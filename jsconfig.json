@@ -1,3 +1,8 @@
+// 保留原有 jsconfig（未删除，回退路径 = 删掉 tsconfig*.json 即恢复现状）。
+// ⚠ 同目录下一旦存在 tsconfig.json，TS Server 会优先采用 tsconfig.json 而忽略本文件，
+//   所以本文件目前对编辑器实际无效，只作为回退基线保留。
+// 唯一改动：补上 "*" 通配以对齐 CI/webpack.config.js:425 的 resolve.modules，
+//   使其在被回退启用时与 tsconfig.json 的模块解析行为一致。
 {
   "compilerOptions": {
     "experimentalDecorators": true,
@@ -7,7 +12,8 @@
       "ming-ui/*": ["./src/ming-ui/*"],
       "worksheet/*": ["./src/pages/worksheet/*"],
       "mobile/*": ["./src/pages/Mobile/*"],
-      "statistics/*": ["./src/pages/Statistics/*"]
+      "statistics/*": ["./src/pages/Statistics/*"],
+      "*": ["./src/*", "./*"]
     }
   },
   "exclude": ["src/library", "node_modules"],

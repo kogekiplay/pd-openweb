@@ -91,7 +91,7 @@ const getModuleRules = () => {
       ...ASSET_CONFIG,
     },
     {
-      test: /\.jsx?$/,
+      test: /\.[jt]sx?$/,
       exclude: /(node_modules)/,
       use: LOADERS.js,
     },
@@ -114,7 +114,9 @@ const getModuleRules = () => {
 
   if (!ENV.isProduction) {
     rules.push({
-      test: /\.js$/,
+      // 与原规则严格对称：原来只覆盖 .js（不含 .jsx），现在同时覆盖 .ts（不含 .tsx）。
+      // 故意不写成 /\.[jt]sx?$/，避免把几千个 .jsx 新纳入 source-map-loader 拖慢 dev 构建。
+      test: /\.[jt]s$/,
       enforce: 'pre',
       exclude: /node_modules/,
       use: ['source-map-loader'],
@@ -423,7 +425,18 @@ module.exports = function (alonePath = '') {
         statistics: 'src/pages/Statistics',
       },
       modules: [PATHS.root, PATHS.src, 'node_modules'],
-      extensions: ['.js', '.jsx'],
+      // .ts/.tsx 放在 .js/.jsx 之前：改名迁移时旧 .js 已被删除，顺序对已迁移文件无影响；
+      // 顺序只在「同名 .ts 与 .js 并存」时起作用，而并存的唯一来源是 codegen
+      // (scripts/downloadApiZip.js 用 unzip -o 只覆盖不清理) 重新吐出旧 .js。
+      // 此时让 .ts 优先命中，可避免「构建绿但跑的是过期 .js」这种最难发现的失败模式。
+      extensions: ['.ts', '.tsx', '.js', '.jsx'],
+      // 必需项：仓库里有 771 处显式带后缀的 import（如 from './x.js'），改名后没有这条会
+      // 直接 Module not found。注意 webpack 语义是「配了别名就只试别名列表」，所以列表里
+      // 必须把原后缀本身也带上，否则所有普通 .js import 全部失效。
+      extensionAlias: {
+        '.js': ['.ts', '.tsx', '.js'],
+        '.jsx': ['.tsx', '.jsx'],
+      },
     },
     optimization: {
       minimizer: [

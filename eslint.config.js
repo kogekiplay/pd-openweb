@@ -16,18 +16,24 @@ module.exports = [
     ignores: [
       'src/library/*',
       'src/pages/calendar/modules/calendarControl/**',
-      'src/pages/integration/svgIcon.js',
+      // 以下按具体文件名忽略的条目一律写成扩展名无关,否则 .js -> .ts 后 glob 失配、
+      // 这些文件会突然被纳入 lint 并刷出大量既存报错
+      'src/pages/integration/svgIcon.*',
       'src/pages/workflow/api/*',
       'src/pages/workflow/apiV2/*',
       'src/pages/Statistics/api/*',
       'src/pages/integration/api/*',
       'src/pages/widgetConfig/widgetSetting/components/DevelopWithAI/examples/**',
-      'src/components/Mingo/ChatBot/components/Recorder/lib.js',
+      'src/components/Mingo/ChatBot/components/Recorder/lib.*',
       'src/pages/widgetConfig/widgetSetting/components/FunctionEditorDialog/Func/lib/**',
       'src/pages/widgetConfig/widgetSetting/components/FunctionEditorDialog/Func/test/**',
     ],
   },
   {
+    // TODO(ts-pilot): 迁移到 .ts/.tsx 的文件目前会从「被 lint」静默变成「完全不被 lint」。
+    // 未扩到 '**/*.ts'/'**/*.tsx' 是有意为之:本仓库没有安装 typescript-eslint
+    // (node_modules/@typescript-eslint 不存在),下面的 parser 也仍是 @babel/eslint-parser,
+    // 现在就扩会让 lint 直接跑崩、毁掉 lint 基线。补齐 parser 后再扩 files。
     files: ['**/*.js', '**/*.jsx'],
     plugins: {
       react,

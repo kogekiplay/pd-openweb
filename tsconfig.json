@@ -1,0 +1,58 @@
+// 宽松基线（tsc 测量用）。
+// 构建链完全不读这份文件：CI/webpack.config.js:94 走 babel-loader（纯类型擦除），
+// 全仓无 ts-loader / fork-ts-checker，所以「webpack 绿」和「tsc 干净」是两件独立的事。
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+
+    // 用 classic（"react"）而不是 "react-jsx"：.babelrc 的 @babel/preset-react 没配
+    // runtime，babel 7 默认即 classic；eslint.config.js 也把 react/react-in-jsx-scope
+    // 设为 error，说明全仓 JSX 文件都显式 import React。React 运行时 18.3.1。
+    // 选 "react-jsx" 会与真实构建产物不一致。
+    "jsx": "react",
+
+    "allowJs": true,
+    "checkJs": false,
+    "noEmit": true,
+
+    "strict": false,
+    "noImplicitAny": false,
+    "skipLibCheck": true,
+
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": false,
+    "experimentalDecorators": true,
+
+    "baseUrl": ".",
+    "paths": {
+      // 保留 jsconfig.json 原有的 4 条 alias（5 个 key）。
+      // 注意 webpack 侧 resolve.alias（CI/webpack.config.js:419-423）只有
+      // worksheet / mobile / statistics 三条，ming-ui 是靠 resolve.modules 的
+      // PATHS.src 解析的；这里显式写出，效果等价。
+      "ming-ui": ["./src/ming-ui"],
+      "ming-ui/*": ["./src/ming-ui/*"],
+      "worksheet/*": ["./src/pages/worksheet/*"],
+      "mobile/*": ["./src/pages/Mobile/*"],
+      "statistics/*": ["./src/pages/Statistics/*"],
+
+      // 镜像 CI/webpack.config.js:425 的
+      //   resolve.modules: [PATHS.root, PATHS.src, 'node_modules']
+      // webpack 能把裸路径 'src/api/x'（1305 处）和 'api/x'（19 处）都解析掉，
+      // tsc 没有等价机制。没这一条会产生大批「webpack 绿但 tsc 报 TS2307」的假故障。
+      // paths 匹配失败时 tsc 会回落到 node_modules 解析，所以不会挡住 npm 包。
+      "*": ["./src/*", "./*"]
+    }
+  },
+
+  // types/global.d.ts 在 src 之外，必须显式列出。
+  "include": ["src", "types/global.d.ts"],
+
+  // src/library 是预打包的压缩产物（applibrary_v2.js 等单行数 MB），
+  // 与 jsconfig.json 原有 exclude 保持一致。
+  "exclude": ["node_modules", "src/library"]
+}

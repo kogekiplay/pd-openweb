@@ -51,7 +51,8 @@
             }
           }
         ],
-        "@babel/preset-react"
+        "@babel/preset-react",
+        "@babel/preset-typescript"
       ]
     },
     "production": {
@@ -66,7 +67,8 @@
             }
           }
         ],
-        "@babel/preset-react"
+        "@babel/preset-react",
+        "@babel/preset-typescript"
       ]
     }
   }

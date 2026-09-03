@@ -15,7 +15,14 @@ const {
 const SWAGGER_URL =
   process.env.CLOUD_API_SWAGGER_URL || cloudApiServer.replace(/\/$/, '') + '/swagger/v1.0.0.0/swagger.json';
 const OUTPUT_DIR = path.join(ROOT_PATH, 'src/pages/Admin/api/cloudApi');
-const PRESERVE_FILES = new Set(['base.js']); // 手动维护的文件，不随脚本清理
+const OUTPUT_EXT = '.ts';
+// 按「去掉扩展名的文件名」保留,否则 base.js -> base.ts 后白名单失配,会被下面的清理逻辑静默删掉
+const PRESERVE_BASENAMES = new Set(['base']); // 手动维护的文件，不随脚本清理
+const SOURCE_EXT_RE = /\.(ts|tsx|js|jsx)$/;
+
+function isPreserved(name) {
+  return PRESERVE_BASENAMES.has(name.replace(SOURCE_EXT_RE, ''));
+}
 
 // 路径第一段到文件名的映射
 const DIR_NAME_MAP = {
@@ -169,14 +176,14 @@ function handleOutput(dirMap) {
     fs.mkdirSync(OUTPUT_DIR, { recursive: true });
   }
 
-  // 清理旧文件（保留 base.js）
+  // 清理旧文件（保留 base，扩展名无关）
   for (const name of fs.readdirSync(OUTPUT_DIR)) {
-    if (PRESERVE_FILES.has(name)) continue;
+    if (isPreserved(name)) continue;
     fs.rmSync(path.join(OUTPUT_DIR, name), { force: true });
   }
 
   Object.keys(dirMap).forEach(dirName => {
-    const filePath = path.join(OUTPUT_DIR, dirName + '.js');
+    const filePath = path.join(OUTPUT_DIR, dirName + OUTPUT_EXT);
     fs.writeFileSync(filePath, renderFile(dirMap[dirName], dirName));
     print.normal(`${filePath.replace(ROOT_PATH + path.sep, '')} 输出成功`);
   });

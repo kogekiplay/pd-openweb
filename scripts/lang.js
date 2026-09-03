@@ -8,7 +8,8 @@ const fetch = require('node-fetch').default;
 const { ROOT_PATH, print } = require('./utils');
 
 const SOURCE_DIR = path.join(ROOT_PATH, 'src');
-const SOURCE_EXTENSIONS = new Set(['.js', '.jsx', '.html', '.htm', '.tpl']);
+// 漏掉任一扩展名不会报错,只会让该类文件里的 _l() 词条静默提取不到,故 TS 迁移时必须同步补 .ts/.tsx
+const SOURCE_EXTENSIONS = new Set(['.js', '.jsx', '.ts', '.tsx', '.html', '.htm', '.tpl']);
 
 const getLangConfig = function () {
   const fileContent = fs

@@ -1,0 +1,12 @@
+// src/api 试点模块的独立测量档：继承宽松基线，只把文件集缩到 src/api。
+//
+// 注意 extends 的语义：include / exclude 是【整体替换】而非合并，
+// 所以 types/global.d.ts 必须在这里重新列一次，否则 src/api 里的
+// mdyAPI(1877 处) / agentAPI(47 处) 会退化成 1924 条 TS2304。
+//
+// src/api 是模块图上的孤岛（106 个文件里 import/require 数为 0），
+// 所以圈到这一层不会拖进任何别的模块。
+{
+  "extends": "./tsconfig.json",
+  "include": ["src/api/**/*", "types/global.d.ts"]
+}

@@ -1,0 +1,16 @@
+// 严格档，用于与 tsconfig.json 做对照测量。
+// 只覆盖 strict 相关开关，文件集 / paths / jsx 全部继承宽松基线。
+//
+// ⚠ 测量须知：基线继承下来的是 checkJs:false，而本仓库 src 下 0 个 .ts/.tsx 源文件，
+// 所以「原样跑这份配置」只会检查 types/global.d.ts，strict 的实际作用面接近 0。
+// 要拿到「全仓 JS 在 strict 下的错误数」，测量时需显式追加 --checkJs：
+//   node node_modules/typescript/bin/tsc -p tsconfig.strict.json --checkJs --noEmit
+// 这样留空是刻意的：checkJs 是测量维度，不该被硬编码进配置档。
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    // strict:true 本身即隐含 noImplicitAny:true，这里显式写出以便 grep 到。
+    "strict": true,
+    "noImplicitAny": true
+  }
+}

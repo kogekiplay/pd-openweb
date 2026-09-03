@@ -16,7 +16,8 @@ const {
 
 const SWAGGER_URL =
   (process.env.AGENT_SWAGGER_URL || mdAgentApiServer)?.replace(/\/$/, '') + '/swagger/v1.0.0.0/swagger.json';
-const OUTPUT_PATH = path.join(ROOT_PATH, 'src/api/agent.js');
+const OUTPUT_EXT = '.ts';
+const OUTPUT_PATH = path.join(ROOT_PATH, 'src/api/agent' + OUTPUT_EXT);
 
 // 极少数命名不顺时的兜底覆盖,key = `${METHOD} ${path}`
 const FN_NAME_OVERRIDES = {

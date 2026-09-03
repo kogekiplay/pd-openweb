@@ -99,7 +99,7 @@ export default class KcListHeader extends Component {
             </span>
             <span className={cx({ hide: !isRecycle })}>
               {' '}
-              >{' '}
+              {'>'}{' '}
               <a className="kcPosition ellipsis hoverColorPrimary" onClick={() => loadRecycleBin(true)}>
                 {_l('回收站')}
               </a>
@@ -120,7 +120,7 @@ export default class KcListHeader extends Component {
                   );
                   return i === currentFolder.position.split('/').length - 1 ? (
                     <span key={i} className={keywords && !isGlobalSearch ? 'positionSpan' : 'flex relative'}>
-                      &nbsp;>{' '}
+                      &nbsp;{'>'}{' '}
                       <span className={cx({ lastPosition: !keywords || isGlobalSearch })}>
                         <a className="kcPosition ellipsis hoverColorPrimary" href={encodeURI(href)} title={part}>
                           {part}
@@ -129,14 +129,14 @@ export default class KcListHeader extends Component {
                     </span>
                   ) : (
                     <span className="positionSpan" key={i}>
-                      &nbsp;>{' '}
+                      &nbsp;{'>'}{' '}
                       <a className="kcPosition ellipsis hoverColorPrimary" href={encodeURI(href)} title={part}>
                         {part}
                       </a>
                     </span>
                   );
                 } else if (i === 2) {
-                  return <span className="positionSpan">&nbsp;> ...</span>;
+                  return <span className="positionSpan">&nbsp;{'>'} ...</span>;
                 }
 
                 return '';

@@ -5,7 +5,14 @@ const { API_SERVER } = require('../CI/publishConfig');
 const agentApiGen = require('./agentApiGen');
 const { ROOT_PATH, formatWithPrettier, print } = require('./utils');
 const AJAX_PATH = path.join(ROOT_PATH, 'src/api');
-const PRESERVE_FILES = new Set(['agent.js']); // 由 agentApiGen.js 单独维护,不随本脚本清理
+const OUTPUT_EXT = '.ts';
+// 按「去掉扩展名的文件名」保留,否则 agent.js -> agent.ts 后白名单失配,会被 clearDir 静默删掉
+const PRESERVE_BASENAMES = new Set(['agent']); // 由 agentApiGen.js 单独维护,不随本脚本清理
+const SOURCE_EXT_RE = /\.(ts|tsx|js|jsx)$/;
+
+function isPreserved(name) {
+  return PRESERVE_BASENAMES.has(name.replace(SOURCE_EXT_RE, ''));
+}
 
 const loading = function (prefix = '') {
   var chars = ['🕒🚶', '🕒🏃'];
@@ -29,11 +36,11 @@ function clearDir() {
   }
 
   for (const name of fs.readdirSync(AJAX_PATH)) {
-    if (PRESERVE_FILES.has(name)) continue;
+    if (isPreserved(name)) continue;
     fs.rmSync(path.join(AJAX_PATH, name), { recursive: true, force: true });
   }
 
-  print.info(`清理 ${AJAX_PATH}(保留 ${[...PRESERVE_FILES].join(', ')})`);
+  print.info(`清理 ${AJAX_PATH}(保留 ${[...PRESERVE_BASENAMES].join(', ')})`);
 }
 
 function getApiHost(env = 'develop') {
@@ -166,8 +173,8 @@ function handleOutput(data) {
   Object.keys(data).forEach(ajaxFileName => {
     var ajaxFilePath = path.join(AJAX_PATH, ajaxFileName);
     var renderData = data[ajaxFileName];
-    fs.writeFileSync(ajaxFilePath + '.js', renderAjaxFile(renderData));
-    print.normal(`${ajaxFilePath.replace(ROOT_PATH + path.sep, '')}.js 输出成功`);
+    fs.writeFileSync(ajaxFilePath + OUTPUT_EXT, renderAjaxFile(renderData));
+    print.normal(`${ajaxFilePath.replace(ROOT_PATH + path.sep, '')}${OUTPUT_EXT} 输出成功`);
   });
   print.success(`请求文件已全部生成到${AJAX_PATH}`);
 }
