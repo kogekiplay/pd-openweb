@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSetState } from 'react-use';
 import update from 'immutability-helper';
 import _ from 'lodash';
@@ -7,7 +7,9 @@ import { Button, Dialog, Dropdown } from 'ming-ui';
 import appManagementAjax from 'src/api/appManagement';
 import homeAppAjax from 'src/api/homeApp';
 
-const Config = [
+// disabled / filter 在渲染处被解构，但两个条目都没有提供 —— 保持行为不变，
+// 显式声明为可选，避免把「永远读到 undefined」伪装成正常字段访问。
+const Config: { text: string; key: 'app' | 'sheet'; disabled?: boolean; filter?: (item: any) => any }[] = [
   {
     text: _l('应用'),
     key: 'app',
@@ -52,7 +54,10 @@ export default function SelectWorksheetDialog(props) {
   const { onClose, onOk, globalSheetInfo = {} } = props;
   const { appId: currentAppId, projectId, worksheetId } = globalSheetInfo;
   const [data, setData] = useSetState({ app: [], sheet: [] });
-  const [loading, setLoading] = useSetState(true);
+  // 原为 useSetState(true)：react-use 的 useSetState 内部是 Object.assign({}, prev, patch)，
+  // 传布尔值时 setLoading(false) 会得到 {}（恒为真值），下面的 `!loading` 永远为 false，
+  // 「应用/工作表已删除」提示因此从来不显示。布尔状态必须用 useState。
+  const [loading, setLoading] = useState(true);
   const [ids, setIds] = useSetState({
     appId: currentAppId,
     sheetId: '',

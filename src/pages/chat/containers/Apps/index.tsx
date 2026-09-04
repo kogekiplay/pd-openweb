@@ -58,7 +58,9 @@ const getShowAppsCount = height => {
   const appHeight = 26;
   const marginBottom = 10;
   const moreHeight = 8;
-  return parseInt((height - moreHeight) / (appHeight + marginBottom));
+  // 原为 parseInt(number)：先隐式 toString 再解析，量级异常时（如 1e21）会得到完全错误的值。
+  // Math.trunc 与当前输入域内的 parseInt 行为等价，且不依赖字符串化。
+  return Math.trunc((height - moreHeight) / (appHeight + marginBottom));
 };
 
 const onAddBehaviorLog = item => {
