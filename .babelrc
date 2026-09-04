@@ -52,7 +52,12 @@
           }
         ],
         "@babel/preset-react",
-        "@babel/preset-typescript"
+        [
+          "@babel/preset-typescript",
+          {
+            "onlyRemoveTypeImports": true
+          }
+        ]
       ]
     },
     "production": {
@@ -68,7 +73,12 @@
           }
         ],
         "@babel/preset-react",
-        "@babel/preset-typescript"
+        [
+          "@babel/preset-typescript",
+          {
+            "onlyRemoveTypeImports": true
+          }
+        ]
       ]
     }
   }

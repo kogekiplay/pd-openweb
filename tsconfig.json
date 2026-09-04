@@ -22,6 +22,11 @@
     "noImplicitAny": false,
     "skipLibCheck": true,
 
+    // R1 配对开关：.babelrc 的 onlyRemoveTypeImports:true 会把
+    // `import { SomeType } from './x'` 原样保留到产物；verbatimModuleSyntax 用 TS1484
+    // 强制这类写法改成 `import type`，把洞补上。
+    "verbatimModuleSyntax": true,
+
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
