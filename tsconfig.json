@@ -49,8 +49,8 @@
     }
   },
 
-  // types/global.d.ts 在 src 之外，必须显式列出。
-  "include": ["src", "types/global.d.ts"],
+  // types/ 在 src 之外，必须显式列出（改成整目录纳入，新增 .d.ts 无需再动这里）。
+  "include": ["src", "types"],
 
   // src/library 是预打包的压缩产物（applibrary_v2.js 等单行数 MB），
   // 与 jsconfig.json 原有 exclude 保持一致。

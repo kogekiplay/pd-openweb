@@ -129,3 +129,11 @@ declare module '*.eot' {
   const src: string;
   export default src;
 }
+
+// 运行时的全局 alert 不是 DOM 的 window.alert：src/common/global.js:247 的
+// customAlert() 把它替换成了 ming-ui/functions/alert 的 antAlert。
+// 真实签名见 src/ming-ui/functions/alert/index.js:54 `antAlert(content, alertType = 1)`。
+// 不覆盖的话 tsc 会按 DOM 的 alert(message?: any): void 判读，凡是传第二个参数的
+// 调用点（本仓大量 `alert(msg, 2)`）都会误报 TS2554 Expected 0-1 arguments。
+// 注意：content 可以是字符串/ReactNode，也可以是 { msg, type, duration, onClose, ... } 配置对象。
+declare function alert(content?: any, alertType?: number): void;
