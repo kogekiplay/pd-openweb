@@ -41,43 +41,49 @@ export default function ViewLand() {
   const isMobile = browserIsMobile();
   const Component = isMobile ? MobileSingleView : SingleView;
 
-  useEffect(async () => {
+  useEffect(() => {
+    // 不能把 useEffect 的回调写成 async：React 会拿到一个 Promise，函数体里 return 的
+    // 清理函数根本不会被注册（window.hideColumnHeadFilter 永远复位不了）。
+    const load = async () => {
+      const data = await homeAppApi.getApp({
+        appId,
+        getLang: true,
+      });
+
+      const { langInfo } = data;
+
+      if (langInfo && langInfo.appLangId && langInfo.version !== window[`langVersion-${appId}`]) {
+        const lang = await appManagementApi.getAppLangDetail({
+          projectId: data.projectId,
+          appId,
+          appLangId: langInfo.appLangId,
+        });
+        window[`langData-${appId}`] = lang.items;
+        window[`langVersion-${appId}`] = langInfo.version;
+      }
+
+      worksheet.getWorksheetInfo({ worksheetId, getViews: true }).then(worksheetInfo => {
+        worksheetInfo.name = getTranslateInfo(appId, null, worksheetId).name || worksheetInfo.name;
+        worksheetInfo.views.forEach(view => {
+          view.name = getTranslateInfo(appId, worksheetId, view.viewId).name || view.name;
+        });
+        const view = _.find(worksheetInfo.views, v => v.viewId === viewId) || {};
+        const isSingleRecordDetailView = _.get(view, 'viewType') === 6 && String(_.get(view, 'childType')) === '1';
+        setShowHeader(isMobile ? true : !isSingleRecordDetailView);
+        setWorksheetInfo({
+          worksheetName: worksheetInfo.name,
+          viewName: view.name || '',
+          appColor: data.iconColor,
+        });
+        setLoading(false);
+      });
+    };
+
     socketInit();
     setLoading(true);
     window.hideColumnHeadFilter = true;
+    load();
 
-    const data = await homeAppApi.getApp({
-      appId,
-      getLang: true,
-    });
-
-    const { langInfo } = data;
-
-    if (langInfo && langInfo.appLangId && langInfo.version !== window[`langVersion-${appId}`]) {
-      const lang = await appManagementApi.getAppLangDetail({
-        projectId: data.projectId,
-        appId,
-        appLangId: langInfo.appLangId,
-      });
-      window[`langData-${appId}`] = lang.items;
-      window[`langVersion-${appId}`] = langInfo.version;
-    }
-
-    worksheet.getWorksheetInfo({ worksheetId, getViews: true }).then(worksheetInfo => {
-      worksheetInfo.name = getTranslateInfo(appId, null, worksheetId).name || worksheetInfo.name;
-      worksheetInfo.views.forEach(view => {
-        view.name = getTranslateInfo(appId, worksheetId, view.viewId).name || view.name;
-      });
-      const view = _.find(worksheetInfo.views, v => v.viewId === viewId) || {};
-      const isSingleRecordDetailView = _.get(view, 'viewType') === 6 && String(_.get(view, 'childType')) === '1';
-      setShowHeader(isMobile ? true : !isSingleRecordDetailView);
-      setWorksheetInfo({
-        worksheetName: worksheetInfo.name,
-        viewName: view.name || '',
-        appColor: data.iconColor,
-      });
-      setLoading(false);
-    });
     return () => {
       window.hideColumnHeadFilter = false;
     };
