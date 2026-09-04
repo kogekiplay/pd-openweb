@@ -22,22 +22,22 @@ const APP_HOMEPAGE_ENTRIES = [
   'src/router/PageHeader/AppCenterHeader/index.jsx',
 ];
 
-const FULL_PAGE_ENTRIES = [...APP_HOMEPAGE_ENTRIES, 'src/router/App.jsx'];
+const FULL_PAGE_ENTRIES = [...APP_HOMEPAGE_ENTRIES, 'src/router/App.tsx'];
 
 const BEFORE_IMPORT_OVERRIDES = {
-  'src/pages/AppHomepage/Dashboard/index.jsx': {
+  'src/pages/AppHomepage/Dashboard/index.tsx': {
     'src/utils/controlCommon': 'src/pages/widgetConfig/util',
   },
-  'src/pages/AppHomepage/Dashboard/utils.js': {
+  'src/pages/AppHomepage/Dashboard/utils.ts': {
     'src/utils/controlCommon': 'src/pages/widgetConfig/util',
   },
-  'src/pages/AppHomepage/Dashboard/DashboardSetting.jsx': {
+  'src/pages/AppHomepage/Dashboard/DashboardSetting.tsx': {
     'src/utils/controlCommon': 'src/pages/widgetConfig/util',
   },
-  'src/pages/AppHomepage/AppCenter/components/AppGrid.jsx': {
+  'src/pages/AppHomepage/AppCenter/components/AppGrid.tsx': {
     'src/utils/controlCommon': 'src/pages/widgetConfig/util',
   },
-  'src/pages/AppHomepage/AppCenter/utils.js': {
+  'src/pages/AppHomepage/AppCenter/utils.ts': {
     'src/utils/controlCommon': 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/util',
   },
 };
@@ -56,8 +56,12 @@ function normalizeRequest(fromFile, request) {
 function resolveFile(filePath) {
   return [
     filePath,
+    `${filePath}.ts`,
+    `${filePath}.tsx`,
     `${filePath}.js`,
     `${filePath}.jsx`,
+    path.join(filePath, 'index.ts'),
+    path.join(filePath, 'index.tsx'),
     path.join(filePath, 'index.js'),
     path.join(filePath, 'index.jsx'),
   ].find(p => fs.existsSync(p));

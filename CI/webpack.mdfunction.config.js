@@ -17,7 +17,7 @@ module.exports = {
   ],
   entry: path.join(
     __dirname,
-    '../src/pages/widgetConfig/widgetSetting/components/FunctionEditorDialog/Func/releaseEntry.js',
+    '../src/pages/widgetConfig/widgetSetting/components/FunctionEditorDialog/Func/releaseEntry.ts',
   ),
   module: {
     rules: [

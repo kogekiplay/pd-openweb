@@ -11,9 +11,18 @@ const SOURCE_DIR = path.join(ROOT_PATH, 'src');
 // 漏掉任一扩展名不会报错,只会让该类文件里的 _l() 词条静默提取不到,故 TS 迁移时必须同步补 .ts/.tsx
 const SOURCE_EXTENSIONS = new Set(['.js', '.jsx', '.ts', '.tsx', '.html', '.htm', '.tpl']);
 
+// 后缀无关地定位 langConfig：TS 迁移后它是 .ts，写死 .js 会让本模块在 require 阶段就 ENOENT。
+const resolveLangConfigPath = function () {
+  for (const ext of ['.ts', '.js', '.tsx', '.jsx']) {
+    const candidate = path.join(ROOT_PATH, `src/common/langConfig${ext}`);
+    if (fs.existsSync(candidate)) return candidate;
+  }
+  throw new Error('找不到 src/common/langConfig.{ts,js}');
+};
+
 const getLangConfig = function () {
   const fileContent = fs
-    .readFileSync(path.join(ROOT_PATH, 'src/common/langConfig.js'))
+    .readFileSync(resolveLangConfigPath())
     .toString()
     .replace(/export\s+default\s+config\s*;?/, '')
     .replace(/export\s+(const|let|var)\s+/g, '$1 ')

@@ -19,7 +19,7 @@ module.exports = {
       localesToKeep: ['es-us', 'zh-cn', 'zh-tw', 'ja', 'th', 'ms'],
     }),
   ],
-  entry: path.join(__dirname, '../src/pages/embed/mingoEntry/widgetEntry.js'),
+  entry: path.join(__dirname, '../src/pages/embed/mingoEntry/widgetEntry.ts'),
   module: {
     rules: [
       {
