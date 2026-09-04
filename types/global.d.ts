@@ -137,3 +137,13 @@ declare module '*.eot' {
 // 调用点（本仓大量 `alert(msg, 2)`）都会误报 TS2554 Expected 0-1 arguments。
 // 注意：content 可以是字符串/ReactNode，也可以是 { msg, type, duration, onClose, ... } 配置对象。
 declare function alert(content?: any, alertType?: number): void;
+
+// src/api/* 方法第二个参数 options 的类型。
+// 依据 src/common/global.js:721 `window.mdyAPI = (controllerName, actionName, requestData, options = {}) =>`
+// 以及 src/api 里对 options 的实际写入（如 src/api/download.ts 的 options.ajaxOptions）。
+// 刻意带索引签名：options 不是本批的观测对象，不希望它产生诊断噪声。
+declare interface ApiOptions {
+  silent?: boolean;
+  ajaxOptions?: any;
+  [key: string]: any;
+}
