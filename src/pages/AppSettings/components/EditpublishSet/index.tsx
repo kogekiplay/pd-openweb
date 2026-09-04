@@ -172,7 +172,7 @@ class EditPublishSetDialog extends React.Component {
             <img className="wechatPng" src={wechatPng} />
             <div className="Font24 Blod mTop50">{_l('将此应用添加到企业微信工作台')}</div>
             <div className="flexRow mTop30">
-              <sapn className=" colorGray mRight18">{_l('应用')}</sapn>
+              <span className=" colorGray mRight18">{_l('应用')}</span>
               <span>{appName}</span>
             </div>
             <div className="submitBtn" onClick={this.submitApply}>
