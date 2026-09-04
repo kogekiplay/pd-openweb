@@ -482,7 +482,9 @@ export default function MoreOperation(props) {
                   icon={<Icon icon="workflow" className="Font18" />}
                   onClick={() => {
                     setPopupVisible(false);
-                    window.open(pathCompletion(`/app/${appId}/workflow` + `/${appItem.workSheetId}`, '__blank'));
+                    // 目标窗口参数原本被误传进 pathCompletion 的第二个入参（options 对象），
+                    // 导致 hasDomain 变成 undefined（默认应为 true），返回相对路径而非绝对 URL。
+                    window.open(pathCompletion(`/app/${appId}/workflow` + `/${appItem.workSheetId}`), '_blank');
                   }}
                 >
                   <span className="text">{_l('查看工作流')}</span>
@@ -509,7 +511,9 @@ export default function MoreOperation(props) {
                 icon={<Icon icon="wysiwyg" className="Font18" />}
                 onClick={() => {
                   setPopupVisible(false);
-                  window.open(pathCompletion(`/app/${appId}/logs/${projectId}/${appItem.workSheetId}`, '__blank'));
+                  // 同上：'__blank' 原本落在 pathCompletion 的 options 位上，既没起到 target 作用，
+                  // 又把 hasDomain 默认值冲掉了。
+                  window.open(pathCompletion(`/app/${appId}/logs/${projectId}/${appItem.workSheetId}`), '_blank');
                 }}
               >
                 <span className="text">{_l('查看日志')}</span>
