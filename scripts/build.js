@@ -298,6 +298,7 @@ function typecheckGate() {
   }
 
   const steps = [
+    ['后缀并存检查（零容忍）', [resolvePath('scripts/checkExtensionCollisions.js')]],
     ['语法门禁（零容忍）', [resolvePath('scripts/typecheck/tsc-syntax-gate.js')]],
     ['语义差分门禁', [resolvePath('scripts/typecheck/tsc-gate.js'), '--no-incremental']],
   ];

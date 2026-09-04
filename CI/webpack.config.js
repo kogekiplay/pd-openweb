@@ -434,8 +434,10 @@ module.exports = function (alonePath = '') {
       // 直接 Module not found。注意 webpack 语义是「配了别名就只试别名列表」，所以列表里
       // 必须把原后缀本身也带上，否则所有普通 .js import 全部失效。
       extensionAlias: {
+        // '.jsx' 必须也能落到 '.ts'：仓库里有 29 处 `from './style.jsx'` 一类的写法，
+        // 而这些 style.jsx 并不含 JSX，AST 判定后会变成 .ts。少了 '.ts' 会直接 Module not found。
         '.js': ['.ts', '.tsx', '.js'],
-        '.jsx': ['.tsx', '.jsx'],
+        '.jsx': ['.ts', '.tsx', '.jsx'],
       },
     },
     optimization: {

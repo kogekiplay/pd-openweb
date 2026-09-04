@@ -18,15 +18,20 @@ import WidgetOtherExplain from './WidgetOtherExplain';
 import WidgetWarning from './WidgetWarning';
 import WidgetWidth from './WidgetWidth';
 
-const settingContext = require.context('../../settings', false, /\.jsx$/, 'lazy');
+// 后缀无关：../../settings 下 .js/.jsx/.ts/.tsx 混杂（不含 JSX 的设置项会被判定成 .ts）。
+// (?!index\.) 排除该目录的 barrel index，避免多出一个无意义的 key。
+const settingContext = require.context('../../settings', false, /^\.\/(?!index\.)[^/]+\.[jt]sx?$/, 'lazy');
 const settingKeys = settingContext.keys();
 const settingComponentCache = {};
 
 const getSettingComponent = typeName => {
   if (!typeName) return null;
 
-  const settingPath = `./${typeName.toLowerCase()}.jsx`;
-  if (!settingKeys.includes(settingPath)) return null;
+  // 这里是与上面 require.context 正则相互独立的第二处后缀硬编码，必须一起改：
+  // 只改正则而漏掉这行，查表恒 false → 所有控件的高级设置面板静默空白（构建绿、tsc 绿）。
+  const base = `./${typeName.toLowerCase()}`;
+  const settingPath = [`${base}.tsx`, `${base}.ts`, `${base}.jsx`, `${base}.js`].find(p => settingKeys.includes(p));
+  if (!settingPath) return null;
 
   if (!settingComponentCache[typeName]) {
     settingComponentCache[typeName] = lazy(() => settingContext(settingPath));

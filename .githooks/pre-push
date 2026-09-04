@@ -16,6 +16,9 @@ if [ "$SKIP_TYPECHECK" = "1" ]; then
   exit 0
 fi
 
+echo "pre-push: 后缀并存检查（约 1s）..."
+node scripts/checkExtensionCollisions.js
+
 echo "pre-push: 语法门禁（约 8s）..."
 NODE_OPTIONS=--max_old_space_size=8192 node scripts/typecheck/tsc-syntax-gate.js
 
