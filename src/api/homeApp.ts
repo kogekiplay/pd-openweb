@@ -22,7 +22,8 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  createApp: function (args?: {
+  createApp: function (
+    args?: {
       projectId?: string;
       name?: string;
       icon?: string;
@@ -39,7 +40,9 @@ export default {
       appDisplay?: boolean;
       dbInstanceId?: string;
       shortDesc?: string;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'CreateApp', args, options);
   },
   /**
@@ -53,12 +56,15 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteApp: function (args?: {
+  deleteApp: function (
+    args?: {
       appId?: string;
       projectId?: string;
       isHomePage?: boolean;
       noCache?: boolean;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'DeleteApp', args, options);
   },
   /**
@@ -73,13 +79,16 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAppRecoveryRecordList: function (args?: {
+  getAppRecoveryRecordList: function (
+    args?: {
       pageIndex?: number;
       pageSize?: number;
       projectId?: string;
       isHomePage?: boolean;
       keyword?: string;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'GetAppRecoveryRecordList', args, options);
   },
   /**
@@ -92,11 +101,14 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  appRecycleBinDelete: function (args?: {
+  appRecycleBinDelete: function (
+    args?: {
       id?: string;
       projectId?: string;
       isHomePage?: boolean;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'AppRecycleBinDelete', args, options);
   },
   /**
@@ -109,11 +121,14 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  restoreApp: function (args?: {
+  restoreApp: function (
+    args?: {
       id?: string;
       projectId?: string;
       isHomePage?: boolean;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'RestoreApp', args, options);
   },
   /**
@@ -125,10 +140,13 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editAppTimeZones: function (args?: {
+  editAppTimeZones: function (
+    args?: {
       appId?: string;
       timeZone?: number;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'EditAppTimeZones', args, options);
   },
   /**
@@ -140,10 +158,13 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editAppOriginalLang: function (args?: {
+  editAppOriginalLang: function (
+    args?: {
       appId?: string;
       originalLang?: string;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'EditAppOriginalLang', args, options);
   },
   /**
@@ -158,13 +179,16 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  markApp: function (args?: {
+  markApp: function (
+    args?: {
       appId?: string;
       itemId?: string;
       type?: number;
       isMark?: boolean;
       projectId?: string;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'MarkApp', args, options);
   },
   /**
@@ -199,7 +223,8 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editAppInfo: function (args?: {
+  editAppInfo: function (
+    args?: {
       appId?: string;
       projectId?: string;
       name?: string;
@@ -225,7 +250,9 @@ export default {
       hideFirstSection?: boolean;
       appNavItemIds?: any[];
       shortDesc?: string;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'EditAppInfo', args, options);
   },
   /**
@@ -239,12 +266,15 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateAppSort: function (args?: {
+  updateAppSort: function (
+    args?: {
       sortType?: number;
       appIds?: any[];
       projectId?: string;
       groupId?: string;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'UpdateAppSort', args, options);
   },
   /**
@@ -259,13 +289,16 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  copyApp: function (args?: {
+  copyApp: function (
+    args?: {
       appId?: string;
       appName?: string;
       groupId?: string;
       groupType?: unknown;
       dbInstanceId?: string;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'CopyApp', args, options);
   },
   /**
@@ -280,13 +313,16 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  publishSettings: function (args?: {
+  publishSettings: function (
+    args?: {
       appId?: string;
       projectId?: string;
       pcDisplay?: boolean;
       webMobileDisplay?: boolean;
       appDisplay?: boolean;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'PublishSettings', args, options);
   },
   /**
@@ -299,11 +335,14 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editWhiteList: function (args?: {
+  editWhiteList: function (
+    args?: {
       whiteIps?: any[];
       appId?: string;
       projectId?: string;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'EditWhiteList', args, options);
   },
   /**
@@ -317,12 +356,15 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editFix: function (args?: {
+  editFix: function (
+    args?: {
       appId?: string;
       projectId?: string;
       fixed?: boolean;
       fixRemark?: string;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'EditFix', args, options);
   },
   /**
@@ -334,10 +376,13 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editSSOAddress: function (args?: {
+  editSSOAddress: function (
+    args?: {
       appId?: string;
       ssoAddress?: string;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'EditSSOAddress', args, options);
   },
   /**
@@ -348,9 +393,12 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAllHomeApp: function (args?: {
+  getAllHomeApp: function (
+    args?: {
       containsLinks?: boolean;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'GetAllHomeApp', args, options);
   },
   /**
@@ -363,11 +411,14 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetsByAppId: function (args?: {
+  getWorksheetsByAppId: function (
+    args?: {
       appId?: string;
       type?: unknown;
       getAlias?: boolean;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'GetWorksheetsByAppId', args, options);
   },
   /**
@@ -383,14 +434,17 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAttachementImages: function (args?: {
+  getAttachementImages: function (
+    args?: {
       workSheetId?: string;
       viewId?: string;
       attachementControlId?: string;
       imageLimitCount?: number;
       displayMode?: number;
       filedIds?: any[];
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'GetAttachementImages', args, options);
   },
   /**
@@ -402,10 +456,13 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPageInfo: function (args?: {
+  getPageInfo: function (
+    args?: {
       id?: string;
       sectionId?: string;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'GetPageInfo', args, options);
   },
   /**
@@ -427,10 +484,13 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getItemDetailByAppId: function (args?: {
+  getItemDetailByAppId: function (
+    args?: {
       appId?: string;
       itemIds?: any[];
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'GetItemDetailByAppId', args, options);
   },
   /**
@@ -452,7 +512,8 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getApp: function (args?: {
+  getApp: function (
+    args?: {
       ticket?: string;
       randStr?: string;
       captchaType?: unknown;
@@ -463,7 +524,9 @@ export default {
       getProject?: boolean;
       getLang?: boolean;
       isMobile?: boolean;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'GetApp', args, options);
   },
   /**
@@ -485,7 +548,8 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getAppLangInfo: function (args?: {
+  getAppLangInfo: function (
+    args?: {
       ticket?: string;
       randStr?: string;
       captchaType?: unknown;
@@ -496,7 +560,9 @@ export default {
       getProject?: boolean;
       getLang?: boolean;
       isMobile?: boolean;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'GetAppLangInfo', args, options);
   },
   /**
@@ -508,10 +574,13 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  checkApp: function (args?: {
+  checkApp: function (
+    args?: {
       appId?: string;
       tradeId?: string;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'CheckApp', args, options);
   },
   /**
@@ -523,10 +592,13 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAppFirstInfo: function (args?: {
+  getAppFirstInfo: function (
+    args?: {
       appId?: string;
       appSectionId?: string;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'GetAppFirstInfo', args, options);
   },
   /**
@@ -537,9 +609,12 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAppSimpleInfo: function (args?: {
+  getAppSimpleInfo: function (
+    args?: {
       workSheetId?: string;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'GetAppSimpleInfo', args, options);
   },
   /**
@@ -551,10 +626,13 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAppSectionDetail: function (args?: {
+  getAppSectionDetail: function (
+    args?: {
       appId?: string;
       appSectionId?: string;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'GetAppSectionDetail', args, options);
   },
   /**
@@ -571,7 +649,8 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addAppSection: function (args?: {
+  addAppSection: function (
+    args?: {
       appId?: string;
       name?: string;
       icon?: string;
@@ -579,7 +658,9 @@ export default {
       sourceAppSectionId?: string;
       parentId?: string;
       rootId?: string;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'AddAppSection', args, options);
   },
   /**
@@ -592,11 +673,14 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateAppSectionName: function (args?: {
+  updateAppSectionName: function (
+    args?: {
       appId?: string;
       name?: string;
       appSectionId?: string;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'UpdateAppSectionName', args, options);
   },
   /**
@@ -611,13 +695,16 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateAppSection: function (args?: {
+  updateAppSection: function (
+    args?: {
       appId?: string;
       appSectionId?: string;
       appSectionName?: string;
       icon?: string;
       iconColor?: string;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'UpdateAppSection', args, options);
   },
   /**
@@ -630,11 +717,14 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteAppSection: function (args?: {
+  deleteAppSection: function (
+    args?: {
       appId?: string;
       appSectionId?: string;
       sourceAppSectionId?: string;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'DeleteAppSection', args, options);
   },
   /**
@@ -646,10 +736,13 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateAppSectionSort: function (args?: {
+  updateAppSectionSort: function (
+    args?: {
       appId?: string;
       appSectionIds?: any[];
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'UpdateAppSectionSort', args, options);
   },
   /**
@@ -662,11 +755,14 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateSectionChildSort: function (args?: {
+  updateSectionChildSort: function (
+    args?: {
       appId?: string;
       appSectionId?: string;
       workSheetIds?: any[];
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'UpdateSectionChildSort', args, options);
   },
   /**
@@ -679,11 +775,14 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setWorksheetStatus: function (args?: {
+  setWorksheetStatus: function (
+    args?: {
       appId?: string;
       worksheetId?: string;
       status?: number;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'SetWorksheetStatus', args, options);
   },
   /**
@@ -695,10 +794,13 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getApiInfo: function (args?: {
+  getApiInfo: function (
+    args?: {
       appId?: string;
       notOnSettingPage?: boolean;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'GetApiInfo', args, options);
   },
   /**
@@ -711,11 +813,14 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getMyApp: function (args?: {
+  getMyApp: function (
+    args?: {
       projectId?: string;
       containsLinks?: boolean;
       getMarkApp?: boolean;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'GetMyApp', args, options);
   },
   /**
@@ -730,13 +835,16 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getGroup: function (args?: {
+  getGroup: function (
+    args?: {
       projectId?: string;
       containsLinks?: boolean;
       getMarkApp?: boolean;
       id?: string;
       groupType?: unknown;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'GetGroup', args, options);
   },
   /**
@@ -749,11 +857,14 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addToGroup: function (args?: {
+  addToGroup: function (
+    args?: {
       appId?: string;
       personalGroups?: any[];
       projectGroups?: any[];
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'AddToGroup', args, options);
   },
   /**
@@ -766,11 +877,14 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeToGroup: function (args?: {
+  removeToGroup: function (
+    args?: {
       appId?: string;
       personalGroups?: any[];
       projectGroups?: any[];
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'RemoveToGroup', args, options);
   },
   /**
@@ -784,12 +898,15 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  markedGroup: function (args?: {
+  markedGroup: function (
+    args?: {
       id?: string;
       groupType?: unknown;
       projectId?: string;
       isMarked?: boolean;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'MarkedGroup', args, options);
   },
   /**
@@ -803,12 +920,15 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addGroup: function (args?: {
+  addGroup: function (
+    args?: {
       projectId?: string;
       name?: string;
       icon?: string;
       groupType?: unknown;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'AddGroup', args, options);
   },
   /**
@@ -824,14 +944,17 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editGroup: function (args?: {
+  editGroup: function (
+    args?: {
       id?: string;
       groupType?: unknown;
       projectId?: string;
       name?: string;
       icon?: string;
       displayType?: unknown;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'EditGroup', args, options);
   },
   /**
@@ -844,11 +967,14 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteGroup: function (args?: {
+  deleteGroup: function (
+    args?: {
       id?: string;
       groupType?: unknown;
       projectId?: string;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'DeleteGroup', args, options);
   },
   /**
@@ -861,11 +987,14 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editGroupSort: function (args?: {
+  editGroupSort: function (
+    args?: {
       projectId?: string;
       ids?: any[];
       sortType?: number;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'EditGroupSort', args, options);
   },
   /**
@@ -887,7 +1016,8 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editHomeSetting: function (args?: {
+  editHomeSetting: function (
+    args?: {
       projectId?: string;
       displayType?: unknown;
       markedAppDisplay?: unknown;
@@ -900,7 +1030,9 @@ export default {
       displayApp?: boolean;
       displayChart?: boolean;
       sortItems?: any[];
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'EditHomeSetting', args, options);
   },
   /**
@@ -912,10 +1044,13 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  markApps: function (args?: {
+  markApps: function (
+    args?: {
       items?: any[];
       projectId?: string;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'MarkApps', args, options);
   },
   /**
@@ -934,7 +1069,8 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editPlatformSetting: function (args?: {
+  editPlatformSetting: function (
+    args?: {
       projectId?: string;
       bulletinBoards?: any[];
       color?: string;
@@ -944,7 +1080,9 @@ export default {
       boardSwitch?: boolean;
       logoHeight?: number;
       advancedSetting?: Record<string, any>;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'EditPlatformSetting', args, options);
   },
   /**
@@ -956,10 +1094,13 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  myPlatform: function (args?: {
+  myPlatform: function (
+    args?: {
       projectId?: string;
       noCache?: boolean;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'MyPlatform', args, options);
   },
   /**
@@ -971,10 +1112,13 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  marketApps: function (args?: {
+  marketApps: function (
+    args?: {
       projectId?: string;
       noCache?: boolean;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'MarketApps', args, options);
   },
   /**
@@ -986,10 +1130,13 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  recentApps: function (args?: {
+  recentApps: function (
+    args?: {
       projectId?: string;
       noCache?: boolean;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'RecentApps', args, options);
   },
   /**
@@ -1001,10 +1148,13 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  searchMyApps: function (args?: {
+  searchMyApps: function (
+    args?: {
       projectId?: string;
       keywords?: string;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'SearchMyApps', args, options);
   },
   /**
@@ -1027,10 +1177,13 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  myPlatformLang: function (args?: {
+  myPlatformLang: function (
+    args?: {
       projectId?: string;
       noCache?: boolean;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'MyPlatformLang', args, options);
   },
   /**
@@ -1042,10 +1195,13 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAppItems: function (args?: {
+  getAppItems: function (
+    args?: {
       appId?: string;
       tradeId?: string;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'GetAppItems', args, options);
   },
   /**
@@ -1057,10 +1213,13 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getHomePlatformSetting: function (args?: {
+  getHomePlatformSetting: function (
+    args?: {
       projectId?: string;
       noCache?: boolean;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'GetHomePlatformSetting', args, options);
   },
   /**
@@ -1072,10 +1231,13 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getOwnedApp: function (args?: {
+  getOwnedApp: function (
+    args?: {
       projectId?: string;
       noCache?: boolean;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'GetOwnedApp', args, options);
   },
   /**
@@ -1087,9 +1249,12 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getMyDbInstances: function (args?: {
+  getMyDbInstances: function (
+    args?: {
       projectId?: string;
-    }, options: ApiOptions = {}) {
+    },
+    options: ApiOptions = {},
+  ) {
     return mdyAPI('HomeApp', 'GetMyDbInstances', args, options);
   },
 };

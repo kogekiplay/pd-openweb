@@ -30,11 +30,14 @@ module.exports = [
     ],
   },
   {
-    // TODO(ts-pilot): 迁移到 .ts/.tsx 的文件目前会从「被 lint」静默变成「完全不被 lint」。
-    // 未扩到 '**/*.ts'/'**/*.tsx' 是有意为之:本仓库没有安装 typescript-eslint
-    // (node_modules/@typescript-eslint 不存在),下面的 parser 也仍是 @babel/eslint-parser,
-    // 现在就扩会让 lint 直接跑崩、毁掉 lint 基线。补齐 parser 后再扩 files。
-    files: ['**/*.js', '**/*.jsx'],
+    // .ts/.tsx 已纳入。不需要 typescript-eslint：@babel/eslint-parser 读项目 .babelrc，
+    // 而 .babelrc 的 development/production 两个 env 都挂了 @babel/preset-typescript，
+    // preset-typescript 按文件扩展名自动启用 TS 语法，所以 .ts/.tsx 能被正常解析。
+    // （eslint 进程 NODE_ENV 为空时 babel 的 envName 默认就是 "development"。）
+    // 注意这里只恢复了「语法层」的 lint 覆盖，拿不到类型感知规则
+    //（no-unsafe-*、no-floating-promises 等）—— 那些需要 typescript-eslint + 类型信息。
+    // 类型层的检查由 tsc 那条独立管线负责，不指望 eslint。
+    files: ['**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx'],
     plugins: {
       react,
       'react-hooks': reactHooks,

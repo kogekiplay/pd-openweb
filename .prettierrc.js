@@ -41,5 +41,12 @@ module.exports = {
   // importOrderSeparation: true,
   importOrderSortSpecifiers: true,
   importOrderCaseInsensitive: true,
-  importOrderParserPlugins: ['classProperties', 'decorators-legacy', 'jsx'],
+  // 'typescript' 是 .ts/.tsx 迁移的硬前提：@trivago/prettier-plugin-sort-imports 用
+  // @babel/parser 重新解析整个文件来排序 import，插件列表里没有 'typescript' 时，
+  // 任何带类型注解的文件都会 SyntaxError 并让 prettier（以及 eslint 的 prettier/prettier）
+  // 整个文件失败。实测：加之前 `prettier --check src/api/homeApp.ts` 报
+  // `SyntaxError: Unexpected token, expected "," (25:27)`，加之后通过。
+  // 与 'jsx' 并存是安全的：@babel/parser 允许同时启用，此时 `<T>expr` 按 JSX 解析，
+  // 正是 .jsx/.tsx 需要的行为。
+  importOrderParserPlugins: ['classProperties', 'decorators-legacy', 'jsx', 'typescript'],
 };
