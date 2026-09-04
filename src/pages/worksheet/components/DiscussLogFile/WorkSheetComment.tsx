@@ -40,7 +40,7 @@ export default class WorkSheetComment extends React.Component {
     }
 
     if (worksheetId && (!appId || !appSectionId)) {
-      homeAppAjax.getAppSimpleInfo({ worksheetId }).then(data => {
+      homeAppAjax.getAppSimpleInfo({ workSheetId: worksheetId }).then(data => {
         this.setState({ worksheetInfo: data });
       });
     }

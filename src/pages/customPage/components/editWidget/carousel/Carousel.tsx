@@ -207,7 +207,7 @@ export default function CarouselPreview(props) {
     if (worksheetId && viewId && image) {
       homeAppApi
         .getAttachementImages({
-          worksheetId,
+          workSheetId: worksheetId,
           viewId,
           attachementControlId: image,
           imageLimitCount: count,

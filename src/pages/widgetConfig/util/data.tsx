@@ -475,7 +475,7 @@ export function navigateToApp(worksheetId) {
 }
 
 export const navigateToView = (worksheetId, viewId) => {
-  homeAppApi.getAppSimpleInfo({ worksheetId }).then(data => {
+  homeAppApi.getAppSimpleInfo({ workSheetId: worksheetId }).then(data => {
     const { appId, appSectionId } = data;
     window.open(pathCompletion(`/app/${appId}/${appSectionId}/${worksheetId}/${viewId}`));
   });
