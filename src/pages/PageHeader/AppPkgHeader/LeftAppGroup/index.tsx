@@ -151,7 +151,7 @@ const AppSectionItem = props => {
           <span className="text">{_l('重命名')}</span>
         </MenuItem>
         <hr className="splitter" />
-        <div class="textTertiary pLeft12 pTop7 pBottom3">{_l('新建')}</div>
+        <div className="textTertiary pLeft12 pTop7 pBottom3">{_l('新建')}</div>
         <MenuItem
           data-event="emptyCreate"
           onClick={() => {
@@ -182,7 +182,7 @@ const AppSectionItem = props => {
         >
           <span className="text">{_l('自定义页面')}</span>
         </MenuItem>
-        {(appPkg.workflowAgentFeatureType === '1') & !md.global.SysSettings.hideAIBasicFun && (
+        {appPkg.workflowAgentFeatureType === '1' && !md.global.SysSettings.hideAIBasicFun && (
           <MenuItem
             data-event="chatbot"
             icon={<Icon icon="AI_Agent" className="Font18" />}
