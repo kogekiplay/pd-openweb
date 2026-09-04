@@ -290,7 +290,8 @@ export default class SourceDest extends Component {
         return;
       }
 
-      this.getSheetListByAppId(appId);
+      // getSheetListByAppId 自己从 this.state.node.nodeConfig.config 读 appId，不接收参数
+      this.getSheetListByAppId();
     }
   };
   onChangeConfig = (options, cb, nextCb) => {
@@ -449,7 +450,7 @@ export default class SourceDest extends Component {
         },
       );
     } else {
-      let dataConfig = {
+      let dataConfig: { scheduleConfig: null; scheduleConfigId: string; appSectionId?: string } = {
         scheduleConfig: null,
         scheduleConfigId: '',
       };
@@ -460,6 +461,7 @@ export default class SourceDest extends Component {
           const { childSections = [] } = this.state;
           const section = childSections.find(o => o.workSheetInfo.map(a => a.workSheetId).includes(value));
           dataConfig = {
+            ...dataConfig,
             appSectionId: section
               ? section.appSectionId
               : (sections.find(o => o.workSheetInfo.map(a => a.workSheetId).includes(value)) || {}).appSectionId,

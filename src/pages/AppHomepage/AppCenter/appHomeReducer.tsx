@@ -187,23 +187,26 @@ export function reducer(state, action = {}) {
       }
 
       newApp = { ...newApp, id: action.newAppId, name: _l('%0-复制', newApp.name), isNew: true, isMarked: false };
-      return updateAppOfState({
+      // 原来外面套了一层 updateAppOfState(...)，但只传了 state 一个参数：
+      // appId === undefined 永远匹配不到任何 app，update 取默认的恒等函数，
+      // 整个调用等价于原样返回，只是白白把 7 个列表 map 出新数组引用。
+      return {
         ...state,
         ...(state.activeGroup && action.groupId === state.activeGroup.id
           ? { activeGroupApps: state.activeGroupApps.concat(newApp) }
           : {}),
         ...(location.pathname.includes('/app/my/owned') ? { ownedApps: state.ownedApps.concat(newApp) } : {}),
         apps: state.apps.concat(newApp),
-      });
+      };
     case 'ADD_APP':
-      return updateAppOfState({
+      return {
         ...state,
         ...(state.activeGroup && action.groupId === state.activeGroup.id
           ? { activeGroupApps: state.activeGroupApps.concat(action.app) }
           : {}),
         ...(location.pathname.includes('/app/my/owned') ? { ownedApps: state.ownedApps.concat(action.app) } : {}),
         apps: state.apps.concat(action.app),
-      });
+      };
     case 'UPDATE_GROUP_OF_APP':
       newState = updateAppOfState(newState, action.appId, app => ({
         ...app,
@@ -259,11 +262,13 @@ export function reducer(state, action = {}) {
         }),
       );
     case 'DELETE_GROUP':
-      return updateGroupOfState({
+      // 同 COPY_APP / ADD_APP：原来的 updateGroupOfState(...) 只传了 state，
+      // groupId === undefined 匹配不到任何分组，是个空转的包装调用。
+      return {
         ...state,
         markedGroup: state.markedGroup.filter(g => g.id !== action.groupId),
         groups: state.groups.filter(g => g.id !== action.groupId),
-      });
+      };
     case 'UPDATE_VALUES':
       return { ...state, ...action.values };
     case 'RESET_STATE':

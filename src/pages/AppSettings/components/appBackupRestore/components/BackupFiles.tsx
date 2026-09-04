@@ -462,7 +462,7 @@ export default function BackupFiles(props) {
                             sourceType !== 60 && (
                               <Dropdown
                                 trigger={['click']}
-                                placement={['bottomRight']}
+                                placement="bottomRight"
                                 overlayClassName="moreActionDropdown"
                                 overlay={
                                   <Menu>
@@ -498,7 +498,7 @@ export default function BackupFiles(props) {
                             )}
                           <Dropdown
                             trigger={['click']}
-                            placement={['bottomRight']}
+                            placement="bottomRight"
                             overlayClassName="moreActionDropdown"
                             overlay={
                               <Menu>
