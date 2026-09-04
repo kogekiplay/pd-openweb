@@ -25,6 +25,7 @@ const WorkflowHistory = props => {
         processId={props.data.processId}
         instanceId={props.instanceId}
         processName={props.data.processName}
+        currentWork={props.currentWork}
         isApproval={props.data.isApproval}
         hideStep={props.hideStep}
       />
