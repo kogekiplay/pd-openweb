@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { fork } = require('child_process');
+const { fork, spawnSync } = require('child_process');
 
 const chalk = require('chalk');
 const { merge } = require('webpack-merge');
@@ -284,10 +284,44 @@ async function devMain() {
   await forkWebpackWatch();
 }
 
+// 类型门禁：release 的前置闸门。
+// 必须放在这里而不是只放 hook 里 —— 本仓无 CI，git hook 又是本地的、可 --no-verify
+// 绕过、且不随 clone 分发；release 是产物真正出厂的唯一必经点。
+// 注意这道闸门只看 tsc，与 webpack 能否构建成功完全无关：
+// CI/webpack.config.js:94 走 babel-loader（纯类型擦除），没有 ts-loader /
+// fork-ts-checker，所以「构建绿」从来不代表「类型干净」。
+// 设 SKIP_TYPECHECK=1 可临时跳过（会打醒目告警，供紧急发版用）。
+function typecheckGate() {
+  if (process.env.SKIP_TYPECHECK === '1') {
+    console.log(chalk.bgRed.white(' 警告 ') + chalk.red(' SKIP_TYPECHECK=1：已跳过类型门禁，产物未经类型校验 '));
+    return;
+  }
+
+  const steps = [
+    ['语法门禁（零容忍）', [resolvePath('scripts/typecheck/tsc-syntax-gate.js')]],
+    ['语义差分门禁', [resolvePath('scripts/typecheck/tsc-gate.js'), '--no-incremental']],
+  ];
+
+  for (const [label, args] of steps) {
+    console.log(chalk.cyan(`typecheck: ${label} ...`));
+    const r = spawnSync(process.execPath, args, {
+      cwd: ROOT_PATH,
+      stdio: 'inherit',
+      env: { ...process.env, NODE_OPTIONS: '--max_old_space_size=8192' },
+    });
+    if (r.status !== 0) {
+      console.log(chalk.red(`typecheck 失败（${label}），release 中止。`));
+      process.exit(r.status || 1);
+    }
+  }
+  console.log(chalk.green('typecheck: 通过'));
+}
+
 // 完整编译 js/css 资源，输出到 build/dist。
 async function release() {
   const startTime = process.hrtime.bigint();
 
+  typecheckGate();
   cleanBuild();
   await buildWebpack();
   await buildSingleEntryExtractModulesWebpack();
@@ -397,6 +431,7 @@ const commandMap = {
   mingoEntryWidgetWebpack: buildMingoEntryWidgetWebpack,
   publish,
   release,
+  typecheck: typecheckGate,
   server: startServer,
   'server:production': startProductionServer,
   singleEntryExtractModulesWebpack: buildSingleEntryExtractModulesWebpack,

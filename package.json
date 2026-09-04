@@ -9,7 +9,13 @@
     "lang:sync-po": "node ./scripts/lang.js sync-po",
     "lang:build-js": "node ./scripts/lang.js build-js",
     "lang:clean-po": "node ./scripts/lang.js clean-po",
-    "lang:push-key": "node ./scripts/lang.js push-key"
+    "lang:push-key": "node ./scripts/lang.js push-key",
+    "typecheck": "cross-env NODE_OPTIONS=--max_old_space_size=8192 node scripts/typecheck/tsc-syntax-gate.js && cross-env NODE_OPTIONS=--max_old_space_size=8192 node scripts/typecheck/tsc-gate.js --no-incremental",
+    "typecheck:syntax": "cross-env NODE_OPTIONS=--max_old_space_size=8192 node scripts/typecheck/tsc-syntax-gate.js",
+    "typecheck:fast": "cross-env NODE_OPTIONS=--max_old_space_size=8192 node scripts/typecheck/tsc-gate.js",
+    "typecheck:stats": "cross-env NODE_OPTIONS=--max_old_space_size=8192 node scripts/typecheck/tsc-gate.js --stats --no-incremental",
+    "typecheck:baseline": "cross-env NODE_OPTIONS=--max_old_space_size=8192 node scripts/typecheck/tsc-syntax-gate.js && cross-env NODE_OPTIONS=--max_old_space_size=8192 node scripts/typecheck/tsc-gate.js --write-baseline --no-incremental",
+    "hooks:install": "git config core.hooksPath .githooks && echo \"core.hooksPath -> .githooks 已配置\""
   },
   "dependencies": {
     "@ant-design/colors": "^6.0.0",

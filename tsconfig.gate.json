@@ -1,0 +1,24 @@
+// 门禁专用档。与 tsconfig.json（测量用宽松基线）的区别只有两点：
+//
+// 1. checkJs: true —— 这是门禁有意义的前提。收益兑现的硬前提 (b) 是
+//    「调用点进入被检查集合」，而调用点绝大多数还是 .js。checkJs:false 时
+//    全仓只有 159 条诊断（且全在 src/api 的 .ts 里），门禁形同虚设。
+//    实测：checkJs:false -> 159 条；checkJs:true -> 21373 条。
+//
+// 2. incremental + tsBuildInfoFile —— noEmit 下 tsc 不会自己选 buildinfo 路径，
+//    必须显式给。放在 node_modules/.cache 下，天然被 .gitignore 覆盖。
+//
+// 注意 exclude 里的 src/library 是【拦不住】的：exclude 只裁剪 include 的 glob
+// 展开结果，不影响被 import 拖进 program 的文件。实测 src/pages/Admin/components/
+// UploadFile/index.js:2 import 了 src/library/plupload/createUploader，
+// src/pages/AppHomepage/AppLib/index.jsx:56 动态 import 了 applibrary_v2，
+// src/components/Agent/anonymous.js:53 动态 import 了 library/jquery/global，
+// 于是 3 个压缩产物照样贡献 1281 条诊断。只能在门禁脚本里按路径后过滤。
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "checkJs": true,
+    "incremental": true,
+    "tsBuildInfoFile": "node_modules/.cache/tsc-gate/gate.tsbuildinfo"
+  }
+}
