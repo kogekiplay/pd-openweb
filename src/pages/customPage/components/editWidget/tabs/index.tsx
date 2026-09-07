@@ -1,7 +1,7 @@
 import React, { Fragment, lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import GridLayout from 'react-grid-layout';
+import GridLayout from 'react-grid-layout/legacy';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -385,11 +385,11 @@ export const Tabs = props => {
               elementRef.current.classList.add('cardNoSelect');
             }}
             onResize={handleLayoutChange}
-            onResizeStop={(layout, oldItem = {}) => {
+            onResizeStop={(layout, oldItem) => {
               elementRef.current.classList.remove('cardNoSelect');
 
               const index = _.findIndex(layout, {
-                i: oldItem.i,
+                i: oldItem?.i,
               });
 
               const getData = _.get(displayRefs[index], ['getData']);
