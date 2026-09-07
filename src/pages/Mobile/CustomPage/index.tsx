@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import GridLayout from 'react-grid-layout';
+import GridLayout from 'react-grid-layout/legacy';
 import 'react-grid-layout/css/styles.css';
 import { SpinLoading } from 'antd-mobile';
 import cx from 'classnames';

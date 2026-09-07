@@ -1,7 +1,7 @@
 import React, { Fragment, useLayoutEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import GridLayout from 'react-grid-layout';
+import GridLayout from 'react-grid-layout/legacy';
 import 'react-grid-layout/css/styles.css';
 import cx from 'classnames';
 import { get, max, throttle } from 'lodash';
@@ -251,9 +251,9 @@ function WidgetContent(props) {
         onResizeStart={() => {
           document.body.classList.add('pageNoSelect');
         }}
-        onResizeStop={(layout, oldItem = {}) => {
+        onResizeStop={(layout, oldItem) => {
           document.body.classList.remove('pageNoSelect');
-          const index = _.findIndex(layout, { i: oldItem.i });
+          const index = _.findIndex(layout, { i: oldItem?.i });
           const getData = _.get(displayRefs[index], ['getData']);
 
           if (getData && typeof getData === 'function') {
