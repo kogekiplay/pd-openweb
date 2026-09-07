@@ -16,8 +16,27 @@ staticfiles/pdf/**          linguist-vendored
 staticfiles/tailwindcss.js  linguist-vendored
 src/library/**              linguist-vendored
 
+# 混在 src 里的第三方库（都已核对文件头/来源）
+# FullCalendar v2.1.0 (c) 2013 Adam Shaw —— 本体 + 46 个语言包
+src/pages/calendar/modules/calendarControl/**   linguist-vendored
+# CodeMirror 的 mode 与 addon（closebrackets / javascript / matchbrackets / show-hint）
+src/pages/widgetConfig/widgetSetting/components/FunctionEditorDialog/Func/lib/**  linguist-vendored
+src/components/Mingo/ChatBot/components/Recorder/lib.js  linguist-vendored
+
+# iconfont.cn 生成的字体样式（Project id 2032949）
+src/common/mdcss/iconfont/**                    linguist-generated
+src/ming-ui/components/IconTabs/iconfont/**     linguist-generated
+
 # scripts/lang.js 生成的翻译包
 locale/*/mdTranslation.js   linguist-generated
 locale/*/mdTranslation.po   linguist-generated
 
-# 注意：staticfiles/staticLanguages.js 是第一方代码（html 直接引用），刻意不排除。
+# ── 刻意【不】排除的，以及为什么 ──────────────────────────────────────────
+# scripts/**、CI/**            我们自己的 Node 构建工具链，由 node 直接执行、没有编译步骤。
+#                              改成 .ts 会让「构建系统自己得先被编译才能构建」，
+#                              凭空增加 bootstrap 复杂度且零收益。它们就该是 JS。
+# src/html-templates/**        webpack 的入口模板，靠 cheerio 扫 <script src="webpack[type]?…">
+#                              生成 entry。HTML 是它的本质，不存在「改成 ts」。
+# staticfiles/staticLanguages.js  第一方代码，html 直接引用。
+# DevelopWithAI/examples/**    我们自己维护的示例数据。
+# src/pages/integration/svgIcon.js  在 package.json 的 sideEffects 白名单里，需保持可辨识。
