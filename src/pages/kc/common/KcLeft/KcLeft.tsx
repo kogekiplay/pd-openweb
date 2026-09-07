@@ -207,7 +207,11 @@ class KcLeft extends Component<any, any> {
       if (filterType === ROOT_FILTER_TYPE.ALL) {
         service
           .getRoots({ accountId: md.global.Account.accountId })
-          .then(roots => this.setState({ filterType, roots: Immutable.Set(roots), loading: false }));
+          // 这里必须是 List：state.roots 的其它赋值点（L67、L92）都是 List，而后续
+          // handleAddNewRoot / handleRemoveRoot / performUpdateItem 用的是 unshift 和
+          // findIndex —— Set 上这两个方法都不存在，点过「全部共享文件夹」再新建/删除/
+          // 重命名就会抛 TypeError。
+          .then(roots => this.setState({ filterType, roots: Immutable.List(roots), loading: false }));
       } else {
         this.setState({ filterType, loading: false });
       }
@@ -272,11 +276,13 @@ class KcLeft extends Component<any, any> {
       root => {
         if (!root) {
           const roots = this.state.roots;
+          // findIndex 找不到会返回 -1，而 List.remove(-1) 会删掉【最后一条】而不是什么都不做。
+          const index = roots.findIndex(r => r.id === rootId);
 
           if (this._isMounted) {
             this.setState(
               {
-                roots: roots.remove(roots.findIndex(r => r.id === rootId)),
+                roots: index >= 0 ? roots.remove(index) : roots,
               },
               this.returnAllFolder,
             );
@@ -301,9 +307,11 @@ class KcLeft extends Component<any, any> {
     this.setState({ settingsOption: null });
     removeRoot(item, isCreator, isPermanent, rootId => {
       const roots = this.state.roots;
+      // 同上：findIndex 返回 -1 时 List.remove(-1) 会误删最后一条。
+      const index = roots.findIndex(root => root.id === rootId);
       this.setState(
         {
-          roots: roots.remove(roots.findIndex(root => root.id === rootId)),
+          roots: index >= 0 ? roots.remove(index) : roots,
         },
         this.returnAllFolder,
       );
@@ -364,11 +372,13 @@ class KcLeft extends Component<any, any> {
   /** 对 rootList 的修改应用到页面上 */
   performUpdateItem = root => {
     const roots = this.state.roots;
+    // 同上：findIndex 返回 -1 时 List.update(-1) 会误改最后一条。
+    const index = roots.findIndex(i => i.id === root.id);
+
+    if (index < 0) return;
+
     this.setState({
-      roots: roots.update(
-        roots.findIndex(i => i.id === root.id),
-        () => _.clone(root),
-      ),
+      roots: roots.update(index, () => _.clone(root)),
     });
   };
 
