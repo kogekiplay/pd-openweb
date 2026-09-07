@@ -42,9 +42,9 @@ class ContractCom extends Component<any, any> {
     upgradeController
       .getOrderContractInfo({
         projectId: projectId,
-        versionId: versionId && JSON.parse(versionId),
-        userNum: userCount && JSON.parse(userCount),
-        years: selectYear && JSON.parse(selectYear),
+        versionId: versionId && JSON.parse(String(versionId)),
+        userNum: userCount && JSON.parse(String(userCount)),
+        years: selectYear && JSON.parse(String(selectYear)),
         unLimited: false,
       })
       .then(({ user = {}, order = {} }) => {

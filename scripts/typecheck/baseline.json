@@ -3,15 +3,15 @@
   "key": "code",
   "tsVersion": "5.9.3",
   "tsconfig": "tsconfig.gate.json",
-  "generatedAt": "2026-09-07T01:40:04.324Z",
-  "rawCount": 24395,
+  "generatedAt": "2026-09-07T05:59:11.299Z",
+  "rawCount": 24393,
   "droppedNoise": {
     "library": 1284,
     "probe": 0,
     "commentTS1xxx": 0,
     "commentOther": 0
   },
-  "keptCount": 23111,
+  "keptCount": 23109,
   "uniqueKeys": 5164,
   "entries": {
     "src/api/account.ts|TS2339": 4,
@@ -507,7 +507,7 @@
     "src/components/kc/folderSelectDialog/folderSelectDialog.tsx|TS2345": 1,
     "src/components/kc/saveToKnowledge/saveToKnowledge.ts|TS2794": 2,
     "src/components/pay/contract/index.tsx|TS2322": 7,
-    "src/components/pay/contract/index.tsx|TS2345": 3,
+    "src/components/pay/contract/index.tsx|TS2345": 1,
     "src/components/pay/payHeader/index.tsx|TS2339": 1,
     "src/components/pay/paySuccess/index.tsx|TS2339": 8,
     "src/components/pay/paySuccess/index.tsx|TS2554": 1,
