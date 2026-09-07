@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import GridLayout from 'react-grid-layout/legacy';
 import 'react-grid-layout/css/styles.css';
+import GridLayout from 'react-grid-layout/legacy';
 import { SpinLoading } from 'antd-mobile';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -11,6 +11,7 @@ import customApi from 'statistics/api/custom';
 import DocumentTitle from 'mobile/components/DocumentTitle';
 import workflowPushSoket from 'mobile/components/socket/workflowPushSoket';
 import { getEmbedValue } from 'src/components/Form/core/formUtils/helper';
+import 'src/pages/customPage/reactGridLayoutOverrides.css';
 import {
   CUSTOM_PAGE_IFRAME_ALLOW,
   getDefaultLayout,
