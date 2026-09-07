@@ -211,7 +211,6 @@ export default class DingSyncCourse extends React.Component<any, any> {
       html2canvas(this.appIconForDown, {
         backgroundColor: null,
         allowTaint: true,
-        tainttest: true,
         scale: scaleBy,
         logging: false,
         width: width,

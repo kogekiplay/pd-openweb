@@ -66,10 +66,9 @@ class Header extends React.Component<any, any> {
         canvas.height = height * scaleBy;
         context.scale(scaleBy, scaleBy);
 
-        let promise = html2canvas(ele, {
+        let promise = html2canvas(ele as HTMLElement, {
           backgroundColor: null,
           allowTaint: true,
-          tainttest: false,
           scale: scaleBy,
           logging: false,
           width: width,

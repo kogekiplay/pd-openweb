@@ -1,3 +1,8 @@
+// jsencrypt 3.5.4 起 main 指向 bin/jsencrypt.min.js，该压缩版在模块加载时
+// 就引用浏览器全局 self。浏览器里没问题（webpack 走 module 字段 lib/index.js），
+// 但 Node 下的 spec 会 ReferenceError。补一个最小垫片。
+if (typeof globalThis.self === 'undefined') globalThis.self = globalThis;
+
 /**
  * Shared harness for the *.spec.js behaviour tests.
  *

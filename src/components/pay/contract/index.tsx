@@ -82,7 +82,6 @@ class ContractCom extends Component<any, any> {
       html2canvas($wrap, {
         backgroundColor: 'var(--color-background-primary)',
         allowTaint: true,
-        tainttest: false,
         scale: scaleBy,
         logging: false,
         width: width,
