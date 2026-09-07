@@ -95,6 +95,11 @@ export default class SearchInput extends Component<any, any> {
               }}
               placeholder={placeholder || _l('搜索')}
               type={browserIsMobile() ? 'search' : 'text'}
+              // name 给浏览器认字段（缺了会报 "A form field element should have an id or
+              // name attribute"）；autoComplete="off" 必须同时加——此前没有 name，
+              // 浏览器从没存过历史值，只补 name 会开始弹自动填充下拉框盖住搜索结果。
+              name="worksheetSearch"
+              autoComplete="off"
               value={value}
               style={isFocus && inputWidth ? { width: inputWidth } : {}}
               onKeyUp={e => {

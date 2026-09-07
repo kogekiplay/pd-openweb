@@ -109,6 +109,10 @@ export default class SearchInput extends Component<any, any> {
             }}
             placeholder={placeholder || _l('搜索')}
             type="search"
+            // 同 worksheet/components/SearchInput：name 消掉 DevTools 的 form field 提示，
+            // autoComplete="off" 保证不因为新增 name 而开始弹自动填充下拉框。
+            name="childTableSearch"
+            autoComplete="off"
             value={value}
             style={isFocus && inputWidth ? { width: inputWidth } : {}}
             onKeyUp={e => {
