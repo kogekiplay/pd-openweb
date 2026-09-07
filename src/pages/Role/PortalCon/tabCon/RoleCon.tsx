@@ -9,7 +9,7 @@ import RoleTem from 'src/pages/Role/component/RolePermissions';
 import CopyRoleDialog from 'src/pages/Role/PortalCon/components/CopyRoleDialog';
 import * as actions from 'src/pages/Role/PortalCon/redux/actions';
 
-class Con extends React.Component {
+class Con extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

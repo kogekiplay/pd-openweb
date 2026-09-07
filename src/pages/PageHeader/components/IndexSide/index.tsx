@@ -8,7 +8,7 @@ import { navigateTo } from 'src/router/navigateTo';
 import Content from './Content';
 import './index.less';
 
-let IndexSide = class IndexSide extends Component {
+let IndexSide = class IndexSide extends Component<any, any> {
   static propTypes = {
     onClose: func,
     posX: number,

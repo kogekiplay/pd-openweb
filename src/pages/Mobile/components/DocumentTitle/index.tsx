@@ -49,7 +49,7 @@ export function setDingTalkNavigationTitle(title) {
   updateTitle(0);
 }
 
-export default class DocumentTitle extends Component {
+export default class DocumentTitle extends Component<any, any> {
   static propTypes = {
     title: string,
   };

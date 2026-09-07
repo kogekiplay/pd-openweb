@@ -16,7 +16,7 @@ const LINK_TYPES = [
 const totalItem = [{ id: '', name: _l('全部'), iconName: 'icon-apps' }];
 const pageSize = 100;
 
-class SelectIntegrationApi extends Component {
+class SelectIntegrationApi extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ClickAway from 'ming-ui/components/ClickAway';
 
 const ClickAwayable = ClickAway;
-export default class ChecklistOperator extends Component {
+export default class ChecklistOperator extends Component<any, any> {
   static propTypes = {
     toggleList: PropTypes.func,
     showAddBtn: PropTypes.bool,

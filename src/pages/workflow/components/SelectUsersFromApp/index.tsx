@@ -5,7 +5,7 @@ import ajaxRequest from 'src/api/appManagement';
 import { getTranslateInfo } from 'src/utils/app';
 import './index.less';
 
-export default class SelectUsersFromApp extends Component {
+export default class SelectUsersFromApp extends Component<any, any> {
   static propTypes = {
     appId: PropTypes.string,
     companyId: PropTypes.string.isRequired,

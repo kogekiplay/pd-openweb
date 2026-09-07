@@ -35,7 +35,7 @@ const Wrap = styled.div`
   }
 `;
 
-class DoubleConfirmDialog extends React.Component {
+class DoubleConfirmDialog extends React.Component<any, any> {
   constructor(props) {
     super(props);
     const { info = {} } = props;

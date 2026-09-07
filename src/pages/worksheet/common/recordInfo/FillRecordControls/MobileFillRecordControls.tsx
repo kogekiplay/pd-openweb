@@ -44,7 +44,7 @@ const LoadMask = styled.div`
   background: rgba(255, 255, 255, 0.8);
   z-index: 2;
 `;
-let FillRecordControls = class FillRecordControls extends React.Component {
+let FillRecordControls = class FillRecordControls extends React.Component<any, any> {
   constructor(props) {
     super(props);
     const { projectId } = props;

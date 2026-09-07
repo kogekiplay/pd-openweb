@@ -107,7 +107,7 @@ const Wrap = styled.div`
     }
   }
 `;
-class Con extends React.Component {
+class Con extends React.Component<any, any> {
   constructor(props) {
     super(props);
     const {

@@ -9,7 +9,7 @@ import SettingForm from './SettingForm';
 import { Wrap } from './style';
 import { fillTranslateInfo } from './util';
 
-export default class RoleSet extends PureComponent {
+export default class RoleSet extends PureComponent<any, any> {
   static propTypes = {
     appId: PropTypes.string,
     roleId: PropTypes.string,

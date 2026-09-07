@@ -44,7 +44,7 @@ function getShowTypeData(control) {
   }
 }
 
-class ColumnHead extends Component {
+class ColumnHead extends Component<any, any> {
   static contextType = SheetContext;
   static propTypes = {
     rowIsSelected: PropTypes.bool,

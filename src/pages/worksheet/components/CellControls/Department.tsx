@@ -12,7 +12,7 @@ import EditableCellCon from '../EditableCellCon';
 const ClickAwayable = ClickAway;
 
 // enumDefault 单选 0 多选 1
-export default class Text extends React.Component {
+export default class Text extends React.Component<any, any> {
   static propTypes = {
     className: PropTypes.string,
     singleLine: PropTypes.bool,

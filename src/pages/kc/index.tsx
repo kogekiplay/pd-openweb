@@ -5,7 +5,7 @@ import KcLeft from './common/KcLeft';
 import KcMain from './common/KcMain';
 import './Kc.less';
 
-let KcEntrypoint = class KcEntrypoint extends Component {
+let KcEntrypoint = class KcEntrypoint extends Component<any, any> {
   componentDidMount() {
     $('html').addClass('AppKc');
   }

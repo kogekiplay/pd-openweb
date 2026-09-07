@@ -11,7 +11,7 @@ import { canDirectSubmitApproveAction } from 'src/pages/workflow/components/Exec
 import OtherAction from '../OtherAction';
 import './index.less';
 
-export default class Footer extends Component {
+export default class Footer extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

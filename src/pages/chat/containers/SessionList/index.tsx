@@ -18,7 +18,7 @@ import * as socket from '../../utils/socket';
 import './index.less';
 
 const ClickAwayable = ClickAway;
-class ContextMenu extends Component {
+class ContextMenu extends Component<any, any> {
   constructor(props) {
     super(props);
   }
@@ -87,7 +87,7 @@ const getOffsetData = function (rootW, rootH, nativeEvent) {
   return offset;
 };
 
-class SessionList extends Component {
+class SessionList extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

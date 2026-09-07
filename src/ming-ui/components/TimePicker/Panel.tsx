@@ -19,7 +19,7 @@ const boolToNumber = bool => {
   return 0;
 };
 
-class Panel extends Component {
+class Panel extends Component<any, any> {
   static defaultProps = {
     onChange: () => {},
   };

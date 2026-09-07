@@ -6,7 +6,7 @@ import InviteController from 'src/api/invitation';
 import DialogSettingInviteRules from 'src/pages/Admin/user/membersDepartments/structure/components/dialogSettingInviteRules';
 import inviteFailedDialog from './InviteFailedDialog';
 
-export default class AddressBookInvite extends Component {
+export default class AddressBookInvite extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -5,7 +5,7 @@ import RoleController from 'src/api/role';
 import PaginationWrap from '../../../components/PaginationWrap';
 import './style.less';
 
-export default class ApplyForRole extends React.Component {
+export default class ApplyForRole extends React.Component<any, any> {
   constructor() {
     super();
     this.state = {

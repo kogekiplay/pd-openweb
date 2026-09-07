@@ -10,7 +10,7 @@ import { dateConvertToUserZone } from 'src/utils/project';
 import { covertTime, FLOW_NODE_TYPE_STATUS, INSTANCELOG_STATUS, TABS } from '../config';
 import './index.less';
 
-export default class Card extends Component {
+export default class Card extends Component<any, any> {
   constructor(props) {
     super(props);
   }

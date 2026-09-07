@@ -7,7 +7,7 @@ import pc from 'src/pages/appInstallSetting/images/pc.png';
 import code from './images/code.png';
 import './index.less';
 
-export default class AppInstallSetting extends Component {
+export default class AppInstallSetting extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

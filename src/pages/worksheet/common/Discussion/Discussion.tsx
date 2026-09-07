@@ -16,7 +16,7 @@ const clickAwayExceptions = [
   '.discussionFilterCon',
 ];
 
-export default class Discussion extends Component {
+export default class Discussion extends Component<any, any> {
   constructor(props) {
     super(props);
   }

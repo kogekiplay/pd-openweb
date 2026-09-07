@@ -186,7 +186,7 @@ const SINGLETON_TOOL_TYPES = DATA_PROCESSING_TOOL_TYPES.concat([7, 8, 9]);
 const NO_CONFIRM_TOOL_TYPES = [3, 4, 9, 10];
 const EDITABLE_TOOL_TYPES = [5, 6, 7, 8, 9];
 
-export default class Agent extends Component {
+export default class Agent extends Component<any, any> {
   constructor(props) {
     super(props);
 

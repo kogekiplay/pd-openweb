@@ -22,7 +22,7 @@ const LoadableDialogImportExcelCreate = lazy(() => import('src/pages/worksheet/c
 const LoadableExternalLinkDialog = lazy(() => import('./ExternalLinkDialog'));
 const LoadableImportApp = lazy(() => import('src/pages/Admin/app/appManagement/modules/ImportApp.jsx'));
 
-export default class AddAppItem extends Component {
+export default class AddAppItem extends Component<any, any> {
   static propTypes = {
     createAppFromEmpty: func,
     projectId: string,

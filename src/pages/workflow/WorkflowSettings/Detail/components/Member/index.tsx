@@ -9,7 +9,7 @@ import { handleGlobalVariableName } from '../../../utils';
 import Tag from '../Tag';
 import './index.less';
 
-export default class Member extends Component {
+export default class Member extends Component<any, any> {
   /**
    * 删除成员
    */

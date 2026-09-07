@@ -4,7 +4,7 @@ import { LoadDiv, ScrollView } from 'ming-ui';
 import flowNode from '../../../api/flowNode';
 import { DetailFooter, DetailHeader, VectorKnowledge } from '../components';
 
-export default class Vector extends Component {
+export default class Vector extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -9,7 +9,7 @@ import { pathCompletion } from 'src/utils/common';
 import { getRgbaByColor } from 'src/utils/controlCommon';
 import { DetailFooter, DetailHeader, FindResult, ProcessParameters, SelectAuthAccount } from '../components';
 
-export default class Api extends Component {
+export default class Api extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

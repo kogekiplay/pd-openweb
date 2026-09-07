@@ -10,7 +10,7 @@ import { handleRecordClick } from 'src/utils/record';
 import RecordBlock from './RecordBlock';
 
 const LoadableRecordInfo = lazy(() => import('worksheet/views/GunterView/components/RecordInfo'));
-let RecordWrapper = class RecordWrapper extends Component {
+let RecordWrapper = class RecordWrapper extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -17,7 +17,7 @@ import {
 import { getIcons, getStartNodeColor } from '../../utils';
 import { CreateNode, MembersName, NodeOperate, WhiteNode, WorksheetMessage } from '../components';
 
-export default class Start extends Component {
+export default class Start extends Component<any, any> {
   constructor(props) {
     super(props);
   }

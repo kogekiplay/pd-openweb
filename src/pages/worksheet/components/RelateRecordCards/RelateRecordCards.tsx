@@ -158,7 +158,7 @@ export function getCardColNum({ width, isMobile, enumDefault }) {
   return colNum;
 }
 
-class RelateRecordCards extends Component {
+class RelateRecordCards extends Component<any, any> {
   static contextType = ChildTableContext;
   static propTypes = {
     editable: PropTypes.bool,

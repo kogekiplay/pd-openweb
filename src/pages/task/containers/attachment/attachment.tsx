@@ -24,7 +24,7 @@ const attachmentSettings = {
   ajaxPost: false,
 };
 
-class Attachment extends Component {
+class Attachment extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

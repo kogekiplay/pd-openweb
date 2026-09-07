@@ -30,7 +30,7 @@ const highlightMessageText = (keyword, message) => {
   return message;
 };
 
-export default class Messages extends Component {
+export default class Messages extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

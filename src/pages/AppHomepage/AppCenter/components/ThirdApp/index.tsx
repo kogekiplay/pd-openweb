@@ -7,7 +7,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import ThirdAppGroup from './ThirdAppGroup';
 import './index.less';
 
-export default class ThirdPartyApp extends Component {
+export default class ThirdPartyApp extends Component<any, any> {
   static propTypes = {
     onCancel: func,
   };

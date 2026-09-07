@@ -9,7 +9,7 @@ import config from '../../../config/config';
 import { taskFoldStatus, updateControlValue, updateTaskControlFiles } from '../../../redux/actions';
 import './taskControl.less';
 
-class TaskControl extends Component {
+class TaskControl extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -8,7 +8,7 @@ import PaginationWrap from 'src/pages/Admin/components/PaginationWrap';
 import { INTEGRATION_INFO } from '../../config';
 import './index.less';
 
-export default class SyncDialog extends Component {
+export default class SyncDialog extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

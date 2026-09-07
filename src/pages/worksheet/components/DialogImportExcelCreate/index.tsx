@@ -27,7 +27,7 @@ import DialogCreateApp from './DialogCreateApp';
 import DialogUpload from './DialogUpload';
 import SetImportExcelCreateWorksheetOrApp from './SetImportExcelCreateWorksheetOrApp';
 
-class DialogImportExcelCreate extends Component {
+class DialogImportExcelCreate extends Component<any, any> {
   static propTypes = {
     createType: PropTypes.string,
     appId: PropTypes.string,

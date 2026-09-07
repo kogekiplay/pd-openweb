@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import DocumentTitle from 'react-document-title';
 import './index.less';
 
-export default class FullScreenCurtain extends Component {
+export default class FullScreenCurtain extends Component<any, any> {
   constructor(props) {
     super(props);
     this.container = document.createElement('div');

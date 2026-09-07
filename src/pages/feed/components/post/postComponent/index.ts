@@ -2,7 +2,7 @@
 import PropTypes from 'prop-types';
 import getSpecificComponent from './factory';
 
-class PostComponent extends React.Component {
+class PostComponent extends React.Component<any, any> {
   static propTypes = {
     postItem: PropTypes.object,
     isReshare: PropTypes.bool,

@@ -60,7 +60,7 @@ const Wrap = styled.div`
     }
   }
 `;
-class AppointDialog extends React.Component {
+class AppointDialog extends React.Component<any, any> {
   state = {
     showAppointDialog: this.props.showAppointDialog,
     writeObject: this.props.writeObject || 1,

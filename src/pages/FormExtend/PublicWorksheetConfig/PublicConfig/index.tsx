@@ -52,7 +52,7 @@ const DEFAULT_TEXT = {
   systemControlId: _l('系统'),
   extendSourceId: _l('扩展值'),
 };
-class PublicConfig extends React.Component {
+class PublicConfig extends React.Component<any, any> {
   static propTypes = {
     originalControls: PropTypes.arrayOf(PropTypes.shape({})),
     worksheetSettings: PropTypes.shape({}),

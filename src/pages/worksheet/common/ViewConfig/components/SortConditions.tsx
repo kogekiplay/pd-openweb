@@ -145,7 +145,7 @@ const Item = props => {
   );
 };
 
-export default class SortConditions extends React.Component {
+export default class SortConditions extends React.Component<any, any> {
   static propTypes = {
     showSystemControls: PropTypes.bool,
     sortConditions: PropTypes.arrayOf(PropTypes.shape({})),

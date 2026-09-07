@@ -10,7 +10,7 @@ const TYPE_TO_TITLE = {
   externalApps: _l('外部协作'),
 };
 
-export default class SideAppGroup extends Component {
+export default class SideAppGroup extends Component<any, any> {
   static propTypes = {};
   static defaultProps = {};
   constructor(props) {

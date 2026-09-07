@@ -11,7 +11,7 @@ import { pathCompletion } from 'src/utils/common';
  * @class PostMention
  * @extends {React.Component}
  */
-export default class PostMention extends React.Component {
+export default class PostMention extends React.Component<any, any> {
   constructor(props) {
     super(props);
 

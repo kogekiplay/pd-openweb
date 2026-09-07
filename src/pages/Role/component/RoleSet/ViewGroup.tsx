@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 
-export default class ViewGroup extends PureComponent {
+export default class ViewGroup extends PureComponent<any, any> {
   static propTypes = {
     hasViews: PropTypes.bool,
     className: PropTypes.string,

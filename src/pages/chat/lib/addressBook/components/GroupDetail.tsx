@@ -5,7 +5,7 @@ import { closeGroup, openGroup } from '../api';
 import { config } from '../config';
 import { pathCompletion } from 'src/utils/common';
 
-export default class GroupDetail extends React.Component {
+export default class GroupDetail extends React.Component<any, any> {
   constructor(props) {
     super(props);
 

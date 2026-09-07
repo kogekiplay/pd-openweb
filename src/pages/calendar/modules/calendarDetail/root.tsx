@@ -74,7 +74,7 @@ const getStateIsShowUpdateBar = (oldState, state) => {
   return !_.isEqual(stateA, stateB);
 };
 
-export default class CalendarDetail extends Component {
+export default class CalendarDetail extends Component<any, any> {
   static propTypes = {
     data: PropTypes.object,
   };

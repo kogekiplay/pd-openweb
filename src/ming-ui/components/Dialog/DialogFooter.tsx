@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button from 'ming-ui/components/Button';
 
-class DialogFooter extends Component {
+class DialogFooter extends Component<any, any> {
   render() {
     const {
       onCancel,

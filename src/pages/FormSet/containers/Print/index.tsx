@@ -25,7 +25,7 @@ const PRINT_TYPE_CLASSIFY = {
   6: [PRINT_TYPE.CLOUD_PRINT],
 };
 
-class CreatePrintDrawer extends React.Component {
+class CreatePrintDrawer extends React.Component<any, any> {
   constructor(props) {
     super(props);
   }
@@ -127,7 +127,7 @@ class CreatePrintDrawer extends React.Component {
     );
   }
 }
-class Print extends React.Component {
+class Print extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

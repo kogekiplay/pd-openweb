@@ -14,7 +14,7 @@ import { controlState } from 'src/utils/control';
 import RegExpValidator from 'src/utils/expression';
 import * as actions from './redux/actions';
 
-class RelationAction extends Component {
+class RelationAction extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

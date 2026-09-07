@@ -97,7 +97,7 @@ const getMinX = formatCount => {
   return minX;
 };
 
-export default class PortalProgress extends Component {
+export default class PortalProgress extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

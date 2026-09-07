@@ -4,7 +4,7 @@ import LibCalender from '../../NewDateTimePicker/lib/calender';
 import List from './list';
 import './style.less';
 
-class TimeMenu extends Component {
+class TimeMenu extends Component<any, any> {
   constructor(props) {
     super(props);
 

@@ -3,7 +3,7 @@ import cx from 'classnames';
 import config from './config';
 
 const INDENT = 20;
-export default class GanttSideBar extends Component {
+export default class GanttSideBar extends Component<any, any> {
   componentDidMount() {
     const $graphWrap = document.querySelector('.graphWrap');
     this.taskList.addEventListener('scroll', e => {

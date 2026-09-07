@@ -10,7 +10,7 @@ import PayLog from './PayLog';
 import WorkSheetComment from './WorkSheetComment';
 import './DiscussLogFile.less';
 
-class DiscussLogFile extends Component {
+class DiscussLogFile extends Component<any, any> {
   static propTypes = {
     workflow: PropTypes.element,
     approval: PropTypes.element,

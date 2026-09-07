@@ -12,7 +12,7 @@ import {
   TransferTriggerUser,
 } from '../components';
 
-export default class SubProcess extends Component {
+export default class SubProcess extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

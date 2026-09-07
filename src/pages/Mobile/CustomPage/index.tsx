@@ -97,7 +97,7 @@ const EmptyData = styled.div`
     }
   }
 `;
-let CustomPage = class CustomPage extends Component {
+let CustomPage = class CustomPage extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

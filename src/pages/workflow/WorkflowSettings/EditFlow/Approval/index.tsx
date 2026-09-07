@@ -3,7 +3,7 @@ import cx from 'classnames';
 import _ from 'lodash';
 import { CreateNode, MembersName, NodeOperate } from '../components';
 
-export default class Approval extends Component {
+export default class Approval extends Component<any, any> {
   constructor(props) {
     super(props);
   }

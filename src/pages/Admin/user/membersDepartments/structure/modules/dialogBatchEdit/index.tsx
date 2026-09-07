@@ -22,7 +22,7 @@ const options = [
   },
 ];
 
-export default class DialogBatchEdit extends Component {
+export default class DialogBatchEdit extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

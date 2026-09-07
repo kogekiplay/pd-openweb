@@ -35,7 +35,7 @@ const formatMatchedTab = (res, isGroup) => {
   });
 };
 
-export default class SearchPanel extends Component {
+export default class SearchPanel extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

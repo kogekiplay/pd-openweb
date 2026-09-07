@@ -6,7 +6,7 @@ import flowNode from '../../../api/flowNode';
 import { checkConditionsIsNull } from '../../utils';
 import { TriggerCondition } from '../components';
 
-export default class Branch extends Component {
+export default class Branch extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

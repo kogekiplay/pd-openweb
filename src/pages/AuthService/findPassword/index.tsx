@@ -20,7 +20,7 @@ import { encrypt } from 'src/utils/common';
 import From from './Form';
 
 const keys = [getAccountTypes(true), 'code', 'setPassword'];
-export default class FindPassword extends React.Component {
+export default class FindPassword extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

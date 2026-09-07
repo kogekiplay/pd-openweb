@@ -34,7 +34,7 @@ import CopyTask from '../copyTask/copyTask';
 import './header.less';
 
 const ClickAwayable = ClickAway;
-class Header extends Component {
+class Header extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

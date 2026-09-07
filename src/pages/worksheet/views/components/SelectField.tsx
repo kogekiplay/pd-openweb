@@ -113,7 +113,7 @@ const VerifyButton = styled(Button)`
   margin-top: 12px;
 `;
 
-export default class SelectField extends Component {
+export default class SelectField extends Component<any, any> {
   static propTypes = {
     fields: arrayOf(shape({ type: number })),
     viewType: oneOf([1, 2, 4, 5, 8]),

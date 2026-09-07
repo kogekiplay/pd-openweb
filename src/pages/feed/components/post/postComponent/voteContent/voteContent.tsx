@@ -10,7 +10,7 @@ import './voteContent.css';
 /**
  * 投票动态所带的投票内容
  */
-class VoteContent extends React.Component {
+class VoteContent extends React.Component<any, any> {
   static propTypes = {
     dispatch: PropTypes.func,
     voteItem: PropTypes.shape({

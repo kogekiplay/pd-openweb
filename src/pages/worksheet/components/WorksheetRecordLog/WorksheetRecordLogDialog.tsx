@@ -8,7 +8,7 @@ import { browserIsMobile } from 'src/utils/common';
 import WorksheetRocordLog from './WorksheetRocordLog';
 import './WorksheetRecordLogDialog.less';
 
-class WorksheetRecordLogDialog extends Component {
+class WorksheetRecordLogDialog extends Component<any, any> {
   static propTypes = {
     appId: PropTypes.string,
     controls: PropTypes.array,

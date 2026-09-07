@@ -4,7 +4,7 @@ import player from '../../../lib/mp3player/mp3player';
 import * as socket from '../../../utils/socket';
 import './index.less';
 
-export default class AudioMessage extends Component {
+export default class AudioMessage extends Component<any, any> {
   constructor(props) {
     super(props);
     const { message } = this.props;

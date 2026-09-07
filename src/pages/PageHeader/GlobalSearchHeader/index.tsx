@@ -39,7 +39,7 @@ const PAGE_HEADER_ROUTE = {
   user: ['user', '/user_:userId?'],
   search: ['/search'],
 };
-let GlobalSearchHeader = class GlobalSearchHeader extends Component {
+let GlobalSearchHeader = class GlobalSearchHeader extends Component<any, any> {
   static propTypes = {};
   static defaultProps = {};
   state = {

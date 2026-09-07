@@ -15,7 +15,7 @@ const LayoutContent = styled.div`
 
 const { processId, instanceId, selectNodeId } = getRequest();
 
-class MobileFlowChart extends React.Component {
+class MobileFlowChart extends React.Component<any, any> {
   constructor(props) {
     super(props);
   }

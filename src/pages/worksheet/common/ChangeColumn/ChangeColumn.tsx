@@ -8,7 +8,7 @@ import ChangedIcon from './ChangeByWorksheet';
 import SortableColumn from './SortableColumn';
 import './ChangeColumn.less';
 
-export default class ChangeColumn extends Component {
+export default class ChangeColumn extends Component<any, any> {
   static propTypes = {
     placeholder: PropTypes.string,
     layout: PropTypes.number, // 呈现方式 1 dropdown 2 平铺

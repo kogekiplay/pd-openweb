@@ -3,7 +3,7 @@ import { Dialog } from 'ming-ui';
 import fixedDataAjax from 'src/api/fixedData.js';
 import workSiteController from 'src/api/workSite';
 
-export default class SiteName extends Component {
+export default class SiteName extends Component<any, any> {
   constructor(props) {
     super(props);
     this.dialogtype = this.props.workSiteId ? _l('编辑') : _l('创建');

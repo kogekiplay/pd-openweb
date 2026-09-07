@@ -16,7 +16,7 @@ import RegExpValidator from 'src/utils/expression';
 import { processImageFile } from './imageProcessor';
 import './index.less';
 
-export class UploadFileWrapper extends Component {
+export class UploadFileWrapper extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {
@@ -372,7 +372,7 @@ export class UploadFileWrapper extends Component {
   }
 }
 
-export default class AttachmentList extends Component {
+export default class AttachmentList extends Component<any, any> {
   static defaultProps = {
     width: 120,
   };

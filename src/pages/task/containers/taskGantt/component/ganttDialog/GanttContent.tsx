@@ -8,7 +8,7 @@ import { durDays } from './time';
 import TimeHeader from './TimeHeader';
 
 const { TYPE_TO_WIDTH } = config;
-export default class ganttContent extends Component {
+export default class ganttContent extends Component<any, any> {
   /**
    * 组件成功挂载
    * 1. 绑定滚动事件以实现同步滚动

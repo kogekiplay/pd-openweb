@@ -10,7 +10,7 @@ import RegExpValidator from 'src/utils/expression';
 import weixinCode from './images/weixin.png';
 import './index.less';
 
-class PrivateImageInstall extends Component {
+class PrivateImageInstall extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

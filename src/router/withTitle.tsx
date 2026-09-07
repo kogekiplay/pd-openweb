@@ -4,7 +4,7 @@ import DocumentTitle from 'react-document-title';
 import { string } from 'prop-types';
 import ErrorBoundary from 'ming-ui/components/ErrorBoundary';
 
-export default class WithTitle extends Component {
+export default class WithTitle extends Component<any, any> {
   static propTypes = {
     title: string,
   };

@@ -12,7 +12,7 @@ import RecordInfo from './RecordInfo';
 
 const AutoSizeRecordInfo = autoSize(RecordInfo);
 
-export default class RecordInfoWrapper extends Component {
+export default class RecordInfoWrapper extends Component<any, any> {
   static propTypes = {
     from: PropTypes.number,
     notDialog: PropTypes.bool,

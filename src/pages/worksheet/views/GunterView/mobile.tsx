@@ -12,7 +12,7 @@ import Gunter from './index.jsx';
 import { isGunterGroupMultiSelectControl } from './util';
 
 const data = getRequest();
-let MobileGunter = class MobileGunter extends Component {
+let MobileGunter = class MobileGunter extends Component<any, any> {
   constructor(props) {
     super(props);
   }

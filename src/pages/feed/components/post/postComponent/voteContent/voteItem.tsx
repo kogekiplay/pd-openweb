@@ -6,7 +6,7 @@ import previewAttachments, { transformQiniuUrl } from 'src/components/previewAtt
 /**
  * 单条投票项
  */
-class VoteItem extends React.Component {
+class VoteItem extends React.Component<any, any> {
   static propTypes = {
     voteID: PropTypes.string,
     checked: PropTypes.bool,

@@ -27,7 +27,7 @@ const builtinPlacements = {
     points: ['tl', 'bl'],
   },
 };
-export default class ApplyAction extends PureComponent {
+export default class ApplyAction extends PureComponent<any, any> {
   constructor(props) {
     super(props);
     this.state = {

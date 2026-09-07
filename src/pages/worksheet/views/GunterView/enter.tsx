@@ -19,7 +19,7 @@ const Wrap = styled.div`
   background: var(--color-background-secondary);
   overflow: hidden;
 `;
-let GunterEnter = class GunterEnter extends Component {
+let GunterEnter = class GunterEnter extends Component<any, any> {
   constructor(props) {
     super(props);
   }

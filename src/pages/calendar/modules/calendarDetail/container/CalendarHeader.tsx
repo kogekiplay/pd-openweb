@@ -8,7 +8,7 @@ import MenuItem from 'ming-ui/components/MenuItem';
 import Textarea from 'ming-ui/components/Textarea';
 import { Config, getCalendarColor, getUserAllCalCategories } from '../common';
 
-export default class CalendarHeader extends Component {
+export default class CalendarHeader extends Component<any, any> {
   static propTypes = {
     title: PropTypes.string.isRequired,
     auth: PropTypes.object.isRequired,

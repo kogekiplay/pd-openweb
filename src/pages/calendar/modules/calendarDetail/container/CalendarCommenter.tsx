@@ -5,7 +5,7 @@ import Icon from 'ming-ui/components/Icon';
 import Commenter from 'src/components/comment/commenter';
 import { htmlDecodeReg } from 'src/utils/common';
 
-export default class CalendarCommenter extends Component {
+export default class CalendarCommenter extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -101,7 +101,7 @@ WorksheetList.propTypes = {
   hide: PropTypes.func,
 };
 
-export default class SelectWroksheet extends React.Component {
+export default class SelectWroksheet extends React.Component<any, any> {
   static propTypes = {
     projectId: PropTypes.string, // 当前网络 id
     worksheetType: PropTypes.number, // 工作表类型 0: 工作表 1: 自定义页面

@@ -12,7 +12,7 @@ const DISPLAY_OPTIONS = [
   { title: _l('详细地址'), key: 'address' },
 ];
 
-export default class CustomLocation extends Component {
+export default class CustomLocation extends Component<any, any> {
   constructor(props) {
     super(props);
 

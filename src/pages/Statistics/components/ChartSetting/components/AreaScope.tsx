@@ -20,7 +20,7 @@ const area = [
 
 const particularlyCity = ['110000', '120000', '310000', '500000', '810000', '820000'];
 
-export default class extends Component {
+export default class extends Component<any, any> {
   constructor(props) {
     super(props);
   }

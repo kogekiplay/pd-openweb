@@ -30,7 +30,7 @@ const COLORS = {
   yellow: '#ffa414',
 };
 
-class TaskTime extends Component {
+class TaskTime extends Component<any, any> {
   constructor(props) {
     super(props);
   }

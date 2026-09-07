@@ -13,7 +13,7 @@ import {
   TriggerCondition,
 } from '../components';
 
-export default class FindSystem extends Component {
+export default class FindSystem extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

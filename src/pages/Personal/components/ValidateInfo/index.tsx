@@ -67,7 +67,7 @@ const StepLine = styled.div`
 
 let timer = null;
 
-export default class ValidateInfoCon extends Component {
+export default class ValidateInfoCon extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

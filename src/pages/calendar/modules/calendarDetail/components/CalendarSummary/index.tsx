@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Icon, Linkify, Textarea } from 'ming-ui';
 
-export default class CalendarSummary extends Component {
+export default class CalendarSummary extends Component<any, any> {
   constructor(props) {
     super(props);
 

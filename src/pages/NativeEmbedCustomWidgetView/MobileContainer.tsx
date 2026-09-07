@@ -9,7 +9,7 @@ import CustomWidgetView from 'src/pages/worksheet/views/CustomWidgetView';
 import { getRequest } from 'src/utils/common';
 
 const data = getRequest();
-let MobileContainer = class MobileContainer extends Component {
+let MobileContainer = class MobileContainer extends Component<any, any> {
   constructor(props) {
     super(props);
   }

@@ -63,7 +63,7 @@ const Wrap = styled.div`
   }
 `;
 
-export default class PaginationWrap extends Component {
+export default class PaginationWrap extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {};

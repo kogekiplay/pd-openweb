@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 export default function widthProvider(GridOutComponent) {
-  return class WidthProvider extends Component {
+  return class WidthProvider extends Component<any, any> {
     state = {
       width: 1280,
       ready: false,

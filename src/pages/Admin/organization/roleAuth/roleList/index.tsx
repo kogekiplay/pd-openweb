@@ -12,7 +12,7 @@ import RoleDetail from '../roleDetail';
 import RoleItem from './roleItem';
 import './style.less';
 
-class RoleList extends React.Component {
+class RoleList extends React.Component<any, any> {
   static propTypes = {
     projectId: PropTypes.string.isRequired,
     manualRef: PropTypes.func,

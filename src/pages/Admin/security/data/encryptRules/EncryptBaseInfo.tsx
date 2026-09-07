@@ -110,7 +110,7 @@ function EditBaseInfo(props) {
   );
 }
 
-export default class EncryptBaseInfo extends Component {
+export default class EncryptBaseInfo extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

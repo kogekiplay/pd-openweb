@@ -21,7 +21,7 @@ const DotWrapper = styled.div`
 `;
 const lineHeight = 32;
 const rowDotHeight = 10;
-let MonitorTimeDot = class MonitorTimeDot extends Component {
+let MonitorTimeDot = class MonitorTimeDot extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {
@@ -95,7 +95,7 @@ let MonitorTimeDot = class MonitorTimeDot extends Component {
   }
 };
 MonitorTimeDot = connect(state => ({ ..._.pick(state.sheet.gunterView, ['chartScroll']) }))(MonitorTimeDot);
-let TimeDot = class TimeDot extends Component {
+let TimeDot = class TimeDot extends Component<any, any> {
   constructor(props) {
     super(props);
   }

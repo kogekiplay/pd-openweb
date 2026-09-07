@@ -43,7 +43,7 @@ const TabList = [
   { tab: 2, title: _l('已加密字段') },
 ];
 
-class EncryptDetail extends Component {
+class EncryptDetail extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

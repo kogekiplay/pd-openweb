@@ -13,7 +13,7 @@ const formatTime = (seconds = 0) => {
   return `${minute}:${second}`;
 };
 
-export default class VideoMessage extends Component {
+export default class VideoMessage extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

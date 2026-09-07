@@ -15,7 +15,7 @@ import KcAppMenu from './KcAppMenu';
 const ONE_PX_IMG =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAQSURBVHgBAQUA+v8A/////wn7A/2j0UkKAAAAAElFTkSuQmCC';
 
-export default class KcAppItem extends React.Component {
+export default class KcAppItem extends React.Component<any, any> {
   static propTypes = {
     path: PropTypes.string,
     baseUrl: PropTypes.string,

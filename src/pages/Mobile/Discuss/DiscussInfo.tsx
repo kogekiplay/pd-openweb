@@ -41,7 +41,7 @@ const getGroupId = (appSectionDetail, worksheetId) => {
   return groupId;
 };
 
-class Discuss extends Component {
+class Discuss extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

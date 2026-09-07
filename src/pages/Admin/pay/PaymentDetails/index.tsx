@@ -11,7 +11,7 @@ const TableWrap = styled(PageTableCon)`
   }
 `;
 
-export default class PaymentDetails extends Component {
+export default class PaymentDetails extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

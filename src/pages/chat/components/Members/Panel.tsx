@@ -6,7 +6,7 @@ import LoadDiv from 'ming-ui/components/LoadDiv';
 import GroupController from 'src/api/group';
 import InviteOrAddUsers from './InviteOrAddUsers';
 
-export class Member extends Component {
+export class Member extends Component<any, any> {
   constructor(props) {
     super(props);
   }
@@ -38,7 +38,7 @@ export class Member extends Component {
   }
 }
 
-export default class MembersPanel extends Component {
+export default class MembersPanel extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

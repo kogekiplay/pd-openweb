@@ -33,7 +33,7 @@ function getProjectfoldedFromStorage() {
   return result;
 }
 
-class WorkSheetLeft extends Component {
+class WorkSheetLeft extends Component<any, any> {
   static propTypes = {
     worksheetId: PropTypes.string,
     sheetListActions: PropTypes.object,

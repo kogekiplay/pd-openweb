@@ -23,7 +23,7 @@ import WorksheetContent from './WorksheetContent';
 
 const START_NODE_EXECUTE_DATE_TYPE = 16;
 
-export default class Start extends Component {
+export default class Start extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -11,7 +11,7 @@ import './index.less';
 
 const { Search } = Input;
 
-export default class MemberList extends Component {
+export default class MemberList extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

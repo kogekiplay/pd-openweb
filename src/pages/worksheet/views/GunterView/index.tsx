@@ -28,7 +28,7 @@ const Drag = styled.div(
 `,
 );
 const isGunterExport = location.href.includes('gunterExport');
-let Gunter = class Gunter extends Component {
+let Gunter = class Gunter extends Component<any, any> {
   constructor(props) {
     super(props);
     const { view } = props;

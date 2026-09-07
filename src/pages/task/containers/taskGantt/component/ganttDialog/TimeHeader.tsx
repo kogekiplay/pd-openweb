@@ -13,7 +13,7 @@ const { TYPE_TO_WIDTH } = config;
 const getDays = data =>
   data.sub.reduce((prev, curr) => prev + moment(`${data.pub}${curr}`, 'YYYYM月').daysInMonth(), 0);
 
-export default class TimeHeader extends Component {
+export default class TimeHeader extends Component<any, any> {
   componentDidMount() {
     const timeBox = document.querySelectorAll('.pubTime');
     this.props.getPosList(timeBox);

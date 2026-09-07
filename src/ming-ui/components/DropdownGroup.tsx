@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-class DropdownGroup extends Component {
+class DropdownGroup extends Component<any, any> {
   static propTypes = {
     children: PropTypes.any,
     className: PropTypes.string,

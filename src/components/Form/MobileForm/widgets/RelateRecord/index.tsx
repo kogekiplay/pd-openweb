@@ -7,7 +7,7 @@ import { getRelateRecordCountFromValue } from 'src/utils/record';
 import { RELATE_RECORD_SHOW_TYPE } from '../../../core/enum';
 import RelateRecordCards from '../../components/RelateRecordCards';
 
-export default class Widgets extends Component {
+export default class Widgets extends Component<any, any> {
   static propTypes = {
     // disabled: PropTypes.bool,
     appId: PropTypes.string, // 他表字段被关联表所在应用 id

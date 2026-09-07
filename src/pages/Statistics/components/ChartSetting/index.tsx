@@ -18,7 +18,7 @@ import XAxis from './components/XAxis';
 import YAxis from './components/YAxis';
 import './index.less';
 
-let ChartSetting = class ChartSetting extends Component {
+let ChartSetting = class ChartSetting extends Component<any, any> {
   constructor(props) {
     super(props);
   }

@@ -37,7 +37,7 @@ const exceptions = [
   '.inboxAppFilterWrapper',
 ];
 
-class ChatPanel extends Component {
+class ChatPanel extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -35,7 +35,7 @@ const closeOptionsList = [
   optionsList[3],
 ];
 
-export default class EnterpriseCard extends Component {
+export default class EnterpriseCard extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

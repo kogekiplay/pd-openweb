@@ -5,7 +5,7 @@ import { Checkbox, Dialog, Icon, LoadDiv, ScrollView } from 'ming-ui';
 import process from '../../api/process';
 import './index.less';
 
-export default class SelectWorkflow extends Component {
+export default class SelectWorkflow extends Component<any, any> {
   static propTypes = {
     visible: bool,
     processId: string,

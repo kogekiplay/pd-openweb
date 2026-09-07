@@ -5,7 +5,7 @@ import { ACTION_ID, APP_TYPE, NODE_TYPE } from '../../enum';
 import { getIcons } from '../../utils';
 import { CreateNode, NodeOperate } from '../components';
 
-export default class FindSystem extends Component {
+export default class FindSystem extends Component<any, any> {
   constructor(props) {
     super(props);
   }

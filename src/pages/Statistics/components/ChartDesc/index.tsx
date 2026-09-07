@@ -12,7 +12,7 @@ const Con = styled.div`
   }
 `;
 
-export default class ChartDesc extends Component {
+export default class ChartDesc extends Component<any, any> {
   constructor(props) {
     super(props);
     const { desc } = props;

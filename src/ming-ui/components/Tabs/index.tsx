@@ -29,7 +29,7 @@ const Tab = styled.div`
   }
 `;
 
-export default class Tabs extends React.Component {
+export default class Tabs extends React.Component<any, any> {
   static propTypes = {
     className: PropTypes.string,
     center: PropTypes.bool, // 是否居中 默认 是

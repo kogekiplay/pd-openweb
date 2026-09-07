@@ -37,7 +37,7 @@ const formatDate = date => {
   return moment(date).format(`YYYY年MM月DD日`);
 };
 
-export default class PersonalEntrypoint extends Component {
+export default class PersonalEntrypoint extends Component<any, any> {
   constructor(props) {
     super(props);
     const { hash } = location;

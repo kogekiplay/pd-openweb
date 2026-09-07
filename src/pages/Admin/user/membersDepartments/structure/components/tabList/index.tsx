@@ -33,7 +33,7 @@ const shouldLoadDepartments = props => {
   return isExpired || (haveSubDepartment && !subDepartments.length);
 };
 
-class TabList extends React.Component {
+class TabList extends React.Component<any, any> {
   constructor(props) {
     super(props);
     const { projectId, fetchInActive = () => {}, fetchApproval = () => {} } = props;

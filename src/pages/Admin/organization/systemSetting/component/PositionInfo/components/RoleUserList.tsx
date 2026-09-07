@@ -7,7 +7,7 @@ import * as actions from '../../../../../redux/position/action';
 import EmptyStatus from './EmptyStatus';
 import { pathCompletion } from 'src/utils/common';
 
-class RoleUserList extends Component {
+class RoleUserList extends Component<any, any> {
   constructor(props) {
     super(props);
   }

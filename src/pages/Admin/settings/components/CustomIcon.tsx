@@ -8,7 +8,7 @@ import AdminTitle from 'src/pages/Admin/common/AdminTitle';
 import { navigateTo } from 'src/router/navigateTo';
 import './index.less';
 
-export default class CustomIcon extends Component {
+export default class CustomIcon extends Component<any, any> {
   state = {
     selected: [],
     data: null,

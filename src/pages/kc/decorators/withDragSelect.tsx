@@ -95,7 +95,7 @@ function getDomNode(node) {
   return null;
 }
 
-class DragSelect extends React.Component {
+class DragSelect extends React.Component<any, any> {
   static propTypes = {
     component: PropTypes.any,
     selectionStyle: PropTypes.object, // 选择框样式

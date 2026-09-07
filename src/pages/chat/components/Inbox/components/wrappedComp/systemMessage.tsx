@@ -54,7 +54,7 @@ const removeWebUrlPrefix = href => {
  * @returns
  */
 
-export default class SystemMessage extends PureComponent {
+export default class SystemMessage extends PureComponent<any, any> {
   state = {
     showAddressBook: false,
     processInfo: null,

@@ -7,7 +7,7 @@ import { handleGlobalVariableName } from '../../../utils';
 import SelectOtherFields from '../SelectOtherFields';
 import Tag from '../Tag';
 
-export default class CustomTextarea extends Component {
+export default class CustomTextarea extends Component<any, any> {
   static propTypes = {
     projectId: PropTypes.string,
     processId: PropTypes.string,

@@ -42,7 +42,7 @@ const getWorksheetList = (list = []) => {
 };
 
 const { Option } = Select;
-let SetImportExcelCreateWorksheetOrApp = class SetImportExcelCreateWorksheetOrApp extends Component {
+let SetImportExcelCreateWorksheetOrApp = class SetImportExcelCreateWorksheetOrApp extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {};

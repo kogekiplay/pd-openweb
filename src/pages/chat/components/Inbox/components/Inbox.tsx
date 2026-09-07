@@ -15,7 +15,7 @@ const getInitialLoadType = inboxType => {
   }
 };
 
-export default class Inbox extends React.Component {
+export default class Inbox extends React.Component<any, any> {
   static INBOXTYPES = INBOXTYPES;
 
   static propTypes = {

@@ -29,7 +29,7 @@ const mapDispatchToProps = dispatch => ({
   updateAppPkgData: value => dispatch(updateAppPkgData(value)),
 });
 
-let DecoratedComponent = class DecoratedComponent extends Component {
+let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
   static propTypes = {
     permissionType: oneOf([0, 1, 2, 3, 100, 200, 300]),
     appStatus: oneOf([0, 1, 2, 3, 4, 5]),

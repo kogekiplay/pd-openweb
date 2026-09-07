@@ -24,7 +24,7 @@ const Wrap = styled.div`
   height: 100%;
 `;
 
-class Task extends Component {
+class Task extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

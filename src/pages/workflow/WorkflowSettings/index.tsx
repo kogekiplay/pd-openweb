@@ -13,7 +13,7 @@ import History from './History';
 import ProcessConfig from './ProcessConfig';
 import WorkflowInfo from './WorkflowInfo';
 
-class WorkflowSettings extends Component {
+class WorkflowSettings extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

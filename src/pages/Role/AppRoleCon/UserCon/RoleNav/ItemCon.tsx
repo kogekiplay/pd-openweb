@@ -8,7 +8,7 @@ import { APP_ROLE_TYPE } from 'src/pages/worksheet/constants/enum';
 import { navigateTo } from 'src/router/navigateTo';
 import { getTranslateInfo } from 'src/utils/app';
 
-export default class ItemCon extends React.Component {
+export default class ItemCon extends React.Component<any, any> {
   render() {
     const {
       setRoleId,

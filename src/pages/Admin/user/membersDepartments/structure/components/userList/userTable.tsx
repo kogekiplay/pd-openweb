@@ -73,7 +73,7 @@ const refreshData = (departmentId, typeCursor, projectId, pageIndex, dispatch) =
   }
 };
 
-class UserTable extends React.Component {
+class UserTable extends React.Component<any, any> {
   state = {
     columnsInfo: [
       { value: 'name', label: _l('姓名'), checked: true, width: 200 },

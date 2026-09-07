@@ -5,7 +5,7 @@ import UniformRoute from 'src/router/withTitle';
 import TaskDetail from '../containers/taskDetail/taskDetail';
 import './index.less';
 
-class TaskDetailEntrypoint extends Component {
+class TaskDetailEntrypoint extends Component<any, any> {
   componentDidMount() {
     $('html').addClass('AppTaskDetail');
   }

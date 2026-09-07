@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import CalendarDetail from '../modules/calendarDetail';
 import './style.less';
 
-class CalendarDetailEntrypoint extends Component {
+class CalendarDetailEntrypoint extends Component<any, any> {
   componentDidMount() {
     $('html').addClass('AppCalendar AppCalendarDetail');
     CalendarDetail({

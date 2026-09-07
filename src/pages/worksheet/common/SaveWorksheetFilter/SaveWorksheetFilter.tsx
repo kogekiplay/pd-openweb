@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Dialog, Input, RadioGroup } from 'ming-ui';
 import './SaveWorksheetFilter.less';
 
-export default class SaveWorksheetFilter extends Component {
+export default class SaveWorksheetFilter extends Component<any, any> {
   static propTypes = {
     title: PropTypes.string,
     visible: PropTypes.bool,

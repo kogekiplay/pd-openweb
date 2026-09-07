@@ -20,7 +20,7 @@ const sheetTypeData = [
   { label: _l('自定义'), count: -1, isCustom: true },
 ];
 
-export default class AppSettings extends React.Component {
+export default class AppSettings extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

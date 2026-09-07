@@ -3,7 +3,7 @@ import cx from 'classnames';
 import PropTypes from 'prop-types';
 import './index.less';
 
-export default class TableEmpty extends React.Component {
+export default class TableEmpty extends React.Component<any, any> {
   static propTypes = {
     detail: PropTypes.object,
   };

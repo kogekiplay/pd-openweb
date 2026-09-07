@@ -3,7 +3,7 @@ import cx from 'classnames';
 import { SEARCH_MODE_MAP } from '../../enum';
 import { CreateNode, NodeOperate } from '../components';
 
-export default class Vector extends Component {
+export default class Vector extends Component<any, any> {
   constructor(props) {
     super(props);
   }

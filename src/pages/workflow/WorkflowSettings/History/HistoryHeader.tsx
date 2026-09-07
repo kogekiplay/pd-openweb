@@ -16,7 +16,7 @@ import { EXPIRE_LIST } from '../enum';
 import SerialProcessDialog from './components/SerialProcessDialog';
 import { FLOW_STATUS } from './config';
 
-export default class HistoryHeader extends Component {
+export default class HistoryHeader extends Component<any, any> {
   static propTypes = {
     isPlugin: bool,
     processId: string,

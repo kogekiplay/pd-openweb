@@ -10,7 +10,7 @@ import { relateDy } from 'src/pages/worksheet/common/WorkSheetFilter/util.js';
 import { isSheetDisplay } from '../../../../../widgetConfig/util';
 import { API_ENUM_TO_TYPE, DEFAULT_COLUMNS, FILTER_CONDITION_TYPE } from '../../enum';
 
-let RelateBox = class RelateBox extends Component {
+let RelateBox = class RelateBox extends Component<any, any> {
   static propTypes = {
     disabled: PropTypes.bool,
     values: PropTypes.arrayOf(PropTypes.string),

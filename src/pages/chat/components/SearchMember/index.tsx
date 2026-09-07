@@ -33,7 +33,7 @@ const flatten = res => {
   return result;
 };
 
-class SearchMember extends Component {
+class SearchMember extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

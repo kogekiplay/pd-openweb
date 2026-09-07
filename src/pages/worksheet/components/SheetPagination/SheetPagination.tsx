@@ -3,7 +3,7 @@ import cx from 'classnames';
 import PropTypes from 'prop-types';
 import './SheetPagination.less';
 
-export default class SheetPagination extends Component {
+export default class SheetPagination extends Component<any, any> {
   static propTypes = {
     count: PropTypes.number,
     pageSize: PropTypes.number,

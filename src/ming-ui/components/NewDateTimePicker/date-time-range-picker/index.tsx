@@ -10,7 +10,7 @@ import DatePickerBase from '../date-picker-base/index';
 import LibCalender from '../lib/calender';
 import './style.less';
 
-class DateTimeRangeDoublePicker extends Component {
+class DateTimeRangeDoublePicker extends Component<any, any> {
   constructor(props) {
     super(props);
 

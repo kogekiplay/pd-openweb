@@ -49,7 +49,7 @@ const SmsServiceTipsCard = styled.div`
   }
 `;
 
-export default class Message extends Component {
+export default class Message extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

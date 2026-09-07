@@ -6,7 +6,7 @@ import './index.less';
 /**
  * 多行文字超出隐藏
  */
-export default class lineClampTextBox extends Component {
+export default class lineClampTextBox extends Component<any, any> {
   constructor(props) {
     super(props);
     this.$textBox = createRef();

@@ -29,7 +29,7 @@ const TABS = [
   { key: 'interfaceLicense', label: _l('接口许可') },
 ];
 
-export default class Workwx extends React.Component {
+export default class Workwx extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

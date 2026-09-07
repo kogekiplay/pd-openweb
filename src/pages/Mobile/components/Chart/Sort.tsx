@@ -20,7 +20,7 @@ const Y_AXIS_SORT_SUFFIX = '-yaxis';
 const RIGHT_AXIS_SORT_SUFFIX = '-right';
 const SAME_AXIS_SORT_SUFFIXES = [RIGHT_AXIS_SORT_SUFFIX, Y_AXIS_SORT_SUFFIX];
 
-export default class ChartSort extends Component {
+export default class ChartSort extends Component<any, any> {
   constructor(props) {
     super(props);
     const { rightY } = props.currentReport;

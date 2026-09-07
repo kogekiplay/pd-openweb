@@ -7,7 +7,7 @@ import MonthTable from './month-table';
 import YearTable from './year-table';
 import './style.less';
 
-class Calender extends Component {
+class Calender extends Component<any, any> {
   constructor(props) {
     super(props);
 

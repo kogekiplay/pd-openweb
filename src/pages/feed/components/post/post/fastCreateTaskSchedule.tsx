@@ -9,7 +9,7 @@ import createCalendar from 'src/components/createCalendar/load';
 import createTask from 'src/components/createTask/load';
 import './postOperateList.css';
 
-class FastCreateTaskSchedule extends React.Component {
+class FastCreateTaskSchedule extends React.Component<any, any> {
   static propTypes = {
     selectText: PropTypes.any.isRequired,
     handFastCreate: PropTypes.func,

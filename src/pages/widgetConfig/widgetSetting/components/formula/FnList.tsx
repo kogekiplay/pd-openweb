@@ -5,7 +5,7 @@ import Menu from 'ming-ui/components/Menu';
 import MenuItem from 'ming-ui/components/MenuItem';
 import { FORMULA } from './enum';
 
-export default class FnList extends Component {
+export default class FnList extends Component<any, any> {
   static propTypes = {
     className: PropTypes.string,
     fnmatch: PropTypes.string,

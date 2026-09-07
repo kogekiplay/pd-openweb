@@ -10,7 +10,7 @@ import { dealUserRange } from 'src/components/Form/core/utils';
 import EditableCellCon from '../EditableCellCon';
 
 const ClickAwayable = ClickAway;
-export default class Text extends React.Component {
+export default class Text extends React.Component<any, any> {
   static propTypes = {
     className: PropTypes.string,
     singleLine: PropTypes.bool,

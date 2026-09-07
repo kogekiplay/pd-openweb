@@ -89,7 +89,7 @@ function renderFilterItemTexts(filters = [], disabled = false, worksheetControls
   );
 }
 
-class RuleItems extends React.Component {
+class RuleItems extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

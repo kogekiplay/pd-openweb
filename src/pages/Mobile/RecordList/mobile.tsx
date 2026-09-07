@@ -20,7 +20,7 @@ import alreadyDelete from './State/assets/alreadyDelete.png';
 import View from './View';
 import './index.less';
 
-let RecordList = class RecordList extends Component {
+let RecordList = class RecordList extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

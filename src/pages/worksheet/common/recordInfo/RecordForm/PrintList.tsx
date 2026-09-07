@@ -242,7 +242,7 @@ export async function handleTemplateRecordPrint({
   }
 }
 
-export default class PrintList extends Component {
+export default class PrintList extends Component<any, any> {
   static propTypes = {
     isCharge: PropTypes.bool,
     type: PropTypes.string, // 显示样式 0 显示在menuItem中 1 显示为按钮 2 只显示系统打印

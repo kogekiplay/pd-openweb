@@ -4,7 +4,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import ajaxRequest from 'src/api/taskCenter';
 import './less/setFolder.less';
 
-export default class SetFolder extends Component {
+export default class SetFolder extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

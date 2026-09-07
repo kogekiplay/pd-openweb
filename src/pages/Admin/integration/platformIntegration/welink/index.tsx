@@ -11,7 +11,7 @@ import { checkClearIntergrationData, integrationFailed } from '../utils';
 import clientIdImg from './img/client_id.png';
 import './style.less';
 
-export default class Welink extends React.Component {
+export default class Welink extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

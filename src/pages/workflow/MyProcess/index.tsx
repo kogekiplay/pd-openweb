@@ -49,7 +49,7 @@ const SECOND_TABS = {
   ],
 };
 const LoadableExecDialog = lazy(() => import('src/pages/workflow/components/ExecDialog'));
-export default class MyProcess extends Component {
+export default class MyProcess extends Component<any, any> {
   static defaultProps = {
     countData: {},
     updateCountData: () => {},

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import SelectItem from './SelectItem';
 import { scrollTo } from './utils';
 
-class PanelSelect extends Component {
+class PanelSelect extends Component<any, any> {
   static propTypes = {
     options: PropTypes.arrayOf(PropTypes.string),
     onSelect: PropTypes.func,

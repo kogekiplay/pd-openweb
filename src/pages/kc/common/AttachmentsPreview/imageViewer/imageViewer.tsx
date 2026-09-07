@@ -29,7 +29,7 @@ const initialState = {
   ctrlIsdDown: false,
 };
 
-class ImageViewer extends React.Component {
+class ImageViewer extends React.Component<any, any> {
   static propTypes = {
     src: PropTypes.string,
     onError: PropTypes.func,

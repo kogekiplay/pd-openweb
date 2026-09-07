@@ -20,7 +20,7 @@ const DetailViewWrap = styled.div`
   }
 `;
 
-class DetailView extends Component {
+class DetailView extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

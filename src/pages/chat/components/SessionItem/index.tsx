@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { Tooltip } from 'ming-ui/antd-components';
 import './index.less';
 
-export default class SessionItem extends Component {
+export default class SessionItem extends Component<any, any> {
   constructor(props) {
     super(props);
   }

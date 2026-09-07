@@ -6,7 +6,7 @@ import ajaxRequest from 'src/api/taskCenter';
 import pathCompletion from 'src/utils/common';
 import './less/printTask.less';
 
-export default class PrintTask extends Component {
+export default class PrintTask extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -5,7 +5,7 @@ import Icon from 'ming-ui/components/Icon';
 import OpList from './opList';
 import User from './user';
 
-export default class Item extends Component {
+export default class Item extends Component<any, any> {
   static propTypes = {
     id: PropTypes.string,
     name: PropTypes.string,

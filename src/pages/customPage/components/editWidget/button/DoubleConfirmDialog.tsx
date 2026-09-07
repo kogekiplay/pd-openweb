@@ -1,7 +1,7 @@
 import React from 'react';
 import { Dialog } from 'ming-ui';
 
-class DoubleConfirmDialog extends React.Component {
+class DoubleConfirmDialog extends React.Component<any, any> {
   state = {
     doubleConfirm: this.props.doubleConfirm || {
       confirmMsg: _l('你确认对记录执行此操作吗？'),

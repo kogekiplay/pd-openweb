@@ -11,7 +11,7 @@ function formatMonth(month) {
   return month;
 }
 
-class CalendarHeader extends Component {
+class CalendarHeader extends Component<any, any> {
   /**
    * 后退
    */

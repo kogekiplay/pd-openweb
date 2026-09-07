@@ -24,7 +24,7 @@ const checkFuncs = {
   },
 };
 
-export default class SetInfoDialog extends Component {
+export default class SetInfoDialog extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

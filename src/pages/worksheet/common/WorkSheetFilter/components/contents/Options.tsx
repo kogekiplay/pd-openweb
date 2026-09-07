@@ -19,7 +19,7 @@ const SCORE_TEXT = [
   _l('九级'),
   _l('十级'),
 ];
-export default class Options extends Component {
+export default class Options extends Component<any, any> {
   static propTypes = {
     disabled: PropTypes.bool,
     onChange: PropTypes.func,

@@ -3,7 +3,7 @@ import cx from 'classnames';
 import { replaceField } from '../../utils';
 import { CreateNode, MembersName, NodeOperate } from '../components';
 
-export default class Message extends Component {
+export default class Message extends Component<any, any> {
   constructor(props) {
     super(props);
   }

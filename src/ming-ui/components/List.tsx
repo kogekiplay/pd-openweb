@@ -3,7 +3,7 @@ import cx from 'classnames';
 import PropTypes from 'prop-types';
 import './less/List.less';
 
-class List extends Component {
+class List extends Component<any, any> {
   static propTypes = {
     children: PropTypes.node,
     className: PropTypes.string,

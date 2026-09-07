@@ -26,7 +26,7 @@ const FlexWrap = styled.div`
   padding: 0 32px;
 `;
 
-export default class orgLog extends React.Component {
+export default class orgLog extends React.Component<any, any> {
   constructor(props) {
     super(props);
     const columns =

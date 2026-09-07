@@ -25,7 +25,7 @@ const builtinPlacements = {
   },
 };
 
-export default class UploadFilesTrigger extends Component {
+export default class UploadFilesTrigger extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

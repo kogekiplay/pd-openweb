@@ -60,7 +60,7 @@ const Setting = [
   },
 ];
 
-class SideNav extends React.Component {
+class SideNav extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

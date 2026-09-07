@@ -8,7 +8,7 @@ import './index.less';
 
 const store = configureStore();
 
-export default class App extends React.Component {
+export default class App extends React.Component<any, any> {
   constructor() {
     super();
     Config.setPageTitle(_l('用户 - 成员与部门'));

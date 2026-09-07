@@ -33,7 +33,7 @@ const EmptyWrap = styled.div`
   }
 `;
 
-export default class EmptyStatus extends Component {
+export default class EmptyStatus extends Component<any, any> {
   constructor(props) {
     super(props);
   }

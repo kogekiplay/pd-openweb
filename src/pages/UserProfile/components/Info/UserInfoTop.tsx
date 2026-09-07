@@ -22,7 +22,7 @@ const InfoTopWrap = styled.div`
     max-width: fit-content;
   }
 `;
-let InfoTop = class InfoTop extends React.PureComponent {
+let InfoTop = class InfoTop extends React.PureComponent<any, any> {
   constructor(props) {
     super(props);
     this.state = {

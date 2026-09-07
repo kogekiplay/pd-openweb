@@ -30,7 +30,7 @@ const Wrap = styled.div`
     }
   }
 `;
-export default class InviteLinkExpirate extends React.Component {
+export default class InviteLinkExpirate extends React.Component<any, any> {
   render() {
     return (
       <Wrap>

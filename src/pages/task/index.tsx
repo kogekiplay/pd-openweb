@@ -11,7 +11,7 @@ const MODULE_TO_TITLE = {
   subordinate: _l('下属任务-任务'),
 };
 
-class TaskEntrypoint extends Component {
+class TaskEntrypoint extends Component<any, any> {
   componentDidMount() {
     $('html').addClass('AppTask');
   }

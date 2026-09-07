@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import cx from 'classnames';
 import { Dialog, Icon, ScrollView } from 'ming-ui';
 
-export default class DelAppGroup extends Component {
+export default class DelAppGroup extends Component<any, any> {
   static propTypes = {};
   static defaultProps = {};
   state = {

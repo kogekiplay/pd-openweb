@@ -62,7 +62,7 @@ const ParamsDropdown = styled(Dropdown)`
     }
   }
 `;
-export default class Condition extends Component {
+export default class Condition extends Component<any, any> {
   static propTypes = {
     isRules: PropTypes.bool,
     projectId: PropTypes.string,

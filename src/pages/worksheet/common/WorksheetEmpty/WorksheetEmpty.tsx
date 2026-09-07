@@ -18,7 +18,7 @@ const createWorksheetList = [
   { type: 'importExcel', icon: 'new_excel', createType: 'importExcel', name: _l('从Excel创建') },
 ];
 
-class WorksheetEmpty extends Component {
+class WorksheetEmpty extends Component<any, any> {
   static propTypes = {
     dispatch: PropTypes.func,
   };

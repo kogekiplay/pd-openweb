@@ -6,7 +6,7 @@ import './less/RadioGroup.less';
 
 export const SIZE_LIST = ['small', 'default', 'middle'];
 
-class Radio extends Component {
+class Radio extends Component<any, any> {
   static propTypes = {
     /**
      * 是否没有margin

@@ -80,7 +80,7 @@ const STATUS = [
   { id: 'unFiltered', text: _l('按钮禁用') },
 ];
 
-class WorkflowHistory extends Component {
+class WorkflowHistory extends Component<any, any> {
   static propTypes = {};
   static defaultProps = {};
   state = {

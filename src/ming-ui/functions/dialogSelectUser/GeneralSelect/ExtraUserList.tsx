@@ -3,7 +3,7 @@ import _ from 'lodash';
 import NoData from './NoData';
 import User from './User';
 
-export default class ExtraUserList extends Component {
+export default class ExtraUserList extends Component<any, any> {
   getChecked(user) {
     return (
       !!this.props.selectedUsers.filter(item => item.accountId === user.accountId).length || this.getIncluded(user)

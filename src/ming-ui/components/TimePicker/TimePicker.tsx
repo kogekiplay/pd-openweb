@@ -10,7 +10,7 @@ const getComputedStyle = (element, attr) => {
   return window.getComputedStyle(element, null).getPropertyValue(attr);
 };
 
-class TimePicker extends Component {
+class TimePicker extends Component<any, any> {
   static propTypes = {
     /**
      * 时间选择器类名

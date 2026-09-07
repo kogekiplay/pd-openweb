@@ -43,7 +43,7 @@ const Drag = styled.div(
   }
 `,
 );
-let WindowChat = class WindowChat extends Component {
+let WindowChat = class WindowChat extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -5,7 +5,7 @@ import GroupsList from './GroupList';
 import MemberList from './MemberList';
 import './index.less';
 
-export default class GroupDept extends Component {
+export default class GroupDept extends Component<any, any> {
   constructor() {
     super();
     Config.setPageTitle(_l('用户 - 群组'));

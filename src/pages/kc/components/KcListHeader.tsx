@@ -12,7 +12,7 @@ import { expireDialogAsync } from 'src/components/upgradeVersion';
 import { NODE_STATUS, PICK_TYPE } from '../constant/enum';
 import HoverState from '../decorators/withHoverState';
 
-export default class KcListHeader extends Component {
+export default class KcListHeader extends Component<any, any> {
   static propTypes = {
     currentRoot: PropTypes.oneOfType([PropTypes.number, PropTypes.shape({})]),
     baseUrl: PropTypes.string,

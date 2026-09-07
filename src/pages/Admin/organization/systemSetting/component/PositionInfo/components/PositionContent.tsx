@@ -13,7 +13,7 @@ import RoleUserList from './RoleUserList';
 
 const PAGE_SIZE = 50;
 
-class PositionContent extends Component {
+class PositionContent extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {};

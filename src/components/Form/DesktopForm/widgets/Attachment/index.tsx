@@ -23,7 +23,7 @@ import FileEditModal from '../../../components/Files/FileEditModal';
 import { WidgetEventHelper } from '../../../core/useFormEventManager';
 import './index.less';
 
-export default class Widgets extends Component {
+export default class Widgets extends Component<any, any> {
   static propTypes = {
     disabled: PropTypes.bool,
     value: PropTypes.any,

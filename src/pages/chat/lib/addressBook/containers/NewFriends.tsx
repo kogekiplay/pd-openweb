@@ -4,7 +4,7 @@ import ListNull from '../components/ListNull';
 import NewFriendsList from '../components/NewFriendsList';
 import RecommendsList from '../components/RecommendsList';
 
-export default class NewFriends extends React.Component {
+export default class NewFriends extends React.Component<any, any> {
   constructor() {
     super();
 

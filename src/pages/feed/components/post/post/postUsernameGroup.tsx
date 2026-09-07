@@ -8,7 +8,7 @@ import { pathCompletion } from 'src/utils/common';
 /**
  * 动态发布者姓名和发布到的群组
  */
-class PostUsernameGroup extends React.Component {
+class PostUsernameGroup extends React.Component<any, any> {
   static displayName = 'PostUsernameGroup';
 
   static propTypes = {

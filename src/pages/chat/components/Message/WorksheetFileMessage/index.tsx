@@ -3,7 +3,7 @@ import _ from 'lodash';
 import homeAppAjax from 'src/api/homeApp';
 import worksheetAjax from 'src/api/worksheet';
 
-export default class WorksheetFileMessage extends Component {
+export default class WorksheetFileMessage extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {};

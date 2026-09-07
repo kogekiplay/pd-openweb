@@ -15,7 +15,7 @@ import DataContrast from './components/DataContrast';
 import OriginalData from './components/OriginalData';
 import PeriodTarget from './components/PeriodTarget';
 
-let ChartAnalyse = class ChartAnalyse extends Component {
+let ChartAnalyse = class ChartAnalyse extends Component<any, any> {
   constructor(props) {
     super(props);
   }

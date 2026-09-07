@@ -102,7 +102,7 @@ const getFilterDeletedMchId = (mchId, merchantList = []) => {
   return mchId.filter(item => _.findIndex(merchantList, v => v.value === item) > -1);
 };
 
-export default class PayConfig extends Component {
+export default class PayConfig extends Component<any, any> {
   constructor(props) {
     super(props);
 

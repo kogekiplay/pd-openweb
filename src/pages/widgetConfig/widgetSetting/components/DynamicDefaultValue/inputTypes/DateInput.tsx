@@ -8,7 +8,7 @@ import { getDatePickerConfigs } from '../../../../util/setting';
 import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
 import { DynamicValueInputWrap, WrapMaxOrMin } from '../styled';
 
-export default class DateInput extends Component {
+export default class DateInput extends Component<any, any> {
   static propTypes = {
     onDynamicValueChange: func,
     data: shape({ enumDefault: number }),

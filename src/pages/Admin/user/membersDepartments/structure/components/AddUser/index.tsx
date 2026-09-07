@@ -17,7 +17,7 @@ import EditUser from '../EditUser';
 import TextInput from '../TextInput';
 import './index.less';
 
-export default class AddUser extends Component {
+export default class AddUser extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

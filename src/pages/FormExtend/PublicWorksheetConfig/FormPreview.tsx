@@ -5,7 +5,7 @@ import { SYS_CONTROLS_WORKFLOW } from 'src/pages/widgetConfig/config/widget.js';
 import { isOldSheetList } from 'src/pages/widgetConfig/util';
 import PublicFormDisplay from '../../widgetConfig/widgetDisplay/publicFormDisplay';
 
-export default class FormPreview extends React.Component {
+export default class FormPreview extends React.Component<any, any> {
   static propTypes = {
     controls: PropTypes.arrayOf(PropTypes.shape({})),
     onChange: PropTypes.func,

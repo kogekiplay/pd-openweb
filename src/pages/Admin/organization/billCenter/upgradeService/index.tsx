@@ -11,7 +11,7 @@ import { pathCompletion } from 'src/utils/common';
 import Config from '../../../config';
 import './style.less';
 
-let UpgradeService = class UpgradeService extends Component {
+let UpgradeService = class UpgradeService extends Component<any, any> {
   constructor() {
     super();
     Config.setPageTitle(_l('升级产品'));

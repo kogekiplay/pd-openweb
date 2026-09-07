@@ -86,7 +86,7 @@ const FormBox = styled.div`
   }
 `;
 
-export default class WebProxySetting extends Component {
+export default class WebProxySetting extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

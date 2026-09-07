@@ -4,7 +4,7 @@ import { SvgIcon } from 'ming-ui';
 import { navigateTo } from '../../../router/navigateTo';
 import './index.less';
 
-export default class AppNameHeader extends Component {
+export default class AppNameHeader extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

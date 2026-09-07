@@ -5,7 +5,7 @@ import Root from './root';
 import store from './store';
 import './style/index.less';
 
-export default class App extends React.Component {
+export default class App extends React.Component<any, any> {
   constructor(props) {
     super(props);
     if (props.from && props.projectId) {

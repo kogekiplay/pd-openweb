@@ -6,7 +6,7 @@ import { DynamicInput, OtherField, SelectOtherField } from '../components';
 import { DynamicValueInputWrap } from '../styled';
 import { transferValue } from '../util';
 
-export default class ArrayInput extends Component {
+export default class ArrayInput extends Component<any, any> {
   static propTypes = {
     dynamicValue: arrayOf(shape({ cid: string, rcid: string, staticValue: string })),
     onDynamicValueChange: func,

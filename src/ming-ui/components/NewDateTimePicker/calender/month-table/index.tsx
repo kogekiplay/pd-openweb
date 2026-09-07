@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-class MonthTable extends Component {
+class MonthTable extends Component<any, any> {
   itemOnClick = (event, item) => {
     if (item.disabled) {
       event.preventDefault();

@@ -22,7 +22,7 @@ const DialogWrap = styled(Dialog)`
   }
 `;
 
-class RefuseUserJoinDia extends React.Component {
+class RefuseUserJoinDia extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

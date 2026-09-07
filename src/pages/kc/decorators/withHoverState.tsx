@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-class HoverState extends React.Component {
+class HoverState extends React.Component<any, any> {
   static propTypes = {
     component: PropTypes.any,
     thisArg: PropTypes.object.isRequired, // 需要调用 setState 的 this 对象

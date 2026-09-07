@@ -179,7 +179,7 @@ function getOptionStyle(option, cell) {
     : {};
 }
 
-export default class Options extends React.Component {
+export default class Options extends React.Component<any, any> {
   static propTypes = {
     className: PropTypes.string,
     style: PropTypes.shape({}),

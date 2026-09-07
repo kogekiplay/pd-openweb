@@ -3,7 +3,7 @@ import moment from 'moment';
 
 const DATE_COL_COUNT = 7;
 
-class DateTHead extends Component {
+class DateTHead extends Component<any, any> {
   render() {
     const props = this.props;
     const value = props.value;

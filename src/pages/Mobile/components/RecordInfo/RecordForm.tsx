@@ -35,7 +35,7 @@ const LockWrap = styled.div`
     }
   }
 `;
-let RecordForm = class RecordForm extends Component {
+let RecordForm = class RecordForm extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

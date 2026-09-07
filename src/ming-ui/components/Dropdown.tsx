@@ -9,7 +9,7 @@ import Menu from './Menu';
 import MenuItem from './MenuItem';
 import './less/Dropdown.less';
 
-class Dropdown extends Component {
+class Dropdown extends Component<any, any> {
   static propTypes = {
     /**
      * 未选择时的默认提示

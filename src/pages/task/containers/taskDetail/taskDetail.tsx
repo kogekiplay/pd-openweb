@@ -39,7 +39,7 @@ const TAB_TYPE = {
   log: 3,
 };
 
-class TaskDetail extends Component {
+class TaskDetail extends Component<any, any> {
   static defaultProps = {
     visible: false,
     taskId: '',

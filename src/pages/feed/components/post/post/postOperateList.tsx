@@ -28,7 +28,7 @@ const { POST_TYPE } = postEnum;
 /**
  * 动态的操作列表
  */
-class PostOperateList extends React.Component {
+class PostOperateList extends React.Component<any, any> {
   static propTypes = {
     dispatch: PropTypes.func,
     options: PropTypes.object,

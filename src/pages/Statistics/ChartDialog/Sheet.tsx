@@ -56,7 +56,7 @@ const Con = styled.div`
     }
   }
 `;
-let ChartSheet = class ChartSheet extends Component {
+let ChartSheet = class ChartSheet extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

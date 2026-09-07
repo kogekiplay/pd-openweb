@@ -6,7 +6,7 @@ import { justifyInfoData } from './enum';
 
 const formatter = v => String(v).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-export default class RealTimeData extends PureComponent {
+export default class RealTimeData extends PureComponent<any, any> {
   constructor(props) {
     super(props);
     this.state = {

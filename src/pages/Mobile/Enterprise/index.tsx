@@ -54,7 +54,7 @@ const BottomSpace = styled.div`
   height: 30px;
 `;
 
-class ProjectCard extends Component {
+class ProjectCard extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {
@@ -177,7 +177,7 @@ class ProjectCard extends Component {
   }
 }
 
-class Enterprise extends Component {
+class Enterprise extends Component<any, any> {
   constructor(props) {
     super(props);
 

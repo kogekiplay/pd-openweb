@@ -50,7 +50,7 @@ const Wrap = styled.div`
 `;
 
 const tabList = [_l('记录范围'), _l('操作'), _l('字段')];
-export default class Con extends PureComponent {
+export default class Con extends PureComponent<any, any> {
   constructor(props) {
     super(props);
     this.state = {

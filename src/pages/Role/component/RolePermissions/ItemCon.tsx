@@ -6,7 +6,7 @@ import { ICON_ROLE_TYPE, sysRoleType } from 'src/pages/Role/config.js';
 import DropOption from 'src/pages/Role/PortalCon/components/DropOption';
 import { getTranslateInfo } from 'src/utils/app';
 
-export default class Con extends React.Component {
+export default class Con extends React.Component<any, any> {
   render() {
     const { appId, item, dataList, onAction, roleId, onChoose, isForPortal, DragHandle } = this.props;
     return (

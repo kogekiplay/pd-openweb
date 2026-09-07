@@ -19,7 +19,7 @@ const Comp = {
   refund: RefundOrder,
 };
 
-export default class Merchant extends Component {
+export default class Merchant extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

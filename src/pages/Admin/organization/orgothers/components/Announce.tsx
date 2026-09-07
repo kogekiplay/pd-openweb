@@ -70,7 +70,7 @@ const AttachmentList = styled.div`
   }
 `;
 
-export default class Announce extends Component {
+export default class Announce extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

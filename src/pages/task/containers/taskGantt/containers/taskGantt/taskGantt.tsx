@@ -22,7 +22,7 @@ import TimeAxis from '../timeAxis/timeAxis';
 import TimeBarContainer from '../timeBarContainer/timeBarContainer';
 import './taskGantt.less';
 
-class TaskGantt extends Component {
+class TaskGantt extends Component<any, any> {
   constructor(props) {
     super(props);
     config.projectId = props.taskConfig.projectId;

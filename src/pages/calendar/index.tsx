@@ -6,7 +6,7 @@ import toolBar from './modules/toolbar/toolbar';
 import './modules/calendarControl/css/fullcalendar.less';
 import './modules/css/share.less';
 
-export default class CalendarEntrypoint extends Component {
+export default class CalendarEntrypoint extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -37,7 +37,7 @@ const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
   return blob;
 };
 
-class ThumbnailGuide extends React.Component {
+class ThumbnailGuide extends React.Component<any, any> {
   static propTypes = {
     attachments: PropTypes.array,
     index: PropTypes.number,

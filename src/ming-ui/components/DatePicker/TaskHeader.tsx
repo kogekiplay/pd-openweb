@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Checkbox from 'ming-ui/components/Checkbox';
 
-class TaskHeader extends Component {
+class TaskHeader extends Component<any, any> {
   /**
    * 切换开始和结束的选中状态
    */

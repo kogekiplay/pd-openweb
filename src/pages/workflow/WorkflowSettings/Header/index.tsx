@@ -130,7 +130,7 @@ const BotBox = styled.div`
   background: var(--color-background-primary);
 `;
 
-class Header extends Component {
+class Header extends Component<any, any> {
   static defaultProps = {
     tabIndex: 1,
     switchTabs: () => {},

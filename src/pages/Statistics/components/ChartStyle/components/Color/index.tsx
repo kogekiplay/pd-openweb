@@ -23,7 +23,7 @@ const EntranceWrapper = styled.div`
   }
 `;
 
-export default class ColorEntrance extends Component {
+export default class ColorEntrance extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

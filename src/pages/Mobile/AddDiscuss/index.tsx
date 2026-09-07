@@ -23,7 +23,7 @@ const formatEmpty = value => {
   return value || '';
 };
 
-let AddDiscuss = class AddDiscuss extends Component {
+let AddDiscuss = class AddDiscuss extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

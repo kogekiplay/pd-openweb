@@ -9,7 +9,7 @@ import PostBody from '../post/postBody';
 import PostCard from '../post/postCard';
 import TopPostPager from './topPostPager';
 
-class TopPostList extends React.Component {
+class TopPostList extends React.Component<any, any> {
   static propTypes = {
     dispatch: PropTypes.func,
     fontSize: PropTypes.number,

@@ -17,7 +17,7 @@ import { checkClearIntergrationData, integrationFailed } from '../utils';
 import fsImg from './feishuSyncCourse/img/8.png';
 import './style.less';
 
-export default class FeiShu extends React.Component {
+export default class FeiShu extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

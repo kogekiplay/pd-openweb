@@ -8,7 +8,7 @@ import { dateConvertToUserZone } from 'src/utils/project';
 import { completeAdminLogLinks } from '../utils';
 import './style.less';
 
-export default class HistoryLogs extends React.Component {
+export default class HistoryLogs extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

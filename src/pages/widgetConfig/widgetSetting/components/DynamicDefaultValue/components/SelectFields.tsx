@@ -24,7 +24,7 @@ const filterSys = (controls = [], fromCustomEventApi) => {
   return controls.filter(i => !_.includes(FILTER_SYS_CONTROLS, i.controlId));
 };
 
-let SelectFields = class SelectFields extends Component {
+let SelectFields = class SelectFields extends Component<any, any> {
   static propTypes = {};
   static defaultProps = {};
   state = {

@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { ACTION_ID, APP_TYPE } from '../../enum';
 import { CreateNode, NodeOperate } from '../components';
 
-export default class Write extends Component {
+export default class Write extends Component<any, any> {
   constructor(props) {
     super(props);
   }

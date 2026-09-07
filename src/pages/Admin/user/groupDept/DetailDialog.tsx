@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { pathCompletion } from 'src/utils/common';
 
-export default class DetailDialog extends Component {
+export default class DetailDialog extends Component<any, any> {
   constructor(props) {
     super(props);
   }

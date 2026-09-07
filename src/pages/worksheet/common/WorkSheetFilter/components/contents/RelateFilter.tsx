@@ -7,7 +7,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { DEFAULT_COLUMNS } from '../../enum';
 import RelateBox from './RelateBox';
 
-export default class RelateFilter extends Component {
+export default class RelateFilter extends Component<any, any> {
   static propTypes = {
     disabled: PropTypes.bool,
     values: PropTypes.arrayOf(PropTypes.string),

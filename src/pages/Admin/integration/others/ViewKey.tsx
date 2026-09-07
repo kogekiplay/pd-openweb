@@ -4,7 +4,7 @@ import copy from 'copy-to-clipboard';
 import { Dialog, VerifyPasswordConfirm } from 'ming-ui';
 import AuthorizationController from 'src/api/authorization';
 
-export default class ViewKey extends Component {
+export default class ViewKey extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

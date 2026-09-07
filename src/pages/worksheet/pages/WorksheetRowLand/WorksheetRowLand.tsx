@@ -12,7 +12,7 @@ import { navigateTo } from 'src/router/navigateTo';
 import RecordInfoWrapper from '../../common/recordInfo/RecordInfoWrapper';
 import './WorksheetRowLand.less';
 
-class WorksheetRowLand extends Component {
+class WorksheetRowLand extends Component<any, any> {
   constructor(props) {
     super(props);
     const { match } = this.props;

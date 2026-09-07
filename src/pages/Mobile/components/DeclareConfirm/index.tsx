@@ -60,7 +60,7 @@ const Con = styled.div`
 `;
 
 const declareConfirm = Component => {
-  class DeclareConfirm extends React.Component {
+  class DeclareConfirm extends React.Component<any, any> {
     constructor(props) {
       super(props);
       const { enableDeclareConfirm } = md.global.SysSettings;

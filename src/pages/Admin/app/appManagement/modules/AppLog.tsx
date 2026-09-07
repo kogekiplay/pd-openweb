@@ -32,7 +32,7 @@ const optionTypeIcon = {
   8: 'icon-restart',
 };
 
-export default class AppLog extends React.Component {
+export default class AppLog extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

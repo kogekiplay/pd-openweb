@@ -63,7 +63,7 @@ const ColorRuleItem = styled.div`
   }
 `;
 
-export default class PivotTableFieldColor extends Component {
+export default class PivotTableFieldColor extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

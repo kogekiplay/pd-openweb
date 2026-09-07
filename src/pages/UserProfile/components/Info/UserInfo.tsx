@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import UserMoreProfile from 'src/components/UserInfoComponents/UserMoreProfile.jsx';
 import InfoTop from './UserInfoTop';
 
-class Info extends Component {
+class Info extends Component<any, any> {
   state = {};
 
   render() {

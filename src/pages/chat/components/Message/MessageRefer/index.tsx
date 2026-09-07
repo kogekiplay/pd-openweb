@@ -4,7 +4,7 @@ import previewAttachments from 'src/components/previewAttachments/previewAttachm
 import Constant from '../../../utils/constant';
 import './index.less';
 
-export default class MessageRefer extends Component {
+export default class MessageRefer extends Component<any, any> {
   constructor(props) {
     super(props);
   }

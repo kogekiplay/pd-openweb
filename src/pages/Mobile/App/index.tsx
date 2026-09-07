@@ -72,7 +72,7 @@ const getBottomTabSheetList = ({ appSection = [], detail = {}, viewHideNavi, isA
   return { sheetList, bottomNavSheetId };
 };
 
-class App extends Component {
+class App extends Component<any, any> {
   constructor(props) {
     super(props);
     const { match, history } = props;

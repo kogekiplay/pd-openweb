@@ -43,7 +43,7 @@ const splitFeeds = list => {
   return list;
 };
 
-export default class FeedsPanel extends Component {
+export default class FeedsPanel extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

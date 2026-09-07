@@ -8,7 +8,7 @@ import { getCurrentProject } from 'src/utils/project';
 import { downloadFile } from '../../util';
 import './index.less';
 
-class UserBoardDialog extends Component {
+class UserBoardDialog extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

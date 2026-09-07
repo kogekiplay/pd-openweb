@@ -14,7 +14,7 @@ import './updater.css';
 /**
  * 动态发布器
  */
-class Updater extends React.Component {
+class Updater extends React.Component<any, any> {
   static propTypes = {
     defaultGroup: PropTypes.string,
     projectId: PropTypes.string,

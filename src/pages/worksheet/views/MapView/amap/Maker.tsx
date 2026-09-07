@@ -5,7 +5,7 @@ import { getAMapPixel, isFun, toCapitalString } from './utils/common';
 import log from './utils/log';
 import { MarkerAllProps, MarkerConfigurableProps, renderMarkerComponent } from './utils/markerUtils';
 
-class Marker extends React.Component {
+class Marker extends React.Component<any, any> {
   static propTypes = {
     map: PropTypes.object,
     element: HTMLDivElement,

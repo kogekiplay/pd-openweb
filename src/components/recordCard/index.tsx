@@ -22,7 +22,7 @@ function getCoverControlData(data) {
   return _.find(data, file => RegExpValidator.fileIsPicture(file.ext));
 }
 
-export default class RecordCard extends Component {
+export default class RecordCard extends Component<any, any> {
   static propTypes = {
     from: PropTypes.number,
     disabled: PropTypes.bool,

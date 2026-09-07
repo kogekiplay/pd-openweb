@@ -65,7 +65,7 @@ const SelectColorWrap = styled.div`
   }
 `;
 
-export default class SelectColor extends Component {
+export default class SelectColor extends Component<any, any> {
   static propTypes = {
     colors: arrayOf(string),
     color: string,

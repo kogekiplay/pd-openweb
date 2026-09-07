@@ -4,7 +4,7 @@ import SearchInput from 'src/pages/AppHomepage/AppCenter/components/SearchInput'
 import { WrapNav } from 'src/pages/Role/style';
 import RoleList from './RoleList';
 
-export default class Con extends React.Component {
+export default class Con extends React.Component<any, any> {
   render() {
     const { roleList = [], keywords } = this.props;
     return (

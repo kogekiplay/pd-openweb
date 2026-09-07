@@ -8,7 +8,7 @@ import account from 'src/api/account';
 import { encrypt } from 'src/utils/common';
 import './index.less';
 
-export default class ValidPassWord extends Component {
+export default class ValidPassWord extends Component<any, any> {
   constructor() {
     super();
     this.state = {

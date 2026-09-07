@@ -156,7 +156,7 @@ const ChartWrap = styled.div`
   }
 `;
 
-export default class Overview extends Component {
+export default class Overview extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

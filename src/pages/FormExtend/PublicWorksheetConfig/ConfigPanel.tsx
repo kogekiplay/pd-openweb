@@ -156,7 +156,7 @@ const ColumnSettingWrap = styled.div`
   }
 `;
 
-class ConfigPanel extends React.Component {
+class ConfigPanel extends React.Component<any, any> {
   static propTypes = {
     worksheetInfo: PropTypes.shape({}),
     worksheetSettings: PropTypes.shape({}),

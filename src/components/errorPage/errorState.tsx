@@ -3,7 +3,7 @@ import cx from 'classnames';
 import PropTypes from 'prop-types';
 import './errorPage.less';
 
-export default class ErrorState extends Component {
+export default class ErrorState extends Component<any, any> {
   static propTypes = {
     text: PropTypes.string,
     showBtn: PropTypes.bool,

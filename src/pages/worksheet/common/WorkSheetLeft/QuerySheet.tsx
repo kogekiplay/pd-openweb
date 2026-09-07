@@ -8,7 +8,7 @@ import sheetAjax from 'src/api/worksheet';
 import WorkSheetItem from './WorkSheetItem';
 
 const ClickAwayable = ClickAway;
-export default class QuerySheet extends Component {
+export default class QuerySheet extends Component<any, any> {
   static propTypes = {
     sheetActions: PropTypes.object,
   };

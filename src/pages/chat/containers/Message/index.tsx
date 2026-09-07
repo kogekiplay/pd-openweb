@@ -21,7 +21,7 @@ import Constant from '../../utils/constant';
 import * as socket from '../../utils/socket';
 import './index.less';
 
-class Message extends Component {
+class Message extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

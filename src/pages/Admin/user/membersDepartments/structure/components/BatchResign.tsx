@@ -56,7 +56,7 @@ const MenuWrap = styled(Menu)`
   }
 `;
 
-export default class BatchResign extends Component {
+export default class BatchResign extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

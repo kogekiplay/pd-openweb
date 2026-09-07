@@ -3,7 +3,7 @@ import cx from 'classnames';
 import PropTypes from 'prop-types';
 import './less/Switch.less';
 
-class Switch extends Component {
+class Switch extends Component<any, any> {
   static propTypes = {
     /**
      * 点击事件,参数(checked, value)

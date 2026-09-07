@@ -14,7 +14,7 @@ function getNode(component) {
   return component && component.getNode ? component.getNode() : null;
 }
 
-class ChecklistOperator extends Component {
+class ChecklistOperator extends Component<any, any> {
   render() {
     return (
       <ClickAwayable
@@ -108,7 +108,7 @@ const cardTarget = {
     props.checklistItemHover(props.index, props.topIndex);
   },
 };
-let ChecklistItem = class ChecklistItem extends Component {
+let ChecklistItem = class ChecklistItem extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

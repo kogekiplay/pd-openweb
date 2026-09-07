@@ -14,7 +14,7 @@ import ExplanList from './container/ExplanList';
 import ManageDataBase from './container/ManageDataBase';
 import './index.less';
 
-export default class ExclusiveComp extends Component {
+export default class ExclusiveComp extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -15,7 +15,7 @@ import DrawerFooterOption from '../DrawerFooterOption';
 import TextInput from '../TextInput';
 import './index.less';
 
-export default class EditUser extends Component {
+export default class EditUser extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

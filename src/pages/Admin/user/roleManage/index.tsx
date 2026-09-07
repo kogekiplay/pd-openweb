@@ -119,7 +119,7 @@ const roleTemplatePaths = {
   5: '/staticfiles/template/orgRoleImportTemplate/Templat Import Peranan.xlsx',
 };
 
-class RoleManage extends Component {
+class RoleManage extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -5,7 +5,7 @@ import { LoadDiv } from 'ming-ui';
 import worksheetAjax from 'src/api/worksheet';
 import DraftList from './DraftList';
 
-export default class MobileDraftList extends Component {
+export default class MobileDraftList extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

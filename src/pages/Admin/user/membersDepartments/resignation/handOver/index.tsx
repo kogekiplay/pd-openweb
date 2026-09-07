@@ -11,7 +11,7 @@ import Detail from './detail';
 import './style.less';
 import { pathCompletion } from 'src/utils/common';
 
-export default class HandOver extends React.Component {
+export default class HandOver extends React.Component<any, any> {
   static propTypes = {
     keywords: PropTypes.string,
     projectId: PropTypes.string.isRequired,

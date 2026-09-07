@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import JsBarcode from 'jsbarcode';
 
-export default class Barcode extends Component {
+export default class Barcode extends Component<any, any> {
   static defaultProps = {
     format: 'CODE128',
     renderer: 'svg',

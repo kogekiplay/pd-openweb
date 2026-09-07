@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { APP_TYPE } from '../../enum';
 import { SelectNodeObject, UpdateFields } from '../components';
 
-export default class UpdateSheetRecord extends Component {
+export default class UpdateSheetRecord extends Component<any, any> {
   render() {
     const { data, SelectNodeObjectChange, isApproval } = this.props;
 

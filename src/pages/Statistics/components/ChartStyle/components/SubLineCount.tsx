@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Checkbox, Input } from 'antd';
 
-export default class SubLineCount extends Component {
+export default class SubLineCount extends Component<any, any> {
   constructor(props) {
     super(props);
   }

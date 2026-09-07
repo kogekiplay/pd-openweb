@@ -43,7 +43,7 @@ const Wrap = styled.div`
 `;
 
 // 记录收藏
-export default class RecordCollect extends Component {
+export default class RecordCollect extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

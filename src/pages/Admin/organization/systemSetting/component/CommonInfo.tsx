@@ -11,7 +11,7 @@ import Config from '../../../config';
 import SetInfoDialog from '../modules/SetInfoDialog';
 import './index.less';
 
-export default class CommonInfo extends Component {
+export default class CommonInfo extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

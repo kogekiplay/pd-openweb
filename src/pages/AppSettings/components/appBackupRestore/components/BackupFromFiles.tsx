@@ -34,7 +34,7 @@ const SupportWrap = styled(Support)`
   }
 `;
 
-class BackupFromFilesCom extends Component {
+class BackupFromFilesCom extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -12,7 +12,7 @@ import PauseTimeList from '../PauseTimeList';
 import CountDown from './CountDown';
 import { formatter, justifyInfoData, runDateList } from './enum';
 
-export default class ExecutionDetails extends Component {
+export default class ExecutionDetails extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { Icon } from 'ming-ui';
 import departmentAjax from 'src/api/department';
 
-export default class DepDropDown extends Component {
+export default class DepDropDown extends Component<any, any> {
   static propTypes = {
     popupClassName: PropTypes.string,
     treePopupAlign: PropTypes.shape({}),

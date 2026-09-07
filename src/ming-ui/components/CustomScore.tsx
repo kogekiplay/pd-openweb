@@ -21,7 +21,7 @@ const CustomScoreIcon = styled.div`
   }
 `;
 
-class CustomScore extends Component {
+class CustomScore extends Component<any, any> {
   static propTypes = {
     /**
      * 配置信息

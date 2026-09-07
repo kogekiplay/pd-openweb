@@ -44,7 +44,7 @@ const typeList = [
   { label: _l('事件推送'), value: 12 },
 ];
 
-class AdminWorkflowList extends Component {
+class AdminWorkflowList extends Component<any, any> {
   constructor(props) {
     super(props);
     const workflowTab = localStorage.getItem('workflowTab');

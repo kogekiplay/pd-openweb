@@ -31,7 +31,7 @@ const checkFuncs = {
   },
 };
 
-export default class InitBindAccountDialog extends Component {
+export default class InitBindAccountDialog extends Component<any, any> {
   constructor(props) {
     super(props);
     const { md = {} } = window;

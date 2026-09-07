@@ -32,7 +32,7 @@ const GenerateJSONBox = styled.textarea`
   }
 `;
 
-export default class WebHook extends Component {
+export default class WebHook extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

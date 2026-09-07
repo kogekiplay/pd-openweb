@@ -21,7 +21,7 @@ const SubmitButton = styled(Button)`
   }
 `;
 
-export default class EditableButton extends React.Component {
+export default class EditableButton extends React.Component<any, any> {
   static propTypes = {
     name: PropTypes.string,
     onChange: PropTypes.func,

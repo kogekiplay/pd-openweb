@@ -6,7 +6,7 @@ import ClickAway from 'ming-ui/components/ClickAway';
 import List from './List';
 import './less/Menu.less';
 
-let Menu = class Menu extends Component {
+let Menu = class Menu extends Component<any, any> {
   static propTypes = {
     fixedHeader: PropTypes.any,
     parentMenuItem: PropTypes.any,

@@ -195,7 +195,7 @@ const getFormatCount = count => {
   return formatCount;
 };
 
-let ExpansionService = class ExpansionService extends Component {
+let ExpansionService = class ExpansionService extends Component<any, any> {
   constructor() {
     super();
     this.expandType = Config.params[3];

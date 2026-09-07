@@ -8,7 +8,7 @@ import Dialog from 'ming-ui/components/Dialog';
 import Input from 'ming-ui/components/Input';
 import postAjax from 'src/api/post';
 
-export default class EditVoteEndTimeDialog extends React.Component {
+export default class EditVoteEndTimeDialog extends React.Component<any, any> {
   static propType = {
     postItem: PropTypes.object,
     callback: PropTypes.func,

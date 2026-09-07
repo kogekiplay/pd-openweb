@@ -23,7 +23,7 @@ import ThumbnailGuide from './thumbnailGuide';
 import VideoPlayer from './VideoPlayer';
 import './attachmentsPreview.less';
 
-class AttachmentsPreview extends React.Component {
+class AttachmentsPreview extends React.Component<any, any> {
   static propTypes = {
     isShare: PropTypes.bool,
     attachments: PropTypes.array,

@@ -48,7 +48,7 @@ const DecryptBox = styled.span`
   min-width: max-content;
 `;
 
-export default class WriteFields extends Component {
+export default class WriteFields extends Component<any, any> {
   static defaultProps = {
     data: [],
     hideTypes: [],

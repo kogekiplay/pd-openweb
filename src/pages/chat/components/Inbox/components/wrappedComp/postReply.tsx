@@ -9,7 +9,7 @@ import BaseMessageComponent from '../baseComponent/messageContent';
  * @class PostReply
  * @extends {React.Component}
  */
-export default class PostReply extends React.Component {
+export default class PostReply extends React.Component<any, any> {
   constructor(props) {
     super(props);
 

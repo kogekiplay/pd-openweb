@@ -26,7 +26,7 @@ const LiCon = styled.li`
     background-color: ${props => props.iconColor} !important;
   }
 `;
-let SortableAppItem = class SortableAppItem extends Component {
+let SortableAppItem = class SortableAppItem extends Component<any, any> {
   static propTypes = {
     value: shape({
       name: string,

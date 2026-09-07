@@ -18,7 +18,7 @@ import {
   WriteFields,
 } from '../components';
 
-export default class Link extends Component {
+export default class Link extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

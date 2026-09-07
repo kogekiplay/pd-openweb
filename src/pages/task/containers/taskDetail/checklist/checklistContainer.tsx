@@ -23,7 +23,7 @@ import Checklist from './checklist';
 import config from './common/config';
 import './less/checklist.less';
 
-let ChecklistContainer = class ChecklistContainer extends Component {
+let ChecklistContainer = class ChecklistContainer extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -184,7 +184,7 @@ const DelNode = styled.div`
   }
 `;
 
-class TaskNode extends Component {
+class TaskNode extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

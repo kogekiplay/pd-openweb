@@ -13,7 +13,7 @@ export const getConfirmDisable = ({ select = [], mustLast, level = 3 }) => {
   return !select.length || (mustLast && last && !last.last && index < level);
 };
 
-export default class MobileCityPicker extends Component {
+export default class MobileCityPicker extends Component<any, any> {
   static propTypes = {
     disabled: PropTypes.bool,
     placeholder: PropTypes.string,

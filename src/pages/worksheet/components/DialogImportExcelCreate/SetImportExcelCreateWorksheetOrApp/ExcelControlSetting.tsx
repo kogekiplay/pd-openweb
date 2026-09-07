@@ -47,7 +47,7 @@ const ExcelControlSettingWrap = styled.div`
   }
 `;
 
-export default class ExcelControlSetting extends Component {
+export default class ExcelControlSetting extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

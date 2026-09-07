@@ -87,7 +87,7 @@ const OperateWrap = styled.div`
   top: -34px;
 `;
 
-class RelateRecordCards extends Component {
+class RelateRecordCards extends Component<any, any> {
   static contextType = ChildTableContext;
   static propTypes = {
     editable: PropTypes.bool,

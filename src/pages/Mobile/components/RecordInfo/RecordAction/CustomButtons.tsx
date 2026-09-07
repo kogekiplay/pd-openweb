@@ -67,7 +67,7 @@ const GroupPopupContent = styled.div`
   }
 `;
 
-export default class CustomButtons extends Component {
+export default class CustomButtons extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

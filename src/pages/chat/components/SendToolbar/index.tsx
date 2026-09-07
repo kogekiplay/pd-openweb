@@ -53,7 +53,7 @@ const recurShowFileConfirm = (up, files, i, length, cb) => {
   });
 };
 
-export default class SendToolbar extends Component {
+export default class SendToolbar extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

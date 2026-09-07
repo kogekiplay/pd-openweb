@@ -7,7 +7,7 @@ import AjaxRequest from 'src/api/discussion';
 import UploadFiles from 'src/components/UploadFiles';
 import { SOURCE_TYPE } from './config';
 
-export default class FileList extends Component {
+export default class FileList extends Component<any, any> {
   static TYPES = SOURCE_TYPE;
 
   static propTypes = {

@@ -9,7 +9,7 @@ const ClearSelect = styled.div`
   color: var(--color-text-secondary);
   cursor: pointer;
 `;
-let ClickAwayMenu = class ClickAwayMenu extends Component {
+let ClickAwayMenu = class ClickAwayMenu extends Component<any, any> {
   render() {
     const { types, handleTimeSelect, dynamicValue, showClear = true } = this.props;
     return (

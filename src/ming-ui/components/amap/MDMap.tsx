@@ -20,7 +20,7 @@ const MAP_TYPE = [
   { text: _l('自定义位置'), value: 1 },
 ];
 
-class GDMap extends Component {
+class GDMap extends Component<any, any> {
   static defaultProps = {
     isMobile: false,
     distance: 0,
@@ -528,7 +528,7 @@ class GDMap extends Component {
   }
 }
 
-export default class MDMap extends Component {
+export default class MDMap extends Component<any, any> {
   constructor(props) {
     super(props);
   }

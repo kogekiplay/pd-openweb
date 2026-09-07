@@ -5,7 +5,7 @@ import flowNode from '../../../api/flowNode';
 import { TIME_TYPE } from '../../enum';
 import { DetailFooter, DetailHeader, SpecificFieldsValue, TimeSelect } from '../components';
 
-export default class Delay extends Component {
+export default class Delay extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

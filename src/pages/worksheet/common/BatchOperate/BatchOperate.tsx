@@ -56,7 +56,7 @@ const ButtonsCon = styled.div`
     background-color: var(--color-border-primary);
   }
 `;
-class BatchOperate extends React.Component {
+class BatchOperate extends React.Component<any, any> {
   static propTypes = {
     isCharge: PropTypes.bool,
     appId: PropTypes.string,

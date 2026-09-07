@@ -7,7 +7,7 @@ import functionWrap from 'ming-ui/components/FunctionWrap';
 import organizeAjax from 'src/api/organize.js';
 import './index.less';
 
-export default class SelectOrgRole extends Component {
+export default class SelectOrgRole extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

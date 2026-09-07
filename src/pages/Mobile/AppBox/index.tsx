@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import AppWarehouse from 'src/pages/AppHomepage/AppLib';
 import './index.less';
 
-let AddBox = class AddBox extends Component {
+let AddBox = class AddBox extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

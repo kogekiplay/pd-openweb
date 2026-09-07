@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import _ from 'lodash';
 import RecordInfo from './RecordInfoWrapper';
 
-export default class Record extends React.Component {
+export default class Record extends React.Component<any, any> {
   shouldComponentUpdate(nextProps) {
     return this.props.recordId !== nextProps.recordId;
   }

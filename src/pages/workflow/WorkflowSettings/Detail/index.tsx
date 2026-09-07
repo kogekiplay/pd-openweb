@@ -8,7 +8,7 @@ import { NODE_TYPE } from '../enum';
 import nodeModules from './nodeModules';
 import './index.less';
 
-class Detail extends Component {
+class Detail extends Component<any, any> {
   static propTypes = {
     companyId: PropTypes.string,
     processId: PropTypes.string,

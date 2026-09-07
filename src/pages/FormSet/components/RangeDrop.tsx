@@ -65,7 +65,7 @@ const RangeBox = styled.div`
     overflow: auto;
   }
 `;
-let RangeDrop = class RangeDrop extends React.Component {
+let RangeDrop = class RangeDrop extends React.Component<any, any> {
   constructor(props) {
     super(props);
   }

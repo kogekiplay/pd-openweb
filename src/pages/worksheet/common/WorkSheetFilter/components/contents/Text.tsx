@@ -28,7 +28,7 @@ const DropdownWrap = styled.div`
   padding: 6px 12px;
 `;
 
-export default class Text extends Component {
+export default class Text extends Component<any, any> {
   static propTypes = {
     disabled: PropTypes.bool,
     values: PropTypes.arrayOf(PropTypes.string),

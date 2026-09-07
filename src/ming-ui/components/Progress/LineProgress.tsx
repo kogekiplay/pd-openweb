@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import '../less/Progress.less';
 
-class LineProgress extends Component {
+class LineProgress extends Component<any, any> {
   static propTypes = {
     /**
      * 进度条类名

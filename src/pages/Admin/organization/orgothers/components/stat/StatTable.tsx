@@ -186,7 +186,7 @@ const SORT_TYPES = {
   DESC: 0,
 };
 
-export default class StatTable extends React.Component {
+export default class StatTable extends React.Component<any, any> {
   static REPOREPORT_TYPES = REPOREPORT_TYPES;
 
   static propTypes = {

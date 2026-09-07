@@ -32,7 +32,7 @@ const { Step } = Steps;
 
 export const detailTypeList = UPGRADE_DETAIL_TYPE_LIST.map(v => v.type);
 export const upgradeTypeList = UPGARADE_TYPE_LIST.map(v => v.type);
-export default class UpgradeProcess extends Component {
+export default class UpgradeProcess extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

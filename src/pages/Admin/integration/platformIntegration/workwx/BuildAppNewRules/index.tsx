@@ -131,7 +131,7 @@ const StepTwo = styled.div`
   }
 `;
 
-export default class BuildAppNewRules extends Component {
+export default class BuildAppNewRules extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

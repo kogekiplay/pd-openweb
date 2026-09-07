@@ -10,7 +10,7 @@ import UploadAction from './UploadAction';
 import UploadProgress from './UploadProgress';
 import './index.less';
 
-export default class ImportExcel extends React.Component {
+export default class ImportExcel extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

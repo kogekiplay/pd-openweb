@@ -14,7 +14,7 @@ import {
   TriggerCondition,
 } from '../components';
 
-export default class LoopProcess extends Component {
+export default class LoopProcess extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

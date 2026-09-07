@@ -78,7 +78,7 @@ function SuccessDialog(props) {
   );
 }
 
-export default class MerchantCom extends Component {
+export default class MerchantCom extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

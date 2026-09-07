@@ -43,7 +43,7 @@ function getNowByCurrentStateValue(value) {
   return ret;
 }
 
-let Calendar = class Calendar extends Component {
+let Calendar = class Calendar extends Component<any, any> {
   static propTypes = {
     value: PropTypes.object,
     selectedValue: PropTypes.object,

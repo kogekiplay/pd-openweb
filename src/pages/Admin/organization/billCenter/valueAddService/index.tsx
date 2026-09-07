@@ -32,7 +32,7 @@ const isPaidSaasProject = project => {
   return !isOverseas && !isLocal && licenseType === 1;
 };
 
-let ValueAddService = class ValueAddService extends Component {
+let ValueAddService = class ValueAddService extends Component<any, any> {
   constructor() {
     super();
     this.state = {

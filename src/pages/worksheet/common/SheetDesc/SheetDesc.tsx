@@ -4,7 +4,7 @@ import { Icon } from 'ming-ui';
 import sheetApi from 'src/api/worksheet';
 import EditAppIntro from 'src/pages/PageHeader/AppPkgHeader/AppDetail/EditIntro';
 
-export default class SheetDesc extends Component {
+export default class SheetDesc extends Component<any, any> {
   constructor(props) {
     super(props);
     const { desc, resume, remark } = props;

@@ -19,7 +19,7 @@ import * as previewUtil from '../constant/util';
 import CommonHeader from './CommonHeader';
 import 'rc-trigger/assets/index.css';
 
-class PreviewHeader extends React.Component {
+class PreviewHeader extends React.Component<any, any> {
   static propTypes = {
     attachment: PropTypes.object,
     onClose: PropTypes.func,

@@ -6,7 +6,7 @@ import utils from '../../utils/utils';
 import './timeBarFences.less';
 
 // 时间栅栏
-export default class TimeBarFences extends Component {
+export default class TimeBarFences extends Component<any, any> {
   constructor(props) {
     super(props);
   }

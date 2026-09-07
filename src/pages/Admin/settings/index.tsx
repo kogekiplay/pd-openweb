@@ -48,7 +48,7 @@ const CONFIGS = [
     clickFunc: 'openAppEmailService',
   },
 ];
-export default class GeneralSettings extends Component {
+export default class GeneralSettings extends Component<any, any> {
   constructor(props) {
     super(props);
     const type = _.get(props, 'match.params.type');

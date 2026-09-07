@@ -81,7 +81,7 @@ const ColumnListWrap = styled.div`
   }
 `;
 
-export default class ColumnListDropdown extends React.Component {
+export default class ColumnListDropdown extends React.Component<any, any> {
   static propTypes = {
     visible: PropTypes.bool,
     showSearch: PropTypes.bool,

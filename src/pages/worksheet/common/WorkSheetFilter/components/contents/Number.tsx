@@ -3,7 +3,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { FILTER_CONDITION_TYPE } from '../../enum';
 
-export default class Number extends Component {
+export default class Number extends Component<any, any> {
   static propTypes = {
     disabled: PropTypes.bool,
     onChange: PropTypes.func,

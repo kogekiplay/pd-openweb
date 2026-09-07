@@ -6,7 +6,7 @@ import projectSettingController from 'src/api/projectSetting';
 import Config from '../../../config';
 import './index.less';
 
-export default class SubDomain extends Component {
+export default class SubDomain extends Component<any, any> {
   constructor(props) {
     super(props);
     this.images = [];

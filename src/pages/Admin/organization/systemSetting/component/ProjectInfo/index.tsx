@@ -5,7 +5,7 @@ import PositionInfo from '../PositionInfo';
 import SubDomain from '../SubDomain';
 import WorkPlace from '../WorkPlace';
 
-export default class ProjectInfo extends Component {
+export default class ProjectInfo extends Component<any, any> {
   constructor() {
     super();
     let level = 1;

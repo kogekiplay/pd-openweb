@@ -47,7 +47,7 @@ import {
 } from './components';
 import { baseSetList, viewTypeConfig } from './config';
 
-class ViewConfigCon extends Component {
+class ViewConfigCon extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

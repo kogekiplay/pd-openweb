@@ -7,7 +7,7 @@ import { Icon } from 'ming-ui';
 import { DateTimeRange } from 'ming-ui/components/NewDateTimePicker';
 import { FROM } from '../../../core/config';
 
-export default class Widgets extends Component {
+export default class Widgets extends Component<any, any> {
   static propTypes = {
     from: PropTypes.number,
     type: PropTypes.number,

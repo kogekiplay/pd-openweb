@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-export default class KcNewFolder extends Component {
+export default class KcNewFolder extends Component<any, any> {
   static propTypes = {
     isList: PropTypes.bool,
     addNewFolder: PropTypes.func,

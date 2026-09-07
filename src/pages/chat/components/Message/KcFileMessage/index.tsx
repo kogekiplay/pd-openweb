@@ -4,7 +4,7 @@ import RegExpValidator from 'src/utils/expression';
 import FileMessage from '../FileMessage';
 import ImageMessage from '../ImageMessage';
 
-export default class KcFileMessage extends Component {
+export default class KcFileMessage extends Component<any, any> {
   constructor(props) {
     super(props);
   }

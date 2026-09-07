@@ -49,7 +49,7 @@ const WorkflowHistory = props => {
   );
 };
 
-export default class ExecDialog extends Component {
+export default class ExecDialog extends Component<any, any> {
   static propTypes = {
     id: string,
     isLand: bool,

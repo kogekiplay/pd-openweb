@@ -154,7 +154,7 @@ const renderSortableItem = ({ DragHandle, index, item, otherProps }) => {
   );
 };
 
-class ColorLevel extends Component {
+class ColorLevel extends Component<any, any> {
   constructor(props) {
     super(props);
     const { yaxisList, colorRule = {} } = props;
@@ -350,7 +350,7 @@ class ColorLevel extends Component {
   }
 }
 
-class ColorScope extends Component {
+class ColorScope extends Component<any, any> {
   constructor(props) {
     super(props);
     const { controlId, scopeRules } = props.colorRule;
@@ -488,7 +488,7 @@ class ColorScope extends Component {
   }
 }
 
-export default class RuleColor extends Component {
+export default class RuleColor extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

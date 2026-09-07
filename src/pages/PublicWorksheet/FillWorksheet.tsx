@@ -55,7 +55,7 @@ const LoadMask = styled.div`
   z-index: 2;
 `;
 
-export default class FillWorksheet extends React.Component {
+export default class FillWorksheet extends React.Component<any, any> {
   static propTypes = {
     loading: PropTypes.bool,
     rules: PropTypes.arrayOf(PropTypes.shape({})),

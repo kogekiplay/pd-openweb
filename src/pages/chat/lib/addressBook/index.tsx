@@ -16,7 +16,7 @@ import './style.less';
 
 const Dialog = MingDialog.DialogBase;
 
-class AddressBook extends React.Component {
+class AddressBook extends React.Component<any, any> {
   constructor(props) {
     super();
 

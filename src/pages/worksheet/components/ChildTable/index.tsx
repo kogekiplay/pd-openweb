@@ -27,7 +27,7 @@ const ChildTableComp = connect(state => ({
 
   return <ChildTable {...props} />;
 });
-export default class extends React.Component {
+export default class extends React.Component<any, any> {
   constructor(props) {
     super(props);
     const { worksheetId, recordId, masterData } = props;

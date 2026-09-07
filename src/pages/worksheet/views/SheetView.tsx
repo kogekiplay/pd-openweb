@@ -375,7 +375,7 @@ const MemoizedRowHead = React.memo(
   },
 );
 
-class TableViewBase extends React.Component {
+class TableViewBase extends React.Component<any, any> {
   static propTypes = {
     isTreeTableView: bool,
     worksheetInfo: PropTypes.shape({}),

@@ -57,7 +57,7 @@ const OUTPUT_TYPE = {
   AGENT: 3,
 };
 
-export default class OutputList extends Component {
+export default class OutputList extends Component<any, any> {
   /**
    * 渲染参数列表
    */

@@ -157,7 +157,7 @@ const confirmClick = props => {
   return FunctionWrap(CustomButtonConfirm, props);
 };
 
-export default class CustomButtons extends React.Component {
+export default class CustomButtons extends React.Component<any, any> {
   static propTypes = {
     iseditting: PropTypes.bool,
     isBatchOperate: PropTypes.bool,

@@ -8,7 +8,7 @@ import Icon from 'ming-ui/components/Icon';
 import GlobalSearchAllContent from 'src/pages/globalSearch/containers/GlobalSearchAllContent';
 import './index.less';
 
-class GlobalSearch extends Component {
+class GlobalSearch extends Component<any, any> {
   static propTypes = {
     onClose: func,
   };

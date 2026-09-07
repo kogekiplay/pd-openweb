@@ -57,7 +57,7 @@ const DelIconWrap = styled.div`
   }
 `;
 
-export default class BaseFormInfo extends Component {
+export default class BaseFormInfo extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

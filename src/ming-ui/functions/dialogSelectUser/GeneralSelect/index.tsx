@@ -89,7 +89,7 @@ const ResignedTab = {
   },
 };
 
-export default class GeneraSelect extends Component {
+export default class GeneraSelect extends Component<any, any> {
   static defaultProps = {
     chooseType: ChooseType.USER, // 默认选中的tab
     departmentSettings: {

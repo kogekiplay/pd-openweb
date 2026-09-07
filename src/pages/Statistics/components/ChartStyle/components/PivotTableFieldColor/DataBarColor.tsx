@@ -3,7 +3,7 @@ import { Button, Checkbox, ConfigProvider, Input, Modal, Select } from 'antd';
 import { ColorPicker, Icon } from 'ming-ui';
 import { formatNumberFromInput } from 'src/utils/control';
 
-export default class DataBarColor extends Component {
+export default class DataBarColor extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

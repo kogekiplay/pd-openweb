@@ -40,7 +40,7 @@ const routeList = [
   },
 ];
 
-export default class Stat extends React.Component {
+export default class Stat extends React.Component<any, any> {
   constructor() {
     super();
 

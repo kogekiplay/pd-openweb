@@ -29,7 +29,7 @@ function getPopupContainer(popupContainer, rows) {
 }
 
 // enumDefault 单选 0 多选 1
-export default class User extends React.Component {
+export default class User extends React.Component<any, any> {
   static contextType = ChildTableContext;
   static propTypes = {
     className: PropTypes.string,

@@ -18,7 +18,7 @@ const MonitorWrap = styled.div`
   flex: 1;
   position: relative;
 `;
-export default class WorkflowMonitor extends Component {
+export default class WorkflowMonitor extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

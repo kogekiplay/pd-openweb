@@ -9,7 +9,7 @@ import store from 'src/redux/configureStore';
 import { pathCompletion } from 'src/utils/common';
 import './BaseColor.less';
 
-export default class BaseColor extends Component {
+export default class BaseColor extends Component<any, any> {
   constructor(props) {
     super(props);
     const { projectId } = props;

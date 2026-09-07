@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import TimePicker from 'src/components/Form/DesktopForm/widgets/Time';
 import { FILTER_CONDITION_TYPE } from '../../enum';
 
-export default class Date extends Component {
+export default class Date extends Component<any, any> {
   static propTypes = {
     disabled: PropTypes.bool,
     onChange: PropTypes.func,

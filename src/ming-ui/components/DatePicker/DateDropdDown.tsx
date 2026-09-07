@@ -8,7 +8,7 @@ import CalendarRange from './CalendarRange';
 import locale from './locale/zh_CN';
 import '../less/DateDropdDown.less';
 
-class DateDropdDown extends Component {
+class DateDropdDown extends Component<any, any> {
   static propTypes = {
     /**
      * 日历属性

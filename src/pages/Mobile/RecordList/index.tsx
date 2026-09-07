@@ -27,7 +27,7 @@ import { getDefaultValueInCreate, getViewActionInfo } from './util';
 import View from './View';
 import './index.less';
 
-let RecordList = class RecordList extends Component {
+let RecordList = class RecordList extends Component<any, any> {
   constructor(props) {
     super(props);
     const { hideAddRecord } = getRequest();

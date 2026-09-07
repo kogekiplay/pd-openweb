@@ -25,7 +25,7 @@ const ChartCountWrap = styled.div`
   }
 `;
 
-export default class ChatCount extends Component {
+export default class ChatCount extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

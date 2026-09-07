@@ -6,7 +6,7 @@ import { LoadDiv } from 'ming-ui';
 import kcAjax from 'src/api/kc';
 import { downloadFile } from 'src/utils/common';
 
-class VersionList extends React.Component {
+class VersionList extends React.Component<any, any> {
   static propTypes() {
     return {
       attachment: PropTypes.object,

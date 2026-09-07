@@ -15,7 +15,7 @@ import './postFilter.css';
 /**
  * 首页动态列表的头部筛选器
  */
-class HomePostFilter extends React.Component {
+class HomePostFilter extends React.Component<any, any> {
   static propTypes = {
     dispatch: PropTypes.func,
     fontSize: PropTypes.number,

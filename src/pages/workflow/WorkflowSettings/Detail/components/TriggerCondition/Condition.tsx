@@ -22,7 +22,7 @@ import SelectOtherFields from '../SelectOtherFields';
 import Tag from '../Tag';
 import TagInput from '../TagInput';
 
-export default class Condition extends Component {
+export default class Condition extends Component<any, any> {
   static propTypes = {
     processId: PropTypes.string,
     selectNodeId: PropTypes.string,

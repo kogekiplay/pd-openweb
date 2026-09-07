@@ -15,7 +15,7 @@ export function regexFilterHtmlScript(str) {
   return filterXss(str).replace(/(<([^>]+)>)/gi, '');
 }
 
-export default class Text extends React.Component {
+export default class Text extends React.Component<any, any> {
   static propTypes = {
     className: PropTypes.string,
     style: PropTypes.shape({}),

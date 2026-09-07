@@ -12,7 +12,7 @@ import { getFilledRequestParams } from 'src/utils/common';
 import { isRelateRecordTableControl } from 'src/utils/control';
 import './ExportSheet.less';
 
-export default class ExportSheet extends Component {
+export default class ExportSheet extends Component<any, any> {
   static propTypes = {
     allCount: PropTypes.number,
     sheetHiddenColumns: PropTypes.array,

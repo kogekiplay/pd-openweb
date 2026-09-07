@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button from 'ming-ui/components/Button';
 
-class ConfirmButton extends Component {
+class ConfirmButton extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

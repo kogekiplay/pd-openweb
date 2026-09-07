@@ -5,7 +5,7 @@ import { Checkbox, Dialog, FunctionWrap, Icon, LoadDiv, Radio, ScrollView } from
 import organizeAjax from 'src/api/organize';
 import './index.less';
 
-class DialogSelectOrgRole extends Component {
+class DialogSelectOrgRole extends Component<any, any> {
   static defaultProps = {
     projectId: '',
     showCompanyName: false,

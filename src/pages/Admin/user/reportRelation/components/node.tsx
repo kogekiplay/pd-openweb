@@ -25,7 +25,7 @@ const LoadWrap = styled.div`
   align-items: center;
 `;
 
-class Node extends Component {
+class Node extends Component<any, any> {
   static propTypes = {
     subordinates: PropTypes.arrayOf(PropTypes.string),
     isFirst: PropTypes.bool,

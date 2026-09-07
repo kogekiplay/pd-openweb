@@ -38,7 +38,7 @@ const CalItem = styled.div`
   }
 `;
 
-export default class Formula extends React.Component {
+export default class Formula extends React.Component<any, any> {
   constructor(props) {
     super(props);
     const { dataSource } = props.data;

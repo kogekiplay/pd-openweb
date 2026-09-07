@@ -40,7 +40,7 @@ const tabs = [
   { key: 1, label: _l('总览') },
   { key: 2, label: _l('按成员') },
 ];
-export default class AppAnalytics extends Component {
+export default class AppAnalytics extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

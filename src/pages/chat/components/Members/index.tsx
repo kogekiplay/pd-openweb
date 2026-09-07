@@ -6,7 +6,7 @@ import GroupController from 'src/api/group';
 import InviteOrAddUsers from './InviteOrAddUsers';
 import './index.less';
 
-class Avatar extends Component {
+class Avatar extends Component<any, any> {
   constructor(props) {
     super(props);
   }
@@ -27,7 +27,7 @@ class Avatar extends Component {
   }
 }
 
-export default class Members extends Component {
+export default class Members extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

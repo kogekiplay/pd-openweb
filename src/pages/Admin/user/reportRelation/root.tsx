@@ -12,7 +12,7 @@ import Node from './components/node';
 import NodeDialog from './components/NodeDialog';
 import SearchInput from './components/searchBox';
 
-class Root extends Component {
+class Root extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

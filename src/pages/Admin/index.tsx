@@ -45,7 +45,7 @@ const NoPermission = (
     <div className="textSecondary Font17 mTop30">{_l('无权限，请联系管理员')}</div>
   </div>
 );
-export default class AdminEntryPoint extends PureComponent {
+export default class AdminEntryPoint extends PureComponent<any, any> {
   state = {
     isLoading: true,
     authority: [],

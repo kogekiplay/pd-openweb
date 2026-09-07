@@ -17,7 +17,7 @@ import { clearFolderTip } from '../../redux/actions';
 import { checkIsProject, errorMessage } from '../../utils/utils';
 import './folderDetail.less';
 
-class FolderDetail extends Component {
+class FolderDetail extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

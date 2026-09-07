@@ -59,7 +59,7 @@ const Wrap = styled.div`
   }
 `;
 
-export default class extends React.Component {
+export default class extends React.Component<any, any> {
   constructor(props) {
     super();
     this.state = {

@@ -8,7 +8,7 @@ import Dropdown from 'ming-ui/components/Dropdown';
 import { formatRecur } from '../../common';
 import { FREQUENCY, RECURLAYERS, RECURTYPE, WEEKDAYS } from '../../constant';
 
-export default class RepeatBox extends Component {
+export default class RepeatBox extends Component<any, any> {
   static propTypes = {
     change: PropTypes.func.isRequired,
   };

@@ -43,7 +43,7 @@ const ThirdAppItem = ({ onSetTopClick, appId, projectId, appName, avatar, isTop,
     </div>
   </div>
 );
-export default class ThirdAppGroup extends Component {
+export default class ThirdAppGroup extends Component<any, any> {
   static propTypes = {
     data: shape({
       apps: array,

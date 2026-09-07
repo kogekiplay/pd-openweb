@@ -1,7 +1,7 @@
 import React from 'react';
 import ClickAway from 'ming-ui/components/ClickAway';
 
-let DepartmentAction = class DepartmentAction extends React.Component {
+let DepartmentAction = class DepartmentAction extends React.Component<any, any> {
   constructor(props) {
     super(props);
   }

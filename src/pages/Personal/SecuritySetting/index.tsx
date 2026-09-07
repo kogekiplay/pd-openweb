@@ -14,7 +14,7 @@ import { identityVerificationFunc } from '../components/IdentityVerification';
 import StepsVerifyDialog from '../components/stepsVerifyDialog/index';
 import './index.less';
 
-export default class SecuritySetting extends Component {
+export default class SecuritySetting extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

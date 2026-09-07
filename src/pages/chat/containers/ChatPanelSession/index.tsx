@@ -30,7 +30,7 @@ const WarnBox = styled.div`
   background: rgba(244, 67, 54, 0.1);
 `;
 
-class ChatPanelSession extends Component {
+class ChatPanelSession extends Component<any, any> {
   constructor(props) {
     super(props);
     const { session } = this.props;
@@ -530,7 +530,7 @@ const ChatPanelSessionConnect = connect(state => {
   };
 })(ErrorBoundary.wrap(ChatPanelSession));
 
-class ChatPanelWrapper extends Component {
+class ChatPanelWrapper extends Component<any, any> {
   constructor(props) {
     super(props);
   }

@@ -15,7 +15,7 @@ import {
   SingleControlValue,
 } from '../components';
 
-export default class Template extends Component {
+export default class Template extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

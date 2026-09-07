@@ -5,7 +5,7 @@ import user from 'src/api/user';
 import { getAppFeaturesVisible } from 'src/utils/common';
 import UserProfile from './components/Profile';
 
-export default class UserEntryPoint extends React.PureComponent {
+export default class UserEntryPoint extends React.PureComponent<any, any> {
   state = {
     accountId: '',
     isMe: false,

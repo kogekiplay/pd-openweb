@@ -15,7 +15,7 @@ import { featureDataList, payMethodList, versionIntroduction } from './config';
 import EditContractDialog from './EditContractDialog';
 import './index.less';
 
-export default class VersionUpgrade extends Component {
+export default class VersionUpgrade extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

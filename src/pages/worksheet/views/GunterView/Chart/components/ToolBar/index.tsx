@@ -68,7 +68,7 @@ const SelectWrap = styled(Select)`
     }
   }
 `;
-let ToolBar = class ToolBar extends Component {
+let ToolBar = class ToolBar extends Component<any, any> {
   constructor(props) {
     super(props);
   }

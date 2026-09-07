@@ -52,7 +52,7 @@ const Wrap = styled.div`
 
 const remarkMaxLength = 150;
 
-export default class Editor extends Component {
+export default class Editor extends Component<any, any> {
   static propTypes = {
     cacheKey: PropTypes.string, // 缓存内容key
     isEditing: PropTypes.bool, // 编辑状态

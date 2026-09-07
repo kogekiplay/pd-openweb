@@ -17,7 +17,7 @@ const LogContent = styled.div`
   background-color: var(--color-background-secondary);
 `;
 
-class MobileLog extends React.Component {
+class MobileLog extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

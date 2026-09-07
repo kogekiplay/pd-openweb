@@ -85,7 +85,7 @@ const getDefaultParameters = () => {
   };
 };
 
-export default class JSONParse extends Component {
+export default class JSONParse extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

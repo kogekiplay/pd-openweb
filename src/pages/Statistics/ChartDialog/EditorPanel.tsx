@@ -17,7 +17,7 @@ import ChartSetting from '../components/ChartSetting';
 import ChartStyle from '../components/ChartStyle';
 import DataSource from '../components/DataSource';
 
-export default class EditorPanel extends Component {
+export default class EditorPanel extends Component<any, any> {
   renderCharts() {
     const { geoCountryRegionCode, projectId, currentReport, changeCurrentReport, onUpdateReportType } = this.props;
     const { reportType, displaySetup } = currentReport;

@@ -23,7 +23,7 @@ export function convertColor(colorStr) {
   return colorStr ? new TinyColor(colorStr).setAlpha(0.1) : 'var(--color-primary-transparent)';
 }
 
-export default class WorkSheetItem extends Component {
+export default class WorkSheetItem extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {};

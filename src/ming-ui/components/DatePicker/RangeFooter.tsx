@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import Dropdown from 'ming-ui/components/Dropdown';
 import TimePicker from 'ming-ui/components/TimePicker/TimePicker';
 
-class RangeFooter extends Component {
+class RangeFooter extends Component<any, any> {
   static propTypes = {
     prefixCls: PropTypes.string,
     timePicker: PropTypes.bool,

@@ -55,7 +55,7 @@ export const splitFiles = list => {
   return list;
 };
 
-export class FileItem extends Component {
+export class FileItem extends Component<any, any> {
   constructor(props) {
     super(props);
   }
@@ -137,7 +137,7 @@ export class FileItem extends Component {
   }
 }
 
-export default class Files extends Component {
+export default class Files extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

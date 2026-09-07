@@ -6,7 +6,7 @@ import addFriends from 'src/components/addFriends';
 import Constant from '../../../utils/constant';
 import './index.less';
 
-export default class SystemMessage extends Component {
+export default class SystemMessage extends Component<any, any> {
   constructor(props) {
     super(props);
   }

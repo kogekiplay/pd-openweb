@@ -69,7 +69,7 @@ const dealRelationControls = (controls = []) => {
   });
 };
 
-export default class SearchWorksheetDialog extends Component {
+export default class SearchWorksheetDialog extends Component<any, any> {
   constructor(props) {
     super(props);
     const {

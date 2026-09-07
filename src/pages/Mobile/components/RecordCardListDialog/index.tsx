@@ -24,7 +24,7 @@ import Filter from './Filter';
 import QuickFilterView from './QuickFilterView';
 import './index.less';
 
-export default class RecordCardListDialog extends Component {
+export default class RecordCardListDialog extends Component<any, any> {
   static propTypes = {
     from: PropTypes.number, // 来源
     appId: PropTypes.string, // 他表字段被关联表所在应用id

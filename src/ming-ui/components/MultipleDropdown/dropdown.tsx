@@ -7,7 +7,7 @@ import '../less/multidropdown.less';
 import '../less/multidropdownmenu.less';
 import '../less/multidropdownpills.less';
 
-class MultipleDropdown extends Component {
+class MultipleDropdown extends Component<any, any> {
   constructor(props) {
     super(props);
 

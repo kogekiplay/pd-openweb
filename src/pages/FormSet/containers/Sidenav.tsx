@@ -5,7 +5,7 @@ import { VersionProductType } from 'src/utils/enum';
 import { getFeatureStatus } from 'src/utils/project';
 import { saveSelectExtensionNavType } from 'src/utils/worksheet';
 
-class Sidenav extends React.Component {
+class Sidenav extends React.Component<any, any> {
   handleClickNav = navType => {
     const { match = { params: {} } } = this.props;
     const { worksheetId } = match.params;

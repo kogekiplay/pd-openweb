@@ -5,7 +5,7 @@ import flowNode from '../../../api/flowNode';
 import { ACTION_ID } from '../../enum';
 import { DetailFooter, DetailHeader } from '../components';
 
-export default class Example extends Component {
+export default class Example extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

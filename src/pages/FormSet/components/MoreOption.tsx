@@ -10,7 +10,7 @@ export const handleCopyOptionClick = ({ event, setFn, onCopy }) => {
   onCopy();
 };
 
-let MoreOption = class MoreOption extends React.Component {
+let MoreOption = class MoreOption extends React.Component<any, any> {
   constructor(props) {
     super(props);
   }

@@ -11,7 +11,7 @@ import PostCommentInput from './postCommentInput';
 /**
  * 动态回复列表
  */
-class PostCommentList extends React.Component {
+class PostCommentList extends React.Component<any, any> {
   static propTypes = {
     dispatch: PropTypes.func,
     postItem: PropTypes.object.isRequired,

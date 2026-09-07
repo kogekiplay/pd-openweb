@@ -6,7 +6,7 @@ import { Dropdown, Icon, RadioGroup } from 'ming-ui';
 import { DateTime } from 'ming-ui/components/NewDateTimePicker';
 import { DATE_TYPE } from '../../enum';
 
-export default class LoopContent extends Component {
+export default class LoopContent extends Component<any, any> {
   constructor(props) {
     super(props);
 

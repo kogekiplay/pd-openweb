@@ -200,7 +200,7 @@ const WorkSheetContainer = props => {
   return null;
 };
 
-class WorkSheet extends Component {
+class WorkSheet extends Component<any, any> {
   static propTypes = {
     sheetList: PropTypes.arrayOf(PropTypes.shape({})),
     sheetListLoading: PropTypes.bool,

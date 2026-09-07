@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import WorkSheet from './WorkSheet';
 
-export default class KcEntrypoint extends Component {
+export default class KcEntrypoint extends Component<any, any> {
   componentDidMount() {
     $('html').addClass('AppWorkSheet');
   }

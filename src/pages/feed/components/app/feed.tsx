@@ -8,7 +8,7 @@ import { Updater } from '../updater';
 import './feed.css';
 import './style.css';
 
-class Feed extends React.Component {
+class Feed extends React.Component<any, any> {
   static propTypes = {
     defaultExpandedGroup: PropTypes.array, // 群组加入 store
   };

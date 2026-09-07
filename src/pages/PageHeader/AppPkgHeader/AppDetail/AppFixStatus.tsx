@@ -9,7 +9,7 @@ const TextareaWrapper = styled(Textarea)`
   }
 `;
 
-export default class AppFixStatus extends Component {
+export default class AppFixStatus extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

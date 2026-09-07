@@ -45,7 +45,7 @@ const AUTH_OPTIONS = [
   { value: 7, text: _l('群发与通知权限') },
 ];
 
-export default class WeiXin extends Component {
+export default class WeiXin extends Component<any, any> {
   constructor(props) {
     super(props);
     Config.setPageTitle(_l('集成 - 微信服务号'));

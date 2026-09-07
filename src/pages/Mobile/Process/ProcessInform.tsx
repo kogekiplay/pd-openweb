@@ -15,7 +15,7 @@ import Sort from './Sort';
 import { formatQueryParam } from './utils';
 import './index.less';
 
-export default class ProcessInform extends Component {
+export default class ProcessInform extends Component<any, any> {
   constructor(props) {
     super(props);
     const { tab } = props.match.params;

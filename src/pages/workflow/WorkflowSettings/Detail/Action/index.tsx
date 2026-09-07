@@ -14,7 +14,7 @@ import RelationFields from './RelationFields';
 import UpdateGlobalVariable from './UpdateGlobalVariable';
 import UpdateSheetRecord from './UpdateSheetRecord';
 
-export default class Action extends Component {
+export default class Action extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

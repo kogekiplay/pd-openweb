@@ -85,7 +85,7 @@ function getPopupContainer(popupContainer, rows, isMultipleLine) {
   return popupContainer;
 }
 
-export default class Text extends React.Component {
+export default class Text extends React.Component<any, any> {
   static contextType = ChildTableContext;
   static propTypes = {
     className: PropTypes.string,

@@ -225,7 +225,7 @@ function LockApp(props) {
 }
 
 // 解锁应用
-class UnLockDialog extends Component {
+class UnLockDialog extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {};

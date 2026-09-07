@@ -17,7 +17,7 @@ function createChainedFunction(...argsOuter) {
   };
 }
 
-class Picker extends Component {
+class Picker extends Component<any, any> {
   static propTypes = {
     panelCls: PropTypes.string,
     className: PropTypes.string,

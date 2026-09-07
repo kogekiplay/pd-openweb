@@ -6,7 +6,7 @@ import { ACTION_ID, APP_TYPE } from '../../enum';
 import { getIcons } from '../../utils';
 import { CreateNode, NodeOperate, WorksheetMessage } from '../components';
 
-export default class Formula extends Component {
+export default class Formula extends Component<any, any> {
   constructor(props) {
     super(props);
   }

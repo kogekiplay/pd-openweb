@@ -69,7 +69,7 @@ const configs = [
   },
 ];
 
-export default class PlatformIntegration extends Component {
+export default class PlatformIntegration extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

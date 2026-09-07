@@ -22,7 +22,7 @@ import End from './End';
 import nodeModules from './nodeModules';
 import './index.less';
 
-class EditFlow extends Component {
+class EditFlow extends Component<any, any> {
   constructor(props) {
     super(props);
 

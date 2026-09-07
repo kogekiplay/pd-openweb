@@ -18,7 +18,7 @@ const YearLabel = styled.div`
 `;
 const paddingLeft = 15;
 const isGunterExport = location.href.includes('gunterExport');
-let MajorAxisLabel = class MajorAxisLabel extends Component {
+let MajorAxisLabel = class MajorAxisLabel extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

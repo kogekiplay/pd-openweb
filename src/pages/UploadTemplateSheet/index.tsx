@@ -24,7 +24,7 @@ const OPTIONS = [
     value: 1,
   },
 ];
-export default class UploadTemplateSheet extends React.Component {
+export default class UploadTemplateSheet extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

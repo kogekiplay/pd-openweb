@@ -11,7 +11,7 @@ import { LOG_TYPE, NODE_TYPE, NODE_VISIBLE_TYPE } from '../../constant/enum';
 import { humanDateTime, humanFileSize, shallowEqual } from '../../utils';
 import './Detail.css';
 
-class Detail extends React.Component {
+class Detail extends React.Component<any, any> {
   static propTypes = {
     data: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   };
@@ -703,7 +703,7 @@ class Detail extends React.Component {
   }
 }
 
-class AttributePair extends React.Component {
+class AttributePair extends React.Component<any, any> {
   static propTypes = {
     name: PropTypes.string.isRequired,
     value: PropTypes.any,

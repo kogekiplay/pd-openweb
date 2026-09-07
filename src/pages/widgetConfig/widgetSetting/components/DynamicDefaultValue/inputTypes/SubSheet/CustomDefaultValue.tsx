@@ -5,7 +5,7 @@ import ChildTable from 'worksheet/components/ChildTable';
 import 'src/pages/widgetConfig/styled/style.less';
 import { handleAdvancedSettingChange } from 'src/pages/widgetConfig/util/setting';
 
-export default class CustomDefaultValue extends Component {
+export default class CustomDefaultValue extends Component<any, any> {
   constructor(props) {
     super(props);
     const { dynamicValue = [] } = props;

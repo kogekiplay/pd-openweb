@@ -88,7 +88,7 @@ const Wrap = styled.div`
   }
 `;
 
-class SideNav extends React.Component {
+class SideNav extends React.Component<any, any> {
   componentDidUpdate(prevProps) {
     if (prevProps !== this.props) {
       const { params = {} } = this.props.match;

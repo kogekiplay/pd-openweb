@@ -6,7 +6,7 @@ import { Button, Icon } from 'ming-ui';
 import ClickAway from 'ming-ui/components/ClickAway';
 import appGroupIntroPic from './images/appGroupIntro.gif';
 
-let AppGroupIntro = class AppGroupIntro extends Component {
+let AppGroupIntro = class AppGroupIntro extends Component<any, any> {
   static propTypes = {
     className: string,
     addAppGroup: func,

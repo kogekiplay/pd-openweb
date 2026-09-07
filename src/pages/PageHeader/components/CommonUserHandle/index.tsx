@@ -49,7 +49,7 @@ const EntryWrap = styled.div`
     background: var(--dashboard-search-hover-bg);
   }
 `;
-let CommonUserHandle = class CommonUserHandle extends Component {
+let CommonUserHandle = class CommonUserHandle extends Component<any, any> {
   static propTypes = {
     type: string,
     currentProject: PropTypes.shape({}),
@@ -191,7 +191,7 @@ let CommonUserHandle = class CommonUserHandle extends Component {
 };
 CommonUserHandle = withRouter(CommonUserHandle);
 export default CommonUserHandle;
-let LeftCommonUserHandle = class LeftCommonUserHandle extends Component {
+let LeftCommonUserHandle = class LeftCommonUserHandle extends Component<any, any> {
   static propTypes = {
     type: string,
   };

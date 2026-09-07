@@ -38,7 +38,7 @@ const STATUS = {
   SUCCESS: 2,
   ERROR: 3,
 };
-let NewRecordLand = class NewRecordLand extends Component {
+let NewRecordLand = class NewRecordLand extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

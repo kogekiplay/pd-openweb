@@ -7,7 +7,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { reportTypes } from 'statistics/Charts/common';
 import { normTypes } from '../../../enum';
 
-export class Count extends Component {
+export class Count extends Component<any, any> {
   constructor(props) {
     super(props);
   }

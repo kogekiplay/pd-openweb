@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Confirm from 'ming-ui/components/Dialog/Confirm';
 import process from '../../../api/process';
 
-export default class DeleteFlowBtn extends Component {
+export default class DeleteFlowBtn extends Component<any, any> {
   /**
    * 删除工作流
    */

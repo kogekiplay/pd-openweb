@@ -14,7 +14,7 @@ const segmentation = columns => {
   return columns;
 };
 
-class ShowBtnFilterDialog extends React.Component {
+class ShowBtnFilterDialog extends React.Component<any, any> {
   state = {
     filters: this.props.filters || [],
   };

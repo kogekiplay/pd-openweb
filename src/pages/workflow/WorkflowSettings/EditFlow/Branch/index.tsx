@@ -7,7 +7,7 @@ import { CreateNode } from '../components';
 import BranchItem from './BranchItem';
 import './index.less';
 
-export default class Branch extends Component {
+export default class Branch extends Component<any, any> {
   constructor(props) {
     super(props);
   }

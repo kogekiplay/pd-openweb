@@ -23,7 +23,7 @@ import {
   STATUS2COLOR,
 } from './config';
 
-export default class HistoryDetail extends Component {
+export default class HistoryDetail extends Component<any, any> {
   static propTypes = {
     isPlugin: bool,
     id: string,

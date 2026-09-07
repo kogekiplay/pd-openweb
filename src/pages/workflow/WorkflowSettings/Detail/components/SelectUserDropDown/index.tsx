@@ -11,7 +11,7 @@ import { getControlTypeName } from '../../../utils';
 import ActionFields from '../ActionFields';
 import './index.less';
 
-export default class SelectUserDropDown extends Component {
+export default class SelectUserDropDown extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

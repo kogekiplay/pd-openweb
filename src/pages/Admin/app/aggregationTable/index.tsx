@@ -22,7 +22,7 @@ import PurchaseExpandPack from '../../components/PurchaseExpandPack';
 import SelectUser from '../../components/SelectUser';
 import './index.less';
 
-export default class AggregationTable extends Component {
+export default class AggregationTable extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

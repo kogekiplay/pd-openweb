@@ -28,7 +28,7 @@ import Filter from './filter';
 import './taskToolbar.less';
 
 const ClickAwayable = ClickAway;
-class TaskToolbar extends Component {
+class TaskToolbar extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

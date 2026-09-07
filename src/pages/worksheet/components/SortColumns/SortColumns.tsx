@@ -5,7 +5,7 @@ import ChangeColumn from 'worksheet/common/ChangeColumn';
 import DropdownWrapper from 'worksheet/components/DropdownWrapper';
 import './index.less';
 
-export default class SortColumns extends React.Component {
+export default class SortColumns extends React.Component<any, any> {
   static propTypes = {
     // 无显示字段时展示内容
     placeholder: PropTypes.string,

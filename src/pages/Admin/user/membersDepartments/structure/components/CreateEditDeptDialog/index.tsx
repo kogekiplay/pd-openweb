@@ -17,7 +17,7 @@ let RESULTS = {
   /* 设置的上级部门是自己的子部门 */
 };
 
-export default class CreateEditDeptDialog extends Component {
+export default class CreateEditDeptDialog extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

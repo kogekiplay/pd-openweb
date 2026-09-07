@@ -96,7 +96,7 @@ const formatScanQRCodeResult = resultStr => {
   );
 };
 
-export default class Widgets extends Component {
+export default class Widgets extends Component<any, any> {
   static propTypes = {
     projectId: PropTypes.string,
     disablePhoto: PropTypes.bool,

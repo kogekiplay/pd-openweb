@@ -19,7 +19,7 @@ import { getCurrentProjectId } from '../utils';
 import './GlobalSearchAllContent.less';
 
 const ClickAwayable = ClickAway;
-export default class GlobalSearchAllContent extends Component {
+export default class GlobalSearchAllContent extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

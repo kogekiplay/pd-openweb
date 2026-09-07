@@ -10,7 +10,7 @@ import PostOperateList from './postOperateList';
 /**
  * 动态右上角的操作项
  */
-class PostOperator extends React.Component {
+class PostOperator extends React.Component<any, any> {
   static propTypes = {
     dispatch: PropTypes.func,
     postItem: PropTypes.object.isRequired,

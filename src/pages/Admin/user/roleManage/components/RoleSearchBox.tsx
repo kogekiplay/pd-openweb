@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import { Icon } from 'ming-ui';
 
-export default class RoleSearchBox extends Component {
+export default class RoleSearchBox extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

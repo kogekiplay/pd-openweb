@@ -30,7 +30,7 @@ const indexConfig = [
   // },
 ];
 
-export default class Orgothers extends Component {
+export default class Orgothers extends Component<any, any> {
   constructor(props) {
     super(props);
     Config.setPageTitle(_l('组织 - 其他'));

@@ -30,7 +30,7 @@ import syncField4 from './img/syncField4.png';
 import syncField5 from './img/syncField5.png';
 import './style.less';
 
-export default class WorkwxSyncCourse extends React.Component {
+export default class WorkwxSyncCourse extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -75,7 +75,7 @@ const conList = [
     txt: _l('统计'),
   },
 ];
-class PortalCon extends React.Component {
+class PortalCon extends React.Component<any, any> {
   constructor(props) {
     super(props);
     const { canEditApp, canEditUser } = props;

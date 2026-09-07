@@ -9,7 +9,7 @@ import { formatNumberThousand } from 'src/utils/control';
 import { htmlDecodeReg } from 'src/utils/project';
 import './printTask.less';
 
-export default class PrintTask extends Component {
+export default class PrintTask extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

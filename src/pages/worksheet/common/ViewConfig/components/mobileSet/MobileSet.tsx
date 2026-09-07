@@ -17,7 +17,7 @@ const Wrap = styled.div`
     }
   }
 `;
-export default class MobileSet extends React.Component {
+export default class MobileSet extends React.Component<any, any> {
   constructor(props) {
     super(props);
     const { view = {} } = props;

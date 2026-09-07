@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { default as Checkbox, SIZE_LIST } from './Checkbox';
 import './less/CheckboxGroup.less';
 
-class CheckboxGroup extends Component {
+class CheckboxGroup extends Component<any, any> {
   static propTypes = {
     data: PropTypes.arrayOf(
       PropTypes.shape({

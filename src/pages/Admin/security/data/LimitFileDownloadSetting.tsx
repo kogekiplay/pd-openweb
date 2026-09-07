@@ -159,7 +159,7 @@ const Footer = styled.div`
   }
 `;
 
-export default class LimitFileDownloadSetting extends Component {
+export default class LimitFileDownloadSetting extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 /**
  * 动态基础卡片样式
  */
-class PostCard extends React.Component {
+class PostCard extends React.Component<any, any> {
   static propTypes = {
     component: PropTypes.any,
     className: PropTypes.string,

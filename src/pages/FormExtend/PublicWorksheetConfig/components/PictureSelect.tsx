@@ -65,7 +65,7 @@ const Page = styled.div(
 `,
 );
 
-export default class extends React.Component {
+export default class extends React.Component<any, any> {
   static propTypes = {
     coverUrl: PropTypes.string,
     images: PropTypes.arrayOf(PropTypes.string),

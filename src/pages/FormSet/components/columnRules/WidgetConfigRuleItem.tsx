@@ -183,7 +183,7 @@ function renderFilterItemTexts(filters = [], disabled = false, worksheetControls
   );
 }
 
-class WidgetConfigRuleItem extends React.Component {
+class WidgetConfigRuleItem extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

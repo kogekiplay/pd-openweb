@@ -26,7 +26,7 @@ const RoleWrapper = styled.div`
   position: relative;
 `;
 
-class AppRole extends Component {
+class AppRole extends Component<any, any> {
   state = {
     applyList: undefined,
     appDetail: undefined,

@@ -50,7 +50,7 @@ const PlaceHolder = styled.div`
 
 const MAX_COUNT = 50;
 
-export default class RelateRecordDropdown extends React.Component {
+export default class RelateRecordDropdown extends React.Component<any, any> {
   static propTypes = {
     disableNewRecord: PropTypes.bool,
     isQuickFilter: PropTypes.bool,

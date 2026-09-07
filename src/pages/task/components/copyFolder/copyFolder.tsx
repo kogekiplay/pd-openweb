@@ -9,7 +9,7 @@ import { errorMessage } from '../../utils/utils';
 import './less/copyFolder.less';
 
 const ClickAwayable = ClickAway;
-export default class CopyFolder extends Component {
+export default class CopyFolder extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -5,7 +5,7 @@ import LibCalender from '../lib/calender';
 import Header from './header';
 import './style.less';
 
-class DatePickerBase extends Component {
+class DatePickerBase extends Component<any, any> {
   constructor(props) {
     super(props);
 

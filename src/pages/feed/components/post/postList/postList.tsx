@@ -12,7 +12,7 @@ import { HomePostFilter } from '../postListHead';
 import PostMoreLoader from './postLoader';
 import './postList.css';
 
-class PostList extends React.Component {
+class PostList extends React.Component<any, any> {
   static propTypes = {
     dispatch: PropTypes.func,
     postIds: PropTypes.arrayOf(PropTypes.string),

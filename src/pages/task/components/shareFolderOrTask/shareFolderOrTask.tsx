@@ -3,7 +3,7 @@ import copy from 'copy-to-clipboard';
 import { Dialog } from 'ming-ui';
 import './shareFolderOrTask.less';
 
-export default class ShareFolderOrTask extends Component {
+export default class ShareFolderOrTask extends Component<any, any> {
   static defaultProps = {
     shareUrl: '',
     shareMessage: '',

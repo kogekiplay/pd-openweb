@@ -19,7 +19,7 @@ import './index.less';
 
 const { Option } = Select;
 
-export default class EncryptRules extends Component {
+export default class EncryptRules extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

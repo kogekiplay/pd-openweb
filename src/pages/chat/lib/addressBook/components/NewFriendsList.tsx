@@ -5,7 +5,7 @@ import LoadDiv from 'ming-ui/components/LoadDiv';
 import API, { editAgreeFriend, editRefuseFriend } from '../api';
 import { pathCompletion } from 'src/utils/common';
 
-export default class NewFriendsList extends React.Component {
+export default class NewFriendsList extends React.Component<any, any> {
   constructor() {
     super();
     this.state = {

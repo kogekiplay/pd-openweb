@@ -12,7 +12,7 @@ import {
 } from '../../../redux/actions';
 import './taskCommentList.less';
 
-class TaskCommentList extends Component {
+class TaskCommentList extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

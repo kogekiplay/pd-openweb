@@ -125,7 +125,7 @@ const SOURCE_TYPE_LABEL = {
   4: _l('应用密钥'),
   5: 'HAP-CLI',
 };
-export default class AppAndWorksheetLog extends Component {
+export default class AppAndWorksheetLog extends Component<any, any> {
   constructor(props) {
     super(props);
     const columns =

@@ -56,7 +56,7 @@ const formatUser = function (props) {
 
 let date = null;
 
-export default class Avatar extends React.Component {
+export default class Avatar extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

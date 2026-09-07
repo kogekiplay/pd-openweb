@@ -32,7 +32,7 @@ const NewTextarea = styled(Textarea)`
   background-color: transparent;
 `;
 
-export default class EditableText extends React.Component {
+export default class EditableText extends React.Component<any, any> {
   static propTypes = {
     className: PropTypes.string,
     mutiLine: PropTypes.bool, // 多行

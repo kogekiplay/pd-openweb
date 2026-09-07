@@ -71,7 +71,7 @@ const WORKS_TDS = [
   },
 ];
 
-export default class Con extends React.Component {
+export default class Con extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

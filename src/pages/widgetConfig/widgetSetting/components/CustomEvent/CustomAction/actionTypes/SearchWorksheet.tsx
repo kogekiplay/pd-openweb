@@ -67,7 +67,7 @@ const dealRelationControls = (controls = []) => {
   });
 };
 
-class SearchWorksheetActionDialog extends Component {
+class SearchWorksheetActionDialog extends Component<any, any> {
   constructor(props) {
     super(props);
     const {

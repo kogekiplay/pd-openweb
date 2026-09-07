@@ -15,7 +15,7 @@ import wrapDisableClick from './wrapDisableClick';
 
 const NewMenuItem = wrapDisableClick(MenuItem);
 
-export default class FilterItem extends Component {
+export default class FilterItem extends Component<any, any> {
   static propTypes = {
     projectId: PropTypes.string,
     showCustomAddCondition: PropTypes.bool,

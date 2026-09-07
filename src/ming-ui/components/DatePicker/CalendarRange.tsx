@@ -44,7 +44,7 @@ function normalizeAnchor(props, init) {
   return !isEmptyArray(normalizedValue) ? normalizedValue : init && [getNow(), getNow()];
 }
 
-class CalendarRange extends Component {
+class CalendarRange extends Component<any, any> {
   static propTypes = {
     prefixCls: PropTypes.string,
     timePicker: PropTypes.bool,

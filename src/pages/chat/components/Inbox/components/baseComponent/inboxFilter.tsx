@@ -77,7 +77,7 @@ const dateScope = [
   },
 ];
 
-export default class InboxFilter extends React.Component {
+export default class InboxFilter extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

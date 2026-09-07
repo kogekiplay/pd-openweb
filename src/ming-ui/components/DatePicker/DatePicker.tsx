@@ -4,7 +4,7 @@ import Calendar from './Calendar';
 import locale from './locale/zh_CN';
 import Picker from './Picker';
 
-class DatePicker extends Component {
+class DatePicker extends Component<any, any> {
   static propTypes = {
     /**
      * 占位符

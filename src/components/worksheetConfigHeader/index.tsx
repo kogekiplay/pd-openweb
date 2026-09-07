@@ -24,7 +24,7 @@ export default function WorksheetConfigHeader(props) {
   return <WorksheetConfigHeaderComponent {...props} mingoCreateWorksheetAction={mingoCreateWorksheetAction} />;
 }
 
-class WorksheetConfigHeaderComponent extends Component {
+class WorksheetConfigHeaderComponent extends Component<any, any> {
   static propTypes = {
     appId: PropTypes.string,
     worksheetId: PropTypes.string,

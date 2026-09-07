@@ -125,7 +125,7 @@ const getChatbotRecommendAppItems = () => {
   };
 };
 
-class CreateSheetOrPage extends Component {
+class CreateSheetOrPage extends Component<any, any> {
   static propTypes = {
     type: string,
     onCreate: func,
@@ -358,7 +358,7 @@ class CreateSheetOrPage extends Component {
   }
 }
 
-class CreateChatbot extends Component {
+class CreateChatbot extends Component<any, any> {
   state = {
     name: _l('对话机器人'),
     remark: '',

@@ -5,7 +5,7 @@ import { LoadDiv } from 'ming-ui';
 import ColumnRulesCon from '../components/columnRules/ColumnRulesCon';
 import * as columnRules from '../components/columnRules/redux/actions/columnRules';
 
-class ColumnRules extends React.Component {
+class ColumnRules extends React.Component<any, any> {
   componentDidMount() {
     const { loadColumnRules } = this.props;
     loadColumnRules(this.props);

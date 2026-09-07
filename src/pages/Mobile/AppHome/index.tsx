@@ -23,7 +23,7 @@ import mingoImg from './img/mingo.png';
 import * as actions from './redux/actions';
 import './index.less';
 
-class AppHome extends React.Component {
+class AppHome extends React.Component<any, any> {
   constructor(props) {
     super(props);
 

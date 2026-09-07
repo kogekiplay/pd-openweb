@@ -4,7 +4,7 @@ import { Dropdown } from 'ming-ui';
 import flowNode from '../../../api/flowNode';
 import { FilterAndSort, FindResult, SelectNodeObject } from '../components';
 
-export default class RelationFields extends Component {
+export default class RelationFields extends Component<any, any> {
   /**
    * 获取工作表的自定义字段
    */

@@ -72,7 +72,7 @@ const Wrap = styled.div`
   }
 `;
 
-export default class SettingIconAndName extends Component {
+export default class SettingIconAndName extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

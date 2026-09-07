@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Amap from 'ming-ui/components/amap/Amap';
 import './index.less';
 
-export default class MapMessage extends Component {
+export default class MapMessage extends Component<any, any> {
   constructor(props) {
     super(props);
   }

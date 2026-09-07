@@ -4,7 +4,7 @@ import Input from 'ming-ui/components/Input';
 import sheetAjax from 'src/api/worksheet';
 import './SheetSetName.less';
 
-export default class SheetSetName extends Component {
+export default class SheetSetName extends Component<any, any> {
   constructor(props) {
     const { entityName, btnName } = props;
     super(props);

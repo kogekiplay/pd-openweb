@@ -59,7 +59,7 @@ const mapStateToProps = ({ customPage, sheet, appPkg }) => ({ ...customPage, ...
 
 const mapDispatchToProps = dispatch => bindActionCreators({ ...actions, updateSheetListAppItem }, dispatch);
 
-let CustomPage = class CustomPage extends Component {
+let CustomPage = class CustomPage extends Component<any, any> {
   static propTypes = {};
   static defaultProps = {};
   state = {

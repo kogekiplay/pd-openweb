@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import CalendarHeader from './CalendarHeaderOld';
 import DateTable from './DateTable';
 
-class CalendarPart extends Component {
+class CalendarPart extends Component<any, any> {
   static propTypes = {
     prefixCls: PropTypes.string,
     value: PropTypes.any,

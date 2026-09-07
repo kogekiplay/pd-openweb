@@ -19,7 +19,7 @@ import { getCurrentPos } from '../../../core/mapUtils';
 import { isOpenPermit } from '../../tools/utils';
 import './index.less';
 
-export default class Widgets extends Component {
+export default class Widgets extends Component<any, any> {
   static propTypes = {
     disabled: PropTypes.bool,
     advancedSetting: PropTypes.object,

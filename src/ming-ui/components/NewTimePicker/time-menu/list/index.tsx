@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './style.less';
 
-class List extends Component {
+class List extends Component<any, any> {
   constructor(props) {
     super(props);
     this.timeRef = React.createRef();

@@ -61,7 +61,7 @@ const Wrap = styled.div`
     right: 14px !important;
   }
 `;
-export default class EncryptFieldList extends Component {
+export default class EncryptFieldList extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

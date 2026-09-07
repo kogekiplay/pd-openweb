@@ -42,7 +42,7 @@ const MenuStyle = styled.div`
   }
 `;
 
-export default class SelectOtherField extends Component {
+export default class SelectOtherField extends Component<any, any> {
   static propTypes = { onTriggerClick: func };
   static defaultProps = {
     onTriggerClick: _.noop,

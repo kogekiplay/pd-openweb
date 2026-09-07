@@ -27,7 +27,7 @@ const Wrap = styled.div`
     color: var(--color-primary);
   }
 `;
-export default class CreateOrAdd extends React.Component {
+export default class CreateOrAdd extends React.Component<any, any> {
   constructor(props) {
     super(props);
   }

@@ -7,7 +7,7 @@ import SortColumns from 'src/pages/worksheet/components/SortColumns/';
 import { getAdvanceSetting } from 'src/utils/control';
 
 // 字段
-export default class Controls extends React.Component {
+export default class Controls extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = { height: document.documentElement.clientHeight - 280 };

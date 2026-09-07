@@ -82,7 +82,7 @@ const UploadListWrap = styled.div`
   }
 `;
 
-export default class UploadFile extends Component {
+export default class UploadFile extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -23,7 +23,7 @@ const STATUS_TO_TEXT = {
   31: { src: turnoffPic, text: _l('应用已被彻底删除，如需使用请重新安装') },
 };
 
-export default class UnusualContent extends Component {
+export default class UnusualContent extends Component<any, any> {
   static propTypes = {
     status: oneOf([2, 3, 4, 5]),
   };

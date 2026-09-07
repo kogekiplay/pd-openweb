@@ -8,7 +8,7 @@ import SelectOtherWorksheetDialog from 'src/pages/worksheet/components/SelectWor
 import { PUSH_TYPE } from '../../enum';
 import { CustomTextarea, SelectNodeObject, SpecificFieldsValue } from '../components';
 
-export default class OpenActionContent extends Component {
+export default class OpenActionContent extends Component<any, any> {
   state = {
     showOtherWorksheet: false,
     otherAppName: '',

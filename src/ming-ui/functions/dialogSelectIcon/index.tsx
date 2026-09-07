@@ -13,7 +13,7 @@ import './index.less';
 const DEFAULT_COLOR = '#1677ff';
 const NAME_MAX_LENGTH = 100;
 
-class SelectIcon extends Component {
+class SelectIcon extends Component<any, any> {
   static propTypes = {
     projectId: string,
     className: string,

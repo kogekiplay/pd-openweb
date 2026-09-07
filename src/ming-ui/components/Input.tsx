@@ -6,7 +6,7 @@ import './less/Input.less';
 
 const SIZE_LIST = ['small', 'default'];
 
-class Input extends Component {
+class Input extends Component<any, any> {
   static propTypes = {
     type: PropTypes.string,
     defaultValue: PropTypes.string,

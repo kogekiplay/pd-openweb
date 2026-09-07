@@ -27,7 +27,7 @@ const positionTemplatePaths = {
   5: '/staticfiles/template/positionImportTemplate/Templat Import Jawatan.xlsx',
 };
 
-class PositionInfo extends Component {
+class PositionInfo extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = { showRoleDialog: false };

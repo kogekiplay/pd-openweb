@@ -72,7 +72,7 @@ const CUSTOM_BUTTOM_CLICK_TYPE = {
   FILL_RECORD: 3,
 };
 
-class SheetView extends Component {
+class SheetView extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = { deleteVisible: false };

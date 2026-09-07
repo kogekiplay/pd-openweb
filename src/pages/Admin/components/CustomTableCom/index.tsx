@@ -7,7 +7,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import PaginationWrap from 'src/pages/Admin/components/PaginationWrap';
 import './index.less';
 
-export default class CustomTableCom extends Component {
+export default class CustomTableCom extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

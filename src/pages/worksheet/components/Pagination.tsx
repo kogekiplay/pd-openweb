@@ -90,7 +90,7 @@ const pageSizeNums = [
   { text: 200, value: 200 },
 ];
 
-export default class Pagination extends React.Component {
+export default class Pagination extends React.Component<any, any> {
   static propTypes = {
     appendToBody: PropTypes.bool,
     disabled: PropTypes.bool,

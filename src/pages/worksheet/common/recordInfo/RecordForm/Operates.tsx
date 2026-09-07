@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import RecordInfoContext from '../RecordInfoContext';
 import CustomButtonsAutoWidth from './CustomButtonsAutoWidth';
 
-export default class Operates extends Component {
+export default class Operates extends Component<any, any> {
   static contextType = RecordInfoContext;
   static propTypes = {
     iseditting: PropTypes.bool,

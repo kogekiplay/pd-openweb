@@ -6,7 +6,7 @@ import Commenter from 'src/components/comment/commenter';
 import CommentList from 'src/components/comment/commentList';
 import { htmlDecodeReg } from 'src/utils/common';
 
-export default class CalendarCommentList extends Component {
+export default class CalendarCommentList extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

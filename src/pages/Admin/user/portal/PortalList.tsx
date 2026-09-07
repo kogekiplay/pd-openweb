@@ -28,7 +28,7 @@ const getValue = (value, type) => {
   return value ? `${value} 23:59` : value;
 };
 
-export default class PortalList extends Component {
+export default class PortalList extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

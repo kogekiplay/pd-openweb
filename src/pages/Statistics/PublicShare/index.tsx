@@ -22,7 +22,7 @@ if (hideHeader === 'true') {
   setCookie('i18n_langtag', 'zh-Hans');
 }
 
-export default class PublicShareChart extends Component {
+export default class PublicShareChart extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

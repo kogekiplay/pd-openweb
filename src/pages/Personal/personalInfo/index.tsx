@@ -25,7 +25,7 @@ const infoList = [
   { label: _l('手机'), key: 'mobilePhone' },
 ];
 
-export default class PersonalInfo extends React.Component {
+export default class PersonalInfo extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

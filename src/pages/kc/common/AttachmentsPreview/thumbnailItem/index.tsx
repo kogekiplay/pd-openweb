@@ -24,7 +24,7 @@ const typeColors = {
   link: '#00bcd4',
 };
 
-class ThumbnailItem extends React.Component {
+class ThumbnailItem extends React.Component<any, any> {
   static propTypes = {
     attachment: PropTypes.object,
     current: PropTypes.bool,

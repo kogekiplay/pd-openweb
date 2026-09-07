@@ -46,7 +46,7 @@ const Wrap = styled.div`
     line-height: 30px;
   }
 `;
-export default class HubAndPluginHeader extends Component {
+export default class HubAndPluginHeader extends Component<any, any> {
   static propTypes = {
     path: string,
   };

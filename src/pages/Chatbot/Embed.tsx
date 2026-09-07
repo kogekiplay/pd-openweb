@@ -61,7 +61,7 @@ const ChatbotWrap = withRouter(props => {
   );
 });
 
-class LandChatbot extends Component {
+class LandChatbot extends Component<any, any> {
   constructor(props) {
     super(props);
   }

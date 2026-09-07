@@ -5,7 +5,7 @@ import { Checkbox, Dialog, FunctionWrap, LoadDiv, ScrollView } from 'ming-ui';
 import JobController from 'src/api/job';
 import './style.less';
 
-class DialogSelectJob extends Component {
+class DialogSelectJob extends Component<any, any> {
   static defaultProps = {
     projectId: '',
     unique: false,

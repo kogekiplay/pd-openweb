@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import TimeMenu from './time-menu';
 import './style.less';
 
-class Time extends Component {
+class Time extends Component<any, any> {
   constructor(props) {
     super(props);
 

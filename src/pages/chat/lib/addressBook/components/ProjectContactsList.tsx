@@ -36,7 +36,7 @@ const Department = styled.div`
   }
 `;
 
-export default class ProjectContactList extends React.Component {
+export default class ProjectContactList extends React.Component<any, any> {
   constructor(props) {
     super(props);
     const project = _.find(md.global.Account.projects, { projectId: props.projectId });

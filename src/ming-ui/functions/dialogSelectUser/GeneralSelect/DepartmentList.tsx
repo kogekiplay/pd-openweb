@@ -17,7 +17,7 @@ const Wrap = styled.div`
   }
 `;
 
-export default class DepartmentList extends Component {
+export default class DepartmentList extends Component<any, any> {
   static propTypes = {
     selectedDepartment: PropTypes.array,
     toogleDepargmentSelect: PropTypes.func,
@@ -101,7 +101,7 @@ export default class DepartmentList extends Component {
   }
 }
 
-class Department extends Component {
+class Department extends Component<any, any> {
   static defaultProps = {
     showUserCount: true,
   };

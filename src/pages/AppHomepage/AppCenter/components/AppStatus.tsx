@@ -38,7 +38,7 @@ const AppStatus = styled.div`
     padding: 0 6px;
   }
 `;
-export default class AppStatusComp extends Component {
+export default class AppStatusComp extends Component<any, any> {
   static propTypes = {};
   static defaultProps = {};
   state = {};

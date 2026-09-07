@@ -6,7 +6,7 @@ import processVersion from '../../api/processVersion';
 import ajaxRequest from 'src/api/appManagement';
 import '../SelectUsersFromApp/index.less';
 
-export default class SelectProcess extends Component {
+export default class SelectProcess extends Component<any, any> {
   static propTypes = {
     appId: PropTypes.string,
     companyId: PropTypes.string.isRequired,

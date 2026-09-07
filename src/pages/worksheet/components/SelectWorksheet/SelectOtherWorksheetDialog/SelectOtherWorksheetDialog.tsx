@@ -8,7 +8,7 @@ import syncTaskApi from 'src/pages/integration/api/syncTask';
 import { canEditApp } from 'src/pages/worksheet/redux/actions/util';
 import './SelectOtherWorksheetDialog.less';
 
-export default class extends Component {
+export default class extends Component<any, any> {
   static propTypes = {
     projectId: PropTypes.string,
     worksheetType: PropTypes.number, // 工作表类型 0: 工作表 1: 自定义页面 2: 聚合表

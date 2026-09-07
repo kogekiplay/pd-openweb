@@ -72,7 +72,7 @@ function getSideVisible(from) {
   }
 }
 
-export default class RecordInfo extends Component {
+export default class RecordInfo extends Component<any, any> {
   static propTypes = {
     width: PropTypes.number,
     visible: PropTypes.bool,

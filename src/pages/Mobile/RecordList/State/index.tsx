@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import alreadyDelete from './assets/alreadyDelete.png';
 import withoutPermission from './assets/withoutPermission.png';
 
-export default class WorksheetUnNormal extends Component {
+export default class WorksheetUnNormal extends Component<any, any> {
   constructor(props) {
     super(props);
   }

@@ -7,7 +7,7 @@ import { pathCompletion } from 'src/utils/common';
 /**
  * 用户姓名，正常用户可以点到其详情页。带 hover 的层
  */
-class UserName extends React.Component {
+class UserName extends React.Component<any, any> {
   static propTypes = {
     user: PropTypes.shape({
       userName: PropTypes.string,

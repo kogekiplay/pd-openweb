@@ -218,7 +218,7 @@ const GuildText = {
 };
 const LoadableLottie = lazy(() => import('react-lottie'));
 const LOTTIE_EVENT_LISTENERS = [];
-export default class AddViewDisplayMenu extends Component {
+export default class AddViewDisplayMenu extends Component<any, any> {
   static propTypes = {};
   static defaultProps = {};
 

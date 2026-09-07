@@ -7,7 +7,7 @@ import { dialogSelectUser, quickSelectUser } from 'ming-ui/functions';
 import { getTabTypeBySelectUser } from 'src/pages/worksheet/common/WorkSheetFilter/util';
 import { FILTER_CONDITION_TYPE } from '../../enum';
 
-export default class Users extends Component {
+export default class Users extends Component<any, any> {
   static propTypes = {
     disabled: PropTypes.bool,
     projectId: PropTypes.string,

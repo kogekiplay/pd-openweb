@@ -4,7 +4,7 @@ import { Dialog } from 'ming-ui';
 import { addToken } from 'src/utils/common';
 import './less/exportFolder.less';
 
-export default class ExportFolder extends Component {
+export default class ExportFolder extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

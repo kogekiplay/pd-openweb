@@ -18,7 +18,7 @@ import openSettingDialog from './SettingDialog';
 import openStyleSettingDialog from './StyleSettingDialog';
 import './ActionDropDown.less';
 
-export default class DropDownItem extends Component {
+export default class DropDownItem extends Component<any, any> {
   static propTypes = {
     values: PropTypes.arrayOf(PropTypes.shape({})),
     dropDownData: PropTypes.array,

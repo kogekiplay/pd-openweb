@@ -108,7 +108,7 @@ const RequiredIcon = styled.div`
   color: var(--color-error);
 `;
 
-export default class OtherAction extends Component {
+export default class OtherAction extends Component<any, any> {
   static propTypes = {
     projectId: string,
     data: object,

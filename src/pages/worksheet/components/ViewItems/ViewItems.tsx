@@ -27,7 +27,7 @@ const EmptyData = styled.div`
   margin-top: 120px;
 `;
 const confirm = Dialog.confirm;
-let ViewItems = class ViewItems extends Component {
+let ViewItems = class ViewItems extends Component<any, any> {
   static defaultProps = {
     viewList: [],
   };

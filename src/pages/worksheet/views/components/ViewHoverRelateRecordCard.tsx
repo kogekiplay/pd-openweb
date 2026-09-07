@@ -26,7 +26,7 @@ const CardWrapper = styled.div`
 `;
 
 // 关联记录卡片和下拉框支持在视图中hover显示卡片
-export default class ViewHoverRelateRecordCard extends Component {
+export default class ViewHoverRelateRecordCard extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

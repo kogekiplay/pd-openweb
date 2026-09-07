@@ -9,7 +9,7 @@ import { defaultTitleStyles, replaceTitleStyle } from 'src/pages/customPage/comp
 import { getTranslateInfo } from 'src/utils/app';
 import ChartDesc from '../components/ChartDesc';
 
-export default class Header extends Component {
+export default class Header extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

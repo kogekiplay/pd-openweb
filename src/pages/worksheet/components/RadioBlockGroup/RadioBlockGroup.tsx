@@ -3,7 +3,7 @@ import cx from 'classnames';
 import PropTypes from 'prop-types';
 import './RadioBlockGroup.less';
 
-export default class RadioBlockGroup extends Component {
+export default class RadioBlockGroup extends Component<any, any> {
   static propTypes = {
     data: PropTypes.arrayOf(PropTypes.shape({})),
     value: PropTypes.number,

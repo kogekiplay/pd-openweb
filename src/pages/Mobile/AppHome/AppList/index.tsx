@@ -10,7 +10,7 @@ import Back from '../../components/Back';
 import showAddAppActionSheet from '../components/AddAppActionSheet';
 import './index.less';
 
-class AppList extends Component {
+class AppList extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

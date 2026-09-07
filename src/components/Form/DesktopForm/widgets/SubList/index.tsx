@@ -5,7 +5,7 @@ import RecordInfoContext from 'worksheet/common/recordInfo/RecordInfoContext';
 import ChildTable from 'worksheet/components/ChildTable';
 import { WidgetEventHelper } from '../../../core/useFormEventManager';
 
-export default class SubList extends React.Component {
+export default class SubList extends React.Component<any, any> {
   static contextType = RecordInfoContext;
   static propTypes = {
     from: PropTypes.number,

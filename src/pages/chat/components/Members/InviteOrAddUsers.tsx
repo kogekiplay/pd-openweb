@@ -15,7 +15,7 @@ const ITEMS = [
   },
 ];
 
-export default class InviteOrAddUsers extends Component {
+export default class InviteOrAddUsers extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {};

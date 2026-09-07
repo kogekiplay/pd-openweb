@@ -25,7 +25,7 @@ const MSG_TEMPLATE_STATUS_TO_TEXT = {
   },
 };
 
-export default class StatusIcon extends Component {
+export default class StatusIcon extends Component<any, any> {
   static propTypes = {
     config: shape({ icon: string, text: string, size: number, color: string }),
     status: number,

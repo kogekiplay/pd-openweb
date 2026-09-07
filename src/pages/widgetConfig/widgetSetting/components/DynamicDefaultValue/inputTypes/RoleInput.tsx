@@ -5,7 +5,7 @@ import { dialogSelectOrgRole } from 'ming-ui/functions';
 import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
 import { DynamicValueInputWrap } from '../styled';
 
-export default class RoleInput extends Component {
+export default class RoleInput extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {};

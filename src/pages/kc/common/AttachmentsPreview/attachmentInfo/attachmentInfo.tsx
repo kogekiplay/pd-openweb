@@ -12,7 +12,7 @@ import createLinksForMessage from 'src/utils/createLinksForMessage';
 import * as Actions from '../actions/action';
 import { FROM_TYPE } from '../constant/enum';
 
-class attachmentInfo extends React.Component {
+class attachmentInfo extends React.Component<any, any> {
   static propTypes = {
     attachments: PropTypes.array,
     index: PropTypes.number,

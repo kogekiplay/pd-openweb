@@ -19,7 +19,7 @@ const Bar = styled.div`
   }
 `;
 
-export default class extends React.Component {
+export default class extends React.Component<any, any> {
   static propTypes = {
     className: PropTypes.string,
     style: PropTypes.shape({}),

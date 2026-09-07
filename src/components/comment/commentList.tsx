@@ -8,7 +8,7 @@ import CommentListItem from './commentListItem';
 import { SOURCE_TYPE } from './config';
 import './css/commentList.less';
 
-class CommentList extends React.Component {
+class CommentList extends React.Component<any, any> {
   static propTypes = {
     sourceId: PropTypes.string.isRequired,
     sourceType: PropTypes.oneOf(_.values(SOURCE_TYPE)).isRequired,

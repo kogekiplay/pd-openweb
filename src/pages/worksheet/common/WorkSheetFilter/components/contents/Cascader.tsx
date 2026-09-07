@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import CascaderDropdown from 'src/components/Form/DesktopForm/widgets/Cascader';
 import { FILTER_CONDITION_TYPE } from '../../enum';
 
-export default class RelateRecord extends React.Component {
+export default class RelateRecord extends React.Component<any, any> {
   static propTypes = {
     disabled: PropTypes.bool,
     onChange: PropTypes.func,

@@ -4,7 +4,7 @@ import cx from 'classnames';
 import { Icon } from 'ming-ui';
 import { reportTypes } from 'statistics/Charts/common';
 
-class YAxis extends Component {
+class YAxis extends Component<any, any> {
   constructor(props) {
     super(props);
   }

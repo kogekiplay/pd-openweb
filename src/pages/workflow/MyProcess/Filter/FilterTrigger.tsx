@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { Icon } from 'ming-ui';
 import { TABS } from '../config';
 
-export default class Filter extends Component {
+export default class Filter extends Component<any, any> {
   getFilterLength = () => {
     const { stateTab } = this.props;
     const filter = {

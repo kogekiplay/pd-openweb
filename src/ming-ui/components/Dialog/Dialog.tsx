@@ -27,7 +27,7 @@ function enterHandle(Comp) {
   };
 }
 
-let Dialog = class Dialog extends Component {
+let Dialog = class Dialog extends Component<any, any> {
   static propTypes = {
     /**
      * 弹窗叠弹窗错位

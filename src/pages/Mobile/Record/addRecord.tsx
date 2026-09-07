@@ -35,7 +35,7 @@ const Success = styled.div`
   }
 `;
 
-class AddRecord extends Component {
+class AddRecord extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -40,7 +40,7 @@ const GlobalSearchSideCon = styled.ul`
   }
 `;
 
-export default class GlobalSearchSide extends Component {
+export default class GlobalSearchSide extends Component<any, any> {
   render() {
     const { current = 'all', onChange } = this.props;
     return (

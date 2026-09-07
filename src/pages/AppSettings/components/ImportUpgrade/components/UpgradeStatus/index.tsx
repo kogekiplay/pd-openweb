@@ -140,7 +140,7 @@ const Wrap = styled.div`
   }
 `;
 
-export default class UpgradeStatus extends Component {
+export default class UpgradeStatus extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {};

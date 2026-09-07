@@ -39,7 +39,7 @@ const FixedContent = styled.div`
   }
 `;
 
-export default class FixedPage extends Component {
+export default class FixedPage extends Component<any, any> {
   render() {
     const { fixAccount = {}, fixRemark, isNoPublish, backVisible = true } = this.props;
     const { fullName } = fixAccount;

@@ -16,7 +16,7 @@ const SORT_TYPE = {
   owned: 8,
 };
 
-export default class SortableComponent extends Component {
+export default class SortableComponent extends Component<any, any> {
   static propTypes = {
     items: arrayOf(
       shape({

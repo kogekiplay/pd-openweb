@@ -50,7 +50,7 @@ import './index.less';
 let time;
 let clickData = null;
 
-class RecordCalendarBase extends Component {
+class RecordCalendarBase extends Component<any, any> {
   constructor(props) {
     super(props);
     this.calendarComponentRef = React.createRef();

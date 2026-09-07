@@ -6,7 +6,7 @@ import store from 'src/redux/configureStore';
 import { socketInit } from 'src/socket';
 import Chat from './Chat';
 
-class WindowChat extends Component {
+class WindowChat extends Component<any, any> {
   constructor(props) {
     super(props);
     socketInit();

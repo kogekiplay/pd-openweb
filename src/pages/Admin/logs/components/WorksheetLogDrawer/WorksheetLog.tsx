@@ -8,7 +8,7 @@ import { completeAdminLogLinks } from '../../utils';
 
 const PAGE_SIZE = 30;
 
-export default class Discuss extends Component {
+export default class Discuss extends Component<any, any> {
   static propTypes = {
     worksheetId: PropTypes.string,
     rowId: PropTypes.string,

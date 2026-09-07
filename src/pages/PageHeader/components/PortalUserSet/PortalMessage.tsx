@@ -38,7 +38,7 @@ const Wrap = styled.div`
   }
 `;
 
-class PortalMessage extends Component {
+class PortalMessage extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -34,7 +34,7 @@ const Mask = styled.div`
   left: 0;
 `;
 
-class Search extends Component {
+class Search extends Component<any, any> {
   constructor(props) {
     super(props);
     const { values = [] } = props.textFilters[0] || {};

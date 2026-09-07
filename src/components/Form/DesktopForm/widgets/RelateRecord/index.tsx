@@ -10,7 +10,7 @@ import { controlState } from 'src/utils/control';
 import { formatRecordToRelateRecord, getRelateRecordCountFromValue } from 'src/utils/record';
 import { WidgetEventHelper } from '../../../core/useFormEventManager';
 
-export default class Widgets extends Component {
+export default class Widgets extends Component<any, any> {
   static propTypes = {
     // disabled: PropTypes.bool,
     isEditing: PropTypes.bool,

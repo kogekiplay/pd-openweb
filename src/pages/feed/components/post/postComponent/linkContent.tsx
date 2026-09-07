@@ -5,7 +5,7 @@ import { htmlDecodeReg } from 'src/utils/common';
 /**
  * 链接型动态所带的链接和图片
  */
-class LinkContent extends React.Component {
+class LinkContent extends React.Component<any, any> {
   static propTypes = {
     linkItem: PropTypes.shape({
       linkUrl: PropTypes.string.isRequired,

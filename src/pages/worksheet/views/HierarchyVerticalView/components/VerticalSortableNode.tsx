@@ -34,7 +34,7 @@ const VerticalSortableRecordItemWrap = styled.div`
   }
 `;
 
-export default class VerticalSortableRecordItem extends Component {
+export default class VerticalSortableRecordItem extends Component<any, any> {
   static propTypes = {
     index: number,
     parentId: string,

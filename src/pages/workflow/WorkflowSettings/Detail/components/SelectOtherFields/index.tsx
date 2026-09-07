@@ -11,7 +11,7 @@ import { getControlTypeName } from '../../../utils';
 import ActionFields from '../ActionFields';
 import './index.less';
 
-export default class SelectOtherFields extends Component {
+export default class SelectOtherFields extends Component<any, any> {
   static propTypes = {
     isFilter: PropTypes.bool,
     sourceNodeId: PropTypes.string,

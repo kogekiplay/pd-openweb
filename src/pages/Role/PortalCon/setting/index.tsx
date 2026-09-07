@@ -117,7 +117,7 @@ const WrapCon = styled.div`
 const SETTYPE = [_l('基础设置'), _l('信息收集'), _l('自定义登录界面'), _l('消息设置')];
 const TYPE_TO_COMP = [BaseSet, InfoSet, LoginSet, TextMessage];
 
-class PortalSetting extends React.Component {
+class PortalSetting extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

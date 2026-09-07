@@ -46,7 +46,7 @@ function isEndOfMonth(current) {
   return isSameDay(current, current.clone().endOf('month'));
 }
 
-class DateTBody extends Component {
+class DateTBody extends Component<any, any> {
   static propTypes = {
     disabledDate: PropTypes.func,
     prefixCls: PropTypes.string,

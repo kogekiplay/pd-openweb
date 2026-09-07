@@ -86,7 +86,7 @@ const BtnContent = styled.div`
   }
 `;
 
-export default class Push extends Component {
+export default class Push extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

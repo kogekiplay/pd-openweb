@@ -58,7 +58,7 @@ const IncomeWrap = styled.div`
   }
 `;
 
-export default class TransactionDetails extends Component {
+export default class TransactionDetails extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

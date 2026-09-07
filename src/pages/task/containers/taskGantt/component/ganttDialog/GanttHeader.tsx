@@ -8,7 +8,7 @@ const chooseDisplayType = [
   { type: 'month', text: _l('按月') },
 ];
 
-export default class GanttHeader extends Component {
+export default class GanttHeader extends Component<any, any> {
   constructor(props) {
     super(props);
   }

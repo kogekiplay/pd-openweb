@@ -6,7 +6,7 @@ import fixedDataAjax from 'src/api/fixedData.js';
 import jobAjax from 'src/api/job';
 import './dialogCreateAndEditRole.less';
 
-class DialogCreateAndEditPosition extends React.Component {
+class DialogCreateAndEditPosition extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

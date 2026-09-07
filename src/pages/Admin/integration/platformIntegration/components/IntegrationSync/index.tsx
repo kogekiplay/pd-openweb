@@ -6,7 +6,7 @@ import { buriedUpgradeVersionDialog } from 'src/components/upgradeVersion';
 import { INTEGRATION_INFO } from '../../config';
 import SyncDialog from '../SyncDialog';
 
-export default class IntegrationSync extends Component {
+export default class IntegrationSync extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

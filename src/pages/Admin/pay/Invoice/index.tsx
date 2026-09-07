@@ -15,7 +15,7 @@ import InvoiceList from './components/InvoiceList';
 import TaxNumber from './components/TaxNumber';
 import { TABS } from './config';
 
-export default class Invoice extends Component {
+export default class Invoice extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

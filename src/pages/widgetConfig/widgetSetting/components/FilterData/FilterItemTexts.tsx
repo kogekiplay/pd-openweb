@@ -94,7 +94,7 @@ const FilterTextWrap = styled.div`
   }
 `;
 
-export default class FilterItemTexts extends React.Component {
+export default class FilterItemTexts extends React.Component<any, any> {
   renderFilterItem({ item, index, key, spliceText }) {
     let { fromCondition } = this.props;
     return (

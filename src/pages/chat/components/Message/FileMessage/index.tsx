@@ -6,7 +6,7 @@ import Constant from '../../../utils/constant';
 import { handleMessageFilePreview } from '../MessageToolbar';
 import './index.less';
 
-export default class FileMessage extends Component {
+export default class FileMessage extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

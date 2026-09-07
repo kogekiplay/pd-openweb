@@ -111,7 +111,7 @@ const isColorString = value => {
   return value.startsWith('#') || value.startsWith('rgb') || value.includes('-');
 };
 
-class ColorPicker extends Component {
+class ColorPicker extends Component<any, any> {
   static propTypes = {
     visible: PropTypes.bool,
     notTrigger: PropTypes.bool,

@@ -18,7 +18,7 @@ import {
 import utils from '../../utils/utils';
 import './timeBarContainer.less';
 
-class TimeBarContainer extends Component {
+class TimeBarContainer extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

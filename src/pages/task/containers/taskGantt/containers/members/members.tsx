@@ -8,7 +8,7 @@ import config from '../../config/config';
 import { addMembers } from '../../redux/actions';
 import './members.less';
 
-class Members extends Component {
+class Members extends Component<any, any> {
   constructor(props) {
     super(props);
   }

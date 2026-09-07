@@ -10,7 +10,7 @@ import NoData from './NoData';
 import User from './User';
 import './css/user.less';
 
-export default class DepartmentGroupUserList extends Component {
+export default class DepartmentGroupUserList extends Component<any, any> {
   constructor(props) {
     super(props);
     const isCheckedGroupOnlyMyJoin = localStorage.getItem('isCheckedGroupOnlyMyJoin');

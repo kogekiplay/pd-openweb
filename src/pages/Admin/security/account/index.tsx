@@ -7,7 +7,7 @@ import DialogSettingInviteRules from '../../user/membersDepartments/structure/co
 import ContactsHiddenWrap from './contactsHidden';
 import UseInfoDisplaySettings from './UseInfoDisplaySettings';
 
-export default class Account extends Component {
+export default class Account extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

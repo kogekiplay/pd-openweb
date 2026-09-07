@@ -12,7 +12,7 @@ const InputWrap = styled(Input)`
   }
 `;
 
-class SetOrgNameMultipleLanguages extends Component {
+class SetOrgNameMultipleLanguages extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

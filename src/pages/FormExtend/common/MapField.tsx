@@ -72,7 +72,7 @@ const fieldsConfig = {
   ],
 };
 
-export default class MapField extends Component {
+export default class MapField extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = { showDialog: false, mapFields: fieldsConfig[props.type] };

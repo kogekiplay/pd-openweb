@@ -14,7 +14,7 @@ const cardTarget = {
     }
   },
 };
-let EmptyItem = class EmptyItem extends Component {
+let EmptyItem = class EmptyItem extends Component<any, any> {
   static propTypes = {
     connectDropTarget: PropTypes.func.isRequired,
     index: PropTypes.number.isRequired,

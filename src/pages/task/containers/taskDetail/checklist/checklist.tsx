@@ -19,7 +19,7 @@ function getNode(component) {
   return component && component.getNode ? component.getNode() : null;
 }
 
-class ChecklistOperator extends Component {
+class ChecklistOperator extends Component<any, any> {
   componentDidMount() {
     const { isShowOperator } = this.props;
     const clipboardText = this.props.data.name;
@@ -142,7 +142,7 @@ const checklistTarget = {
     props.checklistHover(props.index);
   },
 };
-let Checklist = class Checklist extends Component {
+let Checklist = class Checklist extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

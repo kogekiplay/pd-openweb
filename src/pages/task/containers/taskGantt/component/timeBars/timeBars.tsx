@@ -143,7 +143,7 @@ const ganttSource = {
     $('body').removeClass('ganttDraging');
   },
 };
-let TimeBars = class TimeBars extends Component {
+let TimeBars = class TimeBars extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

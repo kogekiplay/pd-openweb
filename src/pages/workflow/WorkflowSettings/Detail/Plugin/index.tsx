@@ -4,7 +4,7 @@ import { LoadDiv, ScrollView } from 'ming-ui';
 import flowNode from '../../../api/flowNode';
 import { DetailFooter, DetailHeader, ProcessParameters } from '../components';
 
-export default class Plugin extends Component {
+export default class Plugin extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

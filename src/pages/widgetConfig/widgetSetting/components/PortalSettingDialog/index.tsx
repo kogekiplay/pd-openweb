@@ -26,7 +26,7 @@ const PortalWrap = styled.div`
 `;
 
 // 参数data(单个控件详情),globalSheetInfo（appId、groupId、name、projectId、worksheetId）
-export default class PortalSettingDialog extends Component {
+export default class PortalSettingDialog extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

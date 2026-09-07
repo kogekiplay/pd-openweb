@@ -11,7 +11,7 @@ const userInfoList = [
   { label: _l('工号'), key: 'jobNumber' },
 ];
 
-export default class EditCardInfo extends Component {
+export default class EditCardInfo extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -31,7 +31,7 @@ function UpgradeCom({ projectId, featureId }) {
   );
 }
 
-class AppSettings extends Component {
+class AppSettings extends Component<any, any> {
   constructor(props) {
     super(props);
     const type = localStorage.getItem('appManageMenu');

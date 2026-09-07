@@ -7,7 +7,7 @@ import { pathCompletion } from 'src/utils/common';
 import { getCurrentProject } from 'src/utils/project';
 import Config from '../../../config';
 
-export default class CloseNet extends Component {
+export default class CloseNet extends Component<any, any> {
   constructor() {
     super();
     this.state = {

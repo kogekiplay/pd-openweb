@@ -25,7 +25,7 @@ const TABS = [
   { key: 'other', label: _l('其他') },
 ];
 
-export default class Ding extends React.Component {
+export default class Ding extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

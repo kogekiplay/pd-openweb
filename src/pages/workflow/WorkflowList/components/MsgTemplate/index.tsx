@@ -6,7 +6,7 @@ import { Checkbox, Dialog, Icon, ScrollView } from 'ming-ui';
 import EmptyStatus from '../../components/Empty';
 import './index.less';
 
-export default class MsgTemplate extends Component {
+export default class MsgTemplate extends Component<any, any> {
   static propTypes = {
     closeLayer: func,
   };

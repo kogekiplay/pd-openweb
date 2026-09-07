@@ -10,7 +10,7 @@ import ColumnListDropdown from '../ColumnListDropdown';
 import DateCalcPicker from './DateCalcPicker';
 import ToTodaySetting from './toTodaySetting';
 
-export default class DateCalc extends Component {
+export default class DateCalc extends Component<any, any> {
   static propTypes = {
     widget: PropTypes.shape({}),
     worksheetData: PropTypes.shape({}),

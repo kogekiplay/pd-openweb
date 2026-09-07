@@ -57,7 +57,7 @@ const SubmitCon = styled.div(
 `,
 );
 
-class PublicWorksheetConfigForm extends React.Component {
+class PublicWorksheetConfigForm extends React.Component<any, any> {
   static propTypes = {
     controls: PropTypes.arrayOf(PropTypes.shape({})),
     originalControls: PropTypes.arrayOf(PropTypes.shape({})),

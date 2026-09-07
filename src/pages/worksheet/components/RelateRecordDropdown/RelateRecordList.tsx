@@ -12,7 +12,7 @@ import { replaceControlsTranslateInfo } from 'src/utils/translate';
 import ChildTableContext from '../ChildTable/ChildTableContext';
 import ReacordItem from './RecordItem';
 
-export default class RelateRecordList extends React.PureComponent {
+export default class RelateRecordList extends React.PureComponent<any, any> {
   static contextType = ChildTableContext;
   static propTypes = {
     from: PropTypes.number,

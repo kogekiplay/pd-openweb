@@ -8,7 +8,7 @@ import congratulationImg from '../images/congratulation.png';
 import successImg from '../images/succuss.png';
 import './index.less';
 
-export default class DialogCreateApp extends Component {
+export default class DialogCreateApp extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

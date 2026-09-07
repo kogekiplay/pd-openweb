@@ -8,7 +8,7 @@ import { htmlDecodeReg, pathCompletion } from 'src/utils/common';
 import { Config, getCalendarDetail, getParamsFromUrl } from './common';
 import CalendarDetail from './root';
 
-class Container extends Component {
+class Container extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Tooltip } from 'ming-ui/antd-components';
 import './less/Score.less';
 
-class Score extends Component {
+class Score extends Component<any, any> {
   static propTypes = {
     /**
      * 类型

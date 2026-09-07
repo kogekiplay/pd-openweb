@@ -21,7 +21,7 @@ const getControlMinAndMax = map => {
   return data;
 };
 
-class ProgressChart extends Component {
+class ProgressChart extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

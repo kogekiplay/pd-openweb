@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { Input } from 'antd';
 
-export default class MeasureAxis extends Component {
+export default class MeasureAxis extends Component<any, any> {
   constructor(props) {
     super(props);
   }

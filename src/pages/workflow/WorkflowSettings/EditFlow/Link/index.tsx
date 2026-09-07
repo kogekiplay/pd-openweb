@@ -3,7 +3,7 @@ import cx from 'classnames';
 import { ACTION_ID } from '../../enum';
 import { CreateNode, NodeOperate, WorksheetMessage } from '../components';
 
-export default class Link extends Component {
+export default class Link extends Component<any, any> {
   constructor(props) {
     super(props);
   }

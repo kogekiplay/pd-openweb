@@ -102,7 +102,7 @@ const USERS_INDEX = {
   type: 0,
 };
 
-export default class CreateIndex extends Component {
+export default class CreateIndex extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -4,7 +4,7 @@ import cx from 'classnames';
 import { Icon } from 'ming-ui';
 import { VIEW_TYPE_ICON } from 'src/pages/worksheet/constants/enum.js';
 
-export default class ViewDisplayMenu extends Component {
+export default class ViewDisplayMenu extends Component<any, any> {
   static propTypes = {};
   static defaultProps = {};
   state = {};

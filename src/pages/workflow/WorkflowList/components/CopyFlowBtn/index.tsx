@@ -3,7 +3,7 @@ import cx from 'classnames';
 import { Dialog } from 'ming-ui';
 import process from '../../../api/process';
 
-export default class CopyFlowBtn extends Component {
+export default class CopyFlowBtn extends Component<any, any> {
   /**
    * 复制工作流 or 转为子流程
    */

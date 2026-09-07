@@ -31,7 +31,7 @@ import { isRelation, isRToC, SYST_PRINTData } from './core/util';
 import { getDownLoadUrl } from './core/util';
 import './index.less';
 
-class PrintForm extends React.Component {
+class PrintForm extends React.Component<any, any> {
   constructor(props) {
     super(props);
     const { match = {} } = this.props;

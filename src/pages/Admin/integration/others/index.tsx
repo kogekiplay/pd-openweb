@@ -73,7 +73,7 @@ const AUTH_MAPPING = {
   [DATA_INFO[3].key]: PERMISSION_ENUM.OPEN_INTERFACE,
 };
 
-export default class OtherTool extends Component {
+export default class OtherTool extends Component<any, any> {
   constructor() {
     super();
     Config.setPageTitle(_l('集成 - 其他'));

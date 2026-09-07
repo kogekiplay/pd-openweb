@@ -41,7 +41,7 @@ const errorCode = {
   50004: _l('系统错误'),
 };
 
-export default class UploadFiles extends Component {
+export default class UploadFiles extends Component<any, any> {
   static contextType = RecordInfoContext;
   static propTypes = {
     /**

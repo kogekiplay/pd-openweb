@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 
-export default class Support extends Component {
+export default class Support extends Component<any, any> {
   static propTypes = {
     /**
      * 链接

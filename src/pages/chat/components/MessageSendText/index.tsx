@@ -3,7 +3,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import config from '../../utils/config';
 import Constant from '../../utils/constant';
 
-export default class MessageSendText extends Component {
+export default class MessageSendText extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

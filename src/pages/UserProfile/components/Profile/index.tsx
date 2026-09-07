@@ -4,7 +4,7 @@ import UserFeed from 'src/pages/feed/components/app/userFeed';
 import Info from '../Info/UserInfo';
 import './index.less';
 
-class UserProfile extends Component {
+class UserProfile extends Component<any, any> {
   renderFeed() {
     const { isLoading, isMe, userInfo: { fullname, accountId } = {} } = this.props;
 

@@ -100,7 +100,7 @@ const AppItem = props => {
   );
 };
 
-export default class WorkHandoverDialog extends Component {
+export default class WorkHandoverDialog extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

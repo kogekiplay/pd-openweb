@@ -54,7 +54,7 @@ const CascaderItem = styled.span`
   }
 `;
 
-export default class Cascader extends Component {
+export default class Cascader extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

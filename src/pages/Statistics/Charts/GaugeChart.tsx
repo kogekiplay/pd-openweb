@@ -116,7 +116,7 @@ function getValueByPercent(minValue, maxValue, percent) {
   return Number(value.toFixed(12));
 }
 
-export default class extends Component {
+export default class extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

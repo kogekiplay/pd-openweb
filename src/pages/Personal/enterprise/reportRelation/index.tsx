@@ -16,7 +16,7 @@ const barList = [
   { label: _l('组织汇报关系'), key: 'enterprise' },
 ];
 
-export default class ReportRelation extends Component {
+export default class ReportRelation extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

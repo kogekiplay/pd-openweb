@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Icon } from 'ming-ui';
 import './index.less';
 
-export default class TagInput extends Component {
+export default class TagInput extends Component<any, any> {
   static propTypes = {
     defaultValue: PropTypes.string,
     className: PropTypes.string,

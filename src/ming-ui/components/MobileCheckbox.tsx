@@ -6,7 +6,7 @@ import { Checkbox, MobileSearch, PopupWrapper } from 'ming-ui';
 import { MAX_OPTIONS_COUNT } from 'src/pages/widgetConfig/config';
 import './less/MobileCheckbox.less';
 
-export default class MobileCheckbox extends Component {
+export default class MobileCheckbox extends Component<any, any> {
   static propTypes = {
     disabled: PropTypes.bool,
     allowAdd: PropTypes.bool,

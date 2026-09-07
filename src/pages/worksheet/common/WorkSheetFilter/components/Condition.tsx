@@ -29,7 +29,7 @@ const listType = [
 ];
 // 附件 检查框 地区 地区 地区
 const listControlType = [API_ENUM_TO_TYPE.ATTACHMENT, API_ENUM_TO_TYPE.SWITCH, API_ENUM_TO_TYPE.LOCATION];
-export default class Condition extends Component {
+export default class Condition extends Component<any, any> {
   static propTypes = {
     isRules: PropTypes.bool,
     projectId: PropTypes.string,

@@ -8,7 +8,7 @@ const UserHeadWrap = styled(UserHead)`
   line-height: 24px;
 `;
 
-export default class PeopleAvatar extends React.Component {
+export default class PeopleAvatar extends React.Component<any, any> {
   render() {
     const { user = {}, projectId } = this.props;
 

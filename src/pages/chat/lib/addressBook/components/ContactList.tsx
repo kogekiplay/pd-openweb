@@ -4,7 +4,7 @@ import { LoadDiv, ScrollView } from 'ming-ui';
 import ContactItem from './ContactItem';
 import ListNull from './ListNull';
 
-export default class ContactList extends React.Component {
+export default class ContactList extends React.Component<any, any> {
   constructor() {
     super();
 

@@ -14,7 +14,7 @@ import {
   TestParameter,
 } from '../components';
 
-export default class Authentication extends Component {
+export default class Authentication extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

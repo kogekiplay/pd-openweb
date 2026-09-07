@@ -27,7 +27,7 @@ import './index.less';
 
 const LoadableEditorPanel = lazy(() => import('./EditorPanel'));
 const LoadableFilterScope = lazy(() => import('../components/FilterScope'));
-let ChartDialog = class ChartDialog extends Component {
+let ChartDialog = class ChartDialog extends Component<any, any> {
   static propTypes = {
     appId: PropTypes.string,
     projectId: PropTypes.string,

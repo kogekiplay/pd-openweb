@@ -4,7 +4,7 @@ import './main.css';
 
 // 隐藏 chat、mobileShare
 
-export default class KcUploadEntrypoint extends Component {
+export default class KcUploadEntrypoint extends Component<any, any> {
   componentDidMount() {
     $('html').addClass('AppKc AppKcUpload');
   }

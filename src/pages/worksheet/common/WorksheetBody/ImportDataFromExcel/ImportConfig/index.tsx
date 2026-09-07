@@ -9,7 +9,7 @@ import './index.less';
 
 const titleLineArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const ClickAwayable = ClickAway;
-export default class ImportConfig extends Component {
+export default class ImportConfig extends Component<any, any> {
   static propTypes = {
     hideImportConfig: PropTypes.func,
     nextStep: PropTypes.func,

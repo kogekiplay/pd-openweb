@@ -44,7 +44,7 @@ let rules = [
   },
 ];
 
-class ContactsHidden extends React.Component {
+class ContactsHidden extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {};

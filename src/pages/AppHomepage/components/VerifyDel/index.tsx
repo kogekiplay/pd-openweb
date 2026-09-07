@@ -5,7 +5,7 @@ import { func, string } from 'prop-types';
 import { Dialog, Input } from 'ming-ui';
 import './index.less';
 
-export default class VerifyDel extends Component {
+export default class VerifyDel extends Component<any, any> {
   static propTypes = {
     name: string,
     onOk: func,

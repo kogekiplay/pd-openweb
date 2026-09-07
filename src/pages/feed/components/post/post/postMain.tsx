@@ -11,7 +11,7 @@ import PostMessage from './postMessage';
 /**
  * 动态主体内容，包括动态内容和用户头像、姓名和发布到的群组
  */
-class PostMain extends React.Component {
+class PostMain extends React.Component<any, any> {
   static propTypes = {
     className: PropTypes.string,
     children: PropTypes.any,

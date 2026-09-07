@@ -15,7 +15,7 @@ const routeList = [
   },
 ];
 
-export default class Portal extends Component {
+export default class Portal extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

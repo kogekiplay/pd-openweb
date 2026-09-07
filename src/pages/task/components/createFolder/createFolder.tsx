@@ -7,7 +7,7 @@ import ajaxRequest from 'src/api/taskCenter';
 import { expireDialogAsync } from 'src/components/upgradeVersion';
 import './less/createFolder.less';
 
-export default class CreateFolder extends Component {
+export default class CreateFolder extends Component<any, any> {
   static defaultProps = {
     mdAppId: '',
     projectId: '',

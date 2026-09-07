@@ -20,7 +20,7 @@ import {
 } from './config';
 import './index.less';
 
-class NetState extends Component {
+class NetState extends Component<any, any> {
   static propTypes = {
     onClose: func,
     /**

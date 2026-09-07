@@ -78,7 +78,7 @@ const formatDepartmentData = list => {
   return departments;
 };
 
-export default class ProjectContacts extends React.Component {
+export default class ProjectContacts extends React.Component<any, any> {
   constructor() {
     super();
 

@@ -5,7 +5,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { browserIsMobile } from 'src/utils/common';
 import './SearchInput.less';
 
-export default class SearchInput extends Component {
+export default class SearchInput extends Component<any, any> {
   static propTypes = {
     active: PropTypes.bool,
     className: PropTypes.string,

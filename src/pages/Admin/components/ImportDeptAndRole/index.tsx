@@ -287,7 +287,7 @@ const SuccessInfo = styled.div`
   }
 `;
 
-export default class ImportDeptAndRole extends Component {
+export default class ImportDeptAndRole extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -4,7 +4,7 @@ import Config from '../../config';
 import Resigned from './resignation';
 import Members from './structure';
 
-export default class MembersDepartments extends Component {
+export default class MembersDepartments extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

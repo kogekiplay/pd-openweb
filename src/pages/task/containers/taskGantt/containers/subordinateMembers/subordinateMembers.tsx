@@ -16,7 +16,7 @@ import { addFollowMembers, removeFollowMembers, updateUserStatus } from '../../r
 import './subordinateMembers.less';
 
 const ClickAwayable = ClickAway;
-class SubordinateMembers extends Component {
+class SubordinateMembers extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

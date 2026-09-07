@@ -5,7 +5,7 @@ import RegExpValidator from 'src/utils/expression';
 import common from '../../common';
 import './index.less';
 
-export default class EditInfo extends React.Component {
+export default class EditInfo extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

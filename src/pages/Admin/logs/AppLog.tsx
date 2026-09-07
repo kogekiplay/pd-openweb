@@ -23,7 +23,7 @@ const AppLogWrap = styled.div`
   }
 `;
 
-export default class AppLog extends Component {
+export default class AppLog extends Component<any, any> {
   constructor(props) {
     super(props);
     const globalLogTab = localStorage.getItem('globalLogTab');

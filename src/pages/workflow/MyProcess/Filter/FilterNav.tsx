@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 
-export default class FilterNav extends Component {
+export default class FilterNav extends Component<any, any> {
   constructor(props) {
     super(props);
     let currentIndex = 0;

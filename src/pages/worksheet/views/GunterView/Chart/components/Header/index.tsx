@@ -6,7 +6,7 @@ import MajorAxisLabel from '../MajorAxisLabel';
 import MinorAxisLabel from '../MinorAxisLabel';
 import Today from '../Today';
 
-let GunterChartHeader = class GunterChartHeader extends Component {
+let GunterChartHeader = class GunterChartHeader extends Component<any, any> {
   constructor(props) {
     super(props);
   }

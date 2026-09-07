@@ -19,7 +19,7 @@ const actionMsg = {
   4: _l('账号已申请注销！'),
   5: _l('state过期或错误！'),
 };
-export default class Cancellation extends Component {
+export default class Cancellation extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

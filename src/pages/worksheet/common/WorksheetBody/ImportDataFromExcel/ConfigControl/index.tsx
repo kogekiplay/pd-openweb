@@ -22,7 +22,7 @@ const handleEnumText = {
   2: _l('覆盖'),
   3: _l('仅更新'),
 };
-export default class ConfigControl extends Component {
+export default class ConfigControl extends Component<any, any> {
   static propTypes = {
     appId: PropTypes.string,
     worksheetId: PropTypes.string,

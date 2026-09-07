@@ -76,7 +76,7 @@ const WecharPayWrap = styled.div`
   }
 `;
 
-export default class WechatPay extends Component {
+export default class WechatPay extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

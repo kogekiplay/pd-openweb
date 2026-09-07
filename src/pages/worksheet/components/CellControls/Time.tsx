@@ -11,7 +11,7 @@ import EditableCellCon from '../EditableCellCon';
 import CellErrorTips from './comps/CellErrorTip';
 
 const ClickAwayable = ClickAway;
-export default class Date extends React.Component {
+export default class Date extends React.Component<any, any> {
   static propTypes = {
     className: PropTypes.string,
     style: PropTypes.shape({}),

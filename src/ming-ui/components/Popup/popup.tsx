@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import ClickAway from 'ming-ui/components/ClickAway';
 import './popup.less';
 
-class Popup extends React.Component {
+class Popup extends React.Component<any, any> {
   static propTypes = {
     children: PropTypes.element,
     withMask: PropTypes.bool,

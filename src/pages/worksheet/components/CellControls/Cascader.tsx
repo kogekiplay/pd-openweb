@@ -9,7 +9,7 @@ import { checkCellIsEmpty } from 'src/utils/control';
 import { renderText } from 'src/utils/control';
 import EditableCellCon from '../EditableCellCon';
 
-export default class Cascader extends React.Component {
+export default class Cascader extends React.Component<any, any> {
   static propTypes = {
     className: PropTypes.string,
     style: PropTypes.shape({}),

@@ -15,7 +15,7 @@ import Apply from './Apply';
 import Outsourcing from './Outsourcing';
 import User from './User';
 
-export default class UserListCon extends React.Component {
+export default class UserListCon extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

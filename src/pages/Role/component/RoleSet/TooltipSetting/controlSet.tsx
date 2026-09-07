@@ -45,7 +45,7 @@ const Wrap = styled.div`
   }
 `;
 
-export default class extends React.PureComponent {
+export default class extends React.PureComponent<any, any> {
   constructor(props) {
     super(props);
 

@@ -8,7 +8,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import PaginationWrap from '../PaginationWrap';
 import './index.less';
 
-export default class PageTableCon extends Component {
+export default class PageTableCon extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

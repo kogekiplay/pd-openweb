@@ -20,7 +20,7 @@ const format = res => {
   });
 };
 
-export default class Files extends Component {
+export default class Files extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -7,7 +7,7 @@ import { getCurrentValue } from 'src/components/Form/core/formUtils';
 import { compatibleMDJS } from 'src/utils/project';
 import ScanQRCode from './ScanQRCode';
 
-export default class Widgets extends Component {
+export default class Widgets extends Component<any, any> {
   static propTypes = {
     projectId: PropTypes.string,
     onChange: PropTypes.func,

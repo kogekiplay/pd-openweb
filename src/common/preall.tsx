@@ -289,7 +289,7 @@ const getGlobalMeta = ({ allowNotLogin, requestParams } = {}) => {
 };
 
 const wrapComponent = function (Comp, { allowNotLogin, requestParams } = {}) {
-  class Pre extends React.Component {
+  class Pre extends React.Component<any, any> {
     constructor(props) {
       super(props);
       this.state = {

@@ -39,7 +39,7 @@ import { DataDBInstances, terminals } from './constant';
 import ExportApp from './modules/ExportApp';
 import './index.less';
 
-export default class AppManagement extends Component {
+export default class AppManagement extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -74,7 +74,7 @@ const RecordCount = styled.div`
   background-color: rgba(0, 0, 0, 0.05);
 `;
 
-export default class BoardTitle extends Component {
+export default class BoardTitle extends Component<any, any> {
   static propTypes = {};
   static defaultProps = {};
 

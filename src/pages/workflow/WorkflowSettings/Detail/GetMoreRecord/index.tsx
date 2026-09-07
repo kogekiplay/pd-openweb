@@ -19,7 +19,7 @@ import {
   UpdateFields,
 } from '../components';
 
-export default class GetMoreRecord extends Component {
+export default class GetMoreRecord extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

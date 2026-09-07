@@ -31,7 +31,7 @@ function getFilterControls(searchId, keyWords) {
     : [];
 }
 
-class Search extends Component {
+class Search extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

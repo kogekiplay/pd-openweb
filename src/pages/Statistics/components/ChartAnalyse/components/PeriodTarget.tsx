@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Input } from 'antd';
 
-export default class PeriodTarget extends Component {
+export default class PeriodTarget extends Component<any, any> {
   constructor(props) {
     super(props);
   }

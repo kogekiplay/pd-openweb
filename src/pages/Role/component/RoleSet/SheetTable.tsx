@@ -81,7 +81,7 @@ const getViewSize = (views, keyName) => {
   return _.filter(views, view => view[keyName]).length;
 };
 
-export default class extends PureComponent {
+export default class extends PureComponent<any, any> {
   state = {
     show: false,
     showRoleSet: false,

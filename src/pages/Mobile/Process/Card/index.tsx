@@ -12,7 +12,7 @@ import { covertTime, FLOW_NODE_TYPE_STATUS, INSTANCELOG_STATUS } from 'src/pages
 import { processInformTabs } from '../enum';
 import './index.less';
 
-export default class Card extends Component {
+export default class Card extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

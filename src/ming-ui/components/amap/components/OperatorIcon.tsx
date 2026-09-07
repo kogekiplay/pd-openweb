@@ -14,7 +14,7 @@ const ToolbarIconWrap = styled.div`
   box-shadow: 0 3px 6px 0px rgba(0, 0, 0, 0.16);
 `;
 
-export default class OperatorIcon extends Component {
+export default class OperatorIcon extends Component<any, any> {
   constructor(props) {
     super(props);
   }

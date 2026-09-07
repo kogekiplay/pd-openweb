@@ -16,7 +16,7 @@ import ApprovalContent from '../ApprovalContent';
 import BatchResign from '../BatchResign';
 import UserTable from '../userList/userTable';
 
-class StructureContent extends Component {
+class StructureContent extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

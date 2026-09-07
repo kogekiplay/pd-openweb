@@ -18,7 +18,7 @@ const TABS = [
   { key: 'byApp', label: _l('按应用') },
   { key: 'byUser', label: _l('按成员') },
 ];
-export default class UseAnalytics extends Component {
+export default class UseAnalytics extends Component<any, any> {
   constructor(props) {
     super(props);
     const { type } = _.get(props, 'match.params');

@@ -34,7 +34,7 @@ const folderChartSettings = {
 let rootFolderChartTime;
 let rootMaxViewUpdateTime;
 
-class FolderChart extends Component {
+class FolderChart extends Component<any, any> {
   constructor(props) {
     super(props);
   }

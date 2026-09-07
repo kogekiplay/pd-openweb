@@ -76,7 +76,7 @@ export const callDialogSelectUser = function (projectId, callback = () => { }) {
   });
 };
 
-export default class Detail extends React.Component {
+export default class Detail extends React.Component<any, any> {
   static propTypes = {
     user: PropTypes.shape({
       avatar: PropTypes.string,

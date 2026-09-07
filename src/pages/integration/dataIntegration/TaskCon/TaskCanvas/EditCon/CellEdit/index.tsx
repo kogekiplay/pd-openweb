@@ -97,7 +97,7 @@ const Wrap = styled.div`
 
 //不支持配置的jdbcId类型
 const disableList = [-8, -4, -2, 0, 70, 1111, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2009, 2011, 2012];
-export default class CellEdit extends Component {
+export default class CellEdit extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

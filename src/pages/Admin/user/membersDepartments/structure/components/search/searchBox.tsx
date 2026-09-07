@@ -6,7 +6,7 @@ import { expandedKeysUpdate, getFullTree, loadAllUsers, loadDepartments } from '
 import { clearSearchKeywords, fetchSearchResult, getCustomList } from '../../actions/search';
 import Result from './searchResult';
 
-class SearchBox extends Component {
+class SearchBox extends Component<any, any> {
   constructor(props) {
     super(props);
     this.ajaxObj = null;

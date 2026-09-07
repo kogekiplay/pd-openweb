@@ -118,7 +118,7 @@ const AccountWrap = styled.div`
   }
 `;
 let sendVerifyCodeTimer = null;
-class TelCon extends React.Component {
+class TelCon extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.iti = null;

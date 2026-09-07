@@ -7,7 +7,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { reportTypes, roundTypes } from 'statistics/Charts/common';
 import RuleColor from './Color/RuleColor';
 
-export default class Label extends Component {
+export default class Label extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

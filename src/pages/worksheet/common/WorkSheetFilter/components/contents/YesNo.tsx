@@ -5,7 +5,7 @@ import { RadioGroup } from 'ming-ui';
 import { getSwitchItemNames } from 'src/utils/control';
 import { FILTER_CONDITION_TYPE } from '../../enum';
 
-export default class YesNo extends Component {
+export default class YesNo extends Component<any, any> {
   static propTypes = {
     disabled: PropTypes.bool,
     onChange: PropTypes.func,

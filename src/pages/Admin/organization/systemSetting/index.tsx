@@ -16,7 +16,7 @@ const TABS = [
 
 const Comp = { sysinfo: ProjectInfo, certinfo: CertInfo };
 
-export default class SystemSetting extends Component {
+export default class SystemSetting extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

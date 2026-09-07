@@ -29,7 +29,7 @@ const MenuWrap = styled(Menu)`
   }
 `;
 
-class CreateBtn extends Component {
+class CreateBtn extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

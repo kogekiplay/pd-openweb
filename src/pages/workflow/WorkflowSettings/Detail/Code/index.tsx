@@ -25,7 +25,7 @@ const CodeSnippetButton = styled.div`
   }
 `;
 
-export default class Code extends Component {
+export default class Code extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

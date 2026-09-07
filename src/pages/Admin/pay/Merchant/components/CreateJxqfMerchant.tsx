@@ -59,7 +59,7 @@ const Description = styled.div`
 `;
 
 // 聚合支付
-export default class CreateJxqfMerchant extends Component {
+export default class CreateJxqfMerchant extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

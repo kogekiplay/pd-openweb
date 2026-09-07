@@ -3,7 +3,7 @@ import cx from 'classnames';
 import { getIcons } from '../../utils';
 import { CreateNode, MembersName, NodeOperate } from '../components';
 
-export default class CC extends Component {
+export default class CC extends Component<any, any> {
   constructor(props) {
     super(props);
   }

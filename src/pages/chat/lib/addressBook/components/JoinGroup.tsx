@@ -3,7 +3,7 @@ import Button from 'ming-ui/components/Button';
 import Icon from 'ming-ui/components/Icon';
 import { joinGroup } from '../api';
 
-export default class JoinGroup extends React.Component {
+export default class JoinGroup extends React.Component<any, any> {
   render() {
     const { groupId } = this.props;
     return (

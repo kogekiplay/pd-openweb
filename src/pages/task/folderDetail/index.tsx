@@ -2,7 +2,7 @@
 import { emitter } from 'src/utils/common';
 import TaskCenter from './containers/taskCenter/taskCenter';
 
-export default class FolderEntrypoint extends Component {
+export default class FolderEntrypoint extends Component<any, any> {
   componentDidMount() {
     $('html').addClass('AppTask');
   }

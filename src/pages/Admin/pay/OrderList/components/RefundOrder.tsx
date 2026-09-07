@@ -37,7 +37,7 @@ const FlexWrap = styled.div`
   overflow: hidden;
 `;
 
-export default class RefundOrder extends Component {
+export default class RefundOrder extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

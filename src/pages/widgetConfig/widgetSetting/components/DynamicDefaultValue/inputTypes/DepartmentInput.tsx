@@ -5,7 +5,7 @@ import { dialogSelectDept } from 'ming-ui/functions';
 import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
 import { DynamicValueInputWrap } from '../styled';
 
-export default class DepartmentInput extends Component {
+export default class DepartmentInput extends Component<any, any> {
   // 成员多选数据处理
   removeItem = id => {
     const { dynamicValue, onDynamicValueChange } = this.props;

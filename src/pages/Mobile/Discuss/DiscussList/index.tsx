@@ -12,7 +12,7 @@ import * as actions from '../redux/actions';
 import withoutDisussion from './assets/withoutDisussion.svg';
 import './index.less';
 
-class DiscussList extends Component {
+class DiscussList extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -4,7 +4,7 @@ import cx from 'classnames';
 import _ from 'lodash';
 import { isWeekEndDay } from 'worksheet/views/GunterView/util';
 
-let TimeCanvas = class TimeCanvas extends Component {
+let TimeCanvas = class TimeCanvas extends Component<any, any> {
   constructor(props) {
     super(props);
     this.$ref = createRef(null);

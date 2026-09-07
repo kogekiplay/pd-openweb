@@ -64,7 +64,7 @@ const plainOptions = [
   },
 ];
 
-export default class ExportDialog extends Component {
+export default class ExportDialog extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -14,7 +14,7 @@ const GroupIcon = styled(SvgIcon)`
   margin-right: 10px;
 `;
 
-export default class ApplicationList extends Component {
+export default class ApplicationList extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

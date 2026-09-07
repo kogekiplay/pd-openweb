@@ -15,7 +15,7 @@ const Wrap = styled.div`
     }
   }
 `;
-export default class IntegrationApi extends React.Component {
+export default class IntegrationApi extends React.Component<any, any> {
   constructor(props) {
     super(props);
   }

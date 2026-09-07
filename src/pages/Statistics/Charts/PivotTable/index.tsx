@@ -115,7 +115,7 @@ export const replaceColor = ({ pivotTableStyle, customPageConfig, themeColor, so
   return data;
 };
 
-class PivotTable extends Component {
+class PivotTable extends Component<any, any> {
   constructor(props) {
     super(props);
     const { style } = props.reportData;

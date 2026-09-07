@@ -7,7 +7,7 @@ import VoteOptionMemberList from './voteOptionMemberList';
 /**
  * 投票结果
  */
-class VoteResult extends React.Component {
+class VoteResult extends React.Component<any, any> {
   static propTypes = {
     voteItem: PropTypes.object.isRequired,
   };

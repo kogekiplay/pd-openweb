@@ -101,7 +101,7 @@ const ChooseWidgetWrap = styled.div`
     }
   }
 `;
-let ChooseWidget = class ChooseWidget extends React.Component {
+let ChooseWidget = class ChooseWidget extends React.Component<any, any> {
   constructor(props) {
     super(props);
     const { writeControls = [] } = props;

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Icon } from 'ming-ui';
 import { SimplifyNode } from '../components';
 
-export default class Return extends Component {
+export default class Return extends Component<any, any> {
   render() {
     const { item } = this.props;
 

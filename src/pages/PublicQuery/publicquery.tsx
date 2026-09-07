@@ -88,7 +88,7 @@ const ErrText = {
 };
 const LoadableForm = lazy(() => import('src/components/Form'));
 
-class Publicquery extends React.Component {
+class Publicquery extends React.Component<any, any> {
   constructor(props) {
     super(props);
     props.onRef(this);

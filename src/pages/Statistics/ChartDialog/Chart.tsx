@@ -44,7 +44,7 @@ const HorizontalDrag = styled.div(
 `,
 );
 const LoadableSheet = lazy(() => import('./Sheet'));
-let Chart = class Chart extends Component {
+let Chart = class Chart extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

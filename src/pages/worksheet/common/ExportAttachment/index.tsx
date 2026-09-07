@@ -36,7 +36,7 @@ const Container = styled.div`
 
 const { Option } = Select;
 
-class ExportAttachment extends Component {
+class ExportAttachment extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

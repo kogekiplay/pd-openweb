@@ -321,7 +321,7 @@ function SearchFolder(props) {
   );
 }
 
-class TaskNavigation extends Component {
+class TaskNavigation extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

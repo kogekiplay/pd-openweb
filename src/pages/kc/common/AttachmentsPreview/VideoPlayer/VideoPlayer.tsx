@@ -10,7 +10,7 @@ function supportsVideo() {
   return !!document.createElement('video').canPlayType;
 }
 
-class VideoPlayer extends Component {
+class VideoPlayer extends Component<any, any> {
   static propTypes = {
     src: PropTypes.string,
     attachment: PropTypes.object,

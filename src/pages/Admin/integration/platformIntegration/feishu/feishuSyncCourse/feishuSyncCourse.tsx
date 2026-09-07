@@ -19,7 +19,7 @@ const PlatformName = {
   lark: 'Lark',
 };
 
-export default class WorkwxSyncCourse extends React.Component {
+export default class WorkwxSyncCourse extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

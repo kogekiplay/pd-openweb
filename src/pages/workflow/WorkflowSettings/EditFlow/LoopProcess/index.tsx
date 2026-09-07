@@ -4,7 +4,7 @@ import { pathCompletion } from 'src/utils/common';
 import { ACTION_ID } from '../../enum';
 import { CreateNode, NodeOperate } from '../components';
 
-export default class LoopProcess extends Component {
+export default class LoopProcess extends Component<any, any> {
   constructor(props) {
     super(props);
   }

@@ -107,7 +107,7 @@ export const RecordWrapper = styled.div`
 const LoadableRecordInfo = lazy(() => import('worksheet/views/GunterView/components/RecordInfo'));
 const LoadableRecordOperate = lazy(() => import('worksheet/components/RecordOperate'));
 const LoadableCellControls = lazy(() => import('worksheet/components/CellControls'));
-let Record = class Record extends Component {
+let Record = class Record extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

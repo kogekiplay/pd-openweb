@@ -3,7 +3,7 @@ import { FullScreenCurtain } from 'ming-ui';
 import ConnectCon from './ConnectCon';
 
 // 连接详情弹层
-export default class ConnectWrap extends Component {
+export default class ConnectWrap extends Component<any, any> {
   render() {
     return (
       <FullScreenCurtain>

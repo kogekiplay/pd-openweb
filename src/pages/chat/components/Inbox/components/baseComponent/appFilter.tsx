@@ -65,7 +65,7 @@ const SelectAppTrigger = styled.div`
   border-radius: 4px;
 `;
 
-export default class AppFilter extends Component {
+export default class AppFilter extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

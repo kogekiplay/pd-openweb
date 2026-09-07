@@ -3,7 +3,7 @@ import cx from 'classnames';
 import { pathCompletion } from 'src/utils/common';
 import { CreateNode, NodeOperate } from '../components';
 
-export default class SubProcess extends Component {
+export default class SubProcess extends Component<any, any> {
   constructor(props) {
     super(props);
   }

@@ -9,7 +9,7 @@ import { PERMISSION_ENUM } from 'src/pages/Admin/enum';
 import DepartmentList from '../dialogSelectUser/GeneralSelect/DepartmentList';
 import './style.less';
 
-class DialogSelectDept extends React.Component {
+class DialogSelectDept extends React.Component<any, any> {
   constructor(props) {
     super(props);
 

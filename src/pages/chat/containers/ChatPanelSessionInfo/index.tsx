@@ -13,7 +13,7 @@ import SearchPanel from '../../components/SearchPanel';
 import * as actions from '../../redux/actions';
 import * as utils from '../../utils';
 
-class ChatPanelSessionInfo extends Component {
+class ChatPanelSessionInfo extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import cx from 'classnames';
 import { CreateNode, NodeOperate } from '../components';
 
-export default class Snapshot extends Component {
+export default class Snapshot extends Component<any, any> {
   constructor(props) {
     super(props);
   }

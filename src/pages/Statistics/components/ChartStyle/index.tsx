@@ -26,7 +26,7 @@ import XAxis from './components/XAxis';
 import yAxisPanelGenerator, { bidirectionalBarChartYAxisPanelGenerator } from './components/YAxis';
 import './index.less';
 
-let ChartStyle = class ChartStyle extends Component {
+let ChartStyle = class ChartStyle extends Component<any, any> {
   constructor(props) {
     super(props);
   }

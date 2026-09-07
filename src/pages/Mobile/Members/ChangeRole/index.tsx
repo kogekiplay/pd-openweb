@@ -8,7 +8,7 @@ import { pathCompletion } from 'src/utils/common';
 import * as actions from './redux/actions';
 import './index.less';
 
-class ChangeRole extends React.Component {
+class ChangeRole extends React.Component<any, any> {
   constructor(props) {
     super(props);
     const { params } = props.match;

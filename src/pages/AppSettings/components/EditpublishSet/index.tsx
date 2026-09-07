@@ -95,7 +95,7 @@ const MDSwitch = styled(Switch)`
   }
 `;
 
-class EditPublishSetDialog extends React.Component {
+class EditPublishSetDialog extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

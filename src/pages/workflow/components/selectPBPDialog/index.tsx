@@ -119,7 +119,7 @@ const ContentBox = styled.div`
   }
 `;
 
-class SelectPBPDialog extends Component {
+class SelectPBPDialog extends Component<any, any> {
   static propTypes = {
     companyId: PropTypes.string,
     appId: PropTypes.string,

@@ -6,7 +6,7 @@ import FunctionWrap from 'ming-ui/components/FunctionWrap';
 import departmentController from 'src/api/department';
 import './index.less';
 
-export default class SelectDeptUser extends Component {
+export default class SelectDeptUser extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

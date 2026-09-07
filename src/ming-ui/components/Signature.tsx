@@ -41,7 +41,7 @@ const SignatureBox = styled.div`
   }
 `;
 
-export default class Signature extends Component {
+export default class Signature extends Component<any, any> {
   state = {
     isEdit: false,
     signature: '',

@@ -172,7 +172,7 @@ const getDefaultSummaryTypes = control => {
   }, {});
 };
 
-class ChildTable extends React.Component {
+class ChildTable extends React.Component<any, any> {
   static contextType = RecordInfoContext;
   static propTypes = {
     mode: PropTypes.string,

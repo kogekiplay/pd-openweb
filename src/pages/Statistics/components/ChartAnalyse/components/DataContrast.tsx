@@ -9,7 +9,7 @@ import { formatContrastTypes, formatLineChartContrastTypes } from 'statistics/co
 
 const { RangePicker } = DatePicker;
 
-export default class DataContrast extends Component {
+export default class DataContrast extends Component<any, any> {
   constructor(props) {
     super(props);
     const { displaySetup, filter } = this.props.currentReport;

@@ -6,7 +6,7 @@ import { telIsValidNumber } from 'ming-ui/components/PhoneNumberInput/util';
 import { captcha } from 'ming-ui/functions';
 import publicWorksheetAjax from 'src/api/publicWorksheet';
 
-export default class WidgetsVerifyCode extends Component {
+export default class WidgetsVerifyCode extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

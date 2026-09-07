@@ -12,7 +12,7 @@ import { addBehaviorLog } from 'src/utils/project';
 import * as actions from './redux/actions';
 import './index.less';
 
-class RelationList extends Component {
+class RelationList extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

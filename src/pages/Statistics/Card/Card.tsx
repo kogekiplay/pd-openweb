@@ -26,7 +26,7 @@ import './Card.less';
 const ChartDialog = lazy(() => import('../ChartDialog'));
 let isCheckLogin = true;
 
-class Card extends Component {
+class Card extends Component<any, any> {
   static defaultProps = {
     needEnlarge: true,
     needTimingRefresh: true,

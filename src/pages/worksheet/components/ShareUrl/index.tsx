@@ -121,7 +121,7 @@ const Danger = styled.span`
   color: var(--color-error);
 `;
 
-export default class ShareUrl extends React.Component {
+export default class ShareUrl extends React.Component<any, any> {
   static propTypes = {
     copyShowText: PropTypes.bool,
     url: PropTypes.string,

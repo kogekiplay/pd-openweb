@@ -7,7 +7,7 @@ import { encrypt, pathCompletion } from 'src/utils/common';
 import RegExpValidator from 'src/utils/expression';
 import './index.less';
 
-export default class EditPassword extends Component {
+export default class EditPassword extends Component<any, any> {
   constructor(props) {
     super(props);
     const { md = {} } = window;

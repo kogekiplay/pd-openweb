@@ -89,7 +89,7 @@ const userTemplatePaths = {
   4: '/staticfiles/template/importUserTemplate/แม่แบบการนำเข้าผู้ใช้งาน.xlsx',
   5: '/staticfiles/template/importUserTemplate/Templat Import Pengguna.xlsx',
 };
-export default class ImportResulFailtDetail extends Component {
+export default class ImportResulFailtDetail extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

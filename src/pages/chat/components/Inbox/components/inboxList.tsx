@@ -12,7 +12,7 @@ import { LOADTYPES, NAMES, TYPES } from '../constants';
 import { isWithinOneHour } from '../util';
 import Message from './inboxMessage';
 
-let InboxList = class InboxList extends React.Component {
+let InboxList = class InboxList extends React.Component<any, any> {
   static propTypes = {
     inboxFavorite: PropTypes.bool,
     type: PropTypes.oneOf(_.values(TYPES)),

@@ -9,7 +9,7 @@ import { formatRecur, formatShowTime } from '../../common';
 import RepeatBox from './RepeatBox';
 
 const RangePicker = DatePicker.RangePicker;
-let EditBlock = class EditBlock extends Component {
+let EditBlock = class EditBlock extends Component<any, any> {
   constructor() {
     super();
     this.state = {
@@ -117,7 +117,7 @@ let EditBlock = class EditBlock extends Component {
   }
 };
 EditBlock = ClickAway.wrap(EditBlock);
-export default class CalendarDate extends Component {
+export default class CalendarDate extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -37,7 +37,7 @@ const Box = styled.div`
     }
   }
 `;
-export default class HistoryList extends Component {
+export default class HistoryList extends Component<any, any> {
   static propTypes = {
     processId: string,
     data: any,

@@ -26,7 +26,7 @@ const contactInfo = [
   [{ key: 'postcode', text: _l('地址和邮编') }],
 ];
 
-class ContractCom extends Component {
+class ContractCom extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {};

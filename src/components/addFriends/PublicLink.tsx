@@ -19,7 +19,7 @@ const DISPLAY_OPTIONS = [
   },
 ];
 
-export default class PublicLink extends Component {
+export default class PublicLink extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

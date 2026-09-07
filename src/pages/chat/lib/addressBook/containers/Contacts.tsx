@@ -37,7 +37,7 @@ const defaultState = {
   isFilterOther: true,
 };
 
-export default class Contacts extends React.Component {
+export default class Contacts extends React.Component<any, any> {
   constructor() {
     super();
 

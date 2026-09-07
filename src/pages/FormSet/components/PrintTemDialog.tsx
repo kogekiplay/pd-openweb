@@ -3,7 +3,7 @@ import { func } from 'prop-types';
 import { FullScreenCurtain } from 'ming-ui';
 import PrintForm from 'src/pages/Print';
 
-export default class PrintTemDialog extends Component {
+export default class PrintTemDialog extends Component<any, any> {
   static propTypes = {
     onBack: func,
   };

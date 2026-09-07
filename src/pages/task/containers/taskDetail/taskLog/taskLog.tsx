@@ -5,7 +5,7 @@ import LoadDiv from 'ming-ui/components/LoadDiv';
 import ajaxRequest from 'src/api/taskCenter';
 import './taskLog.less';
 
-export default class TaskDetail extends Component {
+export default class TaskDetail extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

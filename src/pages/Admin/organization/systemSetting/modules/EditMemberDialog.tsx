@@ -4,7 +4,7 @@ import { Dialog, LoadDiv, ScrollView } from 'ming-ui';
 import { dialogSelectUser } from 'ming-ui/functions';
 import workSiteController from 'src/api/workSite';
 
-export default class EditMemberDialog extends Component {
+export default class EditMemberDialog extends Component<any, any> {
   constructor() {
     super();
     this.state = {

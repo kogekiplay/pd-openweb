@@ -21,7 +21,7 @@ const Wrap = styled.div`
   }
 `;
 const ClickAwayable = ClickAway;
-let PortalMg = class PortalMg extends Component {
+let PortalMg = class PortalMg extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -10,7 +10,7 @@ import Back from '../components/Back';
 import * as actions from './redux/actions';
 import './index.less';
 
-class Members extends Component {
+class Members extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

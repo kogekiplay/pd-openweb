@@ -106,7 +106,7 @@ const tabs = [
   },
 ];
 
-export default class ProcessMatters extends Component {
+export default class ProcessMatters extends Component<any, any> {
   constructor(props) {
     super(props);
     const { tab } = props.match.params;

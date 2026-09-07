@@ -23,7 +23,7 @@ import { handoverDialog } from '../HandoverDialog';
 import { refuseUserJoinFunc } from '../refuseUserJoinDia';
 import './userItem.less';
 
-class UserItem extends Component {
+class UserItem extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

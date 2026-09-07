@@ -28,7 +28,7 @@ const PublicqueryHeader = styled.div`
     }
   }
 `;
-class WorksheetShareHeader extends React.Component {
+class WorksheetShareHeader extends React.Component<any, any> {
   static propTypes = {
     switchSearch: PropTypes.func,
     pageSize: PropTypes.number,

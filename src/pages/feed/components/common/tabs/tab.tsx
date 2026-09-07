@@ -2,7 +2,7 @@
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 
-class Tab extends React.Component {
+class Tab extends React.Component<any, any> {
   static propTypes = {
     focused: PropTypes.bool,
     className: PropTypes.string,

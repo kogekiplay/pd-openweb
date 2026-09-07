@@ -31,7 +31,7 @@ const Cover = styled.div(
   }
 `,
 );
-export default class RecordItem extends React.PureComponent {
+export default class RecordItem extends React.PureComponent<any, any> {
   static propTypes = {
     multiple: PropTypes.bool,
     coverCid: PropTypes.string,

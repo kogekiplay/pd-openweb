@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import cx from 'classnames';
 import { reportTypes } from '../../Charts/common';
 
-export default class HeaderDisplaySetup extends Component {
+export default class HeaderDisplaySetup extends Component<any, any> {
   constructor(props) {
     super(props);
   }

@@ -10,7 +10,7 @@ import createLinksForMessage from 'src/utils/createLinksForMessage';
 /**
  * 动态内容
  */
-class PostMessage extends React.Component {
+class PostMessage extends React.Component<any, any> {
   static propTypes = {
     postItem: PropTypes.object,
     renderFace: PropTypes.bool, // 是否渲染表情

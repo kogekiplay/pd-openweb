@@ -5,7 +5,7 @@ import { func, string } from 'prop-types';
 import Icon from 'ming-ui/components/Icon';
 import './index.less';
 
-export default class Search extends Component {
+export default class Search extends Component<any, any> {
   static propTypes = {
     handleChange: func,
     className: string,

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import cx from 'classnames';
 import { CreateNode, NodeOperate } from '../components';
 
-export default class JSONParse extends Component {
+export default class JSONParse extends Component<any, any> {
   constructor(props) {
     super(props);
   }

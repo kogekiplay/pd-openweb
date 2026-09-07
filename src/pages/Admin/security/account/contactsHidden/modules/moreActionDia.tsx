@@ -1,7 +1,7 @@
 import React from 'react';
 import ClickAway from 'ming-ui/components/ClickAway';
 
-let MoreActionDia = class MoreActionDia extends React.Component {
+let MoreActionDia = class MoreActionDia extends React.Component<any, any> {
   render() {
     if (!this.props.showMoreAction) {
       return '';

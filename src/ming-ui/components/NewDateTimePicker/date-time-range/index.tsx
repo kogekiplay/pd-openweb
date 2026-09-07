@@ -7,7 +7,7 @@ import PositionContainer from 'ming-ui/components/PositionContainer';
 import LibCalender from '../lib/calender';
 import './style.less';
 
-class DateTimeRange extends Component {
+class DateTimeRange extends Component<any, any> {
   constructor(props) {
     super(props);
 

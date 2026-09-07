@@ -16,7 +16,7 @@ function levelSafeParse(value) {
   return levelValue;
 }
 
-export default class Level extends React.Component {
+export default class Level extends React.Component<any, any> {
   static propTypes = {
     className: PropTypes.string,
     style: PropTypes.shape({}),

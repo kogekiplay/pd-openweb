@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Icon from 'ming-ui/components/Icon';
 
-export default class CalendarAddress extends Component {
+export default class CalendarAddress extends Component<any, any> {
   static propTypes = {
     change: PropTypes.func.isRequired, // callback
     address: PropTypes.string,

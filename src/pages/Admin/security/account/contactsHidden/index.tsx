@@ -9,7 +9,7 @@ import './index.less';
 
 const store = createStore(reducer, compose(applyMiddleware(thunk)));
 
-export default class ContactsHiddenWrap extends React.Component {
+export default class ContactsHiddenWrap extends React.Component<any, any> {
   constructor() {
     super();
   }

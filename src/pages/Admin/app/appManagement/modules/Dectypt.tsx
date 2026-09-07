@@ -62,7 +62,7 @@ const Wrap = styled.div`
   }
 `;
 
-export default class Dectypt extends Component {
+export default class Dectypt extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

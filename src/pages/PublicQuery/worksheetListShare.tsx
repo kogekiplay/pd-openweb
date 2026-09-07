@@ -21,7 +21,7 @@ const LoadableMobileRecordInfoModal = lazy(() =>
 );
 const LoadableRecordInfoWrapper = lazy(() => import('worksheet/common/recordInfo/RecordInfoWrapper'));
 
-class WorksheetListShare extends React.Component {
+class WorksheetListShare extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

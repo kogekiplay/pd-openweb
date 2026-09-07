@@ -50,7 +50,7 @@ const getReportObject = (components, reports) => {
     });
 };
 
-export default class AutoLinkage extends Component {
+export default class AutoLinkage extends Component<any, any> {
   constructor(props) {
     super(props);
     const { customPage } = store.getState();

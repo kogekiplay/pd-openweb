@@ -19,7 +19,7 @@ const IconWrap = styled(Icon)`
     color: var(--color-primary) !important;
   }
 `;
-let Zoom = class Zoom extends Component {
+let Zoom = class Zoom extends Component<any, any> {
   constructor(props) {
     super(props);
     window.isZoom = true;

@@ -6,7 +6,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { reportTypes } from 'statistics/Charts/common';
 import { formatNumberFromInput } from 'src/utils/control';
 
-export default class XAxis extends Component {
+export default class XAxis extends Component<any, any> {
   constructor(props) {
     super(props);
   }

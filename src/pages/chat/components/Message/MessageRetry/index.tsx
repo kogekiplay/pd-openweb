@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import LoadDiv from 'ming-ui/components/LoadDiv';
 import './index.less';
 
-export default class MessageRetry extends Component {
+export default class MessageRetry extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

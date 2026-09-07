@@ -13,7 +13,7 @@ import PageMove from '../components/PageMove';
 
 const confirm = Dialog.confirm;
 
-export default class MoreOverlay extends Component {
+export default class MoreOverlay extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

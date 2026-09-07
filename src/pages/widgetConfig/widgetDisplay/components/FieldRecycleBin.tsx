@@ -15,7 +15,7 @@ import { checkWidgetMaxNumErr, getWidgetInfo } from '../../util';
 import { isExceedMaxControlLimit } from '../../util/setting';
 import './FieldRecycleBin.less';
 
-export default class FieldRecycleBin extends Component {
+export default class FieldRecycleBin extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

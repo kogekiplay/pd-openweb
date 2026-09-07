@@ -10,7 +10,7 @@ import * as Actions from 'src/pages/worksheet/redux/actions/calendarview';
 import { renderText } from 'src/utils/control';
 import { EVENT_TAB_KEY_BY_INDEX } from './constants';
 
-let External = class External extends Component {
+let External = class External extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

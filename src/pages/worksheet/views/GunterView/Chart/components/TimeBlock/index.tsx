@@ -10,7 +10,7 @@ import './index.less';
 const lineHeight = 32;
 const groupingBlockHeight = 7;
 const rowBlockHeight = 14;
-let TimeBlock = class TimeBlock extends Component {
+let TimeBlock = class TimeBlock extends Component<any, any> {
   constructor(props) {
     super(props);
   }

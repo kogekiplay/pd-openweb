@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import account from 'src/api/account';
 import { pathCompletion } from 'src/utils/common';
 
-export default class InvitationList extends Component {
+export default class InvitationList extends Component<any, any> {
   renderOption(item) {
     switch (item.status) {
       case 0:

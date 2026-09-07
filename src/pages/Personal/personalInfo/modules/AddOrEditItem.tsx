@@ -14,7 +14,7 @@ const errorList = {
   endDate: false,
 };
 
-export default class AddOrEditItem extends React.Component {
+export default class AddOrEditItem extends React.Component<any, any> {
   constructor(props) {
     super(props);
     const originItem = {

@@ -2,7 +2,7 @@ import React from 'react';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 
-class EditableBlock extends React.Component {
+class EditableBlock extends React.Component<any, any> {
   static propTypes = {
     value: PropTypes.string,
     className: PropTypes.string,

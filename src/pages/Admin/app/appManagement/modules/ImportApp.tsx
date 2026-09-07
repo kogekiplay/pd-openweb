@@ -25,7 +25,7 @@ const ALERTMSG = {
   6: _l('导入失败，导入将导致目标网络的工作表总数超过上限'),
 };
 
-export default class ImportApp extends React.Component {
+export default class ImportApp extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

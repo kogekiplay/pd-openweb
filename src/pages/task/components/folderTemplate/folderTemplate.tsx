@@ -8,7 +8,7 @@ import { errorMessage } from '../../utils/utils';
 import CreateFolder from '../createFolder/createFolder';
 import './less/folderTemplate.less';
 
-export default class FolderTemplate extends Component {
+export default class FolderTemplate extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -72,7 +72,7 @@ export const wsexcelSocketInit = () => {
   );
 };
 
-export default class ImportDataFromExcel extends Component {
+export default class ImportDataFromExcel extends Component<any, any> {
   static propTypes = {
     isCharge: PropTypes.bool,
     hideImportDataFromExcel: PropTypes.func,

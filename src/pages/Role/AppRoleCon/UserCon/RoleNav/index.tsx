@@ -49,7 +49,7 @@ const navList = [
   },
 ];
 
-export default class Con extends React.Component {
+export default class Con extends React.Component<any, any> {
   renderNav = () => {
     const {
       setRoleId,

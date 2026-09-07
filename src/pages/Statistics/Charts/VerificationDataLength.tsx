@@ -4,7 +4,7 @@ import { Overload } from 'statistics/components/ChartStatus';
 import { reportTypes } from '../Charts/common';
 
 const verificationDataLength = Component => {
-  class VerificationDataLength extends React.Component {
+  class VerificationDataLength extends React.Component<any, any> {
     get isOverload() {
       const { reportData } = this.props;
       const { map = [], contrastMap = [] } = reportData;

@@ -34,7 +34,7 @@ const defaultState = {
   keywords: '',
 };
 
-export default class Friends extends React.Component {
+export default class Friends extends React.Component<any, any> {
   constructor() {
     super();
 

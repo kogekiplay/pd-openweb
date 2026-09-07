@@ -100,7 +100,7 @@ const renderSortableItem = ({ DragHandle, item, otherProps }) => {
   );
 };
 
-export default class ShowControlModal extends Component {
+export default class ShowControlModal extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

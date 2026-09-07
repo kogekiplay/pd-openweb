@@ -11,7 +11,7 @@ import SelectApiPackage from '../../../components/SelectApiPackage';
 import { APP_TYPE } from '../../enum';
 import { DetailFooter, DetailHeader } from '../components';
 
-export default class ApiPackage extends Component {
+export default class ApiPackage extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

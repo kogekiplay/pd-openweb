@@ -10,7 +10,7 @@ import AppSettingHeader from '../AppSettingHeader';
 import EmptyStatus from '../EmptyStatus';
 import './index.less';
 
-export default class ExportAppCom extends Component {
+export default class ExportAppCom extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

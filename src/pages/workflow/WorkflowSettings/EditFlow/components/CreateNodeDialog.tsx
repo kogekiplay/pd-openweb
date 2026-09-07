@@ -19,7 +19,7 @@ import SelectProcess from '../../../components/SelectProcess';
 import { ACTION_ID, APP_TYPE, NODE_TYPE, TRIGGER_ID } from '../../enum';
 import BranchDialog from './BranchDialog';
 
-export default class CreateNodeDialog extends Component {
+export default class CreateNodeDialog extends Component<any, any> {
   constructor(props) {
     super(props);
 

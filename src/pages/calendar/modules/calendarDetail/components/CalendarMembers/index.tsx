@@ -3,7 +3,7 @@ import _ from 'lodash';
 import Icon from 'ming-ui/components/Icon';
 import Member from './member';
 
-export default class CalendarMembers extends Component {
+export default class CalendarMembers extends Component<any, any> {
   renderWxMembers() {
     const { thirdUser, editable, callback, argProps } = this.props;
     const memberOtherProps = { editable, callback, argProps };

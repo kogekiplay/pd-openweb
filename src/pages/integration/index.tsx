@@ -94,7 +94,7 @@ const getRoutes = param => {
   return components;
 };
 
-export default class HubContainer extends React.Component {
+export default class HubContainer extends React.Component<any, any> {
   constructor(props) {
     super(props);
 

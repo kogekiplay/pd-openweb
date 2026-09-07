@@ -19,7 +19,7 @@ import { SOURCE_TYPE } from './config';
 import './css/commenter.less';
 
 const ClickAwayable = ClickAway;
-class Commenter extends React.Component {
+class Commenter extends React.Component<any, any> {
   static propTypes = {
     placeholder: PropTypes.string,
     activePlaceholder: PropTypes.string,

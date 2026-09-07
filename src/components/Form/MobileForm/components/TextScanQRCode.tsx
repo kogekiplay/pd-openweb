@@ -18,7 +18,7 @@ const Box = styled(ScanQRCode)`
   background-color: var(--color-background-input);
 `;
 
-export default class Widgets extends Component {
+export default class Widgets extends Component<any, any> {
   static propTypes = {
     projectId: PropTypes.string,
     disablePhoto: PropTypes.bool,

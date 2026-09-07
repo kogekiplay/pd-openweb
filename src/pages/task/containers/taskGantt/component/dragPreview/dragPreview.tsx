@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import './dragPreview.less';
 
-export default class DragPreview extends Component {
+export default class DragPreview extends Component<any, any> {
   constructor(props) {
     super(props);
   }

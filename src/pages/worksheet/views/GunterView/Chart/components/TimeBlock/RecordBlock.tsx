@@ -62,7 +62,7 @@ const getLastWorkEndTime = (time, dayOff) => {
   return current.format('YYYY-MM-DD');
 };
 
-let RowBlock = class RowBlock extends Component {
+let RowBlock = class RowBlock extends Component<any, any> {
   constructor(props) {
     super(props);
     const { base } = props;

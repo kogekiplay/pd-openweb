@@ -14,7 +14,7 @@ import './index.less';
 
 const isRoutePathMatched = (path, pathname) => pathToRegexp(path).test(getPathWithoutSubPath(pathname));
 
-let AdminLeftMenu = class AdminLeftMenu extends Component {
+let AdminLeftMenu = class AdminLeftMenu extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

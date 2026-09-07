@@ -16,7 +16,7 @@ const TagWrapper = ({ onDidMount = () => {}, tag }) => {
   return tag;
 };
 
-export default class TagTextarea extends React.Component {
+export default class TagTextarea extends React.Component<any, any> {
   static propTypes = {
     noCursor: PropTypes.bool,
     className: PropTypes.string,

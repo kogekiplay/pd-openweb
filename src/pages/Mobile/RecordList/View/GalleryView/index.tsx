@@ -10,7 +10,7 @@ import { permitList } from 'src/pages/FormSet/config.js';
 import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import SheetRows, { WithoutRows } from '../../SheetRows';
 
-class MobileGalleryView extends Component {
+class MobileGalleryView extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {};

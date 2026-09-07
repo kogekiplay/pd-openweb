@@ -101,7 +101,7 @@ const auxiliaryLineTypes = [
   },
 ];
 
-class LineConfigModal extends Component {
+class LineConfigModal extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {
@@ -334,7 +334,7 @@ class LineConfigModal extends Component {
   }
 }
 
-export default class AuxiliaryLine extends Component {
+export default class AuxiliaryLine extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

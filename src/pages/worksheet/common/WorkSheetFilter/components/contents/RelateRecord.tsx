@@ -14,7 +14,7 @@ function safeParse(str) {
   }
 }
 
-export default class RelateRecord extends React.Component {
+export default class RelateRecord extends React.Component<any, any> {
   static propTypes = {
     disabled: PropTypes.bool,
     onChange: PropTypes.func,

@@ -19,7 +19,7 @@ import { addNewRoot, editRoot, removeRoot } from './rootHandler';
 import { getRootLog } from './rootLog';
 import './KcLeft.less';
 
-class KcLeft extends Component {
+class KcLeft extends Component<any, any> {
   static propTypes = {
     path: PropTypes.string,
     keywords: PropTypes.string,

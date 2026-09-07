@@ -40,7 +40,7 @@ import {
 } from '../../utils/kcevent';
 import './KcMain.less';
 
-class KcMain extends Component {
+class KcMain extends Component<any, any> {
   static propTypes = {
     path: PropTypes.string,
     baseUrl: PropTypes.string,

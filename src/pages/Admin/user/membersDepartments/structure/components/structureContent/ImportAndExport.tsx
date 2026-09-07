@@ -45,7 +45,7 @@ const userTemplatePaths = window.platformENV.isPlatform
       5: '/staticfiles/template/private/Templat Import Pengguna.xlsx',
     };
 
-class ImportAndExport extends Component {
+class ImportAndExport extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -7,7 +7,7 @@ import * as actions from 'mobile/RelationRow/redux/actions';
 import RelationAction from './RelationAction';
 import RelationList from './RelationList';
 
-let Home = class Home extends Component {
+let Home = class Home extends Component<any, any> {
   constructor(props) {
     super(props);
   }

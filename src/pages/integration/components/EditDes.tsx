@@ -25,7 +25,7 @@ const Wrap = styled.div`
   }
 `;
 
-export default class EditDes extends Component {
+export default class EditDes extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

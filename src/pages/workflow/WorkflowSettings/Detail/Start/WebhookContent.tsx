@@ -15,7 +15,7 @@ const STATUS = {
   PAIRS: 4,
 };
 
-export default class WebhookContent extends Component {
+export default class WebhookContent extends Component<any, any> {
   constructor(props) {
     super(props);
 

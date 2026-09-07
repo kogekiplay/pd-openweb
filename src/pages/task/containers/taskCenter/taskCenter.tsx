@@ -25,7 +25,7 @@ import TaskToolbar from '../taskToolbar/taskToolbar';
 import TaskTree from '../taskTree/taskTree';
 import './taskCenter.less';
 
-class TaskCenter extends Component {
+class TaskCenter extends Component<any, any> {
   constructor(props) {
     super(props);
   }

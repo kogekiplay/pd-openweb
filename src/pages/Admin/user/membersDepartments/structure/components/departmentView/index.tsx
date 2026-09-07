@@ -33,7 +33,7 @@ const loop = (data, key, callback) => {
 };
 
 const { TreeNode, DirectoryTree } = Tree;
-class DepartmentTree extends React.Component {
+class DepartmentTree extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

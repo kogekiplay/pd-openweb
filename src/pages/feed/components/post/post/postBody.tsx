@@ -18,7 +18,7 @@ import { pathCompletion } from 'src/utils/common';
 /**
  * 动态卡片内部内容, 包括动态、相应类型动态的附加信息、操作项、回复/标签等
  */
-class PostBody extends React.Component {
+class PostBody extends React.Component<any, any> {
   static propTypes = {
     dispatch: PropTypes.func,
     postItem: PropTypes.object.isRequired,

@@ -16,7 +16,7 @@ import PortalUserInfoDrawer from './PortalUserInfoDrawer';
 import { WrapHeader } from './style';
 import './index.less';
 
-export default class PortalUserSet extends Component {
+export default class PortalUserSet extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

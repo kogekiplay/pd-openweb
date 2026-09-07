@@ -16,7 +16,7 @@ import MDLeftNav from '../common/mdLeftNav';
 import MDLeftNavSearch from '../common/mdLeftNav/mdLeftNavSearch';
 import './feedLeftNav.css';
 
-class FeedLeftNav extends React.Component {
+class FeedLeftNav extends React.Component<any, any> {
   static propTypes = {
     dispatch: PropTypes.func,
     hasNew: PropTypes.bool,

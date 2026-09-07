@@ -7,7 +7,7 @@ import account from 'src/api/account';
 import fixedDataAjax from 'src/api/fixedData.js';
 import './index.less';
 
-export default class EditDetail extends React.Component {
+export default class EditDetail extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

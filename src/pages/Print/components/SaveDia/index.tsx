@@ -8,7 +8,7 @@ import { getShowViews } from 'src/pages/worksheet/views/util';
 import { typeForCon } from '../../core/config';
 import './index.less';
 
-export default class SaveDia extends React.Component {
+export default class SaveDia extends React.Component<any, any> {
   constructor(props) {
     super(props);
     const { printData } = props;

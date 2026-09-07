@@ -40,7 +40,7 @@ const taskListSettings = {
   taskListPost: null,
 };
 
-class TaskList extends Component {
+class TaskList extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

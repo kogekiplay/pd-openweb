@@ -35,7 +35,7 @@ const taskStageSettings = {
   ajaxPost: '',
 };
 
-class TaskStage extends Component {
+class TaskStage extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

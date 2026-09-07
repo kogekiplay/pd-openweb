@@ -3,7 +3,7 @@ import cx from 'classnames';
 import _ from 'lodash';
 import { createIntlTelInput } from 'ming-ui/components/PhoneNumberInput/util';
 
-export default class Tel extends Component {
+export default class Tel extends Component<any, any> {
   componentDidMount() {
     const {
       data: { value },

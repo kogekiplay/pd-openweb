@@ -2,7 +2,7 @@ import React from 'react';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 
-export default class SiderTabList extends React.Component {
+export default class SiderTabList extends React.Component<any, any> {
   static propTypes = {
     name: PropTypes.string.isRequired,
     isOpen: PropTypes.bool.isRequired,

@@ -81,7 +81,7 @@ const setColorLavel = data => {
   });
 };
 
-export class CountryLayer extends Component {
+export class CountryLayer extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

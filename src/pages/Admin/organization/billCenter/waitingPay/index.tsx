@@ -37,7 +37,7 @@ const _payStyleArr = [
   },
 ];
 
-export default class WaitingPay extends Component {
+export default class WaitingPay extends Component<any, any> {
   constructor() {
     super();
     Config.setPageTitle(_l('等待支付'));

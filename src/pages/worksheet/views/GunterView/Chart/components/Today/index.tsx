@@ -21,7 +21,7 @@ const TodayWrapper = styled.div`
     right: 5px;
   }
 `;
-let Today = class Today extends Component {
+let Today = class Today extends Component<any, any> {
   constructor(props) {
     super(props);
     const { onlyWorkDay, dayOff } = props.gunterView.viewConfig;

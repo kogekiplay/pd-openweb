@@ -28,7 +28,7 @@ const TitleWrapper = styled.div`
   }
 `;
 
-export default class DefaultUserList extends Component {
+export default class DefaultUserList extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

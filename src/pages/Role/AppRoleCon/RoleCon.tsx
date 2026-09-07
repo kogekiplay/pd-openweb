@@ -11,7 +11,7 @@ import CopyRoleDialog from 'src/pages/Role/PortalCon/components/CopyRoleDialog';
 import { APP_ROLE_TYPE } from 'src/pages/worksheet/constants/enum.js';
 import DeleRoleDialog from './component/DeleRoleDialog';
 
-class Con extends React.Component {
+class Con extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

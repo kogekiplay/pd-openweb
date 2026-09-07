@@ -3,7 +3,7 @@ import cx from 'classnames';
 import { PUSH_LIST, PUSH_TYPE } from '../../enum';
 import { CreateNode, NodeOperate } from '../components';
 
-export default class Push extends Component {
+export default class Push extends Component<any, any> {
   constructor(props) {
     super(props);
   }

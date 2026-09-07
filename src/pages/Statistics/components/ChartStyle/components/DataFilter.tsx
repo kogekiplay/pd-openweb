@@ -5,7 +5,7 @@ import { Icon } from 'ming-ui';
 import { reportTypes } from 'statistics/Charts/common';
 import { formatNumberFromInput } from 'src/utils/control';
 
-export default class DataFilter extends Component {
+export default class DataFilter extends Component<any, any> {
   constructor(props) {
     super(props);
     const { showXAxisCount } = props;

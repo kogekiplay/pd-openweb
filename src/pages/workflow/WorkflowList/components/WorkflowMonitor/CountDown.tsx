@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 
-export default class CountDown extends Component {
+export default class CountDown extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

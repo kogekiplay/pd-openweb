@@ -54,7 +54,7 @@ const LoadableMobileRecordInfoModal = lazy(() =>
 );
 const LoadableRecordInfoWrapper = lazy(() => import('worksheet/common/recordInfo/RecordInfoWrapper'));
 
-class WorksheetRowEdit extends Component {
+class WorksheetRowEdit extends Component<any, any> {
   state = {
     loading: true,
     isError: false,

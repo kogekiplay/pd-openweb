@@ -26,7 +26,7 @@ const DragV = styled.div`
   background-color: var(--color-primary);
 `;
 
-export default class DragMast extends React.Component {
+export default class DragMast extends React.Component<any, any> {
   static propTypes = {
     direction: PropTypes.string,
     value: PropTypes.number,

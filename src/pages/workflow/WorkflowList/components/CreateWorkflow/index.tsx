@@ -68,7 +68,7 @@ const WORKFLOW_TRIGGER_MODE = [
     ],
   },
 ];
-export default class CreateFlow extends Component {
+export default class CreateFlow extends Component<any, any> {
   static propTypes = {
     appId: string.isRequired,
     onBack: func,

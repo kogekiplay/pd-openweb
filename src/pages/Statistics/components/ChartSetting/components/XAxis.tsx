@@ -103,7 +103,7 @@ const getIsEmptyType = (reportType, { isTime, isOption }) => {
   return false;
 };
 
-export default class XAxis extends Component {
+export default class XAxis extends Component<any, any> {
   constructor(props) {
     super(props);
     const { xaxes } = props.currentReport;

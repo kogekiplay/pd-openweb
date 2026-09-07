@@ -6,7 +6,7 @@ import addFriends from 'src/components/addFriends';
 import SiderBarTabItem from '../components/SiderBarTabItem';
 import SiderBarTabList from '../components/SiderBarTabList';
 
-export default class SideBar extends React.Component {
+export default class SideBar extends React.Component<any, any> {
   static propTypes = {
     type: PropTypes.string.isRequired,
     projectId: PropTypes.string,

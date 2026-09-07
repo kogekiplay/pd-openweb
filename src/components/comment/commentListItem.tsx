@@ -37,7 +37,7 @@ const Menu = styled.ul`
 const newWhiteList = Object.assign({}, whiteList, { img: ['src', 'alt', 'title', 'width', 'height', 'class'] });
 
 // 评论内容列表
-export default class CommentListItem extends React.Component {
+export default class CommentListItem extends React.Component<any, any> {
   static propTypes = {
     children: PropTypes.element,
     comment: PropTypes.shape({

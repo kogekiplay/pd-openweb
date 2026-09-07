@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import Dropdown from 'ming-ui/components/Dropdown';
 import './index.less';
 
-export default class SelectTimezone extends PureComponent {
+export default class SelectTimezone extends PureComponent<any, any> {
   handleChange = timezone => {
     this.props.selectTimezone(timezone);
   };

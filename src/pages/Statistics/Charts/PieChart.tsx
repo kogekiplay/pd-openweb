@@ -43,7 +43,7 @@ const formatChartMap = (data = [], yaxisList) => {
   });
 };
 
-export default class extends Component {
+export default class extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

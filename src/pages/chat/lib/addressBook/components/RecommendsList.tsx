@@ -6,7 +6,7 @@ import { addFriendConfirm } from 'ming-ui/functions';
 import API, { editIgnoreRecommends } from '../api';
 import { pathCompletion } from 'src/utils/common';
 
-export default class RecommendsList extends React.Component {
+export default class RecommendsList extends React.Component<any, any> {
   constructor() {
     super();
     this.state = {

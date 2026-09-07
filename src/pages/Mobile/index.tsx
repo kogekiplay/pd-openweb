@@ -16,7 +16,7 @@ import DeclareConfirm from './components/DeclareConfirm';
 import { PORTAL, ROUTE_CONFIG } from './config';
 import './index.less';
 
-let App = class App extends Component {
+let App = class App extends Component<any, any> {
   genRouteComponent = genRouteComponent();
 
   componentDidMount() {
@@ -131,7 +131,7 @@ let App = class App extends Component {
 };
 App = preall(withRouter(DeclareConfirm(App)));
 
-class Mobile extends Component {
+class Mobile extends Component<any, any> {
   render() {
     return (
       <Provider store={store}>

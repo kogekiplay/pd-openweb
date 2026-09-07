@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Icon from 'ming-ui/components/Icon';
 
-class MultipleDropdownMenu extends Component {
+class MultipleDropdownMenu extends Component<any, any> {
   constructor(props) {
     super(props);
 

@@ -27,7 +27,7 @@ const LayoutContent = styled.div`
 
 const { appId, reportId, getFilters } = getRequest();
 
-class MobileChart extends React.Component {
+class MobileChart extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -4,7 +4,7 @@ import projectSettingAjax from 'src/api/projectSetting';
 import UserBaseInfoSetting from './components/UserBaseInfoSetting';
 import './index.less';
 
-export default class UseInfoDisplaySettings extends Component {
+export default class UseInfoDisplaySettings extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

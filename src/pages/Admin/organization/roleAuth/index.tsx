@@ -10,7 +10,7 @@ import CreateEditRole from './createEditRole';
 import RoleList from './roleList';
 import './index.less';
 
-export default class RoleAuth extends React.Component {
+export default class RoleAuth extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

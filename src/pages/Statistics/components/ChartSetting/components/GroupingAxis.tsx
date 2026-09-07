@@ -28,7 +28,7 @@ const emptyTypes = [
 const timeGather = timeParticleSizeDropdownData.filter(item => [5, 8, 9, 10, 11].includes(item.value));
 const timeParticle = timeGatherParticle.filter(item => [11, 12, 14].includes(item.value));
 
-export default class GroupingAxis extends Component {
+export default class GroupingAxis extends Component<any, any> {
   constructor(props) {
     super(props);
   }

@@ -22,7 +22,7 @@ const Abnormal = styled.div`
   }
 `;
 
-class NodeShare extends React.Component {
+class NodeShare extends React.Component<any, any> {
   state = {
     node: null,
     currentAccountId: null,

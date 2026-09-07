@@ -6,7 +6,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import flowNode from '../../../api/flowNode';
 import { CustomTextarea, DetailFooter, DetailHeader, SelectNodeObject } from '../components';
 
-export default class File extends Component {
+export default class File extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

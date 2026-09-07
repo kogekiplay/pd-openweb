@@ -22,7 +22,7 @@ const PluginIcon = styled.div`
   }
 `;
 
-class WorkflowInfo extends Component {
+class WorkflowInfo extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

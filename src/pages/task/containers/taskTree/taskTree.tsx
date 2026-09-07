@@ -25,7 +25,7 @@ const taskTreeSettings = {
   ajaxPost: null,
 };
 
-class TaskTree extends Component {
+class TaskTree extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

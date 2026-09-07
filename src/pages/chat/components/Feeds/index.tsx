@@ -49,7 +49,7 @@ export const formatFeeds = attachments => {
   });
 };
 
-export class FeesItem extends Component {
+export class FeesItem extends Component<any, any> {
   constructor(props) {
     super(props);
   }
@@ -168,7 +168,7 @@ export class FeesItem extends Component {
   }
 }
 
-export default class Feeds extends Component {
+export default class Feeds extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

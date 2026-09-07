@@ -4,7 +4,7 @@ import { LoadDiv, ScrollView } from 'ming-ui';
 import GroupItem from './GroupItem';
 import ListNull from './ListNull';
 
-export default class GroupList extends React.Component {
+export default class GroupList extends React.Component<any, any> {
   constructor() {
     super();
 

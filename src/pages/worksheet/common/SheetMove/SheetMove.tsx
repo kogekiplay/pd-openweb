@@ -27,7 +27,7 @@ const formatApps = function (validProject, projectId) {
   return appList;
 };
 
-export default class SheetMove extends Component {
+export default class SheetMove extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -52,7 +52,7 @@ const TYPE_TO_COMP = {
   [customize]: CustomWidgetView,
 };
 
-class View extends Component {
+class View extends Component<any, any> {
   constructor(props) {
     super(props);
     this.viewComRef = React.createRef();

@@ -16,7 +16,7 @@ export const BUTTON_TYPE_LIST = [
 ];
 export const BUTTON_SIZE_LIST = ['tiny', 'small', 'medium', 'large', 'mdnormal', 'mdbig']; // 'mini', 'huge', 'massive'
 
-export default class Button extends Component {
+export default class Button extends Component<any, any> {
   static propTypes = {
     /**
      * 按钮子节点

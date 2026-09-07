@@ -3,7 +3,7 @@ import cx from 'classnames';
 import { SvgIcon } from 'ming-ui';
 import { CreateNode, NodeOperate } from '../components';
 
-export default class Plugin extends Component {
+export default class Plugin extends Component<any, any> {
   constructor(props) {
     super(props);
   }

@@ -16,7 +16,7 @@ import * as actions from '../redux/actions';
 import withoutRows from './assets/withoutRows.png';
 import './index.less';
 
-class SheetRows extends Component {
+class SheetRows extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

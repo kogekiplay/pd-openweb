@@ -6,7 +6,7 @@ import { Icon, ScrollView } from 'ming-ui';
 import jobAjax from 'src/api/job.js';
 import './index.less';
 
-export default class SelectJob extends Component {
+export default class SelectJob extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

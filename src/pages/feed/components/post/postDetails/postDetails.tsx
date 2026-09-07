@@ -10,7 +10,7 @@ import '../../app/feed.css';
 import '../../app/style.css';
 import './detailStyle.css';
 
-class PostDetails extends React.Component {
+class PostDetails extends React.Component<any, any> {
   static propTypes = {
     postItem: PropTypes.object,
     onRemove: PropTypes.func,

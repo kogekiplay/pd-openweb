@@ -3,7 +3,7 @@ import { Radio } from 'antd';
 import { Dialog } from 'ming-ui';
 import workSiteController from 'src/api/workSite';
 
-export default class MergeDialog extends Component {
+export default class MergeDialog extends Component<any, any> {
   constructor() {
     super();
     this.state = {

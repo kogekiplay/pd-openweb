@@ -12,7 +12,7 @@ const Wrap = styled.ul`
   background-color: var(--color-background-secondary);
 `;
 
-class WorkflowStepItem extends Component {
+class WorkflowStepItem extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

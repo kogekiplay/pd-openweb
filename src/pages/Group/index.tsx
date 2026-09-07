@@ -8,7 +8,7 @@ import { navigateTo } from 'src/router/navigateTo';
 import { getRequest } from 'src/utils/common';
 import './index.less';
 
-export default class GroupValidate extends React.Component {
+export default class GroupValidate extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -10,7 +10,7 @@ import { compatibleMDJS } from 'src/utils/project';
 import EditableCellCon from '../EditableCellCon';
 import { FROM } from './enum';
 
-export default class Signature extends React.Component {
+export default class Signature extends React.Component<any, any> {
   static propTypes = {
     className: PropTypes.string,
     style: PropTypes.shape({}),

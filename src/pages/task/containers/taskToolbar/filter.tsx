@@ -24,7 +24,7 @@ import {
 import { errorMessage, setStateToStorage } from '../../utils/utils';
 
 const ClickAwayable = ClickAway;
-class Filter extends Component {
+class Filter extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

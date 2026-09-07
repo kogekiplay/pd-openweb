@@ -7,7 +7,7 @@ import DiscussionController from 'src/api/discussion';
 import PostController from 'src/api/post';
 import { SOURCE_TYPE } from '../../constants';
 
-export default class ReplyTo extends React.Component {
+export default class ReplyTo extends React.Component<any, any> {
   static propTypes = {
     sourceType: PropTypes.oneOf(_.values(SOURCE_TYPE)),
 

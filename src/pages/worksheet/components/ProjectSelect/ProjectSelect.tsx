@@ -4,7 +4,7 @@ import Menu from 'ming-ui/components/Menu';
 import MenuItem from 'ming-ui/components/MenuItem';
 import './ProjectSelect.less';
 
-export default class ProjectSelect extends Component {
+export default class ProjectSelect extends Component<any, any> {
   static propTypes = {
     value: PropTypes.string,
     onChange: PropTypes.func,

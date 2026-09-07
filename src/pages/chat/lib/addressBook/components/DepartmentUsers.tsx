@@ -78,7 +78,7 @@ const UserItem = styled.div`
   }
 `;
 
-export default class DepartmentUsers extends Component {
+export default class DepartmentUsers extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = { showDetail: props.selectedAccountId ? true : false, selectedAccountId: props.selectedAccountId };

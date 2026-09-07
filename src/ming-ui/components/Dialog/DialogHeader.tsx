@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-class DialogHeader extends Component {
+class DialogHeader extends Component<any, any> {
   render() {
     if (!this.props.title) {
       return null;

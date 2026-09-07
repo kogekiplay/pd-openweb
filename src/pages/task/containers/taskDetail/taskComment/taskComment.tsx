@@ -7,7 +7,7 @@ import { htmlDecodeReg } from 'src/utils/common';
 import { addTaskDiscussions, discussionsAddMembers } from '../../../redux/actions';
 import './taskComment.less';
 
-class TaskComment extends Component {
+class TaskComment extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -13,7 +13,7 @@ import { ACTION_TO_TEXT } from 'src/pages/workflow/components/ExecDialog/config'
 import functionTemplateModal from '../FunctionTemplateModal';
 import './index.less';
 
-export default class extends Component {
+export default class extends Component<any, any> {
   constructor(props) {
     super(props);
     const { instance } = this.props;

@@ -20,7 +20,7 @@ const vertical = {
   WebkitBoxOrient: 'vertical',
 };
 
-export default class FileComponent extends Component {
+export default class FileComponent extends Component<any, any> {
   static propTypes = {
     onReplaceAttachment: PropTypes.func,
   };

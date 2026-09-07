@@ -15,7 +15,7 @@ import { addBehaviorLog } from 'src/utils/project';
 import Footer from './Footer';
 
 const LoadableRecordInfo = lazy(() => import('mobile/components/RecordInfo/RecordInfo'));
-export default class ProcessRecordInfo extends Component {
+export default class ProcessRecordInfo extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

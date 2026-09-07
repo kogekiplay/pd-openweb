@@ -16,7 +16,7 @@ const dataRangeTypes = {
   project: 2,
 };
 
-class DialogSelectUser extends Component {
+class DialogSelectUser extends Component<any, any> {
   constructor(props) {
     super(props);
     const { SelectUserSettings: { projectId = '', dataRange = 0, filterProjectId } = {} } = props;

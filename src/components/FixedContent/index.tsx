@@ -4,7 +4,7 @@ import { Icon, Skeleton } from 'ming-ui';
 import 'src/components/UnusualContent/index.less';
 import { pathCompletion } from 'src/utils/common';
 
-export default class FixedContent extends Component {
+export default class FixedContent extends Component<any, any> {
   render() {
     const { appPkg, showLeftSkeleton = true, isNoPublish, hideFixAccount } = this.props;
     const { fixRemark, fixAccount = {}, currentPcNaviStyle } = appPkg;

@@ -532,7 +532,7 @@ const renderSortableItem = props => {
   );
 };
 
-let PivotTableAxis = class PivotTableAxis extends Component {
+let PivotTableAxis = class PivotTableAxis extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

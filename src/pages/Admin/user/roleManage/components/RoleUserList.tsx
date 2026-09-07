@@ -23,7 +23,7 @@ const Departments = styled.div`
   }
 `;
 
-class RoleUserList extends Component {
+class RoleUserList extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

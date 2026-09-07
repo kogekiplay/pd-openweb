@@ -75,7 +75,7 @@ const TABS_ITEM = styled.div`
   }
 `;
 
-export default class Approval extends Component {
+export default class Approval extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

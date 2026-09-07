@@ -11,7 +11,7 @@ const LoadableHierarchyVerticalView = lazy(() => import('src/pages/worksheet/vie
 const LoadableHierarchyMixView = lazy(() => import('src/pages/worksheet/views/HierarchyMixView'));
 const LoadableHierarchyView = lazy(() => import('src/pages/worksheet/views/HierarchyView'));
 
-class MobileHierarchyView extends Component {
+class MobileHierarchyView extends Component<any, any> {
   render() {
     const { view = {}, controls = [] } = this.props;
 

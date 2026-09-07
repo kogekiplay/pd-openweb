@@ -68,7 +68,7 @@ const SelectValue = styled(DisplayControlOption)`
   }
 `;
 
-export default class CardAppearance extends Component {
+export default class CardAppearance extends Component<any, any> {
   static propTypes = {};
   static defaultProps = {};
   constructor(props) {

@@ -12,7 +12,7 @@ const discussTypes = [
   { id: 1, name: 'discuss', text: _l('内部') },
   { id: 2, name: 'discussPortal', text: _l('外部门户') },
 ];
-export default class WorkSheetComment extends React.Component {
+export default class WorkSheetComment extends React.Component<any, any> {
   static propTypes = {
     appId: PropTypes.string,
     worksheetId: PropTypes.string,

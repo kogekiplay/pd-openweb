@@ -11,7 +11,7 @@ import { browserIsMobile } from 'src/utils/common';
 import { getSwitchItemNames } from 'src/utils/control';
 import { FROM } from './enum';
 
-export default class Switch extends React.Component {
+export default class Switch extends React.Component<any, any> {
   static propTypes = {
     from: PropTypes.number,
     className: PropTypes.string,

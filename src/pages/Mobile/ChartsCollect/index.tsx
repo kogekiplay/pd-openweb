@@ -33,7 +33,7 @@ const Wrap = styled.div`
 `;
 
 //  图表收藏
-export default class ChartCollect extends Component {
+export default class ChartCollect extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

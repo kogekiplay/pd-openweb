@@ -3,7 +3,7 @@ import cx from 'classnames';
 import { arrayOf, bool, object, oneOf, string } from 'prop-types';
 import './index.less';
 
-export default class Skeleton extends Component {
+export default class Skeleton extends Component<any, any> {
   static propTypes = {
     className: string,
     // 占位条方向

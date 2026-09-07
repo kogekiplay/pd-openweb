@@ -40,7 +40,7 @@ const defaultArr = [
   },
 ];
 
-export default class RelationControl extends Component {
+export default class RelationControl extends Component<any, any> {
   static propTypes = {
     title: PropTypes.string,
     sourceId: PropTypes.string,

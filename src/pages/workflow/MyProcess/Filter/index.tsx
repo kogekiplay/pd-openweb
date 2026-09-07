@@ -61,7 +61,7 @@ const statusData = [
   },
 ];
 
-export default class Filter extends Component {
+export default class Filter extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

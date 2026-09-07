@@ -32,7 +32,7 @@ const authList = [
     name: _l('有查看权限的记录'),
   },
 ];
-let DataSource = class DataSource extends Component {
+let DataSource = class DataSource extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

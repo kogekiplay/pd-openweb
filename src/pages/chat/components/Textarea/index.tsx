@@ -6,7 +6,7 @@ import config from '../../utils/config';
 import Constant from '../../utils/constant';
 import './index.less';
 
-export default class TextareaBox extends Component {
+export default class TextareaBox extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

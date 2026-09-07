@@ -18,7 +18,7 @@ const THEME_LIST = [
   { text: _l('跟随设备'), key: 'system', icon: 'mobile_phone' },
 ];
 
-class MyHome extends Component {
+class MyHome extends Component<any, any> {
   constructor(props) {
     super(props);
 

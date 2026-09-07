@@ -6,7 +6,7 @@ import './less/Checkbox.less';
 
 export const SIZE_LIST = ['small', 'default'];
 
-class Checkbox extends React.Component {
+class Checkbox extends React.Component<any, any> {
   static propTypes = {
     /**
      * checkbox显示的元素

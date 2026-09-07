@@ -10,7 +10,7 @@ import AIModelRule from './AIModelRule';
 import limitFeatureDialogFunc from './LimitFeatureDialog';
 import PwdFreeVerifyDialog from './PwdFreeVerify';
 
-export default class SecurityOthers extends Component {
+export default class SecurityOthers extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

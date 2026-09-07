@@ -20,7 +20,7 @@ const xssOptions = {
   whiteList: Object.assign({}, whiteList, { img: ['src', 'alt', 'title', 'width', 'height', 'class'] }),
 };
 
-export default class BaseMessageComponent extends React.Component {
+export default class BaseMessageComponent extends React.Component<any, any> {
   static propTypes = {
     isFavorite: PropTypes.oneOf(['0', '1']),
 

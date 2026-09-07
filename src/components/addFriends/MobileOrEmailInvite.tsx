@@ -30,7 +30,7 @@ const TYPE_MODE = {
 
 const defaultList = [{ phone: '', isErr: false }];
 
-export default class MobileOrEmailInvite extends Component {
+export default class MobileOrEmailInvite extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

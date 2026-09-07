@@ -10,7 +10,7 @@ import EditMemberDialog from '../modules/EditMemberDialog';
 import MergeDialog from '../modules/MergeDialog';
 import './index.less';
 
-export default class WorkPlace extends Component {
+export default class WorkPlace extends Component<any, any> {
   constructor() {
     super();
     this.state = {

@@ -55,7 +55,7 @@ const FIELD_TYPE = FIELD_TYPE_LIST.concat([
 ]);
 const isMobile = browserIsMobile();
 
-class WorksheetApi extends Component {
+class WorksheetApi extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -6,7 +6,7 @@ import Trigger from 'rc-trigger';
 import { ROW_ID_CONTROL } from 'src/pages/widgetConfig/config/widget';
 import SelectControls from './SelectControls';
 
-export default class AddCondition extends Component {
+export default class AddCondition extends Component<any, any> {
   static propTypes = {
     defaultVisible: PropTypes.bool,
     columns: PropTypes.arrayOf(PropTypes.shape({})),

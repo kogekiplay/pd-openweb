@@ -8,7 +8,7 @@ const LogsContent = styled.div`
   background-color: var(--color-background-secondary);
 `;
 
-class Logs extends Component {
+class Logs extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {};

@@ -65,7 +65,7 @@ const allocationTask = result => {
   });
 };
 
-export default class Print extends Component {
+export default class Print extends Component<any, any> {
   static propTypes = {
     reqId: PropTypes.string,
   };

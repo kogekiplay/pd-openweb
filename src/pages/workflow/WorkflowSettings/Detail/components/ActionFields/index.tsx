@@ -11,7 +11,7 @@ import selectToolsFields from './selectToolsFields';
 import './index.less';
 
 const ClickAwayable = ClickAway;
-export default class ActionFields extends Component {
+export default class ActionFields extends Component<any, any> {
   static propTypes = {
     className: PropTypes.string,
     style: PropTypes.object,

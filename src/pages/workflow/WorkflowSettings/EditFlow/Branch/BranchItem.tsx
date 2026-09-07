@@ -7,7 +7,7 @@ import { NODE_TYPE } from '../../enum';
 import { getFilterText } from '../../utils';
 import { CreateNode, NodeOperate } from '../components';
 
-export default class BranchItem extends Component {
+export default class BranchItem extends Component<any, any> {
   constructor(props) {
     super(props);
   }

@@ -46,7 +46,7 @@ const PAGE_HEADER_ROUTE = {
 };
 
 const fn = match('/admin/:roleType/:projectId');
-export default class NetManageHeader extends Component {
+export default class NetManageHeader extends Component<any, any> {
   static propTypes = {};
   static defaultProps = {};
   state = {

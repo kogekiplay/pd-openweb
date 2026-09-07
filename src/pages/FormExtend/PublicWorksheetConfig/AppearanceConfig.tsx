@@ -155,7 +155,7 @@ const LayoutSettingWrap = styled.div`
   }
 `;
 
-class AppearanceConfig extends React.Component {
+class AppearanceConfig extends React.Component<any, any> {
   static propTypes = {
     open: PropTypes.bool,
     worksheetInfo: PropTypes.shape({}),

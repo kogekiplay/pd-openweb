@@ -9,7 +9,7 @@ import MenuItem from 'ming-ui/components/MenuItem';
 import { NODE_OPERATOR_TYPE, NODE_STATUS, NODE_TYPE, NODE_VIEW_TYPE } from '../constant/enum';
 import UploadNewVersion from './UploadNewVersion';
 
-let KcAppMenu = class KcAppMenu extends React.Component {
+let KcAppMenu = class KcAppMenu extends React.Component<any, any> {
   static propTypes = {
     item: PropTypes.object,
     removeNode: PropTypes.func,

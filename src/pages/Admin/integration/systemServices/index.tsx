@@ -56,7 +56,7 @@ const SERVICE_CARDS = [
   },
 ];
 
-class SystemServices extends Component {
+class SystemServices extends Component<any, any> {
   constructor(props) {
     super(props);
     Config.getParams();

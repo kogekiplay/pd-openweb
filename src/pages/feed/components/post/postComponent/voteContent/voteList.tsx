@@ -9,7 +9,7 @@ import VoteItem from './voteItem';
 /**
  * 投票项列表
  */
-class VoteList extends React.Component {
+class VoteList extends React.Component<any, any> {
   static propTypes = {
     dispatch: PropTypes.func,
     voteItem: PropTypes.object.isRequired,

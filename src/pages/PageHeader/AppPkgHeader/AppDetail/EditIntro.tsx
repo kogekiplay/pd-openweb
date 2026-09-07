@@ -5,7 +5,7 @@ import { compareProps } from '../../util';
 import Editor from './EditorDiaLogContent';
 import './index.less';
 
-export default class AppIntro extends Component {
+export default class AppIntro extends Component<any, any> {
   static propTypes = {
     isEditing: bool,
     description: string,

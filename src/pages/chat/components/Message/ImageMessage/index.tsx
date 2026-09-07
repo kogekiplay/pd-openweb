@@ -10,7 +10,7 @@ import FileMessage from '../FileMessage';
 import { handleMessageFilePreview } from '../MessageToolbar';
 import './index.less';
 
-export default class ImageMessage extends Component {
+export default class ImageMessage extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

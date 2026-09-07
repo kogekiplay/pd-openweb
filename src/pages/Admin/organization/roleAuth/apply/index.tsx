@@ -56,7 +56,7 @@ const Wrap = styled.div`
   }
 `;
 
-export default class ApplyRole extends React.Component {
+export default class ApplyRole extends React.Component<any, any> {
   constructor(props) {
     super(props);
   }

@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { UserHead } from 'ming-ui';
 import Commenter from 'src/components/comment/commenter';
 
-export default class WorkSheetCommenter extends Component {
+export default class WorkSheetCommenter extends Component<any, any> {
   commentRef = React.createRef();
   render() {
     const {

@@ -3,7 +3,7 @@ import * as components from '../components';
 
 const { CalendarDate, CalendarRemind, CalendarAddress, CalendarMembers, CalendarSummary, CalendarPrivate } = components;
 
-export default class CalendarMain extends Component {
+export default class CalendarMain extends Component<any, any> {
   constructor(props) {
     super(props);
   }

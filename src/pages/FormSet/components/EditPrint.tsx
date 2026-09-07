@@ -34,7 +34,7 @@ const EDIT_OPTIONS = [
   },
 ];
 
-class EditPrint extends React.Component {
+class EditPrint extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

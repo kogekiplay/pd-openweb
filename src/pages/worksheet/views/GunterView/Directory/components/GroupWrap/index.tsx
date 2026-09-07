@@ -21,7 +21,7 @@ const GroupingTotalWrapper = styled.div`
     right: 0;
   }
 `;
-let GroupWrap = class GroupWrap extends Component {
+let GroupWrap = class GroupWrap extends Component<any, any> {
   constructor(props) {
     super(props);
     this.$groupingWrapperRef = createRef(null);

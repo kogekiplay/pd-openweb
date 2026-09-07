@@ -9,7 +9,7 @@ import worksheetApi from 'src/api/worksheet';
 import WorksheetItem from 'src/pages/worksheet/components/DialogImportExcelCreate/SetImportExcelCreateWorksheetOrApp/WorksheetItem';
 import './index.less';
 
-class ErrorDialog extends Component {
+class ErrorDialog extends Component<any, any> {
   static propTypes = {
     fileKey: PropTypes.string,
     isBatch: PropTypes.bool,

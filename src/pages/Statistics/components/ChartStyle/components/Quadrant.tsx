@@ -57,7 +57,7 @@ const QuadrantAxisValue = props => {
   );
 };
 
-export default class Quadrant extends Component {
+export default class Quadrant extends Component<any, any> {
   constructor(props) {
     super(props);
   }

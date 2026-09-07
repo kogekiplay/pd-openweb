@@ -104,7 +104,7 @@ let mousePosition = {
   x: 139,
   y: 23,
 };
-let AppInfo = class AppInfo extends Component {
+let AppInfo = class AppInfo extends Component<any, any> {
   static propTypes = {
     appStatus: oneOf([0, 1, 2, 3, 4, 5]),
     updateColor: func,

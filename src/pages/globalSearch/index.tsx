@@ -25,7 +25,7 @@ import { NEED_ALL_ORG_TAB, SEARCH_APP_SEARCH_TYPE } from './enum';
 import { getCurrentProjectId } from './utils';
 import './index.less';
 
-class GlobalSearch extends Component {
+class GlobalSearch extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

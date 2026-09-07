@@ -43,7 +43,7 @@ const PayChannelItem = styled.div`
   }
 `;
 
-export default class CreateMerchant extends Component {
+export default class CreateMerchant extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

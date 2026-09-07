@@ -15,7 +15,7 @@ import HoverState from '../../decorators/withHoverState';
 import { getUrlByBucketName, humanFileSize } from '../../utils';
 import './uploadAssistant.css';
 
-class UploadProgress extends React.Component {
+class UploadProgress extends React.Component<any, any> {
   static propTypes = {
     status: PropTypes.number,
     percentage: PropTypes.number, // 百分比，1 === 100%
@@ -66,7 +66,7 @@ class UploadProgress extends React.Component {
   }
 }
 
-class UploadAction extends React.Component {
+class UploadAction extends React.Component<any, any> {
   static propTypes = {
     status: PropTypes.number,
     cancelUpload: PropTypes.func,
@@ -105,7 +105,7 @@ class UploadAction extends React.Component {
   }
 }
 
-class UploadAssistant extends React.Component {
+class UploadAssistant extends React.Component<any, any> {
   state = {
     uploadPath: _l('我的文件'),
     parentId: '',

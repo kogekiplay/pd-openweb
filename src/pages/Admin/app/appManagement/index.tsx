@@ -10,7 +10,7 @@ import AppAction from './modules/AppAction';
 import UpgradeRecords from './UpgradeRecords';
 import './index.less';
 
-export default class AppManagement extends Component {
+export default class AppManagement extends Component<any, any> {
   constructor(props) {
     super(props);
     const savedTotalNum = localStorage.getItem('appListTotalNum');

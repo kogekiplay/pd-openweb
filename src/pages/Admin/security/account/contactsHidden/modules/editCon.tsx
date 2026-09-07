@@ -19,7 +19,7 @@ const ruleItemType = {
   extra: 15,
   whiteList: 20,
 };
-class EditCon extends React.Component {
+class EditCon extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

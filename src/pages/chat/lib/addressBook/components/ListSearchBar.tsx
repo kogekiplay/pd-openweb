@@ -10,7 +10,7 @@ import AddFriends from 'src/components/addFriends';
 import createGroup from 'src/pages/Group/createGroup/load';
 import { existAccountHint } from 'src/utils/inviteCommon';
 
-export default class SearchBar extends React.Component {
+export default class SearchBar extends React.Component<any, any> {
   constructor(props) {
     super();
     this.state = {

@@ -34,7 +34,7 @@ const getOrderPayParams = () => {
   return params || {};
 };
 
-export default class OrderPay extends Component {
+export default class OrderPay extends Component<any, any> {
   constructor(props) {
     super(props);
 

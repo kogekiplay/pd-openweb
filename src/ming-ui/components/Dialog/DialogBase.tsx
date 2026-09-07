@@ -6,7 +6,7 @@ import '../less/Dialog.less';
 
 const dialogContainerPadding = 32;
 
-class DialogBase extends Component {
+class DialogBase extends Component<any, any> {
   static propTypes = {
     /**
      * 弹窗叠弹窗错位

@@ -52,7 +52,7 @@ const FROM_TYPE = {
   },
 };
 
-class TaskBasic extends Component {
+class TaskBasic extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

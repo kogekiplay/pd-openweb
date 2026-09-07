@@ -5,7 +5,7 @@ import sheetAjax from 'src/api/worksheet';
 import { getRowDetail } from 'worksheet/api';
 
 export default Component =>
-  class WorksheetRecordProvider extends React.Component {
+  class WorksheetRecordProvider extends React.Component<any, any> {
     static propTypes = {
       loadWorksheetInfo: PropTypes.bool,
       loadWorksheetRecord: PropTypes.bool,

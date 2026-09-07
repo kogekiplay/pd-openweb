@@ -18,7 +18,7 @@ import {
 // setting编辑字段，关联他表筛选/汇总 rule字段显示规则=> 不需要验证的from
 const noCheckConditionAvailable = ['relateSheet', 'rule', 'subTotal', 'custombutton'];
 
-export default class SingleFilter extends Component {
+export default class SingleFilter extends Component<any, any> {
   static propTypes = {
     isRules: PropTypes.bool,
     controllable: PropTypes.bool,

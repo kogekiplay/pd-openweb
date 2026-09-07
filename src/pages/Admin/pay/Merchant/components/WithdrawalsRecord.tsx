@@ -45,7 +45,7 @@ const FlexWrap = styled.div`
   overflow: hidden;
 `;
 
-export default class WithdrawalsRecord extends Component {
+export default class WithdrawalsRecord extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

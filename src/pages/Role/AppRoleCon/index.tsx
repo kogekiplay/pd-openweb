@@ -44,7 +44,7 @@ const getTabList = () => {
   return conList;
 };
 
-class Con extends React.Component {
+class Con extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

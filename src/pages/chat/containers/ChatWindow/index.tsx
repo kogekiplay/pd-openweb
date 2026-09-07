@@ -13,7 +13,7 @@ import ChatPanelSession from '../ChatPanelSession';
 import '../ChatPanel/index.less';
 
 let hasMounted = false;
-let ChatWindow = class ChatWindow extends Component {
+let ChatWindow = class ChatWindow extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -42,7 +42,7 @@ const Wrap = styled.div`
   }
 `;
 
-export default class AvatarEditor extends Component {
+export default class AvatarEditor extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

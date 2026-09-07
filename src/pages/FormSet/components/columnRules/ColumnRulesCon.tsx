@@ -12,7 +12,7 @@ import * as actions from './redux/actions/columnRules';
 import * as columnRules from './redux/actions/columnRules';
 import RuleItem from './RuleItem';
 
-class ColumnRulesCon extends React.Component {
+class ColumnRulesCon extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

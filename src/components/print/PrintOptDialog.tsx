@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Checkbox, Dialog } from 'ming-ui';
 
-export default class PrintOptDialog extends Component {
+export default class PrintOptDialog extends Component<any, any> {
   static propTypes = {
     visible: PropTypes.any,
     reqInfo: PropTypes.any,

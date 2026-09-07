@@ -23,7 +23,7 @@ const newDropdownScopeData = _.cloneDeep(dropdownScopeData.filter(data => ![18, 
 
 newDropdownScopeData.splice(18, 0, ...pastAndFutureData);
 
-export default class TimeModal extends Component {
+export default class TimeModal extends Component<any, any> {
   constructor(props) {
     super(props);
     const { filter } = props;

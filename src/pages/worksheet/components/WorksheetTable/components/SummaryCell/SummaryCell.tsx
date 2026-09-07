@@ -12,7 +12,7 @@ import './SummaryCell.less';
 
 const ClickAwayable = ClickAway;
 
-export default class extends React.Component {
+export default class extends React.Component<any, any> {
   static propTypes = {
     style: PropTypes.shape({}),
     control: PropTypes.shape({}),

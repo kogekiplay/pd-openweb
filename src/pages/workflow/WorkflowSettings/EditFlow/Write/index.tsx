@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import cx from 'classnames';
 import { CreateNode, MembersName, NodeOperate } from '../components';
 
-export default class Write extends Component {
+export default class Write extends Component<any, any> {
   constructor(props) {
     super(props);
   }

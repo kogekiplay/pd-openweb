@@ -43,7 +43,7 @@ const ImgCon = styled.div`
     color: var(--color-text-disabled);
   }
 `;
-export default class Logo extends React.Component {
+export default class Logo extends React.Component<any, any> {
   static propTypes = {
     url: PropTypes.string,
     onChange: PropTypes.func,

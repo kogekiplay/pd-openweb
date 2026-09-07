@@ -18,7 +18,7 @@ const PAY_CHANNEL = [
   { value: 2, label: _l('微信支付'), icon: 'wechat_pay' },
   { value: 1, label: _l('支付宝支付'), icon: 'order-alipay' },
 ];
-export default class PrePayOrder extends Component {
+export default class PrePayOrder extends Component<any, any> {
   constructor(props) {
     super(props);
 

@@ -12,7 +12,7 @@ import InvitationList from './modules/InvitationList';
 import ReportRelation from './reportRelation';
 import './index.less';
 
-export default class AccountChart extends React.Component {
+export default class AccountChart extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

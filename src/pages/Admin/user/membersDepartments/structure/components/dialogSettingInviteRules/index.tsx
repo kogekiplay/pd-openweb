@@ -9,7 +9,7 @@ import './index.less';
 
 // 新用户加入企业必填字段
 
-class DialogSettingInviteRules extends React.Component {
+class DialogSettingInviteRules extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

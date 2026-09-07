@@ -27,7 +27,7 @@ import './index.less';
 
 const isGunterExport = location.href.includes('gunterExport');
 
-class GunterChart extends Component {
+class GunterChart extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

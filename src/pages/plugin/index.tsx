@@ -13,7 +13,7 @@ import { PLUGIN_TYPE } from './config';
 import PluginComponent from './pluginComponent';
 import SideNav from './SideNav';
 
-export default class PluginContainer extends React.Component {
+export default class PluginContainer extends React.Component<any, any> {
   constructor(props) {
     super(props);
 

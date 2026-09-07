@@ -64,7 +64,7 @@ const getDefaultParameters = () => {
   };
 };
 
-export default class AIGC extends Component {
+export default class AIGC extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -3,7 +3,7 @@ import cx from 'classnames';
 import PropTypes from 'prop-types';
 import './CheckBlock.less';
 
-export default class CheckBlock extends React.Component {
+export default class CheckBlock extends React.Component<any, any> {
   static propTypes = {
     data: PropTypes.arrayOf(
       PropTypes.shape({

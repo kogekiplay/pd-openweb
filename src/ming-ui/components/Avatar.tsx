@@ -3,7 +3,7 @@ import cx from 'classnames';
 import PropTypes from 'prop-types';
 import './less/Avatar.less';
 
-export default class Avatar extends Component {
+export default class Avatar extends Component<any, any> {
   static propTypes = {
     src: PropTypes.string,
     size: PropTypes.number,

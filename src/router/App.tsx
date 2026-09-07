@@ -18,7 +18,7 @@ import globalEvents from './globalEvents';
 import PageHeaderRoute from './PageHeader';
 import './index.less';
 
-class App extends Component {
+class App extends Component<any, any> {
   constructor(props) {
     super(props);
 

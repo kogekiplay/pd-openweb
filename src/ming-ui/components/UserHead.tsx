@@ -6,7 +6,7 @@ import { Avatar, UserCard } from 'ming-ui';
 /**
  * 用户头像，带 hover 的层
  */
-export default class UserHead extends React.Component {
+export default class UserHead extends React.Component<any, any> {
   static propTypes = {
     user: PropTypes.shape({
       accountId: PropTypes.string,

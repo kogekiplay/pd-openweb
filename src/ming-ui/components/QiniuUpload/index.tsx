@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import createUploader from 'src/library/plupload/createUploader';
 import RegExpValidator from 'src/utils/expression';
 
-export default class QiniuUpload extends React.Component {
+export default class QiniuUpload extends React.Component<any, any> {
   static propTypes = {
     className: PropTypes.string,
     bucket: PropTypes.number,

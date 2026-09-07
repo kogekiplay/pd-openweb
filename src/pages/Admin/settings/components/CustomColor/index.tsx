@@ -67,7 +67,7 @@ const ColorBox = styled.div(
 `,
 );
 
-export default class CustomColor extends Component {
+export default class CustomColor extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

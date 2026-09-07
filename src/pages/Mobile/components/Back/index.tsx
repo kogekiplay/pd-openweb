@@ -29,7 +29,7 @@ const Content = styled.div`
   }
 `;
 
-export default class Back extends Component {
+export default class Back extends Component<any, any> {
   constructor(props) {
     super(props);
   }

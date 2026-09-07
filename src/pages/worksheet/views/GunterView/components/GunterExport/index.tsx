@@ -10,7 +10,7 @@ import Gunter from 'src/pages/worksheet/views/GunterView';
 import printGunter from './print';
 import './index.less';
 
-let GunterExport = class GunterExport extends Component {
+let GunterExport = class GunterExport extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

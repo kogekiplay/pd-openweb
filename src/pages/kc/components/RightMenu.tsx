@@ -10,7 +10,7 @@ import MenuItem from 'ming-ui/components/MenuItem';
 import { NODE_OPERATOR_TYPE, NODE_STATUS, NODE_TYPE, NODE_VIEW_TYPE } from '../constant/enum';
 import UploadNewVersion from './UploadNewVersion';
 
-let RightMenu = class RightMenu extends React.Component {
+let RightMenu = class RightMenu extends React.Component<any, any> {
   static propTypes = {
     item: PropTypes.object,
     kcApp: PropTypes.object,

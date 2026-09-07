@@ -36,7 +36,7 @@ const defaultState = {
   keywords: '',
 };
 
-export default class Others extends React.Component {
+export default class Others extends React.Component<any, any> {
   constructor() {
     super();
 

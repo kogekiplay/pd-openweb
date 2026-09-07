@@ -18,7 +18,7 @@ import {
 import './folderToolbar.less';
 
 const ClickAwayable = ClickAway;
-class FolderToolbar extends Component {
+class FolderToolbar extends Component<any, any> {
   constructor(props) {
     super(props);
 

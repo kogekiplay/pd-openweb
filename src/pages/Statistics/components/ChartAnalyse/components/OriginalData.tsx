@@ -13,7 +13,7 @@ const ShowControlIdWrapper = styled.div`
   background-color: var(--color-border-secondary);
 `;
 
-export default class OriginalData extends Component {
+export default class OriginalData extends Component<any, any> {
   constructor(props) {
     super(props);
     const { displaySetup } = props;

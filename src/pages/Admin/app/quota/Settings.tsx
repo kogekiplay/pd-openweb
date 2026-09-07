@@ -144,7 +144,7 @@ const func = (ids, limits) => {
   });
 };
 
-export default class LimitAttachmentUpload extends Component {
+export default class LimitAttachmentUpload extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

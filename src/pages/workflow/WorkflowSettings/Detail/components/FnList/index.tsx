@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Menu, MenuItem } from 'ming-ui';
 import { FORMULA } from './enum';
 
-export default class FnList extends Component {
+export default class FnList extends Component<any, any> {
   static propTypes = {
     fnmatch: PropTypes.string,
     onClickAwayExceptions: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.object, PropTypes.string])),

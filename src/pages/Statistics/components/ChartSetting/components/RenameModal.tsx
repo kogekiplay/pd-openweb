@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button, ConfigProvider, Input, Modal } from 'antd';
 import { Icon } from 'ming-ui';
 
-export default class RenameModal extends Component {
+export default class RenameModal extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

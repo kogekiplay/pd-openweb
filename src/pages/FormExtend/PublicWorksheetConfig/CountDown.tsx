@@ -3,7 +3,7 @@ import moment from 'moment';
 
 let timer = null;
 
-export default class CountDown extends Component {
+export default class CountDown extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

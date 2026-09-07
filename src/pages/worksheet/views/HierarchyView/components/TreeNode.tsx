@@ -4,7 +4,7 @@ import CreateRecord from '../../components/createRecord';
 import { getRelateDefaultValue } from '../util';
 import SortableNode from './SortableNode';
 
-export default class TreeNode extends Component {
+export default class TreeNode extends Component<any, any> {
   static propTypes = {};
   static defaultProps = {};
 

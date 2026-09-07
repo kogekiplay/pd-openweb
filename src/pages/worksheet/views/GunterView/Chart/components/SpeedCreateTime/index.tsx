@@ -118,7 +118,7 @@ const getWithoutArrangementIndexs = (grouping, milepost) => {
   };
 };
 
-let SpeedCreateTime = class SpeedCreateTime extends Component {
+let SpeedCreateTime = class SpeedCreateTime extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

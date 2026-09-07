@@ -27,7 +27,7 @@ const SysSortColumn = styled.div`
   }
 `;
 // 显示列
-export default class Show extends React.Component {
+export default class Show extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

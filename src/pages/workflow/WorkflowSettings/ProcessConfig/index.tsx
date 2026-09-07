@@ -25,7 +25,7 @@ const TRIGGER_TYPE = {
   NO_ALLOW: 2,
 };
 
-class ProcessConfig extends Component {
+class ProcessConfig extends Component<any, any> {
   state = {
     data: {},
     showWorkflow: false,

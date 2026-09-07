@@ -8,7 +8,7 @@ import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget';
 import { normTypes } from '../../../enum';
 import WithoutFidldItem from './WithoutFidldItem';
 
-export default class ValueAxis extends Component {
+export default class ValueAxis extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {};

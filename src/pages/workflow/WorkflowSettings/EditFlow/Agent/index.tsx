@@ -36,7 +36,7 @@ const TOOLS_ITEM = styled.span`
   }
 `;
 
-export default class Agent extends Component {
+export default class Agent extends Component<any, any> {
   constructor(props) {
     super(props);
   }

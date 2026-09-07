@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-class YearTable extends Component {
+class YearTable extends Component<any, any> {
   /**
    * 渲染列表
    */

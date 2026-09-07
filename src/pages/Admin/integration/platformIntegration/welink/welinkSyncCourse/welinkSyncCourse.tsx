@@ -13,7 +13,7 @@ import welinkPng6 from './img/6.png';
 import welinkPng7 from './img/7.png';
 import './style.less';
 
-export default class WelinkSyncCourse extends React.Component {
+export default class WelinkSyncCourse extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

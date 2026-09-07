@@ -10,7 +10,7 @@ import ImportAndExport from '../components/structureContent/ImportAndExport';
 import ImportDepAndPosition from '../components/structureContent/ImportDepAndPosition';
 import TabList from '../components/tabList';
 
-class Root extends React.Component {
+class Root extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {};

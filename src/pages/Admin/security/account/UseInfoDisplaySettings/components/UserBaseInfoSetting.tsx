@@ -9,7 +9,7 @@ import userAjax from 'src/api/user';
 import DepartmentFullName from 'src/components/UserInfoComponents/DepartmentFullName.jsx';
 import { getFieldsData, maskValue } from '../../utils';
 
-export default class UserBaseInfoSetting extends Component {
+export default class UserBaseInfoSetting extends Component<any, any> {
   constructor(props) {
     super(props);
 

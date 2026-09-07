@@ -44,7 +44,7 @@ const SetInitialPassword = styled.div`
   }
 `;
 
-export default class IntegrationSetPassword extends Component {
+export default class IntegrationSetPassword extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

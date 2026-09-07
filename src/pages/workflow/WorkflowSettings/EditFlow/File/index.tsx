@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import cx from 'classnames';
 import { CreateNode, NodeOperate, WorksheetMessage } from '../components';
 
-export default class File extends Component {
+export default class File extends Component<any, any> {
   constructor(props) {
     super(props);
   }

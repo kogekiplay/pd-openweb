@@ -16,7 +16,7 @@ const formatData = (value, data) => {
   }
 };
 
-class RadioGroup extends Component {
+class RadioGroup extends Component<any, any> {
   static propTypes = {
     data: PropTypes.arrayOf(
       PropTypes.shape({

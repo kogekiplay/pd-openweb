@@ -14,7 +14,7 @@ import PostCommentInput from './postCommentInput';
 /**
  * 动态的单条回复
  */
-class PostComment extends React.Component {
+class PostComment extends React.Component<any, any> {
   static propTypes = {
     dispatch: PropTypes.func,
     className: PropTypes.string,

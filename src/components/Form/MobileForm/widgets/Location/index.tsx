@@ -42,7 +42,7 @@ const LocationWrap = styled.div`
 const isWx = window.isWeiXin && !window.platformENV.isOverseas && !window.platformENV.isLocal && !window.isWxWork;
 const isApp = window.isWxWork || isWx || window.isWeLink || window.isDingTalk || window.isFeiShu || window.isMingDaoApp;
 
-export default class Widgets extends Component {
+export default class Widgets extends Component<any, any> {
   static propTypes = {
     from: PropTypes.number,
     disabled: PropTypes.bool,

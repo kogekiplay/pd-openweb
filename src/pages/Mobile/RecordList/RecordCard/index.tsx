@@ -49,7 +49,7 @@ const coverTypes = {
   3: 'rectangle',
 };
 
-export default class RecordCard extends Component {
+export default class RecordCard extends Component<any, any> {
   constructor(props) {
     super(props);
     const { data, view } = props;

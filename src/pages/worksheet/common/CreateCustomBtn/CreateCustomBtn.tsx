@@ -23,7 +23,7 @@ import ShowBtnFilterDialog from './components/ShowBtnFilterDialog';
 import { COLORS, ICONS } from './config';
 import './CreateCustomBtn.less';
 
-class CreateCustomBtnCon extends React.Component {
+class CreateCustomBtnCon extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {
@@ -1139,7 +1139,7 @@ class CreateCustomBtnCon extends React.Component {
 
 const CreateCustomBtnConWithErrorBoundary = ErrorBoundary.wrap(CreateCustomBtnCon);
 
-class CreateCustomBtn extends React.Component {
+class CreateCustomBtn extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

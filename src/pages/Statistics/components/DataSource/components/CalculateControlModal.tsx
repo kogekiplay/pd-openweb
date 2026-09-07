@@ -34,7 +34,7 @@ const calculateControlNormTypes = normTypes.map(item => {
 
 const textControlNormTypes = textNormTypes.filter(n => n.value !== 7);
 
-class CalculateControl extends Component {
+class CalculateControl extends Component<any, any> {
   constructor(props) {
     super(props);
     const { editCalculateControl } = props;
@@ -334,7 +334,7 @@ class CalculateControl extends Component {
   }
 }
 
-export default class CalculateControlModal extends Component {
+export default class CalculateControlModal extends Component<any, any> {
   constructor(props) {
     super(props);
   }

@@ -21,7 +21,7 @@ const TEXT_AREA_MAX_HEIGHT = 180;
 /**
  * 动态回复输入框
  */
-class PostCommentInput extends React.Component {
+class PostCommentInput extends React.Component<any, any> {
   static propTypes = {
     postItem: PropTypes.object,
     onPublished: PropTypes.func,

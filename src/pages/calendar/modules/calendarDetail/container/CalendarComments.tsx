@@ -3,7 +3,7 @@ import cx from 'classnames';
 import FileList from 'src/components/comment/FileList';
 import { CalendarCommentList } from '../components';
 
-export default class CalendarComments extends Component {
+export default class CalendarComments extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

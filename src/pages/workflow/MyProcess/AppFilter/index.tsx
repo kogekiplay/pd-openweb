@@ -10,7 +10,7 @@ import { TYPES } from '../../WorkflowList/utils';
 import 'rc-trigger/assets/index.css';
 import './index.less';
 
-export default class AppFilter extends Component {
+export default class AppFilter extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

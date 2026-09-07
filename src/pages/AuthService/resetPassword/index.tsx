@@ -37,7 +37,7 @@ const WrapBtn = styled.div`
   }
 `;
 
-export default class ResetPassword extends React.Component {
+export default class ResetPassword extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

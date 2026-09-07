@@ -3,7 +3,7 @@ import cx from 'classnames';
 import PropTypes from 'prop-types';
 import './less/Textarea.less';
 
-class Textarea extends Component {
+class Textarea extends Component<any, any> {
   static propTypes = {
     minHeight: PropTypes.number,
     maxHeight: PropTypes.number,

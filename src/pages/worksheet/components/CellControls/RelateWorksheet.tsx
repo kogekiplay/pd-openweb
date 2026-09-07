@@ -9,7 +9,7 @@ import { browserIsMobile } from 'src/utils/common';
 import RecordInfoWrapper from '../../common/recordInfo/RecordInfoWrapper';
 import { renderCellText } from '../../components/CellControls';
 
-class RelateWorksheet extends Component {
+class RelateWorksheet extends Component<any, any> {
   static propTypes = {
     className: PropTypes.string,
     style: PropTypes.shape({}),

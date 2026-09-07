@@ -40,7 +40,7 @@ const WrapSys = styled.div`
     }
   }
 `;
-export default class Con extends React.Component {
+export default class Con extends React.Component<any, any> {
   render() {
     const {
       appId,

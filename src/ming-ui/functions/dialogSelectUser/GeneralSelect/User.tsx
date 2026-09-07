@@ -5,7 +5,7 @@ import { Checkbox, UserHead } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import departmentAjax from 'src/api/department.js';
 
-export default class User extends Component {
+export default class User extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

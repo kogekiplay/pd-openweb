@@ -18,7 +18,7 @@ import GanttSideBar from './GanttSideBar';
 import { durDays, momentTime } from './time';
 import './index.less';
 
-export default class GanttDialog extends Component {
+export default class GanttDialog extends Component<any, any> {
   static propTypes = {
     folderID: PropTypes.string.isRequired,
     closeLayer: PropTypes.func,

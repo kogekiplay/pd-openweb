@@ -68,7 +68,7 @@ const ALERT_TIP = {
   balance: _l('输入金额错误，输入的金额范围在10到100,000之间'),
 };
 
-class EarlyWarningDialog extends Component {
+class EarlyWarningDialog extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

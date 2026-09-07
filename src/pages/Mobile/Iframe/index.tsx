@@ -9,7 +9,7 @@ const data = {
   },
 };
 
-export default class Iframe extends Component {
+export default class Iframe extends Component<any, any> {
   constructor(props) {
     super(props);
   }

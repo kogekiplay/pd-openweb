@@ -39,7 +39,7 @@ const defaultState = {
   groupStatus: GROUP_STATUS.OPEN,
 };
 
-export default class ProjectGroups extends React.Component {
+export default class ProjectGroups extends React.Component<any, any> {
   static propTypes = {
     projectId: PropTypes.string,
   };

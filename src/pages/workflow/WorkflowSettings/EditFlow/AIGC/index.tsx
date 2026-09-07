@@ -3,7 +3,7 @@ import cx from 'classnames';
 import { getIcons } from '../../utils';
 import { CreateNode, NodeOperate } from '../components';
 
-export default class AIGC extends Component {
+export default class AIGC extends Component<any, any> {
   constructor(props) {
     super(props);
   }

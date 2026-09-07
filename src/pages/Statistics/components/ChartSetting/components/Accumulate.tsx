@@ -13,7 +13,7 @@ const ShowControlIdWrapper = styled.div`
   background-color: var(--color-border-secondary);
 `;
 
-export default class Accumulate extends Component {
+export default class Accumulate extends Component<any, any> {
   constructor(props) {
     super(props);
     const { displaySetup } = this.props.currentReport;

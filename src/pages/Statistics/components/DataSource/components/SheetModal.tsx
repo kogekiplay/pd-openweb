@@ -70,7 +70,7 @@ const Wrap = styled.div`
   }
 `;
 
-export default class SheetModal extends Component {
+export default class SheetModal extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

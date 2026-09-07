@@ -89,7 +89,7 @@ const renderGlobalStatisticsPanel = node => {
   globalStatisticsRoot.render(node);
 };
 
-export default class Statistics extends Component {
+export default class Statistics extends Component<any, any> {
   constructor(props) {
     super();
     this.isUnmounted = false;

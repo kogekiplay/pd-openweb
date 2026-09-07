@@ -107,7 +107,7 @@ const DISPLAY_HIERARCHY = [
   { value: 4, name: _l('4级') },
   { value: 5, name: _l('5级') },
 ];
-export default class ToolBar extends Component {
+export default class ToolBar extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

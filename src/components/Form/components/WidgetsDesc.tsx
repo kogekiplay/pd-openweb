@@ -5,7 +5,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { browserIsMobile } from 'src/utils/common';
 import { FROM } from '../core/config';
 
-class WidgetsDesc extends React.Component {
+class WidgetsDesc extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

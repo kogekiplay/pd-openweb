@@ -17,7 +17,7 @@ import { TwofactorVerifyCodeActionResult } from '../login/config';
 import { TwofactorType } from './config';
 import Twofactor from './twofactorCon';
 
-export default class TwofactorContainer extends React.Component {
+export default class TwofactorContainer extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -50,7 +50,7 @@ const TestResultBox = styled.div`
   }
 `;
 
-export default class NodeOperate extends Component {
+export default class NodeOperate extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

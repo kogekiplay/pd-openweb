@@ -70,7 +70,7 @@ const HeaderRange = styled.div`
     color: var(--color-primary) !important;
   }
 `;
-let Range = class Range extends React.Component {
+let Range = class Range extends React.Component<any, any> {
   el = null;
   containerRef = null;
 

@@ -3,7 +3,7 @@ import { Dropdown, Menu } from 'antd';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 
-export default class DropDownItem extends Component {
+export default class DropDownItem extends Component<any, any> {
   static propTypes = {
     value: PropTypes.any,
     dropDownData: PropTypes.array,

@@ -300,7 +300,7 @@ const dptTemplatePaths = {
   5: '/staticfiles/template/departmentImportTemplate/Templat Import Jabatan.xlsx',
 };
 
-class ImportDepAndPosition extends Component {
+class ImportDepAndPosition extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

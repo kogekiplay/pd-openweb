@@ -29,7 +29,7 @@ const convertToMinutes = (remindType, value) => {
   }
 };
 
-export default class CalendarRemind extends Component {
+export default class CalendarRemind extends Component<any, any> {
   static propTypes = {
     id: PropTypes.string.isRequired,
     change: PropTypes.func.isRequired, // callback

@@ -51,7 +51,7 @@ const filterDate = [
   },
 ];
 
-export default class FilesPanel extends Component {
+export default class FilesPanel extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

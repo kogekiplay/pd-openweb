@@ -38,7 +38,7 @@ const WrapEdit = styled.div`
   right: 0;
   z-index: 10;
 `;
-class TaskCanvas extends Component {
+class TaskCanvas extends Component<any, any> {
   constructor(props) {
     super(props);
     const { flowData = {}, flowId } = props;

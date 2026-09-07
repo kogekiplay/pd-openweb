@@ -14,7 +14,7 @@ const publishStatus2Text = {
   3: _l('关闭%03055'),
 };
 
-export default class PublishBtn extends Component {
+export default class PublishBtn extends Component<any, any> {
   state = {
     publishing: false,
     publishData: {},

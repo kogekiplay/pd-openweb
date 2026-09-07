@@ -68,7 +68,7 @@ const errors = {
 };
 
 const { Option } = Select;
-export default class AddEditRulesDialog extends Component {
+export default class AddEditRulesDialog extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

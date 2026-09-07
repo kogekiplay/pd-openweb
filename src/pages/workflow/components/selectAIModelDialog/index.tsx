@@ -243,7 +243,7 @@ const MODEL_DESCRIPTIONS = {
   'QWen-Max': _l('中高阶文本生成模型，中文能力强，适用于复杂文本生成任务。'),
 };
 
-class SelectAIModelDialog extends Component {
+class SelectAIModelDialog extends Component<any, any> {
   static propTypes = {
     showAutoModel: PropTypes.bool,
     isMultiple: PropTypes.bool,

@@ -52,7 +52,7 @@ const initData = {
 };
 
 let schemaTypes = [];
-export default class SourceDest extends Component {
+export default class SourceDest extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

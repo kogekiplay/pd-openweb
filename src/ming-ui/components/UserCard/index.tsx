@@ -143,7 +143,7 @@ const DisplayFieldForNameInfo = {
   60: 'currentWorkSiteName',
 };
 
-class UserCard extends React.Component {
+class UserCard extends React.Component<any, any> {
   static propTypes = {
     projectId: PropTypes.string,
     appId: PropTypes.string,

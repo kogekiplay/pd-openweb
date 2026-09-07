@@ -4,7 +4,7 @@ import { LoadDiv, ScrollView } from 'ming-ui';
 import GroupController from 'src/api/group';
 import { Member } from '../Members/Panel';
 
-export default class Members extends Component {
+export default class Members extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

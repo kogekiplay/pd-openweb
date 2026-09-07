@@ -8,7 +8,7 @@ import * as actions from 'worksheet/redux/actions/gunterview';
 import { browserIsMobile } from 'src/utils/common';
 
 const isMobile = browserIsMobile();
-let RecordInfo = class RecordInfo extends Component {
+let RecordInfo = class RecordInfo extends Component<any, any> {
   constructor(props) {
     super(props);
   }

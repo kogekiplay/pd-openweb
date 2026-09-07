@@ -15,7 +15,7 @@ const FooterWrap = styled.div`
   align-items: center;
 `;
 
-export default class EditPostDialog extends React.Component {
+export default class EditPostDialog extends React.Component<any, any> {
   static show(postItem, dispatch) {
     const div = document.createElement('div');
 

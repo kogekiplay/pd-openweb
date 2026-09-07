@@ -28,7 +28,7 @@ const DELETE_TYPES = {
   MOVE: 2,
 };
 
-export default class extends React.PureComponent {
+export default class extends React.PureComponent<any, any> {
   static propTypes = {
     onOk: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,

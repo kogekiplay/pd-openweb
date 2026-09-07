@@ -31,7 +31,7 @@ const RecordCardCellRelateRecord = styled.div`
   border-radius: 3px;
   margin-right: 6px;
 `;
-export default class RelateRecord extends React.Component {
+export default class RelateRecord extends React.Component<any, any> {
   static contextType = SheetContext;
   static propTypes = {
     className: PropTypes.string,

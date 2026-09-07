@@ -8,7 +8,7 @@ import Back from '../../components/Back';
 import * as actions from './redux/actions';
 import './index.less';
 
-class ApplyList extends React.Component {
+class ApplyList extends React.Component<any, any> {
   constructor(props) {
     super(props);
   }

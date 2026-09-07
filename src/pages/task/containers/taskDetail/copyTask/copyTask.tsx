@@ -6,7 +6,7 @@ import ajaxRequest from 'src/api/taskCenter';
 import { errorMessage } from '../../../utils/utils';
 import './less/copyTask.less';
 
-export default class CopyTask extends Component {
+export default class CopyTask extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

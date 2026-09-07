@@ -19,7 +19,7 @@ import * as actions from './redux/actions';
 import './index.less';
 
 let modal = null;
-class MemberList extends Component {
+class MemberList extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

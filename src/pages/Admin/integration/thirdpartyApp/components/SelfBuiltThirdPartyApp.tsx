@@ -62,7 +62,7 @@ const ApplicationTriggerWrapper = styled.div`
   }
 `;
 
-class Moreop extends Component {
+class Moreop extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {
@@ -111,7 +111,7 @@ class Moreop extends Component {
   }
 }
 
-class Upload extends Component {
+class Upload extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {
@@ -219,7 +219,7 @@ class Upload extends Component {
   }
 }
 
-export default class SelfBuiltThirdPartyApp extends Component {
+export default class SelfBuiltThirdPartyApp extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

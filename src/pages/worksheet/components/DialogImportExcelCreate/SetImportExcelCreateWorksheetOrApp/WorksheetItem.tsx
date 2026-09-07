@@ -68,7 +68,7 @@ const SheetTabWrap = styled.div`
   }
 `;
 
-export default class WorksheetItem extends Component {
+export default class WorksheetItem extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -5,7 +5,7 @@ import RecordInfoContext from 'worksheet/common/recordInfo/RecordInfoContext';
 import CustomFields from 'src/components/Form';
 import { isRelateRecordTableControl } from 'src/utils/control';
 
-export default class RowDetail extends React.Component {
+export default class RowDetail extends React.Component<any, any> {
   static propTypes = {
     widgetStyle: PropTypes.shape({}),
     ignoreLock: PropTypes.bool,

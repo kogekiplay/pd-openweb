@@ -18,7 +18,7 @@ const vertical = {
   WebkitBoxOrient: 'vertical',
 };
 
-export default class CardMessage extends Component {
+export default class CardMessage extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

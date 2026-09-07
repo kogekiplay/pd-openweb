@@ -11,7 +11,7 @@ import PostMessage from './postMessage';
 /**
  * 动态卡片内部内容, 包括动态、相应类型动态的附加信息、操作项、回复/标签等
  */
-class PostIReply extends React.Component {
+class PostIReply extends React.Component<any, any> {
   static propTypes = {
     postItem: PropTypes.any.isRequired,
     className: PropTypes.string,

@@ -30,7 +30,7 @@ const CUSTOM_BUTTOM_CLICK_TYPE = {
   FILL_RECORD: 3,
 };
 
-class RecordAction extends Component {
+class RecordAction extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

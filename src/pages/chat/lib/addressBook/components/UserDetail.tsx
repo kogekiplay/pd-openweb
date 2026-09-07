@@ -19,7 +19,7 @@ const defaultState = {
   isLoading: false,
 };
 
-export default class UserDetail extends React.Component {
+export default class UserDetail extends React.Component<any, any> {
   constructor(props) {
     super(props);
 

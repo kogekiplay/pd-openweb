@@ -16,7 +16,7 @@ const BASE_MIN_PICTURE_WIDTH = 169;
 const BASE_MIN_WIDTH = 33;
 const BASE_ORDER_NUMBER_WIDTH = 50;
 
-export default class RelationTable extends React.Component {
+export default class RelationTable extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

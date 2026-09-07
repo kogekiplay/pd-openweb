@@ -37,7 +37,7 @@ export const getTodoCount = (params = {}) => {
   });
 };
 
-export default class Entry extends Component {
+export default class Entry extends Component<any, any> {
   constructor(props) {
     super(props);
   }

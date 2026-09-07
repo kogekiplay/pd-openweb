@@ -13,7 +13,7 @@ import SettingMenu from './SettingMenu';
 import 'rc-trigger/assets/index.css';
 import './ViewItems.less';
 
-export default class Item extends Component {
+export default class Item extends Component<any, any> {
   static defaultProps = {
     item: {},
   };

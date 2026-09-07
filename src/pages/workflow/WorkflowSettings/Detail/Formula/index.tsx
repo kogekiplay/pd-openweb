@@ -35,7 +35,7 @@ const DotBox = styled.div`
   }
 `;
 
-export default class Formula extends Component {
+export default class Formula extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

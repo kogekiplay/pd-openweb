@@ -10,7 +10,7 @@ import './index.less';
 
 const MAX_EXPORT_NUM = 20;
 
-export default class SelectApp extends React.Component {
+export default class SelectApp extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

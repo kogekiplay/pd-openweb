@@ -39,7 +39,7 @@ const STATUS_TO_TEXT = {
   31: { src: noAppImg, text: _l('应用已被彻底删除，如需使用请重新安装') },
 };
 
-export class AppPermissionsInfo extends React.Component {
+export class AppPermissionsInfo extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {
@@ -147,7 +147,7 @@ export class AppPermissionsInfo extends React.Component {
 }
 
 const appPermissions = Component => {
-  class AppPermissions extends React.Component {
+  class AppPermissions extends React.Component<any, any> {
     constructor(props) {
       super(props);
       this.state = {

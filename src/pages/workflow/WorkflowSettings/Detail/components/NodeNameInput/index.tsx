@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-export default class NodeNameInput extends Component {
+export default class NodeNameInput extends Component<any, any> {
   cacheName = '';
 
   render() {

@@ -184,7 +184,7 @@ const renderSortableItem = props => {
   );
 };
 
-export default class YAxis extends Component {
+export default class YAxis extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

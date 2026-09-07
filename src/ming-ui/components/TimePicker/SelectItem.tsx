@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
-class SelectItem extends Component {
+class SelectItem extends Component<any, any> {
   static propTypes = {
     onClick: PropTypes.func,
     value: PropTypes.number,

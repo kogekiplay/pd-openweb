@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './mdLeftNavSearch.css';
 
-class MDLeftNavSearch extends React.Component {
+class MDLeftNavSearch extends React.Component<any, any> {
   static propTypes = {
     value: PropTypes.string,
     defaultValue: PropTypes.string,

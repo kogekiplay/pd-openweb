@@ -12,7 +12,7 @@ const Tips = {
   2: _l('暂无邀请记录'),
 };
 
-export default class DetailList extends Component {
+export default class DetailList extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

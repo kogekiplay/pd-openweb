@@ -5,7 +5,7 @@ import RegExpValidator from 'src/utils/expression';
 import { UPLOAD_ERROR } from '../constant/enum';
 import uploadNewVersionDailog from './kcUploadNewVersion/kcUploadNewVersion';
 
-class UploadNewVersion extends React.Component {
+class UploadNewVersion extends React.Component<any, any> {
   static propTypes() {
     return {
       item: React.propTypes.object,

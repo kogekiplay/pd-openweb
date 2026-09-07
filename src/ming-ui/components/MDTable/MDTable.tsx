@@ -27,7 +27,7 @@ const Cell = memo(
     );
   },
 );
-export default class MDTable extends React.Component {
+export default class MDTable extends React.Component<any, any> {
   static propTypes = {
     loading: PropTypes.bool,
     topFixed: PropTypes.bool,

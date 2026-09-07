@@ -81,7 +81,7 @@ const defaultOpts = {
   ControlBar: {},
 };
 
-class Map extends Component {
+class Map extends Component<any, any> {
   static propTypes = {
     pluginMap: PropTypes.object,
     loader: PropTypes.object,

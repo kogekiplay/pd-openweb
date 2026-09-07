@@ -36,7 +36,7 @@ const ByUserWrap = styled.div`
   }
 `;
 
-export default class ByUser extends Component {
+export default class ByUser extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

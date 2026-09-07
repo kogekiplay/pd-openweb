@@ -5,7 +5,7 @@ import ClickAway from 'ming-ui/components/ClickAway';
 import './DropdownWrapper.less';
 
 const ClickAwayable = ClickAway;
-export default class DropdownWrapper extends Component {
+export default class DropdownWrapper extends Component<any, any> {
   static propTypes = {
     visible: PropTypes.bool,
     downElement: PropTypes.element,

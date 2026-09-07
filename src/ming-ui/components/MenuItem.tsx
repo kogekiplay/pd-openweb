@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Item from './Item';
 import './less/MenuItem.less';
 
-class MenuItem extends Component {
+class MenuItem extends Component<any, any> {
   static propTypes = {
     icon: PropTypes.element,
     iconAtEnd: PropTypes.bool,

@@ -82,7 +82,7 @@ const PERMISSION_WAYS_WITH_UNCHECKED = [
   PERMISSION_WAYS.ViewAllAndManageSelfRecord,
 ];
 
-export default class extends PureComponent {
+export default class extends PureComponent<any, any> {
   static propTypes = {
     loading: PropTypes.bool,
     roleDetail: roleDetailPropType,

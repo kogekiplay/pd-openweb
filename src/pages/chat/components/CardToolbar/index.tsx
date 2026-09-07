@@ -37,7 +37,7 @@ const items = [
   },
 ];
 
-export default class CardToolbar extends Component {
+export default class CardToolbar extends Component<any, any> {
   constructor(props) {
     super(props);
     const { session } = this.props;

@@ -14,7 +14,7 @@ import './index.less';
 
 const isMobile = browserIsMobile();
 
-export default class EmbedChart extends Component {
+export default class EmbedChart extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

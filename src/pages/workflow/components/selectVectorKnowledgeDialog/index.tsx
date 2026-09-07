@@ -5,7 +5,7 @@ import ajaxRequest from 'src/api/appManagement';
 import knowledgeAjax from 'src/pages/AppSettings/components/Knowledge/api/knowledge';
 import '../SelectUsersFromApp/index.less';
 
-class SelectVectorKnowledge extends Component {
+class SelectVectorKnowledge extends Component<any, any> {
   static propTypes = {
     companyId: PropTypes.string.isRequired,
     appId: PropTypes.string,

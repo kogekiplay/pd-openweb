@@ -17,7 +17,7 @@ const CreateButton = styled(Button)`
   }
 `;
 
-export default class Merchant extends Component {
+export default class Merchant extends Component<any, any> {
   constructor(props) {
     super(props);
     const { iscreate } = getRequest();

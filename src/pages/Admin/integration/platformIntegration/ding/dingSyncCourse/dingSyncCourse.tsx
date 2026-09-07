@@ -41,7 +41,7 @@ const passApplyConfig = {
   3: 'weixinAppCourse',
 };
 
-export default class DingSyncCourse extends React.Component {
+export default class DingSyncCourse extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

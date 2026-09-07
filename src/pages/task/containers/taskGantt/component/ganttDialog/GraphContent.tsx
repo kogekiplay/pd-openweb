@@ -38,7 +38,7 @@ const getWidthAndLeft = (beginTime, startTime, endTime) => {
   };
 };
 
-export default class GraphContent extends Component {
+export default class GraphContent extends Component<any, any> {
   constructor(props) {
     super(props);
   }

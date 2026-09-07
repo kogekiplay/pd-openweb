@@ -11,7 +11,7 @@ import { fieldCanSort } from 'src/utils/control';
 import getTableColumnWidth from './getTableColumnWidth';
 import './style.less';
 
-export default class BaseColumnHead extends React.Component {
+export default class BaseColumnHead extends React.Component<any, any> {
   static propTypes = {
     disabled: PropTypes.bool,
     canDrag: PropTypes.bool,

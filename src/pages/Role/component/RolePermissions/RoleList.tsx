@@ -14,7 +14,7 @@ const Wrap = styled.p`
 
 const ROLE_ACTION_MANAGE_MEMBERS = 10;
 
-export default class Con extends React.Component {
+export default class Con extends React.Component<any, any> {
   handleSortEnd = list => {
     const { handleMoveApp, roleList, isForPortal } = this.props;
     const sysList = roleList.filter(o => sysRoleType.includes(o.roleType));

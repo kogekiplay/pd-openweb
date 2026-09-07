@@ -5,7 +5,7 @@ import { getControlTypeName } from '../../../utils';
 import AddOptions from '../AddOptions';
 import SingleControlValue from '../SingleControlValue';
 
-export default class UpdateFields extends Component {
+export default class UpdateFields extends Component<any, any> {
   static defaultProps = {
     type: 1, // 1：更新字段 2：更新参数
     isBatch: false,

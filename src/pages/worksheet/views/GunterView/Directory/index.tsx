@@ -50,7 +50,7 @@ const GroupingChildWrapper = styled.div`
     background-color: var(--color-primary);
   }
 `;
-let GunterDirectory = class GunterDirectory extends Component {
+let GunterDirectory = class GunterDirectory extends Component<any, any> {
   constructor(props) {
     super(props);
     const config = localStorage.getItem(`gunterViewColumnWidthConfig-${props.base.viewId}`);

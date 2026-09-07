@@ -185,7 +185,7 @@ const WrapR = styled.div`
   }
 `;
 
-export default class EditorCon extends Component {
+export default class EditorCon extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

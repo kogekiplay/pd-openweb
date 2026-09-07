@@ -113,7 +113,7 @@ const MAX_COUNT = 1000;
 const DEFAULT_TABLE_PAGE_SIZE = 20;
 const EXPAND_TABLE_PAGE_SIZE = 200;
 
-class ChildTable extends React.Component {
+class ChildTable extends React.Component<any, any> {
   static contextType = RecordInfoContext;
   static propTypes = {
     mode: PropTypes.string,

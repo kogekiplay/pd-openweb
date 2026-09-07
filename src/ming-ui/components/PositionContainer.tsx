@@ -20,7 +20,7 @@ function getDomNode(node) {
   return null;
 }
 
-class PositionContainer extends Component {
+class PositionContainer extends Component<any, any> {
   static propTypes = {
     visible: PropTypes.bool, // 显示隐藏
     bounding: PropTypes.object, // 触发元素的 getBoundingClientRect

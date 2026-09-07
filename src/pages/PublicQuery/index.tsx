@@ -17,7 +17,7 @@ import './index.less';
 const LoadablePublicQuery = lazy(() => import('./publicquery'));
 const LoadableWorksheetListShare = lazy(() => import('./worksheetListShare'));
 
-class WorksheetSahre extends React.Component {
+class WorksheetSahre extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

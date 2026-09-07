@@ -6,7 +6,7 @@ import { navigateTo } from 'src/router/navigateTo';
 import { htmlEncodeReg } from 'src/utils/common';
 import './index.less';
 
-export default class ExitDialog extends Component {
+export default class ExitDialog extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

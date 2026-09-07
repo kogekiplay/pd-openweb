@@ -10,7 +10,7 @@ import ViewErrorPage from '../components/ViewErrorPage';
 
 const LoadableGunterView = lazy(() => import('src/pages/worksheet/views/GunterView'));
 
-class MobileGunterView extends Component {
+class MobileGunterView extends Component<any, any> {
   render() {
     const { view = {}, controls = [] } = this.props;
     const { begindate = '', enddate = '' } = getAdvanceSetting(view);

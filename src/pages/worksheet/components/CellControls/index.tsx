@@ -103,7 +103,7 @@ function mergeControlAdvancedSetting(control = {}, advancedSetting = {}) {
   };
 }
 
-export default class CellControl extends React.Component {
+export default class CellControl extends React.Component<any, any> {
   static propTypes = {
     isSubList: PropTypes.bool,
     disableValidate: PropTypes.bool,

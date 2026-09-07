@@ -30,7 +30,7 @@ import {
 import * as actions from './redux/actions/columnRules';
 import * as columnRules from './redux/actions/columnRules';
 
-class EditBox extends React.Component {
+class EditBox extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

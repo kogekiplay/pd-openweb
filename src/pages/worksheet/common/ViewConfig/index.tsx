@@ -7,7 +7,7 @@ import { VIEW_DISPLAY_TYPE, VIEW_TYPE_ICON } from 'src/pages/worksheet/constants
 import ViewConfigCon from './ViewConfig';
 import './ViewConfig.less';
 
-let ViewConfig = class ViewConfig extends React.Component {
+let ViewConfig = class ViewConfig extends React.Component<any, any> {
   constructor(props) {
     super(props);
     const { view, worksheetId } = props;

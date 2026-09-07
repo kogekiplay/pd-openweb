@@ -23,7 +23,7 @@ const PersonalStatusWrap = styled(PersonalStatus)`
 
 const { GROUPACTION } = Constant;
 
-class ChatPanelHeader extends Component {
+class ChatPanelHeader extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

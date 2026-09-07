@@ -33,7 +33,7 @@ const WrapFocusCon = styled.div`
   }
 `;
 
-export default class WorkSheetCommentList extends Component {
+export default class WorkSheetCommentList extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

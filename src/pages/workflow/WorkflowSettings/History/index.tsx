@@ -44,7 +44,7 @@ const DrawerBox = styled.div`
     }
   }
 `;
-let History = class History extends Component {
+let History = class History extends Component<any, any> {
   constructor(props) {
     super(props);
     const { operator, operatorId } = props.match.params;

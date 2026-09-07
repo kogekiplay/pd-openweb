@@ -13,7 +13,7 @@ import {
   SelectUserDropDown,
 } from '../components';
 
-export default class Notice extends Component {
+export default class Notice extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

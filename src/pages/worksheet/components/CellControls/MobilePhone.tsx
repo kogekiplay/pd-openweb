@@ -15,7 +15,7 @@ import CellErrorTips, { CellErrorTipTrigger } from './comps/CellErrorTip';
 import { FROM } from './enum';
 
 const ClickAwayable = ClickAway;
-export default class MobilePhone extends React.Component {
+export default class MobilePhone extends React.Component<any, any> {
   static propTypes = {
     className: PropTypes.string,
     style: PropTypes.shape({}),

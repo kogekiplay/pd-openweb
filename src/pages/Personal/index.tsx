@@ -10,7 +10,7 @@ import './index.less';
 
 const guideSettings = md.global.Account.guideSettings;
 const showWarn = guideSettings.accountEmail || guideSettings.accountMobilePhone;
-export default class PersonalEntrypoint extends Component {
+export default class PersonalEntrypoint extends Component<any, any> {
   componentDidMount() {
     $('html').addClass('AppPersonal');
   }

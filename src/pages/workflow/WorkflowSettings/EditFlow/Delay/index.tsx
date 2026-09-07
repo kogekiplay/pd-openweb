@@ -10,7 +10,7 @@ const EXECUTE_TYPE_TEXT = {
   2: _l('之后'),
 };
 
-export default class Delay extends Component {
+export default class Delay extends Component<any, any> {
   checkHasContent() {
     const { item } = this.props;
     const { timerNode } = item;

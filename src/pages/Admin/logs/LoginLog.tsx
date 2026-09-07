@@ -35,7 +35,7 @@ const LoginLogWrap = styled.div`
 `;
 
 const PAGE_SIZE = 50;
-export default class LoginLog extends Component {
+export default class LoginLog extends Component<any, any> {
   constructor(props) {
     const columns = LOGIN_LOG_COLUMNS.filter(
       v =>

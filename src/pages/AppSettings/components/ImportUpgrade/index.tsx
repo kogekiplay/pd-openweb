@@ -25,7 +25,7 @@ const LogsWrap = styled.div`
   }
 `;
 
-export default class AppImportUpgrade extends Component {
+export default class AppImportUpgrade extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

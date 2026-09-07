@@ -185,7 +185,7 @@ const ArrowDown = styled.span`
   }
 `;
 
-class AppWorkflowList extends Component {
+class AppWorkflowList extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

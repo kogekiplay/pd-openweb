@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-export default class DragPreview extends Component {
+export default class DragPreview extends Component<any, any> {
   constructor(props) {
     super(props);
   }

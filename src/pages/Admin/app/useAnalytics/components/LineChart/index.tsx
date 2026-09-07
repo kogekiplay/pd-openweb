@@ -52,7 +52,7 @@ const getDualAxesData = (data = []) => {
   return data;
 };
 
-export default class LineChart extends React.Component {
+export default class LineChart extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.chart = null;

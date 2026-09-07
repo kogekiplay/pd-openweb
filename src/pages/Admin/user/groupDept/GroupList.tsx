@@ -25,7 +25,7 @@ const sortFieldTrans = {
   createTime: 0,
 };
 
-export default class GroupsList extends Component {
+export default class GroupsList extends Component<any, any> {
   constructor() {
     super();
     this.state = {

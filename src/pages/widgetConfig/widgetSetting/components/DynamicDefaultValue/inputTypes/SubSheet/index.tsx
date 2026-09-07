@@ -6,7 +6,7 @@ import { DynamicInput, OtherFieldList, SelectOtherField } from '../../components
 import { DynamicValueInputWrap } from '../../styled';
 import CustomDefaultValue from './CustomDefaultValue';
 
-export default class SubSheet extends Component {
+export default class SubSheet extends Component<any, any> {
   static propTypes = {
     onDynamicValueChange: func,
     dynamicValue: arrayOf(shape({ cid: string, rcid: string, staticValue: string })),

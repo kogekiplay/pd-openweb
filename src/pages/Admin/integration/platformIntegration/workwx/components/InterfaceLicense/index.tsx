@@ -79,7 +79,7 @@ const OrderDetail = styled.div`
   }
 `;
 
-export default class InterfaceLicense extends Component {
+export default class InterfaceLicense extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

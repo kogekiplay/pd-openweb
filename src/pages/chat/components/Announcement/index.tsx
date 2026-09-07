@@ -5,7 +5,7 @@ import GroupController from 'src/api/group';
 import * as utils from '../../utils';
 import './index.less';
 
-export default class Announcement extends Component {
+export default class Announcement extends Component<any, any> {
   constructor(props) {
     super(props);
     const { about } = this.props.session;

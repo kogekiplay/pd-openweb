@@ -26,7 +26,7 @@ const TabWrap = styled.div`
   }
 `;
 
-export default class UpgradeDetail extends Component {
+export default class UpgradeDetail extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

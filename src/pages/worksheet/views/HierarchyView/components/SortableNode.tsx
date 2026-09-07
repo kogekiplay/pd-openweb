@@ -15,7 +15,7 @@ import DraggableRecord from './DraggableRecord';
 
 const isMobile = browserIsMobile();
 
-export default class SortableRecordItem extends Component {
+export default class SortableRecordItem extends Component<any, any> {
   static propTypes = {
     index: number,
     parentId: string,

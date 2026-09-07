@@ -18,7 +18,7 @@ import PrintList from './components/PrintList';
 import { ACTION_LIST, ACTION_TO_METHOD, OPERATION_LIST } from './config';
 import { canDirectSubmitApproveAction } from './utils';
 
-export default class Header extends Component {
+export default class Header extends Component<any, any> {
   static propTypes = {
     projectId: string,
     data: shape({

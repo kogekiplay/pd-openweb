@@ -28,7 +28,7 @@ import {
   getMjmlPreviewTheme,
 } from './mjmlUtils';
 
-export default class Email extends Component {
+export default class Email extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -114,7 +114,7 @@ export const handleMessageFilePreview = function () {
     });
 };
 
-export default class MessageToolbar extends Component {
+export default class MessageToolbar extends Component<any, any> {
   constructor(props) {
     super(props);
   }

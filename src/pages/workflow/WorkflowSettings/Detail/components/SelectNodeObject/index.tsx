@@ -5,7 +5,7 @@ import { Dropdown } from 'ming-ui';
 import { APP_TYPE } from '../../../enum';
 import { getIcons } from '../../../utils';
 
-export default class SelectNodeObject extends Component {
+export default class SelectNodeObject extends Component<any, any> {
   /**
    * dropdown title
    */

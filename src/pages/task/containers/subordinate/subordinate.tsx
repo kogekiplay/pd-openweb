@@ -3,7 +3,7 @@ import { navigateTo } from 'src/router/navigateTo';
 import TaskGantt from '../taskGantt/containers/taskGantt/taskGantt';
 import './subordinate.less';
 
-export default class Subordinate extends Component {
+export default class Subordinate extends Component<any, any> {
   /**
    * 加入企业网络
    */

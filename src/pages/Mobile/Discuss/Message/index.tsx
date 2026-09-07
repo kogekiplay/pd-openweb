@@ -5,7 +5,7 @@ import createLinksForMessage from 'src/utils/createLinksForMessage';
 
 const newWhiteList = Object.assign({}, whiteList, { img: ['src', 'alt', 'title', 'width', 'height', 'class'] });
 
-export default class extends Component {
+export default class extends Component<any, any> {
   constructor(props) {
     super(props);
     this.textRef = React.createRef();

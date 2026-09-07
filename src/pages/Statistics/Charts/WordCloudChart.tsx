@@ -9,7 +9,7 @@ import { formatChartData } from './BarChart';
 import { formatrChartValue, formatYaxisList, getChartColors } from './common';
 import loadG2Plot from './loadG2Plot';
 
-export default class extends Component {
+export default class extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

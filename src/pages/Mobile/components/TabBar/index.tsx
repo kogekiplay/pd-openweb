@@ -6,7 +6,7 @@ import 'mobile/MyHome/index.less';
 import { pathCompletion } from 'src/utils/common';
 import './index.less';
 
-let TabBar = class TabBar extends Component {
+let TabBar = class TabBar extends Component<any, any> {
   constructor(props) {
     super(props);
   }

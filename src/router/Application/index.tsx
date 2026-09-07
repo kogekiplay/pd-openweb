@@ -14,7 +14,7 @@ import { getIds } from '../../pages/PageHeader/util';
 import genRouteComponent from '../genRouteComponent';
 import { PORTAL_ROUTE_CONFIG, ROUTE_CONFIG } from './config';
 
-let Application = class Application extends Component {
+let Application = class Application extends Component<any, any> {
   constructor(props) {
     super(props);
     this.genRouteComponent = genRouteComponent();

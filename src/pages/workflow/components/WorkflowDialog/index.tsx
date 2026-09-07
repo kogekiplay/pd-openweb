@@ -3,7 +3,7 @@ import { bool, func, string } from 'prop-types';
 import { FullScreenCurtain } from 'ming-ui';
 import WorkflowSettings from '../../WorkflowSettings';
 
-export default class WorkflowDialog extends Component {
+export default class WorkflowDialog extends Component<any, any> {
   static propTypes = {
     needChat: bool,
     flowId: string,

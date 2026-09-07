@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Icon from 'ming-ui/components/Icon';
 import TimePicker from 'ming-ui/components/TimePicker/TimePicker';
 
-class CalendarFooter extends Component {
+class CalendarFooter extends Component<any, any> {
   /**
    * 后退到指定 view
    */

@@ -3,7 +3,7 @@ import { Dialog } from 'ming-ui';
 import UploadFile from './UploadFile';
 import './index.less';
 
-export default class DialogUpload extends Component {
+export default class DialogUpload extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {};

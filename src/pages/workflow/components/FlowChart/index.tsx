@@ -71,7 +71,7 @@ const Legend = styled.div`
   }
 `;
 
-export class FlowChart extends Component {
+export class FlowChart extends Component<any, any> {
   static propTypes = {
     appId: string.isRequired,
     processId: string.isRequired,

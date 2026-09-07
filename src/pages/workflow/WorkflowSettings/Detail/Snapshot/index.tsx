@@ -29,7 +29,7 @@ export const isValidSnapshotUrl = value => {
   return !EMBEDDED_SCRIPT_REGEXP.test(`${url}\n${decodedUrl}`);
 };
 
-export default class Snapshot extends Component {
+export default class Snapshot extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

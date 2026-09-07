@@ -5,7 +5,7 @@ import Feed from './components/app/feed';
 import postEnum from './constants/postEnum';
 import { changeListType, changeTitle } from './redux/postActions';
 
-let CalendarEntrypoint = class CalendarEntrypoint extends Component {
+let CalendarEntrypoint = class CalendarEntrypoint extends Component<any, any> {
   componentDidMount() {
     $('html').addClass('AppFeed');
     this.handleUpdate();

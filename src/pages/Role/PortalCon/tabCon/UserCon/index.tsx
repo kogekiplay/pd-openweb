@@ -85,7 +85,7 @@ const getTranslatedRoleName = (appId, role = {}) => getTranslatedRoleInfo(appId,
 const getTranslatedRoleDescription = (appId, role = {}) =>
   getTranslatedRoleInfo(appId, role).description || role.description;
 
-class Con extends React.Component {
+class Con extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

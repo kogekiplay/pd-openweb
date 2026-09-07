@@ -4,7 +4,7 @@ import { Button, Dropdown, Icon, Input, RadioGroup } from 'ming-ui';
 import privateGuide from 'src/api/privateGuide';
 import { getRequest } from 'src/utils/common';
 
-export default class ApplyPrivateKey extends Component {
+export default class ApplyPrivateKey extends Component<any, any> {
   constructor(props) {
     super(props);
     const request = getRequest();

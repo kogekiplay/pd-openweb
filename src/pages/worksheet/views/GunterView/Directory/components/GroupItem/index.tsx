@@ -42,7 +42,7 @@ const GroupingItem = styled.div`
   }
 `;
 const LoadableNewRecord = lazy(() => import('worksheet/common/newRecord/NewRecord'));
-let GroupItem = class GroupItem extends Component {
+let GroupItem = class GroupItem extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

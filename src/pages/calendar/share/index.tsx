@@ -6,7 +6,7 @@ import preall from 'src/common/preall';
 import { addToken, htmlEncodeReg, pathCompletion } from 'src/utils/common';
 import './style.css';
 
-class CalendarShare extends Component {
+class CalendarShare extends Component<any, any> {
   constructor(props) {
     super(props);
 

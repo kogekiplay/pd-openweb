@@ -5,7 +5,7 @@ import CascaderDropdown from 'src/components/Form/DesktopForm/widgets/Cascader';
 import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
 import { DynamicValueInputWrap } from '../styled';
 
-export default class CascaderSheet extends Component {
+export default class CascaderSheet extends Component<any, any> {
   static propTypes = {
     onDynamicValueChange: func,
     dynamicValue: arrayOf(shape({ cid: string, rcid: string, staticValue: string })),

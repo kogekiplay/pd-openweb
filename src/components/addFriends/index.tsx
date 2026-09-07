@@ -16,7 +16,7 @@ import MobileOrEmailInvite from './MobileOrEmailInvite';
 import PublicLink from './PublicLink';
 import './index.less';
 
-class AddFriends extends Component {
+class AddFriends extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {
@@ -241,7 +241,7 @@ class AddFriends extends Component {
   }
 }
 
-class SelectProject extends Component {
+class SelectProject extends Component<any, any> {
   constructor(props) {
     super(props);
   }

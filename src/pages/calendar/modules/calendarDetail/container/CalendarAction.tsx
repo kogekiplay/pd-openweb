@@ -3,7 +3,7 @@ import cx from 'classnames';
 import PropTypes from 'prop-types';
 import Button from 'ming-ui/components/Button';
 
-export default class CalendarAction extends Component {
+export default class CalendarAction extends Component<any, any> {
   static propTypes = {
     type: PropTypes.string.isRequired,
     save: PropTypes.func.isRequired,

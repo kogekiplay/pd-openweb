@@ -10,7 +10,7 @@ import FilterItemTexts from 'src/pages/widgetConfig/widgetSetting/components/Fil
 import { formatValuesOfOriginConditions } from 'src/pages/worksheet/common/WorkSheetFilter/util';
 import store from 'src/redux/configureStore';
 
-export default class Filter extends Component {
+export default class Filter extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

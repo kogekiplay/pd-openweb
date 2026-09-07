@@ -105,7 +105,7 @@ const tabs = [
   { tab: 2, name: _l('使用情况') },
 ];
 
-export default class ByApp extends Component {
+export default class ByApp extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

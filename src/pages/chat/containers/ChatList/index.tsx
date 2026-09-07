@@ -12,7 +12,7 @@ import Toolbar from './Toolbar';
 import ToolbarDrawer from './Toolbar/Drawer';
 import './index.less';
 
-class Chat extends Component {
+class Chat extends Component<any, any> {
   constructor(props) {
     super(props);
   }

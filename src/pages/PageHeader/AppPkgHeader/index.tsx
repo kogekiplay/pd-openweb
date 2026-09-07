@@ -10,7 +10,7 @@ import { getIds } from '../util';
 import AppDetail from './AppDetail';
 import './index.less';
 
-let AppPkgHeader = class AppPkgHeader extends Component {
+let AppPkgHeader = class AppPkgHeader extends Component<any, any> {
   constructor(props) {
     super(props);
     this.isRequest = false;

@@ -7,7 +7,7 @@ import './Guidance.less';
 
 const maxGuide = 7;
 
-export default class Guidance extends Component {
+export default class Guidance extends Component<any, any> {
   constructor(props) {
     super(props);
     const guide = localStorage.getItem(`guide-${md.global.Account.accountId}`);

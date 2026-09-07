@@ -7,7 +7,7 @@ import '../less/DatePicker.less';
 import '../less/dateRangePicker.less';
 import '../less/Rangepicker.less';
 
-class RangePicker extends Component {
+class RangePicker extends Component<any, any> {
   static propTypes = {
     /**
      * 占位符

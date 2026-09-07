@@ -112,7 +112,7 @@ const renderSortableItem = ({ item, DragHandle }) => {
   );
 };
 
-export default class Sort extends Component {
+export default class Sort extends Component<any, any> {
   constructor(props) {
     super(props);
     const { rightY } = props.currentReport;

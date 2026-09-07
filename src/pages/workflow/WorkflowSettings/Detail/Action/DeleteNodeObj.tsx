@@ -6,7 +6,7 @@ import { SelectNodeObject } from '../components';
 /**
  * 删除记录
  */
-export default class DeleteNodeObj extends Component {
+export default class DeleteNodeObj extends Component<any, any> {
   onChange = selectNodeId => {
     const { data, SelectNodeObjectChange } = this.props;
     const selectNodeObj = _.find(data.flowNodeList, item => item.nodeId === selectNodeId);

@@ -84,7 +84,7 @@ export const copyWorksheetShareUrl = ({ shareLink, isPublic, isCharge, appId, wo
   }
 };
 
-export default class RecordFooter extends Component {
+export default class RecordFooter extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -1,7 +1,7 @@
 ﻿import React from 'react';
 import './attachmentsLoading.css';
 
-class AttachmentsLoading extends React.Component {
+class AttachmentsLoading extends React.Component<any, any> {
   render() {
     return (
       <div className="attachmentsLoading">

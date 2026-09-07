@@ -4,7 +4,7 @@ import { pathCompletion } from 'src/utils/common';
 import { ACTION_ID } from '../../enum';
 import { CreateNode, NodeOperate, WhiteNode } from '../components';
 
-export default class PBC extends Component {
+export default class PBC extends Component<any, any> {
   constructor(props) {
     super(props);
   }

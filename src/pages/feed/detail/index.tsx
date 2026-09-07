@@ -7,7 +7,7 @@ import PostDetails from '../components/post/postDetails/postDetails';
 import { changePostDetailId, clearPostDetail } from './redux/postDetailActions';
 import './feeddetail.css';
 
-let FeedDetailEntrypoint = class FeedDetailEntrypoint extends Component {
+let FeedDetailEntrypoint = class FeedDetailEntrypoint extends Component<any, any> {
   componentDidMount() {
     $('html').addClass('AppFeed AppFeedDetail');
     this.handleQueryChange(this.props);

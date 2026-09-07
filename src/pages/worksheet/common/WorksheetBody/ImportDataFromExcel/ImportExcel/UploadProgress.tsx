@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Icon } from 'ming-ui';
 import { UPLOAD_STATUS } from 'src/pages/kc/constant/enum';
 
-export default class UploadProgress extends React.Component {
+export default class UploadProgress extends React.Component<any, any> {
   static propTypes = {
     status: PropTypes.number,
     percentage: PropTypes.number, // 百分比，1 === 100%

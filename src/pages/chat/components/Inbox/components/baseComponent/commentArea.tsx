@@ -158,7 +158,7 @@ const getComponentProps = function (props) {
   return $.extend(true, commonProps, map[sourceType]);
 };
 
-class CommentItem extends React.Component {
+class CommentItem extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {
@@ -367,7 +367,7 @@ class CommentItem extends React.Component {
   }
 }
 
-export default class CommentArea extends React.Component {
+export default class CommentArea extends React.Component<any, any> {
   static propTypes = {
     commentsProps: PropTypes.shape({
       comments: PropTypes.array,

@@ -6,7 +6,7 @@ import { upgradeVersionDialog } from 'src/components/upgradeVersion';
 import * as actions from 'src/pages/chat/redux/actions';
 import { emitter, pathCompletion } from 'src/utils/common';
 
-let AppLib = class AppLib extends Component {
+let AppLib = class AppLib extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

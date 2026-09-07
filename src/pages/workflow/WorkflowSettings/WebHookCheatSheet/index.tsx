@@ -6,7 +6,7 @@ import ErrorState from 'src/components/errorPage/errorState';
 import { pathCompletion } from 'src/utils/common';
 import './index.less';
 
-export default class WebHookCheatSheet extends Component {
+export default class WebHookCheatSheet extends Component<any, any> {
   constructor(props) {
     super(props);
     const { selectNodeId, processId } = props.match.params;

@@ -34,7 +34,7 @@ const Wrap = styled.div`
   }
 `;
 
-class ModalWrap extends Component {
+class ModalWrap extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

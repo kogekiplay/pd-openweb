@@ -7,7 +7,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { numberLevel, reportTypes, roundTypes } from 'statistics/Charts/common';
 import { formatNumberFromInput } from 'src/utils/control';
 
-class Unit extends Component {
+class Unit extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {};

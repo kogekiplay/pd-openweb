@@ -38,7 +38,7 @@ const handleDialogCallback = (dispatch, payload) => {
   }
 };
 
-let DiaActionTree = class DiaActionTree extends React.Component {
+let DiaActionTree = class DiaActionTree extends React.Component<any, any> {
   constructor(props) {
     super(props);
   }

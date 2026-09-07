@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 export default function wrapDisableClick(Comp) {
-  return class extends Component {
+  return class extends Component<any, any> {
     static propTypes = {
       disabled: PropTypes.bool,
       onClick: PropTypes.func,

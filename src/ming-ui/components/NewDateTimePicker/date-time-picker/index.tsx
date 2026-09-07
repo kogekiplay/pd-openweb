@@ -7,7 +7,7 @@ import Time from 'ming-ui/components/NewTimePicker';
 import LibCalender from '../lib/calender';
 import './style.less';
 
-class DateTimePicker extends Component {
+class DateTimePicker extends Component<any, any> {
   constructor(props) {
     super(props);
 

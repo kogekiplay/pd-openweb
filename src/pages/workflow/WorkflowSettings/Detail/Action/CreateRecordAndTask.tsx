@@ -16,7 +16,7 @@ const getAppList = data =>
       value: id,
     }));
 
-export default class CreateRecordAndTask extends Component {
+export default class CreateRecordAndTask extends Component<any, any> {
   constructor(props) {
     super(props);
 

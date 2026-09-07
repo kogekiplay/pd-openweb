@@ -14,7 +14,7 @@ const groupTitleList = {
   projectGroups: _l('组织'),
 };
 
-class AppGroupList extends Component {
+class AppGroupList extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {};

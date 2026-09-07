@@ -20,7 +20,7 @@ const Wrap = styled.div`
 `;
 
 //  应用收藏
-export default class RecordCollect extends Component {
+export default class RecordCollect extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -7,7 +7,7 @@ import { DYNAMIC_FROM_MODE } from 'src/pages/widgetConfig/widgetSetting/componen
 import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
 import { DynamicValueInputWrap, WrapMaxOrMin } from '../styled';
 
-export default class TimeInput extends Component {
+export default class TimeInput extends Component<any, any> {
   static propTypes = {
     onDynamicValueChange: func,
     data: shape({ enumDefault: number }),

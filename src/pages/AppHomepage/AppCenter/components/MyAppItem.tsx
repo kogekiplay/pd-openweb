@@ -21,7 +21,7 @@ import 'rc-trigger/assets/index.css';
 const LoadableExternalLinkDialog = lazy(() => import('./ExternalLinkDialog'));
 const LoadableManageUserDialog = lazy(() => import('src/pages/Role/AppRoleCon/ManageUserDialog.jsx'));
 
-let MyAppItem = class MyAppItem extends Component {
+let MyAppItem = class MyAppItem extends Component<any, any> {
   static propTypes = {
     id: string,
     projectId: string,

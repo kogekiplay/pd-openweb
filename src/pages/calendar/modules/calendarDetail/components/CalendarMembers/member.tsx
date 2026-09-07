@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { UserCard } from 'ming-ui';
 import { MEMBER_STATUS } from '../../constant';
 
-export default class Member extends Component {
+export default class Member extends Component<any, any> {
   render() {
     const {
       member: { head, memberName, status, face, nickName, accountID, thirdID },

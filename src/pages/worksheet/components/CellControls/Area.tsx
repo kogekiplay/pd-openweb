@@ -15,7 +15,7 @@ const InputWrap = styled(Input)`
   height: 100% !important;
 `;
 
-export default class Date extends React.Component {
+export default class Date extends React.Component<any, any> {
   static propTypes = {
     className: PropTypes.string,
     style: PropTypes.shape({}),

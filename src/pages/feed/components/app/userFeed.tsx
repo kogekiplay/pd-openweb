@@ -9,7 +9,7 @@ import './feed.css';
 import './style.css';
 import './userFeed.css';
 
-class UserFeed extends React.Component {
+class UserFeed extends React.Component<any, any> {
   static propTypes = {
     accountId: PropTypes.string,
     title: PropTypes.string,

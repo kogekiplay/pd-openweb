@@ -12,7 +12,7 @@ import { addGroupMembers } from '../../utils/group';
 import Message from '../Message';
 import './index.less';
 
-class MessageView extends Component {
+class MessageView extends Component<any, any> {
   constructor(props) {
     super(props);
     this.lastScrollHeight = 0;

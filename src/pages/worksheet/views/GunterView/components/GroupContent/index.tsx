@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { UserHead } from 'ming-ui';
 import { isSameType } from 'worksheet/common/ViewConfig/util';
 
-let GroupContent = class GroupContent extends Component {
+let GroupContent = class GroupContent extends Component<any, any> {
   constructor(props) {
     super(props);
   }

@@ -31,7 +31,7 @@ const Header = styled.div`
   }
 `;
 
-export default class PBC extends Component {
+export default class PBC extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import DateTBody from './DateTBody';
 import DateTHead from './DateTHead';
 
-export default class DateTable extends Component {
+export default class DateTable extends Component<any, any> {
   render() {
     const props = this.props;
     const prefixCls = props.prefixCls;

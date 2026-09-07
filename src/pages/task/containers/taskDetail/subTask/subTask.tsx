@@ -28,7 +28,7 @@ const statusTip = [
 ];
 
 // 单条子任务
-class SingleItem extends Component {
+class SingleItem extends Component<any, any> {
   shouldComponentUpdate(nextProps) {
     if (_.isEqual(nextProps, this.props)) {
       return false;
@@ -148,7 +148,7 @@ class SingleItem extends Component {
   }
 }
 
-class Subtask extends Component {
+class Subtask extends Component<any, any> {
   constructor(props) {
     super(props);
 

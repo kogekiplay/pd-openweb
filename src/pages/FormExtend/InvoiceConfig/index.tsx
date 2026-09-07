@@ -11,7 +11,7 @@ import MapField from '../common/MapField';
 import CustomRemark from './CustomRemark';
 import '../common/payAndInvoice.less';
 
-export default class InvoiceConfig extends Component {
+export default class InvoiceConfig extends Component<any, any> {
   constructor(props) {
     super(props);
 

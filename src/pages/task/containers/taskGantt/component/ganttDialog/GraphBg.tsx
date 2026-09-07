@@ -4,7 +4,7 @@ import moment from 'moment';
 import config from './config';
 
 const { TYPE_TO_WIDTH } = config;
-export default class GraphBg extends Component {
+export default class GraphBg extends Component<any, any> {
   shouldComponentUpdate(nextProp) {
     return !_.isEqual(nextProp.time, this.props.time);
   }

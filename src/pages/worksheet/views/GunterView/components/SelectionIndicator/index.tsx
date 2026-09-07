@@ -18,7 +18,7 @@ const SelectionIndicatorWrapper = styled.div(
 );
 const headerHeight = 60;
 const rowHeight = 32;
-let SelectionIndicator = class SelectionIndicator extends React.Component {
+let SelectionIndicator = class SelectionIndicator extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

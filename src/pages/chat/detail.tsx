@@ -6,7 +6,7 @@ import qs from 'query-string';
 import ConnectChatWindow from 'src/pages/chat/containers/ChatWindow';
 import store from 'src/redux/configureStore';
 
-export default class ChatWindowEntrypoint extends Component {
+export default class ChatWindowEntrypoint extends Component<any, any> {
   constructor(props) {
     super(props);
   }

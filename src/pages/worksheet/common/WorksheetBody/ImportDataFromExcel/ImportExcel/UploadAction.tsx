@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Icon } from 'ming-ui';
 import { UPLOAD_STATUS } from 'src/pages/kc/constant/enum';
 
-export default class UploadAction extends React.Component {
+export default class UploadAction extends React.Component<any, any> {
   static propTypes = {
     status: PropTypes.number,
     cancelUpload: PropTypes.func,

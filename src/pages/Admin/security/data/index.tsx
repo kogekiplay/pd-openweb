@@ -24,7 +24,7 @@ const PersonalApiAccessPolicyWrap = styled.div`
   min-height: 190px;
 `;
 
-export default class DataCom extends Component {
+export default class DataCom extends Component<any, any> {
   constructor(props) {
     super(props);
     const { type } = props.match.params || {};
