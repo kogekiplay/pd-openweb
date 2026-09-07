@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import cx from 'classnames';
-import Immutable from 'immutable';
+import * as Immutable from 'immutable';
 import _ from 'lodash';
 import moment from 'moment';
 import PropTypes from 'prop-types';

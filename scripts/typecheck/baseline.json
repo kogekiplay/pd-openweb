@@ -3,16 +3,16 @@
   "key": "code",
   "tsVersion": "5.9.3",
   "tsconfig": "tsconfig.gate.json",
-  "generatedAt": "2026-09-07T05:59:11.299Z",
-  "rawCount": 24393,
+  "generatedAt": "2026-09-07T06:10:31.213Z",
+  "rawCount": 24391,
   "droppedNoise": {
     "library": 1284,
     "probe": 0,
     "commentTS1xxx": 0,
     "commentOther": 0
   },
-  "keptCount": 23109,
-  "uniqueKeys": 5164,
+  "keptCount": 23107,
+  "uniqueKeys": 5163,
   "entries": {
     "src/api/account.ts|TS2339": 4,
     "src/api/agent.ts|TS2339": 29,
@@ -3083,7 +3083,6 @@
     "src/pages/kc/common/KcMain/KcMain.tsx|TS2339": 17,
     "src/pages/kc/common/KcMain/KcMain.tsx|TS2554": 1,
     "src/pages/kc/common/NodeShare/NodeShare.tsx|TS2339": 6,
-    "src/pages/kc/common/UploadAssistant/UploadAssistant.tsx|TS2322": 2,
     "src/pages/kc/common/UploadAssistant/UploadAssistant.tsx|TS2339": 46,
     "src/pages/kc/common/UploadAssistant/UploadAssistant.tsx|TS2345": 2,
     "src/pages/kc/common/UploadAssistant/UploadAssistant.tsx|TS2794": 2,

@@ -1,6 +1,6 @@
 import React from 'react';
 import cx from 'classnames';
-import Immutable from 'immutable';
+import * as Immutable from 'immutable';
 import _ from 'lodash';
 import { Button, Dialog, Support } from 'ming-ui';
 import createUploader from 'src/library/plupload/createUploader';
@@ -271,6 +271,7 @@ export default class ImportExcel extends React.Component<any, any> {
                         </div>
                       </li>
                     ))
+                    .valueSeq()
                     .toArray()}
                 </ul>
               </div>

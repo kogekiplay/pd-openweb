@@ -1,6 +1,6 @@
 ﻿import React from 'react';
 import cx from 'classnames';
-import Immutable from 'immutable';
+import * as Immutable from 'immutable';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import qs from 'query-string';
@@ -97,7 +97,7 @@ class UploadAction extends React.Component<any, any> {
 
     return (
       show && (
-        <div className="fileListActionBtn Hand" title={title} icon={icon} onClick={action}>
+        <div className="fileListActionBtn Hand" title={title} onClick={action}>
           {icon}
         </div>
       )
@@ -540,7 +540,7 @@ class UploadAssistant extends React.Component<any, any> {
             <ul>
               {this.state.fileList
                 .map((file, id) => (
-                  <li key={id} className="fileListItem">
+                  <li key={String(id)} className="fileListItem">
                     <div className="fileListName" title={file.name}>
                       <span className={cx('type', getClassNameByExt(file.ext))} />
                       {file.name}
@@ -565,7 +565,8 @@ class UploadAssistant extends React.Component<any, any> {
                     </div>
                   </li>
                 ))
-                .toArray()}
+                .valueSeq()
+                  .toArray()}
             </ul>
           </div>
         )}
