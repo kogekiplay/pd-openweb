@@ -88,43 +88,63 @@ class ContractCom extends Component<any, any> {
         height: height,
         canvas: canvas,
         useCORS: true,
-      }).then(canvasData => {
-        import('jspdf').then(jsPDF => {
-          let pageData = canvasData.toDataURL('image/jpeg', 1.0);
-          let pdf = new jsPDF.default('', 'pt', 'a4');
-          let contentWidth = canvasData.width;
-          let contentHeight = canvasData.height;
-          //一页pdf显示html页面生成的canvas高度;
-          let pageHeight = (contentWidth / w) * h;
-          //未生成pdf的html页面高度
-          let leftHeight = contentHeight;
-          //页面偏移
-          let position = 0;
-          //a4纸的尺寸[595.28,841.89]，html页面生成的canvas在pdf中图片的宽高
-          let imgWidth = w;
-          let imgHeight = (w / contentWidth) * contentHeight;
+      })
+        .then(canvasData => {
+          // 必须 return，否则内层 promise 的 reject 不会传到下面的 catch。
+          return import('jspdf').then(jsPDF => {
+            let pageData = canvasData.toDataURL('image/jpeg', 1.0);
+            let pdf = new jsPDF.default('p', 'pt', 'a4');
+            let contentWidth = canvasData.width;
+            let contentHeight = canvasData.height;
 
-          //有两个高度需要区分，一个是html页面的实际高度，和生成pdf的页面高度(h)
-          //当内容未超过pdf一页显示的范围，无需分页
-          if (leftHeight < pageHeight) {
-            pdf.addImage(pageData, 'JPEG', 0, 0, imgWidth, imgHeight);
-          } else {
-            while (leftHeight > 0) {
-              pdf.addImage(pageData, 'JPEG', 0, position, imgWidth, imgHeight);
-              leftHeight -= pageHeight;
-              position -= h;
-              //避免添加空白页
-              if (leftHeight > 0) {
-                pdf.addPage();
+            // contentWidth 为 0 时 pageHeight 也是 0，下面的 while 会因为 leftHeight -= 0
+            // 永远不减而死循环；两者都为 0 时 imgHeight 是 NaN，jspdf 4 会抛
+            // 「Invalid argument passed to jsPDF.scale」（1.x 是静默产出坏 PDF）。
+            if (!contentWidth || !contentHeight) {
+              $('.printMt200,.printMt').css({ marginTop: 0 });
+              alert(_l('生成失败'), 3);
+              return;
+            }
+
+            //一页pdf显示html页面生成的canvas高度;
+            let pageHeight = (contentWidth / w) * h;
+            //未生成pdf的html页面高度
+            let leftHeight = contentHeight;
+            //页面偏移
+            let position = 0;
+            //a4纸的尺寸[595.28,841.89]，html页面生成的canvas在pdf中图片的宽高
+            let imgWidth = w;
+            let imgHeight = (w / contentWidth) * contentHeight;
+
+            //有两个高度需要区分，一个是html页面的实际高度，和生成pdf的页面高度(h)
+            //当内容未超过pdf一页显示的范围，无需分页
+            if (leftHeight < pageHeight) {
+              pdf.addImage(pageData, 'JPEG', 0, 0, imgWidth, imgHeight);
+            } else {
+              while (leftHeight > 0) {
+                pdf.addImage(pageData, 'JPEG', 0, position, imgWidth, imgHeight);
+                leftHeight -= pageHeight;
+                position -= h;
+                //避免添加空白页
+                if (leftHeight > 0) {
+                  pdf.addPage();
+                }
               }
             }
-          }
 
-          pdf.save('salesOrder.pdf');
+            pdf.save('salesOrder.pdf');
 
+            $('.printMt200,.printMt').css({ marginTop: 0 });
+          });
+        })
+        // 下面那个 try/catch 是同步的，覆盖不到这条异步链：一旦 html2canvas 或
+        // jspdf 在回调里抛错，既不会弹提示，也不会执行上面的 marginTop 复位，
+        // 用户看到的是「无任何反应 + 页面排版被撑开」。
+        .catch(error => {
+          console.error(error);
           $('.printMt200,.printMt').css({ marginTop: 0 });
+          alert(_l('生成失败'), 3);
         });
-      });
     } catch (error) {
       console.log(error);
       $('.printMt200,.printMt').css({ marginTop: 0 });
