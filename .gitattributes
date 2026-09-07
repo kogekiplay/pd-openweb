@@ -1,1 +1,23 @@
 * text=auto eol=lf
+
+# ── GitHub Linguist ─────────────────────────────────────────────────────────
+# 语言统计应当反映第一方代码。全仓 37.2 MB 的 .js 里只有约 0.8 MB 是本仓库自己写的，
+# 其余全是第三方发行包与生成物。不做标注时 GitHub 显示 JS 54% / TS 42%；
+# 标注后是 JS 2.5% / TS 90.3%，后者才是这个仓库的真实构成
+# （src 下 .jsx 已为 0，.ts 1,153 个 + .tsx 3,188 个）。
+#
+# linguist-vendored 与 linguist-generated 都会把文件排除出语言统计；
+# 后者还会在 PR diff 里默认折叠——对每个语言约 2 万行的生成翻译包正是想要的效果，
+# 合并上游时不必再滚过十几万行机器生成的内容（需要时仍可展开）。
+
+# 第三方发行包
+staticfiles/vditordist/**   linguist-vendored
+staticfiles/pdf/**          linguist-vendored
+staticfiles/tailwindcss.js  linguist-vendored
+src/library/**              linguist-vendored
+
+# scripts/lang.js 生成的翻译包
+locale/*/mdTranslation.js   linguist-generated
+locale/*/mdTranslation.po   linguist-generated
+
+# 注意：staticfiles/staticLanguages.js 是第一方代码（html 直接引用），刻意不排除。
