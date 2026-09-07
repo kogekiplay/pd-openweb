@@ -185,13 +185,32 @@ function main() {
   // 把一个含 JSX 的 .js 改名成 .ts 后，全仓诊断从 21373 塌到 96。
   // 后果：此时 --write-baseline 会把基线写成 ~96 条，门禁从此永久失明。
   // 所以基线写入和比较都必须先过语法门禁，并且这里再加一道数量护栏。
+  //
+  // 但护栏需要一个显式出口：机械 codemod 会带来【合法的】大幅降错。
+  // 实例：给 1188 处 React class 组件补 <any, any> 泛型，kept 从 48650 降到 23111（−52%），
+  // 直接撞上 50% 阈值。没有出口的话，任何一次大幅改善都永远写不进基线。
+  // --allow-shrink 是那个出口：必须显式传、会打印醒目警告、且不绕过语法门禁
+  //（写基线路径始终先跑 assertSyntaxClean）。
+  // 用它之前必须自己确认两件事：(1) 语法诊断为 0 (2) 故意写错的探针能被报出来。
+  // 只有这两条都成立，才能区分「codemod 生效」和「program 塌掉」——两者都表现为数字大跌。
   const COLLAPSE_RATIO = 0.5;
+  const ALLOW_SHRINK = has('--allow-shrink');
   function assertNotCollapsed(expectKept) {
     if (expectKept && kept.length < expectKept * COLLAPSE_RATIO) {
+      if (ALLOW_SHRINK) {
+        console.warn(
+          `\n⚠ 崩塌护栏已被 --allow-shrink 显式跳过` +
+            `\n  剔噪后 ${kept.length} 条，低于预期 ${expectKept} 的 ${COLLAPSE_RATIO * 100}%（降幅 ${(100 - (kept.length / expectKept) * 100).toFixed(1)}%）。` +
+            `\n  仅在【已确认语法诊断为 0 且语义探针能被报出】时使用。` +
+            `\n  若实际是 program 塌掉，这一步会把失明状态固化进基线。\n`,
+        );
+        return;
+      }
       console.error(
         `\n拒绝执行：剔噪后诊断数 ${kept.length} 不足预期 ${expectKept} 的 ${COLLAPSE_RATIO * 100}%。` +
           `\n这几乎一定是某个文件有语法错误导致 tsc 跳过了整个 program 的语义诊断。` +
-          `\n先跑 node scripts/typecheck/tsc-syntax-gate.js 定位。`,
+          `\n先跑 node scripts/typecheck/tsc-syntax-gate.js 定位。` +
+          `\n若确认是机械 codemod 带来的合法下降，用 --allow-shrink 显式放行。`,
       );
       process.exit(2);
     }
