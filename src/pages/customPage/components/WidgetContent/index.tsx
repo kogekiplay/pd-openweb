@@ -1,13 +1,14 @@
 import React, { Fragment, useLayoutEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import GridLayout from 'react-grid-layout/legacy';
 import 'react-grid-layout/css/styles.css';
+import GridLayout from 'react-grid-layout/legacy';
 import cx from 'classnames';
 import { get, max, throttle } from 'lodash';
 import _ from 'lodash';
 import styled from 'styled-components';
 import ErrorBoundary from 'ming-ui/components/ErrorBoundary';
+import 'src/pages/customPage/reactGridLayoutOverrides.css';
 import { APP_ROLE_TYPE } from 'src/pages/worksheet/constants/enum';
 import { COLUMN_HEIGHT } from '../../config';
 import * as actions from '../../redux/action';

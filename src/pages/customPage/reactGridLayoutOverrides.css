@@ -1,0 +1,24 @@
+/**
+ * react-grid-layout 0.17.1 → 2.2.4 的样式回归修正。
+ *
+ * v2 的 css/styles.css 新增了这条（0.17.1 里完全没有 img 相关规则）：
+ *
+ *     .react-grid-item img { pointer-events: none; user-select: none; }
+ *
+ * 上游的用意是防止图片的原生拖拽抢走网格项的拖拽手势。但它是**后代选择器**，会命中
+ * 网格项内的任意 <img>，于是所有把 onClick 直接挂在 <img> 上的组件都会静默失灵
+ * （点击穿透到父元素）。已知受影响的至少有自定义页的轮播组件
+ * （editWidget/carousel/Carousel.tsx，config.fill === 3 分支），而富文本组件里
+ * 用户自己插入的图片无法穷举。
+ *
+ * 生产环境跑 0.17.1 多年都没有这条规则，也就是说「图片可点、可原生拖拽」才是长期
+ * 既有行为。这里把它恢复成升级前的语义，而不是去逐个改调用点——后者既容易漏，
+ * 也挡不住将来新写的代码再踩一次。
+ *
+ * 选择器故意重复一次类名把优先级抬到 (0,2,1)，压过上游的 (0,1,1)，
+ * 这样就不依赖两个样式表在产物里的先后顺序。
+ */
+.react-grid-item.react-grid-item img {
+  pointer-events: auto;
+  user-select: auto;
+}
