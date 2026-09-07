@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useDrop } from 'react-dnd-latest';
+import { useDrop } from 'react-dnd';
 import _ from 'lodash';
 import NewRecord from 'worksheet/common/newRecord/NewRecord';
 import { AddRecord } from '../components';

@@ -143,7 +143,7 @@ const ganttSource = {
     $('body').removeClass('ganttDraging');
   },
 };
-let TimeBars = class TimeBars extends Component<any, any> {
+let TimeBars: any = class TimeBars extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {
@@ -830,7 +830,7 @@ let TimeBars = class TimeBars extends Component<any, any> {
     );
   }
 };
-TimeBars = DragSource(config.DRAG_GANTT, ganttSource, (connect, monitor) => ({
+TimeBars = DragSource(config.DRAG_GANTT, ganttSource as any, (connect, monitor) => ({
   connectDragSource: connect.dragSource(),
   isDragging: monitor.isDragging(),
 }))(TimeBars);

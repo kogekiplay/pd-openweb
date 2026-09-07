@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useDrag, useDrop } from 'react-dnd-latest';
+import { useDrag, useDrop } from 'react-dnd';
 import cx from 'classnames';
 import update from 'immutability-helper';
 import _, { find, flatten, get, head, includes, last, pick, some } from 'lodash';

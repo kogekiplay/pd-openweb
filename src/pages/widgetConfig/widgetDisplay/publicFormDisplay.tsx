@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { HTML5Backend } from 'react-dnd-html5-backend-latest';
-import { DndProvider } from 'react-dnd-latest';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider } from 'react-dnd';
 import { flatten } from 'lodash';
 import { genControlsByWidgets, genWidgetsByControls } from '../util';
 import DisplayRow from './displayRow';

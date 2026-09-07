@@ -1,8 +1,8 @@
 import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { HTML5Backend } from 'react-dnd-html5-backend-latest';
-import { DndProvider } from 'react-dnd-latest';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider } from 'react-dnd';
 import _ from 'lodash';
 import styled, { keyframes } from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';

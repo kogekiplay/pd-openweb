@@ -21,7 +21,7 @@ const ganttTarget = {
     }
   },
 };
-let TaskTimeBar = class TaskTimeBar extends Component<any, any> {
+let TaskTimeBar: any = class TaskTimeBar extends Component<any, any> {
   render() {
     const { item, connectDropTarget } = this.props;
     return connectDropTarget(

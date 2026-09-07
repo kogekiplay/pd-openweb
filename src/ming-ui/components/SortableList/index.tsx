@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { getEmptyImage, HTML5Backend } from 'react-dnd-html5-backend-latest';
-import { DndProvider, useDrag, useDrop } from 'react-dnd-latest';
+import { getEmptyImage, HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import _ from 'lodash';
 import { array, bool, func, string } from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';

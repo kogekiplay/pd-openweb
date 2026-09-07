@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { useDragLayer } from 'react-dnd-latest';
+import { useDragLayer } from 'react-dnd';
 import _ from 'lodash';
 import { Icon } from 'ming-ui';
 import { ITEM_TYPE, ITEM_TYPE_GROUP } from './constants';

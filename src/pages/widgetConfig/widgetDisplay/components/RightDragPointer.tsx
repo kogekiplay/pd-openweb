@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { useDrop } from 'react-dnd-latest';
+import { useDrop } from 'react-dnd';
 import cx from 'classnames';
 import styled from 'styled-components';
 import { DRAG_ACCEPT, DRAG_MODE } from '../../config/Drag';

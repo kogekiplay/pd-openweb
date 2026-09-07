@@ -1,8 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { HTML5Backend } from 'react-dnd-html5-backend-latest';
-import { DndProvider } from 'react-dnd-latest';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider } from 'react-dnd';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';

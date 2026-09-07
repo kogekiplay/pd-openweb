@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { useDragLayer } from 'react-dnd-latest';
+import { useDragLayer } from 'react-dnd';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';

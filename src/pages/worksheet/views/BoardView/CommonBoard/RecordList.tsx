@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { useDrop } from 'react-dnd-latest';
+import { useDrop } from 'react-dnd';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import { get } from 'lodash';

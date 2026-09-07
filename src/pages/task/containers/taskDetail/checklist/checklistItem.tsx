@@ -54,9 +54,21 @@ const cardSource = {
     props.checklistItemBeginDrag(props.data, props.index, props.topIndex);
     return {
       index: props.index,
+      topIndex: props.topIndex,
     };
   },
 
+  /**
+   * react-dnd 的 DragSourceSpec.isDragging 是【谓词】：(props, monitor) => boolean，
+   * 用于覆盖「这一项是否正在被拖拽」的判定。此前这里被当成 mousemove 钩子用
+   * （每帧移动预览 DOM + 重设自动滚动定时器）且不返回任何值，等于把判定覆盖成 undefined。
+   * 旧的 react-dnd@2 不带类型定义，所以这个误用一直没暴露；
+   * 而它之所以没造成可见故障，是因为 collect 收集出的 isDragging prop 在 render 里无人消费。
+   * 现保留副作用位置不变（挪到 DropTarget.hover 会让光标离开放置目标时预览冻住），
+   * 补上正确的返回值。
+   * checklistItem 的 index 在不同清单组间会碰撞，故 beginDrag 一并返回 topIndex、双条件比较。
+   * 注：文档禁止在本方法内调用 monitor.isDragging()，这里用 getItem() 比较身份。
+   */
   isDragging(props, monitor) {
     const preview = $('.taskDetailDragPreview:last')[0];
     const clientOffset = monitor.getClientOffset();
@@ -78,6 +90,10 @@ const cardSource = {
         }
       }, 200);
     }
+
+    const item = monitor.getItem();
+
+    return props.index === item?.index && props.topIndex === item?.topIndex;
   },
 
   endDrag(props) {
@@ -108,7 +124,7 @@ const cardTarget = {
     props.checklistItemHover(props.index, props.topIndex);
   },
 };
-let ChecklistItem = class ChecklistItem extends Component<any, any> {
+let ChecklistItem: any = class ChecklistItem extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

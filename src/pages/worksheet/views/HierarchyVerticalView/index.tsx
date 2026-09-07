@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { HTML5Backend } from 'react-dnd-html5-backend-latest';
-import { DndProvider, useDrop } from 'react-dnd-latest';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider, useDrop } from 'react-dnd';
 import { useSetState } from 'react-use';
 import domtoimage from 'dom-to-image';
 import { saveAs } from 'file-saver';

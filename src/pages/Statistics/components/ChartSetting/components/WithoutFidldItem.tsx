@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useDrop } from 'react-dnd-latest';
+import { useDrop } from 'react-dnd';
 import cx from 'classnames';
 import _ from 'lodash';
 import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget';

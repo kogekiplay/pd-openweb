@@ -1,5 +1,5 @@
 import React, { Fragment, useRef } from 'react';
-import { useDrop } from 'react-dnd-latest';
+import { useDrop } from 'react-dnd';
 import cx from 'classnames';
 import _, { get, pick } from 'lodash';
 import styled from 'styled-components';

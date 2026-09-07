@@ -1,5 +1,5 @@
 import React, { useCallback, useRef } from 'react';
-import { useDragLayer, useDrop } from 'react-dnd-latest';
+import { useDragLayer, useDrop } from 'react-dnd';
 import cx from 'classnames';
 import { ITEM_TYPE, ITEM_TYPE_GROUP } from './constants';
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { DragDropContext } from 'react-dnd';
+import { DndProvider } from 'react-dnd';
 import MouseBackEnd from '@mdfe/react-dnd-mouse-backend';
 import _ from 'lodash';
 import { Dialog } from 'ming-ui';
@@ -342,5 +342,19 @@ let ChecklistContainer = class ChecklistContainer extends Component<any, any> {
     );
   }
 };
-ChecklistContainer = DragDropContext(MouseBackEnd)(ChecklistContainer);
-export default connect(state => state.task)(ChecklistContainer);
+// react-dnd v11 把 DndProvider 声明为 React.FC<DndProviderProps>，而 @types/react 18
+// 起 React.FC 不再隐含 children，于是传 children 会报 TS2322。这是 v11 类型定义早于
+// React 18 改动导致的，不是用法错误。断言把 children 补回来。
+// （同一处错误在 ViewConfig/customBtn/actionSet/index.tsx 已存在并已记入门禁基线，
+//   那处按范围留给后续统一处理。）
+const DndRoot = DndProvider as React.FC<React.PropsWithChildren<{ backend: any; context?: any }>>;
+
+// react-dnd v9 起 DragDropContext(backend)(Comp) 被 <DndProvider> 取代。
+// 这里保持原来的 HOC 组合形状，只把 context 换成 provider 包裹，
+// 用的是本仓库已在生产验证过的写法（见 ViewConfig/customBtn/actionSet/index.tsx:256）。
+const ChecklistContainerWithDnd = props => (
+  <DndRoot context={window} backend={MouseBackEnd}>
+    <ChecklistContainer {...props} />
+  </DndRoot>
+);
+export default connect(state => state.task)(ChecklistContainerWithDnd);

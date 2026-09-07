@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { useDrop } from 'react-dnd-latest';
+import { useDrop } from 'react-dnd';
 import cx from 'classnames';
 import _, { head, isEmpty, some } from 'lodash';
 import styled from 'styled-components';

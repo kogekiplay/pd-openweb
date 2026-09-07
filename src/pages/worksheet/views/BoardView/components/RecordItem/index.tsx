@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { useDrag } from 'react-dnd-latest';
+import { useDrag } from 'react-dnd';
 import { useInView } from 'react-intersection-observer';
 import { useSetState } from 'react-use';
 import { Skeleton } from 'antd';

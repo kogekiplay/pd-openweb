@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { useDragLayer } from 'react-dnd-latest';
+import { useDragLayer } from 'react-dnd';
 import BaseCard from '../../components/BaseCard';
 import { ITEM_TYPE } from '../config';
 import { dealHierarchyData } from '../util';

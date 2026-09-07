@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef } from 'react';
-import { getEmptyImage } from 'react-dnd-html5-backend-latest';
-import { useDrag } from 'react-dnd-latest';
+import { getEmptyImage } from 'react-dnd-html5-backend';
+import { useDrag } from 'react-dnd';
 import { Dropdown, Menu } from 'antd';
 import cx from 'classnames';
 import { Dialog, Icon } from 'ming-ui';

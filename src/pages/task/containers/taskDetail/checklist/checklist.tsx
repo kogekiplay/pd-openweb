@@ -89,6 +89,16 @@ const checklistSource = {
     };
   },
 
+  /**
+   * react-dnd 的 DragSourceSpec.isDragging 是【谓词】：(props, monitor) => boolean，
+   * 用于覆盖「这一项是否正在被拖拽」的判定。此前这里被当成 mousemove 钩子用
+   * （每帧移动预览 DOM + 重设自动滚动定时器）且不返回任何值，等于把判定覆盖成 undefined。
+   * 旧的 react-dnd@2 不带类型定义，所以这个误用一直没暴露；
+   * 而它之所以没造成可见故障，是因为 collect 收集出的 isDragging prop 在 render 里无人消费。
+   * 现保留副作用位置不变（挪到 DropTarget.hover 会让光标离开放置目标时预览冻住），
+   * 补上正确的返回值。
+   * 注：文档禁止在本方法内调用 monitor.isDragging()，这里用 getItem() 比较身份。
+   */
   isDragging(props, monitor) {
     const preview = $('.taskDetailDragPreview:last')[0];
     const clientOffset = monitor.getClientOffset();
@@ -110,6 +120,8 @@ const checklistSource = {
         }
       }, 200);
     }
+
+    return props.index === monitor.getItem()?.index;
   },
 
   endDrag(props) {
@@ -142,7 +154,7 @@ const checklistTarget = {
     props.checklistHover(props.index);
   },
 };
-let Checklist = class Checklist extends Component<any, any> {
+let Checklist: any = class Checklist extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
-import { HTML5Backend } from 'react-dnd-html5-backend-latest';
-import { DndProvider } from 'react-dnd-latest';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider } from 'react-dnd';
 import { Tabs } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';

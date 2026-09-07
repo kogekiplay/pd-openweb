@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { getEmptyImage } from 'react-dnd-html5-backend-latest';
-import { useDrag } from 'react-dnd-latest';
+import { getEmptyImage } from 'react-dnd-html5-backend';
+import { useDrag } from 'react-dnd';
 import cx from 'classnames';
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';

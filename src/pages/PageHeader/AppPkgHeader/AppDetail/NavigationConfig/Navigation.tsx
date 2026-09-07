@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useRef, useState } from 'react';
-import { HTML5Backend } from 'react-dnd-html5-backend-latest';
-import { DndProvider, useDrag, useDrop } from 'react-dnd-latest';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Icon, LoadDiv, SvgIcon } from 'ming-ui';

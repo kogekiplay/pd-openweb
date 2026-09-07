@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
-import { useDragLayer } from 'react-dnd-latest';
+import { useDragLayer } from 'react-dnd';
 import styled from 'styled-components';
 
 const LayerContainer = styled.div`

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { getEmptyImage } from 'react-dnd-html5-backend';
-import { useDrag, useDrop } from 'react-dnd-latest';
+import { useDrag, useDrop } from 'react-dnd';
 import { useInView } from 'react-intersection-observer';
 import { Skeleton } from 'antd';
 import cx from 'classnames';

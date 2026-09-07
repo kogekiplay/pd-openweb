@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { HTML5Backend } from 'react-dnd-html5-backend-latest';
-import { DndProvider } from 'react-dnd-latest';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider } from 'react-dnd';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';

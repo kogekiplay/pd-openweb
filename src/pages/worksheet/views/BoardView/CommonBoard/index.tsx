@@ -1,5 +1,5 @@
 import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useDrop } from 'react-dnd-latest';
+import { useDrop } from 'react-dnd';
 import { every, isEmpty } from 'lodash';
 import _ from 'lodash';
 import styled from 'styled-components';

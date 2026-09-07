@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useRef, useState } from 'react';
-import { getEmptyImage } from 'react-dnd-html5-backend-latest';
-import { useDrag } from 'react-dnd-latest';
+import { getEmptyImage } from 'react-dnd-html5-backend';
+import { useDrag } from 'react-dnd';
 import { CaretRightOutlined } from '@ant-design/icons';
 import { Collapse, Dropdown } from 'antd';
 import cx from 'classnames';

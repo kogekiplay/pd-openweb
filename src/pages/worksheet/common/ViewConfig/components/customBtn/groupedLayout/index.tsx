@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { useDragLayer } from 'react-dnd-latest';
+import { useDragLayer } from 'react-dnd';
 import cx from 'classnames';
 import { Icon } from 'ming-ui';
 import { ITEM_TYPE_GROUP } from './constants';

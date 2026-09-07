@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useRef } from 'react';
-import { useDragLayer } from 'react-dnd-latest';
+import { useDragLayer } from 'react-dnd';
 import cx from 'classnames';
 import { isEmpty } from 'lodash';
 import styled from 'styled-components';

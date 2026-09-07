@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { getEmptyImage } from 'react-dnd-html5-backend-latest';
-import { useDrag, useDragLayer, useDrop } from 'react-dnd-latest';
+import { getEmptyImage } from 'react-dnd-html5-backend';
+import { useDrag, useDragLayer, useDrop } from 'react-dnd';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Icon, SvgIcon } from 'ming-ui';

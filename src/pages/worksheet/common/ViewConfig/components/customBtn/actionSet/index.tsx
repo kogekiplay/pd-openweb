@@ -1,5 +1,5 @@
 import React from 'react';
-import { DndProvider } from 'react-dnd-latest';
+import { DndProvider } from 'react-dnd';
 import { useSetState } from 'react-use';
 import MouseBackEnd from '@mdfe/react-dnd-mouse-backend';
 import _ from 'lodash';

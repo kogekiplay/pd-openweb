@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { useDrag, useDrop } from 'react-dnd-latest';
+import { useDrag, useDrop } from 'react-dnd';
 import { TinyColor } from '@ctrl/tinycolor';
 import _ from 'lodash';
 import appManagementApi from 'src/api/appManagement';
