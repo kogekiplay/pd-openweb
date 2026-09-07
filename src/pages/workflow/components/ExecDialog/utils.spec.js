@@ -13,12 +13,34 @@ function requireEsm(file) {
   return module.exports;
 }
 
-const { canDirectSubmitApproveAction, getOperationLogActionText } = requireEsm('./utils.js');
+const { canDirectSubmitApproveAction, getApproveActionTypeList, getOperationLogActionText } =
+  requireEsm('./utils.js');
 const auth = { passTypeList: [101], overruleTypeList: [101] };
 
 assert.strictEqual(canDirectSubmitApproveAction({ action: 'pass', auth }), true);
 assert.strictEqual(canDirectSubmitApproveAction({ action: 'overrule', auth }), true);
 assert.strictEqual(canDirectSubmitApproveAction({ action: 'return', auth }), true);
+
+// ── 分支可区分性 ──────────────────────────────────────────────────────────
+// 上面那个 auth 的 passTypeList 与 overruleTypeList 取值相同（都是 [101]），
+// 于是 getApproveActionTypeList 里的
+//     action === 'pass' ? auth.passTypeList : auth.overruleTypeList
+// 把两个分支【整个对调】，上面 17 条断言一条都不会响 —— 变异测试实测存活。
+// 下面用两组取值不同的 auth 把这个盲区堵上：任何一次分支对调都会立刻失败。
+// 注意 'return' 走的也是 else 分支（读 overruleTypeList），这一点一并钉住。
+const authPassOnly = { passTypeList: [101], overruleTypeList: [100] };
+assert.deepStrictEqual(getApproveActionTypeList('pass', authPassOnly), [101]);
+assert.deepStrictEqual(getApproveActionTypeList('overrule', authPassOnly), [100]);
+assert.deepStrictEqual(getApproveActionTypeList('return', authPassOnly), [100]);
+assert.strictEqual(canDirectSubmitApproveAction({ action: 'pass', auth: authPassOnly }), true);
+assert.strictEqual(canDirectSubmitApproveAction({ action: 'overrule', auth: authPassOnly }), false);
+assert.strictEqual(canDirectSubmitApproveAction({ action: 'return', auth: authPassOnly }), false);
+
+const authOverruleOnly = { passTypeList: [100], overruleTypeList: [101] };
+assert.deepStrictEqual(getApproveActionTypeList('pass', authOverruleOnly), [100]);
+assert.deepStrictEqual(getApproveActionTypeList('overrule', authOverruleOnly), [101]);
+assert.strictEqual(canDirectSubmitApproveAction({ action: 'pass', auth: authOverruleOnly }), false);
+assert.strictEqual(canDirectSubmitApproveAction({ action: 'overrule', auth: authOverruleOnly }), true);
 
 assert.strictEqual(canDirectSubmitApproveAction({ action: 'pass', auth, btnDescMap: { 4: 'pass desc' } }), false);
 assert.strictEqual(canDirectSubmitApproveAction({ action: 'pass', auth, btnDescMap: { 4: '   ' } }), true);

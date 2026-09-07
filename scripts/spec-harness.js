@@ -181,6 +181,15 @@ function expectedFailure(label, fn) {
     fn();
     passed = true;
   } catch (err) {
+    // 只吞断言失败。别的异常（模块解析失败、readSource 出错、TypeError…）
+    // 说明隔离区本身坏了，而不是「已知缺陷仍在」——必须原样抛出去。
+    // 否则一个无关的 harness 故障会被伪装成 [known-failure]，spec 照样报绿，
+    // 隔离区从此变成一个永远不会响的黑洞。
+    if (err && err.code !== 'ERR_ASSERTION') {
+      err.message =
+        `expectedFailure("${label}") 捕获到【非断言】异常，隔离区可能已失效：\n` + err.message;
+      throw err;
+    }
     console.warn(`  [known-failure] ${label}\n    ${String(err.message).split('\n')[0]}`);
   }
   if (passed) {

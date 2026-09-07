@@ -24,11 +24,18 @@ const chalk = require('chalk');
 const ROOT = path.resolve(__dirname, '..');
 const SEARCH_DIRS = ['src', 'scripts'];
 
+// 单个 spec 的墙钟上限。实测最慢的 spec < 3s，30s 是很宽的余量。
+// 没有这道保险时，任何一个留下未关闭句柄（定时器、监听器）的 spec 会让
+// pre-push 和 release 无限期挂起，且不给任何诊断信息 —— 比失败更难查。
+// 已知有 spec 真的在跑定时器：SearchInput 用真实 setTimeout，CountDown 打桩 setInterval。
+const DEFAULT_TIMEOUT_MS = 30000;
+
 function parseArgs(argv) {
-  const args = { filter: null, concurrency: os.availableParallelism() };
+  const args = { filter: null, concurrency: os.availableParallelism(), timeout: DEFAULT_TIMEOUT_MS };
   for (let i = 0; i < argv.length; i++) {
     if (argv[i] === '--filter') args.filter = argv[++i];
     else if (argv[i] === '--concurrency') args.concurrency = Math.max(1, parseInt(argv[++i], 10) || 1);
+    else if (argv[i] === '--timeout') args.timeout = Math.max(1000, parseInt(argv[++i], 10) || DEFAULT_TIMEOUT_MS);
   }
   return args;
 }
@@ -43,15 +50,18 @@ function discover(dir, out, suffix) {
   return out;
 }
 
-function runOne(spec) {
+function runOne(spec, timeoutMs) {
   return new Promise(resolve => {
     const started = Date.now();
     execFile(
       process.execPath,
       [path.join(ROOT, spec)],
-      { cwd: ROOT, maxBuffer: 16 * 1024 * 1024 },
+      { cwd: ROOT, maxBuffer: 16 * 1024 * 1024, timeout: timeoutMs, killSignal: 'SIGKILL' },
       (err, stdout, stderr) => {
-        resolve({ spec, ok: !err, stdout, stderr, ms: Date.now() - started });
+        // execFile 超时杀进程时 err.killed 为 true。把它和普通断言失败分开，
+        // 否则「挂住」会伪装成「断言不过」，排查方向完全跑偏。
+        const timedOut = !!(err && err.killed);
+        resolve({ spec, ok: !err, timedOut, stdout, stderr, ms: Date.now() - started });
       },
     );
   });
@@ -100,11 +110,17 @@ async function main() {
   const started = Date.now();
   // Output is fully buffered per spec: with concurrency > 1, streaming child
   // stdout straight through would interleave into nonsense.
-  const results = await pool(specs, args.concurrency, runOne);
+  const results = await pool(specs, args.concurrency, s => runOne(s, args.timeout));
   const seconds = ((Date.now() - started) / 1000).toFixed(1);
 
   const failed = results.filter(r => !r.ok);
+  const timedOut = results.filter(r => r.timedOut);
   const warned = results.filter(r => r.ok && r.stderr.includes('[known-failure]'));
+
+  for (const r of timedOut) {
+    console.log(chalk.red(`TIMEOUT  ${r.spec}  (>${args.timeout}ms，已 SIGKILL)`));
+    console.log(chalk.gray('         多半是留了未关闭的句柄（定时器/监听器）。用 --timeout 调整上限。'));
+  }
 
   for (const r of warned) {
     console.log(chalk.yellow(`known-failure  ${r.spec}`));

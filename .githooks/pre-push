@@ -1,30 +1,42 @@
 #!/bin/sh
-# 类型门禁 pre-push hook。
+# pre-push 门禁：行为门禁 + 类型门禁两套，各自独立开关。
 #
 # 装法（必须每个 clone / worktree 各跑一次，hook 不随 clone 分发）:
 #     git config core.hooksPath .githooks
 # 用 core.hooksPath 而不是往 .git/hooks 里拷文件，这样 hook 本身是【版本化】的。
 #
-# 拦得住：本机 push 出去的类型回归。
+# 拦得住：本机 push 出去的行为回归与类型回归。
 # 拦不住：git push --no-verify；别人机器上没跑过 git config 的；
 #         直接在服务端/网页端改的；以及任何非 push 路径。
 # 所以这道 hook 只是「早失败」，真闸门在 scripts/build.js 的 release 前置。
+#
+# ⚠ 两个开关是【分离】的，别用一个去关另一个：
+#     SKIP_TESTS=1      只跳过行为门禁
+#     SKIP_TYPECHECK=1  只跳过类型门禁（后缀并存 + 语法 + 语义差分）
+#   历史缺陷：SKIP_TYPECHECK=1 曾经 `exit 0` 掉整个 hook，导致行为门禁被静默一并关掉，
+#   而且不给任何提示。用文档里那个逃生口的人会在毫不知情的情况下失去行为门禁。
+#   修法就是下面这个顺序——行为门禁在任何早退之前执行。
 set -e
 
-if [ "$SKIP_TYPECHECK" = "1" ]; then
-  echo "pre-push: SKIP_TYPECHECK=1，跳过类型门禁"
-  exit 0
-fi
-
-# 行为门禁放最前面：它只要约 4s，比语义差分快 7 倍，
-# 绝大多数行为回归可以在 4 秒内失败，不用等后面那 31 秒。
-# 覆盖面很窄（87 个源文件 / 全仓 2.0%，src/api 覆盖为 0），
-# 只是「改这几处别改坏」的护栏，不是重构安全网。
+# ── 行为门禁 ─────────────────────────────────────────────────────────────
+# 放最前面：只要约 4s，比语义差分快 7 倍，绝大多数行为回归能在 4 秒内失败，
+# 不用等后面那 31 秒。
+#
+# 覆盖面很窄，别高估：87 个源文件 / 全仓 2.0%，src/api 覆盖为 0。
+# 变异测试实测——断言直接覆盖的逻辑杀死率 95.7%，但同一文件内其它位置只有 16.7%。
+# 也就是说它守的是「这些文件里被断言点到的那几十行」，不是「这些文件」。
+# 它是「改这几处别改坏」的护栏，不是重构安全网。
 if [ "$SKIP_TESTS" = "1" ]; then
   echo "pre-push: SKIP_TESTS=1，跳过行为门禁"
 else
   echo "pre-push: 行为门禁 62 个 spec（约 4s）..."
   node scripts/run-specs.js
+fi
+
+# ── 类型门禁 ─────────────────────────────────────────────────────────────
+if [ "$SKIP_TYPECHECK" = "1" ]; then
+  echo "pre-push: SKIP_TYPECHECK=1，跳过类型门禁（行为门禁已在上面执行）"
+  exit 0
 fi
 
 echo "pre-push: 后缀并存检查（约 1s）..."
