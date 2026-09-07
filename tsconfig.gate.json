@@ -14,11 +14,22 @@
 // src/pages/AppHomepage/AppLib/index.jsx:56 动态 import 了 applibrary_v2，
 // src/components/Agent/anonymous.js:53 动态 import 了 library/jquery/global，
 // 于是 3 个压缩产物照样贡献 1281 条诊断。只能在门禁脚本里按路径后过滤。
+//
+// 3. exclude 追加 **/*.spec.js —— 行为测试是测试脚手架，不是产品代码，不该计入
+//    产品类型健康度的基线。它们大量给 global.window / location 赋部分对象桩
+//    （`global.location = { origin, href }`），在 checkJs:true 下必然报
+//    TS2322/TS2740「缺少 Location 的其余属性」——这是桩的本意，不是缺陷。
+//    实测：不排除会新增 65 条诊断 / 37 个新 key，直接把门禁打红。
+//    注意这【不是】为了让测试落地而给门禁放水：基线仍是 5164，一条没动；
+//    改的是「哪些文件属于被测量的产品代码」这个范围问题。
+//    spec 文件不被任何产品代码 import，所以 exclude 对它们是真的有效
+//    （不同于下面 src/library 那个「拦不住」的情况）。
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "checkJs": true,
     "incremental": true,
     "tsBuildInfoFile": "node_modules/.cache/tsc-gate/gate.tsbuildinfo"
-  }
+  },
+  "exclude": ["node_modules", "src/library", "**/*.spec.js"]
 }

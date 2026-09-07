@@ -35,4 +35,7 @@ package-lock.json
 *.llog
 
 # Test files
-*.test.js
+# 这里曾经有一条 `*.test.js`——由 bb5b797ff(7.4.1) 在删掉 62 个 .test.js 的同一个
+# commit 里加入，作用只是让那批测试删干净且再也回不来。它的代价是「静默」：新写的
+# 测试不报错、不进 git status、review 里看不见，push 完人间蒸发。已删除。
+# 唯一命名规范是 *.spec.js，由 scripts/run-specs.js 启动时【显式报错】强制执行。

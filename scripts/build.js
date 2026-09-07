@@ -284,6 +284,28 @@ async function devMain() {
   await forkWebpackWatch();
 }
 
+// 行为门禁：release 的前置闸门之一，放在类型门禁【之前】（约 4s，快 7 倍，早失败）。
+// 类型门禁只管类型不管行为；这 62 个 spec 是本仓唯一现成的行为回归手段。
+// 但覆盖面很窄：87 个源文件 / 全仓 4,341 个 .ts(x) = 2.0%，且对 src/api 覆盖为 0。
+// 它回答的是「改这几处有没有改坏」，不是「这次改动是安全的」。
+// 设 SKIP_TESTS=1 可临时跳过（会打醒目告警，供紧急发版用）。
+function specGate() {
+  if (process.env.SKIP_TESTS === '1') {
+    console.log(chalk.bgRed.white(' 警告 ') + chalk.red(' SKIP_TESTS=1：已跳过行为门禁，产物未经行为回归校验 '));
+    return;
+  }
+
+  console.log(chalk.cyan('test: 行为门禁 62 个 spec ...'));
+  const r = spawnSync(process.execPath, [resolvePath('scripts/run-specs.js')], {
+    cwd: ROOT_PATH,
+    stdio: 'inherit',
+  });
+  if (r.status !== 0) {
+    console.log(chalk.red('行为门禁失败，release 中止。'));
+    process.exit(r.status || 1);
+  }
+}
+
 // 类型门禁：release 的前置闸门。
 // 必须放在这里而不是只放 hook 里 —— 本仓无 CI，git hook 又是本地的、可 --no-verify
 // 绕过、且不随 clone 分发；release 是产物真正出厂的唯一必经点。
@@ -322,6 +344,7 @@ function typecheckGate() {
 async function release() {
   const startTime = process.hrtime.bigint();
 
+  specGate();
   typecheckGate();
   cleanBuild();
   await buildWebpack();

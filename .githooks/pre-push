@@ -16,6 +16,17 @@ if [ "$SKIP_TYPECHECK" = "1" ]; then
   exit 0
 fi
 
+# 行为门禁放最前面：它只要约 4s，比语义差分快 7 倍，
+# 绝大多数行为回归可以在 4 秒内失败，不用等后面那 31 秒。
+# 覆盖面很窄（87 个源文件 / 全仓 2.0%，src/api 覆盖为 0），
+# 只是「改这几处别改坏」的护栏，不是重构安全网。
+if [ "$SKIP_TESTS" = "1" ]; then
+  echo "pre-push: SKIP_TESTS=1，跳过行为门禁"
+else
+  echo "pre-push: 行为门禁 62 个 spec（约 4s）..."
+  node scripts/run-specs.js
+fi
+
 echo "pre-push: 后缀并存检查（约 1s）..."
 node scripts/checkExtensionCollisions.js
 
