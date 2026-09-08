@@ -232,14 +232,17 @@ export default function Certification(props) {
   const checkFaceCert = async () => {
     if (!controller || !certState) return;
 
-    const parser = createParser(event => {
-      if (event.type === 'event') {
+    // eventsource-parser 4 把单函数回调换成了 { onEvent, onError, onComment } 对象，
+    // 且 onEvent 收到的对象【没有 type 字段】——v1 的 `event.type === 'event'` 守卫在 v4 恒为 false，
+    // 留着会让整段处理逻辑静默永不执行。注释现在走独立的 onComment，所以守卫本身也不再需要。
+    const parser = createParser({
+      onEvent: event => {
         const data = safeParse(event.data) || {};
         data.state !== certStatus && setCertStatus(data.state);
         if (data.state === CERT_STATUS.USED) {
           setToken(data.token);
         }
-      }
+      },
     });
 
     const resp = await sseAjax.checkFaceCertSSE(

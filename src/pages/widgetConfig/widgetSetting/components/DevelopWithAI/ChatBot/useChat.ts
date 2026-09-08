@@ -157,8 +157,11 @@ function useChatBot({ sessionId, params = [], defaultMessages = [], currentCode,
       setMessages(prev => [...prev, { role: 'assistant', content: '', id: newMessageId }]);
       setActiveMessageId(newMessageId);
 
-      const parser = createParser(event => {
-        if (event.type === 'event') {
+      // eventsource-parser 4 把单函数回调换成了 { onEvent, onError, onComment } 对象，
+      // 且 onEvent 收到的对象【没有 type 字段】——v1 的 `event.type === 'event'` 守卫在 v4 恒为 false，
+      // 留着会让整段处理逻辑静默永不执行。注释现在走独立的 onComment，所以守卫本身也不再需要。
+      const parser = createParser({
+        onEvent: event => {
           if (event.data === '[DONE]') {
             return;
           }
@@ -191,7 +194,7 @@ function useChatBot({ sessionId, params = [], defaultMessages = [], currentCode,
           } catch (error) {
             console.error('Error parsing SSE message:', error);
           }
-        }
+        },
       });
 
       const reader = response.body.getReader();

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { get, isFunction, replace } from 'lodash';
-import * as SignaturePad from 'signature_pad/dist/signature_pad';
+// signature_pad 5 的 exports 映射只有 '.'，深子路径 dist/signature_pad 已被封死。
+import SignaturePad from 'signature_pad';
 import styled from 'styled-components';
 import accountSettingAjax from 'src/api/accountSetting';
 import GenScanUploadQr from 'worksheet/components/GenScanUploadQr';
@@ -59,21 +60,26 @@ export default class Signature extends Component<any, any> {
 
   initCanvas = () => {
     const { onBegin } = this.props;
-    const canvas = document.getElementById('signatureCanvas');
+    // signature_pad 5 自带类型，构造签名要求 HTMLCanvasElement；getElementById 返回的是
+    // HTMLElement，之前深子路径导入没有类型所以看不出来（canvas.width 本来就是类型错误）。
+    const canvas = document.getElementById('signatureCanvas') as HTMLCanvasElement | null;
 
     if (!canvas) return;
 
     canvas.width = canvas.offsetWidth;
     canvas.height = canvas.offsetHeight;
     canvas.getContext('2d');
-    this.signaturePad = new SignaturePad.default(canvas, {
+    // signature_pad 4 起把 onBegin/onEnd 从构造选项改成了事件（类继承 SignatureEventTarget）。
+    // v5 的 Options 里已经没有这两个键，留着会被静默忽略——签名后「已编辑」状态永远不置位。
+    // 事件名实测为 beginStroke / endStroke（另有 beforeUpdateStroke / afterUpdateStroke）。
+    this.signaturePad = new SignaturePad(canvas, {
       penColor: '#151515',
-      onBegin: () => {
-        this.setState({ isEdit: true });
-        if (isFunction(onBegin)) {
-          onBegin();
-        }
-      },
+    });
+    this.signaturePad.addEventListener('beginStroke', () => {
+      this.setState({ isEdit: true });
+      if (isFunction(onBegin)) {
+        onBegin();
+      }
     });
   };
 

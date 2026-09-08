@@ -3,7 +3,8 @@ import axios from 'axios';
 import cx from 'classnames';
 import _, { get } from 'lodash';
 import Trigger from 'rc-trigger';
-import * as SignaturePad from 'signature_pad/dist/signature_pad';
+// signature_pad 5 的 exports 映射只有 '.'，深子路径 dist/signature_pad 已被封死。
+import SignaturePad from 'signature_pad';
 import styled from 'styled-components';
 import { Button } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -272,15 +273,18 @@ const Signature = props => {
     canvas.width = canvas.offsetWidth;
     canvas.height = canvas.offsetHeight;
     canvas.getContext('2d');
-    signaturePadRef.current = new SignaturePad.default(canvas, {
+    // signature_pad 4 起把 onBegin/onEnd 从构造选项改成了事件（类继承 SignatureEventTarget）。
+    // v5 的 Options 里已经没有这两个键，留着会被静默忽略——签名后「已编辑」状态永远不置位。
+    // 事件名实测为 beginStroke / endStroke（另有 beforeUpdateStroke / afterUpdateStroke）。
+    signaturePadRef.current = new SignaturePad(canvas, {
       penColor: '#151515',
       minWidth: 3,
       maxWidth: 3,
       throttle: 8,
       minDistance: 3,
-      onBegin: () => {
-        requestAnimationFrame(() => setIsEdit(true));
-      },
+    });
+    signaturePadRef.current.addEventListener('beginStroke', () => {
+      requestAnimationFrame(() => setIsEdit(true));
     });
   }, []);
 
