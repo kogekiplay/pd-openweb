@@ -775,6 +775,8 @@ export const dealUserRange = (control = {}, data = [], masterData = {}) => {
 };
 
 // 加载第三方集成 SDK
+// load-script 2.0.0 的 .d.ts 没有单参重载（回调是必填），但运行时 index.js 与 1.0.0
+// 字节相同、内部就有 `cb = cb || function() {}`——所以显式传空回调与不传严格等价。
 export function loadSDK() {
   const isIOS = window.isIphone || window.isIPad || window.navigator.userAgent.toLowerCase().includes('ipod');
   const isDesktopMac = window.isMacOs && !isIOS;
@@ -786,23 +788,23 @@ export function loadSDK() {
     !window.isWxWork;
 
   if (window.isDingTalk && !window.dd) {
-    loadScript('https://g.alicdn.com/dingding/dingtalk-jsapi/2.6.41/dingtalk.open.js');
+    loadScript('https://g.alicdn.com/dingding/dingtalk-jsapi/2.6.41/dingtalk.open.js', () => {});
   }
 
   if (window.isWeLink && !window.HWH5) {
-    loadScript('https://open-doc.welink.huaweicloud.com/docs/jsapi/2.0.4/hwh5-cloudonline.js');
+    loadScript('https://open-doc.welink.huaweicloud.com/docs/jsapi/2.0.4/hwh5-cloudonline.js', () => {});
   }
 
   if (isWx && !window.wx) {
-    loadScript('https://res2.wx.qq.com/open/js/jweixin-1.6.0.js');
+    loadScript('https://res2.wx.qq.com/open/js/jweixin-1.6.0.js', () => {});
   }
 
   if (window.isWxWork && !window.wx) {
-    loadScript('https://res.wx.qq.com/open/js/jweixin-1.2.0.js');
+    loadScript('https://res.wx.qq.com/open/js/jweixin-1.2.0.js', () => {});
   }
 
   if (window.isFeiShu && !window.h5sdk) {
-    loadScript('https://lf1-cdn-tos.bytegoofy.com/goofy/lark/op/h5-js-sdk-1.5.19.js');
+    loadScript('https://lf1-cdn-tos.bytegoofy.com/goofy/lark/op/h5-js-sdk-1.5.19.js', () => {});
   }
 }
 
