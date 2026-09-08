@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
-import Remarkable from 'remarkable';
+// remarkable 2 去掉了 default export，Remarkable 改为具名导出。
+import { Remarkable } from 'remarkable';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';

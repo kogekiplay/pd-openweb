@@ -1,5 +1,9 @@
 import React, { lazy, Suspense, useMemo, useState } from 'react';
-import Remarkable from 'remarkable';
+// remarkable 2 去掉了 default export，Remarkable 改为具名导出。
+import { Remarkable } from 'remarkable';
+// v2 删掉了 linkify 选项（只 console.warn 然后静默无效），改由插件提供。
+// 注意它那条警告文案已过期：它写 default 导入，实际导出是具名的 { linkify }。
+import { linkify } from 'remarkable/linkify';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
@@ -19,11 +23,13 @@ function mergeContent(content) {
 } // 创建基础 remarkable 实例
 
 function createMarkdownInstance() {
+  // 不加 .use(linkify) 的话，聊天消息里的裸 URL / 邮箱不再自动成为可点链接。
+  // 实测 v1(linkify:true) 与 v2(.use(linkify)) 在 6 个用例上 5 个逐字节相同，
+  // 唯一差异是 v2 连中文 IDN 域名（http://例子.中国/路径）也能识别，属改善。
   return new Remarkable({
     html: false,
-    linkify: true,
     typographer: false,
-  });
+  }).use(linkify);
 }
 
 function sanitizeMdTagChunk(chunk) {
