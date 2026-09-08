@@ -1,6 +1,8 @@
 import React, { Fragment } from 'react';
-import { VariableSizeGrid } from 'react-window';
 import { includes, isFunction } from 'lodash';
+// react-window 2.x 与 v1 零导出名重叠、且删掉了整个命令式 API（scrollTo / resetAfterIndices）。
+// 这里换成本仓的兼容层，用法保持 v1 原样，差异全部收在 VariableSizeGridCompat.tsx 里。
+import VariableSizeGrid from 'src/ming-ui/components/VariableSizeGridCompat';
 
 function sum(array = []) {
   return array.reduce((a, b) => a + b, 0);
