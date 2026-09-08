@@ -85,6 +85,8 @@ let MoreOption = class MoreOption extends Component<any, any> {
         }}
       >
         <input
+          name="moreOption"
+          autoComplete="off"
           type="text"
           placeholder={_l('备注')}
           onChange={e =>

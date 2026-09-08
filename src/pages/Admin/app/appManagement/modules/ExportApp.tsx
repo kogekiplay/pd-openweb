@@ -174,6 +174,8 @@ export default class ExportApp extends React.Component<any, any> {
             <div className={cx('passwordInputBox', { mTop6: key === 'appKey' && this.state.locked })}>
               <div className="flexColumn">
                 <input
+                  name="exportApp"
+                  autoComplete="off"
                   type="text"
                   className={cx('inputBox', { editInput: canEdit })}
                   placeholder={placeholder}

@@ -230,6 +230,8 @@ export default function SendToChat(props) {
           <div className="con">
             {listActive && (
               <input
+                name="shareUrlSendToChat"
+                autoComplete="off"
                 type="text"
                 autoFocus
                 onClick={e => {

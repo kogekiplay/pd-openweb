@@ -77,6 +77,8 @@ class EditableBlock extends React.Component<any, any> {
           {extOfShow}
         </span>
         <input
+          name="editableBlockEditableBlock"
+          autoComplete="off"
           ref={input => {
             this.inputFileName = input;
           }}

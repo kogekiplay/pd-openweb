@@ -141,6 +141,8 @@ export default function UpgradeFileList(props) {
         return (
           <Fragment>
             <input
+              name="upgradeFileList"
+              autoComplete="off"
               className={cx('passwordInputBox mRight20', { focus: focusKey === item.key })}
               placeholder={_l('请输入密码')}
               value={passwords[item.fileName]}

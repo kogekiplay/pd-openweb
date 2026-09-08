@@ -108,6 +108,8 @@ export default function View(props) {
         <div className="searchWrap flexRow alignItemsCenter mBottom10">
           <Icon className="textTertiary Font20 mRight5" icon="search" />
           <input
+            name="editLingualView"
+            autoComplete="off"
             placeholder={_l('视图')}
             className="flex"
             value={searchValue}

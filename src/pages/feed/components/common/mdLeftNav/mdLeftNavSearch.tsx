@@ -31,6 +31,8 @@ class MDLeftNavSearch extends React.Component<any, any> {
       <div className="mdLeftNavSearch borderSecondary" ref={root => (this.root = root)}>
         <span className="icon-search btnSearch textSecondary" title={_l('搜索')} />
         <input
+          name="mdLeftNavMdLeftNavSearch"
+          autoComplete="off"
           {...props}
           value={value || ''}
           onKeyUp={this.handleKeyUp}

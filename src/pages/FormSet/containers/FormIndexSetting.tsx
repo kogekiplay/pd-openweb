@@ -366,6 +366,8 @@ function FormIndexSetting(props) {
                         />
                         {isRename && templateId === item.indexConfigId ? (
                           <input
+                            name="formIndexSetting"
+                            autoComplete="off"
                             type="text"
                             ref={input}
                             defaultValue={item.customeIndexName}

@@ -118,6 +118,8 @@ export default function AppRole(props) {
         <div className="searchWrap flexRow alignItemsCenter mBottom10">
           <Icon className="textTertiary Font20 mRight5" icon="search" />
           <input
+            name="editLingualAppRole"
+            autoComplete="off"
             placeholder={_l('角色')}
             className="flex"
             value={searchValue}

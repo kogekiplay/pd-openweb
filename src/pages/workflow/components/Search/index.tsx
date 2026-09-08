@@ -37,6 +37,8 @@ export default class Search extends Component<any, any> {
     return (
       <div className={cx('workflowSearchWrap', className)}>
         <input
+          name="search"
+          autoComplete="off"
           type="text"
           className="borderColorPrimary"
           onFocus={onFocus}

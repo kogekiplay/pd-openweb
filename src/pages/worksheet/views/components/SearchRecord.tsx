@@ -137,6 +137,8 @@ const SearchRecord = props => {
             <Icon className="textTertiary Font18" icon="search" />
             <div className="flex">
               <input
+                name="searchRecord"
+                autoComplete="off"
                 autoFocus
                 value={value}
                 onChange={event => {

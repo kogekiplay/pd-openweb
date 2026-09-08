@@ -1048,6 +1048,8 @@ export default class RelateRecordDropdown extends React.Component<any, any> {
         )}
         {window.isIPad && (
           <input
+            name="relateRecordDropdownRelateRecordDropdownCopy"
+            autoComplete="off"
             type="text"
             style={{ width: 0, opacity: 0, height: 0, position: 'absolute', padding: 0, margin: 0 }}
             ref={this.inputForIOSKeyboardRef}

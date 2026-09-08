@@ -190,6 +190,8 @@ export default function Date(props) {
           {includes([101, 102, 10, 11], dateRange) && (
             <div className="dateValue mTop10">
               <input
+                name="contentsDate"
+                autoComplete="off"
                 className="ming Input"
                 value={dayNum || ''}
                 placeholder={_l('请输入数字')}

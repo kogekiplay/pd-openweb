@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Icon, LoadDiv, ScrollView, SvgIcon } from 'ming-ui';
@@ -119,6 +119,8 @@ const WorkSheetPortal = props => {
             {isCharge && !item.notMore && <Icon icon="drag" className="textTertiary pointer Font16 dragIcon" />}
             {isEdit ? (
               <input
+                name="workSheetPortal"
+                autoComplete="off"
                 autoFocus
                 ref={ref}
                 className="resetNameInput"

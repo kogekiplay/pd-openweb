@@ -308,6 +308,7 @@ class Updater extends React.Component<any, any> {
                           </div>
                           <div className="Right linkBtnArea">
                             <input
+                              name="updaterUpdater"
                               type="button"
                               className="btnBootstrap btnBootstrap-primary btnBootstrap-small linkBtn"
                               ref={linkBtn => {

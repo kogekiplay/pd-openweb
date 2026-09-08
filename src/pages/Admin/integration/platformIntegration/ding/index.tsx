@@ -163,6 +163,8 @@ export default class Ding extends React.Component<any, any> {
           {this.state.canEditInfo ? (
             <React.Fragment>
               <input
+                name="platformIntegrationDing1"
+                autoComplete="off"
                 type="text"
                 className="inputBox"
                 onChange={e => {
@@ -178,6 +180,8 @@ export default class Ding extends React.Component<any, any> {
           ) : (
             <React.Fragment>
               <input
+                name="platformIntegrationDing2"
+                autoComplete="off"
                 type="text"
                 className="inputBox"
                 readOnly

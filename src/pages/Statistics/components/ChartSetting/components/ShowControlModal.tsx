@@ -265,6 +265,8 @@ export default class ShowControlModal extends Component<any, any> {
         <SearchControlWrapper className="flexRow valignWrapper textTertiary">
           <Icon icon="search" className="Font18 mRight3" />
           <input
+            name="showControlModal"
+            autoComplete="off"
             value={searchValue}
             className="flex"
             placeholder={_l('搜索字段')}

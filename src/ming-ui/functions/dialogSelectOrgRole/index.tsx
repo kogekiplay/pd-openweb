@@ -337,6 +337,8 @@ class DialogSelectOrgRole extends Component<any, any> {
           <div className="selectJobContainer_search pLeft5">
             <span className="searchIcon icon-search" />
             <input
+              name="functionsDialogSelectOrgRole"
+              autoComplete="off"
               type="text"
               className="searchInput"
               placeholder={_l('搜索组织角色')}

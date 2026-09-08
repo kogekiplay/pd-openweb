@@ -101,6 +101,8 @@ export default ({
         {data !== null && (!!data.length || !!keywords) && (
           <div className="flexRow relative mBottom15 relative alignItemsCenter">
             <input
+              name="selectApiPackage"
+              autoComplete="off"
               type="text"
               placeholder={_l('搜索 API 连接')}
               className="selectApiPackageInput"

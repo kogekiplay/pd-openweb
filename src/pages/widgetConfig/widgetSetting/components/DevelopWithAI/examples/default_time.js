@@ -21,7 +21,7 @@ function BlackGreenDigitalLCDClockSelector({ value, onChange }) {
     <div className="flex flex-col items-center">
       <div className="bg-black text-green-500 text-[24px] font-mono p-2 rounded-md border border-gray-600 shadow-lg">
         <div className="flex items-center space-x-2">
-          <select
+          <select name="examplesDefaultTime1"
             className="h-[36px] border rounded-md border-gray-600 bg-black text-green-500 font-mono focus:outline-none"
             value={hours}
             onChange={handleHoursChange}
@@ -33,7 +33,7 @@ function BlackGreenDigitalLCDClockSelector({ value, onChange }) {
             ))}
           </select>
           <span className="text-green-500">:</span>
-          <select
+          <select name="examplesDefaultTime2"
             className="h-[36px] border rounded-md border-gray-600 bg-black text-green-500 font-mono focus:outline-none"
             value={minutes}
             onChange={handleMinutesChange}

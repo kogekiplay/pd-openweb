@@ -86,7 +86,9 @@ export const VerificationPass = props => {
             }}
             autoComplete="off"
           >
-            <input type="password" hidden autoComplete="new-password" />
+            {/* 反自动填充诱饵：吸掉浏览器对下面真正的 sharePassword 的填充。
+                给它 name 只为满足 DevTools 的 form field 提示，不改变它的作用。 */}
+            <input type="password" name="ignoreAutofill" hidden autoComplete="new-password" />
             <Form.Item
               name="sharePassword"
               rules={[

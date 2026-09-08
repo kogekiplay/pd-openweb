@@ -296,6 +296,8 @@ let ChooseWidget = class ChooseWidget extends React.Component<any, any> {
           <div className="searchWrapper h100">
             <Icon icon="search" className="Font18" />
             <input
+              name="chooseWidget"
+              autoComplete="off"
               type="text"
               className="cursorText"
               placeholder={_l('搜索')}

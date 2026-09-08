@@ -210,7 +210,15 @@ function PublishDialog(props) {
               onClick={() => updateInfo({ accountId: md.global.Account.accountId, companyId: '' })}
             />
           </div>
-          <input type="text" className="mTop20" value={displayName} readOnly placeholder={_l('请输入')} />
+          <input
+            name="publishDialog1"
+            autoComplete="off"
+            type="text"
+            className="mTop20"
+            value={displayName}
+            readOnly
+            placeholder={_l('请输入')}
+          />
         </div>
       );
     }
@@ -225,6 +233,8 @@ function PublishDialog(props) {
             : PUBLISH_FIELD_MAX_LENGTH;
     return (
       <input
+        name="publishDialog2"
+        autoComplete="off"
         type="text"
         value={info[field.key] || ''}
         placeholder={_l('请输入')}

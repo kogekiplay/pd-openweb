@@ -9,6 +9,8 @@ export default class EmailInput extends Component<any, any> {
       <div className={cx({})}>
         <input
           type="tel"
+          name="email"
+          autoComplete="email"
           className={cx(inputClassName)}
           ref={input => {
             this.input = input;

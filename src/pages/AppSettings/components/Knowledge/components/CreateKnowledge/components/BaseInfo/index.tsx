@@ -32,6 +32,8 @@ const BaseInfo = () => {
         <div className="formItem">
           <div className="formItemLabel">{_l('名称')}</div>
           <input
+            name="baseInfo1"
+            autoComplete="off"
             ref={inputRef}
             className="knowledgeInput formItemInput"
             placeholder={_l('请输入名称')}
@@ -43,6 +45,8 @@ const BaseInfo = () => {
         <div className="formItem">
           <div className="formItemLabel">{_l('说明')}</div>
           <textarea
+            name="baseInfo2"
+            autoComplete="off"
             className="knowledgeTextarea formItemDesc"
             placeholder={_l('请输入说明')}
             value={knowledgeDesc}

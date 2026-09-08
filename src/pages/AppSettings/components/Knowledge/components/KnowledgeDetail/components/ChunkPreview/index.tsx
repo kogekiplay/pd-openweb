@@ -251,6 +251,8 @@ const ChunkPreview = props => {
           <div className="sideBarSearchBox">
             <Icon icon="search" className="searchIcon" />
             <input
+              name="chunkPreview"
+              autoComplete="off"
               className="searchInput"
               placeholder={activeTab === TAB_TYPE.ATTACHMENT ? _l('附件名称') : _l('记录名称')}
               value={inputValue}

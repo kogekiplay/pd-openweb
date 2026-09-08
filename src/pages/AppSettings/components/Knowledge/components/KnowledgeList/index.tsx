@@ -290,6 +290,8 @@ const KnowledgeList = props => {
           <div className="updateKnowledgeForm">
             <div className="formLabel">{_l('名称')}</div>
             <input
+              name="knowledgeList1"
+              autoComplete="off"
               ref={inputRef}
               className="knowledgeInput"
               value={currentKnowledge.name}
@@ -298,6 +300,8 @@ const KnowledgeList = props => {
             />
             <div className="formLabel">{_l('说明')}</div>
             <textarea
+              name="knowledgeList2"
+              autoComplete="off"
               className="knowledgeTextarea"
               value={currentKnowledge.description}
               placeholder={_l('请输入')}

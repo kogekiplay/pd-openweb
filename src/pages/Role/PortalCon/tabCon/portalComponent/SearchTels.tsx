@@ -42,7 +42,12 @@ function SearchTelsDialog(props) {
     >
       <Wrap>
         <p className="textTertiary pAll0 mBottom10">{_l('通过手机号批量搜索用户，每个手机号占一行')}</p>
-        <textarea onChange={e => onChange(e.target.value)} value={tels} />
+        <textarea
+          name="portalComponentSearchTels"
+          autoComplete="off"
+          onChange={e => onChange(e.target.value)}
+          value={tels}
+        />
       </Wrap>
     </Dialog>
   );

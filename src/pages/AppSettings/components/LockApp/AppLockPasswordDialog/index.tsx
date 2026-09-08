@@ -177,6 +177,8 @@ function LockApp(props) {
         </div>
         <div className="flexRow alignItemsCenter">
           <input
+            name="lockAppAppLockPasswordDialog"
+            autoComplete="off"
             type="text"
             className={cx('inputBox', { editInput: canEdit })}
             value={password}

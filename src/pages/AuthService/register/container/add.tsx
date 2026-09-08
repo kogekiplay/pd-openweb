@@ -123,6 +123,7 @@ export default function (props) {
         <div className="messageBox mTop5">
           <div className={cx('mesDiv', renderClassName('regcode', regcode))}>
             <input
+              name="containerAdd"
               type="text"
               className="regcode"
               autoComplete="off"

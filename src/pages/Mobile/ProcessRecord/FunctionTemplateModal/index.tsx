@@ -48,6 +48,8 @@ class ModalWrap extends Component<any, any> {
       <div className="searchWrap valignWrapper">
         <Icon icon="search" className="textTertiary Font20 pointer" />
         <input
+          name="processRecordFunctionTemplateModal"
+          autoComplete="off"
           value={searchValue}
           type="text"
           placeholder={_l('搜索')}

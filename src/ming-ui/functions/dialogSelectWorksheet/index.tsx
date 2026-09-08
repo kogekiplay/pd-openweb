@@ -320,6 +320,8 @@ function SelectWorksheet(props) {
         <div className="appSearchInput">
           <Icon icon="search" className="searchIcon Font16 textSecondary" />
           <input
+            name="functionsDialogSelectWorksheet"
+            autoComplete="off"
             type="text"
             autoFocus
             value={keywords}

@@ -464,6 +464,8 @@ export default class SingleControlValue extends Component<any, any> {
             this.renderSelectFieldsValue(item, i)
           ) : (
             <input
+              name="singleControlValue1"
+              autoComplete="off"
               type="text"
               className={cx('flex borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10', {
                 clearBorderRadius: !hideOtherField,
@@ -531,6 +533,8 @@ export default class SingleControlValue extends Component<any, any> {
             this.renderSelectFieldsValue(item, i)
           ) : (
             <input
+              name="singleControlValue2"
+              autoComplete="off"
               type="text"
               className={cx('flex borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10', {
                 clearBorderRadius: !hideOtherField,
@@ -575,6 +579,8 @@ export default class SingleControlValue extends Component<any, any> {
             this.renderSelectFieldsValue(item, i)
           ) : (
             <input
+              name="singleControlValue3"
+              autoComplete="off"
               type="text"
               className={cx(
                 'flex borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10',
@@ -599,6 +605,8 @@ export default class SingleControlValue extends Component<any, any> {
             this.renderSelectFieldsValue(item, i)
           ) : (
             <input
+              name="singleControlValue4"
+              autoComplete="off"
               type="text"
               className={cx('flex borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10', {
                 clearBorderRadius: !hideOtherField,

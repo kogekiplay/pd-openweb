@@ -226,6 +226,8 @@ export default ({
           <div className="flexRow" key={i}>
             {!onlyFile && (
               <input
+                name="keyPairs"
+                autoComplete="off"
                 type="text"
                 className="mTop10 borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10 mRight10"
                 style={{ width: 140 }}

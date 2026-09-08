@@ -97,6 +97,8 @@ export default ({ buttons = [], data, updateSource }) => {
               <div className="mTop10 Font13 textSecondary">{_l('名称')}</div>
               <div className="flexRow">
                 <input
+                  name="buttonName1"
+                  autoComplete="off"
                   type="text"
                   className="flex borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10 mTop10"
                   placeholder={o.namePlaceholder || o.placeholder}
@@ -116,6 +118,8 @@ export default ({ buttons = [], data, updateSource }) => {
                   <div className="mTop10 Font13 textSecondary">{_l('说明')}</div>
                   <div className="flexRow">
                     <input
+                      name="buttonName2"
+                      autoComplete="off"
                       type="text"
                       className="flex borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10 mTop10"
                       placeholder={o.descPlaceholder || _l('请输入按钮说明')}

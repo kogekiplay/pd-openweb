@@ -192,6 +192,8 @@ let SortableAppItem = class SortableAppItem extends Component<any, any> {
         {isFocus ? (
           <div className="sortableItem">
             <input
+              name="appGroupSortableAppItem"
+              autoComplete="off"
               defaultValue={name}
               ref={this.$nameRef}
               autoFocus

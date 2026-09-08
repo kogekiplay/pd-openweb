@@ -77,6 +77,8 @@ export default function SelectControlWithRelate({
         <div className="search">
           <i className="icon-search textTertiary" />
           <input
+            name="selectControlWithRelate"
+            autoComplete="off"
             value={searchValue}
             onChange={e => setSearchValue(e.target.value)}
             placeholder={_l('搜索字段')}

@@ -215,6 +215,8 @@ export default function SessionHistory({
         <div className="searchBox t-flex t-items-center">
           <i className="icon-search" />
           <input
+            name="uiSessionHistory"
+            autoComplete="off"
             ref={searchInputRef}
             value={keyword}
             placeholder={_l('搜索历史对话')}

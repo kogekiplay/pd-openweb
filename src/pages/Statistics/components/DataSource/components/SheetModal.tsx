@@ -262,6 +262,8 @@ export default class SheetModal extends Component<any, any> {
       <div className="searchWrap flexRow alignItemsCenter">
         <Icon className="Font18 textTertiary mRight3" icon="search" />
         <input
+          name="sheetModal"
+          autoComplete="off"
           className="w100"
           placeholder={_l('搜索')}
           type="text"

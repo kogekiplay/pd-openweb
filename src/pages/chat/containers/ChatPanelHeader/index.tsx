@@ -329,6 +329,8 @@ class ChatPanelHeader extends Component<any, any> {
             <div className={cx('search-wrapper', { 'hidden-wrapper': !searchVisible })}>
               <i onClick={this.handleSearch.bind(this)} className="icon-search colorPrimary iconHover" />
               <input
+                name="chatPanelHeader"
+                autoComplete="off"
                 ref={input => {
                   this.input = input;
                 }}

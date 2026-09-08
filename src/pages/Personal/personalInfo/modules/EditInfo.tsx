@@ -77,6 +77,8 @@ export default class EditInfo extends React.Component<any, any> {
         {/**微信 */}
         <div className="Bold">{_l('微信')}</div>
         <input
+          name="editInfo1"
+          autoComplete="off"
           type="text"
           placeholder={_l('微信账号')}
           className="mTop6 mBottom24 formControl"
@@ -88,6 +90,8 @@ export default class EditInfo extends React.Component<any, any> {
         {/**LinkedIn */}
         <div className="Bold">{_l('LinkedIn')}</div>
         <input
+          name="editInfo2"
+          autoComplete="off"
           type="text"
           placeholder={_l('linkedln个人页面地址')}
           className="mTop6 mBottom24 formControl"
@@ -99,6 +103,8 @@ export default class EditInfo extends React.Component<any, any> {
         {/**微博 */}
         <div className="Bold">{_l('微博')}</div>
         <input
+          name="editInfo3"
+          autoComplete="off"
           type="text"
           placeholder={_l('微博个人页面地址')}
           className="mTop6 mBottom24 formControl"

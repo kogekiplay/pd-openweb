@@ -35,6 +35,8 @@ export default class RoleSearchBox extends Component<any, any> {
       <div className="searchContainer Relative">
         <Icon icon="search" className=" btnSearch textSecondary Font18" />
         <input
+          name="roleSearchBox"
+          autoComplete="off"
           defaultValue={searchValue}
           ref={input => (this.input = input)}
           onChange={e => {

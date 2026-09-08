@@ -80,7 +80,12 @@ export default function SetValue(props) {
                     </span>
                   </div>
                   {isDelete ? (
-                    <input className="itemValue itemValueTitle errorBorder" disabled />
+                    <input
+                      name="actionTypesSetValue"
+                      autoComplete="off"
+                      className="itemValue itemValueTitle errorBorder"
+                      disabled
+                    />
                   ) : (
                     <div className="itemValue itemValueTitle">
                       <DynamicDefaultValue

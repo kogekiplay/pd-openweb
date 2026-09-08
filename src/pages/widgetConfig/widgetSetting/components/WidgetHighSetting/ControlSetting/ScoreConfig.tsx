@@ -150,6 +150,8 @@ export default function ScoreConfig({ data, onChange }) {
               <ItemName>
                 <div className="scoreIndex">{it.key}</div>
                 <input
+                  name="controlSettingScoreConfig"
+                  autoComplete="off"
                   className="scoreText"
                   value={it.value}
                   onChange={e => {

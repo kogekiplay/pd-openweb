@@ -169,6 +169,8 @@ export default function SelectSheetFromApp(props) {
         <div className="searchWrap flexRow alignItemsCenter">
           <Icon className="Font18 textTertiary mRight3" icon="search" />
           <input
+            name="relationSearchSelectSearchSheetFromApp"
+            autoComplete="off"
             className="w100"
             placeholder={_l('搜索')}
             autoFocus

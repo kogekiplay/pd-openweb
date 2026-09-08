@@ -190,6 +190,8 @@ export default props => {
         <span className="Bold mRight10">{_l('编辑自定义页面：')}</span>
         {isEdit ? (
           <input
+            name="customPageConfigHeader"
+            autoComplete="off"
             autoFocus
             value={name}
             onChange={e => {

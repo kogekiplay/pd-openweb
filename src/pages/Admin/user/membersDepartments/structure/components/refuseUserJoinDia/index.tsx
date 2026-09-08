@@ -81,6 +81,8 @@ class RefuseUserJoinDia extends React.Component<any, any> {
         </div>
         <div className="settingItemTitle">{_l('拒绝消息')}</div>
         <textarea
+          name="refuseUserJoinDia"
+          autoComplete="off"
           type="textarea"
           className="test-textarea mTop10"
           value={refuseMessage || ''}

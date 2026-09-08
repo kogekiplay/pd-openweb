@@ -90,6 +90,8 @@ export default class EditDetail extends React.Component<any, any> {
           <span className="TxtMiddle Red">*</span>
         </div>
         <input
+          name="editDetail1"
+          autoComplete="off"
           type="text"
           className={cx('formControl mTop6', { error: isError })}
           disabled={!md.global.SysSettings.enableEditAccountInfo}
@@ -127,6 +129,8 @@ export default class EditDetail extends React.Component<any, any> {
           }}
         >
           <input
+            name="editDetail2"
+            autoComplete="off"
             className="formControl mTop6 mBottom24"
             value={baseInfo.birthdate ? moment(baseInfo.birthdate).format('YYYY-MM-DD') : ''}
           />
@@ -154,6 +158,8 @@ export default class EditDetail extends React.Component<any, any> {
         {/**组织名称 */}
         <div className="Bold">{_l('组织名称')}</div>
         <input
+          name="editDetail3"
+          autoComplete="off"
           type="text"
           className="mTop6 formControl"
           maxLength={50}
@@ -169,6 +175,8 @@ export default class EditDetail extends React.Component<any, any> {
         {/**职位 */}
         <div className="Bold mTop24">{_l('职位')}</div>
         <input
+          name="editDetail4"
+          autoComplete="off"
           type="text"
           className="mTop6 formControl"
           maxLength={50}
@@ -184,6 +192,8 @@ export default class EditDetail extends React.Component<any, any> {
         {/**职位 */}
         <div className="Bold mTop24">{_l('居住地址')}</div>
         <input
+          name="editDetail5"
+          autoComplete="off"
           type="text"
           className="mTop6 formControl"
           value={baseInfo.address}

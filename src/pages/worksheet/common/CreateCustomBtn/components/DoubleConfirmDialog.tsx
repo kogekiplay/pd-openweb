@@ -111,6 +111,8 @@ class DoubleConfirmDialog extends React.Component<any, any> {
         <Wrap>
           <p className="Bold">{_l('标题')}</p>
           <input
+            name="doubleConfirmDialog1"
+            autoComplete="off"
             className="mTop10"
             value={_.get(this.state, 'doubleConfirm.confirmMsg')}
             onChange={event => {
@@ -124,6 +126,8 @@ class DoubleConfirmDialog extends React.Component<any, any> {
           />
           <p className="mTop24 bold">{_l('说明')}</p>
           <input
+            name="doubleConfirmDialog2"
+            autoComplete="off"
             className="mTop10"
             value={confirmcontent}
             onChange={event => {
@@ -138,6 +142,8 @@ class DoubleConfirmDialog extends React.Component<any, any> {
           <div className="flexRow btnTxt alignItemsCenter mTop10">
             <span className="bold400">{_l('确认按钮')}</span>
             <input
+              name="doubleConfirmDialog3"
+              autoComplete="off"
               value={_.get(this.state, 'doubleConfirm.sureName')}
               onChange={event => {
                 this.setState({
@@ -152,6 +158,8 @@ class DoubleConfirmDialog extends React.Component<any, any> {
           <div className="flexRow btnTxt alignItemsCenter mTop10">
             <span className="bold400">{_l('取消按钮')}</span>
             <input
+              name="doubleConfirmDialog4"
+              autoComplete="off"
               value={_.get(this.state, 'doubleConfirm.cancelName')}
               onChange={event => {
                 this.setState({
@@ -183,6 +191,8 @@ class DoubleConfirmDialog extends React.Component<any, any> {
               <div className="flexRow btnTxt alignItemsCenter mTop10">
                 <span className="bold400">{_l('备注名称')}</span>
                 <input
+                  name="doubleConfirmDialog5"
+                  autoComplete="off"
                   value={remarkname}
                   onChange={event => {
                     this.setState({
@@ -197,6 +207,8 @@ class DoubleConfirmDialog extends React.Component<any, any> {
               <div className="flexRow btnTxt alignItemsCenter mTop10">
                 <span className="bold400">{_l('引导文字')}</span>
                 <input
+                  name="doubleConfirmDialog6"
+                  autoComplete="off"
                   value={remarkhint}
                   onChange={event => {
                     this.setState({

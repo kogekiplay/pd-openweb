@@ -245,6 +245,8 @@ class Header extends React.Component<any, any> {
                   <React.Fragment>
                     {isEdit ? (
                       <input
+                        name="header"
+                        autoComplete="off"
                         type="text"
                         placeholder={_l('请输入模板名称')}
                         className="tepName"

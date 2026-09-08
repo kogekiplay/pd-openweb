@@ -214,6 +214,8 @@ export default function TextMessage(props) {
 
         <h6 className="Font16 textPrimary Bold mBottom0 mTop24">{_l('发件人名称')}</h6>
         <input
+          name="settingTextMessage"
+          autoComplete="off"
           type="text"
           className="sign mTop6"
           placeholder={_l('请输入发件人名称')}

@@ -73,6 +73,8 @@ export default function DataCon(props) {
             <React.Fragment>
               <i className="icon icon-search"></i>
               <input
+                name="resourceViewDataCon"
+                autoComplete="off"
                 type="text"
                 placeholder={_l('搜索%0', str)}
                 ref={inputRef}

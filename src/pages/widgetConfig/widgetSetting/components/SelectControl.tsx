@@ -22,6 +22,8 @@ export default function SelectControl({ className, list, searchable = true, onCl
         <div className="search" onClick={e => e.stopPropagation()}>
           <i className="icon-search textTertiary" />
           <input
+            name="selectControl"
+            autoComplete="off"
             autoFocus
             ref={inputEl}
             value={keyword}

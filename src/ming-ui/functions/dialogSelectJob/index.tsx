@@ -147,6 +147,8 @@ class DialogSelectJob extends Component<any, any> {
           <div className="selectJobContainer_search">
             <span className="searchIcon icon-search" />
             <input
+              name="functionsDialogSelectJob"
+              autoComplete="off"
               type="text"
               className="searchInput"
               placeholder={_l('搜索职位')}

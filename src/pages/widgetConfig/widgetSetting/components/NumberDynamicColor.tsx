@@ -76,6 +76,8 @@ export default function NumberDynamicColor(props) {
             <DynamicColorWrap>
               <span>{_l('当数值≤')}</span>
               <input
+                name="numberDynamicColor"
+                autoComplete="off"
                 value={item.key}
                 disabled={item.key === max}
                 onChange={e => onChange({ key: e.target.value }, index)}

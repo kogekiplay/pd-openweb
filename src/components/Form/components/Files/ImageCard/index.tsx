@@ -205,6 +205,8 @@ const ImageCard = props => {
         {isEdit ? (
           <div className="flex">
             <input
+              name="filesImageCard1"
+              autoComplete="off"
               ref={ref}
               type="text"
               autoFocus
@@ -433,6 +435,8 @@ const NotSaveImageCard = props => {
         {isEdit ? (
           <div className="flex">
             <input
+              name="filesImageCard2"
+              autoComplete="off"
               ref={ref}
               type="text"
               autoFocus

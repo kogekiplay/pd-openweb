@@ -439,6 +439,8 @@ export default class DropDownItem extends Component<any, any> {
         <Fragment>
           <div className="ruleSearchWrap">
             <input
+              name="actionDropdownActionDropDown"
+              autoComplete="off"
               type="text"
               autoFocus
               value={keyword}

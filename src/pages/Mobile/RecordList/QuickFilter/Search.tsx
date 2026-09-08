@@ -154,6 +154,8 @@ class Search extends Component<any, any> {
             }}
           >
             <input
+              name="quickFilterSearch"
+              autoComplete="off"
               type="search"
               className="pAll0 Border0 w100"
               placeholder={

@@ -366,6 +366,8 @@ export default function TelDialog(props) {
             <span className="title">{_l('验证码')}</span>
             <div className="code">
               <input
+                name="portalUserSetFindPwdDialog"
+                autoComplete="off"
                 type="text"
                 maxLength={'4'}
                 className="loginInput txtLoginCode"
@@ -400,6 +402,8 @@ export default function TelDialog(props) {
             <span className="title">{_l('新密码')}</span>
             <input
               type="password"
+              name="newPassword"
+              autoComplete="new-password"
               className={cx('telPwd')}
               value={psd}
               onChange={e => {

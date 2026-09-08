@@ -24,6 +24,8 @@ export default function (props) {
         <React.Fragment>
           <i className="icon icon-search"></i>
           <input
+            name="groupFilterNavSearch"
+            autoComplete="off"
             type="text"
             ref={inputRef}
             placeholder={_l('搜索')}

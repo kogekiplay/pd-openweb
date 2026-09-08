@@ -118,7 +118,14 @@ function TestSms(props) {
       <div className="">{_l('【%0】您的验证码是1234，感谢您的使用！', signName)}</div>
       <div className="textSecondary bold mBottom8 mTop16">{_l('手机号')}</div>
       <InputWrapper>
-        <input type="tel" className="ming Input w100" ref={mobileRef} placeholder={_l('请输入手机号')} />
+        <input
+          type="tel"
+          name="phone"
+          autoComplete="tel"
+          className="ming Input w100"
+          ref={mobileRef}
+          placeholder={_l('请输入手机号')}
+        />
       </InputWrapper>
     </Dialog>
   );

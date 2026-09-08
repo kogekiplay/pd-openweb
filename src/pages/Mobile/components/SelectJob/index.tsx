@@ -65,6 +65,8 @@ export default class SelectJob extends Component<any, any> {
           }}
         >
           <input
+            name="selectJob"
+            autoComplete="off"
             type="search"
             placeholder={_l('搜索职位')}
             className="Font14"

@@ -361,6 +361,8 @@ let DataSource = class DataSource extends Component<any, any> {
       <div className="searchControlWrapper flexRow valignWrapper textTertiary">
         <Icon className="Font18 mRight3" icon="search" />
         <input
+          name="dataSource"
+          autoComplete="off"
           className="flex"
           value={searchValue}
           placeholder={_l('搜索')}

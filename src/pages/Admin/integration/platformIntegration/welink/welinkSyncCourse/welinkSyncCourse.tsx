@@ -82,7 +82,14 @@ export default class WelinkSyncCourse extends React.Component<any, any> {
         </p>
         <div className="inputList mTop20">
           <span className="inputTitle">{_l('应用主页：')}</span>
-          <input type="text" className="inputBox" readOnly value={homeUrl} />
+          <input
+            name="welinkSyncCourseWelinkSyncCourse"
+            autoComplete="off"
+            type="text"
+            className="inputBox"
+            readOnly
+            value={homeUrl}
+          />
           <span
             className="copyBtn"
             onClick={() => {

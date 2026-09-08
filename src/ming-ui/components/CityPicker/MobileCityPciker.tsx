@@ -135,7 +135,13 @@ export default class MobileCityPicker extends Component<any, any> {
       <Fragment>
         <span className="Block" onClick={() => !disabled && this.setState({ visible: true }, this.props.getCitys)}>
           {children || (
-            <input readOnly value={select.length === 0 ? defaultValue : last.path} placeholder={placeholder} />
+            <input
+              name="cityPickerMobileCityPciker"
+              autoComplete="off"
+              readOnly
+              value={select.length === 0 ? defaultValue : last.path}
+              placeholder={placeholder}
+            />
           )}
         </span>
         <PopupWrapper

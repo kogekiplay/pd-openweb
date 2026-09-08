@@ -84,6 +84,8 @@ export default class TagInput extends Component<any, any> {
           <li className="flex" onClick={this.handleClick}>
             <div className="inputBox">
               <input
+                name="tagInput"
+                autoComplete="off"
                 type="text"
                 autoFocus={inputFocus}
                 disabled={disable}

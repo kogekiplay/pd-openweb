@@ -152,6 +152,8 @@ export default class AddOrEditItem extends React.Component<any, any> {
           <span className="TxtMiddle Red">*</span>
         </div>
         <input
+          name="addOrEditItem1"
+          autoComplete="off"
           type="text"
           className={cx('formControl mTop6 mBottom6', { error: errorList.name })}
           defaultValue={baseInfo.name}
@@ -164,6 +166,8 @@ export default class AddOrEditItem extends React.Component<any, any> {
           <span className="TxtMiddle Red">*</span>
         </div>
         <input
+          name="addOrEditItem2"
+          autoComplete="off"
           type="text"
           className={cx('formControl mTop6 mBottom6', { error: errorList.title })}
           defaultValue={baseInfo.title}
@@ -173,6 +177,8 @@ export default class AddOrEditItem extends React.Component<any, any> {
         {/**描述或核心课程 */}
         <div className="Bold">{type === 1 ? _l('描述') : _l('核心课程')}</div>
         <textarea
+          name="addOrEditItem3"
+          autoComplete="off"
           className="mTop6 mBottom24 formControl mBottom6"
           value={baseInfo.description}
           onChange={e => {

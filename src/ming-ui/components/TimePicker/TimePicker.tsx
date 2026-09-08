@@ -143,6 +143,8 @@ class TimePicker extends Component<any, any> {
     const formatValue = this.getFormat(value);
     return (
       <input
+        name="timePickerTimePicker"
+        autoComplete="off"
         readOnly
         value={formatValue}
         placeholder={placeholder}

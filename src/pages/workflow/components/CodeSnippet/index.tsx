@@ -221,7 +221,14 @@ export const CodeSnippetEdit = ({
     >
       <div className="flexRow alignItemsCenter">
         <div className="codeSnippetEditLabel">{_l('代码片段名称')}</div>
-        <input type="text" className="flex" value={name} onChange={e => setName(e.target.value)} />
+        <input
+          name="codeSnippet1"
+          autoComplete="off"
+          type="text"
+          className="flex"
+          value={name}
+          onChange={e => setName(e.target.value)}
+        />
       </div>
       <div className="flexRow alignItemsCenter mTop30">
         <div className="codeSnippetEditLabel">{_l('保存到')}</div>
@@ -394,6 +401,8 @@ const CodeSnippet = ({ projectId, type = 0, onSave = () => {}, onClose = () => {
           <div className="codeSnippetSearch">
             <i className="icon-search Font16 textSecondary"></i>
             <input
+              name="codeSnippet2"
+              autoComplete="off"
               type="text"
               placeholder={_l('搜索')}
               ref={inputName}

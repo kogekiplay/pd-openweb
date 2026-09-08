@@ -563,6 +563,8 @@ class Detail extends React.Component<any, any> {
                   name={_l('分享链接')}
                   value={
                     <input
+                      name="detailDetail"
+                      autoComplete="off"
                       type="text"
                       readOnly
                       className="copyLink boderRadAll_3 boxSizing"

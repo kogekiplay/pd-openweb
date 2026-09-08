@@ -397,6 +397,8 @@ export default class FileComponent extends Component<any, any> {
         <div className="UploadFiles-panelText">
           {isEdit ? (
             <input
+              name="uploadFilesFile1"
+              autoComplete="off"
               ref={editInput => {
                 this.editInput = editInput;
               }}
@@ -562,6 +564,8 @@ export default class FileComponent extends Component<any, any> {
         <div className="UploadFiles-panelText">
           {isEdit ? (
             <input
+              name="uploadFilesFile2"
+              autoComplete="off"
               ref={editInput => {
                 this.editInput = editInput;
               }}

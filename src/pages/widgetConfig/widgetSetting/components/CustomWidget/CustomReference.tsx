@@ -109,6 +109,8 @@ export default function CustomReference(props) {
               {_.get(control, 'controlName') || _l('已删除')}
             </div>
             <input
+              name="customWidgetCustomReference"
+              autoComplete="off"
               className={cx('fieldName', { error: _.includes(errors, [item.cid]) })}
               value={item.name}
               onChange={e => {

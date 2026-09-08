@@ -333,6 +333,8 @@ class TelCon extends React.Component<any, any> {
     const { verifyCodeLoading, verifyCodeText } = this.state;
     const accountInput = (
       <input
+        name="portalUserSetAccountCon1"
+        autoComplete="off"
         type="text"
         className={cx('telInput')}
         ref={mobile => (this.mobile = mobile)}
@@ -365,6 +367,8 @@ class TelCon extends React.Component<any, any> {
           <span className="title">{_l('验证码')}</span>
           <div className="code">
             <input
+              name="portalUserSetAccountCon2"
+              autoComplete="off"
               type="text"
               maxLength={'4'}
               className="loginInput txtLoginCode"

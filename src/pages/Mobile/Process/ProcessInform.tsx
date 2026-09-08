@@ -130,6 +130,8 @@ export default class ProcessInform extends Component<any, any> {
         <div className="inputWrap valignWrapper flex">
           <Icon icon="search" className="textTertiary Font20 pointer" />
           <input
+            name="processProcessInform"
+            autoComplete="off"
             value={searchValue}
             type="text"
             placeholder={_l('搜索记录名称')}

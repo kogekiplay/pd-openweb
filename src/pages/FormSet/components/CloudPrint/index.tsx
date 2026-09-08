@@ -317,7 +317,13 @@ const CloudPrint = props => {
         <div className="fieldsAnalysisContent">
           <div className="analysisDesc">{_l('解析快麦云打印接口返回的渲染数据，自动生成需要绑定的模板字段。')}</div>
           <div className="analysisLabel">{_l('快麦API示例数据')}</div>
-          <textarea className="analysisTextarea" value={originalData} onChange={e => setOriginalData(e.target.value)} />
+          <textarea
+            name="cloudPrint"
+            autoComplete="off"
+            className="analysisTextarea"
+            value={originalData}
+            onChange={e => setOriginalData(e.target.value)}
+          />
         </div>
       </Dialog>
     );

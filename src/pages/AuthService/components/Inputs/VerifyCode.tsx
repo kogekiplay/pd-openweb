@@ -230,6 +230,7 @@ export default function (props) {
         })}
       >
         <input
+          name="inputsVerifyCode1"
           type="text"
           maxLength={maxLength || '4'}
           className="loginInput Left txtLoginCode"
@@ -260,7 +261,7 @@ export default function (props) {
           value={verifyCodeText || (verifyCodeLoading ? _l('发送中...') : _l('获取验证码'))}
           onClick={() => handleSendVerifyCode(CodeTypeEnum.message)}
         />
-        <input type="text" tabIndex="-1" className="Alpha0 inputHidden" />
+        <input name="inputsVerifyCode2" autoComplete="off" type="text" tabIndex="-1" className="Alpha0 inputHidden" />
         <div className="title" onClick={() => CodeRef.current.focus()}>
           {_l('验证码')}
         </div>

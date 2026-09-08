@@ -372,7 +372,13 @@ export default class RelationControl extends Component<any, any> {
             />
             <div className="relationControlSearch">
               <i className="icon-search" />
-              <input type="text" placeholder={currentType.searchText} onKeyUp={evt => this.search(evt)} />
+              <input
+                name="relationControlRelationControl"
+                autoComplete="off"
+                type="text"
+                placeholder={currentType.searchText}
+                onKeyUp={evt => this.search(evt)}
+              />
             </div>
 
             {this.state.list.length === 0 && this.state.keywords ? undefined : (

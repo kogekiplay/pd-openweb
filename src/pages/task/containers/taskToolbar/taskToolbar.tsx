@@ -490,6 +490,8 @@ class TaskToolbar extends Component<any, any> {
               </span>
             ) : (
               <input
+                name="taskToolbarTaskToolbar"
+                autoComplete="off"
                 type="text"
                 value={this.state.folderName}
                 className="txtName boderRadAll_3 flex"

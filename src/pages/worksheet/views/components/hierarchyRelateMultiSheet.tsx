@@ -202,6 +202,8 @@ export default function HierarchyRelateMultiSheet({ worksheetInfo, viewControls,
         <InputWrap>
           <i className="icon-search textSecondary Font16"></i>
           <input
+            name="hierarchyRelateMultiSheet"
+            autoComplete="off"
             autoFocus
             value={searchValue}
             placeholder={_l('搜索')}

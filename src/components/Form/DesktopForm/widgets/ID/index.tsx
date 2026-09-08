@@ -120,6 +120,8 @@ const IDWidget = props => {
       </div>
       <IDWrap isEditing={isEditing}>
         <input
+          name="iD"
+          autoComplete="off"
           type="text"
           className={cx('customFormControlBox', { controlDisabled: disabled })}
           ref={textRef}

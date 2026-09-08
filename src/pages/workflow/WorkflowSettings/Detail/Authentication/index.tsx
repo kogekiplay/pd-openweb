@@ -353,6 +353,8 @@ export default class Authentication extends Component<any, any> {
             </div>
             <div className="mTop15 flexRow alignItemsCenter">
               <input
+                name="detailAuthentication1"
+                autoComplete="off"
                 type="text"
                 className="borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10"
                 style={{ width: 115 }}
@@ -653,6 +655,8 @@ export default class Authentication extends Component<any, any> {
 
             {refreshType === 10002 && (
               <input
+                name="detailAuthentication2"
+                autoComplete="off"
                 type="text"
                 className="borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10 mRight10"
                 style={{ width: 180 }}
@@ -664,6 +668,8 @@ export default class Authentication extends Component<any, any> {
             )}
 
             <input
+              name="detailAuthentication3"
+              autoComplete="off"
               type="text"
               className="borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10 flex"
               placeholder={

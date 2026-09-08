@@ -206,6 +206,8 @@ export default class DialogCreateApp extends Component<any, any> {
                     {item.sheetId === currentSheetId && isEditSheetName ? (
                       <div className="flex">
                         <input
+                          name="dialogImportExcelCreateDialogCreateApp"
+                          autoComplete="off"
                           ref={node => (this.editInput = node)}
                           value={item.sheetName}
                           className="editSheetNameInput"

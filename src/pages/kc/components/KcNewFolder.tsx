@@ -58,6 +58,8 @@ export default class KcNewFolder extends Component<any, any> {
         <span className="noSelectPoint" />
         <span className="type fileIcon-folder" />
         <input
+          name="kcNewFolder1"
+          autoComplete="off"
           ref={input => (this.input = input)}
           type="text"
           className="addFolderName flex"
@@ -76,6 +78,8 @@ export default class KcNewFolder extends Component<any, any> {
           <span className="type fileIcon-folder" />
         </div>
         <input
+          name="kcNewFolder2"
+          autoComplete="off"
           ref={input => (this.input = input)}
           type="text"
           className="addFolderName thumbnailName"

@@ -30,6 +30,8 @@ const SelectCountryDropdown = ({ data = [], lang, setData, setVisible }) => {
       <div className="searchWrap" onClick={e => e.stopPropagation()}>
         <i className="icon-search Font16 textSecondary"></i>
         <input
+          name="settingsMoney"
+          autoComplete="off"
           autoFocus
           value={value}
           placeholder={_l('搜索')}

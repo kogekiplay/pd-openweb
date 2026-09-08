@@ -462,6 +462,8 @@ export default class ExportSheet extends Component<any, any> {
               <div className="search_input">
                 <i className="icon-search textTertiary Font16" />
                 <input
+                  name="exportSheetExportSheet"
+                  autoComplete="off"
                   placeholder={_l('搜索')}
                   onChange={e => this.setState({ columnSearchWord: e.target.value || '' })}
                 />

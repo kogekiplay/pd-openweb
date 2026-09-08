@@ -26,6 +26,8 @@ export default function TextInput(props) {
         {isRequired ? <span className="TxtMiddle Red">*</span> : null}
       </div>
       <input
+        name="textInput"
+        autoComplete="off"
         type="text"
         className={cx('formControl', { error, disabled, noBorder: disabled })}
         {...inputProps}

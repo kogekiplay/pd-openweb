@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import { AutoComplete } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -154,6 +154,8 @@ function SearchRecord(props) {
           <Icon className="textTertiary Font18" icon="search" />
           <div className="flex">
             <input
+              name="mapViewSearchRecord"
+              autoComplete="off"
               value={value}
               onChange={event => {
                 setValue(event.target.value);

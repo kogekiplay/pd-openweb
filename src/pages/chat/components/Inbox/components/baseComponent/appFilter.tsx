@@ -141,6 +141,8 @@ export default class AppFilter extends Component<any, any> {
       >
         <div className="searchWrapper valignWrapper">
           <input
+            name="baseComponentAppFilter"
+            autoComplete="off"
             autoFocus
             value={searchValue}
             className="flex"

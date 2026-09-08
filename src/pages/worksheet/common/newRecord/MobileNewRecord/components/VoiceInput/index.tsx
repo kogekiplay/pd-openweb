@@ -47,7 +47,7 @@ const VoiceInput = forwardRef((props, ref) => {
     if (step === VOICE_STEP.INIT) return <div className="placeholder">{_l('点击下方按钮进行语音识别录入')}</div>;
     return (
       <div className="recordingContent">
-        <textarea value={value} onChange={manualChangeText} />
+        <textarea name="voiceInput" autoComplete="off" value={value} onChange={manualChangeText} />
       </div>
     );
   };

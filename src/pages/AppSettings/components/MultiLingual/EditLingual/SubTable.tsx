@@ -66,6 +66,8 @@ export default function SubTable(props) {
           <div className="searchWrap flexRow alignItemsCenter mBottom10">
             <Icon className="textTertiary Font20 mRight5" icon="search" />
             <input
+              name="editLingualSubTable"
+              autoComplete="off"
               placeholder={_l('字段')}
               className="flex"
               value={searchValue}

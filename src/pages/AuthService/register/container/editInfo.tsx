@@ -349,6 +349,7 @@ export default function (props) {
           {isMustJobNumber && (
             <div className={cx('mesDiv', renderClassName('jobNumber', jobNumber))}>
               <input
+                name="containerEditInfo"
                 type="text"
                 className="jobNumber"
                 maxLength={'60'}

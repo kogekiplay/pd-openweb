@@ -55,6 +55,8 @@ const OtherInput = props => {
     return (
       <OtherInputWrap className={`mTop10 ${className || ''}`}>
         <textarea
+          name="checkboxOtherInput"
+          autoComplete="off"
           ref={textareaRef}
           maxLength={200}
           disabled={disabled}

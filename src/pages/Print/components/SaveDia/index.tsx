@@ -69,6 +69,8 @@ export default class SaveDia extends React.Component<any, any> {
         <div className="list">
           <span className="title">{_l('模板名称')}</span>
           <input
+            name="saveDia"
+            autoComplete="off"
             type="text"
             ref={el => {
               this.name = el;

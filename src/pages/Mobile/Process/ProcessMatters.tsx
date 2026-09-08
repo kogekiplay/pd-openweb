@@ -667,6 +667,8 @@ export default class ProcessMatters extends Component<any, any> {
         <div className="inputWrap valignWrapper flex">
           <Icon icon="search" className="textSecondary Font20 pointer" />
           <input
+            name="processProcessMatters"
+            autoComplete="off"
             value={searchValue}
             type="text"
             placeholder={_l('搜索记录名称')}

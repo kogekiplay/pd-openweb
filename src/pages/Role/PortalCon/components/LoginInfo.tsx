@@ -164,6 +164,8 @@ function LoginInfo(props) {
         <div className="searchWrapper InlineBlock mLeft16">
           <Icon icon="search" className="Font18 textTertiary" />
           <input
+            name="loginInfo"
+            autoComplete="off"
             type="text"
             className="cursorText"
             placeholder={_l('搜索用户名称、手机号、邮箱')}

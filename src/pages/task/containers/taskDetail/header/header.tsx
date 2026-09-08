@@ -496,6 +496,8 @@ class Header extends Component<any, any> {
           >
             <div className="createChecklistTitle Font15">{_l('添加检查清单')}</div>
             <input
+              name="headerHeader"
+              autoComplete="off"
               type="text"
               ref={checklistText => {
                 this.checklistText = checklistText;

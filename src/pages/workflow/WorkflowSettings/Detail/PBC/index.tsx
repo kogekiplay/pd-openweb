@@ -314,6 +314,8 @@ export default class PBC extends Component<any, any> {
             <div className="mTop20 bold">{_l('参数名')}</div>
             <div className="mTop10 flexRow">
               <input
+                name="detailPBC1"
+                autoComplete="off"
                 type="text"
                 className="borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10 flex"
                 placeholder={_l('参数名')}
@@ -337,6 +339,8 @@ export default class PBC extends Component<any, any> {
             <div className="mTop20 bold">{_l('参数说明')}</div>
             <div className="mTop10 flexRow">
               <input
+                name="detailPBC2"
+                autoComplete="off"
                 type="text"
                 className="borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10 flex"
                 placeholder={_l('参数说明')}
@@ -383,6 +387,8 @@ export default class PBC extends Component<any, any> {
   renderFieldName = item => {
     return (
       <input
+        name="detailPBC3"
+        autoComplete="off"
         type="text"
         className="borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10 flex"
         placeholder={_l('字段名（必填）')}

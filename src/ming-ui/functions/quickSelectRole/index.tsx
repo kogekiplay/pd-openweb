@@ -350,6 +350,8 @@ export function RoleSelect(props) {
       <div className="searchRoleWrap valignWrapper">
         <Icon icon="search" className="searchIcon textTertiary mRight8 Font18" />
         <input
+          name="functionsQuickSelectRole"
+          autoComplete="off"
           type="text"
           className="flex"
           ref={inputRef}

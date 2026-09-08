@@ -162,6 +162,8 @@ export default class CalendarRemind extends Component<any, any> {
               <span>
                 {_l('提前%19001')}
                 <input
+                  name="calendarRemind"
+                  autoComplete="off"
                   type="text"
                   className="remindBox borderColorPrimary"
                   value={this.state.value}

@@ -236,6 +236,8 @@ export default function ConfigureControl(props) {
         <div className="searchWrap" onClick={e => e.stopPropagation()}>
           <i className="icon-search Font16 textSecondary"></i>
           <input
+            name="sublistConfigureControls"
+            autoComplete="off"
             autoFocus
             className="flex"
             value={searchValue}

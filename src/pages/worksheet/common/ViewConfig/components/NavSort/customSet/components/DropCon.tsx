@@ -247,6 +247,8 @@ export default function (props) {
             ></div>
           )}
           <input
+            name="dropCon"
+            autoComplete="off"
             type="text"
             className="customInput"
             ref={inputRef}

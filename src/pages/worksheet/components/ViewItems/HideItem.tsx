@@ -100,6 +100,8 @@ export default function HideItem(props) {
       )}
       {edit ? (
         <input
+          name="viewItemsHideItem"
+          autoComplete="off"
           autoFocus
           ref={nameRef}
           className="viewName sideEditName"

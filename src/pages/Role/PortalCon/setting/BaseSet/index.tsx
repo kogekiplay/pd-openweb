@@ -92,6 +92,8 @@ export default function BaseSet(props) {
       <div className="content">
         <h6 className="Font16 textPrimary Bold mBottom0">{_l('门户名称')}</h6>
         <input
+          name="settingBaseSet"
+          autoComplete="off"
           type="text"
           className="pageTitle mTop6"
           placeholder={_l('请输入')}

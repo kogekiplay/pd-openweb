@@ -188,6 +188,7 @@ export default function (props) {
         <Wrap className="messageBox createOrgForm">
           <div className={cx('mesDiv', renderClassName('companyName', companyName))}>
             <input
+              name="containerCreate1"
               type="text"
               maxLength={'60'}
               className="companyName"
@@ -258,6 +259,7 @@ export default function (props) {
               return (
                 <div className={cx('mesDiv', renderClassName(o.id, extraDatas[o.id]))}>
                   <input
+                    name="containerCreate2"
                     type="text"
                     className={o.id}
                     autoComplete="off"

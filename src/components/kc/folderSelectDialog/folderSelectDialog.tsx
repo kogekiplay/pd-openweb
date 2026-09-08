@@ -113,7 +113,12 @@ $.extend(FolderSelect.prototype, {
             </div>
             <div className="operation">
               <span className="folderSearch">
-                <input className="searchFolder animated" placeholder={_l('请输入文件名称并回车')} />
+                <input
+                  name="folderSelectDialogFolderSelectDialog"
+                  autoComplete="off"
+                  className="searchFolder animated"
+                  placeholder={_l('请输入文件名称并回车')}
+                />
                 <i className="icon-search"></i>
               </span>
               <span className="createFolder icon-createFolder"></span>

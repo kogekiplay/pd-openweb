@@ -123,6 +123,8 @@ const IDWidget = props => {
       </div>
       {!disabled && (
         <input
+          name="iD"
+          autoComplete="off"
           type="text"
           className={cx('customFormControlBox', className)}
           value={currentValue}

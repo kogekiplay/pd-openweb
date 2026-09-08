@@ -104,6 +104,8 @@ export default class NodeOperate extends Component<any, any> {
 
     return (
       <input
+        name="nodeOperate"
+        autoComplete="off"
         type="text"
         ref={workflowNodeName => {
           this.workflowNodeName = workflowNodeName;

@@ -262,7 +262,14 @@ export default class DingSyncCourse extends React.Component<any, any> {
         </p>
         <div className="inputList mTop20">
           <span className="inputTitle">{_l('可信域名：')}</span>
-          <input type="text" className="inputBox" readOnly value={this.state.domainName} />
+          <input
+            name="dingSyncCourseDingSyncCourse1"
+            autoComplete="off"
+            type="text"
+            className="inputBox"
+            readOnly
+            value={this.state.domainName}
+          />
           <span className="copyBtn" onClick={() => this.bindClipboard(this.state.domainName)}>
             {_l('复制')}
           </span>
@@ -335,7 +342,14 @@ export default class DingSyncCourse extends React.Component<any, any> {
         </p>
         <div className="inputList mTop20">
           <span className="inputTitle">{_l('PC端首页地址：')}</span>
-          <input type="text" className="inputBox" readOnly value={homeUrl} />
+          <input
+            name="dingSyncCourseDingSyncCourse2"
+            autoComplete="off"
+            type="text"
+            className="inputBox"
+            readOnly
+            value={homeUrl}
+          />
           <span className="copyBtn" onClick={() => this.bindClipboard(homeUrl)}>
             {_l('复制')}
           </span>
@@ -408,7 +422,14 @@ export default class DingSyncCourse extends React.Component<any, any> {
           <span className="inputTitle" style={{ width: 190 }}>
             {_l('重定向 URL（授权回调域名）')}
           </span>
-          <input type="text" className="inputBox" readOnly value={scanSafeDomain} />
+          <input
+            name="dingSyncCourseDingSyncCourse3"
+            autoComplete="off"
+            type="text"
+            className="inputBox"
+            readOnly
+            value={scanSafeDomain}
+          />
           <span
             className="copyBtn"
             onClick={() => {

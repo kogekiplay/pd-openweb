@@ -184,6 +184,8 @@ const SelectDropdown = ({
       {searchable && (
         <SearchInputWrapper>
           <input
+            name="dropdown"
+            autoComplete="off"
             ref={inputRef}
             className="searchInput"
             placeholder={searchPlaceholder}

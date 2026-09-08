@@ -261,6 +261,8 @@ export default class ImportConfig extends Component<any, any> {
                     <span className="mRight12 textTertiary">{_l('选择表头:')}</span>
                     <span>{_l('第')}</span>
                     <input
+                      name="importDataFromExcelImportConfig"
+                      autoComplete="off"
                       value={titleLine}
                       className="TxeCenter InlineBlock pointer"
                       onClick={() => this.setState({ showDownload: true })}

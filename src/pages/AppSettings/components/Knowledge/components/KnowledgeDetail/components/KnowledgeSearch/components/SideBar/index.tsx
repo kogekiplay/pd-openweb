@@ -95,6 +95,8 @@ const SideBar = props => {
       {/* 检索内容 */}
       <div className="filterTitle">{_l('检索内容')}</div>
       <textarea
+        name="sideBar"
+        autoComplete="off"
         ref={inputRef}
         className="knowledgeTextarea filterDesc"
         placeholder={_l('输入检索内容')}

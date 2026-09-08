@@ -122,7 +122,14 @@ export default class WebhookContent extends Component<any, any> {
           <div className="Font13 bold">{_l('Webhook URL')}</div>
           <div className="Font13 textSecondary mTop5">{_l('我们为您生成了一个用来接收请求的URL')}</div>
           <div className="mTop10 flexRow">
-            <input type="text" className="webhookLink flex" value={data.hookUrl} disabled />
+            <input
+              name="startWebhookContent"
+              autoComplete="off"
+              type="text"
+              className="webhookLink flex"
+              value={data.hookUrl}
+              disabled
+            />
             <div
               className="mLeft10 webhookLinkCopy"
               onClick={() => {

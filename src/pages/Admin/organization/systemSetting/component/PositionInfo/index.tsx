@@ -141,6 +141,8 @@ class PositionInfo extends Component<any, any> {
               <div className="searchContainer">
                 <Icon icon="search" className=" btnSearch textSecondary" />
                 <input
+                  name="componentPositionInfo1"
+                  autoComplete="off"
                   defaultValue={searchValue}
                   ref={input => (this.input = input)}
                   onChange={e => {
@@ -171,7 +173,12 @@ class PositionInfo extends Component<any, any> {
                   />
                 ) : null}
               </div>
-              <input type="text" style={{ width: 0, height: 0, border: 0 }} />
+              <input
+                name="componentPositionInfo2"
+                autoComplete="off"
+                type="text"
+                style={{ width: 0, height: 0, border: 0 }}
+              />
               <div className="actBox flexRow">
                 <span className="creatRole themeColor Hand" onClick={() => this.createAndEdit('create')}>
                   <Icon icon="add" className="Font20 TxtMiddle mRight10" />

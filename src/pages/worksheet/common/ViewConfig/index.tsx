@@ -91,6 +91,8 @@ let ViewConfig = class ViewConfig extends React.Component<any, any> {
           </Fragment>
         ) : (
           <input
+            name="viewConfig"
+            autoComplete="off"
             value={name}
             ref={inputEl => {
               this.inputEl = inputEl;

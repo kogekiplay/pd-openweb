@@ -646,6 +646,8 @@ export function DeptSelect(props) {
       <div className="searchRoleWrap valignWrapper">
         <Icon icon="search" className="searchIcon textTertiary mRight8 Font18" />
         <input
+          name="functionsQuickSelectDept"
+          autoComplete="off"
           type="text"
           className="flex"
           ref={inputRef}

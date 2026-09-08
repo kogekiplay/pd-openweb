@@ -77,6 +77,8 @@ export default class Tel extends Component<any, any> {
       <div className={cx({})}>
         <input
           type="tel"
+          name="phone"
+          autoComplete="tel"
           className={cx(inputClassName)}
           ref={input => {
             this.input = input;

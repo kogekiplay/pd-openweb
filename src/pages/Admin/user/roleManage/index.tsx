@@ -912,7 +912,7 @@ class RoleManage extends Component<any, any> {
             handleClear={this.handleClear}
             updateIsRequestList={this.props.updateIsRequestList}
           />
-          <input type="text" style={{ width: 0, height: 0, border: 0 }} />
+          <input name="userRoleManage" autoComplete="off" type="text" style={{ width: 0, height: 0, border: 0 }} />
 
           {hasRoleAuth && (
             <div className="actBox flexRow">

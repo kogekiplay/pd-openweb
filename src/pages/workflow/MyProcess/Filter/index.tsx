@@ -294,6 +294,8 @@ export default class Filter extends Component<any, any> {
       <div className="mBottom16">
         <div className="inputWrapper valignWrapper Relative">
           <input
+            name="myProcessFilter"
+            autoComplete="off"
             value={searchValue}
             type="text"
             placeholder={_l('搜索名称和摘要')}

@@ -426,6 +426,8 @@ export default function CustomEvent(props) {
                   <span className="titleEvent">{index ? _l('否则如果') : _l('如果')}</span>
                   {focusKey === eventActionKey ? (
                     <input
+                      name="contentCustomEvent"
+                      autoComplete="off"
                       className="customEventInput"
                       value={eventName}
                       autoFocus

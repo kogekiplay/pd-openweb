@@ -148,6 +148,8 @@ class SearchBox extends Component<any, any> {
       <div className="searchContainer Relative" ref={box => (this.box = box)}>
         <span className="icon-search btnSearch textSecondary" title={_l('搜索')} />
         <input
+          name="searchSearchBox"
+          autoComplete="off"
           defaultValue={searchValue}
           ref={input => (this.input = input)}
           onChange={e => {

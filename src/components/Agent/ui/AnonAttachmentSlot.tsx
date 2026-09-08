@@ -121,7 +121,15 @@ export default function AnonAttachmentSlot({
 
   return (
     <>
-      <input ref={inputRef} type="file" multiple accept={ACCEPT} style={{ display: 'none' }} onChange={handlePick} />
+      <input
+        name="uiAnonAttachmentSlot"
+        ref={inputRef}
+        type="file"
+        multiple
+        accept={ACCEPT}
+        style={{ display: 'none' }}
+        onChange={handlePick}
+      />
       <BgIconButton
         className={className}
         style={{ borderRadius: '8px', padding: '6px' }}

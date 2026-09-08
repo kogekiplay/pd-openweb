@@ -208,7 +208,13 @@ const CompositeInput = forwardRef((props, ref) => {
                 </div>
               )}
               <div className="recordingContent">
-                <textarea placeholder={_l('简单描述你希望识别的内容')} value={value} onChange={manualChangeText} />
+                <textarea
+                  name="compositeInput"
+                  autoComplete="off"
+                  placeholder={_l('简单描述你希望识别的内容')}
+                  value={value}
+                  onChange={manualChangeText}
+                />
               </div>
             </Content>
             <Footer className="footer">

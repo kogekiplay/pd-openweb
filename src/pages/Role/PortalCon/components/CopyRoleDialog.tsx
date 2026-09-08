@@ -64,6 +64,8 @@ export default function CopyRoleDialog(props) {
         <div className="roleInput flexRow">
           <span className="title textSecondary">{_l('角色')}</span>
           <input
+            name="copyRoleDialog"
+            autoComplete="off"
             className="flex mLeft16"
             value={roleName}
             ref={inputRef}

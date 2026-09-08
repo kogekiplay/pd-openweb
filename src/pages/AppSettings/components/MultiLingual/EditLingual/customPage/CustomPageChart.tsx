@@ -169,6 +169,8 @@ export default function CustomPageChart(props) {
         <div className="searchWrap flexRow alignItemsCenter mBottom10">
           <Icon className="textTertiary Font20 mRight5" icon="search" />
           <input
+            name="customPageCustomPageChart"
+            autoComplete="off"
             placeholder={_l('统计图')}
             className="flex"
             value={searchValue}

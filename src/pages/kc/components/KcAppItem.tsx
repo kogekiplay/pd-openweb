@@ -205,7 +205,7 @@ export default class KcAppItem extends React.Component<any, any> {
           <span className="itemExt ellipsis" title={item.ext + ' 文件'}>
             {item.ext ? '.' + item.ext : ''}
           </span>
-          <input type="text" className="listNameEdit" defaultValue={item.name} />
+          <input name="kcAppItem1" autoComplete="off" type="text" className="listNameEdit" defaultValue={item.name} />
           <span className="flex" />
           <span className={cx('nodeActionIcons Relative', { hide: !this.state.clickMoreActionsBtn })}>
             <Tooltip title={_l('分享')}>
@@ -353,7 +353,7 @@ export default class KcAppItem extends React.Component<any, any> {
             )}
             {item.ext ? '.' + item.ext : ''}
           </div>
-          <input type="text" className="listNameEdit" defaultValue={item.name} />
+          <input name="kcAppItem2" autoComplete="off" type="text" className="listNameEdit" defaultValue={item.name} />
           <span className={cx('nodeActionIcons', { hide: !this.state.clickMoreActionsBtn })}>
             <Tooltip title={_l('更多操作')}>
               <span>

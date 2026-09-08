@@ -173,6 +173,8 @@ export default function ConfigRelate(props) {
             <InputWrap>
               <i className="icon-search textSecondary Font16"></i>
               <input
+                name="relateSheetConfigRelate"
+                autoComplete="off"
                 autoFocus
                 value={searchValue}
                 placeholder={_l('搜索')}

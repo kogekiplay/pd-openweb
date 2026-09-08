@@ -38,7 +38,7 @@ function NumberInputWithButtons({ value, onChange }) {
       <button onClick={decrement} className="h-[36px] w-[36px] bg-gray-200 rounded-md">
         -
       </button>
-      <input
+      <input name="examplesDefaultNumber" autoComplete="off"
         type="number"
         className="w-[100px] h-[36px] px-2 border rounded-md border-gray-300"
         value={inputValue}

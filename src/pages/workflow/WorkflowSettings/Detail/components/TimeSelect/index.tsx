@@ -110,6 +110,8 @@ export default class TimeSelect extends Component<any, any> {
           {data.executeTimeType !== EXEC_TIME_TYPE.CURRENT && (
             <Fragment>
               <input
+                name="timeSelect"
+                autoComplete="off"
                 type="text"
                 className="borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10 mLeft15"
                 ref={text => {

@@ -249,6 +249,8 @@ export default class Workwx extends React.Component<any, any> {
           {this.state.canEditInfo && this.state.intergrationType !== 2 ? (
             <React.Fragment>
               <input
+                name="platformIntegrationWorkwx1"
+                autoComplete="off"
                 type="text"
                 className="inputBox"
                 onChange={e => {
@@ -264,6 +266,8 @@ export default class Workwx extends React.Component<any, any> {
           ) : (
             <React.Fragment>
               <input
+                name="platformIntegrationWorkwx2"
+                autoComplete="off"
                 type="text"
                 className="inputBox"
                 readOnly

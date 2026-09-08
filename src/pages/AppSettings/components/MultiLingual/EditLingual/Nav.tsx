@@ -340,6 +340,8 @@ export default function Nav(props) {
       <div className="searchWrap flexRow alignItemsCenter pLeft5 mBottom10">
         <Icon className="textTertiary Font20 mRight5" icon="search" />
         <input
+          name="editLingualNav"
+          autoComplete="off"
           placeholder={_l('搜索')}
           className="flex"
           value={searchValue}

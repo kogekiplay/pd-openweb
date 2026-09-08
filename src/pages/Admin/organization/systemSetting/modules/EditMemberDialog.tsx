@@ -185,6 +185,8 @@ export default class EditMemberDialog extends Component<any, any> {
         <div className="editMemberDialog" id="editMemberDialog">
           <div className="Relative">
             <input
+              name="editMemberDialog"
+              autoComplete="off"
               type="text"
               className="ming Input w100 pLeft30"
               placeholder={_l('搜索')}

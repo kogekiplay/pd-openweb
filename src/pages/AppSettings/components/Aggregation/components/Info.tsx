@@ -398,6 +398,8 @@ export default function Info(props) {
           </div>
           {isEdit ? (
             <input
+              name="info"
+              autoComplete="off"
               autoFocus
               className="flex"
               value={name}

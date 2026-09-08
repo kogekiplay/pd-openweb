@@ -140,6 +140,7 @@ export default function (props) {
       <div className="messageBox mTop5">
         <div className={cx('mesDiv', renderClassName('fullName', fullName))}>
           <input
+            name="containerName1"
             type="text"
             maxLength={'60'}
             autoComplete="off"
@@ -161,6 +162,7 @@ export default function (props) {
         {!(emailOrTel && RegExpValidator.isEmail(emailOrTel)) && (
           <div className={cx('mesDiv', renderClassName('email', email))}>
             <input
+              name="containerName2"
               type="text"
               className={cx('email', { onlyRead: emailOrTel && RegExpValidator.isEmail(emailOrTel) })}
               maxLength={'60'}

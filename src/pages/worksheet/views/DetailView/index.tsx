@@ -292,6 +292,8 @@ function DetailView(props) {
                 <React.Fragment>
                   <i className="icon icon-search"></i>
                   <input
+                    name="viewsDetailView"
+                    autoComplete="off"
                     type="text"
                     placeholder={_l('搜索')}
                     ref={inputRef}

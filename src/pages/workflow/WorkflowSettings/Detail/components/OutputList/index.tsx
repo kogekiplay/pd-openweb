@@ -100,6 +100,8 @@ export default class OutputList extends Component<any, any> {
           <OutputListItem>
             <div className={cx('width150 mRight10', { pLeft20: item.dataSource })}>
               <input
+                name="outputList1"
+                autoComplete="off"
                 type="text"
                 value={item.controlName}
                 placeholder={_l('请填写参数名称')}
@@ -159,6 +161,8 @@ export default class OutputList extends Component<any, any> {
             <div className="flex mRight10">
               {outputType === OUTPUT_TYPE.JSON_PARSE ? (
                 <input
+                  name="outputList2"
+                  autoComplete="off"
                   type="text"
                   value={item.jsonPath}
                   placeholder={_l('请填写 JSON Path 值')}
@@ -167,6 +171,8 @@ export default class OutputList extends Component<any, any> {
                 />
               ) : (
                 <input
+                  name="outputList3"
+                  autoComplete="off"
                   type="text"
                   placeholder={_l('说明')}
                   value={item.desc}
@@ -192,6 +198,8 @@ export default class OutputList extends Component<any, any> {
           {isIntegration && (
             <div className={cx('mBottom10 flexRow alignItemsCenter', { pLeft20: item.dataSource })}>
               <input
+                name="outputList4"
+                autoComplete="off"
                 type="text"
                 className="borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10 flex"
                 placeholder={_l('说明')}

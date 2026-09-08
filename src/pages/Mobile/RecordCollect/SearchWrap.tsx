@@ -71,6 +71,8 @@ export default function SearchWrap(props) {
       <div className="searchWrap flexRow alignItemsCenter flex">
         <i className="icon icon-h5_search textTertiary Font16 mRight10" />
         <input
+          name="recordCollectSearchWrap"
+          autoComplete="off"
           type="search"
           className="pAll0 Border0 w100"
           placeholder={_l('搜索')}

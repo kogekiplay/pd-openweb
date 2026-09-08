@@ -405,6 +405,8 @@ export default class Push extends Component<any, any> {
                   <div>{_l('名称')}</div>
                   <div className="mTop10 flexRow">
                     <input
+                      name="detailPush"
+                      autoComplete="off"
                       type="text"
                       className="borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10 flex"
                       value={button.name}

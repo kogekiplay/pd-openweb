@@ -45,7 +45,7 @@ class ProcessConfig extends Component<any, any> {
   /**
    * 更新data数据
    */
-  updateSource = (obj, callback = () => { }) => {
+  updateSource = (obj, callback = () => {}) => {
     this.setState({ data: Object.assign({}, this.state.data, obj) }, callback);
   };
 
@@ -646,6 +646,8 @@ class ProcessConfig extends Component<any, any> {
             </div>
             <div className="mTop10 flexRow">
               <input
+                name="workflowSettingsProcessConfig1"
+                autoComplete="off"
                 type="text"
                 className="webhookLink flex"
                 style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
@@ -656,6 +658,8 @@ class ProcessConfig extends Component<any, any> {
                 disabled
               />
               <input
+                name="workflowSettingsProcessConfig2"
+                autoComplete="off"
                 type="text"
                 className="webhookLinkCustom"
                 value={data.pbcConfig.urlExtension}
