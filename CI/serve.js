@@ -6,7 +6,6 @@ const { networkInterfaces } = require('os');
 const { URL } = require('url');
 const { execSync } = require('child_process');
 
-const open = require('open');
 const handler = require('serve-handler');
 const _ = require('lodash');
 const { createProxyMiddleware } = require('http-proxy-middleware');
@@ -363,7 +362,12 @@ async function serve({ done = () => {}, needOpen = true, isProduction: isProduct
       'api 服务器': publishConfig.apiServer,
     });
     if (needOpen) {
-      open(`${localUrl}/dashboard`);
+      // open v9+ 是纯 ESM：CJS 里 require() 拿到的是命名空间对象而非函数，
+      // 必须走动态 import 取 default。顺手补 catch，否则 spawn 失败会变成
+      // unhandledRejection 把 dev server 崩掉。
+      import('open')
+        .then(({ default: open }) => open(`${localUrl}/dashboard`))
+        .catch(err => console.error('open browser failed:', err.message));
     }
 
     done();
