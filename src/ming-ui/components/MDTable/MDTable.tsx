@@ -1,14 +1,14 @@
-import React, { memo } from 'react';
+import React from 'react';
 import cx from 'classnames';
 import Hammer from 'hammerjs';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
 import DragMask from 'worksheet/common/DragMask';
-// react-window 2.x 与 v1 零导出名重叠、且删掉了整个命令式 API（scrollTo / resetAfterIndices）。
-// 这里换成本仓的兼容层，用法保持 v1 原样，差异全部收在 VariableSizeGridCompat.tsx 里。
-import VariableSizeGrid from 'src/ming-ui/components/VariableSizeGridCompat';
+import { Grid as WindowGrid } from 'react-window';
+import type { CellComponentProps } from 'react-window';
 import { emitter } from 'src/utils/common';
+import { normalizeGridCellStyle, RESET_V2_CONTAINER_BOX } from '../gridCellStyle';
 import Skeleton from '../Skeleton';
 import './style.less';
 
@@ -17,18 +17,70 @@ delete Hammer.defaults.cssProps.userSelect;
 const FIXED_ROW_HEIGHT = 34;
 const FOOTER_ROW_HEIGHT = 28;
 
-const Cell = memo(
-  ({ renderFooter, renderCell, renderFooterCell, ...args }) => {
-    return (renderFooter ? renderFooterCell : renderCell)(args);
-  },
-  (prevProps, nextProps) => {
-    return (
-      prevProps.columnIndex === nextProps.columnIndex &&
-      prevProps.rowIndex === nextProps.rowIndex &&
-      !(!_.isEmpty(nextProps.needUpdateRows) && _.includes(nextProps.needUpdateRows, nextProps.rowIndex))
-    );
-  },
-);
+// react-window 2 用组件而不是 render 函数渲染格子，且把 cellProps 展开后连同 ariaAttributes
+// 一起传进来。这里做四件事：剥掉 ariaAttributes（v1 没有，否则会原样透传给 renderCell）、
+// 把网格内的局部行列号加上偏移还原成整表坐标、把格子坐标还原成 v1 的 left / top、
+// 再按 renderFooter 分派到 renderCell / renderFooterCell。
+// 定义在模块级是为了标识稳定——它是 v2 内部 memo 的依赖，每次渲染换新的会让所有格子重挂。
+//
+// v1 时代这里曾套过一层只比较行列号的 memo。那时 children 是每次渲染新建的内联函数、
+// 被 react-window 当作组件类型，类型变了格子就整体重挂，所以那个比较器从未真正执行过；
+// 换成稳定组件后它会生效，却不比较 style，列宽一改格子就停在旧样式上——故不再保留。
+// 这就是 cellProps 的形状；v2 从它反推 cellProps 该长什么样，不标就会推成必填 ariaAttributes / style。
+type MDTableCellProps = {
+  renderVersion: number;
+  needUpdateRows: number[];
+  renderCell: (args: any) => any;
+  renderFooterCell: (args: any) => any;
+  renderFooter?: boolean;
+  columnOffset: number;
+  rowOffset: number;
+  grid: any;
+  scrollTo: (args: { left?: number; top?: number }) => void;
+  tableScrollTop: number;
+  gridHeight: number;
+  allowlink: any;
+};
+
+function MDTableGridCell({
+  ariaAttributes,
+  renderVersion,
+  style,
+  columnIndex,
+  rowIndex,
+  columnOffset,
+  rowOffset,
+  renderFooter,
+  renderCell,
+  renderFooterCell,
+  ...rest
+}: CellComponentProps<MDTableCellProps>) {
+  return (renderFooter ? renderFooterCell : renderCell)({
+    ...rest,
+    style: normalizeGridCellStyle(style),
+    columnIndex: columnIndex + columnOffset,
+    rowIndex: rowIndex + rowOffset,
+  });
+}
+
+// v2 的 gridRef 给的是 imperative API 对象，命令式滚动改为直接写它暴露的外层 DOM 节点。
+// 首渲染时 ref 还没填充、卸载后又会变回 null，两种情况都按无操作处理。
+function setGridScrollLeft(ref, left) {
+  const el = ref.current && ref.current.element;
+
+  if (el) {
+    el.scrollLeft = left;
+  }
+}
+
+function setGridScrollTop(ref, top) {
+  const el = ref.current && ref.current.element;
+
+  if (el) {
+    el.scrollTop = top;
+  }
+}
+
 export default class MDTable extends React.Component<any, any> {
   static propTypes = {
     loading: PropTypes.bool,
@@ -127,19 +179,9 @@ export default class MDTable extends React.Component<any, any> {
         this.scrollHeight = this.getSumSize(this.props.rowCount - this.props.fixedRowCount, this.props.rowHeight);
         this.fixedColumnsWidth = this.updateFixedWidth(this.props);
 
-        if (this.mainleftgrid.current) {
-          this.mainleftgrid.current.resetAfterIndices({
-            columnIndex: 0,
-            rowIndex: 0,
-          });
-        }
-
-        if (this.mainrightgrid.current) {
-          this.mainrightgrid.current.resetAfterIndices({
-            columnIndex: 0,
-            rowIndex: 0,
-          });
-        }
+        // react-window 2 没有 resetAfterIndices。实测它的尺寸缓存由 cellProps 的标识失效，
+        // 而下面 renderGrid 每次渲染都会重建 cellProps 对象，所以重渲一次就会整体重新测量。
+        this.forceUpdate();
       }
 
       if (
@@ -303,29 +345,9 @@ export default class MDTable extends React.Component<any, any> {
     this.scrollWidth = this.getSumSize(props.columnCount, props.getCellWidth);
     this.scrollHeight = this.getSumSize(props.rowCount - props.fixedRowCount, props.rowHeight);
     this.fixedColumnsWidth = this.updateFixedWidth(props);
-    if (this.topleftgrid.current) {
-      this.topleftgrid.current.resetAfterIndices({ columnIndex: 0, rowIndex: 0 });
-    }
-
-    if (this.toprightgrid.current) {
-      this.toprightgrid.current.resetAfterIndices({ columnIndex: 0, rowIndex: 0 });
-    }
-
-    if (this.mainleftgrid.current) {
-      this.mainleftgrid.current.resetAfterIndices({ columnIndex: 0, rowIndex: 0 });
-    }
-
-    if (this.mainrightgrid.current) {
-      this.mainrightgrid.current.resetAfterIndices({ columnIndex: 0, rowIndex: 0 });
-    }
-
-    if (this.bottomleftgrid.current) {
-      this.bottomleftgrid.current.resetAfterIndices({ columnIndex: 0, rowIndex: 0 });
-    }
-
-    if (this.bottomrightgrid.current) {
-      this.bottomrightgrid.current.resetAfterIndices({ columnIndex: 0, rowIndex: 0 });
-    }
+    // 同上：v2 无 resetAfterIndices，重渲一次即让全部 6 个网格重新测量，
+    // 不再需要逐个持有并调用网格实例。
+    this.forceUpdate();
   };
 
   getSumSize(index, size) {
@@ -379,42 +401,20 @@ export default class MDTable extends React.Component<any, any> {
     if (_.isNumber(left)) {
       this.scrollLeft = left;
       emitter.emit('MDTABLE_SCROLL');
-      if (this.toprightgrid.current) {
-        this.toprightgrid.current.scrollTo({
-          scrollLeft: left,
-        });
-      }
-
-      if (this.mainrightgrid.current) {
-        this.mainrightgrid.current.scrollTo({
-          scrollLeft: left,
-        });
-      }
-
-      if (this.bottomrightgrid.current) {
-        this.bottomrightgrid.current.scrollTo({
-          scrollLeft: left,
-        });
-      }
+      // v2 删掉了命令式 scrollTo，改为通过 imperative API 的 element getter 拿外层节点直接写。
+      setGridScrollLeft(this.toprightgrid, left);
+      setGridScrollLeft(this.mainrightgrid, left);
+      setGridScrollLeft(this.bottomrightgrid, left);
     }
 
     if (_.isNumber(top)) {
       this.scrollTop = top;
-      if (this.mainrightgrid.current) {
-        this.mainrightgrid.current.scrollTo({
-          scrollTop: top,
-        });
-      }
-
-      if (this.mainleftgrid.current) {
-        this.mainleftgrid.current.scrollTo({
-          scrollTop: top,
-        });
-      }
+      setGridScrollTop(this.mainrightgrid, top);
+      setGridScrollTop(this.mainleftgrid, top);
     }
   };
 
-  renderTable = ({ hide, className, top, left, ref, isColumnFixed, isRowFixed, renderFooter, virtualdom }, index) => {
+  renderTable = ({ hide, className, top, left, ref, isColumnFixed, isRowFixed, renderFooter }, index) => {
     const {
       disableFrozen,
       responseHeight,
@@ -453,47 +453,48 @@ export default class MDTable extends React.Component<any, any> {
     }
 
     return (
-      <VariableSizeGrid
+      <WindowGrid
         key={index}
         className={className}
+        // v2 没有 width / height prop（它自测量容器），尺寸只能通过 style 给。
+        // overflow: hidden 是刻意的：滚动由 scrollTo() 命令式驱动，见本文件的 setScroll。
         style={{
+          ...RESET_V2_CONTAINER_BOX,
           position: 'absolute',
           overflow: 'hidden',
           top,
           left,
+          width: isColumnFixed ? this.fixedColumnsWidth : width - this.fixedColumnsWidth,
+          height: gridHeight,
           borderRight:
             fixedColumnCount > 1 && !disableFrozen && className.match(/left-grid/)
               ? '1px solid var(--color-border-primary)'
               : '',
         }}
-        ref={ref}
-        virtualdom={virtualdom}
+        gridRef={ref}
         columnCount={isColumnFixed ? fixedColumnCount : columnCount - fixedColumnCount}
         columnWidth={columnIndex => getCellWidth(isColumnFixed ? columnIndex : columnIndex + fixedColumnCount)}
-        height={gridHeight}
         rowCount={isRowFixed ? fixedRowCount : rowCount - fixedRowCount}
         rowHeight={() => cellHeight}
-        width={isColumnFixed ? this.fixedColumnsWidth : width - this.fixedColumnsWidth}
-      >
-        {args => (
-          <Cell
-            {...args}
-            {...{
-              needUpdateRows: this.needUpdateRows,
-              renderCell,
-              renderFooterCell,
-              renderFooter,
-              columnIndex: isColumnFixed ? args.columnIndex : args.columnIndex + fixedColumnCount,
-              rowIndex: isRowFixed ? args.rowIndex : args.rowIndex + fixedRowCount,
-              grid: ref,
-              scrollTo: this.setScroll,
-              tableScrollTop: this.scrollTop,
-              gridHeight: gridHeight,
-              allowlink: allowlink,
-            }}
-          />
-        )}
-      </VariableSizeGrid>
+        cellComponent={MDTableGridCell}
+        // v2 把 cellProps【展开】传给 cell，所以原来那个内联 render 函数换成模块级的
+        // MDTableGridCell（标识稳定，不会每次渲染都让所有格子重挂）；
+        // 行列偏移改由 cellProps 传进去、在 cell 里做加法。
+        cellProps={{
+          renderVersion: this.renderVersion,
+          needUpdateRows: this.needUpdateRows,
+          renderCell,
+          renderFooterCell,
+          renderFooter,
+          columnOffset: isColumnFixed ? 0 : fixedColumnCount,
+          rowOffset: isRowFixed ? 0 : fixedRowCount,
+          grid: ref,
+          scrollTo: this.setScroll,
+          tableScrollTop: this.scrollTop,
+          gridHeight: gridHeight,
+          allowlink: allowlink,
+        }}
+      />
     );
   };
 
@@ -514,7 +515,12 @@ export default class MDTable extends React.Component<any, any> {
   };
 
   render() {
-    //
+    // v1 每次渲染都重挂所有可见格子（原因见 MDTableGridCell 的注释），下游 renderCell 因此
+    // 从不需要考虑自己何时该更新。v2 会按 cellProps 浅比较跳过未变的格子，若消费方的
+    // renderCell 标识稳定（如类方法）但闭包里的数据变了，格子就会停在旧内容上。
+    // 用一个每次渲染都变的版本号让 cellProps 必然失效，把更新语义精确对齐到 v1
+    // （重渲而非重挂，成本仍低于 v1）。想拿回 v2 的记忆化收益，得先审计各消费方的 renderCell。
+    this.renderVersion = (this.renderVersion || 0) + 1;
     const {
       loading,
       width,
@@ -572,7 +578,6 @@ export default class MDTable extends React.Component<any, any> {
         isColumnFixed: false,
         isRowFixed: false,
         ref: this.mainrightgrid,
-        virtualdom: true,
       },
       {
         hide: !showFooterRow || isEmpty,

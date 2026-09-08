@@ -6,6 +6,7 @@ import React, {
   useLayoutEffect,
   useMemo,
   useRef,
+  useState,
 } from 'react';
 import Hammer from 'hammerjs';
 import _, { get, includes } from 'lodash';
@@ -49,12 +50,37 @@ function sum(array = []) {
   return array.reduce((a, b) => a + b, 0);
 }
 
+/**
+ * 取出可滚动的 DOM 节点。
+ *
+ * cache 里混着两类东西：
+ *   - 网格（'top-center' / 'main-center' / ...）：react-window 2 交出来的 imperative API，
+ *     滚动位置只能通过它的 element getter 拿到外层节点后直接写 scrollLeft / scrollTop
+ *     （v2 删掉了 v1 的命令式 scrollTo）。
+ *   - 'scrollX' / 'scrollY'：ScrollBar 经 setViewPortRef 交出来的 OverlayScrollbars
+ *     viewport【DOM 元素】。
+ *
+ * v1 时代这两类恰好都有 `.scrollTo`，所以下面两个函数是多态调用的。但 DOM 元素的
+ * `scrollTo()` 吃的是 `{ left, top }` 而不是 `{ scrollLeft, scrollTop }`，也就是说
+ * 对 'scrollX' / 'scrollY' 这两个条目**原来一直是空操作**。
+ *
+ * 这里刻意保持这个行为不变（只认网格、跳过 DOM 元素条目），原因有两条：
+ *   1. 滚动条才是唯一真源——setScroll() 直接改滚动条 DOM，滚动条的 customScroll 再回来
+ *      驱动网格。若在这里反向去设滚动条自身的位置，会形成 customScroll 的反馈循环。
+ *   2. 依赖迁移不该顺手改动滚动行为。那个既存的空操作（例如 :463 的 defaultScrollLeft
+ *      只移动网格、不移动滚动条滑块）记录在此，留待单独处理。
+ */
+function gridScrollElement(target) {
+  // 只处理 react-window 2 的 imperative API；DOM 元素条目按上面说明跳过。
+  return target && target.element ? target.element : null;
+}
+
 function setScrollX(cache, newLeft) {
   ['top-center', 'main-center', 'bottom-center', 'scrollX'].forEach(name => {
-    if (cache[name] && _.isFunction(cache[name].scrollTo)) {
-      cache[name].scrollTo({
-        scrollLeft: newLeft,
-      });
+    const el = gridScrollElement(cache[name]);
+
+    if (el) {
+      el.scrollLeft = newLeft;
     }
   });
 }
@@ -65,8 +91,10 @@ function setScrollY(cache, newTop) {
   }
 
   ['main-left', 'main-center', 'main-right', 'scrollY'].forEach(name => {
-    if (cache[name] && _.isFunction(cache[name].scrollTo)) {
-      cache[name].scrollTo({ scrollTop: newTop });
+    const el = gridScrollElement(cache[name]);
+
+    if (el) {
+      el.scrollTop = newTop;
     }
   });
 }
@@ -122,6 +150,8 @@ function FixedTable(props, ref) {
     top: 0,
     needUpdated: {},
   });
+  // 递增它只为触发一次重渲，从而让所有可见网格重新测量——见下面 forceUpdate 的说明。
+  const [, bumpSizeVersion] = useState(0);
   window.cache = cache;
   const tableSize = useMemo(
     () => ({
@@ -182,16 +212,13 @@ function FixedTable(props, ref) {
       visible: rightFixedCount > 0 && bottomFixedCount > 0 && rowCount > 0,
     },
   ];
+  // react-window 2 删掉了 resetAfterRowIndex / resetAfterColumnIndex。
+  // 实测 v2 的尺寸缓存有两个失效条件：尺寸函数的标识，以及 cellProps 的标识。
+  // Grid.tsx 每次渲染都会重建 cellProps 对象，所以让本组件重渲一次就会让所有可见网格
+  // 整体重新测量——效果等价于原来对每个网格逐个调 reset，而且不再需要持有网格实例。
   const forceUpdate = useCallback(() => {
-    tableConfigs
-      .filter(t => t.visible)
-      .forEach(t => {
-        if (cache[t.id]) {
-          cache[t.id].resetAfterRowIndex(0);
-          cache[t.id].resetAfterColumnIndex(0);
-        }
-      });
-  }, [rowCount]);
+    bumpSizeVersion(n => n + 1);
+  }, []);
   const tables = tableConfigs
     .filter(item => item.visible && (!loading || includes(item.id, 'top')))
     .map(t => (

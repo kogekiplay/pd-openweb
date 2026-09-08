@@ -1,8 +1,8 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useCallback, useMemo, useRef } from 'react';
+import { Grid as WindowGrid } from 'react-window';
+import type { CellComponentProps } from 'react-window';
 import { includes, isFunction } from 'lodash';
-// react-window 2.x 与 v1 零导出名重叠、且删掉了整个命令式 API（scrollTo / resetAfterIndices）。
-// 这里换成本仓的兼容层，用法保持 v1 原样，差异全部收在 VariableSizeGridCompat.tsx 里。
-import VariableSizeGrid from 'src/ming-ui/components/VariableSizeGridCompat';
+import { normalizeGridCellStyle, RESET_V2_CONTAINER_BOX } from '../gridCellStyle';
 
 function sum(array = []) {
   return array.reduce((a, b) => a + b, 0);
@@ -75,30 +75,81 @@ export default function Grid(props) {
     rowCount: topFixed || bottomFixed ? 1 : rowCount,
   };
 
+  // key 含宽度：行数/滚动条状态变化（如子表筛选）导致宽度变时 grid 会整体重挂。
+  // center 列是横向滚动区，重挂若回到 0 而表头/内容不同步重挂就会横向错位；
+  // 用缓存的横向位置初始化，使重挂后直接落在原位置，不依赖异步的 setScrollX 纠正。
+  const initialScrollLeft = id.endsWith('center') ? (cache && cache.left) || 0 : 0;
+
+  // react-window 2 没有 initialScrollLeft，也没有 v1 那种「ref 拿到的就是组件实例」的时机。
+  // 实测它填充 gridRef 的时机晚于父组件的 useLayoutEffect / useEffect，甚至晚于它自己的
+  // onResize / onCellsRendered（那时 api.element 还是 null），所以只能在 gridRef 回调里
+  // 拿到 api 的那一刻立即设初始横向位置。
+  // 回调必须标识稳定（useCallback 空依赖），否则每次渲染都会被 React 当成新 ref 反复调用。
+  const appliedInitialScroll = useRef(false);
+  // 这两个值每次渲染都可能变，但回调标识必须稳定，所以用 ref 读最新值。
+  // setRef 由 FixedTable/index.tsx 每次渲染重新创建（它只是往 cache 里塞引用），
+  // 直接闭包捕获会调到过期的那个。
+  const initialScrollLeftRef = useRef(initialScrollLeft);
+  initialScrollLeftRef.current = initialScrollLeft;
+  const setRefRef = useRef(setRef);
+  setRefRef.current = setRef;
+
+  const handleGridRef = useCallback(api => {
+    if (isFunction(setRefRef.current)) {
+      setRefRef.current(api);
+    }
+
+    if (!api || appliedInitialScroll.current) return;
+
+    const el = api.element;
+
+    if (!el) return;
+
+    appliedInitialScroll.current = true;
+
+    if (initialScrollLeftRef.current) {
+      el.scrollLeft = initialScrollLeftRef.current;
+    }
+  }, []);
+
+  // v2 会把格子的 ariaAttributes 一起传给 cellComponent，而这里的 Cell 是外部传进来的
+  // 业务组件（WorksheetTable 的 Cell、ImportFileToChildTable 的内联 Cell），都不认识它。
+  // 顺手在同一层把坐标还原成 v1 的 left / top（见 gridCellStyle.ts）。
+  // 必须 useMemo：包装组件的标识就是 v2 memo 的依赖，每次渲染换新的会让所有格子重挂。
+  // 类型参数就是 cellProps 的形状；v2 从这里反推 cellProps 该长什么样，不标就会推成必填 ariaAttributes / style。
+  const NormalizedCell = useMemo(
+    () =>
+      function GridCell({ ariaAttributes, style, ...rest }: CellComponentProps<{ data: any }>) {
+        return <Cell {...rest} style={normalizeGridCellStyle(style)} />;
+      },
+    [Cell],
+  );
+
   if (!config.width || !config.height) {
     return;
   }
 
   return (
     <Fragment>
-      <VariableSizeGrid
-        ref={setRef}
+      <WindowGrid
+        gridRef={handleGridRef}
         className={id + ' ' + cx({ leftFixed, rightFixed, topFixed, bottomFixed }) + '' + id}
         key={`${id}-${config.width}`}
-        // key 含宽度：行数/滚动条状态变化（如子表筛选）导致宽度变时 grid 会整体重挂。
-        // center 列是横向滚动区，重挂若回到 0 而表头/内容不同步重挂就会横向错位；
-        // 用缓存的横向位置初始化，使重挂后直接落在原位置，不依赖异步的 setScrollX 纠正。
-        initialScrollLeft={id.endsWith('center') ? (cache && cache.left) || 0 : 0}
+        // v2 没有 width / height prop——它自测量容器，尺寸只能通过 style 给。
+        // overflow: hidden 是刻意的：这套表格用的是自绘的覆盖式滚动条（见同目录 ScrollBar.tsx），
+        // 滚动完全由 FixedTable/index.tsx 命令式驱动，不依赖原生滚动条。
         style={{
+          ...RESET_V2_CONTAINER_BOX,
           position: 'absolute',
           left: config.left,
           top: config.top,
+          width: config.width,
+          height: config.height,
           overflow: 'hidden',
           backgroundColor: 'var(--color-background-primary)',
         }}
-        width={config.width}
-        height={config.height}
         columnCount={config.columnCount}
+        // v2 的尺寸函数签名是 (index, cellProps)，多出来的参数忽略即可。
         columnWidth={i => {
           let index = i;
 
@@ -112,23 +163,28 @@ export default function Grid(props) {
         }}
         rowHeight={getRowHeight || (() => rowHeight)}
         rowCount={config.rowCount}
-        itemData={{
-          ...tableData,
-          grid: {
-            id,
-            tableColumnCount: columnCount,
-            leftFixed,
-            rightFixed,
-            topFixed,
-            bottomFixed,
-            rightFixedCount,
-            leftFixedCount,
-            ...config,
+        cellComponent={NormalizedCell}
+        // v2 把 cellProps【展开】传给 cell（cell 收到的是
+        // { ariaAttributes, columnIndex, rowIndex, style, ...cellProps }），
+        // 所以这里把整包数据放在 `data` 键下——Cell 组件里 `const { data } = props` 的写法
+        // 与 v1 的 itemData 完全一致，一行都不用改。
+        cellProps={{
+          data: {
+            ...tableData,
+            grid: {
+              id,
+              tableColumnCount: columnCount,
+              leftFixed,
+              rightFixed,
+              topFixed,
+              bottomFixed,
+              rightFixedCount,
+              leftFixedCount,
+              ...config,
+            },
           },
         }}
-      >
-        {Cell}
-      </VariableSizeGrid>
+      />
       {isFunction(renderCustomComp) && (
         <div style={{ left: 0, top: 0, display: 'inline-block' }}>{renderCustomComp()}</div>
       )}
