@@ -8280,7 +8280,7 @@ mdurl@^2.1.0:
   resolved "https://registry.yarnpkg.com/mdurl/-/mdurl-2.1.0.tgz#d711d3f7bce7f22c487c91be78545f356fa96573"
   integrity sha512-1+HBaOx0zi/dQWht8rNv9MYf9qqpqL/kxI0hXImU6Y547zM6Sni8BQibt7ifgMcYtQg41ao3Ivd6cnSM86inpg==
 
-"memoize-one@>=3.1.1 <6", memoize-one@^5.0.0:
+memoize-one@^5.0.0:
   version "5.2.1"
   resolved "https://registry.npmmirror.com/memoize-one/-/memoize-one-5.2.1.tgz#8337aa3c4335581839ec01c3d594090cebe8f00e"
   integrity sha512-zYiwtZUcYyXKo/np96AGZAckk+FWWsUdJ3cHGGmld7+AhvcWmQyGCYUh1hc4Q/pkOhb65dQR/pqCyK0cOaHz4Q==
@@ -10373,13 +10373,10 @@ react-use@^17.6.1:
     ts-easing "^0.2.0"
     tslib "^2.1.0"
 
-react-window@^1.8.5:
-  version "1.8.11"
-  resolved "https://registry.npmmirror.com/react-window/-/react-window-1.8.11.tgz#a857b48fa85bd77042d59cc460964ff2e0648525"
-  integrity sha512-+SRbUVT2scadgFSWx+R1P754xHPEqvcfSfVX10QYg6POOz+WNgkN48pS+BtZNIMGiL1HYrSEiCkwsMS15QogEQ==
-  dependencies:
-    "@babel/runtime" "^7.0.0"
-    memoize-one ">=3.1.1 <6"
+react-window@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/react-window/-/react-window-2.3.1.tgz#92fd42d7a3704644f56f31a4e829ab74f87126f5"
+  integrity sha512-x/+N6b7FNVtlKE7ZQlfOY2bYdA7VXvT2B1Emo/ndAsFsSQ98FBIO88MsatNELbSIlYJgkCd7unBps5XMfv0Eyg==
 
 react@18.3.1:
   version "18.3.1"

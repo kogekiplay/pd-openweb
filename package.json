@@ -109,7 +109,7 @@
     "react-runner": "^1.0.5",
     "react-svg": "19.1.5",
     "react-use": "^17.6.1",
-    "react-window": "^1.8.5",
+    "react-window": "^2.3.1",
     "redux": "^5.0.1",
     "remarkable": "^2.0.1",
     "signature_pad": "^5.1.4",
