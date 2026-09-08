@@ -649,7 +649,9 @@ TableComp.propTypes = {
 };
 
 export default connect(
-  state => ({ ...state }),
+  // react-redux 9 把 mapStateToProps 的 state 推断为 unknown（v7 给的是 any），
+  // 展开 unknown 会报 TS2698。本仓没有类型化的 root state，这里把原来隐式的 any 写明。
+  (state: any) => ({ ...state }),
   dispatch => ({
     updateTableState: bindActionCreators(actions.updateTableState, dispatch),
     appendRecords: bindActionCreators(actions.appendRecords, dispatch),

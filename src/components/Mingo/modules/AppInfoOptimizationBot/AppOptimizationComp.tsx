@@ -6,6 +6,7 @@ import Trigger from 'rc-trigger';
 import styled from 'styled-components';
 import { AILoading, BgIconButton, Button, Checkbox, Switch } from 'ming-ui';
 import { updateSheetListAppItem } from 'src/pages/worksheet/redux/actions/sheetList';
+import type { AppDispatch } from 'src/redux/configureStore';
 import { emitter } from 'src/utils/common';
 import { parseStreamingJsonlData } from 'src/utils/sse';
 import { buildSheetListUpdates, saveOptimizationResult } from './saveOptimizationResult';
@@ -272,7 +273,9 @@ function AppInfoOptimizationPopup({ appInfo, optimizedMap, config, isStreaming, 
     });
   };
 
-  const dispatch = useDispatch();
+  // updateSheetListAppItem 是 thunk，裸 useDispatch() 在 react-redux 9 下只认
+  // UnknownAction；用 store 推导出的 AppDispatch 才带 thunk 中间件。
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleUse = () => {
     if (disabledAll) return;

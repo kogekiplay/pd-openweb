@@ -1,5 +1,6 @@
 import React from 'react';
-import shallowEqual from 'react-redux/lib/utils/shallowEqual';
+// react-redux 9 移除了 lib/ 内部路径，shallowEqual 现在是公开导出。
+import { shallowEqual } from 'react-redux';
 import { default as MingDialog } from 'ming-ui/components/Dialog';
 import Icon from 'ming-ui/components/Icon';
 import { config } from './config';
