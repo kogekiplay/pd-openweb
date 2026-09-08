@@ -36,6 +36,11 @@ const md = new MarkdownIt({
 
 md.use(taskListsPlugin);
 
+// markdown-it 15 内嵌 linkify-it 6，后者把 fuzzyLink 默认值从 true 翻成 false、
+// 并新增 urlAuth: false。不显式打开会静默改行为（已实测）：裸域名 www.x.com 不再成链；
+// http://u:p@h.com/x 被【截断】成 http://u，剩下的部分变纯文本。
+md.linkify.set({ fuzzyLink: true, urlAuth: true });
+
 // 所有 markdown 链接统一在新标签页打开，并补 rel 防止 opener 反向控制
 const defaultLinkOpen =
   md.renderer.rules.link_open || ((tokens, idx, options, env, self) => self.renderToken(tokens, idx, options));

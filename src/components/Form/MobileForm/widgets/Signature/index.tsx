@@ -2,7 +2,8 @@ import React, { Fragment, memo, useCallback, useEffect, useRef, useState } from 
 import { Popup } from 'antd-mobile';
 import axios from 'axios';
 import _ from 'lodash';
-import * as SignaturePad from 'signature_pad/dist/signature_pad';
+// signature_pad 5 的 exports 映射只有 '.'，深子路径 dist/signature_pad 已被封死。
+import SignaturePad from 'signature_pad';
 import styled from 'styled-components';
 import { Button, Icon } from 'ming-ui';
 import accountSettingAjax from 'src/api/accountSetting';
@@ -250,21 +251,26 @@ const Signature = props => {
     canvas.height = height * ratio;
     canvas.getContext('2d').scale(ratio, ratio);
 
-    signaturePad.current = new SignaturePad.default(canvas, {
+    // signature_pad 4 起把 onBegin/onEnd 从构造选项改成了事件（类继承 SignatureEventTarget）。
+    // v5 的 Options 里已经没有这两个键，留着会被静默忽略——「已编辑」状态不置位、
+    // 且落笔结束后不再缓存签名。事件名实测为 beginStroke / endStroke。
+    signaturePad.current = new SignaturePad(canvas, {
       penColor: '#151515',
       throttle: 8,
       minDistance: 3,
-      onBegin: () => {
-        requestAnimationFrame(() => setIsEdit(true));
-      },
-      onEnd: () => {
-        requestAnimationFrame(cacheCurrentSignature);
-      },
+    });
+    signaturePad.current.addEventListener('beginStroke', () => {
+      requestAnimationFrame(() => setIsEdit(true));
+    });
+    signaturePad.current.addEventListener('endStroke', () => {
+      requestAnimationFrame(cacheCurrentSignature);
     });
 
     if (previousSignature) {
       restoringSignatureRef.current = true;
-      signaturePad.current.fromDataURL(previousSignature, { width, height, ratio: 1 }, () => {
+      // v5 的 fromDataURL 改成返回 Promise、不再接受第三个回调参数——旧写法那个回调
+      // 会被静默忽略，导致 restoringSignatureRef 一直为 true、横屏恢复后交出过期签名。
+      signaturePad.current.fromDataURL(previousSignature, { width, height, ratio: 1 }).then(() => {
         restoringSignatureRef.current = false;
         signatureDataUrlRef.current = previousSignature;
       });
@@ -273,11 +279,14 @@ const Signature = props => {
     if (isRotateLandscape) {
       const createPoint = signaturePad.current._createPoint.bind(signaturePad.current);
 
-      signaturePad.current._createPoint = (clientX, clientY) => {
+      // v5 的内部调用是 _createPoint(event.x, event.y, event.pressure)，比早先多了第三个
+      // 压感参数。原来的两参覆盖会把 pressure 丢成 undefined，笔画粗细就不再随压感变化，
+      // 所以这里把它原样透传下去。
+      signaturePad.current._createPoint = (clientX, clientY, pressure) => {
         const content = signatureContentRef.current;
 
         if (!content) {
-          return createPoint(clientX, clientY);
+          return createPoint(clientX, clientY, pressure);
         }
 
         const contentRect = content.getBoundingClientRect();
@@ -289,6 +298,7 @@ const Signature = props => {
         return createPoint(
           canvasRect.left + Math.max(0, Math.min(width, canvasX)),
           canvasRect.top + Math.max(0, Math.min(height, canvasY)),
+          pressure,
         );
       };
     }

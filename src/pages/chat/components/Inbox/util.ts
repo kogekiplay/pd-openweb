@@ -1,4 +1,5 @@
-﻿import LinkifyIt from 'linkify-it';
+﻿// linkify-it 6 去掉了 default export，类要从具名导出取。
+import { LinkifyIt } from 'linkify-it';
 import moment from 'moment';
 import { browserIsMobile, htmlEncodeReg, pathCompletion } from 'src/utils/common';
 import { MSGTYPES, SOURCE_TYPE } from './constants';
@@ -293,7 +294,9 @@ export function linkifySanitizedHtml(sanitizedHtml, options = {}) {
     ignoreTags: DEFAULT_IGNORE,
     ...options,
   };
-  const linkify = new LinkifyIt();
+  // v6 把 fuzzyLink 默认值从 true 翻成 false、并新增 urlAuth: false。不显式打开，
+  // 聊天消息里的裸域名不再成链，且 http://u:p@h.com/x 会被截断成 http://u（已实测）。
+  const linkify = new LinkifyIt({ fuzzyLink: true, urlAuth: true });
 
   const doc = new DOMParser().parseFromString(sanitizedHtml, 'text/html');
 

@@ -3,15 +3,15 @@
   "key": "code",
   "tsVersion": "5.9.3",
   "tsconfig": "tsconfig.gate.json",
-  "generatedAt": "2026-09-08T02:38:36.757Z",
-  "rawCount": 24263,
+  "generatedAt": "2026-09-08T04:05:09.032Z",
+  "rawCount": 24261,
   "droppedNoise": {
     "library": 1284,
     "probe": 0,
     "commentTS1xxx": 0,
     "commentOther": 0
   },
-  "keptCount": 22979,
+  "keptCount": 22977,
   "uniqueKeys": 5110,
   "entries": {
     "src/api/account.ts|TS2339": 4,
@@ -664,7 +664,7 @@
     "src/ming-ui/components/ScrollView/index.tsx|TS2339": 21,
     "src/ming-ui/components/ScrollView/index.tsx|TS2353": 1,
     "src/ming-ui/components/Signature.tsx|TS2322": 1,
-    "src/ming-ui/components/Signature.tsx|TS2339": 7,
+    "src/ming-ui/components/Signature.tsx|TS2339": 5,
     "src/ming-ui/components/Signature.tsx|TS2554": 3,
     "src/ming-ui/components/Slider.tsx|TS18048": 2,
     "src/ming-ui/components/Slider.tsx|TS2339": 16,

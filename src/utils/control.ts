@@ -1328,7 +1328,10 @@ export const formatNumberToWords = (control = {}, relateControl = {}) => {
           : {}),
       },
     });
-    const tempValue = toWords.convert(parseFloat(value));
+    // to-words 7 在半分位上换了舍入方向（4.5 从 en-US 的 banker rounding 变成常规），
+    // 金额大写与旁边的数字差一分是发票/合同事故。先按 2 位小数预舍入再转，
+    // 与下面中文分支（nzh 那条本来就有 toFixed）保持一致。
+    const tempValue = toWords.convert(parseFloat(toFixed(value, 2)));
     return tempValue ? 'SAY ' + tempValue.toLocaleUpperCase() : '';
   } else {
     return nzh.cn.toMoney(parseFloat(toFixed(value, dot)), { outSymbol: false });
