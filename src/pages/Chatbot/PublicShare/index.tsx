@@ -2,7 +2,7 @@
 import { createRoot } from 'react-dom/client';
 import DocumentTitle from 'react-document-title';
 import cx from 'classnames';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import _, { get } from 'lodash';
 import styled from 'styled-components';
 import { LoadDiv } from 'ming-ui';

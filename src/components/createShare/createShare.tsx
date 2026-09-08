@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import cx from 'classnames';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import moment from 'moment';
 import { Dialog, FunctionWrap } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';

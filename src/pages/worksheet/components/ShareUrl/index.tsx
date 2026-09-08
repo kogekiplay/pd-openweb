@@ -1,6 +1,6 @@
 ﻿import React, { Fragment } from 'react';
 import { Popover } from 'antd';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import { saveAs } from 'file-saver';
 import _ from 'lodash';
 import PropTypes from 'prop-types';

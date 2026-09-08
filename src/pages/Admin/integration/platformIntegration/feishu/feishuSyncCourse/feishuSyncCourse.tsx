@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import moment from 'moment';
 import { compareProps } from 'pages/PageHeader/util.js';

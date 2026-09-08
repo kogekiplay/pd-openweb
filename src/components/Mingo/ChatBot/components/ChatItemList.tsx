@@ -1,7 +1,7 @@
 import React, { Fragment, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 import cx from 'classnames';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import Trigger from 'rc-trigger';
 import styled from 'styled-components';
 import { Dialog, Icon, Input, Menu, MenuItem, MobileConfirmPopup, PopupWrapper, Skeleton } from 'ming-ui';

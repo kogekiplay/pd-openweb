@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { createRoot } from 'react-dom/client';
 import { DragSource, DropTarget } from 'react-dnd';
 import cx from 'classnames';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import { Tooltip } from 'ming-ui/antd-components';
 import ClickAway from 'ming-ui/components/ClickAway';

@@ -1,6 +1,6 @@
 ﻿import React from 'react';
 import { createRoot } from 'react-dom/client';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import doT from 'dot';
 import _ from 'lodash';
 import { Dialog, Dropdown } from 'ming-ui';

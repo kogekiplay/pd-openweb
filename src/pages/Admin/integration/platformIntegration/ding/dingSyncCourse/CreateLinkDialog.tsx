@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import { Button, Dialog, Input } from 'ming-ui';
 import RegExpValidator from 'src/utils/expression';
 

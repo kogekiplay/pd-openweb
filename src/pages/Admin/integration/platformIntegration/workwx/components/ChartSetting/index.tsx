@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Button, Input } from 'ming-ui';

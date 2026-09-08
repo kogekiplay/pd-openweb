@@ -1,5 +1,5 @@
 import React, { Component, createRef, Fragment } from 'react';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import { Button, Dialog, LoadDiv, QiniuUpload, UpgradeIcon, VerifyPasswordConfirm } from 'ming-ui';
 import projectController from 'src/api/project';
 import projectSettingController from 'src/api/projectSetting';

@@ -1,7 +1,7 @@
 ﻿import React, { Fragment } from 'react';
 import Api from 'api/homeApp';
 import cx from 'classnames';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import html2canvas from 'html2canvas';
 import moment from 'moment';
 import { compareProps } from 'pages/PageHeader/util.js';

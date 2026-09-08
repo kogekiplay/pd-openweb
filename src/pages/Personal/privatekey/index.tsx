@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { Pagination } from 'antd';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import moment from 'moment';
 import { Icon, LoadDiv, Textarea } from 'ming-ui';

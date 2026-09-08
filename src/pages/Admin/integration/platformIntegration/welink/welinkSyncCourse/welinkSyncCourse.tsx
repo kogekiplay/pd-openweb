@@ -1,5 +1,5 @@
 import React from 'react';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import moment from 'moment';
 import { compareProps } from 'pages/PageHeader/util.js';
 import { LoadDiv } from 'ming-ui';

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import moment from 'moment';
 import Trigger from 'rc-trigger';
 import { Button, Dialog, Dropdown, Icon, Menu, MenuItem, Support } from 'ming-ui';

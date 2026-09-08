@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import cx from 'classnames';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import { Checkbox, Dropdown, Icon, LoadDiv, Radio, ScrollView, Support, Switch } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';

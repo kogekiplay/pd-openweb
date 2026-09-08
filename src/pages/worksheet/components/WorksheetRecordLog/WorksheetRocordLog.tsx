@@ -2,7 +2,7 @@ import React, { forwardRef, Fragment, useEffect, useImperativeHandle, useState }
 import { useSetState } from 'react-use';
 import { Divider } from 'antd';
 import cx from 'classnames';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import moment from 'moment';
 import Trigger from 'rc-trigger';

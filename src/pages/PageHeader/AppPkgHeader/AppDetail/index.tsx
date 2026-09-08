@@ -6,7 +6,7 @@ import { generate } from '@ant-design/colors';
 import { Drawer, Modal } from 'antd';
 import api from 'api/homeApp';
 import cx from 'classnames';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import { func, oneOf } from 'prop-types';
 import styled from 'styled-components';

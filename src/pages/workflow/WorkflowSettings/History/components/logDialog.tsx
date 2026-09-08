@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import JsonView from '@mingdaocom/json-view';
 import cx from 'classnames';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import moment from 'moment';
 import styled from 'styled-components';

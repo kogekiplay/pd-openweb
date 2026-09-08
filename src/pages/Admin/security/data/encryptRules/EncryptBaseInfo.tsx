@@ -1,5 +1,5 @@
 import React, { Component, createRef, Fragment, useEffect, useState } from 'react';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Dialog, Icon, Input, Textarea } from 'ming-ui';

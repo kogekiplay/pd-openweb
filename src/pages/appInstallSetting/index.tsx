@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import Trigger from 'rc-trigger';
 import privateRequest from 'src/api/private';
 import mobile from 'src/pages/appInstallSetting/images/mobile.png';

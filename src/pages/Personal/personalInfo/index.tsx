@@ -1,6 +1,6 @@
 ﻿import React, { Fragment } from 'react';
 import cx from 'classnames';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import moment from 'moment';
 import { Dialog, Icon, LoadDiv } from 'ming-ui';
