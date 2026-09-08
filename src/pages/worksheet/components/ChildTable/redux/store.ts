@@ -1,5 +1,4 @@
-import { applyMiddleware, compose, createStore } from 'redux';
-import thunk from 'redux-thunk';
+import { configureStore } from '@reduxjs/toolkit';
 import { find, includes, isFunction, isNaN, isNumber } from 'lodash';
 import { get } from 'lodash';
 import { isEmpty } from 'lodash';
@@ -60,17 +59,14 @@ export default function generateStore(
   };
 
   const worksheetId = control.dataSource;
-  const enhancers = [];
 
-  if (process.env.NODE_ENV !== 'production') {
-    const devToolsExtension = window.__REDUX_DEVTOOLS_EXTENSION__;
-
-    if (typeof devToolsExtension === 'function') {
-      enhancers.push(devToolsExtension());
-    }
-  }
-
-  const store = createStore(reducer, compose(applyMiddleware(thunk, logger), ...enhancers));
+  // 原来这里手工探测并挂 window.__REDUX_DEVTOOLS_EXTENSION__，configureStore 默认
+  // devTools: true 已经做了同一件事（且只在非 production 生效），所以那段删掉了。
+  // thunk 也由默认中间件提供，只需把自定义的 logger 追加上去。
+  const store = configureStore({
+    reducer,
+    middleware: getDefaultMiddleware => getDefaultMiddleware().concat(logger),
+  });
   store.name = Math.floor(Math.random() * 1000);
   async function init({ noMountInit = false } = {}) {
     if (store.initialized) return;

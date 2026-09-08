@@ -1,5 +1,4 @@
-import { applyMiddleware, compose, createStore } from 'redux';
-import thunk from 'redux-thunk';
+import { configureStore } from '@reduxjs/toolkit';
 import { find, get, includes, isEmpty } from 'lodash';
 import { v4 } from 'uuid';
 import { RELATE_RECORD_SHOW_TYPE } from 'worksheet/constants/enum';
@@ -32,7 +31,8 @@ export default function generateStore(
       : defaultPageSize;
   }
 
-  const store = createStore(reducer, compose(applyMiddleware(thunk)));
+  // configureStore 默认装 thunk 并自动接管 devtools。
+  const store = configureStore({ reducer });
   store.version = v4();
   const treeLayerControlId = get(control, 'advancedSetting.layercontrolid');
   const treeLayerControl = find(control.relationControls, { controlId: treeLayerControlId });
