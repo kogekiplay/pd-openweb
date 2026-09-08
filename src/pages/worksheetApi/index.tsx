@@ -2,7 +2,7 @@ import React, { Component, Fragment, useCallback, useEffect, useState } from 're
 import { createRoot } from 'react-dom/client';
 import JsonView from '@mingdaocom/json-view';
 import cx from 'classnames';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import { Avatar, Dialog, Icon, LoadDiv, ScrollView, Textarea } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';

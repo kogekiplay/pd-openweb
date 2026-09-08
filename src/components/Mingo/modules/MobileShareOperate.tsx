@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import { isEmpty, isEqual } from 'lodash';
 import styled from 'styled-components';
 import { Checkbox, MobileConfirmPopup } from 'ming-ui';

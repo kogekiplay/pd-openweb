@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import { Dialog, Menu, MenuItem } from 'ming-ui';
 import ClickAway from 'ming-ui/components/ClickAway';
 import projectSettingAjax from 'src/api/projectSetting';

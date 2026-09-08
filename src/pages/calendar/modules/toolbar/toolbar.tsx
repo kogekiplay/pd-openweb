@@ -1,7 +1,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { renderToString } from 'react-dom/server';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import moment from 'moment';
 import { Dialog, LoadDiv, UserCard, UserHead } from 'ming-ui';

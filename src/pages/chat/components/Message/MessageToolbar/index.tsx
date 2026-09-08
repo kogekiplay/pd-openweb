@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import cx from 'classnames';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import moment from 'moment';
 import { Tooltip } from 'ming-ui/antd-components';
 import Dialog from 'ming-ui/components/Dialog';

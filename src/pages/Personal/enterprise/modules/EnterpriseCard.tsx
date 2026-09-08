@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import cx from 'classnames';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import { navigateTo } from 'router/navigateTo';
 import { Dialog, Icon, LoadDiv, VerifyPasswordConfirm } from 'ming-ui';

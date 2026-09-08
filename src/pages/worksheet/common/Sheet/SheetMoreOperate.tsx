@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import Trigger from 'rc-trigger';

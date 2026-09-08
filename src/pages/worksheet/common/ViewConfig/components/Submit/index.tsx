@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import Trigger from 'rc-trigger';
 import styled from 'styled-components';

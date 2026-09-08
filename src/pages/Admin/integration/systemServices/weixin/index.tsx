@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { createRoot } from 'react-dom/client';
 import cx from 'classnames';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import { Button, Dialog, LoadDiv } from 'ming-ui';
 import Ajax from 'src/api/project';

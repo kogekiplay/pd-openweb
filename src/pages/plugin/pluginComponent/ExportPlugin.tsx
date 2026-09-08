@@ -5,7 +5,7 @@ import localeEn from 'antd/es/date-picker/locale/en_US';
 import localeJaJp from 'antd/es/date-picker/locale/ja_JP';
 import localeZhCn from 'antd/es/date-picker/locale/zh_CN';
 import localeZhTw from 'antd/es/date-picker/locale/zh_TW';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import moment from 'moment';
 import styled from 'styled-components';
 import { Checkbox, Dialog, Icon, Input, Textarea } from 'ming-ui';

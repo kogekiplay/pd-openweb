@@ -4980,6 +4980,11 @@ copy-to-clipboard@^3.2.0, copy-to-clipboard@^3.3.1:
   dependencies:
     toggle-selection "^1.0.6"
 
+copy-to-clipboard@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/copy-to-clipboard/-/copy-to-clipboard-4.0.2.tgz#fbd05a471231962c25486c1dc5019adf0b4bdc71"
+  integrity sha512-gklSft7IuhriZKHKpuoA1fpJSLPNgvUMWMo5BlnzAJm0zNKnznoSv23IjtNqclx8eKi6ZcdvFFzYEER/+U1LoQ==
+
 core-js-compat@^3.43.0:
   version "3.47.0"
   resolved "https://registry.npmmirror.com/core-js-compat/-/core-js-compat-3.47.0.tgz#698224bbdbb6f2e3f39decdda4147b161e3772a3"
@@ -8001,10 +8006,10 @@ lru-cache@^5.1.1:
   dependencies:
     yallist "^3.0.2"
 
-lucide-react@^0.463.0:
-  version "0.463.0"
-  resolved "https://registry.npmmirror.com/lucide-react/-/lucide-react-0.463.0.tgz#333015f6fa1ae3e2e60d727c755e041e27854b54"
-  integrity sha512-Ltc6Fpo/5AVnHEsGwU9IbIpoCjZuK/S0Y78k4sl6FzvGlKJyyg44DdaQry7YaLm2sszfZrc9HZ5/4oXqUkzJQQ==
+lucide-react@^1.41.0:
+  version "1.42.0"
+  resolved "https://registry.yarnpkg.com/lucide-react/-/lucide-react-1.42.0.tgz#1504824d77a73c88d3efe381bd8957fc2f435659"
+  integrity sha512-b3jprplnoLS8n5etw1z8xODe3hF/yjKATrTitsrKrnjUhCef5BdDct6Ppv3zVvzFwmtfWgLO6XNM3C9fAD93ug==
 
 lunar-calendar@^0.1.4:
   version "0.1.4"

@@ -1,7 +1,7 @@
 import React from 'react';
 import { ActionSheet, Button } from 'antd-mobile';
 import cx from 'classnames';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import { Icon } from 'ming-ui';
 import { getRecordUrl, getWorksheetShareUrl } from 'mobile/components/RecordInfo/RecordFooter';
 import { deleteRecord } from 'worksheet/common/recordInfo/crtl';

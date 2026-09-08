@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import cx from 'classnames';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import { Dialog, VerifyPasswordConfirm } from 'ming-ui';
 import AuthorizationController from 'src/api/authorization';
 

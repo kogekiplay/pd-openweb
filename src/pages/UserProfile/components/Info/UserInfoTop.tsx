@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import styled from 'styled-components';
 import openEnlargeImage from 'ming-ui/components/UserCard/EnlargeImage';

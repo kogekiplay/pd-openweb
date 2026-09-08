@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import moment from 'moment';
 import styled from 'styled-components';
 import { Dialog, Icon } from 'ming-ui';

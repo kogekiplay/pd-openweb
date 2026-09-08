@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import _, { get, noop } from 'lodash';
 import PropTypes from 'prop-types';
 import Trigger from 'rc-trigger';

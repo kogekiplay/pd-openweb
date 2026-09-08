@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import cx from 'classnames';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import { Checkbox, Dialog, Icon, Support } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';

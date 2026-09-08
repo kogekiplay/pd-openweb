@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import * as Sentry from '@sentry/react';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import PropTypes from 'prop-types';
 import '../less/ErrorBoundary.less';
 

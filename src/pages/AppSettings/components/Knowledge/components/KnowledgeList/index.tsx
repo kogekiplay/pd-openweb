@@ -1,5 +1,5 @@
 import React, { Fragment, memo, useRef, useState } from 'react';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import moment from 'moment';
 import Trigger from 'rc-trigger';
 import { Checkbox, Dialog, Icon, LoadDiv, Menu, MenuItem, ScrollView, SvgIcon } from 'ming-ui';

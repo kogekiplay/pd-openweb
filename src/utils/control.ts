@@ -1,5 +1,5 @@
 import { TinyColor } from '@ctrl/tinycolor';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import dayjs from 'dayjs';
 import _, { find, get, includes, isArray, isEmpty } from 'lodash';
 import moment from 'moment';

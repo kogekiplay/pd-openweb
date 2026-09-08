@@ -1,5 +1,5 @@
 import React from 'react';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import { navigateTo } from 'router/navigateTo';
 import { Dialog, Icon, Switch } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';

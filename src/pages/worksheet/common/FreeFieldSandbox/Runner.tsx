@@ -22,9 +22,47 @@ const useRun = function ({ initialCode, ...rest }) {
   return { element, error, setCode };
 };
 
+// lucide-react 1.x 删掉了全部品牌/社交图标：18 个基名 × 3 种别名形式（X / XIcon / LucideX）
+// = 54 个导出（实测 0.463 有 5220 个导出、1.41 有 6191 个，删 54 新增 1025）。
+// 这里的 name 来自用户/AI 编写并存库的 FreeField 代码，是运行时字符串——不映射的话
+// name="Github" 会静默落到兜底的空白圆角竖矩形，不报错、不 warning，只有用户看到图标变空白。
+// 下表每个替代项都实测确认存在于 1.41.0。
+const REMOVED_BRAND_ICON_FALLBACK = {
+  Chrome: 'Globe',
+  Codepen: 'Code',
+  Codesandbox: 'Package',
+  Dribbble: 'Palette',
+  Facebook: 'ThumbsUp',
+  Figma: 'PenTool',
+  Framer: 'Frame',
+  Github: 'GitBranch',
+  Gitlab: 'GitBranch',
+  Instagram: 'Camera',
+  Linkedin: 'Briefcase',
+  Pocket: 'Bookmark',
+  RailSymbol: 'TrainFront',
+  Slack: 'MessageSquare',
+  Trello: 'LayoutDashboard',
+  Twitch: 'Tv',
+  Twitter: 'Bird',
+  Youtube: 'PlaySquare',
+};
+
+// 用户代码可能写 Github / GithubIcon / LucideGithub 任一形式，统一归一到基名再查表。
+function resolveLucideIcon(name) {
+  if (LucideIconComp[name]) return LucideIconComp[name];
+
+  const base = String(name || '')
+    .replace(/^Lucide/, '')
+    .replace(/Icon$/, '');
+  const fallbackName = REMOVED_BRAND_ICON_FALLBACK[base];
+
+  return (fallbackName && LucideIconComp[fallbackName]) || LucideIconComp.RectangleVertical;
+}
+
 function LucideIcon(props) {
   const { name, ...rest } = props;
-  const Comp = LucideIconComp[name] || LucideIconComp.RectangleVertical;
+  const Comp = resolveLucideIcon(name);
   return <Comp name={name} {...rest} />;
 }
 

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Drawer } from 'antd';
 import cx from 'classnames';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import update from 'immutability-helper';
 import _ from 'lodash';
 import PropTypes from 'prop-types';

@@ -1,7 +1,7 @@
 import React, { Component, Fragment, lazy, Suspense } from 'react';
 import { ActionSheet, Button } from 'antd-mobile';
 import cx from 'classnames';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';

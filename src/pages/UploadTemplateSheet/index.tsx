@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import DocumentTitle from 'react-document-title';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import Trigger from 'rc-trigger';
 import { Dialog, Icon, Menu, MenuItem, Support } from 'ming-ui';

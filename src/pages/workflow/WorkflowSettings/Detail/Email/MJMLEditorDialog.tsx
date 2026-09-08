@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import styled from 'styled-components';
 import { Dialog, LoadDiv, TagTextarea } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';

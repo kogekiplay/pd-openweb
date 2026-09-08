@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import { Icon, LoadDiv, Support } from 'ming-ui';
 import flowNodeAjax from 'src/pages/workflow/api/flowNode';

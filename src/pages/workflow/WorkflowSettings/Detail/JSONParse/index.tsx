@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import JsonView from '@mingdaocom/json-view';
 import cx from 'classnames';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';

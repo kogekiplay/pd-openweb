@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { CaretRightOutlined } from '@ant-design/icons';
 import { Collapse, Input } from 'antd';
 import cx from 'classnames';
-import copy from 'copy-to-clipboard';
+import copy from 'src/utils/copyToClipboard';
 import { Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { HAS_EXPLAIN_CONTROL, NO_DES_WIDGET } from '../../config';
