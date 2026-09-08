@@ -222,6 +222,8 @@ let ValueAddService = class ValueAddService extends Component<any, any> {
                   })}
                   <li className={cx(isInput ? 'selectProduct' : '')}>
                     <input
+                      name="billCenterValueAddService"
+                      autoComplete="off"
                       type="text"
                       className="txtCustomPrice"
                       placeholder={_l('请输入信用点')}

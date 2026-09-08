@@ -197,6 +197,8 @@ export default function SelectStartOrEndGroups(props) {
             />
             {o.mark || showInput === i ? (
               <input
+                name="selectStartOrEndControlSelectStartOrEndGroups"
+                autoComplete="off"
                 className="addMarkInput"
                 value={o.mark}
                 key={i + 'input'}

@@ -27,6 +27,8 @@ export default function SearchInput(props) {
     <SearchWrap className={className}>
       <i className="icon icon-search textTertiary" />
       <input
+        name="resignationSearchInput"
+        autoComplete="off"
         placeholder={placeholder || _l('搜索')}
         type="search"
         value={searchValue}

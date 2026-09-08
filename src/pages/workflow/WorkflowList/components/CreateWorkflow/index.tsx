@@ -128,6 +128,8 @@ export default class CreateFlow extends Component<any, any> {
               <Icon icon="backspace" className="Font24 textSecondary hoverColorPrimary pointer" />
             </div>
             <input
+              name="createWorkflow"
+              autoComplete="off"
               ref={this.inputRef}
               type="text"
               value={flowName}

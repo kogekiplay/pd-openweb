@@ -757,6 +757,8 @@ export default class Agent extends Component<any, any> {
               <div className="flexRow alignItemsCenter">
                 {selectToolId === item.toolId ? (
                   <input
+                    name="detailAgent"
+                    autoComplete="off"
                     type="text"
                     className="flex Font14"
                     autoFocus

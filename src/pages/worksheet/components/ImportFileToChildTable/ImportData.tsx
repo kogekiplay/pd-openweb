@@ -220,6 +220,8 @@ function Input(props) {
   }, []);
   return (
     <input
+      name="importFileToChildTableImportData"
+      autoComplete="off"
       className={className}
       ref={inputRef}
       defaultValue={defaultValue}

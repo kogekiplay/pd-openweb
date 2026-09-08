@@ -277,6 +277,7 @@ const OtpInput = forwardRef(function OtpInput(props, ref) {
       <div className="otp-input-container flexRow mTop8" onPaste={handleContainerPaste}>
         {times(verifyLen, index => (
           <input
+            name="inputsOtpInput"
             key={index}
             className="flex otp-input"
             type="text"

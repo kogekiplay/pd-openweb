@@ -124,6 +124,8 @@ class Search extends Component<any, any> {
           <Icon icon="h5_search" className="textTertiary Font17" />
           <form action="#" className="flex" onSubmit={event => event.preventDefault()}>
             <input
+              name="filterContentSearch"
+              autoComplete="off"
               type="search"
               className="pAll0 Border0 w100"
               placeholder={_l('搜索')}

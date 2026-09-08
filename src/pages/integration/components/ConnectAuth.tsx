@@ -366,6 +366,8 @@ function ConnectAuth(props) {
             />
             {refreshType === 10002 && (
               <input
+                name="connectAuth1"
+                autoComplete="off"
                 type="text"
                 className="borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10 mRight10"
                 style={{
@@ -378,6 +380,8 @@ function ConnectAuth(props) {
               />
             )}
             <input
+              name="connectAuth2"
+              autoComplete="off"
               type="text"
               className="borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10 flex"
               placeholder={
@@ -446,6 +450,8 @@ function ConnectAuth(props) {
               </div>
               <div className="mTop15 flexRow alignItemsCenter">
                 <input
+                  name="connectAuth3"
+                  autoComplete="off"
                   type="text"
                   className="borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10"
                   style={{

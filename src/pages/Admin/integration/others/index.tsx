@@ -843,6 +843,8 @@ export default class OtherTool extends Component<any, any> {
                         <span className="textTertiary">{_l('自定义显示登录文案：')}</span>
                         {this.state[`set${key}Name`] ? (
                           <input
+                            name="integrationOthers"
+                            autoComplete="off"
                             ref={node => (this.customNameInput = node)}
                             value={this.state[`${key}CustomName`]}
                             className="customNameInput"

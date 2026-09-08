@@ -145,6 +145,8 @@ class Textarea extends Component<any, any> {
 
     return (
       <textarea
+        name="textarea"
+        autoComplete="off"
         {...rest}
         {...obj}
         className={cx('ming Textarea', className)}

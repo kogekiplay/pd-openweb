@@ -441,6 +441,8 @@ class MultipleDropdownMenu extends Component<any, any> {
         >
           <i className="icon-search textSecondary Font14" />
           <input
+            name="multipleDropdownMenu"
+            autoComplete="off"
             type="text"
             ref={search => {
               this.search = search;

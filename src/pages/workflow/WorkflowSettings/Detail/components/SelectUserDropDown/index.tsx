@@ -82,6 +82,8 @@ export default class SelectUserDropDown extends Component<any, any> {
           <div className="explainHeader flexRow">
             <i className={cx('textSecondary', specialType === 3 ? 'icon-phone' : 'icon-mailbox')} />
             <input
+              name="selectUserDropDown"
+              autoComplete="off"
               type="text"
               className="w100 textPrimary"
               autoFocus

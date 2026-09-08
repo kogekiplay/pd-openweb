@@ -137,6 +137,8 @@ export default ({ data = [], list = [], errorItems, setErrorItems, updateSource 
             </div>
             <div className="pLeft15 pRight15 w180">
               <input
+                name="setControlName1"
+                autoComplete="off"
                 type="text"
                 placeholder={_l('请输入别名')}
                 value={obj.alias}
@@ -197,6 +199,8 @@ export default ({ data = [], list = [], errorItems, setErrorItems, updateSource 
             <div className="pLeft15 pRight15 flex">
               {!_.includes([10000003, 10000008], obj.type) ? (
                 <input
+                  name="setControlName2"
+                  autoComplete="off"
                   type="text"
                   placeholder={_l('请输入参考值')}
                   value={obj.value}

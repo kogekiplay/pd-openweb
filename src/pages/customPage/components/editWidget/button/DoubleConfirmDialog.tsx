@@ -42,6 +42,8 @@ class DoubleConfirmDialog extends React.Component<any, any> {
       >
         <p className="mTop10 mBottom10">{_l('提示文字')}</p>
         <textarea
+          name="buttonDoubleConfirmDialog1"
+          autoComplete="off"
           type="textarea"
           value={this.state.doubleConfirm.confirmMsg}
           onChange={event => {
@@ -55,6 +57,8 @@ class DoubleConfirmDialog extends React.Component<any, any> {
         />
         <p className="mTop10 mBottom10">{_l('确认按钮文字')}</p>
         <input
+          name="buttonDoubleConfirmDialog2"
+          autoComplete="off"
           value={this.state.doubleConfirm.sureName}
           onChange={event => {
             this.setState({
@@ -67,6 +71,8 @@ class DoubleConfirmDialog extends React.Component<any, any> {
         />
         <p className="mTop10 mBottom10">{_l('取消按钮文字')}</p>
         <input
+          name="buttonDoubleConfirmDialog3"
+          autoComplete="off"
           value={this.state.doubleConfirm.cancelName}
           onChange={event => {
             this.setState({

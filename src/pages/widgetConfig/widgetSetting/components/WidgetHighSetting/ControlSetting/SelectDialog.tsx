@@ -60,6 +60,8 @@ export const SelectCountryDropdown = ({ unique, data, setData, selectableData, s
       <div className="searchWrap" onClick={e => e.stopPropagation()}>
         <i className="icon-search Font16 textSecondary"></i>
         <input
+          name="controlSettingSelectDialog1"
+          autoComplete="off"
           autoFocus
           value={value}
           placeholder={_l('搜索')}
@@ -156,6 +158,8 @@ const SelectAreaCountryDropdown = ({ data, setData, selectableData, style }) => 
       <div className="searchWrap" onClick={e => e.stopPropagation()}>
         <i className="icon-search Font16 textSecondary"></i>
         <input
+          name="controlSettingSelectDialog2"
+          autoComplete="off"
           autoFocus
           value={value}
           placeholder={_l('搜索')}

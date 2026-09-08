@@ -633,6 +633,8 @@ export default class RecordCardListDialog extends Component<any, any> {
           <Icon className="textTertiary" icon="h5_search" />
           <form action="#" className="flex" onSubmit={event => event.preventDefault()}>
             <input
+              name="recordCardListDialog"
+              autoComplete="off"
               className="w100"
               type="search"
               ref={node => (this.inputRef = node)}

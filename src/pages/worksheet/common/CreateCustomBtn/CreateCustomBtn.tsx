@@ -523,6 +523,8 @@ class CreateCustomBtnCon extends React.Component<any, any> {
           />
           {_.get(this.state.advancedSetting, 'opentip') !== '0' && (
             <input
+              name="createCustomBtnCreateCustomBtn1"
+              autoComplete="off"
               className={cx('w100 nameInput')}
               maxLength={50}
               value={_.get(this.state.advancedSetting, 'tiptext')}
@@ -553,6 +555,8 @@ class CreateCustomBtnCon extends React.Component<any, any> {
       <div className="createBtnBox mTop25">
         <h5 className="textPrimary">{_l('按钮名称')}</h5>
         <input
+          name="createCustomBtnCreateCustomBtn2"
+          autoComplete="off"
           value={name}
           placeholder={_l('例如：添加线索、关闭机会')}
           ref={inputEl => {
@@ -975,6 +979,8 @@ class CreateCustomBtnCon extends React.Component<any, any> {
         <h5 className="textPrimary pTop16">{_l('按钮说明')}</h5>
         <div className="mTop10">
           <input
+            name="createCustomBtnCreateCustomBtn3"
+            autoComplete="off"
             value={this.state.desc}
             placeholder={_l('请输入按钮说明')}
             onChange={event => {

@@ -129,7 +129,13 @@ export default function MobileCustomNav(props) {
             <div className="mobileAppItemsWrap flexColumn">
               <div className="searchWrap valignWrapper pBottom10">
                 <Icon icon="search" className="mLeft12 textSecondary Font20" />
-                <input className="flex pLeft10 pRight10" placeholder={_l('搜索')} onChange={handleSearch} />
+                <input
+                  name="navigationConfigMobileCustomNav"
+                  autoComplete="off"
+                  className="flex pLeft10 pRight10"
+                  placeholder={_l('搜索')}
+                  onChange={handleSearch}
+                />
               </div>
               <div className="line mTop0 mBottom10"></div>
               <div className="listWrap flex">

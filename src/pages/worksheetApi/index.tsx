@@ -704,7 +704,12 @@ class WorksheetApi extends Component<any, any> {
       <Fragment>
         <div className="worksheetApiContent1">
           <div className="Font22 bold">{_l('获取应用信息 GET')}</div>
-          <input className="mTop24 worksheetApiInput" value={_l('请求URL：') + url} />
+          <input
+            name="worksheetApi1"
+            autoComplete="off"
+            className="mTop24 worksheetApiInput"
+            value={_l('请求URL：') + url}
+          />
           <div className="flexRow worksheetApiLine flexRowHeight bold mTop25">
             <div className="w32">{_l('参数')}</div>
             <div className="mLeft30 w18">{_l('必选')}</div>
@@ -750,6 +755,8 @@ class WorksheetApi extends Component<any, any> {
         <div className="worksheetApiContent1">
           <div className="Font22 bold">{_l('获取工作表结构信息 POST')}</div>
           <input
+            name="worksheetApi2"
+            autoComplete="off"
             className="mTop24 worksheetApiInput"
             value={_l('请求URL：') + data[0].apiUrl + 'worksheet/getWorksheetInfo'}
           />
@@ -886,6 +893,8 @@ class WorksheetApi extends Component<any, any> {
         <div className="worksheetApiContent1">
           <div className="Font22 bold">{_l('新建工作表 POST')}</div>
           <input
+            name="worksheetApi3"
+            autoComplete="off"
             className="mTop24 worksheetApiInput"
             value={_l('请求URL：') + data[0].apiUrl + 'worksheet/addWorksheet'}
           />
@@ -1023,7 +1032,12 @@ class WorksheetApi extends Component<any, any> {
             )}
           </div> */}
           {tabIndex === TAB_TYPE.API_V2 && (
-            <input className="mTop24 worksheetApiInput" value={_l('请求URL：') + workflowInfo.url} />
+            <input
+              name="worksheetApi4"
+              autoComplete="off"
+              className="mTop24 worksheetApiInput"
+              value={_l('请求URL：') + workflowInfo.url}
+            />
           )}
           <div className="valignWrapper justifyContentBetween Font17 bold mTop30">
             <span>{_l('请求参数')}</span>
@@ -1107,7 +1121,12 @@ class WorksheetApi extends Component<any, any> {
               <div className="worksheetApiContent1">
                 {i === 0 && <div className="Font22 bold mBottom40">{_l('应用角色')}</div>}
                 <div className="Font17 bold">{title}</div>
-                <input className="mTop24 worksheetApiInput" value={_l('请求URL：') + url} />
+                <input
+                  name="worksheetApi5"
+                  autoComplete="off"
+                  className="mTop24 worksheetApiInput"
+                  value={_l('请求URL：') + url}
+                />
                 <div className="flexRow worksheetApiLine flexRowHeight bold mTop25">
                   <div className="w32">{_l('参数')}</div>
                   <div className="mLeft30 w18">{_l('必选')}</div>
@@ -1651,6 +1670,8 @@ class WorksheetApi extends Component<any, any> {
         <div />
         <div className="Font17 bold">{this.MENU_LIST[i].title}</div>
         <input
+          name="worksheetApi6"
+          autoComplete="off"
           className="mTop24 worksheetApiInput"
           value={_l('请求URL：') + data[0].apiUrl + this.MENU_LIST[i].apiName}
         />
@@ -1868,7 +1889,12 @@ class WorksheetApi extends Component<any, any> {
               <div className="worksheetApiContent1">
                 {i === 0 && <div className="Font22 bold mBottom40">{_l('选项集')}</div>}
                 <div className="Font17 bold">{title}</div>
-                <input className="mTop24 worksheetApiInput" value={_l('请求URL：') + url} />
+                <input
+                  name="worksheetApi7"
+                  autoComplete="off"
+                  className="mTop24 worksheetApiInput"
+                  value={_l('请求URL：') + url}
+                />
                 <div className="flexRow worksheetApiLine flexRowHeight bold mTop25">
                   <div className="w32">{_l('参数')}</div>
                   <div className="mLeft30 w18">{_l('必选')}</div>

@@ -90,6 +90,8 @@ export default class LoopContent extends Component<any, any> {
         <div className="mTop10 flexRow alignItemsCenter">
           {_l('每')}
           <input
+            name="startLoopContent1"
+            autoComplete="off"
             type="text"
             className="borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10 mLeft15"
             style={{ width: 48, height: 36, textAlign: 'right', minWidth: 48, boxSizing: 'border-box' }}
@@ -494,6 +496,8 @@ export default class LoopContent extends Component<any, any> {
     return (
       <div className="mTop10 flexRow alignItemsCenter">
         <input
+          name="startLoopContent2"
+          autoComplete="off"
           type="text"
           className="borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10 flex"
           style={{ height: 36, textAlign: 'right', boxSizing: 'border-box' }}
@@ -505,6 +509,8 @@ export default class LoopContent extends Component<any, any> {
         />
         <span className="mLeft10 mRight10">~</span>
         <input
+          name="startLoopContent3"
+          autoComplete="off"
           type="text"
           className="borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10 flex"
           style={{ height: 36, textAlign: 'right', boxSizing: 'border-box' }}
@@ -689,6 +695,8 @@ export default class LoopContent extends Component<any, any> {
       <div className="mTop10 flexRow alignItemsCenter">
         {_l('从')}
         <input
+          name="startLoopContent4"
+          autoComplete="off"
           type="text"
           className="borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10 mLeft15 flex"
           style={{ height: 36, textAlign: 'right', boxSizing: 'border-box' }}
@@ -699,6 +707,8 @@ export default class LoopContent extends Component<any, any> {
         />
         <span className="mLeft10 mRight10">{KEYS_ENUM[key].text1}</span>
         <input
+          name="startLoopContent5"
+          autoComplete="off"
           type="text"
           className="borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10 flex"
           style={{ height: 36, textAlign: 'right', boxSizing: 'border-box' }}

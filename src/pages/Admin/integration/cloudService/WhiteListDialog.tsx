@@ -101,6 +101,8 @@ export default function WhiteListDialog({ visible, apiKeyId, onSave, onCancel })
           <LoadDiv />
         ) : (
           <textarea
+            name="cloudServiceWhiteListDialog"
+            autoComplete="off"
             className="whiteListTextarea"
             value={whiteListValue}
             placeholder={_l('请输入 IP 白名单')}

@@ -69,6 +69,8 @@ export default function DoubleConfirmationDialog(props) {
         <h5 className="Bold Font14">{_l('提示信息')}</h5>
         <p className="Bold mTop30">{_l('标题')}</p>
         <input
+          name="submitFormSettingDoubleConfirmDialog1"
+          autoComplete="off"
           className="mTop10"
           value={_.get(doubleConfirm, 'confirmMsg')}
           onChange={event => {
@@ -82,6 +84,8 @@ export default function DoubleConfirmationDialog(props) {
         />
         <p className="mTop24 bold">{_l('详细内容')}</p>
         <input
+          name="submitFormSettingDoubleConfirmDialog2"
+          autoComplete="off"
           className="mTop10"
           value={doubleConfirm.confirmContent}
           onChange={event => {
@@ -97,6 +101,8 @@ export default function DoubleConfirmationDialog(props) {
         <div className="flexRow btnTxt alignItemsCenter mTop10">
           <span className="bold400">{_l('确认按钮')}</span>
           <input
+            name="submitFormSettingDoubleConfirmDialog3"
+            autoComplete="off"
             value={_.get(doubleConfirm, 'sureName')}
             onChange={event => {
               setState({
@@ -111,6 +117,8 @@ export default function DoubleConfirmationDialog(props) {
         <div className="flexRow btnTxt alignItemsCenter mTop10">
           <span className="bold400">{_l('取消按钮')}</span>
           <input
+            name="submitFormSettingDoubleConfirmDialog4"
+            autoComplete="off"
             value={_.get(doubleConfirm, 'cancelName')}
             onChange={event => {
               setState({

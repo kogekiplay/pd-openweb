@@ -140,6 +140,8 @@ export default class ColumnListDropdown extends React.Component<any, any> {
           <div className="header search flexRow">
             <i className="icon icon-search"></i>
             <input
+              name="columnListDropdown"
+              autoComplete="off"
               type="text"
               className="searchInput"
               placeholder={_l('搜索字段')}

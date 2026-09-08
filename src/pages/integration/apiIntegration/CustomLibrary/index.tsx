@@ -273,6 +273,8 @@ export default function CustomLibrary(props) {
         <SearchBox className="flexRow alignItemsCenter mLeft20">
           <Icon type="search" className="Font18 textTertiary" />
           <input
+            name="apiIntegrationCustomLibrary"
+            autoComplete="off"
             type="text"
             ref={keywordsRef}
             placeholder={_l('搜索连接')}

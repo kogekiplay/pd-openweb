@@ -114,7 +114,14 @@ export default class WorkwxSyncCourse extends React.Component<any, any> {
           <p className="Font14 textSecondary mTop10 LineHeight22 mLeft15">{_l('b.“安全设置”，填写重定向URL')}</p>
           <div className="inputList mTop20">
             <span className="inputTitle">{_l('主页地址：')}</span>
-            <input type="text" className="inputBox" readOnly value={homeUrl} />
+            <input
+              name="feishuSyncCourseFeishuSyncCourse1"
+              autoComplete="off"
+              type="text"
+              className="inputBox"
+              readOnly
+              value={homeUrl}
+            />
             <span
               className="copyBtn"
               onClick={() => {
@@ -194,7 +201,14 @@ export default class WorkwxSyncCourse extends React.Component<any, any> {
         <p className="Font14 textSecondary mTop24 LineHeight22">{_l('2.添加重定向 URL')}</p>
         <div className="inputList mTop20">
           <span className="inputTitle">{_l('重定向 URL')}</span>
-          <input type="text" className="inputBox" readOnly value={scanSafeDomain} />
+          <input
+            name="feishuSyncCourseFeishuSyncCourse2"
+            autoComplete="off"
+            type="text"
+            className="inputBox"
+            readOnly
+            value={scanSafeDomain}
+          />
           <span
             className="copyBtn"
             onClick={() => {

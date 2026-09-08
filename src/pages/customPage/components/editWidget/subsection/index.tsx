@@ -50,6 +50,8 @@ const Subsection = props => {
     <Wrap className={cx('flexRow alignItemsCenter h100 Font20', { editWrap: edit })} ref={elementRef}>
       {edit ? (
         <input
+          name="editWidgetSubsection"
+          autoComplete="off"
           className="disableDrag childrenDisableDrag"
           value={name}
           placeholder={_l('分段名称')}

@@ -192,6 +192,8 @@ class HomePostFilter extends React.Component<any, any> {
           <Tooltip title={_l('搜索动态')}>
             <div className="mLeft10 InlineBlock searchFilterKeyword">
               <input
+                name="postListHeadPostFilter"
+                autoComplete="off"
                 ref={searchInput => {
                   this.searchInput = searchInput;
                 }}

@@ -21,7 +21,7 @@ function TextInput({ value, onChange }) {
     onChange(e.target.value); // 在中文输入结束时更新值
   };
   return (
-    <input
+    <input name="examplesDefaultText" autoComplete="off"
       className="w-[200px] h-[36px] px-2 border rounded-md border-gray-300"
       value={inputValue}
       onChange={handleChange}

@@ -62,6 +62,8 @@ function SubmitFormSetting(props) {
       <Con className="">
         <h5>{_l('表单标题')}</h5>
         <input
+          name="submitFormSetting"
+          autoComplete="off"
           type="text"
           className="title mTop12"
           placeholder={_l('创建记录')}

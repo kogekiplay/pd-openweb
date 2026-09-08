@@ -53,6 +53,8 @@ const Input = React.forwardRef((props, ref) => {
   return (
     <InputCon className={className}>
       <textarea
+        name="cellControlsText1"
+        autoComplete="off"
         {...rest}
         className="stopPropagation"
         ref={ref}
@@ -584,6 +586,8 @@ export default class Text extends React.Component<any, any> {
               />
             ) : (
               <input
+                name="cellControlsText2"
+                autoComplete="off"
                 type="text"
                 className="Ming stopPropagation"
                 {...editProps}

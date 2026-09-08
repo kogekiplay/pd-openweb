@@ -95,6 +95,8 @@ class WorkflowInfo extends Component<any, any> {
             <div className="bold">{_l('名称')}</div>
             <div className="mTop10">
               <input
+                name="workflowSettingsWorkflowInfo"
+                autoComplete="off"
                 type="text"
                 ref={name => (this.name = name)}
                 className="hoverBorderColorPrimary borderColorPrimary"

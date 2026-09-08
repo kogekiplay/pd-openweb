@@ -94,7 +94,14 @@ export default function SelectFnControl(props) {
       )}
       <Search>
         <Icon className="icon icon-search" />
-        <input type="text" value={keywords} placeholder={_l('搜索')} onChange={e => setKeywords(e.target.value)} />
+        <input
+          name="selectFnControl"
+          autoComplete="off"
+          type="text"
+          value={keywords}
+          placeholder={_l('搜索')}
+          onChange={e => setKeywords(e.target.value)}
+        />
       </Search>
       <Content>
         {activeTab === 'fn' && <FnList keywords={keywords} insertFn={insertFn} control={control} />}

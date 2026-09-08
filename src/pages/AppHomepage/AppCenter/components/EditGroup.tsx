@@ -47,6 +47,8 @@ function IconInput(props) {
   return (
     <IconInputCon>
       <input
+        name="editGroup"
+        autoComplete="off"
         ref={inputRef}
         type="text"
         value={name}

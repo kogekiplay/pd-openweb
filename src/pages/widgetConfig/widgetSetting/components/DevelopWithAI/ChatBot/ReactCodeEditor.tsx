@@ -328,7 +328,7 @@ const CodeEditor = ({ value = '', onChange = () => {} }) => {
 
   return (
     <Con ref={ref}>
-      <textarea ref={textareaRef} />
+      <textarea name="chatBotReactCodeEditor" autoComplete="off" ref={textareaRef} />
     </Con>
   );
 };

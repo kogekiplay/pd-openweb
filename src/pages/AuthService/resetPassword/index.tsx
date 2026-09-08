@@ -194,6 +194,7 @@ export default class ResetPassword extends React.Component<any, any> {
           <div className={cx('mesDiv', renderClassName('passwordIcon', password))}>
             <input
               type="password"
+              name="newPassword"
               className="passwordIcon"
               placeholder={password}
               ref={password => (this.password = password)}
@@ -215,6 +216,7 @@ export default class ResetPassword extends React.Component<any, any> {
           <div className={cx('mesDiv', renderClassName('passwordCopy', passwordCopy))}>
             <input
               type="password"
+              name="confirmPassword"
               className="passwordCopy"
               placeholder={passwordCopy}
               ref={passwordCopy => (this.passwordCopy = passwordCopy)}

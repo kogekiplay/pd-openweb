@@ -1723,6 +1723,8 @@ export default class CreateNodeDialog extends Component<any, any> {
           <div className="mLeft32 mRight20 mTop15 flexRow alignItemsCenter">
             <div className="createNodeSearch flex">
               <input
+                name="createNodeDialog"
+                autoComplete="off"
                 type="text"
                 ref={keywordsInput => (this.keywordsInput = keywordsInput)}
                 placeholder={_l('搜索')}

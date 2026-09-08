@@ -8,6 +8,8 @@ export default class NodeNameInput extends Component<any, any> {
 
     return (
       <input
+        name="nodeNameInput"
+        autoComplete="off"
         type="text"
         className="flex"
         disabled={disabled}

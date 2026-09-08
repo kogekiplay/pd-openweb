@@ -224,6 +224,8 @@ export default function SheetField(props) {
               <div className="searchWrap" onClick={e => e.stopPropagation()}>
                 <i className="icon-search textTertiary" />
                 <input
+                  name="settingsSheetField"
+                  autoComplete="off"
                   autoFocus
                   value={searchValue}
                   onChange={e => setSearchValue(e.target.value)}

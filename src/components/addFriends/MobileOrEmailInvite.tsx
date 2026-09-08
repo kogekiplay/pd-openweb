@@ -264,6 +264,8 @@ export default class MobileOrEmailInvite extends Component<any, any> {
             <div className="inputWrapper">
               <span className="icon-search searchIcon"></span>
               <input
+                name="addFriendsMobileOrEmailInvite"
+                autoComplete="off"
                 type="text"
                 value={keywords}
                 onChange={e => this.setState({ keywords: e.target.value.trim() })}

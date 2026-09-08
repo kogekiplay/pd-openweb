@@ -713,6 +713,8 @@ export default class WebHook extends Component<any, any> {
             <div className="Font13 mTop15">{_l('请求成功的 HTTP 状态码')}</div>
             <div className="flexRow mTop10">
               <input
+                name="detailWebHook1"
+                autoComplete="off"
                 type="text"
                 className="flex borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10"
                 placeholder={_l('示例：200,201（多个状态码用英文逗号隔开）')}
@@ -726,6 +728,8 @@ export default class WebHook extends Component<any, any> {
               return (
                 <div className="flexRow mTop10 alignItemsCenter" key={i}>
                   <input
+                    name="detailWebHook2"
+                    autoComplete="off"
                     type="text"
                     style={{ width: 100 }}
                     className="borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10"
@@ -735,6 +739,8 @@ export default class WebHook extends Component<any, any> {
                   />
 
                   <input
+                    name="detailWebHook3"
+                    autoComplete="off"
                     type="text"
                     className="flex borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10 mLeft10"
                     placeholder={_l('请输入错误消息')}
@@ -763,6 +769,8 @@ export default class WebHook extends Component<any, any> {
             <div className="Font13 mTop15">{_l('返回其他 HTTP 状态码时的默认错误消息')}</div>
             <div className="flexRow mTop10">
               <input
+                name="detailWebHook4"
+                autoComplete="off"
                 type="text"
                 className="flex borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10"
                 placeholder={_l('请输入错误消息')}
@@ -841,6 +849,8 @@ export default class WebHook extends Component<any, any> {
 
         <div className="flexRow mTop10">
           <input
+            name="detailWebHook5"
+            autoComplete="off"
             type="text"
             className="flex borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10"
             placeholder={_l('推送地址')}

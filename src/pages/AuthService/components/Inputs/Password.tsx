@@ -52,6 +52,7 @@ export default function (props) {
         })}
       >
         <input
+          name="inputsPassword"
           type={inputType}
           className="passwordIcon"
           ref={InputRef}

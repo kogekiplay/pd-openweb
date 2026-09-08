@@ -79,12 +79,16 @@ export default ({ data, updateSource }) => {
                       border
                     />
                     <input
+                      name="startSubProcess1"
+                      autoComplete="off"
                       type="text"
                       className="mLeft10 fieldName w160 mTop8 minWidth0"
                       disabled={true}
                       value={item.controlName}
                     />
                     <input
+                      name="startSubProcess2"
+                      autoComplete="off"
                       type="text"
                       className="mLeft10 fieldName flex mTop8"
                       placeholder={_l('请输入说明')}

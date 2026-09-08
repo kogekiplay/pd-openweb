@@ -155,6 +155,8 @@ let RelateBox = class RelateBox extends Component<any, any> {
                 <div className="searchInput">
                   <Icon icon={'h5_search'} className="textTertiary searchIcon Font16" />
                   <input
+                    name="contentsRelateBox"
+                    autoComplete="off"
                     type="text"
                     className=""
                     placeholder={_l('搜索字段')}

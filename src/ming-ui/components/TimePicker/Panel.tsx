@@ -184,6 +184,8 @@ class Panel extends Component<any, any> {
         <div className="TimePicker-panel-container">
           <span className="TimePicker-panel-input-container">
             <input
+              name="timePickerPanel"
+              autoComplete="off"
               readOnly="true"
               placeholder={placeholder}
               value={this.state.inputValue}

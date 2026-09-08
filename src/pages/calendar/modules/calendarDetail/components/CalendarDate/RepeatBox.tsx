@@ -115,6 +115,8 @@ export default class RepeatBox extends Component<any, any> {
         <div className="FormControl">
           {_l('每')}
           <input
+            name="calendarDateRepeatBox1"
+            autoComplete="off"
             type="text"
             className="intervalBox borderColorPrimary"
             value={interval}
@@ -185,6 +187,8 @@ export default class RepeatBox extends Component<any, any> {
         <span className="mLeft10">
           {_l('发生')}
           <input
+            name="calendarDateRepeatBox2"
+            autoComplete="off"
             type="text"
             className="recurCountBox borderColorPrimary"
             value={recurCount}

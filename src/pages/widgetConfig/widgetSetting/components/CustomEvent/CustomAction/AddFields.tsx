@@ -51,6 +51,8 @@ export default function AddFields(props) {
             <div className="searchWrap" onClick={e => e.stopPropagation()}>
               <i className="icon-search Font16 textSecondary"></i>
               <input
+                name="customActionAddFields"
+                autoComplete="off"
                 autoFocus
                 value={searchValue}
                 placeholder={_l('搜索')}

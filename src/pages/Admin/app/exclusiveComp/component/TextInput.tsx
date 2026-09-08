@@ -83,6 +83,8 @@ const TextInput = React.forwardRef((props, ref) => {
         </div>
       )}
       <input
+        name="componentTextInput"
+        autoComplete="off"
         type="text"
         className={cx('formControl', { error, disabled, noBorder: disabled })}
         {...inputProps}

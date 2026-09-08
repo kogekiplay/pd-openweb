@@ -128,6 +128,8 @@ export default class WidgetsVerifyCode extends Component<any, any> {
     return (
       <div className="customFormControlVerify">
         <input
+          name="widgetsVerifyCode"
+          autoComplete="off"
           ref={this.inputRef}
           className={cx('customFormControlBox', { verifyCodeStyle: size === 4 })}
           value={verifyCode}

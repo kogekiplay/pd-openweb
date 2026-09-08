@@ -618,6 +618,8 @@ class DialogSelectDept extends React.Component<any, any> {
             <div className="selectDepartmentContainer_search">
               <span className="searchIcon icon-search" />
               <input
+                name="functionsDialogSelectDept"
+                autoComplete="off"
                 type="text"
                 className="searchInput"
                 placeholder={_l('搜索部门')}

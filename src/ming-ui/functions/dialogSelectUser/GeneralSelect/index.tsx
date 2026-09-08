@@ -1614,6 +1614,8 @@ export default class GeneraSelect extends Component<any, any> {
         <div className="GSelect-head-searchArea">
           <span className="icon-search searchIcon" />
           <input
+            name="dialogSelectUserGeneralSelect"
+            autoComplete="off"
             type="text"
             value={keywords}
             autoFocus

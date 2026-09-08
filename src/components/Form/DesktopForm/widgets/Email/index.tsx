@@ -118,6 +118,8 @@ const Email = props => {
       </div>
       <EmailWrap isEditing={isEditing}>
         <input
+          name="email"
+          autoComplete="off"
           type="text"
           className={cx('customFormControlBox', { controlDisabled: disabled })}
           ref={textRef}

@@ -71,9 +71,10 @@ class GlobalSearch extends Component<any, any> {
       <div className="globalSearchWrap" onClick={this.handleMaskClick}>
         <div className={cx('inputWrap', { hasResult: !!searchVal })}>
           <Icon icon="search" className="searchIcon Font20" />
-          <input type="text" style={{ display: 'none' }} />
+          <input name="globalSearch1" autoComplete="off" type="text" style={{ display: 'none' }} />
           <form autoComplete="off" onSubmit={e => e.preventDefault()}>
             <input
+              name="globalSearch2"
               type="text"
               autoFocus
               onKeyUp={this.handleInputKeyDown}

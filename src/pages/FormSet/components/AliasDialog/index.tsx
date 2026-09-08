@@ -233,6 +233,8 @@ export default function AliasDialog(props) {
                   </span>
                 ) : (
                   <input
+                    name="aliasDialog"
+                    autoComplete="off"
                     ref={inputRef}
                     type="text"
                     value={item.alias}

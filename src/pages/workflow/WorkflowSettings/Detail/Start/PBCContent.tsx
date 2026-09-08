@@ -279,6 +279,8 @@ export default ({ data, updateSource, isIntegration, isPlugin }) => {
   const renderControlName = item => {
     return (
       <input
+        name="startPBCContent1"
+        autoComplete="off"
         type="text"
         className="borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10 flex"
         placeholder={_l('字段名（必填）')}
@@ -293,6 +295,8 @@ export default ({ data, updateSource, isIntegration, isPlugin }) => {
   const renderControlAlias = item => {
     return (
       <input
+        name="startPBCContent2"
+        autoComplete="off"
         type="text"
         className="borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10 flex"
         placeholder={item.dataSource ? _l('参数名（必填）') : _l('参数名')}
@@ -314,6 +318,8 @@ export default ({ data, updateSource, isIntegration, isPlugin }) => {
   const renderControlDesc = item => {
     return (
       <input
+        name="startPBCContent3"
+        autoComplete="off"
         type="text"
         className="borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10 flex"
         placeholder={_l('说明')}
@@ -551,6 +557,8 @@ export default ({ data, updateSource, isIntegration, isPlugin }) => {
               {selectItem.options.map((o, index) => (
                 <div className="mTop10 flexRow alignItemsCenter" key={index}>
                   <input
+                    name="startPBCContent4"
+                    autoComplete="off"
                     type="text"
                     className="borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10 flex mRight10"
                     placeholder={_l('选项名')}
@@ -559,6 +567,8 @@ export default ({ data, updateSource, isIntegration, isPlugin }) => {
                     onBlur={e => updateOptions('value', e.target.value.trim(), selectItem, index, true)}
                   />
                   <input
+                    name="startPBCContent5"
+                    autoComplete="off"
                     type="text"
                     className="borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10 flex"
                     placeholder={_l('选项值')}
@@ -594,6 +604,8 @@ export default ({ data, updateSource, isIntegration, isPlugin }) => {
               <div className="mTop20">{_l('检查项')}</div>
               <div className="mTop10 flexRow">
                 <input
+                  name="startPBCContent6"
+                  autoComplete="off"
                   type="text"
                   className="borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10 flex"
                   placeholder={_l('内容')}
@@ -612,6 +624,8 @@ export default ({ data, updateSource, isIntegration, isPlugin }) => {
               <div className="mTop10 flexRow">
                 {isIntegration ? (
                   <input
+                    name="startPBCContent7"
+                    autoComplete="off"
                     type="text"
                     className="borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10 flex"
                     placeholder={PLACEHOLDER[selectItem.type]}
@@ -623,6 +637,8 @@ export default ({ data, updateSource, isIntegration, isPlugin }) => {
                   <Fragment>
                     {_.includes([2, 6, 16], selectItem.type) && (
                       <input
+                        name="startPBCContent8"
+                        autoComplete="off"
                         type="text"
                         className="borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10 flex"
                         placeholder={PLACEHOLDER['2']}

@@ -411,6 +411,8 @@ export default class PersonalInfo extends React.Component<any, any> {
               <div className="textPrimary Font17 overflow_ellipsis LineHeight32">
                 {editFullName ? (
                   <input
+                    name="personalPersonalInfo"
+                    autoComplete="off"
                     className={cx('editfullNameInput', { isErr })}
                     autofocus="autofocus"
                     value={baseDetail.fullname}

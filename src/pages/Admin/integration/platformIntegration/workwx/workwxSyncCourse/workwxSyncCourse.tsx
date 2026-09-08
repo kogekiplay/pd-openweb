@@ -91,7 +91,14 @@ export default class WorkwxSyncCourse extends React.Component<any, any> {
         <p className="Font14 textSecondary mTop24 LineHeight22">{_l('填写“授权回调域”')}</p>
         <div className="inputList mTop20">
           <span className="inputTitle">{_l('回调域名：')}</span>
-          <input type="text" className="inputBox" readOnly value={scanUrl} />
+          <input
+            name="workwxSyncCourseWorkwxSyncCourse1"
+            autoComplete="off"
+            type="text"
+            className="inputBox"
+            readOnly
+            value={scanUrl}
+          />
           <span
             className="copyBtn"
             onClick={() => {
@@ -174,7 +181,14 @@ export default class WorkwxSyncCourse extends React.Component<any, any> {
           </p>
           <div className="inputList mTop20">
             <span className="inputTitle">{_l('可信域名：')}</span>
-            <input type="text" className="inputBox" readOnly value={domainName} />
+            <input
+              name="workwxSyncCourseWorkwxSyncCourse2"
+              autoComplete="off"
+              type="text"
+              className="inputBox"
+              readOnly
+              value={domainName}
+            />
             <span
               className="copyBtn"
               onClick={() => {

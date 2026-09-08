@@ -396,6 +396,8 @@ export default class UpgradeProcess extends Component<any, any> {
               <Fragment>
                 <div className="Font14">{_l('文件已加密，需要验证通过才能上传')}</div>
                 <input
+                  name="upgradeProcess"
+                  autoComplete="off"
                   className="passwordInputBox mTop16 mBottom16"
                   placeholder={_l('请输入密码')}
                   value={password}

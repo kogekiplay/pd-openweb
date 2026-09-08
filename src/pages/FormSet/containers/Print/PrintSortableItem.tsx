@@ -380,6 +380,8 @@ export default function PrintSortableItem(props) {
         <div className="flex overflow_ellipsis">
           {isRename ? (
             <input
+              name="printPrintSortableItem"
+              autoComplete="off"
               type="text"
               className="Font13 renameInput"
               ref={inputRef}

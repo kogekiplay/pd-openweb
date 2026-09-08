@@ -90,6 +90,8 @@ export default class Number extends Component<any, any> {
           <div className="numberRange flexRow">
             <div className="flex">
               <input
+                name="contentsNumber1"
+                autoComplete="off"
                 disabled={disabled}
                 type="text"
                 className="ming Input"
@@ -103,6 +105,8 @@ export default class Number extends Component<any, any> {
             <span className="split">-</span>
             <div className="flex">
               <input
+                name="contentsNumber2"
+                autoComplete="off"
                 disabled={disabled}
                 type="text"
                 className="ming Input"
@@ -116,6 +120,8 @@ export default class Number extends Component<any, any> {
           </div>
         ) : (
           <input
+            name="contentsNumber3"
+            autoComplete="off"
             disabled={disabled}
             type="text"
             className="ming Input w100"

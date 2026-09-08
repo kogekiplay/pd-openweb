@@ -67,6 +67,8 @@ class Input extends Component<any, any> {
 
     return (
       <input
+        name="input"
+        autoComplete="off"
         {...others}
         type={type}
         ref={manualRef}

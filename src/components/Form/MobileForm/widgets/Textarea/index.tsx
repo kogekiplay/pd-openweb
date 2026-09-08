@@ -239,6 +239,8 @@ const Textarea = props => {
         </div>
         {!disabled && !disableInput && (
           <textarea
+            name="textarea"
+            autoComplete="off"
             className={cx('customFormTextarea', className, { isEditing })}
             value={currentValue}
             ref={textareaRef}

@@ -474,7 +474,13 @@ export default class WriteFields extends Component<any, any> {
       <Fragment>
         <div className="flexRow alignItemsCenter">
           <SearchBox>
-            <input type="text" placeholder={_l('搜索')} onChange={e => this.setState({ keywords: e.target.value })} />
+            <input
+              name="writeFields"
+              autoComplete="off"
+              type="text"
+              placeholder={_l('搜索')}
+              onChange={e => this.setState({ keywords: e.target.value })}
+            />
             <Icon type="search" className="textSecondary Font16" />
           </SearchBox>
           <div className="flex" />

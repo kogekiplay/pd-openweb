@@ -44,6 +44,8 @@ export default function WorkAliasDialog(props) {
     <Dialog className="" visible={true} onCancel={onClose} title={_l('设置%0别名', workType)} onOk={() => onOk()}>
       <Wrap>
         <input
+          name="workAliasDialog"
+          autoComplete="off"
           type="text"
           className="name mTop6"
           placeholder={_l('请输入')}

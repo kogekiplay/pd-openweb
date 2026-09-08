@@ -224,7 +224,14 @@ let SelectFields = class SelectFields extends Component<any, any> {
       >
         <div className="search">
           <i className="icon-search textTertiary" />
-          <input value={searchValue} onChange={this.handleChange} placeholder={_l('搜索字段')} autoFocus></input>
+          <input
+            name="selectFields"
+            autoComplete="off"
+            value={searchValue}
+            onChange={this.handleChange}
+            placeholder={_l('搜索字段')}
+            autoFocus
+          ></input>
         </div>
         <div className="fieldsWrap">
           {sheetList.map(({ id: recordId, name }) => {

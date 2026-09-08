@@ -91,6 +91,8 @@ export default props => {
                 onChange={value => updateItem(item.controlId, 'type', value)}
               />
               <input
+                name="loopProcessParameters1"
+                autoComplete="off"
                 type="text"
                 className="mLeft10 fieldName flex mTop8 minWidth0"
                 disabled={isDisabled}
@@ -118,6 +120,8 @@ export default props => {
                 }}
               />
               <input
+                name="loopProcessParameters2"
+                autoComplete="off"
                 type="text"
                 className="mLeft10 fieldName w160 mTop8"
                 disabled={isDisabled}
@@ -147,6 +151,8 @@ export default props => {
               ) : (
                 <Fragment>
                   <input
+                    name="loopProcessParameters3"
+                    autoComplete="off"
                     type="text"
                     className="mLeft10 fieldName w265 mTop8"
                     disabled={item.type !== 6}

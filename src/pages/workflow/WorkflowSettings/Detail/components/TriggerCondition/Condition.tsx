@@ -554,6 +554,8 @@ export default class Condition extends Component<any, any> {
               this.renderSelectFieldsValue(conditionValues[0], i, j)
             ) : (
               <input
+                name="triggerConditionCondition1"
+                autoComplete="off"
                 key={filedId + conditionId}
                 type="text"
                 className="triggerConditionNum flex borderColorPrimary clearBorderRadius"
@@ -574,6 +576,8 @@ export default class Condition extends Component<any, any> {
                 this.renderSelectFieldsValue(conditionValues[1], i, j, true)
               ) : (
                 <input
+                  name="triggerConditionCondition2"
+                  autoComplete="off"
                   key={filedId + conditionId}
                   type="text"
                   className="triggerConditionNum flex borderColorPrimary clearBorderRadius"

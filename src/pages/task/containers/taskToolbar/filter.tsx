@@ -697,6 +697,8 @@ class Filter extends Component<any, any> {
             <div className={cx('relative mTop5', { Hidden: !folderId })}>
               <i className="icon-search filterSearchIcon" />
               <input
+                name="taskToolbarFilter"
+                autoComplete="off"
                 ref={search => {
                   this.search = search;
                 }}

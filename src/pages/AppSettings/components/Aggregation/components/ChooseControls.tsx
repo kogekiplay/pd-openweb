@@ -102,6 +102,8 @@ function ChooseControl(props) {
         <div className="search mTop8 mBottom6">
           <i className="icon-search textTertiary" />
           <input
+            name="chooseControls"
+            autoComplete="off"
             value={keywords}
             autofocus
             ref={inputRef}

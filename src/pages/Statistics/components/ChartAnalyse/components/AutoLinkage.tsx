@@ -136,6 +136,8 @@ export default class AutoLinkage extends Component<any, any> {
         <div className="searchWrap flexRow alignItemsCenter">
           <Icon className="textTertiary Font20 mRight5" icon="search" />
           <input
+            name="autoLinkage"
+            autoComplete="off"
             placeholder={_l('搜索组件名称')}
             className="flex"
             value={searchValue}

@@ -53,6 +53,8 @@ export default class DelAppGroup extends Component<any, any> {
             <div className="searchWrap flexRow alignItemsCenter mBottom8 pBottom10">
               <Icon icon="search" className="Font18 textTertiary mRight3" />
               <input
+                name="appGroupDelAppGroup"
+                autoComplete="off"
                 className="w100"
                 placeholder={_l('搜索')}
                 type="text"

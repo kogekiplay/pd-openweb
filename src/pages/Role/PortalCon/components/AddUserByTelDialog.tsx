@@ -241,6 +241,8 @@ function AddUserByTelDialog(props) {
                   />
                 )}
                 <input
+                  name="addUserByTelDialog"
+                  autoComplete="off"
                   className={cx('name InlineBlock mLeft10 mRight10', { noName: !o.name })}
                   value={o.name}
                   placeholder={_l('姓名')}

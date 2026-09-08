@@ -59,6 +59,8 @@ export default function FilterDetailName(props) {
     <Con className={cx('filterDetailName', { withStar: withStar && !active, editable })}>
       {active && (
         <input
+          name="filterDetailName"
+          autoComplete="off"
           ref={ref}
           value={value}
           onChange={e => setValue(e.target.value)}

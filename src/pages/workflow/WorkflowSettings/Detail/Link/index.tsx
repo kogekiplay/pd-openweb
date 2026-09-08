@@ -289,6 +289,8 @@ export default class Link extends Component<any, any> {
             <div className="mTop20 bold">{_l('密码')}</div>
             <div className="flexRow mTop10">
               <input
+                name="detailLink"
+                autoComplete="off"
                 type="text"
                 className="flex borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10"
                 defaultValue={data.password}

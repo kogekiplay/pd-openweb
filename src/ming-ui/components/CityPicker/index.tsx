@@ -462,6 +462,8 @@ export default function CityPicker(props) {
       children
     ) : (
       <input
+        name="cityPicker"
+        autoComplete="off"
         readOnly
         autoFocus
         value={select.length === 0 ? defaultValue : _.last(select).path}

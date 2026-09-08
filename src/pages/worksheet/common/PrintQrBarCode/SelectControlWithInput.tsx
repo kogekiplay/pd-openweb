@@ -120,7 +120,15 @@ function StaticInput(props) {
     }
   }, [isEditing]);
   return isEditing ? (
-    <input ref={inputRef} value={value} type="text" onChange={e => onChange(e.target.value)} onBlur={onBlur} />
+    <input
+      name="printQrBarCodeSelectControlWithInput"
+      autoComplete="off"
+      ref={inputRef}
+      value={value}
+      type="text"
+      onChange={e => onChange(e.target.value)}
+      onBlur={onBlur}
+    />
   ) : (
     <div className="staticValue ellipsis">{value}</div>
   );

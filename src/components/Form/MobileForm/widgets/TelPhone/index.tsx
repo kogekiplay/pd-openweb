@@ -119,6 +119,8 @@ const TelPhone = props => {
       </div>
       {!disabled && (
         <input
+          name="telPhone"
+          autoComplete="off"
           type="text"
           className={cx('customFormControlBox', className)}
           value={currentValue}

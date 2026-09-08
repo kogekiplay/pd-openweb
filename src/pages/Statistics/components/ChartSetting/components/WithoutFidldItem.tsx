@@ -68,6 +68,8 @@ const WithoutFidldItem = props => {
     >
       {inputVisible ? (
         <input
+          name="withoutFidldItem"
+          autoComplete="off"
           // autoFocus={true}
           defaultValue={inputValue}
           // onChange={(e) => {

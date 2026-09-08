@@ -13,7 +13,15 @@ const InputComponent = ({ str, handleBlur }) => {
   return (
     <Wrap>
       <p className="Font13">{_l('按钮名称')}</p>
-      <input type="text" className="btnName mTop10" defaultValue={str} autoFocus={true} onBlur={handleBlur} />
+      <input
+        name="submitFormSettingSubmitButtonSettings"
+        autoComplete="off"
+        type="text"
+        className="btnName mTop10"
+        defaultValue={str}
+        autoFocus={true}
+        onBlur={handleBlur}
+      />
     </Wrap>
   );
 };

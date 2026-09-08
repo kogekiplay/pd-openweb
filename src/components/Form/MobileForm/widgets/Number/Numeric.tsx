@@ -278,6 +278,8 @@ const Numeric = props => {
         </div>
         {!disabled && (
           <input
+            name="numberNumeric"
+            autoComplete="off"
             type="text"
             inputmode="decimal"
             className="customFormControlBox"

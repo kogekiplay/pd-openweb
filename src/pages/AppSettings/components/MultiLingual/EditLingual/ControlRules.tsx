@@ -114,6 +114,8 @@ export default function ControlRules(props) {
         <div className="searchWrap flexRow alignItemsCenter mBottom10">
           <Icon className="textTertiary Font20 mRight5" icon="search" />
           <input
+            name="editLingualControlRules"
+            autoComplete="off"
             placeholder={_l('验证规则')}
             className="flex"
             value={searchValue}

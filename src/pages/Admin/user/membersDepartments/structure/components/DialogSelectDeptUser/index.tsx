@@ -86,6 +86,8 @@ export default class SelectDeptUser extends Component<any, any> {
           <div className="selectDepartmentUserContainer_search">
             <span className="searchIcon icon-search"></span>
             <input
+              name="dialogSelectDeptUser"
+              autoComplete="off"
               type="text"
               className="searchInput"
               placeholder={_l('搜索成员')}

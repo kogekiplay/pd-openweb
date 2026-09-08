@@ -106,6 +106,8 @@ export default function AdditionSetting(props) {
       </div>
       {printData.formNameChecked && (
         <textarea
+          name="sideBarAdditionSetting"
+          autoComplete="off"
           className=""
           onChange={e =>
             handChange({

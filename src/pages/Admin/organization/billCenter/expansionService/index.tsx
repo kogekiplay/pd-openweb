@@ -785,6 +785,8 @@ let ExpansionService = class ExpansionService extends Component<any, any> {
             －
           </span>
           <input
+            name="billCenterExpansionService"
+            autoComplete="off"
             type="text"
             className="colorPrimary bagNum"
             value={hasUnit ? value + 'GB' : value}

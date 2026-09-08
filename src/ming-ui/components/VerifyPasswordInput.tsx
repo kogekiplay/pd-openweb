@@ -126,7 +126,7 @@ export default function VerifyPasswordInput(props) {
 
       <div style={{ height: 0, overflow: 'hidden' }}>
         {/* 用来避免浏览器将用户名塞到其它input里 */}
-        <input type="text" />
+        <input name="verifyPasswordInput" autoComplete="off" type="text" />
       </div>
       <Password
         ref={passWordRef}

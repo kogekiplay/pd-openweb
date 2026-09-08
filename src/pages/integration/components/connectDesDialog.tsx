@@ -134,6 +134,8 @@ function ConnectDesDia(props) {
       <p className="title">{_l('连接名称')}</p>
       <div className="Relative">
         <input
+          name="connectDesDialog1"
+          autoComplete="off"
           type="text"
           value={name}
           className="Block mTop8"
@@ -155,6 +157,8 @@ function ConnectDesDia(props) {
       <p className="title">{_l('说明')}</p>
       <div className="Relative">
         <textarea
+          name="connectDesDialog2"
+          autoComplete="off"
           type="text"
           value={explain}
           className="Block mTop8"

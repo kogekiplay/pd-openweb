@@ -81,6 +81,8 @@ export default function (props) {
             callback={handleChange}
           >
             <input
+              name="inputTypesAreaInput"
+              autoComplete="off"
               className="CityPicker-input-placeholder-Gray3"
               placeholder={value}
               value={search}

@@ -54,6 +54,8 @@ export default function Item(props) {
         />
       )}
       <input
+        name="infoSetItem"
+        autoComplete="off"
         className={cx('controlName InlineBlock mLeft10 mRight25', { noName: !controlName })}
         value={controlName}
         placeholder={_l('字段标题')}

@@ -69,6 +69,8 @@ const MobileSearch = forwardRef((props, ref) => {
       <Icon icon="h5_search" />
       <form action="#" className="flex" onSubmit={e => e.preventDefault()}>
         <input
+          name="mobileSearch"
+          autoComplete="off"
           type="search"
           placeholder={placeholder || _l('搜索')}
           className="Font14"

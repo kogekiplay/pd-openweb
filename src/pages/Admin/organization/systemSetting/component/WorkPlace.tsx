@@ -302,6 +302,8 @@ export default class WorkPlace extends Component<any, any> {
                   onClick={this.handleKeyDown.bind(this)}
                 />
                 <input
+                  name="componentWorkPlace"
+                  autoComplete="off"
                   value={keywords}
                   onKeyDown={this.handleKeyDown.bind(this)}
                   onChange={e => this.handleChange(e)}

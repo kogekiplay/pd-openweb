@@ -119,6 +119,8 @@ const Email = props => {
       </div>
       {!disabled && (
         <input
+          name="email"
+          autoComplete="off"
           type="text"
           className={cx('customFormControlBox', className)}
           value={currentValue}

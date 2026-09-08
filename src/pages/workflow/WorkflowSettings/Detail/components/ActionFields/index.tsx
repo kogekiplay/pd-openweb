@@ -130,6 +130,8 @@ export default class ActionFields extends Component<any, any> {
             >
               <i className="icon-search textSecondary Font14" />
               <input
+                name="actionFields"
+                autoComplete="off"
                 type="text"
                 ref={search => {
                   this.search = search;

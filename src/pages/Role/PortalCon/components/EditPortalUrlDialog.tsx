@@ -154,6 +154,8 @@ export default function EditPortalUrlDialog(props) {
         <div className="urlInput flexRow">
           <span className="urlPre">{urlPre}</span>
           <input
+            name="editPortalUrlDialog"
+            autoComplete="off"
             className="flex"
             value={urlSuffix}
             maxLength={'60'} //最大60个字

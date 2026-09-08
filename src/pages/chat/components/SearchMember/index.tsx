@@ -288,6 +288,8 @@ class SearchMember extends Component<any, any> {
         <SearchWrap className="searchWrap flexRow alignItemsCenter flex mRight10 Relative">
           <Icon icon="search" className="textSecondary Font20 mLeft10 Absolute" />
           <input
+            name="searchMember"
+            autoComplete="off"
             ref={this.inputRef}
             type="text"
             className="Font13"

@@ -236,6 +236,8 @@ const NumberComp = props => {
   return (
     <div className="flexCenter flexRow">
       <input
+        name="numberNumber"
+        autoComplete="off"
         type="text"
         {...inputAttribute}
         className="customFormControlBox textPrimary flex"

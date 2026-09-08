@@ -264,6 +264,8 @@ export default function CustomAction(props) {
         <div className="searchWrap flexRow alignItemsCenter mBottom10">
           <Icon className="textTertiary Font20 mRight5" icon="search" />
           <input
+            name="editLingualCustomAction"
+            autoComplete="off"
             placeholder={_l('自定义动作')}
             className="flex"
             value={searchValue}

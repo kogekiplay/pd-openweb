@@ -154,6 +154,8 @@ export default class SelectWorkflow extends Component<any, any> {
         <div className="flexColumn h100">
           <div className="flexRow relative">
             <input
+              name="selectWorkflow"
+              autoComplete="off"
               type="text"
               placeholder={_l('搜索工作流名称')}
               className="selectWorkflowInput"

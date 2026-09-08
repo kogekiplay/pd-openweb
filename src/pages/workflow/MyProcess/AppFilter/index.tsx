@@ -120,6 +120,8 @@ export default class AppFilter extends Component<any, any> {
       <div className="appFilterWrapper" style={{ maxHeight: height }}>
         <div className="searchWrapper valignWrapper">
           <input
+            name="myProcessAppFilter"
+            autoComplete="off"
             autoFocus
             value={searchValue}
             className="flex"

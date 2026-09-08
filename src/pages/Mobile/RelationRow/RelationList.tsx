@@ -162,6 +162,8 @@ class RelationList extends Component<any, any> {
             <div className="inputCon">
               <i className="icon icon-search textTertiary" />
               <input
+                name="relationRowRelationList"
+                autoComplete="off"
                 className="flex"
                 placeholder={_l('搜索')}
                 type="search"

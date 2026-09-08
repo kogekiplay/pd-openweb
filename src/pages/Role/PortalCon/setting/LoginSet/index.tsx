@@ -124,6 +124,8 @@ export default function LoginSet(props) {
       <div className="content">
         <h6 className="Font16 textPrimary Bold mBottom0">{_l('登录页名称')}</h6>
         <input
+          name="settingLoginSet1"
+          autoComplete="off"
           type="text"
           className="pageTitle mTop6"
           placeholder={_l('请输入')}
@@ -185,6 +187,8 @@ export default function LoginSet(props) {
               />
             </div>
             <input
+              name="settingLoginSet2"
+              autoComplete="off"
               type="text"
               inputMode="numeric"
               className="logoHeightNumInput"

@@ -443,6 +443,8 @@ export default class Message extends Component<any, any> {
 
         <div className="mTop10 relative flexRow">
           <input
+            name="detailMessage"
+            autoComplete="off"
             type="text"
             placeholder={_l('搜索')}
             className="borderColorPrimary actionControlBox flex pLeft35 pRight10 pTop0 pBottom0"

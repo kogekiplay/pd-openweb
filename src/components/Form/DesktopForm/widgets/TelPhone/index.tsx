@@ -119,6 +119,8 @@ const TelPhone = props => {
       </div>
       <TelPhoneWrap isEditing={isEditing}>
         <input
+          name="telPhone"
+          autoComplete="off"
           type="text"
           className={cx('customFormControlBox', {
             controlDisabled: disabled,

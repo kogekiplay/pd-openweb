@@ -140,6 +140,8 @@ export default class Item extends Component<any, any> {
           )}
           {isEdit ? (
             <input
+              name="viewItemsItem"
+              autoComplete="off"
               autoFocus
               className="deit"
               defaultValue={item.name}

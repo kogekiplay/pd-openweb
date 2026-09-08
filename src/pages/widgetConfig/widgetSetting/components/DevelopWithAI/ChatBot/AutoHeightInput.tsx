@@ -32,6 +32,8 @@ const AutoHeightInput = ({ className, value, onChange, maxRows = 5, minRows = 1,
 
   return (
     <textarea
+      name="chatBotAutoHeightInput"
+      autoComplete="off"
       className={className}
       ref={ref => {
         textareaRef.current = ref;

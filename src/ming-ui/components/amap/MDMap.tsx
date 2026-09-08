@@ -154,7 +154,8 @@ class GDMap extends Component<any, any> {
           if (status === 'complete') {
             this.setState({
               defaultList: result.poiList.pois.filter(
-                item => item.location && item.location.lng && this.compareDistance(item.location.lng, item.location.lat),
+                item =>
+                  item.location && item.location.lng && this.compareDistance(item.location.lng, item.location.lat),
               ),
             });
           } else {
@@ -294,6 +295,8 @@ class GDMap extends Component<any, any> {
           <Icon icon="search" className="textTertiary Font16 Absolute" style={{ left: 12, top: 10 }} />
           <form action="#" className="flex" onSubmit={event => event.preventDefault()}>
             <input
+              name="amapMDMap"
+              autoComplete="off"
               type={isMobile ? 'search' : 'text'}
               ref={con => (this.searchRef = con)}
               placeholder={_l('搜索地点')}

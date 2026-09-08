@@ -105,6 +105,8 @@ const MobileSearch = props => {
           {enumDefault === 2 && clicksearch === '0' ? (
             <div className="searchBox bgTertiary selectSearchBox">
               <input
+                name="searchPopupSearch1"
+                autoComplete="off"
                 ref={searchInput}
                 type="text"
                 className="cursorText flex textPrimary"
@@ -124,6 +126,8 @@ const MobileSearch = props => {
             <div className="searchBox bgTertiary">
               <Icon icon="search" className="searchIcon Font20 textSecondary" />
               <input
+                name="searchPopupSearch2"
+                autoComplete="off"
                 type="text"
                 className="cursorText textPrimary"
                 placeholder={hint || _l('请选择')}

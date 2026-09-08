@@ -153,6 +153,8 @@ class DialogCreateAndEditRole extends React.Component<any, any> {
         <div>
           <div className="mTop5 mBottom12 Font14 require">{_l('名称')}</div>
           <input
+            name="dialogCreateAndEditRole1"
+            autoComplete="off"
             class="inputBox mBottom32"
             maxLength={32}
             value={roleName}
@@ -175,6 +177,8 @@ class DialogCreateAndEditRole extends React.Component<any, any> {
           ></Select>
           <div className="Font14 mBottom12">{_l('备注')}</div>
           <textarea
+            name="dialogCreateAndEditRole2"
+            autoComplete="off"
             value={remark}
             className="remark"
             onChange={e => {

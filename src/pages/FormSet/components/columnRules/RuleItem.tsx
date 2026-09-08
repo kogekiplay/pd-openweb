@@ -233,6 +233,8 @@ class RuleItems extends React.Component<any, any> {
         <div className="ruleNameInputBox" onClick={e => e.stopPropagation()}>
           {type === 1 && <div className={cx('ruleTypeIcon', { isWarning: checkType === 3 })}></div>}
           <input
+            name="columnRulesRuleItem"
+            autoComplete="off"
             className={cx('ruleNameInput', { textDisabled: disabled })}
             style={{ width: getNameWidth(name) }}
             value={name}

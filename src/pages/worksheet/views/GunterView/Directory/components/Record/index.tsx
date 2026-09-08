@@ -491,6 +491,8 @@ let Record = class Record extends Component<any, any> {
       >
         {row.isEdit && titleControl.type === 2 ? (
           <input
+            name="record"
+            autoComplete="off"
             autoFocus
             defaultValue={title}
             onBlur={event => {

@@ -201,6 +201,8 @@ export default class AppLog extends React.Component<any, any> {
 
         <div className="workflowSearchWrap">
           <input
+            name="appLog"
+            autoComplete="off"
             type="text"
             className="borderColorPrimary"
             value={keyword}

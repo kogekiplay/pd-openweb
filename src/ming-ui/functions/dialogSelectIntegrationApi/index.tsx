@@ -153,6 +153,8 @@ class SelectIntegrationApi extends Component<any, any> {
       <div className={cx('searchBox', { searchLink: type === 'link' })}>
         <i className="icon-search Font18" onClick={() => this.handleSearch(type)}></i>
         <input
+          name="functionsDialogSelectIntegrationApi"
+          autoComplete="off"
           value={this.state[keyName]}
           placeholder={_l('搜索')}
           onChange={e => this.setState({ [keyName]: e.target.value.trim() })}

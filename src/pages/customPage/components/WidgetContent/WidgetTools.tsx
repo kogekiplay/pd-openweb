@@ -152,6 +152,8 @@ const WidgetTools = props => {
             <Fragment>
               <div className="titleSign" style={{ backgroundColor: iconColor }} />
               <input
+                name="widgetContentWidgetTools"
+                autoComplete="off"
                 value={title}
                 className="bold"
                 placeholder={_l('标题')}

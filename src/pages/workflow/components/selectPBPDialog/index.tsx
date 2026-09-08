@@ -258,6 +258,8 @@ class SelectPBPDialog extends Component<any, any> {
               <div className="searchBox flexRow alignItemsCenter">
                 <i className="icon-search Font18 textTertiary" />
                 <input
+                  name="selectPBPDialog"
+                  autoComplete="off"
                   value={keyword}
                   placeholder={_l('搜索')}
                   onChange={e => this.setState({ keyword: e.target.value })}

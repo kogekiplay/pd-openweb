@@ -90,6 +90,8 @@ export default class SearchBar extends React.Component<any, any> {
         <div className="contacts-search-wrapper">
           <Icon icon="search" className="Font18 textTertiary mTop1" />
           <input
+            name="listSearchBar"
+            autoComplete="off"
             type="text"
             className="contacts-search-input"
             placeholder={_l('搜索')}

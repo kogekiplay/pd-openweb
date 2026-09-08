@@ -132,6 +132,8 @@ export default class SpecificFieldsValue extends Component<any, any> {
 
     return (
       <input
+        name="specificFieldsValue"
+        autoComplete="off"
         type="text"
         className={cx('flex borderColorPrimary actionControlBox pTop0 pBottom0 pLeft10 pRight10', {
           clearBorderRadius: hasOtherField,

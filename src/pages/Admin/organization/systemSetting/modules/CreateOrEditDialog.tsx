@@ -81,6 +81,8 @@ export default class SiteName extends Component<any, any> {
         onOk={() => this.handleOk()}
       >
         <input
+          name="createOrEditDialog"
+          autoComplete="off"
           ref={processName => {
             this.processName = processName;
           }}

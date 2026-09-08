@@ -147,6 +147,8 @@ export default class Welink extends React.Component<any, any> {
           {this.state.canEditInfo ? (
             <React.Fragment>
               <input
+                name="platformIntegrationWelink1"
+                autoComplete="off"
                 type="text"
                 className="inputBox"
                 onChange={e => {
@@ -162,6 +164,8 @@ export default class Welink extends React.Component<any, any> {
           ) : (
             <React.Fragment>
               <input
+                name="platformIntegrationWelink2"
+                autoComplete="off"
                 type="text"
                 className="inputBox"
                 readOnly

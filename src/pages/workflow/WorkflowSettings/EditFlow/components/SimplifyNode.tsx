@@ -131,6 +131,8 @@ export default props => {
       <div className="flex Font14 bold ellipsis TxtCenter">
         {editName ? (
           <input
+            name="simplifyNode"
+            autoComplete="off"
             type="text"
             ref={nodeNameRef}
             className="workflowNodeName"

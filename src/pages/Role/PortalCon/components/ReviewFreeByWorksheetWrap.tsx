@@ -126,6 +126,8 @@ export default function ReviewFreeByWorksheetWrap(props) {
                       >
                         <i className="icon-search textSecondary Font14" />
                         <input
+                          name="reviewFreeByWorksheetWrap"
+                          autoComplete="off"
                           type="text"
                           autoFocus
                           className="mLeft5 flex Border0 placeholderColor w100"

@@ -112,6 +112,8 @@ export default props => {
             />
 
             <input
+              name="processVariables1"
+              autoComplete="off"
               type="text"
               className="flex mLeft15 processConfigInput"
               value={item.controlName}
@@ -129,6 +131,8 @@ export default props => {
             />
 
             <input
+              name="processVariables2"
+              autoComplete="off"
               type="text"
               className="flex mLeft15 processConfigInput"
               value={item.desc}

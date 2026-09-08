@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { getEmptyImage } from 'react-dnd-html5-backend';
 import { useDrag } from 'react-dnd';
+import { getEmptyImage } from 'react-dnd-html5-backend';
 import { Dropdown, Menu } from 'antd';
 import cx from 'classnames';
 import { Dialog, Icon } from 'ming-ui';
@@ -160,6 +160,8 @@ export default function GroupHeader({
       </span>
       {editing ? (
         <input
+          name="groupedLayoutGroupHeader"
+          autoComplete="off"
           className="flex customBtnGroupedGroupTitleInput"
           value={draftName}
           autoFocus

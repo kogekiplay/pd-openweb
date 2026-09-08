@@ -220,6 +220,8 @@ function ConnectParam(props) {
     if (isEdit) {
       return (
         <input
+          name="connectParam"
+          autoComplete="off"
           type="text"
           className={cx('textPrimary')}
           placeholder={_l('请输入')}

@@ -107,6 +107,8 @@ export default function Alias(props) {
               {_l('设置在添加按钮，消息通知等需要指代记录时所使用的名称，如：可以修改“客户管理”表的记录名称为“客户”。')}
             </p>
             <input
+              name="alias1"
+              autoComplete="off"
               type="text"
               className="name mTop6"
               placeholder={_l('请输入')}
@@ -118,6 +120,8 @@ export default function Alias(props) {
             <h6 className="Font14 mTop24">{_l('新建按钮名称')}</h6>
             <p>{_l('设置新建记录时的按钮名称，未设置时默认使用记录名称')}</p>
             <input
+              name="alias2"
+              autoComplete="off"
               type="text"
               className="name mTop6"
               placeholder={name || _l('请输入')}
@@ -163,6 +167,8 @@ export default function Alias(props) {
             <p>{_l('通过设置工作表和字段别名，使得它们在API、webhook、自定义打印等场景使用的时候更具有辨识度。')}</p>
             <h6 className="Font14 mTop24">{_l('工作表别名')}</h6>
             <input
+              name="alias3"
+              autoComplete="off"
               type="text"
               className="name mTop6"
               placeholder={_l('请输入')}
@@ -178,6 +184,8 @@ export default function Alias(props) {
             <p>{_l('设置开发者备注，仅应用管理员、开发者和API中可见')}</p>
             <h6 className="Font14 mTop24">{_l('开发者备注')}</h6>
             <input
+              name="alias4"
+              autoComplete="off"
               type="text"
               className="name mTop6"
               placeholder={_l('请输入')}

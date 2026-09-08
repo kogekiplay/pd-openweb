@@ -27,6 +27,8 @@ export default class CalendarAddress extends Component<any, any> {
         <div className="calLine">
           <div className="addressContainer">
             <input
+              name="calendarAddress"
+              autoComplete="off"
               type="text"
               readOnly={!editable}
               className="addressBox"

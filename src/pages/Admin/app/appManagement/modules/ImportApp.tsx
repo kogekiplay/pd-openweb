@@ -241,6 +241,8 @@ export default class ImportApp extends React.Component<any, any> {
           <div className="importAppContent solidBorder importAppContentCenter">
             <div className="Font14">{_l('文件已加密，需验证通过才能导入')}</div>
             <input
+              name="importApp"
+              autoComplete="off"
               className="passwordInputBox mTop16 mBottom16"
               placeholder={_l('请输入密码')}
               value={password}

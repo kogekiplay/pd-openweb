@@ -62,6 +62,8 @@ function EditRoleFolderDialog(props) {
       <Wrap>
         <div className="Font14 mBottom13 mTop20">{_l('名称')}</div>
         <input
+          name="editRoleFolderDialog"
+          autoComplete="off"
           type="text"
           value={name}
           maxlength="64"

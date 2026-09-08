@@ -142,6 +142,8 @@ export default class SetInfoDialog extends Component<any, any> {
           </span>
           <div className="formDescribe">{_l('用于账单和发票抬头，请确保准确')}</div>
           <input
+            name="setInfoDialog1"
+            autoComplete="off"
             type="text"
             className={classNames('formControl', { error: errors.companyName && errors.companyName.msg })}
             defaultValue={companyName}
@@ -159,6 +161,8 @@ export default class SetInfoDialog extends Component<any, any> {
           <div className="formDescribe">{_l('用于网站页头的显示，请尽量简短')}</div>
           <div className="formControl flexRow alignItemsCenter shortName">
             <input
+              name="setInfoDialog2"
+              autoComplete="off"
               type="text"
               className={classNames('flex', {
                 error: errors.companyDisplayName && errors.companyDisplayName.msg,

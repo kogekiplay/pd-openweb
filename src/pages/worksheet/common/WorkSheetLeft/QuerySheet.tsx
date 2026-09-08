@@ -78,6 +78,8 @@ export default class QuerySheet extends Component<any, any> {
             }}
           />
           <input
+            name="workSheetLeftQuerySheet"
+            autoComplete="off"
             className="ming Input textPrimary flex"
             placeholder={_l('搜索工作表')}
             value={this.state.keyWords}

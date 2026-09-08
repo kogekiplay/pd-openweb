@@ -213,6 +213,8 @@ export default class InitBindAccountDialog extends Component<any, any> {
           <div className="mTop12">{_l('手机号')}</div>
           <div className="inputWrap" id="txtMobilePhone">
             <input
+              name="initBindAccountDialog1"
+              autoComplete="off"
               className={cx('inputBox', { errors: errorMsg.account })}
               ref={mobile => (this.mobile = mobile)}
               placeholder={_l('请输入手机号')}
@@ -227,6 +229,8 @@ export default class InitBindAccountDialog extends Component<any, any> {
           <div className="mTop10">{_l('验证码')}</div>
           <div className="inputWrap">
             <input
+              name="initBindAccountDialog2"
+              autoComplete="off"
               className={cx('inputBox', { errors: errorMsg.verifyCode })}
               placeholder={_l('请输入验证码')}
               maxLength="6"

@@ -68,6 +68,8 @@ export default function DropChoose(props) {
             <div className="search flexRow alignItemsCenter">
               <i className="icon icon-search textTertiary Hand Font16 mRight5"></i>
               <input
+                name="dropChoose"
+                autoComplete="off"
                 type="text"
                 className="flex"
                 placeholder={_l('搜索')}

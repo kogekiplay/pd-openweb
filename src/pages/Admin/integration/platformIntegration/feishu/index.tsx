@@ -187,6 +187,8 @@ export default class FeiShu extends React.Component<any, any> {
           {this.state.canEditInfo ? (
             <React.Fragment>
               <input
+                name="platformIntegrationFeishu1"
+                autoComplete="off"
                 type="text"
                 className="inputBox"
                 onChange={e => {
@@ -202,6 +204,8 @@ export default class FeiShu extends React.Component<any, any> {
           ) : (
             <React.Fragment>
               <input
+                name="platformIntegrationFeishu2"
+                autoComplete="off"
                 type="text"
                 className="inputBox"
                 readOnly

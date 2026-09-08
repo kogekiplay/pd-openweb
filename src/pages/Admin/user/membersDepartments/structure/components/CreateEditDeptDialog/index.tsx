@@ -201,6 +201,8 @@ export default class CreateEditDeptDialog extends Component<any, any> {
             <span className="infoLabel">{_l('部门名称')}</span>
             <span className="info Relative">
               <input
+                name="createEditDeptDialog1"
+                autoComplete="off"
                 type="text"
                 value={departmentInfo.departmentName}
                 maxlength="64"
@@ -219,6 +221,8 @@ export default class CreateEditDeptDialog extends Component<any, any> {
                 <span className="infoLabel">{_l('上级部门')}</span>
                 <span className="info Hand">
                   <input
+                    name="createEditDeptDialog2"
+                    autoComplete="off"
                     type="text"
                     value={parentDepartment.departmentName || companyName}
                     maxlength="64"

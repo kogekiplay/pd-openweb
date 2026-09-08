@@ -64,6 +64,8 @@ export default function DropdownWrapper(props) {
             <div className="searchWrap" onClick={e => e.stopPropagation()}>
               <i className="icon-search Font16 textSecondary"></i>
               <input
+                name="dropdown"
+                autoComplete="off"
                 autoFocus
                 value={searchValue}
                 placeholder={_l('搜索')}

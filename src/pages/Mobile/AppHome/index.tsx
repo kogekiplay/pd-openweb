@@ -120,6 +120,8 @@ class AppHome extends React.Component<any, any> {
             }}
           >
             <input
+              name="mobileAppHome"
+              autoComplete="off"
               type="search"
               className="pAll0 Border0 w100 Font14"
               placeholder={_l('搜索应用')}

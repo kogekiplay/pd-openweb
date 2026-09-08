@@ -302,6 +302,8 @@ export default class WorksheetItem extends Component<any, any> {
                     >
                       {currentSheetInfo.isEditSheetName ? (
                         <input
+                          name="setImportExcelCreateWorksheetOrAppWorksheetItem"
+                          autoComplete="off"
                           defaultValue={currentSheetInfo.sheetName}
                           ref={node => (this.editInput = node)}
                           className="editSheetNameInput textPrimary"

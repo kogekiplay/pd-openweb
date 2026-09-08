@@ -150,6 +150,8 @@ class DialogCreateAndEditPosition extends React.Component<any, any> {
         <div>
           <div className="mTop5 mBottom12 Font14">{_l('职位名称')}</div>
           <input
+            name="dialogCreateAndEditPosition"
+            autoComplete="off"
             class="inputBox"
             maxLength={32}
             value={jobName}

@@ -272,6 +272,8 @@ let External = class External extends Component<any, any> {
             <div className="searchWrapper">
               <Icon icon="search" className="Font18" />
               <input
+                name="calendarViewExternal"
+                autoComplete="off"
                 type="text"
                 className="cursorText"
                 placeholder={_l('搜索%0', (this.props.tabList.find(o => o.key === typeEvent) || {}).txt)}

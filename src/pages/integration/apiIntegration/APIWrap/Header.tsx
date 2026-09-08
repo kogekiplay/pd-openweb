@@ -261,6 +261,8 @@ function Header({ data, apkInfo, isConnectOwner, forPage, listId, onCancel, onDe
               ) : (
                 <React.Fragment>
                   <input
+                    name="aPIWrapHeader1"
+                    autoComplete="off"
                     type="text"
                     ref={InputRef}
                     className="name Block flex Font22 Border0"
@@ -310,6 +312,8 @@ function Header({ data, apkInfo, isConnectOwner, forPage, listId, onCancel, onDe
               </span>
             ) : (
               <textarea
+                name="aPIWrapHeader2"
+                autoComplete="off"
                 type="text"
                 ref={InputDesRef}
                 autofocus="autofocus"

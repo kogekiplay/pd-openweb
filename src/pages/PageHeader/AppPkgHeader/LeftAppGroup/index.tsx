@@ -1,8 +1,8 @@
 import React, { Fragment, lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import { TinyColor } from '@ctrl/tinycolor';
 import homeAppApi from 'api/homeApp';
 import cx from 'classnames';
@@ -300,6 +300,8 @@ const AppSectionItem = props => {
             <div className="flex ellipsis bold nameWrap flexRow alignItemsCenter">
               {edit ? (
                 <input
+                  name="appPkgHeaderLeftAppGroup"
+                  autoComplete="off"
                   autoFocus
                   className="w100 editInput"
                   defaultValue={item.workSheetName}

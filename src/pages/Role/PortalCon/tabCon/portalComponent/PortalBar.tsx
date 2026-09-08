@@ -80,6 +80,8 @@ function PortalBar(props) {
             <div className="inputCon">
               <div className="inputConLeft">
                 <input
+                  name="portalComponentPortalBar1"
+                  autoComplete="off"
                   placeholder={_l('搜索')}
                   type="text"
                   className="mRight5"
@@ -119,6 +121,8 @@ function PortalBar(props) {
                 <div className="searchWrapper">
                   <Icon icon="search" className="Font18" />
                   <input
+                    name="portalComponentPortalBar2"
+                    autoComplete="off"
                     type="text"
                     className="cursorText"
                     placeholder={_l('搜索')}

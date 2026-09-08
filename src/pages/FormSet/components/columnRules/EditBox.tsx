@@ -427,6 +427,8 @@ class EditBox extends React.Component<any, any> {
           <span className="Red">*</span>
         </div>
         <input
+          name="columnRulesEditBox1"
+          autoComplete="off"
           className={cx('ruleNameInput', { errorBorder: isError && !message })}
           value={this.state.message}
           placeholder={_l('请输入提示内容')}
@@ -529,6 +531,8 @@ class EditBox extends React.Component<any, any> {
       <div className="conditionContainer mTop0">
         <div className="Font14 Bold mBottom16">{_l('锁定说明')}</div>
         <input
+          name="columnRulesEditBox2"
+          autoComplete="off"
           className="ruleNameInput"
           defaultValue={_.get(ruleItems, '0.message')}
           placeholder={_l('请输入提示文案')}
@@ -641,6 +645,8 @@ class EditBox extends React.Component<any, any> {
             <Fragment>
               <div className="Font14 Bold">{_l('规则名称')}</div>
               <input
+                name="columnRulesEditBox3"
+                autoComplete="off"
                 className="mTop12 ruleNameInput"
                 value={this.state.name}
                 onChange={e => this.setState({ name: e.target.value })}

@@ -1219,6 +1219,8 @@ export const joinProjectPrompt = folderId => {
     children: (
       <div className="folderInfo">
         <textarea
+          name="utilsTaskComm"
+          autoComplete="off"
           className="borderColorPrimary w100"
           autofocus={true}
           placeholder={_l('向负责人说明你想要加入项目的原因')}
