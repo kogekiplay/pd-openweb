@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
-import Remarkable from 'remarkable';
-import { escapeHtml, replaceEntities } from 'remarkable/lib/common/utils';
+// remarkable 2 去掉了 default export，Remarkable 改为具名导出。
+import { Remarkable, utils } from 'remarkable';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
@@ -23,6 +23,10 @@ import {
   SelectAIModel,
   TestParameter,
 } from '../components';
+
+// v2 删掉了整个 lib/ 目录（只剩 bin/dist/linkify），这两个函数改由根导出的 utils 提供。
+// 在模块作用域解构，下面所有调用点一行都不用动。
+const { escapeHtml, replaceEntities } = utils;
 
 const MarkdownContent = styled.div`
   p {
