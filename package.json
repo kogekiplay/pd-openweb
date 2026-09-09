@@ -40,6 +40,7 @@
     "@fullcalendar/interaction": "^6.1.21",
     "@fullcalendar/react": "^6.1.21",
     "@fullcalendar/timegrid": "^6.1.21",
+    "@lezer/highlight": "^1.2.3",
     "@mdfe/qrcode-base": "^1.0.3",
     "@mdfe/react-dnd-mouse-backend": "^2.0.0",
     "@mdfe/vditor": "^1.0.0",

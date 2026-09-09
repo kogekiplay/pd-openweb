@@ -149,23 +149,47 @@ const marksMod = require(FUNC + 'common/formulaMarks.ts');
 
 // —— 真实 CM5 编辑器（含 vendored 的 javascript mode / closebrackets / matchbrackets），
 //    与生产的构造参数一致。原始逻辑的 getTokenAt 就靠这份分词器。
-const CodeMirror = require(RW + 'node_modules/codemirror/lib/codemirror.js');
-require(FUNC + 'lib/javascript.js').default(CodeMirror);
-require(FUNC + 'lib/closebrackets.js').default(CodeMirror);
-require(FUNC + 'lib/matchbrackets.js').default(CodeMirror);
+// CM5 那份 vendored addon 已随本次迁移删除（见提交说明）。所以这里的 CM5 参照物
+// 只在【生成 fixture】时需要：从 git 里把它们取到 CM5_LIB 指的目录，再带 --write-fixture 跑一次。
+//   FUNC0=src/pages/widgetConfig/widgetSetting/components/FunctionEditorDialog/Func
+//   mkdir -p /tmp/cm5-lib && for x in javascript closebrackets matchbrackets; do \
+//     git show <删除前的提交>:$FUNC0/lib/$x.js > /tmp/cm5-lib/$x.js; done
+//   CM5_LIB=/tmp/cm5-lib node tools/verify-cm6-formulamarks.cjs --write-fixture
+// 平时（CI / 本地）不带这两样，直接拿冻结好的 fixture 比——这样 CM5 删了之后
+// 这份「与 CM5 逐字一致」的保障依然有效。
+const WRITE_FIXTURE = process.argv.includes('--write-fixture');
+const FIXTURE = RW + 'tools/fixtures/formula-marks-cm5.json';
+let CodeMirror = null;
 
-const keywords = Object.keys(functions).reduce(
-  (a, k) => Object.assign(a, { [k]: { type: 'fn', style: 'customFn' } }),
-  {},
-);
-const host = dom.window.document.getElementById('root');
-const editor = CodeMirror(host, {
-  lineWrapping: true,
-  matchBrackets: true,
-  autoCloseBrackets: true,
-  mode: 'text/javascript',
-  keywords,
-});
+if (WRITE_FIXTURE) {
+  const libDir = process.env.CM5_LIB;
+
+  if (!libDir) {
+    console.error('--write-fixture 需要 CM5_LIB 指向取回的 CM5 addon 目录，见文件头说明。');
+    process.exit(2);
+  }
+
+  CodeMirror = require(RW + 'node_modules/codemirror/lib/codemirror.js');
+  require(libDir + '/javascript.js').default(CodeMirror);
+  require(libDir + '/closebrackets.js').default(CodeMirror);
+  require(libDir + '/matchbrackets.js').default(CodeMirror);
+}
+
+let editor = null;
+
+if (WRITE_FIXTURE) {
+  const keywords = Object.keys(functions).reduce(
+    (a, k) => Object.assign(a, { [k]: { type: 'fn', style: 'customFn' } }),
+    {},
+  );
+  editor = CodeMirror(dom.window.document.getElementById('root'), {
+    lineWrapping: true,
+    matchBrackets: true,
+    autoCloseBrackets: true,
+    mode: 'text/javascript',
+    keywords,
+  });
+}
 
 // —— 原始 CM5 逻辑，从 FunctionEditor.tsx 逐字搬来，只把 markText 换成记录区间。
 function groupMatch(text, matchText) {
@@ -316,10 +340,37 @@ const CASES = [
   ['单引号字符串里的中文逗号', "CONCAT('a，b')"],
 ];
 
-console.log('A. CM5 原始逻辑 ↔ 新纯函数模块（mdfunction，非只读）');
+// 参照值来源：--write-fixture 时现跑真实 CM5，平时读冻结好的 fixture。
+const fixture = WRITE_FIXTURE ? { cases: {} } : JSON.parse(fs.readFileSync(FIXTURE, 'utf8'));
+const fixtureKey = (name, opts) => name + '|' + opts.type + '|' + (opts.readOnly ? 'ro' : 'rw');
+
+function reference(name, text, opts) {
+  const key = fixtureKey(name, opts);
+
+  if (WRITE_FIXTURE) {
+    const r = cm5Marks(text, opts);
+    fixture.cases[key] = r;
+
+    return r;
+  }
+
+  const hit = fixture.cases[key];
+
+  if (!hit) {
+    console.error('fixture 里缺用例：' + key + '（新增用例需重新生成 fixture，见文件头）');
+    process.exit(3);
+  }
+
+  return hit;
+}
+
+console.log(
+  WRITE_FIXTURE ? 'A. 现跑真实 CM5 生成 fixture' : 'A. 冻结的 CM5 结果（fixture）↔ 新纯函数模块（mdfunction，非只读）',
+);
 for (const [name, text] of CASES) {
-  const a = cm5Marks(text, { type: 'mdfunction', readOnly: false });
-  const b = marksMod.computeFormulaMarks(text, { type: 'mdfunction', readOnly: false });
+  const opts = { type: 'mdfunction', readOnly: false };
+  const a = reference(name, text, opts);
+  const b = marksMod.computeFormulaMarks(text, opts);
   // 新模块多了 fnName 一类（替代 CM5 靠 mode keywords 染色的部分），比对时剔掉
   const bMarks = b.marks.filter(m => m.kind !== 'fnName');
   check(name + ' — 区间', a.marks, bMarks);
@@ -332,7 +383,7 @@ for (const [name, text] of [
   ['javascript', 'SUM（1，'],
 ]) {
   const opts = name === '只读' ? { type: 'mdfunction', readOnly: true } : { type: 'javascript', readOnly: false };
-  const a = cm5Marks(text, opts);
+  const a = reference(name, text, opts);
   const b = marksMod.computeFormulaMarks(text, opts);
   check(
     name + ' — 区间',
@@ -354,6 +405,27 @@ console.log('\nC. 新增的函数名高亮（替代 CM5 的 mode keywords 染色
     '字符串里的函数名不高亮',
     inStr.marks.filter(m => m.kind === 'fnName').map(m => m.from),
     [0],
+  );
+}
+
+if (WRITE_FIXTURE) {
+  fs.mkdirSync(path.dirname(FIXTURE), { recursive: true });
+  fs.writeFileSync(
+    FIXTURE,
+    JSON.stringify(
+      {
+        _note:
+          '由真实 CM5（含已删除的 Func/lib vendored 分词器）跑出的参照值，用于在 CM5 删掉之后' +
+          '继续守住「新实现与 CM5 逐字一致」。重新生成方式见 tools/verify-cm6-formulamarks.cjs 文件头。',
+        generatedFrom: 'codemirror ' + require(RW + 'node_modules/codemirror/package.json').version,
+        cases: fixture.cases,
+      },
+      null,
+      2,
+    ) + '\n',
+  );
+  console.log(
+    '\n  已写入 fixture：' + FIXTURE.replace(RW, '') + '（' + Object.keys(fixture.cases).length + ' 个用例）',
   );
 }
 

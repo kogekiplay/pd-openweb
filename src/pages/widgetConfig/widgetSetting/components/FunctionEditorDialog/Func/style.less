@@ -1,17 +1,20 @@
 .functionEditor {
-  .CodeMirror-cursor {
+  /* CM6 类名：-cursor→.cm-cursor、-matchingbracket→.cm-matchingBracket、
+     -placeholder→.cm-placeholder；字符串 token 在 CM6 走 @lezer/highlight 的 tag，
+     统一用 .cm-content 下的 span 无法精确命中，故改为在深色 HighlightStyle 里给底色，
+     这里只保留浅色下「字符串与正文同色」这一条既有意图。 */
+  .cm-cursor,
+  .cm-dropCursor {
     border-color: var(--color-primary);
-    border-right: 1px solid var(--color-primary);
+    border-left: 1px solid var(--color-primary);
     transform: scaleY(1.1);
   }
-  .CodeMirror-matchingbracket {
+  .cm-matchingBracket,
+  .cm-nonmatchingBracket {
     color: var(--color-text-title) !important;
     background-color: rgba(33, 150, 243, 0.2);
   }
-  .cm-string {
-    color: var(--color-text-title) !important;
-  }
-  .CodeMirror-placeholder {
+  .cm-placeholder {
     font-size: 14px !important;
     color: var(--color-text-disabled) !important;
   }

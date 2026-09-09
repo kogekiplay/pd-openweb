@@ -87,17 +87,30 @@ const Editor = styled.div`
   flex: 1;
   padding: ${({ readOnly }) => (readOnly ? '0px' : '20px 0;')}
   overflow: hidden;
-  .CodeMirror {
-    font-family: Monaco, monospace;
+  /* CM6：.CodeMirror → .cm-editor，内容区在 .cm-content 上 */
+  .cm-editor {
     width: 100%;
     height: 100%;
+
+    &.cm-focused {
+      outline: none;
+    }
+  }
+  .cm-scroller {
+    font-family: Monaco, monospace;
     font-size: 14px;
-    .cm-customFn {
-      color: var(--color-success);
-    }
-    .cm-system {
-      color: var(--color-warning);
-    }
+    overflow: auto;
+  }
+  /* 已知 / 未知函数名。CM5 时代 .cm-customFn 是 JS mode 按注入的 keywords 染的色；
+     现在由 formulaMarks 的 fnName 装饰器给，类名沿用以免样式失联，并补一个未知函数的红色。 */
+  .cm-customFn {
+    color: var(--color-success);
+  }
+  .cm-unknownFn {
+    color: var(--color-error);
+  }
+  .cm-system {
+    color: var(--color-warning);
   }
 `;
 
