@@ -11,10 +11,14 @@
  * 所以本文件最核心的一条断言是「注入只发生了 1 次，但颜色/尺寸仍然跟着 props 变了」。
  * 只断言「颜色对」是抓不住回归的：旧代码在首次渲染时颜色也是对的。
  *
- * 分工说明：jsdom 不做真正的样式解析，currentColor 与 var() 的【最终计算值】在这里验不了，
+ * 分工说明（原先这里写错过，纠正）：jsdom 30 能验 color 的继承与自定义属性的解析，
+ * 所以「wrapper 的真值确实继承到了 svg 上」这条【必须在这里验】——只分别断言两端
+ * （svg 上是引用、wrapper 上是真值）而不验中间的继承链，是个真实的洞：
+ * 一旦注入位置跑到 wrapper 外面（比如下次升 react-svg 改了注入点），图标会变黑并撑成原始尺寸，
+ * 而只验两端的脚本一条都不会红。已用变异测试确认过这个洞存在。
+ * jsdom 真正验不了的只有 SVG 的 fill 表现属性不进 computed style，
  * 那部分是在真实浏览器上用生产页面的真实图标验过的（改 wrapper 的 color 后
  * svg 的 computed fill 立即跟随；--svg-icon-size 设 18/32/20px 时 svg 盒子随之变化）。
- * 本文件负责验 React 侧的接线：wrapper 上的真值会更新、注入产物里只有引用、且没有重注入。
  *
  * 运行方式（jsdom 不是本仓依赖，而本仓【不能用 npm install】——react-motion@0.5.2 的
  * peer 冲突会让 npm ERESOLVE 硬失败。所以把 jsdom 装到仓库外再用环境变量指过来）：
@@ -130,6 +134,10 @@ check('svg 的 style 里不含写死的像素值', /\d+px/.test(svg1.getAttribut
 check('wrapper 带上真实颜色', (wrapper.getAttribute('style') || '').includes('color: rgb(76, 175, 80)') || (wrapper.getAttribute('style') || '').includes('#4CAF50'), true);
 check('wrapper 带上真实尺寸', /--svg-icon-size:\s*22px/.test(wrapper.getAttribute('style') || ''), true);
 check('后代的 fill 已被剥离（好继承根节点）', [...svg1.querySelectorAll('*')].map(e => e.getAttribute('fill')), [null, null]);
+// 这三条验的是【中间那段继承链】。上面两端各自对、但链子断了的话，图标会变黑并撑成原始尺寸，
+// 而其余断言全绿——这正是变异测试里复现过的洞。
+check('svg 的 computed color 确实从 wrapper 继承下来了', dom.window.getComputedStyle(svg1).color, 'rgb(76, 175, 80)');
+check('svg 上能解析到 --svg-icon-size', dom.window.getComputedStyle(svg1).getPropertyValue('--svg-icon-size'), '22px');
 
 // ---------- 只改颜色 ----------
 // 这是抓回归的关键一段：旧实现下 wrapper 没有颜色、真值写在 svg 上且不会重写，
@@ -142,12 +150,24 @@ check('没有重新注入：请求次数没涨', xhrCount, 1);
 check('svg 根节点仍是 currentColor', svg2.getAttribute('fill'), 'currentColor');
 check('wrapper 的颜色已跟着 props 更新', /color:\s*var\(--color-text-secondary\)/.test(wrapper.getAttribute('style') || ''), true);
 check('wrapper 上不再残留旧颜色', /76,\s*175,\s*80|#4CAF50/i.test(wrapper.getAttribute('style') || ''), false);
+check('svg 继承到的颜色也跟着变了（而非停在旧色）', dom.window.getComputedStyle(svg2).color !== 'rgb(76, 175, 80)', true);
 
 // ---------- 只改尺寸 ----------
 console.log('\nC. 只改 size');
 await render({ fill: 'var(--color-text-secondary)', size: 30 });
 check('没有重新注入：svg 还是同一个节点', document.querySelector('#root svg') === svg1, true);
 check('wrapper 的尺寸已跟着 props 更新', /--svg-icon-size:\s*30px/.test(wrapper.getAttribute('style') || ''), true);
+check('svg 上解析到的变量也跟着变', dom.window.getComputedStyle(document.querySelector('#root svg')).getPropertyValue('--svg-icon-size'), '30px');
+
+// ---------- fill 传 null / 空串 ----------
+// 默认参数只对 undefined 生效，这两种值会原样传进来。旧实现写进 svg 的 fill 属性是无效值、
+// 退化成黑色；新实现若不兜底则 wrapper 没有 color，svg 会继承祖先文字色——那是行为改变。
+console.log('\nE. fill 传 null / 空串时的兜底');
+for (const bad of [null, '']) {
+  await render({ url: '/icon.svg', fill: bad, size: 22 });
+  check('fill=' + JSON.stringify(bad) + ' 时 wrapper 仍有 inline color', /color:\s*rgb\(22,\s*119,\s*255\)|#1677ff/i.test(wrapper.getAttribute('style') || ''), true);
+}
+await render({ fill: '#4CAF50', size: 22 });
 
 // ---------- 改 url 应当重新注入 ----------
 console.log('\nD. 改 url（这才应该重新注入）');
