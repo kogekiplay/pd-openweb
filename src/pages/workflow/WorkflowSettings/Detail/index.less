@@ -623,8 +623,8 @@
     .workflowCodeMirrorBox {
       .tagInputareaIuput {
         min-height: 250px !important;
-        .CodeMirror,
-        .CodeMirror-scroll {
+        .cm-editor,
+        .cm-scroller {
           min-height: 248px;
         }
       }
@@ -757,13 +757,13 @@
   }
   .tagInputarea {
     &.minH100 {
-      .CodeMirror {
+      .cm-editor {
         min-height: 100px;
       }
     }
     &.smallPadding {
       .tagInputareaIuput {
-        .CodeMirror-lines {
+        .cm-content {
           padding: 1px 0;
         }
       }
@@ -777,7 +777,7 @@
       }
     }
     &.onlyOneValue {
-      .CodeMirror {
+      .cm-editor {
         background: var(--color-background-secondary);
       }
       .columnTagCon {
@@ -892,7 +892,7 @@
     .flowTplContent {
       .tagInputareaIuput {
         border: none !important;
-        .CodeMirror-line {
+        .cm-line {
           padding: 0 !important;
         }
       }
@@ -918,7 +918,7 @@
     .tagInputareaIuput {
       border-radius: 4px !important;
       background: var(--color-background-secondary);
-      .CodeMirror {
+      .cm-editor {
         color: var(--color-text-secondary);
         background: var(--color-background-secondary);
       }
@@ -1011,11 +1011,11 @@
   }
   .formulaEditorBox {
     &.minH100 {
-      .CodeMirror {
+      .cm-editor {
         min-height: 100px;
       }
     }
-    .CodeMirror-lines {
+    .cm-content {
       cursor: pointer;
     }
   }
@@ -1166,13 +1166,13 @@
   .tagInputarea {
     &.smallPadding {
       .tagInputareaIuput {
-        .CodeMirror-lines {
+        .cm-content {
           padding: 1px 0;
         }
       }
     }
     &.onlyOneValue {
-      .CodeMirror {
+      .cm-editor {
         background: var(--color-background-secondary);
       }
       .columnTagCon {

@@ -31,9 +31,10 @@ const TagTextareaWrap = styled.div`
   .tagInputareaIuput {
     border-radius: 3px 0 3px 3px !important;
   }
-  .CodeMirror-placeholder {
+  .cm-placeholder {
     color: var(--color-text-tertiary) !important;
-    padding-left: 10px !important;
+    /* CM5 的 placeholder 是独立的绝对定位元素、要自己补左内边距；
+       CM6 的 .cm-placeholder 在 .cm-line 里，已经继承了那 10px，删掉以免翻倍 */
   }
   .iconWrap {
     border: 1px solid var(--color-border-tertiary);

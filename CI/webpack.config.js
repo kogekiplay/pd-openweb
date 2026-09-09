@@ -223,7 +223,8 @@ const ASYNC_VENDOR_CACHE_GROUPS = {
   // 而它只服务一个后台页面。这个白名单就是拦这件事的。
   asyncCodeMirror: createAsyncVendorCacheGroup(
     'async-codemirror',
-    /[\\/]node_modules[\\/](codemirror|@codemirror[\\/][^\\/]+|@lezer[\\/][^\\/]+)[\\/]/,
+    // 名为 codemirror 的包（CM5）已随 TagTextarea 的迁移删掉，只剩 @codemirror/* 子包。
+    /[\\/]node_modules[\\/](@codemirror[\\/][^\\/]+|@lezer[\\/][^\\/]+)[\\/]/,
   ),
   asyncCkeditor: createAsyncVendorCacheGroup('async-ckeditor', /[\\/]node_modules[\\/](@ckeditor[\\/]|ckeditor5[\\/])/),
   asyncMjml: createAsyncVendorCacheGroup(

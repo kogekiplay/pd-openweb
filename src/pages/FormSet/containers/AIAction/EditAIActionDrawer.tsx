@@ -112,11 +112,11 @@ const Wrapper = styled.div`
     .tagInputareaIuput:not(.active) {
       border-color: transparent !important;
     }
-    .CodeMirror .CodeMirror-lines,
-    .CodeMirror .CodeMirror-line {
+    .cm-editor .cm-content,
+    .cm-editor .cm-line {
       padding: 0 !important;
     }
-    .CodeMirror .columnTagCon {
+    .cm-editor .columnTagCon {
       padding: 2px 4px 2px 0 !important;
     }
   }

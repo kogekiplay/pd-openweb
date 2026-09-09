@@ -55,23 +55,22 @@ export default class CustomTextarea extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    const cm = this.tagtextarea?.cmObj;
+    const editor = this.tagtextarea;
 
-    if (this.tagtextarea && cm && prevProps.content !== this.props.content) {
-      const cursor = cm.getCursor();
-      const scrollInfo = cm.getScrollInfo();
-      const lastLine = cm.lineCount() - 1;
+    if (editor && editor.view && prevProps.content !== this.props.content) {
+      // 光标现在是全文绝对 offset。判断「原来是否在最后一行」需要先换算行号，
+      // 所以先取 lineAt(cursor)，不能再直接比 cursor.line。
+      const cursor = editor.getCursor();
+      const scrollPos = editor.getScrollPos();
+      const wasOnLastLine = editor.lineAt(cursor).line === editor.lineCount() - 1;
 
-      this.tagtextarea.setValue(this.props.content);
-      cm.setCursor(cursor);
-      cm.scrollTo(scrollInfo.left, scrollInfo.top);
+      editor.setValue(this.props.content);
+      editor.setCursor(cursor);
+      editor.setScrollPos(scrollPos);
 
-      if (cursor.line === lastLine) {
+      if (wasOnLastLine) {
         setTimeout(() => {
-          const cmObj = this.tagtextarea?.cmObj;
-          if (cmObj) {
-            cmObj.scrollIntoView({ line: cmObj.lineCount() - 1, ch: 0 }, 50);
-          }
+          if (this.tagtextarea) this.tagtextarea.scrollToEnd();
         }, 10);
       }
     }

@@ -1,0 +1,646 @@
+{
+  "_note": "由真实 CM5（indexFromPos）跑出的参照值，用于在 CM5 删掉之后继续守住「新的 offset 换算与 CM5 的 line/ch 逐字等价」。重新生成方式见 tools/verify-cm6-tagmarks.cjs 文件头。",
+  "generatedFrom": "codemirror 5.65.21",
+  "cases": {
+    "空|noops": [],
+    "空|ops": [],
+    "纯文本|noops": [],
+    "纯文本|ops": [],
+    "单字段|noops": [
+      {
+        "from": 0,
+        "to": 7,
+        "kind": "tag",
+        "tag": "ctrl1",
+        "isLast": true
+      }
+    ],
+    "单字段|ops": [
+      {
+        "from": 0,
+        "to": 7,
+        "kind": "tag",
+        "tag": "ctrl1",
+        "isLast": true
+      }
+    ],
+    "字段前后有文字|noops": [
+      {
+        "from": 1,
+        "to": 8,
+        "kind": "tag",
+        "tag": "ctrl1",
+        "isLast": true
+      }
+    ],
+    "字段前后有文字|ops": [
+      {
+        "from": 1,
+        "to": 8,
+        "kind": "tag",
+        "tag": "ctrl1",
+        "isLast": true
+      }
+    ],
+    "两个字段|noops": [
+      {
+        "from": 0,
+        "to": 3,
+        "kind": "tag",
+        "tag": "a",
+        "isLast": false
+      },
+      {
+        "from": 6,
+        "to": 9,
+        "kind": "tag",
+        "tag": "b",
+        "isLast": true
+      }
+    ],
+    "两个字段|ops": [
+      {
+        "from": 0,
+        "to": 3,
+        "kind": "tag",
+        "tag": "a",
+        "isLast": false
+      },
+      {
+        "from": 6,
+        "to": 9,
+        "kind": "tag",
+        "tag": "b",
+        "isLast": true
+      }
+    ],
+    "字段名含短横（insertColumnTag 的实际形状）|noops": [
+      {
+        "from": 0,
+        "to": 14,
+        "kind": "tag",
+        "tag": "67f0a1b2c3-1",
+        "isLast": true
+      }
+    ],
+    "字段名含短横（insertColumnTag 的实际形状）|ops": [
+      {
+        "from": 0,
+        "to": 14,
+        "kind": "tag",
+        "tag": "67f0a1b2c3-1",
+        "isLast": true
+      },
+      {
+        "from": 11,
+        "to": 12,
+        "kind": "operator",
+        "tag": "-",
+        "isLast": false
+      }
+    ],
+    "两个含短横的字段|noops": [
+      {
+        "from": 0,
+        "to": 14,
+        "kind": "tag",
+        "tag": "node1-field1",
+        "isLast": false
+      },
+      {
+        "from": 17,
+        "to": 31,
+        "kind": "tag",
+        "tag": "node2-field2",
+        "isLast": true
+      }
+    ],
+    "两个含短横的字段|ops": [
+      {
+        "from": 0,
+        "to": 14,
+        "kind": "tag",
+        "tag": "node1-field1",
+        "isLast": false
+      },
+      {
+        "from": 6,
+        "to": 7,
+        "kind": "operator",
+        "tag": "-",
+        "isLast": false
+      },
+      {
+        "from": 15,
+        "to": 16,
+        "kind": "operator",
+        "tag": "+",
+        "isLast": false
+      },
+      {
+        "from": 17,
+        "to": 31,
+        "kind": "tag",
+        "tag": "node2-field2",
+        "isLast": true
+      },
+      {
+        "from": 23,
+        "to": 24,
+        "kind": "operator",
+        "tag": "-",
+        "isLast": false
+      }
+    ],
+    "字段名含点|noops": [
+      {
+        "from": 0,
+        "to": 5,
+        "kind": "tag",
+        "tag": "a.b",
+        "isLast": true
+      }
+    ],
+    "字段名含点|ops": [
+      {
+        "from": 0,
+        "to": 5,
+        "kind": "tag",
+        "tag": "a.b",
+        "isLast": true
+      }
+    ],
+    "字段名含斜杠|noops": [
+      {
+        "from": 0,
+        "to": 5,
+        "kind": "tag",
+        "tag": "a/b",
+        "isLast": true
+      }
+    ],
+    "字段名含斜杠|ops": [
+      {
+        "from": 0,
+        "to": 5,
+        "kind": "tag",
+        "tag": "a/b",
+        "isLast": true
+      },
+      {
+        "from": 2,
+        "to": 3,
+        "kind": "operator",
+        "tag": "/",
+        "isLast": false
+      }
+    ],
+    "字段名含逗号|noops": [
+      {
+        "from": 0,
+        "to": 5,
+        "kind": "tag",
+        "tag": "a,b",
+        "isLast": true
+      }
+    ],
+    "字段名含逗号|ops": [
+      {
+        "from": 0,
+        "to": 5,
+        "kind": "tag",
+        "tag": "a,b",
+        "isLast": true
+      },
+      {
+        "from": 2,
+        "to": 3,
+        "kind": "operator",
+        "tag": ",",
+        "isLast": false
+      }
+    ],
+    "公式带运算符|noops": [
+      {
+        "from": 0,
+        "to": 3,
+        "kind": "tag",
+        "tag": "a",
+        "isLast": false
+      },
+      {
+        "from": 6,
+        "to": 9,
+        "kind": "tag",
+        "tag": "b",
+        "isLast": true
+      }
+    ],
+    "公式带运算符|ops": [
+      {
+        "from": 0,
+        "to": 3,
+        "kind": "tag",
+        "tag": "a",
+        "isLast": false
+      },
+      {
+        "from": 4,
+        "to": 5,
+        "kind": "operator",
+        "tag": "+",
+        "isLast": false
+      },
+      {
+        "from": 6,
+        "to": 9,
+        "kind": "tag",
+        "tag": "b",
+        "isLast": true
+      },
+      {
+        "from": 10,
+        "to": 11,
+        "kind": "operator",
+        "tag": "*",
+        "isLast": false
+      },
+      {
+        "from": 14,
+        "to": 15,
+        "kind": "operator",
+        "tag": "-",
+        "isLast": false
+      }
+    ],
+    "括号与逗号|noops": [
+      {
+        "from": 4,
+        "to": 7,
+        "kind": "tag",
+        "tag": "a",
+        "isLast": false
+      },
+      {
+        "from": 9,
+        "to": 12,
+        "kind": "tag",
+        "tag": "b",
+        "isLast": true
+      }
+    ],
+    "括号与逗号|ops": [
+      {
+        "from": 3,
+        "to": 4,
+        "kind": "operator",
+        "tag": "(",
+        "isLast": false
+      },
+      {
+        "from": 4,
+        "to": 7,
+        "kind": "tag",
+        "tag": "a",
+        "isLast": false
+      },
+      {
+        "from": 7,
+        "to": 8,
+        "kind": "operator",
+        "tag": ",",
+        "isLast": false
+      },
+      {
+        "from": 9,
+        "to": 12,
+        "kind": "tag",
+        "tag": "b",
+        "isLast": true
+      },
+      {
+        "from": 12,
+        "to": 13,
+        "kind": "operator",
+        "tag": ")",
+        "isLast": false
+      }
+    ],
+    "多行|noops": [
+      {
+        "from": 4,
+        "to": 7,
+        "kind": "tag",
+        "tag": "a",
+        "isLast": false
+      },
+      {
+        "from": 12,
+        "to": 15,
+        "kind": "tag",
+        "tag": "b",
+        "isLast": true
+      }
+    ],
+    "多行|ops": [
+      {
+        "from": 4,
+        "to": 7,
+        "kind": "tag",
+        "tag": "a",
+        "isLast": false
+      },
+      {
+        "from": 12,
+        "to": 15,
+        "kind": "tag",
+        "tag": "b",
+        "isLast": true
+      }
+    ],
+    "多行含短横字段|noops": [
+      {
+        "from": 0,
+        "to": 5,
+        "kind": "tag",
+        "tag": "x-1",
+        "isLast": false
+      },
+      {
+        "from": 6,
+        "to": 11,
+        "kind": "tag",
+        "tag": "y-5",
+        "isLast": false
+      },
+      {
+        "from": 12,
+        "to": 17,
+        "kind": "tag",
+        "tag": "z-9",
+        "isLast": true
+      }
+    ],
+    "多行含短横字段|ops": [
+      {
+        "from": 0,
+        "to": 5,
+        "kind": "tag",
+        "tag": "x-1",
+        "isLast": false
+      },
+      {
+        "from": 2,
+        "to": 3,
+        "kind": "operator",
+        "tag": "-",
+        "isLast": false
+      },
+      {
+        "from": 6,
+        "to": 11,
+        "kind": "tag",
+        "tag": "y-5",
+        "isLast": false
+      },
+      {
+        "from": 8,
+        "to": 9,
+        "kind": "operator",
+        "tag": "-",
+        "isLast": false
+      },
+      {
+        "from": 12,
+        "to": 17,
+        "kind": "tag",
+        "tag": "z-9",
+        "isLast": true
+      },
+      {
+        "from": 14,
+        "to": 15,
+        "kind": "operator",
+        "tag": "-",
+        "isLast": false
+      }
+    ],
+    "空行开头|noops": [
+      {
+        "from": 1,
+        "to": 4,
+        "kind": "tag",
+        "tag": "a",
+        "isLast": true
+      }
+    ],
+    "空行开头|ops": [
+      {
+        "from": 1,
+        "to": 4,
+        "kind": "tag",
+        "tag": "a",
+        "isLast": true
+      }
+    ],
+    "连续空行|noops": [
+      {
+        "from": 0,
+        "to": 3,
+        "kind": "tag",
+        "tag": "a",
+        "isLast": false
+      },
+      {
+        "from": 6,
+        "to": 9,
+        "kind": "tag",
+        "tag": "b",
+        "isLast": true
+      }
+    ],
+    "连续空行|ops": [
+      {
+        "from": 0,
+        "to": 3,
+        "kind": "tag",
+        "tag": "a",
+        "isLast": false
+      },
+      {
+        "from": 6,
+        "to": 9,
+        "kind": "tag",
+        "tag": "b",
+        "isLast": true
+      }
+    ],
+    "行尾字段|noops": [
+      {
+        "from": 4,
+        "to": 7,
+        "kind": "tag",
+        "tag": "a",
+        "isLast": true
+      }
+    ],
+    "行尾字段|ops": [
+      {
+        "from": 4,
+        "to": 7,
+        "kind": "tag",
+        "tag": "a",
+        "isLast": true
+      }
+    ],
+    "未闭合的 $|noops": [],
+    "未闭合的 $|ops": [],
+    "孤立 $|noops": [],
+    "孤立 $|ops": [],
+    "相邻字段无分隔|noops": [
+      {
+        "from": 0,
+        "to": 3,
+        "kind": "tag",
+        "tag": "a",
+        "isLast": false
+      },
+      {
+        "from": 3,
+        "to": 6,
+        "kind": "tag",
+        "tag": "b",
+        "isLast": true
+      }
+    ],
+    "相邻字段无分隔|ops": [
+      {
+        "from": 0,
+        "to": 3,
+        "kind": "tag",
+        "tag": "a",
+        "isLast": false
+      },
+      {
+        "from": 3,
+        "to": 6,
+        "kind": "tag",
+        "tag": "b",
+        "isLast": true
+      }
+    ],
+    "纯运算符|noops": [],
+    "纯运算符|ops": [
+      {
+        "from": 0,
+        "to": 1,
+        "kind": "operator",
+        "tag": "+",
+        "isLast": false
+      },
+      {
+        "from": 1,
+        "to": 2,
+        "kind": "operator",
+        "tag": "-",
+        "isLast": false
+      },
+      {
+        "from": 2,
+        "to": 3,
+        "kind": "operator",
+        "tag": "*",
+        "isLast": false
+      },
+      {
+        "from": 3,
+        "to": 4,
+        "kind": "operator",
+        "tag": "/",
+        "isLast": false
+      },
+      {
+        "from": 4,
+        "to": 5,
+        "kind": "operator",
+        "tag": "(",
+        "isLast": false
+      },
+      {
+        "from": 5,
+        "to": 6,
+        "kind": "operator",
+        "tag": ")",
+        "isLast": false
+      },
+      {
+        "from": 6,
+        "to": 7,
+        "kind": "operator",
+        "tag": ",",
+        "isLast": false
+      }
+    ],
+    "日期偏移|noops": [
+      {
+        "from": 0,
+        "to": 3,
+        "kind": "tag",
+        "tag": "a",
+        "isLast": true
+      }
+    ],
+    "日期偏移|ops": [
+      {
+        "from": 0,
+        "to": 3,
+        "kind": "tag",
+        "tag": "a",
+        "isLast": true
+      },
+      {
+        "from": 3,
+        "to": 4,
+        "kind": "operator",
+        "tag": "+",
+        "isLast": false
+      }
+    ],
+    "中文夹字段|noops": [
+      {
+        "from": 2,
+        "to": 7,
+        "kind": "tag",
+        "tag": "字段名",
+        "isLast": true
+      }
+    ],
+    "中文夹字段|ops": [
+      {
+        "from": 2,
+        "to": 7,
+        "kind": "tag",
+        "tag": "字段名",
+        "isLast": true
+      }
+    ],
+    "emoji 夹字段（代理对，offset 按 UTF-16 计）|noops": [
+      {
+        "from": 2,
+        "to": 5,
+        "kind": "tag",
+        "tag": "a",
+        "isLast": true
+      }
+    ],
+    "emoji 夹字段（代理对，offset 按 UTF-16 计）|ops": [
+      {
+        "from": 2,
+        "to": 5,
+        "kind": "tag",
+        "tag": "a",
+        "isLast": true
+      }
+    ]
+  }
+}

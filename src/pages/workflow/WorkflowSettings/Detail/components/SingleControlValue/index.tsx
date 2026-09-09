@@ -55,11 +55,12 @@ export default class SingleControlValue extends Component<any, any> {
       this.props.item.type === 2 &&
       prevProps.item.fieldValue !== this.props.item.fieldValue &&
       this.tagtextarea &&
-      this.tagtextarea.cmObj
+      this.tagtextarea.view
     ) {
-      const cursor = this.tagtextarea.cmObj.getCursor();
+      // 光标现在是全文绝对 offset（数字），不再是 CM5 的 {line, ch}
+      const cursor = this.tagtextarea.getCursor();
       this.tagtextarea.setValue(this.props.item.fieldValue);
-      this.tagtextarea.cmObj.setCursor(cursor);
+      this.tagtextarea.setCursor(cursor);
     }
   }
   /**

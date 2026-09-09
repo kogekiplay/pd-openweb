@@ -55,22 +55,21 @@ const CustomTagTextarea = styled(TagTextarea)`
     .tagInputareaIuput {
       border-radius: 3px 0 0 3px;
       height: 120px;
-      .CodeMirror {
-        .CodeMirror-lines {
+      /* CM6 把 CM5 的 -sizer / -lines / -code 三层并成了一个 .cm-content，
+         三条规则合成一条；-scroll 对应 .cm-scroller。 */
+      .cm-editor {
+        .cm-content {
           padding: 3px 0;
-        }
-        .CodeMirror-sizer {
           min-height: auto !important;
-        }
-        .CodeMirror-placeholder {
-          color: var(--color-text-disabled) !important;
-          margin-left: 8px !important;
-          line-height: 27px !important;
-        }
-        .CodeMirror-code {
           line-height: 28px;
         }
-        .CodeMirror-scroll {
+        .cm-placeholder {
+          color: var(--color-text-disabled) !important;
+          line-height: 27px !important;
+          /* margin-left 删掉：CM6 的 placeholder 在 .cm-line 里，
+             已经继承了那 10px（比原来的 8px 多 2px，肉眼无差） */
+        }
+        .cm-scroller {
           min-height: 118px;
         }
       }

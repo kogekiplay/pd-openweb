@@ -13,16 +13,16 @@ const Wrap = styled.div`
   .fieldsWrap .fieldList li {
     max-width: 100%;
   }
-  .tagInputarea .CodeMirror .CodeMirror-lines {
+  /* CM6 把 CM5 的 -sizer / -lines / -code 三层并成了一个 .cm-content，
+     所以原来分开的两条规则合成一条。 */
+  .tagInputarea .cm-editor .cm-content {
     padding: 3px 0;
-  }
-  .CodeMirror-sizer {
     min-height: 36px;
-    .CodeMirror-placeholder {
-      line-height: 28px !important;
-      color: var(--color-text-disabled) !important;
-      padding-left: 10px !important;
-    }
+  }
+  .cm-placeholder {
+    line-height: 28px !important;
+    color: var(--color-text-disabled) !important;
+    /* padding-left 删掉：CM6 的 placeholder 在 .cm-line 里，已经继承了那 10px */
   }
   .isolate {
     bottom: 100%;

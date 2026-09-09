@@ -22,31 +22,38 @@
     border-left: none;
     border-radius: 0 3px 3px 0;
   }
+  /* CM5 → CM6 的类名对应：.CodeMirror→.cm-editor、-lines/-sizer/-code→.cm-content、
+     -line→.cm-line、-gutters→.cm-gutters、-placeholder→.cm-placeholder、
+     -scroll→.cm-scroller。光标不再是 CM5 那个假元素（.CodeMirror-cursor 的
+     border-color），CM6 这里用的是浏览器原生光标，所以改成 caret-color。 */
   &.autoHeight {
-    .CodeMirror {
+    .cm-editor {
       height: auto;
     }
   }
   &:not(.autoHeight) {
-    .CodeMirror {
+    .cm-editor {
       height: 100%;
     }
   }
-  .CodeMirror {
+  .cm-editor {
     font-family: inherit !important;
     box-sizing: border-box;
     background: transparent;
     color: var(--color-text-primary);
-    .CodeMirror-lines {
-      padding: 6px 0;
+    /* CM6 只在聚焦时给 .cm-focused 加一圈 outline，TagTextarea 的边框由
+       外层 .tagInputareaIuput 画（.active 时变色），所以去掉。 */
+    &.cm-focused {
+      outline: none;
     }
-    .CodeMirror-line {
+    .cm-content {
+      padding: 6px 0;
+      caret-color: var(--color-text-primary);
+    }
+    .cm-line {
       padding: 0 10px;
     }
-    .CodeMirror-cursor {
-      border-color: var(--color-text-primary) !important;
-    }
-    .CodeMirror-gutters {
+    .cm-gutters {
       background-color: var(--color-background-secondary) !important;
     }
     .columnTagCon {
@@ -122,5 +129,10 @@
     .operator {
       margin: 0 4px;
     }
+  }
+  /* CM5 的 cursorHeight: 0（noCursor / readonly）。CM6 用原生光标，藏它就是把
+     caret-color 透明掉。权重要压过上面 .cm-editor .cm-content 那条。 */
+  .tagInputareaIuput.noCursor .cm-editor .cm-content {
+    caret-color: transparent;
   }
 }

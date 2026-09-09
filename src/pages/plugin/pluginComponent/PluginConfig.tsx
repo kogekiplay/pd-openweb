@@ -145,7 +145,7 @@ const ConfigWrapper = styled.div`
     padding: 12px 24px;
     .tagInputareaIuput {
       min-height: 220px;
-      .CodeMirror-sizer {
+      .cm-content {
         min-height: 220px !important;
       }
     }

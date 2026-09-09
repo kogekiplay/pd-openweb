@@ -9,7 +9,7 @@ import { Button } from 'ming-ui';
 const Wrap = styled.div`
   .viewCodeTagTextarea {
     max-width: 500px;
-    .CodeMirror {
+    .cm-editor {
       min-height: 300px;
       max-width: 500px;
     }
