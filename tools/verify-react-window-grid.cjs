@@ -61,7 +61,7 @@ function compileTs(module, filename) {
     presets: [
       [RW + 'node_modules/@babel/preset-env', { targets: { node: 'current' } }],
       [RW + 'node_modules/@babel/preset-react', { runtime: 'classic' }],
-      [RW + 'node_modules/@babel/preset-typescript', { isTSX: true, allExtensions: true }],
+      [RW + 'node_modules/@babel/preset-typescript', { onlyRemoveTypeImports: true }],
     ],
     plugins: ['@babel/plugin-transform-modules-commonjs'],
   });

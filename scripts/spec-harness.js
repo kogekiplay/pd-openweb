@@ -71,16 +71,31 @@ function resolveSpecTarget(request) {
 }
 
 function babelPresets(file, extra = []) {
-  const isTSX = /\.tsx$/.test(file);
   const isTS = /\.tsx?$/.test(file);
-  const presets = extra.filter(p => {
+  // Babel 8 的 preset-react 默认从 classic 切成了 automatic runtime。真实构建在 .babelrc 里
+  // 钉死了 classic，spec 必须跟着，否则 JSX 会编译成 jsx() 而不是 React.createElement——
+  // 那些注入自己的假 createElement 来观察渲染树的 spec 会静默拿到空树（踩过：5 个 spec 全红）。
+  // 注意不能只在「调用方没传 preset-react」时才钉：多数 spec 自己传了裸的 '@babel/preset-react'，
+  // 所以这里对调用方传进来的那份也做归一化（调用方若显式指定了 runtime 则尊重它）。
+  const withClassicJsx = p => {
     const name = Array.isArray(p) ? p[0] : p;
-    return !String(name).includes('preset-typescript');
-  });
+
+    if (!String(name).includes('preset-react')) return p;
+
+    const opts = Array.isArray(p) ? p[1] || {} : {};
+
+    return [name, { runtime: 'classic', ...opts }];
+  };
+  const presets = extra
+    .filter(p => !String(Array.isArray(p) ? p[0] : p).includes('preset-typescript'))
+    .map(withClassicJsx);
+
   if (!presets.some(p => String(Array.isArray(p) ? p[0] : p).includes('preset-react'))) {
-    presets.push('@babel/preset-react');
+    presets.push(['@babel/preset-react', { runtime: 'classic' }]);
   }
-  if (isTS) presets.push(['@babel/preset-typescript', { isTSX, allExtensions: true }]);
+  // Babel 8 移除了 .isTSX / .allExtensions，改为默认按文件扩展名判断是否 TSX——
+  // 这里本来就是按扩展名算的，且传的是真实文件名，所以直接去掉即等价。
+  if (isTS) presets.push('@babel/preset-typescript');
   return presets;
 }
 

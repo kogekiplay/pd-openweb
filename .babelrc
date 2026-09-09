@@ -51,7 +51,12 @@
             }
           }
         ],
-        "@babel/preset-react",
+        [
+          "@babel/preset-react",
+          {
+            "runtime": "classic"
+          }
+        ],
         [
           "@babel/preset-typescript",
           {
@@ -61,7 +66,6 @@
       ]
     },
     "production": {
-      "plugins": ["@babel/plugin-syntax-dynamic-import"],
       "presets": [
         [
           "@babel/preset-env",
@@ -72,7 +76,12 @@
             }
           }
         ],
-        "@babel/preset-react",
+        [
+          "@babel/preset-react",
+          {
+            "runtime": "classic"
+          }
+        ],
         [
           "@babel/preset-typescript",
           {
