@@ -689,15 +689,13 @@ export function updateEventData(rowId, data, time) {
           let start = (eventScheduledDtResort[0] || {}).date;
           let end = (eventScheduledDtResort[eventScheduledDtResort.length - 1] || {}).date;
 
-          if (
-            !(
-              moment(time).isBetween(start, end) ||
-              moment(time).isSame(start, 'day') ||
-              moment(time).isSame(end, 'day') ||
-              calenderEventList[`eventScheduledUpCount`] < 20 ||
-              calenderEventList[`eventScheduledCount`] < 20
-            )
-          ) {
+          if (!(
+            moment(time).isBetween(start, end) ||
+            moment(time).isSame(start, 'day') ||
+            moment(time).isSame(end, 'day') ||
+            calenderEventList[`eventScheduledUpCount`] < 20 ||
+            calenderEventList[`eventScheduledCount`] < 20
+          )) {
             //更改到未获取的时间段否则添加新时间数据
             add = true;
           }

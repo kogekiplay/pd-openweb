@@ -2,7 +2,10 @@ const fs = require('fs');
 const path = require('path');
 const { fork, spawnSync } = require('child_process');
 
-const chalk = require('chalk');
+// chalk 5+ 是纯 ESM。Node 22 起 require(esm) 已稳定（本仓 engines 要求 >=26.8.1），
+// 所以 require 本身没问题，但拿到的是 ESM 命名空间对象，具名导出在 .default 上。
+// 少写 .default 的表现是 `chalk.xxx is not a function`，不是 require 报错。
+const chalk = require('chalk').default;
 const { merge } = require('webpack-merge');
 
 const generate = require('../CI/generate');

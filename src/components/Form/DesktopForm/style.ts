@@ -94,7 +94,7 @@ line-height: ${({ titlesize }) => {
     return `${valueHeight - 12}px !important`;
   }}
 ${({ item, showTitle }) =>
-    item.type === 34 && showTitle ? 'maxWidth: calc(100% - 140px);margin-top:20px;' : 'min-height: 0px !important;'}
+  item.type === 34 && showTitle ? 'maxWidth: calc(100% - 140px);margin-top:20px;' : 'min-height: 0px !important;'}
 .controlLabelName {
     ${({ displayRow, align_pc = '1', showTitle }) => {
       if (displayRow) {

@@ -204,14 +204,12 @@ export default class Widgets extends Component<any, any> {
         fail(res) {
           const { errMsg, errString } = res;
 
-          if (
-            !(
-              errMsg.includes('cancel') ||
-              errMsg.includes('canceled') ||
-              errString.includes('cancel') ||
-              errString.includes('canceled')
-            )
-          ) {
+          if (!(
+            errMsg.includes('cancel') ||
+            errMsg.includes('canceled') ||
+            errString.includes('cancel') ||
+            errString.includes('canceled')
+          )) {
             window.nativeAlert(JSON.stringify(res));
           }
 
@@ -229,14 +227,12 @@ export default class Widgets extends Component<any, any> {
         fail(res) {
           const { errMsg, errString } = res;
 
-          if (
-            !(
-              errMsg.includes('cancel') ||
-              errMsg.includes('canceled') ||
-              errString.includes('cancel') ||
-              errString.includes('canceled')
-            )
-          ) {
+          if (!(
+            errMsg.includes('cancel') ||
+            errMsg.includes('canceled') ||
+            errString.includes('cancel') ||
+            errString.includes('canceled')
+          )) {
             window.nativeAlert(JSON.stringify(res));
           }
         },

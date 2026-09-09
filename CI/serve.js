@@ -9,7 +9,10 @@ const { execSync } = require('child_process');
 const handler = require('serve-handler');
 const _ = require('lodash');
 const { createProxyMiddleware } = require('http-proxy-middleware');
-const chalk = require('chalk');
+// chalk 5+ 是纯 ESM。Node 22 起 require(esm) 已稳定（本仓 engines 要求 >=26.8.1），
+// 所以 require 本身没问题，但拿到的是 ESM 命名空间对象，具名导出在 .default 上。
+// 少写 .default 的表现是 `chalk.xxx is not a function`，不是 require 报错。
+const chalk = require('chalk').default;
 
 const utils = require('./utils');
 const publishConfig = require('./publishConfig');
