@@ -103,7 +103,6 @@ const ViewWrap = styled.div`
     .SingleViewBody .searchWrapper,
     .worksheetSheet .quickFilterWrap,
     .worksheetSheet .groupFilterWrap,
-    .worksheetSheet .mdTableContent,
     .gunterView .gunterRecord,
     .gunterView .recordBlock,
     .gunterView .milepostRecordBlock,

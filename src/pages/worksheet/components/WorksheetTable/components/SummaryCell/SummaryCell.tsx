@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import Trigger from 'rc-trigger';
 import { Menu, MenuItem } from 'ming-ui';
 import ClickAway from 'ming-ui/components/ClickAway';
-import { emitter } from 'src/utils/common';
 import { getSummaryInfo } from 'src/utils/record';
 import SummaryContent from './SummaryContent';
 import './SummaryCell.less';
@@ -26,19 +25,6 @@ export default class extends React.Component<any, any> {
     this.state = {
       menuVisible: false,
     };
-  }
-
-  componentWillUnmount() {
-    if (this.added) {
-      emitter.removeListener('MDTABLE_SCROLL', this.hideMenu);
-    }
-  }
-
-  addListener() {
-    if (!this.added) {
-      this.added = true;
-      emitter.addListener('MDTABLE_SCROLL', this.hideMenu);
-    }
   }
 
   handleChange = value => {
@@ -74,10 +60,6 @@ export default class extends React.Component<any, any> {
       </Menu>
     );
   }
-
-  hideMenu = () => {
-    this.setState({ menuVisible: false });
-  };
 
   render() {
     const {
@@ -168,11 +150,6 @@ export default class extends React.Component<any, any> {
               adjustX: true,
               adjustY: true,
             },
-          }}
-          onPopupVisibleChange={newVisible => {
-            if (newVisible) {
-              this.addListener();
-            }
           }}
         >
           <SummaryContent
