@@ -1,12 +1,11 @@
 import React from 'react';
+import { Grid as WindowGrid } from 'react-window';
 import cx from 'classnames';
 import Hammer from 'hammerjs';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
 import DragMask from 'worksheet/common/DragMask';
-import { Grid as WindowGrid } from 'react-window';
-import type { CellComponentProps } from 'react-window';
 import { emitter } from 'src/utils/common';
 import { normalizeGridCellStyle, RESET_V2_CONTAINER_BOX } from '../gridCellStyle';
 import Skeleton from '../Skeleton';
@@ -26,22 +25,6 @@ const FOOTER_ROW_HEIGHT = 28;
 // v1 时代这里曾套过一层只比较行列号的 memo。那时 children 是每次渲染新建的内联函数、
 // 被 react-window 当作组件类型，类型变了格子就整体重挂，所以那个比较器从未真正执行过；
 // 换成稳定组件后它会生效，却不比较 style，列宽一改格子就停在旧样式上——故不再保留。
-// 这就是 cellProps 的形状；v2 从它反推 cellProps 该长什么样，不标就会推成必填 ariaAttributes / style。
-type MDTableCellProps = {
-  renderVersion: number;
-  needUpdateRows: number[];
-  renderCell: (args: any) => any;
-  renderFooterCell: (args: any) => any;
-  renderFooter?: boolean;
-  columnOffset: number;
-  rowOffset: number;
-  grid: any;
-  scrollTo: (args: { left?: number; top?: number }) => void;
-  tableScrollTop: number;
-  gridHeight: number;
-  allowlink: any;
-};
-
 function MDTableGridCell({
   ariaAttributes,
   renderVersion,
@@ -54,7 +37,7 @@ function MDTableGridCell({
   renderCell,
   renderFooterCell,
   ...rest
-}: CellComponentProps<MDTableCellProps>) {
+}) {
   return (renderFooter ? renderFooterCell : renderCell)({
     ...rest,
     style: normalizeGridCellStyle(style),
@@ -125,6 +108,10 @@ export default class MDTable extends React.Component<any, any> {
   mainrightgrid = React.createRef();
   bottomleftgrid = React.createRef();
   bottomrightgrid = React.createRef();
+  // 每次 render 自增，用来让 cellProps 必然失效（见 render() 里的说明）。
+  renderVersion = 0;
+  // updateRow() 写入、componentDidUpdate 清空；声明在这里免得首次渲染时是 undefined。
+  needUpdateRows = [];
   constructor(props) {
     super(props);
     this.state = {
@@ -476,7 +463,8 @@ export default class MDTable extends React.Component<any, any> {
         columnWidth={columnIndex => getCellWidth(isColumnFixed ? columnIndex : columnIndex + fixedColumnCount)}
         rowCount={isRowFixed ? fixedRowCount : rowCount - fixedRowCount}
         rowHeight={() => cellHeight}
-        cellComponent={MDTableGridCell}
+        // as any 的原因同 FixedTable/Grid.tsx
+        cellComponent={MDTableGridCell as any}
         // v2 把 cellProps【展开】传给 cell，所以原来那个内联 render 函数换成模块级的
         // MDTableGridCell（标识稳定，不会每次渲染都让所有格子重挂）；
         // 行列偏移改由 cellProps 传进去、在 cell 里做加法。
@@ -520,7 +508,7 @@ export default class MDTable extends React.Component<any, any> {
     // renderCell 标识稳定（如类方法）但闭包里的数据变了，格子就会停在旧内容上。
     // 用一个每次渲染都变的版本号让 cellProps 必然失效，把更新语义精确对齐到 v1
     // （重渲而非重挂，成本仍低于 v1）。想拿回 v2 的记忆化收益，得先审计各消费方的 renderCell。
-    this.renderVersion = (this.renderVersion || 0) + 1;
+    this.renderVersion += 1;
     const {
       loading,
       width,

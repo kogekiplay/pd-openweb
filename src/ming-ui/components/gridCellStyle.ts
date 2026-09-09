@@ -14,10 +14,13 @@ const TRANSLATE = /translate\((-?[\d.]+)px,\s*(-?[\d.]+)px\)/;
 export function normalizeGridCellStyle(style) {
   if (!style || !style.transform) return style;
 
+  // rtl 下 v2 给的是 right: 0 + 负向 translate。负号能被下面的正则匹配上，
+  // 于是会算出一个负的 left，再和保留下来的 right: 0 打架——所以 rtl 直接不碰。
+  // 本产品无 rtl（v2 靠向上遍历 DOM 的 dir 属性判断，我们从不设），这条是防御性的。
+  if (style.left === undefined) return style;
+
   const matched = TRANSLATE.exec(style.transform);
 
-  // rtl 下 v2 走的是 right + 负向 translate，本产品无 rtl；匹配不上就原样返回，
-  // 至少不会算出 NaN 坐标。
   if (!matched) return style;
 
   const { transform, ...rest } = style;
@@ -32,4 +35,4 @@ export const RESET_V2_CONTAINER_BOX = {
   maxHeight: 'none',
   maxWidth: 'none',
   flexGrow: 0,
-} as const;
+};

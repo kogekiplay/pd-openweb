@@ -1,6 +1,5 @@
 import React, { Fragment, useCallback, useMemo, useRef } from 'react';
 import { Grid as WindowGrid } from 'react-window';
-import type { CellComponentProps } from 'react-window';
 import { includes, isFunction } from 'lodash';
 import { normalizeGridCellStyle, RESET_V2_CONTAINER_BOX } from '../gridCellStyle';
 
@@ -116,10 +115,9 @@ export default function Grid(props) {
   // 业务组件（WorksheetTable 的 Cell、ImportFileToChildTable 的内联 Cell），都不认识它。
   // 顺手在同一层把坐标还原成 v1 的 left / top（见 gridCellStyle.ts）。
   // 必须 useMemo：包装组件的标识就是 v2 memo 的依赖，每次渲染换新的会让所有格子重挂。
-  // 类型参数就是 cellProps 的形状；v2 从这里反推 cellProps 该长什么样，不标就会推成必填 ariaAttributes / style。
   const NormalizedCell = useMemo(
     () =>
-      function GridCell({ ariaAttributes, style, ...rest }: CellComponentProps<{ data: any }>) {
+      function GridCell({ ariaAttributes, style, ...rest }) {
         return <Cell {...rest} style={normalizeGridCellStyle(style)} />;
       },
     [Cell],
@@ -163,7 +161,11 @@ export default function Grid(props) {
         }}
         rowHeight={getRowHeight || (() => rowHeight)}
         rowCount={config.rowCount}
-        cellComponent={NormalizedCell}
+        // as any：v2 会从 cellComponent 的参数类型反推 cellProps 该长什么样，而这里的参数没有标注，
+        // 它就把 ariaAttributes / style 也算进 cellProps 的必填项。给参数加类型能修，但那要引入具名类型，
+        // 而本仓 eslint 用 @babel/eslint-parser、不做 TS 作用域分析，纯类型位置的标识符会被 no-undef 误报。
+        // 本仓整体是 Component<any, any> 的无类型风格，这里跟随，把类型让给 tsc 那条独立管线。
+        cellComponent={NormalizedCell as any}
         // v2 把 cellProps【展开】传给 cell（cell 收到的是
         // { ariaAttributes, columnIndex, rowIndex, style, ...cellProps }），
         // 所以这里把整包数据放在 `data` 键下——Cell 组件里 `const { data } = props` 的写法

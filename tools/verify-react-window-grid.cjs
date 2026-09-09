@@ -89,10 +89,17 @@ console.log('A. gridCellStyle.ts');
   check('transform 被移除', 'transform' in out, false);
   check('其余键保留', [out.position, out.width, out.height], ['absolute', 80, 30]);
   check('不改原对象', v2.transform, 'translate(160px, 90px)');
-  check('小数坐标', normalizeGridCellStyle({ transform: 'translate(12.5px, 0px)' }).left, 12.5);
+  check('小数坐标', normalizeGridCellStyle({ left: 0, transform: 'translate(12.5px, 0px)' }).left, 12.5);
   check('无 transform 原样返回', normalizeGridCellStyle({ left: 5, top: 6 }), { left: 5, top: 6 });
   check('undefined 原样返回', normalizeGridCellStyle(undefined), undefined);
-  check('非 translate 的 transform 原样返回', normalizeGridCellStyle({ transform: 'scale(2)' }), { transform: 'scale(2)' });
+  check('非 translate 的 transform 原样返回', normalizeGridCellStyle({ left: 0, transform: 'scale(2)' }), {
+    left: 0,
+    transform: 'scale(2)',
+  });
+  // rtl 下 v2 给的是 right: 0 + 负向 translate。负号能被正则匹配，若不拦住就会算出一个负 left
+  // 再和 right: 0 打架，所以必须原样返回。
+  const rtl = { right: 0, transform: 'translate(-160px, 90px)', width: 80, height: 30 };
+  check('rtl（无 left、负向 translate）原样返回', normalizeGridCellStyle(rtl), rtl);
   check('容器盒模型复位包含三键', RESET_V2_CONTAINER_BOX, { maxHeight: 'none', maxWidth: 'none', flexGrow: 0 });
 }
 
