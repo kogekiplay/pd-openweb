@@ -100,7 +100,9 @@ class Search extends Component<any, any> {
       <SearchRowsWrapper className="search flex flexRow valignWrapper">
         {!_.isEmpty(textFilters) && (
           <Trigger
-            placement="bottom"
+            // 原来这里写的是 placement="bottom"（正确名是 popupPlacement），
+            // rc-trigger 不认。而且下面已经显式给了 popupAlign，
+            // popupPlacement 在有 popupAlign 时也不起作用，所以是双重无效。
             action={['click']}
             popupClassName="moibleFilterPopup"
             popupVisible={this.state.visible}

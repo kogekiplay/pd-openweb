@@ -78,7 +78,11 @@ class ColumnHead extends Component<any, any> {
     return sortControl && sortControl.isAsc;
   }
 
-  conRef = React.createRef();
+  // 必须写明泛型：createRef() 不带类型参数时 current 是 {}，
+  // 而 rc-trigger 5 给 getPopupContainer 补上了准确签名
+  // ((node: HTMLElement) => HTMLElement)，四处 `() => this.conRef.current`
+  // 就都成了 TS2740。2.6.5 那边这个 prop 是无类型的，所以看不出来。
+  conRef = React.createRef<HTMLElement>();
 
   getType(control) {
     const { type, sourceControlType } = control;

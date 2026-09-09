@@ -89,7 +89,8 @@ export default function DeleteConfirm({
           </DeleteConfirmWrap>
         )
       }
-      onCancel={onCancel}
+      // 原来这里还传了 onCancel={onCancel}，Trigger 没有这个属性、一直是死的。
+      // 真正生效的是上面弹层内取消按钮里的 onCancel() 调用。
       {...rest}
     >
       {children}

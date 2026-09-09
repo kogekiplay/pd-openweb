@@ -39,7 +39,9 @@ export default function SubButton(props) {
             ))}
           </Menu>
         }
-        onPopupVisible={setPopupVisible}
+        // 原来这里写的是 onPopupVisible={setPopupVisible}（正确名是 onPopupVisibleChange），
+        // rc-trigger 从来不认，一直是死的。删掉而不改名：关闭本来就由上面 Menu 的
+        // onClickAway 和各 MenuItem 负责，改名会多一条回调路径，属于行为变更。
       >
         <div
           onClick={() => {

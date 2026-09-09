@@ -1,0 +1,23 @@
+{
+  "_note": "由真实 rc-trigger 2.6.5 渲染出的归一化 DOM 与交互结果，用于在 2.6.5 从依赖树里消失之后继续守住「5.x 的渲染与行为与它一致」。重新生成方式见 tools/verify-rc-trigger-parity.cjs 文件头。",
+  "generatedFrom": "2.6.5",
+  "dom": {
+    "child": "<span class=\"triggerChild\">点我</span>",
+    "popup": "<div style=\"<略>\"><div><div class=\"rc-trigger-popup myPopupClass anotherClass\" style=\"<略>\"><div class=\"popupInner\">弹层内容</div></div></div></div>"
+  },
+  "behaviour": {
+    "opened": {
+      "inContainer": true,
+      "calls": [
+        true
+      ]
+    },
+    "closed": {
+      "hidden": true,
+      "calls": [
+        true,
+        false
+      ]
+    }
+  }
+}

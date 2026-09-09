@@ -1941,7 +1941,9 @@ class ChildTable extends React.Component<any, any> {
                     <Trigger
                       zIndex={1000}
                       popupVisible={menuVisible && !isExceed}
-                      actions={['click']}
+                      // 原来这里写的是 actions={{['click']}}（正确名是 action），rc-trigger 从来不认，
+                      // 一直是死代码。只删不改名：改名会让 Trigger 真的获得点击开合行为，属于行为变更。
+                      // 开合目前由 popupVisible + onPopupVisibleChange 受控，功能正常。
                       getPopupContainer={() => document.body}
                       onPopupVisibleChange={visible => {
                         this.setState({ menuVisible: visible });

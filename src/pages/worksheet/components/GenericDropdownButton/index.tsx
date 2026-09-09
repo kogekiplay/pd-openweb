@@ -92,7 +92,10 @@ const GenericDropdownButton = ({ buttonText, icon, dropdownItems, onClick, disab
       <Trigger
         zIndex={999}
         popupVisible={menuVisible}
-        actions={['click']}
+        // 原来这里写的是 actions={['click']}（正确名是 action），rc-trigger 从来不认，
+        // 一直是死代码。这里只删不改名：改名会让 Trigger 真的获得点击开合行为，
+        // 那是行为变更，不该混在依赖升级里做。开合目前由 popupVisible +
+        // onPopupVisibleChange 受控，功能是正常的。
         getPopupContainer={() => conRef.current}
         onPopupVisibleChange={setMenuVisible}
         popup={
