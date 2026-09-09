@@ -19,7 +19,7 @@ const ControlTag = styled.div`
 `;
 
 const ReadonlyTagTextareaWrap = styled.div`
-  .CodeMirror-scroll {
+  .cm-scroller {
     background: var(--color-background-secondary);
   }
 `;
@@ -55,7 +55,7 @@ const NodeTagTextarea = props => {
           }}
           renderTag={renderTag}
           onBlur={() => {
-            onBlur(tagTextareaRef.current.cmObj.getValue());
+            onBlur(tagTextareaRef.current.getValue());
           }}
           onAddClick={() => setFormulaMapVisible(true)}
         />

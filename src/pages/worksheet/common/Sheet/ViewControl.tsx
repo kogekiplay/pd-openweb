@@ -445,7 +445,9 @@ function ViewControl(props) {
             '.quickAddControlDialog',
             '.ant-modal-root',
             '.ant-tooltip',
-            '.CodeMirror-hints',
+            // CM6 的补全弹层类名（CM5 时代是 .CodeMirror-hints）。
+            // 漏改的话点补全项会被判成「点到面板外」，把整个视图配置面板关掉。
+            '.cm-tooltip-autocomplete',
             '.selectRoleDialog',
             '#quickSelectDept',
             '.ant-drawer-mask',

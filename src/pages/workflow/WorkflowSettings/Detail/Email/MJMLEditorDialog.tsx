@@ -72,8 +72,8 @@ const DialogContent = styled.div`
       height: 100% !important;
       border: none !important;
       background: var(--mjml-editor-bg);
-      .CodeMirror,
-      .CodeMirror-scroll {
+      .cm-editor,
+      .cm-scroller {
         height: 100% !important;
         background: var(--mjml-editor-bg);
         color: var(--mjml-editor-text);
@@ -81,15 +81,18 @@ const DialogContent = styled.div`
         font-size: 13px;
         line-height: 20px;
       }
-      .CodeMirror-gutters {
+      .cm-gutters {
         background: var(--mjml-editor-bg);
         border-right: 1px solid var(--mjml-editor-gutter-border);
       }
-      .CodeMirror-linenumber {
+      .cm-lineNumbers .cm-gutterElement {
         color: var(--mjml-editor-muted);
       }
-      .CodeMirror-cursor {
-        border-left-color: var(--mjml-editor-cursor);
+      /* CM5 画的是一个假光标元素（.CodeMirror-cursor 的 border-left-color）。
+         TagTextarea 的 CM6 没挂 drawSelection，用的是浏览器原生光标，
+         所以改成 caret-color。 */
+      .cm-content {
+        caret-color: var(--mjml-editor-cursor);
       }
     }
   }
@@ -203,9 +206,10 @@ export default function MJMLEditorDialog({
   };
 
   const insertFieldCode = text => {
-    const editor = editorRef.current && editorRef.current.cmObj;
+    const editor = editorRef.current;
 
-    if (editor) {
+    if (editor && editor.view) {
+      // 光标现在是全文绝对 offset（数字），不再是 CM5 的 {line, ch}
       editor.replaceRange(text, editor.getCursor(), undefined, 'insertfield');
       editor.focus();
       return;

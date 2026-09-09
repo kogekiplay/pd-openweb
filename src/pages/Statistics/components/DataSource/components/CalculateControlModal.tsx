@@ -128,7 +128,8 @@ class CalculateControl extends Component<any, any> {
       formulaStr: value,
       fnmatch: newFnmatch,
       showInSideFormulaSelect: newFnmatch,
-      fnmatchPos: newFnmatch ? this.tagtextarea.cmObj.getCursor() : undefined,
+      // 现在是全文绝对 offset（数字），不再是 CM5 的 {line, ch}
+      fnmatchPos: newFnmatch ? this.tagtextarea.getCursor() : undefined,
     });
   };
   handleChangeDot = value => {

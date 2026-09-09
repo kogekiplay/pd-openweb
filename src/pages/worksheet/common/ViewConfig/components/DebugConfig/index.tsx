@@ -75,7 +75,7 @@ const Wrap = styled.div`
   }
   .viewCodeTagTextarea {
     max-width: 400px;
-    .CodeMirror {
+    .cm-editor {
       min-height: 100px;
       max-width: 400px;
     }

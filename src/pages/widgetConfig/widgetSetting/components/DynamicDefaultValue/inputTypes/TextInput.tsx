@@ -20,6 +20,12 @@ export default class TextInput extends Component<any, any> {
     dynamicValue: [],
   };
 
+  // 这三个原来都是隐式挂上去的 ref（每个访问点一条 TS2339）。
+  // babel 只做类型擦除不会报错，属于「构建绿但类型不干净」那一类，顺手声明掉。
+  $tagtextarea;
+  $textinput;
+  $wrap;
+
   componentDidMount() {
     const { dynamicValue, data, onChange } = this.props;
     const { default: defaultValue } = data;
@@ -45,11 +51,13 @@ export default class TextInput extends Component<any, any> {
   componentDidUpdate(prevProps) {
     if (JSON.stringify(this.props.dynamicValue) !== JSON.stringify(prevProps.dynamicValue)) {
       if (this.$tagtextarea) {
-        const cmObj = this.$tagtextarea?.cmObj;
-        const cursor = cmObj?.getCursor();
+        // 光标现在是全文绝对 offset（数字），不再是 CM5 的 {line, ch}。
+        // 必须用 isNumber 判断：offset 0 是 falsy，而原来那个 {line,ch} 对象恒为 truthy，
+        // 照抄 `if (cursor)` 会让「光标在开头」这一种情况静默丢失。
+        const cursor = this.$tagtextarea.getCursor();
         this.setDynamicValue(this.props.dynamicValue);
-        if (cmObj && cursor) {
-          cmObj.setCursor(cursor);
+        if (_.isNumber(cursor)) {
+          this.$tagtextarea.setCursor(cursor);
         }
       }
     }
@@ -85,7 +93,7 @@ export default class TextInput extends Component<any, any> {
   };
 
   handleDynamicValue = (newField = []) => {
-    if (this.$tagtextarea && this.$tagtextarea.cmObj) {
+    if (this.$tagtextarea && this.$tagtextarea.view) {
       const { cid = '', rcid = '', staticValue } = newField[0];
 
       if (rcid === 'url') {
@@ -95,7 +103,7 @@ export default class TextInput extends Component<any, any> {
 
       const id = rcid ? `${cid}~${rcid}` : `${cid}`;
       this.$tagtextarea.insertColumnTag(id);
-      let newValue = this.$tagtextarea.cmObj.getValue();
+      let newValue = this.$tagtextarea.getValue();
 
       // 文本能多选，以下情况不能同时配置
       if (_.includes(['search-keyword', 'empty'], cid) && !staticValue) {
@@ -129,8 +137,8 @@ export default class TextInput extends Component<any, any> {
               from !== DYNAMIC_FROM_MODE.FAST_FILTER && this.transferValue(value.trim());
             }}
             onBlur={() => {
-              const cmObj = this.$tagtextarea?.cmObj;
-              from === DYNAMIC_FROM_MODE.FAST_FILTER && cmObj && this.transferValue(cmObj.getValue());
+              const editor = this.$tagtextarea;
+              from === DYNAMIC_FROM_MODE.FAST_FILTER && editor && this.transferValue(editor.getValue());
             }}
           />
         )}

@@ -14,7 +14,7 @@ const ProcessWrap = styled.div`
     ${props => (props.hideDynamicValue ? 'margin-right: 0;' : '')}
     background: var(--color-background-primary)
   }
-  .CodeMirror {
+  .cm-editor {
     background: var(--color-background-input) !important;
   }
 `;

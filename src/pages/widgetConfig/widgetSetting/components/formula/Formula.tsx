@@ -219,7 +219,8 @@ export default class Formula extends React.Component<any, any> {
       fnmatch: newFnmatch,
       showInSideFormulaSelect: newFnmatch,
       selectColumnVisible: !newFnmatch,
-      fnmatchPos: newFnmatch ? this.tagtextarea.cmObj.getCursor() : undefined,
+      // 现在是全文绝对 offset（数字），不再是 CM5 的 {line, ch}
+      fnmatchPos: newFnmatch ? this.tagtextarea.getCursor() : undefined,
       hasDeletedWidget: false,
     });
     onChange({
@@ -232,19 +233,18 @@ export default class Formula extends React.Component<any, any> {
     const { showInSideFormulaSelect, shoOutSideFormulaSelect, fnmatchPos, fnmatch } = this.state;
 
     if (showInSideFormulaSelect) {
-      this.tagtextarea.cmObj.replaceRange(
-        `${key}()`,
-        { line: fnmatchPos.line, ch: fnmatchPos.ch - fnmatch.length },
-        { line: fnmatchPos.line, ch: fnmatchPos.ch - fnmatch.length + key.length + 2 },
-        'insertfn',
-      );
-      this.tagtextarea.cmObj.setCursor({ line: fnmatchPos.line, ch: fnmatchPos.ch - fnmatch.length + key.length + 1 });
-      this.tagtextarea.cmObj.focus();
+      // 坐标全部换成全文绝对 offset。原来是同一行内的 ch 加减，公式串又是单行的
+      //（FORMULA 模式的字符白名单不含换行），所以算式逐项照搬即可。
+      const from = fnmatchPos - fnmatch.length;
+      this.tagtextarea.replaceRange(`${key}()`, from, from + key.length + 2, 'insertfn');
+      // 光标落到括号之间
+      this.tagtextarea.setCursor(from + key.length + 1);
+      this.tagtextarea.focus();
     } else if (shoOutSideFormulaSelect) {
-      const cursor = this.tagtextarea.cmObj.getCursor();
-      this.tagtextarea.cmObj.replaceRange(`${key}()`, this.tagtextarea.cmObj.getCursor(), undefined, 'insertfn');
-      this.tagtextarea.cmObj.setCursor({ line: cursor.line, ch: cursor.ch + key.length + 1 });
-      this.tagtextarea.cmObj.focus();
+      const cursor = this.tagtextarea.getCursor();
+      this.tagtextarea.replaceRange(`${key}()`, cursor, undefined, 'insertfn');
+      this.tagtextarea.setCursor(cursor + key.length + 1);
+      this.tagtextarea.focus();
     }
 
     this.setState({
@@ -289,11 +289,15 @@ export default class Formula extends React.Component<any, any> {
                 return (
                   <div
                     onClick={() => {
-                      this.tagtextarea.cmObj.focus();
-                      const cursor = this.tagtextarea.cmObj.getCursor();
-                      this.tagtextarea.cmObj.replaceRange(`${calItem}`, cursor, undefined, 'insertfn');
-                      this.tagtextarea.cmObj.setCursor({ line: cursor.line, ch: cursor.ch + 2 });
-                      const newFnmatch = this.tagtextarea.cmObj.getValue();
+                      this.tagtextarea.focus();
+                      const cursor = this.tagtextarea.getCursor();
+                      this.tagtextarea.replaceRange(`${calItem}`, cursor, undefined, 'insertfn');
+                      // +2 而不是 +1 是 CM5 时代就有的 off-by-one：calItem 只有一个字符，
+                      // 插完光标本就在 cursor+1，这里又推了一格。在文末（最常见）会被
+                      // 夹回文末所以看不出来，插在中间才会多跳一格。原样保留，
+                      // 不在换内核的同一个改动里顺手改行为。
+                      this.tagtextarea.setCursor(cursor + 2);
+                      const newFnmatch = this.tagtextarea.getValue();
                       this.setState({ formulaStr: newFnmatch });
                       onChange({ dataSource: this.genFormula(newFnmatch) });
                     }}

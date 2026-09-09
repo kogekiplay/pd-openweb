@@ -118,7 +118,7 @@ export default class Code extends Component<any, any> {
     const { data, saveRequest, isFullCode } = this.state;
     const tagtextarea = isFullCode && this.fullCodeTagtextarea ? this.fullCodeTagtextarea : this.tagtextarea;
     const code = getCodeForSave({
-      editorCode: tagtextarea && tagtextarea.cmObj ? tagtextarea.cmObj.getValue() : undefined,
+      editorCode: tagtextarea && tagtextarea.view ? tagtextarea.getValue() : undefined,
       stateCode: data.code,
     });
     const currentData = { ...data, code };
@@ -169,19 +169,21 @@ export default class Code extends Component<any, any> {
       return;
     }
 
-    if (!tagtextarea.cmObj) {
+    // 编辑器还没异步就绪时只能先把值塞进 pendingValue（setValue 内部会处理）
+    if (!tagtextarea.view) {
       tagtextarea.setValue(value);
       return;
     }
 
-    if (tagtextarea.cmObj.getValue() === value) {
+    if (tagtextarea.getValue() === value) {
       return;
     }
 
-    const cursor = tagtextarea.cmObj.getCursor();
+    // 光标现在是全文绝对 offset（数字），不再是 CM5 的 {line, ch}
+    const cursor = tagtextarea.getCursor();
 
     tagtextarea.setValue(value);
-    tagtextarea.cmObj.setCursor(cursor);
+    tagtextarea.setCursor(cursor);
   }
 
   /**

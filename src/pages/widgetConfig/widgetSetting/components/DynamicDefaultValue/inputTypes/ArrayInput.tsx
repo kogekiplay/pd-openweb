@@ -33,9 +33,10 @@ export default class ArrayInput extends Component<any, any> {
   componentDidUpdate(prevProps) {
     if (JSON.stringify(this.props.dynamicValue) !== JSON.stringify(prevProps.dynamicValue)) {
       if (this.$tagtextarea) {
-        const cursor = this.$tagtextarea.cmObj.getCursor();
+        // 光标现在是全文绝对 offset（数字），不再是 CM5 的 {line, ch}
+        const cursor = this.$tagtextarea.getCursor();
         this.setDynamicValue(this.props.dynamicValue);
-        this.$tagtextarea.cmObj.setCursor(cursor);
+        if (_.isNumber(cursor)) this.$tagtextarea.setCursor(cursor);
       }
     }
   }
@@ -74,7 +75,7 @@ export default class ArrayInput extends Component<any, any> {
       const { cid = '', rcid = '' } = newField[0];
       const id = rcid ? `${cid}~${rcid}` : `${cid}`;
       this.$tagtextarea.insertColumnTag(id);
-      const newValue = this.$tagtextarea.cmObj.getValue();
+      const newValue = this.$tagtextarea.getValue();
       this.transferValue(newValue);
     }
   };

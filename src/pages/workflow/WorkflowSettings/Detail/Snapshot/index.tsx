@@ -103,7 +103,7 @@ export default class Snapshot extends Component<any, any> {
   onSave = () => {
     const { data, saveRequest } = this.state;
     const { name, actionId, appId, width, height, timeout, openSSL } = data;
-    const currentAppId = actionId === '3' ? String(this.urlTextarea?.cmObj?.getValue() ?? appId).trim() : appId;
+    const currentAppId = actionId === '3' ? String(this.urlTextarea?.getValue() ?? appId).trim() : appId;
 
     if (!currentAppId) {
       alert(

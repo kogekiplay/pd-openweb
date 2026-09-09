@@ -8,9 +8,10 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { ControlTag, SelectFieldsWrap } from 'src/pages/widgetConfig/styled/index';
 
 const WaterMarkTextarea = styled(TagTextarea)`
-  .CodeMirror-placeholder {
+  .cm-placeholder {
     color: var(--color-text-secondary) !important;
-    padding: 0 10px !important;
+    /* CM5 的 placeholder 是独立的绝对定位元素、要自己补左内边距；
+     CM6 的 .cm-placeholder 在 .cm-line 里，已经继承了那 10px，删掉以免翻倍 */
   }
 `;
 

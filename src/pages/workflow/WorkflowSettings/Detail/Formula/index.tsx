@@ -287,7 +287,8 @@ export default class Formula extends Component<any, any> {
       this.updateSource({ formulaValue: value }, () => {
         this.setState({
           fnmatch: newFnmatch,
-          fnmatchPos: this.tagtextarea.cmObj.getCursor(),
+          // 现在是全文绝对 offset（数字），不再是 CM5 的 {line, ch}
+          fnmatchPos: this.tagtextarea.getCursor(),
           showFormulaLayer: !!newFnmatch,
         });
       });
@@ -351,19 +352,18 @@ export default class Formula extends Component<any, any> {
     const { fnmatchPos, fnmatch } = this.state;
 
     if (fnmatch) {
-      this.tagtextarea.cmObj.replaceRange(
-        `${key}()`,
-        { line: fnmatchPos.line, ch: fnmatchPos.ch - 1 },
-        { line: fnmatchPos.line, ch: fnmatchPos.ch + fnmatch.length },
-        'insertfn',
-      );
-      this.tagtextarea.cmObj.setCursor({ line: fnmatchPos.line, ch: fnmatchPos.ch + key.length });
-      this.tagtextarea.cmObj.focus();
+      // 坐标全部换成全文绝对 offset。原来是同一行内的 ch 加减，公式串又是单行的
+      //（FORMULA 模式的字符白名单不含换行），所以算式逐项照搬即可。
+      // 注意这里的偏移量与 widgetConfig 那个公式编辑器【不同】（-1 / +fnmatch.length），
+      // 是各自独立的两套联想逻辑，不要相互套用。
+      this.tagtextarea.replaceRange(`${key}()`, fnmatchPos - 1, fnmatchPos + fnmatch.length, 'insertfn');
+      this.tagtextarea.setCursor(fnmatchPos + key.length);
+      this.tagtextarea.focus();
     } else {
-      const cursor = this.tagtextarea.cmObj.getCursor();
-      this.tagtextarea.cmObj.replaceRange(`${key}()`, this.tagtextarea.cmObj.getCursor(), undefined, 'insertfn');
-      this.tagtextarea.cmObj.setCursor({ line: cursor.line, ch: cursor.ch + key.length + 1 });
-      this.tagtextarea.cmObj.focus();
+      const cursor = this.tagtextarea.getCursor();
+      this.tagtextarea.replaceRange(`${key}()`, cursor, undefined, 'insertfn');
+      this.tagtextarea.setCursor(cursor + key.length + 1);
+      this.tagtextarea.focus();
     }
 
     this.setState({

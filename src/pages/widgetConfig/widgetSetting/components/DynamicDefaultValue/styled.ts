@@ -20,14 +20,15 @@ export const DynamicValueInputWrap = styled(FlexCenter)`
     bottom: 0;
     opacity: 0;
   }
-  .CodeMirror-code {
+  /* CM6 把 CM5 的 -sizer / -lines / -code 三层并成了一个 .cm-content */
+  .cm-content {
     line-height: 28px;
   }
-  .CodeMirror-placeholder {
+  .cm-placeholder {
     color: var(--color-text-placeholder) !important;
     font-size: 14px !important;
     line-height: 27px !important;
-    margin-left: 3px !important;
+    /* margin-left 删掉：CM6 的 placeholder 在 .cm-line 里，已经继承了那 10px */
   }
   .datePicker,
   .richInputText {
@@ -59,11 +60,9 @@ export const DynamicValueInputWrap = styled(FlexCenter)`
     .tagInputareaIuput {
       border-radius: 3px 0 0 3px;
       min-height: 36px;
-      .CodeMirror {
-        .CodeMirror-lines {
+      .cm-editor {
+        .cm-content {
           padding: 3px 0;
-        }
-        .CodeMirror-sizer {
           min-height: auto !important;
         }
       }

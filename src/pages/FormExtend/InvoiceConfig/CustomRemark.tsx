@@ -12,12 +12,13 @@ const Wrapper = styled.div`
   .tagInputareaIuput {
     border-top-right-radius: 0 !important;
     border-bottom-right-radius: 0 !important;
-    .CodeMirror-lines {
+    .cm-content {
       line-height: 22px;
     }
-    .CodeMirror-placeholder {
+    .cm-placeholder {
       color: var(--color-text-disabled) !important;
-      padding: 0 10px !important;
+      /* CM5 的 placeholder 是独立的绝对定位元素、要自己补左内边距；
+       CM6 的 .cm-placeholder 在 .cm-line 里，已经继承了那 10px，删掉以免翻倍 */
     }
   }
   .controlTag {
