@@ -25,8 +25,9 @@
  *
  * 【明确不在覆盖范围内】都依赖真实浏览器：
  *   1. 真实按键、输入法组合（compositionend 的时序）、粘贴
- *   2. 布局测量 —— jsdom 里尺寸恒为 0，所以 maxHeight/autoHeight 那套高度切换
- *      在这里只能验「不抛异常」，切换本身要人工看
+ *   2. 真实布局测量 —— jsdom 里尺寸恒为 0。M 段把 clientHeight 打成桩，
+ *      验的只是阈值判断与类/高度切换那段逻辑；「量出来的数对不对」要真机看
+ *     （已核对：60 行纯文本会封顶到默认的 500px）
  *   3. placeholder / 光标颜色 / 行号等纯样式表现
  */
 const fs = require('fs');
@@ -48,7 +49,10 @@ function loadJsdom() {
   process.exit(2);
 }
 const { JSDOM } = loadJsdom();
-const dom = new JSDOM('<!doctype html><div id="root"></div>', { pretendToBeVisual: true, url: 'https://example.test/' });
+const dom = new JSDOM('<!doctype html><div id="root"></div>', {
+  pretendToBeVisual: true,
+  url: 'https://example.test/',
+});
 for (const k of [
   'window',
   'document',
@@ -73,6 +77,9 @@ for (const k of [
   'HTMLStyleElement',
   'HTMLCollection',
   'NodeList',
+  // syncHeight 的下一帧补量要用；jsdom 在 pretendToBeVisual 下提供这两个
+  'requestAnimationFrame',
+  'cancelAnimationFrame',
 ]) {
   if (dom.window[k] !== undefined) global[k] = dom.window[k];
 }
@@ -129,8 +136,7 @@ function resolveFile(base) {
 fs.mkdirSync('/tmp/cm6-tt-stubs', { recursive: true });
 fs.writeFileSync(
   '/tmp/cm6-tt-stubs/antdComponents.js',
-  "const React = require('" + RW + "node_modules/react');\n" +
-    'exports.Tooltip = ({ children }) => children;\n',
+  "const React = require('" + RW + "node_modules/react');\n" + 'exports.Tooltip = ({ children }) => children;\n',
 );
 // 按【请求字符串】打桩，而不是按解析后的路径：`ming-ui/antd-components` 这个请求
 // 在真实构建里根本到不了 webpack —— .babelrc 的 babel-plugin-import 会先把它改写成
@@ -195,7 +201,10 @@ function check(label, got, want) {
   const ok = JSON.stringify(got) === JSON.stringify(want);
   ok ? pass++ : fail++;
   console.log(
-    '  ' + (ok ? 'PASS ' : 'FAIL ') + label + (ok ? '' : '   got=' + JSON.stringify(got) + ' want=' + JSON.stringify(want)),
+    '  ' +
+      (ok ? 'PASS ' : 'FAIL ') +
+      label +
+      (ok ? '' : '   got=' + JSON.stringify(got) + ' want=' + JSON.stringify(want)),
   );
 }
 
@@ -583,7 +592,11 @@ async function main() {
     const { inst, host, unmount } = await mount({ defaultValue: '$c1$', readonly: true });
     await settle();
     check('只读下字段仍渲染成标签', contentText(host).includes('数量'), true);
-    check('只读下仍可聚焦选中（contenteditable 不关）', host.querySelector('.cm-content').getAttribute('contenteditable'), 'true');
+    check(
+      '只读下仍可聚焦选中（contenteditable 不关）',
+      host.querySelector('.cm-content').getAttribute('contenteditable'),
+      'true',
+    );
     check('noCursor 类挂上（靠 CSS 藏光标）', !!host.querySelector('.tagInputareaIuput.noCursor'), true);
     // 这两条是【机制断言】而不是行为断言：CM6 拦真实输入的位置在 DOMChange
     // （"Ignore changes when the editor is read-only"）和 handlers.paste/drop/cut 里，
@@ -612,6 +625,51 @@ async function main() {
     check('再右移一步走过 b', inst.view.moveByChar(EditorSelection.cursor(5), true).head, 6);
     check('从标签右侧左移一步跳回左边界', inst.view.moveByChar(EditorSelection.cursor(5), false).head, 1);
     unmount();
+  }
+
+  // ---------- M. maxHeight 封顶 ----------
+  // jsdom 不做布局，clientHeight 恒为 0，所以这里把 .cm-content 的 clientHeight
+  // 打成可控的桩，验的是【阈值判断 + 类/内联高度的切换】这段逻辑本身。
+  // 真实测量已在浏览器里核对过：60 行纯文本会被封顶到 500px（不传 maxHeight 时的默认值）。
+  console.log('\nM. maxHeight 封顶（clientHeight 打桩，只验判断逻辑）');
+  {
+    const { inst, host, unmount } = await mount({ defaultValue: 'x', maxHeight: 100 });
+    await settle();
+    const content = host.querySelector('.cm-content');
+    let fake = 0;
+    Object.defineProperty(content, 'clientHeight', { get: () => fake, configurable: true });
+    const con = host.querySelector('.tagInputareaIuput');
+
+    fake = 50;
+    inst.syncHeight();
+    check('未到阈值：保留 autoHeight', con.classList.contains('autoHeight'), true);
+    check('未到阈值：高度 auto', con.style.height, 'auto');
+
+    fake = 98; // 恰好等于 maxHeight - 2，应判为已达
+    inst.syncHeight();
+    check('恰好到阈值：去掉 autoHeight', con.classList.contains('autoHeight'), false);
+    check('恰好到阈值：高度固定', con.style.height, '100px');
+
+    fake = 97;
+    inst.syncHeight();
+    check('回落到阈值下：恢复 auto', con.style.height, 'auto');
+
+    // rAF 补量：标签内容是 React 异步填的，同步那一次量不到，靠下一帧补
+    fake = 50;
+    inst.syncHeight();
+    fake = 300; // 模拟「React 把标签填完之后高度才涨上来」
+    inst.scheduleHeightSync();
+    check('scheduleHeightSync 同步那次先按当前值判', con.style.height, '100px');
+    fake = 50;
+    inst.scheduleHeightSync();
+    check('同一帧内重复调用只排一次 rAF', typeof inst.heightRaf, 'number');
+    await new Promise(r => requestAnimationFrame(() => setTimeout(r, 0)));
+    check('下一帧补量后按新值判', con.style.height, 'auto');
+    check('rAF 句柄已清空', inst.heightRaf, null);
+
+    inst.scheduleHeightSync();
+    unmount();
+    check('unmount 取消未触发的 rAF（不留悬空回调）', inst.heightRaf, null);
   }
 
   console.log('\n  → PASS ' + pass + ' / FAIL ' + fail);

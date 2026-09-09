@@ -162,6 +162,7 @@ export default class TagTextarea extends React.Component<any, any> {
   tempObj;
   marksField;
   forceRemark;
+  heightRaf;
 
   constructor(props) {
     super(props);
@@ -178,6 +179,11 @@ export default class TagTextarea extends React.Component<any, any> {
   componentWillUnmount() {
     this.unmounted = true;
     this.props.getRef(undefined);
+
+    if (this.heightRaf) {
+      cancelAnimationFrame(this.heightRaf);
+      this.heightRaf = null;
+    }
 
     // CM5 那版没有这一步——编辑器和它的事件监听会随组件一起漏掉。
     if (this.view) {
@@ -293,7 +299,7 @@ export default class TagTextarea extends React.Component<any, any> {
         this.view.dom.style.height = typeof height === 'number' ? `${height}px` : height;
       }
 
-      this.syncHeight();
+      this.scheduleHeightSync();
     });
   };
 
@@ -381,7 +387,8 @@ export default class TagTextarea extends React.Component<any, any> {
    * 消费方用它在 setValue 前后保住滚动条不跳。CM6 没有专门的 API，
    * 滚动容器就是 .cm-scroller（view.scrollDOM），直接读写它即可。
    */
-  getScrollPos = () => (this.view ? { left: this.view.scrollDOM.scrollLeft, top: this.view.scrollDOM.scrollTop } : null);
+  getScrollPos = () =>
+    this.view ? { left: this.view.scrollDOM.scrollLeft, top: this.view.scrollDOM.scrollTop } : null;
 
   setScrollPos = pos => {
     if (!this.view || !pos) return;
@@ -465,7 +472,7 @@ export default class TagTextarea extends React.Component<any, any> {
   handleUpdate = update => {
     if (!update.docChanged) return;
 
-    this.syncHeight();
+    this.scheduleHeightSync();
 
     const value = update.state.doc.toString();
     const obj = this.toChangeObj(update);
@@ -528,11 +535,17 @@ export default class TagTextarea extends React.Component<any, any> {
   };
 
   /**
-   * maxHeight 到了就固定高度并去掉 autoHeight 类，否则跟着内容长。
+   * maxHeight 到了就固定高度，否则跟着内容长。
+   * 不传 maxHeight 的消费方只靠这里的默认 500 封顶（JSX 上的 style.maxHeight 此时是
+   * undefined），所以这个函数不是可有可无的。
    *
-   * CM5 是在 beforeChange 里量的，也就是量【改动前】的高度，等于慢一拍；
-   * 这里挪到 update 之后量，行为上更准。量的元素从 .CodeMirror-sizer 换成
-   * CM6 的 .cm-content（都是包住全部行、撑出内容高度的那一层）。
+   * 量的元素从 CM5 的 .CodeMirror-sizer 换成 CM6 的 .cm-content
+   *（都是包住全部行、撑出内容高度的那一层）。
+   *
+   * 一并顺手（同时也是 measure 里必须的）：也切 autoHeight 类，沿用 CM5 的写法。
+   * 注意这个类【实际上不命中任何 CSS】——TagTextarea.less 里的规则是
+   * `.tagInputarea.autoHeight`（外层 div），而这里切的是内层 .tagInputareaIuput，
+   * CM5 时代就是这样。留着只为不改变 DOM 表现，别指望它有样式效果。
    */
   syncHeight = () => {
     const { maxHeight = 500 } = this.props;
@@ -550,6 +563,27 @@ export default class TagTextarea extends React.Component<any, any> {
       this.cmcon.classList.add('autoHeight');
       this.cmcon.style.height = 'auto';
     }
+  };
+
+  /**
+   * 同步量一次 + 下一帧再量一次。
+   *
+   * 为什么需要第二次：字段标签是 React 根异步填进 widget 的（CM6 的 toDOM 只返回
+   * 空节点，内容随后才提交），所以在 CM6 的 update 周期里量到的高度还没算上标签内容。
+   * 纯文本不受影响（真机实测：60 行文本能正确封顶到 500），但一个装满标签的
+   * ONLYTAG 输入框可能撑过 500 却量不出来。CM5 更早——它在 beforeChange 里量，
+   * 量的是【改动前】的高度，比这里还慢一拍，所以这不是回归，是把它修对。
+   */
+  scheduleHeightSync = () => {
+    this.syncHeight();
+
+    if (this.heightRaf) return;
+
+    this.heightRaf = requestAnimationFrame(() => {
+      this.heightRaf = null;
+
+      if (!this.unmounted) this.syncHeight();
+    });
   };
 
   /** 强制重画全部 tag（props 变了但文档没变时用） */
