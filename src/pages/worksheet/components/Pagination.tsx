@@ -128,7 +128,10 @@ export default class Pagination extends React.Component<any, any> {
     };
   }
 
-  conRef = React.createRef();
+  // 必须写明泛型：createRef() 不带类型参数时 current 是 {}，而 rc-trigger 5 给
+  // getPopupContainer 补上了准确签名 ((node: HTMLElement) => HTMLElement)，
+  // 于是 `() => this.xxx.current` 成了 TS2740。2.6.5 那边这个 prop 无类型，看不出来。
+  conRef = React.createRef<HTMLElement>();
   jumpInputRef = React.createRef();
 
   get displayCount() {

@@ -141,10 +141,14 @@ function SheetHeader(props) {
   } = worksheetInfo;
   const name = getTranslateInfo(appId, null, worksheetId).name || worksheetInfo.name || '';
   const cache = useRef({});
-  const [sheetDescVisible, setSheetDescVisible] = useState();
-  const [statisticsVisible, setStatisticsVisible] = useState();
-  const [discussionVisible, setDiscussionVisible] = useState();
-  const [importVisible, setImportVisible] = useState();
+  // 四个都是布尔可见性标志，必须给初值 false：不给的话状态类型被推成 undefined，
+  // setX(true/false) 全是 TS2345。运行时等价——importVisible 是唯一喂给 Trigger
+  // popupVisible 的，而它的 onPopupVisibleChange 已接回 state（否则 undefined→false
+  // 会把 Trigger 从非受控切成受控、弹层再也打不开）。
+  const [sheetDescVisible, setSheetDescVisible] = useState(false);
+  const [statisticsVisible, setStatisticsVisible] = useState(false);
+  const [discussionVisible, setDiscussionVisible] = useState(false);
+  const [importVisible, setImportVisible] = useState(false);
   const [descIsEditing, setDescIsEditing] = useState(false);
   const [inFull, setInFull] = useState(false);
   const [resumeInfo, setResumeInfo] = useState({});

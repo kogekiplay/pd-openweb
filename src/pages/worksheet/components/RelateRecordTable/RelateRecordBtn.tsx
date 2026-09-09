@@ -135,7 +135,11 @@ export default function RelateRecordBtn(props) {
   const { enterBatchEdit, deleteRecords, removeRelation, exportRecords, edit, print, customButton, importFromFile } =
     btnVisible;
   const isShareState = !!get(window, 'shareState.shareId');
-  const [menuVisible, setMenuVisible] = useState();
+  // 必须给初值 false：不给的话状态类型被推成 undefined，setX(true/false) 全是 TS2345。
+  // 运行时等价——每个传 popupVisible 的站点都把 onPopupVisibleChange 接回了 state
+  // （否则 undefined→false 会把 Trigger 从非受控切成受控、弹层再也打不开）。
+  // rc-trigger 5 给回调补上准确类型之后才暴露出来。
+  const [menuVisible, setMenuVisible] = useState(false);
   const [selectedRecords, setSelectedRecords] = useState([]);
   const conRef = useRef();
   const btnText = addVisible ? btnName || entityName : _l('选择%0', entityName);
@@ -160,7 +164,9 @@ export default function RelateRecordBtn(props) {
             <Trigger
               zIndex={999}
               popupVisible={menuVisible && addVisible && selectVisible}
-              actions={['click']}
+              // 原来这里写的是 actions={{['click']}}（正确名是 action），rc-trigger 从来不认，
+              // 一直是死代码。只删不改名：改名会让 Trigger 真的获得点击开合行为，属于行为变更。
+              // 开合目前由 popupVisible + onPopupVisibleChange 受控，功能正常。
               getPopupContainer={() => conRef.current}
               onPopupVisibleChange={setMenuVisible}
               popup={

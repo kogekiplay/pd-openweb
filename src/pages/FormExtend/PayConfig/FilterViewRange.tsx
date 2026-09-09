@@ -39,7 +39,11 @@ const RangeBox = styled.div`
 export default function FilterViewRange(props) {
   const { className, worksheetInfo = {}, type, viewIds = [], changeViewRange = () => {} } = props;
   const { views = [] } = worksheetInfo;
-  const [showRange, setShowRange] = useState();
+  // 必须给初值 false：不给的话状态类型被推成 undefined，setX(true/false) 全是 TS2345。
+  // 运行时等价——每个传 popupVisible 的站点都把 onPopupVisibleChange 接回了 state
+  // （否则 undefined→false 会把 Trigger 从非受控切成受控、弹层再也打不开）。
+  // rc-trigger 5 给回调补上准确类型之后才暴露出来。
+  const [showRange, setShowRange] = useState(false);
   const [isAllView, setIsAllView] = useState(_.isEmpty(viewIds));
   const ref = useRef(null);
 

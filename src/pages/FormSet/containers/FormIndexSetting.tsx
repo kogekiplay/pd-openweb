@@ -192,7 +192,11 @@ function FormIndexSetting(props) {
   const [isEdit, setIsEdit] = useState(false);
   const [indexList, setIndexList] = useState([]); // indexStateId: 1: 成功 -1: 失败 0:排队
   const [templateId, setTemplateId] = useState('');
-  const [showMoreOption, setShowMoreOption] = useState();
+  // 必须给初值 false：不给的话状态类型被推成 undefined，setX(true/false) 全是 TS2345。
+  // 运行时等价——每个传 popupVisible 的站点都把 onPopupVisibleChange 接回了 state
+  // （否则 undefined→false 会把 Trigger 从非受控切成受控、弹层再也打不开）。
+  // rc-trigger 5 给回调补上准确类型之后才暴露出来。
+  const [showMoreOption, setShowMoreOption] = useState(false);
   const [isloading, setIsloading] = useState(true);
   const [selectedIndexList, setSelectedIndexList] = useState([{}]);
   const [worksheetAvailableFields, setWorksheetAvailableFields] = useState([]);

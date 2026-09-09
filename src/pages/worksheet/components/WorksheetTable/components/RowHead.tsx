@@ -176,7 +176,10 @@ export default function RowHead(props) {
     printCharge,
   } = props;
   let { className } = props;
-  const [selectAllPanelVisible, setSelectAllPanelVisible] = useState();
+  // 必须给初值 false：不给的话状态类型被推成 undefined，三处 setSelectAllPanelVisible(true/false) 全是 TS2345。
+  // 运行时等价（undefined 本来也是假值），rc-trigger 5 给 onPopupVisibleChange
+  // 补上了准确的 (visible: boolean) 类型之后才把这个既有问题暴露出来。
+  const [selectAllPanelVisible, setSelectAllPanelVisible] = useState(false);
   const row = data[rowIndex] || {};
   const groups = data.filter(r => r.rowid === 'groupTitle').map(r => _.omit(r, ['rows']));
   const selected =

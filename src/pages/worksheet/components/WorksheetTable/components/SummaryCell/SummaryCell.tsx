@@ -137,8 +137,11 @@ export default class extends React.Component<any, any> {
         }}
         onClickAway={() => this.setState({ menuVisible: false })}
       >
+        {/* 这里原来还传了 style={style}，是死代码：Trigger 不渲染自己的元素、
+            只克隆 child，两个版本都不读 props.style（实测传一个带 color/border 的
+            style 进去，子元素上拿到的是 null）。样式本来就由外层 ClickAwayable
+            上那个同名的 style={style} 负责。rc-trigger 5 的类型更严，把它暴露出来了。 */}
         <Trigger
-          style={style}
           action={['click']}
           popupVisible={!disabled && menuVisible}
           popupClassName={'summaryCellMenu'}

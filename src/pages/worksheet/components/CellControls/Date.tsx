@@ -124,7 +124,9 @@ export default class Date extends React.Component<any, any> {
           popupVisible={isediting && !!error}
           popup={<CellErrorTips error={error} pos={rowIndex === 0 ? 'bottom' : 'top'} />}
           destroyPopupOnHide
-          zIndex="1051"
+          // 数字而不是字符串："1051" 在 rc-trigger 5 的类型里是 TS2322（zIndex: number）。
+          // 运行时等价：zIndex 是 React 的无单位样式属性，两种写法都出 z-index: 1051。
+          zIndex={1051}
           popupAlign={{
             points: rowIndex === 0 ? ['tl', 'bl'] : ['bl', 'tl'],
             offset: rowIndex === 0 ? [0, -3] : [0, 0],
