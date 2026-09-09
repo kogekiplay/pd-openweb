@@ -84,20 +84,16 @@ export const getCanSelectControls = (sourceInfos, flowData, workSheetId, forAggr
     list = list.filter(
       o =>
         !(
-          (
-            (o.type === 38 && o.enumDefault === 2) || //聚合不支持公式日期加减
-            (o.type === 37 && !isFormulaResultAsSubtotal(o))
-          ) //聚合不支持数值之外的
+          (o.type === 38 && o.enumDefault === 2) || //聚合不支持公式日期加减
+          (o.type === 37 && !isFormulaResultAsSubtotal(o)) //聚合不支持数值之外的
         ),
     );
     const onFilter = it => {
       return (
         ![34, 35, 29].includes(it.type) &&
         !(
-          (
-            (it.type === 38 && it.enumDefault === 2) || //聚合不支持公式日期加减
-            (it.type === 37 && !isFormulaResultAsSubtotal(it))
-          ) //聚合不支持数值之外的
+          (it.type === 38 && it.enumDefault === 2) || //聚合不支持公式日期加减
+          (it.type === 37 && !isFormulaResultAsSubtotal(it)) //聚合不支持数值之外的
         )
       );
     };
@@ -631,12 +627,10 @@ export const getResultField = (fields = [], flowData, aggFuncType) => {
 export const isDateTimeGroup = item => {
   let isTimeType = true;
   (_.get(item, 'fields') || []).map(data => {
-    if (
-      !(
-        isFormulaResultAsSubtotalDateTime(data.controlSetting) ||
-        [15, 16, 17, 18].includes(_.get(data, 'controlSetting.type'))
-      )
-    ) {
+    if (!(
+      isFormulaResultAsSubtotalDateTime(data.controlSetting) ||
+      [15, 16, 17, 18].includes(_.get(data, 'controlSetting.type'))
+    )) {
       isTimeType = false;
     }
   });
@@ -663,13 +657,11 @@ export const isFormulaDateOrDateTimeResult = data => {
 export const isTimeGroup = item => {
   let isTimeType = true;
   (_.get(item, 'fields') || []).map(data => {
-    if (
-      !(
-        isFormulaResultAsTime(data.controlSetting) ||
-        isFormulaResultAsSubtotalTime(data.controlSetting) ||
-        [46].includes(_.get(data, 'controlSetting.type'))
-      )
-    ) {
+    if (!(
+      isFormulaResultAsTime(data.controlSetting) ||
+      isFormulaResultAsSubtotalTime(data.controlSetting) ||
+      [46].includes(_.get(data, 'controlSetting.type'))
+    )) {
       isTimeType = false;
     }
   });
@@ -681,15 +673,13 @@ export const isNumberGroup = item => {
   let isNumberType = true;
   (_.get(item, 'fields') || []).map(data => {
     //数值、金额、公式（数值类型）、等级、汇总
-    if (
-      !(
-        [API_ENUM_TO_TYPE.NUMBER_INPUT, API_ENUM_TO_TYPE.MONEY_AMOUNT_8, API_ENUM_TO_TYPE.SCORE].includes(
-          _.get(data, 'controlSetting.type'),
-        ) ||
-        isFormulaResultAsNumber(data) ||
-        isFormulaResultAsSubtotal(data)
-      )
-    ) {
+    if (!(
+      [API_ENUM_TO_TYPE.NUMBER_INPUT, API_ENUM_TO_TYPE.MONEY_AMOUNT_8, API_ENUM_TO_TYPE.SCORE].includes(
+        _.get(data, 'controlSetting.type'),
+      ) ||
+      isFormulaResultAsNumber(data) ||
+      isFormulaResultAsSubtotal(data)
+    )) {
       isNumberType = false;
     }
   });

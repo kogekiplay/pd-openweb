@@ -316,13 +316,10 @@ export const filterUnAvailable = (controlConfig = {}, worksheetControls = [], ty
       }
 
       // 已选的必填关联多条列表、标签页字段过滤
-      if (
-        !(
-          (type === 5 &&
-            ((isSheetDisplay(curItem) && !_.get(item, 'childControlIds.length')) || curItem.type === 52)) ||
-          ((_.includes(2, 4), type) && curItem.sectionId)
-        )
-      ) {
+      if (!(
+        (type === 5 && ((isSheetDisplay(curItem) && !_.get(item, 'childControlIds.length')) || curItem.type === 52)) ||
+        ((_.includes(2, 4), type) && curItem.sectionId)
+      )) {
         newControls.push(newItem);
       }
     }

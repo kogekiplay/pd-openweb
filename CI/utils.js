@@ -10,7 +10,15 @@ const webpack = require('webpack');
 const minimist = require('minimist');
 const dayjs = require('dayjs');
 const axios = require('axios');
-const chalk = require('chalk');
+// chalk 5+ 是纯 ESM。Node 22 起 require(esm) 已稳定（本仓 engines 要求 >=26.8.1），
+// 所以 require 本身没问题，但拿到的是 ESM 命名空间对象，着色函数在 .default 上。
+// 少写 .default 的表现是 `chalk.xxx is not a function`，不是 require 报错。
+//
+// supportsColor 要另外拿：chalk 4 里它挂在 chalk 对象上（chalk.supportsColor），
+// chalk 5+ 把它改成了【模块级具名导出】，default 上没有这个属性（值会是 undefined）。
+// 两版的取值形状一致（false 或 {level, hasBasic, ...}），所以下面 webpack
+// stats.toString({ colors }) 的真值语义不变。
+const { default: chalk, supportsColor } = require('chalk');
 
 const isProduction = process.env.NODE_ENV === 'production';
 const argv = minimist(process.argv.slice(2));
@@ -72,7 +80,7 @@ const webpackCompile = (err, stats) => {
   stats.compilation.warnings = stats.compilation.warnings.filter(w => !/Failed to parse source map/.test(w.details));
 
   const output = stats.toString({
-    colors: chalk.supportsColor,
+    colors: supportsColor,
     hash: verbose,
     version: verbose,
     timings: verbose,

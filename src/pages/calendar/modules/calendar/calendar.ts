@@ -409,12 +409,10 @@ Calendar.Method = {
       hoverTitleTimer = setTimeout(function () {
         var title = $this.find('.fc-title').html();
         if (title) {
-          if (
-            !(
-              title.indexOf(_l('全天')) > 0 ||
-              (!$this.find('.fc-time').length && title.indexOf('icon-calendartask') < 0)
-            )
-          ) {
+          if (!(
+            title.indexOf(_l('全天')) > 0 ||
+            (!$this.find('.fc-time').length && title.indexOf('icon-calendartask') < 0)
+          )) {
             if (title.indexOf('icon-calendartask') > 0) {
               // 任务
               title = $this.find('.icon-calendartask').attr('data-endtime') + ' ' + title.split('</span>')[1];

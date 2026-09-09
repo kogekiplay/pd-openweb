@@ -19,7 +19,11 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const { execFile } = require('child_process');
-const chalk = require('chalk');
+// chalk 5+ 是纯 ESM（package.json 里 "type": "module"、exports 没有 CJS 条件）。
+// Node 22 起 require(esm) 已稳定，本仓 engines 要求 >=26.8.1，所以 require 本身没问题——
+// 但拿到的是 ESM 命名空间对象，具名导出在 .default 上，直接 chalk.gray 是 undefined
+//（表现为 `chalk.gray is not a function`，而不是 require 报错，所以别误判成「装错了」）。
+const chalk = require('chalk').default;
 
 const ROOT = path.resolve(__dirname, '..');
 const SEARCH_DIRS = ['src', 'scripts'];

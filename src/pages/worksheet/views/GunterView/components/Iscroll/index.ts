@@ -974,7 +974,7 @@ IScroll.prototype = {
     }
 
     if (this.indicators) {
-      for (var i = this.indicators.length; i--; ) {
+      for (var i = this.indicators.length; i--;) {
         this.indicators[i].transitionTime(time);
       }
     }
@@ -986,7 +986,7 @@ IScroll.prototype = {
     this.scrollerStyle[utils.style.transitionTimingFunction] = easing;
 
     if (this.indicators) {
-      for (var i = this.indicators.length; i--; ) {
+      for (var i = this.indicators.length; i--;) {
         this.indicators[i].transitionTimingFunction(easing);
       }
     }
@@ -1012,7 +1012,7 @@ IScroll.prototype = {
     this.y = y;
 
     if (this.indicators) {
-      for (var i = this.indicators.length; i--; ) {
+      for (var i = this.indicators.length; i--;) {
         this.indicators[i].updatePosition();
       }
     }
@@ -1124,13 +1124,13 @@ IScroll.prototype = {
       indicators = indicators.concat(this.options.indicators);
     }
 
-    for (var i = indicators.length; i--; ) {
+    for (var i = indicators.length; i--;) {
       this.indicators.push(new Indicator(this, indicators[i]));
     }
 
     function _indicatorsMap(fn) {
       if (that.indicators) {
-        for (var i = that.indicators.length; i--; ) {
+        for (var i = that.indicators.length; i--;) {
           fn.call(that.indicators[i]);
         }
       }
