@@ -216,7 +216,15 @@ const createAsyncVendorCacheGroup = (name, test) => ({
 
 const ASYNC_VENDOR_CACHE_GROUPS = {
   asyncVditor: createAsyncVendorCacheGroup('async-vditor', /[\\/]node_modules[\\/]@mdfe[\\/]vditor[\\/]/),
-  asyncCodeMirror: createAsyncVendorCacheGroup('async-codemirror', /[\\/]node_modules[\\/]codemirror[\\/]/),
+  // 三段都要：CM5 是 node_modules/codemirror，CM6 拆成了 @codemirror/* 与 @lezer/*（语法引擎）。
+  // 漏掉后两段的后果是实测出来的：默认 splitChunks 是 chunks:'all' + node_modules 兜底组，
+  // 会把动态 import 进来的 @codemirror/* 也捞进共享的 node_modules 入口 chunk，
+  // 于是 index.html 等 8 个页面每次加载都白背 0.4MB 编辑器（4.54MB → 4.94MB），
+  // 而它只服务一个后台页面。这个白名单就是拦这件事的。
+  asyncCodeMirror: createAsyncVendorCacheGroup(
+    'async-codemirror',
+    /[\\/]node_modules[\\/](codemirror|@codemirror[\\/][^\\/]+|@lezer[\\/][^\\/]+)[\\/]/,
+  ),
   asyncCkeditor: createAsyncVendorCacheGroup('async-ckeditor', /[\\/]node_modules[\\/](@ckeditor[\\/]|ckeditor5[\\/])/),
   asyncMjml: createAsyncVendorCacheGroup(
     'async-mjml',
