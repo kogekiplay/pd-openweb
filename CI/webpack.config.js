@@ -110,6 +110,17 @@ const getModuleRules = () => {
         },
       },
     },
+    {
+      // @antv/x6 3.x 的打包 bug：package.json 声明了 "type": "module"，但 es/ 里的相对导入
+      // 不带扩展名（`export * from './registry'`）。webpack 5 对 ESM 强制 fullySpecified，
+      // 于是每个子模块都报
+      //   BREAKING CHANGE: The request './registry' failed to resolve only because it was
+      //   resolved as fully specified
+      // 关掉这条强制即可，实测 0 错误 0 警告。范围限定在 @antv 下，不影响其它包的 ESM 严格性。
+      test: /\.m?js$/,
+      include: /node_modules\/@antv\//,
+      resolve: { fullySpecified: false },
+    },
   ];
 
   if (!ENV.isProduction) {

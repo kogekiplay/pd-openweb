@@ -509,41 +509,19 @@
     gl-matrix "^3.3.0"
     tslib "^2.3.1"
 
-"@antv/x6-common@^2.0.16":
-  version "2.0.17"
-  resolved "https://registry.npmmirror.com/@antv/x6-common/-/x6-common-2.0.17.tgz#a40a0920859faadf567452dea81132783a19aaa4"
-  integrity sha512-37g7vmRkNdYzZPdwjaMSZEGv/MMH0S4r70/Jwoab1mioycmuIBN73iyziX8m56BvJSDucZ3J/6DU07otWqzS6A==
+"@antv/x6-react-shape@3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@antv/x6-react-shape/-/x6-react-shape-3.0.1.tgz#f9fd618da85ff75035152ce43f3f6884ce7f30bd"
+  integrity sha512-zLIJ0NMO6R3sXZGKQJKMUEZmaVwNDBxx3jYUMSXE9cZhKsvWV+P8WuiUCtJYNSVTezBLbxYLzrukA/QdQa/sKg==
+
+"@antv/x6@^3.1.8":
+  version "3.1.8"
+  resolved "https://registry.yarnpkg.com/@antv/x6/-/x6-3.1.8.tgz#2b3f0329c5e92a5488bce2fdc04421f903d6bd95"
+  integrity sha512-JVGxBRmjnqDr7W7Ql5XWc6FUtFcy+QlFaV31cv0pHIeVIJmyYnB5rHmdzz93CY5lCS/XcNBtOnNIIq6JVgfZ5w==
   dependencies:
+    dom-align "^1.12.4"
     lodash-es "^4.17.15"
-    utility-types "^3.10.0"
-
-"@antv/x6-geometry@^2.0.5":
-  version "2.0.5"
-  resolved "https://registry.npmmirror.com/@antv/x6-geometry/-/x6-geometry-2.0.5.tgz#c158317d74135bedd78c2fdeb76f9c7cfa0ef0aa"
-  integrity sha512-MId6riEQkxphBpVeTcL4ZNXL4lScyvDEPLyIafvWMcWNTGK0jgkK7N20XSzqt8ltJb0mGUso5s56mrk8ysHu2A==
-
-"@antv/x6-plugin-export@^2.1.6":
-  version "2.1.6"
-  resolved "https://registry.npmmirror.com/@antv/x6-plugin-export/-/x6-plugin-export-2.1.6.tgz#f8cedab3707c43728baaf0f0bfb1e75ec4a61a30"
-  integrity sha512-m0ukMmZhrFE5n7uCR43DVQBdiUfpjGN+vm1mc+6RTZdHK8pa6Mxr0RZztaxPy34YA4tli+bGY3ePslsNPfh6PQ==
-
-"@antv/x6-plugin-scroller@^2.0.10":
-  version "2.0.10"
-  resolved "https://registry.npmmirror.com/@antv/x6-plugin-scroller/-/x6-plugin-scroller-2.0.10.tgz#bdd39d3530e469bbe72c5feca3b6787512232a3d"
-  integrity sha512-CrC5zCbtPe7LJEKK8ucLcDN+9lMtTJNApFmFObAiR/y2LO1QFCHz8GGLVeNOZaIEmJbR/Z/etpJkvc1LE7WhTg==
-
-"@antv/x6-react-shape@2.0.8":
-  version "2.0.8"
-  resolved "https://registry.npmmirror.com/@antv/x6-react-shape/-/x6-react-shape-2.0.8.tgz#d9b30411326c11b53eea9962f689deb61a9b720a"
-  integrity sha512-mOO3BAN5xxKAdfJUU5fy1Rb/sv+3o85EgKWM+rs5LCOy+EIqG2pzXB/IuqB3Q5m1MCweJ3BuDRrzBqnVv7yNjg==
-
-"@antv/x6@^2.18.1":
-  version "2.19.2"
-  resolved "https://registry.npmmirror.com/@antv/x6/-/x6-2.19.2.tgz#219729fc6486c89d8d46f5c65cd16c6412f82808"
-  integrity sha512-lr9sUAlrR7eSVANru8kUNZUqCRl7eOCgb36M61FMDonUYREwkHpRN+0zq+1egSSOdz3HHSDBjs7UMtGH1ZEg2w==
-  dependencies:
-    "@antv/x6-common" "^2.0.16"
-    "@antv/x6-geometry" "^2.0.5"
+    mousetrap "^1.6.5"
     utility-types "^3.10.0"
 
 "@babel/code-frame@^7.28.6", "@babel/code-frame@^7.29.0":
@@ -5810,7 +5788,7 @@ doctrine@^2.1.0:
   dependencies:
     esutils "^2.0.2"
 
-dom-align@^1.7.0:
+dom-align@^1.12.4, dom-align@^1.7.0:
   version "1.12.4"
   resolved "https://registry.npmmirror.com/dom-align/-/dom-align-1.12.4.tgz#3503992eb2a7cfcb2ed3b2a6d21e0b9c00d54511"
   integrity sha512-R8LUSEay/68zE5c8/3BDxiTEvgb4xZTF0RKmAHfiEVN3klfIpXfi2/QCoiWPccVQ0J/ZGdz9OjzL4uJEP/MRAw==
@@ -8762,6 +8740,11 @@ moment@2.30.1, moment@^2.24.0, moment@^2.25.3:
   version "2.30.1"
   resolved "https://registry.npmmirror.com/moment/-/moment-2.30.1.tgz#f8c91c07b7a786e30c59926df530b4eac96974ae"
   integrity sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==
+
+mousetrap@^1.6.5:
+  version "1.6.5"
+  resolved "https://registry.yarnpkg.com/mousetrap/-/mousetrap-1.6.5.tgz#8a766d8c272b08393d5f56074e0b5ec183485bf9"
+  integrity sha512-QNo4kEepaIBwiT8CDhP98umTetp+JNfQYBWvC1pc6/OAibuXtRcxZ58Qz8skvEHYvURne/7R8T5VoOI7rDsEUA==
 
 ms@2.0.0:
   version "2.0.0"

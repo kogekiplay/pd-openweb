@@ -1,6 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Export } from '@antv/x6-plugin-export';
-import { Scroller } from '@antv/x6-plugin-scroller';
 import { register } from '@antv/x6-react-shape';
 import _ from 'lodash';
 import moment from 'moment';
@@ -19,6 +17,9 @@ import { stylesheet_er } from './config';
 import { createLabelOption, HIDE_FIELDS, isBothWayRelate, LINE_HEIGHT, NODE_WIDTH } from './utils';
 import './index.less';
 
+// x6 3.x 把原来的独立插件包（x6-plugin-export / x6-plugin-scroller 等）并进了核心包，
+// 所以 Export / Scroller 现在从 '@antv/x6' 取。必须跟着走这个动态 import——
+// 若改成静态 import，整个 x6（2.3MB）会被拽进主包，现有的懒加载就白做了。
 const loadGraph = () => import('@antv/x6');
 const loadLayout = () => import('@antv/layout');
 
@@ -129,8 +130,8 @@ function EntityRelationship(props) {
           };
         },
       });
-      graphRef.current.use(new Export());
-      graphRef.current.use(new Scroller({ enabled: true, pannable: true, padding: 80 }));
+      graphRef.current.use(new GraphModule.Export());
+      graphRef.current.use(new GraphModule.Scroller({ enabled: true, pannable: true, padding: 80 }));
       document.addEventListener('keydown', handleKeyDown);
       getData();
       graphRef.current.on('edge:click', ({ edge }) => {
