@@ -64,6 +64,15 @@ if (!window.emitter) {
   window.emitter = emitter;
 }
 
+// 补全的配置单独拎出来，好被 tools/verify-cm6-functioneditor.cjs 钉住。
+// 【不要】加 selectOnOpen: false。我一开始把 CM5 的 completeSingle: false 映射成了它，
+// 那是错的：CM5 那个选项的意思是「只有一个候选时不要自动替换」，弹层仍然高亮第一项、
+// Enter 采纳它；而 CM6 本来就没有单候选自动替换的行为。
+// 设成 false 的后果是【弹层永远没有选中项，连按 Down 都不会移动】，Enter 于是落到
+// defaultKeymap 上插了个换行 —— 键盘选补全彻底失效。这是真机键盘实测才暴露的，
+// jsdom 驱不动 CM6 的补全插件（它依赖真实渲染周期），所以只能靠这条配置断言 + 真机核对。
+export const COMPLETION_OPTIONS = { activateOnTyping: true, closeOnBlur: true };
+
 const isDarkTheme = () => document.documentElement.getAttribute('data-theme') === 'dark';
 
 function createElement(text, style = {}, { tooltip } = {}) {
@@ -301,15 +310,7 @@ export default class Function {
     }
 
     if (this.type === 'mdfunction' && !this.readOnly) {
-      extensions.push(
-        autocompletion({
-          override: [ctx => this.formulaCompletions(ctx)],
-          activateOnTyping: true,
-          // 对应 CM5 showHint 的 completeSingle: false
-          selectOnOpen: false,
-          closeOnBlur: true,
-        }),
-      );
+      extensions.push(autocompletion({ ...COMPLETION_OPTIONS, override: [ctx => this.formulaCompletions(ctx)] }));
     }
 
     return new EditorView({
