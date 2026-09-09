@@ -25,7 +25,6 @@ module.exports = [
       'src/pages/integration/api/*',
       'src/pages/widgetConfig/widgetSetting/components/DevelopWithAI/examples/**',
       'src/components/Mingo/ChatBot/components/Recorder/lib.*',
-      'src/pages/widgetConfig/widgetSetting/components/FunctionEditorDialog/Func/lib/**',
       'src/pages/widgetConfig/widgetSetting/components/FunctionEditorDialog/Func/test/**',
     ],
   },

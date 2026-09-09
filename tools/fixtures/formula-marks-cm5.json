@@ -1,0 +1,313 @@
+{
+  "_note": "由真实 CM5（含已删除的 Func/lib vendored 分词器）跑出的参照值，用于在 CM5 删掉之后继续守住「新实现与 CM5 逐字一致」。重新生成方式见 tools/verify-cm6-formulamarks.cjs 文件头。",
+  "generatedFrom": "codemirror 5.65.21",
+  "cases": {
+    "空|mdfunction|rw": {
+      "marks": [],
+      "errors": []
+    },
+    "单字段|mdfunction|rw": {
+      "marks": [
+        {
+          "kind": "control",
+          "from": 0,
+          "to": 7,
+          "id": "ctrl1"
+        }
+      ],
+      "errors": []
+    },
+    "两字段带分隔|mdfunction|rw": {
+      "marks": [
+        {
+          "kind": "control",
+          "from": 4,
+          "to": 7,
+          "id": "a"
+        },
+        {
+          "kind": "control",
+          "from": 9,
+          "to": 12,
+          "id": "b"
+        }
+      ],
+      "errors": []
+    },
+    "两字段缺分隔|mdfunction|rw": {
+      "marks": [
+        {
+          "kind": "control",
+          "from": 4,
+          "to": 7,
+          "id": "a"
+        },
+        {
+          "kind": "control",
+          "from": 7,
+          "to": 10,
+          "id": "b"
+        }
+      ],
+      "errors": [
+        "缺少分隔符或运算符"
+      ]
+    },
+    "错误结尾-逗号|mdfunction|rw": {
+      "marks": [
+        {
+          "kind": "badEnd",
+          "from": 5,
+          "to": 7
+        }
+      ],
+      "errors": [
+        "错误的公式结尾"
+      ]
+    },
+    "错误结尾-加号|mdfunction|rw": {
+      "marks": [
+        {
+          "kind": "badEnd",
+          "from": 5,
+          "to": 7
+        }
+      ],
+      "errors": [
+        "错误的公式结尾"
+      ]
+    },
+    "中文括号|mdfunction|rw": {
+      "marks": [
+        {
+          "kind": "chinese",
+          "from": 3,
+          "to": 4,
+          "text": "（"
+        },
+        {
+          "kind": "chinese",
+          "from": 5,
+          "to": 6,
+          "text": "）"
+        }
+      ],
+      "errors": [
+        "字符错误，请输入英文字符"
+      ]
+    },
+    "中文逗号|mdfunction|rw": {
+      "marks": [
+        {
+          "kind": "chinese",
+          "from": 5,
+          "to": 6,
+          "text": "，"
+        }
+      ],
+      "errors": [
+        "字符错误，请输入英文字符"
+      ]
+    },
+    "中文引号|mdfunction|rw": {
+      "marks": [
+        {
+          "kind": "chinese",
+          "from": 7,
+          "to": 8,
+          "text": "“"
+        },
+        {
+          "kind": "chinese",
+          "from": 9,
+          "to": 10,
+          "text": "”"
+        }
+      ],
+      "errors": [
+        "字符错误，请输入英文字符"
+      ]
+    },
+    "中文标点在字符串内（不应标记）|mdfunction|rw": {
+      "marks": [],
+      "errors": []
+    },
+    "中文括号在字符串内（不应标记）|mdfunction|rw": {
+      "marks": [],
+      "errors": []
+    },
+    "未闭合-单层|mdfunction|rw": {
+      "marks": [
+        {
+          "kind": "unclosed",
+          "from": 0,
+          "to": 4,
+          "text": "SUM("
+        }
+      ],
+      "errors": [
+        "函数括号未闭合"
+      ]
+    },
+    "未闭合-嵌套|mdfunction|rw": {
+      "marks": [
+        {
+          "kind": "unclosed",
+          "from": 0,
+          "to": 3,
+          "text": "IF("
+        },
+        {
+          "kind": "control",
+          "from": 7,
+          "to": 10,
+          "id": "a"
+        }
+      ],
+      "errors": [
+        "函数括号未闭合"
+      ]
+    },
+    "未闭合-多个|mdfunction|rw": {
+      "marks": [
+        {
+          "kind": "unclosed",
+          "from": 0,
+          "to": 4,
+          "text": "SUM("
+        },
+        {
+          "kind": "unclosed",
+          "from": 4,
+          "to": 8,
+          "text": "AVG("
+        }
+      ],
+      "errors": [
+        "函数括号未闭合"
+      ]
+    },
+    "未闭合-无函数名|mdfunction|rw": {
+      "marks": [
+        {
+          "kind": "unclosed",
+          "from": 0,
+          "to": 1,
+          "text": "("
+        }
+      ],
+      "errors": [
+        "函数括号未闭合"
+      ]
+    },
+    "括号内字符串含右括号|mdfunction|rw": {
+      "marks": [],
+      "errors": []
+    },
+    "转义引号|mdfunction|rw": {
+      "marks": [],
+      "errors": []
+    },
+    "多行|mdfunction|rw": {
+      "marks": [
+        {
+          "kind": "control",
+          "from": 7,
+          "to": 10,
+          "id": "a"
+        },
+        {
+          "kind": "control",
+          "from": 14,
+          "to": 17,
+          "id": "b"
+        }
+      ],
+      "errors": []
+    },
+    "多行未闭合|mdfunction|rw": {
+      "marks": [
+        {
+          "kind": "unclosed",
+          "from": 0,
+          "to": 4,
+          "text": "SUM("
+        },
+        {
+          "kind": "control",
+          "from": 7,
+          "to": 10,
+          "id": "a"
+        }
+      ],
+      "errors": [
+        "函数括号未闭合"
+      ]
+    },
+    "运算符混排|mdfunction|rw": {
+      "marks": [
+        {
+          "kind": "control",
+          "from": 0,
+          "to": 3,
+          "id": "a"
+        },
+        {
+          "kind": "control",
+          "from": 6,
+          "to": 9,
+          "id": "b"
+        }
+      ],
+      "errors": []
+    },
+    "小写函数名|mdfunction|rw": {
+      "marks": [],
+      "errors": []
+    },
+    "嵌套多层齐全|mdfunction|rw": {
+      "marks": [
+        {
+          "kind": "control",
+          "from": 10,
+          "to": 13,
+          "id": "a"
+        },
+        {
+          "kind": "control",
+          "from": 21,
+          "to": 24,
+          "id": "b"
+        }
+      ],
+      "errors": []
+    },
+    "只有右括号|mdfunction|rw": {
+      "marks": [],
+      "errors": []
+    },
+    "字段名含空格|mdfunction|rw": {
+      "marks": [
+        {
+          "kind": "control",
+          "from": 0,
+          "to": 5,
+          "id": "a b"
+        }
+      ],
+      "errors": []
+    },
+    "单引号字符串里的中文逗号|mdfunction|rw": {
+      "marks": [],
+      "errors": []
+    },
+    "只读|mdfunction|ro": {
+      "marks": [],
+      "errors": []
+    },
+    "javascript|javascript|rw": {
+      "marks": [],
+      "errors": []
+    }
+  }
+}

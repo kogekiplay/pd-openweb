@@ -37,7 +37,9 @@ const EditorCon = styled.div`
   padding: 0 20px;
   background: var(--color-background-secondary);
   border-radius: 3px;
-  .CodeMirror {
+  /* CM6：.CodeMirror → .cm-editor */
+  .cm-editor,
+  .cm-gutters {
     background: var(--color-background-secondary);
   }
 `;
