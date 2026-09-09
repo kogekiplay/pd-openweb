@@ -99,6 +99,11 @@ module.exports = [
       // Prettier integration
       'prettier/prettier': 'error',
 
+      // 解构时把某个属性单列出来、只为了让它不进 rest，是本仓剥离 prop 的常用写法
+      //（例如 react-window 2 会额外塞 ariaAttributes 给格子组件，透传下去会落到 DOM 上）。
+      // eslint 默认把这种"故意不用"的变量算作未使用，ignoreRestSiblings 就是为它设的。
+      'no-unused-vars': ['error', { ignoreRestSiblings: true }],
+
       'no-extra-boolean-cast': 'warn',
       'no-async-promise-executor': 'off',
       'no-loss-of-precision': 'off',
