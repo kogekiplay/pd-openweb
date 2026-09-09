@@ -250,9 +250,13 @@ const CodeEditor = ({ value = '', onChange = () => {} }) => {
               override: [reactCompletionSource],
               // CM5 那边是 on('keyup') 里手工判断按键再 showHint；CM6 声明式打开即可。
               activateOnTyping: true,
-              // 对应 CM5 的 completeSingle: false——只有一条候选时也不要直接替换
               defaultKeymap: true,
-              selectOnOpen: false,
+              // 【不要】设 selectOnOpen: false。我一开始把 CM5 的 completeSingle: false
+              // 映射成了它，那是错的：CM5 那个选项的意思是「只有一个候选时不要自动替换」，
+              // 弹层仍然高亮第一项、Enter 采纳它；而 CM6 本来就没有单候选自动替换的行为。
+              // 设成 false 的后果是【弹层永远没有选中项，连按 Down 都不会移动】，
+              // 于是 Enter 落到 defaultKeymap 上插了个换行——键盘选补全彻底失效。
+              // 真机键盘实测才暴露出来的（jsdom 里合成 beforeinput 走不通 CM6 的输入通道）。
             }),
             // 顺序有讲究：closeBrackets / completion 的按键要排在 defaultKeymap 之前，
             // 否则会被后者先吃掉。indentWithTab 对应 CM5 extraKeys 里的 Tab 缩进。

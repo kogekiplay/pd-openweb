@@ -42,7 +42,10 @@ function loadJsdom() {
   process.exit(2);
 }
 const { JSDOM } = loadJsdom();
-const dom = new JSDOM('<!doctype html><div id="root"></div>', { pretendToBeVisual: true, url: 'https://example.test/' });
+const dom = new JSDOM('<!doctype html><div id="root"></div>', {
+  pretendToBeVisual: true,
+  url: 'https://example.test/',
+});
 for (const k of [
   'window',
   'document',
@@ -192,7 +195,10 @@ function check(label, got, want) {
   const ok = JSON.stringify(got) === JSON.stringify(want);
   ok ? pass++ : fail++;
   console.log(
-    '  ' + (ok ? 'PASS ' : 'FAIL ') + label + (ok ? '' : '   got=' + JSON.stringify(got) + ' want=' + JSON.stringify(want)),
+    '  ' +
+      (ok ? 'PASS ' : 'FAIL ') +
+      label +
+      (ok ? '' : '   got=' + JSON.stringify(got) + ' want=' + JSON.stringify(want)),
   );
 }
 
@@ -353,11 +359,34 @@ async function main() {
     };
 
     const r = ed.formulaCompletions(ctx('SU'));
-    check('输入 SU 命中 SUM', (r.options || []).some(o => o.label === 'SUM'), true);
-    check('候选里带字段（按名字过滤）', (ed.formulaCompletions(ctx('数')).options || []).some(o => o.label === '数量'), true);
+    check(
+      '输入 SU 命中 SUM',
+      (r.options || []).some(o => o.label === 'SUM'),
+      true,
+    );
+    check(
+      '候选里带字段（按名字过滤）',
+      (ed.formulaCompletions(ctx('数')).options || []).some(o => o.label === '数量'),
+      true,
+    );
     check('字段候选排在函数前', (ed.formulaCompletions(ctx('数')).options || [])[0].label, '数量');
     check('无匹配时返回 null', ed.formulaCompletions(ctx('ZZZZZZ')), null);
     ed.destroy();
+  }
+
+  // ---------- G. 补全配置（钉住一个真机才暴露的回归）----------
+  // 这一条是【配置断言】，不是行为断言：CM6 的补全插件依赖真实渲染/测量周期，
+  // jsdom 里 startCompletion 会返回 true 但 completionStatus 始终为 null，驱不动。
+  // 而这个回归的本体恰好就是配置——selectOnOpen: false 会让弹层永远没有选中项、
+  // 按 Down 也不动，Enter 于是插换行，键盘选补全彻底失效。
+  // 行为侧已在真机浏览器核对过（输入 SU 弹出 SUBSTITUTE/SUM、Down+Enter 采纳）。
+  console.log('\nG. 补全配置');
+  {
+    const mod = require(FUNC + 'common/FunctionEditor.tsx');
+    const opts = mod.COMPLETION_OPTIONS;
+    check('导出了可测的补全配置', typeof opts, 'object');
+    check('没有关掉 selectOnOpen（关掉会让键盘选补全失效）', opts.selectOnOpen, undefined);
+    check('打开随输入触发', opts.activateOnTyping, true);
   }
 
   console.log('\n  → PASS ' + pass + ' / FAIL ' + fail);
