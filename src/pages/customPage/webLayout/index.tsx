@@ -166,10 +166,19 @@ function WebLayout(props) {
     return (
       <BgImageWrap
         className="Absolute w100"
-        style={{ pointerEvents: 'none', top: editable ? 0 : -44, height: `calc(100% + ${editable ? 0 : 44}px)` }}
+        // color 放 wrapper、注入产物只写 currentColor：react-svg 19 只有 src 变才重注入，
+        // 而改页面背景色时 src（pageBgImage）不变，真值写进回调会让整张背景图案的颜色冻住
+        //（最刺眼的一档是背景色改成主题色时图案本该转成 lightColor 才看得见，否则几乎消失）。
+        // preserveAspectRatio 是常量、不随 props 变，留在回调里是对的。
+        style={{
+          pointerEvents: 'none',
+          top: editable ? 0 : -44,
+          height: `calc(100% + ${editable ? 0 : 44}px)`,
+          color: lowAlphaIconColor,
+        }}
         src={_.get(_.find(bgImages, { name: pageConfig.pageBgImage }), 'value')}
         beforeInjection={svg => {
-          svg.setAttribute('fill', lowAlphaIconColor);
+          svg.setAttribute('fill', 'currentColor');
           svg.setAttribute('preserveAspectRatio', 'none');
         }}
       />

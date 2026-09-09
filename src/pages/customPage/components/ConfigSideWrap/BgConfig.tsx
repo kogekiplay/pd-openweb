@@ -194,13 +194,18 @@ export default props => {
                         }}
                       >
                         <ReactSVG
-                          style={{ width: 178, height: 100 }}
+                          // 颜色放在 wrapper 的 style 上、注入产物里只写 currentColor：
+                          // react-svg 19 的注入 effect 依赖里没有 beforeInjection，
+                          // 只有 src 变了才重注入，而这里调色时 src（item.value）不变，
+                          // 把真值写进回调会让颜色冻结在首次注入时。同 SvgIcon.tsx。
+                          style={{
+                            width: 178,
+                            height: 100,
+                            color: backgroundColor === appPkg.iconColor ? appPkg.lightColor : appPkg.iconColor,
+                          }}
                           src={item.value}
                           beforeInjection={svg => {
-                            svg.setAttribute(
-                              'fill',
-                              backgroundColor === appPkg.iconColor ? appPkg.lightColor : appPkg.iconColor,
-                            );
+                            svg.setAttribute('fill', 'currentColor');
                           }}
                         />
                       </div>
@@ -218,13 +223,15 @@ export default props => {
                   }}
                 >
                   <ReactSVG
-                    style={{ width: '100%', height: '100%' }}
+                    // 同上：真值放 wrapper，注入产物只写引用
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      color: backgroundColor === appPkg.iconColor ? appPkg.lightColor : appPkg.iconColor,
+                    }}
                     src={_.get(_.find(bgImages, { name: pageBgImage }), 'value')}
                     beforeInjection={svg => {
-                      svg.setAttribute(
-                        'fill',
-                        backgroundColor === appPkg.iconColor ? appPkg.lightColor : appPkg.iconColor,
-                      );
+                      svg.setAttribute('fill', 'currentColor');
                     }}
                   />
                 </div>
