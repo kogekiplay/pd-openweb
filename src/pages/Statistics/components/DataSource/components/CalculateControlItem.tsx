@@ -6,6 +6,7 @@ import { Dialog, Icon } from 'ming-ui';
 
 const SourceBox = ({ item, isActive, onOpenEdit, onDelete, onChangeCheckbox }) => {
   const [{ isDragging }, drag] = useDrag({
+    type: 'ChartDnd',
     item: { type: 'ChartDnd', data: item },
     collect: monitor => ({
       isDragging: monitor.isDragging(),

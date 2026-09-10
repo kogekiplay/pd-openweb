@@ -175,6 +175,7 @@ const Drag = props => {
     },
   });
   const [{ isDragging }, drag] = useDrag({
+    type: dndAccept,
     item: { type: dndAccept, appItem },
     canDrag: isCharge,
     end: onDragEnd,

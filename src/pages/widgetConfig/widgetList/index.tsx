@@ -489,6 +489,7 @@ function TemplatePanelHeader(props) {
   };
 
   const [, drag, preview] = useDrag({
+    type: firstControl.type === 52 ? DRAG_ITEMS.LIST_TAB : DRAG_ITEMS.LIST_ITEM,
     item: {
       enumType,
       type: firstControl.type === 52 ? DRAG_ITEMS.LIST_TAB : DRAG_ITEMS.LIST_ITEM,

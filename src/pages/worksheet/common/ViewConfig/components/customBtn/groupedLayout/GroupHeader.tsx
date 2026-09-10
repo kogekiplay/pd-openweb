@@ -31,9 +31,10 @@ export default function GroupHeader({
   const headerRef = useRef(null);
   const titleToggleTimerRef = useRef(null);
   const [{ isDragging }, drag, dragPreview] = useDrag({
-    item: { type: ITEM_TYPE_GROUP, segmentIndex, layoutId },
-    collect: monitor => ({ isDragging: monitor.isDragging() }),
-    begin: () => {
+    type: ITEM_TYPE_GROUP,
+    // v11 的 begin 只有副作用、不返回值，v16 里等价物是函数形式的 item：
+    // 同样在拖拽开始时调用，返回值即拖拽 item，所以把原来的对象原样 return 回去。
+    item: () => {
       const el = headerRef.current;
       const block = el?.closest('.customBtnGroupedBlock');
       const w = block?.offsetWidth || el?.offsetWidth || 320;
@@ -42,7 +43,10 @@ export default function GroupHeader({
         width: w,
         height: headerH + 12,
       };
+
+      return { type: ITEM_TYPE_GROUP, segmentIndex, layoutId };
     },
+    collect: monitor => ({ isDragging: monitor.isDragging() }),
     end: () => {
       window.MD_DRAG_ITEM = undefined;
     },

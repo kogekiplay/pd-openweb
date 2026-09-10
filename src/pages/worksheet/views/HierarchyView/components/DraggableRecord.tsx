@@ -87,7 +87,7 @@ export default function DraggableRecord(props) {
   const $ref = useRef(null);
   const $dragDropRef = useRef(null);
 
-  const [{ isOver, canDrop }, drop] = useDrop({
+  const [{ isOver, canDrop }, drop] = useDrop<any, any, any>({
     accept: ITEM_TYPE.ITEM,
     canDrop() {
       const draggingItem = safeParse(localStorage.getItem('draggingHierarchyItem'));
@@ -105,13 +105,18 @@ export default function DraggableRecord(props) {
       return { isOver: monitor.isOver(), canDrop: monitor.canDrop() };
     },
   });
-  const [, drag, connectDragPreview] = useDrag({
-    item: { type: ITEM_TYPE.ITEM },
+  const [, drag, connectDragPreview] = useDrag<any, any, any>({
+    type: ITEM_TYPE.ITEM,
     canDrag() {
       const { allowedit } = treeData[data.rowId];
       return allowedit;
     },
-    begin() {
+    // v11 的 begin 在 v16 里没有了，等价物是【函数形式的 item】：两者都在拖拽开始时调用。
+    // 原来这里同时写了 `item: { type: ITEM_TYPE.ITEM }` 和一个 return data 的 begin，
+    // 而 v11 的规则是 `begin() 的返回值 || item` —— 返回了 data，那个对象字面量根本没用上。
+    // 所以直接删掉它，把 begin 改名成 item，拖拽中的 item 仍然是 data，与 v11 一致。
+    // （dnd 的类型标识已经提到顶层的 type 上了，不依赖 item.type。）
+    item() {
       safeLocalStorageSetItem('draggingHierarchyItem', JSON.stringify(data));
       // 拖拽时折叠所有子记录
       toggleChildren({ visible: false, ..._.pick(data, ['path', 'pathId', 'rowId']) });

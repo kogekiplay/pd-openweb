@@ -39,7 +39,7 @@ const SecondGroupItem = props => {
     secondGroupValue: '',
   });
   const [curList, setCurList] = useState({});
-  const [{ isOver, dragItem }, drop] = useDrop({
+  const [{ isOver, dragItem }, drop] = useDrop<any, any, any>({
     accept: ITEM_TYPE.RECORD,
     drop() {
       return { list, secondGroupOpt, secondGroupControl: control };

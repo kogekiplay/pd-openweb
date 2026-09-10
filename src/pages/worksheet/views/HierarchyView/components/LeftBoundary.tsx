@@ -8,7 +8,7 @@ import { AddRecord } from '../styled';
 export default function LeftBoundary(props) {
   const { becomeTopLevelRecord, showAdd, onClick } = props;
 
-  const [{ isOver, canDrop }, drop] = useDrop({
+  const [{ isOver, canDrop }, drop] = useDrop<any, any, any>({
     accept: ITEM_TYPE.ITEM,
     canDrop(_, monitor) {
       const data = monitor.getItem();

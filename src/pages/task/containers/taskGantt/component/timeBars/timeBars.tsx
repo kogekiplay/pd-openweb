@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { createRoot } from 'react-dom/client';
-import { DragSource } from 'react-dnd';
+// react-dnd v14 删除了 DragSource / DropTarget 装饰器且没有官方替代，
+// 这里用 v16 的 hooks 重建了一份语义一致的（含 spec 第三参 component）。
+// 为什么走兼容层而不是逐个改写成 hooks，见 src/components/dnd/legacyDecorators.tsx 文件头。
+import { DragSource } from 'src/components/dnd/legacyDecorators';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';

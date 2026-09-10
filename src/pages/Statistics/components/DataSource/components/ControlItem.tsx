@@ -8,6 +8,7 @@ import { getIconByType } from 'src/pages/widgetConfig/util';
 
 const SourceBox = ({ item, isActive, onChangeCheckbox }) => {
   const [{ isDragging }, drag] = useDrag({
+    type: 'ChartDnd',
     item: { type: 'ChartDnd', data: item },
     collect: monitor => ({
       isDragging: monitor.isDragging(),

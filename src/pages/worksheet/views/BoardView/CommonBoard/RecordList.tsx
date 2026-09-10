@@ -53,7 +53,7 @@ export default function Board(props) {
 
   const pendingFlag = useRef(false);
 
-  const [{ isOver, dragItem }, drop] = useDrop({
+  const [{ isOver, dragItem }, drop] = useDrop<any, any, any>({
     accept: ITEM_TYPE.RECORD,
     hover() {
       // 滚动至头部

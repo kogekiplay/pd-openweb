@@ -181,6 +181,7 @@ const Group = props => {
     },
   });
   const [{ isDragging }, drag, dragPreview] = useDrag({
+    type: dndAccept,
     item: { type: dndAccept, data },
     collect: monitor => ({
       isDragging: monitor.isDragging(),

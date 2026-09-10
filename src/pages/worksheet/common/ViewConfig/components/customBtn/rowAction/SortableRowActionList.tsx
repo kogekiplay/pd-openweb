@@ -133,9 +133,10 @@ function RowDropGap({ gapIndex, activeGap }) {
 function DraggableRowAction({ item, index, onDelete, onDropRow, activeGap, setActiveGap }) {
   const rowRef = useRef(null);
   const [{ isDragging }, drag, dragPreview] = useDrag({
-    item: { type: ITEM_TYPE, index },
-    collect: monitor => ({ isDragging: monitor.isDragging() }),
-    begin: () => {
+    type: ITEM_TYPE,
+    // v11 的 begin 只有副作用、不返回值，v16 里等价物是函数形式的 item：
+    // 同样在拖拽开始时调用，返回值即拖拽 item，所以把原来的对象原样 return 回去。
+    item: () => {
       const el = rowRef.current;
 
       if (el) {
@@ -144,7 +145,10 @@ function DraggableRowAction({ item, index, onDelete, onDropRow, activeGap, setAc
           height: el.offsetHeight,
         };
       }
+
+      return { type: ITEM_TYPE, index };
     },
+    collect: monitor => ({ isDragging: monitor.isDragging() }),
     end: () => {
       window.MD_DRAG_ITEM = undefined;
     },
