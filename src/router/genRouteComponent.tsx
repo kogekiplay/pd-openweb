@@ -25,9 +25,19 @@ export default () => {
       const guardProps = guard
         ? { ...guard, ...(guard.fallback ? { fallback: getComponent(guard.fallback) } : {}) }
         : null;
+      // 【lazy() 必须在这里调、不能挪进下面的渲染函数里】
+      // lazy(component) 每调一次都产出一个全新的组件类型，而新 lazy 必然先 suspend。
+      // 写成 props => <Guard component={lazy(component)} /> 的话：suspend →
+      // withTitle 的 <Suspense> 挂起 → promise resolve 后 React 从边界往下重渲染 →
+      // 又造一个新 lazy → 又 suspend，无限循环，页面永远出不来。
+      // 而且它【不抛错、不刷 CPU、不发网络请求】（webpack 的 import 有缓存），
+      // 导航还是 startTransition + fallback={null}，所以线上表现是
+      // 「地址栏变了、页面纹丝不动」，一条日志都没有。三条带 guard 的路由全中。
+      // 回归测试见 tools/verify-router-client-render.cjs —— 它专门盯工厂调用次数。
+      const LazyComponent = getComponent(component);
       const Wrapped = guardProps
-        ? props => <SegmentPrefixGuard {...props} {...guardProps} component={getComponent(component)} />
-        : getComponent(component);
+        ? props => <SegmentPrefixGuard {...props} {...guardProps} component={LazyComponent} />
+        : LazyComponent;
 
       // v7 的 <Route> 不认数组 path，也不认 exact/strict/sensitive
       //（精确与否改由「有没有 /*」表达，见 expandRoutePaths）。
