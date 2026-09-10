@@ -39,6 +39,11 @@
       // 注意 webpack 侧 resolve.alias（CI/webpack.config.js:419-423）只有
       // worksheet / mobile / statistics 三条，ming-ui 是靠 resolve.modules 的
       // PATHS.src 解析的；这里显式写出，效果等价。
+      // styled-components 6 自带完整类型，但本仓在 4.4.1 时代从未装过
+      // @types/styled-components（styled 一直是隐式 any）。直接启用会新增
+      // 5633 条原始诊断，那是一件独立的大工程。这里把它指向本仓的下限声明，
+      // 维持升级前的类型精度；撤销方式见 types/styled-components.d.ts 文件头。
+      "styled-components": ["./types/styled-components.d.ts"],
       "ming-ui": ["./src/ming-ui"],
       "ming-ui/*": ["./src/ming-ui/*"],
       "worksheet/*": ["./src/pages/worksheet/*"],

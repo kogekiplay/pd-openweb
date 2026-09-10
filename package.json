@@ -120,7 +120,7 @@
     "remarkable": "^2.0.1",
     "signature_pad": "^5.1.4",
     "socket.io-client": "^2.0.4",
-    "styled-components": "^4.3.2",
+    "styled-components": "^6.5.3",
     "svg.js": "^2.7.1",
     "to-words": "^7.1.0",
     "twemoji": "^2.0.5",

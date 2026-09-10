@@ -29,7 +29,7 @@ const path = require('path');
 const RW = path.resolve(__dirname, '..') + '/';
 
 const NEW_PATH = process.env.SC_NEW || '/tmp/sc6/node_modules/styled-components';
-const OLD_PATH = RW + 'node_modules/styled-components';
+const OLD_PATH = process.env.SC_OLD || RW + 'node_modules/styled-components';
 
 // ---------- 1. 从源码里抽出不含插值的 styled 模板 ----------
 function walk(dir, out = []) {
@@ -131,6 +131,26 @@ function normalize(styleTags) {
 }
 
 // ---------- 4. 跑 ----------
+// 升级落地后仓里的 styled-components 已经是 6.x，「旧版」参照物没了。
+// 这个脚本是一次性的迁移工具，不是常驻门禁 —— 与其静默比出一堆「完全一致」，
+// 不如直接说清楚。要复跑就把 4.4.1 装到仓外，用 SC_OLD 指过来。
+{
+  const oldVer = require(OLD_PATH + '/package.json').version;
+  const newVer = require(NEW_PATH + '/package.json').version;
+
+  if (oldVer === newVer) {
+    console.error(
+      `两侧都是 ${oldVer}，没有可比的对象。\n` +
+        '本脚本是 4.x → 6.x 的一次性迁移工具。要复跑：\n' +
+        "  mkdir -p /tmp/sc4 && cd /tmp/sc4 && echo '{\"private\":true}' > package.json && npm i styled-components@4.4.1\n" +
+        '  cd /tmp/sc4/node_modules && for p in react react-dom scheduler; do rm -rf $p && ln -s <repo>/node_modules/$p $p; done\n' +
+        '  cd <repo> && SC_OLD=/tmp/sc4/node_modules/styled-components node tools/verify-styled-components-css.cjs\n' +
+        '日常防回归请用 tools/scan-styled-missing-semicolon.cjs（它不依赖旧版本）。',
+    );
+    process.exit(2);
+  }
+}
+
 const bodies = collect();
 console.log(`从 src 抽出不含插值的 styled 模板 ${bodies.length} 条`);
 console.log(`旧: ${require(OLD_PATH + '/package.json').version}  ↔  新: ${require(NEW_PATH + '/package.json').version}\n`);
