@@ -1,7 +1,7 @@
-import React, { Fragment, Suspense, useMemo } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router';
+import React, { Fragment, Suspense } from 'react';
 import DocumentTitle from 'react-document-title';
 import ErrorBoundary from 'ming-ui/components/ErrorBoundary';
+import { useRouteProps } from './routeProps';
 
 /**
  * 路由组件的统一外壳：标题 + 错误边界 + Suspense + 【把 v4 时代的路由 props 注回去】。
@@ -17,27 +17,7 @@ import ErrorBoundary from 'ming-ui/components/ErrorBoundary';
  */
 export default function WithTitle(props) {
   const { title, component: Comp, preCallback, ...rest } = props;
-  const location = useLocation();
-  const navigate = useNavigate();
-  const params = useParams();
-
-  const routeProps = useMemo(() => {
-    const history = {
-      push: (to, state) => navigate(to, { state }),
-      replace: (to, state) => navigate(to, { state, replace: true }),
-      go: n => navigate(n),
-      goBack: () => navigate(-1),
-      goForward: () => navigate(1),
-      location,
-    };
-
-    return {
-      history,
-      location,
-      navigate,
-      match: { params, url: location.pathname, path: location.pathname, isExact: true },
-    };
-  }, [navigate, location, params]);
+  const routeProps = useRouteProps();
 
   // preCallback 在 v4 里是 componentDidMount 时调一次。这里用 ref 保证同样只调一次：
   // element 会随每次导航重新渲染，直接在渲染里调会重复触发。

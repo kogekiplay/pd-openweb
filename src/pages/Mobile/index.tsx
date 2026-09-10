@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { createRoot } from 'react-dom/client';
-import { Route, BrowserRouter as Router, Switch } from 'react-router';
-import withRouter from '../../router/withRouter';
 import { Provider } from 'react-redux';
+import { Route, BrowserRouter as Router, Routes, useLocation } from 'react-router';
 import { Dialog, Modal } from 'antd-mobile';
 import _ from 'lodash';
 import preall from 'src/common/preall';
@@ -13,6 +12,7 @@ import genRouteComponent from 'src/router/genRouteComponent';
 import { navigateTo } from 'src/router/navigateTo';
 import { socketInit } from 'src/socket/mobileSocketInit';
 import { getPathWithoutSubPath, getRequest, pathCompletion } from 'src/utils/common';
+import withRouter from '../../router/withRouter';
 import DeclareConfirm from './components/DeclareConfirm';
 import { PORTAL, ROUTE_CONFIG } from './config';
 import './index.less';
@@ -95,41 +95,47 @@ let App = class App extends Component<any, any> {
     const isPortal = md.global.Account.isPortal;
     const ROUTER = isPortal ? _.pick(ROUTE_CONFIG, PORTAL) : ROUTE_CONFIG;
     return (
-      <Switch>
+      <Routes>
         {this.genRouteComponent(ROUTER, params => {
           formatPortalHref(params);
         })}
-        <Route
-          path="*"
-          render={({ location }) => {
-            const home = '/mobile/dashboard';
-            const page = '/mobile/recordList/';
-            const record = '/mobile/record/';
-            const pathname = getPathWithoutSubPath(location.pathname);
-
-            const setHash = url => navigateTo(url + decodeURIComponent(location.hash), true);
-
-            if (pathname.includes(record)) {
-              const param = pathname.replace(record, '').split('/');
-              const [appId, worksheetId, viewId, rowId] = param;
-
-              if (!viewId) {
-                return setHash(`${record}${appId}/${worksheetId}/null/${rowId}`);
-              } else {
-                return setHash(home);
-              }
-            } else if (pathname.includes(page)) {
-              const param = pathname.replace(page, '').split('/');
-              return setHash(param.length === 1 ? `/mobile/app/${param[0]}` : home);
-            } else if (!isPortal) {
-              return setHash(home);
-            }
-          }}
-        />
-      </Switch>
+        {/* v7 的 <Route> 没有 render，只有 element；而 element 拿不到 location，
+            所以把原来的 render 回调搬进一个小组件，用 useLocation 取。 */}
+        <Route path="*" element={<MobileFallback isPortal={isPortal} />} />
+      </Routes>
     );
   }
 };
+
+function MobileFallback({ isPortal }) {
+  const location = useLocation();
+
+  // 原来这段是写在 <Route render={...}> 里的，也就是【渲染期间】直接调 navigateTo。
+  // v4 能这么用，但在 React 18/19 的并发渲染下，渲染期做导航这类副作用是不安全的
+  //（可能被丢弃或重复执行）。搬进 useEffect，语义是「挂载后按当前路径纠正一次」。
+  React.useEffect(() => {
+    const home = '/mobile/dashboard';
+    const page = '/mobile/recordList/';
+    const record = '/mobile/record/';
+    const pathname = getPathWithoutSubPath(location.pathname);
+    const setHash = url => navigateTo(url + decodeURIComponent(location.hash), true);
+
+    if (pathname.includes(record)) {
+      const param = pathname.replace(record, '').split('/');
+      const [appId, worksheetId, viewId, rowId] = param;
+
+      setHash(viewId ? home : `${record}${appId}/${worksheetId}/null/${rowId}`);
+    } else if (pathname.includes(page)) {
+      const param = pathname.replace(page, '').split('/');
+      setHash(param.length === 1 ? `/mobile/app/${param[0]}` : home);
+    } else if (!isPortal) {
+      setHash(home);
+    }
+  }, [location.pathname, location.hash, isPortal]);
+
+  return null;
+}
+
 App = preall(withRouter(DeclareConfirm(App)));
 
 class Mobile extends Component<any, any> {
