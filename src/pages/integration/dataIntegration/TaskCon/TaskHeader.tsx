@@ -21,13 +21,13 @@ const Wrap = styled.div`
   align-items: center;
   background: var(--color-background-primary);
   z-index: 1;
-  .back{
+  .back {
     cursor: pointer;
     margin-right: 15px;
     width: 20px;
     display: block;
-    color: var(--color-text-secondary)
-    &:hover{
+    color: var(--color-text-secondary);
+    &:hover {
       color: var(--color-primary);
     }
   }
@@ -45,7 +45,8 @@ const Wrap = styled.div`
       font-weight: 400;
       color: var(--color-text-tertiary);
       line-height: 54px;
-      &.isCur,&:hover {
+      &.isCur,
+      &:hover {
         font-weight: 600;
         color: var(--color-primary);
         border-bottom: 3px solid var(--color-primary);
@@ -63,23 +64,25 @@ const Wrap = styled.div`
     border-radius: 3px;
     text-align: center;
     font-weight: 600;
-    &:hover{
+    &:hover {
       background: var(--color-primary);
-      color:#fff;
+      color: #fff;
     }
   }
-  .disable,.disable:hover {
+  .disable,
+  .disable:hover {
     background: var(--color-text-disabled);
-    background-color: var(--color-text-disabled)!important;
+    background-color: var(--color-text-disabled) !important;
     border: 1px solid var(--color-text-disabled);
     border-color: var(--color-text-disabled);
-    cursor: not-allowed!important;
-    color:#fff;
+    cursor: not-allowed !important;
+    color: #fff;
   }
-  .workflowStatusWrap{
-    .disable,.disable:hover {
-      .iconWrap .workflowSwitchIcon-active{
-        color:var(--color-text-disabled)!important;
+  .workflowStatusWrap {
+    .disable,
+    .disable:hover {
+      .iconWrap .workflowSwitchIcon-active {
+        color: var(--color-text-disabled) !important;
       }
     }
   }

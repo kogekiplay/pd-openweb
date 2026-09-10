@@ -10,23 +10,21 @@ import { getAdvanceSetting, isTimeStyle } from 'src/utils/control';
 import { getTimeControls } from '../CalendarView/util';
 
 const BtnForSure = styled.div`
-   {
-    padding: 0 32px;
-    line-height: 36px;
-    height: 36px;
-    color: var(--color-white);
-    background-color: var(--color-primary);
-    border-radius: 4px;
-    outline: none;
-    cursor: pointer;
-    border: 1px solid transparent;
-    margin-top: 32px;
-    box-sizing: border-box;
-    display: inline-block;
-    &.isUnAb {
-      background-color: var(--color-primary-light);
-      cursor: not-allowed;
-    }
+  padding: 0 32px;
+  line-height: 36px;
+  height: 36px;
+  color: var(--color-white);
+  background-color: var(--color-primary);
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+  border: 1px solid transparent;
+  margin-top: 32px;
+  box-sizing: border-box;
+  display: inline-block;
+  &.isUnAb {
+    background-color: var(--color-primary-light);
+    cursor: not-allowed;
   }
 `;
 

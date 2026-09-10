@@ -13,7 +13,7 @@ export const Wrap = styled.div`
   .timeNum {
     li {
       width: 32%;
-      margin-right:16%
+      margin-right: 16%;
       height: 120px;
       background: var(--color-background-tertiary);
       border-radius: 4px;

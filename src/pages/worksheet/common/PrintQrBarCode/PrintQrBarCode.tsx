@@ -29,7 +29,7 @@ import {
 } from './util';
 
 const Con = styled.div`
-  height: 100vh
+  height: 100vh;
   display: flex;
   flex-direction: column;
   background: var(--color-background-disabled);

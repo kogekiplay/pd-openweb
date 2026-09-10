@@ -102,43 +102,41 @@ export const WrapFooter = styled.div`
 `;
 
 export const CardTopWrap = styled.div`
-   {
-    padding: 24px;
-    align-items: center;
-    .iconCon {
-      width: 44px;
-      height: 44px;
-      border: 1px solid var(--color-border-secondary);
-      border-radius: 6px;
-      position: relative;
-      .iconParam {
-        color: var(--color-text-secondary);
-      }
-      &.isEdit {
-        .iconParam {
-          color: var(--color-primary);
-        }
-        border: 1px solid var(--color-primary);
-      }
-      .tip {
-        position: absolute;
-        font-size: 20px;
-        left: -10px;
-        top: -10px;
-      }
+  padding: 24px;
+  align-items: center;
+  .iconCon {
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--color-border-secondary);
+    border-radius: 6px;
+    position: relative;
+    .iconParam {
+      color: var(--color-text-secondary);
     }
-    .btn {
-      padding: 0 20px;
-      margin-right: 12px;
-      line-height: 26px;
-      color: var(--color-primary);
-      border: 1px solid var(--color-primary);
-      border-radius: 26px;
-      height: 28px;
-      &:hover {
-        color: rgba(23, 100, 192, 1);
-        border: 1px solid rgba(23, 100, 192, 1);
+    &.isEdit {
+      .iconParam {
+        color: var(--color-primary);
       }
+      border: 1px solid var(--color-primary);
+    }
+    .tip {
+      position: absolute;
+      font-size: 20px;
+      left: -10px;
+      top: -10px;
+    }
+  }
+  .btn {
+    padding: 0 20px;
+    margin-right: 12px;
+    line-height: 26px;
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary);
+    border-radius: 26px;
+    height: 28px;
+    &:hover {
+      color: rgba(23, 100, 192, 1);
+      border: 1px solid rgba(23, 100, 192, 1);
     }
   }
 `;

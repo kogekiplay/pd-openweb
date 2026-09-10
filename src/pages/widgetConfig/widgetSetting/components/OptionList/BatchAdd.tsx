@@ -14,7 +14,7 @@ const BatchAddContent = styled.div`
     overflow-y: auto;
   }
   .footerBox {
-    display: flex
+    display: flex;
     justify-content: flex-end;
     .countBox {
       color: ${props => (props.disabled ? '#F52222' : 'var(--color-text-tertiary)')};

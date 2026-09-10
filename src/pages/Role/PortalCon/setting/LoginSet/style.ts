@@ -241,8 +241,8 @@ export const WrapDemo = styled.div`
   display: flex;
   background-color: rgb(245, 245, 245);
   width: calc(100% - 64px);
-  height: 80%
-  border-radius:8px;
+  height: 80%;
+  border-radius: 8px;
   position: relative;
   left: 50%;
   top: 46%;

@@ -19,10 +19,10 @@ import { formatDataForPortalControl, formatPortalData, renderText } from '../uti
 
 const Wrap = styled.div`
   .wrapTr:not(.checkBoxTr):not(.optionWrapTr) {
-    width: calc(calc(100%  - 38px) / 6);
+    width: calc(calc(100% - 38px) / 6);
   }
   .wrapTr.nameWrapTr {
-    width: calc(calc(100%  - 38px) / 6); !important;
+    width: calc(calc(100% - 38px) / 6);
     overflow: hidden;
   }
   padding: 16px 10px 0 10px;

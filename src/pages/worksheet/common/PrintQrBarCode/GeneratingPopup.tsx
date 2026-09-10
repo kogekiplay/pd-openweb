@@ -43,7 +43,7 @@ const Header = styled.div`
 const Pagination = styled.div`
   display: flex;
   font-size: 13px;
-  color var(--color-text-title);
+  color: var(--color-text-title);
   align-items: center;
   .info {
     margin-right: 8px;

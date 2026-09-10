@@ -202,65 +202,63 @@ export const Wrap = styled.div`
   }
 `;
 export const WrapTxt = styled.div`
-   {
-    width: 100%;
-    background: var(--color-background-secondary);
-    border: 1px solid var(--color-border-primary);
-    border-radius: 3px;
-    padding: 16px;
-    box-sizing: border-box;
+  width: 100%;
+  background: var(--color-background-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 3px;
+  padding: 16px;
+  box-sizing: border-box;
+  color: var(--color-text-title);
+  margin-top: 12px;
+  display: flex;
+  &.createCon {
+    background: var(--color-background-primary);
+    display: block;
+  }
+
+  .txtFilter {
+    flex-shrink: 0;
+    min-width: 0;
+    flex: 1;
+    font-size: 13px;
     color: var(--color-text-title);
-    margin-top: 12px;
-    display: flex;
-    &.createCon {
-      background: var(--color-background-primary);
-      display: block;
-    }
+    line-height: 24px;
 
-    .txtFilter {
-      flex-shrink: 0;
-      min-width: 0;
-      flex: 1;
-      font-size: 13px;
-      color: var(--color-text-title);
-      line-height: 24px;
+    p {
+      line-height: 22px;
+      padding: 0;
+      margin: 0;
+      display: flex;
 
-      p {
+      .titleTxt {
+        width: 100px;
+        font-size: 13px;
         line-height: 22px;
-        padding: 0;
-        margin: 0;
-        display: flex;
+        display: inline-block;
+        min-width: 0;
+        flex-shrink: 0;
+      }
 
-        .titleTxt {
-          width: 100px;
-          font-size: 13px;
-          line-height: 22px;
-          display: inline-block;
-          min-width: 0;
-          flex-shrink: 0;
-        }
-
-        .txt {
-          flex: 1;
-          font-weight: 500;
-          font-size: 13px;
-          min-width: 0;
-          flex-shrink: 0;
-        }
+      .txt {
+        flex: 1;
+        font-weight: 500;
+        font-size: 13px;
+        min-width: 0;
+        flex-shrink: 0;
       }
     }
+  }
 
-    .editFilter {
-      width: 20px;
+  .editFilter {
+    width: 20px;
 
-      &:hover {
-        color: var(--color-primary) !important;
-      }
+    &:hover {
+      color: var(--color-primary) !important;
     }
+  }
 
-    .editWorkflow {
-      width: auto;
-      color: var(--color-primary);
-    }
+  .editWorkflow {
+    width: auto;
+    color: var(--color-primary);
   }
 `;

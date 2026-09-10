@@ -97,8 +97,8 @@ const IconSelector = styled.div`
         background: var(--color-background-hover);
       }
       &.active {
-        color: #732ED1
-        background: #732ED112;
+        color: #732ed1;
+        background: #732ed112;
       }
     }
   }

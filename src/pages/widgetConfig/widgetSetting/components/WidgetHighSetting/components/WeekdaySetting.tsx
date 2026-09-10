@@ -7,29 +7,27 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { getAdvanceSetting, handleAdvancedSettingChange } from '../../../../util/setting';
 
 const WeekdayWrap = styled.ul`
-   {
-    position: absolute;
-    top: 30px;
-    z-index: 1;
-    width: 170px;
-    padding: 7px 0;
-    border-radius: 3px;
-    background-color: var(--color-background-primary);
-    cursor: pointer;
-    box-shadow: 0 3px 12px rgb(0, 0, 0, 0.16);
-    li {
-      line-height: 24px;
-      padding: 6px 12px;
-      min-height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      &:hover,
-      &.active {
-        background-color: var(--color-primary-transparent);
-        .icon-done {
-          color: var(--color-primary);
-        }
+  position: absolute;
+  top: 30px;
+  z-index: 1;
+  width: 170px;
+  padding: 7px 0;
+  border-radius: 3px;
+  background-color: var(--color-background-primary);
+  cursor: pointer;
+  box-shadow: 0 3px 12px rgb(0, 0, 0, 0.16);
+  li {
+    line-height: 24px;
+    padding: 6px 12px;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    &:hover,
+    &.active {
+      background-color: var(--color-primary-transparent);
+      .icon-done {
+        color: var(--color-primary);
       }
     }
   }
