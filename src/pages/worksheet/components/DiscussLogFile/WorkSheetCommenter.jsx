@@ -68,7 +68,7 @@ export default class WorkSheetCommenter extends Component {
             userHead: md.global.Account.avatar,
             accountId: md.global.Account.accountId,
           }}
-          size={32}
+          size={24}
           projectId={projectId}
         />
         <Commenter {...props} />

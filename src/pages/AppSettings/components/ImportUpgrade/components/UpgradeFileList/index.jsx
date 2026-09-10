@@ -163,7 +163,6 @@ export default function UpgradeFileList(props) {
                       obj[v.fileName] = passwords[item.fileName];
                       return obj;
                     }, {});
-                    console.log(newPasswords, 'newPasswords');
                     setPasswords({ ...passwords, ...newPasswords });
                   }}
                 >

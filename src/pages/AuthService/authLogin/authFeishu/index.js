@@ -17,8 +17,10 @@ const isMobile = browserIsMobile();
 
 if (code) {
   if (checkLogin()) {
-    if (checkOriginUrl(url)) {
-      location.replace(decodeURIComponent(url));
+    const safeUrl = checkOriginUrl(url);
+
+    if (safeUrl) {
+      location.replace(safeUrl);
     } else {
       location.replace(pathCompletion(isMobile ? `/mobile` : `/app`));
     }
@@ -36,8 +38,10 @@ if (code) {
         if (accountResult === 1) {
           getGlobalMeta().then(() => {
             setPssId(sessionId);
-            if (checkOriginUrl(url)) {
-              location.replace(decodeURIComponent(url));
+            const safeUrl = checkOriginUrl(url);
+
+            if (safeUrl) {
+              location.replace(safeUrl);
             } else {
               location.replace(pathCompletion(isMobile ? `/mobile` : `/app`));
             }
@@ -52,8 +56,10 @@ if (code) {
   const newUrl = addOtherParam(url, otherParamString);
 
   if (checkLogin()) {
-    if (checkOriginUrl(newUrl)) {
-      location.replace(decodeURIComponent(newUrl));
+    const safeUrl = checkOriginUrl(newUrl);
+
+    if (safeUrl) {
+      location.replace(safeUrl);
     } else {
       location.replace(pathCompletion(isMobile ? `/mobile` : `/app`));
     }

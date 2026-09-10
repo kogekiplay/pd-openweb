@@ -41,8 +41,10 @@ function loginSuccess(url, appscheme) {
     return;
   }
 
-  if (checkOriginUrl(url)) {
-    location.replace(decodeURIComponent(url));
+  const safeUrl = checkOriginUrl(url);
+
+  if (safeUrl) {
+    location.replace(safeUrl);
   } else {
     location.replace(pathCompletion(isMobile ? `/mobile` : `/app`));
   }
@@ -77,8 +79,10 @@ if (code) {
 
           getGlobalMeta().then(() => {
             setPssId(sessionId);
-            if (checkOriginUrl(url)) {
-              location.replace(decodeURIComponent(url));
+            const safeUrl = checkOriginUrl(url);
+
+            if (safeUrl) {
+              location.replace(safeUrl);
             } else {
               location.replace(pathCompletion(isMobile ? `/mobile` : `/app`));
             }

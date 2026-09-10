@@ -1,7 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
+import { Popover } from 'antd';
 import _ from 'lodash';
-import { Dialog } from 'ming-ui';
+import { Dialog, Icon } from 'ming-ui';
 import ErrorBoundary from 'ming-ui/components/ErrorBoundary';
 import privateGuide from 'src/api/privateGuide';
 import preall from 'src/common/preall';
@@ -9,12 +10,12 @@ import ChatList from 'src/pages/chat/containers/ChatList';
 import ChatPanel from 'src/pages/chat/containers/ChatPanel';
 import { ROUTE_CONFIG_PORTAL } from 'src/pages/Portal/config';
 import PortalPageHeaderRoute from 'src/pages/Portal/PageHeader';
-import weixinCode from 'src/pages/privateImageInstall/images/weixin.png';
 import { getAppFeaturesVisible } from 'src/utils/common';
 import socketInit from '../socket';
 import { ROUTE_CONFIG, withoutChatUrl } from './config';
 import genRouteComponent from './genRouteComponent';
 import globalEvents from './globalEvents';
+import weixinCode from './images/supportQrCode.png';
 import PageHeaderRoute from './PageHeader';
 import './index.less';
 
@@ -63,7 +64,7 @@ class App extends Component {
         width="630"
         closable={false}
         visible
-        cancelText=""
+        showCancel={false}
         okText={_l('我已知晓')}
         onOk={() => {
           this.setState({ isSupport: true });
@@ -81,15 +82,7 @@ class App extends Component {
           {md.global.Account.superAdmin ? (
             <Fragment>
               <span className="Gray_9e">{_l('您可以')}</span>
-              <Trigger
-                action={['hover']}
-                popup={<img className="card z-depth-2" style={{ width: 300 }} src={weixinCode} />}
-                popupAlign={{
-                  offset: [0, 7],
-                  points: ['tc', 'bc'],
-                  overflow: { adjustX: 1, adjustY: 2 },
-                }}
-              >
+              <Popover arrow={true} content={<img style={{ width: 300 }} src={weixinCode} />} placement="bottom">
                 <span
                   style={{
                     cursor: 'pointer',
@@ -101,7 +94,7 @@ class App extends Component {
                   <Icon icon="weixin" className="mRight2" />
                   {_l('提交工单')}
                 </span>
-              </Trigger>
+              </Popover>
               <span className="Gray_9e">{_l('咨询并延长技术支持或查看')}</span>
               <a href="https://docs-pd.mingdao.com/version" target="_blank" className="mLeft3">
                 {_l('其他可升级的版本')}

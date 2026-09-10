@@ -7,6 +7,7 @@ import { whiteList } from 'xss/lib/default';
 import autoSize from 'ming-ui/components/AutoSize';
 import { getToken } from 'src/utils/common';
 import RegExpValidator from 'src/utils/expression';
+import { preventWidgetResizeRedrawRecursion } from './richTextUtils';
 import './less/RichText.less';
 
 let ckeditorPromise;
@@ -748,6 +749,10 @@ const RichText = forwardRef((props, ref) => {
             editor.plugins.get('FileRepository').createUploadAdapter = loader => {
               return new MyUploadAdapter(loader, tokenArgs);
             };
+
+            if (editor.plugins.has('WidgetResize')) {
+              preventWidgetResizeRedrawRecursion(editor.plugins.get('WidgetResize'));
+            }
           }
 
           lastSavedContentRef.current = editor.getData();

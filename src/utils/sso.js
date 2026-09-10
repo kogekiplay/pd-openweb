@@ -157,15 +157,21 @@ export const addOtherParam = (url, param) => {
   }
 };
 
+/**
+ * 校验返回地址是否属于明道云域名或当前页面来源。
+ */
 export const checkOriginUrl = url => {
-  if (url && url.includes('mingdao.com')) {
-    return url;
-  }
+  if (!url) return '';
 
-  if (url && url.includes('http')) {
-    return url.includes(location.origin);
-  } else {
-    return url;
+  try {
+    const target = new URL(url, location.origin);
+    const isMingdaoDomain = target.hostname === 'mingdao.com' || target.hostname.endsWith('.mingdao.com');
+    const isTrusted = target.origin === location.origin || isMingdaoDomain;
+    const isHttp = ['http:', 'https:'].includes(target.protocol);
+
+    return isHttp && isTrusted ? target.href : '';
+  } catch {
+    return '';
   }
 };
 

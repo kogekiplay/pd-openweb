@@ -7,8 +7,10 @@ const isMobile = browserIsMobile();
 
 if (source === 'wxwork') {
   if (checkLogin()) {
-    if (checkOriginUrl(url)) {
-      location.replace(decodeURIComponent(url));
+    const safeUrl = checkOriginUrl(url);
+
+    if (safeUrl) {
+      location.replace(safeUrl);
     } else {
       location.replace(pathCompletion(isMobile ? `/mobile` : `/app`));
     }
@@ -25,8 +27,10 @@ if (source === 'wxwork') {
         if (accountResult === 1) {
           getGlobalMeta().then(() => {
             setPssId(sessionId);
-            if (checkOriginUrl(url)) {
-              location.replace(decodeURIComponent(url));
+            const safeUrl = checkOriginUrl(url);
+
+            if (safeUrl) {
+              location.replace(safeUrl);
             } else {
               location.replace(pathCompletion(isMobile ? `/mobile` : `/app`));
             }
@@ -38,8 +42,10 @@ if (source === 'wxwork') {
   }
 } else {
   if (checkLogin()) {
-    if (checkOriginUrl(ret)) {
-      location.replace(ret);
+    const safeUrl = checkOriginUrl(ret);
+
+    if (safeUrl) {
+      location.replace(safeUrl);
     } else {
       location.replace(pathCompletion(isMobile ? `/mobile/app/${i}#hideTabBar` : `/app/${i}`));
     }
@@ -58,8 +64,10 @@ if (source === 'wxwork') {
 
         if (accountResult === 1) {
           setPssId(sessionId);
-          if (checkOriginUrl(ret)) {
-            location.replace(ret);
+          const safeUrl = checkOriginUrl(ret);
+
+          if (safeUrl) {
+            location.replace(safeUrl);
           } else {
             location.replace(pathCompletion(isMobile ? `/mobile/app/${i}#hideTabBar` : `/app/${i}`));
           }

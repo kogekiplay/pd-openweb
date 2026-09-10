@@ -12,9 +12,7 @@
             body {
                 margin: 0;
                 background-color: #f5f5f9;
-            }
-            #app {
-                display: none;
+                font-family: Helvetica, 'PingFang SC', 'Microsoft YaHei', sans-serif !important;
             }
             .flex {
                 display: flex;
@@ -34,15 +32,43 @@
             .content-center {
                 justify-content: center;
             }
-            #app {
+            #app,
+            .page {
                 height: 100vh;
             }
             .con {
-                height: 400px;
                 width: 460px;
                 border-radius: 4px;
-                border: 1px solid #e5e5e5;
+                border: 1px solid var(--color-border-primary);
                 background-color: #ffffff;
+            }
+            .con .content {
+                padding: 36px 36px 8px;
+            }
+            .con .content:last-child {
+                padding-bottom: 36px;
+            }
+            .con .title {
+                font-size: 20px;
+                font-weight: bold;
+                color: var(--color-text-title);
+            }
+            .con .description {
+                font-size: 13px;
+                line-height: 20px;
+                color: var(--color-text-secondary);
+            }
+            .con .url {
+                font-size: 13px;
+                line-height: 20px;
+                color: var(--color-text-title);
+                word-break: break-all;
+            }
+            .m-top12 {
+                margin-top: 12px;
+            }
+            .m-top24 {
+                margin-top: 24px;
             }
             .button {
                 display: inline-block;
@@ -68,7 +94,7 @@
                 background-color: #ccc;
             }
             .footer {
-                padding: 10px 20px;
+                padding: 20px 36px 28px;
                 justify-content: end;
             }
         </style>

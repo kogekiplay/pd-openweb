@@ -356,6 +356,7 @@ export default class Condition extends Component {
           <div
             className="ming Dropdown pointer flowDropdown flowDropdownBorder"
             onClick={event => {
+              if (window.getSelection().toString()) return;
               if ($(event.target).closest('.ant-tooltip').length) return;
 
               this.setState({ showControlsIndex: `${i}-${j}` });
@@ -365,6 +366,7 @@ export default class Condition extends Component {
               <span className="value">
                 {item.filedId ? (
                   <Tag
+                    className="flowDetailConditionTag"
                     flowNodeType={item.nodeType}
                     appType={item.appType}
                     actionId={item.actionId}

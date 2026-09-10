@@ -191,7 +191,7 @@ export default function List(props) {
       return;
     }
 
-    let url = encodeURI(`${LIST_URL_PRE[dataKey].pre}${item[LIST_URL_PRE[dataKey].idKey]}`);
+    let url = encodeURI(pathCompletion(`${LIST_URL_PRE[dataKey].pre}${item[LIST_URL_PRE[dataKey].idKey]}`));
     window.open(url);
   };
 
@@ -253,8 +253,8 @@ export default function List(props) {
                         text={
                           settingInfo.descKeys
                             ? settingInfo.descKeys
-                              .map(l => (l === 'position' ? (item[l] ? item[l].slice(1) : '') : item[l]))
-                              .join(' | ') || ''
+                                .map(l => (l === 'position' ? (item[l] ? item[l].slice(1) : '') : item[l]))
+                                .join(' | ') || ''
                             : item[prefix + 'Content'] || ''
                         }
                       />

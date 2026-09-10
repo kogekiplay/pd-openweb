@@ -22,8 +22,10 @@ function start() {
   if (t == '-1') {
     // 小程序
     if (checkLogin()) {
-      if (checkOriginUrl(url)) {
-        location.replace(decodeURIComponent(url));
+      const safeUrl = checkOriginUrl(url);
+
+      if (safeUrl) {
+        location.replace(safeUrl);
       } else {
         location.replace(pathCompletion(isMobile ? `/mobile` : `/app`));
       }
@@ -40,8 +42,10 @@ function start() {
 
           if (accountResult === 1) {
             setPssId(sessionId);
-            if (checkOriginUrl(url)) {
-              location.replace(decodeURIComponent(url));
+            const safeUrl = checkOriginUrl(url);
+
+            if (safeUrl) {
+              location.replace(safeUrl);
             } else {
               location.replace(pathCompletion(isMobile ? `/mobile` : `/app`));
             }
@@ -54,8 +58,10 @@ function start() {
     }
   } else if (t == '1') {
     if (checkLogin()) {
-      if (checkOriginUrl(newRet)) {
-        location.replace(newRet);
+      const safeUrl = checkOriginUrl(newRet);
+
+      if (safeUrl) {
+        location.replace(safeUrl);
       } else {
         location.replace(pathCompletion(isMobile ? `/mobile/app/${i}#hideTabBar` : `/app/${i}`));
       }

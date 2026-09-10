@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { Component, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { renderToString } from 'react-dom/server';
 import { connect } from 'react-redux';
@@ -100,22 +100,78 @@ function SearchFolder(props) {
     id: 0,
     data: {},
   });
+  const requestRef = useRef(null);
+  const requestIdRef = useRef(0);
 
-  document.onkeydown = e => {
-    handleKeyDown(e);
-  };
-
-  useEffect(() => {
-    if (visible) return;
+  const hideSearch = () => {
+    setVisible(false);
     setHighlight({
       id: 0,
       data: {},
     });
-  }, [visible]);
+  };
 
-  const searchFetch = (value = '') => {
-    setSearch(value.trim());
-    if (!value.trim()) {
+  const searchFetch = useCallback(
+    (value, requestId) => {
+      const request = ajaxRequest.searchFolderList({
+        keywords: value,
+        otherAccountID: filterUserId,
+        pageIndex: 1,
+      });
+
+      requestRef.current = request;
+      request
+        .then(res => {
+          if (requestId !== requestIdRef.current) return;
+
+          setData({
+            folders: (res.data || {}).folders || [],
+            labels: (res.data || {}).labels || [],
+          });
+        })
+        .catch(() => {
+          if (requestId !== requestIdRef.current) return;
+
+          setData({
+            folders: [],
+            labels: [],
+          });
+        })
+        .finally(() => {
+          if (requestId === requestIdRef.current) {
+            setLoading(false);
+          }
+        });
+    },
+    [filterUserId],
+  );
+
+  const handleSearch = useMemo(() => _.debounce(searchFetch, 500), [searchFetch]);
+
+  useEffect(
+    () => () => {
+      handleSearch.cancel();
+      requestIdRef.current += 1;
+      requestRef.current?.abort?.();
+    },
+    [handleSearch],
+  );
+
+  const handleSearchChange = value => {
+    const trimmedValue = value.trim();
+    const requestId = requestIdRef.current + 1;
+
+    requestIdRef.current = requestId;
+    requestRef.current?.abort?.();
+    setSearch(trimmedValue);
+    setHighlight({
+      id: 0,
+      data: {},
+    });
+
+    if (!trimmedValue) {
+      handleSearch.cancel();
+      setLoading(false);
       setData({
         folders: [],
         labels: [],
@@ -125,20 +181,8 @@ function SearchFolder(props) {
     }
 
     setLoading(true);
-    ajaxRequest
-      .searchFolderList({
-        keywords: value.trim(),
-        otherAccountID: filterUserId,
-        pageIndex: 1,
-      })
-      .then(res => {
-        setLoading(false);
-        setData({
-          folders: (res.data || {}).folders || [],
-          labels: (res.data || {}).labels || [],
-        });
-        setVisible(true);
-      });
+    setVisible(true);
+    handleSearch(trimmedValue, requestId);
   };
 
   const handleKeyDown = e => {
@@ -155,7 +199,7 @@ function SearchFolder(props) {
           onSelect(highlight.data);
         }
 
-        setVisible(false);
+        hideSearch();
         return;
       case 38: //up
       case 40: //down
@@ -194,8 +238,6 @@ function SearchFolder(props) {
     }
   };
 
-  const handleSearch = _.debounce(searchFetch, 500);
-
   return (
     <Trigger
       zIndex={10}
@@ -213,7 +255,7 @@ function SearchFolder(props) {
                     type: 'task',
                     searchText: search,
                   });
-                  setVisible(false);
+                  hideSearch();
                 }}
                 onMouseOver={() => {
                   if (highlight.id === 0) return;
@@ -238,7 +280,7 @@ function SearchFolder(props) {
                       text: folder.folderName,
                       searchText: search,
                     });
-                    setVisible(false);
+                    hideSearch();
                   }}
                   onMouseOver={() => {
                     if (highlight.id === folder.folderID) return;
@@ -269,7 +311,7 @@ function SearchFolder(props) {
                       text: label.categoryName,
                       searchText: search,
                     });
-                    setVisible(false);
+                    hideSearch();
                   }}
                   onMouseOver={() => {
                     if (highlight.id === label.categoryID) return;
@@ -294,9 +336,13 @@ function SearchFolder(props) {
       }
       popupStyle={{ width: 374 }}
       popupVisible={visible}
-      onPopupVisibleChange={visible => {
-        if (visible && data.folders.length === 0 && data.labels.length === 0) return;
-        setVisible(visible);
+      onPopupVisibleChange={nextVisible => {
+        if (nextVisible && data.folders.length === 0 && data.labels.length === 0) return;
+        if (nextVisible) {
+          setVisible(true);
+        } else {
+          hideSearch();
+        }
       }}
       action={['click']}
       popupAlign={{
@@ -313,8 +359,9 @@ function SearchFolder(props) {
           className="txtSearch boxSizing textPrimary"
           placeholder={_l('搜索')}
           onChange={e => {
-            handleSearch(e.target.value);
+            handleSearchChange(e.target.value);
           }}
+          onKeyDown={handleKeyDown}
         />
       </div>
     </Trigger>

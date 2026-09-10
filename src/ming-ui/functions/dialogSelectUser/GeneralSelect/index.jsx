@@ -163,10 +163,14 @@ export default class GeneraSelect extends Component {
   componentDidMount() {
     window.addEventListener('keydown', this.handleKeyDown, false);
     this.defaultAction();
+    this.focusSearchInputTimer = setTimeout(() => {
+      this._searchInput?.focus();
+    });
   }
 
   componentWillUnmount() {
     window.removeEventListener('keydown', this.handleKeyDown);
+    clearTimeout(this.focusSearchInputTimer);
   }
 
   updateEvent() {

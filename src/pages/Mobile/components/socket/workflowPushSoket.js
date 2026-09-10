@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import homeAppAjax from 'src/api/homeApp';
-import { VOICE_FILE_LIST } from 'src/pages/widgetConfig/widgetSetting/components/CustomEvent/config.js';
+import { playPromptSound } from 'src/pages/workflow/socket/promptSound';
 import { PUSH_TYPE } from 'src/pages/workflow/WorkflowSettings/enum';
 import { equalToLocalPushUniqueId, pathCompletion } from 'src/utils/common';
 import { compatibleMDJS } from 'src/utils/project';
@@ -86,29 +86,7 @@ export default () => {
         }
 
         if (pushType === PUSH_TYPE.AUDIO) {
-          const { content, file, language, pitch, preset, speed, type } = promptSound;
-
-          if (type === 1) {
-            if (file) {
-              playAudio(_.get(safeParse(file), '[0].viewUrl'));
-            } else {
-              const filePath = [{ fileKey: '', filePath: require('/staticfiles/images/session_new_message.mp3') }]
-                .concat(VOICE_FILE_LIST)
-                .find(o => o.fileKey === preset).filePath;
-
-              playAudio(filePath);
-            }
-          } else {
-            const utterance = new SpeechSynthesisUtterance(content);
-
-            utterance.lang = language; // 设置为中文
-            utterance.pitch = parseInt(pitch); // 音调
-            utterance.rate = parseInt(speed); // 语速
-            utterance.volume = 1; // 音量
-
-            // 播放语音
-            window.speechSynthesis.speak(utterance);
-          }
+          playPromptSound(promptSound, playAudio);
         }
       };
 

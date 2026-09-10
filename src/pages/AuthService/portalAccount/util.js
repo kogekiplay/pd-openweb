@@ -52,10 +52,11 @@ export const toApp = appId => {
 
 export const getCurrentId = cb => {
   const request = getRequest();
-  const { ReturnUrl = '', mdAppId = '' } = request;
+  const { ReturnUrl = '', mdAppId = '', portalAppId = '' } = request;
 
-  if (mdAppId) {
-    cb(mdAppId);
+  // portalAppId 只选择门户，不带微信回调的绑定模式语义。
+  if (mdAppId || portalAppId) {
+    cb(mdAppId || portalAppId);
     return;
   }
 
@@ -75,6 +76,51 @@ export const getCurrentId = cb => {
     cb(currentAppId, '');
   }
 };
+
+// 重新验证必须刷新整页以丢弃 PC 扫码状态，不能保留 mdAppId/wxState/status 等回调模式。
+export function restartPortalLogin(appId, customLink) {
+  const loginUrl = new URL(pathCompletion('/login', { hasDomain: false }), location.origin);
+  const source = new URL(location.href);
+  const appUrl = new URL(`app/${encodeURIComponent(appId)}`, loginUrl);
+  const isLocalEntry = url =>
+    url.origin === location.origin &&
+    ['http:', 'https:'].includes(url.protocol) &&
+    !/\/(login|network|wxauth|wxscanauth)\/?$/.test(url.pathname);
+  // 克隆已解析的 URL，不能把 // 开头的 pathname 再解析成外域地址。
+  const fallback = new URL(source.href);
+  // state/code 也可能是业务参数；微信回调路径整体拒绝，而非在业务页泛删这些键。
+  const callbackKeys = ['mdAppId', 'wxState', 'status', 'accountId', 'portalAppId', 'ReturnUrl', 'returnUrl'];
+  callbackKeys.forEach(key => fallback.searchParams.delete(key));
+  let returnUrl = isLocalEntry(fallback) ? fallback : appUrl;
+
+  try {
+    const original = source.searchParams.get('ReturnUrl') || source.searchParams.get('returnUrl');
+
+    if (original) {
+      const candidate = new URL(original, source.origin);
+
+      if (isLocalEntry(candidate)) {
+        callbackKeys.forEach(key => candidate.searchParams.delete(key));
+        returnUrl = candidate;
+      }
+    }
+  } catch {
+    // 畸形回跳地址退回安全入口，不影响重新验证。
+  }
+
+  // 包括 fallback 在内，最终回跳必须统一满足同源 HTTP(S) 业务入口约束。
+  if (!isLocalEntry(returnUrl)) returnUrl = appUrl;
+
+  loginUrl.searchParams.set('portalAppId', appId);
+  loginUrl.searchParams.set('ReturnUrl', returnUrl.href);
+  if (customLink) loginUrl.searchParams.set('customLink', customLink);
+  sessionStorage.removeItem('clientId');
+  localStorage.removeItem('pcScan');
+  localStorage.removeItem(`${appId}_portalCustomLink`);
+  localStorage.removeItem(`PortalLoginInfo-${appId}`);
+  window.clientId = '';
+  location.replace(loginUrl.href);
+}
 
 //外部门户已登录的情况下，customLink要去除，且h5的模式下，直接走/portal/app/${md.global.Account.appId}
 export const resetPortalUrl = () => {
@@ -142,12 +188,22 @@ export const goApp = (sessionId, appId, customLink) => {
   let { ReturnUrl = '' } = request;
 
   if (ReturnUrl) {
-    if (ReturnUrl.indexOf(`/${customLink}`) >= 0 && customLink) {
-      const regex = new RegExp(`/${customLink}(.*)$`, 'g');
-      window.location.replace(ReturnUrl.replace(regex, ''));
-    } else {
-      window.location.replace(ReturnUrl);
+    if (customLink) {
+      try {
+        const target = new URL(ReturnUrl, location.href);
+        const lastSlash = target.pathname.lastIndexOf('/');
+
+        // 邀请码仅是末尾路径段，不能连同业务 query/hash 一起删除。
+        if (target.pathname.slice(lastSlash + 1) === customLink) {
+          target.pathname = target.pathname.slice(0, lastSlash) || '/';
+          ReturnUrl = target.href;
+        }
+      } catch {
+        // 保持原有非标准 ReturnUrl 的跳转处理，不在此扩展全局路由规则。
+      }
     }
+
+    window.location.replace(ReturnUrl);
   } else {
     //h5暂不处理后缀
     toApp(appId);
