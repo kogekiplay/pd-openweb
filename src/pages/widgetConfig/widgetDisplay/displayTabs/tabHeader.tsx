@@ -185,7 +185,8 @@ export function DragHeaderItem(props) {
   const $ref = useRef(null);
   const [pointerDir, setPointerDir] = useState('');
 
-  const [, drag] = useDrag({
+  const [, drag] = useDrag<any, any, any>({
+    type: data.type === 52 ? DRAG_ITEMS.DISPLAY_TAB : DRAG_ITEMS.DISPLAY_LIST_TAB,
     item: {
       type: data.type === 52 ? DRAG_ITEMS.DISPLAY_TAB : DRAG_ITEMS.DISPLAY_LIST_TAB,
       widgetType: data.type,
@@ -201,7 +202,7 @@ export function DragHeaderItem(props) {
     },
   });
 
-  const [{ isOver }, drop] = useDrop({
+  const [{ isOver }, drop] = useDrop<any, any, any>({
     accept: DRAG_ACCEPT.tab,
     hover(item, monitor) {
       if (item.id === data.controlId || !$ref.current) return;

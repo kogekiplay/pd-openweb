@@ -132,9 +132,10 @@ export function DraggableBtnRow({
 }) {
   const rowRef = useRef(null);
   const [{ isDragging }, drag, dragPreview] = useDrag({
-    item: { type: ITEM_TYPE, segmentIndex, idIndex, btnId: btn.btnId, layoutId },
-    collect: monitor => ({ isDragging: monitor.isDragging() }),
-    begin: () => {
+    type: ITEM_TYPE,
+    // v11 的 begin 只有副作用、不返回值，v16 里等价物是函数形式的 item：
+    // 同样在拖拽开始时调用，返回值即拖拽 item，所以把原来的对象原样 return 回去。
+    item: () => {
       const el = rowRef.current;
 
       if (el) {
@@ -143,7 +144,10 @@ export function DraggableBtnRow({
           height: el.offsetHeight,
         };
       }
+
+      return { type: ITEM_TYPE, segmentIndex, idIndex, btnId: btn.btnId, layoutId };
     },
+    collect: monitor => ({ isDragging: monitor.isDragging() }),
     end: () => {
       window.MD_DRAG_ITEM = undefined;
     },

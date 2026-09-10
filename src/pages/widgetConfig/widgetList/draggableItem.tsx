@@ -58,6 +58,7 @@ export default function DraggableItem(props) {
   };
 
   const [, drag, preview] = useDrag({
+    type: _.includes(['SECTION'], enumType) ? DRAG_ITEMS.LIST_TAB : DRAG_ITEMS.LIST_ITEM,
     item: {
       enumType: enumType,
       type: _.includes(['SECTION'], enumType) ? DRAG_ITEMS.LIST_TAB : DRAG_ITEMS.LIST_ITEM,

@@ -85,7 +85,7 @@ function SortableRecordItem(props) {
 
   const [realCardHeight, setRealCardHeight] = useState(skeletonHeight);
   const [skeletonRows, setSkeletonRows] = useState(Math.floor(skeletonHeight / 40));
-  const [{ isDragging }, drag, preview] = useDrag({
+  const [{ isDragging }, drag, preview] = useDrag<any, any, any>({
     type: ITEM_TYPE.RECORD,
     item: { type: ITEM_TYPE.RECORD, rowId },
     canDrag() {

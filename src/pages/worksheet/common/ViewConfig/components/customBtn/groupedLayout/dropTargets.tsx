@@ -59,7 +59,7 @@ export function SegmentBoundaryGap({
   isAfterGroup = false,
 }) {
   const active = activeGroupInsert === insertBefore || activeButtonInsert === insertBefore;
-  const [, drop] = useDrop({
+  const [, drop] = useDrop<any, any, any>({
     accept: [ITEM_TYPE_GROUP, ITEM_TYPE],
     hover: (item, monitor) => {
       if (item.layoutId !== layoutId || !monitor.isOver({ shallow: true })) {
@@ -135,7 +135,7 @@ export function EmptyGroupDropTarget({
     return clientOffset.y - rect.top > Math.min(6, rect.height / 3) ? 'after' : 'inside';
   };
 
-  const [{ isOver }, drop] = useDrop({
+  const [{ isOver }, drop] = useDrop<any, any, any>({
     accept: ITEM_TYPE,
     hover: (item, monitor) => {
       if (item.layoutId !== layoutId || !monitor.isOver({ shallow: true })) {
@@ -264,7 +264,7 @@ export function SegmentBlockDropTarget({
     },
     [segment, segmentIndex, isGroupCollapsed],
   );
-  const [{ isOver }, drop] = useDrop({
+  const [{ isOver }, drop] = useDrop<any, any, any>({
     accept: [ITEM_TYPE_GROUP, ITEM_TYPE],
     hover: (item, monitor) => {
       if (item.layoutId !== layoutId || !ref.current || !monitor.isOver({ shallow: true })) {

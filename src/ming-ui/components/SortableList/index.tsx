@@ -74,19 +74,23 @@ const DragItem = props => {
   });
 
   const [{ isDragging }, drag, dragPreview] = useDrag({
-    item: { type: dragType, index, item: item },
-    canDrag: _.has(item, 'canDrag') ? item.canDrag : canDrag,
-    collect: monitor => ({
-      isDragging: monitor.isDragging(),
-    }),
-    begin: () => {
+    type: dragType,
+    // v11 的 begin 只有副作用、不返回值，v16 里等价物是函数形式的 item：
+    // 同样在拖拽开始时调用，返回值即拖拽 item，所以把原来的对象原样 return 回去。
+    item: () => {
       dragging = true;
       oldIndex = index;
       window.MD_DRAG_ITEM = {
         width: ref.current.offsetWidth,
         height: ref.current.offsetHeight,
       };
+
+      return { type: dragType, index, item: item };
     },
+    canDrag: _.has(item, 'canDrag') ? item.canDrag : canDrag,
+    collect: monitor => ({
+      isDragging: monitor.isDragging(),
+    }),
     end: () => {
       window.MD_DRAG_ITEM = undefined;
       dragging = false;

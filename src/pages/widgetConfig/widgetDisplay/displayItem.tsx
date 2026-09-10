@@ -145,7 +145,8 @@ export default function DisplayItem(props) {
     return true;
   };
 
-  const [dragCollectProps, drag] = useDrag({
+  const [dragCollectProps, drag] = useDrag<any, any, any>({
+    type: isTab ? (data.type === 52 ? DRAG_ITEMS.DISPLAY_TAB : DRAG_ITEMS.DISPLAY_LIST_TAB) : DRAG_ITEMS.DISPLAY_ITEM,
     item: {
       type: isTab ? (data.type === 52 ? DRAG_ITEMS.DISPLAY_TAB : DRAG_ITEMS.DISPLAY_LIST_TAB) : DRAG_ITEMS.DISPLAY_ITEM,
       id: controlId,
@@ -239,7 +240,7 @@ export default function DisplayItem(props) {
       return { isDragging: monitor.isDragging() };
     },
   });
-  const [{ isOver }, drop] = useDrop({
+  const [{ isOver }, drop] = useDrop<any, any, any>({
     accept: DRAG_ACCEPT[displayItemType],
     canDrop(item) {
       // 标签页内不允许标签页、多条列表(旧)、标签页表格等拖拽

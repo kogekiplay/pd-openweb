@@ -91,7 +91,7 @@ export default function DraggableRecord(props) {
   const $ref = useRef(null);
   const $dragDropRef = useRef(null);
 
-  const [{ isOver, canDrop }, drop] = useDrop({
+  const [{ isOver, canDrop }, drop] = useDrop<any, any, any>({
     accept: ITEM_TYPE.ITEM,
     canDrop() {
       const draggingItem = safeParse(localStorage.getItem('draggingHierarchyItem'));
@@ -109,13 +109,16 @@ export default function DraggableRecord(props) {
       return { isOver: monitor.isOver(), canDrop: monitor.canDrop() };
     },
   });
-  const [, drag, connectDragPreview] = useDrag({
-    item: { type: ITEM_TYPE.ITEM },
+  const [, drag, connectDragPreview] = useDrag<any, any, any>({
+    type: ITEM_TYPE.ITEM,
     canDrag() {
       const { allowedit } = treeData[data.rowId];
       return allowedit;
     },
-    begin() {
+    // 同 HierarchyView/components/DraggableRecord.tsx：v11 的 begin 在 v16 里改成
+    // 函数形式的 item。原来的 `item: { type }` 被 begin 的返回值盖掉、从来没生效，
+    // 直接删掉。改动理由见那边的注释。
+    item() {
       safeLocalStorageSetItem('draggingHierarchyItem', JSON.stringify(data));
       // 拖拽时折叠所有子记录
       toggleChildren({ visible: false, ..._.pick(data, ['path', 'pathId', 'rowId']) });
