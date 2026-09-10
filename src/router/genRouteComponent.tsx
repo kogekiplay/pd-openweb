@@ -51,7 +51,26 @@ export default () => {
 
       // v7 的 <Route> 不认数组 path，也不认 exact/strict/sensitive
       //（精确与否改由「有没有 /*」表达，见 expandRoutePaths）。
-      // 所以这里把它们在这一层消化掉，不要透传下去。
+      // 所以这里把它们在这一层消化掉，不要透传给 <Route>。
+      //
+      // 【但 path 必须继续【作为 prop】发给业务组件】。v4 的这段代码是
+      // `const { component, redirect, ...rest } = ROUTE_CONFIG[key]`，path 留在 rest 里、
+      // 一路 spread 到了组件上，于是有 6 个顶栏组件靠 props.path【认自己是哪一条路由】：
+      //   AppPkgSimpleHeader  props.path.indexOf('logs'|'analytics'|'settings')
+      //   AppPkgHeader        props.path === subPath + '/worksheet/:worksheetId?'
+      //   NetManageHeader / GlobalSearchHeader  用 props.path 查 PAGE_HEADER_ROUTE 表定模块
+      //   HubAndPluginHeader  _.includes('/plugin', path) 区分集成/插件
+      //   NativeHeader        urlMatch.test(path) 高亮页签
+      // 第一版顺手把 path 一起解构掉了，后果是 AppPkgSimpleHeader 直接
+      // 「Cannot read properties of undefined (reading 'indexOf')」—— 顶栏整条变成
+      // 「程序错误」（正文还是好的，所以很容易漏看）；其余五个不抛错、只是静默认错模块：
+      // 后台顶栏没了「组织管理」标题、插件页顶栏写着「集成」。
+      //
+      // 发出去的是【配置里原始的 path】（可能是数组，也已被 addSubPathOfRoutes 加过子路径），
+      // 而不是 expandRoutePaths 摊平补 /* 之后的那条 —— 前者才和 v4 拿到的值一模一样，
+      // 上面那些等值比较和查表才对得上。
+      const routeProps = { ...rest, path };
+
       expandRoutePaths({ path, exact }).forEach((p, j) => {
         if (redirect) {
           // v4 的 <Redirect> 在 v7 里叫 <Navigate>，而且必须写 replace ——
@@ -63,7 +82,7 @@ export default () => {
             <Route
               key={`${i}-${j}`}
               path={p}
-              element={<WithTitleRoute component={Wrapped} {...rest} preCallback={preCallback} />}
+              element={<WithTitleRoute component={Wrapped} {...routeProps} preCallback={preCallback} />}
             />,
           );
         }
