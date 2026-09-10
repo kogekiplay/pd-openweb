@@ -293,7 +293,7 @@ export const menuList = [
         name: _l('商户'),
         key: 'merchant',
         featureId: 40,
-        menuPath: '/admin/merchant/:projectId(.*)',
+        menuPath: '/admin/merchant/:projectId',
         routes: [
           {
             path: 'merchant/:projectId',
@@ -309,7 +309,7 @@ export const menuList = [
         name: _l('订单'),
         key: 'transaction',
         featureId: 40,
-        menuPath: '/admin/transaction/:projectId(.*)',
+        menuPath: '/admin/transaction/:projectId',
         routes: [
           {
             path: 'transaction/:projectId',
@@ -346,7 +346,7 @@ export const menuList = [
       {
         name: _l('企业身份'),
         key: 'platformintegration',
-        menuPath: '/admin/platformintegration/:projectId(.*)',
+        menuPath: '/admin/platformintegration/:projectId',
         routes: [
           {
             path: 'platformintegration/:projectId/:type?',
@@ -357,7 +357,7 @@ export const menuList = [
       {
         name: _l('系统服务'),
         key: 'systemservice',
-        menuPath: '/admin/systemservice/:projectId(.*)',
+        menuPath: '/admin/systemservice/:projectId',
         routes: [
           {
             path: 'systemservice/:projectId',
