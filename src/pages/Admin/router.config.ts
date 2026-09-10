@@ -24,7 +24,7 @@ export const menuList = [
             component: () => import('./organization/billCenter/waitingPay'),
           },
           {
-            path: ['/admin/expansionservice/:projectId/user', '/admin/expansionservice/:projectId/storage', '/admin/expansionservice/:projectId/workflow', '/admin/expansionservice/:projectId/dataSync', '/admin/expansionservice/:projectId/app', '/admin/expansionservice/:projectId/chunks'],
+            path: '/admin/expansionservice/*',
             component: () => import('./organization/billCenter/expansionService'),
           },
           {
@@ -105,7 +105,7 @@ export const menuList = [
             component: () => import('./user/portal'),
           },
           {
-            path: ['/admin/expansionservice/:projectId/portalexpand', '/admin/expansionservice/:projectId/portalupgrade'],
+            path: '/admin/expansionservice/*',
             component: () => import('./organization/billCenter/expansionService'),
           },
         ],
@@ -300,7 +300,7 @@ export const menuList = [
             component: () => import('./pay/Merchant'),
           },
           {
-            path: ['/admin/expansionservice/:projectId/merchant'],
+            path: '/admin/expansionservice/*',
             component: () => import('./organization/billCenter/expansionService'),
           },
         ],
@@ -331,7 +331,7 @@ export const menuList = [
             component: () => import('./pay/Invoice'),
           },
           {
-            path: ['/admin/expansionservice/:projectId/invoice'],
+            path: '/admin/expansionservice/*',
             component: () => import('./organization/billCenter/expansionService'),
           },
         ],

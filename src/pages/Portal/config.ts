@@ -6,7 +6,14 @@ export const ROUTE_CONFIG_PORTAL = addSubPathOfRoutes({
     component: () => import('src/pages/Print'),
   },
   worksheet: {
-    path: '/worksheet/:worksheetId',
+    // v4 这条是非精确匹配，/worksheet/xxx 下的任何深度都由它接住（渲染应用外壳，
+    // 由外壳内部继续路由）。v7 换成按具体度排序后，下面 worksheetDetailNoView 的
+    // '/:appId/:worksheetId/row/:rowId'（四段全匹配）会把 /worksheet/x/row/y 抢走 ——
+    // 那条本意是「无 /app 前缀的旧书签兜底」，不该盖住这里。
+    // 显式补一条同形状的路径，让它按具体度平手后由静态段 'worksheet' 胜出。
+    // 用 splat 而不是具名的 :rowId —— 这条路由的组件（应用外壳）不读 rowId，
+    // 写成具名参数只会凭空多给它一个 v4 时代没有的 param。
+    path: ['/worksheet/:worksheetId', '/worksheet/:worksheetId/row/*'],
     component: () => import('src/router/Application'),
     title: _l('应用'),
   },

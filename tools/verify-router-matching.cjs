@@ -23,6 +23,22 @@
  *   cd /tmp/rr7/node_modules && for p in react react-dom scheduler; do \
  *     rm -rf $p && ln -s <repo>/node_modules/$p $p; done
  *   cd <repo> && RR7=/tmp/rr7/node_modules/react-router-dom node tools/verify-router-matching.cjs
+ *
+ * 【重新生成 fixture 的正确姿势】基线必须来自【迁移开始之前】的路由配置。
+ * 直接在工作区跑 --write-fixture 会用【已经改过的】配置生成基线，等于一边改代码
+ * 一边移动球门 —— 这个坑我踩过两次（一次是改完配置顺手重跑，一次是以为
+ * `git stash push -- src` 能退回，其实改动早已提交、stash 是空的）。
+ * 可靠做法是开一个独立 worktree 指到迁移前的提交，把【当前版本】的 harness 拷进去跑：
+ *   git worktree add --detach /tmp/rr-baseline <迁移前的提交>
+ *   cp tools/verify-router-matching.cjs /tmp/rr-baseline/tools/
+ *   ln -s <repo>/node_modules /tmp/rr-baseline/node_modules
+ *   cd /tmp/rr-baseline && JSDOM_PATH=... node tools/verify-router-matching.cjs --write-fixture
+ *   cp /tmp/rr-baseline/tools/fixtures/router-v4-matching.json <repo>/tools/fixtures/
+ *   git worktree remove --force /tmp/rr-baseline
+ * 本仓迁移前的提交是 80411b84c（「router 迁移第 0 步」，src 未改动）。
+ *
+ * 【判据不是永远绿的】做过负向控制：把某条 path 改错 → 2 条「选中的路由不同」；
+ * 把某个参数改名 → 2 条「params 不同」；改回来 → 归零。
  */
 const fs = require('fs');
 const path = require('path');
@@ -149,7 +165,18 @@ function loadAdminRoutes() {
   for (const g of menuList || []) {
     for (const sub of g.subMenuList || []) {
       for (const r of sub.routes || []) {
-        if (r && typeof r.path === 'string') routes.push({ key: `${g.key}/${sub.key}`, path: r.path });
+        // path 可以是数组（同一个组件挂多条路径）。这里第一版漏了 Array 分支，
+        // 于是管理后台那 4 条拆分后的数组路由被整个丢掉、v7 侧查无此路由。
+        // 与 loadConfigs 里犯的是同一个错，改的时候两处都要看。
+        if (r && (typeof r.path === 'string' || Array.isArray(r.path))) {
+          routes.push({
+            // 加序号：菜单组/子菜单 这个组合不唯一（同一个子菜单下挂多条路由），
+            // 不加的话「选中了哪条路由」这个判据本身就分辨不出来。
+            key: `${g.key}/${sub.key}#${(sub.routes || []).indexOf(r)}`,
+            path: r.path,
+            comp: (String(r.component).match(/import\(['"]([^'"]+)['"]\)/) || [])[1],
+          });
+        }
       }
     }
   }
@@ -188,7 +215,17 @@ function loadConfigs() {
       // fixture 也就少了它们 —— 这类遗漏不会报错，只会让安全网出现盲区。
       const routes = Object.entries(table)
         .filter(([, r]) => r && (typeof r.path === 'string' || Array.isArray(r.path)))
-        .map(([key, r]) => ({ key, path: r.path, exact: r.exact, strict: r.strict, sensitive: r.sensitive }));
+        .map(([key, r]) => ({
+          key,
+          path: r.path,
+          exact: r.exact,
+          strict: r.strict,
+          sensitive: r.sensitive,
+          // 组件是 () => import('x') 形式，每个箭头函数身份都不同，没法按引用比。
+          // 抠出 import 的路径字符串当身份 —— 用来判定「路由 key 不同但渲染的是
+          // 同一个组件」，那种差异用户完全看不见。
+          comp: (String(r.component).match(/import\(['"]([^'"]+)['"]\)/) || [])[1],
+        }));
       out.push({ label: candidates.length > 1 ? `${label}:${name}` : label, file, name, routes });
     }
   }
@@ -340,6 +377,10 @@ function buildCorpus(groups) {
 
     for (const r of g.routes || []) {
       for (const u of [].concat(r.path).flatMap(expand)) {
+        // 含 ? 的 URL 是 v4 那两条死路由（path: '/app/?'）展开的产物。
+        // 真实 pathname 里 ? 是查询串起点，不可能出现，留着只会制造假差异。
+        if (u.includes('?')) continue;
+
         urls.add(u);
         // 多带一层尾巴：专门用来暴露 v4 非精确匹配 vs v7 精确匹配的差异
         urls.add((u === '/' ? '' : u) + '/extraTail');
@@ -363,7 +404,7 @@ function matchV4(group, url) {
       return { key: r.key, error: 'matchPath 抛错: ' + e.message.split('\n')[0] };
     }
 
-    if (m) return { key: r.key, params: m.params, isExact: m.isExact };
+    if (m) return { key: r.key, comp: r.comp, params: m.params, isExact: m.isExact };
   }
 
   return null;
@@ -389,7 +430,9 @@ for (const g of groups) {
 
     if (r) matched++; else unmatched++;
 
-    fixture.cases[`${g.label}|${url}`] = r ? { key: r.key, params: r.params, isExact: r.isExact } : null;
+    fixture.cases[`${g.label}|${url}`] = r
+      ? { key: r.key, comp: r.comp, params: r.params, isExact: r.isExact }
+      : null;
   }
 }
 
@@ -529,7 +572,9 @@ function buildV7Routes(group) {
 
   for (const r of group.routes) {
     for (const one of [].concat(r.path)) {
-      for (const p of toV7Paths({ path: one, exact: r.exact })) routes.push({ path: p, __key: r.key });
+      for (const p of toV7Paths({ path: one, exact: r.exact })) {
+        routes.push({ path: p, __key: r.key, __comp: r.comp });
+      }
     }
   }
 
@@ -549,7 +594,7 @@ function matchV7(routes, url) {
 
   const last = m[m.length - 1];
 
-  return { key: last.route.__key, params: last.params };
+  return { key: last.route.__key, comp: last.route.__comp, params: last.params };
 }
 
 // ---------- 5.5 已知且【行为等价】的选路差异 ----------
@@ -571,8 +616,36 @@ function isAcceptable(group, url, wantKey, gotKey) {
     return !seg.startsWith('user_');
   }
 
+  // 【calendarDetail】同上：v4 是 /apps/calendar/detail_:id，v7 只能退化成
+  // /apps/calendar/:detailSeg，于是 /apps/calendar/其它段 也会被它接住。
+  // 补法（第 ② 步）：组件里若 detailSeg 不以 detail_ 开头就走兜底 404。
+  if (gotKey === 'calendarDetail' && wantKey === null) {
+    return !(url.split('/')[3] || '').startsWith('detail_');
+  }
+
+  // 【taskDetail】v4 是 /apps/task/task_:id，v7 退化成 /apps/task/:taskSeg。
+  // 与上面两条不同的是：这里 v4 命中的是 task（任务列表页，靠前缀匹配接住的），
+  // 不是「什么都没命中」。所以组件守卫不能跳 404，而要在 taskSeg 不以 task_
+  // 开头时渲染任务列表本身 —— 也就是还原 v4 的结果。
+  if (gotKey === 'taskDetail' && wantKey === 'task') {
+    return !(url.split('/')[3] || '').startsWith('task_');
+  }
+
   return false;
 }
+
+// 【有意的 params 改名】v7 表达不了原来的形态，参数名必然变，消费方在第 ② 步跟着改。
+// 写成显式白名单而不是「忽略所有 params 差异」—— 后者会把真的丢参数也一起放过。
+const PARAM_RENAMES = {
+  // v4: /apps/calendar/detail_:id  ->  v7: /apps/calendar/:detailSeg（组件里剥 detail_ 前缀）
+  calendarDetail: { from: ['id'], to: ['detailSeg'] },
+  // v4: /apps/task/task_:id  ->  v7: /apps/task/:taskSeg
+  taskDetail: { from: ['id'], to: ['taskSeg'] },
+  // v4: /user_:id / /user_:userId?  ->  v7: /:userSeg
+  user: { from: ['id', 'userId'], to: ['userSeg'] },
+  // v4: /apps/kc/:path*  ->  v7: /apps/kc/*（splat 的参数名在 v7 里固定是 '*'）
+  kc: { from: ['path'], to: ['*'] },
+};
 
 // ---------- 6. 比对 ----------
 if (process.argv.includes('--compare')) {
@@ -610,7 +683,10 @@ if (process.argv.includes('--compare')) {
       const wantKey = want ? want.key : null;
       const gotKey = got ? got.key : null;
 
-      if (wantKey !== gotKey && !isAcceptable(g.label, url, wantKey, gotKey)) {
+      // 路由 key 不同、但渲染的是【同一个组件】时，用户看到的完全一样，不算差异。
+      const sameComp = want && got && want.comp && got.comp && want.comp === got.comp;
+
+      if (wantKey !== gotKey && !sameComp && !isAcceptable(g.label, url, wantKey, gotKey)) {
         wrongRoute.push({ group: g.label, url, want: wantKey, got: gotKey });
         continue;
       }
@@ -623,8 +699,49 @@ if (process.argv.includes('--compare')) {
         //     单独在下面 SPLAT_ROUTES 里核对。
         const named = o =>
           Object.fromEntries(Object.entries(o || {}).filter(([k, v]) => !/^\d+$/.test(k) && k !== '*' && v !== undefined));
-        const a = JSON.stringify(named(want.params));
-        const b = JSON.stringify(named(got.params));
+        const wp = named(want.params);
+        const gp = got ? { ...(got.params || {}) } : {};
+        // splat 的值是真数据，只是名字从 :path 变成了 '*'，要留着比
+        const rename = PARAM_RENAMES[gotKey];
+        // '*' 默认要排除：绝大多数路由上它只是「为还原 v4 前缀匹配而补的 /*」
+        // 带来的人造参数，v4 侧根本没有对应物。
+        // 但对 kc 这种【splat 本身就是真数据】的路由（改名白名单里 to 含 '*'），
+        // 必须留着比，否则就等于放过了「splat 值丢了」这种真问题。
+        const keepSplat = !!(rename && rename.to.includes('*'));
+        const gpNamed = Object.fromEntries(
+          Object.entries(gp).filter(
+            ([k, v]) => !/^\d+$/.test(k) && v !== undefined && (k !== '*' || keepSplat),
+          ),
+        );
+
+        if (rename) {
+          // 白名单命中：把两边【改了名的那几个】剔掉单独核对「值是否还在」，
+          // 其余参数照常严格比 —— 这样既容忍有意改名，又不会放过真的丢参数。
+          const wv = rename.from.map(k => wp[k]).filter(v => v !== undefined);
+          const gv = rename.to.map(k => gpNamed[k]).filter(v => v !== undefined && v !== '');
+          rename.from.forEach(k => delete wp[k]);
+          rename.to.forEach(k => delete gpNamed[k]);
+
+          // 值必须还在（允许 v7 侧多带前缀，例如 detail_id0008 vs id0008）
+          const kept = wv.every(v => gv.some(x => String(x).endsWith(String(v))));
+
+          if (wv.length && !kept) {
+            wrongParams.push({ group: g.label, url, key: wantKey, want: JSON.stringify(wv), got: JSON.stringify(gv) });
+            continue;
+          }
+        }
+
+        // 【已判定的改进】外部门户顶栏的 /app：v4 里这个 URL 是被
+        // '/(app/)?:appId' 的无前缀分支接住的，于是把字面量路径段 "app" 当成了
+        // appId（顶栏会去加载一个 id 为 "app" 的应用，注定失败）。
+        // v7 里它命中的是显式的 '/app' 那条，不产出 appId —— 组件相同，
+        // 少了一个假参数，是修正而不是回归。
+        const isKnownGarbageParam = url === '/app' && wp.appId === 'app' && !gpNamed.appId;
+
+        if (isKnownGarbageParam) delete wp.appId;
+
+        const a = JSON.stringify(wp);
+        const b = JSON.stringify(gpNamed);
 
         if (a !== b) { wrongParams.push({ group: g.label, url, key: wantKey, want: a, got: b }); continue; }
       }
