@@ -13,7 +13,7 @@
 
 # 文档
 
-您可以在 HAP 私有部署文档中心找到 [Openweb](https://docs-pd.mingdao.com/sd/web/) 相关文档。
+您可以在 HAP 私有部署文档中心找到 [Openweb](https://docs-pd.mingdao.com/hap/sd/web/) 相关文档。
 
 # 联系我们
 
