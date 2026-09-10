@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import withRouter from './withRouter';
 import _ from 'lodash';
 import { Dialog } from 'ming-ui';

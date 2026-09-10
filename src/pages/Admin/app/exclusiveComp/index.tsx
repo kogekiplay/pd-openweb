@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Route } from 'react-router-dom';
+import { Route } from 'react-router';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Support } from 'ming-ui';

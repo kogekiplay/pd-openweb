@@ -45,6 +45,10 @@ const path = require('path');
 const RW = path.resolve(__dirname, '..') + '/';
 
 const RR7_PATH = process.env.RR7 || '/tmp/rr7/node_modules/react-router-dom';
+// 注：仓里现在装的是 react-router（不带 -dom）。v7 的 react-router 已自带全部
+// DOM 绑定，react-router-dom 只多一个 SSR 用的 HydratedRouter；而 v8 干脆把
+// react-router-dom 合并掉了。所以源码统一从 react-router 导入，
+// 将来上 v8 时导入语句一行都不用改。这里的探针路径仍指 /tmp 的 v7 安装。
 
 // ---------- 环境：加载 .ts 配置需要 jsdom + babel + 别名解析 + 全局桩 ----------
 // 配置文件会 import src/utils/common，那条 import 链上有引用 self/document 的模块，
@@ -392,7 +396,8 @@ function buildCorpus(groups) {
 }
 
 // ---------- 3. v4 侧：按 <Switch> 语义取第一条匹配 ----------
-const v4 = require(RW + 'node_modules/react-router-dom');
+// v4 参照物装在仓外（仓里已经是 v7 了）
+const v4 = require(process.env.RR4 || '/tmp/rr4/node_modules/react-router-dom');
 
 function matchV4(group, url) {
   for (const r of group.routes) {
@@ -415,7 +420,7 @@ console.log('\n语料（按渲染上下文分组）：');
 for (const [ctx, urls] of corpusByContext) console.log(`  ${String(urls.size).padStart(4)} 条  ${ctx}`);
 console.log('');
 
-const fixture = { _note: '', generatedFrom: require(RW + 'node_modules/react-router-dom/package.json').version, cases: {} };
+const fixture = { _note: '', generatedFrom: require((process.env.RR4 || '/tmp/rr4/node_modules/react-router-dom') + '/package.json').version, cases: {} };
 let matched = 0;
 let unmatched = 0;
 const errors = [];

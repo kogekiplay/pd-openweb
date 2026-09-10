@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router';
 
 /**
  * withRouter —— react-router v6 起被移除，这里用 hooks 重新实现。

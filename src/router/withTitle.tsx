@@ -1,5 +1,5 @@
 import React, { Fragment, Suspense, useMemo } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router';
 import DocumentTitle from 'react-document-title';
 import ErrorBoundary from 'ming-ui/components/ErrorBoundary';
 

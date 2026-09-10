@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, useLocation } from 'react-router-dom';
+import { Routes, useLocation } from 'react-router';
 import { withoutHeaderUrl } from '../config';
 import genRouteComponent from '../genRouteComponent';
 import { PAGE_HEADER_ROUTE_CONFIG } from './config';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router';
 import DocumentTitle from 'react-document-title';
 import _ from 'lodash';
 import { Support } from 'ming-ui';

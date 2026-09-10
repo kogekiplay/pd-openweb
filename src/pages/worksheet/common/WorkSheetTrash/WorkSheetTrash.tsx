@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer, useRef, useState } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router';
 import update from 'immutability-helper';
 import _ from 'lodash';
 import { arrayOf, bool, func, shape, string } from 'prop-types';

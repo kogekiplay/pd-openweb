@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Icon, Menu, MenuItem, Modal } from 'ming-ui';

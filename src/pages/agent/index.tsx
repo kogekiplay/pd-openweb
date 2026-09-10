@@ -1,6 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Switch } from 'react-router';
 import preall from 'src/common/preall';
 import { addSubPathOfRoute } from 'src/utils/common';
 import AgentLand from './AgentLand';

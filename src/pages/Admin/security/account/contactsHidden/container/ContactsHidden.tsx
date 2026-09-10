@@ -1,5 +1,5 @@
 import React from 'react';
-import { Prompt } from 'react-router-dom';
+import { Prompt } from 'react-router';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';

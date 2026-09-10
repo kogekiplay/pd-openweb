@@ -1,5 +1,5 @@
 import React, { lazy, PureComponent, Suspense } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router';
 import _ from 'lodash';
 import { navigateTo } from 'router/navigateTo';
 import { LoadDiv, WaterMark } from 'ming-ui';

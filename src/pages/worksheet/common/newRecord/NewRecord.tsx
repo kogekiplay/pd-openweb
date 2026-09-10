@@ -1,5 +1,5 @@
 import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router';
 import { useKey } from 'react-use';
 import cx from 'classnames';
 import _, { get } from 'lodash';

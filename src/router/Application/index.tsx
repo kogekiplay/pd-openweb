@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Switch } from 'react-router-dom';
+import { Switch } from 'react-router';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { navigateTo } from 'router/navigateTo';

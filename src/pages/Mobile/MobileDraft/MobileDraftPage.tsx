@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router';
 import _ from 'lodash';
 import { LoadDiv } from 'ming-ui';
 import worksheetAjax from 'src/api/worksheet';

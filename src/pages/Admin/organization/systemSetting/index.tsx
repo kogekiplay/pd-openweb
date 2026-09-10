@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
+import { Route } from 'react-router';
 import cx from 'classnames';
 import _ from 'lodash';
 import AdminTitle from 'src/pages/Admin/common/AdminTitle';
