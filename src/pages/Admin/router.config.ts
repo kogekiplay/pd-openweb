@@ -20,15 +20,15 @@ export const menuList = [
             component: () => import('./organization/billCenter/upgradeService'),
           },
           {
-            path: '/admin/waitingpay/(.*)/(.*)',
+            path: '/admin/waitingpay/*',
             component: () => import('./organization/billCenter/waitingPay'),
           },
           {
-            path: '/admin/expansionservice/(.*)/(user|storage|workflow|storage|dataSync|app|chunks)+',
+            path: ['/admin/expansionservice/:projectId/user', '/admin/expansionservice/:projectId/storage', '/admin/expansionservice/:projectId/workflow', '/admin/expansionservice/:projectId/dataSync', '/admin/expansionservice/:projectId/app', '/admin/expansionservice/:projectId/chunks'],
             component: () => import('./organization/billCenter/expansionService'),
           },
           {
-            path: '/admin/valueaddservice/(.*)',
+            path: '/admin/valueaddservice/*',
             component: () => import('./organization/billCenter/valueAddService'),
           },
         ],
@@ -45,11 +45,11 @@ export const menuList = [
         key: 'structure',
         routes: [
           {
-            path: '/admin/structure/(.*)/(create|inactive|importusers|approve)?',
+            path: '/admin/structure/*',
             component: () => import('./user/membersDepartments'),
           },
           {
-            path: '/admin/expansionserviceResign/(.*)',
+            path: '/admin/expansionserviceResign/*',
             component: () => import('./organization/billCenter/expansionService'),
           },
         ],
@@ -69,7 +69,7 @@ export const menuList = [
         key: 'reportrelation',
         routes: [
           {
-            path: '/admin/reportrelation/(.*)',
+            path: '/admin/reportrelation/*',
             component: () => import('./user/reportRelation'),
           },
         ],
@@ -89,7 +89,7 @@ export const menuList = [
         key: 'groups',
         routes: [
           {
-            path: '/admin/groups/(.*)',
+            path: '/admin/groups/*',
             component: () => import('./user/groupDept/index.jsx'),
           },
         ],
@@ -105,7 +105,7 @@ export const menuList = [
             component: () => import('./user/portal'),
           },
           {
-            path: '/admin/expansionservice/(.*)/(portalexpand|portalupgrade)+',
+            path: ['/admin/expansionservice/:projectId/portalexpand', '/admin/expansionservice/:projectId/portalupgrade'],
             component: () => import('./organization/billCenter/expansionService'),
           },
         ],
@@ -122,11 +122,11 @@ export const menuList = [
         key: 'sysinfo',
         routes: [
           {
-            path: '/admin/sysinfo/(.*)',
+            path: '/admin/sysinfo/*',
             component: () => import('./organization/systemSetting'),
           },
           {
-            path: '/admin/certinfo/(.*)',
+            path: '/admin/certinfo/*',
             component: () => import('./organization/systemSetting'),
           },
         ],
@@ -140,7 +140,7 @@ export const menuList = [
             component: () => import('./organization/billCenter/billInfo'),
           },
           {
-            path: '/admin/valueaddservice/(.*)',
+            path: '/admin/valueaddservice/*',
             component: () => import('./organization/billCenter/valueAddService'),
           },
         ],
@@ -151,7 +151,7 @@ export const menuList = [
         menuPath: '/admin/sysroles/:projectId',
         routes: [
           {
-            path: '/admin/(sysroles)/:projectId/:roleId?',
+            path: '/admin/sysroles/:projectId/:roleId?',
             component: () => import('./organization/roleAuth'),
           },
         ],
@@ -205,7 +205,7 @@ export const menuList = [
             component: () => import('src/pages/workflow/WorkflowList/AdminWorkflowList'),
           },
           {
-            path: '/admin/expansionserviceWorkflow/(.*)',
+            path: '/admin/expansionserviceWorkflow/*',
             component: () => import('./organization/billCenter/expansionService'),
           },
         ],
@@ -222,7 +222,7 @@ export const menuList = [
             component: () => import('./app/aggregationTable'),
           },
           {
-            path: '/admin/expansionserviceAggregationtable/(.*)',
+            path: '/admin/expansionserviceAggregationtable/*',
             component: () => import('./organization/billCenter/expansionService'),
           },
         ],
@@ -267,7 +267,7 @@ export const menuList = [
             component: () => import('./app/exclusiveComp/index.jsx'),
           },
           {
-            path: '/admin/expansionserviceComputing/(.*)',
+            path: '/admin/expansionserviceComputing/*',
             component: () => import('./organization/billCenter/expansionService'),
           },
         ],
@@ -300,7 +300,7 @@ export const menuList = [
             component: () => import('./pay/Merchant'),
           },
           {
-            path: '/admin/expansionservice/(.*)/(merchant)+',
+            path: ['/admin/expansionservice/:projectId/merchant'],
             component: () => import('./organization/billCenter/expansionService'),
           },
         ],
@@ -331,7 +331,7 @@ export const menuList = [
             component: () => import('./pay/Invoice'),
           },
           {
-            path: '/admin/expansionservice/(.*)/(invoice)+',
+            path: ['/admin/expansionservice/:projectId/invoice'],
             component: () => import('./organization/billCenter/expansionService'),
           },
         ],

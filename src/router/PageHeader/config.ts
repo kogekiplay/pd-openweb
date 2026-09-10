@@ -2,7 +2,9 @@ import { addSubPathOfRoutes } from 'src/utils/common';
 
 export const PAGE_HEADER_ROUTE_CONFIG = addSubPathOfRoutes({
   home: {
-    path: ['/dashboard', '/app/my/(group|owned)?/:projectId?/:groupType?/:groupId?', '/favorite', '/app/lib/'],
+    path: ['/dashboard', '/app/my/group/:projectId?/:groupType?/:groupId?',
+      '/app/my/owned/:projectId?/:groupType?/:groupId?',
+      '/app/my/:projectId?/:groupType?/:groupId?', '/favorite', '/app/lib/'],
     component: () => import('src/pages/PageHeader/AppCenterHeader'),
   },
   appLogs: {
@@ -42,7 +44,7 @@ export const PAGE_HEADER_ROUTE_CONFIG = addSubPathOfRoutes({
     component: () => import('src/pages/PageHeader/NativeHeader'),
   },
   user: {
-    path: ['/user', '/user_:userId?'],
+    path: ['/user', '/:userSeg'],
     component: () => import('src/pages/PageHeader/NetManageHeader'),
   },
   group: {
@@ -108,10 +110,5 @@ export const PAGE_HEADER_ROUTE_CONFIG = addSubPathOfRoutes({
   plugin: {
     path: '/plugin',
     component: () => import('src/pages/PageHeader/HubAndPluginHeader'),
-  },
-  app: {
-    path: '/app/?',
-    isExact: true,
-    component: () => import('src/pages/PageHeader/AppCenterHeader'),
   },
 });

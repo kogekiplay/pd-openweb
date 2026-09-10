@@ -60,21 +60,21 @@ export const ROUTE_CONFIG = addSubPathOfRoutes({
 export const PORTAL_ROUTE_CONFIG = addSubPathOfRoutes({
   // 工作流
   workflow: {
-    path: '/(app/)?:appId/workflow',
+    path: ['/app/:appId/workflow', '/:appId/workflow'],
     component: () => import('pages/workflow/WorkflowList/AppWorkflowList'),
     sensitive: true,
   },
 
   // 权限
   role: {
-    path: '/(app/)?:appId/role/:editType?/:listType?',
+    path: ['/app/:appId/role/:editType?/:listType?', '/:appId/role/:editType?/:listType?'],
     component: () => import('pages/Role'),
     sensitive: true,
   },
 
   // 应用管理
   appPkg: {
-    path: '/(app/)?:appId/:groupId?/:worksheetId?/:viewId?',
+    path: ['/app/:appId/:groupId?/:worksheetId?/:viewId?', '/:appId/:groupId?/:worksheetId?/:viewId?'],
     component: () => import('src/pages/worksheet/WorkSheet'),
     sensitive: true,
   },

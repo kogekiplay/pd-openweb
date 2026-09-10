@@ -26,12 +26,12 @@ export const ROUTE_CONFIG = addSubPathOfRoutes({
 
   // 任务
   taskDetail: {
-    path: '/apps/task/task_:id',
+    path: '/apps/task/:taskSeg',
     component: () => import('src/pages/task/detail'),
     title: _l('任务详情'),
   },
   task: {
-    path: '/apps/(task|taskcenter)',
+    path: ['/apps/task', '/apps/taskcenter'],
     component: () => import('src/pages/task'),
     title: _l('任务'),
   },
@@ -43,14 +43,14 @@ export const ROUTE_CONFIG = addSubPathOfRoutes({
     title: _l('日程'),
   },
   calendarDetail: {
-    path: '/apps/calendar/detail_:id',
+    path: '/apps/calendar/:detailSeg',
     component: () => import('src/pages/calendar/detail'),
     title: _l('日程详情'),
   },
 
   // 知识
   kc: {
-    path: '/apps/kc/:path*',
+    path: '/apps/kc/*',
     component: () => import('src/pages/kc'),
     title: _l('知识'),
   },
@@ -133,7 +133,7 @@ export const ROUTE_CONFIG = addSubPathOfRoutes({
     title: _l('App下载与设置'),
   },
   user: {
-    path: ['/user', '/user_:id'],
+    path: ['/user', '/:userSeg'],
     component: () => import('src/pages/UserProfile'),
     title: _l('个人资料'),
   },
@@ -205,7 +205,9 @@ export const ROUTE_CONFIG = addSubPathOfRoutes({
     title: _l('正在导出，请稍候...'),
   },
   home: {
-    path: ['/dashboard', '/app/my/(group|owned)?/:projectId?/:groupType?/:groupId?', '/favorite', '/app/lib/'],
+    path: ['/dashboard', '/app/my/group/:projectId?/:groupType?/:groupId?',
+      '/app/my/owned/:projectId?/:groupType?/:groupId?',
+      '/app/my/:projectId?/:groupType?/:groupId?', '/favorite', '/app/lib/'],
     component: () => import('src/pages/AppHomepage/AppCenter'),
   },
   aggregationInfo: {

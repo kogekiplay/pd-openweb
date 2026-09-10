@@ -314,10 +314,30 @@ function expand(p) {
     .map(v => (v.startsWith('/') ? v : '/' + v));
 }
 
+// 每张路由表只在【它自己的渲染上下文】里出现，拿 A 上下文的 URL 去测 B 的表
+// 是没有意义的：外部门户永远不会遇到 /admin/... 这种 URL。
+// 第一版就是全表交叉测的，结果是「外部门户表的 appPkg 匹配了几乎所有 URL」这类
+// 纯噪声淹掉了真信号（1385 条差异里绝大多数是这个）。
+// 同一上下文里【同时渲染】的表要共用语料 —— 比如主应用页面上
+// PageHeaderRoute（顶栏表）和主 Switch（主路由表）是并存的。
+const CONTEXTS = {
+  主应用: ['主路由', '顶栏', '应用内'],
+  外部门户: ['外部门户', '外部门户顶栏', '应用内-外部门户'],
+  管理后台: ['管理后台', '管理后台-支付'],
+  移动端: ['移动端'],
+};
+const contextOf = label => Object.keys(CONTEXTS).find(c => CONTEXTS[c].includes(label)) || label;
+
 function buildCorpus(groups) {
-  const urls = new Set();
+  const byContext = new Map();
 
   for (const g of groups) {
+    const ctx = contextOf(g.label);
+
+    if (!byContext.has(ctx)) byContext.set(ctx, new Set());
+
+    const urls = byContext.get(ctx);
+
     for (const r of g.routes || []) {
       for (const u of [].concat(r.path).flatMap(expand)) {
         urls.add(u);
@@ -327,7 +347,7 @@ function buildCorpus(groups) {
     }
   }
 
-  return [...urls].sort();
+  return byContext;
 }
 
 // ---------- 3. v4 侧：按 <Switch> 语义取第一条匹配 ----------
@@ -349,8 +369,10 @@ function matchV4(group, url) {
   return null;
 }
 
-const corpus = buildCorpus(groups);
-console.log(`\n语料：${corpus.length} 条 URL\n`);
+const corpusByContext = buildCorpus(groups);
+console.log('\n语料（按渲染上下文分组）：');
+for (const [ctx, urls] of corpusByContext) console.log(`  ${String(urls.size).padStart(4)} 条  ${ctx}`);
+console.log('');
 
 const fixture = { _note: '', generatedFrom: require(RW + 'node_modules/react-router-dom/package.json').version, cases: {} };
 let matched = 0;
@@ -360,7 +382,7 @@ const errors = [];
 for (const g of groups) {
   if (!g.routes) continue;
 
-  for (const url of corpus) {
+  for (const url of corpusByContext.get(contextOf(g.label))) {
     const r = matchV4(g, url);
 
     if (r && r.error) errors.push({ group: g.label, url, ...r });
@@ -530,9 +552,45 @@ function matchV7(routes, url) {
   return { key: last.route.__key, params: last.params };
 }
 
+// ---------- 5.5 已知且【行为等价】的选路差异 ----------
+// 只在「v7 表达不了 v4 的写法，但组件侧能补回同样的用户可见行为」时才放行，
+// 每条都要写清楚补在哪。这不是「把红的改成绿的」——放行的前提是
+// 第 ② 步真的把对应的守卫代码写进组件；没写就是骗自己。
+function isAcceptable(group, url, wantKey, gotKey) {
+  // 【user 路由】v4 是 /user_:id：只接 user_ 开头的单段 URL。
+  // v7 没有任何办法匹配段内静态前缀（* 必须跟在 / 后，实测 /user_* 会被
+  // 当成 /user_/* 处理并且匹配不到 /user_abc），只能退化成整段的 /:userSeg，
+  // 于是它会吃掉所有「没被更具体路由接住」的一级 URL。
+  // 补法（第 ② 步）：user 组件挂载时若 userSeg 不以 user_ 开头，
+  // 就走与全局兜底路由相同的 404 跳转（App.tsx 里那条 path="*" 干的事）。
+  // 因此这里只放行「v4 本来就没命中任何路由」的情形 —— 那些 URL 在 v4 下
+  // 也是落到兜底 404 的，用户看到的结果一致。
+  if (gotKey === 'user' && wantKey === null) {
+    const seg = url.split('/')[1] || '';
+
+    return !seg.startsWith('user_');
+  }
+
+  return false;
+}
+
 // ---------- 6. 比对 ----------
 if (process.argv.includes('--compare')) {
   const ref = JSON.parse(fs.readFileSync(RW + 'tools/fixtures/router-v4-matching.json', 'utf8'));
+  // 【关键】比对时的 URL 必须从 fixture 的键里取，不能现场用 buildCorpus() 重新生成。
+  // 语料是从路由配置推出来的，而迁移正要改这些配置 —— 现场生成等于一边改代码
+  // 一边移动球门：改完 path 后新语料里的 URL 在 fixture 里查不到，
+  // 旧语料里的 URL 又不再被生成，差分就变成了自说自话。
+  const urlsByGroup = new Map();
+  for (const k of Object.keys(ref.cases)) {
+    const i = k.indexOf('|');
+    const g = k.slice(0, i);
+    const u = k.slice(i + 1);
+
+    if (!urlsByGroup.has(g)) urlsByGroup.set(g, []);
+
+    urlsByGroup.get(g).push(u);
+  }
   let same = 0;
   const wrongRoute = [];
   const wrongParams = [];
@@ -543,7 +601,7 @@ if (process.argv.includes('--compare')) {
 
     const v7routes = buildV7Routes(g);
 
-    for (const url of corpus) {
+    for (const url of urlsByGroup.get(g.label) || []) {
       const want = ref.cases[`${g.label}|${url}`];
       const got = matchV7(v7routes, url);
 
@@ -552,7 +610,10 @@ if (process.argv.includes('--compare')) {
       const wantKey = want ? want.key : null;
       const gotKey = got ? got.key : null;
 
-      if (wantKey !== gotKey) { wrongRoute.push({ group: g.label, url, want: wantKey, got: gotKey }); continue; }
+      if (wantKey !== gotKey && !isAcceptable(g.label, url, wantKey, gotKey)) {
+        wrongRoute.push({ group: g.label, url, want: wantKey, got: gotKey });
+        continue;
+      }
 
       if (want) {
         // 比对时排除两类：
