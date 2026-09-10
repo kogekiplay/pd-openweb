@@ -569,6 +569,53 @@ function toV7Paths(route) {
   return [...new Set(out)];
 }
 
+// ---------- 4.5 嵌套路由表 ----------
+// v4 的嵌套 <Switch> 匹配【完整 pathname】，所以子路由写绝对路径没问题；
+// v7 的嵌套 <Routes> 匹配的是【父路由消费掉之后剩下的那段】，子路由必须写相对路径。
+// 实测：父 path="/app/:appId/*"、子写 '/app/:appId/workflow' → 不匹配；写 'workflow' → 匹配。
+//
+// 所以对这几张表，v7 侧不能像顶层表那样直接拿完整 URL 去匹配，
+// 必须【两段式】：先用父路径吃掉前缀，再拿剩余段去匹配相对子路径。
+// 不建这个模型的话，差分对这几张表给出的「一致」是在错误前提下得出的。
+// parents: 宿主组件被挂载的父路径
+// outer:   {表名, 该表里渲染本宿主的路由 key} —— 用来判断「这个 URL 下宿主到底会不会被渲染」。
+//          外层 <Routes> 先决定渲染哪个组件；如果它选了别的路由，本表压根不参与，
+//          此时拿这个 URL 去测本表就是过度测试（第一版就是这么冒出 23 条假差异的：
+//          /worksheet/form/edit/xxx 在外层被更具体的 formEdit 接住，Application 根本不渲染）。
+const NESTED_PARENTS = {
+  应用内: {
+    parents: ['/app/:appId', '/worksheet/:worksheetId'],
+    outer: { group: '主路由', keys: ['app', 'worksheet'] },
+  },
+  '应用内-外部门户': {
+    parents: ['/app/:appId', '/:appId', '/worksheet/:worksheetId'],
+    outer: { group: '外部门户', keys: ['app', 'worksheet'] },
+  },
+};
+
+// 用父路径把 URL 前缀吃掉，返回剩余段（匹配不上则返回 null）
+function stripParent(label, url) {
+  const cfg = NESTED_PARENTS[label];
+
+  if (!cfg) return { rest: url, nested: false };
+
+  for (const parent of cfg.parents) {
+    const m = rr7.matchPath(parent.endsWith('*') ? parent : `${parent}/*`, url);
+
+    // 父路由的 params 要带出来：实测 v7 里子路由的 useParams() 会把父路由的参数
+    // 一并返回（父 /app/:appId/* + 子 workflow/:wsId 时拿到 {appId, *, wsId}），
+    // 所以比对时也必须合并，否则会把「父给的 appId」误判成丢参数。
+    if (m) {
+      const parentParams = { ...m.params };
+      delete parentParams['*'];
+
+      return { rest: '/' + (m.params['*'] || ''), nested: true, parent, parentParams };
+    }
+  }
+
+  return { rest: null, nested: true };
+}
+
 // ---------- 5. v7 侧匹配 ----------
 const rr7 = require(RR7_PATH);
 
@@ -636,6 +683,15 @@ function isAcceptable(group, url, wantKey, gotKey) {
     return !(url.split('/')[3] || '').startsWith('task_');
   }
 
+  // 【应用内 appPkg 在 /worksheet 挂载点下】Application 组件同时挂在
+  // /app/:appId 和 /worksheet/:worksheetId 两条路由下。v4 时代它的内层路径是
+  // 绝对的（/app/:appId/...），天然匹配不到 /worksheet/...，所以后一个挂载点下
+  // 内层什么都不渲染；改成相对路径后，全可选的 ':groupId?/:worksheetId?/:viewId?'
+  // 会匹配到空的剩余段。
+  // 守卫写在 src/router/Application/index.tsx 的 render 里：!appId 时直接 return null，
+  // 还原 v4 的行为。这里放行的正是那批 URL。
+  if (gotKey === 'appPkg' && wantKey === null && /^\/worksheet(\/|$)/.test(url)) return true;
+
   return false;
 }
 
@@ -681,7 +737,26 @@ if (process.argv.includes('--compare')) {
 
     for (const url of urlsByGroup.get(g.label) || []) {
       const want = ref.cases[`${g.label}|${url}`];
-      const got = matchV7(v7routes, url);
+      // 嵌套表：v7 侧要先让父路径吃掉前缀，再拿剩余段匹配相对子路径。
+      // v4 侧（fixture）是拿完整 URL 匹配绝对路径的 —— 这正是两版的差异所在，
+      // 所以这里必须走不同的路径，不能图省事两边都用完整 URL。
+      // 嵌套表：先确认外层 <Routes> 在这个 URL 下确实选中了渲染本宿主的那条路由，
+      // 否则本表根本不参与，不该拿它来比。
+      const nestCfg = NESTED_PARENTS[g.label];
+
+      if (nestCfg) {
+        const outerGroup = groups.find(x => x.label === nestCfg.outer.group);
+        const outerHit = outerGroup ? matchV4(outerGroup, url) : null;
+
+        if (!outerHit || !nestCfg.outer.keys.includes(outerHit.key)) {
+          same++;
+          continue;
+        }
+      }
+
+      const { rest, parentParams } = stripParent(g.label, url);
+      const gotRaw = rest === null ? null : matchV7(v7routes, rest);
+      const got = gotRaw ? { ...gotRaw, params: { ...(parentParams || {}), ...gotRaw.params } } : gotRaw;
 
       if (got && got.error) { v7Errors.push({ group: g.label, url, error: got.error }); continue; }
 
