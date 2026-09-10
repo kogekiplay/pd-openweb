@@ -28,6 +28,10 @@ export const ROUTE_CONFIG = addSubPathOfRoutes({
   taskDetail: {
     path: '/apps/task/:taskSeg',
     component: () => import('src/pages/task/detail'),
+    // v4 原路径是 '/apps/task/task_:id'，v7 表达不了段内前缀，退化成整段匹配后
+    // 由守卫判前缀。不匹配时【回落到任务列表】而不是 404 —— v4 下 /apps/task/其它
+    // 是被前一条 '/apps/task' 的前缀匹配接住的（渲染列表页），不是什么都没命中。
+    guard: { param: 'taskSeg', prefix: 'task_', fallback: () => import('src/pages/task') },
     title: _l('任务详情'),
   },
   task: {
@@ -45,6 +49,9 @@ export const ROUTE_CONFIG = addSubPathOfRoutes({
   calendarDetail: {
     path: '/apps/calendar/:detailSeg',
     component: () => import('src/pages/calendar/detail'),
+    // v4 原路径 '/apps/calendar/detail_:id'；不匹配前缀时 v4 是【什么都没命中】，
+    // 所以这里走全局兜底 404（不给 fallback 即为此行为）。
+    guard: { param: 'detailSeg', prefix: 'detail_' },
     title: _l('日程详情'),
   },
 
@@ -135,6 +142,10 @@ export const ROUTE_CONFIG = addSubPathOfRoutes({
   user: {
     path: ['/user', '/:userSeg'],
     component: () => import('src/pages/UserProfile'),
+    // v4 原路径是 ['/user', '/user_:id']。'/user' 是本人主页、'/user_xxx' 是他人。
+    // 退化成根级 '/:userSeg' 后会吃掉所有一级 URL，靠守卫挡回去。
+    // UserProfile 自己用正则从 pathname 取 accountId，不读 params，所以只需要「挡」。
+    guard: { param: 'userSeg', prefix: 'user_', allowExact: ['user'] },
     title: _l('个人资料'),
   },
   search: {

@@ -11,7 +11,9 @@ import Register from './register';
 import ResetPassword from './resetPassword';
 import Twofactor from './twofactor';
 
-const AUTH_ROUTES = [
+// 标上元组类型：不标的话 TS 会把数组元素推成 `string[] | 组件类型` 的联合，
+// 下面 paths.flatMap 就报「联合类型上没有 flatMap」。
+const AUTH_ROUTES: [string[], any][] = [
   [['/resetPassword'], ResetPassword],
   [['/login', '/network'], Login],
   [['/findPassword'], FindPassword],

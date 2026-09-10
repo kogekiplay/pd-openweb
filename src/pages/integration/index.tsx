@@ -58,7 +58,10 @@ const getRoutes = param => {
         <Route
           key={i}
           path={path}
-          component={() => {
+          // v7 只有 element。原来的 component={() => ...} 是个无 props 的函数组件，
+          // 用 createElement 包一下即可；不能写成 element={(() => ...)()}，
+          // 那会在构造路由表时就把它求值掉。
+          element={React.createElement(() => {
             return (window.platformENV.isOverseas || window.platformENV.isLocal) &&
               !md.global.Config.EnableDataPipeline &&
               ENABLE_DATAPIPELINE_KEYS.includes(key) ? (
@@ -86,7 +89,7 @@ const getRoutes = param => {
             ) : (
               <Component {...param} />
             );
-          }}
+          })}
         />,
       );
     }

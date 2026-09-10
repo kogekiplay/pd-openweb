@@ -206,19 +206,15 @@ export default class AdminEntryPoint extends PureComponent<any, any> {
     );
 
     return (
-      <Switch>
-        <Route
-          path={addSubPathOfRoute('/admin/mycharacter/:projectId')}
-          component={() => <MyRole authority={authority} />}
-        />
-        <Route
-          path={addSubPathOfRoute('/admin/apply/:projectId/:roleId?')}
-          component={() => <ApplyRole authority={authority} />}
-        />
-        <Route path={addSubPathOfRoute('/admin/:routeType/:projectId')}>
-          {this.renderHomeContent(routesWithAuthority)}
-        </Route>
-      </Switch>
+      // 本组件挂在父路由 '/admin/*' 之下，所以这里写相对路径、也不再套
+      // addSubPathOfRoute（部署子路径由父路由那层处理）。
+      // 最后那条原本是 '/admin/:routeType/:projectId'，作用是「其余都走后台主内容」，
+      // 相对化后就是 '*'（v7 里排序恒定最低，与放在 Switch 末尾同效）。
+      <Routes>
+        <Route path="mycharacter/:projectId" element={<MyRole authority={authority} />} />
+        <Route path="apply/:projectId/:roleId?" element={<ApplyRole authority={authority} />} />
+        <Route path="*" element={this.renderHomeContent(routesWithAuthority)} />
+      </Routes>
     );
   }
 

@@ -1,5 +1,4 @@
 ﻿import React, { Component } from 'react';
-import withRouter from '../../../router/withRouter';
 import cx from 'classnames';
 import _ from 'lodash';
 import { compile, pathToRegexp } from 'path-to-regexp';
@@ -10,9 +9,17 @@ import { navigateTo } from 'src/router/navigateTo';
 import { getPathWithoutSubPath } from 'src/utils/common';
 import { VersionProductType } from 'src/utils/enum';
 import { getCurrentProject, getFeatureStatus } from 'src/utils/project';
+import withRouter from '../../../router/withRouter';
+import { getProjectIdFromPath } from '../config';
 import './index.less';
 
-const isRoutePathMatched = (path, pathname) => pathToRegexp(path).test(getPathWithoutSubPath(pathname));
+// 路由迁到 v7 后，router.config.ts 里的 path 已经【相对化】了（'home/:projectId'
+// 而不是 '/admin/home/:projectId'）—— 因为 v7 的嵌套 Routes 匹配的是父路由
+// '/admin/*' 消费之后剩下的那段。而这里是拿它去比【完整 pathname】做菜单高亮，
+// 不补回前缀就一条都匹配不上、菜单再也不会高亮。
+const toAbsoluteAdminPath = path => (path.startsWith('/') ? path : `/admin/${path}`);
+const isRoutePathMatched = (path, pathname) =>
+  pathToRegexp(toAbsoluteAdminPath(path)).test(getPathWithoutSubPath(pathname));
 
 let AdminLeftMenu = class AdminLeftMenu extends Component<any, any> {
   constructor(props) {
@@ -25,12 +32,11 @@ let AdminLeftMenu = class AdminLeftMenu extends Component<any, any> {
 
   componentDidMount() {
     const {
-      match: {
-        params: { projectId },
-      },
       location: { pathname },
       menuList,
     } = this.props;
+    // 父路由已改成 '/admin/*'，不再提供 projectId 参数，从路径取（同值）
+    const projectId = getProjectIdFromPath(pathname);
     const currentProject = getCurrentProject(projectId, true);
     this.setState({
       currentCompanyName: currentProject.companyName,
@@ -75,10 +81,9 @@ let AdminLeftMenu = class AdminLeftMenu extends Component<any, any> {
     const { subListVisible, isExtend } = this.state;
     const {
       location: { pathname },
-      match: {
-        params: { projectId },
-      },
     } = this.props;
+    // 同上：父路由 '/admin/*' 不再提供 projectId
+    const projectId = getProjectIdFromPath(pathname);
     if (
       key === 'billinfo' &&
       (window.platformENV.isLocal || window.platformENV.isOverseas) &&

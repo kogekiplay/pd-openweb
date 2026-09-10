@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react';
 import { Route, Routes } from 'react-router';
-import withRouter from './withRouter';
 import _ from 'lodash';
 import { Dialog } from 'ming-ui';
 import ErrorBoundary from 'ming-ui/components/ErrorBoundary';
@@ -16,7 +15,9 @@ import socketInit from '../socket';
 import { ROUTE_CONFIG, withoutChatUrl } from './config';
 import genRouteComponent from './genRouteComponent';
 import globalEvents from './globalEvents';
+import NotFoundRedirect from './NotFoundRedirect';
 import PageHeaderRoute from './PageHeader';
+import withRouter from './withRouter';
 import './index.less';
 
 class App extends Component<any, any> {
