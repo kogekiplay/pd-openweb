@@ -42,7 +42,7 @@ export const Wrap = styled.div`
         flex: 1;
       }
       .icon-close {
-        color: var(--color-text-tertiary) !important
+        color: var(--color-text-tertiary) !important;
         &:hover {
           color: var(--color-primary);
         }
@@ -53,7 +53,7 @@ export const Wrap = styled.div`
       padding: 0 24px;
       .title {
         padding-top: 24px;
-        margin-top: 0!important;
+        margin-top: 0 !important;
         font-weight: bold;
         font-size: 13px;
         font-size: 13px;
@@ -81,28 +81,28 @@ export const Wrap = styled.div`
         }
         &.timeRange {
           padding: 0 0 0 12px;
-          .act{
+          .act {
             width: 18px;
             height: 18px;
             margin-right: 5px;
           }
           .clearTimeRange,
-          .changeTimeRange{
+          .changeTimeRange {
             position: absolute;
             left: 0;
             top: 50%;
             transform: translateY(-50%);
-            display:block;
-            &.clearTimeRange{
-              display:none;
+            display: block;
+            &.clearTimeRange {
+              display: none;
             }
           }
-          &:hover{
-            .clearTimeRange{
-              display:block;
+          &:hover {
+            .clearTimeRange {
+              display: block;
             }
-            .changeTimeRange{
-              display:none;
+            .changeTimeRange {
+              display: none;
             }
           }
         }
@@ -146,7 +146,7 @@ export const Wrap = styled.div`
             line-height: 36px;
             font-size: 18px;
           }
-          .icon-arrow-down-border{
+          .icon-arrow-down-border {
             font-size: 14px;
           }
           .List {
@@ -200,7 +200,7 @@ export const Wrap = styled.div`
       -webkit-appearance: none !important;
     }
   }
-  .ming.Input{
+  .ming.Input {
     font-size: 13px;
   }
   .disabledBtn {

@@ -15,7 +15,7 @@ const TemplateTitleWrap = styled.div`
   border-radius: 3px;
   padding: 0 5px;
   height: 32px;
-  display: flex
+  display: flex;
   align-items: center;
 `;
 

@@ -15,35 +15,33 @@ const DropDownSetChoose = styled.div`
     left: 10px;
     top: 8px;
   }
-   {
-    .dropDropDownSet {
-      width: 100%;
-      .ant-select-selector {
-        border-radius: 3px !important;
-        height: 36px !important;
-        .ant-select-selection-item {
-          line-height: 36px !important;
-          font-size: 13px !important;
-        }
-      }
-      &.isDelete {
-        .ant-select-selector {
-          border-color: var(--color-error) !important;
-        }
-        .ant-select-selection-item {
-          opacity: 0;
-          z-index: 1;
-        }
+  .dropDropDownSet {
+    width: 100%;
+    .ant-select-selector {
+      border-radius: 3px !important;
+      height: 36px !important;
+      .ant-select-selection-item {
+        line-height: 36px !important;
+        font-size: 13px !important;
       }
     }
-    li {
-      .itemText {
-        padding-left: 10px;
+    &.isDelete {
+      .ant-select-selector {
+        border-color: var(--color-error) !important;
       }
-      &:hover {
-        .itemText {
-          color: var(--color-white);
-        }
+      .ant-select-selection-item {
+        opacity: 0;
+        z-index: 1;
+      }
+    }
+  }
+  li {
+    .itemText {
+      padding-left: 10px;
+    }
+    &:hover {
+      .itemText {
+        color: var(--color-white);
       }
     }
   }

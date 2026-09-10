@@ -20,7 +20,7 @@ const Con = styled.div`
     .summary_value {
       margin-left: 4px;
     }
-  }in
+  }
 `;
 
 export default function SelectedInfo({ selectedRowIds = [], summaryControls = [], records = [] }) {
