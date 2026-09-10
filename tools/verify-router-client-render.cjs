@@ -162,6 +162,7 @@ const { createRoot } = require('react-dom/client');
 const { MemoryRouter, Routes, useNavigate } = require('react-router');
 
 const { ROUTE_CONFIG } = require(RW + 'src/router/config.ts');
+const { PAGE_HEADER_ROUTE_CONFIG } = require(RW + 'src/router/PageHeader/config.ts');
 const genRouteComponent = require(RW + 'src/router/genRouteComponent.tsx').default;
 
 // 工厂调用次数：每造一个新的 lazy 就会 +1，是 churn 的直接度量
@@ -173,16 +174,29 @@ const stubFactory = tag => () => {
 };
 
 // 只换 component / guard.fallback，path / guard / exact 全部保持真实配置
-const STUB_CONFIG = {};
-for (const [key, r] of Object.entries(ROUTE_CONFIG)) {
-  STUB_CONFIG[key] = {
-    ...r,
-    ...(r.component ? { component: stubFactory(key) } : {}),
-    ...(r.guard && r.guard.fallback ? { guard: { ...r.guard, fallback: stubFactory(key + ':fallback') } } : {}),
-  };
-}
+const stubConfig = (cfg, prefix = '') => {
+  const out = {};
 
-const routes = genRouteComponent()(STUB_CONFIG);
+  for (const [key, r] of Object.entries(cfg)) {
+    out[key] = {
+      ...r,
+      ...(r.component ? { component: stubFactory(prefix + key) } : {}),
+      ...(r.guard && r.guard.fallback
+        ? { guard: { ...r.guard, fallback: stubFactory(prefix + key + ':fallback') } }
+        : {}),
+    };
+  }
+
+  return out;
+};
+
+const routes = genRouteComponent()(stubConfig(ROUTE_CONFIG));
+// 顶栏是【另一张表、另一个 <Routes>】，和主路由表在同一个页面上并存。
+// 它同样有 user 路由退化成 /:userSeg 的问题，但守卫要求不同：不匹配时必须
+// 「什么都不渲染」而不是跳 404（顶栏只是页面的一个部件）。
+// tools/verify-router-matching.cjs 的例外表放行了 67 条顶栏差异，前提就是这个
+// emptyFallback 守卫真的生效 —— 所以在这里把它跑出来，而不是只写在注释里。
+const headerRoutes = genRouteComponent()(stubConfig(PAGE_HEADER_ROUTE_CONFIG, 'hdr:'));
 
 let navigateRef = null;
 function NavHook() {
@@ -204,6 +218,19 @@ const CASES = [
   ['/apps/task/task_abc123', 'taskDetail'],
   ['/apps/task/notaprefix', 'taskDetail:fallback'],
   ['/apps/calendar/detail_x1', 'calendarDetail'],
+];
+
+// 顶栏表的用例。'' 表示【期望什么都不渲染】—— v4 下这些 URL 一条顶栏路由都没命中。
+const HEADER_CASES = [
+  ['/user', 'hdr:user'],
+  ['/user_abc123', 'hdr:user'],
+  ['/feed', 'hdr:feed'],
+  ['/personal', 'hdr:personal'],
+  ['/search', 'hdr:search'],
+  // 下面这些在 v4 下没有顶栏；退化成 /:userSeg 后会被 user 接住，靠 emptyFallback 挡回去
+  ['/myprocess', ''],
+  ['/apps/taskcenter', ''],
+  ['/aggregation', ''],
 ];
 
 async function flush(times = 12) {
@@ -251,6 +278,52 @@ async function flush(times = 12) {
     // 回到一个干净的起点，避免上一条的挂起状态影响下一条
     await React.act(async () => {
       navigateRef('/feed');
+    });
+    await flush(4);
+  }
+
+  // ---- 顶栏表 ----
+  const hdrContainer = document.createElement('div');
+  document.body.appendChild(hdrContainer);
+  const hdrRoot = createRoot(hdrContainer);
+  let hdrNavigate = null;
+  const HdrNavHook = () => {
+    hdrNavigate = useNavigate();
+
+    return null;
+  };
+
+  await React.act(async () => {
+    hdrRoot.render(
+      React.createElement(
+        MemoryRouter,
+        { initialEntries: ['/feed'] },
+        React.createElement(HdrNavHook),
+        React.createElement(Routes, null, headerRoutes),
+      ),
+    );
+  });
+  await flush();
+
+  console.log('\n  顶栏表：');
+
+  for (const [url, expect] of HEADER_CASES) {
+    await React.act(async () => {
+      hdrNavigate(url);
+    });
+    await flush();
+
+    const el = hdrContainer.querySelector('[data-route-comp]');
+    const got = el ? el.getAttribute('data-route-comp') : '';
+    const ok = got === expect;
+    ok ? pass++ : fail++;
+    console.log(
+      `  ${ok ? 'PASS ' : 'FAIL '} ${url.padEnd(26)} -> ${(got || '(不渲染顶栏)').padEnd(22)}` +
+        (ok ? '' : `   期望 ${expect || '(不渲染顶栏)'}`),
+    );
+
+    await React.act(async () => {
+      hdrNavigate('/feed');
     });
     await flush(4);
   }

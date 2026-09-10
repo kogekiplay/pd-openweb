@@ -659,6 +659,20 @@ function matchV7(routes, url) {
 // 只在「v7 表达不了 v4 的写法，但组件侧能补回同样的用户可见行为」时才放行，
 // 每条都要写清楚补在哪。这不是「把红的改成绿的」——放行的前提是
 // 第 ② 步真的把对应的守卫代码写进组件；没写就是骗自己。
+//
+// 【每条例外都必须绑定到具体的 group】。踩过一次：user 那条原本没写 group 条件，
+// 于是把顶栏表里同名但【没有守卫】的路由也一起放行了，线上多出一条假顶栏。
+// 补偿代码总是写在某一个具体的宿主里，所以「哪张表」是例外成立的一部分，不是细节。
+// 下面的 ACCEPTED 会记录每条规则实际在哪些 group 上生效并在结尾打印出来 ——
+// 出现意料之外的 group，就说明这条例外正在替一处没有补偿的地方背书。
+const ACCEPTED = new Map();
+const accept = (rule, group) => {
+  const k = `${rule} @ ${group}`;
+  ACCEPTED.set(k, (ACCEPTED.get(k) || 0) + 1);
+
+  return true;
+};
+
 function isAcceptable(group, url, wantKey, gotKey) {
   // 【user 路由】v4 是 /user_:id：只接 user_ 开头的单段 URL。
   // v7 没有任何办法匹配段内静态前缀（* 必须跟在 / 后，实测 /user_* 会被
@@ -668,17 +682,30 @@ function isAcceptable(group, url, wantKey, gotKey) {
   // 就走与全局兜底路由相同的 404 跳转（App.tsx 里那条 path="*" 干的事）。
   // 因此这里只放行「v4 本来就没命中任何路由」的情形 —— 那些 URL 在 v4 下
   // 也是落到兜底 404 的，用户看到的结果一致。
-  if (gotKey === 'user' && wantKey === null) {
+  // 【必须按 group 分别判断】第一版这里没写 group 条件，于是这条例外把【顶栏表】的
+  // 同名 user 路由也一起放行了 —— 而顶栏表根本没有守卫。后果是 /myprocess、
+  // /apps/taskcenter 这些在 v4 下【不渲染任何顶栏】的 URL，v7 里被顶栏的 /:userSeg
+  // 接住、渲染出了「个人资料」顶栏。例外表的前提是「另一处有等价补偿」，
+  // 那就必须写清是哪一处、只对哪一张表成立，否则例外表本身就成了漏洞。
+  if (gotKey === 'user' && wantKey === null && (group === '主路由' || group === '顶栏')) {
     const seg = url.split('/')[1] || '';
 
-    return !seg.startsWith('user_');
+    if (seg.startsWith('user_')) return false;
+
+    // 主路由：SegmentPrefixGuard 在 userSeg 不以 user_ 开头时走全局兜底 404，
+    //         与 v4 落到 <Route path="*"> 同效（见 src/router/config.ts 的 guard）。
+    // 顶栏：  同一个守卫，但 fallback 是【什么都不渲染】（emptyFallback），
+    //         与 v4 下 <Switch> 一条都没命中、<header> 里空着同效。
+    return accept('user 退化为 /:userSeg', group);
   }
 
   // 【calendarDetail】同上：v4 是 /apps/calendar/detail_:id，v7 只能退化成
   // /apps/calendar/:detailSeg，于是 /apps/calendar/其它段 也会被它接住。
   // 补法（第 ② 步）：组件里若 detailSeg 不以 detail_ 开头就走兜底 404。
   if (gotKey === 'calendarDetail' && wantKey === null) {
-    return !(url.split('/')[3] || '').startsWith('detail_');
+    if ((url.split('/')[3] || '').startsWith('detail_')) return false;
+
+    return accept('calendarDetail 退化为 /:detailSeg', group);
   }
 
   // 【taskDetail】v4 是 /apps/task/task_:id，v7 退化成 /apps/task/:taskSeg。
@@ -686,7 +713,9 @@ function isAcceptable(group, url, wantKey, gotKey) {
   // 不是「什么都没命中」。所以组件守卫不能跳 404，而要在 taskSeg 不以 task_
   // 开头时渲染任务列表本身 —— 也就是还原 v4 的结果。
   if (gotKey === 'taskDetail' && wantKey === 'task') {
-    return !(url.split('/')[3] || '').startsWith('task_');
+    if ((url.split('/')[3] || '').startsWith('task_')) return false;
+
+    return accept('taskDetail 退化为 /:taskSeg', group);
   }
 
   // 【应用内 appPkg 在 /worksheet 挂载点下】Application 组件同时挂在
@@ -696,7 +725,9 @@ function isAcceptable(group, url, wantKey, gotKey) {
   // 会匹配到空的剩余段。
   // 守卫写在 src/router/Application/index.tsx 的 render 里：!appId 时直接 return null，
   // 还原 v4 的行为。这里放行的正是那批 URL。
-  if (gotKey === 'appPkg' && wantKey === null && /^\/worksheet(\/|$)/.test(url)) return true;
+  if (gotKey === 'appPkg' && wantKey === null && /^\/worksheet(\/|$)/.test(url)) {
+    return accept('appPkg 在 /worksheet 挂载点下', group);
+  }
 
   return false;
 }
@@ -869,6 +900,13 @@ if (process.argv.includes('--compare')) {
   console.log(`  选中的路由不同: ${wrongRoute.length}`);
   console.log(`  params 不同:  ${wrongParams.length}`);
   console.log(`  v7 抛错:     ${v7Errors.length}`);
+
+  // 例外表用在了哪些 group 上 —— 出现意料之外的 group，说明这条例外正在替一处
+  // 没有补偿代码的地方背书（顶栏那次假顶栏就是这么放过去的）。
+  if (ACCEPTED.size) {
+    console.log('\n  已放行的已知差异（规则 @ 路由表 × 条数）:');
+    [...ACCEPTED.entries()].sort().forEach(([k, n]) => console.log(`    ${String(n).padStart(4)}  ${k}`));
+  }
 
   const show = (title, arr, fmt) => {
     if (!arr.length) return;

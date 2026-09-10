@@ -21,7 +21,16 @@ import NotFoundRedirect from './NotFoundRedirect';
  * 真的存在 —— 那里写了「没写守卫就是骗自己」。改这里之前先看那段注释。
  */
 export default function SegmentPrefixGuard(props) {
-  const { param, prefix, allowExact = [], component: Comp, fallback: Fallback, match, ...rest } = props;
+  const {
+    param,
+    prefix,
+    allowExact = [],
+    component: Comp,
+    fallback: Fallback,
+    emptyFallback,
+    match,
+    ...rest
+  } = props;
   const raw = _.get(match, ['params', param]);
 
   // param 压根不存在，说明命中的是同一条路由里【不带该参数的静态路径】
@@ -34,7 +43,16 @@ export default function SegmentPrefixGuard(props) {
   const hasPrefix = !!prefix && seg.startsWith(prefix);
 
   if (!hasPrefix && !allowExact.includes(seg)) {
-    return Fallback ? <Fallback {...rest} match={match} /> : <NotFoundRedirect />;
+    if (Fallback) return <Fallback {...rest} match={match} />;
+
+    // emptyFallback：不匹配时【什么都不渲染】。顶栏表要的就是这个 —— 那里的 user
+    // 路由退化成 /:userSeg 后会吃掉一堆 URL（/myprocess、/apps/taskcenter…），
+    // 而 v4 下这些 URL 一条顶栏路由都没命中、<header> 里是空的。
+    // 【不能沿用下面的 404 跳转】：顶栏只是页面的一个部件，让它把整页跳去 404
+    // 是把「这个部件不该出现」升级成了「整个页面打不开」。
+    if (emptyFallback) return null;
+
+    return <NotFoundRedirect />;
   }
 
   const nextMatch = {
