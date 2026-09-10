@@ -22,7 +22,15 @@ import NotFoundRedirect from './NotFoundRedirect';
  */
 export default function SegmentPrefixGuard(props) {
   const { param, prefix, allowExact = [], component: Comp, fallback: Fallback, match, ...rest } = props;
-  const seg = _.get(match, ['params', param]) || '';
+  const raw = _.get(match, ['params', param]);
+
+  // param 压根不存在，说明命中的是同一条路由里【不带该参数的静态路径】
+  //（例如 user 路由的 path 是 ['/user', '/:userSeg']，访问 /user 时会命中前者，
+  //  自然没有 userSeg）。这种情况直接放行 —— v4 下它本来就是有效路径。
+  // 第一版少了这个分支，导致 /user（本人主页）被守卫当成「前缀不匹配」跳了 404。
+  if (raw === undefined) return <Comp {...rest} match={match} />;
+
+  const seg = raw || '';
   const hasPrefix = !!prefix && seg.startsWith(prefix);
 
   if (!hasPrefix && !allowExact.includes(seg)) {
