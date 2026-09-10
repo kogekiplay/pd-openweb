@@ -5,7 +5,17 @@ import expandRoutePaths from './expandRoutePaths';
 import SegmentPrefixGuard from './SegmentPrefixGuard';
 import WithTitleRoute from './withTitle';
 
-const getComponent = component => lazy(component);
+// 按工厂缓存：同一个 import 工厂永远拿到同一个 lazy 组件。
+// 本文件里 getComponent 只在配置遍历时调（每个 key 一次），加缓存不是为了省这一次，
+// 而是让「绝不会产出新组件类型」成为这个函数【自身】的性质，而不是依赖调用点的纪律 ——
+// 下面那段注释里的死循环就是纪律没守住造成的。src/router/renderTimeLazy.spec.js
+// 会检查白名单文件确实做了缓存。
+const lazyCache = new Map();
+const getComponent = component => {
+  if (!lazyCache.has(component)) lazyCache.set(component, lazy(component));
+
+  return lazyCache.get(component);
+};
 
 export default () => {
   const components = [];

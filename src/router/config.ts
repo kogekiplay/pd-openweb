@@ -378,13 +378,32 @@ const withoutChatPathList = [
   'app/lib',
   'approveInvoice',
 ];
-// 原来是 v4 的路径正则 `/(.*)(片段1|片段2|...)` —— 实际语义是「pathname 里
-// 出现过其中任一片段」的【子串匹配】。v7 的路径语法表达不了它（* 只能在末尾、
-// 也没有交替组），而且用「某条路由是否匹配」去表达「要不要渲染另一个东西」
-// 本来就绕。直接改成谓词函数，语义等价且一眼能懂。
-export const withoutHeaderUrl = (pathname = location.pathname) => withoutHeaderPathList.some(p => pathname.includes(p));
-// 原来是 v4 的路径正则 `/(.*)(片段1|片段2|...)` —— 实际语义是「pathname 里
-// 出现过其中任一片段」的【子串匹配】。v7 的路径语法表达不了它（* 只能在末尾、
-// 也没有交替组），而且用「某条路由是否匹配」去表达「要不要渲染另一个东西」
-// 本来就绕。直接改成谓词函数，语义等价且一眼能懂。
-export const withoutChatUrl = (pathname = location.pathname) => withoutChatPathList.some(p => pathname.includes(p));
+/**
+ * 原来这两个是 v4 的路径字符串 `/(.*)(片段1|片段2|...)`，被当成 <Route path> 用来
+ * 「占掉」某些 URL，从而不渲染顶栏 / 聊天栏。v7 的路径语法表达不了交替组，只能改成谓词。
+ *
+ * 【第一版写成 pathname.includes(片段) 是错的】—— 我当时在注释里断言 v4 的语义就是
+ * 子串匹配，没有实测。实际上 v4 的 <Route> 默认 end: false，path-to-regexp 会在
+ * 末尾补 `(?=\/|$)`，也就是【片段必须停在路径分隔符或字符串结尾】。
+ * 差别是实打实的：'role' 这个片段下，v4 不匹配 /admin/roles/<id>（role 后面还有 s），
+ * includes 却匹配 —— 线上 /admin/roles、/admin/sysroles、/admin/workflows
+ * 三个页面的顶栏（含返回工作台的主页图标）就这么整个消失了。
+ *
+ * 所以这里【照抄 v4 实际生成的那条正则】，一个细节都不省：
+ *   /^\/((?:.*))((?:片段1|片段2))(?:\/(?=$))?(?=\/|$)/i
+ * 其中两处很容易漏掉、漏了就是线上事故：
+ *   - 结尾的 (?=\/|$)：片段必须停在分隔符或结尾（上面说的 role vs roles）
+ *   - 【i 标志】：v4 的 matchPath 默认 sensitive: false，所以是大小写不敏感的。
+ *     列表里有 'workflowEdit' 这种驼峰片段，真实 URL 是全小写的 /workflowedit，
+ *     少了 i 就漏判。这条正是差分跑出来才发现的。
+ * tools/verify-without-url-predicates.cjs 拿真的 react-router 4 对着 1292 条
+ * 真实 URL 语料 + 一批边界用例逐条比过，两个谓词都是 0 差异。改这里之前先跑它。
+ */
+const buildWithoutUrlRegExp = list =>
+  new RegExp(`^/.*(?:${list.map(p => p.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})(?:/(?=$))?(?=/|$)`, 'i');
+
+const withoutHeaderRegExp = buildWithoutUrlRegExp(withoutHeaderPathList);
+const withoutChatRegExp = buildWithoutUrlRegExp(withoutChatPathList);
+
+export const withoutHeaderUrl = (pathname = location.pathname) => withoutHeaderRegExp.test(pathname);
+export const withoutChatUrl = (pathname = location.pathname) => withoutChatRegExp.test(pathname);

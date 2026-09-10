@@ -20,7 +20,20 @@ import { menuList } from './router.config.js';
 import { allPlatformsHidden } from './util';
 import './index.less';
 
-const getComponent = component => lazy(component);
+// 【按工厂缓存，不要每次渲染都 lazy() 一个新的】本函数是在 render 里被调的
+//（childRoutes.flatMap(...)），而 lazy() 每调一次都产出新组件类型、必然先 suspend。
+// v7 的导航包在 startTransition 里，撞上一个已挂载的 <Suspense> 边界就会
+// 「resolve → 重渲染 → 又造新 lazy → 又 suspend」无限打转、永不 commit。
+// 这里今天侥幸没炸，只是因为 withParams 每次也返回新的组件类型，边界跟着重新挂载、
+// 于是允许直接显示 fallback。这个侥幸不能依赖 —— 同一个坑已经在
+// src/router/genRouteComponent.tsx 和 src/pages/Personal/index.tsx 各炸过一次。
+// 顺带也省掉了每次渲染整棵后台页面重新挂载的开销。
+const lazyCache = new Map();
+const getComponent = component => {
+  if (!lazyCache.has(component)) lazyCache.set(component, lazy(component));
+
+  return lazyCache.get(component);
+};
 
 const withParams = (Component, params) => {
   const ParamsComponent = props => (
