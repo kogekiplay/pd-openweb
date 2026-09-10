@@ -18,6 +18,22 @@
 #   修法就是下面这个顺序——行为门禁在任何早退之前执行。
 set -e
 
+# ── 前置：node_modules 与 package.json 是否对得上 ──────────────────────────
+# 为什么值得单开一条：合并完依赖升级分支之后，主检出的代码是新的、node_modules
+# 还是旧的。这时语义差分会吐出几十条【指向业务文件】的类型错
+#（实际见过的：react-dnd 16 的代码撞上 v11 的 DragObjectWithType；
+#  chalk 6 的代码撞上 v4 → `Cannot read properties of undefined (reading 'gray')`），
+# 看起来像是代码写错了，其实一条都不是。连栽两次，所以在最前面直接说清楚。
+# 用 yarn 自己的完整性记录判断，不自己造轮子；yarn 不在或记录缺失时不拦（只提示）。
+if command -v yarn > /dev/null 2>&1 && [ -f node_modules/.yarn-integrity ]; then
+  if ! yarn check --integrity > /dev/null 2>&1; then
+    echo "pre-push: !! node_modules 与 package.json/yarn.lock 不一致。"
+    echo "           先跑 yarn install 再 push —— 否则下面的类型门禁会报出一堆"
+    echo "           指向业务文件、但其实是版本不匹配造成的假错误。"
+    exit 1
+  fi
+fi
+
 # ── 行为门禁 ─────────────────────────────────────────────────────────────
 # 放最前面：只要约 4s，比语义差分快 7 倍，绝大多数行为回归能在 4 秒内失败，
 # 不用等后面那 31 秒。
@@ -29,7 +45,7 @@ set -e
 if [ "$SKIP_TESTS" = "1" ]; then
   echo "pre-push: SKIP_TESTS=1，跳过行为门禁"
 else
-  echo "pre-push: 行为门禁 62 个 spec（约 4s）..."
+  echo "pre-push: 行为门禁（约 4s）..."
   node scripts/run-specs.js
 fi
 
