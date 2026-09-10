@@ -1,14 +1,17 @@
 import React, { lazy, PureComponent, Suspense } from 'react';
-import { Route, Switch } from 'react-router';
+import { Route, Routes } from 'react-router';
 import _ from 'lodash';
 import { navigateTo } from 'router/navigateTo';
 import { LoadDiv, WaterMark } from 'ming-ui';
 import withoutPermission from 'src/pages/worksheet/assets/withoutPermission.png';
+import expandRoutePaths from 'src/router/expandRoutePaths';
+import { RouteElement } from 'src/router/routeProps';
 import { addSubPathOfRoute } from 'src/utils/common';
 import { getCurrentProject, getFeatureStatus } from 'src/utils/project';
 import AdminCommon from './common/common';
 import Empty from './common/TableEmpty';
 import Config from './config';
+import { getProjectIdFromPath } from './config';
 import { PERMISSION_ENUM, ROUTE_CONFIG } from './enum';
 import Menu from './menu';
 import ApplyRole from './organization/roleAuth/apply';
@@ -63,7 +66,7 @@ export default class AdminEntryPoint extends PureComponent<any, any> {
 
   componentDidUpdate(prevProps) {
     if (prevProps !== this.props) {
-      const projectId = _.get(this.props, 'match.params.projectId');
+      const projectId = getProjectIdFromPath();
 
       if (projectId !== Config.projectId) {
         this.setState({
@@ -91,7 +94,7 @@ export default class AdminEntryPoint extends PureComponent<any, any> {
   } //获取权限模块
 
   getRouterKeys(authority) {
-    const projectId = _.get(this.props, 'match.params.projectId');
+    const projectId = getProjectIdFromPath();
 
     if (_.isArray(authority)) {
       let keys = [];
@@ -157,7 +160,7 @@ export default class AdminEntryPoint extends PureComponent<any, any> {
 
     const isExtend = JSON.parse(localStorage.getItem('adminList_isUp'));
 
-    const projectId = _.get(this.props, 'match.params.projectId');
+    const projectId = getProjectIdFromPath();
 
     return (
       <WaterMark projectId={projectId}>
@@ -165,20 +168,19 @@ export default class AdminEntryPoint extends PureComponent<any, any> {
           <div className="flexRow w100 mainContainerWrapper">
             <Menu isExtend={isExtend} menuList={filteredRoutes} />
             <div id="mainContainer" className="Relative">
-              <Switch>
-                {childRoutes.map(({ path, exact, component }) => {
-                  return (
-                    <Route
-                      key={path}
-                      exact={exact}
-                      path={addSubPathOfRoute(path)}
-                      component={withParams(getComponent(component), {
-                        authority,
-                      })}
-                    />
-                  );
+              <Routes>
+                {/* 子路径已相对化（见 router.config.ts），这里不能再套 addSubPathOfRoute ——
+                    子路径部署在父路由 /admin/* 之下，子路径本身不带 /admin 前缀，
+                    也就不该再被拼上部署子路径（那是父路由那一层的事）。
+                    expandRoutePaths 负责摊平数组 path 并按「非精确」补 /*。 */}
+                {childRoutes.flatMap(({ path, exact, component }) => {
+                  const Comp = withParams(getComponent(component), { authority });
+
+                  return expandRoutePaths({ path, exact }).map(p => (
+                    <Route key={p} path={p} element={<RouteElement component={Comp} />} />
+                  ));
                 })}
-              </Switch>
+              </Routes>
             </div>
           </div>
         </div>

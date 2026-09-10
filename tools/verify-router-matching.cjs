@@ -591,6 +591,12 @@ const NESTED_PARENTS = {
     parents: ['/app/:appId', '/:appId', '/worksheet/:worksheetId'],
     outer: { group: '外部门户', keys: ['app', 'worksheet'] },
   },
+  // 管理后台由 src/pages/Admin 渲染，父路由已从 '/admin/:routeType/:projectId'
+  // 改成 '/admin/*'（父子深度原本相同、父会把 URL 吃光，子路由无段可匹配）
+  管理后台: {
+    parents: ['/admin'],
+    outer: { group: '主路由', keys: ['admin'] },
+  },
 };
 
 // 用父路径把 URL 前缀吃掉，返回剩余段（匹配不上则返回 null）
@@ -819,6 +825,34 @@ if (process.argv.includes('--compare')) {
         const isKnownGarbageParam = url === '/app' && wp.appId === 'app' && !gpNamed.appId;
 
         if (isKnownGarbageParam) delete wp.appId;
+
+        // 【管理后台外层路由不再提供 routeType/projectId】父路由从
+        // '/admin/:routeType/:projectId' 改成了 '/admin/*'（原来父子深度相同、
+        // 父会把 URL 吃光，子路由无段可匹配）。查过这两个参数的去向：
+        //  - routeType：全仓无人读
+        //  - projectId：Admin/index.tsx 那 3 处已改用 getProjectIdFromPath()
+        //    （与 Config.params[2] 同值，从 pathname 直接取）；其余 23 处读它的
+        //    都是【子路由组件】，而它们各自的子路径里仍然声明着 :projectId
+        //    （如 'sysroles/:projectId/:roleId?'），照常拿得到。
+        if (wantKey === 'admin' && g.label === '主路由') {
+          delete wp.routeType;
+          delete wp.projectId;
+        }
+
+        // 【integration / plugin 的父路由同样改成了 splat】理由与 admin 相同：
+        // 原来 '/integration/:type?/:listType?' 与内层的 '/integration/connectList'
+        // 深度相同，父会把 URL 吃光、子路由无段可匹配。
+        // 这两个参数的去向都查过（第一版注释写成「无人读」是错的，grep 立刻打脸，
+        // 下面是核实后的实际情况）：
+        //  - integration 的 type：index.tsx 的 render 读它 → 已改成从 pathname 取
+        //  - integration 的 listType：apiIntegration/index.tsx 读它来决定选中哪个标签页
+        //  - plugin 的 type：SideNav.tsx 读它来高亮导航项、并写 localStorage.pluginUrl
+        //  后两个都是【经宿主的 {...this.props} 传下去】的，所以在宿主里把推导出的
+        //  参数补回 match.params，形状不变、下游组件一行没改。
+        if ((wantKey === 'integration' || wantKey === 'plugin') && g.label === '主路由') {
+          delete wp.type;
+          delete wp.listType;
+        }
 
         const a = JSON.stringify(wp);
         const b = JSON.stringify(gpNamed);

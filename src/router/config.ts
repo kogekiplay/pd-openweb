@@ -143,7 +143,12 @@ export const ROUTE_CONFIG = addSubPathOfRoutes({
     title: _l('超级搜索'),
   },
   admin: {
-    path: '/admin/:routeType/:projectId',
+    // v7 的嵌套 <Routes> 匹配的是父路由消费之后剩下的那段。原来父写
+    // '/admin/:routeType/:projectId' 与子路由深度相同，会把整个 URL 吃光、
+    // 子路由无段可匹配。改成 /admin/* 之后子路由才能相对匹配（见
+    // src/pages/Admin/router.config.ts）。父不再提供 projectId，
+    // Admin 改用 getProjectIdFromPath() 从路径取，同值。
+    path: '/admin/*',
     component: () => import('src/pages/Admin'),
     title: _l('组织管理'),
   },
@@ -205,9 +210,14 @@ export const ROUTE_CONFIG = addSubPathOfRoutes({
     title: _l('正在导出，请稍候...'),
   },
   home: {
-    path: ['/dashboard', '/app/my/group/:projectId?/:groupType?/:groupId?',
+    path: [
+      '/dashboard',
+      '/app/my/group/:projectId?/:groupType?/:groupId?',
       '/app/my/owned/:projectId?/:groupType?/:groupId?',
-      '/app/my/:projectId?/:groupType?/:groupId?', '/favorite', '/app/lib/'],
+      '/app/my/:projectId?/:groupType?/:groupId?',
+      '/favorite',
+      '/app/lib/',
+    ],
     component: () => import('src/pages/AppHomepage/AppCenter'),
   },
   aggregationInfo: {
@@ -236,7 +246,8 @@ export const ROUTE_CONFIG = addSubPathOfRoutes({
     title: _l('集成'),
   },
   integration: {
-    path: '/integration/:type?/:listType?',
+    // 改成 splat 才能让内层的嵌套 <Routes> 有剩余段可匹配
+    path: '/integration/*',
     component: () => import('src/pages/integration'),
     title: _l('集成'),
   },
@@ -261,7 +272,8 @@ export const ROUTE_CONFIG = addSubPathOfRoutes({
     title: _l('统计'),
   },
   plugin: {
-    path: '/plugin/:type?',
+    // 改成 splat 才能让内层的嵌套 <Routes> 有剩余段可匹配
+    path: '/plugin/*',
     component: () => import('src/pages/plugin'),
     title: _l('插件'),
   },
@@ -359,11 +371,9 @@ const withoutChatPathList = [
 // 出现过其中任一片段」的【子串匹配】。v7 的路径语法表达不了它（* 只能在末尾、
 // 也没有交替组），而且用「某条路由是否匹配」去表达「要不要渲染另一个东西」
 // 本来就绕。直接改成谓词函数，语义等价且一眼能懂。
-export const withoutHeaderUrl = (pathname = location.pathname) =>
-  withoutHeaderPathList.some(p => pathname.includes(p));
+export const withoutHeaderUrl = (pathname = location.pathname) => withoutHeaderPathList.some(p => pathname.includes(p));
 // 原来是 v4 的路径正则 `/(.*)(片段1|片段2|...)` —— 实际语义是「pathname 里
 // 出现过其中任一片段」的【子串匹配】。v7 的路径语法表达不了它（* 只能在末尾、
 // 也没有交替组），而且用「某条路由是否匹配」去表达「要不要渲染另一个东西」
 // 本来就绕。直接改成谓词函数，语义等价且一眼能懂。
-export const withoutChatUrl = (pathname = location.pathname) =>
-  withoutChatPathList.some(p => pathname.includes(p));
+export const withoutChatUrl = (pathname = location.pathname) => withoutChatPathList.some(p => pathname.includes(p));

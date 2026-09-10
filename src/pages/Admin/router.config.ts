@@ -12,23 +12,23 @@ export const menuList = [
         key: 'home',
         routes: [
           {
-            path: '/admin/home/:projectId',
+            path: 'home/:projectId',
             component: () => import('./homePage/index.jsx'),
           },
           {
-            path: '/admin/upgradeservice/:projectId/:vertionType?',
+            path: 'upgradeservice/:projectId/:vertionType?',
             component: () => import('./organization/billCenter/upgradeService'),
           },
           {
-            path: '/admin/waitingpay/*',
+            path: 'waitingpay/*',
             component: () => import('./organization/billCenter/waitingPay'),
           },
           {
-            path: '/admin/expansionservice/*',
+            path: 'expansionservice/*',
             component: () => import('./organization/billCenter/expansionService'),
           },
           {
-            path: '/admin/valueaddservice/*',
+            path: 'valueaddservice/*',
             component: () => import('./organization/billCenter/valueAddService'),
           },
         ],
@@ -45,11 +45,11 @@ export const menuList = [
         key: 'structure',
         routes: [
           {
-            path: '/admin/structure/*',
+            path: 'structure/*',
             component: () => import('./user/membersDepartments'),
           },
           {
-            path: '/admin/expansionserviceResign/*',
+            path: 'expansionserviceResign/*',
             component: () => import('./organization/billCenter/expansionService'),
           },
         ],
@@ -59,7 +59,7 @@ export const menuList = [
         key: 'roles',
         routes: [
           {
-            path: '/admin/roles/:projectId',
+            path: 'roles/:projectId',
             component: () => import('./user/roleManage'),
           },
         ],
@@ -69,7 +69,7 @@ export const menuList = [
         key: 'reportrelation',
         routes: [
           {
-            path: '/admin/reportrelation/*',
+            path: 'reportrelation/*',
             component: () => import('./user/reportRelation'),
           },
         ],
@@ -79,7 +79,7 @@ export const menuList = [
         key: 'delegation',
         routes: [
           {
-            path: '/admin/delegation/:projectId',
+            path: 'delegation/:projectId',
             component: () => import('src/pages/Admin/delegation'),
           },
         ],
@@ -89,7 +89,7 @@ export const menuList = [
         key: 'groups',
         routes: [
           {
-            path: '/admin/groups/*',
+            path: 'groups/*',
             component: () => import('./user/groupDept/index.jsx'),
           },
         ],
@@ -100,12 +100,12 @@ export const menuList = [
         menuPath: '/admin/external/:projectId',
         routes: [
           {
-            path: '/admin/external/:projectId',
+            path: 'external/:projectId',
             exact: true,
             component: () => import('./user/portal'),
           },
           {
-            path: '/admin/expansionservice/*',
+            path: 'expansionservice/*',
             component: () => import('./organization/billCenter/expansionService'),
           },
         ],
@@ -122,11 +122,11 @@ export const menuList = [
         key: 'sysinfo',
         routes: [
           {
-            path: '/admin/sysinfo/*',
+            path: 'sysinfo/*',
             component: () => import('./organization/systemSetting'),
           },
           {
-            path: '/admin/certinfo/*',
+            path: 'certinfo/*',
             component: () => import('./organization/systemSetting'),
           },
         ],
@@ -136,11 +136,11 @@ export const menuList = [
         key: 'billinfo',
         routes: [
           {
-            path: '/admin/billinfo/:projectId/:type?',
+            path: 'billinfo/:projectId/:type?',
             component: () => import('./organization/billCenter/billInfo'),
           },
           {
-            path: '/admin/valueaddservice/*',
+            path: 'valueaddservice/*',
             component: () => import('./organization/billCenter/valueAddService'),
           },
         ],
@@ -151,7 +151,7 @@ export const menuList = [
         menuPath: '/admin/sysroles/:projectId',
         routes: [
           {
-            path: '/admin/sysroles/:projectId/:roleId?',
+            path: 'sysroles/:projectId/:roleId?',
             component: () => import('./organization/roleAuth'),
           },
         ],
@@ -161,7 +161,7 @@ export const menuList = [
         key: 'orgothers',
         routes: [
           {
-            path: '/admin/orgothers/:projectId',
+            path: 'orgothers/:projectId',
             component: () => import('./organization/orgothers'),
           },
         ],
@@ -179,7 +179,7 @@ export const menuList = [
         key: 'analytics',
         routes: [
           {
-            path: '/admin/analytics/:projectId/:type?',
+            path: 'analytics/:projectId/:type?',
             component: () => import('./app/useAnalytics/index.js'),
           },
         ],
@@ -190,7 +190,7 @@ export const menuList = [
         menuPath: '/admin/app/:projectId',
         routes: [
           {
-            path: '/admin/app/:projectId/:type?',
+            path: 'app/:projectId/:type?',
             exact: true,
             component: () => import('./app/appManagement'),
           },
@@ -201,11 +201,11 @@ export const menuList = [
         key: 'workflows',
         routes: [
           {
-            path: '/admin/workflows/:projectId',
+            path: 'workflows/:projectId',
             component: () => import('src/pages/workflow/WorkflowList/AdminWorkflowList'),
           },
           {
-            path: '/admin/expansionserviceWorkflow/*',
+            path: 'expansionserviceWorkflow/*',
             component: () => import('./organization/billCenter/expansionService'),
           },
         ],
@@ -218,11 +218,11 @@ export const menuList = [
         featureId: VersionProductType.aggregation,
         routes: [
           {
-            path: '/admin/aggregationtable/:projectId',
+            path: 'aggregationtable/:projectId',
             component: () => import('./app/aggregationTable'),
           },
           {
-            path: '/admin/expansionserviceAggregationtable/*',
+            path: 'expansionserviceAggregationtable/*',
             component: () => import('./organization/billCenter/expansionService'),
           },
         ],
@@ -233,7 +233,7 @@ export const menuList = [
         featureId: VersionProductType.globalVariable,
         routes: [
           {
-            path: '/admin/variables/:projectId',
+            path: 'variables/:projectId',
             exact: true,
             component: () => import('./app/globalVariable/index.jsx'),
           },
@@ -245,7 +245,7 @@ export const menuList = [
         featureId: VersionProductType.quota,
         routes: [
           {
-            path: '/admin/quota/:projectId',
+            path: 'quota/:projectId',
             exact: true,
             component: () => import('./app/quota'),
           },
@@ -259,15 +259,15 @@ export const menuList = [
         hasBeta: false,
         routes: [
           {
-            path: '/admin/computing/:projectId/:explanId?',
+            path: 'computing/:projectId/:explanId?',
             component: () => import('./app/exclusiveComp/index.jsx'),
           },
           {
-            path: '/admin/database/:projectId/:explanId?',
+            path: 'database/:projectId/:explanId?',
             component: () => import('./app/exclusiveComp/index.jsx'),
           },
           {
-            path: '/admin/expansionserviceComputing/*',
+            path: 'expansionserviceComputing/*',
             component: () => import('./organization/billCenter/expansionService'),
           },
         ],
@@ -277,7 +277,7 @@ export const menuList = [
         key: 'settings',
         routes: [
           {
-            path: '/admin/settings/:projectId/:type?',
+            path: 'settings/:projectId/:type?',
             component: () => import('./settings'),
           },
         ],
@@ -296,11 +296,11 @@ export const menuList = [
         menuPath: '/admin/merchant/:projectId(.*)',
         routes: [
           {
-            path: '/admin/merchant/:projectId',
+            path: 'merchant/:projectId',
             component: () => import('./pay/Merchant'),
           },
           {
-            path: '/admin/expansionservice/*',
+            path: 'expansionservice/*',
             component: () => import('./organization/billCenter/expansionService'),
           },
         ],
@@ -312,11 +312,11 @@ export const menuList = [
         menuPath: '/admin/transaction/:projectId(.*)',
         routes: [
           {
-            path: '/admin/transaction/:projectId',
+            path: 'transaction/:projectId',
             component: () => import('./pay/OrderList'),
           },
           {
-            path: '/admin/refund/:projectId',
+            path: 'refund/:projectId',
             component: () => import('./pay/OrderList'),
           },
         ],
@@ -327,11 +327,11 @@ export const menuList = [
         featureId: VersionProductType.invoice,
         routes: [
           {
-            path: '/admin/invoice/:projectId/:type?',
+            path: 'invoice/:projectId/:type?',
             component: () => import('./pay/Invoice'),
           },
           {
-            path: '/admin/expansionservice/*',
+            path: 'expansionservice/*',
             component: () => import('./organization/billCenter/expansionService'),
           },
         ],
@@ -349,7 +349,7 @@ export const menuList = [
         menuPath: '/admin/platformintegration/:projectId(.*)',
         routes: [
           {
-            path: '/admin/platformintegration/:projectId/:type?',
+            path: 'platformintegration/:projectId/:type?',
             component: () => import('./integration/platformIntegration'),
           },
         ],
@@ -360,15 +360,15 @@ export const menuList = [
         menuPath: '/admin/systemservice/:projectId(.*)',
         routes: [
           {
-            path: '/admin/systemservice/:projectId',
+            path: 'systemservice/:projectId',
             component: () => import('./integration/systemServices'),
           },
           {
-            path: '/admin/weixin/:projectId',
+            path: 'weixin/:projectId',
             component: () => import('./integration/systemServices'),
           },
           {
-            path: '/admin/cloudprint/:projectId',
+            path: 'cloudprint/:projectId',
             component: () => import('./integration/systemServices'),
           },
         ],
@@ -379,7 +379,7 @@ export const menuList = [
         featureId: VersionProductType.cloudService,
         routes: [
           {
-            path: '/admin/cloudservice/:projectId',
+            path: 'cloudservice/:projectId',
             component: () => import('./integration/cloudService'),
           },
         ],
@@ -389,11 +389,11 @@ export const menuList = [
         key: 'thirdapp',
         routes: [
           {
-            path: '/admin/thirdapp/:projectId/:type?',
+            path: 'thirdapp/:projectId/:type?',
             component: () => import('./integration/thirdpartyApp'),
           },
           {
-            path: '/admin/thirdapp/:projectId/:type?',
+            path: 'thirdapp/:projectId/:type?',
             component: () => import('./integration/thirdpartyApp'),
           },
         ],
@@ -403,7 +403,7 @@ export const menuList = [
         key: 'integrationothers',
         routes: [
           {
-            path: '/admin/integrationothers/:projectId',
+            path: 'integrationothers/:projectId',
             component: () => import('./integration/others'),
           },
         ],
@@ -420,7 +420,7 @@ export const menuList = [
         key: 'addressBook',
         routes: [
           {
-            path: '/admin/addressBook/:projectId',
+            path: 'addressBook/:projectId',
             component: () => import('./security/account'),
           },
         ],
@@ -430,7 +430,7 @@ export const menuList = [
         key: 'dataAccess',
         routes: [
           {
-            path: '/admin/dataAccess/:projectId',
+            path: 'dataAccess/:projectId',
             exact: true,
             component: () => import('./security/data'),
           },
@@ -441,7 +441,7 @@ export const menuList = [
         key: 'function',
         routes: [
           {
-            path: '/admin/function/:projectId',
+            path: 'function/:projectId',
             exact: true,
             component: () => import('./security/securityOthers'),
           },
@@ -461,7 +461,7 @@ export const menuList = [
         menuPath: '/admin/applog/:projectId',
         routes: [
           {
-            path: '/admin/applog/:projectId',
+            path: 'applog/:projectId',
             exact: true,
             component: () => import('./logs/AppLog'),
           },
@@ -473,7 +473,7 @@ export const menuList = [
         menuPath: '/admin/loginlog/:projectId',
         routes: [
           {
-            path: '/admin/loginlog/:projectId',
+            path: 'loginlog/:projectId',
             exact: true,
             component: () => import('./logs/LoginLog'),
           },
@@ -485,7 +485,7 @@ export const menuList = [
         menuPath: '/admin/orglog/:projectId',
         routes: [
           {
-            path: '/admin/orglog/:projectId',
+            path: 'orglog/:projectId',
             exact: true,
             component: () => import('./logs/orgLog'),
           },
