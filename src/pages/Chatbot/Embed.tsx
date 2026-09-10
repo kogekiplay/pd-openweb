@@ -1,7 +1,7 @@
 import React, { Component, useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
-import { withRouter } from 'react-router-dom';
+import withRouter from '../../router/withRouter';
 import { Provider } from 'react-redux';
 import { LoadDiv } from 'ming-ui';
 import homeAppApi from 'src/api/homeApp';

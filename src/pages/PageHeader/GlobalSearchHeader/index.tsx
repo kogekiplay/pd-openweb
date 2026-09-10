@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import withRouter from '../../../router/withRouter';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Icon, Input } from 'ming-ui';

@@ -1,5 +1,5 @@
 import React, { Component, Fragment, lazy, Suspense, useEffect, useRef, useState } from 'react';
-import { withRouter } from 'react-router-dom';
+import withRouter from '../../router/withRouter';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import UseKey from 'react-use/lib/component/UseKey';

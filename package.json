@@ -111,7 +111,7 @@
     "react-mobile-datepicker": "^4.0.2",
     "react-motion": "^0.5.2",
     "react-redux": "^9.3.0",
-    "react-router-dom": "^4.2.2",
+    "react-router-dom": "^7.18.3",
     "react-runner": "^1.0.5",
     "react-svg": "19.1.5",
     "react-use": "^17.6.1",

@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
-import { Route, Switch, withRouter } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
+import withRouter from './withRouter';
 import _ from 'lodash';
 import { Dialog } from 'ming-ui';
 import ErrorBoundary from 'ming-ui/components/ErrorBoundary';
@@ -124,7 +125,7 @@ class App extends Component<any, any> {
           <div className="flexColumn flex" id="containerWrapper">
             <PortalPageHeaderRoute />
             <section id="container">
-              <Switch>{this.genRouteComponent(ROUTE_CONFIG_PORTAL)}</Switch>
+              <Routes>{this.genRouteComponent(ROUTE_CONFIG_PORTAL)}</Routes>
             </section>
           </div>
         </div>
@@ -136,16 +137,11 @@ class App extends Component<any, any> {
         <div className="flexColumn flex" id="containerWrapper">
           <PageHeaderRoute />
           <section id="container">
-            <Switch>
+            <Routes>
               {this.genRouteComponent(ROUTE_CONFIG)}
-              <Route
-                path="*"
-                render={() => {
-                  location.href = md.global.Config.PlatformUrl + '404';
-                  return null;
-                }}
-              />
-            </Switch>
+              {/* v7 里 * 的排序恒定最低，与 v4 把兜底放在 <Switch> 最后是同一个效果 */}
+              <Route path="*" element={<NotFoundRedirect />} />
+            </Routes>
           </section>
         </div>
         <section id="chatPanel">{rp && <ChatPanel />}</section>
@@ -154,10 +150,13 @@ class App extends Component<any, any> {
 
         {ch && (
           <section id="chat">
-            <Switch>
-              <Route path={withoutChatUrl} component={null} />
-              {!window.isPublicApp && rp && <Route path="*" component={ChatList} />}
-            </Switch>
+            {/* 原来这里用一条 path={withoutChatUrl} 的空路由把「不显示聊天」的
+                URL 占掉、其余落到 path="*" 上。withoutChatUrl 现在是谓词函数
+                （见 config.ts 里的说明），直接判断即可。 */}
+            {/* App 外层套了 withRouter，导航时会拿到新的 location prop 并重渲染，
+                所以这里读 props.location.pathname 而不是全局 location —— 后者
+                在 SPA 里不会触发 React 更新。 */}
+            {!window.isPublicApp && rp && !withoutChatUrl(this.props.location.pathname) && <ChatList />}
           </section>
         )}
       </div>

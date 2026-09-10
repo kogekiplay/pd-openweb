@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { withRouter } from 'react-router-dom';
+import withRouter from '../../../../../router/withRouter';
 import { ConfigProvider, Empty, Select, Table } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';

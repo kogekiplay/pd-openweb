@@ -57,4 +57,9 @@ const withoutHeaderPathList = [
   'gunterExport',
   'printForm',
 ];
-export const withoutHeaderUrl = `/(.*)(${withoutHeaderPathList.join('|')})`;
+// 原来是 v4 的路径正则 `/(.*)(片段1|片段2|...)` —— 实际语义是「pathname 里
+// 出现过其中任一片段」的【子串匹配】。v7 的路径语法表达不了它（* 只能在末尾、
+// 也没有交替组），而且用「某条路由是否匹配」去表达「要不要渲染另一个东西」
+// 本来就绕。直接改成谓词函数，语义等价且一眼能懂。
+export const withoutHeaderUrl = (pathname = location.pathname) =>
+  withoutHeaderPathList.some(p => pathname.includes(p));

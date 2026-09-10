@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { withRouter } from 'react-router-dom';
+import withRouter from '../../../../router/withRouter';
 import { Icon, LoadDiv, Support } from 'ming-ui';
 import projectAjax from 'src/api/project';
 import smsAjax from 'src/api/sms';

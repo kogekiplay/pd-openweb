@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import withRouter from '../../../router/withRouter';
 import cx from 'classnames';
 import _ from 'lodash';
 import { compile, pathToRegexp } from 'path-to-regexp';

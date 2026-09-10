@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { createRoot } from 'react-dom/client';
-import { Route, BrowserRouter as Router, Switch, withRouter } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
+import withRouter from '../../router/withRouter';
 import { Provider } from 'react-redux';
 import { Dialog, Modal } from 'antd-mobile';
 import _ from 'lodash';

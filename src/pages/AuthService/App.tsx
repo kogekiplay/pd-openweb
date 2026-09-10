@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { withRouter } from 'react-router-dom';
+import withRouter from '../../router/withRouter';
 import ErrorBoundary from 'ming-ui/components/ErrorBoundary';
 import preall from 'src/common/preall';
 import { addSubPathOfRoute } from 'src/utils/common';

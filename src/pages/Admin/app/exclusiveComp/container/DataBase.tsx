@@ -1,5 +1,5 @@
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
-import { withRouter } from 'react-router-dom';
+import withRouter from '../../../../../router/withRouter';
 import Trigger from 'rc-trigger';
 import styled from 'styled-components';
 import { Button, Dialog, Icon, LoadDiv } from 'ming-ui';
