@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import withRouter from '../../../../router/withRouter';
 import cx from 'classnames';
 import { Icon } from 'ming-ui';
 import 'mobile/MyHome/index.less';

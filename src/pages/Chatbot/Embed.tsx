@@ -1,15 +1,16 @@
 import React, { Component, useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
-import { withRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import { Route, BrowserRouter as Router, Routes } from 'react-router';
 import { LoadDiv } from 'ming-ui';
 import homeAppApi from 'src/api/homeApp';
 import UnNormal from 'worksheet/views/components/UnNormal';
 import preall from 'src/common/preall';
 import store from 'src/redux/configureStore';
 import { navigateTo } from 'src/router/navigateTo';
+import { RouteElement } from 'src/router/routeProps';
 import { addSubPathOfRoute, getPathWithoutSubPath } from 'src/utils/common';
+import withRouter from '../../router/withRouter';
 import Chatbot from './index';
 
 const ChatbotWrap = withRouter(props => {
@@ -68,17 +69,15 @@ class LandChatbot extends Component<any, any> {
   render() {
     return (
       <Router>
-        <Switch>
-          <Route
-            path={addSubPathOfRoute('/embed/chatbot/:appId/:chatbotId/:conversationId?')}
-            component={ChatbotWrap}
-          />
-          <Route
-            path={addSubPathOfRoute('/embed/chatbot/s/:appId/:chatbotId/:conversationId?')}
-            component={ChatbotWrap}
-          />
-          <Route component={null} />
-        </Switch>
+        <Routes>
+          {/* 两条都是非精确匹配，各补一条 /*；末尾无 path 的兜底对应 v7 的 path="*" */}
+          {['/embed/chatbot/:appId/:chatbotId/:conversationId?', '/embed/chatbot/s/:appId/:chatbotId/:conversationId?']
+            .flatMap(one => [addSubPathOfRoute(one), `${addSubPathOfRoute(one)}/*`])
+            .map(p => (
+              <Route key={p} path={p} element={<RouteElement component={ChatbotWrap} />} />
+            ))}
+          <Route path="*" element={null} />
+        </Routes>
       </Router>
     );
   }

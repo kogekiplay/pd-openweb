@@ -1,6 +1,6 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
 import DocumentTitle from 'react-document-title';
+import { Route, Routes } from 'react-router';
 import _ from 'lodash';
 import { Support } from 'ming-ui';
 import ErrorBoundary from 'ming-ui/components/ErrorBoundary';
@@ -26,13 +26,13 @@ import Sidenav from './Sidenav';
 import './svgIcon';
 
 const ROUTE_CONFIG_PATH = {
-  connectList: '/integration/connectList',
-  dataConnect: '/integration/dataConnect',
-  taskCon: '/integration/taskCon',
-  task: '/integration/task',
-  source: '/integration/source',
-  dataMirror: '/integration/dataMirror',
-  stats: '/integration/stats',
+  connectList: 'connectList',
+  dataConnect: 'dataConnect',
+  taskCon: 'taskCon',
+  task: 'task',
+  source: 'source',
+  dataMirror: 'dataMirror',
+  stats: 'stats',
 };
 const TYPE_TO_COMP = {
   connectList: ConnectList,
@@ -57,8 +57,11 @@ const getRoutes = param => {
       components.push(
         <Route
           key={i}
-          path={addSubPathOfRoute(path)}
-          component={() => {
+          path={path}
+          // v7 只有 element。原来的 component={() => ...} 是个无 props 的函数组件，
+          // 用 createElement 包一下即可；不能写成 element={(() => ...)()}，
+          // 那会在构造路由表时就把它求值掉。
+          element={React.createElement(() => {
             return (window.platformENV.isOverseas || window.platformENV.isLocal) &&
               !md.global.Config.EnableDataPipeline &&
               ENABLE_DATAPIPELINE_KEYS.includes(key) ? (
@@ -86,7 +89,7 @@ const getRoutes = param => {
             ) : (
               <Component {...param} />
             );
-          }}
+          })}
         />,
       );
     }
@@ -129,8 +132,11 @@ export default class HubContainer extends React.Component<any, any> {
   };
 
   render() {
-    const { match = { params: {} } } = this.props;
-    const { type = '' } = match.params;
+    // 父路由从 '/integration/:type?/:listType?' 改成了 '/integration/*'
+    //（原来父子深度相同、父会把 URL 吃光，子路由无段可匹配），所以 type 不再
+    // 由路由参数提供。它本来就是 /integration/ 之后的那一段，直接从路径取。
+    const seg = location.pathname.split('/');
+    const type = seg[seg.indexOf('integration') + 1] || '';
     const info = integrationConfig.find(o => o.type === type) || {};
     const { currentProjectId } = this.state;
     const myPermissions = getMyPermissions(currentProjectId);
@@ -145,8 +151,19 @@ export default class HubContainer extends React.Component<any, any> {
       noMirrorMenu: !hasPermission(myPermissions, PERMISSION_ENUM.CREATE_SYNC_TASK),
       noStatsMenu: !hasPermission(myPermissions, PERMISSION_ENUM.CREATE_SYNC_TASK),
     };
+    // 同上：父路由改成 '/integration/*' 后 match.params 里的 type / listType 没了。
+    // 下游 apiIntegration/index.tsx 读 match.params.listType 来决定选中哪个标签页，
+    // 这里把两个都从路径补回去，形状不变，下游不用改。
     const param = {
       ...this.props,
+      match: {
+        ...(this.props as any).match,
+        params: {
+          ...((this.props as any).match || {}).params,
+          type,
+          listType: seg[seg.indexOf('integration') + 2] || '',
+        },
+      },
       currentProjectId,
       myPermissions,
     };
@@ -178,10 +195,12 @@ export default class HubContainer extends React.Component<any, any> {
         <Sidenav {...param} menuAuth={menuAuth} />
         <div className="flex overflowHidden">
           <ErrorBoundary>
-            <Switch>
+            {/* 父路由已改成 /integration/*，这里是相对路径，也不再套
+                addSubPathOfRoute（部署子路径由父路由那层处理）。 */}
+            <Routes>
               {getRoutes(param)}
-              <Route path="*" component={() => <APILibrary {...param} />} exact />
-            </Switch>
+              <Route path="*" element={<APILibrary {...param} />} />
+            </Routes>
           </ErrorBoundary>
         </div>
       </div>

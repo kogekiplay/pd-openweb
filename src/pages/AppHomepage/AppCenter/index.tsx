@@ -1,5 +1,5 @@
 import React, { lazy, Suspense, useEffect, useState } from 'react';
-import { withRouter } from 'react-router-dom';
+import withRouter from '../../../router/withRouter';
 import DocumentTitle from 'react-document-title';
 import _ from 'lodash';
 import moment from 'moment';

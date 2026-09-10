@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { withRouter } from 'react-router-dom';
+import withRouter from '../../../router/withRouter';
 import styled from 'styled-components';
 import { LoadDiv } from 'ming-ui';
 import Agent from 'src/components/Agent';

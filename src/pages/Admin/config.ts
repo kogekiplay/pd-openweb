@@ -25,6 +25,22 @@ Config.getParams = function () {
   Config.projectId = Config.params[2];
 };
 
+/**
+ * 从 pathname 里取 projectId，与 Config.getParams() 的算法一致（admin 段之后第 2 个）。
+ *
+ * 为什么需要它：路由迁到 v7 后，Admin 的父路由从 '/admin/:routeType/:projectId'
+ * 改成了 '/admin/*' —— 只有这样内层的子路由才有剩余段可匹配（v7 的嵌套 Routes
+ * 匹配的是父消费后剩下的那段，而原来父子深度相同，父会把整个 URL 吃光）。
+ * 代价是父路由不再提供 projectId 参数，所以改从路径直接取。
+ * 与 Config.params[2] 同值，但不依赖 Config.getParams() 是否已经调用过。
+ */
+export const getProjectIdFromPath = (pathname = location.pathname) => {
+  const arr = pathname.split('/');
+  const i = arr.indexOf('admin');
+
+  return i >= 0 ? arr[i + 2] : undefined;
+};
+
 Config.setPageTitle = function (prefix) {
   document.title = Config.getTitle(prefix);
 };

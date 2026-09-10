@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
 import cx from 'classnames';
 import _ from 'lodash';
 import AdminTitle from 'src/pages/Admin/common/AdminTitle';
 import { navigateTo } from 'src/router/navigateTo';
-import { addSubPathOfRoute } from 'src/utils/common';
 import Config from '../../config';
 import CertInfo from './component/CertInfo';
 import ProjectInfo from './component/ProjectInfo';
@@ -20,19 +18,26 @@ export default class SystemSetting extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {
-      currentTab: _.isArray(Config.params) && Config.params.length ? Config.params[1] : 'sysinfo',
       showHeader: true,
     };
   }
 
   changeTab = key => {
     const projectId = Config.projectId;
-    this.setState({ currentTab: key });
     navigateTo(`/admin/${key}/${projectId}`);
   };
 
   render() {
-    const { currentTab, showHeader } = this.state;
+    const { showHeader } = this.state;
+    // 从路径派生而不是存 state：原来内层用两条 <Route> 来决定渲染哪个 Tab
+    //（state 只是同步用的）。路由迁到 v7 后这两条没法保留 —— 它们的判别段
+    // （sysinfo / certinfo）已经被父路由 '/admin/*' 下的 'sysinfo/*' / 'certinfo/*'
+    // 消费掉了，相对化之后两条都会变成 ':projectId'、直接撞车。
+    // 改成按路径取当前 Tab，顺带修掉一个既有隐患：原来 changeTab 只在点击时
+    // setState，浏览器【后退】时 state 不会变（v4 是靠 <Route> 重新匹配兜住的）。
+    const seg = location.pathname.split('/');
+    const currentTab = seg[seg.indexOf('admin') + 1] || 'sysinfo';
+    const ActiveComp = Comp[currentTab] || Comp.sysinfo;
 
     return (
       <div className="orgManagementWrap">
@@ -60,23 +65,12 @@ export default class SystemSetting extends Component<any, any> {
         )}
 
         <div className={cx('flexColumn', { orgManagementContent: showHeader, orgManagementWrap: !showHeader })}>
-          {TABS.map(item => {
-            const Component = Comp[item.key];
-            return (
-              <Route
-                key={item.path}
-                path={addSubPathOfRoute(item.path)}
-                render={({ match: { params } }) => (
-                  <Component
-                    ref={ele => (this.com = ele)}
-                    {...params}
-                    changeTab={this.changeTab}
-                    changeShowHeader={visible => this.setState({ showHeader: visible })}
-                  />
-                )}
-              />
-            );
-          })}
+          <ActiveComp
+            ref={ele => (this.com = ele)}
+            projectId={Config.projectId}
+            changeTab={this.changeTab}
+            changeShowHeader={visible => this.setState({ showHeader: visible })}
+          />
         </div>
       </div>
     );

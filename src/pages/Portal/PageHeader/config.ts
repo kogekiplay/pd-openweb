@@ -14,11 +14,11 @@ export const PAGE_HEADER_ROUTE_CONFIG = addSubPathOfRoutes({
     component: () => import('src/pages/PageHeader/AppPkgHeader'),
   },
   appPkg: {
-    path: '/(app/)?:appId/:groupId?/:worksheetId?/:viewId?',
+    path: ['/app/:appId/:groupId?/:worksheetId?/:viewId?', '/:appId/:groupId?/:worksheetId?/:viewId?'],
     component: () => import('src/pages/PageHeader/AppPkgHeader'),
   },
   app: {
-    path: '/(app/)?',
+    path: ['/app', '/'],
     isExact: true,
     component: () => import('src/pages/PageHeader/AppPkgHeader'),
   },

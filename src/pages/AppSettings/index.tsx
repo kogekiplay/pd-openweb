@@ -21,6 +21,19 @@ import { routerConfigs } from './routerConfig';
 import { getAppConfig } from './util';
 import './index.less';
 
+// 【lazy() 不能在渲染期调】和 src/pages/Personal/index.tsx 同一个坑：
+// v7 的导航包在 startTransition 里，渲染期新造的 lazy 必然 suspend，而下面那个
+// <Suspense> 是已挂载的边界，transition 不会显示 fallback、只会保留旧内容等新树，
+// 等 resolve 后重渲染又造一个新 lazy —— 无限打转、永不 commit。
+// 表现是切左侧设置项时地址栏变了、右侧纹丝不动，且不抛任何错。
+// 判据与豁免写在 src/router/renderTimeLazy.spec.js。
+const lazyCache = new Map();
+const getLazyComponent = factory => {
+  if (!lazyCache.has(factory)) lazyCache.set(factory, lazy(factory));
+
+  return lazyCache.get(factory);
+};
+
 function UpgradeCom({ projectId, featureId }) {
   return (
     <Fragment>
@@ -242,7 +255,7 @@ class AppSettings extends Component<any, any> {
         _.find(routerConfigs, menu => menu.type === currentConfigType),
         'component',
       ) || routerConfigs[0].component;
-    const Component = lazy(currentComp);
+    const Component = getLazyComponent(currentComp);
     const componentProps = {
       ...this.props,
       data,

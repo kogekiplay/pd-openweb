@@ -1,11 +1,9 @@
 import React, { Component, Fragment } from 'react';
-import { Route } from 'react-router-dom';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Support } from 'ming-ui';
 import AdminTitle from 'src/pages/Admin/common/AdminTitle';
 import { navigateTo } from 'src/router/navigateTo';
-import { addSubPathOfRoute } from 'src/utils/common';
 import { VersionProductType } from 'src/utils/enum';
 import { getFeatureStatus } from 'src/utils/project';
 import DataBase from './container/DataBase';
@@ -74,7 +72,7 @@ export default class ExclusiveComp extends Component<any, any> {
 
   render() {
     const { refresh, activeKey } = this.state;
-    const projectId = _.get(this.props, 'match.params.projectId');
+    const { projectId, explanId } = _.get(this.props, 'match.params') || {};
     const hasDataBase =
       getFeatureStatus(projectId, VersionProductType.dataBase) === '1' &&
       (!window.platformENV.isPlatform || (!window.platformENV.isOverseas && !window.platformENV.isLocal));
@@ -87,42 +85,26 @@ export default class ExclusiveComp extends Component<any, any> {
         />
         {this.renderHeader()}
 
-        {hasComputing && (
-          <Fragment>
-            <Route
-              path={addSubPathOfRoute('/admin/computing/:projectId')}
-              exact
-              render={({ match: { params } }) => {
-                return <ExplanList {...params} refresh={refresh} />;
-              }}
-            />
-            <Route
-              path={addSubPathOfRoute('/admin/computing/:projectId/:id')}
-              exact
-              render={({ match: { params } }) => {
-                return <ExplanDetail {...params} />;
-              }}
-            />
-          </Fragment>
-        )}
-        {hasDataBase && (
-          <Fragment>
-            <Route
-              path={addSubPathOfRoute('/admin/database/:projectId')}
-              exact
-              render={({ match: { params } }) => {
-                return <DataBase {...params} refresh={refresh} />;
-              }}
-            />
-            <Route
-              path={addSubPathOfRoute('/admin/database/:projectId/:id')}
-              exact
-              render={({ match: { params } }) => {
-                return <ManageDataBase {...params} />;
-              }}
-            />
-          </Fragment>
-        )}
+        {/* 原来这里是 4 条【裸的】<Route>（不在 Switch 里，靠各自匹配决定渲染谁）。
+            v7 的 <Route> 必须放在 <Routes> 内，而且这几条也留不住 ——
+            判别段已经被父路由 'computing/:projectId/:explanId?' /
+            'database/:projectId/:explanId?' 消费掉了，相对化后全部撞在一起。
+            这两个维度组件本来就有：activeKey（computing / database）由 state 维护，
+            有没有 id 看父路由给的 explanId。直接按它们渲染，等价且更直白。 */}
+        {hasComputing &&
+          activeKey === 'computing' &&
+          (explanId ? (
+            <ExplanDetail projectId={projectId} id={explanId} />
+          ) : (
+            <ExplanList projectId={projectId} refresh={refresh} />
+          ))}
+        {hasDataBase &&
+          activeKey === 'database' &&
+          (explanId ? (
+            <ManageDataBase projectId={projectId} id={explanId} />
+          ) : (
+            <DataBase projectId={projectId} refresh={refresh} />
+          ))}
       </div>
     );
   }

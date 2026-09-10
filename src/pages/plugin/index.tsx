@@ -1,6 +1,6 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
 import DocumentTitle from 'react-document-title';
+import { Route, Routes } from 'react-router';
 import _ from 'lodash';
 import ErrorBoundary from 'ming-ui/components/ErrorBoundary';
 import { getMyPermissions } from 'src/components/checkPermission';
@@ -58,8 +58,18 @@ export default class PluginContainer extends React.Component<any, any> {
 
   render() {
     const { currentProjectId, currentProjectName, myPermissions } = this.state;
+    // 父路由从 '/plugin/:type?' 改成了 '/plugin/*'（否则内层嵌套 Routes 无段可匹配），
+    // 于是 match.params.type 没了。而 SideNav 靠它高亮当前导航项、并写
+    // localStorage 的 pluginUrl —— 这里把它从路径补回去，形状与原来一致，
+    // 下游组件（SideNav 读的是 props.match.params.type）不用改。
+    const seg = location.pathname.split('/');
+    const pluginType = seg[seg.indexOf('plugin') + 1] || '';
     const param = {
       ...this.props,
+      match: {
+        ...(this.props as any).match,
+        params: { ...((this.props as any).match || {}).params, type: pluginType },
+      },
       currentProjectId,
       currentProjectName,
       myPermissions,
@@ -86,19 +96,17 @@ export default class PluginContainer extends React.Component<any, any> {
         <SideNav {...param} />
         <div className="flex">
           <ErrorBoundary>
-            <Switch>
+            {/* 父路由已改成 /plugin/*（见 src/router/config.ts）。v7 的嵌套 Routes
+                匹配父消费后剩下的那段，所以这里写相对路径 'view' / 'node'，
+                且不再套 addSubPathOfRoute —— 部署子路径是父路由那一层的事。 */}
+            <Routes>
+              <Route path="view" element={<PluginComponent {...param} myPermissions={myPermissions} />} />
               <Route
-                path={addSubPathOfRoute('/plugin/view')}
-                component={() => <PluginComponent {...param} myPermissions={myPermissions} />}
+                path="node"
+                element={<PluginComponent {...param} myPermissions={myPermissions} pluginType={PLUGIN_TYPE.WORKFLOW} />}
               />
-              <Route
-                path={addSubPathOfRoute('/plugin/node')}
-                component={() => (
-                  <PluginComponent {...param} myPermissions={myPermissions} pluginType={PLUGIN_TYPE.WORKFLOW} />
-                )}
-              />
-              <Route path="*" component={() => <PluginComponent {...param} myPermissions={myPermissions} />} exact />
-            </Switch>
+              <Route path="*" element={<PluginComponent {...param} myPermissions={myPermissions} />} />
+            </Routes>
           </ErrorBoundary>
         </div>
       </div>

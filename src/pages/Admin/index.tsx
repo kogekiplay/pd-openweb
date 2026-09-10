@@ -1,14 +1,17 @@
 import React, { lazy, PureComponent, Suspense } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import _ from 'lodash';
 import { navigateTo } from 'router/navigateTo';
 import { LoadDiv, WaterMark } from 'ming-ui';
 import withoutPermission from 'src/pages/worksheet/assets/withoutPermission.png';
+import expandRoutePaths from 'src/router/expandRoutePaths';
+import { RouteElement } from 'src/router/routeProps';
 import { addSubPathOfRoute } from 'src/utils/common';
 import { getCurrentProject, getFeatureStatus } from 'src/utils/project';
 import AdminCommon from './common/common';
 import Empty from './common/TableEmpty';
 import Config from './config';
+import { getProjectIdFromPath } from './config';
 import { PERMISSION_ENUM, ROUTE_CONFIG } from './enum';
 import Menu from './menu';
 import ApplyRole from './organization/roleAuth/apply';
@@ -17,7 +20,20 @@ import { menuList } from './router.config.js';
 import { allPlatformsHidden } from './util';
 import './index.less';
 
-const getComponent = component => lazy(component);
+// 【按工厂缓存，不要每次渲染都 lazy() 一个新的】本函数是在 render 里被调的
+//（childRoutes.flatMap(...)），而 lazy() 每调一次都产出新组件类型、必然先 suspend。
+// v7 的导航包在 startTransition 里，撞上一个已挂载的 <Suspense> 边界就会
+// 「resolve → 重渲染 → 又造新 lazy → 又 suspend」无限打转、永不 commit。
+// 这里今天侥幸没炸，只是因为 withParams 每次也返回新的组件类型，边界跟着重新挂载、
+// 于是允许直接显示 fallback。这个侥幸不能依赖 —— 同一个坑已经在
+// src/router/genRouteComponent.tsx 和 src/pages/Personal/index.tsx 各炸过一次。
+// 顺带也省掉了每次渲染整棵后台页面重新挂载的开销。
+const lazyCache = new Map();
+const getComponent = component => {
+  if (!lazyCache.has(component)) lazyCache.set(component, lazy(component));
+
+  return lazyCache.get(component);
+};
 
 const withParams = (Component, params) => {
   const ParamsComponent = props => (
@@ -63,7 +79,7 @@ export default class AdminEntryPoint extends PureComponent<any, any> {
 
   componentDidUpdate(prevProps) {
     if (prevProps !== this.props) {
-      const projectId = _.get(this.props, 'match.params.projectId');
+      const projectId = getProjectIdFromPath();
 
       if (projectId !== Config.projectId) {
         this.setState({
@@ -91,7 +107,7 @@ export default class AdminEntryPoint extends PureComponent<any, any> {
   } //获取权限模块
 
   getRouterKeys(authority) {
-    const projectId = _.get(this.props, 'match.params.projectId');
+    const projectId = getProjectIdFromPath();
 
     if (_.isArray(authority)) {
       let keys = [];
@@ -157,7 +173,7 @@ export default class AdminEntryPoint extends PureComponent<any, any> {
 
     const isExtend = JSON.parse(localStorage.getItem('adminList_isUp'));
 
-    const projectId = _.get(this.props, 'match.params.projectId');
+    const projectId = getProjectIdFromPath();
 
     return (
       <WaterMark projectId={projectId}>
@@ -165,20 +181,19 @@ export default class AdminEntryPoint extends PureComponent<any, any> {
           <div className="flexRow w100 mainContainerWrapper">
             <Menu isExtend={isExtend} menuList={filteredRoutes} />
             <div id="mainContainer" className="Relative">
-              <Switch>
-                {childRoutes.map(({ path, exact, component }) => {
-                  return (
-                    <Route
-                      key={path}
-                      exact={exact}
-                      path={addSubPathOfRoute(path)}
-                      component={withParams(getComponent(component), {
-                        authority,
-                      })}
-                    />
-                  );
+              <Routes>
+                {/* 子路径已相对化（见 router.config.ts），这里不能再套 addSubPathOfRoute ——
+                    子路径部署在父路由 /admin/* 之下，子路径本身不带 /admin 前缀，
+                    也就不该再被拼上部署子路径（那是父路由那一层的事）。
+                    expandRoutePaths 负责摊平数组 path 并按「非精确」补 /*。 */}
+                {childRoutes.flatMap(({ path, exact, component }) => {
+                  const Comp = withParams(getComponent(component), { authority });
+
+                  return expandRoutePaths({ path, exact }).map(p => (
+                    <Route key={p} path={p} element={<RouteElement component={Comp} />} />
+                  ));
                 })}
-              </Switch>
+              </Routes>
             </div>
           </div>
         </div>
@@ -204,19 +219,15 @@ export default class AdminEntryPoint extends PureComponent<any, any> {
     );
 
     return (
-      <Switch>
-        <Route
-          path={addSubPathOfRoute('/admin/mycharacter/:projectId')}
-          component={() => <MyRole authority={authority} />}
-        />
-        <Route
-          path={addSubPathOfRoute('/admin/apply/:projectId/:roleId?')}
-          component={() => <ApplyRole authority={authority} />}
-        />
-        <Route path={addSubPathOfRoute('/admin/:routeType/:projectId')}>
-          {this.renderHomeContent(routesWithAuthority)}
-        </Route>
-      </Switch>
+      // 本组件挂在父路由 '/admin/*' 之下，所以这里写相对路径、也不再套
+      // addSubPathOfRoute（部署子路径由父路由那层处理）。
+      // 最后那条原本是 '/admin/:routeType/:projectId'，作用是「其余都走后台主内容」，
+      // 相对化后就是 '*'（v7 里排序恒定最低，与放在 Switch 末尾同效）。
+      <Routes>
+        <Route path="mycharacter/:projectId" element={<MyRole authority={authority} />} />
+        <Route path="apply/:projectId/:roleId?" element={<ApplyRole authority={authority} />} />
+        <Route path="*" element={this.renderHomeContent(routesWithAuthority)} />
+      </Routes>
     );
   }
 

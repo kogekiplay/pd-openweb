@@ -26,12 +26,16 @@ export const ROUTE_CONFIG = addSubPathOfRoutes({
 
   // 任务
   taskDetail: {
-    path: '/apps/task/task_:id',
+    path: '/apps/task/:taskSeg',
     component: () => import('src/pages/task/detail'),
+    // v4 原路径是 '/apps/task/task_:id'，v7 表达不了段内前缀，退化成整段匹配后
+    // 由守卫判前缀。不匹配时【回落到任务列表】而不是 404 —— v4 下 /apps/task/其它
+    // 是被前一条 '/apps/task' 的前缀匹配接住的（渲染列表页），不是什么都没命中。
+    guard: { param: 'taskSeg', prefix: 'task_', fallback: () => import('src/pages/task') },
     title: _l('任务详情'),
   },
   task: {
-    path: '/apps/(task|taskcenter)',
+    path: ['/apps/task', '/apps/taskcenter'],
     component: () => import('src/pages/task'),
     title: _l('任务'),
   },
@@ -43,14 +47,17 @@ export const ROUTE_CONFIG = addSubPathOfRoutes({
     title: _l('日程'),
   },
   calendarDetail: {
-    path: '/apps/calendar/detail_:id',
+    path: '/apps/calendar/:detailSeg',
     component: () => import('src/pages/calendar/detail'),
+    // v4 原路径 '/apps/calendar/detail_:id'；不匹配前缀时 v4 是【什么都没命中】，
+    // 所以这里走全局兜底 404（不给 fallback 即为此行为）。
+    guard: { param: 'detailSeg', prefix: 'detail_' },
     title: _l('日程详情'),
   },
 
   // 知识
   kc: {
-    path: '/apps/kc/:path*',
+    path: '/apps/kc/*',
     component: () => import('src/pages/kc'),
     title: _l('知识'),
   },
@@ -133,8 +140,12 @@ export const ROUTE_CONFIG = addSubPathOfRoutes({
     title: _l('App下载与设置'),
   },
   user: {
-    path: ['/user', '/user_:id'],
+    path: ['/user', '/:userSeg'],
     component: () => import('src/pages/UserProfile'),
+    // v4 原路径是 ['/user', '/user_:id']。'/user' 是本人主页、'/user_xxx' 是他人。
+    // 退化成根级 '/:userSeg' 后会吃掉所有一级 URL，靠守卫挡回去。
+    // UserProfile 自己用正则从 pathname 取 accountId，不读 params，所以只需要「挡」。
+    guard: { param: 'userSeg', prefix: 'user_', allowExact: ['user'] },
     title: _l('个人资料'),
   },
   search: {
@@ -143,7 +154,12 @@ export const ROUTE_CONFIG = addSubPathOfRoutes({
     title: _l('超级搜索'),
   },
   admin: {
-    path: '/admin/:routeType/:projectId',
+    // v7 的嵌套 <Routes> 匹配的是父路由消费之后剩下的那段。原来父写
+    // '/admin/:routeType/:projectId' 与子路由深度相同，会把整个 URL 吃光、
+    // 子路由无段可匹配。改成 /admin/* 之后子路由才能相对匹配（见
+    // src/pages/Admin/router.config.ts）。父不再提供 projectId，
+    // Admin 改用 getProjectIdFromPath() 从路径取，同值。
+    path: '/admin/*',
     component: () => import('src/pages/Admin'),
     title: _l('组织管理'),
   },
@@ -205,7 +221,14 @@ export const ROUTE_CONFIG = addSubPathOfRoutes({
     title: _l('正在导出，请稍候...'),
   },
   home: {
-    path: ['/dashboard', '/app/my/(group|owned)?/:projectId?/:groupType?/:groupId?', '/favorite', '/app/lib/'],
+    path: [
+      '/dashboard',
+      '/app/my/group/:projectId?/:groupType?/:groupId?',
+      '/app/my/owned/:projectId?/:groupType?/:groupId?',
+      '/app/my/:projectId?/:groupType?/:groupId?',
+      '/favorite',
+      '/app/lib/',
+    ],
     component: () => import('src/pages/AppHomepage/AppCenter'),
   },
   aggregationInfo: {
@@ -234,7 +257,8 @@ export const ROUTE_CONFIG = addSubPathOfRoutes({
     title: _l('集成'),
   },
   integration: {
-    path: '/integration/:type?/:listType?',
+    // 改成 splat 才能让内层的嵌套 <Routes> 有剩余段可匹配
+    path: '/integration/*',
     component: () => import('src/pages/integration'),
     title: _l('集成'),
   },
@@ -259,7 +283,8 @@ export const ROUTE_CONFIG = addSubPathOfRoutes({
     title: _l('统计'),
   },
   plugin: {
-    path: '/plugin/:type?',
+    // 改成 splat 才能让内层的嵌套 <Routes> 有剩余段可匹配
+    path: '/plugin/*',
     component: () => import('src/pages/plugin'),
     title: _l('插件'),
   },
@@ -353,5 +378,32 @@ const withoutChatPathList = [
   'app/lib',
   'approveInvoice',
 ];
-export const withoutHeaderUrl = `/(.*)(${withoutHeaderPathList.join('|')})`;
-export const withoutChatUrl = `/(.*)(${withoutChatPathList.join('|')})`;
+/**
+ * 原来这两个是 v4 的路径字符串 `/(.*)(片段1|片段2|...)`，被当成 <Route path> 用来
+ * 「占掉」某些 URL，从而不渲染顶栏 / 聊天栏。v7 的路径语法表达不了交替组，只能改成谓词。
+ *
+ * 【第一版写成 pathname.includes(片段) 是错的】—— 我当时在注释里断言 v4 的语义就是
+ * 子串匹配，没有实测。实际上 v4 的 <Route> 默认 end: false，path-to-regexp 会在
+ * 末尾补 `(?=\/|$)`，也就是【片段必须停在路径分隔符或字符串结尾】。
+ * 差别是实打实的：'role' 这个片段下，v4 不匹配 /admin/roles/<id>（role 后面还有 s），
+ * includes 却匹配 —— 线上 /admin/roles、/admin/sysroles、/admin/workflows
+ * 三个页面的顶栏（含返回工作台的主页图标）就这么整个消失了。
+ *
+ * 所以这里【照抄 v4 实际生成的那条正则】，一个细节都不省：
+ *   /^\/((?:.*))((?:片段1|片段2))(?:\/(?=$))?(?=\/|$)/i
+ * 其中两处很容易漏掉、漏了就是线上事故：
+ *   - 结尾的 (?=\/|$)：片段必须停在分隔符或结尾（上面说的 role vs roles）
+ *   - 【i 标志】：v4 的 matchPath 默认 sensitive: false，所以是大小写不敏感的。
+ *     列表里有 'workflowEdit' 这种驼峰片段，真实 URL 是全小写的 /workflowedit，
+ *     少了 i 就漏判。这条正是差分跑出来才发现的。
+ * tools/verify-without-url-predicates.cjs 拿真的 react-router 4 对着 1292 条
+ * 真实 URL 语料 + 一批边界用例逐条比过，两个谓词都是 0 差异。改这里之前先跑它。
+ */
+const buildWithoutUrlRegExp = list =>
+  new RegExp(`^/.*(?:${list.map(p => p.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})(?:/(?=$))?(?=/|$)`, 'i');
+
+const withoutHeaderRegExp = buildWithoutUrlRegExp(withoutHeaderPathList);
+const withoutChatRegExp = buildWithoutUrlRegExp(withoutChatPathList);
+
+export const withoutHeaderUrl = (pathname = location.pathname) => withoutHeaderRegExp.test(pathname);
+export const withoutChatUrl = (pathname = location.pathname) => withoutChatRegExp.test(pathname);

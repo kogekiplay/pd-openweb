@@ -1,11 +1,11 @@
 import React from 'react';
-import { Prompt } from 'react-router-dom';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Icon, LoadDiv, Support } from 'ming-ui';
 import Confirm from 'ming-ui/components/Dialog/Confirm';
 import { buriedUpgradeVersionDialog } from 'src/components/upgradeVersion';
+import NavigationPrompt from 'src/router/NavigationPrompt';
 import { VersionProductType } from 'src/utils/enum';
 import { getFeatureStatus } from 'src/utils/project';
 import { deleteRules, getRulesAll, saveFn, showEditFn } from '../actions/action';
@@ -198,7 +198,7 @@ class ContactsHidden extends React.Component<any, any> {
           <div className="editCon flexColumn">
             {isEdit && (
               <div>
-                <Prompt when={true} message={_l('你修改的设置尚未保存，确定要离开吗？')} />
+                <NavigationPrompt when={true} message={_l('你修改的设置尚未保存，确定要离开吗？')} />
               </div>
             )}
             <div className="headerCon orgManagementHeader">

@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { Dialog } from 'ming-ui';
 import login from 'src/api/login';
 import { browserIsMobile, getPathWithoutSubPath, pathCompletion } from 'src/utils/common';
+import { getNavigationBlockMessage } from './NavigationPrompt';
 
 export function redirect(url, navigate = toUrl => (location.href = toUrl)) {
   if (getPathWithoutSubPath(url).split(/(?=[?#])/)[0] === '/app/my') {
@@ -29,6 +30,15 @@ export function navigateTo(url, isReplace = false, noRedirect = false) {
   url = pathCompletion(url, { hasDomain: false });
 
   if (url === location.href || url === location.pathname + location.search + location.hash) {
+    return;
+  }
+
+  // <Prompt> 的替代：v7 移除了它，而官方替代 useBlocker 只在 data router 下可用
+  //（见 src/router/NavigationPrompt.tsx）。本仓的应用内跳转集中走这里，所以在这
+  // 一处询问就能覆盖绝大多数「未保存就离开」的场景。
+  const blockMessage = getNavigationBlockMessage();
+
+  if (blockMessage && !window.confirm(blockMessage)) {
     return;
   }
 

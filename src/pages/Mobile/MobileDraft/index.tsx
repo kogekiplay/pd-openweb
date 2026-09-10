@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router';
 import { Popup } from 'antd-mobile';
 import _ from 'lodash';
 import styled from 'styled-components';

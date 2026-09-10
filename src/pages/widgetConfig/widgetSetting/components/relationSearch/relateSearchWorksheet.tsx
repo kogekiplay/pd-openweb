@@ -1,5 +1,5 @@
 ﻿import React, { Fragment, useEffect, useRef, useState } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';
