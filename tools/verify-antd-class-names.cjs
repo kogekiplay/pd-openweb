@@ -140,6 +140,70 @@ if (overridden.size < 100) {
   process.exit(2);
 }
 
+/* ============================================================================
+ * 补充：静态样式表比对（覆盖率远高于上面的渲染用例，是本判据的【主信号】）
+ *
+ * antd 4 和 antd 6 都在 dist/antd.css 里提供了完整样式表（2470 / 3056 个类名），
+ * 直接比这两份就能覆盖本仓全部 292 条覆盖选择器，而不像渲染用例只能触达 106 条
+ * —— 渲染用例够不到的是各种子状态（disabled / active / 展开态 / 固定列…）。
+ * 渲染用例保留下来，作用是交叉验证静态清单确实反映真实 DOM。
+ *
+ * 【antd 5 没有这份文件】：v5 把 dist/antd.css 删了（CSS-in-JS，只留 reset.css），
+ * v6 又重新提供。所以中间那一跳没法做静态比对 —— 但也不需要：
+ * 我们的落点是 v6，按 v4→v6 的结果修即可。
+ *
+ * 单独运行：node tools/verify-antd-class-names.cjs --static
+ * ==========================================================================*/
+if (process.argv.includes('--static')) {
+  const clsOf = p => new Set((fs.readFileSync(p, 'utf8').match(/\.ant-[a-zA-Z0-9_-]*/g) || []).map(s => s.slice(1)));
+  const v4css = clsOf((process.env.ANTD4 || '/tmp/antd4/node_modules/antd') + '/dist/antd.css');
+  const v6css = clsOf((process.env.ANTD6 || '/tmp/antd6/node_modules/antd') + '/dist/antd.css');
+
+  if (v4css.size < 1000 || v6css.size < 1000) {
+    console.error(`样式表解析异常（v4 ${v4css.size} / v6 ${v6css.size}），拒绝下结论。`);
+    process.exit(2);
+  }
+
+  const willBreak = [];
+  const deadAlready = [];
+  let safe = 0;
+
+  for (const [c, files] of overridden) {
+    if (!v4css.has(c)) deadAlready.push({ c, files: files.map(f => f.replace(RW, '')) });
+    else if (!v6css.has(c)) willBreak.push({ c, files: files.map(f => f.replace(RW, '')) });
+    else safe++;
+  }
+
+  console.log(`\n  本仓覆盖的 .ant-* 选择器: ${overridden.size}`);
+  console.log(`  ├ v4 有、v6 也有（安全）:        ${safe}`);
+  console.log(`  ├ v4 有、v6 没有（升级后失效）:  ${willBreak.length}`);
+  console.log(`  └ v4 里本来就没有（早已是死样式）: ${deadAlready.length}`);
+
+  const byComp = arr => {
+    const g = new Map();
+
+    for (const i of arr) {
+      const k = i.c.replace(/^ant-/, '').split('-')[0];
+
+      if (!g.has(k)) g.set(k, []);
+
+      g.get(k).push(i);
+    }
+
+    return [...g].sort((a, b) => b[1].length - a[1].length);
+  };
+
+  console.log('\n  === 会失效的（人工验证清单）===');
+  byComp(willBreak).forEach(([k, list]) => {
+    console.log(`\n  【${k}】${list.length} 条`);
+    list.forEach(i => console.log(`    .${i.c.padEnd(34)} ← ${i.files[0]}`));
+  });
+
+  fs.writeFileSync('/tmp/antd-static-diff.json', JSON.stringify({ willBreak, deadAlready }, null, 2));
+  console.log('\n  完整结果: /tmp/antd-static-diff.json');
+  process.exit(willBreak.length ? 1 : 0);
+}
+
 /* ---------- 2. 在两个版本下分别渲染，收集出现过的类名 ---------- */
 
 // 每个用例：组件名 -> 渲染函数。弹层类一律强制打开，否则收不到内容区的类名。
@@ -317,3 +381,4 @@ async function classNamesFor(antdPath) {
   // jsdom 会留下未关闭的句柄，不显式退出的话进程挂在那里、最后被看门狗误判成超时
   process.exit(broken.length ? 1 : 0);
 })();
+
