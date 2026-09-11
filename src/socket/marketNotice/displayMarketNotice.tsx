@@ -42,7 +42,8 @@ export default function displayNotice({ noticeId, displayType, desc }) {
         key: noticeId,
         icon: null,
         placement: 'bottomLeft',
-        bottom: 24,
+        // antd 5 起 notification 静态方法不再接受 bottom/top/getContainer 等实例级配置
+        // （静态方法只有一个共享实例）。24 本就是默认值，去掉后位置不变。
         description: <div className="contentWrap" dangerouslySetInnerHTML={{ __html: desc }}></div>,
         duration: null,
         onClose: handleClose,

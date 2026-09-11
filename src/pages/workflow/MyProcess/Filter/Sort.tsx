@@ -13,7 +13,6 @@ export default props => {
         <Menu className="" expandIcon={<Icon icon="arrow-right-tip" />} style={{ width: 180 }}>
           {SORT_LIST.map(item => (
             <Menu.Item
-              item={item.value}
               data-event={item.icon}
               className="pLeft10"
               style={{ padding: '7px 12px' }}

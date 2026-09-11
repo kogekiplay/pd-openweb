@@ -107,11 +107,13 @@ const antNotification = {
   info(props) {
     return notification.info(getProps(props, 'info'));
   },
+  // antd 5 彻底移除了 notification.warn（v4 时代就已废弃），统一走 warning。
+  // 本仓对外仍同时暴露 warn/warning 两个入口，调用方不用改。
   warn(props) {
-    return notification.warn(getProps(props, 'warning'));
+    return notification.warning(getProps(props, 'warning'));
   },
   warning(props) {
-    return notification.warn(getProps(props, 'warning'));
+    return notification.warning(getProps(props, 'warning'));
   },
 };
 

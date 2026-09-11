@@ -443,7 +443,10 @@ export default function CreateTaxNumber(props) {
                     ? false
                     : index === 0
               }
-              status={step === index ? 'process' : index < step ? 'finish' : ''}
+              status={
+                /* antd 5 收紧了 status 类型，'' 不再合法；v4 下 '' 走的就是默认的 wait */
+                step === index ? 'process' : index < step ? 'finish' : 'wait'
+              }
             />
           );
         })}

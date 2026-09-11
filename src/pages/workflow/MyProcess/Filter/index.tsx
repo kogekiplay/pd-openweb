@@ -7,6 +7,7 @@ import zh_TW from 'antd/es/date-picker/locale/zh_TW';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
+import dayjs from 'dayjs';
 import { Icon, LoadDiv, SvgIcon } from 'ming-ui';
 import { quickSelectUser } from 'ming-ui/functions';
 import instanceVersion from 'src/pages/workflow/api/instanceVersion';
@@ -414,15 +415,18 @@ export default class Filter extends Component<any, any> {
             suffixIcon={null}
             locale={datePickerLocale}
             format="YYYY/MM/DD"
+            // antd 5 的日期组件收发的是 dayjs 对象（本仓已直接依赖 dayjs 并在 11 个文件里使用），
+            // 所以只在 antd 的边界上用 dayjs；组件外的 state 仍是 'YYYY-MM-DD' 字符串，不受影响。
+            // onChange 里用的 .format() 两个库同名同义，下游无需改动。
             disabledDate={current => {
               if (current) {
-                const end = moment(moment().format('YYYY-MM-DD')).add(1, 'day');
+                const end = dayjs(dayjs().format('YYYY-MM-DD')).add(1, 'day');
                 return current > end;
               } else {
                 return false;
               }
             }}
-            value={[startDate ? moment(startDate) : null, endDate ? moment(endDate) : null]}
+            value={[startDate ? dayjs(startDate) : null, endDate ? dayjs(endDate) : null]}
             onChange={date => {
               if (!date) {
                 this.setState({ startDate: '', endDate: '' }, this.handleChange);
@@ -454,7 +458,7 @@ export default class Filter extends Component<any, any> {
                 return false;
               }
             }}
-            value={[moment(archivedItem.start), moment(archivedItem.end)]}
+            value={[dayjs(archivedItem.start), dayjs(archivedItem.end)]}
             onChange={date => {
               if (!date) return;
               const [start, end] = date;

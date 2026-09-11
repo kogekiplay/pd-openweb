@@ -3,6 +3,7 @@ import { TimePicker } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
+import dayjs from 'dayjs';
 import {
   Checkbox,
   CityPicker,
@@ -1236,7 +1237,7 @@ export default class SingleControlValue extends Component<any, any> {
                 inputReadOnly
                 placeholder={_l('请选择时间')}
                 format={timeFormat}
-                value={item.fieldValue ? moment(item.fieldValue, timeFormat) : null}
+                value={item.fieldValue ? dayjs(item.fieldValue, timeFormat) : null}
                 onChange={(time, timeString) => this.updateSingleControlValue({ fieldValue: timeString }, i)}
               />
             </div>

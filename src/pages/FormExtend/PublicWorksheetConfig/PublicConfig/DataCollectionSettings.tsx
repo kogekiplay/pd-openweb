@@ -203,7 +203,7 @@ const getDisabledTime = (from, itemData) => {
   if (from === 'start' && itemData.end) {
     const [endHour, endMinute] = itemData.end.split(':').map(item => parseInt(item));
     disabledHours = () => Array.from({ length: 23 - endHour }, (_, k) => k + endHour + 1);
-    disabledMinutes = selectedHour =>
+    disabledMinutes = (selectedHour: number) =>
       selectedHour < 0
         ? Array.from({ length: 60 }, (_, k) => k)
         : selectedHour === endHour
@@ -214,7 +214,7 @@ const getDisabledTime = (from, itemData) => {
   if (from === 'end' && itemData.start) {
     const [startHour, startMinute] = itemData.start.split(':').map(item => parseInt(item));
     disabledHours = () => Array.from({ length: startHour }, (_, k) => k);
-    disabledMinutes = selectedHour =>
+    disabledMinutes = (selectedHour: number) =>
       selectedHour < 0
         ? Array.from({ length: 60 }, (_, k) => k)
         : selectedHour === startHour
@@ -514,13 +514,14 @@ export default function DataCollectionSettings(props) {
                   value={
                     !linkSwitchTime.startTime || linkSwitchTime.startTime.substr(0, 4) === '0001'
                       ? null
-                      : [moment(linkSwitchTime.startTime), moment(linkSwitchTime.endTime)]
+                      : // antd 5 的 RangePicker 收发 dayjs 对象，只在边界上转，state 仍是字符串
+                        [dayjs(linkSwitchTime.startTime), dayjs(linkSwitchTime.endTime)]
                   }
                   onChange={date => {
                     setState({
                       linkSwitchTime: Object.assign({}, linkSwitchTime, {
-                        startTime: date ? moment(date[0]).format('YYYY-MM-DD HH:mm:ss') : '',
-                        endTime: date ? moment(date[1]).format('YYYY-MM-DD HH:mm:ss') : '',
+                        startTime: date ? dayjs(date[0]).format('YYYY-MM-DD HH:mm:ss') : '',
+                        endTime: date ? dayjs(date[1]).format('YYYY-MM-DD HH:mm:ss') : '',
                       }),
                     });
                   }}

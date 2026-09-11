@@ -2,6 +2,13 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Menu, Switch } from 'antd';
+
+// antd 5 起 Menu 的 children 写法被废弃，类型里只留 items；运行时仍然支持。
+// 本文件那 6 个 Menu.Item 是由 CONFIG 经多重过滤动态产出的，改成 items 是一次真重构，
+// 不适合塞进 v5 这一跳顺手做 —— 那样容易在过滤条件上出错而又没有验证手段。
+// 【v6 待办】升 6 之前必须改成 items：v6 很可能真正移除 children 支持。
+// 用这个窄口径别名显式标出来，便于检索，也不会把该组件其它类型错误一起吞掉。
+const LegacyMenu = Menu as any;
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -220,7 +227,7 @@ function OperateMenu(props) {
   return otherAppVisible ? (
     renderDialog()
   ) : (
-    <Menu className="customPageOperateMenu" activeKey={null} selectable={false}>
+    <LegacyMenu className="customPageOperateMenu" activeKey={undefined} selectable={false}>
       {CONFIG.filter(o => {
         // 加锁| 运营者=>修改名称和图标(详情页) 编辑页面说明
         if (
@@ -317,7 +324,7 @@ function OperateMenu(props) {
             </Menu.Item>
           );
         })}
-    </Menu>
+    </LegacyMenu>
   );
 }
 

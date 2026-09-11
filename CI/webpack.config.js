@@ -142,7 +142,15 @@ const ENTRIES = {
   cookies: ['src/common/cookies'],
   globals: ['src/common/global'],
   vendors: ['src/library/jquery/global', 'src/library/plupload/plupload.full.min'],
-  css: ['src/common/mdcss/basic.css', 'src/common/mdcss/iconfont/mdfont.css', 'src/common/mdcss/animate.css'],
+  // antd 5 的产物里不再有 css，原来靠 babel-plugin-import 的 style:'css' 逐组件引入，
+  // 那条链上会带进 antd 的基础重置样式。插件拆掉后必须显式补回来，否则按钮/表单的
+  // 盒模型、字体、行高会退回浏览器默认值。放在 basic.css 【之前】，本仓样式仍然压得住它。
+  css: [
+    'antd/dist/reset.css',
+    'src/common/mdcss/basic.css',
+    'src/common/mdcss/iconfont/mdfont.css',
+    'src/common/mdcss/animate.css',
+  ],
 };
 
 // Plugin configurations

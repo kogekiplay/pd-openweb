@@ -27,15 +27,6 @@
         "camel2DashComponentName": false
       },
       "import-ming-ui"
-    ],
-    [
-      "import",
-      {
-        "libraryName": "antd",
-        "libraryDirectory": "es",
-        "style": "css"
-      },
-      "import-antd"
     ]
   ],
   "env": {

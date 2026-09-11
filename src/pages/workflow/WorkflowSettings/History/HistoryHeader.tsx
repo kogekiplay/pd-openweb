@@ -7,6 +7,7 @@ import zh_TW from 'antd/es/date-picker/locale/zh_TW';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
+import dayjs from 'dayjs';
 import { array, bool, func, string } from 'prop-types';
 import { Dropdown, Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -150,7 +151,8 @@ export default class HistoryHeader extends Component<any, any> {
               showTime
               ranges={{
                 [_l('此刻')]: () => {
-                  const now = moment();
+                  // ranges 的返回值要喂给 antd 的 RangePicker，v5 起是 dayjs 对象
+                  const now = dayjs();
                   return [now, now];
                 },
               }}

@@ -331,7 +331,12 @@ export default function CalendarSet(props) {
                   : []
               }
               hourStep={1}
-              minuteStep={60}
+              minuteStep={
+                  /* antd 5 把类型收紧到 1..59，但 60 是刻意的：rc-picker 内部是
+                     for (i = 0; i <= 59; i += step)，step=60 只产出 0，即「分钟只给整点」。
+                     改成 59 或 30 都不等价，所以保留数值、只放宽类型。 */
+                  60 as any
+                }
               popupClassName={`filterDateRangeInputPopup`}
               onClick={() => {
                 const $arrow = $(`.filterDateRangeInputPopup .ant-picker-range-arrow`);

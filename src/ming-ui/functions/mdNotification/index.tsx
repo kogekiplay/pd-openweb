@@ -40,7 +40,8 @@ function notify(type = 'success', content) {
   let btnList = [];
 
   if (type === 'close') {
-    return antNotification.close(content);
+    // antd 5 把 notification.close 改名成 destroy（与 message 统一），传 key 仍是关单条
+    return antNotification.destroy(content);
   }
 
   if (type === 'destroy') {

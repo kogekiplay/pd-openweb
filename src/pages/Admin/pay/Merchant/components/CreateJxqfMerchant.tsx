@@ -342,14 +342,15 @@ export default class CreateJxqfMerchant extends Component<any, any> {
                       : false
                   }
                   status={
+                    // antd 5 收紧了 status 类型，'' 不再合法；v4 下 '' 走的就是默认的 wait
                     createStep === 0 && !merchantId && index === 0
-                      ? ''
+                      ? 'wait'
                       : (merchantStatus === 0 && _.includes([0, 1], index)) ||
                           (_.includes([1, 2], merchantStatus) && _.includes([0, 1, 2], index)) ||
                           merchantStatus === 3
                         ? step !== index
                           ? 'finish'
-                          : ''
+                          : 'wait'
                         : 'wait'
                   }
                 ></Step>

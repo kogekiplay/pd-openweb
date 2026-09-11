@@ -7,6 +7,7 @@ import localeZhCn from 'antd/es/date-picker/locale/zh_CN';
 import localeZhTw from 'antd/es/date-picker/locale/zh_TW';
 import copy from 'src/utils/copyToClipboard';
 import moment from 'moment';
+import dayjs from 'dayjs';
 import styled from 'styled-components';
 import { Checkbox, Dialog, Icon, Input, Textarea } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -191,10 +192,10 @@ function ExportPlugin(props) {
                 placeholder={_l('请选择授权到期时间')}
                 showNow={false}
                 allowClear={true}
-                disabledDate={date => date < moment().endOf('day')}
+                disabledDate={date => date < dayjs().endOf('day')}
                 format="YYYY-MM-DD 00:00"
                 onChange={validityPeriod =>
-                  setData({ validityPeriod: validityPeriod ? moment(validityPeriod).format('YYYY-MM-DD') : undefined })
+                  setData({ validityPeriod: validityPeriod ? dayjs(validityPeriod).format('YYYY-MM-DD') : undefined })
                 }
               />
             </FormItem>

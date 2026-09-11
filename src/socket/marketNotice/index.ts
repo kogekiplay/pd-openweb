@@ -10,7 +10,8 @@ export default function marketNotice() {
       // 多页面通知同步关闭
       if (data.type === 99) {
         const { noticeId } = data;
-        notification.close(noticeId);
+        // antd 5 把 notification.close 改名成 destroy（与 message 统一），传 key 仍是关单条
+        notification.destroy(noticeId);
         // 如果存在通知弹窗 则通过引用关闭
         const modalRef = window[`marketModal-${noticeId}`];
 

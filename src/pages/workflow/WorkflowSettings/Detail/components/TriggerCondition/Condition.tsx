@@ -3,6 +3,7 @@ import { TimePicker } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
+import dayjs from 'dayjs';
 import PropTypes from 'prop-types';
 import { Checkbox, CityPicker, Dropdown, Icon, Input } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -991,7 +992,7 @@ export default class Condition extends Component<any, any> {
                   placeholder=""
                   format={timeFormat}
                   value={
-                    conditionValues[0] && conditionValues[0].value ? moment(conditionValues[0].value, timeFormat) : null
+                    conditionValues[0] && conditionValues[0].value ? dayjs(conditionValues[0].value, timeFormat) : null
                   }
                   onChange={(time, timeString) => this.updateConditionDateValue({ value: timeString, i, j })}
                 />
@@ -1018,7 +1019,7 @@ export default class Condition extends Component<any, any> {
                     format={timeFormat}
                     value={
                       conditionValues[1] && conditionValues[1].value
-                        ? moment(conditionValues[1].value, timeFormat)
+                        ? dayjs(conditionValues[1].value, timeFormat)
                         : null
                     }
                     onChange={(time, timeString) =>
