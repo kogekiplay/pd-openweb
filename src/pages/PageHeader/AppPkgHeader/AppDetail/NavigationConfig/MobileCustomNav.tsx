@@ -117,7 +117,6 @@ export default function MobileCustomNav(props) {
           value: workSheetId,
           label: workSheetName,
         }))}
-        showArrow={true}
         removeIcon={null}
         value={selectedAppNavList.map(item => item.workSheetId)}
         showSearch={false}

@@ -90,7 +90,7 @@ export default function SearchApp({ projectId, className, mode, onChange = () =>
         placeholder={_l('全部应用')}
         showSearch={{ filterOption: (input, option) => option.label.toLowerCase().includes(input.toLowerCase()), onSearch: debouncedSearch }}
         allowClear
-        showArrow={false}
+        suffixIcon={null}
         value={appId}
         options={appList}
         {...extra}

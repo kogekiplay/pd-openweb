@@ -404,7 +404,7 @@ function PluginSettings(params) {
         onClose={() => setState({ editInfo: null, showEdit: false })}
         placement="right"
         open={showEdit}
-        maskClosable={false}
+       
         closable={false}
         getContainer={false}
         mask={false}

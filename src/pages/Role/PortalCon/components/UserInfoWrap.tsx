@@ -171,7 +171,7 @@ export default function UserInfoWrap(props) {
       mask={true}
       placement="right"
       open={show}
-      maskClosable={true}
+     
       closable={false}
     >
       {renderCon()}

@@ -540,7 +540,7 @@ function FormIndexSetting(props) {
           placement="right"
           onClose={() => setShowCreateIndex(false)}
           open={showCreateIndex}
-          maskClosable={false}
+         
           getContainer={false}
           mask={false}
           closable={false}

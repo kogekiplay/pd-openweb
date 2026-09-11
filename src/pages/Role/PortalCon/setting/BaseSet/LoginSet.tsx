@@ -125,7 +125,7 @@ export default function (props) {
               showTime={true}
               className={'flex Hand'}
               locale={locale}
-              bordered={false}
+              variant="borderless"
               placeholder={_l('开始时间')}
               value={
                 !_.get(portalSetModel, 'registerInfo.startTime') ||
@@ -158,7 +158,7 @@ export default function (props) {
               showTime={true}
               locale={locale}
               className={'flex Hand'}
-              bordered={false}
+              variant="borderless"
               placeholder={_l('结束时间')}
               value={
                 !_.get(portalSetModel, 'registerInfo.endTime') ||

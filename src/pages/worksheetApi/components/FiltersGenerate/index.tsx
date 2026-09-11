@@ -151,7 +151,7 @@ export default function FiltersGenerate(props) {
                   value={apiVersion}
                   onChange={value => setApiVersion(value)}
                   style={{ width: 80, backgroundColor: 'var(--color-background-secondary)' }}
-                  bordered={false}
+                  variant="borderless"
                   size="small"
                 >
                   {[

@@ -340,7 +340,7 @@ class PortalSetting extends React.Component<any, any> {
         mask={true}
         placement="right"
         open={show}
-        maskClosable={true}
+       
         closable={false}
       >
         {show ? (

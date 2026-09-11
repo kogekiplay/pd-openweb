@@ -138,7 +138,7 @@ export default function PortalUserInfoDrawer(props) {
       onClose={onClose}
       placement="right"
       open={visible}
-      maskClosable={true}
+     
       closable={false}
       getContainer={![1, 3].includes(currentPcNaviStyle)}
       mask={true}

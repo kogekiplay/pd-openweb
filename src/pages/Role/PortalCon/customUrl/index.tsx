@@ -179,7 +179,7 @@ function Setting(props) {
       rootClassName=""
       placement="right"
       open={show}
-      maskClosable={true}
+     
       closable={false}
       styles={{ body: { padding: 0 } }}
     >

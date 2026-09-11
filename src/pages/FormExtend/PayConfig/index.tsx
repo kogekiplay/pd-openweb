@@ -664,7 +664,6 @@ export default class PayConfig extends Component<any, any> {
                     className="w100 merchantList"
                     classNames={{ popup: { root: "merchantDropDown" } }}
                     mode={isMultipleMerchant ? 'multiple' : undefined}
-                    showArrow={true}
                     value={mchId}
                     optionLabelProp="label"
                     optionFilterProp="label"

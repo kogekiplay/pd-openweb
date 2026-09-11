@@ -97,7 +97,6 @@ export default function CheckboxSelect(props) {
         optionLabelProp="label"
         styles={{ popup: { root: { padding: 0 } } }}
         // 添加以下属性确保箭头显示
-        showArrow={true}
         inputIcon={null}
       >
         {controls

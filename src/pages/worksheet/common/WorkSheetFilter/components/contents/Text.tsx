@@ -102,11 +102,10 @@ export default class Text extends Component<any, any> {
         classNames={{ popup: { root: cx('worksheetFilterTextPopup', { hide: !searchValue }) } }}
         disabled={disabled}
         value={values}
-        searchValue={searchValue}
         style={{ width: '100%' }}
         notFoundContent={null}
         onChange={this.onChange}
-        onSearch={this.onSearch}
+        showSearch={{ searchValue: searchValue, onSearch: this.onSearch }}
         tokenSeparators={['\r\n', '\n']}
         options={[]}
         tagRender={this.tagRender}

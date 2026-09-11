@@ -130,7 +130,7 @@ const SearchRecord = props => {
           value={activeRecord ? activeIndex.toString() : null}
           options={options}
           onSelect={onSelect}
-          onSearch={handleSearch}
+          showSearch={{ onSearch: handleSearch }}
           open={open}
         >
           <InputWrapper className="flexRow valignWrapper">

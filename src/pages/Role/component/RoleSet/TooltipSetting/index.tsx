@@ -91,7 +91,7 @@ export default class Con extends PureComponent<any, any> {
         mask={true}
         placement="right"
         open={showRoleSet}
-        maskClosable={true}
+       
         closable={false}
       >
         <Wrap className="roleSettingWrap flexColumn">

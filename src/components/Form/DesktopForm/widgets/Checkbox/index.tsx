@@ -323,7 +323,6 @@ const CheckboxWidgets = props => {
           placeholder={hint}
           value={checkIds}
           tagRender={tagRender}
-          showArrow
           suffixIcon={<Icon icon="arrow-down-border Font14" />}
           notFoundContent={<span className="textTertiary">{_l('无搜索结果')}</span>}
           onKeyDown={createEventHandler}

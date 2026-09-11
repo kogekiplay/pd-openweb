@@ -346,7 +346,7 @@ class Print extends React.Component<any, any> {
         zIndex={10}
         onClose={() => this.setState({ showEditPrint: false, type: '' })}
         open={showEditPrint}
-        maskClosable={false}
+       
         closable={false}
         getContainer={false}
         mask={false}
@@ -391,7 +391,7 @@ class Print extends React.Component<any, any> {
         zIndex={10}
         onClose={() => this.setState({ showCloudPrint: false })}
         open={showCloudPrint}
-        maskClosable={false}
+       
         closable={false}
         getContainer={false}
         mask={false}

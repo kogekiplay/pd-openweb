@@ -110,7 +110,7 @@ const AddLangModal = props => {
           style={{ borderBottom: '1px solid var(--color-border-secondary)' }}
         >
           <Icon className="textTertiary Font20" icon="search" />
-          <Input bordered={false} placeholder={_l('搜索')} onChange={event => setSearchValue(event.target.value)} />
+          <Input variant="borderless" placeholder={_l('搜索')} onChange={event => setSearchValue(event.target.value)} />
         </div>
         {!!systemLangList.length && (
           <Fragment>

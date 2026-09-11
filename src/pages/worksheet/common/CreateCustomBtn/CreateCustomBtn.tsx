@@ -1168,11 +1168,11 @@ class CreateCustomBtn extends React.Component<any, any> {
         rootClassName={cx('createCustomBtnConDraw')}
         onClose={onClose}
         zIndex={zIndex}
-        mask={true}
+        mask={{ closable: !!isClickAway }}
         placement="right"
         getContainer={false}
         open={true}
-        maskClosable={!!isClickAway}
+       
         closable={false}
         styles={{ body: { padding: 0 } }}
       >
