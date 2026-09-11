@@ -682,10 +682,18 @@ export const addCurrentInbox = result => (dispatch, getState) => {
     dispatch(removeCurrentInbox(id));
   }
 
-  result.requestNow = Date.now();
+  // 原来是 result.requestNow = Date.now()，而 result 是调用方直接从 redux 里取出来的
+  // 会话对象（ChatPanel.inboxSessionItem 传的 session），等于在 dispatch 之前改 store。
+  // redux 3 的 createStore 不检查，迁到 RTK configureStore 后默认带
+  // immutableStateInvariantMiddleware，它【抛错】不是警告：
+  //   A state mutation was detected between dispatches, in the path 'chat.currentSession.requestNow'
+  // 于是点右侧栏的工作流入口整页被 ErrorBoundary 接住，变成「程序错误，请刷新页面重试」。
+  // 这两个检查只在非 production 生效，线上构建不受影响，坏的只有本地 dev。
+  // 改成带上 requestNow 复制一份：reducer 是 state.concat(action.result)，存进去的就是
+  // 这个副本；唯一的调用方 dispatch 之后不再用原对象，行为不变。
   dispatch({
     type: 'ADD_INBOX_SESSION',
-    result,
+    result: { ...result, requestNow: Date.now() },
   });
 };
 

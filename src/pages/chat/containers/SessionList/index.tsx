@@ -321,8 +321,12 @@ class SessionList extends Component<any, any> {
     //   return;
     // }
     // 设置当前会话窗口
+    // 原来是直接 item.showBadge = 0，而 item 来自 props.sessionList，也就是 redux 里的
+    // chat.sessionList 元素；在事件回调里改它 = 在两次 dispatch 之间改 store，
+    // RTK 的 immutableStateInvariantMiddleware 会抛错而不是警告（见 configureStore.ts）。
+    // 这里改成复制一份再往下用，后面读到的 showBadge 也就跟着是 0，行为不变。
     if ('showBadge' in item) {
-      item.showBadge = 0;
+      item = { ...item, showBadge: 0 };
     }
 
     this.props.dispatch(actions.setNewCurrentSession(item));

@@ -92,12 +92,25 @@ class WorkSheetLeft extends Component<any, any> {
     const { groupId, firstGroupIndex } = this.props;
     const isAppItem = item.type !== 2;
     const Wrap = isAppItem ? WorkSheetItem : WorkSheetGroup;
-    item.layerIndex = 1;
-    item.isAppItem = isAppItem;
-    item.parentId = groupId;
-    item.index = index;
-    item.firstGroupIndex = firstGroupIndex;
-    return <Wrap key={item.workSheetId} appItem={item} {...workSheetItemProps} />;
+    // 这几个字段原来是直接写在 item 上的，而 item 就是 redux 里 sheetList.data 的元素，
+    // 等于在 render 期间改 store。redux 3 的 createStore 默默容忍，迁到 RTK
+    // configureStore 之后默认带上 immutableStateInvariantMiddleware，而它是【抛错】不是警告：
+    //   A state mutation was detected between dispatches, in the path 'sheetList.data.0.layerIndex'
+    // 于是打开任何一个应用，整个页头/左栏就被 ErrorBoundary 接住，变成
+    // 「程序错误，请刷新页面重试」—— 报错信息里不含 antd 字样，很容易误判成组件库的锅。
+    // 注意这两个检查只在非 production 生效，所以线上构建不受影响，坏的只有本地 dev。
+    //
+    // 改成复制一份：同目录 WorkSheetGroup.renderGroupItems 本来就是这么写的。
+    // 下游这几个字段全部经 appItem 这个 prop 往下传（WorkSheetItem → Drag，
+    // Drag 的 useDrag payload 也是 { appItem }，drop 里的 current/target 同样取自它），
+    // 没有任何地方从 store 回读，所以复制不改变行为。
+    return (
+      <Wrap
+        key={item.workSheetId}
+        appItem={{ ...item, layerIndex: 1, isAppItem, parentId: groupId, index, firstGroupIndex }}
+        {...workSheetItemProps}
+      />
+    );
   }
   renderContent(data) {
     const { worksheetId, isCharge, appPkg, secondLevelGroup = false } = this.props;
