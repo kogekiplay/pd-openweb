@@ -3,18 +3,14 @@
 import _ from 'lodash';
 import global from 'src/api/global';
 
-export const getMapKey = keyName => {
-  let mapInfo;
-  const mapData = window.localStorage.getItem('MDMap');
+let mapConfig;
 
-  // 私有实时调接口
-  if (!mapData || window.platformENV.isOverseas || window.platformENV.isLocal) {
-    const data = global.getSystemConfiguration({}, { ajaxOptions: { sync: true } });
-    safeLocalStorageSetItem('MDMap', JSON.stringify(data));
-    mapInfo = _.get(data, [keyName]);
-  } else {
-    mapInfo = _.get(safeParse(mapData), [keyName]);
+export const getMapKey = keyName => {
+  if (!mapConfig) {
+    mapConfig = global.getSystemConfiguration({}, { ajaxOptions: { sync: true } });
   }
+
+  const mapInfo = _.get(mapConfig, [keyName]);
 
   if (keyName === 'amap') {
     window._AMapSecurityConfig = {
@@ -41,6 +37,7 @@ export default class MapLoader {
       const AMAP_URL = `https://webapi.amap.com/maps?v=2.0&key=${key}&plugin=AMap.Autocomplete,AMap.PlaceSearch,AMap.Geocoder,AMap.Geolocation,AMap.ToolBar,AMap.Scale,AMap.CitySearch`;
 
       const existingScript = document.querySelector('script[data-amap-script]');
+
       if (!existingScript) {
         const script = document.createElement('script');
         script.setAttribute('data-amap-script', 'true');

@@ -11,7 +11,7 @@ export const QUICK_CONNECT_TOOLS = [
     icon: 'claudecode',
     iconColor: '#D97757',
     injectChat: true,
-    getChatUrl: msg => `claude://claude.ai/new?q=${encodeURIComponent(msg)}`,
+    getChatUrl: msg => `claude://code/new?q=${encodeURIComponent(msg)}`,
   },
   {
     key: 'codex',

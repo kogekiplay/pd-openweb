@@ -97,7 +97,11 @@ export default class AddAppItem extends Component<any, any> {
         desc: _l('安装开箱即用的应用'),
         hidden:
           (window.platformENV.isOverseas || window.platformENV.isLocal) && md.global.SysSettings.hideTemplateLibrary,
-        onClick: () => window.open(`${md.global.Config.MarketUrl}/apps`),
+        // 未配置应用市场地址（私有部署等）时，退回站内应用库
+        onClick: () =>
+          md.global.Config.MarketUrl
+            ? window.open(`${md.global.Config.MarketUrl}/apps`)
+            : navigateTo(projectId && projectId !== 'external' ? `/app/lib?projectId=${projectId}` : '/app/lib'),
       },
       {
         id: 'importExcelCreateApp',

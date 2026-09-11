@@ -15,8 +15,10 @@ const { url, p } = getRequest();
 const isMobile = browserIsMobile();
 
 if (checkLogin()) {
-  if (checkOriginUrl(url)) {
-    location.replace(decodeURIComponent(url));
+  const safeUrl = checkOriginUrl(url);
+
+  if (safeUrl) {
+    location.replace(safeUrl);
   } else {
     location.replace(pathCompletion(isMobile ? `/mobile` : `/app`));
   }
@@ -39,8 +41,10 @@ if (checkLogin()) {
             if (accountResult === 1) {
               getGlobalMeta().then(() => {
                 setPssId(sessionId);
-                if (checkOriginUrl(url)) {
-                  location.replace(decodeURIComponent(url));
+                const safeUrl = checkOriginUrl(url);
+
+                if (safeUrl) {
+                  location.replace(safeUrl);
                 } else {
                   location.replace(pathCompletion(isMobile ? `/mobile` : `/app`));
                 }

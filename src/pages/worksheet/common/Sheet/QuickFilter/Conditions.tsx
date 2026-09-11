@@ -15,6 +15,7 @@ import { formatFilterValuesToServer } from './utils';
 const Con = styled.div`
   display: flex;
   flex-wrap: wrap;
+  align-items: flex-start;
   flex: 1;
   padding: ${({ isConfigMode }) => (isConfigMode ? '0 10px' : '0 10px 0 20px')};
   &.isDark {
@@ -200,12 +201,12 @@ export function conditionAdapter(condition) {
   return condition;
 }
 
-function getDefaultValues(items) {
+export function getValues(items, { includeDefaultValues = true } = {}) {
   const values = {};
   items.forEach((item, i) => {
     const key = `${_.get(item, 'control.controlId') || _.get(item, 'controlId')}-${i}`;
 
-    if (!_.isEmpty(item.value) || !_.isEmpty(item.values)) {
+    if (includeDefaultValues && (!_.isEmpty(item.value) || !_.isEmpty(item.values))) {
       values[key] = {
         values: item.values,
         value: item.value,
@@ -353,7 +354,7 @@ export default function Conditions(props) {
   useEffect(() => {
     didMount.current = false;
     setRequiredErrorVisible(false);
-    setValues(getDefaultValues(filters));
+    setValues(getValues(filters));
   }, [view.viewId]);
   useEffect(() => {
     let newValues;
@@ -521,7 +522,7 @@ export default function Conditions(props) {
               type="ghostgray"
               size="mdnormal"
               onClick={() => {
-                setValues({});
+                setValues(getValues(items, { includeDefaultValues: false }));
                 resetQuickFilter(view);
                 setRequiredErrorVisible(false);
               }}

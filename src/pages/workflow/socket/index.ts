@@ -5,10 +5,10 @@ import homeAppAjax from 'src/api/homeApp';
 import sheetAjax from 'src/api/worksheet';
 import addRecord from 'worksheet/common/newRecord/addRecord';
 import { openRecordInfo } from 'worksheet/common/recordInfo';
-import { VOICE_FILE_LIST } from 'src/pages/widgetConfig/widgetSetting/components/CustomEvent/config';
 import { emitter } from 'src/utils/common';
 import { equalToLocalPushUniqueId, pathCompletion } from 'src/utils/common';
 import { PUSH_TYPE } from '../WorkflowSettings/enum';
+import { playPromptSound } from './promptSound';
 
 const getWorksheetInfo = worksheetId => {
   return new Promise(resolve => {
@@ -179,31 +179,7 @@ export default () => {
       }
 
       if (pushType === PUSH_TYPE.AUDIO) {
-        const { content, file, language, pitch, preset, speed, type } = promptSound;
-
-        if (type === 1) {
-          if (file) {
-            playAudio(_.get(safeParse(file), '[0].viewUrl'));
-          } else {
-            const filePath = [{ fileKey: '', filePath: require('/staticfiles/images/session_new_message.mp3') }]
-              .concat(VOICE_FILE_LIST)
-              .find(o => o.fileKey === preset).filePath;
-
-            playAudio(filePath);
-          }
-        } else {
-          const speechPitch = parseInt(pitch, 10);
-          const speechRate = parseInt(speed, 10);
-          const utterance = new SpeechSynthesisUtterance(content);
-
-          utterance.lang = language; // 设置为中文
-          utterance.pitch = Number.isFinite(speechPitch) ? speechPitch : 1; // 音调
-          utterance.rate = Number.isFinite(speechRate) ? speechRate : 1; // 语速
-          utterance.volume = 1; // 音量
-
-          // 播放语音
-          window.speechSynthesis.speak(utterance);
-        }
+        playPromptSound(promptSound, playAudio);
       }
     };
 

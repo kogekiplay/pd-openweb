@@ -1,7 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import { Route, Routes } from 'react-router';
+import { Popover } from 'antd';
 import _ from 'lodash';
-import { Dialog } from 'ming-ui';
+import { Dialog, Icon } from 'ming-ui';
 import ErrorBoundary from 'ming-ui/components/ErrorBoundary';
 import privateGuide from 'src/api/privateGuide';
 import preall from 'src/common/preall';
@@ -9,12 +10,12 @@ import ChatList from 'src/pages/chat/containers/ChatList';
 import ChatPanel from 'src/pages/chat/containers/ChatPanel';
 import { ROUTE_CONFIG_PORTAL } from 'src/pages/Portal/config';
 import PortalPageHeaderRoute from 'src/pages/Portal/PageHeader';
-import weixinCode from 'src/pages/privateImageInstall/images/weixin.png';
 import { getAppFeaturesVisible } from 'src/utils/common';
 import socketInit from '../socket';
 import { ROUTE_CONFIG, withoutChatUrl } from './config';
 import genRouteComponent from './genRouteComponent';
 import globalEvents from './globalEvents';
+import weixinCode from './images/supportQrCode.png';
 import NotFoundRedirect from './NotFoundRedirect';
 import PageHeaderRoute from './PageHeader';
 import withRouter from './withRouter';
@@ -65,7 +66,7 @@ class App extends Component<any, any> {
         width="630"
         closable={false}
         visible
-        cancelText=""
+        showCancel={false}
         okText={_l('我已知晓')}
         onOk={() => {
           this.setState({ isSupport: true });
@@ -83,15 +84,10 @@ class App extends Component<any, any> {
           {md.global.Account.superAdmin ? (
             <Fragment>
               <span className="Gray_9e">{_l('您可以')}</span>
-              <Trigger
-                action={['hover']}
-                popup={<img className="card z-depth-2" style={{ width: 300 }} src={weixinCode} />}
-                popupAlign={{
-                  offset: [0, 7],
-                  points: ['tc', 'bc'],
-                  overflow: { adjustX: 1, adjustY: 2 },
-                }}
-              >
+              {/* 上游写的是 arrow={true}，但那是 antd 5+ 的 prop —— antd 4 的 Popover 本来就带箭头，
+                  这个 prop 在 4 里是无效属性（上游不跑 tsc 所以没发现）。去掉，运行时行为完全一致。
+                  等 antd 升到 5/6 之后可以按需加回来。 */}
+              <Popover content={<img style={{ width: 300 }} src={weixinCode} />} placement="bottom">
                 <span
                   style={{
                     cursor: 'pointer',
@@ -103,7 +99,7 @@ class App extends Component<any, any> {
                   <Icon icon="weixin" className="mRight2" />
                   {_l('提交工单')}
                 </span>
-              </Trigger>
+              </Popover>
               <span className="Gray_9e">{_l('咨询并延长技术支持或查看')}</span>
               <a href="https://docs-pd.mingdao.com/version" target="_blank" className="mLeft3">
                 {_l('其他可升级的版本')}

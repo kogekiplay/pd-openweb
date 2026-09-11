@@ -63,6 +63,13 @@ export default class CreateNodeDialog extends Component<any, any> {
                     {
                       type: 7,
                       appType: 1,
+                      actionId: '406',
+                      name: _l('查询工作表'),
+                      describe: _l('根据查询条件从工作表中获取一条记录'),
+                    },
+                    {
+                      type: 7,
+                      appType: 1,
                       actionId: '421',
                       name: _l('查询并更新记录'),
                       describe: _l(
@@ -75,13 +82,6 @@ export default class CreateNodeDialog extends Component<any, any> {
                       actionId: '422',
                       name: _l('查询并删除记录'),
                       describe: _l('根据查询条件从工作表中查找一条记录后直接删除'),
-                    },
-                    {
-                      type: 7,
-                      appType: 1,
-                      actionId: '406',
-                      name: _l('查询工作表'),
-                      describe: _l('根据查询条件从工作表中获取一条记录'),
                     },
                     {
                       type: 7,
@@ -134,6 +134,13 @@ export default class CreateNodeDialog extends Component<any, any> {
                     {
                       type: 13,
                       appType: 1,
+                      actionId: '400',
+                      name: _l('查询工作表'),
+                      describe: _l('获取后什么也不做，在以后节点使用'),
+                    },
+                    {
+                      type: 13,
+                      appType: 1,
                       actionId: '412',
                       name: _l('查询并批量更新'),
                       describe: _l('根据查询条件从工作表获取多条数据并批量更新，后续节点可使用新值'),
@@ -144,13 +151,6 @@ export default class CreateNodeDialog extends Component<any, any> {
                       actionId: '413',
                       name: _l('查询并批量删除'),
                       describe: _l('根据查询条件从工作表找到多条数据并删除，后续节点不可使用'),
-                    },
-                    {
-                      type: 13,
-                      appType: 1,
-                      actionId: '400',
-                      name: _l('查询工作表'),
-                      describe: _l('获取后什么也不做，在以后节点使用'),
                     },
                     {
                       type: 13,

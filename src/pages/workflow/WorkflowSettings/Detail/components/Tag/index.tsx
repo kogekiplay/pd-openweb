@@ -4,6 +4,11 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { getIcons } from '../../../utils';
 import './index.less';
 
+// props 标成 any：这个组件从来没有真正的 props 契约，
+// 不标的话 TS 会从解构模式反推 —— 凡是没写默认值的参数一律算【必填】，
+// 于是 6 个调用点各自漏传不同的 prop（className / controlId / isSourceApp）就全报 TS2741。
+// 这些「必填」是推断的产物、不是设计意图（线上一直这么调且工作正常）。
+// 与本仓其它 JS 遗留组件的处理一致（Component<any, any> 那套）。
 export default ({
   flowNodeType,
   appType,
@@ -16,7 +21,7 @@ export default ({
   isSourceApp,
   actualityValue = '',
   errorMessage = '',
-}) => {
+}: any) => {
   const errorClass = !nodeName || !controlName ? 'error' : '';
 
   if (isSourceApp) {

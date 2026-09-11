@@ -15,12 +15,20 @@ import Container from './Container';
 import Info from './Info';
 import { Wrap, WrapWx } from './style';
 import TPAuth from './TpAuthLogin';
-import { accountResultAction, getCurrentExt, getCurrentId, isErrSet, setAutoLoginKey, statusList } from './util';
+import {
+  accountResultAction,
+  getCurrentExt,
+  getCurrentId,
+  isErrSet,
+  restartPortalLogin,
+  setAutoLoginKey,
+  statusList,
+} from './util';
 
 function ContainerCon(props) {
   const [baseSetInfo, setBaseSetInfo] = useState({}); //门户配置
   const [loading, setLoading] = useState(true);
-  const [{ account, accountId }, setAccount] = useSetState({ account: '', accountId: '' });
+  const [{ account }, setAccount] = useSetState({ account: '', accountId: '' });
   const [paramForPcWx, setParamForPcWx] = useState(); //pc端二维码扫码后的返回值
   const [appId, setAppId] = useState('');
   const [isWXOfficialExist, setIsWXOfficialExist] = useState(false);
@@ -342,7 +350,7 @@ function ContainerCon(props) {
         {isTpauth ? (
           <TPAuth customLink={customLink} />
         ) : status === 9 ? (
-          <Info {...param} accountId={accountId} />
+          <Info {...param} onRestart={() => restartPortalLogin(appId, customLink)} />
         ) : (
           <Container
             {...param}
