@@ -24,10 +24,21 @@ export const formatLeftSectionDetail = data => {
 
     if (s.type === 2) {
       const { workSheetInfo = [], appSectionId } = _.find(data.childSections, { appSectionId: s.workSheetId }) || {};
-      result.items = workSheetInfo.map(item => {
-        item.parentGroupId = appSectionId;
-        return item;
-      });
+      // 原来这里是 `item.parentGroupId = appSectionId; return item;` —— 就地改。
+      // 而 item 就是 redux 里 appPkg.appGroups[i].childSections[j].workSheetInfo[k]：
+      // getAllAppSectionDetail 先 dispatch(updateAppGroup(filterSections)) 把这批对象放进了
+      // store，紧接着才对同一批对象调本函数。redux 3 的 createStore 默默容忍，迁到 RTK
+      // configureStore 之后默认带 immutableStateInvariantMiddleware，而它是【抛错】不是警告：
+      //   A state mutation was detected between dispatches, in the path
+      //   'appPkg.appGroups.2.childSections.0.workSheetInfo.0.parentGroupId'
+      // 错误从下一次 dispatch 抛出来，正好把 getAllAppSectionDetail 的 .then 打断在
+      // callBack() 之前 —— 那个 callBack 就是 LeftAppGroup 的 setLoading(false)。
+      // 于是左侧栏永远停在骨架屏，页面其余部分照常渲染、也不进 ErrorBoundary，
+      // 只在控制台留一条 Uncaught (in promise)，很难联想到是「渲染期改了 store」。
+      // 上面 `const result = { ...s }` 本来就是不改原对象的写法，这层 map 漏了而已。
+      // 改成复制：下游（MoreOperation / Drag / selectIconDialog / ExternalLink）读的都是
+      // sheetList 这一份里的 parentGroupId，没有任何地方从 appPkg.appGroups 回读它。
+      result.items = workSheetInfo.map(item => ({ ...item, parentGroupId: appSectionId }));
     }
 
     return result;
