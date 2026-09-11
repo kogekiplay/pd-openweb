@@ -2,6 +2,19 @@
 import { configureStore as createReduxStore } from '@reduxjs/toolkit';
 import { makeRootReducer } from './reducers';
 
+// 只对下面这几条确切路径关掉两个 dev 检查，整棵 state 树的其余部分仍受保护。
+// 共同点：它们存进 store 的都是【活对象】（Immutable 集合 / AbortController /
+// 带方法的滚动控制器），自己就会变、也不可序列化，不是我们代码脏、也没法靠改写法修好。
+const IGNORED_PATHS = [
+  'kc.params',
+  'kc.list',
+  'kc.selectedItems',
+  'sheet.sheetview.abortController',
+  // 存的是带 on() 等方法的滚动控制器对象，serializableCheck 每次 dispatch 报一次，
+  // 实测单次浏览就刷出 372 条，把控制台里真正的报错淹掉。
+  'sheet.gunterView.chartScroll',
+];
+
 export function configureStore() {
   // 原来这里手工探测并挂 window.__REDUX_DEVTOOLS_EXTENSION__，RTK 的 configureStore
   // 默认 devTools: true 做的是同一件事（且同样只在非 production 生效）；
@@ -10,7 +23,7 @@ export function configureStore() {
     reducer: makeRootReducer(),
     middleware: getDefaultMiddleware =>
       getDefaultMiddleware({
-        // 只对三条确切路径关掉这两个 dev 检查，整棵 state 树的其余部分仍受保护。
+        // 豁免名单见上面的 IGNORED_PATHS。前三条是 kc 模块：
         // 这三个 slice 存的是 Immutable.js 集合（src/pages/kc/redux/reducers.ts:50/79/155
         // 分别以 Map / List / Set 作默认值），两个检查对它们都不适用，而且都不是我们代码脏：
         //
@@ -24,8 +37,20 @@ export function configureStore() {
         // 要真正去掉这三条豁免，得把 kc 模块的 store state 从 Immutable.js 换成普通 JS
         // 结构（涉及 kc/redux/reducers.ts 与 selectAction.ts，另有 8 个组件读这些集合），
         // 那是独立一件事，不该混在依赖升级里做。
-        serializableCheck: { ignoredPaths: ['kc.params', 'kc.list', 'kc.selectedItems'] },
-        immutableCheck: { ignoredPaths: ['kc.params', 'kc.list', 'kc.selectedItems'] },
+        //
+        // sheet.sheetview.abortController 是第四条，性质相同 —— 存进 store 的是一个
+        // 活的 AbortController 实例（见 worksheet/redux/actions/sheetview.ts 的
+        // WORKSHEET_SHEETVIEW_INIT_ABORT_CONTROLLER）。它天生就会自己变：
+        // 调用 abort() 时 signal.aborted 由 false 翻成 true，于是 immutableCheck 报
+        // "in the path 'sheet.sheetview.abortController.signal.aborted'"，
+        // 触发点是 SheetView.componentWillUnmount —— 切工作表就会撞。
+        // serializableCheck 也一直在为它刷屏（"A non-serializable value was detected
+        // in the state, in the path: sheet.sheetview.abortController"），每 dispatch 一次一条。
+        // 这同样不是可修的代码缺陷，而是「把活对象放进 store」的必然结果；真要去掉
+        // 得把 AbortController 移出 redux（改放 ref 或模块级 Map），那会动到
+        // sheetview 的取数/取消逻辑，是独立一件事。
+        serializableCheck: { ignoredPaths: IGNORED_PATHS },
+        immutableCheck: { ignoredPaths: IGNORED_PATHS },
       }),
   });
 }

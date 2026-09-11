@@ -810,8 +810,17 @@ export function getRecordCardStyle(control) {
 export function getTitleTextFromControls(controls, data, titleSourceControlType, options = {}) {
   let titleControl = _.find(controls, control => control.attribute === 1) || {};
 
+  // 原来这里是 titleControl.sourceControlType = titleSourceControlType，先改后拷 ——
+  // _.find 返回的是 controls 里的【原对象】，而这个函数最常见的调用方
+  // getTitleTextFromRelateControl 传进来的就是 control.relationControls，
+  // 也就是 redux 里的 sheet.controls[i].relationControls。于是这行等于在渲染期改 store，
+  // RTK 的 immutableStateInvariantMiddleware 会抛错（见 src/redux/configureStore.ts）：
+  //   A state mutation was detected between dispatches, in the path
+  //   'sheet.controls.3.relationControls.0.sourceControlType'
+  // 紧接着下面那行本来就要 Object.assign({}, titleControl, …) 复制一份，
+  // 只是复制发生在赋值之后 —— 把复制提前即可，后续只读不写，行为不变。
   if (titleSourceControlType) {
-    titleControl.sourceControlType = titleSourceControlType;
+    titleControl = { ...titleControl, sourceControlType: titleSourceControlType };
   }
 
   if (titleControl && data) {
@@ -853,18 +862,20 @@ export function getTitleTextFromRelateControl(control = {}, data, options = {}) 
     return data.name;
   }
 
-  // relationControls返回的选项没有options，在这里赋进去
-  if (_.includes([9, 10, 11], control.sourceControlType)) {
-    if (!_.isEmpty(control.options)) {
-      control.relationControls.forEach(c => {
-        if (c.attribute === 1 && isEmpty(c.options)) {
-          c.options = control.options;
-        }
-      });
-    }
+  // relationControls返回的选项没有options，在这里补上。
+  // 原来是 control.relationControls.forEach(c => { c.options = control.options })，
+  // 直接写在 redux 的 sheet.controls[i].relationControls 元素上 —— 与上面
+  // sourceControlType 同一类问题，只是碰巧还没被 immutableCheck 撞上。
+  // 改成只为这次取标题构造一份带 options 的副本，不回写 store。
+  let relationControls = control.relationControls;
+
+  if (_.includes([9, 10, 11], control.sourceControlType) && !_.isEmpty(control.options)) {
+    relationControls = relationControls.map(c =>
+      c.attribute === 1 && isEmpty(c.options) ? { ...c, options: control.options } : c,
+    );
   }
 
-  return getTitleTextFromControls(control.relationControls, data, control.sourceControlType, options);
+  return getTitleTextFromControls(relationControls, data, control.sourceControlType, options);
 }
 
 export function renderText(cell, options = {}) {
