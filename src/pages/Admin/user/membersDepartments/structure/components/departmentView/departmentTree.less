@@ -222,7 +222,22 @@
         box-sizing: border-box;
 
         .ant-tree-iconEle {
-          vertical-align: middle;
+          /* antd 4 的 dist/antd.css 里【根本没有 .ant-tree-iconEle 这条规则】，图标盒子是自动高度，
+             等于 36px 的行盒，里面的图标天然居中，所以当年只补一个 vertical-align 就够了。
+             antd 5 新增了 `.ant-tree .ant-tree-node-content-wrapper .ant-tree-iconEle
+             { display:inline-block; width:24px; height:24px; vertical-align:top; }`，
+             盒子被钉成 24px 高，而它继承的 line-height 仍是上面这行的 36px ——
+             36px 的 strut 在 24px 的盒子里往下溢出，图标中心比行中心低 6.4px（实测）。
+             类名一个没变，纯靠类名差分看不见，只有量 getBoundingClientRect 才发现。
+
+             用 flex 居中而不是改 line-height：后者依赖字体 metrics，实测仍差 0.31px；
+             flex 与字体无关，图标中心和行中心实测偏差 0.00px。
+             高度写 36px 跟行盒一致，再配 vertical-align:top，盒子正好铺满一行。 */
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          height: 36px;
+          vertical-align: top;
         }
       }
 

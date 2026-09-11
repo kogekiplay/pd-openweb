@@ -303,7 +303,23 @@
   color: var(--color-text-primary) !important;
   background-color: var(--color-background-primary) !important;
   .ant-tree-switcher {
-    background-color: inherit !important;
+    /* 不能用 inherit：那样写是在「树节点本身没有背景」的前提下成立的
+       （v4 的行背景画在 ::before 且 z-index:-1）。现在节点自己有浅蓝底，
+       inherit 会让 switcher 再叠一层同色，alpha 翻倍，箭头那一格明显更深。
+       也不加 !important：本仓自己还有一条
+       .departmentTreeBox .ant-tree-switcher_close:hover 的灰色 hover 底，
+       那是设计要的，加了会把它一起杀掉（实验台当场抓到）。
+       不加也够压 antd —— antd 的规则走 :where()，特异性极低。 */
+    background-color: transparent;
+
+    /* antd 5 新增了 switcher 的 hover 高亮，画在它的 ::before 上：
+       .ant-tree .ant-tree-switcher:not(.ant-tree-switcher-noop):hover:before
+         background-color rgba(0,0,0,0.06)
+       实测 antd 4.24 完全没有这条规则，所以压掉是还原 v4 原样，不是自创样式。
+       必须打在 ::before 上：只压元素本身的 background 对 v5 无效。 */
+    &::before {
+      background-color: transparent !important;
+    }
   }
   .ant-tree-node-content-wrapper:hover {
     background-color: var(--color-background-hover) !important;

@@ -8,7 +8,7 @@ const { execSync } = require('child_process');
 
 const handler = require('serve-handler');
 const _ = require('lodash');
-const { createProxyMiddleware } = require('http-proxy-middleware');
+const { createProxyMiddleware, responseInterceptor } = require('http-proxy-middleware');
 // chalk 5+ 是纯 ESM。Node 22 起 require(esm) 已稳定（本仓 engines 要求 >=26.8.1），
 // 所以 require 本身没问题，但拿到的是 ESM 命名空间对象，具名导出在 .default 上。
 // 少写 .default 的表现是 `chalk.xxx is not a function`，不是 require 报错。
@@ -78,8 +78,41 @@ const proxyConfigs = [
     replace: '/api/artifacts/',
     server: publishConfig.apiServer,
   },
-  { name: 'api', path: '/api/', replace: '/', server: publishConfig.apiServer },
+  // 【API_PATH_PREFIX：把 dev server 接到一套已部署的 HAP 上】
+  // 上游默认 replace:'/'，前提是 API_SERVER 直接指向后端服务本身（服务在根路径提供接口）。
+  // 但如果 API_SERVER 指向的是一套已部署 HAP 的 nginx 入口，布局完全不同：
+  // 主 API 在 /wwwapi/，而 workflow / report / integration 等各挂在别的路径下，
+  // 且【具体挂哪儿是每套部署自己定的】——见下面 resolveApiRoutes。
+  //
+  // 设了 API_PATH_PREFIX 就表示「按已部署 HAP 的方式接」，主 API 用它给出的前缀引导，
+  // 其余服务在启动时自动推导。不设时行为与上游完全一致。
+  //   API_SERVER=https://host:8880/  API_PATH_PREFIX=/wwwapi/
+  //
+  // 【为什么 rewriteHosts 开在通配的 api 上，而不是只开在某个接口上】
+  // 这个开关会打开 selfHandleResponse，把响应整个缓冲下来，SSE / 流式接口会被憋住。
+  // 但真正的流式接口（/api/agent/、/api/agui/、/api/artifacts/）都在上面单独列了，
+  // handlers 按顺序取第一个匹配的，它们不会走到这条，所以这里开是安全的。
+  // 剩下的 /api/ 都是普通 REST 响应，缓冲一下的代价在本地可以忽略。
+  {
+    name: 'api',
+    path: '/api/',
+    replace: process.env.API_PATH_PREFIX || '/',
+    server: publishConfig.apiServer,
+    rewriteHosts: true,
+  },
   { name: 'workflow_api', path: '/workflow_api/', replace: '', server: publishConfig.apiServer },
+  // 下面三条都是【原样透传】的静态/服务前缀，存在的意义是让 rewriteAbsoluteHosts
+  // 改写出来的相对地址能落到本地 dev server 上，再由这里转发到真实部署。
+  // 不加的话请求会被 serve-handler 兜底成 SPA 的 index.html，返回 200 但内容是 HTML——
+  // 比 404 更难查：JS 报 `Unexpected token '<'`，图片/接口则是解析失败。
+  //
+  // file：FileStoreConfig 里的 upload/document/picture/media/pub 都在这个前缀下
+  // chatmq：聊天服务（data.config.HTTP_SERVER）。只转发 HTTP，WebSocket 升级没接，
+  //         所以本地的聊天列表能拉到，实时推送不通——本地环境不验聊天，够用。
+  // pm：平台自定义样式/脚本（Config.PlatformUrl），freestyle.css / freestyle.js 从这儿来
+  { name: 'file', path: '/file/', replace: '/file/', server: publishConfig.apiServer },
+  { name: 'chatmq', path: '/chatmq/', replace: '/chatmq/', server: publishConfig.apiServer },
+  { name: 'pm', path: '/pm/', replace: '/pm/', server: publishConfig.apiServer },
   { name: 'report_api', path: '/report_api/', replace: '', server: publishConfig.apiServer },
   { name: 'integration_api', path: '/integration_api/', replace: '', server: publishConfig.apiServer },
   { name: 'data_pipeline_api', path: '/data_pipeline_api/', replace: '', server: publishConfig.apiServer },
@@ -103,17 +136,71 @@ const proxyConfigs = [
   },
 ];
 
+// 把接口响应里指向真实部署的【绝对地址】改写成相对地址，让请求落回本地 dev server。
+//
+// 起因：这些地址指向真实部署（如 https://host:8880/file/mdpub/...），而 dev server 跑在
+// http://localhost:30001。走 <img> 的头像、附件不受影响（图片请求不校验同源），
+// 但应用图标走的是 SvgIcon → react-svg → XMLHttpRequest，会被 CORS 挡死。
+// 现象很迷惑：图标位置只剩一个纯色圆块，页面其余部分完全正常，像是前端渲染 bug。
+//
+// 【为什么必须对所有 /api/ 响应做，而不是只改 GetGlobalMeta】
+// 一开始只改了 GetGlobalMeta 里的 FileStoreConfig，结果图标照样跨源。
+// 原因是应用图标的地址【根本不是用 pubHost 拼的】：
+//   item.iconUrl ? item.iconUrl : `${pubHost}/customIcon/${item.icon}.svg`
+//（见 src/pages/worksheet/common/WorkSheetPortal/index.tsx）
+// 只要接口给了 iconUrl 就直接用，而 HomeApp/MyPlatform、RecentApps 等接口
+// 返回的 iconUrl 本身就是绝对地址。改配置项治不了这一类。
+//
+// 所以这里做的是【窄字符串替换】而不是解析 JSON 改字段：
+// 只把「origin + 这几个已代理前缀」换成相对路径，其余一律不碰。
+// 不解析 JSON 有两个好处：非 JSON 响应（图片、网关错误页）天然安全，
+// 以及不用关心这些地址埋在响应的哪一层。
+//
+// 【为什么前缀要显式列出、不能直接剥 origin】
+// config.SERVER_NAME 的值恰好【就等于 origin】，剥完是空串。它被直接喂给
+// io.connect(server)（见 src/socket/index.ts），空串的语义是「连当前页面的 origin」，
+// 跟「同源的某个路径」完全是两回事——本地没接 WebSocket 升级，改成空串只会
+// 让它改为徒劳地重连 localhost。列出前缀就天然排除了这种纯 origin 的值。
+const REWRITE_PREFIXES = ['/file/', '/chatmq'];
+
+function rewriteAbsoluteHosts(buffer, server) {
+  let origin;
+
+  try {
+    origin = new URL(server).origin;
+  } catch {
+    // 上游默认值是 '/wwwapi/' 这种相对路径，不是合法 URL —— 此时无事可做
+    return buffer;
+  }
+
+  const text = buffer.toString('utf8');
+
+  if (!text.includes(origin)) return buffer;
+
+  let out = text;
+
+  for (const prefix of REWRITE_PREFIXES) {
+    out = out.split(origin + prefix).join(prefix);
+  }
+
+  return out === text ? buffer : out;
+}
+
 // 把 proxy-middleware 替换为 http-proxy-middleware：
 // - 内置 SSE / WebSocket 支持，上游断开不再串到下个中间件触发 ERR_HTTP_HEADERS_SENT
 // - 错误统一在 on.error 里兜底，不会让 dev server 进程崩溃
-function makeProxy({ name, server, path: matchPath, replace }) {
+function makeProxy({ name, server, path: matchPath, replace, rewriteHosts: rewrite }) {
   return createProxyMiddleware({
     target: server,
     changeOrigin: true,
     // path 与 replace 相同（如 /api/agent/）的配置等价于 no-op，仍交给 pathRewrite 走一遍统一逻辑
     pathRewrite: { [`^${matchPath}`]: replace },
     logger: { info: () => {}, warn: console.warn, error: console.error },
+    ...(rewrite ? { selfHandleResponse: true } : null),
     on: {
+      ...(rewrite
+        ? { proxyRes: responseInterceptor(async buffer => rewriteAbsoluteHosts(buffer, server)) }
+        : null),
       error(err, req, res) {
         console.error(`[proxy ${name}] ${req.url} -> ${server} failed:`, err.message);
         if (!res || res.headersSent) {
@@ -132,10 +219,92 @@ function makeProxy({ name, server, path: matchPath, replace }) {
   });
 }
 
-const proxyMiddlewares = proxyConfigs.reduce((acc, config) => {
-  acc[config.name] = makeProxy(config);
-  return acc;
-}, {});
+// 每个 dev 侧前缀对应 GetGlobalMeta 里的哪个 Config 字段。
+// 这组配对不是猜的，来自 src 里统一的取址写法：`__api_server__.<key> || md.global.Config.<Key>`
+//（见 src/pages/workflow/apiV2/base.ts 等）。dev 下走前者，生产下走后者，
+// 所以「后者的路径」就是「前者该被重写成什么」。
+const API_ROUTE_CONFIG_KEYS = {
+  workflow_api: 'WorkFlowUrl',
+  report_api: 'WsReportUrl',
+  integration_api: 'IntegrationAPIUrl',
+  data_pipeline_api: 'DataPipelineUrl',
+  workflow_plugin_api: 'WorkflowPluginUrl',
+  knowledge_api: 'KnowledgeApiUrl',
+  cloudapi_api: 'CloudApiUrl',
+};
+
+// 【为什么要自动推导，不能写死】各服务挂在哪个路径下是每套部署自己定的，
+// 同一个 workflow 服务，这套部署在 /api/workflow，另一套可能在别处。写死就只对一套有效。
+// 好在部署会通过 GetGlobalMeta 把自己的 Config 全报出来，启动时问一次即可。
+//
+// 不推导的后果很隐蔽：页面能登录、能看数据，只有待办数这类少数模块 404，
+// 而且返回的是 SPA 的 index.html（200 + text/html，不是 404），
+// 前端把它当接口响应去解析，报出来的是「404 页面不存在」，看着完全像前端 bug。
+async function resolveApiRoutes(mainPrefix) {
+  const base = publishConfig.apiServer;
+  let metaUrl;
+
+  try {
+    metaUrl = new URL(mainPrefix.replace(/^\//, '') + 'Global/GetGlobalMeta', base);
+  } catch {
+    console.warn(chalk.yellow(`[proxy] API_SERVER=${base} 不是合法 URL，跳过服务前缀推导`));
+    return;
+  }
+
+  let config;
+
+  try {
+    const res = await fetch(metaUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: '{}',
+      signal: AbortSignal.timeout(20000),
+    });
+
+    config = _.get(await res.json(), ['data', 'md.global', 'Config']);
+  } catch (err) {
+    console.warn(chalk.yellow(`[proxy] 读取 ${metaUrl} 失败，各服务前缀沿用默认值：${err.message}`));
+    return;
+  }
+
+  if (!config) {
+    console.warn(chalk.yellow(`[proxy] ${metaUrl} 的响应里没有 md.global.Config，各服务前缀沿用默认值`));
+    return;
+  }
+
+  const resolved = {};
+
+  for (const proxyConfig of proxyConfigs) {
+    const value = config[API_ROUTE_CONFIG_KEYS[proxyConfig.name]];
+
+    if (typeof value !== 'string' || !value) continue;
+
+    let url;
+
+    try {
+      url = new URL(value);
+    } catch {
+      continue;
+    }
+
+    // 前缀必须带结尾斜杠：pathRewrite 替换掉的 `^/workflow_api/` 是带斜杠的，
+    // 不补的话 /workflow_api/v1/x 会拼成 /api/workflowv1/x。
+    proxyConfig.replace = url.pathname.endsWith('/') ? url.pathname : `${url.pathname}/`;
+    // 个别服务可能部署在别的 origin 上，那样只改路径不够，target 也要跟着换。
+    proxyConfig.server = url.origin;
+    resolved[proxyConfig.name] = `${proxyConfig.server}${proxyConfig.replace}`;
+  }
+
+  logObj({ ...resolved, api: `${publishConfig.apiServer}${mainPrefix.replace(/^\//, '')}` });
+}
+
+const proxyMiddlewares = {};
+
+function buildProxyMiddlewares() {
+  for (const config of proxyConfigs) {
+    proxyMiddlewares[config.name] = makeProxy(config);
+  }
+}
 
 function createRequestHandlers() {
   const rewrites = utils
@@ -306,6 +475,14 @@ function runMiddleware(req, res, callback) {
 }
 
 async function serve({ done = () => {}, needOpen = true, isProduction: isProductionServer = false } = {}) {
+  // 必须在 createServer 之前完成：推导会改写 proxyConfigs 里的 replace/server，
+  // 而 makeProxy 是按当时的值固化进中间件的，先建中间件再推导就白推了。
+  if (process.env.API_PATH_PREFIX) {
+    await resolveApiRoutes(process.env.API_PATH_PREFIX);
+  }
+
+  buildProxyMiddlewares();
+
   const port = await getValuedPort();
   const server = http.createServer((req, res) => {
     runMiddleware(req, res, async () => {
