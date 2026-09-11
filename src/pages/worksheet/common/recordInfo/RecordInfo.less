@@ -1,5 +1,17 @@
 .workSheetRecordInfo {
   box-shadow: var(--shadow-xl);
+  /* 记录头自己就有一个关闭按钮（RecordForm/Header.tsx 的 .closeBtn，在 !notDialog 时
+     必渲染），MdModal 又总会给 antd 传 closeIcon，于是同一处叠了两个叉。
+     v4 下这俩是像素级重合的 —— antd 4 的 .ant-modal-close 是 top:0 / right:0 的
+     56×56 方块，RecordInfoWrapper 特地传 closeSize={56} 让它正好盖住记录头右端那个叉，
+     看着就是一个。antd 5 起 close 的定位从 (0,0)+56 改成了
+     top/inset-inline-end = (modalHeaderHeight - closeBtnSize)/2 的小方块，两个叉就错开
+     几像素，渲染成一个「加粗的叉」。
+     这里直接隐藏 antd 自带的那个：留下的是记录头 flex 行里的那个，间距跟隔壁 ••• 对齐，
+     也不会再随 antd 改定位而漂移。关闭仍然可用（.closeBtn 走 hideRecordInfo）。 */
+  > .ant-modal-container > .ant-modal-close {
+    display: none;
+  }
   .ck-sticky-panel__content_sticky {
     top: 55px !important;
   }

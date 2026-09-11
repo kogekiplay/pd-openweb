@@ -65,7 +65,38 @@ export default function generateStore(
   // thunk 也由默认中间件提供，只需把自定义的 logger 追加上去。
   const store = configureStore({
     reducer,
-    middleware: getDefaultMiddleware => getDefaultMiddleware().concat(logger),
+    // base / lastAction 这两片整体豁免两个 dev 检查（豁免理由见下），其余 slice
+    // （rows / originRows / changes / treeTableViewData…）仍然受保护 —— 真正会藏 bug 的是那几片。
+    // lastAction 必须一起豁免：它的 reducer 是 `(state, action) => action`，
+    // 把【整个 action 原样存进 state】，于是 UPDATE_BASE 的 payload 又从
+    // lastAction.value.control 这条路进来一次。只豁免 base 的话报错只会换个路径继续崩。
+    //
+    // 【为什么必须豁免：dev 下打开带子表的记录会直接崩】
+    // base 存的是构造期从表单层接过来的【活对象】，不是数据快照：base.control 是父表单
+    // 的控件实例，而 DataFormat 会把子表自己的 store 挂回控件上（DataFormat.ts:184
+    // item.store = this.getControlStore(item)），ChildTable 又把 React 组件实例挂到
+    // store 上（ChildTable/index.tsx:101 this.store.ref = ref）。于是：
+    //     state.base.control.store.ref → React 实例 → props.store → 同一个 store → …
+    // 一个长度 3 的环。immutableCheck 的 trackProperties 是深度优先递归，撞上环就是
+    // RangeError: Maximum call stack size exceeded，ChildTable 被 ErrorBoundary 接住，
+    // 表现为「记录能打开一瞬间随后弹程序错误」。
+    //
+    // 【别指望 RTK 自己的环检测】trackProperties 签名里确实有个 checkedObjects Set
+    // 看着像防环，但它是默认参数、递归调用处又没把它传下去（@reduxjs/toolkit 2.12.0
+    // dist/redux-toolkit.modern.mjs:175-199），每层递归都新建一个空 Set —— 等于没有。
+    // 所以不要因为「RTK 有防环」就以为这里只是噪音。
+    //
+    // serializableCheck 不会崩，但会被 base.control.refreshRecord 这类函数刷屏，
+    // 每次 dispatch 一条，把控制台里真正的报错淹掉；UPDATE_BASE 这个 action 的
+    // payload 就是 base 本身，所以按 action 名一并豁免。
+    //
+    // 这不是 antd 6 带来的，是本仓 redux 3 → RTK 迁移的后果：createStore 没有这两个
+    // 中间件，所以旧版一直相安无事。两个检查都只在非 production 生效，线上不受影响。
+    middleware: getDefaultMiddleware =>
+      getDefaultMiddleware({
+        serializableCheck: { ignoredActions: ['UPDATE_BASE'], ignoredPaths: ['base', 'lastAction'] },
+        immutableCheck: { ignoredPaths: ['base', 'lastAction'] },
+      }).concat(logger),
   });
   store.name = Math.floor(Math.random() * 1000);
   async function init({ noMountInit = false } = {}) {

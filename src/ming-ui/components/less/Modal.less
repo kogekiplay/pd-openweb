@@ -38,7 +38,34 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+    /* 【antd 4 → 5 留下的坑，改名 diff 查不出来】
+       v4 的 .ant-modal-content 没有内边距，留白由 header / body / footer 各自承担；
+       v5 起 content（v6 改名 container）多了一个默认 token
+       contentPadding: `${paddingMD} ${paddingContentHorizontalLG}` = 20px 24px，
+       v6 原样继承（两版 modal/style/index.js 逐行 diff 过，这一项没动）。
+
+       这一圈对本仓是【净多出来的】，因为整套 mdModal 的 CSS 和几百处消费方都按 v4 那套写：
+         - 本文件自己给 .ant-modal-header 写了 padding: 20px 24px 0、
+           .ant-modal-footer 写了 10px 24px 20px —— 叠上这圈就成了双份内边距；
+         - 消费方靠 bodyStyle={{ padding: 0 }} 求「贴边」（全仓几十处这么写），
+           叠上这圈根本贴不到边。
+
+       两个肉眼症状都出自它，尤其是记录弹窗：
+         1) 内容比白色外框小一圈；
+         2) 「两个关闭按钮」—— antd 自带的 .ant-modal-close 是相对 container 的
+            padding box 绝对定位的，v4 下它在 (0,0)，RecordInfoWrapper 特地传
+            closeSize={56} 让这个 56×56 的叉正好盖在 52px 高的记录头右端，
+            与记录自己那个 .closeBtn 像素级重合，看着就是一个叉。这圈内边距把它
+            往右下推了 (24, 20)，两个叉当场分家。
+
+       为什么 antd 5 那轮没发现：这不是类名改名，而是新增的默认值 ——
+       tools/verify-antd-class-names.cjs 这类按类名比对的判据天生看不见。
+
+       归零即恢复 v4 几何；同时把 body 的默认内边距按 v4 的 @modal-body-padding: 24px
+       补回来（v5/v6 的 bodyPadding 默认是 0），消费方的内联 bodyStyle 仍然照常覆盖。 */
+    padding: 0;
     .ant-modal-body {
+      padding: 24px;
       overflow-y: auto;
       overflow-x: hidden;
       flex: 1;

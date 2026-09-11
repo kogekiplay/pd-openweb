@@ -32,7 +32,21 @@ export default function generateStore(
   }
 
   // configureStore 默认装 thunk 并自动接管 devtools。
-  const store = configureStore({ reducer });
+  // base / lastAction 整片豁免两个 dev 检查，理由与 ChildTable/redux/store.ts 完全相同
+  // （详见那边的长注释）：这两片存的是构造期接过来的活对象 —— base.control 是父表单控件
+  // 实例，base.formData 是父表单整份控件数组，两者里的子表控件都挂着自己的 store，store
+  // 上又挂着 React 组件实例，绕回来成环；immutableCheck 撞环是直接 RangeError 而不是报警。
+  // lastAction 的 reducer 同样是 `(state, action) => action`，会把 UPDATE_BASE 的
+  // payload 原样再存一份，所以必须一起豁免。
+  // 其余 slice（records / controls / changes / tableState…）仍然受保护。
+  const store = configureStore({
+    reducer,
+    middleware: getDefaultMiddleware =>
+      getDefaultMiddleware({
+        serializableCheck: { ignoredActions: ['UPDATE_BASE'], ignoredPaths: ['base', 'lastAction'] },
+        immutableCheck: { ignoredPaths: ['base', 'lastAction'] },
+      }),
+  });
   store.version = v4();
   const treeLayerControlId = get(control, 'advancedSetting.layercontrolid');
   const treeLayerControl = find(control.relationControls, { controlId: treeLayerControlId });
