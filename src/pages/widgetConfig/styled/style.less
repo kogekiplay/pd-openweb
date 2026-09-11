@@ -147,7 +147,7 @@
        而这个变量 antd 自己就会按 <Popover color="black"> 内联设在 .ant-popover 上
        （实测 v4 设在 arrow-content 上、v5 设在 .ant-popover 上，两版都是 antd 自己管）。
        所以这条在 v5 下既匹配不到元素、也不再需要 —— 直接删，不用找替代写法。 */
-    .ant-popover-inner {
+    .ant-popover-container {
       border-radius: 3px;
     }
   }

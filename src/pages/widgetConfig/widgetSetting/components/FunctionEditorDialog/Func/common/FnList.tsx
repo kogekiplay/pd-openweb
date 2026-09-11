@@ -60,7 +60,7 @@ const Con = styled.div`
     padding: 0px !important;
     left: 14px !important;
   }
-  .ant-collapse-content-box {
+  .ant-collapse-body {
     padding: 0px !important;
   }
 `;

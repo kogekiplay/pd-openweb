@@ -86,13 +86,13 @@ export const WrapL = styled.div`
         margin-bottom: 0 !important;
         width: 100% !important;
       }
-      .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+      .ant-select-single:not(.ant-select-customize-input) .ant-select-content {
         height: 36px !important;
         border-radius: 4px !important;
       }
-      .ant-select-single:not(.ant-select-customize-input) .ant-select-selector .ant-select-selection-search-input,
-      .ant-select-single .ant-select-selector .ant-select-selection-item,
-      .ant-select-single .ant-select-selector .ant-select-selection-placeholder {
+      .ant-select-single:not(.ant-select-customize-input) .ant-select-content .ant-select-input,
+      .ant-select-single .ant-select-content .ant-select-selection-item,
+      .ant-select-single .ant-select-content .ant-select-selection-placeholder {
         height: 36px !important;
         line-height: 36px !important;
       }

@@ -29,7 +29,7 @@ const Wrap = styled.div`
   .liInput {
     width: 110px;
     margin-left: 8px;
-    .ant-input-number-handler-wrap {
+    .ant-input-number-actions {
       display: none;
     }
     .liInputPx {

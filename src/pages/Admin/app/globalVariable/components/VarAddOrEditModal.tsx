@@ -80,7 +80,7 @@ const FormItem = styled.div`
   }
   .ant-select {
     width: 100%;
-    .ant-select-selector {
+    .ant-select-content {
       min-height: 36px;
       padding: 2px 11px !important;
       border: 1px solid var(--color-border-tertiary) !important;
@@ -88,12 +88,12 @@ const FormItem = styled.div`
       box-shadow: none !important;
     }
     &.ant-select-focused {
-      .ant-select-selector {
+      .ant-select-content {
         border-color: var(--color-primary) !important;
       }
     }
     &.ant-select-disabled {
-      .ant-select-selector {
+      .ant-select-content {
         color: var(--color-text-title) !important;
         background: var(--color-background-secondary) !important;
         border-color: var(--color-background-secondary) !important;

@@ -91,7 +91,7 @@ const Wrap = styled.div`
   .ant-select:hover {
     border-color: var(--color-border-primary) !important;
   }
-  .ant-select-arrow {
+  .ant-select-suffix {
     color: var(--color-text-tertiary) !important;
   }
   .RelateRecordDropdown-selected:not(.active) {

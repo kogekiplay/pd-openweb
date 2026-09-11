@@ -20,7 +20,7 @@ const Wrapper = styled.div`
   .selectItem {
     width: 100%;
     font-size: 13px;
-    .ant-select-selector {
+    .ant-select-content {
       height: 36px !important;
       padding: 2px 11px !important;
       border-radius: 3px !important;

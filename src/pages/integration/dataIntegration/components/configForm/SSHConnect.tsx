@@ -31,7 +31,7 @@ const CrackTextarea = styled(Textarea)`
 const CommonSelect = styled(Select)`
   width: 100%;
   font-size: 13px;
-  .ant-select-selector {
+  .ant-select-content {
     height: 36px !important;
     padding: 2px 11px !important;
     border-radius: 3px !important;
@@ -43,12 +43,12 @@ const CommonSelect = styled(Select)`
     }
   }
   &.ant-select-focused {
-    .ant-select-selector {
+    .ant-select-content {
       border-color: var(--color-primary) !important;
     }
   }
   &.ant-select-disabled {
-    .ant-select-selector {
+    .ant-select-content {
       &:hover {
         border-color: var(--color-border-primary) !important;
       }

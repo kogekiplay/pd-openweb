@@ -11,7 +11,7 @@ const PivotTableContent = styled.div`
   &.contentAutoHeight {
     overflow: hidden;
     .ant-table-wrapper,
-    .ant-spin-nested-loading,
+    .ant-spin-section,
     .ant-spin-container,
     .ant-table,
     .ant-table-container,
@@ -167,7 +167,7 @@ const PivotTableContent = styled.div`
   }
   .ant-table-pagination.ant-pagination {
     margin-bottom: 5px;
-    .ant-select-selector {
+    .ant-select-content {
       border-radius: 4px;
     }
   }

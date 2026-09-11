@@ -10,7 +10,7 @@ export const SettingCollapseWrap = styled(Collapse)`
       &:last-child {
         border-bottom: none !important;
       }
-      .ant-collapse-content {
+      .ant-collapse-panel {
         color: var(--color-text-primary) !important;
       }
     }
@@ -31,7 +31,7 @@ export const SettingCollapseWrap = styled(Collapse)`
         padding: 3px;
       }
     }
-    .ant-collapse-content-box {
+    .ant-collapse-body {
       padding: 0 0 24px 0 !important;
       & > div:first-child {
         margin-top: 0 !important;

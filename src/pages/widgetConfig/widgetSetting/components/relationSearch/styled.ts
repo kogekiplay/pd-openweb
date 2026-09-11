@@ -124,16 +124,16 @@ export const FilterContent = styled.div`
           min-width: 0;
           margin-right: 0px;
         }
-        .ant-select-arrow {
+        .ant-select-suffix {
           margin-top: -8px !important;
         }
-        .ant-select-selector {
+        .ant-select-content {
           border-color: var(--color-border-secondary);
           height: 36px;
           width: 130px;
           border-radius: 4px;
           box-shadow: none !important;
-          .ant-select-selection-search-input {
+          .ant-select-input {
             height: 34px;
           }
           .ant-select-selection-item {

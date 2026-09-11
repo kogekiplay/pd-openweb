@@ -36,7 +36,7 @@ const CreateFormItem = styled.div`
     padding: 0 12px;
   }
 
-  .ant-select-selector {
+  .ant-select-content {
     height: 38px !important;
     border: 1px solid var(--color-border-primary) !important;
     border-radius: 4px !important;
@@ -50,7 +50,7 @@ const CreateFormItem = styled.div`
     line-height: 36px !important;
   }
 
-  .ant-select-arrow {
+  .ant-select-suffix {
     right: 12px;
   }
 `;

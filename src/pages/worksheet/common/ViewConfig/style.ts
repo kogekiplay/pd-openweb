@@ -28,7 +28,7 @@ export const TimeDropdownChoose = styled.div`
   margin-top: 6px;
   .timeDropdown {
     width: 100%;
-    .ant-select-selector {
+    .ant-select-content {
       border-radius: 3px;
       line-height: 36px;
       height: 36px !important;

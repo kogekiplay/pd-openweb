@@ -37,7 +37,7 @@ const Wrap = styled.div`
       border-color: var(--color-border-tertiary);
     }
   }
-  .customAntSelect:not(.ant-select-open):not(.ant-select-disabled) .ant-select-selector {
+  .customAntSelect:not(.ant-select-open):not(.ant-select-disabled) .ant-select-content {
     background: var(--color-background-primary) !important;
     border-color: var(--color-border-primary) !important;
     &:hover {

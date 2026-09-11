@@ -38,7 +38,7 @@ const SelectWrapper = styled(Select)`
   width: 120px;
   margin-right: 10px !important;
   &.ant-select-sm {
-    .ant-select-selector,
+    .ant-select-content,
     .ant-select-selection-item {
       height: 28px !important;
       line-height: 26px !important;

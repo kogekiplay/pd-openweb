@@ -21,7 +21,7 @@ const Wrapper = styled.div`
   .selectItem {
     width: 100% !important;
     font-size: 13px;
-    .ant-select-selector {
+    .ant-select-content {
       min-height: 36px;
       padding: 2px 11px !important;
       border: 1px solid var(--color-border-tertiary) !important;
@@ -29,12 +29,12 @@ const Wrapper = styled.div`
       box-shadow: none !important;
     }
     &.ant-select-focused {
-      .ant-select-selector {
+      .ant-select-content {
         border-color: var(--color-primary) !important;
       }
     }
     &.disabled {
-      .ant-select-selector {
+      .ant-select-content {
         border: 0;
       }
     }

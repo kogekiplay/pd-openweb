@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import CascaderDropdown from 'src/components/Form/DesktopForm/widgets/Cascader';
 
 const Con = styled.div`
-  .ant-select-selector {
+  .ant-select-content {
     min-height: 30px !important;
     line-height: 30px;
   }
@@ -15,7 +15,7 @@ const Con = styled.div`
     }
   }
   .ant-tree-select {
-    .ant-select-selection-search-input {
+    .ant-select-input {
       height: 30px !important;
     }
     .ant-select-selection-placeholder {
@@ -23,7 +23,7 @@ const Con = styled.div`
     }
   }
 
-  .customAntSelect:not(.ant-select-open):not(.ant-select-disabled) .ant-select-selector {
+  .customAntSelect:not(.ant-select-open):not(.ant-select-disabled) .ant-select-content {
     background-color: transparent !important;
     border-color: var(--color-border-primary) !important;
     &:hover {

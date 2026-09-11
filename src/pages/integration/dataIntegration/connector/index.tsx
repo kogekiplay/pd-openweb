@@ -90,7 +90,7 @@ const FormCard = styled.div`
     margin-right: 16px;
     margin-top: 6px;
 
-    .ant-select-selector {
+    .ant-select-content {
       min-height: 48px;
       padding: 8px 11px !important;
       border: 2px solid var(--color-border-secondary) !important;
@@ -103,7 +103,7 @@ const FormCard = styled.div`
     }
 
     &.ant-select-focused {
-      .ant-select-selector {
+      .ant-select-content {
         border-color: var(--color-primary) !important;
       }
     }

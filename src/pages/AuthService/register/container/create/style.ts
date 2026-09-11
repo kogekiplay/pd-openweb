@@ -53,7 +53,7 @@ export const Wrap = styled.div`
       input[type='text']:not(.iti__search-input),
       input[type='password'],
       .Dropdown--input,
-      .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+      .ant-select-single:not(.ant-select-customize-input) .ant-select-content {
         .Dropdown--placeholder {
           opacity: 1;
         }
@@ -73,7 +73,7 @@ export const Wrap = styled.div`
       input[type='text']:not(.iti__search-input),
       input[type='password'],
       .Dropdown--input,
-      .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+      .ant-select-single:not(.ant-select-customize-input) .ant-select-content {
         .Dropdown--placeholder {
           opacity: 0;
           transition: all 0.3s;

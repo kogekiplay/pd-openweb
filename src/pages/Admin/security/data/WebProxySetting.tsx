@@ -50,7 +50,7 @@ const FormBox = styled.div`
         & > .ant-select {
           width: 40%;
           height: 36px;
-          .ant-select-selector {
+          .ant-select-content {
             width: 100%;
             height: 100%;
           }

@@ -7,13 +7,13 @@ import { Icon } from 'ming-ui';
 const { Option } = Select;
 
 const StyledSelectContainer = styled.div`
-  .ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  .ant-select:not(.ant-select-customize-input) .ant-select-content {
     border-radius: 3px;
     border: 1px solid var(--color-border-secondary);
     padding-right: 24px;
   }
 
-  .ant-select-arrow {
+  .ant-select-suffix {
     right: 8px;
     color: rgba(0, 0, 0, 0.25);
   }

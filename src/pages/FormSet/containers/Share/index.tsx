@@ -66,7 +66,7 @@ const RecordSharing = styled.div`
     height: 0;
     border-bottom: 1px solid var(--color-border-primary);
   }
-  .ant-select-selector {
+  .ant-select-content {
     min-height: 36px;
   }
   .wxPublicWrap {

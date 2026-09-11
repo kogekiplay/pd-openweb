@@ -70,7 +70,7 @@ const AssignValueContent = styled.div`
     border: none;
     box-shadow: none;
     width: 100%;
-    .ant-input-number-handler-wrap {
+    .ant-input-number-actions {
       display: none;
     }
   }

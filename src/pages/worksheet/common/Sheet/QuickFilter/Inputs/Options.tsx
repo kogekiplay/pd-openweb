@@ -18,7 +18,7 @@ const Con = styled.div`
     ${({ isMultiple }) => (isMultiple ? '' : 'height: 32px;')}
     line-height: 32px;
     overflow: hidden;
-    .ant-select-arrow {
+    .ant-select-suffix {
       color: var(--color-text-tertiary);
     }
     .ant-select-clear {
@@ -28,20 +28,20 @@ const Con = styled.div`
       border-color: var(--color-border-tertiary) !important;
     }
     &:not(.isEmpty):hover {
-      .ant-select-arrow {
+      .ant-select-suffix {
         display: none;
       }
     }
     &.ant-select-open {
       border-color: var(--color-primary) !important;
     }
-    &.customAntSelect:not(.ant-select-open):not(.ant-select-disabled) .ant-select-selector {
+    &.customAntSelect:not(.ant-select-open):not(.ant-select-disabled) .ant-select-content {
       background-color: transparent !important;
       &:hover {
         background-color: transparent !important;
       }
     }
-    .ant-select-selector {
+    .ant-select-content {
       cursor: pointer !important;
       border: none !important;
       min-height: 30px;
@@ -53,7 +53,7 @@ const Con = styled.div`
       .ant-select-selection-search {
         line-height: 0px;
       }
-      .ant-select-selection-search-input {
+      .ant-select-input {
         height: 30px !important;
       }
       .ant-select-selection-placeholder {
@@ -82,7 +82,7 @@ const Con = styled.div`
       }
     }
     &.ant-select-multiple {
-      .ant-select-selector .ant-select-selection-overflow {
+      .ant-select-content .ant-select-selection-overflow {
         .ant-select-selection-search {
           margin: 0px;
         }

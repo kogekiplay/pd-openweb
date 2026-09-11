@@ -35,10 +35,10 @@ const AddWorkflowDialogContentWrap = styled.div`
     width: 100%;
     height: 48px;
     font-size: 13px !important;
-    .ant-select-arrow {
+    .ant-select-suffix {
       right: 16px !important;
     }
-    .ant-select-selector {
+    .ant-select-content {
       height: 48px !important;
       border-radius: 53px !important;
       box-shadow: none !important;
@@ -59,7 +59,7 @@ const AddWorkflowDialogContentWrap = styled.div`
     .filterItem {
       width: 160px;
       margin-right: 20px;
-      .ant-select-selector {
+      .ant-select-content {
         height: 36px;
         line-height: 36px;
       }

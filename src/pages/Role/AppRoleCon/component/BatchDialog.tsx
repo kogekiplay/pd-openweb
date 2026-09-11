@@ -31,14 +31,14 @@ const Wrap = styled.div`
     line-height: 18px;
     padding: 0 6px;
   }
-  .ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  .ant-select:not(.ant-select-customize-input) .ant-select-content {
     min-height: 36px;
     height: auto;
     border-radius: 3px;
     border: 1px solid var(--color-border-primary);
   }
   .ant-select-focused:not(.ant-select-disabled) {
-    .ant-select-selector {
+    .ant-select-content {
       box-shadow: none !important;
     }
   }

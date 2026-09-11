@@ -28,7 +28,7 @@ const ToolBarWrap = styled.div(
   padding:${isMobile ? '0 18px' : '0 22px 0 16px'};
   z-index: 10;
   box-shadow: var(--shadow-lg);
-  .ant-select-selector {
+  .ant-select-content {
     border: none !important;
   }
   .icon-download:hover {
@@ -43,7 +43,7 @@ const ToolBarWrap = styled.div(
 );
 const SelectWrap = styled(Select)`
   width: 85px;
-  .ant-select-selector {
+  .ant-select-content {
     padding-left: 0 !important;
   }
   .ant-select-selection-item {
@@ -53,7 +53,7 @@ const SelectWrap = styled(Select)`
   &.ant-select-single.ant-select-open .ant-select-selection-item {
     color: inherit;
   }
-  .ant-select-selection-search-input {
+  .ant-select-input {
     display: none;
   }
   &:hover {
@@ -63,7 +63,7 @@ const SelectWrap = styled(Select)`
   }
   &.mobile {
     width: 60px;
-    .ant-select-selector {
+    .ant-select-content {
       padding-left: 0 !important;
     }
   }

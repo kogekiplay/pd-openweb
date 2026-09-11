@@ -31,12 +31,12 @@ const RemarkTextArea = styled(Textarea)`
 const SelectBox = styled(Select)`
   width: 100%;
   &.ant-select-focused {
-    .ant-select-selector {
+    .ant-select-content {
       border-color: var(--color-primary) !important;
       box-shadow: none !important;
     }
   }
-  .ant-select-selector {
+  .ant-select-content {
     height: 36px !important;
     border-color: var(--color-border-tertiary) !important;
     border-radius: 4px !important;

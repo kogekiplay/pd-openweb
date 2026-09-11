@@ -70,7 +70,7 @@ const Item = styled.div(
     .label {
       color: var(--color-white) !important;
     }
-    .ant-select.ant-select-open .ant-select-selector {
+    .ant-select.ant-select-open .ant-select-content {
       background-color: transparent !important;
       color: var(--color-text-tertiary) !important;
     }

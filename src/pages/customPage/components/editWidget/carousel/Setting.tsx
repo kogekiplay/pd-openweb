@@ -33,7 +33,7 @@ const Wrap = styled.div`
     color: var(--color-text-disabled);
   }
   .customPageSelect {
-    .ant-select-selector {
+    .ant-select-content {
       height: 36px !important;
     }
     .ant-select-clear {

@@ -33,7 +33,7 @@ const Wrap = styled.div`
     .ant-tabs-nav-list {
       padding: 0 15px;
     }
-    .ant-tabs-tabpane {
+    .ant-tabs-content {
       padding: 10px;
     }
   }

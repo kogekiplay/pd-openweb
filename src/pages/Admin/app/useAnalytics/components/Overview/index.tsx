@@ -64,7 +64,7 @@ const ChartWrap = styled.div`
       .ant-select {
         height: 36px;
         border-radius: 3px;
-        .ant-select-selector {
+        .ant-select-content {
           height: 36px;
           border: 1px solid var(--color-border-secondary);
           border-radius: 3px;
@@ -75,7 +75,7 @@ const ChartWrap = styled.div`
             line-height: 34px;
           }
         }
-        .ant-select-arrow {
+        .ant-select-suffix {
           margin-top: -9px;
           top: 50%;
           width: 18px;

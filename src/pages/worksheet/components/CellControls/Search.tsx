@@ -16,7 +16,7 @@ const Con = styled(EditableCellCon)`
   }
   .ant-select {
     font-size: 13px;
-    .ant-select-arrow {
+    .ant-select-suffix {
       height: 30px !important;
       border: none;
       right: 2px !important;
@@ -27,8 +27,8 @@ const Con = styled(EditableCellCon)`
       }
     }
   }
-  .ant-select .ant-select-selector,
-  .ant-select .ant-select-selector:not(.ant-select-open):not(.ant-select-disabled) {
+  .ant-select .ant-select-content,
+  .ant-select .ant-select-content:not(.ant-select-open):not(.ant-select-disabled) {
     height: 32px !important;
     min-height: auto !important;
     padding: 0 6px !important;
@@ -44,7 +44,7 @@ const Con = styled(EditableCellCon)`
       left: 6px !important;
     }
     .ant-select-selection-search,
-    .ant-select-selection-search-input,
+    .ant-select-input,
     .ant-select-selection-placeholder {
       height: 32px !important;
     }
@@ -63,7 +63,7 @@ const Con = styled(EditableCellCon)`
   `
       : ''}
   &.hideArrow {
-    .ant-select-arrow {
+    .ant-select-suffix {
       display: none !important;
     }
   }

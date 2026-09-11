@@ -23,7 +23,7 @@ const Wrap = styled.div`
       font-weight: bold;
     }
   }
-  .ant-tabs-content {
+  .ant-tabs-body {
     border: 1px solid var(--color-border-primary);
     border-radius: 4px;
   }

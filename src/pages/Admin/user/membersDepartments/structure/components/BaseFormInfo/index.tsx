@@ -20,7 +20,7 @@ import TextInput from '../TextInput';
 const { Option } = Select;
 
 const SelectWrap = styled(Select)`
-  &:not(.ant-select-customize-input) .ant-select-selector {
+  &:not(.ant-select-customize-input) .ant-select-content {
     height: unset !important;
   }
 `;

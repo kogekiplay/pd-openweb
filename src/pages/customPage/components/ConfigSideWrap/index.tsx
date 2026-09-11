@@ -150,28 +150,28 @@ const Wrap = styled.div`
     }
   }
   .pageSelect {
-    &.ant-select:not(.ant-select-disabled):hover .ant-select-selector,
+    &.ant-select:not(.ant-select-disabled):hover .ant-select-content,
     &.ant-select-focused:not(.ant-select-disabled).ant-select-single:not(.ant-select-customize-input)
-      .ant-select-selector {
+      .ant-select-content {
       border-color: var(--color-primary) !important;
     }
-    .ant-select-selector {
+    .ant-select-content {
       border-radius: 4px !important;
       box-shadow: none !important;
     }
     &.selectTitleSelect {
-      .ant-select-selector,
+      .ant-select-content,
       .ant-select-selection-item {
         height: 42px;
         line-height: 40px;
       }
     }
-    .ant-select-selector,
+    .ant-select-content,
     .ant-select-selection-item {
       height: 32px;
       line-height: 30px;
     }
-    .ant-select-arrow {
+    .ant-select-suffix {
       width: auto;
       height: auto;
       top: 40%;

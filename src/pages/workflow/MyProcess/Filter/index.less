@@ -12,16 +12,16 @@
   .ant-drawer-content-wrapper {
     box-shadow: none !important;
   }
-  .ant-drawer-content {
+  .ant-drawer-section {
     background-color: transparent;
-    /* antd 5 删掉了 .ant-drawer-wrapper-body 这一层（v4 的 DOM 是
-       .ant-drawer-content > .ant-drawer-wrapper-body > [header, body]，
-       v5 变成 .ant-drawer-content > [header, body]），它那份
-       display:flex; flex-direction:column; width/height:100% 原样搬到了
-       .ant-drawer-content 上。原来挂在 wrapper-body 上的 align-items 因此落空 ——
-       类名没了，选择器静默失配，280px 宽的 .ant-drawer-body 不再贴右边（列向 flex
-       的交叉轴是水平方向，flex-end 即靠右）。搬到 content 上即可，flex-direction
-       仍由 antd 提供、不用重复声明。 */
+    /* 这层容器连着换了两次名字，注意别把沿革记混：
+         v4: .ant-drawer-content > .ant-drawer-wrapper-body > [header, body]
+         v5: .ant-drawer-content > [header, body]      —— wrapper-body 整层被删
+         v6: .ant-drawer-section > [header, body]      —— content 改名为 section
+       原来挂在 wrapper-body 上的 align-items 在 v5 就落空了（类名没了、选择器静默失配，
+       280px 宽的 .ant-drawer-body 不再贴右边；列向 flex 的交叉轴是水平方向，flex-end 即靠右），
+       当时搬到了 .ant-drawer-content 上；v6 又随改名挪到 .ant-drawer-section。
+       display/flex-direction 一直由 antd 自己给，这里只补 align-items。 */
     display: flex;
     align-items: flex-end;
   }
@@ -113,16 +113,16 @@
     padding-top: 16px;
   }
   .selectWrapper {
-    &.ant-select:not(.ant-select-disabled):hover .ant-select-selector,
+    &.ant-select:not(.ant-select-disabled):hover .ant-select-content,
     &.ant-select-focused:not(.ant-select-disabled).ant-select-single:not(.ant-select-customize-input)
-      .ant-select-selector {
+      .ant-select-content {
       border-color: var(--color-primary) !important;
     }
-    .ant-select-selector {
+    .ant-select-content {
       border-radius: 4px;
       box-shadow: none !important;
     }
-    .ant-select-arrow {
+    .ant-select-suffix {
       width: auto;
       height: auto;
       top: 40%;

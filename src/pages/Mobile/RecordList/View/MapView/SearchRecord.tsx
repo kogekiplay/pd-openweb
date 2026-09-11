@@ -32,7 +32,7 @@ const Wrapper = styled.div`
       0 6px 16px 0 rgb(0 0 0 / 8%),
       0 9px 28px 8px rgb(0 0 0 / 5%);
   }
-  .ant-select-open .ant-select-selection-search-input {
+  .ant-select-open .ant-select-input {
     border-radius: 4px 4px 0 0;
   }
   .ant-select-dropdown {

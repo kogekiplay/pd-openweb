@@ -20,7 +20,7 @@ export const isValidName = name => {
 
 const Wrap = styled.div`
   .selectItem {
-    .ant-select-selector {
+    .ant-select-content {
       min-height: 36px;
       input {
         min-height: 32px;

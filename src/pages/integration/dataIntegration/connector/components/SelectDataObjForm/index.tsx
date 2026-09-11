@@ -13,7 +13,7 @@ const Wrapper = styled.div`
   .selectItem {
     width: 100% !important;
     font-size: 13px;
-    .ant-select-selector {
+    .ant-select-content {
       min-height: 36px;
       padding: 2px 11px !important;
       border-radius: 3px !important;
@@ -23,7 +23,7 @@ const Wrapper = styled.div`
       -webkit-margin-start: 0px !important;
     }
     &.disabled {
-      .ant-select-selector {
+      .ant-select-content {
         border: 0;
       }
     }

@@ -133,7 +133,7 @@ class Actions {
   addCondition = (control, groupIndex = 0, from) => {
     const condition = getDefaultCondition(control, from);
     setTimeout(() => {
-      const dom = document.querySelector('.keyStr_' + condition.keyStr + ' .ant-select-selector');
+      const dom = document.querySelector('.keyStr_' + condition.keyStr + ' .ant-select-content');
 
       if (dom) {
         dom.click();

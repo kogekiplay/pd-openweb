@@ -19,7 +19,7 @@ const Wrapper = styled.div`
   .ant-select-auto-complete {
     z-index: 2;
   }
-  .ant-select-open .ant-select-selection-search-input {
+  .ant-select-open .ant-select-input {
     border-radius: 4px 4px 0 0;
   }
   .ant-select-dropdown {

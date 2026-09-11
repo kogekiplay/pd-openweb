@@ -47,13 +47,13 @@ const Con = styled.div`
   }
   .customAntSelect {
     margin-top: 10px;
-    .ant-select-selector {
+    .ant-select-content {
       border-color: var(--color-border-primary) !important;
       background: var(--color-background-primary) !important;
     }
   }
   .customAntSelect:not(.ant-select-open):not(.ant-select-disabled) {
-    .ant-select-selector:hover {
+    .ant-select-content:hover {
       background-color: inherit !important;
       border-color: var(--color-border-primary) !important;
     }

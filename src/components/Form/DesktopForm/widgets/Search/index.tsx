@@ -260,7 +260,7 @@ const Search = props => {
       if (boxRef.current) {
         setTimeout(() => {
           try {
-            boxRef.current.querySelector('.ant-select-selection-search-input').focus();
+            boxRef.current.querySelector('.ant-select-input').focus();
           } catch (err) {
             console.log(err);
           }

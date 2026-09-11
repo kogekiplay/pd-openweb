@@ -359,7 +359,7 @@ function Filters(props, ref) {
                     const defaultCondition = getDefaultCondition(selectedControl);
                     setTimeout(() => {
                       const dom = document.querySelector(
-                        '.keyStr_' + defaultCondition.keyStr + ' .ant-select-selector',
+                        '.keyStr_' + defaultCondition.keyStr + ' .ant-select-content',
                       );
 
                       if (dom) {

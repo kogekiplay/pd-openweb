@@ -17,7 +17,7 @@ const DropDownSetChoose = styled.div`
   }
   .dropDropDownSet {
     width: 100%;
-    .ant-select-selector {
+    .ant-select-content {
       border-radius: 3px !important;
       height: 36px !important;
       .ant-select-selection-item {
@@ -26,7 +26,7 @@ const DropDownSetChoose = styled.div`
       }
     }
     &.isDelete {
-      .ant-select-selector {
+      .ant-select-content {
         border-color: var(--color-error) !important;
       }
       .ant-select-selection-item {

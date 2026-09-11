@@ -48,7 +48,7 @@ const ToolBarWrap = styled(FlexCenter)`
       color: var(--color-text-secondary);
     }
   }
-  .ant-select-selector {
+  .ant-select-content {
     border: none !important;
   }
   .toOrigin {
@@ -81,7 +81,7 @@ const ToolBarWrap = styled(FlexCenter)`
 
 const SelectWrap = styled(Select)`
   width: 85px;
-  .ant-select-selector {
+  .ant-select-content {
     padding-left: 0 !important;
   }
   .ant-select-selection-item {
@@ -90,7 +90,7 @@ const SelectWrap = styled(Select)`
   &.ant-select-single.ant-select-open .ant-select-selection-item {
     color: inherit;
   }
-  .ant-select-selection-search-input {
+  .ant-select-input {
     display: none;
   }
   &:hover {

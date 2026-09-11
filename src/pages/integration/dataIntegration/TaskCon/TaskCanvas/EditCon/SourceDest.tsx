@@ -18,16 +18,16 @@ const Wrap = styled.div`
   .mTop14 {
     margin-top: 14px;
   }
-  .ant-select-disabled.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  .ant-select-disabled.ant-select:not(.ant-select-customize-input) .ant-select-content {
     background: var(--color-background-primary);
   }
-  .ant-select-arrow {
+  .ant-select-suffix {
     display: none;
   }
-  .ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  .ant-select:not(.ant-select-customize-input) .ant-select-content {
     border-radius: 4px;
   }
-  .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+  .ant-select-single:not(.ant-select-customize-input) .ant-select-content {
     height: 36px;
   }
 `;

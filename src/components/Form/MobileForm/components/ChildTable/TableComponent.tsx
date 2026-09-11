@@ -15,7 +15,7 @@ import { addWidthToColumns } from './utils';
 
 const TableWrap = styled(Table)`
   height: 100%;
-  .ant-spin-nested-loading,
+  .ant-spin-section,
   .ant-spin-container,
   .ant-table,
   .ant-table-container {

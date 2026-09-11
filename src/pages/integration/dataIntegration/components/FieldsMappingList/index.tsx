@@ -112,7 +112,7 @@ const Wrapper = styled.div`
       }
     }
   }
-  .ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  .ant-select:not(.ant-select-customize-input) .ant-select-content {
     border-radius: 3px;
     /* border: 1px solid var(--color-border-tertiary) !important; */
   }
@@ -149,7 +149,7 @@ const SelectWrapper = styled.div`
   display: flex;
   align-items: center;
   .isNoMatchOption {
-    .ant-select-selector .ant-select-selection-item {
+    .ant-select-content .ant-select-selection-item {
       color: #f00;
     }
   }

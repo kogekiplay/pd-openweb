@@ -98,7 +98,7 @@ const WidgetList = styled.div`
         .ant-collapse-item > .ant-collapse-header {
           padding: 12px 0 !important;
         }
-        .ant-collapse-content-box {
+        .ant-collapse-body {
           padding-bottom: 0 !important;
         }
       }
@@ -133,11 +133,11 @@ const WidgetList = styled.div`
           .anticon {
             margin-right: 0 !important;
           }
-          .ant-collapse-header-text {
+          .ant-collapse-title {
             min-width: 0;
           }
         }
-        .ant-collapse-content-box {
+        .ant-collapse-body {
           padding: 0 0 12px 0 !important;
         }
       }

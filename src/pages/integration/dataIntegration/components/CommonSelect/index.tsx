@@ -6,7 +6,7 @@ const SelectWrapper = styled.div`
   .selectItem {
     font-size: 13px;
     width: ${({ width }) => `${width ? width + 'px' : '100%'} !important`};
-    .ant-select-selector {
+    .ant-select-content {
       min-height: 36px;
       padding: 2px 11px !important;
       border: 1px solid var(--color-border-tertiary) !important;
@@ -14,12 +14,12 @@ const SelectWrapper = styled.div`
       box-shadow: none !important;
     }
     &.ant-select-focused {
-      .ant-select-selector {
+      .ant-select-content {
         border-color: var(--color-primary) !important;
       }
     }
     &.disabled {
-      .ant-select-selector {
+      .ant-select-content {
         border: 0;
       }
     }

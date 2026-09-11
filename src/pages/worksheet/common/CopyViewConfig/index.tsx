@@ -34,7 +34,7 @@ const ContentWrap = styled.div`
     }
   }
   .selectViewCon {
-    .ant-select-selector {
+    .ant-select-content {
       height: 36px !important;
       input {
         height: 34px !important;
