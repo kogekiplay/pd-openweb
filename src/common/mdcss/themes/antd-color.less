@@ -1,6 +1,11 @@
 .ant-drawer {
+  /* antd 6 把 .ant-drawer-content 换成了 .ant-drawer-section
+     （v5: .ant-drawer-content-wrapper > .ant-drawer-content > [header, body]
+       v6: .ant-drawer-content-wrapper > .ant-drawer-section > [header, body]）。
+     注意 v6 的 CSS 里仍有 .ant-drawer-content 的规则，但渲染出来的元素不带这个类，
+     所以「产物里搜得到这个类名」不能当作判据，得看实际渲染结果。 */
   .ant-drawer-header,
-  .ant-drawer-content {
+  .ant-drawer-section {
     color: var(--color-text-primary) !important;
     background-color: var(--color-background-card) !important;
   }
@@ -34,19 +39,27 @@
   }
 }
 
-.ant-checkbox,
+/* antd 6 把 .ant-checkbox-inner 这一层【整个删掉】了：v5 的结构是
+   span.ant-checkbox > (input.ant-checkbox-input + span.ant-checkbox-inner)，
+   方框画在 inner 上；v6 变成 span.ant-checkbox > input.ant-checkbox-input，
+   方框直接画在 .ant-checkbox 自身（background-color + border），勾号是它的 ::after，
+   选中/禁用也从「父级类 + inner 子元素」变成同一个元素上的
+   .ant-checkbox-checked / .ant-checkbox-disabled。
+   类名一个都没报错、构建也不受影响，只是深色主题下这几条全落空 ——
+   复选框会退回 antd 默认的白底，在 #222 的面板上变成一排白方块。
+   （结构是渲染两版 DOM 实测对出来的，不是照文档推的。） */
 .ant-checkbox-wrapper {
   color: var(--color-text-primary) !important;
-  .ant-checkbox-inner {
-    background: var(--color-background-input) !important;
-  }
-  &.ant-checkbox-checked .ant-checkbox-inner {
-    background: var(--color-primary) !important;
-    border-color: var(--color-primary) !important;
-  }
-  .ant-checkbox-disabled .ant-checkbox-inner {
-    background: var(--color-background-secondary) !important;
-  }
+}
+.ant-checkbox {
+  background: var(--color-background-input) !important;
+}
+.ant-checkbox.ant-checkbox-checked {
+  background: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+}
+.ant-checkbox.ant-checkbox-disabled {
+  background: var(--color-background-secondary) !important;
 }
 
 .ant-switch {
@@ -57,12 +70,14 @@
   }
 }
 
+/* 同上：antd 6 也删掉了 .ant-radio-inner，圆点底色改画在 .ant-radio 自身上
+   （选中态 .ant-radio-checked、禁用 .ant-radio-disabled 都在同一元素，圆点是 ::after）。 */
 .ant-radio-group,
 .ant-radio-wrapper {
   color: var(--color-text-primary) !important;
-  .ant-radio-inner {
-    background: var(--color-background-input) !important;
-  }
+}
+.ant-radio {
+  background: var(--color-background-input) !important;
 }
 
 .ant-input {
@@ -182,7 +197,7 @@
 }
 
 .ant-popover,
-.ant-popover-inner-content {
+.ant-popover-content {
   color: var(--color-text-primary) !important;
 
   /* antd 5 删掉了 .ant-popover-arrow-content 这个类，箭头也从 .ant-popover-content
@@ -196,9 +211,15 @@
      v5 改设这个变量即可，两条旧规则合并成这一行。
      特异性 (0,1,0) 与 antd 的 (0,1,0) 并列，但 cssinjs 以 prependQueue 插在
      <head> 最前，本仓样式在后 —— 并列归我们（见 tools/verify-antd-style-collisions.cjs）。 */
-  --antd-arrow-background-color: var(--color-background-card);
+  /* v6 又改了一次箭头变量名：v5 是 --antd-arrow-background-color，
+     v6 变成 --ant-tooltip-arrow-background-color（popover 也用 tooltip 这个名字，
+     实测 .ant-popover 自身就设了它 = var(--ant-color-bg-elevated)）。 */
+  --ant-tooltip-arrow-background-color: var(--color-background-card);
 
-  .ant-popover-inner {
+  /* v6: .ant-popover-inner → .ant-popover-container；
+     而 .ant-popover-content 两版都在、含义却变了（v5 是外层包裹，v6 是内层内容盒），
+     按名字对会对错，必须看结构。 */
+  .ant-popover-container {
     box-shadow: var(--shadow-lg);
     background-color: var(--color-background-card) !important;
   }
@@ -434,14 +455,16 @@
 
 .ant-collapse {
   color: var(--color-text-primary) !important;
-  .ant-collapse-content {
+  /* antd 6: .ant-collapse-content → .ant-collapse-panel（内层 -content-box → -body） */
+  .ant-collapse-panel {
     color: var(--color-text-primary) !important;
   }
 }
 
 .ant-tooltip {
   [data-theme='dark'] & {
-    .ant-tooltip-inner {
+    /* antd 6: .ant-tooltip-content > .ant-tooltip-inner 两层合并成 .ant-tooltip-container */
+    .ant-tooltip-container {
       box-shadow:
         0 0 0 1px rgba(255, 255, 255, 0.04),
         0 8px 24px rgba(0, 0, 0, 0.45);

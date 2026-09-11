@@ -379,9 +379,12 @@ async function classNamesFor(antdPath) {
       .sort((a, b) => b[1].length - a[1].length)
       .forEach(([comp, list]) => {
         console.log(`\n    ${comp}（${list.length} 条）`);
-        list.slice(0, 6).forEach(b => console.log(`      .${b.cls}   ← ${b.files[0]}`));
-
-        if (list.length > 6) console.log(`      …还有 ${list.length - 6} 条`);
+        // 【必须打印全部文件】只打 files[0] 会让人修完第一处、判据仍然报红，
+        // 然后再冒出下一个文件 —— 实际就这么来回过一轮。收集端已经收全了，显示端也要跟上。
+        list.forEach(b => {
+          console.log(`      .${b.cls}`);
+          b.files.forEach(f => console.log(`          ← ${f}`));
+        });
       });
   }
 
