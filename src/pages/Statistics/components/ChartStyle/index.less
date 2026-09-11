@@ -24,7 +24,14 @@
       }
     }
     .ant-collapse-arrow {
-      transition: transform 0.24s;
+      // antd 4 的 transition 挂在 `.ant-collapse-arrow svg` 上，跟这行不是同一个元素，
+      // 所以这行当年不带 !important 也能生效。antd 5 改成直接挂在箭头本体：
+      //   .ant-collapse > .ant-collapse-item > .ant-collapse-header .ant-collapse-arrow
+      // 那是 (0,4,0)，压过这里的 (0,3,0)，0.24s 会被悄悄换成 antd 的 0.3s。
+      // 展开/收起动画仍在（旋转由下面的 transform 驱动），只是慢 60ms —— 看不出报错，
+      // 纯靠肉眼也基本看不出，只有静态比特异性才发现。本块其余四条本来就带 !important，
+      // 这里补齐，顺带让 tools/verify-antd-style-collisions.cjs 归零。
+      transition: transform 0.24s !important;
       position: static !important;
       line-height: initial !important;
       padding: 0 !important;

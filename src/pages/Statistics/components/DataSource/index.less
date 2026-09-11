@@ -49,7 +49,9 @@
       padding: 16px 16px 0 16px;
     }
     .ant-collapse-arrow {
-      transition: transform 0.24s;
+      // 同 ChartStyle/index.less：antd 5 把 transition 从 `.ant-collapse-arrow svg`
+      // 移到箭头本体，(0,4,0) 压过这里的 (0,3,0)，0.24s 会被换成 antd 的 0.3s。
+      transition: transform 0.24s !important;
       position: static !important;
       line-height: initial !important;
       padding: 0 !important;
