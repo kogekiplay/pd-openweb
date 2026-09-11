@@ -492,7 +492,7 @@ export default function CascaderWidget(props) {
     return (
       (<TreeSelect
         className="w100 customAntSelect customTreeSelect"
-        popupClassName={cx('customTreeSelectDropdown', popupClassName, `treeSelect_${controlId}`)}
+        classNames={{ popup: { root: cx('customTreeSelectDropdown', popupClassName, `treeSelect_${controlId}`) } }}
         dropdownPopupAlign={treePopupAlign}
         ref={treeSelectCompRef}
         disabled={disabled}
@@ -548,7 +548,7 @@ export default function CascaderWidget(props) {
           setKeywords(value);
           setTreeExpandedKeys([]);
         }}
-        onDropdownVisibleChange={visible => {
+        onOpenChange={visible => {
           setPopupVisible(visible);
           onPopupVisibleChange(visible);
         }}

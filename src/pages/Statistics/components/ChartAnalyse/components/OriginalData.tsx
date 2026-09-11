@@ -83,7 +83,7 @@ export default class OriginalData extends Component<any, any> {
   renderFooter() {
     return (
       <div className="mTop20 mBottom10 pRight8">
-        <ConfigProvider autoInsertSpaceInButton={false}>
+        <ConfigProvider button={{ autoInsertSpace: false }}>
           <Button
             type="link"
             onClick={() => {
@@ -110,7 +110,7 @@ export default class OriginalData extends Component<any, any> {
         <div className="mBottom10 Font13">{_l('显示数据')}</div>
         <div className="mBottom16">
           <Radio.Group onChange={this.handleChange} value={displaySetup.showControlIds.length ? 2 : 1}>
-            <Space direction="vertical">
+            <Space orientation="vertical">
               <Radio value={1} className="Font13">
                 {_l('按照权限查看')}
               </Radio>
@@ -138,7 +138,7 @@ export default class OriginalData extends Component<any, any> {
           className="chartModal"
           open={showControlVisible}
           centered={true}
-          destroyOnClose={true}
+          destroyOnHidden={true}
           closeIcon={<Icon icon="close" className="Font20 pointer textTertiary" />}
           footer={this.renderFooter()}
           onCancel={() => {
@@ -172,7 +172,7 @@ export default class OriginalData extends Component<any, any> {
       <Fragment>
         <div className="flexColumn mBottom16">
           <Radio.Group onChange={this.handleChangeViewDataType} value={viewDataType}>
-            <Space direction="vertical">
+            <Space orientation="vertical">
               <Radio value={1} className="Font13">
                 {_l('在图表中分栏查看')}
               </Radio>

@@ -49,7 +49,7 @@ const CallBackRefresh = props => {
           />
         </div>
         <Divider className="mTop5 mBottom5" />
-        <Space direction="vertical">
+        <Space orientation="vertical">
           <Checkbox
             checked={filterObject.length === refreshObjects.length}
             onChange={e => {

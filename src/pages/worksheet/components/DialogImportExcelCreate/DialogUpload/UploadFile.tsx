@@ -98,7 +98,7 @@ export default class UploadFile extends Component<any, any> {
         <div className="Font14">{file.name}</div>
         <Progress
           style={{ width: 196, marginLeft: '36px' }}
-          trailColor="var(--color-border-secondary)"
+          railColor="var(--color-border-secondary)"
           strokeColor="#1677ff"
           strokeWidth={8}
           percent={Math.floor((file.loaded / (file.size || 0)) * 100)}

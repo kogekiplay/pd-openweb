@@ -319,9 +319,9 @@ function WorksheetRecordLogSubTable(props) {
 
   const renderEmpty = () => (
     <Empty
-      imageStyle={{
+      styles={{ image: {
         height: 40,
-      }}
+      } }}
       image={Empty.PRESENTED_IMAGE_SIMPLE}
       description={<span>{columns.length ? _l('无数据，或是移除记录暂不支持查看详情') : _l('暂无权限查看')}</span>}
     ></Empty>

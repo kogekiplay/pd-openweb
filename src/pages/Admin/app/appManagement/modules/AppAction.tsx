@@ -188,7 +188,7 @@ export default function BatchImportApp(props) {
       {/* 日志 */}
       <Drawer
         rootClassName="appLogDrawerContainer"
-        width={480}
+        size={480}
         title={
           <div className="flexRow">
             <span className="flex">{_l('日志')}</span>
@@ -202,7 +202,7 @@ export default function BatchImportApp(props) {
         placement="right"
         onClose={() => setData({ drawerVisible: false })}
         open={drawerVisible}
-        maskClosable={false}
+        mask={{ closable: false }}
         closable={false}
       >
         <AppLog visible={drawerVisible} />

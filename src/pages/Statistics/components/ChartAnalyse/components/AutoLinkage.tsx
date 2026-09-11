@@ -101,7 +101,7 @@ export default class AutoLinkage extends Component<any, any> {
   renderFooter() {
     return (
       <div className="mTop20 mBottom10 pRight8">
-        <ConfigProvider autoInsertSpaceInButton={false}>
+        <ConfigProvider button={{ autoInsertSpace: false }}>
           <Button type="link" onClick={() => this.setState({ modalVisible: false })}>
             {_l('取消')}
           </Button>

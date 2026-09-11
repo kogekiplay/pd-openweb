@@ -84,9 +84,9 @@ class Detail extends Component<any, any> {
         closable={false}
         mask={false}
         getContainer={false}
-        bodyStyle={{ padding: 0 }}
+        styles={{ body: { padding: 0 } }}
         rootStyle={{ zIndex: 9 }}
-        width={800}
+        size={800}
       >
         <div className="workflowSettings h100">
           <div

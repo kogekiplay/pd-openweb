@@ -47,7 +47,7 @@ class CreatePrintDrawer extends React.Component<any, any> {
 
     return (
       (<Drawer
-        width={400}
+        size={400}
         rootClassName="printTempDrawer"
         title={_l('创建打印模板')}
         placement="right"
@@ -340,7 +340,7 @@ class Print extends React.Component<any, any> {
 
     return (
       (<Drawer
-        width={480}
+        size={480}
         placement="right"
         rootClassName="Absolute"
         zIndex={10}
@@ -350,7 +350,7 @@ class Print extends React.Component<any, any> {
         closable={false}
         getContainer={false}
         mask={false}
-        bodyStyle={{ padding: 0 }}
+        styles={{ body: { padding: 0 } }}
       >
         <EditPrint
           type={type}
@@ -385,7 +385,7 @@ class Print extends React.Component<any, any> {
 
     return (
       (<Drawer
-        width={560}
+        size={560}
         placement="right"
         rootClassName="Absolute"
         zIndex={10}
@@ -395,7 +395,7 @@ class Print extends React.Component<any, any> {
         closable={false}
         getContainer={false}
         mask={false}
-        bodyStyle={{ padding: 0 }}
+        styles={{ body: { padding: 0 } }}
       >
         <CloudPrint
           type={type}

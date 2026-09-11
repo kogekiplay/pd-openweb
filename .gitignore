@@ -39,3 +39,10 @@ package-lock.json
 # commit 里加入，作用只是让那批测试删干净且再也回不来。它的代价是「静默」：新写的
 # 测试不报错、不进 git status、review 里看不见，push 完人间蒸发。已删除。
 # 唯一命名规范是 *.spec.js，由 scripts/run-specs.js 启动时【显式报错】强制执行。
+
+# Agent 侧工具（npx skills add ant-design/ant-design-cli 装的），非产品代码。
+# 单独列出来是因为本仓的提交惯用 `git add -A`，不挡住会被顺手带进提交。
+# 若希望团队共享同一套 skill，把这几行删掉改为提交即可。
+.agents/
+.claude/
+skills-lock.json

@@ -86,7 +86,7 @@ export default class Con extends PureComponent<any, any> {
     const { tab = 0 } = this.state;
     return (
       (<Drawer
-        width={880}
+        size={880}
         onClose={() => onClose()}
         mask={true}
         placement="right"

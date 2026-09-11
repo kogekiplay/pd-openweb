@@ -89,7 +89,7 @@ export default class DropDownSet extends React.Component<any, any> {
               value={[setDataId]}
               suffixIcon={<Icon icon="arrow-down-border Font14" />}
               allowClear={setDataId}
-              popupClassName="dropConOption"
+              classNames={{ popup: { root: "dropConOption" } }}
               onChange={value => {
                 if (value === setDataId) {
                   return;

@@ -431,7 +431,7 @@ export default class Condition extends Component<any, any> {
             <Select
               className="dynamicSource"
               disabled={!isDynamicValue}
-              popupClassName="dynamicSelectDropdown"
+              classNames={{ popup: { root: "dynamicSelectDropdown" } }}
               value={this.state.isDynamicsource ? 2 : 1}
               options={isDynamicValue ? CONDITION_OPTIONS : CONDITION_OPTIONS.filter(o => o.value === 1)}
               suffixIcon={<Icon icon="arrow-down-border Font14" />}

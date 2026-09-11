@@ -334,7 +334,7 @@ class PortalSetting extends React.Component<any, any> {
 
     return (
       (<Drawer
-        width={640}
+        size={640}
         onClose={() => closeSet()}
         zIndex={999}
         mask={true}

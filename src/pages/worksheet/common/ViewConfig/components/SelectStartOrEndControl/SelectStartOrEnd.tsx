@@ -62,7 +62,7 @@ const TimeSelect = ({
       labelInValue
       optionLabelProp="label"
       suffixIcon={<Icon icon="arrow-down-border Font14" />}
-      popupClassName="dropConOption"
+      classNames={{ popup: { root: "dropConOption" } }}
       onChange={(selectedValue = {}) => {
         if (selectedValue.value === (value || {}).controlId) return;
         if (selectedValue.value === 'add') {

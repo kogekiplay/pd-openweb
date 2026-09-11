@@ -84,13 +84,12 @@ const AddLangModal = props => {
           <Icon className="textSecondary Font20 pointer" icon="close" onClick={onCancel} />
         </div>
       }
-      bodyStyle={{
+      styles={{ body: {
         padding: '12px 24px',
-      }}
-      footerStyle={{
+      }, footer: {
         padding: '16px',
-      }}
-      width={700}
+      } }}
+      size={700}
       open={visible}
       closable={false}
       onClose={onCancel}

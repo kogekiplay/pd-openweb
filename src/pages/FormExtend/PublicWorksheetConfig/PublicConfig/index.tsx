@@ -574,7 +574,7 @@ class PublicConfig extends React.Component<any, any> {
 
     return (
       (<Drawer
-        width={640}
+        size={640}
         rootClassName="publicConfigSettingDrawer"
         title={_l('发布设置')}
         placement="right"

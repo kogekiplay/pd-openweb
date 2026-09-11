@@ -534,7 +534,7 @@ function FormIndexSetting(props) {
           )}
         </div>
         <Drawer
-          width={497}
+          size={497}
           rootClassName="Absolute"
           zIndex={9}
           placement="right"

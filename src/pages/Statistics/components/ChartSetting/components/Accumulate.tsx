@@ -72,7 +72,7 @@ export default class Accumulate extends Component<any, any> {
   renderFooter() {
     return (
       <div className="mTop20 mBottom10 pRight8">
-        <ConfigProvider autoInsertSpaceInButton={false}>
+        <ConfigProvider button={{ autoInsertSpace: false }}>
           <Button
             type="link"
             onClick={() => {
@@ -124,7 +124,7 @@ export default class Accumulate extends Component<any, any> {
         {displaySetup.isAccumulate && isOptionControl(xaxes.controlType) && (
           <div className="mBottom16 mLeft20">
             <Radio.Group onChange={this.handleChange} value={displaySetup.showOptionIds.length ? 2 : 1}>
-              <Space direction="vertical" className="mTop10">
+              <Space orientation="vertical" className="mTop10">
                 <Radio value={1} className="Font13">
                   {_l('全部')}
                 </Radio>
@@ -155,7 +155,7 @@ export default class Accumulate extends Component<any, any> {
           className="chartModal"
           open={showControlVisible}
           centered={true}
-          destroyOnClose={true}
+          destroyOnHidden={true}
           closeIcon={<Icon icon="close" className="Font20 pointer textTertiary" />}
           footer={this.renderFooter()}
           onCancel={() => {

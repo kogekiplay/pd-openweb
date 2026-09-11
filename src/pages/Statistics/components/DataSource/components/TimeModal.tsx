@@ -145,7 +145,7 @@ export default class TimeModal extends Component<any, any> {
 
                 this.setState(data);
               }}
-              onDropdownVisibleChange={visible => {
+              onOpenChange={visible => {
                 this.setState({ dropdownVisible: visible });
               }}
             >
@@ -380,7 +380,7 @@ export default class TimeModal extends Component<any, any> {
         className="chartModal"
         open={visible}
         centered={true}
-        destroyOnClose={true}
+        destroyOnHidden={true}
         closeIcon={<Icon icon="close" className="Font20 pointer textTertiary" />}
         footer={this.renderFooter()}
         onCancel={onCancel}

@@ -326,8 +326,8 @@ export default function (props) {
       rootClassName="asdasd"
       closable={false}
       mask={false}
-      bodyStyle={{ padding: 0 }}
-      width={800}
+      styles={{ body: { padding: 0 } }}
+      size={800}
       title={
         <div className="flexRow">
           <span className="flex">{_l('查看日志')}</span>

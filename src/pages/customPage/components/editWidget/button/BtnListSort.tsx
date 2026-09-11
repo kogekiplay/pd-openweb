@@ -69,7 +69,7 @@ export default function BtnListSort({ buttonList, onSortEnd }) {
       </Tooltip>
       <Modal
         title={_l('自定义按钮排序')}
-        maskStyle={{ zIndex: 1051 }}
+        styles={{ mask: { zIndex: 1051 } }}
         width={400}
         centered
         closable={false}

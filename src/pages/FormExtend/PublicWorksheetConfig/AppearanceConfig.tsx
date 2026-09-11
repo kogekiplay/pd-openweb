@@ -346,7 +346,7 @@ class AppearanceConfig extends React.Component<any, any> {
     const config = getPageConfig(pageConfigs, pageConfigKey);
 
     return (
-      (<Drawer open={open} width={640} bodyStyle={{ padding: 0 }} headerStyle={{ display: 'none' }} onClose={onClose}>
+      (<Drawer open={open} size={640} styles={{ body: { padding: 0 }, header: { display: 'none' } }} onClose={onClose}>
         <ScrollView>
           <Con>
             <Absolute right="24" top="-2">

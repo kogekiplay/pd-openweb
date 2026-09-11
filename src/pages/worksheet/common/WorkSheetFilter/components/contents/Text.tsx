@@ -99,7 +99,7 @@ export default class Text extends Component<any, any> {
         mode="tags"
         className="worksheetFilterTextCondition"
         placeholder={_l('请输入')}
-        popupClassName={cx('worksheetFilterTextPopup', { hide: !searchValue })}
+        classNames={{ popup: { root: cx('worksheetFilterTextPopup', { hide: !searchValue }) } }}
         disabled={disabled}
         value={values}
         searchValue={searchValue}
@@ -110,7 +110,7 @@ export default class Text extends Component<any, any> {
         tokenSeparators={['\r\n', '\n']}
         options={[]}
         tagRender={this.tagRender}
-        dropdownRender={this.dropdownRender}
+        popupRender={this.dropdownRender}
         onInputKeyDown={this.onInputKeyDown}
       />)
     );

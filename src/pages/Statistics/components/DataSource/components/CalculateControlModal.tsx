@@ -342,7 +342,7 @@ export default class CalculateControlModal extends Component<any, any> {
   renderFooter() {
     return (
       <div className="mTop20 mBottom10 pRight8">
-        <ConfigProvider autoInsertSpaceInButton={false}>
+        <ConfigProvider button={{ autoInsertSpace: false }}>
           <Button
             type="link"
             onClick={() => {
@@ -372,7 +372,7 @@ export default class CalculateControlModal extends Component<any, any> {
         className="chartModal"
         open={dialogVisible}
         centered={true}
-        destroyOnClose={true}
+        destroyOnHidden={true}
         closeIcon={<Icon icon="close" className="Font20 pointer textTertiary" />}
         footer={this.renderFooter()}
         onCancel={() => {

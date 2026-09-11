@@ -85,8 +85,8 @@ export default function CustomSelectDate(props) {
     (<div className="w100 Relative">
       <Select
         suffixIcon={<Icon icon="sidebar_calendar" className="Font16" />}
-        popupClassName="serchDate"
-        dropdownStyle={!openDateSelect ? { display: 'none' } : {}}
+        classNames={{ popup: { root: "serchDate" } }}
+        styles={{ popup: { root: !openDateSelect ? { display: 'none' } : {} } }}
         open={openDateSelect}
         className={className}
         placeholder={placeholder || _l('最近30天')}
@@ -95,10 +95,10 @@ export default function CustomSelectDate(props) {
         }}
         value={dateInfo.searchDateStr}
         allowClear
-        onDropdownVisibleChange={open => {
+        onOpenChange={open => {
           setOpenDateSelect(open);
         }}
-        dropdownRender={() => (
+        popupRender={() => (
           <div className="listContainer">
             {(props.searchDateList || searchDateList).map(item => (
               <div

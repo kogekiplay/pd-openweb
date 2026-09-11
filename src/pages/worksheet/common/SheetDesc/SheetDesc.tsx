@@ -66,8 +66,7 @@ export default class SheetDesc extends Component<any, any> {
         width={800}
         footer={null}
         centered={true}
-        maskStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.7)' }}
-        bodyStyle={{ minHeight: '480px', padding: 0 }}
+        styles={{ mask: { backgroundColor: 'rgba(0, 0, 0, 0.7)' }, body: { minHeight: '480px', padding: 0 } }}
         maskAnimation="fade"
         mousePosition={{ x: 139, y: 23 }}
         closeIcon={<Icon icon="close" />}

@@ -116,24 +116,23 @@ const ToolbarDrawer = props => {
         <Drawer
           placement="right"
           open={visible}
-          destroyOnClose={false}
+          destroyOnHidden={false}
           closable={false}
-          maskStyle={{
+          styles={{ mask: {
             backgroundColor: 'transparent',
-          }}
+          }, body: {
+            padding: 0,
+          } }}
           onClose={() => {
             onClose();
             localStorage.removeItem('toolBarOpenType');
           }}
           getContainer={() => document.querySelector('#containerWrapper')}
-          width={drawerWidht}
+          size={drawerWidht}
           rootStyle={{
             // position: 'absolute',
             zIndex: 20,
             right: 52,
-          }}
-          bodyStyle={{
-            padding: 0,
           }}
         >
           {renderDrag()}

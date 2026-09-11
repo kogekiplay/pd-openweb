@@ -220,7 +220,7 @@ export default function orgQuota(props) {
                         <Progress
                           showInfo={false}
                           style={{ margin: '7px 0', textAlign: 'left' }}
-                          trailColor="var(--color-border-secondary)"
+                          railColor="var(--color-border-secondary)"
                           strokeColor={
                             _.isNaN(Number(percentValue))
                               ? 'var(--color-border-secondary)'

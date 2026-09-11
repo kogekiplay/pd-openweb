@@ -23,13 +23,12 @@ export default function (props) {
         zIndex={1000}
         width={1600}
         footer={null}
-        destroyOnClose={true}
+        destroyOnHidden={true}
         className="appIntroDialog appMultilingualDialog"
         wrapClassName="appIntroDialogWrapCenter"
         open={editAppIntroVisible}
         onClose={() => setEditAppIntroVisible(false)}
-        maskStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.7)' }}
-        bodyStyle={{ padding: 0 }}
+        styles={{ mask: { backgroundColor: 'rgba(0, 0, 0, 0.7)' }, body: { padding: 0 } }}
         closable={false}
         // closeIcon={<Icon icon="close" />}
       >

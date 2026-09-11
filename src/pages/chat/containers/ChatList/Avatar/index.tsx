@@ -38,18 +38,17 @@ const AvatarSetting = props => {
         rootClassName="userDrawerWrap"
         open={userDrawerVisible}
         closable={false}
-        maskStyle={{
+        styles={{ mask: {
           backgroundColor: 'transparent',
-        }}
+        }, body: {
+          padding: 0,
+        } }}
         onClose={() => setToolbarConfig({ userDrawerVisible: false })}
         getContainer={() => document.body}
         rootStyle={{
           // position: embed ? undefined : 'absolute',
           zIndex: 20,
           right: embed ? 0 : 52,
-        }}
-        bodyStyle={{
-          padding: 0,
         }}
       >
         <User
@@ -63,20 +62,19 @@ const AvatarSetting = props => {
       <Drawer
         placement="right"
         open={settingDrawerVisible}
-        destroyOnClose={true}
+        destroyOnHidden={true}
         closable={false}
-        maskStyle={{
+        styles={{ mask: {
           backgroundColor: 'transparent',
-        }}
-        width={680}
+        }, body: {
+          padding: 0,
+        } }}
+        size={680}
         onClose={() => setToolbarConfig({ settingDrawerVisible: false })}
         getContainer={() => (embed ? document.body : document.querySelector('#containerWrapper'))}
         rootStyle={{
           position: embed ? undefined : 'absolute',
           zIndex: 20,
-        }}
-        bodyStyle={{
-          padding: 0,
         }}
       >
         <Setting defaultNavType={defaultNavType} onClose={() => setToolbarConfig({ settingDrawerVisible: false })} />

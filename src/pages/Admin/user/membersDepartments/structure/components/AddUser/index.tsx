@@ -601,11 +601,11 @@ export default class AddUser extends Component<any, any> {
     return (
       (<Fragment>
         <Drawer
-          width={580}
+          size={580}
           placement="right"
           onClose={onClose}
           open={addUserVisible}
-          maskClosable={false}
+          mask={{ closable: false }}
           closable={false}
         >
           <div className="addEditUserInfoWrap" key="addEditUserInfo">

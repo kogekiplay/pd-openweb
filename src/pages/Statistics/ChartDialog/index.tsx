@@ -285,7 +285,7 @@ let ChartDialog = class ChartDialog extends Component<any, any> {
         <Header {...this.props} />
         <div className="flexRow valignWrapper settingWrapper">
           {settingVisible && (
-            <ConfigProvider autoInsertSpaceInButton={false}>
+            <ConfigProvider button={{ autoInsertSpace: false }}>
               <Button className="buttonSave" block shape="round" type="primary" onClick={this.handleVerifySave}>
                 {saveLoading ? <LoadDiv size="small" /> : _l('保存')}
               </Button>

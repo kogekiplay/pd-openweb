@@ -194,7 +194,7 @@ export default function SelectSheetFromApp(props) {
               <span className="Font14 textTertiary mTop12 ">{_l('将工作表数据预处理为聚合结果')}</span>
               <span className="Font14 textTertiary mBottom24">{_l('在表单、流程、统计中作为数据源使用')}</span>
               {getFeatureStatus(projectId, VersionProductType.aggregation) == '1' && (
-                <ConfigProvider autoInsertSpaceInButton={false}>
+                <ConfigProvider button={{ autoInsertSpace: false }}>
                   <Button
                     type="primary"
                     onClick={() => {

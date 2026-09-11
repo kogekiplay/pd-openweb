@@ -28,7 +28,11 @@ function requireEsm(file, stubs = {}) {
 
 let rangePickerProps;
 
-const Select = props => React.createElement('div', null, props.dropdownRender ? props.dropdownRender() : null);
+// antd 6 把 Select 的 dropdownRender 改名为 popupRender（v5 起废弃，见
+// `antd lint --only deprecated`）。这个桩要调到真实的那个名字才会渲染出下面的
+// RangePicker —— 名字对不上时 rangePickerProps 一直是 undefined，报错会指向
+// 断言那行的 `.timePicker`，看起来像组件没传 props，实际是桩没触发。
+const Select = props => React.createElement('div', null, props.popupRender ? props.popupRender() : null);
 const Icon = () => React.createElement('i');
 
 const RangePicker = props => {

@@ -1185,12 +1185,11 @@ let AppInfo = class AppInfo extends Component<any, any> {
             width={800}
             footer={null}
             centered={true}
-            maskStyle={{
+            styles={{ mask: {
               backgroundColor: 'rgba(0, 0, 0, 0.7)',
-            }}
-            bodyStyle={{
+            }, body: {
               padding: 0,
-            }}
+            } }}
             maskAnimation="fade"
             mousePosition={mousePosition}
             closeIcon={<Icon icon="close" />}
@@ -1257,15 +1256,15 @@ let AppInfo = class AppInfo extends Component<any, any> {
           )}
 
           <Drawer
-            bodyStyle={{
+            styles={{ body: {
               display: 'flex',
               flexDirection: 'column',
               padding: '0',
-            }}
-            width={900}
+            } }}
+            size={900}
             title={null}
             open={navigationConfigVisible}
-            destroyOnClose={true}
+            destroyOnHidden={true}
             closeIcon={null}
             onClose={this.closeNavigationConfigVisible}
             placement="right"
@@ -1336,7 +1335,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
           <Drawer
             title={null}
             open={roleDebugVisible}
-            destroyOnClose={true}
+            destroyOnHidden={true}
             closeIcon={null}
             onClose={() =>
               this.setState({

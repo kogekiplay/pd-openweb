@@ -314,7 +314,7 @@ const CheckboxWidgets = props => {
         <Select
           ref={selectRef}
           mode="multiple"
-          popupClassName={dropdownClassName}
+          classNames={{ popup: { root: dropdownClassName } }}
           className={cx('w100 customAntSelect', { optionDisabled: disabled })}
           disabled={disabled}
           showSearch
@@ -330,7 +330,7 @@ const CheckboxWidgets = props => {
           notFoundContent={<span className="textTertiary">{_l('无搜索结果')}</span>}
           onSearch={keywords => setKeywords(keywords.trim())}
           onKeyDown={createEventHandler}
-          onDropdownVisibleChange={open => {
+          onOpenChange={open => {
             setKeywords('');
             setIsFocus(open);
             !open && selectRef.current.blur();

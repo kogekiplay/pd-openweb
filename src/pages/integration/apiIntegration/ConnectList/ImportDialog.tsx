@@ -268,7 +268,7 @@ export default function ImportDialog(props) {
           <div className={cx('flexRow mTop16', { Hidden: file.loaded === file.size })}>
             <Progress
               style={{ width: 250 }}
-              trailColor="var(--color-border-secondary)"
+              railColor="var(--color-border-secondary)"
               strokeColor="var(--color-primary)"
               strokeWidth={8}
               percent={Math.floor((file.loaded / (file.size || 0)) * 100)}

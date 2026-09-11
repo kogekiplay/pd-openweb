@@ -212,7 +212,7 @@ export default function ResourceSet(props) {
           optionLabelProp="label"
           placeholder={_l('请选择')}
           suffixIcon={<Icon icon="arrow-down-border Font14" />}
-          popupClassName="dropConOption"
+          classNames={{ popup: { root: "dropConOption" } }}
           onChange={value => {
             const weekbegin = !_.get(props, 'view.advancedSetting.weekbegin')
               ? '0'

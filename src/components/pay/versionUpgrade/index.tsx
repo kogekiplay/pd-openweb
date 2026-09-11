@@ -454,7 +454,7 @@ export default class VersionUpgrade extends Component<any, any> {
                       if (value < 30) return;
                       this.setState({ userCount: value });
                     }}
-                    onAfterChange={value => {
+                    onChangeComplete={value => {
                       if (value < 30) return;
                       this.setState({ userCount: value }, () => {
                         if (value > 750) return;

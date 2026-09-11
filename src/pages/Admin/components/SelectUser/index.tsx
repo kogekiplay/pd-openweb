@@ -69,7 +69,7 @@ export default function SelectUser(props) {
           : userType
       }
       placeholder={placeholder || _l('搜索用户')}
-      dropdownRender={null}
+      popupRender={null}
       allowClear
       style={style}
       suffixIcon={<Icon icon="person" className="Font16" />}

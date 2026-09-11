@@ -159,7 +159,7 @@ export default function DynamicRender(props) {
                     <Icon icon="arrow_forward" className="Font20 colorPrimary mLeft10 mRight10 LineHeight36" />
                     <Select
                       className="Height36 flex minWidth0"
-                      popupClassName="mappedFieldPopup"
+                      classNames={{ popup: { root: "mappedFieldPopup" } }}
                       showSearch
                       optionLabelProp="label"
                       optionFilterProp="label"

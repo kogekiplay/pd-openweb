@@ -187,7 +187,7 @@ const DropdownComp = props => {
       <Select
         {...(mode ? { mode, tagRender } : {})}
         ref={selectRef}
-        popupClassName={dropdownClassName}
+        classNames={{ popup: { root: dropdownClassName } }}
         className={cx('w100 customAntSelect', { optionDisabled: disabled })}
         disabled={disabled}
         showSearch
@@ -202,7 +202,7 @@ const DropdownComp = props => {
         filterOption={() => true}
         notFoundContent={<span className="textTertiary">{_l('无搜索结果')}</span>}
         onSearch={handleSearch}
-        onDropdownVisibleChange={handleDropdownVisibleChange}
+        onOpenChange={handleDropdownVisibleChange}
         onChange={handleSelectChange}
         onKeyDown={createEventHandler}
         {...selectProps}

@@ -78,7 +78,7 @@ export default function CheckboxSelect(props) {
         onChange={handleChange}
         style={{ width: '100%' }}
         maxTagCount={max}
-        dropdownRender={menu => <StyledDropdown>{menu}</StyledDropdown>}
+        popupRender={menu => <StyledDropdown>{menu}</StyledDropdown>}
         tagRender={props => (
           <StyledTag className="ant-select-selection-item alignItemsCenter">
             <span
@@ -95,7 +95,7 @@ export default function CheckboxSelect(props) {
         )}
         notFoundContent={<span className="textTertiary">{props.noTxt || _l('暂无相关字段')}</span>}
         optionLabelProp="label"
-        dropdownStyle={{ padding: 0 }}
+        styles={{ popup: { root: { padding: 0 } } }}
         // 添加以下属性确保箭头显示
         showArrow={true}
         inputIcon={null}

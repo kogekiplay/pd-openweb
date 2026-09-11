@@ -1164,7 +1164,7 @@ class CreateCustomBtn extends React.Component<any, any> {
     const { zIndex, onClose, isClickAway, btnI = '' } = this.props;
     return (
       (<Drawer
-        width={640}
+        size={640}
         rootClassName={cx('createCustomBtnConDraw')}
         onClose={onClose}
         zIndex={zIndex}
@@ -1174,7 +1174,7 @@ class CreateCustomBtn extends React.Component<any, any> {
         open={true}
         maskClosable={!!isClickAway}
         closable={false}
-        bodyStyle={{ padding: 0 }}
+        styles={{ body: { padding: 0 } }}
       >
         <div className="createCustomBtnCon">
           <div className="flexColumn h100">

@@ -309,7 +309,7 @@ class EditBox extends React.Component<any, any> {
             (<div className="actionItemCon">
               <Select
                 className={cx('ruleListSelect', { flexItem: _.includes([7], actionItem.type) })}
-                popupClassName="ruleListSelectDropdown"
+                classNames={{ popup: { root: "ruleListSelectDropdown" } }}
                 value={getActionLabelByType(actionItem.type)}
                 options={listData}
                 disabled={_.includes([9], actionItem.type)}

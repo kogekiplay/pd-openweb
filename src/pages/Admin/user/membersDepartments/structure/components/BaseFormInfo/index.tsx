@@ -716,7 +716,7 @@ export default class BaseFormInfo extends Component<any, any> {
             filterOption={() => true}
             notFoundContent={<span className="textTertiary">{_l('可直接输入创建新的工作地点')}</span>}
             onSearch={worksiteKeywords => this.setState({ worksiteKeywords })}
-            onDropdownVisibleChange={open => {
+            onOpenChange={open => {
               this.setState({ worksiteKeywords: '' });
               !open && this.worksiteSelect.blur();
             }}

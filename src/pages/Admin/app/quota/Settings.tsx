@@ -768,7 +768,7 @@ export default class LimitAttachmentUpload extends Component<any, any> {
                     }
                   }}
                   onFocus={appPageIndex === 1 && _.isEmpty(appList) && this.getAppList}
-                  onDropdownVisibleChange={open => !open && businessType !== 2 && this.getLimits()}
+                  onOpenChange={open => !open && businessType !== 2 && this.getLimits()}
                   onChange={value => {
                     this.setState({ appIds: value }, () => {
                       !_.isEmpty(value) && businessType === 2 && this.getWorksheetList(value);

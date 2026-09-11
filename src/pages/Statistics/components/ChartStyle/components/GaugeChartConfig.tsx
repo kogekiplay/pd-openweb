@@ -79,11 +79,11 @@ const SectionColorConfigModal = props => {
       className="chartModal"
       open={visible}
       centered={true}
-      destroyOnClose={true}
+      destroyOnHidden={true}
       closeIcon={<Icon icon="close" className="Font20 pointer textTertiary" />}
       footer={
         <div className="mTop20 mBottom10 pRight8">
-          <ConfigProvider autoInsertSpaceInButton={false}>
+          <ConfigProvider button={{ autoInsertSpace: false }}>
             <Button type="link" onClick={onCancel}>
               {_l('取消')}
             </Button>

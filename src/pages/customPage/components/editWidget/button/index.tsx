@@ -172,7 +172,7 @@ export default function Btn(props) {
     </SideWrap>
   ) : (
     <Modal
-      maskStyle={{ zIndex: 999 }}
+      styles={{ mask: { zIndex: 999 } }}
       wrapClassName="customPageButtonWrap"
       className="editWidgetDialogWrap"
       open
@@ -187,7 +187,7 @@ export default function Btn(props) {
       <Header>
         <div className="typeName">{_l('按钮')}</div>
         <div className="flexRow valignWrapper">
-          <ConfigProvider autoInsertSpaceInButton={false}>
+          <ConfigProvider button={{ autoInsertSpace: false }}>
             <Button block className="save" shape="round" type="primary" onClick={handleSave}>
               {_l('保存')}
             </Button>

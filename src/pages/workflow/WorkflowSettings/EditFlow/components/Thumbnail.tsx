@@ -191,8 +191,8 @@ export default ({ visible, refreshPosition, refreshThumbnail }) => {
       open={visible}
       closable={false}
       mask={false}
-      bodyStyle={{ padding: 0 }}
-      width={290}
+      styles={{ body: { padding: 0 } }}
+      size={290}
     >
       <Thumbnail>
         <Box style={{ backgroundImage: `url(${imgUrl})` }} ref={thumbnailContainer} onClick={clickPosition}>

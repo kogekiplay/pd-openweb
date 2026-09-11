@@ -85,7 +85,7 @@ class WorkflowInfo extends Component<any, any> {
     const { explain, name, iconColor, iconName } = this.state;
 
     return (
-      (<Drawer placement="right" open={visible} closable={false} mask={false} bodyStyle={{ padding: 0 }} width={800}>
+      (<Drawer placement="right" open={visible} closable={false} mask={false} styles={{ body: { padding: 0 } }} size={800}>
         <div className="workflowInfo flexColumn h100">
           <div className="Font17 bold flexRow alignItemsCenter pLeft24 pRight24" style={{ height: 55 }}>
             <div className="flex">{_l('基本信息')}</div>

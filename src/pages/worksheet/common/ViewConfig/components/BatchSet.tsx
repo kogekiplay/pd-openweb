@@ -378,7 +378,7 @@ export default function BatchSetDialog(props) {
       open={visible}
       onCancel={onClose}
       centered={true}
-      maskClosable={false}
+      mask={{ closable: false }}
       width={720}
       footer={[
         <div className="flexRow alignItemsCenter pTop6 pBottom6 pLeft8 pRight8">

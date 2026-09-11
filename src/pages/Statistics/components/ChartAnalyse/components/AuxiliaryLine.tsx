@@ -136,7 +136,7 @@ class LineConfigModal extends Component<any, any> {
     const { onCancel } = this.props;
     return (
       <div className="mTop32 mBottom20 footer flexRow">
-        <ConfigProvider autoInsertSpaceInButton={false}>
+        <ConfigProvider button={{ autoInsertSpace: false }}>
           <Button type="link" onClick={onCancel}>
             {_l('取消')}
           </Button>
@@ -160,7 +160,7 @@ class LineConfigModal extends Component<any, any> {
         className="chartModal"
         open={visible}
         centered={true}
-        destroyOnClose={true}
+        destroyOnHidden={true}
         closeIcon={<Icon icon="close" className="Font20 pointer textTertiary" />}
         footer={null}
         onCancel={onCancel}

@@ -273,13 +273,13 @@ export default function CopyViewConfig(props) {
               value={selectViewId}
               showSearch={false}
               ref={inputRef}
-              dropdownMatchSelectWidth={false}
+              popupMatchSelectWidth={false}
               className="w100 selectViewCon"
               placeholder={_l('请选择')}
               mode={isCopyFrom ? '' : 'multiple'}
               suffixIcon={<Icon icon="expand_more" className="Font18 textTertiary" />}
-              dropdownStyle={{ width: 512 }}
-              dropdownRender={menu => (
+              styles={{ popup: { root: { width: 512 } } }}
+              popupRender={menu => (
                 <div style={{ width: 512 }}>
                   <SearchCon className="searchCon">
                     <Icon icon="search" className="Font16 textPrimary" />

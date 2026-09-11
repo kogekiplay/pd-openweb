@@ -399,7 +399,7 @@ function PluginSettings(params) {
         </div>
       </div>
       <Drawer
-        width={400}
+        size={400}
         rootClassName="Absolute"
         onClose={() => setState({ editInfo: null, showEdit: false })}
         placement="right"

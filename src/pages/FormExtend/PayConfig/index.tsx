@@ -662,7 +662,7 @@ export default class PayConfig extends Component<any, any> {
                 ) : (
                   <Select
                     className="w100 merchantList"
-                    popupClassName="merchantDropDown"
+                    classNames={{ popup: { root: "merchantDropDown" } }}
                     mode={isMultipleMerchant ? 'multiple' : undefined}
                     showArrow={true}
                     value={mchId}
@@ -798,7 +798,7 @@ export default class PayConfig extends Component<any, any> {
                       val = val && Number(val) > 30 ? '30' : val;
                       this.setState({ expireTime: val ? Number(val) : expireTime, searchValue: val });
                     }}
-                    onDropdownVisibleChange={open => this.setState({ dropdownVisible: open })}
+                    onOpenChange={open => this.setState({ dropdownVisible: open })}
                   />
                 ) : (
                   ''

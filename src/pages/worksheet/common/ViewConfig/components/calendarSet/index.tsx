@@ -230,7 +230,7 @@ export default function CalendarSet(props) {
           optionLabelProp="label"
           placeholder={_l('请选择')}
           suffixIcon={<Icon icon="arrow-down-border Font14" />}
-          popupClassName="dropConOption"
+          classNames={{ popup: { root: "dropConOption" } }}
           onChange={value => {
             if (value === weekbegin) {
               return;

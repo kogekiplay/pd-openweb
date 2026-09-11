@@ -189,8 +189,8 @@ class ExportAttachment extends Component<any, any> {
                 <span className="mLeft40 mRight7">{_l('连接符')}</span>
                 <Select
                   style={{ width: 65 }}
-                  dropdownMatchSelectWidth={false}
-                  dropdownStyle={{ width: 120 }}
+                  popupMatchSelectWidth={false}
+                  styles={{ popup: { root: { width: 120 } } }}
                   optionLabelProp="optionLabel"
                   value={hyphenValue}
                   onChange={(value, option) => {

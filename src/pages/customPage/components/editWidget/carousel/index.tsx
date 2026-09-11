@@ -69,7 +69,7 @@ export default function Carousel(props) {
 
   return (
     (<Modal
-      maskStyle={{ zIndex: 999 }}
+      styles={{ mask: { zIndex: 999 } }}
       wrapClassName="customPageCarouselWrap"
       className="editWidgetDialogWrap"
       open
@@ -83,7 +83,7 @@ export default function Carousel(props) {
       <Header>
         <div className="typeName">{_l('轮播图')}</div>
         <div className="flexRow valignWrapper">
-          <ConfigProvider autoInsertSpaceInButton={false}>
+          <ConfigProvider button={{ autoInsertSpace: false }}>
             <Button block className="save" shape="round" type="primary" onClick={handleSave}>
               {_l('保存')}
             </Button>

@@ -133,7 +133,7 @@ export default function PortalUserInfoDrawer(props) {
 
   return (<>
     <Drawer
-      width={isMobile ? '100%' : 480}
+      size={isMobile ? '100%' : 480}
       rootClassName={[1, 3].includes(currentPcNaviStyle) ? '' : 'Absolute'}
       onClose={onClose}
       placement="right"
@@ -142,7 +142,7 @@ export default function PortalUserInfoDrawer(props) {
       closable={false}
       getContainer={![1, 3].includes(currentPcNaviStyle)}
       mask={true}
-      bodyStyle={{ padding: 0 }}
+      styles={{ body: { padding: 0 } }}
     >
       <Wrap className={cx('flexColumn h100', { isMobile, leftNaviStyle: [1, 3].includes(currentPcNaviStyle) })}>
         {isMobile && (

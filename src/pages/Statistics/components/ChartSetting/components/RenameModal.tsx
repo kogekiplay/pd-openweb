@@ -27,7 +27,7 @@ export default class RenameModal extends Component<any, any> {
   renderFooter() {
     return (
       <div className="mTop20 mBottom10 pRight8">
-        <ConfigProvider autoInsertSpaceInButton={false}>
+        <ConfigProvider button={{ autoInsertSpace: false }}>
           <Button
             type="link"
             onClick={() => {
@@ -52,7 +52,7 @@ export default class RenameModal extends Component<any, any> {
         width={480}
         className="chartModal"
         open={dialogVisible}
-        destroyOnClose={true}
+        destroyOnHidden={true}
         centered={true}
         closeIcon={<Icon icon="close" className="Font20 pointer textTertiary" />}
         footer={this.renderFooter()}

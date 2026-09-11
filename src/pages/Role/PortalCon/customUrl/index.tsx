@@ -172,7 +172,7 @@ function Setting(props) {
 
   return (
     (<Drawer
-      width={640}
+      size={640}
       onClose={() => closeSet()}
       zIndex={999}
       mask={true}
@@ -181,7 +181,7 @@ function Setting(props) {
       open={show}
       maskClosable={true}
       closable={false}
-      bodyStyle={{ padding: 0 }}
+      styles={{ body: { padding: 0 } }}
     >
       {show ? (
         <Wrap className={'flexColumn h100 Relative'}>

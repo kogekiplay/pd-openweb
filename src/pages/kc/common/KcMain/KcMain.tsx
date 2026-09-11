@@ -607,19 +607,17 @@ class KcMain extends Component<any, any> {
         <Drawer
           rootClassName="kcMain"
           open={isShowDetail}
-          width={408}
+          size={408}
           mask={false}
-          drawerStyle={{
+          styles={{ section: {
             position: 'absolute',
             top: 95,
             bottom: 0,
             height: 'auto',
             right: 68,
             width: 340,
-          }}
+          }, body: { padding: 0 }, header: { display: 'none' } }}
           rootStyle={{ zIndex: detailAttamentsPreviewActive ? 16 : 6, overflow: 'visible' }}
-          bodyStyle={{ padding: 0 }}
-          headerStyle={{ display: 'none' }}
           onClose={isPinDetail ? null : () => this.setState({ isShowDetail: false })}
         >
           <Detail

@@ -46,7 +46,7 @@ class WorksheetRecordLogDialog extends Component<any, any> {
       return (
         (<Drawer
           placement="right"
-          width={'85%'}
+          size={'85%'}
           rootClassName="sheetWorkflowDrawer"
           closable={false}
           mask={true}

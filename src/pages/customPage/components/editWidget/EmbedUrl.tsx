@@ -88,7 +88,7 @@ function EmbedUrl({ onClose, onEdit, widget = {}, info }) {
       centered={true}
       onCancel={onClose}
     >
-      <ConfigProvider autoInsertSpaceInButton={false}>
+      <ConfigProvider button={{ autoInsertSpace: false }}>
         <Header>
           <div className="typeName">{_l('嵌入url')}</div>
           <div className="flexRow valignWrapper">

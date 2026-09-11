@@ -125,6 +125,33 @@ const RULES = [
     to: 'styles',
     key: 'container',
   },
+  // ── 第三批：antd lint --only deprecated 报出的 255 条（官方口径，按 import 绑定判定）──
+  // 每条的替代写法都用 `antd info <组件>` 核实过，不按记忆写。两个查出来的关键事实：
+  //   Drawer.size 的类型是 'default' | 'large' | number | string —— 接受数字，
+  //     所以 width={520} → size={520} 是合法的 1:1 改名，不是只能填预设档位。
+  //   Drawer.mask 的类型是 boolean | { enabled?, blur?, closable? } —— maskClosable
+  //     落到 mask.closable。
+  { name: 'drawer-width-to-size', kind: 'rename', components: ['Drawer'], from: 'width', to: 'size' },
+  { name: 'dropdownRender-to-popupRender', kind: 'rename', components: ['Select', 'TreeSelect', 'AutoComplete', 'Cascader'], from: 'dropdownRender', to: 'popupRender' },
+  { name: 'onDropdownVisibleChange-to-onOpenChange', kind: 'rename', components: ['Select', 'TreeSelect', 'AutoComplete', 'Cascader'], from: 'onDropdownVisibleChange', to: 'onOpenChange' },
+  { name: 'dropdownMatchSelectWidth-to-popupMatchSelectWidth', kind: 'rename', components: ['Select', 'TreeSelect', 'AutoComplete', 'Cascader'], from: 'dropdownMatchSelectWidth', to: 'popupMatchSelectWidth' },
+  { name: 'trailColor-to-railColor', kind: 'rename', components: ['Progress'], from: 'trailColor', to: 'railColor' },
+  { name: 'onAfterChange-to-onChangeComplete', kind: 'rename', components: ['Slider'], from: 'onAfterChange', to: 'onChangeComplete' },
+  { name: 'destroyOnClose-to-destroyOnHidden', kind: 'rename', components: ['Modal', 'Drawer'], from: 'destroyOnClose', to: 'destroyOnHidden' },
+  { name: 'space-direction-to-orientation', kind: 'rename', components: ['Space'], from: 'direction', to: 'orientation' },
+
+  { name: 'drawer-bodyStyle-to-styles-body', kind: 'wrap', components: ['Drawer'], from: 'bodyStyle', to: 'styles', key: 'body' },
+  { name: 'drawer-headerStyle-to-styles-header', kind: 'wrap', components: ['Drawer'], from: 'headerStyle', to: 'styles', key: 'header' },
+  { name: 'drawer-maskStyle-to-styles-mask', kind: 'wrap', components: ['Drawer'], from: 'maskStyle', to: 'styles', key: 'mask' },
+  { name: 'drawer-footerStyle-to-styles-footer', kind: 'wrap', components: ['Drawer'], from: 'footerStyle', to: 'styles', key: 'footer' },
+  { name: 'drawer-drawerStyle-to-styles-section', kind: 'wrap', components: ['Drawer'], from: 'drawerStyle', to: 'styles', key: 'section' },
+  { name: 'modal-bodyStyle-to-styles-body', kind: 'wrap', components: ['Modal'], from: 'bodyStyle', to: 'styles', key: 'body' },
+  { name: 'modal-maskStyle-to-styles-mask', kind: 'wrap', components: ['Modal'], from: 'maskStyle', to: 'styles', key: 'mask' },
+  { name: 'empty-imageStyle-to-styles-image', kind: 'wrap', components: ['Empty'], from: 'imageStyle', to: 'styles', key: 'image' },
+  { name: 'maskClosable-to-mask-closable', kind: 'wrap', components: ['Modal', 'Drawer'], from: 'maskClosable', to: 'mask', key: 'closable' },
+  { name: 'configProvider-autoInsertSpaceInButton', kind: 'wrap', components: ['ConfigProvider'], from: 'autoInsertSpaceInButton', to: 'button', key: 'autoInsertSpace' },
+  { name: 'popupClassName-to-classNames-popup-root', kind: 'wrap', components: ['Select', 'TreeSelect', 'AutoComplete', 'Cascader', 'DatePicker'], from: 'popupClassName', to: 'classNames', key: 'popup.root' },
+  { name: 'dropdownStyle-to-styles-popup-root', kind: 'wrap', components: ['Select', 'TreeSelect', 'AutoComplete', 'Cascader'], from: 'dropdownStyle', to: 'styles', key: 'popup.root' },
 ];
 
 // ───────────────────────── 收集文件 ─────────────────────────
@@ -241,6 +268,7 @@ for (const file of collect(SRC)) {
       const attrNames = new Set(
         p.node.attributes.filter(a => a.type === 'JSXAttribute').map(a => a.name.name),
       );
+      const wraps = Object.create(null); // 目标属性名 -> [{attr, key, inner, rule}]
 
       for (const rule of rules) {
         if (!rule.components.includes(comp)) continue;
@@ -310,12 +338,32 @@ for (const file of collect(SRC)) {
           const inner =
             v.type === 'JSXExpressionContainer' ? src.slice(v.expression.start, v.expression.end) : src.slice(v.start, v.end);
 
-          edits.push({
-            start: attr.start,
-            end: attr.end,
-            text: `${rule.to}={{ ${rule.key}: ${inner} }}`,
-            rule: rule.name,
-          });
+          // 【同一目标属性必须合并成一条】Drawer 的 bodyStyle / headerStyle / maskStyle
+          // 全都映射到 styles 对象。各自独立产出的话，同一个元素上会出现两个
+          // styles={{…}} 属性 —— JSX 里后者直接覆盖前者，样式静默丢掉一半。
+          // 所以先登记，等这个元素的规则跑完再统一产出。
+          (wraps[rule.to] ||= []).push({ attr, key: rule.key, inner, rule: rule.name });
+        }
+      }
+
+      // 按目标属性合并：第一个源属性的位置写合并后的新属性，其余源属性整段删掉
+      //（连同前导空白，免得留下多余空格）。
+      for (const target of Object.keys(wraps)) {
+        const list = wraps[target].sort((a, b) => a.attr.start - b.attr.start);
+        // key 支持两级（'popup.root' → { popup: { root: X } }），Select 的
+        // popupClassName → classNames.popup.root 就是这种。
+        const nest = (k, v) => k.split('.').reverse().reduce((acc, seg) => `{ ${seg}: ${acc} }`, v);
+        const body = list.map(w => (w.key.includes('.')
+          ? w.key.split('.').slice(0, -1).join('.') + ': ' + nest(w.key.split('.').slice(1).join('.'), w.inner)
+          : `${w.key}: ${w.inner}`)).join(', ');
+
+        edits.push({ start: list[0].attr.start, end: list[0].attr.end, text: `${target}={{ ${body} }}`, rule: list[0].rule });
+        stats.get(list[0].rule);
+
+        for (const w of list.slice(1)) {
+          let from = w.attr.start;
+          while (from > 0 && /\s/.test(src[from - 1])) from--;
+          edits.push({ start: from, end: w.attr.end, text: '', rule: w.rule });
         }
       }
     },

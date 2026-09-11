@@ -525,7 +525,7 @@ function AddWorkflowDialog(props) {
                 searchRef.current.focus();
               }
             }}
-            dropdownRender={menu => (
+            popupRender={menu => (
               <Fragment>
                 <DropDownInputWrap>
                   <Input

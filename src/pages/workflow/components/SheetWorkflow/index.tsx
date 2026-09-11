@@ -1087,7 +1087,7 @@ export default function SheetWorkflow(props) {
       )}
       <Drawer
         placement="right"
-        width={isMobile ? '85%' : '100%'}
+        size={isMobile ? '85%' : '100%'}
         zIndex={isMobile ? 1000 : 10}
         rootClassName="sheetWorkflowDrawer"
         closable={false}

@@ -427,11 +427,11 @@ export default class EditUser extends Component<any, any> {
 
     return (
       (<Drawer
-        width={580}
+        size={580}
         placement="right"
         onClose={onClose}
         open={openChangeUserInfoDrawer}
-        maskClosable={false}
+        mask={{ closable: false }}
         closable={false}
       >
         <div className="addEditUserInfoWrap" key="addEditUserInfo">

@@ -176,7 +176,7 @@ export default function FilterObject(props) {
           />
         </div>
         <Divider className="mTop5 mBottom5" />
-        <Space direction="vertical">
+        <Space orientation="vertical">
           <Checkbox
             checked={searchFilterObject.length && searchFilterObject.length === objectControls.length}
             onChange={e => {

@@ -331,7 +331,7 @@ export default function PersonalAccessTokenDrawer(props) {
         showSearch
         optionLabelProp="label"
         className="w100 mdAntSelect projectSelect"
-        popupClassName="patProjectSelectDropdown"
+        classNames={{ popup: { root: "patProjectSelectDropdown" } }}
         disabled={isEdit}
         placeholder={_l('请选择组织')}
         value={formData.entityScopeType === ENTITY_SCOPE_TYPE.ALL ? [ALL_PROJECTS_VALUE] : formData.projectIds || []}
@@ -413,12 +413,12 @@ export default function PersonalAccessTokenDrawer(props) {
   return (
     (<Drawer
       open={visible}
-      width={600}
+      size={600}
       title={_l('个人访问令牌')}
       rootClassName="personalAccessTokenDrawer"
       onClose={onClose}
       placement="right"
-      destroyOnClose={true}
+      destroyOnHidden={true}
       closeIcon={<i className="icon-close Font18" />}
       footer={footer}
     >

@@ -68,8 +68,8 @@ export default function WorksheetLogDrawer(props) {
       open={visible}
       title={null}
       closable={false}
-      maskClosable={true}
-      destroyOnClose={true}
+      mask={{ closable: true }}
+      destroyOnHidden={true}
       size="large"
       onClose={onClose}
     >

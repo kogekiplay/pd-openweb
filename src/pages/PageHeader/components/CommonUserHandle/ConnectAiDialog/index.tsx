@@ -422,13 +422,13 @@ function ConnectAiDialog({ visible, projectId, initialPersonalTokens = null, onC
                 {renderFieldLabel(_l('个人访问令牌'))}
                 <Select
                   className="connectAiSelect"
-                  popupClassName="connectAiSelectDropdown"
+                  classNames={{ popup: { root: "connectAiSelectDropdown" } }}
                   placeholder={personalTokens.length ? _l('请选择个人访问令牌') : _l('当前组织暂无可用令牌')}
                   notFoundContent={_l('当前组织暂无可用令牌')}
                   value={selectedTokenId || undefined}
                   options={personalTokens.map(item => ({ label: item.name, value: item.id }))}
                   onChange={setSelectedTokenId}
-                  dropdownRender={menu => (
+                  popupRender={menu => (
                     <div className="connectAiSelectDropdownWrap">
                       {menu}
                       {renderSelectExtra('personalToken')}
@@ -441,7 +441,7 @@ function ConnectAiDialog({ visible, projectId, initialPersonalTokens = null, onC
                 {renderFieldLabel(_l('应用'))}
                 <Select
                   className="connectAiSelect"
-                  popupClassName="connectAiSelectDropdown"
+                  classNames={{ popup: { root: "connectAiSelectDropdown" } }}
                   placeholder={_l('选择应用')}
                   notFoundContent={_l('暂无数据')}
                   value={selectedAppId || undefined}
@@ -455,13 +455,13 @@ function ConnectAiDialog({ visible, projectId, initialPersonalTokens = null, onC
                     {renderFieldLabel(_l('授权密钥'))}
                     <Select
                       className="connectAiSelect"
-                      popupClassName="connectAiSelectDropdown"
+                      classNames={{ popup: { root: "connectAiSelectDropdown" } }}
                       placeholder={_l('选择授权密钥')}
                       notFoundContent={_l('暂无数据')}
                       value={selectedAuthId || undefined}
                       options={authKeys.map(item => ({ label: item.name, value: item.id }))}
                       onChange={setSelectedAuthId}
-                      dropdownRender={menu => (
+                      popupRender={menu => (
                         <div className="connectAiSelectDropdownWrap">
                           {menu}
                           {renderSelectExtra('authKey')}

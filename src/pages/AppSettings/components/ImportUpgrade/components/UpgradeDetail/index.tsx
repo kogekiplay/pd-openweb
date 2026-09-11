@@ -69,9 +69,9 @@ export default class UpgradeDetail extends Component<any, any> {
         onClose={onClose}
         open={visible}
         closable={false}
-        maskClosable={false}
-        headerStyle={{}}
-        width={520}
+        mask={{ closable: false }}
+        styles={{ header: {} }}
+        size={520}
         extra={<i className="icon-close Font20 Hand textTertiary" onClick={onClose} />}
       >
         <TabWrap className="flexRow">

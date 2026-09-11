@@ -181,7 +181,7 @@ export default function SelectTables(props) {
           .toLowerCase()
           .includes(inputValue.toLowerCase());
       }}
-      dropdownRender={menu => (
+      popupRender={menu => (
         <React.Fragment>
           {allowCreate && (
             <NewItem onClick={onAdd}>

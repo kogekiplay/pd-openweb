@@ -62,8 +62,7 @@ export default function (props) {
         }}
         centered={true}
         width={800}
-        maskStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.7)' }}
-        bodyStyle={{ minHeight: '480px', padding: 0 }}
+        styles={{ mask: { backgroundColor: 'rgba(0, 0, 0, 0.7)' }, body: { minHeight: '480px', padding: 0 } }}
         closeIcon={<Icon icon="close" />}
       >
         <EditIntro

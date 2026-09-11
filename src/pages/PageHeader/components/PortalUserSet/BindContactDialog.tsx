@@ -45,7 +45,7 @@ export default function (props) {
       centered={true}
       onCancel={() => {}} // 禁用所有默认关闭方式
       closable={false} // 隐藏关闭按钮
-      maskClosable={false} // 禁用遮罩层点击关闭
+      mask={{ closable: false }} // 禁用遮罩层点击关闭
       keyboard={false} // 禁用ESC关闭
       footer={[
         <Button type={'primary'} disabled={!isValidNumber || !code} onClick={handleSubmit}>

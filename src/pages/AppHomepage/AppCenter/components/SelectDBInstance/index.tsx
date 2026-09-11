@@ -61,13 +61,13 @@ function SelectDBInstance(props) {
         open={open}
         value={dbInstance.label}
         optionLabelProp="label"
-        popupClassName="dbInstanceSelect"
+        classNames={{ popup: { root: "dbInstanceSelect" } }}
         placeholder={_l('请选择应用的存储数据库')}
         className="w100 mdAntSelect mTop28"
         suffixIcon={<Icon icon="arrow-down-border Font14" />}
         notFoundContent={<span className="textTertiary">{_l('无搜索结果')}</span>}
-        onDropdownVisibleChange={visible => setOpen(visible)}
-        dropdownRender={() => {
+        onOpenChange={visible => setOpen(visible)}
+        popupRender={() => {
           return (
             <DropdownWrap>
               {options.map(l => (

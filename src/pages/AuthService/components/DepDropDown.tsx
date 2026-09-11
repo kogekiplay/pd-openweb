@@ -194,7 +194,7 @@ export default class DepDropDown extends Component<any, any> {
     return (
       (<TreeSelect
         className="w100 customAntSelect customTreeSelect"
-        popupClassName={cx(popupClassName)}
+        classNames={{ popup: { root: cx(popupClassName) } }}
         dropdownPopupAlign={treePopupAlign}
         ref={this.treeSelectComp}
         virtual={false}
@@ -228,7 +228,7 @@ export default class DepDropDown extends Component<any, any> {
           this.treeSelectChange(id);
         }}
         onFocus={() => !options && this.loadData()}
-        onDropdownVisibleChange={data => {
+        onOpenChange={data => {
           if (data && !keywords && !options) {
             this.loadData();
           }

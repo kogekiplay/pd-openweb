@@ -334,7 +334,7 @@ export default function (props) {
       title={_l('批量设置数据操作权限')}
       footer={null}
       width={1000}
-      bodyStyle={{ overflow: 'hidden', height: '720px', padding: 0 }} // 设置弹层主体高度
+      styles={{ body: { overflow: 'hidden', height: '720px', padding: 0 } }} // 设置弹层主体高度
     >
       <Wrap className="flexRow h100">
         <div className="sideNav flexColumn h100">{worksheets()}</div>

@@ -397,11 +397,11 @@ export default function EnvConfig(props) {
         </div>
       ))}
       <Drawer
-        bodyStyle={{ padding: 0 }}
-        width={490}
+        styles={{ body: { padding: 0 } }}
+        size={490}
         title={null}
         open={drawerVisible}
-        destroyOnClose={true}
+        destroyOnHidden={true}
         mask={false}
         closable={null}
         placement="right"

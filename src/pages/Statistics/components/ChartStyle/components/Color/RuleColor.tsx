@@ -524,7 +524,7 @@ export default class RuleColor extends Component<any, any> {
     const { onCancel } = this.props;
     return (
       <div className="mTop20 mBottom10 pRight8">
-        <ConfigProvider autoInsertSpaceInButton={false}>
+        <ConfigProvider button={{ autoInsertSpace: false }}>
           <Button type="link" onClick={onCancel}>
             {_l('取消')}
           </Button>
@@ -553,7 +553,7 @@ export default class RuleColor extends Component<any, any> {
         className="chartModal chartRuleColorModal"
         open={visible}
         centered={true}
-        destroyOnClose={true}
+        destroyOnHidden={true}
         closeIcon={<Icon icon="close" className="Font20 pointer textTertiary" />}
         footer={this.renderRuleColorFooter()}
         onCancel={onCancel}

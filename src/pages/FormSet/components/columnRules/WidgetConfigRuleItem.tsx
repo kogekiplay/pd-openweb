@@ -335,7 +335,7 @@ class WidgetConfigRuleItem extends React.Component<any, any> {
         {selectRules.ruleId && (
           <Drawer
             rootClassName="widgetColumnRulesDrawer"
-            width={640}
+            size={640}
             title={isAdd ? _l('新建样式规则') : _l('编辑样式规则')}
             placement="right"
             onClose={() => clearColumnRules()}

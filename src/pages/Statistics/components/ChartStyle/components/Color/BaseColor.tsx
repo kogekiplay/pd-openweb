@@ -109,7 +109,7 @@ export default class BaseColor extends Component<any, any> {
     const { isSuperAdmin } = _.find(md.global.Account.projects, { projectId }) || {};
     return (
       <div className="mTop20 mBottom10 pRight8 flexRow alignItemsCenter">
-        <ConfigProvider autoInsertSpaceInButton={false}>
+        <ConfigProvider button={{ autoInsertSpace: false }}>
           <div className="flex flexRow pLeft7">
             {isSuperAdmin && type === 1 && (
               <Button
@@ -231,7 +231,7 @@ export default class BaseColor extends Component<any, any> {
         className="chartModal chartBaseColorModal"
         open={visible}
         centered={true}
-        destroyOnClose={true}
+        destroyOnHidden={true}
         closeIcon={<Icon icon="close" className="Font20 pointer textTertiary" />}
         footer={this.renderBaseColorFooter()}
         onCancel={onCancel}

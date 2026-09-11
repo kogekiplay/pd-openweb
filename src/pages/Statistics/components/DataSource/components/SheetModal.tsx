@@ -359,7 +359,7 @@ export default class SheetModal extends Component<any, any> {
                               {_l('将表单或多表数据预处理为聚合数据')}
                             </span>
                             {getFeatureStatus(projectId, VersionProductType.aggregation) == '1' && (
-                              <ConfigProvider autoInsertSpaceInButton={false}>
+                              <ConfigProvider button={{ autoInsertSpace: false }}>
                                 <Button
                                   type="primary"
                                   onClick={() => {
@@ -460,7 +460,7 @@ export default class SheetModal extends Component<any, any> {
               </div>
             )}
         </div>
-        <ConfigProvider autoInsertSpaceInButton={false}>
+        <ConfigProvider button={{ autoInsertSpace: false }}>
           <Button type="primary" onClick={this.handleSave}>
             {_l('确认')}
           </Button>
@@ -477,7 +477,7 @@ export default class SheetModal extends Component<any, any> {
         className="chartModal chartSheetModal"
         open={dialogVisible}
         centered={true}
-        destroyOnClose={true}
+        destroyOnHidden={true}
         closeIcon={<Icon icon="close" className="Font24 pointer textTertiary" />}
         footer={this.renderFooter()}
         onCancel={() => {

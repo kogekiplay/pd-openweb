@@ -910,7 +910,7 @@ function BtnSetting(props) {
                     }}
                     value={action}
                   >
-                    <Space direction="vertical">
+                    <Space orientation="vertical">
                       {CLICK_ACTION.map(item => (
                         <Radio key={item.value} value={item.value}>
                           {item.text}

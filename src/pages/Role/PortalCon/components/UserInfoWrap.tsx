@@ -166,7 +166,7 @@ export default function UserInfoWrap(props) {
 
   return (
     (<Drawer
-      width={640}
+      size={640}
       onClose={() => setShow(false)}
       mask={true}
       placement="right"

@@ -64,7 +64,7 @@ export const VerificationPass = props => {
   const passwordField = _.find(fromFields, { name: ['sharePassword'] });
 
   return (
-    <ConfigProvider autoInsertSpaceInButton={false}>
+    <ConfigProvider button={{ autoInsertSpace: false }}>
       <VerificationPassWrap className="w100 h100 flexColumn justifyContentCenter bgPrimary">
         <div className="flexColumn alignItemsCenter" style={{ marginTop: -120 }}>
           <div className="flexRow alignItemsCenter mBottom18">

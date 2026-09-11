@@ -142,7 +142,7 @@ class ColumnRulesCon extends React.Component<any, any> {
         {selectRules.ruleId && (
           <Drawer
             rootClassName="columnRulesDrawerContainer"
-            width={640}
+            size={640}
             title={isAdd ? _l('新建%0规则', tabText) : _l('编辑%0规则', tabText)}
             placement="right"
             mask={false}

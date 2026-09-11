@@ -579,7 +579,7 @@ const Files = props => {
   };
 
   return (
-    <ConfigProvider autoInsertSpaceInButton={false}>
+    <ConfigProvider button={{ autoInsertSpace: false }}>
       {isListCard && !!sortAllAttachments.length && <ListCardHeader />}
       <SortableListWrap
         ref={ref}

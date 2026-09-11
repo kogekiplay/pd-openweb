@@ -36,7 +36,7 @@ export default props => {
 
   const renderFooter = () => {
     return (
-      <ConfigProvider autoInsertSpaceInButton={false}>
+      <ConfigProvider button={{ autoInsertSpace: false }}>
         <Footer className="mTop5 mBottom5">
           <Button type="link" onClick={onCancel}>
             {_l('取消')}
@@ -66,7 +66,7 @@ export default props => {
       width={1080}
       open={visible}
       centered={true}
-      destroyOnClose={true}
+      destroyOnHidden={true}
       closeIcon={<Icon icon="close" className="Font20 pointer textTertiary" />}
       footer={isShare || !filesProps.attachmentData.length ? null : renderFooter()}
       onCancel={onCancel}

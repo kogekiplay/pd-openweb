@@ -78,7 +78,7 @@ export default class ChartDesc extends Component<any, any> {
           >
             {_l('取消')}
           </Button>
-          <ConfigProvider autoInsertSpaceInButton={false}>
+          <ConfigProvider button={{ autoInsertSpace: false }}>
             <Button type="primary" size="small" className="mLeft10 hoverBgColorPrimaryDark" onClick={this.handleSave}>
               {_l('保存')}
             </Button>

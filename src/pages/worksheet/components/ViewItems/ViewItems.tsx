@@ -715,7 +715,7 @@ let ViewItems = class ViewItems extends Component<any, any> {
           </Tooltip>
           <Drawer
             title=""
-            width={280}
+            size={280}
             rootClassName="drawerWorksheetHidden"
             placement="left"
             mask={false}

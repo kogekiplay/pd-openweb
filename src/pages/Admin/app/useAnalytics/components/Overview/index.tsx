@@ -634,7 +634,7 @@ export default class Overview extends Component<any, any> {
                 className="width200 mRight15 mdAntSelect"
                 placeholder={_l('按部门')}
                 value={departmentInfo.departmentName}
-                dropdownRender={null}
+                popupRender={null}
                 open={false}
                 onFocus={this.handleSelectDepartment}
                 suffixIcon={<Icon icon="arrow-down-border" className="Font18" />}

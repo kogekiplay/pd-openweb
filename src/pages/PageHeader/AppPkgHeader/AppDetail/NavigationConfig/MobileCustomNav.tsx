@@ -122,7 +122,7 @@ export default function MobileCustomNav(props) {
         value={selectedAppNavList.map(item => item.workSheetId)}
         showSearch={false}
         suffixIcon={<i className="icon icon-arrow-down-border textTertiary" />}
-        dropdownRender={() => {
+        popupRender={() => {
           const unselectList = appItemList.filter(it => !_.includes(appNavItemIds, it.workSheetId));
 
           return (
