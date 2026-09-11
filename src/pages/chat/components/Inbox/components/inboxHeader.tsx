@@ -1,6 +1,11 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import antd from 'antd';
+// antd 5 的 ESM 产物【没有默认导出】，`import antd from 'antd'` 拿到的是 undefined，
+// 于是下面按命名空间访问 Dropdown 时直接抛
+// 「Cannot read properties of undefined (reading 'Dropdown')」，把整个 chat 组件树炸掉 ——
+// 线上表现是右侧那排图标全部点不开，而错误只出现在控制台，页面其余部分看着正常。
+// 改成具名导入；本文件已从 ming-ui 导入了同名的 Dropdown，所以起别名区分。
+import { Dropdown as AntdDropdown } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -224,7 +229,7 @@ class InboxHeader extends React.Component<any, any> {
             }}
           />
           {!md.global.Account.isPortal && (
-            <antd.Dropdown
+            <AntdDropdown
               overlay={this.renderOverlay()}
               trigger={['click']}
               placement="bottomRight"
@@ -248,7 +253,7 @@ class InboxHeader extends React.Component<any, any> {
                   <Icon className="Font20 textTertiary pointer" icon="filter" />
                 )}
               </div>
-            </antd.Dropdown>
+            </AntdDropdown>
           )}
           {!md.global.Account.isPortal && (
             <Icon
