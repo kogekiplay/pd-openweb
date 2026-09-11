@@ -14,8 +14,14 @@
   }
   .ant-drawer-content {
     background-color: transparent;
-  }
-  .ant-drawer-wrapper-body {
+    /* antd 5 删掉了 .ant-drawer-wrapper-body 这一层（v4 的 DOM 是
+       .ant-drawer-content > .ant-drawer-wrapper-body > [header, body]，
+       v5 变成 .ant-drawer-content > [header, body]），它那份
+       display:flex; flex-direction:column; width/height:100% 原样搬到了
+       .ant-drawer-content 上。原来挂在 wrapper-body 上的 align-items 因此落空 ——
+       类名没了，选择器静默失配，280px 宽的 .ant-drawer-body 不再贴右边（列向 flex
+       的交叉轴是水平方向，flex-end 即靠右）。搬到 content 上即可，flex-direction
+       仍由 antd 提供、不用重复声明。 */
     display: flex;
     align-items: flex-end;
   }

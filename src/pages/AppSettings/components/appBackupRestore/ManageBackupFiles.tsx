@@ -22,7 +22,9 @@ const DrawerWrap = styled(Drawer)`
   .ant-drawer-content-wrapper {
     width: 500px !important;
   }
-  .ant-drawer-wrapper-body,
+  /* antd 5 删掉了 .ant-drawer-wrapper-body 这一层，这里去掉它。
+     antd 4 的 .ant-drawer-wrapper-body 本来也只有 display/flex-direction/宽高，
+     没有 padding，所以这条 padding:0 对它一直是空操作，删掉不改变任何渲染。 */
   .ant-drawer-body {
     padding: 0;
   }

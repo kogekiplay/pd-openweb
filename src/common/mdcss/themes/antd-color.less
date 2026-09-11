@@ -184,16 +184,23 @@
 .ant-popover,
 .ant-popover-inner-content {
   color: var(--color-text-primary) !important;
+
+  /* antd 5 删掉了 .ant-popover-arrow-content 这个类，箭头也从 .ant-popover-content
+     里挪到了 .ant-popover 直下，改成用 CSS 变量上色：
+       .ant-popover { --antd-arrow-background-color: #ffffff }
+       .ant-popover .ant-popover-arrow::before { background: var(--antd-arrow-background-color) }
+     所以原来那两条（给 .ant-popover-arrow-content 设底色、再用 ::before 铺一层
+     同色渐变盖住 v4 的阴影接缝）在 v5 下一个元素都匹配不到 —— 不报错、不影响构建、
+     tsc 也看不见，只有深色主题下气泡底是 #222 而箭头还留在 antd 默认的 #ffffff，
+     变成一个白色小三角。本仓没有配 antd 的 theme token，箭头不会自己跟着走。
+     v5 改设这个变量即可，两条旧规则合并成这一行。
+     特异性 (0,1,0) 与 antd 的 (0,1,0) 并列，但 cssinjs 以 prependQueue 插在
+     <head> 最前，本仓样式在后 —— 并列归我们（见 tools/verify-antd-style-collisions.cjs）。 */
+  --antd-arrow-background-color: var(--color-background-card);
+
   .ant-popover-inner {
     box-shadow: var(--shadow-lg);
-  }
-  .ant-popover-inner,
-  .ant-popover-arrow-content {
     background-color: var(--color-background-card) !important;
-  }
-  .ant-popover-arrow-content::before {
-    background: linear-gradient(to left, var(--color-background-card) 50%, var(--color-background-card) 50%)
-      no-repeat -5px -5px;
   }
 }
 

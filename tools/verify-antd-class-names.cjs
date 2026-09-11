@@ -103,8 +103,15 @@ for (const p of [A4, A6]) {
 
 /* ---------- 1. 本仓覆盖了哪些 .ant-* 选择器 ---------- */
 
+// 【必须先去注释】否则一给失效的类名写说明（「antd 5 删掉了 .ant-popover-arrow-content」），
+// 这条注释本身就会被当成一处覆盖，修完了判据还是红的 —— 实际踩过。
+function stripComments(src) {
+  // 尾随 // 前面要求空白，免得把 https:// 切掉
+  return src.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|\s)\/\/[^\n]*/g, '$1');
+}
+
 function collectOverridden() {
-  const found = new Map(); // 类名 -> 出现过的文件（去重后前几个）
+  const found = new Map(); // 类名 -> 出现过的【全部】文件
 
   const walk = dir => {
     for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -112,18 +119,23 @@ function collectOverridden() {
 
       if (e.isDirectory()) {
         if (!/(^|\/)(node_modules|library)$/.test(abs)) walk(abs);
-      } else if (/\.(less|css)$/.test(e.name)) {
-        const src = fs.readFileSync(abs, 'utf8');
+        continue;
+      }
 
-        for (const m of src.matchAll(/\.(ant-[a-z0-9-]+)/g)) {
-          const cls = m[1];
+      // 【不能只扫 less/css】styled-components 的模板串里也是真样式：
+      // ManageBackupFiles.tsx 里的 styled(Drawer) 就覆盖了 .ant-drawer-wrapper-body，
+      // 只扫样式文件的话这处完全看不见。ts/tsx 里 querySelector('.ant-xxx') 同样要管 ——
+      // 类名一没，选择器静默返回 null，比样式失效更难查。
+      if (!/\.(less|css|ts|tsx|js|jsx)$/.test(e.name) || /\.spec\.js$/.test(e.name)) continue;
 
-          if (!found.has(cls)) found.set(cls, []);
+      for (const m of stripComments(fs.readFileSync(abs, 'utf8')).matchAll(/\.(ant-[a-z0-9-]+)/g)) {
+        const cls = m[1];
 
-          const list = found.get(cls);
+        if (!found.has(cls)) found.set(cls, []);
 
-          if (list.length < 3 && !list.includes(abs)) list.push(abs);
-        }
+        // 【要收全】原来封顶 3 个、报告里又只打印 files[0]，于是同一个类名有 3 处
+        // 只会显示 1 处。修完第一处判据仍然报红，另外两处纯靠人肉 grep 才发现。
+        if (!found.get(cls).includes(abs)) found.get(cls).push(abs);
       }
     }
   };

@@ -24,14 +24,15 @@
     .ant-popover-inner {
       border-radius: 3px;
     }
-    .ant-popover-arrow {
-      width: 20px;
-      height: 20px;
-    }
-    .ant-popover-arrow-content {
-      width: 10px;
-      height: 10px;
-    }
+    /* 这里原来是「把箭头放大」的一对规则：.ant-popover-arrow 撑到 20px 当外框，
+       里面的 .ant-popover-arrow-content 设 10px 当真正画出来的方块。
+       antd 5 删掉了 -arrow-content，箭头改由 .ant-popover-arrow::before 画，
+       而那个伪元素的尺寸是写死的 width:16px;height:8px + 固定 px 的 clip-path 多边形，
+       【不会跟着外框缩放】。所以放大的那条不但失效，还会把箭头画歪：
+       外框由 `left:50%; transform:translateX(-50%)` 居中，伪元素却锚在
+       inset-inline-start:0、宽仍是 16px —— 外框撑到 20px 后形状中心比外框中心偏左 2px。
+       两条一起删，回到 antd 5 自洽的默认箭头。
+       注：本机 dev 会话已登出、没能实测，这条留在人工验证清单上（应用首页建议气泡）。 */
   }
   .title {
     font-size: 17px;

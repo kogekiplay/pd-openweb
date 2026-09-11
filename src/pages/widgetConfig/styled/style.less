@@ -140,9 +140,13 @@
 .textMarkdownTipsContainer {
   &.ant-popover {
     max-width: 380px !important;
-    .ant-popover-arrow-content::before {
-      background: linear-gradient(to left, black 50%, black 50%) no-repeat -5px -5px;
-    }
+    /* 这里原来有一条给 .ant-popover-arrow-content::before 铺纯黑渐变的规则，
+       用途是盖住 antd 4 箭头上的阴影接缝（那个 no-repeat -5px -5px 的偏移就是为此）。
+       antd 5 删掉了 .ant-popover-arrow-content 这个类，箭头改由
+       .ant-popover-arrow::before/::after 用 var(--antd-arrow-background-color) 画；
+       而这个变量 antd 自己就会按 <Popover color="black"> 内联设在 .ant-popover 上
+       （实测 v4 设在 arrow-content 上、v5 设在 .ant-popover 上，两版都是 antd 自己管）。
+       所以这条在 v5 下既匹配不到元素、也不再需要 —— 直接删，不用找替代写法。 */
     .ant-popover-inner {
       border-radius: 3px;
     }
