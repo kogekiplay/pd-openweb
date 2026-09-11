@@ -12,7 +12,7 @@
  *   node scripts/typecheck/tsc-gate.js --stats            # 打印噪声剔除明细
  *   node scripts/typecheck/tsc-gate.js --from out.txt     # 用缓存的 tsc 输出（实验用）
  *   node scripts/typecheck/tsc-gate.js --key line         # 换 key 方案（实验用）
- *   node scripts/typecheck/tsc-gate.js --no-incremental   # 冷跑
+ *   node scripts/typecheck/tsc-gate.js --incremental      # 复用缓存（快，但会出幻影诊断，见下）
  */
 const fs = require('fs');
 const path = require('path');
@@ -140,7 +140,13 @@ function main() {
     raw = fs.readFileSync(from, 'utf8');
     ms = 0;
   } else {
-    ({ raw, ms } = runTsc({ incremental: !has('--no-incremental') }));
+    // 【默认冷跑】incremental 复用 .tsbuildinfo 会给出与冷跑【不一致】的结果。
+    // 实测：src/common/global.ts 自基线提交起一行没改过，增量跑却报它的 TS2339
+    // 从 47 涨到 48，冷跑下这一条根本不存在 —— 纯粹是缓存幻影。
+    // 门禁的全部价值就是「新增的那几条可信」，出幻影等于白做：要么让人去查一个
+    // 不存在的回归，要么被当成惯常的噪声而忽略，两条路都通向门禁失效。
+    // 冷跑实测 24.9s，对一道门禁完全可接受，所以默认冷跑，缓存改成显式 --incremental。
+    ({ raw, ms } = runTsc({ incremental: has('--incremental') }));
   }
 
   const all = parseDiagnostics(raw);

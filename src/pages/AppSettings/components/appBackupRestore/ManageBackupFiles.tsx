@@ -24,11 +24,10 @@ const DrawerWrap = styled(Drawer)`
   }
   /* antd 5 删掉了 .ant-drawer-wrapper-body 这一层，这里去掉它。
      antd 4 的 .ant-drawer-wrapper-body 本来也只有 display/flex-direction/宽高，
-     没有 padding，所以这条 padding:0 对它一直是空操作，删掉不改变任何渲染。 */
+     没有 padding，所以这条 padding:0 对它一直是空操作，删掉不改变任何渲染。
+     删完只剩 .ant-drawer-body，与下面那条合并。 */
   .ant-drawer-body {
     padding: 0;
-  }
-  .ant-drawer-body {
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -76,7 +75,6 @@ export default function ManageBackupFiles(props) {
   const [currentValid, setCurrentValid] = useState(0);
   const [createBackupVisible, setCreateBackUpVisible] = useState(false);
   const [showLog, setShowLog] = useState(false);
-  const [showBackupFromFiles, setShowBackupFromFiles] = useState(false);
   const [countLoading, setCountLoading] = useState(true);
   const [backupInfo, setBackupInfo] = useState({ isLoading: false, fileList: [], pageIndex: 1 });
   const [backupTask, setBackupTask] = useState({});
@@ -309,15 +307,16 @@ export default function ManageBackupFiles(props) {
         />
       )}
 
-      {showBackupFromFiles && (
-        <BackupFromFiles
-          visible={showBackupFromFiles}
-          projectId={projectId}
-          appId={appId}
-          appName={appName}
-          onCancel={() => setShowBackupFromFiles(false)}
-        />
-      )}
+      {/* 这里原来还有一段 {showBackupFromFiles && <BackupFromFiles … />}。
+          它是从声明式改成命令式弹窗之后遗留的残骸：BackupFromFiles 这个标识符
+          在本文件里【从来没有定义过】（第 15 行 import 进来的是小写的
+          backupFromFiles，而且那是个函数 —— 见其 export default props =>
+          FunctionWrap(BackupFromFilesCom, {...props})，由第 270 行「从文件还原」
+          按钮直接调用）。所以那段 JSX 一旦渲染就是 ReferenceError。
+          之所以线上没炸，是因为 showBackupFromFiles 恒为 false：初值 false，
+          唯一的 setter 调用就在那段死代码自己内部、且传的是 false。
+          tsc 门禁把它报成 TS2552 Cannot find name 'BackupFromFiles'。连同
+          useState 一起删掉，命令式那条路径不受影响。 */}
 
       {showLog && (
         <DrawerWrap

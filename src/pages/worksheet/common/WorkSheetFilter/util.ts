@@ -188,7 +188,12 @@ export function formatOriginFilterValue(item) {
 }
 
 export function formatOriginFilterGroupValue(filter) {
-  filter = typeof item === 'string' ? JSON.parse(filter) : filter;
+  // 原来写的是 typeof item —— 从上面 formatOriginFilterValue(item) 复制过来漏改了形参名，
+  // 而这个函数里没有 item 这个标识符。typeof 作用在未声明标识符上【不抛错】，恒等于
+  // 'undefined'，所以这个三元永远走 else：传进来的 JSON 字符串从来没被解析过，
+  // 后面 _.get(filter, 'items') 拿到 undefined、filter.filterId 也是 undefined，
+  // 静默给出空筛选条件，不报错。tsc 报 TS2552 Cannot find name 'item'。
+  filter = typeof filter === 'string' ? JSON.parse(filter) : filter;
   const items = _.get(filter, 'items') || [];
   const isGroup = items[0] && items[0].isGroup;
   const result = {

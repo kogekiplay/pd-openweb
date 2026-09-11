@@ -147,3 +147,15 @@ declare interface ApiOptions {
   ajaxOptions?: any;
   [key: string]: any;
 }
+
+// ---- 构建期常量：webpack DefinePlugin 在编译时替换的字面量 ----
+// 与本文件其余部分不同，这两个【不是】挂在 window 上的运行时全局，而是
+// CI/webpack.config.js:21-24 的 BUILD_CONSTANTS 经 DefinePlugin 做文本替换，
+// 打包后源码里根本不存在这两个标识符。
+// 因为没有 import、也没有 window 赋值，tsc 与 eslint 都只能靠声明认识它们：
+// 不声明的话 src/utils/enum.ts:118/122 会同时报 TS2304 与 no-undef。
+// 声明成可选（| undefined）是贴着调用点写的 —— getFastGptConfig 本身就用
+// `typeof X === 'undefined'` 做保护，写成必选会让那个保护分支被判成永不成立。
+// 同步登记在 eslint.config.js 的 languageOptions.globals 里，保持两张表一致。
+declare const ENABLE_FASTGPT: boolean | undefined;
+declare const FAST_GPT_CONFIG_BASE64: string | undefined;

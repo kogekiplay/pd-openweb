@@ -64,6 +64,10 @@ module.exports = [
         getCurrentLang: false,
         translations: false,
         __api_server__: false,
+        // 构建期常量：CI/webpack.config.js 的 BUILD_CONSTANTS 经 DefinePlugin
+        // 做文本替换注入，源码里没有声明处。同步登记在 types/global.d.ts。
+        ENABLE_FASTGPT: false,
+        FAST_GPT_CONFIG_BASE64: false,
         $: false,
         createTimeSpan: false,
         getCurrentLangCode: false,
