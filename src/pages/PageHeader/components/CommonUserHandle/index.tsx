@@ -103,7 +103,7 @@ let CommonUserHandle = class CommonUserHandle extends Component<any, any> {
           <Fragment>
             {type === 'native' && (
               <Popover
-                visible={this.state.addMenuVisible}
+                open={this.state.addMenuVisible}
                 content={
                   <AddMenu
                     onClose={() => {
@@ -115,9 +115,9 @@ let CommonUserHandle = class CommonUserHandle extends Component<any, any> {
                 }
                 trigger="click"
                 mouseEnterDelay={0.2}
-                overlayClassName="addOperationPopover"
+                classNames={{ root: "addOperationPopover" }}
                 placement="bottom"
-                onVisibleChange={this.handleAddMenuVisible.bind(this)}
+                onOpenChange={this.handleAddMenuVisible.bind(this)}
               >
                 <div className="addOperationIconWrap mLeft20 mRight15 pointer">
                   <Icon icon="add_circle Font30" />

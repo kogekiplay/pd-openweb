@@ -463,7 +463,7 @@ export default class XAxis extends Component<any, any> {
             <span className="Red flex ellipsis">{_l('字段已删除')}</span>
           </Tooltip>
         )}
-        <Dropdown overlay={this.renderOverlay(axis || {})} trigger={['click']} placement="bottomRight">
+        <Dropdown popupRender={() => this.renderOverlay(axis || {})} trigger={['click']} placement="bottomRight">
           <Icon className="textTertiary Font18 pointer" icon="arrow-down-border" />
         </Dropdown>
         <Icon className="textTertiary Font18 pointer mLeft10" icon="close" onClick={this.props.removeXaxes} />

@@ -105,8 +105,7 @@ export default props => {
 
   return (
     <Dropdown
-      overlay={
-        <Wrap style={{ width: 200, maxHeight: 380, overflowY: loading ? undefined : 'auto' }}>
+      popupRender={() => <Wrap style={{ width: 200, maxHeight: 380, overflowY: loading ? undefined : 'auto' }}>
           {loading ? (
             <li className="flexRow alignItemsCenter justifyContentCenter">
               <LoadDiv />
@@ -155,11 +154,10 @@ export default props => {
               )}
             </Fragment>
           )}
-        </Wrap>
-      }
+        </Wrap>}
       placement={placement}
       trigger={['click']}
-      onVisibleChange={value => {
+      onOpenChange={value => {
         if (value) {
           loadLangList(appLangs);
         }

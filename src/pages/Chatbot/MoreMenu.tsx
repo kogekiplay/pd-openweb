@@ -85,11 +85,11 @@ const MoreMenu = props => {
     (<Fragment>
       {desc && (
         <Popover
-          arrowPointAtCenter={true}
+          arrow={{ pointAtCenter: true }}
           title={null}
           zIndex={2000}
           placement="bottomLeft"
-          overlayClassName="sheetDescPopoverOverlay"
+          classNames={{ root: "sheetDescPopoverOverlay" }}
           content={
             <div className="popoverContent" style={{ maxHeight: document.body.clientHeight / 2 }}>
               <RichText data={desc || ''} disabled={true} />
@@ -111,9 +111,8 @@ const MoreMenu = props => {
         <Dropdown
           trigger={['click']}
           open={popupVisible}
-          onVisibleChange={value => setPopupVisible(value)}
-          overlay={
-            <MenuWrap style={{ width: 200 }}>
+          onOpenChange={value => setPopupVisible(value)}
+          popupRender={() => <MenuWrap style={{ width: 200 }}>
               <Menu.Item
                 key="edit"
                 onClick={() => {
@@ -160,8 +159,7 @@ const MoreMenu = props => {
                   </Menu.Item>
                 </Fragment>
               )}
-            </MenuWrap>
-          }
+            </MenuWrap>}
         >
           {props.children}
         </Dropdown>

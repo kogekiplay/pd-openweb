@@ -406,11 +406,11 @@ export default function CustomPageHeader(props) {
           )}
           {desc && !isPublicShare && (
             <Popover
-              arrowPointAtCenter={true}
+              arrow={{ pointAtCenter: true }}
               title={null}
               zIndex={2000}
               placement="bottomLeft"
-              overlayClassName="sheetDescPopoverOverlay"
+              classNames={{ root: "sheetDescPopoverOverlay" }}
               content={
                 <div className="popoverContent" style={{ maxHeight: document.body.clientHeight / 2 }}>
                   <RichText
@@ -458,10 +458,10 @@ export default function CustomPageHeader(props) {
             )}
             {pageConfig.autoLinkage && (
               <Popover
-                visible={undefined}
+                open={undefined}
                 trigger="click"
                 placement="bottom"
-                overlayClassName="customPageAutoLinkagePopoverWrap"
+                classNames={{ root: "customPageAutoLinkagePopoverWrap" }}
                 content={renderLinkageFiltersPopover()}
               >
                 <Tooltip title={_l('联动筛选')} placement="bottom">

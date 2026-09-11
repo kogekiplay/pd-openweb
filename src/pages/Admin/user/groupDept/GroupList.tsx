@@ -145,7 +145,7 @@ export default class GroupsList extends Component<any, any> {
             </div>
           );
           return (
-            <Dropdown overlay={menu} trigger={['click']} placement="bottomRight" autoAdjustOverflow>
+            <Dropdown popupRender={() => menu} trigger={['click']} placement="bottomRight" autoAdjustOverflow>
               <span className="icon-moreop Font18 pointer textTertiary"></span>
             </Dropdown>
           );

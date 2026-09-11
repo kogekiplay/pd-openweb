@@ -9,8 +9,7 @@ export default props => {
     <Dropdown
       trigger={['click']}
       placement="bottomLeft"
-      overlay={
-        <Menu className="" expandIcon={<Icon icon="arrow-right-tip" />} style={{ width: 180 }}>
+      popupRender={() => <Menu className="" expandIcon={<Icon icon="arrow-right-tip" />} style={{ width: 180 }}>
           {SORT_LIST.map(item => (
             <Menu.Item
               data-event={item.icon}
@@ -27,8 +26,7 @@ export default props => {
               </div>
             </Menu.Item>
           ))}
-        </Menu>
-      }
+        </Menu>}
     >
       <Icon icon="import_export" className="textSecondary pointer Font20" />
     </Dropdown>

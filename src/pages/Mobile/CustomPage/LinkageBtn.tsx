@@ -124,10 +124,10 @@ const LinkageBtn = props => {
 
   return (
     <Popover
-      visible={undefined}
+      open={undefined}
       trigger="click"
       placement="topRight"
-      arrowPointAtCenter={true}
+      arrow={{ pointAtCenter: true }}
       content={renderLinkageFiltersPopover()}
     >
       <Wrap className="flexRow alignItemsCenter justifyContentCenter card autoLinkageTrigger">

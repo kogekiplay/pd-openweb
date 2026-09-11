@@ -191,13 +191,13 @@ export default function GroupHeader({
         </span>
       )}
       <Dropdown
-        overlay={moreMenu}
+        popupRender={() => moreMenu}
         trigger={['click']}
         placement="bottomRight"
         align={{ overflow: { adjustX: true, adjustY: true } }}
         getPopupContainer={() => document.body}
         open={openMoreKey === moreKey}
-        onVisibleChange={handleDropdownVisibleChange}
+        onOpenChange={handleDropdownVisibleChange}
       >
         <span
           className="customBtnGroupedGroupMore Hand InlineFlex alignItemsCenter justifyContentCenter"

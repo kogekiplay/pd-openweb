@@ -177,10 +177,10 @@ export default class AppFilter extends Component<any, any> {
     return (
       (<Fragment>
         <Dropdown
-          overlay={this.renderProjectList()}
+          popupRender={() => this.renderProjectList()}
           trigger={['click']}
           open={menuVisible}
-          onVisibleChange={menuVisible => {
+          onOpenChange={menuVisible => {
             this.setState({ menuVisible });
             if (menuVisible) {
               setTimeout(() => {

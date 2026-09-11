@@ -110,9 +110,8 @@ export function TabHeaderItem(props) {
         <Dropdown
           trigger={['click']}
           open={visible}
-          onVisibleChange={visible => setVisible(visible)}
-          overlay={
-            <DropdownOverlay>
+          onOpenChange={visible => setVisible(visible)}
+          popupRender={() => <DropdownOverlay>
               <div
                 className="dropdownContent"
                 onClick={e => {
@@ -165,8 +164,7 @@ export function TabHeaderItem(props) {
                   {_l('删除')}
                 </div>
               </div>
-            </DropdownOverlay>
-          }
+            </DropdownOverlay>}
           placement="bottom"
         >
           <div className="tabDeleteIcon">

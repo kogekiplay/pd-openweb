@@ -238,8 +238,7 @@ function SortableItem({
           trigger="click"
           className="mTop0"
           getPopupContainer={() => $addControl.current}
-          overlay={
-            <SelectControlWithRelate
+          popupRender={() => <SelectControlWithRelate
               {...rest}
               allControls={allControls}
               globalSheetControls={globalSheetControls}
@@ -252,8 +251,7 @@ function SortableItem({
                   ...rest,
                 })
               }
-            />
-          }
+            />}
         >
           <DropdownPlaceholder ref={$addControl}>
             {getControlInfo()}
@@ -270,15 +268,13 @@ function SortableItem({
           trigger="click"
           className="mTop0"
           getPopupContainer={() => $addTime.current}
-          overlay={
-            <Menu width={'100%'}>
+          popupRender={() => <Menu width={'100%'}>
               {TIME_MODE.map(({ value, text }) => (
                 <MenuItem key={value} onClick={() => handleTimeSelect(value)}>
                   {text}
                 </MenuItem>
               ))}
-            </Menu>
-          }
+            </Menu>}
         >
           <DropdownPlaceholder
             color={format ? 'var(--color-text-primary)' : 'var(--color-text-disabled)'}
@@ -373,15 +369,13 @@ function SortableRules({ rules, data, deleteRule, updateRule, addRule, onSortEnd
       <Dropdown
         trigger={['click']}
         getPopupContainer={() => $addRule.current}
-        overlay={
-          <Menu style={{ width: '100%' }}>
+        popupRender={() => <Menu style={{ width: '100%' }}>
             {typesData.map(({ value, text }) => (
               <MenuItem key={value} onClick={() => addRule(value)}>
                 {text}
               </MenuItem>
             ))}
-          </Menu>
-        }
+          </Menu>}
       >
         <li className="addRule" ref={$addRule}>
           <i className="icon-add Font16"></i>

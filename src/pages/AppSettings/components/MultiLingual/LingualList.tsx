@@ -183,16 +183,14 @@ export default function LingualList(props) {
                 <div className="operate">
                   <Dropdown
                     trigger={['click']}
-                    overlay={
-                      <Menu style={{ width: 100 }}>
+                    popupRender={() => <Menu style={{ width: 100 }}>
                         <Menu.Item key="edit" onClick={() => onChangeLangInfo(data)}>
                           {_l('编辑')}
                         </Menu.Item>
                         <Menu.Item key="delete" danger onClick={() => handleDelete(data)}>
                           {_l('删除')}
                         </Menu.Item>
-                      </Menu>
-                    }
+                      </Menu>}
                   >
                     <Icon className="textSecondary Font20" icon="more_horiz" />
                   </Dropdown>

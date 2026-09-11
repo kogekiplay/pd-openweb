@@ -49,16 +49,14 @@ export default class InviteOrAddUsers extends Component<any, any> {
       <Dropdown
         trigger={['click']}
         placement="bottom"
-        overlayClassName="addMembersMoreAction"
-        overlay={
-          <Menu onClick={this.handleClick}>
+        classNames={{ root: "addMembersMoreAction" }}
+        popupRender={() => <Menu onClick={this.handleClick}>
             {ITEMS.map(i => (
               <Menu.Item key={i.value}>
                 <span>{i.text}</span>
               </Menu.Item>
             ))}
-          </Menu>
-        }
+          </Menu>}
       >
         <span className="Hand textTertiary hoverColorPrimary icon-invite Font18" ref={con => (this.$wrap = con)}></span>
       </Dropdown>

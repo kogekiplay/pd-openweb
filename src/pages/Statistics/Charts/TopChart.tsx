@@ -437,12 +437,12 @@ export default class extends Component<any, any> {
       (<div className="flex flexColumn chartWrapper minHeight0 topChart Relative" ref={el => (this.chartWrapEl = el)}>
         <Dropdown
           open={dropdownVisible}
-          onVisibleChange={dropdownVisible => {
+          onOpenChange={dropdownVisible => {
             this.setState({ dropdownVisible });
           }}
           trigger={['click']}
           placement="bottomLeft"
-          overlay={this.renderOverlay()}
+          popupRender={() => this.renderOverlay()}
         >
           <div className="Absolute" style={{ width: 1, height: 1, left: offset.x, top: offset.y }}></div>
         </Dropdown>

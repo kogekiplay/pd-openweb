@@ -173,8 +173,7 @@ export default function PublicAppLangDropdown(props) {
   return (
     <Wrapper className={className}>
       <Dropdown
-        overlay={
-          <MenuWrap>
+        popupRender={() => <MenuWrap>
             {loading ? (
               <li className="flexRow alignItemsCenter justifyContentCenter" style={{ height: 36 }}>
                 <LoadDiv size="small" />
@@ -195,11 +194,10 @@ export default function PublicAppLangDropdown(props) {
                 ))}
               </React.Fragment>
             )}
-          </MenuWrap>
-        }
+          </MenuWrap>}
         placement={placement}
         trigger={['click']}
-        onVisibleChange={value => {
+        onOpenChange={value => {
           setTooltipVisible(false);
 
           if (value) {

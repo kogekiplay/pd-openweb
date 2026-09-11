@@ -205,13 +205,13 @@ const SelectDropdown = ({
 
   return (
     (<Dropdown
-      overlay={overlay}
+      popupRender={() => overlay}
       trigger={['click']}
       disabled={disabled}
       open={visible}
       placement={placement}
       getPopupContainer={() => document.body}
-      onVisibleChange={v => {
+      onOpenChange={v => {
         if (abortVisibleChange?.()) {
           setVisible(false);
           return;

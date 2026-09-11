@@ -21,7 +21,7 @@ export default function DropdownSelectFields(props) {
     <Dropdown
       trigger={['click']}
       placement={window.innerHeight < 700 ? 'top' : 'bottom'}
-      overlay={<SelectFields from={13} {...props} onClick={obj => onChange(obj)} />}
+      popupRender={() => <SelectFields from={13} {...props} onClick={obj => onChange(obj)} />}
     >
       <DropdownPlaceholder>
         {renderPlaceholder()}

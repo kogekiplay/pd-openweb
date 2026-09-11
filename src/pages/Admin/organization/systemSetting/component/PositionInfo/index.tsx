@@ -185,11 +185,10 @@ class PositionInfo extends Component<any, any> {
                   {_l('创建职位')}
                 </span>
                 <Dropdown
-                  overlayClassName="createMoreDropDown"
+                  classNames={{ root: "createMoreDropDown" }}
                   trigger={['click']}
                   placement="bottomLeft"
-                  overlay={
-                    <Menu>
+                  popupRender={() => <Menu>
                       <Menu.Item
                         key="0"
                         onClick={() => {
@@ -201,8 +200,7 @@ class PositionInfo extends Component<any, any> {
                       <Menu.Item key="1" disabled={_.isEmpty(positionList)} onClick={this.exportJobList}>
                         {_l('导出职位')}
                       </Menu.Item>
-                    </Menu>
-                  }
+                    </Menu>}
                 >
                   <Icon icon="moreop" className="textSecondary Hand Font20 TxtMiddle iconHover" />
                 </Dropdown>

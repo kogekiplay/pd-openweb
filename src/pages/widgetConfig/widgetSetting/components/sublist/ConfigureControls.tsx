@@ -456,8 +456,8 @@ export default function ConfigureControl(props) {
       <Dropdown
         trigger={['click']}
         open={visible}
-        overlay={SelectWidgetMenu}
-        onVisibleChange={value => {
+        popupRender={() => SelectWidgetMenu}
+        onOpenChange={value => {
           setValue(value);
           if (!value) {
             setSearchValue('');

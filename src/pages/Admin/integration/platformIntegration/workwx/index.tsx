@@ -225,9 +225,9 @@ export default class Workwx extends React.Component<any, any> {
           <span className="inputTitle">{`${strId}：`}</span>
           <Popover
             title={null}
-            arrowPointAtCenter={true}
+            arrow={{ pointAtCenter: true }}
             placement="bottomLeft"
-            overlayClassName="workwxPopoverWrapper"
+            classNames={{ root: "workwxPopoverWrapper" }}
             content={
               <span className="card Relative overflowHidden">
                 <img

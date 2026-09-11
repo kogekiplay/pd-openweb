@@ -338,7 +338,7 @@ let DataSource = class DataSource extends Component<any, any> {
     return (
       <div className="mTop15 horizontalPaddingWrapper">
         <div className="Bold Font13 textPrimary mBottom10">{_l('权限')}</div>
-        <Dropdown overlay={renderOverlay()} trigger={['click']} placement="bottomRight">
+        <Dropdown popupRender={() => renderOverlay()} trigger={['click']} placement="bottomRight">
           <div className="timeWrapper flexRow valignWrapper pointer">
             <div className="flex Font13 Bold">
               {_.get(

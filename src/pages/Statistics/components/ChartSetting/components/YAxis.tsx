@@ -169,7 +169,7 @@ const renderSortableItem = props => {
             <span className="Red flex ellipsis">{_l('字段已删除')}</span>
           </Tooltip>
         )}
-        <Dropdown overlay={renderOverlay(props)} trigger={['click']} placement="bottomRight">
+        <Dropdown popupRender={() => renderOverlay(props)} trigger={['click']} placement="bottomRight">
           <Icon className="textTertiary Font18 pointer" icon="arrow-down-border" />
         </Dropdown>
         <Icon
@@ -388,8 +388,7 @@ export default class YAxis extends Component<any, any> {
             </span>
             {isScatterChart && (
               <Dropdown
-                overlay={
-                  <Menu
+                popupRender={() => <Menu
                     className="chartControlMenu chartMenu"
                     expandIcon={<Icon icon="arrow-right-tip" />}
                     subMenuOpenDelay={0.2}
@@ -409,8 +408,7 @@ export default class YAxis extends Component<any, any> {
                         </div>
                       </Menu.Item>
                     ))}
-                  </Menu>
-                }
+                  </Menu>}
                 trigger={['click']}
                 placement="bottomRight"
               >

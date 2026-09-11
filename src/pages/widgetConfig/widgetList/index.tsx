@@ -539,9 +539,8 @@ function TemplatePanelHeader(props) {
           placement={dropdownPlacement}
           open={dropdownVisible}
           getPopupContainer={() => document.body}
-          onVisibleChange={handleDropdownVisibleChange}
-          overlay={
-            <DropdownOverlay>
+          onOpenChange={handleDropdownVisibleChange}
+          popupRender={() => <DropdownOverlay>
               <div className="dropdownContent grayDropdown Width200">
                 <div
                   className="item grayItem"
@@ -566,8 +565,7 @@ function TemplatePanelHeader(props) {
                   <span>{_l('删除')}</span>
                 </div>
               </div>
-            </DropdownOverlay>
-          }
+            </DropdownOverlay>}
         >
           <i
             ref={moreBtnRef}

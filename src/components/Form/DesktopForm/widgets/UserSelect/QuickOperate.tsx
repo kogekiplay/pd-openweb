@@ -201,11 +201,11 @@ export default function QuickOperate(props) {
       <Fragment>
         {item.value === 'chat' && <div className="showLine"></div>}
         <Popover
-          overlayClassName="quickConfigPopover"
+          classNames={{ root: "quickConfigPopover" }}
           title={null}
-          visible={showId === item.value}
+          open={showId === item.value}
           placement="rightTop"
-          onVisibleChange={visible => setShowId(visible ? item.value : '')}
+          onOpenChange={visible => setShowId(visible ? item.value : '')}
           content={item.isPopover ? renderSelect(item) : null}
         >
           <div className="operateItem" onClick={() => (item.isPopover ? {} : handleClick(item))}>

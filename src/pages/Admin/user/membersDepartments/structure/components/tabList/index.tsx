@@ -126,16 +126,14 @@ class TabList extends React.Component<any, any> {
                 <span>{_l('全组织')}</span>
               </div>
               <Dropdown
-                overlayStyle={{ width: 150 }}
+                styles={{ root: { width: 150 } }}
                 trigger={['click']}
                 placement="bottomLeft"
-                overlay={
-                  <Menu>
+                popupRender={() => <Menu>
                     <Menu.Item key="0" onClick={this.clearCache}>
                       {_l('刷新所有成员信息')}
                     </Menu.Item>
-                  </Menu>
-                }
+                  </Menu>}
               >
                 <div className="moreopWrap" onClick={e => e.stopPropagation()}>
                   <Icon icon="moreop" />

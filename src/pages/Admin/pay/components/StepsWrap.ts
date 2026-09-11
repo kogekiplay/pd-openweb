@@ -64,4 +64,3 @@ export const StepsWrap = styled(Steps)`
   }
 `;
 
-export const Step = Steps.Step;

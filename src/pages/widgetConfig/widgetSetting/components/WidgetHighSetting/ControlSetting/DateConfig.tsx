@@ -340,9 +340,8 @@ export default function DateConfig(props) {
           <Dropdown
             trigger={'click'}
             open={timeIntervalVisible}
-            onVisibleChange={v => setVisible({ timeIntervalVisible: v })}
-            overlay={
-              <IntervalWrap>
+            onOpenChange={v => setVisible({ timeIntervalVisible: v })}
+            popupRender={() => <IntervalWrap>
                 {INTERVAL.map(v => (
                   <div
                     key={v}
@@ -355,8 +354,7 @@ export default function DateConfig(props) {
                     {_l('%0分钟', v)}
                   </div>
                 ))}
-              </IntervalWrap>
-            }
+              </IntervalWrap>}
           >
             <DropdownPlaceholder className={cx({ active: timeIntervalVisible })} color="var(--color-text-primary)">
               {_l('%0分钟', timeinterval)}

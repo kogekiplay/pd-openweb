@@ -103,7 +103,7 @@ export default class ValueAxis extends Component<any, any> {
           </Tooltip>
         )}
         {isNumber && (
-          <Dropdown overlay={this.renderOverlay(axis)} trigger={['click']} placement="bottomRight">
+          <Dropdown popupRender={() => this.renderOverlay(axis)} trigger={['click']} placement="bottomRight">
             <Icon className="textTertiary Font18 pointer" icon="arrow-down-border" />
           </Dropdown>
         )}

@@ -53,8 +53,7 @@ const CreateGroup = props => {
     <Fragment>
       <Dropdown
         placement="topRight"
-        overlay={
-          <Menu style={{ width: 180, padding: '8px 0' }}>
+        popupRender={() => <Menu style={{ width: 180, padding: '8px 0' }}>
             <Menu.Item key="addSession" style={{ padding: '7px 12px' }} onClick={handleAddSession}>
               <div className="flexRow alignItemsCenter">
                 <Icon icon="task-reply-msg" className="textSecondary Font18 mRight10" />
@@ -67,8 +66,7 @@ const CreateGroup = props => {
                 <div>{_l('创建群组')}</div>
               </div>
             </Menu.Item>
-          </Menu>
-        }
+          </Menu>}
       >
         <CreateWrap className="flexRow alignItemsCenter justifyContentCenter pointer">
           <Icon icon="add" className="Font30 textWhite" />

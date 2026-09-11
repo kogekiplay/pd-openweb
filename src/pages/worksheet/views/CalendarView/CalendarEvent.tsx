@@ -294,12 +294,12 @@ const EventCard = ({
       trigger="hover"
       // trigger="click"
       placement="topLeft"
-      overlayClassName="event-card-popover calendarPopoverWrap"
-      visible={visible && !isMove}
-      onVisibleChange={visible => {
+      classNames={{ root: "event-card-popover calendarPopoverWrap" }}
+      open={visible && !isMove}
+      onOpenChange={visible => {
         setVisible(visible);
       }}
-      destroyTooltipOnHide
+      destroyOnHidden
     >
       <div
         ref={hoverRef}

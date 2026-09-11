@@ -697,8 +697,8 @@ export default class Sort extends Component<any, any> {
         {this.getIsSort() && (
           <Dropdown
             open={visible}
-            onVisibleChange={this.handleChangeVisible}
-            overlay={Content}
+            onOpenChange={this.handleChangeVisible}
+            popupRender={() => Content}
             trigger={['click']}
             placement={dropdownPlacement}
             align={SORT_DROPDOWN_ALIGN}

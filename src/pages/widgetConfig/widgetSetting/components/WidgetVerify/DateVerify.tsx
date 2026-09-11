@@ -157,9 +157,8 @@ export default function DateVerify({ data, onChange }) {
             <Dropdown
               trigger={['click']}
               open={weekVisible}
-              onVisibleChange={visible => setVisible({ weekVisible: visible })}
-              overlay={
-                <WeekWrap onClick={e => e.stopPropagation()}>
+              onOpenChange={visible => setVisible({ weekVisible: visible })}
+              popupRender={() => <WeekWrap onClick={e => e.stopPropagation()}>
                   {keys(WEEKDAYS).map(key => (
                     <div key={key} className="weekItem">
                       <Checkbox
@@ -176,8 +175,7 @@ export default function DateVerify({ data, onChange }) {
                       </Checkbox>
                     </div>
                   ))}
-                </WeekWrap>
-              }
+                </WeekWrap>}
             >
               <DropdownPlaceholder
                 className={cx({ active: weekVisible })}
@@ -212,10 +210,9 @@ export default function DateVerify({ data, onChange }) {
             <div className="timeFieldWrap flexRow">
               <Dropdown
                 open={startTimeVisible}
-                onVisibleChange={v => setVisible({ startTimeVisible: v })}
+                onOpenChange={v => setVisible({ startTimeVisible: v })}
                 trigger="click"
-                overlay={
-                  <WeekWrap>
+                popupRender={() => <WeekWrap>
                     {TIME_FIELD.map(v => {
                       const nextVal = allowtime.split('-')[1];
                       const disabled = parseFloat(v) >= parseFloat(nextVal);
@@ -234,8 +231,7 @@ export default function DateVerify({ data, onChange }) {
                         </div>
                       );
                     })}
-                  </WeekWrap>
-                }
+                  </WeekWrap>}
               >
                 <Input
                   className="mTop12 allowTimeSelect1"
@@ -251,9 +247,8 @@ export default function DateVerify({ data, onChange }) {
               <Dropdown
                 trigger="click"
                 open={endTimeVisible}
-                onVisibleChange={v => setVisible({ endTimeVisible: v })}
-                overlay={
-                  <WeekWrap>
+                onOpenChange={v => setVisible({ endTimeVisible: v })}
+                popupRender={() => <WeekWrap>
                     {TIME_FIELD.map(v => {
                       const preVal = allowtime.split('-')[0];
                       const disabled = parseFloat(v) <= parseFloat(preVal);
@@ -272,8 +267,7 @@ export default function DateVerify({ data, onChange }) {
                         </div>
                       );
                     })}
-                  </WeekWrap>
-                }
+                  </WeekWrap>}
               >
                 <Input
                   className="mTop12 allowTimeSelect2"

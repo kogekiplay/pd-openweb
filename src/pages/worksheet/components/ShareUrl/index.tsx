@@ -309,7 +309,7 @@ export default class ShareUrl extends React.Component<any, any> {
             )}
             {qrVisible && (
               <Popover
-                overlayClassName="qrHoverPanel"
+                classNames={{ root: "qrHoverPanel" }}
                 placement="bottomRight"
                 align={{
                   overflow: { adjustX: true, adjustY: true },

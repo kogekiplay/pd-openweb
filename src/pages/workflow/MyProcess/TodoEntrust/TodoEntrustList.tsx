@@ -313,8 +313,7 @@ function TodoEntrustList(props) {
                       <Dropdown
                         trigger={['click']}
                         placement="bottomRight"
-                        overlay={
-                          <Menu
+                        popupRender={() => <Menu
                             expandIcon={<Icon icon="arrow-right-tip" />}
                             style={{
                               width: 180,
@@ -355,8 +354,7 @@ function TodoEntrustList(props) {
                                 <div className="flex">{isStartDate ? _l('取消委托') : _l('结束委托')}</div>
                               </div>
                             </Menu.Item>
-                          </Menu>
-                        }
+                          </Menu>}
                       >
                         <Icon
                           icon="more_horiz"

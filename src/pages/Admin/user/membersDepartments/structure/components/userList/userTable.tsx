@@ -220,10 +220,10 @@ class UserTable extends React.Component<any, any> {
         renderHeader: () => {
           return (
             (<Dropdown
-              overlay={this.renderShowColumns}
+              popupRender={this.renderShowColumns}
               trigger={['click']}
               open={dropDownVisible}
-              onVisibleChange={this.handleVisibleChange}
+              onOpenChange={this.handleVisibleChange}
               placement="bottomRight"
             >
               <Tooltip title={_l('自定义显示列')}>

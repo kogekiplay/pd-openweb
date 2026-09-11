@@ -230,10 +230,10 @@ class InboxHeader extends React.Component<any, any> {
           />
           {!md.global.Account.isPortal && (
             <AntdDropdown
-              overlay={this.renderOverlay()}
+              popupRender={() => this.renderOverlay()}
               trigger={['click']}
               placement="bottomRight"
-              overlayClassName="inboxFilterDropdown"
+              classNames={{ root: "inboxFilterDropdown" }}
             >
               <div className={cx('filterWrapper flexRow valignWrapper mRight15', { transparent: _.isEmpty(filter) })}>
                 {filter ? (

@@ -207,10 +207,10 @@ export default class AppFilter extends Component<any, any> {
       (<div>
         <div className="Font13 mBottom10">{_l('应用')}</div>
         <Dropdown
-          overlay={this.renderProjectList()}
+          popupRender={() => this.renderProjectList()}
           trigger={['click']}
           open={menuVisible}
-          onVisibleChange={menuVisible => {
+          onOpenChange={menuVisible => {
             this.setState({ menuVisible });
             if (menuVisible) {
               setTimeout(() => {

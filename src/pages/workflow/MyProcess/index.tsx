@@ -786,16 +786,16 @@ export default class MyProcess extends Component<any, any> {
                 </div>
               </div>
               <Popover
-                overlayClassName="myProcessApproveOverlay"
-                overlayStyle={{
+                classNames={{ root: "myProcessApproveOverlay" }}
+                styles={{ root: {
                   width: 320,
                   maxWidth: 320,
-                }}
+                } }}
                 align={{
                   offset: [40, -5],
                 }}
                 placement="bottomRight"
-                arrowPointAtCenter={true}
+                arrow={{ pointAtCenter: true }}
                 trigger={['click']}
                 color="#FFF"
                 content={
@@ -834,8 +834,8 @@ export default class MyProcess extends Component<any, any> {
                     </div>
                   </div>
                 }
-                visible={passVisible}
-                onVisibleChange={passVisible => {
+                open={passVisible}
+                onOpenChange={passVisible => {
                   if (approveLoading || rejectLoading) return;
 
                   if (_.isEmpty(approveCards)) {

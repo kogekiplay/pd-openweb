@@ -361,7 +361,7 @@ export default function BulletinSetting(props) {
             {_l('支持 jpg、jpeg、png、gif格式，2MB以内')} <span></span>
           </span>
           <Popover
-            overlayClassName="suggestWrapper"
+            classNames={{ root: "suggestWrapper" }}
             placement="bottom"
             align={{
               overflow: { adjustX: true, adjustY: true },

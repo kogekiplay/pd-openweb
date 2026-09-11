@@ -452,7 +452,7 @@ export default class AuxiliaryLine extends Component<any, any> {
         ))}
         <Dropdown
           trigger={['click']}
-          overlay={this.renderMenu}
+          popupRender={this.renderMenu}
           getPopupContainer={() => document.querySelector('.ChartDialogSetting .chartTabs')}
         >
           <AddLine className="Font13 valignWrapper pointer" onClick={e => e.preventDefault()}>

@@ -18,8 +18,7 @@ export default props => {
       <Dropdown
         trigger={['hover']}
         placement="leftTop"
-        overlay={
-          <Menu
+        popupRender={() => <Menu
             className="chartMenu"
             expandIcon={<Icon icon="arrow-right-tip" />}
             subMenuOpenDelay={0.2}
@@ -133,8 +132,7 @@ export default props => {
                 </div>
               </Menu.Item>
             )}
-          </Menu>
-        }
+          </Menu>}
       >
         {renderItem({ onClick: () => {} })}
       </Dropdown>

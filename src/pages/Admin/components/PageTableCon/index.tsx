@@ -127,10 +127,10 @@ export default class PageTableCon extends Component<any, any> {
         ? columns.concat({
             title: hideMoreActionTitle ? null : (
               <Dropdown
-                overlay={this.renderShowColumns}
+                popupRender={this.renderShowColumns}
                 trigger={['click']}
                 open={dropDownVisible}
-                onVisibleChange={visible => this.setState({ dropDownVisible: visible })}
+                onOpenChange={visible => this.setState({ dropDownVisible: visible })}
                 placement="bottomRight"
               >
                 <Tooltip title={_l('自定义显示列')}>
@@ -214,10 +214,10 @@ export default class PageTableCon extends Component<any, any> {
         {fixedShowCols && (
           <div className="showColsWrap">
             <Dropdown
-              overlay={this.renderShowColumns}
+              popupRender={this.renderShowColumns}
               trigger={['click']}
               open={dropDownVisible}
-              onVisibleChange={visible => this.setState({ dropDownVisible: visible })}
+              onOpenChange={visible => this.setState({ dropDownVisible: visible })}
               placement="bottomRight"
             >
               <Tooltip title={_l('自定义显示列')}>

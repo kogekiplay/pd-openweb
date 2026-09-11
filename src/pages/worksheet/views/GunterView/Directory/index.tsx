@@ -252,7 +252,7 @@ let GunterDirectory = class GunterDirectory extends Component<any, any> {
     return (
       <More className="flexRow valignWrapper">
         <div className="flex"></div>
-        <Dropdown overlay={this.renderOverlay()} trigger={['click']}>
+        <Dropdown popupRender={() => this.renderOverlay()} trigger={['click']}>
           <Icon className="textTertiary Font18 pointer" icon="more_horiz" />
         </Dropdown>
       </More>

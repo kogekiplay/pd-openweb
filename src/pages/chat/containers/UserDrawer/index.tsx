@@ -146,8 +146,8 @@ export default props => {
             <Popover
               title={null}
               placement="leftTop"
-              overlayClassName="userConfigPopover"
-              overlayStyle={{ padding: 0 }}
+              classNames={{ root: "userConfigPopover" }}
+              styles={{ root: { padding: 0 } }}
               content={renderProjectsPopover(props)}
               getPopupContainer={() => document.querySelector('.userDrawerWrap')}
             >
@@ -173,8 +173,8 @@ export default props => {
         <Popover
           title={null}
           placement="leftTop"
-          overlayClassName="userConfigPopover"
-          overlayStyle={{ padding: 0 }}
+          classNames={{ root: "userConfigPopover" }}
+          styles={{ root: { padding: 0 } }}
           content={renderLanguagePopover()}
         >
           <div className="flexRow alignItemsCenter pointer itemWrap">
@@ -217,8 +217,8 @@ export default props => {
             <Popover
               title={null}
               placement="leftTop"
-              overlayClassName="userConfigPopover"
-              overlayStyle={{ padding: 0 }}
+              classNames={{ root: "userConfigPopover" }}
+              styles={{ root: { padding: 0 } }}
               content={renderHelpPopover(props)}
             >
               <div className="flexRow alignItemsCenter pointer itemWrap">

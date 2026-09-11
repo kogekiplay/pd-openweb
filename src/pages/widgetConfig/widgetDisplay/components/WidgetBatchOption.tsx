@@ -113,8 +113,7 @@ function WidgetBatch(props) {
           {sectionData.length > 0 && (
             <Dropdown
               trigger={['click']}
-              overlay={
-                <DropdownOverlay>
+              popupRender={() => <DropdownOverlay>
                   <div className="dropdownContent Width250">
                     {sectionData.length > 0 ? (
                       sectionData.map(item => {
@@ -128,8 +127,7 @@ function WidgetBatch(props) {
                       <div className="emptyText">{_l('暂无分段字段')}</div>
                     )}
                   </div>
-                </DropdownOverlay>
-              }
+                </DropdownOverlay>}
               placement="bottom"
             >
               <Tooltip placement="bottom" title={_l('移动到标签页')}>

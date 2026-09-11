@@ -287,13 +287,13 @@ export default function FilterObject(props) {
       </TagWrap>
       <Dropdown
         open={addTagVisible}
-        destroyPopupOnHide={true}
-        onVisibleChange={visible => {
+        destroyOnHidden={true}
+        onOpenChange={visible => {
           setAddTagVisible(visible);
         }}
         getPopupContainer={() => document.querySelector('.customPageFilterWrap .setting')}
         trigger={['click']}
-        overlay={renderOverlay()}
+        popupRender={() => renderOverlay()}
       >
         <div className="Relative" style={{ top: '-15px' }}></div>
       </Dropdown>

@@ -309,10 +309,10 @@ function SheetHeader(props) {
           </span>
           {desc && !resumeInfo.value ? (
             <Popover
-              arrowPointAtCenter={true}
+              arrow={{ pointAtCenter: true }}
               title={null}
               placement="bottomLeft"
-              overlayClassName="sheetDescPopoverOverlay"
+              classNames={{ root: "sheetDescPopoverOverlay" }}
               content={
                 <div
                   className="popoverContent"

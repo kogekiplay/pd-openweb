@@ -573,7 +573,7 @@ export default function WorkflowAction(props) {
           {isMobile ? (
             content
           ) : (
-            <Dropdown trigger={['click']} placement="top" overlay={renderDropdownOverlay({ width: '100%' })}>
+            <Dropdown trigger={['click']} placement="top" popupRender={() => renderDropdownOverlay({ width: '100%' })}>
               {content}
             </Dropdown>
           )}
@@ -646,7 +646,7 @@ export default function WorkflowAction(props) {
             <Icon className="Font20 textSecondary" icon="arrow-up-border" />
           </div>
         ) : (
-          <Dropdown trigger={['click']} placement="topRight" overlay={renderDropdownOverlay({ width: 200 })}>
+          <Dropdown trigger={['click']} placement="topRight" popupRender={() => renderDropdownOverlay({ width: 200 })}>
             <Icon className="Font20 pointer textSecondary" icon="more_horiz" />
           </Dropdown>
         ))}

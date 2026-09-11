@@ -196,10 +196,9 @@ export default function DefaultOptions(props) {
           <Dropdown
             trigger={['click']}
             open={visible}
-            onVisibleChange={setVisible}
+            onOpenChange={setVisible}
             getPopupContainer={() => document.querySelector('.defaultOptionsWrap') || document.body}
-            overlay={
-              <DefaultOptionsMenu onClick={e => e.stopPropagation()}>
+            popupRender={() => <DefaultOptionsMenu onClick={e => e.stopPropagation()}>
                 <div
                   className="clearDefault hoverText"
                   onClick={() => {
@@ -225,8 +224,7 @@ export default function DefaultOptions(props) {
                     </>
                   );
                 })}
-              </DefaultOptionsMenu>
-            }
+              </DefaultOptionsMenu>}
           >
             <div className="defaultOptionsWrap">
               {dynamicValue.map(({ cid, rcid, staticValue }) => {

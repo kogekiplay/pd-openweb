@@ -198,9 +198,9 @@ class CalculateControl extends Component<any, any> {
       return (
         (<Dropdown
           trigger={['click']}
-          overlay={this.renderControlTypeOverlay(control, norm)}
+          popupRender={() => this.renderControlTypeOverlay(control, norm)}
           open={showDropdownId}
-          onVisibleChange={visible => {
+          onOpenChange={visible => {
             if (!visible) {
               this.setState({ showDropdownId: '' });
             }

@@ -201,7 +201,7 @@ let GroupItem = class GroupItem extends Component<any, any> {
               </div>
               <div className="textTertiary totalNum">{rows.length}</div>
               {allowAdd && (
-                <Dropdown overlay={this.renderOverlay(group)} trigger={['click']}>
+                <Dropdown popupRender={() => this.renderOverlay(group)} trigger={['click']}>
                   <Icon className="addCoin Font18" icon="add_circle" />
                 </Dropdown>
               )}

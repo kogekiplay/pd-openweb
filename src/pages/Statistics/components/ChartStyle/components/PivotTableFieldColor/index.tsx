@@ -156,8 +156,7 @@ export default class PivotTableFieldColor extends Component<any, any> {
         <Dropdown
           placement="topLeft"
           trigger={['click']}
-          overlay={
-            <Menu className="chartMenu">
+          popupRender={() => <Menu className="chartMenu">
               {data.map(data => (
                 <Menu.Item
                   key={data.controlId}
@@ -172,8 +171,7 @@ export default class PivotTableFieldColor extends Component<any, any> {
                   {data.controlName}
                 </Menu.Item>
               ))}
-            </Menu>
-          }
+            </Menu>}
         >
           <AddLine className="Font13 valignWrapper pointer" onClick={e => e.preventDefault()}>
             <Icon icon="add" />

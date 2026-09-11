@@ -728,12 +728,12 @@ let RowBlock = class RowBlock extends Component<any, any> {
         zIndex={1000}
         title={undefined}
         content={this.renderPopoverContent()}
-        overlayClassName="gunterPopoverWrap"
+        classNames={{ root: "gunterPopoverWrap" }}
         align={{
           offset: [isMilepost ? 15 : tooltipLeft, 0],
         }}
-        visible={isMobile ? false : tooltipVisible}
-        onVisibleChange={tooltipVisible => {
+        open={isMobile ? false : tooltipVisible}
+        onOpenChange={tooltipVisible => {
           this.setState({
             tooltipVisible,
           });

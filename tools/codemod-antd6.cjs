@@ -68,6 +68,24 @@ const RULES = [
     conflictsWith: 'arrow',
   },
 
+  {
+    // antd 5 的 overlay 同时接受【元素】和【返回元素的函数】两种形态，v6 删掉了它。
+    // 落点是 popupRender：实测 antd 6 的 renderOverlay() 里，不传 menu 时
+    // overlayNode 为 undefined，随后 overlayNode = mergedPopupRender(overlayNode)，
+    // 返回值直接当弹层内容，外面仍包同一个 OverrideProvider —— 与 overlay 1:1 等价。
+    // 不改成 menu={{items}}：本仓 36 处里几乎都是 this.renderOverlay() 这类返回 JSX 的
+    // 方法调用，改 menu 等于重写每个 render 方法，是语义改造不是迁移。
+    //
+    // 两种形态转换方式相反，所以只处理能【静态证明】的：
+    //   元素 / 调用 / 三元 / 逻辑表达式  → popupRender={() => 原值}
+    //   箭头函数 / function 表达式      → popupRender={原值}（只改名）
+    //   裸标识符、成员表达式（moreMenu、this.renderShowColumns）→ 判不出来，报出来人工定
+    name: 'overlay-to-popupRender',
+    kind: 'overlay',
+    components: ['Dropdown'],
+    from: 'overlay',
+  },
+
   // ── 第二批：v6 仍可用但已废弃，用户要求一并迁移 ──
   {
     name: 'destroyTooltipOnHide-to-destroyOnHidden',
@@ -249,6 +267,30 @@ for (const file of collect(SRC)) {
           }
 
           edits.push({ start: attr.start, end: attr.end, text: rule.to, rule: rule.name });
+          continue;
+        }
+
+        if (rule.kind === 'overlay') {
+          const v = attr.value;
+
+          if (!v || v.type !== 'JSXExpressionContainer') {
+            stats.get(rule.name).skipped.push(`${where}（取值不是表达式容器）`);
+            continue;
+          }
+
+          const ex = v.expression;
+          const text = src.slice(ex.start, ex.end);
+          const WRAP = ['JSXElement', 'JSXFragment', 'CallExpression', 'ConditionalExpression', 'LogicalExpression'];
+          const ASIS = ['ArrowFunctionExpression', 'FunctionExpression'];
+
+          if (WRAP.includes(ex.type)) {
+            edits.push({ start: attr.start, end: attr.end, text: `popupRender={() => ${text}}`, rule: rule.name });
+          } else if (ASIS.includes(ex.type)) {
+            edits.push({ start: attr.start, end: attr.end, text: `popupRender={${text}}`, rule: rule.name });
+          } else {
+            stats.get(rule.name).skipped.push(`${where}  overlay={${text}}（${ex.type}：元素还是函数判不出来）`);
+          }
+
           continue;
         }
 

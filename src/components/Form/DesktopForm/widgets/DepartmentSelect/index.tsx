@@ -127,10 +127,10 @@ const DepartmentSelect = props => {
       <Popover
         title={null}
         placement="bottomLeft"
-        overlayClassName="quickConfigPopover"
+        classNames={{ root: "quickConfigPopover" }}
         trigger={['click', 'contextMenu']}
-        visible={showMenu}
-        onVisibleChange={visible => {
+        open={showMenu}
+        onOpenChange={visible => {
           if (disablePopover) return;
           setShowId(visible ? item.departmentId : '');
         }}

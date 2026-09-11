@@ -363,7 +363,7 @@ export default class BatchResign extends Component<any, any> {
     return (
       <Fragment>
         <BatchResignDialogStyle />
-        <Dropdown trigger={['click']} overlay={this.renderMenu()}>
+        <Dropdown trigger={['click']} popupRender={() => this.renderMenu()}>
           <div className="actBtn">
             {_l('离职')}
             <span className="icon-arrow-down-border Font12 mLeft6" />

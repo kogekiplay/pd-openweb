@@ -97,13 +97,13 @@ function ActionItemRow({ btn, editBtn, deleteBtn, handleCopy, toggleEnable, disa
         </span>
       </span>
       <Dropdown
-        overlay={moreMenu}
+        popupRender={() => moreMenu}
         trigger={['click']}
         placement="bottomRight"
         align={{ overflow: { adjustX: true, adjustY: true } }}
         getPopupContainer={() => document.body}
         open={openMoreKey === moreKey}
-        onVisibleChange={handleDropdownVisibleChange}
+        onOpenChange={handleDropdownVisibleChange}
       >
         <span
           className="customBtnGroupedRowMore Hand InlineFlex alignItemsCenter justifyContentCenter"

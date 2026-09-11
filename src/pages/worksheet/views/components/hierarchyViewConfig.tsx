@@ -148,7 +148,7 @@ export default function HierarchyViewConfig({ fields, handleSelect, currentSheet
               </li>
             ))}
             {selectableControls.length > 0 && (
-              <Dropdown trigger={['click']} overlay={renderRelate()} placement="bottomLeft">
+              <Dropdown trigger={['click']} popupRender={() => renderRelate()} placement="bottomLeft">
                 <li className="addRelate">
                   <i className="icon-add"></i>
                   <span>{_l('下一级关联')}</span>

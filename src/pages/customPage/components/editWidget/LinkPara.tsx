@@ -106,9 +106,8 @@ function ParaItem({ deleteItem, item, updateItem }) {
           open={visible}
           trigger={'click'}
           placement="bottomRight"
-          onVisibleChange={setVisible}
-          overlay={
-            <DropdownContent style={{ width: '180px' }}>
+          onOpenChange={setVisible}
+          popupRender={() => <DropdownContent style={{ width: '180px' }}>
               {LINK_PARA_FIELDS.map(({ type, title, fields }) => {
                 return (
                   <Fragment key={type}>
@@ -128,8 +127,7 @@ function ParaItem({ deleteItem, item, updateItem }) {
                   </Fragment>
                 );
               })}
-            </DropdownContent>
-          }
+            </DropdownContent>}
         >
           <Tooltip title={_l('使用动态参数')}>
             <div className={cx('selectField pointer', { active: visible })}>

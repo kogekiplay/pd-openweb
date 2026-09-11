@@ -184,8 +184,8 @@ const Apps = props => {
               <Popover
                 title={null}
                 placement="leftBottom"
-                overlayClassName="userConfigPopover"
-                overlayStyle={{ padding: 0 }}
+                classNames={{ root: "userConfigPopover" }}
+                styles={{ root: { padding: 0 } }}
                 content={
                   <PopoverWrap
                     style={{

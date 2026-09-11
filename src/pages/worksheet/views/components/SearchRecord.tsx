@@ -215,13 +215,13 @@ const SearchRecord = props => {
 
   return (
     (<Dropdown
-      overlayClassName={overlayClassName}
+      classNames={{ root: overlayClassName }}
       trigger={['click']}
-      overlay={renderOverlay()}
+      popupRender={() => renderOverlay()}
       open={visible}
       placement="bottomRight"
       zIndex={1000}
-      onVisibleChange={visible => {
+      onOpenChange={visible => {
         setVisible(visible);
         if (visible) {
           setTimeout(() => {

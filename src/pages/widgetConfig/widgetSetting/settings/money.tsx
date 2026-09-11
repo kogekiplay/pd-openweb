@@ -132,10 +132,9 @@ export default function Money(props) {
         <Dropdown
           trigger={['click']}
           open={visible}
-          onVisibleChange={value => setVisible(value)}
-          destroyPopupOnHide={true}
-          overlay={
-            <SelectCountryDropdown
+          onOpenChange={value => setVisible(value)}
+          destroyOnHidden={true}
+          popupRender={() => <SelectCountryDropdown
               setVisible={setVisible}
               data={currencyList}
               lang={lang}
@@ -157,8 +156,7 @@ export default function Money(props) {
                   }),
                 );
               }}
-            />
-          }
+            />}
         >
           <DropdownPlaceholder cancelAble={!!currentCurrency}>
             {renderPlaceholder()}

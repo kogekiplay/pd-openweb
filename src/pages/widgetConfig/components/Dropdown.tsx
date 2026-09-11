@@ -58,8 +58,7 @@ export default function DropdownWrapper(props) {
     <Dropdown
       trigger={trigger || ['click']}
       {...rest}
-      overlay={
-        <DropdownOverlay>
+      popupRender={() => <DropdownOverlay>
           {searchable && (
             <div className="searchWrap" onClick={e => e.stopPropagation()}>
               <i className="icon-search Font16 textSecondary"></i>
@@ -93,8 +92,7 @@ export default function DropdownWrapper(props) {
               <div className="emptyText">{_l(searchValue ? '暂无搜索结果' : '无内容')}</div>
             )}
           </div>
-        </DropdownOverlay>
-      }
+        </DropdownOverlay>}
     >
       <DropdownPlaceholder>
         {renderPlaceholder()}

@@ -412,12 +412,10 @@ export default function Tools(props) {
               trigger={['hover']}
               placement={placement}
               open={dropdownVisible}
-              onVisibleChange={handleUpdateDropdownVisible}
-              overlay={
-                <Menu className="chartMenu widgetToolMenu" style={{ width: 180 }}>
+              onOpenChange={handleUpdateDropdownVisible}
+              popupRender={() => <Menu className="chartMenu widgetToolMenu" style={{ width: 180 }}>
                   {widgetTools}
-                </Menu>
-              }
+                </Menu>}
             >
               <li className="more">
                 <Icon icon="more_horiz" className="Font18 current" />

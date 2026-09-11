@@ -51,15 +51,13 @@ let IndexSide = class IndexSide extends Component<any, any> {
           <Dropdown
             trigger={['click']}
             placement="bottomRight"
-            overlay={
-              <Menu
+            popupRender={() => <Menu
                 style={{
                   width: 120,
                 }}
               >
                 <Menu.Item onClick={() => navigateTo('/personal?type=system')}>{_l('偏好设置')}</Menu.Item>
-              </Menu>
-            }
+              </Menu>}
           >
             <div className="flexRow alignItemsCenter justifyContentCenter pointer moreWrap">
               <Icon className="textTertiary Font20" icon="more_horiz" />

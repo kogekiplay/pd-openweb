@@ -265,8 +265,7 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
       const { customRangeDay, currentRangeValue } = this.state;
       return (
         <Dropdown
-          overlay={
-            <Menu className="rangeDayOverlayMenu">
+          popupRender={() => <Menu className="rangeDayOverlayMenu">
               {dropdownDayData
                 .filter(item => item.value <= currentRangeValue)
                 .map(item => (
@@ -285,8 +284,7 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
                     {item.text}
                   </Menu.Item>
                 ))}
-            </Menu>
-          }
+            </Menu>}
           trigger={['click']}
         >
           <div className="w100 Relative">

@@ -232,8 +232,7 @@ const Chatbot = props => {
           <Dropdown
             trigger={['click']}
             placement="bottomRight"
-            overlay={
-              <Menu style={{ width: 180 }}>
+            popupRender={() => <Menu style={{ width: 180 }}>
                 <Menu.Item key="edit" onClick={() => setEditVisible(!editVisible)}>
                   <div className="flexRow valignWrapper">
                     <Icon icon="edit" className="Font18 mLeft5 mRight10 textTertiary" />
@@ -246,8 +245,7 @@ const Chatbot = props => {
                     <div>{_l('配置流程')}</div>
                   </div>
                 </Menu.Item>
-              </Menu>
-            }
+              </Menu>}
           >
             <div className="iconWrap">
               <Icon icon="settings" className="Font20 textTertiary pointer" />

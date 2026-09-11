@@ -61,10 +61,9 @@ const NodeTagTextarea = props => {
         />
         <Dropdown
           open={formulaMapVisible}
-          onVisibleChange={visible => setFormulaMapVisible(visible)}
+          onOpenChange={visible => setFormulaMapVisible(visible)}
           placement="bottomRight"
-          overlay={
-            <Menu style={{ width: 180, padding: '8px 0' }}>
+          popupRender={() => <Menu style={{ width: 180, padding: '8px 0' }}>
               {formulaMapList.map(data => (
                 <Menu.Item
                   key={data.id}
@@ -81,8 +80,7 @@ const NodeTagTextarea = props => {
                   </div>
                 </Menu.Item>
               ))}
-            </Menu>
-          }
+            </Menu>}
         >
           <div />
         </Dropdown>

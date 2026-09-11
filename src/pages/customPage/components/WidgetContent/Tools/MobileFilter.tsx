@@ -60,9 +60,8 @@ export default props => {
       trigger={['hover']}
       placement={placement}
       open={dropdownVisible}
-      onVisibleChange={handleUpdateDropdownVisible}
-      overlay={
-        <Menu
+      onOpenChange={handleUpdateDropdownVisible}
+      popupRender={() => <Menu
           className="chartMenu"
           expandIcon={<Icon icon="arrow-right-tip" />}
           subMenuOpenDelay={0.2}
@@ -85,8 +84,7 @@ export default props => {
               </div>
             </Menu.Item>
           ))}
-        </Menu>
-      }
+        </Menu>}
     >
       {renderItem({ onClick: () => {} })}
     </Dropdown>)

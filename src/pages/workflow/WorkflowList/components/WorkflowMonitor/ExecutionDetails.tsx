@@ -480,8 +480,7 @@ export default class ExecutionDetails extends Component<any, any> {
                 trigger={['click']}
                 placement="bottomLeft"
                 getPopupContainer={() => this.props.monitorContainer}
-                overlay={
-                  <div className="runoOperateBox">
+                popupRender={() => <div className="runoOperateBox">
                     {runDateList.map(v => (
                       <div
                         className="runDateItem Font13"
@@ -491,8 +490,7 @@ export default class ExecutionDetails extends Component<any, any> {
                         {v.label}
                       </div>
                     ))}
-                  </div>
-                }
+                  </div>}
               >
                 <Button type="ghostgray" className="mRight10">
                   {_l('暂停')}

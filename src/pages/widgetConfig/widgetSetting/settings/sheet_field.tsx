@@ -164,8 +164,7 @@ export default function SheetField(props) {
           <Dropdown
             trigger={['click']}
             disabled={dataSourceDisabled}
-            overlay={
-              <DropdownOverlay>
+            popupRender={() => <DropdownOverlay>
                 {_.isEmpty(sheetList) ? (
                   <div className="emptyText">{_l('请先添加一个 ”关联记录“ 字段')}</div>
                 ) : (
@@ -188,8 +187,7 @@ export default function SheetField(props) {
                     ))}
                   </ul>
                 )}
-              </DropdownOverlay>
-            }
+              </DropdownOverlay>}
           >
             <DropdownPlaceholder
               className={cx({
@@ -213,14 +211,13 @@ export default function SheetField(props) {
         <Dropdown
           trigger={['click']}
           open={visible}
-          onVisibleChange={visible => {
+          onOpenChange={visible => {
             if (visible) setSearchValue('');
             setVisible(visible);
           }}
           disabled={sheetFieldDisabled}
           getPopupContainer={() => $ref.current}
-          overlay={
-            <DropdownOverlay>
+          popupRender={() => <DropdownOverlay>
               <div className="searchWrap" onClick={e => e.stopPropagation()}>
                 <i className="icon-search textTertiary" />
                 <input
@@ -259,8 +256,7 @@ export default function SheetField(props) {
                   ))}
                 </ul>
               )}
-            </DropdownOverlay>
-          }
+            </DropdownOverlay>}
         >
           <DropdownPlaceholder
             ref={$ref}

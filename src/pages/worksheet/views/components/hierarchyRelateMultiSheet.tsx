@@ -295,9 +295,9 @@ export default function HierarchyRelateMultiSheet({ worksheetInfo, viewControls,
         })}
       </ul>
       <Dropdown
-        overlayClassName="addHierarchyRelate"
+        classNames={{ root: "addHierarchyRelate" }}
         trigger={['click']}
-        overlay={renderRelate()}
+        popupRender={() => renderRelate()}
         placement={getPlacement()}
       >
         <div className={'addRelate'} ref={addRelateRef} onClick={getAvailableControls}>

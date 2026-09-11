@@ -54,7 +54,7 @@ export default class DropDownItem extends Component<any, any> {
 
     return (
       <Dropdown
-        overlay={menu}
+        popupRender={() => menu}
         trigger={['click']}
         align={{ overflow: { adjustY: true } }}
         className={cx(className, 'excelControlDropDown')}

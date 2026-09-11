@@ -147,13 +147,13 @@ const CallBackRefresh = props => {
       </TagWrap>
       <Dropdown
         open={addTagVisible}
-        destroyPopupOnHide={true}
-        onVisibleChange={visible => {
+        destroyOnHidden={true}
+        onOpenChange={visible => {
           setAddTagVisible(visible);
         }}
         getPopupContainer={() => document.querySelector('.editWidgetDialogWrap .settingsBox')}
         trigger={['click']}
-        overlay={renderOverlay()}
+        popupRender={() => renderOverlay()}
       >
         <div className="Relative" style={{ top: '-15px' }}></div>
       </Dropdown>

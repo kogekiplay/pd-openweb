@@ -12,7 +12,7 @@ import orderApi from 'src/api/order';
 import paymentApi from 'src/api/payment';
 import userApi from 'src/api/user';
 import PageTableCon from 'src/pages/Admin/components/PageTableCon';
-import { Step, StepsWrap } from 'src/pages/Admin/pay/components/StepsWrap';
+import { StepsWrap } from 'src/pages/Admin/pay/components/StepsWrap';
 import UploadFile from 'src/pages/worksheet/components/DialogImportExcelCreate/DialogUpload/UploadFile';
 import { navigateTo } from 'src/router/navigateTo';
 import { VersionProductType } from 'src/utils/enum';
@@ -430,27 +430,23 @@ export default function CreateTaxNumber(props) {
 
   return (
     <div className="flexRow flex">
-      <StepsWrap direction="vertical" current={step} onChange={current => setStep(current)}>
-        {STEPS.map((item, index) => {
-          return (
-            <Step
-              key={index}
-              title={item.title}
-              disabled={
-                step === 0 && !taxId
-                  ? index > 0
-                  : window.platformENV.isOverseas || window.platformENV.isLocal
-                    ? false
-                    : index === 0
-              }
-              status={
-                /* antd 5 收紧了 status 类型，'' 不再合法；v4 下 '' 走的就是默认的 wait */
-                step === index ? 'process' : index < step ? 'finish' : 'wait'
-              }
-            />
-          );
-        })}
-      </StepsWrap>
+      <StepsWrap
+        direction="vertical"
+        current={step}
+        onChange={current => setStep(current)}
+        items={STEPS.map((item, index) => ({
+          key: index,
+          title: item.title,
+          disabled:
+            step === 0 && !taxId
+              ? index > 0
+              : window.platformENV.isOverseas || window.platformENV.isLocal
+                ? false
+                : index === 0,
+          /* antd 5 收紧了 status 类型，'' 不再合法；v4 下 '' 走的就是默认的 wait */
+          status: step === index ? 'process' : index < step ? 'finish' : 'wait',
+        }))}
+      />
       <DivideLine />
 
       <StepContentWrap className="flex">

@@ -213,7 +213,7 @@ export default class GroupingAxis extends Component<any, any> {
         )}
         {isTime && (
           <Dropdown
-            overlay={this.renderTimeOverlay(axis)}
+            popupRender={() => this.renderTimeOverlay(axis)}
             trigger={['click']}
             placement="bottomRight"
             getPopupContainer={() => document.querySelector('.ChartDialogContainer .setting')}
@@ -222,12 +222,12 @@ export default class GroupingAxis extends Component<any, any> {
           </Dropdown>
         )}
         {isArea && (
-          <Dropdown overlay={this.renderAreaOverlay(axis)} trigger={['click']} placement="bottomRight">
+          <Dropdown popupRender={() => this.renderAreaOverlay(axis)} trigger={['click']} placement="bottomRight">
             <Icon className="textTertiary Font18 pointer" icon="arrow-down-border" />
           </Dropdown>
         )}
         {isOption && (
-          <Dropdown overlay={this.renderOptionOverlay(axis)} trigger={['click']} placement="bottomRight">
+          <Dropdown popupRender={() => this.renderOptionOverlay(axis)} trigger={['click']} placement="bottomRight">
             <Icon className="textTertiary Font18 pointer" icon="arrow-down-border" />
           </Dropdown>
         )}

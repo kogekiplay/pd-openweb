@@ -108,9 +108,8 @@ export default function TelConfig({ data, onChange, globalSheetInfo = {} }) {
         <Dropdown
           trigger={['click']}
           open={defaultCountryVisible}
-          onVisibleChange={visible => setVisible({ defaultCountryVisible: visible })}
-          overlay={
-            <SelectCountryDropdown
+          onOpenChange={visible => setVisible({ defaultCountryVisible: visible })}
+          popupRender={() => <SelectCountryDropdown
               style={{ width: '300px' }}
               unique
               selectableData={allData}
@@ -122,8 +121,7 @@ export default function TelConfig({ data, onChange, globalSheetInfo = {} }) {
                 );
                 setVisible({ defaultCountryVisible: false });
               }}
-            />
-          }
+            />}
         >
           <DropdownPlaceholder>
             <div className={cx('text', { textDisabled: !defaultCountry.name })}>

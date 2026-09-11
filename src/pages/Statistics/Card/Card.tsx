@@ -420,10 +420,10 @@ class Card extends Component<any, any> {
             )}
             {sourceType && !_.isEmpty(initiateChartInfo) && (
               <Popover
-                visible={undefined}
+                open={undefined}
                 trigger="hover"
                 placement="bottom"
-                overlayClassName="customPageAutoLinkagePopoverWrap"
+                classNames={{ root: "customPageAutoLinkagePopoverWrap" }}
                 content={
                   <div className="customPageAutoLinkagePopover">
                     <div className="Font14 bold mBottom5">

@@ -86,15 +86,15 @@ export default function ResetAutoNumber(props) {
                   <Popover
                     placement="bottomRight"
                     align={{ offset: [24] }}
-                    visible={activeIndex === index}
-                    onVisibleChange={visible => {
+                    open={activeIndex === index}
+                    onOpenChange={visible => {
                       setIndex(visible ? index : -1);
                       const startValue = visible ? _.padStart(start, length, '0') : 1;
                       setNum(startValue);
                       setStartNum(startValue);
                     }}
                     trigger="click"
-                    overlayClassName={'resetReconfirm'}
+                    classNames={{ root: 'resetReconfirm' }}
                     title={null}
                     content={
                       <ResetContent>

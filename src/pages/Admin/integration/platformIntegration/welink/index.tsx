@@ -131,9 +131,9 @@ export default class Welink extends React.Component<any, any> {
           <span className="inputTitle">{`${key}：`}</span>
           <Popover
             title={null}
-            arrowPointAtCenter={true}
+            arrow={{ pointAtCenter: true }}
             placement="bottomLeft"
-            overlayClassName="welinkPopoverWrapper"
+            classNames={{ root: "welinkPopoverWrapper" }}
             content={
               <span className="card Relative overflowHidden">
                 <img width={466} className="mTop1" src={clientIdImg} alt={_l('点击“自建应用”进入新建应用页面')} />

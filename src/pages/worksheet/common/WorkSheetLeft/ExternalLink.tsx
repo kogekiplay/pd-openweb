@@ -182,8 +182,7 @@ const ExternalLink = props => {
               <Dropdown
                 trigger="click"
                 placement="bottomRight"
-                overlay={
-                  <DropdownContent style={{ width: '180px' }}>
+                popupRender={() => <DropdownContent style={{ width: '180px' }}>
                     {LINK_PARA_FIELDS.map(({ type, title, fields }) => {
                       return (
                         <Fragment key={type}>
@@ -202,8 +201,7 @@ const ExternalLink = props => {
                         </Fragment>
                       );
                     })}
-                  </DropdownContent>
-                }
+                  </DropdownContent>}
               >
                 <Tooltip title={_l('使用动态参数')} placement="bottom">
                   <div className="iconWrap Font17 pointer">

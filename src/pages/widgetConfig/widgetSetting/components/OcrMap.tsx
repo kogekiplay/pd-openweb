@@ -181,11 +181,9 @@ function MapItem(props) {
         <Dropdown
           trigger={['click']}
           placement={placement}
-          overlay={
-            <SelectFieldsWrap className="mapFieldsWrap">
+          popupRender={() => <SelectFieldsWrap className="mapFieldsWrap">
               <div className="fieldsWrap">{selectableControls.map(renderControlItem)}</div>
-            </SelectFieldsWrap>
-          }
+            </SelectFieldsWrap>}
         >
           <DropdownPlaceholder
             ref={placeholderRef}

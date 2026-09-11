@@ -40,14 +40,14 @@ export default props => {
       <Popover
         zIndex={1000}
         placement="bottomLeft"
-        overlayClassName="tabsSettingPopover"
-        arrowPointAtCenter={true}
+        classNames={{ root: "tabsSettingPopover" }}
+        arrow={{ pointAtCenter: true }}
         mouseLeaveDelay={0.3}
-        overlayInnerStyle={{
+        styles={{ container: {
           padding: 24,
-        }}
-        visible={popoverVisible}
-        onVisibleChange={visible => {
+        } }}
+        open={popoverVisible}
+        onOpenChange={visible => {
           if (isEdit) return;
           setPopoverVisible(visible);
         }}

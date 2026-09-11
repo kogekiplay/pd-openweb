@@ -517,7 +517,7 @@ const renderSortableItem = props => {
           </Tooltip>
         )}
         {item.hide && <Icon className="textTertiary Font18 mRight10" icon="workflow_hide" />}
-        <Dropdown trigger={['click']} overlay={renderOverlay(overlayProps)} placement="bottomRight">
+        <Dropdown trigger={['click']} popupRender={() => renderOverlay(overlayProps)} placement="bottomRight">
           <Icon className="textTertiary Font18 pointer" icon="arrow-down-border" />
         </Dropdown>
         <Icon

@@ -7,7 +7,7 @@ import { Button, Checkbox, Icon, LoadDiv, Qr } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import paymentAjax from 'src/api/payment';
 import WeChatServiceAccount from 'src/components/WeChatServiceAccountsDialog';
-import { Step, StepsWrap } from 'src/pages/Admin/pay/components/StepsWrap';
+import { StepsWrap } from 'src/pages/Admin/pay/components/StepsWrap';
 import aliQrCode from 'src/pages/Admin/pay/images/aliQrCode.png';
 import wechatQrCode from 'src/pages/Admin/pay/images/wechatQrCode.png';
 import { STEPS } from '../../config';
@@ -323,40 +323,33 @@ export default class CreateJxqfMerchant extends Component<any, any> {
                 this.pollGetMerchantStatus({ merchantId, merchantNo: merchant.merchantNo });
               }
             }}
-          >
-            {STEPS.map((item, index) => {
-              return (
-                <Step
-                  className={cx({
-                    customTail:
-                      (merchantStatus === 0 && index === 1) || (_.includes([1, 2], merchantStatus) && index === 2),
-                  })}
-                  key={index}
-                  title={item.title}
-                  disabled={
-                    (merchantStatus === 0 && _.includes([2, 3], index)) ||
-                    (_.includes([1, 2], merchantStatus) && _.includes([1, 3], index)) ||
-                    (merchantStatus === 3 && _.includes([1, 2], index)) ||
-                    (createStep === 0 && !merchantId)
-                      ? true
-                      : false
-                  }
-                  status={
-                    // antd 5 收紧了 status 类型，'' 不再合法；v4 下 '' 走的就是默认的 wait
-                    createStep === 0 && !merchantId && index === 0
-                      ? 'wait'
-                      : (merchantStatus === 0 && _.includes([0, 1], index)) ||
-                          (_.includes([1, 2], merchantStatus) && _.includes([0, 1, 2], index)) ||
-                          merchantStatus === 3
-                        ? step !== index
-                          ? 'finish'
-                          : 'wait'
-                        : 'wait'
-                  }
-                ></Step>
-              );
-            })}
-          </StepsWrap>
+            items={STEPS.map((item, index) => ({
+              key: index,
+              className: cx({
+                customTail:
+                  (merchantStatus === 0 && index === 1) || (_.includes([1, 2], merchantStatus) && index === 2),
+              }),
+              title: item.title,
+              disabled:
+                (merchantStatus === 0 && _.includes([2, 3], index)) ||
+                (_.includes([1, 2], merchantStatus) && _.includes([1, 3], index)) ||
+                (merchantStatus === 3 && _.includes([1, 2], index)) ||
+                (createStep === 0 && !merchantId)
+                  ? true
+                  : false,
+              // antd 5 收紧了 status 类型，'' 不再合法；v4 下 '' 走的就是默认的 wait
+              status:
+                createStep === 0 && !merchantId && index === 0
+                  ? 'wait'
+                  : (merchantStatus === 0 && _.includes([0, 1], index)) ||
+                      (_.includes([1, 2], merchantStatus) && _.includes([0, 1, 2], index)) ||
+                      merchantStatus === 3
+                    ? step !== index
+                      ? 'finish'
+                      : 'wait'
+                    : 'wait',
+            }))}
+          />
           <DivideLine />
           <div className="flex">
             <Description>

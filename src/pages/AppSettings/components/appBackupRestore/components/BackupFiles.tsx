@@ -463,9 +463,8 @@ export default function BackupFiles(props) {
                               <Dropdown
                                 trigger={['click']}
                                 placement="bottomRight"
-                                overlayClassName="moreActionDropdown"
-                                overlay={
-                                  <Menu>
+                                classNames={{ root: "moreActionDropdown" }}
+                                popupRender={() => <Menu>
                                     <MenuItem onClick={() => downloadBackup(item)}>{_l('下载应用')}</MenuItem>
                                     {containData && dataStatus === 1 ? (
                                       <MenuItem onClick={() => downloadData(item)}>
@@ -490,8 +489,7 @@ export default function BackupFiles(props) {
                                         </MenuItem>
                                       </Tooltip>
                                     )}
-                                  </Menu>
-                                }
+                                  </Menu>}
                               >
                                 <span className="Hand mRight20">{_l('下载')}</span>
                               </Dropdown>
@@ -499,9 +497,8 @@ export default function BackupFiles(props) {
                           <Dropdown
                             trigger={['click']}
                             placement="bottomRight"
-                            overlayClassName="moreActionDropdown"
-                            overlay={
-                              <Menu>
+                            classNames={{ root: "moreActionDropdown" }}
+                            popupRender={() => <Menu>
                                 {/* 备份文件列表中，开发者无“下载备份和还原为新应用”权限 */}
                                 {!expired &&
                                   permissionType !== APP_ROLE_TYPE.DEVELOPERS_ROLE &&
@@ -515,8 +512,7 @@ export default function BackupFiles(props) {
                                 <MenuItem className="delete" onClick={() => deleteBackup(item)}>
                                   <span>{_l('删除')}</span>
                                 </MenuItem>
-                              </Menu>
-                            }
+                              </Menu>}
                           >
                             <Icon icon="more_horiz" className="textTertiary Hand Font18 more_horiz" />
                           </Dropdown>

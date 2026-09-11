@@ -28,7 +28,6 @@ import UpgradeSelectApp from '../UpgradeSelectApp';
 import UpgradeStatus from '../UpgradeStatus';
 import './index.less';
 
-const { Step } = Steps;
 
 export const detailTypeList = UPGRADE_DETAIL_TYPE_LIST.map(v => v.type);
 export const upgradeTypeList = UPGARADE_TYPE_LIST.map(v => v.type);
@@ -885,11 +884,11 @@ export default class UpgradeProcess extends Component<any, any> {
         </div>
         <div className={cx('upgradeProcessContent', { pBottom68: batchUpdate })}>
           <Fragment>
-            <Steps current={current} className="mBottom20">
-              {items.map(item => {
-                return <Step key={item.title} title={item.title} disabled={true}></Step>;
-              })}
-            </Steps>
+            <Steps
+              current={current}
+              className="mBottom20"
+              items={items.map(item => ({ key: item.title, title: item.title, disabled: true }))}
+            />
           </Fragment>
           {this[items[current].key]()}
           {this.renderFooter()}

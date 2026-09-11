@@ -418,8 +418,8 @@ export default class MoreOverlay extends Component<any, any> {
             trigger={['click']}
             placement={placement}
             open={dropdownVisible}
-            onVisibleChange={this.handleUpdateDropdownVisible}
-            overlay={this.renderOverlay()}
+            onOpenChange={this.handleUpdateDropdownVisible}
+            popupRender={() => this.renderOverlay()}
           >
             <span className={className}>
               <Icon className="chartCardMoreIcon" icon="more_horiz" />

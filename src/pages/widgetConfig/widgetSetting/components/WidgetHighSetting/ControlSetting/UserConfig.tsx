@@ -210,16 +210,14 @@ export default function UserConfig(props) {
               <Dropdown
                 trigger={['click']}
                 open={overlayVisible}
-                onVisibleChange={setVisible}
-                overlay={
-                  <DropdownContent>
+                onOpenChange={setVisible}
+                popupRender={() => <DropdownContent>
                     {USER_RANGE.map(item => (
                       <div className="item" onClick={() => handleClick(item)}>
                         {item.text}
                       </div>
                     ))}
-                  </DropdownContent>
-                }
+                  </DropdownContent>}
               >
                 <div className="defaultOptionsWrap">
                   {chooseRange.length > 0 ? (

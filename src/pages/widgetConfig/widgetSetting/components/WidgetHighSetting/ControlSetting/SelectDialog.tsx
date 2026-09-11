@@ -120,7 +120,7 @@ export default function SelectCountryDialog(props) {
     <Dialog title={title} visible onOk={() => onOk(data)} onCancel={onCancel} dialogClasses="selectDialogZIndex">
       <Dropdown
         trigger={['click']}
-        overlay={<SelectCountryDropdown data={data} setData={setData} selectableData={getSelectableData()} />}
+        popupRender={() => <SelectCountryDropdown data={data} setData={setData} selectableData={getSelectableData()} />}
       >
         <SelectInfoWrap>
           <div className="countryList">
@@ -202,7 +202,7 @@ export function SelectAreaCountryDialog(props) {
     <Dialog title={title} visible onOk={() => onOk(selectableData)} onCancel={onCancel}>
       <Dropdown
         trigger={['click']}
-        overlay={<SelectAreaCountryDropdown data={data} setData={setSelectData} selectableData={selectableData} />}
+        popupRender={() => <SelectAreaCountryDropdown data={data} setData={setSelectData} selectableData={selectableData} />}
       >
         <SelectInfoWrap>
           <div className="countryList">

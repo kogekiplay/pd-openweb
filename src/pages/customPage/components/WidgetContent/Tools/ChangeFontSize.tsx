@@ -11,7 +11,7 @@ export default props => {
   return (
     <Popover
       placement="bottom"
-      arrowPointAtCenter={true}
+      arrow={{ pointAtCenter: true }}
       content={
         <div className="changeFontSizePopover flexRow">
           <Slider

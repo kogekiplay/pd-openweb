@@ -14,7 +14,6 @@ import { UPGRADE_ERRORMSG } from 'src/pages/AppSettings/config.js';
 import { formatFileSize } from 'src/utils/common';
 import UpgradeItemWrap from './UpgradeItemWrap';
 
-const { Step } = Steps;
 
 const Wrap = styled.div`
   width: 100%;
@@ -370,11 +369,11 @@ function Upgrade(props) {
         </div>
         <div className={cx('upgradeProcessContent')}>
           <Fragment>
-            <Steps current={current} className="mBottom20">
-              {ITEMS.map(item => {
-                return <Step key={item.title} title={item.title} disabled={true}></Step>;
-              })}
-            </Steps>
+            <Steps
+              current={current}
+              className="mBottom20"
+              items={ITEMS.map(item => ({ key: item.title, title: item.title, disabled: true }))}
+            />
           </Fragment>
           {renderCon()}
           {current !== 0 && renderFooter()}

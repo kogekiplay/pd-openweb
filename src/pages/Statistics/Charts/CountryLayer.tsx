@@ -713,12 +713,12 @@ export class CountryLayer extends Component<any, any> {
       (<div className="flex flexColumn chartWrapper countryLayerChart Relative">
         <Dropdown
           open={dropdownVisible}
-          onVisibleChange={dropdownVisible => {
+          onOpenChange={dropdownVisible => {
             this.setState({ dropdownVisible });
           }}
           trigger={['click']}
           placement="bottomLeft"
-          overlay={this.renderOverlay()}
+          popupRender={() => this.renderOverlay()}
         >
           <div className="Absolute" style={{ left: offset.x, top: offset.y }} />
         </Dropdown>

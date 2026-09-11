@@ -70,7 +70,7 @@ export default function Text(props) {
             return (
               <Popover
                 color="black"
-                overlayClassName="textMarkdownTipsContainer"
+                classNames={{ root: "textMarkdownTipsContainer" }}
                 content={item.value === 3 ? <MarkdownTips /> : ''}
                 placement="bottomRight"
               >
