@@ -50,6 +50,12 @@
   }
 
   .ant-tree.ant-tree-directory .ant-tree-treenode-selected {
+    // antd 5 起，目录树选中态的高亮从 ::before 挪到了【节点元素本身】：
+    //   .ant-tree.ant-tree-directory .ant-tree-treenode-selected { background: #1677ff }
+    // 而本仓的设计是「浅蓝底 + 主题色文字」，浅蓝底是靠下面那条 ::before 画的。
+    // 不中和这条的话就是实心蓝底压着主题色蓝字，文字等于看不见（线上实测就是一条空白蓝条）。
+    // 注意类名两版完全一致，变的是「样式挂在哪个元素上」—— 只比类名的差分抓不到这种。
+    background: transparent;
     .treeNodeIcon,
     .departmentName {
       color: var(--color-primary) !important;
