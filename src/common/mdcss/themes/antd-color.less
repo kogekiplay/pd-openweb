@@ -107,16 +107,26 @@
 }
 
 .ant-select:not(.customAntSelect) {
+  /* antd 6 把 Select 的边框/底色从内层 .ant-select-selector（v6 改名 .ant-select-content）
+     上移到了根节点 .ant-select，并全部改由 CSS 变量驱动
+     （antd/es/select/style/select-input.js:60 起：borderColor: var(--ant-select-border-color) 等）。
+     照 v5 写法继续给内层涂底色，结果是 antd 的白底描边盒里套一块灰底 —— 全站下拉框都会这样。
+     所以这里改成设变量：不用跟 antd 自己的规则拼特异性，hover/focus/disabled 由 antd 的
+     变体规则改同一批变量，特异性更高，交互态自然还归它管；下面只覆盖需要改的态。 */
   color: var(--color-text-primary) !important;
+  --ant-select-border-color: var(--color-border-primary);
+  --ant-select-background-color: var(--color-background-input);
   &:not(.ant-select-customize-input) .ant-select-content {
-    border-color: var(--color-border-primary) !important;
-    background-color: var(--color-background-input) !important;
+    background-color: transparent !important;
   }
-  &.ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-content {
-    border-color: var(--color-primary) !important;
+  &.ant-select-focused:not(.ant-select-disabled):not(.ant-select-customize-input) {
+    --ant-select-border-color: var(--color-primary);
     box-shadow: none !important;
   }
   &.ant-select-disabled {
+    /* 单选值节点 v6 叫 .ant-select-content-value；多选态仍叫 .ant-select-selection-item
+       （antd/es/select/style/select-input-multiple.js:72），所以两个都要写。 */
+    .ant-select-content-value,
     .ant-select-selection-item {
       color: var(--color-text-disabled) !important;
     }
@@ -131,7 +141,7 @@
   .ant-select-suffix {
     color: var(--color-text-tertiary) !important;
   }
-  .ant-select-selection-placeholder {
+  .ant-select-placeholder {
     color: var(--color-text-placeholder) !important;
   }
   &.ant-select-multiple {

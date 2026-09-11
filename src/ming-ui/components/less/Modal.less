@@ -4,6 +4,18 @@
 .mdModal {
   padding: 0px !important;
   white-space: initial;
+  .ant-modal-close {
+    /* v4 的 .ant-modal-close 是 top:0 / inset-inline-end:0 贴角，尺寸由 MdModal 传的
+       closeSize 决定（它给 closeIcon 的 <i> 设 width/height/line-height = closeSize）。
+       v5 起 antd 改成 top / inset-inline-end = (modalHeaderHeight - closeBtnSize) / 2，
+       等于往里缩了约 17px —— 于是这个叉跟弹窗自己那排图标（分享 / 全屏 / ···）挤在一起，
+       间距比它们彼此之间小一半，看着不在一条节奏上。这里恢复 v4 的贴角定位。
+       同时去掉 v5 新增的 hover 灰底圆角：v4 没有，旁边那排图标也没有，只靠变色反馈
+       （下面 .ant-modal-close-x:hover 已经把图标变成主色）。 */
+    top: 0;
+    inset-inline-end: 0;
+    background: transparent !important;
+  }
   .ant-modal-close-x {
     color: var(--color-text-tertiary);
     width: auto;

@@ -121,7 +121,7 @@
       cursor: text;
       .ant-select-content {
         pointer-events: none;
-        .ant-select-selection-item {
+        .ant-select-content-value {
           cursor: text !important;
           user-select: all !important;
         }
@@ -918,9 +918,9 @@
     }
 
     .customTreeSelect {
-      .ant-select-selection-placeholder,
-      .ant-select-selection-item {
-        line-height: 34px;
+      .ant-select-placeholder,
+      .ant-select-content-value {
+        line-height: 24px;
         overflow: hidden;
         white-space: nowrap;
       }
@@ -961,18 +961,31 @@
       }
     }
 
-    .customAntSelect:not(.optionDisabled) {
-      .ant-select-content {
-        border: 1px solid var(--color-border-primary) !important;
-        background-color: var(--color-background-input) !important;
-        &:hover {
-          border-color: var(--color-text-placeholder) !important;
-        }
+    // 【antd 6 把 Select 的「盒子」从内层挪到了根节点】
+    // v5：.ant-select 只是个壳，边框/底色/内边距/高度都画在 .ant-select-selector 上，
+    //     箭头 .ant-select-arrow 是绝对定位盖上去的，所以把盒子画在内层没问题。
+    // v6：.ant-select-selector 改名 .ant-select-content，并且【只剩内容行】——
+    //     边框/底色/内边距/高度全部上移到根节点 .ant-select，
+    //     而 .ant-select-suffix / .ant-select-clear 变成了 content 的兄弟、同在根节点里。
+    // 于是照 v5 写法给内层画边框，看到的就是「antd 的白色描边盒 套 我们的灰盒，
+    // 箭头夹在两层之间」——即用户说的「下拉框很丑」；高度也从 36 变成 46。
+    //
+    // v6 的盒子完全由 CSS 变量驱动（antd/es/select/style/select-input.js:60 起：
+    // borderColor: var(--ant-select-border-color) 等），所以改法是设变量而不是拼特异性。
+    // 注意 hover/focus/disabled 由 antd 自己的变体规则改同一批变量，特异性比这里高，
+    // 所以只需要给「静止态」赋值，交互态仍走 antd 的；要覆盖就按下面这样带上同样的态。
+    .ant-select.customAntSelect:not(.optionDisabled) {
+      --ant-select-border-color: var(--color-border-primary);
+      --ant-select-background-color: var(--color-background-input);
+      &:not(.ant-select-disabled):hover {
+        --ant-select-border-color: var(--color-text-placeholder);
       }
       &.ant-select-open {
-        .ant-select-content {
-          border-color: var(--color-primary) !important;
-        }
+        --ant-select-border-color: var(--color-primary);
+      }
+      .ant-select-content {
+        border: 0 !important;
+        background-color: transparent !important;
       }
     }
 
@@ -1125,16 +1138,35 @@ input.customFormControlBox:disabled {
   -webkit-text-fill-color: var(--color-text-primary);
 }
 
-.customAntSelect {
+// 【必须写成 .ant-select.customAntSelect，不能只写 .customAntSelect】
+// antd 6 的 border-color / background-color 两个变量是在变体规则
+// `:where(.css-hash).ant-select.ant-select-outlined` 上赋值的，特异性 (0,2,0)。
+// 单写 .customAntSelect 只有 (0,1,0)，会被它盖掉 —— 现象很迷惑：同一个块里
+// --ant-select-border-radius / --ant-select-padding-horizontal 生效了（antd 只在
+// (0,1,0) 的 .ant-select 上给这两个默认值），偏偏边框色和底色不生效。
+// 补一个 .ant-select 凑成 (0,2,0) 打平即可：我们的样式表在 antd 之后（antd 走 rc-util
+// prependQueue 插到 <head> 最前），平手时后者胜。
+.ant-select.customAntSelect {
+  --ant-select-border-radius: 4px;
+  --ant-select-padding-horizontal: 12px;
+  --ant-select-font-size: 13px;
+  // 直接给定上下内边距，不走 antd 由 --ant-select-height 推导的那条 calc。
+  // 目标是「空态和选中态都跟文本框一样高 36」：
+  //   选中态 = 胶囊 24（.customAntDropdownTitle 固定高）+ 5*2 + 边框 1*2 = 36
+  //   空态   = 占位行高 24                              + 5*2 + 边框 1*2 = 36
+  // 多选态不受影响：antd 用的是另一套 --ant-select-multi-padding-vertical。
+  --ant-select-padding-vertical: 5px;
+  --ant-select-border-color: var(--color-background-secondary);
+  --ant-select-background-color: var(--color-background-secondary);
+  box-shadow: none !important;
+
   &.ant-select-open {
-    .ant-select-content {
-      border-color: var(--color-primary) !important;
-      background-color: var(--color-background-primary) !important;
-    }
+    --ant-select-border-color: var(--color-primary);
+    --ant-select-background-color: var(--color-background-primary);
     .ant-select-suffix {
       display: none;
     }
-    .ant-select-selection-item {
+    .ant-select-content-value {
       opacity: 0.4;
     }
   }
@@ -1146,6 +1178,7 @@ input.customFormControlBox:disabled {
     border-radius: 50%;
   }
 
+  .ant-select-content-value,
   .ant-select-selection-item {
     color: var(--color-text-primary) !important;
   }
@@ -1173,19 +1206,28 @@ input.customFormControlBox:disabled {
     }
   }
 
+  .ant-select-content-value,
   .ant-select-selection-item,
-  .ant-select-selection-placeholder {
-    line-height: 34px !important;
+  .ant-select-placeholder {
+    line-height: 24px !important;
     font-size: 13px !important;
   }
 
+  // v5 的内层没有内边距，选中值那个 24px 高的胶囊靠自己的 mTop5/mBottom5 撑出
+  // 24+10=34，加边框正好 36。v6 的留白已经由根节点的 padding-vertical 给了，
+  // 再叠这 10px 就是 48 —— 比旁边的文本框高一截。单选态去掉这对外边距即可；
+  // 多选态要靠它换行时分隔多个胶囊，所以限定在 .ant-select-single。
+  &.ant-select-single .ant-select-content-value > * {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
   &.ant-select-disabled {
-    .ant-select-content {
-      color: var(--color-text-primary) !important;
-      border-color: var(--color-background-primary) !important;
-      background: var(--color-background-primary) !important;
-      padding: 0 !important;
-    }
+    --ant-select-border-color: var(--color-background-primary);
+    --ant-select-background-color: var(--color-background-primary);
+    --ant-select-padding-horizontal: 0;
+    --ant-select-color: var(--color-text-primary);
+    .ant-select-content-value,
     .ant-select-selection-item {
       color: var(--color-text-primary) !important;
       padding: 0;
@@ -1195,23 +1237,17 @@ input.customFormControlBox:disabled {
     }
   }
 
-  &:not(.ant-select-open):not(.ant-select-disabled) {
-    .ant-select-content {
-      &:hover {
-        border-color: var(--color-background-secondary) !important;
-        background-color: var(--color-background-secondary) !important;
-      }
-    }
+  &:not(.ant-select-open):not(.ant-select-disabled):hover {
+    --ant-select-border-color: var(--color-background-secondary);
+    --ant-select-background-color: var(--color-background-secondary);
   }
 
+  // 内层只剩内容行，不再画盒子（盒子在根节点上，见文件上方那段注释）。
   .ant-select-content {
-    min-height: 36px;
-    padding: 0 12px !important;
-    height: auto !important;
-    border-radius: 4px !important;
+    border: 0 !important;
+    padding: 0 !important;
+    background-color: transparent !important;
     box-shadow: none !important;
-    border-color: var(--color-background-secondary) !important;
-    background-color: var(--color-background-secondary) !important;
   }
 
   &.ant-select-multiple {
@@ -1219,10 +1255,6 @@ input.customFormControlBox:disabled {
       > span {
         max-width: 95%;
       }
-    }
-    .ant-select-selection-search {
-      left: 0 !important;
-      margin-left: -1px;
     }
     .ant-select-input {
       margin-left: 0 !important;
@@ -1238,10 +1270,6 @@ input.customFormControlBox:disabled {
         }
       }
     }
-  }
-
-  .ant-select-selection-search {
-    left: 12px !important;
   }
 
   .ant-select-input {
@@ -1265,7 +1293,7 @@ input.customFormControlBox:disabled {
       color: var(--color-text-secondary);
     }
   }
-  .ant-select-selection-placeholder {
+  .ant-select-placeholder {
     color: var(--color-text-disabled);
   }
 }
