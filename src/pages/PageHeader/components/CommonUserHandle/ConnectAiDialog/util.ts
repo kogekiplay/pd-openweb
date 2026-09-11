@@ -173,6 +173,7 @@ export const getInstallTip = ({ activeTab, canInstall, currentTool, isOtherTool,
   }
 
   return currentTool.injectChat
-    ? _l('将打开%0，并填入安装提示词，请在客户端确认执行', currentTool.label)
+    ? _l('将打开%0，并填入安装提示词，请在客户端确认执行', currentTool.label) +
+        (currentTool.key === 'claude-code' ? _l('。需开通 Code 功能，并建议使用最新版客户端。') : '')
     : _l('将复制安装提示词，并打开%0，请在客户端粘贴后执行', currentTool.label);
 };

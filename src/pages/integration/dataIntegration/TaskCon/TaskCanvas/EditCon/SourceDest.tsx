@@ -493,7 +493,7 @@ export default class SourceDest extends Component<any, any> {
   render() {
     const { currentProjectId: projectId } = this.props;
     const { node = {} } = this.state;
-    const { dbList = [], sheetList = [], schemaList = [], appInfo = {}, worksheetInfo = {}, loading } = this.state;
+    const { dbList = [], sheetList = [], schemaList = [], appInfo = {}, loading } = this.state;
     const {
       dbName = '',
       appId,
@@ -776,19 +776,7 @@ export default class SourceDest extends Component<any, any> {
                               className="mLeft10 Font12 colorPrimary hoverColorPrimaryDark Hand"
                               onClick={e => {
                                 e.stopPropagation();
-                                if (!_.get(worksheetInfo, 'sectionId')) {
-                                  this.getWorksheetInfo(workSheetId, worksheetInfo => {
-                                    window.open(
-                                      pathCompletion(
-                                        !_.get(worksheetInfo, 'sectionId')
-                                          ? `/app/${dbValue}`
-                                          : `/app/${dbValue}/${_.get(worksheetInfo, 'sectionId')}/${tbValue}`,
-                                      ),
-                                    );
-                                  });
-                                } else {
-                                  window.open(pathCompletion(`/app/${dbValue}/${worksheetInfo.sectionId}/${tbValue}`));
-                                }
+                                window.open(pathCompletion(`/worksheet/${workSheetId}`));
                               }}
                             />
                           )}

@@ -1483,7 +1483,13 @@ export const getAppFeaturesPath = () => {
 };
 
 // 路径补全
-export const pathCompletion = (url, parameters = { hasDomain: true, localHasDomain: false }) => {
+// parameters 的类型不能靠默认值推断 —— 那样会推成两个字段都必填，
+// 而全仓大量调用点只传 { hasDomain: false }（navigateTo、portalAccount/util 等）。
+// 显式标成可选：缺省时 localHasDomain 是 undefined，与原来传 false 同为假值，行为不变。
+export const pathCompletion = (
+  url,
+  parameters: { hasDomain?: boolean; localHasDomain?: boolean } = { hasDomain: true, localHasDomain: false },
+) => {
   if (!url || url.startsWith('#') || url.startsWith('http')) return url;
 
   const { hasDomain, localHasDomain } = parameters;

@@ -70,9 +70,6 @@ rewrite (?i)^/cancellation /cancellation.html break;
 # 个人账户邮箱验证
 rewrite (?i)^/emailvalidate /emailvalidate.html break;
 
-# install安装
-rewrite (?i)^/privateImageInstall /privateImageInstall.html break;
-
 # auth
 rewrite (?i)^/tpAuthPortal /account-login-tpAuthPortal.html break;
 rewrite (?i)^/tpAuthApp /account-login-tpAuthApp.html break;

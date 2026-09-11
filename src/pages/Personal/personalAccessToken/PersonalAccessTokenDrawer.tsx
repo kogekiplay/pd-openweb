@@ -12,7 +12,6 @@ import AuthAppList from 'src/pages/Admin/components/AuthAppList';
 
 const CUSTOM_VALIDITY = 'custom';
 const DATE_FORMAT = 'YYYY-MM-DD HH:mm';
-const VALIDITY_EXPIRE_FORMAT = 'M月D日 HH:mm';
 const ALL_PROJECTS_VALUE = 'all_projects';
 const ENTITY_SCOPE_TYPE = {
   ALL: 1,
@@ -46,7 +45,7 @@ const getValidityValue = ({ validityType, days }) =>
   validityType === 1 ? days : validityType === 2 ? CUSTOM_VALIDITY : 0;
 
 const getValidityExpireTime = days =>
-  _.isNumber(days) && days > 0 ? moment().add(days, 'days').format(VALIDITY_EXPIRE_FORMAT) : '';
+  _.isNumber(days) && days > 0 ? moment().add(days, 'days').format(_l('MM月DD日 HH:mm')) : '';
 
 const getValidityFields = value => {
   if (value === CUSTOM_VALIDITY) {
