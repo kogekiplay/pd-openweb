@@ -99,7 +99,11 @@ export default function FilterControl(props) {
           )}
         </div>
         <Select
-          showSearch
+          showSearch={{ filterOption: (searchValue, option) => {
+            const { value } = option;
+            const { controlName } = _.find(templateControls, { controlId: value }) || {};
+            return searchValue && controlName ? controlName.toLowerCase().includes(searchValue.toLowerCase()) : true;
+          } }}
           className={cx('customPageSelect w100', { Red: item.controlId && !currentControl })}
           value={item.controlId ? (currentControl ? item.controlId : _l('字段已删除')) : undefined}
           disabled={index && (lastControl.controlId ? false : true)}
@@ -107,11 +111,6 @@ export default function FilterControl(props) {
           placeholder={_l('请选择筛选字段')}
           notFoundContent={notFoundContent()}
           getPopupContainer={() => document.querySelector('.customPageFilterWrap .setting')}
-          filterOption={(searchValue, option) => {
-            const { value } = option;
-            const { controlName } = _.find(templateControls, { controlId: value }) || {};
-            return searchValue && controlName ? controlName.toLowerCase().includes(searchValue.toLowerCase()) : true;
-          }}
           onChange={value => {
             const { objectControls = [] } = filter;
             const newControls = objectControls.map(f => {

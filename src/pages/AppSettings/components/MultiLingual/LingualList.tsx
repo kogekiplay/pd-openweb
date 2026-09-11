@@ -141,13 +141,12 @@ export default function LingualList(props) {
       <Select
         className="mTop10 mBottom10"
         style={{ width: 'max-content', minWidth: 300 }}
-        showSearch={true}
-        allowClear={true}
-        notFoundContent={<div className="valignWrapper">{_l('暂无数据')}</div>}
-        filterOption={(searchValue, option) => {
+        showSearch={{ filterOption: (searchValue, option) => {
           const name = renderLangName(_.find(allLangList, { langCode: option.value }));
           return searchValue && name ? name.toLowerCase().includes(searchValue.toLowerCase()) : true;
-        }}
+        } }}
+        allowClear={true}
+        notFoundContent={<div className="valignWrapper">{_l('暂无数据')}</div>}
         value={originalLang || app.originalLang || null}
         placeholder={_l('未设置')}
         suffixIcon={<Icon icon="expand_more" className="textTertiary Font20" style={{ marginRight: -4 }} />}

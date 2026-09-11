@@ -193,14 +193,13 @@ export default function CreateDialog(props) {
           suffixIcon={<Icon icon="arrow-down-border Font14" />}
           labelInValue={true}
           allowClear={true}
-          showSearch={true}
+          showSearch={{ filterOption: (inputValue, option) => {
+            return option.label.toLowerCase().includes(inputValue.toLowerCase());
+          } }}
           placeholder={_l('请选择')}
           notFoundContent={fetching ? <LoadDiv size="small" /> : _l('暂无应用')}
           options={appList}
           value={appInfo && appInfo.appId ? { label: appInfo.sourceName, value: appInfo.appId } : undefined}
-          filterOption={(inputValue, option) => {
-            return option.label.toLowerCase().includes(inputValue.toLowerCase());
-          }}
           onChange={(app = {}) => {
             if (app.value === appInfo.appId) return;
             setState({
@@ -217,15 +216,14 @@ export default function CreateDialog(props) {
           suffixIcon={<Icon icon="arrow-down-border Font14" />}
           mode="multiple"
           allowClear={true}
-          showSearch={true}
+          showSearch={{ filterOption: (inputValue, option) => {
+            return option.workSheetName.toLowerCase().includes(inputValue.toLowerCase());
+          } }}
           labelInValue={true}
           placeholder={_l('请选择')}
           notFoundContent={_l('暂无数据')}
           options={getWorksheetList()}
           value={worksheetInfos}
-          filterOption={(inputValue, option) => {
-            return option.workSheetName.toLowerCase().includes(inputValue.toLowerCase());
-          }}
           onChange={worksheetInfos => {
             setState({
               worksheetInfos,

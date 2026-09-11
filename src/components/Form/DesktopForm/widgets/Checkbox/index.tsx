@@ -317,18 +317,15 @@ const CheckboxWidgets = props => {
           classNames={{ popup: { root: dropdownClassName } }}
           className={cx('w100 customAntSelect', { optionDisabled: disabled })}
           disabled={disabled}
-          showSearch
+          showSearch={{ filterOption: () => true, onSearch: keywords => setKeywords(keywords.trim()), autoClearSearchValue: false }}
           allowClear={checkIds.length > 0}
-          autoClearSearchValue={false}
           listHeight={320}
           placeholder={hint}
           value={checkIds}
           tagRender={tagRender}
           showArrow
           suffixIcon={<Icon icon="arrow-down-border Font14" />}
-          filterOption={() => true}
           notFoundContent={<span className="textTertiary">{_l('无搜索结果')}</span>}
-          onSearch={keywords => setKeywords(keywords.trim())}
           onKeyDown={createEventHandler}
           onOpenChange={open => {
             setKeywords('');

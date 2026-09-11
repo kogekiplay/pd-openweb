@@ -342,7 +342,9 @@ export default function ConfigForm(props) {
               className="selectItem"
               labelInValue={true}
               allowClear={true}
-              showSearch={true}
+              showSearch={{ filterOption: (inputValue, option) => {
+                return option.label.toLowerCase().includes(inputValue.toLowerCase());
+              } }}
               placeholder={_l('请选择')}
               notFoundContent={appOptionList.fetching ? <LoadDiv size="small" /> : _l('暂无应用')}
               options={appOptionList.list}
@@ -351,9 +353,6 @@ export default function ConfigForm(props) {
                   ? { label: connectorConfigData[roleType].sourceName, value: connectorConfigData[roleType].id }
                   : {}
               }
-              filterOption={(inputValue, option) => {
-                return option.label.toLowerCase().includes(inputValue.toLowerCase());
-              }}
               onChange={app => {
                 setSaveDisabled(!app);
                 setConnectorConfigData({

@@ -151,7 +151,19 @@ export default function SelectTables(props) {
     <Select
       listHeight={240}
       allowClear={true}
-      showSearch={true}
+      showSearch={{ filterOption: (inputValue, option) => {
+        return (
+          ((isAppType ? options : searchOptions).find(item => item.value === option.value) || {})[
+            isAppType ? 'workSheetName' : 'value'
+          ] || ''
+        )
+          .toLowerCase()
+          .includes(inputValue.toLowerCase());
+      }, onSearch: !isAppType
+          ? _.debounce(value => {
+              setFetchState({ tableName: value });
+            }, 500)
+          : _.noop }}
       labelInValue={true}
       placeholder={_l('请选择')}
       notFoundContent={fetchState.loading ? <div></div> : _l('暂无数据')}
@@ -161,25 +173,9 @@ export default function SelectTables(props) {
       disabled={disabled}
       value={value}
       onChange={onChangeTable}
-      onSearch={
-        !isAppType
-          ? _.debounce(value => {
-              setFetchState({ tableName: value });
-            }, 500)
-          : _.noop
-      }
       onBlur={() => {
         setFetchState({ tableName: '' });
         setSearchOptions([]);
-      }}
-      filterOption={(inputValue, option) => {
-        return (
-          ((isAppType ? options : searchOptions).find(item => item.value === option.value) || {})[
-            isAppType ? 'workSheetName' : 'value'
-          ] || ''
-        )
-          .toLowerCase()
-          .includes(inputValue.toLowerCase());
       }}
       popupRender={menu => (
         <React.Fragment>

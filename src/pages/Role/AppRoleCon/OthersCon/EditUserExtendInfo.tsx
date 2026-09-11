@@ -167,12 +167,10 @@ export default function EditUserExtendInfo(props) {
       </div>
       <div className="selectTitle Bold valignWrapper mTop30">{_l('选择应用')}</div>
       <Select
-        showSearch
+        showSearch={{ filterOption: (input, option) => (option.children || '').toLowerCase().includes(input.toLowerCase()), optionFilterProp: "workSheetName" }}
         className="selectWorksheet mTop8"
         loading={loading}
         placeholder={_l('选择应用')}
-        optionFilterProp="workSheetName"
-        filterOption={(input, option) => (option.children || '').toLowerCase().includes(input.toLowerCase())}
         value={
           appList.find(l => l.appId === data.appId)
             ? data.appId
@@ -198,12 +196,10 @@ export default function EditUserExtendInfo(props) {
         </Tooltip>
       </div>
       <Select
-        showSearch
+        showSearch={{ filterOption: (input, option) => (option.children || '').toLowerCase().includes(input.toLowerCase()), optionFilterProp: "workSheetName" }}
         className="selectWorksheet mTop8"
         loading={loading}
         placeholder={_l('选择工作表')}
-        optionFilterProp="workSheetName"
-        filterOption={(input, option) => (option.children || '').toLowerCase().includes(input.toLowerCase())}
         value={
           worksheetList.find(l => l.workSheetId === data.worksheetId)
             ? data.worksheetId
@@ -229,12 +225,10 @@ export default function EditUserExtendInfo(props) {
         </Tooltip>
       </div>
       <Select
-        showSearch
+        showSearch={{ filterOption: (input, option) => (option.children || '').toLowerCase().includes(input.toLowerCase()), optionFilterProp: "controlName" }}
         className="selectControl mTop8"
         loading={loading}
         placeholder={_l('选择用户映射')}
-        optionFilterProp="controlName"
-        filterOption={(input, option) => (option.children || '').toLowerCase().includes(input.toLowerCase())}
         value={controls.find(l => l.controlId === data.controlId) ? data.controlId : undefined}
         onSelect={value => setData({ ...data, controlId: value })}
         notFoundContent={<span>{data.worksheetId ? _l('该工作表无"成员"字段') : _l('请先选择工作表')}</span>}

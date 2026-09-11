@@ -737,22 +737,20 @@ export default class LimitAttachmentUpload extends Component<any, any> {
                 <Select
                   className="mdAntSelect w200 mRight20"
                   placeholder={_l('所属应用')}
-                  showSearch
-                  allowClear
-                  options={appList}
-                  value={appIds}
-                  mode="multiple"
-                  maxTagCount="responsive"
-                  notFoundContent={() => <span className="textTertiary">{_l('无搜索结果')}</span>}
-                  filterOption={(inputValue, option) => {
+                  showSearch={{ filterOption: (inputValue, option) => {
                     return (
                       appList
                         .find(item => item.value === option.value)
                         .label.toLowerCase()
                         .indexOf(inputValue.toLowerCase()) > -1
                     );
-                  }}
-                  onSearch={_.debounce(val => this.setState({ keyword: val, appPageIndex: 1 }, this.getAppList), 500)}
+                  }, onSearch: _.debounce(val => this.setState({ keyword: val, appPageIndex: 1 }, this.getAppList), 500) }}
+                  allowClear
+                  options={appList}
+                  value={appIds}
+                  mode="multiple"
+                  maxTagCount="responsive"
+                  notFoundContent={() => <span className="textTertiary">{_l('无搜索结果')}</span>}
                   onClear={() =>
                     this.setState({ appPageIndex: 1, keyword: '', worksheetIds: [] }, () => {
                       this.getAppList();
@@ -788,21 +786,20 @@ export default class LimitAttachmentUpload extends Component<any, any> {
                   <Select
                     className="mdAntSelect w200"
                     placeholder={_l('请选择')}
-                    showSearch
-                    allowClear
-                    value={worksheetIds}
-                    mode="multiple"
-                    maxTagCount="responsive"
-                    disabled={_.isEmpty(appIds)}
-                    notFoundContent={() => <span className="textTertiary">{_l('无搜索结果')}</span>}
-                    filterOption={(inputValue, option) => {
+                    showSearch={{ filterOption: (inputValue, option) => {
                       return (
                         worksheetList
                           .find(item => item.value === option.value)
                           .label.toLowerCase()
                           .indexOf(inputValue.toLowerCase()) > -1
                       );
-                    }}
+                    } }}
+                    allowClear
+                    value={worksheetIds}
+                    mode="multiple"
+                    maxTagCount="responsive"
+                    disabled={_.isEmpty(appIds)}
+                    notFoundContent={() => <span className="textTertiary">{_l('无搜索结果')}</span>}
                     onClear={() => this.setState({ worksheetIds: [] })}
                     onChange={value => this.setState({ worksheetIds: value })}
                   >

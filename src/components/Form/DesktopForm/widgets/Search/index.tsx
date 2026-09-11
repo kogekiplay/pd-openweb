@@ -352,10 +352,9 @@ const Search = props => {
         allowClear={value}
         listHeight={320}
         optionLabelProp="label"
-        searchValue={keywords}
         value={value}
         placeholder={hint || _l('请选择')}
-        showSearch={true}
+        showSearch={{ searchValue: keywords }}
         suffixIcon={suffixIcon}
         {...{ ...defaultSelectProps, ...selectProps }}
         notFoundContent={

@@ -445,8 +445,7 @@ function ConnectAiDialog({ visible, projectId, initialPersonalTokens = null, onC
                   placeholder={_l('选择应用')}
                   notFoundContent={_l('暂无数据')}
                   value={selectedAppId || undefined}
-                  showSearch
-                  optionFilterProp="label"
+                  showSearch={{ optionFilterProp: "label" }}
                   options={apps.map(item => ({ label: item.name, value: item.id }))}
                   onChange={setSelectedAppId}
                 />

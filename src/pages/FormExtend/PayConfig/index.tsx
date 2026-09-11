@@ -784,19 +784,17 @@ export default class PayConfig extends Component<any, any> {
                 {expireTime ? (
                   <Select
                     className="w100 mdAntSelect"
-                    showSearch
+                    showSearch={{ onSearch: value => {
+                      let val = value.replace(/\D/g, '');
+                      val = val && Number(val) > 30 ? '30' : val;
+                      this.setState({ expireTime: val ? Number(val) : expireTime, searchValue: val });
+                    }, searchValue: searchValue }}
                     placeholder={_l('选择或填写时间')}
                     value={expireTime}
-                    searchValue={searchValue}
                     suffixIcon={<i className="icon icon-arrow-down-border textTertiary" />}
                     options={options}
                     onChange={value => {
                       this.setState({ expireTime: value, searchValue: undefined });
-                    }}
-                    onSearch={value => {
-                      let val = value.replace(/\D/g, '');
-                      val = val && Number(val) > 30 ? '30' : val;
-                      this.setState({ expireTime: val ? Number(val) : expireTime, searchValue: val });
                     }}
                     onOpenChange={open => this.setState({ dropdownVisible: open })}
                   />

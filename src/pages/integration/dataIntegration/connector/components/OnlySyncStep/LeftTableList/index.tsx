@@ -351,15 +351,14 @@ export default function LeftTableList(props) {
                 className="selectItem"
                 mode="multiple"
                 allowClear={true}
-                showSearch={true}
+                showSearch={{ filterOption: (inputValue, option) => {
+                  return option.workSheetName.toLowerCase().includes(inputValue.toLowerCase());
+                } }}
                 labelInValue={true}
                 placeholder={_l('请选择')}
                 notFoundContent={_l('暂无数据')}
                 options={getList()}
                 value={dataObj.tables}
-                filterOption={(inputValue, option) => {
-                  return option.workSheetName.toLowerCase().includes(inputValue.toLowerCase());
-                }}
                 onChange={tables => setDataObj({ tables })}
               />
             </Wrapper>

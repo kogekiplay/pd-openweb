@@ -160,9 +160,8 @@ export default function DynamicRender(props) {
                     <Select
                       className="Height36 flex minWidth0"
                       classNames={{ popup: { root: "mappedFieldPopup" } }}
-                      showSearch
+                      showSearch={{ optionFilterProp: "label" }}
                       optionLabelProp="label"
-                      optionFilterProp="label"
                       value={fromFieldItem.toControlId || ''}
                       placeholder={_l('请选择')}
                       options={

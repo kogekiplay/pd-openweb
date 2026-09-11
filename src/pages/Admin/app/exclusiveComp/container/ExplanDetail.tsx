@@ -281,19 +281,16 @@ function ExplanDetail(props) {
         <div className="actionCon flexRow">
           <Select
             className="selectItem"
-            showSearch
-            defaultValue={filters.apkId}
-            options={appList}
-            onFocus={() => appList.length === 1 && getAppList()}
-            filterOption={(inputValue, option) =>
+            showSearch={{ filterOption: (inputValue, option) =>
               appList
                 .find(item => item.value === option.value)
                 .label.toLowerCase()
-                .indexOf(inputValue.toLowerCase()) > -1
-            }
+                .indexOf(inputValue.toLowerCase()) > -1, onSearch: _.debounce(val => this.setState({ keyword: val }, () => getAppList()), 500) }}
+            defaultValue={filters.apkId}
+            options={appList}
+            onFocus={() => appList.length === 1 && getAppList()}
             suffixIcon={<Icon icon="arrow-down-border Font14" />}
             notFoundContent={<span className="textTertiary">{_l('无搜索结果')}</span>}
-            onSearch={_.debounce(val => this.setState({ keyword: val }, () => getAppList()), 500)}
             onChange={value =>
               setFilters({
                 ...filters,

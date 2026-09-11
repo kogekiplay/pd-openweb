@@ -212,18 +212,17 @@ function Setting(props) {
       <div className="mBottom16">
         <div className="mBottom12">{_l('视图')}</div>
         <Select
-          showSearch
+          showSearch={{ filterOption: (searchValue, option) => {
+            const { value } = option;
+            const { name } = _.find(views, { viewId: value }) || {};
+            return searchValue && name ? name.toLowerCase().includes(searchValue.toLowerCase()) : true;
+          } }}
           className={cx('customPageSelect w100', { Red: viewId && !_.find(views, { viewId }) })}
           value={viewId ? (_.find(views, { viewId }) ? viewId : _l('视图已删除')) : undefined}
           suffixIcon={<Icon icon="expand_more" className="textTertiary Font20" />}
           placeholder={_l('请选择视图')}
           notFoundContent={<div className="valignWrapper textTertiary">{_l('请先选择工作表')}</div>}
           getPopupContainer={() => document.querySelector('.customPageCarouselWrap .setting')}
-          filterOption={(searchValue, option) => {
-            const { value } = option;
-            const { name } = _.find(views, { viewId: value }) || {};
-            return searchValue && name ? name.toLowerCase().includes(searchValue.toLowerCase()) : true;
-          }}
           onChange={value => {
             setComponentConfig({ viewId: value });
           }}

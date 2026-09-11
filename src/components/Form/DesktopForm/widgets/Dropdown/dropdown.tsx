@@ -190,7 +190,7 @@ const DropdownComp = props => {
         classNames={{ popup: { root: dropdownClassName } }}
         className={cx('w100 customAntSelect', { optionDisabled: disabled })}
         disabled={disabled}
-        showSearch
+        showSearch={{ filterOption: () => true, onSearch: handleSearch, optionFilterProp: "children" }}
         open={open}
         allowClear={checkIds.length > 0}
         listHeight={320}
@@ -198,10 +198,7 @@ const DropdownComp = props => {
         placeholder={hint}
         suffixIcon={<Icon icon="arrow-down-border Font14" />}
         labelInValue={true}
-        optionFilterProp="children"
-        filterOption={() => true}
         notFoundContent={<span className="textTertiary">{_l('无搜索结果')}</span>}
-        onSearch={handleSearch}
         onOpenChange={handleDropdownVisibleChange}
         onChange={handleSelectChange}
         onKeyDown={createEventHandler}

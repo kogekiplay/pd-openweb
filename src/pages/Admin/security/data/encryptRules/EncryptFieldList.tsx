@@ -199,24 +199,22 @@ export default class EncryptFieldList extends Component<any, any> {
         <div className="searchWrap flexRow mBottom20">
           <Select
             className="width160 mRight12 mdAntSelect"
-            showSearch
-            allowClear
-            placeholder={_l('全部')}
-            options={appList}
-            value={searchParams.appId}
-            onSearch={_.debounce(val => {
-              this.setState({ keyword: val, appPageIndex: 1 }, this.getAppList);
-            }, 500)}
-            suffixIcon={<Icon icon="arrow-down-border" className="Font18" />}
-            notFoundContent={<span className="textTertiary">{_l('无搜索结果')}</span>}
-            filterOption={(inputValue, option) => {
+            showSearch={{ filterOption: (inputValue, option) => {
               return (
                 appList
                   .find(item => item.value === option.value)
                   .label.toLowerCase()
                   .indexOf(inputValue.toLowerCase()) > -1
               );
-            }}
+            }, onSearch: _.debounce(val => {
+              this.setState({ keyword: val, appPageIndex: 1 }, this.getAppList);
+            }, 500) }}
+            allowClear
+            placeholder={_l('全部')}
+            options={appList}
+            value={searchParams.appId}
+            suffixIcon={<Icon icon="arrow-down-border" className="Font18" />}
+            notFoundContent={<span className="textTertiary">{_l('无搜索结果')}</span>}
             onChange={value => {
               this.changeConditions('appId', value);
               this.getWorksheetList(value);
@@ -246,19 +244,17 @@ export default class EncryptFieldList extends Component<any, any> {
 
           <Select
             className="width160 mRight12 mdAntSelect"
-            showSearch
+            showSearch={{ filterOption: (inputValue, option) =>
+              worksheetList
+                .find(item => item.value === option.value)
+                .label.toLowerCase()
+                .indexOf(inputValue.toLowerCase()) > -1 }}
             allowClear
             placeholder={_l('全部')}
             options={worksheetList}
             disabled={!searchParams.appId}
             value={searchParams.worksheetId}
             onFocus={() => worksheetList.length === 1 && this.getWorksheetList(projectId)}
-            filterOption={(inputValue, option) =>
-              worksheetList
-                .find(item => item.value === option.value)
-                .label.toLowerCase()
-                .indexOf(inputValue.toLowerCase()) > -1
-            }
             suffixIcon={<Icon icon="arrow-down-border" className="Font18" />}
             notFoundContent={<span className="textTertiary">{_l('无搜索结果')}</span>}
             onChange={value => this.changeConditions('worksheetId', value)}

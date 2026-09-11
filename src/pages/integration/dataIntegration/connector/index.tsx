@@ -282,7 +282,9 @@ function Connector(props) {
                         placeholder={_l('请选择')}
                         notFoundContent={_l('暂无数据')}
                         getPopupContainer={() => selectOptionListRef.current}
-                        showSearch={true}
+                        showSearch={{ filterOption: (inputValue, option) => {
+                          return option.name.toLowerCase().includes(inputValue.toLowerCase());
+                        } }}
                         options={sourceOptionsData
                           .filter(t => _.includes([ROLE_TYPE.ALL, item.key.toUpperCase()], t.roleType))
                           .map(item => {
@@ -302,9 +304,6 @@ function Connector(props) {
                             };
                           })}
                         value={_.get(connectorConfigData, [item.key, 'type'])}
-                        filterOption={(inputValue, option) => {
-                          return option.name.toLowerCase().includes(inputValue.toLowerCase());
-                        }}
                         onChange={(_, value) => setConnectorConfigData({ [item.key]: value })}
                       />
                     </div>

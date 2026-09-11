@@ -700,16 +700,14 @@ export default class AppManagement extends Component<any, any> {
             {hasDataBase && (
               <Select
                 className="w180 mdAntSelect mLeft15 Hand"
-                showSearch
-                defaultValue={dbInstanceId}
-                options={dataDBInstances}
-                onFocus={() => dataDBInstances.length === 2 && this.getDBInstances()}
-                filterOption={(inputValue, option) =>
+                showSearch={{ filterOption: (inputValue, option) =>
                   dataDBInstances
                     .find(item => item.value === option.value)
                     .label.toLowerCase()
-                    .indexOf(inputValue.toLowerCase()) > -1
-                }
+                    .indexOf(inputValue.toLowerCase()) > -1 }}
+                defaultValue={dbInstanceId}
+                options={dataDBInstances}
+                onFocus={() => dataDBInstances.length === 2 && this.getDBInstances()}
                 suffixIcon={<Icon icon="arrow-down-border Font14" />}
                 notFoundContent={<span className="textTertiary">{_l('无搜索结果')}</span>}
                 onChange={value => this.updateState({ dbInstanceId: value })}

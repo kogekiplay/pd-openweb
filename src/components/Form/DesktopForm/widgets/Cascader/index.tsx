@@ -501,7 +501,10 @@ export default function CascaderWidget(props) {
           : {})}
         virtual={false}
         placeholder={hint || _l('请选择')}
-        showSearch
+        showSearch={{ onSearch: value => {
+          setKeywords(value);
+          setTreeExpandedKeys([]);
+        } }}
         allowClear={!_.isEmpty(widgetValue)}
         value={
           _.isEmpty(widgetValue) ? [] : widgetValue.map(item => ({ value: item.sid, label: item.name || _l('未命名') }))
@@ -543,10 +546,6 @@ export default function CascaderWidget(props) {
           if (id || !keywords.length) {
             treeSelectChange(id, title);
           }
-        }}
-        onSearch={value => {
-          setKeywords(value);
-          setTreeExpandedKeys([]);
         }}
         onOpenChange={visible => {
           setPopupVisible(visible);

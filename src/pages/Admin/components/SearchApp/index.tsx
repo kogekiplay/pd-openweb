@@ -88,20 +88,18 @@ export default function SearchApp({ projectId, className, mode, onChange = () =>
       <Select
         className={`mdAntSelect ${className}`}
         placeholder={_l('全部应用')}
-        showSearch
+        showSearch={{ filterOption: (input, option) => option.label.toLowerCase().includes(input.toLowerCase()), onSearch: debouncedSearch }}
         allowClear
         showArrow={false}
         value={appId}
         options={appList}
         {...extra}
-        filterOption={(input, option) => option.label.toLowerCase().includes(input.toLowerCase())}
         notFoundContent={<span className="textSecondary">{_l('无搜索结果')}</span>}
         onFocus={() => !appList.length && getAppList()}
         onChange={value => {
           setState({ appId: value });
           onChange(value);
         }}
-        onSearch={debouncedSearch}
         onPopupScroll={handleScroll}
         onClear={() => {
           setState({ keyword: '', pageIndex: 1 });

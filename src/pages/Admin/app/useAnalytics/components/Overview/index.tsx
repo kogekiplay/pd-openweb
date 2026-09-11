@@ -645,22 +645,19 @@ export default class Overview extends Component<any, any> {
               {!this.props.appId && (
                 <Select
                   className="width200 mRight15 mdAntSelect"
-                  showSearch
-                  defaultValue={appId}
-                  options={appList}
-                  onFocus={() => appList.length === 1 && this.getAppList(projectId)}
-                  filterOption={(inputValue, option) =>
+                  showSearch={{ filterOption: (inputValue, option) =>
                     appList
                       .find(item => item.value === option.value)
                       .label.toLowerCase()
-                      .indexOf(inputValue.toLowerCase()) > -1
-                  }
-                  suffixIcon={<Icon icon="arrow-down-border" className="Font18" />}
-                  notFoundContent={<span className="textTertiary">{_l('无搜索结果')}</span>}
-                  onSearch={_.debounce(
+                      .indexOf(inputValue.toLowerCase()) > -1, onSearch: _.debounce(
                     val => this.setState({ keyword: val, appPageIndex: 1 }, () => this.getAppList(projectId)),
                     500,
-                  )}
+                  ) }}
+                  defaultValue={appId}
+                  options={appList}
+                  onFocus={() => appList.length === 1 && this.getAppList(projectId)}
+                  suffixIcon={<Icon icon="arrow-down-border" className="Font18" />}
+                  notFoundContent={<span className="textTertiary">{_l('无搜索结果')}</span>}
                   onChange={value =>
                     this.setState({ appId: value }, () => {
                       this.getChartData();

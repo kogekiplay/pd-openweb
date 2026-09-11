@@ -328,7 +328,11 @@ export default function PersonalAccessTokenDrawer(props) {
       <Select
         mode="multiple"
         allowClear
-        showSearch
+        showSearch={{ filterOption: (inputValue, option) => {
+          return String(option?.label || '')
+            .toLowerCase()
+            .includes(inputValue.toLowerCase());
+        } }}
         optionLabelProp="label"
         className="w100 mdAntSelect projectSelect"
         classNames={{ popup: { root: "patProjectSelectDropdown" } }}
@@ -337,11 +341,6 @@ export default function PersonalAccessTokenDrawer(props) {
         value={formData.entityScopeType === ENTITY_SCOPE_TYPE.ALL ? [ALL_PROJECTS_VALUE] : formData.projectIds || []}
         notFoundContent={<span className="textTertiary">{_l('暂无数据')}</span>}
         getPopupContainer={() => document.body}
-        filterOption={(inputValue, option) => {
-          return String(option?.label || '')
-            .toLowerCase()
-            .includes(inputValue.toLowerCase());
-        }}
         onChange={onProjectChange}
       >
         <Select.Option className="mdAntSelectOption" value={ALL_PROJECTS_VALUE} label={_l('所有组织')}>

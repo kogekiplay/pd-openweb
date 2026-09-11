@@ -533,22 +533,19 @@ class AdminWorkflowList extends Component<any, any> {
             <div className="manageListSearch flexRow">
               <Select
                 className="w180 mdAntSelect"
-                showSearch
-                defaultValue={apkId}
-                options={appList}
-                onFocus={() => appList.length === 1 && this.getAppList(params.projectId)}
-                filterOption={(inputValue, option) =>
+                showSearch={{ filterOption: (inputValue, option) =>
                   appList
                     .find(item => item.value === option.value)
                     .label.toLowerCase()
-                    .indexOf(inputValue.toLowerCase()) > -1
-                }
-                suffixIcon={<Icon icon="arrow-down-border Font14" />}
-                notFoundContent={<span className="textSecondary">{_l('无搜索结果')}</span>}
-                onSearch={_.debounce(
+                    .indexOf(inputValue.toLowerCase()) > -1, onSearch: _.debounce(
                   val => this.setState({ keyword: val, appPageIndex: 1 }, () => this.getAppList(params.projectId)),
                   500,
-                )}
+                ) }}
+                defaultValue={apkId}
+                options={appList}
+                onFocus={() => appList.length === 1 && this.getAppList(params.projectId)}
+                suffixIcon={<Icon icon="arrow-down-border Font14" />}
+                notFoundContent={<span className="textSecondary">{_l('无搜索结果')}</span>}
                 onChange={value => this.updateState({ apkId: value })}
                 onPopupScroll={e => {
                   e.persist();

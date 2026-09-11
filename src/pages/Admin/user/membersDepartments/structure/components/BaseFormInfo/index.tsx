@@ -706,16 +706,14 @@ export default class BaseFormInfo extends Component<any, any> {
             }}
             disabled={typeCursor === 2}
             className={cx('w100 mdAntSelect', { noBorder: typeCursor === 2 })}
-            showSearch
+            showSearch={{ filterOption: () => true, onSearch: worksiteKeywords => this.setState({ worksiteKeywords }) }}
             allowClear
             listHeight={285}
             optionLabelProp="label"
             value={workSiteId || undefined}
             placeholder={_l('请选择')}
             suffixIcon={<Icon icon="arrow-down-border Font14" />}
-            filterOption={() => true}
             notFoundContent={<span className="textTertiary">{_l('可直接输入创建新的工作地点')}</span>}
-            onSearch={worksiteKeywords => this.setState({ worksiteKeywords })}
             onOpenChange={open => {
               this.setState({ worksiteKeywords: '' });
               !open && this.worksiteSelect.blur();

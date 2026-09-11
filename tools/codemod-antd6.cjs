@@ -152,6 +152,23 @@ const RULES = [
   { name: 'configProvider-autoInsertSpaceInButton', kind: 'wrap', components: ['ConfigProvider'], from: 'autoInsertSpaceInButton', to: 'button', key: 'autoInsertSpace' },
   { name: 'popupClassName-to-classNames-popup-root', kind: 'wrap', components: ['Select', 'TreeSelect', 'AutoComplete', 'Cascader', 'DatePicker'], from: 'popupClassName', to: 'classNames', key: 'popup.root' },
   { name: 'dropdownStyle-to-styles-popup-root', kind: 'wrap', components: ['Select', 'TreeSelect', 'AutoComplete', 'Cascader'], from: 'dropdownStyle', to: 'styles', key: 'popup.root' },
+  {
+    // Select 的 5 个搜索相关 props 在 v6 合并进 showSearch 对象。
+    // 【读了实现才敢动】@rc-component/select/es/hooks/useSearchConfig.js：
+    //   const isObject = typeof showSearch === 'object';
+    //   searchConfig = { filterOption, searchValue, ..., ...(isObject ? showSearch : {}) };
+    //   return [isObject || mode==='combobox' || ... ? true : showSearch, searchConfig];
+    // 两个后果：
+    //  (a) 顶层 props 仍然生效（先铺顶层、对象再覆盖）—— 所以这批确实只是「废弃」不是「坏了」。
+    //  (b) 【传对象会强制把搜索打开】isObject 直接短路成 true。
+    //      所以只有元素上已经是 showSearch / showSearch={true} 时合并才等价；
+    //      showSearch={false}、写成表达式的、以及【根本没写 showSearch 的单选 Select】
+    //      一旦合并就会凭空多出一个搜索框，必须跳过交人工。
+    name: 'select-search-props-to-showSearch',
+    kind: 'showSearch',
+    components: ['Select', 'TreeSelect', 'AutoComplete', 'Cascader'],
+    sources: ['filterOption', 'onSearch', 'optionFilterProp', 'searchValue', 'autoClearSearchValue', 'filterSort'],
+  },
 ];
 
 // ───────────────────────── 收集文件 ─────────────────────────
@@ -272,6 +289,52 @@ for (const file of collect(SRC)) {
 
       for (const rule of rules) {
         if (!rule.components.includes(comp)) continue;
+
+        if (rule.kind === 'showSearch') {
+          const present = rule.sources
+            .map(n => p.node.attributes.find(a => a.type === 'JSXAttribute' && a.name.name === n))
+            .filter(Boolean);
+
+          if (!present.length) continue;
+
+          const ss = p.node.attributes.find(a => a.type === 'JSXAttribute' && a.name.name === 'showSearch');
+          const line = `${path.relative(ROOT, file)}:${present[0].loc.start.line}`;
+          const enabled =
+            ss &&
+            (ss.value === null ||
+              (ss.value.type === 'JSXExpressionContainer' &&
+                ss.value.expression.type === 'BooleanLiteral' &&
+                ss.value.expression.value === true));
+
+          if (!enabled) {
+            const why = !ss ? '元素上没有 showSearch，合并会凭空开启搜索' : 'showSearch 不是字面量 true';
+            stats.get(rule.name).skipped.push(`${line}（${why}）`);
+            continue;
+          }
+
+          const body = present
+            .map(a => {
+              const v = a.value;
+              const inner =
+                v === null
+                  ? 'true'
+                  : v.type === 'JSXExpressionContainer'
+                    ? src.slice(v.expression.start, v.expression.end)
+                    : src.slice(v.start, v.end);
+              return `${a.name.name}: ${inner}`;
+            })
+            .join(', ');
+
+          edits.push({ start: ss.start, end: ss.end, text: `showSearch={{ ${body} }}`, rule: rule.name });
+
+          for (const a of present) {
+            let from = a.start;
+            while (from > 0 && /\s/.test(src[from - 1])) from--;
+            edits.push({ start: from, end: a.end, text: '', rule: rule.name });
+          }
+
+          continue;
+        }
 
         const attr = p.node.attributes.find(a => a.type === 'JSXAttribute' && a.name.name === rule.from);
 
