@@ -49,7 +49,9 @@ const ours=new Map();
 for(const f of walk(RW+'src')){
   const src=fs.readFileSync(f,'utf8');
   for(const r of src.matchAll(/([^{}]*\.ant-[a-z0-9-]+[^{}]*)\{([^{}]*)\}/g)){
-    const props=new Set(r[2].split(';').map(d=>d.split(':')[0].trim()).filter(p=>p&&!p.startsWith('/')&&!p.startsWith('&')&&!p.startsWith('.')));
+    // 【带 !important 的不算碰撞】antd 自己的声明一律不带 !important，
+    // 我们带了就一定压得过它，不需要人工确认。不排的话列表里一半是噪声。
+    const props=new Set(r[2].split(';').filter(d=>!/!important/.test(d)).map(d=>d.split(':')[0].trim()).filter(p=>p&&!p.startsWith('/')&&!p.startsWith('&')&&!p.startsWith('.')));
     for(const c of new Set((r[1].match(/\.(ant-[a-z0-9-]+)/g)||[]).map(s=>s.slice(1)))){
       if(!ours.has(c)) ours.set(c,{props:new Set(),files:new Set()});
       for(const p of props) ours.get(c).props.add(p);
