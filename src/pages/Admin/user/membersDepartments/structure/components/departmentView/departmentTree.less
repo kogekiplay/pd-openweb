@@ -26,20 +26,18 @@
     }
   }
 
-  .ant-tree.ant-tree-directory .ant-tree-treenode-selected:hover::before,
-  .ant-tree.ant-tree-directory .ant-tree-treenode-selected::before,
-  .ant-tree.ant-tree-directory .ant-tree-treenode:hover::before {
+  // 【不要再劫持 ::before】antd 4 里 .ant-tree-treenode::before 是整行背景
+  // （antd 自己给 top:0/bottom:0，我们只改 background 和 height 就够）。
+  // antd 5 把它【改成了拖拽落点指示条】：height:4px、top:36px（贴在行底）。
+  // 旧写法只改 height/background 而没写 top，于是继承了 antd 的 top:36px，
+  // 高亮块整体下移一行 —— 线上表现是「看到的蓝条和实际能点的行错开一行，
+  // 要往下点一点才选得中部门」。
+  // 补 top 能修位置，但会连带压掉 v5 的拖拽指示条（部门拖拽排序会失去落点提示，
+  // 而那个功能一拖就写数据、没法验证）。所以改成把背景画在节点本身，
+  // 与 antd 5 自己的做法一致，::before 完全还给 antd。
+  .ant-tree.ant-tree-directory .ant-tree-treenode-selected,
+  .ant-tree.ant-tree-directory .ant-tree-treenode:hover {
     background: rgba(33, 150, 243, 0.11);
-    border-radius: 3px;
-    height: 36px;
-    line-height: 36px;
-    position: absolute;
-    right: 0;
-    left: 0;
-    z-index: -1;
-  }
-
-  .ant-tree.ant-tree-directory .ant-tree-treenode::before {
     border-radius: 3px;
   }
 
@@ -50,12 +48,6 @@
   }
 
   .ant-tree.ant-tree-directory .ant-tree-treenode-selected {
-    // antd 5 起，目录树选中态的高亮从 ::before 挪到了【节点元素本身】：
-    //   .ant-tree.ant-tree-directory .ant-tree-treenode-selected { background: #1677ff }
-    // 而本仓的设计是「浅蓝底 + 主题色文字」，浅蓝底是靠下面那条 ::before 画的。
-    // 不中和这条的话就是实心蓝底压着主题色蓝字，文字等于看不见（线上实测就是一条空白蓝条）。
-    // 注意类名两版完全一致，变的是「样式挂在哪个元素上」—— 只比类名的差分抓不到这种。
-    background: transparent;
     .treeNodeIcon,
     .departmentName {
       color: var(--color-primary) !important;
@@ -68,18 +60,15 @@
   .ant-tree.ant-tree-directory .ant-tree-treenode {
     &.ant-tree-treenode-selected {
       &:hover {
-        &::before {
-          background: var(--color-primary-transparent) 0 0 no-repeat padding-box !important;
-        }
+        // 同上：背景画在节点本身，不碰 ::before（v5 那是拖拽落点指示条）
+        background: var(--color-primary-transparent) 0 0 no-repeat padding-box !important;
         .ant-tree-switcher {
           background: none !important;
         }
       }
     }
     &:hover {
-      &::before {
-        background: rgba(0, 0, 0, 0.04) 0% 0% no-repeat padding-box;
-      }
+      background: rgba(0, 0, 0, 0.04) 0% 0% no-repeat padding-box;
 
       .ant-tree-title {
         .departmentName {
@@ -104,10 +93,10 @@
   }
 
   .hoverParentStyle {
+    // 原来这里还带上了 .ant-tree-treenode-switcher-*::before，用途是清掉 v4 的行背景。
+    // v5 下那个伪元素是拖拽落点指示条，再清就等于把指示条也抹了，所以只留 switcher 本身。
     .ant-tree-switcher_close:hover,
-    .ant-tree-switcher_open:hover,
-    .ant-tree-treenode-switcher-close::before,
-    .ant-tree-treenode-switcher-open::before {
+    .ant-tree-switcher_open:hover {
       background: none !important;
     }
     &.ant-tree-treenode-switcher-close,
@@ -132,11 +121,12 @@
         }
       }
     }
-    &.ant-tree-treenode-selected:hover::before,
-    &.ant-tree-treenode-selected::before {
+    // 同上：v5 起 ::before 是拖拽落点指示条，背景一律画在节点本身
+    &.ant-tree-treenode-selected:hover,
+    &.ant-tree-treenode-selected {
       background: var(--color-primary-transparent) 0 0 no-repeat padding-box !important;
     }
-    &.ant-tree-treenode::before {
+    &.ant-tree-treenode {
       background: rgba(0, 0, 0, 0.04) !important;
     }
   }
@@ -291,6 +281,14 @@
     transition: none;
   }
 
+  // antd 5 把目录树【选中态的实心蓝】画在 content-wrapper 的 ::before 上：
+  //   .ant-tree.ant-tree-directory .ant-tree-treenode-selected .ant-tree-node-content-wrapper:before
+  //     { background: #1677ff }
+  // 不中和它，上面画在节点本身的浅蓝底会被这层盖住，又变回实心蓝。
+  .ant-tree.ant-tree-directory .ant-tree-treenode-selected .ant-tree-node-content-wrapper::before {
+    background: transparent !important;
+  }
+
   .ant-tree.ant-tree-directory > .ant-tree-treenode span.ant-tree-node-content-wrapper:hover::before,
   .ant-tree.ant-tree-directory
     .ant-tree-child-tree
@@ -326,8 +324,9 @@
     }
   }
 
-  .ant-tree.ant-tree-directory .ant-tree-treenode-selected:hover::before,
-  .ant-tree.ant-tree-directory .ant-tree-treenode-selected::before {
+  // 同上：v5 起 ::before 是拖拽落点指示条，背景画在节点本身
+  .ant-tree.ant-tree-directory .ant-tree-treenode-selected:hover,
+  .ant-tree.ant-tree-directory .ant-tree-treenode-selected {
     background: var(--color-primary-transparent) 0 0 no-repeat padding-box !important;
   }
 }

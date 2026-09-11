@@ -346,16 +346,42 @@ function typecheckGate() {
 // 完整编译 js/css 资源，输出到 build/dist。
 async function release() {
   const startTime = process.hrtime.bigint();
+  // 分阶段计时：实测三次 webpack 编译只占 release 总时长的两成左右，
+  // 其余七成八在门禁与资源落盘上。没有这个分解，很容易把优化力气花错地方
+  //（曾经差点去并行化那三次编译 —— 最多省 25s，还要冒四个编译同时吃 8GB 堆的风险）。
+  const marks = [];
+  const phase = async (label, fn) => {
+    const t = process.hrtime.bigint();
+    const r = await fn();
 
-  specGate();
-  typecheckGate();
-  cleanBuild();
-  await buildWebpack();
-  await buildSingleEntryExtractModulesWebpack();
-  await buildSingleEntryWebpack();
-  await buildMingoEntryWidget();
+    marks.push([label, Number(process.hrtime.bigint() - t) / 1e6]);
+
+    return r;
+  };
+
+  await phase('行为门禁', async () => specGate());
+  await phase('类型门禁', async () => typecheckGate());
+  await phase('清理产物', async () => cleanBuild());
+  // 【试过并行，没用，别再试】四个编译写不同目录、无构建期依赖，确实可以并行，
+  // 但实测：并行 3m02s vs 串行 3m01s，总时长 3m31s vs 3m37s，纯噪声；
+  // 峰值内存却从约 8GB 涨到 11.7GB。原因是每个编译内部已经用 thread-loader
+  // 把核心跑满，并行只是让它们互抢同一批 CPU 与磁盘 IO —— 严格更差。
+  //
+  // 真正的大头是「单页编译」1m21s（37%）：它的 splitChunks 是 undefined，
+  // 每个单入口页各自打一份公共依赖，落盘 170MiB，时间基本花在写文件上。
+  // 要提速应该从那里下手（给 single 开 splitChunks），但那会改变产物结构、
+  // 影响这些页面 HTML 引用的 chunk 名，属于另一件需要单独验证的事。
+  await phase('主站编译', buildWebpack);
+  await phase('单页公共模块编译', buildSingleEntryExtractModulesWebpack);
+  await phase('单页编译', buildSingleEntryWebpack);
+  await phase('mingo widget', buildMingoEntryWidget);
 
   const duration = Number(process.hrtime.bigint() - startTime) / 1e6;
+  const total = marks.reduce((a, [, ms]) => a + ms, 0);
+  console.log(chalk.cyan('  分阶段耗时：'));
+  marks.forEach(([l, ms]) =>
+    console.log(chalk.cyan(`    ${l.padEnd(18)} ${formatDuration(ms).padStart(8)}  ${Math.round((ms / total) * 100)}%`)),
+  );
   console.log(chalk.green(`release success, duration: ${formatDuration(duration)}`));
 }
 
