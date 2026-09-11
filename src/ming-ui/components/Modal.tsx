@@ -80,8 +80,36 @@ export default function MdModal(props) {
     transform: `translate(${left}px, 0px)`,
     transition: 'width 0.4s ease',
   });
-  modalProps.maskStyle = { backgroundColor: 'rgba(0, 0, 0, .7)' };
-  modalProps.bodyStyle = Object.assign(props.bodyStyle || {}, {});
+  // 【antd 6 删掉了 Modal 的 visible】接口里只剩 open。本壳对外的 API 一直是 visible，
+  // 而下面是 {...props} 整个铺给 <Modal>，于是 v6 收到一个它不认识的 visible、
+  // open 永远是 undefined —— 弹窗静默不显示。表现就是「点记录打不开、点按钮没反应」，
+  // 不报错、不进 ErrorBoundary、控制台干净，最难查的一类。
+  // v5 的官方 codemod 把 JSX 上的 visible= 改成了 open=，但改不到这种「壳自己有个同名
+  // 对外 API、再用 spread 转发」的写法；全仓 604 处 visible= 大多是 ming-ui 自己的组件。
+  modalProps.open = props.open !== undefined ? props.open : visible;
+  delete modalProps.visible;
+
+  // antd 6 的边界翻译。本壳对外仍保留 v5 的名字（消费方传的是 bodyStyle / maskClosable），
+  // 但交给 antd 时必须转成 styles.* 和 mask.closable。
+  //
+  // 【为什么 codemod 没覆盖到这里】tools/codemod-antd6.cjs 改的是 JSX 属性，而这里是先拼
+  // 一个 modalProps 对象、最后 {...modalProps} 铺给 <Modal>。对象属性它看不见 ——
+  // 表现就是控制台一直刷 `[antd: Modal] bodyStyle is deprecated`，但全仓 grep JSX 属性
+  // 一个都搜不到，很容易以为是别人的代码。ming-ui 的 Tooltip 壳是同一类情况。
+  modalProps.styles = {
+    ...(props.styles || {}),
+    mask: { backgroundColor: 'rgba(0, 0, 0, .7)', ...(props.maskStyle || {}) },
+    body: Object.assign({}, props.bodyStyle || {}),
+  };
+  // mask 可能被消费方传成布尔；统一归一成对象，再把 maskClosable 并进去。
+  // 注意 antd 6 里对象不写 enabled 即视为启用（enabled !== false），与旧的 mask 默认 true 一致。
+  modalProps.mask =
+    typeof modalProps.mask === 'object' && modalProps.mask !== null
+      ? { closable: modalProps.maskClosable, ...modalProps.mask }
+      : { enabled: modalProps.mask !== false, closable: modalProps.maskClosable };
+  delete modalProps.maskClosable;
+  delete modalProps.maskStyle;
+  delete modalProps.bodyStyle;
   useEffect(() => {
     window.dislocateCount = window.dislocateCount || 0;
     if (window.dislocateCount > 0 && !document.querySelectorAll('.mdModal').length) {

@@ -43,7 +43,7 @@ const Wrap = styled.div`
       height: 30px;
       font-size: 15px;
       line-height: 30px;
-      .ant-steps-icon {
+      .ant-steps-item-icon-number {
         top: -1.5px;
       }
     }
@@ -55,26 +55,26 @@ const Wrap = styled.div`
       border-color: var(--color-primary-transparent);
       background: var(--color-primary-transparent);
     }
-    .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon {
+    .ant-steps-item-finish .ant-steps-item-icon-number {
       color: var(--color-primary);
     }
-    .ant-steps-item-wait .ant-steps-item-icon > .ant-steps-icon {
+    .ant-steps-item-wait .ant-steps-item-icon-number {
       color: var(--color-text-secondary);
     }
     .ant-steps-item-title {
       line-height: 30px;
     }
-    .ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title,
-    .ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title {
+    .ant-steps-item-process .ant-steps-item-title,
+    .ant-steps-item-finish .ant-steps-item-title {
       color: var(--color-text-title);
       font-weight: 600;
     }
-    .ant-steps-item-wait > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title {
+    .ant-steps-item-wait .ant-steps-item-title {
       color: var(--color-text-tertiary);
       font-weight: 600;
     }
-    .ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title::after,
-    .ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title::after {
+    .ant-steps-item-process .ant-steps-item-title::after,
+    .ant-steps-item-finish .ant-steps-item-title::after {
       background-color: var(--color-border-secondary);
     }
   }

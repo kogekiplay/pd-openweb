@@ -207,7 +207,7 @@ const ListErrorInfo = styled.div`
               &.ant-checkbox-checked::after {
                 border: none;
               }
-              .ant-checkbox-inner {
+              .ant-checkbox {
                 top: -8px;
               }
             }
@@ -234,7 +234,7 @@ const ListErrorInfo = styled.div`
               &.ant-checkbox-checked::after {
                 border: none;
               }
-              .ant-checkbox-inner {
+              .ant-checkbox {
                 top: -8px;
               }
             }
