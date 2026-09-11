@@ -354,7 +354,7 @@ export default class Condition extends Component<any, any> {
     const isDynamicStyle = _.includes(['relateSheet', 'rule', 'fastFilter'], from); // 动态值选择的特定样式
     const isDynamicValue = this.isCanDynamicsource();
     return (
-      <div
+      (<div
         className={cx(
           'conditionItem',
           {
@@ -431,7 +431,7 @@ export default class Condition extends Component<any, any> {
             <Select
               className="dynamicSource"
               disabled={!isDynamicValue}
-              dropdownClassName="dynamicSelectDropdown"
+              popupClassName="dynamicSelectDropdown"
               value={this.state.isDynamicsource ? 2 : 1}
               options={isDynamicValue ? CONDITION_OPTIONS : CONDITION_OPTIONS.filter(o => o.value === 1)}
               suffixIcon={<Icon icon="arrow-down-border Font14" />}
@@ -454,7 +454,7 @@ export default class Condition extends Component<any, any> {
           )}
           {control ? this.renderControl() : <Input className="deletedColumn" disabled />}
         </div>
-      </div>
+      </div>)
     );
   }
 }

@@ -137,7 +137,7 @@ export default function DateVerify({ data, onChange }) {
     }
   }, [type]);
   return (
-    <Fragment>
+    (<Fragment>
       {type !== 46 && !needHide && (
         <Fragment>
           {!isCustomWidget(data) && (
@@ -156,7 +156,7 @@ export default function DateVerify({ data, onChange }) {
           {allowweek && (
             <Dropdown
               trigger={['click']}
-              visible={weekVisible}
+              open={weekVisible}
               onVisibleChange={visible => setVisible({ weekVisible: visible })}
               overlay={
                 <WeekWrap onClick={e => e.stopPropagation()}>
@@ -211,7 +211,7 @@ export default function DateVerify({ data, onChange }) {
           {allowtime && (
             <div className="timeFieldWrap flexRow">
               <Dropdown
-                visible={startTimeVisible}
+                open={startTimeVisible}
                 onVisibleChange={v => setVisible({ startTimeVisible: v })}
                 trigger="click"
                 overlay={
@@ -250,7 +250,7 @@ export default function DateVerify({ data, onChange }) {
               <span>-</span>
               <Dropdown
                 trigger="click"
-                visible={endTimeVisible}
+                open={endTimeVisible}
                 onVisibleChange={v => setVisible({ endTimeVisible: v })}
                 overlay={
                   <WeekWrap>
@@ -289,6 +289,6 @@ export default function DateVerify({ data, onChange }) {
           )}
         </Fragment>
       )}
-    </Fragment>
+    </Fragment>)
   );
 }

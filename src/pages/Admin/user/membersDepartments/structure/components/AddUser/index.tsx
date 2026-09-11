@@ -356,7 +356,7 @@ export default class AddUser extends Component<any, any> {
     const { passwordRegexTip } = _.get(md, 'global.SysSettings') || {};
 
     return (
-      <Fragment>
+      (<Fragment>
         {_.isEmpty(user) ? (
           <TextInput
             ref={ele => (this.userNameInput = ele)}
@@ -568,7 +568,7 @@ export default class AddUser extends Component<any, any> {
             error={errors.autonomouslyPasswrod}
           />
         )}
-      </Fragment>
+      </Fragment>)
     );
   };
 
@@ -599,12 +599,12 @@ export default class AddUser extends Component<any, any> {
     } = this.state;
 
     return (
-      <Fragment>
+      (<Fragment>
         <Drawer
           width={580}
           placement="right"
           onClose={onClose}
-          visible={addUserVisible}
+          open={addUserVisible}
           maskClosable={false}
           closable={false}
         >
@@ -701,7 +701,7 @@ export default class AddUser extends Component<any, any> {
             openChangeUserInfoDrawer={openChangeUserInfoDrawer}
           />
         )}
-      </Fragment>
+      </Fragment>)
     );
   }
 }

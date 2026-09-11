@@ -400,7 +400,7 @@ export default function ConfigureControl(props) {
   };
 
   return (
-    <Fragment>
+    (<Fragment>
       {selectCascadeDataSourceVisible && (
         <SelectDataSource
           editType={0}
@@ -432,7 +432,6 @@ export default function ConfigureControl(props) {
           }}
         />
       )}
-
       {count > 0 && (
         <ConfigureWrap ref={$wrap}>
           <SortableList
@@ -456,7 +455,7 @@ export default function ConfigureControl(props) {
       )}
       <Dropdown
         trigger={['click']}
-        visible={visible}
+        open={visible}
         overlay={SelectWidgetMenu}
         onVisibleChange={value => {
           setValue(value);
@@ -486,6 +485,6 @@ export default function ConfigureControl(props) {
           />,
           document.getElementById('widgetConfigSettingWrap'),
         )}
-    </Fragment>
+    </Fragment>)
   );
 }

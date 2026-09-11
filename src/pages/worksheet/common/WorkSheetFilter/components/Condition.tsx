@@ -194,7 +194,7 @@ export default class Condition extends Component<any, any> {
     const isDynamicStyle = from === 'relateSheet'; // 动态值选择的特定样式
     const isDynamicValue = this.getIsDynamicValue();
     return (
-      <div
+      (<div
         className={cx('conditionItem', {
           readonly: !canEdit,
           conditionItemForDynamicStyle: isDynamicStyle,
@@ -257,7 +257,7 @@ export default class Condition extends Component<any, any> {
             <Select
               className="dynamicSource"
               disabled={!isDynamicValue}
-              dropdownClassName="dynamicSelectDropdown"
+              popupClassName="dynamicSelectDropdown"
               value={this.state.isDynamicsource ? 2 : 1}
               options={isDynamicValue ? CONDITION_OPTIONS : CONDITION_OPTIONS.filter(o => o.value === 1)}
               suffixIcon={<Icon icon="arrow-down-border Font14" />}
@@ -307,7 +307,7 @@ export default class Condition extends Component<any, any> {
         {isDynamicStyle && index !== conditionsLength - 1 && (
           <div className="conditionRelationBox">{this.renderOption()}</div>
         )}
-      </div>
+      </div>)
     );
   }
 }

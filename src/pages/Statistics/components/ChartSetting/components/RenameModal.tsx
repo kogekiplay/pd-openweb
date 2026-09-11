@@ -47,11 +47,11 @@ export default class RenameModal extends Component<any, any> {
     const { dialogVisible } = this.props;
     const { rename } = this.state;
     return (
-      <Modal
+      (<Modal
         title={_l('重命名')}
         width={480}
         className="chartModal"
-        visible={dialogVisible}
+        open={dialogVisible}
         destroyOnClose={true}
         centered={true}
         closeIcon={<Icon icon="close" className="Font20 pointer textTertiary" />}
@@ -70,7 +70,7 @@ export default class RenameModal extends Component<any, any> {
             });
           }}
         />
-      </Modal>
+      </Modal>)
     );
   }
 }

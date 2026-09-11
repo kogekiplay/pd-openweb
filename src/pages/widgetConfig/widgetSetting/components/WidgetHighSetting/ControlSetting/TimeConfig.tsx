@@ -76,7 +76,7 @@ export default function TimeConfig(props) {
   const [{ timeIntervalVisible }, setVisible] = useSetState({ timeIntervalVisible: false });
 
   return (
-    <Fragment>
+    (<Fragment>
       <div className={'labelWrap'}>
         <Checkbox
           size="small"
@@ -96,7 +96,7 @@ export default function TimeConfig(props) {
         <Dropdown
           trigger={'click'}
           className="mTop8 mBottom8"
-          visible={timeIntervalVisible}
+          open={timeIntervalVisible}
           onVisibleChange={v => setVisible({ timeIntervalVisible: v })}
           overlay={
             <IntervalWrap>
@@ -122,6 +122,6 @@ export default function TimeConfig(props) {
         </Dropdown>
       )}
       <StartEndTime {...props} />
-    </Fragment>
+    </Fragment>)
   );
 }

@@ -56,10 +56,10 @@ export default props => {
   };
 
   return (
-    <Dropdown
+    (<Dropdown
       trigger={['hover']}
       placement={placement}
-      visible={dropdownVisible}
+      open={dropdownVisible}
       onVisibleChange={handleUpdateDropdownVisible}
       overlay={
         <Menu
@@ -89,6 +89,6 @@ export default props => {
       }
     >
       {renderItem({ onClick: () => {} })}
-    </Dropdown>
+    </Dropdown>)
   );
 };

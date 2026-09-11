@@ -39,9 +39,9 @@ export default function (props) {
   };
 
   return (
-    <Modal
+    (<Modal
       title={type === 'phone' ? _l('绑定手机号') : _l('绑定邮箱')}
-      visible={true}
+      open={true}
       centered={true}
       onCancel={() => {}} // 禁用所有默认关闭方式
       closable={false} // 隐藏关闭按钮
@@ -69,6 +69,6 @@ export default function (props) {
         setIsValidNumber={setIsValidNumber}
         setCountry={setCountry}
       />
-    </Modal>
+    </Modal>)
   );
 }

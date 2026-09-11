@@ -490,9 +490,9 @@ export default function CascaderWidget(props) {
 
   if (showtype === '4') {
     return (
-      <TreeSelect
+      (<TreeSelect
         className="w100 customAntSelect customTreeSelect"
-        dropdownClassName={cx('customTreeSelectDropdown', popupClassName, `treeSelect_${controlId}`)}
+        popupClassName={cx('customTreeSelectDropdown', popupClassName, `treeSelect_${controlId}`)}
         dropdownPopupAlign={treePopupAlign}
         ref={treeSelectCompRef}
         disabled={disabled}
@@ -556,7 +556,7 @@ export default function CascaderWidget(props) {
           setTreeExpandedKeys(treeExpandedKeys);
           cacheScrollTopRef.current = getTreeSelectEl().scrollTop;
         }}
-      />
+      />)
     );
   }
 

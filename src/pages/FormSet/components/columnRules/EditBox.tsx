@@ -301,15 +301,15 @@ class EditBox extends React.Component<any, any> {
     const filterControls = worksheetControls.filter(i => !_.includes(ALL_SYS, i.controlId));
 
     return (
-      <div className="conditionContainer mTop0">
+      (<div className="conditionContainer mTop0">
         <div className="Font14 Bold">{_l('则执行动作')}</div>
         {ruleItems.map((actionItem, actionIndex) => {
           const actionError = (ruleError.actionError || {})[actionIndex] || false;
           return (
-            <div className="actionItemCon">
+            (<div className="actionItemCon">
               <Select
                 className={cx('ruleListSelect', { flexItem: _.includes([7], actionItem.type) })}
-                dropdownClassName="ruleListSelectDropdown"
+                popupClassName="ruleListSelectDropdown"
                 value={getActionLabelByType(actionItem.type)}
                 options={listData}
                 disabled={_.includes([9], actionItem.type)}
@@ -363,7 +363,7 @@ class EditBox extends React.Component<any, any> {
                   />
                 </Fragment>
               )}
-            </div>
+            </div>)
           );
         })}
         <Trigger
@@ -400,7 +400,7 @@ class EditBox extends React.Component<any, any> {
             {_l('添加动作')}
           </div>
         </Trigger>
-      </div>
+      </div>)
     );
   };
 

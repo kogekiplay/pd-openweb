@@ -102,12 +102,12 @@ export default function TelConfig({ data, onChange, globalSheetInfo = {} }) {
   };
 
   return (
-    <Fragment>
+    (<Fragment>
       <SettingItem>
         <div className="settingItemTitle">{_l('默认区号')}</div>
         <Dropdown
           trigger={['click']}
-          visible={defaultCountryVisible}
+          open={defaultCountryVisible}
           onVisibleChange={visible => setVisible({ defaultCountryVisible: visible })}
           overlay={
             <SelectCountryDropdown
@@ -194,6 +194,6 @@ export default function TelConfig({ data, onChange, globalSheetInfo = {} }) {
           onCancel={() => setVisible({ commonUseVisible: false })}
         />
       )}
-    </Fragment>
+    </Fragment>)
   );
 }

@@ -76,7 +76,7 @@ const AddLangModal = props => {
     .filter(data => !data.isSystemLang);
 
   return (
-    <Drawer
+    (<Drawer
       placement="right"
       title={
         <div className="flexRow alignItemsCenter">
@@ -91,7 +91,7 @@ const AddLangModal = props => {
         padding: '16px',
       }}
       width={700}
-      visible={visible}
+      open={visible}
       closable={false}
       onClose={onCancel}
       footer={
@@ -143,7 +143,7 @@ const AddLangModal = props => {
           </Fragment>
         )}
       </div>
-    </Drawer>
+    </Drawer>)
   );
 };
 

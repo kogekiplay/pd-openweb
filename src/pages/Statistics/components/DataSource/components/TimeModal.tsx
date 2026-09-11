@@ -373,12 +373,12 @@ export default class TimeModal extends Component<any, any> {
     const { dropdownVisible } = this.state;
     const { visible, onCancel } = this.props;
     return (
-      <Modal
+      (<Modal
         title={_l('时间范围')}
         style={dropdownVisible ? { top: -100 } : {}}
         width={560}
         className="chartModal"
-        visible={visible}
+        open={visible}
         centered={true}
         destroyOnClose={true}
         closeIcon={<Icon icon="close" className="Font20 pointer textTertiary" />}
@@ -386,7 +386,7 @@ export default class TimeModal extends Component<any, any> {
         onCancel={onCancel}
       >
         {this.renderContent()}
-      </Modal>
+      </Modal>)
     );
   }
 }

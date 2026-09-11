@@ -188,14 +188,14 @@ export default function DefaultOptions(props) {
   };
 
   return (
-    <DefaultOptionSetting className="mTop0">
+    (<DefaultOptionSetting className="mTop0">
       {defaultType ? (
         <DynamicInput {...props} onTriggerClick={onTriggerClick} />
       ) : (
         <div className="content">
           <Dropdown
             trigger={['click']}
-            visible={visible}
+            open={visible}
             onVisibleChange={setVisible}
             getPopupContainer={() => document.querySelector('.defaultOptionsWrap') || document.body}
             overlay={
@@ -266,6 +266,6 @@ export default function DefaultOptions(props) {
         </div>
       )}
       <SelectOtherField {...props} onDynamicValueChange={handleFieldClick} ref={$wrap} />
-    </DefaultOptionSetting>
+    </DefaultOptionSetting>)
   );
 }

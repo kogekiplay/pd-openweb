@@ -219,10 +219,10 @@ class UserTable extends React.Component<any, any> {
         style: { width: actWidth },
         renderHeader: () => {
           return (
-            <Dropdown
+            (<Dropdown
               overlay={this.renderShowColumns}
               trigger={['click']}
-              visible={dropDownVisible}
+              open={dropDownVisible}
               onVisibleChange={this.handleVisibleChange}
               placement="bottomRight"
             >
@@ -233,7 +233,7 @@ class UserTable extends React.Component<any, any> {
                   style={isSetShowColumn ? { color: 'var(--color-primary)' } : {}}
                 />
               </Tooltip>
-            </Dropdown>
+            </Dropdown>)
           );
         },
       },

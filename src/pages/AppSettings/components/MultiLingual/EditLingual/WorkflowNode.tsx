@@ -39,7 +39,7 @@ const NodeTagTextarea = props => {
   };
 
   return (
-    <Fragment>
+    (<Fragment>
       <ReadonlyTagTextareaWrap className="flex mRight20">
         <TagTextarea mode={2} defaultValue={value} maxHeight={240} readonly={true} renderTag={renderTag} />
       </ReadonlyTagTextareaWrap>
@@ -60,7 +60,7 @@ const NodeTagTextarea = props => {
           onAddClick={() => setFormulaMapVisible(true)}
         />
         <Dropdown
-          visible={formulaMapVisible}
+          open={formulaMapVisible}
           onVisibleChange={visible => setFormulaMapVisible(visible)}
           placement="bottomRight"
           overlay={
@@ -87,7 +87,7 @@ const NodeTagTextarea = props => {
           <div />
         </Dropdown>
       </div>
-    </Fragment>
+    </Fragment>)
   );
 };
 

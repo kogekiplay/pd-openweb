@@ -106,7 +106,7 @@ export default class Accumulate extends Component<any, any> {
         };
       });
     return (
-      <div className="mBottom20">
+      (<div className="mBottom20">
         <div className="mBottom8 Font13">{_l('累计')}</div>
         <div className="flexRow valignWrapper">
           <Checkbox
@@ -153,7 +153,7 @@ export default class Accumulate extends Component<any, any> {
           title={_l('自定义显示项')}
           width={580}
           className="chartModal"
-          visible={showControlVisible}
+          open={showControlVisible}
           centered={true}
           destroyOnClose={true}
           closeIcon={<Icon icon="close" className="Font20 pointer textTertiary" />}
@@ -176,7 +176,7 @@ export default class Accumulate extends Component<any, any> {
             onChange={this.handleChangeColumn}
           />
         </Modal>
-      </div>
+      </div>)
     );
   }
 }

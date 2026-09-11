@@ -165,16 +165,16 @@ export default function UserInfoWrap(props) {
   }
 
   return (
-    <Drawer
+    (<Drawer
       width={640}
       onClose={() => setShow(false)}
       mask={true}
       placement="right"
-      visible={show}
+      open={show}
       maskClosable={true}
       closable={false}
     >
       {renderCon()}
-    </Drawer>
+    </Drawer>)
   );
 }

@@ -14,7 +14,7 @@ const AvatarSetting = props => {
   const [defaultNavType, setDefaultNavType] = useState(null);
   const { userDrawerVisible, settingDrawerVisible } = toolbarConfig;
   return (
-    <Fragment>
+    (<Fragment>
       <div className="flexColumn alignItemsCenter justifyContentCenter mTop8 mBottom8">
         <Tooltip title={md.global.Account.fullname} placement={embed ? 'bottom' : 'left'} mouseLeaveDelay={0.1}>
           <div
@@ -35,15 +35,15 @@ const AvatarSetting = props => {
       </div>
       <Drawer
         placement="right"
-        className="userDrawerWrap"
-        visible={userDrawerVisible}
+        rootClassName="userDrawerWrap"
+        open={userDrawerVisible}
         closable={false}
         maskStyle={{
           backgroundColor: 'transparent',
         }}
         onClose={() => setToolbarConfig({ userDrawerVisible: false })}
         getContainer={() => document.body}
-        style={{
+        rootStyle={{
           // position: embed ? undefined : 'absolute',
           zIndex: 20,
           right: embed ? 0 : 52,
@@ -62,7 +62,7 @@ const AvatarSetting = props => {
       </Drawer>
       <Drawer
         placement="right"
-        visible={settingDrawerVisible}
+        open={settingDrawerVisible}
         destroyOnClose={true}
         closable={false}
         maskStyle={{
@@ -71,7 +71,7 @@ const AvatarSetting = props => {
         width={680}
         onClose={() => setToolbarConfig({ settingDrawerVisible: false })}
         getContainer={() => (embed ? document.body : document.querySelector('#containerWrapper'))}
-        style={{
+        rootStyle={{
           position: embed ? undefined : 'absolute',
           zIndex: 20,
         }}
@@ -81,7 +81,7 @@ const AvatarSetting = props => {
       >
         <Setting defaultNavType={defaultNavType} onClose={() => setToolbarConfig({ settingDrawerVisible: false })} />
       </Drawer>
-    </Fragment>
+    </Fragment>)
   );
 };
 

@@ -46,15 +46,15 @@ class CreatePrintDrawer extends React.Component<any, any> {
     const featureType = getFeatureStatus(currentProjectId, VersionProductType.wordPrintTemplate);
 
     return (
-      <Drawer
+      (<Drawer
         width={400}
-        className="printTempDrawer"
+        rootClassName="printTempDrawer"
         title={_l('创建打印模板')}
         placement="right"
         mask={false}
         closeIcon={<Icon className="textTertiary" icon="close" onClick={onCloseDrawer} />}
         onClose={onCloseDrawer}
-        visible={visible}
+        open={visible}
       >
         <p className="printTempDrawerListTitle">{_l('通过系统默认打印创建')}</p>
         <div className="printTempDrawerListItem" onClick={addNewRecordPrintTemp}>
@@ -123,7 +123,7 @@ class CreatePrintDrawer extends React.Component<any, any> {
             )}
           </React.Fragment>
         )}
-      </Drawer>
+      </Drawer>)
     );
   }
 }
@@ -339,13 +339,13 @@ class Print extends React.Component<any, any> {
     const { showEditPrint, templateId, fileType, printData = [], exampleData, type } = this.state;
 
     return (
-      <Drawer
+      (<Drawer
         width={480}
         placement="right"
-        className="Absolute"
+        rootClassName="Absolute"
         zIndex={10}
         onClose={() => this.setState({ showEditPrint: false, type: '' })}
-        visible={showEditPrint}
+        open={showEditPrint}
         maskClosable={false}
         closable={false}
         getContainer={false}
@@ -373,7 +373,7 @@ class Print extends React.Component<any, any> {
             this.loadPrint({ worksheetId: worksheetId }); // 获取当前模板
           }}
         />
-      </Drawer>
+      </Drawer>)
     );
   };
 
@@ -384,13 +384,13 @@ class Print extends React.Component<any, any> {
     if (!showCloudPrint) return null;
 
     return (
-      <Drawer
+      (<Drawer
         width={560}
         placement="right"
-        className="Absolute"
+        rootClassName="Absolute"
         zIndex={10}
         onClose={() => this.setState({ showCloudPrint: false })}
-        visible={showCloudPrint}
+        open={showCloudPrint}
         maskClosable={false}
         closable={false}
         getContainer={false}
@@ -404,7 +404,7 @@ class Print extends React.Component<any, any> {
           getPrintData={() => this.loadPrint({ worksheetId: worksheetInfo.worksheetId })}
           onClose={() => this.setState({ showCloudPrint: false, type: '', templateId: '' })}
         />
-      </Drawer>
+      </Drawer>)
     );
   };
 

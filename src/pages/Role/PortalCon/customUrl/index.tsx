@@ -171,14 +171,14 @@ function Setting(props) {
   };
 
   return (
-    <Drawer
+    (<Drawer
       width={640}
       onClose={() => closeSet()}
       zIndex={999}
       mask={true}
-      className=""
+      rootClassName=""
       placement="right"
-      visible={show}
+      open={show}
       maskClosable={true}
       closable={false}
       bodyStyle={{ padding: 0 }}
@@ -381,7 +381,7 @@ function Setting(props) {
           </WrapDetail>
         </Dialog>
       )}
-    </Drawer>
+    </Drawer>)
   );
 }
 

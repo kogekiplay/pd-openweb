@@ -319,7 +319,7 @@ export default function DateConfig(props) {
 
   if (type === 16) {
     return (
-      <Fragment>
+      (<Fragment>
         {/* <ShowFormat {...props} /> */}
         <div className="labelWrap mTop8">
           <Checkbox
@@ -339,7 +339,7 @@ export default function DateConfig(props) {
         {timeinterval && (
           <Dropdown
             trigger={'click'}
-            visible={timeIntervalVisible}
+            open={timeIntervalVisible}
             onVisibleChange={v => setVisible({ timeIntervalVisible: v })}
             overlay={
               <IntervalWrap>
@@ -365,7 +365,7 @@ export default function DateConfig(props) {
           </Dropdown>
         )}
         {!isCustomWidget(data) && <StartEndTime {...props} />}
-      </Fragment>
+      </Fragment>)
     );
   }
 }

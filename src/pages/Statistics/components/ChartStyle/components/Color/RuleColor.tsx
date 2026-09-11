@@ -547,11 +547,11 @@ export default class RuleColor extends Component<any, any> {
     } = this.props;
     const { model } = this.state;
     return (
-      <Modal
+      (<Modal
         title={_l('颜色规则')}
         width={680}
         className="chartModal chartRuleColorModal"
-        visible={visible}
+        open={visible}
         centered={true}
         destroyOnClose={true}
         closeIcon={<Icon icon="close" className="Font20 pointer textTertiary" />}
@@ -584,7 +584,7 @@ export default class RuleColor extends Component<any, any> {
             }}
           />
         )}
-      </Modal>
+      </Modal>)
     );
   }
 }

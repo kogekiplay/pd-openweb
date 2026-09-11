@@ -394,7 +394,7 @@ export default function Tools(props) {
   const widgetTools = TOOLS.filter(n => n.type !== 'setting').map(item => renderTool({ ...item, renderType: 'menu' }));
 
   return (
-    <ToolsWrap
+    (<ToolsWrap
       ref={ref}
       titleVisible={titleVisible}
       layoutType={layoutType}
@@ -411,7 +411,7 @@ export default function Tools(props) {
             <Dropdown
               trigger={['hover']}
               placement={placement}
-              visible={dropdownVisible}
+              open={dropdownVisible}
               onVisibleChange={handleUpdateDropdownVisible}
               overlay={
                 <Menu className="chartMenu widgetToolMenu" style={{ width: 180 }}>
@@ -430,6 +430,6 @@ export default function Tools(props) {
       ) : (
         TOOLS.map(item => renderTool({ ...item, renderType: 'li' }))
       )}
-    </ToolsWrap>
+    </ToolsWrap>)
   );
 }

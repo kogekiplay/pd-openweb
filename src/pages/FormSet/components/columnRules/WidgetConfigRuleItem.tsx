@@ -324,7 +324,7 @@ class WidgetConfigRuleItem extends React.Component<any, any> {
     });
 
     return (
-      <div className="formSetWorksheet">
+      (<div className="formSetWorksheet">
         <RuleStyleWrapper>
           {styleRuleList.length > 0 ? styleRuleList.map(rule => this.renderContent(rule)) : null}
           <AddRule onClick={() => addColumnRules()}>
@@ -334,12 +334,12 @@ class WidgetConfigRuleItem extends React.Component<any, any> {
         </RuleStyleWrapper>
         {selectRules.ruleId && (
           <Drawer
-            className="widgetColumnRulesDrawer"
+            rootClassName="widgetColumnRulesDrawer"
             width={640}
             title={isAdd ? _l('新建样式规则') : _l('编辑样式规则')}
             placement="right"
             onClose={() => clearColumnRules()}
-            visible={true}
+            open={true}
             getContainer={() => document.querySelector('.customWidgetContainer') || document.body}
             closeIcon={<i className="icon-close Font20" />}
             footer={
@@ -354,7 +354,7 @@ class WidgetConfigRuleItem extends React.Component<any, any> {
             <EditBox />
           </Drawer>
         )}
-      </div>
+      </div>)
     );
   }
 }

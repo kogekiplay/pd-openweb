@@ -44,15 +44,15 @@ class WorksheetRecordLogDialog extends Component<any, any> {
 
     if (browserIsMobile()) {
       return (
-        <Drawer
+        (<Drawer
           placement="right"
           width={'85%'}
-          className="sheetWorkflowDrawer"
+          rootClassName="sheetWorkflowDrawer"
           closable={false}
           mask={true}
-          style={{ position: 'absolute' }}
+          rootStyle={{ position: 'absolute' }}
           onClose={onClose}
-          visible={visible}
+          open={visible}
         >
           <div className="h100 flexColumn">
             <div className="flexRow alignItemsCenter mTop20 mRight20 mBottom5 pLeft10">
@@ -61,7 +61,7 @@ class WorksheetRecordLogDialog extends Component<any, any> {
             </div>
             {Content}
           </div>
-        </Drawer>
+        </Drawer>)
       );
     } else {
       return (

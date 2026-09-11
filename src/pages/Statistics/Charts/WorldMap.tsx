@@ -417,9 +417,9 @@ export default class extends Component<any, any> {
     const { count, originalCount, dropdownVisible, offset } = this.state;
     const { summary, displaySetup = {} } = this.props.reportData;
     return (
-      <div className="flex flexColumn chartWrapper Relative">
+      (<div className="flex flexColumn chartWrapper Relative">
         <Dropdown
-          visible={dropdownVisible}
+          open={dropdownVisible}
           onVisibleChange={dropdownVisible => {
             this.setState({ dropdownVisible });
           }}
@@ -470,7 +470,7 @@ export default class extends Component<any, any> {
             />
           </Tooltip>
         </ZoomWrapper>
-      </div>
+      </div>)
     );
   }
 }

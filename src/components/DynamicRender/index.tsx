@@ -133,7 +133,7 @@ export default function DynamicRender(props) {
           _.findIndex(item.value, v => v.isDetail) > -1 && _.findLastIndex(item.value, v => !v.isDetail);
 
         return (
-          <div key={fieldKey} className="dynamicField mappingField">
+          (<div key={fieldKey} className="dynamicField mappingField">
             <div className="mappingHeader flexRow alignItemsCenter mBottom20">
               <div className="fromField flex">{item.fromField?.title || _l('源字段')}</div>
               <div style={{ width: 40 }}></div>
@@ -147,7 +147,7 @@ export default function DynamicRender(props) {
                 !!fromFieldItem.toControlId && !_.find(options, option => option.value === fromFieldItem.toControlId);
 
               return (
-                <Fragment key={fieldIndex}>
+                (<Fragment key={fieldIndex}>
                   {_.isNumber(lastMasterFieldIndex) && _.findIndex(item.value, v => v.isDetail) === fieldIndex ? (
                     <div className="Font13 bold mBottom15 pTop10">{item.subDesc}</div>
                   ) : null}
@@ -159,7 +159,7 @@ export default function DynamicRender(props) {
                     <Icon icon="arrow_forward" className="Font20 colorPrimary mLeft10 mRight10 LineHeight36" />
                     <Select
                       className="Height36 flex minWidth0"
-                      dropdownClassName="mappedFieldPopup"
+                      popupClassName="mappedFieldPopup"
                       showSearch
                       optionLabelProp="label"
                       optionFilterProp="label"
@@ -179,10 +179,10 @@ export default function DynamicRender(props) {
                       onChange={(value, data) => handleChange(data, type, fieldKey, fieldIndex)}
                     />
                   </div>
-                </Fragment>
+                </Fragment>)
               );
             })}
-          </div>
+          </div>)
         );
 
       default:

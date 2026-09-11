@@ -126,12 +126,12 @@ export default function Money(props) {
   };
 
   return (
-    <Fragment>
+    (<Fragment>
       <SettingItem>
         <div className="settingItemTitle">{_l('金额类型')}</div>
         <Dropdown
           trigger={['click']}
-          visible={visible}
+          open={visible}
           onVisibleChange={value => setVisible(value)}
           destroyPopupOnHide={true}
           overlay={
@@ -216,6 +216,6 @@ export default function Money(props) {
           )}
         </SettingItem>
       )}
-    </Fragment>
+    </Fragment>)
   );
 }

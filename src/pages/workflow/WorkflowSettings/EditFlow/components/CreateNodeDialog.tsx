@@ -1860,7 +1860,7 @@ export default class CreateNodeDialog extends Component<any, any> {
     const isApprovalProcess = selectItemType === NODE_TYPE.APPROVAL_PROCESS;
 
     return (
-      <Drawer placement="right" visible={!!nodeId} closable={false} mask={false} bodyStyle={{ padding: 0 }} width={840}>
+      (<Drawer placement="right" open={!!nodeId} closable={false} mask={false} bodyStyle={{ padding: 0 }} width={840}>
         <div className="createNodeDialog flexColumn h100">
           {selectSecond ? this.renderSecondContent() : this.renderContent()}
 
@@ -1917,7 +1917,7 @@ export default class CreateNodeDialog extends Component<any, any> {
             />
           )}
         </div>
-      </Drawer>
+      </Drawer>)
     );
   }
 }

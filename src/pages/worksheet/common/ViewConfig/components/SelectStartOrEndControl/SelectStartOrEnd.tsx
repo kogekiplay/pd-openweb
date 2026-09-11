@@ -51,7 +51,7 @@ const TimeSelect = ({
   };
 
   return (
-    <Select
+    (<Select
       className={cx('dropCon', {
         'error-select': isError,
         'disabled-select': isError,
@@ -62,7 +62,7 @@ const TimeSelect = ({
       labelInValue
       optionLabelProp="label"
       suffixIcon={<Icon icon="arrow-down-border Font14" />}
-      dropdownClassName="dropConOption"
+      popupClassName="dropConOption"
       onChange={(selectedValue = {}) => {
         if (selectedValue.value === (value || {}).controlId) return;
         if (selectedValue.value === 'add') {
@@ -95,7 +95,7 @@ const TimeSelect = ({
           {_l('添加日期字段')}
         </Select.Option>
       )}
-    </Select>
+    </Select>)
   );
 };
 

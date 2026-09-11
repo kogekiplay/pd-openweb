@@ -204,11 +204,11 @@ const SelectDropdown = ({
   );
 
   return (
-    <Dropdown
+    (<Dropdown
       overlay={overlay}
       trigger={['click']}
       disabled={disabled}
-      visible={visible}
+      open={visible}
       placement={placement}
       getPopupContainer={() => document.body}
       onVisibleChange={v => {
@@ -232,7 +232,7 @@ const SelectDropdown = ({
           </Fragment>
         )}
       </Container>
-    </Dropdown>
+    </Dropdown>)
   );
 };
 

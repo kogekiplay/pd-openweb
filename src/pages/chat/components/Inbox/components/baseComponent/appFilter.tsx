@@ -175,11 +175,11 @@ export default class AppFilter extends Component<any, any> {
     const { app, menuVisible } = this.state;
     const { apkId } = this.props;
     return (
-      <Fragment>
+      (<Fragment>
         <Dropdown
           overlay={this.renderProjectList()}
           trigger={['click']}
-          visible={menuVisible}
+          open={menuVisible}
           onVisibleChange={menuVisible => {
             this.setState({ menuVisible });
             if (menuVisible) {
@@ -210,7 +210,7 @@ export default class AppFilter extends Component<any, any> {
             )}
           </SelectAppTrigger>
         </Dropdown>
-      </Fragment>
+      </Fragment>)
     );
   }
 }

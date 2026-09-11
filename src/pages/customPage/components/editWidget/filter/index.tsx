@@ -118,11 +118,11 @@ export default function Filter(props) {
   }, [value]);
 
   return (
-    <Modal
+    (<Modal
       maskStyle={{ zIndex: 999 }}
       wrapClassName="customPageFilterWrap"
       className="editWidgetDialogWrap"
-      visible
+      open
       transitionName=""
       maskTransitionName=""
       width="100%"
@@ -166,6 +166,6 @@ export default function Filter(props) {
           />
         </Wrap>
       </EditWidgetContent>
-    </Modal>
+    </Modal>)
   );
 }

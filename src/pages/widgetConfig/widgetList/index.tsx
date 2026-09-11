@@ -514,7 +514,7 @@ function TemplatePanelHeader(props) {
   }, [preview]);
 
   return (
-    <div
+    (<div
       ref={drag}
       className={cx('templateItemHeaderContent', { hasTemplateAction: showOperate })}
       onClick={e => {
@@ -537,7 +537,7 @@ function TemplatePanelHeader(props) {
         <Dropdown
           trigger={['click']}
           placement={dropdownPlacement}
-          visible={dropdownVisible}
+          open={dropdownVisible}
           getPopupContainer={() => document.body}
           onVisibleChange={handleDropdownVisibleChange}
           overlay={
@@ -577,7 +577,7 @@ function TemplatePanelHeader(props) {
           />
         </Dropdown>
       )}
-    </div>
+    </div>)
   );
 }
 

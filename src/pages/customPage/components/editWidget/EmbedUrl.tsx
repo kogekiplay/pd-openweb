@@ -78,9 +78,9 @@ function EmbedUrl({ onClose, onEdit, widget = {}, info }) {
   };
 
   return (
-    <Modal
+    (<Modal
       className="editWidgetDialogWrap"
-      visible
+      open
       transitionName=""
       maskTransitionName=""
       width="100%"
@@ -137,7 +137,7 @@ function EmbedUrl({ onClose, onEdit, widget = {}, info }) {
           </div>
         </ContentWrap>
       </ConfigProvider>
-    </Modal>
+    </Modal>)
   );
 }
 

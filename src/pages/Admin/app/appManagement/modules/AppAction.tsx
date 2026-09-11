@@ -67,7 +67,7 @@ export default function BatchImportApp(props) {
   };
 
   return (
-    <Fragment>
+    (<Fragment>
       <Trigger
         popupVisible={moreVisible}
         onPopupVisibleChange={visible => setData({ moreVisible: visible })}
@@ -152,7 +152,6 @@ export default function BatchImportApp(props) {
       >
         <span className="textTertiary Font18 icon-more_horiz Hand mLeft25 hoverColorPrimary"></span>
       </Trigger>
-
       {/* 导出应用 */}
       {exportAppVisible && (
         <Dialog
@@ -177,7 +176,6 @@ export default function BatchImportApp(props) {
           />
         </Dialog>
       )}
-
       {/* 导入应用 */}
       {importAppVisible && (
         <UpgradeProcess
@@ -187,10 +185,9 @@ export default function BatchImportApp(props) {
           onCancel={() => setData({ importAppVisible: false })}
         />
       )}
-
       {/* 日志 */}
       <Drawer
-        className="appLogDrawerContainer"
+        rootClassName="appLogDrawerContainer"
         width={480}
         title={
           <div className="flexRow">
@@ -204,17 +201,16 @@ export default function BatchImportApp(props) {
         }
         placement="right"
         onClose={() => setData({ drawerVisible: false })}
-        visible={drawerVisible}
+        open={drawerVisible}
         maskClosable={false}
         closable={false}
       >
         <AppLog visible={drawerVisible} />
       </Drawer>
-
       {/* 应用回收站 */}
       {appTrashVisible && (
         <AppTrash projectId={projectId} onCancel={() => setData({ appTrashVisible: false })} onRestore={updateList} />
       )}
-    </Fragment>
+    </Fragment>)
   );
 }

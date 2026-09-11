@@ -82,10 +82,10 @@ export default function CustomSelectDate(props) {
   };
 
   return (
-    <div className="w100 Relative">
+    (<div className="w100 Relative">
       <Select
         suffixIcon={<Icon icon="sidebar_calendar" className="Font16" />}
-        dropdownClassName="serchDate"
+        popupClassName="serchDate"
         dropdownStyle={!openDateSelect ? { display: 'none' } : {}}
         open={openDateSelect}
         className={className}
@@ -152,6 +152,6 @@ export default function CustomSelectDate(props) {
           </div>
         )}
       ></Select>
-    </div>
+    </div>)
   );
 }

@@ -129,7 +129,7 @@ const CallBackRefresh = props => {
   }
 
   return (
-    <div className="settingItem">
+    (<div className="settingItem">
       <div className="settingTitle valignWrapper mBottom10">
         <span>{_l('创建完成后刷新组件')}</span>
       </div>
@@ -146,7 +146,7 @@ const CallBackRefresh = props => {
         </div>
       </TagWrap>
       <Dropdown
-        visible={addTagVisible}
+        open={addTagVisible}
         destroyPopupOnHide={true}
         onVisibleChange={visible => {
           setAddTagVisible(visible);
@@ -157,7 +157,7 @@ const CallBackRefresh = props => {
       >
         <div className="Relative" style={{ top: '-15px' }}></div>
       </Dropdown>
-    </div>
+    </div>)
   );
 };
 

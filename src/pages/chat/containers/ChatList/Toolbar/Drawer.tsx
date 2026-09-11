@@ -104,7 +104,7 @@ const ToolbarDrawer = props => {
   };
 
   return (
-    <Fragment>
+    (<Fragment>
       {fixing ? (
         visible && (
           <FixingWrap style={{ width: drawerWidht }}>
@@ -115,7 +115,7 @@ const ToolbarDrawer = props => {
       ) : (
         <Drawer
           placement="right"
-          visible={visible}
+          open={visible}
           destroyOnClose={false}
           closable={false}
           maskStyle={{
@@ -127,7 +127,7 @@ const ToolbarDrawer = props => {
           }}
           getContainer={() => document.querySelector('#containerWrapper')}
           width={drawerWidht}
-          style={{
+          rootStyle={{
             // position: 'absolute',
             zIndex: 20,
             right: 52,
@@ -142,7 +142,7 @@ const ToolbarDrawer = props => {
           })}
         </Drawer>
       )}
-    </Fragment>
+    </Fragment>)
   );
 };
 

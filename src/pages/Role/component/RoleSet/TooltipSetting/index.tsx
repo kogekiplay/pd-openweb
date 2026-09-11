@@ -85,12 +85,12 @@ export default class Con extends PureComponent<any, any> {
     const { iconUrl, sheetName, sheetId } = sheet;
     const { tab = 0 } = this.state;
     return (
-      <Drawer
+      (<Drawer
         width={880}
         onClose={() => onClose()}
         mask={true}
         placement="right"
-        visible={showRoleSet}
+        open={showRoleSet}
         maskClosable={true}
         closable={false}
       >
@@ -142,7 +142,7 @@ export default class Con extends PureComponent<any, any> {
           </div>
           <div className="setCon flex">{this.renderContent()}</div>
         </Wrap>
-      </Drawer>
+      </Drawer>)
     );
   }
 }

@@ -710,9 +710,9 @@ export class CountryLayer extends Component<any, any> {
     const { xaxes = {}, displaySetup = {}, country = {}, summary } = this.props.reportData;
     const chooserange = _.get(xaxes, 'advancedSetting.chooserange');
     return (
-      <div className="flex flexColumn chartWrapper countryLayerChart Relative">
+      (<div className="flex flexColumn chartWrapper countryLayerChart Relative">
         <Dropdown
-          visible={dropdownVisible}
+          open={dropdownVisible}
           onVisibleChange={dropdownVisible => {
             this.setState({ dropdownVisible });
           }}
@@ -788,7 +788,7 @@ export class CountryLayer extends Component<any, any> {
             </ZoomWrapper>
           </Fragment>
         )}
-      </div>
+      </div>)
     );
   }
 }

@@ -701,7 +701,7 @@ let ViewItems = class ViewItems extends Component<any, any> {
         _.get(l, 'advancedSetting.showhide') === 'hide' && (!searchWorksheetListValue || this.hasSearchWords(l.name)),
     );
     return (
-      <div className="valignWrapper flex">
+      (<div className="valignWrapper flex">
         <div>
           <Tooltip placement="bottom" title={_l('全部视图%05005')}>
             <Icon
@@ -716,12 +716,12 @@ let ViewItems = class ViewItems extends Component<any, any> {
           <Drawer
             title=""
             width={280}
-            className="drawerWorksheetHidden"
+            rootClassName="drawerWorksheetHidden"
             placement="left"
             mask={false}
             closable={false}
             getContainer={() => document.querySelector('#worksheetRightContentBox')}
-            style={{
+            rootStyle={{
               position: 'absolute',
             }}
             onClose={() =>
@@ -729,7 +729,7 @@ let ViewItems = class ViewItems extends Component<any, any> {
                 setWorksheetHidden: false,
               })
             }
-            visible={setWorksheetHidden}
+            open={setWorksheetHidden}
           >
             <div className="searchBox">
               <i className="icon icon-search textTertiary Font20"></i>
@@ -843,7 +843,7 @@ let ViewItems = class ViewItems extends Component<any, any> {
             />
           </div>
         ) : null}
-      </div>
+      </div>)
     );
   }
 };

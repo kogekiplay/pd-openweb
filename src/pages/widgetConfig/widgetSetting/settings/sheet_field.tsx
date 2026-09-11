@@ -155,7 +155,7 @@ export default function SheetField(props) {
   };
 
   return (
-    <div className="settingItemWrap">
+    (<div className="settingItemWrap">
       <SettingItem>
         <div className="settingItemTitle">{_l('关联记录')}</div>
         {loading ? (
@@ -212,7 +212,7 @@ export default function SheetField(props) {
         <div className="settingItemTitle">{_l('显示字段')}</div>
         <Dropdown
           trigger={['click']}
-          visible={visible}
+          open={visible}
           onVisibleChange={visible => {
             if (visible) setSearchValue('');
             setVisible(visible);
@@ -321,6 +321,6 @@ export default function SheetField(props) {
           </div>
         </div>
       )}
-    </div>
+    </div>)
   );
 }

@@ -73,7 +73,7 @@ function ActionItemRow({ btn, editBtn, deleteBtn, handleCopy, toggleEnable, disa
   );
 
   return (
-    <div className={cx('customBtn alignItemsCenter', 'customBtnGroupedRow', { disabledCustomBtn: isDisabled })}>
+    (<div className={cx('customBtn alignItemsCenter', 'customBtnGroupedRow', { disabledCustomBtn: isDisabled })}>
       <span
         className="Hand con overflow_ellipsis alignItemsCenter"
         onClick={() => {
@@ -102,7 +102,7 @@ function ActionItemRow({ btn, editBtn, deleteBtn, handleCopy, toggleEnable, disa
         placement="bottomRight"
         align={{ overflow: { adjustX: true, adjustY: true } }}
         getPopupContainer={() => document.body}
-        visible={openMoreKey === moreKey}
+        open={openMoreKey === moreKey}
         onVisibleChange={handleDropdownVisibleChange}
       >
         <span
@@ -113,7 +113,7 @@ function ActionItemRow({ btn, editBtn, deleteBtn, handleCopy, toggleEnable, disa
           <Icon className="Font18 textTertiary hoverColorPrimary" icon="more_horiz" />
         </span>
       </Dropdown>
-    </div>
+    </div>)
   );
 }
 

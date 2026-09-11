@@ -73,11 +73,11 @@ const SectionColorConfigModal = props => {
   };
 
   return (
-    <Modal
+    (<Modal
       title={_l('区间颜色')}
       width={680}
       className="chartModal"
-      visible={visible}
+      open={visible}
       centered={true}
       destroyOnClose={true}
       closeIcon={<Icon icon="close" className="Font20 pointer textTertiary" />}
@@ -346,7 +346,7 @@ const SectionColorConfigModal = props => {
           </div>
         )}
       </div>
-    </Modal>
+    </Modal>)
   );
 };
 

@@ -175,7 +175,7 @@ export default function Btn(props) {
       maskStyle={{ zIndex: 999 }}
       wrapClassName="customPageButtonWrap"
       className="editWidgetDialogWrap"
-      visible
+      open
       transitionName=""
       maskTransitionName=""
       width="100%"

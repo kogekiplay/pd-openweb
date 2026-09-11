@@ -370,7 +370,7 @@ function ConnectAiDialog({ visible, projectId, initialPersonalTokens = null, onC
   );
 
   return (
-    <Dialog
+    (<Dialog
       dialogClasses="connectAiDialog"
       visible={visible}
       onCancel={onCancel}
@@ -391,7 +391,6 @@ function ConnectAiDialog({ visible, projectId, initialPersonalTokens = null, onC
           </div>
         ))}
       </div>
-
       <div className="tabPanel">
         {!installData.shouldHideCliInstall && renderQuickConnectCard()}
 
@@ -423,7 +422,7 @@ function ConnectAiDialog({ visible, projectId, initialPersonalTokens = null, onC
                 {renderFieldLabel(_l('个人访问令牌'))}
                 <Select
                   className="connectAiSelect"
-                  dropdownClassName="connectAiSelectDropdown"
+                  popupClassName="connectAiSelectDropdown"
                   placeholder={personalTokens.length ? _l('请选择个人访问令牌') : _l('当前组织暂无可用令牌')}
                   notFoundContent={_l('当前组织暂无可用令牌')}
                   value={selectedTokenId || undefined}
@@ -442,7 +441,7 @@ function ConnectAiDialog({ visible, projectId, initialPersonalTokens = null, onC
                 {renderFieldLabel(_l('应用'))}
                 <Select
                   className="connectAiSelect"
-                  dropdownClassName="connectAiSelectDropdown"
+                  popupClassName="connectAiSelectDropdown"
                   placeholder={_l('选择应用')}
                   notFoundContent={_l('暂无数据')}
                   value={selectedAppId || undefined}
@@ -456,7 +455,7 @@ function ConnectAiDialog({ visible, projectId, initialPersonalTokens = null, onC
                     {renderFieldLabel(_l('授权密钥'))}
                     <Select
                       className="connectAiSelect"
-                      dropdownClassName="connectAiSelectDropdown"
+                      popupClassName="connectAiSelectDropdown"
                       placeholder={_l('选择授权密钥')}
                       notFoundContent={_l('暂无数据')}
                       value={selectedAuthId || undefined}
@@ -492,7 +491,7 @@ function ConnectAiDialog({ visible, projectId, initialPersonalTokens = null, onC
 
         {installMode === 'dialog' && !installData.shouldHideCliInstall && renderInstallActions()}
       </div>
-    </Dialog>
+    </Dialog>)
   );
 }
 

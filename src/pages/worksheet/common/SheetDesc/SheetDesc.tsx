@@ -56,11 +56,11 @@ export default class SheetDesc extends Component<any, any> {
     const { cacheKey, title, visible, onClose, isEditing, setDescIsEditing, permissionType, data } = this.props;
     const { desc, resume, remark } = this.state;
     return (
-      <Modal
+      (<Modal
         zIndex={1000}
         className="appIntroDialog"
         wrapClassName="appIntroDialogWrapCenter"
-        visible={visible}
+        open={visible}
         onCancel={onClose}
         animation="zoom"
         width={800}
@@ -102,7 +102,7 @@ export default class SheetDesc extends Component<any, any> {
             onClose();
           }}
         />
-      </Modal>
+      </Modal>)
     );
   }
 }

@@ -61,10 +61,10 @@ export default props => {
   };
 
   return (
-    <Modal
+    (<Modal
       title={_l('附件编辑')}
       width={1080}
-      visible={visible}
+      open={visible}
       centered={true}
       destroyOnClose={true}
       closeIcon={<Icon icon="close" className="Font20 pointer textTertiary" />}
@@ -87,6 +87,6 @@ export default props => {
           onChangeAttachmentData(res);
         }}
       />
-    </Modal>
+    </Modal>)
   );
 };

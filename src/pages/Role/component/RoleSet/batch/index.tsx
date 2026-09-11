@@ -327,9 +327,9 @@ export default function (props) {
   };
 
   return (
-    <Modal
+    (<Modal
       className="roleBatchSetDialog"
-      visible={show}
+      open={show}
       onCancel={onClose}
       title={_l('批量设置数据操作权限')}
       footer={null}
@@ -421,6 +421,6 @@ export default function (props) {
           onClose={() => setShowRecordLoggingDialog(false)}
         />
       </Wrap>
-    </Modal>
+    </Modal>)
   );
 }

@@ -1,6 +1,9 @@
 import React from 'react';
 import { Collapse } from 'antd';
-import 'antd/lib/collapse/style/index.css';
+
+// import 'antd/lib/collapse/style/index.css';
+
+
 import _ from 'lodash';
 import { func, string } from 'prop-types';
 import styled from 'styled-components';

@@ -434,9 +434,9 @@ export default class extends Component<any, any> {
     const showTotal = displaySetup.showTotal && !_.isEmpty(summary);
 
     return (
-      <div className="flex flexColumn chartWrapper minHeight0 topChart Relative" ref={el => (this.chartWrapEl = el)}>
+      (<div className="flex flexColumn chartWrapper minHeight0 topChart Relative" ref={el => (this.chartWrapEl = el)}>
         <Dropdown
-          visible={dropdownVisible}
+          open={dropdownVisible}
           onVisibleChange={dropdownVisible => {
             this.setState({ dropdownVisible });
           }}
@@ -455,7 +455,7 @@ export default class extends Component<any, any> {
           </div>
         ) : null}
         <div className={showTotal ? 'showTotalHeight' : 'h100'}>{this.renderTopChart()}</div>
-      </div>
+      </div>)
     );
   }
 }

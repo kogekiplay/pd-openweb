@@ -102,15 +102,14 @@ export function TabHeaderItem(props) {
   };
 
   return (
-    <TabHeaderItemWrap titleStyle={titleStyle} titleColor={titlecolor}>
+    (<TabHeaderItemWrap titleStyle={titleStyle} titleColor={titlecolor}>
       {renderIcon()}
       <span className="Font15 Bold ellipsis tabHeaderTitle">{data.controlName}</span>
       <WidgetStatus data={data} style={{ lineHeight: '16px' }} />
-
       {isCollapse && (
         <Dropdown
           trigger={['click']}
-          visible={visible}
+          open={visible}
           onVisibleChange={visible => setVisible(visible)}
           overlay={
             <DropdownOverlay>
@@ -175,7 +174,7 @@ export function TabHeaderItem(props) {
           </div>
         </Dropdown>
       )}
-    </TabHeaderItemWrap>
+    </TabHeaderItemWrap>)
   );
 }
 

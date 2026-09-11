@@ -319,11 +319,11 @@ export default function (props) {
   };
 
   return (
-    <Drawer
+    (<Drawer
       onClose={onClose}
-      visible={showRefreshLog}
+      open={showRefreshLog}
       placement="right"
-      className="asdasd"
+      rootClassName="asdasd"
       closable={false}
       mask={false}
       bodyStyle={{ padding: 0 }}
@@ -385,6 +385,6 @@ export default function (props) {
         {renderCon()}
         {show && <LogDialog logInfo={list.find(o => o.id === id) || {}} onCancel={() => setState({ show: false })} />}
       </Wrap>
-    </Drawer>
+    </Drawer>)
   );
 }

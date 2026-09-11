@@ -791,7 +791,7 @@ export default class extends Component<any, any> {
     const span = Math.ceil(24 / newColumnCount);
     const controlMinAndMax = getControlMinAndMax(map);
     return (
-      <Wrap
+      (<Wrap
         className={cx(
           'numberChart flexRow h100 Relative',
           `verticalAlign-${numberChartStyle.allowScroll ? 'top' : 'center'}`,
@@ -855,7 +855,7 @@ export default class extends Component<any, any> {
             )}
         </Row>
         <Dropdown
-          visible={dropdownVisible}
+          open={dropdownVisible}
           onVisibleChange={dropdownVisible => {
             this.setState({ dropdownVisible });
           }}
@@ -865,7 +865,7 @@ export default class extends Component<any, any> {
         >
           <div className="Absolute" style={{ left: offset.x, top: offset.y }}></div>
         </Dropdown>
-      </Wrap>
+      </Wrap>)
     );
   }
 }

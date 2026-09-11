@@ -270,7 +270,7 @@ function FormIndexSetting(props) {
   }
 
   return (
-    <Fragment>
+    (<Fragment>
       <Con className="Relative">
         <div className="setIndexList">
           <div className="flexRow">
@@ -535,11 +535,11 @@ function FormIndexSetting(props) {
         </div>
         <Drawer
           width={497}
-          className="Absolute"
+          rootClassName="Absolute"
           zIndex={9}
           placement="right"
           onClose={() => setShowCreateIndex(false)}
-          visible={showCreateIndex}
+          open={showCreateIndex}
           maskClosable={false}
           getContainer={false}
           mask={false}
@@ -564,7 +564,7 @@ function FormIndexSetting(props) {
           )}
         </Drawer>
       </Con>
-    </Fragment>
+    </Fragment>)
   );
 }
 

@@ -63,9 +63,9 @@ export default function WorksheetLogDrawer(props) {
   }, [worksheetList]);
 
   return (
-    <Drawer
-      className="worksheetLogDrawer"
-      visible={visible}
+    (<Drawer
+      rootClassName="worksheetLogDrawer"
+      open={visible}
       title={null}
       closable={false}
       maskClosable={true}
@@ -120,6 +120,6 @@ export default function WorksheetLogDrawer(props) {
           </div>
         </div>
       </div>
-    </Drawer>
+    </Drawer>)
   );
 }

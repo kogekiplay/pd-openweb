@@ -1060,7 +1060,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
     }
 
     return (
-      <Fragment>
+      (<Fragment>
         {[1, 3].includes(currentPcNaviStyle) && (
           <Fragment>
             {dragMaskVisible && (
@@ -1172,7 +1172,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
             wrapClassName={cx('appIntroDialogWrapCenter', {
               preview: !isEditing,
             })}
-            visible={editAppIntroVisible || (!window.isPublicApp && isShowAppIntroFirst && description && isNormalApp)}
+            open={editAppIntroVisible || (!window.isPublicApp && isShowAppIntroFirst && description && isNormalApp)}
             onCancel={() =>
               this.switchVisible({
                 editAppIntroVisible: false,
@@ -1264,7 +1264,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
             }}
             width={900}
             title={null}
-            visible={navigationConfigVisible}
+            open={navigationConfigVisible}
             destroyOnClose={true}
             closeIcon={null}
             onClose={this.closeNavigationConfigVisible}
@@ -1335,7 +1335,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
           )}
           <Drawer
             title={null}
-            visible={roleDebugVisible}
+            open={roleDebugVisible}
             destroyOnClose={true}
             closeIcon={null}
             onClose={() =>
@@ -1366,7 +1366,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
             />
           </Drawer>
         </div>
-      </Fragment>
+      </Fragment>)
     );
   }
 };

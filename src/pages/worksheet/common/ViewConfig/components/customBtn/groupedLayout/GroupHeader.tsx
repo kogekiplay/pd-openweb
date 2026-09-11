@@ -150,7 +150,7 @@ export default function GroupHeader({
   };
 
   return (
-    <div
+    (<div
       ref={attachHeaderRef}
       className={cx('customBtnGroupedGroupHeader flexRow alignItemsCenter', {
         isDragging,
@@ -196,7 +196,7 @@ export default function GroupHeader({
         placement="bottomRight"
         align={{ overflow: { adjustX: true, adjustY: true } }}
         getPopupContainer={() => document.body}
-        visible={openMoreKey === moreKey}
+        open={openMoreKey === moreKey}
         onVisibleChange={handleDropdownVisibleChange}
       >
         <span
@@ -220,6 +220,6 @@ export default function GroupHeader({
           className="Font14 textTertiary customBtnGroupedGroupCaretIcon"
         />
       </span>
-    </div>
+    </div>)
   );
 }

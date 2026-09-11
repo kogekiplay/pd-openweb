@@ -751,9 +751,9 @@ export default class extends Component<any, any> {
     const { dropdownVisible, offset } = this.state;
     const { displaySetup = {} } = this.props.reportData;
     return (
-      <div className="flex flexColumn chartWrapper">
+      (<div className="flex flexColumn chartWrapper">
         <Dropdown
-          visible={dropdownVisible}
+          open={dropdownVisible}
           onVisibleChange={dropdownVisible => {
             this.setState({ dropdownVisible });
           }}
@@ -765,7 +765,7 @@ export default class extends Component<any, any> {
         </Dropdown>
         {displaySetup.showTotal && this.renderCount()}
         <div className="h100" ref={el => (this.chartEl = el)}></div>
-      </div>
+      </div>)
     );
   }
 }

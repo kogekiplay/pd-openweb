@@ -185,10 +185,10 @@ export default ({ visible, refreshPosition, refreshThumbnail }) => {
   }, [refreshPosition]);
 
   return (
-    <Drawer
+    (<Drawer
       placement="left"
-      className="workflowThumbnail"
-      visible={visible}
+      rootClassName="workflowThumbnail"
+      open={visible}
       closable={false}
       mask={false}
       bodyStyle={{ padding: 0 }}
@@ -209,6 +209,6 @@ export default ({ visible, refreshPosition, refreshThumbnail }) => {
           />
         </Box>
       </Thumbnail>
-    </Drawer>
+    </Drawer>)
   );
 };

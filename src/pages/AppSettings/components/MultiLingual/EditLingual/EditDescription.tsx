@@ -9,7 +9,7 @@ export default function (props) {
   const [editAppIntroVisible, setEditAppIntroVisible] = useState(false);
 
   return (
-    <Fragment>
+    (<Fragment>
       <Input.TextArea
         readOnly={true}
         style={{ resize: 'none' }}
@@ -26,7 +26,7 @@ export default function (props) {
         destroyOnClose={true}
         className="appIntroDialog appMultilingualDialog"
         wrapClassName="appIntroDialogWrapCenter"
-        visible={editAppIntroVisible}
+        open={editAppIntroVisible}
         onClose={() => setEditAppIntroVisible(false)}
         maskStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.7)' }}
         bodyStyle={{ padding: 0 }}
@@ -55,6 +55,6 @@ export default function (props) {
           onCancel={() => setEditAppIntroVisible(false)}
         />
       </Modal>
-    </Fragment>
+    </Fragment>)
   );
 }

@@ -196,10 +196,10 @@ class CalculateControl extends Component<any, any> {
 
     if (showDropdownId) {
       return (
-        <Dropdown
+        (<Dropdown
           trigger={['click']}
           overlay={this.renderControlTypeOverlay(control, norm)}
-          visible={showDropdownId}
+          open={showDropdownId}
           onVisibleChange={visible => {
             if (!visible) {
               this.setState({ showDropdownId: '' });
@@ -207,7 +207,7 @@ class CalculateControl extends Component<any, any> {
           }}
         >
           <span className="Absolute" style={showDropdownStyle} />
-        </Dropdown>
+        </Dropdown>)
       );
     } else {
       return null;
@@ -366,11 +366,11 @@ export default class CalculateControlModal extends Component<any, any> {
   render() {
     const { dialogVisible } = this.props;
     return (
-      <Modal
+      (<Modal
         title={_l('添加计算字段')}
         width={480}
         className="chartModal"
-        visible={dialogVisible}
+        open={dialogVisible}
         centered={true}
         destroyOnClose={true}
         closeIcon={<Icon icon="close" className="Font20 pointer textTertiary" />}
@@ -385,7 +385,7 @@ export default class CalculateControlModal extends Component<any, any> {
           }}
           {...this.props}
         />
-      </Modal>
+      </Modal>)
     );
   }
 }

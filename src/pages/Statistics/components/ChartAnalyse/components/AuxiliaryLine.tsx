@@ -154,11 +154,11 @@ class LineConfigModal extends Component<any, any> {
     const allYaxisList = _.uniqBy(yaxisList.concat(rightYaxisList), 'controlId');
 
     return (
-      <Modal
+      (<Modal
         title={type && _.find(auxiliaryLineTypes, { type }).name}
         width={580}
         className="chartModal"
-        visible={visible}
+        open={visible}
         centered={true}
         destroyOnClose={true}
         closeIcon={<Icon icon="close" className="Font20 pointer textTertiary" />}
@@ -329,7 +329,7 @@ class LineConfigModal extends Component<any, any> {
           )}
           {this.renderFooter()}
         </ModalContent>
-      </Modal>
+      </Modal>)
     );
   }
 }

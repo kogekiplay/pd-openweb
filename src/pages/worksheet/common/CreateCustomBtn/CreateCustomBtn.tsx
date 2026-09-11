@@ -449,14 +449,14 @@ class CreateCustomBtnCon extends React.Component<any, any> {
     }
 
     return (
-      <div
+      (<div
         className={`filterTextCon createCon ${
           !_.isUndefined(isListOption) && !isListOption && !isEdit ? 'pTop10 pBottom10' : 'pTop16 pBottom20'
         }`}
       >
         <div className="txtFilter textPrimary Bold Font13">{_l('添加按钮后自动创建流程')}</div>
         {!(!_.isUndefined(isListOption) && !isListOption && !isEdit) && ( //记录详情进入，且是创建，则不显示数据源类型，默认单条记录
-          <React.Fragment>
+          (<React.Fragment>
             <div className="mTop14">{_l('数据源')}</div>
             <RadioGroup
               data={[
@@ -477,9 +477,9 @@ class CreateCustomBtnCon extends React.Component<any, any> {
               }}
               checkedValue={isBatch ? 1 : 0}
             />
-          </React.Fragment>
+          </React.Fragment>)
         )}
-      </div>
+      </div>)
     );
   };
   renderCon = () => {
@@ -900,7 +900,7 @@ class CreateCustomBtnCon extends React.Component<any, any> {
   renderIcons = () => {
     const { icon, iconUrl = '', showCustomIcon } = this.state;
     return (
-      <div className="mTop32 customBtnIconBox">
+      (<div className="mTop32 customBtnIconBox">
         <h5 className="textPrimary Bold">{_l('图标')}</h5>
         <Trigger
           action={['click']}
@@ -969,7 +969,7 @@ class CreateCustomBtnCon extends React.Component<any, any> {
             </div>
           </div>
         </Trigger>
-      </div>
+      </div>)
     );
   };
 
@@ -1163,15 +1163,15 @@ class CreateCustomBtn extends React.Component<any, any> {
   render() {
     const { zIndex, onClose, isClickAway, btnI = '' } = this.props;
     return (
-      <Drawer
+      (<Drawer
         width={640}
-        className={cx('createCustomBtnConDraw')}
+        rootClassName={cx('createCustomBtnConDraw')}
         onClose={onClose}
         zIndex={zIndex}
         mask={true}
         placement="right"
         getContainer={false}
-        visible={true}
+        open={true}
         maskClosable={!!isClickAway}
         closable={false}
         bodyStyle={{ padding: 0 }}
@@ -1190,7 +1190,7 @@ class CreateCustomBtn extends React.Component<any, any> {
             />
           </div>
         </div>
-      </Drawer>
+      </Drawer>)
     );
   }
 }

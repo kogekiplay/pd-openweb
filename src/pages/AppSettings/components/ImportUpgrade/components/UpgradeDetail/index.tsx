@@ -63,11 +63,11 @@ export default class UpgradeDetail extends Component<any, any> {
     const { controls = [], views = [] } = data;
 
     return (
-      <Drawer
+      (<Drawer
         title={_l('更新详情')}
         placement="right"
         onClose={onClose}
-        visible={visible}
+        open={visible}
         closable={false}
         maskClosable={false}
         headerStyle={{}}
@@ -88,7 +88,6 @@ export default class UpgradeDetail extends Component<any, any> {
             </div>
           ))}
         </TabWrap>
-
         {tabType === 'fields' && (
           <UpgradeItemWrap
             modelType={modelType}
@@ -109,7 +108,7 @@ export default class UpgradeDetail extends Component<any, any> {
             isExpand={true}
           />
         )}
-      </Drawer>
+      </Drawer>)
     );
   }
 }

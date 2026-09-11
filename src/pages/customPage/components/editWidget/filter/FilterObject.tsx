@@ -259,7 +259,7 @@ export default function FilterObject(props) {
   }
 
   return (
-    <Fragment>
+    (<Fragment>
       <div className="valignWrapper mBottom8">
         <div className="flex Font13 bold">{_l('筛选对象')}</div>
         <div className="valignWrapper">
@@ -286,7 +286,7 @@ export default function FilterObject(props) {
         </div>
       </TagWrap>
       <Dropdown
-        visible={addTagVisible}
+        open={addTagVisible}
         destroyPopupOnHide={true}
         onVisibleChange={visible => {
           setAddTagVisible(visible);
@@ -297,6 +297,6 @@ export default function FilterObject(props) {
       >
         <div className="Relative" style={{ top: '-15px' }}></div>
       </Dropdown>
-    </Fragment>
+    </Fragment>)
   );
 }

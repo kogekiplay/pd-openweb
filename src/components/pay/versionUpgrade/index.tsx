@@ -379,7 +379,7 @@ export default class VersionUpgrade extends Component<any, any> {
     const selectVersionName = _.find(featureDataList, v => v.version === activeVersion).versionName;
 
     return (
-      <div className="versionUpgrade">
+      (<div className="versionUpgrade">
         <PayHeader />
         {orderId ? (
           this.renderExistOrder()
@@ -450,8 +450,6 @@ export default class VersionUpgrade extends Component<any, any> {
                     step={5}
                     defaultValue={30}
                     value={userCount}
-                    tooltipVisible={true}
-                    tipFormatter={value => (userCount <= 750 ? `${value}人` : _l('更多人数'))}
                     onChange={value => {
                       if (value < 30) return;
                       this.setState({ userCount: value });
@@ -463,7 +461,10 @@ export default class VersionUpgrade extends Component<any, any> {
                         this.getProductPrice();
                       });
                     }}
-                  />
+                    tooltip={{
+                      formatter: value => (userCount <= 750 ? `${value}人` : _l('更多人数')),
+                      open: true
+                    }} />
                 </div>
                 <div className="Font14 mRight15">
                   {_l('购买年限')} <span className="mLeft32">1{_l('年')}</span>
@@ -546,7 +547,6 @@ export default class VersionUpgrade extends Component<any, any> {
             </div>
           </Fragment>
         )}
-
         {editContractVisible && (
           <EditContractDialog
             projectId={projectId}
@@ -555,7 +555,7 @@ export default class VersionUpgrade extends Component<any, any> {
             updateContractInfo={contractInfo => this.setState({ contractInfo })}
           />
         )}
-      </div>
+      </div>)
     );
   }
 }

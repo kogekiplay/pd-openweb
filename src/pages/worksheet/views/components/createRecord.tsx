@@ -1,6 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Input } from 'antd';
-import 'antd/es/input/style/css';
+
+// import 'antd/es/input/style/css';
+
+
 import _ from 'lodash';
 import Trigger from 'rc-trigger';
 import styled from 'styled-components';

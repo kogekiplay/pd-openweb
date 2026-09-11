@@ -81,7 +81,7 @@ export default function VersionCard(props) {
   }, [data, isNocolySaas, projectId]);
 
   return (
-    <div className="infoCard row1">
+    (<div className="infoCard row1">
       <Icon
         icon="task-later"
         className={cx('versionRefreshIcon textTertiary hoverText Font17', { refreshing })}
@@ -157,7 +157,6 @@ export default function VersionCard(props) {
           </Fragment>
         )}
       </div>
-
       {!data.basicLoading &&
         !window.platformENV.isLocal &&
         (!window.platformENV.isOverseas ? (
@@ -198,8 +197,7 @@ export default function VersionCard(props) {
             )}
           </div>
         ))}
-
-      <Modal width={720} visible={freeTrialVisible} title={null} footer={null} onCancel={() => setVisible(false)}>
+      <Modal width={720} open={freeTrialVisible} title={null} footer={null} onCancel={() => setVisible(false)}>
         <FreeTrialWrap>
           <div className="title">{_l('额外获赠最多30天免费试用')}</div>
           <div className="subTitle">{_l('试用期间邀请同事加入即可获赠相应试用天数')}</div>
@@ -239,6 +237,6 @@ export default function VersionCard(props) {
           </Button>
         </FreeTrialWrap>
       </Modal>
-    </div>
+    </div>)
   );
 }

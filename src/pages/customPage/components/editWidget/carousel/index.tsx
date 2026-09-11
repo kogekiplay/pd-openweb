@@ -68,11 +68,11 @@ export default function Carousel(props) {
   };
 
   return (
-    <Modal
+    (<Modal
       maskStyle={{ zIndex: 999 }}
       wrapClassName="customPageCarouselWrap"
       className="editWidgetDialogWrap"
-      visible
+      open
       transitionName=""
       maskTransitionName=""
       width="100%"
@@ -125,6 +125,6 @@ export default function Carousel(props) {
           />
         </Wrap>
       </EditWidgetContent>
-    </Modal>
+    </Modal>)
   );
 }

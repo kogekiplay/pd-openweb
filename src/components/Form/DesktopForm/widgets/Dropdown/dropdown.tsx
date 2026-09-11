@@ -183,11 +183,11 @@ const DropdownComp = props => {
   };
 
   return (
-    <Fragment>
+    (<Fragment>
       <Select
         {...(mode ? { mode, tagRender } : {})}
         ref={selectRef}
-        dropdownClassName={dropdownClassName}
+        popupClassName={dropdownClassName}
         className={cx('w100 customAntSelect', { optionDisabled: disabled })}
         disabled={disabled}
         showSearch
@@ -244,7 +244,7 @@ const DropdownComp = props => {
           )}
       </Select>
       <OtherInput {...props} isSelect={true} />
-    </Fragment>
+    </Fragment>)
   );
 };
 

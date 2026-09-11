@@ -225,11 +225,11 @@ export default class BaseColor extends Component<any, any> {
     );
     const adaptThemeId = adaptThemeColors.map(item => item.id);
     return (
-      <Modal
+      (<Modal
         title={_l('图形颜色')}
         width={520}
         className="chartModal chartBaseColorModal"
-        visible={visible}
+        open={visible}
         centered={true}
         destroyOnClose={true}
         closeIcon={<Icon icon="close" className="Font20 pointer textTertiary" />}
@@ -267,7 +267,7 @@ export default class BaseColor extends Component<any, any> {
             )}
           </div>
         )}
-      </Modal>
+      </Modal>)
     );
   }
 }

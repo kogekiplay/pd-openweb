@@ -33,7 +33,7 @@ export default function (props) {
   };
 
   return (
-    <DynamicValueInputWrap>
+    (<DynamicValueInputWrap>
       {defaultType ? (
         <DynamicInput {...props} onTriggerClick={onTriggerClick} />
       ) : isDynamic ? (
@@ -52,12 +52,11 @@ export default function (props) {
         />
       )}
       <SelectOtherField {...props} onDynamicValueChange={setDynamicValue} ref={$wrap} />
-
       <Modal
         className="appIntroDialog"
         wrapClassName="appIntroDialogWrapCenter"
         footer={null}
-        visible={visible}
+        open={visible}
         onCancel={() => {
           setVisible(false);
         }}
@@ -83,6 +82,6 @@ export default function (props) {
           title={_l('内容')}
         />
       </Modal>
-    </DynamicValueInputWrap>
+    </DynamicValueInputWrap>)
   );
 }

@@ -573,12 +573,12 @@ class PublicConfig extends React.Component<any, any> {
     } = this.state;
 
     return (
-      <Drawer
+      (<Drawer
         width={640}
-        className="publicConfigSettingDrawer"
+        rootClassName="publicConfigSettingDrawer"
         title={_l('发布设置')}
         placement="right"
-        visible
+        open
         push={false}
         closeIcon={<i className="icon-close Font18" />}
         onClose={() => {
@@ -829,7 +829,6 @@ class PublicConfig extends React.Component<any, any> {
             </React.Fragment>
           )}
         </div>
-
         {[1, 2].includes(activeTab) && (
           <div className="footer flexRow">
             <div className="flex">
@@ -852,7 +851,6 @@ class PublicConfig extends React.Component<any, any> {
             </div>
           </div>
         )}
-
         {addControlVisible && (
           <AddControlDialog
             defaultText={DEFAULT_TEXT[activeSourceKey] || ''}
@@ -862,7 +860,6 @@ class PublicConfig extends React.Component<any, any> {
             }}
           />
         )}
-
         {confirmDialog.visible && (
           <Dialog
             visible
@@ -907,7 +904,7 @@ class PublicConfig extends React.Component<any, any> {
             }}
           />
         )}
-      </Drawer>
+      </Drawer>)
     );
   }
 }

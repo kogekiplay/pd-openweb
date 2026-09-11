@@ -412,12 +412,12 @@ export default class MoreOverlay extends Component<any, any> {
       return true;
     })();
     return (
-      <Fragment>
+      (<Fragment>
         {moreVisible && (
           <Dropdown
             trigger={['click']}
             placement={placement}
-            visible={dropdownVisible}
+            open={dropdownVisible}
             onVisibleChange={this.handleUpdateDropdownVisible}
             overlay={this.renderOverlay()}
           >
@@ -455,7 +455,7 @@ export default class MoreOverlay extends Component<any, any> {
             }}
           />
         )}
-      </Fragment>
+      </Fragment>)
     );
   }
 }

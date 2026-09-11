@@ -42,11 +42,11 @@ export default function View(props) {
   };
 
   return (
-    <Modal
+    (<Modal
       maskStyle={{ zIndex: 999 }}
       wrapClassName="customPageViewWrap"
       className="editWidgetDialogWrap"
-      visible
+      open
       transitionName=""
       maskTransitionName=""
       width="100%"
@@ -83,6 +83,6 @@ export default function View(props) {
           />
         </Wrap>
       </EditWidgetContent>
-    </Modal>
+    </Modal>)
   );
 }

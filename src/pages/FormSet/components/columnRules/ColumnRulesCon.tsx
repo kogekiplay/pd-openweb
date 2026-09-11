@@ -93,7 +93,7 @@ class ColumnRulesCon extends React.Component<any, any> {
     );
 
     return (
-      <Fragment>
+      (<Fragment>
         <div className="columnRuleTitle">
           <div className="flexRow">
             <span className="Font17 Bold flex LineHeight36">{_l('业务规则')}</span>
@@ -138,18 +138,16 @@ class ColumnRulesCon extends React.Component<any, any> {
             <Support type={3} text={_l('帮助')} href="https://help.mingdao.com/worksheet/business-rule" />
           </div>
         </div>
-
         {this.renderCon()}
-
         {selectRules.ruleId && (
           <Drawer
-            className="columnRulesDrawerContainer"
+            rootClassName="columnRulesDrawerContainer"
             width={640}
             title={isAdd ? _l('新建%0规则', tabText) : _l('编辑%0规则', tabText)}
             placement="right"
             mask={false}
             onClose={() => clearColumnRules()}
-            visible={true}
+            open={true}
             getContainer={false}
             closeIcon={<i className="icon-close Font20" />}
             footer={
@@ -164,7 +162,7 @@ class ColumnRulesCon extends React.Component<any, any> {
             <EditBox />
           </Drawer>
         )}
-      </Fragment>
+      </Fragment>)
     );
   }
 }

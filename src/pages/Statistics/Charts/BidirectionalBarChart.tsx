@@ -512,9 +512,9 @@ export default class extends Component<any, any> {
     const { rightY, summary = {} } = this.props.reportData;
     const dualAxesSwitchChecked = summary.showTotal || (rightY ? rightY.summary.showTotal : null);
     return (
-      <div className="flex flexColumn chartWrapper">
+      (<div className="flex flexColumn chartWrapper">
         <Dropdown
-          visible={dropdownVisible}
+          open={dropdownVisible}
           onVisibleChange={dropdownVisible => {
             this.setState({ dropdownVisible });
           }}
@@ -549,7 +549,7 @@ export default class extends Component<any, any> {
           </div>
         )}
         <div className={dualAxesSwitchChecked ? 'showTotalHeight' : 'h100'} ref={el => (this.chartEl = el)}></div>
-      </div>
+      </div>)
     );
   }
 }

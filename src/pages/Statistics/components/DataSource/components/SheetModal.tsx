@@ -471,11 +471,11 @@ export default class SheetModal extends Component<any, any> {
   render() {
     const { dialogVisible } = this.props;
     return (
-      <Modal
+      (<Modal
         title={_l('数据源')}
         width={640}
         className="chartModal chartSheetModal"
-        visible={dialogVisible}
+        open={dialogVisible}
         centered={true}
         destroyOnClose={true}
         closeIcon={<Icon icon="close" className="Font24 pointer textTertiary" />}
@@ -485,7 +485,7 @@ export default class SheetModal extends Component<any, any> {
         }}
       >
         {this.renderContent()}
-      </Modal>
+      </Modal>)
     );
   }
 }

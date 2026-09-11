@@ -214,11 +214,11 @@ const SearchRecord = props => {
   };
 
   return (
-    <Dropdown
+    (<Dropdown
       overlayClassName={overlayClassName}
       trigger={['click']}
       overlay={renderOverlay()}
-      visible={visible}
+      open={visible}
       placement="bottomRight"
       zIndex={1000}
       onVisibleChange={visible => {
@@ -232,7 +232,7 @@ const SearchRecord = props => {
       }}
     >
       {props.children}
-    </Dropdown>
+    </Dropdown>)
   );
 };
 

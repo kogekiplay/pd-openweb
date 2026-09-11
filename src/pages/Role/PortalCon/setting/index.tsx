@@ -333,13 +333,13 @@ class PortalSetting extends React.Component<any, any> {
     const Component = TYPE_TO_COMP[type];
 
     return (
-      <Drawer
+      (<Drawer
         width={640}
         onClose={() => closeSet()}
         zIndex={999}
         mask={true}
         placement="right"
-        visible={show}
+        open={show}
         maskClosable={true}
         closable={false}
       >
@@ -426,7 +426,7 @@ class PortalSetting extends React.Component<any, any> {
             </WrapCon>
           </Wrap>
         ) : null}
-      </Drawer>
+      </Drawer>)
     );
   }
 }

@@ -341,12 +341,12 @@ const Search = props => {
   }
 
   return (
-    <div ref={boxRef}>
+    (<div ref={boxRef}>
       <Select
         ref={searchRef}
         open={open}
         getPopupContainer={() => (isCell ? document.body : boxRef.current)}
-        dropdownClassName={dropdownClassName}
+        popupClassName={dropdownClassName}
         className={cx('w100 customAntSelect', { customApiSelect: isSelectBtn, customSelectIcon: enumDefault === 2 })}
         disabled={disabled}
         allowClear={value}
@@ -391,7 +391,7 @@ const Search = props => {
           );
         })}
       </Select>
-    </div>
+    </div>)
   );
 };
 

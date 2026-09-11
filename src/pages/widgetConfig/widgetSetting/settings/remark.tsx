@@ -28,7 +28,7 @@ const Wrap = styled.div`
 export default function Remark({ data, onChange }) {
   const [show, setShow] = useState(false);
   return (
-    <Fragment>
+    (<Fragment>
       <SettingItem>
         <div className="settingItemTitle">{_l('备注内容')}</div>
         <Wrap className="settingContent">
@@ -50,7 +50,7 @@ export default function Remark({ data, onChange }) {
             className="appIntroDialog"
             wrapClassName="appIntroDialogWrapCenter"
             footer={null}
-            visible={show}
+            open={show}
             onCancel={() => {
               setShow(false);
             }}
@@ -78,6 +78,6 @@ export default function Remark({ data, onChange }) {
           </Modal>
         )}
       </SettingItem>
-    </Fragment>
+    </Fragment>)
   );
 }

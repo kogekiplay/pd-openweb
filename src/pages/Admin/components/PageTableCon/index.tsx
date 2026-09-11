@@ -129,7 +129,7 @@ export default class PageTableCon extends Component<any, any> {
               <Dropdown
                 overlay={this.renderShowColumns}
                 trigger={['click']}
-                visible={dropDownVisible}
+                open={dropDownVisible}
                 onVisibleChange={visible => this.setState({ dropDownVisible: visible })}
                 placement="bottomRight"
               >
@@ -164,7 +164,7 @@ export default class PageTableCon extends Component<any, any> {
         };
 
     return (
-      <div className={`tableWrap flexColumn Relative ${className}`}>
+      (<div className={`tableWrap flexColumn Relative ${className}`}>
         <div className="flex" style={{ overflow: 'hidden', minHeight: 0 }}>
           {loading ? (
             <LoadDiv className="mTop40" />
@@ -216,7 +216,7 @@ export default class PageTableCon extends Component<any, any> {
             <Dropdown
               overlay={this.renderShowColumns}
               trigger={['click']}
-              visible={dropDownVisible}
+              open={dropDownVisible}
               onVisibleChange={visible => this.setState({ dropDownVisible: visible })}
               placement="bottomRight"
             >
@@ -232,7 +232,7 @@ export default class PageTableCon extends Component<any, any> {
             </Dropdown>
           </div>
         )}
-      </div>
+      </div>)
     );
   }
 }

@@ -141,7 +141,7 @@ export default function CalendarSet(props) {
   const startData = calendarcids[0] ? worksheetControls.filter(item => item.controlId === calendarcids[0].begin) : [];
   const isDelete = calendarcids[0] && calendarcids[0].begin && (!startData || startData.length <= 0);
   return (
-    <React.Fragment>
+    (<React.Fragment>
       <div className="title Font13 bold">{_l('日期')}</div>
       <SelectStartOrEndGroups
         {...props}
@@ -222,7 +222,6 @@ export default function CalendarSet(props) {
           </AnimationWrap>
         </div>
       </div>
-
       <div className="title Font13 bold mTop32">{_l('每周的第一天')}</div>
       <TimeDropdownChoose>
         <Select
@@ -231,7 +230,7 @@ export default function CalendarSet(props) {
           optionLabelProp="label"
           placeholder={_l('请选择')}
           suffixIcon={<Icon icon="arrow-down-border Font14" />}
-          dropdownClassName="dropConOption"
+          popupClassName="dropConOption"
           onChange={value => {
             if (value === weekbegin) {
               return;
@@ -395,6 +394,6 @@ export default function CalendarSet(props) {
           text={_l('显示所有日程')}
         />
       </ShowChoose>
-    </React.Fragment>
+    </React.Fragment>)
   );
 }

@@ -426,11 +426,11 @@ export default class EditUser extends Component<any, any> {
       this.state;
 
     return (
-      <Drawer
+      (<Drawer
         width={580}
         placement="right"
         onClose={onClose}
-        visible={openChangeUserInfoDrawer}
+        open={openChangeUserInfoDrawer}
         maskClosable={false}
         closable={false}
       >
@@ -510,7 +510,7 @@ export default class EditUser extends Component<any, any> {
             />
           )}
         </div>
-      </Drawer>
+      </Drawer>)
     );
   }
 }

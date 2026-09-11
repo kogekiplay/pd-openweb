@@ -192,9 +192,9 @@ export default class DepDropDown extends Component<any, any> {
     const { popupClassName, treePopupAlign } = this.props;
     const { options, searchOptions, keywords, isError, value } = this.state;
     return (
-      <TreeSelect
+      (<TreeSelect
         className="w100 customAntSelect customTreeSelect"
-        dropdownClassName={cx(popupClassName)}
+        popupClassName={cx(popupClassName)}
         dropdownPopupAlign={treePopupAlign}
         ref={this.treeSelectComp}
         virtual={false}
@@ -233,7 +233,7 @@ export default class DepDropDown extends Component<any, any> {
             this.loadData();
           }
         }}
-      />
+      />)
     );
   }
 }

@@ -249,11 +249,11 @@ export default class ShowControlModal extends Component<any, any> {
       handleChangeSize: this.handleChangeSize,
     };
     return (
-      <Modal
+      (<Modal
         title={_l('显示字段')}
         width={580}
         className="chartModal"
-        visible={dialogVisible}
+        open={dialogVisible}
         destroyOnClose={true}
         centered={true}
         closeIcon={<Icon icon="close" className="Font20 pointer textTertiary" />}
@@ -295,7 +295,7 @@ export default class ShowControlModal extends Component<any, any> {
             />
           </div>
         </div>
-      </Modal>
+      </Modal>)
     );
   }
 }

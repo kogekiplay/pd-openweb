@@ -1048,7 +1048,7 @@ export default function SheetWorkflow(props) {
 
   const Wrap = isMobile ? Fragment : ScrollView;
   return (
-    <div className="h100 w100 sheetWorkflowWrapper Relative">
+    (<div className="h100 w100 sheetWorkflowWrapper Relative">
       {renderFilter()}
       {loading ? (
         <LoadDiv className="pTop20" />
@@ -1089,16 +1089,16 @@ export default function SheetWorkflow(props) {
         placement="right"
         width={isMobile ? '85%' : '100%'}
         zIndex={isMobile ? 1000 : 10}
-        className="sheetWorkflowDrawer"
+        rootClassName="sheetWorkflowDrawer"
         closable={false}
         getContainer={isMobile ? () => document.body : false}
         mask={isMobile}
         push={false}
-        style={{
+        rootStyle={{
           position: 'absolute',
         }}
         onClose={handleCloseDrawer}
-        visible={workflowVisible}
+        open={workflowVisible}
       >
         {renderStepItem()}
       </Drawer>
@@ -1159,6 +1159,6 @@ export default function SheetWorkflow(props) {
             }}
           />
         ))}
-    </div>
+    </div>)
   );
 }

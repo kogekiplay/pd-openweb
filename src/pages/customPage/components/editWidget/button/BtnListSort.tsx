@@ -61,7 +61,7 @@ const renderSortableBtn = ({ item, DragHandle }) => (
 export default function BtnListSort({ buttonList, onSortEnd }) {
   const [visible, setVisible] = useState(false);
   return (
-    <Fragment>
+    (<Fragment>
       <Tooltip title={_l('按钮排序')}>
         <SortableBtnIconWrap className="mLeft10" onClick={() => setVisible(true)}>
           <Icon className="Font24 textTertiary hoverColorPrimary" icon="import_export" />
@@ -74,7 +74,7 @@ export default function BtnListSort({ buttonList, onSortEnd }) {
         centered
         closable={false}
         wrapClassName="customPageBtnSortModalWrap"
-        visible={visible}
+        open={visible}
         onCancel={() => setVisible(false)}
         footer={null}
       >
@@ -91,6 +91,6 @@ export default function BtnListSort({ buttonList, onSortEnd }) {
           <Button onClick={() => setVisible(false)}>{_l('完成')}</Button>
         </ModalContentWrap>
       </Modal>
-    </Fragment>
+    </Fragment>)
   );
 }

@@ -373,9 +373,9 @@ export default function BatchSetDialog(props) {
   };
 
   return (
-    <Modal
+    (<Modal
       title={_l('编辑列样式')}
-      visible={visible}
+      open={visible}
       onCancel={onClose}
       centered={true}
       maskClosable={false}
@@ -470,7 +470,7 @@ export default function BatchSetDialog(props) {
           {renderList('Hide')}
         </WrapCon>
       </div>
-    </Modal>
+    </Modal>)
   );
 }
 

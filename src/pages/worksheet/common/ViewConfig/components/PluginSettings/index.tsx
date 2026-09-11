@@ -171,7 +171,7 @@ function PluginSettings(params) {
   };
 
   return (
-    <Wrap className="mTop24">
+    (<Wrap className="mTop24">
       {/* <div className="title Bold mTop24">{_l('提交设置')}</div> */}
       <div className="tit mTop16 Bold">{_l('插件名称')}</div>
       <div className="pluginSet flexRow alignItemsCenter mTop8">
@@ -400,10 +400,10 @@ function PluginSettings(params) {
       </div>
       <Drawer
         width={400}
-        className="Absolute"
+        rootClassName="Absolute"
         onClose={() => setState({ editInfo: null, showEdit: false })}
         placement="right"
-        visible={showEdit}
+        open={showEdit}
         maskClosable={false}
         closable={false}
         getContainer={false}
@@ -507,7 +507,7 @@ function PluginSettings(params) {
           }
         />
       )}
-    </Wrap>
+    </Wrap>)
   );
 }
 

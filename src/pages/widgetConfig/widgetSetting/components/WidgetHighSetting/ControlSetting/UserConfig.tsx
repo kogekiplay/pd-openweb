@@ -174,7 +174,7 @@ export default function UserConfig(props) {
   };
 
   return (
-    <Fragment>
+    (<Fragment>
       {userType !== 2 && (
         <SettingItem>
           <div className="settingItemTitle">
@@ -209,7 +209,7 @@ export default function UserConfig(props) {
             <div className="content">
               <Dropdown
                 trigger={['click']}
-                visible={overlayVisible}
+                open={overlayVisible}
                 onVisibleChange={setVisible}
                 overlay={
                   <DropdownContent>
@@ -263,6 +263,6 @@ export default function UserConfig(props) {
           </DefaultOptionSetting>
         </SettingItem>
       )}
-    </Fragment>
+    </Fragment>)
   );
 }

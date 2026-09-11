@@ -396,7 +396,7 @@ class KcMain extends Component<any, any> {
 
     // 主体
     return (
-      <div className="kcMain kcMain flex" ref={kcApp => (this.kcApp = kcApp)}>
+      (<div className="kcMain kcMain flex" ref={kcApp => (this.kcApp = kcApp)}>
         <div className="previewFileMain">
           {isPreviewFile && (
             <AttachmentsPreview
@@ -604,10 +604,9 @@ class KcMain extends Component<any, any> {
             />
           )}
         </div>
-
         <Drawer
-          className="kcMain"
-          visible={isShowDetail}
+          rootClassName="kcMain"
+          open={isShowDetail}
           width={408}
           mask={false}
           drawerStyle={{
@@ -618,7 +617,7 @@ class KcMain extends Component<any, any> {
             right: 68,
             width: 340,
           }}
-          style={{ zIndex: detailAttamentsPreviewActive ? 16 : 6, overflow: 'visible' }}
+          rootStyle={{ zIndex: detailAttamentsPreviewActive ? 16 : 6, overflow: 'visible' }}
           bodyStyle={{ padding: 0 }}
           headerStyle={{ display: 'none' }}
           onClose={isPinDetail ? null : () => this.setState({ isShowDetail: false })}
@@ -644,7 +643,7 @@ class KcMain extends Component<any, any> {
             }}
           />
         </Drawer>
-      </div>
+      </div>)
     );
   }
 }

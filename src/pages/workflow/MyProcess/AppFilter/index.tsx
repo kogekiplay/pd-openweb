@@ -204,12 +204,12 @@ export default class AppFilter extends Component<any, any> {
     const { app, menuVisible } = this.state;
     const { apkId } = this.props;
     return (
-      <div>
+      (<div>
         <div className="Font13 mBottom10">{_l('应用')}</div>
         <Dropdown
           overlay={this.renderProjectList()}
           trigger={['click']}
-          visible={menuVisible}
+          open={menuVisible}
           onVisibleChange={menuVisible => {
             this.setState({ menuVisible });
             if (menuVisible) {
@@ -230,7 +230,7 @@ export default class AppFilter extends Component<any, any> {
           </div>
         </Dropdown>
         {app.id && this.renderWorkflowList()}
-      </div>
+      </div>)
     );
   }
 }

@@ -317,7 +317,7 @@ export default function EnvConfig(props) {
   const valueToShow = getValueToShow({ formData, reference, control, envIsMobile, envIsDisabled });
   const [selectedEnv, setSelectedEnv] = useState(get(valueToShow, '0.value'));
   return (
-    <Con className={className} ref={ref}>
+    (<Con className={className} ref={ref}>
       <div className="title">{_l('引用其他字段')}</div>
       <div className="sectionTitle">
         {_l(
@@ -400,7 +400,7 @@ export default function EnvConfig(props) {
         bodyStyle={{ padding: 0 }}
         width={490}
         title={null}
-        visible={drawerVisible}
+        open={drawerVisible}
         destroyOnClose={true}
         mask={false}
         closable={null}
@@ -430,7 +430,7 @@ export default function EnvConfig(props) {
           <i className="icon icon-close close" onClick={() => setDrawerVisible(false)}></i>
         </DrawerContent>
       </Drawer>
-    </Con>
+    </Con>)
   );
 }
 

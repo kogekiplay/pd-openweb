@@ -82,7 +82,7 @@ const MoreMenu = props => {
   };
 
   return (
-    <Fragment>
+    (<Fragment>
       {desc && (
         <Popover
           arrowPointAtCenter={true}
@@ -110,7 +110,7 @@ const MoreMenu = props => {
       {!isLand && (
         <Dropdown
           trigger={['click']}
-          visible={popupVisible}
+          open={popupVisible}
           onVisibleChange={value => setPopupVisible(value)}
           overlay={
             <MenuWrap style={{ width: 200 }}>
@@ -182,7 +182,7 @@ const MoreMenu = props => {
           setEditIntroVisible(false);
         }}
       />
-    </Fragment>
+    </Fragment>)
   );
 };
 

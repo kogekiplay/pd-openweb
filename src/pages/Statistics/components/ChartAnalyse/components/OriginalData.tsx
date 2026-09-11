@@ -106,7 +106,7 @@ export default class OriginalData extends Component<any, any> {
     const { displaySetup } = this.props;
     const { columnsSorts } = this;
     return (
-      <Fragment>
+      (<Fragment>
         <div className="mBottom10 Font13">{_l('显示数据')}</div>
         <div className="mBottom16">
           <Radio.Group onChange={this.handleChange} value={displaySetup.showControlIds.length ? 2 : 1}>
@@ -136,7 +136,7 @@ export default class OriginalData extends Component<any, any> {
           title={_l('自定义显示字段')}
           width={580}
           className="chartModal"
-          visible={showControlVisible}
+          open={showControlVisible}
           centered={true}
           destroyOnClose={true}
           closeIcon={<Icon icon="close" className="Font20 pointer textTertiary" />}
@@ -159,7 +159,7 @@ export default class OriginalData extends Component<any, any> {
             onChange={this.handleChangeColumn}
           />
         </Modal>
-      </Fragment>
+      </Fragment>)
     );
   }
   render() {

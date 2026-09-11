@@ -693,10 +693,10 @@ export default class Sort extends Component<any, any> {
     const Content = this.renderContent();
     if (!this.isRenderSort) return null;
     return (
-      <Fragment>
+      (<Fragment>
         {this.getIsSort() && (
           <Dropdown
-            visible={visible}
+            open={visible}
             onVisibleChange={this.handleChangeVisible}
             overlay={Content}
             trigger={['click']}
@@ -723,7 +723,7 @@ export default class Sort extends Component<any, any> {
             </div>
           }
           className="chartModal"
-          visible={!!currentCustomSort}
+          open={!!currentCustomSort}
           centered={true}
           width={400}
           footer={this.renderFooter()}
@@ -747,7 +747,7 @@ export default class Sort extends Component<any, any> {
             </ScrollView>
           </div>
         </Modal>
-      </Fragment>
+      </Fragment>)
     );
   }
 }

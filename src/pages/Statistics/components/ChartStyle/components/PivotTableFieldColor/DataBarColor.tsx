@@ -160,11 +160,11 @@ export default class DataBarColor extends Component<any, any> {
   render() {
     const { visible, onCancel } = this.props;
     return (
-      <Modal
+      (<Modal
         title={_l('数据条')}
         width={580}
         className="chartModal chartRuleColorModal"
-        visible={visible}
+        open={visible}
         centered={true}
         destroyOnClose={true}
         closeIcon={<Icon icon="close" className="Font20 pointer textTertiary" />}
@@ -172,7 +172,7 @@ export default class DataBarColor extends Component<any, any> {
         onCancel={onCancel}
       >
         {this.renderContent()}
-      </Modal>
+      </Modal>)
     );
   }
 }

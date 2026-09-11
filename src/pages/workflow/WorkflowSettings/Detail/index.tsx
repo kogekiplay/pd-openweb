@@ -77,15 +77,15 @@ class Detail extends Component<any, any> {
     }
 
     return (
-      <Drawer
+      (<Drawer
         placement="right"
-        className="Absolute"
-        visible={!!selectNodeId}
+        rootClassName="Absolute"
+        open={!!selectNodeId}
         closable={false}
         mask={false}
         getContainer={false}
         bodyStyle={{ padding: 0 }}
-        style={{ zIndex: 9 }}
+        rootStyle={{ zIndex: 9 }}
         width={800}
       >
         <div className="workflowSettings h100">
@@ -97,7 +97,7 @@ class Detail extends Component<any, any> {
             {this.renderContent()}
           </div>
         </div>
-      </Drawer>
+      </Drawer>)
     );
   }
 }

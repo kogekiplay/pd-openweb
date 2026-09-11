@@ -600,7 +600,7 @@ export default class PayConfig extends Component<any, any> {
     // const amountControlType =( _.find(controls,v=>v.controlId === payAmountControlId)||{}).type
 
     return (
-      <div className="payConfigWrap payAndInvoiceWrap">
+      (<div className="payConfigWrap payAndInvoiceWrap">
         <div className="configCon">
           <div className="configTitle">{_l('支付')}</div>
           <div className="configDesc">
@@ -662,7 +662,7 @@ export default class PayConfig extends Component<any, any> {
                 ) : (
                   <Select
                     className="w100 merchantList"
-                    dropdownClassName="merchantDropDown"
+                    popupClassName="merchantDropDown"
                     mode={isMultipleMerchant ? 'multiple' : undefined}
                     showArrow={true}
                     value={mchId}
@@ -904,13 +904,12 @@ export default class PayConfig extends Component<any, any> {
             )}
           </div>
         </div>
-
         <div className="footer">
           <Button type="primary" onClick={this.onSave}>
             {_l('保存设置')}
           </Button>
         </div>
-      </div>
+      </div>)
     );
   }
 }

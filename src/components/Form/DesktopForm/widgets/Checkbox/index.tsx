@@ -310,11 +310,11 @@ const CheckboxWidgets = props => {
     }
 
     return (
-      <Fragment>
+      (<Fragment>
         <Select
           ref={selectRef}
           mode="multiple"
-          dropdownClassName={dropdownClassName}
+          popupClassName={dropdownClassName}
           className={cx('w100 customAntSelect', { optionDisabled: disabled })}
           disabled={disabled}
           showSearch
@@ -402,7 +402,7 @@ const CheckboxWidgets = props => {
             isSelect={true}
           />
         )}
-      </Fragment>
+      </Fragment>)
     );
   };
 

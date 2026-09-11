@@ -161,9 +161,9 @@ class EditPublishSetDialog extends React.Component<any, any> {
     if (integratedWechat) {
       // 已集成
       return (
-        <Modal
+        (<Modal
           wrapClassName="addwechatModal"
-          visible={integratedWechat}
+          open={integratedWechat}
           width={608}
           onCancel={() => this.setState({ integratedWechat: false })}
           footer={null}
@@ -182,15 +182,15 @@ class EditPublishSetDialog extends React.Component<any, any> {
               {_l('提交后，顾问会电话联系您完成应用集成,也可主动联系顾问 联系电话：400-665-6655')}
             </div>
           </div>
-        </Modal>
+        </Modal>)
       );
     } else if (noIntegratedWechat) {
       // 未集成
       return (
-        <Modal
+        (<Modal
           wrapClassName="addwechatModal"
           width={608}
-          visible={noIntegratedWechat}
+          open={noIntegratedWechat}
           onCancel={() => this.setState({ noIntegratedWechat: false })}
           footer={null}
         >
@@ -202,7 +202,7 @@ class EditPublishSetDialog extends React.Component<any, any> {
               {_l('前往设置')}
             </div>
           </div>
-        </Modal>
+        </Modal>)
       );
     }
   };

@@ -1536,7 +1536,7 @@ class PivotTable extends Component<any, any> {
       [2, 3].includes(widthModel);
 
     return (
-      <Fragment>
+      (<Fragment>
         <PivotTableContent
           ref={this.$ref}
           isMobile={isMobile}
@@ -1591,7 +1591,7 @@ class PivotTable extends Component<any, any> {
           {!!dragValue && <div style={{ left: dragValue }} className="pivotTableDragLine" />}
         </PivotTableContent>
         <Dropdown
-          visible={dropdownVisible}
+          open={dropdownVisible}
           onVisibleChange={dropdownVisible => {
             this.setState({ dropdownVisible });
           }}
@@ -1601,7 +1601,7 @@ class PivotTable extends Component<any, any> {
         >
           <div className="Absolute" style={{ left: offset.x, top: offset.y }}></div>
         </Dropdown>
-      </Fragment>
+      </Fragment>)
     );
   }
 }

@@ -81,7 +81,7 @@ function ParaItem({ deleteItem, item, updateItem }) {
   const { type, data } = value;
   const [visible, setVisible] = useState(false);
   return (
-    <div className="paraItem flexCenter">
+    (<div className="paraItem flexCenter">
       <Input
         style={{ width: '100px' }}
         value={key}
@@ -103,7 +103,7 @@ function ParaItem({ deleteItem, item, updateItem }) {
           <div className="fieldWrap">{`{{${data}}}`}</div>
         )}
         <Dropdown
-          visible={visible}
+          open={visible}
           trigger={'click'}
           placement="bottomRight"
           onVisibleChange={setVisible}
@@ -143,7 +143,7 @@ function ParaItem({ deleteItem, item, updateItem }) {
           <i className="icon-delete_12"></i>
         </div>
       </Tooltip>
-    </div>
+    </div>)
   );
 }
 
