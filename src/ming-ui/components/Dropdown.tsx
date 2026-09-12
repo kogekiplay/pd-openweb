@@ -1,9 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import Icon from './Icon';
 import LoadDiv from './LoadDiv';
 import Menu from './Menu';
@@ -270,7 +270,13 @@ class Dropdown extends Component<any, any> {
       }
     }
 
-    this.trigger && this.trigger.forcePopupAlign();
+    // rc-trigger 5 的实例方法叫 forcePopupAlign，继任的 @rc-component/trigger
+    // 改名为 forceAlign（es/index.js:285 的 useImperativeHandle）。
+    // 这里原本是【无守卫】直调，迁移后直接抛
+    //   TypeError: this.trigger.forcePopupAlign is not a function
+    // 而且是在 componentDidUpdate 里抛，会被 ErrorBoundary 接住 —— 整块工作表视图
+    // 变成错误页（实测触发点：点视图的「排序」）。加上 ?. 是为了万一 ref 还没挂上。
+    this.trigger?.forceAlign?.();
   }
 
   filterFun(item) {

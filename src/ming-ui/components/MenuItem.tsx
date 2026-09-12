@@ -5,6 +5,11 @@ import Item from './Item';
 import './less/MenuItem.less';
 
 class MenuItem extends Component<any, any> {
+  // 用 declare：只声明类型、不生成运行时字段（babel 的 TS preset 会整行擦掉）。
+  // nativeElement 是 @rc-component/trigger 取 DOM 节点的约定入口，见 setItemRef。
+  declare menuItemNode: HTMLElement | null;
+  declare nativeElement: HTMLElement | null;
+
   static propTypes = {
     icon: PropTypes.element,
     iconAtEnd: PropTypes.bool,
@@ -24,6 +29,17 @@ class MenuItem extends Component<any, any> {
 
   setItemRef = node => {
     this.menuItemNode = node;
+    // 【rc-component 取 DOM 节点的约定】MenuItem 常被当作 <Trigger> 的直接子元素
+    //（如视图右键菜单里的「导出」，见 worksheet/components/ViewItems/SettingMenu.tsx）。
+    // rc-trigger 5 用 findDOMNode，class 组件天然可用；继任的 @rc-component/trigger
+    // 改成 getDOM(node)，而它只认两种东西（@rc-component/util Dom/findDOMNode.js:10）：
+    //   node.nativeElement 是 DOM，或者 node 本身就是 DOM
+    // class 组件的 ref 给出的是【实例】，两条都不满足 → targetEle 恒为 null，
+    // useAlign 算出的坐标完全失真，弹层被放到 (-6260, -7880)，即渲染在屏幕外。
+    // 这个失败是【静默】的：弹层在 DOM 里、内容也对、控制台无任何报错，
+    // 用户看到的就是「点了/悬停了没反应」。
+    this.nativeElement = node;
+
     if (this.props.setRef) {
       this.props.setRef(node);
     }

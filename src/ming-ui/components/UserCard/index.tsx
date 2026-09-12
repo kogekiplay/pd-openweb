@@ -1,9 +1,8 @@
 import React from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
-import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import { LoadDiv } from 'ming-ui';
@@ -17,6 +16,7 @@ import PersonalStatus from 'src/pages/chat/components/MyStatus/PersonalStatus';
 import * as actions from 'src/pages/chat/redux/actions';
 import store from 'src/redux/configureStore';
 import { browserIsMobile, getPathWithoutSubPath, pathCompletion } from 'src/utils/common';
+import copy from 'src/utils/copyToClipboard';
 import { EnlargeImage } from './EnlargeImage';
 import placements from './placements';
 import './css/userCard.less';
@@ -217,9 +217,14 @@ class UserCard extends React.Component<any, any> {
       if (!visible || enlargeImageVisible) return;
 
       const target = event.target;
-      const rootNode = this.triggerRef && this.triggerRef.getRootDomNode ? this.triggerRef.getRootDomNode() : undefined;
-      const popupNode =
-        this.triggerRef && this.triggerRef.getPopupDomNode ? this.triggerRef.getPopupDomNode() : undefined;
+      // rc-trigger 5 是 getRootDomNode() / getPopupDomNode() 两个方法；
+      // 继任的 @rc-component/trigger 改成 nativeElement / popupElement 两个属性
+      //（es/index.js:285 的 useImperativeHandle）。
+      // 原来的三元守卫不报错，但迁移后两个方法都不存在，rootNode / popupNode 恒为
+      // undefined —— 下面那个「点在卡片里就不关」的判断随之恒为假，
+      // 表现是【点卡片内部也会把卡片关掉】，且不报任何错。
+      const rootNode = this.triggerRef?.nativeElement;
+      const popupNode = this.triggerRef?.popupElement;
 
       if ((rootNode && rootNode.contains(target)) || (popupNode && popupNode.contains(target))) {
         return;
@@ -424,10 +429,11 @@ class UserCard extends React.Component<any, any> {
   };
 
   handleContentLoaded = () => {
-    // 当异步内容加载完成后，强制 rc-trigger 重新对齐位置
-    if (this.triggerRef && this.triggerRef.forcePopupAlign) {
-      this.triggerRef.forcePopupAlign();
-    }
+    // 当异步内容加载完成后，强制 trigger 重新对齐位置。
+    // 方法名在 rc-trigger 5 里叫 forcePopupAlign，继任的 @rc-component/trigger
+    // 改成了 forceAlign（es/index.js:285）。这里外面那层 if 守住了不报错，
+    // 但守卫恒为假 —— 迁移后这个「异步内容加载完再对齐」实际上【静默失效】了。
+    this.triggerRef?.forceAlign?.();
   };
 
   renderContent() {
@@ -612,7 +618,13 @@ class UserCard extends React.Component<any, any> {
     if (isMobile || disabled || isPublic || !md.global.Account.accountId) return this.props.children;
 
     return (
-      <Trigger key={wrapKey} ref={ele => { this.triggerRef = ele; }} {...props}>
+      <Trigger
+        key={wrapKey}
+        ref={ele => {
+          this.triggerRef = ele;
+        }}
+        {...props}
+      >
         {this.props.children}
       </Trigger>
     );
