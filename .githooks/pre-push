@@ -24,33 +24,32 @@ set -e
 #（实际见过的：react-dnd 16 的代码撞上 v11 的 DragObjectWithType；
 #  chalk 6 的代码撞上 v4 → `Cannot read properties of undefined (reading 'gray')`），
 # 看起来像是代码写错了，其实一条都不是。连栽两次，所以在最前面直接说清楚。
-# 用 yarn 自己的完整性记录判断，不自己造轮子；记录缺失时不拦（只提示）。
-#
-# 【第三次栽进来的教训】上面写着「yarn 不在……时只提示」，但原来的写法是
+# 【第三次栽进来的教训】曾经写成
 # `if command -v yarn && [ -f .yarn-integrity ]`，yarn 不在时整个 if 被跳过，
 # 一个字都不提示 —— 等于这条预检在没装 yarn 的机器上完全不存在。
 # 2026-09-11 就是这么中的：本机没有 yarn，主检出合完 antd 5 分支后 node_modules
 # 还是 antd 4.19.0，push 被类型门禁挡下并吐出 131 个新 key，全是
 # `TS2322 … maskStyle … not assignable to ModalProps` 这种指向业务文件的假错。
-# 所以 yarn 缺席时必须【明确说出来】，并改用 npx yarn 兜一次真检查。
-if [ -f node_modules/.yarn-integrity ]; then
-  if command -v yarn > /dev/null 2>&1; then
-    YARN_CHECK="yarn check --integrity"
-  elif command -v npx > /dev/null 2>&1; then
-    echo "pre-push: 本机没有 yarn，改用 npx yarn@1 做完整性检查（略慢）。"
-    YARN_CHECK="npx --yes yarn@1 check --integrity"
-  else
-    echo "pre-push: !! 本机既没有 yarn 也没有 npx，跳过 node_modules 一致性预检。"
-    echo "           如果下面的类型门禁报出大量指向业务文件的类型错，先确认"
-    echo "           node_modules 是否与当前 package.json 匹配。"
-    YARN_CHECK=""
-  fi
-
-  if [ -n "$YARN_CHECK" ] && ! $YARN_CHECK > /dev/null 2>&1; then
+#
+# 现在【不依赖 yarn 在不在】了：yarn 2 删掉了 `yarn check`（yarnpkg/rfcs#106），
+# 迁到 yarn 4 时改成自己写的戳，只需要 node —— 而 node 本来就是下面几道门禁的
+# 前提，不可能缺席。能力与原来的 `yarn check --integrity` 一致（依据见
+# scripts/install-stamp.js 文件头，那里记了 yarn 1 源码的核对结果）。
+if [ -d node_modules ]; then
+  node scripts/install-stamp.js check
+  STAMP_RC=$?
+  if [ "$STAMP_RC" = "1" ]; then
     echo "pre-push: !! node_modules 与 package.json/yarn.lock 不一致。"
     echo "           先跑 yarn install 再 push —— 否则下面的类型门禁会报出一堆"
     echo "           指向业务文件、但其实是版本不匹配造成的假错误。"
     exit 1
+  elif [ "$STAMP_RC" != "0" ]; then
+    # 走到这里说明戳不在（没跑过 yarn install，或用 npm/别的工具装的）。
+    # 沿用上面那条教训：不拦，但必须【明确说出来】，不能静默消失。
+    echo "pre-push: !! 没有安装戳，node_modules 一致性预检【未生效】。"
+    echo "           跑一次 yarn install 就会补上（.yarn/plugins 里的插件自动写）。"
+    echo "           在此之前，如果下面的类型门禁报出大量指向业务文件的类型错，"
+    echo "           先确认 node_modules 是否与当前 package.json 匹配。"
   fi
 fi
 

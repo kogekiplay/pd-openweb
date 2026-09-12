@@ -17,7 +17,8 @@
     "typecheck:fast": "cross-env NODE_OPTIONS=--max_old_space_size=8192 node scripts/typecheck/tsc-gate.js",
     "typecheck:stats": "cross-env NODE_OPTIONS=--max_old_space_size=8192 node scripts/typecheck/tsc-gate.js --stats --no-incremental",
     "typecheck:baseline": "cross-env NODE_OPTIONS=--max_old_space_size=8192 node scripts/typecheck/tsc-syntax-gate.js && cross-env NODE_OPTIONS=--max_old_space_size=8192 node scripts/typecheck/tsc-gate.js --write-baseline --no-incremental",
-    "hooks:install": "git config core.hooksPath .githooks && echo \"core.hooksPath -> .githooks 已配置\""
+    "hooks:install": "git config core.hooksPath .githooks && echo \"core.hooksPath -> .githooks 已配置\"",
+    "check:install": "node scripts/install-stamp.js check"
   },
   "dependencies": {
     "@ant-design/colors": "^8.0.1",
@@ -181,7 +182,6 @@
     "webpackbar": "7.0.0"
   },
   "resolutions": {
-    "mermaid/**/d3-color": "3.1.0",
     "@types/react": "18.3.31",
     "fast-uri": "3.1.7",
     "flatted": "3.4.4",
@@ -208,10 +208,10 @@
     "src/components/autoTextarea/autoTextarea.*",
     "src/pages/integration/svgIcon.*"
   ],
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
+  "packageManager": "yarn@4.18.0+sha512.fcb8716fe7cd0eece141ffc18b92193a9df9204c1ba83189c288835223fc0bbe64af473bab0d5e9927a7daeb5caf2bb07eb2787cc9338ca040ea125f2a1f2f7e",
   "engines": {
     "node": ">=26.8.1",
-    "yarn": "1.22.22",
+    "yarn": ">=4.18.0",
     "npm": "please-use-yarn"
   }
 }

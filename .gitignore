@@ -29,6 +29,18 @@ node_modules
 # Use yarn
 package-lock.json
 
+# Yarn 4 (Berry)。白名单式：默认忽略 .yarn/ 下全部内容，只放行需要版本化的几个。
+# 本仓用 nodeLinker: node-modules + 全局 cache，所以 .yarn/ 下实际只会出现
+# install-state.gz（安装状态缓存，机器相关，不提交）。patches/ 一旦用上必须提交，
+# 否则别人装出来的依赖跟你不是一份代码 —— 先写在这里，免得将来打补丁时踩。
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+
 # Tool output
 .codegraph/
 .scannerwork
