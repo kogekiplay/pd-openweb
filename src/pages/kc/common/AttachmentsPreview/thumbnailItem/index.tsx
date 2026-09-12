@@ -51,8 +51,18 @@ class ThumbnailItem extends React.Component<any, any> {
       let imagePath = attachment.viewUrl || '';
 
       if (imagePath) {
-        const urlObj = new URL(imagePath);
-        imagePath += urlObj.search ? `&imageView2/2/h/70` : `?imageView2/2/h/70`;
+        // 原来这里是 `const urlObj = new URL(imagePath); urlObj.search ? '&…' : '?…'`。
+        // 私有部署下 attachment.viewUrl 是【根相对路径】（实测形如
+        // /file/mdpic/<projectId>/<appId>/<recordId>/20260912/xxx.png?e=178926328），
+        // 而 new URL(相对路径) 不带 base 会直接抛 TypeError: Invalid URL。
+        // 抛在 render 里 → 整个 AttachmentsPreview 挂不上 → 表现就是「附件预览点不开」：
+        // 没有弹层、没有 ErrorBoundary 兜底页，只有控制台一条 Invalid URL。
+        // 而且只在【图片类】附件上触发（要 previewType === PICTURE 才走到这一行），
+        // 所以同一条记录里点 mp4 没事、点 png 就哑掉，很容易以为是文件本身的问题。
+        // SaaS 上 viewUrl 是绝对地址，所以上游一直没暴露。
+        // 这里本来就只想知道「有没有 query」，不需要解析整个 URL，看有没有 ? 即可 ——
+        // 绝对地址、根相对、协议相对（//host/…）三种都对。
+        imagePath += imagePath.includes('?') ? `&imageView2/2/h/70` : `?imageView2/2/h/70`;
       }
 
       content = (
