@@ -1,9 +1,9 @@
 import React, { Component, Fragment } from 'react';
-import withRouter from '../../../../router/withRouter';
+import { shallowEqual } from 'react-redux';
 import { Drawer } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Dialog, Icon, Input, SortableList } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -14,6 +14,7 @@ import { getShowViews } from 'src/pages/worksheet/views/util';
 import { navigateTo } from 'src/router/navigateTo';
 import { VersionProductType } from 'src/utils/enum';
 import { getFeatureStatus } from 'src/utils/project';
+import withRouter from '../../../../router/withRouter';
 import AddViewDisplayMenu from './AddViewDisplayMenu';
 import HideItem from './HideItem';
 import Item from './Item';
@@ -50,7 +51,7 @@ let ViewItems = class ViewItems extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.sheetInfoLoading && !prevProps.sheetInfoLoading) {
         this.flag = null;
         this.setState({
@@ -701,7 +702,7 @@ let ViewItems = class ViewItems extends Component<any, any> {
         _.get(l, 'advancedSetting.showhide') === 'hide' && (!searchWorksheetListValue || this.hasSearchWords(l.name)),
     );
     return (
-      (<div className="valignWrapper flex">
+      <div className="valignWrapper flex">
         <div>
           <Tooltip placement="bottom" title={_l('全部视图%05005')}>
             <Icon
@@ -843,7 +844,7 @@ let ViewItems = class ViewItems extends Component<any, any> {
             />
           </div>
         ) : null}
-      </div>)
+      </div>
     );
   }
 };

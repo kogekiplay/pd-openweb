@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import withRouter from '../../../../router/withRouter';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -9,6 +9,7 @@ import worksheetAjax from 'src/api/worksheet';
 import FixedContent from 'src/components/FixedContent';
 import { canEditApp } from 'src/pages/worksheet/redux/actions/util';
 import { navigateTo } from 'src/router/navigateTo';
+import withRouter from '../../../../router/withRouter';
 import RecordInfoWrapper from '../../common/recordInfo/RecordInfoWrapper';
 import './WorksheetRowLand.less';
 
@@ -50,7 +51,7 @@ class WorksheetRowLand extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const params = prevProps.match.params;
       const nextParams = this.props.match.params;
 

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -52,7 +53,7 @@ export default class ChangeColumn extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(prevProps.controlsSorts, this.props.controlsSorts)) {
         this.setState({
           controlsSorts: getControlsSorts(this.props.columns, this.props.controlsSorts),

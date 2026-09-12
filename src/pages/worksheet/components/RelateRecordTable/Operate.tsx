@@ -6,7 +6,7 @@ import _, { find, get, isEmpty, isUndefined } from 'lodash';
 import moment from 'moment';
 import { bool, func, shape, string } from 'prop-types';
 import { arrayOf } from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Dialog, Input } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';

@@ -1,4 +1,5 @@
 import React, { Component, lazy, Suspense } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import _, { identity } from 'lodash';
@@ -95,7 +96,7 @@ class View extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(prevProps.mobileNavGroupFilters, this.props.mobileNavGroupFilters)) {
         prevProps.fetchSheetRows({
           navGroupFilters: this.props.mobileNavGroupFilters,

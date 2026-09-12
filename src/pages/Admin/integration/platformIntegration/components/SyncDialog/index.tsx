@@ -1,8 +1,9 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import { Input } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { Dialog, Icon, LoadDiv, ScrollView } from 'ming-ui';
 import PaginationWrap from 'src/pages/Admin/components/PaginationWrap';
 import { INTEGRATION_INFO } from '../../config';
@@ -27,7 +28,7 @@ export default class SyncDialog extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (
         (!_.isEqual(prevProps.isBindRelationship, this.props.isBindRelationship) && this.props.isBindRelationship) ||
         (this.props.integrationType === 7 && this.props.visible)
@@ -183,7 +184,9 @@ export default class SyncDialog extends Component<any, any> {
           <input
             name="syncDialog"
             autoComplete="off"
-            ref={ele => { this.input = ele; }}
+            ref={ele => {
+              this.input = ele;
+            }}
             placeholder={_l('搜索姓名、部门、职位')}
             onChange={e => this.searchQWUserList(e.target.value)}
           />

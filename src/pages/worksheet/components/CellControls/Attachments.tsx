@@ -3,7 +3,7 @@ import { useClickAway } from 'react-use';
 import cx from 'classnames';
 import _, { get, isFunction } from 'lodash';
 import { bool, func, number, shape, string } from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Tooltip } from 'ming-ui/antd-components';
 import { deleteAttachmentOfControl } from 'worksheet/api';
@@ -735,7 +735,7 @@ function Attachment(props) {
         />
       }
       getPopupContainer={() => document.body}
-      destroyPopupOnHide
+      autoDestroy
       mouseEnterDelay={0.4}
       popupAlign={{
         points: ['tl', 'bl'],
@@ -960,7 +960,7 @@ function CellAttachments(props, sourceRef) {
         id={cell.controlId + rest.recordId}
         projectId={projectId}
         noWrap
-        destroyPopupOnHide={!window.isSafari} // 不是 Safari
+        autoDestroy={!window.isSafari} // 不是 Safari
         popupVisible={editable && (uploadFileVisible || !attachments.length)}
         from={from}
         canAddLink={false}
@@ -1023,7 +1023,7 @@ function CellAttachments(props, sourceRef) {
         getPopupContainer={popupContainer}
         popupClassName="filterTrigger"
         popupVisible={isediting}
-        destroyPopupOnHide
+        autoDestroy
         popupAlign={{
           points: ['tl', 'tl'],
           overflow: { adjustY: true },

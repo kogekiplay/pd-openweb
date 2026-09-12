@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { createPortal } from 'react-dom';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import '../less/Dialog.less';
@@ -134,7 +135,7 @@ class DialogBase extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.type !== prevProps.type) {
         this.autoPosition();
       }
@@ -347,10 +348,21 @@ class DialogBase extends Component<any, any> {
               overlayOnClick(e);
             }}
           >
-            <div className={dialogClassList.join(' ')} style={style} ref={dialog => { this._dialog = dialog; }}>
+            <div
+              className={dialogClassList.join(' ')}
+              style={style}
+              ref={dialog => {
+                this._dialog = dialog;
+              }}
+            >
               {this.props.children}
             </div>
-            <span className="mui-dialog-ghost" ref={ghost => { this._ghost = ghost; }} />
+            <span
+              className="mui-dialog-ghost"
+              ref={ghost => {
+                this._ghost = ghost;
+              }}
+            />
           </div>
         </div>
       );

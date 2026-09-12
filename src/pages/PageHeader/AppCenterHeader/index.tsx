@@ -2,7 +2,7 @@
 import withRouter from '../../../router/withRouter';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, Menu, MenuItem, ScrollView } from 'ming-ui';
 import { VerticalMiddle } from 'worksheet/components/Basics';
@@ -284,7 +284,7 @@ function AppCenterHeader(props) {
                         </Menu>
                       }
                       getPopupContainer={() => createRef.current}
-                      destroyPopupOnHide
+                      autoDestroy
                     >
                       <div ref={createRef}>
                         <NewMenuItem className="colorPrimary">

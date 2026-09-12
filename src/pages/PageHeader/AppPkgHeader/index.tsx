@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import api from 'api/homeApp';
@@ -37,7 +38,7 @@ let AppPkgHeader = class AppPkgHeader extends Component<any, any> {
   // 兼容形如 /worksheet/:worksheetId?的旧工作表路由
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const { appId, groupId, worksheetId } = getIds(this.props);
 
       if (appId === _.get(window, 'appInfo.id') && _.get(window, 'appInfo.currentPcNaviStyle') === 2) {

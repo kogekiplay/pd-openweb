@@ -1,10 +1,11 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import Button from 'ming-ui/components/Button';
 import LoadDiv from 'ming-ui/components/LoadDiv';
 import { addFriendConfirm } from 'ming-ui/functions';
-import API, { editIgnoreRecommends } from '../api';
 import { pathCompletion } from 'src/utils/common';
+import API, { editIgnoreRecommends } from '../api';
 
 export default class RecommendsList extends React.Component<any, any> {
   constructor() {
@@ -24,7 +25,7 @@ export default class RecommendsList extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.isLoaded !== prevProps.isLoaded && this.props.isLoaded === false) {
         this.setState(
           {

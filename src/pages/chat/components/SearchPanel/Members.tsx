@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import { LoadDiv, ScrollView } from 'ming-ui';
 import GroupController from 'src/api/group';
@@ -19,7 +20,7 @@ export default class Members extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.searchText !== prevProps.searchText) {
         this.setState(
           {

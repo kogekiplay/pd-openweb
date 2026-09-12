@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import domtoimage from 'dom-to-image';
 import { saveAs } from 'file-saver';
 import _ from 'lodash';
@@ -70,7 +71,7 @@ class TaskCanvas extends Component<any, any> {
   //删除节点
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.curId) {
         this.setState({
           currentId: this.props.curId,

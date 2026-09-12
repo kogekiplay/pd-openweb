@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import Confirm from 'ming-ui/components/Dialog/Confirm';
@@ -25,7 +26,7 @@ export default class BranchItem extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.index !== prevProps.index && this.state.isMove) {
         setTimeout(() => {
           this.mounted &&

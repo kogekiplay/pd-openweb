@@ -1,4 +1,5 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { browserIsMobile } from 'src/utils/common';
@@ -37,7 +38,7 @@ export default class Inbox extends React.Component<any, any> {
   };
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.inboxType !== prevProps.inboxType || this.props.count !== prevProps.count) {
         this.setState({
           filter: null,

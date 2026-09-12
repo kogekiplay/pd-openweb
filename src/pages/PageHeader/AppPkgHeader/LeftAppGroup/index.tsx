@@ -7,7 +7,7 @@ import { TinyColor } from '@ctrl/tinycolor';
 import homeAppApi from 'api/homeApp';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, Menu, MenuItem, ScrollView, Skeleton, SvgIcon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';

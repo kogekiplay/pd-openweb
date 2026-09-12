@@ -1,10 +1,11 @@
 import React, { Component, createRef } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import { func, number, shape, string } from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, MdLink, Menu, MenuItem, SvgIcon } from 'ming-ui';
 import { convertColor } from 'worksheet/common/WorkSheetLeft/WorkSheetItem';
@@ -57,7 +58,7 @@ let SortableAppItem = class SortableAppItem extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       this.ids = getIds(this.props);
     }
   }

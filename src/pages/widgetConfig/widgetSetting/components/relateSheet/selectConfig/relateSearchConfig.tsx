@@ -3,7 +3,7 @@ import cx from 'classnames';
 import update from 'immutability-helper';
 import { get, head } from 'lodash';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Checkbox, Dropdown, Icon, RadioGroup } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';

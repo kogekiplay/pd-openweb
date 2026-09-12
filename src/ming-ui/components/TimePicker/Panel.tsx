@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import classNames from 'classnames';
 import { times } from 'lodash';
 import moment from 'moment';
@@ -52,7 +53,7 @@ class Panel extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const { value, format } = this.props;
       this.setState({
         inputValue: format(value),

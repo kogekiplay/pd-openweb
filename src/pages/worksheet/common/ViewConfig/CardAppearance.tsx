@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -90,7 +91,7 @@ export default class CardAppearance extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const { view } = this.props;
       const { emptyname = '' } = getAdvanceSetting(view);
 

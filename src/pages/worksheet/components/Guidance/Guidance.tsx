@@ -1,7 +1,8 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { Button } from 'ming-ui';
 import './Guidance.less';
 
@@ -20,7 +21,7 @@ export default class Guidance extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (prevProps.sheetListVisible !== this.props.sheetListVisible) {
         setTimeout(() => {
           this.setState({

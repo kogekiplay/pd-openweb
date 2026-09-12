@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useSetState } from 'react-use';
 import _ from 'lodash';
 import moment from 'moment';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, LoadDiv } from 'ming-ui';
 import Oauth2Ajax from 'src/pages/workflow/api/oauth2';

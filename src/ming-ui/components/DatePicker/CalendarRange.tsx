@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import classNames from 'classnames';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -95,7 +96,7 @@ class CalendarRange extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const newState = {};
 
       if ('selectedValue' in this.props) {
@@ -307,7 +308,12 @@ class CalendarRange extends Component<any, any> {
     }
 
     return (
-      <div className={classes} ref={root => { this._root = root; }}>
+      <div
+        className={classes}
+        ref={root => {
+          this._root = root;
+        }}
+      >
         {taskHeader}
         <div className={`${prefixCls}-panel`}>
           <div className={`${prefixCls}-date-panel`}>

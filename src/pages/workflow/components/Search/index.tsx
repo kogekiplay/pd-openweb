@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import { func, string } from 'prop-types';
@@ -19,7 +20,7 @@ export default class Search extends Component<any, any> {
   state = { value: '' };
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.value !== prevProps.value) {
         this.setState({
           value: this.props.value,

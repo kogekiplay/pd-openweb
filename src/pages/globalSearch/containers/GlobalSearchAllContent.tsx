@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import { Skeleton } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -52,7 +53,7 @@ export default class GlobalSearchAllContent extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.searchKeyword !== prevProps.searchKeyword) {
         const { searchKeyword } = this.props;
         this.requestDebounce(searchKeyword);

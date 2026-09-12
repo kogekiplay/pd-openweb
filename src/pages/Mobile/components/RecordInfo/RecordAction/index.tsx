@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import { ActionSheet, Button, Dialog, Popup } from 'antd-mobile';
 import cx from 'classnames';
 import _, { get } from 'lodash';
@@ -67,7 +68,7 @@ class RecordAction extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.recordActionVisible !== prevProps.recordActionVisible && prevProps.isBatchOperate) {
         customBtnWorkflow();
       }

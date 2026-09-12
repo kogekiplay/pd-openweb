@@ -5,7 +5,7 @@ import { generate } from '@ant-design/colors';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, Menu, MenuItem, RichText, ScrollView, Skeleton } from 'ming-ui';
 import { Absolute, BlackBtn, FormTopImgCon, Hr } from 'worksheet/components/Basics';

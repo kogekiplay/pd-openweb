@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import Icon from 'ming-ui/components/Icon';
@@ -81,7 +82,7 @@ class MultipleDropdown extends Component<any, any> {
    */
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.value !== this.state.value) {
         this.setState({
           value: this.props.value,
@@ -169,7 +170,12 @@ class MultipleDropdown extends Component<any, any> {
     const classNames = classList.join(' ');
 
     return (
-      <div className={cx(classNames, this.props.className || '')} ref={root => { this.root = root; }}>
+      <div
+        className={cx(classNames, this.props.className || '')}
+        ref={root => {
+          this.root = root;
+        }}
+      >
         <button
           ref={button => {
             this.button = button;

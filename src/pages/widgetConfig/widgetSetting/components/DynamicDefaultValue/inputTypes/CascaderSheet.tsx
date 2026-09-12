@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import { arrayOf, func, shape, string } from 'prop-types';
 import CascaderDropdown from 'src/components/Form/DesktopForm/widgets/Cascader';
@@ -22,7 +23,7 @@ export default class CascaderSheet extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (_.get(this.props, 'data.controlId') !== _.get(prevProps, 'data.controlId')) {
         this.setState({
           visible: false,
@@ -129,7 +130,9 @@ export default class CascaderSheet extends Component<any, any> {
         {!hideOtherFields && (
           <SelectOtherField
             {...this.props}
-            ref={con => { this.$wrap = con; }}
+            ref={con => {
+              this.$wrap = con;
+            }}
             onDynamicValueChange={newValue => {
               this.props.onDynamicValueChange(newValue);
             }}

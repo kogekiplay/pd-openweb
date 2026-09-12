@@ -1,4 +1,5 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import update from 'immutability-helper';
 import _ from 'lodash';
@@ -164,7 +165,7 @@ export default class SortConditions extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (
         !_.isEqual(prevProps.sortConditions, this.props.sortConditions) ||
         !_.isEqual(prevProps.columns, this.props.columns)

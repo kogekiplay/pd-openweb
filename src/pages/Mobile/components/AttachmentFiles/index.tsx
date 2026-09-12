@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
@@ -28,7 +29,7 @@ export class UploadFileWrapper extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.files.length !== prevProps.files.length) {
         this.setState({
           files: this.props.files,
@@ -341,7 +342,13 @@ export class UploadFileWrapper extends Component<any, any> {
     const { appId, worksheetId, projectId } = this.props;
     const { children, qiniuUploadClassName, className, style } = this.props;
     return (
-      <div className="Relative mobileUploadTriggerWrap" style={style} ref={el => { this.uploadContainer = el; }}>
+      <div
+        className="Relative mobileUploadTriggerWrap"
+        style={style}
+        ref={el => {
+          this.uploadContainer = el;
+        }}
+      >
         <QiniuUpload
           className={qiniuUploadClassName}
           options={{
@@ -363,7 +370,13 @@ export class UploadFileWrapper extends Component<any, any> {
           }}
           {...this.getMethod()}
         >
-          <span ref={el => { this.uploadFileEl = el; }} id={this.id} className={className}>
+          <span
+            ref={el => {
+              this.uploadFileEl = el;
+            }}
+            id={this.id}
+            className={className}
+          >
             {children}
           </span>
         </QiniuUpload>

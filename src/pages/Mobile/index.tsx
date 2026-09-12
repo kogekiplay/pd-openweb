@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { createRoot } from 'react-dom/client';
+import { shallowEqual } from 'react-redux';
 import { Provider } from 'react-redux';
 import { Route, BrowserRouter as Router, Routes, useLocation } from 'react-router';
 import { Dialog, Modal } from 'antd-mobile';
@@ -29,7 +30,7 @@ let App = class App extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.location.pathname !== prevProps.location.pathname) {
         Dialog.clear();
         Modal.clear();

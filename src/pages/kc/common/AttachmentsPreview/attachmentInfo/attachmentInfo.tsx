@@ -1,4 +1,5 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
@@ -34,7 +35,7 @@ class attachmentInfo extends React.Component<any, any> {
   };
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       this.setState({
         visible: this.props.visible,
       });
@@ -87,7 +88,7 @@ class attachmentInfo extends React.Component<any, any> {
           postDetails,
         });
       })
-      .catch(() => { });
+      .catch(() => {});
   };
 
   toggleInfo = () => {

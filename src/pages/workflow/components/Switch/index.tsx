@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import { bool, func, string } from 'prop-types';
 import Icon from 'ming-ui/components/Icon';
@@ -46,7 +47,7 @@ export default class Switch extends Component<any, any> {
   };
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (!this.props.pending && prevProps.pending) {
         this.setState({
           disabled: false,

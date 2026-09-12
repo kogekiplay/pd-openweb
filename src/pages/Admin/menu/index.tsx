@@ -1,8 +1,9 @@
-﻿import React, { Component } from 'react';
+import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
+import { generatePath, matchPath } from 'react-router';
 import cx from 'classnames';
 import _ from 'lodash';
-import { generatePath, matchPath } from 'react-router';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { MdLink, UpgradeIcon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { navigateTo } from 'src/router/navigateTo';
@@ -32,8 +33,7 @@ const toAbsoluteAdminPath = path => (!path ? '' : path.startsWith('/') ? path : 
  * 参数键也跟着变：v4 的路径是 '/admin/structure/(.*)'，projectId 落在
  * path-to-regexp 的无名分组上、键名是下标 '0'；v7 的通配段键名是 '*'。
  */
-const isRoutePathMatched = (path, pathname) =>
-  !!matchPath(toAbsoluteAdminPath(path), getPathWithoutSubPath(pathname));
+const isRoutePathMatched = (path, pathname) => !!matchPath(toAbsoluteAdminPath(path), getPathWithoutSubPath(pathname));
 
 const buildMenuHref = (pattern, projectId) =>
   generatePath(pattern, pattern.includes(':projectId') ? { projectId } : { '*': projectId });
@@ -77,7 +77,7 @@ let AdminLeftMenu = class AdminLeftMenu extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const {
         location: { pathname },
         menuList,

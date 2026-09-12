@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import { Button, ConfigProvider, Input, Modal } from 'antd';
 import { Icon } from 'ming-ui';
 
@@ -11,7 +12,7 @@ export default class RenameModal extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.rename !== prevProps.rename) {
         this.setState({
           rename: this.props.rename,
@@ -47,7 +48,7 @@ export default class RenameModal extends Component<any, any> {
     const { dialogVisible } = this.props;
     const { rename } = this.state;
     return (
-      (<Modal
+      <Modal
         title={_l('重命名')}
         width={480}
         className="chartModal"
@@ -70,7 +71,7 @@ export default class RenameModal extends Component<any, any> {
             });
           }}
         />
-      </Modal>)
+      </Modal>
     );
   }
 }

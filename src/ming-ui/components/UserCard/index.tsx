@@ -3,7 +3,7 @@ import cx from 'classnames';
 import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import { LoadDiv } from 'ming-ui';
@@ -590,7 +590,7 @@ class UserCard extends React.Component<any, any> {
       action: ['hover'],
       builtinPlacements: placements,
       popupPlacement: 'topLeft',
-      destroyPopupOnHide: true,
+      autoDestroy: true,
       getPopupContainer: () => document.body,
       mouseEnterDelay: 0.1,
       mouseLeaveDelay: 0.3,

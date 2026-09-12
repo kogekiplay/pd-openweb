@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useRef } from 'react';
 import cx from 'classnames';
 import _, { includes } from 'lodash';
 import { arrayOf, bool, func, number, shape, string } from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { FixedTable } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';

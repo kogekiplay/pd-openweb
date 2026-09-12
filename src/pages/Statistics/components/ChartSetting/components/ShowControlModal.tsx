@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import { Button, ConfigProvider, Modal, Select } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -112,7 +113,7 @@ export default class ShowControlModal extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.dialogVisible && !prevProps.dialogVisible) {
         const columns = this.props.relationControls
           .filter(item => {
@@ -250,7 +251,7 @@ export default class ShowControlModal extends Component<any, any> {
       handleChangeSize: this.handleChangeSize,
     };
     return (
-      (<Modal
+      <Modal
         title={_l('显示字段')}
         width={580}
         className="chartModal"
@@ -296,7 +297,7 @@ export default class ShowControlModal extends Component<any, any> {
             />
           </div>
         </div>
-      </Modal>)
+      </Modal>
     );
   }
 }

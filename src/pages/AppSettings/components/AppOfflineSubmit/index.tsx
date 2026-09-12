@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { Button, Dialog, Input, LoadDiv, Menu, MenuItem, ScrollView, Support, SvgIcon, Switch } from 'ming-ui';
 import appManagementAjax from 'src/api/appManagement';
 import homeAppAjax from 'src/api/homeApp';

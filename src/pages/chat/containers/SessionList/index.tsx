@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { createRoot } from 'react-dom/client';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -29,7 +30,7 @@ class ContextMenu extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.visible) {
         this.renderLayer(this.props);
       } else {
@@ -117,7 +118,7 @@ class SessionList extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const { chatCount } = this.state;
       const { sessionList, currentSession } = this.props;
 

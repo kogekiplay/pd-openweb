@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { ROW_ID_CONTROL } from 'src/pages/widgetConfig/config/widget';
 import SelectControls from './SelectControls';
 
@@ -21,7 +22,7 @@ export default class AddCondition extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (
         this.props.from === 'fastFilter' &&
         this.props.defaultVisible !== this.state.columnListVisible &&
@@ -101,7 +102,9 @@ export default class AddCondition extends Component<any, any> {
           }
         >
           <div
-            ref={con => { this.box = con; }}
+            ref={con => {
+              this.box = con;
+            }}
             onClick={() => {
               if (disabled) {
                 return;

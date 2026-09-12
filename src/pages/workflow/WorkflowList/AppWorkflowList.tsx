@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import DocumentTitle from 'react-document-title';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -235,7 +236,7 @@ class AppWorkflowList extends Component<any, any> {
    */
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const type = this.getQueryStringType();
 
       if (type !== this.state.type) {

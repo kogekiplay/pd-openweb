@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import { Dialog } from 'ming-ui';
 import fixedDataAjax from 'src/api/fixedData.js';
 import workSiteController from 'src/api/workSite';
@@ -13,7 +14,7 @@ export default class SiteName extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       this.setState({
         workSiteName: this.props.workSiteId ? this.props.workSiteName : '',
       });

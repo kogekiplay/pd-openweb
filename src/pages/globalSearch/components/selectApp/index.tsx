@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { Icon, Input, SvgIcon } from 'ming-ui';
 import HomeAjax from 'src/api/homeApp';
 import './index.less';
@@ -35,7 +35,6 @@ export default function SelectApp(props) {
 
   return (
     <Trigger
-      className="appSelectTrigger"
       popupVisible={visible}
       onPopupVisibleChange={visible => setVisible(visible)}
       action={['click']}
@@ -68,7 +67,7 @@ export default function SelectApp(props) {
         </div>
       }
     >
-      <span className={`${className} selectApp ${value ? 'light' : ''}`}>
+      <span className={`${className} selectApp appSelectTrigger ${value ? 'light' : ''}`}>
         {value ? (
           <span className="selectedIconCon" style={{ background: value.iconColor }}>
             <SvgIcon url={value.iconUrl} fill="#FFF" size={10} />

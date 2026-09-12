@@ -3,7 +3,7 @@ import cx from 'classnames';
 import { includes } from 'lodash';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Menu, MenuItem } from 'ming-ui';
 import { UserHead } from 'ming-ui';

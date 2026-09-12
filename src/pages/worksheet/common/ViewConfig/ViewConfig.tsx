@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _, { get } from 'lodash';
 import { Icon, ScrollView } from 'ming-ui';
@@ -62,7 +63,7 @@ class ViewConfigCon extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.viewId !== prevProps.viewId) {
         const { view = {}, viewConfigTab, setViewConfigTab } = this.props;
         const isDevCustomView = (_.get(view, 'pluginInfo') || {}).source === 0; //是否可以开发状态的自定义视图

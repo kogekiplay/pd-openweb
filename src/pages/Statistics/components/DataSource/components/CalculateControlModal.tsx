@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button, ConfigProvider, Dropdown, Input, Menu, Modal } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import { Icon, TagTextarea } from 'ming-ui';

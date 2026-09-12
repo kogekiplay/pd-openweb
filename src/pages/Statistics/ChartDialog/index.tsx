@@ -1,4 +1,5 @@
 import React, { Component, Fragment, lazy, Suspense } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import DocumentTitle from 'react-document-title';
@@ -79,7 +80,7 @@ let ChartDialog = class ChartDialog extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const { activeData } = this.state;
 
       if (!this.props.loading && prevProps.loading && !_.isEmpty(activeData)) {

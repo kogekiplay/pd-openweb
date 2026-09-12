@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import withRouter from '../../../router/withRouter';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { SpinLoading } from 'antd-mobile';
@@ -13,6 +13,7 @@ import { addNewRecord } from 'src/pages/worksheet/redux/actions';
 import { getRequest } from 'src/utils/common';
 import { getAdvanceSetting } from 'src/utils/control';
 import { mdAppResponse } from 'src/utils/project';
+import withRouter from '../../../router/withRouter';
 import AppPermissions from '../components/AppPermissions';
 import * as actions from './redux/actions';
 import State from './State';
@@ -65,7 +66,7 @@ let RecordList = class RecordList extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const { params: newParams } = this.props.match;
       const { params } = prevProps.match;
 

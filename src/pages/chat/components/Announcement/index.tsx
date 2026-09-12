@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import Textarea from 'ming-ui/components/Textarea';
 import GroupController from 'src/api/group';
@@ -16,7 +17,7 @@ export default class Announcement extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const { session } = this.props;
 
       if (session.about !== this.state.value) {

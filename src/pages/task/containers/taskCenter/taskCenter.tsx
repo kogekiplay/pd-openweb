@@ -1,4 +1,5 @@
-﻿import React, { Component, Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import ErrorState from 'src/components/errorPage/errorState';
@@ -204,7 +205,7 @@ class TaskCenter extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const pathname = this.props.pathname || '';
       const folderIndex =
         pathname.indexOf('folder_') > -1 ? pathname.indexOf('folder_') : pathname.indexOf('center_folderId=');

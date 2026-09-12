@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import DateTimePicker from 'ming-ui/components/NewDateTimePicker/date-time-picker';
@@ -38,7 +39,7 @@ class DateTime extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.selectedValue !== prevProps.selectedValue) {
         const mode = this.props.timePicker ? 'datetime' : this.props.mode;
         const selectedValue = this.props.selectedValue ? moment(this.props.selectedValue).toDate() : null;

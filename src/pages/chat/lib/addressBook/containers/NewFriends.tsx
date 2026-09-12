@@ -1,4 +1,5 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import { LoadDiv, ScrollView } from 'ming-ui';
 import ListNull from '../components/ListNull';
 import NewFriendsList from '../components/NewFriendsList';
@@ -21,7 +22,7 @@ export default class NewFriends extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       this.setState({
         loadedRecommends: false,
         haveRecommends: true,

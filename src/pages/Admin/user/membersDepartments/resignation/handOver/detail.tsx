@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { Button, Checkbox, LoadDiv, UserCard, UserHead } from 'ming-ui';
 import { dialogSelectUser } from 'ming-ui/functions';
 import TransferController from 'src/api/transfer';

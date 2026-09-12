@@ -1,4 +1,5 @@
 import React, { Component, createRef, Fragment, lazy, Suspense } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import cx from 'classnames';
@@ -62,7 +63,7 @@ let Chart = class Chart extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.scopeVisible !== prevProps.scopeVisible || this.props.direction !== prevProps.direction) {
         setTimeout(() => {
           this.changeDragValue(this.props.direction);

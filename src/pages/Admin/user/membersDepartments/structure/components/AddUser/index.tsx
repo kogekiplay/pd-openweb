@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import { Drawer } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -36,7 +37,7 @@ export default class AddUser extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (prevProps.addUserVisible !== this.props.addUserVisible) {
         this.setState({
           addUserVisible: this.props.addUserVisible,
@@ -356,10 +357,12 @@ export default class AddUser extends Component<any, any> {
     const { passwordRegexTip } = _.get(md, 'global.SysSettings') || {};
 
     return (
-      (<Fragment>
+      <Fragment>
         {_.isEmpty(user) ? (
           <TextInput
-            ref={ele => { this.userNameInput = ele; }}
+            ref={ele => {
+              this.userNameInput = ele;
+            }}
             label={_l('姓名')}
             field={'userName'}
             value={userName}
@@ -568,7 +571,7 @@ export default class AddUser extends Component<any, any> {
             error={errors.autonomouslyPasswrod}
           />
         )}
-      </Fragment>)
+      </Fragment>
     );
   };
 
@@ -599,7 +602,7 @@ export default class AddUser extends Component<any, any> {
     } = this.state;
 
     return (
-      (<Fragment>
+      <Fragment>
         <Drawer
           size={580}
           placement="right"
@@ -633,7 +636,9 @@ export default class AddUser extends Component<any, any> {
                 <div className="formInfoWrap flex">
                   {this.renderBase()}
                   <BaseFormInfo
-                    ref={ele => { this.baseFormInfo = ele; }}
+                    ref={ele => {
+                      this.baseFormInfo = ele;
+                    }}
                     typeCursor={typeCursor}
                     actType={actType}
                     isUploading={isUploading}
@@ -701,7 +706,7 @@ export default class AddUser extends Component<any, any> {
             openChangeUserInfoDrawer={openChangeUserInfoDrawer}
           />
         )}
-      </Fragment>)
+      </Fragment>
     );
   }
 }

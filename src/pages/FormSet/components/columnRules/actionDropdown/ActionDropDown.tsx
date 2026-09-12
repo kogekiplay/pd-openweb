@@ -1,8 +1,9 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { Checkbox, Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import {
@@ -50,7 +51,7 @@ export default class DropDownItem extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const { dropDownData = [], actionType } = this.props;
 
       if (this.props.actionType !== prevProps.actionType) {
@@ -481,7 +482,9 @@ export default class DropDownItem extends Component<any, any> {
       >
         <div
           className={cx('fixedRuleDropdownSelected', { errorBorder: actionError, disabled })}
-          ref={con => { this.box = con; }}
+          ref={con => {
+            this.box = con;
+          }}
         >
           <span className="dropDownLabel">
             {!_.isEmpty(values) ? (

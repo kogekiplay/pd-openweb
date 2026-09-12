@@ -1,4 +1,5 @@
 import React, { Component, createRef, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import { generate } from '@ant-design/colors';
 import { Dropdown, Menu, Table } from 'antd';
 import cx from 'classnames';
@@ -134,7 +135,7 @@ class PivotTable extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const { style } = this.props.reportData;
       const { style: oldStyle } = prevProps.reportData;
 
@@ -1536,7 +1537,7 @@ class PivotTable extends Component<any, any> {
       [2, 3].includes(widthModel);
 
     return (
-      (<Fragment>
+      <Fragment>
         <PivotTableContent
           ref={this.$ref}
           isMobile={isMobile}
@@ -1601,7 +1602,7 @@ class PivotTable extends Component<any, any> {
         >
           <div className="Absolute" style={{ left: offset.x, top: offset.y }}></div>
         </Dropdown>
-      </Fragment>)
+      </Fragment>
     );
   }
 }

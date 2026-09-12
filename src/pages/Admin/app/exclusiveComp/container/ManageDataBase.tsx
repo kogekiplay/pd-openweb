@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import withRouter from '../../../../../router/withRouter';
 import _ from 'lodash';
 import moment from 'moment';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Dropdown, Icon, UserHead } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';

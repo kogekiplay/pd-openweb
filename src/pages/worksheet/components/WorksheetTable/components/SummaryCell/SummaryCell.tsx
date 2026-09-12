@@ -2,7 +2,7 @@
 import cx from 'classnames';
 import _, { includes } from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { Menu, MenuItem } from 'ming-ui';
 import ClickAway from 'ming-ui/components/ClickAway';
 import { getSummaryInfo } from 'src/utils/record';

@@ -1,8 +1,9 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import ClickAway from 'ming-ui/components/ClickAway';
 import { WORKSHEETTABLE_FROM_MODULE } from 'worksheet/constants/enum';
 import DatePicker from 'src/components/Form/DesktopForm/widgets/Date';
@@ -33,7 +34,7 @@ export default class Date extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.cell.value !== prevProps.cell.value) {
         this.setState({
           value: this.props.cell.value,
@@ -123,7 +124,7 @@ export default class Date extends React.Component<any, any> {
           getPopupContainer={cellPopupContainer}
           popupVisible={isediting && !!error}
           popup={<CellErrorTips error={error} pos={rowIndex === 0 ? 'bottom' : 'top'} />}
-          destroyPopupOnHide
+          autoDestroy
           // 数字而不是字符串："1051" 在 rc-trigger 5 的类型里是 TS2322（zIndex: number）。
           // 运行时等价：zIndex 是 React 的无单位样式属性，两种写法都出 z-index: 1051。
           zIndex={1051}

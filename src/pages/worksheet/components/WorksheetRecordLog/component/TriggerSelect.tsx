@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import '../WorksheetRecordLogValue.less';
 
 function TriggerSelect(props) {

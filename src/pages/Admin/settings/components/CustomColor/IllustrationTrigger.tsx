@@ -1,5 +1,5 @@
 import React from 'react';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { CUSTOM_ILLUSTRATION } from '../../config';
 
@@ -38,8 +38,9 @@ function IllustrationTrigger(props) {
           </div>
         </GuildWrap>
       }
-      popupTransitionName="Tooltip-move-top"
-      destroyPopupOnHide
+      // @rc-component/trigger 去掉了 popupTransitionName，动画改走 popupMotion。
+      popupMotion={{ motionName: 'Tooltip-move-top' }}
+      autoDestroy
       action={['hover']}
       popupAlign={{
         points: ['tl', 'tr'],

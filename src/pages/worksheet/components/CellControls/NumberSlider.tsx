@@ -1,8 +1,9 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Slider } from 'ming-ui';
 import ClickAway from 'ming-ui/components/ClickAway';
@@ -75,7 +76,7 @@ export default class NumberSlider extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.cell.value !== prevProps.cell.value) {
         this.setState({
           value: levelSafeParse(this.props.cell.value),
@@ -232,7 +233,7 @@ export default class NumberSlider extends React.Component<any, any> {
           getPopupContainer={popupContainer}
           popupClassName="filterTrigger"
           popupVisible={isediting}
-          destroyPopupOnHide
+          autoDestroy
           popupAlign={{
             points: ['tl', 'tl'],
           }}

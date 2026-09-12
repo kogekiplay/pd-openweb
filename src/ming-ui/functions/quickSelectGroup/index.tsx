@@ -4,7 +4,7 @@ import { useClickAway } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';
 import { bool, func, number, string } from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, LoadDiv, ScrollView } from 'ming-ui';
 import groupAjax from 'src/api/group';
@@ -298,7 +298,7 @@ export function SelectGroupTrigger(props) {
   const {
     offset = { top: 0, left: 0 },
     zIndex = 1001,
-    destroyPopupOnHide = false,
+    autoDestroy = false,
     defaultValue,
     hideIcon = false,
     everyoneOnly = false,
@@ -376,13 +376,12 @@ export function SelectGroupTrigger(props) {
       zIndex={zIndex}
       popupVisible={visible}
       action={['click']}
-      destroyPopupOnHide={destroyPopupOnHide}
+      autoDestroy={autoDestroy}
       popupAlign={{
         offset: popupOffset,
         points: ['tl', 'bl'],
         overflow: { adjustX: true, adjustY: true },
       }}
-      className={className}
       popup={
         <SelectGroup
           {...props}
@@ -403,8 +402,19 @@ export function SelectGroupTrigger(props) {
       onPopupVisibleChange={setVisible}
       getPopupContainer={getPopupContainer}
     >
-      {props.children || (
-        <DefaultChildWrap className="Hand">
+      {/*
+        rc-trigger 会把自己的 className 合并进【子元素】
+        （es/index.js:757 classNames(child.props.className, className)）。
+        @rc-component/trigger 没有 className 这个 prop —— 传了会被静默忽略，
+        样式无声丢失。所以这里显式复刻原行为：自定义 children 走 cloneElement，
+        默认 children 直接并到 DefaultChildWrap 上。
+      */}
+      {props.children ? (
+        React.cloneElement(props.children, {
+          className: cx(props.children.props && props.children.props.className, className),
+        })
+      ) : (
+        <DefaultChildWrap className={cx('Hand', className)}>
           {!hideIcon && <Icon icon="eye" className="Font16 textPlaceholder mRight5" />}
           <span className="colorPrimary">
             {value.length

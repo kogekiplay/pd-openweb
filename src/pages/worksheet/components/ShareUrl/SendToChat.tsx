@@ -2,7 +2,7 @@ import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react
 import cx from 'classnames';
 import { debounce } from 'lodash';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Button, Icon, LoadDiv, ScrollView, UserHead } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -217,7 +217,7 @@ export default function SendToChat(props) {
 
           setListActive(visible);
         }}
-        destroyPopupOnHide
+        autoDestroy
         popupAlign={{
           points: ['tl', 'bl'],
           offset: [0, 0],

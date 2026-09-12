@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { DatePicker, Menu, MenuItem } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { getIconByType } from 'src/pages/widgetConfig/util';
@@ -161,14 +161,13 @@ export default class DateCalcPicker extends Component<any, any> {
     );
     return (
       <Trigger
-        className="columnSelectDropdown"
         popupAlign={{
           points: ['tl', 'bl'],
         }}
         popup={popup}
         popupVisible={showMenu}
       >
-        <div className="dropdownHead">
+        <div className="dropdownHead columnSelectDropdown">
           {pickDate && this.renderDatePicker(value)}
           {!pickDate && value && this.renderSelected(selected)}
           <Tooltip title={_l('选择字段')} placement="bottom">

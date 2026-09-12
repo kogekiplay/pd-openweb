@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Tooltip } from 'ming-ui/antd-components';
 import Checkbox from 'ming-ui/components/Checkbox';
@@ -47,7 +48,7 @@ export default class CalendarRemind extends Component<any, any> {
   // 修改日程提醒类型 // 修改日程提醒类型
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       this.setState({
         value: convert(this.props.remindType, this.props.remindTime),
       });

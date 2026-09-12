@@ -1,5 +1,5 @@
 import React from 'react';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Button } from 'ming-ui';
 import WorksheetReference from '../../widgetSetting/components/WorksheetReference';

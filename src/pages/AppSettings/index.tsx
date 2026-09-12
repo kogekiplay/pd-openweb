@@ -1,4 +1,5 @@
 import React, { Component, Fragment, lazy, Suspense } from 'react';
+import { shallowEqual } from 'react-redux';
 import homeAppApi from 'api/homeApp';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -70,7 +71,7 @@ class AppSettings extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.location.search === '?backup') {
         this.setState({
           manageBackupFilesVisible: true,

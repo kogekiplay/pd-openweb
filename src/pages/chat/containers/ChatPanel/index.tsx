@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -73,7 +74,7 @@ class ChatPanel extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const { currentSession: newCurrentSession } = this.props;
       const { currentSession, currentSessionList, currentInboxList } = prevProps;
       const sessionSuperfluous = currentSessionList.filter(

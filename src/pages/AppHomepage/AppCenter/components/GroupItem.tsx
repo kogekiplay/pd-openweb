@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { bool, func, number, string } from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, MdLink, Menu, MenuItem, SvgIcon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';

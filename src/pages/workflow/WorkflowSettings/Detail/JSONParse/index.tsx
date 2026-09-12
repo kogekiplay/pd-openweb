@@ -1,12 +1,13 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import JsonView from '@mingdaocom/json-view';
 import cx from 'classnames';
-import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import { Dialog, Icon, LoadDiv, Menu, MenuItem, Radio, ScrollView, Support } from 'ming-ui';
 import flowNode from '../../../api/flowNode';
+import copy from 'src/utils/copyToClipboard';
 import { FIELD_TYPE_LIST } from '../../enum';
 import { checkConditionsIsNull } from '../../utils';
 import {
@@ -106,7 +107,7 @@ export default class JSONParse extends Component<any, any> {
    */
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.selectNodeId !== prevProps.selectNodeId) {
         this.getNodeDetail(this.props);
       }

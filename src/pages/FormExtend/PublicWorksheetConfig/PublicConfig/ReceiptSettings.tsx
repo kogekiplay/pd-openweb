@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, Input, Radio, RichText } from 'ming-ui';
 import { getIconByType } from 'src/pages/widgetConfig/util';

@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Collapse, Dropdown, Menu } from 'antd';
@@ -47,7 +48,7 @@ let DataSource = class DataSource extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const newViewId = _.get(this.props, ['currentReport', 'filter', 'viewId']);
       const newFormulasLength = _.get(this.props, ['currentReport', 'formulas', 'length']);
 
@@ -554,7 +555,12 @@ let DataSource = class DataSource extends Component<any, any> {
         {dataIsUnfold ? (
           <Fragment>
             {this.renderHeader()}
-            <ScrollView ref={el => { this.scrollViewRef = el; }} className="flex scrollWrapper">
+            <ScrollView
+              ref={el => {
+                this.scrollViewRef = el;
+              }}
+              className="flex scrollWrapper"
+            >
               {this.renderSheet()}
               {this.renderTime()}
               {!ownerId && appType !== 2 && this.renderPermission()}

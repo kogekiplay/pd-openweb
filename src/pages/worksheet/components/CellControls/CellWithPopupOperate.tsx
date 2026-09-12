@@ -1,6 +1,6 @@
 ﻿import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { isFunction } from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { emitter } from 'src/utils/common';
 
@@ -149,7 +149,11 @@ export default function CellWithPopupOperate({
 
   return (
     <Trigger
-      action={['']}
+      // 原来写的是 action={['']}。'' 从来不是合法的触发方式，rc-trigger 5 只是
+      // 匹配不到任何 handler 才等价于"不自动触发"；新包的 ActionType 是
+      // 'hover' | 'focus' | 'click' | 'contextMenu' 的联合，'' 直接报类型错。
+      // 显隐本来就由下面的 popupVisible state 外部控制，空数组才是它的本意。
+      action={[]}
       zIndex={999}
       popup={
         <PopupOperateCon

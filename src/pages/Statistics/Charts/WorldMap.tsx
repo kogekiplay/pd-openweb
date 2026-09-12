@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import { Dropdown, Menu } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -175,7 +176,7 @@ export default class extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const { style = {}, displaySetup = {} } = this.props.reportData;
       const { style: oldStyle = {}, displaySetup: oldDisplaySetup = {} } = prevProps.reportData;
 
@@ -417,7 +418,7 @@ export default class extends Component<any, any> {
     const { count, originalCount, dropdownVisible, offset } = this.state;
     const { summary, displaySetup = {} } = this.props.reportData;
     return (
-      (<div className="flex flexColumn chartWrapper Relative">
+      <div className="flex flexColumn chartWrapper Relative">
         <Dropdown
           open={dropdownVisible}
           onOpenChange={dropdownVisible => {
@@ -439,7 +440,9 @@ export default class extends Component<any, any> {
         )}
         <div
           className={cx('Relative', displaySetup.showTotal ? 'showTotalHeight' : 'h100')}
-          ref={el => { this.chartEl = el; }}
+          ref={el => {
+            this.chartEl = el;
+          }}
         />
         <ZoomWrapper className="flexColumn alignItemsCenter justifyContentCenter card">
           <Tooltip title={_l('放大')}>
@@ -470,7 +473,7 @@ export default class extends Component<any, any> {
             />
           </Tooltip>
         </ZoomWrapper>
-      </div>)
+      </div>
     );
   }
 }

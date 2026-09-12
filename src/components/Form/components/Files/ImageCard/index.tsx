@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { Icon, Menu, MenuItem, Progress } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { handleDownload, handleShare, loadImage } from '../utils';

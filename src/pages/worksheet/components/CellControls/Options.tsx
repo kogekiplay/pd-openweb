@@ -1,9 +1,10 @@
 import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { shallowEqual } from 'react-redux';
 import { useClickAway } from 'react-use';
 import cx from 'classnames';
 import _, { isEmpty } from 'lodash';
 import PropTypes, { bool, func, shape, string } from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Textarea } from 'ming-ui';
 import { WORKSHEETTABLE_FROM_MODULE } from 'worksheet/constants/enum';
@@ -144,7 +145,7 @@ function OtherOption(props) {
           />
         </div>
       }
-      destroyPopupOnHide
+      autoDestroy
       popupAlign={{
         points: ['tl', 'bl'],
         overflow: { adjustY: true, adjustX: true },
@@ -203,7 +204,7 @@ export default class Options extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.cell.value !== prevProps.cell.value && !this.props.isediting) {
         this.setState({
           value: this.props.cell.value,
@@ -614,7 +615,7 @@ export default class Options extends React.Component<any, any> {
                 pos={rowIndex === 0 ? 'bottom' : 'top'}
               />
             }
-            destroyPopupOnHide
+            autoDestroy
             popupAlign={{
               points: ['tl', 'bl'],
               offset: [0, rowIndex === 0 ? 0 : -1 * style.height],

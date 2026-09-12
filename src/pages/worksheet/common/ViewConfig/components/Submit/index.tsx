@@ -3,7 +3,7 @@ import { useSetState } from 'react-use';
 import cx from 'classnames';
 import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Dialog, Icon, LoadDiv, Radio, ScrollView, UserHead } from 'ming-ui';
 import pluginAjax from 'src/api/plugin';

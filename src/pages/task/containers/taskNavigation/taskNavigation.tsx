@@ -1,11 +1,12 @@
 import React, { Component, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { renderToString } from 'react-dom/server';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import doT from 'dot';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { LoadDiv, UserHead } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -393,7 +394,7 @@ class TaskNavigation extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.taskConfig.filterUserId !== prevProps.taskConfig.filterUserId) {
         setTimeout(() => {
           this.getTaskNavAll();

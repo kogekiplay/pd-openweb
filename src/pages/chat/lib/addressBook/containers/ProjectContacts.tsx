@@ -1,4 +1,5 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import styled from 'styled-components';
 import departmentController from 'src/api/department';
@@ -113,7 +114,7 @@ export default class ProjectContacts extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       this.setState({}, this.fetchDepartments);
       if (!_.isEqual(prevProps.projectId, this.props.projectId)) {
         this.setState({

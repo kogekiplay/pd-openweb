@@ -1,9 +1,10 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import Button from 'ming-ui/components/Button';
 import LoadDiv from 'ming-ui/components/LoadDiv';
-import API, { editAgreeFriend, editRefuseFriend } from '../api';
 import { pathCompletion } from 'src/utils/common';
+import API, { editAgreeFriend, editRefuseFriend } from '../api';
 
 export default class NewFriendsList extends React.Component<any, any> {
   constructor() {
@@ -19,7 +20,7 @@ export default class NewFriendsList extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.isLoaded !== prevProps.isLoaded && this.props.isLoaded === false) {
         this.setState(
           {

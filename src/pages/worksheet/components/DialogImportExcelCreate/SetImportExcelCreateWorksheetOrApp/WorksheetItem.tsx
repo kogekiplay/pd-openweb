@@ -1,7 +1,8 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Checkbox, Icon, Menu, MenuItem } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -79,7 +80,7 @@ export default class WorksheetItem extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       this.computeDirectionVisible();
     }
   }
@@ -305,7 +306,9 @@ export default class WorksheetItem extends Component<any, any> {
                           name="setImportExcelCreateWorksheetOrAppWorksheetItem"
                           autoComplete="off"
                           defaultValue={currentSheetInfo.sheetName}
-                          ref={node => { this.editInput = node; }}
+                          ref={node => {
+                            this.editInput = node;
+                          }}
                           className="editSheetNameInput textPrimary"
                           autoFocus
                           onFocus={() => {

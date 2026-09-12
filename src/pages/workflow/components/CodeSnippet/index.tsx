@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { func, number, string } from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Button, Checkbox, Dialog, LoadDiv, Menu, MenuItem, Radio, ScrollView, TagTextarea } from 'ming-ui';
 import flowNodeAjax from '../../api/flowNode';

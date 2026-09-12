@@ -7,7 +7,7 @@ import zh_TW from 'antd/es/date-picker/locale/zh_TW';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 
 const lang = getCookie('i18n_langtag') || window.getDefaultLangKey();

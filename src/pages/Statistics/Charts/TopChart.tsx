@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import { Dropdown, Menu } from 'antd';
 import { TinyColor } from '@ctrl/tinycolor';
 import cx from 'classnames';
@@ -159,7 +160,7 @@ export default class extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.reportData.yaxisList, prevProps.reportData.yaxisList)) {
         this.setCount(this.props);
       }
@@ -434,7 +435,12 @@ export default class extends Component<any, any> {
     const showTotal = displaySetup.showTotal && !_.isEmpty(summary);
 
     return (
-      (<div className="flex flexColumn chartWrapper minHeight0 topChart Relative" ref={el => { this.chartWrapEl = el; }}>
+      <div
+        className="flex flexColumn chartWrapper minHeight0 topChart Relative"
+        ref={el => {
+          this.chartWrapEl = el;
+        }}
+      >
         <Dropdown
           open={dropdownVisible}
           onOpenChange={dropdownVisible => {
@@ -455,7 +461,7 @@ export default class extends Component<any, any> {
           </div>
         ) : null}
         <div className={showTotal ? 'showTotalHeight' : 'h100'}>{this.renderTopChart()}</div>
-      </div>)
+      </div>
     );
   }
 }

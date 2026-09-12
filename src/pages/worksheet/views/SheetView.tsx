@@ -1,4 +1,5 @@
 import React, { useContext, useMemo } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import cx from 'classnames';
@@ -529,7 +530,7 @@ class TableViewBase extends React.Component<any, any> {
   };
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const {
         view,
         fetchRows,

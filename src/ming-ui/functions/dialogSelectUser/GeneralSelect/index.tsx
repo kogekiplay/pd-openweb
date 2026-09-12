@@ -1,4 +1,5 @@
-﻿import React, { Component, createRef, Fragment } from 'react';
+import React, { Component, createRef, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Button, LoadDiv, ScrollView } from 'ming-ui';
@@ -151,7 +152,7 @@ export default class GeneraSelect extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const needUpdate =
         this.props.commonSettings.projectId !== this.commonSettings.projectId ||
         this.props.commonSettings.dataRange !== this.commonSettings.dataRange;
@@ -1678,7 +1679,9 @@ export default class GeneraSelect extends Component<any, any> {
         <ScrollView
           className="GSelect-container"
           onScrollEnd={this.updateEvent.bind(this)}
-          ref={scrollView => { this.scrollView = scrollView; }}
+          ref={scrollView => {
+            this.scrollView = scrollView;
+          }}
         >
           {this.renderContent()}
         </ScrollView>

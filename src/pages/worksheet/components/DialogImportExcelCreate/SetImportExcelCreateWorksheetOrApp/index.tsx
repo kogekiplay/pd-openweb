@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Select } from 'antd';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Button, Checkbox, Dialog, Icon, LoadDiv, Menu, MenuItem, Support } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -305,7 +305,7 @@ let SetImportExcelCreateWorksheetOrApp = class SetImportExcelCreateWorksheetOrAp
                     }}
                     action={['click']}
                     zIndex={1000}
-                    destroyPopupOnHide={true}
+                    autoDestroy={true}
                     popup={() => (
                       <ExcelControlSetting
                         data={{ ...control }}

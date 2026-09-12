@@ -1,7 +1,7 @@
 import React, { Fragment, lazy, Suspense, useEffect } from 'react';
 import { useSetState } from 'react-use';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Button, Icon, Input, LoadDiv, SortableList } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';

@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { Divider } from 'antd';
 import _ from 'lodash';
@@ -34,7 +35,7 @@ let InboxList = class InboxList extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (
         !_.isEqual(_.omit(this.props, 'count', 'requestNow'), _.omit(prevProps, 'count', 'requestNow')) ||
         (this.props.count && this.props.count !== prevProps.count) ||

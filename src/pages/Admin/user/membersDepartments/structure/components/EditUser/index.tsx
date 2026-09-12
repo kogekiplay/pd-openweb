@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import { Drawer } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -55,7 +56,7 @@ export default class EditUser extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.typeCursor !== 0 && !_.isEqual(prevProps.editCurrentUser, this.props.editCurrentUser)) {
         const { fullname, mobilePhone, email, jobNumber, contactPhone } = this.props;
         this.setState({
@@ -426,7 +427,7 @@ export default class EditUser extends Component<any, any> {
       this.state;
 
     return (
-      (<Drawer
+      <Drawer
         size={580}
         placement="right"
         onClose={onClose}
@@ -461,7 +462,9 @@ export default class EditUser extends Component<any, any> {
               <div className="formInfoWrap flex">
                 {this.renderBaseUserInfo()}
                 <BaseFormInfo
-                  ref={ele => { this.baseFormInfo = ele; }}
+                  ref={ele => {
+                    this.baseFormInfo = ele;
+                  }}
                   typeCursor={typeCursor}
                   actType={actType}
                   isUploading={isUploading}
@@ -510,7 +513,7 @@ export default class EditUser extends Component<any, any> {
             />
           )}
         </div>
-      </Drawer>)
+      </Drawer>
     );
   }
 }

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { FILTER_CONDITION_TYPE } from '../../enum';
@@ -22,7 +23,7 @@ export default class Number extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (
         this.props.value !== prevProps.value ||
         this.props.minValue !== prevProps.minValue ||

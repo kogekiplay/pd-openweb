@@ -1,4 +1,5 @@
 import React, { Component, Fragment, useState } from 'react';
+import { shallowEqual } from 'react-redux';
 import { Button, Checkbox, ConfigProvider, Input, Modal, Radio, Select } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -497,7 +498,7 @@ export default class RuleColor extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.visible) {
         const { model = 1 } = this.props.colorRule || {};
         this.setState({
@@ -547,7 +548,7 @@ export default class RuleColor extends Component<any, any> {
     } = this.props;
     const { model } = this.state;
     return (
-      (<Modal
+      <Modal
         title={_l('颜色规则')}
         width={680}
         className="chartModal chartRuleColorModal"
@@ -584,7 +585,7 @@ export default class RuleColor extends Component<any, any> {
             }}
           />
         )}
-      </Modal>)
+      </Modal>
     );
   }
 }

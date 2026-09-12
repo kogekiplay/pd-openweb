@@ -1,4 +1,5 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import API from '../api';
 import ContactList from '../components/ContactList';
@@ -51,7 +52,7 @@ export default class Others extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       this.setState(defaultState, this.fetch);
     }
   }

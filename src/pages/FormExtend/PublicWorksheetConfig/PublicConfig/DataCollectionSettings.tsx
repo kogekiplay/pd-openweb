@@ -8,7 +8,7 @@ import cx from 'classnames';
 import dayjs from 'dayjs';
 import _ from 'lodash';
 import moment from 'moment';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Checkbox, Dropdown, Icon, Input } from 'ming-ui';
 import { generateRandomPassword } from 'src/utils/common';

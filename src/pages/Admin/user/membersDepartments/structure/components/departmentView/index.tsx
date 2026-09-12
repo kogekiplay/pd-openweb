@@ -1,8 +1,9 @@
 import React, { Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { Tree } from 'antd';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { Icon, LoadDiv } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import departmentController from 'src/api/department';
@@ -77,7 +78,7 @@ class DepartmentTree extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (
         !_.isEqual(prevProps.newDepartments, this.props.newDepartments) ||
         !_.isEqual(prevProps.expandedKeys, this.props.expandedKeys) ||

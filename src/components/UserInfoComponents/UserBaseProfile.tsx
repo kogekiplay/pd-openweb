@@ -4,7 +4,7 @@ import { Divider } from 'antd';
 import cx from 'classnames';
 import _, { get } from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { getFieldsData, maskValue } from 'src/pages/Admin/security/account/utils';
 import DepartmentFullName from './DepartmentFullName';

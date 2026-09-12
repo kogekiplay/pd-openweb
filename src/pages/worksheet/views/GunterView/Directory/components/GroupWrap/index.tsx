@@ -1,4 +1,5 @@
 import React, { Component, createRef } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import cx from 'classnames';
@@ -58,7 +59,7 @@ let GroupWrap = class GroupWrap extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.loading !== prevProps.loading || !_.isEqual(this.props.widthConfig, prevProps.widthConfig)) {
         setTimeout(() => {
           this.props.groupingScroll.refresh();

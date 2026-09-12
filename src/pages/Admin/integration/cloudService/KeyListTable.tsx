@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Button, Dialog, Icon, Input, Menu, MenuItem, UserHead, VerifyPasswordConfirm } from 'ming-ui';
 import apiKeyAjax from 'src/pages/Admin/api/cloudApi/apiKey';

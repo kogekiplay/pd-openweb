@@ -1,7 +1,7 @@
 ﻿import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import cx from 'classnames';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { UserHead } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import ClickAway from 'ming-ui/components/ClickAway';

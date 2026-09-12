@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import copy from 'src/utils/copyToClipboard';
+import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import { Checkbox, Dropdown, LoadDiv, PriceTip, Radio, RichText, ScrollView } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -7,6 +7,7 @@ import flowNode from '../../../api/flowNode';
 import agentApi from 'src/api/agent';
 import { genBotSessionId } from 'src/utils/agentSession';
 import { emitter } from 'src/utils/common';
+import copy from 'src/utils/copyToClipboard';
 import { ACTION_ID, RELATION_TYPE } from '../../enum';
 import { getControlTypeName } from '../../utils';
 import {
@@ -56,7 +57,7 @@ export default class Email extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.selectNodeId !== prevProps.selectNodeId) {
         this.getNodeDetail(this.props);
       }

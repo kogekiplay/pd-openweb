@@ -2,7 +2,7 @@ import React, { Fragment, memo, useEffect, useMemo, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { Checkbox, Dialog, Icon, LoadDiv, Menu, MenuItem, ScrollView, Support, Switch } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import knowledgeAjax from '../../../../api/knowledge';

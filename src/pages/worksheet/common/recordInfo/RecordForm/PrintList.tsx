@@ -3,7 +3,7 @@ import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, MenuItem } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';

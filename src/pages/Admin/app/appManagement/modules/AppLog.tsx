@@ -1,7 +1,8 @@
 import React, { Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import filterXSS from 'xss';
 import { Icon, LoadDiv, ScrollView } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -60,7 +61,7 @@ export default class AppLog extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.visible) {
         this.updateState({
           activeTab: 'logs',
@@ -206,7 +207,9 @@ export default class AppLog extends React.Component<any, any> {
             type="text"
             className="borderColorPrimary"
             value={keyword}
-            ref={con => { this.search = con; }}
+            ref={con => {
+              this.search = con;
+            }}
             placeholder={_l('搜索应用名称/操作者')}
             onChange={_.throttle(e => this.updateState({ keyword: e.target.value }), 500)}
           />

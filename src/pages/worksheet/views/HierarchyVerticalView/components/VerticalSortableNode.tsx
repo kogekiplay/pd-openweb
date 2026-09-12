@@ -1,4 +1,5 @@
 import React, { Component, createRef, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import { func, number, string } from 'prop-types';
@@ -57,7 +58,7 @@ export default class VerticalSortableRecordItem extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (
         this.props.recordInfoId &&
         this.props.recordInfoId !== prevProps.recordInfoId &&

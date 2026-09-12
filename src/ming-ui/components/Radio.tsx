@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import { isFunction } from 'lodash';
 import PropTypes from 'prop-types';
@@ -59,7 +60,7 @@ class Radio extends Component<any, any> {
   };
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       this.setState({
         checked: this.props.checked,
       });

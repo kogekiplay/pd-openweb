@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -141,7 +142,7 @@ export default class RecordCardListDialog extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (prevProps.keyWords !== this.props.keyWords) {
         this.setState({
           keyWords: this.props.keyWords,
@@ -637,7 +638,9 @@ export default class RecordCardListDialog extends Component<any, any> {
               autoComplete="off"
               className="w100"
               type="search"
-              ref={node => { this.inputRef = node; }}
+              ref={node => {
+                this.inputRef = node;
+              }}
               placeholder={_l('搜索%0', this.title)}
               onChange={e => {
                 if (this.isOnComposition) return;

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -212,7 +212,7 @@ function ColumnVisibilityControl(props) {
         overflow: { adjustX: true, adjustY: true },
       }}
       getPopupContainer={() => document.body}
-      destroyPopupOnHide
+      autoDestroy
       zIndex={1000}
     >
       <Tooltip title={_l('显示列设置')} placement="top">

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import PropTypes from 'prop-types';
 import LibCalender from '../../NewDateTimePicker/lib/calender';
 import List from './list';
@@ -12,7 +13,7 @@ class TimeMenu extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       this.setState(this.init(this.props));
     }
   }

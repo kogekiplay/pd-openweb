@@ -1,4 +1,5 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import styled from 'styled-components';
 import RoleNav from 'src/pages/Role/component/RolePermissions/RoleNav.jsx';
@@ -49,7 +50,7 @@ export default class Con extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const { roleList = [], roleId } = prevProps;
 
       if (!_.isEqual(this.props.roleList, roleList) || this.props.roleId !== roleId) {

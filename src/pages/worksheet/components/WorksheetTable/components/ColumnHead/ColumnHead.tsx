@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import cx from 'classnames';
 import _, { get, isUndefined } from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { Dialog, Icon, Input, Menu, MenuItem } from 'ming-ui';
 import SheetContext from 'worksheet/common/Sheet/SheetContext';
 import { CONTROL_FILTER_WHITELIST } from 'worksheet/common/WorkSheetFilter/enum';
@@ -589,7 +589,7 @@ class ColumnHead extends Component<any, any> {
                 offset: [0, -6],
                 overflow: { adjustX: true, adjustY: true },
               }}
-              destroyPopupOnHide={true}
+              autoDestroy={true}
               popup={
                 <div className="changeColumnWidthPanel">
                   <MenuItem

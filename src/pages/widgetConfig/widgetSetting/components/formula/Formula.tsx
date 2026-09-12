@@ -1,4 +1,5 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import { Parser } from 'hot-formula-parser';
 import _ from 'lodash';
@@ -55,7 +56,7 @@ export default class Formula extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const { data } = this.props;
       const { dataSource, controlId } = data;
       const nextCalType = FORMULA.CUSTOM.type;

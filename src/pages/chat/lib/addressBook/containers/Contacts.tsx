@@ -1,4 +1,5 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import Checkbox from 'ming-ui/components/Checkbox';
 import API from '../api';
@@ -52,7 +53,7 @@ export default class Contacts extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       this.setState(defaultState, this.fetch);
     }
   }

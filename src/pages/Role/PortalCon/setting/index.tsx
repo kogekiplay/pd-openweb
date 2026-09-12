@@ -1,4 +1,5 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Drawer } from 'antd';
@@ -136,7 +137,7 @@ class PortalSetting extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(prevProps.portalSet, this.props.portalSet)) {
         this.setState({
           portalSet: this.props.portalSet,
@@ -333,14 +334,14 @@ class PortalSetting extends React.Component<any, any> {
     const Component = TYPE_TO_COMP[type];
 
     return (
-      (<Drawer
+      <Drawer
         size={640}
         onClose={() => closeSet()}
         zIndex={999}
         mask={true}
         placement="right"
         open={show}
-       
+
         closable={false}
       >
         {show ? (
@@ -426,7 +427,7 @@ class PortalSetting extends React.Component<any, any> {
             </WrapCon>
           </Wrap>
         ) : null}
-      </Drawer>)
+      </Drawer>
     );
   }
 }

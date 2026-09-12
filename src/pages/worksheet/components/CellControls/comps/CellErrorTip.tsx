@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import _ from 'lodash';
 import { bool, func, node, oneOf, oneOfType, string } from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 
 const Con = styled.div`
@@ -88,7 +88,7 @@ export function CellErrorTipTrigger(props) {
       popupVisible={!!visible && !!error}
       popup={<CellErrorTip error={error} color={color} pos="bottom" />}
       getPopupContainer={() => getErrorTipContainer(popupContainer)}
-      destroyPopupOnHide
+      autoDestroy
       zIndex={1051}
       popupAlign={{
         points: ['tl', 'bl'],

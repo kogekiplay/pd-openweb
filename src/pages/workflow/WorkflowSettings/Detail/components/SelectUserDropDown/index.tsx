@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import { MenuItem } from 'ming-ui';
@@ -25,7 +26,7 @@ export default class SelectUserDropDown extends Component<any, any> {
    */
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.nodeId !== prevProps.nodeId || this.props.specialType !== prevProps.specialType) {
         this.setState({
           fieldsData: [],

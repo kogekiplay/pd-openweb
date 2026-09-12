@@ -1,9 +1,10 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import { TimePicker } from 'antd';
 import cx from 'classnames';
+import dayjs from 'dayjs';
 import _ from 'lodash';
 import moment from 'moment';
-import dayjs from 'dayjs';
 import PropTypes from 'prop-types';
 import { Checkbox, CityPicker, Dropdown, Icon, Input } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -79,7 +80,7 @@ export default class Condition extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.controls, prevProps.controls)) {
         this.setState({
           controlsData: this.getFieldData(this.props.controls || []),

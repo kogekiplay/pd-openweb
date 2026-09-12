@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import cx from 'classnames';
 import moment from 'moment';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { DatePicker, Icon } from 'ming-ui';
 import './index.less';
 
@@ -49,7 +49,6 @@ export default function DateFilter(props) {
 
   return (
     <Trigger
-      className="dateFilterTrigger"
       popupVisible={visible}
       onPopupVisibleChange={visible => setVisible(visible)}
       action={['click']}
@@ -91,7 +90,7 @@ export default function DateFilter(props) {
         </ul>
       }
     >
-      <span className="globalSearchDateFilter textTertiary valignWrapper">
+      <span className="globalSearchDateFilter textTertiary valignWrapper dateFilterTrigger">
         <Icon icon="event" className="mRight5 Font14" />
         {value.key === 'clear'
           ? _l('按更新时间')

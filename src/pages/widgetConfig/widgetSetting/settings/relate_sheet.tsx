@@ -3,7 +3,7 @@ import { useSetState } from 'react-use';
 import cx from 'classnames';
 import update from 'immutability-helper';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Dropdown, RadioGroup, Switch } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';

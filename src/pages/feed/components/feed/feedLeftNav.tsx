@@ -100,7 +100,7 @@ class FeedLeftNav extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.options.keywords !== this.state.searchAllKeywords) {
         this.setState({
           searchAllKeywords: null,

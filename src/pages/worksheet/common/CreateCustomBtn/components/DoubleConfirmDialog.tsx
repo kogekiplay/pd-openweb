@@ -1,4 +1,5 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Checkbox, Dialog, Icon } from 'ming-ui';
@@ -52,7 +53,7 @@ class DoubleConfirmDialog extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(prevProps.info, this.props.info)) {
         const { info } = this.props;
         this.state = {

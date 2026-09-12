@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import PropTypes from 'prop-types';
 import Icon from 'ming-ui/components/Icon';
 
@@ -107,7 +108,7 @@ class MultipleDropdownMenu extends Component<any, any> {
    */
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.value !== prevProps.value) {
         this.initValue(this.props);
       }

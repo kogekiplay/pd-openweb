@@ -1,5 +1,6 @@
-﻿import React, { Fragment } from 'react';
+import React, { Fragment } from 'react';
 import { flushSync } from 'react-dom';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { ActionSheet, Button, Popup } from 'antd-mobile';
@@ -193,7 +194,7 @@ class ChildTable extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.refreshFlag && this.props.refreshFlag !== prevProps.refreshFlag) {
         this.refresh();
       }

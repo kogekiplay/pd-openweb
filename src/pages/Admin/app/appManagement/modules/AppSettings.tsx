@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import { InputNumber, Select } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -30,7 +31,7 @@ export default class AppSettings extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.list !== prevProps.list) {
         this.setState({
           list: this.props.list.map(item => ({ ...item, isCustom: false, isAll: false })),

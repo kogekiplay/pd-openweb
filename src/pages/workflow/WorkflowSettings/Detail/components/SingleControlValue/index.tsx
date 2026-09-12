@@ -1,9 +1,10 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import { TimePicker } from 'antd';
 import cx from 'classnames';
+import dayjs from 'dayjs';
 import _ from 'lodash';
 import moment from 'moment';
-import dayjs from 'dayjs';
 import {
   Checkbox,
   CityPicker,
@@ -46,7 +47,7 @@ export default class SingleControlValue extends Component<any, any> {
   updateComponentsKeyMaps = {};
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.item.fieldId !== prevProps.item.fieldId) {
         this.cacheFile = [];
       }

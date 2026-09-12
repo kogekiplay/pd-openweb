@@ -1,4 +1,5 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -169,7 +170,7 @@ class Commenter extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.storageId && this.props.storageId !== prevProps.storageId) {
         this.textarea.value = window.localStorage.getItem('commenter-' + this.props.storageId) || '';
       }

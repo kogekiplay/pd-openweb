@@ -1,7 +1,7 @@
 import React from 'react';
-import copy from 'src/utils/copyToClipboard';
+import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { Dialog, Icon, LoadDiv, ScrollView } from 'ming-ui';
 import Menu from 'ming-ui/components/Menu';
 import MenuItem from 'ming-ui/components/MenuItem';
@@ -9,10 +9,11 @@ import { addFriendConfirm as addFriendConfirmFun } from 'ming-ui/functions';
 import { checkCertification } from 'src/components/checkCertification';
 import UserBaseProfile from 'src/components/UserInfoComponents/UserBaseProfile.jsx';
 import UserMoreProfile from 'src/components/UserInfoComponents/UserMoreProfile.jsx';
+import { pathCompletion } from 'src/utils/common';
+import copy from 'src/utils/copyToClipboard';
 import API, { removeFriend } from '../api';
 import { config } from '../config';
 import AddFriend from './AddFriend';
-import { pathCompletion } from 'src/utils/common';
 
 const defaultState = {
   data: null,
@@ -38,7 +39,7 @@ export default class UserDetail extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.accountId && this.props.accountId !== prevProps.accountId) {
         this.fetchUserDetail(this.props.accountId);
       } else if (this.props.accountId === null) {
@@ -188,7 +189,11 @@ export default class UserDetail extends React.Component<any, any> {
             <Icon icon="chat" className="mRight5 Font18 TxtMiddle" />
             {_l('发消息')}
           </a>
-          <a href={pathCompletion('/user_' + accountId)} className="detail-btn textSecondary mLeft10 NoUnderline" target="_blank">
+          <a
+            href={pathCompletion('/user_' + accountId)}
+            className="detail-btn textSecondary mLeft10 NoUnderline"
+            target="_blank"
+          >
             <Icon icon="dynamic-empty" className="mRight10 Font17 TxtMiddle" />
             {_l('TA的动态')}
           </a>

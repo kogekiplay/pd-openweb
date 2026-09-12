@@ -1,4 +1,5 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import styled from 'styled-components';
 import { Icon, MdLink } from 'ming-ui';
@@ -90,7 +91,7 @@ const Wrap = styled.div`
 
 class SideNav extends React.Component<any, any> {
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const { params = {} } = this.props.match;
       !params.type ? localStorage.removeItem('pluginUrl') : safeLocalStorageSetItem(`pluginUrl`, params.type);
     }

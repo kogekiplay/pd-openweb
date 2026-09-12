@@ -1,4 +1,5 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import styled from 'styled-components';
 import { createIntlTelInput } from 'ming-ui/components/PhoneNumberInput/util';
@@ -136,7 +137,7 @@ class TelCon extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.type !== prevProps.type) {
         sendVerifyCodeTimer && clearInterval(sendVerifyCodeTimer);
         sendVerifyCodeTimer = null;
@@ -337,7 +338,9 @@ class TelCon extends React.Component<any, any> {
         autoComplete="off"
         type="text"
         className={cx('telInput')}
-        ref={mobile => { this.mobile = mobile; }}
+        ref={mobile => {
+          this.mobile = mobile;
+        }}
         onBlur={this.onChangeAccount}
       />
     );
@@ -373,7 +376,9 @@ class TelCon extends React.Component<any, any> {
               maxLength={'4'}
               className="loginInput txtLoginCode"
               value={this.props.code}
-              ref={code => { this.code = code; }}
+              ref={code => {
+                this.code = code;
+              }}
               onChange={e => {
                 setCode(e.target.value.replace(/[^\d]/g, ''));
               }}

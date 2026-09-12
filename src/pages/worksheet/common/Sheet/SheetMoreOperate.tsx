@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react';
 import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { Icon, Menu, MenuItem } from 'ming-ui';
 import DeleteConfirm from 'ming-ui/components/DeleteReconfirm';
 import { openResetAutoNumber } from 'worksheet/common/ResetAutoNumber';

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import 'react-grid-layout/css/styles.css';
 import GridLayout from 'react-grid-layout/legacy';
 import { SpinLoading } from 'antd-mobile';
@@ -121,7 +122,7 @@ let CustomPage = class CustomPage extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const { params: newParams } = this.props.match;
       const { params } = prevProps.match;
 

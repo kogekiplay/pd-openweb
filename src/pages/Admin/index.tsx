@@ -1,4 +1,5 @@
 import React, { lazy, PureComponent, Suspense } from 'react';
+import { shallowEqual } from 'react-redux';
 import { Route, Routes } from 'react-router';
 import _ from 'lodash';
 import { navigateTo } from 'router/navigateTo';
@@ -78,7 +79,7 @@ export default class AdminEntryPoint extends PureComponent<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const projectId = getProjectIdFromPath();
 
       if (projectId !== Config.projectId) {

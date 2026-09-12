@@ -1,4 +1,5 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import PropTypes from 'prop-types';
 import MapLoader from 'ming-ui/components/amap/MapLoader';
 import { getAMapPosition, isFun, toCapitalString } from './utils/common';
@@ -105,7 +106,7 @@ class Map extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       this.loader.then(() => {
         if (this.map) {
           this.updateMapProps(prevProps, this.props);

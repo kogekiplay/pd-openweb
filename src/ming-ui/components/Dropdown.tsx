@@ -1,8 +1,9 @@
-﻿import React, { Component, Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import Icon from './Icon';
 import LoadDiv from './LoadDiv';
 import Menu from './Menu';
@@ -255,7 +256,7 @@ class Dropdown extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.value !== prevProps.value) {
         this.setState({
           value: this.props.value,
@@ -522,7 +523,9 @@ class Dropdown extends Component<any, any> {
       <div className={`ming Dropdown pointer ${className || ''} ${disabled ? 'disabled' : ''}`} style={style}>
         {isAppendToBody ? (
           <Trigger
-            ref={trigger => { this.trigger = trigger; }}
+            ref={trigger => {
+              this.trigger = trigger;
+            }}
             action={['click']}
             popup={this.displayMenu()}
             popupClassName={cx('dropdownTrigger', menuClass)}

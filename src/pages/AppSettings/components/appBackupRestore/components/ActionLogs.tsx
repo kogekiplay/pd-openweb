@@ -4,7 +4,7 @@ import { useSetState } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, ScrollView } from 'ming-ui';
 import { quickSelectUser } from 'ming-ui/functions';

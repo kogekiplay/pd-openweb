@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import copy from 'src/utils/copyToClipboard';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import privateRequest from 'src/api/private';
 import mobile from 'src/pages/appInstallSetting/images/mobile.png';
 import pc from 'src/pages/appInstallSetting/images/pc.png';

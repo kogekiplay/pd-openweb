@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { Icon } from 'ming-ui';
 import { DEFAULT_CONFIG, SYS, SYS_CONTROLS } from '../../../../config/widget';
 import { DropdownOverlay } from '../../../../styled';

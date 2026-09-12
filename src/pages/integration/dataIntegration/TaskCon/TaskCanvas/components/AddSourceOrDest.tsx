@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSetState } from 'react-use';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import autoSize from 'ming-ui/components/AutoSize';

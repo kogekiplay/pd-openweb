@@ -5,7 +5,7 @@ import { Input } from 'antd';
 
 
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import SVG from 'svg.js';
 import { Button } from 'ming-ui';

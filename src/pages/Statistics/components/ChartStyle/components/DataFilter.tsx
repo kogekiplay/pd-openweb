@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import { Input, Select } from 'antd';
 import cx from 'classnames';
 import { Icon } from 'ming-ui';
@@ -16,7 +17,7 @@ export default class DataFilter extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.showXAxisCount !== prevProps.showXAxisCount) {
         this.setState({
           count: this.props.showXAxisCount,

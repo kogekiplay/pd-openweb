@@ -1,7 +1,8 @@
 import React, { Component, createRef } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import SVG from 'svg.js';
 import { Icon, Menu, MenuItem, UpgradeIcon } from 'ming-ui';
@@ -201,7 +202,7 @@ class TaskNode extends Component<any, any> {
   //新增节点
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (
         !_.isEqual(_.get(this.props, 'nodeData.pathIds'), _.get(prevProps, 'nodeData.pathIds')) &&
         _.isEqual(_.get(this.props, 'nodeData.nodeId'), _.get(prevProps, 'nodeData.nodeId'))

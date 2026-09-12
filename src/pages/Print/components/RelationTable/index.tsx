@@ -1,4 +1,5 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import DragMask from 'worksheet/common/DragMask';
@@ -35,7 +36,7 @@ export default class RelationTable extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (
         !_.isEqual(this.props.controls, prevProps.controls) ||
         this.props.showData !== prevProps.showData ||

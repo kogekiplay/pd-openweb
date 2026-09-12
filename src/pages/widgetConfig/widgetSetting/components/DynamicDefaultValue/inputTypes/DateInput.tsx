@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import moment from 'moment';
 import { func, number, shape } from 'prop-types';
@@ -38,7 +39,7 @@ export default class DateInput extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.dynamicValue, prevProps.dynamicValue)) {
         this.updateValue(this.props);
       }
@@ -137,7 +138,12 @@ export default class DateInput extends Component<any, any> {
     return (
       <DynamicValueInputWrap>
         {defaultType ? <DynamicInput {...this.props} onTriggerClick={this.onTriggerClick} /> : this.renderContent()}
-        <SelectOtherField {...this.props} ref={con => { this.$wrap = con; }} />
+        <SelectOtherField
+          {...this.props}
+          ref={con => {
+            this.$wrap = con;
+          }}
+        />
       </DynamicValueInputWrap>
     );
   }

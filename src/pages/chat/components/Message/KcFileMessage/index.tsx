@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import kc from 'src/api/kc';
 import RegExpValidator from 'src/utils/expression';
 import FileMessage from '../FileMessage';
@@ -13,7 +14,7 @@ export default class KcFileMessage extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       this.getNodeDetail();
     }
   }

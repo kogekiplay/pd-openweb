@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { browserIsMobile, formatFileSize, getClassNameByExt } from 'src/utils/common';
 import RegExpValidator from 'src/utils/expression';
 import WorksheetRecordLogSelectTags from './WorksheetRecordLogSelectTags';
@@ -89,7 +89,7 @@ function WorksheetRecordLogThumbnail(props) {
       <Trigger
         action={['hover']}
         getPopupContainer={() => document.body}
-        destroyPopupOnHide
+        autoDestroy
         mouseEnterDelay={0.4}
         popupAlign={{
           points: ['tl', 'bl'],

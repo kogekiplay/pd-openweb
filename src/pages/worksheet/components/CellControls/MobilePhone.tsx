@@ -1,8 +1,9 @@
-﻿import React from 'react';
+import React from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import ClickAway from 'ming-ui/components/ClickAway';
 import PhoneNumberInput from 'ming-ui/components/PhoneNumberInput';
 import { emitter } from 'src/utils/common';
@@ -39,7 +40,7 @@ export default class MobilePhone extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       // 子表场景：失焦后 ChildTable 的 300ms debounce + DataFormat 清洗会让 cell.value 异步回灌；
       // 这段窗口内阻断 props → state 同步，避免清洗后的空值覆盖用户输入；窗口结束后正常同步，
       // 确保外部 row 恢复（如取消保存）能反向覆盖到本地。
@@ -296,7 +297,7 @@ export default class MobilePhone extends React.Component<any, any> {
     );
     const editTrigger = (
       <Trigger
-        destroyPopupOnHide={!window.isSafari} // 不是 Safari
+        autoDestroy={!window.isSafari} // 不是 Safari
         action={['click']}
         popup={editcontent}
         getPopupContainer={window.isSafari ? undefined : cell.enumDefault === 0 ? () => document.body : popupContainer}

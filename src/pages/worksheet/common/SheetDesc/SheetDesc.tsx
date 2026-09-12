@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import { Modal } from 'antd';
 import { Icon } from 'ming-ui';
 import sheetApi from 'src/api/worksheet';
@@ -16,7 +17,7 @@ export default class SheetDesc extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.desc !== prevProps.desc) {
         this.setState({
           desc: this.props.desc,
@@ -56,7 +57,7 @@ export default class SheetDesc extends Component<any, any> {
     const { cacheKey, title, visible, onClose, isEditing, setDescIsEditing, permissionType, data } = this.props;
     const { desc, resume, remark } = this.state;
     return (
-      (<Modal
+      <Modal
         zIndex={1000}
         className="appIntroDialog"
         wrapClassName="appIntroDialogWrapCenter"
@@ -101,7 +102,7 @@ export default class SheetDesc extends Component<any, any> {
             onClose();
           }}
         />
-      </Modal>)
+      </Modal>
     );
   }
 }

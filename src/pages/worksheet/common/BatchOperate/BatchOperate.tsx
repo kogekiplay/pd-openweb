@@ -1,4 +1,5 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _, { get, includes } from 'lodash';
 import PropTypes from 'prop-types';
@@ -97,7 +98,7 @@ class BatchOperate extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const { appId, worksheetId, viewId, permission, updateViewPermission = () => {} } = prevProps;
 
       if (this.props.worksheetId !== prevProps.worksheetId || this.props.viewId !== prevProps.viewId) {

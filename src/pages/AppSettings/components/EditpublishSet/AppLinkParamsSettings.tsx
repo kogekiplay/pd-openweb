@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react';
 import cx from 'classnames';
 import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Checkbox } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';

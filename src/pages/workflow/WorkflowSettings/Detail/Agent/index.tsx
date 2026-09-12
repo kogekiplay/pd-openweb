@@ -1,7 +1,8 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import { Checkbox, Dialog, Icon, LoadDiv, PriceTip, ScrollView, Support, SvgIcon, Switch } from 'ming-ui';
@@ -206,7 +207,7 @@ export default class Agent extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.selectNodeId !== prevProps.selectNodeId) {
         this.getNodeDetail(this.props);
       }
@@ -630,7 +631,9 @@ export default class Agent extends Component<any, any> {
 
         <div className="Font13 mTop15">
           <Trigger
-            ref={triggerRef => { this.triggerRef = triggerRef; }}
+            ref={triggerRef => {
+              this.triggerRef = triggerRef;
+            }}
             popup={() => (
               <MORE_TOOLS_LIST>
                 {MORE_TOOLS.map((o, index) => {

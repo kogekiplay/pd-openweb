@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -48,7 +49,7 @@ export default class ProjectContactList extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(prevProps.departmentsList, this.props.departmentsList)) {
         this.setState({
           department: this.props.departmentsList,

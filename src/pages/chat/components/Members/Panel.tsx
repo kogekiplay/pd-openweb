@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import { ScrollView } from 'ming-ui';
 import Dropdown from 'ming-ui/components/Dropdown';
@@ -55,7 +56,7 @@ export default class MembersPanel extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const { session } = this.props;
 
       if (session.groupMemberCount !== this.state.groupMemberCount) {

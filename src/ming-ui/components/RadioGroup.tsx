@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import { default as Radio, SIZE_LIST } from './Radio';
@@ -60,7 +61,7 @@ class RadioGroup extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       this.refreshId(this.props.checkedValue, this.props.data);
     }
   }

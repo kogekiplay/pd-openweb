@@ -1,8 +1,9 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { UserHead } from 'ming-ui';
 import ClickAway from 'ming-ui/components/ClickAway';
 import { quickSelectUser } from 'ming-ui/functions';
@@ -54,7 +55,7 @@ export default class User extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.cell.value !== prevProps.cell.value) {
         this.setState({
           value: safeParse(this.props.cell.value, 'array'),

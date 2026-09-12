@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import withRouter from '../../../router/withRouter';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { SpinLoading, Tabs } from 'antd-mobile';
@@ -17,6 +17,7 @@ import { updateHierarchyConfigLevel } from 'src/pages/worksheet/views';
 import { getShowViews } from 'src/pages/worksheet/views/util';
 import { getRequest, pathCompletion } from 'src/utils/common';
 import { mdAppResponse } from 'src/utils/project';
+import withRouter from '../../../router/withRouter';
 import AppPermissions from '../components/AppPermissions';
 import Back from '../components/Back';
 import SlideGroupFilter from './GroupFilter/SlideGroupFilter';
@@ -78,7 +79,7 @@ let RecordList = class RecordList extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const { params: newParams } = this.props.match;
       const { params } = prevProps.match;
       const view = _.find(this.props.worksheetInfo.views, v => v.viewId === newParams.viewId) || {};

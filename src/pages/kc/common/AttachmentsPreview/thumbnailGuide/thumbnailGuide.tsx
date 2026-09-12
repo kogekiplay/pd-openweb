@@ -1,4 +1,5 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import cx from 'classnames';
@@ -60,7 +61,7 @@ class ThumbnailGuide extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       this.setState({
         fitited: false,
       });
@@ -140,7 +141,12 @@ class ThumbnailGuide extends React.Component<any, any> {
     }
 
     return (
-      <div className={cx('thumbnailGuide', this.props.className)} ref={guide => { this.thumbnailGuide = guide; }}>
+      <div
+        className={cx('thumbnailGuide', this.props.className)}
+        ref={guide => {
+          this.thumbnailGuide = guide;
+        }}
+      >
         <div className="statusBar fle" onClick={this.foldThumbnail}>
           <div className="fold">
             <div className="Left AttachmentInfo">
@@ -226,7 +232,9 @@ class ThumbnailGuide extends React.Component<any, any> {
           className={cx('thumbnailList', {
             hide: !showThumbnail,
           })}
-          ref={box => { this.listBox = box; }}
+          ref={box => {
+            this.listBox = box;
+          }}
           style={{
             overflowX: 'hidden',
           }}

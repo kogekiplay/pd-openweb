@@ -1,13 +1,14 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import { DatePicker, Select } from 'antd';
 import en_US from 'antd/es/date-picker/locale/en_US';
 import ja_JP from 'antd/es/date-picker/locale/ja_JP';
 import zh_CN from 'antd/es/date-picker/locale/zh_CN';
 import zh_TW from 'antd/es/date-picker/locale/zh_TW';
 import cx from 'classnames';
+import dayjs from 'dayjs';
 import _ from 'lodash';
 import moment from 'moment';
-import dayjs from 'dayjs';
 import { Icon, LoadDiv, SvgIcon } from 'ming-ui';
 import { quickSelectUser } from 'ming-ui/functions';
 import instanceVersion from 'src/pages/workflow/api/instanceVersion';
@@ -82,7 +83,7 @@ export default class Filter extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.isResetFilter) {
         this.handleReset();
 
@@ -319,7 +320,12 @@ export default class Filter extends Component<any, any> {
       <div className="mBottom16">
         <div className="Font13 mBottom10">{_l('发起人')}</div>
         {_.isEmpty(createAccount) ? (
-          <div className="personPostBox" ref={owner => { this.owner = owner; }}>
+          <div
+            className="personPostBox"
+            ref={owner => {
+              this.owner = owner;
+            }}
+          >
             <Icon
               icon="task_add-02"
               className="textSecondary Font24 hoverColorPrimaryLight Hand"

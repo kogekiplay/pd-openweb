@@ -1,5 +1,5 @@
 import React, { Component, Fragment, lazy, Suspense, useEffect, useRef, useState } from 'react';
-import withRouter from '../../router/withRouter';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import UseKey from 'react-use/lib/component/UseKey';
@@ -18,6 +18,7 @@ import { navigateTo } from 'src/router/navigateTo';
 import { emitter } from 'src/utils/common';
 import { browserIsMobile, updateGlobalStoreForMingo } from 'src/utils/common';
 import { findSheet, getSheetListFirstId, moveSheetCache } from 'src/utils/worksheet';
+import withRouter from '../../router/withRouter';
 import Sheet from './common/Sheet';
 import WorksheetEmpty from './common/WorksheetEmpty';
 import WorkSheetLeft from './common/WorkSheetLeft';
@@ -251,7 +252,7 @@ class WorkSheet extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const { updateBase, worksheetId, updateWorksheetLoading, views } = this.props;
 
       if (/\/app\/[\w-]+$/.test(location.pathname)) {

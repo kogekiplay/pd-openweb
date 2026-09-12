@@ -1,7 +1,7 @@
 import React, { lazy, Suspense, useCallback, useState } from 'react';
 import { Drawer } from 'antd';
 import cx from 'classnames';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { Dialog, Dropdown, Icon, Menu } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import accountSetting from 'src/api/accountSetting';

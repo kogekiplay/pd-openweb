@@ -3,7 +3,7 @@ import { useKey } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';
 import { bool, func, number, shape, string } from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Steps } from 'ming-ui';
 import ClickAway from 'ming-ui/components/ClickAway';
@@ -162,7 +162,7 @@ function OptionsSteps(props, ref) {
         getPopupContainer={() => document.body}
         popupClassName="filterTrigger"
         popupVisible={isediting}
-        destroyPopupOnHide
+        autoDestroy
         popupAlign={{
           points: ['tl', 'tl'],
         }}

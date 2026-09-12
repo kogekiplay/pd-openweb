@@ -1,5 +1,6 @@
-﻿import React, { Component } from 'react';
+import React, { Component } from 'react';
 import { createRoot } from 'react-dom/client';
+import { shallowEqual } from 'react-redux';
 import DocumentTitle from 'react-document-title';
 import _ from 'lodash';
 import { Dialog, LoadDiv } from 'ming-ui';
@@ -49,7 +50,7 @@ class Container extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.calendarId !== prevProps.calendarId || this.props.recurTime !== prevProps.recurTime) {
         this.fetchData(true, this.props);
       }

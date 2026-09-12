@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Input } from 'antd';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 
 const ResetNameWrap = styled.div`
@@ -73,7 +73,7 @@ export default props => {
         offset: [0, 10],
         overflow: { adjustX: true, adjustY: true },
       }}
-      destroyPopupOnHide={true}
+      autoDestroy={true}
     >
       {props.children}
     </Trigger>

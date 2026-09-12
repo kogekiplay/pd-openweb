@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { LoadDiv, Qr } from 'ming-ui';
 import attachmentAjax from 'src/api/attachment';
@@ -338,7 +338,7 @@ export default function GenScanUploadQr({
           setPopupVisible={setPopupVisible}
         />
       }
-      destroyPopupOnHide
+      autoDestroy
       action={['click']}
     >
       {React.cloneElement(child, {

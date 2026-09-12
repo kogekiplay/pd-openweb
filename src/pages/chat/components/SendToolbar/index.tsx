@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { Tooltip } from 'ming-ui/antd-components';
 import chatAjax from 'src/api/chat';
 import { SOURCE_TYPE } from 'src/components/comment/config';

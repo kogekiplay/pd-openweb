@@ -1,4 +1,5 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import { Provider } from 'react-redux';
 import PropTypes from 'prop-types';
 import store from 'src/redux/configureStore';
@@ -26,7 +27,7 @@ class UserFeed extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (prevProps.accountId !== this.props.accountId || prevProps.title !== this.props.title) {
         store.dispatch(
           changeListType({

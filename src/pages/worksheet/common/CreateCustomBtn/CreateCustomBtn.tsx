@@ -1,8 +1,9 @@
-﻿import React from 'react';
+import React from 'react';
+import { shallowEqual } from 'react-redux';
 import { Drawer } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { Checkbox, ColorPicker, Icon, RadioGroup, SvgIcon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import ErrorBoundary from 'ming-ui/components/ErrorBoundary';
@@ -53,7 +54,7 @@ class CreateCustomBtnCon extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const btnDataInfoPre = prevProps.btnDataInfo || {};
       const btnDataInfoNext = this.props.btnDataInfo || {};
 
@@ -449,14 +450,14 @@ class CreateCustomBtnCon extends React.Component<any, any> {
     }
 
     return (
-      (<div
+      <div
         className={`filterTextCon createCon ${
           !_.isUndefined(isListOption) && !isListOption && !isEdit ? 'pTop10 pBottom10' : 'pTop16 pBottom20'
         }`}
       >
         <div className="txtFilter textPrimary Bold Font13">{_l('添加按钮后自动创建流程')}</div>
         {!(!_.isUndefined(isListOption) && !isListOption && !isEdit) && ( //记录详情进入，且是创建，则不显示数据源类型，默认单条记录
-          (<React.Fragment>
+          <React.Fragment>
             <div className="mTop14">{_l('数据源')}</div>
             <RadioGroup
               data={[
@@ -477,9 +478,9 @@ class CreateCustomBtnCon extends React.Component<any, any> {
               }}
               checkedValue={isBatch ? 1 : 0}
             />
-          </React.Fragment>)
+          </React.Fragment>
         )}
-      </div>)
+      </div>
     );
   };
   renderCon = () => {
@@ -900,7 +901,7 @@ class CreateCustomBtnCon extends React.Component<any, any> {
   renderIcons = () => {
     const { icon, iconUrl = '', showCustomIcon } = this.state;
     return (
-      (<div className="mTop32 customBtnIconBox">
+      <div className="mTop32 customBtnIconBox">
         <h5 className="textPrimary Bold">{_l('图标')}</h5>
         <Trigger
           action={['click']}
@@ -969,7 +970,7 @@ class CreateCustomBtnCon extends React.Component<any, any> {
             </div>
           </div>
         </Trigger>
-      </div>)
+      </div>
     );
   };
 
@@ -1163,7 +1164,7 @@ class CreateCustomBtn extends React.Component<any, any> {
   render() {
     const { zIndex, onClose, isClickAway, btnI = '' } = this.props;
     return (
-      (<Drawer
+      <Drawer
         size={640}
         rootClassName={cx('createCustomBtnConDraw')}
         onClose={onClose}
@@ -1172,7 +1173,7 @@ class CreateCustomBtn extends React.Component<any, any> {
         placement="right"
         getContainer={false}
         open={true}
-       
+
         closable={false}
         styles={{ body: { padding: 0 } }}
       >
@@ -1190,7 +1191,7 @@ class CreateCustomBtn extends React.Component<any, any> {
             />
           </div>
         </div>
-      </Drawer>)
+      </Drawer>
     );
   }
 }

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import RecordInfoContext from '../RecordInfoContext';
@@ -38,7 +39,7 @@ export default class Operates extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (
         this.props.recordbase.recordId !== prevProps.recordbase.recordId ||
         (this.props.recordbase.viewId && this.props.recordbase.viewId !== prevProps.recordbase.viewId)

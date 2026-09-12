@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSetState } from 'react-use';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { LoadDiv } from 'ming-ui';
 
@@ -95,7 +95,7 @@ export default function QrPopup(props) {
         offset: [0, popupPosition === 'bottom' ? 13 : -13],
         points: popupPosition === 'bottom' ? ['tc', 'bc'] : ['bc', 'tc'],
       }}
-      destroyPopupOnHide
+      autoDestroy
       action={['click']}
       popup={
         <Popup className={popupPosition}>

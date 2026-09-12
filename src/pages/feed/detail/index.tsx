@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import qs from 'query-string';
 import { LoadDiv, ScrollView } from 'ming-ui';
@@ -14,7 +15,7 @@ let FeedDetailEntrypoint = class FeedDetailEntrypoint extends Component<any, any
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (prevProps.location.search !== this.props.location.search) {
         this.handleQueryChange(this.props);
       }

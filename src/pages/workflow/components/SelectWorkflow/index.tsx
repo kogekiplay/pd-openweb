@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import { array, bool, func, string } from 'prop-types';
 import { Checkbox, Dialog, Icon, LoadDiv, ScrollView } from 'ming-ui';
@@ -39,7 +40,7 @@ export default class SelectWorkflow extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (!prevProps.visible && this.props.visible) {
         this.getData();
       }

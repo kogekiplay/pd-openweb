@@ -1,6 +1,7 @@
-﻿import React, { Component } from 'react';
+import React, { Component } from 'react';
 import { createRoot } from 'react-dom/client';
 import { renderToString } from 'react-dom/server';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import doT from 'dot';
 import _ from 'lodash';
@@ -50,7 +51,7 @@ class FolderChart extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.taskConfig.folderId && this.props.taskConfig.folderId !== prevProps.taskConfig.folderId) {
         setTimeout(() => {
           this.init();

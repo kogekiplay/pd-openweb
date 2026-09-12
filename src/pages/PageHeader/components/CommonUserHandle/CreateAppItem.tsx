@@ -2,7 +2,7 @@ import React, { Fragment, lazy, Suspense, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import cx from 'classnames';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { Icon, Menu, MenuItem } from 'ming-ui';
 import chatbotIcon from 'worksheet/common/WorkSheetLeft/assets/chatbot.png';
 import customPageIcon from 'worksheet/common/WorkSheetLeft/assets/dashboard.png';

@@ -2,7 +2,7 @@ import React from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { Icon } from 'ming-ui';
 import 'src/pages/integration/dataIntegration/connector/style.less';
 import { getTranslateInfo } from 'src/utils/app';

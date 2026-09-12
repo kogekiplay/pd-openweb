@@ -3,7 +3,7 @@ import { useSetState } from 'react-use';
 import { Drawer } from 'antd';
 import cx from 'classnames';
 import moment from 'moment';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import filterXSS from 'xss';
 import { Icon, LoadDiv, ScrollView, UserHead } from 'ming-ui';

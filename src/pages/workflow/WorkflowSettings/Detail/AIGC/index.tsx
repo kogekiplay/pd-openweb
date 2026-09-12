@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 // remarkable 2 去掉了 default export，Remarkable 改为具名导出。
 import { Remarkable, utils } from 'remarkable';
 import { highlight, languages } from 'prismjs/components/prism-core';
@@ -91,7 +92,7 @@ export default class AIGC extends Component<any, any> {
    */
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.selectNodeId !== prevProps.selectNodeId) {
         this.getNodeDetail(this.props);
       }

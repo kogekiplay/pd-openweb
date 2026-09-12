@@ -1,4 +1,5 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import _, { get, includes, isUndefined } from 'lodash';
 import PropTypes from 'prop-types';
 import { RELATE_RECORD_SHOW_TYPE, ROW_HEIGHT } from 'worksheet/constants/enum';
@@ -168,7 +169,7 @@ export default class CellControl extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.state.error && !this.props.error) {
         this.setState({
           error: null,

@@ -1,8 +1,9 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import CascaderDropdown from 'src/components/Form/DesktopForm/widgets/Cascader';
 import { isKeyBoardInputChar } from 'src/utils/common';
 import { checkCellIsEmpty } from 'src/utils/control';
@@ -29,7 +30,7 @@ export default class Cascader extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.cell.value !== prevProps.cell.value) {
         this.setState({
           value: this.props.cell.value,
@@ -129,7 +130,7 @@ export default class Cascader extends React.Component<any, any> {
         getPopupContainer={popupContainer}
         popupClassName="filterTrigger"
         popupVisible={isediting}
-        destroyPopupOnHide={!window.isSafari}
+        autoDestroy={!window.isSafari}
         popupAlign={{
           points: ['tl', 'tl'],
           overflow: {

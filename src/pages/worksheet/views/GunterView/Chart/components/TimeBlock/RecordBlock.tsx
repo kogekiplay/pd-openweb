@@ -1,4 +1,5 @@
 import React, { Component, createRef, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Popover } from 'antd';
@@ -81,7 +82,7 @@ let RowBlock = class RowBlock extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.style, prevProps.style)) {
         this.$ref.current.style.transform = null;
       }
@@ -728,7 +729,7 @@ let RowBlock = class RowBlock extends Component<any, any> {
         zIndex={1000}
         title={undefined}
         content={this.renderPopoverContent()}
-        classNames={{ root: "gunterPopoverWrap" }}
+        classNames={{ root: 'gunterPopoverWrap' }}
         align={{
           offset: [isMilepost ? 15 : tooltipLeft, 0],
         }}

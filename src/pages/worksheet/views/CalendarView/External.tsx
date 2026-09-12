@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Draggable } from '@fullcalendar/interaction';
@@ -30,7 +31,7 @@ let External = class External extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const { calendarview = {}, getInitType, fetchExternal, refreshEventList, updateCalendarEventIsAdd } = this.props;
       const { calendarEventIsAdd, calendarData = {} } = calendarview;
       const { calendarInfo } = calendarData;

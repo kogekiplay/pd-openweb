@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import { Divider, Dropdown, Menu } from 'antd';
 import _ from 'lodash';
 import { Dialog, Icon } from 'ming-ui';
@@ -25,7 +26,7 @@ export default class MoreOverlay extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.favorite !== prevProps.favorite) {
         this.setState({
           favorite: this.props.favorite,
@@ -412,7 +413,7 @@ export default class MoreOverlay extends Component<any, any> {
       return true;
     })();
     return (
-      (<Fragment>
+      <Fragment>
         {moreVisible && (
           <Dropdown
             trigger={['click']}
@@ -455,7 +456,7 @@ export default class MoreOverlay extends Component<any, any> {
             }}
           />
         )}
-      </Fragment>)
+      </Fragment>
     );
   }
 }

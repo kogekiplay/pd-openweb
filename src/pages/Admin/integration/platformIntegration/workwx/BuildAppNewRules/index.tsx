@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Button, Icon, LoadDiv } from 'ming-ui';
@@ -147,7 +148,7 @@ export default class BuildAppNewRules extends Component<any, any> {
   // 获取二维码链接
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(prevProps.status, this.props.status)) {
         this.setState({
           step: this.props.status === 0 ? 2 : 1,

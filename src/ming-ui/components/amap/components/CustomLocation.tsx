@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import { Input } from 'antd';
 import _ from 'lodash';
 import { Button } from 'ming-ui';
@@ -58,7 +59,7 @@ export default class CustomLocation extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       // 经纬度不同才赋值，防止name被冲掉
       if (
         this.props.customLocation &&

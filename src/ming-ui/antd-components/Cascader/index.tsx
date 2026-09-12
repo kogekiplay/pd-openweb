@@ -3,7 +3,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { Checkbox, Input, Spin } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import 'rc-trigger/assets/index.css';
@@ -553,7 +553,7 @@ const Cascader = React.forwardRef(
         getPopupContainer={getPopupContainer || (() => document.body)}
         zIndex={zIndex}
         popupClassName={`cascader-trigger-popup ${popupClassName}`}
-        destroyPopupOnHide={true}
+        autoDestroy={true}
       >
         <CascaderWrapper
           ref={containerRef}

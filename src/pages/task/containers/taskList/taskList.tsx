@@ -1,5 +1,6 @@
-﻿import React, { Component, Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
 import { createRoot } from 'react-dom/client';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import doT from 'dot';
 import _ from 'lodash';
@@ -98,7 +99,7 @@ class TaskList extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (
         !this.props.taskConfig.folderId &&
         (!_.isEqual(this.props.taskConfig, prevProps.taskConfig) || config.isGetData)

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import Icon from 'ming-ui/components/Icon';
@@ -94,7 +95,7 @@ export default class Amap extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const { defaultAddress } = this.props;
       const { lng, lat } = defaultAddress || {};
 
@@ -257,7 +258,13 @@ export default class Amap extends Component<any, any> {
       <div className={mapCls}>
         {mapSearch ? this.renderInput() : undefined}
         {this.props.topRightElement && <div className="Amap-topRightElement">{this.props.topRightElement}</div>}
-        <div style={newStyle} className="AmapContainer" ref={container => { this._mapContainer = container; }} />
+        <div
+          style={newStyle}
+          className="AmapContainer"
+          ref={container => {
+            this._mapContainer = container;
+          }}
+        />
       </div>
     );
   }

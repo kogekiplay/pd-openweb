@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import { Dialog, LoadDiv, ScrollView } from 'ming-ui';
 import { dialogSelectUser } from 'ming-ui/functions';
@@ -24,7 +25,7 @@ export default class EditMemberDialog extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.workSiteId !== prevProps.workSiteId) {
         this.getUserList();
       }

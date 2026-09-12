@@ -1,4 +1,5 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
@@ -89,7 +90,7 @@ export default class InboxFilter extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (_.isEmpty(this.props.filter)) {
         this.setState({
           userValue: null,

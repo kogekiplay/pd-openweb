@@ -1,7 +1,7 @@
 import React from 'react';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import ClickAway from 'ming-ui/components/ClickAway';
 import './EditableCellCon.less';
@@ -44,7 +44,7 @@ function EditableCellCon(props) {
       getPopupContainer={() => popupContainer}
       popupClassName="filterTrigger"
       popupVisible={!!error}
-      destroyPopupOnHide
+      autoDestroy
       popupAlign={{
         points: ['tl', 'bl'],
       }}

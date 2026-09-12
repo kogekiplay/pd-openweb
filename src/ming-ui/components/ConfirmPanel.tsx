@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Button } from 'ming-ui';
 
@@ -62,7 +62,7 @@ export default function ConfirmPanel(props) {
       popupStyle={style}
       action={['click']}
       popupVisible={visible}
-      destroyPopupOnHide
+      autoDestroy
       onPopupVisibleChange={onPopupVisibleChange}
       popup={
         <Popup className={className}>

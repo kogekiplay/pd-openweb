@@ -4,7 +4,7 @@ import { ConfigProvider, Empty, Select, Table } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Button, Icon, UserHead } from 'ming-ui';
 import Confirm from 'ming-ui/components/Dialog/Confirm';

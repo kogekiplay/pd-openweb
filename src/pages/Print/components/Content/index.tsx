@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import { Qr } from 'ming-ui';
 import sheetAjax from 'src/api/worksheet';
@@ -84,7 +85,7 @@ export default class Con extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (_.get(prevProps, ['printData', 'shareType']) !== _.get(this.props, ['printData', 'shareType'])) {
         this.loadWorksheetShortUrl(this.props);
       }

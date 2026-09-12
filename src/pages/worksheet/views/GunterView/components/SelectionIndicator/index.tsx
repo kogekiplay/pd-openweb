@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import _ from 'lodash';
@@ -28,7 +29,7 @@ let SelectionIndicator = class SelectionIndicator extends React.Component<any, a
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const { groupingScroll, grouping } = this.props;
 
       if (groupingScroll && !prevProps.groupingScroll) {

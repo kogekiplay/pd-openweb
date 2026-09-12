@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import classNames from 'classnames';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -114,7 +115,7 @@ class TimePicker extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if ('value' in this.props) {
         this.setState({
           value: this.props.value,
@@ -150,7 +151,9 @@ class TimePicker extends Component<any, any> {
         placeholder={placeholder}
         onClick={this.handleFocus}
         className="TimePicker-input hoverColorPrimary hoverBorderColorPrimary"
-        ref={timepicker => { this._timepicker = timepicker; }}
+        ref={timepicker => {
+          this._timepicker = timepicker;
+        }}
       />
     );
   };

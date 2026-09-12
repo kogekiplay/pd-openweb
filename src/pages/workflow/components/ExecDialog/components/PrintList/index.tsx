@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, MenuItem } from 'ming-ui';
 import webCacheAjax from 'src/api/webCache';

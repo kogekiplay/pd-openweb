@@ -1,8 +1,9 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _, { find, get, uniq } from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { ClickAway, SortableList } from 'ming-ui';
 import { RecordFormContext } from 'worksheet/common/recordInfo/RecordForm';
@@ -119,7 +120,7 @@ export default class RelateRecordDropdown extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       // 表格内退出编辑态，提交面板内累积的变更
       if (prevProps.isediting && !this.props.isediting) {
         this.commitChange();
@@ -1013,7 +1014,7 @@ export default class RelateRecordDropdown extends React.Component<any, any> {
               },
             }}
             zIndex={zIndex || (this.isMobile ? 999 : 1000)}
-            destroyPopupOnHide
+            autoDestroy
             popup={popup}
           >
             {(!insheet || !isediting) && (!isQuickFilter || !listvisible) ? (

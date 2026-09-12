@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import filterXss from 'xss';
@@ -37,7 +38,7 @@ export default class Discuss extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.worksheetId !== prevProps.worksheetId || this.props.rowId !== prevProps.rowId) {
         this.loadLog({ ..._.pick(this.props, ['worksheetId', 'rowId']), pageIndex: 1 });
       }

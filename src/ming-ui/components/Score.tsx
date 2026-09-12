@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -76,7 +77,7 @@ class Score extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if ('score' in this.props) {
         this.setState({
           foregroundColor: this.props.foregroundColor,

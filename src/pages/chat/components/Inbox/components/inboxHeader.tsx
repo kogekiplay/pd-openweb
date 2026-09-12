@@ -9,7 +9,7 @@ import { Dropdown as AntdDropdown } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { Dropdown, Icon } from 'ming-ui';
 import Config from 'src/pages/chat/utils/config';
 import * as socket from 'src/pages/chat/utils/socket';

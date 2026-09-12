@@ -1,4 +1,5 @@
 import React, { Component, forwardRef, lazy, Suspense, useImperativeHandle, useMemo } from 'react';
+import { shallowEqual } from 'react-redux';
 import { Provider } from 'react-redux';
 import { Popover } from 'antd';
 import cx from 'classnames';
@@ -52,7 +53,7 @@ class Card extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (
         this.props.needUpdate !== prevProps.needUpdate ||
         !_.isEqual(this.props.filtersGroup, prevProps.filtersGroup) ||
@@ -423,7 +424,7 @@ class Card extends Component<any, any> {
                 open={undefined}
                 trigger="hover"
                 placement="bottom"
-                classNames={{ root: "customPageAutoLinkagePopoverWrap" }}
+                classNames={{ root: 'customPageAutoLinkagePopoverWrap' }}
                 content={
                   <div className="customPageAutoLinkagePopover">
                     <div className="Font14 bold mBottom5">

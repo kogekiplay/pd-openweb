@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Drawer } from 'antd';
@@ -123,7 +124,7 @@ class KcMain extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const { path, query, changeFolder } = prevProps;
 
       if (this.props.path !== path || this.props.query.q !== query.q) {
@@ -321,7 +322,9 @@ class KcMain extends Component<any, any> {
               key="nodeList"
               containerSelector="#kclistContainer"
               component="ul"
-              ref={dragSelect => { this.dragSelect = dragSelect; }}
+              ref={dragSelect => {
+                this.dragSelect = dragSelect;
+              }}
               className="clearfix"
               style={{ position: 'relative' }}
               onDragSelectStart={() => (this.selectedItemsBeforeDragSelect = selectedItems)}
@@ -396,7 +399,12 @@ class KcMain extends Component<any, any> {
 
     // 主体
     return (
-      (<div className="kcMain kcMain flex" ref={kcApp => { this.kcApp = kcApp; }}>
+      <div
+        className="kcMain kcMain flex"
+        ref={kcApp => {
+          this.kcApp = kcApp;
+        }}
+      >
         <div className="previewFileMain">
           {isPreviewFile && (
             <AttachmentsPreview
@@ -609,14 +617,18 @@ class KcMain extends Component<any, any> {
           open={isShowDetail}
           size={408}
           mask={false}
-          styles={{ section: {
-            position: 'absolute',
-            top: 95,
-            bottom: 0,
-            height: 'auto',
-            right: 68,
-            width: 340,
-          }, body: { padding: 0 }, header: { display: 'none' } }}
+          styles={{
+            section: {
+              position: 'absolute',
+              top: 95,
+              bottom: 0,
+              height: 'auto',
+              right: 68,
+              width: 340,
+            },
+            body: { padding: 0 },
+            header: { display: 'none' },
+          }}
           rootStyle={{ zIndex: detailAttamentsPreviewActive ? 16 : 6, overflow: 'visible' }}
           onClose={isPinDetail ? null : () => this.setState({ isShowDetail: false })}
         >
@@ -641,7 +653,7 @@ class KcMain extends Component<any, any> {
             }}
           />
         </Drawer>
-      </div>)
+      </div>
     );
   }
 }

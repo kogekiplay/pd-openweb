@@ -2,7 +2,7 @@ import React, { Component, lazy, Suspense } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { bool, func, oneOf, string } from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { Icon, MdLink, SvgIcon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import ClickAway from 'ming-ui/components/ClickAway';
@@ -346,7 +346,7 @@ let MyAppItem = class MyAppItem extends Component<any, any> {
                   },
                 }}
                 getPopupContainer={() => this.$myAppItem.current}
-                destroyPopupOnHide
+                autoDestroy
               >
                 <div
                   className="myAppItemMore appItemIcon"

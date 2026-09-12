@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useSetState } from 'react-use';
 import { Switch } from 'antd';
 import cx from 'classnames';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { Dialog, Icon, MenuItem, UserHead } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import AggTableAjax from 'src/pages/integration/api/aggTable.js';

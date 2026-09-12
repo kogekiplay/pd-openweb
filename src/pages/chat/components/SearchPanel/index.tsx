@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import * as ajax from '../../utils/ajax';
 import Files from './Files';
@@ -50,7 +51,7 @@ export default class SearchPanel extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.searchText) {
         this.updateTabCount(this.props.searchText);
       }

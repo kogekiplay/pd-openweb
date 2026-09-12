@@ -1,10 +1,11 @@
 import React, { Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Drawer } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -203,7 +204,7 @@ class WidgetConfigRuleItem extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const { initGlobalRuleInfo, initWorksheetRuleList, ruleList, saveIndex } = this.props;
 
       if (!_.isUndefined(ruleList) && _.isUndefined(prevProps.ruleList)) {
@@ -324,7 +325,7 @@ class WidgetConfigRuleItem extends React.Component<any, any> {
     });
 
     return (
-      (<div className="formSetWorksheet">
+      <div className="formSetWorksheet">
         <RuleStyleWrapper>
           {styleRuleList.length > 0 ? styleRuleList.map(rule => this.renderContent(rule)) : null}
           <AddRule onClick={() => addColumnRules()}>
@@ -354,7 +355,7 @@ class WidgetConfigRuleItem extends React.Component<any, any> {
             <EditBox />
           </Drawer>
         )}
-      </div>)
+      </div>
     );
   }
 }

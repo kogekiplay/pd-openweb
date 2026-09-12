@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
+import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, Menu, MenuItem } from 'ming-ui';
 import SearchInput from 'src/pages/AppHomepage/AppCenter/components/SearchInput';
@@ -44,7 +45,7 @@ export default class ApplyAction extends PureComponent<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(prevProps.roles, this.props.roles)) {
         this.setState({
           roles: this.props.roles,

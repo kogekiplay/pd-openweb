@@ -1,4 +1,5 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -41,7 +42,7 @@ class PostCommentList extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const postItem = this.props.postItem;
       const defaultCount = this.props.defaultCount;
       const totalCount = parseInt(postItem.commentCount, 10);

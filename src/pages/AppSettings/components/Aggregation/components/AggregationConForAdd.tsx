@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { Icon } from 'ming-ui';
 import { getTranslateInfo } from 'src/utils/app';
 import { formatAggConfig, getAggFuncTypes, getNodeInfo, getRuleAlias, isDelStatus, updateConfig } from '../util';

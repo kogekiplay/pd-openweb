@@ -3,7 +3,7 @@ import { useSetState } from 'react-use';
 import cx from 'classnames';
 import update from 'immutability-helper';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { v4 as uuidv4 } from 'uuid';
 import { Checkbox, Dialog, Dropdown, Icon, Menu, MenuItem } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';

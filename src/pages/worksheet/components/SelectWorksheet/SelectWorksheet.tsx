@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -131,7 +132,7 @@ export default class SelectWroksheet extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.appId !== prevProps.appId || this.props.worksheetType !== prevProps.worksheetType) {
         this.loadWorksheets(this.props.appId, this.props.value, this.props.worksheetType);
         return;

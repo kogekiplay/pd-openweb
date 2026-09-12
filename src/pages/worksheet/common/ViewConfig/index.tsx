@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import { Icon, Support, SvgIcon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -18,7 +19,7 @@ let ViewConfig = class ViewConfig extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const { view, worksheetId } = this.props;
 
       if (this.props.viewId !== prevProps.viewId) {

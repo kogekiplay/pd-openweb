@@ -2,7 +2,7 @@ import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useState } 
 import { useDispatch } from 'react-redux';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { AILoading, BgIconButton, Button, Checkbox, Switch } from 'ming-ui';
 import { updateSheetListAppItem } from 'src/pages/worksheet/redux/actions/sheetList';

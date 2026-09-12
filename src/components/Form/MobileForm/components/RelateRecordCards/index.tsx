@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _, { identity } from 'lodash';
 import PropTypes from 'prop-types';
@@ -184,7 +185,7 @@ class RelateRecordCards extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const control = this.props.control || {};
 
       if (prevProps.control.dataSource !== this.props.control.dataSource) {

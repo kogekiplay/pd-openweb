@@ -1,6 +1,6 @@
 ﻿import React from 'react';
 import { useSetState } from 'react-use';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { Dialog, Icon } from 'ming-ui';
 import packageVersionAjax from 'src/pages/workflow/api/packageVersion';
 import exportDialog from '../apiIntegration/ConnectWrap/content/Export';

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import PropTypes from 'prop-types';
 import Calender from 'ming-ui/components/NewDateTimePicker/calender';
 import LibCalender from '../lib/calender';
@@ -20,7 +21,7 @@ class DatePickerBase extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       this.setState(this.generateState(this.props));
     }
   }

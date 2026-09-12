@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -44,7 +45,7 @@ class DiscussLogFile extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.hiddenTabs !== prevProps.hiddenTabs || this.props.workflowStatus !== prevProps.workflowStatus) {
         this.getShowTabs(this.props);
 

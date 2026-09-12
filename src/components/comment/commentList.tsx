@@ -1,4 +1,5 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import LoadDiv from 'ming-ui/components/LoadDiv';
@@ -59,7 +60,7 @@ class CommentList extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const changeSource = this.props.entityType !== prevProps.entityType || prevProps.sourceId !== this.props.sourceId; //内部和外部讨论 || 源id改变
       //内部和外部讨论 || 源id改变
       const hasNewComments = this.props.commentList.length > prevProps.commentList.length;

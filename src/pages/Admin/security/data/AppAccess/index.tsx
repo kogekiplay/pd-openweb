@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import { useSetState } from 'react-use';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Button, Dialog, Icon, Menu, MenuItem, Switch } from 'ming-ui';
 import dataLimitAjax from 'src/api/dataLimit';

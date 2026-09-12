@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, Menu, SvgIcon } from 'ming-ui';
 import CustomButtons, { MenuItemWrap } from 'worksheet/common/recordInfo/RecordForm/CustomButtons';
@@ -62,7 +62,7 @@ export default function GroupedMenuItem(props) {
   const parentSetCustomButtonActive = buttonsProps.setCustomButtonActive;
   const parentTriggerCallback = buttonsProps.triggerCallback;
   // 填写动作打开 FillRecordControls 时关闭子菜单弹层，并向上冒泡通知父级溢出弹层一起关；
-  // Trigger 去掉 destroyPopupOnHide，避免连带卸载 CustomButtons 内部的 FillRecordControls Modal。
+  // Trigger 去掉 autoDestroy，避免连带卸载 CustomButtons 内部的 FillRecordControls Modal。
   const handleCustomButtonActive = useCallback(
     active => {
       if (active) setSubmenuVisible(false);

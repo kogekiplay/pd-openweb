@@ -1,8 +1,9 @@
 import React, { createRef } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _, { find, includes } from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import SheetContext from 'worksheet/common/Sheet/SheetContext';
 import RelateRecordDropdown from 'worksheet/components/RelateRecordDropdown';
@@ -56,7 +57,7 @@ export default class RelateRecord extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (prevProps.cell.value !== this.props.cell.value) {
         this.setState({
           records: this.parseValue(this.props.cell.value),
@@ -555,7 +556,7 @@ export default class RelateRecord extends React.Component<any, any> {
             }
             popupClassName="filterTrigger"
             popupVisible={isediting}
-            destroyPopupOnHide
+            autoDestroy
             popupAlign={{
               points: ['tl', 'tl'],
               overflow: { adjustY: true },

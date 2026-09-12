@@ -1,4 +1,5 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import CascaderDropdown from 'src/components/Form/DesktopForm/widgets/Cascader';
@@ -25,7 +26,7 @@ export default class RelateRecord extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.fullValues?.length !== prevProps.fullValues?.length) {
         this.setState({
           records: this.props.fullValues?.length > 0 ? _.map(this.props.fullValues, r => safeParse(r)) : [],

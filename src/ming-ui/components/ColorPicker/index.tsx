@@ -6,7 +6,7 @@ import { TinyColor } from '@ctrl/tinycolor';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Dropdown } from 'ming-ui';
 import { getColorValue } from 'src/utils/controlCommon';
@@ -425,7 +425,7 @@ class ColorPicker extends Component<any, any> {
               this.onClose();
             }
           }}
-          destroyPopupOnHide
+          autoDestroy
           popupClassName={cx('ColorPickerPanelTrigger', triggerClass)}
           popupAlign={{
             points: ['tl', 'bl'],

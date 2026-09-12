@@ -113,7 +113,7 @@ class KcLeft extends Component<any, any> {
     );
   }
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.keywords !== this.state.keywords) {
         this.setState({
           keywords: this.props.keywords,

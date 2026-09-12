@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import { LoadDiv, UserCard } from 'ming-ui';
@@ -38,7 +39,7 @@ export default class Members extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const { session } = this.props;
 
       if (session.groupMemberCount !== this.state.groupMemberCount) {

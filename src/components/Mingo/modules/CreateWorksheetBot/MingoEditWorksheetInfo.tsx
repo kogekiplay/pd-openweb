@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { useMeasure } from 'react-use';
 import cx from 'classnames';
 import { isEmpty } from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Input, SvgIcon } from 'ming-ui';
 import appManagementAjax from 'src/api/appManagement';
@@ -150,7 +150,7 @@ export default function MingoEditWorksheetInfo({
               action={['click']}
               popupVisible={popupVisible}
               onPopupVisibleChange={setPopupVisible}
-              destroyPopupOnHide
+              autoDestroy
               popup={
                 <IconSelector style={{ width: width }}>
                   <div className="title">{_l('AI推荐')}</div>

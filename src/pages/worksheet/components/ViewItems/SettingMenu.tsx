@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { Icon, Menu, MenuItem } from 'ming-ui';
 import { VIEW_DISPLAY_TYPE } from 'worksheet/constants/enum';
 import { buriedUpgradeVersionDialog } from 'src/components/upgradeVersion';

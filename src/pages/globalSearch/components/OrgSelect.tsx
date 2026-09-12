@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, Input } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -74,7 +74,6 @@ export default function OrgSelect(props) {
   return (
     <OrgSelectCon className="Font12 Bold" style={style}>
       <Trigger
-        className="orgSelectTrigger"
         popupVisible={visible}
         onPopupVisibleChange={visible => setVisible(visible)}
         action={['click']}
@@ -109,7 +108,7 @@ export default function OrgSelect(props) {
           </div>
         }
       >
-        <div className="orgShowCon">
+        <div className="orgShowCon orgSelectTrigger">
           <span className="ellipsis">{selected && selected.companyName}</span>{' '}
           <Icon icon="expand_more" className="Font20 textDisabled mLeft9" />
         </div>

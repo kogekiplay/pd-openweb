@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import { List, Popup } from 'antd-mobile';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -76,7 +77,7 @@ export default class Cascader extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(prevProps.value, this.props.value)) {
         this.setState({
           value: this.props.value,

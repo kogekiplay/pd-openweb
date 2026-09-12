@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { Drawer } from 'antd';
 import styled from 'styled-components';
@@ -41,7 +42,7 @@ class WorkflowInfo extends Component<any, any> {
    */
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.visible) {
         this.setState({
           name: this.props.flowInfo.name,
@@ -85,7 +86,14 @@ class WorkflowInfo extends Component<any, any> {
     const { explain, name, iconColor, iconName } = this.state;
 
     return (
-      (<Drawer placement="right" open={visible} closable={false} mask={false} styles={{ body: { padding: 0 } }} size={800}>
+      <Drawer
+        placement="right"
+        open={visible}
+        closable={false}
+        mask={false}
+        styles={{ body: { padding: 0 } }}
+        size={800}
+      >
         <div className="workflowInfo flexColumn h100">
           <div className="Font17 bold flexRow alignItemsCenter pLeft24 pRight24" style={{ height: 55 }}>
             <div className="flex">{_l('基本信息')}</div>
@@ -98,7 +106,9 @@ class WorkflowInfo extends Component<any, any> {
                 name="workflowSettingsWorkflowInfo"
                 autoComplete="off"
                 type="text"
-                ref={name => { this.name = name; }}
+                ref={name => {
+                  this.name = name;
+                }}
                 className="hoverBorderColorPrimary borderColorPrimary"
                 maxLength={30}
                 autoFocus
@@ -143,7 +153,7 @@ class WorkflowInfo extends Component<any, any> {
           </div>
           <DetailFooter {...this.props} isCorrect={!!name.trim()} onSave={this.onOk} closeDetail={onClose} />
         </div>
-      </Drawer>)
+      </Drawer>
     );
   }
 }

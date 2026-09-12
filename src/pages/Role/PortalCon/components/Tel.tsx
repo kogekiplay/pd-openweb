@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import { createIntlTelInput } from 'ming-ui/components/PhoneNumberInput/util';
@@ -31,7 +32,7 @@ export default class Tel extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (
         (this.props.data || {}).value !== (prevProps.data || {}).value &&
         (this.props.value || (prevProps.data || {}).value !== undefined) &&

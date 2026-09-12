@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, LoadDiv } from 'ming-ui';
 import fixedDataController from 'src/api/fixedData';
@@ -113,7 +113,7 @@ export default function CityPicker(props) {
     popupParentNode = document.body,
     className = '',
     children,
-    destroyPopupOnHide,
+    autoDestroy,
     disabled,
     popupClassName = '',
     popupAlign,
@@ -517,7 +517,7 @@ export default function CityPicker(props) {
       <Trigger
         action={['click']}
         popupVisible={disabled ? false : visible}
-        destroyPopupOnHide={destroyPopupOnHide}
+        autoDestroy={autoDestroy}
         onPopupVisibleChange={visible => {
           if (disabled || (manual && visible)) return;
 
@@ -584,7 +584,7 @@ CityPicker.propTypes = {
    * 指定弹层创建的位置，默认是body下
    */
   popupParentNode: PropTypes.any,
-  destroyPopupOnHide: PropTypes.bool,
+  autoDestroy: PropTypes.bool,
   popupAlign: PropTypes.object,
   popupVisible: PropTypes.bool,
   /**

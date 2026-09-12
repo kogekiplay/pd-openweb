@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import Button from 'ming-ui/components/Button';
 import ClickAway from 'ming-ui/components/ClickAway';
 import Icon from 'ming-ui/components/Icon';
@@ -42,7 +43,7 @@ export default class UploadFilesTrigger extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (_.isBoolean(this.props.popupVisible) && this.props.popupVisible !== prevProps.popupVisible) {
         this.setTriggerPanelVisible(this.props.popupVisible);
       }
@@ -201,12 +202,12 @@ export default class UploadFilesTrigger extends Component<any, any> {
   }
   render() {
     const { visible } = this.state;
-    const { children, getPopupContainer, offset, noWrap, destroyPopupOnHide, ...uploadFilesProps } = this.props;
+    const { children, getPopupContainer, offset, noWrap, autoDestroy, ...uploadFilesProps } = this.props;
     return (
       <Trigger
         popupVisible={visible}
         onPopupVisibleChange={!noWrap ? this.setTriggerPanelVisible.bind(this, true) : () => {}}
-        destroyPopupOnHide={destroyPopupOnHide}
+        autoDestroy={autoDestroy}
         popupClassName="UploadFilesTriggerWrap"
         action={['click']}
         popupPlacement="bottomLeft"

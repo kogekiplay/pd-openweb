@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import { Select } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -84,7 +85,7 @@ class AdminWorkflowList extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props, prevProps)) {
         this.setState(
           Object.assign({
@@ -533,14 +534,17 @@ class AdminWorkflowList extends Component<any, any> {
             <div className="manageListSearch flexRow">
               <Select
                 className="w180 mdAntSelect"
-                showSearch={{ filterOption: (inputValue, option) =>
-                  appList
-                    .find(item => item.value === option.value)
-                    .label.toLowerCase()
-                    .indexOf(inputValue.toLowerCase()) > -1, onSearch: _.debounce(
-                  val => this.setState({ keyword: val, appPageIndex: 1 }, () => this.getAppList(params.projectId)),
-                  500,
-                ) }}
+                showSearch={{
+                  filterOption: (inputValue, option) =>
+                    appList
+                      .find(item => item.value === option.value)
+                      .label.toLowerCase()
+                      .indexOf(inputValue.toLowerCase()) > -1,
+                  onSearch: _.debounce(
+                    val => this.setState({ keyword: val, appPageIndex: 1 }, () => this.getAppList(params.projectId)),
+                    500,
+                  ),
+                }}
                 defaultValue={apkId}
                 options={appList}
                 onFocus={() => appList.length === 1 && this.getAppList(params.projectId)}
@@ -631,7 +635,12 @@ class AdminWorkflowList extends Component<any, any> {
           </Fragment>
         ) : (
           <Fragment>
-            <WorkflowMonitor match={this.props.match} ref={ele => { this.workflowMonotor = ele; }} />
+            <WorkflowMonitor
+              match={this.props.match}
+              ref={ele => {
+                this.workflowMonotor = ele;
+              }}
+            />
           </Fragment>
         )}
 

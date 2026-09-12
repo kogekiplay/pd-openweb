@@ -1,11 +1,12 @@
 import React, { Component, createRef, Fragment } from 'react';
-import copy from 'src/utils/copyToClipboard';
+import { shallowEqual } from 'react-redux';
 import { Button, Dialog, LoadDiv, QiniuUpload, UpgradeIcon, VerifyPasswordConfirm } from 'ming-ui';
 import projectController from 'src/api/project';
 import projectSettingController from 'src/api/projectSetting';
 import AdminCommon from 'src/pages/Admin/common/common';
 import DialogSettingInviteRules from 'src/pages/Admin/user/membersDepartments/structure/components/dialogSettingInviteRules/index.jsx';
 import CertificationDisplay from 'src/pages/certification/components/CertificationDisplay';
+import copy from 'src/utils/copyToClipboard';
 import { getCurrentProject } from 'src/utils/project';
 import Config from '../../../config';
 import SetInfoDialog from '../modules/SetInfoDialog';
@@ -38,7 +39,7 @@ export default class CommonInfo extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.level !== prevProps.level) {
         this.getAllData();
       }

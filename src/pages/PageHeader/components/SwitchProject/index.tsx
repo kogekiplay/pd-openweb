@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Menu, MenuItem, ScrollView } from 'ming-ui';
 import { VerticalMiddle } from 'worksheet/components/Basics';
@@ -158,7 +158,7 @@ function SwitchProject() {
                 </Menu>
               }
               getPopupContainer={() => createRef.current}
-              destroyPopupOnHide
+              autoDestroy
             >
               <div ref={createRef}>
                 <NewMenuItem className="colorPrimary">

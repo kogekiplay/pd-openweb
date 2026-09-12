@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSetState } from 'react-use';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, LoadDiv, QiniuUpload } from 'ming-ui';
 import groupAjax from 'src/api/group';

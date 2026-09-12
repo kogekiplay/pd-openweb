@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import copy from 'src/utils/copyToClipboard';
 import _, { get, noop } from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Dialog, Icon, Menu, MenuItem } from 'ming-ui';
 import favoriteApi from 'src/api/favorite';
@@ -472,7 +472,7 @@ export default function RecordOperate(props) {
       )}
       zIndex={1000}
       mouseEnterDelay={mouseEnterDelay}
-      destroyPopupOnHide
+      autoDestroy
       popup={
         moveRecordToOtherGroupVisible ? (
           <MoveRecordToOtherGroupWrap

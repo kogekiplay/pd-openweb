@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 
 export default function widthProvider(GridOutComponent) {
   return class WidthProvider extends Component<any, any> {
@@ -23,7 +24,7 @@ export default function widthProvider(GridOutComponent) {
     }
 
     componentDidUpdate(prevProps) {
-      if (prevProps !== this.props) {
+      if (!shallowEqual(prevProps, this.props)) {
         if (this.props.sheetListVisible !== prevProps.sheetListVisible) {
           // 增减左侧列表展开收起之间的宽度差值
           const width = this.props.sheetListVisible ? -176 : 176;

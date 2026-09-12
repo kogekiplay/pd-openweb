@@ -1,4 +1,5 @@
-﻿import React, { Component, Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
@@ -31,7 +32,7 @@ export default class CreateRecordAndTask extends Component<any, any> {
    */
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.data.selectNodeId !== prevProps.data.selectNodeId) {
         this.setState({
           isBatch: !!this.props.data.selectNodeId,

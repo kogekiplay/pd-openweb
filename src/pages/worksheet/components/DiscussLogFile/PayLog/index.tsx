@@ -5,7 +5,7 @@ import cx from 'classnames';
 import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import moment from 'moment';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Button, Dialog, LoadDiv, MenuItem } from 'ming-ui';
 import paymentAjax from 'src/api/payment.js';

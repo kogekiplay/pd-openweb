@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { Icon } from 'ming-ui';
 import functionWrap from 'ming-ui/components/FunctionWrap';
 import { dialogSelectUser } from 'ming-ui/functions';
@@ -776,7 +776,7 @@ const MentionsInput = props => {
           adjustY: true,
         },
       }}
-      destroyPopupOnHide
+      autoDestroy
       action={['hover']}
       popupClassName="mentionsTriggerWrap"
       popup={

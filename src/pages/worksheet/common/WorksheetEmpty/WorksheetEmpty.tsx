@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { Button, Icon } from 'ming-ui';
 import abnormal from 'src/pages/worksheet/assets/abnormal.png';
 import CreateNew from 'src/pages/worksheet/common/WorkSheetLeft/CreateNew';

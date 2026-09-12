@@ -1,4 +1,5 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import moment from 'moment';
 import groupController from 'src/api/group';
@@ -18,7 +19,7 @@ export default class GroupValidate extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       this.init(_.get(this.props, 'location.search'));
     }
   }

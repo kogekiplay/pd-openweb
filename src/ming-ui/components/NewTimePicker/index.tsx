@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import PropTypes from 'prop-types';
 import TimeMenu from './time-menu';
 import './style.less';
@@ -39,7 +40,7 @@ class Time extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.value !== this.state.value) {
         const value = this.props.value || {
           hour: 0,
@@ -141,7 +142,12 @@ class Time extends Component<any, any> {
     const classNames = classList.join(' ');
 
     return (
-      <div className={classNames} ref={root => { this.root = root; }}>
+      <div
+        className={classNames}
+        ref={root => {
+          this.root = root;
+        }}
+      >
         <button
           ref={button => {
             this.button = button;

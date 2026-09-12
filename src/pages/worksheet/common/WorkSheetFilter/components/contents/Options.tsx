@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -40,7 +41,7 @@ export default class Options extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.fullValues, prevProps.fullValues)) {
         this.setState({
           selectedOptions: this.getDefaultSelectedOptions(this.props.fullValues, this.props.control),
@@ -171,7 +172,12 @@ export default class Options extends Component<any, any> {
       const { chooserange = 'CN', commcountries } = control.advancedSetting || {};
 
       return (
-        <div className="worksheetFilterOptionsCondition" ref={con => { this.con = con; }}>
+        <div
+          className="worksheetFilterOptionsCondition"
+          ref={con => {
+            this.con = con;
+          }}
+        >
           <CityPicker
             search={keywords}
             destroyPopupOnHide
@@ -361,7 +367,12 @@ export default class Options extends Component<any, any> {
   };
   render() {
     return (
-      <div className="worksheetFilterOptionsCondition" ref={con => { this.con = con; }}>
+      <div
+        className="worksheetFilterOptionsCondition"
+        ref={con => {
+          this.con = con;
+        }}
+      >
         {this.renderSelect()}
       </div>
     );

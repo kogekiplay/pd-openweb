@@ -1,10 +1,11 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { Icon, LoadDiv, UserName } from 'ming-ui';
 import statisticController from 'src/api/statistic';
-import PaginationWrap from '../../../../components/PaginationWrap';
 import { pathCompletion } from 'src/utils/common';
+import PaginationWrap from '../../../../components/PaginationWrap';
 
 const PAGE_SIZES = {
   NORMAL: 20,
@@ -215,7 +216,7 @@ export default class StatTable extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (
         prevProps.reportType !== this.props.reportType ||
         prevProps.startDate !== this.props.startDate ||

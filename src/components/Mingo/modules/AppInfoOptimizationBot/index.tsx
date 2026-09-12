@@ -2,7 +2,7 @@ import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef,
 import cx from 'classnames';
 import { isFunction } from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import agentApi from 'src/api/agent';
 import { useGlobalStore } from 'src/common/GlobalStore';
@@ -301,7 +301,7 @@ function MingoContent(props, ref) {
                 </ConfigPanelWrap>
               }
               popupClassName="mingoCreateWorksheetDataBotConfigTrigger"
-              destroyPopupOnHide
+              autoDestroy
               zIndex={1050}
             >
               <IconBtn

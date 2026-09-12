@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { Table } from 'antd';
 import cx from 'classnames';
@@ -314,7 +315,7 @@ class ImportDepAndPosition extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(prevProps.importExportResult, this.props.importExportResult)) {
         let { actionResult } = this.props.importExportResult;
 

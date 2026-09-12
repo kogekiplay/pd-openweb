@@ -1,7 +1,8 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, Input, LoadDiv, Menu, MenuItem, UserHead } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -95,7 +96,7 @@ export default class WorkSheetCommentList extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       //内部和外部讨论切换
       if (this.props.entityType !== prevProps.entityType) {
         this.setState({

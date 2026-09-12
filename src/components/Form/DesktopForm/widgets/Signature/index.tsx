@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import cx from 'classnames';
 import _, { get } from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 // signature_pad 5 的 exports 映射只有 '.'，深子路径 dist/signature_pad 已被封死。
 import SignaturePad from 'signature_pad';
 import styled from 'styled-components';
@@ -162,7 +162,7 @@ const Signature = props => {
     viewIdForPermit,
     advancedSetting = {},
     popupContainer,
-    destroyPopupOnHide,
+    autoDestroy,
     popupAlign,
     formItemId,
   } = props;
@@ -452,7 +452,7 @@ const Signature = props => {
         popupAlign={popupAlign || getAlign()}
         onPopupVisibleChange={showPopup}
         getPopupContainer={() => popupContainer || $ref.current}
-        destroyPopupOnHide={destroyPopupOnHide}
+        autoDestroy={autoDestroy}
         popup={
           <ClickAwayable onClickAway={clickEvent}>
             <SignaturePopup onClick={e => e.nativeEvent.stopImmediatePropagation()} className="noSelect">

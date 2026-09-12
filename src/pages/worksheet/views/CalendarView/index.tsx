@@ -1,4 +1,5 @@
 import React, { Component, useMemo } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import FullCalendar from '@fullcalendar/react';
@@ -85,7 +86,7 @@ class RecordCalendarBase extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const { base, calendarview = {}, height, sheetSwitchPermit } = this.props;
 
       if (

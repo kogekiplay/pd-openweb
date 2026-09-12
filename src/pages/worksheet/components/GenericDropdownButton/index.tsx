@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Menu, MenuItem } from 'ming-ui';
 
@@ -115,7 +115,7 @@ const GenericDropdownButton = ({ buttonText, icon, dropdownItems, onClick, disab
           </MenuCon>
         }
         popupClassName="filterTrigger"
-        destroyPopupOnHide
+        autoDestroy
         popupAlign={{
           offset: [0, 4],
           points: ['tl', 'bl'],

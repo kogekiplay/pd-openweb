@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -27,7 +28,7 @@ class TaskControl extends Component<any, any> {
    */
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.taskControls[this.props.taskId], prevProps.taskControls[prevProps.taskId])) {
         this.formatData(this.props.taskControls[this.props.taskId] || []);
       }
@@ -272,7 +273,9 @@ class TaskControl extends Component<any, any> {
           <div className="pLeft12 pRight12 taskCustomFields">
             <CustomFields
               flag={flag}
-              ref={fields => { this.fields = fields; }}
+              ref={fields => {
+                this.fields = fields;
+              }}
               sheetSwitchPermit={[{ type: 14, state: true }]}
               isWorksheetQuery={false}
               disableRules={true}

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import { Button, Checkbox, ConfigProvider, Dropdown, Form, Input, Menu, Modal, Select } from 'antd';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -110,7 +111,7 @@ class LineConfigModal extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.visible && !prevProps.visible) {
         this.setState({
           lineConfig: this.props.lineConfig,
@@ -154,7 +155,7 @@ class LineConfigModal extends Component<any, any> {
     const allYaxisList = _.uniqBy(yaxisList.concat(rightYaxisList), 'controlId');
 
     return (
-      (<Modal
+      <Modal
         title={type && _.find(auxiliaryLineTypes, { type }).name}
         width={580}
         className="chartModal"
@@ -329,7 +330,7 @@ class LineConfigModal extends Component<any, any> {
           )}
           {this.renderFooter()}
         </ModalContent>
-      </Modal>)
+      </Modal>
     );
   }
 }

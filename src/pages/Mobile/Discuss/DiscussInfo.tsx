@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { Popup, Tabs } from 'antd-mobile';
 import _ from 'lodash';
@@ -78,7 +79,7 @@ class Discuss extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.sheetDiscussions, prevProps.sheetDiscussions)) {
         this.setState(
           {

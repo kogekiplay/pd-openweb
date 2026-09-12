@@ -1,4 +1,5 @@
-﻿import React, { Component } from 'react';
+import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { DndProvider } from 'react-dnd';
 import MouseBackEnd from '@mdfe/react-dnd-mouse-backend';
@@ -57,7 +58,7 @@ class TaskGantt extends Component<any, any> {
    */
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.taskConfig, prevProps.taskConfig)) {
         config.projectId = this.props.taskConfig.projectId;
         config.folderId = this.props.taskConfig.folderId;

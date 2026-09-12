@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import { ConfigProvider, Dropdown, Table } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -23,7 +24,7 @@ export default class PageTableCon extends Component<any, any> {
   // 分页
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (prevProps.paginationInfo !== this.props.paginationInfo) {
         this.setState({
           pageIndex: this.props.paginationInfo.pageIndex,
@@ -164,7 +165,7 @@ export default class PageTableCon extends Component<any, any> {
         };
 
     return (
-      (<div className={`tableWrap flexColumn Relative ${className}`}>
+      <div className={`tableWrap flexColumn Relative ${className}`}>
         <div className="flex" style={{ overflow: 'hidden', minHeight: 0 }}>
           {loading ? (
             <LoadDiv className="mTop40" />
@@ -232,7 +233,7 @@ export default class PageTableCon extends Component<any, any> {
             </Dropdown>
           </div>
         )}
-      </div>)
+      </div>
     );
   }
 }

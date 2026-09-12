@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { generate } from '@ant-design/colors';
@@ -123,7 +124,7 @@ export class CountryLayer extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const { style = {}, displaySetup = {} } = this.props.reportData;
       const { style: oldStyle = {}, displaySetup: oldDisplaySetup = {} } = prevProps.reportData;
 
@@ -710,7 +711,7 @@ export class CountryLayer extends Component<any, any> {
     const { xaxes = {}, displaySetup = {}, country = {}, summary } = this.props.reportData;
     const chooserange = _.get(xaxes, 'advancedSetting.chooserange');
     return (
-      (<div className="flex flexColumn chartWrapper countryLayerChart Relative">
+      <div className="flex flexColumn chartWrapper countryLayerChart Relative">
         <Dropdown
           open={dropdownVisible}
           onOpenChange={dropdownVisible => {
@@ -735,14 +736,21 @@ export class CountryLayer extends Component<any, any> {
             <div className="flexRow valignWrapper h100 justifyContent textSecondary Font16">
               {_l('海外地区暂不支持')}
             </div>
-            <div className="hide" ref={el => { this.chartEl = el; }} />
+            <div
+              className="hide"
+              ref={el => {
+                this.chartEl = el;
+              }}
+            />
           </Fragment>
         ) : (
           <Fragment>
             <div
               id="countryLayerChartEl"
               className={displaySetup.showTotal ? 'showTotalHeight Relative' : 'h100'}
-              ref={el => { this.chartEl = el; }}
+              ref={el => {
+                this.chartEl = el;
+              }}
             />
             {!_.isEmpty(path) && (
               <PathWrapper className="flexRow valignWrapper card">
@@ -788,7 +796,7 @@ export class CountryLayer extends Component<any, any> {
             </ZoomWrapper>
           </Fragment>
         )}
-      </div>)
+      </div>
     );
   }
 }

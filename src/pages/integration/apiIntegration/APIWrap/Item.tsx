@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, LoadDiv, Menu, Radio, Support } from 'ming-ui';
 import flowNodeAjax from 'src/pages/workflow/api/flowNode';

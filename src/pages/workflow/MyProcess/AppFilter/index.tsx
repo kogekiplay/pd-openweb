@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import { Dropdown, Select } from 'antd';
 import api from 'api/homeApp';
 import cx from 'classnames';
@@ -33,7 +34,7 @@ export default class AppFilter extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.apkId !== prevProps.apkId && _.isEmpty(this.props.apkId)) {
         this.setState({
           processList: [],
@@ -204,7 +205,7 @@ export default class AppFilter extends Component<any, any> {
     const { app, menuVisible } = this.state;
     const { apkId } = this.props;
     return (
-      (<div>
+      <div>
         <div className="Font13 mBottom10">{_l('应用')}</div>
         <Dropdown
           popupRender={() => this.renderProjectList()}
@@ -230,7 +231,7 @@ export default class AppFilter extends Component<any, any> {
           </div>
         </Dropdown>
         {app.id && this.renderWorkflowList()}
-      </div>)
+      </div>
     );
   }
 }

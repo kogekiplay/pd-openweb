@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import { Button, Input } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -56,7 +57,7 @@ export default class IntegrationSetPassword extends Component<any, any> {
   // 改变初始密码值
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(prevProps.isSetPassword, this.props.isSetPassword)) {
         this.setState({
           isSetPassword: this.props.isSetPassword,

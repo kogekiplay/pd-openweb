@@ -1,5 +1,6 @@
-﻿import React, { Fragment } from 'react';
+import React, { Fragment } from 'react';
 import { flushSync } from 'react-dom';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import cx from 'classnames';
@@ -20,7 +21,7 @@ import _, {
 } from 'lodash';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import { Menu, MenuItem, Skeleton } from 'ming-ui';
@@ -282,7 +283,7 @@ class ChildTable extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.refreshFlag && this.props.refreshFlag !== prevProps.refreshFlag) {
         this.refresh();
       }
@@ -1898,7 +1899,12 @@ class ChildTable extends React.Component<any, any> {
     );
     return (
       <ChildTableContext.Provider value={{ rows }}>
-        <div className="childTableCon" ref={con => { this.childTableCon = con; }}>
+        <div
+          className="childTableCon"
+          ref={con => {
+            this.childTableCon = con;
+          }}
+        >
           {!_.isEmpty(cellErrors) && (
             <span className="errorTip ellipsis" style={isMobile ? { top: -31 } : {}}>
               {' '}
@@ -1977,7 +1983,7 @@ class ChildTable extends React.Component<any, any> {
                         </Menu>
                       }
                       popupClassName="filterTrigger"
-                      destroyPopupOnHide
+                      autoDestroy
                       popupAlign={{
                         offset: [0, 4],
                         points: ['tl', 'bl'],

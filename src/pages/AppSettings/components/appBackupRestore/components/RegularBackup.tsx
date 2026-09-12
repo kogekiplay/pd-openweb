@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Button, Checkbox, Dialog, Dropdown } from 'ming-ui';
 import { Days, RegularBackupTabs } from '../enum';
@@ -167,7 +167,7 @@ export default function RegularBackup(props) {
             <Trigger
               action={['click']}
               popup={renderDay}
-              destroyPopupOnHide={true}
+              autoDestroy={true}
               popupAlign={{
                 points: ['tl', 'bl'],
                 offset: [0, 1],

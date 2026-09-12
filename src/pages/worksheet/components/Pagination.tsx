@@ -2,7 +2,7 @@ import React from 'react';
 import cx from 'classnames';
 import _, { get } from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Dropdown, Input } from 'ming-ui';
 
@@ -297,7 +297,7 @@ export default class Pagination extends React.Component<any, any> {
           action={['click']}
           popupVisible={!(disabled || abnormalMode) && popupVisible}
           onPopupVisibleChange={value => this.setState({ popupVisible: value })}
-          destroyPopupOnHide
+          autoDestroy
           popupAlign={{
             points: ['tl', 'bl'],
             overflow: {

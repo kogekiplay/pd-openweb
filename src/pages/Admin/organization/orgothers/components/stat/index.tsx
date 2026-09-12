@@ -1,7 +1,7 @@
 ﻿import React, { Fragment } from 'react';
 import cx from 'classnames';
 import moment from 'moment';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import Config from '../../../../config';
 import DatePickerFilter from './datePickerFilter';
 import StatTable from './StatTable';

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import cx from 'classnames';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { Dialog, Icon, MenuItem } from 'ming-ui';
 import appManagement from 'src/api/appManagement';
 import externalPortalAjax from 'src/api/externalPortal';

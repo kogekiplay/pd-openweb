@@ -1,8 +1,9 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { Dropdown, Radio, SortableList } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import userAjax from 'src/api/user';
@@ -28,7 +29,7 @@ export default class UserBaseInfoSetting extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (prevProps.flag !== this.props.flag) {
         this.setState({
           baseSettingData: getFieldsData(false, _.get(this.props, 'settings.psersonalSetList', [])),

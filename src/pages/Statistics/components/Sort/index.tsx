@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import { Button, ConfigProvider, Dropdown, Modal } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -129,7 +130,7 @@ export default class Sort extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const { rightY } = this.props.currentReport;
       this.setState({
         rightYaxisList: rightY ? this.setYaxisList(this.props) : [],
@@ -693,7 +694,7 @@ export default class Sort extends Component<any, any> {
     const Content = this.renderContent();
     if (!this.isRenderSort) return null;
     return (
-      (<Fragment>
+      <Fragment>
         {this.getIsSort() && (
           <Dropdown
             open={visible}
@@ -747,7 +748,7 @@ export default class Sort extends Component<any, any> {
             </ScrollView>
           </div>
         </Modal>
-      </Fragment>)
+      </Fragment>
     );
   }
 }

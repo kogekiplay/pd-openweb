@@ -1,4 +1,5 @@
 import React, { Component, createRef, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import { isEmpty } from 'lodash';
 import _ from 'lodash';
@@ -45,7 +46,7 @@ export default class SortableRecordItem extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (
         this.props.recordInfoId &&
         this.props.recordInfoId !== prevProps.recordInfoId &&

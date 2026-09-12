@@ -2,7 +2,7 @@
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import calendar from 'src/api/calendar';
 import taskCenter from 'src/api/taskCenter';
 import * as cardSender from '../../utils/cardSender';

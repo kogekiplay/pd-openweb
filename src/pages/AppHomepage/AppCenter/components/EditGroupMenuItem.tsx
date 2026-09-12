@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Checkbox, Icon, MenuItem } from 'ming-ui';
 import { FlexCenter, VerticalMiddle } from 'worksheet/components/Basics';
@@ -171,7 +171,7 @@ export default function EditGroupMenuItem(props) {
         />
       }
       getPopupContainer={() => itemRef.current}
-      destroyPopupOnHide
+      autoDestroy
     >
       <div ref={itemRef}>
         <Con icon={<Icon className="operationIcon" icon={'addto-folder'} />}>

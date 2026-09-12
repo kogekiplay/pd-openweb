@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import CalendarDetail from '../modules/calendarDetail';
 import './style.less';
@@ -13,7 +14,7 @@ class CalendarDetailEntrypoint extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (prevProps.match.params.id !== this.props.match.params.id) {
         CalendarDetail({
           isDetailPage: true,

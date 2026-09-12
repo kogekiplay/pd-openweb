@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Menu, MenuItem } from 'ming-ui';
 

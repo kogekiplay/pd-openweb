@@ -1,8 +1,9 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import { Divider, Select } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import { Dialog, Icon } from 'ming-ui';
@@ -81,7 +82,7 @@ export default class BaseFormInfo extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.baseInfo, prevProps.baseInfo)) {
         this.setState({
           jobList: this.props.baseInfo.jobList,
@@ -574,7 +575,9 @@ export default class BaseFormInfo extends Component<any, any> {
           </div>
           <SelectWrap
             disabled={typeCursor === 2}
-            ref={select => { this.select = select; }}
+            ref={select => {
+              this.select = select;
+            }}
             className={cx('w100 mdAntSelect', { noBorder: typeCursor === 2 })}
             showSearch
             allowClear={type === 'multiple' ? departmentItem.jobIds.length > 0 : jobIds.length > 0}

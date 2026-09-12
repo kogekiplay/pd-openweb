@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import { Button, Checkbox, ConfigProvider, Input, Modal, Select } from 'antd';
 import { ColorPicker, Icon } from 'ming-ui';
 import { formatNumberFromInput } from 'src/utils/control';
@@ -18,7 +19,7 @@ export default class DataBarColor extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.visible) {
         const { colorRule } = this.props;
         this.setState(colorRule);
@@ -160,7 +161,7 @@ export default class DataBarColor extends Component<any, any> {
   render() {
     const { visible, onCancel } = this.props;
     return (
-      (<Modal
+      <Modal
         title={_l('数据条')}
         width={580}
         className="chartModal chartRuleColorModal"
@@ -172,7 +173,7 @@ export default class DataBarColor extends Component<any, any> {
         onCancel={onCancel}
       >
         {this.renderContent()}
-      </Modal>)
+      </Modal>
     );
   }
 }

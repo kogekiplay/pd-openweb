@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import cx from 'classnames';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { Dialog, Icon, LoadDiv, Menu, MenuItem, VerifyPasswordConfirm } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import certificationApi from 'src/api/certification';

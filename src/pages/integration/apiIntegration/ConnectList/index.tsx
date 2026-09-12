@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import bg from 'staticfiles/images/query.png';
 import styled from 'styled-components';
 import { Dropdown, Icon, Menu, ScrollView, Support } from 'ming-ui';

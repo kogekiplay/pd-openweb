@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router';
 import { useClickAway } from 'react-use';
 import _ from 'lodash';
 import { arrayOf, bool, func, number, shape, string } from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { LoadDiv } from 'ming-ui';
 import { Con, Content, Search, Tabs, UserList } from './Comps';
 import { getAccounts, getUsers } from './util';
@@ -327,7 +327,7 @@ export function SelectWrapper(props) {
       zIndex={zIndex}
       popupVisible={visible}
       action={['click']}
-      destroyPopupOnHide
+      autoDestroy
       popupAlign={{
         offset: popupOffset,
         points: ['tl', 'bl'],

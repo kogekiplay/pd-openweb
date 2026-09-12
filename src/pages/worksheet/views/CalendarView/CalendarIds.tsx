@@ -2,7 +2,7 @@ import React from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import moment from 'moment';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import addRecord from 'worksheet/common/newRecord/addRecord';
 import { controlState } from 'src/utils/control';
 import { WrapChoose } from './styles';

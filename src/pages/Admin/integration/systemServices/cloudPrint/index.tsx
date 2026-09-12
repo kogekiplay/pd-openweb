@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Dialog, Icon, LoadDiv, Menu, MenuItem, Switch } from 'ming-ui';
 import systemIntegrationAjax from 'src/api/systemIntegration';

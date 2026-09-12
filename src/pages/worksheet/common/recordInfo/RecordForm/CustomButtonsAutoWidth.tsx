@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import cx from 'classnames';
 import _, { get } from 'lodash';
 import { arrayOf, bool, func, number, shape, string } from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Button, Menu, SvgIcon } from 'ming-ui';
 import autoSize from 'ming-ui/components/AutoSize';
@@ -388,7 +388,7 @@ function GroupedIconTextButton(props) {
   const { group, buttons, buttonsProps } = props;
   const [popupVisible, setPopupVisible] = useState(false);
   // 填写动作打开 FillRecordControls 时，主动关掉分组弹层；
-  // Trigger 去掉 destroyPopupOnHide，弹层关闭后仍保留 CustomButtons 挂载，
+  // Trigger 去掉 autoDestroy，弹层关闭后仍保留 CustomButtons 挂载，
   // 否则 CustomButtons 卸载会把它内部的 FillRecordControls Modal 一并销毁。
   const handleCustomButtonActive = useCallback(active => {
     if (active) setPopupVisible(false);
@@ -458,7 +458,7 @@ function GroupedTopButton(props) {
   const { group, buttons, mRight6, isOperates, operateHeight, isInCard, buttonsProps } = props;
   const [popupVisible, setPopupVisible] = useState(false);
   // 填写动作打开 FillRecordControls 时，主动关掉分组弹层；
-  // Trigger 去掉 destroyPopupOnHide，弹层关闭后仍保留 CustomButtons 挂载，
+  // Trigger 去掉 autoDestroy，弹层关闭后仍保留 CustomButtons 挂载，
   // 否则 CustomButtons 卸载会把它内部的 FillRecordControls Modal 一并销毁。
   const handleCustomButtonActive = useCallback(active => {
     if (active) setPopupVisible(false);
@@ -612,7 +612,7 @@ function Buttons(props) {
   const overflowItems = items.slice(itemShowNum);
   const showMore = overflowItems.length > 0;
   // 填写动作打开 FillRecordControls 时主动关溢出弹层；
-  // Trigger 去掉 destroyPopupOnHide，弹层关闭后 CustomButtons 仍挂载，
+  // Trigger 去掉 autoDestroy，弹层关闭后 CustomButtons 仍挂载，
   // 避免连带卸载内部的 FillRecordControls Modal。
   const handleOverflowCustomButtonActive = useCallback(active => {
     if (active) setPopupVisible(false);

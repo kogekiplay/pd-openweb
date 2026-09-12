@@ -1,4 +1,5 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import _ from 'lodash';
@@ -59,7 +60,7 @@ class Con extends React.Component<any, any> {
   //复制角色到外部门户
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const { appRole = {} } = this.props;
       const { roleInfos = [] } = appRole;
 

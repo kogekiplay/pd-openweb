@@ -71,7 +71,7 @@ class Detail extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (!shallowEqual(prevProps, this.props)) {
         this.getNodesTotalFolderCountAndFileSize(this.props);
       }

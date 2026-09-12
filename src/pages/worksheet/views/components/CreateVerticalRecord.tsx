@@ -4,7 +4,7 @@ import { Input } from 'antd';
 // import 'antd/es/input/style/css';
 
 
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Button } from 'ming-ui';
 import 'rc-trigger/assets/index.css';

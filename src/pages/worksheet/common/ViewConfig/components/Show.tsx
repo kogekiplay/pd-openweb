@@ -1,4 +1,5 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Radio } from 'ming-ui';
@@ -40,7 +41,7 @@ export default class Show extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const { view } = this.props;
 
       if (!_.isEqual(view, prevProps.view)) {

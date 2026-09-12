@@ -5,7 +5,7 @@ import update from 'immutability-helper';
 import { pick } from 'lodash';
 import _ from 'lodash';
 import moment from 'moment';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { Icon, LoadDiv, RichText, SvgIcon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import DeleteConfirm from 'ming-ui/components/DeleteReconfirm';

@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import Ajax from 'src/api/appManagement';
@@ -32,7 +33,7 @@ export default class RoleSet extends PureComponent<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.roleId !== prevProps.roleId) {
         this.fetchRoleDetail(this.props);
       }

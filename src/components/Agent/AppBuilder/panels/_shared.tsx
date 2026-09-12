@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import { useAgentBus } from '../../agentBus';
@@ -418,7 +418,7 @@ export function CardEditButton({ moduleLabel, cardName }) {
       // dom-align 会回退成 position:relative 导致弹层贴到容器左缘，这里显式指定
       popupStyle={{ position: 'absolute', zIndex: 1051 }}
       popupAlign={{ points: ['tr', 'br'], offset: [0, 4], overflow: { adjustX: true, adjustY: true } }}
-      destroyPopupOnHide
+      autoDestroy
       popup={
         <CardEditPopover
           moduleLabel={moduleLabel}

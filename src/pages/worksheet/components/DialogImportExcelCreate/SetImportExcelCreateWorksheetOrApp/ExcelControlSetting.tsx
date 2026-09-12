@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import { Input } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -71,7 +72,7 @@ export default class ExcelControlSetting extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const { data: { type, dataSource } = {} } = this.props;
 
       if (type === 29 && dataSource && dataSource !== (prevProps.data || {}).dataSource) {
@@ -230,7 +231,9 @@ export default class ExcelControlSetting extends Component<any, any> {
         <SettingItem>
           <div className="settingItemTitle">{_l('字段名称')}</div>
           <Input
-            ref={ele => { this.fieldName = ele; }}
+            ref={ele => {
+              this.fieldName = ele;
+            }}
             type="text"
             value={controlName}
             onBlur={() => {

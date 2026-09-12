@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import api from 'api/homeApp';
 import cx from 'classnames';
@@ -62,7 +63,7 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       this.ids = getIds(this.props);
       if (
         compareProps(this.props.appPkg, prevProps.appPkg, ['id']) ||

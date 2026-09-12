@@ -4,7 +4,7 @@ import { Button, ConfigProvider } from 'antd';
 import cx from 'classnames';
 import update from 'immutability-helper';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, LoadDiv, Dropdown as MDDropdown, SvgIcon } from 'ming-ui';
 import appManagementAjax from 'src/api/appManagement';

@@ -1,4 +1,5 @@
-﻿import React, { Component, Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import { Drawer } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -1221,7 +1222,7 @@ export default class CreateNodeDialog extends Component<any, any> {
   cacheScrollTop = 0;
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const featureType = getFeatureStatus(this.props.flowInfo.companyId, VersionProductType.flowPlugin);
 
       if (this.props.nodeId && this.props.nodeId !== prevProps.nodeId) {
@@ -1726,7 +1727,9 @@ export default class CreateNodeDialog extends Component<any, any> {
                 name="createNodeDialog"
                 autoComplete="off"
                 type="text"
-                ref={keywordsInput => { this.keywordsInput = keywordsInput; }}
+                ref={keywordsInput => {
+                  this.keywordsInput = keywordsInput;
+                }}
                 placeholder={_l('搜索')}
                 value={keywords}
                 onChange={e => this.setState({ keywords: e.target.value })}
@@ -1765,7 +1768,9 @@ export default class CreateNodeDialog extends Component<any, any> {
           </div>
           <ScrollView
             className="flex mTop20"
-            ref={contentScroll => { this.contentScroll = contentScroll; }}
+            ref={contentScroll => {
+              this.contentScroll = contentScroll;
+            }}
             onScroll={this.onScroll}
           >
             {source.map(data => {
@@ -1860,7 +1865,14 @@ export default class CreateNodeDialog extends Component<any, any> {
     const isApprovalProcess = selectItemType === NODE_TYPE.APPROVAL_PROCESS;
 
     return (
-      (<Drawer placement="right" open={!!nodeId} closable={false} mask={false} styles={{ body: { padding: 0 } }} size={840}>
+      <Drawer
+        placement="right"
+        open={!!nodeId}
+        closable={false}
+        mask={false}
+        styles={{ body: { padding: 0 } }}
+        size={840}
+      >
         <div className="createNodeDialog flexColumn h100">
           {selectSecond ? this.renderSecondContent() : this.renderContent()}
 
@@ -1917,7 +1929,7 @@ export default class CreateNodeDialog extends Component<any, any> {
             />
           )}
         </div>
-      </Drawer>)
+      </Drawer>
     );
   }
 }

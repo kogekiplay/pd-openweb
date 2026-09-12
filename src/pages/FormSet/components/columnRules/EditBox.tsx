@@ -1,10 +1,11 @@
 import React, { Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Select } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { Checkbox, Icon, RadioGroup, ScrollView } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { ALL_SYS } from 'src/pages/widgetConfig/config/widget';
@@ -44,7 +45,7 @@ class EditBox extends React.Component<any, any> {
   // 筛选条件 // 筛选条件
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.selectRules.name !== this.state.name) {
         this.setState({
           name: this.props.selectRules.name,
@@ -177,7 +178,12 @@ class EditBox extends React.Component<any, any> {
           }
           getPopupContainer={() => this.addField}
         >
-          <div className="addField" ref={con => { this.addField = con; }}>
+          <div
+            className="addField"
+            ref={con => {
+              this.addField = con;
+            }}
+          >
             <Icon icon="plus" className="mRight8" />
             {_l('字段')}
           </div>
@@ -301,15 +307,15 @@ class EditBox extends React.Component<any, any> {
     const filterControls = worksheetControls.filter(i => !_.includes(ALL_SYS, i.controlId));
 
     return (
-      (<div className="conditionContainer mTop0">
+      <div className="conditionContainer mTop0">
         <div className="Font14 Bold">{_l('则执行动作')}</div>
         {ruleItems.map((actionItem, actionIndex) => {
           const actionError = (ruleError.actionError || {})[actionIndex] || false;
           return (
-            (<div className="actionItemCon">
+            <div className="actionItemCon">
               <Select
                 className={cx('ruleListSelect', { flexItem: _.includes([7], actionItem.type) })}
-                classNames={{ popup: { root: "ruleListSelectDropdown" } }}
+                classNames={{ popup: { root: 'ruleListSelectDropdown' } }}
                 value={getActionLabelByType(actionItem.type)}
                 options={listData}
                 disabled={_.includes([9], actionItem.type)}
@@ -363,7 +369,7 @@ class EditBox extends React.Component<any, any> {
                   />
                 </Fragment>
               )}
-            </div>)
+            </div>
           );
         })}
         <Trigger
@@ -395,12 +401,17 @@ class EditBox extends React.Component<any, any> {
           )}
           getPopupContainer={() => this.addAction}
         >
-          <div className="addCondition" ref={con => { this.addAction = con; }}>
+          <div
+            className="addCondition"
+            ref={con => {
+              this.addAction = con;
+            }}
+          >
             <Icon icon="plus" className="mRight8" />
             {_l('添加动作')}
           </div>
         </Trigger>
-      </div>)
+      </div>
     );
   };
 

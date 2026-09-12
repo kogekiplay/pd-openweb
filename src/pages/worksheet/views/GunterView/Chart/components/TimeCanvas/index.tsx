@@ -1,4 +1,5 @@
 import React, { Component, createRef } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -12,7 +13,7 @@ let TimeCanvas = class TimeCanvas extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (
         !_.isEqual(this.props.grouping, prevProps.grouping) ||
         this.props.withoutArrangementVisible !== prevProps.withoutArrangementVisible

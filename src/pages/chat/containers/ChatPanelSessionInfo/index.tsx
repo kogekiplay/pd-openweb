@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import { ScrollView } from 'ming-ui';
@@ -24,7 +25,7 @@ class ChatPanelSessionInfo extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       // 展开和收起
       if (this.props.infoVisible) {
         this.first = true;

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { Routes } from 'react-router';
 import _ from 'lodash';
@@ -44,7 +45,7 @@ let Application = class Application extends Component<any, any> {
    */
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (
         this.props.match.params.appId !== prevProps.match.params.appId ||
         (window.redirected && location.href.indexOf('from=system') > -1)

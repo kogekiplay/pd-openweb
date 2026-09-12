@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import { Button, ConfigProvider, Input } from 'antd';
 import styled from 'styled-components';
 import reportConfig from '../../api/reportConfig';
@@ -22,7 +23,7 @@ export default class ChartDesc extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.desc !== prevProps.desc) {
         this.setState({
           desc: this.props.desc,

@@ -1,9 +1,10 @@
 import React from 'react';
 import { flushSync } from 'react-dom';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _, { get, includes, isEqual } from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Linkify, Textarea } from 'ming-ui';
 import ClickAway from 'ming-ui/components/ClickAway';
@@ -122,7 +123,7 @@ export default class Text extends React.Component<any, any> {
   tempKey = [];
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const valueChanged = this.props.cell.value !== prevProps.cell.value;
       const rowChanged = !isEqual(get(this.props, 'row.rowid'), get(prevProps, 'row.rowid'));
       const nextState = {}; // 子表场景：失焦后 ChildTable 的 300ms debounce + DataFormat 清洗会让 cell.value 异步回灌；
@@ -640,7 +641,7 @@ export default class Text extends React.Component<any, any> {
         }
         popupClassName="filterTrigger"
         popupVisible={isediting}
-        destroyPopupOnHide={!window.isSafari} // 不是 Safari
+        autoDestroy={!window.isSafari} // 不是 Safari
         popupAlign={{
           points: ['tl', 'tl'],
           overflow: {

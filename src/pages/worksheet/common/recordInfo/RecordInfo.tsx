@@ -1,4 +1,5 @@
-﻿import React, { Component } from 'react';
+import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _, { find, get } from 'lodash';
 import PropTypes from 'prop-types';
@@ -172,7 +173,7 @@ export default class RecordInfo extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if ((this.props.recordId !== prevProps.recordId || this.props.flag !== prevProps.flag) && this.props.recordId) {
         this.setState({
           loading: true,
@@ -1429,7 +1430,9 @@ export default class RecordInfo extends Component<any, any> {
             className={cx('recordInfoCon flexColumn', { abnormal, isWorkflow: from === RECORD_INFO_FROM.WORKFLOW })}
             data-record-id={recordId}
             data-view-id={viewId}
-            ref={con => { this.con = con; }}
+            ref={con => {
+              this.con = con;
+            }}
             // onClick={e => e.stopPropagation()}
           >
             {!(abnormal && !isWorkflow) &&

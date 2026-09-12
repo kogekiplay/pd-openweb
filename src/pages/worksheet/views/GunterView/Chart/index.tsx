@@ -1,4 +1,5 @@
 import React, { Component, createRef, Fragment, useMemo } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import cx from 'classnames';
@@ -73,7 +74,7 @@ class GunterChart extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.gunterView.zoom !== prevProps.gunterView.zoom) {
         window.isZoom = true;
         const { chartScroll, periodList } = this.props.gunterView;

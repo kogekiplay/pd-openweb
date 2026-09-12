@@ -1,7 +1,7 @@
 import React, { Fragment, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Button, Dialog, TagTextarea } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';

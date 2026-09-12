@@ -1,4 +1,5 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -56,7 +57,7 @@ export default class extends React.PureComponent<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (_.isEqual(this.props.fields, prevProps.fields)) {
         this.setState({
           fields: this.props.fields,

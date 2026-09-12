@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { createRoot } from 'react-dom/client';
 import { renderToString } from 'react-dom/server';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import doT from 'dot';
 import _ from 'lodash';
@@ -47,7 +48,7 @@ class TaskTree extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       // 减少proejctId不同的而发生的请求
       let nextConfig = Object.assign({}, this.props.taskConfig);
       let currentConfig = Object.assign({}, prevProps.taskConfig);

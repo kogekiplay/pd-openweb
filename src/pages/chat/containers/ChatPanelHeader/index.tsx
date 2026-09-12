@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import cx from 'classnames';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { LoadDiv } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -35,7 +36,7 @@ class ChatPanelHeader extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (!this.props.searchText) {
         this.setState({
           focus: false,

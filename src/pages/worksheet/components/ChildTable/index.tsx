@@ -1,4 +1,5 @@
 import React from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect, Provider } from 'react-redux';
 import { get, isFunction } from 'lodash';
 import DataFormat from 'src/components/Form/core/DataFormat';
@@ -45,7 +46,7 @@ export default class extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.control.store && this.props.control.store !== this.store) {
         this.store = this.props.control.store;
         this.store.init();

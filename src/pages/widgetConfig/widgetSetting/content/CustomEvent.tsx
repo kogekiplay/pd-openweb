@@ -3,7 +3,7 @@ import { CaretRightOutlined } from '@ant-design/icons';
 import { Collapse } from 'antd';
 import update from 'immutability-helper';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { v4 as uuidv4 } from 'uuid';
 import { Dropdown, Icon, LoadDiv, Menu, MenuItem } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import { Drawer } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -46,7 +47,7 @@ export default class UpgradeDetail extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(prevProps.worksheetDetailData, this.props.worksheetDetailData)) {
         const { worksheetDetailData, currentWorksheet } = this.props;
 
@@ -63,7 +64,7 @@ export default class UpgradeDetail extends Component<any, any> {
     const { controls = [], views = [] } = data;
 
     return (
-      (<Drawer
+      <Drawer
         title={_l('更新详情')}
         placement="right"
         onClose={onClose}
@@ -108,7 +109,7 @@ export default class UpgradeDetail extends Component<any, any> {
             isExpand={true}
           />
         )}
-      </Drawer>)
+      </Drawer>
     );
   }
 }

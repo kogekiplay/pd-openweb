@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import styled from 'styled-components';
@@ -52,7 +53,7 @@ class PortalMessage extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const { sessionList = [] } = this.props;
       const count = (sessionList.find(o => o.value === 'worksheet') || {}).count;
       const countProps = ((prevProps.sessionList || []).find(o => o.value === 'worksheet') || {}).count;

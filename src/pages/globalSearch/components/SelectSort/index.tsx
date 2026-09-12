@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import cx from 'classnames';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { Icon } from 'ming-ui';
 import './index.less';
 
@@ -44,7 +44,6 @@ export default function SelectSort(props) {
 
   return (
     <Trigger
-      className="appSelectTrigger"
       popupVisible={visible}
       onPopupVisibleChange={visible => setVisible(visible)}
       action={['click']}
@@ -72,7 +71,7 @@ export default function SelectSort(props) {
         </div>
       }
     >
-      <span className={`selectSort textTertiary ${className} ${value === 0 ? '' : 'lighthigh'}`}>
+      <span className={`selectSort textTertiary appSelectTrigger ${className} ${value === 0 ? '' : 'lighthigh'}`}>
         {value === 0 ? _l('更新时间') : SORT_TYPE[value].label}
         <Icon icon={SORT_TYPE[value].icon} className="textTertiary" />
       </span>

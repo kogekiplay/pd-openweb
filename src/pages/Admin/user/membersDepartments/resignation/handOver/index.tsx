@@ -1,15 +1,16 @@
 import React, { Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import classNames from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { Dialog, LoadDiv, UserCard, UserHead } from 'ming-ui';
 import transferController from 'src/api/transfer';
+import { pathCompletion } from 'src/utils/common';
 import Empty from '../../../../common/TableEmpty';
 import PaginationWrap from '../../../../components/PaginationWrap';
 import SearchInput from '../SearchInput';
 import Detail from './detail';
 import './style.less';
-import { pathCompletion } from 'src/utils/common';
 
 export default class HandOver extends React.Component<any, any> {
   static propTypes = {
@@ -42,7 +43,7 @@ export default class HandOver extends React.Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.activeTab !== prevProps.activeTab || this.props.level !== prevProps.level) {
         this.setState(
           {
@@ -110,7 +111,11 @@ export default class HandOver extends React.Component<any, any> {
         {user.accountId ? (
           <span className="flexColumn TxtLeft personBox ellipsis pRight10">
             <UserCard sourceId={user.accountId}>
-              <a className="Bold overflow_ellipsis" href={pathCompletion(`/user_${user.accountId}`)} title={user.fullname}>
+              <a
+                className="Bold overflow_ellipsis"
+                href={pathCompletion(`/user_${user.accountId}`)}
+                title={user.fullname}
+              >
                 {user.fullname}
               </a>
             </UserCard>
@@ -240,7 +245,7 @@ export default class HandOver extends React.Component<any, any> {
 
   render() {
     const { selectAccount } = this.state;
-    const { visible, onCancel = () => { } } = this.props;
+    const { visible, onCancel = () => {} } = this.props;
 
     return (
       <Dialog title="" width={1000} className="handoverDialog" visible={visible} showFooter={false} onCancel={onCancel}>

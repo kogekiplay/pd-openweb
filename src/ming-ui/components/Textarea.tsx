@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import './less/Textarea.less';
@@ -99,7 +100,7 @@ class Textarea extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const $textarea = $(this.textarea); // 处理 isFocus 变化
 
       // 处理 isFocus 变化

@@ -1,7 +1,7 @@
 import React, { Fragment, useRef, useState } from 'react';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import { Dialog, Icon, Menu, MenuItem, Popup } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import UploadNewVersion from 'src/pages/kc/components/UploadNewVersion.jsx';

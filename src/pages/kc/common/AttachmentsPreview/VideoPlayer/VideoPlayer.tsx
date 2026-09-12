@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
@@ -27,7 +28,7 @@ class VideoPlayer extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (this.props.src !== prevProps.src) {
         this.loadVideo(this.props.src);
       }
@@ -62,7 +63,9 @@ class VideoPlayer extends Component<any, any> {
       <div className="videoPlayer">
         <video
           className="videoContent"
-          ref={content => { this.videoContent = content; }}
+          ref={content => {
+            this.videoContent = content;
+          }}
           preload="metadata"
           controlsList="nodownload"
           onContextMenu={e => {

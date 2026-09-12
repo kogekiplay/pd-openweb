@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Menu } from 'antd';
 import cx from 'classnames';
 import _, { isUndefined } from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import { COVER_DISPLAY_FILL } from 'src/pages/worksheet/common/ViewConfig/config.js';

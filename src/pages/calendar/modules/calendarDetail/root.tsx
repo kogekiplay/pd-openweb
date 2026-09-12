@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
@@ -105,7 +106,7 @@ export default class CalendarDetail extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const {
         data: { calendar, keyStatus, token, thirdUser },
       } = this.props;

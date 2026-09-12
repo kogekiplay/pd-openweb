@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Dialog, Icon, VerifyPasswordInput } from 'ming-ui';
 import ProductLicenseInfo from 'src/components/productLicenseInfo';

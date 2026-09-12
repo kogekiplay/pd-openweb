@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { TinyColor } from '@ctrl/tinycolor';
 import cx from 'classnames';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { ColorPicker, Dialog, Icon, Input } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';

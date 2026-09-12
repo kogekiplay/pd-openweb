@@ -1,6 +1,7 @@
 import React, { Component, lazy, Suspense } from 'react';
+import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, LoadDiv, SvgIcon } from 'ming-ui';
 import pluginAjax from 'src/api/plugin';
@@ -244,7 +245,7 @@ export default class AddViewDisplayMenu extends Component<any, any> {
   //或是自定义列表，更新customList //或是自定义列表，更新customList
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       const { canAddCustomView, popupVisible } = this.props;
 
       if (canAddCustomView && popupVisible) {
@@ -349,8 +350,9 @@ export default class AddViewDisplayMenu extends Component<any, any> {
                   </div>
                 </GuildWrap>
               }
-              popupTransitionName="Tooltip-move-top"
-              destroyPopupOnHide
+              // @rc-component/trigger 去掉了 popupTransitionName，动画改走 popupMotion。
+              popupMotion={{ motionName: 'Tooltip-move-top' }}
+              autoDestroy
               action={['hover']}
               mouseEnterDelay={0.3}
               popupAlign={{

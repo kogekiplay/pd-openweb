@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import DocumentTitle from 'react-document-title';
 import { generate } from '@ant-design/colors';
@@ -181,7 +182,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       this.ids = getIds(this.props);
       const { data } = this.state;
 
@@ -199,14 +200,31 @@ let AppInfo = class AppInfo extends Component<any, any> {
           data.appStatus = 300016;
         }
 
-        this.setState({
-          data: { ...data, currentPcNaviStyle },
-        });
-        prevProps.syncAppDetail({
-          currentPcNaviStyle,
-        });
-        prevProps.setAppStatus(appStatus);
-        this.checkNavigationStyle(currentPcNaviStyle);
+        // 必须先判"值真的变了"再写回。这一段原来是【无条件】执行的：
+        // setState 造新 data 对象、外加两次 redux dispatch。而 dispatch 会改 store、
+        // 回流成新 props，再次满足上面的守卫 —— 自反馈环。
+        //
+        // 打点实测（React 19，工作表页）：
+        //   [AI#1] diffKeys=["sheet","sheetList"]
+        //   [AI#2] diffKeys=["appStatus"]        ← setAppStatus 的回流
+        //   [AI#3] diffKeys=["sheet","sheetList"] …
+        // sheet / sheetList 每次渲染引用都变（mapStateToProps 产新对象），
+        // 让守卫恒为真，于是每渲染一轮就再 dispatch 一轮，
+        // React 19 抛 Maximum update depth exceeded，整个应用页被 ErrorBoundary 接管。
+        // React 18 下没炸，但这个环本来就存在，只是没被计数到阈值。
+        const styleChanged = data.currentPcNaviStyle !== currentPcNaviStyle;
+        const statusChanged = appStatus !== this.props.appStatus;
+
+        if (styleChanged || statusChanged) {
+          this.setState({
+            data: { ...data, currentPcNaviStyle },
+          });
+          prevProps.syncAppDetail({
+            currentPcNaviStyle,
+          });
+          prevProps.setAppStatus(appStatus);
+          this.checkNavigationStyle(currentPcNaviStyle);
+        }
       }
 
       if (

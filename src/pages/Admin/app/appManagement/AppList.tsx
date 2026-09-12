@@ -1,10 +1,11 @@
 import React, { Component, Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import { Select } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
 import qs from 'query-string';
-import Trigger from 'rc-trigger';
+import Trigger from '@rc-component/trigger';
 import {
   DeleteReconfirm,
   Dialog,
@@ -101,7 +102,7 @@ export default class AppManagement extends Component<any, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.projectId, prevProps.projectId)) {
         this.setState({
           list: null,
@@ -700,11 +701,13 @@ export default class AppManagement extends Component<any, any> {
             {hasDataBase && (
               <Select
                 className="w180 mdAntSelect mLeft15 Hand"
-                showSearch={{ filterOption: (inputValue, option) =>
-                  dataDBInstances
-                    .find(item => item.value === option.value)
-                    .label.toLowerCase()
-                    .indexOf(inputValue.toLowerCase()) > -1 }}
+                showSearch={{
+                  filterOption: (inputValue, option) =>
+                    dataDBInstances
+                      .find(item => item.value === option.value)
+                      .label.toLowerCase()
+                      .indexOf(inputValue.toLowerCase()) > -1,
+                }}
                 defaultValue={dbInstanceId}
                 options={dataDBInstances}
                 onFocus={() => dataDBInstances.length === 2 && this.getDBInstances()}
