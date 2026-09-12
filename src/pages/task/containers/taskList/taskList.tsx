@@ -61,7 +61,26 @@ class TaskList extends Component<any, any> {
         (taskFilter === 6 || taskFilter === 1 || taskFilter === 2 || taskFilter === 3) &&
         !filterSettings.tags.length &&
         listStatus === 0;
-      const data = this.props.myTaskDataSource;
+      // 必须深拷贝：这里的 myTaskDataSource 是 redux state，而下面的
+      // renderMyTask / renderTask 把传进去的对象当草稿纸用 —— 往顶层挂渲染用的
+      // 函数和标志（formatTaskTime / formatStatus / isAnimated / isMyTask /
+      // TYPES / TIPS / tasks …），还会改嵌套内容：
+      //   folders[i].folderID = 1
+      //   folder.formatTaskTime = formatTaskTime
+      //   _.remove(folders, …)      ← 直接从数组里删元素
+      // 直接把 store 里的对象递进去，等于让渲染逻辑就地改写 store。
+      //
+      // 症状是 RTK 的 immutableCheck 抛
+      // 「A state mutation was detected between dispatches, in the path
+      //   'task.myTaskDataSource.hideOpts'」，整个任务页被 ErrorBoundary 接管。
+      // 但 hideOpts 只是【第一个】被抓到的：它写在下面 renderTask 里那次
+      // dispatch(updateSearchTaskCount) 之前，其余几十处写在之后，会在下一次
+      // dispatch 时接着报。所以不能只改 hideOpts 一行 —— 那是把错误挪个位置。
+      //
+      // 浅拷贝也不够（嵌套被改），用 cloneDeep；第 454 行把数据【存进】redux 时
+      // 用的也是 _.cloneDeep，这里只是把同一个惯例补在读出来的那一侧。
+      // 代价只有缓存首屏那一次克隆。
+      const data = _.cloneDeep(this.props.myTaskDataSource);
 
       data.hideOpts = true;
       taskListSettings.isFirst = true;
