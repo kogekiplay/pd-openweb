@@ -59,6 +59,16 @@ async function getValuedPort(port = 30001) {
   return getValuedPort(port + 1);
 }
 
+// 【平台管理那份响应要用另一套前缀】/pm 那个控制台的配置是它【自己】的接口给的
+// （platformapi 的 GetSysSettings 返回 accountApiUrl / accountWebUrl 等一串绝对地址），
+// 不是主站的 GetGlobalMeta。这些前缀【不能】并进下面的 REWRITE_PREFIXES：
+// 那一套作用在主站所有 /api/ 响应上，把 /account 加进去会一并改掉主站的
+// Config.AccountUrl，动到登录链路。所以按代理条目分别指定。
+// '/' 对应 hapWebUrl（控制台左上角「主页」按钮跳的地方），它的值整个就是 origin + '/'。
+// rewriteAbsoluteHosts 对 '/' 有特殊处理（连引号一起匹配），见那里的注释。
+// 它也是唯一不需要 proxyConfigs 条目的前缀 —— '/' 就是 dev server 自己的根，本地直接就有。
+const PLATFORM_REWRITE_PREFIXES = ['/accountapi/', '/account/', '/platformapi/', '/pm/', '/'];
+
 const proxyConfigs = [
   {
     name: 'md_agent_api',
@@ -101,7 +111,7 @@ const proxyConfigs = [
     rewriteHosts: true,
   },
   { name: 'workflow_api', path: '/workflow_api/', replace: '', server: publishConfig.apiServer },
-  // 下面四条都是【原样透传】的静态/服务前缀，存在的意义是让 rewriteAbsoluteHosts
+  // 下面五条都是【原样透传】的静态/服务前缀，存在的意义是让 rewriteAbsoluteHosts
   // 改写出来的相对地址能落到本地 dev server 上，再由这里转发到真实部署。
   // 不加的话请求会被 serve-handler 兜底成 SPA 的 index.html，返回 200 但内容是 HTML——
   // 比 404 更难查：JS 报 `Unexpected token '<'`，图片/接口则是解析失败。
@@ -109,7 +119,16 @@ const proxyConfigs = [
   // file：FileStoreConfig 里的 upload/document/picture/media/pub 都在这个前缀下
   // chatmq：聊天服务（data.config.HTTP_SERVER）。只转发 HTTP，WebSocket 升级没接，
   //         所以本地的聊天列表能拉到，实时推送不通——本地环境不验聊天，够用。
-  // pm：平台自定义样式/脚本（Config.PlatformUrl），freestyle.css / freestyle.js 从这儿来
+  // pm：【平台管理】控制台，一个独立的部署产物（不在本仓路由里）。
+  //     原本只是为了 freestyle.css / freestyle.js，后来 Config.PlatformUrl 也改写成
+  //     相对地址（见 REWRITE_PREFIXES），整个控制台都从这条走。
+  // platformapi：平台管理【自己的】后端（Config.PlatformApiUrl）。
+  //     它不是本仓发的请求 —— 是 /pm 那个 SPA 按自身 origin 发的。
+  //     PlatformUrl 改写成相对地址之前，控制台跑在生产 origin 上，这些请求
+  //     自然落在生产；改写之后控制台跑在 localhost，就必须有这条转发。
+  //     缺了它的表现极具迷惑性：POST /platformapi/SysSetting/GetSysSettings
+  //     返回【200 + dev server 自己的 index.html】，控制台把 HTML 当 JSON 解析，
+  //     页面只显示「初始化失败，请刷新页面后重试」，看不出和代理有任何关系。
   // excelapi：导出/打印服务（Config.WorksheetDownUrl → 各接口返回的 worksheetInfo.downLoadUrl）。
   //           工作表导出 Excel、导出 Word、打印模板全挂在它下面：
   //             ${downLoadUrl}/ExportExcel/Export       （ExportSheet.tsx、recordInfo/crtl.ts）
@@ -120,6 +139,35 @@ const proxyConfigs = [
   { name: 'file', path: '/file/', replace: '/file/', server: publishConfig.apiServer },
   { name: 'chatmq', path: '/chatmq/', replace: '/chatmq/', server: publishConfig.apiServer },
   { name: 'pm', path: '/pm/', replace: '/pm/', server: publishConfig.apiServer },
+  // platformapi 要开 rewriteHosts：它的 GetSysSettings 把 accountApiUrl 等
+  // 一串【绝对地址】发给控制台，控制台照着发请求。不改写的话，控制台跑在
+  // localhost 却往生产发 XHR，被 CORS 挡死，页面同样停在「初始化失败」——
+  // 和缺代理条目时的症状一模一样，但成因完全不同。
+  {
+    name: 'platformapi',
+    path: '/platformapi/',
+    replace: '/platformapi/',
+    server: publishConfig.apiServer,
+    rewriteHosts: PLATFORM_REWRITE_PREFIXES,
+  },
+  // 平台管理要读当前账号信息；/account 是它跳转用的 web 地址
+  { name: 'accountapi', path: '/accountapi/', replace: '/accountapi/', server: publishConfig.apiServer },
+  { name: 'account', path: '/account/', replace: '/account/', server: publishConfig.apiServer },
+  // 【平台管理里自定义的 favicon】CI/generate.js 生成的是写死的 href="/favicon.png"，
+  // 生产上由 nginx 用 subs_filter 换成真正的地址（conf.d/subsfilter_hap_favicon）：
+  //   subs_filter ('|")/favicon.png $1https://<host>/file/mdpic/ProjectLogo/favicon.png igr;
+  // dev 的 index.html 是本地生成、不过代理的，没有这一步，所以只会显示默认图标。
+  // 与其在 dev 侧复刻一遍 HTML 替换，不如让 /favicon.png 这个请求【自己】转发过去，
+  // 效果等价：浏览器照旧请求 /favicon.png，拿到的是该部署自定义的那张。
+  // 路径写死是照抄 nginx —— 那个文件由部署工具生成，只有 host 会变，
+  // ProjectLogo/favicon.png 是固定约定。没配自定义图标时上游 404，
+  // 浏览器退回无图标，与生产表现一致（nginx 那条替换也是无条件的）。
+  {
+    name: 'favicon',
+    path: '/favicon.png',
+    replace: '/file/mdpic/ProjectLogo/favicon.png',
+    server: publishConfig.apiServer,
+  },
   { name: 'excelapi', path: '/excelapi/', replace: '/excelapi/', server: publishConfig.apiServer },
   { name: 'report_api', path: '/report_api/', replace: '', server: publishConfig.apiServer },
   { name: 'integration_api', path: '/integration_api/', replace: '', server: publishConfig.apiServer },
@@ -189,7 +237,7 @@ const proxyConfigs = [
 //   Config.AccountUrl (/account/)   —— 登录链路，动它风险大
 const REWRITE_PREFIXES = ['/file/', '/chatmq', '/excelapi', '/pm/'];
 
-function rewriteAbsoluteHosts(buffer, server) {
+function rewriteAbsoluteHosts(buffer, server, prefixes = REWRITE_PREFIXES) {
   let origin;
 
   try {
@@ -205,7 +253,16 @@ function rewriteAbsoluteHosts(buffer, server) {
 
   let out = text;
 
-  for (const prefix of REWRITE_PREFIXES) {
+  for (const prefix of prefixes) {
+    // '/' 是特例：它对应的值（如平台管理配置里的 hapWebUrl）【整个就等于 origin + '/'】。
+    // 按普通前缀处理会把 origin + '/wwwapi/'、origin + '/apidoc/' 这些也一并改成
+    // 相对地址，而它们在 dev 侧都【没有】转发条目，换来的只是 SPA 兜底（200 + HTML）。
+    // 所以把左右引号一起纳入匹配，只替换「整个值就是 origin + '/'」的那一类。
+    if (prefix === '/') {
+      out = out.split(`"${origin}/"`).join('"/"');
+      continue;
+    }
+
     out = out.split(origin + prefix).join(prefix);
   }
 
@@ -215,7 +272,11 @@ function rewriteAbsoluteHosts(buffer, server) {
 // 把 proxy-middleware 替换为 http-proxy-middleware：
 // - 内置 SSE / WebSocket 支持，上游断开不再串到下个中间件触发 ERR_HTTP_HEADERS_SENT
 // - 错误统一在 on.error 里兜底，不会让 dev server 进程崩溃
+// rewriteHosts: true 用默认的 REWRITE_PREFIXES；传数组则用这一条自己的前缀表
+// （见 PLATFORM_REWRITE_PREFIXES —— 平台管理那份响应里的地址和主站不是一套）。
 function makeProxy({ name, server, path: matchPath, replace, rewriteHosts: rewrite }) {
+  const prefixes = Array.isArray(rewrite) ? rewrite : REWRITE_PREFIXES;
+
   return createProxyMiddleware({
     target: server,
     changeOrigin: true,
@@ -225,7 +286,7 @@ function makeProxy({ name, server, path: matchPath, replace, rewriteHosts: rewri
     ...(rewrite ? { selfHandleResponse: true } : null),
     on: {
       ...(rewrite
-        ? { proxyRes: responseInterceptor(async buffer => rewriteAbsoluteHosts(buffer, server)) }
+        ? { proxyRes: responseInterceptor(async buffer => rewriteAbsoluteHosts(buffer, server, prefixes)) }
         : null),
       error(err, req, res) {
         console.error(`[proxy ${name}] ${req.url} -> ${server} failed:`, err.message);
