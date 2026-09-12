@@ -202,7 +202,9 @@ export default class SystemMessage extends PureComponent<any, any> {
         } // 反馈给 HAP
 
         if (href.indexOf('agent/feedback/') > -1) {
-          const agentParams = match('/agent/feedback/:processId/:nodeId/:instanceId');
+          // decode: false 保持 path-to-regexp 6 的语义：v8 默认解码参数，遇到畸形
+          // 百分号会抛 URIError。这里匹配的 href 来自【消息内容】，是用户可控的。
+          const agentParams = match('/agent/feedback/:processId/:nodeId/:instanceId', { decode: false });
           const agentMatch = agentParams(href);
 
           if (!agentMatch) return;

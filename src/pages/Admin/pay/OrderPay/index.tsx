@@ -26,7 +26,14 @@ const formatWeChatPayInfo = payInfo => {
   return result;
 };
 
-const fn = match('/orderpay/:orderId/:paymentModule?');
+// path-to-regexp 8 的可选段语法变了：v6 的 `:x?` 要写成 `{/:x}`（斜杠写进花括号里）。
+// v6 写法在 v8 会【构造时就抛】Unexpected ?，而这行在模块顶层 —— 等于整个模块
+// import 失败、页面白屏，且构建和类型门禁都抓不到（纯运行时错误）。
+//
+// decode: false 是为了保持 v6 语义：v8 默认拿 decodeURIComponent 解参数，遇到畸形
+// 百分号（如 /orderpay/100%off）会抛 URIError 把调用方带崩，v6 则原样返回字符串。
+// 这里的参数都是 ID，本来也不该解码。
+const fn = match('/orderpay/:orderId{/:paymentModule}', { decode: false });
 
 const getOrderPayParams = () => {
   const { params } = fn(getPathWithoutSubPath(location.pathname)) || {};

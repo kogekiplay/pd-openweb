@@ -7,7 +7,13 @@ import ErrorDialog from 'src/pages/worksheet/common/WorksheetBody/ImportDataFrom
 import { navigateTo } from 'src/router/navigateTo';
 import { downloadFile, emitter, getPathWithoutSubPath } from 'src/utils/common';
 
-const integrationParams = match('/integrationConnect/:id?/:tab?');
+// path-to-regexp 8 的可选段语法变了：v6 的 `:x?` 要写成 `{/:x}`（斜杠写进花括号里）。
+// v6 写法在 v8 会【构造时就抛】，而这行在模块顶层 —— 等于整个模块 import 失败。
+//
+// decode: false 保持 v6 语义：v8 默认解码参数，遇到畸形百分号会抛 URIError。
+// 这一处尤其要紧 —— 它匹配的是【消息内容里的 href】，内容是用户可控的，
+// 一条带 `%` 的链接就能把通知处理整条打断。
+const integrationParams = match('/integrationConnect{/:id}{/:tab}', { decode: false });
 
 function addWebUrlForWorksheetHref(content = '') {
   const webUrl = _.get(md, 'global.Config.WebUrl', '');

@@ -11,7 +11,9 @@ import { INVOICE_STATUS } from '../constant';
 import InvoiceStatus from '../InvoiceStatus';
 import Apply from './Apply';
 
-const invoiceParams = match('/invoice/:orderId');
+// decode: false 保持 path-to-regexp 6 的语义：v8 默认拿 decodeURIComponent 解参数，
+// 遇到畸形百分号会抛 URIError 把调用方带崩；v6 原样返回。参数都是 ID，本就不该解码。
+const invoiceParams = match('/invoice/:orderId', { decode: false });
 
 const InvoiceApply = props => {
   const { onCancel, isLandPage, onApplySuccess, onCancelSuccess } = props;

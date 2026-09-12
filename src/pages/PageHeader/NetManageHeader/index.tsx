@@ -45,7 +45,13 @@ const PAGE_HEADER_ROUTE = {
   certification: ['/certification/:roleType?'],
 };
 
-const fn = match('/admin/:roleType/:projectId');
+// decode: false 保持 path-to-regexp 6 的语义：v8 默认拿 decodeURIComponent 解参数，
+// 遇到畸形百分号会抛 URIError 把调用方带崩；v6 原样返回。参数都是 ID，本就不该解码。
+// 泛型不能省：v8 的 ParamData 是 Partial<Record<string, string | string[]>>，
+// 不指定就推成 string | string[]，下面 localStorage.setItem(params.projectId) 会
+// 报 TS2345。数组形态只有重复段（*x / {…}*）才会出现，这个 pattern 是两个普通
+// 段，写清楚实际形状比在调用处 String() 强转诚实。
+const fn = match<{ roleType: string; projectId: string }>('/admin/:roleType/:projectId', { decode: false });
 export default class NetManageHeader extends Component<any, any> {
   static propTypes = {};
   static defaultProps = {};
