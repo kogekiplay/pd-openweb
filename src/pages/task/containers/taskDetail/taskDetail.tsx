@@ -11,6 +11,7 @@ import ajaxRequest from 'src/api/taskCenter';
 import FileList from 'src/components/comment/FileList';
 import ErrorState from 'src/components/errorPage/errorState';
 import RelationControl from 'src/components/relationControl/relationControl';
+import type { RootState } from 'src/redux/types';
 import { navigateTo } from 'src/router/navigateTo';
 import config, { OPEN_TYPE, RELATION_TYPES } from '../../config/config';
 import {
@@ -630,4 +631,4 @@ class TaskDetail extends Component<any, any> {
   }
 }
 
-export default connect(state => state.task)(TaskDetail);
+export default connect((state: RootState) => state.task)(TaskDetail);

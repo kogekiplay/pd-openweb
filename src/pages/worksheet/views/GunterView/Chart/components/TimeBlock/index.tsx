@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import _ from 'lodash';
 import * as actions from 'worksheet/redux/actions/gunterview';
 import GroupContent from 'worksheet/views/GunterView/components/GroupContent';
+import type { RootState } from 'src/redux/types';
 import RecordWrapper from './RecordWrapper';
 import './index.less';
 
@@ -74,7 +75,7 @@ let TimeBlock = class TimeBlock extends Component<any, any> {
   }
 };
 TimeBlock = connect(
-  state => ({ ..._.pick(state.sheet, ['gunterView']) }),
+  (state: RootState) => ({ ..._.pick(state.sheet, ['gunterView']) }),
   dispatch => bindActionCreators(actions, dispatch),
 )(TimeBlock);
 export default TimeBlock;

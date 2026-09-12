@@ -8,6 +8,7 @@ import { UserHead } from 'ming-ui';
 import { dialogSelectUser } from 'ming-ui/functions';
 import ajaxRequest from 'src/api/taskCenter';
 import createTask from 'src/components/createTask/load';
+import type { RootState } from 'src/redux/types';
 import config from '../../config/config';
 import { updateMyTaskDataSource, updateSearchTaskCount } from '../../redux/actions';
 import { updateTaskCharge } from '../../redux/actions';
@@ -1195,4 +1196,4 @@ class TaskList extends Component<any, any> {
   }
 }
 
-export default connect(state => state.task)(TaskList);
+export default connect((state: RootState) => state.task)(TaskList);

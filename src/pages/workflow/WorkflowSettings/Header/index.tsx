@@ -1,9 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _, { get } from 'lodash';
 import moment from 'moment';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Button, Checkbox, Icon, LoadDiv, MenuItem, ScrollView, Support, SvgIcon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -15,6 +15,7 @@ import sheetAjax from 'src/api/worksheet';
 import AiActionChatBot from 'src/components/Mingo/modules/AiActionChatBot';
 import WorkflowChatBot from 'src/components/Mingo/modules/WorkflowChatBot';
 import { selectRecords } from 'src/components/SelectRecords';
+import type { RootState } from 'src/redux/types';
 import { pathCompletion } from 'src/utils/common';
 import PublishErrorDialog from '../../components/PublishErrorDialog';
 import Switch from '../../components/Switch';
@@ -1032,4 +1033,4 @@ class Header extends Component<any, any> {
   }
 }
 
-export default connect(state => state.workflow)(Header);
+export default connect((state: RootState) => state.workflow)(Header);

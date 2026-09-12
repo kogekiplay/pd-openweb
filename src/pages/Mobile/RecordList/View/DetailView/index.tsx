@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { LoadDiv } from 'ming-ui';
 import { RecordInfoModal } from 'mobile/Record';
 import * as actions from 'mobile/RecordList/redux/actions';
+import type { RootState } from 'src/redux/types';
 import SheetRows, { WithoutRows } from '../../SheetRows/';
 
 const DetailViewWrap = styled.div`
@@ -123,7 +124,7 @@ class DetailView extends Component<any, any> {
 }
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     ..._.pick(state.mobile, [
       'worksheetInfo',
       'filters',

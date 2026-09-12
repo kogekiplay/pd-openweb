@@ -4,6 +4,7 @@ import { SpinLoading } from 'antd-mobile';
 import _ from 'lodash';
 import { formatFiltersGroup } from 'src/pages/customPage/components/editWidget/filter/util';
 import { View } from 'src/pages/customPage/components/editWidget/view/Preview';
+import type { RootState } from 'src/redux/types';
 
 const emptyArray = [];
 
@@ -93,7 +94,7 @@ function ViewContent(props) {
   return <View {...props} filtersGroup={filtersGroup.length ? filtersGroup : emptyArray} />;
 }
 
-export default connect(state => ({
+export default connect((state: RootState) => ({
   filtersGroup: state.mobile.filtersGroup,
   filterComponents: state.mobile.filterComponents,
   loadFilterComponentCount: state.mobile.loadFilterComponentCount,

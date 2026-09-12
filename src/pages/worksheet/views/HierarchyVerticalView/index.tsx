@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider, useDrop } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useSetState } from 'react-use';
 import domtoimage from 'dom-to-image';
 import { saveAs } from 'file-saver';
@@ -17,6 +17,7 @@ import * as hierarchyActions from 'worksheet/redux/actions/hierarchy';
 import * as viewActions from 'worksheet/redux/actions/index';
 import { getDynamicValue } from 'src/components/Form/core/formUtils';
 import { getCoverStyle } from 'src/pages/worksheet/common/ViewConfig/utils';
+import type { RootState } from 'src/redux/types';
 import { browserIsMobile } from 'src/utils/common';
 import { emitter } from 'src/utils/common';
 import {
@@ -628,7 +629,12 @@ function HierarchyVertical(props) {
   };
 
   return (
-    <div ref={el => { drop(el); }} className="structureViewWrap">
+    <div
+      ref={el => {
+        drop(el);
+      }}
+      className="structureViewWrap"
+    >
       <DragLayer
         scale={scale}
         treeData={hierarchyViewData}
@@ -667,7 +673,7 @@ function HierarchyVertical(props) {
 }
 
 const ConnectedHierarchyVerticalView = connect(
-  state => ({
+  (state: RootState) => ({
     ..._.pick(state.sheet, [
       'worksheetInfo',
       'filters',

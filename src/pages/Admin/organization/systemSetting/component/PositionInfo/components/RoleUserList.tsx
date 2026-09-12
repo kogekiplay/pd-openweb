@@ -3,9 +3,10 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import _ from 'lodash';
 import { Checkbox, UserHead } from 'ming-ui';
+import type { RootState } from 'src/redux/types';
+import { pathCompletion } from 'src/utils/common';
 import * as actions from '../../../../../redux/position/action';
 import EmptyStatus from './EmptyStatus';
-import { pathCompletion } from 'src/utils/common';
 
 class RoleUserList extends Component<any, any> {
   constructor(props) {
@@ -131,7 +132,7 @@ class RoleUserList extends Component<any, any> {
 }
 
 export default connect(
-  state => {
+  (state: RootState) => {
     const { userList, selectUserIds } = state.orgManagePage.position;
     return { userList, selectUserIds };
   },

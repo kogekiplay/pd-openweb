@@ -13,6 +13,7 @@ import * as actions from 'mobile/RecordList/redux/actions';
 import { refreshWorksheetControls } from 'worksheet/redux/actions';
 import { permitList } from 'src/pages/FormSet/config.js';
 import { isOpenPermit } from 'src/pages/FormSet/util.js';
+import type { RootState } from 'src/redux/types';
 import { replaceBtnsTranslateInfo } from 'src/utils/translate';
 import SheetRows, { WithoutRows } from '../../SheetRows';
 
@@ -516,7 +517,7 @@ class SheetView extends Component<any, any> {
 }
 
 export default connect(
-  state => {
+  (state: RootState) => {
     const { mobile, sheet } = state;
 
     return {

@@ -8,6 +8,7 @@ import { Icon } from 'ming-ui';
 import { reportTypes } from 'statistics/Charts/common';
 import { ContrastValue } from 'statistics/components/ChartStyle/components/NumberStyle';
 import * as actions from 'statistics/redux/actions';
+import type { RootState } from 'src/redux/types';
 import { defaultNumberChartStyle } from '../.../../../enum';
 import AutoLinkage from './components/AutoLinkage';
 import AuxiliaryLine from './components/AuxiliaryLine';
@@ -216,7 +217,7 @@ let ChartAnalyse = class ChartAnalyse extends Component<any, any> {
   }
 };
 ChartAnalyse = connect(
-  state => ({ ..._.pick(state.statistics, ['currentReport', 'worksheetInfo', 'reportData', 'base']) }),
+  (state: RootState) => ({ ..._.pick(state.statistics, ['currentReport', 'worksheetInfo', 'reportData', 'base']) }),
   dispatch => bindActionCreators(actions, dispatch),
 )(ChartAnalyse);
 export default ChartAnalyse;

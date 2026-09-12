@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 import _ from 'lodash';
 import styled from 'styled-components';
 import * as actions from 'worksheet/redux/actions/gunterview';
+import type { RootState } from 'src/redux/types';
 
 const SelectionIndicatorWrapper = styled.div(
   ({ color }) => `
@@ -142,7 +143,7 @@ let SelectionIndicator = class SelectionIndicator extends React.Component<any, a
   }
 };
 SelectionIndicator = connect(
-  state => ({
+  (state: RootState) => ({
     ..._.pick(state.sheet.gunterView, ['editIndex', 'grouping', 'searchRecordId', 'chartScroll', 'groupingScroll']),
     ..._.pick(state.sheet, ['base']),
   }),

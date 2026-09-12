@@ -14,6 +14,7 @@ import * as viewAction from 'src/pages/worksheet/redux/actions/resourceview.js';
 import { setSysWorkflowTimeControlFormat } from 'src/pages/worksheet/views/CalendarView/util.js';
 import SelectField from 'src/pages/worksheet/views/components/SelectField.jsx';
 import 'src/pages/worksheet/views/ResourceView/index.less';
+import type { RootState } from 'src/redux/types';
 import { isRelateRecordTableControl } from 'src/utils/control';
 import Resource from './Resource.jsx';
 
@@ -161,7 +162,7 @@ function ResourceView(props) {
 }
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     ..._.omit(state.sheet, [
       'boardView',
       'hierarchyView',

@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -7,6 +7,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { SelectGroupTrigger } from 'ming-ui/functions/quickSelectGroup';
 import Emotion from 'src/components/emotion/emotion';
 import UploadFiles from 'src/components/UploadFiles';
+import type { RootState } from 'src/redux/types';
 import { addSuccess } from '../../redux/postActions';
 import MyUpdater from '../common/myupdater/myupdater';
 import './updater.css';
@@ -358,7 +359,7 @@ class Updater extends React.Component<any, any> {
   }
 }
 
-export default connect(state => {
+export default connect((state: RootState) => {
   const { projectId, groupId } = state.post.options;
   return { projectId, groupId };
 })(Updater);

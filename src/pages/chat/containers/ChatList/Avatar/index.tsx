@@ -8,13 +8,14 @@ import Setting from 'src/pages/chat/containers/SettingDrawer';
 import User from 'src/pages/chat/containers/UserDrawer';
 import * as actions from 'src/pages/chat/redux/actions';
 import Avatar from 'src/pages/PageHeader/components/Avatar';
+import type { RootState } from 'src/redux/types';
 
 const AvatarSetting = props => {
   const { embed = false, toolbarConfig, setToolbarConfig, closeSessionPanel } = props;
   const [defaultNavType, setDefaultNavType] = useState(null);
   const { userDrawerVisible, settingDrawerVisible } = toolbarConfig;
   return (
-    (<Fragment>
+    <Fragment>
       <div className="flexColumn alignItemsCenter justifyContentCenter mTop8 mBottom8">
         <Tooltip title={md.global.Account.fullname} placement={embed ? 'bottom' : 'left'} mouseLeaveDelay={0.1}>
           <div
@@ -38,11 +39,14 @@ const AvatarSetting = props => {
         rootClassName="userDrawerWrap"
         open={userDrawerVisible}
         closable={false}
-        styles={{ mask: {
-          backgroundColor: 'transparent',
-        }, body: {
-          padding: 0,
-        } }}
+        styles={{
+          mask: {
+            backgroundColor: 'transparent',
+          },
+          body: {
+            padding: 0,
+          },
+        }}
         onClose={() => setToolbarConfig({ userDrawerVisible: false })}
         getContainer={() => document.body}
         rootStyle={{
@@ -64,11 +68,14 @@ const AvatarSetting = props => {
         open={settingDrawerVisible}
         destroyOnHidden={true}
         closable={false}
-        styles={{ mask: {
-          backgroundColor: 'transparent',
-        }, body: {
-          padding: 0,
-        } }}
+        styles={{
+          mask: {
+            backgroundColor: 'transparent',
+          },
+          body: {
+            padding: 0,
+          },
+        }}
         size={680}
         onClose={() => setToolbarConfig({ settingDrawerVisible: false })}
         getContainer={() => (embed ? document.body : document.querySelector('#containerWrapper'))}
@@ -79,12 +86,12 @@ const AvatarSetting = props => {
       >
         <Setting defaultNavType={defaultNavType} onClose={() => setToolbarConfig({ settingDrawerVisible: false })} />
       </Drawer>
-    </Fragment>)
+    </Fragment>
   );
 };
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     toolbarConfig: state.chat.toolbarConfig,
   }),
   dispatch => bindActionCreators(_.pick(actions, ['setToolbarConfig', 'closeSessionPanel']), dispatch),

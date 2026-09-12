@@ -11,6 +11,7 @@ import GroupContent from 'worksheet/views/GunterView/components/GroupContent';
 import { MenuOverlayWrapper } from 'worksheet/views/GunterView/Directory';
 import { permitList } from 'src/pages/FormSet/config.js';
 import { isOpenPermit } from 'src/pages/FormSet/util.js';
+import type { RootState } from 'src/redux/types';
 import Record from '../Record';
 
 const GroupingItem = styled.div`
@@ -264,7 +265,7 @@ let GroupItem = class GroupItem extends Component<any, any> {
   }
 };
 GroupItem = connect(
-  state => ({
+  (state: RootState) => ({
     ..._.pick(state.sheet.gunterView, ['grouping', 'viewConfig', 'withoutArrangementVisible']),
     ..._.pick(state.sheet, ['base', 'controls', 'worksheetInfo', 'sheetSwitchPermit']),
   }),

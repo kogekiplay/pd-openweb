@@ -8,6 +8,7 @@ import ClickAway from 'ming-ui/components/ClickAway';
 import ajaxRequest from 'src/api/taskCenter';
 import createTask from 'src/components/createTask/load';
 import { expireDialogAsync } from 'src/components/upgradeVersion';
+import type { RootState } from 'src/redux/types';
 import { htmlEncodeReg, pathCompletion } from 'src/utils/common';
 import CopyFolder from '../../components/copyFolder/copyFolder';
 import ExportFolder from '../../components/exportFolder/exportFolder';
@@ -672,4 +673,4 @@ class TaskToolbar extends Component<any, any> {
   }
 }
 
-export default connect(state => state.task)(TaskToolbar);
+export default connect((state: RootState) => state.task)(TaskToolbar);

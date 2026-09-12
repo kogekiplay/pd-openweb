@@ -3,15 +3,16 @@ import { createRoot } from 'react-dom/client';
 import { renderToString } from 'react-dom/server';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import doT from 'dot';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { LoadDiv, UserHead } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import ajaxRequest from 'src/api/taskCenter';
 import { expireDialogAsync } from 'src/components/upgradeVersion';
+import type { RootState } from 'src/redux/types';
 import { navigateTo } from 'src/router/navigateTo';
 import CopyFolder from '../../components/copyFolder/copyFolder';
 import FolderTemplate from '../../components/folderTemplate/folderTemplate';
@@ -2386,4 +2387,4 @@ class TaskNavigation extends Component<any, any> {
   }
 }
 
-export default connect(state => state.task)(TaskNavigation);
+export default connect((state: RootState) => state.task)(TaskNavigation);

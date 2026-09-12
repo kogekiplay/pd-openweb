@@ -5,6 +5,7 @@ import _ from 'lodash';
 import { Icon, ScrollView } from 'ming-ui';
 import { ROLE_CONFIG, sysRoleType } from 'src/pages/Role/config.js';
 import { APP_ROLE_TYPE } from 'src/pages/worksheet/constants/enum.js';
+import type { RootState } from 'src/redux/types';
 import { pathCompletion } from 'src/utils/common';
 import Back from '../components/Back';
 import * as actions from './redux/actions';
@@ -201,7 +202,7 @@ class Members extends Component<any, any> {
   }
 }
 
-export default connect(state => {
+export default connect((state: RootState) => {
   // status = rolesVisibleConfig === ROLE_CONFIG.REFUSE ? ROLE_CONFIG.PERMISSION : ROLE_CONFIG.REFUSE;
   const { memberData, isMemberLoading } = state.mobile;
   return {

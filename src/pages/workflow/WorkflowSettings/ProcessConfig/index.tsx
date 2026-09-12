@@ -1,14 +1,15 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import cx from 'classnames';
-import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import { Checkbox, Dropdown, Icon, LoadDiv, Radio, ScrollView, Support, Switch } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { quickSelectUser } from 'ming-ui/functions';
 import process from '../../api/process';
 import { buriedUpgradeVersionDialog } from 'src/components/upgradeVersion';
+import type { RootState } from 'src/redux/types';
 import { pathCompletion } from 'src/utils/common';
+import copy from 'src/utils/copyToClipboard';
 import { VersionProductType } from 'src/utils/enum';
 import { getFeatureStatus } from 'src/utils/project';
 import SelectWorkflow from '../../components/SelectWorkflow';
@@ -1063,4 +1064,4 @@ class ProcessConfig extends Component<any, any> {
   }
 }
 
-export default connect(state => state.workflow)(ProcessConfig);
+export default connect((state: RootState) => state.workflow)(ProcessConfig);

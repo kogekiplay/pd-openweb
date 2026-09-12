@@ -5,6 +5,7 @@ import { WIDGETS_TO_API_TYPE_ENUM } from 'pages/widgetConfig/config/widget';
 import worksheetApi from 'src/api/worksheet';
 import { formatFilterValues } from 'worksheet/common/Sheet/QuickFilter/utils';
 import DefCom from 'worksheet/common/ViewConfig/components/fastFilter/Edit/DefCom';
+import type { RootState } from 'src/redux/types';
 
 const transitionTypes = [
   WIDGETS_TO_API_TYPE_ENUM.USER_PICKER,
@@ -127,7 +128,7 @@ function FilterDefaultValue(props) {
   );
 }
 
-export default connect(state => ({
+export default connect((state: RootState) => ({
   appPkg: state.appPkg,
   urlParams: state.customPage.urlParams,
 }))(FilterDefaultValue);

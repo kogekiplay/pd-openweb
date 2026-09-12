@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import * as Immutable from 'immutable';
@@ -8,6 +8,7 @@ import shallowEqual from 'shallowequal';
 import { Icon, Item, List, ScrollView, Splitter } from 'ming-ui';
 import groupController from 'src/api/group';
 import createGroup from 'src/pages/Group/createGroup/load';
+import type { RootState } from 'src/redux/types';
 import { navigateTo } from 'src/router/navigateTo';
 import { pathCompletion } from 'src/utils/common';
 import postEnum from '../../constants/postEnum';
@@ -397,7 +398,7 @@ class FeedLeftNav extends React.Component<any, any> {
   }
 }
 
-export default connect(state => {
+export default connect((state: RootState) => {
   const { options } = state.post;
   return { options };
 })(FeedLeftNav);

@@ -6,6 +6,7 @@ import _ from 'lodash';
 import ViewErrorPage from 'mobile/RecordList/View/components/ViewErrorPage';
 import { SYS } from 'src/pages/widgetConfig/config/widget';
 import * as actions from 'src/pages/worksheet/redux/actions';
+import type { RootState } from 'src/redux/types';
 import { getRequest } from 'src/utils/common';
 import { getAdvanceSetting } from 'src/utils/control';
 import Gunter from './index.jsx';
@@ -66,7 +67,7 @@ let MobileGunter = class MobileGunter extends Component<any, any> {
   }
 };
 MobileGunter = connect(
-  state => ({ ...state.sheet }),
+  (state: RootState) => ({ ...state.sheet }),
   dispatch => bindActionCreators(actions, dispatch),
 )(MobileGunter);
 export default MobileGunter;

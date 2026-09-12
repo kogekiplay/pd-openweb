@@ -21,6 +21,7 @@ import {
   updateExcelDetailData,
   updateSelectedImportSheetIds,
 } from 'src/pages/worksheet/redux/actions/excelCreateAppAndSheet';
+import type { RootState } from 'src/redux/types';
 import { VersionProductType } from 'src/utils/enum';
 import { getFeatureStatus } from 'src/utils/project';
 import DialogCreateApp from './DialogCreateApp';
@@ -497,7 +498,7 @@ class DialogImportExcelCreate extends Component<any, any> {
 }
 
 export default connect(
-  state => {
+  (state: RootState) => {
     const { excelCreateAppAndSheet = {} } = state.sheet;
     return excelCreateAppAndSheet;
   },

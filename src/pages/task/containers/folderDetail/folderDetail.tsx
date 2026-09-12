@@ -12,6 +12,7 @@ import ajaxRequest from 'src/api/taskCenter';
 import Commenter from 'src/components/comment/commenter';
 import CommentList from 'src/components/comment/commentList';
 import Editor from 'src/pages/PageHeader/AppPkgHeader/AppDetail/EditorDiaLogContent';
+import type { RootState } from 'src/redux/types';
 import { htmlEncodeReg } from 'src/utils/common';
 import editFolder from '../../components/editFolder/editFolder';
 import { clearFolderTip } from '../../redux/actions';
@@ -1139,4 +1140,4 @@ class FolderDetail extends Component<any, any> {
   }
 }
 
-export default connect(state => state.task)(FolderDetail);
+export default connect((state: RootState) => state.task)(FolderDetail);

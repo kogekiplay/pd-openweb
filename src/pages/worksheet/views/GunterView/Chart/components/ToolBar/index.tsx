@@ -12,6 +12,7 @@ import * as actions from 'worksheet/redux/actions/gunterview';
 import { PERIODS } from 'worksheet/views/GunterView/config';
 import { getSearchData } from 'worksheet/views/util';
 import SearchRecord from 'src/pages/worksheet/views/components/SearchRecord';
+import type { RootState } from 'src/redux/types';
 import { browserIsMobile, pathCompletion } from 'src/utils/common';
 import Zoom from './Zoom';
 import './index.less';
@@ -176,7 +177,7 @@ let ToolBar = class ToolBar extends Component<any, any> {
   }
 };
 ToolBar = connect(
-  state => ({
+  (state: RootState) => ({
     ..._.pick(state.sheet, ['base']),
     ..._.pick(state.sheet.gunterView, ['periodType']),
     searchData: browserIsMobile() ? getSearchData(state.sheet) : {},

@@ -8,6 +8,7 @@ import _ from 'lodash';
 import { LoadDiv, UserHead } from 'ming-ui';
 import { dialogSelectUser } from 'ming-ui/functions';
 import ajaxRequest from 'src/api/taskCenter';
+import type { RootState } from 'src/redux/types';
 import quickCreateTask from '../../components/quickCreateTask/quickCreateTask';
 import config from '../../config/config';
 import { updateTaskCharge } from '../../redux/actions';
@@ -846,4 +847,4 @@ class TaskTree extends Component<any, any> {
   }
 }
 
-export default connect(state => state.task)(TaskTree);
+export default connect((state: RootState) => state.task)(TaskTree);

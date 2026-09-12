@@ -42,6 +42,7 @@ import { exportAttachment } from 'src/pages/worksheet/common/ExportAttachment';
 import EditFastFilter from 'src/pages/worksheet/common/ViewConfig/components/fastFilter/Edit';
 import { openShareDialog } from 'src/pages/worksheet/components/Share';
 import { APP_ROLE_TYPE, VIEW_DISPLAY_TYPE } from 'src/pages/worksheet/constants/enum';
+import type { RootState } from 'src/redux/types';
 import { navigateTo } from 'src/router/navigateTo';
 import { renderText as renderCellText } from 'src/utils/control';
 import { filterHidedControls } from 'src/utils/control';
@@ -593,7 +594,7 @@ ViewControl.propTypes = {
 };
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     saveViewSetLoading: state.sheet.saveViewSetLoading,
     views: state.sheet.views,
     sheetList: state.sheet.sheetList,

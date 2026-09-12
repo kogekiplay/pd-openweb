@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import { HIERARCHY_VIEW_TYPE } from 'src/pages/worksheet/common/ViewConfig/components/navGroup/util';
 import * as baseAction from 'src/pages/worksheet/redux/actions';
+import type { RootState } from 'src/redux/types';
 import './index.less';
 
 const HierarchyViewConfigWrap = styled.div`
@@ -73,6 +74,6 @@ function StructureType(props) {
 }
 
 export default connect(
-  state => _.pick(state.sheet, ['base', 'views']),
+  (state: RootState) => _.pick(state.sheet, ['base', 'views']),
   dispatch => bindActionCreators({ ...baseAction }, dispatch),
 )(StructureType);

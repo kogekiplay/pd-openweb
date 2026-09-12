@@ -20,6 +20,7 @@ import { SYS_CONTROLS_WORKFLOW } from 'src/pages/widgetConfig/config/widget.js';
 import RecordInfoWrapper from 'src/pages/worksheet/common/recordInfo/RecordInfoWrapper';
 import { saveView, updateWorksheetControls } from 'src/pages/worksheet/redux/actions';
 import * as Actions from 'src/pages/worksheet/redux/actions/calendarview';
+import type { RootState } from 'src/redux/types';
 import { getAdvanceSetting, isTimeStyle } from 'src/utils/control';
 import { addBehaviorLog } from 'src/utils/project';
 import { handleRecordClick } from 'src/utils/record';
@@ -976,7 +977,7 @@ const RecordCalendarWrapper = props => {
 };
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     ...state.sheet,
     sheetSwitchPermit: state.sheet.sheetSwitchPermit || [],
     worksheetInfo: state.sheet.worksheetInfo,

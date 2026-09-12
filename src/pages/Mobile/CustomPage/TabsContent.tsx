@@ -2,6 +2,7 @@ import React, { lazy, Suspense } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import _ from 'lodash';
+import type { RootState } from 'src/redux/types';
 import * as actions from './redux/actions';
 
 const LoadableTabs = lazy(() =>
@@ -19,7 +20,7 @@ const TabsContent = props => {
 };
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     loadFilterComponentCount: state.mobile.loadFilterComponentCount,
   }),
   dispatch => bindActionCreators(_.pick(actions, ['updateLoadFilterComponentCount']), dispatch),

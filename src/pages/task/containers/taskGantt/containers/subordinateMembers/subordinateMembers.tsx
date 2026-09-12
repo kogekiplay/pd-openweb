@@ -1,7 +1,7 @@
-﻿import React, { Component } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import cx from 'classnames';
 import Trigger from '@rc-component/trigger';
+import cx from 'classnames';
 import { UserHead } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import ClickAway from 'ming-ui/components/ClickAway';
@@ -9,6 +9,7 @@ import { dialogSelectUser } from 'ming-ui/functions';
 import ajaxRequest from 'src/api/taskCenter';
 import createTask from 'src/components/createTask/load';
 import { upgradeVersionDialog } from 'src/components/upgradeVersion';
+import type { RootState } from 'src/redux/types';
 import { navigateTo } from 'src/router/navigateTo';
 import { updateStateConfig } from '../../../../redux/actions';
 import config from '../../config/config';
@@ -376,7 +377,7 @@ class SubordinateMembers extends Component<any, any> {
   }
 }
 
-export default connect(state => {
+export default connect((state: RootState) => {
   const { accountTasksKV, taskConfig } = state.task;
 
   return {

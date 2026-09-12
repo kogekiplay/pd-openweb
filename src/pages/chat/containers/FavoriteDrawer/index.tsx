@@ -5,6 +5,7 @@ import cx from 'classnames';
 import _ from 'lodash';
 import { Icon } from 'ming-ui';
 import * as actions from 'src/pages/chat/redux/actions';
+import type { RootState } from 'src/redux/types';
 
 const Collect = props => {
   const { toolbarConfig, setToolbarConfig } = props;
@@ -35,7 +36,7 @@ const Collect = props => {
 };
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     toolbarConfig: state.chat.toolbarConfig,
   }),
   dispatch => bindActionCreators(_.pick(actions, ['setToolbarConfig']), dispatch),

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import shallowEqual from 'shallowequal';
+import type { RootState } from 'src/redux/types';
 import postEnum from '../../../constants/postEnum';
 import { loadTop } from '../../../redux/postActions';
 import PostBody from '../post/postBody';
@@ -79,7 +80,14 @@ class TopPostList extends React.Component<any, any> {
   handleChangeItem(pageIndex) {
     this.setState({ pageIndex }, this.nextItem);
   }
-  renderRoot = props => <div {...props} ref={root => { this.root = root; }} />;
+  renderRoot = props => (
+    <div
+      {...props}
+      ref={root => {
+        this.root = root;
+      }}
+    />
+  );
   render() {
     const { groupId, projectId, listType } = this.props.options;
     if (!this.props.topPostIds.length || listType !== postEnum.LIST_TYPE.project || groupId || projectId === '')
@@ -110,7 +118,7 @@ class TopPostList extends React.Component<any, any> {
   }
 }
 
-export default connect(state => {
+export default connect((state: RootState) => {
   const { fontSize, topPostIds, postsById, options } = state.post;
   return { fontSize, topPostIds, postsById, options };
 })(TopPostList);

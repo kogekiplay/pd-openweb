@@ -1,8 +1,8 @@
 import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import _ from 'lodash';
 import styled, { keyframes } from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
@@ -15,6 +15,7 @@ import * as baseAction from 'src/pages/worksheet/redux/actions';
 import * as viewActions from 'src/pages/worksheet/redux/actions/mapView';
 import * as navFilterActions from 'src/pages/worksheet/redux/actions/navFilter';
 import { setSysWorkflowTimeControlFormat } from 'src/pages/worksheet/views/CalendarView/util.js';
+import type { RootState } from 'src/redux/types';
 import { browserIsMobile } from 'src/utils/common';
 import { getMapConfig } from 'src/utils/control';
 import {
@@ -588,7 +589,7 @@ function MapView(props) {
 }
 
 const ConnectedMapView = connect(
-  state => ({
+  (state: RootState) => ({
     ..._.pick(state.sheet, [
       'mapView',
       'worksheetInfo',

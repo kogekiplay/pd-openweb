@@ -9,6 +9,7 @@ import { Inbox } from 'src/pages/chat/components/Inbox';
 import 'src/pages/chat/containers/ChatPanel/index.less';
 import * as actions from 'src/pages/chat/redux/actions';
 import * as socket from 'src/pages/chat/utils/socket';
+import type { RootState } from 'src/redux/types';
 import { browserIsMobile } from 'src/utils/common';
 
 const Wrap = styled.div`
@@ -121,7 +122,7 @@ let PortalMg = class PortalMg extends Component<any, any> {
     );
   }
 };
-PortalMg = connect(state => {
+PortalMg = connect((state: RootState) => {
   const { currentSession, currentSessionList, visible } = state.chat;
   return {
     currentSession,

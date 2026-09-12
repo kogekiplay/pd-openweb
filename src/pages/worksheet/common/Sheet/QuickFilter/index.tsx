@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { arrayOf, func, number, shape, string } from 'prop-types';
 import { fireWhenViewLoaded, refreshSheet, resetQuickFilter, updateQuickFilter } from 'worksheet/redux/actions';
+import type { RootState } from 'src/redux/types';
 import QuickFilter from './QuickFilter';
 
 function Comp(props) {
@@ -21,7 +22,7 @@ Comp.propTypes = {
 };
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     // worksheet
     controls: state.sheet.controls.map(c => ({ ...c })),
     navGroupFilters: state.sheet.navGroupFilters,

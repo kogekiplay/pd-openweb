@@ -3,6 +3,7 @@ import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import qs from 'query-string';
 import { LoadDiv, ScrollView } from 'ming-ui';
+import type { RootState } from 'src/redux/types';
 import { navigateTo } from 'src/router/navigateTo';
 import PostDetails from '../components/post/postDetails/postDetails';
 import { changePostDetailId, clearPostDetail } from './redux/postDetailActions';
@@ -78,7 +79,7 @@ let FeedDetailEntrypoint = class FeedDetailEntrypoint extends Component<any, any
     );
   }
 };
-FeedDetailEntrypoint = connect(state => ({
+FeedDetailEntrypoint = connect((state: RootState) => ({
   postItem: state.post.postsById[state.postDetail.postId],
   error: state.postDetail.errors[state.postDetail.postId],
 }))(FeedDetailEntrypoint);

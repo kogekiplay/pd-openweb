@@ -6,6 +6,7 @@ import _ from 'lodash';
 import { Tooltip } from 'ming-ui/antd-components';
 import CustomFields from 'src/components/Form';
 import { deleteAttachment } from 'src/pages/kc/common/AttachmentsPreview/ajax';
+import type { RootState } from 'src/redux/types';
 import config from '../../../config/config';
 import { taskFoldStatus, updateControlValue, updateTaskControlFiles } from '../../../redux/actions';
 import './taskControl.less';
@@ -291,4 +292,4 @@ class TaskControl extends Component<any, any> {
   }
 }
 
-export default connect(state => state.task)(TaskControl);
+export default connect((state: RootState) => state.task)(TaskControl);

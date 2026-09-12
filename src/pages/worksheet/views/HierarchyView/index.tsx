@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider, useDrop } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useSetState } from 'react-use';
 import domtoimage from 'dom-to-image';
 import { saveAs } from 'file-saver';
@@ -17,6 +17,7 @@ import useButtonStatusOfRows from 'worksheet/hooks/useButtonStatusOfRows';
 import * as hierarchyActions from 'worksheet/redux/actions/hierarchy';
 import * as viewActions from 'worksheet/redux/actions/index';
 import { getDynamicValue } from 'src/components/Form/core/formUtils';
+import type { RootState } from 'src/redux/types';
 import { browserIsMobile } from 'src/utils/common';
 import { emitter } from 'src/utils/common';
 import { replaceControlsTranslateInfo } from 'src/utils/translate.js';
@@ -652,7 +653,12 @@ function Hierarchy(props) {
   };
 
   return (
-    <div ref={el => { drop(el); }} className="structureViewWrap">
+    <div
+      ref={el => {
+        drop(el);
+      }}
+      className="structureViewWrap"
+    >
       {!browserIsMobile() && (
         <LeftBoundary
           {..._.pick(props, ['becomeTopLevelRecord'])}
@@ -712,7 +718,7 @@ function Hierarchy(props) {
 }
 
 const ConnectedHierarchyView = connect(
-  state => ({
+  (state: RootState) => ({
     ..._.pick(state.sheet, [
       'worksheetInfo',
       'filters',

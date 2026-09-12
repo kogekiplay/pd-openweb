@@ -7,6 +7,7 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import { Tooltip } from 'ming-ui/antd-components';
 import * as actions from 'src/pages/chat/redux/actions';
+import type { RootState } from 'src/redux/types';
 import { emitter } from 'src/utils/common';
 import mingoActiveHover from './images/mingo-active-hover.gif';
 import mingoActive from './images/mingo-active.png';
@@ -205,7 +206,7 @@ const Mingo = props => {
 };
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     toolbarConfig: state.chat.toolbarConfig,
   }),
   dispatch => bindActionCreators(_.pick(actions, ['setToolbarConfig']), dispatch),

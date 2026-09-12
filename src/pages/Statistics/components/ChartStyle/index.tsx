@@ -8,6 +8,7 @@ import { Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { LegendTypeData, reportTypes } from 'statistics/Charts/common';
 import * as actions from 'statistics/redux/actions';
+import type { RootState } from 'src/redux/types';
 import allCountPanelGenerator from './components/AllCount';
 import Color from './components/Color/index';
 import { Count } from './components/Count';
@@ -745,7 +746,7 @@ let ChartStyle = class ChartStyle extends Component<any, any> {
   }
 };
 ChartStyle = connect(
-  state => ({ ..._.pick(state.statistics, ['currentReport', 'reportData', 'worksheetInfo']) }),
+  (state: RootState) => ({ ..._.pick(state.statistics, ['currentReport', 'reportData', 'worksheetInfo']) }),
   dispatch => bindActionCreators(actions, dispatch),
 )(ChartStyle);
 export default ChartStyle;

@@ -8,6 +8,7 @@ import { Checkbox, Dropdown, MultipleDropdown, ScrollView } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import ClickAway from 'ming-ui/components/ClickAway';
 import ajaxRequest from 'src/api/taskCenter';
+import type { RootState } from 'src/redux/types';
 import config from '../../config/config';
 import {
   updateChargeIds,
@@ -830,4 +831,4 @@ class Filter extends Component<any, any> {
   }
 }
 
-export default connect(state => state.task)(Filter);
+export default connect((state: RootState) => state.task)(Filter);

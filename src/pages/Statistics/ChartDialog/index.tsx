@@ -15,6 +15,7 @@ import projectController from 'src/api/project';
 import worksheetApi from 'src/api/worksheet';
 import { formatValuesOfOriginConditions } from 'src/pages/worksheet/common/WorkSheetFilter/util';
 import store from 'src/redux/configureStore';
+import type { RootState } from 'src/redux/types';
 import MoreOverlay from '../Card/MoreOverlay';
 import { reportTypes } from '../Charts/common';
 import { getNewReport } from '../common/reportConfigUtils';
@@ -527,7 +528,7 @@ let ChartDialog = class ChartDialog extends Component<any, any> {
   }
 };
 ChartDialog = connect(
-  state => ({
+  (state: RootState) => ({
     ..._.pick(state.statistics, [
       'currentReport',
       'axisControls',

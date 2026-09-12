@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
-import cx from 'classnames';
 import Trigger from '@rc-component/trigger';
+import cx from 'classnames';
 import styled from 'styled-components';
 import { LoadDiv } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import GroupController from 'src/api/group';
 import PersonalStatus from 'src/pages/chat/components/MyStatus/PersonalStatus';
 import settingGroup from 'src/pages/Group/settingGroup';
+import type { RootState } from 'src/redux/types';
 import { pathCompletion } from 'src/utils/common';
 import * as actions from '../../redux/actions';
 import config from '../../utils/config';
@@ -394,7 +395,7 @@ class ChatPanelHeader extends Component<any, any> {
   }
 }
 
-export default connect(state => {
+export default connect((state: RootState) => {
   const { currentSession, isWindow, socketState } = state.chat;
 
   return {

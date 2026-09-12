@@ -7,6 +7,7 @@ import _ from 'lodash';
 import moment from 'moment';
 import styled from 'styled-components';
 import * as actions from 'worksheet/redux/actions/gunterview';
+import type { RootState } from 'src/redux/types';
 
 const TodayWrapper = styled.div`
   position: absolute;
@@ -122,7 +123,7 @@ let Today = class Today extends Component<any, any> {
   }
 };
 Today = connect(
-  state => ({ ..._.pick(state.sheet, ['gunterView', 'base']) }),
+  (state: RootState) => ({ ..._.pick(state.sheet, ['gunterView', 'base']) }),
   dispatch => bindActionCreators(actions, dispatch),
 )(Today);
 export default Today;

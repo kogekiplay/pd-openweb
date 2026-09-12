@@ -7,6 +7,7 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import { Icon, LoadDiv, ScrollView } from 'ming-ui';
 import * as actions from 'src/pages/chat/redux/actions';
+import type { RootState } from 'src/redux/types';
 import * as ajax from '../../utils/ajax';
 import './index.less';
 
@@ -319,7 +320,7 @@ class SearchMember extends Component<any, any> {
 }
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     sessionListVisible: state.chat.toolbarConfig.sessionListVisible,
   }),
   dispatch => bindActionCreators(_.pick(actions, ['addGroupSession', 'addUserSession']), dispatch),

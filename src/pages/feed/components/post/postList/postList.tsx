@@ -1,8 +1,9 @@
-﻿import React from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import LoadDiv from 'ming-ui/components/LoadDiv';
+import type { RootState } from 'src/redux/types';
 import postEnum from '../../../constants/postEnum';
 import { focusUpdater, loadMore } from '../../../redux/postActions';
 import PostBody from '../post/postBody';
@@ -138,4 +139,4 @@ class PostList extends React.Component<any, any> {
   }
 }
 
-export default connect(state => state.post)(PostList);
+export default connect((state: RootState) => state.post)(PostList);

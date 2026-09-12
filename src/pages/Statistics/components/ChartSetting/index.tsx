@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import * as actions from 'statistics/redux/actions';
+import type { RootState } from 'src/redux/types';
 import { reportTypes } from '../../Charts/common';
 import { chartType, funnelCurvatureList, funnelShapeList } from '../../common/chartTypeConfig';
 import { filterDisableParticleSizeTypes, getAxisText } from '../../common/reportConfigUtils';
@@ -616,7 +617,7 @@ let ChartSetting = class ChartSetting extends Component<any, any> {
   }
 };
 ChartSetting = connect(
-  state => ({
+  (state: RootState) => ({
     ..._.pick(state.statistics, ['currentReport', 'reportData', 'axisControls', 'worksheetInfo', 'filterItem']),
   }),
   dispatch => bindActionCreators(actions, dispatch),

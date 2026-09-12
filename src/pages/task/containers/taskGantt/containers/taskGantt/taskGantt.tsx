@@ -7,6 +7,7 @@ import _ from 'lodash';
 import moment from 'moment';
 import { LoadDiv } from 'ming-ui';
 import ajaxRequest from 'src/api/taskCenter';
+import type { RootState } from 'src/redux/types';
 import config from '../../config/config';
 import {
   changeTaskStatus,
@@ -332,7 +333,7 @@ const DndRoot = DndProvider as React.FC<React.PropsWithChildren<{ backend: any; 
 // react-dnd v9 起 DragDropContext(backend)(Comp) 被 <DndProvider> 取代。
 // 保持原来的组合顺序：DnD 在外、connect 在内（与迁移前一致）。
 // 写法照抄本仓库已在生产验证过的 ViewConfig/customBtn/actionSet/index.tsx:256。
-const ConnectedTaskGantt = connect(state => {
+const ConnectedTaskGantt = connect((state: RootState) => {
   const { accountTasksKV, stateConfig, taskConfig } = state.task;
 
   return {

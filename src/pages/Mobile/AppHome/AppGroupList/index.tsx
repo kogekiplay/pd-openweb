@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Icon, SvgIcon } from 'ming-ui';
+import type { RootState } from 'src/redux/types';
 import { getCurrentProject } from 'src/utils/project';
 import Back from '../../components/Back';
 import * as actions from '../redux/actions';
@@ -97,7 +98,7 @@ class AppGroupList extends Component<any, any> {
     );
   }
 }
-export default connect(state => {
+export default connect((state: RootState) => {
   const { isHomeLoading, myAppData, projectGroupsNameLang } = state.mobile;
   return {
     myAppData,

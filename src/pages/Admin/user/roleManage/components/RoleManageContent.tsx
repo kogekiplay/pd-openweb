@@ -7,6 +7,7 @@ import { LoadDiv } from 'ming-ui';
 import { dialogSelectUser } from 'ming-ui/functions';
 import organizeAjax from 'src/api/organize.js';
 import { dialogUserBoard } from 'src/pages/Admin/components/userBoardDialog';
+import type { RootState } from 'src/redux/types';
 import PaginationWrap from '../../../components/PaginationWrap';
 import * as actions from '../../../redux/roleManage/action';
 import RoleUserList from './RoleUserList';
@@ -138,7 +139,7 @@ class RoleManageContent extends Component<any, any> {
 }
 
 export default connect(
-  state => {
+  (state: RootState) => {
     const { currentRole, userList, allUserCount, userPageIndex, userLoading, selectUserIds, projectId } =
       state.orgManagePage.roleManage;
     return { currentRole, userList, allUserCount, userPageIndex, userLoading, selectUserIds, projectId };

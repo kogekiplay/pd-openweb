@@ -4,10 +4,11 @@ import { connect, Provider } from 'react-redux';
 import _, { isFunction } from 'lodash';
 import DataFormat from 'src/components/Form/core/DataFormat';
 import generateStore from 'src/pages/worksheet/components/ChildTable/redux/store';
+import type { RootState } from 'src/redux/types';
 import ChildTable from './ChildTable';
 import './style.less';
 
-const ChildTableComp = connect(state => ({
+const ChildTableComp = connect((state: RootState) => ({
   baseLoading: state.baseLoading,
   base: state.base,
   rows: state.rows,

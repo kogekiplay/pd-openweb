@@ -14,6 +14,7 @@ import homeAppApi from 'src/api/homeApp';
 import DragMask from 'worksheet/common/DragMask';
 import UnNormal from 'worksheet/views/components/UnNormal';
 import { updateSheetListLoading } from 'src/pages/worksheet/redux/actions/sheetList';
+import type { RootState } from 'src/redux/types';
 import { navigateTo } from 'src/router/navigateTo';
 import { emitter } from 'src/utils/common';
 import { browserIsMobile, updateGlobalStoreForMingo } from 'src/utils/common';
@@ -551,7 +552,7 @@ class WorkSheet extends Component<any, any> {
 
 export default withRouter(
   connect(
-    state => ({
+    (state: RootState) => ({
       sheetListLoading: state.sheetList.loading,
       sheetListIsUnfold: state.sheetList.isUnfold,
       sheetList: [1, 3].includes(state.appPkg.currentPcNaviStyle)

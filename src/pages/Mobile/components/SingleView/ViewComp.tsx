@@ -25,6 +25,7 @@ import { permitList } from 'src/pages/FormSet/config.js';
 import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import SlideGroupFilter from 'src/pages/Mobile/RecordList/GroupFilter/SlideGroupFilter.jsx';
 import { addNewRecord, updateFilters } from 'src/pages/worksheet/redux/actions';
+import type { RootState } from 'src/redux/types';
 import { pathCompletion } from 'src/utils/common';
 import { mdAppResponse } from 'src/utils/project';
 
@@ -272,7 +273,7 @@ function ViewComp(props) {
 }
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     ..._.pick(
       state.mobile,
       'base',

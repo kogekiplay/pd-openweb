@@ -6,6 +6,7 @@ import _ from 'lodash';
 import LoadDiv from 'ming-ui/components/LoadDiv';
 import ajaxRequest from 'src/api/taskCenter';
 import previewAttachments from 'src/components/previewAttachments/previewAttachments';
+import type { RootState } from 'src/redux/types';
 import { downloadFile, getClassNameByExt } from 'src/utils/common';
 import RegExpValidator from 'src/utils/expression';
 import config from '../../config/config';
@@ -446,4 +447,4 @@ class Attachment extends Component<any, any> {
   }
 }
 
-export default connect(state => state.task)(Attachment);
+export default connect((state: RootState) => state.task)(Attachment);

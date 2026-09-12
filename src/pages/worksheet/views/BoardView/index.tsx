@@ -1,12 +1,13 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import _ from 'lodash';
 import * as baseAction from 'src/pages/worksheet/redux/actions';
 import * as boardActions from 'src/pages/worksheet/redux/actions/boardView';
 import { setSysWorkflowTimeControlFormat } from 'src/pages/worksheet/views/CalendarView/util';
+import type { RootState } from 'src/redux/types';
 import { getAdvanceSetting } from 'src/utils/control';
 import CommonBoard from './CommonBoard';
 import GroupBoard from './GroupBoard';
@@ -103,7 +104,7 @@ const BoardView = props => {
 };
 
 const ConnectedBoardView = connect(
-  state =>
+  (state: RootState) =>
     _.pick(state.sheet, [
       'boardView',
       'worksheetInfo',

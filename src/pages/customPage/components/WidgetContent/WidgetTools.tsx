@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import update from 'immutability-helper';
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
+import type { RootState } from 'src/redux/types';
 import { getTranslateInfo } from 'src/utils/app';
 import { containerWidgets } from '../../enum';
 import * as actions from '../../redux/action';
@@ -192,7 +193,7 @@ const WidgetTools = props => {
 };
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     allComponents: state.customPage.components,
     activeContainerInfo: state.customPage.activeContainerInfo,
   }),

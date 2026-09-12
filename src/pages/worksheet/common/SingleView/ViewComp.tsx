@@ -9,6 +9,7 @@ import Sheet from 'worksheet/common/Sheet/Sheet';
 import { loadWorksheet, openNewRecord, refreshSheet, updateFilters, updateSearchRecord } from 'worksheet/redux/actions';
 import { changePageIndex, changePageSize } from 'worksheet/redux/actions/sheetview';
 import { getSearchData } from 'worksheet/views/util';
+import type { RootState } from 'src/redux/types';
 import { emitter } from 'src/utils/common';
 import Header from './Header';
 
@@ -106,7 +107,7 @@ function ViewComp(props) {
 }
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     forcePageSize: state.sheet.base.forcePageSize,
     appId: state.sheet.base.appId,
     worksheetId: state.sheet.base.worksheetId,

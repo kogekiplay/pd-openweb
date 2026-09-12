@@ -4,6 +4,7 @@ import { ActionSheet, Dialog, Input, SpinLoading } from 'antd-mobile';
 import _ from 'lodash';
 import { Icon } from 'ming-ui';
 import { WithoutRows } from 'mobile/RecordList/SheetRows';
+import type { RootState } from 'src/redux/types';
 import Back from '../../components/Back';
 import * as actions from './redux/actions';
 import './index.less';
@@ -153,7 +154,7 @@ class ApplyList extends React.Component<any, any> {
   }
 }
 
-export default connect(state => {
+export default connect((state: RootState) => {
   const { applyData, isApplyLoading } = state.mobile;
   return {
     applyData,

@@ -3,10 +3,10 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useKey } from 'react-use';
 import { Popover } from 'antd';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _, { get } from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, RichText } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -34,6 +34,7 @@ import { permitList } from 'src/pages/FormSet/config.js';
 import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import { getAppSectionData, getAppSectionRef } from 'src/pages/PageHeader/AppPkgHeader/LeftAppGroup';
 import WorksheetDraft from 'src/pages/worksheet/common/WorksheetDraft';
+import type { RootState } from 'src/redux/types';
 import { navigateTo } from 'src/router/navigateTo';
 import { getTranslateInfo } from 'src/utils/app';
 import { getAppFeaturesVisible } from 'src/utils/common';
@@ -312,7 +313,7 @@ function SheetHeader(props) {
               arrow={{ pointAtCenter: true }}
               title={null}
               placement="bottomLeft"
-              classNames={{ root: "sheetDescPopoverOverlay" }}
+              classNames={{ root: 'sheetDescPopoverOverlay' }}
               content={
                 <div
                   className="popoverContent"
@@ -633,7 +634,7 @@ SheetHeader.propTypes = {
 };
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     appPkg: state.appPkg,
     sheetList: state.sheetList.data,
     app: state.sheet.app,

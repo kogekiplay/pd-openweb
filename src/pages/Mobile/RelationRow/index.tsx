@@ -1,9 +1,10 @@
 import React, { Component, Fragment } from 'react';
-import withRouter from '../../../router/withRouter';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import _ from 'lodash';
 import * as actions from 'mobile/RelationRow/redux/actions';
+import type { RootState } from 'src/redux/types';
+import withRouter from '../../../router/withRouter';
 import RelationAction from './RelationAction';
 import RelationList from './RelationList';
 
@@ -44,6 +45,6 @@ let Home = class Home extends Component<any, any> {
 };
 Home = withRouter(Home);
 export default connect(
-  state => ({ ..._.pick(state.mobile, ['loadParams']) }),
+  (state: RootState) => ({ ..._.pick(state.mobile, ['loadParams']) }),
   dispatch => bindActionCreators(_.pick(actions, ['updatePageIndex']), dispatch),
 )(Home);

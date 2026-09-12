@@ -15,6 +15,7 @@ import * as actions from 'statistics/redux/actions';
 import { permitList } from 'src/pages/FormSet/config.js';
 import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import { WORKFLOW_SYSTEM_CONTROL } from 'src/pages/widgetConfig/config/widget';
+import type { RootState } from 'src/redux/types';
 import { controlState } from 'src/utils/control';
 import CalculateControlItem from './components/CalculateControlItem';
 import CalculateControlModal from './components/CalculateControlModal';
@@ -575,7 +576,7 @@ let DataSource = class DataSource extends Component<any, any> {
   }
 };
 DataSource = connect(
-  state => ({ ..._.pick(state.statistics, ['currentReport', 'axisControls', 'worksheetInfo', 'base']) }),
+  (state: RootState) => ({ ..._.pick(state.statistics, ['currentReport', 'axisControls', 'worksheetInfo', 'base']) }),
   dispatch => bindActionCreators(actions, dispatch),
 )(DataSource);
 export default DataSource;

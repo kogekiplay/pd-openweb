@@ -10,6 +10,7 @@ import FixedPage from 'mobile/App/FixedPage.jsx';
 import { permitList } from 'src/pages/FormSet/config.js';
 import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import { addNewRecord } from 'src/pages/worksheet/redux/actions';
+import type { RootState } from 'src/redux/types';
 import { getRequest } from 'src/utils/common';
 import { getAdvanceSetting } from 'src/utils/control';
 import { mdAppResponse } from 'src/utils/project';
@@ -229,7 +230,7 @@ let RecordList = class RecordList extends Component<any, any> {
 };
 RecordList = withRouter(AppPermissions(RecordList));
 export default connect(
-  state => ({
+  (state: RootState) => ({
     ..._.pick(
       state.mobile,
       'base',

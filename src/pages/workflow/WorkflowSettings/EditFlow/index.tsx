@@ -5,6 +5,7 @@ import _ from 'lodash';
 import { Dialog, EditingBar, LoadDiv, SvgIcon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import ErrorBoundary from 'ming-ui/components/ErrorBoundary';
+import type { RootState } from 'src/redux/types';
 import { pathCompletion } from 'src/utils/common';
 import {
   addFlowNode,
@@ -723,4 +724,4 @@ class EditFlow extends Component<any, any> {
   }
 }
 
-export default connect(state => state.workflow)(ErrorBoundary.wrap(EditFlow));
+export default connect((state: RootState) => state.workflow)(ErrorBoundary.wrap(EditFlow));

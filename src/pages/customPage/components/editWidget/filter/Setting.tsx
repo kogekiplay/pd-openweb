@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { Dialog, Dropdown, Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { getIconByType } from 'src/pages/widgetConfig/util';
+import type { RootState } from 'src/redux/types';
 import FilterControl from './FilterControl';
 import FilterListSort from './FilterListSort';
 import FilterObject from './FilterObject';
@@ -402,6 +403,6 @@ function Setting(props) {
   );
 }
 
-export default connect(state => ({
+export default connect((state: RootState) => ({
   appPkg: state.appPkg,
 }))(Setting);

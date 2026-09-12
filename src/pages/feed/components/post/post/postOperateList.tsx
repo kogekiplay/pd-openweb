@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -7,6 +7,8 @@ import ClickAway from 'ming-ui/components/ClickAway';
 import createCalendar from 'src/components/createCalendar/load';
 import addOldTask from 'src/components/createTask/addOldTask';
 import createTask from 'src/components/createTask/load';
+import type { RootState } from 'src/redux/types';
+import { pathCompletion } from 'src/utils/common';
 import createLinksForMessage from 'src/utils/createLinksForMessage';
 import postEnum from '../../../constants/postEnum';
 import {
@@ -21,7 +23,6 @@ import editShareScope from '../postComponent/editShareScope/editShareScope';
 import EditPostDialog from './EditPostDialog';
 import EditVoteEndTimeDialog from './EditVoteEndTimeDialog';
 import './postOperateList.css';
-import { pathCompletion } from 'src/utils/common';
 
 const { POST_TYPE } = postEnum;
 
@@ -343,7 +344,7 @@ class PostOperateList extends React.Component<any, any> {
   }
 }
 
-export default connect(state => {
+export default connect((state: RootState) => {
   const { options } = state.post;
   return { options };
 })(PostOperateList);

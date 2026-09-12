@@ -14,6 +14,7 @@ import { formatFilterValuesToServer } from 'src/pages/worksheet/common/Sheet/Qui
 import { FILTER_CONDITION_TYPE } from 'src/pages/worksheet/common/WorkSheetFilter/enum';
 import { formatForSave } from 'src/pages/worksheet/common/WorkSheetFilter/model';
 import * as sheetActions from 'src/pages/worksheet/redux/actions';
+import type { RootState } from 'src/redux/types';
 import { compatibleMDJS } from 'src/utils/project';
 import FilterInput, { NumberTypes, TextTypes } from './Inputs';
 import { conditionAdapter, turnControl, validate } from './utils';
@@ -431,7 +432,7 @@ export function QuickFilter(props) {
 }
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     mobileNavGroupFilters: state.mobile.mobileNavGroupFilters,
     quickFilter: state.mobile.quickFilter,
     base: state.mobile.base,

@@ -5,6 +5,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Dialog, Icon, LoadDiv } from 'ming-ui';
+import type { RootState } from 'src/redux/types';
 import {
   addSubordinates,
   fetchSubordinates,
@@ -255,7 +256,7 @@ class Node extends Component<any, any> {
   }
 }
 
-const ConnectedNode = connect((state, ownProps) => {
+const ConnectedNode = connect((state: RootState, ownProps) => {
   const {
     entities: { users },
     highLightId,

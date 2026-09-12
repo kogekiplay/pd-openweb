@@ -5,6 +5,7 @@ import cx from 'classnames';
 import _ from 'lodash';
 import ClickAway from 'ming-ui/components/ClickAway';
 import LoadDiv from 'ming-ui/components/LoadDiv';
+import type { RootState } from 'src/redux/types';
 import { Inbox } from '../../components/Inbox';
 import * as actions from '../../redux/actions';
 import * as ajax from '../../utils/ajax';
@@ -248,7 +249,7 @@ class ChatPanel extends Component<any, any> {
   }
 }
 
-export default connect(state => {
+export default connect((state: RootState) => {
   const { currentSession, currentSessionList, currentInboxList, toolbarConfig } = state.chat;
   return {
     currentSession,

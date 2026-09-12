@@ -1,14 +1,15 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import Trigger from '@rc-component/trigger';
 import _ from 'lodash';
 import moment from 'moment';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Checkbox, Icon, Menu, MenuItem } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import projectSettingAjax from 'src/api/projectSetting';
 import { CLEAR_CACHE_PROCESS_TYPE } from 'src/pages/Admin/enum';
+import type { RootState } from 'src/redux/types';
 import { emitter } from 'src/utils/common';
 import { getCurrentProject } from 'src/utils/project';
 import { downloadFile } from '../../../../../util';
@@ -179,7 +180,7 @@ class CreateBtn extends Component<any, any> {
 }
 
 const ConnectedCreateBtn = connect(
-  state => {
+  (state: RootState) => {
     const {
       current,
       entities: { newDepartments = [], showDisabledDepartment },

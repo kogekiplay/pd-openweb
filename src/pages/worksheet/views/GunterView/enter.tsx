@@ -8,6 +8,7 @@ import SelectFieldForStartOrEnd from 'worksheet/views/components/SelectFieldForS
 import { isIllegal } from 'src/pages/worksheet/views/CalendarView/util';
 import { setSysWorkflowTimeControlFormat } from 'src/pages/worksheet/views/CalendarView/util.js';
 import { getControlsForGunter, isGunterGroupMultiSelectControl } from 'src/pages/worksheet/views/GunterView/util.js';
+import type { RootState } from 'src/redux/types';
 import { getAdvanceSetting } from 'src/utils/control';
 import SelectField from '../components/SelectField';
 import UnNormal from '../components/UnNormal';
@@ -126,7 +127,7 @@ let GunterEnter = class GunterEnter extends Component<any, any> {
   }
 };
 GunterEnter = connect(
-  state => ({ ...state.sheet }),
+  (state: RootState) => ({ ...state.sheet }),
   dispatch =>
     bindActionCreators(
       {

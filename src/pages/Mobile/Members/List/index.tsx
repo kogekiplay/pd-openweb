@@ -9,6 +9,7 @@ import { userStatusList } from 'src/pages/Role/AppRoleCon/UserCon/config.js';
 import { sysRoleType } from 'src/pages/Role/config.js';
 import { APP_ROLE_TYPE } from 'src/pages/worksheet/constants/enum.js';
 import { getUserRole } from 'src/pages/worksheet/redux/actions/util';
+import type { RootState } from 'src/redux/types';
 import { pathCompletion } from 'src/utils/common';
 import Back from '../../components/Back';
 import SelectJob from '../../components/SelectJob';
@@ -619,7 +620,7 @@ class MemberList extends Component<any, any> {
   }
 }
 
-export default connect(state => {
+export default connect((state: RootState) => {
   const { memberList, isListLoading, isUpdateListLoading, debugRoles } = state.mobile;
   return {
     memberList,

@@ -8,6 +8,7 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import { updatePageInfo } from 'src/pages/customPage/redux/action';
 import { isLightColor, replaceColor } from 'src/pages/customPage/util';
+import type { RootState } from 'src/redux/types';
 import { bgImages } from '../components/ConfigSideWrap/bgImages';
 import WidgetContent from '../components/WidgetContent';
 
@@ -274,7 +275,7 @@ function WebLayout(props) {
 }
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     components: state.customPage.components,
     apk: state.customPage.apk,
   }),

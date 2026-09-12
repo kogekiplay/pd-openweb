@@ -9,6 +9,7 @@ import { LoadDiv } from 'ming-ui';
 import { defaultTitleStyles, replaceTitleStyle } from 'src/pages/customPage/components/ConfigSideWrap/util';
 import { updateComponents, updatePageInfo } from 'src/pages/customPage/redux/action';
 import { getEnumType, getLayout } from 'src/pages/customPage/util';
+import type { RootState } from 'src/redux/types';
 import { getTranslateInfo } from 'src/utils/app';
 import { LAYOUT_CONFIG, LayoutContent } from '../../WidgetContent';
 import WidgetTools from '../../WidgetContent/WidgetTools';
@@ -505,7 +506,7 @@ export const Tabs = props => {
 };
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     activeContainerInfo: state.customPage.activeContainerInfo,
     components: state.customPage.components,
     adjustScreen: state.customPage.adjustScreen,

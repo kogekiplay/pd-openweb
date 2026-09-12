@@ -12,6 +12,7 @@ import Filters from 'worksheet/common/Sheet/QuickFilter/Filters';
 import { formatFilterValues, formatFilterValuesToServer, validate } from 'worksheet/common/Sheet/QuickFilter/utils';
 import { updateFiltersGroup, updatePageInfo } from 'src/pages/customPage/redux/action.js';
 import store from 'src/redux/configureStore';
+import type { RootState } from 'src/redux/types';
 import { getTranslateInfo } from 'src/utils/app';
 import { replaceControlsTranslateInfo } from 'src/utils/translate';
 import { formatFilters } from './util';
@@ -181,7 +182,7 @@ function FiltersGroupPreview(props) {
 
 export default ErrorBoundary.wrap(
   connect(
-    state => ({
+    (state: RootState) => ({
       filterComponents: state.customPage.filterComponents,
       loadFilterComponentCount: state.customPage.loadFilterComponentCount,
       config: state.customPage.config,

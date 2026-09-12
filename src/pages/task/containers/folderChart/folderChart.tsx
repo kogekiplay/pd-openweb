@@ -11,6 +11,7 @@ import { Icon } from 'ming-ui';
 import { Dialog, LoadDiv } from 'ming-ui';
 import ajaxRequest from 'src/api/taskFolderStatistics';
 import DateFilter from 'src/components/DateFilter';
+import type { RootState } from 'src/redux/types';
 import config from '../../config/config';
 import { listLoadingContent } from '../../utils/taskComm';
 import chargeList from './tpl/chargeList.html';
@@ -1297,4 +1298,4 @@ class FolderChart extends Component<any, any> {
   }
 }
 
-export default connect(state => state.task)(FolderChart);
+export default connect((state: RootState) => state.task)(FolderChart);

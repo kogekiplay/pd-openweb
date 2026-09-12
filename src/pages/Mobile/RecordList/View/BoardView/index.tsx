@@ -9,6 +9,7 @@ import * as actions from 'mobile/RecordList/redux/actions';
 import { getTargetName } from 'worksheet/views/BoardView/util';
 import { getViewSelectFields, hasSecondGroupControl } from 'worksheet/views/BoardView/util';
 import ViewEmpty from 'worksheet/views/components/ViewEmpty';
+import type { RootState } from 'src/redux/types';
 import { pathCompletion } from 'src/utils/common';
 import { getAdvanceSetting } from 'src/utils/control';
 import RegExpValidator from 'src/utils/expression';
@@ -221,7 +222,7 @@ const MobileBoardView = props => {
 };
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     ..._.pick(state.mobile, [
       'base',
       'worksheetInfo',

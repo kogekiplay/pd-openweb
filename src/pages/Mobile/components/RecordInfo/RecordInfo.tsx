@@ -23,6 +23,7 @@ import ShareCardConfig from 'src/components/ShareCardConfig';
 import { SHARECARDTYPS } from 'src/components/ShareCardConfig/config';
 import { permitList } from 'src/pages/FormSet/config.js';
 import { isOpenPermit } from 'src/pages/FormSet/util.js';
+import type { RootState } from 'src/redux/types';
 import { getTranslateInfo } from 'src/utils/app';
 import { emitter } from 'src/utils/common';
 import { getRowGetType, KVGet, removeTempRecordValueFromLocal, saveTempRecordValueToLocal } from 'src/utils/common';
@@ -1457,7 +1458,7 @@ let RecordInfo = class RecordInfo extends Component<any, any> {
   }
 };
 RecordInfo = connect(
-  state => ({ ..._.pick(state.mobile, ['relationRow']) }),
+  (state: RootState) => ({ ..._.pick(state.mobile, ['relationRow']) }),
   dispatch => bindActionCreators({ ..._.pick(actions, ['updateRelationRows', 'updateActionParams']) }, dispatch),
 )(RecordInfo);
 export default RecordInfo;

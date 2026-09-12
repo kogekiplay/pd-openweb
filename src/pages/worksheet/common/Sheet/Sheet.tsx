@@ -16,6 +16,7 @@ import { canEditApp, canEditData } from 'worksheet/redux/actions/util.js';
 import View from 'worksheet/views';
 import { defaultNavCloseW, defaultNavOpenW, MaxNavW, MinNavW } from 'src/pages/worksheet/common/ViewConfig/config.js';
 import { setSysWorkflowTimeControlFormat } from 'src/pages/worksheet/views/CalendarView/util.js';
+import type { RootState } from 'src/redux/types';
 import { navigateTo } from 'src/router/navigateTo';
 import { getTranslateInfo } from 'src/utils/app';
 import { emitter as globalEmitter } from 'src/utils/common';
@@ -494,7 +495,7 @@ Sheet.propTypes = {
 };
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     appId: state.sheet.base.appId,
     appPkg: state.appPkg,
     groupId: state.sheet.base.groupId,

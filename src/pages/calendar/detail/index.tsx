@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
+import type { RootState } from 'src/redux/types';
 import CalendarDetail from '../modules/calendarDetail';
 import './style.less';
 
@@ -40,4 +41,4 @@ class CalendarDetailEntrypoint extends Component<any, any> {
   }
 }
 
-export default connect(state => state)(CalendarDetailEntrypoint);
+export default connect((state: RootState) => state)(CalendarDetailEntrypoint);

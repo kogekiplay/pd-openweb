@@ -7,6 +7,7 @@ import * as actions from 'src/pages/chat/redux/actions';
 import * as ajax from 'src/pages/chat/utils/ajax';
 import * as socketEvent from 'src/pages/chat/utils/socketEvent.js';
 import PortalMg from 'src/pages/Portal/PortalMg.jsx';
+import type { RootState } from 'src/redux/types';
 import { getAppFeaturesVisible } from 'src/utils/common';
 import './index.less';
 
@@ -117,7 +118,7 @@ class PortalMessage extends Component<any, any> {
     );
   }
 }
-export default connect(state => {
+export default connect((state: RootState) => {
   const { currentSession, visible, sessionList } = state.chat;
   return {
     currentSession,

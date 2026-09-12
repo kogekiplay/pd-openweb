@@ -13,6 +13,7 @@ import {
   setChartScrollLock,
   setGroupingScrollLock,
 } from 'worksheet/views/GunterView/scrollState';
+import type { RootState } from 'src/redux/types';
 import {
   filterButtonBySheetSwitchPermit,
   getSheetOperateButtonIds,
@@ -356,7 +357,7 @@ function GunterChartContainer(props) {
 }
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     gunterView: state.sheet.gunterView,
     base: state.sheet.base,
     worksheetInfo: state.sheet.worksheetInfo,

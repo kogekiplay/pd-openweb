@@ -13,6 +13,7 @@ import { setRecordDragging } from 'worksheet/views/GunterView/scrollState';
 import { percentageToTime, timeToPercentage } from 'worksheet/views/GunterView/util';
 import EditableCard from 'src/pages/worksheet/views/components/EditableCard';
 import { renderTitleByViewtitle } from 'src/pages/worksheet/views/util.js';
+import type { RootState } from 'src/redux/types';
 import { browserIsMobile } from 'src/utils/common';
 import { renderText as renderCellText } from 'src/utils/control';
 import { sortControlByIds } from 'src/utils/control';
@@ -793,7 +794,7 @@ let RowBlock = class RowBlock extends Component<any, any> {
   }
 };
 RowBlock = connect(
-  state => ({
+  (state: RootState) => ({
     ..._.pick(state.sheet.gunterView, ['searchRecordId', 'viewConfig', 'chartScroll', 'grouping']),
     ..._.pick(state.sheet, ['controls', 'base', 'isCharge', 'worksheetInfo', 'views', 'sheetSwitchPermit']),
   }),

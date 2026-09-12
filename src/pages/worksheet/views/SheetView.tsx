@@ -36,6 +36,7 @@ import { putControlByOrder } from 'src/pages/widgetConfig/util';
 import { renderBatchSetDialog } from 'src/pages/worksheet/common/ViewConfig/components/BatchSet';
 import { NORMAL_SYSTEM_FIELDS_SORT, WORKFLOW_SYSTEM_FIELDS_SORT } from 'src/pages/worksheet/common/ViewConfig/enum';
 import { getUserRole } from 'src/pages/worksheet/redux/actions/util';
+import type { RootState } from 'src/redux/types';
 import { browserIsMobile, emitter, getLRUWorksheetConfig } from 'src/utils/common';
 import { controlState } from 'src/utils/control';
 import { getAdvanceSetting, getHighAuthControls } from 'src/utils/control';
@@ -2313,7 +2314,7 @@ SheetViewConnecter.propTypes = {
 };
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     // worksheet
     isCharge: state.sheet.isCharge,
     worksheetInfo: state.sheet.worksheetInfo,

@@ -1,14 +1,15 @@
 import React, { Component, lazy, Suspense } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import { Button, Icon } from 'ming-ui';
 import abnormal from 'src/pages/worksheet/assets/abnormal.png';
 import CreateNew from 'src/pages/worksheet/common/WorkSheetLeft/CreateNew';
 import { addWorkSheet, createAppItem, getSheetList } from 'src/pages/worksheet/redux/actions/sheetList.js';
 import store from 'src/redux/configureStore';
+import type { RootState } from 'src/redux/types';
 import './WorksheetEmpty.less';
 
 const LoadableDialogImportExcelCreate = lazy(() => import('src/pages/worksheet/components/DialogImportExcelCreate'));
@@ -213,7 +214,7 @@ class WorksheetEmpty extends Component<any, any> {
 }
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     isValidAppSectionId: state.sheetList.isValidAppSectionId,
     worksheetId: state.sheet.base.worksheetId,
     sheetList: state.sheetList.data,

@@ -9,6 +9,7 @@ import sheetAjax from 'src/api/worksheet';
 import { updateGroupFilter } from 'worksheet/redux/actions';
 import { getNavGroupCount } from 'worksheet/redux/actions/navFilter';
 import { FILTER_CONDITION_TYPE } from 'src/pages/worksheet/common/WorkSheetFilter/enum.js';
+import type { RootState } from 'src/redux/types';
 import { emitter } from 'src/utils/common';
 import { getFilledRequestParams } from 'src/utils/common';
 import { getAdvanceSetting } from 'src/utils/control';
@@ -512,7 +513,7 @@ function GroupFilter(props) {
 }
 
 export default connect(
-  state => ({ ...state.sheet }),
+  (state: RootState) => ({ ...state.sheet }),
   dispatch =>
     bindActionCreators(
       {

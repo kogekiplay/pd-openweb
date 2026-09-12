@@ -6,6 +6,7 @@ import _ from 'lodash';
 import { arrayOf, bool, func, shape } from 'prop-types';
 import * as actions from 'src/pages/worksheet/redux/actions';
 import CustomWidgetView from 'src/pages/worksheet/views/CustomWidgetView';
+import type { RootState } from 'src/redux/types';
 import { getRequest } from 'src/utils/common';
 
 const data = getRequest();
@@ -38,7 +39,7 @@ let MobileContainer = class MobileContainer extends Component<any, any> {
   }
 };
 MobileContainer = connect(
-  state => ({ ...state.sheet }),
+  (state: RootState) => ({ ...state.sheet }),
   dispatch => bindActionCreators(actions, dispatch),
 )(MobileContainer);
 export default MobileContainer;

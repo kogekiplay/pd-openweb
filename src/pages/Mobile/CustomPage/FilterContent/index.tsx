@@ -11,6 +11,7 @@ import { formatFilterValues } from 'worksheet/common/Sheet/QuickFilter/utils';
 import { formatFilters } from 'src/pages/customPage/components/editWidget/filter/util';
 import { updateFiltersGroup, updatePageInfo } from 'src/pages/customPage/redux/action';
 import store from 'src/redux/configureStore';
+import type { RootState } from 'src/redux/types';
 import { getTranslateInfo } from 'src/utils/app';
 import { replaceControlsTranslateInfo } from 'src/utils/translate';
 import * as actions from '../redux/actions';
@@ -220,7 +221,7 @@ function FilterContent(props) {
 }
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     filtersGroup: state.mobile.filtersGroup,
   }),
   dispatch =>

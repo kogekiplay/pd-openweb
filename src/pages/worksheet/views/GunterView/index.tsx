@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import DragMask from 'worksheet/common/DragMask';
 import * as actions from 'worksheet/redux/actions/gunterview';
 import { PERIOD_TYPE } from 'src/pages/worksheet/views/GunterView/config';
+import type { RootState } from 'src/redux/types';
 import { browserIsMobile } from 'src/utils/common';
 import GunterChart from './Chart';
 import SelectionIndicator from './components/SelectionIndicator';
@@ -212,7 +213,9 @@ let Gunter = class Gunter extends Component<any, any> {
   }
 };
 Gunter = connect(
-  state => ({ ..._.pick(state.sheet.gunterView, ['loading', 'groupingVisible', 'chartScroll', 'groupingScroll']) }),
+  (state: RootState) => ({
+    ..._.pick(state.sheet.gunterView, ['loading', 'groupingVisible', 'chartScroll', 'groupingScroll']),
+  }),
   dispatch => bindActionCreators(actions, dispatch),
 )(Gunter);
 export default Gunter;

@@ -27,6 +27,7 @@ import {
 import { FILTER_CONDITION_TYPE } from 'src/pages/worksheet/common/WorkSheetFilter/enum';
 import * as worksheetActions from 'src/pages/worksheet/redux/actions';
 import * as navFilterActions from 'src/pages/worksheet/redux/actions/navFilter';
+import type { RootState } from 'src/redux/types';
 import { getFilledRequestParams } from 'src/utils/common';
 import { getTitleTextFromControls } from 'src/utils/control';
 import { getAdvanceSetting } from 'src/utils/control';
@@ -825,7 +826,7 @@ const GroupFilterList = props => {
 };
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     controls: state.sheet.controls,
     views: state.sheet.views,
     ...state.sheet,

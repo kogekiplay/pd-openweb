@@ -6,13 +6,14 @@ import { connect } from 'react-redux';
 // 线上表现是右侧那排图标全部点不开，而错误只出现在控制台，页面其余部分看着正常。
 // 改成具名导入；本文件已从 ming-ui 导入了同名的 Dropdown，所以起别名区分。
 import { Dropdown as AntdDropdown } from 'antd';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import { Dropdown, Icon } from 'ming-ui';
 import Config from 'src/pages/chat/utils/config';
 import * as socket from 'src/pages/chat/utils/socket';
+import type { RootState } from 'src/redux/types';
 import { pathCompletion } from 'src/utils/common';
 import * as actions from '../../../redux/actions';
 import { TYPE_GROUP, TYPES } from '../constants';
@@ -233,7 +234,7 @@ class InboxHeader extends React.Component<any, any> {
               popupRender={() => this.renderOverlay()}
               trigger={['click']}
               placement="bottomRight"
-              classNames={{ root: "inboxFilterDropdown" }}
+              classNames={{ root: 'inboxFilterDropdown' }}
             >
               <div className={cx('filterWrapper flexRow valignWrapper mRight15', { transparent: _.isEmpty(filter) })}>
                 {filter ? (
@@ -270,7 +271,7 @@ class InboxHeader extends React.Component<any, any> {
   }
 }
 
-export default connect(state => {
+export default connect((state: RootState) => {
   const { currentSession, sessionList } = state.chat;
 
   return {

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import { isWeekEndDay } from 'worksheet/views/GunterView/util';
+import type { RootState } from 'src/redux/types';
 
 let TimeCanvas = class TimeCanvas extends Component<any, any> {
   constructor(props) {
@@ -94,7 +95,7 @@ let TimeCanvas = class TimeCanvas extends Component<any, any> {
     );
   }
 };
-TimeCanvas = connect(state => ({
+TimeCanvas = connect((state: RootState) => ({
   ..._.pick(state.sheet.gunterView, [
     'grouping',
     'periodList',

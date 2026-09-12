@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import cx from 'classnames';
 import Icon from 'ming-ui/components/Icon';
 import Commenter from 'src/components/comment/commenter';
+import type { RootState } from 'src/redux/types';
 import { htmlDecodeReg } from 'src/utils/common';
 import { addTaskDiscussions, discussionsAddMembers } from '../../../redux/actions';
 import './taskComment.less';
@@ -103,4 +104,4 @@ class TaskComment extends Component<any, any> {
   }
 }
 
-export default connect(state => state.task)(TaskComment);
+export default connect((state: RootState) => state.task)(TaskComment);

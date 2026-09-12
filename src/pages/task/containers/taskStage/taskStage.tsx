@@ -10,6 +10,7 @@ import { dialogSelectUser, quickSelectUser } from 'ming-ui/functions';
 import ajaxRequest from 'src/api/taskCenter';
 import 'src/components/autoTextarea/autoTextarea';
 import { expireDialogAsync } from 'src/components/upgradeVersion';
+import type { RootState } from 'src/redux/types';
 import config from '../../config/config';
 import { updateTaskCharge } from '../../redux/actions';
 import { listLoadingContent } from '../../utils/taskComm';
@@ -1760,4 +1761,4 @@ class TaskStage extends Component<any, any> {
   }
 }
 
-export default connect(state => state.task)(TaskStage);
+export default connect((state: RootState) => state.task)(TaskStage);

@@ -8,6 +8,7 @@ import { dialogSelectUser } from 'ming-ui/functions';
 import jobAjax from 'src/api/job';
 import PaginationWrap from 'src/pages/Admin/components/PaginationWrap';
 import { dialogUserBoard } from 'src/pages/Admin/components/userBoardDialog';
+import type { RootState } from 'src/redux/types';
 import * as actions from '../../../../../redux/position/action';
 import RoleUserList from './RoleUserList';
 
@@ -124,7 +125,7 @@ class PositionContent extends Component<any, any> {
 }
 
 export default connect(
-  state => {
+  (state: RootState) => {
     const { currentPosition, userList, allUserCount, userPageIndex, userLoading, selectUserIds, projectId } =
       state.orgManagePage.position;
     return { currentPosition, userList, allUserCount, userPageIndex, userLoading, selectUserIds, projectId };

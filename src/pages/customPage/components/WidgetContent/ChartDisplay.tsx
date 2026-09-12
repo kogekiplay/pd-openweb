@@ -7,6 +7,7 @@ import Card from 'statistics/Card';
 import { formatFiltersGroup } from 'src/pages/customPage/components/editWidget/filter/util';
 import { updateLinkageFiltersGroup } from 'src/pages/customPage/redux/action.js';
 import { formatLinkageFiltersGroup } from 'src/pages/customPage/util';
+import type { RootState } from 'src/redux/types';
 
 const ChartDisplay = props => {
   const { widget, filterComponents, loadFilterComponentCount } = props;
@@ -120,7 +121,7 @@ const ChartDisplay = props => {
 };
 
 export default connect(
-  (state, ownProps) => ({
+  (state: RootState, ownProps) => ({
     filtersGroup: state.customPage.filtersGroup,
     linkageFiltersGroup: state.customPage.linkageFiltersGroup,
     filterComponents: state.customPage.filterComponents.filter(n =>

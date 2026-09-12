@@ -15,6 +15,7 @@ import PortalUserSet from 'src/pages/PageHeader/components/PortalUserSet/index.j
 import { transferValue } from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/util';
 import { APP_ROLE_TYPE } from 'src/pages/worksheet/constants/enum.js';
 import { canEditApp } from 'src/pages/worksheet/redux/actions/util';
+import type { RootState } from 'src/redux/types';
 import { getTranslateInfo } from 'src/utils/app';
 import { getAppFeaturesVisible } from 'src/utils/common';
 import { isHistoryLayerPopstate } from 'src/utils/mobileNavigation';
@@ -981,7 +982,7 @@ class App extends Component<any, any> {
   }
 }
 
-export default connect(state => {
+export default connect((state: RootState) => {
   const { appDetail, isAppLoading, isQuitSuccess, batchOptVisible, debugRoles, appScrollY } = state.mobile;
   // status: null, // 0: 加载中 1:正常 2:关闭 3:删除 4:不是应用成员 5:是应用成员但未分配视图
   return {

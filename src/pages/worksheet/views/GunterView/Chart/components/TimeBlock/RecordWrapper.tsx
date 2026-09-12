@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import _ from 'lodash';
 import * as actions from 'worksheet/redux/actions/gunterview';
 import { isRecordDragging } from 'worksheet/views/GunterView/scrollState';
+import type { RootState } from 'src/redux/types';
 import { pathCompletion } from 'src/utils/common';
 import { addBehaviorLog } from 'src/utils/project';
 import { handleRecordClick } from 'src/utils/record';
@@ -78,7 +79,7 @@ let RecordWrapper = class RecordWrapper extends Component<any, any> {
   }
 };
 RecordWrapper = connect(
-  state => ({
+  (state: RootState) => ({
     ..._.pick(state.sheet.gunterView, ['viewConfig']),
     ..._.pick(state.sheet, ['isCharge', 'base', 'worksheetInfo', 'controls', 'sheetSwitchPermit']),
   }),

@@ -6,6 +6,7 @@ import _ from 'lodash';
 import { MobilePersonalInfo, PullToRefreshWrapper } from 'ming-ui';
 import { Icon } from 'ming-ui';
 import AttachmentFiles from 'mobile/components/AttachmentFiles';
+import type { RootState } from 'src/redux/types';
 import { dateConvertToUserZone } from 'src/utils/project';
 import Message from '../Message';
 import * as actions from '../redux/actions';
@@ -198,7 +199,7 @@ class DiscussList extends Component<any, any> {
   }
 }
 
-export default connect(state => {
+export default connect((state: RootState) => {
   const { sheetDiscussions } = state.mobile;
   return {
     sheetDiscussions,

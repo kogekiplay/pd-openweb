@@ -8,6 +8,7 @@ import _ from 'lodash';
 import moment from 'moment';
 import { Icon, LoadDiv, ScrollView } from 'ming-ui';
 import * as Actions from 'src/pages/worksheet/redux/actions/calendarview';
+import type { RootState } from 'src/redux/types';
 import { renderText } from 'src/utils/control';
 import { EVENT_TAB_KEY_BY_INDEX } from './constants';
 
@@ -361,7 +362,7 @@ let External = class External extends Component<any, any> {
   }
 };
 External = connect(
-  state => ({ ...state.sheet }),
+  (state: RootState) => ({ ...state.sheet }),
   dispatch => bindActionCreators(Actions, dispatch),
 )(External);
 export default External;

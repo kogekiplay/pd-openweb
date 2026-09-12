@@ -12,6 +12,7 @@ import { permitList } from 'src/pages/FormSet/config.js';
 import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import { getAdvanceSetting } from 'src/pages/widgetConfig/util/setting';
 import { updateRecordLockStatus } from 'src/pages/worksheet/common/recordInfo/crtl.js';
+import type { RootState } from 'src/redux/types';
 import { renderText as renderCellText } from 'src/utils/control';
 import { handleRecordClick } from 'src/utils/record';
 
@@ -620,7 +621,7 @@ let Record = class Record extends Component<any, any> {
   }
 };
 Record = connect(
-  state => ({
+  (state: RootState) => ({
     ..._.pick(state.sheet, ['base', 'controls', 'sheetSwitchPermit', 'worksheetInfo', 'gunterView', 'isCharge']),
     ..._.pick(state.appPkg, ['permissionType']),
   }),

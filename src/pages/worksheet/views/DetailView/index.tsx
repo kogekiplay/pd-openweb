@@ -1,4 +1,4 @@
-﻿import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import cx from 'classnames';
@@ -9,6 +9,7 @@ import DragMask from 'worksheet/common/DragMask';
 import RecordInfoWrapper from 'src/pages/worksheet/common/recordInfo/RecordInfoWrapper';
 import * as baseAction from 'src/pages/worksheet/redux/actions';
 import * as detailActions from 'src/pages/worksheet/redux/actions/detailView';
+import type { RootState } from 'src/redux/types';
 import { getAdvanceSetting } from 'src/utils/control';
 import { getCardWidth } from 'src/utils/worksheet';
 import ViewEmpty from '../components/ViewEmpty';
@@ -388,7 +389,7 @@ function DetailView(props) {
 }
 
 export default connect(
-  state =>
+  (state: RootState) =>
     _.pick(state.sheet, [
       'detailView',
       'worksheetInfo',

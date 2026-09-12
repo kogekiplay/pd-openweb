@@ -2,15 +2,16 @@ import React, { Component, createRef } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
 import { func, number, shape, string } from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, MdLink, Menu, MenuItem, SvgIcon } from 'ming-ui';
 import { convertColor } from 'worksheet/common/WorkSheetLeft/WorkSheetItem';
 import { changeBoardViewData } from 'src/pages/worksheet/redux/actions/boardView';
 import { canEditApp } from 'src/pages/worksheet/redux/actions/util';
+import type { RootState } from 'src/redux/types';
 import { getTranslateInfo } from 'src/utils/app';
 import { compareProps, getIds } from '../../util';
 import { APP_GROUP_CONFIG, DEFAULT_CREATE, DEFAULT_GROUP_NAME } from '../config';
@@ -311,7 +312,7 @@ let SortableAppItem = class SortableAppItem extends Component<any, any> {
   }
 };
 SortableAppItem = connect(
-  state => state,
+  (state: RootState) => state,
   dispatch =>
     bindActionCreators(
       {

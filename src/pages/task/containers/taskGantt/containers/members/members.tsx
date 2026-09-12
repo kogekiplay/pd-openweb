@@ -1,9 +1,10 @@
-﻿import React, { Component } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { Dialog, UserHead } from 'ming-ui';
 import { dialogSelectUser } from 'ming-ui/functions';
 import ajaxRequest from 'src/api/taskCenter';
+import type { RootState } from 'src/redux/types';
 import config from '../../config/config';
 import { addMembers } from '../../redux/actions';
 import './members.less';
@@ -155,7 +156,7 @@ class Members extends Component<any, any> {
   }
 }
 
-export default connect(state => {
+export default connect((state: RootState) => {
   const { accountTasksKV } = state.task;
 
   return {

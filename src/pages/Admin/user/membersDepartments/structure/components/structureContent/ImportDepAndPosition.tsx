@@ -9,6 +9,7 @@ import { Icon } from 'ming-ui';
 import { captcha } from 'ming-ui/functions';
 import departmentController from 'src/api/department';
 import { IMPORT_EXPORT_SHOWLIST } from 'src/pages/Admin/user/membersDepartments/structure/constant';
+import type { RootState } from 'src/redux/types';
 import Config from '../../../../../config';
 import { loadDepartments, updateImportExportResult, updateImportType, updateShowExport } from '../../actions/entities';
 import UploadFile from './UploadFile';
@@ -520,7 +521,7 @@ class ImportDepAndPosition extends Component<any, any> {
   }
 }
 export default connect(
-  state => {
+  (state: RootState) => {
     const { current, entities } = state;
     const { projectId } = current;
     const { importExportType, importExportResult } = entities;

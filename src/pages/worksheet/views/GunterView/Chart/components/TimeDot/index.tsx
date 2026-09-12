@@ -5,6 +5,7 @@ import _ from 'lodash';
 import moment from 'moment';
 import styled from 'styled-components';
 import * as actions from 'worksheet/redux/actions/gunterview';
+import type { RootState } from 'src/redux/types';
 
 const TimeDotWrapper = styled.div`
   position: relative;
@@ -94,7 +95,9 @@ let MonitorTimeDot = class MonitorTimeDot extends Component<any, any> {
     );
   }
 };
-MonitorTimeDot = connect(state => ({ ..._.pick(state.sheet.gunterView, ['chartScroll']) }))(MonitorTimeDot);
+MonitorTimeDot = connect((state: RootState) => ({ ..._.pick(state.sheet.gunterView, ['chartScroll']) }))(
+  MonitorTimeDot,
+);
 let TimeDot = class TimeDot extends Component<any, any> {
   constructor(props) {
     super(props);
@@ -165,7 +168,7 @@ let TimeDot = class TimeDot extends Component<any, any> {
   }
 };
 TimeDot = connect(
-  state => ({ ..._.pick(state.sheet, ['gunterView']) }),
+  (state: RootState) => ({ ..._.pick(state.sheet, ['gunterView']) }),
   dispatch => bindActionCreators(actions, dispatch),
 )(TimeDot);
 export default TimeDot;

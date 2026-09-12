@@ -10,6 +10,7 @@ import MobileRecordCardListDialog from 'mobile/components/RecordCardListDialog';
 import RelateScanQRCode from 'src/components/Form/MobileForm/components/RelateScanQRCode.jsx';
 import NewRecord from 'src/pages/worksheet/common/newRecord/MobileNewRecord';
 import { getFilter } from 'src/pages/worksheet/common/WorkSheetFilter/util';
+import type { RootState } from 'src/redux/types';
 import { controlState } from 'src/utils/control';
 import RegExpValidator from 'src/utils/expression';
 import * as actions from './redux/actions';
@@ -434,7 +435,7 @@ class RelationAction extends Component<any, any> {
 }
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     ..._.pick(state.mobile, ['base', 'rowInfo', 'relationRow', 'relationRows', 'actionParams', 'permissionInfo']),
   }),
   dispatch =>
