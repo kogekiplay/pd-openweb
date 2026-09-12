@@ -307,92 +307,111 @@ export function loadWorksheet(worksheetId, setRequest) {
           ),
         });
         worksheetRequest = worksheetAjax.getWorksheetInfo({ ...args, resultType: undefined });
-        worksheetRequest.then(async infoRes => {
-          let queryRes;
-          infoRes.name = translateInfo.name || infoRes.name;
-          if (infoRes.isWorksheetQuery) {
-            queryRes = await worksheetAjax.getQueryBySheetId({ worksheetId }, { silent: true });
-          }
+        worksheetRequest
+          .then(async infoRes => {
+            let queryRes;
+            infoRes.name = translateInfo.name || infoRes.name;
+            if (infoRes.isWorksheetQuery) {
+              queryRes = await worksheetAjax.getQueryBySheetId({ worksheetId }, { silent: true });
+            }
 
-          if (_.get(window, 'shareState.isPublicView') || _.get(window, 'shareState.isPublicPage')) {
-            infoRes.allowAdd = false;
-          }
+            if (_.get(window, 'shareState.isPublicView') || _.get(window, 'shareState.isPublicPage')) {
+              infoRes.allowAdd = false;
+            }
 
-          if (queryRes) {
-            dispatch({
-              type: 'WORKSHEET_SEARCH_CONFIG_INIT',
-              value: formatSearchConfigs(queryRes),
-            });
-          }
-
-          window[`timeZone_${appId}`] = infoRes.appTimeZone;
-          const newControls = replaceControlsTranslateInfo(appId, worksheetId, _.get(infoRes, 'template.controls'));
-          infoRes.entityName = translateInfo.recordName || infoRes.entityName;
-          if (infoRes.advancedSetting) {
-            infoRes.advancedSetting = replaceAdvancedSettingTranslateInfo(
-              appId,
-              worksheetId,
-              res.advancedSetting || {},
-            );
-          }
-
-          if (infoRes.rules && infoRes.rules.length) {
-            infoRes.rules = replaceRulesTranslateInfo(appId, worksheetId, res.rules);
-          }
-
-          if (infoRes.views) {
-            infoRes.views.forEach(view => {
-              (view.viewControls || []).forEach(item => {
-                item.worksheetName = getTranslateInfo(appId, null, item.worksheetId).name || item.worksheetName;
+            if (queryRes) {
+              dispatch({
+                type: 'WORKSHEET_SEARCH_CONFIG_INIT',
+                value: formatSearchConfigs(queryRes),
               });
-            });
-          }
+            }
 
-          if (_.isEmpty(newControls)) {
-            return;
-          }
+            window[`timeZone_${appId}`] = infoRes.appTimeZone;
+            const newControls = replaceControlsTranslateInfo(appId, worksheetId, _.get(infoRes, 'template.controls'));
+            infoRes.entityName = translateInfo.recordName || infoRes.entityName;
+            if (infoRes.advancedSetting) {
+              infoRes.advancedSetting = replaceAdvancedSettingTranslateInfo(
+                appId,
+                worksheetId,
+                res.advancedSetting || {},
+              );
+            }
 
-          dispatch({
-            type: 'WORKSHEET_UPDATE_VIEWS',
-            views: isAIPreview && _.isEmpty(infoRes.views) && !chartId ? [...aiPreviewViews] : infoRes.views,
-          });
+            if (infoRes.rules && infoRes.rules.length) {
+              infoRes.rules = replaceRulesTranslateInfo(appId, worksheetId, res.rules);
+            }
 
-          infoRes.template.controls = newControls;
-          dispatch(updateWorksheetSomeControls(newControls));
-          dispatch({
-            type: 'WORKSHEET_UPDATE_WORKSHEETINFO',
-            info: Object.assign(
-              !chartId
-                ? infoRes
-                : {
-                    ...infoRes,
-                    views: infoRes.views.map(v => ({ ...v, viewType: 0 })),
-                  },
-            ),
-          });
-          dispatch(handleLoadOperateButtons({ worksheetInfo: infoRes }));
-          const currentView = find(infoRes.views, { viewId });
+            if (infoRes.views) {
+              infoRes.views.forEach(view => {
+                (view.viewControls || []).forEach(item => {
+                  item.worksheetName = getTranslateInfo(appId, null, item.worksheetId).name || item.worksheetName;
+                });
+              });
+            }
 
-          if (currentView) {
-            dispatch(fireWhenViewLoaded(currentView, { controls: infoRes.template.controls }));
-          }
+            if (_.isEmpty(newControls)) {
+              return;
+            }
 
-          dispatch(setViewLayout(viewId));
-          if (worksheetId) {
             dispatch({
-              type: 'WORKSHEET_PERMISSION_INIT',
-              value: infoRes.switches,
+              type: 'WORKSHEET_UPDATE_VIEWS',
+              views: isAIPreview && _.isEmpty(infoRes.views) && !chartId ? [...aiPreviewViews] : infoRes.views,
             });
-          }
 
-          dispatch({
-            type: 'WORKSHEET_UPDATE_IS_REQUESTING_RELATION_CONTROLS',
-            value: false,
+            infoRes.template.controls = newControls;
+            dispatch(updateWorksheetSomeControls(newControls));
+            dispatch({
+              type: 'WORKSHEET_UPDATE_WORKSHEETINFO',
+              info: Object.assign(
+                !chartId
+                  ? infoRes
+                  : {
+                      ...infoRes,
+                      views: infoRes.views.map(v => ({ ...v, viewType: 0 })),
+                    },
+              ),
+            });
+            dispatch(handleLoadOperateButtons({ worksheetInfo: infoRes }));
+            const currentView = find(infoRes.views, { viewId });
+
+            if (currentView) {
+              dispatch(fireWhenViewLoaded(currentView, { controls: infoRes.template.controls }));
+            }
+
+            dispatch(setViewLayout(viewId));
+            if (worksheetId) {
+              dispatch({
+                type: 'WORKSHEET_PERMISSION_INIT',
+                value: infoRes.switches,
+              });
+            }
+
+            dispatch({
+              type: 'WORKSHEET_UPDATE_IS_REQUESTING_RELATION_CONTROLS',
+              value: false,
+            });
+          })
+          // 这条内层链必须自己兜住 catch：上面第 309 行【重新赋值】了 worksheetRequest，
+          // 于是下一次进工作表时 fetchSheet 开头那句 worksheetRequest.abort() 打的是
+          // 【这个】请求。它既没有被 return 进外层链、外层的 .catch 也就接不到，
+          // 被 abort 后直接变成 "Uncaught (in promise) {errorCode: 1,
+          // errorMessage: '请求被取消'}" 刷在控制台。
+          // errorCode 1 = 主动取消（见 src/common/global.ts:424 的 textStatus === 'abort'），
+          // 是预期行为，不该报；其余错误仍标记初始化失败。
+          .catch(err => {
+            if (get(err, 'errorCode') !== 1) {
+              dispatch({
+                type: 'WORKSHEET_INIT_FAIL',
+              });
+            }
           });
-        });
       })
       .catch(err => {
-        if (!get(err, 'errorCode') === 1) {
+        // 原来写的是 `!get(err, 'errorCode') === 1`，按 (!errorCode) === 1 解析 ——
+        // 布尔值永远不等于 1，整个条件【恒为 false】，等于任何错误下
+        // WORKSHEET_INIT_FAIL 都从不派发，页面只会一直停在加载态。
+        // 本意是"不是取消才算失败"。
+        if (get(err, 'errorCode') !== 1) {
           dispatch({
             type: 'WORKSHEET_INIT_FAIL',
           });
