@@ -322,7 +322,7 @@ export default class ValidateInfoCon extends Component<any, any> {
                 <InputCom
                   autoFocus
                   type="text"
-                  ref={ele => (this.email = ele)}
+                  ref={ele => { this.email = ele; }}
                   placeholder={_l('请输入邮箱地址')}
                   className="inputBox txtEmail w100"
                   maxLength={64}
@@ -335,7 +335,7 @@ export default class ValidateInfoCon extends Component<any, any> {
                 <InputCom
                   type="text"
                   autoFocus
-                  ref={ele => (this.mobile = ele)}
+                  ref={ele => { this.mobile = ele; }}
                   placeholder={_l('请输入手机号')}
                   className="inputBox txtMobilePhone w100 box-sizing"
                   maxLength={64}
@@ -348,7 +348,7 @@ export default class ValidateInfoCon extends Component<any, any> {
               <div className="flexRow mBottom20">
                 <InputCom
                   type="text"
-                  ref={ele => (this.verifyCode = ele)}
+                  ref={ele => { this.verifyCode = ele; }}
                   placeholder={_l('请输入验证码')}
                   className="mRight15 inputBox txtVerifyCode flex"
                   maxLength={6}

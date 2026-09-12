@@ -326,7 +326,7 @@ export default class LoginLog extends Component<any, any> {
           </div>
         </div>
         <div className="orgManagementContent pTop0 flexColumn">
-          <div ref={ele => (this.seatchWrap = ele)}>
+          <div ref={ele => { this.seatchWrap = ele; }}>
             <SearchWrap
               showExpandBtn={true}
               hideReset={true}

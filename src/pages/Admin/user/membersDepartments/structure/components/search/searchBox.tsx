@@ -145,13 +145,13 @@ class SearchBox extends Component<any, any> {
         />
       ) : null;
     return (
-      <div className="searchContainer Relative" ref={box => (this.box = box)}>
+      <div className="searchContainer Relative" ref={box => { this.box = box; }}>
         <span className="icon-search btnSearch textSecondary" title={_l('搜索')} />
         <input
           name="searchSearchBox"
           autoComplete="off"
           defaultValue={searchValue}
-          ref={input => (this.input = input)}
+          ref={input => { this.input = input; }}
           onChange={e => {
             this.setState({ searchValue: e.target.value });
             if (this.ajaxObj && this.ajaxObj.abort) {

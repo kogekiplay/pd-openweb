@@ -681,7 +681,15 @@ export default function Sider(props) {
           index={i}
           className="mTop10"
           controls={controls}
-          onChange={({ type, value, forceInLine = false, name = '' } = {}) => {
+          // 形参必须显式标类型：`= {}` 默认值让 TS 只从【带默认值的属性】推形状，
+          // 推出来是 { forceInLine?: boolean; name?: string }，没有默认值的 type / value
+          // 不在其中，于是 TS2339。类型取自下面那行兜底值 { forceInLine, name, type: 2, value: '' }。
+          onChange={({
+            type,
+            value,
+            forceInLine = false,
+            name = '',
+          }: { type?: number; value?: string; forceInLine?: boolean; name?: string } = {}) => {
             const newShowTexts = [...showTexts];
             newShowTexts[i] = { type, value, forceInLine, name };
             onUpdate({

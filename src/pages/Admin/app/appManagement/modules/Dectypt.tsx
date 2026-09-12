@@ -133,7 +133,7 @@ export default class Dectypt extends Component<any, any> {
           <img className="uploadImg" src={file.name ? importActiveImg : importDisabledImg}></img>
           <div className={cx('textDisabled', { hide: file.name })}>{_l('请选择.mdy格式的应用文件')}</div>
           <QiniuUpload
-            ref={ele => (this.uploaderWrap = ele)}
+            ref={ele => { this.uploaderWrap = ele; }}
             className={cx('upgradeAppUpload mTop24', { hide: file.name })}
             options={{
               filters: {

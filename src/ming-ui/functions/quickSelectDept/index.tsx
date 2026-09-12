@@ -108,8 +108,8 @@ export function DeptSelect(props) {
     selectFn = () => {},
   } = props;
 
-  const inputRef = useRef();
-  const conRef = useRef();
+  const inputRef = useRef<any>(undefined);
+  const conRef = useRef<any>(undefined);
   const [
     {
       loading,

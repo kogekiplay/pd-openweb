@@ -98,7 +98,7 @@ class WorkflowInfo extends Component<any, any> {
                 name="workflowSettingsWorkflowInfo"
                 autoComplete="off"
                 type="text"
-                ref={name => (this.name = name)}
+                ref={name => { this.name = name; }}
                 className="hoverBorderColorPrimary borderColorPrimary"
                 maxLength={30}
                 autoFocus

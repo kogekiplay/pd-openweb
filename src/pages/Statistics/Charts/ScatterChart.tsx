@@ -616,7 +616,7 @@ export default class extends Component<any, any> {
             </Tooltip>
           </div>
         ) : null}
-        <div className={displaySetup.showTotal ? 'showTotalHeight' : 'h100'} ref={el => (this.chartEl = el)}></div>
+        <div className={displaySetup.showTotal ? 'showTotalHeight' : 'h100'} ref={el => { this.chartEl = el; }}></div>
       </div>)
     );
   }

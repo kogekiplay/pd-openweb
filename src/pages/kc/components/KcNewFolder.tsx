@@ -60,7 +60,7 @@ export default class KcNewFolder extends Component<any, any> {
         <input
           name="kcNewFolder1"
           autoComplete="off"
-          ref={input => (this.input = input)}
+          ref={input => { this.input = input; }}
           type="text"
           className="addFolderName flex"
           value={folderName}
@@ -80,7 +80,7 @@ export default class KcNewFolder extends Component<any, any> {
         <input
           name="kcNewFolder2"
           autoComplete="off"
-          ref={input => (this.input = input)}
+          ref={input => { this.input = input; }}
           type="text"
           className="addFolderName thumbnailName"
           value={folderName}

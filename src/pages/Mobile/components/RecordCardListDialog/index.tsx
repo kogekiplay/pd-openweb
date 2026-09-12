@@ -637,7 +637,7 @@ export default class RecordCardListDialog extends Component<any, any> {
               autoComplete="off"
               className="w100"
               type="search"
-              ref={node => (this.inputRef = node)}
+              ref={node => { this.inputRef = node; }}
               placeholder={_l('搜索%0', this.title)}
               onChange={e => {
                 if (this.isOnComposition) return;

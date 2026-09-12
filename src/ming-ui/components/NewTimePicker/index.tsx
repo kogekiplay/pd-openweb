@@ -141,7 +141,7 @@ class Time extends Component<any, any> {
     const classNames = classList.join(' ');
 
     return (
-      <div className={classNames} ref={root => (this.root = root)}>
+      <div className={classNames} ref={root => { this.root = root; }}>
         <button
           ref={button => {
             this.button = button;

@@ -328,7 +328,7 @@ export default function ChildTableFlatComp(props) {
               'noBoxShadow allowOverflow': isEdit && !disabled && isExpand,
             })}
             key={rowid}
-            ref={el => (rowRefs.current[index] = el)}
+            ref={el => { rowRefs.current[index] = el; }}
             style={{ scrollMarginTop: '10px' }}
           >
             <div
@@ -407,7 +407,7 @@ export default function ChildTableFlatComp(props) {
                     disabledFunctions={isEdit ? ['controlRefresh'] : []}
                     ignoreLock={ignoreLock}
                     isDraft={isDraft}
-                    ref={el => (customWidgetRefs.current[index] = el)}
+                    ref={el => { customWidgetRefs.current[index] = el; }}
                     recordId={rowid}
                     data={showFields.map(c => ({
                       ...c,

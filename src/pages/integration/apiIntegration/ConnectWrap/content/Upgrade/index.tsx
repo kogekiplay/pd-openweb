@@ -156,7 +156,7 @@ function Upgrade(props) {
     url: '',
     upgradeId: '',
   });
-  const uploaderWrap = useRef();
+  const uploaderWrap = useRef<any>(undefined);
 
   useEffect(() => {
     () => destroyUploadWrap();

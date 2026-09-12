@@ -255,10 +255,10 @@ export default function Slider(props) {
   const numberWidth = getNumberMaxWidth(max, step, showAsPercent);
   const disabled = props.disabled || readonly;
   const cache = useRef({});
-  const barRef = useRef();
-  const dragRef = useRef();
-  const contentRef = useRef();
-  const inputRef = useRef();
+  const barRef = useRef<any>(undefined);
+  const dragRef = useRef<any>(undefined);
+  const contentRef = useRef<any>(undefined);
+  const inputRef = useRef<any>(undefined);
   const [tempValue, setTempValue] = useState();
   const [numberIsFocusing, setNumberIsFocusing] = useState();
   const [isDragging, setIsDragging] = useState();

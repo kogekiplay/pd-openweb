@@ -924,7 +924,7 @@ export default class AppAndWorksheetLog extends Component<any, any> {
                 />
               </Box>
             )}
-            <div ref={ele => (this.seatchWrap = ele)}>
+            <div ref={ele => { this.seatchWrap = ele; }}>
               <SearchWrap
                 projectId={projectId}
                 searchList={this.getConditions()}
@@ -986,7 +986,7 @@ export default class AppAndWorksheetLog extends Component<any, any> {
               <PageTableCon
                 className="logsTable"
                 paginationInfo={{ pageIndex, pageSize: PAGE_SIZE }}
-                ref={node => (this.tableWrap = node)}
+                ref={node => { this.tableWrap = node; }}
                 loading={loading}
                 columns={this.columns}
                 dataSource={dataSource}

@@ -135,7 +135,7 @@ class CircleProgress extends Component<any, any> {
               strokeWidth={strokeWidth}
             />
             <circle
-              ref={circlePath => (this._circlePath = circlePath)}
+              ref={circlePath => { this._circlePath = circlePath; }}
               r={(diameter - strokeWidth) / 2}
               cy={diameter / 2}
               cx={diameter / 2}

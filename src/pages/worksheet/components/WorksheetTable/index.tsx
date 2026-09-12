@@ -315,7 +315,7 @@ function WorksheetTable(props, ref) {
     () => defaultRuleState.ruleControlAdvancedSettings,
   );
   const [xIsScroll, setXIsScroll] = useState(false);
-  const tableRef = useRef();
+  const tableRef = useRef<any>(undefined);
   window.tableRef = tableRef;
   const handleUpdateRuleState = useCallback(updates => {
     const { fieldPermissions = {}, ruleControlAdvancedSettings: adv = {}, touchedRowIds = [] } = updates || {};

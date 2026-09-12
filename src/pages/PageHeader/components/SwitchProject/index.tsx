@@ -81,7 +81,7 @@ function SwitchProject() {
   const request = getRequest();
   const projectId = request.projectId;
   const projects = md.global.Account.projects;
-  const createRef = useRef();
+  const createRef = useRef<any>(undefined);
   const [currentProject, setCurrentProject] = useState({});
   // 必须给初值 false：不给的话状态类型被推成 undefined，setX(true/false) 全是 TS2345。
   // 运行时等价——每个传 popupVisible 的站点都把 onPopupVisibleChange 接回了 state

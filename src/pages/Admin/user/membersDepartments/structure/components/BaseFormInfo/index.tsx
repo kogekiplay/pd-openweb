@@ -574,7 +574,7 @@ export default class BaseFormInfo extends Component<any, any> {
           </div>
           <SelectWrap
             disabled={typeCursor === 2}
-            ref={select => (this.select = select)}
+            ref={select => { this.select = select; }}
             className={cx('w100 mdAntSelect', { noBorder: typeCursor === 2 })}
             showSearch
             allowClear={type === 'multiple' ? departmentItem.jobIds.length > 0 : jobIds.length > 0}

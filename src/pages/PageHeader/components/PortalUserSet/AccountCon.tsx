@@ -337,7 +337,7 @@ class TelCon extends React.Component<any, any> {
         autoComplete="off"
         type="text"
         className={cx('telInput')}
-        ref={mobile => (this.mobile = mobile)}
+        ref={mobile => { this.mobile = mobile; }}
         onBlur={this.onChangeAccount}
       />
     );
@@ -373,7 +373,7 @@ class TelCon extends React.Component<any, any> {
               maxLength={'4'}
               className="loginInput txtLoginCode"
               value={this.props.code}
-              ref={code => (this.code = code)}
+              ref={code => { this.code = code; }}
               onChange={e => {
                 setCode(e.target.value.replace(/[^\d]/g, ''));
               }}

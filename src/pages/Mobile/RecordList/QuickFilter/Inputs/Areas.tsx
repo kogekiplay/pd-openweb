@@ -55,7 +55,7 @@ const AreaItem = styled.span`
 export default function Areas(props) {
   const { values = [], control, isMultiple, onChange = () => {}, projectId } = props;
   const { chooserange = 'CN', commcountries } = control.advancedSetting;
-  const tempArea = useRef();
+  const tempArea = useRef<any>(undefined);
 
   const deleteCurrentArea = item => {
     onChange({ values: values.filter(v => v.id !== item.id) });

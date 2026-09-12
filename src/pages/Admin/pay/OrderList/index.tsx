@@ -105,7 +105,7 @@ export default class Merchant extends Component<any, any> {
               相对化之后几条会撞在一起。改成直接按当前 Tab 渲染 ——
               currentTab 本来就由组件自己从 URL 维护。 */}
           <ActiveComp
-            ref={ele => (this.com = ele)}
+            ref={ele => { this.com = ele; }}
             projectId={Config.projectId}
             featureType={featureType}
             changeTab={this.changeTab}

@@ -34,8 +34,8 @@ export function UserSelector(props) {
     selectCb = () => {}, // 选中回调
     onSelect = () => {}, // 选中回调
   } = props;
-  const conRef = useRef();
-  const scrollRef = useRef();
+  const conRef = useRef<any>(undefined);
+  const scrollRef = useRef<any>(undefined);
   const [activeTab, setActiveTab] = useState(
     !_.isUndefined(tabIndex) ? tabIndex : tabType === 1 || tabType === 3 ? 0 : 1,
   );

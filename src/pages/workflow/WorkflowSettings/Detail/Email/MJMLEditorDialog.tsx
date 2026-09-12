@@ -150,7 +150,7 @@ export default function MJMLEditorDialog({
   const [previewLoading, setPreviewLoading] = useState(!html);
   const [themeVersion, setThemeVersion] = useState(0);
   const latestRequest = useRef(0);
-  const editorRef = useRef();
+  const editorRef = useRef<any>(undefined);
   const previewTheme = useMemo(() => getMjmlPreviewTheme(), [themeVersion]);
 
   const convert = source => {

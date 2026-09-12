@@ -33,7 +33,7 @@ export default function FormExtend(props) {
   const isloading = _.isEmpty(worksheetInfo);
   const hasCharge = [2, 4, 6].includes(roleType); //0：非成员 1：表负责人（弃用） 2：管理员 3：成员 4:开发者 6:开发者+运营者
   const payConfigRef = createRef();
-  const invoiceConfigRef = useRef();
+  const invoiceConfigRef = useRef<any>(undefined);
   const featureType = !isloading && !hasCharge ? false : getFeatureStatus(projectId, VersionProductType.PAY);
 
   // 检查 支付/开票 配置信息是否保存

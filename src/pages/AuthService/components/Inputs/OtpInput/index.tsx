@@ -287,7 +287,7 @@ const OtpInput = forwardRef(function OtpInput(props, ref) {
             onFocus={() => handleFocus(index)}
             onKeyDown={e => handleKeyDown(e, index)}
             onPaste={e => handlePaste(e, index)}
-            ref={el => (inputRefs.current[index] = el)}
+            ref={el => { inputRefs.current[index] = el; }}
             autoFocus={index === 0}
             autoComplete={index === 0 ? 'one-time-code' : 'off'}
             inputMode="numeric"

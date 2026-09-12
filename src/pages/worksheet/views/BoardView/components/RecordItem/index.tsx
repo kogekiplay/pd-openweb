@@ -250,7 +250,7 @@ function SortableRecordItem(props) {
 
   return (
     <div
-      ref={drag}
+      ref={el => { drag(el); }}
       onClick={() => {
         handleRecordClick(currentView, safeParse(rawRow), () => {
           if (!recordInfoVisible) {

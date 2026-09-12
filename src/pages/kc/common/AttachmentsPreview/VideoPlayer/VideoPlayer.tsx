@@ -62,7 +62,7 @@ class VideoPlayer extends Component<any, any> {
       <div className="videoPlayer">
         <video
           className="videoContent"
-          ref={content => (this.videoContent = content)}
+          ref={content => { this.videoContent = content; }}
           preload="metadata"
           controlsList="nodownload"
           onContextMenu={e => {

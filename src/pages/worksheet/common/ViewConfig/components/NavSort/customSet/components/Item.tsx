@@ -12,7 +12,7 @@ import './index.less';
 export default function (props) {
   const { setting } = props;
   const $ref = useRef(null);
-  const valueRef = useRef();
+  const valueRef = useRef<any>(undefined);
 
   useEffect(() => {
     valueRef.current = setting;

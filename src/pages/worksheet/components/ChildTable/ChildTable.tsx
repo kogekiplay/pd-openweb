@@ -1898,7 +1898,7 @@ class ChildTable extends React.Component<any, any> {
     );
     return (
       <ChildTableContext.Provider value={{ rows }}>
-        <div className="childTableCon" ref={con => (this.childTableCon = con)}>
+        <div className="childTableCon" ref={con => { this.childTableCon = con; }}>
           {!_.isEmpty(cellErrors) && (
             <span className="errorTip ellipsis" style={isMobile ? { top: -31 } : {}}>
               {' '}

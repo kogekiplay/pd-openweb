@@ -57,7 +57,7 @@ export default class DepartmentInput extends Component<any, any> {
         ) : (
           <OtherFieldList {...this.props} removeItem={this.removeItem} onClick={this.handleClick} />
         )}
-        <SelectOtherField {...this.props} ref={con => (this.$wrap = con)} />
+        <SelectOtherField {...this.props} ref={con => { this.$wrap = con; }} />
       </DynamicValueInputWrap>
     );
   }

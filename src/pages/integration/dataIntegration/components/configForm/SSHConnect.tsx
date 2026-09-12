@@ -160,8 +160,8 @@ const DialogWrapper = styled.div`
 export default function SSHConnect(props) {
   const { data = {}, onChange, projectId, setSubmitDisabled, disabled } = props;
   const [sshOptions, setSshOptions] = useState([]);
-  const sshSelectRef = useRef();
-  const authTypeRef = useRef();
+  const sshSelectRef = useRef<any>(undefined);
+  const authTypeRef = useRef<any>(undefined);
   const [addDialogVisible, setAddDialogVisible] = useState(false);
   const [errorInfo, setErrorInfo] = useState([]);
   const [sshFormData, setSshFormData] = useSetState({ authType: 0 });

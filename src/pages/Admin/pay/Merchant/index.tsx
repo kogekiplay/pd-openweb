@@ -80,7 +80,7 @@ export default class Merchant extends Component<any, any> {
           })}
         >
           <MerchantCom
-            ref={ele => (this.com = ele)}
+            ref={ele => { this.com = ele; }}
             {...params}
             featureType={featureType}
             isCreate={iscreate}

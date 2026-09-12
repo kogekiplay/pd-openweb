@@ -76,7 +76,13 @@ function ErrorPage({ isSeriousError, errorData = {} }) {
   );
 }
 
-function ErrorBoundary({ children, isSeriousError = false, fallback }) {
+// fallback 必须显式写 `= undefined`，不能只靠下面的 propTypes 标它可选。
+// @types/react 18 的 JSX.LibraryManagedAttributes 会读 propTypes
+// （MergePropTypes<P, InferProps<typeof propTypes>>），PropTypes.func 不带
+// .isRequired 于是推成可选；@types/react 19 把 propTypes 从类型系统里整个删掉了，
+// 只剩解构推断 —— 没默认值就是必填，12 个 <ErrorBoundary> 调用点全报 TS2741。
+// 运行时没有任何变化：不传时本来就是 undefined，函数体里走的是 fallback ? … : …。
+function ErrorBoundary({ children, isSeriousError = false, fallback = undefined }) {
   return (
     <Sentry.ErrorBoundary
       fallback={errorData =>

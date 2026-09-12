@@ -14,8 +14,8 @@ export default function RoleItem(props) {
   const [isMembersOverflow, setIsMembersOverflow] = useState(false);
   const [isAuthOverflow, setIsAuthOverflow] = useState(false);
   const { isHrVisible, isSuperAdmin, projectStatus } = getCurrentProject(projectId, true);
-  const membersRef = useRef();
-  const authRef = useRef();
+  const membersRef = useRef<any>(undefined);
+  const authRef = useRef<any>(undefined);
 
   useEffect(() => {
     setIsMembersOverflow(membersRef.current && membersRef.current.scrollHeight > 40);

@@ -150,7 +150,7 @@ class TimePicker extends Component<any, any> {
         placeholder={placeholder}
         onClick={this.handleFocus}
         className="TimePicker-input hoverColorPrimary hoverBorderColorPrimary"
-        ref={timepicker => (this._timepicker = timepicker)}
+        ref={timepicker => { this._timepicker = timepicker; }}
       />
     );
   };

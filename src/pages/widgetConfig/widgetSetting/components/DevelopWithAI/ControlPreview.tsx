@@ -22,7 +22,7 @@ const Con = styled.div`
 `;
 
 export default function ControlPreview({
-  className,
+  className = undefined,
   controlName,
   runFlag,
   currentControlId,

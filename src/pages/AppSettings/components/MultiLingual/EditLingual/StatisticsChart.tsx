@@ -14,7 +14,7 @@ export default function StatisticsChart(props) {
   const [loading, setLoading] = useState(true);
   const [reportList, setReportList] = useState([]);
   const [searchValue, setSearchValue] = useState('');
-  const scrollViewRef = useRef();
+  const scrollViewRef = useRef<any>(undefined);
 
   useEffect(() => {
     setLoading(true);

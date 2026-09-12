@@ -37,8 +37,8 @@ const Footer = styled.div`
 `;
 
 const SignatureComp = ({ disabled, scanId, scanInfo, onComplete = () => {} }) => {
-  const signatureRef = useRef();
-  const wrapRef = useRef();
+  const signatureRef = useRef<any>(undefined);
+  const wrapRef = useRef<any>(undefined);
   const [isUploading, setIsUploading] = useState(false);
   const [started, setStarted] = useState(false);
   const [hideCanvas, setHideCanvas] = useState(false);

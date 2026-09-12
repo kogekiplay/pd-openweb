@@ -144,7 +144,7 @@ class PositionInfo extends Component<any, any> {
                   name="componentPositionInfo1"
                   autoComplete="off"
                   defaultValue={searchValue}
-                  ref={input => (this.input = input)}
+                  ref={input => { this.input = input; }}
                   onChange={e => {
                     this.props.updateSearchValue(e.target.value);
                     if (this.ajaxObj && this.ajaxObj.abort) {

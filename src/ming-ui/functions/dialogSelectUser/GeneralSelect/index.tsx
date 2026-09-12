@@ -1678,7 +1678,7 @@ export default class GeneraSelect extends Component<any, any> {
         <ScrollView
           className="GSelect-container"
           onScrollEnd={this.updateEvent.bind(this)}
-          ref={scrollView => (this.scrollView = scrollView)}
+          ref={scrollView => { this.scrollView = scrollView; }}
         >
           {this.renderContent()}
         </ScrollView>

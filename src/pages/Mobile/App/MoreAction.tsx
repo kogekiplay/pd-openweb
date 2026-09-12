@@ -66,9 +66,9 @@ export default function MoreAction(props) {
   const [langList, setLangList] = useState({});
   const [originalLang, setOriginalLang] = useState('');
   const currentAppIdRef = useRef(detail.id);
-  const appInfoPromiseRef = useRef();
-  const roleSettingPromiseRef = useRef();
-  const langListPromiseRef = useRef();
+  const appInfoPromiseRef = useRef<any>(undefined);
+  const roleSettingPromiseRef = useRef<any>(undefined);
+  const langListPromiseRef = useRef<any>(undefined);
 
   const handleLanguageClose = () => {
     setLanguageVisible(false);

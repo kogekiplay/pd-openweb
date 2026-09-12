@@ -177,7 +177,7 @@ class EditBox extends React.Component<any, any> {
           }
           getPopupContainer={() => this.addField}
         >
-          <div className="addField" ref={con => (this.addField = con)}>
+          <div className="addField" ref={con => { this.addField = con; }}>
             <Icon icon="plus" className="mRight8" />
             {_l('字段')}
           </div>
@@ -395,7 +395,7 @@ class EditBox extends React.Component<any, any> {
           )}
           getPopupContainer={() => this.addAction}
         >
-          <div className="addCondition" ref={con => (this.addAction = con)}>
+          <div className="addCondition" ref={con => { this.addAction = con; }}>
             <Icon icon="plus" className="mRight8" />
             {_l('添加动作')}
           </div>

@@ -196,7 +196,7 @@ export default function CarouselPreview(props) {
   const [previewRecord, setPreviewRecord] = useState({});
   const [currentIndex, setCurrentIndex] = useState(0);
   const [code, setCode] = useState(0);
-  const contentRef = useRef();
+  const contentRef = useRef<any>(undefined);
   const isMobile = browserIsMobile();
 
   const { worksheetId, viewId, image, count, title, subTitle, url } = componentConfig;

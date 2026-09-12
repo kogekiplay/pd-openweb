@@ -735,14 +735,14 @@ export class CountryLayer extends Component<any, any> {
             <div className="flexRow valignWrapper h100 justifyContent textSecondary Font16">
               {_l('海外地区暂不支持')}
             </div>
-            <div className="hide" ref={el => (this.chartEl = el)} />
+            <div className="hide" ref={el => { this.chartEl = el; }} />
           </Fragment>
         ) : (
           <Fragment>
             <div
               id="countryLayerChartEl"
               className={displaySetup.showTotal ? 'showTotalHeight Relative' : 'h100'}
-              ref={el => (this.chartEl = el)}
+              ref={el => { this.chartEl = el; }}
             />
             {!_.isEmpty(path) && (
               <PathWrapper className="flexRow valignWrapper card">

@@ -446,6 +446,6 @@ export default class LineChart extends React.Component<any, any> {
     this.chart.render();
   };
   render() {
-    return <div className="w100 h100" ref={ele => (this.lineChartEle = ele)}></div>;
+    return <div className="w100 h100" ref={ele => { this.lineChartEle = ele; }}></div>;
   }
 }

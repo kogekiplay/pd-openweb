@@ -169,7 +169,7 @@ class MultipleDropdown extends Component<any, any> {
     const classNames = classList.join(' ');
 
     return (
-      <div className={cx(classNames, this.props.className || '')} ref={root => (this.root = root)}>
+      <div className={cx(classNames, this.props.className || '')} ref={root => { this.root = root; }}>
         <button
           ref={button => {
             this.button = button;

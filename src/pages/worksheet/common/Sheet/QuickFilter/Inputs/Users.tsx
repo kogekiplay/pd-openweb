@@ -80,7 +80,7 @@ export default function Users(props) {
   const cache = useRef({ values });
   const { shownullitem, nullitemname, navshow, navfilters } = advancedSetting;
   const [active, setActive] = useState();
-  const conRef = useRef();
+  const conRef = useRef<any>(undefined);
   const tabType = getTabTypeBySelectUser(props.control);
   let staticAccounts = [];
 

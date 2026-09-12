@@ -118,7 +118,7 @@ export default function FilterDetail(props) {
   const isNew = filter.id.startsWith('new');
   const saveButtonDisabled = !(isNew || needSave) || !canSave;
   const { conditionsGroups = [] } = filter;
-  const scrollRef = useRef();
+  const scrollRef = useRef<any>(undefined);
   const [foldedMap, setFoldedMap] = useState({});
   const { projectId, appId, worksheetId, isCharge } = base;
   const featureType = supportGroup ? getFeatureStatus(projectId, VersionProductType.filterGroup) : '';
@@ -253,7 +253,9 @@ export default function FilterDetail(props) {
                 onAdd={control => {
                   actions.addCondition(control, groupIndex, from);
                 }}
-                onChange={(value = {}, conditionIndex) => {
+                // `= {}` 默认值让 TS 把 value 推成 {}，下面读 value.folded 就报 TS2339。
+                // 这里只需要 folded 有类型，其余字段原样透传给 actions.updateCondition。
+                onChange={(value: { folded?: boolean } = {}, conditionIndex) => {
                   actions.updateCondition(value, groupIndex, conditionIndex);
                   const condition = conditionsGroup.conditions[conditionIndex];
 

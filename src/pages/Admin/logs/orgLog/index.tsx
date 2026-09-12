@@ -297,7 +297,7 @@ export default class orgLog extends React.Component<any, any> {
             </Tooltip>
           </div>
         </div>
-        <div ref={ele => (this.seatchWrap = ele)} className="mLeft32 mRight32">
+        <div ref={ele => { this.seatchWrap = ele; }} className="mLeft32 mRight32">
           <SearchWrap
             showExpandBtn={true}
             projectId={projectId}
@@ -356,7 +356,7 @@ export default class orgLog extends React.Component<any, any> {
           <PageTableCon
             className="logsTable"
             paginationInfo={{ pageIndex, pageSize: 50 }}
-            ref={node => (this.tableWrap = node)}
+            ref={node => { this.tableWrap = node; }}
             loading={isLoading}
             columns={this.columns}
             dataSource={list}

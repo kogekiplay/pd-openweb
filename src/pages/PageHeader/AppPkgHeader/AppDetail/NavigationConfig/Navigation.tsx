@@ -238,7 +238,7 @@ const Group = props => {
               hide: hideAppSection,
             })}
           >
-            <div ref={drag} onMouseDown={() => setChildrenVisible(false)}>
+            <div ref={el => { drag(el); }} onMouseDown={() => setChildrenVisible(false)}>
               <Icon icon="drag" className="textTertiary pointer operateIcon mRight5" />
             </div>
             <Icon
@@ -285,7 +285,7 @@ const Group = props => {
               activeGroup: collectProps.isOver && activeGroup,
             })}
           >
-            <div ref={drag} onMouseDown={() => setChildrenVisible(false)}>
+            <div ref={el => { drag(el); }} onMouseDown={() => setChildrenVisible(false)}>
               <Icon icon="drag" className="textTertiary pointer operateIcon mRight0" />
             </div>
             <div

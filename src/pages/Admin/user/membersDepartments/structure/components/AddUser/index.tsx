@@ -359,7 +359,7 @@ export default class AddUser extends Component<any, any> {
       (<Fragment>
         {_.isEmpty(user) ? (
           <TextInput
-            ref={ele => (this.userNameInput = ele)}
+            ref={ele => { this.userNameInput = ele; }}
             label={_l('姓名')}
             field={'userName'}
             value={userName}
@@ -633,7 +633,7 @@ export default class AddUser extends Component<any, any> {
                 <div className="formInfoWrap flex">
                   {this.renderBase()}
                   <BaseFormInfo
-                    ref={ele => (this.baseFormInfo = ele)}
+                    ref={ele => { this.baseFormInfo = ele; }}
                     typeCursor={typeCursor}
                     actType={actType}
                     isUploading={isUploading}

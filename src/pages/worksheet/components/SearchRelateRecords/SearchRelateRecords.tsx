@@ -72,7 +72,7 @@ function Search(props) {
   const { enableClear = true, onChange = () => {} } = props;
   const [value, setValue] = useState('');
   const [focus, setFocus] = useState(false);
-  const inputRef = useRef();
+  const inputRef = useRef<any>(undefined);
   useEffect(() => {
     inputRef.current.focus();
   }, []);
@@ -128,7 +128,7 @@ export default function SearchRelateRecords(props) {
     onNewRecord = () => {},
     ...rest
   } = props;
-  const conRef = useRef();
+  const conRef = useRef<any>(undefined);
   const [keyWords, setKeyWords] = useState('');
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(!onlySearchLoad);

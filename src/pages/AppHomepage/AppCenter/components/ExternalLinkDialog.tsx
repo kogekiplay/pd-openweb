@@ -149,8 +149,8 @@ export default function ExternalLinkDialog(props) {
   const [appInfo, setAppInfo] = useSetState(
     isEdit ? _.omit(record, ['id']) : { pcDisplay: false, webMobileDisplay: true, appDisplay: true },
   );
-  const tagTextAreaRef = useRef();
-  const inputRef = useRef();
+  const tagTextAreaRef = useRef<any>(undefined);
+  const inputRef = useRef<any>(undefined);
 
   useEffect(() => {
     if (record && record.urlTemplate) {

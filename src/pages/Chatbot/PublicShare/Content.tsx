@@ -27,7 +27,7 @@ const MessageListHeader = styled.div`
   }
 `;
 
-export default function Content({ isSmallMode, title, updateTime, chatbotId, conversationId }) {
+export default function Content({ isSmallMode = undefined, title, updateTime, chatbotId, conversationId }) {
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState([]);
   const loadMessage = useCallback(() => {

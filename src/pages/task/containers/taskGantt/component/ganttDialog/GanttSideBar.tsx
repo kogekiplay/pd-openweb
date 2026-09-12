@@ -64,7 +64,7 @@ export default class GanttSideBar extends Component<any, any> {
     return (
       <div className="ganttSideBarWrap flexColumn">
         <header>{_l('任务列表')}</header>
-        <div className="taskListWrap" ref={node => (this.taskList = node)}>
+        <div className="taskListWrap" ref={node => { this.taskList = node; }}>
           {this.renderTaskList(data)}
         </div>
       </div>

@@ -4,12 +4,12 @@ import cx from 'classnames';
 export default ({
   className,
   IconElement,
-  nodeId,
+  nodeId = undefined,
   nodeName,
   nodeDesc,
   isComplete,
-  isCopy,
-  hasError,
+  isCopy = undefined,
+  hasError = undefined,
   isActive,
   onClick = () => {},
 }) => {

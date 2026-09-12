@@ -215,7 +215,7 @@ export default class BaseColumnHead extends React.Component<any, any> {
           )}
         </div>
         {!disabled && canDrag && (
-          <span ref={drag => (this.drag = drag)} title={_l('双击自适应宽度')} className="resizeDrag Hand"></span>
+          <span ref={drag => { this.drag = drag; }} title={_l('双击自适应宽度')} className="resizeDrag Hand"></span>
         )}
       </div>
     );

@@ -548,7 +548,7 @@ export default class extends Component<any, any> {
             )}
           </div>
         )}
-        <div className={dualAxesSwitchChecked ? 'showTotalHeight' : 'h100'} ref={el => (this.chartEl = el)}></div>
+        <div className={dualAxesSwitchChecked ? 'showTotalHeight' : 'h100'} ref={el => { this.chartEl = el; }}></div>
       </div>)
     );
   }

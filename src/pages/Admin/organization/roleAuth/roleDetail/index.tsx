@@ -81,7 +81,7 @@ export default function RoleDetail(props) {
   });
   const [loading, setLoading] = useState(false);
   const [nameEditing, setNameEditing] = useState(false);
-  const inputRef = useRef();
+  const inputRef = useRef<any>(undefined);
   const { isHrVisible, isSuperAdmin } = getCurrentProject(projectId);
   const isRoleSuperAdmin = role.isSuperAdmin;
 

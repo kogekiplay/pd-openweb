@@ -86,7 +86,7 @@ class RefuseUserJoinDia extends React.Component<any, any> {
           type="textarea"
           className="test-textarea mTop10"
           value={refuseMessage || ''}
-          ref={area => (this.area = area)}
+          ref={area => { this.area = area; }}
           onChange={e => {
             this.setState({
               refuseMessage: e.target.value,

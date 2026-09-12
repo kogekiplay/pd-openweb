@@ -290,7 +290,7 @@ export default function RecordOperate(props) {
   const showEditForm = _.includes(shows, 'editform') && isCharge;
   const showOpenInNew = _.includes(shows, 'openinnew') && !isManageView;
   const showLock = _.includes(shows, 'lock') && isAdmin;
-  const customButtonActive = useRef();
+  const customButtonActive = useRef<any>(undefined);
   const [customButtons, setCustomButtons] = useState([]);
   const [customButtonLoading, setCustomButtonLoading] = useState();
   const [popupVisible, setPopupVisible] = useState(false);

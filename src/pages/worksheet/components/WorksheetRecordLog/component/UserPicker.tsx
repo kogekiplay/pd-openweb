@@ -51,7 +51,7 @@ const SYSTEM_FIELDS = [
 
 export default function UserPicker(props) {
   const { projectId, appId, selectUsers = [], changeSelect, showRequestTypeFilter = true } = props;
-  const selectUserRef = useRef();
+  const selectUserRef = useRef<any>(undefined);
 
   const [visible, setVisible] = useState(false);
   const isPortal = _.get(md, 'global.Account.isPortal');

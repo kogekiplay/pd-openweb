@@ -241,7 +241,7 @@ export function UserList(props) {
 export function Search(props) {
   const { type, keywords, setKeywords, parentProps, onSelect, onClose, isHidAddUser, onKeyDown = () => {} } = props;
   const SelectUserSettings = parentProps.SelectUserSettings || { ...parentProps };
-  const inputRef = useRef();
+  const inputRef = useRef<any>(undefined);
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();

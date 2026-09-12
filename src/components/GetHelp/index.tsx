@@ -40,7 +40,7 @@ function GetHelp(props) {
   const [submitting, setSubmitting] = useState(false);
   const [personalInfoVisible, setPersonalInfoVisible] = useState(false);
   const isMobile = browserIsMobile();
-  const textareaRef = useRef();
+  const textareaRef = useRef<any>(undefined);
 
   useEffect(() => {
     onInit();

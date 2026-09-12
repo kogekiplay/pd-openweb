@@ -439,7 +439,7 @@ export default class extends Component<any, any> {
         )}
         <div
           className={cx('Relative', displaySetup.showTotal ? 'showTotalHeight' : 'h100')}
-          ref={el => (this.chartEl = el)}
+          ref={el => { this.chartEl = el; }}
         />
         <ZoomWrapper className="flexColumn alignItemsCenter justifyContentCenter card">
           <Tooltip title={_l('放大')}>

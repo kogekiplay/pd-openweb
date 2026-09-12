@@ -445,7 +445,7 @@ export default class RelateRecordList extends React.PureComponent<any, any> {
         >
           <div className="flex flexColumn listCon minHeight0" onClick={e => e.stopPropagation()}>
             <ScrollView
-              ref={el => (this.scrollViewRef = el)}
+              ref={el => { this.scrollViewRef = el; }}
               className="flex"
               onScrollEnd={() => {
                 if (!loading && !loadouted && _.isEmpty(staticRecords)) {

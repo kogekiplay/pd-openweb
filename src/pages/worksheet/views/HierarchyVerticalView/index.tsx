@@ -628,7 +628,7 @@ function HierarchyVertical(props) {
   };
 
   return (
-    <div ref={drop} className="structureViewWrap">
+    <div ref={el => { drop(el); }} className="structureViewWrap">
       <DragLayer
         scale={scale}
         treeData={hierarchyViewData}

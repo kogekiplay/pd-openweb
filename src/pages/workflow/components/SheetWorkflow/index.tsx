@@ -136,7 +136,7 @@ function CurrentWorkItems(props) {
   const { type } = data.flowNode || {};
   const allCurrentWorkItems = (data.currentWorkItems || []).filter(c => c.operationType !== 5);
   const [currentWorkItems, setCurrentWorkItems] = useState(allCurrentWorkItems);
-  const wrapRef = useRef();
+  const wrapRef = useRef<any>(undefined);
   useEffect(() => {
     if (currentWorkItems.length && wrapRef.current) {
       const { clientWidth } = wrapRef.current;

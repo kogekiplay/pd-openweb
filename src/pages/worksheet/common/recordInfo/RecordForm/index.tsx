@@ -281,11 +281,11 @@ function RecordForm(props) {
   const isFixedRight = _.get(widgetStyle, 'tabposition') === '4';
   const isFixed = _.includes(['2', '3', '4'], _.get(recordinfo, 'advancedSetting.tabposition'));
 
-  const scrollRef = useRef();
-  const customwidget = useRef();
-  const recordForm = useRef();
-  const nav = useRef();
-  const sectionTab = useRef();
+  const scrollRef = useRef<any>(undefined);
+  const customwidget = useRef<any>(undefined);
+  const recordForm = useRef<any>(undefined);
+  const nav = useRef<any>(undefined);
+  const sectionTab = useRef<any>(undefined);
   const [sizeRef, { width }] = useMeasure();
   const [isSplit, setIsSplit] = useState(
     Boolean(localStorage.getItem('recordinfoSplitHeight')) && recordId && tabControls.length && !isFixed, // 分栏只对标签页底部时生效

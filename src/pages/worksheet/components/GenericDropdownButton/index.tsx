@@ -83,7 +83,7 @@ const DropIcon = styled.span`
  */
 const GenericDropdownButton = ({ buttonText, icon, dropdownItems, onClick, disabled, className }) => {
   const [menuVisible, setMenuVisible] = useState(false);
-  const conRef = useRef();
+  const conRef = useRef<any>(undefined);
 
   const hasDropdown = dropdownItems && dropdownItems.length > 0;
 

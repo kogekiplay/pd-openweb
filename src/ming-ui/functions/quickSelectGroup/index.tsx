@@ -74,7 +74,7 @@ export function SelectGroup(props) {
     onClose = () => {},
   } = props;
   const projects = (_.get(md, 'global.Account.projects') || []).filter(l => l.licenseType);
-  const conRef = useRef();
+  const conRef = useRef<any>(undefined);
   const [loading, setLoading] = useState(false);
   const [commonList, setCommonList] = useState([]);
   const [groupData, setGroupData] = useState({});

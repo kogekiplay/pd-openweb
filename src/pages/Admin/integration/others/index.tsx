@@ -845,7 +845,7 @@ export default class OtherTool extends Component<any, any> {
                           <input
                             name="integrationOthers"
                             autoComplete="off"
-                            ref={node => (this.customNameInput = node)}
+                            ref={node => { this.customNameInput = node; }}
                             value={this.state[`${key}CustomName`]}
                             className="customNameInput"
                             onChange={e => this.setState({ [`${key}CustomName`]: e.target.value })}

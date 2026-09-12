@@ -99,7 +99,7 @@ export default function OperateButtons({
   const { isCharge, appId, projectId, worksheetId, view, sheetButtons, printList, sheetSwitchPermit, controls } =
     context || {};
   const [btnDisable, setBtnDisable] = useState({});
-  const conRef = useRef();
+  const conRef = useRef<any>(undefined);
   const [width, setWidth] = useState(0);
   const [loading, setLoading] = useState(isInCard);
   const viewId = view?.viewId;

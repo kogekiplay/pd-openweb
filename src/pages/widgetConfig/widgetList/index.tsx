@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useRef, useState } from 'react';
-import { getEmptyImage } from 'react-dnd-html5-backend';
 import { useDrag } from 'react-dnd';
+import { getEmptyImage } from 'react-dnd-html5-backend';
 import { CaretRightOutlined } from '@ant-design/icons';
 import { Collapse, Dropdown } from 'antd';
 import cx from 'classnames';
@@ -514,8 +514,10 @@ function TemplatePanelHeader(props) {
   }, [preview]);
 
   return (
-    (<div
-      ref={drag}
+    <div
+      ref={el => {
+        drag(el);
+      }}
       className={cx('templateItemHeaderContent', { hasTemplateAction: showOperate })}
       onClick={e => {
         e.stopPropagation();
@@ -540,7 +542,8 @@ function TemplatePanelHeader(props) {
           open={dropdownVisible}
           getPopupContainer={() => document.body}
           onOpenChange={handleDropdownVisibleChange}
-          popupRender={() => <DropdownOverlay>
+          popupRender={() => (
+            <DropdownOverlay>
               <div className="dropdownContent grayDropdown Width200">
                 <div
                   className="item grayItem"
@@ -565,7 +568,8 @@ function TemplatePanelHeader(props) {
                   <span>{_l('删除')}</span>
                 </div>
               </div>
-            </DropdownOverlay>}
+            </DropdownOverlay>
+          )}
         >
           <i
             ref={moreBtnRef}
@@ -575,7 +579,7 @@ function TemplatePanelHeader(props) {
           />
         </Dropdown>
       )}
-    </div>)
+    </div>
   );
 }
 

@@ -652,7 +652,7 @@ export default class TagTextarea extends React.Component<any, any> {
             // CM5 的 cursorHeight: 0。CM6 用的是原生光标，靠 caret-color 藏。
             noCursor: noCursor || readonly,
           })}
-          ref={con => (this.cmcon = con)}
+          ref={con => { this.cmcon = con; }}
           style={{ maxHeight }}
         />
         {rightIcon && (

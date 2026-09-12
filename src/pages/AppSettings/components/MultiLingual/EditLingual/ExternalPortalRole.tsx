@@ -13,7 +13,7 @@ export default function ExternalPortalRole(props) {
   const [loading, setLoading] = useState(true);
   const [roleInfos, setRoleInfos] = useState([]);
   const [searchValue, setSearchValue] = useState('');
-  const scrollViewRef = useRef();
+  const scrollViewRef = useRef<any>(undefined);
 
   useEffect(() => {
     setLoading(true);

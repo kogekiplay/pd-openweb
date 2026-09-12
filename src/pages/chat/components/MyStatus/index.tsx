@@ -315,7 +315,7 @@ export default function MyStatus() {
                     className={cx('emojiWrap flexRow alignItemsCenter Relative', {
                       transparentBg: defaultStatusInfo[item.statusId],
                     })}
-                    ref={el => (!isDefaultStatus ? (emotionRefs.current[index] = el) : null)}
+                    ref={el => { !isDefaultStatus ? (emotionRefs.current[index] = el) : null; }}
                     onClick={e => !isDefaultStatus && e.stopPropagation()}
                   >
                     <span

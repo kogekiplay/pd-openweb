@@ -85,7 +85,7 @@ export default function PhoneNumberInput({
   showMask = false,
   renderMask = _.noop,
   className,
-  inputClassName,
+  inputClassName = undefined,
   isCell = false,
 }) {
   const [code, setCode] = useState('');

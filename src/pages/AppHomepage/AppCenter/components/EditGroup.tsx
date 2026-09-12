@@ -36,7 +36,7 @@ const IconInputCon = styled.div`
 function IconInput(props) {
   const { projectId, icon, name, setIcon, setName, groupType, editingGroupId, type, actions, projectGroupsLang } =
     props;
-  const inputRef = useRef();
+  const inputRef = useRef<any>(undefined);
 
   useEffect(() => {
     if (inputRef.current) {

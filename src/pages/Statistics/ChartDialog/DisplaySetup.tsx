@@ -7,7 +7,7 @@ import { chartNav } from '../common/chartNav';
 import HeaderDisplaySetup from '../components/HeaderDisplaySetup';
 import * as actions from '../redux/actions.js';
 
-const DisplaySetup = ({ settingVisible, currentReport, reportData, changeCurrentReport, children }) => {
+const DisplaySetup = ({ settingVisible, currentReport = undefined, reportData = undefined, changeCurrentReport = undefined, children }) => {
   const isDualAxes = reportTypes.DualAxes === currentReport.reportType;
   const { xaxes, displaySetup, yreportType, sorts } = currentReport;
   return (

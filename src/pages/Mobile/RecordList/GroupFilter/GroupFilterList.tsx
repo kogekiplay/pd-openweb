@@ -72,9 +72,9 @@ const GroupFilterList = props => {
   const keyStr = _.includes([26, 27, 48], source.type) ? TYPES[source.type].name : '';
 
   let isOption = [9, 10, 11].includes(source.type) || [9, 10, 11].includes(source.sourceControlType); //是否选项
-  const breadNavBar = useRef();
-  const ajaxRequestRef = useRef();
-  const apiRequestRef = useRef();
+  const breadNavBar = useRef<any>(undefined);
+  const ajaxRequestRef = useRef<any>(undefined);
+  const apiRequestRef = useRef<any>(undefined);
   const debouncedSetKeywords = useRef(_.debounce(value => setKeywords(value), 300));
 
   useEffect(() => {

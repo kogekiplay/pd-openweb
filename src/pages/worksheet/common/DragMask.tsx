@@ -93,10 +93,10 @@ export default class DragMast extends React.Component<any, any> {
     return (
       <Mask
         style={Object.assign({ cursor: direction === 'horizontal' ? 'ew-resize' : 'ns-resize' }, style)}
-        ref={mask => (this.mask = mask)}
+        ref={mask => { this.mask = mask; }}
       >
-        {direction === 'horizontal' && <DragH ref={drag => (this.drag = drag)} style={{ left: this.value }} />}
-        {direction === 'vertical' && <DragV ref={drag => (this.drag = drag)} style={{ top: this.value }} />}
+        {direction === 'horizontal' && <DragH ref={drag => { this.drag = drag; }} style={{ left: this.value }} />}
+        {direction === 'vertical' && <DragV ref={drag => { this.drag = drag; }} style={{ top: this.value }} />}
       </Mask>
     );
   }

@@ -573,7 +573,7 @@ class SearchWorksheetActionDialog extends Component<any, any> {
                 },
               }}
             >
-              <div className="settingWorksheetInput" ref={con => (this.box = con)}>
+              <div className="settingWorksheetInput" ref={con => { this.box = con; }}>
                 <div className="overflow_ellipsis">
                   {isSheetDelete ? (
                     <span className="Red">{_l('工作表已删除')}</span>

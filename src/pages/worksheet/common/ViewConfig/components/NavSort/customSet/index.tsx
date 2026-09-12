@@ -105,7 +105,7 @@ export default function (props) {
     loading: false,
   });
 
-  const valueRef = useRef();
+  const valueRef = useRef<any>(undefined);
   useEffect(() => {
     valueRef.current = setting;
   }, [setting]);

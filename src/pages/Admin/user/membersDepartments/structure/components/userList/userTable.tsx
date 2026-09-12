@@ -595,13 +595,13 @@ class UserTable extends React.Component<any, any> {
     const { openChangeUserInfoDrawer, editCurrentUser = {}, openSortTopUpDialog } = this.state;
 
     return (
-      <div className="tableContent" ref={node => (this.tableContent = node)}>
-        <div className="theadContainer" ref={node => (this.headContainer = node)} onScroll={this.headScroll}>
+      <div className="tableContent" ref={node => { this.tableContent = node; }}>
+        <div className="theadContainer" ref={node => { this.headContainer = node; }} onScroll={this.headScroll}>
           <table className="usersTable overflowTable" cellSpacing="0">
             {this.renderThead()}
           </table>
         </div>
-        <div className="tbodyContainer" ref={node => (this.tbodyContainer = node)} onScroll={this.bodyScroll}>
+        <div className="tbodyContainer" ref={node => { this.tbodyContainer = node; }} onScroll={this.bodyScroll}>
           {isLoading ? (
             <LoadDiv size="small" className="mTop30" />
           ) : (

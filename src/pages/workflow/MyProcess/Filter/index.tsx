@@ -319,7 +319,7 @@ export default class Filter extends Component<any, any> {
       <div className="mBottom16">
         <div className="Font13 mBottom10">{_l('发起人')}</div>
         {_.isEmpty(createAccount) ? (
-          <div className="personPostBox" ref={owner => (this.owner = owner)}>
+          <div className="personPostBox" ref={owner => { this.owner = owner; }}>
             <Icon
               icon="task_add-02"
               className="textSecondary Font24 hoverColorPrimaryLight Hand"

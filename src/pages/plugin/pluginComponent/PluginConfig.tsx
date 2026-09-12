@@ -220,8 +220,8 @@ function PluginConfig(props) {
     configType === pluginConfigType.create ? pluginConfigType.debugEnv : configType,
   );
   const [publishVisible, setPublishVisible] = useState(false);
-  const inputRef = useRef();
-  const textareaRef = useRef();
+  const inputRef = useRef<any>(undefined);
+  const textareaRef = useRef<any>(undefined);
   const source = belongType === 'myPlugin' ? 0 : 1;
 
   const pluginApi = pluginApiConfig[pluginType];

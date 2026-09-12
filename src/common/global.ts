@@ -683,7 +683,10 @@ const interfaceDataDecryption = (response, actionName = '') => {
     !['meihua.mingdao.com', 'www.mingdao.com'].includes(location.host)
   ) {
     let dataStr = JSON.stringify(data);
-    const encryptedArray = dataStr.match(/\$\$encryptedStart\$\$.*?\$\$.*?\$\$encryptedEnd/g) || [];
+    // 标注成 string[]：match 失败时的 `|| []` 是 never[]，与 RegExpMatchArray 组成联合后
+    // TS 会把 forEach 的形参解析成 never，下面的 item.split 报 TS2339。
+    // 升级前被 @types/react 18 的宽松推断盖住了，这里写清楚实际类型。
+    const encryptedArray: string[] = dataStr.match(/\$\$encryptedStart\$\$.*?\$\$.*?\$\$encryptedEnd/g) || [];
 
     encryptedArray.forEach(item => {
       const [decryptKey, encryptedValue] = item

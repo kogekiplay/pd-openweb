@@ -30,7 +30,7 @@ const SourceBox = ({ item, isActive, onOpenEdit, onDelete, onChangeCheckbox }) =
   return (
     <Fragment>
       <div
-        ref={drag}
+        ref={el => { drag(el); }}
         role="axisControlItem"
         style={{ opacity: isDragging ? 0.4 : 1 }}
         className="axisControlItem flexRow valignWrapper pTop8 pBottom8 pLeft5 pRight5 Font13 textPrimary pointer"

@@ -427,7 +427,7 @@ export default class PortalList extends Component<any, any> {
                   >
                     <div
                       className="selectDateInput"
-                      ref={con => (this.dateInput = con)}
+                      ref={con => { this.dateInput = con; }}
                       onMouseEnter={() => {
                         if (startDate && endDate) {
                           $(`#dateArrowIcon_${item.id}`).hide();

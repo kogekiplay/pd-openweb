@@ -38,7 +38,7 @@ export default class RoleSearchBox extends Component<any, any> {
           name="roleSearchBox"
           autoComplete="off"
           defaultValue={searchValue}
-          ref={input => (this.input = input)}
+          ref={input => { this.input = input; }}
           onChange={e => {
             this.props.updateIsRequestList(false);
             this.setState({ searchValue: e.target.value.trim() });

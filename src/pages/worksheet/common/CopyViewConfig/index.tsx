@@ -168,7 +168,7 @@ export default function CopyViewConfig(props) {
       };
     })
     .filter(l => l.viewId !== view.viewId);
-  const inputRef = useRef();
+  const inputRef = useRef<any>(undefined);
 
   const getConfigs = viewId => {
     const currentViewConfigs = COPY_CONFIGS.filter(l => !getFilters(view).includes(l.key));

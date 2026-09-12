@@ -339,7 +339,7 @@ function CommonBoard(props) {
   };
 
   return (
-    <div className="worksheetBoardViewWrap" ref={drop}>
+    <div className="worksheetBoardViewWrap" ref={el => { drop(el); }}>
       <RecordBoardWrap ref={commonBoardRef}>{renderContent()}</RecordBoardWrap>
       <CustomDragLayer />
     </div>

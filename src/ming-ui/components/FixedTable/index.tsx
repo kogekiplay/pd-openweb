@@ -142,8 +142,8 @@ function FixedTable(props, ref) {
 
   const bottomFixedCount = showFoot ? 1 : 0;
   const topFixedCount = showHead ? 1 : 0;
-  const conRef = useRef();
-  const tablehammer = useRef();
+  const conRef = useRef<any>(undefined);
+  const tablehammer = useRef<any>(undefined);
   const [hammerCache, setHammer] = useRefStore();
   const [cache, set] = useRefStore({
     left: 0,

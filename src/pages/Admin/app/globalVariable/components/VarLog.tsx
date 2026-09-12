@@ -131,7 +131,7 @@ const LogItem = styled.div`
 
 export default function VarLog(props) {
   const { onClose, variableId, projectId = '' } = props;
-  const selectUserRef = useRef();
+  const selectUserRef = useRef<any>(undefined);
   const [{ selectUser, selectDate }, setFilter] = useSetState({
     selectUser: undefined,
     selectDate: {

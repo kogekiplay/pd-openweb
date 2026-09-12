@@ -54,7 +54,7 @@ const EditTaskNameWrapper = styled.div`
 export default function OptionColumn({ projectId, record, taskList, setTaskList, onRefreshComponents }) {
   const [visible, setVisible] = useState(false);
   const [editPopupVisible, setEditPopupVisible] = useState(false);
-  const inputRef = useRef();
+  const inputRef = useRef<any>(undefined);
 
   const onEditTaskName = () => {
     setEditPopupVisible(true);

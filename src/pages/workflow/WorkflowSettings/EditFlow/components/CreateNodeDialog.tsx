@@ -1726,7 +1726,7 @@ export default class CreateNodeDialog extends Component<any, any> {
                 name="createNodeDialog"
                 autoComplete="off"
                 type="text"
-                ref={keywordsInput => (this.keywordsInput = keywordsInput)}
+                ref={keywordsInput => { this.keywordsInput = keywordsInput; }}
                 placeholder={_l('搜索')}
                 value={keywords}
                 onChange={e => this.setState({ keywords: e.target.value })}
@@ -1765,7 +1765,7 @@ export default class CreateNodeDialog extends Component<any, any> {
           </div>
           <ScrollView
             className="flex mTop20"
-            ref={contentScroll => (this.contentScroll = contentScroll)}
+            ref={contentScroll => { this.contentScroll = contentScroll; }}
             onScroll={this.onScroll}
           >
             {source.map(data => {

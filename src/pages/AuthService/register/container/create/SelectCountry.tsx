@@ -14,7 +14,7 @@ export default function RegionDropdown(props) {
     loading: false,
   });
 
-  const searchRef = useRef();
+  const searchRef = useRef<any>(undefined);
 
   searchRef.current = useCallback(
     _.debounce(async searchKeywords => {

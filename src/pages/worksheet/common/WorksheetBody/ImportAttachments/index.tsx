@@ -303,7 +303,7 @@ function ImportAttachments(props) {
               <span className="Font14">{_l('拖拽至此 或 粘贴剪贴板文件')}</span>
             </div>
           </div>
-          <textarea readOnly id={dropPasteId} className="dropTextarea" ref={ref => (textareaRef.current = ref)} />
+          <textarea readOnly id={dropPasteId} className="dropTextarea" ref={ref => { textareaRef.current = ref; }} />
           {isDrag && <div className="dragPanel Font18 textSecondary">{_l('拖拽至此处上传文件')}</div>}
           {importLoading && <div className="importLoadingMask" />}
         </div>

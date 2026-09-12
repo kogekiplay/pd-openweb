@@ -527,7 +527,7 @@ let SetImportExcelCreateWorksheetOrApp = class SetImportExcelCreateWorksheetOrAp
                     </Trigger>
                   </div>
                 </div>
-                <div className="tableWrap flex" ref={node => (this.tableWrap = node)}>
+                <div className="tableWrap flex" ref={node => { this.tableWrap = node; }}>
                   <table
                     cellSpacing="0"
                     cellPadding="0"

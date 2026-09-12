@@ -406,7 +406,7 @@ export default function FieldMappingList(props) {
     };
 
     return (
-      <SelectWrapper ref={select => (selectNameRef.current[sourceField.id] = select)}>
+      <SelectWrapper ref={select => { selectNameRef.current[sourceField.id] = select; }}>
         <Select
           disabled={!isValidField || isNotSupport}
           className={cx('selectItem flex', { isNoMatchOption })}

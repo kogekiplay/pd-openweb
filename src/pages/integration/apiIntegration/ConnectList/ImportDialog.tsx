@@ -120,7 +120,7 @@ const Wrap = styled.div`
 `;
 
 export default function ImportDialog(props) {
-  const uploaderWrap = useRef();
+  const uploaderWrap = useRef<any>(undefined);
   const { projectId, onFresh, onClose } = props;
   const [{ file, errTip, analyzeLoading, upgradeId }, setState] = useSetState({
     file: {},

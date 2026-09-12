@@ -13,7 +13,7 @@ export default function View(props) {
   const [loading, setLoading] = useState(true);
   const [sheetInfo, setSheetInfo] = useState({});
   const [searchValue, setSearchValue] = useState('');
-  const scrollViewRef = useRef();
+  const scrollViewRef = useRef<any>(undefined);
 
   useEffect(() => {
     setLoading(true);

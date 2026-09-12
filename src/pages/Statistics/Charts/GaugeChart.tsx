@@ -457,7 +457,7 @@ export default class extends Component<any, any> {
   render() {
     return (
       <div className="flex flexColumn chartWrapper">
-        <div className="h100" ref={el => (this.chartEl = el)}></div>
+        <div className="h100" ref={el => { this.chartEl = el; }}></div>
       </div>
     );
   }

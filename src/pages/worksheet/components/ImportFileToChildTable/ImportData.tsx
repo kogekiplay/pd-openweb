@@ -212,7 +212,7 @@ function overrideData({ oldData, columnsCount, startRowIndex, startColumnIndex, 
 
 function Input(props) {
   const { className, defaultValue, onChange = () => {}, onBlur = () => {}, onKeyDown = () => {} } = props;
-  const inputRef = useRef();
+  const inputRef = useRef<any>(undefined);
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();

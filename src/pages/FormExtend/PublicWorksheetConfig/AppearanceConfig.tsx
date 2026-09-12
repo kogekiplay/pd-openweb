@@ -11,6 +11,7 @@ import { Icon, QiniuUpload, Radio, ScrollView, Switch } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { dialogSelectColor } from 'ming-ui/functions';
 import { Absolute, CustomButton, H1, H3, Hr } from 'worksheet/components/Basics';
+import type { RootState } from 'src/redux/configureStore';
 import { getThemeColors } from 'src/utils/project';
 import { coverurls, LAYOUT_OPTIONS } from '../enum';
 import * as actions from '../PublicWorksheetConfig/redux/actions';
@@ -346,7 +347,7 @@ class AppearanceConfig extends React.Component<any, any> {
     const config = getPageConfig(pageConfigs, pageConfigKey);
 
     return (
-      (<Drawer open={open} size={640} styles={{ body: { padding: 0 }, header: { display: 'none' } }} onClose={onClose}>
+      <Drawer open={open} size={640} styles={{ body: { padding: 0 }, header: { display: 'none' } }} onClose={onClose}>
         <ScrollView>
           <Con>
             <Absolute right="24" top="-2">
@@ -399,12 +400,17 @@ class AppearanceConfig extends React.Component<any, any> {
             </div>
           </Con>
         </ScrollView>
-      </Drawer>)
+      </Drawer>
     );
   }
 }
 
-const mapStateToProps = state => ({ ..._.pick(state.publicWorksheet, ['worksheetInfo']) });
+// 同本目录另外三个 connect 组件：展开 lodash pick 会让返回类型变成 any
+// （本仓没装 @types/lodash），react-redux 据此推出 TStateProps = any，再用
+// Omit<OwnProps, keyof TStateProps> 把 own props 整个抹成 {}，于是 SourceKeys.tsx
+// 传进来的 pageConfigKey / theme / open / … 全部报 not assignable to
+// 'IntrinsicAttributes & …'。改成显式取值，返回类型即为具体对象，Omit 恢复正常。
+const mapStateToProps = (state: RootState) => ({ worksheetInfo: state.publicWorksheet.worksheetInfo });
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 

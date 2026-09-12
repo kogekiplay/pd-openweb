@@ -38,7 +38,7 @@ const Con = styled.div`
 
 export default function FilterDetailName(props) {
   const { withStar, editable, name, onChange = () => {} } = props;
-  const ref = useRef();
+  const ref = useRef<any>(undefined);
   const [value, setValue] = useState(name);
   const [active, setActive] = useState();
 

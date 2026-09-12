@@ -88,7 +88,7 @@ export function SegmentBoundaryGap({
     },
   });
 
-  return <div ref={drop} className={cx('customBtnGroupedSegmentReorderGap', { isActive: active, isAfterGroup })} />;
+  return <div ref={el => { drop(el); }} className={cx('customBtnGroupedSegmentReorderGap', { isActive: active, isAfterGroup })} />;
 }
 
 export function DropGap({ segmentIndex, gapIndex, activeGap }) {

@@ -46,10 +46,10 @@ export default function SplitLineSection(props) {
       ? propsExpandWidgetIds
       : getExpandWidgetIds(_.flatten(widgets || []), { controlId, sectionId }, from);
   }, [propsExpandWidgetIds, widgets, controlId, sectionId, from]);
-  const $ref = useRef();
+  const $ref = useRef<any>(undefined);
   let $originIds = useRef([]);
-  const expandTimerRef = useRef();
-  const navTimerRef = useRef();
+  const expandTimerRef = useRef<any>(undefined);
+  const navTimerRef = useRef<any>(undefined);
 
   useEffect(() => {
     handleExpand(enumDefault2 !== 2);

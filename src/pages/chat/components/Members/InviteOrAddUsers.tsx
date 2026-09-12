@@ -58,7 +58,7 @@ export default class InviteOrAddUsers extends Component<any, any> {
             ))}
           </Menu>}
       >
-        <span className="Hand textTertiary hoverColorPrimary icon-invite Font18" ref={con => (this.$wrap = con)}></span>
+        <span className="Hand textTertiary hoverColorPrimary icon-invite Font18" ref={con => { this.$wrap = con; }}></span>
       </Dropdown>
     );
   }

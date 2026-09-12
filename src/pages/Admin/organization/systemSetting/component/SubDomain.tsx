@@ -167,7 +167,7 @@ export default class SubDomain extends Component<any, any> {
         onError={() => {}}
       >
         <div className="avatar-uploader" id="upload_file">
-          <input name="componentSubDomain" ref={con => (this.upload = con)} type="hidden" />
+          <input name="componentSubDomain" ref={con => { this.upload = con; }} type="hidden" />
           {isCustomImage ? (
             <img src={currentHomeImage} alt="avatar" />
           ) : (
@@ -210,7 +210,7 @@ export default class SubDomain extends Component<any, any> {
                 <Input
                   defaultValue={domainName}
                   className={`w100 mTop25`}
-                  ref={con => (this.inputValue = con)}
+                  ref={con => { this.inputValue = con; }}
                   onChange={this.handleChange.bind(this)}
                 />
               </Dialog>

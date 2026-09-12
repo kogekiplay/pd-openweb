@@ -173,8 +173,8 @@ function CodeEdit(props, ref) {
 
   // const [error, setError] = useState(undefined);
   const readOnly = mode === 'read';
-  const editorDomRef = useRef();
-  const editorRef = useRef();
+  const editorDomRef = useRef<any>(undefined);
+  const editorRef = useRef<any>(undefined);
   const description = getControlDescription(control.type);
   useEffect(() => {
     const handleChange = (...args) => {

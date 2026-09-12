@@ -264,7 +264,7 @@ export default function MobileTable(props) {
                 disabledFunctions={isEdit ? ['controlRefresh'] : []}
                 ignoreLock={ignoreLock}
                 isDraft={isDraft}
-                ref={el => (customWidgetRefs.current[index] = el)}
+                ref={el => { customWidgetRefs.current[index] = el; }}
                 recordId={rowid}
                 data={(expandRowIndex === index ? controls : showControls).map(c => ({
                   ...c,

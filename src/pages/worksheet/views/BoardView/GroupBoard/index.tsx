@@ -42,7 +42,7 @@ const GroupBoard = props => {
     worksheetId,
     ...rest
   } = props;
-  const scrollViewRef = useRef();
+  const scrollViewRef = useRef<any>(undefined);
   const isManualExpand = useRef(false);
   const [, drop] = useDrop({
     accept: ITEM_TYPE.RECORD,

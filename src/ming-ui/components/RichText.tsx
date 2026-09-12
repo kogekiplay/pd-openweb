@@ -471,8 +471,8 @@ const RichText = forwardRef((props, ref) => {
   const [ckeditor, setCkeditor] = useState(null);
   const MDEditor = ckeditor && ckeditor.editorModule;
   const CKEditor = ckeditor && ckeditor.CKEditor;
-  const editorDiv = useRef();
-  let editorDom = useRef();
+  const editorDiv = useRef<any>(undefined);
+  let editorDom = useRef<any>(undefined);
   const lastSavedContentRef = useRef(data ?? '');
 
   // 标准化 HTML 内容用于比对：移除 img src 中的 ?e= 及之后的内容

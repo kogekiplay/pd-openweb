@@ -103,7 +103,7 @@ function Filters(props, ref) {
     onChange = () => {},
     filterResigned = true,
   } = props;
-  const conRef = useRef();
+  const conRef = useRef<any>(undefined);
   const cache = useRef({});
   const base = { projectId, appId, worksheetId, isCharge };
   const filterWhiteKeys = _.flatten(

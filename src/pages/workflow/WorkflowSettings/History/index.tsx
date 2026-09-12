@@ -359,7 +359,7 @@ let History = class History extends Component<any, any> {
     const { data, hasMoreData, accumulation, requestPending, batchIds, archivedItem, cacheKey } = this.state;
     const { lastPublishDate, parentId, enabled } = flowInfo;
     return (
-      <ScrollView className="workflowHistoryWrap flex" ref={contentScroll => (this.contentScroll = contentScroll)}>
+      <ScrollView className="workflowHistoryWrap flex" ref={contentScroll => { this.contentScroll = contentScroll; }}>
         <div className="lastPublishInfo">
           {!_.isEmpty(archivedItem) ? (
             <ArchivedList

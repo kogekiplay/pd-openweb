@@ -147,7 +147,7 @@ class Publicquery extends React.Component<any, any> {
               <LoadableForm
                 disableRules
                 recordId="00000"
-                ref={customWidget => (this.customWidget = customWidget)}
+                ref={customWidget => { this.customWidget = customWidget; }}
                 data={controls.map(c => ({
                   ...c,
                   size: 12,

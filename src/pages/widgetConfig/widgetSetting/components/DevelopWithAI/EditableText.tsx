@@ -19,7 +19,7 @@ const Con = styled.div`
 
 export default function EditableText(props) {
   const { onChange } = props;
-  const ref = useRef();
+  const ref = useRef<any>(undefined);
   const [value, setValue] = useState(props.value);
   const [isEditing, setIsEditing] = useState(false);
   return (

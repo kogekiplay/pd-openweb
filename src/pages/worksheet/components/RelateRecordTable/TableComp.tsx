@@ -179,7 +179,7 @@ function TableComp(props) {
     isBatchEditing,
     originalRecords = [],
   } = tableState;
-  const worksheetTableRef = useRef();
+  const worksheetTableRef = useRef<any>(undefined);
   const dataCache = useRef({});
   const columns = useMemo(() => {
     const visibleControls = getVisibleControls(control, controls, sheetHiddenColumnIds, disableMaskDataControls);
@@ -330,7 +330,8 @@ function TableComp(props) {
         updateRows={newRow => {
           updateRecord(newRow);
         }}
-        onSelect={({ action } = {}) => {
+        // 同上：`= {}` 让 TS 把形参推成 {}，action 不在其中。类型取自下面 switch 的分支值。
+        onSelect={({ action }: { action?: string } = {}) => {
           let isSelect, selectRowIndex, selectedRecords;
 
           switch (action) {

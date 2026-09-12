@@ -27,9 +27,26 @@ function canReceiveRef(Comp) {
   );
 }
 
-export default function autoSize(Comp, { onlyWidth } = {}) {
+/**
+ * AutoSizer 自己消费的三个 props；其余一律原样透传给被包裹组件，
+ * 所以留一个索引签名。
+ *
+ * 这个标注不能省：不写的话 props 是隐式 any，@types/react 19 的
+ * PropsWithoutRef<any> 会走 `'ref' extends keyof any ? Omit<P,'ref'> : P` 分支，
+ * 把 any 【塌缩成具体对象类型】，于是外部传的几十个 props 全部"不在允许的 props 里"
+ * （TableComp.tsx:432 报 not assignable to 'IntrinsicAttributes & …'）。
+ * v18 不会，因为它的 LibraryManagedAttributes 还有 propTypes 分支兜着。
+ */
+interface AutoSizeProps {
+  width?: number;
+  height?: number;
+  watchHeight?: boolean;
+  [key: string]: unknown;
+}
+
+export default function autoSize(Comp, { onlyWidth }: { onlyWidth?: boolean } = {}) {
   const AutoSizer = memo(
-    forwardRef(function AutoSizer(props, ref) {
+    forwardRef(function AutoSizer(props: AutoSizeProps, ref) {
       const { height, width, watchHeight, ...rest } = props;
       const controlledSize = width && height ? { width, height } : undefined;
       const [measureRef, rect] = useMeasure();

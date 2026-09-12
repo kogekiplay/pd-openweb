@@ -374,7 +374,7 @@ let RecordForm = class RecordForm extends Component<any, any> {
           edit: isEditRecord,
           overflowHidden: !isEditRecord && _.includes([29, 51], currentTab.type) && !window.isDingTalk,
         })}
-        ref={con => (this.con = con)}
+        ref={con => { this.con = con; }}
       >
         <CustomFields
           ref={customwidget}
@@ -466,7 +466,7 @@ let RecordForm = class RecordForm extends Component<any, any> {
       <Fragment>
         {this.renderHeader()}
         <div
-          ref={ele => (this.formWrap = ele)}
+          ref={ele => { this.formWrap = ele; }}
           className="flexColumn flex recordScroll"
           style={{
             overflowX: 'hidden',

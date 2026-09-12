@@ -341,7 +341,7 @@ export class UploadFileWrapper extends Component<any, any> {
     const { appId, worksheetId, projectId } = this.props;
     const { children, qiniuUploadClassName, className, style } = this.props;
     return (
-      <div className="Relative mobileUploadTriggerWrap" style={style} ref={el => (this.uploadContainer = el)}>
+      <div className="Relative mobileUploadTriggerWrap" style={style} ref={el => { this.uploadContainer = el; }}>
         <QiniuUpload
           className={qiniuUploadClassName}
           options={{
@@ -363,7 +363,7 @@ export class UploadFileWrapper extends Component<any, any> {
           }}
           {...this.getMethod()}
         >
-          <span ref={el => (this.uploadFileEl = el)} id={this.id} className={className}>
+          <span ref={el => { this.uploadFileEl = el; }} id={this.id} className={className}>
             {children}
           </span>
         </QiniuUpload>

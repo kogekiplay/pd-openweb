@@ -63,8 +63,8 @@ export default function FiltersPopup(props) {
     isSingleView = false,
     persistFilterToUrl = false,
   } = rest;
-  const filtersRef = useRef();
-  const btnRef = useRef();
+  const filtersRef = useRef<any>(undefined);
+  const btnRef = useRef<any>(undefined);
   const didMountRef = useRef(false);
   const [popupVisible, setPopupVisible] = useState();
   const { needSave, editingFilter, activeFilter } = state;

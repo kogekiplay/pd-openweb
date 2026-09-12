@@ -150,7 +150,7 @@ export default function RelateSheet(props) {
   const [{ sortVisible }, setState] = useSetState({
     sortVisible: false,
   });
-  const relationSheetConfigCallback = useRef();
+  const relationSheetConfigCallback = useRef<any>(undefined);
   const relationSheetLoadState = useRef({ status: 'idle' });
 
   const isRelateView = Boolean(viewId);

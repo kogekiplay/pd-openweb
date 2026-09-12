@@ -164,7 +164,7 @@ export default class Invoice extends Component<any, any> {
         >
           {currentTab === 'taxNo' && (
             <TaxNumber
-              ref={ele => (this.com = ele)}
+              ref={ele => { this.com = ele; }}
               projectId={Config.projectId}
               featureType={featureType}
               createTaxVisible={createTaxVisible}
@@ -178,7 +178,7 @@ export default class Invoice extends Component<any, any> {
 
           {currentTab === 'list' && (
             <InvoiceList
-              ref={ele => (this.com = ele)}
+              ref={ele => { this.com = ele; }}
               projectId={Config.projectId}
               updateDisabledExportBtn={disabledExportBtn => this.setState({ disabledExportBtn })}
               taxList={taxList}

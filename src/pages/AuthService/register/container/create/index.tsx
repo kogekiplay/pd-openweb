@@ -23,7 +23,7 @@ export default function (props) {
     extraList: [],
     geoCountryRegionCode: _.get(md, 'global.Config.DefaultRegion') || 'CN',
   });
-  const companyNameRef = useRef();
+  const companyNameRef = useRef<any>(undefined);
   const submittingRef = useRef(false);
   const companyName = _.get(props, 'company.companyName');
 

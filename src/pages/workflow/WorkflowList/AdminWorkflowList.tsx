@@ -631,7 +631,7 @@ class AdminWorkflowList extends Component<any, any> {
           </Fragment>
         ) : (
           <Fragment>
-            <WorkflowMonitor match={this.props.match} ref={ele => (this.workflowMonotor = ele)} />
+            <WorkflowMonitor match={this.props.match} ref={ele => { this.workflowMonotor = ele; }} />
           </Fragment>
         )}
 

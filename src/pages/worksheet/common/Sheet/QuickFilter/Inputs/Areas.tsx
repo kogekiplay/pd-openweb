@@ -55,7 +55,7 @@ export default function Areas(props) {
   const [search, setSearch] = useState(undefined);
   const [keywords, setKeywords] = useState('');
   const [defaultValue, setDefaultValue] = useState(null);
-  const tempArea = useRef();
+  const tempArea = useRef<any>(undefined);
   const { enumDefault2, advancedSetting: { chooserange = 'CN', commcountries } = {} } = control;
 
   const onFetchData = _.debounce(value => {

@@ -482,7 +482,7 @@ export default class extends Component<any, any> {
         ) : null}
         <div
           className={showTotal && showChartType === 2 ? 'showTotalHeight' : 'h100'}
-          ref={el => (this.chartEl = el)}
+          ref={el => { this.chartEl = el; }}
         ></div>
       </div>)
     );

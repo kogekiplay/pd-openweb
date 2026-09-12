@@ -256,7 +256,7 @@ export default class VersionUpgrade extends Component<any, any> {
     const { activeVersion } = this.state;
 
     return (
-      <div className="featureWrap flexRow" ref={node => (this.featureWrap = node)}>
+      <div className="featureWrap flexRow" ref={node => { this.featureWrap = node; }}>
         <div className="fixedInfo">
           {featureDataList.map(item => {
             return (
@@ -385,7 +385,7 @@ export default class VersionUpgrade extends Component<any, any> {
           this.renderExistOrder()
         ) : (
           <Fragment>
-            <div className="priceWrap" ref={node => (this.topDescription = node)}>
+            <div className="priceWrap" ref={node => { this.topDescription = node; }}>
               <div className="priceTxt TxtCenter">{_l('价格')}</div>
               <div className="priceDescription TxtCenter">
                 {_l('我们力求通过科学的特性组合，让不同需求的用户感到物超所值')}

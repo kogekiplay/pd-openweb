@@ -57,8 +57,8 @@ export default function SelectType(props) {
   const sourceField = itemData.sourceField || {};
   const destField = itemData.destField || {};
   const [settingComponent, setSettingComponent] = useSetState({ component: null, data: {} });
-  const selectRef = useRef();
-  const selectOptionListRef = useRef();
+  const selectRef = useRef<any>(undefined);
+  const selectOptionListRef = useRef<any>(undefined);
 
   const currentOption = options.filter(item => item.value === destField.dataType)[0] || {};
 

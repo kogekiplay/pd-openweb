@@ -304,7 +304,7 @@ class UnLockDialog extends Component<any, any> {
                 {_l('当前应用为不可配置状态，验证应用锁密码后将会解锁您在该应用下的相关操作权限')}
               </div>
               <Input.Password
-                ref={input => (this.passwordInput = input)}
+                ref={input => { this.passwordInput = input; }}
                 className="mBottom16"
                 placeholder={_l('请输入应用锁密码')}
                 autoComplete="new-password"

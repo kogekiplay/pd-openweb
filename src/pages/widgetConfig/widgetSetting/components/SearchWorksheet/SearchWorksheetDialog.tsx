@@ -539,7 +539,7 @@ export default class SearchWorksheetDialog extends Component<any, any> {
                 },
               }}
             >
-              <div className={cx('settingWorksheetInput', { disabled: relateField })} ref={con => (this.box = con)}>
+              <div className={cx('settingWorksheetInput', { disabled: relateField })} ref={con => { this.box = con; }}>
                 <div className="overflow_ellipsis">
                   {isSheetDelete ? (
                     <span className="Red">{_l('工作表已删除')}</span>

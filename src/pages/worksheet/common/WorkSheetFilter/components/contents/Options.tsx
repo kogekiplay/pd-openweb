@@ -171,7 +171,7 @@ export default class Options extends Component<any, any> {
       const { chooserange = 'CN', commcountries } = control.advancedSetting || {};
 
       return (
-        <div className="worksheetFilterOptionsCondition" ref={con => (this.con = con)}>
+        <div className="worksheetFilterOptionsCondition" ref={con => { this.con = con; }}>
           <CityPicker
             search={keywords}
             destroyPopupOnHide
@@ -361,7 +361,7 @@ export default class Options extends Component<any, any> {
   };
   render() {
     return (
-      <div className="worksheetFilterOptionsCondition" ref={con => (this.con = con)}>
+      <div className="worksheetFilterOptionsCondition" ref={con => { this.con = con; }}>
         {this.renderSelect()}
       </div>
     );

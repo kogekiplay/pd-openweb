@@ -134,7 +134,7 @@ export function ButtonList({
   } = createRecordInfo;
   const isMobile = browserIsMobile();
   const isIPad = navigator.userAgent.toLowerCase().includes('ipad');
-  const scanQRCodeRef = useRef();
+  const scanQRCodeRef = useRef<any>(undefined);
   const [currentScanBtn, setCurrentScanBtn] = useState();
   const [previewRecord, setPreviewRecord] = useState({});
   const isPublicShare = location.href.includes('public/page');

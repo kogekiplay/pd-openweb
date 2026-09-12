@@ -94,7 +94,7 @@ export default function WorkflowNode(props) {
   const [searchValue, setSearchValue] = useState('');
   const [nodes, setNodes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const scrollViewRef = useRef();
+  const scrollViewRef = useRef<any>(undefined);
   const translateDataRef = useRef(translateData);
 
   useEffect(() => {

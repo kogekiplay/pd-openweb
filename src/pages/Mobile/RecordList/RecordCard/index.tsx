@@ -502,7 +502,7 @@ export default class RecordCard extends Component<any, any> {
     return (
       <div className={cx('mobileViewRecordCardContainer', { batchOptStyle: batchOptChecked })}>
         <Con
-          ref={node => (this.cardWrap = node)}
+          ref={node => { this.cardWrap = node; }}
           controlStyles={controlStyles}
           className={cx('mobileWorksheetRecordCard', className, {
             coverRight: ['0'].includes(coverPosition),

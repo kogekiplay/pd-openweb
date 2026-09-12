@@ -61,7 +61,7 @@ export default class SubSheet extends Component<any, any> {
             onOk={() => {}}
           />
         )}
-        <SelectOtherField {...this.props} ref={con => (this.$wrap = con)} />
+        <SelectOtherField {...this.props} ref={con => { this.$wrap = con; }} />
       </DynamicValueInputWrap>
     );
   }

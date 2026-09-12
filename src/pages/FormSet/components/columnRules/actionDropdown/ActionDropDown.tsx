@@ -481,7 +481,7 @@ export default class DropDownItem extends Component<any, any> {
       >
         <div
           className={cx('fixedRuleDropdownSelected', { errorBorder: actionError, disabled })}
-          ref={con => (this.box = con)}
+          ref={con => { this.box = con; }}
         >
           <span className="dropDownLabel">
             {!_.isEmpty(values) ? (

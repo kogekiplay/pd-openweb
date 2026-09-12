@@ -84,7 +84,7 @@ export default function PublishVersion(props) {
   const [commitList, setCommitList] = useState([]);
   const [formData, setFormData] = useSetState({ configuration: defaultConfigValue, commitId });
   const [fetchState, setFetchState] = useSetState({ loading: true, pageIndex: 1, noMore: false });
-  const textareaRef = useRef();
+  const textareaRef = useRef<any>(undefined);
   const isWorkflowPlugin = pluginType === PLUGIN_TYPE.WORKFLOW;
 
   const pluginApi = pluginApiConfig[pluginType];

@@ -101,8 +101,8 @@ function Header(props, ref) {
     changePageSize = () => {},
     changePageIndex = () => {},
   } = props;
-  const filterComp = useRef();
-  const inputRef = useRef();
+  const filterComp = useRef<any>(undefined);
+  const inputRef = useRef<any>(undefined);
   const [searchActive, setSearchActive] = useState();
   const [searchText, setSearchText] = useState('');
   useImperativeHandle(ref, () => ({

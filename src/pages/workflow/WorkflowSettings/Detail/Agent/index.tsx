@@ -630,7 +630,7 @@ export default class Agent extends Component<any, any> {
 
         <div className="Font13 mTop15">
           <Trigger
-            ref={triggerRef => (this.triggerRef = triggerRef)}
+            ref={triggerRef => { this.triggerRef = triggerRef; }}
             popup={() => (
               <MORE_TOOLS_LIST>
                 {MORE_TOOLS.map((o, index) => {

@@ -100,7 +100,7 @@ export default function SearchWrap(props) {
   const [fullShow, setFullShow] = useState(
     showExpandBtn ? false : !_.isUndefined(props.fullShow) ? props.fullShow : true,
   );
-  const searchBoxRef = useRef();
+  const searchBoxRef = useRef<any>(undefined);
   const [width, setWidth] = useState(searchBoxRef && searchBoxRef.current && searchBoxRef.current.clientWidth);
   const [values, setValues] = useSetState(searchValues);
   let colNum = (width - 63) / 280;

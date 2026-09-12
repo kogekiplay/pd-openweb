@@ -307,7 +307,7 @@ export default class HistoryChart extends PureComponent<any, any> {
               </Fragment>
             )}
           </div>
-          <div className="chartBox" ref={node => (this.chantRef = node)} />
+          <div className="chartBox" ref={node => { this.chantRef = node; }} />
           {loadingChart && (
             <div className="loadingWrap">
               <LoadDiv />

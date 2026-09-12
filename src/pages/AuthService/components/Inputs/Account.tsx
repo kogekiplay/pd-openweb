@@ -12,7 +12,7 @@ export default function (props) {
   const { keys, onlyRead, type, emailOrTel, onChange = () => {}, canChangeEmailOrTel, focusDiv, warnList } = props;
 
   const cache = useRef({});
-  const mobileInput = useRef();
+  const mobileInput = useRef<any>(undefined);
   const isTelMode = keys.includes('tel') && !keys.includes('email');
 
   const resetToInitialState = () => {

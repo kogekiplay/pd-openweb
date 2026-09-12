@@ -38,7 +38,7 @@ const SourceBox = ({ item, isActive, onChangeCheckbox }) => {
 
   return (
     <div
-      ref={drag}
+      ref={el => { drag(el); }}
       role="axisControlItem"
       style={{ opacity: isDragging ? 0.4 : 1 }}
       className="axisControlItem flexRow valignWrapper pTop8 pBottom8 pLeft5 Font13 textPrimary pointer"

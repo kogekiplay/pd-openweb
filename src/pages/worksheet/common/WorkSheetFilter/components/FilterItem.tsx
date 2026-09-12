@@ -328,7 +328,7 @@ export default class FilterItem extends Component<any, any> {
         >
           <div
             className={cx('filterTitle flex ellipsis', { colorPrimary: selected })}
-            ref={title => (this.title = title)}
+            ref={title => { this.title = title; }}
           >
             {nameIsEditing ? (
               <Input

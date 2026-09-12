@@ -847,7 +847,7 @@ export default class extends Component<any, any> {
             {rightY && rightY.summary.showTotal ? this.renderCount(rightY.summary, newRightYaxisList) : <div></div>}
           </div>
         )}
-        <div className="h100" ref={el => (this.chartEl = el)}></div>
+        <div className="h100" ref={el => { this.chartEl = el; }}></div>
       </div>)
     );
   }

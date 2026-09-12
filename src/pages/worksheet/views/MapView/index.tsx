@@ -139,12 +139,12 @@ function MapView(props) {
   const isMobile = browserIsMobile();
   const isGoogle = !!getMapConfig();
 
-  const conRef = useRef();
-  const aMapRef = useRef();
-  const gMapRef = useRef();
-  const newRecordBtnRef = useRef();
+  const conRef = useRef<any>(undefined);
+  const aMapRef = useRef<any>(undefined);
+  const gMapRef = useRef<any>(undefined);
+  const newRecordBtnRef = useRef<any>(undefined);
   const rippleRef = useRef(null);
-  const ignoreNextZoomChangeRef = useRef();
+  const ignoreNextZoomChangeRef = useRef<any>(undefined);
   const [zoom, setZoom] = useState(getLocalMapZoom(viewId) ?? getValidZoom(mapLocation.zoom) ?? DEFAULT_MAP_ZOOM);
   const [center, setCenter] = useState([116.4, 39.9]);
   const [originalCenter, setOriginalCenter] = useState([116.4, 39.9]);

@@ -41,7 +41,7 @@ function WithdrawReimburseDialog(props) {
   const { merchantNo, orderId, merchantOrderId, taxAmount, description } = orderInfo;
   const [amount, setAmount] = useState();
   const [isFocus, setIsFocus] = useState(false);
-  const inputRef = useRef();
+  const inputRef = useRef<any>(undefined);
 
   const onRefund = () => {
     // 退款

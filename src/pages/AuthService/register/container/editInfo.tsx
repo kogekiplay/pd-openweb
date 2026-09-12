@@ -32,7 +32,7 @@ export default function (props) {
     warnList: [],
     focusDiv: '',
   });
-  const submitUserCardRef = useRef();
+  const submitUserCardRef = useRef<any>(undefined);
 
   // 提交名片信息
   const submitUserCard = () => {

@@ -230,7 +230,7 @@ export default class ExcelControlSetting extends Component<any, any> {
         <SettingItem>
           <div className="settingItemTitle">{_l('字段名称')}</div>
           <Input
-            ref={ele => (this.fieldName = ele)}
+            ref={ele => { this.fieldName = ele; }}
             type="text"
             value={controlName}
             onBlur={() => {

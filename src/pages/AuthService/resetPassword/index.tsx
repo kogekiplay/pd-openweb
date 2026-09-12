@@ -197,7 +197,7 @@ export default class ResetPassword extends React.Component<any, any> {
               name="newPassword"
               className="passwordIcon"
               placeholder={password}
-              ref={password => (this.password = password)}
+              ref={password => { this.password = password; }}
               onBlur={() => this.setState({ focusDiv: '' })}
               onFocus={() => this.setState({ focusDiv: 'passwordIcon' })}
               onChange={e => {
@@ -219,7 +219,7 @@ export default class ResetPassword extends React.Component<any, any> {
               name="confirmPassword"
               className="passwordCopy"
               placeholder={passwordCopy}
-              ref={passwordCopy => (this.passwordCopy = passwordCopy)}
+              ref={passwordCopy => { this.passwordCopy = passwordCopy; }}
               onBlur={() => this.setState({ focusDiv: '' })}
               onFocus={() => this.setState({ focusDiv: 'passwordCopy' })}
               onChange={e => {

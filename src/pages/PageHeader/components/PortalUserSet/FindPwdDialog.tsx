@@ -114,7 +114,7 @@ export default function TelDialog(props) {
   const { global = {} } = md;
   const { SysSettings = {} } = global;
   const { passwordRegexTip } = SysSettings;
-  const codeDiv = useRef();
+  const codeDiv = useRef<any>(undefined);
 
   const findPwdCallback = res => {
     const { accountResult } = res;

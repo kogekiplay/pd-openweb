@@ -42,7 +42,7 @@ class Popup extends React.Component<any, any> {
     const withMask = this.props.withMask;
     const popup = withMask ? (
       <div>
-        <div className={cx('mingPopup', this.props.className)} ref={ref => (this.popup = ref)} style={this.state.style}>
+        <div className={cx('mingPopup', this.props.className)} ref={ref => { this.popup = ref; }} style={this.state.style}>
           <span className="arrow" style={this.state.arrowStyle} />
           {this.props.children}
         </div>

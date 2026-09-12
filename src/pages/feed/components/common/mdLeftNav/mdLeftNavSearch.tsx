@@ -28,7 +28,7 @@ class MDLeftNavSearch extends React.Component<any, any> {
     const { value, ...props } = this.props;
 
     return (
-      <div className="mdLeftNavSearch borderSecondary" ref={root => (this.root = root)}>
+      <div className="mdLeftNavSearch borderSecondary" ref={root => { this.root = root; }}>
         <span className="icon-search btnSearch textSecondary" title={_l('搜索')} />
         <input
           name="mdLeftNavMdLeftNavSearch"

@@ -11,6 +11,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { H2, Hr, Tip9e } from 'worksheet/components/Basics';
 import ShareUrl from 'worksheet/components/ShareUrl';
 import { buriedUpgradeVersionDialog } from 'src/components/upgradeVersion';
+import type { RootState } from 'src/redux/configureStore';
 import { pathCompletion } from 'src/utils/common';
 import { VersionProductType } from 'src/utils/enum';
 import { getFeatureStatus } from 'src/utils/project';
@@ -447,17 +448,28 @@ class ConfigPanel extends React.Component<any, any> {
   }
 }
 
-const mapStateToProps = state => ({
-  ...pick(state.publicWorksheet, [
-    'loading',
-    'shareUrl',
-    'worksheetInfo',
-    'worksheetSettings',
-    'originalControls',
-    'controls',
-    'hidedControlIds',
-  ]),
-});
+// 这里原本是 `...pick(state.publicWorksheet, [...])`。展开 lodash pick 的结果会让
+// 返回类型变成 any（本仓没装 @types/lodash），于是 react-redux 推出 TStateProps = any，
+// 再用 Omit<OwnProps, keyof TStateProps> 去掉"由 store 提供"的部分 —— keyof any 是
+// string | number | symbol，own props 被整个抹成 {}，外部传的 props 全部报
+// not assignable to 'IntrinsicAttributes & ({ context?…; store?… } | {…})'。
+// 升级前没暴露：@types/react 18 的 JSX.LibraryManagedAttributes 还有 propTypes 分支
+// （P 为 any 时直接返回 any）把它盖住了，v19 把该分支整个删掉才露出来。
+//
+// 改成显式取值后返回类型是一个有 7 个已知键的具体对象，Omit 恢复正常；
+// 各属性自身的类型与改写前完全一致，没有引入任何 any。
+const mapStateToProps = (state: RootState) => {
+  const s = state.publicWorksheet;
+  return {
+    loading: s.loading,
+    shareUrl: s.shareUrl,
+    worksheetInfo: s.worksheetInfo,
+    worksheetSettings: s.worksheetSettings,
+    originalControls: s.originalControls,
+    controls: s.controls,
+    hidedControlIds: s.hidedControlIds,
+  };
+};
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 

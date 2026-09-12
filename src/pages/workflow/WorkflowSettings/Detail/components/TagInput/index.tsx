@@ -89,7 +89,7 @@ export default class TagInput extends Component<any, any> {
                 type="text"
                 autoFocus={inputFocus}
                 disabled={disable}
-                ref={node => (this.tagInput = node)}
+                ref={node => { this.tagInput = node; }}
                 style={{ width: charWidth + 12 }}
                 value={val}
                 onFocus={this.handleFocus}
@@ -100,7 +100,7 @@ export default class TagInput extends Component<any, any> {
             </div>
           </li>
         </ul>
-        <span ref={node => (this.textWrap = node)} style={{ visibility: 'hidden', position: 'absolute' }}>
+        <span ref={node => { this.textWrap = node; }} style={{ visibility: 'hidden', position: 'absolute' }}>
           {val}
         </span>
         <div className={cx('createTag ellipsis', { show: val.length !== 0 })} onClick={this.userTag}>

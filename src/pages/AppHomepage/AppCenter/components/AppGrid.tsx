@@ -579,11 +579,11 @@ export default function AppGrid(props) {
   );
   const [morePopupVisible, setMorePopupVisible] = useState(false);
   const [moreGroups, setMoreGroups] = useState([]);
-  const groupListRef = useRef();
+  const groupListRef = useRef<any>(undefined);
   const [activeMoreGroup, setActiveMoreGroup] = useState('');
   const projectGroups = groups.filter(g => g.groupType === 1);
   const [hasMore, setHasMore] = useState(false);
-  const moreTabRef = useRef();
+  const moreTabRef = useRef<any>(undefined);
 
   const noProjects = !md.global.Account.projects.length;
   const allowCreate =

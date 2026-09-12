@@ -57,7 +57,7 @@ function RelateRecordTable(props) {
     get(control, 'advancedSetting.showtype'),
   );
   const tableCache = useRef({});
-  const tableConRef = useRef();
+  const tableConRef = useRef<any>(undefined);
   const [tableId] = useState(v4());
   const { width, recordbase = {}, iseditting, isMingoCreate } = useContext(RecordFormContext) || {};
   const { recordTitle } = recordbase;

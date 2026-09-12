@@ -298,7 +298,7 @@ class GDMap extends Component<any, any> {
               name="amapMDMap"
               autoComplete="off"
               type={isMobile ? 'search' : 'text'}
-              ref={con => (this.searchRef = con)}
+              ref={con => { this.searchRef = con; }}
               placeholder={_l('搜索地点')}
               className="MDMapInput textPrimary"
               onKeyUp={e => e.keyCode === 13 && this.handleChange()}
@@ -424,7 +424,7 @@ class GDMap extends Component<any, any> {
                 <div
                   className="mBottom10"
                   style={{ height: 254 }}
-                  ref={container => (this._mapContainer = container)}
+                  ref={container => { this._mapContainer = container; }}
                 />
                 {defaultLocation && <img src={markImg} className="markMapImg" />}
               </div>
@@ -492,7 +492,7 @@ class GDMap extends Component<any, any> {
             </div>
 
             <div className="flex h100 Relative">
-              <div className="h100" ref={container => (this._mapContainer = container)} />
+              <div className="h100" ref={container => { this._mapContainer = container; }} />
               {defaultLocation && <img src={markImg} className="markMapImg" />}
             </div>
           </div>

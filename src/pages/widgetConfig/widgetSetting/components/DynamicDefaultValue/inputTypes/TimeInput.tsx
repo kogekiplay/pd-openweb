@@ -112,7 +112,7 @@ export default class TimeInput extends Component<any, any> {
     return (
       <DynamicValueInputWrap>
         {defaultType ? <DynamicInput {...this.props} onTriggerClick={this.onTriggerClick} /> : this.renderContent()}
-        <SelectOtherField {...this.props} ref={con => (this.$wrap = con)} />
+        <SelectOtherField {...this.props} ref={con => { this.$wrap = con; }} />
       </DynamicValueInputWrap>
     );
   }

@@ -522,7 +522,7 @@ class Dropdown extends Component<any, any> {
       <div className={`ming Dropdown pointer ${className || ''} ${disabled ? 'disabled' : ''}`} style={style}>
         {isAppendToBody ? (
           <Trigger
-            ref={trigger => (this.trigger = trigger)}
+            ref={trigger => { this.trigger = trigger; }}
             action={['click']}
             popup={this.displayMenu()}
             popupClassName={cx('dropdownTrigger', menuClass)}

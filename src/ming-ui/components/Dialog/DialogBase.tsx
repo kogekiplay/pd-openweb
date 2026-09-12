@@ -347,10 +347,10 @@ class DialogBase extends Component<any, any> {
               overlayOnClick(e);
             }}
           >
-            <div className={dialogClassList.join(' ')} style={style} ref={dialog => (this._dialog = dialog)}>
+            <div className={dialogClassList.join(' ')} style={style} ref={dialog => { this._dialog = dialog; }}>
               {this.props.children}
             </div>
-            <span className="mui-dialog-ghost" ref={ghost => (this._ghost = ghost)} />
+            <span className="mui-dialog-ghost" ref={ghost => { this._ghost = ghost; }} />
           </div>
         </div>
       );

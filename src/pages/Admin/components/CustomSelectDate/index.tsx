@@ -18,7 +18,7 @@ export default function CustomSelectDate(props) {
     dateInfo = {},
   } = props;
   const [openDateSelect, setOpenDateSelect] = useState(false);
-  const $ref = useRef();
+  const $ref = useRef<any>(undefined);
   const dateFormat = props.dateFormat ? props.dateFormat : 'YYYY-MM-DD';
 
   const changeFileds = item => {

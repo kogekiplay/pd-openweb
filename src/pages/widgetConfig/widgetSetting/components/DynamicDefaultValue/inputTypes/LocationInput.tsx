@@ -26,13 +26,13 @@ export default class LocationInput extends Component<any, any> {
           <DynamicInput {...this.props} onTriggerClick={this.onTriggerClick} />
         ) : (
           <OtherFieldList
-            ref={con => (this.userscon = con)}
+            ref={con => { this.userscon = con; }}
             {...this.props}
             removeItem={this.removeItem}
             onClick={() => this.setState({ visible: true })}
           />
         )}
-        <SelectOtherField {...this.props} ref={con => (this.$wrap = con)} />
+        <SelectOtherField {...this.props} ref={con => { this.$wrap = con; }} />
         {this.state.visible && (
           <MDMap
             isMobile={false}

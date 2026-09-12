@@ -158,7 +158,7 @@ const RecentOrCollectAppList = forwardRef(props => {
   } = props;
   const [sortIds, setSortIds] = useState([]);
   const [blankBlockCount, setBlankBlockCount] = useState(0);
-  const listRef = useRef();
+  const listRef = useRef<any>(undefined);
   const minWidth = 180;
 
   useEffect(() => {

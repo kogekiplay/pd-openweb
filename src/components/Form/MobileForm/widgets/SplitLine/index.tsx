@@ -44,10 +44,10 @@ const SplitLine = props => {
     () => getExpandWidgetIds(renderData, { controlId, sectionId }, from),
     [renderData, controlId, sectionId, from],
   );
-  const $ref = useRef();
+  const $ref = useRef<any>(undefined);
   let $originIds = useRef([]);
-  const expandTimerRef = useRef();
-  const navTimerRef = useRef();
+  const expandTimerRef = useRef<any>(undefined);
+  const navTimerRef = useRef<any>(undefined);
 
   const handleExpand = tempVisible => {
     // 不折叠不能点击

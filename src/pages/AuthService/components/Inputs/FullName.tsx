@@ -6,7 +6,7 @@ import _ from 'lodash';
 export default function (props) {
   const { warnList = [], fullName, onChange = () => {}, focusDiv, accountTxtType, accountTxt } = props;
   const warn = _.find(warnList, it => it.tipDom === 'inputFullname');
-  const InputRef = useRef();
+  const InputRef = useRef<any>(undefined);
 
   const getTxt = () => {
     let txt = _l('用户名');

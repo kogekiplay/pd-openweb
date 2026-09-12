@@ -84,7 +84,7 @@ export default function BgPicker(props) {
   const { themeColor, config, onChange } = props;
   const { bgStyleValue } = config;
   const [tab, setTab] = useState(bgStyleValue || TABS[0].value);
-  const colorPickerRef = useRef();
+  const colorPickerRef = useRef<any>(undefined);
 
   const getBgStyle = () => {
     if (bgStyleValue === 'color') {

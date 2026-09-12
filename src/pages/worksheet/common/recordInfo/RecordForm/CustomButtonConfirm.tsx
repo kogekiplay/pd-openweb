@@ -118,7 +118,7 @@ export default function CustomButtonConfirm(props) {
     showTemplateList: false,
     removeNoneVerification: false,
   });
-  const remarkRef = useRef();
+  const remarkRef = useRef<any>(undefined);
   useEffect(() => {
     setState({ checkIsPending: true });
     verifyPassword({

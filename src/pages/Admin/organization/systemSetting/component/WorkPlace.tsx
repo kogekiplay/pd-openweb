@@ -295,7 +295,7 @@ export default class WorkPlace extends Component<any, any> {
                   </button>
                 )}
               </div>
-              <div className="searchContainer Right Relative" ref={box => (this.box = box)}>
+              <div className="searchContainer Right Relative" ref={box => { this.box = box; }}>
                 <span
                   className="icon-search btnSearch textSecondary"
                   title={_l('搜索')}

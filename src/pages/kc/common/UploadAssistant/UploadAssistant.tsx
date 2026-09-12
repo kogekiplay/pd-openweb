@@ -457,7 +457,7 @@ class UploadAssistant extends React.Component<any, any> {
     return (
       <div
         id="uploadAssistant"
-        ref={root => (this.root = root)}
+        ref={root => { this.root = root; }}
         className="uploadAssistant flexColumn"
         onDragOver={() => this.setState({ dragOver: true })}
         onDragLeave={() => this.setState({ dragOver: false })}

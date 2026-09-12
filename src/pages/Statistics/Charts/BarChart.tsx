@@ -820,7 +820,7 @@ export default class extends Component<any, any> {
           <div className="Absolute" style={{ left: offset.x, top: offset.y }}></div>
         </Dropdown>
         {displaySetup.showTotal && this.renderCount()}
-        <div className="h100" ref={el => (this.chartEl = el)}></div>
+        <div className="h100" ref={el => { this.chartEl = el; }}></div>
       </div>)
     );
   }

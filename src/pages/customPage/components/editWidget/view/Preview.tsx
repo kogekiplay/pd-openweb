@@ -154,7 +154,7 @@ const navigateToView = (workSheetId, viewId) => {
 export function View(props) {
   const { appId, setting = {}, className, layoutType, filtersGroup = [], themeColor } = props;
   const { id, apkId, value, viewId, config = {} } = setting;
-  const singleViewRef = useRef();
+  const singleViewRef = useRef<any>(undefined);
   const isMobileLayout = isMobile || layoutType === 'mobile';
   const translateInfo = getTranslateInfo(appId, null, id);
   const Component = isMobileLayout ? LoadableMobileSingleView : LoadableSingleView;

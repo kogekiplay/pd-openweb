@@ -66,7 +66,7 @@ export default class SystemSetting extends Component<any, any> {
 
         <div className={cx('flexColumn', { orgManagementContent: showHeader, orgManagementWrap: !showHeader })}>
           <ActiveComp
-            ref={ele => (this.com = ele)}
+            ref={ele => { this.com = ele; }}
             projectId={Config.projectId}
             changeTab={this.changeTab}
             changeShowHeader={visible => this.setState({ showHeader: visible })}

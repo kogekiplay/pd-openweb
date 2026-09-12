@@ -81,7 +81,7 @@ function CustomWidgetViewContent(props) {
   const pluginIsPublished = _.get(view, 'pluginInfo.source') === 1;
   const showDebugButton = isCharge && !browserIsMobile() && !pluginIsPublished;
   const [status, setStatus] = useState(getViewStatus({ scriptUrl, view }));
-  const conRef = useRef();
+  const conRef = useRef<any>(undefined);
   useEffect(() => {
     setStatus(getViewStatus({ scriptUrl, view }));
   }, [flag, scriptUrl, viewId]);

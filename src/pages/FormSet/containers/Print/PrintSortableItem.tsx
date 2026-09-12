@@ -21,7 +21,7 @@ export default function PrintSortableItem(props) {
   const printInfo = getPrintCardInfoOfTemplate(item);
   const isCustom = [PRINT_TYPE.WORD_PRINT, PRINT_TYPE.EXCEL_PRINT].includes(item.type);
   const isCloudPrint = item.type === PRINT_TYPE.CLOUD_PRINT;
-  const inputRef = useRef();
+  const inputRef = useRef<any>(undefined);
 
   const [inputName, setInputName] = useState(item.name);
   const [isRename, setIsRename] = useState(false);

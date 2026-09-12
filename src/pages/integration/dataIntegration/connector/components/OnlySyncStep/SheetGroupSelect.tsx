@@ -42,7 +42,7 @@ export default function SheetGroupSelect(props) {
   const [groupPopupVisible, setGroupPopupVisible] = useState(false);
   const [searchKeyWords, setSearchKeyWords] = useState('');
   const [groups, setGroups] = useState([]);
-  const groupRef = useRef();
+  const groupRef = useRef<any>(undefined);
 
   useEffect(() => {
     !!appId &&

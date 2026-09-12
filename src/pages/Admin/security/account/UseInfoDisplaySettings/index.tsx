@@ -83,7 +83,7 @@ export default class UseInfoDisplaySettings extends Component<any, any> {
 
         <div className="orgManagementContent">
           <UserBaseInfoSetting
-            ref={ele => (this.settingEle = ele)}
+            ref={ele => { this.settingEle = ele; }}
             projectId={projectId}
             editStatus={editStatus}
             flag={flag}

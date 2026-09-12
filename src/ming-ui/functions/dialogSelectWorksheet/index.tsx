@@ -110,7 +110,7 @@ const Item = styled.div`
 
 function SelectWorksheet(props) {
   const { projectId, title, onClose, onOk = () => {} } = props;
-  const searchRef = useRef();
+  const searchRef = useRef<any>(undefined);
   const [
     {
       keywords,

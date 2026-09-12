@@ -61,8 +61,8 @@ function User(props) {
   const [currentData, setCurrentData] = useState([]); //当前用户详情
   const [currentId, setCurrentId] = useState(''); //当前用户详情
   const [filterStatus, setFilterStatus] = useState('');
-  const filterStatusNum = useRef();
-  const filtersTag = useRef();
+  const filterStatusNum = useRef<any>(undefined);
+  const filtersTag = useRef<any>(undefined);
 
   useEffect(() => {
     filterStatusNum.current = '';

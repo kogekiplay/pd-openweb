@@ -47,7 +47,7 @@ export default function SearchInput(props) {
   // name，浏览器从没存过它的历史值；只补 name 会开始积累自动填充历史，多出一个下拉框
   // 盖住搜索结果——两个一起加才是「消掉提示且行为不变」。
   const { clickShowInput, placeholder, value, onChange, name = 'search' } = props;
-  const inputRef = useRef();
+  const inputRef = useRef<any>(undefined);
   const [isFocus, setIsFocus] = useState();
 
   useEffect(() => {

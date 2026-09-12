@@ -47,16 +47,16 @@ class WidgetsDesc extends React.Component<any, any> {
     if (hintShowAsText) {
       return (
         <p className="descBox pAll0 mAll0 mBottom0 mTop6 Font12 textSecondary w100">
-          <span className="descTxt" ref={formcon => (this.formconBox = formcon)}>
+          <span className="descTxt" ref={formcon => { this.formconBox = formcon; }}>
             <span
-              ref={formcon => (this.formcon = formcon)}
+              ref={formcon => { this.formcon = formcon; }}
               className="descText"
               style={{ wordBreak: 'normal', overflowWrap: 'break-word' }}
             >
               <Linkify properties={{ target: '_blank' }}>{item.desc}</Linkify>
             </span>
             <span
-              ref={formcon => (this.formconMoreDesc = formcon)}
+              ref={formcon => { this.formconMoreDesc = formcon; }}
               className="moreDesc Hand Font12"
               onClick={() => {
                 if (!isShow) {

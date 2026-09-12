@@ -25,7 +25,7 @@ class SelectItem extends Component<any, any> {
       disabled,
     });
     return (
-      <li ref={ref => (this._selectitem = ref)} className={optCls} {...optionEvent}>
+      <li ref={ref => { this._selectitem = ref; }} className={optCls} {...optionEvent}>
         {this.props.children}
       </li>
     );

@@ -307,7 +307,7 @@ class CalendarRange extends Component<any, any> {
     }
 
     return (
-      <div className={classes} ref={root => (this._root = root)}>
+      <div className={classes} ref={root => { this._root = root; }}>
         {taskHeader}
         <div className={`${prefixCls}-panel`}>
           <div className={`${prefixCls}-date-panel`}>

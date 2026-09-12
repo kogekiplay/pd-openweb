@@ -48,7 +48,7 @@ export default class SaveWorksheetFilter extends Component<any, any> {
           onClose();
         }}
       >
-        <div className="formItem flexRow" ref={form => (this.form = form)}>
+        <div className="formItem flexRow" ref={form => { this.form = form; }}>
           <div className="label">{_l('名称')}</div>
           <div className="content">
             <div className="flex content">

@@ -38,9 +38,9 @@ const getOpenKeys = props => {
 export const useGalleryFetchEffect = (props, options) => {
   const { clicksearch, setClicksearch, setOpKeys, getFetch } = options;
   const latestPropsRef = useRef(props);
-  const prevPropsRef = useRef();
-  const fetchTimerRef = useRef();
-  const openKeysTimerRef = useRef();
+  const prevPropsRef = useRef<any>(undefined);
+  const fetchTimerRef = useRef<any>(undefined);
+  const openKeysTimerRef = useRef<any>(undefined);
 
   latestPropsRef.current = props;
 

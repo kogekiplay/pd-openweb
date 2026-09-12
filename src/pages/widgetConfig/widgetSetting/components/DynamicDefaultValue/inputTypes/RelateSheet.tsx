@@ -96,7 +96,7 @@ export default class RelateSheet extends Component<any, any> {
             removeRelateSheet={this.removeRelateSheet}
           />
         )}
-        <SelectOtherField {...this.props} ref={con => (this.$wrap = con)} />
+        <SelectOtherField {...this.props} ref={con => { this.$wrap = con; }} />
       </DynamicValueInputWrap>
     );
   }

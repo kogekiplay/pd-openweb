@@ -122,7 +122,7 @@ export default function GeneratingPopup(props) {
   } = props;
   const disabledPrev = loading || pageIndex <= 1;
   const disabledNext = loading || pageIndex >= Math.ceil(count / pageSize);
-  const embedRef = useRef();
+  const embedRef = useRef<any>(undefined);
   useEffect(() => {
     if (embedUrl) {
       PDFObject.embed(embedUrl, embedRef.current);

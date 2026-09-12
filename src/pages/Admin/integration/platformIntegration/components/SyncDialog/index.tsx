@@ -183,7 +183,7 @@ export default class SyncDialog extends Component<any, any> {
           <input
             name="syncDialog"
             autoComplete="off"
-            ref={ele => (this.input = ele)}
+            ref={ele => { this.input = ele; }}
             placeholder={_l('搜索姓名、部门、职位')}
             onChange={e => this.searchQWUserList(e.target.value)}
           />

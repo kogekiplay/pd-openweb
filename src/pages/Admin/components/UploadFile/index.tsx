@@ -73,7 +73,7 @@ export default class UploadFile extends Component<any, any> {
     return (
       <button
         id="upload_field"
-        ref={con => (this.con = con)}
+        ref={con => { this.con = con; }}
         type="button"
         className="ming Button uploadBtnStyle mTop30"
       >

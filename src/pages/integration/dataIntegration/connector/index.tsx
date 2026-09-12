@@ -202,7 +202,7 @@ function Connector(props) {
   const [addVisible, setAddVisible] = useState(false);
   const [connectorList, setConnectorList] = useState([]);
   const [sourceOptionsData, setSourceOptionsData] = useState([]);
-  const selectOptionListRef = useRef();
+  const selectOptionListRef = useRef<any>(undefined);
   const TYPES = [
     { title: _l('数据源类型'), key: 'source' },
     { title: _l('目的地类型'), key: 'dest' },

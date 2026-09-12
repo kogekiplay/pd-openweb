@@ -69,7 +69,7 @@ export default function WidgetContainer(props) {
   // 调试脚本（含云端沙箱隧道地址）需直接加载，跳过跨域 iframe 沙箱代理，避免地址被代理域名拼接污染
   const isLocalScript = isDebugBundle || /localhost|127\.0\.0\.1/.test(scriptUrl);
   const pluginRuntimeUrl = isLocalScript ? '' : rawPluginRuntimeUrl;
-  const iframeRef = useRef();
+  const iframeRef = useRef<any>(undefined);
   const cache = useRef({});
   const containerId = useRef(uuidv4());
   const bridge = useRef(

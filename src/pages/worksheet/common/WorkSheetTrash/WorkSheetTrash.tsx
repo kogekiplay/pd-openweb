@@ -152,7 +152,7 @@ export default function WorkSheetTrash(props) {
     reloadWorksheet = () => {},
     onCancel = () => {},
   } = props;
-  const headerRef = useRef();
+  const headerRef = useRef<any>(undefined);
   const needRestoreRelation = useRef(true);
   const [isAll, setIsAll] = useState(false);
   const [selected, setSelected] = useState([]);

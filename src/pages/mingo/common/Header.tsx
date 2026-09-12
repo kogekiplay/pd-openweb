@@ -141,15 +141,15 @@ const QrCode = styled.div`
 `;
 
 export default function Header({
-  error,
-  isShare,
+  error = undefined,
+  isShare = undefined,
   isFooter = false,
-  isSmallMode,
+  isSmallMode = undefined,
   brandWordmark = false,
   useMingdaoLogo = false,
   hideLoginEntry = false,
-  onCopyLink,
-  onContinueChat,
+  onCopyLink = undefined,
+  onContinueChat = undefined,
 }) {
   const searchParams = new URL(location.href).searchParams;
   const isEmbed = !!searchParams.get('embed') || window.top !== window.self;

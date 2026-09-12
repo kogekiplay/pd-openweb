@@ -520,7 +520,7 @@ export default class Widgets extends Component<any, any> {
           />
         )}
 
-        {this.props.default === '1' && <div className="hidden" ref={container => (this._mapContainer = container)} />}
+        {this.props.default === '1' && <div className="hidden" ref={container => { this._mapContainer = container; }} />}
       </Fragment>
     );
   }

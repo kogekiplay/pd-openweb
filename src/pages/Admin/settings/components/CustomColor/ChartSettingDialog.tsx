@@ -222,7 +222,7 @@ export default function ChartSettingDialog(props) {
   const [customThemeVisible, setCustomThemeVisible] = useState(false);
   const [otherThemeColors, setOtherThemeColors] = useState([]);
   const [lastColor, setLastColor] = useState('');
-  const inputRef = useRef();
+  const inputRef = useRef<any>(undefined);
 
   useEffect(() => {
     if (inputRef.current) {

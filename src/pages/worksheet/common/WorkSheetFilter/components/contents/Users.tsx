@@ -200,7 +200,7 @@ export default class Users extends Component<any, any> {
     const { users } = this.state;
     return (
       <div className="worksheetFilterUsersCondition">
-        <div className={cx('usersCon', { disabled })} ref={con => (this.userscon = con)} onClick={this.addUser}>
+        <div className={cx('usersCon', { disabled })} ref={con => { this.userscon = con; }} onClick={this.addUser}>
           {users.length ? (
             users.map((user, index) => (
               <div className="userItem" key={index}>

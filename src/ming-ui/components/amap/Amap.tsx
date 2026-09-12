@@ -257,7 +257,7 @@ export default class Amap extends Component<any, any> {
       <div className={mapCls}>
         {mapSearch ? this.renderInput() : undefined}
         {this.props.topRightElement && <div className="Amap-topRightElement">{this.props.topRightElement}</div>}
-        <div style={newStyle} className="AmapContainer" ref={container => (this._mapContainer = container)} />
+        <div style={newStyle} className="AmapContainer" ref={container => { this._mapContainer = container; }} />
       </div>
     );
   }

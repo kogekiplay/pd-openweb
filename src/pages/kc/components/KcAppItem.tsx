@@ -227,7 +227,7 @@ export default class KcAppItem extends React.Component<any, any> {
               <span>
                 <HoverState
                   component="span"
-                  ref={moreActions => (this.moreActions = moreActions)}
+                  ref={moreActions => { this.moreActions = moreActions; }}
                   className={cx(
                     'actions pointer',
                     { colorPrimary: this.state.hoverMoreActionsBtn || this.state.clickMoreActionsBtn },
@@ -358,7 +358,7 @@ export default class KcAppItem extends React.Component<any, any> {
             <Tooltip title={_l('更多操作')}>
               <span>
                 <HoverState
-                  ref={moreActions => (this.moreActions = moreActions)}
+                  ref={moreActions => { this.moreActions = moreActions; }}
                   component="span"
                   className={cx('actions pointer icon-more_horiz', {
                     colorPrimary: this.state.hoverMoreActionsBtn || this.state.clickMoreActionsBtn,

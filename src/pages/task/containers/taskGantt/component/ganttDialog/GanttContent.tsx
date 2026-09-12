@@ -106,7 +106,7 @@ export default class ganttContent extends Component<any, any> {
     return (
       <div className="ganttContentBox flex flexColumn" onScroll={e => this.handleScroll(e.target)}>
         <TimeHeader {...{ time, type }} getPosList={this.getPosList} />
-        <div className="graphWrap" ref={node => (this.graphWrap = node)}>
+        <div className="graphWrap" ref={node => { this.graphWrap = node; }}>
           <GraphBg {...{ time, type, durFromBeginToToday }} />
           <GraphContent {...{ time, width, type, beginTime, ...rest }} />
         </div>

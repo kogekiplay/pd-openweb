@@ -100,7 +100,7 @@ function DetailView(props) {
   const currentView = views.find(o => o.viewId === viewId) || {};
   const coverCid = currentView.coverCid || _.get(worksheetInfo, ['advancedSetting', 'coverid']);
   const { showtoolbar, showtitle } = getAdvanceSetting(currentView);
-  const inputRef = useRef();
+  const inputRef = useRef<any>(undefined);
   const cardWidth = getCardWidth(currentView);
 
   const [currentRecord, setCurrentRecord] = useState({});

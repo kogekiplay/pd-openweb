@@ -612,7 +612,7 @@ class UserCard extends React.Component<any, any> {
     if (isMobile || disabled || isPublic || !md.global.Account.accountId) return this.props.children;
 
     return (
-      <Trigger key={wrapKey} ref={ele => (this.triggerRef = ele)} {...props}>
+      <Trigger key={wrapKey} ref={ele => { this.triggerRef = ele; }} {...props}>
         {this.props.children}
       </Trigger>
     );

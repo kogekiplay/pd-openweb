@@ -109,7 +109,7 @@ export default class UploadFile extends Component<any, any> {
       <UploadWrap style={style}>
         <div
           id="uploadExcel"
-          ref={node => (this.uplaodaExcel = node)}
+          ref={node => { this.uplaodaExcel = node; }}
           className="h100 flexColumn justifyContentCenter alignItemsCenter Hand"
         >
           <Icon icon="upload_file" className="Font48 mBottom18" />

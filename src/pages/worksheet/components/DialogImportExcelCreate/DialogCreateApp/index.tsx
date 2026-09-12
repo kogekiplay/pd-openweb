@@ -155,7 +155,7 @@ export default class DialogCreateApp extends Component<any, any> {
               <img src={successImg} className={cx('successImg', { successBg: createAppStatus && !createAppLoading })} />
             )}
             <div className={cx('appName bold TxtCenter ellipsis', { bgColor: !createAppStatus && !createAppLoading })}>
-              <label ref={node => (this.inputBox = node)} id="label" class="occupation"></label>
+              <label ref={node => { this.inputBox = node; }} id="label" class="occupation"></label>
               {editAppName ? (
                 <input
                   type="text"
@@ -208,7 +208,7 @@ export default class DialogCreateApp extends Component<any, any> {
                         <input
                           name="dialogImportExcelCreateDialogCreateApp"
                           autoComplete="off"
-                          ref={node => (this.editInput = node)}
+                          ref={node => { this.editInput = node; }}
                           value={item.sheetName}
                           className="editSheetNameInput"
                           onChange={e => this.changeSheetName(e, item)}

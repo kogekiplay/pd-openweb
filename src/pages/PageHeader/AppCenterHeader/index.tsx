@@ -161,7 +161,7 @@ const UpgradeWrap = styled.div`
 function AppCenterHeader(props) {
   const projectId = _.get(props, 'match.params.projectId');
   const projects = md.global.Account.projects;
-  const createRef = useRef();
+  const createRef = useRef<any>(undefined);
   const [currentProject, setCurrentProject] = useState(
     getCurrentProject(projectId || localStorage.getItem('currentProjectId')),
   );

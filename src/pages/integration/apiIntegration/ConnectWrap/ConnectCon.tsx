@@ -70,8 +70,8 @@ function ConnectCon(props) {
   });
 
   const cache = useRef({ isFix: false });
-  const headerRef = useRef();
-  const WrapRef = useRef();
+  const headerRef = useRef<any>(undefined);
+  const WrapRef = useRef<any>(undefined);
   const [{ authType, actionId }, setDefaultFlowNode] = useSetState({
     authType: _.get(props, 'data.authType'),
     actionId: _.get(props, 'data.actionId'),

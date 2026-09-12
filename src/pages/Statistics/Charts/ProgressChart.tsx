@@ -278,7 +278,7 @@ class ProgressChart extends Component<any, any> {
       <Fragment>
         <div className="Font13 textSecondary">{yAxis.rename || yAxis.controlName}</div>
         <div className="flexRow alignItemsCenter mTop7 mBottom7 printStatisticSign">
-          <div className="flex overflowHidden" style={{ borderRadius: 2 }} ref={el => (this.chartEl = el)} />
+          <div className="flex overflowHidden" style={{ borderRadius: 2 }} ref={el => { this.chartEl = el; }} />
           <div
             className="Font20 ellipsis mLeft12 bold textPrimary"
             style={{ lineHeight: '18px' }}
@@ -297,7 +297,7 @@ class ProgressChart extends Component<any, any> {
   renderRingProgress() {
     return (
       <Fragment>
-        <div className="alignItemsCenter justifyContentCenter flexRow" ref={el => (this.chartEl = el)} />
+        <div className="alignItemsCenter justifyContentCenter flexRow" ref={el => { this.chartEl = el; }} />
       </Fragment>
     );
   }

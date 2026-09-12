@@ -54,9 +54,9 @@ function Header({ data, apkInfo, isConnectOwner, forPage, listId, onCancel, onDe
   const [showMenu, setShowMenu] = useState(false);
 
   // 内部 refs
-  const TipRef = useRef();
-  const InputRef = useRef();
-  const InputDesRef = useRef();
+  const TipRef = useRef<any>(undefined);
+  const InputRef = useRef<any>(undefined);
+  const InputDesRef = useRef<any>(undefined);
 
   // 编辑描述时自动聚焦
   useEffect(() => {

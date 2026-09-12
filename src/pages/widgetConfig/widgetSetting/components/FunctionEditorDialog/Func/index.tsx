@@ -125,7 +125,7 @@ function Func(props, ref) {
     }
   }
 
-  const codeEditor = useRef();
+  const codeEditor = useRef<any>(undefined);
   const loadingTimerRef = useRef(null);
 
   const editorFunctions = key => {

@@ -72,7 +72,7 @@ export default function UrlParams(props) {
   const { view = {}, updateCurrentView, appId, worksheetId, currentSheetInfo, sheetSwitchPermit, hasCharge } = props;
   const [params, setParams] = useState(safeParse(view?.advancedSetting?.urlparams, 'array'));
   const [flag, setFlag] = useState(false);
-  const paramsRef = useRef();
+  const paramsRef = useRef<any>(undefined);
 
   useEffect(() => {
     if (paramsRef && paramsRef.current && paramsRef.current.lastChild && paramsRef.current.lastChild.firstChild) {

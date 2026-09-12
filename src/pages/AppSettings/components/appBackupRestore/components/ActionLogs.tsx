@@ -132,7 +132,7 @@ const PAGESIZE = 10;
 
 export default function ActionLogs(props) {
   const { appId, projectId, onClose = () => {} } = props;
-  const selectUserRef = useRef();
+  const selectUserRef = useRef<any>(undefined);
   const [{ selectUser, selectDate, isLoading, pageIndex, actLogList, startTime, endTime, total }, setPara] =
     useSetState({
       selectUser: undefined,

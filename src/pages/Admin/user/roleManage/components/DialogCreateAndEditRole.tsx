@@ -159,7 +159,7 @@ class DialogCreateAndEditRole extends React.Component<any, any> {
             maxLength={32}
             value={roleName}
             placeholder={_l('请填写角色名称')}
-            ref={node => (this.input = node)}
+            ref={node => { this.input = node; }}
             onChange={e => {
               this.setState({
                 roleName: e.target.value,

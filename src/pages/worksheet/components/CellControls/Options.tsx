@@ -61,7 +61,7 @@ const OtherOptionTextInputCon = styled.div`
 
 function OtherOptionTextInput(props) {
   const { className, value = '', onChange, handleSave, onSave } = props;
-  const textRef = useRef();
+  const textRef = useRef<any>(undefined);
   useEffect(() => {
     try {
       textRef.current.textarea.focus();
@@ -109,7 +109,7 @@ function OtherOption(props) {
   const { style, otherRequired, otherValue = '', getPopupContainer, selected = {}, onSave = () => {} } = props;
   const [value, setValue] = useState(otherValue);
   const [error, setError] = useState();
-  const conRef = useRef();
+  const conRef = useRef<any>(undefined);
 
   function handleSave() {
     if (otherRequired && !value.trim()) {

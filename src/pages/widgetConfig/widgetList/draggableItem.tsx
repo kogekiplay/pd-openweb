@@ -82,7 +82,7 @@ export default function DraggableItem(props) {
   }, [preview]);
 
   return (
-    <li className={cx('widgetLi', { widgetCustom: isCustomWidget })} ref={drag} onClick={handleAdd}>
+    <li className={cx('widgetLi', { widgetCustom: isCustomWidget })} ref={el => { drag(el); }} onClick={handleAdd}>
       <div className="widgetItem">
         <i className={`icon-${icon}`}></i>
         <span>{widgetName}</span>

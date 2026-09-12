@@ -75,7 +75,7 @@ export default class AppManagement extends Component<any, any> {
         </div>
         <AppList
           className={currentTab === 'list' ? '' : 'hide'}
-          ref={ele => (this.appListRef = ele)}
+          ref={ele => { this.appListRef = ele; }}
           projectId={projectId}
           queryString={this.props.location.search && this.props.location.search.slice(1)}
           updateListTotalNum={num => {

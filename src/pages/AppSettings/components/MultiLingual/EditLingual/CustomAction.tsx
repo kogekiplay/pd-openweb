@@ -13,7 +13,7 @@ export default function CustomAction(props) {
   const [loading, setLoading] = useState(true);
   const [sheetBtns, setSheetBtns] = useState([]);
   const [searchValue, setSearchValue] = useState('');
-  const scrollViewRef = useRef();
+  const scrollViewRef = useRef<any>(undefined);
   const [optionsEditDialogVisible, setOptionsEditDialogVisible] = useState('');
 
   useEffect(() => {

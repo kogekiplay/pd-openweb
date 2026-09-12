@@ -216,7 +216,7 @@ export default class InitBindAccountDialog extends Component<any, any> {
               name="initBindAccountDialog1"
               autoComplete="off"
               className={cx('inputBox', { errors: errorMsg.account })}
-              ref={mobile => (this.mobile = mobile)}
+              ref={mobile => { this.mobile = mobile; }}
               placeholder={_l('请输入手机号')}
               value={account}
               maxLength="11"

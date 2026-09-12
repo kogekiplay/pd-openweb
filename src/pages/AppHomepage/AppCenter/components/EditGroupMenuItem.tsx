@@ -146,7 +146,7 @@ function EditPanel(props) {
 
 export default function EditGroupMenuItem(props) {
   const { groups = [], projectId, myPermissions = [] } = props;
-  const itemRef = useRef();
+  const itemRef = useRef<any>(undefined);
   const personalGroups = groups.filter(g => g.groupType === 0);
   const projectGroups = groups.filter(g => g.groupType === 1);
   const hasManageAppAuth = hasPermission(myPermissions, PERMISSION_ENUM.APP_RESOURCE_SERVICE);

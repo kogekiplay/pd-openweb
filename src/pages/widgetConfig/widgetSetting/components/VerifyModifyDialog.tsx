@@ -21,7 +21,7 @@ const VerifyModifyDialogWrap = styled.div`
   }
 `;
 
-export default function VerifyModifyDialog({ desc, cancelText, onClose, onOk, onCancel }) {
+export default function VerifyModifyDialog({ desc = undefined, cancelText = undefined, onClose, onOk, onCancel }) {
   return (
     <Dialog visible footer={null} onCancel={onCancel} title={<span>{_l('您是否保存此次更改')}</span>}>
       <VerifyModifyDialogWrap>

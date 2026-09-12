@@ -435,7 +435,7 @@ class ColorPicker extends Component<any, any> {
           getPopupContainer={this.getPopupContainer}
           popup={popup}
         >
-          <span className="ColorPicker-input-container" ref={trigger => (this.trigger = trigger)}>
+          <span className="ColorPicker-input-container" ref={trigger => { this.trigger = trigger; }}>
             {cloneElement(
               children ? (
                 children

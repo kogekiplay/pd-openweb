@@ -90,7 +90,7 @@ export default function CellWithPopupOperate({
     renderColumnPopupContent,
   } = cellProps;
   const [popupVisible, setPopupVisible] = useState(false);
-  const dragRef = useRef();
+  const dragRef = useRef<any>(undefined);
   const allowDelete = useUserPermission && !!recordId ? row?.allowdelete : true;
   const customPopupContent = isFunction(renderColumnPopupContent)
     ? renderColumnPopupContent({ className, style, rowIndex, row })

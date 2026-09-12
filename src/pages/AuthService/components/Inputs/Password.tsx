@@ -11,7 +11,7 @@ export default function (props) {
   const [{ isOpen, inputType }, setState] = useSetState({ isOpen: false, inputType: 'text' });
 
   const warn = _.find(warnList, it => it.tipDom === 'inputPassword');
-  const InputRef = useRef();
+  const InputRef = useRef<any>(undefined);
 
   useEffect(() => {
     setState({

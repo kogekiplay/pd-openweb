@@ -116,7 +116,7 @@ class BackupFromFilesCom extends Component<any, any> {
   renderUploadBtn = children => {
     return (
       <QiniuUpload
-        ref={ele => (this.uploaderWrap = ele)}
+        ref={ele => { this.uploaderWrap = ele; }}
         className="upgradeAppUpload mTop24"
         options={{
           filters: {

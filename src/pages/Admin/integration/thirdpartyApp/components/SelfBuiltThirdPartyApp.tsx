@@ -200,7 +200,7 @@ class Upload extends Component<any, any> {
     const { uploadAvatarUrl } = this.state;
     return (
       <UploadContent className="flexRow">
-        <div id="uploadAppIcon" ref={el => (this.uploadFileEl = el)}>
+        <div id="uploadAppIcon" ref={el => { this.uploadFileEl = el; }}>
           {this.state.loading ? (
             <LoadDiv size="small" />
           ) : uploadAvatarUrl || avatarUrl ? (

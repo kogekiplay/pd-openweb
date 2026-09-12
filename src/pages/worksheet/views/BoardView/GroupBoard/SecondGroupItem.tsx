@@ -74,7 +74,7 @@ const SecondGroupItem = props => {
   };
 
   return (
-    <div className="secondGroupItemWrap" ref={allowOperation ? drop : null}>
+    <div className="secondGroupItemWrap" ref={allowOperation ? el => { drop(el); } : null}>
       <div className="secondGroupItemWrap">
         {isOver && (list.key !== dragItemKey || secondGroupOpt.key !== secondGroupKey) && (
           <div className="isDragTempBlock"></div>

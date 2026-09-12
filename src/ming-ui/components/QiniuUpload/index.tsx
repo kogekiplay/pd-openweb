@@ -86,7 +86,7 @@ export default class QiniuUpload extends React.Component<any, any> {
   render() {
     const { className, children } = this.props;
     return (
-      <div className={`InlineBlock ${className || ''}`} ref={con => (this.upload = con)}>
+      <div className={`InlineBlock ${className || ''}`} ref={con => { this.upload = con; }}>
         {children}
       </div>
     );

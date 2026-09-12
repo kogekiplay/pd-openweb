@@ -79,7 +79,7 @@ class TopPostList extends React.Component<any, any> {
   handleChangeItem(pageIndex) {
     this.setState({ pageIndex }, this.nextItem);
   }
-  renderRoot = props => <div {...props} ref={root => (this.root = root)} />;
+  renderRoot = props => <div {...props} ref={root => { this.root = root; }} />;
   render() {
     const { groupId, projectId, listType } = this.props.options;
     if (!this.props.topPostIds.length || listType !== postEnum.LIST_TYPE.project || groupId || projectId === '')

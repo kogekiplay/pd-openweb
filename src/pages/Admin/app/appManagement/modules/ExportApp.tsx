@@ -180,7 +180,7 @@ export default class ExportApp extends React.Component<any, any> {
                   className={cx('inputBox', { editInput: canEdit })}
                   placeholder={placeholder}
                   value={this.state[password]}
-                  ref={input => (this[`${key}Input`] = input)}
+                  ref={input => { this[`${key}Input`] = input; }}
                   onChange={e => this.setState({ [password]: e.target.value })}
                   onFocus={() => this.setState({ [`${key}Edit`]: true })}
                   onBlur={e => {
@@ -250,7 +250,7 @@ export default class ExportApp extends React.Component<any, any> {
           </div>
         </div>
         <AppSettings
-          ref={con => (this.settings = con)}
+          ref={con => { this.settings = con; }}
           list={exportList}
           getIsDisabledExportBtn={this.getIsDisabledExportBtn}
         />

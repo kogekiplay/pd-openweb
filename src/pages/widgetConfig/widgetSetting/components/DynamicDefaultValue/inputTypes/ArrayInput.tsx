@@ -83,7 +83,7 @@ export default class ArrayInput extends Component<any, any> {
   render() {
     const { defaultType } = this.props;
     return (
-      <DynamicValueInputWrap ref={con => (this.$textinput = con)} triggerStyle={true}>
+      <DynamicValueInputWrap ref={con => { this.$textinput = con; }} triggerStyle={true}>
         {defaultType ? (
           <DynamicInput {...this.props} onTriggerClick={this.onTriggerClick} />
         ) : (
@@ -103,7 +103,7 @@ export default class ArrayInput extends Component<any, any> {
         <SelectOtherField
           {...this.props}
           onDynamicValueChange={this.handleDynamicValue}
-          ref={con => (this.$wrap = con)}
+          ref={con => { this.$wrap = con; }}
           popupContainer={this.$textinput}
         />
       </DynamicValueInputWrap>

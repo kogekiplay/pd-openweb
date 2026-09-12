@@ -10,7 +10,7 @@ export default function SubTable(props) {
   const [sheetInfo, setSheetInfo] = useState({});
   const [dialogVisible, setDialogVisible] = useState(false);
   const [searchValue, setSearchValue] = useState('');
-  const scrollViewRef = useRef();
+  const scrollViewRef = useRef<any>(undefined);
   const appId = app.id;
 
   useEffect(() => {

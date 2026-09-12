@@ -151,8 +151,8 @@ function NewRecordForm(props) {
   const isSubmitting = useRef(false);
   // 提交锁必须用 ref：requesting 是 state，连点提交时 onSave 闭包里读到的仍是旧值，拦不住第二次提交
   const submitLock = useRef(false);
-  const customwidget = useRef();
-  const formcon = useRef();
+  const customwidget = useRef<any>(undefined);
+  const formcon = useRef<any>(undefined);
   const formdataRef = useRef([]);
   const propsWorksheetInfo = useMemo(() => _.cloneDeep(props.worksheetInfo || {}), []);
   const [formLoading, setFormLoading] = useState(true);

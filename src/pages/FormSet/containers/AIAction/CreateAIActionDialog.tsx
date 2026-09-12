@@ -105,7 +105,9 @@ export default function CreateAIActionDialog(props) {
       defaultAIsuggestions={[
         { summary: _l('总结记录内容'), description: _l('分析记录字段值，提炼当前记录内容的核心信息') },
       ]}
-      updateData={(data, callback = () => {}) => {
+      // callback 必须显式标类型：只写默认值 `= () => {}` 的话 TS 把它推成 `() => void`，
+      // 下面 callback({ ...data }) 就报 TS2554「Expected 0 arguments, but got 1」。
+      updateData={(data, callback: (nextData: object) => void = () => {}) => {
         setState({ ...data });
         callback({ ...data });
       }}

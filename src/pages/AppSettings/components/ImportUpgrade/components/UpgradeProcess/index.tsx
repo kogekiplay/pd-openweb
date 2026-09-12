@@ -304,7 +304,7 @@ export default class UpgradeProcess extends Component<any, any> {
 
     return (
       <QiniuUpload
-        ref={ele => (this.uploaderWrap = ele)}
+        ref={ele => { this.uploaderWrap = ele; }}
         className={cx('upgradeAppUpload mTop24', { 'Visibility hiddenUpload': analyzeLoading })}
         options={{
           filters: {

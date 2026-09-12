@@ -321,7 +321,7 @@ class KcMain extends Component<any, any> {
               key="nodeList"
               containerSelector="#kclistContainer"
               component="ul"
-              ref={dragSelect => (this.dragSelect = dragSelect)}
+              ref={dragSelect => { this.dragSelect = dragSelect; }}
               className="clearfix"
               style={{ position: 'relative' }}
               onDragSelectStart={() => (this.selectedItemsBeforeDragSelect = selectedItems)}
@@ -396,7 +396,7 @@ class KcMain extends Component<any, any> {
 
     // 主体
     return (
-      (<div className="kcMain kcMain flex" ref={kcApp => (this.kcApp = kcApp)}>
+      (<div className="kcMain kcMain flex" ref={kcApp => { this.kcApp = kcApp; }}>
         <div className="previewFileMain">
           {isPreviewFile && (
             <AttachmentsPreview

@@ -242,7 +242,7 @@ function AddWorkflowDialog(props) {
     total: 0,
   });
 
-  const searchRef = useRef();
+  const searchRef = useRef<any>(undefined);
 
   useEffect(() => {
     visible && getAppList();

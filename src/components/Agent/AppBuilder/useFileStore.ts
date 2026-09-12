@@ -34,7 +34,7 @@ export function useFileStore() {
   // 侧栏按文件首次出现的顺序排列，避免后到的文件被 SIDEBAR_ITEMS 固定位插队
   const [pathOrder, setPathOrder] = useState([]);
   // 上一次已应用的 planGenerationId；undefined = 尚未见过任何方案。值变化 = 整套方案被推倒重写。
-  const lastGenIdRef = useRef(undefined);
+  const lastGenIdRef = useRef<any>(undefined);
   // app.json 流式累积缓冲：file:delta 逐段拼接后增量解析 planGenerationId。
   const appMetaBufRef = useRef('');
   // 本轮 app.json 流是否已触发过重置，避免逐 delta 重复 reset。file:begin 时归位。

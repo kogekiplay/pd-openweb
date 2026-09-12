@@ -163,7 +163,7 @@ export default function DialCodePanel({
         <div className="countryList" ref={listRef}>
           {!filteredOptions.length && <div className="empty">{_l('没有匹配的国家/地区')}</div>}
           {!!groupedCountryOptions.preferred.length && (
-            <div ref={node => (sectionRefs.current['#'] = node)}>
+            <div ref={node => { sectionRefs.current['#'] = node; }}>
               <div className="groupTitle">#</div>
               {groupedCountryOptions.preferred.map(item => (
                 <div
@@ -178,7 +178,7 @@ export default function DialCodePanel({
             </div>
           )}
           {groupedCountryOptions.groupKeys.map(key => (
-            <div key={`group-${key}`} ref={node => (sectionRefs.current[key] = node)}>
+            <div key={`group-${key}`} ref={node => { sectionRefs.current[key] = node; }}>
               <div className="groupTitle">{key}</div>
               {(groupedCountryOptions.grouped[key] || []).map(item => (
                 <div

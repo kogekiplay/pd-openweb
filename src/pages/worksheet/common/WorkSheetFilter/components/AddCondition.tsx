@@ -101,7 +101,7 @@ export default class AddCondition extends Component<any, any> {
           }
         >
           <div
-            ref={con => (this.box = con)}
+            ref={con => { this.box = con; }}
             onClick={() => {
               if (disabled) {
                 return;

@@ -207,7 +207,7 @@ export default class UploadFile extends Component<any, any> {
             })}
           </div>
           <div className="uploadFooter">
-            <div className="footerBtn uploadBtn" ref={node => (this.uploadMp3 = node)}>
+            <div className="footerBtn uploadBtn" ref={node => { this.uploadMp3 = node; }}>
               {_l('继续上传')}
             </div>
             <div
@@ -229,7 +229,7 @@ export default class UploadFile extends Component<any, any> {
           id="uploadMp3"
           onDragOver={() => this.setState({ dragOver: true })}
           onDragLeave={() => this.setState({ dragOver: false })}
-          ref={node => (this.uploadMp3 = node)}
+          ref={node => { this.uploadMp3 = node; }}
           className="h100 flexColumn justifyContentCenter alignItemsCenter Hand"
         >
           <Icon icon="upload_file" className="Font56 mBottom18" />

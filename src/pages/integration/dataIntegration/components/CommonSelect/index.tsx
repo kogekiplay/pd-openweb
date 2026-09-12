@@ -34,7 +34,7 @@ const SelectWrapper = styled.div`
 
 export default function CommonSelect(props) {
   const { className, notFoundContent, width, ...restProps } = props;
-  const selectRef = useRef();
+  const selectRef = useRef<any>(undefined);
 
   return (
     <SelectWrapper ref={selectRef} className={className || ''} width={width}>

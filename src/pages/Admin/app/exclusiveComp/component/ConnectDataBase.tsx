@@ -196,7 +196,7 @@ function ConnectDataBase(props) {
               onFocus={() => clearError(`host${index}`)}
               tips={_l('支持单机与副本集，副本集请输入多个数据库地址和端口，且包含主节点')}
               hideLabel={index !== 0}
-              ref={el => (hostInputRefs.current[index] = el)}
+              ref={el => { hostInputRefs.current[index] = el; }}
             />
             <TextInput
               className="textInput"

@@ -1429,7 +1429,7 @@ export default class RecordInfo extends Component<any, any> {
             className={cx('recordInfoCon flexColumn', { abnormal, isWorkflow: from === RECORD_INFO_FROM.WORKFLOW })}
             data-record-id={recordId}
             data-view-id={viewId}
-            ref={con => (this.con = con)}
+            ref={con => { this.con = con; }}
             // onClick={e => e.stopPropagation()}
           >
             {!(abnormal && !isWorkflow) &&

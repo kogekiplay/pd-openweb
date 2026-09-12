@@ -272,7 +272,7 @@ class TaskControl extends Component<any, any> {
           <div className="pLeft12 pRight12 taskCustomFields">
             <CustomFields
               flag={flag}
-              ref={fields => (this.fields = fields)}
+              ref={fields => { this.fields = fields; }}
               sheetSwitchPermit={[{ type: 14, state: true }]}
               isWorksheetQuery={false}
               disableRules={true}

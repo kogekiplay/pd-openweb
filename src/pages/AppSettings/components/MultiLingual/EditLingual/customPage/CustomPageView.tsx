@@ -13,7 +13,7 @@ export default function CustomPageView(props) {
   const [loading, setLoading] = useState(true);
   const [list, setList] = useState([]);
   const [searchValue, setSearchValue] = useState('');
-  const scrollViewRef = useRef();
+  const scrollViewRef = useRef<any>(undefined);
 
   useEffect(() => {
     setLoading(true);

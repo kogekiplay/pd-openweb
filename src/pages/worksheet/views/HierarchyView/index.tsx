@@ -652,7 +652,7 @@ function Hierarchy(props) {
   };
 
   return (
-    <div ref={drop} className="structureViewWrap">
+    <div ref={el => { drop(el); }} className="structureViewWrap">
       {!browserIsMobile() && (
         <LeftBoundary
           {..._.pick(props, ['becomeTopLevelRecord'])}

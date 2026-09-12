@@ -173,7 +173,7 @@ export function renderTabs(props) {
 
 export default function SectionTableNav(props) {
   const { style = {}, sideVisible, formWidth, showSplitIcon, isSplit, setSplit } = props;
-  const tabConRef = useRef();
+  const tabConRef = useRef<any>(undefined);
   const [clientWidth = 0, setClientWidth] = useState();
   const [scrollWidth = 0, setScrollWidth] = useState();
   const [scrollBtnVisible, setScrollBtnVisible] = useState();

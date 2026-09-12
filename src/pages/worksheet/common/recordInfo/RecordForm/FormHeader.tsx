@@ -46,7 +46,7 @@ export default function FormHeader(props) {
     _.get(window, 'shareState.isPublicView') ||
     _.get(window, 'shareState.isPublicPage');
   const { maskPermissions, handleUnMask } = maskinfo;
-  const ownerRef = useRef();
+  const ownerRef = useRef<any>(undefined);
   const ownerControl = _.find(formData, c => c.controlId === 'ownerid');
   const showOwner =
     ownerControl &&

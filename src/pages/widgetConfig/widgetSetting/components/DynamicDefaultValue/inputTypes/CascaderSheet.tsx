@@ -129,7 +129,7 @@ export default class CascaderSheet extends Component<any, any> {
         {!hideOtherFields && (
           <SelectOtherField
             {...this.props}
-            ref={con => (this.$wrap = con)}
+            ref={con => { this.$wrap = con; }}
             onDynamicValueChange={newValue => {
               this.props.onDynamicValueChange(newValue);
             }}

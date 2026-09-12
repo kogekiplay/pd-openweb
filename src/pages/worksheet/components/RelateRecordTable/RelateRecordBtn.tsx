@@ -141,7 +141,7 @@ export default function RelateRecordBtn(props) {
   // rc-trigger 5 给回调补上准确类型之后才暴露出来。
   const [menuVisible, setMenuVisible] = useState(false);
   const [selectedRecords, setSelectedRecords] = useState([]);
-  const conRef = useRef();
+  const conRef = useRef<any>(undefined);
   const btnText = addVisible ? btnName || entityName : _l('选择%0', entityName);
   const iconName = addVisible ? 'icon-plus' : 'icon-link_record';
   const btnClick = addVisible ? onNew : onSelect;

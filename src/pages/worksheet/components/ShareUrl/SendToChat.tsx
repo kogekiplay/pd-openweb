@@ -80,8 +80,8 @@ export default function SendToChat(props) {
   const [list, setList] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
   const [loading, setLoading] = useState();
-  const scrollViewRef = useRef();
-  const descriptionRef = useRef();
+  const scrollViewRef = useRef<any>(undefined);
+  const descriptionRef = useRef<any>(undefined);
 
   useEffect(() => {
     if (_.isNumber(activeIndex) && scrollViewRef.current) {

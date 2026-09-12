@@ -375,7 +375,7 @@ class ImageViewer extends React.Component<any, any> {
     return (
       <div
         className={cx('dragAbleContainer', this.props.className)}
-        ref={root => (this.root = root)}
+        ref={root => { this.root = root; }}
         onMouseDown={this.onConClose}
       >
         {this.state.loading && <LoadDiv size="big" className="dragAbleLoadDiv" />}

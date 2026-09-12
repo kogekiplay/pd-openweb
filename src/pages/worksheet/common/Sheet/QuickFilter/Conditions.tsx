@@ -256,7 +256,7 @@ export default function Conditions(props) {
   const [values, setValues] = useState({});
   const [isQuerying, setIsQuerying] = useState(false);
   const [requiredErrorVisible, setRequiredErrorVisible] = useState(false);
-  const didMount = useRef();
+  const didMount = useRef<any>(undefined);
   const showQueryBtn = _.isUndefined(props.showQueryBtn)
     ? _.get(view, 'advancedSetting.enablebtn') === '1'
     : props.showQueryBtn;

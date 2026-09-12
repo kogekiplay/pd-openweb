@@ -186,7 +186,7 @@ function PreviewTable(props) {
     columnCount = columnCount + 1;
   }
 
-  const tableRef = useRef();
+  const tableRef = useRef<any>(undefined);
   useEffect(() => {
     const tableDom = _.get(tableRef, 'current.dom.current');
 

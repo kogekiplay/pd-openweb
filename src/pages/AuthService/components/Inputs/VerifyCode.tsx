@@ -51,7 +51,7 @@ export default function (props) {
   const sendByVoice = () => handleSendVerifyCode(CodeTypeEnum.voice);
 
   const warn = _.find(warnList, it => it.tipDom === 'inputCode');
-  const CodeRef = useRef();
+  const CodeRef = useRef<any>(undefined);
 
   const updateWarn = data => onChange({ warnList: data });
 

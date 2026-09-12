@@ -377,7 +377,7 @@ class EditPublishSetDialog extends React.Component<any, any> {
               <React.Fragment>
                 <div className="Font13 mBottom5 mTop24">{_l('维护公告')}</div>
                 <TextareaWrapper
-                  ref={ele => (this.appFixTextarea = ele)}
+                  ref={ele => { this.appFixTextarea = ele; }}
                   id="appFixTextarea"
                   value={fixRemark}
                   className="Font13"

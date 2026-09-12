@@ -28,7 +28,7 @@ export default function LeftBoundary(props) {
   });
 
   return (
-    <div ref={drop} className={cx('hierarchyViewLeftBoundary pointer', { isOver: isOver && canDrop })}>
+    <div ref={el => { drop(el); }} className={cx('hierarchyViewLeftBoundary pointer', { isOver: isOver && canDrop })}>
       {showAdd && (
         <AddRecord size={30} onClick={onClick}>
           <i className="icon icon-add" />

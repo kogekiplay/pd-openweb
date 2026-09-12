@@ -554,7 +554,7 @@ let DataSource = class DataSource extends Component<any, any> {
         {dataIsUnfold ? (
           <Fragment>
             {this.renderHeader()}
-            <ScrollView ref={el => (this.scrollViewRef = el)} className="flex scrollWrapper">
+            <ScrollView ref={el => { this.scrollViewRef = el; }} className="flex scrollWrapper">
               {this.renderSheet()}
               {this.renderTime()}
               {!ownerId && appType !== 2 && this.renderPermission()}

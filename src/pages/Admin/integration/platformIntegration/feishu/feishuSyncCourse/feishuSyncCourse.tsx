@@ -234,7 +234,7 @@ export default class WorkwxSyncCourse extends React.Component<any, any> {
     const { type } = this.state;
     const isLark = type === 'lark';
     return (
-      <div ref={ele => (this.syncApprovalRef = ele)}>
+      <div ref={ele => { this.syncApprovalRef = ele; }}>
         <h3 className="Font18 textPrimary mTop40">
           {isLark ? _l('流程待办同步至Lark审批中心') : _l('流程待办同步至飞书审批中心')}
         </h3>

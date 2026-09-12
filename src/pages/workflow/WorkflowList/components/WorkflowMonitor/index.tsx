@@ -159,14 +159,14 @@ export default class WorkflowMonitor extends Component<any, any> {
     const { projectId } = this.props.match.params;
 
     return (
-      <MonitorWrap className="monitorContainer flex Relative" ref={node => (this.monitorContainer = node)}>
+      <MonitorWrap className="monitorContainer flex Relative" ref={node => { this.monitorContainer = node; }}>
         {/* 实时 */}
-        <RealTimeData projectId={projectId} ref={ele => (this.realTimeDataRef = ele)} />
+        <RealTimeData projectId={projectId} ref={ele => { this.realTimeDataRef = ele; }} />
         {/* 历史 */}
         <HistoryChart
           projectId={projectId}
           updateHistoryDetail={this.updateHistoryDetail}
-          ref={ele => (this.historyChartRef = ele)}
+          ref={ele => { this.historyChartRef = ele; }}
         />
         {/* 执行详情 */}
         <ExecutionDetails

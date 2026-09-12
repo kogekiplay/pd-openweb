@@ -54,7 +54,7 @@ const WithoutFidldItem = props => {
 
   return (
     <div
-      ref={drop}
+      ref={el => { drop(el); }}
       className={cx(
         'flexRow valignWrapper withoutFidldItem',
         { withoutValueItem: inputVisible, disable },

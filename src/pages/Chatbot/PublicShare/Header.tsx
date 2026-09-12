@@ -137,15 +137,15 @@ const QrCode = styled.div`
 `;
 
 export default function Header({
-  title,
-  iconUrl,
+  title = undefined,
+  iconUrl = undefined,
   error,
   isAiAction,
   isShare = true,
   isFooter = false,
   isSmallMode,
-  appId,
-  projectId,
+  appId = undefined,
+  projectId = undefined,
   onCopyLink,
   onContinueChat,
 }) {

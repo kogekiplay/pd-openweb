@@ -13,7 +13,7 @@ export default function CustomPageFilter(props) {
   const { app, selectNode, translateData, comparisonLangId, comparisonLangData, onEditAppLang } = props;
   const [loading, setLoading] = useState(true);
   const [list, setList] = useState([]);
-  const scrollViewRef = useRef();
+  const scrollViewRef = useRef<any>(undefined);
 
   useEffect(() => {
     setLoading(true);

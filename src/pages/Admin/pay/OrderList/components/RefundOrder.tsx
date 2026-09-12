@@ -686,7 +686,7 @@ export default class RefundOrder extends Component<any, any> {
         <FlexWrap>
           <PageTableCon
             paginationInfo={{ pageIndex, pageSize: 50 }}
-            ref={node => (this.tableWrap = node)}
+            ref={node => { this.tableWrap = node; }}
             loading={loading}
             columns={this.columns}
             dataSource={list}

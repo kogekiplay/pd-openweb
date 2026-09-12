@@ -149,7 +149,7 @@ function Monitor(props) {
     showErr: false,
     g2plotLoaded: false,
   });
-  const chantRef = useRef();
+  const chantRef = useRef<any>(undefined);
 
   useEffect(() => {
     mounted.current = true;

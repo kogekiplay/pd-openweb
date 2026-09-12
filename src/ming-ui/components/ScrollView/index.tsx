@@ -73,7 +73,7 @@ const ScrollView = forwardRef((props, ref) => {
       customOptions: { disableParentScroll, enableWheelDirectionControl, isMobile, enableSwipeBack },
     });
   }, [options, disableParentScroll, enableWheelDirectionControl, theme, enableSwipeBack]);
-  const osRef = useRef();
+  const osRef = useRef<any>(undefined);
   const lastScroll = useRef({ top: 0, left: 0 });
 
   // 设置滚动位置

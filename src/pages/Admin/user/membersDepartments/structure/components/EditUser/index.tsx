@@ -461,7 +461,7 @@ export default class EditUser extends Component<any, any> {
               <div className="formInfoWrap flex">
                 {this.renderBaseUserInfo()}
                 <BaseFormInfo
-                  ref={ele => (this.baseFormInfo = ele)}
+                  ref={ele => { this.baseFormInfo = ele; }}
                   typeCursor={typeCursor}
                   actType={actType}
                   isUploading={isUploading}

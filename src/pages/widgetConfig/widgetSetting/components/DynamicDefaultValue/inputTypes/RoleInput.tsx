@@ -59,7 +59,7 @@ export default class RoleInput extends Component<any, any> {
             }}
           />
         )}
-        <SelectOtherField {...this.props} ref={con => (this.$wrap = con)} />
+        <SelectOtherField {...this.props} ref={con => { this.$wrap = con; }} />
       </DynamicValueInputWrap>
     );
   }

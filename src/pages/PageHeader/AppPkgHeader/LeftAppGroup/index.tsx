@@ -88,7 +88,7 @@ const AppSectionItem = props => {
   const [createType, setCreateType] = useState('');
   const [sectionsHeight, setSectionsHeight] = useState({});
   const isActive = !childrenVisible && isCurrentChildren;
-  const singleRef = useRef();
+  const singleRef = useRef<any>(undefined);
 
   useEffect(() => {
     const id = `AppSectionRef-${item.workSheetId}`;

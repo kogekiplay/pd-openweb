@@ -263,7 +263,7 @@ export default function Steps(props) {
     onChange = _.noop,
     direction = '',
   } = props;
-  const barRef = useRef();
+  const barRef = useRef<any>(undefined);
   const selectedOption = _.find(options, i => i.key === value);
   const filterOptions = options.filter(i => !i.isDeleted && (i.key === value || !i.hide));
   const isSingleOption = filterOptions.length === 1;

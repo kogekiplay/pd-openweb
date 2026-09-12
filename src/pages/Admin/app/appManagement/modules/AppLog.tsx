@@ -206,7 +206,7 @@ export default class AppLog extends React.Component<any, any> {
             type="text"
             className="borderColorPrimary"
             value={keyword}
-            ref={con => (this.search = con)}
+            ref={con => { this.search = con; }}
             placeholder={_l('搜索应用名称/操作者')}
             onChange={_.throttle(e => this.updateState({ keyword: e.target.value }), 500)}
           />

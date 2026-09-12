@@ -53,15 +53,15 @@ function formatFormData(formData) {
 export default function FreeFieldRunner({
   type,
   code,
-  runFlag,
-  compReRenderFlag,
-  className,
+  runFlag = undefined,
+  compReRenderFlag = undefined,
+  className = undefined,
   widgetParams = {},
   onError = () => {},
 }) {
   const [iframeId] = useState(v4());
   const { currentControlId, value, env, recordId, worksheetId, refreshRecord, setControlHeight, appId } = widgetParams;
-  const iframeRef = useRef();
+  const iframeRef = useRef<any>(undefined);
   const cache = useRef({});
   cache.current.formData = widgetParams.formData;
   cache.current.onChange = widgetParams.onChange;

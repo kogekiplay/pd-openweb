@@ -115,8 +115,8 @@ const keysDef = [
 ];
 
 function APITable(props) {
-  const WrapRef = useRef();
-  const WrapBotttomRef = useRef();
+  const WrapRef = useRef<any>(undefined);
+  const WrapBotttomRef = useRef<any>(undefined);
   const { list = [], onChange, selectedList, noDataIcon } = props;
   const keys = props.keys || keysDef;
 

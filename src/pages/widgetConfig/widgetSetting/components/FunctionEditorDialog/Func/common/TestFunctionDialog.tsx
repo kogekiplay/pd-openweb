@@ -147,7 +147,7 @@ export default function TestFunctionDialog(props) {
     onCancel,
     onUpdate,
   } = props;
-  const codeEditorRef = useRef();
+  const codeEditorRef = useRef<any>(undefined);
   const [expression, setExpression] = useState(value);
   const controlIdsInExpression = uniq((expression.match(/\$(.+?)\$/g) || []).map(id => id.slice(1, -1)));
   const [testFormValues, setTestFormValues] = useState({});

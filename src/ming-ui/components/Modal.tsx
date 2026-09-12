@@ -40,7 +40,7 @@ export default function MdModal(props) {
     needRenderRight,
     renderModalRightComp,
   } = props;
-  const locateRef = useRef();
+  const locateRef = useRef<any>(undefined);
   let { width } = props;
   const showConfirm = props.onOk || props.okText || props.cancelText;
   const [left, setLeft] = useState(0);

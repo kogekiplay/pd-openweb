@@ -107,7 +107,7 @@ export default class AppAnalytics extends Component<any, any> {
             </div>
             <div className="flex">
               {currentTab === 1 && (
-                <Overview appId={appId} projectId={projectId} ref={ele => (this.analysisEle = ele)} />
+                <Overview appId={appId} projectId={projectId} ref={ele => { this.analysisEle = ele; }} />
               )}
               {currentTab === 2 && <ByUser appId={appId} projectId={projectId} />}
             </div>

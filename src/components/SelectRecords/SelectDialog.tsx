@@ -242,7 +242,7 @@ export default function SelectDialog({ ...args }) {
     listMode,
   });
   const recordsCache = useRef({});
-  const tableRef = useRef();
+  const tableRef = useRef<any>(undefined);
   const cache = useRef({});
   const [activeRowIndex, setActiveRowIndex] = useState(-1);
   const [selectedRowIds, setSelectedRowIds] = useState([]);

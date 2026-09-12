@@ -76,7 +76,7 @@ function RefundConfirm(props) {
   } = props;
   const [amount, setAmount] = useState(props.amount);
   const [isFocus, setIsFocus] = useState(false);
-  const inputRef = useRef();
+  const inputRef = useRef<any>(undefined);
 
   const onChange = value => {
     let val = value
