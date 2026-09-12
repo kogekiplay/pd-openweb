@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Input } from 'antd';
+import { Input, Space } from 'antd';
 import _ from 'lodash';
 import { Checkbox, Dropdown } from 'ming-ui';
 import { getStrBytesLength } from 'src/pages/Role/PortalCon/tabCon/util-pure.js';
@@ -56,21 +56,44 @@ export default function Switch({ data, onChange }) {
               <Fragment>
                 {(DEFAULT_TEXT[showtype] || []).map((item, index) => {
                   return (
-                    <Input
-                      style={{ marginTop: 10 }}
-                      addonBefore={<span>{item.value}</span>}
-                      value={_.get(itemnames[index], 'value')}
-                      onChange={e => {
-                        const tempValue =
-                          getStringBytes(e.target.value) <= 60 //30个中文字符
-                            ? e.target.value
-                            : getStrBytesLength(e.target.value, 60);
-                        const newItemNames = itemnames.map((i, idx) =>
-                          idx === index ? Object.assign({}, i, { value: tempValue }) : i,
-                        );
-                        onChange(handleAdvancedSettingChange(data, { itemnames: JSON.stringify(newItemNames) }));
-                      }}
-                    />
+                    // antd 6 废弃了 Input 的 addonBefore，官方指向 Space.Compact。
+                    // 两者不是一回事：addonBefore 是「输入框前面挂一块共用外框的附属标签」，
+                    // 宽度跟着内容自适应；Space.Compact 只负责把相邻组件的圆角/边框拼起来，
+                    // 没有 addon 这种附属块，只能拿一个只读 Input 来充当左边那格，
+                    // 宽度也得自己定死（这里 64px：「开启/关闭」两字、「是/否」一字都能放下）。
+                    <Space.Compact key={index} block style={{ marginTop: 10 }}>
+                      <Input
+                        readOnly
+                        tabIndex={-1}
+                        value={item.value}
+                        style={{
+                          width: 64,
+                          textAlign: 'center',
+                          cursor: 'default',
+                          // 左格要看起来像「标签」而不是第二个输入框。
+                          // 原来的 addon 走 .ant-input-group-addon，本仓主题把它设成
+                          // --color-background-primary；普通 Input 走的是
+                          // --color-background-input。浅色下两者都是 #ffffff、看不出区别，
+                          // 深色下分别是 #161616 / #222222 —— 不补这行，深色主题里左格会跟
+                          // 右边输入框同色，失去「这是标签」的视觉区分。
+                          background: 'var(--color-background-primary)',
+                        }}
+                      />
+                      <Input
+                        style={{ width: 'calc(100% - 64px)' }}
+                        value={_.get(itemnames[index], 'value')}
+                        onChange={e => {
+                          const tempValue =
+                            getStringBytes(e.target.value) <= 60 //30个中文字符
+                              ? e.target.value
+                              : getStrBytesLength(e.target.value, 60);
+                          const newItemNames = itemnames.map((i, idx) =>
+                            idx === index ? Object.assign({}, i, { value: tempValue }) : i,
+                          );
+                          onChange(handleAdvancedSettingChange(data, { itemnames: JSON.stringify(newItemNames) }));
+                        }}
+                      />
+                    </Space.Compact>
                   );
                 })}
               </Fragment>
