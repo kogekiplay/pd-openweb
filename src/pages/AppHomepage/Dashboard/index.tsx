@@ -188,7 +188,10 @@ export default function Dashboard(props) {
         const isDark = value === 'dark';
         const color = getRgbaByColor(dashboardColor.themeColor, isDark ? '0.1' : '0.08');
         $('.appCenterHeaderMask').css('background', color);
-        $('.sideNavMask').css('background', color);
+        // .sideNavMask 这行搬走了：侧边栏是 AppCenter 的常驻组件，七个路由共用一个实例，
+        // 只有工作台会挂 Dashboard，所以由这里刷底色 → 直接刷新在别的页面就没底色。
+        // 现在由 AppCenter/SideNav.tsx 自己按同一份 dashboardColor 画（那边也监听了
+        // CHANGE_THEME_MODE）。两边都写会互相覆盖内联样式，所以这里必须去掉。
         $('.dashboardMask').css('background', color);
       }
     },

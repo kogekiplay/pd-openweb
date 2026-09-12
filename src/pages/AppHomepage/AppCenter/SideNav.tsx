@@ -9,10 +9,11 @@ import privateSource from 'src/api/privateSource';
 import { hasPermission } from 'src/components/checkPermission';
 import { PERMISSION_ENUM } from 'src/pages/Admin/enum';
 import { navigateTo } from 'src/router/navigateTo';
+import { getRgbaByColor } from 'src/utils/controlCommon';
 import { getCurrentProject } from 'src/utils/project';
 import PopupLinks from './components/PopupLinks';
 import ThirdApp from './components/ThirdApp';
-import { pathCompletion } from 'src/utils/common';
+import { emitter, pathCompletion } from 'src/utils/common';
 
 const NATIVE_APP_ITEM = [
   { id: 'feed', icon: 'dynamic-empty', text: _l('动态'), color: '#1677ff', href: '/feed', key: 1 },
@@ -260,6 +261,19 @@ export default function SideNav(props) {
   const [isExpanded, setIsExpanded] = useState(localStorage.getItem('homeNavIsExpanded') === '1');
   const [thirdPartyAppVisible, setThirdPartyAppVisible] = useState();
   const [sourcesList, setSourcesList] = useState([]);
+  // 侧边栏那层淡色底（.sideNavMask）原来是 Dashboard/index.tsx 用 jQuery 刷上去的：
+  //   $('.sideNavMask').css('background', color)
+  // 但侧边栏是 AppCenter 这一层的常驻组件，工作台 / 应用 / 收藏 / 应用库 / 协作 / 集成 /
+  // 插件 七个路由共用同一个实例，只有工作台会挂 Dashboard。于是：
+  //   - 直接刷新在「应用库」等页面 → Dashboard 从没挂载过 → 没人刷这个底色 → 侧边栏纯白，
+  //     hover / 选中态那点淡色填充在白底上几乎看不见（就是这个 bug 的现象）；
+  //   - 先进工作台再点去别的页面 → Dashboard 卸载时还会把 header 的底色清掉。
+  // 颜色本来就来自 AppCenter 算好、并且已经传进来的 dashboardColor，侧边栏完全可以自己画。
+  // 这里把它收回组件内部，顺带保留对 CHANGE_THEME_MODE 的响应（深色模式透明度不同）。
+  const [themeMode, setThemeMode] = useState(window.themeMode);
+  const maskBg = dashboardColor.themeColor
+    ? getRgbaByColor(dashboardColor.themeColor, themeMode === 'dark' ? '0.1' : '0.08')
+    : undefined;
   const { projectId } = currentProject;
   const cooperationItems = NATIVE_APP_ITEM.filter(
     item =>
@@ -280,6 +294,14 @@ export default function SideNav(props) {
       PERMISSION_ENUM.MANAGE_SYNC_TASKS,
       PERMISSION_ENUM.MANAGE_DATA_SOURCES,
     ]);
+
+  useEffect(() => {
+    const onThemeModeChange = value => setThemeMode(value);
+    emitter.addListener('CHANGE_THEME_MODE', onThemeModeChange);
+    return () => {
+      emitter.removeListener('CHANGE_THEME_MODE', onThemeModeChange);
+    };
+  }, []);
 
   useEffect(() => {
     privateSource.getSources({ status: 1 }).then(result => {
@@ -433,7 +455,7 @@ export default function SideNav(props) {
       className={cx('sideNavWrapper', { isExpanded })}
       themeBgColor={hasBgImg ? 'unset' : 'var(--color-background-primary)'}
     >
-      <div className="sideNavMask" />
+      <div className="sideNavMask" style={maskBg ? { background: maskBg } : undefined} />
       <ScrollView className="h100">
         <Content>
           {thirdPartyAppVisible && <ThirdApp onCancel={() => setThirdPartyAppVisible(false)} />}
