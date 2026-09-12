@@ -201,19 +201,52 @@ function RecordForm(props) {
   });
 
   formdata.forEach(item => {
+    // item 是记录级的副本（RecordInfo 的 tempFormData 来自 recordinfo.formData，
+    // 沿途几处都是 map 出来的新对象），所以这层照旧就地写。
     item.defaultState = {
       required: item.required,
       controlPermissions: item.controlPermissions,
       fieldPermission: item.fieldPermission,
       showControls: item.showControls,
     };
-    (item.relationControls || []).forEach(c => {
-      c.defaultState = {
-        required: c.required,
-        controlPermissions: c.controlPermissions,
-        fieldPermission: c.fieldPermission,
-      };
-    });
+
+    // 但 relationControls 里的对象与 redux 的 sheet.controls[i].relationControls 是【同一批】
+    // —— 记录的 formData 复用了工作表模板里的关联控件。原来这里是
+    //   (item.relationControls || []).forEach(c => { c.defaultState = {...} })
+    // 就地写，等于在渲染期改 store。redux 3 的 createStore 默默容忍，迁到 RTK
+    // configureStore 之后默认带 immutableStateInvariantMiddleware，而它是【抛错】不是警告：
+    //   A state mutation was detected between dispatches, in the path
+    //   'sheet.controls.1.relationControls.0.defaultState'
+    // 这条没打断到关键回调，所以只表现为控制台噪音（不像 sheetList 那处会把左栏卡在骨架屏），
+    // 但它是从下一次 dispatch 抛出来的，会把那次 dispatch 的调用方打断 —— 属于随时可能咬人的雷。
+    //
+    // 改成复制。注意要保持数组引用稳定：原来就地改时引用天然不变，这里若每次渲染都
+    // 无条件 map 一个新数组，下游按引用做记忆化的地方会白白重渲染（这是记录表单的热路径）。
+    // 所以只在确实需要更新时才重建 —— 第一次跑完 defaultState 就与自身字段一致了，
+    // 之后除非 required / controlPermissions / fieldPermission 真的变了才会再建，
+    // 与「每次渲染都按当前值重算」的旧语义等价。
+    const relationControls = item.relationControls;
+
+    if (relationControls && relationControls.length) {
+      const needsUpdate = relationControls.some(
+        c =>
+          !c.defaultState ||
+          c.defaultState.required !== c.required ||
+          c.defaultState.controlPermissions !== c.controlPermissions ||
+          c.defaultState.fieldPermission !== c.fieldPermission,
+      );
+
+      if (needsUpdate) {
+        item.relationControls = relationControls.map(c => ({
+          ...c,
+          defaultState: {
+            required: c.required,
+            controlPermissions: c.controlPermissions,
+            fieldPermission: c.fieldPermission,
+          },
+        }));
+      }
+    }
   });
   const viewContext = useContext(ViewContext);
   const dealFrom = recordId && from !== 21 ? 3 : 2;
