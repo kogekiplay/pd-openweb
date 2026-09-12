@@ -101,7 +101,7 @@ const proxyConfigs = [
     rewriteHosts: true,
   },
   { name: 'workflow_api', path: '/workflow_api/', replace: '', server: publishConfig.apiServer },
-  // 下面三条都是【原样透传】的静态/服务前缀，存在的意义是让 rewriteAbsoluteHosts
+  // 下面四条都是【原样透传】的静态/服务前缀，存在的意义是让 rewriteAbsoluteHosts
   // 改写出来的相对地址能落到本地 dev server 上，再由这里转发到真实部署。
   // 不加的话请求会被 serve-handler 兜底成 SPA 的 index.html，返回 200 但内容是 HTML——
   // 比 404 更难查：JS 报 `Unexpected token '<'`，图片/接口则是解析失败。
@@ -110,9 +110,17 @@ const proxyConfigs = [
   // chatmq：聊天服务（data.config.HTTP_SERVER）。只转发 HTTP，WebSocket 升级没接，
   //         所以本地的聊天列表能拉到，实时推送不通——本地环境不验聊天，够用。
   // pm：平台自定义样式/脚本（Config.PlatformUrl），freestyle.css / freestyle.js 从这儿来
+  // excelapi：导出/打印服务（Config.WorksheetDownUrl → 各接口返回的 worksheetInfo.downLoadUrl）。
+  //           工作表导出 Excel、导出 Word、打印模板全挂在它下面：
+  //             ${downLoadUrl}/ExportExcel/Export       （ExportSheet.tsx、recordInfo/crtl.ts）
+  //             ${downLoadUrl}/ExportWord/DownloadWord  （FormSet/components/EditPrint.tsx）
+  //             ${downLoadUrl}/PrintTemplate/EditPrint  （UploadTemplateSheet/utils.ts）
+  //           这条【不能开 rewriteHosts】：它返回的是文件流/下载响应，
+  //           selfHandleResponse 会把整个文件缓冲进内存。
   { name: 'file', path: '/file/', replace: '/file/', server: publishConfig.apiServer },
   { name: 'chatmq', path: '/chatmq/', replace: '/chatmq/', server: publishConfig.apiServer },
   { name: 'pm', path: '/pm/', replace: '/pm/', server: publishConfig.apiServer },
+  { name: 'excelapi', path: '/excelapi/', replace: '/excelapi/', server: publishConfig.apiServer },
   { name: 'report_api', path: '/report_api/', replace: '', server: publishConfig.apiServer },
   { name: 'integration_api', path: '/integration_api/', replace: '', server: publishConfig.apiServer },
   { name: 'data_pipeline_api', path: '/data_pipeline_api/', replace: '', server: publishConfig.apiServer },
@@ -161,7 +169,12 @@ const proxyConfigs = [
 // io.connect(server)（见 src/socket/index.ts），空串的语义是「连当前页面的 origin」，
 // 跟「同源的某个路径」完全是两回事——本地没接 WebSocket 升级，改成空串只会
 // 让它改为徒劳地重连 localhost。列出前缀就天然排除了这种纯 origin 的值。
-const REWRITE_PREFIXES = ['/file/', '/chatmq'];
+// 尾斜杠按【配置值本身的形态】写，不要统一加：
+// FileStoreConfig 给的是 .../file/xxx，而 Config.WorksheetDownUrl 给的是裸的
+// `https://host:8880/excelapi`（无尾斜杠），调用点再自己拼 `/ExportExcel/Export`。
+// 写成 '/excelapi/' 就匹配不上那个裸值，导出照旧发绝对地址、照旧被 CORS 挡死。
+// '/chatmq' 同理。
+const REWRITE_PREFIXES = ['/file/', '/chatmq', '/excelapi'];
 
 function rewriteAbsoluteHosts(buffer, server) {
   let origin;

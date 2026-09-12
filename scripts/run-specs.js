@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Behaviour-spec runner for the *.spec.js files under src/ and scripts/.
+ * Behaviour-spec runner for the *.spec.js files under src/, scripts/ and CI/.
  *
  * Zero new dependencies by design: each spec is a plain Node script using the
  * built-in `assert`, run in its own child process. This runner only needs to
@@ -26,7 +26,8 @@ const { execFile } = require('child_process');
 const chalk = require('chalk').default;
 
 const ROOT = path.resolve(__dirname, '..');
-const SEARCH_DIRS = ['src', 'scripts'];
+// CI：构建/dev-server 那套脚本也归这里管（CI/serve.spec.js 守的是代理配置的成对性）。
+const SEARCH_DIRS = ['src', 'scripts', 'CI'];
 
 // 单个 spec 的墙钟上限。实测最慢的 spec < 3s，30s 是很宽的余量。
 // 没有这道保险时，任何一个留下未关闭句柄（定时器、监听器）的 spec 会让
