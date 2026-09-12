@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { Button, Skeleton, Support, Switch } from 'ming-ui';
 import ShareUrl from 'worksheet/components/ShareUrl';
 import { checkCertification } from 'src/components/checkCertification';
+import type { RootState } from 'src/redux/types';
 import { VISIBLE_TYPE } from '../enum';
 import * as actions from '../PublicWorksheetConfig/redux/actions';
 import { getDisabledControls, isDisplayPromptText, renderLimitInfo } from '../utils';
@@ -168,7 +169,7 @@ PublicWorksheetConfig.propTypes = {
   updateWorksheetVisibleType: PropTypes.func,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   ..._.pick(state.publicWorksheet, [
     'shareUrl',
     'worksheetInfo',

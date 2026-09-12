@@ -23,6 +23,7 @@ import { getAppSectionData } from 'src/pages/PageHeader/AppPkgHeader/LeftAppGrou
 import { transferValue } from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/util';
 import { copyCustomPage } from 'src/pages/worksheet/redux/actions/sheetList';
 import { deleteSheet, updateSheetList, updateSheetListAppItem } from 'src/pages/worksheet/redux/actions/sheetList';
+import type { RootState } from 'src/redux/types';
 import { getTranslateInfo } from 'src/utils/app';
 import { browserIsMobile, emitter } from 'src/utils/common';
 import { addBehaviorLog } from 'src/utils/project';
@@ -341,7 +342,7 @@ function CustomPageContent(props) {
 }
 
 export default connect(
-  ({ appPkg, customPage, sheet: { isCharge, base }, sheetList: { data } }) => ({
+  ({ appPkg, customPage, sheet: { isCharge, base }, sheetList: { data } }: RootState) => ({
     ...pick(customPage, [
       'loading',
       'visible',

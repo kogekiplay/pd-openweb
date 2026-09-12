@@ -22,9 +22,18 @@
  * 参数前面正好就是 connect 的那个左括号。正确的判据是
  * arrow.start === param.start：不带括号时二者重合，带括号时 arrow.start 指向 '('。
  *
- * 范围：只处理【内联函数 + 首参是裸 Identifier】这一类（扫描器统计为 189 处 /
- * 187 文件，全部是 .tsx —— .js/.jsx 里写不了类型标注）。
- * 传具名函数的 58 处、解构参数的 11 处不在本工具范围内，需另行处理。
+ * 覆盖 connect 第一个实参的三种形态（扫描器分类，见
+ * tools/scan-redux-state-annotations.cjs）：
+ *   a. 内联函数          189 处 / 187 文件   connect(state => ...)
+ *   b. 同文件具名函数      56 处              connect(mapStateToProps)
+ *                                            （52 个 const = 函数，4 个 function 声明；
+ *                                             【没有】跨文件 import 的情形）
+ *   c. 解构参数            11 处              connect(({ appPkg }) => ...)
+ * 另有 2 处第一个实参写的就是标识符 `undefined`（connect(undefined, mapDispatch)），
+ * 本来就没有 state 参数，不需要处理。
+ *
+ * 只处理 .ts / .tsx —— .js / .jsx 里写不了类型标注。实测目标站点全在 .tsx。
+ * 工具幂等：已带 typeAnnotation 的参数会跳过，可以反复跑。
  * 运行后跑 prettier，import 顺序交给 sort-imports 插件收拾。
  */
 const fs = require('fs');
@@ -60,7 +69,7 @@ function walk(dir, out = []) {
     if (e.isDirectory()) {
       if (e.name === 'library') continue;
       walk(p, out);
-    } else if (/\.tsx$/.test(e.name)) out.push(p);
+    } else if (/\.tsx?$/.test(e.name)) out.push(p);
   }
   return out;
 }
@@ -82,28 +91,66 @@ for (const file of walk(SRC)) {
     continue;
   }
 
-  const edits = [];
+  let edits = [];
+
+  const FN_TYPES = new Set(['ArrowFunctionExpression', 'FunctionExpression']);
+
+  // 给一个函数节点的首参标上 RootState
+  function annotate(fn) {
+    const param = fn && fn.params && fn.params[0];
+    if (!param || param.typeAnnotation) return;
+
+    if (param.type === 'ObjectPattern') {
+      // ({ appPkg }) => ...  解构参数本来就带括号，直接在模式后面追加类型即可
+      edits.push({ start: param.end, end: param.end, text: ': RootState' });
+      return;
+    }
+
+    if (param.type !== 'Identifier') return;
+
+    // 单参数不带括号的箭头函数：arrow.start 与 param.start 重合，补括号
+    const needParens = fn.type === 'ArrowFunctionExpression' && fn.start === param.start;
+    const text = `${param.name}: RootState`;
+
+    edits.push({ start: param.start, end: param.end, text: needParens ? `(${text})` : text });
+  }
 
   traverse(ast, {
     CallExpression(p) {
       const callee = p.node.callee;
       if (callee.type !== 'Identifier' || callee.name !== 'connect') return;
 
-      const fn = p.node.arguments[0];
-      if (!fn || (fn.type !== 'ArrowFunctionExpression' && fn.type !== 'FunctionExpression')) return;
+      const arg = p.node.arguments[0];
+      if (!arg) return;
 
-      const param = fn.params[0];
-      if (!param || param.type !== 'Identifier' || param.typeAnnotation) return;
+      if (FN_TYPES.has(arg.type)) {
+        annotate(arg);
+        return;
+      }
 
-      // 单参数不带括号的箭头函数：arrow.start 与 param.start 重合，补括号
-      const needParens = fn.type === 'ArrowFunctionExpression' && fn.start === param.start;
-      const text = `${param.name}: RootState`;
+      // connect(mapStateToProps) —— 顺着作用域找到同文件里的定义再标。
+      // `connect(undefined, mapDispatch)` 也走这里：undefined 查不到绑定，自然跳过。
+      if (arg.type === 'Identifier') {
+        const binding = p.scope.getBinding(arg.name);
+        if (!binding) return;
 
-      edits.push({ start: param.start, end: param.end, text: needParens ? `(${text})` : text });
+        const node = binding.path.node;
+        if (node.type === 'FunctionDeclaration') annotate(node);
+        else if (node.type === 'VariableDeclarator' && node.init && FN_TYPES.has(node.init.type)) annotate(node.init);
+      }
     },
   });
 
   if (!edits.length) continue;
+
+  // 同一个具名函数可能被两处 connect 引用，去重，否则会重复插入类型
+  const seen = new Set();
+  edits = edits.filter(e => {
+    const k = `${e.start}:${e.end}`;
+    if (seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
 
   // 倒序 splice：先改后面的，前面的 start/end 才不会失效
   edits.sort((a, b) => b.start - a.start);

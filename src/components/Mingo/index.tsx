@@ -1,4 +1,4 @@
-﻿import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import { get, includes } from 'lodash';
@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { BgIconButton } from 'ming-ui';
 import { AGENT_HEADER_EVENT } from 'src/components/Agent/agentService';
 import mingoWordmark from 'src/pages/mingo/common/images/mingo-logo.png';
+import type { RootState } from 'src/redux/types';
 import { emitter, pathCompletion } from 'src/utils/common';
 import { MINGO_TASK_TYPE } from './ChatBot/enum';
 import MingoEntry from './Entry';
@@ -288,7 +289,7 @@ Mingo.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   base: state.sheet.base,
   sheetList: state.sheetList,
   worksheetInfo: state.sheet.worksheetInfo,

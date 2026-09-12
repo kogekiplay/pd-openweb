@@ -2,9 +2,9 @@ import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useSetState } from 'react-use';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Checkbox, Dialog, Dropdown, Icon, Menu, MenuItem, UserHead } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -19,6 +19,7 @@ import Table from 'src/pages/Role/component/Table';
 import { sysRoleType } from 'src/pages/Role/config.js';
 import DropOption from 'src/pages/Role/PortalCon/components/DropOption';
 import { APP_ROLE_TYPE } from 'src/pages/worksheet/constants/enum.js';
+import type { RootState } from 'src/redux/types';
 import { getTranslateInfo } from 'src/utils/app';
 import { dateConvertToUserZone, getCurrentProject } from 'src/utils/project';
 
@@ -848,7 +849,7 @@ function User(props) {
   );
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   portal: state.portal,
 });
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);

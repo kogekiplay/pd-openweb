@@ -3,14 +3,15 @@ import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Drawer } from 'antd';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { redefineComplexControl } from 'worksheet/common/WorkSheetFilter/util';
 import { isRelateMoreList } from 'src/components/Form/core/formUtils/helper';
+import type { RootState } from 'src/redux/types';
 import { getValueStyle } from 'src/utils/control';
 import DrawerFooter from '../DrawerFooter';
 import { checkRuleEnableLimit, filterData, hasRuleChanged, TAB_TYPES } from './config';
@@ -360,7 +361,7 @@ class WidgetConfigRuleItem extends React.Component<any, any> {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   worksheetControls: state.formSet.worksheetRuleControls,
   selectRules: state.formSet.selectRules,
   columnRulesListData: state.formSet.columnRulesListData,

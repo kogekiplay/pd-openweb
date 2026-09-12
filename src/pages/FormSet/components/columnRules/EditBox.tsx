@@ -3,9 +3,9 @@ import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Select } from 'antd';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import { Checkbox, Icon, RadioGroup, ScrollView } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { ALL_SYS } from 'src/pages/widgetConfig/config/widget';
@@ -16,6 +16,7 @@ import { WidgetItem } from 'src/pages/widgetConfig/widgetSetting/components/Styl
 import FilterConfig from 'src/pages/worksheet/common/WorkSheetFilter/common/FilterConfig';
 import SelectControls from 'src/pages/worksheet/common/WorkSheetFilter/components/SelectControls';
 import { redefineComplexControl } from 'src/pages/worksheet/common/WorkSheetFilter/util';
+import type { RootState } from 'src/redux/types';
 import { getAdvanceSetting, handleAdvancedSettingChange } from 'src/utils/control';
 import ActionDropDown from './actionDropdown/ActionDropDown';
 import {
@@ -677,7 +678,7 @@ class EditBox extends React.Component<any, any> {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   worksheetControls: state.formSet.worksheetRuleControls,
   worksheetRelationSearch: state.formSet.worksheetRelationSearch,
   columnRulesListData: state.formSet.columnRulesListData,

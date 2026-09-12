@@ -11,6 +11,7 @@ import * as actions from 'src/pages/Role/AppRoleCon/redux/actions';
 import { getColor, getIcon, getTxtColor } from 'src/pages/Role/AppRoleCon/UserCon/config';
 import Table from 'src/pages/Role/component/Table';
 import DropOption from 'src/pages/Role/PortalCon/components/DropOption';
+import type { RootState } from 'src/redux/types';
 
 const pageSize = 1000;
 const Wrap = styled.div`
@@ -313,7 +314,7 @@ function Others(props) {
   );
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   portal: state.portal,
 });
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);

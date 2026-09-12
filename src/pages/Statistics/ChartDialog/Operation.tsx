@@ -7,6 +7,7 @@ import { Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import CreateByMingDaoYun from 'src/components/CreateByMingDaoYun';
 import PublicAppLangDropdown from 'src/components/PublicAppLangDropdown';
+import type { RootState } from 'src/redux/types';
 import { reportTypes } from '../Charts/common';
 import Sort from '../components/Sort';
 import * as actions from '../redux/actions.js';
@@ -142,7 +143,7 @@ const Operation = ({
 };
 
 export default connect(
-  ({ statistics }) => ({
+  ({ statistics }: RootState) => ({
     ..._.pick(statistics, ['currentReport', 'reportData', 'worksheetInfo', 'base']),
   }),
   dispatch => bindActionCreators(actions, dispatch),

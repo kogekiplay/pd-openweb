@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _, { get, isUndefined } from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import { Dialog, Icon, Input, Menu, MenuItem } from 'ming-ui';
 import SheetContext from 'worksheet/common/Sheet/SheetContext';
 import { CONTROL_FILTER_WHITELIST } from 'worksheet/common/WorkSheetFilter/enum';
@@ -24,6 +24,7 @@ import { SYS } from 'src/pages/widgetConfig/config/widget.js';
 import { isOtherShowFeild } from 'src/pages/widgetConfig/util';
 import { showTypeData } from 'src/pages/worksheet/common/ViewConfig/components/BatchSet';
 import { COVER_DISPLAY_FILL } from 'src/pages/worksheet/common/ViewConfig/config.js';
+import type { RootState } from 'src/redux/types';
 import { emitter } from 'src/utils/common';
 import { saveLRUWorksheetConfig } from 'src/utils/common';
 import { controlState } from 'src/utils/control';
@@ -710,7 +711,7 @@ class ColumnHead extends Component<any, any> {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   reduxSheetHiddenColumns: state.sheet.sheetview.sheetViewConfig.sheetHiddenColumns,
   sortControls: state.sheet.sheetview.sheetFetchParams.sortControls,
   allWorksheetIsSelected: state.sheet.sheetview.sheetViewConfig.allWorksheetIsSelected,

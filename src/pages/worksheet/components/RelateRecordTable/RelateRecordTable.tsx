@@ -11,6 +11,7 @@ import { v4 } from 'uuid';
 import { openRecordInfo } from 'worksheet/common/recordInfo';
 import { RecordFormContext } from 'worksheet/common/recordInfo/RecordForm';
 import { RELATE_RECORD_SHOW_TYPE } from 'worksheet/constants/enum';
+import type { RootState } from 'src/redux/types';
 import Operate from './Operate';
 import * as actions from './redux/action';
 import TableComp from './TableComp';
@@ -228,7 +229,7 @@ RelateRecordTable.propTypes = {
   onUpdateCell: func,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   ...state,
 });
 const mapDispatchToProps = dispatch => ({

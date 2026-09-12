@@ -13,6 +13,7 @@ import SearchInput from 'src/pages/AppHomepage/AppCenter/components/SearchInput'
 import DropOption from 'src/pages/Role/PortalCon/components/DropOption';
 import * as actions from 'src/pages/Role/PortalCon/redux/actions';
 import { AddWrap, WrapNav, WrapTableCon } from 'src/pages/Role/style';
+import type { RootState } from 'src/redux/types';
 import { getTranslateInfo } from 'src/utils/app';
 import PendingReview from './PendingReview';
 import User from './User';
@@ -347,7 +348,7 @@ class Con extends React.Component<any, any> {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   portal: state.portal,
 });
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);

@@ -2,12 +2,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Switch } from 'antd';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import { Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import externalPortalAjax from 'src/api/externalPortal';
+import type { RootState } from 'src/redux/types';
 import * as actions from '../../redux/actions';
 import FilterDrop from './FilterDrop';
 import SearchTelsDialog from './SearchTels';
@@ -213,7 +214,7 @@ function PortalBar(props) {
   );
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   portal: state.portal,
 });
 

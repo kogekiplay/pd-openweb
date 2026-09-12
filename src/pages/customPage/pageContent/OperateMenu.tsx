@@ -2,13 +2,6 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Menu, Switch } from 'antd';
-
-// antd 5 起 Menu 的 children 写法被废弃，类型里只留 items；运行时仍然支持。
-// 本文件那 6 个 Menu.Item 是由 CONFIG 经多重过滤动态产出的，改成 items 是一次真重构，
-// 不适合塞进 v5 这一跳顺手做 —— 那样容易在过滤条件上出错而又没有验证手段。
-// 【v6 待办】升 6 之前必须改成 items：v6 很可能真正移除 children 支持。
-// 用这个窄口径别名显式标出来，便于检索，也不会把该组件其它类型错误一起吞掉。
-const LegacyMenu = Menu as any;
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -17,7 +10,15 @@ import homeApp from 'src/api/homeApp';
 import { APP_ROLE_TYPE } from 'src/pages/worksheet/constants/enum';
 import { moveSheet } from 'src/pages/worksheet/redux/actions/sheetList';
 import { canEditApp } from 'src/pages/worksheet/redux/actions/util.js';
+import type { RootState } from 'src/redux/types';
 import './index.less';
+
+// antd 5 起 Menu 的 children 写法被废弃，类型里只留 items；运行时仍然支持。
+// 本文件那 6 个 Menu.Item 是由 CONFIG 经多重过滤动态产出的，改成 items 是一次真重构，
+// 不适合塞进 v5 这一跳顺手做 —— 那样容易在过滤条件上出错而又没有验证手段。
+// 【v6 待办】升 6 之前必须改成 items：v6 很可能真正移除 children 支持。
+// 用这个窄口径别名显式标出来，便于检索，也不会把该组件其它类型错误一起吞掉。
+const LegacyMenu = Menu as any;
 
 const { SubMenu, Divider } = Menu;
 
@@ -329,6 +330,6 @@ function OperateMenu(props) {
 }
 
 export default connect(
-  ({ appPkg }) => ({ projectId: appPkg.projectId, appGroups: appPkg.appGroups }),
+  ({ appPkg }: RootState) => ({ projectId: appPkg.projectId, appGroups: appPkg.appGroups }),
   dispatch => bindActionCreators({ moveSheet }, dispatch),
 )(OperateMenu);

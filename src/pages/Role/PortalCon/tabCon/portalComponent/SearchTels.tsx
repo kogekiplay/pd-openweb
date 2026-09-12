@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import styled from 'styled-components';
 import { Dialog } from 'ming-ui';
+import type { RootState } from 'src/redux/types';
 import * as actions from '../../redux/actions';
 
 const Wrap = styled.div`
@@ -53,7 +54,7 @@ function SearchTelsDialog(props) {
   );
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   portal: state.portal,
 });
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);

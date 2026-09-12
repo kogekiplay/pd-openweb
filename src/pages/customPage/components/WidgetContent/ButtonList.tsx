@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { Dialog as MobileDialog, Toast } from 'antd-mobile';
-import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import moment from 'moment';
 import styled from 'styled-components';
@@ -21,8 +20,10 @@ import { showFilteredRecords } from 'worksheet/components/SearchRecordResult';
 import ScanQRCode from 'src/components/Form/MobileForm/components/ScanQRCode';
 import { hrefReg } from 'src/pages/customPage/components/previewContent';
 import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget';
+import type { RootState } from 'src/redux/types';
 import { navigateTo } from 'src/router/navigateTo';
 import { browserIsMobile, getRequest, pathCompletion } from 'src/utils/common';
+import copy from 'src/utils/copyToClipboard';
 import { addBehaviorLog, dateConvertToServerZone, mdAppResponse } from 'src/utils/project';
 import { genUrl } from '../../util';
 import ButtonDisplay from '../editWidget/button/ButtonDisplay';
@@ -638,7 +639,7 @@ export function ButtonList({
   );
 }
 
-export default connect(({ sheet, appPkg, customPage }) => ({
+export default connect(({ sheet, appPkg, customPage }: RootState) => ({
   info: {
     ...sheet.base,
     projectId: appPkg.projectId,

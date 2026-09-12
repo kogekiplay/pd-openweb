@@ -12,6 +12,7 @@ import ChangeRoleDialog from 'src/pages/Role/PortalCon/components/ChangeRoleDial
 import ReviewFree from 'src/pages/Role/PortalCon/components/ReviewFree';
 import UserInfoWrap from 'src/pages/Role/PortalCon/components/UserInfoWrap';
 import { pageSizeForPortal } from 'src/pages/Role/PortalCon/tabCon/config';
+import type { RootState } from 'src/redux/types';
 import { renderText as renderCellText } from 'src/utils/control';
 import * as actions from '../../redux/actions';
 import PortalBar from '../portalComponent/PortalBar';
@@ -482,7 +483,7 @@ function PendingReview(props) {
   );
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   portal: state.portal,
 });
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);

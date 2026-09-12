@@ -10,6 +10,7 @@ import DeleRoleDialog from 'src/pages/Role/AppRoleCon/component/DeleRoleDialog.j
 import * as actions from 'src/pages/Role/AppRoleCon/redux/actions';
 import { sysRoleType } from 'src/pages/Role/config.js';
 import { APP_ROLE_TYPE } from 'src/pages/worksheet/constants/enum.js';
+import type { RootState } from 'src/redux/types';
 import { navigateTo } from 'src/router/navigateTo';
 import RoleNav from './RoleNav';
 import UserListCon from './UserListCon';
@@ -336,7 +337,7 @@ class Con extends React.Component<any, any> {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   appRole: state.appRole,
 });
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);

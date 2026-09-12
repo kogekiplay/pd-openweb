@@ -9,6 +9,7 @@ import styled from 'styled-components';
 import externalPortalAjax from 'src/api/externalPortal';
 import ShareUrl from 'worksheet/components/ShareUrl';
 import PortalSetting from 'src/pages/Role/PortalCon/setting';
+import type { RootState } from 'src/redux/types';
 import { WrapCon, WrapContext, WrapHeader } from '../style';
 import EditPortalUrlDialog from './components/EditPortalUrlDialog';
 import CustomUrlDrawer from './customUrl';
@@ -339,7 +340,7 @@ class PortalCon extends React.Component<any, any> {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   portal: state.portal,
 });
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);

@@ -7,6 +7,7 @@ import { saveAs } from 'file-saver';
 import styled from 'styled-components';
 import { Checkbox, Dialog, Icon, LoadDiv, PriceTip, QiniuUpload } from 'ming-ui';
 import externalPortalAjax from 'src/api/externalPortal';
+import type { RootState } from 'src/redux/types';
 import * as actions from '../redux/actions';
 
 const Wrap = styled.div`
@@ -204,7 +205,7 @@ function AddUserDialog(props) {
   );
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   portal: state.portal,
 });
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);

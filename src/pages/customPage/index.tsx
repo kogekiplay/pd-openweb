@@ -14,6 +14,7 @@ import { defaultConfig } from 'src/pages/customPage/components/ConfigSideWrap/de
 import { formatControlsData } from 'src/pages/widgetConfig/util/data';
 import { formatValuesOfCondition } from 'src/pages/worksheet/common/WorkSheetFilter/util';
 import { updateSheetListAppItem } from 'src/pages/worksheet/redux/actions/sheetList';
+import type { RootState } from 'src/redux/types';
 import ConfigHeader from './ConfigHeader';
 import * as actions from './redux/action';
 import {
@@ -55,7 +56,7 @@ const CustomPageWrap = styled.div`
   }
 `;
 
-const mapStateToProps = ({ customPage, sheet, appPkg }) => ({ ...customPage, ...sheet.base, appPkg });
+const mapStateToProps = ({ customPage, sheet, appPkg }: RootState) => ({ ...customPage, ...sheet.base, appPkg });
 
 const mapDispatchToProps = dispatch => bindActionCreators({ ...actions, updateSheetListAppItem }, dispatch);
 

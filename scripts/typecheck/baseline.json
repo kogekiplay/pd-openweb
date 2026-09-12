@@ -3,16 +3,16 @@
   "key": "code",
   "tsVersion": "5.9.3",
   "tsconfig": "tsconfig.gate.json",
-  "generatedAt": "2026-09-12T08:14:10.748Z",
-  "rawCount": 22997,
+  "generatedAt": "2026-09-12T08:22:47.652Z",
+  "rawCount": 22996,
   "droppedNoise": {
     "library": 1284,
     "probe": 0,
     "commentTS1xxx": 0,
     "commentOther": 0
   },
-  "keptCount": 21713,
-  "uniqueKeys": 4629,
+  "keptCount": 21712,
+  "uniqueKeys": 4628,
   "entries": {
     "src/api/account.ts|TS2339": 4,
     "src/api/agent.ts|TS2339": 29,
@@ -1992,7 +1992,6 @@
     "src/pages/Statistics/ChartDialog/index.tsx|TS2322": 1,
     "src/pages/Statistics/ChartDialog/index.tsx|TS2345": 1,
     "src/pages/Statistics/ChartDialog/index.tsx|TS2554": 2,
-    "src/pages/Statistics/ChartDialog/index.tsx|TS2740": 1,
     "src/pages/Statistics/Charts/BarChart.tsx|TS2339": 42,
     "src/pages/Statistics/Charts/BarChart.tsx|TS2345": 1,
     "src/pages/Statistics/Charts/BarChart.tsx|TS2554": 7,

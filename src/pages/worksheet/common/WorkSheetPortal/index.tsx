@@ -11,6 +11,7 @@ import homeAppApi from 'src/api/homeApp';
 import WorksheetEmpty from 'worksheet/common/WorksheetEmpty/WorksheetEmpty';
 import * as sheetListActions from 'src/pages/worksheet/redux/actions/sheetList';
 import { canEditApp } from 'src/pages/worksheet/redux/actions/util';
+import type { RootState } from 'src/redux/types';
 import { getTranslateInfo } from 'src/utils/app';
 import CreateAppItem from '../WorkSheetLeft/CreateAppItem';
 import Drag from '../WorkSheetLeft/Drag';
@@ -238,7 +239,7 @@ const mapDispatchToProps = dispatch => ({
   dispatch,
 });
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   data: state.sheetList.data,
   loading: state.sheetList.loading,
 });

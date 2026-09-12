@@ -1,13 +1,14 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Select } from 'antd';
-import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
+import _ from 'lodash';
 import styled from 'styled-components';
 import { Button, Checkbox, Dialog, Icon, LoadDiv, Menu, MenuItem, Support } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { DEFAULT_CONFIG } from 'src/pages/widgetConfig/config/widget.js';
 import { canSetAsTitle } from 'src/pages/widgetConfig/util';
+import type { RootState } from 'src/redux/types';
 import { FILEDS_TYPE_INFO } from '../util';
 import ExcelControlSetting from './ExcelControlSetting';
 import WorksheetItem from './WorksheetItem';
@@ -527,7 +528,12 @@ let SetImportExcelCreateWorksheetOrApp = class SetImportExcelCreateWorksheetOrAp
                     </Trigger>
                   </div>
                 </div>
-                <div className="tableWrap flex" ref={node => { this.tableWrap = node; }}>
+                <div
+                  className="tableWrap flex"
+                  ref={node => {
+                    this.tableWrap = node;
+                  }}
+                >
                   <table
                     cellSpacing="0"
                     cellPadding="0"
@@ -567,7 +573,7 @@ let SetImportExcelCreateWorksheetOrApp = class SetImportExcelCreateWorksheetOrAp
     );
   }
 };
-SetImportExcelCreateWorksheetOrApp = connect(({ appPkg }) => ({
+SetImportExcelCreateWorksheetOrApp = connect(({ appPkg }: RootState) => ({
   worksheetList: getWorksheetList(appPkg.appGroups || []),
   projectId: appPkg.projectId,
 }))(SetImportExcelCreateWorksheetOrApp);

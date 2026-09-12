@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import { ScrollView } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import LoadDiv from 'ming-ui/components/LoadDiv';
+import type { RootState } from 'src/redux/types';
 import { navigateTo } from 'src/router/navigateTo';
 import AttachmentsPreview from '../../common/AttachmentsPreview';
 import Detail from '../../components/Detail';
@@ -658,7 +659,7 @@ class KcMain extends Component<any, any> {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   listLoading: state.kc.listLoading,
   totalCount: state.kc.totalCount,
   params: state.kc.params,

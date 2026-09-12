@@ -14,6 +14,7 @@ import * as actions from 'src/pages/Role/AppRoleCon/redux/actions';
 import Table from 'src/pages/Role/component/Table';
 import { sysRoleType } from 'src/pages/Role/config.js';
 import { APP_ROLE_TYPE } from 'src/pages/worksheet/constants/enum.js';
+import type { RootState } from 'src/redux/types';
 
 const Wrap = styled.div`
   padding: 20px 10px 20px 10px;
@@ -322,7 +323,7 @@ function Apply(props) {
   );
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   portal: state.portal,
 });
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);

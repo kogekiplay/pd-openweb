@@ -13,6 +13,7 @@ import AppRoleCon from 'src/pages/Role/AppRoleCon';
 import Portal from 'src/pages/Role/PortalCon/index';
 import * as actionsPortal from 'src/pages/Role/PortalCon/redux/actions.js';
 import { canEditApp, canEditData, getUserRole } from 'src/pages/worksheet/redux/actions/util';
+import type { RootState } from 'src/redux/types';
 import { getAppLangDetail, getTranslateInfo } from 'src/utils/app';
 import { setFavicon } from 'src/utils/app';
 import { emitter } from 'src/utils/common';
@@ -269,7 +270,7 @@ class AppRole extends Component<any, any> {
     );
   }
 }
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   portal: state.portal,
 });
 const mapDispatchToProps = dispatch => bindActionCreators(actionsPortal, dispatch);

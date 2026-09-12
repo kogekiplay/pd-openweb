@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import withRouter from '../../router/withRouter';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -9,8 +8,10 @@ import sheetAjax from 'src/api/worksheet';
 import mingoCreateIcon from 'src/components/Mingo/assets/ai_create_date.svg';
 import { MINGO_TASK_TYPE } from 'src/components/Mingo/ChatBot/enum';
 import NewRecord from 'src/pages/worksheet/common/newRecord';
+import type { RootState } from 'src/redux/types';
 import { navigateTo } from 'src/router/navigateTo';
 import { emitter } from 'src/utils/common';
+import withRouter from '../../router/withRouter';
 import successPng from './success.png';
 import './index.less';
 
@@ -244,7 +245,7 @@ let NewRecordLand = class NewRecordLand extends Component<any, any> {
   }
 };
 NewRecordLand = withRouter(
-  connect(({ appPkg }) => ({
+  connect(({ appPkg }: RootState) => ({
     appPkg,
   }))(NewRecordLand),
 );

@@ -2,12 +2,19 @@ import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import _ from 'lodash';
+import type { RootState } from 'src/redux/types';
 import { reportTypes } from '../Charts/common';
 import { chartNav } from '../common/chartNav';
 import HeaderDisplaySetup from '../components/HeaderDisplaySetup';
 import * as actions from '../redux/actions.js';
 
-const DisplaySetup = ({ settingVisible, currentReport = undefined, reportData = undefined, changeCurrentReport = undefined, children }) => {
+const DisplaySetup = ({
+  settingVisible,
+  currentReport = undefined,
+  reportData = undefined,
+  changeCurrentReport = undefined,
+  children,
+}) => {
   const isDualAxes = reportTypes.DualAxes === currentReport.reportType;
   const { xaxes, displaySetup, yreportType, sorts } = currentReport;
   return (
@@ -76,7 +83,7 @@ const DisplaySetup = ({ settingVisible, currentReport = undefined, reportData = 
 };
 
 export default connect(
-  ({ statistics }) => ({
+  ({ statistics }: RootState) => ({
     ..._.pick(statistics, ['currentReport', 'reportData', 'base']),
   }),
   dispatch => bindActionCreators(actions, dispatch),

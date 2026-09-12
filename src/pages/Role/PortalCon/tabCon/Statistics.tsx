@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { Dialog, Dropdown } from 'ming-ui';
 import externalPortalAjax from 'src/api/externalPortal';
 import LoginInfoDialog from 'src/pages/Role/PortalCon/components/LoginInfo';
+import type { RootState } from 'src/redux/types';
 import * as actions from '../redux/actions';
 
 const Wrap = styled.div`
@@ -231,7 +232,7 @@ function Statistics(props) {
   );
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   portal: state.portal,
 });
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);

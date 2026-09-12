@@ -6,6 +6,7 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import { Checkbox, Dialog, Dropdown, Icon, PriceTip, Radio } from 'ming-ui';
 import externalPortalAjax from 'src/api/externalPortal';
+import type { RootState } from 'src/redux/types';
 import { getTranslateInfo } from 'src/utils/app';
 import * as actions from '../redux/actions';
 import EmailInput from './Email';
@@ -314,7 +315,7 @@ function AddUserByTelDialog(props) {
   );
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   portal: state.portal,
 });
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
