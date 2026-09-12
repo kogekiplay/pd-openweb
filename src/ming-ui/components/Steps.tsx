@@ -273,7 +273,9 @@ export default function Steps(props) {
     return _.findIndex(filterOptions, i => i.key === value);
   };
 
-  const [currentValue, setCurrentValue] = useState();
+  // 标成 number：它存的是 filterOptions 的下标，下面 setCurrentValue(index) 传的是数字。
+  // 不写类型时 useState() 推成 undefined，setCurrentValue(数字) 报 TS2345。
+  const [currentValue, setCurrentValue] = useState<number | undefined>(undefined);
   const [width, setWidth] = useState(0);
 
   useEffect(() => {

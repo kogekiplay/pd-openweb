@@ -73,7 +73,7 @@ export default function NoRecords(props) {
 }
 
 NoRecords.propTypes = {
-  style: PropTypes.shape(),
+  style: PropTypes.shape({}),
   sheetIsFiltered: PropTypes.bool,
   text: PropTypes.bool,
   icon: PropTypes.element,

@@ -319,7 +319,6 @@ class TaskTree extends Component<any, any> {
           ) : null
         }
       />,
-      ele,
     );
   }
 

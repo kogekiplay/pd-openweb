@@ -57,9 +57,11 @@ export const roleDetailPropType = PropTypes.shape({
 export const fieldPropType = PropTypes.shape({
   fieldId: PropTypes.string,
   fieldName: PropTypes.string,
-  notAdd: PropTypes.boolean,
-  notEdit: PropTypes.boolean,
-  notRead: PropTypes.boolean,
+  // PropTypes 没有 boolean，正确名是 bool。写成 boolean 时校验器是 undefined，
+  // 这三条 propTypes 从来没生效过 —— 装上 @types/prop-types 才暴露出来。
+  notAdd: PropTypes.bool,
+  notEdit: PropTypes.bool,
+  notRead: PropTypes.bool,
 });
 
 export const ROLE_CONFIG = {
