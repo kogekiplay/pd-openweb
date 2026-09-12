@@ -47,6 +47,7 @@
     "@mdfe/react-dnd-mouse-backend": "^2.0.0",
     "@mdfe/vditor": "^1.0.0",
     "@mingdaocom/json-view": "0.1.4",
+    "@rc-component/picker": "1.12.2",
     "@rc-component/trigger": "3.10.1",
     "@react-google-maps/api": "2.20.8",
     "@reduxjs/toolkit": "^2.12.0",
