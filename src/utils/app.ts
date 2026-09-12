@@ -156,11 +156,27 @@ const getLangDataIndex = langData => {
  * @param {*} data 翻译包数据
  * @returns { name、description、hintText、... }
  */
-export const getTranslateInfo = (appId, parentId, id, data) => {
+/**
+ * 一条翻译记录的内容：字段名 → 译文。
+ *
+ * 用索引签名而不是穷举字段：字段集合随对象类型而变（控件有 name / hintText /
+ * otherhint，按钮有 btnname / confirmMsg / sureName，标签页有 deftabname …），
+ * 穷举会在后端新增字段时【静默漏掉】。
+ *
+ * 标这个返回类型的收益不在本文件：装上 @types/lodash 后，第 169 行的 _.find
+ * 有了真实返回类型，info.data || {} 被推成 {}，于是全仓几十处
+ * getTranslateInfo(...).title / .sub / .btnname 一律报 TS2339。
+ * 在源头标一次，下游全部消解。
+ */
+export type TranslateInfo = Record<string, string>;
+
+export const getTranslateInfo = (appId, parentId, id, data?): TranslateInfo => {
   const langData = data || window[`langData-${appId}`] || [];
 
   if (!Array.isArray(langData)) {
-    const findCondition = { correlationId: id };
+    // 标注类型：下面按条件往里塞 parentId，不标的话对象字面量被推成
+    // { correlationId: any }，加字段直接报 TS2339。
+    const findCondition: { correlationId: unknown; parentId?: unknown } = { correlationId: id };
 
     if (parentId) {
       findCondition.parentId = parentId;

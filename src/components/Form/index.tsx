@@ -372,7 +372,18 @@ const Entrance = React.forwardRef((componentProps, ref) => {
     return null;
   }; // 提示错误二次确认层
 
-  const newErrorDialog = (errors, options) => {
+  /** 校验错误项：controlId 定位控件，errorMessage 是文案，ignoreErrorMessage 表示"可忽略"。 */
+  type FormValidateError = {
+    controlId?: string;
+    errorMessage?: string;
+    ignoreErrorMessage?: boolean;
+  };
+
+  // errors 必须标类型：不标的话它是隐式 any，但下面第 378 行的 _.uniqBy 在装上
+  // @types/lodash 后会【反向约束】它 —— TS 把 errors 推成字符串数组，于是
+  // i.ignoreErrorMessage / item.errorMessage 全部报 TS2339
+  // （报文里那串 charAt / charCodeAt 就是 String 的原型成员，很好认）。
+  const newErrorDialog = (errors: FormValidateError[], options) => {
     const isAllIgnoreError = errors.every(i => i.ignoreErrorMessage);
 
     const uniqueErrors = _.uniqBy(errors, 'errorMessage');
