@@ -486,11 +486,14 @@ export const SearchWorksheetWrap = styled.div`
         .ant-select-suffix {
           margin-top: -8px !important;
         }
-        .ant-select-content {
-          border-color: var(--color-border-secondary);
-          height: 36px;
-          border-radius: 4px;
+        &.ant-select,
+        & .ant-select {
+          --ant-select-border-color: var(--color-border-secondary);
+          --ant-select-border-radius: 4px;
           box-shadow: none !important;
+        }
+        .ant-select-content {
+          height: 36px;
           .ant-select-input {
             height: 34px;
           }

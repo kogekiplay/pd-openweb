@@ -35,15 +35,21 @@ const Con = styled.div`
     &.ant-select-open {
       border-color: var(--color-primary) !important;
     }
+    &.customAntSelect:not(.ant-select-open):not(.ant-select-disabled).ant-select,
+    &.customAntSelect:not(.ant-select-open):not(.ant-select-disabled) .ant-select {
+      --ant-select-background-color: transparent !important;
+      --ant-select-background-color: transparent !important;
+    }
     &.customAntSelect:not(.ant-select-open):not(.ant-select-disabled) .ant-select-content {
-      background-color: transparent !important;
       &:hover {
-        background-color: transparent !important;
       }
+    }
+    &.ant-select,
+    & .ant-select {
+      --ant-select-border-size: 0 !important;
     }
     .ant-select-content {
       cursor: pointer !important;
-      border: none !important;
       min-height: 30px;
       .customAntSelectPlaceHolder,
       .ant-select-placeholder {

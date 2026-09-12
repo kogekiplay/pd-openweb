@@ -2857,33 +2857,40 @@ html:not(.appHomeMobile) .ant-message {
   font-size: 13px !important;
 }
 
-.mdAntSelect:not(.ant-select-disabled):hover .ant-select-content {
-  border-color: var(--color-primary) !important;
+.mdAntSelect:not(.ant-select-disabled):hover.ant-select,
+.mdAntSelect:not(.ant-select-disabled):hover .ant-select {
+  --ant-select-border-color: var(--color-primary) !important;
 }
 
-.mdAntSelect.ant-select-open .ant-select-content {
-  border-color: var(--color-primary);
+.mdAntSelect.ant-select-open.ant-select,
+.mdAntSelect.ant-select-open .ant-select {
+  --ant-select-border-color: var(--color-primary);
   box-shadow: none;
 }
 
-.mdAntSelect.ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input)
-  .ant-select-content {
-  border: 1px solid var(--color-primary);
+.mdAntSelect.ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) {
+  --ant-select-border-size: 1px;
+  --ant-select-border-color: var(--color-primary);
   box-shadow: none;
 }
 
+.mdAntSelect:not(.ant-select-customize-input).ant-select,
+.mdAntSelect:not(.ant-select-customize-input) .ant-select {
+  --ant-select-border-size: 1px;
+  --ant-select-border-color: var(--color-border-primary);
+  --ant-select-border-radius: 4px !important;
+}
 .mdAntSelect:not(.ant-select-customize-input) .ant-select-content {
-  border: 1px solid var(--color-border-primary);
   height: 36px !important;
-  border-radius: 4px !important;
 }
 
 .mdAntSelect:not(.ant-select-customize-input) .ant-select-content .ant-select-input {
   height: 34px;
 }
 
-.noBorder:not(.ant-select-customize-input) .ant-select-content {
-  border: none !important;
+.noBorder:not(.ant-select-customize-input).ant-select,
+.noBorder:not(.ant-select-customize-input) .ant-select {
+  --ant-select-border-size: 0 !important;
 }
 
 .mdAntSelect.ant-select-single .ant-select-content .ant-select-selection-item,

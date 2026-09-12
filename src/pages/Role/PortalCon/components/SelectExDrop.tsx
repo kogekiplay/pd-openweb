@@ -6,10 +6,12 @@ import { Icon } from 'ming-ui';
 
 const { Option } = Select;
 
-const StyledSelectContainer = styled.div`
+const StyledSelectContainer = styled.div` .ant-select:not(.ant-select-customize-input) {
+  --ant-select-border-radius: 3px;
+  --ant-select-border-size: 1px;
+  --ant-select-border-color: var(--color-border-secondary);
+}
   .ant-select:not(.ant-select-customize-input) .ant-select-content {
-    border-radius: 3px;
-    border: 1px solid var(--color-border-secondary);
     padding-right: 24px;
   }
 

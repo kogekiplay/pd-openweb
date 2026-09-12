@@ -28,8 +28,9 @@ const ToolBarWrap = styled.div(
   padding:${isMobile ? '0 18px' : '0 22px 0 16px'};
   z-index: 10;
   box-shadow: var(--shadow-lg);
-  .ant-select-content {
-    border: none !important;
+  &.ant-select,
+  & .ant-select {
+    --ant-select-border-size: 0 !important;
   }
   .icon-download:hover {
     color: var(--color-primary) !important;

@@ -145,14 +145,16 @@
   .ant-select-focused {
     border-color: none;
   }
-  .ant-select:not(.ant-select-customize-input) .ant-select-content {
-    border: 1px solid var(--color-border-tertiary);
+  .ant-select:not(.ant-select-customize-input) {
+    --ant-select-border-size: 1px;
+    --ant-select-border-color: var(--color-border-tertiary);
   }
-  .ant-select:not(.ant-select-disabled):hover .ant-select-content {
-    border-color: var(--color-text-disabled);
+  .ant-select:not(.ant-select-disabled):hover {
+    --ant-select-border-color: var(--color-text-disabled);
   }
-  .formInfoWrap .ant-select:not(.ant-select-customize-input) .ant-select-content {
-    border: 1px solid var(--color-background-secondary);
+  .formInfoWrap .ant-select:not(.ant-select-customize-input) {
+    --ant-select-border-size: 1px;
+    --ant-select-border-color: var(--color-background-secondary);
   }
 }
 

@@ -90,18 +90,23 @@ const FormCard = styled.div`
     margin-right: 16px;
     margin-top: 6px;
 
+    &.ant-select,
+    & .ant-select {
+      --ant-select-border-size: 2px !important;
+      --ant-select-border-color: var(--color-border-secondary) !important;
+      --ant-select-border-radius: 8px !important;
+      box-shadow: none !important;
+    }
     .ant-select-content {
       min-height: 48px;
       padding: 8px 11px !important;
-      border: 2px solid var(--color-border-secondary) !important;
-      border-radius: 8px !important;
-      box-shadow: none !important;
 
     }
 
     &.ant-select-focused {
-      .ant-select-content {
-        border-color: var(--color-primary) !important;
+      &.ant-select,
+      & .ant-select {
+        --ant-select-border-color: var(--color-primary) !important;
       }
     }
   }

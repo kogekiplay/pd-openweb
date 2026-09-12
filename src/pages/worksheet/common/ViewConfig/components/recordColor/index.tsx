@@ -47,16 +47,16 @@ const Con = styled.div`
   }
   .customAntSelect {
     margin-top: 10px;
-    .ant-select-content {
-      border-color: var(--color-border-primary) !important;
-      background: var(--color-background-primary) !important;
+    &.ant-select,
+    & .ant-select {
+      --ant-select-border-color: var(--color-border-primary) !important;
+      --ant-select-background-color: var(--color-background-primary) !important;
     }
   }
-  .customAntSelect:not(.ant-select-open):not(.ant-select-disabled) {
-    .ant-select-content:hover {
-      background-color: inherit !important;
-      border-color: var(--color-border-primary) !important;
-    }
+  .customAntSelect:not(.ant-select-open):not(.ant-select-disabled).ant-select:hover,
+  .customAntSelect:not(.ant-select-open):not(.ant-select-disabled) .ant-select:hover {
+    --ant-select-background-color: inherit !important;
+    --ant-select-border-color: var(--color-border-primary) !important;
   }
 `;
 

@@ -31,15 +31,19 @@ const RemarkTextArea = styled(Textarea)`
 const SelectBox = styled(Select)`
   width: 100%;
   &.ant-select-focused {
-    .ant-select-content {
-      border-color: var(--color-primary) !important;
+    &.ant-select,
+    & .ant-select {
+      --ant-select-border-color: var(--color-primary) !important;
       box-shadow: none !important;
     }
   }
+  &.ant-select,
+  & .ant-select {
+    --ant-select-border-color: var(--color-border-tertiary) !important;
+    --ant-select-border-radius: 4px !important;
+  }
   .ant-select-content {
     height: 36px !important;
-    border-color: var(--color-border-tertiary) !important;
-    border-radius: 4px !important;
     padding: 3px 10px !important;
     transition: none !important;
     .ant-select-selection-item,

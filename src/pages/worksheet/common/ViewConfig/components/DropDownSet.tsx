@@ -17,8 +17,11 @@ const DropDownSetChoose = styled.div`
   }
   .dropDropDownSet {
     width: 100%;
+    &.ant-select,
+    & .ant-select {
+      --ant-select-border-radius: 3px !important;
+    }
     .ant-select-content {
-      border-radius: 3px !important;
       height: 36px !important;
       .ant-select-selection-item,
       .ant-select-content-value {
@@ -27,8 +30,9 @@ const DropDownSetChoose = styled.div`
       }
     }
     &.isDelete {
-      .ant-select-content {
-        border-color: var(--color-error) !important;
+      &.ant-select,
+      & .ant-select {
+        --ant-select-border-color: var(--color-error) !important;
       }
       .ant-select-selection-item,
       .ant-select-content-value {

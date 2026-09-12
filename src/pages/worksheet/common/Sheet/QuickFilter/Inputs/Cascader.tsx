@@ -23,12 +23,15 @@ const Con = styled.div`
     }
   }
 
+  .customAntSelect:not(.ant-select-open):not(.ant-select-disabled).ant-select,
+  .customAntSelect:not(.ant-select-open):not(.ant-select-disabled) .ant-select {
+    --ant-select-background-color: transparent !important;
+    --ant-select-border-color: var(--color-border-primary) !important;
+    --ant-select-background-color: transparent !important;
+    --ant-select-border-color: var(--color-text-placeholder) !important;
+  }
   .customAntSelect:not(.ant-select-open):not(.ant-select-disabled) .ant-select-content {
-    background-color: transparent !important;
-    border-color: var(--color-border-primary) !important;
     &:hover {
-      background-color: transparent !important;
-      border-color: var(--color-text-placeholder) !important;
     }
   }
   .customTreeSelect.ant-select-single {

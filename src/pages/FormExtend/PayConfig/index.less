@@ -32,8 +32,9 @@
     color: var(--color-text-tertiary);
   }
 
-  &.ant-select-open .ant-select-content {
-    border-color: var(--color-primary);
+  &.ant-select-open.ant-select,
+  &.ant-select-open .ant-select {
+    --ant-select-border-color: var(--color-primary);
     box-shadow: none;
   }
   .ant-select-item-option-disabled {

@@ -251,10 +251,14 @@
         }
       }
 
+      &.ant-select,
+      & .ant-select {
+        --ant-select-border-size: 1px !important;
+        --ant-select-border-color: var(--color-error) !important;
+      }
       input[type='text']:not(.iti__search-input),
       input[type='password'],
-      .Dropdown--input,
-      .ant-select-content {
+      .Dropdown--input {
         border: 1px solid var(--color-error) !important;
       }
       .title {
@@ -302,8 +306,9 @@
         border: 1px solid var(--color-primary) !important;
       }
     }
-    .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-content {
-      border: 1px solid var(--color-primary);
+    .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) {
+      --ant-select-border-size: 1px;
+      --ant-select-border-color: var(--color-primary);
       box-shadow: var(--shadow-sm);
     }
     .ant-select-show-search.ant-select:not(.ant-select-customize-input) .ant-select-content input {
@@ -312,12 +317,26 @@
     .ant-select-single:not(.ant-select-customize-input) .ant-select-content .ant-select-input {
       height: 48px;
     }
+    .ant-select-single:not(.ant-select-customize-input).ant-select,
+    .ant-select-single:not(.ant-select-customize-input) .ant-select {
+      --ant-select-border-size: 0;
+      --ant-select-border-size: 1px;
+      --ant-select-border-color: var(--color-border-primary);
+      --ant-select-border-radius: 6px;
+      --ant-select-background-color: var(--color-background-primary);
+      --ant-select-border-color: var(--color-primary);
+      box-shadow: var(--shadow-sm);
+    }
     input[type='text']:not(.iti__search-input),
     input[type='password'],
-    .Dropdown--input,
-    .ant-select-single:not(.ant-select-customize-input) .ant-select-content {
-      vertical-align: top;
+    .Dropdown--input {
       border: 0px;
+      border: 1px solid var(--color-border-primary);
+      border-radius: 6px;
+      background: var(--color-background-primary);
+        border-color: var(--color-primary);
+        box-shadow: var(--shadow-sm);
+      vertical-align: top;
       width: 100%;
       padding: 0 15px;
       box-sizing: border-box;
@@ -325,9 +344,6 @@
       vertical-align: top;
       line-height: 48px;
       font-size: 14px;
-      border: 1px solid var(--color-border-primary);
-      border-radius: 6px;
-      background: var(--color-background-primary);
       transition:
         border-color 0.2s,
         box-shadow 0.2s;
@@ -340,8 +356,6 @@
 
       &:focus {
         outline: 0px;
-        border-color: var(--color-primary);
-        box-shadow: var(--shadow-sm);
       }
 
       &.loginInput {

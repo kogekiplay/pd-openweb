@@ -237,13 +237,16 @@
     width: 100%;
     margin-top: 10px;
 
+    &.ant-select,
+    & .ant-select {
+      --ant-select-border-radius: 8px !important;
+      --ant-select-border-color: var(--color-border-primary) !important;
+      box-shadow: none !important;
+    }
     .ant-select-content {
-      border-radius: 8px !important;
-      border-color: var(--color-border-primary) !important;
       height: 36px !important;
       display: flex !important;
       align-items: center !important;
-      box-shadow: none !important;
     }
 
     .ant-select-selection-item,

@@ -31,26 +31,33 @@ const CrackTextarea = styled(Textarea)`
 const CommonSelect = styled(Select)`
   width: 100%;
   font-size: 13px;
+  &.ant-select,
+  & .ant-select {
+    --ant-select-border-radius: 3px !important;
+    --ant-select-border-color: var(--color-border-tertiary) !important;
+    box-shadow: none !important;
+    --ant-select-border-color: var(--color-primary) !important;
+  }
   .ant-select-content {
     height: 36px !important;
     padding: 2px 11px !important;
-    border-radius: 3px !important;
-    border-color: var(--color-border-tertiary) !important;
     transition: 0;
-    box-shadow: none !important;
     &:hover {
-      border-color: var(--color-primary) !important;
     }
   }
   &.ant-select-focused {
-    .ant-select-content {
-      border-color: var(--color-primary) !important;
+    &.ant-select,
+    & .ant-select {
+      --ant-select-border-color: var(--color-primary) !important;
     }
   }
   &.ant-select-disabled {
+    &.ant-select,
+    & .ant-select {
+      --ant-select-border-color: var(--color-border-primary) !important;
+    }
     .ant-select-content {
       &:hover {
-        border-color: var(--color-border-primary) !important;
       }
     }
   }

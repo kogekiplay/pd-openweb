@@ -106,12 +106,15 @@
     width: 300px;
     height: 36px;
     line-height: 34px;
+    &.ant-select,
+    & .ant-select {
+      --ant-select-border-radius: 2px;
+      box-shadow: none !important;
+    }
     .ant-select-content {
       height: 36px;
       display: flex;
       align-items: center;
-      border-radius: 2px;
-      box-shadow: none !important;
       font-size: 13px;
     }
     .ant-select-suffix {
@@ -123,10 +126,10 @@
       color: var(--color-primary);
       background-color: var(--color-background-primary);
     }
-    &.ant-select:not(.ant-select-disabled):hover .ant-select-content,
-    &.ant-select-focused:not(.ant-select-disabled).ant-select-single:not(.ant-select-customize-input)
-      .ant-select-content {
-      border-color: var(--color-primary) !important;
+    &.ant-select:not(.ant-select-disabled):hover,
+    &.ant-select-focused:not(.ant-select-disabled).ant-select-single:not(.ant-select-customize-input).ant-select,
+    &.ant-select-focused:not(.ant-select-disabled).ant-select-single:not(.ant-select-customize-input) .ant-select {
+      --ant-select-border-color: var(--color-primary) !important;
     }
   }
 }

@@ -64,10 +64,14 @@ const ChartWrap = styled.div`
       .ant-select {
         height: 36px;
         border-radius: 3px;
+        &.ant-select,
+        & .ant-select {
+          --ant-select-border-size: 1px;
+          --ant-select-border-color: var(--color-border-secondary);
+          --ant-select-border-radius: 3px;
+        }
         .ant-select-content {
           height: 36px;
-          border: 1px solid var(--color-border-secondary);
-          border-radius: 3px;
           .ant-select-selection-item,
           .ant-select-content-value {
             line-height: 34px;

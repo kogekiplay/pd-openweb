@@ -32,8 +32,9 @@ const Wrap = styled.div`
   .icon-more_horiz:hover {
     color: var(--color-primary) !important;
   }
-  .ant-select-content {
-    border-radius: 4px !important;
+  &.ant-select,
+  & .ant-select {
+    --ant-select-border-radius: 4px !important;
     box-shadow: none !important;
   }
 `;

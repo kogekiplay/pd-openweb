@@ -27,15 +27,24 @@ const Con = styled(EditableCellCon)`
       }
     }
   }
-  .ant-select .ant-select-content,
+  .ant-select {
+    --ant-select-background-color: transparent !important;
+    --ant-select-background-color: transparent !important;
+    --ant-select-border-size: 0 !important;
+    box-shadow: none !important;
+    --ant-select-background-color: transparent !important;
+    --ant-select-background-color: transparent !important;
+  }
   .ant-select .ant-select-content:not(.ant-select-open):not(.ant-select-disabled) {
-    height: 32px !important;
-    min-height: auto !important;
-    padding: 0 6px !important;
     background: transparent !important;
     background-color: transparent !important;
     border: none !important;
     box-shadow: none !important;
+      background: transparent !important;
+      background-color: transparent !important;
+    height: 32px !important;
+    min-height: auto !important;
+    padding: 0 6px !important;
     .ant-select-placeholder,
     input {
       font-size: 13px;
@@ -45,8 +54,6 @@ const Con = styled(EditableCellCon)`
       height: 32px !important;
     }
     &:hover {
-      background: transparent !important;
-      background-color: transparent !important;
     }
   }
   ${({ isediting }) =>

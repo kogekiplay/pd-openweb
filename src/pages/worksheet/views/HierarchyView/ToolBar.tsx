@@ -48,8 +48,9 @@ const ToolBarWrap = styled(FlexCenter)`
       color: var(--color-text-secondary);
     }
   }
-  .ant-select-content {
-    border: none !important;
+  &.ant-select,
+  & .ant-select {
+    --ant-select-border-size: 0 !important;
   }
   .toOrigin {
     margin: 0 12px;

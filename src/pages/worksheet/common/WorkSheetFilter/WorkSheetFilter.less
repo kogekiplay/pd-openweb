@@ -542,10 +542,13 @@
 .worksheetFilterTextCondition {
   outline: none;
 
+  &.ant-select,
+  & .ant-select {
+    --ant-select-border-color: var(--color-border-primary) !important;
+    box-shadow: none !important;
+  }
   .ant-select-content {
     min-height: 36px;
-    border-color: var(--color-border-primary) !important;
-    box-shadow: none !important;
     padding: 3px 4px !important;
     /* v5 的 gap 挂在 .ant-select-selection-overflow 上，v6 没有这层，
        多个胶囊直接是 .ant-select-content 的 flex 子元素，gap 上提到这里。 */
@@ -553,8 +556,9 @@
   }
 
   &.ant-select-focused {
-    .ant-select-content {
-      border-color: var(--color-primary) !important;
+    &.ant-select,
+    & .ant-select {
+      --ant-select-border-color: var(--color-primary) !important;
     }
   }
 }
@@ -834,13 +838,15 @@
 .worksheetFilterCascaderCondition {
   .cascaderDropdown {
     margin-top: 0px !important;
-    .ant-select-content {
-      background-color: transparent !important;
-      border-color: var(--color-border-primary) !important;
+    &.ant-select,
+    & .ant-select {
+      --ant-select-background-color: transparent !important;
+      --ant-select-border-color: var(--color-border-primary) !important;
     }
-    .customAntSelect:not(.ant-select-open):not(.ant-select-disabled) .ant-select-content:hover {
-      background-color: transparent !important;
-      border-color: var(--color-text-placeholder) !important;
+    .customAntSelect:not(.ant-select-open):not(.ant-select-disabled).ant-select:hover,
+    .customAntSelect:not(.ant-select-open):not(.ant-select-disabled) .ant-select:hover {
+      --ant-select-background-color: transparent !important;
+      --ant-select-border-color: var(--color-text-placeholder) !important;
     }
     .cascader-input {
       background-color: transparent !important;

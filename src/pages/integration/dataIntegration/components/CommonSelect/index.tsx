@@ -6,21 +6,27 @@ const SelectWrapper = styled.div`
   .selectItem {
     font-size: 13px;
     width: ${({ width }) => `${width ? width + 'px' : '100%'} !important`};
+    &.ant-select,
+    & .ant-select {
+      --ant-select-border-size: 1px !important;
+      --ant-select-border-color: var(--color-border-tertiary) !important;
+      --ant-select-border-radius: 3px !important;
+      box-shadow: none !important;
+    }
     .ant-select-content {
       min-height: 36px;
       padding: 2px 11px !important;
-      border: 1px solid var(--color-border-tertiary) !important;
-      border-radius: 3px !important;
-      box-shadow: none !important;
     }
     &.ant-select-focused {
-      .ant-select-content {
-        border-color: var(--color-primary) !important;
+      &.ant-select,
+      & .ant-select {
+        --ant-select-border-color: var(--color-primary) !important;
       }
     }
     &.disabled {
-      .ant-select-content {
-        border: 0;
+      &.ant-select,
+      & .ant-select {
+        --ant-select-border-size: 0;
       }
     }
   }

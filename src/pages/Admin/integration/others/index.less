@@ -156,8 +156,9 @@
   }
   .errorInput {
     border-color: #f00 !important;
-    & .ant-select-content {
-      border-color: #f00 !important;
+    &.ant-select,
+    & .ant-select {
+      --ant-select-border-color: #f00 !important;
     }
   }
 }

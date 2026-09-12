@@ -18,14 +18,14 @@ const Wrap = styled.div`
   .mTop14 {
     margin-top: 14px;
   }
-  .ant-select-disabled.ant-select:not(.ant-select-customize-input) .ant-select-content {
-    background: var(--color-background-primary);
+  .ant-select-disabled.ant-select:not(.ant-select-customize-input) {
+    --ant-select-background-color: var(--color-background-primary);
   }
   .ant-select-suffix {
     display: none;
   }
-  .ant-select:not(.ant-select-customize-input) .ant-select-content {
-    border-radius: 4px;
+  .ant-select:not(.ant-select-customize-input) {
+    --ant-select-border-radius: 4px;
   }
   .ant-select-single:not(.ant-select-customize-input) .ant-select-content {
     height: 36px;

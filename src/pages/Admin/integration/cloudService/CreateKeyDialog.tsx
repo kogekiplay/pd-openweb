@@ -36,13 +36,17 @@ const CreateFormItem = styled.div`
     padding: 0 12px;
   }
 
+  &.ant-select,
+  & .ant-select {
+    --ant-select-border-size: 1px !important;
+    --ant-select-border-color: var(--color-border-primary) !important;
+    --ant-select-border-radius: 4px !important;
+    box-shadow: none !important;
+  }
   .ant-select-content {
     height: 38px !important;
-    border: 1px solid var(--color-border-primary) !important;
-    border-radius: 4px !important;
     display: flex;
     align-items: center;
-    box-shadow: none !important;
     padding: 0 12px !important;
   }
 

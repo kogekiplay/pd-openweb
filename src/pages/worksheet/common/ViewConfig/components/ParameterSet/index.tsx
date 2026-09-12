@@ -37,12 +37,15 @@ const Wrap = styled.div`
       border-color: var(--color-border-tertiary);
     }
   }
+  .customAntSelect:not(.ant-select-open):not(.ant-select-disabled).ant-select,
+  .customAntSelect:not(.ant-select-open):not(.ant-select-disabled) .ant-select {
+    --ant-select-background-color: var(--color-background-primary) !important;
+    --ant-select-border-color: var(--color-border-primary) !important;
+    --ant-select-border-color: var(--color-border-tertiary) !important;
+    --ant-select-background-color: var(--color-background-primary) !important;
+  }
   .customAntSelect:not(.ant-select-open):not(.ant-select-disabled) .ant-select-content {
-    background: var(--color-background-primary) !important;
-    border-color: var(--color-border-primary) !important;
     &:hover {
-      border-color: var(--color-border-tertiary) !important;
-      background: var(--color-background-primary) !important;
     }
   }
   .customFieldsContainer .customFormItemControl > .ming.Dropdown .Dropdown--border:not(:hover):not(.active),

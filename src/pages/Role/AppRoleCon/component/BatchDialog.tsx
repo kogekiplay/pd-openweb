@@ -31,14 +31,18 @@ const Wrap = styled.div`
     line-height: 18px;
     padding: 0 6px;
   }
+  .ant-select:not(.ant-select-customize-input) {
+    --ant-select-border-radius: 3px;
+    --ant-select-border-size: 1px;
+    --ant-select-border-color: var(--color-border-primary);
+  }
   .ant-select:not(.ant-select-customize-input) .ant-select-content {
     min-height: 36px;
     height: auto;
-    border-radius: 3px;
-    border: 1px solid var(--color-border-primary);
   }
   .ant-select-focused:not(.ant-select-disabled) {
-    .ant-select-content {
+    &.ant-select,
+    & .ant-select {
       box-shadow: none !important;
     }
   }

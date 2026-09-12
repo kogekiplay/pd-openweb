@@ -18,7 +18,7 @@ const EditUserExtendInfoCon = styled.div`
     width: 100%;
     height: 36px;
   }
-  .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-content {
+  .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) {
     box-shadow: unset;
   }
   .saveBtn {

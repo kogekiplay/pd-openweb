@@ -167,8 +167,9 @@ const PivotTableContent = styled.div`
   }
   .ant-table-pagination.ant-pagination {
     margin-bottom: 5px;
-    .ant-select-content {
-      border-radius: 4px;
+    &.ant-select,
+    & .ant-select {
+      --ant-select-border-radius: 4px;
     }
   }
   .ant-table-container,

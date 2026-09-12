@@ -86,9 +86,12 @@ export const WrapL = styled.div`
         margin-bottom: 0 !important;
         width: 100% !important;
       }
+      .ant-select-single:not(.ant-select-customize-input).ant-select,
+      .ant-select-single:not(.ant-select-customize-input) .ant-select {
+        --ant-select-border-radius: 4px !important;
+      }
       .ant-select-single:not(.ant-select-customize-input) .ant-select-content {
         height: 36px !important;
-        border-radius: 4px !important;
       }
       .ant-select-single:not(.ant-select-customize-input) .ant-select-content .ant-select-input,
       .ant-select-single .ant-select-content .ant-select-selection-item,

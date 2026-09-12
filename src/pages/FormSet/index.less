@@ -250,11 +250,14 @@
           .ant-select-suffix {
             margin-top: -8px !important;
           }
-          .ant-select-content {
-            border-color: var(--color-border-secondary);
-            height: 36px;
-            border-radius: 4px;
+          &.ant-select,
+          & .ant-select {
+            --ant-select-border-color: var(--color-border-secondary);
+            --ant-select-border-radius: 4px;
             box-shadow: none !important;
+          }
+          .ant-select-content {
+            height: 36px;
             .ant-select-input {
               height: 34px;
             }
@@ -357,11 +360,14 @@
         .ant-select-suffix {
           margin-top: -8px !important;
         }
-        .ant-select-content {
-          border-color: var(--color-border-secondary);
-          height: 36px;
-          border-radius: 4px;
+        &.ant-select,
+        & .ant-select {
+          --ant-select-border-color: var(--color-border-secondary);
+          --ant-select-border-radius: 4px;
           box-shadow: none !important;
+        }
+        .ant-select-content {
+          height: 36px;
           .ant-select-input {
             height: 34px;
           }
@@ -820,10 +826,10 @@
     color: var(--color-white) !important;
     background-color: var(--color-primary) !important;
   }
-  &.ant-select:not(.ant-select-disabled):hover .ant-select-content,
-  &.ant-select-focused:not(.ant-select-disabled).ant-select-single:not(.ant-select-customize-input)
-    .ant-select-content {
-    border-color: var(--color-primary) !important;
+  &.ant-select:not(.ant-select-disabled):hover,
+  &.ant-select-focused:not(.ant-select-disabled).ant-select-single:not(.ant-select-customize-input).ant-select,
+  &.ant-select-focused:not(.ant-select-disabled).ant-select-single:not(.ant-select-customize-input) .ant-select {
+    --ant-select-border-color: var(--color-primary) !important;
   }
 }
 .addConditionTrigger {

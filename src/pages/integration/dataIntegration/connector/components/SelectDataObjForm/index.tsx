@@ -13,14 +13,18 @@ const Wrapper = styled.div`
   .selectItem {
     width: 100% !important;
     font-size: 13px;
+    &.ant-select,
+    & .ant-select {
+      --ant-select-border-radius: 3px !important;
+    }
     .ant-select-content {
       min-height: 36px;
       padding: 2px 11px !important;
-      border-radius: 3px !important;
     }
     &.disabled {
-      .ant-select-content {
-        border: 0;
+      &.ant-select,
+      & .ant-select {
+        --ant-select-border-size: 0;
       }
     }
   }

@@ -135,8 +135,8 @@ export const Con = styled.div`
   .w200 {
     width: 200px;
   }
-  .ant-select:not(.ant-select-customize-input) .ant-select-content {
-    border-radius: 3px;
+  .ant-select:not(.ant-select-customize-input) {
+    --ant-select-border-radius: 3px;
   }
   .act {
     flex-shrink: 0;

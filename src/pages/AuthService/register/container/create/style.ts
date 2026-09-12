@@ -70,17 +70,22 @@ export const Wrap = styled.div`
         right: 12px;
         top: 0;
       }
+      .ant-select-single:not(.ant-select-customize-input).ant-select,
+      .ant-select-single:not(.ant-select-customize-input) .ant-select {
+        --ant-select-border-size: 1px !important;
+        --ant-select-border-color: var(--color-primary) !important;
+        box-shadow: var(--shadow-sm);
+      }
       input[type='text']:not(.iti__search-input),
       input[type='password'],
-      .Dropdown--input,
-      .ant-select-single:not(.ant-select-customize-input) .ant-select-content {
+      .Dropdown--input {
+          border: 1px solid var(--color-primary) !important;
+          box-shadow: var(--shadow-sm);
         .Dropdown--placeholder {
           opacity: 0;
           transition: all 0.3s;
         }
         &.active {
-          border: 1px solid var(--color-primary) !important;
-          box-shadow: var(--shadow-sm);
           .title {
             color: var(--color-primary) !important;
             top: -1px;
