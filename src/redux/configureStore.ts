@@ -9,6 +9,15 @@ const IGNORED_PATHS = [
   'kc.params',
   'kc.list',
   'kc.selectedItems',
+  // 存的是一个【真 DOM 元素】（#kclistContainer），见 kc/redux/reducers.ts 的
+  // kcListElement 与 kcAction.ts:181 的 kcListElement.querySelector(...)。
+  // 这一条比其它几条更狠：DOM 节点有 parentNode ↔ childNodes 循环引用，而 RTK
+  // 2.12 的循环防护是【死代码】—— trackProperties 的 checkedObjects 是默认参数，
+  // 递归时没有往下传（dist/redux-toolkit.modern.mjs:175-199），所以遇到环不是
+  // 报警而是无限递归。表现为 RangeError: Maximum call stack size exceeded，
+  // 整个知识中心页被 ErrorBoundary 接管。本次会话里 ChildTable / RelateRecordTable
+  // 撞的是同一个缺陷。
+  'kc.kcListElement',
   'sheet.sheetview.abortController',
   // 存的是带 on() 等方法的滚动控制器对象，serializableCheck 每次 dispatch 报一次，
   // 实测单次浏览就刷出 372 条，把控制台里真正的报错淹掉。
@@ -49,7 +58,10 @@ export function configureStore() {
         // 这同样不是可修的代码缺陷，而是「把活对象放进 store」的必然结果；真要去掉
         // 得把 AbortController 移出 redux（改放 ref 或模块级 Map），那会动到
         // sheetview 的取数/取消逻辑，是独立一件事。
-        serializableCheck: { ignoredPaths: IGNORED_PATHS },
+        // ignoredActions 也要给：ignoredPaths 只管 state 树，派发时 action 本身
+        // 还会被单独检查一遍，否则 KC_UPDATE_LIST_ELEMENT 每次仍刷一条
+        // 「A non-serializable value was detected in an action, in the path: `value`」。
+        serializableCheck: { ignoredPaths: IGNORED_PATHS, ignoredActions: ['KC_UPDATE_LIST_ELEMENT'] },
         immutableCheck: { ignoredPaths: IGNORED_PATHS },
       }),
   });
