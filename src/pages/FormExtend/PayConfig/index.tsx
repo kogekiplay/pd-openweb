@@ -666,7 +666,11 @@ export default class PayConfig extends Component<any, any> {
                     mode={isMultipleMerchant ? 'multiple' : undefined}
                     value={mchId}
                     optionLabelProp="label"
-                    optionFilterProp="label"
+                    showSearch={
+                      // 同上：showSearch 传对象等于开启搜索，所以只在 multiple（本来就默认
+                      // 开搜索）时传，单选商户保持原来没有搜索框的样子。
+                      isMultipleMerchant ? { optionFilterProp: 'label' } : undefined
+                    }
                     suffixIcon={<i className="icon icon-arrow-down-border textTertiary" />}
                     onChange={value => this.setState({ mchId: _.isArray(value) ? value : [value] })}
                     tagRender={props => {

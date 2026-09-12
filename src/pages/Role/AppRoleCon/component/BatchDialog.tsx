@@ -124,7 +124,15 @@ export default function BatchDialog(props) {
             }}
             defaultValue={defaultRoles}
             notFoundContent={_l('无相关角色')}
-            filterOption={(input, option) => String(option.label || '').includes(input)}
+            showSearch={
+              // antd 6 把搜索相关的 props 收进了 showSearch 对象。这里不能无条件传对象：
+              // rc-select 的 useSearchConfig 里「showSearch 是对象」等价于开启搜索
+              // （node_modules/@rc-component/select/es/hooks/useSearchConfig.js:24），
+              // 而 undefined 时只有 multiple / tags / combobox 才默认开。
+              // 本组件 mode={isMulti ? '' : 'multiple'}（命名反直觉：isMulti 为真反而是单选），
+              // 单选态原本没有搜索框，无条件传对象会凭空多出来一个。
+              isMulti ? undefined : { filterOption: (input, option) => String(option.label || '').includes(input) }
+            }
             options={translatedRoleInfos.map(o => {
               return { label: o.name, value: o.roleId };
             })}

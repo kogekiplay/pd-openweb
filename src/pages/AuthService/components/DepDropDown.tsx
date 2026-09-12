@@ -216,7 +216,11 @@ export default class DepDropDown extends Component<any, any> {
           </div>
         }
         treeData={keywords ? searchOptions || [] : options || []}
-        filterTreeNode={false}
+        // 这里原本有 filterTreeNode={false}：上面的 showSearch 是注释掉的，单选 TreeSelect
+        // 默认不开搜索，searchValue 永远为空、内置过滤根本不会跑，所以那条是死代码，直接删。
+        // 不能顺手改写成 showSearch={{ filterTreeNode: false }} —— rc-select 的 useSearchConfig
+        // 里「showSearch 是对象」一律视为开启搜索（select/es/hooks/useSearchConfig.js:24），
+        // 那样会凭空多出一个搜索框。将来要放开搜索，把 filterTreeNode 放进 showSearch 对象即可。
         suffixIcon={<Icon icon="arrow-down-border Font14" />}
         loadData={({ value }) =>
           new Promise(resolve => {

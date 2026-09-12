@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Input } from 'antd';
+import { Button, Input, Space } from 'antd';
 import styled from 'styled-components';
 import { Icon, SvgIcon } from 'ming-ui';
 import { dialogSelectIcon } from 'ming-ui/functions';
@@ -79,7 +79,7 @@ export default function BtnName(props) {
   return (
     <div className="settingItem">
       <div className="settingTitle">{_l('按钮名称')}</div>
-      <Input.Group compact>
+      <Space.Compact>
         <Input
           value={name}
           style={{ width: 'calc(100% - 80px)' }}
@@ -96,7 +96,7 @@ export default function BtnName(props) {
             </div>
           </Button>
         </ButtonWrap>
-      </Input.Group>
+      </Space.Compact>
     </div>
   );
 }

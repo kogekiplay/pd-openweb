@@ -195,7 +195,8 @@
     "svgo": "4.1.0",
     "postcss-selector-parser": "7.1.6",
     "protocol-buffers-schema": "3.6.1",
-    "@babel/core": "8.0.1"
+    "@babel/core": "8.0.1",
+    "dayjs": "1.11.23"
   },
   "description": "* [前端编码规范](https://github.com/mdfe/style-guide)",
   "main": "Gruntfile.js",

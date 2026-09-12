@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSetState } from 'react-use';
-import { Checkbox, List, Modal, Radio } from 'antd';
+import { Checkbox, Listy, Modal, Radio } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Button, Icon, Radio as MDRadio, SvgIcon, Switch } from 'ming-ui';
@@ -83,9 +83,16 @@ export default function (props) {
         >
           {_l('全选')}
         </Checkbox>
-        <List
+        {/* antd 6 弃用 List，官方替代是 Listy：items / rowKey / itemRender 三件套，
+            没有 List.Item 这层（每项的外壳由 Listy 自己渲染成 .ant-listy-item，
+            默认样式与 List.Item 同形：上下内边距 + 一条底部分隔线，见
+            antd/es/listy/style/index.js:18）。
+            另外 rc-listy 默认 virtual=true，但 antd 的外壳把默认改成了 false
+            （antd/es/listy/index.js:48），所以不用给 height。 */}
+        <Listy
           className="flex w100"
-          dataSource={sheets.map(o => {
+          rowKey="key"
+          items={sheets.map(o => {
             return {
               key: o.sheetId,
               label: (
@@ -112,11 +119,7 @@ export default function (props) {
               ),
             };
           })}
-          renderItem={item => (
-            <List.Item>
-              <span className="flexRow w100"> {item.label}</span>
-            </List.Item>
-          )}
+          itemRender={item => <span className="flexRow w100"> {item.label}</span>}
         />
       </div>
     );

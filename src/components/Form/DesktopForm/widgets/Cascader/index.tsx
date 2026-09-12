@@ -532,7 +532,6 @@ export default function CascaderWidget(props) {
           </div>
         }
         treeData={keywords ? searchOptions || [] : options || []}
-        filterTreeNode={false}
         treeExpandedKeys={treeExpandedKeys}
         suffixIcon={<Icon icon="arrow-down-border Font14" />}
         loadData={({ value }) =>
