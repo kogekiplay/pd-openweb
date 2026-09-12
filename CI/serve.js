@@ -173,8 +173,21 @@ const proxyConfigs = [
 // FileStoreConfig 给的是 .../file/xxx，而 Config.WorksheetDownUrl 给的是裸的
 // `https://host:8880/excelapi`（无尾斜杠），调用点再自己拼 `/ExportExcel/Export`。
 // 写成 '/excelapi/' 就匹配不上那个裸值，导出照旧发绝对地址、照旧被 CORS 挡死。
-// '/chatmq' 同理。
-const REWRITE_PREFIXES = ['/file/', '/chatmq', '/excelapi'];
+// '/chatmq' 同理；'/pm/' 则相反 —— Config.PlatformUrl 的值自带尾斜杠
+//（`https://host:8880/pm/`），调用点直接拼 `hap/platform`、`legalportal/terms`。
+//
+// /pm 是【平台管理】控制台，一个独立的部署产物（不在本仓路由里：
+// 本仓没有 hap/platform 这条路由，本地 /hap/platform 只会落到 SPA 兜底）。
+// 不改写的话，dev 下点「平台管理」会直接 window.open 到生产地址。
+// 它早就在 proxyConfigs 里（原本是为了 freestyle.css/js），代理实测可用：
+// http://localhost:30001/pm/hap/platform 返回的内容与生产逐字节一致。
+//
+// 同类但【没有】一并处理的几个，都缺 proxyConfigs 条目，加改写只会让它们
+// 从"跳生产"变成"拿到 SPA 的 index.html"（200 + HTML，更难查）：
+//   Config.HDPUrl (/hdp)         —— 该服务在本部署压根没起，生产端直接 502
+//   Config.OpenApiDocUrl (/apidoc/) —— 只用于 href / iframe 看文档，跳生产无害
+//   Config.AccountUrl (/account/)   —— 登录链路，动它风险大
+const REWRITE_PREFIXES = ['/file/', '/chatmq', '/excelapi', '/pm/'];
 
 function rewriteAbsoluteHosts(buffer, server) {
   let origin;
