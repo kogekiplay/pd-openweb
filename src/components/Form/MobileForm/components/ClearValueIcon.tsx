@@ -58,7 +58,13 @@ const ClearIconSafeAreaStyle = createGlobalStyle`
 `;
 
 export default function ClearValueIcon(props) {
-  const { className, onClear, size } = props;
+  // 默认值写在解构上，不能再用 ClearValueIcon.defaultProps ——
+  // React 19 对【函数组件】的 defaultProps 是【静默忽略】的，不报错也不告警。
+  // 这两个默认值都有实义，丢了会出事：
+  //   onClear 缺省时 handleClear 里的 onClear(event) 直接 TypeError；
+  //   size 缺省时 getIconTop 从 CONTROL_HEIGHT_MAP['1em'](39) 掉到兜底的 36，
+  //   图标位置会上移 1.5px（getIconSize/getIconFontSize 本来就有兜底，只有它没有）。
+  const { className, onClear = () => {}, size = '1em' } = props;
   const iconSize = getIconSize(size);
 
   const handleClear = event => {
@@ -87,9 +93,4 @@ ClearValueIcon.propTypes = {
   className: PropTypes.string,
   onClear: PropTypes.func,
   size: PropTypes.string,
-};
-
-ClearValueIcon.defaultProps = {
-  onClear: () => {},
-  size: '1em',
 };

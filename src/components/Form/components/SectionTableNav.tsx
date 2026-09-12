@@ -1,12 +1,13 @@
 import React, { Fragment, useEffect, useRef, useState } from 'react';
-import { Motion, spring } from 'react-motion';
 import cx from 'classnames';
 import _ from 'lodash';
+import { motion } from 'motion/react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Icon, SvgIcon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { getTitleStyle } from 'src/utils/controlCommon';
+import { SPRING_DEFAULT } from 'src/utils/spring';
 
 const Con = styled.div`
   display: flex;
@@ -214,9 +215,17 @@ export default function SectionTableNav(props) {
   return (
     <Con style={style}>
       <TabCon ref={tabConRef}>
-        <Motion defaultStyle={{ scrollLeft }} style={{ scrollLeft: spring(-1 * scrollLeft) }}>
-          {value => <span style={{ marginLeft: value.scrollLeft }}></span>}
-        </Motion>
+        {/*
+          这个空 span 靠 marginLeft 把后面的 tab 推走，实现横向滚动。
+          保留原来的不对称：initial 是 +scrollLeft，动画目标是 -scrollLeft
+          （react-motion 的 defaultStyle 只在挂载时生效，挂载时 scrollLeft 为 0，
+          所以两者实际都是 0；不去"修正"它，迁移不改行为）。
+        */}
+        <motion.span
+          initial={{ marginLeft: scrollLeft }}
+          animate={{ marginLeft: -1 * scrollLeft }}
+          transition={SPRING_DEFAULT}
+        />
         {renderTabs(props)}
       </TabCon>
       {scrollBtnVisible && (

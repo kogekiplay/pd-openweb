@@ -1,12 +1,10 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import DocumentTitle from 'react-document-title';
-import { Motion, spring } from 'react-motion';
 import { generate } from '@ant-design/colors';
 import { Drawer, Modal } from 'antd';
 import api from 'api/homeApp';
 import cx from 'classnames';
-import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import { func, oneOf } from 'prop-types';
 import styled from 'styled-components';
@@ -36,12 +34,13 @@ import { canEditApp, canEditData, isHaveCharge } from 'src/pages/worksheet/redux
 import { navigateTo } from 'src/router/navigateTo';
 import { getTranslateInfo, setFavicon } from 'src/utils/app';
 import { emitter, getAppFeaturesVisible, pathCompletion } from 'src/utils/common';
+import copy from 'src/utils/copyToClipboard';
 import { VersionProductType } from 'src/utils/enum';
 import { getFeatureStatus } from 'src/utils/project';
 import { getSheetListFirstId } from 'src/utils/worksheet';
 import CommonUserHandle, { LeftCommonUserHandle } from '../../components/CommonUserHandle';
 import HomepageIcon from '../../components/HomepageIcon';
-import IndexSide from '../../components/IndexSide';
+import AnimatedIndexSide from '../../components/IndexSide/Animated';
 import MyProcessEntry from '../../components/MyProcessEntry';
 import { compareProps, getAppConfig, getIds } from '../../util';
 import AppGroup from '../AppGroup';
@@ -1060,7 +1059,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
     }
 
     return (
-      (<Fragment>
+      <Fragment>
         {[1, 3].includes(currentPcNaviStyle) && (
           <Fragment>
             {dragMaskVisible && (
@@ -1185,11 +1184,14 @@ let AppInfo = class AppInfo extends Component<any, any> {
             width={800}
             footer={null}
             centered={true}
-            styles={{ mask: {
-              backgroundColor: 'rgba(0, 0, 0, 0.7)',
-            }, body: {
-              padding: 0,
-            } }}
+            styles={{
+              mask: {
+                backgroundColor: 'rgba(0, 0, 0, 0.7)',
+              },
+              body: {
+                padding: 0,
+              },
+            }}
             maskAnimation="fade"
             mousePosition={mousePosition}
             closeIcon={<Icon icon="close" />}
@@ -1256,11 +1258,13 @@ let AppInfo = class AppInfo extends Component<any, any> {
           )}
 
           <Drawer
-            styles={{ body: {
-              display: 'flex',
-              flexDirection: 'column',
-              padding: '0',
-            } }}
+            styles={{
+              body: {
+                display: 'flex',
+                flexDirection: 'column',
+                padding: '0',
+              },
+            }}
             size={900}
             title={null}
             open={navigationConfigVisible}
@@ -1276,29 +1280,20 @@ let AppInfo = class AppInfo extends Component<any, any> {
               onClose={this.closeNavigationConfigVisible}
             />
           </Drawer>
-          <Motion
-            style={{
-              x: spring(indexSideVisible ? 0 : -352),
-            }}
-          >
-            {({ x }) => (
-              <IndexSide
-                posX={x}
-                visible={indexSideVisible}
-                onClose={() =>
-                  this.setState({
-                    indexSideVisible: false,
-                  })
-                }
-                onClickAway={() =>
-                  indexSideVisible &&
-                  this.setState({
-                    indexSideVisible: false,
-                  })
-                }
-              />
-            )}
-          </Motion>
+          <AnimatedIndexSide
+            visible={indexSideVisible}
+            onClose={() =>
+              this.setState({
+                indexSideVisible: false,
+              })
+            }
+            onClickAway={() =>
+              indexSideVisible &&
+              this.setState({
+                indexSideVisible: false,
+              })
+            }
+          />
           <Fragment>
             {md.global.Account.isPortal ? (
               <PortalUserSet
@@ -1365,7 +1360,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
             />
           </Drawer>
         </div>
-      </Fragment>)
+      </Fragment>
     );
   }
 };

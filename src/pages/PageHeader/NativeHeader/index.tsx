@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Motion, spring } from 'react-motion';
 import cx from 'classnames';
 import _ from 'lodash';
 import { string } from 'prop-types';
@@ -8,7 +7,7 @@ import { navigateTo } from 'src/router/navigateTo';
 import CommonUserHandle from '../components/CommonUserHandle';
 import CoordinationIcon from '../components/CoordinationIcon';
 import HomepageIcon from '../components/HomepageIcon';
-import IndexSide from '../components/IndexSide';
+import AnimatedIndexSide from '../components/IndexSide/Animated';
 import { NATIVE_MODULES } from '../config';
 import { compareProps } from '../util';
 import './index.less';
@@ -54,16 +53,11 @@ export default class NativeHeader extends Component<any, any> {
           )}
           <CoordinationIcon className="nativeCoordinationIcon" />
           <div className="nativeTitle">{_l('协作套件')}</div>
-          <Motion style={{ x: spring(indexSideVisible ? 0 : -352) }}>
-            {({ x }) => (
-              <IndexSide
-                posX={x}
-                visible={indexSideVisible}
-                onClickAway={() => this.switchIndexSideVisible(false)}
-                onClose={() => indexSideVisible && this.switchIndexSideVisible(false)}
-              />
-            )}
-          </Motion>
+          <AnimatedIndexSide
+            visible={indexSideVisible}
+            onClickAway={() => this.switchIndexSideVisible(false)}
+            onClose={() => indexSideVisible && this.switchIndexSideVisible(false)}
+          />
         </div>
         <ul className="nativeTabsWrap">
           {NATIVE_MODULES.map(({ id, href, urlMatch, text }) =>

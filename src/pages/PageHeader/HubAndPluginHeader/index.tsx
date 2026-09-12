@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import { Motion, spring } from 'react-motion';
 import _ from 'lodash';
 import { string } from 'prop-types';
 import styled from 'styled-components';
 import { Tooltip } from 'ming-ui/antd-components';
 import { navigateTo } from 'src/router/navigateTo';
 import CommonUserHandle from '../components/CommonUserHandle';
-import IndexSide from '../components/IndexSide';
+import AnimatedIndexSide from '../components/IndexSide/Animated';
 import SwitchProject from '../components/SwitchProject';
 import '../NativeHeader/index.less';
 
@@ -77,16 +76,11 @@ export default class HubAndPluginHeader extends Component<any, any> {
             <div className="nativeTitle">{isPlugin ? _l('插件') : _l('集成')}</div>
           </div>
           <SwitchProject />
-          <Motion style={{ x: spring(indexSideVisible ? 0 : -352) }}>
-            {({ x }) => (
-              <IndexSide
-                posX={x}
-                visible={indexSideVisible}
-                onClose={() => this.setState({ indexSideVisible: false })}
-                onClickAway={() => indexSideVisible && this.setState({ indexSideVisible: false })}
-              />
-            )}
-          </Motion>
+          <AnimatedIndexSide
+            visible={indexSideVisible}
+            onClose={() => this.setState({ indexSideVisible: false })}
+            onClickAway={() => indexSideVisible && this.setState({ indexSideVisible: false })}
+          />
         </div>
         <CommonUserHandle type={'integration'} />
       </Wrap>

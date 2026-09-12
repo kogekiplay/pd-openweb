@@ -1,14 +1,23 @@
 import React, { useEffect, useRef } from 'react';
-import { Motion, spring } from 'react-motion';
 import { useKey } from 'react-use';
 import cx from 'classnames';
 import { includes } from 'lodash';
+import { motion } from 'motion/react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Tooltip from 'ming-ui/antd-components/Tooltip';
 import { getLatestCreateTimestampOfWithSaveShortcut } from 'src/utils/common';
+import { SPRING_STIFF_300 } from 'src/utils/spring';
 
-const ConBox = styled.div`
+// styled(motion.div) 而不是 styled.div：让这层同时是样式容器和动画载体，
+// 就不用再套一层 <Motion> 的 render prop，top 由 Motion 直接写到元素上。
+//
+// 原来是 style={Object.assign({ overflow }, value, style)}，即外部传入的 style
+// 【可以覆盖】动画出来的 top。现在 animate={{ top }} 由 Motion 写入，外部 style
+// 盖不住它 —— 优先级变了。查过 5 个调用方（RecordInfo ×2、NewRecordContent、
+// EditFlow、EntityRelationship），传的都是 { left, width }，没有一个传 top，
+// 所以这个差异在当前代码里取不到。真要传 top 的话得改回手写 style。
+const ConBox = styled(motion.div)`
   position: absolute;
   display: flex;
   align-items: center;
@@ -116,54 +125,38 @@ export default function EditingBar(props) {
     cache.current = { saveShortCut, okDisabled };
   }, [saveShortCut, okDisabled]);
   return (
-    <Motion
-      defaultStyle={{ top: defaultTop }}
-      style={{
-        top: spring(visible ? visibleTop : defaultTop, {
-          stiffness: 300,
-          damping: 30,
-          precision: 0.01,
-        }),
-      }}
+    <ConBox
+      initial={{ top: defaultTop }}
+      animate={{ top: visible ? visibleTop : defaultTop }}
+      transition={SPRING_STIFF_300}
+      style={{ overflow: visible ? undefined : 'hidden', ...style }}
+      onClick={e => e.stopPropagation()}
+      className="editingBar"
     >
-      {value => (
-        <ConBox
-          style={Object.assign(
-            {
-              overflow: visible ? undefined : 'hidden',
-            },
-            value,
-            style,
-          )}
-          onClick={e => e.stopPropagation()}
-          className="editingBar"
-        >
-          <Con style={{ background: isBlack ? 'var(--color-background-inverse)' : 'var(--color-primary)' }}>
-            <span className="flex bold">{title}</span>
-            {loading && <Loading className="icon icon-loading_button" />}
-            {!loading && cancelText && (
-              <CancelButton className="mLeft30  mRight10" onClick={onCancel}>
-                {cancelText}
-              </CancelButton>
-            )}
-            {!loading && (
-              <Tooltip
-                title={saveShortCut && !okDisabled ? _l('保存') : ''}
-                shortcut={saveShortCut && !okDisabled ? (window.isMacOs ? '⌘S' : 'Ctrl+S') : ''}
-              >
-                <OkButton
-                  className={cx({ disabled: okDisabled }, isBlack ? 'textBlack' : 'colorPrimary')}
-                  onMouseDown={onOkMouseDown}
-                  onClick={okDisabled ? () => {} : onUpdate}
-                >
-                  {updateText}
-                </OkButton>
-              </Tooltip>
-            )}
-          </Con>
-        </ConBox>
-      )}
-    </Motion>
+      <Con style={{ background: isBlack ? 'var(--color-background-inverse)' : 'var(--color-primary)' }}>
+        <span className="flex bold">{title}</span>
+        {loading && <Loading className="icon icon-loading_button" />}
+        {!loading && cancelText && (
+          <CancelButton className="mLeft30  mRight10" onClick={onCancel}>
+            {cancelText}
+          </CancelButton>
+        )}
+        {!loading && (
+          <Tooltip
+            title={saveShortCut && !okDisabled ? _l('保存') : ''}
+            shortcut={saveShortCut && !okDisabled ? (window.isMacOs ? '⌘S' : 'Ctrl+S') : ''}
+          >
+            <OkButton
+              className={cx({ disabled: okDisabled }, isBlack ? 'textBlack' : 'colorPrimary')}
+              onMouseDown={onOkMouseDown}
+              onClick={okDisabled ? () => {} : onUpdate}
+            >
+              {updateText}
+            </OkButton>
+          </Tooltip>
+        )}
+      </Con>
+    </ConBox>
   );
 }
 

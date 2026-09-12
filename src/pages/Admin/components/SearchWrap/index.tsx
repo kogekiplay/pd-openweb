@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect, useRef, useState } from 'react';
-import { Motion, spring } from 'react-motion';
 import { useSetState } from 'react-use';
 import { DatePicker, Select } from 'antd';
 import en_US from 'antd/es/date-picker/locale/en_US';
@@ -8,8 +7,10 @@ import zh_CN from 'antd/es/date-picker/locale/zh_CN';
 import zh_TW from 'antd/es/date-picker/locale/zh_TW';
 import cx from 'classnames';
 import _ from 'lodash';
+import { motion } from 'motion/react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { SPRING_DEFAULT } from 'src/utils/spring';
 import CustomSelectDate from '../CustomSelectDate';
 import SelectUser from '../SelectUser';
 
@@ -256,19 +257,13 @@ export default function SearchWrap(props) {
                 setFullShow(!fullShow);
               }}
             >
-              <Motion
-                defaultStyle={{ rotate: fullShow ? 0 : 180 }}
-                style={{
-                  rotate: spring(fullShow ? 0 : 180),
-                }}
-              >
-                {({ rotate }) => (
-                  <i
-                    className="InlineBlock icon icon-arrow-up-border"
-                    style={{ transform: `rotate(${rotate}deg)` }}
-                  ></i>
-                )}
-              </Motion>
+              {/* 这里没有别的 transform，Motion 自己合成 rotate() 与原来手写的等价 */}
+              <motion.i
+                className="InlineBlock icon icon-arrow-up-border"
+                initial={{ rotate: fullShow ? 0 : 180 }}
+                animate={{ rotate: fullShow ? 0 : 180 }}
+                transition={SPRING_DEFAULT}
+              />
               {fullShow ? _l('收起') : _l('展开')}
             </ExpandBtn>
           )}

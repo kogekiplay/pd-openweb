@@ -1,10 +1,11 @@
 ﻿import React from 'react';
-import { Motion, spring } from 'react-motion';
 import cx from 'classnames';
 import { assign, min } from 'lodash';
 import _ from 'lodash';
+import { motion } from 'motion/react';
 import PropTypes from 'prop-types';
 import LoadDiv from 'ming-ui/components/LoadDiv';
+import { SPRING_DEFAULT, SPRING_NONE } from 'src/utils/spring';
 import './imageViewer.css';
 
 function getClientX(evt) {
@@ -372,41 +373,52 @@ class ImageViewer extends React.Component<any, any> {
     const width = this.state.originSize ? this.state.originSize.width : 0;
     const { scale, left, top, rotate, dragStart } = this.state;
     return (
-      <Motion
-        defaultStyle={{ left: 0, top: 0, rotate: 0 }}
-        style={{ left: dragStart ? left : spring(left), top: dragStart ? top : spring(top), rotate: spring(rotate) }}
+      <div
+        className={cx('dragAbleContainer', this.props.className)}
+        ref={root => (this.root = root)}
+        onMouseDown={this.onConClose}
       >
-        {motionState => (
-          <div
-            className={cx('dragAbleContainer', this.props.className)}
-            ref={root => (this.root = root)}
-            onMouseDown={this.onConClose}
-          >
-            {this.state.loading && <LoadDiv size="big" className="dragAbleLoadDiv" />}
-            {this.state.src && (
-              <img
-                src={this.state.src}
-                style={{
-                  width,
-                  transform: `rotate(${motionState.rotate}deg) scale(${scale}) translate(${motionState.left}px, ${motionState.top}px)`,
-                }}
-                alt=""
-                ref={ele => {
-                  this.imageEle = ele;
-                }}
-                className={cx('dragAbleImg noSelect', this.state.dragStart ? 'grabbing' : 'grab')}
-                onMouseDown={this.initDrag}
-                onTouchStart={this.initDrag}
-                onContextMenu={e => {
-                  if (!canDownload) {
-                    e.preventDefault();
-                  }
-                }}
-              />
-            )}
-          </div>
+        {this.state.loading && <LoadDiv size="big" className="dragAbleLoadDiv" />}
+        {this.state.src && (
+          <motion.img
+            src={this.state.src}
+            style={{ width }}
+            // left/top 在这里是 translate 的偏移量（不是 CSS left/top），所以映射到
+            // Motion 的 x/y —— 它们正是 translate 通道。
+            initial={{ x: 0, y: 0, rotate: 0 }}
+            animate={{ x: left, y: top, rotate }}
+            // 原来是 `dragStart ? left : spring(left)`：拖拽过程中【不做动画】跟手走，
+            // 松手后才回弹；而 rotate 任何时候都走弹簧。Motion 支持逐属性 transition，
+            // 所以这个不对称能原样保留。
+            transition={{
+              x: dragStart ? SPRING_NONE : SPRING_DEFAULT,
+              y: dragStart ? SPRING_NONE : SPRING_DEFAULT,
+              rotate: SPRING_DEFAULT,
+            }}
+            // transform 的【顺序会影响结果】，而 Motion 自己合成的顺序
+            // （translate → scale → rotate）与原来手写的 rotate → scale → translate
+            // 不同，直接用会改变画面。transformTemplate 是 Motion 留的出口：
+            // 它把各通道的值（【已带单位】的字符串，见 motion-dom 的
+            // `transform[key] = valueAsType`）交回来自己拼，于是能 1:1 还原原顺序。
+            // scale 不参与动画，直接取自 state，闭包每次渲染刷新。
+            transformTemplate={({ rotate: r, x, y }) =>
+              `rotate(${r ?? '0deg'}) scale(${scale}) translate(${x ?? '0px'}, ${y ?? '0px'})`
+            }
+            alt=""
+            ref={ele => {
+              this.imageEle = ele;
+            }}
+            className={cx('dragAbleImg noSelect', this.state.dragStart ? 'grabbing' : 'grab')}
+            onMouseDown={this.initDrag}
+            onTouchStart={this.initDrag}
+            onContextMenu={e => {
+              if (!canDownload) {
+                e.preventDefault();
+              }
+            }}
+          />
         )}
-      </Motion>
+      </div>
     );
   }
 }

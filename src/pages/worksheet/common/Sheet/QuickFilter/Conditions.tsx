@@ -1,13 +1,14 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Motion, spring } from 'react-motion';
 import cx from 'classnames';
 import _, { get } from 'lodash';
+import { motion } from 'motion/react';
 import { arrayOf, bool, func, number, shape, string } from 'prop-types';
 import styled from 'styled-components';
 import { Button } from 'ming-ui';
 import { formatQuickFilterValueToControlValue } from 'worksheet/common/WorkSheetFilter/util';
 import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget';
 import { FILTER_CONDITION_TYPE } from 'src/pages/worksheet/common/WorkSheetFilter/enum';
+import { SPRING_DEFAULT } from 'src/utils/spring';
 import FilterInput, { NumberTypes, TextTypes } from './Inputs';
 import { validate } from './utils';
 import { formatFilterValuesToServer } from './utils';
@@ -540,19 +541,13 @@ export default function Conditions(props) {
                 safeLocalStorageSetItem('QUICK_FILTER_FULL_SHOW', !fullShow);
               }}
             >
-              <Motion
-                defaultStyle={{ rotate: fullShow ? 0 : 180 }}
-                style={{
-                  rotate: spring(fullShow ? 0 : 180),
-                }}
-              >
-                {({ rotate }) => (
-                  <i
-                    className="InlineBlock icon icon-arrow-up-border"
-                    style={{ transform: `rotate(${rotate}deg)` }}
-                  ></i>
-                )}
-              </Motion>
+              {/* 这里没有别的 transform，Motion 自己合成 rotate() 与原来手写的等价 */}
+              <motion.i
+                className="InlineBlock icon icon-arrow-up-border"
+                initial={{ rotate: fullShow ? 0 : 180 }}
+                animate={{ rotate: fullShow ? 0 : 180 }}
+                transition={SPRING_DEFAULT}
+              />
               {fullShow ? _l('收起') : _l('展开')}
             </ExpandBtn>
           )}
