@@ -59,8 +59,19 @@ class MenuItem extends Component<any, any> {
         {...this.props}
         className={cx(this.props.className, 'ming MenuItem', { 'MenuItem--withSubMenu': subMenu })}
         subMenu={subMenu}
-        onMouseEnter={() => this.handleMouseEnter()}
-        onMouseLeave={() => this.handleMouseLeave()}
+        // 必须把事件【透传】下去。这两个 handler 会转调 this.props.onMouseEnter/Leave，
+        // 而当 MenuItem 被 @rc-component/trigger 当作子元素时，那个 prop 就是 trigger 的
+        // onMouseEnter —— 它里面 setMousePosByEvent(event) 直接读 event.clientX，
+        // 【没有任何守卫】（es/index.js:251）。写成 () => this.handleMouseEnter() 会把事件吞掉，
+        // trigger 拿到 undefined，当场抛
+        // "Cannot read properties of undefined (reading 'clientX')"，带子菜单的菜单项
+        //（如工作表视图右键菜单里的「导出」）一 hover 就崩。
+        //
+        // 旧的 rc-trigger 5.x 不会暴露这个问题：它对应的 setPoint 有双重守卫
+        //   setPoint(point) { if (!alignPoint || !point) return; ... }  （es/index.js:396）
+        // 继任包把守卫去掉了，于是这里一直存在的「吞事件」才真正发作。
+        onMouseEnter={(...args) => this.handleMouseEnter(...args)}
+        onMouseLeave={(...args) => this.handleMouseLeave(...args)}
         disabled={this.props.disabled}
         setRef={this.setItemRef}
       >
