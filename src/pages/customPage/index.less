@@ -74,13 +74,15 @@
       top: 40%;
     }
     &.ant-select-single.ant-select-show-arrow .ant-select-selection-item,
-    .ant-select-selection-placeholder {
+    &.ant-select-single.ant-select-show-arrow .ant-select-content-value,
+    .ant-select-placeholder {
       opacity: 1;
       font-size: 13px;
       display: flex;
       align-items: center;
     }
-    &.ant-select-single.ant-select-open .ant-select-selection-item {
+    &.ant-select-single.ant-select-open .ant-select-selection-item,
+    &.ant-select-single.ant-select-open .ant-select-content-value {
       color: inherit;
     }
   }

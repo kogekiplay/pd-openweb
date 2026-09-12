@@ -136,7 +136,8 @@ export const FilterContent = styled.div`
           .ant-select-input {
             height: 34px;
           }
-          .ant-select-selection-item {
+          .ant-select-selection-item,
+          .ant-select-content-value {
             line-height: 34px;
           }
         }

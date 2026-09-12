@@ -42,7 +42,8 @@ const SelectBox = styled(Select)`
     border-radius: 4px !important;
     padding: 3px 10px !important;
     transition: none !important;
-    .ant-select-selection-item {
+    .ant-select-selection-item,
+    .ant-select-content-value {
       line-height: 28px !important;
     }
   }

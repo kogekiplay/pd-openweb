@@ -18,7 +18,7 @@ const Con = styled.div`
     .ant-select-input {
       height: 30px !important;
     }
-    .ant-select-selection-placeholder {
+    .ant-select-placeholder {
       line-height: 30px !important;
     }
   }
@@ -32,7 +32,8 @@ const Con = styled.div`
     }
   }
   .customTreeSelect.ant-select-single {
-    .ant-select-selection-item {
+    .ant-select-selection-item,
+    .ant-select-content-value {
       word-wrap: break-word;
       word-break: break-all;
       line-height: 30px !important;

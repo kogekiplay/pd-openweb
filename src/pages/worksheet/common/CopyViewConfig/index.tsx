@@ -40,8 +40,9 @@ const ContentWrap = styled.div`
         height: 34px !important;
       }
     }
-    .ant-select-selection-placeholder,
-    .ant-select-selection-item > div {
+    .ant-select-placeholder,
+    .ant-select-selection-item > div,
+    .ant-select-content-value > div{
       line-height: 34px !important;
     }
     &.ant-select-multiple .ant-select-selection-item {

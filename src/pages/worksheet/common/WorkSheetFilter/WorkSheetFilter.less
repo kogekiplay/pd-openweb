@@ -547,10 +547,9 @@
     border-color: var(--color-border-primary) !important;
     box-shadow: none !important;
     padding: 3px 4px !important;
-
-    .ant-select-selection-overflow {
-      gap: 6px;
-    }
+    /* v5 的 gap 挂在 .ant-select-selection-overflow 上，v6 没有这层，
+       多个胶囊直接是 .ant-select-content 的 flex 子元素，gap 上提到这里。 */
+    gap: 6px;
   }
 
   &.ant-select-focused {

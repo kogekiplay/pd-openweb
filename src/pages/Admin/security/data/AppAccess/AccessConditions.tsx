@@ -20,9 +20,6 @@ const AccessConditionsWrap = styled.div`
 `;
 
 const SelectWrap = styled(Select)`
-  .ant-select-selection-search {
-    right: unset !important;
-  }
   .anticon-search {
     display: none !important;
   }

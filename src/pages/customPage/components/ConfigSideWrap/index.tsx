@@ -161,13 +161,15 @@ const Wrap = styled.div`
     }
     &.selectTitleSelect {
       .ant-select-content,
-      .ant-select-selection-item {
+      .ant-select-selection-item,
+      .ant-select-content-value {
         height: 42px;
         line-height: 40px;
       }
     }
     .ant-select-content,
-    .ant-select-selection-item {
+    .ant-select-selection-item,
+    .ant-select-content-value {
       height: 32px;
       line-height: 30px;
     }
@@ -177,11 +179,13 @@ const Wrap = styled.div`
       top: 40%;
     }
     &.ant-select-single.ant-select-show-arrow .ant-select-selection-item,
-    .ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder {
+    &.ant-select-single.ant-select-show-arrow .ant-select-content-value,
+    .ant-select-single.ant-select-show-arrow .ant-select-placeholder {
       opacity: 1;
       font-size: 13px;
     }
-    &.ant-select-single.ant-select-open .ant-select-selection-item {
+    &.ant-select-single.ant-select-open .ant-select-selection-item,
+    &.ant-select-single.ant-select-open .ant-select-content-value {
       color: inherit;
     }
   }

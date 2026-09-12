@@ -46,7 +46,8 @@ const CreateFormItem = styled.div`
     padding: 0 12px !important;
   }
 
-  .ant-select-selection-item {
+  .ant-select-selection-item,
+  .ant-select-content-value {
     line-height: 36px !important;
   }
 

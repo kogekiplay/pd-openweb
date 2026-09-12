@@ -15,8 +15,9 @@ import { mdAppResponse } from 'src/utils/project';
 
 const Wrap = styled.div`
   .Dropdown--placeholder,
-  .ant-select-selection-placeholder,
-  .ant-select-selection-item {
+  .ant-select-placeholder,
+  .ant-select-selection-item,
+  .ant-select-content-value {
     line-height: 48px !important;
   }
 `;

@@ -36,16 +36,12 @@ const Con = styled(EditableCellCon)`
     background-color: transparent !important;
     border: none !important;
     box-shadow: none !important;
-    .ant-select-selection-placeholder,
+    .ant-select-placeholder,
     input {
       font-size: 13px;
     }
-    .ant-select-selection-search {
-      left: 6px !important;
-    }
-    .ant-select-selection-search,
     .ant-select-input,
-    .ant-select-selection-placeholder {
+    .ant-select-placeholder {
       height: 32px !important;
     }
     &:hover {

@@ -46,23 +46,22 @@ const Con = styled.div`
       border: none !important;
       min-height: 30px;
       .customAntSelectPlaceHolder,
-      .ant-select-selection-placeholder {
+      .ant-select-placeholder {
         color: var(--color-text-disabled) !important;
         font-size: 13px !important;
-      }
-      .ant-select-selection-search {
-        line-height: 0px;
       }
       .ant-select-input {
         height: 30px !important;
       }
-      .ant-select-selection-placeholder {
+      .ant-select-placeholder {
         line-height: 30px !important;
       }
-      .ant-select-selection-item {
+      .ant-select-selection-item,
+      .ant-select-content-value {
         line-height: 28px !important;
       }
-      .ant-select-selection-item > span {
+      .ant-select-selection-item > span,
+      .ant-select-content-value > span{
         margin: 3px 0 !important;
       }
       .customAntDropdownTitleWithBG {
@@ -82,11 +81,8 @@ const Con = styled.div`
       }
     }
     &.ant-select-multiple {
-      .ant-select-content .ant-select-selection-overflow {
-        .ant-select-selection-search {
-          margin: 0px;
-        }
-        .ant-select-selection-overflow-item .customAntDropdownTitle {
+      .ant-select-content {
+        .ant-select-selection-item .customAntDropdownTitle {
           margin-top: 3px !important;
           margin-bottom: 3px !important;
         }

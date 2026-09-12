@@ -18,10 +18,6 @@ const Wrapper = styled.div`
       padding: 2px 11px !important;
       border-radius: 3px !important;
     }
-    .ant-select-selection-search {
-      margin-inline-start: 0px !important;
-      -webkit-margin-start: 0px !important;
-    }
     &.disabled {
       .ant-select-content {
         border: 0;

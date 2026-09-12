@@ -389,6 +389,7 @@
   .colorWrap();
   .ant-select-content,
   .ant-select-selection-item,
+  .ant-select-content-value,
   .ant-input,
   .ant-picker {
     height: 36px !important;
@@ -456,7 +457,8 @@
       box-shadow: none !important;
     }
     .ant-select-content,
-    .ant-select-selection-item {
+    .ant-select-selection-item,
+    .ant-select-content-value {
       height: 32px;
       line-height: 30px;
     }
@@ -465,15 +467,17 @@
       height: auto;
       top: 40%;
     }
-    .ant-select-selection-placeholder {
+    .ant-select-placeholder {
       line-height: 36px;
     }
     &.ant-select-single.ant-select-show-arrow .ant-select-selection-item,
-    .ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder {
+    &.ant-select-single.ant-select-show-arrow .ant-select-content-value,
+    .ant-select-single.ant-select-show-arrow .ant-select-placeholder {
       opacity: 1;
       font-size: 13px;
     }
-    &.ant-select-single.ant-select-open .ant-select-selection-item {
+    &.ant-select-single.ant-select-open .ant-select-selection-item,
+    &.ant-select-single.ant-select-open .ant-select-content-value {
       color: inherit;
     }
     /*    &.ant-select-multiple .ant-select-selection-overflow {
@@ -483,7 +487,7 @@
     &.ant-select-multiple .ant-select-content {
       height: auto;
       line-height: auto;
-      .ant-select-selection-overflow-item {
+      .ant-select-selection-item {
         line-height: 28px;
       }
       .ant-tag-close-icon:hover svg {

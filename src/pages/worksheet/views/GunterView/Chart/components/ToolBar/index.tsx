@@ -46,11 +46,13 @@ const SelectWrap = styled(Select)`
   .ant-select-content {
     padding-left: 0 !important;
   }
-  .ant-select-selection-item {
+  .ant-select-selection-item,
+  .ant-select-content-value {
     text-align: center;
     padding-right: 11px !important;
   }
-  &.ant-select-single.ant-select-open .ant-select-selection-item {
+  &.ant-select-single.ant-select-open .ant-select-selection-item,
+  &.ant-select-single.ant-select-open .ant-select-content-value {
     color: inherit;
   }
   .ant-select-input {

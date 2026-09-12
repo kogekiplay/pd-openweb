@@ -20,7 +20,8 @@ const DropDownSetChoose = styled.div`
     .ant-select-content {
       border-radius: 3px !important;
       height: 36px !important;
-      .ant-select-selection-item {
+      .ant-select-selection-item,
+      .ant-select-content-value {
         line-height: 36px !important;
         font-size: 13px !important;
       }
@@ -29,7 +30,8 @@ const DropDownSetChoose = styled.div`
       .ant-select-content {
         border-color: var(--color-error) !important;
       }
-      .ant-select-selection-item {
+      .ant-select-selection-item,
+      .ant-select-content-value {
         opacity: 0;
         z-index: 1;
       }

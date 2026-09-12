@@ -51,7 +51,9 @@ const Tag = styled.div`
 `;
 
 const SelectWrap = styled(Select)`
-  .ant-select-selection-overflow {
+  /* v5 的 .ant-select-selection-overflow 在 v6 没有了，多个胶囊直接是
+     .ant-select-content 的 flex 子元素（多选时 flex-wrap: wrap）。 */
+  .ant-select-content {
     gap: 6px;
   }
 `;

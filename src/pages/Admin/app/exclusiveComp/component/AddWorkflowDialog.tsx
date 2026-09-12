@@ -42,11 +42,12 @@ const AddWorkflowDialogContentWrap = styled.div`
       height: 48px !important;
       border-radius: 53px !important;
       box-shadow: none !important;
-      .ant-select-selection-item {
+      .ant-select-selection-item,
+      .ant-select-content-value {
         line-height: 48px !important;
         padding-left: 13px !important;
       }
-      .ant-select-selection-placeholder {
+      .ant-select-placeholder {
         line-height: 48px !important;
         padding-left: 13px !important;
       }
@@ -63,7 +64,8 @@ const AddWorkflowDialogContentWrap = styled.div`
         height: 36px;
         line-height: 36px;
       }
-      .ant-select-selection-item {
+      .ant-select-selection-item,
+      .ant-select-content-value {
         line-height: 36px;
       }
       input {

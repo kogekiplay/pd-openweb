@@ -149,7 +149,8 @@ const SelectWrapper = styled.div`
   display: flex;
   align-items: center;
   .isNoMatchOption {
-    .ant-select-content .ant-select-selection-item {
+    .ant-select-content .ant-select-selection-item,
+    .ant-select-content .ant-select-content-value {
       color: #f00;
     }
   }

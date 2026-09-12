@@ -92,7 +92,8 @@ export const WrapL = styled.div`
       }
       .ant-select-single:not(.ant-select-customize-input) .ant-select-content .ant-select-input,
       .ant-select-single .ant-select-content .ant-select-selection-item,
-      .ant-select-single .ant-select-content .ant-select-selection-placeholder {
+      .ant-select-single .ant-select-content .ant-select-content-value,
+      .ant-select-single .ant-select-content .ant-select-placeholder {
         height: 36px !important;
         line-height: 36px !important;
       }

@@ -68,10 +68,11 @@ const ChartWrap = styled.div`
           height: 36px;
           border: 1px solid var(--color-border-secondary);
           border-radius: 3px;
-          .ant-select-selection-item {
+          .ant-select-selection-item,
+          .ant-select-content-value {
             line-height: 34px;
           }
-          .ant-select-selection-placeholder {
+          .ant-select-placeholder {
             line-height: 34px;
           }
         }

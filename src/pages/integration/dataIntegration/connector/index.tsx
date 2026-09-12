@@ -97,9 +97,6 @@ const FormCard = styled.div`
       border-radius: 8px !important;
       box-shadow: none !important;
 
-      .ant-select-selection-search {
-        top: 8px !important;
-      }
     }
 
     &.ant-select-focused {

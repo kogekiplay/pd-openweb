@@ -26,7 +26,7 @@ const Wrap = styled.div`
         min-height: 32px;
       }
     }
-    .ant-select-selection-placeholder {
+    .ant-select-placeholder {
       line-height: 34px !important;
     }
   }
