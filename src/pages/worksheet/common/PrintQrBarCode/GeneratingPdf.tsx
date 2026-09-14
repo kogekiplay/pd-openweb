@@ -31,10 +31,12 @@ export default function GeneratingPdf(props) {
   } = props;
   const [printConfig, setPrintConfig] = useState(config && { ...config });
   const [loading, setLoading] = useState(true);
-  const [loadingText, setLoadingText] = useState();
+  // 必须显式给类型参数：useState() 不带初值会被推成 useState<undefined>，
+  // setter 就只收 undefined，setLoadingText(字符串) / setEmbedUrl(地址) 都报 TS2345。
+  const [loadingText, setLoadingText] = useState<string | undefined>();
   const rows = useRef(selectedRows);
   const [pageIndex, setPageIndex] = useState(1);
-  const [embedUrl, setEmbedUrl] = useState();
+  const [embedUrl, setEmbedUrl] = useState<string | undefined>();
   const [name, setName] = useState(props.name);
 
   function loadData(pageIndex = 1, cb = () => {}) {

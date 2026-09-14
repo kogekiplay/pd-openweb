@@ -17,7 +17,12 @@ import {
   SOURCE_TYPE,
 } from './enum';
 
-export function getDefaultText({ printType, sourceType, sourceControlId, controls = [] } = {}) {
+export function getDefaultText({
+  printType,
+  sourceType,
+  sourceControlId,
+  controls = [],
+}: PrintLabelConfig & { controls?: any[] } = {}) {
   if (sourceType === SOURCE_TYPE.URL) {
     return {
       type: 1,
@@ -46,7 +51,12 @@ export function getDefaultText({ printType, sourceType, sourceControlId, control
 
 const DPI_MM = 8;
 
-export function createQrLabeObjectFromConfig(config = {}, url, texts = [], options = {}) {
+export function createQrLabeObjectFromConfig(
+  config: PrintLabelConfig = {},
+  url,
+  texts = [],
+  options: QrLabelOptions = {},
+) {
   let width, height;
 
   if (config.labelSize === QR_LABEL_SIZE.CUSTOM) {
@@ -108,7 +118,10 @@ function sliceByByteLength(str = '', length = 0) {
   return result;
 }
 
-export function getCodeTexts({ showTexts, firstIsBold, showControlName, controls } = {}, data = {}) {
+export function getCodeTexts(
+  { showTexts, firstIsBold, showControlName, controls }: PrintLabelConfig & { controls?: any[] } = {},
+  data: Record<string, any> = {},
+) {
   return (
     showTexts
       .map((item, i) => {
@@ -144,7 +157,20 @@ export function getCodeTexts({ showTexts, firstIsBold, showControlName, controls
   );
 }
 
-export function getCodeContent({ printType, sourceType, sourceControlId, row = {}, urls = {}, index, controls }) {
+export function getCodeContent({
+  printType,
+  sourceType,
+  sourceControlId,
+  row = {},
+  urls = {},
+  index,
+  controls,
+}: PrintLabelConfig & {
+  row?: Record<string, any>;
+  urls?: Record<string, any>;
+  index?: number;
+  controls?: any[];
+}) {
   let content = '';
 
   if (sourceType === SOURCE_TYPE.URL) {
@@ -166,7 +192,12 @@ export function getCodeContent({ printType, sourceType, sourceControlId, row = {
   return content;
 }
 
-export function createBarLabeObjectFromConfig(config = {}, value, texts = [], { isPreview = false } = {}) {
+export function createBarLabeObjectFromConfig(
+  config: PrintLabelConfig = {},
+  value,
+  texts = [],
+  { isPreview = false }: { isPreview?: boolean } = {},
+) {
   let width, height;
 
   if (config.labelSize === BAR_LABEL_SIZE.CUSTOM) {
@@ -197,7 +228,107 @@ export function createBarLabeObjectFromConfig(config = {}, value, texts = [], { 
   return barLabel;
 }
 
+/**
+ * canvas 版标签的排版参数。BarLabel 与 QrLabel 各自在 setLayout*() 里构造，
+ * 共用 paddingX / paddingY / fontSize，另外各有一个自己的尺寸字段。
+ * codeSize 写成可选是因为 QrLabel 是先建字面量、再按 type 分支补上去的
+ * （this.layout.codeSize = {...}[size]），一开始就写成必填会报 TS2741。
+ */
+interface CanvasLabelLayout {
+  paddingX: number;
+  paddingY: number;
+  fontSize: number;
+  /** 条码高度，仅 BarLabel 用 */
+  height?: number;
+  /** 二维码边长，仅 QrLabel 用 */
+  codeSize?: number;
+}
+
+/** 标签上的一行文本。字段取自本文件实际读取的那几个。 */
+interface CanvasLabelText {
+  value?: string;
+  /** 与 value 同义的另一种来源（renderTexts 会把两者都往里塞） */
+  text?: string;
+  name?: string;
+  type?: number;
+  isBold?: boolean;
+  /** 为真时该行不参与自动换行 */
+  forceInLine?: boolean;
+}
+
+/**
+ * 标签打印的整体配置（打印设置面板存下来的那份）。
+ * 这里列的是本文件几个 createXxxFromConfig 实际读取的键。
+ * 与 vectorLabel.ts 的 LabelOptions 有重叠但不是同一个东西：
+ * 那边是传给 Label 实例的运行参数，这边是面板配置，还带 labelCustomWidth/Height。
+ * 两个文件之间没有互相 import，刻意不合并 —— 合并要新开一个 types 模块，
+ * 属于单独的整理，不夹在这批里做。
+ */
+export interface PrintLabelConfig {
+  labelSize?: number;
+  labelCustomWidth?: number;
+  labelCustomHeight?: number;
+  layout?: number;
+  printType?: number;
+  position?: number;
+  codeSize?: number | string;
+  codeFaultTolerance?: number;
+  fontSize?: number;
+  firstIsBold?: boolean;
+  showBarValue?: boolean;
+  showControlName?: boolean;
+  /** 标签上要打印哪些行；元素是文本配置项，不是布尔（调用点是 showTexts.map(...)） */
+  showTexts?: CanvasLabelText[];
+  sourceType?: number;
+  sourceControlId?: string;
+  sourceUrlType?: number;
+  /** 预览时没有选中记录，用占位样例填充 */
+  emptySetAsSample?: boolean;
+}
+
+/** BarLabel 的配置，键名与构造函数解构出来的一一对应。 */
+export interface BarLabelOptions {
+  isDebug?: boolean;
+  isPreview?: boolean;
+  pixelRadio?: number;
+  width?: number;
+  height?: number;
+  fontSize?: number;
+  firstIsTitle?: boolean;
+  showBarValue?: boolean;
+  /** 码相对文本的位置：'top' | 'bottom' */
+  codePosition?: string;
+  /** 档位：'s' | 'm' | 'l'（来源是数组下标取值，类型只到 string） */
+  size?: string;
+  value?: string;
+  texts?: CanvasLabelText[];
+}
+
+/** QrLabel 的配置，键名与 setOptions()/各处 this.options.x 的读取点对应。 */
+export interface QrLabelOptions {
+  isPreview?: boolean;
+  pixelRadio?: number;
+  width?: number;
+  height?: number;
+  fontSize?: number;
+  firstIsTitle?: boolean;
+  /** 布局：'p' 表示纵向，其余为横向 */
+  type?: string;
+  size?: string;
+  /** 二维码容错级别，见 vectorLabel.ts 的 QRErrorCorrectLevel */
+  correctLevel?: number;
+  /** 码相对文本的位置 */
+  qrPos?: string;
+  url?: string;
+  texts?: CanvasLabelText[];
+}
+
 class TextMeasure {
+  // 构造函数里的 this.x = ... 在 TS 里不构成字段声明，不写这两行每次读取都报 TS2339。
+  // declare 是纯类型声明，babel 的 TS preset 整行擦除，运行时无影响。
+  declare canvas: HTMLCanvasElement;
+  declare ctx: CanvasRenderingContext2D;
+
   constructor() {
     this.canvas = null;
     this.ctx = null;
@@ -278,6 +409,18 @@ function getBarcodeBase64(value, { width = 100, height = 100 } = {}) {
 }
 
 export class BarLabel {
+  // 同 TextMeasure：这些字段只在 setOptions/setLayoutParams/init 里赋值，
+  // 不声明的话每次读取报 TS2339（本文件因此有 117 条）。
+  declare options: BarLabelOptions;
+  declare layout: CanvasLabelLayout;
+  declare canvas: HTMLCanvasElement;
+  declare ctx: CanvasRenderingContext2D;
+  /** 乘过 pixelRadio 之后的画布像素宽高 */
+  declare _width: number;
+  declare _height: number;
+  declare unitSize: number;
+  declare maxLineNumber: number;
+
   constructor({
     isDebug = false,
     isPreview = false,
@@ -292,7 +435,7 @@ export class BarLabel {
     size = 'm',
     value,
     texts = [],
-  } = {}) {
+  }: BarLabelOptions = {}) {
     this.setOptions({
       isDebug,
       isPreview,
@@ -571,9 +714,23 @@ export class BarLabel {
 }
 
 export class QrLabel {
+  // 同上，不声明每次读取报 TS2339（本文件因此有 91 条）。
+  declare options: QrLabelOptions;
+  declare layout: CanvasLabelLayout;
+  declare canvas: HTMLCanvasElement;
+  declare ctx: CanvasRenderingContext2D;
+  /** 乘过 pixelRadio 之后的画布像素宽高 */
+  declare width: number;
+  declare height: number;
+  declare pixelRadio: number;
+  declare fontSize: number;
+  declare firstIsTitle: boolean;
+  declare unitSize: number;
+  declare maxLineNumber: number;
+
   // portrait 肖像 高度大
   // landscape 风景 宽度大
-  constructor(options = {}) {
+  constructor(options: QrLabelOptions = {}) {
     this.options = options;
     this.setOptions();
     this.setLayout();
