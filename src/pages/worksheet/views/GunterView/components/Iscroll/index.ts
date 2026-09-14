@@ -16,19 +16,20 @@ var rAF =
  * 原代码里 utils 是先 var me = {} 再逐个挂方法，TS 会把它推成 {}，
  * 于是每次 utils.xxx 调用都报 TS2339 —— 实测 135 条，占全仓 {} 类诊断的头名。
  *
- * 成员【全部写成可选】是刻意的：这样 var me: IScrollUtils = {} 不需要类型断言，
- * 与上游代码的写法保持一致，改动量最小（只多这一处类型标注）。
- * 本仓 strictNullChecks 是关的，可选不会带来「可能 undefined」的连锁。
+ * 成员写成【必填】+ 构造处一次 as 断言。
+ * 曾经试过全部可选以避开断言，代价是 90 多处 utils.xxx() 调用变成
+ * 「可能 undefined 不能调用」（TS2722）—— 一处断言换 90 条噪音，不划算。
+ * 断言成立的依据就在下面：me 被逐个补齐后才 return，中途不对外暴露。
  */
 interface IScrollUtils {
-  getTime?: () => number;
-  extend?: (target: object, obj: object) => void;
-  addEvent?: (el: EventTarget, type: string, fn: EventListenerOrEventListenerObject, capture?: boolean) => void;
-  removeEvent?: (el: EventTarget, type: string, fn: EventListenerOrEventListenerObject, capture?: boolean) => void;
+  getTime: () => number;
+  extend: (target: object, obj: object) => void;
+  addEvent: (el: EventTarget, type: string, fn: EventListenerOrEventListenerObject, capture?: boolean) => void;
+  removeEvent: (el: EventTarget, type: string, fn: EventListenerOrEventListenerObject, capture?: boolean) => void;
   // 同 style：_prefixStyle 在不支持时返回 false，但调用点从不检查，
   // 直接把返回值当事件名用。写 string 是如实反映调用契约。
-  prefixPointerEvent?: (pointerEvent: string) => string;
-  momentum?: (
+  prefixPointerEvent: (pointerEvent: string) => string;
+  momentum: (
     current: number,
     start: number,
     time: number,
@@ -36,34 +37,34 @@ interface IScrollUtils {
     wrapperSize: number,
     deceleration?: number,
   ) => { destination: number; duration: number };
-  isBadAndroid?: boolean;
-  hasClass?: (e: Element, c: string) => boolean;
-  addClass?: (e: Element, c: string) => void;
-  removeClass?: (e: Element, c: string) => void;
-  offset?: (el: Element) => { left: number; top: number };
-  preventDefaultException?: (el: Element, exceptions: Record<string, RegExp>) => boolean;
-  tap?: (e: MouseEvent | TouchEvent, eventName: string) => void;
-  click?: (e: MouseEvent | TouchEvent) => void;
-  getTouchAction?: (eventPassthrough: string, addPinch: boolean) => string;
-  getRect?: (el: Element) => { top: number; left: number; width: number; height: number };
+  isBadAndroid: boolean;
+  hasClass: (e: Element, c: string) => boolean;
+  addClass: (e: Element, c: string) => void;
+  removeClass: (e: Element, c: string) => void;
+  offset: (el: Element) => { left: number; top: number };
+  preventDefaultException: (el: Element, exceptions: Record<string, RegExp>) => boolean;
+  tap: (e: MouseEvent | TouchEvent, eventName: string) => void;
+  click: (e: MouseEvent | TouchEvent) => void;
+  getTouchAction: (eventPassthrough: string, addPinch: boolean) => string;
+  getRect: (el: Element) => { top: number; left: number; width: number; height: number };
   /** 下面这组由 me.extend(me, {...}) 一次性挂上（特性检测结果） */
-  hasTransform?: boolean;
-  hasPerspective?: boolean;
-  hasTouch?: boolean;
-  hasPointer?: boolean;
-  hasTransition?: boolean;
+  hasTransform: boolean;
+  hasPerspective: boolean;
+  hasTouch: boolean;
+  hasPointer: boolean;
+  hasTransition: boolean;
   // 值写 string 而不是 string | false：_prefixStyle 在不支持时确实会返回 false，
   // 但上游代码从不检查这一点，直接把它当样式名用（如 elementStyle[utils.style.transform]）。
   // 写成联合类型只会在 20 多处调用点报 TS2538/TS2345，如实反映'上游没处理这个分支'才是这里该做的。
-  style?: Record<string, string>;
+  style: Record<string, string>;
   /** 指针/触摸/鼠标三套事件的类型映射 */
-  eventType?: Record<string, number>;
+  eventType: Record<string, number>;
   /** 缓动函数表 */
-  ease?: Record<string, { style: string; fn: (k: number) => number }>;
+  ease: Record<string, { style: string; fn: (k: number) => number }>;
 }
 
 var utils = (function () {
-  var me: IScrollUtils = {};
+  var me = {} as IScrollUtils;
 
   var _elementStyle = document.createElement('div').style;
   var _vendor = (function () {
