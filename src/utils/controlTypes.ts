@@ -47,8 +47,12 @@ export interface ControlPermissions {
  */
 export interface FormControl {
   controlId?: string;
-  /** 控件类型，见 src/utils/enum 的控件类型表 */
-  type?: number;
+  /**
+   * 控件类型，见 src/utils/enum 的控件类型表。
+   * 除数值外还有一个哨兵值 'summaryhead'：统计行最左侧那一格不是真控件，
+   * 代码里靠 type === 'summaryhead' 判定（见 SummaryCell.tsx）。
+   */
+  type?: number | 'summaryhead';
   controlName?: string;
   value?: ControlValue;
   advancedSetting?: ControlAdvancedSetting;

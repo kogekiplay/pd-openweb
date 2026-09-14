@@ -132,7 +132,18 @@ export function getSelectedOptions(options = [], value, control) {
 /**
  * 格式化日期公式控件
  */
-export function formatFormulaDate({ value, unit = '6', hideUnitStr, dot = 0 }) {
+// hideUnitStr 没有默认值会被判必填，而调用点普遍不传 —— 显式标可选。
+export function formatFormulaDate({
+  value,
+  unit = '6',
+  hideUnitStr,
+  dot = 0,
+}: {
+  value?: ControlValue;
+  unit?: string;
+  hideUnitStr?: boolean;
+  dot?: number;
+}) {
   const isNegative = value < 0; // 处理负数
   value = toFixed(Math.floor(value * Math.pow(10, dot)) / Math.pow(10, dot), dot);
   if (isNegative) {
@@ -338,7 +349,9 @@ export function getControlsSorts(controls = [], sortedIds = []) {
   return sortedIds.concat(leftControlIds);
 }
 
-export function controlIsNumber({ type, sourceControlType, enumDefault, enumDefault2 }) {
+// 这几个键在调用点是按需传的（controlIsNumber({ type }) / ({ type, enumDefault })），
+// 解构参数不标可选会被判必填，报 TS2345。
+export function controlIsNumber({ type, sourceControlType, enumDefault, enumDefault2 }: FormControl) {
   return (
     type === 6 ||
     type === 8 ||

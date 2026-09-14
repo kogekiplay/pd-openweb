@@ -40,6 +40,7 @@ import type { RootState } from 'src/redux/types';
 import { browserIsMobile, emitter, getLRUWorksheetConfig } from 'src/utils/common';
 import { controlState } from 'src/utils/control';
 import { getAdvanceSetting, getHighAuthControls } from 'src/utils/control';
+import type { ControlValue, FormControl } from 'src/utils/controlTypes';
 import { addBehaviorLog } from 'src/utils/project';
 import { getRecordColorConfig, handleRecordClick } from 'src/utils/record';
 import {
@@ -55,7 +56,7 @@ import ColumnVisibilityControl from './components/ColumnVisibilityControl';
 import ToolBar from './HierarchyView/ToolBar';
 
 function setRowIndexForSheetView(rows) {
-  let rowIndexMap = {};
+  const rowIndexMap: Record<string, number> = {};
   rows.forEach(r => {
     if (typeof r.allowedit !== 'undefined' && r.groupKey) {
       const newRowIndex = rowIndexMap[r.groupKey] || 1;
@@ -64,6 +65,34 @@ function setRowIndexForSheetView(rows) {
     }
   });
   return rows;
+}
+
+/** 分组标题格的 props。字段就是下面解构出来的那 22 个。 */
+interface GroupTitleCellProps {
+  className?: string;
+  style?: React.CSSProperties;
+  /** 分组行，key 是分组值 */
+  row?: { key?: string; [field: string]: ControlValue };
+  columnIndex?: number;
+  getColumnWidth?: (index: number) => number;
+  view?: ControlValue;
+  appId?: string;
+  worksheetId?: string;
+  viewId?: string;
+  projectId?: string;
+  /** 分组折叠状态：分组 key -> 是否折叠 */
+  foldedMap?: Record<string, boolean>;
+  updateFolded?: (key: string, folded: boolean) => void;
+  sheetViewData?: ControlValue;
+  changeWorksheetSheetViewSummaryType?: (...args: ControlValue[]) => void;
+  insertToGroupedRow?: (...args: ControlValue[]) => void;
+  fixedColumnCount?: number;
+  allWorksheetIsSelected?: boolean;
+  sheetSelectedRows?: { rowid?: string }[];
+  allowAdd?: boolean;
+  lineEditable?: boolean;
+  columns?: FormControl[];
+  rowHeadOnlyNum?: boolean;
 }
 
 // 优化的分组标题组件
@@ -91,7 +120,7 @@ const GroupTitleCell = React.memo(
     lineEditable,
     columns,
     rowHeadOnlyNum,
-  }) => {
+  }: GroupTitleCellProps) => {
     // 缓存计算结果
     const groupRows = useMemo(
       () => (sheetViewData.rows || []).filter(({ rowid }) => rowid === 'groupTitle'),
@@ -107,7 +136,13 @@ const GroupTitleCell = React.memo(
 
     const selectedIds = useMemo(() => sheetSelectedRows.map(r => r.rowid), [sheetSelectedRows]);
 
-    const control = useMemo(() => [{ type: 'summaryhead' }].concat(columns)[columnIndex], [columns, columnIndex]);
+    const control = useMemo(
+      () =>
+        // 用 as FormControl[] 固定住哨兵项的类型：裸字面量里 type 会被推成 string，
+        // 与 FormControl.type 的 number | 'summaryhead' 对不上（TS2769）
+        ([{ type: 'summaryhead' }] as FormControl[]).concat(columns)[columnIndex],
+      [columns, columnIndex],
+    );
 
     // 缓存回调函数
     const handleFold = React.useCallback(
@@ -377,7 +412,34 @@ const MemoizedRowHead = React.memo(
   },
 );
 
+/** getDerivedStateFromProps 里攒出来的 state 增量，键就是下面几处赋值用到的那些。 */
+interface SheetViewStatePatch {
+  __lastViewId?: string;
+  __lastWorksheetId?: string;
+  /** sheetViewData.refreshFlag 的上一次取值，用来判断是否需要重置打码字段 */
+  __lastRefreshFlag?: string | number;
+  /** 自定义按钮的校验状态，切视图时清空 */
+  buttonsCheckStatus?: Record<string, boolean>;
+  /** 需要打码的字段，刷新时清空 */
+  disableMaskDataControls?: Record<string, boolean>;
+}
+
 class TableViewBase extends React.Component<any, any> {
+  // 这些字段只在构造函数/各方法里 this.x = ... 赋值，TS 不当作字段声明，
+  // 不写这几行每次读取都报 TS2339（本文件因此有 26 条）。
+  // declare 是纯类型声明，babel 整行擦除，运行时无影响。
+  declare tableId: string;
+  declare shiftActive: boolean;
+  declare shiftActiveRowIndex: number;
+  /** 列配置的缓存，与 _lastPropsHash 配对使用（props 未变时直接复用） */
+  declare _columnsCache: FormControl[] | null;
+  // 不是字符串哈希，是一份「参与列计算的 props 快照」对象，用 isEqual 比对
+  declare _lastPropsHash: Record<string, ControlValue> | null;
+  /** 未应用个人列设置前的原始列，导出等场景要用 */
+  declare columnsNoPersonalSetting: FormControl[];
+  declare expandCellAppendWidth: number;
+  declare refreshTimer: ReturnType<typeof setTimeout> | null;
+
   static propTypes = {
     isTreeTableView: bool,
     worksheetInfo: PropTypes.shape({}),
@@ -412,7 +474,7 @@ class TableViewBase extends React.Component<any, any> {
       };
     }
 
-    const patch = {};
+    const patch: SheetViewStatePatch = {};
     const changeView = state.__lastWorksheetId === props.worksheetId && state.__lastViewId !== props.viewId;
 
     if (changeView) {
