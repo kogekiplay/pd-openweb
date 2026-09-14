@@ -6,7 +6,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAccountApps: function (args, options = {}) {
+  getAccountApps: function (args, options: ApiOptions = {}) {
     return mdyAPI('Application', 'GetAccountApps', args, options);
   },
   /**
@@ -18,7 +18,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateAccountAppTop: function (args, options = {}) {
+  updateAccountAppTop: function (args, options: ApiOptions = {}) {
     return mdyAPI('Application', 'UpdateAccountAppTop', args, options);
   },
   /**
@@ -34,7 +34,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addApplication: function (args, options = {}) {
+  addApplication: function (args, options: ApiOptions = {}) {
     return mdyAPI('Application', 'AddApplication', args, options);
   },
   /**
@@ -51,7 +51,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editApplication: function (args, options = {}) {
+  editApplication: function (args, options: ApiOptions = {}) {
     return mdyAPI('Application', 'EditApplication', args, options);
   },
   /**
@@ -63,7 +63,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeApplication: function (args, options = {}) {
+  removeApplication: function (args, options: ApiOptions = {}) {
     return mdyAPI('Application', 'RemoveApplication', args, options);
   },
   /**
@@ -74,7 +74,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectApplicationList: function (args, options = {}) {
+  getProjectApplicationList: function (args, options: ApiOptions = {}) {
     return mdyAPI('Application', 'GetProjectApplicationList', args, options);
   },
 };

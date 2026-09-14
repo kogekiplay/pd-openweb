@@ -6,7 +6,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSettingDefualtProjectId: function (args, options = {}) {
+  getSettingDefualtProjectId: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetSettingDefualtProjectId', args, options);
   },
   /**
@@ -17,7 +17,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSetting: function (args, options = {}) {
+  getSetting: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetSetting', args, options);
   },
   /**
@@ -29,7 +29,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  followUserOfSetting: function (args, options = {}) {
+  followUserOfSetting: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'FollowUserOfSetting', args, options);
   },
   /**
@@ -41,7 +41,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  unfollowUserOfSetting: function (args, options = {}) {
+  unfollowUserOfSetting: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UnfollowUserOfSetting', args, options);
   },
   /**
@@ -54,7 +54,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateUserStatusOfSetting: function (args, options = {}) {
+  updateUserStatusOfSetting: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateUserStatusOfSetting', args, options);
   },
   /**
@@ -68,7 +68,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSubordinateTaskGantt: function (args, options = {}) {
+  getSubordinateTaskGantt: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetSubordinateTaskGantt', args, options);
   },
   /**
@@ -81,7 +81,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFolderTaskGantt: function (args, options = {}) {
+  getFolderTaskGantt: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetFolderTaskGantt', args, options);
   },
   /**
@@ -92,7 +92,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTaskStaticGanttChart: function (args, options = {}) {
+  getTaskStaticGanttChart: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetTaskStaticGanttChart', args, options);
   },
   /**
@@ -104,7 +104,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateTaskActualStartTime: function (args, options = {}) {
+  updateTaskActualStartTime: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateTaskActualStartTime', args, options);
   },
   /**
@@ -116,7 +116,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateTasksActualStartTime: function (args, options = {}) {
+  updateTasksActualStartTime: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateTasksActualStartTime', args, options);
   },
   /**
@@ -128,7 +128,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateCompletedTime: function (args, options = {}) {
+  updateCompletedTime: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateCompletedTime', args, options);
   },
   /**
@@ -144,7 +144,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateTaskStartTimeAndDeadline: function (args, options = {}) {
+  updateTaskStartTimeAndDeadline: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateTaskStartTimeAndDeadline', args, options);
   },
   /**
@@ -155,7 +155,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTaskDetail4Print: function (args, options = {}) {
+  getTaskDetail4Print: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetTaskDetail4Print', args, options);
   },
   /**
@@ -166,7 +166,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectIdAndFolderIdForItemConvertTask: function (args, options = {}) {
+  getProjectIdAndFolderIdForItemConvertTask: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetProjectIdAndFolderIdForItemConvertTask', args, options);
   },
   /**
@@ -179,7 +179,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addCheckList: function (args, options = {}) {
+  addCheckList: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'AddCheckList', args, options);
   },
   /**
@@ -190,7 +190,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getCheckListsWithItemsInTask: function (args, options = {}) {
+  getCheckListsWithItemsInTask: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetCheckListsWithItemsInTask', args, options);
   },
   /**
@@ -202,7 +202,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateCheckListIndex: function (args, options = {}) {
+  updateCheckListIndex: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateCheckListIndex', args, options);
   },
   /**
@@ -214,7 +214,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateCheckListName: function (args, options = {}) {
+  updateCheckListName: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateCheckListName', args, options);
   },
   /**
@@ -225,7 +225,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeCheckList: function (args, options = {}) {
+  removeCheckList: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'RemoveCheckList', args, options);
   },
   /**
@@ -238,7 +238,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  addItems: function (args, options = {}) {
+  addItems: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'AddItems', args, options);
   },
   /**
@@ -251,7 +251,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateItemIndex: function (args, options = {}) {
+  updateItemIndex: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateItemIndex', args, options);
   },
   /**
@@ -264,7 +264,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  updateItemName: function (args, options = {}) {
+  updateItemName: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateItemName', args, options);
   },
   /**
@@ -277,7 +277,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  updateItemStatus: function (args, options = {}) {
+  updateItemStatus: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateItemStatus', args, options);
   },
   /**
@@ -288,7 +288,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeItem: function (args, options = {}) {
+  removeItem: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'RemoveItem', args, options);
   },
   /**
@@ -299,7 +299,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  saveAsMyFolderTemplate: function (args, options = {}) {
+  saveAsMyFolderTemplate: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'SaveAsMyFolderTemplate', args, options);
   },
   /**
@@ -310,7 +310,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeMyFolderTemplateOne: function (args, options = {}) {
+  removeMyFolderTemplateOne: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'RemoveMyFolderTemplateOne', args, options);
   },
   /**
@@ -321,7 +321,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTemplateTypes: function (args, options = {}) {
+  getTemplateTypes: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetTemplateTypes', args, options);
   },
   /**
@@ -332,7 +332,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTemplatesByTemplateTypeId: function (args, options = {}) {
+  getTemplatesByTemplateTypeId: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetTemplatesByTemplateTypeId', args, options);
   },
   /**
@@ -343,7 +343,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTaskOptionsInFolder: function (args, options = {}) {
+  getTaskOptionsInFolder: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetTaskOptionsInFolder', args, options);
   },
   /**
@@ -357,7 +357,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateControlValue: function (args, options = {}) {
+  updateControlValue: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateControlValue', args, options);
   },
   /**
@@ -369,7 +369,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateFolderTemplateScope: function (args, options = {}) {
+  updateFolderTemplateScope: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateFolderTemplateScope', args, options);
   },
   /**
@@ -381,7 +381,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getLeftMenu: function (args, options = {}) {
+  getLeftMenu: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetLeftMenu', args, options);
   },
   /**
@@ -395,7 +395,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTwoTypeTaskCount: function (args, options = {}) {
+  getTwoTypeTaskCount: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetTwoTypeTaskCount', args, options);
   },
   /**
@@ -408,7 +408,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTaskLog: function (args, options = {}) {
+  getTaskLog: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetTaskLog', args, options);
   },
   /**
@@ -422,7 +422,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTagsByTaskID: function (args, options = {}) {
+  getTagsByTaskID: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetTagsByTaskID', args, options);
   },
   /**
@@ -449,7 +449,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTaskList: function (args, options = {}) {
+  getTaskList: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetTaskList', args, options);
   },
   /**
@@ -464,7 +464,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTaskListWithStar: function (args, options = {}) {
+  getTaskListWithStar: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetTaskListWithStar', args, options);
   },
   /**
@@ -476,7 +476,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSubTask: function (args, options = {}) {
+  getSubTask: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetSubTask', args, options);
   },
   /**
@@ -496,7 +496,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTaskListInProjectWithOutFolder: function (args, options = {}) {
+  getTaskListInProjectWithOutFolder: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetTaskListInProjectWithOutFolder', args, options);
   },
   /**
@@ -518,7 +518,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFolderTaskList: function (args, options = {}) {
+  getFolderTaskList: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetFolderTaskList', args, options);
   },
   /**
@@ -532,7 +532,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getMyTaskList: function (args, options = {}) {
+  getMyTaskList: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetMyTaskList', args, options);
   },
   /**
@@ -545,7 +545,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTaskDetail: function (args, options = {}) {
+  getTaskDetail: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetTaskDetail', args, options);
   },
   /**
@@ -556,7 +556,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTaskControls: function (args, options = {}) {
+  getTaskControls: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetTaskControls', args, options);
   },
   /**
@@ -568,7 +568,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTaskList_RelationParent: function (args, options = {}) {
+  getTaskList_RelationParent: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetTaskList_RelationParent', args, options);
   },
   /**
@@ -581,7 +581,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTaskWithMe: function (args, options = {}) {
+  getTaskWithMe: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetTaskWithMe', args, options);
   },
   /**
@@ -610,7 +610,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addTask: function (args, options = {}) {
+  addTask: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'AddTask', args, options);
   },
   /**
@@ -634,7 +634,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  duplicateTask: function (args, options = {}) {
+  duplicateTask: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'DuplicateTask', args, options);
   },
   /**
@@ -646,7 +646,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteTask: function (args, options = {}) {
+  deleteTask: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'DeleteTask', args, options);
   },
   /**
@@ -658,7 +658,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  batchDeleteTask: function (args, options = {}) {
+  batchDeleteTask: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'BatchDeleteTask', args, options);
   },
   /**
@@ -670,7 +670,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateTaskCharge: function (args, options = {}) {
+  updateTaskCharge: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateTaskCharge', args, options);
   },
   /**
@@ -682,7 +682,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  batchUpdateTaskCharge: function (args, options = {}) {
+  batchUpdateTaskCharge: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'BatchUpdateTaskCharge', args, options);
   },
   /**
@@ -694,7 +694,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateTaskName: function (args, options = {}) {
+  updateTaskName: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateTaskName', args, options);
   },
   /**
@@ -706,7 +706,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateTaskSummary: function (args, options = {}) {
+  updateTaskSummary: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateTaskSummary', args, options);
   },
   /**
@@ -718,7 +718,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateTaskLocked: function (args, options = {}) {
+  updateTaskLocked: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateTaskLocked', args, options);
   },
   /**
@@ -730,7 +730,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  batchUpdateTaskLocked: function (args, options = {}) {
+  batchUpdateTaskLocked: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'BatchUpdateTaskLocked', args, options);
   },
   /**
@@ -742,7 +742,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateTaskStageID: function (args, options = {}) {
+  updateTaskStageID: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateTaskStageID', args, options);
   },
   /**
@@ -756,7 +756,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateTaskStatus: function (args, options = {}) {
+  updateTaskStatus: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateTaskStatus', args, options);
   },
   /**
@@ -769,7 +769,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  batchUpdateTaskStatus: function (args, options = {}) {
+  batchUpdateTaskStatus: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'BatchUpdateTaskStatus', args, options);
   },
   /**
@@ -781,7 +781,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateTaskParentID: function (args, options = {}) {
+  updateTaskParentID: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateTaskParentID', args, options);
   },
   /**
@@ -793,7 +793,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateTaskFolderID: function (args, options = {}) {
+  updateTaskFolderID: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateTaskFolderID', args, options);
   },
   /**
@@ -805,7 +805,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  batchUpdateTaskFolderID: function (args, options = {}) {
+  batchUpdateTaskFolderID: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'BatchUpdateTaskFolderID', args, options);
   },
   /**
@@ -819,7 +819,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  batchAddTaskMember: function (args, options = {}) {
+  batchAddTaskMember: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'BatchAddTaskMember', args, options);
   },
   /**
@@ -832,7 +832,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addTaskMember: function (args, options = {}) {
+  addTaskMember: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'AddTaskMember', args, options);
   },
   /**
@@ -843,7 +843,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  applyJoinTask: function (args, options = {}) {
+  applyJoinTask: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'ApplyJoinTask', args, options);
   },
   /**
@@ -855,7 +855,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteTaskMember: function (args, options = {}) {
+  deleteTaskMember: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'DeleteTaskMember', args, options);
   },
   /**
@@ -867,7 +867,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  batchDeleteTaskMember: function (args, options = {}) {
+  batchDeleteTaskMember: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'BatchDeleteTaskMember', args, options);
   },
   /**
@@ -879,7 +879,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  agreeApplyJoinTask: function (args, options = {}) {
+  agreeApplyJoinTask: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'AgreeApplyJoinTask', args, options);
   },
   /**
@@ -891,7 +891,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  refuseJoinTask: function (args, options = {}) {
+  refuseJoinTask: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'RefuseJoinTask', args, options);
   },
   /**
@@ -903,7 +903,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateTaskMemberStar: function (args, options = {}) {
+  updateTaskMemberStar: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateTaskMemberStar', args, options);
   },
   /**
@@ -915,7 +915,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  batchUpdateTaskMemberStar: function (args, options = {}) {
+  batchUpdateTaskMemberStar: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'BatchUpdateTaskMemberStar', args, options);
   },
   /**
@@ -927,7 +927,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateTaskMemberNotice: function (args, options = {}) {
+  updateTaskMemberNotice: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateTaskMemberNotice', args, options);
   },
   /**
@@ -939,7 +939,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  batchUpdateTaskMemberNotice: function (args, options = {}) {
+  batchUpdateTaskMemberNotice: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'BatchUpdateTaskMemberNotice', args, options);
   },
   /**
@@ -951,7 +951,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateTaskMemberClassify: function (args, options = {}) {
+  updateTaskMemberClassify: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateTaskMemberClassify', args, options);
   },
   /**
@@ -963,7 +963,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addTaskTopicFromPost: function (args, options = {}) {
+  addTaskTopicFromPost: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'AddTaskTopicFromPost', args, options);
   },
   /**
@@ -977,7 +977,7 @@ adder: suncheng date: 2017年11月29日
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  addTaskAttachments: function (args, options = {}) {
+  addTaskAttachments: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'AddTaskAttachments', args, options);
   },
   /**
@@ -989,7 +989,7 @@ adder: suncheng date: 2017年11月29日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  searchFolderList: function (args, options = {}) {
+  searchFolderList: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'SearchFolderList', args, options);
   },
   /**
@@ -999,7 +999,7 @@ adder: suncheng date: 2017年11月29日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectsFolderNotice: function (args, options = {}) {
+  getProjectsFolderNotice: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetProjectsFolderNotice', args, options);
   },
   /**
@@ -1013,7 +1013,7 @@ adder: suncheng date: 2017年11月29日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getMainFolderList: function (args, options = {}) {
+  getMainFolderList: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetMainFolderList', args, options);
   },
   /**
@@ -1025,7 +1025,7 @@ adder: suncheng date: 2017年11月29日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getMainFolderListInFile: function (args, options = {}) {
+  getMainFolderListInFile: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetMainFolderListInFile', args, options);
   },
   /**
@@ -1037,7 +1037,7 @@ adder: suncheng date: 2017年11月29日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getHiddenFolderList: function (args, options = {}) {
+  getHiddenFolderList: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetHiddenFolderList', args, options);
   },
   /**
@@ -1049,7 +1049,7 @@ adder: suncheng date: 2017年11月29日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getArchiveFolderList: function (args, options = {}) {
+  getArchiveFolderList: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetArchiveFolderList', args, options);
   },
   /**
@@ -1060,7 +1060,7 @@ adder: suncheng date: 2017年11月29日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTopFolderList: function (args, options = {}) {
+  getTopFolderList: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetTopFolderList', args, options);
   },
   /**
@@ -1072,7 +1072,7 @@ adder: suncheng date: 2017年11月29日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSubordinate: function (args, options = {}) {
+  getSubordinate: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetSubordinate', args, options);
   },
   /**
@@ -1094,7 +1094,7 @@ adder: suncheng date: 2017年11月29日
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getTaskListWithStageView: function (args, options = {}) {
+  getTaskListWithStageView: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetTaskListWithStageView', args, options);
   },
   /**
@@ -1117,7 +1117,7 @@ adder: suncheng date: 2017年11月29日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFolderTaskListByStageID: function (args, options = {}) {
+  getFolderTaskListByStageID: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetFolderTaskListByStageID', args, options);
   },
   /**
@@ -1130,7 +1130,7 @@ adder: suncheng date: 2017年11月29日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setStageOwner: function (args, options = {}) {
+  setStageOwner: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'SetStageOwner', args, options);
   },
   /**
@@ -1141,7 +1141,7 @@ adder: suncheng date: 2017年11月29日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFolderTaskCharges: function (args, options = {}) {
+  getFolderTaskCharges: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetFolderTaskCharges', args, options);
   },
   /**
@@ -1152,7 +1152,7 @@ adder: suncheng date: 2017年11月29日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFolderConfig: function (args, options = {}) {
+  getFolderConfig: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetFolderConfig', args, options);
   },
   /**
@@ -1167,7 +1167,7 @@ adder: suncheng date: 2017年11月29日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFolderListForUpdateFolderID: function (args, options = {}) {
+  getFolderListForUpdateFolderID: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetFolderListForUpdateFolderID', args, options);
   },
   /**
@@ -1181,7 +1181,7 @@ adder: suncheng date: 2017年11月29日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFolderListForCreateTask: function (args, options = {}) {
+  getFolderListForCreateTask: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetFolderListForCreateTask', args, options);
   },
   /**
@@ -1192,7 +1192,7 @@ adder: suncheng date: 2017年11月29日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFolderDetail: function (args, options = {}) {
+  getFolderDetail: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetFolderDetail', args, options);
   },
   /**
@@ -1205,7 +1205,7 @@ adder: suncheng date: 2017年11月29日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFolderLog: function (args, options = {}) {
+  getFolderLog: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetFolderLog', args, options);
   },
   /**
@@ -1222,7 +1222,7 @@ adder: suncheng date: 2017年11月29日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addFolder: function (args, options = {}) {
+  addFolder: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'AddFolder', args, options);
   },
   /**
@@ -1234,7 +1234,7 @@ adder: suncheng date: 2017年11月29日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeFolder: function (args, options = {}) {
+  removeFolder: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'RemoveFolder', args, options);
   },
   /**
@@ -1246,7 +1246,7 @@ adder: suncheng date: 2017年11月29日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateStageConfig: function (args, options = {}) {
+  updateStageConfig: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateStageConfig', args, options);
   },
   /**
@@ -1258,7 +1258,7 @@ adder: suncheng date: 2017年11月29日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateFolderArchived: function (args, options = {}) {
+  updateFolderArchived: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateFolderArchived', args, options);
   },
   /**
@@ -1270,7 +1270,7 @@ adder: suncheng date: 2017年11月29日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateFolderAuthVisible: function (args, options = {}) {
+  updateFolderAuthVisible: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateFolderAuthVisible', args, options);
   },
   /**
@@ -1283,7 +1283,7 @@ adder: suncheng date: 2017年11月29日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateFolderVisibility: function (args, options = {}) {
+  updateFolderVisibility: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateFolderVisibility', args, options);
   },
   /**
@@ -1295,7 +1295,7 @@ adder: suncheng date: 2017年11月29日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateFolderCharge: function (args, options = {}) {
+  updateFolderCharge: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateFolderCharge', args, options);
   },
   /**
@@ -1307,7 +1307,7 @@ adder: suncheng date: 2017年11月29日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateFolderName: function (args, options = {}) {
+  updateFolderName: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateFolderName', args, options);
   },
   /**
@@ -1319,7 +1319,7 @@ adder: suncheng date: 2017年11月29日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateFolderDes: function (args, options = {}) {
+  updateFolderDes: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateFolderDes', args, options);
   },
   /**
@@ -1332,7 +1332,7 @@ adder: suncheng date: 2017年11月24日
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  updateFolderMemberNotice: function (args, options = {}) {
+  updateFolderMemberNotice: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateFolderMemberNotice', args, options);
   },
   /**
@@ -1358,7 +1358,7 @@ adder: suncheng date: 2017年11月24日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  duplicateFolder: function (args, options = {}) {
+  duplicateFolder: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'DuplicateFolder', args, options);
   },
   /**
@@ -1369,7 +1369,7 @@ adder: suncheng date: 2017年11月24日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFolderStage: function (args, options = {}) {
+  getFolderStage: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetFolderStage', args, options);
   },
   /**
@@ -1382,7 +1382,7 @@ adder: suncheng date: 2017年11月24日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addFolderStage: function (args, options = {}) {
+  addFolderStage: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'AddFolderStage', args, options);
   },
   /**
@@ -1396,7 +1396,7 @@ adder: suncheng date: 2017年11月24日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateFolderStage: function (args, options = {}) {
+  updateFolderStage: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateFolderStage', args, options);
   },
   /**
@@ -1408,7 +1408,7 @@ adder: suncheng date: 2017年11月24日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteFolderStage: function (args, options = {}) {
+  deleteFolderStage: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'DeleteFolderStage', args, options);
   },
   /**
@@ -1420,7 +1420,7 @@ adder: suncheng date: 2017年11月24日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  checkAccountNeedAddIntoFolder: function (args, options = {}) {
+  checkAccountNeedAddIntoFolder: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'CheckAccountNeedAddIntoFolder', args, options);
   },
   /**
@@ -1431,7 +1431,7 @@ adder: suncheng date: 2017年11月24日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFolderSettingsForCurrentUser: function (args, options = {}) {
+  getFolderSettingsForCurrentUser: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetFolderSettingsForCurrentUser', args, options);
   },
   /**
@@ -1443,7 +1443,7 @@ adder: suncheng date: 2017年11月24日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  applyFolderMember: function (args, options = {}) {
+  applyFolderMember: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'ApplyFolderMember', args, options);
   },
   /**
@@ -1455,7 +1455,7 @@ adder: suncheng date: 2017年11月24日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  refuseFolderMember: function (args, options = {}) {
+  refuseFolderMember: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'RefuseFolderMember', args, options);
   },
   /**
@@ -1469,7 +1469,7 @@ adder: suncheng date: 2017年11月24日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addFolderMembers: function (args, options = {}) {
+  addFolderMembers: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'AddFolderMembers', args, options);
   },
   /**
@@ -1482,7 +1482,7 @@ adder: suncheng date: 2017年11月24日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateFolderMemberStatusAndAuth: function (args, options = {}) {
+  updateFolderMemberStatusAndAuth: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateFolderMemberStatusAndAuth', args, options);
   },
   /**
@@ -1495,7 +1495,7 @@ adder: suncheng date: 2017年11月24日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeFolderMember: function (args, options = {}) {
+  removeFolderMember: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'RemoveFolderMember', args, options);
   },
   /**
@@ -1507,7 +1507,7 @@ adder: suncheng date: 2017年11月24日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateFolderTop: function (args, options = {}) {
+  updateFolderTop: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateFolderTop', args, options);
   },
   /**
@@ -1519,7 +1519,7 @@ adder: suncheng date: 2017年11月24日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateFolderDisplay: function (args, options = {}) {
+  updateFolderDisplay: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateFolderDisplay', args, options);
   },
   /**
@@ -1531,7 +1531,7 @@ adder: suncheng date: 2017年11月24日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateFolderIntoFile: function (args, options = {}) {
+  updateFolderIntoFile: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateFolderIntoFile', args, options);
   },
   /**
@@ -1544,7 +1544,7 @@ adder: suncheng date: 2017年11月24日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateFolderMemberAuth: function (args, options = {}) {
+  updateFolderMemberAuth: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateFolderMemberAuth', args, options);
   },
   /**
@@ -1557,7 +1557,7 @@ adder: suncheng date: 2017年11月24日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFolderFiles: function (args, options = {}) {
+  getFolderFiles: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetFolderFiles', args, options);
   },
   /**
@@ -1569,7 +1569,7 @@ adder: suncheng date: 2017年11月24日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addUserFolderFile: function (args, options = {}) {
+  addUserFolderFile: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'AddUserFolderFile', args, options);
   },
   /**
@@ -1581,7 +1581,7 @@ adder: suncheng date: 2017年11月24日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateUserFolderFile: function (args, options = {}) {
+  updateUserFolderFile: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'UpdateUserFolderFile', args, options);
   },
   /**
@@ -1592,7 +1592,7 @@ adder: suncheng date: 2017年11月24日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteUserFolderFile: function (args, options = {}) {
+  deleteUserFolderFile: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'DeleteUserFolderFile', args, options);
   },
   /**
@@ -1606,7 +1606,7 @@ adder: suncheng date: 2017年11月24日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTags: function (args, options = {}) {
+  getTags: function (args, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetTags', args, options);
   },
 };

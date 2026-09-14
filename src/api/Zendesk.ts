@@ -6,7 +6,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-   getWidgetJwt: function (args, options = {}) {
+   getWidgetJwt: function (args, options: ApiOptions = {}) {
      
      return mdyAPI('Zendesk', 'GetWidgetJwt', args, options);
    },
@@ -19,7 +19,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-   getSsoJwt: function (args, options = {}) {
+   getSsoJwt: function (args, options: ApiOptions = {}) {
      
      return mdyAPI('Zendesk', 'GetSsoJwt', args, options);
    },

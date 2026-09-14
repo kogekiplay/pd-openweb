@@ -12,7 +12,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getLogs: function (args, options = {}) {
+  getLogs: function (args, options: ApiOptions = {}) {
     return mdyAPI('PrivateHkLog', 'GetLogs', args, options);
   },
   /**
@@ -22,7 +22,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  downloadLogs: function (args, options = {}) {
+  downloadLogs: function (args, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('PrivateHkLog', 'DownloadLogs', args, options);
   },

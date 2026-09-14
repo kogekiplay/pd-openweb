@@ -13,7 +13,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUserReport: function (args, options = {}) {
+  getUserReport: function (args, options: ApiOptions = {}) {
     return mdyAPI('Statistic', 'GetUserReport', args, options);
   },
   /**
@@ -31,7 +31,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPostReportByType: function (args, options = {}) {
+  getPostReportByType: function (args, options: ApiOptions = {}) {
     return mdyAPI('Statistic', 'GetPostReportByType', args, options);
   },
   /**
@@ -48,7 +48,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getGroupReport: function (args, options = {}) {
+  getGroupReport: function (args, options: ApiOptions = {}) {
     return mdyAPI('Statistic', 'GetGroupReport', args, options);
   },
 };

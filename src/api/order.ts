@@ -7,7 +7,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAuthorizeVersions: function (args, options = {}) {
+  getAuthorizeVersions: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'GetAuthorizeVersions', args, options);
   },
   /**
@@ -18,7 +18,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAuthorizeDraftOrder: function (args, options = {}) {
+  getAuthorizeDraftOrder: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'GetAuthorizeDraftOrder', args, options);
   },
   /**
@@ -34,7 +34,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addAuthorizeOrder: function (args, options = {}) {
+  addAuthorizeOrder: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'AddAuthorizeOrder', args, options);
   },
   /**
@@ -49,7 +49,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAuthorizeOrderPrice: function (args, options = {}) {
+  getAuthorizeOrderPrice: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'GetAuthorizeOrderPrice', args, options);
   },
   /**
@@ -60,7 +60,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectComputingInstances: function (args, options = {}) {
+  getProjectComputingInstances: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'GetProjectComputingInstances', args, options);
   },
   /**
@@ -74,7 +74,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPersonOrderPrice: function (args, options = {}) {
+  getPersonOrderPrice: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'GetPersonOrderPrice', args, options);
   },
   /**
@@ -88,7 +88,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addPersonOrder: function (args, options = {}) {
+  addPersonOrder: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'AddPersonOrder', args, options);
   },
   /**
@@ -102,7 +102,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getApkStorageOrderPrice: function (args, options = {}) {
+  getApkStorageOrderPrice: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'GetApkStorageOrderPrice', args, options);
   },
   /**
@@ -116,7 +116,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addApkStorageOrder: function (args, options = {}) {
+  addApkStorageOrder: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'AddApkStorageOrder', args, options);
   },
   /**
@@ -130,7 +130,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorkflowOrderPrice: function (args, options = {}) {
+  getWorkflowOrderPrice: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'GetWorkflowOrderPrice', args, options);
   },
   /**
@@ -144,7 +144,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addWorkflowOrder: function (args, options = {}) {
+  addWorkflowOrder: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'AddWorkflowOrder', args, options);
   },
   /**
@@ -158,7 +158,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getMonthlyWorkflowOrderPrice: function (args, options = {}) {
+  getMonthlyWorkflowOrderPrice: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'GetMonthlyWorkflowOrderPrice', args, options);
   },
   /**
@@ -172,7 +172,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addMonthlyWorkflowOrder: function (args, options = {}) {
+  addMonthlyWorkflowOrder: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'AddMonthlyWorkflowOrder', args, options);
   },
   /**
@@ -186,7 +186,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getExternalUserOrderPrice: function (args, options = {}) {
+  getExternalUserOrderPrice: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'GetExternalUserOrderPrice', args, options);
   },
   /**
@@ -200,7 +200,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getExternalUserExtensionOrderPrice: function (args, options = {}) {
+  getExternalUserExtensionOrderPrice: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'GetExternalUserExtensionOrderPrice', args, options);
   },
   /**
@@ -214,7 +214,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addExternalUserOrder: function (args, options = {}) {
+  addExternalUserOrder: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'AddExternalUserOrder', args, options);
   },
   /**
@@ -226,7 +226,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addExternalUserExtensionOrder: function (args, options = {}) {
+  addExternalUserExtensionOrder: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'AddExternalUserExtensionOrder', args, options);
   },
   /**
@@ -240,7 +240,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDataPipelineOrderPrice: function (args, options = {}) {
+  getDataPipelineOrderPrice: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'GetDataPipelineOrderPrice', args, options);
   },
   /**
@@ -254,7 +254,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addDataPipelineOrder: function (args, options = {}) {
+  addDataPipelineOrder: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'AddDataPipelineOrder', args, options);
   },
   /**
@@ -268,7 +268,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getMonthlyDataPipelineOrderPrice: function (args, options = {}) {
+  getMonthlyDataPipelineOrderPrice: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'GetMonthlyDataPipelineOrderPrice', args, options);
   },
   /**
@@ -282,7 +282,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addMonthlyDataPipelineOrder: function (args, options = {}) {
+  addMonthlyDataPipelineOrder: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'AddMonthlyDataPipelineOrder', args, options);
   },
   /**
@@ -296,7 +296,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getComputingInstanceOrderPrice: function (args, options = {}) {
+  getComputingInstanceOrderPrice: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'GetComputingInstanceOrderPrice', args, options);
   },
   /**
@@ -310,7 +310,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getComputingInstanceExtensionOrderPrice: function (args, options = {}) {
+  getComputingInstanceExtensionOrderPrice: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'GetComputingInstanceExtensionOrderPrice', args, options);
   },
   /**
@@ -324,7 +324,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addPermanentComputingInstanceOrder: function (args, options = {}) {
+  addPermanentComputingInstanceOrder: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'AddPermanentComputingInstanceOrder', args, options);
   },
   /**
@@ -338,7 +338,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addComputingInstanceOrder: function (args, options = {}) {
+  addComputingInstanceOrder: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'AddComputingInstanceOrder', args, options);
   },
   /**
@@ -352,7 +352,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addComputingInstanceExtensionOrder: function (args, options = {}) {
+  addComputingInstanceExtensionOrder: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'AddComputingInstanceExtensionOrder', args, options);
   },
   /**
@@ -366,7 +366,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getMonthlyComputingInstanceOrderPrice: function (args, options = {}) {
+  getMonthlyComputingInstanceOrderPrice: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'GetMonthlyComputingInstanceOrderPrice', args, options);
   },
   /**
@@ -380,7 +380,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addMonthlyComputingInstanceOrder: function (args, options = {}) {
+  addMonthlyComputingInstanceOrder: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'AddMonthlyComputingInstanceOrder', args, options);
   },
   /**
@@ -394,7 +394,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAggregationTableOrderPrice: function (args, options = {}) {
+  getAggregationTableOrderPrice: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'GetAggregationTableOrderPrice', args, options);
   },
   /**
@@ -408,7 +408,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addAggregationTableOrder: function (args, options = {}) {
+  addAggregationTableOrder: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'AddAggregationTableOrder', args, options);
   },
   /**
@@ -422,7 +422,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getVectorKnowledgeChunkOrderPrice: function (args, options = {}) {
+  getVectorKnowledgeChunkOrderPrice: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'GetVectorKnowledgeChunkOrderPrice', args, options);
   },
   /**
@@ -436,7 +436,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addVectorKnowledgeChunkOrder: function (args, options = {}) {
+  addVectorKnowledgeChunkOrder: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'AddVectorKnowledgeChunkOrder', args, options);
   },
   /**
@@ -448,7 +448,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addThreePartPayOrderLog: function (args, options = {}) {
+  addThreePartPayOrderLog: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'AddThreePartPayOrderLog', args, options);
   },
   /**
@@ -461,7 +461,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  balancePayOrder: function (args, options = {}) {
+  balancePayOrder: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'BalancePayOrder', args, options);
   },
   /**
@@ -473,7 +473,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUpgradeVersionOrderPrice: function (args, options = {}) {
+  getUpgradeVersionOrderPrice: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'GetUpgradeVersionOrderPrice', args, options);
   },
   /**
@@ -485,7 +485,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addUpgradeVersionOrder: function (args, options = {}) {
+  addUpgradeVersionOrder: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'AddUpgradeVersionOrder', args, options);
   },
   /**
@@ -496,7 +496,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUpgradeVersionData: function (args, options = {}) {
+  getUpgradeVersionData: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'GetUpgradeVersionData', args, options);
   },
   /**
@@ -509,7 +509,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addRechargeOrder: function (args, options = {}) {
+  addRechargeOrder: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'AddRechargeOrder', args, options);
   },
   /**
@@ -528,7 +528,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addMerchantPaymentOrder: function (args, options = {}) {
+  addMerchantPaymentOrder: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'AddMerchantPaymentOrder', args, options);
   },
   /**
@@ -547,7 +547,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getMerchantPaymentOrderPrice: function (args, options = {}) {
+  getMerchantPaymentOrderPrice: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'GetMerchantPaymentOrderPrice', args, options);
   },
   /**
@@ -566,7 +566,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addMerchantInvoiceOrder: function (args, options = {}) {
+  addMerchantInvoiceOrder: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'AddMerchantInvoiceOrder', args, options);
   },
   /**
@@ -585,7 +585,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getMerchantInvoiceOrderPrice: function (args, options = {}) {
+  getMerchantInvoiceOrderPrice: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'GetMerchantInvoiceOrderPrice', args, options);
   },
   /**
@@ -596,7 +596,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectPayResult: function (args, options = {}) {
+  getProjectPayResult: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'GetProjectPayResult', args, options);
   },
   /**
@@ -610,7 +610,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  cancelOrder: function (args, options = {}) {
+  cancelOrder: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'CancelOrder', args, options);
   },
   /**
@@ -623,7 +623,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  downloadBankInfo: function (args, options = {}) {
+  downloadBankInfo: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'DownloadBankInfo', args, options);
   },
   /**
@@ -640,7 +640,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTransactionRecordByPage: function (args, options = {}) {
+  getTransactionRecordByPage: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'GetTransactionRecordByPage', args, options);
   },
   /**
@@ -652,7 +652,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTransactionRecordByOrderId: function (args, options = {}) {
+  getTransactionRecordByOrderId: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'GetTransactionRecordByOrderId', args, options);
   },
   /**
@@ -676,7 +676,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  applyInvoice: function (args, options = {}) {
+  applyInvoice: function (args, options: ApiOptions = {}) {
     return mdyAPI('Order', 'ApplyInvoice', args, options);
   },
 };

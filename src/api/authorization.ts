@@ -8,7 +8,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addAuthorization: function (args, options = {}) {
+  addAuthorization: function (args, options: ApiOptions = {}) {
     return mdyAPI('Authorization', 'AddAuthorization', args, options);
   },
   /**
@@ -20,7 +20,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAuthorizationByType: function (args, options = {}) {
+  getAuthorizationByType: function (args, options: ApiOptions = {}) {
     return mdyAPI('Authorization', 'GetAuthorizationByType', args, options);
   },
 };

@@ -6,7 +6,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getHomePage: function (args, options = {}) {
+  getHomePage: function (args, options: ApiOptions = {}) {
     return mdyAPI('Map', 'GetHomePage', args, options);
   },
   /**
@@ -23,7 +23,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  searchName: function (args, options = {}) {
+  searchName: function (args, options: ApiOptions = {}) {
     return mdyAPI('Map', 'SearchName', args, options);
   },
   /**
@@ -38,7 +38,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  searchUser: function (args, options = {}) {
+  searchUser: function (args, options: ApiOptions = {}) {
     return mdyAPI('Map', 'SearchUser', args, options);
   },
   /**
@@ -49,7 +49,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUserApps: function (args, options = {}) {
+  getUserApps: function (args, options: ApiOptions = {}) {
     return mdyAPI('Map', 'GetUserApps', args, options);
   },
   /**
@@ -59,7 +59,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getCategory: function (args, options = {}) {
+  getCategory: function (args, options: ApiOptions = {}) {
     return mdyAPI('Map', 'GetCategory', args, options);
   },
   /**
@@ -69,7 +69,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getIndustry: function (args, options = {}) {
+  getIndustry: function (args, options: ApiOptions = {}) {
     return mdyAPI('Map', 'GetIndustry', args, options);
   },
   /**
@@ -81,7 +81,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getLibraryToken: function (args, options = {}) {
+  getLibraryToken: function (args, options: ApiOptions = {}) {
     return mdyAPI('Map', 'GetLibraryToken', args, options);
   },
   /**
@@ -92,7 +92,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSpecialApps: function (args, options = {}) {
+  getSpecialApps: function (args, options: ApiOptions = {}) {
     return mdyAPI('Map', 'GetSpecialApps', args, options);
   },
   /**
@@ -103,7 +103,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDetial: function (args, options = {}) {
+  getDetial: function (args, options: ApiOptions = {}) {
     return mdyAPI('Map', 'GetDetial', args, options);
   },
   /**
@@ -115,7 +115,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  gets: function (args, options = {}) {
+  gets: function (args, options: ApiOptions = {}) {
     return mdyAPI('Map', 'Gets', args, options);
   },
   /**
@@ -125,7 +125,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getNew: function (args, options = {}) {
+  getNew: function (args, options: ApiOptions = {}) {
     return mdyAPI('Map', 'GetNew', args, options);
   },
   /**
@@ -136,7 +136,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPlatformSetting: function (args, options = {}) {
+  getPlatformSetting: function (args, options: ApiOptions = {}) {
     return mdyAPI('Map', 'GetPlatformSetting', args, options);
   },
 };

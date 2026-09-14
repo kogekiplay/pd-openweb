@@ -7,7 +7,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getLoginUrl: function (args, options = {}) {
+  getLoginUrl: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetLoginUrl', args, options);
   },
   /**
@@ -19,7 +19,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPortalSetByAppId: function (args, options = {}) {
+  getPortalSetByAppId: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetPortalSetByAppId', args, options);
   },
   /**
@@ -30,7 +30,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAppIdByAddressSuffix: function (args, options = {}) {
+  getAppIdByAddressSuffix: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetAppIdByAddressSuffix', args, options);
   },
   /**
@@ -42,7 +42,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUserAgreement: function (args, options = {}) {
+  getUserAgreement: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetUserAgreement', args, options);
   },
   /**
@@ -54,7 +54,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPrivacyTerms: function (args, options = {}) {
+  getPrivacyTerms: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetPrivacyTerms', args, options);
   },
   /**
@@ -66,7 +66,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPortalSet: function (args, options = {}) {
+  getPortalSet: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetPortalSet', args, options);
   },
   /**
@@ -78,7 +78,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPortalEnableState: function (args, options = {}) {
+  getPortalEnableState: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetPortalEnableState', args, options);
   },
   /**
@@ -91,7 +91,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getConfig: function (args, options = {}) {
+  getConfig: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetConfig', args, options);
   },
   /**
@@ -103,7 +103,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  createEPDiscussWorkFlow: function (args, options = {}) {
+  createEPDiscussWorkFlow: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'CreateEPDiscussWorkFlow', args, options);
   },
   /**
@@ -115,7 +115,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  initAddressExt: function (args, options = {}) {
+  initAddressExt: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'InitAddressExt', args, options);
   },
   /**
@@ -127,7 +127,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editExPortalEnable: function (args, options = {}) {
+  editExPortalEnable: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'EditExPortalEnable', args, options);
   },
   /**
@@ -139,7 +139,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editIsSendMsgs: function (args, options = {}) {
+  editIsSendMsgs: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'EditIsSendMsgs', args, options);
   },
   /**
@@ -152,7 +152,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editPortalSet: function (args, options = {}) {
+  editPortalSet: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'EditPortalSet', args, options);
   },
   /**
@@ -164,7 +164,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editCustomAddressSuffix: function (args, options = {}) {
+  editCustomAddressSuffix: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'EditCustomAddressSuffix', args, options);
   },
   /**
@@ -176,7 +176,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editCustomAddressExt: function (args, options = {}) {
+  editCustomAddressExt: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'EditCustomAddressExt', args, options);
   },
   /**
@@ -192,7 +192,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  sendAccountVerifyCode: function (args, options = {}) {
+  sendAccountVerifyCode: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'SendAccountVerifyCode', args, options);
   },
   /**
@@ -207,7 +207,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  checkExAccountVerifyCode: function (args, options = {}) {
+  checkExAccountVerifyCode: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'CheckExAccountVerifyCode', args, options);
   },
   /**
@@ -219,7 +219,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUserTemple: function (args, options = {}) {
+  getUserTemple: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetUserTemple', args, options);
   },
   /**
@@ -234,7 +234,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUserCollect: function (args, options = {}) {
+  getUserCollect: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetUserCollect', args, options);
   },
   /**
@@ -250,7 +250,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUserActionLogs: function (args, options = {}) {
+  getUserActionLogs: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetUserActionLogs', args, options);
   },
   /**
@@ -262,7 +262,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  dateHistogram: function (args, options = {}) {
+  dateHistogram: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'DateHistogram', args, options);
   },
   /**
@@ -274,7 +274,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  importExAccounts: function (args, options = {}) {
+  importExAccounts: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'ImportExAccounts', args, options);
   },
   /**
@@ -287,7 +287,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addExAccounts: function (args, options = {}) {
+  addExAccounts: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'AddExAccounts', args, options);
   },
   /**
@@ -300,7 +300,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  reinviteExAccount: function (args, options = {}) {
+  reinviteExAccount: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'ReinviteExAccount', args, options);
   },
   /**
@@ -314,7 +314,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  saveUserDetailForBackgroud: function (args, options = {}) {
+  saveUserDetailForBackgroud: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'SaveUserDetailForBackgroud', args, options);
   },
   /**
@@ -328,7 +328,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  saveUserDetail: function (args, options = {}) {
+  saveUserDetail: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'SaveUserDetail', args, options);
   },
   /**
@@ -342,7 +342,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editExAccountsRole: function (args, options = {}) {
+  editExAccountsRole: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'EditExAccountsRole', args, options);
   },
   /**
@@ -356,7 +356,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editExAccountState: function (args, options = {}) {
+  editExAccountState: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'EditExAccountState', args, options);
   },
   /**
@@ -369,7 +369,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  activatExAccounts: function (args, options = {}) {
+  activatExAccounts: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'ActivatExAccounts', args, options);
   },
   /**
@@ -384,7 +384,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  auditPassExAccountToNewRole: function (args, options = {}) {
+  auditPassExAccountToNewRole: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'AuditPassExAccountToNewRole', args, options);
   },
   /**
@@ -397,7 +397,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  refusePassExAccount: function (args, options = {}) {
+  refusePassExAccount: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'RefusePassExAccount', args, options);
   },
   /**
@@ -409,7 +409,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editExAccountCancel: function (args, options = {}) {
+  editExAccountCancel: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'EditExAccountCancel', args, options);
   },
   /**
@@ -424,7 +424,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  bindExAccount: function (args, options = {}) {
+  bindExAccount: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'BindExAccount', args, options);
   },
   /**
@@ -439,7 +439,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editExAccount: function (args, options = {}) {
+  editExAccount: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'EditExAccount', args, options);
   },
   /**
@@ -452,7 +452,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeUsers: function (args, options = {}) {
+  removeUsers: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'RemoveUsers', args, options);
   },
   /**
@@ -465,7 +465,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  cancelInvitation: function (args, options = {}) {
+  cancelInvitation: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'CancelInvitation', args, options);
   },
   /**
@@ -477,7 +477,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getViewShowControls: function (args, options = {}) {
+  getViewShowControls: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetViewShowControls', args, options);
   },
   /**
@@ -489,7 +489,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editViewShowControls: function (args, options = {}) {
+  editViewShowControls: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'EditViewShowControls', args, options);
   },
   /**
@@ -501,7 +501,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getExAccountCategoryCount: function (args, options = {}) {
+  getExAccountCategoryCount: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetExAccountCategoryCount', args, options);
   },
   /**
@@ -550,7 +550,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getFilterRows: function (args, options = {}) {
+  getFilterRows: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetFilterRows', args, options);
   },
   /**
@@ -563,7 +563,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDetail: function (args, options = {}) {
+  getDetail: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetDetail', args, options);
   },
   /**
@@ -584,7 +584,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUsers: function (args, options = {}) {
+  getUsers: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetUsers', args, options);
   },
   /**
@@ -600,7 +600,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUsersByApp: function (args, options = {}) {
+  getUsersByApp: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetUsersByApp', args, options);
   },
   /**
@@ -612,7 +612,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeUsersByPorject: function (args, options = {}) {
+  removeUsersByPorject: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'RemoveUsersByPorject', args, options);
   },
   /**
@@ -625,7 +625,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAppInfoByProject: function (args, options = {}) {
+  getAppInfoByProject: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetAppInfoByProject', args, options);
   },
   /**
@@ -637,7 +637,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getExRoles: function (args, options = {}) {
+  getExRoles: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetExRoles', args, options);
   },
   /**
@@ -666,7 +666,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addExRole: function (args, options = {}) {
+  addExRole: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'AddExRole', args, options);
   },
   /**
@@ -678,7 +678,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editDefaultExRole: function (args, options = {}) {
+  editDefaultExRole: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'EditDefaultExRole', args, options);
   },
   /**
@@ -692,7 +692,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editAppExRole: function (args, options = {}) {
+  editAppExRole: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'EditAppExRole', args, options);
   },
   /**
@@ -704,7 +704,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeExRole: function (args, options = {}) {
+  removeExRole: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'RemoveExRole', args, options);
   },
   /**
@@ -721,7 +721,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  sendVerifyCode: function (args, options = {}) {
+  sendVerifyCode: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'SendVerifyCode', args, options);
   },
   /**
@@ -733,7 +733,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  autoLogin: function (args, options = {}) {
+  autoLogin: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'AutoLogin', args, options);
   },
   /**
@@ -752,7 +752,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  login: function (args, options = {}) {
+  login: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'Login', args, options);
   },
   /**
@@ -770,7 +770,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  pwdLogin: function (args, options = {}) {
+  pwdLogin: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'PwdLogin', args, options);
   },
   /**
@@ -788,7 +788,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  twofactorLogin: function (args, options = {}) {
+  twofactorLogin: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'TwofactorLogin', args, options);
   },
   /**
@@ -800,7 +800,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getTwofactorInfo: function (args, options = {}) {
+  getTwofactorInfo: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetTwofactorInfo', args, options);
   },
   /**
@@ -813,7 +813,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  exportalSSO: function (args, options = {}) {
+  exportalSSO: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'ExportalSSO', args, options);
   },
   /**
@@ -826,7 +826,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  infoLogin: function (args, options = {}) {
+  infoLogin: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'InfoLogin', args, options);
   },
   /**
@@ -837,7 +837,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTpLoginUrlInfo: function (args, options = {}) {
+  getTpLoginUrlInfo: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetTpLoginUrlInfo', args, options);
   },
   /**
@@ -851,7 +851,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  tpLogin: function (args, options = {}) {
+  tpLogin: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'TpLogin', args, options);
   },
   /**
@@ -862,7 +862,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSelfLoginScanUrl: function (args, options = {}) {
+  getSelfLoginScanUrl: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetSelfLoginScanUrl', args, options);
   },
   /**
@@ -874,7 +874,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getSelfTpLoginUrlInfo: function (args, options = {}) {
+  getSelfTpLoginUrlInfo: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetSelfTpLoginUrlInfo', args, options);
   },
   /**
@@ -886,7 +886,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getTpLoginSubscribedScanUrl: function (args, options = {}) {
+  getTpLoginSubscribedScanUrl: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetTpLoginSubscribedScanUrl', args, options);
   },
   /**
@@ -901,7 +901,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  scanTpLogin: function (args, options = {}) {
+  scanTpLogin: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'ScanTpLogin', args, options);
   },
   /**
@@ -918,7 +918,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  findPwd: function (args, options = {}) {
+  findPwd: function (args, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'FindPwd', args, options);
   },
 };

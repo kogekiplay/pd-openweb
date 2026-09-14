@@ -8,7 +8,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addJob: function (args, options = {}) {
+  addJob: function (args, options: ApiOptions = {}) {
     return mdyAPI('Job', 'AddJob', args, options);
   },
   /**
@@ -21,7 +21,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editJobName: function (args, options = {}) {
+  editJobName: function (args, options: ApiOptions = {}) {
     return mdyAPI('Job', 'EditJobName', args, options);
   },
   /**
@@ -33,7 +33,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteJobs: function (args, options = {}) {
+  deleteJobs: function (args, options: ApiOptions = {}) {
     return mdyAPI('Job', 'DeleteJobs', args, options);
   },
   /**
@@ -49,7 +49,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  importJobList: function (args, options = {}) {
+  importJobList: function (args, options: ApiOptions = {}) {
     return mdyAPI('Job', 'ImportJobList', args, options);
   },
   /**
@@ -62,7 +62,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addJobUser: function (args, options = {}) {
+  addJobUser: function (args, options: ApiOptions = {}) {
     return mdyAPI('Job', 'AddJobUser', args, options);
   },
   /**
@@ -75,7 +75,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteJobUser: function (args, options = {}) {
+  deleteJobUser: function (args, options: ApiOptions = {}) {
     return mdyAPI('Job', 'DeleteJobUser', args, options);
   },
   /**
@@ -88,7 +88,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteJobUsers: function (args, options = {}) {
+  deleteJobUsers: function (args, options: ApiOptions = {}) {
     return mdyAPI('Job', 'DeleteJobUsers', args, options);
   },
   /**
@@ -104,7 +104,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getJobs: function (args, options = {}) {
+  getJobs: function (args, options: ApiOptions = {}) {
     return mdyAPI('Job', 'GetJobs', args, options);
   },
   /**
@@ -119,7 +119,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  pagedJobAccounts: function (args, options = {}) {
+  pagedJobAccounts: function (args, options: ApiOptions = {}) {
     return mdyAPI('Job', 'PagedJobAccounts', args, options);
   },
 };

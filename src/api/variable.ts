@@ -7,7 +7,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  get: function (args, options = {}) {
+  get: function (args, options: ApiOptions = {}) {
     return mdyAPI('Variable', 'Get', args, options);
   },
   /**
@@ -19,7 +19,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  gets: function (args, options = {}) {
+  gets: function (args, options: ApiOptions = {}) {
     return mdyAPI('Variable', 'Gets', args, options);
   },
   /**
@@ -39,7 +39,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  create: function (args, options = {}) {
+  create: function (args, options: ApiOptions = {}) {
     return mdyAPI('Variable', 'Create', args, options);
   },
   /**
@@ -60,7 +60,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  edit: function (args, options = {}) {
+  edit: function (args, options: ApiOptions = {}) {
     return mdyAPI('Variable', 'Edit', args, options);
   },
   /**
@@ -71,7 +71,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  remove: function (args, options = {}) {
+  remove: function (args, options: ApiOptions = {}) {
     return mdyAPI('Variable', 'Remove', args, options);
   },
   /**
@@ -87,7 +87,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getLogs: function (args, options = {}) {
+  getLogs: function (args, options: ApiOptions = {}) {
     return mdyAPI('Variable', 'GetLogs', args, options);
   },
 };

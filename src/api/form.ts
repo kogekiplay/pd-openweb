@@ -16,7 +16,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  saveTemplateWithControls: function (args, options = {}) {
+  saveTemplateWithControls: function (args, options: ApiOptions = {}) {
     return mdyAPI('Form', 'SaveTemplateWithControls', args, options);
   },
   /**
@@ -28,7 +28,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addTextControl: function (args, options = {}) {
+  addTextControl: function (args, options: ApiOptions = {}) {
     return mdyAPI('Form', 'AddTextControl', args, options);
   },
   /**
@@ -42,7 +42,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addTemplateControls: function (args, options = {}) {
+  addTemplateControls: function (args, options: ApiOptions = {}) {
     return mdyAPI('Form', 'AddTemplateControls', args, options);
   },
   /**
@@ -62,7 +62,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  saveTemplateWithControlsGrpc: function (args, options = {}) {
+  saveTemplateWithControlsGrpc: function (args, options: ApiOptions = {}) {
     return mdyAPI('Form', 'SaveTemplateWithControlsGrpc', args, options);
   },
   /**
@@ -75,7 +75,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFormulaControlValue: function (args, options = {}) {
+  getFormulaControlValue: function (args, options: ApiOptions = {}) {
     return mdyAPI('Form', 'GetFormulaControlValue', args, options);
   },
   /**
@@ -86,7 +86,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTemplateWithControlsOld: function (args, options = {}) {
+  getTemplateWithControlsOld: function (args, options: ApiOptions = {}) {
     return mdyAPI('Form', 'GetTemplateWithControlsOld', args, options);
   },
   /**
@@ -97,7 +97,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTemplateWithControls: function (args, options = {}) {
+  getTemplateWithControls: function (args, options: ApiOptions = {}) {
     return mdyAPI('Form', 'GetTemplateWithControls', args, options);
   },
   /**
@@ -114,7 +114,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getRelationSources: function (args, options = {}) {
+  getRelationSources: function (args, options: ApiOptions = {}) {
     return mdyAPI('Form', 'GetRelationSources', args, options);
   },
   /**
@@ -126,7 +126,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  checkEditAuth: function (args, options = {}) {
+  checkEditAuth: function (args, options: ApiOptions = {}) {
     return mdyAPI('Form', 'CheckEditAuth', args, options);
   },
 };

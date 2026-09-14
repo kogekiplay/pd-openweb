@@ -13,7 +13,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editSmtpSecret: function (args, options = {}) {
+  editSmtpSecret: function (args, options: ApiOptions = {}) {
     return mdyAPI('Email', 'EditSmtpSecret', args, options);
   },
   /**
@@ -23,7 +23,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSmtpSecret: function (args, options = {}) {
+  getSmtpSecret: function (args, options: ApiOptions = {}) {
     return mdyAPI('Email', 'GetSmtpSecret', args, options);
   },
   /**
@@ -35,7 +35,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSmtpEntityBindings: function (args, options = {}) {
+  getSmtpEntityBindings: function (args, options: ApiOptions = {}) {
     return mdyAPI('Email', 'GetSmtpEntityBindings', args, options);
   },
   /**
@@ -49,7 +49,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addSmtpEntityBinding: function (args, options = {}) {
+  addSmtpEntityBinding: function (args, options: ApiOptions = {}) {
     return mdyAPI('Email', 'AddSmtpEntityBinding', args, options);
   },
   /**
@@ -63,7 +63,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteSmtpEntityBinding: function (args, options = {}) {
+  deleteSmtpEntityBinding: function (args, options: ApiOptions = {}) {
     return mdyAPI('Email', 'DeleteSmtpEntityBinding', args, options);
   },
 };

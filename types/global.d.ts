@@ -148,6 +148,19 @@ declare interface ApiOptions {
   [key: string]: any;
 }
 
+// src/api/agent.ts 里带路径参数的方法，第一个参数 args 的类型。
+// 生成器 scripts/agentApiGen.js:87 在有 path/query 参数时发 `args = {}`，
+// 不标类型的话 TS 从默认值推成 `{}`，紧接着的
+// `const { sessionId, ...rest } = args;` 就报 TS2339（实测 29 条）。
+//
+// 索引签名用 any 而不是 unknown：这个 args 是直接交给网络层的异构参数包，
+// 取出来的值会当字符串用（如 encodeURIComponent(sessionId)）。
+// 写成 unknown 不会消诊断，只会把 TS2339 换成一批 TS2345，属于原地打转。
+// 真正的收敛应该是按接口给出各自的参数类型，那要从 swagger 生成，是另一件事。
+declare interface ApiArgs {
+  [key: string]: any;
+}
+
 // ---- 构建期常量：webpack DefinePlugin 在编译时替换的字面量 ----
 // 与本文件其余部分不同，这两个【不是】挂在 window 上的运行时全局，而是
 // CI/webpack.config.js:21-24 的 BUILD_CONSTANTS 经 DefinePlugin 做文本替换，

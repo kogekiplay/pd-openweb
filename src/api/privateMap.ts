@@ -6,7 +6,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAvailableMapList: function (args, options = {}) {
+  getAvailableMapList: function (args, options: ApiOptions = {}) {
     return mdyAPI('PrivateMap', 'GetAvailableMapList', args, options);
   },
   /**
@@ -16,7 +16,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getMapList: function (args, options = {}) {
+  getMapList: function (args, options: ApiOptions = {}) {
     return mdyAPI('PrivateMap', 'GetMapList', args, options);
   },
   /**
@@ -28,7 +28,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addMap: function (args, options = {}) {
+  addMap: function (args, options: ApiOptions = {}) {
     return mdyAPI('PrivateMap', 'AddMap', args, options);
   },
   /**
@@ -40,7 +40,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editMap: function (args, options = {}) {
+  editMap: function (args, options: ApiOptions = {}) {
     return mdyAPI('PrivateMap', 'EditMap', args, options);
   },
   /**
@@ -52,7 +52,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editMapStatus: function (args, options = {}) {
+  editMapStatus: function (args, options: ApiOptions = {}) {
     return mdyAPI('PrivateMap', 'EditMapStatus', args, options);
   },
   /**
@@ -63,7 +63,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editMapSort: function (args, options = {}) {
+  editMapSort: function (args, options: ApiOptions = {}) {
     return mdyAPI('PrivateMap', 'EditMapSort', args, options);
   },
   /**
@@ -74,7 +74,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeMap: function (args, options = {}) {
+  removeMap: function (args, options: ApiOptions = {}) {
     return mdyAPI('PrivateMap', 'RemoveMap', args, options);
   },
 };

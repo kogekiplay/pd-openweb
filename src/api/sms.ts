@@ -11,7 +11,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addTwilioProvider: function (args, options = {}) {
+  addTwilioProvider: function (args, options: ApiOptions = {}) {
     return mdyAPI('Sms', 'AddTwilioProvider', args, options);
   },
   /**
@@ -28,7 +28,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editTwilioProvider: function (args, options = {}) {
+  editTwilioProvider: function (args, options: ApiOptions = {}) {
     return mdyAPI('Sms', 'EditTwilioProvider', args, options);
   },
   /**
@@ -40,7 +40,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeTwilioProvider: function (args, options = {}) {
+  removeTwilioProvider: function (args, options: ApiOptions = {}) {
     return mdyAPI('Sms', 'RemoveTwilioProvider', args, options);
   },
   /**
@@ -51,7 +51,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTwilioProvider: function (args, options = {}) {
+  getTwilioProvider: function (args, options: ApiOptions = {}) {
     return mdyAPI('Sms', 'GetTwilioProvider', args, options);
   },
   /**
@@ -62,7 +62,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTwilioProviderBaseInfo: function (args, options = {}) {
+  getTwilioProviderBaseInfo: function (args, options: ApiOptions = {}) {
     return mdyAPI('Sms', 'GetTwilioProviderBaseInfo', args, options);
   },
 };

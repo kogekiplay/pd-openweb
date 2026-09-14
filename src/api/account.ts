@@ -6,7 +6,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAccountListInfo: function (args, options = {}) {
+  getAccountListInfo: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'GetAccountListInfo', args, options);
   },
   /**
@@ -16,7 +16,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getContactInfo: function (args, options = {}) {
+  getContactInfo: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'GetContactInfo', args, options);
   },
   /**
@@ -26,7 +26,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getMyContactInfo: function (args, options = {}) {
+  getMyContactInfo: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'GetMyContactInfo', args, options);
   },
   /**
@@ -37,7 +37,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAccountDetail: function (args, options = {}) {
+  getAccountDetail: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'GetAccountDetail', args, options);
   },
   /**
@@ -49,7 +49,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  delAccountDetail: function (args, options = {}) {
+  delAccountDetail: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'DelAccountDetail', args, options);
   },
   /**
@@ -65,7 +65,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editAccountBasicInfo: function (args, options = {}) {
+  editAccountBasicInfo: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'EditAccountBasicInfo', args, options);
   },
   /**
@@ -80,7 +80,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editContactInfo: function (args, options = {}) {
+  editContactInfo: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'EditContactInfo', args, options);
   },
   /**
@@ -98,7 +98,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editAccountDetail: function (args, options = {}) {
+  editAccountDetail: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'EditAccountDetail', args, options);
   },
   /**
@@ -111,7 +111,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  editAccountAvatar: function (args, options = {}) {
+  editAccountAvatar: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'EditAccountAvatar', args, options);
   },
   /**
@@ -121,7 +121,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAccountInfo: function (args, options = {}) {
+  getAccountInfo: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'GetAccountInfo', args, options);
   },
   /**
@@ -134,7 +134,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  sendProjectBindEmail: function (args, options = {}) {
+  sendProjectBindEmail: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'SendProjectBindEmail', args, options);
   },
   /**
@@ -145,7 +145,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  emailValidate: function (args, options = {}) {
+  emailValidate: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'EmailValidate', args, options);
   },
   /**
@@ -158,7 +158,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editPwd: function (args, options = {}) {
+  editPwd: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'EditPwd', args, options);
   },
   /**
@@ -171,7 +171,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editIntergrationAccount: function (args, options = {}) {
+  editIntergrationAccount: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'EditIntergrationAccount', args, options);
   },
   /**
@@ -186,7 +186,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  sendChangeAccountVerifyCode: function (args, options = {}) {
+  sendChangeAccountVerifyCode: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'SendChangeAccountVerifyCode', args, options);
   },
   /**
@@ -201,7 +201,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  sendVerifyCode: function (args, options = {}) {
+  sendVerifyCode: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'SendVerifyCode', args, options);
   },
   /**
@@ -215,7 +215,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  checkAccount: function (args, options = {}) {
+  checkAccount: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'CheckAccount', args, options);
   },
   /**
@@ -232,7 +232,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  checkAccountIdentity: function (args, options = {}) {
+  checkAccountIdentity: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'CheckAccountIdentity', args, options);
   },
   /**
@@ -244,7 +244,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editAccount: function (args, options = {}) {
+  editAccount: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'EditAccount', args, options);
   },
   /**
@@ -256,7 +256,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  unBindAccount: function (args, options = {}) {
+  unBindAccount: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'UnBindAccount', args, options);
   },
   /**
@@ -266,7 +266,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAccountTotpScanUrl: function (args, options = {}) {
+  getAccountTotpScanUrl: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'GetAccountTotpScanUrl', args, options);
   },
   /**
@@ -278,7 +278,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editAccountTotp: function (args, options = {}) {
+  editAccountTotp: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'EditAccountTotp', args, options);
   },
   /**
@@ -290,7 +290,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  exitAccount: function (args, options = {}) {
+  exitAccount: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'ExitAccount', args, options);
   },
   /**
@@ -304,7 +304,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectList: function (args, options = {}) {
+  getProjectList: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'GetProjectList', args, options);
   },
   /**
@@ -321,7 +321,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  joinProjectByToken: function (args, options = {}) {
+  joinProjectByToken: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'JoinProjectByToken', args, options);
   },
   /**
@@ -338,7 +338,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  joinProjectByCode: function (args, options = {}) {
+  joinProjectByCode: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'JoinProjectByCode', args, options);
   },
   /**
@@ -349,7 +349,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  revokedJoinProject: function (args, options = {}) {
+  revokedJoinProject: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'RevokedJoinProject', args, options);
   },
   /**
@@ -361,7 +361,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  checkJoinProjectByTokenWithCard: function (args, options = {}) {
+  checkJoinProjectByTokenWithCard: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'CheckJoinProjectByTokenWithCard', args, options);
   },
   /**
@@ -373,7 +373,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  refuseJoin: function (args, options = {}) {
+  refuseJoin: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'RefuseJoin', args, options);
   },
   /**
@@ -385,7 +385,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editUserCardContactPhone: function (args, options = {}) {
+  editUserCardContactPhone: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'EditUserCardContactPhone', args, options);
   },
   /**
@@ -396,7 +396,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUserCard: function (args, options = {}) {
+  getUserCard: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'GetUserCard', args, options);
   },
   /**
@@ -409,7 +409,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  sendSystemMessageToAdmin: function (args, options = {}) {
+  sendSystemMessageToAdmin: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'SendSystemMessageToAdmin', args, options);
   },
   /**
@@ -424,7 +424,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  validateExitProject: function (args, options = {}) {
+  validateExitProject: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'ValidateExitProject', args, options);
   },
   /**
@@ -436,7 +436,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  exitProject: function (args, options = {}) {
+  exitProject: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'ExitProject', args, options);
   },
   /**
@@ -446,7 +446,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getMyAuthList: function (args, options = {}) {
+  getMyAuthList: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'GetMyAuthList', args, options);
   },
   /**
@@ -456,7 +456,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUntreatAuthList: function (args, options = {}) {
+  getUntreatAuthList: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'GetUntreatAuthList', args, options);
   },
   /**
@@ -467,7 +467,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  unbindEmail: function (args, options = {}) {
+  unbindEmail: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'UnbindEmail', args, options);
   },
   /**
@@ -478,7 +478,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  unbindMobile: function (args, options = {}) {
+  unbindMobile: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'UnbindMobile', args, options);
   },
   /**
@@ -488,7 +488,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  validateLogoffAccount: function (args, options = {}) {
+  validateLogoffAccount: function (args, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('Account', 'ValidateLogoffAccount', args, options);
   },
@@ -499,7 +499,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  applyLogOffAccount: function (args, options = {}) {
+  applyLogOffAccount: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'ApplyLogOffAccount', args, options);
   },
   /**
@@ -509,7 +509,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getApplyLogOffAccount: function (args, options = {}) {
+  getApplyLogOffAccount: function (args, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('Account', 'GetApplyLogOffAccount', args, options);
   },
@@ -520,7 +520,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  cancelLogOffAccount: function (args, options = {}) {
+  cancelLogOffAccount: function (args, options: ApiOptions = {}) {
     return mdyAPI('Account', 'CancelLogOffAccount', args, options);
   },
 };

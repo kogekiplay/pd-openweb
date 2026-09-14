@@ -7,7 +7,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTags: function (args, options = {}) {
+  getTags: function (args, options: ApiOptions = {}) {
     return mdyAPI('HomeMarketplace', 'GetTags', args, options);
   },
   /**
@@ -28,7 +28,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  gets: function (args, options = {}) {
+  gets: function (args, options: ApiOptions = {}) {
     return mdyAPI('HomeMarketplace', 'Gets', args, options);
   },
   /**
@@ -41,7 +41,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProductDetail: function (args, options = {}) {
+  getProductDetail: function (args, options: ApiOptions = {}) {
     return mdyAPI('HomeMarketplace', 'GetProductDetail', args, options);
   },
   /**
@@ -52,7 +52,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDeveloperInfo: function (args, options = {}) {
+  getDeveloperInfo: function (args, options: ApiOptions = {}) {
     return mdyAPI('HomeMarketplace', 'GetDeveloperInfo', args, options);
   },
   /**
@@ -62,7 +62,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPrivateProjects: function (args, options = {}) {
+  getPrivateProjects: function (args, options: ApiOptions = {}) {
     return mdyAPI('HomeMarketplace', 'GetPrivateProjects', args, options);
   },
   /**
@@ -74,7 +74,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addPrivateProject: function (args, options = {}) {
+  addPrivateProject: function (args, options: ApiOptions = {}) {
     return mdyAPI('HomeMarketplace', 'AddPrivateProject', args, options);
   },
   /**
@@ -86,7 +86,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removePrivateProject: function (args, options = {}) {
+  removePrivateProject: function (args, options: ApiOptions = {}) {
     return mdyAPI('HomeMarketplace', 'RemovePrivateProject', args, options);
   },
   /**
@@ -98,7 +98,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSimpleDetail: function (args, options = {}) {
+  getSimpleDetail: function (args, options: ApiOptions = {}) {
     return mdyAPI('HomeMarketplace', 'GetSimpleDetail', args, options);
   },
   /**
@@ -108,7 +108,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getCommentList: function (args, options = {}) {
+  getCommentList: function (args, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('HomeMarketplace', 'GetCommentList', args, options);
   },
@@ -119,7 +119,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getCommentCount: function (args, options = {}) {
+  getCommentCount: function (args, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('HomeMarketplace', 'GetCommentCount', args, options);
   },
@@ -133,7 +133,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  createComment: function (args, options = {}) {
+  createComment: function (args, options: ApiOptions = {}) {
     return mdyAPI('HomeMarketplace', 'CreateComment', args, options);
   },
   /**
@@ -144,7 +144,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteComment: function (args, options = {}) {
+  deleteComment: function (args, options: ApiOptions = {}) {
     return mdyAPI('HomeMarketplace', 'DeleteComment', args, options);
   },
   /**
@@ -157,7 +157,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  consult: function (args, options = {}) {
+  consult: function (args, options: ApiOptions = {}) {
     return mdyAPI('HomeMarketplace', 'Consult', args, options);
   },
   /**
@@ -168,7 +168,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  consultByDeveloper: function (args, options = {}) {
+  consultByDeveloper: function (args, options: ApiOptions = {}) {
     return mdyAPI('HomeMarketplace', 'ConsultByDeveloper', args, options);
   },
 };

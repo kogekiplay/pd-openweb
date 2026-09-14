@@ -13,7 +13,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addFavorite: function (args, options = {}) {
+  addFavorite: function (args, options: ApiOptions = {}) {
     return mdyAPI('Favorite', 'AddFavorite', args, options);
   },
   /**
@@ -26,7 +26,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAllFavorites: function (args, options = {}) {
+  getAllFavorites: function (args, options: ApiOptions = {}) {
     return mdyAPI('Favorite', 'GetAllFavorites', args, options);
   },
   /**
@@ -43,7 +43,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeFavorite: function (args, options = {}) {
+  removeFavorite: function (args, options: ApiOptions = {}) {
     return mdyAPI('Favorite', 'RemoveFavorite', args, options);
   },
   /**
@@ -56,7 +56,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeReportFavoritesExcludeAccountId: function (args, options = {}) {
+  removeReportFavoritesExcludeAccountId: function (args, options: ApiOptions = {}) {
     return mdyAPI('Favorite', 'RemoveReportFavoritesExcludeAccountId', args, options);
   },
   /**
@@ -72,7 +72,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  checkFavoriteByRowId: function (args, options = {}) {
+  checkFavoriteByRowId: function (args, options: ApiOptions = {}) {
     return mdyAPI('Favorite', 'CheckFavoriteByRowId', args, options);
   },
   /**
@@ -84,7 +84,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateReportSort: function (args, options = {}) {
+  updateReportSort: function (args, options: ApiOptions = {}) {
     return mdyAPI('Favorite', 'UpdateReportSort', args, options);
   },
   /**
@@ -96,7 +96,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateFavoriteTopSort: function (args, options = {}) {
+  updateFavoriteTopSort: function (args, options: ApiOptions = {}) {
     return mdyAPI('Favorite', 'UpdateFavoriteTopSort', args, options);
   },
   /**
@@ -109,7 +109,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateFavoriteTop: function (args, options = {}) {
+  updateFavoriteTop: function (args, options: ApiOptions = {}) {
     return mdyAPI('Favorite', 'UpdateFavoriteTop', args, options);
   },
 };

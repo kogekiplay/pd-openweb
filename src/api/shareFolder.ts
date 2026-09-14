@@ -17,7 +17,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getNodesByShareFolderId: function (args, options = {}) {
+  getNodesByShareFolderId: function (args, options: ApiOptions = {}) {
     return mdyAPI('ShareFolder', 'GetNodesByShareFolderId', args, options);
   },
   /**
@@ -29,7 +29,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getParentNode: function (args, options = {}) {
+  getParentNode: function (args, options: ApiOptions = {}) {
     return mdyAPI('ShareFolder', 'GetParentNode', args, options);
   },
 };

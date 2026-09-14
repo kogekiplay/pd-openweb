@@ -11,7 +11,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getRoots: function (args, options = {}) {
+  getRoots: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'GetRoots', args, options);
   },
   /**
@@ -22,7 +22,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getRootDetail: function (args, options = {}) {
+  getRootDetail: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'GetRootDetail', args, options);
   },
   /**
@@ -38,7 +38,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addRoot: function (args, options = {}) {
+  addRoot: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'AddRoot', args, options);
   },
   /**
@@ -50,7 +50,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  starRoot: function (args, options = {}) {
+  starRoot: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'StarRoot', args, options);
   },
   /**
@@ -61,7 +61,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeRoot: function (args, options = {}) {
+  removeRoot: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'RemoveRoot', args, options);
   },
   /**
@@ -73,7 +73,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeRootMember: function (args, options = {}) {
+  removeRootMember: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'RemoveRootMember', args, options);
   },
   /**
@@ -87,7 +87,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addRootMembers: function (args, options = {}) {
+  addRootMembers: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'AddRootMembers', args, options);
   },
   /**
@@ -100,7 +100,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateMemberPermission: function (args, options = {}) {
+  updateMemberPermission: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'UpdateMemberPermission', args, options);
   },
   /**
@@ -112,7 +112,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateRootOwner: function (args, options = {}) {
+  updateRootOwner: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'UpdateRootOwner', args, options);
   },
   /**
@@ -124,7 +124,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateRootName: function (args, options = {}) {
+  updateRootName: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'UpdateRootName', args, options);
   },
   /**
@@ -137,7 +137,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateMemberStatus: function (args, options = {}) {
+  updateMemberStatus: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'UpdateMemberStatus', args, options);
   },
   /**
@@ -149,7 +149,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  resendInvite: function (args, options = {}) {
+  resendInvite: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'ResendInvite', args, options);
   },
   /**
@@ -170,7 +170,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getNodes: function (args, options = {}) {
+  getNodes: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'GetNodes', args, options);
   },
   /**
@@ -185,7 +185,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  globalSearch: function (args, options = {}) {
+  globalSearch: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'GlobalSearch', args, options);
   },
   /**
@@ -204,7 +204,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getNodesTotalFolderCountAndFileSize: function (args, options = {}) {
+  getNodesTotalFolderCountAndFileSize: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'GetNodesTotalFolderCountAndFileSize', args, options);
   },
   /**
@@ -220,7 +220,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getNodeDetail: function (args, options = {}) {
+  getNodeDetail: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'GetNodeDetail', args, options);
   },
   /**
@@ -240,7 +240,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addNode: function (args, options = {}) {
+  addNode: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'AddNode', args, options);
   },
   /**
@@ -256,7 +256,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addMultiVersionFile: function (args, options = {}) {
+  addMultiVersionFile: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'AddMultiVersionFile', args, options);
   },
   /**
@@ -268,7 +268,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteVersionFile: function (args, options = {}) {
+  deleteVersionFile: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'DeleteVersionFile', args, options);
   },
   /**
@@ -279,7 +279,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getMultiVersionFile: function (args, options = {}) {
+  getMultiVersionFile: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'GetMultiVersionFile', args, options);
   },
   /**
@@ -290,7 +290,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDetailUrl: function (args, options = {}) {
+  getDetailUrl: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'GetDetailUrl', args, options);
   },
   /**
@@ -306,7 +306,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateNode: function (args, options = {}) {
+  updateNode: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'UpdateNode', args, options);
   },
   /**
@@ -318,7 +318,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  starNode: function (args, options = {}) {
+  starNode: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'StarNode', args, options);
   },
   /**
@@ -330,7 +330,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeNode: function (args, options = {}) {
+  removeNode: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'RemoveNode', args, options);
   },
   /**
@@ -345,7 +345,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeNodeByParentId: function (args, options = {}) {
+  removeNodeByParentId: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'RemoveNodeByParentId', args, options);
   },
   /**
@@ -356,7 +356,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  restoreNode: function (args, options = {}) {
+  restoreNode: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'RestoreNode', args, options);
   },
   /**
@@ -370,7 +370,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  restoreNodeByParentId: function (args, options = {}) {
+  restoreNodeByParentId: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'RestoreNodeByParentId', args, options);
   },
   /**
@@ -384,7 +384,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  moveNode: function (args, options = {}) {
+  moveNode: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'MoveNode', args, options);
   },
   /**
@@ -401,7 +401,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  moveNodeByParentId: function (args, options = {}) {
+  moveNodeByParentId: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'MoveNodeByParentId', args, options);
   },
   /**
@@ -418,7 +418,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  copyNode: function (args, options = {}) {
+  copyNode: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'CopyNode', args, options);
   },
   /**
@@ -435,7 +435,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  copyNodeByParentId: function (args, options = {}) {
+  copyNodeByParentId: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'CopyNodeByParentId', args, options);
   },
   /**
@@ -446,7 +446,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getNodeLogDetail: function (args, options = {}) {
+  getNodeLogDetail: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'GetNodeLogDetail', args, options);
   },
   /**
@@ -457,7 +457,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getRootLogDetail: function (args, options = {}) {
+  getRootLogDetail: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'GetRootLogDetail', args, options);
   },
   /**
@@ -467,7 +467,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getMyLogDetail: function (args, options = {}) {
+  getMyLogDetail: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'GetMyLogDetail', args, options);
   },
   /**
@@ -479,7 +479,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addNodeViewCount: function (args, options = {}) {
+  addNodeViewCount: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'AddNodeViewCount', args, options);
   },
   /**
@@ -492,7 +492,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUsage: function (args, options = {}) {
+  getUsage: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'GetUsage', args, options);
   },
   /**
@@ -502,7 +502,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTotalUsedSize: function (args, options = {}) {
+  getTotalUsedSize: function (args, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'GetTotalUsedSize', args, options);
   },
 };

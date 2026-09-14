@@ -12,7 +12,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorkSites: function (args, options = {}) {
+  getWorkSites: function (args, options: ApiOptions = {}) {
     return mdyAPI('WorkSite', 'GetWorkSites', args, options);
   },
   /**
@@ -24,7 +24,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addWorkSite: function (args, options = {}) {
+  addWorkSite: function (args, options: ApiOptions = {}) {
     return mdyAPI('WorkSite', 'AddWorkSite', args, options);
   },
   /**
@@ -37,7 +37,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateWorkSiteName: function (args, options = {}) {
+  updateWorkSiteName: function (args, options: ApiOptions = {}) {
     return mdyAPI('WorkSite', 'UpdateWorkSiteName', args, options);
   },
   /**
@@ -50,7 +50,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  mergeWorkSites: function (args, options = {}) {
+  mergeWorkSites: function (args, options: ApiOptions = {}) {
     return mdyAPI('WorkSite', 'MergeWorkSites', args, options);
   },
   /**
@@ -62,7 +62,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteWorkSites: function (args, options = {}) {
+  deleteWorkSites: function (args, options: ApiOptions = {}) {
     return mdyAPI('WorkSite', 'DeleteWorkSites', args, options);
   },
   /**
@@ -77,7 +77,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorkSiteUsers: function (args, options = {}) {
+  getWorkSiteUsers: function (args, options: ApiOptions = {}) {
     return mdyAPI('WorkSite', 'GetWorkSiteUsers', args, options);
   },
   /**
@@ -90,7 +90,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addWorkSiteUser: function (args, options = {}) {
+  addWorkSiteUser: function (args, options: ApiOptions = {}) {
     return mdyAPI('WorkSite', 'AddWorkSiteUser', args, options);
   },
   /**
@@ -102,7 +102,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteWorkSiteUser: function (args, options = {}) {
+  deleteWorkSiteUser: function (args, options: ApiOptions = {}) {
     return mdyAPI('WorkSite', 'DeleteWorkSiteUser', args, options);
   },
 };

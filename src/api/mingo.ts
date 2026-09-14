@@ -6,7 +6,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFederationToken: function (args, options = {}) {
+  getFederationToken: function (args, options: ApiOptions = {}) {
     return mdyAPI('Mingo', 'GetFederationToken', args, options);
   },
   /**
@@ -17,7 +17,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  fileOcrParse: function (args, options = {}) {
+  fileOcrParse: function (args, options: ApiOptions = {}) {
     return mdyAPI('Mingo', 'FileOcrParse', args, options);
   },
   /**
@@ -27,7 +27,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getHistoryRecord: function (args, options = {}) {
+  getHistoryRecord: function (args, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('Mingo', 'GetHistoryRecord', args, options);
   },
@@ -38,7 +38,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getChat: function (args, options = {}) {
+  getChat: function (args, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('Mingo', 'GetChat', args, options);
   },
@@ -52,7 +52,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  saveRecord: function (args, options = {}) {
+  saveRecord: function (args, options: ApiOptions = {}) {
     return mdyAPI('Mingo', 'SaveRecord', args, options);
   },
   /**
@@ -63,7 +63,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteRecord: function (args, options = {}) {
+  deleteRecord: function (args, options: ApiOptions = {}) {
     return mdyAPI('Mingo', 'DeleteRecord', args, options);
   },
   /**
@@ -75,7 +75,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getRecommendedSheets: function (args, options = {}) {
+  getRecommendedSheets: function (args, options: ApiOptions = {}) {
     return mdyAPI('Mingo', 'GetRecommendedSheets', args, options);
   },
   /**
@@ -87,7 +87,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getRecommendedSheetSummaries: function (args, options = {}) {
+  getRecommendedSheetSummaries: function (args, options: ApiOptions = {}) {
     return mdyAPI('Mingo', 'GetRecommendedSheetSummaries', args, options);
   },
   /**
@@ -101,7 +101,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getRecommendedDirections: function (args, options = {}) {
+  getRecommendedDirections: function (args, options: ApiOptions = {}) {
     return mdyAPI('Mingo', 'GetRecommendedDirections', args, options);
   },
   /**
@@ -116,7 +116,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  generateRecordByMobile: function (args, options = {}) {
+  generateRecordByMobile: function (args, options: ApiOptions = {}) {
     return mdyAPI('Mingo', 'GenerateRecordByMobile', args, options);
   },
   /**
@@ -132,7 +132,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  generateAppOrWorksheetDescription: function (args, options = {}) {
+  generateAppOrWorksheetDescription: function (args, options: ApiOptions = {}) {
     return mdyAPI('Mingo', 'GenerateAppOrWorksheetDescription', args, options);
   },
   /**
@@ -148,7 +148,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  generateChatRobotInfo: function (args, options = {}) {
+  generateChatRobotInfo: function (args, options: ApiOptions = {}) {
     return mdyAPI('Mingo', 'GenerateChatRobotInfo', args, options);
   },
   /**
@@ -164,7 +164,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  generateAIActionInfo: function (args, options = {}) {
+  generateAIActionInfo: function (args, options: ApiOptions = {}) {
     return mdyAPI('Mingo', 'GenerateAIActionInfo', args, options);
   },
   /**
@@ -177,7 +177,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  generateKnowledgeBasePlan: function (args, options = {}) {
+  generateKnowledgeBasePlan: function (args, options: ApiOptions = {}) {
     return mdyAPI('Mingo', 'GenerateKnowledgeBasePlan', args, options);
   },
 };

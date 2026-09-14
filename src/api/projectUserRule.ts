@@ -7,7 +7,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getRulesWithMainTarget: function (args, options = {}) {
+  getRulesWithMainTarget: function (args, options: ApiOptions = {}) {
     return mdyAPI('ProjectUserRule', 'GetRulesWithMainTarget', args, options);
   },
   /**
@@ -19,7 +19,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getRule: function (args, options = {}) {
+  getRule: function (args, options: ApiOptions = {}) {
     return mdyAPI('ProjectUserRule', 'GetRule', args, options);
   },
   /**
@@ -32,7 +32,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addRule: function (args, options = {}) {
+  addRule: function (args, options: ApiOptions = {}) {
     return mdyAPI('ProjectUserRule', 'AddRule', args, options);
   },
   /**
@@ -45,7 +45,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  resetRule: function (args, options = {}) {
+  resetRule: function (args, options: ApiOptions = {}) {
     return mdyAPI('ProjectUserRule', 'ResetRule', args, options);
   },
   /**
@@ -57,7 +57,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeRule: function (args, options = {}) {
+  removeRule: function (args, options: ApiOptions = {}) {
     return mdyAPI('ProjectUserRule', 'RemoveRule', args, options);
   },
 };

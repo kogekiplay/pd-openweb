@@ -12,7 +12,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUploadToken: function (args, options = {}) {
+  getUploadToken: function (args, options: ApiOptions = {}) {
     return mdyAPI('Qiniu', 'GetUploadToken', args, options);
   },
   /**
@@ -28,7 +28,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFileUploadToken: function (args, options = {}) {
+  getFileUploadToken: function (args, options: ApiOptions = {}) {
     return mdyAPI('Qiniu', 'GetFileUploadToken', args, options);
   },
   /**
@@ -38,7 +38,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFaviconUploadToken: function (args, options = {}) {
+  getFaviconUploadToken: function (args, options: ApiOptions = {}) {
     return mdyAPI('Qiniu', 'GetFaviconUploadToken', args, options);
   },
 };

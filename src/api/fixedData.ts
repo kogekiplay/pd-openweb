@@ -6,7 +6,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  loadProvince: function (args, options = {}) {
+  loadProvince: function (args, options: ApiOptions = {}) {
     return mdyAPI('FixedData', 'LoadProvince', args, options);
   },
   /**
@@ -18,7 +18,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  loadCityCountyById: function (args, options = {}) {
+  loadCityCountyById: function (args, options: ApiOptions = {}) {
     return mdyAPI('FixedData', 'LoadCityCountyById', args, options);
   },
   /**
@@ -28,7 +28,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getCityByID: function (args, options = {}) {
+  getCityByID: function (args, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('FixedData', 'GetCityByID', args, options);
   },
@@ -48,7 +48,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getCitysByParentID: function (args, options = {}) {
+  getCitysByParentID: function (args, options: ApiOptions = {}) {
     return mdyAPI('FixedData', 'GetCitysByParentID', args, options);
   },
   /**
@@ -64,7 +64,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAllPathCitysByID: function (args, options = {}) {
+  getAllPathCitysByID: function (args, options: ApiOptions = {}) {
     return mdyAPI('FixedData', 'GetAllPathCitysByID', args, options);
   },
   /**
@@ -74,7 +74,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getRegionConfigInfos: function (args, options = {}) {
+  getRegionConfigInfos: function (args, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('FixedData', 'GetRegionConfigInfos', args, options);
   },
@@ -85,7 +85,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  loadIndustry: function (args, options = {}) {
+  loadIndustry: function (args, options: ApiOptions = {}) {
     return mdyAPI('FixedData', 'LoadIndustry', args, options);
   },
   /**
@@ -95,7 +95,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  checkSensitive: function (args, options = {}) {
+  checkSensitive: function (args, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('FixedData', 'CheckSensitive', args, options);
   },
@@ -108,7 +108,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  loadTimeZones: function (args, options = {}) {
+  loadTimeZones: function (args, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('FixedData', 'LoadTimeZones', args, options);
   },
@@ -119,7 +119,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  loadExtraDatas: function (args, options = {}) {
+  loadExtraDatas: function (args, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('FixedData', 'LoadExtraDatas', args, options);
   },
@@ -131,7 +131,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  loadLangList: function (args, options = {}) {
+  loadLangList: function (args, options: ApiOptions = {}) {
     return mdyAPI('FixedData', 'LoadLangList', args, options);
   },
   /**
@@ -141,7 +141,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  loadHostKeys: function (args, options = {}) {
+  loadHostKeys: function (args, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('FixedData', 'LoadHostKeys', args, options);
   },

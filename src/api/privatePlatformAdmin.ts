@@ -9,7 +9,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPlatformAdmins: function (args, options = {}) {
+  getPlatformAdmins: function (args, options: ApiOptions = {}) {
     return mdyAPI('PrivatePlatformAdmin', 'GetPlatformAdmins', args, options);
   },
   /**
@@ -20,7 +20,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addPlatformAdmins: function (args, options = {}) {
+  addPlatformAdmins: function (args, options: ApiOptions = {}) {
     return mdyAPI('PrivatePlatformAdmin', 'AddPlatformAdmins', args, options);
   },
   /**
@@ -31,7 +31,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removePlatformAdmins: function (args, options = {}) {
+  removePlatformAdmins: function (args, options: ApiOptions = {}) {
     return mdyAPI('PrivatePlatformAdmin', 'RemovePlatformAdmins', args, options);
   },
 };

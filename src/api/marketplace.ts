@@ -6,7 +6,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  checkMarketOperator: function (args, options = {}) {
+  checkMarketOperator: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'CheckMarketOperator', args, options);
   },
   /**
@@ -18,7 +18,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  dateHistogram: function (args, options = {}) {
+  dateHistogram: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'DateHistogram', args, options);
   },
   /**
@@ -28,7 +28,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDevHomePage: function (args, options = {}) {
+  getDevHomePage: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'GetDevHomePage', args, options);
   },
   /**
@@ -39,7 +39,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTags: function (args, options = {}) {
+  getTags: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'GetTags', args, options);
   },
   /**
@@ -51,7 +51,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addTags: function (args, options = {}) {
+  addTags: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'AddTags', args, options);
   },
   /**
@@ -64,7 +64,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editTags: function (args, options = {}) {
+  editTags: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'EditTags', args, options);
   },
   /**
@@ -77,7 +77,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeTags: function (args, options = {}) {
+  removeTags: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'RemoveTags', args, options);
   },
   /**
@@ -89,7 +89,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editTagsSort: function (args, options = {}) {
+  editTagsSort: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'EditTagsSort', args, options);
   },
   /**
@@ -102,7 +102,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addTagApps: function (args, options = {}) {
+  addTagApps: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'AddTagApps', args, options);
   },
   /**
@@ -115,7 +115,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeTagApps: function (args, options = {}) {
+  removeTagApps: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'RemoveTagApps', args, options);
   },
   /**
@@ -126,7 +126,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAppInfo: function (args, options = {}) {
+  getAppInfo: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'GetAppInfo', args, options);
   },
   /**
@@ -160,7 +160,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  productPush: function (args, options = {}) {
+  productPush: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'ProductPush', args, options);
   },
   /**
@@ -176,7 +176,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editProductPush: function (args, options = {}) {
+  editProductPush: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'EditProductPush', args, options);
   },
   /**
@@ -188,7 +188,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editOnShelves: function (args, options = {}) {
+  editOnShelves: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'EditOnShelves', args, options);
   },
   /**
@@ -202,7 +202,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editStatus: function (args, options = {}) {
+  editStatus: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'EditStatus', args, options);
   },
   /**
@@ -215,7 +215,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteProduct: function (args, options = {}) {
+  deleteProduct: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'DeleteProduct', args, options);
   },
   /**
@@ -228,7 +228,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  get: function (args, options = {}) {
+  get: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'Get', args, options);
   },
   /**
@@ -242,7 +242,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProductTags: function (args, options = {}) {
+  getProductTags: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'GetProductTags', args, options);
   },
   /**
@@ -257,7 +257,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editProductTags: function (args, options = {}) {
+  editProductTags: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'EditProductTags', args, options);
   },
   /**
@@ -268,7 +268,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getStatusTotal: function (args, options = {}) {
+  getStatusTotal: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'GetStatusTotal', args, options);
   },
   /**
@@ -279,7 +279,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getStatusTotalByOperate: function (args, options = {}) {
+  getStatusTotalByOperate: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'GetStatusTotalByOperate', args, options);
   },
   /**
@@ -297,7 +297,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  gets: function (args, options = {}) {
+  gets: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'Gets', args, options);
   },
   /**
@@ -315,7 +315,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProductsByOperate: function (args, options = {}) {
+  getProductsByOperate: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'GetProductsByOperate', args, options);
   },
   /**
@@ -328,7 +328,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getHistoricalVersion: function (args, options = {}) {
+  getHistoricalVersion: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'GetHistoricalVersion', args, options);
   },
   /**
@@ -340,7 +340,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getOwnedApp: function (args, options = {}) {
+  getOwnedApp: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'GetOwnedApp', args, options);
   },
   /**
@@ -350,7 +350,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDeveloperInfo: function (args, options = {}) {
+  getDeveloperInfo: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'GetDeveloperInfo', args, options);
   },
   /**
@@ -366,7 +366,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  saveDeveloperInfo: function (args, options = {}) {
+  saveDeveloperInfo: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'SaveDeveloperInfo', args, options);
   },
   /**
@@ -377,7 +377,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  saveWithdrawInfo: function (args, options = {}) {
+  saveWithdrawInfo: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'SaveWithdrawInfo', args, options);
   },
   /**
@@ -392,7 +392,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getListDeveloperInfo: function (args, options = {}) {
+  getListDeveloperInfo: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'GetListDeveloperInfo', args, options);
   },
   /**
@@ -405,7 +405,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getListAgreement: function (args, options = {}) {
+  getListAgreement: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'GetListAgreement', args, options);
   },
   /**
@@ -418,7 +418,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  saveAgreement: function (args, options = {}) {
+  saveAgreement: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'SaveAgreement', args, options);
   },
   /**
@@ -429,7 +429,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAgreement: function (args, options = {}) {
+  getAgreement: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'GetAgreement', args, options);
   },
   /**
@@ -439,7 +439,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  signAgreement: function (args, options = {}) {
+  signAgreement: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'SignAgreement', args, options);
   },
   /**
@@ -454,7 +454,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  exportDeveloperInfo: function (args, options = {}) {
+  exportDeveloperInfo: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'ExportDeveloperInfo', args, options);
   },
   /**
@@ -469,7 +469,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTradesByDevelop: function (args, options = {}) {
+  getTradesByDevelop: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'GetTradesByDevelop', args, options);
   },
   /**
@@ -484,7 +484,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTradesByBuyer: function (args, options = {}) {
+  getTradesByBuyer: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'GetTradesByBuyer', args, options);
   },
   /**
@@ -496,7 +496,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTradeDetailByBuyer: function (args, options = {}) {
+  getTradeDetailByBuyer: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'GetTradeDetailByBuyer', args, options);
   },
   /**
@@ -508,7 +508,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTradeDetailByDevelop: function (args, options = {}) {
+  getTradeDetailByDevelop: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'GetTradeDetailByDevelop', args, options);
   },
   /**
@@ -519,7 +519,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTradeDetailByOrder: function (args, options = {}) {
+  getTradeDetailByOrder: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'GetTradeDetailByOrder', args, options);
   },
   /**
@@ -532,7 +532,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editTradeBuyer: function (args, options = {}) {
+  editTradeBuyer: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'EditTradeBuyer', args, options);
   },
   /**
@@ -544,7 +544,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getLicenseByApp: function (args, options = {}) {
+  getLicenseByApp: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'GetLicenseByApp', args, options);
   },
   /**
@@ -556,7 +556,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getLicenseByTradeRecordId: function (args, options = {}) {
+  getLicenseByTradeRecordId: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'GetLicenseByTradeRecordId', args, options);
   },
   /**
@@ -568,7 +568,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  reinstall: function (args, options = {}) {
+  reinstall: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'Reinstall', args, options);
   },
   /**
@@ -580,7 +580,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  checkTradePluginExist: function (args, options = {}) {
+  checkTradePluginExist: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'CheckTradePluginExist', args, options);
   },
   /**
@@ -592,7 +592,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSecretKey: function (args, options = {}) {
+  getSecretKey: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'GetSecretKey', args, options);
   },
   /**
@@ -604,7 +604,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setSecretKeyForApp: function (args, options = {}) {
+  setSecretKeyForApp: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'SetSecretKeyForApp', args, options);
   },
   /**
@@ -616,7 +616,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  marketPluginUpgrade: function (args, options = {}) {
+  marketPluginUpgrade: function (args, options: ApiOptions = {}) {
     return mdyAPI('Marketplace', 'MarketPluginUpgrade', args, options);
   },
 };
