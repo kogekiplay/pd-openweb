@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import worksheetApi from 'src/api/worksheet';
+import type { AppDispatch, GetState } from 'src/redux/types';
 import { getFilledRequestParams } from 'src/utils/common';
 import { formatQuickFilter } from 'src/utils/filter';
 
@@ -7,7 +8,7 @@ let detailRowsRequest = null;
 let requestViewIds = [];
 
 export const fetchRows = (pageIndex, keyWords) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, filters, detailView, quickFilter, navGroupFilters } = getState().sheet;
     const { appId, viewId, worksheetId } = base;
     let { detailViewRows } = detailView;
@@ -51,7 +52,7 @@ export const fetchRows = (pageIndex, keyWords) => {
 };
 
 export const refresh = () => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { detailView } = getState().sheet;
     let { detailKeyWords } = detailView;
     dispatch(fetchRows(1, detailKeyWords));
@@ -67,7 +68,7 @@ export const clearData = () => {
 
 //add | update
 export const updateRow = data => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { detailView } = getState().sheet;
     let { detailViewRows } = detailView;
     const row = detailViewRows.find(o => o.rowid === data.rowid);
@@ -95,7 +96,7 @@ export const updateRow = data => {
 
 //删除
 export const deleteRow = id => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { detailView } = getState().sheet;
     let { detailViewRows } = detailView;
     const newList = detailViewRows.filter(o => o.rowid !== id);

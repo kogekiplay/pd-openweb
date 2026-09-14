@@ -1,3 +1,4 @@
+import type { ThunkAction, ThunkDispatch, UnknownAction } from '@reduxjs/toolkit';
 import type { makeRootReducer } from './reducers';
 
 /**
@@ -20,3 +21,23 @@ import type { makeRootReducer } from './reducers';
  * 要提升精度，得去给对应的 reducer 标类型，改一个 slice 收一个 slice 的效果。
  */
 export type RootState = ReturnType<ReturnType<typeof makeRootReducer>>;
+
+/**
+ * thunk 里 dispatch 的类型。
+ *
+ * 【为什么不从 store 推】configureStore.ts 里已经有
+ * `export type AppDispatch = typeof store.dispatch`，但 action 文件不能 import 它：
+ * store → reducers → actions → store 会成环。所以这里用 RTK 的 ThunkDispatch
+ * 直接构造，只依赖 RootState，不依赖 store 实例。
+ *
+ * 第二个类型参数是 thunk 的 extraArgument。本仓用的是 RTK 默认中间件、
+ * 没有配 extraArgument（见 configureStore.ts 的 middleware），所以是 undefined ——
+ * 这是【实情】，不是拿 unknown 占位。
+ */
+export type AppDispatch = ThunkDispatch<RootState, undefined, UnknownAction>;
+
+/** thunk 里 getState 的类型。 */
+export type GetState = () => RootState;
+
+/** 一个 thunk action 的完整签名，返回值默认 void。 */
+export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, undefined, UnknownAction>;

@@ -1,10 +1,11 @@
 import _ from 'lodash';
 import worksheetAjax from 'src/api/worksheet';
+import type { AppDispatch, GetState } from 'src/redux/types';
 import { getFilledRequestParams } from 'src/utils/common';
 
 // 更新分组筛选
 export const updateNavGroup = () => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { views, base } = getState().sheet;
     const { viewId = '' } = base;
     const view = views.find(o => o.viewId === viewId) || {};
@@ -18,7 +19,7 @@ let preWorksheetIds = [];
 
 // 获取分组筛选的count
 export function getNavGroupCount() {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const sheet = getState().sheet;
     const { filters = {}, base = {}, quickFilter = {} } = sheet;
     const { appId, worksheetId, viewId } = base;

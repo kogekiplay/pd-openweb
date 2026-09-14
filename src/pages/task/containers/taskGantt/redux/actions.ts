@@ -1,4 +1,5 @@
-﻿import _ from 'lodash';
+import _ from 'lodash';
+import type { AppDispatch, GetState } from 'src/redux/types';
 import config from '../config/config';
 import utils from '../utils/utils';
 
@@ -35,7 +36,7 @@ export const changeSubTaskLevel = level => {
 };
 
 // 处理呈现数据
-export const updateDataSource = source => (dispatch, getState) => {
+export const updateDataSource = source => (dispatch: AppDispatch, getState: GetState) => {
   const { accountTasksKV, stateConfig } = getState().task;
 
   source = _.cloneDeep(source || accountTasksKV);
@@ -54,7 +55,7 @@ export const updateDataSource = source => (dispatch, getState) => {
 };
 
 // 添加负责人
-export const addMembers = data => (dispatch, getState) => {
+export const addMembers = data => (dispatch: AppDispatch, getState: GetState) => {
   let { accountTasksKV } = getState().task;
   accountTasksKV = _.cloneDeep(accountTasksKV);
 
@@ -77,7 +78,7 @@ export const addMembers = data => (dispatch, getState) => {
 };
 
 // 处理时间轴数据
-export const getTimeAxisSource = () => (dispatch, getState) => {
+export const getTimeAxisSource = () => (dispatch: AppDispatch, getState: GetState) => {
   const { stateConfig } = getState().task;
   const timeAxis = utils.getTimeAxisSource(stateConfig.currentView, stateConfig.filterWeekend);
 
@@ -88,7 +89,7 @@ export const getTimeAxisSource = () => (dispatch, getState) => {
 };
 
 // 显示或隐藏任务
-export const showOrHideTask = (index, id, arrowStatus) => (dispatch, getState) => {
+export const showOrHideTask = (index, id, arrowStatus) => (dispatch: AppDispatch, getState: GetState) => {
   let { accountTasksKV, stateConfig } = getState().task;
   accountTasksKV = _.cloneDeep(accountTasksKV);
 
@@ -135,70 +136,71 @@ export const ganttDragRecordIndex = index => {
 };
 
 // 拖拽单侧调整视图呈现
-export const updateStartTimeAndEndTime = (id, index, time, type, isReset) => (dispatch, getState) => {
-  let { accountTasksKV, stateConfig } = getState().task;
-  accountTasksKV = _.cloneDeep(accountTasksKV);
+export const updateStartTimeAndEndTime =
+  (id, index, time, type, isReset) => (dispatch: AppDispatch, getState: GetState) => {
+    let { accountTasksKV, stateConfig } = getState().task;
+    accountTasksKV = _.cloneDeep(accountTasksKV);
 
-  accountTasksKV[index].tasks.forEach(item => {
-    if (item.taskId === id) {
-      // 拖左侧
-      if (type === config.DRAG_DIRECTION.LEFT) {
-        // 只有结束时间
-        if (item.singleTime === config.SINGLE_TIME.END) {
-          item.singleTime = '';
-        }
-
-        item.showStartTime = time;
-      } else {
-        // 只有开始时间
-        if (item.singleTime === config.SINGLE_TIME.START) {
-          item.singleTime = '';
-        }
-
-        item.showEndTime = time;
-      }
-
-      // 重置时间类型
-      if (isReset) {
-        item.singleTime = config.recordSingleTime;
-        // 清除单侧id
-        config.singleDragTaskId = '';
-      } else {
-        config.dragItem = item;
-      }
-
-      // 重新计算时长
-      item.showHourLong = utils.getValidHours(item.showStartTime, item.showEndTime, stateConfig.filterWeekend);
-    }
-  });
-
-  accountTasksKV[index].taskTimeBars.forEach((timeBars, i) =>
-    timeBars.forEach(item => {
-      // 记录当前项的下标
+    accountTasksKV[index].tasks.forEach(item => {
       if (item.taskId === id) {
-        config.DARG_INDEX = i;
+        // 拖左侧
+        if (type === config.DRAG_DIRECTION.LEFT) {
+          // 只有结束时间
+          if (item.singleTime === config.SINGLE_TIME.END) {
+            item.singleTime = '';
+          }
+
+          item.showStartTime = time;
+        } else {
+          // 只有开始时间
+          if (item.singleTime === config.SINGLE_TIME.START) {
+            item.singleTime = '';
+          }
+
+          item.showEndTime = time;
+        }
+
+        // 重置时间类型
+        if (isReset) {
+          item.singleTime = config.recordSingleTime;
+          // 清除单侧id
+          config.singleDragTaskId = '';
+        } else {
+          config.dragItem = item;
+        }
+
+        // 重新计算时长
+        item.showHourLong = utils.getValidHours(item.showStartTime, item.showEndTime, stateConfig.filterWeekend);
       }
-    }),
-  );
+    });
 
-  accountTasksKV[index] = utils.taskTimeBars(
-    [accountTasksKV[index]],
-    stateConfig.currentView,
-    stateConfig.filterWeekend,
-  )[0];
+    accountTasksKV[index].taskTimeBars.forEach((timeBars, i) =>
+      timeBars.forEach(item => {
+        // 记录当前项的下标
+        if (item.taskId === id) {
+          config.DARG_INDEX = i;
+        }
+      }),
+    );
 
-  // 重置
-  config.dragItem = '';
-  config.DARG_INDEX = 0;
+    accountTasksKV[index] = utils.taskTimeBars(
+      [accountTasksKV[index]],
+      stateConfig.currentView,
+      stateConfig.filterWeekend,
+    )[0];
 
-  dispatch({
-    type: 'UPDATE_DATA_SOURCE',
-    data: accountTasksKV,
-  });
-};
+    // 重置
+    config.dragItem = '';
+    config.DARG_INDEX = 0;
+
+    dispatch({
+      type: 'UPDATE_DATA_SOURCE',
+      data: accountTasksKV,
+    });
+  };
 
 // 更新项目socket推送过来的数据
-export const updateFolderSocketSource = source => (dispatch, getState) => {
+export const updateFolderSocketSource = source => (dispatch: AppDispatch, getState: GetState) => {
   let { accountTasksKV, stateConfig } = getState().task;
   const oldTaskKV = _.cloneDeep(accountTasksKV);
   accountTasksKV = _.cloneDeep(accountTasksKV);
@@ -314,7 +316,7 @@ export const updateFolderSocketSource = source => (dispatch, getState) => {
 };
 
 // 更新下属socket推送过来的数据
-export const updateSubordinateSocketSource = source => (dispatch, getState) => {
+export const updateSubordinateSocketSource = source => (dispatch: AppDispatch, getState: GetState) => {
   let { accountTasksKV, stateConfig } = getState().task;
   const oldTaskKV = _.cloneDeep(accountTasksKV);
   const currentAccountId = source.id.split('|')[2];
@@ -410,7 +412,7 @@ export const updateSubordinateSocketSource = source => (dispatch, getState) => {
 };
 
 // 添加关注的同事
-export const addFollowMembers = data => (dispatch, getState) => {
+export const addFollowMembers = data => (dispatch: AppDispatch, getState: GetState) => {
   let { accountTasksKV } = getState().task;
   accountTasksKV = _.cloneDeep(accountTasksKV);
 
@@ -435,7 +437,7 @@ export const addFollowMembers = data => (dispatch, getState) => {
 };
 
 // 移除关注的同事
-export const removeFollowMembers = accountId => (dispatch, getState) => {
+export const removeFollowMembers = accountId => (dispatch: AppDispatch, getState: GetState) => {
   let { accountTasksKV } = getState().task;
   accountTasksKV = _.cloneDeep(accountTasksKV);
 
@@ -448,7 +450,7 @@ export const removeFollowMembers = accountId => (dispatch, getState) => {
 };
 
 // 修改用户配置展开缩起状态
-export const updateUserStatus = (accountId, hidden) => (dispatch, getState) => {
+export const updateUserStatus = (accountId, hidden) => (dispatch: AppDispatch, getState: GetState) => {
   let { accountTasksKV } = getState().task;
   accountTasksKV = _.cloneDeep(accountTasksKV);
 
@@ -467,7 +469,7 @@ export const updateUserStatus = (accountId, hidden) => (dispatch, getState) => {
 };
 
 // 获取更多用户数据
-export const moreSubordinateTasks = data => (dispatch, getState) => {
+export const moreSubordinateTasks = data => (dispatch: AppDispatch, getState: GetState) => {
   let { accountTasksKV, stateConfig } = getState().task;
   const oldTaskKV = _.cloneDeep(accountTasksKV);
   accountTasksKV = _.cloneDeep(accountTasksKV);

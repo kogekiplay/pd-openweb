@@ -1,5 +1,6 @@
 import discussionAjax from 'src/api/discussion';
 import worksheetAjax from 'src/api/worksheet';
+import type { AppDispatch, GetState } from 'src/redux/types';
 
 export const getSheetDiscussion =
   ({ worksheetId, rowId, pageIndex, entityType }, callback) =>
@@ -42,7 +43,7 @@ export const unshiftSheetDiscussion = data => dispatch => {
   dispatch({ type: 'MOBILE_UNSHIFT_SHEET_DISCUSSION', data });
 };
 
-export const removeSheetDiscussion = (discussionId, rowId) => (dispatch, getState) => {
+export const removeSheetDiscussion = (discussionId, rowId) => (dispatch: AppDispatch, getState: GetState) => {
   const { sheetDiscussions } = getState().mobile;
   discussionAjax
     .removeDiscussion({

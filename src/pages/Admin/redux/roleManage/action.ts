@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import organizeAjax from 'src/api/organize.js';
+import type { AppDispatch, GetState } from 'src/redux/types';
 
 const PAGE_SIZE = 50;
 let ajaxRequest = null;
@@ -10,7 +11,7 @@ export const updateProjectId = projectId => dispatch => {
 
 export const getRoleList =
   (isAdd, orgRoleGroupId = '') =>
-  (dispatch, getState) => {
+  (dispatch: AppDispatch, getState: GetState) => {
     const {
       rolePageInfo = {},
       projectId,
@@ -86,7 +87,7 @@ export const updateUserPageIndex = userPageIndex => dispatch => {
   dispatch({ type: 'UPDATE_USER_PAGE_INDEX', userPageIndex });
 };
 
-export const getUserList = params => (dispatch, getState) => {
+export const getUserList = params => (dispatch: AppDispatch, getState: GetState) => {
   const { roleId } = params || {};
   const { projectId, userPageIndex } = getState().orgManagePage.roleManage;
   dispatch({ type: 'UPDATE_USER_LOADING', userLoading: true });
