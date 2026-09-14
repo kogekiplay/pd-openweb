@@ -4,6 +4,7 @@ import { Icon } from 'ming-ui';
 import { LoadingButton } from '../../components/RelateRecordCards';
 import RecordCoverCard from '../../components/RelateRecordCards/RecordCoverCard';
 import { getCoverUrl } from '../../tools/utils';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function Cards(props) {
   const {
@@ -54,7 +55,7 @@ export default function Cards(props) {
               hideTitle={hideTitle}
               key={i}
               cover={getCoverUrl(control.coverCid, record, controls)}
-              controls={control.showControls.map(cid => _.find(controls, { controlId: cid })).filter(identity)}
+              controls={control.showControls.map((cid: FormControl) => _.find(controls, { controlId: cid })).filter(identity)}
               data={record}
               allowlink={allowOpenRecord ? '1' : '0'}
               parentControl={{ ...control, relationControls: controls }}

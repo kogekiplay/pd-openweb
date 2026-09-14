@@ -11,6 +11,7 @@ import { getFilter } from 'src/pages/worksheet/common/WorkSheetFilter/util';
 import { renderText as renderCellText } from 'src/utils/control';
 import { checkCellIsEmpty } from 'src/utils/control';
 import { useWidgetEvent } from '../../../core/useFormEventManager';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const { SHOW_ALL } = TreeSelect;
 
@@ -197,7 +198,7 @@ export default function CascaderWidget(props) {
       .then(result => {
         if (result.resultCode === 1) {
           const { template } = result;
-          const control = template.controls.find(item => item.attribute === 1);
+          const control = template.controls.find((item: FormControl) => item.attribute === 1);
           const data = result.data.map(item => {
             const isLeaf = currentKeywords || isEndLeaf(rowId) ? true : !item.childrenids;
             return {

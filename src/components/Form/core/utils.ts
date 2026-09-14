@@ -153,7 +153,7 @@ function formatRowToServer(
   controls: FormControl[] = [],
   { isDraft, isSubList }: Pick<FormatControlOptions, 'isDraft' | 'isSubList'> = {},
 ) {
-  controls = controls.filter(c => c.type !== 34);
+  controls = controls.filter((c: FormControl) => c.type !== 34);
   return Object.keys(row)
     .map(key => {
       const c = _.find(controls, c => c.controlId === key);
@@ -443,7 +443,7 @@ export function formatControlToServer(
       }
 
       childTableControls = childTableControls
-        .filter(c => !_.includes(_.get(window, 'shareState.isPublicForm') ? [48] : [], c.type))
+        .filter((c: FormControl) => !_.includes(_.get(window, 'shareState.isPublicForm') ? [48] : [], c.type))
         .filter(v => (isDraft ? v.controlId !== 'ownerid' : true));
 
       if (
@@ -917,14 +917,14 @@ export const getControlsByTab = (
 
   const sectionControlsMap: { [sectionId: string]: FormControl[] } = {};
 
-  controls.forEach(item => {
+  controls.forEach((item: FormControl) => {
     if (item.sectionId) {
       sectionControlsMap[item.sectionId] = sectionControlsMap[item.sectionId] || [];
       sectionControlsMap[item.sectionId].push(item);
     }
   });
 
-  controls.forEach(item => {
+  controls.forEach((item: FormControl) => {
     if (_.includes(ALL_SYS, item.controlId)) {
       return;
     }

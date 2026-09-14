@@ -8,6 +8,7 @@ import { formatResponseData } from 'src/components/UploadFiles/utils';
 import { pathCompletion } from 'src/utils/common';
 import { compatibleMDJS } from 'src/utils/project';
 import { dealAuthAccount, getParamsByConfigs, handleUpdateApi } from '../../../core/searchUtils';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const OCR = props => {
   const {
@@ -160,7 +161,7 @@ const OCR = props => {
       // 批量,附件信息都收集完了在请求
       if (_.get(up, 'files.length') !== cacheFile.current.length) return;
       // 子表数量达到上限
-      const subControl = formData.find(f => f.controlId === advancedSetting.ocrcid);
+      const subControl = formData.find((f: FormControl) => f.controlId === advancedSetting.ocrcid);
 
       if (_.get(subControl, 'advancedSetting.enablelimit') === '1') {
         const maxCount = _.get(subControl, 'advancedSetting.max');
@@ -195,7 +196,7 @@ const OCR = props => {
           }
 
           const childRows = [];
-          rows.forEach(row => {
+          rows.forEach((row: RecordRow) => {
             let newRow = {};
             (row.data || []).map(i => {
               const currentItem = ocrmap.find(o => o.cid === i.controlId);

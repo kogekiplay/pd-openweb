@@ -2,6 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import ChildTable from '../../components/ChildTable';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 export default function SubList(props) {
   const {
@@ -22,7 +23,7 @@ export default function SubList(props) {
   } = props;
   const control = { ...props };
   const masterFormData = formData
-    .map(c =>
+    .map((c: FormControl) =>
       _.pick(c, [
         'controlId',
         'type',
@@ -69,12 +70,12 @@ export default function SubList(props) {
       if (isAdd) {
         onChangeData({
           isAdd: true,
-          rows: rows.filter(row => !row.empty),
+          rows: rows.filter((row: RecordRow) => !row.empty),
         });
       } else if (lastAction.type === 'CLEAR_AND_SET_ROWS') {
         onChangeData({
-          deleted: originRows.map(r => r.rowid),
-          updated: rows.map(r => r.rowid),
+          deleted: originRows.map((r: RecordRow) => r.rowid),
+          updated: rows.map((r: RecordRow) => r.rowid),
           rows: rows,
         });
       } else {
@@ -101,7 +102,7 @@ export default function SubList(props) {
         } else if (lastAction.type === 'UPDATE_ROWS' && !lastAction.noRealUpdate) {
           updated = _.uniqBy(updated.concat(lastAction.rowIds));
         } else if (lastAction.type === 'ADD_ROWS') {
-          updated = _.uniqBy(updated.concat(lastAction.rows.map(r => r.rowid)));
+          updated = _.uniqBy(updated.concat(lastAction.rows.map((r: RecordRow) => r.rowid)));
         }
 
         onChangeData({

@@ -21,6 +21,7 @@ import { controlState, getTitleTextFromRelateControl, getValueStyle } from 'src/
 import RegExpValidator from 'src/utils/expression';
 import { addBehaviorLog } from 'src/utils/project';
 import { replaceControlsTranslateInfo } from 'src/utils/translate';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const PAGE_SIZE = 50;
 
@@ -166,7 +167,7 @@ function Cards(props) {
               containerWidth={width}
               key={i}
               cover={getCoverUrl(control.coverCid, record, controls)}
-              controls={control.showControls.map(cid => _.find(controls, { controlId: cid })).filter(identity)}
+              controls={control.showControls.map((cid: FormControl) => _.find(controls, { controlId: cid })).filter(identity)}
               data={record}
               allowlink={allowOpenRecord ? '1' : '0'}
               parentControl={{ ...control, relationControls: controls }}

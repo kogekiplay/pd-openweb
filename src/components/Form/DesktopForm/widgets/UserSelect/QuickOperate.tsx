@@ -7,6 +7,7 @@ import UserController from 'src/api/user';
 import { WIDGET_VALUE_ID } from 'src/components/Form/core/config';
 import { pathCompletion } from 'src/utils/common';
 import { controlState } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const QuickOperateWrap = styled.div`
   .operateItem {
@@ -55,7 +56,7 @@ export default function QuickOperate(props) {
 
   const getSelectList = () => {
     let selectControls = formData.filter(
-      f => controlState(f, from).editable && f.type === type && f.controlId !== 'ownerid' && f.controlId !== controlId,
+      (f: FormControl) => controlState(f, from).editable && f.type === type && f.controlId !== 'ownerid' && f.controlId !== controlId,
     );
 
     if (type === 26) {

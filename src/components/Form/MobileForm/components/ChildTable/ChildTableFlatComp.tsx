@@ -10,6 +10,7 @@ import { getAvailableFilters } from 'src/components/Form/core/formUtils/ruleUtil
 import MobileCardCellControls from 'src/components/MobileCardCellControls/MobileCardCellControls';
 import SummaryCom from 'src/components/MobileCardCellControls/SummaryCom';
 import { controlState, getTitleTextFromControls, isRelateRecordTableControl } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 
 function getFieldsAfterRules(displayFields, formData, rules, rowId) {
   if (!rules || !rules.length) return displayFields;
@@ -224,7 +225,7 @@ export default function ChildTableFlatComp(props) {
   };
 
   const showFields = controls
-    .filter(c => _.find(props.showControls || [], scid => scid === c.controlId) && controlState(c).visible)
+    .filter((c: FormControl) => _.find(props.showControls || [], scid => scid === c.controlId) && controlState(c).visible)
     .map(formatMobileCardControl); // 配置可显示字段
   const titleControl = showtitleid && _.find(controls, { controlId: showtitleid });
   const fieldsWithTitle = titleControl
@@ -317,7 +318,7 @@ export default function ChildTableFlatComp(props) {
         const ignoreLock = /^(temp|default|empty)/.test(rowid);
         const title =
           getTitleTextFromControls(
-            controls.map(v => (v.controlId === showtitleid ? { ...v, attribute: 1 } : { ...v, attribute: 0 })),
+            controls.map((v: FormControl) => (v.controlId === showtitleid ? { ...v, attribute: 1 } : { ...v, attribute: 0 })),
             item,
             control.advancedSetting.titleSourceControlType,
             { appId },
@@ -391,7 +392,7 @@ export default function ChildTableFlatComp(props) {
                   appId={appId}
                   from={from}
                   masterData={masterData}
-                  rowFormData={() => control.relationControls.map(c => ({ ...c, value: item[c.controlId] }))}
+                  rowFormData={() => control.relationControls.map((c: FormControl) => ({ ...c, value: item[c.controlId] }))}
                 />
               ) : (
                 <div

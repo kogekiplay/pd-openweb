@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import RecordInfoContext from 'worksheet/common/recordInfo/RecordInfoContext';
 import ChildTable from 'worksheet/components/ChildTable';
 import { WidgetEventHelper } from '../../../core/useFormEventManager';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 export default class SubList extends React.Component<any, any> {
   static contextType = RecordInfoContext;
@@ -81,14 +82,14 @@ export default class SubList extends React.Component<any, any> {
         onChange({
           isAdd: true,
           disabledRuleSet: get(lastAction, 'isSetValueFromRule'),
-          rows: rows.filter(row => !row.empty),
+          rows: rows.filter((row: RecordRow) => !row.empty),
         });
       } else if (lastAction.type === 'CLEAR_AND_SET_ROWS') {
         onChange({
           deleted: get(lastAction, 'isSetValueFromEvent')
             ? value.deleted || lastAction.deleted || []
-            : originRows.map(r => r.rowid),
-          updated: rows.map(r => r.rowid),
+            : originRows.map((r: RecordRow) => r.rowid),
+          updated: rows.map((r: RecordRow) => r.rowid),
           rows: rows,
           disabledRuleSet: get(lastAction, 'isSetValueFromRule'),
         });
@@ -118,7 +119,7 @@ export default class SubList extends React.Component<any, any> {
         } else if (lastAction.type === 'UPDATE_ROWS' && !lastAction.noRealUpdate) {
           updated = _.uniqBy(updated.concat(lastAction.rowIds));
         } else if (lastAction.type === 'ADD_ROWS') {
-          updated = _.uniqBy(updated.concat(lastAction.rows.map(r => r.rowid)));
+          updated = _.uniqBy(updated.concat(lastAction.rows.map((r: RecordRow) => r.rowid)));
         }
 
         onChange({
@@ -200,7 +201,7 @@ export default class SubList extends React.Component<any, any> {
               worksheetId,
               appId,
               formData: formData
-                .map(c =>
+                .map((c: FormControl) =>
                   _.pick(c, [
                     'controlId',
                     'type',

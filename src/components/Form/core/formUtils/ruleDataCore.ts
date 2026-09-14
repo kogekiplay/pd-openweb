@@ -1,9 +1,10 @@
 import _ from 'lodash';
 import { controlState } from 'src/utils/controlCommon';
 import { FORM_ERROR_TYPE } from '../config';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const removeRequireError = (controls = [], checkRuleValidator = () => {}) => {
-  controls.forEach(control => {
+  controls.forEach((control: FormControl) => {
     const { controlId = '', childControlIds = [] } = control;
 
     if (!childControlIds.length) {
@@ -96,7 +97,7 @@ export const updateRulesDataByRule = (
         if (_.includes([7, 8], currentType)) {
           formatData.forEach(item => pushType('parent', item.controlId, attrObj));
         } else {
-          controls.forEach(control => {
+          controls.forEach((control: FormControl) => {
             if (currentType === 9) {
               if (
                 _.some(availableControlIds, availableControlId => _.includes(currentRuleControlIds, availableControlId))
@@ -119,7 +120,7 @@ export const updateRulesDataByRule = (
   }
 
   formatData.forEach(item => {
-    item.relationControls.forEach(relationControl => {
+    item.relationControls.forEach((relationControl: FormControl) => {
       const id = `${item.controlId}-${relationControl.controlId}`;
       updateDataPermission({
         attrs: relateRuleType.child[id],
@@ -148,11 +149,11 @@ export const updateRulesDataByRule = (
 
         rule.ruleItems.forEach(({ type, message, controls = [] }) => {
           if (rule.type === 3 && isAvailable) {
-            controls.forEach(control => {
+            controls.forEach((control: FormControl) => {
               pushType('style', control.controlId, { ..._.pick(control, ['type', 'value']), message });
             });
           } else if (_.includes([6], type)) {
-            const errorIds = controls.map(i => i.controlId);
+            const errorIds = controls.map((i: FormControl) => i.controlId);
             const curErrorIds = rule.type === 1 && errorIds.length > 0 ? errorIds : filterControlIds;
             (rule.type === 1 ? curErrorIds : filterControlIds).forEach(id =>
               checkRuleValidator(id, FORM_ERROR_TYPE.RULE_ERROR, '', rule),

@@ -27,6 +27,7 @@ import {
 import { replaceStr } from './formUtils/helper';
 import { dealAuthAccount, getParamsByConfigs, handleUpdateApi } from './searchUtils';
 import { formatControlToServer } from './utils';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 // 显隐、只读编辑等处理
 const dealDataPermission = props => {
@@ -58,9 +59,9 @@ const dealDataPermission = props => {
 
   // 只读所有字段
   if (actionType === ACTION_VALUE_ENUM.READONLY && _.some(actions, a => a.isAll)) {
-    formData.forEach(item => setEventPermission(item));
+    formData.forEach((item: FormControl) => setEventPermission(item));
   } else {
-    formData.forEach(item => {
+    formData.forEach((item: FormControl) => {
       actionItems.map(i => {
         const { controlId, childControlIds = [] } = i || {};
 
@@ -615,7 +616,7 @@ export const handleSetValueActions = async (actionItems, props) => {
                   value = 'deleteRowIds: all';
                 } else {
                   value = JSON.stringify(
-                    records.map(record => ({
+                    records.map((record: RecordRow) => ({
                       ...record,
                       count: records.length,
                     })),

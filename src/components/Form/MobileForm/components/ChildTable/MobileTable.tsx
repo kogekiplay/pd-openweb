@@ -7,6 +7,7 @@ import { Icon } from 'ming-ui';
 import MobileCardCellControl from 'src/components/MobileCardCellControls/MobileCardCellControl';
 import { controlState, getControlStyles } from 'src/utils/control';
 import { updateRulesData } from '../../../core/formUtils/updateRulesData';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const MobileTableContent = styled.div`
   .mobileTableHeader {
@@ -154,7 +155,7 @@ export default function MobileTable(props) {
   const showRows = isEdit || showExpand ? rows : rows.slice(0, maxShowLength);
 
   const showFields = controls.filter(
-    c => _.find(props.showControls || [], scid => scid === c.controlId) && controlState(c).visible,
+    (c: FormControl) => _.find(props.showControls || [], scid => scid === c.controlId) && controlState(c).visible,
   );
 
   const showControlsFilter =
@@ -240,7 +241,7 @@ export default function MobileTable(props) {
                   const tableFormData = updateRulesData({
                     rules,
                     recordId: row.rowid,
-                    data: controls.map(v => ({ ...v, value: row[v.controlId] })),
+                    data: controls.map((v: FormControl) => ({ ...v, value: row[v.controlId] })),
                   });
 
                   const currentCell = _.find(tableFormData, v => v.controlId === c.controlId);
@@ -286,7 +287,7 @@ export default function MobileTable(props) {
                         appId={appId}
                         rowHeight={30}
                         masterData={masterData}
-                        rowFormData={() => controls.map(c => Object.assign({}, c, { value: row[c.controlId] }))}
+                        rowFormData={() => controls.map((c: FormControl) => Object.assign({}, c, { value: row[c.controlId] }))}
                         canedit={c.type === 36 && controlPermission.editable && !control.mobileCheckRuleLocked}
                         updateCell={({ value }) => {
                           if (c.type !== 36) return;

@@ -100,6 +100,16 @@ export interface FormControl {
   count?: number;
   /** 手机号等掩码字段：解码后是否展示全值 */
   showMaskValue?: boolean;
+  /** 业务规则里这一项覆盖的子控件 id（分段/子表展开后的成员） */
+  childControlIds?: string[];
+  /** 业务规则赋予该控件的权限位 */
+  permission?: number | string;
+  /** 该字段不允许重复（全表唯一） */
+  unique?: boolean;
+  /** 该字段在同一条记录的子表内不允许重复 */
+  uniqueInRecord?: boolean;
+  /** 业务规则里标记为自定义项 */
+  isCustom?: boolean;
   disabled?: boolean;
   required?: boolean;
   sectionId?: string;
