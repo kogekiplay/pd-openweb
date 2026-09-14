@@ -265,7 +265,8 @@ export default function Slider(props) {
   const [value, setValue] = useState(
     getDefaultValue(showAsPercent ? fixedByStep(props.value * 100, step) : props.value),
   );
-  const [valueForInput, setValueForInput] = useState(value);
+  // 这个 state 除了数字还会存 '' 和 formatNumberFromInput 的字符串结果
+  const [valueForInput, setValueForInput] = useState<number | string | undefined>(value);
   const isMobile = browserIsMobile();
   const inputAttribute = isMobile ? (window.isIphone ? { type: 'text' } : { inputmode: 'decimal' }) : {};
   const color = getColor(itemcolor, value, showAsPercent);

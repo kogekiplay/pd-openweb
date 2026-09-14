@@ -110,11 +110,15 @@ export const WIDGETS_TO_API_TYPE_ENUM = {
   REMARK: 10010,
 };
 
-export const enumWidgetType = Object.keys(WIDGETS_TO_API_TYPE_ENUM).reduce((result, key) => {
-  result[key] = WIDGETS_TO_API_TYPE_ENUM[key];
-  result[WIDGETS_TO_API_TYPE_ENUM[key]] = key;
-  return result;
-}, {});
+/** 双向表：名字 -> 数字，数字 -> 名字 */
+export const enumWidgetType = Object.keys(WIDGETS_TO_API_TYPE_ENUM).reduce(
+  (result: { [key: string]: string | number }, key) => {
+    result[key] = WIDGETS_TO_API_TYPE_ENUM[key as keyof typeof WIDGETS_TO_API_TYPE_ENUM];
+    result[WIDGETS_TO_API_TYPE_ENUM[key as keyof typeof WIDGETS_TO_API_TYPE_ENUM]] = key;
+    return result;
+  },
+  {},
+);
 
 export const permitList = {
   createButtonSwitch: 10, // createButtonSwitch 显示创建按钮

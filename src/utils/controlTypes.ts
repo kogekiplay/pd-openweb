@@ -87,7 +87,13 @@ export interface FormControl {
   strDefault?: string;
   storeFromDefault?: boolean;
   fieldPermission?: string;
-  controlPermissions?: string | ControlPermissions;
+  /**
+   * 权限位，后端存成 '111' 这样的三位字符串，全仓都是按下标取字符
+   * （controlPermissions[0] / [1] / [2]）。
+   * 不要写成 `string | ControlPermissions`：对象那一支没有任何读取点，
+   * 只会让每个下标访问都要先判别一次类型。
+   */
+  controlPermissions?: string;
   /** 人员控件的用途：2 表示这一列里的人是记录拥有者 */
   userPermission?: number;
   /** 关联记录/附件等多值控件的条数，由 getRowDetail 从 rq{controlId} 拼上来 */

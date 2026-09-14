@@ -1110,8 +1110,18 @@ function generateFileOId() {
   return prefix + timestamp + randomPart;
 }
 
-export function getTemporaryAttachmentFromUrl({ fileUrl, fileName = '', fileSize, fileExt } = {}) {
-  const urlObj = new URL(fileUrl);
+export function getTemporaryAttachmentFromUrl({
+  fileUrl,
+  fileName = '',
+  fileSize,
+  fileExt,
+}: {
+  fileUrl?: string;
+  fileName?: string;
+  fileSize?: number;
+  fileExt?: string;
+} = {}) {
+  const urlObj = new URL(String(fileUrl));
   const name = fileName.replace(/\.[^.]+$/, '');
   const ext = fileExt || get(fileName.match(/\.[^.]+$/), '0');
   const fileNameOfUrl = get(urlObj.pathname.match(/\/([^/]*$)/, ''), '1').replace(/\.[^.]+$/, '');
