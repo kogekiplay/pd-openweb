@@ -175,12 +175,13 @@ function getContentOfMessage(message) {
   return content;
 }
 
-export function formatMessage(message) {
+export function formatMessage(message: any) {
   if (!['user', 'assistant'].includes(message.role)) {
     return;
   }
 
-  const result = {};
+  // 逐个字段拼出来的消息对象，键在下面几行才补齐，不标类型会被推成 {}
+  const result: Record<string, any> = {};
   result.id = get(message, 'metadata.id');
   result.instanceId = message.instanceId;
   result.workId = message.workId;

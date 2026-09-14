@@ -58,7 +58,8 @@ export default function CascaderWidget(props) {
   const [isError, setIsError] = useState(false);
   const [treeExpandedKeys, setTreeExpandedKeys] = useState([]);
 
-  const ajaxRef = useRef('');
+  // 装在途 ajax 句柄（要 abort），不是字符串；初值 '' 会把它推成 string
+  const ajaxRef = useRef<ApiResult | string>('');
   const cacheDataRef = useRef([]);
   const sourcePathRef = useRef({});
   const cacheScrollTopRef = useRef(0);

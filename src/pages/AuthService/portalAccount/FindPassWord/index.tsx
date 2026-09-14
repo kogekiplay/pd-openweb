@@ -30,7 +30,8 @@ function ContainerCon(props) {
 
   //根据appid  获取当前应用的登录页面 以及应用状态
   const getBaseInfo = () => {
-    let ajaxPromise = '';
+    // 装在途 ajax 句柄；初值 '' 会把它推成 string
+    let ajaxPromise: ApiResult | string = '';
     let request = getRequest();
     const { appId = '' } = request;
     ajaxPromise = externalPortalAjax.getPortalSetByAppId({ appId, customLink });

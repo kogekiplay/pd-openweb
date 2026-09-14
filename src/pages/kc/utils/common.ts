@@ -355,7 +355,7 @@ export function handleRemoveNode(args) {
         _l('文件的引用和分享链接也将失效，确认删除？') +
         '</div></span>';
   confirm('', confirmMessage, false, '', '', confirmTitle).then(() => {
-    let message = '';
+    let message: string | { success?: any; error?: any } = '';
     const ids = selectedItems.map(item => item.id).toArray();
     let ajax;
 
@@ -490,7 +490,7 @@ export function handleMoveOrCopyClick(args, cb = () => {}) {
 export function handleMoveOrCopy(options) {
   const { result, type, baseUrl, selectedItems, selectAll, list, keywords, folder, root, reloadList, clearSelect } =
     options;
-  let message = '';
+  let message: string | { success?: any; error?: any } = '';
   const ids = selectedItems.map(item => item.id).toArray();
   // idsLength = selectAll ? totalCount : ids.length;
   let ajax = '';
@@ -654,7 +654,8 @@ export function handleRestoreNode(args) {
       success: _l('还原成功'),
       noExistPath: _l('原存储位置已不存在，还原到对应根目录下'),
     };
-    let ajax = '';
+    // 在途 ajax 句柄；初值 '' 会把它推成 string
+    let ajax: ApiResult | string = '';
 
     if (selectAll) {
       // 全选

@@ -106,7 +106,11 @@ export default class RecordEditLock {
   //获取锁状态
   getEditLockStatus() {
     const { worksheetId, recordId } = this;
-    this.lockData = worksheetAjax.checkRowEditLock({ worksheetId, rowId: recordId }, { ajaxOptions: { sync: true } });
+    // sync 调用【同步返回结果对象】，但 src/api/* 的包装函数统一声明成 ApiResult（见 types/global.d.ts）
+    this.lockData = worksheetAjax.checkRowEditLock(
+      { worksheetId, rowId: recordId },
+      { ajaxOptions: { sync: true } },
+    ) as unknown as LockData;
 
     if (this.lockData.status === EDIT_LOCK_STATUS.LOCKED) {
       if (this.lockStatusInterval) {
@@ -161,7 +165,7 @@ export default class RecordEditLock {
       const res = worksheetAjax.getRowEditLock(
         { worksheetId, rowId: recordId, getRowUpdateTime },
         { ajaxOptions: { sync: true } },
-      );
+      ) as unknown as LockData;
 
       this.lockData = res;
 

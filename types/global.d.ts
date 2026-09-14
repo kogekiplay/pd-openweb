@@ -14,7 +14,40 @@
 // ---- 由 src/common/global.js 在启动时挂到 window 上 ----
 declare var _l: any; // src/common/global.js:108 `window._l = function (key, ...args) {`（i18n）
 declare var md: any; // src/common/global.js:190 `window.md = {`（全局配置树 md.global.*）
-declare var mdyAPI: any; // src/common/global.js:721 `window.mdyAPI = (controllerName, actionName, ...) =>`
+/**
+ * src/common/global.js:721 `window.mdyAPI = (controllerName, actionName, requestData, options = {}) =>`
+ *
+ * 【为什么要写成函数而不是 `any`】写 any 的话 src/api/* 里所有生成的方法
+ * 返回类型也是 any，于是调用点 `.then(res => ...)` 拿不到任何上下文类型，
+ * res 成了【隐式 any】—— 光 res/result/data/response 这四个名字就 3745 条 TS7006。
+ * 声明成返回 Promise<any> 之后，这些回调参数由上下文推出类型，一个调用点都不用改。
+ *
+ * 【为什么是 Promise<any> 而不是更精确的类型】本仓没有响应体的 schema
+ * （src/api/* 由 scripts/mainApiGen.js 从 swagger 生成，swagger 只给了入参）。
+ * 要收窄得先让生成器把 response schema 也带出来，那是独立的一件事。
+ * 在那之前 Promise<any> 是【如实】描述，而不是拿 any 搪塞 —— 它至少让
+ * .then / .catch / await 这条链本身可被检查。
+ *
+ * 注意 ajaxOptions.sync 那条路：带 sync 时接口是【同步返回结果对象】而不是 Promise
+ * （见 RecordEditLock 的 checkRowEditLock），所以返回类型带上 any 这一支。
+ */
+/**
+ * 返回类型是 Promise 和开放对象的【交集】，两条返回路径都要覆盖：
+ *   - 默认是异步，调用点 `.then(res => ...)` 靠它拿到上下文类型；
+ *   - 带 ajaxOptions.sync 时接口【同步返回结果对象】（见 RecordEditLock、
+ *     checkPermission、preall 的 getGlobalMeta），调用点直接读 data.config / data.status。
+ *
+ * 为什么不用重载：sync 这条路几乎都经由 src/api/* 生成的包装函数
+ * （wrapper 自己的 options 是 ApiOptions，匹配不到 sync 那条重载），
+ * 要让重载生效得改生成器、影响 1000+ 个函数，不划算。
+ *
+ * 为什么不直接写 any：那样 src/api/* 的返回也是 any，
+ * 调用点 `.then(res => ...)` 的 res 就成了隐式 any —— 光 res/result/data/response
+ * 四个名字就 3745 条 TS7006。交集写法能保住 .then 的上下文类型。
+ */
+declare type ApiResult = Promise<any> & { [key: string]: any };
+
+declare var mdyAPI: (...args: any[]) => ApiResult;
 declare var agentAPI: any; // src/common/global.js:936 `window.agentAPI = (args = {}, options = {}) =>`
 declare var safeParse: any; // src/common/global.js:265 `window.safeParse = (str, type) => {`
 declare var createTimeSpan: any; // src/common/global.js:291 `window.createTimeSpan = (dateStr, showType = 1) =>`

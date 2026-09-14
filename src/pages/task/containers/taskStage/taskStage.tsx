@@ -34,7 +34,8 @@ const taskStageSettings = {
   globalEvent: null,
   isDragEnd: true,
   dragAuth: false,
-  ajaxPost: '',
+  // 在途 ajax 句柄（要 abort），初值 '' 会把它推成 string
+  ajaxPost: '' as ApiResult | string,
 };
 
 class TaskStage extends Component<any, any> {

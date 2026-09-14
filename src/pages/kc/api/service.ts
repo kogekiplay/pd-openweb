@@ -40,7 +40,7 @@ function getRoots(args) {
 }
 
 /** 获取根目录详情 */
-function getRootDetail(rootId, options) {
+function getRootDetail(rootId: string, options?: ApiOptions) {
   return kc
     .getRootDetail({ id: rootId }, options || {})
     .then(assignHashFunc)
