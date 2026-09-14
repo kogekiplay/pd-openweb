@@ -8,6 +8,8 @@ import MingoAttachmentUploader from 'src/components/Mingo/ChatBot/components/Att
 import { upgradeVersionDialog } from 'src/components/upgradeVersion';
 import { browserIsMobile, emitter, pathCompletion } from 'src/utils/common';
 import { useAgentBus, useAgentEvent } from './agentBus';
+import type { AgentBus } from './agentBus';
+import type { ChatMessage, ChatMessagePart } from './types';
 import {
   AGENT_ATTACHMENT_MIME_TYPES,
   AGENT_HEADER_EVENT,
@@ -94,7 +96,7 @@ const HIDDEN_USAGE_AGENTS = ['help-agent'];
 
 // 计费展示统一门控：非平台版（platformENV.isPlatform 为 false，如普通私有部署）无信用点计费体系，
 // 计费相关交互整体隐藏——气泡下不显示费用（含历史消息自带的 usage.credits）、也不轮询用量。
-function shouldHideUsage(agentName) {
+function shouldHideUsage(agentName?: string) {
   return !window.platformENV.isPlatform || HIDDEN_USAGE_AGENTS.includes(agentName);
 }
 
@@ -197,7 +199,7 @@ const EmptyState = styled.div`
   }
 `;
 
-const uid = prefix => `${prefix}-${Math.random().toString(36).slice(2, 10)}`;
+const uid = (prefix: string) => `${prefix}-${Math.random().toString(36).slice(2, 10)}`;
 
 // 由 doc/image 待解析数量派生过渡态文案：「正在解析文档…」「正在解析 2 个文档、1 张图片…」
 function buildExtractHint({ doc, image }: { doc?: number; image?: number } = {}) {
@@ -208,8 +210,8 @@ function buildExtractHint({ doc, image }: { doc?: number; image?: number } = {})
   return segs.length ? _l('正在解析%0…', segs.join('、')) : '';
 }
 
-function userMessageFrom(text, attachments) {
-  const parts = [];
+function userMessageFrom(text?: string, attachments: any[] = []): ChatMessage {
+  const parts: ChatMessagePart[] = [];
 
   if (attachments.length) parts.push({ kind: 'attachment', items: attachments, ts: Date.now() });
   // 用户消息不走 markdown：把 ```mingo_embed_data_*``` 抽成独立 embed part，其余按纯文本渲染
@@ -219,7 +221,7 @@ function userMessageFrom(text, attachments) {
         // 静默段（系统触发语 / 全部跳过的 ask_reply）不进 parts：parts 为空时整条消息不渲染（见 submitPrompt）
         if (isSilentEmbedSegment(seg.suffix, seg.data)) return;
         parts.push({ kind: 'embed', suffix: seg.suffix, data: seg.data, ts: Date.now() });
-      } else if (seg.text.trim()) {
+      } else if ((seg.text || '').trim()) {
         parts.push({ kind: 'text', text: seg.text, ts: Date.now() });
       }
     });
@@ -229,27 +231,27 @@ function userMessageFrom(text, attachments) {
   return { id: uid('user'), role: 'user', name: _l('你'), parts, time: Date.now() };
 }
 
-function assistantMessage() {
+function assistantMessage(): ChatMessage {
   // time：本轮助手消息生成时间，与信用点同一行展示（见 MessageMeta）
   return { id: uid('assistant'), role: 'assistant', name: ASSISTANT_NAME, parts: [], time: Date.now() };
 }
 
 // 流式中，artifact-file-written 回写时拉取签名 URL 并 fetch 内容，覆盖 file 状态
-function fetchAndWriteArtifact(bus, data) {
+function fetchAndWriteArtifact(bus: AgentBus, data: any) {
   const artifactId = data.artifactId || data.ArtifactId;
   const versionId = data.versionId || data.VersionId || data.draftVersionId || data.DraftVersionId;
 
   if (!artifactId || !versionId || !data.path) return Promise.resolve();
   return fetchArtifactFile({ artifactId, versionId, path: data.path })
-    .then(meta => {
+    .then((meta: { url?: string } | null) => {
       if (!meta || !meta.url) throw new Error('missing url');
       return fetch(meta.url).then(r => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         return r.text();
       });
     })
-    .then(content => bus.emit('file:write', { path: data.path, content }))
-    .catch(err => console.error('[agent] fetch artifact failed', data.path, err));
+    .then((content: string) => bus.emit('file:write', { path: data.path, content }))
+    .catch((err: unknown) => console.error('[agent] fetch artifact failed', data.path, err));
 }
 
 // 历史：并行拉取已提交版本的文件，但严格按 FILE_ENTRIES 顺序回写 file:write。
@@ -259,7 +261,7 @@ function fetchAndWriteArtifact(bus, data) {
 // 先列出该版本「实际存在」的文件（含签名 url），与前端登记表 FILE_ENTRIES 取交集后再拉——避免对不存在的
 // 已登记文件（如本应用没有 AI 助手时的 ai-assistants.json）硬拉、并误生成空 tab；列表已带 url，直接拉内容。
 // 列举接口异常时回退到逐文件按 path 取 url 再拉的全量模式，不漏文件。
-async function loadCommittedArtifactFiles(bus, artifactId, versionId) {
+async function loadCommittedArtifactFiles(bus: AgentBus, artifactId?: string, versionId?: string) {
   let urlByPath = null;
 
   try {
@@ -294,11 +296,11 @@ async function loadCommittedArtifactFiles(bus, artifactId, versionId) {
   loaded.forEach(item => item && bus.emit('file:write', { path: item.path, content: item.content }));
 }
 
-function getArtifactVersionKey(artifactId, versionId) {
+function getArtifactVersionKey(artifactId?: string, versionId?: string) {
   return artifactId && versionId ? `${artifactId}:${versionId}` : '';
 }
 
-function normalizeArtifactRef(artifact) {
+function normalizeArtifactRef(artifact: any) {
   if (!artifact) return null;
   const artifactId = stringValue(readField(artifact, 'artifactId')) || stringValue(readField(artifact, 'id'));
   const versionId =
@@ -317,7 +319,7 @@ function normalizeArtifactRef(artifact) {
   };
 }
 
-function getSingleMingoPlanAnonSessionError(error) {
+function getSingleMingoPlanAnonSessionError(error: any) {
   const body = safeParse((error && error.message) || '', 'object');
   const errorCode = stringValue(readField(body, 'errorCode')) || '';
   const message = stringValue(readField(body, 'errorMessage'));
@@ -327,7 +329,7 @@ function getSingleMingoPlanAnonSessionError(error) {
   return { errorCode, message };
 }
 
-function getStreamFailureError(error, shouldPickSingleMingoPlanError) {
+function getStreamFailureError(error: any, shouldPickSingleMingoPlanError?: boolean) {
   if (shouldPickSingleMingoPlanError) {
     const singleMingoPlanError = getSingleMingoPlanAnonSessionError(error);
 
@@ -459,11 +461,11 @@ export default function ChatPanel({
   const bus = useAgentBus();
   const initialAppBuilderVisible = landingLayout && autoOpenInitialBuilder && !disableAppBuilder && !isMobile;
   const [sessionId, setSessionId] = useState(() => initialSessionId || createAgentSessionId());
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [draft, setDraft] = useState('');
-  const [draftAttachments, setDraftAttachments] = useState([]);
+  const [draftAttachments, setDraftAttachments] = useState<any[]>([]);
   // 卡片「修改」聚合的待提交修改：1 条→填入输入框纯文本；≥2 条→输入框上方聚合成「修改搭建计划」chip
-  const [pendingEdits, setPendingEdits] = useState([]);
+  const [pendingEdits, setPendingEdits] = useState<any[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [appBuilderVisible, setAppBuilderVisible] = useState(initialAppBuilderVisible);
   // 落地页左侧会话列表是否收起（由 AgentLand 广播）：决定中栏 AppBuilder 左上角是否显示「展开会话列表」icon
@@ -477,18 +479,21 @@ export default function ChatPanel({
   // 当前在 AppBuilder 中激活/展示的版本（versionLabel）：用于让对应 plan-card 高亮为选中态，其余仅 committed 不高亮
   const [activeVersionLabel, setActiveVersionLabel] = useState('');
   // 执行中断 / 拦截提示：贴在输入框上方的浮动卡（信用点不足、服务异常等）。{ errorCode, message }，null 时不展示。
-  const [interceptError, setInterceptError] = useState(null);
+  // { errorCode, message }，null 时不展示
+  const [interceptError, setInterceptError] = useState<{ errorCode?: number | string; message?: string } | null>(
+    null,
+  );
   // 附件解析过渡态：route-selected 后、text-delta 前，后端同步「下载+解析」doc/图片附件（vision），
   // 这段窗口原本黑屏。记 doc/image 各自待解析数量（0=未在解析），给 loading 三点补「正在解析文档/图片…」步骤文案。
   // doc 与 image 可同时出现（一条消息既带文档又带图），分开记，避免一方先完成把另一方文案误清。
   // 成功路径 *-completed 清；失败只会有 terminal error（无 *-completed），故 error/completed 也要兜底清空。
   const [extracting, setExtracting] = useState({ doc: 0, image: 0 });
 
-  const filesRef = useRef({});
+  const filesRef = useRef<Record<string, any>>({});
   // 「生成应用」发起中闸：预检为异步（await 工作表上限接口），在这段窗口内 submitting 尚未置位、
   // 按钮也还没变「已搭建」，靠它挡住重复点击，避免并发预检 / 发起两次搭建。发起完成（提交或被拒）即放开。
   const buildKickoffRef = useRef(false);
-  const messagesRef = useRef([]);
+  const messagesRef = useRef<ChatMessage[]>([]);
   const appBuilderVisibleRef = useRef(initialAppBuilderVisible);
   // 已拉取过 app.json 的版本（artifactId:versionId），避免历史 plan 卡片补图标时重复请求
   const planMetaFetchedRef = useRef(new Set());
@@ -535,7 +540,12 @@ export default function ChatPanel({
   // 当前选中组织：落地页空态可切换（仅影响新会话）；优先级 runtime 固定值 > 用户所选 > 全局默认
   const [selectedProjectId, setSelectedProjectId] = useState(() => getCurrentProjectId());
 
-  function loadCommittedArtifactFilesOnce({ artifactId, versionId, loading = false, force = false } = {}) {
+  function loadCommittedArtifactFilesOnce({
+    artifactId,
+    versionId,
+    loading = false,
+    force = false,
+  }: { artifactId?: string; versionId?: string; loading?: boolean; force?: boolean } = {}) {
     const key = getArtifactVersionKey(artifactId, versionId);
 
     if (!key || disableCommittedFileLoad) return Promise.resolve(false);
@@ -570,7 +580,7 @@ export default function ChatPanel({
     const file = filesRef.current && filesRef.current['/jsons/worksheets.json'];
     const parsed = file && file.parsed;
 
-    return Array.isArray(parsed) ? parsed.filter(i => i && i.type === 'worksheet').length : 0;
+    return Array.isArray(parsed) ? parsed.filter((i: any) => i && i.type === 'worksheet').length : 0;
   }
 
   // 点「生成应用」前的预检：组织无创建应用权限、或「已用 + 本次计划」工作表数会超组织上限时拦截，
@@ -581,7 +591,7 @@ export default function ChatPanel({
     // 预检①：组织创建应用权限。global 已按组织下发 cannotCreateApp（见 md.global.Account.projects）。
     const projects =
       (window.md && window.md.global && window.md.global.Account && window.md.global.Account.projects) || [];
-    const project = projects.find(p => p.projectId === projectId);
+    const project = projects.find((p: any) => p.projectId === projectId);
 
     if (project && project.cannotCreateApp) {
       alert(_l('您当前所在的组织没有创建应用的权限，请联系组织管理员。'), 3);
@@ -608,7 +618,12 @@ export default function ChatPanel({
     return true;
   }
 
-  function autoOpenInitialBuilderIfNeeded({ artifactId, versionId, versionLabel, name } = {}) {
+  function autoOpenInitialBuilderIfNeeded({
+    artifactId,
+    versionId,
+    versionLabel,
+    name,
+  }: { artifactId?: string; versionId?: string; versionLabel?: string; name?: string } = {}) {
     if (!disableAppBuilder && !isMobile && autoOpenInitialBuilderRef.current && artifactId && versionId) {
       autoOpenInitialBuilderRef.current = false;
       bus.emit('builder:open', {

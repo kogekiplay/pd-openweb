@@ -54,11 +54,20 @@ export function parseEmbed(language, code) {
 
 // 把消息文本里的 ```mingo_embed_data_<suffix>``` 抽成独立段，供「用户消息（不走 markdown）」按段渲染：
 // 返回 [{ type:'text', text } | { type:'embed', suffix, data }]。未登记 / 解析失败的 fence 保留为普通文本。
-export function extractEmbedSegments(text) {
+/** 消息文本被切出来的一段：普通文本，或一个已登记的 embed 围栏 */
+export interface EmbedSegment {
+  type: 'text' | 'embed';
+  text?: string;
+  /** type = 'embed' 时才有 */
+  suffix?: string;
+  data?: any;
+}
+
+export function extractEmbedSegments(text?: string): EmbedSegment[] {
   if (typeof text !== 'string' || !text) return [{ type: 'text', text: text || '' }];
 
   const fenceRe = /```([^\n`]+)\n([\s\S]*?)```/g;
-  const segments = [];
+  const segments: EmbedSegment[] = [];
   let lastIndex = 0;
   let match;
 
@@ -83,7 +92,7 @@ export function extractEmbedSegments(text) {
 }
 
 // 构造嵌入 fence 文本（发送给后端的消息体即此字符串，保持 ```包裹数据 不变）。
-export function buildEmbedFence(suffix, data) {
+export function buildEmbedFence(suffix: string, data: any) {
   return `\`\`\`${EMBED_LANGUAGE_PREFIX}${suffix}\n${JSON.stringify(data)}\n\`\`\``;
 }
 
@@ -91,7 +100,7 @@ export function buildEmbedFence(suffix, data) {
 // 返回 { text: 去掉该围栏后的正文, data: 解析出的提问对象 | null }。
 // 提问卡固定在底部输入区渲染，故正文里要把围栏剥掉；流式未闭合时隐藏「围栏起始→结尾」的半包，避免裸 JSON 闪现。
 // 返回值额外带 opened：是否已出现 ask 围栏起始（供流式骨架判断"提问卡即将到来"）。
-export function extractAsk(text) {
+export function extractAsk(text?: string) {
   if (typeof text !== 'string' || !text) return { text: text || '', data: null, opened: false };
 
   const open = text.indexOf('```' + EMBED_LANGUAGE_PREFIX + ASK_SUFFIX);
