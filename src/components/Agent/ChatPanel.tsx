@@ -97,7 +97,7 @@ const HIDDEN_USAGE_AGENTS = ['help-agent'];
 // 计费展示统一门控：非平台版（platformENV.isPlatform 为 false，如普通私有部署）无信用点计费体系，
 // 计费相关交互整体隐藏——气泡下不显示费用（含历史消息自带的 usage.credits）、也不轮询用量。
 function shouldHideUsage(agentName?: string) {
-  return !window.platformENV.isPlatform || HIDDEN_USAGE_AGENTS.includes(agentName);
+  return !window.platformENV.isPlatform || HIDDEN_USAGE_AGENTS.includes(agentName as string);
 }
 
 const PROMPT_INPUT_ID = 'agent-prompt-input';
@@ -399,6 +399,14 @@ export interface ChatPanelRuntime {
   promptPlaceholder?: string;
 }
 
+/** submitPrompt / streamAgentResponse 的单次覆盖项，只对本次请求生效 */
+interface SubmitOptions {
+  /** 单次覆盖目标 agent，不污染下一次 */
+  agentName?: string;
+  onSubmitStart?: () => void;
+  [key: string]: any;
+}
+
 export default function ChatPanel({
   runtime = {},
   isSingleMingoPlan = false,
@@ -501,21 +509,21 @@ export default function ChatPanel({
   const committedFilesFetchedRef = useRef(new Set());
   const committedFilesLoadingRef = useRef(new Map());
   const appMetaRef = useRef({ name: '', appId: '', sectionIdByName: {} });
-  const abortRef = useRef(null);
+  const abortRef = useRef<AbortController | null>(null);
   const autoOpenInitialOverviewRef = useRef(autoOpenInitialOverview);
   const autoOpenInitialBuilderRef = useRef(autoOpenInitialBuilder);
   const initialOverviewOpenedRef = useRef(false);
-  const latestRuntimeRef = useRef({});
+  const latestRuntimeRef = useRef<Record<string, any>>({});
   // 镜像最新 sessionId：卸载清理在闭包里拿不到最新 state，用 ref 取当前会话调取消接口
   const sessionIdRef = useRef('');
-  const promptInputRef = useRef(null);
+  const promptInputRef = useRef<any>(null);
   // 从首页分组内「AI 创建应用」交接来的分组 id：拼进 stream context.groupId，让新建应用归入该分组
   const groupIdRef = useRef('');
   // 已开过流的 path 集合：用于决定首次 delta 时是否触发 file:begin + file:focus
   const startedPathsRef = useRef(new Set());
   // 当前查看/选中的版本 + 已知最新版本 label：继续对话时若查看的不是最新版本，
   // 就带 artifactId + basedOnVersionId 让后端基于该旧版本 fork（LOCKED）；在最新版本上则走 AUTO。
-  const selectedVerRef = useRef(null); // { artifactId, versionId, versionLabel }
+  const selectedVerRef = useRef<{ artifactId?: string; versionId?: string; versionLabel?: string } | null>(null);
   const latestVerLabelRef = useRef('');
   // build 成功收尾标记：completed 事件（带 worksheetContext 的 build 轮）置 true，
   // 由发起方在本轮 stream await 结束后消费——追加调用 app-build-summary 流式生成搭建总结。
@@ -535,7 +543,7 @@ export default function ChatPanel({
   // 靠它保证一轮只做一次；每轮 stream 开始时复位。
   const buildRoundOpenedRef = useRef(false);
   // 在途的用量轮询定时器集合：切会话 / 新建会话 / 卸载时统一清掉，避免轮询写进已不存在的消息。
-  const usagePollTimersRef = useRef(new Set());
+  const usagePollTimersRef = useRef(new Set<ReturnType<typeof setTimeout>>());
 
   // 当前选中组织：落地页空态可切换（仅影响新会话）；优先级 runtime 固定值 > 用户所选 > 全局默认
   const [selectedProjectId, setSelectedProjectId] = useState(() => getCurrentProjectId());
@@ -650,13 +658,16 @@ export default function ChatPanel({
   // 保证首页与右侧 Mingo 两边选中组织同步。runtime 固定组织（承接页）时不跟随。
   useEffect(() => {
     if (runtimeProjectId) return undefined;
-    const onChangeProject = project => {
+    const onChangeProject = (project?: { projectId?: string }) => {
       const pid = project && project.projectId;
       if (pid) setSelectedProjectId(pid);
     };
 
     emitter.addListener('CHANGE_CURRENT_PROJECT', onChangeProject);
-    return () => emitter.removeListener('CHANGE_CURRENT_PROJECT', onChangeProject);
+    // 包成块：emitter.removeListener 返回 EventEmitter，箭头表达式体会把它当 cleanup 返回值
+    return () => {
+      emitter.removeListener('CHANGE_CURRENT_PROJECT', onChangeProject);
+    };
   }, [runtimeProjectId]);
 
   useAgentEvent('builder:close', hideAppBuilder);
@@ -666,9 +677,9 @@ export default function ChatPanel({
   useAgentEvent('builder:open-preview', () => {
     if (!disableAppBuilder) revealAppBuilder();
   });
-  useAgentEvent('builder:open', (payload = {}) => {
+  useAgentEvent('builder:open', (payload: any = {}) => {
     const { artifactId, versionId, name, versionLabel, source, appId, built } = payload || {};
-    let loadFilesPromise = Promise.resolve();
+    let loadFilesPromise: Promise<any> = Promise.resolve();
     // 历史已搭建版本：透传 appId + built，让 AppBuilder 还原完成态（Sidebar「打开应用」/ Header「已使用 v* 搭建」）；
     // built 为显式布尔，切回未搭建版本时（built=false）由 AppBuilder 清掉残留的 appId / 完成态
     const appMetaPayload = { name, versionLabel, artifactId, versionId, appId, built };
@@ -774,7 +785,7 @@ export default function ChatPanel({
     // 预检通过（有创建应用权限 + 工作表不超上限）才真正发起搭建；被拦截时通知 AppBuilder
     // 撤销发起态，让「生成应用」按钮恢复可点以便修复后重试。
     runBuildPrecheck()
-      .then(ok => {
+      .then((ok: boolean) => {
         if (ok) {
           // 预检通过、即将发送「开始搭建应用」：此刻视为真实触发搭建，通知 AppBuilder 切「已使用 v* 搭建」
           bus.emit('builder:generate-accepted');
@@ -807,9 +818,11 @@ export default function ChatPanel({
 
   useEffect(() => {
     if (!landingLayout) return;
-    const onSidebarState = ({ visible } = {}) => setSidebarCollapsed(!visible);
+    const onSidebarState = ({ visible }: { visible?: boolean } = {}) => setSidebarCollapsed(!visible);
     emitter.on(AGENT_HEADER_EVENT.SIDEBAR_STATE, onSidebarState);
-    return () => emitter.off(AGENT_HEADER_EVENT.SIDEBAR_STATE, onSidebarState);
+    return () => {
+      emitter.off(AGENT_HEADER_EVENT.SIDEBAR_STATE, onSidebarState);
+    };
   }, [landingLayout]);
 
   useEffect(() => {
@@ -843,7 +856,7 @@ export default function ChatPanel({
   useEffect(() => {
     if (disableArtifactMetaFetch) return;
 
-    const targets = [];
+    const targets: { artifactId?: string; versionId?: string }[] = [];
 
     messages.forEach(m =>
       (m.parts || []).forEach(p => {
@@ -867,7 +880,7 @@ export default function ChatPanel({
       if (planMetaFetchedRef.current.has(key)) return;
       planMetaFetchedRef.current.add(key);
 
-      const resolve = meta =>
+      const resolve = (meta: any) =>
         setMessages(cur =>
           cur.map(m => ({
             ...m,
@@ -886,7 +899,7 @@ export default function ChatPanel({
 
       fetchArtifactAppMeta({ artifactId, versionId })
         .then(resolve)
-        .catch(err => {
+        .catch((err: unknown) => {
           console.error('[agent] fetch plan-card app meta failed', key, err);
           resolve(null);
         });
@@ -897,7 +910,7 @@ export default function ChatPanel({
   // 输入框文字保留作为补充说明，发送时与多条修改一并打包，避免漏带（旧版 1 条回填依赖 PromptInput 回写非空
   // value，但其只处理清空，导致填充不可见且发送禁用）。
 
-  function applyAgentEvent(assistantId, event) {
+  function applyAgentEvent(assistantId: string, event: any) {
     const data = (event.payload && event.payload.data) || {};
 
     logSseEvent(event);
@@ -1243,7 +1256,7 @@ export default function ChatPanel({
     // 默认应用 id：供 app-query-agent 等在用户未指定时作默认。有则带、无则省略。
     // appId 优先用本会话 build 流新建的应用，其次回退到当前所在应用（URL /app/:appId）。
     // 但停留在应用列表页（/app/my、/app/lib）时显式判为不在应用下，不让续建会话的 appId 泄漏。
-    const defaults = {};
+    const defaults: Record<string, any> = {};
     const defaultAppId = isAppListPage() ? '' : appMetaRef.current.appId || getCurrentAppId();
 
     if (defaultAppId) defaults.defaultAppId = defaultAppId;
@@ -1264,21 +1277,21 @@ export default function ChatPanel({
   async function fetchCommonApps() {
     const candidates = await fetchAppCandidates(getContextProjectId());
 
-    return candidates.slice(0, 20).map(a => ({ name: a.name, id: a.id }));
+    return candidates.slice(0, 20).map((a: any) => ({ name: a.name, id: a.id }));
   }
 
   // 在 build context 之外，按设计稿补充对话上下文：
   // mentions（@ 的应用）、currentApp（应用内默认当前应用）、commonApps（非应用内且未 @ 时的常用应用兜底）。
   // currentOrganization 暂不处理。
-  async function composeChatContext(mentions, { omitPlanContext = false } = {}) {
+  async function composeChatContext(mentions?: any[], { omitPlanContext = false }: { omitPlanContext?: boolean } = {}) {
     // 续建态省略 plan 派生字段（worksheets/groupNames…），只保留对话上下文（默认应用 / @ / 常用应用），
     // 后端据 __original_inputs__ 续建，不触发 plan 漂移判定。
     const base = omitPlanContext ? composeDefaultContext() : composeCurrentContext() || {};
-    const extra = {};
+    const extra: Record<string, any> = {};
 
     const normalizedMentions = (Array.isArray(mentions) ? mentions : [])
-      .filter(m => m && m.id)
-      .map(m => ({ type: m.type || 'app', name: m.name, id: m.id }));
+      .filter((m: any) => m && m.id)
+      .map((m: any) => ({ type: m.type || 'app', name: m.name, id: m.id }));
 
     if (normalizedMentions.length) extra.mentions = normalizedMentions;
 
@@ -1329,7 +1342,7 @@ export default function ChatPanel({
           projectId: getContextProjectId(),
         },
         {
-          onEvent: event => {
+          onEvent: (event: any) => {
             if (event && event.eventName === 'error') return;
             applyAgentEvent(assistant.id, event);
           },
@@ -1343,7 +1356,8 @@ export default function ChatPanel({
 
   // 清掉所有在途的用量查询延迟定时器（切会话 / 新建会话 / 卸载时调）：避免回调写进已销毁会话的消息。
   function clearUsagePolls() {
-    usagePollTimersRef.current.forEach(clearTimeout);
+    // forEach 会把 (value, value2, set) 三个参数一起喂给 clearTimeout，重载对不上；包一层只传第一个
+    usagePollTimersRef.current.forEach(timer => clearTimeout(timer));
     usagePollTimersRef.current.clear();
   }
 
@@ -1351,7 +1365,7 @@ export default function ChatPanel({
   //  - settled（已扣完）→ 写入 credits（终值，0 也合法），清掉计算中态；
   //  - pending_aggregate（a2a 后台 async 还在扣）→ 置 creditsPending，气泡显示「费用计算中…」+ 刷新按钮，
   //    并把 traceId / projectId 记在消息上供手动刷新重查。
-  function applyTraceUsage(messageId, traceId, projectId) {
+  function applyTraceUsage(messageId?: string, traceId?: string, projectId?: string) {
     return fetchTraceUsage(traceId, projectId).then(({ settled, credits }) => {
       setMessages(current =>
         current.map(m => {
@@ -1365,7 +1379,7 @@ export default function ChatPanel({
   }
 
   // 新消息收尾后延迟 1s 查一次本轮用量（给后端落账留出时间）。pending 时由气泡上的刷新按钮手动重查，不再自动轮询。
-  function startUsagePoll(messageId, traceId, projectId) {
+  function startUsagePoll(messageId?: string, traceId?: string, projectId?: string) {
     if (!traceId || !projectId) return;
     const timer = setTimeout(() => {
       usagePollTimersRef.current.delete(timer);
@@ -1376,12 +1390,18 @@ export default function ChatPanel({
   }
 
   // 「费用计算中…」刷新按钮：手动重查该条消息本轮用量（projectId 兜底取当前上下文组织）
-  function handleRefreshUsage(message) {
+  function handleRefreshUsage(message: ChatMessage) {
     if (!message || !message.creditsTraceId) return;
     applyTraceUsage(message.id, message.creditsTraceId, message.creditsProjectId || getContextProjectId());
   }
 
-  async function streamAgentResponse(assistantId, promptText, attachments, mentions, options = {}) {
+  async function streamAgentResponse(
+    assistantId: string,
+    promptText?: string,
+    attachments?: any[],
+    mentions?: any[],
+    options: SubmitOptions = {},
+  ) {
     setSubmitting(true);
     const controller = new AbortController();
 
@@ -1426,7 +1446,7 @@ export default function ChatPanel({
           basedOnVersionId: baseOnOldVersion ? sel.versionId : undefined,
         },
         {
-          onEvent: event => {
+          onEvent: (event: any) => {
             applyAgentEvent(assistantId, event);
           },
           enableCaptcha: anonymous && isSingleMingoPlan,
@@ -1449,7 +1469,7 @@ export default function ChatPanel({
       if (!anonymous && !controller.signal.aborted && !shouldHideUsage(roundAgentRef.current)) {
         startUsagePoll(assistantId, roundTraceId, projectId);
       }
-    } catch (error) {
+    } catch (error: any) {
       // 用户主动点"停止"/关闭会话会 abort fetch（浏览器抛英文 BodyStreamBuffer was aborted），属正常终止非错误：
       // 不弹拦截卡，静默收尾即可；仅真实请求失败才走贴底拦截卡（无 errorCode → 可重试态）。
       const aborted = controller.signal.aborted || (error && error.name === 'AbortError');
@@ -1470,7 +1490,7 @@ export default function ChatPanel({
     }
   }
 
-  async function submitPrompt(text, presetAttachments, mentions, options = {}) {
+  async function submitPrompt(text?: string, presetAttachments?: any[], mentions?: any[], options: SubmitOptions = {}) {
     const promptText = (text || '').trim();
     const attachments =
       presetAttachments || draftAttachments.filter(f => f.status === 'uploaded').map(mapAttachmentForRequest);
@@ -1497,13 +1517,13 @@ export default function ChatPanel({
     await streamAgentResponse(assistant.id, promptText, attachments, mentions, options);
   }
 
-  function handleDeleteEdit(id) {
+  function handleDeleteEdit(id: string) {
     setPendingEdits(prev => prev.filter(item => item.id !== id));
   }
 
   // 「提交修改」：把多条修改（+ 当前输入框补充文字）打包成 ```mingo_embed_data_modify_plan``` 作为一条用户消息发送。
   // extraText 来自主发送按钮（编辑器实时文本，最可靠）；从 chip 弹窗「提交修改」进入时无参，回退取 draft。
-  function handleSubmitEdits(extraText) {
+  function handleSubmitEdits(extraText?: string) {
     if (!pendingEdits.length) return;
     const items = pendingEdits.map(({ module, card, text }) => ({ module, card, text }));
     const extra = (typeof extraText === 'string' ? extraText : draft || '').trim();
@@ -1515,7 +1535,7 @@ export default function ChatPanel({
     });
   }
 
-  function retryAssistant(assistantId, promptText) {
+  function retryAssistant(assistantId: string, promptText?: string) {
     if (submitting || !promptText) return;
     startedPathsRef.current = new Set();
     setMessages(current => current.map(m => (m.id === assistantId ? { ...m, parts: [] } : m)));
@@ -1546,7 +1566,7 @@ export default function ChatPanel({
   // 必须带当前 plan context：rebuild 要按新方案从头建（plan 数据全在 context 里），
   // resume_with_old_plan 也无害（已完成步骤走 checkpoint 投回、不消费 context）。
   // 带一句 message 仅为通过后端 legality 校验（决策由 confirmation 驱动，与 message 内容无关）。
-  async function sendPlanDriftConfirmation(driftMessageId, action) {
+  async function sendPlanDriftConfirmation(driftMessageId: string, action: string) {
     if (submitting) return;
 
     // 先把卡片标记为已决策，禁用按钮、展示选择
@@ -1582,7 +1602,7 @@ export default function ChatPanel({
         pendingBuildSummaryRef.current = false;
         await streamBuildSummary();
       }
-    } catch (error) {
+    } catch (error: any) {
       // 用户主动点"停止"/关闭会话会 abort fetch（浏览器抛英文 BodyStreamBuffer was aborted），属正常终止非错误：
       // 不弹拦截卡，静默收尾即可；仅真实请求失败才走贴底拦截卡（无 errorCode → 可重试态）。
       const aborted = controller.signal.aborted || (error && error.name === 'AbortError');
@@ -1639,7 +1659,7 @@ export default function ChatPanel({
         pendingBuildSummaryRef.current = false;
         await streamBuildSummary();
       }
-    } catch (error) {
+    } catch (error: any) {
       const aborted = controller.signal.aborted || (error && error.name === 'AbortError');
 
       if (!aborted) {
@@ -1709,7 +1729,7 @@ export default function ChatPanel({
   }
 
   // 加载历史会话：拉取消息还原对话，并把后续请求切到该 sessionId
-  async function loadSession(targetSessionId, options = {}) {
+  async function loadSession(targetSessionId?: string, options: { silent?: boolean; [key: string]: any } = {}) {
     if (!targetSessionId || historyLoading) return;
     const shouldAutoOpenInitialBuilder = !!options.autoOpenBuilder;
     const initialPlanArtifactRef = normalizeArtifactRef(options.initialPlanArtifact);
@@ -1863,12 +1883,12 @@ export default function ChatPanel({
     }
   }
 
-  function handleSelectSession(session) {
+  function handleSelectSession(session: any) {
     if (session && session.sessionId) loadSession(session.sessionId);
   }
 
   // 会话被删除：清掉记住的会话（避免重开抽屉再恢复已删会话）；若删的是当前正在查看的会话，回到 MingoWelcome 首页
-  function handleSessionDeleted(deletedSessionId) {
+  function handleSessionDeleted(deletedSessionId?: string) {
     if (!deletedSessionId) return;
     const accountId =
       (window.md && window.md.global && window.md.global.Account && window.md.global.Account.accountId) || '';
