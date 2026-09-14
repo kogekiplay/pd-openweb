@@ -176,7 +176,7 @@ function ManageDataBase(props) {
     getApp();
   }, [pageIndex, appStatus]);
 
-  const getApp = param => {
+  const getApp = (param?) => {
     setLoading(true);
     appManagement
       .getAppsForProject({

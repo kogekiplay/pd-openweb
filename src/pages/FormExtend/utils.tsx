@@ -188,7 +188,7 @@ export function renderLimitInfo(worksheetSettings) {
   );
 }
 
-export const getPageConfig = (pageConfigs = '[]', pageConfigKey) => {
+export const getPageConfig = (pageConfigs = '[]', pageConfigKey?) => {
   const configs = safeParse(pageConfigs);
 
   if (!pageConfigKey) return configs[0] || {};

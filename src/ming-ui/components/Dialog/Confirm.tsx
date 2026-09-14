@@ -14,7 +14,7 @@ export default function confirm(props) {
 
   const root = createRoot(div);
 
-  const handleClose = (needExecCancel = true, isOkBtn) => {
+  const handleClose = (needExecCancel = true, isOkBtn?) => {
     setTimeout(() => {
       root.unmount();
       div.parentNode?.removeChild(div);

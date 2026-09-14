@@ -240,7 +240,7 @@ export default class Print extends Component<any, any> {
   valueItem: 他表字段valueItem；[valueItem, valueItem]
   relationItemKey: 他表字段选择关联控件，循环key
   */
-  getShowContent = function (item, sourceControlType, valueItem, relationItemKey) {
+  getShowContent = function (item, sourceControlType?, valueItem?, relationItemKey?) {
     const value = sourceControlType ? valueItem : item.value;
     const type = sourceControlType || item.type;
 
@@ -928,7 +928,7 @@ export default class Print extends Component<any, any> {
       return this.beforeControlIsDetail(Number(key) - 1);
     }
   }.bind(this);
-  renderTaskItem(name, value, key, classname) {
+  renderTaskItem(name, value, key, classname?) {
     return (
       <tr className="row clearfix Relative notDetails" key={key}>
         <td className="noHalf rowItem BorderRight0 taskRowItem" colSpan={1}>

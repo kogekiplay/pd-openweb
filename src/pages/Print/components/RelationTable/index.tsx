@@ -271,7 +271,7 @@ export default class RelationTable extends React.Component<any, any> {
     );
   };
 
-  changeData = (controlId, w, dataList) => {
+  changeData = (controlId, w, dataList?) => {
     const { printData, id } = this.props;
     let { controlStyles = [] } = printData;
     let data = [];

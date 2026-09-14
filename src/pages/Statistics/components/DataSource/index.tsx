@@ -73,7 +73,7 @@ let DataSource = class DataSource extends Component<any, any> {
     }
   }
 
-  formatAxisControls = (axisControls, newViewId) => {
+  formatAxisControls = (axisControls, newViewId?) => {
     const { worksheetInfo, ownerId, currentReport } = this.props;
 
     if (!ownerId) {

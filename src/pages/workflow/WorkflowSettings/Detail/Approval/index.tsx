@@ -120,7 +120,7 @@ export default class Approval extends Component<any, any> {
   /**
    * 获取节点详情
    */
-  getNodeDetail(props, sId, callback = () => {}) {
+  getNodeDetail(props, sId?, callback = () => {}) {
     const { processId, selectNodeId, selectNodeType, isApproval, instanceId } = props;
     const { data } = this.state;
 
@@ -172,7 +172,7 @@ export default class Approval extends Component<any, any> {
   /**
    * 更新节点对象数据
    */
-  updateFlowMapSource = (key, obj, callback) => {
+  updateFlowMapSource = (key, obj, callback?) => {
     const { data } = this.state;
 
     this.updateSource(
@@ -965,7 +965,7 @@ export default class Approval extends Component<any, any> {
   /**
    * 意见必填修改
    */
-  opinionRequiredChange(checked, key, value) {
+  opinionRequiredChange(checked, key, value?) {
     const { data } = this.state;
     const currentAuth = [].concat(data.auth[key]);
 

@@ -296,14 +296,14 @@ function RecordForm(props) {
   const [dragVisible, setDragVisible] = useState<boolean | undefined>();
 
   // 左右布局，非默认标签页，显示单独header
-  const getActiveTabControl = tempId => {
+  const getActiveTabControl = (tempId?) => {
     const sectionTabId = tempId || _.get(sectionTab, 'current.activeControlId') || defaultTabId;
     return (isFixedLeft || isFixedRight) && sectionTabId !== 'detail'
       ? _.find(tabControls, t => t.controlId === sectionTabId)
       : '';
   };
 
-  const handleSectionClick = controlId => {
+  const handleSectionClick = (controlId?) => {
     const tempId = controlId || defaultTabId;
 
     if (isFixedLeft || isFixedRight) {

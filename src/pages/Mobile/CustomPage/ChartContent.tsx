@@ -113,7 +113,7 @@ function ChartComponent(props) {
     handleReportRequest();
   }, [reportId, filtersGroup, linkageFiltersGroup, needUpdate]);
 
-  const handleReportRequest = param => {
+  const handleReportRequest = (param?) => {
     let requestParam = {
       pageId,
       reportId,
@@ -160,7 +160,7 @@ function ChartComponent(props) {
     });
   };
 
-  const handleNextReportRequest = (reportId, param) => {
+  const handleNextReportRequest = (reportId, param?) => {
     let requestParam = {
       pageId,
       reportId,

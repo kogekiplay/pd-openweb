@@ -789,7 +789,7 @@ export default class CustomButtons extends React.Component<any, any> {
     });
   }
 
-  setStateFn = (args, fn) => {
+  setStateFn = (args, fn?) => {
     const { setCustomButtonActive } = this.props;
 
     if (typeof args.fillRecordControlsVisible !== 'undefined') {

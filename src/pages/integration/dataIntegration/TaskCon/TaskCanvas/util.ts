@@ -40,7 +40,7 @@ export const formatTaskNodeData = (dataList = [], firstId) => {
     };
   });
 
-  const generateCoordinateX = (currentId, x, y) => {
+  const generateCoordinateX = (currentId, x?, y?) => {
     const currentItem = list.find(item => item.nodeId === currentId);
 
     currentItem.x = currentId === firstId ? 0 : x;
@@ -55,7 +55,7 @@ export const formatTaskNodeData = (dataList = [], firstId) => {
     });
   };
 
-  const generateCoordinateParent = (parentIds, newY) => {
+  const generateCoordinateParent = (parentIds, newY?) => {
     parentIds.forEach(currentId => {
       const currentItem = list.find(item => item.nodeId === currentId);
 
@@ -432,7 +432,7 @@ export const getUnionFeids = (defaultFields = [], list, node) => {
   });
 };
 
-export const setAllUnionFieldsCheck = (fieldList, setCheck) => {
+export const setAllUnionFieldsCheck = (fieldList, setCheck?) => {
   const fields = setCheck
     ? fieldList.map(it => {
         return {

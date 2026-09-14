@@ -74,7 +74,7 @@ export default function SplitLineSection(props) {
     };
   }, []);
 
-  const handleExpand = tempVisible => {
+  const handleExpand = (tempVisible?) => {
     if (hidetitle === '1' && enumDefault2 == 0) return;
     // 不折叠不能点击
     if (enumDefault2 === 0) return;

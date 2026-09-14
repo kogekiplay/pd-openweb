@@ -370,7 +370,7 @@ function SettingGroup(props) {
       });
   };
 
-  const updateGroup = (params, type, keys, close) => {
+  const updateGroup = (params, type, keys?, close?) => {
     const ajaxFun = groupAjax[USER_ACTION_AJAX[type]];
     const isGroups = [8, 9].includes(type);
 

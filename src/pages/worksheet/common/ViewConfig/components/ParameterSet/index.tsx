@@ -327,7 +327,7 @@ export default function ParameterSet(params) {
     cache.current.paramSettings = paramSettings;
   }, [paramSettings]);
 
-  const handleUpdate = data => {
+  const handleUpdate = (data?) => {
     let newData = {};
     (data || cache.current.paramSettings).map(item => {
       newData[item.fieldId] =
@@ -342,7 +342,7 @@ export default function ParameterSet(params) {
     );
   };
 
-  const renderReshTime = isNull => {
+  const renderReshTime = (isNull?) => {
     const { pluginInfo = {} } = view;
     const { switchSettings = {} } = pluginInfo;
     return switchSettings.showRefresh === '1' ? (

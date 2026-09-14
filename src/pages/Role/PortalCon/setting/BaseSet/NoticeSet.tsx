@@ -12,7 +12,7 @@ export default function (props) {
   const { noticeScope = {} } = portalSetModel;
   const [{ showWorkflowDialog }, setCommonState] = useSetState({ showWorkflowDialog: false });
 
-  const createWorkFlow = callback => {
+  const createWorkFlow = (callback?) => {
     if (ajaxRequest) {
       ajaxRequest.abort();
     }

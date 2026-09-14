@@ -125,7 +125,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  checkLogin: function (args: ApiArgs, options: ApiOptions = {}) {
+  checkLogin: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Login', 'CheckLogin', args, options);
   },
   /**
@@ -135,7 +135,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  loginOut: function (args: ApiArgs, options: ApiOptions = {}) {
+  loginOut: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Login', 'LoginOut', args, options);
   },
   /**

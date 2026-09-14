@@ -68,7 +68,7 @@ class WorksheetRowEdit extends Component<any, any> {
    * 获取详情
    */
 
-  getLinkDetail = param => {
+  getLinkDetail = (param?) => {
     return new Promise((resolve, reject) => {
       const shareId = location.pathname.match(/.*\/public\/workflow\/(.*)/)[1];
       worksheetAjax

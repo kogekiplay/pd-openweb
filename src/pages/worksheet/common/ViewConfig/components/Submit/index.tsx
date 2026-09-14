@@ -182,7 +182,7 @@ const handleCopy = content => {
   alert(_l('复制成功'));
 };
 
-const renderText = (content, renderTxt) => {
+const renderText = (content, renderTxt?) => {
   return (
     <div className="textCopyCon flexRow alignItemsCenter mTop16 Hand" onClick={() => handleCopy(content)}>
       <div className="flex">{renderTxt ? renderTxt() : content}</div>
@@ -216,7 +216,7 @@ export default function SubmitConfig(params) {
     });
   }, [params]);
 
-  const handleScroll = (pageIndex, reGet) => {
+  const handleScroll = (pageIndex, reGet?) => {
     if (!_.get(view, 'pluginInfo.id')) {
       return;
     }

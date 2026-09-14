@@ -248,7 +248,7 @@ export default class StatTable extends React.Component<any, any> {
     this.fetchData();
   };
 
-  fetchData(nextState) {
+  fetchData(nextState?) {
     const { startDate, endDate, projectId, reportType } = this.props;
     const { pageIndex, pageSize, sortField, sortType } = nextState || this.state;
     const params = {

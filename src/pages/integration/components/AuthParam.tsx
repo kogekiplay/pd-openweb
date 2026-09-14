@@ -94,7 +94,7 @@ function AuthParam(props) {
   };
 
   //保存参数
-  const update = data => {
+  const update = (data?) => {
     flowNodeAjax.saveNode(
       {
         processId: props.id,

@@ -1315,7 +1315,7 @@ class TaskNavigation extends Component<any, any> {
   /**
    * 获取各个网络数据
    */
-  getNetworkData(projectId, folders, callback) {
+  getNetworkData(projectId, folders, callback?) {
     const { filterUserId } = this.props.taskConfig;
 
     ajaxRequest

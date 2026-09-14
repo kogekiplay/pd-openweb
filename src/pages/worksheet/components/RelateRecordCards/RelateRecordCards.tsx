@@ -453,7 +453,7 @@ class RelateRecordCards extends Component<any, any> {
     );
   }
 
-  loadControls(nextProps) {
+  loadControls(nextProps?) {
     const { dataSource, worksheetId } = (nextProps || this.props).control;
     sheetAjax
       .getWorksheetInfo({
@@ -471,7 +471,7 @@ class RelateRecordCards extends Component<any, any> {
       });
   }
 
-  loadMoreRecords = (pageIndex = 2, nextProps) => {
+  loadMoreRecords = (pageIndex = 2, nextProps?) => {
     const { from, controlId, recordId, worksheetId, advancedSetting, instanceId, workId } = (nextProps || this.props)
       .control;
     this.setState({

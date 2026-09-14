@@ -20,7 +20,7 @@ export const getSameLevelIds = (data, firstId, excludeFirstId = false) => {
 /**
  * 返回对应的图标
  */
-export const getIcons = (type, appType, actionId) => {
+export const getIcons = (type, appType?, actionId?) => {
   const { flowInfo } = store.getState().workflow;
   let icon;
 
@@ -582,7 +582,7 @@ export const switchFilterConditions = conditions => {
 /**
  * 处理全局变量名称
  */
-export const handleGlobalVariableName = (nodeId, sourceType, name) => {
+export const handleGlobalVariableName = (nodeId, sourceType, name?) => {
   if (nodeId === GLOBAL_VARIABLE) {
     return sourceType === 1 ? _l('全局变量(应用)') : _l('全局变量(组织)');
   }
@@ -673,7 +673,7 @@ export const handleExecReturnValue = item => {
 /**
  * 格式化测试参数
  */
-export const formatTestParameters = (source, testMap, isArray) => {
+export const formatTestParameters = (source, testMap, isArray?) => {
   if (isArray) {
     source = _.cloneDeep(source);
     source.map(item => {

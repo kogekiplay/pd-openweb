@@ -105,7 +105,7 @@ const getValidHours = (startTime, endTime, filterWeekend) => {
  * @param  {boolean} filterWeekend  是否过滤周末
  * @return {object}  showStartTime, showEndTime, showHourLong
  */
-const checkTime = (startTime, endTime, filterWeekend) => {
+const checkTime = (startTime, endTime, filterWeekend?) => {
   // 最大截止时间
   const maxWorkingEnd = workingTimes[workingTimes.length - 1][1];
 
@@ -733,7 +733,7 @@ const singleDayWidth = viewType => {
  * @param  {string} month 月份
  * @return {number}
  */
-const singleTableWidth = (viewType, filterWeekend, month) => {
+const singleTableWidth = (viewType, filterWeekend?, month?) => {
   // 日
   if (viewType === VIEWTYPE.DAY) {
     return singleDayWidth(viewType);

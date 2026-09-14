@@ -218,7 +218,7 @@ export default class Workwx extends React.Component<any, any> {
     });
   };
 
-  inputRender = (strId, w, img1, img2) => {
+  inputRender = (strId, w, img1, img2?) => {
     return (
       <React.Fragment>
         <div className="inputTitleBox">
@@ -406,7 +406,7 @@ export default class Workwx extends React.Component<any, any> {
     );
   };
 
-  editWXProjectSettingStatus = (tag, callback, isProxy) => {
+  editWXProjectSettingStatus = (tag, callback, isProxy?) => {
     // 状态：0 提交申请；2关闭集成；1重新开启集成 tag
     Ajax.editWXProjectSettingStatus({
       projectId: this.props.projectId,

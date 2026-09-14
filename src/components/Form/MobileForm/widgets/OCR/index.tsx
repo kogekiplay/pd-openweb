@@ -55,7 +55,7 @@ const OCR = props => {
     handleUpdateApi(props, itemData, false);
   };
 
-  const handleSearch = (up, file) => {
+  const handleSearch = (up?, file?) => {
     if (!dataSource) {
       handleClear(up);
       setMingDaoAppUploading(false);

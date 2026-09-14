@@ -45,7 +45,7 @@ export default class PluginContainer extends React.Component<any, any> {
     return (!_.isEmpty(currentProject) ? currentProject : _.get(md, 'global.Account.projects.0')) || {};
   };
 
-  loadPermissions = initProjectId => {
+  loadPermissions = (initProjectId?) => {
     const projectInfo = this.getProjectInfo(initProjectId);
     const { projectId = '', companyName } = projectInfo;
     const myPermissions = getMyPermissions(projectId);

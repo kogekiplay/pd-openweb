@@ -6,7 +6,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFederationToken: function (args: ApiArgs, options: ApiOptions = {}) {
+  getFederationToken: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Mingo', 'GetFederationToken', args, options);
   },
   /**

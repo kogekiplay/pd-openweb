@@ -152,7 +152,7 @@ class TaskList extends Component<any, any> {
     }
   }
 
-  renderChargeHeaderAvatar(params) {
+  renderChargeHeaderAvatar(params?) {
     const { taskConfig } = this.props;
     $('#tasks .listStageTaskContent tr .chargeTd').each((i, ele) => {
       let $ele = $(ele);

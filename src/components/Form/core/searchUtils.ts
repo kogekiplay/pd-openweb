@@ -270,7 +270,7 @@ export const clearValue = (value = '') => {
 };
 
 // api查询数据处理
-export const handleUpdateApi = (props, itemData = {}, isDefault = false, callback) => {
+export const handleUpdateApi = (props, itemData = {}, isDefault = false, callback?) => {
   const { advancedSetting: { responsemap } = {}, formData, onChange } = props;
   const responseMap = safeParse(responsemap || '[]');
   responseMap.map(item => {

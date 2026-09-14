@@ -40,7 +40,7 @@ function WorksheetRecordLogSubTable(props) {
   const [loadEnd, setLoadEnd] = useState(false);
   const [log, setLog] = useState(null);
 
-  const getData = param => {
+  const getData = (param?) => {
     let _pageIndex = param ? param.pageIndex : pageIndex;
     sheetAjax
       .getDetailTableLog({

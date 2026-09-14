@@ -64,7 +64,7 @@ export const formatObjWithNavfilters = o => {
   }
 };
 
-export const getCanDisplayControls = (worksheetControls, disableTypes) => {
+export const getCanDisplayControls = (worksheetControls, disableTypes?) => {
   return worksheetControls.filter(
     (c: FormControl) => !!c.controlName && !_.includes(disableTypes || [22, 10010, 43, 45, 47, 49, 51, 52], c.type),
   );

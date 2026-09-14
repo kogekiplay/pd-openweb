@@ -378,7 +378,7 @@ export function isOffice(fileExt) {
   return false;
 }
 
-export function isWpsPreview(fileExt, isEdit) {
+export function isWpsPreview(fileExt, isEdit?) {
   var fileExts = [
     'doc',
     'dot',

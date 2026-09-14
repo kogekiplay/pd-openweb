@@ -70,7 +70,7 @@ let SelectionIndicator = class SelectionIndicator extends React.Component<any, a
       updateEditIndex(null);
     }
   };
-  handleMouseLeave = event => {
+  handleMouseLeave = (event?) => {
     this.setState({
       top: null,
     });

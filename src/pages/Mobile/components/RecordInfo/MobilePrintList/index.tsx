@@ -359,7 +359,7 @@ export default function MobilePrintList(props) {
   };
 
   // APP网页集成word模版打印\excel打印\二维码打印\条码打印 调用原生方法处理
-  const handleAPPPrint = (it, printUrl) => {
+  const handleAPPPrint = (it, printUrl?) => {
     closePrintList();
 
     // 单条打印全走APP原生逻辑

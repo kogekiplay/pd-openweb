@@ -785,7 +785,7 @@ export async function requestAgentStream(
     return error;
   };
 
-  const requestStream = async extra => {
+  const requestStream = async (extra?) => {
     const response = await agentAjax.agentExecuteStream(
       {
         sessionId,

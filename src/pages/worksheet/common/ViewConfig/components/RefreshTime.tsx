@@ -6,7 +6,7 @@ import { REFRESH_TIME_OPTIONS } from '../config';
 export default function RefreshTime(props) {
   const { appId, view, updateCurrentView } = props;
 
-  const handleChange = (obj, editAttrs) => {
+  const handleChange = (obj, editAttrs?) => {
     if (editAttrs) {
       updateCurrentView({
         ...view,

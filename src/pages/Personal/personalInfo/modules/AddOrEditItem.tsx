@@ -42,7 +42,7 @@ export default class AddOrEditItem extends React.Component<any, any> {
     }));
   }
 
-  updateError(key, value, content) {
+  updateError(key, value, content?) {
     const { type } = this.props;
     const { errorList = {}, errorSentry = {} } = this.state;
     const list = { ...errorList, [key]: value };

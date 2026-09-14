@@ -110,7 +110,7 @@ export default class PrePayOrder extends Component<any, any> {
   };
 
   // 创建订单
-  handlePay = merchants => {
+  handlePay = (merchants?) => {
     const {
       worksheetId,
       rowId,
@@ -170,7 +170,7 @@ export default class PrePayOrder extends Component<any, any> {
   };
 
   // 获取订单信息
-  getData = async orderId => {
+  getData = async (orderId?) => {
     const { orderStatus } = this.state;
     orderId = orderId ? orderId : this.state.orderId;
 

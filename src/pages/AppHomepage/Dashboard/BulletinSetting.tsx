@@ -227,7 +227,7 @@ export default function BulletinSetting(props) {
   const onDelete = currentIndex => {
     const isAdded = bulletins.length > bulletinBoards.length && currentIndex === bulletins.length - 1;
 
-    const deleteItem = isUpdate => {
+    const deleteItem = (isUpdate?) => {
       const newBulletins = bulletins.filter((_, index) => index !== currentIndex);
       setActiveIndex(0);
       setBulletins(newBulletins);

@@ -34,7 +34,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  selectGroupMostFrequent: function (args: ApiArgs, options: ApiOptions = {}) {
+  selectGroupMostFrequent: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'SelectGroupMostFrequent', args, options);
   },
   /**
@@ -125,7 +125,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getGroupAvatarSelectList: function (args: ApiArgs, options: ApiOptions = {}) {
+  getGroupAvatarSelectList: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'GetGroupAvatarSelectList', args, options);
   },
   /**

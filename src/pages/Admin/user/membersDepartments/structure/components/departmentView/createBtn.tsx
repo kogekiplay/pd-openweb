@@ -55,7 +55,7 @@ class CreateBtn extends Component<any, any> {
     emitter.removeListener('handleClick', this.handleClick);
   }
 
-  handleClick(e) {
+  handleClick(e?) {
     if (e) {
       e.stopPropagation();
     }

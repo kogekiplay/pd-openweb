@@ -9,7 +9,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getGlobalMeta: function (args: ApiArgs, options: ApiOptions = {}) {
+  getGlobalMeta: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Global', 'GetGlobalMeta', args, options);
   },
   /**

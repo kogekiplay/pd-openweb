@@ -119,7 +119,7 @@ export default function FastFilter(params) {
     }
   };
 
-  const updateView = (fastFilters, advanced) => {
+  const updateView = (fastFilters, advanced?) => {
     let data =
       fastFilters.length > 0
         ? {

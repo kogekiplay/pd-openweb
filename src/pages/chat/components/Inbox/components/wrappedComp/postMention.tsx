@@ -100,7 +100,7 @@ export default class PostMention extends React.Component<any, any> {
     }
   }
 
-  mergeFromSourceState(fromPost) {
+  mergeFromSourceState(fromPost?) {
     const inboxItem = this.props;
     const {
       Post: { postID, message, rUserList, rGroupList, categories },

@@ -1,4 +1,4 @@
-﻿import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import { isEmpty } from 'lodash';
@@ -151,7 +151,7 @@ export default function RelationSearch(props) {
 
   const filterControls = getFilterRelateControls({ controls: relationControls, data });
 
-  const isSheetDisplay = value => {
+  const isSheetDisplay = (value?) => {
     return _.includes(['2', '5', '6'], value || showtype);
   };
 
@@ -176,7 +176,7 @@ export default function RelationSearch(props) {
     }
   }, [loading]);
 
-  const getShowControls = (reControls, needDefault) => {
+  const getShowControls = (reControls, needDefault?) => {
     if (_.isEmpty(showControls) && needDefault) return reControls.slice(0, 4).map(item => item.controlId);
     // 删除掉showControls 中已经被删掉的控件
     const allControlId = reControls.map(item => item.controlId);

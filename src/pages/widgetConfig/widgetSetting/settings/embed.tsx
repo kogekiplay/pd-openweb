@@ -95,7 +95,7 @@ export default function Embed(props) {
     });
   };
 
-  const getSheetInfo = (id, currentReport) => {
+  const getSheetInfo = (id, currentReport?) => {
     if (!id) return;
 
     worksheetAjax

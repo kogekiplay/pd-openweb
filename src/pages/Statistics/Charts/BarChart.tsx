@@ -57,7 +57,7 @@ export const formatDataCount = (data, isVertical, newYaxisList) => {
   });
 };
 
-export const formatChartData = (data, yaxisList, splitControlId, xaxesControlId) => {
+export const formatChartData = (data, yaxisList, splitControlId?, xaxesControlId?) => {
   if (_.isEmpty(data)) return [];
   let result = [];
   const { value } = data[0];

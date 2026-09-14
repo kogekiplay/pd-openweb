@@ -281,7 +281,7 @@ export const formatSheetsToDropdown = sheets =>
 export const formatControlsToDropdown = controls =>
   controls.map(({ controlId, controlName }) => ({ text: controlName, value: controlId }));
 
-export const getControlByControlId = (controls, controlId, key) => {
+export const getControlByControlId = (controls, controlId, key?) => {
   const control = _.find(controls, item => item.controlId === controlId) || {};
   return key ? get(control, key) : control;
 };
@@ -333,7 +333,7 @@ export const adjustControlSize = (row = [], data) => {
   return { ...data, size: WHOLE_SIZE / nextRow.length };
 };
 
-export const getAdvanceSetting = (data, key) => {
+export const getAdvanceSetting = (data, key?) => {
   const setting = get(data, ['advancedSetting']) || {};
   if (!key) return setting;
   let value = get(setting, key);
@@ -602,7 +602,7 @@ export const supportSettingCollapse = (props, key) => {
 
 // 各控件分别支持哪些配置
 // 设置、样式、说明、事件
-export const supportWidgetIntroOptions = (data = {}, introType, from, isRecycle = false) => {
+export const supportWidgetIntroOptions = (data = {}, introType, from?, isRecycle = false) => {
   // 回收站不显示样式、说明
   if (isRecycle) return false;
   // 分段、他表、标签页

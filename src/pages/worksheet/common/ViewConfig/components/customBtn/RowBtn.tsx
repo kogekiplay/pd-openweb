@@ -52,7 +52,7 @@ export default function (props) {
     [btnList, detailFlatBtnOrderJson, detailBtnGroupsJson, listFlatBtnOrderJson, listBtnGroupsJson],
   );
 
-  const getItem = (o, printList) => {
+  const getItem = (o, printList?) => {
     return o.type === 'print'
       ? (printList || tempListAll).find(a => a.id === o.id) || {}
       : o.type === 'btn'
@@ -69,7 +69,7 @@ export default function (props) {
     return ['print', 'btn', 'group'].includes(o.type) ? data.name : data.txt;
   };
 
-  const getItems = printList => {
+  const getItems = (printList?) => {
     return actioncolumn.map(o => {
       return {
         ...o,

@@ -51,7 +51,7 @@ let ChartStyle = class ChartStyle extends Component<any, any> {
       isRequest,
     );
   };
-  handleChangeDisplayValue = (key, value, isRequest) => {
+  handleChangeDisplayValue = (key, value, isRequest?) => {
     this.handleChangeDisplaySetup(
       {
         [key]: value,

@@ -168,7 +168,7 @@ function RecordFav(props) {
     setState({ recordList: list.filter(item => !item.isTop), topList: list.filter(item => item.isTop) });
   }, [keywords, appId]);
 
-  const getList = data => {
+  const getList = (data?) => {
     return (data || recordListAll)
       .filter(
         o =>
@@ -217,7 +217,7 @@ function RecordFav(props) {
     setState({ keywords: value });
   };
 
-  const renderSkeleton = height => {
+  const renderSkeleton = (height?) => {
     return (
       <div className={cx({ 'pLeft16 pRight16': props.forCard })}>
         {Array.from({ length: 3 }).map((_, index) => (
@@ -316,7 +316,7 @@ function RecordFav(props) {
     );
   };
 
-  const onRefresh = isClear => {
+  const onRefresh = (isClear?) => {
     isClear &&
       setState({
         recordListAll: [],

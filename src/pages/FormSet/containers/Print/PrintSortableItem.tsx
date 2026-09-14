@@ -34,7 +34,7 @@ export default function PrintSortableItem(props) {
     isRename && inputRef.current && inputRef.current.focus();
   }, [isRename]);
 
-  const onPreview = (isEdit = false, options) => {
+  const onPreview = (isEdit = false, options?) => {
     if ($('.printTemplatesList-tr .name input')[0] && isEdit) return;
 
     !isEdit && setIsRename(false);

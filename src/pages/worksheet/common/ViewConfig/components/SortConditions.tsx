@@ -273,7 +273,7 @@ export default class SortConditions extends React.Component<any, any> {
     this.handleChange(newSortConditions);
   };
 
-  getCanSelectColumns = controlId => {
+  getCanSelectColumns = (controlId?) => {
     const { columns, sortConditions } = this.state;
     return getCanSelectColumnsForSort(controlId, columns, sortConditions);
   };

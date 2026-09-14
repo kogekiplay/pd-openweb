@@ -62,7 +62,7 @@ export default class Operates extends Component<any, any> {
 
   customButtonsCon = React.createRef();
 
-  loadBtns = async (rowId, viewId) => {
+  loadBtns = async (rowId?, viewId?) => {
     const { updateAiActionButtons } = this.props;
     const { api } = this.context;
     const buttons = await api().getWorksheetBtns(rowId ? { rowId, ...(viewId ? { viewId } : {}) } : {});

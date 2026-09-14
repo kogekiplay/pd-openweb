@@ -143,7 +143,7 @@ class Filter extends Component<any, any> {
   /**
    * render babel
    */
-  renderLabel(text, clearOptionsFun, tips = '') {
+  renderLabel(text, clearOptionsFun?, tips = '') {
     return (
       <div className="filterLabel relative">
         {text}

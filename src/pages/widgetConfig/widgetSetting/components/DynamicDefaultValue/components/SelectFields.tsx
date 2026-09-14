@@ -18,7 +18,7 @@ const Empty = styled.div`
   background-color: var(--color-background-primary);
 `;
 
-const filterSys = (controls = [], fromCustomEventApi) => {
+const filterSys = (controls = [], fromCustomEventApi?) => {
   // 自定义事件api查询支持rowid异化
   const FILTER_SYS_CONTROLS = fromCustomEventApi ? SYS_CONTROLS.filter(i => i !== 'rowid') : SYSTEM_CONTROL;
   return controls.filter(i => !_.includes(FILTER_SYS_CONTROLS, i.controlId));

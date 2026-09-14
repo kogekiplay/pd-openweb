@@ -74,7 +74,7 @@ export default class OrderPay extends Component<any, any> {
     }
   };
 
-  getData = async orderId => {
+  getData = async (orderId?) => {
     const { payLoading } = this.state;
     const params = getOrderPayParams();
 

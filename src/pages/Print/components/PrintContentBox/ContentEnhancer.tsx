@@ -81,7 +81,7 @@ const ContentEnhancer = props => {
     approvalAjaxRef.current = ajaxMap;
   };
 
-  const syncApprovalChecked = (approval, map) => {
+  const syncApprovalChecked = (approval, map?) => {
     const realMap = map || approvalCheckedMap;
     return approval.map(item => ({
       ...item,

@@ -1,4 +1,4 @@
-﻿import React, { Component, Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Button, Dialog, RadioGroup } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import ajaxRequest from 'src/api/taskCenter';
@@ -158,7 +158,7 @@ export default class SetFolder extends Component<any, any> {
    * @param  {number} auth
    * @param  {number} originalAuth
    */
-  updateFolderAuthVisible(auth, originalAuth) {
+  updateFolderAuthVisible(auth, originalAuth?) {
     ajaxRequest
       .updateFolderAuthVisible({
         folderID: this.props.folderId,

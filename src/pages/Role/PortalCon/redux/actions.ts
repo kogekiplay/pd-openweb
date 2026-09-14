@@ -349,7 +349,7 @@ const getFilterTels = telFilters => {
 
 let ajaxFn = null;
 
-export const getList = (PotralStatus = 0, cb) => {
+export const getList = (PotralStatus = 0, cb?) => {
   return (dispatch, getState) => {
     dispatch({ type: 'UPDATE_LOADING', data: true });
     const { portal = {} } = getState();

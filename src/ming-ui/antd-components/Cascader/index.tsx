@@ -272,7 +272,7 @@ const Cascader = React.forwardRef(
 
     // 清空所有选择
     const handleClear = useCallback(
-      e => {
+      (e?) => {
         e?.stopPropagation();
         setSelectedKeys([]);
         onChange?.([]);

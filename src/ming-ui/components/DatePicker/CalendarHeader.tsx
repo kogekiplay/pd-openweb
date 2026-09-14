@@ -15,7 +15,7 @@ class CalendarHeader extends Component<any, any> {
   /**
    * 后退
    */
-  goBack = event => {
+  goBack = (event?) => {
     if (this.props.goBack) {
       this.props.goBack(event);
     }
@@ -24,7 +24,7 @@ class CalendarHeader extends Component<any, any> {
   /**
    * 前进
    */
-  goForward = event => {
+  goForward = (event?) => {
     if (this.props.goForward) {
       this.props.goForward(event);
     }

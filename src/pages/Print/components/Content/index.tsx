@@ -92,7 +92,7 @@ export default class Con extends React.Component<any, any> {
     }
   }
 
-  loadWorksheetShortUrl = props => {
+  loadWorksheetShortUrl = (props?) => {
     let { appId, worksheetId, viewId, rowId, printId } = this.props.params;
     const { printData, shareUrl } = props || this.props;
     const { shareType = 0, rowIdForQr } = printData;
@@ -858,7 +858,7 @@ export default class Con extends React.Component<any, any> {
     );
   };
 
-  renderWorks = (_works = undefined, _name, parentId) => {
+  renderWorks = (_works = undefined, _name?, parentId?) => {
     const { printData, params } = this.props;
     const { appId } = params;
     const { workflow = [], processName, approvePosition } = printData;

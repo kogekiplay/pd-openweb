@@ -89,7 +89,7 @@ export const getAssignWorkDays = (value, time, dayOff) => {
 /**
  * 获取日视图数据(仅工作日)
  */
-export const getWorkDays = (start, end, center, viewConfig) => {
+export const getWorkDays = (start, end, center?, viewConfig?) => {
   const { minDayWidth, periodCount, dayOff } = viewConfig;
   const movePeriodCount = periodCount / 2;
   const days = [];

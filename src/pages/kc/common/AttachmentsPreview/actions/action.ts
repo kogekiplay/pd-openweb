@@ -1,4 +1,4 @@
-﻿import _, { isEmpty } from 'lodash';
+import _, { isEmpty } from 'lodash';
 import kcService from '../../../api/service';
 import attachmentAjax from 'src/api/attachment';
 import fileAjax from 'src/api/file';
@@ -271,7 +271,7 @@ function getExtType(ext) {
   return EXT_TYPE_DIC[ext.toLowerCase()];
 }
 
-function formatAttachment(attachments, callfrom) {
+function formatAttachment(attachments, callfrom?) {
   return attachments.map(attachment => {
     let previewAttachmentType, previewType, name, ext, size, viewUrl, msg;
     attachment.ext = attachment.ext || '';
@@ -443,7 +443,7 @@ export function error() {
   };
 }
 
-function loadMoreAttachments(state, dispatch, isPre) {
+function loadMoreAttachments(state, dispatch, isPre?) {
   const { extra, isLoadingMore, loadMoreFinished } = state;
   const loadAjaxName = isPre ? 'preLoadMoreAttachments' : 'loadMoreAttachments';
 

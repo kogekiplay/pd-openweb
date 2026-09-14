@@ -95,7 +95,7 @@ export default function (props) {
   };
 
   //图形验证
-  const onSend = (codeType, isfrequentLogin) => {
+  const onSend = (codeType?, isfrequentLogin?) => {
     if (timeLeft > 0 && !isfrequentLogin) {
       return;
     }
@@ -123,7 +123,7 @@ export default function (props) {
     if (loginLoading) return;
     setState({ loginLoading: true });
 
-    const loginFetch = res => {
+    const loginFetch = (res?) => {
       const { emailOrTel, isCheck, dialCode } = props;
       let account = emailOrTel;
       let params = {

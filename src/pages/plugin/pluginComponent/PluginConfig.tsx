@@ -249,7 +249,7 @@ function PluginConfig(props) {
     });
   };
 
-  const fetchList = (pageIndex, keywords) => {
+  const fetchList = (pageIndex, keywords?) => {
     if (!_.includes([pluginConfigType.debugEnv, pluginConfigType.paramSetting], currentTab)) {
       setFetchListState({ loading: true, pageIndex, keywords });
     }
@@ -370,7 +370,7 @@ function PluginConfig(props) {
       });
   };
 
-  const onUpdate = (updateObj = {}, cb = () => {}, errorText) => {
+  const onUpdate = (updateObj = {}, cb = () => {}, errorText?) => {
     pluginApi.edit({ projectId, id: pluginId, source, ...updateObj }, API_EXTENDS).then(res => {
       if (res) {
         onUpdateSuccess(pluginId, updateObj);

@@ -166,7 +166,7 @@ export function ButtonList({
     }
   }, []);
 
-  async function runStartProcessByPBC(item, scanQRCodeResult) {
+  async function runStartProcessByPBC(item, scanQRCodeResult?) {
     const { id, processId, name, config } = item;
     const { inputs = [] } = config;
     const { accountId } = md.global.Account;

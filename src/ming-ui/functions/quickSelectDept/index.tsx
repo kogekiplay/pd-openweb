@@ -178,7 +178,7 @@ export function DeptSelect(props) {
       }));
   };
 
-  const onSelect = value => {
+  const onSelect = (value?) => {
     const selected = value || selectedDepartment;
     selectFn.call(
       null,
@@ -449,7 +449,7 @@ export function DeptSelect(props) {
     }
   };
 
-  const toggle = (department, notIncludeChilren) => {
+  const toggle = (department, notIncludeChilren?) => {
     const departmentIndex = _.findIndex(list, { departmentId: department.departmentId });
 
     if (!_.isUndefined(departmentIndex)) {

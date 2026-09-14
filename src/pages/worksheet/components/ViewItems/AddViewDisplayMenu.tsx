@@ -285,7 +285,7 @@ export default class AddViewDisplayMenu extends Component<any, any> {
       retract: retract.includes(key) ? retract.filter(item => item !== key) : [...retract, key],
     });
   };
-  renderCon = (info, isDev) => {
+  renderCon = (info, isDev?) => {
     const { onClick } = this.props;
     return info.map(o => {
       const { icon, id, iconColor = 'var(--color-cyan-dark)', name, iconUrl } = o;

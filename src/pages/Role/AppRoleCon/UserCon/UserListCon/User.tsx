@@ -583,7 +583,7 @@ function User(props) {
   ];
 
   //取消或设置成为角色负责人
-  const changeIsRoleManager = (param, isRoleCharger, cb) => {
+  const changeIsRoleManager = (param, isRoleCharger, cb?) => {
     if (ajaxRef.current) {
       ajaxRef.current.abort();
     }

@@ -1,4 +1,4 @@
-﻿import { Parser } from 'hot-formula-parser';
+import { Parser } from 'hot-formula-parser';
 import _ from 'lodash';
 import moment from 'moment';
 import { telIsValidNumber } from 'ming-ui/components/PhoneNumberInput/util';
@@ -405,7 +405,7 @@ const parseStaticValue = (item, staticValue) => {
 
 // 获取动态默认值
 // embedData 标可选：多数调用点只传前三个参数，不标会报 TS2554。
-export const getDynamicValue = (data, currentItem, masterData, embedData?) => {
+export const getDynamicValue = (data, currentItem, masterData?, embedData?) => {
   if (currentItem.isQueryWorksheetFill && !checkCellIsEmpty(currentItem.value)) {
     return currentItem.value;
   }
@@ -1307,7 +1307,7 @@ const getItemGroupFilters = (arrItem = {}, data = [], recordId, from) => {
 };
 
 //判断业务规则配置条件是否满足
-export const checkValueAvailable = (rule = {}, data = [], recordId, from) => {
+export const checkValueAvailable = (rule = {}, data = [], recordId, from?) => {
   let isAvailable = false;
   //不满足条件的id,过滤错误
   let filterControlIds = {};

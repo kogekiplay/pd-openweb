@@ -89,7 +89,7 @@ export const loadRow = (control, getType) => (dispatch, getState) => {
   }
 };
 
-export const loadRowRelationRows = (relationControl, getType) => async (dispatch, getState) => {
+export const loadRowRelationRows = (relationControl?, getType?) => async (dispatch, getState) => {
   const { base, loadParams, relationRows, rowInfo } = getState().mobile;
   const { pageIndex, keywords } = loadParams;
   const { instanceId, workId, rowId, worksheetId, controlId } = base;

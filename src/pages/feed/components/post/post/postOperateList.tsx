@@ -46,7 +46,7 @@ class PostOperateList extends React.Component<any, any> {
     this.componentClickAway = this.componentClickAway.bind(this);
   }
 
-  componentClickAway(e) {
+  componentClickAway(e?) {
     if (this.props.handleHide) {
       this.props.handleHide(e);
     }

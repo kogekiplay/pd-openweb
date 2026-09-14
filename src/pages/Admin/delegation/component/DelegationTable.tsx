@@ -127,7 +127,7 @@ function DeputeTable(props) {
     getData();
   }, [principals, refreshFlag]);
 
-  const getData = param => {
+  const getData = (param?) => {
     if (loading) return;
 
     if (_.get(param, 'pageIndex')) {

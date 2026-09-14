@@ -1187,7 +1187,7 @@ export function batchUpdateWidgetsLayout(
 }
 
 // 批量添加
-export const handleAddWidgets = (data, para = {}, widgetProps, callback) => {
+export const handleAddWidgets = (data, para = {}, widgetProps, callback?) => {
   const { widgets, activeWidget, allControls, setWidgets, setActiveWidget, globalSheetInfo = {} } = widgetProps;
   const { mode, path, location, displayItemType, rowIndex, activePath, isMingo } = para;
   const tempData = head(data);

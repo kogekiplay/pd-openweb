@@ -213,7 +213,7 @@ function NewRecord(props) {
     });
   };
 
-  const handleAdd = async (isContinue, appScanAutoFill) => {
+  const handleAdd = async (isContinue, appScanAutoFill?) => {
     if (window.isPublicApp) {
       alert(_l('预览模式下，不能操作'), 3);
       return;

@@ -79,7 +79,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSupportInfo: function (args: ApiArgs, options: ApiOptions = {}) {
+  getSupportInfo: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateGuide', 'GetSupportInfo', args, options);
   },
   /**
@@ -195,7 +195,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPlatformRemindInfo: function (args: ApiArgs, options: ApiOptions = {}) {
+  getPlatformRemindInfo: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateGuide', 'GetPlatformRemindInfo', args, options);
   },
 };

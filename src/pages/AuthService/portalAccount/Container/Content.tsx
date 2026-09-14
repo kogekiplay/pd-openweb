@@ -81,7 +81,7 @@ export default function (props) {
     }
   };
 
-  const footerNotice = isScanLogin => {
+  const footerNotice = (isScanLogin?) => {
     let isNoRightTime =
       //开启了注册时间验证
       !!_.get(registerInfo, 'enable') &&
@@ -113,7 +113,7 @@ export default function (props) {
     }
   };
 
-  const footer = (keys, findPassword) => {
+  const footer = (keys, findPassword?) => {
     return (
       <React.Fragment>
         {!paramForPcWx && (

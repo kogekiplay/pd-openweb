@@ -49,7 +49,7 @@ const SplitLine = props => {
   const expandTimerRef = useRef<any>(undefined);
   const navTimerRef = useRef<any>(undefined);
 
-  const handleExpand = tempVisible => {
+  const handleExpand = (tempVisible?) => {
     // 不折叠不能点击
     if (enumDefault2 === 0) return;
     const currentVisible = _.isUndefined(tempVisible) ? !visible : tempVisible;

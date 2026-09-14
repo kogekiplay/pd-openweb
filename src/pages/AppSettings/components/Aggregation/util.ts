@@ -68,7 +68,7 @@ export const canChooseForParent = (flowData, dataSource) => {
   );
 };
 
-export const canAgg = (control, parentControl, flowData, workSheetId) => {
+export const canAgg = (control, parentControl, flowData, workSheetId?) => {
   const aggregateDt = getNodeInfo(flowData, 'AGGREGATE');
   const aggregateFields = _.get(aggregateDt, 'nodeConfig.config.aggregateFields') || [];
   return (
@@ -204,7 +204,7 @@ const isRuleRelative = o => {
   );
 };
 
-export const formatControls = (controls, worksheetId) => {
+export const formatControls = (controls, worksheetId?) => {
   // 嵌入,条码,分段,备注,标签页,自由链接,富文本,查询记录,他表字段仅显示,文本识别,api查询(按钮),加密文本,成员外部门户
   // 大写金额，定位 签名 附件
   //老字段 17 18
@@ -288,7 +288,7 @@ export const extractBetweenDollars = str => {
   return matches ? matches.map(match => match.slice(1, -1)) : [];
 };
 
-export const getRuleAlias = (alias, flowData, isRule, getLen) => {
+export const getRuleAlias = (alias, flowData, isRule?, getLen?) => {
   const groupDt = getNodeInfo(flowData, 'GROUP');
   const aggregateDt = getNodeInfo(flowData, 'AGGREGATE');
   const groupFields = _.get(groupDt, 'nodeConfig.config.groupFields') || [];
@@ -550,7 +550,7 @@ export const isHasChange = flowData => {
 };
 
 //多源归组ResultField及配置处理
-export const getResultField = (fields = [], flowData, aggFuncType) => {
+export const getResultField = (fields = [], flowData, aggFuncType?) => {
   if (fields.length <= 0) {
     return undefined;
   }
@@ -713,7 +713,7 @@ export const getGroupInfo = (data, flowData) => {
 };
 
 //获取数据源节点需要展示的数据 包含源节点 以及关联的字段
-export const getAllSourceList = (flowData, source) => {
+export const getAllSourceList = (flowData, source?) => {
   const sourceDt = getNodeInfo(flowData, 'DATASOURCE');
   const groupDt = getNodeInfo(flowData, 'GROUP');
   const aggregateDt = getNodeInfo(flowData, 'AGGREGATE');
@@ -816,7 +816,7 @@ export const setGroupFields = (groupDt, sourceInfos, flowData) => {
 };
 
 //聚合字段配置处理
-export const formatAggConfig = (it, isAdd) => {
+export const formatAggConfig = (it, isAdd?) => {
   const dot = ['COUNT', 'DISTINCT_COUNT'].includes(it.aggFuncType)
     ? undefined
     : isAdd

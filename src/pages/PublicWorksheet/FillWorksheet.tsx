@@ -154,7 +154,7 @@ export default class FillWorksheet extends React.Component<any, any> {
 
     let hasError;
 
-    const submit = res => {
+    const submit = (res?) => {
       if (res && !res.ticket) {
         this.setState({
           submitLoading: false,

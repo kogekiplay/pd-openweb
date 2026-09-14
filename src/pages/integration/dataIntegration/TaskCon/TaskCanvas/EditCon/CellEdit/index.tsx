@@ -182,7 +182,7 @@ export default class CellEdit extends Component<any, any> {
     });
   };
 
-  getSourceFieldList = async nextProps => {
+  getSourceFieldList = async (nextProps?) => {
     const { node = {}, currentProjectId, list } = nextProps || this.props;
     this.setState({
       loading: true,

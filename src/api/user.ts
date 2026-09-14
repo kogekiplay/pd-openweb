@@ -38,7 +38,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getAccountBaseInfo: function (args: ApiArgs, options: ApiOptions = {}) {
+  getAccountBaseInfo: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('User', 'GetAccountBaseInfo', args, options);
   },
   /**

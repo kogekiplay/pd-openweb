@@ -1,4 +1,4 @@
-﻿import _ from 'lodash';
+import _ from 'lodash';
 import shallowEqual from 'shallowequal';
 import groupController from 'src/api/group';
 import postAjax from 'src/api/post';
@@ -170,7 +170,7 @@ export function focusUpdater() {
  * 加载置顶动态
  * @param  {string} projectId 网络 id, 全部为 null, 其他协作群等没非网络的情况下为空字符串
  */
-export function loadTop(projectId) {
+export function loadTop(projectId?) {
   return dispatch => {
     dispatch({ type: 'POST_LOAD_TOP_START' });
     if (projectId === '') {
@@ -286,7 +286,7 @@ export function filter(inputOptions) {
   };
 }
 
-export function getPostDetail(postId, knowledgeId, projectId) {
+export function getPostDetail(postId, knowledgeId?, projectId?) {
   return dispatch => {
     dispatch({ type: 'POST_GET_POST_DETAIL_START', postId });
     postAjax.getPostDetail({ postId, knowledgeId, projectId }).then(

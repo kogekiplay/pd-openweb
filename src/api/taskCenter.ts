@@ -6,7 +6,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSettingDefualtProjectId: function (args: ApiArgs, options: ApiOptions = {}) {
+  getSettingDefualtProjectId: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetSettingDefualtProjectId', args, options);
   },
   /**
@@ -999,7 +999,7 @@ adder: suncheng date: 2017年11月29日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectsFolderNotice: function (args: ApiArgs, options: ApiOptions = {}) {
+  getProjectsFolderNotice: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('TaskCenter', 'GetProjectsFolderNotice', args, options);
   },
   /**

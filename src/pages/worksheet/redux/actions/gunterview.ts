@@ -342,7 +342,7 @@ export const zoomGunterView = () => {
   };
 };
 
-export const updataPeriodType = (value, time) => {
+export const updataPeriodType = (value, time?) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { base, gunterView } = getState().sheet;
     const { viewConfig } = gunterView;
@@ -919,7 +919,7 @@ export const moveGroupingRow = (data, newKey, oldKey) => {
   };
 };
 
-export const addNewRecord = (record, addIndex) => {
+export const addNewRecord = (record, addIndex?) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { gunterView, controls } = getState().sheet;
     const { grouping, periodList, viewConfig } = gunterView;

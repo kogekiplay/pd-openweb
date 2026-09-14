@@ -113,7 +113,7 @@ export default class MemberList extends Component<any, any> {
     );
   }
 
-  handleSet = id => {
+  handleSet = (id?) => {
     Confirm({
       title: _l('设置管理员'),
       description: _l('确认将所选择人员设置为管理员?'),

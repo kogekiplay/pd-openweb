@@ -476,7 +476,7 @@ class App extends Component<any, any> {
       });
   }
 
-  renderHeader(data, level, index) {
+  renderHeader(data, level, index?) {
     const { appDetail } = this.props;
     const { id, appNaviStyle } = appDetail.detail;
     const { expandGroupKeys = [], level2ExpandKeys = [] } = this.state;

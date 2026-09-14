@@ -94,7 +94,7 @@ export function getFeatureStatus(projectId, featureId) {
  * @param {Object} params - 额外的参数，用于记录日志的详细信息。
  * @param {boolean} isLinkVisited - 是否通过链接访问
  */
-export const addBehaviorLog = (type, entityId, params = {}, isLinkVisited) => {
+export const addBehaviorLog = (type, entityId, params = {}, isLinkVisited?) => {
   if (!get(md, 'global.Account.accountId')) return;
 
   const typeObj = {

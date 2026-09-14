@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import styled from 'styled-components';
@@ -145,7 +145,7 @@ export default function (props) {
     );
   };
 
-  const onSubmit = isFrequentLoginError => {
+  const onSubmit = (isFrequentLoginError?) => {
     let callback = (res = {}) => {
       if (isFrequentLoginError && res.ret !== 0) return;
       doAddProjectCode(res);

@@ -188,7 +188,7 @@ export default function RowHead(props) {
   const recordOperateVisible = showOperate && !readonly && !isTrash && !isDraftTable;
   const dataLength = data.filter(r => r.rowid !== 'groupTitle').length;
 
-  function handleCheckAll(force) {
+  function handleCheckAll(force?) {
     if (canSelectAll && allWorksheetIsSelected) {
       onSelectAllWorksheet(false);
       if (force) {

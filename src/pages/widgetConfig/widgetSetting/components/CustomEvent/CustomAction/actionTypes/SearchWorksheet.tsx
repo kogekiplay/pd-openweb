@@ -273,7 +273,7 @@ class SearchWorksheetActionDialog extends Component<any, any> {
   };
 
   // 过滤已经选中的本表字段
-  filterSelectControls = controls => {
+  filterSelectControls = (controls?) => {
     const { allControls = [] } = this.props;
     const { configs = [] } = this.state;
     controls = (controls || allControls).filter(a => !_.find(configs, c => c.cid === a.controlId));

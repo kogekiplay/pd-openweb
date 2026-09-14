@@ -41,7 +41,7 @@ export const getFieldsData = (isCard, data = []) => {
   return initFieldsData;
 };
 
-export function maskValue(value, type) {
+export function maskValue(value, type?) {
   if (!value) return '';
   let pat = type === 'mobilePhone' ? /(\d{3})\d*(\d{4})/ : /(^\w)[^@]*(@.*$)/;
   let result = value.replace(pat, '$1***$2');

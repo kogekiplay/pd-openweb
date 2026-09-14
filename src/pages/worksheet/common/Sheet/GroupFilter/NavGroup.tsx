@@ -113,7 +113,7 @@ export default function NavGroup(props) {
     }
   }
 
-  const renderTree = (data, level, str) => {
+  const renderTree = (data, level?, str?) => {
     return data.map(d => {
       let hasChildren = !d.isLeaf;
       let isClose = hasChildren && !openKeys.includes(d.value);

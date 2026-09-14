@@ -224,7 +224,7 @@ export default class UpgradeProcess extends Component<any, any> {
     this.destroyUploadWrap();
   };
 
-  batchCheckUpgrade = (i, upgrade) => {
+  batchCheckUpgrade = (i, upgrade?) => {
     const { files } = this.state;
 
     if (files[i].index !== undefined && !upgrade) {

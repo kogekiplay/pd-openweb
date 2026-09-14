@@ -360,7 +360,7 @@ const Cascader = props => {
   };
 
   // 简单展示内容
-  const renderSimpleContent = (item, keywords) => {
+  const renderSimpleContent = (item, keywords?) => {
     return (
       <OptionWrap
         onClick={

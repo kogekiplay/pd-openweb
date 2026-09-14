@@ -491,7 +491,7 @@ class ChildTable extends React.Component<any, any> {
     return _.find(this.state.controls, { controlId });
   }
 
-  updateDefsourceOfControl(nextProps) {
+  updateDefsourceOfControl(nextProps?) {
     const { recordId, masterData } = nextProps || this.props;
     const relateRecordControl = (nextProps || this.props).control;
     this.setState(oldState => {
@@ -564,7 +564,7 @@ class ChildTable extends React.Component<any, any> {
     });
   };
 
-  refresh = (nextProps, { needResetControls = true } = {}) => {
+  refresh = (nextProps?, { needResetControls = true } = {}) => {
     const { updatePagination = () => {} } = nextProps || this.props;
     const { showExpand } = this.state;
 
@@ -662,7 +662,7 @@ class ChildTable extends React.Component<any, any> {
     return columns;
   }
 
-  newRow = (defaultRow, { isDefaultValue, isCreate, isQueryWorksheetFill, isImportFromExcel } = {}) => {
+  newRow = (defaultRow?, { isDefaultValue, isCreate, isQueryWorksheetFill, isImportFromExcel } = {}) => {
     const tempRowId = !isDefaultValue ? `temp-${uuidv4()}` : `default-${uuidv4()}`;
     const row = this.rowUpdate(
       { row: defaultRow, rowId: tempRowId },
@@ -972,7 +972,7 @@ class ChildTable extends React.Component<any, any> {
     }
   };
 
-  handleRowDetailSave = (row, updatedControlIds, saveOptions = {}) => {
+  handleRowDetailSave = (row, updatedControlIds?, saveOptions = {}) => {
     const { updateRow, addRow } = this.props;
     const { previewRowIndex, controls } = this.state;
     const newControls = updateOptionsOfControls(

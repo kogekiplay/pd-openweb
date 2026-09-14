@@ -106,7 +106,7 @@ class CalendarRange extends Component<any, any> {
     }
   }
 
-  onDateSelect(index, value, options) {
+  onDateSelect(index, value, options?) {
     const selectedValue = [...this.state.selectedValue];
     const rememberedValue = [...this.state.rememberedValue];
     selectedValue[index] = value;

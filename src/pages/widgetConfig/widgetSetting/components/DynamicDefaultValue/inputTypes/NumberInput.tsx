@@ -21,7 +21,7 @@ export default function NumberInput(props) {
     onDynamicValueChange(newValue || []);
   };
 
-  const handleChange = (value, noChange) => {
+  const handleChange = (value, noChange?) => {
     const parsedValue = formatNumberFromInput(value);
     setValue(parsedValue);
     !noChange && onDynamicValueChange(value ? [{ cid: '', rcid: '', staticValue: parsedValue }] : []);
@@ -64,7 +64,7 @@ export default function NumberInput(props) {
     defaultType && $wrap.current.triggerClick();
   };
 
-  const getMaxOrMin = isMax => {
+  const getMaxOrMin = (isMax?) => {
     return isMax
       ? (value || '').substring((value || '').indexOf('~') + 1)
       : (value || '').substring(0, (value || '').indexOf('~'));

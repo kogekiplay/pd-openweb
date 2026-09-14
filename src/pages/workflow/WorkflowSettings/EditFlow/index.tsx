@@ -394,7 +394,7 @@ class EditFlow extends Component<any, any> {
   /**
    * 打开详情
    */
-  openDetail = (processId, id, type, instanceId) => {
+  openDetail = (processId, id, type, instanceId?) => {
     const { flowInfo, workflowDetail, changeFlowInfo } = this.props;
     const { isCopy } = this.state;
 

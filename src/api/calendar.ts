@@ -6,7 +6,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUserInvitedCalendarsCount: function (args: ApiArgs, options: ApiOptions = {}) {
+  getUserInvitedCalendarsCount: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Calendar', 'GetUserInvitedCalendarsCount', args, options);
   },
   /**
@@ -27,7 +27,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getIcsUrl: function (args: ApiArgs, options: ApiOptions = {}) {
+  getIcsUrl: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Calendar', 'GetIcsUrl', args, options);
   },
   /**
@@ -50,7 +50,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  invitedCalendars: function (args: ApiArgs, options: ApiOptions = {}) {
+  invitedCalendars: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Calendar', 'InvitedCalendars', args, options);
   },
   /**
@@ -429,7 +429,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUserAllCalCategories: function (args: ApiArgs, options: ApiOptions = {}) {
+  getUserAllCalCategories: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Calendar', 'GetUserAllCalCategories', args, options);
   },
 };

@@ -214,7 +214,7 @@ export const formatRecordPoint = (row, view, list = [], controls, currentTime) =
   const type =
     localStorage.getItem(`${view.viewId}_resource_type`) || types[_.get(view, 'advancedSetting.calendarType') || 0];
 
-  const getTimeConfig = (time, isEnd) => {
+  const getTimeConfig = (time, isEnd?) => {
     let n = -1;
     list.forEach((o, i) => {
       const key = type === 'Week' ? 'h' : type === 'Month' ? 'd' : 'm';

@@ -266,7 +266,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAccountTotpScanUrl: function (args: ApiArgs, options: ApiOptions = {}) {
+  getAccountTotpScanUrl: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Account', 'GetAccountTotpScanUrl', args, options);
   },
   /**
@@ -488,7 +488,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  validateLogoffAccount: function (args: ApiArgs, options: ApiOptions = {}) {
+  validateLogoffAccount: function (args?: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('Account', 'ValidateLogoffAccount', args, options);
   },

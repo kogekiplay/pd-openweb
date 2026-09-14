@@ -131,7 +131,7 @@ export default function Info(props) {
     });
   };
 
-  const initState = (res, cb) => {
+  const initState = (res, cb?) => {
     setState({
       flowData: res,
       loading: (_.get(getNodeInfo(res, 'DATASOURCE'), 'nodeConfig.config.sourceTables') || []).length > 0,

@@ -147,7 +147,7 @@ class PrintForm extends React.Component<any, any> {
     });
   };
 
-  getParamFn = cb => {
+  getParamFn = (cb?) => {
     if (location.href.indexOf('printForm') > -1) {
       const { params = {} } = this.state;
       const { key } = params;

@@ -69,7 +69,7 @@ export default function CustomEvent(props) {
   /**
    * 调用已集成api、封装业务流程api需要接口获取数据
    */
-  const getApiInfo = (dataSource, actionType) => {
+  const getApiInfo = (dataSource, actionType?) => {
     if (!dataSource || loadingItems[dataSource]) return {};
     if (window.IntegratedApi[dataSource]) return window.IntegratedApi[dataSource];
     setLoading({ ...loadingItems, [dataSource]: true });
@@ -167,7 +167,7 @@ export default function CustomEvent(props) {
     const { actionType, actionItems = [], isAll, message, advancedSetting = {}, dataSource } = actionData;
 
     // 用默认值那套配置的呈现
-    const renderDynamicValue = (value, controlId) => {
+    const renderDynamicValue = (value, controlId?) => {
       const dynamicValue = safeParse(value, 'array');
 
       let currentControl = { type: 2 };

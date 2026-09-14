@@ -183,7 +183,7 @@ let ChooseWidget = class ChooseWidget extends React.Component<any, any> {
         : this.state.writeControls.filter(o => !othersDel.map(it => it.controlId).includes(o.controlId)),
     );
   };
-  selectOrClearAll = isSelect => {
+  selectOrClearAll = (isSelect?) => {
     if (!isSelect) {
       this.setState({
         writeControls: [],

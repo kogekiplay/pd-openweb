@@ -92,7 +92,7 @@ export default function Microsoft(props) {
     });
   };
 
-  const onEdit = (key, value, isCancel) => {
+  const onEdit = (key, value, isCancel?) => {
     if (
       key === 'groupId' &&
       value &&

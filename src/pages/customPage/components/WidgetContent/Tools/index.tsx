@@ -239,7 +239,7 @@ export default function Tools(props) {
     return tip;
   };
 
-  const getIcon = (type, icon, next) => {
+  const getIcon = (type, icon, next?) => {
     if (isSwitchButton(type)) {
       const value =
         widgetType === 'button' ? _.get(widget, ['button', 'mobileCount']) : _.get(widget, ['config', 'mobileCount']);

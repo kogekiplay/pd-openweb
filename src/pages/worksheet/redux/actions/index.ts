@@ -620,7 +620,7 @@ export function saveView(viewId, newConfig, cb) {
 }
 
 // 刷新视图
-export function refreshSheet(view, options) {
+export function refreshSheet(view, options?) {
   return dispatch => {
     if (
       String(view.viewType) === VIEW_DISPLAY_TYPE.sheet ||
@@ -914,7 +914,7 @@ export function resetQuickFilter(view) {
 }
 
 // 更新分组筛选条件
-export function updateGroupFilter(navGroupFilters = [], view) {
+export function updateGroupFilter(navGroupFilters = [], view?) {
   return dispatch => {
     dispatch({
       type: 'WORKSHEET_UPDATE_GROUP_FILTER',

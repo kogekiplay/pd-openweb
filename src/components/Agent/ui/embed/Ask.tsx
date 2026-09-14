@@ -311,7 +311,7 @@ export default function Ask({ data, docked = false }) {
     });
   }
 
-  function submit(skipCurrent, answersOverride) {
+  function submit(skipCurrent, answersOverride?) {
     if (submittedRef.current) return;
     submittedRef.current = true;
     bus.emit('ask:submit', { answers: collect(skipCurrent, answersOverride) });

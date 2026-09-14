@@ -104,7 +104,7 @@ export default class SingleFilter extends Component<any, any> {
     });
     this.handleConditionsChange(newConditions);
   }
-  handleConditionsChange(conditions, relationType) {
+  handleConditionsChange(conditions, relationType?) {
     const { onConditionsChange, feOnly } = this.props;
     const formatedConditions = conditions.map(condition => ({
       controlId: condition.controlType === 25 ? condition.control.dataSource.slice(1, -1) : condition.controlId,

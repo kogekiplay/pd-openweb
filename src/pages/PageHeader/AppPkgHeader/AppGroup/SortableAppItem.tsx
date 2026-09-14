@@ -78,7 +78,7 @@ let SortableAppItem = class SortableAppItem extends Component<any, any> {
     );
   }
 
-  switchVisible = (obj, cb) => {
+  switchVisible = (obj, cb?) => {
     this.setState(obj, cb);
   };
   handleFocus = () => {

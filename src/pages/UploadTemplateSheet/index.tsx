@@ -230,7 +230,7 @@ export default class UploadTemplateSheet extends React.Component<any, any> {
     );
   };
 
-  strQrcodeField = (it, alias = false, relation, hasS = false) => {
+  strQrcodeField = (it, alias = false, relation?, hasS = false) => {
     const { controls } = this.state;
     const { enumDefault, dataSource } = it;
     const worksheetControls = relation ? relation.controlList : controls;

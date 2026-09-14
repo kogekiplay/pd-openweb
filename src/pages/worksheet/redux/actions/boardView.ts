@@ -103,7 +103,7 @@ export function updateBoardViewRecord(data) {
   };
 }
 
-const getBoardViewPara = (sheet = {}, view) => {
+const getBoardViewPara = (sheet = {}, view?) => {
   const { base, controls, navGroupFilters = [], quickFilter = [] } = sheet;
   const { viewId, appId, chartId, type } = base;
   view = view || getCurrentView(sheet);
@@ -149,7 +149,7 @@ const dealBoardViewRecordCount = data => {
   return data.map(item => ({ [item.key]: item.totalNum })).reduce((p, c) => ({ ...p, ...c }), {});
 };
 
-export function initBoardViewData(view, hasSecondGroup) {
+export function initBoardViewData(view?, hasSecondGroup?) {
   return (dispatch, getState) => {
     const { sheet } = getState();
     const para = getBoardViewPara(sheet, view);

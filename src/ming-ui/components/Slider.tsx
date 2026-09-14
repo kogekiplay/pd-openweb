@@ -300,7 +300,7 @@ export default function Slider(props) {
     valuePercent = 0;
   }
 
-  function updateValue(v, update, updateInput) {
+  function updateValue(v, update, updateInput?) {
     v = formatByMinMax(v, min, max);
 
     setValue(v);

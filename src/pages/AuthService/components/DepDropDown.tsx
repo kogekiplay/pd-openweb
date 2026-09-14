@@ -78,7 +78,7 @@ export default class DepDropDown extends Component<any, any> {
         if (result) {
           this.cachePath = {};
           if (keywords) {
-            const getItem = (item = [], path) => {
+            const getItem = (item = [], path?) => {
               return item.map(o => {
                 this.cachePath[o.departmentId] = path ? `${path} / ${o.departmentName}` : o.departmentName;
                 let name = o.departmentName;

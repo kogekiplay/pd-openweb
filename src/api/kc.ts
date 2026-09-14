@@ -492,7 +492,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUsage: function (args: ApiArgs, options: ApiOptions = {}) {
+  getUsage: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'GetUsage', args, options);
   },
   /**
@@ -502,7 +502,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTotalUsedSize: function (args: ApiArgs, options: ApiOptions = {}) {
+  getTotalUsedSize: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Kc', 'GetTotalUsedSize', args, options);
   },
 };

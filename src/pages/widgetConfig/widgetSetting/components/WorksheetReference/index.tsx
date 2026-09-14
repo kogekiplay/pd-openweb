@@ -158,7 +158,7 @@ function WorksheetReferenceDialog(props) {
     });
   };
 
-  const getReferenceList = options => {
+  const getReferenceList = (options?) => {
     if (loading) return;
 
     setState({ loading: true });

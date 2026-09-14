@@ -65,7 +65,7 @@ function Edit(params) {
       info: params.info || {},
     });
   }, [params, setState]);
-  const onUpdate = data => {
+  const onUpdate = (data?) => {
     onChange({ ...info, ...data });
   };
 

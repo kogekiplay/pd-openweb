@@ -61,7 +61,7 @@ export default class WorkSheetComment extends React.Component<any, any> {
       this.$scrollCon.removeEventListener('scroll', this.handleRecordRightContentScroll);
     }
   }
-  getAtData = nextProps => {
+  getAtData = (nextProps?) => {
     let {
       formdata = [],
       allowExAccountDiscuss = false, //是否配置外部门户可参与讨论

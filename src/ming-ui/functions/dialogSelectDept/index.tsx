@@ -416,7 +416,7 @@ class DialogSelectDept extends React.Component<any, any> {
     }
   };
 
-  toggle(department, notIncludeChilren) {
+  toggle(department, notIncludeChilren?) {
     const { selectedDepartment } = this.state;
     const { checkIncludeChilren } = this.props; //是否选择包含子集
     const departmentIndex = _.findIndex(this.state.list, { departmentId: department.departmentId });

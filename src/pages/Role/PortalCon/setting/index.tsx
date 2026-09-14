@@ -177,7 +177,7 @@ class PortalSetting extends React.Component<any, any> {
     });
   };
 
-  editPortal = noClose => {
+  editPortal = (noClose?) => {
     const { portalSet = {} } = this.state;
     const { closeSet, appPkg = {} } = this.props;
     const { portalSetModel = {}, controlTemplate = {}, authorizerInfo = {}, epDiscussWorkFlow = {} } = portalSet;

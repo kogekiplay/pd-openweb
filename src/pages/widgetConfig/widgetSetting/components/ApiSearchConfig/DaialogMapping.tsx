@@ -10,7 +10,7 @@ import { dealRequestControls } from '../../../util/data';
 import { getMapControls } from '../DynamicDefaultValue/util';
 import './DialogMapping.less';
 
-const renderHeader = showSupport => {
+const renderHeader = (showSupport?) => {
   return (
     <div className={cx('mappingHeader mBottom20', { mTop44: !showSupport })}>
       <span className="Font14 Bold">

@@ -108,7 +108,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  loadTimeZones: function (args: ApiArgs, options: ApiOptions = {}) {
+  loadTimeZones: function (args?: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('FixedData', 'LoadTimeZones', args, options);
   },
@@ -131,7 +131,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  loadLangList: function (args: ApiArgs, options: ApiOptions = {}) {
+  loadLangList: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('FixedData', 'LoadLangList', args, options);
   },
   /**

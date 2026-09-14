@@ -175,7 +175,7 @@ export default class SingleControlValue extends Component<any, any> {
   /**
    * 更多节点的值
    */
-  renderOtherFields(item, i, customCallback) {
+  renderOtherFields(item, i, customCallback?) {
     const { hideOtherField } = this.props;
 
     if (hideOtherField) return null;
@@ -209,7 +209,7 @@ export default class SingleControlValue extends Component<any, any> {
   /**
    * 验证号码控件  只能输入数字  做最简单验证
    */
-  checkPhoneNumberControl(evt, isBlur, i) {
+  checkPhoneNumberControl(evt, isBlur?, i?) {
     const num = evt.target.value.replace(/[^\d]/g, '');
     evt.target.value = num;
 
@@ -334,7 +334,7 @@ export default class SingleControlValue extends Component<any, any> {
   /**
    * 验证数值金额控件
    */
-  checkNumberControl(evt, isBlur, i) {
+  checkNumberControl(evt, isBlur?, i?) {
     let num = evt.target.value
       .replace(/[^-\d.]/g, '')
       .replace(/^\./g, '')

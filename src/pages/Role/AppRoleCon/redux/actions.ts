@@ -93,7 +93,7 @@ export const getOutList = (props, isOut) => {
 
 let ajaxAppRoleSummary = null;
 
-export const getRoleSummary = (appId, cb, loading) => {
+export const getRoleSummary = (appId, cb?, loading?) => {
   return dispatch => {
     if (ajaxAppRoleSummary) {
       ajaxAppRoleSummary.abort();

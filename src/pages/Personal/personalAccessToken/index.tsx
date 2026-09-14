@@ -55,7 +55,7 @@ export default function PersonalAccessToken() {
       .finally(() => setLoading(false));
   };
 
-  const openFormDialog = tokenId => {
+  const openFormDialog = (tokenId?) => {
     setEditingTokenId(tokenId);
     setDialogVisible(true);
   };

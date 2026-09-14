@@ -72,7 +72,7 @@ export interface RecordDetail {
   errorCode?: number;
 }
 
-export function getRowDetail(params, controls, options = {}) {
+export function getRowDetail(params, controls?, options = {}) {
   return new Promise<RecordDetail>((resolve, reject) => {
     if (!controls) {
       params.getTemplate = true;

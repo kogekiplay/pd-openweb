@@ -215,7 +215,7 @@ export const getGlobalMeta = () => {
   });
 };
 
-export const getCurrentTime = time => {
+export const getCurrentTime = (time?) => {
   let date = time ? time : new Date();
   let month = zeroFill(date.getMonth() + 1);
   let day = zeroFill(date.getDate());

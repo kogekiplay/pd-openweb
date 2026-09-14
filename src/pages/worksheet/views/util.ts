@@ -174,7 +174,7 @@ export const isDisabledCreate = permit => {
   return !isOpenPermit(permitList.createButtonSwitch, permit);
 };
 
-export const isAllowQuickSwitch = (permit, viewId) => isOpenPermit(permitList.quickSwitch, permit, viewId);
+export const isAllowQuickSwitch = (permit, viewId?) => isOpenPermit(permitList.quickSwitch, permit, viewId);
 
 export const getSearchData = sheet => {
   const {
@@ -222,7 +222,7 @@ export const getSearchData = sheet => {
   return { queryKey: titleControlId, data };
 };
 
-export const renderTitleByViewtitle = (row, controls, view, useDateConvertToServerZone) => {
+export const renderTitleByViewtitle = (row, controls, view, useDateConvertToServerZone?) => {
   const viewtitle = _.get(view, 'advancedSetting.viewtitle');
   const controlFields = viewtitle.match(FIELD_REG_EXP) || [];
   const defaultValue = _.filter(viewtitle.split('$'), v => !_.isEmpty(v));

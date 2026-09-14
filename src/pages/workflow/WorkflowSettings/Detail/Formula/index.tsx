@@ -1026,7 +1026,7 @@ export default class Formula extends Component<any, any> {
   /**
    * 切换工作表
    */
-  switchWorksheet = (appId, name, otherApkId = '', otherApkName = '') => {
+  switchWorksheet = (appId, name?, otherApkId = '', otherApkName = '') => {
     const { data } = this.state;
     const appList = _.cloneDeep(data.appList);
 

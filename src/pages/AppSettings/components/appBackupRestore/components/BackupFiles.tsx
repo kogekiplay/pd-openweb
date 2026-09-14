@@ -171,7 +171,7 @@ export default function BackupFiles(props) {
     });
   };
 
-  const onRestore = (it, dbInstanceId) => {
+  const onRestore = (it, dbInstanceId?) => {
     const item = it || restoreItem;
 
     let params = {

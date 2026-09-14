@@ -280,7 +280,7 @@ class DepartmentTree extends React.Component<any, any> {
     this.props.loadUsers(id);
   };
 
-  renderTreeNodes = (data, hasMore, parentData) => {
+  renderTreeNodes = (data, hasMore?, parentData?) => {
     const { expandedKeys, showDisabledDepartment, hasDepartmentAuth } = this.props;
     const { showAction } = this.state;
 

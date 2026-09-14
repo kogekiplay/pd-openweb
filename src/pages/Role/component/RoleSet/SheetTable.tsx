@@ -121,7 +121,7 @@ export default class extends PureComponent<any, any> {
     onChange(changeSheetModel(sheet, key, checked));
   };
 
-  toggleViewLevel = (viewId, payload, isAllNoRead) => {
+  toggleViewLevel = (viewId, payload, isAllNoRead?) => {
     const { sheet, onChange } = this.props;
     onChange(changeViewModel({ ...sheet, canAdd: isAllNoRead ? false : sheet.canAdd }, viewId, payload));
   };

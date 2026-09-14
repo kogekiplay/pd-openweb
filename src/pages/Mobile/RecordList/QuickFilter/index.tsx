@@ -165,7 +165,7 @@ export function QuickFilter(props) {
     setValues({});
   }
 
-  const update = newValues => {
+  const update = (newValues?) => {
     const valuesToUpdate = newValues || values;
     const needCheckRequired = _.get(view, 'advancedSetting.fastrequired') === '1';
     const itemsWithValues = items.map((filter, i) => ({

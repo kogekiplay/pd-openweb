@@ -367,7 +367,7 @@ export function updateSelectRule(attr, value) {
 }
 
 // 校验配置错误
-export function updateError(attr, value, index) {
+export function updateError(attr, value, index?) {
   return (dispatch, getState) => {
     const stateList = getState().formSet;
     const { ruleError = {} } = stateList;

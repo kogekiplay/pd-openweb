@@ -112,7 +112,7 @@ class Task extends Component<any, any> {
     });
   };
   //获取流信息
-  getSynsTask = errIds => {
+  getSynsTask = (errIds?) => {
     const { flowId = '' } = this.state;
     TaskFlow.getTaskFlow({
       flowId,
@@ -272,7 +272,7 @@ class Task extends Component<any, any> {
     }
   };
 
-  publishTaskAction = info => {
+  publishTaskAction = (info?) => {
     const { currentProjectId: projectId } = this.state;
     const { flowId = '', flowData } = this.state;
     this.setState({

@@ -312,7 +312,7 @@ export function reducer(state, action: AppHomeAction = {}) {
   }
 }
 
-function handleDashboardOrAppResponse(dispatch, data, isDashboard) {
+function handleDashboardOrAppResponse(dispatch, data, isDashboard?) {
   if (
     _.every(
       [

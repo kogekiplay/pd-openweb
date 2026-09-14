@@ -105,7 +105,7 @@ ErrorBoundary.propTypes = {
   fallback: PropTypes.func,
 };
 
-ErrorBoundary.wrap = (Component, options) => {
+ErrorBoundary.wrap = (Component, options?) => {
   const isSeriousError = typeof options === 'boolean' ? options : options && options.isSeriousError;
 
   function ErrorBoundaryWrapper(props) {

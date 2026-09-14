@@ -311,7 +311,7 @@ export function checkConditionAvailable(condition) {
   }
 }
 
-export function getConditionOverrideValue(type, condition, valueType, from) {
+export function getConditionOverrideValue(type, condition, valueType?, from?) {
   const { value, values, dateRange, dateRangeType, fullValues } = condition;
   let newDateRangeType = dateRangeType;
   const conditionGroupType = getConditionType(condition);
@@ -427,7 +427,7 @@ export function compareControlType(widget, type) {
   return false;
 }
 
-export function getFilterTypes(control = {}, conditionType, from) {
+export function getFilterTypes(control = {}, conditionType?, from?) {
   let typeEnums = [];
   const { type, advancedSetting = {} } = control;
   const typeKey = getTypeKey(type);
@@ -737,7 +737,7 @@ function getDefaultFilterType(control, from) {
   }
 }
 
-export function getDefaultCondition(control, from) {
+export function getDefaultCondition(control, from?) {
   const conditionGroupKey = getTypeKey(control.type);
   const conditionGroupType =
     CONTROL_FILTER_WHITELIST[conditionGroupKey] && CONTROL_FILTER_WHITELIST[conditionGroupKey].value;
@@ -1712,7 +1712,7 @@ export function validate(condition) {
 const SHEET_FILTER_URL_KEY = 'sf';
 
 // 把选中的已保存筛选器 id 写入 url，刷新后可还原选中；不传 filterId 时仅清除该参数
-export function saveSheetFilterIdToUrl(filterId) {
+export function saveSheetFilterIdToUrl(filterId?) {
   if (typeof window === 'undefined' || !window.history) return;
   try {
     const search = new URLSearchParams(window.location.search);

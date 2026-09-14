@@ -183,7 +183,7 @@ const OCR = props => {
   };
 
   // api查询
-  const handleSearch = (up, file) => {
+  const handleSearch = (up?, file?) => {
     const { requestmap, authaccount } = advancedSetting;
 
     if (!dataSource) {

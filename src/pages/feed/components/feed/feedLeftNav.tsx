@@ -167,7 +167,7 @@ class FeedLeftNav extends React.Component<any, any> {
     });
   };
 
-  createGroup = (e, projectId) => {
+  createGroup = (e, projectId?) => {
     e.preventDefault();
     e.stopPropagation();
     createGroup({

@@ -286,7 +286,7 @@ export default function NavGroup(params) {
     updateView(undefined);
   };
 
-  const updateView = (navGroup, advancedSetting) => {
+  const updateView = (navGroup, advancedSetting?) => {
     setData(navGroup);
     let editAttrs = ['navGroup'];
     let param = { navGroup: navGroup ? [navGroup] : [] };

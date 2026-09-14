@@ -124,7 +124,7 @@ export default class LoopContent extends Component<any, any> {
   /**
    * 验证数值控件
    */
-  checkNumberControl(evt, isBlur) {
+  checkNumberControl(evt, isBlur?) {
     const { updateSource } = this.props;
     let num = evt.target.value.replace(/[^\d]/g, '');
 
@@ -527,7 +527,7 @@ export default class LoopContent extends Component<any, any> {
   /**
    * 验证范围开始值、结束值
    */
-  checkRangeNumber(evt, key, min, max, isEnd) {
+  checkRangeNumber(evt, key?, min?, max?, isEnd?) {
     let num = evt.target.value.replace(/[^\d]/g, '');
     evt.target.value = num;
 
@@ -725,7 +725,7 @@ export default class LoopContent extends Component<any, any> {
   /**
    * 验证增量开始值
    */
-  checkIncrementStartNumber(evt, key, min, max) {
+  checkIncrementStartNumber(evt, key?, min?, max?) {
     let num = evt.target.value.replace(/[^\d]/g, '');
     evt.target.value = num;
 
@@ -753,7 +753,7 @@ export default class LoopContent extends Component<any, any> {
   /**
    * 验证增量值
    */
-  checkIncrementNumber(evt, key) {
+  checkIncrementNumber(evt, key?) {
     let num = evt.target.value.replace(/[^\d]/g, '');
     evt.target.value = num;
 

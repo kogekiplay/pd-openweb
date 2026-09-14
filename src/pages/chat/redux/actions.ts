@@ -192,7 +192,7 @@ export const removeSession = id => {
  * 添加会话
  * @param {*} result
  */
-export const addSession = (result, id) => (dispatch: AppDispatch, getState: GetState) => {
+export const addSession = (result, id?) => (dispatch: AppDispatch, getState: GetState) => {
   const { sessionList } = getState().chat;
 
   // 兼容连续消息
@@ -298,7 +298,7 @@ export const addGroupSession =
  * @param {*} cb
  */
 export const addUserSession =
-  (id, msg = {}, isOpen = true, cb) =>
+  (id, msg = {}, isOpen = true, cb?) =>
   (dispatch: AppDispatch, getState: GetState) => {
     const { sessionList } = getState().chat;
     // if (utils.chatWindow.is(id)) {

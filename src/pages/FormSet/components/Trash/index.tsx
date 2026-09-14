@@ -193,7 +193,7 @@ export default function TrashDialog(props) {
       });
   };
 
-  const renderTxt = (it, isTxt) => {
+  const renderTxt = (it, isTxt?) => {
     const list = safeParse(_.get(it, 'advancedSetting.listviews'), 'array');
     const dt = safeParse(_.get(it, 'advancedSetting.detailviews'), 'array');
     const data = _.uniq([...list, ...dt]);

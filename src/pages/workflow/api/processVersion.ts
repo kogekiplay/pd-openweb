@@ -12,7 +12,7 @@ const processVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  batch: function (args, options) {
+  batch: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + '/v1/process/batch';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'v1processbatch', JSON.stringify(args), $.extend(base, options));
@@ -25,7 +25,7 @@ const processVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getDifferenceByCompanyId: function (args, options) {
+  getDifferenceByCompanyId: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + '/v1/process/getDifferenceByCompanyId';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'v1processgetDifferenceByCompanyId', args, $.extend(base, options));
@@ -38,7 +38,7 @@ const processVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getDifferenceByProcessId: function (args, options) {
+  getDifferenceByProcessId: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + '/v1/process/getDifferenceByProcessId';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'v1processgetDifferenceByProcessId', args, $.extend(base, options));
@@ -51,7 +51,7 @@ const processVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getDifferenceProcessCount: function (args, options) {
+  getDifferenceProcessCount: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + '/v1/process/getDifferenceProcessCount';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'v1processgetDifferenceProcessCount', JSON.stringify(args), $.extend(base, options));
@@ -64,7 +64,7 @@ const processVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getDifferenceProcessList: function (args, options) {
+  getDifferenceProcessList: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + '/v1/process/getDifferenceProcessList';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'v1processgetDifferenceProcessList', JSON.stringify(args), $.extend(base, options));
@@ -77,7 +77,7 @@ const processVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getDifferenceProcessListByIds: function (args, options) {
+  getDifferenceProcessListByIds: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + '/v1/process/getDifferenceProcessListByIds';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(
@@ -95,7 +95,7 @@ const processVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getHistoryDifferenceByCompanyId: function (args, options) {
+  getHistoryDifferenceByCompanyId: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + '/v1/process/getHistoryDifferenceByCompanyId';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(
@@ -113,7 +113,7 @@ const processVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getHistoryDifferenceByProcessId: function (args, options) {
+  getHistoryDifferenceByProcessId: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + '/v1/process/getHistoryDifferenceByProcessId';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'v1processgetHistoryDifferenceByProcessId', args, $.extend(base, options));
@@ -126,7 +126,7 @@ const processVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getRouterList: function (args, options) {
+  getRouterList: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + '/v1/process/getRouterList';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'v1processgetRouterList', args, $.extend(base, options));
@@ -139,7 +139,7 @@ const processVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getWarning: function (args, options) {
+  getWarning: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + '/v1/process/getWarning';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'v1processgetWarning', args, $.extend(base, options));
@@ -152,7 +152,7 @@ const processVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  init: function (args, options) {
+  init: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + '/v1/process/init';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'v1processinit', JSON.stringify(args), $.extend(base, options));
@@ -165,7 +165,7 @@ const processVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  remove: function (args, options) {
+  remove: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + '/v1/process/remove';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'v1processremove', JSON.stringify(args), $.extend(base, options));
@@ -178,7 +178,7 @@ const processVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  reset: function (args, options) {
+  reset: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + '/v1/process/reset';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'v1processreset', JSON.stringify(args), $.extend(base, options));
@@ -191,7 +191,7 @@ const processVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  updateRouterIndex: function (args, options) {
+  updateRouterIndex: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + '/v1/process/updateRouterIndex';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'v1processupdateRouterIndex', JSON.stringify(args), $.extend(base, options));
@@ -204,7 +204,7 @@ const processVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  updateWaiting: function (args, options) {
+  updateWaiting: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + '/v1/process/updateWaiting';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'v1processupdateWaiting', JSON.stringify(args), $.extend(base, options));
@@ -217,7 +217,7 @@ const processVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  updateWarning: function (args, options) {
+  updateWarning: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + '/v1/process/updateWarning';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'v1processupdateWarning', JSON.stringify(args), $.extend(base, options));
@@ -231,7 +231,7 @@ const processVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  count: function (args, options) {
+  count: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + '/v1/process/count';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'v1processcount', args, $.extend(base, options));
@@ -253,7 +253,7 @@ const processVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getProcessByCompanyId: function (args, options) {
+  getProcessByCompanyId: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + '/v1/process/getProcessByCompanyId';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'v1processgetProcessByCompanyId', args, $.extend(base, options));
@@ -267,7 +267,7 @@ const processVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getProcessRole: function (args, options) {
+  getProcessRole: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + '/v1/process/getProcessRole';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'v1processgetProcessRole', args, $.extend(base, options));
@@ -280,7 +280,7 @@ const processVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getProcessUseCount: function (args, options) {
+  getProcessUseCount: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + '/v1/process/getProcessUseCount';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'v1processgetProcessUseCount', args, $.extend(base, options));
@@ -297,7 +297,7 @@ const processVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  list: function (args, options) {
+  list: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + '/v1/process/list';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'v1processlist', args, $.extend(base, options));
@@ -313,7 +313,7 @@ const processVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  listAll: function (args, options) {
+  listAll: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + '/v1/process/listAll';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'v1processlistAll', args, $.extend(base, options));
@@ -326,7 +326,7 @@ const processVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  removeProcess: function (args, options) {
+  removeProcess: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + '/v1/process/removeProcess';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'v1processremoveProcess', JSON.stringify(args), $.extend(base, options));
@@ -339,7 +339,7 @@ const processVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  restoreProcess: function (args, options) {
+  restoreProcess: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + '/v1/process/restoreProcess';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'v1processrestoreProcess', JSON.stringify(args), $.extend(base, options));

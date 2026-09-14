@@ -420,7 +420,7 @@ class WorkSheet extends Component<any, any> {
 
     safeLocalStorageSetItem(`mdAppCache_${md.global.Account.accountId}_${appId}`, JSON.stringify(storage));
   }
-  getValidedWorksheetId(props) {
+  getValidedWorksheetId(props?) {
     const { match } = props || this.props;
     let id;
 

@@ -36,7 +36,7 @@ export const changeSubTaskLevel = level => {
 };
 
 // 处理呈现数据
-export const updateDataSource = source => (dispatch: AppDispatch, getState: GetState) => {
+export const updateDataSource = (source?) => (dispatch: AppDispatch, getState: GetState) => {
   const { accountTasksKV, stateConfig } = getState().task;
 
   source = _.cloneDeep(source || accountTasksKV);

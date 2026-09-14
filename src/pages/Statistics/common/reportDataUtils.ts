@@ -33,7 +33,7 @@ export const fillMapKey = result => {
 /**
  * 把 valueMap 的 key 填充到 map 和 contrastMap
  */
-export const fillValueMap = (result, pageId) => {
+export const fillValueMap = (result, pageId?) => {
   if (result.status <= 0) {
     return result;
   }
@@ -154,7 +154,7 @@ const fillTranslate = (result, pageId) => {
     }
   };
 
-  const translateValueMap = (dataSource, controlId, displayMode) => {
+  const translateValueMap = (dataSource, controlId, displayMode?) => {
     const isFieldStyle = displayMode === 'fieldStyle';
     const valueMapTranslateInfo = getTranslateInfo(appId, null, dataSource);
 

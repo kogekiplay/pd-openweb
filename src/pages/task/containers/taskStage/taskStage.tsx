@@ -148,7 +148,7 @@ class TaskStage extends Component<any, any> {
       );
     });
   }
-  renderChargeHeaderAvatar(params) {
+  renderChargeHeaderAvatar(params?) {
     const { taskConfig } = this.props;
     $('#tasks .listStageContent .chargeHeaderAvatar').each((i, ele) => {
       let $ele = $(ele);
@@ -1635,7 +1635,7 @@ class TaskStage extends Component<any, any> {
   /**
    * 创建
    */
-  addNewTaskEnter($el, isEnter) {
+  addNewTaskEnter($el, isEnter?) {
     const $parent = $el.parent();
     const taskName = $parent.find('.teaStageName').val().trim();
 

@@ -1,4 +1,4 @@
-﻿import _, {
+import _, {
   assign,
   find,
   findKey,
@@ -782,7 +782,7 @@ export const setHighLight = (tableId, rowIndex) => {
   };
 };
 
-export const setHighLightOfRows = (rowIds, tableId) => {
+export const setHighLightOfRows = (rowIds, tableId?) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { sheetview } = getState().sheet;
     const { rows } = sheetview.sheetViewData;
@@ -1047,7 +1047,7 @@ export function changePageSize(pageSize, pageIndex, { refetch = true } = {}) {
 }
 
 // 分页
-export function changePageIndex(pageIndex, sleep) {
+export function changePageIndex(pageIndex, sleep?) {
   return function (dispatch) {
     if (sleep) {
       setTimeout(() => {
@@ -1433,7 +1433,7 @@ export function changeWorksheetSheetViewSummaryType({ controlId, value, groupArg
   };
 }
 
-export function addRecord(records, afterRowId) {
+export function addRecord(records, afterRowId?) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const state = getState();
     const { sheetview, base = {}, views = [], controls = [] } = state.sheet;

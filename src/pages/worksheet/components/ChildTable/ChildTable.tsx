@@ -673,7 +673,7 @@ class ChildTable extends React.Component<any, any> {
     clearAndSetRows(rows);
   }
 
-  updateDefsourceOfControl(nextProps) {
+  updateDefsourceOfControl(nextProps?) {
     const { recordId, masterData } = nextProps || this.props;
     const relateRecordControl = (nextProps || this.props).control;
     this.setState(oldState => {
@@ -688,7 +688,7 @@ class ChildTable extends React.Component<any, any> {
     });
   }
 
-  loadRows(nextProps, { needResetControls, isRefresh } = {}) {
+  loadRows(nextProps?, { needResetControls, isRefresh } = {}) {
     const { control, recordId, masterData, loadRows, from, base = {} } = nextProps || this.props;
     const { isTreeTableView, instanceId, workId, worksheetInfo, originControls } = base;
     const isWorkflow =
@@ -748,7 +748,7 @@ class ChildTable extends React.Component<any, any> {
     });
   }
 
-  refresh = (nextProps, { needResetControls = true } = {}) => {
+  refresh = (nextProps?, { needResetControls = true } = {}) => {
     this.setState({
       loading: true,
       keywords: undefined,
@@ -803,7 +803,7 @@ class ChildTable extends React.Component<any, any> {
     return columns;
   }
 
-  getSheetColumnWidths(control) {
+  getSheetColumnWidths(control?) {
     control = control || this.props.control;
     const columns = this.getShowColumns();
     let widths = {};
@@ -828,7 +828,7 @@ class ChildTable extends React.Component<any, any> {
     );
   }
 
-  newRow = (defaultRow, { isDefaultValue, isCreate, isQueryWorksheetFill, isImportFromExcel } = {}) => {
+  newRow = (defaultRow?, { isDefaultValue, isCreate, isQueryWorksheetFill, isImportFromExcel } = {}) => {
     const tempRowId = !isDefaultValue ? `temp-${uuidv4()}` : `default-${uuidv4()}`;
     const row = this.rowUpdate(
       { row: defaultRow, rowId: tempRowId },
@@ -1280,7 +1280,7 @@ class ChildTable extends React.Component<any, any> {
     update.apply(this);
   }
 
-  handleRowDetailSave = (row, updatedControlIds) => {
+  handleRowDetailSave = (row, updatedControlIds?) => {
     const { updateRow, addRow } = this.props;
     const { previewRowIndex, controls } = this.state;
     const newControls = updateOptionsOfControls(

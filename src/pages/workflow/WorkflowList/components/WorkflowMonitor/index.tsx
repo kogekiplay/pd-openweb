@@ -47,7 +47,7 @@ export default class WorkflowMonitor extends Component<any, any> {
   };
 
   //  获取流程列表
-  getFlowList = isRefresh => {
+  getFlowList = (isRefresh?) => {
     this.setState({ loading: true });
     let { pageIndex, keyword = undefined, sorter, showHistoryDetail, historyIds = [] } = this.state;
     const { projectId } = this.props.match.params;

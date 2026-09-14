@@ -87,7 +87,7 @@ class EditPrint extends React.Component<any, any> {
     this.uploaderDestroy();
   }
 
-  setData = nextProps => {
+  setData = (nextProps?) => {
     const { fileType, templateData = {}, worksheetName, type } = nextProps || this.props;
 
     this.setState({

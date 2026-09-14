@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { assign } from 'lodash';
 import PropTypes from 'prop-types';
 
@@ -266,7 +266,7 @@ class DragSelect extends React.Component<any, any> {
 
     execFunc(this.props.onDragSelectStart, evt);
   };
-  calcRect(startPos, endPos, range) {
+  calcRect(startPos, endPos, range?) {
     const el = this.getRootNode();
     let left = startPos.x < endPos.x ? startPos.x : endPos.x;
     let right = el.clientWidth - (startPos.x > endPos.x ? startPos.x : endPos.x);

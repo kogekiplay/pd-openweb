@@ -148,7 +148,7 @@ const renderRecordAttachments = (value, isRelateMultipleSheet, fileStyle = '0') 
   sourceControlType: 他表字段type
   valueItem: 他表字段valueItem；[valueItem, valueItem]
   */
-const getPrintContent = (item, sourceControlType, valueItem) => {
+const getPrintContent = (item, sourceControlType?, valueItem?) => {
   const { realShowData, enableEmptyPlaceholder, emptyPlaceholderMode } = item;
   const placeholderMode =
     realShowData && !!Number(enableEmptyPlaceholder) && emptyPlaceholderMode ? emptyPlaceholderMode : '';

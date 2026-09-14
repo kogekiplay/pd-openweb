@@ -140,7 +140,7 @@ export default function Item(props) {
     return <LoadDiv className="mTop24" />;
   }
 
-  const addNode = (id = actionId, appId) => {
+  const addNode = (id = actionId, appId?) => {
     let typeInfo = TYPENODE.find(o => o.actionId === id) || {};
     flowNodeAjax
       .add(

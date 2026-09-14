@@ -114,7 +114,7 @@ let ViewItems = class ViewItems extends Component<any, any> {
     }
   };
 
-  getWorksheetViews(worksheetId, status) {
+  getWorksheetViews(worksheetId, status?) {
     const { appId } = this.props;
     sheetAjax
       .getWorksheetViews({
@@ -137,7 +137,7 @@ let ViewItems = class ViewItems extends Component<any, any> {
       });
   }
 
-  handleAddView = (data, callback) => {
+  handleAddView = (data, callback?) => {
     const { id = 'sheet', name, isManageView = false } = data;
     const { worksheetId, viewList, appId, worksheetControls, worksheetInfo } = this.props;
 

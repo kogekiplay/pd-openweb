@@ -186,7 +186,7 @@ export const getSecondGroupDefaultValue = (control, opt) => {
 };
 
 // 记录排序
-export const viewSortRecord = (obj, view, props, selectControl, secondGroupControl) => {
+export const viewSortRecord = (obj, view, props, selectControl, secondGroupControl?) => {
   const { rowId, value, firstGroupChange, secondGroupChange, secondGroupValue } = obj;
   const defaultValue = [];
   const firstGroupControl = selectControl();

@@ -176,7 +176,7 @@ export const showArrowSetting = (data, values = [], actionType, from) => {
 };
 
 //根据controls获取controlName
-export function getTextById(data, controls = [], actionType, from) {
+export function getTextById(data, controls = [], actionType, from?) {
   const tree = getNewDropDownData(data, actionType);
   let currentArr = [];
   if (_.find(tree, i => i.sectionId)) return;
@@ -635,7 +635,7 @@ export const filterDataRelationText = (dynamicSource = [], columns) => {
   return data;
 };
 
-export const filterData = (columns = [], filterItem = [], isSetting, relationControls = [], sourceControlId = '') => {
+export const filterData = (columns = [], filterItem = [], isSetting?, relationControls = [], sourceControlId = '') => {
   columns = columns.concat(DEFAULT_COLUMNS);
   let dataList = [];
   filterItem.forEach(item => {
@@ -744,7 +744,7 @@ export function getActionError(value = {}) {
 }
 
 // 对比是否有变更
-export function hasRuleChanged(data = [], selectRule = {}, passAlert) {
+export function hasRuleChanged(data = [], selectRule = {}, passAlert?) {
   const originData = _.find(data, i => i.ruleId === selectRule.ruleId);
   const { ruleId = '' } = selectRule;
 

@@ -318,7 +318,7 @@ export default function SubListSetting(props) {
     );
   };
 
-  const renderUniqText = isGlobal => {
+  const renderUniqText = (isGlobal?) => {
     const textControls = isGlobal ? globalUniqControlIds : showUniqueControls;
     const textArr = textControls
       .map(i => {

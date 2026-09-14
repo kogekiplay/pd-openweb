@@ -32,7 +32,7 @@ export const changeBase = data => {
 
 let reportConfigDetailRequest = null;
 
-export const getReportConfigDetail = (data, callBack) => {
+export const getReportConfigDetail = (data, callBack?) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { reportId, reportType, appId, customPageConfig = {} } = data;
     const { currentReport: oldReport, base } = getState().statistics;
@@ -175,7 +175,7 @@ export const getReportData = ({ reload = false } = {}) => {
       });
     };
 
-    const fail = error => {
+    const fail = (error?) => {
       const { errorCode } = error || {};
       dispatch({
         type: 'CHANGE_STATISTICS_REPORT_DATA',

@@ -160,7 +160,7 @@ export default class Amap extends Component<any, any> {
     }
   }
   // 定位并添加mark
-  geoLocation(lng, lat, address, name) {
+  geoLocation(lng, lat, address, name?) {
     if (this._maphHandler) {
       this._maphHandler.setPosition(lng, lat, 18);
       this._maphHandler.removeMarker('searchMarker');

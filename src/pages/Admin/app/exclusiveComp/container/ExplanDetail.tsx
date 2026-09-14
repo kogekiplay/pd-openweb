@@ -88,7 +88,7 @@ function ExplanDetail(props) {
     getProcessList();
   }, [filters.search, filters.pageIndex, filters.apkId, filters.workflowType]);
 
-  const getProcessList = resourceId => {
+  const getProcessList = (resourceId?) => {
     setLoading(true);
     let _resourceId = resourceId || (explanInfo || {}).resourceId;
     if (!_resourceId) return;
@@ -139,7 +139,7 @@ function ExplanDetail(props) {
       });
   };
 
-  const removeWorkflow = (ids, targetResourceId) => {
+  const removeWorkflow = (ids, targetResourceId?) => {
     if (!ids || ids.length === 0) return;
 
     resourceApi

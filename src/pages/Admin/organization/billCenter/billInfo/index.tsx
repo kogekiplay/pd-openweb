@@ -425,7 +425,7 @@ export default function BillInfo({ match }) {
   };
 
   const getAgentBillingTransactionsByTraceId = useCallback(
-    (extendId, isFreeApplied) => {
+    (extendId, isFreeApplied?) => {
       const traceId = _.trim(String(extendId || ''));
 
       if (!traceId) return;

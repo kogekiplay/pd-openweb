@@ -638,7 +638,7 @@ export default class Agent extends Component<any, any> {
               <MORE_TOOLS_LIST>
                 {MORE_TOOLS.map((o, index) => {
                   const tool = AGENT_TOOLS[o.type];
-                  const getNewTool = (configs = [], name) => ({
+                  const getNewTool = (configs = [], name?) => ({
                     auto: !configs.length,
                     configs,
                     enabled: true,

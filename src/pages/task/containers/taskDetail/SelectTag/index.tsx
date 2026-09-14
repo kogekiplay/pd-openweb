@@ -93,7 +93,7 @@ function SelectTag(props) {
   }, [focus]);
 
   const getTags = useCallback(
-    keywords => {
+    (keywords?) => {
       setLoading(true);
       ajaxRequest
         .getTagsByTaskID({ taskID: batchTask ? '' : taskID, keywords: keywords || searchValue })

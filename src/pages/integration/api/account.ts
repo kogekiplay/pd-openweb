@@ -29,7 +29,7 @@ const account = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAccounts: function (args, options) {
+  getAccounts: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + 'account/getAccounts';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'accountgetAccounts', JSON.stringify(args), $.extend(base, options));

@@ -27,7 +27,7 @@ const syncTask = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteTask: function (args, options) {
+  deleteTask: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + 'syncTask/deleteTask';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'syncTaskdeleteTask', JSON.stringify(args), $.extend(base, options));
@@ -45,7 +45,7 @@ const syncTask = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  datasourceUseDetails: function (args, options) {
+  datasourceUseDetails: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + 'syncTask/datasourceUseDetails';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'syncTaskdatasourceUseDetails', JSON.stringify(args), $.extend(base, options));
@@ -61,7 +61,7 @@ const syncTask = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  batchStopTask: function (args, options) {
+  batchStopTask: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + 'syncTask/batchStopTask';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'syncTaskbatchStopTask', JSON.stringify(args), $.extend(base, options));
@@ -92,7 +92,7 @@ const syncTask = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  batchStartTask: function (args, options) {
+  batchStartTask: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + 'syncTask/batchStartTask';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'syncTaskbatchStartTask', JSON.stringify(args), $.extend(base, options));
@@ -141,7 +141,7 @@ const syncTask = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  startTask: function (args, options) {
+  startTask: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + 'syncTask/startTask';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'syncTaskstartTask', JSON.stringify(args), $.extend(base, options));
@@ -216,7 +216,7 @@ const syncTask = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateSyncTask: function (args, options) {
+  updateSyncTask: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + 'syncTask/updateSyncTask';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'syncTaskupdateSyncTask', JSON.stringify(args), $.extend(base, options));
@@ -231,7 +231,7 @@ const syncTask = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getStatistics: function (args, options) {
+  getStatistics: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + 'syncTask/getStatistics';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'syncTaskgetStatistics', args, $.extend(base, options));
@@ -248,7 +248,7 @@ const syncTask = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  stopTask: function (args, options) {
+  stopTask: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + 'syncTask/stopTask';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'syncTaskstopTask', JSON.stringify(args), $.extend(base, options));
@@ -275,7 +275,7 @@ const syncTask = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  list: function (args, options) {
+  list: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + 'syncTask/list';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'syncTasklist', JSON.stringify(args), $.extend(base, options));
@@ -306,7 +306,7 @@ const syncTask = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  createOnlySyncTaskPreCheck: function (args, options) {
+  createOnlySyncTaskPreCheck: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + 'syncTask/createOnlySyncTaskPreCheck';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'syncTaskcreateOnlySyncTaskPreCheck', args, $.extend(base, options));

@@ -757,7 +757,7 @@ class TableViewBase extends React.Component<any, any> {
     }
   }
 
-  navGroupToSearch = props => {
+  navGroupToSearch = (props?) => {
     const { view, worksheetInfo } = props || this.props;
     const navGroupData = (get(worksheetInfo, 'template.controls') || []).find(
       o => o.controlId === get(view, 'navGroup[0].controlId'),

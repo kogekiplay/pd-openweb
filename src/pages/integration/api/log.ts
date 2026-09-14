@@ -35,7 +35,7 @@ const log = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getLog: function (args, options) {
+  getLog: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + 'log/getLog';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'loggetLog', JSON.stringify(args), $.extend(base, options));

@@ -115,7 +115,7 @@ export const getItemFilters = items => {
 };
 
 // 时间字段处理
-export const formatTimeValue = (control = {}, isCurrent = false, value) => {
+export const formatTimeValue = (control = {}, isCurrent = false, value?) => {
   // 汇总输出格式unit为9
   const mode = control.unit === '6' || control.unit === '9' ? 'HH:mm:ss' : 'HH:mm';
   if (isCurrent) return moment(moment().format(mode), mode).format('HH:mm:ss');
@@ -184,7 +184,7 @@ export function handleDotAndRound(currentItem, value, ignoreAddZero = true) {
 
 // 获取控件的值（处理特殊选项控件）
 // objValue是外层新值，覆盖obj.value
-export const getControlValue = (data, currentItem, controlId, objValue) => {
+export const getControlValue = (data, currentItem, controlId, objValue?) => {
   const obj = _.find(data, o => o.controlId === controlId) || {};
   const value = objValue || obj.value;
 

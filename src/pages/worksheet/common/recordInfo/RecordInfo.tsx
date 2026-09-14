@@ -377,7 +377,7 @@ export default class RecordInfo extends Component<any, any> {
     return externalPortalAjax.getConfig({ appId });
   };
 
-  getPayConfig = (recordId, updateFlag) => {
+  getPayConfig = (recordId?, updateFlag?) => {
     const { worksheetId, viewId, enablePayment, from } = this.props;
     const isPayShare = location.search.includes('payshare=true');
     // 支付配置（开启支付或分享支付） && 不是草稿箱

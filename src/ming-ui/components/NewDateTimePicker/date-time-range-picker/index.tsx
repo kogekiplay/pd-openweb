@@ -216,7 +216,7 @@ class DateTimeRangeDoublePicker extends Component<any, any> {
     );
   };
 
-  timeOnChange = (event, value, index, halfData) => {
+  timeOnChange = (event, value, index, halfData?) => {
     const newValue = new Date(this.state.value[index]);
 
     newValue.setHours(value.hour);

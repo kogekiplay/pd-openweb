@@ -1,4 +1,4 @@
-﻿import React, { Component, Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -69,7 +69,7 @@ export default class WriteFields extends Component<any, any> {
   /**
    * 是否禁用
    */
-  isDisabled(item, type) {
+  isDisabled(item, type?) {
     const { readonlyControlTypes, selectNodeType } = this.props;
 
     if (
@@ -335,7 +335,7 @@ export default class WriteFields extends Component<any, any> {
   /**
    * 渲染字段
    */
-  renderField(data, showCard, isChildTable, isSubData) {
+  renderField(data, showCard, isChildTable, isSubData?) {
     const { hideTypes, selectNodeType } = this.props;
     const { foldIds, keywords } = this.state;
 

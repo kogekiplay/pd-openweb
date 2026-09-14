@@ -137,7 +137,7 @@ const Entrance = React.forwardRef((componentProps, ref) => {
    * 表单提交数据
    */
 
-  const submitFormData = options => {
+  const submitFormData = (options?) => {
     submitFormDataAction(dispatch, {
       props,
       getState,

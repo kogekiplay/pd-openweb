@@ -93,7 +93,7 @@ let ChartDialog = class ChartDialog extends Component<any, any> {
     }
   }
 
-  getReportConfigDetail(reportType) {
+  getReportConfigDetail(reportType?) {
     const {
       base,
       report = {},

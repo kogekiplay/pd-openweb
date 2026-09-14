@@ -27,7 +27,7 @@ const getTotalDataIds = (hierarchyViewData = {}, total = 0) => {
 };
 
 // 展开多级数据
-export function expandedMultiLevelHierarchyData(args, changeFilters) {
+export function expandedMultiLevelHierarchyData(args, changeFilters?) {
   return (dispatch, getState) => {
     const { sheet } = getState();
     const { quickFilter, navGroupFilters } = sheet;
@@ -730,7 +730,7 @@ export function initHierarchyRelateSheetControls(payload) {
   return { type: 'INIT_HIERARCHY_RELATE_SHEET_CONTROLS', payload };
 }
 
-export function getDefaultHierarchyData(view, { changeFilters } = {}) {
+export function getDefaultHierarchyData(view?, { changeFilters } = {}) {
   return (dispatch, getState) => {
     const { sheet } = getState();
     const { viewId, viewControl, viewControls, childType } = isEmpty(view) ? getCurrentView(sheet) : view;

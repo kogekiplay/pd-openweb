@@ -181,7 +181,7 @@ export class CountryLayer extends Component<any, any> {
       }
     });
   };
-  resetChart = props => {
+  resetChart = (props?) => {
     this.CountryLayerChart && this.CountryLayerChart.destroy();
     this.renderChart(props || this.props);
     this.setState({ path: [] });

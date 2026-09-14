@@ -28,7 +28,7 @@ export default class GroupValidate extends React.Component<any, any> {
     this.init();
   }
 
-  init(search) {
+  init(search?) {
     const request = getRequest(search);
     const { gID } = request;
 

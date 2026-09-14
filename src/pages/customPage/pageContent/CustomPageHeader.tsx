@@ -154,7 +154,7 @@ export default function CustomPageHeader(props) {
       });
   };
 
-  const handleClick = (type, data) => {
+  const handleClick = (type, data?) => {
     switch (type) {
       case 'editCanvas':
         updateVisible(update(visible, { popupVisible: { $set: false } }));

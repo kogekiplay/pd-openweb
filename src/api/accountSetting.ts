@@ -6,7 +6,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAccountSettings: function (args: ApiArgs, options: ApiOptions = {}) {
+  getAccountSettings: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AccountSetting', 'GetAccountSettings', args, options);
   },
   /**
@@ -16,7 +16,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSign: function (args: ApiArgs, options: ApiOptions = {}) {
+  getSign: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AccountSetting', 'GetSign', args, options);
   },
   /**

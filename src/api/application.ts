@@ -6,7 +6,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAccountApps: function (args: ApiArgs, options: ApiOptions = {}) {
+  getAccountApps: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Application', 'GetAccountApps', args, options);
   },
   /**

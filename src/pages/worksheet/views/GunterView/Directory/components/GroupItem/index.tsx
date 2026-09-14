@@ -53,7 +53,7 @@ let GroupItem = class GroupItem extends Component<any, any> {
     };
   }
 
-  handleChangeSubVisible = (id, visible) => {
+  handleChangeSubVisible = (id, visible?) => {
     this.props.updateGroupSubVisible(id);
     setTimeout(() => {
       if (visible) {
@@ -61,7 +61,7 @@ let GroupItem = class GroupItem extends Component<any, any> {
       }
     }, 100);
   };
-  handleCreateRecord = (groupId, isMilepost) => {
+  handleCreateRecord = (groupId, isMilepost?) => {
     const { base, grouping, controls, viewConfig, sheetSwitchPermit } = this.props;
     const { viewControl, milepost, navTitle } = viewConfig;
 

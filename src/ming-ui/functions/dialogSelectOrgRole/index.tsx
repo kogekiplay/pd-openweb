@@ -59,7 +59,7 @@ class DialogSelectOrgRole extends Component<any, any> {
       });
   }
 
-  fetchData(groups, orgRoleGroupId, index) {
+  fetchData(groups?, orgRoleGroupId?, index?) {
     const { projectId, appointedOrganizeIds = [] } = this.props;
     const { keywords, pageIndex = 1, treeData, searchList } = this.state;
     let treeList = groups || treeData;
@@ -174,7 +174,7 @@ class DialogSelectOrgRole extends Component<any, any> {
     });
   };
 
-  renderChildren(groupItem) {
+  renderChildren(groupItem?) {
     const { expendTreeNodeKey, selectData, keywords, searchList, treeData } = this.state;
     const { unique, appointedOrganizeIds = [] } = this.props;
 

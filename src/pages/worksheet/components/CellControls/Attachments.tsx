@@ -880,7 +880,7 @@ function CellAttachments(props, sourceRef) {
       setUploadFileVisible(true);
     }
   });
-  function handleChange(_attachments) {
+  function handleChange(_attachments?) {
     const attachmentList = _attachments || attachments;
     const submitData = {};
     const tempSavedAttachments = attachmentList.filter(c => /^o_/.test(c.fileID) && !c.refId).map(c => c.origin);

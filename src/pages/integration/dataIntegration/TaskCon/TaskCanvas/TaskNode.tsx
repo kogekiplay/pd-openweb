@@ -281,7 +281,7 @@ class TaskNode extends Component<any, any> {
   };
 
   // 绘制连接线
-  drawConnector = nextProps => {
+  drawConnector = (nextProps?) => {
     const { nodeData } = nextProps || this.props;
     const { pathIds } = nodeData;
     let yN = 0;

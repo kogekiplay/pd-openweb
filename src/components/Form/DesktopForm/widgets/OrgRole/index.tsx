@@ -50,7 +50,7 @@ const OrgRole = props => {
   /**
    * 选择组织角色
    */
-  const pickOrgRole = replaceItem => {
+  const pickOrgRole = (replaceItem?) => {
     if (!_.find(md.global.Account.projects, item => item.projectId === projectId)) {
       alert(_l('您不是该组织成员，无法获取其组织角色列表，请联系组织管理员'), 3);
       return;

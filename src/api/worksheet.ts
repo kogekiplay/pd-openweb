@@ -286,7 +286,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getRefreshRowsMinute: function (args: ApiArgs, options: ApiOptions = {}) {
+  getRefreshRowsMinute: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetRefreshRowsMinute', args, options);
   },
   /**
@@ -1159,7 +1159,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetArchives: function (args: ApiArgs, options: ApiOptions = {}) {
+  getWorksheetArchives: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetWorksheetArchives', args, options);
   },
   /**
@@ -2531,7 +2531,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addOrUpdateOptionSetApiInfo: function (args: ApiArgs, options: ApiOptions = {}) {
+  addOrUpdateOptionSetApiInfo: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'AddOrUpdateOptionSetApiInfo', args, options);
   },
   /**
@@ -2541,7 +2541,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  optionSetListApiInfo: function (args: ApiArgs, options: ApiOptions = {}) {
+  optionSetListApiInfo: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'OptionSetListApiInfo', args, options);
   },
   /**
@@ -2828,7 +2828,7 @@ remark:待识别文件url ，图片的 Url 地址。要求图片经Base64编码�
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetCurrencyInfos: function (args: ApiArgs, options: ApiOptions = {}) {
+  getWorksheetCurrencyInfos: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetWorksheetCurrencyInfos', args, options);
   },
   /**

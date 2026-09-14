@@ -53,7 +53,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  checkExistAccountByCurrentAccount: function (args: ApiArgs, options: ApiOptions = {}) {
+  checkExistAccountByCurrentAccount: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Register', 'CheckExistAccountByCurrentAccount', args, options);
   },
   /**
@@ -165,7 +165,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  checkCreateCompany: function (args: ApiArgs, options: ApiOptions = {}) {
+  checkCreateCompany: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Register', 'CheckCreateCompany', args, options);
   },
   /**

@@ -188,7 +188,7 @@ const getSubListData = async props => {
   return listResult.resultCode === 1 ? listResult.data : [];
 };
 
-const getRelateSearchResult = (control, searchResult, isMix) => {
+const getRelateSearchResult = (control, searchResult, isMix?) => {
   let newValue = [];
 
   if (isMix) {

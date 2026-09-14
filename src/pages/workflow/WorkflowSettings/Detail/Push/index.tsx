@@ -583,7 +583,7 @@ export default class Push extends Component<any, any> {
   /**
    * 渲染事件列表
    */
-  renderEventList(pushType, buttonIndex) {
+  renderEventList(pushType, buttonIndex?) {
     const pushList = _.cloneDeep(PUSH_LIST);
 
     if (buttonIndex !== undefined) {

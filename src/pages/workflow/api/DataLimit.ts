@@ -12,7 +12,7 @@ const DataLimit = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  EditUageLimit: function (args, options) {
+  EditUageLimit: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + '/DataLimit/EditUageLimit';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'DataLimitEditUageLimit', JSON.stringify(args), $.extend(base, options));
@@ -25,7 +25,7 @@ const DataLimit = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  GetUageLimits: function (args, options) {
+  GetUageLimits: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + '/DataLimit/GetUageLimits';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'DataLimitGetUageLimits', JSON.stringify(args), $.extend(base, options));

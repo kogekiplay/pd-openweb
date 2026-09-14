@@ -132,7 +132,7 @@ export default class AppManagement extends Component<any, any> {
     );
   };
 
-  async getDBInstances(importApp) {
+  async getDBInstances(importApp?) {
     const { requested, dataDBInstances } = this.state;
     const { projectId } = this.props;
     let res = dataDBInstances;

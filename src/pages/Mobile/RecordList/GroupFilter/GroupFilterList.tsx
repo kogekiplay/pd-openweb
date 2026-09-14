@@ -209,7 +209,7 @@ const GroupFilterList = props => {
     }
   };
 
-  const setData = obj => {
+  const setData = (obj?) => {
     const { rowId, cb, isNext } = obj || {};
     const { navshow, navlayer } = getAdvanceSetting(view);
 
@@ -415,7 +415,7 @@ const GroupFilterList = props => {
   const loadData = obj => fetchData(obj);
 
   //更新当前的navGroupData
-  const updateNavGroupData = ({ filterData, data, rowId, cb }, notUpdate) => {
+  const updateNavGroupData = ({ filterData, data, rowId, cb }, notUpdate?) => {
     if (rowId && !keywords) {
       filterData.forEach(item => {
         if (item.value === rowId) {

@@ -1,4 +1,4 @@
-﻿import _, {
+import _, {
   assign,
   find,
   get,
@@ -322,7 +322,7 @@ function getTableConfigFromControl(control, { allowEdit, relateWorksheetInfo, re
   };
 }
 
-export function updateTableConfigByControl(control) {
+export function updateTableConfigByControl(control?) {
   return (dispatch: RelateRecordTableDispatch, getState: RelateRecordTableGetState) => {
     const state = getState();
     const { base } = state;

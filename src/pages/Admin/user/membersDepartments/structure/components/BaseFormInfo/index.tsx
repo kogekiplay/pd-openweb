@@ -237,7 +237,7 @@ export default class BaseFormInfo extends Component<any, any> {
     });
   };
 
-  getDepartmentFullName = (ids = [], field, departments = []) => {
+  getDepartmentFullName = (ids = [], field?, departments = []) => {
     let { projectId } = this.props;
     let { fullDepartmentInfo = {} } = this.state;
     const validIds = ids.filter(it => !!it);
@@ -269,7 +269,7 @@ export default class BaseFormInfo extends Component<any, any> {
   };
 
   // 获取职位列表
-  getJobList = jobName => {
+  getJobList = (jobName?) => {
     const { projectId } = this.props;
     const { keywords } = this.state;
 
@@ -431,7 +431,7 @@ export default class BaseFormInfo extends Component<any, any> {
     );
   };
 
-  renderDepartItem = (item, i) => {
+  renderDepartItem = (item, i?) => {
     const { typeCursor } = this.props;
     const { fullDepartmentInfo = {}, useMultiJobs } = this.state;
     const fullName = fullDepartmentInfo[item.departmentId] || '';
@@ -462,7 +462,7 @@ export default class BaseFormInfo extends Component<any, any> {
     );
   };
 
-  renderDepartmentJob = (type = 'single', departmentItem = {}, index) => {
+  renderDepartmentJob = (type = 'single', departmentItem = {}, index?) => {
     const { typeCursor, projectId, authority = [] } = this.props;
     const {
       departmentInfos = [],

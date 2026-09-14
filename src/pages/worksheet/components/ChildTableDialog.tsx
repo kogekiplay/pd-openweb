@@ -1,4 +1,4 @@
-﻿import React, { Fragment, useEffect, useRef, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { useKey } from 'react-use';
 import cx from 'classnames';
 import _, { get, includes } from 'lodash';
@@ -163,7 +163,7 @@ export default function ChildTableDialog(props) {
   const maxShowRowCount = Math.floor((maxHeight - 30 - 40) / rowHeight);
   const width = window.innerWidth - 32 * 2 > 1600 ? 1600 : window.innerWidth - 32 * 2;
 
-  function handleSave(close) {
+  function handleSave(close?) {
     function submit() {
       if (cache.current.isSaving) {
         return;

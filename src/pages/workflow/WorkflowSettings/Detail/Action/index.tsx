@@ -55,7 +55,7 @@ export default class Action extends Component<any, any> {
   /**
    * 获取动作详情
    */
-  getNodeDetail(props, sId) {
+  getNodeDetail(props, sId?) {
     const { processId, selectNodeId, selectNodeType, isApproval, instanceId } = props;
 
     flowNode
@@ -387,7 +387,7 @@ export default class Action extends Component<any, any> {
   /**
    * 下拉框更改
    */
-  SelectNodeObjectChange = (selectNodeId, addFields) => {
+  SelectNodeObjectChange = (selectNodeId, addFields?) => {
     const { data } = this.state;
     const selectNodeObj = _.find(data.flowNodeList, item => item.nodeId === selectNodeId);
 

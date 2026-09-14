@@ -38,7 +38,7 @@ export default class TimeInput extends Component<any, any> {
     }
   }
 
-  updateValue(nextProps) {
+  updateValue(nextProps?) {
     const { dynamicValue = [] } = nextProps || this.props;
     const { staticValue, cid = '' } = _.get(dynamicValue, '0') || {};
     const tempValue = !cid && staticValue && staticValue !== '2' ? staticValue : '';

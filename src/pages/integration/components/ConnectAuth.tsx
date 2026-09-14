@@ -237,7 +237,7 @@ function ConnectAuth(props) {
       });
   };
 
-  const checkNumberControl = (evt, isBlur) => {
+  const checkNumberControl = (evt, isBlur?) => {
     let num = evt.target.value.replace(/[^\d]/g, '');
     evt.target.value = num;
 

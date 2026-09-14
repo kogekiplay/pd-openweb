@@ -85,7 +85,7 @@ export default function ApiSearchConfig(props) {
     }
   };
 
-  const isForbidEncry = id => {
+  const isForbidEncry = (id?) => {
     return _.get(
       _.find(controls, i => i.controlId === (id || searchcontrol)),
       'encryId',

@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import cx from 'classnames';
 import { assign, min } from 'lodash';
 import _ from 'lodash';
@@ -131,7 +131,7 @@ class ImageViewer extends React.Component<any, any> {
     }
   };
 
-  loadImage(src, cb) {
+  loadImage(src, cb?) {
     const img = new Image();
 
     img.onload = () => {

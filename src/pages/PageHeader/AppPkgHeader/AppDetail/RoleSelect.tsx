@@ -128,7 +128,7 @@ function RoleSelect(props) {
     });
   }, [visible]);
 
-  const setDebugRoles = ids => {
+  const setDebugRoles = (ids?) => {
     localForage.clear();
     appManagementApi
       .setDebugRoles({

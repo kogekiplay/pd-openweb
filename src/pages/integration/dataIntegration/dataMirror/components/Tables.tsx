@@ -162,7 +162,7 @@ function Controls(props) {
       {
         dataIndex: 'sourceTable',
         title: _l('工作表'),
-        render: (item, isLast) => {
+        render: (item, isLast?) => {
           return (
             <div className="flexRow alignItemsCenter w100">
               <span title={item.wsFieldName} className={cx('titleText overflow_ellipsis wsFieldName', { isLast })}>
@@ -315,7 +315,7 @@ export default function Tables(props) {
     checkTableExists(cache.current.doubleWriteTables, true);
   };
 
-  const checkTableExists = (data, nextCreate) => {
+  const checkTableExists = (data?, nextCreate?) => {
     const tableNames = (data || doubleWriteTables).map(o => o.tableName);
     onChange(null, false, true);
     dataMirrorAjax

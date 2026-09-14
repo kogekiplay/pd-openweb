@@ -448,7 +448,7 @@ export const updateRecordTime = (row, start, end, key, newKey) => {
   };
 };
 
-export const updateByKey = (key, rowsData, key1, rowsData1) => {
+export const updateByKey = (key, rowsData, key1?, rowsData1?) => {
   return (dispatch, getState) => {
     const { base, controls, resourceview, views } = getState().sheet;
     const view = base.viewId ? _.find(views, { viewId: base.viewId }) : views[0];

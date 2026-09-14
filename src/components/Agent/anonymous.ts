@@ -44,7 +44,7 @@ function agentRequest(args, options) {
   });
 }
 
-function webCacheRequest(actionName, args, options) {
+function webCacheRequest(actionName, args, options?) {
   return window.mdyAPI('WebCache', actionName, { ...args, moduleType: WEB_CACHE_MODULE_TYPE }, options);
 }
 

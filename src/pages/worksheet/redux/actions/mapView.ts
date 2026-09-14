@@ -51,7 +51,7 @@ function getMapViewData({ para, dispatch, mapViewRequestKey }) {
   });
 }
 
-export function initMapViewData(view, refreshMap = false, mapViewRequestKey) {
+export function initMapViewData(view, refreshMap = false, mapViewRequestKey?) {
   return (dispatch, getState) => {
     const { sheet } = getState();
     const para = getMapViewPara(sheet, view);

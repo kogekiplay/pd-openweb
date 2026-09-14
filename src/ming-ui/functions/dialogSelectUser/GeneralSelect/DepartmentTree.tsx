@@ -103,7 +103,7 @@ export default class DepartmentTree extends Component<any, any> {
     }
   };
 
-  getNextPageDepartmentTrees = id => {
+  getNextPageDepartmentTrees = (id?) => {
     const { pagedDepartmentIndex, pagedDepartmentSize } = this.state;
     const { projectId, isNetwork } = this.props;
     this.setState({ departmentLoading: true });

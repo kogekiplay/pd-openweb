@@ -217,7 +217,7 @@ function WorksheetRecordLog(props, ref) {
     };
   };
 
-  function loadNewEdition(prop = {}, isPullRefresh) {
+  function loadNewEdition(prop = {}, isPullRefresh?) {
     const { worksheetId, rowId, pageSize = PAGE_SIZE, filterUniqueIds } = props;
     const params = getParams(prop);
     if (!isPullRefresh) setMark({ loading: true, loadingAll: !params.lastMark });
@@ -316,7 +316,7 @@ function WorksheetRecordLog(props, ref) {
       });
   }
 
-  const changeSelect = (e, para = {}, loadParam) => {
+  const changeSelect = (e, para = {}, loadParam?) => {
     e && e.stopPropagation();
     !loadParam && (loadParam = para);
     setMark({ lastMark: undefined });

@@ -26,7 +26,7 @@ export default class ExecutionDetails extends Component<any, any> {
   }
 
   // 批量设置（暂停、恢复）流程
-  batchPauseRecover = (isPause, hours) => {
+  batchPauseRecover = (isPause, hours?) => {
     const { checkedIds = [] } = this.state;
     const { detailList, projectId } = this.props;
 

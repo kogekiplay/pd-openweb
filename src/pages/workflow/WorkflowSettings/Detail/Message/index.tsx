@@ -667,7 +667,7 @@ export default class Message extends Component<any, any> {
   /**
    * 保存短信模板
    */
-  onSaveTemplate = referenceValue => {
+  onSaveTemplate = (referenceValue?) => {
     const { sign, messageContent, type, templateId, saveRequest } = this.state;
 
     if (saveRequest) {

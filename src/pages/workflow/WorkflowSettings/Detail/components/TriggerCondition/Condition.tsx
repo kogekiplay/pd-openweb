@@ -1040,7 +1040,7 @@ export default class Condition extends Component<any, any> {
   /**
    * 清除不是数字的字符
    */
-  clearNoNum = (evt, isBlur, i, j, second = false) => {
+  clearNoNum = (evt, isBlur?, i?, j?, second = false) => {
     let num = evt.target.value
       .replace(/[^-\d.]/g, '')
       .replace(/^\./g, '')
@@ -1380,7 +1380,7 @@ export default class Condition extends Component<any, any> {
   /**
    * 渲染选中的单个值
    */
-  renderSelectFieldsValue(item, i, j, second) {
+  renderSelectFieldsValue(item, i, j, second?) {
     const { data } = this.props;
 
     return (

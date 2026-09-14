@@ -84,7 +84,7 @@ export const getValueStyle = (data, isField = true) => {
     : { type };
 };
 
-export const getAdvanceSetting = (data, key) => {
+export const getAdvanceSetting = (data, key?) => {
   const setting = get(data, ['advancedSetting']) || {};
   if (!key) return setting;
   let value = get(setting, key);

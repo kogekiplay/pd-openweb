@@ -209,7 +209,7 @@ class DialogImportExcelCreate extends Component<any, any> {
     });
   };
 
-  getParams = isMore => {
+  getParams = (isMore?) => {
     const { id, filePath, freeRowCount } = this.state;
     const {
       createType,
@@ -329,7 +329,7 @@ class DialogImportExcelCreate extends Component<any, any> {
       this.props.changeDialogCreateAppVisible(true);
     }
   };
-  createApp = dbInstanceId => {
+  createApp = (dbInstanceId?) => {
     const { excelDetailData = [], selectedImportSheetIds } = this.props;
     const importSheets = excelDetailData.filter(it => _.includes(selectedImportSheetIds, it.sheetId));
     const isMore = importSheets.length > 10;

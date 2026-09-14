@@ -445,7 +445,7 @@ export default function MingoWelcome({ onStartTask = () => {}, landing = false, 
   }
 
   // 把首条消息（与可选附件、@ 应用）塞给 Agent，由 Agent 在 mount 时自动 submit
-  function startAgentChat(text, attachments, mentions) {
+  function startAgentChat(text, attachments?, mentions?) {
     const trimmed = (text || '').trim();
     const hasAttachments = Array.isArray(attachments) && attachments.length > 0;
     const hasMentions = Array.isArray(mentions) && mentions.length > 0;

@@ -370,7 +370,7 @@ export default class FileComponent extends Component<any, any> {
       colorPrimary: !isPicture,
     });
 
-    let handleOpen = (event, isEdit) => {
+    let handleOpen = (event, isEdit?) => {
       event.stopPropagation();
       if (!isEdit) {
         isKc
@@ -477,7 +477,7 @@ export default class FileComponent extends Component<any, any> {
       </div>
     );
   }
-  renderView(fileResponse, isKc) {
+  renderView(fileResponse, isKc?) {
     let fileClassName = getClassNameByExt(fileResponse.fileExt);
     let isPicture = RegExpValidator.fileIsPicture(fileResponse.fileExt);
     let isMDLink = fileResponse.viewType === 5;
@@ -527,7 +527,7 @@ export default class FileComponent extends Component<any, any> {
       </div>
     );
   }
-  renderPenel(fileResponse, index, isKc) {
+  renderPenel(fileResponse, index, isKc?) {
     let { isEdit, penelVisible } = this.state;
     let isPicture = RegExpValidator.fileIsPicture(fileResponse.fileExt);
     let penelClass = cx(

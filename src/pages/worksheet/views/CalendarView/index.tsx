@@ -225,7 +225,7 @@ class RecordCalendarBase extends Component<any, any> {
     });
   };
 
-  updateData = (newOldControl, rowId, cb) => {
+  updateData = (newOldControl, rowId, cb?) => {
     const { base, updataEditable } = this.props;
     const { appId, worksheetId, viewId } = base;
     updataEditable(false);

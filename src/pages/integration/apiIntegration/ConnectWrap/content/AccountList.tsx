@@ -197,7 +197,7 @@ function AccountList(props) {
     getList();
   }, [props.connectId]);
 
-  const getList = id => {
+  const getList = (id?) => {
     Oauth2Ajax.getAllTokenList(
       {
         id: id || props.connectId,
@@ -234,7 +234,7 @@ function AccountList(props) {
   };
 
   // 编辑名称｜删除
-  const onEdit = (data, isDel) => {
+  const onEdit = (data, isDel?) => {
     Oauth2Ajax.updateAccessToken(
       {
         id: data.id,

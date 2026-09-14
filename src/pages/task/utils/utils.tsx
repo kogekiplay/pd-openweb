@@ -333,7 +333,7 @@ export const formatStatus = (status, lock, auth) => {
 };
 
 // build myTaskIcon
-export const buildMyTaskIcon = (type, isBatch) => {
+export const buildMyTaskIcon = (type, isBatch?) => {
   let tip;
   const className = isBatch ? '' : 'Hidden';
   let iconName = ' icon-task-soon';

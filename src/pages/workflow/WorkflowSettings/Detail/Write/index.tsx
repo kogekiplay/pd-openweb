@@ -87,7 +87,7 @@ export default class Write extends Component<any, any> {
   /**
    * 获取节点详情
    */
-  getNodeDetail(props, sId) {
+  getNodeDetail(props, sId?) {
     const { processId, selectNodeId, selectNodeType, isApproval, instanceId } = props;
     const { data } = this.state;
 

@@ -3,7 +3,7 @@ import appManagementApi from 'src/api/appManagement';
 import favoriteAjax from 'src/api/favorite';
 import homeAppAjax from 'src/api/homeApp';
 
-export const getMyApp = (projectId, isPullRefresh) => dispatch => {
+export const getMyApp = (projectId, isPullRefresh?) => dispatch => {
   if (!isPullRefresh) {
     dispatch({ type: 'MOBILE_FETCHHOMELIST_START' });
   }

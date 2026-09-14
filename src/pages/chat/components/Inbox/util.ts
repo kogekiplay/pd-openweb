@@ -1,4 +1,4 @@
-﻿// linkify-it 6 去掉了 default export，类要从具名导出取。
+// linkify-it 6 去掉了 default export，类要从具名导出取。
 import { LinkifyIt } from 'linkify-it';
 import moment from 'moment';
 import { browserIsMobile, htmlEncodeReg, pathCompletion } from 'src/utils/common';
@@ -222,7 +222,7 @@ export const splitSourceId = sourceId => {
   };
 };
 
-export const buildSourceLink = function (type, _sourceId, _extendsId, inboxId) {
+export const buildSourceLink = function (type, _sourceId, _extendsId?, inboxId?) {
   var linkUrl = '';
   const { sourceId, childId } = splitSourceId(_sourceId);
 

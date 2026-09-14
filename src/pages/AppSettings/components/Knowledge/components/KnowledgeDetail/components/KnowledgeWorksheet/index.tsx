@@ -267,7 +267,7 @@ const KnowledgeWorksheet = props => {
     openDialog(DIALOG_TYPE_MAP.COLLECTION_SCOPE);
   };
 
-  const getFilterConditions = async (item, filterId) => {
+  const getFilterConditions = async (item, filterId?) => {
     const filterItems = formatValuesOfOriginConditions(item.filterConditions);
 
     const data = await worksheetAjax.saveWorksheetFilter({

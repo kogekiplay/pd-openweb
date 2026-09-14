@@ -62,7 +62,7 @@ export default ({
     return source;
   }, []);
 
-  const renderList = (source, isFile) => {
+  const renderList = (source, isFile?) => {
     return source.map((key, index) => {
       const [nodeId, controlId] = parseId(key);
 

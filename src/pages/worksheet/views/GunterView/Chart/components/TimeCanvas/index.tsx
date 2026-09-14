@@ -40,7 +40,7 @@ let TimeCanvas = class TimeCanvas extends Component<any, any> {
     window.removeEventListener('resize', this.debounceUpdateHeight);
   }
 
-  updateHeight = (event, props) => {
+  updateHeight = (event?, props?) => {
     const { grouping, chartScroll, groupingScroll, base } = props || this.props;
     const gunterChartWrapperEl = document.querySelector(`.gunterView-${base.viewId} .gunterChartWrapper`);
     const gunterGroupingScrollerEl = document.querySelector(`.gunterView-${base.viewId} .gunterGroupingScroller`);

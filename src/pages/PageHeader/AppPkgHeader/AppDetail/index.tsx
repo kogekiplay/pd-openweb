@@ -429,7 +429,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
     safeLocalStorageSetItem(`appCache-${data.id}`, JSON.stringify(this.dataCache));
     setFavicon(data.iconUrl, data.iconColor);
   };
-  switchVisible = (obj, cb) => {
+  switchVisible = (obj, cb?) => {
     this.setState(obj, cb);
   };
   updateData = obj => {

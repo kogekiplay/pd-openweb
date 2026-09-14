@@ -106,7 +106,7 @@ class TaskCanvas extends Component<any, any> {
     });
   };
   //计算更新后的数据
-  onCompute = (data, cb) => {
+  onCompute = (data, cb?) => {
     const { flowNodes } = this.state;
     const { toAdd = [], toUpdate = [], toDeleteIds = [], srcIsDb } = data;
     const updateIds = (toUpdate || []).map(o => o.nodeId);
@@ -133,7 +133,7 @@ class TaskCanvas extends Component<any, any> {
   };
 
   //更新节点信息
-  updateNode = (node, forName, cb) => {
+  updateNode = (node, forName, cb?) => {
     const { currentProjectId: projectId } = this.props;
     const { flowId = '' } = this.state;
     const { nodeId, name, nodeType, nodeConfig } = node;

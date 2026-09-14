@@ -45,7 +45,7 @@ class RoleList extends React.Component<any, any> {
     }
   }
 
-  getMyRoles(isReload) {
+  getMyRoles(isReload?) {
     const { projectId, entry } = this.props;
     const { isLoading, pageIndex, pageSize } = this.state;
     if (isLoading || entry === 'apply') return;
@@ -96,11 +96,11 @@ class RoleList extends React.Component<any, any> {
     res && this.setState({ applyList: res.roles });
   };
 
-  renderList(isApply) {
+  renderList(isApply?) {
     const { list, applyList, drawer, hasChanged } = this.state;
     const { projectId } = this.props;
 
-    const onOpenDrawer = (role, type, closeNeedOpenDetail) => {
+    const onOpenDrawer = (role, type, closeNeedOpenDetail?) => {
       this.setState({ drawer: { visible: true, role, type, closeNeedOpenDetail } });
     };
 

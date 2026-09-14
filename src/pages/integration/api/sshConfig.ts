@@ -18,7 +18,7 @@ const sshConfig = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addSshConfig: function (args, options) {
+  addSshConfig: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + 'sshConfig/addSshConfig';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'sshConfigaddSshConfig', JSON.stringify(args), $.extend(base, options));
@@ -37,7 +37,7 @@ const sshConfig = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  list: function (args, options) {
+  list: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + 'sshConfig/list';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'sshConfiglist', JSON.stringify(args), $.extend(base, options));
@@ -75,7 +75,7 @@ const sshConfig = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  genKeyPair: function (args, options) {
+  genKeyPair: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + 'sshConfig/genKeyPair';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'sshConfiggenKeyPair', JSON.stringify(args), $.extend(base, options));
@@ -129,7 +129,7 @@ const sshConfig = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteSshConfig: function (args, options) {
+  deleteSshConfig: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + 'sshConfig/deleteSshConfig';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'sshConfigdeleteSshConfig', JSON.stringify(args), $.extend(base, options));

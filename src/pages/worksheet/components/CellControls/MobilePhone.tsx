@@ -87,7 +87,7 @@ export default class MobilePhone extends React.Component<any, any> {
     }
   };
 
-  handleBlur = nextValue => {
+  handleBlur = (nextValue?) => {
     const { isSubList, error, ignoreErrorMessage, updateCell, updateEditingStatus, onValidate } = this.props;
     const { tempValue, value } = this.state;
     const finalValue = _.isUndefined(nextValue) ? tempValue : nextValue;

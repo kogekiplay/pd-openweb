@@ -227,7 +227,7 @@ const GroupedIconTextCon = styled.div`
   }
 `;
 
-function getButtonWidth(button, type, maxNameWidth) {
+function getButtonWidth(button, type, maxNameWidth?) {
   if (!document.body) return 0;
   const isDebug = window.isDebug;
   let result;

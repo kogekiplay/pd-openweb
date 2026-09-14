@@ -14,7 +14,7 @@ export default class SheetPagination extends Component<any, any> {
     pageIndex: 1,
     onChange: () => {},
   };
-  renderPage(index, pageIndex) {
+  renderPage(index, pageIndex?) {
     if (index === -1) {
       return (
         <span key={index} className="pageNum">

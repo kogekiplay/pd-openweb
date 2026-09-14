@@ -126,7 +126,7 @@ export default class Widgets extends Component<any, any> {
     return false;
   }
 
-  loadAttachments(props) {
+  loadAttachments(props?) {
     const { value, worksheetId, recordId, controlId, isDraft } = props || this.props;
     let fileIds = [];
 

@@ -302,7 +302,7 @@ export const getFilledRequestParams = (params, defaultRequestParams = {}) => {
   return { ...params, requestParams: { ...defaultRequestParams, ...requestParams } };
 };
 
-export function appendDataToLocalPushUniqueId(data) {
+export function appendDataToLocalPushUniqueId(data?) {
   try {
     const defaultData = getDataFromLocalPushUniqueId();
     let pushUniqueId = _.get(md, 'global.Config.pushUniqueId');
@@ -618,7 +618,7 @@ export const htmlDecodeReg = str => {
  * @param  {Array}  units 自定义文件大小单位的数组，默认为 ['B', 'KB', 'MB', 'GB', 'TB']
  * @return {String}       可读的格式
  */
-export const formatFileSize = (size, accuracy, space, units) => {
+export const formatFileSize = (size, accuracy?, space?, units?) => {
   units = units || ['B', 'KB', 'MB', 'GB', 'TB'];
   space = space || ' ';
   accuracy = (accuracy && typeof accuracy === 'number' && accuracy) || 0;
@@ -709,7 +709,7 @@ export const getDefaultThemeMode = () => {
  * @param  {string} str url中 ? 之后的部分，可以包含 ?
  * @return {object}
  */
-export const getRequest = str => {
+export const getRequest = (str?) => {
   str = str || location.search;
   str = str
     .replace(/^\?/, '')
@@ -1078,7 +1078,7 @@ const globalStoreForMingo = {
 
 window.globalStoreForMingo = globalStoreForMingo;
 
-export const updateGlobalStoreForMingo = (key, value) => {
+export const updateGlobalStoreForMingo = (key, value?) => {
   if (typeof key === 'string') {
     globalStoreForMingo[key] = value;
   } else {

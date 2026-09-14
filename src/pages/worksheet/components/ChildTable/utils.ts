@@ -192,7 +192,7 @@ function mergeRequiredState(controls = [], control = {}) {
   });
 }
 
-export function getSubListErrorOfStore(store, currentControl) {
+export function getSubListErrorOfStore(store, currentControl?) {
   const state = store.getState();
   const { rows, base = {}, persistedCellErrors: pendingCellErrors = {} } = state;
   const { recordId, control = {} } = base;

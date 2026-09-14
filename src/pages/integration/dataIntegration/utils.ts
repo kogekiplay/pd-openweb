@@ -90,8 +90,8 @@ export const getInitWorkSheetFields = (
   isSourceAppType,
   isDestAppType,
   workSheetId,
-  withRowId,
-  withSys,
+  withRowId?,
+  withSys?,
 ) => {
   let initWorkSheetFields = [];
   const rowIDField = (controls || [])
@@ -217,7 +217,7 @@ export const getDefaultData = (
   destFields,
   isSourceAppType,
   isDestAppType,
-  notCanvas,
+  notCanvas?,
 ) => {
   let hasSetFields = {};
   let isSetTitle = false; //是否已经设置过标题默认值

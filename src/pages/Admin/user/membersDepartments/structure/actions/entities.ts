@@ -1,4 +1,4 @@
-﻿import _ from 'lodash';
+import _ from 'lodash';
 import departmentController from 'src/api/department';
 import Config from '../../../../config';
 import { PAGE_SIZE } from '../constant';
@@ -13,7 +13,7 @@ import { getParentNode, getParentsId, updateTreeData } from '../modules/util';
  * @returns
  */
 
-export const loadDepartments = (departmentId, pageIndex, afterRequest) => (dispatch, getState) => {
+export const loadDepartments = (departmentId, pageIndex, afterRequest?) => (dispatch, getState) => {
   const { showDisabledDepartment } = getState().entities;
   const params = {
     projectId: Config.projectId,
@@ -71,7 +71,7 @@ const fetchUser = (departmentId, pageIndex) => {
 /** fetch users before hand
  * relies on redux-thunk
  */
-export const loadUsers = (departmentId, pageIndex) => dispatch => {
+export const loadUsers = (departmentId, pageIndex?) => dispatch => {
   return dispatch(fetchUser(departmentId, pageIndex || 1));
 };
 

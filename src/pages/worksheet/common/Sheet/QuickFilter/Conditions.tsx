@@ -297,7 +297,7 @@ export default function Conditions(props) {
     setValues({});
   }
 
-  function update(newValues, { noDebounce, skipRequiredCheck } = {}) {
+  function update(newValues?, { noDebounce, skipRequiredCheck } = {}) {
     didMount.current = true;
     const valuesToUpdate = newValues || values;
     const needCheckRequired = _.get(view, 'advancedSetting.fastrequired') === '1' && !skipRequiredCheck;

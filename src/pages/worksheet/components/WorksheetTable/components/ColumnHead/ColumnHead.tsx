@@ -109,7 +109,7 @@ class ColumnHead extends Component<any, any> {
     });
   }
 
-  handleColumnWidthLRUSave(controlId, value, changes) {
+  handleColumnWidthLRUSave(controlId, value, changes?) {
     const { readonly, saveColumnStylesToLocal, updateColumnStyles } = this.props;
 
     if (readonly) return;

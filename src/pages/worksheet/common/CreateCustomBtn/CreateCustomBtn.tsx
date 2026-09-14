@@ -163,7 +163,7 @@ class CreateCustomBtnCon extends React.Component<any, any> {
     );
   };
 
-  getProcessByTriggerId = (callback, getProcess) => {
+  getProcessByTriggerId = (callback?, getProcess?) => {
     const { worksheetId } = this.props;
     const { btnId, clickType, workflowType } = this.state;
 

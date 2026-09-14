@@ -280,7 +280,7 @@ function batchDownload(ids, folderId, fileName) {
 }
 
 /** 单条下载 */
-export function handleDownloadOne(item, excludeIds) {
+export function handleDownloadOne(item, excludeIds?) {
   if (item.viewType === NODE_VIEW_TYPE.LINK) {
     window.open(downloadFile(item.downloadUrl));
     return;
