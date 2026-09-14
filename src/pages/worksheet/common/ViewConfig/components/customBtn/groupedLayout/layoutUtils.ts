@@ -17,6 +17,7 @@
 import _ from 'lodash';
 import { normalizeGroups, parseJsonArray } from './parseUtils';
 import { cloneSegment, newGroupId, normalizeSegments } from './segmentUtils';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 export {
   addGroupSegment,
@@ -204,7 +205,7 @@ function segmentsFromLegacyFlatAndGroups(flatBtnIds, groupRaw, idSet) {
 export function segmentsFromView(btnData, flatBtnOrderJson, groupRaw) {
   const btnOrder = (btnData || []).map(b => b.btnId);
   const idSet = new Set(btnOrder);
-  const rows = parseJsonArray(groupRaw);
+  const rows: RecordRow[] = parseJsonArray(groupRaw);
   const flatOrder = parseJsonArray(flatBtnOrderJson);
 
   let segments;

@@ -109,7 +109,7 @@ const OCR = props => {
 
         // 批量映射子表
         if (advancedSetting.ocrmaptype === '2') {
-          const rows = _.get(result, 'data');
+          const rows: RecordRow[] = _.get(result, 'data');
           const errorCount = cacheFileRef.current.length - rows.length;
 
           if (errorCount) {

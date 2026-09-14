@@ -8,6 +8,7 @@ import AddedFiles from 'src/components/Mingo/ChatBot/components/AddedFiles';
 import { useDailyBuildSuggestions } from 'src/components/Mingo/ChatBot/components/buildRecommender';
 import UploadFiles from 'src/components/Mingo/ChatBot/components/UploadFiles';
 import { formatResponseData } from 'src/components/UploadFiles/utils';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 const ATTACHMENT_TOKEN_TYPE = 71;
 const MAX_ATTACHMENTS = 5;
@@ -163,7 +164,7 @@ export default function CreateAppEntryContent(props) {
   const { randomSamples: samples, status: samplesStatus } = useDailyBuildSuggestions(projectId, showAi);
 
   const cards = actions.filter(a => !a.hidden && a.variant === 'card');
-  const rows = actions.filter(a => !a.hidden && a.variant === 'row');
+  const rows: RecordRow[] = actions.filter(a => !a.hidden && a.variant === 'row');
 
   // 点击示例：直接以该条作为消息呼出 Mingo 发送（onAiSubmit 会写 mingoInitialMessage、emit SET_MINGO_VISIBLE 并关闭弹窗），
   // 与 MingoWelcome「试一试」搭建示例点击即发起一致；带上已选附件

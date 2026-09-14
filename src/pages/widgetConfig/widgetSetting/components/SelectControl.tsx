@@ -4,12 +4,13 @@ import { isEmpty } from 'lodash';
 import _ from 'lodash';
 import { SelectFieldsWrap } from '../../styled';
 import { getIconByType } from '../../util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function SelectControl({ className, list, searchable = true, onClick, onClickAway = _.noop }) {
   const ref = useRef(null);
   const inputEl = useRef(null);
   const [keyword, setKeyWord] = useState('');
-  const controls = (
+  const controls: FormControl[] = (
     keyword ? list.filter(c => c.controlName.toLowerCase().indexOf(keyword.toLowerCase()) > -1) : list
   ).sort((a, b) => (a.row * 10 + a.col > b.row * 10 + b.col ? 1 : -1));
   useClickAway(ref, onClickAway);

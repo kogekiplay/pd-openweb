@@ -21,7 +21,7 @@ export default function SelectControls(props) {
   } = props;
   const inputRef = useRef(null);
   const [keyword, setKeyword] = useState('');
-  const controls = keyword
+  const controls: FormControl[] = keyword
     ? props.controls.filter((c: FormControl) => c.controlName.toLowerCase().indexOf(keyword.toLowerCase()) > -1)
     : props.controls;
 

@@ -3,6 +3,7 @@ import formAjax from 'src/api/form';
 import publicWorksheetAjax from 'src/api/publicWorksheet';
 import { getDisabledControls, getNewControlColRow } from '../../utils';
 import type { AppDispatch, GetState } from 'src/redux/types';
+import type { FormControl } from 'src/utils/controlTypes';
 
 function changeKeyToServer(value) {
   if (!_.isUndefined(value.coverUrl)) {
@@ -232,7 +233,7 @@ export const hideControl = controlId => (dispatch: AppDispatch, getState: GetSta
   //每次更改字段显隐时，需要将禁用的字段隐藏
   const disabledControlIds = getDisabledControls(originalControls, worksheetSettings);
   const newHidedControlIds = _.uniqBy(hidedControlIds.concat(controlId).concat(disabledControlIds));
-  const newControls = controls.filter(item => !_.includes(newHidedControlIds, item.controlId));
+  const newControls: FormControl[] = controls.filter(item => !_.includes(newHidedControlIds, item.controlId));
 
   updateBaseConfig(dispatch, getState, { hidedControlIds: newHidedControlIds, controls: newControls });
   dispatch({ type: 'WORKSHEET_HIDE_CONTROL', controlId });
@@ -248,7 +249,7 @@ export function showControl(showControls = []) {
 
     const newShowControls = showControls.reduce((acc, control) => {
       // 将原始 controls 和已经处理过的控件合并，用于计算新控件位置
-      const currentControls = controls.concat(acc);
+      const currentControls: FormControl[] = controls.concat(acc);
       const rowCol = getNewControlColRow(currentControls, control.half);
       return acc.concat({ ...control, col: rowCol.col, row: rowCol.row });
     }, []);
@@ -258,7 +259,7 @@ export function showControl(showControls = []) {
     const newHidedControlIds = _.uniqBy(
       hidedControlIds.concat(disabledControlIds).filter(controlId => !_.find(newShowControls, { controlId })),
     );
-    const newControls = controls.concat(
+    const newControls: FormControl[] = controls.concat(
       newShowControls.map(control => _.pick(control, ['controlId', 'col', 'row', 'size'])),
     );
 

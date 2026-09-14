@@ -71,7 +71,7 @@ export default function SingleFilter(props) {
   const showWorkflowControl = isOpenPermit(permitList.sysControlSwitch, sheetSwitchPermit, viewId);
 
   function filterAddConditionControls(controls) {
-    const availableControls = showWorkflowControl
+    const availableControls: FormControl[] = showWorkflowControl
       ? controls
       : controls.filter(
           (c: FormControl) =>

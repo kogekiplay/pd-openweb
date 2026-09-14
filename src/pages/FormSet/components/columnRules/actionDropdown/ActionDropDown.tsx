@@ -18,6 +18,7 @@ import {
 import openSettingDialog from './SettingDialog';
 import openStyleSettingDialog from './StyleSettingDialog';
 import './ActionDropDown.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default class DropDownItem extends Component<any, any> {
   static propTypes = {
@@ -283,7 +284,7 @@ export default class DropDownItem extends Component<any, any> {
     const { values, onChange } = this.props;
     const index = _.findIndex(values, v => v.controlId === item.controlId);
     const ids = (item.relationControls || []).map(i => i.controlId);
-    let newControls = values.filter(v => !_.includes(ids, v.controlId));
+    let newControls: FormControl[] = values.filter(v => !_.includes(ids, v.controlId));
     const addValues = ids.map(i => ({ controlId: i, childControlIds: [] }));
 
     if (isChecked) {

@@ -12,6 +12,7 @@ import { checkCellIsEmpty, controlIsNumber, isRelateRecordTableControl } from 's
 import { getRecordColor } from 'src/utils/record';
 import CollapseExpandButton from './CollapseExpandButton';
 import DataCell from './DataCell';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 const EMPTY_ROW = {};
 
@@ -22,7 +23,7 @@ export function getRelateRecordCountOfControlFromRow(control, row = {}) {
     if (isTable) {
       return row['rq' + control.controlId] || row[control.controlId];
     } else {
-      const records = safeParse(row[control.controlId], 'array');
+      const records: RecordRow[] = safeParse(row[control.controlId], 'array');
       return records.length || 0;
     }
   } catch (err) {

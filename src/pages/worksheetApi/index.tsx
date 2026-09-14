@@ -48,6 +48,7 @@ import {
 import { MENU_LIST_MAP, SIDEBAR_LIST_MAP, TAB_TYPE } from './core/enum';
 import { convertControl } from './core/utils';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const FIELD_TYPE = FIELD_TYPE_LIST.concat([
   { text: _l('对象'), value: 10000006, en: 'object' },
@@ -1827,7 +1828,7 @@ class WorksheetApi extends Component<any, any> {
     if (specification.errorData) rightOptions.errorData = specification.errorData;
     if (specification.id === 'List') otherOptions.filters = this.fillFilters();
     if (['AddRow', 'AddRows', 'UpdateDetail', 'UpdateDetails'].includes(specification.id)) {
-      const controls = this.fillControls(item, specification.id === 'UpdateDetails');
+      const controls: FormControl[] = this.fillControls(item, specification.id === 'UpdateDetails');
       otherOptions[specification.id === 'AddRows' ? 'rows' : 'controls'] =
         specification.id === 'AddRows' ? [controls] : controls;
     }

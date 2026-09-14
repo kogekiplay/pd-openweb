@@ -6,6 +6,7 @@ import { formatRecordToRelateRecord } from 'src/utils/record';
 import { getRelateRecordCountFromValue } from 'src/utils/record';
 import { RELATE_RECORD_SHOW_TYPE } from '../../../core/enum';
 import RelateRecordCards from '../../components/RelateRecordCards';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 export default class Widgets extends Component<any, any> {
   static propTypes = {
@@ -142,7 +143,7 @@ export default class Widgets extends Component<any, any> {
     let { showtype = RELATE_RECORD_SHOW_TYPE.LIST } = advancedSetting; // 1 卡片 2 列表 3 下拉
     showtype = parseInt(showtype, 10);
     const controlPermission = controlState({ ...this.props }, from);
-    const records = this.getRecordsData();
+    const records: RecordRow[] = this.getRecordsData();
 
     return (
       <RelateRecordCards

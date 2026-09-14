@@ -105,7 +105,7 @@ export function updateTreeNodeExpansion(
             workId,
           })
           .then(res => {
-            const newRows = (res.data || []).map(r => ({ ...r, pid: row.rowid }));
+            const newRows: RecordRow[] = (res.data || []).map(r => ({ ...r, pid: row.rowid }));
             dispatch(appendFakeRecords(newRows));
             return newRows;
           }));
@@ -218,7 +218,7 @@ export function loadRecords({
       return;
     }
 
-    const records =
+    const records: RecordRow[] =
       !base.isTab && recordId
         ? res.data.filter(r => !includes(deletedRecordIds.concat(addedRecords), r.rowid))
         : res.data;
@@ -498,7 +498,7 @@ export function init() {
       relateWorksheetInfo,
       recordId,
     });
-    const controls = (get(relateWorksheetInfo, 'template.controls') || []).concat(SYSTEM_CONTROL).filter(
+    const controls: FormControl[] = (get(relateWorksheetInfo, 'template.controls') || []).concat(SYSTEM_CONTROL).filter(
       c =>
         c &&
         controlState({
@@ -1141,7 +1141,7 @@ export function batchUpdateRecords({ selectedRowIds = [], records = [], activeCo
       return;
     }
 
-    const selectedRows = selectedRowIds
+    const selectedRows: RecordRow[] = selectedRowIds
       .map(rowId => find(records, { rowid: rowId }))
       .filter(_.identity)
       .filter(row => row.allowedit);

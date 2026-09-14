@@ -89,7 +89,7 @@ function DraftModal(props) {
   const [disableMaskDataControls, setDisableMaskDataControls] = useState({});
   const [errorCode, setErrorCode] = useState(0);
 
-  const controls = resortControlByColRow(_.get(worksheetInfo, 'template.controls'));
+  const controls: FormControl[] = resortControlByColRow(_.get(worksheetInfo, 'template.controls'));
   const columns = controls
     .filter(
       (item: FormControl) =>

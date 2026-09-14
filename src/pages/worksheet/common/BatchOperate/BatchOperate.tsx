@@ -31,7 +31,7 @@ import ExportList from './ExportList';
 import PrintList from './PrintList';
 import SubButton from './SubButton';
 import './BatchOperate.less';
-import type { RecordRow } from 'src/utils/controlTypes';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const CancelTextContent = styled.div`
   display: flex;
@@ -279,7 +279,7 @@ class BatchOperate extends React.Component<any, any> {
     } = this.props;
     const rowIds = selectedRows.map((row: RecordRow) => row.rowid);
     const isEditSingle = rowIds.length === 1 && !allWorksheetIsSelected;
-    const controls =
+    const controls: FormControl[] =
       rowIds.length === 1 ? args.newOldControl : args.newOldControl.filter(c => !checkCellIsEmpty(c.value));
     delete args.newOldControl;
     const updateArgs = {

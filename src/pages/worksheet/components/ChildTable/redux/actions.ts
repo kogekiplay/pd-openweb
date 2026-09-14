@@ -39,7 +39,7 @@ export function updateTreeNodeExpansion(
             workId,
           })
           .then(res => {
-            const newRows = res.data.map(r => ({
+            const newRows: RecordRow[] = res.data.map(r => ({
               ...r,
               isAddByTree: true,
             }));
@@ -161,7 +161,7 @@ export const clearAndSetRows = (
 ) => {
   return (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
     const oldRows = getState().rows;
-    let newRows = rows;
+    let newRows: RecordRow[] = rows;
     let deleted = oldRows.map(r => r.rowid);
 
     if (isSetValueFromEvent) {
@@ -284,7 +284,7 @@ export const updateRows = ({ rowIds, value }, { asyncUpdate, noRealUpdate } = {}
 };
 
 async function batchLoadRows(args) {
-  let rows = [];
+  let rows: RecordRow[] = [];
   let total;
   let res;
   let noMore = false;
@@ -602,12 +602,12 @@ export function setRowsFromStaticRows({
     const { controls, projectId, searchConfig, initRowIsCreate, max } = base;
     // 树形子表：value 序列化可能不带 pid/childrenids，按 value 重建会丢父子关系、展开 icon 消失。
     // 用同 rowid 的现有行（如服务端已加载行）的树字段做兜底，仅当 value 未给该字段时回退。
-    const existingRows = getState().rows || [];
+    const existingRows: RecordRow[] = getState().rows || [];
     const requestPool = createRequestPool({
       abortController: abortController || (typeof AbortController !== 'undefined' && new AbortController()),
       maxConcurrentRequests: 6,
     });
-    const rows = (!max ? staticRows : staticRows.slice(0, max)).map(staticRow => {
+    const rows: RecordRow[] = (!max ? staticRows : staticRows.slice(0, max)).map(staticRow => {
       let tempRowId;
 
       if (/^public-/.test(staticRow.rowid)) {

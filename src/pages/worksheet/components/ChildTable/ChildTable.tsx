@@ -429,14 +429,14 @@ class ChildTable extends React.Component<any, any> {
       return;
     }
 
-    const realRows = rows.filter((r: RecordRow) => r.rowid && !/^empty-/.test(r.rowid));
+    const realRows: RecordRow[] = rows.filter((r: RecordRow) => r.rowid && !/^empty-/.test(r.rowid));
 
     if (!realRows.length) {
       return;
     }
 
     const treeMap = treeTableViewData.treeMap || {};
-    const rootRows = realRows.filter((r: RecordRow) => !r.pid);
+    const rootRows: RecordRow[] = realRows.filter((r: RecordRow) => !r.pid);
     const missing = rootRows.some((r: RecordRow) => !treeMap[r.rowid]);
 
     if (!missing) {
@@ -723,7 +723,7 @@ class ChildTable extends React.Component<any, any> {
         const state = { loading: false };
 
         if (needResetControls) {
-          let newControls = (_.get(res, 'worksheet.template.controls') || _.get(res, 'template.controls')).concat(
+          let newControls: FormControl[] = (_.get(res, 'worksheet.template.controls') || _.get(res, 'template.controls')).concat(
             systemControls,
           );
           // 这里要和 getControls 一起统一到 action 内处理
@@ -872,7 +872,7 @@ class ChildTable extends React.Component<any, any> {
   }
   copyRows(rows) {
     const { addRows } = this.props;
-    const newRows = rows.map((row: RecordRow) =>
+    const newRows: RecordRow[] = rows.map((row: RecordRow) =>
       Object.assign({}, _.omit(copySublistRow(this.state.controls, row), ['updatedControlIds']), {
         rowid: `temp-${uuidv4()}`,
         allowedit: true,
@@ -1095,7 +1095,7 @@ class ChildTable extends React.Component<any, any> {
   handleImport = ({ replace = false } = {}) => {
     const { control, masterData, rows, addRows } = this.props;
     const { projectId } = this.worksheetInfo;
-    const controls = this.getShowColumns();
+    const controls: FormControl[] = this.getShowColumns();
 
     if (!controls.filter((c: FormControl) => _.includes(CHILD_TABLE_ALLOW_IMPORT_CONTROL_TYPES, c.type)).length) {
       alert(_l('没有支持导入的字段'), 3);
@@ -1115,7 +1115,7 @@ class ChildTable extends React.Component<any, any> {
         }
 
         setTimeout(() => {
-          const newRows = data
+          const newRows: RecordRow[] = data
             .slice(0, this.settings.maxCount - filterEmptyChildTableRows(rows).length)
             .map(updatedValues =>
               this.newRow(omit({ ...updatedValues, needShowLoading: true }, 'rowid'), {
@@ -1480,7 +1480,7 @@ class ChildTable extends React.Component<any, any> {
       return;
     }
 
-    const selectedRows = selectedRowIds
+    const selectedRows: RecordRow[] = selectedRowIds
       .map(rowId => find(tableRows, { rowid: rowId }))
       .filter(_.identity)
       .filter((row: RecordRow) => row.allowedit);
@@ -1518,7 +1518,7 @@ class ChildTable extends React.Component<any, any> {
 
         if (relateClearCids.length) {
           const selectedIdSet = new Set(selectedRows.map((r: RecordRow) => r.rowid));
-          const newRows = rows.map((row: RecordRow) => {
+          const newRows: RecordRow[] = rows.map((row: RecordRow) => {
             if (!selectedIdSet.has(row.rowid)) return row;
             const rowChanges = { ...baseChanges };
             relateClearCids.forEach(cid => {
@@ -1660,7 +1660,7 @@ class ChildTable extends React.Component<any, any> {
         return { ...row, allowedit: allowedit && (useUserPermission ? row.allowedit : true) };
       }
     });
-    const originRows = tableRows;
+    const originRows: RecordRow[] = tableRows;
     const valueChanged = _.isUndefined(this.props.valueChanged) ? this.state.valueChanged : this.props.valueChanged;
     const disabled = !controlPermission.editable || control.disabled;
     const noColumns = !controls.length;

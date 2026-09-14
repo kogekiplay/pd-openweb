@@ -7,6 +7,7 @@ import { Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import ChangeColumn from 'worksheet/common/ChangeColumn';
 import { getAdvanceSetting } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const IconWrapper = styled.div`
   position: absolute;
@@ -106,7 +107,7 @@ function ColumnVisibilityControl(props) {
     const personalSetting = safeParse(personal_setting || '{}');
     const allControlIds = columns.map(c => c.controlId);
     // 从 controls 计算 showControls
-    const controls = personalSetting?.controls || [];
+    const controls: FormControl[] = personalSetting?.controls || [];
     const showControls = allControlIds.filter(id => !controls.includes(id));
     // 从 controlsSorts 读取排序，如果没有则使用全部字段的顺序
     let controlsSorts = allControlIds;
@@ -143,7 +144,7 @@ function ColumnVisibilityControl(props) {
     ({ newShowControls, newControlSorts }) => {
       // 计算 controls：全部字段 - 显示的字段
       const allControlIds = columns.map(c => c.controlId);
-      const controls = allControlIds.filter(id => !newShowControls.includes(id));
+      const controls: FormControl[] = allControlIds.filter(id => !newShowControls.includes(id));
       // 按照 newControlSorts 的顺序来设置 showControls
       const sortedShowControls = newControlSorts.filter(id => newShowControls.includes(id));
       saveView(viewId, {

@@ -14,6 +14,7 @@ import Refund from './Refund';
 import RelationFields from './RelationFields';
 import UpdateGlobalVariable from './UpdateGlobalVariable';
 import UpdateSheetRecord from './UpdateSheetRecord';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default class Action extends Component<any, any> {
   constructor(props) {
@@ -158,7 +159,7 @@ export default class Action extends Component<any, any> {
       destroy,
       filters = [],
     } = data;
-    const controls = _.cloneDeep(data.controls);
+    const controls: FormControl[] = _.cloneDeep(data.controls);
     let hasError = false;
 
     if (actionId === ACTION_ID.ADD && !appId && appType !== APP_TYPE.CALENDAR) {

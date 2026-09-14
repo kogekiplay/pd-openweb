@@ -1,4 +1,4 @@
-﻿import React, { Component } from 'react';
+import React, { Component } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import RelateRecordCards from 'worksheet/components/RelateRecordCards';
@@ -9,6 +9,7 @@ import { ADD_EVENT_ENUM } from 'src/pages/widgetConfig/widgetSetting/components/
 import { controlState } from 'src/utils/control';
 import { formatRecordToRelateRecord, getRelateRecordCountFromValue } from 'src/utils/record';
 import { WidgetEventHelper } from '../../../core/useFormEventManager';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 export default class Widgets extends Component<any, any> {
   static propTypes = {
@@ -233,7 +234,7 @@ export default class Widgets extends Component<any, any> {
     let { showtype = RELATE_RECORD_SHOW_TYPE.LIST } = advancedSetting; // 1 卡片 2 列表 3 下拉
     showtype = parseInt(showtype, 10);
     const controlPermission = controlState({ ...this.props }, from);
-    const records = this.getRecordsData();
+    const records: RecordRow[] = this.getRecordsData();
 
     if (showtype === RELATE_RECORD_SHOW_TYPE.TABLE) {
       return (

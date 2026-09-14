@@ -201,7 +201,7 @@ export function getSubListErrorOfStore(store, currentControl?) {
     _.get(base, 'worksheetInfo.workflowChildTableSwitch') !== false;
   const mergedControl = isWorkflow && currentControl ? currentControl : control;
   // 只同步工作流审批规则改写后的必填状态，避免影响普通记录子表的权限判断。
-  const controls = isWorkflow ? mergeRequiredState(base.controls, mergedControl) : base.controls;
+  const controls: FormControl[] = isWorkflow ? mergeRequiredState(base.controls, mergedControl) : base.controls;
   const error = getSubListError(
     {
       rows,

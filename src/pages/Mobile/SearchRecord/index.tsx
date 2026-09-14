@@ -1,4 +1,4 @@
-﻿import React, { Component, Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
 import { SpinLoading } from 'antd-mobile';
 import _ from 'lodash';
 import sheetApi from 'src/api/worksheet';
@@ -7,6 +7,7 @@ import { formatValuesOfOriginConditions } from 'src/pages/worksheet/common/WorkS
 import { getRequest, pathCompletion } from 'src/utils/common';
 import { WithoutSearchRows } from '../RecordList/SheetRows';
 import './index.less';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const pageSize = 20;
 
@@ -76,7 +77,7 @@ class Search extends Component<any, any> {
   requestFilterRows = () => {
     const { params } = this.props.match;
     const { pageIndex, filterControls, sheetInfo } = this.state;
-    const controls = _.get(sheetInfo, ['template', 'controls']) || [];
+    const controls: FormControl[] = _.get(sheetInfo, ['template', 'controls']) || [];
     const { keyWords, searchId } = getRequest();
 
     this.setState({
@@ -114,7 +115,7 @@ class Search extends Component<any, any> {
             ).map(v => JSON.parse(v))
           : data;
         const { rows } = this.state;
-        const newRows = rows.concat(data);
+        const newRows: RecordRow[] = rows.concat(data);
 
         if (newRows.length === 1) {
           const url = `/mobile/record/${params.appId}/${params.worksheetId}/${params.viewId}/${newRows[0].rowid}`;
@@ -150,7 +151,7 @@ class Search extends Component<any, any> {
     const { views } = sheetInfo;
     const view = _.find(views, { viewId: params.viewId });
 
-    const worksheetControls = sheetInfo.template.controls.filter(item => {
+    const worksheetControls: FormControl[] = sheetInfo.template.controls.filter(item => {
       if (item.attribute === 1) {
         return true;
       }

@@ -3,6 +3,7 @@ import moment from 'moment';
 import { onValidator } from 'src/components/Form/core/formUtils';
 import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget.js';
 import { postWithToken } from 'src/utils/common';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 function getSelectedOptionKeys(text = '', options, isMultiple?) {
   if (!text.trim()) {
@@ -63,7 +64,7 @@ function getDateStringValue(dateString) {
 }
 
 async function convert({ projectId, worksheetId, controlId, mapConfig = [], controls = [], data = [] }) {
-  const rows = [];
+  const rows: RecordRow[] = [];
   const serverHandleControls = [];
   data.forEach((item, rowIndex) => {
     const row = {};

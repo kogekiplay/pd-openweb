@@ -1,4 +1,4 @@
-﻿import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Dialog } from 'antd-mobile';
 import cx from 'classnames';
 import _, { find, get, isEmpty } from 'lodash';
@@ -634,7 +634,7 @@ function NewRecordForm(props) {
   const handleAPPScanCodeFunc = newFormdata => {
     const { autoFill } = cache.current.newRecordOptions || {};
     newFormdata = newFormdata && !_.isEmpty(newFormdata) ? newFormdata : formdata;
-    const controls = newFormdata.map(item => {
+    const controls: FormControl[] = newFormdata.map(item => {
       if (_.get(item, 'advancedSetting.defsource')) {
         return { ...item, value: getDynamicValue(newFormdata, item) };
       }
@@ -691,7 +691,7 @@ function NewRecordForm(props) {
             sheetId: props.worksheetId,
             success: res => {
               const tempId = res.tempId; // 临时记录ID
-              const controls = res.controls;
+              const controls: FormControl[] = res.controls;
               const data = newFormdata.map(item => {
                 const it = _.find(controls, v => v.controlId === item.controlId) || {};
 

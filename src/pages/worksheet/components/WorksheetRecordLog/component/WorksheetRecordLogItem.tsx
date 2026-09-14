@@ -22,7 +22,7 @@ import type { FormControl } from 'src/utils/controlTypes';
 function renderContent(data, recordInfo, extendParam) {
   const { type, oldValue, newValue, id, editType } = data;
   const { requestType } = extendParam;
-  let controls = recordInfo.controls && recordInfo.controls.length ? recordInfo.controls : recordInfo.formdata;
+  let controls: FormControl[] = recordInfo.controls && recordInfo.controls.length ? recordInfo.controls : recordInfo.formdata;
   let control = controls ? controls.find((l: FormControl) => id === l.controlId) : undefined;
 
   if (

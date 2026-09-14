@@ -52,6 +52,14 @@ export interface FormControl {
   controlName?: string;
   value?: ControlValue;
   advancedSetting?: ControlAdvancedSetting;
+  /** 打印模块给控件挂的：明细表打印形态 */
+  printDetailType?: number;
+  /** 打印配置/字段选择器里给控件挂的勾选态 */
+  checked?: boolean;
+  /** Mingo AI 建表时标记这个控件是 AI 智能填充出来的 */
+  isSmartFill?: boolean;
+  /** Mingo AI 建表时给出的理由 */
+  Reason?: string;
   /** 关联记录控件上的「新建」按钮文案 */
   sourceBtnName?: string;
   /** 他表字段/快速筛选里挂着的源控件 */

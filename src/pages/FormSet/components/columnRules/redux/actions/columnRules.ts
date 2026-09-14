@@ -14,6 +14,7 @@ import {
   TAB_TYPES,
 } from '../../config';
 import type { AppDispatch, GetState } from 'src/redux/types';
+import type { FormControl } from 'src/utils/controlTypes';
 
 /**
  * 获取规则列表
@@ -85,7 +86,7 @@ export function loadColumnRules({ worksheetRuleControls, worksheetInfo }) {
 export function initGlobalRuleInfo(props) {
   const { allControls = [], globalSheetInfo = {} } = props;
   const { worksheetId, systemControls = [] } = globalSheetInfo || {};
-  const worksheetControls = allControls.concat(systemControls);
+  const worksheetControls: FormControl[] = allControls.concat(systemControls);
 
   return dispatch => {
     dispatch({

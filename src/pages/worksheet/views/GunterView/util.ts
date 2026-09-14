@@ -568,7 +568,7 @@ export const groupingTimeBlock = (grouping, periodList, viewConfig) => {
   return grouping.map(item => {
     const data = calculateTimeBlock(item, periodList, viewConfig);
     const itemWithoutBlock = _.omit(item, ['left', 'right', 'rows']);
-    const newRows = item.rows.map((row: RecordRow) => {
+    const newRows: RecordRow[] = item.rows.map((row: RecordRow) => {
       const rowWithoutBlock = _.omit(row, ['left', 'right']);
       const data = calculateTimeBlock(row, periodList, viewConfig);
       return {
@@ -658,7 +658,7 @@ export const getRecordIndex = (id, grouping, withoutArrangementVisible) => {
 
   for (let i = 0; i < grouping.length; i++) {
     let { groupingIndex } = grouping[i];
-    let rows = grouping[i].rows.filter((item: RecordRow) => (withoutArrangementVisible ? true : item.diff > 0));
+    let rows: RecordRow[] = grouping[i].rows.filter((item: RecordRow) => (withoutArrangementVisible ? true : item.diff > 0));
 
     for (let j = 0; j < rows.length; j++) {
       if (id === rows[j].rowid) {

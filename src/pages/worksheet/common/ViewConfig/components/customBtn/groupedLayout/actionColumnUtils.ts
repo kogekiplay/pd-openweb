@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { segmentsFromView } from './layoutUtils';
 import { normalizeGroups, parseJsonArray } from './parseUtils';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 export const getActionColumnKey = item =>
   `${item.type}:${item.type === 'group' ? item.source || 'list' : ''}:${item.id}`;
@@ -17,7 +18,7 @@ function isTypedActionGroupLayout(rows) {
 
 /** 从 listgroup/detailgroup 抽出按钮 id 顺序（typed 走整表；否则退回 listbtns/detailbtns 或旧分组 btns） */
 export function orderedBtnIdsFromGroupLayout(groupRaw, visibleBtnIds) {
-  const rows = parseJsonArray(groupRaw);
+  const rows: RecordRow[] = parseJsonArray(groupRaw);
 
   if (isTypedActionGroupLayout(rows)) {
     return _.flatMap(rows, r => {

@@ -1,4 +1,4 @@
-﻿import _ from 'lodash';
+import _ from 'lodash';
 import tagController from 'src/api/tag';
 import ajaxRequest from 'src/api/taskCenter';
 import { emitter } from 'src/utils/common';
@@ -11,6 +11,7 @@ import config from '../config/config';
 import updateStageViewControlsSource from '../utils/updateStage';
 import { errorMessage } from '../utils/utils';
 import type { AppDispatch, GetState } from 'src/redux/types';
+import type { FormControl } from 'src/utils/controlTypes';
 
 /**
  * 任务中心接口的通用返回。
@@ -1074,7 +1075,7 @@ export const getTaskControls =
 export const updateControlValue = (taskId: string, controlId: string, value, opts, isAttachment) => (dispatch: AppDispatch, getState: GetState) => {
   ajaxRequest.updateControlValue({ taskId, controlId, value, knowledgeAtt: isAttachment ? opts : '' }).then((result: TaskApiResult) => {
     if (result.status) {
-      const controls = _.cloneDeep(getState().task.taskControls[taskId]);
+      const controls: FormControl[] = _.cloneDeep(getState().task.taskControls[taskId]);
 
       controls.forEach(item => {
         if (item.controlId === controlId) {
@@ -1117,7 +1118,7 @@ export const updateControlValue = (taskId: string, controlId: string, value, opt
 
 // 更新自定义字段附件删除之后的值
 export const updateTaskControlFiles = (taskId: string, controlId: string, value) => (dispatch: AppDispatch, getState: GetState) => {
-  const controls = _.cloneDeep(getState().task.taskControls[taskId]);
+  const controls: FormControl[] = _.cloneDeep(getState().task.taskControls[taskId]);
 
   controls.forEach(item => {
     if (item.controlId === controlId) {

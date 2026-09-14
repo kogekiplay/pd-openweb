@@ -254,7 +254,7 @@ export const handleUpdateTreeNodeExpansion =
         loading: true,
       });
       const childRows = await getNewRows();
-      const newRows = rows.filter((r: RecordRow) => !find(childRows, { rowid: r.rowid })).concat(childRows);
+      const newRows: RecordRow[] = rows.filter((r: RecordRow) => !find(childRows, { rowid: r.rowid })).concat(childRows);
       dispatch({
         type: 'WORKSHEET_SHEETVIEW_APPEND_ROWS',
         rows: childRows,

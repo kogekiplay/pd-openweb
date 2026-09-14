@@ -313,7 +313,7 @@ function RelationSearch(props) {
     !window.isPublicWorksheet;
 
   const loadRecords = async (pageIndex = 1) => {
-    let relationControls = [...controls];
+    let relationControls: FormControl[] = [...controls];
     setState(oldState => ({ ...oldState, isLoadingMore: true, loading: pageIndex === 1 }));
     if (_.isEmpty(relationControls)) {
       relationControls = await sheetAjax

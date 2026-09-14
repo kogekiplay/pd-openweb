@@ -1,4 +1,4 @@
-﻿import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import cx from 'classnames';
 import { difference, filter, find, get, isEmpty, isEqual, sortBy, uniq } from 'lodash';
 import styled, { keyframes } from 'styled-components';
@@ -15,6 +15,7 @@ import LoadingDots from 'src/pages/widgetConfig/widgetSetting/components/Develop
 import { emitter, htmlEncodeReg } from 'src/utils/common';
 import { changeCodeOfAIGenControl, convertAiRecommendControlToControlData } from 'src/utils/control';
 import { parseStreamingJsonlData } from 'src/utils/sse';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   border-radius: 8px;
@@ -618,7 +619,7 @@ export default function MingoGeneratedWidgetsSelector({
                               worksheetId: relatedWorksheetId,
                             })
                             .then(res => {
-                              const controls = get(res, 'template.controls') || [];
+                              const controls: FormControl[] = get(res, 'template.controls') || [];
                               worksheetControlsMap[relatedWorksheetId] = controls;
                             })
                             .catch(() => {}),
@@ -626,7 +627,7 @@ export default function MingoGeneratedWidgetsSelector({
                       );
                       const needUpdateWidgets = relateControlsWithExistWorksheet
                         .map(control => {
-                          const controls = worksheetControlsMap[control.dataSource] || [];
+                          const controls: FormControl[] = worksheetControlsMap[control.dataSource] || [];
                           const backRelateControl =
                             controls.find(
                               item =>

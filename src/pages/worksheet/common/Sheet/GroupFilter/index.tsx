@@ -400,7 +400,7 @@ function GroupFilter(props) {
     } // 级联 关联
     else {
       let data = result.data || [];
-      const controls = _.get(result, ['template', 'controls']) || [];
+      const controls: FormControl[] = _.get(result, ['template', 'controls']) || [];
       const control = controls.find((item: FormControl) => item.attribute === 1);
 
       if (navlayer && Number(navlayer) > 1 && !rowId) {

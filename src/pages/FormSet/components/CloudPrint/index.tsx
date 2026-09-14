@@ -5,6 +5,7 @@ import worksheetAjax from 'src/api/worksheet';
 import DynamicRender from 'src/components/DynamicRender';
 import DrawerFooter from '../DrawerFooter';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const supportedControlTypes = [2, 3, 4, 5, 6, 7, 8, 15, 16, 17, 18, 25, 26, 27, 32, 33, 46, 48, 53];
 
@@ -66,7 +67,7 @@ const getControls = (controls, isMaster) => {
         (item.type === 30 && supportedControlTypes.includes(item.sourceControl.type)),
     );
   } else {
-    const relationControls = _.filter(controls, item => [29, 34].includes(item.type));
+    const relationControls: FormControl[] = _.filter(controls, item => [29, 34].includes(item.type));
 
     result = _.reduce(
       relationControls,

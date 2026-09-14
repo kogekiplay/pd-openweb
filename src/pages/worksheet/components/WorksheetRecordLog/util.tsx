@@ -15,7 +15,7 @@ import {
   WF_STATUS,
   WFSTATUS_OPTIONS,
 } from './enum.js';
-import type { FormControl } from 'src/utils/controlTypes';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const reg = new RegExp('<[^<>]+>', 'g');
 
@@ -175,7 +175,7 @@ export function handleSelectTagsValue(param) {
     case 29:
       const { advancedSetting = {} } = control || {};
       const oldRows = (safeParse(oldValue) || {}).rows;
-      const newRows = (safeParse(newValue) || {}).rows;
+      const newRows: RecordRow[] = (safeParse(newValue) || {}).rows;
 
       if (
         ([8, 2].includes(requestType) || ['1', '2', '5', '6'].includes(advancedSetting.showtype)) &&

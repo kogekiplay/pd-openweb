@@ -422,7 +422,7 @@ function MingoContent(props, ref) {
   } = useChat({
     defaultMessages: defaultData.messages || [],
     aiCompletionApi: async (_, { abortController, agentParams = {} }) => {
-      const availableControls = getAvailableControls(get(worksheetInfo, 'template.controls', []));
+      const availableControls: FormControl[] = getAvailableControls(get(worksheetInfo, 'template.controls', []));
       const [presetDepartmentsAndRoles, presetRelatedRecords] = await Promise.all([
         getPresetDepartmentsAndRoles({
           controls: availableControls,
@@ -614,7 +614,7 @@ function MingoContent(props, ref) {
       onClose();
     }
   }, [activeWorksheet]);
-  const visibleControls = get(worksheetInfo, 'template.controls', []).filter(
+  const visibleControls: FormControl[] = get(worksheetInfo, 'template.controls', []).filter(
     control =>
       !includes(SHEET_VIEW_HIDDEN_TYPES, control.type) &&
       !includes(

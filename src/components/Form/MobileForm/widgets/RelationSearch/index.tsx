@@ -13,6 +13,7 @@ import { RECORD_INFO_FROM, RELATION_SEARCH_SHOW_TYPE } from '../../../core/enum'
 import SearchInput from '../../components/ChildTable/SearchInput';
 import Cards from './Cards';
 import Texts from './Text';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const PAGE_SIZE = 50;
 
@@ -69,7 +70,7 @@ export default function RelationSearch(props) {
     !window.isPublicWorksheet;
 
   const loadRecords = async (pageIndex = 1, keywords = '') => {
-    let relationControls = [...controls];
+    let relationControls: FormControl[] = [...controls];
     setState(oldState => ({ ...oldState, isLoadingMore: true, loading: pageIndex === 1 }));
     if (_.isEmpty(relationControls)) {
       relationControls = await sheetAjax

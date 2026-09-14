@@ -18,6 +18,7 @@ import WithoutFidldItem from './components/WithoutFidldItem';
 import XAxis from './components/XAxis';
 import YAxis from './components/YAxis';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 let ChartSetting = class ChartSetting extends Component<any, any> {
   constructor(props) {
@@ -240,7 +241,7 @@ let ChartSetting = class ChartSetting extends Component<any, any> {
 
             if (specificValue) {
               const columnSummary = _.get(currentReport, 'pivotTable.columnSummary') || {};
-              const controlList = columnSummary.controlList.filter(item => item.controlId !== specificValue.controlId);
+              const controlList: FormControl[] = columnSummary.controlList.filter(item => item.controlId !== specificValue.controlId);
               data.pivotTable = {
                 ...currentReport.pivotTable,
                 columnSummary: { ...columnSummary, controlList },

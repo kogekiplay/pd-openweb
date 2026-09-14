@@ -15,7 +15,7 @@ import {
 import { WHOLE_SIZE } from '../config/Drag';
 import { RELATION_OPTIONS } from '../config/setting';
 import { ALL_SYS, DEFAULT_CONFIG, DEFAULT_DATA, SYS_CONTROLS, WIDGETS_TO_API_TYPE_ENUM } from '../config/widget';
-import type { FormControl } from 'src/utils/controlTypes';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const FORMULA_FN_LIST = [
   'SUM',
@@ -144,7 +144,7 @@ export const putControlByOrder = controls => {
     .reduce((result, key) => {
       // 每一行里按照col排序
       const row = sortBy(obj[key], [({ item }) => item.col, 'originIndex']).map(({ item }) => item);
-      const rows = [];
+      const rows: RecordRow[] = [];
 
       row.forEach(item => {
         const currentRow = rows[rows.length - 1];
@@ -213,7 +213,7 @@ export const genWidgetsByControls = (controls: FormControl[] = []) => {
   /**
    * 依次处理数据
    */
-  const newControls = compose(putControlByOrder, dealControlData, replaceHalfWithSizeControls)(controls);
+  const newControls: FormControl[] = compose(putControlByOrder, dealControlData, replaceHalfWithSizeControls)(controls);
   return replaceRowWithControls(newControls);
 };
 

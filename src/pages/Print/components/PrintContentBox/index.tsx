@@ -6,6 +6,7 @@ import { isRelationControl } from '../../core/util';
 import ContentEnhancer from './ContentEnhancer';
 import { findLastVisibleByBinary, getAllRelationRows } from './utils';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const PrintContentBox = props => {
   const {
@@ -72,7 +73,7 @@ const PrintContentBox = props => {
     // 生成基础打印数据
     const nextControlMap = {};
     const nextSignatureMap = {};
-    const allControls = printData?.allControls || [];
+    const allControls: FormControl[] = printData?.allControls || [];
 
     rowValues.forEach(({ rowId }) => {
       const rowValueMap = rowsValuesMapRef.current[rowId];
@@ -87,7 +88,7 @@ const PrintContentBox = props => {
       nextSignatureMap[rowId] = signature.map(fillValue);
     });
 
-    const relationControls = controls.filter(({ type, checked }) => isRelationControl(type) && checked);
+    const relationControls: FormControl[] = controls.filter(({ type, checked }) => isRelationControl(type) && checked);
 
     setSignatureProcessedMap(nextSignatureMap);
     // 没有关联记录

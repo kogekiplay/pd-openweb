@@ -109,7 +109,7 @@ export default function Header(props) {
   const handleSearchData = () => {
     if (!searchData) return;
 
-    const controls = _.get(worksheetInfo, 'template.controls') || [];
+    const controls: FormControl[] = _.get(worksheetInfo, 'template.controls') || [];
     const titleField = controls.find((m: FormControl) => m.controlId === searchData.queryKey);
     const searchRecordData = searchData.data.map(l => {
       return {

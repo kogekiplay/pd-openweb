@@ -539,7 +539,7 @@ class ChildTable extends React.Component<any, any> {
         const state = { loading: false };
 
         if (needResetControls) {
-          let newControls = (_.get(res, 'worksheet.template.controls') || _.get(res, 'template.controls')).concat(
+          let newControls: FormControl[] = (_.get(res, 'worksheet.template.controls') || _.get(res, 'template.controls')).concat(
             systemControls,
           );
           // 这里要和 getControls 一起统一到 action 内处理
@@ -1217,7 +1217,7 @@ class ChildTable extends React.Component<any, any> {
         return { ...row, allowedit: allowedit && (useUserPermission ? row.allowedit : true) };
       }
     });
-    const originRows = tableRows;
+    const originRows: RecordRow[] = tableRows;
     const disabled = !controlPermission.editable || control.disabled;
     const noColumns = !controls.length;
     const columns = this.getShowColumns();

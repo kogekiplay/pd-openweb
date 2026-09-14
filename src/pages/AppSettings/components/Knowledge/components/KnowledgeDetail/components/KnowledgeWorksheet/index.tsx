@@ -34,6 +34,7 @@ import ErrorDialog from './components/ErrorDialog';
 import { useKnowledgeDetail } from './core/hooks';
 import { getBannerConfig } from './utils';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const FORMAT_TIME = 'YYYY-MM-DD HH:mm:ss';
 
@@ -214,7 +215,7 @@ const KnowledgeWorksheet = props => {
     let nextControlsMap = { ...worksheetControlsMap };
 
     let filterConditions = nextFilterMap[filterId];
-    let worksheetControls = nextControlsMap[worksheetId];
+    let worksheetControls: FormControl[] = nextControlsMap[worksheetId];
 
     if (!filterConditions?.length || !worksheetControls?.length) {
       const res = await fetchFilterData({

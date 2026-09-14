@@ -18,6 +18,7 @@ import BasicsSetting from './BasicsSetting';
 import ControlsSetting from './ControlsSetting';
 import LayoutSetting from './LayoutSetting';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Setting = [
   {
@@ -77,7 +78,7 @@ class SideNav extends React.Component<any, any> {
     const { printData = [] } = this.props;
     const { orderNumber = [] } = printData;
     let orderNumberCheck = (orderNumber.find(o => o.receiveControlId === it.controlId) || []).checked;
-    let controls =
+    let controls: FormControl[] =
       it.showControls.length > 0 ? it.relationControls.filter(o => it.showControls.includes(o.controlId)) : [];
     let list = controls.filter(o => o.checked);
 
@@ -290,7 +291,7 @@ class SideNav extends React.Component<any, any> {
     const { receiveControls = [] } = printData;
 
     let isChecked = checked;
-    const controls =
+    const controls: FormControl[] =
       o.showControls.length > 0 ? o.relationControls.filter(it => o.showControls.includes(it.controlId)) : [];
 
     if (controls.map(o => o.checked).includes(true)) {

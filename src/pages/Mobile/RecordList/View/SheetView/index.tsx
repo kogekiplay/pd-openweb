@@ -16,6 +16,7 @@ import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import type { RootState } from 'src/redux/types';
 import { replaceBtnsTranslateInfo } from 'src/utils/translate';
 import SheetRows, { WithoutRows } from '../../SheetRows';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const BatchOptBtn = styled.div`
   display: flex;
@@ -346,7 +347,7 @@ class SheetView extends Component<any, any> {
       refreshWorksheetControls,
     } = this.props;
     const rowIds = batchOptCheckedData;
-    const controls = args.newOldControl;
+    const controls: FormControl[] = args.newOldControl;
     const updateArgs = {
       ...args,
       appId,

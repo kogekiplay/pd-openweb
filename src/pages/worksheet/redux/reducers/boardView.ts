@@ -4,12 +4,13 @@ import _ from 'lodash';
 import findIndex from 'lodash/findIndex';
 import { WIDGET_VALUE_ID } from 'src/components/Form/core/config';
 import type { ReduxAction } from 'src/redux/types';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 export const getIndex = (state, data) => {
   const { key, rowId } = data;
   const keyIndex = _.findIndex(state, item => item.key === key);
   if (keyIndex < 0) return null;
-  const rows = _.get(state, [keyIndex, 'rows']);
+  const rows: RecordRow[] = _.get(state, [keyIndex, 'rows']);
 
   try {
     const rowIndex = _.findIndex(rows, row => JSON.parse(row).rowid === rowId);

@@ -126,7 +126,7 @@ const getSearchWorksheetData = async props => {
   const { formData, recordId, queryConfig = {}, control, appId } = props;
   const { items = [], templates = [], sourceId, moreSort, controlId, id, moreType, recordsNotFound } = queryConfig;
   const currentControl = control || _.find(formData, da => da.controlId === controlId);
-  const controls = _.get(templates[0] || {}, 'controls') || [];
+  const controls: FormControl[] = _.get(templates[0] || {}, 'controls') || [];
   let queryCount = getDefaultCount(currentControl, queryConfig.queryCount);
 
   if (templates.length > 0 && controls.length > 0) {
@@ -233,7 +233,7 @@ const getRelateSearchResult = (control, searchResult, isMix?) => {
 const handleUpdateSearchResult = async props => {
   const { handleChange, queryConfig = {}, formData = [], isMix, control } = props;
   const { configs = [], templates = {}, recordsNotFound, moreType } = queryConfig;
-  const controls = _.get(templates[0] || {}, 'controls') || [];
+  const controls: FormControl[] = _.get(templates[0] || {}, 'controls') || [];
   const { count, result: searchResult } = props.searchResult || {};
 
   // 保留原值
@@ -374,7 +374,7 @@ const getSearchWorksheetResult = async props => {
   const { id } = safeParse(advancedSetting.dynamicsrc || '{}');
   const currentSearchConfig = _.find(searchConfig, s => s.id === id) || {};
   const { items = [], templates = [], sourceId, moreSort, resultType, controlId } = currentSearchConfig;
-  const controls = _.get(templates[0] || {}, 'controls') || [];
+  const controls: FormControl[] = _.get(templates[0] || {}, 'controls') || [];
 
   if (templates.length > 0 && controls.length > 0) {
     const filterControls = getFilter({
@@ -432,11 +432,11 @@ const getSearchWorksheetResult = async props => {
 const createRecord = async props => {
   const { actionItems = [], advancedSetting = {}, projectId } = props;
 
-  const receiveControls = [];
+  const receiveControls: FormControl[] = [];
 
   const sheetData = await sheetAjax.getWorksheetInfo({ worksheetId: advancedSetting.sheetId, getTemplate: true });
 
-  const controls = _.get(sheetData, 'template.controls') || [];
+  const controls: FormControl[] = _.get(sheetData, 'template.controls') || [];
 
   actionItems.map(item => {
     const control = _.find(controls, f => f.controlId === item.controlId);
@@ -610,7 +610,7 @@ export const handleSetValueActions = async (actionItems, props) => {
           if (value !== control.value && !canNotSet) {
             if (control.type === 29) {
               try {
-                const records = safeParse(value || '[]');
+                const records: RecordRow[] = safeParse(value || '[]');
 
                 if (_.isEmpty(records)) {
                   value = 'deleteRowIds: all';
@@ -629,7 +629,7 @@ export const handleSetValueActions = async (actionItems, props) => {
 
             if (control.type === 34) {
               try {
-                const records = safeParse(value || '[]');
+                const records: RecordRow[] = safeParse(value || '[]');
                 value = {
                   action: 'clearAndSet',
                   isDefault: true,

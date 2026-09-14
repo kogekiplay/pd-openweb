@@ -31,7 +31,7 @@ const GalleryGroup = props => {
     control,
   });
   const isOpen = opKeys.includes(row.key);
-  const rows = row.rows || [];
+  const rows: RecordRow[] = row.rows || [];
 
   // 每个分组独立处理展开状态、组内新增和组内分页加载。
   return (

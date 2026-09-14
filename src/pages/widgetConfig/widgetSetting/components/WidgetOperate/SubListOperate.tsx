@@ -3,6 +3,7 @@ import { Checkbox, Dropdown } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { getAdvanceSetting, handleAdvancedSettingChange } from 'src/pages/widgetConfig/util/setting';
 import { SettingItem } from '../../../styled';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function SubListOperate(props) {
   const { data, onChange } = props;
@@ -21,7 +22,7 @@ export default function SubListOperate(props) {
   const batchcids = getAdvanceSetting(data, 'batchcids') || [];
   const [visible, setVisible] = useState(batchcids.length > 0);
 
-  const worksheetControls = relationControls
+  const worksheetControls: FormControl[] = relationControls
     .filter(item => item.type === 29)
     .map(({ controlId: value, controlName: text }) => ({ value, text }));
 

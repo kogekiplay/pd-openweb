@@ -36,6 +36,7 @@ import ToolBar from '../HierarchyView/ToolBar';
 import { hierarchyViewCanSelectFields } from '../HierarchyView/util';
 import { getSearchData, isAllowQuickSwitch, isDisabledCreate, isTextTitle } from '../util';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const RecordStructureWrap = styled.div`
   padding-left: 48px;
@@ -267,7 +268,7 @@ function HierarchyMix(props) {
           getTemplate: true,
         })
         .then(res => {
-          const allControls = _.get(res, 'template.controls') || [];
+          const allControls: FormControl[] = _.get(res, 'template.controls') || [];
           updateWorksheetControls(allControls);
           updateWorksheetInfo(res);
         });

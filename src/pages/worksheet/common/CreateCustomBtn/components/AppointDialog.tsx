@@ -87,7 +87,7 @@ class AppointDialog extends React.Component<any, any> {
   };
 
   handDel = item => {
-    const controls = this.state.writeObject !== 1 ? this.props.relationControls : this.state.widgetList;
+    const controls: FormControl[] = this.state.writeObject !== 1 ? this.props.relationControls : this.state.widgetList;
     const list = getRealData(
       controls.find((o: FormControl) => o.controlId === item.controlId),
       controls.filter((o: FormControl) => this.state.writeControls.map(it => it.controlId).includes(o.controlId)),

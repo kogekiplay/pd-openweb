@@ -148,7 +148,7 @@ export const fetchRows = callBackFun => {
           const isEndTimeStyle = isTimeStyle(endControl);
           const grouping = sortGrouping(
             data.map(item => {
-              const rows = (item.rows || []).map(row => {
+              const rows: RecordRow[] = (item.rows || []).map(row => {
                 const data = formatRecordTime(safeParse(row || '{}'), gunterView.viewConfig);
                 const startTime =
                   data.startTime && isStartTimeStyle
@@ -498,7 +498,7 @@ export const addRecord = (cell, row) => {
     const startControl = _.find(controls, { controlId: startId });
     const endControl = _.find(controls, { controlId: endId });
 
-    const receiveControls = [
+    const receiveControls: FormControl[] = [
       cell,
       {
         controlId: startId,
@@ -577,11 +577,11 @@ export const addRecord = (cell, row) => {
 
         if (c.type === 34) {
           try {
-            const records = safeParse(value || '[]');
+            const records: RecordRow[] = safeParse(value || '[]');
 
             if (records.length) {
               const tempValue = records.map((staticRow: RecordRow) => {
-                const rows = [];
+                const rows: RecordRow[] = [];
                 Object.keys(staticRow).forEach(key => {
                   rows.push({ controlId: key === 'rowid' ? 'tempRowId' : key, value: staticRow[key] });
                 });
@@ -627,7 +627,7 @@ export const addRecord = (cell, row) => {
         if (errors[data.resultCode]) {
           alert(errors[data.resultCode], 3);
           const newGrouping = grouping.map(item => {
-            const newRows = item.rows.filter((item: RecordRow) => item.rowid !== row.rowid);
+            const newRows: RecordRow[] = item.rows.filter((item: RecordRow) => item.rowid !== row.rowid);
             return {
               ...item,
               rows: newRows,
@@ -652,7 +652,7 @@ export const removeRecord = id => {
       .then(data => {
         if (data.isSuccess) {
           let newGrouping = gunterView.grouping.map(item => {
-            const newRows = item.rows.filter((row: RecordRow) => row.rowid !== id);
+            const newRows: RecordRow[] = item.rows.filter((row: RecordRow) => row.rowid !== id);
             const times = getRowsTime(newRows);
             return {
               ...item,
@@ -671,7 +671,7 @@ export const hideRecord = id => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { gunterView } = getState().sheet;
     let newGrouping = gunterView.grouping.map(item => {
-      const newRows = item.rows.filter((row: RecordRow) => row.rowid !== id);
+      const newRows: RecordRow[] = item.rows.filter((row: RecordRow) => row.rowid !== id);
       const times = getRowsTime(newRows);
       return {
         ...item,
@@ -867,7 +867,7 @@ export const updateGroupingRow = (data, id) => {
         return item;
       }
 
-      const newRows = item.rows.map((row: RecordRow) => {
+      const newRows: RecordRow[] = item.rows.map((row: RecordRow) => {
         if (id === row.rowid) {
           return {
             ...row,
@@ -894,7 +894,7 @@ export const moveGroupingRow = (data, newKey, oldKey) => {
     const { gunterView } = getState().sheet;
     const { grouping, periodList, viewConfig } = gunterView;
     let newGrouping = grouping.map(item => {
-      let newRows = item.rows;
+      let newRows: RecordRow[] = item.rows;
 
       if (item.key === oldKey) {
         newRows = item.rows.filter((item: RecordRow) => item.rowid !== data.rowid);
@@ -944,7 +944,7 @@ export const addNewRecord = (record, addIndex?) => {
           fillRecordTimeBlockColor({ ...record, groupId: groupKey }, colorControl),
           viewConfig,
         );
-        const newRows = addIndex
+        const newRows: RecordRow[] = addIndex
           ? item.rows.slice(0, addIndex).concat(newRecord, item.rows.slice(addIndex))
           : item.rows.concat(newRecord);
 

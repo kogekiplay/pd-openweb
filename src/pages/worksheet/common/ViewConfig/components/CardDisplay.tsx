@@ -35,7 +35,7 @@ export default function CardDisplay(props) {
   useEffect(() => {
     if (!worksheetId) return;
     worksheetAjax.getWorksheetInfo({ worksheetId, getTemplate: true }).then(data => {
-      const controls = _.get(data, ['template', 'controls']);
+      const controls: FormControl[] = _.get(data, ['template', 'controls']);
       const excludedTitle = excludeTitleControls(controls);
       const defaultShowControls = getDefaultShowControls(excludedTitle);
       const coverColumns = controls.filter((l: FormControl) => isVisible(l)).filter(c => !!c.controlName);

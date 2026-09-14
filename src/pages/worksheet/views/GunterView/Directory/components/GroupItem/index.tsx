@@ -167,7 +167,7 @@ let GroupItem = class GroupItem extends Component<any, any> {
     const { width, viewConfig, widthConfig, group, worksheetInfo, sheetSwitchPermit, withoutArrangementVisible } =
       this.props;
     const { viewControl } = viewConfig;
-    const rows = group.rows.filter((item: RecordRow) => (withoutArrangementVisible ? true : item.diff > 0));
+    const rows: RecordRow[] = group.rows.filter((item: RecordRow) => (withoutArrangementVisible ? true : item.diff > 0));
     const allowAdd =
       isOpenPermit(permitList.createButtonSwitch, sheetSwitchPermit) &&
       worksheetInfo.allowAdd &&

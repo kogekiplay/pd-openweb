@@ -4,6 +4,7 @@ import { SYSTEM_CONTROL_WITH_UAID } from 'src/pages/widgetConfig/config/widget';
 import { controlState } from 'src/utils/control';
 import { replaceControlsTranslateInfo } from 'src/utils/translate';
 import { FILTER_SYS, SYST_PRINT } from './config';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export const isRelationControl = type => {
   return [29, 34, 51].includes(type);
@@ -11,7 +12,7 @@ export const isRelationControl = type => {
 
 // 关联表控件根据showControls排序
 export const sortByShowControls = list => {
-  let controls = [];
+  let controls: FormControl[] = [];
   list.showControls.map(id => {
     let l = list.relationControls.find(it => id === it.controlId);
 
@@ -40,7 +41,7 @@ const isSupportedPrintControl = ({ control, needVisible, showControls = [], isRe
 
 //处理打印数据
 export const getControlsForPrint = ({ receiveControls, relationMaps = {}, needVisible }) => {
-  const controls = receiveControls
+  const controls: FormControl[] = receiveControls
     .filter(c => isSupportedPrintControl({ control: c, needVisible }))
     .map(control => {
       const extendAttr = {};
@@ -51,7 +52,7 @@ export const getControlsForPrint = ({ receiveControls, relationMaps = {}, needVi
           (control.relationControls || []).map(rc => [rc.controlId, rc.checked]),
         );
         const relationData = relationMaps[control.controlId] || {};
-        const relationControls = (_.get(relationData, 'template.controls') || [])
+        const relationControls: FormControl[] = (_.get(relationData, 'template.controls') || [])
           .map(c => ({
             ...c,
             checked:

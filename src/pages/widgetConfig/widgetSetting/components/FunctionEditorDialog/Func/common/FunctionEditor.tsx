@@ -7,6 +7,7 @@ import { checkTypeSupportForFunction } from 'src/utils/control';
 import { functions } from '../enum';
 import { getControlType } from './ControlList';
 import { computeFormulaMarks } from './formulaMarks';
+import type { FormControl } from 'src/utils/controlTypes';
 
 /**
  * 公式编辑器（CodeMirror 6）。CM5 → CM6 分三步走的第 2 步。
@@ -480,7 +481,7 @@ export default class Function {
     if (word.from === word.to && !context.explicit) return null;
 
     const typed = word.text.toUpperCase();
-    const controls = this.controls
+    const controls: FormControl[] = this.controls
       .filter(c => c.controlName && checkTypeSupportForFunction(c))
       .filter(c => c.controlName.toUpperCase().indexOf(typed) > -1);
     const fns = Object.keys(functions).filter(fn => fn.indexOf(typed) > -1);

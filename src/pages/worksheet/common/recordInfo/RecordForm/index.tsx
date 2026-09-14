@@ -226,7 +226,7 @@ function RecordForm(props) {
     // 所以只在确实需要更新时才重建 —— 第一次跑完 defaultState 就与自身字段一致了，
     // 之后除非 required / controlPermissions / fieldPermission 真的变了才会再建，
     // 与「每次渲染都按当前值重算」的旧语义等价。
-    const relationControls = item.relationControls;
+    const relationControls: FormControl[] = item.relationControls;
 
     if (relationControls && relationControls.length) {
       const needsUpdate = relationControls.some(

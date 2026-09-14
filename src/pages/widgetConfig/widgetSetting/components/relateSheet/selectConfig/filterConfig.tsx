@@ -9,6 +9,7 @@ import { SYSTEM_CONTROL } from '../../../../config/widget';
 import { filterControlsFromAll } from '../../../../util';
 import { getAdvanceSetting, handleAdvancedSettingChange, isSingleRelateSheet } from '../../../../util/setting';
 import EmptyRuleConfig from '../../EmptyRuleConfig';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const formatCondition = ({ filters = [], relationControls = [], ruleValue }) => {
   function formatCondition(condition) {
@@ -82,7 +83,7 @@ export default function FilterDialog(props) {
 
   const { sourceControlId = '', type = '' } = data;
   const filters = getAdvanceSetting(data, 'filters') || [];
-  const allControls = props.allControls.concat(
+  const allControls: FormControl[] = props.allControls.concat(
     SYSTEM_CONTROL.filter(c => _.includes(['caid', 'ownerid'], c.controlId)),
   );
   const relateSheetList = filterControlsFromAll(

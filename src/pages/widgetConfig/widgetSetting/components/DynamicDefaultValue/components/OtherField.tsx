@@ -37,7 +37,7 @@ export default function OtherField(props) {
     from,
   } = props;
   const { worksheetId } = globalSheetInfo;
-  const originControls = props.controls.concat(globalSheetControls);
+  const originControls: FormControl[] = props.controls.concat(globalSheetControls);
   const [controls, setControls] = useState(originControls);
 
   useEffect(() => {

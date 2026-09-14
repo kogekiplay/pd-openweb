@@ -181,7 +181,7 @@ export const fetchRows = ({
   return (dispatch: AppDispatch, getState: GetState) => {
     const { base, filters, views, sheetview, quickFilter, navGroupFilters } = getState().sheet;
     const { appId, viewId, worksheetId, forcePageSize, maxCount, chartId, showAsSheetView } = base;
-    let controls = getState().sheet.controls;
+    let controls: FormControl[] = getState().sheet.controls;
     const view = _.find(views, { viewId });
     const isGroupedView = !!getGroupControlId(view);
     const abortController = sheetview.abortController;
@@ -292,7 +292,7 @@ export const fetchRows = ({
     fetchRowsAjax
       .then(res => {
         if (updateWorksheetControls && _.get(res, 'template.controls')) {
-          const newControls = _.get(res, 'template.controls').filter(
+          const newControls: FormControl[] = _.get(res, 'template.controls').filter(
             c =>
               c.controlId.length === 24 ||
               _.includes(
@@ -313,7 +313,7 @@ export const fetchRows = ({
           dispatch(setViewLayout(viewId));
         }
 
-        let rows = res.data;
+        let rows: RecordRow[] = res.data;
 
         if (groupControl && !isTreeTableView) {
           rows = flatRowsFromGroups(rows, groupControl, view, controls);
@@ -390,7 +390,7 @@ export const loadGroupMore = groupKey => {
     let { sortControls } = sheetview.sheetFetchParams;
     const currentRows = get(sheetview, 'sheetViewData.rows', []);
     const loadMoreRow = find(currentRows, r => r.groupKey === groupKey && r.rowid === 'loadGroupMore');
-    const rows = currentRows.filter(r => !(r.groupKey === groupKey && r.rowid === 'loadGroupMore'));
+    const rows: RecordRow[] = currentRows.filter(r => !(r.groupKey === groupKey && r.rowid === 'loadGroupMore'));
     const groupFetchParams = sheetview.groupFetchParams;
     const prevPageIndex = get(groupFetchParams, `${groupKey}.pageIndex`, 1);
     const nextPageIndex = prevPageIndex + 1;
@@ -430,7 +430,7 @@ export const loadGroupMore = groupKey => {
           ...safeParse(rowStr),
           groupKey,
         }));
-        let newRows = rows;
+        let newRows: RecordRow[] = rows;
 
         if (!isEmpty(newRowsOfGroup)) {
           newRows = [...rows.slice(0, lastRowIndex + 1), ...newRowsOfGroup, ...rows.slice(lastRowIndex + 1)];
@@ -643,7 +643,7 @@ export function insertToGroupedRow(newRow) {
       lastRowIndexOfGroup = groupIndex;
     }
 
-    let newRows = [
+    let newRows: RecordRow[] = [
       ...rows.slice(0, lastRowIndexOfGroup + 1),
       { ...newRow, groupKey: newRow.group.key, group: newRow.group },
       ...rows.slice(lastRowIndexOfGroup + 1),
@@ -672,7 +672,7 @@ export function insertToGroupedRow(newRow) {
 export function updateRows(rowIds, value) {
   return (dispatch: AppDispatch, getState: GetState) => {
     if (value.group) {
-      let rows = get(getState().sheet.sheetview.sheetViewData, 'rows', []);
+      let rows: RecordRow[] = get(getState().sheet.sheetview.sheetViewData, 'rows', []);
       const prevRow = find(rows, r => r.rowid === value.rowid);
       rows = rows.filter((row: RecordRow) => row.rowid !== value.rowid);
       const groupOldRow = find(rows, r => r.rowid === 'groupTitle' && r.key === prevRow.groupKey);
@@ -683,7 +683,7 @@ export function updateRows(rowIds, value) {
       }
 
       const oldRow = rows[lastRowIndexOfGroup];
-      let newRows = [
+      let newRows: RecordRow[] = [
         ...rows.slice(0, lastRowIndexOfGroup + 1),
         { ...pick(oldRow, ['allowedit', 'allowdelete']), ...value, groupKey: value.group.key, group: value.group },
         ...rows.slice(lastRowIndexOfGroup + 1),
@@ -817,7 +817,7 @@ export function hideRows(rowIds) {
     if (rowIds.length) {
       dispatch(clearSelect());
       if (getGroupControlId(view)) {
-        const newRows = rows.map((groupRow: RecordRow) => {
+        const newRows: RecordRow[] = rows.map((groupRow: RecordRow) => {
           if (groupRow.rowid === 'groupTitle') {
             const deletedRowsLengthOfGroup = rowIds.filter(rowId => {
               const row = rows.find((r: RecordRow) => r.rowid === rowId);
@@ -1460,7 +1460,7 @@ export function addRecord(records, afterRowId?) {
     dispatch(getWorksheetSheetViewSummary());
     if (afterRowId) {
       const afterRowIndex = _.findIndex(rows, row => row.rowid === afterRowId);
-      const newRows = _.isUndefined(afterRowId)
+      const newRows: RecordRow[] = _.isUndefined(afterRowId)
         ? [...records, ...rows]
         : [...rows.slice(0, afterRowIndex + 1), ...records, ...rows.slice(afterRowIndex + 1)];
       dispatch({

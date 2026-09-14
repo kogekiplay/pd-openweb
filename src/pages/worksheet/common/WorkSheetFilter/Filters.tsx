@@ -111,7 +111,7 @@ function Filters(props, ref) {
     Object.keys(CONTROL_FILTER_WHITELIST).map(key => CONTROL_FILTER_WHITELIST[key].keys),
   );
   const showWorkflowControl = isOpenPermit(permitList.sysControlSwitch, sheetSwitchPermit, viewId);
-  const controls = columns
+  const controls: FormControl[] = columns
     .filter(o => (md.global.Account.isPortal ? !_.includes(['ownerid', 'caid', 'uaid'], o.controlId) : true))
     .filter(c => (c.controlPermissions || '111')[0] === '1')
     .map(redefineComplexControl)

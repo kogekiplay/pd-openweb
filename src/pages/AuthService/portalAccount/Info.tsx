@@ -8,6 +8,7 @@ import { formatControlToServer } from 'src/components/Form/core/utils';
 import { browserIsMobile } from 'src/utils/common';
 import { getPssId } from 'src/utils/pssId';
 import { accountResultAction, setAutoLoginKey, statusList } from './util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrap = styled.div`
   .Hide {
@@ -216,7 +217,7 @@ export default function Info(props) {
     let collectionContext;
 
     try {
-      const receiveControls = data.map(c => formatControlToServer(c, { isNewRecord: true }));
+      const receiveControls: FormControl[] = data.map(c => formatControlToServer(c, { isNewRecord: true }));
       collectionContext = captureCollectionContext(state);
       clearCollectionClientId();
       const res = await externalPortalAjax.infoLogin(

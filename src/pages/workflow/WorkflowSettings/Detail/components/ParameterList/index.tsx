@@ -1,6 +1,7 @@
 import React from 'react';
 import { Checkbox } from 'ming-ui';
 import { getControlTypeName } from '../../../utils';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default ({ data, controls, showRequired, updateSource, hideControlType }) => {
   return (
@@ -25,7 +26,7 @@ export default ({ data, controls, showRequired, updateSource, hideControlType })
                   <Checkbox
                     checked={item.required}
                     onClick={checked => {
-                      const newControls = [].concat(data);
+                      const newControls: FormControl[] = [].concat(data);
 
                       newControls.forEach(o => {
                         if (o.controlId === item.controlId) {

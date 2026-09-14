@@ -22,6 +22,7 @@ import {
 import { filterByTypeAndSheetFieldType, getAdvanceSetting, handleAdvancedSettingChange } from '../../util/setting';
 import PointerConfig from '../components/PointerConfig';
 import PreSuffix from '../components/PreSuffix';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const DATE_FORMULA_UNIT = [_l('分钟'), _l('小时'), _l('天'), _l('月'), _l('年')];
 
@@ -142,7 +143,7 @@ export default function Subtotal(props) {
   const { dataSource: worksheetId, relationControls } = getControlByControlId(allControls, parsedDataSource);
   const { loading, data: sheetData } = useSheetInfo({ worksheetId, relationWorksheetId: globalSheetInfo.worksheetId });
   // 空白子表手动取值
-  const availableControls = (
+  const availableControls: FormControl[] = (
     (sheetData.info || {}).worksheetId ? sheetData.controls || [] : (relationControls || []).concat(SYSTEM_CONTROL)
   ).filter(
     i =>

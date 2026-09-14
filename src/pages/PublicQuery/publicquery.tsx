@@ -7,6 +7,7 @@ import { LoadDiv } from 'ming-ui';
 import { captcha } from 'ming-ui/functions';
 import CreateByMingDaoYun from 'src/components/CreateByMingDaoYun';
 import PublicAppLangDropdown from 'src/components/PublicAppLangDropdown';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   background: var(--color-background-secondary);
@@ -119,7 +120,7 @@ class Publicquery extends React.Component<any, any> {
     const { publicqueryRes = {}, querydata = {}, appId } = this.props;
     const { queryControlIds = [], viewId, worksheet = {}, worksheetId = '', visibleType, title } = publicqueryRes;
     const { projectId = '', template = {}, views = [] } = worksheet;
-    const controls = (template.controls || []).filter(o => queryControlIds.includes(o.controlId));
+    const controls: FormControl[] = (template.controls || []).filter(o => queryControlIds.includes(o.controlId));
     const errCode =
       visibleType === 1
         ? 1

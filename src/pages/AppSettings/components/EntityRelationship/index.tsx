@@ -16,6 +16,7 @@ import Search from './component/Search';
 import { stylesheet_er } from './config';
 import { createLabelOption, HIDE_FIELDS, isBothWayRelate, LINE_HEIGHT, NODE_WIDTH } from './utils';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 // x6 3.x 把原来的独立插件包（x6-plugin-export / x6-plugin-scroller 等）并进了核心包，
 // 所以 Export / Scroller 现在从 '@antv/x6' 取。必须跟着走这个动态 import——
@@ -269,7 +270,7 @@ function EntityRelationship(props) {
 
     const sortData = data.sort((a, b) => !!(b.start + b.end) - !!(a.start + a.end));
     sortData.forEach((item, dataIndex) => {
-      const controls = item.controls.filter(l => !HIDE_FIELDS.includes(l.type));
+      const controls: FormControl[] = item.controls.filter(l => !HIDE_FIELDS.includes(l.type));
 
       let items = _.fill(Array(item.start + item.end), 0).map((l, index) => ({
         id: `${item.worksheetId}-${index}`,
@@ -438,7 +439,7 @@ function EntityRelationship(props) {
       worksheetId: res.workSheetId,
     });
 
-    const controls = _.get(newWorksheetInfo, 'template.controls')
+    const controls: FormControl[] = _.get(newWorksheetInfo, 'template.controls')
       .filter(c => controlState(c).visible)
       .filter(l => l.controlId.length === 24);
     let info = {

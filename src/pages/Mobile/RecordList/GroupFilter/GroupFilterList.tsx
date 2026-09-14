@@ -32,6 +32,7 @@ import { getFilledRequestParams } from 'src/utils/common';
 import { getTitleTextFromControls } from 'src/utils/control';
 import { getAdvanceSetting } from 'src/utils/control';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const GroupFilterList = props => {
   const {
@@ -370,7 +371,7 @@ const GroupFilterList = props => {
     } // 级联 关联
     else {
       let data = result.data || [];
-      const controls = _.get(result, ['template', 'controls']) || [];
+      const controls: FormControl[] = _.get(result, ['template', 'controls']) || [];
       const control = controls.find(item => item.attribute === 1);
 
       if (navlayer && Number(navlayer) > 1 && !rowId) {

@@ -21,6 +21,7 @@ import * as actions from '../PublicWorksheetConfig/redux/actions';
 import { getDisabledControls, isDisplayPromptText, renderLimitInfo } from '../utils';
 import ControlList from './components/ControlList';
 import PublicConfig from './PublicConfig';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const WHOLE_SIZE = 12;
 
@@ -193,7 +194,7 @@ class ConfigPanel extends React.Component<any, any> {
 
   onChangeColumn = columnNumber => {
     const { changeControls, controls, originalControls } = this.props;
-    let newControls = [];
+    let newControls: FormControl[] = [];
     const data = originalControls
       .filter(control => controls.find(item => item.controlId === control.controlId))
       .map(control => ({ ...control, ...controls.find(item => item.controlId === control.controlId) }));

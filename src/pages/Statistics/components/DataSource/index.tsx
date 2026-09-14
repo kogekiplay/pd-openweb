@@ -23,6 +23,7 @@ import ControlItem from './components/ControlItem';
 import SheetModal from './components/SheetModal';
 import TimeModal from './components/TimeModal';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const authList = [
   {
@@ -250,7 +251,7 @@ let DataSource = class DataSource extends Component<any, any> {
 
     if (base.appType === 2) {
       const alreadySelectControlId = getAlreadySelectControlId(currentReport);
-      const controls = alreadySelectControlId.map(id =>
+      const controls: FormControl[] = alreadySelectControlId.map(id =>
         _.find(axisControls, {
           controlId: id,
         }),

@@ -11,6 +11,7 @@ import { filterOnlyShowField } from 'src/pages/widgetConfig/util';
 import { SYSTEM_DATE_CONTROL } from '../../config/widget';
 import { ControlTag } from '../../styled';
 import SelectControl from './SelectControl';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const DateInfoWrap = styled.div`
   display: flex;
@@ -59,7 +60,7 @@ export default function DynamicSelectDateControl({ value, onChange, allControls,
   const [{ dateControlVisible }, setVisible] = useSetState({
     dateControlVisible: false,
   });
-  const availableControls = allControls.concat(SYSTEM_DATE_CONTROL);
+  const availableControls: FormControl[] = allControls.concat(SYSTEM_DATE_CONTROL);
   const types = disableTimeControl ? [15, 16] : [15, 16, 46];
   const filteredControls = _.filter(
     availableControls,

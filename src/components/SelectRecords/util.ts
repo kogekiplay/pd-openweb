@@ -65,7 +65,7 @@ export function getTitleControl(control, controls) {
 
 export function getTableConfig(controlsForShow, { titleControl, coverControl } = {}) {
   let fixedColumnCount = 1;
-  let visibleControls = controlsForShow;
+  let visibleControls: FormControl[] = controlsForShow;
 
   if (titleControl) {
     visibleControls = [titleControl].concat(visibleControls.filter(c => c.controlId !== titleControl.controlId));

@@ -27,6 +27,7 @@ import { FixedIcon } from '../widgetDisplay/components/WidgetStyle';
 import { SettingCollapseWrap } from '../widgetSetting/content/styled';
 import DraggableItem from './draggableItem';
 import ListItemLayer from './ListItemLayer';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const { Panel } = Collapse;
 
@@ -737,7 +738,7 @@ export default function List(props) {
 
   const handleAddTemplate = async (item, para = {}) => {
     try {
-      const controls = await cloneTemplateControls(getTemplateControls(item), props.updateQueryConfigs);
+      const controls: FormControl[] = await cloneTemplateControls(getTemplateControls(item), props.updateQueryConfigs);
       if (_.isEmpty(controls)) return;
 
       for (let i = 0; i < controls.length; i++) {
@@ -861,7 +862,7 @@ export default function List(props) {
               {group.list.map(item => {
                 const templateId = getTemplateId(item);
                 const templateKey = `${group.key}-${templateId}`;
-                const controls = getTemplateControls(item);
+                const controls: FormControl[] = getTemplateControls(item);
                 const controlCount = getTemplateControlCount(item);
                 const showOperate = group.key !== 'organization' || hasCreateTemplatePermission;
 

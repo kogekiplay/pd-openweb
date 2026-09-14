@@ -53,7 +53,7 @@ let FillRecordControls = class FillRecordControls extends React.Component<any, a
     super(props);
     const { projectId } = props;
     this.hasDefaultRelateRecordTableControls = [];
-    const controls = update(
+    const controls: FormControl[] = update(
       props.formData.concat((props.masterFormData || []).map(c => ({ ...c, fromMaster: true }))),
       {
         $apply: formData => {

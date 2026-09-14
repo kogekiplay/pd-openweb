@@ -18,6 +18,7 @@ import { VIEW_DISPLAY_TYPE } from 'src/pages/worksheet/constants/enum';
 import { filterHidedControls, handleAdvancedSettingChange } from 'src/utils/control';
 import HierarchyViewSetting from './hierarchyViewSetting';
 import StructureType from './StructureType';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrap = styled.div`
   .topShowCon {
@@ -91,7 +92,7 @@ export default function StructureSet(props) {
       projectId,
       worksheetId,
     };
-    const relationControls = columns;
+    const relationControls: FormControl[] = columns;
     return (
       <Fragment>
         {visibleInfo[visibleKey] && (

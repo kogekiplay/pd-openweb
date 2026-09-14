@@ -45,6 +45,7 @@ import {
 import { formatTimeValue, getItemFilters, getOtherWorksheetFieldValue } from './formUtils/helper';
 import type { ControlValue, FormControl, FormError, FormRule, SubListStore } from './types';
 import { calcSubTotalCount, getArrBySpliceType, halfSwitchSize, isUnTextWidget } from './utils';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 /**
  * 自定义字段数据格式化
@@ -780,7 +781,7 @@ export default class DataFormat {
             ) {
               if (String(value || '').startsWith('[')) {
                 try {
-                  const records = safeParse(value, 'array').filter((r: ControlValue) => r.sid || r.sourcevalue);
+                  const records: RecordRow[] = safeParse(value, 'array').filter((r: ControlValue) => r.sid || r.sourcevalue);
                   item.store.dispatch({
                     type: 'DELETE_ALL',
                   });
@@ -1086,7 +1087,7 @@ export default class DataFormat {
               return;
             }
 
-            let records = [];
+            let records: RecordRow[] = [];
 
             try {
               if (sourceSheetControl.type === 29) {
@@ -2046,7 +2047,7 @@ export default class DataFormat {
         controlId,
         id,
       } = currentConfig;
-      const controls = _.get(templates[0] || {}, 'controls') || [];
+      const controls: FormControl[] = _.get(templates[0] || {}, 'controls') || [];
       //当前配置查询的控件
       const currentControl = _.find(this.data, da => da.controlId === controlId);
 

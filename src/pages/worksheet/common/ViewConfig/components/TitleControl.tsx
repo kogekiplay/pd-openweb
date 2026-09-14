@@ -77,7 +77,7 @@ function TitleDrop(props) {
 export default function (props) {
   const { isCard, advancedSetting, className, worksheetControls, handleChange, title } = props;
   const { viewtitle } = advancedSetting;
-  const controls = worksheetControls
+  const controls: FormControl[] = worksheetControls
     .filter((o: FormControl) => canSetAsTitle(o) && !_.includes(ALL_SYS, o.controlId))
     .map(it => {
       return {

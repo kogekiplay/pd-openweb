@@ -30,6 +30,7 @@ import { DEFAULT_FONT_SIZE, FILTER_SYS, fromType, PRINT_TYPE, typeForCon } from 
 import { isRelation, isRToC, SYST_PRINTData } from './core/util';
 import { getDownLoadUrl } from './core/util';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 class PrintForm extends React.Component<any, any> {
   constructor(props) {
@@ -337,7 +338,7 @@ class PrintForm extends React.Component<any, any> {
         }
 
         if (!rowValues.length) {
-          const receiveControls = printDot.receiveControls;
+          const receiveControls: FormControl[] = printDot.receiveControls;
           const tempData = receiveControls.map(({ controlId }) => ({
             id: controlId,
             value: '',
@@ -533,7 +534,7 @@ class PrintForm extends React.Component<any, any> {
 
     this.setState({ saveLoading: true });
     const { printId, projectId, worksheetId, type } = params;
-    let controls = [];
+    let controls: FormControl[] = [];
 
     receiveControls.map(o => {
       if (o.checked) {

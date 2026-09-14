@@ -6,6 +6,7 @@ import { getFilter } from 'src/pages/worksheet/common/WorkSheetFilter/util';
 import { controlState } from 'src/utils/control';
 import { replaceControlsTranslateInfo } from 'src/utils/translate';
 import type { AppDispatch, GetState } from 'src/redux/types';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const getPermissionInfo = (activeRelateSheetControl, rowInfo, worksheet) => {
   const { allowAdd } = worksheet;
@@ -114,7 +115,7 @@ export const loadRowRelationRows = (relationControl?, getType?) => async (dispat
     params.viewId = viewId;
   }
 
-  let relationControls = [];
+  let relationControls: FormControl[] = [];
   let resWorksheetInfo = await worksheetAjax.getWorksheetInfo({
     worksheetId: control.dataSource,
     getTemplate: true,

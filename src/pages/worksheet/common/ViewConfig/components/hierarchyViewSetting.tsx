@@ -253,7 +253,7 @@ export default function HierarchyViewSetting(props) {
 
   const addViewControl = item => {
     worksheetAjax.getWorksheetInfo({ worksheetId: item.dataSource, getTemplate: true }).then(data => {
-      const controls = data.template.controls;
+      const controls: FormControl[] = data.template.controls;
       const coverControls = filterAndFormatterControls({
         controls: controls.filter((l: FormControl) => isVisible(l)).filter(c => !!c.controlName),
         ////扫码|附件可作为封面

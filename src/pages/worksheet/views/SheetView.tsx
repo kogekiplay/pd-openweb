@@ -705,7 +705,7 @@ class TableViewBase extends React.Component<any, any> {
           const operatesButtons = this.getOperateButtons(this.props);
 
           if (operatesButtons.length && !_.get(window, 'shareState.shareId')) {
-            const rows = this.props.sheetViewData.rows;
+            const rows: RecordRow[] = this.props.sheetViewData.rows;
             const rowIds = rows.map((r: RecordRow) => r.rowid).filter(identity);
 
             if (_.isEmpty(rowIds)) {
@@ -1066,9 +1066,9 @@ class TableViewBase extends React.Component<any, any> {
   _computeColumns() {
     const { isTreeTableView, view, showControlIds = [], treeTableViewData } = this.props;
     const { maxLevel } = treeTableViewData;
-    const rows = get(this.props, 'sheetViewData.rows') || [];
+    const rows: RecordRow[] = get(this.props, 'sheetViewData.rows') || [];
     const isShowWorkflowSys = isOpenPermit(permitList.sysControlSwitch, this.sheetSwitchPermit);
-    const controls = isShowWorkflowSys
+    const controls: FormControl[] = isShowWorkflowSys
       ? this.props.controls
       : this.props.controls.filter((it: FormControl) => !_.includes(WORKFLOW_SYSTEM_FIELDS_SORT, it.controlId));
 
@@ -1248,7 +1248,7 @@ class TableViewBase extends React.Component<any, any> {
 
   get highLightRows() {
     try {
-      const rows = get(this.props, 'sheetViewData.rows');
+      const rows: RecordRow[] = get(this.props, 'sheetViewData.rows');
       const { allWorksheetIsSelected, sheetSelectedRows } = this.props.sheetViewConfig || {};
       return [
         {},
@@ -2011,7 +2011,7 @@ class TableViewBase extends React.Component<any, any> {
     } = this.props;
     const { readonly } = this;
     const { loading } = sheetViewData;
-    let rows = sheetViewData.rows;
+    let rows: RecordRow[] = sheetViewData.rows;
     const operatesButtons = this.getOperateButtons(this.props);
     const operatesButtonsStyle = getSheetOperatesButtonsStyle(view);
     const showOperatesInRow = !!operatesButtons.length && !get(window, 'shareState.shareId');
@@ -2336,7 +2336,7 @@ function SheetViewConnecter(props) {
     updateTreeByRowChange,
   } = props;
   const context = useContext(SheetContext);
-  const rows = useMemo(() => {
+  const rows: RecordRow[] = useMemo(() => {
     if (!isTreeTableView || !!filters.keyWords) {
       return sheetViewData.rows;
     } else {

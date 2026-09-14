@@ -10,6 +10,7 @@ import { navigateTo } from 'src/router/navigateTo';
 import MapField from '../common/MapField';
 import CustomRemark from './CustomRemark';
 import '../common/payAndInvoice.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default class InvoiceConfig extends Component<any, any> {
   constructor(props) {
@@ -125,7 +126,7 @@ export default class InvoiceConfig extends Component<any, any> {
       boundControlIds,
       invoiceCustomRemark,
     } = this.state;
-    const controls = _.get(this.props.worksheetInfo, 'template.controls') || [];
+    const controls: FormControl[] = _.get(this.props.worksheetInfo, 'template.controls') || [];
 
     if (loading) {
       return <LoadDiv className="mTop20" />;

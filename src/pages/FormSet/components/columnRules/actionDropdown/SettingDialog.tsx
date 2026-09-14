@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Checkbox, Dialog, Switch } from 'ming-ui';
 import functionWrap from 'ming-ui/components/FunctionWrap';
 import { ACTION_DISPLAY, deepSearch, RELATE_PERMISSION_DISPLAY, SUBLIST_PERMISSION_DISPLAY } from '../config';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const SectionConfirmWrap = styled.div`
   display: flex;
@@ -62,7 +63,7 @@ function SettingDialog(props) {
       }
       okText={_l('确认')}
       onOk={() => {
-        const newControls = values.filter(v => v.controlId !== parentItem.controlId);
+        const newControls: FormControl[] = values.filter(v => v.controlId !== parentItem.controlId);
         const index = _.findIndex(values, v => v.controlId === parentItem.controlId);
         const addControls = [].concat(parentConfig);
 

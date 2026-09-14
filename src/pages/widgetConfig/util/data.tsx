@@ -969,7 +969,7 @@ export const formatControlsData = (controls: FormControl[] = [], fromSub = false
 // 处理查询输入参数层级关系
 export const dealRequestControls = (controls: FormControl[], needChild?: boolean) => {
   if (!(controls && controls.length)) return [];
-  let newControls = [];
+  let newControls: FormControl[] = [];
 
   // 查询过滤无效数据(附件不支持)
   const filterControls = controls
@@ -1375,7 +1375,7 @@ export const dealCopyWidgetId = (data = {}) => {
     (_.get(data, 'advancedSetting.detailworksheettype') === '2' ||
       _.get(window.subListSheetConfig[data.controlId], 'mode') === 'new')
   ) {
-    const relationControls = (newData.relationControls || []).map(item => {
+    const relationControls: FormControl[] = (newData.relationControls || []).map(item => {
       if (_.includes(ALL_SYS, item.controlId)) return item;
       const newItem = {
         ...item,

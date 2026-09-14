@@ -263,13 +263,13 @@ export function getNewDropDownData(controls: FormControl[] = [], actionType) {
     });
   }
 
-  let newControls = [];
+  let newControls: FormControl[] = [];
 
   controls.forEach(item => {
     if (!_.includes(filterControls, item.type)) {
       if (_.includes([29, 34], item.type)) {
         // 关联卡片、下拉框不支持配置内部控件
-        const relationControls =
+        const relationControls: FormControl[] =
           item.type === 29 && !_.includes(['2', '5', '6'], _.get(item, 'advancedSetting.showtype'))
             ? []
             : filterRelations(item);
@@ -298,7 +298,7 @@ export function getNewDropDownData(controls: FormControl[] = [], actionType) {
 export const filterUnAvailable = (controlConfig = {}, worksheetControls: FormControl[] = [], type) => {
   const { controls = [] } = controlConfig;
   const dropDownData = getNewDropDownData(worksheetControls, controlConfig.type);
-  let newControls = [];
+  let newControls: FormControl[] = [];
   controls.map(item => {
     let newItem = { ...item };
 

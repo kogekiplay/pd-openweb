@@ -128,7 +128,7 @@ export default function DialogMapping(props) {
       const filterIds = mappingData
         .filter(i => i.pid && i.cid === parentControl.controlId && i.subid !== showValue)
         .map(i => i.subid);
-      const relationControls = (parentControl.relationControls || []).filter(i => {
+      const relationControls: FormControl[] = (parentControl.relationControls || []).filter(i => {
         return !_.includes([...filterSYS, ...filterIds], i.controlId);
       });
       filterData = getMapControls(item, relationControls);

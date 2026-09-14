@@ -22,6 +22,7 @@ import { openChildTable } from '../ChildTableDialog';
 import EditableCellCon from '../EditableCellCon';
 import { openRelateRelateRecordTable } from '../RelateRecordTableDialog';
 import RelateRecordTags from './comps/RelateRecordTags';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 const RecordCardCellRelateRecord = styled.div`
   display: inline-block;
@@ -49,7 +50,7 @@ export default class RelateRecord extends React.Component<any, any> {
 
   constructor(props) {
     super(props);
-    const records = props.cell.value ? this.parseValue(props.cell.value) : [];
+    const records: RecordRow[] = props.cell.value ? this.parseValue(props.cell.value) : [];
     this.state = {
       records,
       dialogActive: false,
@@ -175,7 +176,7 @@ export default class RelateRecord extends React.Component<any, any> {
       titleControl = matchedTitleControl;
     }
 
-    let records = [];
+    let records: RecordRow[] = [];
 
     if (!titleControl) {
       return null;

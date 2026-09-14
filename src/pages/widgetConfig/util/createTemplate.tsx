@@ -13,6 +13,7 @@ import { ALL_SYS, DEFAULT_CONFIG, WIDGETS_TO_API_TYPE_ENUM } from '../config/wid
 import { SettingItem } from '../styled';
 import { enumWidgetType } from '../util';
 import { formatControlsData } from './data';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const TemplateRelationNotice = styled.div`
   margin-top: 10px;
@@ -652,7 +653,7 @@ function getAllReferencedControlInfo(allControls, templateControls, queryConfigs
     return { referencedControls, worksheetRoleControls };
   };
 
-  let currentControls = templateControls.filter(
+  let currentControls: FormControl[] = templateControls.filter(
     control => isValidControl(control) && supportReferencedTemplateControl(control),
   );
 

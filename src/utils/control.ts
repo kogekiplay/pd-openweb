@@ -1907,7 +1907,7 @@ export function convertAiRecommendControlToControlData(
   }
 
   if (control.type === WIDGETS_TO_API_TYPE_ENUM.SUB_LIST) {
-    const relationControls = (recommendControl.subFields || []).map(convertAiRecommendControlToControlData);
+    const relationControls: FormControl[] = (recommendControl.subFields || []).map(convertAiRecommendControlToControlData);
     control.dataSource = uuidv4();
     control.relationControls = relationControls;
     control.showControls = relationControls.map((item: FormControl) => item.controlId as string);

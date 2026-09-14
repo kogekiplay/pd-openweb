@@ -4,13 +4,14 @@ import { Dialog } from 'ming-ui';
 import ChildTable from 'worksheet/components/ChildTable';
 import 'src/pages/widgetConfig/styled/style.less';
 import { handleAdvancedSettingChange } from 'src/pages/widgetConfig/util/setting';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 export default class CustomDefaultValue extends Component<any, any> {
   constructor(props) {
     super(props);
     const { dynamicValue = [] } = props;
     const defaultValue = (dynamicValue[0] || {}).staticValue;
-    const rows = defaultValue ? JSON.parse(defaultValue) : [];
+    const rows: RecordRow[] = defaultValue ? JSON.parse(defaultValue) : [];
     const rowData = rows.map(item => {
       const tempRowId = item.rowid ? item.rowid : `temp-${uuidv4()}`;
       return { ...item, rowid: tempRowId, allowedit: true, addTime: new Date().getTime() };
@@ -24,7 +25,7 @@ export default class CustomDefaultValue extends Component<any, any> {
   render() {
     const { onClose, data = {}, globalSheetInfo = {}, appId, onChange } = this.props;
     const { filterRows = [], rowData = [] } = this.state;
-    const controls = (data.relationControls || []).map(i => ({
+    const controls: FormControl[] = (data.relationControls || []).map(i => ({
       ...i,
       controlPermissions: i.controlPermissions || '111',
     }));

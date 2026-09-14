@@ -68,7 +68,7 @@ export function overridePos(controls: FormControl[] = [], newPosControls = []) {
   const newPos = [{}, ...newPosControls].reduce((a, b) =>
     _.assign({}, a, { [(b || {}).controlId]: _.pick(b || {}, ['col', 'row', 'size']) }),
   );
-  const newControls = controls.map(control =>
+  const newControls: FormControl[] = controls.map(control =>
     _.assign({}, control, newPos[control.controlId] ? newPos[control.controlId] : { col: -1, row: -1 }),
   );
   newControls.forEach((control, index) => {

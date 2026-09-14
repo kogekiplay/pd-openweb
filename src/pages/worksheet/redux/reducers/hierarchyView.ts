@@ -3,6 +3,7 @@ import { isArray, isEmpty } from 'lodash';
 import _ from 'lodash';
 import { dealChildren, dealPath, initState } from './util';
 import type { ReduxAction } from 'src/redux/types';
+import type { FormControl } from 'src/utils/controlTypes';
 
 // 按已有顺序排序
 const sortChildIds = (treeData, rowId, childrenids) => {
@@ -425,7 +426,7 @@ export function hierarchyTopLevelDataCount(state = 0, action: ReduxAction) {
 }
 
 const addRelateControls = (state, { ids, controls }) => {
-  const newControls = ids.reduce((p, c, index) => {
+  const newControls: FormControl[] = ids.reduce((p, c, index) => {
     p[c] = controls[index];
     return p;
   }, {});

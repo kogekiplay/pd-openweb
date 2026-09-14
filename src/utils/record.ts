@@ -631,7 +631,7 @@ export function getSubListUniqueError({
   if (badData[0]) {
     const [childTableControlId, controlId, value = ''] = badData[0].split(':');
     const state = store.getState();
-    let rows = state.rows;
+    let rows: RecordRow[] = state.rows;
 
     if (get(state, 'base.isTreeTableView')) {
       rows = getSheetViewRows(

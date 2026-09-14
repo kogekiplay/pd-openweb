@@ -49,7 +49,7 @@ const CopySheetConfirmDescription = props => {
           worksheetId: workSheetId,
         })
         .then(data => {
-          const controls = _.get(data, 'template.controls') || [];
+          const controls: FormControl[] = _.get(data, 'template.controls') || [];
           setLoading(false);
           setControls(controls.filter((c: FormControl) => [29, 34, 35].includes(c.type as number)));
         });

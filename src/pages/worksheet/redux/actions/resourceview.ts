@@ -202,7 +202,7 @@ const formatByGroup = (info, view, controls, gridTimes, currentTime) => {
     info
       .filter(o => o.key !== '-1')
       .map(item => {
-        const rows =
+        const rows: RecordRow[] =
           _.get(view, 'advancedSetting.begindate') && _.get(view, 'advancedSetting.enddate') //未配置开始和结束时间，不显示时间块
             ? formatRows(item, view, controls, gridTimes, true, currentTime)
             : [];
@@ -222,7 +222,7 @@ const formatByGroup = (info, view, controls, gridTimes, currentTime) => {
 };
 
 const formatRows = (item, view, controls, gridTimes, mustParse = true, currentTime) => {
-  const rows = (item.rows || []).map(row => {
+  const rows: RecordRow[] = (item.rows || []).map(row => {
     let data = {
       ...formatRecordTime(mustParse ? JSON.parse(row) : row, view, controls), // startTime, endTime
       groupId: item.key,
@@ -460,7 +460,7 @@ export const updateByKey = (key, rowsData, key1?, rowsData1?) => {
         ...o,
         rows: rowsData,
       };
-      const rows = formatRows(item, view, controls, gridTimes, false, currentTime);
+      const rows: RecordRow[] = formatRows(item, view, controls, gridTimes, false, currentTime);
       const type =
         localStorage.getItem(`${view.viewId}_resource_type`) || types[_.get(view, 'advancedSetting.calendarType') || 0];
       const oneWidth = type !== 'Day' ? timeWidth : timeWidthHalf;

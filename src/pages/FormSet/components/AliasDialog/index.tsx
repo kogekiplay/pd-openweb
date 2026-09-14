@@ -6,6 +6,7 @@ import sheetAjax from 'src/api/worksheet';
 import { ALL_SYS } from 'src/pages/widgetConfig/config/widget.js';
 import { VIEW_DISPLAY_TYPE, VIEW_TYPE_ICON } from 'src/pages/worksheet/constants/enum';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const CONFIG = {
   control: {
@@ -51,7 +52,7 @@ export default function AliasDialog(props) {
           sheetAjax.getWorksheetInfo({ worksheetId, getTemplate: true, getViews: true }).then(res => {
             if (!mountedRef.current) return;
 
-            const controls = res.template?.controls || [];
+            const controls: FormControl[] = res.template?.controls || [];
             const controlsList = controls.filter(item => !_.includes(ALL_SYS, item.controlId));
             setAliasData(controlsList);
             setOriginalData(controlsList);

@@ -165,14 +165,14 @@ export default function RefreshRecordDialog(props) {
     clearSelect = () => {},
     onClose = () => {},
   } = props;
-  const visibleControls = controls.filter(
+  const visibleControls: FormControl[] = controls.filter(
     (c: FormControl) => !_.includes(FORM_HIDDEN_CONTROL_IDS.concat(WORKFLOW_SYSTEM_CONTROL.map(cc => cc.controlId)), c.controlId),
   );
   const refreshControls = getRefreshControls(visibleControls);
   const refreshSortControls = getRefreshSortControls(visibleControls);
   const encryptControls = visibleControls.filter((c: FormControl) => c.encryId);
   const otherTableControls = getOtherTableControls(visibleControls);
-  const relationControls = visibleControls.filter((c: FormControl) =>
+  const relationControls: FormControl[] = visibleControls.filter((c: FormControl) =>
     _.includes([WIDGETS_TO_API_TYPE_ENUM.RELATE_SHEET, WIDGETS_TO_API_TYPE_ENUM.SUB_LIST], c.type),
   );
   const refreshVisible = !!refreshControls.concat(

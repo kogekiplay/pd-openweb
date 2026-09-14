@@ -564,7 +564,7 @@ export function formatControlToServer(
 
         if (_.isEmpty(resultvalue) && control && typeof control.value === 'string') {
           try {
-            const rows = JSON.parse(control.value);
+            const rows: RecordRow[] = JSON.parse(control.value);
             result.value = JSON.stringify(
               filterEmptyChildTableRows(rows).map(row =>
                 formatRowToServer(row, childTableControls || [], { isDraft, isSubList: true }),

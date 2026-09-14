@@ -6,6 +6,7 @@ import { SYSTEM_FIELD_TO_TEXT } from 'src/pages/widgetConfig/widgetSetting/compo
 import { CommonDisplay, EditModelWrap } from '../../styled';
 import { isSheetDisplay } from '../../util';
 import { getAdvanceSetting, getShowControls } from '../../util/setting';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const SYSTEM_CONTROL = Object.keys(SYSTEM_FIELD_TO_TEXT).map(item => ({
   controlId: item,
@@ -28,7 +29,7 @@ export default function RelationSearch({ data = {}, fromType, isTab }) {
     }
   }, [controlId]);
 
-  const relationControls = fromType === 'public' ? controls : data.relationControls || [];
+  const relationControls: FormControl[] = fromType === 'public' ? controls : data.relationControls || [];
   const showControls = getShowControls(relationControls.concat(SYSTEM_CONTROL), data.showControls);
 
   const getWidths = () => {

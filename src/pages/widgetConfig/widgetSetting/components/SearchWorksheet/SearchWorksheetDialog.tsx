@@ -309,7 +309,7 @@ export default class SearchWorksheetDialog extends Component<any, any> {
           //已选择的子表字段
           const selectControl = _.find(relationControls, re => re.controlId === item.cid);
           // 根据选中子表字段匹配默认值规则，筛选可匹配的查询表字段
-          const subControls = this.getDropData(controls, selectControl, true);
+          const subControls: FormControl[] = this.getDropData(controls, selectControl, true);
           // 查询表字段已删除
           const isDelete = item.subCid && !_.find(subControls, subControl => subControl.value === item.subCid);
           return (

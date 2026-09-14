@@ -6,7 +6,7 @@ import { Modal } from 'ming-ui';
 import { CHILD_TABLE_ALLOW_IMPORT_CONTROL_TYPES } from 'worksheet/constants/enum';
 import ImportData from './ImportData';
 import PreviewData from './PreviewData';
-import type { RecordRow } from 'src/utils/controlTypes';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   width: 100%;
@@ -17,7 +17,7 @@ const Con = styled.div`
 
 export default function ImportFileToChildTable(props) {
   const { maxCount = 1000, dataCount, projectId, worksheetId, controlId, onClose, onAddRows } = props;
-  const controls = (props.controls || []).filter(c => _.includes(CHILD_TABLE_ALLOW_IMPORT_CONTROL_TYPES, c.type));
+  const controls: FormControl[] = (props.controls || []).filter(c => _.includes(CHILD_TABLE_ALLOW_IMPORT_CONTROL_TYPES, c.type));
   const [sheets, setSheets] = useState([]);
   const [cellsData, setCellsData] = useState([]);
   const [excelUrl, setExcelUrl] = useState();

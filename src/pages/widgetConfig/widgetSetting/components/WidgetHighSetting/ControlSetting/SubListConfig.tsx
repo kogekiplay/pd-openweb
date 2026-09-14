@@ -5,6 +5,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { getAdvanceSetting, handleAdvancedSettingChange, updateConfig } from '../../../../util/setting';
 import SetHiddenControls from '../components/SetHiddenControls';
 import SubListStatisticsConfig from '../components/SubListStatisticsConfig';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function SubListConfig(props) {
   const { data, onChange } = props;
@@ -12,7 +13,7 @@ export default function SubListConfig(props) {
   const { showcount = '0', layercontrolid } = getAdvanceSetting(data);
   const { mode, sheetInfo = {} } = window.subListSheetConfig[controlId] || {};
   const [isHiddenOtherViewRecord] = (strDefault || '000').split('');
-  const controls = _.get(sheetInfo, 'template.controls') || _.get(sheetInfo, 'relationControls');
+  const controls: FormControl[] = _.get(sheetInfo, 'template.controls') || _.get(sheetInfo, 'relationControls');
 
   return (
     <Fragment>

@@ -322,7 +322,7 @@ class WidgetConfigRuleItem extends React.Component<any, any> {
     } = this.props;
     const isAdd = (selectRules.ruleId || '').indexOf('-') >= 0;
     const styleRuleList = columnRulesListData.filter(rule => {
-      const controls = _.get(rule, 'ruleItems.0.controls', []);
+      const controls: FormControl[] = _.get(rule, 'ruleItems.0.controls', []);
       return rule.type === TAB_TYPES.STYLE_RULE && _.some(controls, control => control.controlId === data.controlId);
     });
 

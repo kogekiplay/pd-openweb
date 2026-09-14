@@ -91,7 +91,7 @@ export default function SheetField(props) {
 
   const updateDisabledInfo = () => {
     const sheetObj = _.find(sheetList, item => item.value === parsedDataSource);
-    const relationControls = _.get(
+    const relationControls: FormControl[] = _.get(
       allControls.find(item => _.get(item, 'controlId') === parsedDataSource),
       'relationControls',
     );

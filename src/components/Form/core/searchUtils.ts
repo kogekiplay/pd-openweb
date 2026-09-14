@@ -6,10 +6,11 @@ import { transferValue } from 'src/pages/widgetConfig/widgetSetting/components/D
 import { getDatePickerConfigs, isEmptyValue } from 'src/utils/controlCommon';
 import { getDynamicValue } from './formUtils';
 import { getAttachmentData } from './formUtils/helper';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 const getRelateValue = (control = {}, controlState, recordId) => {
   if (!_.isEmpty(controlState)) {
-    const records = _.get(controlState, 'records') || [];
+    const records: RecordRow[] = _.get(controlState, 'records') || [];
 
     if (recordId) {
       return records.concat(_.get(controlState, 'changes.addedRecords') || []);
@@ -180,7 +181,7 @@ export const getParamsByConfigs = (recordId, requestMap = [], formData = [], key
         _.find(formData, i => i.controlId === _.get(safeParse(item.defsource || '[]')[0], 'cid')) || {};
       // 对象数组或子表值
       const controlState = curControl.store ? curControl.store.getState() : {};
-      const rows = (
+      const rows: RecordRow[] = (
         curControl.type === 29 ? getRelateValue(curControl, controlState, recordId) : _.get(controlState, 'rows') || []
       ).filter(r => !(r.rowid || '').includes('empty'));
 

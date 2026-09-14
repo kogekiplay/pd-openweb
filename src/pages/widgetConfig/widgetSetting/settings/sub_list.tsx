@@ -30,6 +30,7 @@ import AddSubList from '../components/sublist/AddSubList';
 import ConfigureControls from '../components/sublist/ConfigureControls';
 import Sort from '../components/sublist/Sort';
 import WidgetVerify from '../components/WidgetVerify';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const SettingModelWrap = styled.div`
   .transferToRelate {
@@ -121,7 +122,7 @@ export default function SubListSetting(props) {
         })
         .then(res => {
           if (res.resultCode === 4) return;
-          const controls = _.get(res, ['template', 'controls']);
+          const controls: FormControl[] = _.get(res, ['template', 'controls']);
           const saveData = _.find(allControls, i => i.controlId === data.controlId) || {};
 
           // 关联表子表因为无法新增字段 所以不需要更新relationControls
@@ -215,7 +216,7 @@ export default function SubListSetting(props) {
       })
       .then(res => {
         if (res.resultCode === 4) return;
-        const controls = filterRelationControls(res);
+        const controls: FormControl[] = filterRelationControls(res);
         const mode = res.type === 2 ? 'new' : 'relate';
         const filterControls = mode === 'new' ? controls.filter(c => !_.includes(ALL_SYS, c.controlId)) : controls;
         const defaultShowControls = getDefaultShowControls(filterControls);

@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { getIconByType } from 'src/pages/widgetConfig/util';
 import { SearchFn } from 'src/pages/widgetConfig/util';
 import { checkTypeSupportForFunction } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   padding: 10px 0;
@@ -75,7 +76,7 @@ export function getControlType(control) {
 
 export default function ControlList(props) {
   const { keywords, controls, controlGroups, insertTagToEditor } = props;
-  const visibleControls = controls.filter(c => c.controlName && checkTypeSupportForFunction(c));
+  const visibleControls: FormControl[] = controls.filter(c => c.controlName && checkTypeSupportForFunction(c));
 
   if (controlGroups && controlGroups.length) {
     return (
