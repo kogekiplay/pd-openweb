@@ -43,7 +43,7 @@ import {
   parseValueIframe,
 } from './formUtils';
 import { formatTimeValue, getItemFilters, getOtherWorksheetFieldValue } from './formUtils/helper';
-import type { ControlValue, FormControl, FormError, SubListStore } from './types';
+import type { ControlValue, FormControl, FormError, FormRule, SubListStore } from './types';
 import { calcSubTotalCount, getArrBySpliceType, halfSwitchSize, isUnTextWidget } from './utils';
 
 /**
@@ -68,25 +68,70 @@ import { calcSubTotalCount, getArrBySpliceType, halfSwitchSize, isUnTextWidget }
  * @param {function} activeTrigger 主动触发保存 汇总字段这类引起的
  * @param {[]} currentRuleControlIds 当前页面正更新字段用于业务规则设置字段值
  */
+/**
+ * DataFormat 的构造入参。
+ * 全部可选：各调用方按场景传子集（新建表单、子表、工作流节点、公开表单各不相同），
+ * 缺省值都写在解构里。
+ */
+interface DataFormatOptions {
+  projectId?: string;
+  isCharge?: boolean;
+  appId?: string;
+  worksheetId?: string;
+  recordId?: string;
+  instanceId?: string;
+  workId?: string;
+  /** 子表控件创建行存储的工厂，由外部注入 */
+  setSubListStore?: (...args: ControlValue[]) => ControlValue;
+  requestPool?: ReturnType<typeof createRequestPool>;
+  abortController?: AbortController;
+  data?: FormControl[];
+  rules?: FormRule[];
+  /** 构造时就同步初始化 store，而不是等第一次读 */
+  forceSync?: boolean;
+  isCreate?: boolean;
+  disabled?: boolean;
+  ignoreLock?: boolean;
+  ignoreRequired?: boolean;
+  verifyAllControls?: boolean;
+  noAutoSubmit?: boolean;
+  recordCreateTime?: string;
+  masterRecordRowId?: string;
+  masterData?: ControlValue;
+  /** 见 core/config 的 FROM */
+  from?: number;
+  isDraft?: boolean;
+  storeCenter?: Record<string, SubListStore>;
+  loadRowsWhenChildTableStoreCreated?: boolean;
+  searchConfig?: ControlValue[];
+  embedData?: Record<string, ControlValue>;
+  ignoreHiddenRequired?: boolean;
+  onAsyncChange?: (...args: ControlValue[]) => ControlValue;
+  updateLoadingItems?: (...args: ControlValue[]) => ControlValue;
+  activeTrigger?: (...args: ControlValue[]) => ControlValue;
+}
+
 export default class DataFormat {
   // 下面这些字段全部只在构造函数或各方法里用 this.x = ... 赋值。
   // TS 不把构造函数赋值当作字段声明，不写这几行每次读取都报 TS2339 ——
   // 本文件因此产生 205 条诊断，是全仓单文件最高的一处。
   // declare 是纯类型声明，babel 的 TS preset 整行擦除，运行时零影响。
-  declare appId: string;
-  declare projectId: string;
-  declare worksheetId: string;
-  declare recordId: string;
-  declare instanceId: string;
-  declare workId: string;
-  declare masterRecordRowId: string;
-  declare recordCreateTime: string;
+  // 这几个的来源（构造入参）本来就是可选的：子表、工作流节点、公开表单各传一部分。
+  // 字段类型要跟着如实可选，不然构造函数里赋值就是 TS2322。
+  declare appId?: string;
+  declare projectId?: string;
+  declare worksheetId?: string;
+  declare recordId?: string;
+  declare instanceId?: string;
+  declare workId?: string;
+  declare masterRecordRowId?: string;
+  declare recordCreateTime?: string;
   /** 调试用：recordId + 随机数，区分同一条记录的多个实例 */
   declare _debug_flag: string;
 
-  declare isCharge: boolean;
-  declare disabled: boolean;
-  declare noAutoSubmit: boolean;
+  declare isCharge?: boolean;
+  declare disabled?: boolean;
+  declare noAutoSubmit?: boolean;
   declare isDraft: boolean;
   declare isMobile: boolean;
   declare loadRowsWhenChildTableStoreCreated: boolean;
@@ -115,7 +160,7 @@ export default class DataFormat {
   /** 规则求值时的调用栈，用来挡住循环依赖 */
   declare loopList: ControlValue[];
 
-  declare abortController: AbortController;
+  declare abortController?: AbortController;
   declare requestPool: ReturnType<typeof createRequestPool>;
   /** key -> 防抖后的函数，debounceByKey 用它做缓存 */
   declare debounceMap: Map<string, (...args: ControlValue[]) => void>;
@@ -162,7 +207,7 @@ export default class DataFormat {
     onAsyncChange = () => {},
     updateLoadingItems = () => {},
     activeTrigger = () => {},
-  }) {
+  }: DataFormatOptions) {
     this.abortController = abortController;
     this.disabled = disabled;
     this.isCharge = isCharge;
@@ -211,15 +256,15 @@ export default class DataFormat {
     this.debounceByKey = (fn, wait) => {
       const { debounceMap } = this;
 
-      return function (key, ...args) {
+      return function (key: string, ...args: ControlValue[]) {
         if (!debounceMap.has(key)) {
           debounceMap.set(
             key,
-            _.debounce((resolve, ...args) => resolve(fn(...args)), wait),
+            _.debounce((resolve: (v: ControlValue) => void, ...args: ControlValue[]) => resolve(fn(...args)), wait),
           );
         }
 
-        const debouncedFn = debounceMap.get(key);
+        const debouncedFn = debounceMap.get(key) as (...args: ControlValue[]) => void;
 
         return new Promise(resolve => {
           debouncedFn(resolve, ...args);
@@ -228,9 +273,9 @@ export default class DataFormat {
     };
 
     this.debounceGetFilterRowsData = this.debounceByKey(this.getFilterRowsData, 100);
-    const departmentIds = [];
-    const locationIds = [];
-    const organizeIds = [];
+    const departmentIds: string[] = [];
+    const locationIds: string[] = [];
+    const organizeIds: string[] = [];
     const isInit = true;
     this.storeCenter = storeCenter || {};
 
@@ -254,7 +299,7 @@ export default class DataFormat {
 
         try {
           if (item.store) {
-            item.store.setLoadingInfo = (key, status) => {
+            item.store.setLoadingInfo = (key: string, status: boolean) => {
               this.loadingInfo[key] = status;
               this.updateLoadingItems(this.loadingInfo, true);
             };
@@ -271,7 +316,7 @@ export default class DataFormat {
 
     // 新建初始化
     if (isCreate) {
-      function isRelateRecordWithStaticValue(control) {
+      function isRelateRecordWithStaticValue(control: FormControl) {
         return (
           control.type === 29 && (_.get(control, 'advancedSetting.defsource') || '').startsWith('[{"staticValue":')
         );
@@ -284,11 +329,11 @@ export default class DataFormat {
         if (item.value) {
           this.updateDataSource({ controlId: item.controlId, value: item.value, notInsertControlIds: true, isInit });
         } else if (item.advancedSetting && item.advancedSetting.defaultfunc && item.type !== 30) {
-          if (_.get(safeParse(item.advancedSetting.defaultfunc), 'type') === 'javascript') {
+          if (_.get(safeParse(item.advancedSetting?.defaultfunc), 'type') === 'javascript') {
             asyncUpdateMdFunction({
               formData: this.data,
               fnControl: item,
-              update: v => {
+              update: (v: ControlValue) => {
                 this.updateDataSource({
                   controlId: item.controlId,
                   value: v,
@@ -351,11 +396,11 @@ export default class DataFormat {
           item.sourceControlId &&
           item.sourceControlId[0] !== '$'
         ) {
-          const unit = TIME_UNIT[item.unit] || 'd';
+          const unit = TIME_UNIT[Number(item.unit) as keyof typeof TIME_UNIT] || 'd';
           const today = moment().startOf(unit);
           const time = moment(item.sourceControlId);
 
-          if (item.advancedSetting.dateformulatype === '1' || _.isUndefined(item.advancedSetting.dateformulatype)) {
+          if (item.advancedSetting?.dateformulatype === '1' || _.isUndefined(item.advancedSetting?.dateformulatype)) {
             item.value = String(Math.floor(moment(time).diff(today, unit)));
           } else {
             item.value = String(Math.floor(moment(today).diff(time, unit)));
@@ -363,33 +408,33 @@ export default class DataFormat {
         }
 
         // 部门控件默认值当前用户
-        if (item.type === 27 && item.advancedSetting.defsource) {
-          safeParse(item.advancedSetting.defsource)
-            .filter(obj => obj.isAsync && obj.staticValue)
+        if (item.type === 27 && item.advancedSetting?.defsource) {
+          safeParse(item.advancedSetting?.defsource)
+            .filter((obj: ControlValue) => obj.isAsync && obj.staticValue)
             .forEach(obj => {
               // 当前用户所在的部门
               if (_.includes(['current', 'user-departments'], safeParse(obj.staticValue).departmentId)) {
-                departmentIds.push(item.controlId);
+                departmentIds.push(item.controlId as string);
               }
             });
         }
 
         // 组织角色控件默认值当前用户所在组织角色
-        if (item.type === 48 && item.advancedSetting.defsource) {
-          safeParse(item.advancedSetting.defsource)
-            .filter(obj => obj.isAsync && obj.staticValue)
+        if (item.type === 48 && item.advancedSetting?.defsource) {
+          safeParse(item.advancedSetting?.defsource)
+            .filter((obj: ControlValue) => obj.isAsync && obj.staticValue)
             .forEach(obj => {
               // 当前用户所在的部门
               if (_.includes(['current', 'user-role'], safeParse(obj.staticValue).organizeId)) {
-                organizeIds.push(item.controlId);
+                organizeIds.push(item.controlId as string);
               }
             });
         }
 
         // 定位控件默认选中当前位置
-        if (item.type === 40 && item.advancedSetting.defsource && controlState(item, this.from).visible) {
-          if (_.get(safeParse(item.advancedSetting.defsource), '0.cid') === 'current-location') {
-            locationIds.push(item.controlId);
+        if (item.type === 40 && item.advancedSetting?.defsource && controlState(item, this.from).visible) {
+          if (_.get(safeParse(item.advancedSetting?.defsource), '0.cid') === 'current-location') {
+            locationIds.push(item.controlId as string);
           }
         }
 
@@ -410,6 +455,8 @@ export default class DataFormat {
       this.mobileCheckRuleLocked = true;
     }
 
+    // 这一趟把 advancedSetting 统一补成 {}。上面 isCreate 初始化块跑在它【之前】，
+    // 所以那里读 item.advancedSetting.x 必须用可选链 —— 不是防御性编程，是顺序问题。
     this.data.forEach(item => {
       item.advancedSetting = item.advancedSetting || {};
       item.dataSource = item.dataSource || '';
@@ -436,7 +483,7 @@ export default class DataFormat {
       });
 
       // 处理老数据关联列表去除必填
-      if (item.type === 29 && item.advancedSetting.showtype === '2') {
+      if (item.type === 29 && item.advancedSetting?.showtype === '2') {
         item.required = false;
       }
 
@@ -503,7 +550,7 @@ export default class DataFormat {
     }
   }
 
-  getControlStore(control) {
+  getControlStore(control: FormControl) {
     const { appId, recordId, instanceId, workId, worksheetId, from, loadRowsWhenChildTableStoreCreated } = this;
     let store = this.storeCenter[control.controlId];
 
@@ -543,7 +590,7 @@ export default class DataFormat {
       });
       // 需在 initAndLoadRows 之前挂上，否则 init 同步段里的 loading 打标全部落空，
       // 保存不会等待预取完成，行内必填校验会在 rows 未返回时空转放过。
-      store.setLoadingInfo = (key, status) => {
+      store.setLoadingInfo = (key: string, status: boolean) => {
         this.loadingInfo[key] = status;
         this.updateLoadingItems(this.loadingInfo, true);
       };
@@ -587,7 +634,7 @@ export default class DataFormat {
   /**
    * 直接更新字段值，不触发任何其他逻辑
    */
-  setControlItemValue(controlId, value) {
+  setControlItemValue(controlId?: string, value?: ControlValue) {
     const targetControl = find(this.data, { controlId });
 
     if (targetControl) {
@@ -602,7 +649,7 @@ export default class DataFormat {
     controlId,
     value,
     notInsertControlIds = false,
-    removeUniqueItem = () => {},
+    removeUniqueItem = (controlId?: string) => {},
     data,
     isInit = false,
     isDefaultValue = false,
@@ -613,7 +660,7 @@ export default class DataFormat {
     controlId?: string;
     value?: ControlValue;
     notInsertControlIds?: boolean;
-    removeUniqueItem?: () => void;
+    removeUniqueItem?: (controlId?: string) => void;
     /** 直接给出整份控件数据（子表回填等场景），不传则用 this.data */
     data?: FormControl[];
     isInit?: boolean;
@@ -625,7 +672,12 @@ export default class DataFormat {
     this.asyncControls = {};
 
     try {
-      const updateSource = (controlId, value, currentSearchByChange, currentIgnoreSearch) => {
+      const updateSource = (
+        controlId?: string,
+        value?: ControlValue,
+        currentSearchByChange?: boolean,
+        currentIgnoreSearch?: boolean,
+      ) => {
         this.data.forEach(item => {
           if (item.controlId === controlId) {
             // 子表被动赋值
@@ -638,7 +690,9 @@ export default class DataFormat {
                 console.log(err);
               }
 
-              const params = {
+              // 下面按分支往上挂 staticRows / type / isSetValueFromEvent…，
+              // 推断出的闭合对象类型接不住
+              const params: Record<string, ControlValue> = {
                 recordId: this.recordId,
                 masterData: {
                   worksheetId: this.worksheetId,
@@ -649,7 +703,7 @@ export default class DataFormat {
               };
 
               if (_.get(value, 'action') === 'append') {
-                params.staticRows = value.rows.filter(i => !i.rowid);
+                params.staticRows = value.rows.filter((i: ControlValue) => !i.rowid);
                 params.type = 'append';
               } else if (_.get(value, 'action') === 'clearAndSet') {
                 params.staticRows = value.rows;
@@ -684,7 +738,7 @@ export default class DataFormat {
                   ).push(() => {
                     setRowsFromStaticRows({
                       ...params,
-                      triggerSubListControlValueChange: controlValue => {
+                      triggerSubListControlValueChange: (controlValue: ControlValue) => {
                         this.updateDataSource({
                           controlId: item.controlId,
                           value: controlValue,
@@ -703,7 +757,7 @@ export default class DataFormat {
                   setRowsFromStaticRows(params)(item.store.getState, item.store.dispatch, DataFormat);
                 }
 
-                this.controlIds.push(controlId);
+                this.controlIds.push(controlId as string);
                 return;
               }
             }
@@ -711,7 +765,7 @@ export default class DataFormat {
             // 表单内关联表格组件被动赋值
             if (
               !this.isMobile &&
-              (!this.recordId || String(RELATE_RECORD_SHOW_TYPE.TABLE) === item.advancedSetting.showtype) &&
+              (!this.recordId || String(RELATE_RECORD_SHOW_TYPE.TABLE) === item.advancedSetting?.showtype) &&
               item.type === 29 &&
               !item.isSubList &&
               includes(
@@ -720,12 +774,12 @@ export default class DataFormat {
                   String(RELATE_RECORD_SHOW_TYPE.TAB_TABLE),
                   String(RELATE_RECORD_SHOW_TYPE.LIST),
                 ],
-                item.advancedSetting.showtype,
+                item.advancedSetting?.showtype,
               )
             ) {
               if (String(value || '').startsWith('[')) {
                 try {
-                  const records = safeParse(value, 'array').filter(r => r.sid || r.sourcevalue);
+                  const records = safeParse(value, 'array').filter((r: ControlValue) => r.sid || r.sourcevalue);
                   item.store.dispatch({
                     type: 'DELETE_ALL',
                   });
@@ -759,17 +813,17 @@ export default class DataFormat {
 
             // 数值进度区间控制
             if (item.type === 6 && _.get(item, 'advancedSetting.showtype') === '2' && !isEmptyValue(value)) {
-              const maxCount = parseFloat(_.get(item, 'advancedSetting.max') || 100);
-              const minCount = parseFloat(_.get(item, 'advancedSetting.min') || 0);
+              const maxCount = parseFloat(_.get(item, 'advancedSetting.max') || '100');
+              const minCount = parseFloat(_.get(item, 'advancedSetting.min') || '0');
               if (parseFloat(value || 0) < minCount) item.value = minCount;
               if (parseFloat(value || 0) > maxCount) item.value = maxCount;
             }
 
             // 成员控件
-            if (item.type === 26 && value && item.advancedSetting.checkusertype === '1') {
-              const filterValues = safeParse(value || '[]').filter((v = {}) => {
+            if (item.type === 26 && value && item.advancedSetting?.checkusertype === '1') {
+              const filterValues = safeParse(value || '[]').filter((v: { accountId?: string } = {}) => {
                 const result = (v.accountId || '').startsWith('a#');
-                return item.advancedSetting.usertype === '2' ? result : !result;
+                return item.advancedSetting?.usertype === '2' ? result : !result;
               });
               item.value = _.isEmpty(filterValues) ? '' : JSON.stringify(filterValues);
             }
@@ -777,7 +831,7 @@ export default class DataFormat {
             // 等级控件
             if (item.type === 28) {
               const maxCount = (item.advancedSetting || {}).max || (item.enumDefault === 1 ? 5 : 10);
-              item.value = Math.min(parseInt(Number(value || 0)), maxCount);
+              item.value = Math.min(parseInt(String(Number(value || 0))), Number(maxCount));
             }
 
             // 定位各端统一保留6位小数
@@ -833,7 +887,7 @@ export default class DataFormat {
 
             //规则变更id集合
             if (!_.includes(this.ruleControlIds, controlId) && !isInit) {
-              this.ruleControlIds.push(controlId);
+              this.ruleControlIds.push(controlId as string);
             }
 
             // 业务规则当前单次操作变更id集合，包含默认值初始化产生的变更
@@ -854,7 +908,7 @@ export default class DataFormat {
         });
       };
 
-      const updateControlData = (controlId, data) => {
+      const updateControlData = (controlId?: string, data?: ControlValue) => {
         this.data.forEach(item => {
           if (controlId === item.controlId) {
             item.data = data;
@@ -862,8 +916,12 @@ export default class DataFormat {
         });
       };
 
-      const depthUpdateData = (controlId, depth, value) => {
-        const currentItem = _.find(this.data, item => item.controlId === controlId);
+      const depthUpdateData = (controlId: string, depth: number, value?: ControlValue) => {
+        // _.find 类型上是 FormControl | undefined。取不到时下面几十处读取会直接抛，
+        // 而整个 updateSource 外面有 try/catch，会打出 'UpdateSource Error' ——
+        // 这是现有的、能被观察到的失败方式。这里断言非空是为了【保持】它，
+        // 不要改成可选链或提前 return，那会把这个错误静默掉。
+        const currentItem = _.find(this.data, item => item.controlId === controlId) as FormControl;
         let currentSearchByChange = depth === 0 ? searchByChange : false;
         let currentIgnoreSearch = depth === 0 ? ignoreSearch : false;
 
@@ -886,7 +944,10 @@ export default class DataFormat {
           currentIgnoreSearch = false;
           // 大写金额控件
           if (currentItem.type === 25) {
-            const relateControl = _.find(this.data, item => item.controlId === currentItem.dataSource.slice(1, -1));
+            const relateControl = _.find(
+              this.data,
+              item => item.controlId === String(currentItem.dataSource).slice(1, -1),
+            );
             value = formatNumberToWords(currentItem, relateControl);
           }
 
@@ -907,8 +968,8 @@ export default class DataFormat {
 
           // 文本组合处理
           if (currentItem.type === 32) {
-            value = currentItem.dataSource.replace(/\$.+?\$/g, matched => {
-              const controlId = matched.match(/\$(.+?)\$/)[1];
+            value = String(currentItem.dataSource).replace(/\$.+?\$/g, (matched: string) => {
+              const controlId = (matched.match(/\$(.+?)\$/) || [])[1];
               let singleControl = _.find(this.data, item => item.controlId === controlId);
               if (!singleControl && controlId === 'rowid') return this.recordId || '';
 
@@ -930,7 +991,7 @@ export default class DataFormat {
                   singleControl.advancedSetting.numshow === '1' &&
                   formulaResult.result
                 ) {
-                  formulaResult.result = parseFloat(formulaResult.result) * 100;
+                  formulaResult.result = parseFloat(String(formulaResult.result)) * 100;
                 }
 
                 return formulaResult.error || _.isNull(formulaResult.result)
@@ -962,7 +1023,7 @@ export default class DataFormat {
               asyncUpdateMdFunction({
                 formData: this.data,
                 fnControl: currentItem,
-                update: v => {
+                update: (v: ControlValue) => {
                   this.updateDataSource({
                     controlId: currentItem.controlId,
                     value: v,
@@ -1066,7 +1127,7 @@ export default class DataFormat {
               value = records.length;
             } else {
               const sourceControl = _.find(
-                sourceSheetControl.relationControls.concat(SYSTEM_CONTROL_WITH_UAID),
+                (sourceSheetControl.relationControls || []).concat(SYSTEM_CONTROL_WITH_UAID),
                 c => c.controlId === currentItem.sourceControlId,
               );
 
@@ -1086,7 +1147,7 @@ export default class DataFormat {
 
                   switch (currentItem.enumDefault) {
                     case 13: // 已填
-                      value = valuesOfRecords.filter(c => {
+                      value = valuesOfRecords.filter((c: ControlValue) => {
                         if (sourceControl.type === 36) {
                           return c === '1';
                         } else if (_.includes([29, 34], sourceControl.type) && _.isNumber(c)) {
@@ -1097,7 +1158,7 @@ export default class DataFormat {
                       }).length;
                       break;
                     case 14: // 未填
-                      value = valuesOfRecords.filter(c => {
+                      value = valuesOfRecords.filter((c: ControlValue) => {
                         if (sourceControl.type === 36) {
                           return c !== '1';
                         } else if (_.includes([29, 34], sourceControl.type) && _.isNumber(c)) {
@@ -1117,7 +1178,7 @@ export default class DataFormat {
                     case 5: // 求和
                       value = _.sum(
                         valuesOfRecords
-                          .map(v => v || 0)
+                          .map((v: ControlValue) => v || 0)
                           .map(v =>
                             _.isNumber(parseFloat(v, 10)) && !_.isNaN(parseFloat(v, 10)) ? parseFloat(v, 10) : 0,
                           ),
@@ -1200,11 +1261,11 @@ export default class DataFormat {
             (item.dataSource || '').indexOf(controlId) > -1 ||
             (item.type === 38 && (item.sourceControlId || '').indexOf(controlId) > -1) ||
             (item.advancedSetting &&
-              item.advancedSetting.defsource &&
-              safeParse(item.advancedSetting.defsource).filter(
+              item.advancedSetting?.defsource &&
+              safeParse(item.advancedSetting?.defsource).filter(
                 obj => ((!obj.rcid && obj.cid === controlId) || (obj.rcid === controlId && obj.cid)) && !obj.isAsync,
               ).length) ||
-            ((item.advancedSetting && _.get(safeParse(item.advancedSetting.defaultfunc), 'expression')) || '').indexOf(
+            ((item.advancedSetting && _.get(safeParse(item.advancedSetting?.defaultfunc), 'expression')) || '').indexOf(
               controlId,
             ) > -1 ||
             (item.type === 37 && controlId === (item.dataSource || '').slice(1, -1)),
@@ -1216,8 +1277,8 @@ export default class DataFormat {
             this.data,
             item =>
               item.advancedSetting &&
-              item.advancedSetting.defsource &&
-              safeParse(item.advancedSetting.defsource).filter(
+              item.advancedSetting?.defsource &&
+              safeParse(item.advancedSetting?.defsource).filter(
                 obj => ((!obj.rcid && obj.cid === controlId) || (obj.rcid === controlId && obj.cid)) && obj.isAsync,
               ).length,
           );
@@ -1719,7 +1780,7 @@ export default class DataFormat {
             getDynamicValue(
               this.data,
               Object.assign({}, item, {
-                advancedSetting: { defsource: item.advancedSetting.defsource.replace(/isAsync/gi, 'async') },
+                advancedSetting: { defsource: item.advancedSetting?.defsource.replace(/isAsync/gi, 'async') },
               }),
               this.masterData,
             ),

@@ -38,6 +38,7 @@ import {
   replaceStr,
   validateIdCardBirthDate,
 } from './helper';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export const checkValueByFilterRegex = (data = {}, name, formData, recordId) => {
   const filterRegex = safeParse(_.get(data, 'advancedSetting.filterregex') || '[]');
@@ -611,7 +612,20 @@ export const getDynamicValue = (data, currentItem, masterData, embedData?) => {
 };
 
 // 处理公式
-export const parseNewFormula = (data, currentItem = {}) => {
+/**
+ * parseNewFormula 的结果。
+ * 两个 return 分支只会给出 columnIsUndefined 或 result 之一，
+ * 但调用点普遍还会读 .error —— 那个键【从来没有被赋过值】，读到的永远是 undefined。
+ * 这里如实列出来，是为了让"它一直是 undefined"这件事可被看见，而不是被类型掩盖。
+ */
+interface FormulaResult {
+  columnIsUndefined?: boolean;
+  result?: number | null;
+  /** 历史遗留键：没有任何地方给它赋值 */
+  error?: unknown;
+}
+
+export const parseNewFormula = (data: FormControl[], currentItem: FormControl = {}): FormulaResult => {
   const { dot = 2 } = currentItem;
   const nullzero = _.includes([2, 3, 6], currentItem.enumDefault)
     ? '1'
@@ -619,7 +633,7 @@ export const parseNewFormula = (data, currentItem = {}) => {
   const isPercent = _.get(currentItem, 'advancedSetting.numshow') === '1';
   let columnIsUndefined;
 
-  const formulaStr = currentItem.dataSource
+  const formulaStr = String(currentItem.dataSource)
     .replace(/cSUM/gi, 'SUM')
     .replace(/cAVG/gi, 'AVERAGE')
     .replace(/cMIN/gi, 'MIN')
@@ -743,10 +757,11 @@ export const parseValueIframe = (data, currentItem, masterData, embedData) => {
 /**
  * ignoreAddZero 不走补零逻辑
  */
-export function handleDotAndRound(currentItem, value, ignoreAddZero = true) {
-  const isNegative = value < 0;
-  value = Math.abs(value);
-  const roundType = currentItem.advancedSetting.roundtype || (_.includes([6, 8, 31, 37], currentItem.type) ? '2' : '0');
+export function handleDotAndRound(currentItem: FormControl, value: number | string, ignoreAddZero = true) {
+  const isNegative = Number(value) < 0;
+  value = Math.abs(Number(value));
+  const roundType =
+    currentItem.advancedSetting?.roundtype || (_.includes([6, 8, 31, 37], currentItem.type) ? '2' : '0');
   // 取整方式 空或者0 向下取整 1 向上取整 2 代表四舍五入
   let dot = Number(currentItem.dot);
 
@@ -1033,7 +1048,21 @@ export const checkRequired = item => {
 };
 
 // 验证必填及格式
-export const onValidator = ({ item, data, masterData, ignoreRequired, verifyAllControls, appId }) => {
+export const onValidator = ({
+  item,
+  data,
+  masterData,
+  ignoreRequired,
+  verifyAllControls,
+  appId,
+}: {
+  item: FormControl;
+  data?: FormControl[];
+  masterData?: any;
+  ignoreRequired?: boolean;
+  verifyAllControls?: boolean;
+  appId?: string;
+}) => {
   let errorType = '';
   let errorText = '';
 
@@ -1129,7 +1158,7 @@ export const onValidator = ({ item, data, masterData, ignoreRequired, verifyAllC
               }
             }
 
-            if (allowweek.indexOf(mAppTime.day() === 0 ? '7' : mAppTime.day()) === -1 && !errorType) {
+            if (allowweek.indexOf(String(mAppTime.day() === 0 ? '7' : mAppTime.day())) === -1 && !errorType) {
               errorType = FORM_ERROR_TYPE.DATE;
             }
 

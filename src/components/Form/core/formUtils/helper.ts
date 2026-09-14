@@ -4,6 +4,7 @@ import { toFixed } from 'src/utils/controlCommon';
 import { getContactInfo } from 'src/utils/project';
 import { filterEmptyChildTableRows } from 'src/utils/record';
 import { FORM_ERROR_TYPE } from '../config';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export { flattenArr, getAvailableFilters, getResult, isRelateMoreList, replaceStr } from './ruleUtils';
 
@@ -43,8 +44,8 @@ export const compareWithTime = (start, end, type) => {
   }
 };
 
-export const getRangeErrorType = ({ type, value, advancedSetting = {} }) => {
-  const formatValue = value => parseFloat(value.replace(/,/g, ''));
+export const getRangeErrorType = ({ type, value, advancedSetting = {} }: FormControl) => {
+  const formatValue = (value: string) => parseFloat(String(value).replace(/,/g, ''));
   const { min, max, checkrange } = advancedSetting;
 
   if (!value || checkrange !== '1') return '';
