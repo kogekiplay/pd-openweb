@@ -18,7 +18,10 @@
     "typecheck:stats": "cross-env NODE_OPTIONS=--max_old_space_size=8192 node scripts/typecheck/tsc-gate.js --stats --no-incremental",
     "typecheck:baseline": "cross-env NODE_OPTIONS=--max_old_space_size=8192 node scripts/typecheck/tsc-syntax-gate.js && cross-env NODE_OPTIONS=--max_old_space_size=8192 node scripts/typecheck/tsc-gate.js --write-baseline --no-incremental",
     "hooks:install": "git config core.hooksPath .githooks && echo \"core.hooksPath -> .githooks 已配置\"",
-    "check:install": "node scripts/install-stamp.js check"
+    "check:install": "node scripts/install-stamp.js check",
+    "typecheck:strict": "node scripts/typecheck/tsc-strict-gate.js",
+    "typecheck:strict:widen": "node scripts/typecheck/tsc-strict-gate.js --widen",
+    "typecheck:strict:stats": "node scripts/typecheck/tsc-strict-gate.js --stats"
   },
   "dependencies": {
     "@ant-design/colors": "^8.0.1",
