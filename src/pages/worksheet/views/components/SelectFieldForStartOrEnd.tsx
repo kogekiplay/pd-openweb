@@ -39,7 +39,7 @@ export default function SelectFieldForStartOrEnd(props) {
   } = props;
   const { viewId } = base;
   const [view, setView] = useState(props.view || {});
-  const [isUnAb, setIsUnAb] = useState();
+  const [isUnAb, setIsUnAb] = useState<boolean | undefined>();
   let { begindate = '', enddate = '', calendarcids = '[]' } = getAdvanceSetting(view);
   let timeControls = props.timeControls || getTimeControls(props.controls);
   begindate = begindate ? begindate : begindateOrFirst ? (timeControls[0] || {}).controlId : '';

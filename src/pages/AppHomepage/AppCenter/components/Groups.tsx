@@ -87,8 +87,8 @@ export default function Groups(props) {
   const [sorts, setSorts] = useState({});
   const [isFolded, setIsFolded] = useState(localStorage.getItem('homeGroupsIsFolded') === '1');
   const [editingGroupId, setIsEditingGroupId] = useState();
-  const [addGroupVisible, setAddGroupVisible] = useState();
-  const [trashVisible, setTrashVisible] = useState();
+  const [addGroupVisible, setAddGroupVisible] = useState<boolean | undefined>();
+  const [trashVisible, setTrashVisible] = useState<boolean | undefined>();
   const editingGroup = _.find(groups, { id: editingGroupId });
   const list = [
     { name: _l('星标'), type: 'star', groups: markedGroup },

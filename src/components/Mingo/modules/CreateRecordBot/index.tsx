@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { BgIconButton } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import agentApi from 'src/api/agent';
+import type { StreamError } from 'src/components/Mingo/ChatBot/utils';
 import mingoWordmark from 'src/pages/mingo/common/images/mingo-logo.png';
 import useChat from 'src/pages/worksheet/hooks/useChat';
 import { genBotSessionId } from 'src/utils/agentSession';
@@ -144,7 +145,7 @@ function MingoContent(props, ref) {
     sessionId: genBotSessionId(),
   });
   const [isChatting, setIsChatting] = useState(defaultIsChatting);
-  const [error, setError] = useState();
+  const [error, setError] = useState<StreamError | undefined>();
   const [enableAiFillButton, setEnableAiFillButton] = useState(true);
   const speechSynthesizer = useRef(new SpeechSynthesizer({ bufferDelay: 2000 }));
   const sendRef = useRef(null);

@@ -157,7 +157,8 @@ export default function WorkSheetTrash(props) {
   const [isAll, setIsAll] = useState(false);
   const [selected, setSelected] = useState([]);
   const [selectRows, setSelectRows] = useState([]);
-  const [sortControl, setSortControl] = useState();
+  // 排序状态：未排序时为 undefined，排序后是 { 字段, 升序? }
+  const [sortControl, setSortControl] = useState<{ controlId?: string; isAsc?: boolean } | undefined>();
   const [disableMaskDataControls, setDisableMaskDataControls] = useState({});
   const [state, dispatch] = useReducer(trashReducer, { records: [] });
   const {

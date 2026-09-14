@@ -22,7 +22,7 @@ export default function AppTrash(props) {
   const cache = useRef({});
   const [loading, setLoading] = useState(true);
   const [pageIndex, setPageIndex] = useState(1);
-  const [loadOuted, setLoadOuted] = useState();
+  const [loadOuted, setLoadOuted] = useState<boolean | undefined>();
   const [apps, setApps] = useState([]);
   const [keyword, setKeyword] = useState();
 

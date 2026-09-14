@@ -11,7 +11,7 @@ export default function AttachmentVerify(props) {
   const { data, onChange } = props;
   const { maxcount, max: originMax } = getAdvanceSetting(data);
   const [max, setMax] = useState(originMax);
-  const [visible, setVisible] = useState();
+  const [visible, setVisible] = useState<boolean | undefined>();
 
   useEffect(() => {
     setMax(originMax);

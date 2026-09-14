@@ -14,6 +14,7 @@ import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import appManagementAjax from 'src/api/appManagement';
 import { useGlobalStore } from 'src/common/GlobalStore';
+import type { StreamError } from 'src/components/Mingo/ChatBot/utils';
 import { toEditWidgetPage } from 'src/pages/widgetConfig/util/index';
 import useChat from 'src/pages/worksheet/hooks/useChat';
 import { genBotSessionId } from 'src/utils/agentSession';
@@ -152,7 +153,7 @@ function MingoContent(props, ref) {
     store: { mingoCreateWorksheetAction },
   } = useGlobalStore();
   const [rootComp, setRootComp] = useState(null);
-  const [error, setError] = useState();
+  const [error, setError] = useState<StreamError | undefined>();
   const [sendDisabled, setSendDisabled] = useState(false);
   const [currentAppData, setCurrentAppData] = useState(getCurrentAppData({ base, sheetList }));
   const [unsavedControlIds, setUnsavedControlIds] = useState([]);
@@ -171,7 +172,7 @@ function MingoContent(props, ref) {
       window.mingoPendingCreateWorksheetTaskStatus ||
       MINGO_TASK_STATUS.CREATE_WORKSHEET_ASSIGNMENT_PREPARING_WORKSHEET_DESCRIPTION,
   );
-  const [taskStep, setTaskStep] = useState();
+  const [taskStep, setTaskStep] = useState<number | undefined>();
   const handleSetTaskStatus = useCallback(status => {
     setTaskStatus(status);
     cache.current.taskStatus = status;

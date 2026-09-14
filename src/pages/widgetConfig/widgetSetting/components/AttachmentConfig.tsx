@@ -35,7 +35,9 @@ export default function AttachmentConfig({ data = {}, minCount = 1, maxNum, onCh
     maxNum = data.type === 28 ? 10 : 20;
   }
 
-  const [count, setCount] = useState();
+  // 输入过程中存的是字符串（handleChange 里 value.replace(...) 的结果、
+  // 以及来自高级设置的 maxcount），失焦后 dealValue 返回的是数字。两种都要收。
+  const [count, setCount] = useState<string | number | undefined>();
 
   useEffect(() => {
     setCount(maxcount);

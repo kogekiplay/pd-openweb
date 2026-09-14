@@ -155,7 +155,7 @@ function Sheet(props) {
   let [isOpenGroup, setIsOpenGroup] = useState(
     !window.localStorage.getItem('navGroupIsOpen') ? true : window.localStorage.getItem('navGroupIsOpen') === 'true',
   );
-  let [groupFilterWidth, setGroupFilterWidth] = useState();
+  let [groupFilterWidth, setGroupFilterWidth] = useState<number | string | undefined>();
   let { viewId } = props;
   const { loadWorksheet } = props;
   const showViews = views.filter(view => {

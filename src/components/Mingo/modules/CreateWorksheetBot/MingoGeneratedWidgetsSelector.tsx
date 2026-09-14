@@ -449,7 +449,7 @@ export default function MingoGeneratedWidgetsSelector({
   onAppendNewCreatedWorksheets = () => {},
   updateUnsavedControlIds = () => {},
 }) {
-  const [addedCount, setAddedCount] = useState();
+  const [addedCount, setAddedCount] = useState<number | undefined>();
   const [allWidgets, setAllWidgets] = useState([]);
   const disabled = !isLastAssistantMessage || !!addedCount || deactivated;
   const checkboxDisabled = disabled || isStreaming;

@@ -175,7 +175,7 @@ export default function SelectControlWithInput(props) {
     controls,
     onChange = () => {},
   } = props;
-  const [textEditing, setTextEditing] = useState();
+  const [textEditing, setTextEditing] = useState<boolean | undefined>();
   const [editNameVisible, setEditNameVisible] = useState(false);
   const sourceControl = type === 1 && _.find(controls, { controlId: value });
 

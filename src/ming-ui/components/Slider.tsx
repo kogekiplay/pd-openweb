@@ -260,8 +260,8 @@ export default function Slider(props) {
   const contentRef = useRef<any>(undefined);
   const inputRef = useRef<any>(undefined);
   const [tempValue, setTempValue] = useState();
-  const [numberIsFocusing, setNumberIsFocusing] = useState();
-  const [isDragging, setIsDragging] = useState();
+  const [numberIsFocusing, setNumberIsFocusing] = useState<boolean | undefined>();
+  const [isDragging, setIsDragging] = useState<boolean | undefined>();
   const [value, setValue] = useState(
     getDefaultValue(showAsPercent ? fixedByStep(props.value * 100, step) : props.value),
   );

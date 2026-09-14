@@ -2,9 +2,9 @@ import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router';
 import { useClickAway } from 'react-use';
+import Trigger from '@rc-component/trigger';
 import _ from 'lodash';
 import { arrayOf, bool, func, number, shape, string } from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import { LoadDiv } from 'ming-ui';
 import { Con, Content, Search, Tabs, UserList } from './Comps';
 import { getAccounts, getUsers } from './util';
@@ -40,7 +40,7 @@ export function UserSelector(props) {
     !_.isUndefined(tabIndex) ? tabIndex : tabType === 1 || tabType === 3 ? 0 : 1,
   );
   const [type, setType] = useState(selectRangeOptions ? 'range' : activeTab === 1 ? 'external' : 'normal');
-  const [keywords, setKeywords] = useState();
+  const [keywords, setKeywords] = useState<string | undefined>();
   const [pageIndex, setPageIndex] = useState(1);
   const [loadOuted, setLoadOuted] = useState(false);
   const [loading, setLoading] = useState(true);

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { ScrollView, SvgIcon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -9,11 +9,11 @@ import privateSource from 'src/api/privateSource';
 import { hasPermission } from 'src/components/checkPermission';
 import { PERMISSION_ENUM } from 'src/pages/Admin/enum';
 import { navigateTo } from 'src/router/navigateTo';
+import { emitter, pathCompletion } from 'src/utils/common';
 import { getRgbaByColor } from 'src/utils/controlCommon';
 import { getCurrentProject } from 'src/utils/project';
 import PopupLinks from './components/PopupLinks';
 import ThirdApp from './components/ThirdApp';
-import { emitter, pathCompletion } from 'src/utils/common';
 
 const NATIVE_APP_ITEM = [
   { id: 'feed', icon: 'dynamic-empty', text: _l('动态'), color: '#1677ff', href: '/feed', key: 1 },
@@ -224,18 +224,18 @@ const moduleEntries = [
   },
   !window.platformENV.isOverseas && !window.platformENV.isLocal
     ? {
-      type: 'market',
-      icon: 'merchant',
-      name: _l('市场'),
-      fullName: _l('市场'),
-    }
+        type: 'market',
+        icon: 'merchant',
+        name: _l('市场'),
+        fullName: _l('市场'),
+      }
     : {
-      type: 'lib',
-      icon: 'custom_store',
-      name: _l('应用库%01000'),
-      fullName: _l('应用库%01012'),
-      href: '/app/lib',
-    },
+        type: 'lib',
+        icon: 'custom_store',
+        name: _l('应用库%01000'),
+        fullName: _l('应用库%01012'),
+        href: '/app/lib',
+      },
   {
     type: 'cooperation',
     icon: 'cooperation',
@@ -259,7 +259,7 @@ const moduleEntries = [
 export default function SideNav(props) {
   const { active, currentProject = {}, countData, dashboardColor, hasBgImg, myPermissions = [] } = props;
   const [isExpanded, setIsExpanded] = useState(localStorage.getItem('homeNavIsExpanded') === '1');
-  const [thirdPartyAppVisible, setThirdPartyAppVisible] = useState();
+  const [thirdPartyAppVisible, setThirdPartyAppVisible] = useState<boolean | undefined>();
   const [sourcesList, setSourcesList] = useState([]);
   // 侧边栏那层淡色底（.sideNavMask）原来是 Dashboard/index.tsx 用 jQuery 刷上去的：
   //   $('.sideNavMask').css('background', color)
@@ -344,16 +344,16 @@ export default function SideNav(props) {
         onClick={
           !entry.href
             ? () => {
-              if (entry.type === 'integration') {
-                const type = localStorage.getItem('integrationUrl');
-                navigateTo('/integration/' + (type || ''));
-              } else if (entry.type === 'plugin') {
-                const type = localStorage.getItem('pluginUrl');
-                navigateTo('/plugin/' + (type || ''));
-              } else if (entry.type === 'market') {
-                window.open(`${md.global.Config.MarketUrl}/apps`);
+                if (entry.type === 'integration') {
+                  const type = localStorage.getItem('integrationUrl');
+                  navigateTo('/integration/' + (type || ''));
+                } else if (entry.type === 'plugin') {
+                  const type = localStorage.getItem('pluginUrl');
+                  navigateTo('/plugin/' + (type || ''));
+                } else if (entry.type === 'market') {
+                  window.open(`${md.global.Config.MarketUrl}/apps`);
+                }
               }
-            }
             : _.noop
         }
       >

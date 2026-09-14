@@ -175,7 +175,7 @@ function Hierarchy(props) {
   const { viewControl, viewControls } = view;
   const $wrapRef = useRef(null);
   const cache = useRef({});
-  const [refreshFlag, setRefreshFlag] = useState();
+  const [refreshFlag, setRefreshFlag] = useState<number | undefined>();
 
   useEffect(() => {
     if (!cache.current.didMount) return;

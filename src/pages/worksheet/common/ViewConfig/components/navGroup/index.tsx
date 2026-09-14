@@ -244,8 +244,8 @@ export default function NavGroup(params) {
   const { worksheetControls = [], view = {}, updateCurrentView, worksheetId, columns, currentSheetInfo = {} } = params;
   let [navGroup, setData] = useState({});
   let [filterData, setDatas] = useState();
-  let [usenav, setUsenav] = useState(); //空或者0：不使用筛选条件作为默认值 1：使用筛选条件作为默认值 ，老数据后端回兼容，新配置需要前端把这个值设为1
-  let [showAddCondition, setShowAddCondition] = useState();
+  let [usenav, setUsenav] = useState<string | undefined>(); //空或者0：不使用筛选条件作为默认值 1：使用筛选条件作为默认值 ，老数据后端回兼容，新配置需要前端把这个值设为1
+  let [showAddCondition, setShowAddCondition] = useState<boolean | undefined>();
   const [relateSheetInfo, setRelateSheetInfo] = useState([]);
   const [relateControls, setRelateControls] = useState([]);
   const [{ navshow, navfilters, navwidth, appnavtype }, setState] = useSetState({

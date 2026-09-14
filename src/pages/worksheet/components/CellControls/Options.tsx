@@ -1,10 +1,10 @@
 import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { shallowEqual } from 'react-redux';
 import { useClickAway } from 'react-use';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _, { isEmpty } from 'lodash';
 import PropTypes, { bool, func, shape, string } from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Textarea } from 'ming-ui';
 import { WORKSHEETTABLE_FROM_MODULE } from 'worksheet/constants/enum';
@@ -109,7 +109,7 @@ OtherOptionTextInput.propTypes = {
 function OtherOption(props) {
   const { style, otherRequired, otherValue = '', getPopupContainer, selected = {}, onSave = () => {} } = props;
   const [value, setValue] = useState(otherValue);
-  const [error, setError] = useState();
+  const [error, setError] = useState<boolean | undefined>();
   const conRef = useRef<any>(undefined);
 
   function handleSave() {

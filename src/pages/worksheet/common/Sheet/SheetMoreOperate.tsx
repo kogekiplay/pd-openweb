@@ -1,8 +1,7 @@
 import React, { Fragment, useState } from 'react';
-import copy from 'src/utils/copyToClipboard';
+import Trigger from '@rc-component/trigger';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import { Icon, Menu, MenuItem } from 'ming-ui';
 import DeleteConfirm from 'ming-ui/components/DeleteReconfirm';
 import { openResetAutoNumber } from 'worksheet/common/ResetAutoNumber';
@@ -14,6 +13,7 @@ import WorksheetReference, { renderDialog } from 'src/pages/widgetConfig/widgetS
 import { canEditApp, canEditData, isHaveCharge } from 'src/pages/worksheet/redux/actions/util';
 import { navigateTo } from 'src/router/navigateTo';
 import { pathCompletion } from 'src/utils/common';
+import copy from 'src/utils/copyToClipboard';
 import { VersionProductType } from 'src/utils/enum';
 import { getFeatureStatus } from 'src/utils/project';
 import { saveSelectExtensionNavType } from 'src/utils/worksheet';
@@ -61,7 +61,7 @@ export default function SheetMoreOperate(props) {
   } = props;
   const { setSheetDescVisible, selectIcon, reloadWorksheet, deleteSheet } = props;
   const { name, projectId, worksheetId, allowAdd } = worksheetInfo;
-  const [menuVisible, setMenuVisible] = useState();
+  const [menuVisible, setMenuVisible] = useState<boolean | undefined>();
   const autoNumberControls = _.filter(controls, item => item.type === 33);
   const canDelete = isCharge && !isLock;
   const lastSheetSwitchPermit =

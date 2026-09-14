@@ -41,7 +41,7 @@ const defaultItemColor = {
 export default function Number(props) {
   const { data, onChange, fromPortal, fromExcel } = props;
   const [visible, setVisible] = useState(false);
-  const [numValue, setNumValue] = useState();
+  const [numValue, setNumValue] = useState<string | undefined>();
   const { numshow, thousandth, showtype = '0', numinterval, min, max } = getAdvanceSetting(data);
   const itemcolor = getAdvanceSetting(data, 'itemcolor') || {};
   const isSlider = showtype === '2';

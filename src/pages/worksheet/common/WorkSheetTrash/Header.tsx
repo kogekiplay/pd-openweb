@@ -103,7 +103,7 @@ function Header(props, ref) {
   } = props;
   const filterComp = useRef<any>(undefined);
   const inputRef = useRef<any>(undefined);
-  const [searchActive, setSearchActive] = useState();
+  const [searchActive, setSearchActive] = useState<boolean | undefined>();
   const [searchText, setSearchText] = useState('');
   useImperativeHandle(ref, () => ({
     addFilterByControl: control => {

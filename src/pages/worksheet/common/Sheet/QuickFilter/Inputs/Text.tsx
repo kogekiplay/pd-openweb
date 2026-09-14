@@ -119,11 +119,11 @@ export default function Text(props) {
     onChange = () => {},
     onEnterDown = () => {},
   } = props;
-  const [tempValue, setTempValue] = useState();
+  const [tempValue, setTempValue] = useState<string | undefined>();
   const [isFocusing, setIsFocusing] = useState(false);
   const [isMultiple, setIsMultiple] = useState(false);
-  const [valueForMultiple, setValueForMultiple] = useState();
-  const [pasteDialogVisible, setPasteDialogVisible] = useState();
+  const [valueForMultiple, setValueForMultiple] = useState<string | undefined>();
+  const [pasteDialogVisible, setPasteDialogVisible] = useState<boolean | undefined>();
   const [isExact, setIsExact] = useState(false);
   const [isCaseSensitive, setIsCaseSensitive] = useState(false);
   const limit = advancedSetting.limit && Number(advancedSetting.limit);

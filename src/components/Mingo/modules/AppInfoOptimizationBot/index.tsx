@@ -1,11 +1,12 @@
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import { isFunction } from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import agentApi from 'src/api/agent';
 import { useGlobalStore } from 'src/common/GlobalStore';
+import type { StreamError } from 'src/components/Mingo/ChatBot/utils';
 import IconBtn from 'src/pages/worksheet/common/recordInfo/RecordForm/IconBtn';
 import useChat from 'src/pages/worksheet/hooks/useChat';
 import { genBotSessionId } from 'src/utils/agentSession';
@@ -116,7 +117,7 @@ function MingoContent(props, ref) {
     sessionId: genBotSessionId(),
   });
   const [isChatting, setIsChatting] = useState(defaultIsChatting);
-  const [error, setError] = useState();
+  const [error, setError] = useState<StreamError | undefined>();
   const {
     store: { appInfo },
   } = useGlobalStore();

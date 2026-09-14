@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import { getStrBytesLength } from 'src/pages/Role/PortalCon/tabCon/util-pure.js';
@@ -113,7 +113,7 @@ export default function SelectStartOrEndGroups(props) {
   let $ref = useRef(null);
   const [calendarcids, setCalendarcids] = useState([]);
   const [visible, setVisible] = useState(false);
-  const [showInput, setShowInput] = useState();
+  const [showInput, setShowInput] = useState<number | undefined>();
   const [calendarIds, setCalendarIds] = useState([]);
   const [visibleAddControlDiaLog, setVisibleAddControlDiaLog] = useState(false);
 

@@ -1,8 +1,8 @@
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import { find, flatten, get, includes, isEmpty, isFunction, isObject, last, uniq } from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import agentApi from 'src/api/agent';
@@ -13,6 +13,7 @@ import worksheetAjax from 'src/api/worksheet';
 import { SHEET_VIEW_HIDDEN_TYPES } from 'worksheet/constants/enum';
 import { useGlobalStore } from 'src/common/GlobalStore';
 import { formatControlToServer } from 'src/components/Form/core/utils';
+import type { StreamError } from 'src/components/Mingo/ChatBot/utils';
 import {
   SYSTEM_CONTROL,
   WIDGETS_TO_API_TYPE_ENUM,
@@ -405,7 +406,7 @@ function MingoContent(props, ref) {
   const [selectedDataMessageId, setSelectedDataMessageId] = useState([]);
   const [previewTempData, setPreviewTempData] = useState([]);
   const [messageIdOfIsGeneratingMoreData, setMessageIdOfIsGeneratingMoreData] = useState();
-  const [error, setError] = useState();
+  const [error, setError] = useState<StreamError | undefined>();
   const {
     sendMessage,
     loading,

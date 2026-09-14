@@ -39,7 +39,7 @@ class ChunkLoader {
 }
 
 function useChatBot({ sessionId, params = [], defaultMessages = [], currentCode, onError = () => {} }) {
-  const [firstInputMessage, setFirstInputMessage] = useState();
+  const [firstInputMessage, setFirstInputMessage] = useState<string | undefined>();
   const [messages, setMessages] = useState(defaultMessages);
   const [code, setCode] = useState(currentCode);
   const [input, setInput] = useState('');

@@ -1,8 +1,8 @@
 import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import { debounce } from 'lodash';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Button, Icon, LoadDiv, ScrollView, UserHead } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -79,7 +79,7 @@ export default function SendToChat(props) {
   const [listActive, setListActive] = useState(false);
   const [list, setList] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
-  const [loading, setLoading] = useState();
+  const [loading, setLoading] = useState<boolean | undefined>();
   const scrollViewRef = useRef<any>(undefined);
   const descriptionRef = useRef<any>(undefined);
 

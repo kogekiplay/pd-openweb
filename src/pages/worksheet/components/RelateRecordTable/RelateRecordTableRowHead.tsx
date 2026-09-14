@@ -99,7 +99,7 @@ const OpenRecordBtn = styled(FlexCenter)`
 `;
 
 export default function RowHead(props) {
-  const [confirmVisible, setConfirmVisible] = useState();
+  const [confirmVisible, setConfirmVisible] = useState<boolean | undefined>();
   const [moreOperateVisible, setMoreOperateVisible] = useState(false);
   const {
     tableId,

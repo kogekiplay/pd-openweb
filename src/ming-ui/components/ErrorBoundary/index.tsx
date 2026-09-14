@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import * as Sentry from '@sentry/react';
-import copy from 'src/utils/copyToClipboard';
 import PropTypes from 'prop-types';
+import copy from 'src/utils/copyToClipboard';
 import '../less/ErrorBoundary.less';
 
 function getErrorStr(errorData) {
@@ -16,7 +16,7 @@ ${errorData.error.stack}`;
 }
 
 function ErrorPage({ isSeriousError, errorData = {} }) {
-  const [errorVisible, setErrorVisible] = useState();
+  const [errorVisible, setErrorVisible] = useState<boolean | undefined>();
 
   if (isSeriousError === false) {
     return (

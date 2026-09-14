@@ -144,7 +144,7 @@ export default function DateTime(props) {
   const filterType = props.filterType || FILTER_CONDITION_TYPE.DATE_BETWEEN;
   let dateOptions = DATE_TYPE.concat([[{ text: _l('指定时间'), value: 18 }]]);
   const [active, setActive] = useState();
-  const [pickerVisible, setPickerVisible] = useState();
+  const [pickerVisible, setPickerVisible] = useState<boolean | undefined>();
 
   if (dateRangeType) {
     control.advancedSetting.showtype = String(dateRangeType);

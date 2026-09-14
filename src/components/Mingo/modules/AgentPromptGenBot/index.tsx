@@ -3,6 +3,7 @@ import { isFunction } from 'lodash';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import agentApi from 'src/api/agent';
+import type { StreamError } from 'src/components/Mingo/ChatBot/utils';
 import useChat from 'src/pages/worksheet/hooks/useChat';
 import { genBotSessionId } from 'src/utils/agentSession';
 import { SpeechSynthesizer } from 'src/utils/audio';
@@ -61,7 +62,7 @@ function AgentPromptGenBot(props, ref) {
   const messageListRef = useRef(null);
   const cache = useRef({});
   const [isChatting, setIsChatting] = useState(defaultIsChatting);
-  const [error, setError] = useState();
+  const [error, setError] = useState<StreamError | undefined>();
   const speechSynthesizer = useRef(new SpeechSynthesizer({ bufferDelay: 2000 }));
   const { messages, sendMessage, loading, activeMessageId, isRequesting, abortRequest, clearMessages } = useChat({
     aiCompletionApi: async (messages, { abortController, agentParams }) => {

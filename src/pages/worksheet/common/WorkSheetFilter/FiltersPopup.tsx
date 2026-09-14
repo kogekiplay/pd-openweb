@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
+import _ from 'lodash';
 import styled from 'styled-components';
 import { Tooltip } from 'ming-ui/antd-components';
 import ClickAway from 'ming-ui/components/ClickAway';
@@ -66,7 +66,7 @@ export default function FiltersPopup(props) {
   const filtersRef = useRef<any>(undefined);
   const btnRef = useRef<any>(undefined);
   const didMountRef = useRef(false);
-  const [popupVisible, setPopupVisible] = useState();
+  const [popupVisible, setPopupVisible] = useState<boolean | undefined>();
   const { needSave, editingFilter, activeFilter } = state;
   // 受控同步用：保存最新 editingFilter / actions 引用，供同步 effect 读取，
   // 避免把不稳定的 actions、频繁变动的 editingFilter 放进依赖导致 effect 反复执行。

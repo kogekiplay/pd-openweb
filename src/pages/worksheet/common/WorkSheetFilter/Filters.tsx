@@ -136,7 +136,7 @@ function Filters(props, ref) {
     })(),
   );
   const [queryType, setQueryType] = useState(NEW_FILTER_QUERY_TYPE.IMMEDIATELY);
-  const [queryFlag, setQueryFlag] = useState();
+  const [queryFlag, setQueryFlag] = useState<number | undefined>();
   const [queryButtonDisabled, setQueryButtonDisabled] = useState(false);
   const isSavedEditing = !!editingFilter && !/^new/.test(editingFilter.id);
   const isNewEditing = !!editingFilter && /^new/.test(editingFilter.id);
@@ -358,9 +358,7 @@ function Filters(props, ref) {
                   onAdd={selectedControl => {
                     const defaultCondition = getDefaultCondition(selectedControl);
                     setTimeout(() => {
-                      const dom = document.querySelector(
-                        '.keyStr_' + defaultCondition.keyStr + ' .ant-select-content',
-                      );
+                      const dom = document.querySelector('.keyStr_' + defaultCondition.keyStr + ' .ant-select-content');
 
                       if (dom) {
                         dom.click();

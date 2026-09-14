@@ -117,9 +117,9 @@ function ViewControl(props) {
   const { pageIndex, pageSize, sortControls } = sheetFetchParams;
   const { allWorksheetIsSelected, sheetSelectedRows, sheetHiddenColumns } = sheetViewConfig;
   const cache = useRef({});
-  const [createCustomBtnVisible, setCreateCustomBtnVisible] = useState();
+  const [createCustomBtnVisible, setCreateCustomBtnVisible] = useState<boolean | undefined>();
   const [isListOption, setIsListOption] = useState(false);
-  const [showFastFilter, setShowFastFilter] = useState();
+  const [showFastFilter, setShowFastFilter] = useState<boolean | undefined>();
   const [customBtnIsEdit, setCustomBtnIsEdit] = useState();
   const [activeBtnId, setActiveBtnId] = useState();
   const [activeFastFilterId, setActiveFastFilterId] = useState();

@@ -90,7 +90,7 @@ export default function FastFilter(params) {
   const { advancedSetting = {} } = view;
   let { enablebtn, clicksearch, fastrequired, requiredcids } = advancedSetting;
   let [fastFilters, setData] = useState(view.fastFilters || []);
-  let [showAddCondition, setShowAddCondition] = useState();
+  let [showAddCondition, setShowAddCondition] = useState<boolean | undefined>();
   const [{ dropDownVisible }, setState] = useSetState({
     dropDownVisible: false,
   });

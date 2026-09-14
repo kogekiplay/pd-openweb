@@ -1,8 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import copy from 'src/utils/copyToClipboard';
+import Trigger from '@rc-component/trigger';
 import _, { get, noop } from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Dialog, Icon, Menu, MenuItem } from 'ming-ui';
 import favoriteApi from 'src/api/favorite';
@@ -20,6 +19,7 @@ import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import { navigateTo } from 'src/router/navigateTo';
 import { emitter } from 'src/utils/common';
 import { controlState } from 'src/utils/control';
+import copy from 'src/utils/copyToClipboard';
 import { VersionProductType } from 'src/utils/enum';
 import { getCurrentProject, getFeatureStatus } from 'src/utils/project';
 import { replaceBtnsTranslateInfo } from 'src/utils/translate';
@@ -292,7 +292,7 @@ export default function RecordOperate(props) {
   const showLock = _.includes(shows, 'lock') && isAdmin;
   const customButtonActive = useRef<any>(undefined);
   const [customButtons, setCustomButtons] = useState([]);
-  const [customButtonLoading, setCustomButtonLoading] = useState();
+  const [customButtonLoading, setCustomButtonLoading] = useState<boolean | undefined>();
   const [popupVisible, setPopupVisible] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const [moveRecordToOtherGroupVisible, setMoveRecordToOtherGroupVisible] = useState(false);

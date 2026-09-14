@@ -114,7 +114,7 @@ const CloudPrint = props => {
   const templateName = _.find(renderData, { fieldKey: 'name' })?.value;
   const templateType = _.find(renderData, { fieldKey: 'cloudPrintType' })?.value;
   const [fieldsAnalysisVisible, setFieldsAnalysisVisible] = useState(false);
-  const [originalData, setOriginalData] = useState();
+  const [originalData, setOriginalData] = useState<string | undefined>();
   const [parsedFields, setParsedFields] = useState([]);
   const [masterTableIndex, setMasterTableIndex] = useState(0); // 快麦云主表序号
   const [checkMainTableVisible, setCheckMainTableVisible] = useState(false); // 选择快麦云主表弹窗是否显示

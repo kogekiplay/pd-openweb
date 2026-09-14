@@ -292,7 +292,7 @@ function RecordForm(props) {
   );
   const [formHeight, setFormHeight] = useState(0);
   const [topHeight, setTopHeight] = useState(getTopHeight());
-  const [dragVisible, setDragVisible] = useState();
+  const [dragVisible, setDragVisible] = useState<boolean | undefined>();
 
   // 左右布局，非默认标签页，显示单独header
   const getActiveTabControl = tempId => {

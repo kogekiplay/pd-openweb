@@ -182,11 +182,11 @@ export default function DevelopWithAI(props) {
   const [codeFileName, setCodeFileName] = useState('Free_field.jsx');
   const [codeStore, setCodeStore] = useState({});
   const [runnerCode, setRunnerCode] = useState(defaultCode);
-  const [runFlag, setRunFlag] = useState();
+  const [runFlag, setRunFlag] = useState<number | undefined>();
   const [currentCode, setCurrentCode] = useState(defaultCode);
   const [showEmptyHolder, setShowEmptyHolder] = useState(!props.defaultCode);
   const [lastCode, setLastCode] = useState();
-  const [error, setError] = useState();
+  const [error, setError] = useState<string | undefined>();
   const [mockRecord, setMockRecord] = useState();
   const [envIsMobile, setEnvIsMobile] = useState(false);
   const [envIsDisabled, setEnvIsDisabled] = useState(false);
