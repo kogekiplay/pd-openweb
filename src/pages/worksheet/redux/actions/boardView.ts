@@ -17,6 +17,7 @@ import { getBoardItemKey, getCurrentView } from '../util';
 import { updateNavGroup } from './navFilter.js';
 import { getParaIds, sortDataByCustomItems } from './util';
 import { wrapAjax } from './util';
+import type { AppDispatch, GetState, RootState } from 'src/redux/types';
 
 let boardPromiseObj;
 let boardPromiseViewIds = [];
@@ -59,7 +60,7 @@ export function changeBoardViewData(data) {
 }
 
 export function delBoardViewRecord(data) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { sheet } = getState();
     sheetAjax.deleteWorksheetRows({ rowIds: [data.rowId], ...getParaIds(sheet) }).then(res => {
       if (res.isSuccess) {
@@ -103,7 +104,7 @@ export function updateBoardViewRecord(data) {
   };
 }
 
-const getBoardViewPara = (sheet = {}, view?) => {
+const getBoardViewPara = (sheet: RootState['sheet'], view?) => {
   const { base, controls, navGroupFilters = [], quickFilter = [] } = sheet;
   const { viewId, appId, chartId, type } = base;
   view = view || getCurrentView(sheet);
@@ -150,7 +151,7 @@ const dealBoardViewRecordCount = data => {
 };
 
 export function initBoardViewData(view?, hasSecondGroup?) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { sheet } = getState();
     const para = getBoardViewPara(sheet, view);
 
@@ -230,7 +231,7 @@ function getBoardViewDataFillPage({ para, dispatch, view, controls }) {
 }
 
 export function getBoardViewPageData({ alwaysCallback = noop }) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { sheet } = getState();
     const { boardView } = sheet;
     const { boardViewState, boardViewRecordCount, boardData } = boardView;
@@ -272,7 +273,7 @@ function mergeUniqBoardData(boardViewData, currentData) {
 
 // 分页获取单个看板数据
 export function getSingleBoardPageData({ pageIndex, kanbanKey, alwaysCallback, checkIsMore }) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { sheet } = getState();
     const { boardView } = sheet;
     const { boardData } = boardView;

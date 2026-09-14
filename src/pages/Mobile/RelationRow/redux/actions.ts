@@ -5,6 +5,7 @@ import { getIsScanQR } from 'src/components/Form/MobileForm/components/ScanQRCod
 import { getFilter } from 'src/pages/worksheet/common/WorkSheetFilter/util';
 import { controlState } from 'src/utils/control';
 import { replaceControlsTranslateInfo } from 'src/utils/translate';
+import type { AppDispatch, GetState } from 'src/redux/types';
 
 const getPermissionInfo = (activeRelateSheetControl, rowInfo, worksheet) => {
   const { allowAdd } = worksheet;
@@ -47,7 +48,7 @@ export const updateBase = base => dispatch => {
   });
 };
 
-export const loadRow = (control, getType) => (dispatch, getState) => {
+export const loadRow = (control, getType) => (dispatch: AppDispatch, getState: GetState) => {
   const { base, rowInfo } = getState().mobile;
   const { instanceId, workId, worksheetId, rowId } = base;
   const params = {};
@@ -89,7 +90,7 @@ export const loadRow = (control, getType) => (dispatch, getState) => {
   }
 };
 
-export const loadRowRelationRows = (relationControl?, getType?) => async (dispatch, getState) => {
+export const loadRowRelationRows = (relationControl?, getType?) => async (dispatch: AppDispatch, getState: GetState) => {
   const { base, loadParams, relationRows, rowInfo } = getState().mobile;
   const { pageIndex, keywords } = loadParams;
   const { instanceId, workId, rowId, worksheetId, controlId } = base;
@@ -192,7 +193,7 @@ export const loadRowRelationRows = (relationControl?, getType?) => async (dispat
     });
 };
 
-export const updateRelationRows = (data, value) => (dispatch, getState) => {
+export const updateRelationRows = (data, value) => (dispatch: AppDispatch, getState: GetState) => {
   const { relationRow } = getState().mobile;
   dispatch({
     type: 'MOBILE_RELATION_ROWS',

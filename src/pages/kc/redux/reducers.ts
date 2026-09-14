@@ -48,7 +48,7 @@ const defaultParams = Map({
   sortType: NODE_SORT_TYPE.DESC,
 });
 
-function params(state = defaultParams, action: ReduxAction) {
+function params(state: Map<string, any> = defaultParams, action: ReduxAction): Map<string, any> {
   switch (action.type) {
     case 'KC_CLEAR_KC':
       return defaultParams;

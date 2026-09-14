@@ -1,6 +1,7 @@
 import externalPortalAjax from 'src/api/externalPortal';
 import { pageSizeForPortal } from 'src/pages/Role/PortalCon/tabCon/config';
 import { translatePortalRoleOptions } from 'src/pages/Role/PortalCon/tabCon/util-pure';
+import type { AppDispatch, GetState } from 'src/redux/types';
 
 export const getControls = (appId, projectId) => {
   return dispatch => {
@@ -38,9 +39,9 @@ export const getCount = appId => {
 
 //控件
 export const setBaseInfo = data => {
-  return (dispatch, getState) => {
-    const { portal = {} } = getState();
-    const { baseInfo = {} } = portal;
+  return (dispatch: AppDispatch, getState: GetState) => {
+    const { portal } = getState();
+    const { baseInfo } = portal;
     dispatch({
       type: 'UPDATE_BASE',
       data: {
@@ -81,9 +82,9 @@ export const setCount = data => {
 
 //更新用户数据 角色
 export const updateListByRoleid = ({ roleId = '', rowIds = [] }, cb) => {
-  return (dispatch, getState) => {
-    const { portal = {} } = getState();
-    const { baseInfo = {}, list } = portal;
+  return (dispatch: AppDispatch, getState: GetState) => {
+    const { portal } = getState();
+    const { baseInfo, list } = portal;
     const { appId = '' } = baseInfo;
     externalPortalAjax
       .editExAccountsRole({
@@ -115,8 +116,8 @@ export const updateListByRoleid = ({ roleId = '', rowIds = [] }, cb) => {
 
 //激活用户
 export const activateExAccounts = ({ rowIds, cb }) => {
-  return (dispatch, getState) => {
-    const { portal = {} } = getState();
+  return (dispatch: AppDispatch, getState: GetState) => {
+    const { portal } = getState();
     const { baseInfo = {}, list = [] } = portal;
     const { appId = '' } = baseInfo;
     externalPortalAjax
@@ -148,8 +149,8 @@ export const activateExAccounts = ({ rowIds, cb }) => {
 
 //更新用户数据 状态
 export const updateListByStatus = ({ newState, rowIds, cb }) => {
-  return (dispatch, getState) => {
-    const { portal = {} } = getState();
+  return (dispatch: AppDispatch, getState: GetState) => {
+    const { portal } = getState();
     const { baseInfo = {}, list = [] } = portal;
     const { appId = '' } = baseInfo;
     externalPortalAjax
@@ -238,14 +239,14 @@ export const setFastFilters = data => {
 
 //快速筛选参数
 export const setFastFiltersData = data => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     if (!data) {
       dispatch({
         type: 'UPDATE_FASTFILTERS',
         data: [],
       });
     } else {
-      const { portal = {} } = getState();
+      const { portal } = getState();
       const { fastFilters = [] } = portal;
       let newData = fastFilters.slice();
       let value = data.value || (data.values || [])[0];
@@ -350,9 +351,9 @@ const getFilterTels = telFilters => {
 let ajaxFn = null;
 
 export const getList = (PotralStatus = 0, cb?) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     dispatch({ type: 'UPDATE_LOADING', data: true });
-    const { portal = {} } = getState();
+    const { portal } = getState();
     const {
       filters = [],
       keyWords,

@@ -1,4 +1,5 @@
 import projectUserRule from 'src/api/projectUserRule.js';
+import type { ContactsHiddenDispatch, ContactsHiddenGetState } from '../types';
 
 export const showEditFn =
   (showEdit, editType = '', ruleId = '') =>
@@ -76,7 +77,7 @@ export const deleteRules = (projectId, ruleId) => dispatch => {
 };
 
 //获取单条规则
-export const getRulesByRuleId = ruleId => (dispatch, getState) => {
+export const getRulesByRuleId = ruleId => (dispatch: ContactsHiddenDispatch, getState: ContactsHiddenGetState) => {
   dispatch({
     type: 'ACTION_ING',
   });

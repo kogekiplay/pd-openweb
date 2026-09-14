@@ -1,7 +1,8 @@
 import { Set } from 'immutable';
+import type { AppDispatch, GetState } from 'src/redux/types';
 
 export function selectAllItems(forceSelectAll, cb) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const kcState = getState().kc;
     let { selectAll } = kcState;
     const { list, selectedItems } = kcState;
@@ -31,7 +32,7 @@ export function clearSelect() {
 }
 
 export function selectItem(item) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const kcState = getState().kc;
     const { selectedItems } = kcState;
     dispatch({
@@ -44,7 +45,7 @@ export function selectItem(item) {
 }
 
 export function selectItems(items) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const kcState = getState().kc;
     const { list } = kcState;
     items = Set(items);
@@ -60,7 +61,7 @@ export function selectItems(items) {
 }
 
 export function selectSingleItem(item) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const kcState = getState().kc;
     const { list } = kcState;
     const newSelectedItems = Set(item ? [item] : []);

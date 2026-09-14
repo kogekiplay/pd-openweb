@@ -2,6 +2,7 @@
 import StructureController from 'src/api/structure';
 import { getCurrentProject } from 'src/utils/project';
 import Config from '../../config';
+import type { ReportRelationDispatch, ReportRelationGetState } from './types';
 
 const COMPANY_FAKE_ACCOUNTID = '';
 
@@ -61,7 +62,7 @@ export const updateCollapse = (id = COMPANY_FAKE_ACCOUNTID, open = true) => ({
 
 export const addSubordinates =
   ({ id, accounts, callback }) =>
-  (dispatch, getState) => {
+  (dispatch: ReportRelationDispatch, getState: ReportRelationGetState) => {
     StructureController.addStructure({
       projectId: Config.projectId,
       isTop: id === COMPANY_FAKE_ACCOUNTID,
@@ -297,7 +298,7 @@ export const fetchSubordinates =
  */
 export const fetchParent =
   (id, isDirect = false) =>
-  (dispatch, getState) => {
+  (dispatch: ReportRelationDispatch, getState: ReportRelationGetState) => {
     return StructureController.getParentsByAccountId({
       accountId: id,
       projectId: Config.projectId,

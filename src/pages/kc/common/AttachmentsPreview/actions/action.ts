@@ -14,6 +14,7 @@ import * as ajax from '../ajax';
 import ACTION_TYPES from '../constant/actionTypes';
 import { EXT_TYPE_DIC, LOADED_STATUS, PREVIEW_TYPE } from '../constant/enum';
 import { canPreviewHtml, getHtmlPreviewUrl, isHtmlPreviewExt, splitFileName } from '../constant/util';
+import type { AttachmentsPreviewDispatch, AttachmentsPreviewGetState } from '../types';
 
 function addViewCount(attachment) {
   if (
@@ -369,7 +370,7 @@ function formatAttachment(attachments, callfrom?) {
 }
 
 export function init(options, extra) {
-  return (dispatch, getState) => {
+  return (dispatch: AttachmentsPreviewDispatch, getState: AttachmentsPreviewGetState) => {
     const { callFrom, showThumbnail, showAttInfo, hideFunctions, fromType, onClose } = options;
     let { attachments, index } = options;
     let currentAttachment;
@@ -536,7 +537,7 @@ function changeIndexThunk(dispatch, getState, index, flag, extra = {}) {
 }
 
 export function changeIndex(index, flag, extra) {
-  return (dispatch, getState) => {
+  return (dispatch: AttachmentsPreviewDispatch, getState: AttachmentsPreviewGetState) => {
     setTimeout(() => {
       changeIndexThunk(dispatch, getState, index, flag, extra);
     }, 10);
@@ -564,7 +565,7 @@ function nothing() {
 }
 
 export function renameFile(value) {
-  return (dispatch, getState) => {
+  return (dispatch: AttachmentsPreviewDispatch, getState: AttachmentsPreviewGetState) => {
     const state = getState();
     const index = state.index;
     const currentAttachment = state.attachments[index];
@@ -619,7 +620,7 @@ export function renameFile(value) {
 }
 
 export function updateAllowDownload() {
-  return (dispatch, getState) => {
+  return (dispatch: AttachmentsPreviewDispatch, getState: AttachmentsPreviewGetState) => {
     const state = getState();
     const index = state.index;
     const currentAttachment = state.attachments[index];
@@ -666,7 +667,7 @@ function selectFolder() {
 }
 
 export function saveToKnowlwdge(savePath) {
-  return (dispatch, getState) => {
+  return (dispatch: AttachmentsPreviewDispatch, getState: AttachmentsPreviewGetState) => {
     const state = getState();
     const index = state.index;
     const currentAttachment = state.attachments[index];
@@ -754,7 +755,7 @@ export function changeStateOfAttachment(attachment, index) {
 }
 
 export function onClose() {
-  return (dispatch, getState) => {
+  return (dispatch: AttachmentsPreviewDispatch, getState: AttachmentsPreviewGetState) => {
     const state = getState();
 
     if (state.onClose) {

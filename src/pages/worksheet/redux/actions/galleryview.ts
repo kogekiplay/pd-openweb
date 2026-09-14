@@ -6,6 +6,7 @@ import { getGroupControlId } from 'src/utils/worksheet';
 import { getNavGroupCount } from './navFilter';
 import { sortDataByGroupItems } from './util';
 import type { RecordRow } from 'src/utils/controlTypes';
+import type { AppDispatch, GetState } from 'src/redux/types';
 
 let getGalleryRequest = null;
 let preWorksheetIds = [];
@@ -28,7 +29,7 @@ const getGroupName = (newName, oldName, groupControl = {}) => {
 };
 
 export const fetch = index => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, filters, galleryview, quickFilter, navGroupFilters, controls, views = [] } = getState().sheet;
     const { appId, viewId, worksheetId, chartId, maxCount } = base;
     let { gallery } = galleryview;
@@ -102,7 +103,7 @@ export const fetch = index => {
 };
 
 export const fetchMoreByGroup = (index, kanbanKey) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, filters, galleryview, quickFilter, navGroupFilters, controls, views = [] } = getState().sheet;
     const { appId, viewId, worksheetId, chartId } = base;
     let { gallery } = galleryview;
@@ -161,7 +162,7 @@ export const refresh = () => {
 };
 
 export const getCurrentView = () => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base = {}, views = [] } = getState().sheet;
     const { viewId = '' } = base;
     dispatch({ type: 'CHANGE_GALLERY_VIEW', data: views.find(o => o.viewId === viewId) || {} });
@@ -170,7 +171,7 @@ export const getCurrentView = () => {
 
 //new | add
 export const updateRow = (data, groupId) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { galleryview } = getState().sheet;
     let { gallery } = galleryview;
 
@@ -228,7 +229,7 @@ export const updateRow = (data, groupId) => {
 
 //删除
 export const deleteRow = (id, groupId) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { galleryview } = getState().sheet;
     let { gallery } = galleryview;
 

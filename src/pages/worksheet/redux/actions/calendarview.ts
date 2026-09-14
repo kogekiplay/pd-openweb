@@ -13,12 +13,13 @@ import { getFilledRequestParams } from 'src/utils/common';
 import { getAdvanceSetting, isTimeStyle } from 'src/utils/control';
 import { formatQuickFilter } from 'src/utils/filter';
 import type { FormControl } from 'src/utils/controlTypes';
+import type { AppDispatch, GetState } from 'src/redux/types';
 
 let getRows;
 let getRowsIds = [];
 
 export const fetch = searchArgs => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, quickFilter = [] } = getState().sheet;
     const { worksheetId, viewId, appId, chartId } = base;
 
@@ -74,9 +75,9 @@ export const fetch = searchArgs => {
 };
 
 export function updateFormatData() {
-  return (dispatch, getState) => {
-    const { controls, calendarview = {} } = getState().sheet;
-    const { calendar = [], calendarData = {} } = calendarview;
+  return (dispatch: AppDispatch, getState: GetState) => {
+    const { controls, calendarview } = getState().sheet;
+    const { calendar = [], calendarData } = calendarview;
     let list = [];
     calendar.forEach(item => {
       let data = setDataFormat({
@@ -93,7 +94,7 @@ export function updateFormatData() {
 }
 
 export const refresh = () => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { filters, calendarview } = getState().sheet;
     const { calendarViewStart, calendarViewEnd } = calendarview;
     dispatch(
@@ -108,7 +109,7 @@ export const refresh = () => {
 };
 
 export const fetchExternal = () => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base = {} } = getState().sheet;
     const { worksheetId, viewId } = base;
     const initType = dispatch(getInitType());
@@ -232,7 +233,7 @@ export function changeCalendarTime(start, end) {
 }
 
 export function getCalendarData() {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { controls, base, views } = getState().sheet;
     const { viewId = '', worksheetId } = base;
     const currentView = views.find(o => o.viewId === viewId) || {};
@@ -351,7 +352,7 @@ export function getEventList({
   isUp = false,
   cb = null,
 }) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { calendarview, controls, base, filters } = getState().sheet;
     const { calendarData, calenderEventList = {} } = calendarview;
     const { appId, worksheetId, viewId } = base;
@@ -567,7 +568,7 @@ export function getEventList({
 }
 
 export function searchKeys(keyWords) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { calendarview } = getState().sheet;
     const { calenderEventList = {} } = calendarview;
     dispatch({
@@ -589,7 +590,7 @@ export function searchEventArgs(keyWords, pageIndex) {
 }
 
 export function updateEventList(pageIndex, isUp) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { calendarview } = getState().sheet;
     const { calenderEventList = {} } = calendarview;
     const { keyWords } = calenderEventList;
@@ -599,7 +600,7 @@ export function updateEventList(pageIndex, isUp) {
 }
 
 export function deleteEventList(rowid) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { calendarview } = getState().sheet;
     const { calenderEventList = {} } = calendarview;
     const typeEvent = dispatch(getInitType());
@@ -644,7 +645,7 @@ export function updateCalendarEventIsAdd(data) {
 
 // 更改 已获取的  排期/未排期数据
 export function updateEventData(rowId, data, time) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { calendarview, controls } = getState().sheet;
     const { calendarData, calenderEventList = {} } = calendarview;
     const currentView = getCurrentView(getState().sheet);

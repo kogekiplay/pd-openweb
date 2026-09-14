@@ -908,7 +908,7 @@ export function frozenColumn(columnIndex) {
 }
 
 export function saveSheetLayout({ isApplyAll, closePopup = () => {} }) {
-  return function (dispatch, getState) {
+  return function (dispatch: AppDispatch, getState: GetState) {
     const { base, controls, views, sheetview, worksheetInfo } = getState().sheet;
     const { appId, worksheetId, viewId } = base;
     const { fixedColumnCount, sheetHiddenColumns, columnStyles, sheetColumnWidths } = sheetview.sheetViewConfig;
@@ -1007,7 +1007,7 @@ export function saveSheetLayout({ isApplyAll, closePopup = () => {} }) {
 }
 
 export function resetSheetLayout() {
-  return function (dispatch, getState) {
+  return function (dispatch: AppDispatch, getState: GetState) {
     const { base, views, worksheetInfo } = getState().sheet;
     const { viewId } = base;
     const view = _.find(views, v => v.viewId === viewId);
@@ -1036,7 +1036,7 @@ export const updateDefaultScrollLeft = value => ({
 
 // 更新每页数量
 export function changePageSize(pageSize, pageIndex, { refetch = true } = {}) {
-  return function (dispatch, getState) {
+  return function (dispatch: AppDispatch, getState: GetState) {
     const { base } = getState().sheet;
     saveLRUWorksheetConfig('WORKSHEET_VIEW_PAGESIZE', base.worksheetId, pageSize);
     dispatch({ type: 'WORKSHEET_SHEETVIEW_CHANGE_PAGESIZE', pageSize, pageIndex });

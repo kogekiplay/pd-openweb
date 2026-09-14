@@ -4,6 +4,7 @@ import Config from '../../../../config';
 import { PAGE_SIZE } from '../constant';
 import { CALL_API } from '../middleware/api';
 import { getParentNode, getParentsId, updateTreeData } from '../modules/util';
+import type { StructureDispatch, StructureGetState } from '../types';
 
 /**
  * 根据部门父Id获取子部门,departmentId为null表示父部门是网络
@@ -13,7 +14,7 @@ import { getParentNode, getParentsId, updateTreeData } from '../modules/util';
  * @returns
  */
 
-export const loadDepartments = (departmentId, pageIndex, afterRequest?) => (dispatch, getState) => {
+export const loadDepartments = (departmentId, pageIndex, afterRequest?) => (dispatch: StructureDispatch, getState: StructureGetState) => {
   const { showDisabledDepartment } = getState().entities;
   const params = {
     projectId: Config.projectId,
@@ -103,7 +104,7 @@ export const updateNewDepartments = newDepartments => dispatch => {
  * @param departmentId
  * @param parentId
  */
-export const deleteDepartment = departmentId => (dispatch, getState) => {
+export const deleteDepartment = departmentId => (dispatch: StructureDispatch, getState: StructureGetState) => {
   const { newDepartments } = getState().entities;
   const parentNode = getParentNode(newDepartments, departmentId);
   departmentController
@@ -170,7 +171,7 @@ export const sortDepartmentsFn =
 /**
  * 部门停用/启用
  */
-export const disabledAndEnabledDepartments = (departmentId, disabled, parentId) => (dispatch, getState) => {
+export const disabledAndEnabledDepartments = (departmentId, disabled, parentId) => (dispatch: StructureDispatch, getState: StructureGetState) => {
   const { newDepartments } = getState().entities;
   const request = disabled ? departmentController.enabledDepartment : departmentController.disabledDepartments;
 
@@ -268,7 +269,7 @@ const fetchApprovalUser = (projectId, pageIndex, userStatus, applyDateOrderBy) =
 /** fetch approvalUser before hand
  * relies on redux-thunk
  */
-export const loadApprovalUsers = (projectId, pageIndex) => (dispatch, getState) => {
+export const loadApprovalUsers = (projectId, pageIndex) => (dispatch: StructureDispatch, getState: StructureGetState) => {
   const { userStatus } = getState().current;
   const { applyDateOrderBy } = getState().entities;
   return dispatch(fetchApprovalUser(projectId, pageIndex || 1, userStatus, applyDateOrderBy));

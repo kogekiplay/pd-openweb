@@ -24,6 +24,7 @@ import { formatQuickFilter } from 'src/utils/filter';
 import { dateConvertToServerZone, dateConvertToUserZone } from 'src/utils/project';
 import { replaceControlsTranslateInfo } from 'src/utils/translate.js';
 import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import type { AppDispatch, GetState } from 'src/redux/types';
 
 export const initData = () => {
   return dispatch => {
@@ -36,7 +37,7 @@ export const initData = () => {
 };
 
 export const fetchRows = (refresh = true) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, controls, views, filters, quickFilter = [], resourceview } = getState().sheet;
     const { filterControls } = getState().mobile;
     const view = (base.viewId ? _.find(views, { viewId: base.viewId }) : views[0]) || {};
@@ -102,7 +103,7 @@ export const fetchRows = (refresh = true) => {
 
 //加载分组下的更多
 export const fetchRowsByGroupId = (kanbanKey, kanbanIndex) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, controls, views, filters, quickFilter = [], resourceview } = getState().sheet;
     const { filterControls } = getState().mobile;
     const { resourceData = [] } = resourceview;
@@ -250,7 +251,7 @@ export const refresh = () => {
 };
 
 export const getTimeList = cb => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { views, base, resourceview } = getState().sheet;
     const view = base.viewId ? _.find(views, { viewId: base.viewId }) : views[0];
     const list = getViewTimesList(
@@ -286,7 +287,7 @@ export const getTimeList = cb => {
 };
 
 export const updateKeyWords = keywords => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { resourceview } = getState().sheet;
     const { resourceData = [] } = resourceview;
     dispatch({ type: 'CHANGE_RESOURCE_KEYWORDS', data: keywords });
@@ -308,7 +309,7 @@ export const updateCurrnetTime = time => {
 };
 
 export const updateRecordTime = (row, start, end, key, newKey) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, controls, resourceview, views } = getState().sheet;
     const view = base.viewId ? _.find(views, { viewId: base.viewId }) : views[0];
     const { resourceData } = resourceview;
@@ -449,7 +450,7 @@ export const updateRecordTime = (row, start, end, key, newKey) => {
 };
 
 export const updateByKey = (key, rowsData, key1?, rowsData1?) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, controls, resourceview, views } = getState().sheet;
     const view = base.viewId ? _.find(views, { viewId: base.viewId }) : views[0];
     const { keywords = '', resourceData, gridTimes, currentTime } = resourceview;

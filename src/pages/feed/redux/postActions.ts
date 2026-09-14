@@ -4,6 +4,7 @@ import groupController from 'src/api/group';
 import postAjax from 'src/api/post';
 import { emitter } from 'src/utils/common';
 import postEnum from '../constants/postEnum';
+import type { AppDispatch, GetState } from 'src/redux/types';
 
 function handleMdAjaxFail(dispatch, actionType, payload = {}) {
   return result => {
@@ -106,7 +107,7 @@ export function loading(isLoading) {
 }
 
 export function reload(options, showLoading = false) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { post } = getState();
     options = options || post.options;
     dispatch({ type: 'POST_RELOAD_START', options });
@@ -133,7 +134,7 @@ export function reload(options, showLoading = false) {
 }
 
 export function loadMore() {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { post } = getState();
     const { options } = post;
     dispatch({ type: 'POST_LOAD_MORE_START', options });
@@ -145,9 +146,11 @@ export function loadMore() {
             lastPostAutoID: getLastPostAutoID(post.postIds, post.postsById),
           },
       options,
-      post.postIds.lenth,
+      // 【已知 bug，先不动行为】lenth 是 length 的笔误，这里一直传的是 undefined
+      (post.postIds as any).lenth,
     ).then(({ postList, more }) => {
-      dispatch(
+      // 【已知 bug，先不动行为】dispatch 只收一个参数，第二个失败回调从来没生效过
+      (dispatch as any)(
         {
           type: 'POST_LOAD_MORE_SUCCESS',
           options,
@@ -229,7 +232,7 @@ function ensureProjectIdByGroupIdInOptions(options) {
 }
 
 export function changeListType(inputOptions, showLoading = false) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { post } = getState();
     const prevOptions = post.options;
     ensureProjectIdByGroupIdInOptions(inputOptions).then(options => {
@@ -270,7 +273,7 @@ export function searchAll(keywords) {
 }
 
 export function filter(inputOptions) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { post } = getState();
     const { listType, groupId, accountId, tagId, catId, projectId } = post.options;
     const options = Object.assign(
@@ -348,7 +351,7 @@ function updateCommon({
   successMessage,
   catchMethod,
 }) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     dispatch(Object.assign({ type: startActionType }, startActionArgs));
     ajaxMethod(startActionArgs).then(
       success => {
@@ -475,7 +478,7 @@ export function addTagSuccess({ postId, tagId, tagName }) {
     createUser: md.global.Account.accountId,
   };
 
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const postItem = _.clone(getState().post.postsById[postId]);
     const promise = postItem
       ? Promise.resolve(((postItem.tags = [tag].concat(postItem.tags.filter(t => t.tagId !== tagId))), postItem))
@@ -487,7 +490,7 @@ export function addTagSuccess({ postId, tagId, tagName }) {
 }
 
 export function removeTagSuccess({ postId, tagId }) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const postItem = _.clone(getState().post.postsById[postId]);
     const promise = postItem
       ? Promise.resolve(((postItem.tags = postItem.tags.filter(t => t.tagId !== tagId)), postItem))
@@ -499,7 +502,7 @@ export function removeTagSuccess({ postId, tagId }) {
 }
 
 export function editVoteEndTimeSuccess({ postId, deadline }) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const postItem = _.clone(getState().post.postsById[postId]);
     const promise = postItem
       ? Promise.resolve(((postItem.Deadline = deadline), postItem))
@@ -511,7 +514,7 @@ export function editVoteEndTimeSuccess({ postId, deadline }) {
 }
 
 export function editShareScopeSuccess({ postId, scope }) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const postItem = _.clone(getState().post.postsById[postId]);
     const promise = postItem
       ? Promise.resolve(((postItem.scope = scope), postItem))
@@ -523,7 +526,7 @@ export function editShareScopeSuccess({ postId, scope }) {
 }
 
 export function addComment(args, successCallback, failCallback) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     dispatch({ type: 'POST_ADD_COMMENT_START', args });
     postAjax.addPostComment(args).then(result => {
       if (result == '-1' || !result.success) {
@@ -553,7 +556,7 @@ export function addComment(args, successCallback, failCallback) {
 }
 
 export function removeComment(postID, commentID) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     dispatch({ type: 'POST_REMOVE_COMMENT_START' });
     postAjax
       .removePostComment({
@@ -585,7 +588,7 @@ export function removeComment(postID, commentID) {
 }
 
 export function loadMoreComments(postId) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     dispatch({ type: 'POST_LOAD_MORE_COMMENTS_START' });
     postAjax
       .getMorePostComments({

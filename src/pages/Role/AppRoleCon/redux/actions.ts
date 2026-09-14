@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import appManagementAjax from 'src/api/appManagement.js';
+import type { AppDispatch, GetState } from 'src/redux/types';
 
 export const setLoading = data => {
   return dispatch => {
@@ -72,7 +73,7 @@ export const SetAppRolePagingModel = data => {
 let ajaxOut = null;
 
 export const getOutList = (props, isOut) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { appId } = props;
     const { appRolePagingModel = {} } = getState().appRole;
     isOut && dispatch({ type: 'UPDATE_ROLE_LOADING', data: true });
@@ -147,7 +148,7 @@ const isDefaultPagingModel = (appRolePagingModel = {}) => {
 
 export const getUserList = (props, isUserList) => {
   // isAllCount 用于左侧nav的计数 全部
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { appRolePagingModel = {}, roleId = 'all', userList = [] } = getState().appRole;
     const { pageIndex = 1 } = appRolePagingModel;
     const { appId } = props;
@@ -213,7 +214,7 @@ export const getUserAllCount = props => {
 
 //获取nav
 export const fetchAllNavCount = props => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { canEditUser } = props;
 
     if (canEditUser) {

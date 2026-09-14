@@ -2,6 +2,7 @@ import _ from 'lodash';
 import formAjax from 'src/api/form';
 import publicWorksheetAjax from 'src/api/publicWorksheet';
 import { getDisabledControls, getNewControlColRow } from '../../utils';
+import type { AppDispatch, GetState } from 'src/redux/types';
 
 function changeKeyToServer(value) {
   if (!_.isUndefined(value.coverUrl)) {
@@ -24,7 +25,7 @@ function changeKeyToServer(value) {
 
 export const updateSettings =
   (value, cb = () => {}) =>
-  (dispatch, getState) => {
+  (dispatch: AppDispatch, getState: GetState) => {
     const {
       publicWorksheet: {
         worksheetInfo: { worksheetId, projectId },
@@ -75,7 +76,7 @@ function updateBaseConfig(dispatch, getState, value, cb?) {
 }
 
 export function refreshShareUrl() {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const {
       publicWorksheet: {
         worksheetInfo: { worksheetId },
@@ -89,7 +90,7 @@ export function refreshShareUrl() {
 }
 
 export function addWorksheetControl(controlName, cb = () => {}) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const state = getState();
 
     if (state.publicWorksheet.originalControls.length + 1 > 200) {
@@ -197,7 +198,7 @@ export function loadPublicWorksheet({ worksheetId }) {
 
 export const changeControls =
   (controls, isSave = true) =>
-  (dispatch, getState) => {
+  (dispatch: AppDispatch, getState: GetState) => {
     dispatch({ type: 'PUBLICWORKSHEET_UPDATE_CONTROLS', controls });
     isSave &&
       updateBaseConfig(dispatch, getState, {
@@ -205,14 +206,14 @@ export const changeControls =
       });
   };
 
-export const updateWorksheetInfo = value => (dispatch, getState) => {
+export const updateWorksheetInfo = value => (dispatch: AppDispatch, getState: GetState) => {
   dispatch({ type: 'PUBLICWORKSHEET_UPDATE_INFO', value });
   updateBaseConfig(dispatch, getState, value);
 };
 
 export const updateWorksheetVisibleType =
   (value, cb = () => {}) =>
-  (dispatch, getState) => {
+  (dispatch: AppDispatch, getState: GetState) => {
     updateBaseConfig(dispatch, getState, { visibleType: value }, worksheetId => {
       cb();
       if (value === 1) {
@@ -223,7 +224,7 @@ export const updateWorksheetVisibleType =
     });
   };
 
-export const hideControl = controlId => (dispatch, getState) => {
+export const hideControl = controlId => (dispatch: AppDispatch, getState: GetState) => {
   const {
     publicWorksheet: { hidedControlIds, controls, worksheetSettings, originalControls },
   } = getState();
@@ -239,7 +240,7 @@ export const hideControl = controlId => (dispatch, getState) => {
 };
 
 export function showControl(showControls = []) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const state = getState();
     const {
       publicWorksheet: { controls, hidedControlIds, originalControls, worksheetSettings },
@@ -275,7 +276,7 @@ export function showControl(showControls = []) {
 }
 
 export function resetControls() {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const {
       publicWorksheet: {
         worksheetInfo: { worksheetId },

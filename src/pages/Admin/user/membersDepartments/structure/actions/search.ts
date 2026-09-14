@@ -1,10 +1,11 @@
+import type { StructureDispatch, StructureGetState } from '../types';
 ﻿import departmentController from 'src/api/department';
 
 /**
  * 搜索
  * @param keywords
  */
-export const fetchSearchResult = keywords => (dispatch, getState) => {
+export const fetchSearchResult = keywords => (dispatch: StructureDispatch, getState: StructureGetState) => {
   const { showDisabledDepartment } = getState().entities;
   const { projectId } = getState().current;
   dispatch({ type: 'UPDATE_IS_SEARCHING', isSearching: true });

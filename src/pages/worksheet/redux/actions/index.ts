@@ -45,9 +45,10 @@ import {
   refresh as sheetViewRefresh,
 } from './sheetview';
 import { isHaveCharge } from './util';
+import type { AppDispatch, GetState } from 'src/redux/types';
 
 export function fireWhenViewLoaded(view = {}, { forceUpdate, controls } = {}) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, quickFilter } = getState().sheet;
     const { chartId } = base || {};
     if (!get(view, 'fastFilters')) return;
@@ -150,7 +151,7 @@ export function handleLoadOperateButtons({ worksheetInfo }) {
 }
 
 export const updateBase = base => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const sheet = getState().sheet;
     const viewChanged = _.get(sheet, 'base.viewId') && base.viewId && _.get(sheet, 'base.viewId') !== base.viewId;
 
@@ -212,7 +213,7 @@ export const updateWorksheetLoading = loading => ({ type: 'WORKSHEET_UPDATE_LOAD
 let worksheetRequest = null;
 
 export function loadWorksheet(worksheetId, setRequest) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base = {}, appPkgData = {}, views = [] } = getState().sheet;
     const { viewId, chartId } = base;
     const appId = base.type === 'single' ? base.singleAppId : base.appId;
@@ -459,7 +460,7 @@ export function loadCustomButtons({ appId, viewId, rowId, worksheetId }, cb = ()
 }
 
 export function updateCustomButtons(btns, isAdd) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const sheet = getState().sheet;
     let { buttons = [], sheetButtons = [] } = sheet;
 
@@ -526,7 +527,7 @@ function getSaveViewEditAttrs(saveParams = {}) {
 
 // 更新单个视图
 export function saveView(viewId, newConfig, cb) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const sheet = getState().sheet;
     const { base, views, navGroupFilters, worksheetInfo } = sheet;
     const view = _.find(views, v => v.viewId === viewId);
@@ -692,7 +693,7 @@ export function addNewRecord(data, view) {
 
 // 打开创建记录弹层
 export function openNewRecord({ isDraft, allowShowMingoCreate } = {}) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, views, worksheetInfo, navGroupFilters, sheetSwitchPermit, isCharge, appPkgData } = getState().sheet;
     const { appId, viewId, groupId, worksheetId } = base;
     const isManageView = isHaveCharge(appPkgData.appRoleType) && viewId === worksheetId;
@@ -839,7 +840,7 @@ export const updateWorksheetControls = controls => ({
 
 // 更新字段
 export const refreshWorksheetControls = () => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const sheet = getState().sheet;
     const { worksheetId } = sheet.base;
     worksheetAjax.getWorksheetInfo({ worksheetId, getTemplate: true }).then(res => {
@@ -899,7 +900,7 @@ export function updateQuickFilterWithDefault(filter = []) {
 
 // 重置快速筛选条件
 export function resetQuickFilter(view) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { quickFilter } = getState().sheet;
 
     if (_.isEmpty(quickFilter)) {
@@ -934,7 +935,7 @@ export function updateSheetListVisible(visible) {
 }
 
 export function copyCustomPage(para) {
-  return function (dispatch, getState) {
+  return function (dispatch: AppDispatch, getState: GetState) {
     const sheetList = getState().sheetList.data;
     appManagementAjax.copyCustomPage(para).then(data => {
       if (data) {
@@ -996,7 +997,7 @@ export function initMobileGunter({ appId, worksheetId, viewId }) {
 }
 
 export function updateCurrentViewState(updates) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, views } = getState().sheet;
     const { viewId } = base;
     const view = _.find(views, v => v.viewId === viewId);
@@ -1008,7 +1009,7 @@ export function updateCurrentViewState(updates) {
 }
 
 export function updateViewShowcount(showcount) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base } = getState().sheet;
     const { viewId } = base;
 
@@ -1026,7 +1027,7 @@ export function updateViewShowcount(showcount) {
 }
 
 export function loadManageView(worksheetId, callback) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base = {}, appPkgData = {} } = getState().sheet;
     const { appId } = base;
 

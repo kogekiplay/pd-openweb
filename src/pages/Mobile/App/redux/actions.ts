@@ -4,6 +4,7 @@ import appManagementApi from 'src/api/appManagement';
 import homeAppApi from 'src/api/homeApp';
 import instanceVersion from 'src/pages/workflow/api/instanceVersion';
 import { getAppLangDetail, getTranslateInfo } from 'src/utils/app';
+import type { AppDispatch, GetState } from 'src/redux/types';
 
 export const getAppDetail =
   (appId, cb, isPullRefresh = false) =>
@@ -121,7 +122,7 @@ export const addAppApply =
       });
   };
 
-export const updateAppMark = (appId, projectId, isMarked) => (dispatch, getState) => {
+export const updateAppMark = (appId, projectId, isMarked) => (dispatch: AppDispatch, getState: GetState) => {
   const { mobile } = getState();
   const { appDetail } = mobile;
 
@@ -145,7 +146,7 @@ export const updateAppMark = (appId, projectId, isMarked) => (dispatch, getState
     });
 };
 
-export const editAppInfo = (viewHideNavi, callback) => (dispatch, getState) => {
+export const editAppInfo = (viewHideNavi, callback) => (dispatch: AppDispatch, getState: GetState) => {
   const { detail } = _.get(getState(), 'mobile.appDetail');
   const params = _.pick(detail, ['projectId', 'iconColor', 'navColor', 'icon', 'description', 'name']);
   homeAppApi.editAppInfo({ ...params, appId: detail.id, viewHideNavi }).then(res => {

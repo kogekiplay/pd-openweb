@@ -1,6 +1,7 @@
 ﻿import _ from 'lodash';
 import importUserAjax from 'src/api/importUser';
 import { CALL_API } from '../middleware/api';
+import type { StructureDispatch, StructureGetState } from '../types';
 
 export const UPDATE_CURSOR = 'UPDATE_CURSOR';
 export const REMOVE_CURSOR = 'REMOVE_CURSOR';
@@ -145,7 +146,7 @@ export const updateNoDepartmentUsers = noDepartmentUsers => ({
 });
 
 // 重新邀请
-export const fetchReInvite = (accountIds, callback) => (dispatch, getState) => {
+export const fetchReInvite = (accountIds, callback) => (dispatch: StructureDispatch, getState: StructureGetState) => {
   const { projectId } = getState().current;
 
   importUserAjax
@@ -167,7 +168,7 @@ export const fetchReInvite = (accountIds, callback) => (dispatch, getState) => {
 };
 
 // 取消邀请并移除
-export const fetchCancelImportUser = (accountIds, callback) => (dispatch, getState) => {
+export const fetchCancelImportUser = (accountIds, callback) => (dispatch: StructureDispatch, getState: StructureGetState) => {
   const { projectId } = getState().current;
 
   importUserAjax
