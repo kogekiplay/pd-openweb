@@ -7,7 +7,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { getWithToken } from 'src/utils/common';
 import convert from './convertData';
 import PreviewTable from './PreviewTable';
-import type { RecordRow } from 'src/utils/controlTypes';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const Header = styled.div`
   height: 52px;
@@ -70,7 +70,7 @@ const ConvertingMask = styled.div`
   align-items: center;
 `;
 
-function getMapConfigByExcel(controls = [], excelData = []) {
+function getMapConfigByExcel(controls: FormControl[] = [], excelData = []) {
   const result = {};
 
   if (excelData.length < controls.length) {

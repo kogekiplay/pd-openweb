@@ -15,6 +15,7 @@ import {
 import { WHOLE_SIZE } from '../config/Drag';
 import { RELATION_OPTIONS } from '../config/setting';
 import { ALL_SYS, DEFAULT_CONFIG, DEFAULT_DATA, SYS_CONTROLS, WIDGETS_TO_API_TYPE_ENUM } from '../config/widget';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const FORMULA_FN_LIST = [
   'SUM',
@@ -161,7 +162,7 @@ export const putControlByOrder = controls => {
     }, []);
 };
 
-export const dealControlData = (controls = []) => {
+export const dealControlData = (controls: FormControl[] = []) => {
   return controls.map(item => {
     const { type } = item;
 
@@ -208,7 +209,7 @@ const replaceRowWithControls = widgets => {
   return genWidgetRowAndCol(newWidgets);
 };
 
-export const genWidgetsByControls = (controls = []) => {
+export const genWidgetsByControls = (controls: FormControl[] = []) => {
   /**
    * 依次处理数据
    */
@@ -216,7 +217,7 @@ export const genWidgetsByControls = (controls = []) => {
   return replaceRowWithControls(newControls);
 };
 
-export const resortControlByColRow = (controls = []) => {
+export const resortControlByColRow = (controls: FormControl[] = []) => {
   return _.flatten(putControlByOrder(controls));
 };
 
@@ -262,7 +263,7 @@ export const resetWidgets = (widgets, obj) => {
 /**
  * 从当前表所有控件中获取满足规则的控件
  */
-export const filterControlsFromAll = (allControls = [], filter = item => item) => {
+export const filterControlsFromAll = (allControls: FormControl[] = [], filter = item => item) => {
   return allControls.filter(filter).map(({ controlId, controlName }) => ({ value: controlId, text: controlName }));
 };
 
@@ -357,7 +358,7 @@ export const getRelationText = enumDefault => {
   );
 };
 
-export const filterOnlyShowField = (controls = []) => {
+export const filterOnlyShowField = (controls: FormControl[] = []) => {
   return controls.filter(i => !((i.type === 30 || i.originType === 30) && (i.strDefault || '')[0] === '1'));
 };
 
@@ -614,7 +615,7 @@ export const supportWidgetIntroOptions = (data = {}, introType, from?, isRecycle
 };
 
 // 过滤系统字段专用
-export const filterSysControls = (controls = []) => {
+export const filterSysControls = (controls: FormControl[] = []) => {
   return controls.filter(c => !_.includes(ALL_SYS, c.controlId));
 };
 
@@ -631,7 +632,7 @@ export const isCustomWidget = data => {
 };
 
 // 校验某些控件上限
-export const checkWidgetMaxNumErr = (data, allControls = []) => {
+export const checkWidgetMaxNumErr = (data, allControls: FormControl[] = []) => {
   // 自定义控件超出提示
   if (isCustomWidget(data) && allControls.filter(isCustomWidget).length >= 5) {
     return _l('超过自定义字段数量限制');
@@ -650,7 +651,7 @@ export const parseDataSource = dataSource => {
 };
 
 // 表单保存选项集不校验
-export const checkOptionsRepeat = (controls = [], checkCollections = true) => {
+export const checkOptionsRepeat = (controls: FormControl[] = [], checkCollections = true) => {
   for (const c of controls) {
     if (_.includes([9, 10, 11], c.type) && c.dataSource ? checkCollections : true) {
       const noDelOptions = (c.options || []).filter(o => o && !o.isDeleted);

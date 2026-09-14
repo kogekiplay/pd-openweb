@@ -16,7 +16,7 @@ export function isGunterGroupControl(item = {}) {
   );
 }
 
-export function getGunterGroupControlInvalidText(viewControl = '', worksheetControls = [], controlList = []) {
+export function getGunterGroupControlInvalidText(viewControl = '', worksheetControls: FormControl[] = [], controlList: FormControl[] = []) {
   if (!viewControl || controlList.find(item => item.controlId === viewControl)) {
     return '';
   }

@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { getTranslateInfo } from 'src/utils/app';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const replaceOptionControlTranslateInfo = (data, { translateInfo, optionTranslateInfo }) => {
   data.options = data.options.map(item => {
@@ -13,7 +14,7 @@ const replaceOptionControlTranslateInfo = (data, { translateInfo, optionTranslat
   }
 };
 
-export const replaceControlsTranslateInfo = (appId, worksheetId, controls = []) => {
+export const replaceControlsTranslateInfo = (appId, worksheetId, controls: FormControl[] = []) => {
   if (!window[`langData-${appId}`]) return controls;
   return controls.map(c => {
     const translateInfo = getTranslateInfo(appId, worksheetId, c.controlId);

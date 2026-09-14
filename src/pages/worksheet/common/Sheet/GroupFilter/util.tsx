@@ -8,7 +8,7 @@ import { getAdvanceSetting } from 'src/utils/control';
 import { AREA, TYPES } from './constants.js';
 import type { FormControl } from 'src/utils/controlTypes';
 
-export function sortDataByCustomNavs(data, view = {}, controls = []) {
+export function sortDataByCustomNavs(data, view = {}, controls: FormControl[] = []) {
   let customItems = safeParse(_.get(view, 'advancedSetting.customnavs'), 'array');
 
   if (_.get(view, 'advancedSetting.navshow') === '2') {

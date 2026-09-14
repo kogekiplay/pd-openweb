@@ -22,6 +22,7 @@ import { getControls } from '../../../DynamicDefaultValue/util';
 import EmptyRuleConfig from '../../../EmptyRuleConfig';
 import SelectWorksheet from '../../../SearchWorksheet/SelectWorksheet';
 import SelectControl from '../../../SelectControl';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const RadioDisplay = [
   {
@@ -50,7 +51,7 @@ const EmptyDisplay = [
 ];
 
 // 关联记录、子表等他表字段需要处理controls
-const dealRelationControls = (controls = []) => {
+const dealRelationControls = (controls: FormControl[] = []) => {
   return controls.map((control = {}) => {
     if (control.type === 30) {
       const currentItemRelate = _.find(controls, c => (control.dataSource || '').includes(c.controlId)) || {};
@@ -236,7 +237,7 @@ class SearchWorksheetActionDialog extends Component<any, any> {
   }, 300);
 
   // 获取查询表映射数据
-  getDropData = (controls = [], control = {}, hasRowId) => {
+  getDropData = (controls: FormControl[] = [], control = {}, hasRowId) => {
     const { configs = [] } = this.state;
     controls = controls.filter(
       a =>

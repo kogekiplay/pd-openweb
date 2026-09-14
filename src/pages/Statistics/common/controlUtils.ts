@@ -1,7 +1,8 @@
 import _ from 'lodash';
 import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget';
+import type { FormControl } from 'src/utils/controlTypes';
 
-export const isTimeControl = (value, controls = []) => {
+export const isTimeControl = (value, controls: FormControl[] = []) => {
   const data = _.find(controls, { controlId: value });
 
   if (_.isEmpty(data)) {

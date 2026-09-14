@@ -41,7 +41,7 @@ function getControlCompareValue(c, value) {
  * @param  {} data
  */
 
-export function getSubListError({ rows, rules }, controls = [], showControls = [], from = 3, masterData) {
+export function getSubListError({ rows, rules }, controls: FormControl[] = [], showControls = [], from = 3, masterData) {
   const result = {};
 
   try {

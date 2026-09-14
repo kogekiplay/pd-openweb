@@ -1901,7 +1901,7 @@ export default class DataFormat {
    * 能否执行查询（条件字段、字段值存在&&当前变更字段有值）
    * 查询条件支持且或，分组判断
    */
-  getSearchStatus = (filters = [], controls = []) => {
+  getSearchStatus = (filters = [], controls: FormControl[] = []) => {
     const splitFilters = getArrBySpliceType(filters);
     return _.some(splitFilters, (items = []) => {
       return _.every(getItemFilters(items), item => {

@@ -21,6 +21,7 @@ import {
 import { handleAdvancedSettingChange, isSingleRelateSheet, updateConfig } from '../../util/setting';
 import { isFullLineControl } from '../../util/widgets';
 import WorksheetReference from '../components/WorksheetReference';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const SHEET_FIELD_TYPES = [
   {
@@ -33,7 +34,7 @@ const SHEET_FIELD_TYPES = [
   },
 ];
 
-const getFieldsByControls = (controls = []) => {
+const getFieldsByControls = (controls: FormControl[] = []) => {
   return resortControlByColRow(controls.filter(i => !_.includes(SYS_CONTROLS, i.controlId))).filter(
     ({ type, enumDefault }) => !(_.includes(CAN_NOT_AS_OTHER_FIELD, type) || (type === 38 && enumDefault === 3)),
   );

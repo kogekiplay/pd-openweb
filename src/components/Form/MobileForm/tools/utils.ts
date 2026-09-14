@@ -3,6 +3,7 @@ import { controlState, isEmptyValue } from 'src/utils/control';
 import RegExpValidator from 'src/utils/expression';
 import { allSwitchKeys, HAVE_VALUE_STYLE_WIDGET } from '../../core/enum';
 import { FIELD_SIZE_OPTIONS, TITLE_SIZE_OPTIONS } from './config';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export const fixWeixinInputBlurScroll = () => {
   if (!window.isWeiXin) return;
@@ -117,7 +118,7 @@ export const fixedBottomWidgets = data => {
   return data.type === 52 || (_.includes([29, 51], data.type) && get(data, 'advancedSetting.showtype') === '6');
 };
 
-export const getExpandWidgetIds = (controls = [], data = {}, from) => {
+export const getExpandWidgetIds = (controls: FormControl[] = [], data = {}, from) => {
   const { controlId, sectionId } = data;
   const expandWidgetIds = [];
   const widgets = controls.sort((a, b) => {

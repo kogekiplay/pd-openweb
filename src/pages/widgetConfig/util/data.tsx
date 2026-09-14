@@ -569,7 +569,7 @@ const isBlankSubList = (control = {}) => {
   return _.get(window, `subListSheetConfig.${controlId}.mode`) === 'new';
 };
 
-const findInvalidUnsavedRelateControl = (controls = []) => {
+const findInvalidUnsavedRelateControl = (controls: FormControl[] = []) => {
   for (const control of controls) {
     if (
       isUnsavedControl(control) &&
@@ -584,7 +584,7 @@ const findInvalidUnsavedRelateControl = (controls = []) => {
   return null;
 };
 
-const findInvalidRelateWorksheetControl = (controls = []) => {
+const findInvalidRelateWorksheetControl = (controls: FormControl[] = []) => {
   const invalidTopLevel = findInvalidUnsavedRelateControl(controls);
 
   if (invalidTopLevel) return invalidTopLevel;
@@ -713,7 +713,7 @@ export const checkWidgetBeforeSave = (
   });
 };
 
-const checkAutoIdReset = (data = {}, originControls = [], globalInfo = {}) => {
+const checkAutoIdReset = (data = {}, originControls: FormControl[] = [], globalInfo = {}) => {
   const increase = getAdvanceSetting(data, 'increase') || [];
   const originAutoId = _.find(originControls, o => o.controlId === data.controlId);
   const originIncrease = getAdvanceSetting(originAutoId, 'increase') || [];
@@ -1409,7 +1409,7 @@ export const dealCopyWidgetId = (data = {}) => {
 };
 
 // 获取当前分段控件子布局控件
-export const getChildWidgetsBySection = (controls = [], id) => {
+export const getChildWidgetsBySection = (controls: FormControl[] = [], id) => {
   const childControls = controls.filter(i => i.sectionId === id);
   return putControlByOrder(childControls);
 };

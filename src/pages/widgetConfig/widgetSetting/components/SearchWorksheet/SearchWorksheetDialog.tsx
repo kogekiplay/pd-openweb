@@ -24,6 +24,7 @@ import { getControls } from '../DynamicDefaultValue/util';
 import EmptyRuleConfig from '../EmptyRuleConfig';
 import SelectControl from '../SelectControl';
 import SelectWorksheet from './SelectWorksheet';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const RadioDisplay = [
   {
@@ -52,7 +53,7 @@ const EmptyDisplay = [
 ];
 
 // 关联记录、子表等他表字段需要处理controls
-const dealRelationControls = (controls = []) => {
+const dealRelationControls = (controls: FormControl[] = []) => {
   return controls.map((control = {}) => {
     if (control.type === 30) {
       const currentItemRelate = _.find(controls, c => (control.dataSource || '').includes(c.controlId)) || {};
@@ -260,7 +261,7 @@ export default class SearchWorksheetDialog extends Component<any, any> {
   }, 300);
 
   // 获取子表下拉数据或查询表下拉数据
-  getDropData = (controls = [], control = {}, hasRowId?) => {
+  getDropData = (controls: FormControl[] = [], control = {}, hasRowId?) => {
     let filterControls = getControls({
       data: control,
       controls,
@@ -284,7 +285,7 @@ export default class SearchWorksheetDialog extends Component<any, any> {
   };
 
   // 过滤已经选中的映射字段
-  filterSelectControls = (controls = []) => {
+  filterSelectControls = (controls: FormControl[] = []) => {
     const { configs = [] } = this.state;
     controls = controls.filter(i => !_.includes([...SYS_CONTROLS, ...FORM_HIDDEN_CONTROL_IDS], i.controlId));
     controls = controls.filter(co => {

@@ -191,7 +191,7 @@ export const getViewTimesList = (view = {}, time) => {
 /**
  * 处理记录时间
  */
-export const formatRecordTime = (row, view, controls = []) => {
+export const formatRecordTime = (row, view, controls: FormControl[] = []) => {
   const { advancedSetting } = view;
   const { begindate, enddate } = advancedSetting;
   const startControl = controls.find((o: FormControl) => o.controlId === begindate);

@@ -122,13 +122,13 @@ export function getRecordAttachments(coverImageStr) {
  * @param {*} id
  * @param {*} key  取control中的属性
  */
-export const getControlById = (controls = [], id, key) => {
+export const getControlById = (controls: FormControl[] = [], id, key) => {
   const control = find(controls, item => item.controlId === id);
   return key ? get(control, key) : control;
 };
 
 // 判断标题控件是否是文本控件
-export const isTextTitle = (controls = []) =>
+export const isTextTitle = (controls: FormControl[] = []) =>
   _.findIndex(controls, item => item.attribute === 1 && item.type === 2) > -1;
 
 export const getCardDisplayPara = ({ currentView = {}, data = {} }) => {
@@ -267,7 +267,7 @@ export const getWrappedViewTitleControlId = viewtitle => {
 };
 
 // 卡片标题的呈现侧兼容：配置仍保存原值，只有 $单个字段ID$ 展示时归一成真实字段 ID。
-export const getCardTitleFieldForView = (row = {}, worksheetControls = [], currentView = {}) => {
+export const getCardTitleFieldForView = (row = {}, worksheetControls: FormControl[] = [], currentView = {}) => {
   const viewtitle = _.get(currentView, 'advancedSetting.viewtitle');
   const controlId = getWrappedViewTitleControlId(viewtitle);
   const titleControl = getTitleControlForCard(

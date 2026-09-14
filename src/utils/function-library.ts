@@ -1,7 +1,8 @@
 import dayjs from 'dayjs';
 import _, { isArray, isFunction } from 'lodash';
+import type { RecordRow } from 'src/utils/controlTypes';
 
-function filterEmptyChildTableRows(rows = []) {
+function filterEmptyChildTableRows(rows: RecordRow[] = []) {
   try {
     return rows.filter(row => !(row.rowid || '').startsWith('empty'));
   } catch (err) {

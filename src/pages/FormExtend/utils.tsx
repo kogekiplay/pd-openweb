@@ -4,6 +4,7 @@ import moment from 'moment';
 import { RELATION_SEARCH_SHOW_TYPE } from 'worksheet/constants/enum';
 import { TIME_PERIOD_TYPE, TIME_TYPE, WEEKS } from './enum';
 import CountDown from './PublicWorksheetConfig/CountDown';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export function getNewControlColRow(controls, halfOfNewControl = true) {
   if (!controls.length) {
@@ -63,7 +64,7 @@ export function getDisabledControls(controls, systemRelatedIds = {}) {
   return _.uniqBy(defaultHided.concat(systemRelated).concat(hidedWhenNew));
 }
 
-export function overridePos(controls = [], newPosControls = []) {
+export function overridePos(controls: FormControl[] = [], newPosControls = []) {
   const newPos = [{}, ...newPosControls].reduce((a, b) =>
     _.assign({}, a, { [(b || {}).controlId]: _.pick(b || {}, ['col', 'row', 'size']) }),
   );

@@ -23,8 +23,9 @@ import {
 import * as actions from './redux/actions/columnRules';
 import * as columnRules from './redux/actions/columnRules';
 import { StyleDiv } from './WidgetConfigRuleItem';
+import type { FormControl } from 'src/utils/controlTypes';
 
-function renderFilterItemTexts(filters = [], disabled = false, worksheetControls = []) {
+function renderFilterItemTexts(filters = [], disabled = false, worksheetControls: FormControl[] = []) {
   if (_.isEmpty(filters)) return '';
   const formatControls = worksheetControls.map(redefineComplexControl);
   let filterItemTexts = filters.map(item => {

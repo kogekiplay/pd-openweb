@@ -36,6 +36,7 @@ import CreateWorksheetDataMask from './CreateWorksheetDataMask';
 import Recommend from './Recommend';
 import { ConfigPanel } from './Recommend';
 import WorksheetDataGenerator from './WorksheetDataGenerator';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const MessageListWrap = styled.div`
   position: relative;
@@ -149,7 +150,7 @@ function getPresetUsersAndFiles(config) {
   return result;
 }
 
-function getAvailableControls(controls = []) {
+function getAvailableControls(controls: FormControl[] = []) {
   return controls.reduce((result, control) => {
     if (
       !includes(SHEET_VIEW_HIDDEN_TYPES, control.type) &&

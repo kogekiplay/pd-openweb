@@ -47,15 +47,15 @@ export interface ControlPermissions {
  */
 export interface FormControl {
   controlId?: string;
-  /**
-   * 控件类型，见 src/utils/enum 的控件类型表。
-   * 除数值外还有一个哨兵值 'summaryhead'：统计行最左侧那一格不是真控件，
-   * 代码里靠 type === 'summaryhead' 判定（见 SummaryCell.tsx）。
-   */
-  type?: number | 'summaryhead';
+  /** 控件类型，见 src/utils/enum 的控件类型表 */
+  type?: number;
   controlName?: string;
   value?: ControlValue;
   advancedSetting?: ControlAdvancedSetting;
+  /** 关联记录控件上的「新建」按钮文案 */
+  sourceBtnName?: string;
+  /** 他表字段/快速筛选里挂着的源控件 */
+  sourceControl?: FormControl;
   /** 子表/关联表的行存储，由 setSubListStore 挂上 */
   store?: SubListStore;
   /** 复制控件时的原始 controlId */
@@ -166,6 +166,17 @@ export interface FormControl {
  * 索引签名在这里【不是偷懒】：这个对象的键就是 controlId，
  * 代码里也确实是 row[control.controlId] 这么取的。
  */
+/**
+ * 统计行最左侧那一格不是真控件，只有一个哨兵 type。
+ * 【不能】把 'summaryhead' 并进 FormControl['type'] —— 一并进去，全仓
+ * `[9, 10, 11].includes(control.type)` 这类数值判断就全部 TS2345，
+ * 为了一格表头污染所有真控件的取值不划算。要它的地方用这个联合。
+ */
+export interface SummaryHeadControl {
+  type: 'summaryhead';
+}
+export type MaybeSummaryHeadControl = FormControl | SummaryHeadControl;
+
 export interface RecordRow {
   rowid?: string;
   [controlId: string]: any;

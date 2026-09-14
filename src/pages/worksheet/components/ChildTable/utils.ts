@@ -43,7 +43,7 @@ function getControlCompareValue(c, value) {
 
 export function getSubListError(
   { rows, rules },
-  controls = [],
+  controls: FormControl[] = [],
   showControls = [],
   from = 3,
   masterData,
@@ -153,7 +153,7 @@ export function getSubListError(
   }
 }
 
-function filterPendingCellErrors(errors = {}, rows = [], showControls = []) {
+function filterPendingCellErrors(errors = {}, rows: RecordRow[] = [], showControls = []) {
   const validRows = filterEmptyChildTableRows(rows);
 
   return _.pickBy(errors, (error, key) => {
@@ -175,7 +175,7 @@ function filterPendingCellErrors(errors = {}, rows = [], showControls = []) {
   });
 }
 
-function mergeRequiredState(controls = [], control = {}) {
+function mergeRequiredState(controls: FormControl[] = [], control = {}) {
   const resetControls = control.relationControls || [];
 
   if (_.isEmpty(resetControls)) return controls;

@@ -318,7 +318,7 @@ export const isIllegalFormat = (calendarInfo = []) => {
   return calendarInfo.some(o => [o.endData, o.startData].some(item => isIllegal(item)));
 };
 
-export const setSysWorkflowTimeControlFormat = (controls = [], sheetSwitchPermit = [], key = 'controlId') => {
+export const setSysWorkflowTimeControlFormat = (controls: FormControl[] = [], sheetSwitchPermit = [], key = 'controlId') => {
   const isPermitted = isOpenPermit(permitList.sysControlSwitch, sheetSwitchPermit);
   return controls.filter((o: FormControl) => isPermitted || !SYS_CONTROLS_WORKFLOW.includes(o[key]));
 };

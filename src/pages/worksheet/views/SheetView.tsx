@@ -40,7 +40,7 @@ import type { RootState } from 'src/redux/types';
 import { browserIsMobile, emitter, getLRUWorksheetConfig } from 'src/utils/common';
 import { controlState } from 'src/utils/control';
 import { getAdvanceSetting, getHighAuthControls } from 'src/utils/control';
-import type { ControlValue, FormControl, RecordRow } from 'src/utils/controlTypes';
+import type { ControlValue, FormControl, MaybeSummaryHeadControl, RecordRow } from 'src/utils/controlTypes';
 import { addBehaviorLog } from 'src/utils/project';
 import { getRecordColorConfig, handleRecordClick } from 'src/utils/record';
 import {
@@ -138,9 +138,8 @@ const GroupTitleCell = React.memo(
 
     const control = useMemo(
       () =>
-        // 用 as FormControl[] 固定住哨兵项的类型：裸字面量里 type 会被推成 string，
-        // 与 FormControl.type 的 number | 'summaryhead' 对不上（TS2769）
-        ([{ type: 'summaryhead' }] as FormControl[]).concat(columns)[columnIndex],
+        // 裸字面量里 type 会被推成 string，得显式钉成哨兵联合
+        ([{ type: 'summaryhead' }] as MaybeSummaryHeadControl[]).concat(columns)[columnIndex],
       [columns, columnIndex],
     );
 
@@ -224,8 +223,8 @@ const GroupTitleCell = React.memo(
 
     const newClassName = className + ' noRightBorder';
     const { groupRowsSummary } = sheetViewData;
-    const summaryType = control && get(groupRowsSummary, `types.${control.controlId}`);
-    const summaryValue = control && get(groupRowsSummary, `${row.key}.values.${control.controlId}`);
+    const summaryType = control && get(groupRowsSummary, `types.${get(control, 'controlId')}`);
+    const summaryValue = control && get(groupRowsSummary, `${row.key}.values.${get(control, 'controlId')}`);
     return (
       <SummaryCell
         className={newClassName}

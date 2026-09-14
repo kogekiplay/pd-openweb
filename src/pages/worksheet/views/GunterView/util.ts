@@ -678,7 +678,7 @@ export const getRecordIndex = (id, grouping, withoutArrangementVisible) => {
 /**
  * 排序分组
  */
-export const sortGrouping = (grouping, view = {}, controls = []) => {
+export const sortGrouping = (grouping, view = {}, controls: FormControl[] = []) => {
   const empty = grouping.filter(item => item.key == '-1');
   const sortGrouping = grouping.filter(item => item.key !== '-1').sort((a, b) => a.sort - b.sort);
   return sortDataByCustomItems(sortGrouping.concat(empty), view, controls, false);

@@ -199,7 +199,7 @@ class DialogImportExcelCreate extends Component<any, any> {
     this.props.changeDialogCreateAppVisible(false);
   };
 
-  getCells = (rows = [], matchControl = [], selectCells = []) => {
+  getCells = (rows: RecordRow[] = [], matchControl = [], selectCells = []) => {
     const cells = rows.length && rows[0].cells ? rows[0].cells : [];
     return _.filter(cells, it => _.includes(selectCells, it.columnNumber)).map(item => {
       return {

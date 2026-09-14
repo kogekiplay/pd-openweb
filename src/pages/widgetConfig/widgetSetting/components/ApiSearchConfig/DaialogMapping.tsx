@@ -9,6 +9,7 @@ import { getAdvanceSetting, handleAdvancedSettingChange } from 'src/pages/widget
 import { dealRequestControls } from '../../../util/data';
 import { getMapControls } from '../DynamicDefaultValue/util';
 import './DialogMapping.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const renderHeader = (showSupport?) => {
   return (
@@ -38,7 +39,7 @@ const getOptions = item => {
 
   return { iconType: item.type, placeholder: item.dataSource ? _l('请选择子表中的字段') : _l('请选择') };
 };
-const findCurrentValue = (item = {}, i = {}) => {
+const findCurrentValue = (item: Partial<FormControl> = {}, i: { subid?: string; cid?: string } = {}) => {
   if (item.dataSource) return i.subid;
   if (item.type === 10000007) return i.subid || i.cid;
   if (!item.dataSource && !i.subid) return i.cid;

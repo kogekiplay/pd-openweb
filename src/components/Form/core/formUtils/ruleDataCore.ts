@@ -3,7 +3,7 @@ import { controlState } from 'src/utils/controlCommon';
 import { FORM_ERROR_TYPE } from '../config';
 import type { FormControl } from 'src/utils/controlTypes';
 
-const removeRequireError = (controls = [], checkRuleValidator = () => {}) => {
+const removeRequireError = (controls: FormControl[] = [], checkRuleValidator = () => {}) => {
   controls.forEach((control: FormControl) => {
     const { controlId = '', childControlIds = [] } = control;
 

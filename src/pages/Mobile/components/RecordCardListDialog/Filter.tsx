@@ -3,8 +3,9 @@ import { Popup } from 'antd-mobile';
 import _ from 'lodash';
 import { QuickFilter } from 'mobile/RecordList/QuickFilter';
 import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget';
+import type { FormControl } from 'src/utils/controlTypes';
 
-function formatSearchFilters(filters = [], controls = []) {
+function formatSearchFilters(filters = [], controls: FormControl[] = []) {
   return filters.map(f => {
     const control = _.find(controls, { controlId: f.controlId });
     f.control = control;

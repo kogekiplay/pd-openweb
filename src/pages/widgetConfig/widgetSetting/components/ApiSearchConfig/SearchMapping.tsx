@@ -5,6 +5,7 @@ import DropdownWrapper from '../../../components/Dropdown';
 import { SetConfig, SettingItem } from '../../../styled';
 import { getAdvanceSetting, handleAdvancedSettingChange } from '../../../util/setting';
 import DialogMapping from './DaialogMapping';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const SELECT_OPTIONS = [
   {
@@ -40,7 +41,7 @@ const MappingWrap = styled.div`
 `;
 
 // 是普通数组
-const isNormalArray = (controls = [], value) => {
+const isNormalArray = (controls: FormControl[] = [], value) => {
   return (
     _.get(
       _.find(controls, i => i.controlId === value),

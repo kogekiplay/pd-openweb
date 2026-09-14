@@ -9,6 +9,7 @@ import { COMMON, TEMPLATE_TYPE } from '../../config/ocr';
 import { DropdownPlaceholder, SelectFieldsWrap } from '../../styled';
 import { getAdvanceSetting, getIconByType } from '../../util';
 import { handleAdvancedSettingChange } from '../../util/setting';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const ConfigRelation = styled.div`
   .title {
@@ -85,7 +86,7 @@ function MapItem(props) {
   const getSelectableControls = (match, withSubList = false) => {
     const allCid = ocrMap.map(item => item.cid);
     const allSubCid = ocrMap.map(item => item.subCid);
-    const filterControls = (controls = [], exclude = []) =>
+    const filterControls = (controls: FormControl[] = [], exclude = []) =>
       controls.filter(item => match.includes(item.type) && !exclude.includes(item.controlId));
     let controls = [
       {

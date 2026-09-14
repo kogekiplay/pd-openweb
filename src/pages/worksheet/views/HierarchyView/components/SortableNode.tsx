@@ -13,6 +13,7 @@ import { handleRecordClick } from 'src/utils/record';
 import { getCardWidth } from 'src/utils/worksheet';
 import { getPosition, getRelateSheetId } from '../util';
 import DraggableRecord from './DraggableRecord';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 const isMobile = browserIsMobile();
 
@@ -189,7 +190,7 @@ export default class SortableRecordItem extends Component<any, any> {
   getCurrentSheetRows = () => {
     const { stateTree = [] } = this.props;
 
-    const getLayerRows = (arr = [], rows = []) => {
+    const getLayerRows = (arr = [], rows: RecordRow[] = []) => {
       const { data = {}, treeData = {} } = this.props;
 
       if (arr.length) {

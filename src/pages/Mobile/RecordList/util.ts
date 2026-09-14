@@ -116,13 +116,14 @@ export const getViewActionInfo = ({
             sheetSwitchPermit,
           ) || []
         ).find(it => it.controlId === view.viewControl) || {};
-      isHaveSelectControl = viewControlInfo.controlId;
+      isHaveSelectControl = !!viewControlInfo.controlId;
       canAddRecord = canAddRecord && isHaveSelectControl;
       break;
     case map:
-      isHaveSelectControl =
+      isHaveSelectControl = !!(
         viewControl &&
-        _.find(setSysWorkflowTimeControlFormat(controls, sheetSwitchPermit), item => item.controlId === viewControl);
+        _.find(setSysWorkflowTimeControlFormat(controls, sheetSwitchPermit), item => item.controlId === viewControl)
+      );
       canAddRecord = canAddRecord && isHaveSelectControl;
       break;
   }

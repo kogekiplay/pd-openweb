@@ -592,7 +592,7 @@ class Header extends Component<any, any> {
     const { flowNodeMap } = workflowDetail;
     let showSendModeDialog = this.hasTodoNode(flowNodeMap);
 
-    const execFunc = (debugEvents = []) => {
+    const execFunc = (debugEvents: number[] = []) => {
       this.setState({ isProgressing: true });
 
       process

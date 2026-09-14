@@ -29,6 +29,7 @@ import {
   EMEBD_FIELDS,
   TIME_TYPES,
 } from './config';
+import type { FormControl } from 'src/utils/controlTypes';
 
 // 新建子表并配置成员、部门等默认值，后端relationControls不处理，没有补全配置返回
 export const dealIds = (type, dynamicValue) => {
@@ -214,7 +215,7 @@ export const FILTER = {
 };
 
 // 关联多条----关联单条、多条（列表除外）
-export const filterControls = (data = {}, controls = []) => {
+export const filterControls = (data = {}, controls: FormControl[] = []) => {
   return controls.filter(item =>
     isRelateMore(data) ? isResultAsRelateMore(item) : isSingleRelate(item) || item.type === 35,
   );
@@ -376,7 +377,7 @@ const MAP_FILTER = {
   10000008: item => _.includes([34], item.type),
 };
 
-export const getMapControls = (item, controls = []) => {
+export const getMapControls = (item, controls: FormControl[] = []) => {
   if (item.type === 10000007) {
     const subControl = controls
       .filter(i => i.type === 34)

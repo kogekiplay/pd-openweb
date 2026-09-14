@@ -16,6 +16,7 @@ import { API_ENUM_TO_TYPE } from 'src/pages/worksheet/common/WorkSheetFilter/enu
 import { VersionProductType } from 'src/utils/enum';
 import { getSyncLicenseInfo } from 'src/utils/project';
 import { DATE_TIME_DATA_PARTICLE, GROUPLIMITTYPES } from './config';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export const getNodeInfo = (flowData, type) => {
   return _.values(_.get(flowData, 'aggTableNodes') || {}).find(o => _.get(o, 'nodeType') === type) || {};
@@ -333,7 +334,7 @@ export const getRuleAlias = (alias, flowData, isRule?, getLen?) => {
 };
 
 //多源选择字段
-export const getControls = (data, controls = []) => {
+export const getControls = (data, controls: FormControl[] = []) => {
   return (
     controls
       //排除 非选项集的选项、大写金额、汇总、签名、定位

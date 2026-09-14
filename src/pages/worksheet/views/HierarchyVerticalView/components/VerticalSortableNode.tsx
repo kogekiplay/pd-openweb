@@ -10,6 +10,7 @@ import { browserIsMobile, emitter, pathCompletion } from 'src/utils/common';
 import { getCardWidth } from 'src/utils/worksheet';
 import { getRelateSheetId } from '../../HierarchyView/util';
 import DraggableRecord from './DraggableRecord';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 const isMobile = browserIsMobile();
 
@@ -123,7 +124,7 @@ export default class VerticalSortableRecordItem extends Component<any, any> {
   getCurrentSheetRows = () => {
     const { stateTree = [] } = this.props;
 
-    const getLayerRows = (arr = [], rows = []) => {
+    const getLayerRows = (arr = [], rows: RecordRow[] = []) => {
       const { data = {}, treeData = {} } = this.props;
 
       if (arr.length) {

@@ -51,7 +51,7 @@ const parseNumber = numStr => {
  * @param {Array} records 全部记录
  * @param {boolean} requireDefinedPid 是否要求 pid 字段已定义（初始接口数据用）
  */
-function getTreeRootRows(records = [], { requireDefinedPid = false } = {}) {
+function getTreeRootRows(records: RecordRow[] = [], { requireDefinedPid = false } = {}) {
   const childIds = new Set();
   records.forEach((r: RecordRow) => {
     safeParse(r.childrenids, 'array').forEach(id => id && childIds.add(id));
@@ -596,7 +596,7 @@ export function updateRecordByRecordId(recordId, changes = {}) {
   };
 }
 
-export function appendRecords(records = [], { afterRecordId } = {}) {
+export function appendRecords(records: RecordRow[] = [], { afterRecordId } = {}) {
   return (dispatch: RelateRecordTableDispatch, getState: RelateRecordTableGetState) => {
     const state = getState();
     const { base } = state;
