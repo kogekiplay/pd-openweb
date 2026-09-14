@@ -53,7 +53,7 @@ export default function DisplayControl(props) {
     isShowWorkflowSys,
     canShowCount,
     disableTypes,
-  } = props;
+  }: { worksheetControls: FormControl[]; [key: string]: any } = props;
 
   const [{ data, allCanDisplayControls }, setState] = useSetState({
     data: !fromRelative ? view : props,

@@ -132,7 +132,7 @@ export default function RelateRecordBtn(props) {
     onSelect,
     onBatchOperate,
     updateRowsWithChanges,
-  } = props;
+  }: { records: RecordRow[]; [key: string]: any } = props;
   const { enterBatchEdit, deleteRecords, removeRelation, exportRecords, edit, print, customButton, importFromFile } =
     btnVisible;
   const isShareState = !!get(window, 'shareState.shareId');

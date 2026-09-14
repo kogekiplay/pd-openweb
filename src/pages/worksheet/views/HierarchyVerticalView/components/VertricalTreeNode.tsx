@@ -9,6 +9,7 @@ import TreeNode from '../../HierarchyView/components/TreeNode';
 import { getRelateDefaultValue } from '../../HierarchyView/util';
 import { isTextTitle } from '../../util';
 import VerticalSortableRecordItem from './VerticalSortableNode';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const ParentNodeWrap = styled.div`
   width: 100%;
@@ -89,7 +90,7 @@ function VertricalTreeNode(props) {
     showTopAdd = false,
     handleAddRecord,
     controls,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const { children = [], display, pathId = [], visible = false } = data;
   const { advancedSetting = {} } = view;
 

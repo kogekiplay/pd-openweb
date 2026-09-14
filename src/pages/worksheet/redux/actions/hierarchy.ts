@@ -6,7 +6,7 @@ import { formatQuickFilter } from 'src/utils/filter';
 import { getCurrentView } from '../util';
 import { updateNavGroup } from './navFilter.js';
 import { dealData, getHierarchyViewIds, getItemByRowId, getParaIds } from './util';
-import type { RecordRow } from 'src/utils/controlTypes';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import type { AppDispatch, GetState } from 'src/redux/types';
 
 const MULTI_RELATE_MAX_PAGE_SIZE = 500;
@@ -431,7 +431,7 @@ export function moveMultiSheetRecord(args) {
     const { worksheetId } = viewControls[target.path.length - 1];
     const { controlId, worksheetId: relationWorksheetId } = viewControls[target.path.length];
     const { hierarchyView } = sheet;
-    const { pid: fromRowId, controls } = get(hierarchyView, ['hierarchyViewData', [src.rowId]]);
+    const { pid: fromRowId, controls }: { controls: FormControl[]; [key: string]: any } = get(hierarchyView, ['hierarchyViewData', [src.rowId]]);
     const { viewId } = _.find(controls, item => item.controlId === controlId) || {};
 
     const targetControl = _.find(sheet.controls || [], item => item.controlId === controlId) || {};

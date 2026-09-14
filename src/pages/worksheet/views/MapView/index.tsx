@@ -117,7 +117,7 @@ function MapView(props) {
     appPkg,
     sheetButtons,
     printList,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const viewControl = view.viewControl;
   const coverCid = view.coverCid;
   const viewAdvancedSettingData = _.get(view, 'advancedSetting');

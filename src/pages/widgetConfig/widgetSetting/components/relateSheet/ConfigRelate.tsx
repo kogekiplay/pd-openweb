@@ -33,7 +33,7 @@ const RELATE_TYPE = [
 ];
 
 export default function ConfigRelate(props) {
-  const { globalSheetInfo, value = '', allControls = [], deleteWidget, onOk, fromPortal } = props;
+  const { globalSheetInfo, value = '', allControls = [], deleteWidget, onOk, fromPortal }: { allControls: FormControl[]; [key: string]: any } = props;
   const { appId: defaultAppId, worksheetId: sourceId, name: sourceName } = globalSheetInfo;
   const [{ appId, sheetId, sheetName }, setSelectedId] = useSetState({
     appId: defaultAppId,

@@ -9,7 +9,7 @@ import { getSortData } from 'src/utils/control';
 import type { FormControl } from 'src/utils/controlTypes';
 
 export default function (props) {
-  const { view, onChange, relationControls, advancedSettingKey, viewControlData, canClear } = props;
+  const { view, onChange, relationControls, advancedSettingKey, viewControlData, canClear }: { relationControls: FormControl[]; [key: string]: any } = props;
   const [{ sortVisible }, setConfig] = useSetState({
     sortVisible: false,
   });

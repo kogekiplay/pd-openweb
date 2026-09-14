@@ -447,7 +447,7 @@ const KnowledgeWorksheet = props => {
               filterId,
               discussionEnabled,
               attachmentParseEnhanced,
-            } = item;
+            }: { controls: FormControl[]; [key: string]: any } = item;
             return (
               <div className="worksheetItem" key={id} onClick={() => handleOpenChunkPreview(knowledgeDetail, item)}>
                 {item.isDeleted ? (

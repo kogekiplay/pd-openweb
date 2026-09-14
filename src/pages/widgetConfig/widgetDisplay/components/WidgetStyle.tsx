@@ -20,6 +20,7 @@ import StyleSetting from '../../widgetSetting/components/SplitLineConfig/StyleSe
 import WidgetWarning from '../../widgetSetting/components/WidgetBase/WidgetWarning';
 import QuickArrange from './QuickArrange';
 import './FieldRecycleBin.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const { Panel } = Collapse;
 
@@ -132,7 +133,7 @@ export function WidgetStyleSetting(props) {
     globalSheetInfo = {},
     widgets = [],
     setWidgets,
-  } = props;
+  }: { allControls: FormControl[]; [key: string]: any } = props;
   const {
     coverid,
     covertype = '0',

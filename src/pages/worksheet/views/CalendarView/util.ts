@@ -185,7 +185,7 @@ const splitCalendarEventColors = recordColor => {
 // type === 16 ? 'YYYY-MM-DD HH:mm' : 'YYYY-MM-DD';
 //格式events数据//根据多组时间拆分出多条数据
 export const setDataFormat = pram => {
-  const { worksheetControls = [], currentView = {}, calendarData = {}, byRowId, ...data } = pram;
+  const { worksheetControls = [], currentView = {}, calendarData = {}, byRowId, ...data }: { worksheetControls: FormControl[]; [key: string]: any } = pram;
 
   if (byRowId) {
     return setDataFormatByRowId(pram);
@@ -247,7 +247,7 @@ const renderTitleTxt = (worksheetControls, currentView, dataInfo) => {
 
 //格式events数据//未排期 以及全部 一条数据卡片显示多个时间信息
 export const setDataFormatByRowId = pram => {
-  const { worksheetControls = [], currentView = {}, calendarData = {}, ...data } = pram;
+  const { worksheetControls = [], currentView = {}, calendarData = {}, ...data }: { worksheetControls: FormControl[]; [key: string]: any } = pram;
   const { calendarInfo = [] } = calendarData;
   const { stringColor, recordColor } = getColorData(calendarData, data, currentView, worksheetControls);
   const colortype = getAdvanceSetting(currentView).colortype || RECORD_COLOR_SHOW_TYPE.BG;

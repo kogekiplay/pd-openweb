@@ -112,7 +112,7 @@ function ViewControl(props) {
     fireWhenViewLoaded,
     updateWorksheetInfo,
     loadManageView,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const { worksheetId, projectId, appName } = worksheetInfo;
   const { count, pageCountAbnormal, rowsSummary } = sheetViewData;
   const { pageIndex, pageSize, sortControls } = sheetFetchParams;

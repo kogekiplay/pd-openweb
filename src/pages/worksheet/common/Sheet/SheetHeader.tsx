@@ -43,6 +43,7 @@ import { getHighAuthSheetSwitchPermit } from 'src/utils/worksheet';
 import { findSheet } from 'src/utils/worksheet';
 import ImportMenu from './ImportMenu';
 import SheetMoreOperate from './SheetMoreOperate';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   display: flex;
@@ -94,7 +95,7 @@ const VerticalCenter = styled.div`
 `;
 
 function SheetHeader(props) {
-  const { appPkg, worksheetInfo, controls, sheetSwitchPermit, isSingleView = false } = props;
+  const { appPkg, worksheetInfo, controls, sheetSwitchPermit, isSingleView = false }: { controls: FormControl[]; [key: string]: any } = props;
   const { type, appId, groupId, view, viewId, isCharge, views } = props;
   // functions
   const {
@@ -166,7 +167,7 @@ function SheetHeader(props) {
   const showPublic = isOpenPermit(permitList.statisticsSwitch, lastSheetSwitchPermit);
   const showSelf = isOpenPermit(permitList.statisticsSelfSwitch, lastSheetSwitchPermit);
   const canImportSwitch = isOpenPermit(permitList.importSwitch, lastSheetSwitchPermit) && !window.isPublicApp;
-  const { rows, count, permission, rowsSummary, pageCountAbnormal } = sheetViewData;
+  const { rows, count, permission, rowsSummary, pageCountAbnormal }: { rows: RecordRow[]; [key: string]: any } = sheetViewData;
   const { allWorksheetIsSelected, sheetSelectedRows = [] } = sheetViewConfig;
 
   const selectIcon = () => {

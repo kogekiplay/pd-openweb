@@ -177,7 +177,7 @@ export default function MarkerCard(props) {
     getData,
     updateNavGroup,
     buttonsCheckStatus,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const { position, cover, record } = marker;
   const { titleId, tagType, tagcolorid, showtitle } = mapViewConfig;
   const [active, setActive] = useState(false);

@@ -84,7 +84,7 @@ export function loadColumnRules({ worksheetRuleControls, worksheetInfo }) {
  * 表单配置中插入规则时初始化
  */
 export function initGlobalRuleInfo(props) {
-  const { allControls = [], globalSheetInfo = {} } = props;
+  const { allControls = [], globalSheetInfo = {} }: { allControls: FormControl[]; [key: string]: any } = props;
   const { worksheetId, systemControls = [] } = globalSheetInfo || {};
   const worksheetControls: FormControl[] = allControls.concat(systemControls);
 

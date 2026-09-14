@@ -17,6 +17,7 @@ import { getTitleStyle, getVerifyInfo } from '../util/setting';
 import WidgetStatus from './components/WidgetStatus';
 import { TabHeaderItem } from './displayTabs/tabHeader';
 import displayTypes from './displayTypes';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function WidgetDisplay(props) {
   const {
@@ -28,7 +29,7 @@ export default function WidgetDisplay(props) {
     fromType,
     commonWidgets = [],
     isTab,
-  } = props;
+  }: { allControls: FormControl[]; [key: string]: any } = props;
   const { type, sourceControlType, required, hint, unit, desc, strDefault, controlId, fieldPermission = '111' } = data;
   const readOnly = fieldPermission[1] === '0';
   const {

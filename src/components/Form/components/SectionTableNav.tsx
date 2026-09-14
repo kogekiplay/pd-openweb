@@ -8,6 +8,7 @@ import { Icon, SvgIcon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { getTitleStyle } from 'src/utils/controlCommon';
 import { SPRING_DEFAULT } from 'src/utils/spring';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   display: flex;
@@ -92,7 +93,7 @@ const IconCon = styled.span`
 `;
 
 export function renderTabs(props) {
-  const { widgetStyle = {}, controls = [], activeControlId, onClick, showTip = false, isFixedLeft } = props;
+  const { widgetStyle = {}, controls = [], activeControlId, onClick, showTip = false, isFixedLeft }: { controls: FormControl[]; [key: string]: any } = props;
 
   function renderIcon(control) {
     let iconUrl = control.iconUrl;

@@ -14,6 +14,7 @@ import FieldRecycleBin from './components/FieldRecycleBin';
 import { WidgetStyle } from './components/WidgetStyle';
 import DisplayTab from './displayTabs';
 import RowItem from './rowItem';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const DisplayRowListWrap = styled.div`
   flex: 1;
@@ -100,7 +101,7 @@ export default function DisplayRow(props) {
     widgetPanelFixed,
     widgetVisible,
     setPanelVisible = () => {},
-  } = props;
+  }: { allControls: FormControl[]; [key: string]: any } = props;
   const maxControlsCount = getMaxControlsCount();
   const { commonWidgets = [], tabWidgets = [] } = getSectionWidgets(widgets);
   const noWidgets = isEmpty(widgets);

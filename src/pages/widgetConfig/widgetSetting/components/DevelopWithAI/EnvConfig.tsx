@@ -11,6 +11,7 @@ import { getTitleTextFromControls } from 'src/utils/control';
 import { WIDGETS_TO_API_TYPE_ENUM } from '../../../config/widget';
 import CustomReference from '../CustomWidget/CustomReference';
 import { getFormData } from './util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   position: relative;
@@ -310,7 +311,7 @@ export default function EnvConfig(props) {
     setEnvIsMobile,
     setEnvIsDisabled,
     onUpdate,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const ref = useRef(null);
   const [drawerVisible, setDrawerVisible] = useState(false);
   const formData = getFormData(controls, mockRecord);

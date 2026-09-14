@@ -229,7 +229,7 @@ class SideNav extends React.Component<any, any> {
 
   setData = (o, key, isRelationControls) => {
     const { printData = [], handChange } = this.props;
-    const { receiveControls = [] } = printData;
+    const { receiveControls = [] }: { receiveControls: FormControl[]; [key: string]: any } = printData;
     let dataOther = [];
     let isCheck;
     let sectionOrder = [];
@@ -288,7 +288,7 @@ class SideNav extends React.Component<any, any> {
 
   setReceiveControls = (o, checked) => {
     const { printData = [] } = this.props;
-    const { receiveControls = [] } = printData;
+    const { receiveControls = [] }: { receiveControls: FormControl[]; [key: string]: any } = printData;
 
     let isChecked = checked;
     const controls: FormControl[] =
@@ -310,7 +310,7 @@ class SideNav extends React.Component<any, any> {
   checkAll = isReceiveControls => {
     const { receiveControlsCheckAll, workflowCheckAll } = this.state;
     const { handChange, printData } = this.props;
-    const { receiveControls = [], workflow = [], systemControl = [] } = printData;
+    const { receiveControls = [], workflow = [], systemControl = [] }: { receiveControls: FormControl[]; [key: string]: any } = printData;
 
     if (isReceiveControls) {
       handChange({

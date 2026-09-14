@@ -897,7 +897,7 @@ class TableViewBase extends React.Component<any, any> {
 
   updateRecordEvent = ({ worksheetId, recordId }) => {
     const { viewId, updateRows, hideRows, sheetViewData } = this.props;
-    const { rows } = sheetViewData;
+    const { rows }: { rows: RecordRow[]; [key: string]: any } = sheetViewData;
 
     if (worksheetId === this.props.worksheetId && _.find(rows, r => r.rowid === recordId)) {
       getRowDetail({
@@ -1277,7 +1277,7 @@ class TableViewBase extends React.Component<any, any> {
 
   get numberWidth() {
     const { sheetViewData } = this.props;
-    const { rows } = sheetViewData;
+    const { rows }: { rows: RecordRow[]; [key: string]: any } = sheetViewData;
     const { lineNumberBegin } = this;
     let numberWidth = String(lineNumberBegin + rows.length).length * 8;
     return numberWidth > 14 ? numberWidth : 14;
@@ -1343,7 +1343,7 @@ class TableViewBase extends React.Component<any, any> {
   // 缓存分组行，避免重复过滤
   get groupRows() {
     const { sheetViewData = {} } = this.props;
-    const { rows = [] } = sheetViewData;
+    const { rows = [] }: { rows: RecordRow[]; [key: string]: any } = sheetViewData;
     return rows.filter(({ rowid }) => rowid === 'groupTitle');
   }
 
@@ -1356,7 +1356,7 @@ class TableViewBase extends React.Component<any, any> {
   renderSummaryCell = ({ className = '', style, columnIndex }) => {
     const { viewId, sheetViewData, changeWorksheetSheetViewSummaryType, sheetViewConfig } = this.props;
     const { allWorksheetIsSelected, sheetSelectedRows } = sheetViewConfig;
-    const { rowsSummary, rows } = sheetViewData;
+    const { rowsSummary, rows }: { rows: RecordRow[]; [key: string]: any } = sheetViewData;
     const control = [{ type: 'summaryhead' }].concat(this.columns)[columnIndex];
     return (
       <SummaryCell
@@ -1913,7 +1913,7 @@ class TableViewBase extends React.Component<any, any> {
 
   asyncUpdate(row, cell, options) {
     const { worksheetInfo, updateControlOfRow, controls, sheetSearchConfig, sheetViewData = {} } = this.props;
-    const { rows = [] } = sheetViewData;
+    const { rows = [] }: { rows: RecordRow[]; [key: string]: any } = sheetViewData;
     row = _.find(rows, { rowid: row.rowid }) || {};
     const { projectId, rules = [] } = worksheetInfo;
     const asyncUpdateControlOfRow = this.debounceUpdateControlOfRow();

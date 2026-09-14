@@ -75,7 +75,7 @@ export function getControlType(control) {
 }
 
 export default function ControlList(props) {
-  const { keywords, controls, controlGroups, insertTagToEditor } = props;
+  const { keywords, controls, controlGroups, insertTagToEditor }: { controls: FormControl[]; [key: string]: any } = props;
   const visibleControls: FormControl[] = controls.filter(c => c.controlName && checkTypeSupportForFunction(c));
 
   if (controlGroups && controlGroups.length) {

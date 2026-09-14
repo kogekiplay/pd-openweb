@@ -61,7 +61,7 @@ export default function DataCon(props) {
   });
 
   const renderContent = () => {
-    const { resourceview, updateKeyWords, view, controls } = props;
+    const { resourceview, updateKeyWords, view, controls }: { controls: FormControl[]; [key: string]: any } = props;
     const { keywords } = resourceview;
     const { viewControl } = view;
     const str = (controls.find((o: FormControl) => o.controlId === viewControl) || {}).controlName;

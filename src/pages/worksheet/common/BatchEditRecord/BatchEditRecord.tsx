@@ -94,7 +94,7 @@ export default function BatchEditRecord(props) {
     onUpdate = () => {},
     getWorksheetSheetViewSummary = () => {},
     onClose,
-  } = props;
+  }: { selectedRows: RecordRow[]; [key: string]: any } = props;
   const editConRef = useRef(null);
   const addRef = useRef(null);
   const refCache = useRef({});

@@ -8,6 +8,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { DropdownContent, DropdownPlaceholder } from '../../../../styled';
 import { getAdvanceSetting, handleAdvancedSettingChange } from '../../../../util/setting';
 import TimeInput from '../../DynamicDefaultValue/inputTypes/TimeInput.jsx';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const INTERVAL = [1, 5, 10, 15, 30, 60];
 
@@ -19,7 +20,7 @@ const IntervalWrap = styled(DropdownContent)`
 `;
 
 function StartEndTime(props) {
-  const { data, onChange, allControls } = props;
+  const { data, onChange, allControls }: { allControls: FormControl[]; [key: string]: any } = props;
   const min = getAdvanceSetting(data, 'min');
   const max = getAdvanceSetting(data, 'max');
 

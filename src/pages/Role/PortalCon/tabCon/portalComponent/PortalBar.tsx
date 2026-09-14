@@ -13,10 +13,11 @@ import * as actions from '../../redux/actions';
 import FilterDrop from './FilterDrop';
 import SearchTelsDialog from './SearchTels';
 import { ClearIcon, Popup, PortalBarWrap } from './style';
+import type { FormControl } from 'src/utils/controlTypes';
 
 function PortalBar(props) {
   const { portal, setHideIds, setKeyWords, keys, appId } = props;
-  const { showPortalControlIds = [], controls = [] } = portal;
+  const { showPortalControlIds = [], controls = [] }: { controls: FormControl[]; [key: string]: any } = portal;
   const [showTels, setShowTels] = useState(false);
   const [columnsKey, setcolumnsKey] = useState('');
   const [inputValue, setInputValue] = useState('');

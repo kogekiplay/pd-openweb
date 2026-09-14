@@ -5,6 +5,7 @@ import { getCoverStyle } from 'src/pages/worksheet/common/ViewConfig/utils';
 import { getTitleControlForCard } from 'src/pages/worksheet/views/util.js';
 import { getCardWidth } from 'src/utils/worksheet';
 import { RENDER_RECORD_NECESSARY_ATTR } from '../util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export const getWidth = props => {
   const { base = {}, views = [], width } = props;
@@ -18,7 +19,7 @@ export const getWidth = props => {
 };
 
 export const getDataWithFormat = (row, props) => {
-  const { base, controls, views, sheetSwitchPermit } = props;
+  const { base, controls, views, sheetSwitchPermit }: { controls: FormControl[]; [key: string]: any } = props;
   const view = views.find(o => o.viewId === base.viewId) || {};
   const { displayControls = [] } = view;
   const parsedRow = row;

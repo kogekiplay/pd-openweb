@@ -19,6 +19,7 @@ import { checkRulesErrorOfRowControl } from 'src/utils/rule';
 import { Cell, NoRecords, NoSearch } from './components';
 import { checkCellFullVisible, getRulePermissions, getTableHeadHeight, handleLifeEffect } from './util';
 import './style.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const StyledFixedTable = styled(FixedTable)`
   font-size: 13px;
@@ -251,7 +252,7 @@ function WorksheetTable(props, ref) {
     cellProps = {},
     // onHoverColumnChange = () => {},
     renderCompInMainCenter,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const { emptyIcon, emptyText, sheetIsFiltered, allowAdd, noRecordAllowAdd, showNewRecord } = props; // 空状态
   const { keyWords } = props; // 搜索
   const {

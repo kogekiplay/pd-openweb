@@ -18,6 +18,7 @@ import { transferValue } from '../DynamicDefaultValue/util';
 import SearchMapping from './SearchMapping';
 import SearchMappingFilter from './SearchMappingFilter';
 import SearchParams from './SearchParams';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const SearchMode = styled.div`
   display: flex;
@@ -169,7 +170,7 @@ export default function ApiSearchConfig(props) {
     fromCustomFilter, // 自定义事件条件
     fromOperationFlow, // 业务封装流程
     allControls = [],
-  } = props;
+  }: { allControls: FormControl[]; [key: string]: any } = props;
   const requestmap = getAdvanceSetting(data, 'requestmap') || [];
   const responsemap = getAdvanceSetting(data, 'responsemap') || [];
   const { authaccount } = getAdvanceSetting(data);
@@ -216,7 +217,7 @@ export default function ApiSearchConfig(props) {
 
   useEffect(() => {
     if (saveIndex > 0) {
-      const { allControls = [], data = {} } = props;
+      const { allControls = [], data = {} }: { allControls: FormControl[]; [key: string]: any } = props;
       const curControl = _.find(allControls, i => i.controlId === data.controlId);
       curControl && onChange(curControl);
     }

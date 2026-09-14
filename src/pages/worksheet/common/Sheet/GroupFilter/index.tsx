@@ -46,7 +46,7 @@ function GroupFilter(props) {
     navGroupFilters,
     worksheetInfo,
     isSingle,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
 
   const searchRef = useRef({});
   const { viewId } = base;

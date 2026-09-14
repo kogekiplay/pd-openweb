@@ -28,6 +28,7 @@ import {
   getMjmlPreviewHtml,
   getMjmlPreviewTheme,
 } from './mjmlUtils';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default class Email extends Component<any, any> {
   constructor(props) {
@@ -84,7 +85,7 @@ export default class Email extends Component<any, any> {
    * 修改选中的字段
    */
   genFields = data => {
-    const { controls, fields } = data;
+    const { controls, fields }: { controls: FormControl[]; [key: string]: any } = data;
     controls.forEach(item => {
       fields.push({
         fieldId: item.controlId,

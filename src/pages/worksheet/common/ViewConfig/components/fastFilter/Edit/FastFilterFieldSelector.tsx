@@ -18,7 +18,7 @@ export default function FastFilterFieldSelector(props) {
     view,
     setActiveFastFilterId,
     updateView,
-  } = props;
+  }: { worksheetControls: FormControl[]; [key: string]: any } = props;
   const boxConT = useRef(null);
 
   return (

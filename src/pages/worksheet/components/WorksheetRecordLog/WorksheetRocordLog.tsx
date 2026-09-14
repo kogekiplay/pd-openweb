@@ -56,7 +56,7 @@ function WorksheetRecordLog(props, ref) {
     allowExport: propsAllowExport,
     showOperatorFilter: propsShowOperatorFilter,
     showRequestTypeFilter: propsShowRequestTypeFilter,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const [{ loading, loadouted, sign, showDivider, lastMark, loadingAll }, setMark] = useSetState({
     loading: false,
     loadouted: false,

@@ -21,6 +21,7 @@ import {
 import { handleAdvancedSettingChange } from '../../util/setting';
 import { FixedIcon } from '../../widgetDisplay/components/WidgetStyle';
 import NoTitleControlDialog from './NoTitleControlDialog';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const DISPLAY_OPTIONS = [
   {
@@ -86,7 +87,7 @@ export default function WidgetIntro(props) {
     globalSheetInfo = {},
     isRecycle,
     allControls,
-  } = props;
+  }: { allControls: FormControl[]; [key: string]: any } = props;
   const {
     type,
     controlId,
@@ -95,7 +96,7 @@ export default function WidgetIntro(props) {
     sourceControl = {},
     relationControls = [],
     advancedSetting,
-  } = data;
+  }: { relationControls: FormControl[]; [key: string]: any } = data;
   const { icon, widgetName } = getWidgetInfo(type);
   const [visible, setVisible] = useState(false);
   const [switchList, setSwitchList] = useState([]);

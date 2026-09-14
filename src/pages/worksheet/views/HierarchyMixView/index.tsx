@@ -107,7 +107,7 @@ function HierarchyMix(props) {
     recordInfoId,
     navGroupFilters,
     ...rest
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const IS_MOBILE = browserIsMobile();
   const uniqId = useMemo(() => uuidv4());
   const { scale: configScale, level: configLevel = '' } = safeParse(localStorage.getItem(`hierarchyConfig-${viewId}`));

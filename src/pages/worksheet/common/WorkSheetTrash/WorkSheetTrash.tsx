@@ -153,7 +153,7 @@ export default function WorkSheetTrash(props) {
     worksheetInfo = {},
     reloadWorksheet = () => {},
     onCancel = () => {},
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const headerRef = useRef<any>(undefined);
   const needRestoreRelation = useRef(true);
   const [isAll, setIsAll] = useState(false);
@@ -172,7 +172,7 @@ export default function WorkSheetTrash(props) {
     filterControls,
     searchText = '',
     errorCode,
-  } = state;
+  }: { records: RecordRow[]; [key: string]: any } = state;
   const lineNumberBegin = (pageIndex - 1) * pageSize;
   const hasAuthRows = selectRows.filter(item => item.allowedit || item.allowEdit);
   const hasAuthRowIds = hasAuthRows.map(item => item.rowid);

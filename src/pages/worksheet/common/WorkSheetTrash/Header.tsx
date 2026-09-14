@@ -5,6 +5,7 @@ import { Dialog } from 'ming-ui';
 import WorkSheetFilter from 'worksheet/common/WorkSheetFilter';
 import Pagination from 'worksheet/components/Pagination';
 import SearchInput from 'worksheet/components/SearchInput';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   height: 62px;
@@ -100,7 +101,7 @@ function Header(props, ref) {
     onCancel = () => {},
     changePageSize = () => {},
     changePageIndex = () => {},
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const filterComp = useRef<any>(undefined);
   const inputRef = useRef<any>(undefined);
   const [searchActive, setSearchActive] = useState<boolean | undefined>();

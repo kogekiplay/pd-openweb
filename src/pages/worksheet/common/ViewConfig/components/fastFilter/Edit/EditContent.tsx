@@ -19,7 +19,7 @@ export default function EditContent(params) {
     setActiveFastFilterId,
     currentSheetInfo,
     saveViewSetLoading,
-  } = params;
+  }: { worksheetControls: FormControl[]; [key: string]: any } = params;
   const [{ fastFilters, control, advancedSetting, dataType, dataControls }, setState] = useSetState({
     fastFilters: [],
     control: {},

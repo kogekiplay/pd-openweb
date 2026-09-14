@@ -12,6 +12,7 @@ import SelectFnControl from './common/SelectFnControl';
 import { openTestFunctionDialog } from './common/TestFunctionDialog';
 import Tip from './common/Tip';
 import './style.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 if (!window.emitter) {
   window.emitter = emitter;
@@ -101,7 +102,7 @@ function Func(props, ref) {
   const [type, setType] = useState(value.type || 'mdfunction');
   const [codeEditorLoading, setCodeEditorLoading] = useState(false);
   const [pendingEditorValue, setPendingEditorValue] = useState(null);
-  let { controls = [] } = props;
+  let { controls = [] }: { controls: FormControl[]; [key: string]: any } = props;
 
   if (_.isArray(controlGroups)) {
     controls = _.flatten(controlGroups.map(group => group.controls.map(c => ({ ...c, workflowGroupId: group.id }))));

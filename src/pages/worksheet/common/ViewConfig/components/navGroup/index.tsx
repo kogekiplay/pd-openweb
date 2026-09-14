@@ -242,7 +242,7 @@ const WrapDrop = styled.div`
 
 export default function NavGroup(params) {
   let ajaxInfoFn = null;
-  const { worksheetControls = [], view = {}, updateCurrentView, worksheetId, columns, currentSheetInfo = {} } = params;
+  const { worksheetControls = [], view = {}, updateCurrentView, worksheetId, columns, currentSheetInfo = {} }: { worksheetControls: FormControl[]; [key: string]: any } = params;
   let [navGroup, setData] = useState({});
   let [filterData, setDatas] = useState();
   let [usenav, setUsenav] = useState<string | undefined>(); //空或者0：不使用筛选条件作为默认值 1：使用筛选条件作为默认值 ，老数据后端回兼容，新配置需要前端把这个值设为1

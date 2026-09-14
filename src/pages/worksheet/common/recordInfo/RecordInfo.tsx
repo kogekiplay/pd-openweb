@@ -455,7 +455,7 @@ export default class RecordInfo extends Component<any, any> {
       isRelateRecord,
       onError = _.noop,
       notDialog,
-    } = props || this.props;
+    }: { controls: FormControl[]; [key: string]: any } = props || this.props;
     let { sheetSwitchPermit } = this.state;
     const { isPublicShare } = this;
     const { tempFormData } = this.state;

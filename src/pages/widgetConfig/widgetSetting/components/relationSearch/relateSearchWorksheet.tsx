@@ -1,4 +1,4 @@
-﻿import React, { Fragment, useEffect, useRef, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { BrowserRouter } from 'react-router';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
@@ -16,6 +16,7 @@ import { handleAdvancedSettingChange } from 'src/utils/control';
 import EmptyRuleConfig from '../EmptyRuleConfig';
 import SelectSearchSheetFromApp from './SelectSearchSheetFromApp';
 import { AddRelate, FilterContent } from './styled';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const RELATE_SEARCH_TYPE = [
   { key: 'new', text: _l('新建查询') },
@@ -40,7 +41,7 @@ function FilterRelateSearch(props) {
     setEmptyRule,
     globalSheetInfo = {},
     queryType,
-  } = props;
+  }: { allControls: FormControl[]; relationControls: FormControl[]; [key: string]: any } = props;
 
   const isRelate = _.find(relationControls, r => _.includes([29, 34], r.type) && r.dataSource === worksheetId);
 
@@ -116,7 +117,7 @@ function FilterRelateSearch(props) {
 }
 
 export function RelateSearchWorksheet(props) {
-  const { globalSheetInfo, data = {}, deleteWidget, allControls, onOk, isDeleteWorksheet } = props;
+  const { globalSheetInfo, data = {}, deleteWidget, allControls, onOk, isDeleteWorksheet }: { allControls: FormControl[]; [key: string]: any } = props;
   const { dataSource, controlId } = data;
   const { querytype } = getAdvanceSetting(data);
   const { worksheetId, name } = globalSheetInfo;

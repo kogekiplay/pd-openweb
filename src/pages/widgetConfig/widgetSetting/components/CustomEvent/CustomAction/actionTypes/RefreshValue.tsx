@@ -4,9 +4,10 @@ import _ from 'lodash';
 import { Dialog } from 'ming-ui';
 import { CustomActionWrap } from '../../style';
 import SelectFields from '../SelectFields';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function RefreshValue(props) {
-  const { actionData = {}, handleOk, allControls } = props;
+  const { actionData = {}, handleOk, allControls }: { allControls: FormControl[]; [key: string]: any } = props;
   const selectControls = allControls
     .filter(
       item =>

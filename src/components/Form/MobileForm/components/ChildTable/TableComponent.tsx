@@ -12,7 +12,7 @@ import { getControlStyles } from 'src/utils/control';
 import { controlState, isRelateRecordTableControl } from 'src/utils/control';
 import { updateRulesData } from '../../../core/formUtils/updateRulesData';
 import { addWidthToColumns } from './utils';
-import type { FormControl } from 'src/utils/controlTypes';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const TableWrap = styled(Table)`
   height: 100%;
@@ -238,7 +238,7 @@ function TableComponent(props) {
     updatePagination = () => {},
     onOpen = () => {},
     onDelete = () => {},
-  } = props;
+  }: { controls: FormControl[]; rows: RecordRow[]; [key: string]: any } = props;
   const { pageIndex, count, pageSize } = pagination;
   const totalPage = Math.ceil(count / pageSize);
   const dataSource = useMemo(

@@ -87,7 +87,7 @@ const Wrap = styled.div`
 `;
 
 export default function FastFilter(params) {
-  const { worksheetControls = [], setFastFilter, view = {}, updateCurrentView, currentSheetInfo } = params;
+  const { worksheetControls = [], setFastFilter, view = {}, updateCurrentView, currentSheetInfo }: { worksheetControls: FormControl[]; [key: string]: any } = params;
   const { advancedSetting = {} } = view;
   let { enablebtn, clicksearch, fastrequired, requiredcids } = advancedSetting;
   let [fastFilters, setData] = useState(view.fastFilters || []);

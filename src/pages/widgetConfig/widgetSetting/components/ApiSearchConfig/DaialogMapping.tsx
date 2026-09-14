@@ -68,7 +68,7 @@ export default function DialogMapping(props) {
     onClose,
     onChange,
     fromOperationFlow,
-  } = props;
+  }: { allControls: FormControl[]; [key: string]: any } = props;
   const { itemsource = '' } = getAdvanceSetting(data);
   const responsemap = getAdvanceSetting(data, 'responsemap') || [];
   const [mappingData, setMappingData] = useState(responsemap);

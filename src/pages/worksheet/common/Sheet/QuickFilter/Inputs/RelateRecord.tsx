@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import RelateRecordDropdown from 'worksheet/components/RelateRecordDropdown/RelateRecordDropdownCopy';
 import { getTitleTextFromRelateControl, isRelateRecordTableControl } from 'src/utils/control';
 import RelateRecordOptions from './RelateRecordOptions';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   display: flex;
@@ -98,7 +99,7 @@ export default function RelateRecord(props) {
       searchcontrol: controlAdvancedSetting.searchcontrol,
     },
   });
-  const { relationControls = [] } = control;
+  const { relationControls = [] }: { relationControls: FormControl[]; [key: string]: any } = control;
   const { navshow, allowitem, navfilters, direction, shownullitem, nullitemname } = advancedSetting || {};
   let staticRecords;
 

@@ -180,7 +180,7 @@ export default class Widgets extends Component<any, any> {
     if (type === 'array') {
       onChange(JSON.stringify(formatRecordToRelateRecord(relationControls, args)));
     } else {
-      const { count, records, deletedIds, needFullUpdate, addedIds, searchByChange } = args;
+      const { count, records, deletedIds, needFullUpdate, addedIds, searchByChange }: { records: RecordRow[]; [key: string]: any } = args;
 
       if (records.length) {
         onChange(

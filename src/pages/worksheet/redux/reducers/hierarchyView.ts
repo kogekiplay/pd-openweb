@@ -435,7 +435,7 @@ const addRelateControls = (state, { ids, controls }) => {
 
 export function hierarchyRelateSheetControls(state = {}, action: ReduxAction) {
   const { type, payload = {} } = action;
-  const { ids = [], controls = [] } = payload;
+  const { ids = [], controls = [] }: { controls: FormControl[]; [key: string]: any } = payload;
 
   switch (type) {
     case 'INIT_HIERARCHY_RELATE_SHEET_CONTROLS':

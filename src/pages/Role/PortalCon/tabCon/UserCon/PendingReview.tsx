@@ -17,6 +17,7 @@ import { renderText as renderCellText } from 'src/utils/control';
 import * as actions from '../../redux/actions';
 import PortalBar from '../portalComponent/PortalBar';
 import { formatDataForPortalControl, formatPortalData, renderText } from '../util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrap = styled.div`
   .wrapTr:not(.checkBoxTr):not(.optionWrapTr) {
@@ -101,7 +102,7 @@ function PendingReview(props) {
     handleChangeSort,
     setTelFilters,
   } = props;
-  const { roleList = [], controls = [], unApproveCount, pageIndex, keyWords, filters = [], telFilters } = portal;
+  const { roleList = [], controls = [], unApproveCount, pageIndex, keyWords, filters = [], telFilters }: { controls: FormControl[]; [key: string]: any } = portal;
   const [show, setShow] = useState(false);
   const [showPassDrop, setShowPassDrop] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);

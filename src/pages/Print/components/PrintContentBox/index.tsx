@@ -20,7 +20,7 @@ const PrintContentBox = props => {
     printData,
     signature,
     ...rest
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const { advanceMap, layout } = getPrintLayoutConfig(printData.advanceSettings);
   const enableEmptyPlaceholder = !!Number(advanceMap.enableEmptyPlaceholder?.value);
   const emptyPlaceholderMode = advanceMap.emptyPlaceholderMode?.value;

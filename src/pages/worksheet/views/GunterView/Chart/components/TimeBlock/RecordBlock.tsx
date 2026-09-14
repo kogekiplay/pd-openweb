@@ -18,7 +18,7 @@ import { browserIsMobile } from 'src/utils/common';
 import { renderText as renderCellText } from 'src/utils/control';
 import { sortControlByIds } from 'src/utils/control';
 import { getRecordColorConfig } from 'src/utils/record';
-import type { FormControl } from 'src/utils/controlTypes';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const isMobile = browserIsMobile();
 
@@ -664,7 +664,7 @@ let RowBlock = class RowBlock extends Component<any, any> {
           removeRecord(recordId);
         }}
         onCopySuccess={data => {
-          const { rows } = _.find(this.props.grouping, {
+          const { rows }: { rows: RecordRow[]; [key: string]: any } = _.find(this.props.grouping, {
             key: groupKey,
           });
 

@@ -182,7 +182,7 @@ export const getRelationControls = (appId, sourceId) => {
         })
         .then(({ code, data }) => {
           if (code === 1) {
-            const { controls } = data;
+            const { controls }: { controls: FormControl[]; [key: string]: any } = data;
             dispatch({
               type: 'CHANGE_RESOURCE_RESOURCE_RELATION_CONTROLS',
               data: replaceControlsTranslateInfo(appId, sourceId, controls),

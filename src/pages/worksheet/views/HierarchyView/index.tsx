@@ -110,7 +110,7 @@ function Hierarchy(props) {
     sheetButtons,
     printList,
     ...rest
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
 
   const uniqId = useMemo(() => uuidv4());
   const { scale: configScale, level: configLevel = '' } = safeParse(localStorage.getItem(`hierarchyConfig-${viewId}`));

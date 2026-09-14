@@ -12,6 +12,7 @@ import { getFormData } from '../../core/util';
 import TableCommon from './TableCommon';
 import TableRToC from './TableRToC';
 import { getRelationCellPrintData } from './utils';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const BASE_MIN_PICTURE_WIDTH = 169;
 const BASE_MIN_WIDTH = 33;
@@ -74,7 +75,7 @@ export default class RelationTable extends React.Component<any, any> {
       dataInfo,
       tableList,
       printData,
-    } = props;
+    }: { controls: FormControl[]; allControls: FormControl[]; [key: string]: any } = props;
     const { realShowData, enableEmptyPlaceholder, emptyPlaceholderMode } = printData;
     const contentShowParams = {
       realShowData,

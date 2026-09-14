@@ -13,6 +13,7 @@ import type { RootState } from 'src/redux/types';
 import { addBehaviorLog } from 'src/utils/project';
 import * as actions from './redux/actions';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 class RelationList extends Component<any, any> {
   constructor(props) {
@@ -91,7 +92,7 @@ class RelationList extends Component<any, any> {
   };
   renderRow = item => {
     const { actionParams, control, viewId } = this.props;
-    const { showControls, relationControls, selectedRecordIds, isEdit, coverCid } = actionParams;
+    const { showControls, relationControls, selectedRecordIds, isEdit, coverCid }: { relationControls: FormControl[]; [key: string]: any } = actionParams;
     const selected = !!_.find(selectedRecordIds, id => id === item.rowid);
 
     return (

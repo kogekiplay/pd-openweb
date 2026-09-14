@@ -15,7 +15,7 @@ import { formatControlToServer } from 'src/components/Form/core/utils';
 import { formatSearchConfigs } from 'src/pages/widgetConfig/util';
 import { getSubListErrorOfStore } from 'src/pages/worksheet/components/ChildTable/utils';
 import { emitter } from 'src/utils/common';
-import type { RecordRow } from 'src/utils/controlTypes';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   width: 100%;
@@ -146,7 +146,7 @@ export default function ChildTableDialog(props) {
     projectId,
     mobileIsEdit,
     onClose,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const cache = useRef({});
   const callFromDialog = openFrom !== 'cell';
   const rowHeight = ROW_HEIGHT[Number(_.get(control, 'advancedSetting.rowheight'))] || 34;
@@ -368,7 +368,7 @@ export default function ChildTableDialog(props) {
             projectId={projectId}
             onChange={changedValues => {
               if (openFrom === 'cell') {
-                const { rows, lastAction = {} } = changedValues;
+                const { rows, lastAction = {} }: { rows: RecordRow[]; [key: string]: any } = changedValues;
 
                 if (
                   !_.includes(

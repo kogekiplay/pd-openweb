@@ -4,9 +4,10 @@ import FilterConfig from 'src/pages/worksheet/common/WorkSheetFilter/common/Filt
 import { SettingItem } from '../../../styled';
 import { filterSysControls } from '../../../util';
 import { getFilterControls } from '../../../util/data';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function SearchMappingFilter(props) {
-  const { originResponseControls, globalSheetInfo = {}, filterItems, handleFilters = () => {}, allControls } = props;
+  const { originResponseControls, globalSheetInfo = {}, filterItems, handleFilters = () => {}, allControls }: { allControls: FormControl[]; [key: string]: any } = props;
   const { projectId, appId } = globalSheetInfo;
   const filterControls = getFilterControls(originResponseControls);
 

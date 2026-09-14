@@ -10,6 +10,7 @@ import { ALL_SYS } from 'src/pages/widgetConfig/config/widget';
 import Input from 'src/pages/worksheet/common/CreateCustomBtn/components/Inputs';
 import { DEF_R_TYPES, DEF_TYPES } from 'src/pages/worksheet/common/CreateCustomBtn/config';
 import SortColumns from 'src/pages/worksheet/components/SortColumns';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const AddButton = styled.div`
   display: inline-flex;
@@ -108,7 +109,7 @@ const DefaultValueInputWrap = styled.div`
 const FILTER_TYPES = DEF_TYPES.concat(DEF_R_TYPES);
 
 function DefaultValue(props) {
-  const { projectId, appId, btnId, worksheetId, controls, config, onChangeConfig } = props;
+  const { projectId, appId, btnId, worksheetId, controls, config, onChangeConfig }: { controls: FormControl[]; [key: string]: any } = props;
   const { temporaryWriteControls = [], isEmptyWriteControls } = config || {};
   const [showControls, setShowControls] = useState(temporaryWriteControls.map(c => c.controlId));
 

@@ -13,6 +13,7 @@ import GroupedMenuItem, {
   POPUP_CLICK_AWAY_EXCEPTIONS,
 } from 'worksheet/common/recordInfo/RecordForm/groupedMenu/GroupedMenuItem';
 import { segmentsFromView } from 'worksheet/common/ViewConfig/components/customBtn/groupedLayout/layoutUtils';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   display: flex;
@@ -547,7 +548,7 @@ function Buttons(props) {
     detailbtns,
     listgroup,
     listbtns,
-  } = props;
+  }: { selectedRows: RecordRow[]; [key: string]: any } = props;
   const layoutGroupRaw = detailgroup || listgroup;
   const layoutFlatRaw = detailbtns || listbtns;
   let { buttons } = props;

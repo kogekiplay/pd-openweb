@@ -9,7 +9,7 @@ import type { FormControl } from 'src/utils/controlTypes';
 
 // 将接口行数据整理成 EditableCard 需要的卡片数据结构。
 export const formatGalleryItem = (item, props, currentView) => {
-  const { worksheetInfo, base = {}, controls = [] } = props;
+  const { worksheetInfo, base = {}, controls = [] }: { controls: FormControl[]; [key: string]: any } = props;
   const { coverCid } = currentView;
   const { abstract = '' } = getAdvanceSetting(currentView);
   const formData = controls.map((o: FormControl) => ({ ...o, value: item[o.controlId] }));
@@ -56,7 +56,7 @@ export const formatGalleryItem = (item, props, currentView) => {
 
 // 为卡片的移动分组操作准备可选分组和分组控件信息。
 export const getGalleryItemGroupInfo = (item, rowKey, props, currentView) => {
-  const { controls = [], galleryview = {} } = props;
+  const { controls = [], galleryview = {} }: { controls: FormControl[]; [key: string]: any } = props;
   const { gallery = [] } = galleryview;
   const { groupsetting } = getAdvanceSetting(currentView);
   const groupControlId = _.get(safeParse(groupsetting, 'array'), '[0].controlId');

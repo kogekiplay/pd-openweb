@@ -15,7 +15,7 @@ import { updateRecordLockStatus } from 'src/pages/worksheet/common/recordInfo/cr
 import type { RootState } from 'src/redux/types';
 import { renderText as renderCellText } from 'src/utils/control';
 import { handleRecordClick } from 'src/utils/record';
-import type { FormControl } from 'src/utils/controlTypes';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 export const RecordWrapper = styled.div`
   height: 32px;
@@ -441,7 +441,7 @@ let Record = class Record extends Component<any, any> {
           onCopySuccess={data => {
             const { grouping } = gunterView;
 
-            const { rows } = _.find(grouping, {
+            const { rows }: { rows: RecordRow[]; [key: string]: any } = _.find(grouping, {
               key: groupKey,
             });
 

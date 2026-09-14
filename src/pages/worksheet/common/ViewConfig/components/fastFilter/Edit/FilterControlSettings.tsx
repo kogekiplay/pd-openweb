@@ -33,7 +33,7 @@ export default function FilterControlSettings(props) {
     updateViewSet,
     setAdvancedSetting,
     children,
-  } = props;
+  }: { worksheetControls: FormControl[]; [key: string]: any } = props;
 
   const getDaterange = () => safeParse(advancedSetting.daterange, 'array');
 

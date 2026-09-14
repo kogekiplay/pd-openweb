@@ -35,7 +35,7 @@ function SettingMenu(props) {
     onCopyConfig,
     onExportAttachment,
     changeViewDisplayType,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const [changeHiddenTypeVisible, setChangeHiddenTypeVisible] = useState(false);
   const [exportVisible, setExportVisible] = useState(false);
   const [changeViewDisplayTypeVisible, setChangeViewDisplayTypeVisible] = useState(false);

@@ -8,7 +8,7 @@ import { getControlFormatType, getDateRangeTypeListByShowtype, getDefaultDateRan
 import type { FormControl } from 'src/utils/controlTypes';
 
 export default function DropCom(props) {
-  const { data, worksheetControls, control, advancedSetting, updateViewSet } = props;
+  const { data, worksheetControls, control, advancedSetting, updateViewSet }: { worksheetControls: FormControl[]; [key: string]: any } = props;
   let conData = worksheetControls.find((item: FormControl) => item.controlId === control.controlId) || {};
   let dataInfo = data.types.map(o => {
     return { ...o, disabled: !!conData.encryId && o.value !== FILTER_CONDITION_TYPE.EQ };

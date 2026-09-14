@@ -14,6 +14,7 @@ import { dealMaskValue } from 'src/pages/widgetConfig/widgetSetting/components/W
 import { browserIsMobile, pathCompletion } from 'src/utils/common';
 import { addBehaviorLog } from 'src/utils/project';
 import { getUrlList } from './util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const CarouselComponent = styled(Carousel)`
   &.slick-slider .slick-dots li {
@@ -215,7 +216,7 @@ export default function CarouselPreview(props) {
           displayMode: config.displayMode,
         })
         .then(data => {
-          const { appId, code, imageData = [], rowData = [], controls = [] } = data;
+          const { appId, code, imageData = [], rowData = [], controls = [] }: { controls: FormControl[]; [key: string]: any } = data;
           const imageControl = _.find(controls, { controlId: image }) || {};
 
           if (imageControl.type === 14) {

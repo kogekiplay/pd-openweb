@@ -9,6 +9,7 @@ import { getAdvanceSetting } from 'src/pages/widgetConfig/util/setting';
 import DynamicDefaultValue from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue';
 import { transferValue } from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/util';
 import { renderText as renderCellText } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const EXPORT_NAME_TYPE = [
   {
@@ -54,7 +55,7 @@ function PrintTemSetting(props) {
     allowDownloadPermission,
     onChange = () => {},
     updateExampleData = () => {},
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
 
   const advanceMap = _.keyBy(advanceSettings, 'key');
   const type = advanceMap.export_type?.value || '0';

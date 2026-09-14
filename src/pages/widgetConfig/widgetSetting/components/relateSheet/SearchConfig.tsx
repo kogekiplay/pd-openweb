@@ -14,6 +14,7 @@ import { formatControlsToDropdown, getAdvanceSetting } from '../../../util';
 import { handleAdvancedSettingChange } from '../../../util/setting';
 import SelectControl from '../SelectControl';
 import 'rc-trigger/assets/index.css';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const TEXT_TYPE_CONTROL = [2, 3, 4, 5, 7, 32, 33];
 
@@ -55,7 +56,7 @@ const ConfigWrap = styled.div`
 `;
 
 export default function ApiSearchConfig(props) {
-  const { data, onChange, onClose, controls = [], title } = props;
+  const { data, onChange, onClose, controls = [], title }: { controls: FormControl[]; [key: string]: any } = props;
   const [visible, setVisible] = useState(false);
 
   const searchableControls = formatControlsToDropdown(

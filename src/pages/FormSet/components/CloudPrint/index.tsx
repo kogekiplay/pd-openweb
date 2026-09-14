@@ -104,7 +104,7 @@ const currentFieldValue = (data, fieldKey) => {
 const CloudPrint = props => {
   const { worksheetInfo, onClose, templateData, type, getPrintData } = props;
   const { worksheetId, projectId } = worksheetInfo;
-  const { controls = [] } = worksheetInfo?.template || {};
+  const { controls = [] }: { controls: FormControl[]; [key: string]: any } = worksheetInfo?.template || {};
   const masterControls = getControls(controls, true); // 主表字段
   let relationControls = getControls(controls, false); // 关联表字段
 

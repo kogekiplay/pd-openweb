@@ -7,6 +7,7 @@ import { RadioGroup } from 'ming-ui';
 import worksheetAjax from 'src/api/worksheet';
 import { Button } from 'worksheet/styled';
 import { InfoWrap, SettingItem } from 'src/pages/widgetConfig/styled';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const RELATE_TYPE = [
   { text: _l('本表关联'), value: 0 },
@@ -55,7 +56,7 @@ const HierarchyViewConfigWrap = styled.div`
 export default function HierarchyViewConfig({ fields, handleSelect, currentSheetInfo }) {
   // 可选控件为关联表且关联他表
   const getSelectableControls = sheetInfo => {
-    const { controls = [] } = _.get(sheetInfo, 'template') || {};
+    const { controls = [] }: { controls: FormControl[]; [key: string]: any } = _.get(sheetInfo, 'template') || {};
     return _.filter(controls, item => item.type === 29 && item.dataSource !== currentSheetInfo.worksheetId);
   };
 

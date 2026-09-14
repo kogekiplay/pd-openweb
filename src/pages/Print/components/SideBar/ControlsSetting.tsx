@@ -34,8 +34,8 @@ export default function ControlsSetting(props) {
     handChange,
     getIsChecked,
     changeAdvanceSettings,
-  } = props;
-  const { orderNumber, receiveControls = [], advanceSettings = [] } = printData;
+  }: { controls: FormControl[]; [key: string]: any } = props;
+  const { orderNumber, receiveControls = [], advanceSettings = [] }: { receiveControls: FormControl[]; [key: string]: any } = printData;
   const fileStyle = safeParse(
     _.get(
       advanceSettings.find(l => l.key === 'atta_style'),

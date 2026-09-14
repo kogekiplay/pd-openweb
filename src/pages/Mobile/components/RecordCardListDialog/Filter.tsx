@@ -48,7 +48,7 @@ export default function MobileFilter(props) {
     filtersVisible,
     onChangeFiltersVisible,
     onChangeQuickFilter,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   return (
     <Popup
       bodyStyle={{

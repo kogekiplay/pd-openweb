@@ -25,7 +25,7 @@ export function getGunterGroupControlInvalidText(viewControl = '', worksheetCont
 }
 
 export default function Group(props) {
-  const { appId, view, updateCurrentView, worksheetControls = [], currentSheetInfo } = props;
+  const { appId, view, updateCurrentView, worksheetControls = [], currentSheetInfo }: { worksheetControls: FormControl[]; [key: string]: any } = props;
   const { viewControl = '' } = view;
   const controlList = setSysWorkflowTimeControlFormat(
     worksheetControls.filter(isGunterGroupControl),

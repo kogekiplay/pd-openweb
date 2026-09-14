@@ -21,6 +21,7 @@ import SubProcess from './SubProcess';
 import UserAndDepartment from './UserAndDepartment';
 import WebhookContent from './WebhookContent';
 import WorksheetContent from './WorksheetContent';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const START_NODE_EXECUTE_DATE_TYPE = 16;
 
@@ -153,7 +154,7 @@ export default class Start extends Component<any, any> {
       flowNodeMap,
       addNotAllowView,
       formProperties,
-    } = data;
+    }: { controls: FormControl[]; [key: string]: any } = data;
     let { time } = data;
     time = isDateField ? '' : time;
 

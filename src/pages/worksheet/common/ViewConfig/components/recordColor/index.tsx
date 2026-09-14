@@ -234,7 +234,7 @@ SelectColorShowType.propTypes = {
 };
 
 function RecordColor(params) {
-  const { worksheetControls = [], view = {}, onChange } = params;
+  const { worksheetControls = [], view = {}, onChange }: { worksheetControls: FormControl[]; [key: string]: any } = params;
   const { advancedSetting = {} } = view;
   const { colorid, coloritems, colortype } = advancedSetting;
 

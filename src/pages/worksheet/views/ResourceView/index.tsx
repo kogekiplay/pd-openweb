@@ -54,7 +54,7 @@ const BtnForSure = styled.div`
 `;
 
 function ResourceView(props) {
-  const { view, saveView, controls = [], isCharge, sheetSwitchPermit, viewId, initData } = props;
+  const { view, saveView, controls = [], isCharge, sheetSwitchPermit, viewId, initData }: { controls: FormControl[]; [key: string]: any } = props;
 
   const [{ viewControlInfo, viewControl }, setState] = useSetState({
     viewControlInfo: {},
@@ -66,7 +66,7 @@ function ResourceView(props) {
   }, [viewId, _.get(view, 'advancedSetting.showtitle')]);
 
   useEffect(() => {
-    const { view, controls = [] } = props;
+    const { view, controls = [] }: { controls: FormControl[]; [key: string]: any } = props;
     const { viewControl = '' } = view;
     const viewControlInfo =
       (

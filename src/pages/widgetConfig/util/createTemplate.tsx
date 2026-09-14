@@ -721,7 +721,7 @@ function CreateTemplateDialog(props) {
     templateOrganizationList,
     getTemplateListByPersonal = () => {},
     getTemplateListByOrganization = () => {},
-  } = props;
+  }: { allControls: FormControl[]; templateControls: FormControl[]; [key: string]: any } = props;
   void globalSheetInfo;
   const [visible, setVisible] = useState(true);
   const [loading, setLoading] = useState(true);
@@ -1021,7 +1021,7 @@ function CreateTemplateDialog(props) {
 }
 
 export const createTemplateDialog = props => {
-  const { allControls = [], templateInfo = {}, templateControls = [], queryConfigs = [] } = props || {};
+  const { allControls = [], templateInfo = {}, templateControls = [], queryConfigs = [] }: { allControls: FormControl[]; templateControls: FormControl[]; [key: string]: any } = props || {};
 
   if (!templateInfo.templateId) {
     const supportedTemplateControls = templateControls.filter(

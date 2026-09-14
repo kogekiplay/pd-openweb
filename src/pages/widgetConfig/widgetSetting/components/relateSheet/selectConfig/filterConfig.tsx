@@ -77,7 +77,7 @@ export default function FilterDialog(props) {
     globalSheetControls, //主标控件 用于 子表中的关联记录字段筛选选择范围，支持使用主表中的字段
     sheetSwitchPermit = [],
     from,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
 
   const [ruleValue, setValue] = useState('');
 

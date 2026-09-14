@@ -18,6 +18,7 @@ import CountTip from '../../HierarchyView/components/CountTip';
 import { ITEM_TYPE } from '../../HierarchyView/config';
 import { dealHierarchyData, getRelateDefaultValue } from '../../HierarchyView/util';
 import { isDisabledCreate, isTextTitle } from '../../util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const OperationWrap = styled(FlexCenter)`
   position: absolute;
@@ -75,7 +76,7 @@ export default function DraggableRecord(props) {
     width,
     hierarchyTopLevelDataCount = 0,
     buttonsCheckStatus,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const { rowId, visible, path = [], pathId = [], children = [] } = data;
   const recordData = dealHierarchyData(treeData[rowId], {
     worksheetControls: controls,

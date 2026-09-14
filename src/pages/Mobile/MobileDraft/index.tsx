@@ -8,6 +8,7 @@ import worksheetAjax from 'src/api/worksheet';
 import { openMobileRecordInfo } from 'src/pages/Mobile/Record';
 import { updateDraftTotalInfo } from 'src/pages/worksheet/common/WorksheetDraft/utils';
 import DraftList from './DraftList';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const ModalWrap = styled(Popup)`
   .mobileContainer {
@@ -109,7 +110,7 @@ function MobileDraftList(props) {
 }
 
 export default function MobileDraft(props) {
-  const { appId, controls = [], worksheetInfo, worksheetId, sheetSwitchPermit, ...rest } = props;
+  const { appId, controls = [], worksheetInfo, worksheetId, sheetSwitchPermit, ...rest }: { controls: FormControl[]; [key: string]: any } = props;
   const [visible, setVisible] = useState(false);
   const [total, setTotal] = useState(_.get(window, `draftTotalNumInfo[${worksheetId}]`));
 

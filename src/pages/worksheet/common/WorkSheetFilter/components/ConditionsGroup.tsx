@@ -9,6 +9,7 @@ import { CONTROL_FILTER_WHITELIST, FILTER_RELATION_TYPE } from '../enum';
 import { getTypeKey } from '../util';
 import AddCondition from './AddCondition';
 import Condition from './ConditionV2';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   .conditionItem {
@@ -180,7 +181,7 @@ export default function ConditionsGroup(props) {
     isRules,
     showCustom,
     widgetControlData,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   return (
     <Con className={cx({ isSingleFilter })}>
       {conditions.map((condition, i) => {

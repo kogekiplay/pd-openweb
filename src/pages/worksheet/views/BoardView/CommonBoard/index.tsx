@@ -64,7 +64,7 @@ function CommonBoard(props) {
     addRecord,
     refreshSheet,
     ...rest
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
 
   const $listWrapRef = useRef(null);
 

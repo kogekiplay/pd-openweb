@@ -6,6 +6,7 @@ import 'src/pages/worksheet/common/WorkSheetFilter/WorkSheetFilter.less';
 import { getAdvanceSetting } from '../../../util/setting';
 import EmptyRuleConfig from '../EmptyRuleConfig';
 import '../FilterData/FilterDialog.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function FilterDialog(props) {
   const {
@@ -17,7 +18,7 @@ export default function FilterDialog(props) {
     allControls, // 动态字段值显示的Controls
     globalSheetInfo,
     sourceControlId,
-  } = props;
+  }: { controls: FormControl[]; allControls: FormControl[]; [key: string]: any } = props;
 
   const [filters, setFilters] = useState(getAdvanceSetting(data, 'filters'));
   const ruleRef = useRef(null);

@@ -86,7 +86,7 @@ const WrapPopup = styled.div`
 `;
 
 function PluginSettings(params) {
-  const { projectId, worksheetControls, onChangeView, view } = params;
+  const { projectId, worksheetControls, onChangeView, view }: { worksheetControls: FormControl[]; [key: string]: any } = params;
   const [
     { switchSettings, paramSettings, name, icon, iconUrl, iconColor, editInfo, showEdit, addVisible, key },
     setState,

@@ -7,6 +7,7 @@ import RowBtn from '../RowBtn';
 import { CustomActionPanel, RecordClickAction, ToggleHeader } from './ActionSetSections';
 import { Wrap } from './ActionSetStyled';
 import RowActionStyleSettings from './RowActionStyleSettings';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const getBtnBySort = (list, ids) => {
   const ordered = ids.map(id => list.find(o => o.btnId === id)).filter(Boolean);
@@ -28,7 +29,7 @@ export default function ActionSet(props) {
     isSheetView,
     worksheetControls = [],
     viewId,
-  } = props;
+  }: { worksheetControls: FormControl[]; [key: string]: any } = props;
 
   const [{ openList }, setState] = useSetState({
     openList: ['clickAction', 'recordAction', 'bathAction', 'rowAction'],

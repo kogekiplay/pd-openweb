@@ -15,7 +15,7 @@ import type { FormControl } from 'src/utils/controlTypes';
 
 // 处理从后端获取的看板数据
 export const dealBoardViewData = props => {
-  const { view, controls } = props;
+  const { view, controls }: { controls: FormControl[]; [key: string]: any } = props;
   let { data } = props;
   if (!data || isEmpty(data)) return [];
   data = data.sort((a, b) => a.sort - b.sort);

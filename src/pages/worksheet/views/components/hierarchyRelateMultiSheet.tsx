@@ -104,7 +104,7 @@ const isVisible = control => {
 
 export default function HierarchyRelateMultiSheet({ worksheetInfo, viewControls, updateViewControls }) {
   const getSelectableControls = sheetInfo => {
-    const { controls = [] } = _.get(sheetInfo, 'template') || {};
+    const { controls = [] }: { controls: FormControl[]; [key: string]: any } = _.get(sheetInfo, 'template') || {};
     const existSheet = viewControls.map(item => item.worksheetId);
     return _.filter(
       controls,

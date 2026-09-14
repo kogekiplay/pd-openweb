@@ -109,7 +109,7 @@ export default function SelectStartOrEndGroups(props) {
     updateWorksheetControls,
     worksheetId,
     sheetSwitchPermit = [],
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   timeControls = setSysWorkflowTimeControlFormat(timeControls, sheetSwitchPermit);
   let $ref = useRef(null);
   const [calendarcids, setCalendarcids] = useState([]);

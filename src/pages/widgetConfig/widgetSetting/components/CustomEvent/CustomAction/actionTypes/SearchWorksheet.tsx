@@ -168,7 +168,7 @@ class SearchWorksheetActionDialog extends Component<any, any> {
     worksheetAjax
       .getWorksheetInfo({ worksheetId: sheetId, getTemplate: true, getSwitchPermit: true, appId, getViews: true })
       .then(res => {
-        const { controls = [] } = res.template || {};
+        const { controls = [] }: { controls: FormControl[]; [key: string]: any } = res.template || {};
         this.setState({
           controls: controls,
           sheetName: res.name,
@@ -308,7 +308,7 @@ class SearchWorksheetActionDialog extends Component<any, any> {
     const curIsSubList = _.get(cidControl, 'type') === 34;
 
     if (curIsSubList) {
-      const { relationControls = [], showControls = [] } = cidControl;
+      const { relationControls = [], showControls = [] }: { relationControls: FormControl[]; [key: string]: any } = cidControl;
       cidControls = relationControls.filter(r => _.includes(showControls, r.controlId));
     }
 

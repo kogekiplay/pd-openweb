@@ -27,7 +27,7 @@ let obj = [
 let weekObj = [_l('周一'), _l('周二'), _l('周三'), _l('周四'), _l('周五'), _l('周六'), _l('周天')];
 
 export default function GunterSet(props) {
-  const { appId, view, updateCurrentView, worksheetControls = [] } = props;
+  const { appId, view, updateCurrentView, worksheetControls = [] }: { worksheetControls: FormControl[]; [key: string]: any } = props;
   const { advancedSetting = {} } = view;
   const { calendartype = '0', unweekday = '', milepost, showgroupcolor } = advancedSetting;
   let [checkedWorkDate, setCheckedWorkDate] = useState(unweekday === '');

@@ -516,7 +516,7 @@ class PrintForm extends React.Component<any, any> {
       return;
     }
 
-    const { name, views, orderNumber, titleChecked, receiveControls, approval = [], advanceSettings } = printData;
+    const { name, views, orderNumber, titleChecked, receiveControls, approval = [], advanceSettings }: { receiveControls: FormControl[]; [key: string]: any } = printData;
 
     if (!_.trim(name)) {
       alert(_l('请输入模板名称'), 3);
@@ -921,7 +921,7 @@ class PrintForm extends React.Component<any, any> {
       cacheData,
     } = this.state;
     const { type, isDefault, worksheetId, viewId, rowIds } = params;
-    let { receiveControls = [], systemControl = [] } = printData;
+    let { receiveControls = [], systemControl = [] }: { receiveControls: FormControl[]; [key: string]: any } = printData;
 
     if (!worksheetId) {
       return '';

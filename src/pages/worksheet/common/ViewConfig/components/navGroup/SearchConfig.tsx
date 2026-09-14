@@ -40,7 +40,7 @@ const ConfigWrap = styled.div`
 `;
 
 export default function SearchConfig(props) {
-  const { data, onChange, controls = [] } = props;
+  const { data, onChange, controls = [] }: { controls: FormControl[]; [key: string]: any } = props;
 
   const searchableControls = formatControlsToDropdown(
     controls.filter((item: FormControl) => TEXT_TYPE_CONTROL.includes(item.type as number) && /^\w{24}$/.test(item.controlId)),

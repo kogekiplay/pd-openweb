@@ -11,9 +11,10 @@ import { DYNAMIC_FROM_MODE } from '../../../DynamicDefaultValue/config';
 import { HAS_DYNAMIC_TYPE } from '../../config';
 import { CustomActionWrap } from '../../style';
 import AddFields from '../AddFields';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function SetValue(props) {
-  const { actionData = {}, handleOk, allControls = [], updateQueryConfigs = () => {} } = props;
+  const { actionData = {}, handleOk, allControls = [], updateQueryConfigs = () => {} }: { allControls: FormControl[]; [key: string]: any } = props;
   const [{ actionItems, visible, customQueryConfig = [] }, setState] = useSetState({
     actionItems: actionData.actionItems || [],
     visible: true,

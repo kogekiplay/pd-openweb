@@ -14,6 +14,7 @@ import ShowControls from './showControls';
 import SortConfig from './sortConfig';
 import ReportConfig from './totalConfig';
 import '../../FilterData/FilterDialog.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const SelectConfigWrap = styled.div`
   min-height: 440px;
@@ -95,7 +96,7 @@ function SelectConfig(props) {
   });
   const isDropdown = showtype === '3';
   const chooselisttype = _.get(configData, 'advancedSetting.chooselisttype') || '1';
-  const { controls = [], views = [], sheetInfo = {} } = relationSheetLoadState.data || {};
+  const { controls = [], views = [], sheetInfo = {} }: { controls: FormControl[]; [key: string]: any } = relationSheetLoadState.data || {};
   const isRelationSheetLoading = relationSheetLoadState.status === 'loading';
 
   useEffect(() => {

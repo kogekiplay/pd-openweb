@@ -110,7 +110,7 @@ function HierarchyVertical(props) {
     recordInfoId,
     navGroupFilters,
     ...rest
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const IS_MOBILE = browserIsMobile();
   const { scale: configScale, level: configLevel = '' } = safeParse(localStorage.getItem(`hierarchyConfig-${viewId}`));
   const { loading, pageIndex } = hierarchyDataStatus;

@@ -6,6 +6,7 @@ import { filterOnlyShowField } from 'src/pages/widgetConfig/util';
 import { getSummaryInfo } from 'src/utils/record';
 import { getAdvanceSetting, handleAdvancedSettingChange } from '../../../../util/setting';
 import AddFields from '../../CustomEvent/CustomAction/AddFields';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const SubListSummaryDialog = styled(Dialog)`
   .summaryContent {
@@ -41,7 +42,7 @@ const getTypeList = control => {
 };
 
 export default function SubListSummaryWidget(props) {
-  const { data, controls = [], onChange, onClose } = props;
+  const { data, controls = [], onChange, onClose }: { controls: FormControl[]; [key: string]: any } = props;
   const { showControls = [] } = data;
   const originStatisticsSetting = getAdvanceSetting(data, 'statisticsseting') || [];
   const [settingList, setSettingList] = useState(originStatisticsSetting);

@@ -4,9 +4,10 @@ import ActionDropDown from 'src/pages/FormSet/components/columnRules/actionDropd
 import { SYS, SYS_CONTROLS } from 'src/pages/widgetConfig/config/widget';
 import { SettingItem } from '../../../../styled';
 import { ACTION_VALUE_ENUM } from '../config';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function SelectFields(props) {
-  const { allControls, actionType, actionItems = [], onSelectField = () => {}, disabled, hiddenTitle } = props;
+  const { allControls, actionType, actionItems = [], onSelectField = () => {}, disabled, hiddenTitle }: { allControls: FormControl[]; [key: string]: any } = props;
   const filterSysControls = allControls.filter(i => !_.includes(SYS_CONTROLS.concat(SYS), i.controlId));
   return (
     <SettingItem className={props.className}>

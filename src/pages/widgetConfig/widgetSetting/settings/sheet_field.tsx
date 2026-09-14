@@ -47,7 +47,7 @@ export default function SheetField(props) {
     onChange,
     globalSheetInfo = {},
     status: { saveIndex },
-  } = props;
+  }: { allControls: FormControl[]; [key: string]: any } = props;
   const { controlId, dataSource, strDefault = '10' } = data;
 
   const showType = strDefault.split('')[0] || '0';

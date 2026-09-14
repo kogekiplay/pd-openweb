@@ -353,7 +353,7 @@ const OPTION_TYPE_TEXT = {
 };
 
 export const renderTitleText = (data, extendParam) => {
-  const { controls } = extendParam;
+  const { controls }: { controls: FormControl[]; [key: string]: any } = extendParam;
   const count = data.child[0].operatContent.logData.filter(l => l.oldValue !== '' || l.newValue !== '').length;
   const showTooltips = hasHiddenControl(data.child[0].operatContent.logData, controls);
 

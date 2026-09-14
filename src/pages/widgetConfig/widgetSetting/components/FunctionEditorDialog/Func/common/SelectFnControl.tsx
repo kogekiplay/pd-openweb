@@ -3,6 +3,7 @@ import { arrayOf, func, shape, string } from 'prop-types';
 import styled from 'styled-components';
 import ControlList from './ControlList';
 import FnList from './FnList';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   height: 100%;
@@ -59,7 +60,7 @@ const Content = styled.div`
 `;
 
 export default function SelectFnControl(props) {
-  const { type = 'mdfunction', controls, controlGroups, insertTagToEditor, insertFn, control } = props;
+  const { type = 'mdfunction', controls, controlGroups, insertTagToEditor, insertFn, control }: { controls: FormControl[]; [key: string]: any } = props;
   const [keywords, setKeywords] = useState('');
   const [activeTab, setActiveTab] = useState(type === 'mdfunction' ? 'fn' : 'control');
   useEffect(() => {

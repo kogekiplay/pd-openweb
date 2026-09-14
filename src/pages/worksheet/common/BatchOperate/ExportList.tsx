@@ -56,7 +56,7 @@ export default function ExportList(props) {
     sortControls,
     filtersGroup,
     navGroupFilters,
-  } = props;
+  }: { selectedRows: RecordRow[]; controls: FormControl[]; [key: string]: any } = props;
   const { downLoadUrl, projectId } = worksheetInfo;
   const [menuVisible, setMenuVisible] = useState(false);
   const attachmentControls =

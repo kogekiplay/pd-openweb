@@ -52,6 +52,24 @@ export interface FormControl {
   controlName?: string;
   value?: ControlValue;
   advancedSetting?: ControlAdvancedSetting;
+  /** 关联记录控件指定的关联视图 */
+  viewId?: string;
+  /** 关联记录控件指向的应用 */
+  appId?: string;
+  /** 移动端卡片给控件挂的外层 class */
+  className?: string;
+  /** 卡片/详情里给控件挂的可编辑标记 */
+  canEdit?: boolean;
+  /** 卡片单元格自带的写回函数 */
+  updateCell?: (data: any) => void;
+  /** 打印时是否隐藏这个控件 */
+  printHide?: boolean;
+  /** 该控件在当前视图是否可见（自定义动作/打印模板按它过滤） */
+  viewDisplay?: boolean;
+  /** 应用升级 / 公式编辑器挂的原始控件类型，和 originType 不是一回事 */
+  originalType?: number;
+  /** 关联表控件上挂的被关联表控件列表（另有同义的 relationControls） */
+  relateControls?: FormControl[];
   /** 打印模块给控件挂的：明细表打印形态 */
   printDetailType?: number;
   /** 打印配置/字段选择器里给控件挂的勾选态 */

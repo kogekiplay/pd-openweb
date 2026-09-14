@@ -15,6 +15,7 @@ import { getCardWidth } from 'src/utils/worksheet';
 import ViewEmpty from '../components/ViewEmpty';
 import DetailItem from './DetaiIItem';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const LeftListWrapper = styled.div(
   ({ width }) => `
@@ -96,7 +97,7 @@ function DetailView(props) {
     clearData,
     controls,
     updateWorksheetSomeControls,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const { detailViewRows = [], detailViewLoading, detailPageIndex, detailKeyWords, noMoreRows } = detailView;
   const currentView = views.find(o => o.viewId === viewId) || {};
   const coverCid = currentView.coverCid || _.get(worksheetInfo, ['advancedSetting', 'coverid']);

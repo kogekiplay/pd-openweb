@@ -108,7 +108,7 @@ export default function PreviewData(props) {
     controls,
     setStep,
     onClose,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const [mapByExcel, setMapByExcel] = useState(dataFrom === 'excel');
   const [tableLoading, setTableLoading] = useState(false);
   const [isConverting, setIsConverting] = useState(false);

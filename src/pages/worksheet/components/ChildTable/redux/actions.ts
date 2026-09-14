@@ -508,7 +508,7 @@ class RowData {
       isCreate = false,
       isQueryWorksheetFill = false,
       DataFormat,
-    } = this.args;
+    }: { controls: FormControl[]; [key: string]: any } = this.args;
 
     if (get(row, 'updatedControlIds')) {
       this.updatedControlIds = get(row, 'updatedControlIds');
@@ -544,7 +544,7 @@ class RowData {
     this.addTime = new Date().getTime();
   }
   handleAsyncChange(changes) {
-    const { controls, updateRow } = this.args;
+    const { controls, updateRow }: { controls: FormControl[]; [key: string]: any } = this.args;
     const { controlId, value } = changes;
     this.formData.updateDataSource({ controlId, value });
     let updatedControlIds = this.formData.controlIds.concat('rowid');
@@ -599,7 +599,7 @@ export function setRowsFromStaticRows({
 } = {}) {
   return (getState, dispatch, DataFormat) => {
     const { base } = getState();
-    const { controls, projectId, searchConfig, initRowIsCreate, max } = base;
+    const { controls, projectId, searchConfig, initRowIsCreate, max }: { controls: FormControl[]; [key: string]: any } = base;
     // 树形子表：value 序列化可能不带 pid/childrenids，按 value 重建会丢父子关系、展开 icon 消失。
     // 用同 rowid 的现有行（如服务端已加载行）的树字段做兜底，仅当 value 未给该字段时回退。
     const existingRows: RecordRow[] = getState().rows || [];

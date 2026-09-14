@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { Dropdown, Icon } from 'ming-ui';
 import { WIDGETS_TO_API_TYPE_ENUM_N } from 'src/pages/Role/PortalCon/setting/InfoSet/config.js';
 import { getIconByType } from 'src/pages/widgetConfig/util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const typeList = _.keys(WIDGETS_TO_API_TYPE_ENUM_N);
 const Wrap = styled.div`
@@ -73,7 +74,7 @@ export default function ReviewFreeMap(props) {
   const getData = () => {
     if (props.type === 1) {
       const { templates = {} } = props.query || {} || {};
-      const { controls = [] } = templates;
+      const { controls = [] }: { controls: FormControl[]; [key: string]: any } = templates;
       setCells(
         controls.filter(item => !['rowid', 'wfname'].includes(item.controlId) && typeList.includes(item.type + '')),
       );

@@ -2,6 +2,7 @@ import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import Empty from './Empty';
 import FilterTitleList from './FilterTitleList';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   padding: 0 6px 6px;
@@ -25,7 +26,7 @@ export default function SavedFilters(props) {
     onDelete,
     triggerFilter,
     onHideFilterPopup,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const isEmpty = !filters.length;
   const personalFilters = filters.filter(f => f.type === 1);
   const globalFilters = filters.filter(f => f.type === 2);

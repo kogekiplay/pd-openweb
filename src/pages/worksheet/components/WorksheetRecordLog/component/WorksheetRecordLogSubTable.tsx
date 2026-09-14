@@ -11,7 +11,7 @@ import { TEXT_FIELD_SHOWTEXT_TYPE, UPDATA_ITEM_CLASSNAME_BY_TYPE } from '../enum
 import { getDepartmentName } from '../util';
 import WorksheetRecordLogThumbnail from './WorksheetRecordLogThumbnail';
 import '../WorksheetRecordLogValue.less';
-import type { FormControl } from 'src/utils/controlTypes';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 function MaskCell(props) {
   const { cell, appId } = props;
@@ -58,7 +58,7 @@ function WorksheetRecordLogSubTable(props) {
       .then(res => {
         setLoading(false);
         setPageIndex(_pageIndex + 1);
-        const { oldRows, newRows } = res;
+        const { oldRows, newRows }: { newRows: RecordRow[]; [key: string]: any } = res;
         let oldList = safeParse(oldRows, 'array');
         let newList = safeParse(newRows, 'array');
         let defaultList = _.intersectionBy(newList, oldList, 'rowid').map(l => {

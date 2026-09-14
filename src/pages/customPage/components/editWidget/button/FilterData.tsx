@@ -5,9 +5,10 @@ import worksheetApi from 'src/api/worksheet';
 import { filterData } from 'src/pages/FormSet/components/columnRules/config';
 import FilterItemTexts from 'src/pages/widgetConfig/widgetSetting/components/FilterData/FilterItemTexts';
 import FilterConfig from 'src/pages/worksheet/common/WorkSheetFilter/common/FilterConfig';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function FilterData(props) {
-  const { projectId, appId, filterId, controls, config, onChangeConfig } = props;
+  const { projectId, appId, filterId, controls, config, onChangeConfig }: { controls: FormControl[]; [key: string]: any } = props;
   const { isFilter, filterConditions = [] } = config;
   const [visible, setVisible] = useState(false);
   const [filter, setFilter] = useState([]);

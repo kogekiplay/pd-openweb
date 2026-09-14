@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -53,7 +53,7 @@ export default function (props) {
     worksheetId = '',
     forBoard,
     hideSort,
-  } = props;
+  }: { worksheetControls: FormControl[]; [key: string]: any } = props;
   let [showAddCondition, setShowAddCondition] = useState(false);
 
   const updateAdvancedSetting = data => {

@@ -167,7 +167,7 @@ const TbWrap = styled.div`
 export default function GroupCon(props) {
   const headContainer = useRef(null);
   const tbodyContainer = useRef(null);
-  const { resourceview, view, controls, viewId, appId, worksheetInfo, base = {} } = props;
+  const { resourceview, view, controls, viewId, appId, worksheetInfo, base = {} }: { controls: FormControl[]; [key: string]: any } = props;
   const { resourceDataByKey, keywords } = resourceview;
   const viewControlInfo = controls.find((o: FormControl) => o.controlId === _.get(view, 'viewControl')) || {};
   const { dataSource } = viewControlInfo;

@@ -1188,7 +1188,7 @@ export function batchUpdateWidgetsLayout(
 
 // 批量添加
 export const handleAddWidgets = (data, para = {}, widgetProps, callback?) => {
-  const { widgets, activeWidget, allControls, setWidgets, setActiveWidget, globalSheetInfo = {} } = widgetProps;
+  const { widgets, activeWidget, allControls, setWidgets, setActiveWidget, globalSheetInfo = {} }: { allControls: FormControl[]; [key: string]: any } = widgetProps;
   const { mode, path, location, displayItemType, rowIndex, activePath, isMingo } = para;
   const tempData = head(data);
   const featureType = getFeatureStatus(globalSheetInfo.projectId, tempData.featureId);
@@ -1321,7 +1321,7 @@ export const handleAddWidgets = (data, para = {}, widgetProps, callback?) => {
 
 // 批量移动
 export const handleMoveWidgets = (data, widgetProps) => {
-  const { widgets, activeWidget, allControls, setWidgets, setActiveWidget } = widgetProps;
+  const { widgets, activeWidget, allControls, setWidgets, setActiveWidget }: { allControls: FormControl[]; [key: string]: any } = widgetProps;
 
   if (isExceedMaxControlLimit(allControls, data.length)) {
     alert(_l('当前表存在的控件已达到最大值，无法添加继续添加新控件!'), 3);
@@ -1416,7 +1416,7 @@ export const getChildWidgetsBySection = (controls: FormControl[] = [], id) => {
 
 // 批量复制控件数据处理
 export const batchCopyWidgets = (props, selectWidgets = []) => {
-  const { widgets, allControls, queryConfigs, setActiveWidget, setWidgets } = props;
+  const { widgets, allControls, queryConfigs, setActiveWidget, setWidgets }: { allControls: FormControl[]; [key: string]: any } = props;
 
   for (var i = 0; i < selectWidgets.length; i++) {
     const err = checkWidgetMaxNumErr(selectWidgets[i], [...allControls, ...selectWidgets.slice(0, i)]);

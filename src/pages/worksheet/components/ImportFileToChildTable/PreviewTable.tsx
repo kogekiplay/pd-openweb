@@ -11,6 +11,7 @@ import SelectControls from 'worksheet/common/WorkSheetFilter/components/SelectCo
 import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget';
 import { getIconByType } from 'src/pages/widgetConfig/util';
 import { getIndex } from '../WorksheetTable/components/Cell';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const StyledFixedTable = styled(FixedTable)`
   border-radius: 4px;
@@ -132,7 +133,7 @@ function ControlTooltip(props) {
 }
 
 function renderNormalHead(props) {
-  const { controls, key, style, columnIndex } = props;
+  const { controls, key, style, columnIndex }: { controls: FormControl[]; [key: string]: any } = props;
   const control = controls[columnIndex];
   return (
     <div key={key} style={style} className={'cell controlHead'}>
@@ -175,7 +176,7 @@ function PreviewTable(props) {
     renderCellContent,
     onCellClick = () => {},
     onUpdateMapConfig = () => {},
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   let columnCount = mode === 'paste' ? controls.length : Object.keys(mapConfig).length;
 
   if (props.columnCount && props.columnCount > columnCount) {

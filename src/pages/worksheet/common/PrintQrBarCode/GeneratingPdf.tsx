@@ -9,6 +9,7 @@ import { QrPdf } from './print';
 import type { CodeUrlSource } from './types';
 import { getCodeContent, getCodeTexts } from './util';
 import { generateLabelPdf } from './vectorLabel';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const PAGE_SIZE = 200;
 
@@ -29,7 +30,7 @@ export default function GeneratingPdf(props) {
     fastFilters,
     navGroupFilters,
     onClose,
-  } = props;
+  }: { controls: FormControl[]; selectedRows: RecordRow[]; [key: string]: any } = props;
   const [printConfig, setPrintConfig] = useState(config && { ...config });
   const [loading, setLoading] = useState(true);
   // 必须显式给类型参数：useState() 不带初值会被推成 useState<undefined>，

@@ -4,12 +4,13 @@ import { Checkbox } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { getAdvanceSetting, updateConfig } from '../../../../util/setting';
 import SubListStatisticsConfig from '../components/SubListStatisticsConfig';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function RelateSearchConfig(props) {
   const { data, onChange } = props;
-  const { controlId, relationControls = [], strDefault } = data;
+  const { controlId, relationControls = [], strDefault }: { relationControls: FormControl[]; [key: string]: any } = data;
   const [isHiddenOtherViewRecord] = (strDefault || '000').split('');
-  const { controls = [] } = window.subListSheetConfig[controlId] || {};
+  const { controls = [] }: { controls: FormControl[]; [key: string]: any } = window.subListSheetConfig[controlId] || {};
   const statisticsControls = controls.length ? controls : relationControls;
   const { showtype } = getAdvanceSetting(data);
   const isList = _.includes(['2', '5', '6'], showtype);

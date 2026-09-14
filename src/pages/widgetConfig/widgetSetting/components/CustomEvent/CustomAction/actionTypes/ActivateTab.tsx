@@ -5,9 +5,10 @@ import { Dialog } from 'ming-ui';
 import { fixedBottomWidgets } from '../../../../../util';
 import { CustomActionWrap } from '../../style';
 import SelectFields from '../SelectFields';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function ActivateTab(props) {
-  const { actionData = {}, handleOk, allControls = [] } = props;
+  const { actionData = {}, handleOk, allControls = [] }: { allControls: FormControl[]; [key: string]: any } = props;
   const [{ actionType, actionItems, visible }, setState] = useSetState({
     actionType: actionData.actionType,
     actionItems: actionData.actionItems || [],

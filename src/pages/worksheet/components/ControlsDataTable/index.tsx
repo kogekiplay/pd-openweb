@@ -6,6 +6,7 @@ import { arrayOf, bool, func, number, shape } from 'prop-types';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import WorksheetTable from 'worksheet/components/WorksheetTable';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const ColumnHead = styled.div`
   background-color: var(--color-background-secondary) !important;
@@ -61,7 +62,7 @@ export default function ControlsDataTable(props) {
     canSort,
     wrapControlName,
     appId,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const [{ isAsc, controlId }, setState] = useSetState({
     isAsc: undefined,
     controlId: '',

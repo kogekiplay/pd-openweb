@@ -5,9 +5,10 @@ import { Dialog } from 'ming-ui';
 import { checkConditionCanSave } from 'src/pages/FormSet/components/columnRules/config';
 import FilterConfig from 'src/pages/worksheet/common/WorkSheetFilter/common/FilterConfig';
 import { redefineComplexControl } from 'src/pages/worksheet/common/WorkSheetFilter/util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function FilterValue(props) {
-  const { filterData = {}, handleOk, globalSheetInfo = {}, allControls = [], customTitle } = props;
+  const { filterData = {}, handleOk, globalSheetInfo = {}, allControls = [], customTitle }: { allControls: FormControl[]; [key: string]: any } = props;
   const { projectId, appId } = globalSheetInfo;
   const filterControls = allControls.map(redefineComplexControl);
 

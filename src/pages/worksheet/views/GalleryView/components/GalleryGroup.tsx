@@ -21,7 +21,7 @@ const GalleryGroup = props => {
     galleryview = {},
     fetchMoreByGroup,
     worksheetInfo,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const { viewId, appId, worksheetId } = base;
   const { groupsetting } = getAdvanceSetting(currentView);
   const { galleryGroupLoading, gallery = [] } = galleryview;

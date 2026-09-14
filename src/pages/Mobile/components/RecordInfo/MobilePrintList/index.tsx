@@ -15,6 +15,7 @@ import { VersionProductType } from 'src/utils/enum';
 import { compatibleMDJS, getCurrentProject, getFeatureStatus } from 'src/utils/project';
 import { sendCloudPrint } from 'src/utils/record';
 import { buildAppPrintParams, getPrintCacheAppDetail, getPrintCacheWorksheetInfo } from './utils';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const DEFAULT_TEMPLATE_TYPES = [PRINT_TYPE.SYS_PRINT, PRINT_TYPE.WORD_PRINT, PRINT_TYPE.EXCEL_PRINT];
 const CODE_TEMPLATE_TYPES = [PRINT_TYPE.QR_CODE_PRINT, PRINT_TYPE.BAR_CODE_PRINT];
@@ -175,7 +176,7 @@ export default function MobilePrintList(props) {
     getWorksheetShareUrl,
     hideRecordActionVisible = noop,
     updatePrintList = noop,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
 
   const [printList, setPrintList] = useState([]);
   const [showPrintListVisible, setShowPrintListVisible] = useState(false);

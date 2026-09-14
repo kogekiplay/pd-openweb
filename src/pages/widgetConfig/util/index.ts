@@ -511,7 +511,7 @@ export const isSheetDisplay = (data = {}) => {
 
 // 基础设置各控件分别支持哪些模块
 export const supportSettingCollapse = (props, key) => {
-  const { data = {}, allControls = [], isRecycle, from } = props;
+  const { data = {}, allControls = [], isRecycle, from }: { allControls: FormControl[]; [key: string]: any } = props;
   const {
     dataSource,
     sourceControlId,
@@ -558,7 +558,7 @@ export const supportSettingCollapse = (props, key) => {
           return mode === 'relate' ? true : !advancedSetting.layercontrolid;
         case 37:
           const parsedDataSource = parseDataSource(dataSource);
-          const { relationControls = [] } = getControlByControlId(allControls, parsedDataSource);
+          const { relationControls = [] }: { relationControls: FormControl[]; [key: string]: any } = getControlByControlId(allControls, parsedDataSource);
           const selectedControl = getControlByControlId(relationControls, sourceControlId);
           return isShowUnitConfig(data, selectedControl);
         case 51:
@@ -575,7 +575,7 @@ export const supportSettingCollapse = (props, key) => {
 
       if (currentControl.type === 30) {
         const parsedDataSource = parseDataSource(dataSource);
-        const { relationControls = [] } = getControlByControlId(allControls, parsedDataSource);
+        const { relationControls = [] }: { relationControls: FormControl[]; [key: string]: any } = getControlByControlId(allControls, parsedDataSource);
         const parsedControl = getControlByControlId(relationControls, sourceControlId);
         currentControl = parsedControl;
       }

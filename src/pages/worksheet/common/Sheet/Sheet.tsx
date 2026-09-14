@@ -27,6 +27,7 @@ import SheetContext from './SheetContext';
 import SheetHeader from './SheetHeader';
 import ViewControl from './ViewControl';
 import './style.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const { sheet, gallery, board, calendar, gunter, detail, customize, map, resource, structure } = VIEW_DISPLAY_TYPE;
 
@@ -146,7 +147,7 @@ function Sheet(props) {
     printList,
     sheetSwitchPermit,
     viewRowsLoading,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const isDevAndOps = canEditApp(appPkg.permissionType) || canEditData(appPkg.permissionType);
   const cache = useRef({});
   const [viewConfigVisible, setViewConfigVisible] = useState(false);

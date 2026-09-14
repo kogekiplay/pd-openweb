@@ -11,6 +11,7 @@ import { pathCompletion } from 'src/utils/common';
 import { getWidgetInfo, toEditWidgetPage } from '../../../util';
 import { REFERENCE_TYPE } from './config';
 import { ExtraTime } from './styled';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const { Panel } = Collapse;
 
@@ -36,7 +37,7 @@ export const WorksheetField = props => {
   }, [loading]);
 
   const isPassive = item => {
-    const { worksheetList, controls } = globalSheetInfo;
+    const { worksheetList, controls }: { controls: FormControl[]; [key: string]: any } = globalSheetInfo;
 
     if ((!worksheetList && !controls) || item.type !== 29 || type !== 2) return false;
 

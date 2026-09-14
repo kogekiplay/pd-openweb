@@ -13,6 +13,7 @@ import { FILEDS_TYPE_INFO } from '../util';
 import ExcelControlSetting from './ExcelControlSetting';
 import WorksheetItem from './WorksheetItem';
 import './index.less';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 const ImportLoadingWrap = styled.div`
   position: absolute;
@@ -51,7 +52,7 @@ let SetImportExcelCreateWorksheetOrApp = class SetImportExcelCreateWorksheetOrAp
 
   renderCells = () => {
     const { currentSheetInfo = {} } = this.props;
-    const { rows = [], selectCells = [], matchControl } = currentSheetInfo;
+    const { rows = [], selectCells = [], matchControl }: { rows: RecordRow[]; [key: string]: any } = currentSheetInfo;
     const cells = rows.length ? rows[0].cells : [];
 
     const titleCellNumber = _.get(
@@ -383,7 +384,7 @@ let SetImportExcelCreateWorksheetOrApp = class SetImportExcelCreateWorksheetOrAp
   };
   getTableWidth = () => {
     const { currentSheetInfo = {} } = this.props;
-    const { rows = [], selectCells = [] } = currentSheetInfo;
+    const { rows = [], selectCells = [] }: { rows: RecordRow[]; [key: string]: any } = currentSheetInfo;
     const tableWidth =
       rows.length && rows[0].cells && rows[0].cells.length
         ? rows[0].cells.filter(it => _.includes(selectCells, it.columnNumber)).length * 150 + 60
@@ -402,7 +403,7 @@ let SetImportExcelCreateWorksheetOrApp = class SetImportExcelCreateWorksheetOrAp
       currentSheetCount,
       importLoading,
     } = this.props;
-    const { rows = [], selectCells = [], rowNum } = currentSheetInfo;
+    const { rows = [], selectCells = [], rowNum }: { rows: RecordRow[]; [key: string]: any } = currentSheetInfo;
     const cells = rows.length ? rows[0].cells : [];
     const showRows = rows.filter((it, index) => index === 0).concat(rows.slice(rowNum, rowNum + 10));
     return (

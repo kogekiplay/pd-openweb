@@ -11,6 +11,7 @@ import { browserIsMobile } from 'src/utils/common';
 import { emitter } from 'src/utils/common';
 import Abnormal from './Abnormal';
 import WidgetContainer from './WidgetContainer';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   height: 100%;
@@ -72,7 +73,7 @@ function CustomWidgetViewContent(props) {
     quickFilter,
     navGroupFilters,
     refresh,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
 
   const { isPublished = false, currentScriptUrl } = view;
   const debugUrl = localStorage.getItem('customViewDebugUrl_' + viewId);

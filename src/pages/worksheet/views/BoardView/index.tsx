@@ -12,6 +12,7 @@ import { getAdvanceSetting } from 'src/utils/control';
 import CommonBoard from './CommonBoard';
 import GroupBoard from './GroupBoard';
 import { getViewSelectFields, hasSecondGroupControl } from './util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const BoardView = props => {
   const {
@@ -23,7 +24,7 @@ const BoardView = props => {
     worksheetInfo,
     updateBoardViewSortedOptionKeys,
     sheetSwitchPermit,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const { viewControl } = view;
   const { groupsetting } = getAdvanceSetting(view);
   // 一级分组有字段，且未被删除

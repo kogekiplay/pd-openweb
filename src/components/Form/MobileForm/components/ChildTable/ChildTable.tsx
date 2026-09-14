@@ -383,7 +383,7 @@ class ChildTable extends React.Component<any, any> {
     const isWorkflow =
       ((instanceId && workId) || window.shareState.isPublicWorkflowRecord) &&
       worksheetInfo.workflowChildTableSwitch !== false;
-    const { showControls = [], advancedSetting = {}, relationControls = [] } = control;
+    const { showControls = [], advancedSetting = {}, relationControls = [] }: { relationControls: FormControl[]; [key: string]: any } = control;
 
     if (baseLoading) {
       return [];
@@ -508,7 +508,7 @@ class ChildTable extends React.Component<any, any> {
 
   loadRows = (nextProps, { needResetControls, isRefresh } = {}) => {
     const { control, recordId, masterData, loadRows, from, base = {} } = nextProps || this.props;
-    const { instanceId, workId, worksheetInfo, originControls } = base;
+    const { instanceId, workId, worksheetInfo, originControls }: { originControls: FormControl[]; [key: string]: any } = base;
     const isWorkflow =
       ((instanceId && workId) || window?.shareState?.isPublicWorkflowRecord) &&
       worksheetInfo?.workflowChildTableSwitch !== false;

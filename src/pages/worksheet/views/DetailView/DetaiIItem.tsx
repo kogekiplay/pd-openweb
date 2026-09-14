@@ -27,7 +27,7 @@ export default function DetailItem(props) {
     currentRecordId,
     onClick,
     onUpdateFn,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const currentView = views.find(o => o.viewId === viewId) || {};
   const coverCid = currentView.coverCid || _.get(worksheetInfo, ['advancedSetting', 'coverid']);
 

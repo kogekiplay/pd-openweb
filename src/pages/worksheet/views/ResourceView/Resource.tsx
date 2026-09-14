@@ -13,6 +13,7 @@ import { timeWidth, timeWidthHalf, types } from './config';
 import ConTimegrid from './ConTimegrid';
 import DataCon from './DataCon';
 import ToolBar from './ToolBar';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrap = styled.div`
   width: 100%;
@@ -66,7 +67,7 @@ const renderLoading = () => {
 
 export default function Resource(props) {
   const isM = browserIsMobile();
-  const { fetchRows, getRelationControls, view, getTimeList, resourceview, controls } = props;
+  const { fetchRows, getRelationControls, view, getTimeList, resourceview, controls }: { controls: FormControl[]; [key: string]: any } = props;
 
   const getDirectoryWidth = () => {
     if (isM) {

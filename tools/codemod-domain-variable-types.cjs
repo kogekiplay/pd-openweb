@@ -23,61 +23,13 @@
 const fs = require('fs');
 const path = require('path');
 const ts = require('typescript');
+const { DOMAIN, EXCLUDE } = require('./domain-names.cjs');
 
 const ROOT = path.resolve(__dirname, '..');
 const SRC = path.join(ROOT, 'src') + path.sep;
 const APPLY = !process.argv.includes('--list');
 
-/**
- * 这些目录/文件里叫 controls 的东西【不是】表单控件，是别的模块自己的字段描述符
- * （字段名对不上：mdType / isPk / isCheck / 直接是字符串）。都是被差分闸门挡出来的。
- */
-const EXCLUDE = [
-  'src/pages/AppSettings/components/Aggregation/', // 聚合表的字段描述符，用 mdType 不是 type
-  'src/pages/integration/', // 数据集成的字段描述符，带 isPk / isCheck
-  'src/pages/customPage/components/editWidget/filter/FilterControl.tsx', // 这里的 controls 是字符串
-  'src/pages/FormExtend/PublicWorksheetConfig/PublicConfig/WeChatSettings.tsx',
-  'src/pages/Mobile/RecordList/redux/actions.ts',
-  'src/pages/task/components/printTask/printTask.tsx', // controls 是 Dictionary<any[]>（按分组聚好的）
-  'src/pages/widgetConfig/widgetDisplay/displayTypes/section.tsx', // controls 是嵌套数组
-  'src/pages/worksheet/common/ViewConfig/components/Controls.tsx', // controls 装的是 controlId 字符串
-  'src/pages/worksheet/common/WorksheetBody/ImportDataFromExcel/', // Excel 列描述符，有 text/value
-  'src/pages/worksheet/components/ImportFileToChildTable/ImportData.tsx', // rows 是字符串
-  'src/pages/worksheet/components/RelateRecordTable/TableComp.tsx',
-  'src/pages/workflow/WorkflowSettings/Detail/components/SingleControlValue/index.tsx',
-  'src/pages/workflow/WorkflowSettings/Detail/Start/PBCContent.tsx', // PBC 入参，带 jsonPath
-  'src/pages/Print/components/Content/index.tsx',
-  'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/components/SelectFields.tsx',
-];
 
-const DOMAIN = new Map([
-  ...[
-    'controls',
-    'allControls',
-    'originControls',
-    'relationControls',
-    'templateControls',
-    'formControls',
-    'receiveControls',
-    'controlList',
-    'newControls',
-    'visibleControls',
-    'subControls',
-    'childTableControls',
-    'availableControls',
-    'currentControls',
-    'sourceControls',
-    'worksheetControls',
-    // 'filterControls' 【不能收】：columnRules/config.ts 里同名变量装的是控件类型码
-    // （filterControls.push(31, 38, 37, ...)），另有几处它是 `FormControl[] | false`
-    // 的哨兵（customEvent 里 `filterControls === false ? [] : filterControls`）。
-    // 一个名字两种含义，不满足「语义单一」。
-  ].map(n => [n, 'FormControl[]']),
-  ...['rows', 'originRows', 'newRows', 'records', 'selectedRows', 'realRows', 'rootRows', 'existingRows'].map(n => [
-    n,
-    'RecordRow[]',
-  ]),
-]);
 
 const cfg = ts.parseJsonConfigFileContent(
   ts.readConfigFile(path.join(ROOT, 'tsconfig.json'), ts.sys.readFile).config,

@@ -15,6 +15,7 @@ import { VersionProductType } from 'src/utils/enum';
 import { addBehaviorLog, getFeatureStatus } from 'src/utils/project';
 import { sendCloudPrint } from 'src/utils/record';
 import { generatePdf } from '../PrintQrBarCode/GeneratingPdf';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   position: relative;
@@ -113,7 +114,7 @@ export default function PrintList(props) {
     navGroupFilters,
     selectedLength = 0,
     children,
-  } = props;
+  }: { controls: FormControl[]; selectedRows: RecordRow[]; [key: string]: any } = props;
   const idsFromSelectedRows = selectedRows?.map(r => r.rowid);
   const rowIds = idsFromSelectedRows?.length ? idsFromSelectedRows : selectedRowIds?.filter(Boolean);
   const [loading, setLoading] = useState(true);

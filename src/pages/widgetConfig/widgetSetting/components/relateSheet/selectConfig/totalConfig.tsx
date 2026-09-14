@@ -8,6 +8,7 @@ import { filterOnlyShowField } from 'src/pages/widgetConfig/util';
 import { getSummaryInfo } from 'src/utils/record';
 import { getAdvanceSetting, handleAdvancedSettingChange } from '../../../../util/setting';
 import SelectControl from '../../SelectControl';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const TotalConfigWrap = styled.div`
   .addTotalControl {
@@ -56,7 +57,7 @@ const TotalConfigWrap = styled.div`
 `;
 
 export default function ReportConfig(props) {
-  const { data, controls = [], handleChange } = props;
+  const { data, controls = [], handleChange }: { controls: FormControl[]; [key: string]: any } = props;
   const [visible, setVisible] = useState(false);
   const { chooseshow = '0' } = getAdvanceSetting(data);
   const chooseshowids = getAdvanceSetting(data, 'chooseshowids') || [];

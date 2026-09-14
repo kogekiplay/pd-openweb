@@ -180,7 +180,7 @@ export default class SearchWorksheetDialog extends Component<any, any> {
     worksheetAjax
       .getWorksheetInfo({ worksheetId: sheetId, getTemplate: true, getSwitchPermit: true, appId, getViews: true })
       .then(res => {
-        const { controls = [] } = res.template || {};
+        const { controls = [] }: { controls: FormControl[]; [key: string]: any } = res.template || {};
         this.setState({
           controls: controls,
           sheetName: res.name,

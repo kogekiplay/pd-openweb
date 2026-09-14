@@ -13,6 +13,7 @@ import { SYSTEM_CONTROL } from '../../../config/widget';
 import { SettingItem, SheetViewWrap } from '../../../styled';
 import { formatViewToDropdown } from '../../../util';
 import openSelectConfig from '../relateSheet/selectConfig';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const BATCH_OPTIONS = [
   {
@@ -102,7 +103,7 @@ function OperateDialog(props) {
 
 // 高级设置
 export default function RelateOperate(props) {
-  const { data, allControls, globalSheetControls, onChange, globalSheetInfo = {} } = props;
+  const { data, allControls, globalSheetControls, onChange, globalSheetInfo = {} }: { allControls: FormControl[]; [key: string]: any } = props;
   const [visible, setVisible] = useState(false);
   const { enumDefault, enumDefault2 = 1, controlId, viewId } = data;
 
@@ -122,7 +123,7 @@ export default function RelateOperate(props) {
     allowimport = '0',
   } = getAdvanceSetting(data);
   const filters = getAdvanceSetting(data, 'filters') || [];
-  const { loading = true, views = [], controls = [] } = window.subListSheetConfig[controlId] || {};
+  const { loading = true, views = [], controls = [] }: { controls: FormControl[]; [key: string]: any } = window.subListSheetConfig[controlId] || {};
   const selectedViewIsDeleted = !loading && viewId && !_.find(views, sheet => sheet.viewId === viewId);
   const selectedOpenViewIsDelete = !loading && openview && !_.find(views, sheet => sheet.viewId === openview);
   const isRelateView = Boolean(data.viewId) && !selectedViewIsDeleted;

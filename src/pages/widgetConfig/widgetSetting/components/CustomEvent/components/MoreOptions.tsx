@@ -14,6 +14,7 @@ import { getPathById } from '../../../../util/widgets';
 import { ACTION_VALUE_ENUM, dealEventDisplay, EVENT_MORE_OPTIONS, FILTER_VALUE_ENUM, getEventDisplay } from '../config';
 import { IconWrap } from '../style';
 import '../../../../styled/style.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 // 查询工作表不支持复制
 const dealEventActions = eventActions => {
@@ -32,7 +33,7 @@ const dealEventActions = eventActions => {
 };
 
 function CopyCustomEvent(props) {
-  const { data, allControls = [], index, widgets = [], onCancel, setWidgets, eventId, onChange } = props;
+  const { data, allControls = [], index, widgets = [], onCancel, setWidgets, eventId, onChange }: { allControls: FormControl[]; [key: string]: any } = props;
   const [{ copyId, copyEventType, copyAction }, setData] = useSetState({
     copyId: '',
     copyEventType: '',

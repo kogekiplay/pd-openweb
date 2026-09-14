@@ -17,7 +17,7 @@ export default function ImportMenu(props) {
     worksheetName,
     onMenuClick = () => {},
     className = '',
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
 
   return (
     <Menu className={className}>

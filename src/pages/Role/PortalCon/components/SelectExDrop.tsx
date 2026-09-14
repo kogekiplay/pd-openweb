@@ -3,6 +3,7 @@ import { Checkbox, Select } from 'antd';
 import cx from 'classnames';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const { Option } = Select;
 
@@ -56,7 +57,7 @@ const CheckboxOption = styled.div`
 `;
 
 export default function CheckboxSelect(props) {
-  const { disabled, controls, onChange, max = 3 } = props;
+  const { disabled, controls, onChange, max = 3 }: { controls: FormControl[]; [key: string]: any } = props;
   const [selectedValues, setSelectedValues] = useState(props.values);
 
   useEffect(() => {

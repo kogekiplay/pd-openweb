@@ -7,7 +7,7 @@ import { Icon } from 'ming-ui';
 import MobileCardCellControl from 'src/components/MobileCardCellControls/MobileCardCellControl';
 import { controlState, getControlStyles } from 'src/utils/control';
 import { updateRulesData } from '../../../core/formUtils/updateRulesData';
-import type { FormControl } from 'src/utils/controlTypes';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const MobileTableContent = styled.div`
   .mobileTableHeader {
@@ -146,7 +146,7 @@ export default function MobileTable(props) {
     cellErrors = {},
     onSave = () => {},
     submitChildTableCheckData = () => {},
-  } = props;
+  }: { controls: FormControl[]; rows: RecordRow[]; [key: string]: any } = props;
 
   const defaultMaxLength = 10;
   const [maxShowLength, setMaxShowLength] = useState(defaultMaxLength);

@@ -52,7 +52,7 @@ export default function CustomErNode(props) {
     onFilter,
     showItemForAllControls,
     hasMoreControls,
-  } = data;
+  }: { controls: FormControl[]; allControls: FormControl[]; [key: string]: any } = data;
   const worksheetName = getTranslateInfo(appId, null, item.worksheetId).name || item.worksheetName;
 
   const [visible, setVisible] = useState(false);

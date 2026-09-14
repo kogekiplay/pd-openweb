@@ -4,6 +4,7 @@ import { useDragLayer } from 'react-dnd';
 import BaseCard from '../../components/BaseCard';
 import { ITEM_TYPE } from '../config';
 import { dealHierarchyData } from '../util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const layerStyles = {
   position: 'fixed',
@@ -16,7 +17,7 @@ const layerStyles = {
 };
 
 export default function CustomDragLayer(props) {
-  const { treeData, currentView, controls, hierarchyRelateSheetControls, sheetSwitchPermit } = props;
+  const { treeData, currentView, controls, hierarchyRelateSheetControls, sheetSwitchPermit }: { controls: FormControl[]; [key: string]: any } = props;
   const { item, isDragging, currentOffset, itemType } = useDragLayer(monitor => ({
     item: monitor.getItem(),
     itemType: monitor.getItemType(),

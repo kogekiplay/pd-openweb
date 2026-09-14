@@ -9,6 +9,7 @@ import { Dialog, Input } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { FlexCenter, VerticalMiddle } from 'worksheet/components/Basics';
 import ControlSelect from 'worksheet/components/ControlSelect';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Title = styled.div`
   font-size: 13px;
@@ -174,7 +175,7 @@ export default function SelectControlWithInput(props) {
     style,
     controls,
     onChange = () => {},
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const [textEditing, setTextEditing] = useState<boolean | undefined>();
   const [editNameVisible, setEditNameVisible] = useState(false);
   const sourceControl = type === 1 && _.find(controls, { controlId: value });

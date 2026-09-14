@@ -7,9 +7,10 @@ import { checkConditionCanSave } from 'src/pages/FormSet/components/columnRules/
 import { ROW_ID_CONTROL } from '../../../../../config/widget';
 import ApiSearchConfig from '../../../ApiSearchConfig';
 import { CustomActionWrap } from '../../style';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function IntegratedApi(props) {
-  const { actionData = {}, data, handleOk, fromCustomFilter, allControls = [] } = props;
+  const { actionData = {}, data, handleOk, fromCustomFilter, allControls = [] }: { allControls: FormControl[]; [key: string]: any } = props;
   const [{ advancedSetting, dataSource, filterItems, visible }, setState] = useSetState({
     advancedSetting: actionData.advancedSetting || {},
     filterItems: actionData.filterItems || [],

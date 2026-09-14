@@ -4,9 +4,10 @@ import { Checkbox } from 'ming-ui';
 import { isSheetDisplay } from '../../../../util';
 import { getAdvanceSetting, handleAdvancedSettingChange } from '../../../../util/setting';
 import SelectFields from '../../CustomEvent/CustomAction/SelectFields';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function SetHiddenControls(props) {
-  const { data, controls = [], onChange } = props;
+  const { data, controls = [], onChange }: { controls: FormControl[]; [key: string]: any } = props;
   const additionalids = getAdvanceSetting(data, 'additionalids') || [];
 
   const [checked, setChecked] = useState(false);

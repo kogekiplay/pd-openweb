@@ -3,7 +3,7 @@ import { find, get, identity } from 'lodash';
 import { arrayOf, bool, func, number, shape, string } from 'prop-types';
 import styled from 'styled-components';
 import RecordCoverCard from '../RelateRecordCards/RecordCoverCard';
-import type { FormControl } from 'src/utils/controlTypes';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   padding: 10px 0;
@@ -26,7 +26,7 @@ export default function RecordCoverCardList(props) {
     allowlink,
     onCardClick = () => {},
     onDelete = () => {},
-  } = props;
+  }: { records: RecordRow[]; controls: FormControl[]; [key: string]: any } = props;
   const showControls = get(props, 'control.showControls') || [];
   return (
     <Con

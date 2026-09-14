@@ -184,7 +184,7 @@ export const getSearchData = sheet => {
     hierarchyView: { hierarchyViewState = [], hierarchyViewData = {} },
     gunterView: { grouping = [], withoutArrangementVisible },
     mapView: { mapViewData = [] },
-  } = sheet;
+  }: { controls: FormControl[]; [key: string]: any } = sheet;
   const view = find(views, item => item.viewId === base.viewId) || {};
   const titleControlId = (_.find(controls, { attribute: 1 }) || {}).controlId;
   let data = [];

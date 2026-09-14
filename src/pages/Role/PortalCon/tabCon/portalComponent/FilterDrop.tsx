@@ -6,6 +6,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import ClickAway from 'ming-ui/components/ClickAway';
 import SingleFilter from 'src/pages/worksheet/common/WorkSheetFilter/common/SingleFilter';
 import 'src/pages/worksheet/common/WorkSheetFilter/WorkSheetFilter.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const ClickAwayable = ClickAway;
 
@@ -24,7 +25,7 @@ const Popup = styled.div`
 
 export default function FilterDrop(props) {
   const { portal, setFilter, appId } = props;
-  const { controls = [], filters = [] } = portal;
+  const { controls = [], filters = [] }: { controls: FormControl[]; [key: string]: any } = portal;
   const [show, setShow] = useState(false);
   return (
     <ClickAwayable

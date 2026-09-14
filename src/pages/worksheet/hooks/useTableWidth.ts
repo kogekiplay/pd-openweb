@@ -11,7 +11,7 @@ function getDefaultWidth(control) {
 }
 
 export default function useTableWidth(props) {
-  const { width, xIsScroll, visibleControls = [], sheetColumnWidths = {} } = props;
+  const { width, xIsScroll, visibleControls = [], sheetColumnWidths = {} }: { visibleControls: FormControl[]; [key: string]: any } = props;
   const sumControlWidth = useCallback(
     controls =>
       sum(

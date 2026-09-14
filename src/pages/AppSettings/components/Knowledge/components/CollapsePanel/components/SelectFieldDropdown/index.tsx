@@ -1,9 +1,10 @@
 import React from 'react';
 import { getControlIcon } from '../../../../core/utils';
 import Dropdown from '../../../Dropdown';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const SelectFieldDropdown = props => {
-  const { controls, selectedFields, addSelectedField } = props;
+  const { controls, selectedFields, addSelectedField }: { controls: FormControl[]; [key: string]: any } = props;
   const selectedIdSet = new Set((selectedFields || []).map(item => item.controlId));
   // 剩余字段
   const remainingControls = (controls || []).filter(control => !selectedIdSet.has(control.controlId));

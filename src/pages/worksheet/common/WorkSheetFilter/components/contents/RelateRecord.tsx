@@ -4,7 +4,7 @@ import _, { omit } from 'lodash';
 import PropTypes from 'prop-types';
 import { getTitleTextFromControls } from 'src/utils/control';
 import { FILTER_CONDITION_TYPE } from '../../enum';
-import type { RecordRow } from 'src/utils/controlTypes';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 function safeParse(str) {
   try {
@@ -44,7 +44,7 @@ export default class RelateRecord extends React.Component<any, any> {
   addRecord = selectedRecords => {
     const { control, onChange } = this.props;
     const { records } = this.state;
-    const { relationControls } = control;
+    const { relationControls }: { relationControls: FormControl[]; [key: string]: any } = control;
     const newRecords = (
       this.selectSingle ? [] : records.filter((r: RecordRow) => !_.find(selectedRecords, sr => r.id === sr.rowid))
     ).concat(

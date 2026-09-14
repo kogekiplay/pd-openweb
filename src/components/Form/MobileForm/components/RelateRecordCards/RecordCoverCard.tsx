@@ -8,6 +8,7 @@ import { getTitleTextFromRelateControl } from 'src/utils/control';
 import { getTitleControlId } from '../../../core/utils';
 import { getRecordCardStyle } from '../../tools/utils';
 import CardCellControls from './CardCellControls';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   position: relative;
@@ -132,7 +133,7 @@ export default function RecordCoverCard(props) {
     onReplaceRecord = () => {},
     canSelect = false,
     selected = false,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const [forceShowFullValue, setForceShowFullValue] = useState(false);
   const titleControl = _.find(parentControl.relationControls, { attribute: 1 });
   const titleMasked =

@@ -964,7 +964,7 @@ class RelateRecordCards extends Component<any, any> {
       showRelateRecordEmpty,
       isDraft,
       sourceBtnName,
-    } = control;
+    }: { relationControls: FormControl[]; [key: string]: any } = control;
     const sourceEntityName = getTranslateInfo(appId, null, dataSource).recordName || control.sourceEntityName;
     const { records, previewRecord, showNewRecord, sheetTemplateLoading, enablePayment } = this.state;
     const {

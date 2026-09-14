@@ -6,6 +6,7 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import { UPGRADE_DETAIL_TYPE_LIST } from '../../../../config';
 import UpgradeItemWrap from '../UpgradeItemWrap';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const TabWrap = styled.div`
   background: var(--color-background-disabled);
@@ -61,7 +62,7 @@ export default class UpgradeDetail extends Component<any, any> {
   render() {
     const { visible, modelType, onClose = () => {} } = this.props;
     const { data = {}, tabType } = this.state;
-    const { controls = [], views = [] } = data;
+    const { controls = [], views = [] }: { controls: FormControl[]; [key: string]: any } = data;
 
     return (
       <Drawer

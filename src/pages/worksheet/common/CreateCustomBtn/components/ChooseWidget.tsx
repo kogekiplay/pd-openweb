@@ -163,7 +163,7 @@ let ChooseWidget = class ChooseWidget extends React.Component<any, any> {
     });
   };
   getData = props => {
-    const { writeObject, relationControls = [], widgetList = [] } = props;
+    const { writeObject, relationControls = [], widgetList = [] }: { relationControls: FormControl[]; [key: string]: any } = props;
     return (writeObject !== 1 ? relationControls : widgetList).filter(o => !canNotForCustomWrite(o));
   };
   handSet = (item, isAdd) => {

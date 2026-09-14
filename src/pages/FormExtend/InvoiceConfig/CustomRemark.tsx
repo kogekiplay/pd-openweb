@@ -5,6 +5,7 @@ import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, Menu, MenuItem, TagTextarea } from 'ming-ui';
 import { getIconByType } from 'src/pages/widgetConfig/util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrapper = styled.div`
   display: flex;
@@ -64,7 +65,7 @@ const Wrapper = styled.div`
 `;
 
 export default function SelectWithRefer(props) {
-  const { value, onChange, controlList = [] } = props;
+  const { value, onChange, controlList = [] }: { controlList: FormControl[]; [key: string]: any } = props;
   const [visible, setVisible] = useState(false);
   const tagTextareaRef = useRef(null);
   const popupContainerRef = useRef(null);

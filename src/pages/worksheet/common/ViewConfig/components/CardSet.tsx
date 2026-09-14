@@ -8,7 +8,7 @@ import TitleControl from './TitleControl';
 import type { FormControl } from 'src/utils/controlTypes';
 
 export default function CardSet(props) {
-  const { appId, view, updateCurrentView, worksheetControls, columns } = props;
+  const { appId, view, updateCurrentView, worksheetControls, columns }: { worksheetControls: FormControl[]; [key: string]: any } = props;
   const { advancedSetting } = view;
   const info = { ...view, appId, editAttrs: ['advancedSetting'] };
   const viewTypeText = VIEW_DISPLAY_TYPE[view.viewType];

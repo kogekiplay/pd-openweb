@@ -17,6 +17,7 @@ import { handleAdvancedSettingChange } from '../../../../util/setting';
 import SelectControl from '../../SelectControl';
 import { SectionItem } from '../../SplitLineConfig/style';
 import 'rc-trigger/assets/index.css';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const TEXT_TYPE_CONTROL = [2, 3, 4, 5, 7, 32, 33];
 
@@ -78,7 +79,7 @@ const renderViewMenu = (item, isDisplay) => {
 };
 
 export default function RelateSearchConfig(props) {
-  const { data, controls = [], views = [], handleChange } = props;
+  const { data, controls = [], views = [], handleChange }: { controls: FormControl[]; [key: string]: any } = props;
   const { advancedSetting = {}, viewId } = data;
   const [visible, setVisible] = useState(false);
   const searchableControls = formatControlsToDropdown(

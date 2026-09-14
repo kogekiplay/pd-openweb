@@ -19,6 +19,7 @@ import { getFeatureStatus } from 'src/utils/project';
 import { saveSelectExtensionNavType } from 'src/utils/worksheet';
 import { getHighAuthSheetSwitchPermit } from 'src/utils/worksheet';
 import ImportMenu from './ImportMenu';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const settingMenuList = [
   { type: 'submitForm', text: _l('提交表单'), navType: 'settingNav', subPath: 'formSet' },
@@ -58,7 +59,7 @@ export default function SheetMoreOperate(props) {
     sheetSwitchPermit,
     isLock,
     permissionType,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const { setSheetDescVisible, selectIcon, reloadWorksheet, deleteSheet } = props;
   const { name, projectId, worksheetId, allowAdd } = worksheetInfo;
   const [menuVisible, setMenuVisible] = useState<boolean | undefined>();

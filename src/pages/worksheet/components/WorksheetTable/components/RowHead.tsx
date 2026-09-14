@@ -175,7 +175,7 @@ export default function RowHead(props) {
     refreshWorksheetControls = () => {},
     onOpenRecord = () => {},
     printCharge,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   let { className } = props;
   // 必须给初值 false：不给的话状态类型被推成 undefined，三处 setSelectAllPanelVisible(true/false) 全是 TS2345。
   // 运行时等价（undefined 本来也是假值），rc-trigger 5 给 onPopupVisibleChange

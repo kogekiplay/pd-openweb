@@ -4,6 +4,7 @@ import _ from 'lodash';
 import { LoadDiv, ScrollView } from 'ming-ui';
 import flowNode from '../../../api/flowNode';
 import { DetailFooter, DetailHeader, ProcessParameters } from '../components';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default class Plugin extends Component<any, any> {
   constructor(props) {
@@ -88,7 +89,7 @@ export default class Plugin extends Component<any, any> {
    */
   onSave = () => {
     const { data, saveRequest } = this.state;
-    const { name, fields, controls } = data;
+    const { name, fields, controls }: { controls: FormControl[]; [key: string]: any } = data;
     let hasError = false;
 
     controls.forEach(item => {

@@ -179,7 +179,7 @@ export async function fetchFilterData({ worksheetId, filterId, setWorksheetContr
     ]);
 
     const { template = {} } = worksheetInfo;
-    const { controls = [] } = template;
+    const { controls = [] }: { controls: FormControl[]; [key: string]: any } = template;
 
     const dataFilterFields = controls.filter(isSupportFilterField);
 

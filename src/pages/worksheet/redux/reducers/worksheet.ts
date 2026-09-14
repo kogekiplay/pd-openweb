@@ -217,7 +217,7 @@ export function controls(state = [], action: ReduxAction) {
     case 'WORKSHEET_INIT':
       const { value = {} } = action;
       const { template = {} } = value;
-      const { controls = [] } = template;
+      const { controls = [] }: { controls: FormControl[]; [key: string]: any } = template;
       return controls;
     case 'WORKSHEET_UPDATE_CONTROLS':
       return action.controls;

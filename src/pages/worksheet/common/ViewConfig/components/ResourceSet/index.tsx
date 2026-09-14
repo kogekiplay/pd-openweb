@@ -61,7 +61,7 @@ export default function ResourceSet(props) {
   });
 
   useEffect(() => {
-    const { worksheetControls = [] } = props;
+    const { worksheetControls = [] }: { worksheetControls: FormControl[]; [key: string]: any } = props;
     const timeControls = worksheetControls
       .filter(
         (item: FormControl) =>

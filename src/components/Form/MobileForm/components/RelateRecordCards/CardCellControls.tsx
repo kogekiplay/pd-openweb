@@ -6,6 +6,7 @@ import CellControl from 'worksheet/components/CellControls';
 import { checkCellIsEmpty } from 'src/utils/control';
 import { checkControlCanSetStyle } from 'src/utils/control';
 import { getRecordCardStyle } from '../../tools/utils';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Control = styled.div`
   display: flex;
@@ -120,7 +121,7 @@ export default function CardCellControls(props) {
     sheetSwitchPermit,
     appId,
     isMobileTable,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
 
   return (
     <div className={className}>

@@ -31,7 +31,7 @@ const Wrap = styled.div`
 `;
 
 function TitleDrop(props) {
-  const { advancedSetting, worksheetControls, handleChange, controls, cancelAble } = props;
+  const { advancedSetting, worksheetControls, handleChange, controls, cancelAble }: { worksheetControls: FormControl[]; controls: FormControl[]; [key: string]: any } = props;
   const { viewtitle } = advancedSetting;
 
   const resolveTitleControl = () => {
@@ -75,7 +75,7 @@ function TitleDrop(props) {
 }
 
 export default function (props) {
-  const { isCard, advancedSetting, className, worksheetControls, handleChange, title } = props;
+  const { isCard, advancedSetting, className, worksheetControls, handleChange, title }: { worksheetControls: FormControl[]; [key: string]: any } = props;
   const { viewtitle } = advancedSetting;
   const controls: FormControl[] = worksheetControls
     .filter((o: FormControl) => canSetAsTitle(o) && !_.includes(ALL_SYS, o.controlId))

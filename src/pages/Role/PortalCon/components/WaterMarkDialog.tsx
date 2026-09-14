@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { Dialog, TagTextarea } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { ControlTag, SelectFieldsWrap } from 'src/pages/widgetConfig/styled/index';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const WaterMarkTextarea = styled(TagTextarea)`
   .cm-placeholder {
@@ -23,7 +24,7 @@ const DEFAULT_CONTROLS = [
 ];
 
 function WaterMarkDialog(props) {
-  const { defaultValue = '', visible, onClose, onSave, controls = DEFAULT_CONTROLS } = props;
+  const { defaultValue = '', visible, onClose, onSave, controls = DEFAULT_CONTROLS }: { controls: FormControl[]; [key: string]: any } = props;
   const [value, setValue] = useState(defaultValue);
   const [selectVisible, setSelectVisible] = useState(false);
   const $tagTextarea = useRef(null);

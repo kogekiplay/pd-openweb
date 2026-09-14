@@ -32,7 +32,7 @@ const Wrap = styled.div(
 );
 
 export default function AddControlDiaLog(params) {
-  const { controls = [], setVisible, visible, type, addName, onAdd, enumType, title, worksheetId, onChange } = params;
+  const { controls = [], setVisible, visible, type, addName, onAdd, enumType, title, worksheetId, onChange }: { controls: FormControl[]; [key: string]: any } = params;
   let initData = {
     ...DEFAULT_DATA[enumType],
     type: type || enumWidgetType[enumType],

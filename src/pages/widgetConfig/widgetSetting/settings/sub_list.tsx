@@ -57,8 +57,8 @@ const SettingModelWrap = styled.div`
 `;
 
 export default function SubListSetting(props) {
-  const { status, allControls, data, globalSheetInfo = {}, onChange } = props;
-  const { controlId, dataSource, relationControls = [], showControls = [], needUpdate } = data;
+  const { status, allControls, data, globalSheetInfo = {}, onChange }: { allControls: FormControl[]; [key: string]: any } = props;
+  const { controlId, dataSource, relationControls = [], showControls = [], needUpdate }: { relationControls: FormControl[]; [key: string]: any } = data;
   const [sheetInfo, setInfo] = useState({});
   const [subQueryConfigs, setSubQueryConfigs] = useState([]);
   const [subListMode, setMode] = useState('new');

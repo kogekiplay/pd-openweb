@@ -14,9 +14,10 @@ import { getPrintCardInfoOfTemplate } from 'src/pages/worksheet/common/PrintQrBa
 import { sendCloudPrint } from 'src/utils/record';
 import MoreOption from '../../components/MoreOption';
 import RangeDrop from '../../components/RangeDrop';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function PrintSortableItem(props) {
-  const { item, worksheetInfo = {}, worksheetControls = [], updatePrint, changeState, loadPrint, DragHandle } = props;
+  const { item, worksheetInfo = {}, worksheetControls = [], updatePrint, changeState, loadPrint, DragHandle }: { worksheetControls: FormControl[]; [key: string]: any } = props;
   const { views = [], worksheetId } = worksheetInfo;
   const printInfo = getPrintCardInfoOfTemplate(item);
   const isCustom = [PRINT_TYPE.WORD_PRINT, PRINT_TYPE.EXCEL_PRINT].includes(item.type);

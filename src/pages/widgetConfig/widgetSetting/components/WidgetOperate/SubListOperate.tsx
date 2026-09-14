@@ -7,7 +7,7 @@ import type { FormControl } from 'src/utils/controlTypes';
 
 export default function SubListOperate(props) {
   const { data, onChange } = props;
-  const { advancedSetting = {}, relationControls = [], controlId } = data;
+  const { advancedSetting = {}, relationControls = [], controlId }: { relationControls: FormControl[]; [key: string]: any } = data;
   const {
     allowadd = '1',
     allowedit = '1',

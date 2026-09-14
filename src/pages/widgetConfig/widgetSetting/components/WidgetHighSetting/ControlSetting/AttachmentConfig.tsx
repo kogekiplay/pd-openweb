@@ -17,6 +17,7 @@ import Dropdown from '../../../../components/Dropdown';
 import DynamicDefaultValue from '../../DynamicDefaultValue';
 import { transferValue } from '../../DynamicDefaultValue/util';
 import { SectionItem } from '../../SplitLineConfig/style';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const defaultImg = `https://fp1.mingdaoyun.cn/resources/preview_background.png`;
 
@@ -235,7 +236,7 @@ const getMarkStyle = value => {
 };
 
 function WaterMarkDialog(props) {
-  const { data, onChange, allControls = [], globalSheetInfo = {}, onClose } = props;
+  const { data, onChange, allControls = [], globalSheetInfo = {}, onClose }: { allControls: FormControl[]; [key: string]: any } = props;
   const {
     watermarkstyle = '2',
     watermarkinfo,

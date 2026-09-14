@@ -27,6 +27,7 @@ import {
 } from './util';
 import WebLayout from './webLayout';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const MobileLayout = lazy(() => import('./mobileLayout'));
 
@@ -258,7 +259,7 @@ let CustomPage = class CustomPage extends Component<any, any> {
       if (createRecordBtns.length) {
         // 找到创建按钮
         const saveBtnRequest = createRecordBtns.map(item => {
-          const { temporaryWriteControls, controls } = item.config; // 保存的时候对 writeControls 数据处理
+          const { temporaryWriteControls, controls }: { controls: FormControl[]; [key: string]: any } = item.config; // 保存的时候对 writeControls 数据处理
 
           let writeControlsFormat = temporaryWriteControls.map(o => {
             let control = _.find(controls, item => item.controlId === o.controlId) || {};

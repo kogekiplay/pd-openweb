@@ -15,6 +15,7 @@ import SelectWorksheet from 'src/pages/widgetConfig/widgetSetting/components/Sea
 import SingleFilter from 'src/pages/worksheet/common/WorkSheetFilter/common/SingleFilter';
 import { getTranslateInfo } from 'src/utils/app';
 import { replaceControlsTranslateInfo } from 'src/utils/translate';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const renderSearchCom = () => {
   return (
@@ -58,7 +59,7 @@ export default function ReviewFreeByWorksheetWrap(props) {
     const { sourceId = '', sourceName = '', templates = {}, items = [], appName } = query || {};
     setSheetId(sourceId);
     setSheetName(sourceName);
-    const { controls = [] } = templates;
+    const { controls = [] }: { controls: FormControl[]; [key: string]: any } = templates;
     setAllControls(controls);
     setState({ getNameLoading: false, isSheetDelete: !sourceId });
     setControls(

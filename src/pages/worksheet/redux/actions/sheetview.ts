@@ -103,7 +103,7 @@ export function updateTreeNodeExpansion(
     const sheetview: Record<string, any> = getState().sheet.sheetview || {};
     const { appId, viewId, worksheetId } = base;
     const { treeMap, maxLevel } = sheetview.treeTableViewData || {};
-    const { rows = [] } = sheetview.sheetViewData || {};
+    const { rows = [] }: { rows: RecordRow[]; [key: string]: any } = sheetview.sheetViewData || {};
 
     if (runTimes > 20) {
       return;
@@ -1542,7 +1542,7 @@ export function changeTreeTableViewLevelCount(levelCount) {
 export function expandAllTreeTableViewNode() {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { sheetview = {} } = getState().sheet;
-    const { rows = [] } = sheetview.sheetViewData || {};
+    const { rows = [] }: { rows: RecordRow[]; [key: string]: any } = sheetview.sheetViewData || {};
     const { treeMap } = sheetview.treeTableViewData || {};
     const needLoadNodes = Object.keys(treeMap)
       .filter(key => treeMap[key].folded)
@@ -1582,7 +1582,7 @@ export function refreshTreeOfTreeTableView(cb = () => {}) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { sheetview = {} } = getState().sheet;
     const oldTreeMap = get(sheetview, 'treeTableViewData.treeMap');
-    const { rows = [] } = sheetview.sheetViewData || {};
+    const { rows = [] }: { rows: RecordRow[]; [key: string]: any } = sheetview.sheetViewData || {};
     const { treeMap, maxLevel } = treeDataUpdater({}, { rootRows: rows.filter((r: RecordRow) => !r.pid), rows });
     dispatch({
       type: 'UPDATE_TREE_TABLE_VIEW_DATA',
@@ -1604,7 +1604,7 @@ export function refreshTreeOfTreeTableView(cb = () => {}) {
 export function updateTreeByRowChange({ recordId, changedValue = {} } = {}) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { base, views, sheetview = {} } = getState().sheet;
-    const { rows = [] } = sheetview.sheetViewData || {};
+    const { rows = [] }: { rows: RecordRow[]; [key: string]: any } = sheetview.sheetViewData || {};
     const { treeMap } = sheetview.treeTableViewData || {};
     const { viewId } = base;
     const view = find(views, v => v.viewId === viewId) || {};
@@ -1664,7 +1664,7 @@ export function updateFolded(key, value) {
     if (key === 'all') {
       if (value) {
         const { sheetview = {} } = getState().sheet;
-        const { rows = [] } = sheetview.sheetViewData || {};
+        const { rows = [] }: { rows: RecordRow[]; [key: string]: any } = sheetview.sheetViewData || {};
         const groupRows = rows.filter((row: RecordRow) => row.rowid === 'groupTitle');
         dispatch({
           type: 'WORKSHEET_SHEETVIEW_UPDATE_FOLDED',

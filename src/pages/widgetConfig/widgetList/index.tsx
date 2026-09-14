@@ -467,7 +467,7 @@ function TemplatePanelHeader(props) {
     onEdit,
     onDelete,
     showOperate = true,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const templateId = item.templateId || item.id;
   const firstControl = controls[0] || {};
   const { icon: firstControlIcon } = getWidgetInfo(firstControl.type);
@@ -604,7 +604,7 @@ export default function List(props) {
     setConfig = () => {},
     getTemplateListByPersonal = () => {},
     getTemplateListByOrganization = () => {},
-  } = props;
+  }: { allControls: FormControl[]; [key: string]: any } = props;
   const { hideWorksheetControl } = md.global.SysSettings;
   const [activeWidgetTab, setActiveWidgetTab] = useState(1);
   const [expandedGroups, setExpandedGroups] = useState(['organization', 'personal']);

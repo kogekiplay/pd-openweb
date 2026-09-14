@@ -194,7 +194,7 @@ function mergeRequiredState(controls: FormControl[] = [], control = {}) {
 
 export function getSubListErrorOfStore(store, currentControl?) {
   const state = store.getState();
-  const { rows, base = {}, persistedCellErrors: pendingCellErrors = {} } = state;
+  const { rows, base = {}, persistedCellErrors: pendingCellErrors = {} }: { rows: RecordRow[]; [key: string]: any } = state;
   const { recordId, control = {} } = base;
   const isWorkflow =
     ((base.instanceId && base.workId) || _.get(window, 'shareState.isPublicWorkflowRecord')) &&

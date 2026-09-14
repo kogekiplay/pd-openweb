@@ -22,6 +22,7 @@ import { AnimationWrap, EditInfo, SettingItem } from '../../styled';
 import { filterSysControls, formatControlsToDropdown, getFilterRelateControls, toEditWidgetPage } from '../../util';
 import { getAdvanceSetting, getControlsSorts, handleAdvancedSettingChange } from '../../util/setting';
 import { RelateSearchWorksheet, relateSearchWorksheet } from '../components/relationSearch/relateSearchWorksheet';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const FILL_TYPES = [
   { text: _l('填满'), value: '0' },
@@ -99,7 +100,7 @@ const CoverWrap = styled.div`
 `;
 
 export default function RelationSearch(props) {
-  let { data, onChange, allControls, globalSheetInfo, deleteWidget, status: { saveIndex } = {} } = props;
+  let { data, onChange, allControls, globalSheetInfo, deleteWidget, status: { saveIndex } = {} }: { allControls: FormControl[]; [key: string]: any } = props;
   const {
     controlId,
     enumDefault = 1,
@@ -108,7 +109,7 @@ export default function RelationSearch(props) {
     dataSource,
     coverCid,
     sourceControlId,
-  } = data;
+  }: { relationControls: FormControl[]; [key: string]: any } = data;
   let {
     showtype = String(enumDefault),
     covertype = '0',

@@ -60,7 +60,7 @@ export default function RecordWrap(props) {
   };
 
   const renderContent = () => {
-    const { view, viewId, fetchRowsByGroupId, controls } = props;
+    const { view, viewId, fetchRowsByGroupId, controls }: { controls: FormControl[]; [key: string]: any } = props;
     const dateStart = controls.find((o: FormControl) => o.controlId === _.get(view, 'advancedSetting.begindate'));
     const dateEnd = controls.find((o: FormControl) => o.controlId === _.get(view, 'advancedSetting.enddate'));
     const hasStartAndEnd = !!dateStart && !!dateEnd;

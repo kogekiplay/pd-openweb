@@ -7,7 +7,7 @@ import type { FormControl } from 'src/utils/controlTypes';
 
 // 选项、人员等字段的快速筛选显示项配置。
 export default function NavShowSetting(props) {
-  const { dataType, control, worksheetControls, currentSheetInfo, view, activeFastFilterId, updateViewSet } = props;
+  const { dataType, control, worksheetControls, currentSheetInfo, view, activeFastFilterId, updateViewSet }: { worksheetControls: FormControl[]; [key: string]: any } = props;
 
   if (!NAV_SHOW_TYPE.keys.includes(dataType)) {
     return null;

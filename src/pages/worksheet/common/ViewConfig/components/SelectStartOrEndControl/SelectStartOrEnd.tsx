@@ -122,7 +122,7 @@ export default function SelectStartOrEnd(props) {
     beginIsDel,
     endIsDel,
     classNames,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
 
   const getData = () => {
     const timeControlsList = setSysWorkflowTimeControlFormat(timeControls, sheetSwitchPermit);

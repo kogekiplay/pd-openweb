@@ -17,6 +17,7 @@ import * as actions from '../../../redux/actions';
 import HeaderCon from './Header';
 import { Wrap } from './style';
 import { getColumns, getColumnsShowControls } from './util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 function User(props) {
   const {
@@ -51,7 +52,7 @@ function User(props) {
     fastFilters = [],
     filters,
     telFilters,
-  } = portal;
+  }: { controls: FormControl[]; [key: string]: any } = portal;
 
   const { isSendMsgs } = baseInfo;
   const [changeRoleDialog, setChangeRoleDialog] = useState(false);
@@ -109,7 +110,7 @@ function User(props) {
         appId,
       })
       .then(res => {
-        const { controls, showControlIds = [] } = res;
+        const { controls, showControlIds = [] }: { controls: FormControl[]; [key: string]: any } = res;
         setHideIds(showControlIds);
         setControls(translatePortalRoleOptions(appId, controls));
       });

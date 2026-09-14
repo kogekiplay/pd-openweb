@@ -69,7 +69,7 @@ export default function ControlSelect(props) {
     children,
     isAppendToBody,
     onChange = () => {},
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const control = _.find(controls, { controlId: selected });
   return (
     <AddCondition

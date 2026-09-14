@@ -55,7 +55,7 @@ function QuickFilter(props) {
     resetQuickFilter = () => {},
     fireWhenViewLoaded = () => {},
     onFilterClick = () => {},
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const { worksheetId } = base;
   const isConfigMode = mode === 'config';
   const filtersLength = useRef(filters.length);

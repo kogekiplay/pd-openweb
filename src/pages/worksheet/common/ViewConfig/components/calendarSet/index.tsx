@@ -93,7 +93,7 @@ const changePickerContainerLeft = () => {
 };
 
 export default function CalendarSet(props) {
-  const { appId, view, updateCurrentView, worksheetControls } = props;
+  const { appId, view, updateCurrentView, worksheetControls }: { worksheetControls: FormControl[]; [key: string]: any } = props;
   const { advancedSetting = {}, worksheetId, viewId } = view;
   const {
     calendarType = '0',

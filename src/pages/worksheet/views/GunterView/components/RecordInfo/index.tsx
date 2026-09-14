@@ -7,6 +7,7 @@ import RecordInfoWrapper from 'worksheet/common/recordInfo/RecordInfoWrapper';
 import * as actions from 'worksheet/redux/actions/gunterview';
 import type { RootState } from 'src/redux/types';
 import { browserIsMobile } from 'src/utils/common';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 const isMobile = browserIsMobile();
 let RecordInfo = class RecordInfo extends Component<any, any> {
@@ -22,7 +23,7 @@ let RecordInfo = class RecordInfo extends Component<any, any> {
   getCurrentSheetRows() {
     const { row, grouping } = this.props;
     const { groupId } = row;
-    const { rows } =
+    const { rows }: { rows: RecordRow[]; [key: string]: any } =
       _.find(grouping, {
         key: groupId,
       }) || {};

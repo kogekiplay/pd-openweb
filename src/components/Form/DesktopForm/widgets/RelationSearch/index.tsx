@@ -21,7 +21,7 @@ import { controlState, getTitleTextFromRelateControl, getValueStyle } from 'src/
 import RegExpValidator from 'src/utils/expression';
 import { addBehaviorLog } from 'src/utils/project';
 import { replaceControlsTranslateInfo } from 'src/utils/translate';
-import type { FormControl } from 'src/utils/controlTypes';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const PAGE_SIZE = 50;
 
@@ -133,8 +133,8 @@ function Cards(props) {
     onAdd,
     onOpen,
     appId,
-  } = props;
-  let { records } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
+  let { records }: { records: RecordRow[]; [key: string]: any } = props;
 
   if (control.type === 51 && control.enumDefault === 1) {
     records = records.slice(0, 1);
@@ -213,7 +213,7 @@ function Cards(props) {
 }
 
 function Texts(props) {
-  const { control, entityName, allowOpenRecord, allowNewRecord, records = [], onAdd, onOpen } = props;
+  const { control, entityName, allowOpenRecord, allowNewRecord, records = [], onAdd, onOpen }: { records: RecordRow[]; [key: string]: any } = props;
 
   let valueStyle = {};
   let style = {};

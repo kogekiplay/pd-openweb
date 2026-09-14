@@ -50,7 +50,7 @@ function RelateRecordTable(props) {
     isDraft,
     formItemId,
     onUpdateCell = () => {},
-  } = props;
+  }: { records: RecordRow[]; [key: string]: any } = props;
   const { updateWorksheetControls } = props;
   const { updateRecord, deleteRecords, refresh, updateBase, updateTableConfigByControl } = props;
   const { isInForm, allowEdit, controlPermission, relateWorksheetInfo } = base;

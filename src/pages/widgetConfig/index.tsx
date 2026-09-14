@@ -44,6 +44,7 @@ import NoTitleControlDialog from './widgetSetting/components/NoTitleControlDialo
 import VerifyModifyDialog from './widgetSetting/components/VerifyModifyDialog';
 import { verifyModifyDialog } from './widgetSetting/components/VerifyModifyDialog';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const WidgetConfig = styled.div`
   height: 100%;
@@ -254,7 +255,7 @@ export default function Container({ isDialog, ...props }) {
       })
       .then(({ code, data }) => {
         if (code === 1) {
-          const { version, controls } = data;
+          const { version, controls }: { controls: FormControl[]; [key: string]: any } = data;
 
           let widgets = genWidgetsByControls(controls);
 
@@ -418,7 +419,7 @@ export default function Container({ isDialog, ...props }) {
 
         let error = getMsgByCode({ code, data, controls: saveControls });
         if (error) return;
-        const { controls, version } = data;
+        const { controls, version }: { controls: FormControl[]; [key: string]: any } = data;
 
         // 子表重新拉缓存数据，保存后，relationControls不处理，防止一些隐藏问题
         window.subListSheetConfig = {};

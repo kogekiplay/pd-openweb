@@ -10,7 +10,7 @@ import { getAvailableFilters } from 'src/components/Form/core/formUtils/ruleUtil
 import MobileCardCellControls from 'src/components/MobileCardCellControls/MobileCardCellControls';
 import SummaryCom from 'src/components/MobileCardCellControls/SummaryCom';
 import { controlState, getTitleTextFromControls, isRelateRecordTableControl } from 'src/utils/control';
-import type { FormControl } from 'src/utils/controlTypes';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 function getFieldsAfterRules(displayFields, formData, rules, rowId) {
   if (!rules || !rules.length) return displayFields;
@@ -160,7 +160,7 @@ export default function ChildTableFlatComp(props) {
     onSave = () => {},
     submitChildTableCheckData = () => {},
     updateIsAddByLine = () => {},
-  } = props;
+  }: { controls: FormControl[]; rows: RecordRow[]; [key: string]: any } = props;
   const { columnnum, showtitleid } = control.advancedSetting;
   const defaultMaxLength = 10;
   const [maxShowLength, setMaxShowLength] = useState(defaultMaxLength);

@@ -253,7 +253,7 @@ export default function Conditions(props) {
     resetQuickFilter,
     onFilterClick,
     viewRowsLoading,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const [values, setValues] = useState({});
   const [isQuerying, setIsQuerying] = useState(false);
   const [requiredErrorVisible, setRequiredErrorVisible] = useState(false);

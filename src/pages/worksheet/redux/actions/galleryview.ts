@@ -180,7 +180,7 @@ export const updateRow = (data, groupId) => {
         type: 'CHANGE_GALLERY_VIEW_DATA',
         list: gallery.map(o => {
           if (o.key === groupId) {
-            const { rows = [] } = o;
+            const { rows = [] }: { rows: RecordRow[]; [key: string]: any } = o;
             const rowData = rows.find((it: RecordRow) => safeParse(it).rowid === data.rowid);
             return {
               ...o,

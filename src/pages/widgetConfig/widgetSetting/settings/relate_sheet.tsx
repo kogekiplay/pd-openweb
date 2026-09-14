@@ -30,6 +30,7 @@ import RelateDetailInfo from '../components/RelateDetailInfo';
 import ConfigRelate from '../components/relateSheet/ConfigRelate';
 import openSelectConfig from '../components/relateSheet/selectConfig';
 import WidgetVerify from '../components/WidgetVerify';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const DISPLAY_COUNT = [
   { text: _l('单条'), value: 1 },
@@ -128,7 +129,7 @@ export default function RelateSheet(props) {
     coverCid,
     advancedSetting = {},
     enumDefault2 = 1,
-  } = data;
+  }: { relationControls: FormControl[]; [key: string]: any } = data;
   let {
     showtype = '3',
     allowlink,

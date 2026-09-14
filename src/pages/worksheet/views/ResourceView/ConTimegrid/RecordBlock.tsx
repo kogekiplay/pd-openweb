@@ -134,7 +134,7 @@ export default function RecordBlock(props) {
       $ref.current.style.zIndex = 100;
       let oldTop = allList.find(it => it.key === keyForGroup).top + top;
       let newTop = oldTop + changValueY + 3; //3px偏差
-      const { controls = [] } = props;
+      const { controls = [] }: { controls: FormControl[]; [key: string]: any } = props;
       const viewControlData = controls.find((o: FormControl) => o.controlId === view.viewControl) || {};
       newKey =
         (viewControlData.fieldPermission || '111')[1] === '1'
@@ -263,7 +263,7 @@ export default function RecordBlock(props) {
     };
   };
 
-  const { row, controls, minHeight } = props;
+  const { row, controls, minHeight }: { controls: FormControl[]; [key: string]: any } = props;
   const startControl = controls.find((o: FormControl) => o.controlId === _.get(view, 'advancedSetting.begindate'));
   const endControl = controls.find((o: FormControl) => o.controlId === _.get(view, 'advancedSetting.enddate'));
   const startDisable =

@@ -49,7 +49,7 @@ const getFiledOptions = controls => {
 };
 
 function ImportAttachments(props) {
-  const { onCancel, controls, projectId, appId, worksheetId, viewId, allowAdd } = props;
+  const { onCancel, controls, projectId, appId, worksheetId, viewId, allowAdd }: { controls: FormControl[]; [key: string]: any } = props;
   const { matchFieldOptions, writeFieldOptions } = getFiledOptions(controls);
 
   const [step, setStep] = useState(1);

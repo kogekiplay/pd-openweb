@@ -19,7 +19,7 @@ const AddGalleryCard = props => {
     controls = [],
     galleryview = {},
     allowAddNewRecord = true,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const currentView = views.find(o => o.viewId === base.viewId) || {};
   const { gallery = [] } = galleryview;
   const { groupsetting } = getAdvanceSetting(currentView);

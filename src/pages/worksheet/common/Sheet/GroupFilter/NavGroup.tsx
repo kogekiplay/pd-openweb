@@ -7,6 +7,7 @@ import { isOpenPermit } from 'src/pages/FormSet/util';
 import { getAdvanceSetting } from 'src/utils/control';
 import { AREA, TYPES } from './constants.js';
 import { isSourceTree, sortDataByCustomNavs } from './util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function NavGroup(props) {
   const {
@@ -26,7 +27,7 @@ export default function NavGroup(props) {
     source,
     setOpenKeys,
     sheetSwitchPermit = [],
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
 
   const { showallitem, allitemname = '', shownullitem, nullitemname = '' } = getAdvanceSetting(view);
 

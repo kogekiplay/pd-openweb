@@ -164,7 +164,7 @@ export default function RefreshRecordDialog(props) {
     getWorksheetSheetViewSummary = () => {},
     clearSelect = () => {},
     onClose = () => {},
-  } = props;
+  }: { controls: FormControl[]; selectedRows: RecordRow[]; [key: string]: any } = props;
   const visibleControls: FormControl[] = controls.filter(
     (c: FormControl) => !_.includes(FORM_HIDDEN_CONTROL_IDS.concat(WORKFLOW_SYSTEM_CONTROL.map(cc => cc.controlId)), c.controlId),
   );

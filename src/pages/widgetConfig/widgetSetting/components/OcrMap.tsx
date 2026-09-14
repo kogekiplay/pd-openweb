@@ -66,7 +66,7 @@ const getMapByType = type => {
 };
 
 function MapItem(props) {
-  const { allControls, ocrMap, value, text, match, withSubList, setMap } = props;
+  const { allControls, ocrMap, value, text, match, withSubList, setMap }: { allControls: FormControl[]; [key: string]: any } = props;
   const placeholderRef = useRef(null);
   const [isHover, setHover] = useState(false);
   const [placement, setPlacement] = useState('bottomLeft');

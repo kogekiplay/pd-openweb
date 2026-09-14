@@ -121,7 +121,7 @@ const RecordCount = styled.div`
 `;
 
 export default function Subtotal(props) {
-  const { data, onChange, allControls, globalSheetInfo = {} } = props;
+  const { data, onChange, allControls, globalSheetInfo = {} }: { allControls: FormControl[]; [key: string]: any } = props;
   const { sourceControlId, dataSource, enumDefault, enumDefault2, unit } = data;
   const { summaryresult = '0', numshow, reportempty } = getAdvanceSetting(data);
   const [visible, setVisible] = useState(false);
@@ -140,7 +140,7 @@ export default function Subtotal(props) {
   }, [data.controlId]);
 
   // 获取汇总关联表控件的表id
-  const { dataSource: worksheetId, relationControls } = getControlByControlId(allControls, parsedDataSource);
+  const { dataSource: worksheetId, relationControls }: { relationControls: FormControl[]; [key: string]: any } = getControlByControlId(allControls, parsedDataSource);
   const { loading, data: sheetData } = useSheetInfo({ worksheetId, relationWorksheetId: globalSheetInfo.worksheetId });
   // 空白子表手动取值
   const availableControls: FormControl[] = (
