@@ -92,6 +92,8 @@ export interface FormControl {
   userPermission?: number;
   /** 关联记录/附件等多值控件的条数，由 getRowDetail 从 rq{controlId} 拼上来 */
   count?: number;
+  /** 手机号等掩码字段：解码后是否展示全值 */
+  showMaskValue?: boolean;
   disabled?: boolean;
   required?: boolean;
   sectionId?: string;
