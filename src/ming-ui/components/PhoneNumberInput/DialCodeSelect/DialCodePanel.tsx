@@ -103,7 +103,9 @@ export default function DialCodePanel({
   onSelectCode = _.noop,
   locale,
   panelWidth = 400,
-  maxPanelHeight,
+  // 给个 undefined 默认值：解构里不带默认值的键会被 TS 推成【必填】prop，
+  // 调用方展开 panelLayout（初值是 {}）时就报 TS2322。默认 undefined 不改变运行时行为。
+  maxPanelHeight = undefined,
   hideIndexBar = false,
 }) {
   const [searchValue, setSearchValue] = useState('');
@@ -163,7 +165,11 @@ export default function DialCodePanel({
         <div className="countryList" ref={listRef}>
           {!filteredOptions.length && <div className="empty">{_l('没有匹配的国家/地区')}</div>}
           {!!groupedCountryOptions.preferred.length && (
-            <div ref={node => { sectionRefs.current['#'] = node; }}>
+            <div
+              ref={node => {
+                sectionRefs.current['#'] = node;
+              }}
+            >
               <div className="groupTitle">#</div>
               {groupedCountryOptions.preferred.map(item => (
                 <div
@@ -178,7 +184,12 @@ export default function DialCodePanel({
             </div>
           )}
           {groupedCountryOptions.groupKeys.map(key => (
-            <div key={`group-${key}`} ref={node => { sectionRefs.current[key] = node; }}>
+            <div
+              key={`group-${key}`}
+              ref={node => {
+                sectionRefs.current[key] = node;
+              }}
+            >
               <div className="groupTitle">{key}</div>
               {(groupedCountryOptions.grouped[key] || []).map(item => (
                 <div
