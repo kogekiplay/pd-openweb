@@ -1,3 +1,4 @@
+import type { ReduxAction } from 'src/redux/types';
 ﻿import * as ACTIONS from '../actions/search';
 
 const initialState = {
@@ -7,7 +8,7 @@ const initialState = {
   searchValue: '',
 };
 
-export default (state = initialState, action) => {
+export default (state = initialState, action: ReduxAction) => {
   const { type, isSearching, result } = action;
 
   switch (type) {

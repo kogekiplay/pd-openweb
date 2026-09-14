@@ -23,6 +23,7 @@ import {
   UPDATE_WIDGET,
   UPDATE_WIDGET_VISIBLE,
 } from './actionType';
+import type { ReduxAction } from 'src/redux/types';
 
 const initialState = {
   loading: true,
@@ -170,7 +171,7 @@ function copyWidget(state, payload) {
   });
 }
 
-export default function customPage(state = initialState, action) {
+export default function customPage(state = initialState, action: ReduxAction) {
   const { type, payload } = action;
 
   switch (type) {

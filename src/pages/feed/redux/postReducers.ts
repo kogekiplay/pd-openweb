@@ -1,5 +1,6 @@
 ﻿import _ from 'lodash';
 import defaultOptions from './defaultOptions';
+import type { ReduxAction } from 'src/redux/types';
 
 function getPostIdsFromPostList(postList, isIReply = false) {
   if (!postList || !postList.length) return [];
@@ -52,7 +53,7 @@ function getPostByIdsFromPostList(postList, isIReply = false) {
   }, {});
 }
 
-export function ireplyPostIds(state = [], action) {
+export function ireplyPostIds(state = [], action: ReduxAction) {
   switch (action.type) {
     case 'POST_RELOAD_SUCCESS':
       return getPostIdsFromPostList(action.postList, true);
@@ -63,7 +64,7 @@ export function ireplyPostIds(state = [], action) {
   }
 }
 
-export function ireplyPostsById(state = {}, action) {
+export function ireplyPostsById(state = {}, action: ReduxAction) {
   switch (action.type) {
     case 'POST_RELOAD_SUCCESS':
     case 'POST_LOAD_MORE_SUCCESS':
@@ -73,7 +74,7 @@ export function ireplyPostsById(state = {}, action) {
   }
 }
 
-export function postIds(state = [], action) {
+export function postIds(state = [], action: ReduxAction) {
   switch (action.type) {
     case 'POST_ADD_SUCCESS':
       return action.toPostWall ? [action.postItem.postID].concat(state) : state;
@@ -88,7 +89,7 @@ export function postIds(state = [], action) {
   }
 }
 
-export function topPostIds(state = [], action) {
+export function topPostIds(state = [], action: ReduxAction) {
   switch (action.type) {
     case 'POST_LOAD_TOP_SUCCESS':
       return getPostIdsFromPostList(action.postList, action.options);
@@ -106,7 +107,7 @@ export function topPostIds(state = [], action) {
   }
 }
 
-export function postsById(state = {}, action) {
+export function postsById(state = {}, action: ReduxAction) {
   switch (action.type) {
     case 'POST_ADD_SUCCESS':
     case 'POST_UPDATE_SUCCESS':
@@ -126,7 +127,7 @@ export function postsById(state = {}, action) {
   }
 }
 
-export function hasNew(state = false, action) {
+export function hasNew(state = false, action: ReduxAction) {
   switch (action.type) {
     case 'POST_HAS_NEW':
       return action.hasNew;
@@ -135,7 +136,7 @@ export function hasNew(state = false, action) {
   }
 }
 
-export function hasMore(state = false, action) {
+export function hasMore(state = false, action: ReduxAction) {
   switch (action.type) {
     case 'POST_RELOAD_START':
       return false;
@@ -149,7 +150,7 @@ export function hasMore(state = false, action) {
   }
 }
 
-export function loading(state = true, action) {
+export function loading(state = true, action: ReduxAction) {
   switch (action.type) {
     case 'POST_RELOAD_FAIL':
     case 'POST_RELOAD_SUCCESS':
@@ -163,7 +164,7 @@ export function loading(state = true, action) {
   }
 }
 
-export function loadingMore(state = false, action) {
+export function loadingMore(state = false, action: ReduxAction) {
   switch (action.type) {
     case 'POST_LOAD_MORE_START':
       return true;
@@ -177,7 +178,7 @@ export function loadingMore(state = false, action) {
   }
 }
 
-export function pageIndex(state = 1, action) {
+export function pageIndex(state = 1, action: ReduxAction) {
   switch (action.type) {
     case 'POST_RELOAD_SUCCESS':
       return 1;
@@ -200,7 +201,7 @@ export function fontSize(
   }
 }
 
-export function options(state = defaultOptions, action) {
+export function options(state = defaultOptions, action: ReduxAction) {
   switch (action.type) {
     case 'POST_RELOAD_SUCCESS':
     case 'POST_CHANGE_OPTIONS':
@@ -211,7 +212,7 @@ export function options(state = defaultOptions, action) {
 }
 
 // 右侧搜索框的值，在当前筛选条件中搜索，因为列表刷新后元素会被移除重新渲染所以状态不能放在组件中
-export function searchKeywords(state = null, action) {
+export function searchKeywords(state = null, action: ReduxAction) {
   switch (action.type) {
     case 'POST_CHANGE_SEARCH_KEYWORDS':
       return action.keywords;
@@ -220,7 +221,7 @@ export function searchKeywords(state = null, action) {
   }
 }
 
-export function title(state = _l('动态墙'), action) {
+export function title(state = _l('动态墙'), action: ReduxAction) {
   switch (action.type) {
     case 'POST_CHANGE_TITLE':
       return action.title;

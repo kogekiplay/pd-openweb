@@ -16,9 +16,10 @@ import task from 'src/pages/task/redux/reducers';
 import workflow from 'src/pages/workflow/redux/reducers';
 import sheet from 'src/pages/worksheet/redux/reducers';
 import sheetList from 'src/pages/worksheet/redux/reducers/sheetList';
+import type { ReduxAction } from 'src/redux/types';
 
 export function makeRootReducer() {
-  return (state = {}, action) => {
+  return (state = {}, action: ReduxAction) => {
     return combineReducers({
       post: combineReducers(postReducers),
       postDetail: combineReducers(postDetailReducers),

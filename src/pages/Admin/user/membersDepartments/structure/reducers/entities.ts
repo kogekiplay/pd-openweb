@@ -1,6 +1,7 @@
 ﻿import _ from 'lodash';
 import * as ENTITIES_ACTIONS from '../actions/entities';
 import { getFlatDepartments } from '../modules/util';
+import type { ReduxAction } from 'src/redux/types';
 
 const ACTIONS = {
   ...ENTITIES_ACTIONS,
@@ -107,7 +108,7 @@ const editDepartment = (state, action) => {
   return { ...state, newDepartments, expandedKeys };
 };
 
-const entities = (state = initialState, action) => {
+const entities = (state = initialState, action: ReduxAction) => {
   const {
     type,
     department,

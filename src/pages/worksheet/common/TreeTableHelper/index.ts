@@ -1,6 +1,7 @@
 import _, { difference, find, get, intersection, isUndefined, pickBy, sortBy } from 'lodash';
 import { parseAdvancedSetting } from 'src/utils/control';
 import type { RecordRow } from 'src/utils/controlTypes';
+import type { ReduxAction } from 'src/redux/types';
 
 function getSortedValue(list) {
   return _.map(list, function (num) {
@@ -150,7 +151,7 @@ const initialTreeViewParams = {
 };
 
 // 树形表格相关参数
-export function treeTableViewData(state = initialTreeViewParams, action) {
+export function treeTableViewData(state = initialTreeViewParams, action: ReduxAction) {
   switch (action.type) {
     case 'UPDATE_TREE_TABLE_VIEW_DATA':
       return {

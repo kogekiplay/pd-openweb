@@ -1,3 +1,4 @@
+import type { ReduxAction } from 'src/redux/types';
 const INIT_STATE = {
   mapViewData: [],
   mapViewLoading: false,
@@ -8,7 +9,7 @@ const INIT_STATE = {
   },
 };
 
-export default function boardView(state = INIT_STATE, action) {
+export default function boardView(state = INIT_STATE, action: ReduxAction) {
   const { type, data } = action;
 
   switch (type) {

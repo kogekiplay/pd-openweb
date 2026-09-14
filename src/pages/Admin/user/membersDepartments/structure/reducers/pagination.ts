@@ -14,6 +14,7 @@
 } from '../actions/entities';
 import { CUSTOM_LIST } from '../actions/search';
 import { PAGE_SIZE } from '../constant';
+import type { ReduxAction } from 'src/redux/types';
 
 const mergeUserList = (action, type) => {
   const { response, departmentId, pageIndex } = action;
@@ -89,7 +90,7 @@ const updatePagination = (
   }
 };
 
-export default (state = {}, action) => {
+export default (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'PROJECT_ID_CHANGED':
       return {};

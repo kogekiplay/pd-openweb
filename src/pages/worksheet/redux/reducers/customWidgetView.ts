@@ -1,4 +1,5 @@
-export function loading(state = true, action) {
+import type { ReduxAction } from 'src/redux/types';
+export function loading(state = true, action: ReduxAction) {
   const { type, value } = action;
 
   switch (type) {
@@ -9,7 +10,7 @@ export function loading(state = true, action) {
   }
 }
 
-export function flag(state = 'init', action) {
+export function flag(state = 'init', action: ReduxAction) {
   const { type } = action;
 
   switch (type) {

@@ -1,4 +1,5 @@
-export function view(state = {}, action) {
+import type { ReduxAction } from 'src/redux/types';
+export function view(state = {}, action: ReduxAction) {
   switch (action.type) {
     case 'CHANGE_GALLERY_VIEW':
       return action.data || {};
@@ -7,7 +8,7 @@ export function view(state = {}, action) {
   }
 }
 
-export function galleryGroupLoading(state = false, action) {
+export function galleryGroupLoading(state = false, action: ReduxAction) {
   switch (action.type) {
     case 'CHANGE_GALLERY_VIEW_GROUP_LOADING':
       return action.loading;
@@ -16,7 +17,7 @@ export function galleryGroupLoading(state = false, action) {
   }
 }
 
-export function galleryViewLoading(state = false, action) {
+export function galleryViewLoading(state = false, action: ReduxAction) {
   switch (action.type) {
     case 'CHANGE_GALLERY_VIEW_LOADING':
       return action.loading;
@@ -25,7 +26,7 @@ export function galleryViewLoading(state = false, action) {
   }
 }
 
-export function galleryLoading(state = false, action) {
+export function galleryLoading(state = false, action: ReduxAction) {
   switch (action.type) {
     case 'CHANGE_GALLERY_LOADING':
       return action.loading;
@@ -34,7 +35,7 @@ export function galleryLoading(state = false, action) {
   }
 }
 
-export function galleryViewRecordCount(state = 0, action) {
+export function galleryViewRecordCount(state = 0, action: ReduxAction) {
   const { type } = action;
 
   switch (type) {
@@ -45,7 +46,7 @@ export function galleryViewRecordCount(state = 0, action) {
   }
 }
 
-export function gallery(state = [], action) {
+export function gallery(state = [], action: ReduxAction) {
   const { type } = action;
 
   switch (type) {
@@ -56,7 +57,7 @@ export function gallery(state = [], action) {
   }
 }
 
-export function galleryIndex(state = 0, action) {
+export function galleryIndex(state = 0, action: ReduxAction) {
   const { type } = action;
 
   switch (type) {
@@ -67,7 +68,7 @@ export function galleryIndex(state = 0, action) {
   }
 }
 
-export function galleryViewCard(state = { needUpdate: true, height: 0 }, action) {
+export function galleryViewCard(state = { needUpdate: true, height: 0 }, action: ReduxAction) {
   const { type } = action;
 
   switch (type) {

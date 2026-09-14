@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import { reportTypes } from '../Charts/reportTypes';
+import type { ReduxAction } from 'src/redux/types';
 
 const normalizeBidirectionalBarChartAxes = report => {
   if (!report || report.reportType !== reportTypes.BidirectionalBarChart) {
@@ -25,7 +26,7 @@ const normalizeBidirectionalBarChartAxes = report => {
   };
 };
 
-const currentReport = (state = {}, action) => {
+const currentReport = (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'CHANGE_STATISTICS_CURRENT_REPORT':
       return normalizeBidirectionalBarChartAxes(action.data);
@@ -36,7 +37,7 @@ const currentReport = (state = {}, action) => {
   }
 };
 
-const axisControls = (state = [], action) => {
+const axisControls = (state = [], action: ReduxAction) => {
   switch (action.type) {
     case 'CHANGE_STATISTICS_AXIS_CONTROLS':
       return action.data;
@@ -47,7 +48,7 @@ const axisControls = (state = [], action) => {
   }
 };
 
-const worksheetInfo = (state = {}, action) => {
+const worksheetInfo = (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'CHANGE_STATISTICS_WORKSHEET_INFO':
       return action.data;
@@ -58,7 +59,7 @@ const worksheetInfo = (state = {}, action) => {
   }
 };
 
-const reportData = (state = {}, action) => {
+const reportData = (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'CHANGE_STATISTICS_REPORT_DATA':
       return normalizeBidirectionalBarChartAxes(action.data);
@@ -69,7 +70,7 @@ const reportData = (state = {}, action) => {
   }
 };
 
-const tableData = (state = {}, action) => {
+const tableData = (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'CHANGE_STATISTICS_TABLE_DATA':
       return action.data;
@@ -80,7 +81,7 @@ const tableData = (state = {}, action) => {
   }
 };
 
-const filterItem = (state = [], action) => {
+const filterItem = (state = [], action: ReduxAction) => {
   switch (action.type) {
     case 'CHANGE_STATISTICS_FILTER_ITEM':
       return action.data;
@@ -91,7 +92,7 @@ const filterItem = (state = [], action) => {
   }
 };
 
-const detailLoading = (state = true, action) => {
+const detailLoading = (state = true, action: ReduxAction) => {
   switch (action.type) {
     case 'CHANGE_STATISTICS_DETAIL_LOADING':
       return action.data;
@@ -102,7 +103,7 @@ const detailLoading = (state = true, action) => {
   }
 };
 
-const loading = (state = true, action) => {
+const loading = (state = true, action: ReduxAction) => {
   switch (action.type) {
     case 'CHANGE_STATISTICS_LOADING':
       return action.data;
@@ -113,7 +114,7 @@ const loading = (state = true, action) => {
   }
 };
 
-const reportSingleCacheLoading = (state = true, action) => {
+const reportSingleCacheLoading = (state = true, action: ReduxAction) => {
   switch (action.type) {
     case 'CHANGE_STATISTICS_REPORTSINGLECACHE_LOADING':
       return action.data;
@@ -124,7 +125,7 @@ const reportSingleCacheLoading = (state = true, action) => {
   }
 };
 
-const direction = (state = sessionStorage.getItem('chartSheetDirection') || 'horizontal', action) => {
+const direction = (state = sessionStorage.getItem('chartSheetDirection') || 'horizontal', action: ReduxAction) => {
   switch (action.type) {
     case 'CHANGE_STATISTICS_DIRECTION':
       return action.data;
@@ -133,7 +134,7 @@ const direction = (state = sessionStorage.getItem('chartSheetDirection') || 'hor
   }
 };
 
-const base = (state = {}, action) => {
+const base = (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'CHANGE_STATISTICS_BASE':
       return { ...state, ...action.data };

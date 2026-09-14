@@ -1,6 +1,7 @@
 import _ from 'lodash';
+import type { ReduxAction } from 'src/redux/types';
 
-export function groupingScroll(state = null, action) {
+export function groupingScroll(state = null, action: ReduxAction) {
   switch (action.type) {
     case 'CHANGE_GUNTER_GROUPING_SCROLL':
       return action.data;
@@ -9,7 +10,7 @@ export function groupingScroll(state = null, action) {
   }
 }
 
-export function chartScroll(state = { on: _.noop, off: _.noop }, action) {
+export function chartScroll(state = { on: _.noop, off: _.noop }, action: ReduxAction) {
   switch (action.type) {
     case 'CHANGE_GUNTER_CHART_SCROLL':
       return action.data;
@@ -18,7 +19,7 @@ export function chartScroll(state = { on: _.noop, off: _.noop }, action) {
   }
 }
 
-export function loading(state = true, action) {
+export function loading(state = true, action: ReduxAction) {
   switch (action.type) {
     case 'CHANGE_GUNTER_LOADINNG':
       return action.data;
@@ -27,7 +28,7 @@ export function loading(state = true, action) {
   }
 }
 
-export function grouping(state = [], action) {
+export function grouping(state = [], action: ReduxAction) {
   switch (action.type) {
     case 'CHANGE_GUNTER_GROUPING':
       return action.data;
@@ -36,7 +37,7 @@ export function grouping(state = [], action) {
   }
 }
 
-export function groupingVisible(state = true, action) {
+export function groupingVisible(state = true, action: ReduxAction) {
   switch (action.type) {
     case 'CHANGE_GUNTER_GROUPING_VISIBLE':
       return action.data;
@@ -45,7 +46,7 @@ export function groupingVisible(state = true, action) {
   }
 }
 
-export function periodType(state = null, action) {
+export function periodType(state = null, action: ReduxAction) {
   switch (action.type) {
     case 'CHANGE_GUNTER_PERIOD_TYPE':
       return action.data;
@@ -54,7 +55,7 @@ export function periodType(state = null, action) {
   }
 }
 
-export function periodList(state = [], action) {
+export function periodList(state = [], action: ReduxAction) {
   switch (action.type) {
     case 'CHANGE_GUNTER_PERIOD_LIST':
       return action.data;
@@ -63,7 +64,7 @@ export function periodList(state = [], action) {
   }
 }
 
-export function periodParentList(state = [], action) {
+export function periodParentList(state = [], action: ReduxAction) {
   switch (action.type) {
     case 'CHANGE_GUNTER_PERIOD_PARENT_LIST':
       return action.data;
@@ -72,7 +73,7 @@ export function periodParentList(state = [], action) {
   }
 }
 
-export function isRefresh(state = false, action) {
+export function isRefresh(state = false, action: ReduxAction) {
   switch (action.type) {
     case 'CHANGE_GUNTER_IS_REFRESH':
       return action.data;
@@ -81,7 +82,7 @@ export function isRefresh(state = false, action) {
   }
 }
 
-export function viewConfig(state = {}, action) {
+export function viewConfig(state = {}, action: ReduxAction) {
   switch (action.type) {
     case 'CHANGE_GUNTER_VIEW_CONFIG':
       return action.data;
@@ -90,7 +91,7 @@ export function viewConfig(state = {}, action) {
   }
 }
 
-export function editIndex(state = null, action) {
+export function editIndex(state = null, action: ReduxAction) {
   switch (action.type) {
     case 'CHANGE_GUNTER_EDIT_INDEX':
       return action.data;
@@ -111,7 +112,7 @@ export function withoutArrangementVisible(
   }
 }
 
-export function searchRecordId(state = null, action) {
+export function searchRecordId(state = null, action: ReduxAction) {
   switch (action.type) {
     case 'CHANGE_GUNTER_SEARCH_RECORD_ID':
       return action.data;
@@ -120,7 +121,7 @@ export function searchRecordId(state = null, action) {
   }
 }
 
-export function zoom(state = null, action) {
+export function zoom(state = null, action: ReduxAction) {
   switch (action.type) {
     case 'CHANGE_GUNTER_ZOOM':
       return action.data;

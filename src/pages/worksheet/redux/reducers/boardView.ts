@@ -3,6 +3,7 @@ import { get, head } from 'lodash';
 import _ from 'lodash';
 import findIndex from 'lodash/findIndex';
 import { WIDGET_VALUE_ID } from 'src/components/Form/core/config';
+import type { ReduxAction } from 'src/redux/types';
 
 export const getIndex = (state, data) => {
   const { key, rowId } = data;
@@ -288,7 +289,7 @@ const INIT_STATE = {
   sortedOptionKeys: [],
 };
 
-export default function boardView(state = INIT_STATE, action) {
+export default function boardView(state = INIT_STATE, action: ReduxAction) {
   const { type, data } = action;
   const { boardData, boardViewState, boardViewRecordCount, boardViewCard } = state;
 

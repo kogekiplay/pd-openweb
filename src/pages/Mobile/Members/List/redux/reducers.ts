@@ -1,3 +1,4 @@
+import type { ReduxAction } from 'src/redux/types';
 export const memberList = (
   state = {
     data: [],
@@ -12,7 +13,7 @@ export const memberList = (
   }
 };
 
-export const isListLoading = (state = true, action) => {
+export const isListLoading = (state = true, action: ReduxAction) => {
   switch (action.type) {
     case 'MOBILE_LIST_FETCH_START':
       return true;
@@ -23,7 +24,7 @@ export const isListLoading = (state = true, action) => {
   }
 };
 
-export const isUpdateListLoading = (state = false, action) => {
+export const isUpdateListLoading = (state = false, action: ReduxAction) => {
   switch (action.type) {
     case 'MOBILE_UPDATELIST_FETCH_START':
       return true;

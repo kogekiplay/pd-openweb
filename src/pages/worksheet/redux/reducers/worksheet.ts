@@ -1,7 +1,8 @@
 import _ from 'lodash';
 import type { FormControl } from 'src/utils/controlTypes';
+import type { ReduxAction } from 'src/redux/types';
 
-export function loading(state = true, action) {
+export function loading(state = true, action: ReduxAction) {
   switch (action.type) {
     case 'WORKSHEET_UPDATE_LOADING':
       return action.loading;
@@ -15,7 +16,7 @@ export function loading(state = true, action) {
   }
 }
 
-export function operateButtonLoading(state = true, action) {
+export function operateButtonLoading(state = true, action: ReduxAction) {
   switch (action.type) {
     case 'WORKSHEET_UPDATE_OPERATE_BUTTON_LOADING':
       return action.loading;
@@ -26,7 +27,7 @@ export function operateButtonLoading(state = true, action) {
   }
 }
 
-export function error(state = false, action) {
+export function error(state = false, action: ReduxAction) {
   switch (action.type) {
     case 'WORKSHEET_INIT_FAIL':
       return true;
@@ -37,7 +38,7 @@ export function error(state = false, action) {
   }
 }
 
-export function worksheetInfo(state = {}, action) {
+export function worksheetInfo(state = {}, action: ReduxAction) {
   let newState;
 
   switch (action.type) {
@@ -70,7 +71,7 @@ export function worksheetInfo(state = {}, action) {
   }
 }
 
-export function sheetSwitchPermit(state = [], action) {
+export function sheetSwitchPermit(state = [], action: ReduxAction) {
   switch (action.type) {
     case 'WORKSHEET_PERMISSION_INIT':
       return action.value;
@@ -81,7 +82,7 @@ export function sheetSwitchPermit(state = [], action) {
   }
 }
 
-export function sheetSearchConfig(state = [], action) {
+export function sheetSearchConfig(state = [], action: ReduxAction) {
   switch (action.type) {
     case 'WORKSHEET_SEARCH_CONFIG_INIT':
       return action.value;
@@ -92,7 +93,7 @@ export function sheetSearchConfig(state = [], action) {
   }
 }
 
-export function views(state = [], action) {
+export function views(state = [], action: ReduxAction) {
   switch (action.type) {
     case 'WORKSHEET_INIT':
       return action.value.views || state;
@@ -115,7 +116,7 @@ export function views(state = [], action) {
   }
 }
 
-export function buttons(state = [], action) {
+export function buttons(state = [], action: ReduxAction) {
   switch (action.type) {
     case 'WORKSHEET_UPDATE_BUTTONS':
       return action.buttons;
@@ -126,7 +127,7 @@ export function buttons(state = [], action) {
   }
 }
 
-export function printList(state = [], action) {
+export function printList(state = [], action: ReduxAction) {
   switch (action.type) {
     case 'WORKSHEET_UPDATE_PRINT_LIST':
       return action.printList;
@@ -137,7 +138,7 @@ export function printList(state = [], action) {
   }
 }
 
-export function sheetButtons(state = [], action) {
+export function sheetButtons(state = [], action: ReduxAction) {
   switch (action.type) {
     case 'WORKSHEET_UPDATE_SHEETBUTTONS':
       return action.buttons;
@@ -154,7 +155,7 @@ const initialFiltersState = {
   filterControls: [],
 };
 
-export function filters(state = initialFiltersState, action) {
+export function filters(state = initialFiltersState, action: ReduxAction) {
   switch (action.type) {
     case 'WORKSHEET_UPDATE_FILTERS':
       return { ...state, ...action.filters };
@@ -168,7 +169,7 @@ export function filters(state = initialFiltersState, action) {
   }
 }
 
-export function quickFilter(state = [], action) {
+export function quickFilter(state = [], action: ReduxAction) {
   switch (action.type) {
     case 'WORKSHEET_UPDATE_QUICK_FILTER':
       return [...action.filter];
@@ -181,7 +182,7 @@ export function quickFilter(state = [], action) {
   }
 }
 
-export function quickFilterWithDefault(state = [], action) {
+export function quickFilterWithDefault(state = [], action: ReduxAction) {
   switch (action.type) {
     case 'WORKSHEET_UPDATE_QUICK_FILTER_WITH_DEFAULT':
       return [...action.filter];
@@ -193,7 +194,7 @@ export function quickFilterWithDefault(state = [], action) {
   }
 }
 
-export function navGroupFilters(state = [], action) {
+export function navGroupFilters(state = [], action: ReduxAction) {
   switch (action.type) {
     case 'WORKSHEET_UPDATE_GROUP_FILTER':
       return action.navGroupFilters || [];
@@ -202,7 +203,7 @@ export function navGroupFilters(state = [], action) {
   }
 }
 
-export function navGroupCounts(state = [], action) {
+export function navGroupCounts(state = [], action: ReduxAction) {
   switch (action.type) {
     case 'WORKSHEET_NAVGROUP_COUNT':
       return action.data || [];
@@ -211,7 +212,7 @@ export function navGroupCounts(state = [], action) {
   }
 }
 
-export function controls(state = [], action) {
+export function controls(state = [], action: ReduxAction) {
   switch (action.type) {
     case 'WORKSHEET_INIT':
       const { value = {} } = action;

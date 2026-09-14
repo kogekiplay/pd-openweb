@@ -1,8 +1,9 @@
 import update from 'immutability-helper';
 import _ from 'lodash';
 import { addRecord, delRecord, updateMultiSelectBoard, updateRecord } from 'worksheet/redux/reducers/boardView';
+import type { ReduxAction } from 'src/redux/types';
 
-export const base = (state = {}, action) => {
+export const base = (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'MOBILE_UPDATE_BASE':
       return { ...state, ...action.base };
@@ -11,7 +12,7 @@ export const base = (state = {}, action) => {
   }
 };
 
-export const workSheetLoading = (state = true, action) => {
+export const workSheetLoading = (state = true, action: ReduxAction) => {
   switch (action.type) {
     case 'MOBILE_WORK_SHEET_UPDATE_LOADING':
       return action.loading;
@@ -20,7 +21,7 @@ export const workSheetLoading = (state = true, action) => {
   }
 };
 
-export const currentSheetRows = (state = [], action) => {
+export const currentSheetRows = (state = [], action: ReduxAction) => {
   switch (action.type) {
     case 'MOBILE_CHANGE_SHEET_ROWS':
       return Object.assign([], action.data);
@@ -41,7 +42,7 @@ export const currentSheetRows = (state = [], action) => {
   }
 };
 
-export const worksheetInfo = (state = {}, action) => {
+export const worksheetInfo = (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'MOBILE_WORK_SHEET_INFO':
       return action.data;
@@ -50,7 +51,7 @@ export const worksheetInfo = (state = {}, action) => {
   }
 };
 
-export const savedFilters = (state = [], action) => {
+export const savedFilters = (state = [], action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_SAVED_FILTERS':
       return action.filters;
@@ -59,7 +60,7 @@ export const savedFilters = (state = [], action) => {
   }
 };
 
-export const activeSavedFilter = (state = {}, action) => {
+export const activeSavedFilter = (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_ACTIVE_SAVED_FILTERS':
       return action.filter;
@@ -68,7 +69,7 @@ export const activeSavedFilter = (state = {}, action) => {
   }
 };
 
-export const filters = (state = { keyWords: '', quickFilterKeyWords: '', visible: false }, action) => {
+export const filters = (state = { keyWords: '', quickFilterKeyWords: '', visible: false }, action: ReduxAction) => {
   switch (action.type) {
     case 'MOBILE_UPDATE_FILTERS':
       return { ...state, ...action.filters };
@@ -77,7 +78,7 @@ export const filters = (state = { keyWords: '', quickFilterKeyWords: '', visible
   }
 };
 
-export const quickFilter = (state = [], action) => {
+export const quickFilter = (state = [], action: ReduxAction) => {
   switch (action.type) {
     case 'MOBILE_UPDATE_QUICK_FILTER':
       return [...action.filter];
@@ -86,7 +87,7 @@ export const quickFilter = (state = [], action) => {
   }
 };
 
-export function quickFilterWithDefault(state = [], action) {
+export function quickFilterWithDefault(state = [], action: ReduxAction) {
   switch (action.type) {
     case 'UPDATE_QUICK_FILTER_WITH_DEFAULT':
       return [...action.filter];
@@ -95,7 +96,7 @@ export function quickFilterWithDefault(state = [], action) {
   }
 }
 
-export const sheetFiltersGroup = (state = [], action) => {
+export const sheetFiltersGroup = (state = [], action: ReduxAction) => {
   switch (action.type) {
     case 'MOBILE_UPDATE_FILTERS_GROUP':
       return [...action.filter];
@@ -120,7 +121,7 @@ export const sheetView = (
   }
 };
 
-export const viewResultCode = (state = 1, action) => {
+export const viewResultCode = (state = 1, action: ReduxAction) => {
   switch (action.type) {
     case 'MOBILE_UPDATE_VIEW_CODE':
       return action.value;
@@ -129,7 +130,7 @@ export const viewResultCode = (state = 1, action) => {
   }
 };
 
-export const isCharge = (state = false, action) => {
+export const isCharge = (state = false, action: ReduxAction) => {
   switch (action.type) {
     case 'MOBILE_UPDATE_IS_CHARGE':
       return action.value;
@@ -138,7 +139,7 @@ export const isCharge = (state = false, action) => {
   }
 };
 
-export const appColor = (state = '#1677ff', action) => {
+export const appColor = (state = '#1677ff', action: ReduxAction) => {
   switch (action.type) {
     case 'MOBILE_APP_COLOR':
       return action.value;
@@ -147,7 +148,7 @@ export const appColor = (state = '#1677ff', action) => {
   }
 };
 
-export const sheetSwitchPermit = (state = [], action) => {
+export const sheetSwitchPermit = (state = [], action: ReduxAction) => {
   switch (action.type) {
     case 'MOBILE_SHEET_PERMISSION_INIT':
       return action.value;
@@ -156,7 +157,7 @@ export const sheetSwitchPermit = (state = [], action) => {
   }
 };
 
-export const worksheetControls = (state = [], action) => {
+export const worksheetControls = (state = [], action: ReduxAction) => {
   switch (action.type) {
     case 'MOBILE_WORK_SHEET_CONTROLS':
       return action.value;
@@ -165,7 +166,7 @@ export const worksheetControls = (state = [], action) => {
   }
 };
 
-export const sheetRowLoading = (state = false, action) => {
+export const sheetRowLoading = (state = false, action: ReduxAction) => {
   switch (action.type) {
     case 'MOBILE_FETCH_SHEETROW_START':
       return true;
@@ -176,7 +177,7 @@ export const sheetRowLoading = (state = false, action) => {
   }
 };
 
-export const mobileNavGroupFilters = (state = [], action) => {
+export const mobileNavGroupFilters = (state = [], action: ReduxAction) => {
   switch (action.type) {
     case 'CHANGE_MOBILE_GROUPFILTERS':
       return action.data;
@@ -185,7 +186,7 @@ export const mobileNavGroupFilters = (state = [], action) => {
   }
 };
 
-export const batchOptVisible = (state = false, action) => {
+export const batchOptVisible = (state = false, action: ReduxAction) => {
   switch (action.type) {
     case 'CHABGE_MOBILE_BATCHOPT_VISIBLE':
       return action.flag;
@@ -194,7 +195,7 @@ export const batchOptVisible = (state = false, action) => {
   }
 };
 
-export const batchCheckAll = (state = false, action) => {
+export const batchCheckAll = (state = false, action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_BATCH_CHECK_ALL':
       return action.data;
@@ -203,7 +204,7 @@ export const batchCheckAll = (state = false, action) => {
   }
 };
 
-export const batchOptCheckedData = (state = [], action) => {
+export const batchOptCheckedData = (state = [], action: ReduxAction) => {
   switch (action.type) {
     case 'CAHNGE_BATCHOPT_CHECKED':
       return action.data;
@@ -212,7 +213,7 @@ export const batchOptCheckedData = (state = [], action) => {
   }
 };
 
-export const isClickChart = (state = false, action) => {
+export const isClickChart = (state = false, action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_CLICK_CHART':
       return action.flag;
@@ -221,7 +222,7 @@ export const isClickChart = (state = false, action) => {
   }
 };
 
-export const filterControls = (state = [], action) => {
+export const filterControls = (state = [], action: ReduxAction) => {
   switch (action.type) {
     case 'MOBILE_UPDATE_FILTER_CONTROLS':
       const { filterControls } = action;
@@ -232,7 +233,7 @@ export const filterControls = (state = [], action) => {
   }
 };
 
-export const isPullRefreshing = (state = false, action) => {
+export const isPullRefreshing = (state = false, action: ReduxAction) => {
   switch (action.type) {
     case 'MOBILE_IS_PULL_REFRESHING':
       return action.flag;
@@ -241,7 +242,7 @@ export const isPullRefreshing = (state = false, action) => {
   }
 };
 
-export const groupListLoading = (state = false, action) => {
+export const groupListLoading = (state = false, action: ReduxAction) => {
   switch (action.type) {
     case 'GROUP_FILTER_LIST_LOADING':
       return action.data;
@@ -250,7 +251,7 @@ export const groupListLoading = (state = false, action) => {
   }
 };
 
-export const previewRecordId = (state = '', action) => {
+export const previewRecordId = (state = '', action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_PREVIEW_RECORD':
       return action.data;
@@ -388,7 +389,7 @@ export const calenderNotScheduled = (
   }
 };
 
-export function sheetButtons(state = [], action) {
+export function sheetButtons(state = [], action: ReduxAction) {
   switch (action.type) {
     case 'MOBILE_WORKSHEET_UPDATE_SHEET_BUTTONS':
       return action.buttons;
@@ -397,7 +398,7 @@ export function sheetButtons(state = [], action) {
   }
 }
 
-export function printList(state = [], action) {
+export function printList(state = [], action: ReduxAction) {
   switch (action.type) {
     case 'MOBILE_WORKSHEET_UPDATE_PRINT_LIST':
       return action.printList;
@@ -406,7 +407,7 @@ export function printList(state = [], action) {
   }
 }
 
-export function buttonsCheckStatus(state = {}, action) {
+export function buttonsCheckStatus(state = {}, action: ReduxAction) {
   switch (action.type) {
     case 'MOBILE_UPDATE_BUTTONS_CHECK_STATUS': {
       const nextState = { ...state };
@@ -424,7 +425,7 @@ export function buttonsCheckStatus(state = {}, action) {
   }
 }
 
-export const viewPermission = (state = {}, action) => {
+export const viewPermission = (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_MOBILEVIEW_PERMISSION':
       return action.data;

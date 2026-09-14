@@ -15,6 +15,7 @@ import Header from './Header';
 import TrashBatchOperate from './TrashBatchOperate';
 import ColumnHead from './TrashColumnHead';
 import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import type { ReduxAction } from 'src/redux/types';
 
 const Con = styled.div`
   width: 100%;
@@ -42,7 +43,7 @@ const SearchIcon = styled.div`
   margin-bottom: 12px;
 `;
 
-const trashReducer = (state, action) => {
+const trashReducer = (state, action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_RECORDS':
       return update(state, { $merge: _.omit(action, ['type']) });

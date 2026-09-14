@@ -1,10 +1,11 @@
 import _ from 'lodash';
 import { getThemeColors } from 'src/utils/project';
+import type { ReduxAction } from 'src/redux/types';
 
 const projectId = localStorage.getItem('currentProjectId') || _.get(md, 'global.Account.projects[0].projectId');
 const COLORS = getThemeColors(projectId);
 
-export const excelDetailData = (state = [], action) => {
+export const excelDetailData = (state = [], action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_EXCEL_DETAIL_DATA':
       return action.data || {};
@@ -13,7 +14,7 @@ export const excelDetailData = (state = [], action) => {
   }
 };
 
-export const currentSheetInfo = (state = {}, action) => {
+export const currentSheetInfo = (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_CURRENT_SHEET_INFO':
       return action.data || {};
@@ -34,7 +35,7 @@ export const appInfo = (
   }
 };
 
-export const selectedImportSheetIds = (state = [], action) => {
+export const selectedImportSheetIds = (state = [], action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_SELECTED_IMPORT_SHEET_IDS':
       return action.data || [];
@@ -43,7 +44,7 @@ export const selectedImportSheetIds = (state = [], action) => {
   }
 };
 
-export const dialogUploadVisible = (state = false, action) => {
+export const dialogUploadVisible = (state = false, action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_UPLOAD_VISIBLE':
       return action.data;
@@ -52,7 +53,7 @@ export const dialogUploadVisible = (state = false, action) => {
   }
 };
 
-export const setDataDialogVisible = (state = false, action) => {
+export const setDataDialogVisible = (state = false, action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_SETDATA_VISIBLE':
       return action.data;
@@ -61,7 +62,7 @@ export const setDataDialogVisible = (state = false, action) => {
   }
 };
 
-export const dialogCreateAppVisible = (state = false, action) => {
+export const dialogCreateAppVisible = (state = false, action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_CREATE_APP_VISIBLE':
       return action.data;
@@ -70,7 +71,7 @@ export const dialogCreateAppVisible = (state = false, action) => {
   }
 };
 
-export const createAppLoading = (state = false, action) => {
+export const createAppLoading = (state = false, action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_CREATE_APP_LOADING':
       return action.data;

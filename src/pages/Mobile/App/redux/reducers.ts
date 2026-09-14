@@ -1,3 +1,4 @@
+import type { ReduxAction } from 'src/redux/types';
 export const appDetail = (
   state = {
     appName: '',
@@ -15,7 +16,7 @@ export const appDetail = (
   }
 };
 
-export const isAppLoading = (state = true, action) => {
+export const isAppLoading = (state = true, action: ReduxAction) => {
   switch (action.type) {
     case 'MOBILE_FETCH_START':
       return true;
@@ -26,7 +27,7 @@ export const isAppLoading = (state = true, action) => {
   }
 };
 
-export const isQuitSuccess = (state = true, action) => {
+export const isQuitSuccess = (state = true, action: ReduxAction) => {
   switch (action.type) {
     case 'MOBILE_QUIT_FAILED_CLOSE':
       return true;
@@ -37,7 +38,7 @@ export const isQuitSuccess = (state = true, action) => {
   }
 };
 
-export const debugRoles = (state = [], action) => {
+export const debugRoles = (state = [], action: ReduxAction) => {
   switch (action.type) {
     case 'DEBUG_ROLE_LIST':
       return action.data;
@@ -46,7 +47,7 @@ export const debugRoles = (state = [], action) => {
   }
 };
 
-export const appScrollY = (state = 0, action) => {
+export const appScrollY = (state = 0, action: ReduxAction) => {
   switch (action.type) {
     case 'APP_SCROLL_Y':
       return action.data;

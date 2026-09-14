@@ -1,8 +1,9 @@
 import { combineReducers } from 'redux';
 import { List, Map, Set } from 'immutable';
 import { NODE_SORT_BY, NODE_SORT_TYPE, PICK_TYPE } from '../constant/enum';
+import type { ReduxAction } from 'src/redux/types';
 
-function kcListElement(state = null, action) {
+function kcListElement(state = null, action: ReduxAction) {
   switch (action.type) {
     case 'KC_UPDATE_LIST_ELEMENT':
       return action.value;
@@ -11,14 +12,14 @@ function kcListElement(state = null, action) {
   }
 }
 
-function loading(state = true, action) {
+function loading(state = true, action: ReduxAction) {
   switch (action.type) {
     default:
       return state;
   }
 }
 
-function listLoading(state = true, action) {
+function listLoading(state = true, action: ReduxAction) {
   switch (action.type) {
     case 'KC_FETCH_NODES_START':
       return true;
@@ -30,7 +31,7 @@ function listLoading(state = true, action) {
   }
 }
 
-function path(state = '', action) {
+function path(state = '', action: ReduxAction) {
   switch (action.type) {
     case 'KC_UPDATE_PATH':
       return action.value;
@@ -47,7 +48,7 @@ const defaultParams = Map({
   sortType: NODE_SORT_TYPE.DESC,
 });
 
-function params(state = defaultParams, action) {
+function params(state = defaultParams, action: ReduxAction) {
   switch (action.type) {
     case 'KC_CLEAR_KC':
       return defaultParams;
@@ -58,7 +59,7 @@ function params(state = defaultParams, action) {
   }
 }
 
-function currentFolder(state = {}, action) {
+function currentFolder(state = {}, action: ReduxAction) {
   switch (action.type) {
     case 'KC_UPDATE_FOLDER':
       return action.value;
@@ -67,7 +68,7 @@ function currentFolder(state = {}, action) {
   }
 }
 
-function currentRoot(state = PICK_TYPE.MY, action) {
+function currentRoot(state = PICK_TYPE.MY, action: ReduxAction) {
   switch (action.type) {
     case 'KC_UPDATE_ROOT':
       return action.value;
@@ -76,7 +77,7 @@ function currentRoot(state = PICK_TYPE.MY, action) {
   }
 }
 
-function list(state = List(), action) {
+function list(state = List(), action: ReduxAction) {
   switch (action.type) {
     case 'KC_CLEAR_LIST':
     case 'KC_CLEAR_KC':
@@ -92,7 +93,7 @@ function list(state = List(), action) {
   }
 }
 
-function totalCount(state = 0, action) {
+function totalCount(state = 0, action: ReduxAction) {
   switch (action.type) {
     case 'KC_UPDATE_TOTALCOUNT':
       return action.value;
@@ -103,7 +104,7 @@ function totalCount(state = 0, action) {
   }
 }
 
-function kcUsage(state = {}, action) {
+function kcUsage(state = {}, action: ReduxAction) {
   switch (action.type) {
     case 'KC_FETCH_USAGE_SUCCESS':
       return action.value;
@@ -112,7 +113,7 @@ function kcUsage(state = {}, action) {
   }
 }
 
-function isRecycle(state = false, action) {
+function isRecycle(state = false, action: ReduxAction) {
   switch (action.type) {
     case 'KC_UPDATE_LIST_STATE':
       return action.value.isRecycle || false;
@@ -121,7 +122,7 @@ function isRecycle(state = false, action) {
   }
 }
 
-function isReadOnly(state = true, action) {
+function isReadOnly(state = true, action: ReduxAction) {
   switch (action.type) {
     case 'KC_UPDATE_LIST_STATE':
       return action.value.isReadOnly || false;
@@ -130,7 +131,7 @@ function isReadOnly(state = true, action) {
   }
 }
 
-function isGlobalSearch(state = false, action) {
+function isGlobalSearch(state = false, action: ReduxAction) {
   switch (action.type) {
     case 'KC_CLEAR_KC':
       return false;
@@ -142,7 +143,7 @@ function isGlobalSearch(state = false, action) {
 }
 
 // 选择
-export function selectAll(state = false, action) {
+export function selectAll(state = false, action: ReduxAction) {
   switch (action.type) {
     case 'KC_CHANGE_SELECT_ALL':
     case 'KC_SELECT_ALL_ITEMS':
@@ -152,7 +153,7 @@ export function selectAll(state = false, action) {
   }
 }
 
-export function selectedItems(state = Set(), action) {
+export function selectedItems(state = Set(), action: ReduxAction) {
   switch (action.type) {
     case 'KC_UPDATE_SELECTED_ITEMS':
       return action.value;
@@ -163,14 +164,14 @@ export function selectedItems(state = Set(), action) {
   }
 }
 
-export function rightMenuOption(state = false, action) {
+export function rightMenuOption(state = false, action: ReduxAction) {
   switch (action.type) {
     default:
       return state;
   }
 }
 
-export function baseUrl(state = '/apps/kc', action) {
+export function baseUrl(state = '/apps/kc', action: ReduxAction) {
   switch (action.type) {
     case 'KC_UPDATE_KC_BASE_URL':
       return action.value;
@@ -179,7 +180,7 @@ export function baseUrl(state = '/apps/kc', action) {
   }
 }
 
-export function temp(state = false, action) {
+export function temp(state = false, action: ReduxAction) {
   switch (action.type) {
     default:
       return state;

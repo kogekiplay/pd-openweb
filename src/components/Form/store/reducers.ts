@@ -1,3 +1,4 @@
+import type { ReduxAction } from 'src/redux/types';
 export const initialState = {
   renderData: [],
   errorItems: [],
@@ -14,7 +15,7 @@ export const initialState = {
   emSizeNum: 16,
 };
 
-export const reducer = (state, action) => {
+export const reducer = (state, action: ReduxAction) => {
   switch (action.type) {
     case 'SET_RENDER_DATA':
       return state.renderData === action.payload ? state : { ...state, renderData: action.payload };

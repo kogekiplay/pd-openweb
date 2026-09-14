@@ -41,3 +41,18 @@ export type GetState = () => RootState;
 
 /** 一个 thunk action 的完整签名，返回值默认 void。 */
 export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, undefined, UnknownAction>;
+
+/**
+ * reducer 收到的 action。
+ *
+ * 本仓的 action 都是 `{ type, ...载荷 }` 的裸对象，载荷字段名由每个 reducer 自己
+ * 约定（value / rows / data / controls ...），没有统一的 action creator 层。
+ *
+ * 索引签名在这里【不是偷懒】：这个对象的形状本来就是各 reducer 各自约定的，
+ * 收窄成某一份具体联合，只会把别的 reducer 合法的读取判成错。真要收窄，
+ * 得一个 reducer 一个 reducer 地给它自己的 action 定判别联合，那是另一件事。
+ */
+export interface ReduxAction {
+  type: string;
+  [key: string]: any;
+}
