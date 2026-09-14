@@ -6,7 +6,9 @@ import projectAjax from 'src/api/project';
 import { SYS_CHART_COLORS, SYS_COLOR } from 'src/pages/Admin/settings/config';
 
 // 获取当前网络信息
-export const getCurrentProject = (id, isExternalProject) => {
+// id 的调用点里既有 string，也有 localStorage.getItem 的 string | null，
+// 还有从 query 里解出来的 string | string[]（那种匹配不上，返回 {}）
+export const getCurrentProject = (id?: string | string[] | null, isExternalProject?: boolean) => {
   if (!id) return {};
 
   const externalProjects = _.get(md, ['global', 'Account', 'externalProjects']) || [];

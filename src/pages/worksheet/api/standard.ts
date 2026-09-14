@@ -96,10 +96,22 @@ export class RequestPool {
   }
 }
 
-export function createRequestPool({ abortController } = {}) {
+export function createRequestPool({
+  abortController,
+  maxConcurrentRequests,
+}: {
+  abortController?: AbortController;
+  /**
+   * 调用方传得到，但【这里没有往下透】—— new RequestPool 只收了 abortController，
+   * 所以并发数始终是 RequestPool 的默认值 3。
+   * 透下去会真的把并发从 3 提到 6，是线上请求量的变化，不在类型改造的范围里，
+   * 留给单独评估。（当前唯一传它的地方：ChildTable/redux/actions 的 setRowsFromStaticRows）
+   */
+  maxConcurrentRequests?: number;
+} = {}) {
   const requestPool = new RequestPool({ abortController });
   return {
-    getRowDetail(data) {
+    getRowDetail(data: ApiArgs) {
       const controller = 'Worksheet';
       const action = 'GetRowDetail';
       return requestPool.fetch({
@@ -109,7 +121,7 @@ export function createRequestPool({ abortController } = {}) {
         abortController,
       });
     },
-    getFilterRowsByQueryDefault(data) {
+    getFilterRowsByQueryDefault(data: ApiArgs) {
       const controller = 'Worksheet';
       const action = 'GetFilterRowsByQueryDefault';
       return requestPool.fetch({

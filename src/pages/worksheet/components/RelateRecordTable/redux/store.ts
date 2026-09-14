@@ -5,9 +5,10 @@ import { RELATE_RECORD_SHOW_TYPE } from 'worksheet/constants/enum';
 import { isRelateRecordTableControl } from 'src/utils/control';
 import { init, updateTreeTableViewData } from './action';
 import reducer from './reducer';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function generateStore(
-  control,
+  control: FormControl,
   {
     mode,
     from,
@@ -22,6 +23,21 @@ export default function generateStore(
     workId,
     isDraft,
     openFrom,
+  }: {
+    mode?: string;
+    from?: number;
+    isCharge?: boolean;
+    appId?: string;
+    recordId?: string;
+    allowEdit?: boolean;
+    worksheetId?: string;
+    /** 父表单的整份控件数组 */
+    formData?: FormControl[];
+    instanceId?: string;
+    pageSize?: number;
+    workId?: string;
+    isDraft?: boolean;
+    openFrom?: string;
   } = {},
 ) {
   if (!pageSize) {

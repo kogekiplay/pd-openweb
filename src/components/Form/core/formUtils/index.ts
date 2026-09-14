@@ -38,9 +38,15 @@ import {
   replaceStr,
   validateIdCardBirthDate,
 } from './helper';
+import type { FormRule } from '../types';
 import type { FormControl } from 'src/utils/controlTypes';
 
-export const checkValueByFilterRegex = (data = {}, name, formData, recordId) => {
+export const checkValueByFilterRegex = (
+  data: FormControl = {},
+  name?: string,
+  formData?: FormControl[],
+  recordId?: string,
+) => {
   const filterRegex = safeParse(_.get(data, 'advancedSetting.filterregex') || '[]');
 
   if (filterRegex.length) {
@@ -1427,7 +1433,7 @@ export const getRuleErrorInfo = (rules: any[] = [], badData: any[] = []) => {
 };
 
 //判断所有业务规则是否有锁定状态
-export const checkRuleLocked = (rules = [], data = [], recordId) => {
+export const checkRuleLocked = (rules: FormRule[] = [], data: FormControl[] = [], recordId?: string) => {
   let isLocked = false;
   const { defaultRules = [] } = getAvailableFilters(rules, data, recordId);
 

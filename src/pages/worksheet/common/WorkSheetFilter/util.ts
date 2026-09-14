@@ -18,6 +18,7 @@ import {
   getDateCompareRangeValues,
   getFilterTypeLabel,
 } from './enum';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export function getConditionType(condition) {
   return (condition.controlType === 28 || condition.dataType === 28) &&
@@ -26,7 +27,11 @@ export function getConditionType(condition) {
     : condition.conditionGroupType;
 }
 
-export function formatConditionForSave(condition, relationType, options = {}) {
+export function formatConditionForSave(
+  condition: any,
+  relationType?: number,
+  options: { returnFullValues?: boolean } = {},
+) {
   let { controlId, values, controlType } = condition;
   const { returnFullValues } = options;
 
@@ -1103,6 +1108,14 @@ export function getFilter({
   ignoreEmptyRule = false,
   appId,
   currentTimeForSecond,
+}: {
+  control?: FormControl;
+  formData?: FormControl[];
+  /** advancedSetting 里存筛选条件的键名，查询配置用 'filters' 之外的值 */
+  filterKey?: string;
+  ignoreEmptyRule?: boolean;
+  appId?: string;
+  currentTimeForSecond?: boolean;
 }) {
   if (
     !control ||

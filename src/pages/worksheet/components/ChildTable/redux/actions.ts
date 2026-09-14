@@ -593,7 +593,7 @@ export function setRowsFromStaticRows({
   isQueryWorksheetFill = true,
   isSetValueFromEvent = false,
   isSetValueFromRule = false,
-  triggerSubListControlValueChange = () => {},
+  triggerSubListControlValueChange = (controlValue?: any) => {},
 } = {}) {
   return (getState, dispatch, DataFormat) => {
     const { base = {} } = getState();
