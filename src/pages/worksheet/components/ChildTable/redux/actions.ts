@@ -7,6 +7,7 @@ import { getTreeExpandSize, handleUpdateTreeNodeExpansion, treeDataUpdater } fro
 import { postWithToken } from 'src/utils/common';
 import { filterEmptyChildTableRows } from 'src/utils/record';
 import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import type { ChildTableDispatch, ChildTableGetState } from './types';
 
 const PAGE_SIZE = 200;
 
@@ -14,8 +15,8 @@ export function updateTreeNodeExpansion(
   row = {},
   { expandAll, forceUpdate, getNewRows, updateRows, worksheetId, recordId } = {},
 ) {
-  return (dispatch, getState) => {
-    const { base = {}, rows = [], treeTableViewData } = getState();
+  return (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
+    const { base, rows = [], treeTableViewData } = getState();
     const { control, instanceId, workId } = base;
     const { treeMap, maxLevel } = treeTableViewData;
     const getNewRowsFn =
@@ -61,8 +62,8 @@ export function updateTreeNodeExpansion(
 }
 
 export function updateBase(changes = {}) {
-  return (dispatch, getState) => {
-    const { base = {} } = getState();
+  return (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
+    const { base } = getState();
     dispatch({
       type: 'UPDATE_BASE',
       value: { ...base, ...changes },
@@ -74,8 +75,8 @@ export const initRows = rows => ({ type: 'INIT_ROWS', rows });
 
 export const updateTreeTableViewData =
   ({ prevTreeMap } = {}) =>
-  (dispatch, getState) => {
-    const { base, rows, treeTableViewData = {} } = getState();
+  (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
+    const { base, rows, treeTableViewData } = getState();
 
     if (!base.isTreeTableView) {
       return;
@@ -100,8 +101,8 @@ export const updateTreeTableViewData =
   };
 
 export const resetRows = () => {
-  return (dispatch, getState) => {
-    const { base = {} } = getState();
+  return (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
+    const { base } = getState();
     dispatch(initRows(getState().originRows));
     if (base.reset && !base.loaded) {
       dispatch({ type: 'RESET' });
@@ -115,8 +116,8 @@ export const resetRows = () => {
 };
 
 export const clearRows = () => {
-  return (dispatch, getState) => {
-    const { base = {} } = getState();
+  return (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
+    const { base } = getState();
     dispatch(initRows([]));
     if (base.reset && !base.loaded) {
       dispatch({ type: 'RESET' });
@@ -158,7 +159,7 @@ export const clearAndSetRows = (
   rows,
   { isSetValueFromEvent = false, isSetValueFromRule = false, controls = [] } = {},
 ) => {
-  return (dispatch, getState) => {
+  return (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
     const oldRows = getState().rows;
     let newRows = rows;
     let deleted = oldRows.map(r => r.rowid);
@@ -183,7 +184,7 @@ export const setOriginRows = rows => ({ type: 'LOAD_ROWS', rows });
 
 export const setFilterControls =
   (filterControls, { skipRealCount } = {}) =>
-  (dispatch, getState) => {
+  (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
     const { rows = [], realCount, filterControls: prevFilterControls = [] } = getState();
 
     // 进入筛选态前，若"未筛选真实总数"未知(行来自内嵌数据，未经未筛选服务端加载落总数)，
@@ -198,7 +199,7 @@ export const setFilterControls =
 
 // 按本地增删维护 realCount(未筛选真实总数)。仅在真实总数已知(由未筛选加载落过)时增量维护，
 // 用增量而非按 rows 重算，避免分页只加载首页时按子集重算导致少算。
-export const adjustRealCount = delta => (dispatch, getState) => {
+export const adjustRealCount = delta => (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
   const { realCount } = getState();
 
   if (_.isNumber(realCount) && delta) {
@@ -206,7 +207,7 @@ export const adjustRealCount = delta => (dispatch, getState) => {
   }
 };
 
-export const addRow = (row, insertRowId) => (dispatch, getState) => {
+export const addRow = (row, insertRowId) => (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
   const { filterControls = [] } = getState();
   // 筛选生效时，新增的临时行（temp-*）置顶，不参与筛选
   const isTempRow = row.rowid && _.isFunction(row.rowid.startsWith) && row.rowid.startsWith('temp-');
@@ -220,8 +221,8 @@ export const addRow = (row, insertRowId) => (dispatch, getState) => {
   dispatch(updatePagination({ count: _.get(getState(), 'pagination.count') + 1 }));
 };
 
-export const deleteRow = rowid => (dispatch, getState) => {
-  const { cellErrors = {} } = getState();
+export const deleteRow = rowid => (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
+  const { cellErrors } = getState();
   dispatch({ type: 'UPDATE_CELL_ERRORS', value: _.omitBy(cellErrors, (value, key) => key.startsWith(`${rowid}-`)) });
   // 先减 realCount，再 DELETE_ROW（见 addRow 注释）
   dispatch(adjustRealCount(-1));
@@ -232,8 +233,8 @@ export const deleteRow = rowid => (dispatch, getState) => {
 
 export const deleteRows =
   (rowIds, { useUserPermission } = {}) =>
-  (dispatch, getState) => {
-    const { rows, cellErrors = {} } = getState();
+  (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
+    const { rows, cellErrors } = getState();
     const filteredRowIds = rowIds.filter(rowId => {
       const row = find(rows, r => r.rowid === rowId);
       return row && (useUserPermission ? row.allowdelete : true);
@@ -319,8 +320,8 @@ export const loadRows = ({
   setLoadingInfo,
   callback = () => {},
 }) => {
-  return (dispatch, getState) => {
-    const { base = {}, filterControls = [] } = getState();
+  return (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
+    const { base, filterControls = [] } = getState();
     const { instanceId, workId, control } = base;
 
     const args = {
@@ -388,8 +389,8 @@ export const loadRows = ({
 // 分页加载数据
 export const loadPageRows =
   ({ worksheetId, recordId, controlId, getWorksheet, from, callback = () => {} }) =>
-  (dispatch, getState) => {
-    const { base = {}, pagination = {}, filterControls = [] } = getState();
+  (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
+    const { base, pagination, filterControls = [] } = getState();
     const { instanceId, workId } = base;
     const { pageIndex, pageSize } = pagination;
 
@@ -417,7 +418,7 @@ export const loadPageRows =
 
 export const addRows =
   (rows, options = {}) =>
-  (dispatch, getState) => {
+  (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
     dispatch({ type: 'ADD_ROWS', rows: rows.map((row: RecordRow) => omit(row, 'needShowLoading')), ...options });
     dispatch(updateTreeTableViewData());
     dispatch(updatePagination({ count: _.get(getState(), 'pagination.count') + rows.length }));
@@ -485,7 +486,7 @@ export const exportSheet = ({
   };
 };
 
-export const updatePagination = pagination => dispatch => {
+export const updatePagination = pagination => (dispatch: ChildTableDispatch) => {
   dispatch({ type: 'UPDATE_PAGINATION', pagination });
 };
 
@@ -597,7 +598,7 @@ export function setRowsFromStaticRows({
   triggerSubListControlValueChange = (controlValue?: any) => {},
 } = {}) {
   return (getState, dispatch, DataFormat) => {
-    const { base = {} } = getState();
+    const { base } = getState();
     const { controls, projectId, searchConfig, initRowIsCreate, max } = base;
     // 树形子表：value 序列化可能不带 pid/childrenids，按 value 重建会丢父子关系、展开 icon 消失。
     // 用同 rowid 的现有行（如服务端已加载行）的树字段做兜底，仅当 value 未给该字段时回退。

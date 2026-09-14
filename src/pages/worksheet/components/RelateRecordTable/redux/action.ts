@@ -30,6 +30,7 @@ import { handleRowData } from 'src/utils/record';
 import { replaceAdvancedSettingTranslateInfo, replaceControlsTranslateInfo } from 'src/utils/translate';
 import { getVisibleControls } from '../utils';
 import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import type { RelateRecordTableDispatch, RelateRecordTableGetState } from './types';
 
 /**
  * 解析字符串为数字
@@ -72,8 +73,8 @@ export function updateTreeNodeExpansion(
     updateRows?: (...args: any[]) => any;
   } = {},
 ) {
-  return (dispatch, getState) => {
-    const { base = {}, records = [], changes = {}, treeTableViewData } = getState();
+  return (dispatch: RelateRecordTableDispatch, getState: RelateRecordTableGetState) => {
+    const { base, records = [], changes, treeTableViewData } = getState();
     const { control, recordId, worksheetId, instanceId, workId, from, isDraft } = base;
     const { addedRecords = [] } = changes;
     const allRecords = recordId ? records.concat(addedRecords) : records;
@@ -124,8 +125,8 @@ export function updateTreeNodeExpansion(
 
 export const updateTreeTableViewData =
   ({ pageIndexStart = 0, resetExpansion = false } = {}) =>
-  (dispatch, getState) => {
-    const { base, changes = {}, records, treeTableViewData = {} } = getState();
+  (dispatch: RelateRecordTableDispatch, getState: RelateRecordTableGetState) => {
+    const { base, changes, records, treeTableViewData } = getState();
     const { addedRecords = [] } = changes;
 
     if (!base.isTreeTableView) {
@@ -155,10 +156,22 @@ export const updateTreeTableViewData =
     });
   };
 
-export function loadRecords({ pageIndex, pageSize, keywords, getRules, getWorksheet } = {}) {
-  return async (dispatch, getState) => {
+export function loadRecords({
+  pageIndex,
+  pageSize,
+  keywords,
+  getRules,
+  getWorksheet,
+}: {
+  pageIndex?: number;
+  pageSize?: number;
+  keywords?: string;
+  getRules?: boolean;
+  getWorksheet?: boolean;
+} = {}) {
+  return async (dispatch: RelateRecordTableDispatch, getState: RelateRecordTableGetState) => {
     const state = getState();
-    const { base = {}, tableState = {}, changes = {} } = state;
+    const { base, tableState, changes } = state;
     const { addedRecords = [], deletedRecordIds = [] } = changes;
     const { filterControls } = tableState;
     const { from, worksheetId, control, recordId, instanceId, workId, isDraft, isTab, direction } = base;
@@ -310,9 +323,9 @@ function getTableConfigFromControl(control, { allowEdit, relateWorksheetInfo, re
 }
 
 export function updateTableConfigByControl(control) {
-  return (dispatch, getState) => {
+  return (dispatch: RelateRecordTableDispatch, getState: RelateRecordTableGetState) => {
     const state = getState();
-    const { base = {} } = state;
+    const { base } = state;
     const { from, allowEdit, relateWorksheetInfo, recordId } = base;
 
     if (typeof control === 'undefined') {
@@ -341,10 +354,10 @@ export const updateBase = value => ({
 });
 
 export function init() {
-  return async (dispatch, getState) => {
+  return async (dispatch: RelateRecordTableDispatch, getState: RelateRecordTableGetState) => {
     const state = getState();
     if (state.initialized) return;
-    const { base = {}, tableState } = state;
+    const { base, tableState } = state;
     const { from, worksheetId, control, recordId, allowEdit, isTreeTableView, instanceId, workId, direction } = base;
     let { pageSize } = tableState;
     const isTab = [String(RELATE_RECORD_SHOW_TYPE.LIST), String(RELATE_RECORD_SHOW_TYPE.TAB_TABLE)].includes(
@@ -534,9 +547,9 @@ export function init() {
 }
 
 export function refresh({ doNotResetPageIndex, doNotClearKeywords } = {}) {
-  return (dispatch, getState) => {
+  return (dispatch: RelateRecordTableDispatch, getState: RelateRecordTableGetState) => {
     const state = getState();
-    const { base = {}, tableState = {} } = state;
+    const { base, tableState = {} } = state;
     const { control = {} } = base;
     const { pageIndex, filterControls } = tableState;
     dispatch({ type: 'RESET', doNotClearKeywords });
@@ -584,9 +597,9 @@ export function updateRecordByRecordId(recordId, changes = {}) {
 }
 
 export function appendRecords(records = [], { afterRecordId } = {}) {
-  return (dispatch, getState) => {
+  return (dispatch: RelateRecordTableDispatch, getState: RelateRecordTableGetState) => {
     const state = getState();
-    const { base = {} } = state;
+    const { base } = state;
     dispatch({
       type: 'APPEND_RECORDS',
       records,
@@ -610,9 +623,9 @@ export function appendFakeRecords(records) {
 }
 
 export function deleteRecords(recordIds = []) {
-  return (dispatch, getState) => {
+  return (dispatch: RelateRecordTableDispatch, getState: RelateRecordTableGetState) => {
     const state = getState();
-    const { base = {} } = state;
+    const { base } = state;
     dispatch({
       type: 'DELETE_RECORDS',
       recordIds: typeof recordIds === 'string' ? [recordIds] : recordIds,
@@ -623,9 +636,9 @@ export function deleteRecords(recordIds = []) {
 
 // 更新单元格控件
 export function updateCell({ cell, row }, options = {}) {
-  return (dispatch, getState) => {
+  return (dispatch: RelateRecordTableDispatch, getState: RelateRecordTableGetState) => {
     const state = getState();
-    const { base = {}, controls } = state;
+    const { base, controls } = state;
     const { relateWorksheetInfo, searchConfig } = base;
 
     function handleUpdateCell(cells) {
@@ -757,9 +770,9 @@ function getStatisticsSettingTypes(control) {
 }
 
 export function getRelateRecordSummary({ reset = false } = {}) {
-  return (dispatch, getState) => {
+  return (dispatch: RelateRecordTableDispatch, getState: RelateRecordTableGetState) => {
     const state = getState();
-    const { base = {}, tableState = {}, rowsSummary = { types: {}, values: {} } } = state;
+    const { base, tableState = {}, rowsSummary = { types: {}, values: {} } } = state;
     const { control = {}, worksheetId, recordId, appId, viewId } = base;
 
     if (get(control, 'advancedSetting.openstatistics') !== '1') return;
@@ -812,8 +825,8 @@ function getSummaryCacheKey(base = {}) {
 }
 
 export function changeRelateRecordSummaryType({ controlId, value }) {
-  return (dispatch, getState) => {
-    const { base = {}, rowsSummary = { types: {}, values: {} } } = getState();
+  return (dispatch: RelateRecordTableDispatch, getState: RelateRecordTableGetState) => {
+    const { base, rowsSummary = { types: {}, values: {} } } = getState();
     const newTypes = { ...rowsSummary.types };
 
     if (!value) {
@@ -842,8 +855,8 @@ export function changeRelateRecordSummaryType({ controlId, value }) {
 
 // 全屏关闭后，内联表格读回全屏写入的统计方式并刷新（读一次即清除）
 export function syncRelateRecordSummaryFromCache() {
-  return (dispatch, getState) => {
-    const { base = {} } = getState();
+  return (dispatch: RelateRecordTableDispatch, getState: RelateRecordTableGetState) => {
+    const { base } = getState();
     const key = getSummaryCacheKey(base);
     const summaryCache = window.relateRecordSummaryTypesCache;
 
@@ -880,9 +893,9 @@ export function getDefaultRelatedSheetValue(formData = [], recordId) {
 }
 
 export function handleRecreateRecord(record, { openRecord = () => {}, isDraft } = {}) {
-  return (dispatch, getState) => {
+  return (dispatch: RelateRecordTableDispatch, getState: RelateRecordTableGetState) => {
     const state = getState();
-    const { base = {}, controls } = state;
+    const { base, controls } = state;
     const { worksheetId, control, recordId, relateWorksheetInfo, formData } = base;
     const pid = record.pid;
     handleRowData({
@@ -921,9 +934,9 @@ export function handleRecreateRecord(record, { openRecord = () => {}, isDraft } 
 }
 
 export function handleSaveSheetLayout({ updateWorksheetControls, columns, columnWidthsOfSetting } = {}) {
-  return (dispatch, getState) => {
+  return (dispatch: RelateRecordTableDispatch, getState: RelateRecordTableGetState) => {
     const state = getState();
-    const { base = {}, tableState = {} } = state;
+    const { base, tableState = {} } = state;
     const { worksheetId } = base;
     const { sheetColumnWidths, fixedColumnCount, sheetHiddenColumnIds } = tableState;
     const newControl = omit(base.control, ['relationControls']);
@@ -971,8 +984,8 @@ export function handleSaveSheetLayout({ updateWorksheetControls, columns, column
 }
 
 export function handleRemoveRelation(recordIds) {
-  return async (dispatch, getState) => {
-    const { base = {}, records = [] } = getState();
+  return async (dispatch: RelateRecordTableDispatch, getState: RelateRecordTableGetState) => {
+    const { base, records = [] } = getState();
     const { from, saveSync, recordId, appId, viewId, worksheetId, control, instanceId, workId } = base;
 
     if (recordIds && !isArray(recordIds)) {
@@ -1015,8 +1028,8 @@ export function handleRemoveRelation(recordIds) {
 }
 
 export function handleAddRelation(records) {
-  return async (dispatch, getState) => {
-    const { base = {} } = getState();
+  return async (dispatch: RelateRecordTableDispatch, getState: RelateRecordTableGetState) => {
+    const { base } = getState();
     const { from, saveSync, recordId, appId, viewId, worksheetId, control, instanceId, workId } = base;
 
     if (records && !isArray(records)) {
@@ -1050,9 +1063,9 @@ export function handleAddRelation(records) {
 }
 
 export function deleteOriginalRecords({ recordIds = [] } = {}) {
-  return (dispatch, getState) => {
+  return (dispatch: RelateRecordTableDispatch, getState: RelateRecordTableGetState) => {
     const state = getState();
-    const { base = {}, records, tableState = {} } = state;
+    const { base, records, tableState = {} } = state;
     const { relateWorksheetInfo } = base;
     const { count, pageSize } = tableState;
     const allowDeleteRowIds = recordIds.filter(rowId => {
@@ -1092,9 +1105,9 @@ export function deleteOriginalRecords({ recordIds = [] } = {}) {
 }
 
 export function updateFilter() {
-  return (dispatch, getState) => {
+  return (dispatch: RelateRecordTableDispatch, getState: RelateRecordTableGetState) => {
     const state = getState();
-    const { base = {}, controls } = state;
+    const { base, controls } = state;
     const { control, formData, recordId, appId } = base;
     const filterControls = getFilter({
       control: { ...control, relationControls: controls, recordId },
@@ -1119,9 +1132,9 @@ export function updateFilter() {
 }
 
 export function batchUpdateRecords({ selectedRowIds = [], records = [], activeControl } = {}) {
-  return (dispatch, getState) => {
+  return (dispatch: RelateRecordTableDispatch, getState: RelateRecordTableGetState) => {
     const state = getState();
-    const { isCharge, base = {}, controls } = state;
+    const { isCharge, base, controls } = state;
     const { control, relateWorksheetInfo } = base;
 
     if (!selectedRowIds.length) {
