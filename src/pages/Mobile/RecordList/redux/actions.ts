@@ -34,6 +34,8 @@ import {
   getSheetOperatesButtons,
 } from 'src/utils/worksheet';
 import { getFlatSheetRows } from '../util';
+import type { AppDispatch, GetState } from 'src/redux/types';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const dealBoardViewRecordCount = data => {
   if (!data || !_.isArray(data)) return {};
@@ -59,8 +61,8 @@ export function changeBoardViewState(data) {
   return { type: 'MOBILE_CHANGE_BOARD_VIEW_STATE', data };
 }
 
-function fireWhenViewLoaded(view = {}, { controls = [] } = {}) {
-  return dispatch => {
+function fireWhenViewLoaded(view: any = {}, { controls = [] }: { controls?: FormControl[] } = {}) {
+  return (dispatch: AppDispatch) => {
     if (_.includes([1, 7, 21], view.viewType)) {
       dispatch(PcFireWhenViewLoaded(view, controls));
     }
@@ -113,7 +115,7 @@ function getGroupData({ data = [], view = {}, controls = [], groupKey, moreRows 
   return viewControls ? sortDataByGroupItems(result, view, controls) : result;
 }
 
-export const updateBase = base => (dispatch, getState) => {
+export const updateBase = base => (dispatch: AppDispatch, getState: GetState) => {
   const {
     worksheetInfo: { views, template },
   } = getState().mobile;
@@ -130,7 +132,7 @@ export const updateBase = base => (dispatch, getState) => {
   dispatch({ type: 'MOBILE_UPDATE_BASE', base });
 };
 
-export const loadWorksheet = noNeedGetApp => (dispatch, getState) => {
+export const loadWorksheet = noNeedGetApp => (dispatch: AppDispatch, getState: GetState) => {
   const { base, appDetail, filterControls = [] } = getState().mobile;
   const appId = base.type === 'single' ? base.singleAppId : base.appId;
   const { filters } = getState().sheet;
@@ -328,7 +330,7 @@ export const loadWorksheet = noNeedGetApp => (dispatch, getState) => {
     });
 };
 
-export const loadSavedFilters = worksheetId => dispatch => {
+export const loadSavedFilters = worksheetId => (dispatch: AppDispatch) => {
   if (!worksheetId) return;
   sheetAjax.getWorksheetFilters({ worksheetId }).then(data => {
     let filters = data.map(formatOriginFilterGroupValue);
@@ -345,7 +347,7 @@ const promiseRequests = {};
 
 export const fetchSheetRows =
   (param = {}) =>
-  (dispatch, getState) => {
+  (dispatch: AppDispatch, getState: GetState) => {
     const {
       base,
       filters,
@@ -573,7 +575,7 @@ export const fetchSheetRows =
       });
   };
 
-export const loadGroupMore = groupKey => (dispatch, getState) => {
+export const loadGroupMore = groupKey => (dispatch: AppDispatch, getState: GetState) => {
   dispatch({ type: 'UPDATE_GROUP_DATA_INFO', data: { isGroupLoading: true } });
 
   const {
@@ -658,18 +660,18 @@ export const loadGroupMore = groupKey => (dispatch, getState) => {
   });
 };
 
-export const changeMobileSheetRows = data => dispatch => {
+export const changeMobileSheetRows = data => (dispatch: AppDispatch) => {
   dispatch({ type: 'MOBILE_CHANGE_SHEET_ROWS', data });
 };
 
-export const unshiftSheetRow = data => dispatch => {
+export const unshiftSheetRow = data => (dispatch: AppDispatch) => {
   dispatch({
     type: 'MOBILE_UNSHIFT_SHEET_ROWS',
     data: data,
   });
 };
 
-export const changePageIndex = pageIndex => (dispatch, getState) => {
+export const changePageIndex = pageIndex => (dispatch: AppDispatch, getState: GetState) => {
   const { sheetView, sheetRowLoading, isPullRefreshing } = getState().mobile;
   const index = pageIndex || sheetView.pageIndex + 1;
 
@@ -680,7 +682,7 @@ export const changePageIndex = pageIndex => (dispatch, getState) => {
 
 export const updateQuickFilter =
   (filter = [], view, { noLoad } = {}) =>
-  (dispatch, getState) => {
+  (dispatch: AppDispatch, getState: GetState) => {
     const { base = {}, worksheetInfo = {} } = getState().mobile;
     const view = _.find(worksheetInfo.views || [], item => base.viewId === item.viewId) || {};
 
@@ -718,7 +720,7 @@ export function updateQuickFilterWithDefault(filter = []) {
   };
 }
 
-export const updateFilters = (filters, view) => (dispatch, getState) => {
+export const updateFilters = (filters, view) => (dispatch: AppDispatch, getState: GetState) => {
   const { base = {}, worksheetInfo = {} } = getState().mobile;
   view = view || _.find(worksheetInfo.views || [], item => base.viewId === item.viewId) || {};
   dispatch({
@@ -734,12 +736,12 @@ export const updateFilters = (filters, view) => (dispatch, getState) => {
   }
 };
 
-export const updateActiveSavedFilter = filter => dispatch => {
+export const updateActiveSavedFilter = filter => (dispatch: AppDispatch) => {
   dispatch({ type: 'UPDATE_ACTIVE_SAVED_FILTERS', filter });
   dispatch({ type: 'MOBILE_UPDATE_FILTER_CONTROLS', filterControls: formatForSave(filter) });
 };
 
-export const updateFiltersGroup = (filter, view) => dispatch => {
+export const updateFiltersGroup = (filter, view) => (dispatch: AppDispatch) => {
   dispatch({
     type: 'MOBILE_UPDATE_FILTERS_GROUP',
     filter: filter,
@@ -757,7 +759,7 @@ export const updateFiltersGroup = (filter, view) => dispatch => {
   dispatch(fetchSheetRows());
 };
 
-export const resetSheetView = () => dispatch => {
+export const resetSheetView = () => (dispatch: AppDispatch) => {
   dispatch({
     type: 'MOBILE_UPDATE_SHEET_VIEW',
     sheetView: { pageIndex: 1 },
@@ -769,18 +771,18 @@ export const resetSheetView = () => dispatch => {
   dispatch(fetchSheetRows());
 };
 
-export const emptySheetRows = () => dispatch => {
+export const emptySheetRows = () => (dispatch: AppDispatch) => {
   dispatch(changeMobileSheetRows([]));
   dispatch({ type: 'MOBILE_WORK_SHEET_INFO', data: {} });
 };
 
-export const emptySheetControls = () => dispatch => {
+export const emptySheetControls = () => (dispatch: AppDispatch) => {
   dispatch({ type: 'MOBILE_CHANGE_SHEET_CONTROLS', value: [] });
   dispatch({ type: 'MOBILE_UPDATE_QUICK_FILTER', filter: [] });
   dispatch({ type: 'MOBILE_WORK_SHEET_UPDATE_LOADING', loading: true });
 };
 
-export const changeSheetControls = () => (dispatch, getState) => {
+export const changeSheetControls = () => (dispatch: AppDispatch, getState: GetState) => {
   const { base, worksheetInfo } = getState().mobile;
   const { views, template } = worksheetInfo;
   const { viewId } = base;
@@ -801,7 +803,7 @@ export const changeSheetControls = () => (dispatch, getState) => {
 
 export const updateCurrentView =
   ({ currentView, sortCid, sortType }) =>
-  (dispatch, getState) => {
+  (dispatch: AppDispatch, getState: GetState) => {
     const { worksheetInfo } = getState().mobile;
     const { views } = worksheetInfo;
     const base = {
@@ -830,21 +832,21 @@ export const updateCurrentView =
       });
   };
 
-export const changeMobileGroupFilters = data => dispatch => {
+export const changeMobileGroupFilters = data => (dispatch: AppDispatch) => {
   dispatch({ type: 'CHANGE_MOBILE_GROUPFILTERS', data });
 };
 
-export const changeMobielSheetLoading = loading => dispatch => {
+export const changeMobielSheetLoading = loading => (dispatch: AppDispatch) => {
   dispatch({ type: 'MOBILE_WORK_SHEET_UPDATE_LOADING', loading });
 };
 
-export const changeBatchOptVisible = flag => dispatch => {
+export const changeBatchOptVisible = flag => (dispatch: AppDispatch) => {
   dispatch({ type: 'CHABGE_MOBILE_BATCHOPT_VISIBLE', flag });
   dispatch(updateBatchCheckAll(false));
   dispatch(changeBatchOptData([]));
 };
 
-export const updateBatchCheckAll = isAll => (dispatch, getState) => {
+export const updateBatchCheckAll = isAll => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSheetRows, groupDataInfo, base, worksheetInfo } = getState().mobile;
   const { groupData, unfoldedKeys } = groupDataInfo;
   const view = _.find(worksheetInfo.views || [], v => v.viewId === base.viewId);
@@ -862,11 +864,11 @@ export const updateBatchCheckAll = isAll => (dispatch, getState) => {
   }
 };
 
-export const changeBatchOptData = data => dispatch => {
+export const changeBatchOptData = data => (dispatch: AppDispatch) => {
   dispatch({ type: 'CAHNGE_BATCHOPT_CHECKED', data });
 };
 
-export const updateMobileViewPermission = params => dispatch => {
+export const updateMobileViewPermission = params => (dispatch: AppDispatch) => {
   let { viewId, appId, worksheetId } = params;
   sheetAjax.getViewPermission({ viewId, appId, worksheetId }).then(data => {
     if (data.view) {
@@ -875,26 +877,26 @@ export const updateMobileViewPermission = params => dispatch => {
   });
 };
 
-export const updateClickChart = flag => dispatch => {
+export const updateClickChart = flag => (dispatch: AppDispatch) => {
   dispatch({ type: 'UPDATE_CLICK_CHART', flag });
 };
 
-export const updateFilterControls = filterControls => dispatch => {
+export const updateFilterControls = filterControls => (dispatch: AppDispatch) => {
   dispatch({ type: 'MOBILE_UPDATE_FILTER_CONTROLS', filterControls });
 };
 
-export const updateIsPullRefreshing = flag => dispatch => {
+export const updateIsPullRefreshing = flag => (dispatch: AppDispatch) => {
   dispatch({ type: 'MOBILE_IS_PULL_REFRESHING', flag });
 };
 
-export const updatePreviewRecordId = data => dispatch => {
+export const updatePreviewRecordId = data => (dispatch: AppDispatch) => {
   safeLocalStorageSetItem('mobilePreviewRecordId', data);
   dispatch({ type: 'UPDATE_PREVIEW_RECORD', data });
 };
 
 export const updateRow =
   ({ recordId, rowData, isViewData }) =>
-  dispatch => {
+  (dispatch: AppDispatch) => {
     dispatch({
       type: 'MOBILE_UPDATE_SHEET_ROW_BY_ROWID',
       recordId,
@@ -903,7 +905,7 @@ export const updateRow =
     });
   };
 
-export const updateGroupDataInfo = data => (dispatch, getState) => {
+export const updateGroupDataInfo = data => (dispatch: AppDispatch, getState: GetState) => {
   const { batchOptVisible, groupDataInfo, batchOptCheckedData } = getState().mobile;
   const { groupData } = groupDataInfo;
   dispatch({
@@ -943,7 +945,7 @@ const getBoardViewPara = (sheet = {}) => {
 
 // 获取看板下一页分组
 export const loadBoardViewNextGroup = ({ callback = _.noop }) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const sheet = getState().mobile;
     const { boardView } = sheet;
     const { boardViewState, boardViewRecordCount, boardData } = boardView;
@@ -979,7 +981,7 @@ export const loadBoardViewNextGroup = ({ callback = _.noop }) => {
 // 获取看板单个分组下的数据（滚动加载）
 export const loadBoardViewGroupItemData =
   ({ pageIndex = 1, kanbanKey }, callback = _.noop) =>
-  (dispatch, getState) => {
+  (dispatch: AppDispatch, getState: GetState) => {
     const sheet = getState().mobile;
     const { boardView } = sheet;
     const params = getBoardViewPara(sheet);
@@ -1096,7 +1098,7 @@ export const initCalendarViewData = searchArgs => {
 };
 
 export const getCalendarData = () => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, worksheetInfo } = getState().mobile;
     const { viewId = '', worksheetId } = base;
     const { views, template } = worksheetInfo;
@@ -1163,7 +1165,7 @@ export const getCalendarData = () => {
 };
 
 export const updateFormatData = listData => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { calendarView = {}, base, worksheetInfo } = getState().mobile;
     const { viewId = '' } = base;
     const { views, template } = worksheetInfo;
@@ -1225,7 +1227,7 @@ export const getNotScheduledEventList = ({
   onlyGetCount = false,
   callback = _.noop,
 } = {}) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const sheet = getState().mobile;
     const { calendarView, calenderNotScheduled, sheetFiltersGroup } = sheet;
     const { calendarData = {} } = calendarView;
@@ -1304,7 +1306,7 @@ export const deleteCalendarNotScheduled = rowid => {
 };
 
 export const updateCalendarNotScheduled = (rowid, rowData = {}) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const sheet = getState().mobile;
     const { calendarView } = sheet;
     const { calendarData = {} } = calendarView;
@@ -1382,7 +1384,7 @@ export function handleLoadOperateButtons({ worksheetInfo }) {
 }
 
 export function onDeleteSuccess({ rowId }) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { currentSheetRows } = getState().mobile;
     dispatch(changeMobileSheetRows(currentSheetRows.filter(r => r.rowid !== rowId)));
   };

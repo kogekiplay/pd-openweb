@@ -26,9 +26,10 @@ import { controlState, isTimeStyle } from 'src/utils/control';
 import { formatQuickFilter } from 'src/utils/filter';
 import { dateConvertToServerZone, dateConvertToUserZone } from 'src/utils/project';
 import { handleRecordError } from 'src/utils/record';
+import type { AppDispatch, GetState } from 'src/redux/types';
 
 const updatePeriodList = ({ result, parent }) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { gunterView } = getState().sheet;
     const grouping = groupingTimeBlock(gunterView.grouping, result, gunterView.viewConfig);
     dispatch({ type: 'CHANGE_GUNTER_GROUPING', data: grouping });
@@ -60,7 +61,7 @@ let viewRequest = new WeakMap();
 let fetchRowsRequestSeq = new WeakMap();
 
 export const fetchRows = callBackFun => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, controls, views, filters, quickFilter = [] } = getState().sheet;
     const { filterControls } = getState().mobile;
     const requestViewId = base.viewId;
@@ -228,7 +229,7 @@ export const fetchRows = callBackFun => {
  * 更新组和记录top和index数据
  */
 export const updateGroupingData = grouping => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { gunterView } = getState().sheet;
     const { viewConfig, withoutArrangementVisible } = gunterView;
     const { viewControl } = viewConfig;
@@ -266,7 +267,7 @@ export const updateGroupingData = grouping => {
 };
 
 export const updateRecordTimeBlockColor = () => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { gunterView, controls } = getState().sheet;
     const { grouping, viewConfig } = gunterView;
     const { colorId } = viewConfig;
@@ -276,7 +277,7 @@ export const updateRecordTimeBlockColor = () => {
 };
 
 export const updateGroupingVisible = data => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, gunterView } = getState().sheet;
     const value = _.isBoolean(data) ? data : !gunterView.groupingVisible;
     safeLocalStorageSetItem(`gunterGroupingVisible-${base.viewId}`, value);
@@ -307,7 +308,7 @@ export const destroyGunterView = () => {
 };
 
 export const refreshGunterView = time => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, gunterView } = getState().sheet;
     const gunterViewType = localStorage.getItem(`gunterViewType-${base.viewId}`) || gunterView.periodType;
     dispatch(updataPeriodType(Number(gunterViewType) || PERIOD_TYPE.day, time));
@@ -316,7 +317,7 @@ export const refreshGunterView = time => {
 };
 
 export const resetLoadGunterView = () => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { gunterView } = getState().sheet;
     const { chartScroll } = gunterView;
 
@@ -333,7 +334,7 @@ export const resetLoadGunterView = () => {
 };
 
 export const zoomGunterView = () => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { gunterView } = getState().sheet;
     dispatch(updataPeriodType(gunterView.periodType));
     dispatch({ type: 'CHANGE_GUNTER_ZOOM', data: Date.now() });
@@ -341,7 +342,7 @@ export const zoomGunterView = () => {
 };
 
 export const updataPeriodType = (value, time) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, gunterView } = getState().sheet;
     const { viewConfig } = gunterView;
     const newViewConfig = changeViewConfig(value, viewConfig);
@@ -368,7 +369,7 @@ export const updataPeriodType = (value, time) => {
 };
 
 export const updateViewConfig = () => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, views, gunterView, controls } = getState().sheet;
     const {
       advancedSetting,
@@ -444,7 +445,7 @@ export const updateViewConfig = () => {
 };
 
 export const createRecord = (id, isMilepost = false) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { controls, gunterView } = getState().sheet;
     const { grouping, viewConfig, periodList } = gunterView;
     const { startId, endId, startType, endType, milepost } = viewConfig;
@@ -488,7 +489,7 @@ export const createRecord = (id, isMilepost = false) => {
 };
 
 export const addRecord = (cell, row) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, controls, gunterView, worksheetInfo } = getState().sheet;
     const { grouping, viewConfig } = gunterView;
     const { startId, endId, viewControl, milepost } = viewConfig;
@@ -638,7 +639,7 @@ export const addRecord = (cell, row) => {
 };
 
 export const removeRecord = id => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, gunterView } = getState().sheet;
     sheetAjax
       .deleteWorksheetRows({
@@ -666,7 +667,7 @@ export const removeRecord = id => {
 };
 
 export const hideRecord = id => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { gunterView } = getState().sheet;
     let newGrouping = gunterView.grouping.map(item => {
       const newRows = item.rows.filter(row => row.rowid !== id);
@@ -683,7 +684,7 @@ export const hideRecord = id => {
 };
 
 export const updateRecord = (row, updateControls, newItem) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { gunterView, controls } = getState().sheet;
     const { viewConfig } = gunterView;
 
@@ -718,7 +719,7 @@ export const updateRecord = (row, updateControls, newItem) => {
 };
 
 export const updateRecordTime = (row, start, end) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, gunterView, controls } = getState().sheet;
     const { startId, endId } = gunterView.viewConfig;
     const startControl = _.find(controls, { controlId: startId });
@@ -818,7 +819,7 @@ export const updateRecordDragTime = (row, start, end, value) => {
 };
 
 export const updateRecordTitle = (control, record) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base } = getState().sheet;
 
     dispatch(
@@ -856,7 +857,7 @@ export const updateRecordTitle = (control, record) => {
 };
 
 export const updateGroupingRow = (data, id) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { gunterView } = getState().sheet;
     const { grouping, periodList, viewConfig } = gunterView;
     const { groupId } = data;
@@ -888,7 +889,7 @@ export const updateGroupingRow = (data, id) => {
 };
 
 export const moveGroupingRow = (data, newKey, oldKey) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { gunterView } = getState().sheet;
     const { grouping, periodList, viewConfig } = gunterView;
     let newGrouping = grouping.map(item => {
@@ -918,7 +919,7 @@ export const moveGroupingRow = (data, newKey, oldKey) => {
 };
 
 export const addNewRecord = (record, addIndex) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { gunterView, controls } = getState().sheet;
     const { grouping, periodList, viewConfig } = gunterView;
     const viewControl = record[viewConfig.viewControl];
@@ -960,7 +961,7 @@ export const addNewRecord = (record, addIndex) => {
 };
 
 export const updateEditIndex = index => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     if (_.isString(index)) {
       const { gunterView } = getState().sheet;
       const { grouping, withoutArrangementVisible } = gunterView;
@@ -972,7 +973,7 @@ export const updateEditIndex = index => {
 };
 
 export const updateWithoutArrangementVisible = value => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { gunterView } = getState().sheet;
     safeLocalStorageSetItem('gunterViewWithoutArrangementVisible', value);
     dispatch({ type: 'CHANGE_GUNTER_WITHOUT_ARRANGEMENT_VISIBLE', data: value });
@@ -981,7 +982,7 @@ export const updateWithoutArrangementVisible = value => {
 };
 
 export const changeViewType = value => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { gunterView } = getState().sheet;
     const { chartScroll, periodList } = gunterView;
     const scrollCenter = Math.abs(chartScroll.x) + chartScroll.wrapperWidth / 2;
@@ -1002,7 +1003,7 @@ export const changeViewType = value => {
 };
 
 export const updateGroupSubVisible = id => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { grouping } = getState().sheet.gunterView;
     const newGrouping = grouping.map(item => {
       if (item.key === id) {
@@ -1029,7 +1030,7 @@ export const updateGroupSubVisible = id => {
 };
 
 export const updateGunterSearchRecord = record => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { gunterView } = getState().sheet;
     const { grouping, withoutArrangementVisible, chartScroll, groupingScroll } = gunterView;
 
@@ -1062,7 +1063,7 @@ export const updateGunterSearchRecord = record => {
 };
 
 export const loadLeftPeriodList = () => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { gunterView } = getState().sheet;
     const { periodType, periodList, viewConfig } = gunterView;
     const { periodCount, onlyWorkDay } = viewConfig;
@@ -1102,7 +1103,7 @@ export const loadLeftPeriodList = () => {
 };
 
 export const loadRightPeriodList = () => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { gunterView } = getState().sheet;
     const { periodType, periodList, viewConfig } = gunterView;
     const { periodCount, onlyWorkDay } = viewConfig;
