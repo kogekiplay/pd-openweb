@@ -1,4 +1,4 @@
-﻿import _, { find, get, includes } from 'lodash';
+import _, { find, get, includes } from 'lodash';
 import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 import MapHandler from 'ming-ui/components/amap/MapHandler';
@@ -43,6 +43,7 @@ import {
   parseValueIframe,
 } from './formUtils';
 import { formatTimeValue, getItemFilters, getOtherWorksheetFieldValue } from './formUtils/helper';
+import type { ControlValue, FormControl, FormError, SubListStore } from './types';
 import { calcSubTotalCount, getArrBySpliceType, halfSwitchSize, isUnTextWidget } from './utils';
 
 /**
@@ -68,6 +69,66 @@ import { calcSubTotalCount, getArrBySpliceType, halfSwitchSize, isUnTextWidget }
  * @param {[]} currentRuleControlIds 当前页面正更新字段用于业务规则设置字段值
  */
 export default class DataFormat {
+  // 下面这些字段全部只在构造函数或各方法里用 this.x = ... 赋值。
+  // TS 不把构造函数赋值当作字段声明，不写这几行每次读取都报 TS2339 ——
+  // 本文件因此产生 205 条诊断，是全仓单文件最高的一处。
+  // declare 是纯类型声明，babel 的 TS preset 整行擦除，运行时零影响。
+  declare appId: string;
+  declare projectId: string;
+  declare worksheetId: string;
+  declare recordId: string;
+  declare instanceId: string;
+  declare workId: string;
+  declare masterRecordRowId: string;
+  declare recordCreateTime: string;
+  /** 调试用：recordId + 随机数，区分同一条记录的多个实例 */
+  declare _debug_flag: string;
+
+  declare isCharge: boolean;
+  declare disabled: boolean;
+  declare noAutoSubmit: boolean;
+  declare isDraft: boolean;
+  declare isMobile: boolean;
+  declare loadRowsWhenChildTableStoreCreated: boolean;
+  declare mobileCheckRuleLocked: boolean;
+  /** 表单来源场景，见 core/config 的 FROM */
+  declare from: number;
+
+  /** 表单的全部控件 */
+  declare data: FormControl[];
+  /** 主记录的数据，子表/关联表回填时用 */
+  declare masterData: ControlValue;
+  /** 嵌入场景透传的外部数据 */
+  declare embedData: Record<string, ControlValue>;
+  declare searchConfig: ControlValue[];
+
+  declare controlIds: string[];
+  declare ruleControlIds: string[];
+  declare currentRuleControlIds: string[];
+  declare errorItems: FormError[];
+  /** controlId -> 是否正在加载 */
+  declare loadingInfo: Record<string, boolean>;
+  /** 正在异步求值的控件 */
+  declare asyncControls: Record<string, ControlValue>;
+  /** 子表 store 的集中存放处 */
+  declare storeCenter: Record<string, SubListStore>;
+  /** 规则求值时的调用栈，用来挡住循环依赖 */
+  declare loopList: ControlValue[];
+
+  declare abortController: AbortController;
+  declare requestPool: ReturnType<typeof createRequestPool>;
+  /** key -> 防抖后的函数，debounceByKey 用它做缓存 */
+  declare debounceMap: Map<string, (...args: ControlValue[]) => void>;
+  declare debounceByKey: (fn: (...args: ControlValue[]) => void, wait: number) => (...args: ControlValue[]) => void;
+  // 返回值会被 await 后读（const res = await this.debounceGetFilterRowsData(...); if (!res ...)），
+  // 标 void 会报 TS1345「void 类型不能做真值判断」。
+  declare debounceGetFilterRowsData: (...args: ControlValue[]) => ControlValue;
+
+  // 返回值在调用点会被读（形如 !res），所以不能标 void
+  declare onAsyncChange: (...args: ControlValue[]) => ControlValue;
+  declare updateLoadingItems: (...args: ControlValue[]) => ControlValue;
+  declare activeTrigger: (...args: ControlValue[]) => ControlValue;
+
   constructor({
     projectId = '',
     isCharge,
@@ -548,6 +609,18 @@ export default class DataFormat {
     searchByChange = false,
     userTriggerChange = false,
     ignoreSearch = false, // 禁止触发查询工作表
+  }: {
+    controlId?: string;
+    value?: ControlValue;
+    notInsertControlIds?: boolean;
+    removeUniqueItem?: () => void;
+    /** 直接给出整份控件数据（子表回填等场景），不传则用 this.data */
+    data?: FormControl[];
+    isInit?: boolean;
+    isDefaultValue?: boolean;
+    searchByChange?: boolean;
+    userTriggerChange?: boolean;
+    ignoreSearch?: boolean;
   }) {
     this.asyncControls = {};
 

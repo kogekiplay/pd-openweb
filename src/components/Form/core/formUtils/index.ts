@@ -397,7 +397,8 @@ const parseStaticValue = (item, staticValue) => {
 };
 
 // 获取动态默认值
-export const getDynamicValue = (data, currentItem, masterData, embedData) => {
+// embedData 标可选：多数调用点只传前三个参数，不标会报 TS2554。
+export const getDynamicValue = (data, currentItem, masterData, embedData?) => {
   if (currentItem.isQueryWorksheetFill && !checkCellIsEmpty(currentItem.value)) {
     return currentItem.value;
   }
@@ -697,7 +698,9 @@ export const parseNewFormula = (data, currentItem = {}) => {
 };
 
 // 函数处理
-export function calcDefaultValueFunction({ formData, fnControl, forceSyncRun }) {
+// forceSyncRun 标可选：调用点（DataFormat 的默认值计算）不传它，
+// 不标的话解构参数默认是必填，报 TS2345。
+export function calcDefaultValueFunction({ formData, fnControl, forceSyncRun = false }) {
   let expression = _.get(safeParse(fnControl.advancedSetting.defaultfunc), 'expression');
 
   if (!expression) {
