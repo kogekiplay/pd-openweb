@@ -28,6 +28,7 @@ import { Menu, MenuItem, Skeleton } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import worksheetAjax from 'src/api/worksheet';
 import { createRequestPool } from 'worksheet/api/standard';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import { mobileSelectRecord } from 'mobile/components/RecordCardListDialog';
 import { batchEditRecord } from 'worksheet/common/BatchEditRecord';
 import RecordInfoContext from 'worksheet/common/recordInfo/RecordInfoContext';
@@ -153,27 +154,74 @@ const DropIcon = styled.span`
 `;
 
 const isMobile = browserIsMobile();
-const systemControls = SYSTEM_CONTROLS.map(c => ({ ...c, fieldPermission: '111' }));
+const systemControls = SYSTEM_CONTROLS.map((c: FormControl) => ({ ...c, fieldPermission: '111' }));
 const MAX_COUNT = 1000;
 
 // 从 html 代码创建元素
-const createElementFromHtml = html => {
+const createElementFromHtml = (html: string) => {
   const con = document.createElement('div');
   con.innerHTML = html;
   return con.firstElementChild;
 };
 
+/**
+ * 批量编辑弹层（BatchEditRecord）交过来的待更新项 —— 【不是】 FormControl。
+ * 它的 editType 装的是弹层自己的 tab 类型（'modify' / 'clear'，见
+ * BatchEditRecord/controller.ts:93），而 FormControl.editType 是服务端的数字增量标记。
+ * 两者同名不同义，所以这里必须单独建型，不能复用 FormControl。
+ */
+interface BatchUpdateControl {
+  controlId: string;
+  /** 控件类型，29 = 关联记录 */
+  type?: number;
+  /** 'clear' 表示这一项是「清空」而不是「修改」 */
+  editType?: string;
+  value?: any;
+  sourceValue?: any;
+}
+
 const maxAllowFrozenColumnIndex = 10;
 
-const getDefaultSummaryTypes = control => {
+const getDefaultSummaryTypes = (control?: FormControl) => {
   const types = safeParse(control?.advancedSetting?.statisticsseting || '[]', 'array');
-  return types.reduce((acc, curr) => {
+  return types.reduce((acc: Record<string, number>, curr: { id: string; type: number }) => {
     acc[curr.id] = curr.type;
     return acc;
   }, {});
 };
 
 class ChildTable extends React.Component<any, any> {
+  // 下面这些都是构造函数 / render / ref 回调里用 this.x = ... 赋的实例字段。
+  // TS 不把构造函数赋值当字段声明，不写这几行每次读取都报 TS2339。
+  // declare 是纯类型声明，babel 的 TS preset 整行擦除，运行时零影响 ——
+  // 不要改成带初值的类字段，那会真的生成赋值语句，覆盖掉 ref 回调写进来的值。
+  /** props.controls 的快照，用来和下一次 props 比对 */
+  declare controls: FormControl[];
+  // 老环境（无 AbortController）下是 undefined。
+  // 原来写的是 `... && new AbortController()`，取到的是 false —— 而下游
+  // createRequestPool / DataFormat 的入参都是 AbortController | undefined，
+  // false 只是碰巧同为假值。改成三元，让类型和语义一致。
+  declare abortController: AbortController | undefined;
+  declare requestPool: ReturnType<typeof createRequestPool>;
+  /** rowid -> 该行的 DataFormat 实例，避免每次渲染重建 */
+  declare dataFormatCacheMap: Map<string, any>;
+  /** rowid -> 该行是否有字段在异步加载 */
+  declare rowsLoading: Record<string, boolean>;
+  /** 任意一行在加载时盖的遮罩 */
+  declare showLoadingMask: boolean;
+  /** 上一次重建过树形结构的 rows，用来判断要不要再建 */
+  declare _treeRebuiltForRows: RecordRow[];
+  /** 子表容器 DOM，由 ref 回调写入 */
+  declare childTableCon: HTMLElement;
+  /** 控件配置的 direction：'1' 为纵向 */
+  declare defaultDirection: 'vertical' | 'horizontal';
+  /** 新增按钮是否禁用（无列 / 只读 / 不允许新增） */
+  declare disabledNew: boolean;
+  /** 行数是否已达上限 */
+  declare isExceed: boolean;
+  /** 展开态单元格额外占用的宽度 */
+  declare expandCellAppendWidth: number;
+
   static contextType = RecordInfoContext;
   static propTypes = {
     mode: PropTypes.string,
@@ -243,7 +291,7 @@ class ChildTable extends React.Component<any, any> {
     };
     this.state.sheetColumnWidths = this.getSheetColumnWidths();
     this.controls = props.controls;
-    this.abortController = typeof AbortController !== 'undefined' && new AbortController();
+    this.abortController = typeof AbortController !== 'undefined' ? new AbortController() : undefined;
     this.requestPool = createRequestPool({ abortController: this.abortController });
     const _handleUpdateCell = this.handleUpdateCell.bind(this);
 
@@ -381,15 +429,15 @@ class ChildTable extends React.Component<any, any> {
       return;
     }
 
-    const realRows = rows.filter(r => r.rowid && !/^empty-/.test(r.rowid));
+    const realRows = rows.filter((r: RecordRow) => r.rowid && !/^empty-/.test(r.rowid));
 
     if (!realRows.length) {
       return;
     }
 
     const treeMap = treeTableViewData.treeMap || {};
-    const rootRows = realRows.filter(r => !r.pid);
-    const missing = rootRows.some(r => !treeMap[r.rowid]);
+    const rootRows = realRows.filter((r: RecordRow) => !r.pid);
+    const missing = rootRows.some((r: RecordRow) => !treeMap[r.rowid]);
 
     if (!missing) {
       return;
@@ -495,7 +543,7 @@ class ChildTable extends React.Component<any, any> {
     const controls = replaceControlsTranslateInfo(
       appId,
       worksheetInfo.worksheetId,
-      (newControls || get(base, 'controls') || props.controls).map(c => ({
+      (newControls || get(base, 'controls') || props.controls).map((c: FormControl) => ({
         ...c,
         ...(isWorkflow
           ? {}
@@ -524,7 +572,7 @@ class ChildTable extends React.Component<any, any> {
     // 避免落到接口返回的无序 controls 上导致列顺序错乱
     const sortedControlIds = _.isEmpty(controlssorts) ? showControls : _.uniq(controlssorts.concat(showControls));
 
-    let result = sortControlByIds(controls, sortedControlIds).map(c => {
+    let result = sortControlByIds(controls, sortedControlIds).map((c: FormControl) => {
       const control = { ...c };
       const resetedControl = _.find(relationControls.concat(systemControls), { controlId: control.controlId });
 
@@ -586,7 +634,7 @@ class ChildTable extends React.Component<any, any> {
 
   updateAbortController = () => {
     this.abortController && this.abortController.abort && this.abortController.abort();
-    this.abortController = typeof AbortController !== 'undefined' && new AbortController();
+    this.abortController = typeof AbortController !== 'undefined' ? new AbortController() : undefined;
     this.requestPool = createRequestPool({ abortController: this.abortController });
     this.dataFormatCacheMap.clear();
   };
@@ -614,7 +662,7 @@ class ChildTable extends React.Component<any, any> {
     const sort = safeParse(control.advancedSetting.sorts)[0];
 
     if (sort && sort.controlId) {
-      const sortControl = _.find(controls, c => c.controlId === sort.controlId);
+      const sortControl = _.find(controls, (c: FormControl) => c.controlId === sort.controlId);
 
       if (sortControl) {
         clearAndSetRows(handleSortRows(rows, sortControl, sort.isAsc));
@@ -680,7 +728,7 @@ class ChildTable extends React.Component<any, any> {
           );
           // 这里要和 getControls 一起统一到 action 内处理
           const { uniqueControlIds } = parseAdvancedSetting(control.advancedSetting);
-          newControls = newControls.map(c => ({
+          newControls = newControls.map((c: FormControl) => ({
             ...c,
             uniqueInRecord: includes(uniqueControlIds, c.controlId) && canAsUniqueWidget(c),
           }));
@@ -731,7 +779,7 @@ class ChildTable extends React.Component<any, any> {
     let columns = !controls.length
       ? [{}]
       : controls
-          .filter(c =>
+          .filter((c: FormControl) =>
             browserIsMobile() && h5showtype == '2'
               ? c.type !== 34 &&
                 !isRelateRecordTableControl(c) &&
@@ -742,7 +790,7 @@ class ChildTable extends React.Component<any, any> {
                 !isRelateRecordTableControl(c) &&
                 !_.includes(hiddenTypes.concat(SHEET_VIEW_HIDDEN_TYPES), c.type),
           )
-          .map(c => _.assign({}, c));
+          .map((c: FormControl) => _.assign({}, c));
 
     if (isTreeTableView && columns[0]) {
       const appendWidth = getTreeExpandCellWidth(treeTableViewData.maxLevel, rows.length);
@@ -776,7 +824,7 @@ class ChildTable extends React.Component<any, any> {
 
     return pick(
       widths,
-      columns.map(c => c.controlId),
+      columns.map((c: FormControl) => c.controlId),
     );
   }
 
@@ -824,7 +872,7 @@ class ChildTable extends React.Component<any, any> {
   }
   copyRows(rows) {
     const { addRows } = this.props;
-    const newRows = rows.map(row =>
+    const newRows = rows.map((row: RecordRow) =>
       Object.assign({}, _.omit(copySublistRow(this.state.controls, row), ['updatedControlIds']), {
         rowid: `temp-${uuidv4()}`,
         allowedit: true,
@@ -875,7 +923,7 @@ class ChildTable extends React.Component<any, any> {
     if (isNewRecord || !cacheKey || !this.dataFormatCacheMap.has(cacheKey)) {
       formdata = new DataFormat({
         requestPool: this.requestPool,
-        data: this.state.controls.map(c => {
+        data: this.state.controls.map((c: FormControl) => {
           const importedValue = (row || {})[c.controlId];
           let controlValue = importedValue;
 
@@ -950,7 +998,7 @@ class ChildTable extends React.Component<any, any> {
       // 不能在构造后立即清除：关联记录类默认值需异步拉取详情后回填，
       // 立即清除会抢在异步回填之前，导致 isImportFromExcel 守卫失效、导入值被默认值覆盖。
       if (userTriggerChange) {
-        formdata.data.forEach(c => {
+        formdata.data.forEach((c: FormControl) => {
           c.isImportFromExcel = false;
           c.isQueryWorksheetFill = false;
         });
@@ -1049,7 +1097,7 @@ class ChildTable extends React.Component<any, any> {
     const { projectId } = this.worksheetInfo;
     const controls = this.getShowColumns();
 
-    if (!controls.filter(c => _.includes(CHILD_TABLE_ALLOW_IMPORT_CONTROL_TYPES, c.type)).length) {
+    if (!controls.filter((c: FormControl) => _.includes(CHILD_TABLE_ALLOW_IMPORT_CONTROL_TYPES, c.type)).length) {
       alert(_l('没有支持导入的字段'), 3);
       return;
     }
@@ -1114,10 +1162,10 @@ class ChildTable extends React.Component<any, any> {
       filterRowIds:
         relateRecordControl.unique || relateRecordControl.uniqueInRecord
           ? (rows || [])
-              .map(r => _.get(safeParse(r[relateRecordControl.controlId], 'array'), '0.sid'))
+              .map((r: RecordRow) => _.get(safeParse(r[relateRecordControl.controlId], 'array'), '0.sid'))
               .filter(_.identity)
           : [],
-      formData: controls.map(c => ({ ...c, value: tempRow[c.controlId] })).concat(this.props.masterData.formData),
+      formData: controls.map((c: FormControl) => ({ ...c, value: tempRow[c.controlId] })).concat(this.props.masterData.formData),
       onOk: selectedRecords => {
         const rowsLength = filterEmptyChildTableRows(rows).length;
 
@@ -1159,7 +1207,7 @@ class ChildTable extends React.Component<any, any> {
   handleUpdateCell({ control, cell, row = {} }, options) {
     const { rows, updateRow } = this.props;
     const { controls } = this.state;
-    const rowData = _.find(rows, r => r.rowid === row.rowid);
+    const rowData = _.find(rows, (r: RecordRow) => r.rowid === row.rowid);
 
     if (!rowData) {
       return;
@@ -1220,7 +1268,7 @@ class ChildTable extends React.Component<any, any> {
         key: _.last(JSON.parse(value)),
         ...JSON.parse(_.last(JSON.parse(value))),
       };
-      controls.forEach(c => {
+      controls.forEach((c: FormControl) => {
         if (c.controlId === control.controlId) {
           c.options = _.uniqBy([...control.options, newOption], 'key');
         }
@@ -1236,12 +1284,12 @@ class ChildTable extends React.Component<any, any> {
     const { updateRow, addRow } = this.props;
     const { previewRowIndex, controls } = this.state;
     const newControls = updateOptionsOfControls(
-      controls.map(c => ({ ...{}, ...c, value: row[c.controlId] })),
+      controls.map((c: FormControl) => ({ ...{}, ...c, value: row[c.controlId] })),
       row,
     );
     this.setState(
       {
-        controls: controls.map(c => {
+        controls: controls.map((c: FormControl) => {
           const newControl = _.find(newControls, { controlId: c.controlId });
           return newControl ? { ...newControl, value: c.value } : c;
         }),
@@ -1252,8 +1300,8 @@ class ChildTable extends React.Component<any, any> {
           : _.uniqBy(row.updatedControlIds.concat(updatedControlIds));
         row.updatedControlIds = row.updatedControlIds.concat(
           controls
-            .filter(c => _.find(updatedControlIds, cid => ((c.advancedSetting || {}).defsource || '').includes(cid)))
-            .map(c => c.controlId),
+            .filter((c: FormControl) => _.find(updatedControlIds, cid => ((c.advancedSetting || {}).defsource || '').includes(cid)))
+            .map((c: FormControl) => c.controlId),
         );
         if (previewRowIndex > -1) {
           updateRow({ rowid: row.rowid, value: row });
@@ -1310,8 +1358,8 @@ class ChildTable extends React.Component<any, any> {
     try {
       if (control && _.includes([26, 27, 48], control.type)) {
         return _.isEqual(
-          safeParse(value1, 'array').map(c => c[WIDGET_VALUE_ID[control.type]]),
-          safeParse(value2, 'array').map(c => c[WIDGET_VALUE_ID[control.type]]),
+          safeParse(value1, 'array').map((c: FormControl) => c[WIDGET_VALUE_ID[control.type]]),
+          safeParse(value2, 'array').map((c: FormControl) => c[WIDGET_VALUE_ID[control.type]]),
         );
       } else {
         return value1 === value2;
@@ -1327,7 +1375,7 @@ class ChildTable extends React.Component<any, any> {
     const { controls } = this.state;
     const checkControl = _.find(controls, { controlId });
     const { uniqueControlIds } = parseAdvancedSetting(control.advancedSetting);
-    const isUniqueInRecord = !_.find(rowId ? rows.filter(row => row.rowid !== rowId) : rows, row =>
+    const isUniqueInRecord = !_.find(rowId ? rows.filter((row: RecordRow) => row.rowid !== rowId) : rows, row =>
       this.compareValue(checkControl, row[controlId], value),
     );
 
@@ -1435,7 +1483,7 @@ class ChildTable extends React.Component<any, any> {
     const selectedRows = selectedRowIds
       .map(rowId => find(tableRows, { rowid: rowId }))
       .filter(_.identity)
-      .filter(row => row.allowedit);
+      .filter((row: RecordRow) => row.allowedit);
 
     if (!selectedRows.length) {
       return;
@@ -1457,22 +1505,25 @@ class ChildTable extends React.Component<any, any> {
         // 必须按「该行当前关联 id」下发 `deleteRowIds: id1,id2`（与单元格清空一致）。各行待删 id 不同，
         // 故不能用单值 updateRows；又因逐行多次 updateRows 会互相覆盖只生效一条，改用 clearAndSetRows 单次提交。
         const relateClearCids = needUpdateControls
-          .filter(c => c.type === 29 && c.editType === 'clear')
-          .map(c => c.controlId);
-        const baseChanges = needUpdateControls.reduce((acc, c) => {
-          if (c.type === 29 && c.editType === 'clear') return acc;
-          acc[c.controlId] = c.sourceValue || c.value;
-          return acc;
-        }, {});
+          .filter((c: BatchUpdateControl) => c.type === 29 && c.editType === 'clear')
+          .map((c: BatchUpdateControl) => c.controlId);
+        const baseChanges = needUpdateControls.reduce(
+          (acc: Record<string, any>, c: BatchUpdateControl) => {
+            if (c.type === 29 && c.editType === 'clear') return acc;
+            acc[c.controlId] = c.sourceValue || c.value;
+            return acc;
+          },
+          {},
+        );
 
         if (relateClearCids.length) {
-          const selectedIdSet = new Set(selectedRows.map(r => r.rowid));
-          const newRows = rows.map(row => {
+          const selectedIdSet = new Set(selectedRows.map((r: RecordRow) => r.rowid));
+          const newRows = rows.map((row: RecordRow) => {
             if (!selectedIdSet.has(row.rowid)) return row;
             const rowChanges = { ...baseChanges };
             relateClearCids.forEach(cid => {
               const ids = safeParse(row[cid], 'array')
-                .map(r => r.sid)
+                .map((r: RecordRow) => r.sid)
                 .filter(Boolean);
               rowChanges[cid] = ids.length ? `deleteRowIds: ${ids.join(',')}` : '';
             });
@@ -1499,7 +1550,7 @@ class ChildTable extends React.Component<any, any> {
 
         if (!_.isEmpty(cellErrors)) {
           const clearedKeys = _.flatMap(selectedRowIds, rowId =>
-            needUpdateControls.map(c => `${rowId}-${c.controlId}`),
+            needUpdateControls.map((c: FormControl) => `${rowId}-${c.controlId}`),
           );
 
           if (clearedKeys.some(key => key in cellErrors)) {
@@ -1600,7 +1651,7 @@ class ChildTable extends React.Component<any, any> {
     let allowExport = _.get(control, 'advancedSetting.allowexport');
     allowExport = _.isUndefined(allowExport) || allowExport === '1';
     const controlPermission = controlState(control, from);
-    let tableRows = rows.map(row => {
+    let tableRows = rows.map((row: RecordRow) => {
       if (/^temp/.test(row.rowid)) {
         return row;
       } else if (/^empty/.test(row.rowid)) {
@@ -1619,7 +1670,7 @@ class ChildTable extends React.Component<any, any> {
     this.disabledNew = disabledNew;
     this.isExceed = isExceed;
     const allowBatch = !_.includes([FROM.DEFAULT], from) && this.settings.allowBatch;
-    const allowBatchDelete = allowcancel || (allowadd && !!originRows.filter(r => /^temp/.test(r.rowid)).length);
+    const allowBatchDelete = allowcancel || (allowadd && !!originRows.filter((r: RecordRow) => /^temp/.test(r.rowid)).length);
     const allowImport = this.settings.allowImport && !_.includes([FROM.DEFAULT], from);
     const showBatchEdit =
       !isMobile &&
@@ -1666,8 +1717,8 @@ class ChildTable extends React.Component<any, any> {
     }
 
     if (treeLayerControlId) {
-      const emptyRows = _.filter(tableRows, r => /^empty-/.test(r.rowid));
-      tableData = getSheetViewRows({ rows: _.filter(tableRows, r => !/^empty-/.test(r.rowid)) }, { treeMap }).concat(
+      const emptyRows = _.filter(tableRows, (r: RecordRow) => /^empty-/.test(r.rowid));
+      tableData = getSheetViewRows({ rows: _.filter(tableRows, (r: RecordRow) => !/^empty-/.test(r.rowid)) }, { treeMap }).concat(
         emptyRows,
       );
     }
@@ -1834,7 +1885,7 @@ class ChildTable extends React.Component<any, any> {
             <ExportSheetButton
               className="mLeft6"
               exportSheet={cb => {
-                if (!filterEmptyChildTableRows(tableRows).filter(r => !/^temp-/.test(r.rowid)).length) {
+                if (!filterEmptyChildTableRows(tableRows).filter((r: RecordRow) => !/^temp-/.test(r.rowid)).length) {
                   cb();
                   alert(_l('数据为空，暂不支持导出！'), 3);
                   return;
@@ -2170,7 +2221,7 @@ class ChildTable extends React.Component<any, any> {
                 worksheetId={control.dataSource}
                 projectId={projectId}
                 appId={appId}
-                columns={columns.map(c =>
+                columns={columns.map((c: FormControl) =>
                   disableMaskDataControls[c.controlId]
                     ? {
                         ...c,
@@ -2271,7 +2322,7 @@ class ChildTable extends React.Component<any, any> {
                     }}
                     onSelectAll={selectAll => {
                       if (selectAll) {
-                        this.setState({ selectedRowIds: filterEmptyChildTableRows(tableRows).map(row => row.rowid) });
+                        this.setState({ selectedRowIds: filterEmptyChildTableRows(tableRows).map((row: RecordRow) => row.rowid) });
                       } else {
                         this.setState({ selectedRowIds: [] });
                       }
@@ -2296,7 +2347,7 @@ class ChildTable extends React.Component<any, any> {
                         changes.widths = JSON.stringify(
                           pick(
                             { ...sheetColumnWidths, ...tempSheetColumnWidths },
-                            columns.map(c => c.controlId),
+                            columns.map((c: FormControl) => c.controlId),
                           ),
                         );
                       }
@@ -2725,7 +2776,7 @@ class ChildTable extends React.Component<any, any> {
                 (allowcancel &&
                   (useUserPermission && !!recordId ? _.get(tableData[previewRowIndex], 'allowdelete') : true))
               }
-              controls={controls.map(c => ({
+              controls={controls.map((c: FormControl) => ({
                 ...c,
                 hidden: !_.includes(control.showControls, c.controlId) ? true : c.hidden,
               }))}
@@ -2733,7 +2784,7 @@ class ChildTable extends React.Component<any, any> {
               switchDisabled={{
                 prev: previewRowIndex === 0,
                 next:
-                  previewRowIndex === filterEmptyChildTableRows(tableData.filter(r => !r.isSubListFooter)).length - 1,
+                  previewRowIndex === filterEmptyChildTableRows(tableData.filter((r: RecordRow) => !r.isSubListFooter)).length - 1,
               }}
               getMasterFormData={() => this.props.masterData.formData}
               handleUniqueValidate={this.handleUniqueValidate}
