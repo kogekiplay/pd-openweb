@@ -123,7 +123,7 @@ export const replaceAdvancedSettingTranslateInfo = (appId, worksheetId, advanced
   return data;
 };
 
-export const replaceRulesTranslateInfo = (appId, worksheetId, rules) => {
+export const replaceRulesTranslateInfo = (appId, worksheetId, rules: any[]) => {
   return rules.map(rule => {
     const translateInfo = getTranslateInfo(appId, worksheetId, rule.ruleId);
 
@@ -135,7 +135,8 @@ export const replaceRulesTranslateInfo = (appId, worksheetId, rules) => {
   });
 };
 
-export const replaceBtnsTranslateInfo = (appId, btns = []) => {
+// 不标类型的话 `= []` 会被推成 never[]，调用方传任何真实数组都报 TS2345
+export const replaceBtnsTranslateInfo = (appId, btns: any[] = []) => {
   if (!window[`langData-${appId}`]) return btns;
   return btns.map(btn => {
     const translateInfo = getTranslateInfo(appId, null, btn.btnId);

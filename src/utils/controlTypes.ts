@@ -86,6 +86,8 @@ export interface FormControl {
   storeFromDefault?: boolean;
   fieldPermission?: string;
   controlPermissions?: string | ControlPermissions;
+  /** 人员控件的用途：2 表示这一列里的人是记录拥有者 */
+  userPermission?: number;
   disabled?: boolean;
   required?: boolean;
   sectionId?: string;

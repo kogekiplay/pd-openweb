@@ -179,6 +179,25 @@ function formatRowToServer(row, controls = [], { isDraft, isSubList } = {}) {
 }
 
 /**
+ * formatControlToServer 的第二个参数。
+ * 不写出来的话，TS 只能从 `hasDefaultRelateRecordTableControls = []` 推出
+ * `{ hasDefaultRelateRecordTableControls?: never[] }`，
+ * 于是任何调用方传 isNewRecord / isDraft 都报 TS2353「未知属性」。
+ */
+interface FormatControlOptions {
+  /** 子表整行复制，value 里的行 id 要重新生成 */
+  isSubListCopy?: boolean;
+  isDraft?: boolean;
+  isSubList?: boolean;
+  isFromMingoData?: boolean;
+  isNewRecord?: boolean;
+  needSourceValue?: boolean;
+  needFullUpdate?: boolean;
+  /** 带默认值的关联表控件 id，新建记录时要一并提交 */
+  hasDefaultRelateRecordTableControls?: string[];
+}
+
+/**
  * 将控件数据格式化成后端需要的数据
  * @param  {} control 控件
  */
@@ -193,7 +212,7 @@ export function formatControlToServer(
     needSourceValue,
     needFullUpdate,
     hasDefaultRelateRecordTableControls = [],
-  } = {},
+  }: FormatControlOptions = {},
 ) {
   let result = {
     controlId: control.controlId,

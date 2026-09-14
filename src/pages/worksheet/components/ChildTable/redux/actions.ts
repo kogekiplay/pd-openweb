@@ -438,6 +438,16 @@ export const sortRows = ({ control, isAsc }) => {
   };
 };
 
+interface ExportSheetOptions {
+  worksheetId?: string;
+  rowId?: string;
+  controlId?: string;
+  clientId?: string;
+  fileName?: string;
+  filterControls?: any[];
+  onDownload?: (...args: any[]) => void;
+}
+
 export const exportSheet = ({
   worksheetId,
   rowId,
@@ -446,7 +456,7 @@ export const exportSheet = ({
   fileName,
   filterControls = [],
   onDownload = () => {},
-} = {}) => {
+}: ExportSheetOptions = {}) => {
   return async () => {
     try {
       const resData = await postWithToken(

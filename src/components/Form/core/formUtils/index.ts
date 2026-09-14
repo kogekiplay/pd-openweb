@@ -1364,7 +1364,8 @@ export const checkAllValueAvailable = (rules = [], data = [], recordId, from) =>
 };
 
 // 业务规则后端校验
-export const getRuleErrorInfo = (rules = [], badData = []) => {
+// 两个 `= []` 不标类型会被推成 never[]，调用方传真实数组一律报 TS2345
+export const getRuleErrorInfo = (rules: any[] = [], badData: any[] = []) => {
   return badData
     .map(itemBadData => {
       const errorInfo = [];

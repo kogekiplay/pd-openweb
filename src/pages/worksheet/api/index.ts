@@ -7,6 +7,7 @@ import { isSheetDisplay } from 'src/pages/widgetConfig/util';
 import { ensureAppLangData } from 'src/utils/app';
 import { browserIsMobile } from 'src/utils/common';
 import { replaceAdvancedSettingTranslateInfo, replaceControlsTranslateInfo } from 'src/utils/translate';
+import type { FormControl } from 'src/utils/controlTypes';
 
 function getTableAdvancedSettingOfControl(control) {
   let { advancedSetting = {} } = control;
@@ -32,8 +33,47 @@ function getTableAdvancedSettingOfControl(control) {
   return advancedSetting;
 }
 
+/**
+ * getRowDetail 解析、翻译、拼装之后吐出来的记录详情。
+ *
+ * 和 FormControl 一样【故意不完备】：字段是按本仓实际读到的点补的。
+ * 碰到没列的就往这里加一行，不要退回 any —— 一旦退回去，
+ * 各处 data.xxx 又整片变成不受检的黑洞。
+ */
+export interface RecordDetail {
+  /** 1 正常，4 记录不存在/无权限，71 仅部分字段有权限 */
+  resultCode?: number;
+  /** 0 表示当前用户在这条记录上没有角色 */
+  roleType?: number;
+  /** 由 templateControls + 行数据拼出来的表单字段 */
+  formData?: FormControl[];
+  /** 字段显隐规则；由 loadRecord 在 getRules 为真时合并进来 */
+  rules?: any[];
+  allowEdit?: boolean;
+  allowDelete?: boolean;
+  /** 记录是否落在当前视图的数据范围内 */
+  isViewData?: boolean;
+  isLock?: boolean;
+  updateTime?: string;
+  ownerAccount?: { accountId?: string; fullname?: string; avatar?: string };
+  /** 表单级高级设置（含编辑锁 roweditlock 等），值都是字符串 */
+  advancedSetting?: { [key: string]: string };
+  /** 后端原样返回的行数据 JSON 串，formData 就是从它解析出来的 */
+  rowData?: string;
+  templateControls?: FormControl[];
+  appId?: string;
+  appTimeZone?: string;
+  projectId?: string;
+  worksheetId?: string;
+  viewId?: string;
+  rowid?: string;
+  requestLogId?: string;
+  /** 请求异常时后端给的错误码，与 resultCode 不是一回事 */
+  errorCode?: number;
+}
+
 export function getRowDetail(params, controls, options = {}) {
-  return new Promise((resolve, reject) => {
+  return new Promise<RecordDetail>((resolve, reject) => {
     if (!controls) {
       params.getTemplate = true;
     }
