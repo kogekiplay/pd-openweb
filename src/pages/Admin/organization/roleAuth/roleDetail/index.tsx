@@ -148,7 +148,7 @@ export default function RoleDetail(props) {
   return (
     <DetailDrawer
       className="roleDetailDrawer"
-      visible={true}
+      open={true}
       mask={false}
       width={720}
       title={title}

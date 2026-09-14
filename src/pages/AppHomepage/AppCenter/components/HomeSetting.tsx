@@ -112,7 +112,7 @@ export default function HomeSetting(props) {
         width={360}
         title={_l('自定义')}
         placement="right"
-        visible={customDrawerVisible}
+        open={customDrawerVisible}
         closeIcon={<i className="icon-close Font20" />}
         onClose={() => setCustomDrawerVisible(false)}
       >

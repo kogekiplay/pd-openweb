@@ -126,7 +126,7 @@ export default class AutoLinkage extends Component<any, any> {
         }
         width={480}
         className="chartModal"
-        visible={modalVisible}
+        open={modalVisible}
         centered={true}
         destroyOnClose={true}
         closeIcon={<Icon icon="close" className="Font20 pointer textTertiary" />}

@@ -92,7 +92,7 @@ export default function ConfigScopeDrawer(props) {
     <DrawerWrap
       title={_l('集成应用')}
       width={685}
-      visible
+      open
       onClose={onClose}
       placement="right"
       destroyOnClose={true}

@@ -209,7 +209,7 @@ export default function AuthorizationList(props) {
 
   return (
     <AuthListDrawer
-      visible
+      open
       title={_l('API 申请使用审核')}
       width={840}
       placement="right"

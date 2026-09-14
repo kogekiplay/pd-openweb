@@ -203,7 +203,7 @@ export default function AddAndEditAppAccess(props) {
     <DrawerWrap
       placement="right"
       title={isEdit ? _l('编辑应用访问策略') : _l('新建应用访问策略')}
-      visible={visible}
+      open={visible}
       onClose={onClose}
       width={640}
       destroyOnClose={true}

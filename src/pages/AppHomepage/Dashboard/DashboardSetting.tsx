@@ -279,12 +279,12 @@ export default function DashboardSetting(props) {
   return (
     <React.Fragment>
       <SettingDrawer
-        visible
+        open
         maskStyle={{ backgroundColor: 'transparent' }}
         width={480}
         title={_l('自定义工作台')}
         placement="right"
-        afterVisibleChange={visible => setEnableSlider(visible)}
+        afterOpenChange={visible => setEnableSlider(visible)}
         closeIcon={<i className="icon-close Font24" />}
         onClose={onClose}
       >

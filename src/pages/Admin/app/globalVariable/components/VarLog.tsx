@@ -210,7 +210,7 @@ export default function VarLog(props) {
 
   return (
     <LogDrawer
-      visible
+      open
       width={470}
       placement="right"
       title={_l('日志')}

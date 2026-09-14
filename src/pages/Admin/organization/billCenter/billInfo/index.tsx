@@ -485,7 +485,7 @@ export default function BillInfo({ match }) {
 
     return (
       <AgentBillingDetailDrawer
-        visible
+        open
         width={980}
         title={
           <div className="agentBillingDetailTitle">
