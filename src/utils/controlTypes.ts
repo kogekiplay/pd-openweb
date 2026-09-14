@@ -74,6 +74,10 @@ export interface FormControl {
   /** 关联表里作为标题显示的字段 */
   sourceTitleControlId?: string;
   sourceControlType?: number;
+  /** 汇总/公式控件里指向的原始控件类型（注意大小写与 sourceControlType 不同，后端就是两个键） */
+  sourceControltype?: number;
+  /** 他表字段的原始控件类型 */
+  originType?: number;
   strDefault?: string;
   storeFromDefault?: boolean;
   fieldPermission?: string;
@@ -112,4 +116,19 @@ export interface FormControl {
   isImportFromExcel?: boolean;
   /** 移动端规则锁，避免重复触发 */
   mobileCheckRuleLocked?: boolean;
+}
+
+/**
+ * 人员 / 部门 / 组织角色 / 选项 这类选择型控件的【值元素】。
+ * 控件的 value 是一段 JSON 串，解析出来是这种对象的数组。
+ * 字段按各控件类型不同只出现其中几个，所以全部可选。
+ */
+export interface SelectedEntityValue {
+  id?: string;
+  sid?: string;
+  accountId?: string;
+  departmentId?: string;
+  organizeId?: string;
+  name?: string;
+  value?: ControlValue;
 }
