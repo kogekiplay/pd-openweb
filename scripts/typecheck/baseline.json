@@ -3,16 +3,16 @@
   "key": "code",
   "tsVersion": "5.9.3",
   "tsconfig": "tsconfig.gate.json",
-  "generatedAt": "2026-09-14T06:35:19.105Z",
-  "rawCount": 19510,
+  "generatedAt": "2026-09-14T06:54:49.875Z",
+  "rawCount": 19492,
   "droppedNoise": {
     "library": 1277,
     "probe": 0,
     "commentTS1xxx": 0,
     "commentOther": 0
   },
-  "keptCount": 18233,
-  "uniqueKeys": 4188,
+  "keptCount": 18215,
+  "uniqueKeys": 4187,
   "entries": {
     "src/common/GlobalStore.tsx|TS2554": 1,
     "src/common/cookies.ts|TS2551": 2,
@@ -4056,7 +4056,6 @@
     "src/pages/worksheet/views/GunterView/components/GunterExport/index.tsx|TS2322": 1,
     "src/pages/worksheet/views/GunterView/components/GunterExport/print.ts|TS2339": 20,
     "src/pages/worksheet/views/GunterView/components/GunterExport/print.ts|TS2794": 1,
-    "src/pages/worksheet/views/GunterView/components/Iscroll/index.ts|TS2339": 18,
     "src/pages/worksheet/views/GunterView/components/RecordInfo/index.tsx|TS2322": 2,
     "src/pages/worksheet/views/GunterView/components/SelectionIndicator/index.tsx|TS2322": 1,
     "src/pages/worksheet/views/GunterView/components/SelectionIndicator/index.tsx|TS2339": 13,

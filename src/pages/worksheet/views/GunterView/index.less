@@ -10,7 +10,7 @@
 }
 
 .gunterViewLoading {
-  .iScrollVerticalScrollbar {
+  [data-overlayscrollbars-viewport] > .os-scrollbar {
     opacity: 0;
   }
 }
@@ -23,10 +23,17 @@
   bottom: 0;
   left: 0;
   width: 100%;
+  // overflow 交给 OverlayScrollbars 造的 viewport，宿主保持裁切
   overflow: hidden;
-  .iScrollIndicator:hover {
-    background-color: var(--color-text-tertiary) !important;
-  }
+}
+
+// 滚动条外观：对齐原来 .iScrollIndicator 的灰色滑块 + hover 加深
+.os-theme-gunter-scrollbar {
+  --os-size: 8px;
+  --os-handle-bg: var(--color-border-secondary);
+  --os-handle-bg-hover: var(--color-text-tertiary);
+  --os-handle-bg-active: var(--color-text-tertiary);
+  --os-handle-border-radius: 4px;
 }
 
 .gunterGroupingLastMarginBottom > div:last-child {
@@ -35,7 +42,11 @@
 
 .gunterGroupingScroller,
 .gunterChartScroller {
-  position: absolute;
+  // 原来是 position: absolute —— iScroll 靠 transform 平移它。
+  // 改成原生滚动后，这一层必须按内容撑开尺寸，滚动容器才有可滚动区域。
+  position: relative;
+  width: max-content;
+  min-width: 100%;
   transform: translateZ(0);
   user-select: none;
   text-size-adjust: none;

@@ -7,7 +7,7 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import { Skeleton } from 'ming-ui';
 import * as actions from 'worksheet/redux/actions/gunterview';
-import IScroll from 'worksheet/views/GunterView/components/Iscroll';
+import GunterScroll from 'worksheet/views/GunterView/components/GunterScroll';
 import { isChartScrollLocked, setChartScrollLock, setGroupingScrollLock } from 'worksheet/views/GunterView/scrollState';
 import type { RootState } from 'src/redux/types';
 import GroupItem from '../GroupItem';
@@ -33,7 +33,7 @@ let GroupWrap = class GroupWrap extends Component<any, any> {
   }
 
   componentDidMount() {
-    const scroll = new IScroll(this.$groupingWrapperRef.current, {
+    const scroll = new GunterScroll(this.$groupingWrapperRef.current, {
       scrollX: true,
       scrollY: true,
       mouseWheelScrollsHorizontally: false,

@@ -7,7 +7,7 @@ import _ from 'lodash';
 import { Icon, Skeleton } from 'ming-ui';
 import useButtonStatusOfRows from 'worksheet/hooks/useButtonStatusOfRows';
 import * as actions from 'worksheet/redux/actions/gunterview';
-import IScroll from 'worksheet/views/GunterView/components/Iscroll';
+import GunterScroll from 'worksheet/views/GunterView/components/GunterScroll';
 import {
   isGroupingScrollLocked,
   setChartScrollLock,
@@ -39,7 +39,7 @@ class GunterChart extends Component<any, any> {
   }
   componentDidMount() {
     const { isMobile } = this.props;
-    const scroll = new IScroll(this.$ref.current, {
+    const scroll = new GunterScroll(this.$ref.current, {
       scrollX: true,
       scrollY: true,
       mouseWheelScrollsHorizontally: false,
