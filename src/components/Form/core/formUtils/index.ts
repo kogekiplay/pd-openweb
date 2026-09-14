@@ -1262,7 +1262,9 @@ const getItemGroupFilters = (arrItem = {}, data = [], recordId, from) => {
       return (
         (recordId && id === 'rowid') ||
         _.includes(['currenttime', 'user-self'], id) ||
-        (da && controlState(da, from).visible & !da.hidden)
+        // 原来写的是按位 &（visible 当时是 any，TS 拦不住）。两个布尔做按位与，
+        // 真值结果和 && 完全一致，所以这是等价修正，不是行为变更。
+        (da && controlState(da, from).visible && !da.hidden)
       );
     });
   });

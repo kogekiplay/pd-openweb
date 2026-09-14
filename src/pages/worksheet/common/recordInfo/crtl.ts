@@ -12,7 +12,7 @@ import { postWithToken } from 'src/utils/common';
 import { getRecordLandUrl, handleRecordError } from 'src/utils/record';
 import { replaceBtnsTranslateInfo, replaceRulesTranslateInfo } from 'src/utils/translate';
 import type { FormRule } from 'src/components/Form/core/types';
-import type { FormControl } from 'src/utils/controlTypes';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 /**
  * 提交失败时后端回传的「坏数据」。形状随 resultCode 变（11 唯一值冲突 / 22 子表唯一值 /
@@ -30,15 +30,8 @@ type RecordCallback = (...args: any[]) => void;
 // RecordDetail 定义在 worksheet/api（记录详情就是在那儿拼出来的），这里转出去方便调用方取用
 export type { RecordDetail };
 
-/**
- * 一行记录的原始值。
- * 索引签名在这里【不是偷懒】：这个对象的键就是 controlId，
- * 代码里也确实是 row[control.controlId] 这么取的。
- */
-export interface RecordRow {
-  rowid?: string;
-  [controlId: string]: any;
-}
+// RecordRow 和 FormControl 同属控件领域类型，定义在 src/utils/controlTypes，这里转出去
+export type { RecordRow };
 
 /** updateWorksheetRow / saveDraftRow 的返回 */
 interface UpdateRowResult {

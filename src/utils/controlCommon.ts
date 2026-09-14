@@ -2,6 +2,7 @@ import update from 'immutability-helper';
 import _, { get, includes } from 'lodash';
 import moment from 'moment';
 import { HAVE_VALUE_STYLE_WIDGET } from 'src/components/Form/core/enum';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const NEW_RECORD_FROM = [2, 4, 5, 21];
 
@@ -106,15 +107,25 @@ export const getDatePickerConfigs = (data = {}) => {
   }
 };
 
+/** 控件在当前上下文下是否可见、可编辑 */
+export interface ControlState {
+  visible: boolean;
+  editable: boolean;
+}
+
 // 控件状态
-export const controlState = (data, from) => {
+// 返回值必须标出来：data 为空时原来返回 `{}`，推断出的联合类型让所有
+// `controlState(x).visible` 调用点报 TS2339。
+// 空分支给 false/false 而不是 true/true —— 原来读 `{}.visible` 拿到 undefined，
+// 两边在真值判断下完全一致，不要顺手改成 true。
+export const controlState = (data?: FormControl, from?: number): ControlState => {
   if (!data) {
-    return {};
+    return { visible: false, editable: false };
   }
 
   const controlPermissions = data.controlPermissions || '111';
   const fieldPermission = data.fieldPermission || '111';
-  let state = {
+  const state: ControlState = {
     visible: true,
     editable: true,
   };
@@ -130,7 +141,11 @@ export const controlState = (data, from) => {
   return state;
 };
 
-export const getControlStateAndCheckSectionControl = (data, from, formData) => {
+export const getControlStateAndCheckSectionControl = (
+  data: FormControl,
+  from?: number,
+  formData?: FormControl[],
+): ControlState => {
   const sectionControl = data.sectionId && _.find(formData, c => c.controlId === data.sectionId);
 
   if (!sectionControl) {

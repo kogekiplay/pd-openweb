@@ -20,7 +20,7 @@ import { VersionProductType } from 'src/utils/enum';
 import { getFeatureStatus } from 'src/utils/project';
 import type { FormControl } from 'src/utils/controlTypes';
 
-export function filterEmptyChildTableRows(rows = []) {
+export function filterEmptyChildTableRows<T extends { rowid?: string }>(rows: T[] = []): T[] {
   try {
     return rows.filter(row => !(row.rowid || '').startsWith('empty'));
   } catch (err) {

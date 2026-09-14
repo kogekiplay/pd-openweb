@@ -67,6 +67,8 @@ export interface FormControl {
   enumDefault2?: number;
   /** 关联表的字段列表 */
   relationControls?: FormControl[];
+  /** 分段控件（type 52）下挂的子控件，由 getControlsByTab 按 sectionId 归拢出来 */
+  child?: FormControl[];
   /** 关联记录在表单上展示的字段 */
   showControls?: string[];
   dataSource?: string;
@@ -88,6 +90,8 @@ export interface FormControl {
   controlPermissions?: string | ControlPermissions;
   /** 人员控件的用途：2 表示这一列里的人是记录拥有者 */
   userPermission?: number;
+  /** 关联记录/附件等多值控件的条数，由 getRowDetail 从 rq{controlId} 拼上来 */
+  count?: number;
   disabled?: boolean;
   required?: boolean;
   sectionId?: string;
@@ -122,6 +126,16 @@ export interface FormControl {
   isImportFromExcel?: boolean;
   /** 移动端规则锁，避免重复触发 */
   mobileCheckRuleLocked?: boolean;
+}
+
+/**
+ * 一行记录的原始值。
+ * 索引签名在这里【不是偷懒】：这个对象的键就是 controlId，
+ * 代码里也确实是 row[control.controlId] 这么取的。
+ */
+export interface RecordRow {
+  rowid?: string;
+  [controlId: string]: any;
 }
 
 /**

@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import moment from 'moment';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export const FORM_ERROR_TYPE = {
   REQUIRED: 'REQUIRED',
@@ -26,11 +27,11 @@ export const FORM_ERROR_TYPE = {
 };
 
 export const FORM_ERROR_TYPE_TEXT = {
-  REQUIRED: ({ controlName: label, advancedSetting, type }) => {
+  REQUIRED: ({ controlName: label, advancedSetting, type }: FormControl = {}) => {
     if (type === 36) {
-      if (advancedSetting.showtype === '1') {
+      if (advancedSetting?.showtype === '1') {
         return _l('请开启此项');
-      } else if (advancedSetting.showtype === '2') {
+      } else if (advancedSetting?.showtype === '2') {
         const itemNames = safeParse((advancedSetting || {}).itemnames || '[]');
         return _l(
           '请选择%0',
@@ -46,7 +47,7 @@ export const FORM_ERROR_TYPE_TEXT = {
 
     return `${_l('请填写%0', label)}`;
   },
-  REQUIRED_SELECT: ({ controlName: label }) => {
+  REQUIRED_SELECT: ({ controlName: label }: FormControl) => {
     return `${_l('请选择%0', label)}`;
   },
   MOBILE_PHONE: _l('不是有效的手机号码'),
@@ -56,19 +57,20 @@ export const FORM_ERROR_TYPE_TEXT = {
   PASSPORT: _l('不是有效的护照号码'),
   HK_PASSPORT: _l('不是有效的港澳通行证号码'),
   TW_PASSPORT: _l('不是有效的台湾通行证号码'),
-  OTHER_REQUIRED: ({ options = [] }) => {
+  OTHER_REQUIRED: ({ options = [] }: FormControl) => {
     const value = _.get(
-      _.find(options, i => i.key === 'other' && !i.isDeleted),
+      _.find(options, (i: any) => i.key === 'other' && !i.isDeleted),
       'value',
     );
     return _l('请填写%0', value || '其他');
   },
-  CHILD_TABLE_ROWS_LIMIT: ({ value, advancedSetting }) => {
+  CHILD_TABLE_ROWS_LIMIT: ({ value, advancedSetting = {} }: FormControl) => {
     const { min, max, enablelimit } = advancedSetting;
 
     if (String(enablelimit) === '1') {
       const rowsLength = Number(
-        (_.get(value, 'rows') && value.rows.filter(row => !(row.rowid || '').startsWith('empty')).length) ||
+        (_.get(value, 'rows') &&
+          value.rows.filter((row: { rowid?: string }) => !(row.rowid || '').startsWith('empty')).length) ||
           (!_.isObject(value) ? value : 0) ||
           0,
       );
@@ -85,7 +87,7 @@ export const FORM_ERROR_TYPE_TEXT = {
   UNIQUE: () => {
     return _l('不允许重复');
   },
-  NUMBER_RANGE: ({ value, advancedSetting }) => {
+  NUMBER_RANGE: ({ value, advancedSetting = {} }: FormControl) => {
     const { min, max, numshow } = advancedSetting;
     // 百分比提示时，数值异化
     const showMin = numshow === '1' ? `${Number(min || 0) * 100}%` : min;
@@ -99,7 +101,7 @@ export const FORM_ERROR_TYPE_TEXT = {
     if (min && +value < +min) return _l('请输入大于等于%0的数', showMin);
     if (max && +value > +max) return _l('请输入小于等于%0的数', showMax);
   },
-  MULTI_SELECT_RANGE: ({ value, advancedSetting }) => {
+  MULTI_SELECT_RANGE: ({ value, advancedSetting = {} }: FormControl) => {
     const { min, max } = advancedSetting;
     const selectItemsCount = JSON.parse(value || '[]').length;
 
@@ -112,17 +114,19 @@ export const FORM_ERROR_TYPE_TEXT = {
     if (min && selectItemsCount < +min) return _l('最少选择%0项', min);
     if (max && selectItemsCount > +max) return _l('最多选择%0项', max);
   },
-  DATE: ({ advancedSetting }) => {
+  DATE: ({ advancedSetting = {} }: FormControl) => {
     const allowweek = advancedSetting.allowweek || '1234567';
     const FIXED_WEEK = '1234567';
     const TEXT = ['', _l('周一'), _l('周二'), _l('周三'), _l('周四'), _l('周五'), _l('周六'), _l('周日')];
 
-    if (allowweek && _.isArray(allowweek) && allowweek.length <= 4) {
+    // 注意：allowweek 是字符串（'1234567'），这个 _.isArray 分支【永远走不到】。
+    // 保留原状是为了不把类型改造混进行为变更里 —— 要删它得单独确认一次。
+    if (allowweek && _.isArray(allowweek) && (allowweek as string[]).length <= 4) {
       return _l(
         '请选择%0对应的日期',
-        allowweek
+        String(allowweek)
           .split('')
-          .map(o => TEXT[o])
+          .map(o => TEXT[Number(o)])
           .join('、'),
       );
     } else {
@@ -130,18 +134,18 @@ export const FORM_ERROR_TYPE_TEXT = {
         '请选择除%0以外的日期',
         FIXED_WEEK.split('')
           .filter(o => !(allowweek.indexOf(o) > -1))
-          .map(o => TEXT[o])
+          .map(o => TEXT[Number(o)])
           .join('、'),
       );
     }
   },
-  DATE_TIME: ({ advancedSetting }) =>
+  DATE_TIME: ({ advancedSetting = {} }: FormControl) =>
     _l(
       '请填写（%0 ~ %1）范围内的时间',
       advancedSetting.allowtime.split('-')[0],
       advancedSetting.allowtime.split('-')[1],
     ),
-  TEXT_RANGE: ({ value, advancedSetting }) => {
+  TEXT_RANGE: ({ value, advancedSetting = {} }: FormControl) => {
     const { min, max } = advancedSetting;
     const stringSize = (value || '').length;
 
@@ -154,8 +158,8 @@ export const FORM_ERROR_TYPE_TEXT = {
     if (min && stringSize < +min) return _l('最少输入%0个字', min);
     if (max && stringSize > +max) return _l('最多输入%0个字', max);
   },
-  DATE_TIME_RANGE: (value, min, max, isTime) => {
-    function computerValue(val) {
+  DATE_TIME_RANGE: (value: string, min?: string, max?: string, isTime?: boolean) => {
+    function computerValue(val?: string) {
       const mode = isTime ? 'HH:mm:ss' : 'YYYY-MM-DD HH:mm:ss';
       return moment(val, mode);
     }
@@ -216,7 +220,8 @@ export const SYSTEM_ENUM = [
 ];
 
 // 各控件取值id
-export const WIDGET_VALUE_ID = {
+// 标索引签名：调用方拿到的 control.type 是 number，不标的话按字面量键索引一律报 TS7053
+export const WIDGET_VALUE_ID: { [controlType: number]: string } = {
   26: 'accountId',
   27: 'departmentId',
   29: 'sid',
