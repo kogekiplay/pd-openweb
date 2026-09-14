@@ -7,7 +7,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  shareAttachmentByPost: function (args, options: ApiOptions = {}) {
+  shareAttachmentByPost: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Attachment', 'ShareAttachmentByPost', args, options);
   },
   /**
@@ -23,7 +23,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAttachmentDetail: function (args, options: ApiOptions = {}) {
+  getAttachmentDetail: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Attachment', 'GetAttachmentDetail', args, options);
   },
   /**
@@ -51,7 +51,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getAttachmentEditDetail: function (args, options: ApiOptions = {}) {
+  getAttachmentEditDetail: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Attachment', 'GetAttachmentEditDetail', args, options);
   },
   /**
@@ -63,7 +63,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAttachmentViewUrlForWaterMark: function (args, options: ApiOptions = {}) {
+  getAttachmentViewUrlForWaterMark: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Attachment', 'GetAttachmentViewUrlForWaterMark', args, options);
   },
   /**
@@ -76,7 +76,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editLinkAttachment: function (args, options: ApiOptions = {}) {
+  editLinkAttachment: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Attachment', 'EditLinkAttachment', args, options);
   },
   /**
@@ -89,7 +89,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getShareLocalAttachmentUrl: function (args, options: ApiOptions = {}) {
+  getShareLocalAttachmentUrl: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Attachment', 'GetShareLocalAttachmentUrl', args, options);
   },
   /**
@@ -100,7 +100,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getShortUrl: function (args, options: ApiOptions = {}) {
+  getShortUrl: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Attachment', 'GetShortUrl', args, options);
   },
   /**
@@ -113,7 +113,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addAttachmentClick: function (args, options: ApiOptions = {}) {
+  addAttachmentClick: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Attachment', 'AddAttachmentClick', args, options);
   },
   /**
@@ -129,7 +129,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAttachmentToList: function (args, options: ApiOptions = {}) {
+  getAttachmentToList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Attachment', 'GetAttachmentToList', args, options);
   },
   /**
@@ -146,7 +146,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  saveToKnowledge: function (args, options: ApiOptions = {}) {
+  saveToKnowledge: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Attachment', 'SaveToKnowledge', args, options);
   },
   /**
@@ -158,7 +158,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPreviewLink: function (args, options: ApiOptions = {}) {
+  getPreviewLink: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Attachment', 'GetPreviewLink', args, options);
   },
   /**
@@ -172,7 +172,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  update: function (args, options: ApiOptions = {}) {
+  update: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Attachment', 'Update', args, options);
   },
   /**
@@ -188,7 +188,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteAttachment: function (args, options: ApiOptions = {}) {
+  deleteAttachment: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Attachment', 'DeleteAttachment', args, options);
   },
   /**
@@ -212,7 +212,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  newVersion: function (args, options: ApiOptions = {}) {
+  newVersion: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Attachment', 'NewVersion', args, options);
   },
   /**
@@ -225,7 +225,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPreViewMsg: function (args, options: ApiOptions = {}) {
+  getPreViewMsg: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Attachment', 'GetPreViewMsg', args, options);
   },
   /**
@@ -237,7 +237,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAttachmentTotal: function (args, options: ApiOptions = {}) {
+  getAttachmentTotal: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Attachment', 'GetAttachmentTotal', args, options);
   },
   /**
@@ -254,7 +254,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAttachmentScanUrl: function (args, options: ApiOptions = {}) {
+  getAttachmentScanUrl: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Attachment', 'GetAttachmentScanUrl', args, options);
   },
   /**
@@ -265,7 +265,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  stopAttachmentScanUrl: function (args, options: ApiOptions = {}) {
+  stopAttachmentScanUrl: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Attachment', 'StopAttachmentScanUrl', args, options);
   },
   /**
@@ -276,7 +276,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getScanAttachments: function (args, options: ApiOptions = {}) {
+  getScanAttachments: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Attachment', 'GetScanAttachments', args, options);
   },
   /**
@@ -287,7 +287,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getScanAttachmentInfo: function (args, options: ApiOptions = {}) {
+  getScanAttachmentInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Attachment', 'GetScanAttachmentInfo', args, options);
   },
   /**
@@ -305,7 +305,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addScanAttachments: function (args, options: ApiOptions = {}) {
+  addScanAttachments: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Attachment', 'AddScanAttachments', args, options);
   },
   /**
@@ -325,7 +325,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getScanUploadToken: function (args, options: ApiOptions = {}) {
+  getScanUploadToken: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Attachment', 'GetScanUploadToken', args, options);
   },
   /**
@@ -335,7 +335,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getClientUrl: function (args, options: ApiOptions = {}) {
+  getClientUrl: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Attachment', 'GetClientUrl', args, options);
   },
 };

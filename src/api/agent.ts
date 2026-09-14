@@ -13,7 +13,7 @@ export default {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  agentBillingGrant: function (args, options: ApiOptions = {}) {
+  agentBillingGrant: function (args: ApiArgs, options: ApiOptions = {}) {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/billing/grant',
@@ -29,7 +29,7 @@ export default {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  agentBillingGrantVoid: function (args, options: ApiOptions = {}) {
+  agentBillingGrantVoid: function (args: ApiArgs, options: ApiOptions = {}) {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/billing/grant/void',
@@ -46,7 +46,7 @@ export default {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  agentBillingInternalMonthlyFreeConsumption: function (args, options: ApiOptions = {}) {
+  agentBillingInternalMonthlyFreeConsumption: function (args: ApiArgs, options: ApiOptions = {}) {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/billing/internal/monthly-free-consumption',
@@ -61,7 +61,7 @@ export default {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  agentCancel: function (args, options: ApiOptions = {}) {
+  agentCancel: function (args: ApiArgs, options: ApiOptions = {}) {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/cancel',
@@ -93,7 +93,7 @@ export default {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  agentExecute: function (args, options: ApiOptions = {}) {
+  agentExecute: function (args: ApiArgs, options: ApiOptions = {}) {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/execute',
@@ -125,7 +125,7 @@ export default {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  agentExecuteStream: function (args, options: ApiOptions = {}) {
+  agentExecuteStream: function (args: ApiArgs, options: ApiOptions = {}) {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/execute/stream',
@@ -145,7 +145,7 @@ export default {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  agentProvidersTestCapabilities: function (args, options: ApiOptions = {}) {
+  agentProvidersTestCapabilities: function (args: ApiArgs, options: ApiOptions = {}) {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/providers/test-capabilities',
@@ -161,7 +161,7 @@ export default {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  agentSessionClaim: function (args, options: ApiOptions = {}) {
+  agentSessionClaim: function (args: ApiArgs, options: ApiOptions = {}) {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/session-claim',
@@ -212,7 +212,7 @@ export default {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  agentSessionsShares: function (args, options: ApiOptions = {}) {
+  agentSessionsShares: function (args: ApiArgs, options: ApiOptions = {}) {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/sessions/shares',
@@ -245,7 +245,7 @@ export default {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  agentSessionToken: function (args, options: ApiOptions = {}) {
+  agentSessionToken: function (args: ApiArgs, options: ApiOptions = {}) {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/session-token',
@@ -264,7 +264,7 @@ export default {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  agentUploadToken: function (args, options: ApiOptions = {}) {
+  agentUploadToken: function (args: ApiArgs, options: ApiOptions = {}) {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/upload-token',
@@ -282,7 +282,7 @@ export default {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  agentVoiceToken: function (args, options: ApiOptions = {}) {
+  agentVoiceToken: function (args: ApiArgs, options: ApiOptions = {}) {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/voice-token',
@@ -328,7 +328,7 @@ export default {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  aguiInfo: function (args, options: ApiOptions = {}) {
+  aguiInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return agentAPI(args, {
       ...options,
       url: '/api/agui/info',
@@ -342,7 +342,7 @@ export default {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  aguiRun: function (args, options: ApiOptions = {}) {
+  aguiRun: function (args: ApiArgs, options: ApiOptions = {}) {
     return agentAPI(args, {
       ...options,
       url: '/api/agui',
@@ -529,7 +529,7 @@ export default {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getAgentConfigAgents: function (args, options: ApiOptions = {}) {
+  getAgentConfigAgents: function (args: ApiArgs, options: ApiOptions = {}) {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/config/agents',
@@ -543,7 +543,7 @@ export default {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getAgentHealth: function (args, options: ApiOptions = {}) {
+  getAgentHealth: function (args: ApiArgs, options: ApiOptions = {}) {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/health',
@@ -557,7 +557,7 @@ export default {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getAgentHealthLive: function (args, options: ApiOptions = {}) {
+  getAgentHealthLive: function (args: ApiArgs, options: ApiOptions = {}) {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/health/live',
@@ -571,7 +571,7 @@ export default {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getAgentHealthReady: function (args, options: ApiOptions = {}) {
+  getAgentHealthReady: function (args: ApiArgs, options: ApiOptions = {}) {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/health/ready',
@@ -674,7 +674,7 @@ export default {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getAguiInfo: function (args, options: ApiOptions = {}) {
+  getAguiInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return agentAPI(args, {
       ...options,
       url: '/api/agui/info',

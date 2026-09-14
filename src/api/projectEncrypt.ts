@@ -13,7 +13,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  pagedEncryptFields: function (args, options: ApiOptions = {}) {
+  pagedEncryptFields: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectEncrypt', 'PagedEncryptFields', args, options);
   },
   /**
@@ -29,7 +29,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  pagedEncryptRules: function (args, options: ApiOptions = {}) {
+  pagedEncryptRules: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectEncrypt', 'PagedEncryptRules', args, options);
   },
   /**
@@ -41,7 +41,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getEncryptRule: function (args, options: ApiOptions = {}) {
+  getEncryptRule: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectEncrypt', 'GetEncryptRule', args, options);
   },
   /**
@@ -53,7 +53,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addEncryptRule: function (args, options: ApiOptions = {}) {
+  addEncryptRule: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectEncrypt', 'AddEncryptRule', args, options);
   },
   /**
@@ -66,7 +66,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editEncryptRule: function (args, options: ApiOptions = {}) {
+  editEncryptRule: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectEncrypt', 'EditEncryptRule', args, options);
   },
   /**
@@ -78,7 +78,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  testEncryptRule: function (args, options: ApiOptions = {}) {
+  testEncryptRule: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectEncrypt', 'TestEncryptRule', args, options);
   },
   /**
@@ -91,7 +91,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setEncryptRuleState: function (args, options: ApiOptions = {}) {
+  setEncryptRuleState: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectEncrypt', 'SetEncryptRuleState', args, options);
   },
   /**
@@ -103,7 +103,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setDefaultEncryptRule: function (args, options: ApiOptions = {}) {
+  setDefaultEncryptRule: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectEncrypt', 'SetDefaultEncryptRule', args, options);
   },
   /**
@@ -115,7 +115,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeEncryptRule: function (args, options: ApiOptions = {}) {
+  removeEncryptRule: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectEncrypt', 'RemoveEncryptRule', args, options);
   },
   /**
@@ -126,7 +126,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectEncryptRules: function (args, options: ApiOptions = {}) {
+  getProjectEncryptRules: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectEncrypt', 'GetProjectEncryptRules', args, options);
   },
 };

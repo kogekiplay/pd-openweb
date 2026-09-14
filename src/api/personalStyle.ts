@@ -7,7 +7,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAccountsPersonalStatus: function (args, options: ApiOptions = {}) {
+  getAccountsPersonalStatus: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PersonalStyle', 'GetAccountsPersonalStatus', args, options);
   },
   /**
@@ -17,7 +17,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPersonalStatus: function (args, options: ApiOptions = {}) {
+  getPersonalStatus: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PersonalStyle', 'GetPersonalStatus', args, options);
   },
   /**
@@ -33,7 +33,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setPersonalStatus: function (args, options: ApiOptions = {}) {
+  setPersonalStatus: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PersonalStyle', 'SetPersonalStatus', args, options);
   },
   /**
@@ -44,7 +44,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  cancelPersonalStatus: function (args, options: ApiOptions = {}) {
+  cancelPersonalStatus: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PersonalStyle', 'CancelPersonalStatus', args, options);
   },
   /**
@@ -55,7 +55,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deletePersonalStatus: function (args, options: ApiOptions = {}) {
+  deletePersonalStatus: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PersonalStyle', 'DeletePersonalStatus', args, options);
   },
   /**
@@ -71,7 +71,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addOrUpdateStatus: function (args, options: ApiOptions = {}) {
+  addOrUpdateStatus: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PersonalStyle', 'AddOrUpdateStatus', args, options);
   },
 };

@@ -7,7 +7,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectContractInfo: function (args, options: ApiOptions = {}) {
+  getProjectContractInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Upgrade', 'GetProjectContractInfo', args, options);
   },
   /**
@@ -26,7 +26,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateProjectContractInfo: function (args, options: ApiOptions = {}) {
+  updateProjectContractInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Upgrade', 'UpdateProjectContractInfo', args, options);
   },
   /**
@@ -41,7 +41,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getOrderContractInfo: function (args, options: ApiOptions = {}) {
+  getOrderContractInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Upgrade', 'GetOrderContractInfo', args, options);
   },
 };

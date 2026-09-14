@@ -8,7 +8,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  dialogueSetupAssistant: function (args, options: ApiOptions = {}) {
+  dialogueSetupAssistant: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('sse/Assistant', 'DialogueSetupAssistant', args, options);
   },
   /**
@@ -21,7 +21,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  chat: function (args, options: ApiOptions = {}) {
+  chat: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('sse/Assistant', 'Chat', args, options);
   },
   /**
@@ -34,7 +34,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  checkFaceCertSSE: function (args, options: ApiOptions = {}) {
+  checkFaceCertSSE: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('sse/Certification', 'CheckFaceCertSSE', args, options);
   },
   /**
@@ -48,7 +48,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  generateCodeBlock: function (args, options: ApiOptions = {}) {
+  generateCodeBlock: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('sse/Code', 'GenerateCodeBlock', args, options);
   },
   /**
@@ -61,7 +61,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setupCustomField: function (args, options: ApiOptions = {}) {
+  setupCustomField: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('sse/Code', 'SetupCustomField', args, options);
   },
   /**
@@ -73,7 +73,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  buildSheetRequirements: function (args, options: ApiOptions = {}) {
+  buildSheetRequirements: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('sse/Mingo', 'BuildSheetRequirements', args, options);
   },
   /**
@@ -85,7 +85,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  buildWorkSheet: function (args, options: ApiOptions = {}) {
+  buildWorkSheet: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('sse/Mingo', 'BuildWorkSheet', args, options);
   },
   /**
@@ -100,7 +100,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  generateExampleData: function (args, options: ApiOptions = {}) {
+  generateExampleData: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('sse/Mingo', 'GenerateExampleData', args, options);
   },
   /**
@@ -115,7 +115,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  generateRecordByAI: function (args, options: ApiOptions = {}) {
+  generateRecordByAI: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('sse/Mingo', 'GenerateRecordByAI', args, options);
   },
   /**
@@ -128,7 +128,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  optimizeAppInfo: function (args, options: ApiOptions = {}) {
+  optimizeAppInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('sse/Mingo', 'OptimizeAppInfo', args, options);
   },
   /**
@@ -140,7 +140,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  generateAgentPrompt: function (args, options: ApiOptions = {}) {
+  generateAgentPrompt: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('sse/Mingo', 'GenerateAgentPrompt', args, options);
   },
 };

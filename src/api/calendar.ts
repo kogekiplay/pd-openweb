@@ -6,7 +6,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUserInvitedCalendarsCount: function (args, options: ApiOptions = {}) {
+  getUserInvitedCalendarsCount: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Calendar', 'GetUserInvitedCalendarsCount', args, options);
   },
   /**
@@ -17,7 +17,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUserInfo: function (args, options: ApiOptions = {}) {
+  getUserInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Calendar', 'GetUserInfo', args, options);
   },
   /**
@@ -27,7 +27,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getIcsUrl: function (args, options: ApiOptions = {}) {
+  getIcsUrl: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Calendar', 'GetIcsUrl', args, options);
   },
   /**
@@ -40,7 +40,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUserBusyStatus: function (args, options: ApiOptions = {}) {
+  getUserBusyStatus: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Calendar', 'GetUserBusyStatus', args, options);
   },
   /**
@@ -50,7 +50,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  invitedCalendars: function (args, options: ApiOptions = {}) {
+  invitedCalendars: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Calendar', 'InvitedCalendars', args, options);
   },
   /**
@@ -67,7 +67,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getCalendarList2: function (args, options: ApiOptions = {}) {
+  getCalendarList2: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Calendar', 'GetCalendarList2', args, options);
   },
   /**
@@ -84,7 +84,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getCalendars: function (args, options: ApiOptions = {}) {
+  getCalendars: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Calendar', 'GetCalendars', args, options);
   },
   /**
@@ -96,7 +96,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getCalendarDetail: function (args, options: ApiOptions = {}) {
+  getCalendarDetail: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Calendar', 'GetCalendarDetail', args, options);
   },
   /**
@@ -108,7 +108,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getCalendarDetail2: function (args, options: ApiOptions = {}) {
+  getCalendarDetail2: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Calendar', 'GetCalendarDetail2', args, options);
   },
   /**
@@ -120,7 +120,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getCalendarShareDetail: function (args, options: ApiOptions = {}) {
+  getCalendarShareDetail: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Calendar', 'GetCalendarShareDetail', args, options);
   },
   /**
@@ -133,7 +133,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateCalednarShare: function (args, options: ApiOptions = {}) {
+  updateCalednarShare: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Calendar', 'UpdateCalednarShare', args, options);
   },
   /**
@@ -145,7 +145,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  insertCalendarWeChatMember: function (args, options: ApiOptions = {}) {
+  insertCalendarWeChatMember: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Calendar', 'InsertCalendarWeChatMember', args, options);
   },
   /**
@@ -160,7 +160,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeCalendarWeChatMember: function (args, options: ApiOptions = {}) {
+  removeCalendarWeChatMember: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Calendar', 'RemoveCalendarWeChatMember', args, options);
   },
   /**
@@ -172,7 +172,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getShareConfig: function (args, options: ApiOptions = {}) {
+  getShareConfig: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Calendar', 'GetShareConfig', args, options);
   },
   /**
@@ -204,7 +204,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  insertCalendar: function (args, options: ApiOptions = {}) {
+  insertCalendar: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Calendar', 'InsertCalendar', args, options);
   },
   /**
@@ -217,7 +217,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteCalendar: function (args, options: ApiOptions = {}) {
+  deleteCalendar: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Calendar', 'DeleteCalendar', args, options);
   },
   /**
@@ -229,7 +229,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateCalendarIsPrivate: function (args, options: ApiOptions = {}) {
+  updateCalendarIsPrivate: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Calendar', 'UpdateCalendarIsPrivate', args, options);
   },
   /**
@@ -241,7 +241,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateCalendarCatId: function (args, options: ApiOptions = {}) {
+  updateCalendarCatId: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Calendar', 'UpdateCalendarCatId', args, options);
   },
   /**
@@ -254,7 +254,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateMemberRemind: function (args, options: ApiOptions = {}) {
+  updateMemberRemind: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Calendar', 'UpdateMemberRemind', args, options);
   },
   /**
@@ -266,7 +266,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateVoiceRemind: function (args, options: ApiOptions = {}) {
+  updateVoiceRemind: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Calendar', 'UpdateVoiceRemind', args, options);
   },
   /**
@@ -295,7 +295,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editCalendar: function (args, options: ApiOptions = {}) {
+  editCalendar: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Calendar', 'EditCalendar', args, options);
   },
   /**
@@ -313,7 +313,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editCalendarTime: function (args, options: ApiOptions = {}) {
+  editCalendarTime: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Calendar', 'EditCalendarTime', args, options);
   },
   /**
@@ -328,7 +328,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addMembers: function (args, options: ApiOptions = {}) {
+  addMembers: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Calendar', 'AddMembers', args, options);
   },
   /**
@@ -343,7 +343,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  reInvite: function (args, options: ApiOptions = {}) {
+  reInvite: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Calendar', 'ReInvite', args, options);
   },
   /**
@@ -358,7 +358,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  changeMember: function (args, options: ApiOptions = {}) {
+  changeMember: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Calendar', 'ChangeMember', args, options);
   },
   /**
@@ -372,7 +372,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeMember: function (args, options: ApiOptions = {}) {
+  removeMember: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Calendar', 'RemoveMember', args, options);
   },
   /**
@@ -397,7 +397,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  convertCalendarToTask: function (args, options: ApiOptions = {}) {
+  convertCalendarToTask: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Calendar', 'ConvertCalendarToTask', args, options);
   },
   /**
@@ -408,7 +408,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteUserCalCategory: function (args, options: ApiOptions = {}) {
+  deleteUserCalCategory: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Calendar', 'DeleteUserCalCategory', args, options);
   },
   /**
@@ -419,7 +419,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateUserCalCategoryInfo: function (args, options: ApiOptions = {}) {
+  updateUserCalCategoryInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Calendar', 'UpdateUserCalCategoryInfo', args, options);
   },
   /**
@@ -429,7 +429,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUserAllCalCategories: function (args, options: ApiOptions = {}) {
+  getUserAllCalCategories: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Calendar', 'GetUserAllCalCategories', args, options);
   },
 };

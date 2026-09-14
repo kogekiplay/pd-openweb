@@ -145,7 +145,9 @@ function renderParamLine(name, param = {}) {
   return `  * @param {${escapeTemplateValue(param.type)}} args.${escapeTemplateValue(name)}${description}`;
 }
 
-// options 必须标 ApiOptions，不能只写 `options = {}`：
+// args / options 都要标类型：不标的话在 noImplicitAny 下是隐式 any（TS7006），
+// 全仓 src/api 合计 2541 个 args 参数，是通往 strict 的一大块。
+// options 还额外有个问题 ——
 // TS 会从默认值把它推成 `{}`，于是下面 GET 分支的 `options.ajaxOptions = ...`
 // 报 TS2339「Property 'ajaxOptions' does not exist on type '{}'」。
 // 实测这一条模板在生成产物里造成 157 条诊断（src/api 下全部诊断都是它）。
@@ -162,7 +164,7 @@ function renderApiFunction(fn) {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-   ${escapeTemplateValue(fn.fnname)}: function (args, options: ApiOptions = {}) {
+   ${escapeTemplateValue(fn.fnname)}: function (args: ApiArgs, options: ApiOptions = {}) {
 ${optionsLine}     return mdyAPI('${escapeTemplateValue(fn.controllerName)}', '${escapeTemplateValue(fn.actionName)}', args, options);
    },`;
 }

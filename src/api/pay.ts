@@ -7,7 +7,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  aliPay: function (args, options: ApiOptions = {}) {
+  aliPay: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('Pay', 'AliPay', args, options);
   },
@@ -18,7 +18,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  alipayReturn: function (args, options: ApiOptions = {}) {
+  alipayReturn: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('Pay', 'AlipayReturn', args, options);
   },
@@ -29,7 +29,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  alipayNotify: function (args, options: ApiOptions = {}) {
+  alipayNotify: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Pay', 'AlipayNotify', args, options);
   },
   /**
@@ -40,7 +40,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  weChatPay: function (args, options: ApiOptions = {}) {
+  weChatPay: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('Pay', 'WeChatPay', args, options);
   },
@@ -51,7 +51,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  weChatNotify: function (args, options: ApiOptions = {}) {
+  weChatNotify: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Pay', 'WeChatNotify', args, options);
   },
   /**
@@ -62,7 +62,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  weChatQueryOrder: function (args, options: ApiOptions = {}) {
+  weChatQueryOrder: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('Pay', 'WeChatQueryOrder', args, options);
   },
@@ -73,7 +73,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  paymentNotify: function (args, options: ApiOptions = {}) {
+  paymentNotify: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Pay', 'PaymentNotify', args, options);
   },
   /**
@@ -83,7 +83,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  marketplacePaymentNotify: function (args, options: ApiOptions = {}) {
+  marketplacePaymentNotify: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Pay', 'MarketplacePaymentNotify', args, options);
   },
   /**
@@ -93,7 +93,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  withDrawNotify: function (args, options: ApiOptions = {}) {
+  withDrawNotify: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Pay', 'WithDrawNotify', args, options);
   },
 };

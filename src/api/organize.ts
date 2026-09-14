@@ -10,7 +10,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  upsertOrgRoleGroup: function (args, options: ApiOptions = {}) {
+  upsertOrgRoleGroup: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Organize', 'UpsertOrgRoleGroup', args, options);
   },
   /**
@@ -23,7 +23,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setSortOrgRoleGroup: function (args, options: ApiOptions = {}) {
+  setSortOrgRoleGroup: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Organize', 'SetSortOrgRoleGroup', args, options);
   },
   /**
@@ -35,7 +35,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  disabledOrganizeGroup: function (args, options: ApiOptions = {}) {
+  disabledOrganizeGroup: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Organize', 'DisabledOrganizeGroup', args, options);
   },
   /**
@@ -47,7 +47,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  enabledOrganizeGroup: function (args, options: ApiOptions = {}) {
+  enabledOrganizeGroup: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Organize', 'EnabledOrganizeGroup', args, options);
   },
   /**
@@ -59,7 +59,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeOrgRoleGroup: function (args, options: ApiOptions = {}) {
+  removeOrgRoleGroup: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Organize', 'RemoveOrgRoleGroup', args, options);
   },
   /**
@@ -74,7 +74,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  importOrgRoleList: function (args, options: ApiOptions = {}) {
+  importOrgRoleList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Organize', 'ImportOrgRoleList', args, options);
   },
   /**
@@ -88,7 +88,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addOrganize: function (args, options: ApiOptions = {}) {
+  addOrganize: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Organize', 'AddOrganize', args, options);
   },
   /**
@@ -103,7 +103,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editOrganizeName: function (args, options: ApiOptions = {}) {
+  editOrganizeName: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Organize', 'EditOrganizeName', args, options);
   },
   /**
@@ -117,7 +117,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setSortOrgRole: function (args, options: ApiOptions = {}) {
+  setSortOrgRole: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Organize', 'SetSortOrgRole', args, options);
   },
   /**
@@ -129,7 +129,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteOrganizes: function (args, options: ApiOptions = {}) {
+  deleteOrganizes: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Organize', 'DeleteOrganizes', args, options);
   },
   /**
@@ -141,7 +141,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  disabledOrganize: function (args, options: ApiOptions = {}) {
+  disabledOrganize: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Organize', 'DisabledOrganize', args, options);
   },
   /**
@@ -153,7 +153,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  enabledOrganize: function (args, options: ApiOptions = {}) {
+  enabledOrganize: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Organize', 'EnabledOrganize', args, options);
   },
   /**
@@ -167,7 +167,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setOrgRoleChargeDepartment: function (args, options: ApiOptions = {}) {
+  setOrgRoleChargeDepartment: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Organize', 'SetOrgRoleChargeDepartment', args, options);
   },
   /**
@@ -182,7 +182,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  pagedOrganizeAccounts: function (args, options: ApiOptions = {}) {
+  pagedOrganizeAccounts: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Organize', 'PagedOrganizeAccounts', args, options);
   },
   /**
@@ -195,7 +195,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addOrganizeUsers: function (args, options: ApiOptions = {}) {
+  addOrganizeUsers: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Organize', 'AddOrganizeUsers', args, options);
   },
   /**
@@ -208,7 +208,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteOrganizeUsers: function (args, options: ApiOptions = {}) {
+  deleteOrganizeUsers: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Organize', 'DeleteOrganizeUsers', args, options);
   },
   /**
@@ -220,7 +220,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getOrgRoleGroupsByProjectId: function (args, options: ApiOptions = {}) {
+  getOrgRoleGroupsByProjectId: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Organize', 'GetOrgRoleGroupsByProjectId', args, options);
   },
   /**
@@ -237,7 +237,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getOrganizes: function (args, options: ApiOptions = {}) {
+  getOrganizes: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Organize', 'GetOrganizes', args, options);
   },
   /**
@@ -249,7 +249,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getOrganizesByAccountId: function (args, options: ApiOptions = {}) {
+  getOrganizesByAccountId: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Organize', 'GetOrganizesByAccountId', args, options);
   },
 };

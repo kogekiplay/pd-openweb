@@ -16,7 +16,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  setProjectInfo: function (args, options: ApiOptions = {}) {
+  setProjectInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'SetProjectInfo', args, options);
   },
   /**
@@ -27,7 +27,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectFinance: function (args, options: ApiOptions = {}) {
+  getProjectFinance: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'GetProjectFinance', args, options);
   },
   /**
@@ -52,7 +52,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateProjectFinance: function (args, options: ApiOptions = {}) {
+  updateProjectFinance: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'UpdateProjectFinance', args, options);
   },
   /**
@@ -65,7 +65,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectLicenseSupportInfo: function (args, options: ApiOptions = {}) {
+  getProjectLicenseSupportInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'GetProjectLicenseSupportInfo', args, options);
   },
   /**
@@ -76,7 +76,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getEffectiveUsersCount: function (args, options: ApiOptions = {}) {
+  getEffectiveUsersCount: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'GetEffectiveUsersCount', args, options);
   },
   /**
@@ -87,7 +87,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectLogOff: function (args, options: ApiOptions = {}) {
+  getProjectLogOff: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'GetProjectLogOff', args, options);
   },
   /**
@@ -99,7 +99,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  closeProject: function (args, options: ApiOptions = {}) {
+  closeProject: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'CloseProject', args, options);
   },
   /**
@@ -111,7 +111,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  recoverProject: function (args, options: ApiOptions = {}) {
+  recoverProject: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'RecoverProject', args, options);
   },
   /**
@@ -123,7 +123,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  applyCancelProject: function (args, options: ApiOptions = {}) {
+  applyCancelProject: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'ApplyCancelProject', args, options);
   },
   /**
@@ -134,7 +134,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeApplyCancelProject: function (args, options: ApiOptions = {}) {
+  removeApplyCancelProject: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'RemoveApplyCancelProject', args, options);
   },
   /**
@@ -145,7 +145,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeProjectTrialLicense: function (args, options: ApiOptions = {}) {
+  removeProjectTrialLicense: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'RemoveProjectTrialLicense', args, options);
   },
   /**
@@ -156,7 +156,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getInviteGiveRule: function (args, options: ApiOptions = {}) {
+  getInviteGiveRule: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'GetInviteGiveRule', args, options);
   },
   /**
@@ -167,7 +167,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectUnauditedUserCount: function (args, options: ApiOptions = {}) {
+  getProjectUnauditedUserCount: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'GetProjectUnauditedUserCount', args, options);
   },
   /**
@@ -180,7 +180,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  pushInstallClientMsg: function (args, options: ApiOptions = {}) {
+  pushInstallClientMsg: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'PushInstallClientMsg', args, options);
   },
   /**
@@ -192,7 +192,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getComputingInstances: function (args, options: ApiOptions = {}) {
+  getComputingInstances: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'GetComputingInstances', args, options);
   },
   /**
@@ -204,7 +204,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getComputingInstanceDetail: function (args, options: ApiOptions = {}) {
+  getComputingInstanceDetail: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'GetComputingInstanceDetail', args, options);
   },
   /**
@@ -219,7 +219,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  updateComputingInstance: function (args, options: ApiOptions = {}) {
+  updateComputingInstance: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'UpdateComputingInstance', args, options);
   },
   /**
@@ -232,7 +232,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  retryComputingInstance: function (args, options: ApiOptions = {}) {
+  retryComputingInstance: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'RetryComputingInstance', args, options);
   },
   /**
@@ -243,7 +243,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDBInstanceLimit: function (args, options: ApiOptions = {}) {
+  getDBInstanceLimit: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'GetDBInstanceLimit', args, options);
   },
   /**
@@ -254,7 +254,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDBInstances: function (args, options: ApiOptions = {}) {
+  getDBInstances: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'GetDBInstances', args, options);
   },
   /**
@@ -279,7 +279,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  createDBInstance: function (args, options: ApiOptions = {}) {
+  createDBInstance: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'CreateDBInstance', args, options);
   },
   /**
@@ -304,7 +304,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  testConnection: function (args, options: ApiOptions = {}) {
+  testConnection: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'TestConnection', args, options);
   },
   /**
@@ -329,7 +329,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editDBInstance: function (args, options: ApiOptions = {}) {
+  editDBInstance: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'EditDBInstance', args, options);
   },
   /**
@@ -341,7 +341,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeDBInstance: function (args, options: ApiOptions = {}) {
+  removeDBInstance: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'RemoveDBInstance', args, options);
   },
   /**
@@ -352,7 +352,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  bindingWeiXin: function (args, options: ApiOptions = {}) {
+  bindingWeiXin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'BindingWeiXin', args, options);
   },
   /**
@@ -363,7 +363,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWeiXinBindingInfo: function (args, options: ApiOptions = {}) {
+  getWeiXinBindingInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'GetWeiXinBindingInfo', args, options);
   },
   /**
@@ -375,7 +375,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  cancelBindingWeiXin: function (args, options: ApiOptions = {}) {
+  cancelBindingWeiXin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'CancelBindingWeiXin', args, options);
   },
   /**
@@ -388,7 +388,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  callBackWeiXinBinding: function (args, options: ApiOptions = {}) {
+  callBackWeiXinBinding: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'CallBackWeiXinBinding', args, options);
   },
   /**
@@ -402,7 +402,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addTpAuthorizerInfo: function (args, options: ApiOptions = {}) {
+  addTpAuthorizerInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'AddTpAuthorizerInfo', args, options);
   },
   /**
@@ -413,7 +413,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectInfo: function (args, options: ApiOptions = {}) {
+  getProjectInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'GetProjectInfo', args, options);
   },
   /**
@@ -424,7 +424,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectLimitationInfo: function (args, options: ApiOptions = {}) {
+  getProjectLimitationInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'GetProjectLimitationInfo', args, options);
   },
   /**
@@ -436,7 +436,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getProjectLicenseInfo: function (args, options: ApiOptions = {}) {
+  getProjectLicenseInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'GetProjectLicenseInfo', args, options);
   },
   /**
@@ -447,7 +447,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  checkSubDomain: function (args, options: ApiOptions = {}) {
+  checkSubDomain: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'CheckSubDomain', args, options);
   },
   /**
@@ -459,7 +459,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectSubDomainInfo: function (args, options: ApiOptions = {}) {
+  getProjectSubDomainInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'GetProjectSubDomainInfo', args, options);
   },
   /**
@@ -472,7 +472,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getInvitedUsersJoinProjectLog: function (args, options: ApiOptions = {}) {
+  getInvitedUsersJoinProjectLog: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'GetInvitedUsersJoinProjectLog', args, options);
   },
   /**
@@ -486,7 +486,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUpgradeLicenseUrl: function (args, options: ApiOptions = {}) {
+  getUpgradeLicenseUrl: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'GetUpgradeLicenseUrl', args, options);
   },
   /**
@@ -500,7 +500,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateStripeLicense: function (args, options: ApiOptions = {}) {
+  updateStripeLicense: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'UpdateStripeLicense', args, options);
   },
   /**
@@ -511,7 +511,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getExternalIsFirstSubscription: function (args, options: ApiOptions = {}) {
+  getExternalIsFirstSubscription: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'GetExternalIsFirstSubscription', args, options);
   },
   /**
@@ -522,7 +522,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getCurrentLicense: function (args, options: ApiOptions = {}) {
+  getCurrentLicense: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'GetCurrentLicense', args, options);
   },
   /**
@@ -533,10 +533,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getManageSubscriptionUrl: function (args, options: ApiOptions = {}) {
+  getManageSubscriptionUrl: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'GetManageSubscriptionUrl', args, options);
   },
-  getProjectSource: function (args, options: ApiOptions = {}) {
+  getProjectSource: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'GetProjectSource', args, options);
   },
 };

@@ -12,7 +12,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  sendRegisterVerifyCode: function (args, options: ApiOptions = {}) {
+  sendRegisterVerifyCode: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Register', 'SendRegisterVerifyCode', args, options);
   },
   /**
@@ -27,7 +27,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  checkExistAccount: function (args, options: ApiOptions = {}) {
+  checkExistAccount: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Register', 'CheckExistAccount', args, options);
   },
   /**
@@ -42,7 +42,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  checkExistAccountByConfirmation: function (args, options: ApiOptions = {}) {
+  checkExistAccountByConfirmation: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Register', 'CheckExistAccountByConfirmation', args, options);
   },
   /**
@@ -53,7 +53,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  checkExistAccountByCurrentAccount: function (args, options: ApiOptions = {}) {
+  checkExistAccountByCurrentAccount: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Register', 'CheckExistAccountByCurrentAccount', args, options);
   },
   /**
@@ -65,7 +65,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  checkInviteLink: function (args, options: ApiOptions = {}) {
+  checkInviteLink: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Register', 'CheckInviteLink', args, options);
   },
   /**
@@ -76,7 +76,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  checkJoinLink: function (args, options: ApiOptions = {}) {
+  checkJoinLink: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Register', 'CheckJoinLink', args, options);
   },
   /**
@@ -93,7 +93,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  joinByExistAccount: function (args, options: ApiOptions = {}) {
+  joinByExistAccount: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Register', 'JoinByExistAccount', args, options);
   },
   /**
@@ -115,7 +115,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  createAccount: function (args, options: ApiOptions = {}) {
+  createAccount: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Register', 'CreateAccount', args, options);
   },
   /**
@@ -127,7 +127,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setAccountInfo: function (args, options: ApiOptions = {}) {
+  setAccountInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Register', 'SetAccountInfo', args, options);
   },
   /**
@@ -141,7 +141,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  checkProjectCode: function (args, options: ApiOptions = {}) {
+  checkProjectCode: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Register', 'CheckProjectCode', args, options);
   },
   /**
@@ -152,7 +152,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getCompanyInfo: function (args, options: ApiOptions = {}) {
+  getCompanyInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Register', 'GetCompanyInfo', args, options);
   },
   /**
@@ -165,7 +165,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  checkCreateCompany: function (args, options: ApiOptions = {}) {
+  checkCreateCompany: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Register', 'CheckCreateCompany', args, options);
   },
   /**
@@ -194,7 +194,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  createCompany: function (args, options: ApiOptions = {}) {
+  createCompany: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Register', 'CreateCompany', args, options);
   },
   /**
@@ -220,7 +220,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  inviteJoinCompany: function (args, options: ApiOptions = {}) {
+  inviteJoinCompany: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Register', 'InviteJoinCompany', args, options);
   },
   /**
@@ -250,7 +250,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  applyJoinCompany: function (args, options: ApiOptions = {}) {
+  applyJoinCompany: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Register', 'ApplyJoinCompany', args, options);
   },
   /**
@@ -266,7 +266,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  sendFindPasswordVerifyCode: function (args, options: ApiOptions = {}) {
+  sendFindPasswordVerifyCode: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Register', 'SendFindPasswordVerifyCode', args, options);
   },
   /**
@@ -282,7 +282,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updatePassword: function (args, options: ApiOptions = {}) {
+  updatePassword: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Register', 'UpdatePassword', args, options);
   },
   /**
@@ -293,7 +293,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getResetPasswordTrigerInfo: function (args, options: ApiOptions = {}) {
+  getResetPasswordTrigerInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Register', 'GetResetPasswordTrigerInfo', args, options);
   },
   /**
@@ -305,7 +305,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  resetPasswordByState: function (args, options: ApiOptions = {}) {
+  resetPasswordByState: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Register', 'ResetPasswordByState', args, options);
   },
 };

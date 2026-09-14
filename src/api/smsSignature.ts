@@ -6,7 +6,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSmsSignAuditNoticeUsers: function (args, options: ApiOptions = {}) {
+  getSmsSignAuditNoticeUsers: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('SmsSignature', 'GetSmsSignAuditNoticeUsers', args, options);
   },
   /**
@@ -23,7 +23,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getListSmsSignature: function (args, options: ApiOptions = {}) {
+  getListSmsSignature: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('SmsSignature', 'GetListSmsSignature', args, options);
   },
   /**
@@ -34,7 +34,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSmsSignature: function (args, options: ApiOptions = {}) {
+  getSmsSignature: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('SmsSignature', 'GetSmsSignature', args, options);
   },
   /**
@@ -48,7 +48,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  auditSmsSignature: function (args, options: ApiOptions = {}) {
+  auditSmsSignature: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('SmsSignature', 'AuditSmsSignature', args, options);
   },
 };

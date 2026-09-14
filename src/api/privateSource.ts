@@ -7,7 +7,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSources: function (args, options: ApiOptions = {}) {
+  getSources: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateSource', 'GetSources', args, options);
   },
   /**
@@ -21,7 +21,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addSource: function (args, options: ApiOptions = {}) {
+  addSource: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateSource', 'AddSource', args, options);
   },
   /**
@@ -36,7 +36,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editSource: function (args, options: ApiOptions = {}) {
+  editSource: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateSource', 'EditSource', args, options);
   },
   /**
@@ -48,7 +48,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editSourceStatus: function (args, options: ApiOptions = {}) {
+  editSourceStatus: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateSource', 'EditSourceStatus', args, options);
   },
   /**
@@ -59,7 +59,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editSourceSort: function (args, options: ApiOptions = {}) {
+  editSourceSort: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateSource', 'EditSourceSort', args, options);
   },
   /**
@@ -70,7 +70,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeSource: function (args, options: ApiOptions = {}) {
+  removeSource: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateSource', 'RemoveSource', args, options);
   },
 };

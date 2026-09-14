@@ -12,7 +12,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAllowChooseUsers: function (args, options: ApiOptions = {}) {
+  getAllowChooseUsers: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Structure', 'GetAllowChooseUsers', args, options);
   },
   /**
@@ -27,7 +27,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSubordinateUsers: function (args, options: ApiOptions = {}) {
+  getSubordinateUsers: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Structure', 'GetSubordinateUsers', args, options);
   },
   /**
@@ -41,7 +41,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  pagedGetAccountList: function (args, options: ApiOptions = {}) {
+  pagedGetAccountList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Structure', 'PagedGetAccountList', args, options);
   },
   /**
@@ -53,7 +53,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTreesByAccountId: function (args, options: ApiOptions = {}) {
+  getTreesByAccountId: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Structure', 'GetTreesByAccountId', args, options);
   },
   /**
@@ -67,7 +67,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  myStructures: function (args, options: ApiOptions = {}) {
+  myStructures: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Structure', 'MyStructures', args, options);
   },
   /**
@@ -80,7 +80,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getParentsByAccountId: function (args, options: ApiOptions = {}) {
+  getParentsByAccountId: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Structure', 'GetParentsByAccountId', args, options);
   },
   /**
@@ -94,7 +94,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addStructure: function (args, options: ApiOptions = {}) {
+  addStructure: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Structure', 'AddStructure', args, options);
   },
   /**
@@ -107,7 +107,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  replaceUserStructure: function (args, options: ApiOptions = {}) {
+  replaceUserStructure: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Structure', 'ReplaceUserStructure', args, options);
   },
   /**
@@ -119,7 +119,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeParentID: function (args, options: ApiOptions = {}) {
+  removeParentID: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Structure', 'RemoveParentID', args, options);
   },
 };

@@ -8,7 +8,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getQrCode: function (args, options: ApiOptions = {}) {
+  getQrCode: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('CodeAuth', 'GetQrCode', args, options);
   },
   /**
@@ -19,7 +19,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getQrCodeResult: function (args, options: ApiOptions = {}) {
+  getQrCodeResult: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('CodeAuth', 'GetQrCodeResult', args, options);
   },
   /**
@@ -30,7 +30,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDefaultPicUrl: function (args, options: ApiOptions = {}) {
+  getDefaultPicUrl: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('CodeAuth', 'GetDefaultPicUrl', args, options);
   },
 };

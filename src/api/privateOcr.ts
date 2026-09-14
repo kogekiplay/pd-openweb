@@ -6,7 +6,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getOcr: function (args, options: ApiOptions = {}) {
+  getOcr: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateOcr', 'GetOcr', args, options);
   },
   /**
@@ -22,7 +22,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editOcr: function (args, options: ApiOptions = {}) {
+  editOcr: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateOcr', 'EditOcr', args, options);
   },
   /**
@@ -32,7 +32,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeOcr: function (args, options: ApiOptions = {}) {
+  removeOcr: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateOcr', 'RemoveOcr', args, options);
   },
 };

@@ -8,7 +8,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  syncWorkWXToMing: function (args, options: ApiOptions = {}) {
+  syncWorkWXToMing: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'SyncWorkWXToMing', args, options);
   },
   /**
@@ -21,7 +21,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getLogs: function (args, options: ApiOptions = {}) {
+  getLogs: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'GetLogs', args, options);
   },
   /**
@@ -36,7 +36,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getSignatureInfo: function (args, options: ApiOptions = {}) {
+  getSignatureInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'GetSignatureInfo', args, options);
   },
   /**
@@ -47,7 +47,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDDProjectSettingInfo: function (args, options: ApiOptions = {}) {
+  getDDProjectSettingInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'GetDDProjectSettingInfo', args, options);
   },
   /**
@@ -59,7 +59,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDDSsoUrlInfo: function (args, options: ApiOptions = {}) {
+  getDDSsoUrlInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'GetDDSsoUrlInfo', args, options);
   },
   /**
@@ -73,7 +73,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editDDProjectSetting: function (args, options: ApiOptions = {}) {
+  editDDProjectSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'EditDDProjectSetting', args, options);
   },
   /**
@@ -88,7 +88,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  editDDProjectSettingStatus: function (args, options: ApiOptions = {}) {
+  editDDProjectSettingStatus: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'EditDDProjectSettingStatus', args, options);
   },
   /**
@@ -103,7 +103,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  editDDProjectClientWorkingPattern: function (args, options: ApiOptions = {}) {
+  editDDProjectClientWorkingPattern: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'EditDDProjectClientWorkingPattern', args, options);
   },
   /**
@@ -118,7 +118,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  editDDMessagUrlPcSlide: function (args, options: ApiOptions = {}) {
+  editDDMessagUrlPcSlide: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'EditDDMessagUrlPcSlide', args, options);
   },
   /**
@@ -132,7 +132,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editDDProjectTodoMessageEnabled: function (args, options: ApiOptions = {}) {
+  editDDProjectTodoMessageEnabled: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'EditDDProjectTodoMessageEnabled', args, options);
   },
   /**
@@ -146,7 +146,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editProjectSyncRootDepartment: function (args, options: ApiOptions = {}) {
+  editProjectSyncRootDepartment: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'EditProjectSyncRootDepartment', args, options);
   },
   /**
@@ -161,7 +161,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editDDAppNoticeSetting: function (args, options: ApiOptions = {}) {
+  editDDAppNoticeSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'EditDDAppNoticeSetting', args, options);
   },
   /**
@@ -173,7 +173,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDDSignatureInfo: function (args, options: ApiOptions = {}) {
+  getDDSignatureInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'GetDDSignatureInfo', args, options);
   },
   /**
@@ -185,7 +185,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  syncWorkDDToMing: function (args, options: ApiOptions = {}) {
+  syncWorkDDToMing: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'SyncWorkDDToMing', args, options);
   },
   /**
@@ -196,7 +196,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  checkWorkDDToMing: function (args, options: ApiOptions = {}) {
+  checkWorkDDToMing: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'CheckWorkDDToMing', args, options);
   },
   /**
@@ -208,7 +208,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDDStructureInfo: function (args, options: ApiOptions = {}) {
+  getDDStructureInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'GetDDStructureInfo', args, options);
   },
   /**
@@ -223,7 +223,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDDUserRelations: function (args, options: ApiOptions = {}) {
+  getDDUserRelations: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'GetDDUserRelations', args, options);
   },
   /**
@@ -236,7 +236,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  unbindDDUserRelation: function (args, options: ApiOptions = {}) {
+  unbindDDUserRelation: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'UnbindDDUserRelation', args, options);
   },
   /**
@@ -247,7 +247,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWXProjectSettingInfo: function (args, options: ApiOptions = {}) {
+  getWXProjectSettingInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'GetWXProjectSettingInfo', args, options);
   },
   /**
@@ -261,7 +261,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editWXProjectSetting: function (args, options: ApiOptions = {}) {
+  editWXProjectSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'EditWXProjectSetting', args, options);
   },
   /**
@@ -276,7 +276,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  editWXProjectSettingStatus: function (args, options: ApiOptions = {}) {
+  editWXProjectSettingStatus: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'EditWXProjectSettingStatus', args, options);
   },
   /**
@@ -290,7 +290,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editThirdPartyIntergrationScanEnabled: function (args, options: ApiOptions = {}) {
+  editThirdPartyIntergrationScanEnabled: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'EditThirdPartyIntergrationScanEnabled', args, options);
   },
   /**
@@ -304,7 +304,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editThirdPartyCustomNameIcon: function (args, options: ApiOptions = {}) {
+  editThirdPartyCustomNameIcon: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'EditThirdPartyCustomNameIcon', args, options);
   },
   /**
@@ -318,7 +318,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editWXProjectMappingFieldEnabled: function (args, options: ApiOptions = {}) {
+  editWXProjectMappingFieldEnabled: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'EditWXProjectMappingFieldEnabled', args, options);
   },
   /**
@@ -330,7 +330,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editWXProjectJobnumberMappingField: function (args, options: ApiOptions = {}) {
+  editWXProjectJobnumberMappingField: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'EditWXProjectJobnumberMappingField', args, options);
   },
   /**
@@ -342,7 +342,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editWXProjectTagMappingField: function (args, options: ApiOptions = {}) {
+  editWXProjectTagMappingField: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'EditWXProjectTagMappingField', args, options);
   },
   /**
@@ -356,7 +356,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editWXIsEnableQuickApprove: function (args, options: ApiOptions = {}) {
+  editWXIsEnableQuickApprove: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'EditWXIsEnableQuickApprove', args, options);
   },
   /**
@@ -367,7 +367,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  checkWorkWXToMingByApp: function (args, options: ApiOptions = {}) {
+  checkWorkWXToMingByApp: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'CheckWorkWXToMingByApp', args, options);
   },
   /**
@@ -379,7 +379,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorkWXStructureInfo: function (args, options: ApiOptions = {}) {
+  getWorkWXStructureInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'GetWorkWXStructureInfo', args, options);
   },
   /**
@@ -391,7 +391,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  syncWorkWXToMingByApp: function (args, options: ApiOptions = {}) {
+  syncWorkWXToMingByApp: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'SyncWorkWXToMingByApp', args, options);
   },
   /**
@@ -406,7 +406,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorkWxUserRelations: function (args, options: ApiOptions = {}) {
+  getWorkWxUserRelations: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'GetWorkWxUserRelations', args, options);
   },
   /**
@@ -419,7 +419,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  unbindWorkWxUserRelation: function (args, options: ApiOptions = {}) {
+  unbindWorkWxUserRelation: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'UnbindWorkWxUserRelation', args, options);
   },
   /**
@@ -431,7 +431,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorkWXSsoUrlInfo: function (args, options: ApiOptions = {}) {
+  getWorkWXSsoUrlInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'GetWorkWXSsoUrlInfo', args, options);
   },
   /**
@@ -442,7 +442,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorkWXAlternativeAppScanCodeUrl: function (args, options: ApiOptions = {}) {
+  getWorkWXAlternativeAppScanCodeUrl: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'GetWorkWXAlternativeAppScanCodeUrl', args, options);
   },
   /**
@@ -453,7 +453,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editWorkWXAlternativeAppStatus: function (args, options: ApiOptions = {}) {
+  editWorkWXAlternativeAppStatus: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'EditWorkWXAlternativeAppStatus', args, options);
   },
   /**
@@ -466,7 +466,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  applyWorkWXAlternativeApp: function (args, options: ApiOptions = {}) {
+  applyWorkWXAlternativeApp: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'ApplyWorkWXAlternativeApp', args, options);
   },
   /**
@@ -477,7 +477,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWelinkProjectSettingInfo: function (args, options: ApiOptions = {}) {
+  getWelinkProjectSettingInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'GetWelinkProjectSettingInfo', args, options);
   },
   /**
@@ -490,7 +490,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editWelinkProjectSetting: function (args, options: ApiOptions = {}) {
+  editWelinkProjectSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'EditWelinkProjectSetting', args, options);
   },
   /**
@@ -505,7 +505,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  editWelinkProjectSettingStatus: function (args, options: ApiOptions = {}) {
+  editWelinkProjectSettingStatus: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'EditWelinkProjectSettingStatus', args, options);
   },
   /**
@@ -517,7 +517,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  syncWelinkToMingByApp: function (args, options: ApiOptions = {}) {
+  syncWelinkToMingByApp: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'SyncWelinkToMingByApp', args, options);
   },
   /**
@@ -528,7 +528,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWelinkSsoUrlInfo: function (args, options: ApiOptions = {}) {
+  getWelinkSsoUrlInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'GetWelinkSsoUrlInfo', args, options);
   },
   /**
@@ -540,7 +540,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWeLinkSignatureInfo: function (args, options: ApiOptions = {}) {
+  getWeLinkSignatureInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'GetWeLinkSignatureInfo', args, options);
   },
   /**
@@ -551,7 +551,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFeishuProjectSettingInfo: function (args, options: ApiOptions = {}) {
+  getFeishuProjectSettingInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'GetFeishuProjectSettingInfo', args, options);
   },
   /**
@@ -563,7 +563,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFeiShuSignatureInfo: function (args, options: ApiOptions = {}) {
+  getFeiShuSignatureInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'GetFeiShuSignatureInfo', args, options);
   },
   /**
@@ -577,7 +577,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editFeishuProjectSetting: function (args, options: ApiOptions = {}) {
+  editFeishuProjectSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'EditFeishuProjectSetting', args, options);
   },
   /**
@@ -592,7 +592,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  editFeishuProjectSettingStatus: function (args, options: ApiOptions = {}) {
+  editFeishuProjectSettingStatus: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'EditFeishuProjectSettingStatus', args, options);
   },
   /**
@@ -605,7 +605,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editFeishuTodoMessageEnabled: function (args, options: ApiOptions = {}) {
+  editFeishuTodoMessageEnabled: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'EditFeishuTodoMessageEnabled', args, options);
   },
   /**
@@ -618,7 +618,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editFeishuApproveName: function (args, options: ApiOptions = {}) {
+  editFeishuApproveName: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'EditFeishuApproveName', args, options);
   },
   /**
@@ -630,7 +630,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  syncFeishuToMingByApp: function (args, options: ApiOptions = {}) {
+  syncFeishuToMingByApp: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'SyncFeishuToMingByApp', args, options);
   },
   /**
@@ -641,7 +641,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  checkFeiShuToMingByApp: function (args, options: ApiOptions = {}) {
+  checkFeiShuToMingByApp: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'CheckFeiShuToMingByApp', args, options);
   },
   /**
@@ -653,7 +653,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFeiShuStructureInfo: function (args, options: ApiOptions = {}) {
+  getFeiShuStructureInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'GetFeiShuStructureInfo', args, options);
   },
   /**
@@ -668,7 +668,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFeiShuUserRelations: function (args, options: ApiOptions = {}) {
+  getFeiShuUserRelations: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'GetFeiShuUserRelations', args, options);
   },
   /**
@@ -681,7 +681,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  unbindFeiShuUserRelation: function (args, options: ApiOptions = {}) {
+  unbindFeiShuUserRelation: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'UnbindFeiShuUserRelation', args, options);
   },
   /**
@@ -692,7 +692,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFeishuSsoUrlInfo: function (args, options: ApiOptions = {}) {
+  getFeishuSsoUrlInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'GetFeishuSsoUrlInfo', args, options);
   },
   /**
@@ -703,7 +703,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeProjectAllIntergration: function (args, options: ApiOptions = {}) {
+  removeProjectAllIntergration: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'RemoveProjectAllIntergration', args, options);
   },
   /**
@@ -714,7 +714,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  checkClearIntergrationData: function (args, options: ApiOptions = {}) {
+  checkClearIntergrationData: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'CheckClearIntergrationData', args, options);
   },
   /**
@@ -725,7 +725,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getIntergrationAccountInitializeInfo: function (args, options: ApiOptions = {}) {
+  getIntergrationAccountInitializeInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'GetIntergrationAccountInitializeInfo', args, options);
   },
   /**
@@ -737,7 +737,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editIntergrationAccountInitializeInfo: function (args, options: ApiOptions = {}) {
+  editIntergrationAccountInitializeInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'EditIntergrationAccountInitializeInfo', args, options);
   },
   /**
@@ -749,7 +749,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getIntergrationInfo: function (args, options: ApiOptions = {}) {
+  getIntergrationInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'GetIntergrationInfo', args, options);
   },
   /**
@@ -759,7 +759,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorkWxLicenseDetailByApp: function (args, options: ApiOptions = {}) {
+  getWorkWxLicenseDetailByApp: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('WorkWeiXin', 'GetWorkWxLicenseDetailByApp', args, options);
   },
@@ -770,7 +770,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorkWxLicenseCreateOrderDetailByApp: function (args, options: ApiOptions = {}) {
+  getWorkWxLicenseCreateOrderDetailByApp: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('WorkWeiXin', 'GetWorkWxLicenseCreateOrderDetailByApp', args, options);
   },
@@ -782,7 +782,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  createWorkWxLicenseOrder: function (args, options: ApiOptions = {}) {
+  createWorkWxLicenseOrder: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'CreateWorkWxLicenseOrder', args, options);
   },
   /**
@@ -797,7 +797,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorkWxLicenseOrderList: function (args, options: ApiOptions = {}) {
+  getWorkWxLicenseOrderList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkWeiXin', 'GetWorkWxLicenseOrderList', args, options);
   },
 };

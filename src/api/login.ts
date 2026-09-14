@@ -21,7 +21,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  mDAccountLogin: function (args, options: ApiOptions = {}) {
+  mDAccountLogin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Login', 'MDAccountLogin', args, options);
   },
   /**
@@ -36,7 +36,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  sendLoginVerifyCode: function (args, options: ApiOptions = {}) {
+  sendLoginVerifyCode: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Login', 'SendLoginVerifyCode', args, options);
   },
   /**
@@ -52,7 +52,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  mDAccountAutoLogin: function (args, options: ApiOptions = {}) {
+  mDAccountAutoLogin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Login', 'MDAccountAutoLogin', args, options);
   },
   /**
@@ -64,7 +64,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getTwofactorSettingInfo: function (args, options: ApiOptions = {}) {
+  getTwofactorSettingInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Login', 'GetTwofactorSettingInfo', args, options);
   },
   /**
@@ -79,7 +79,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  mDTwofactorLogin: function (args, options: ApiOptions = {}) {
+  mDTwofactorLogin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Login', 'MDTwofactorLogin', args, options);
   },
   /**
@@ -96,7 +96,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  sendTwofactorVerifyCode: function (args, options: ApiOptions = {}) {
+  sendTwofactorVerifyCode: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Login', 'SendTwofactorVerifyCode', args, options);
   },
   /**
@@ -114,7 +114,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  lDAPLogin: function (args, options: ApiOptions = {}) {
+  lDAPLogin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Login', 'LDAPLogin', args, options);
   },
   /**
@@ -125,7 +125,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  checkLogin: function (args, options: ApiOptions = {}) {
+  checkLogin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Login', 'CheckLogin', args, options);
   },
   /**
@@ -135,7 +135,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  loginOut: function (args, options: ApiOptions = {}) {
+  loginOut: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Login', 'LoginOut', args, options);
   },
   /**
@@ -148,7 +148,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  tPLogin: function (args, options: ApiOptions = {}) {
+  tPLogin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Login', 'TPLogin', args, options);
   },
   /**
@@ -161,7 +161,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTPUserInfo: function (args, options: ApiOptions = {}) {
+  getTPUserInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Login', 'GetTPUserInfo', args, options);
   },
   /**
@@ -173,7 +173,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  tPMDAccountLogin: function (args, options: ApiOptions = {}) {
+  tPMDAccountLogin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Login', 'TPMDAccountLogin', args, options);
   },
   /**
@@ -184,7 +184,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  workWeiXinLogin: function (args, options: ApiOptions = {}) {
+  workWeiXinLogin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Login', 'WorkWeiXinLogin', args, options);
   },
   /**
@@ -197,7 +197,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  workWeiXinInstallAuthLogin: function (args, options: ApiOptions = {}) {
+  workWeiXinInstallAuthLogin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Login', 'WorkWeiXinInstallAuthLogin', args, options);
   },
   /**
@@ -208,7 +208,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorkWeiXinCorpInfo: function (args, options: ApiOptions = {}) {
+  getWorkWeiXinCorpInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Login', 'GetWorkWeiXinCorpInfo', args, options);
   },
   /**
@@ -220,7 +220,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  workWeiXinMiniProgramLogin: function (args, options: ApiOptions = {}) {
+  workWeiXinMiniProgramLogin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Login', 'WorkWeiXinMiniProgramLogin', args, options);
   },
   /**
@@ -232,7 +232,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  workWeiXinH5Login: function (args, options: ApiOptions = {}) {
+  workWeiXinH5Login: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Login', 'WorkWeiXinH5Login', args, options);
   },
   /**
@@ -243,7 +243,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDingDingCorpInfo: function (args, options: ApiOptions = {}) {
+  getDingDingCorpInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Login', 'GetDingDingCorpInfo', args, options);
   },
   /**
@@ -257,7 +257,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  dingDingAppLogin: function (args, options: ApiOptions = {}) {
+  dingDingAppLogin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Login', 'DingDingAppLogin', args, options);
   },
   /**
@@ -270,7 +270,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  workWeiXinAppLoginByApp: function (args, options: ApiOptions = {}) {
+  workWeiXinAppLoginByApp: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Login', 'WorkWeiXinAppLoginByApp', args, options);
   },
   /**
@@ -281,7 +281,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorkWeiXinCorpInfoByApp: function (args, options: ApiOptions = {}) {
+  getWorkWeiXinCorpInfoByApp: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Login', 'GetWorkWeiXinCorpInfoByApp', args, options);
   },
   /**
@@ -293,7 +293,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  welinkAppLoginByApp: function (args, options: ApiOptions = {}) {
+  welinkAppLoginByApp: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Login', 'WelinkAppLoginByApp', args, options);
   },
   /**
@@ -304,7 +304,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFeishuCorpInfoByApp: function (args, options: ApiOptions = {}) {
+  getFeishuCorpInfoByApp: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Login', 'GetFeishuCorpInfoByApp', args, options);
   },
   /**
@@ -317,7 +317,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  feishuAppLoginByApp: function (args, options: ApiOptions = {}) {
+  feishuAppLoginByApp: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Login', 'FeishuAppLoginByApp', args, options);
   },
   /**
@@ -328,7 +328,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorkMicrosoftInfo: function (args, options: ApiOptions = {}) {
+  getWorkMicrosoftInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Login', 'GetWorkMicrosoftInfo', args, options);
   },
   /**
@@ -342,7 +342,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  workMicrosoftLoginByApp: function (args, options: ApiOptions = {}) {
+  workMicrosoftLoginByApp: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Login', 'WorkMicrosoftLoginByApp', args, options);
   },
 };

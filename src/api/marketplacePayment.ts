@@ -15,7 +15,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  createOrder: function (args, options: ApiOptions = {}) {
+  createOrder: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MarketplacePayment', 'CreateOrder', args, options);
   },
   /**
@@ -30,7 +30,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPayOrderSummary: function (args, options: ApiOptions = {}) {
+  getPayOrderSummary: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MarketplacePayment', 'GetPayOrderSummary', args, options);
   },
   /**
@@ -46,7 +46,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPlatformTaxSummary: function (args, options: ApiOptions = {}) {
+  getPlatformTaxSummary: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MarketplacePayment', 'GetPlatformTaxSummary', args, options);
   },
   /**
@@ -78,7 +78,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPayOrderList: function (args, options: ApiOptions = {}) {
+  getPayOrderList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MarketplacePayment', 'GetPayOrderList', args, options);
   },
   /**
@@ -89,7 +89,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getOrderConfirmInfo: function (args, options: ApiOptions = {}) {
+  getOrderConfirmInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MarketplacePayment', 'GetOrderConfirmInfo', args, options);
   },
   /**
@@ -100,7 +100,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  checkUnpayOrderByPurchaseRecordId: function (args, options: ApiOptions = {}) {
+  checkUnpayOrderByPurchaseRecordId: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MarketplacePayment', 'CheckUnpayOrderByPurchaseRecordId', args, options);
   },
   /**
@@ -132,7 +132,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  exportBuyerCenterOrder: function (args, options: ApiOptions = {}) {
+  exportBuyerCenterOrder: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MarketplacePayment', 'ExportBuyerCenterOrder', args, options);
   },
   /**
@@ -164,7 +164,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  exportDeveloperCenterOrder: function (args, options: ApiOptions = {}) {
+  exportDeveloperCenterOrder: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MarketplacePayment', 'ExportDeveloperCenterOrder', args, options);
   },
   /**
@@ -196,7 +196,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  exportOperationsCenterOrder: function (args, options: ApiOptions = {}) {
+  exportOperationsCenterOrder: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MarketplacePayment', 'ExportOperationsCenterOrder', args, options);
   },
   /**
@@ -208,7 +208,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editPayOrderStatus: function (args, options: ApiOptions = {}) {
+  editPayOrderStatus: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MarketplacePayment', 'EditPayOrderStatus', args, options);
   },
   /**
@@ -229,7 +229,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWithDrawList: function (args, options: ApiOptions = {}) {
+  getWithDrawList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MarketplacePayment', 'GetWithDrawList', args, options);
   },
   /**
@@ -245,7 +245,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWithdrawSummary: function (args, options: ApiOptions = {}) {
+  getWithdrawSummary: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MarketplacePayment', 'GetWithdrawSummary', args, options);
   },
   /**
@@ -269,7 +269,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  applyWithDraw: function (args, options: ApiOptions = {}) {
+  applyWithDraw: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MarketplacePayment', 'ApplyWithDraw', args, options);
   },
   /**
@@ -282,7 +282,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  confirmWithdraw: function (args, options: ApiOptions = {}) {
+  confirmWithdraw: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MarketplacePayment', 'ConfirmWithdraw', args, options);
   },
   /**
@@ -293,7 +293,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  cancelWithdraw: function (args, options: ApiOptions = {}) {
+  cancelWithdraw: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MarketplacePayment', 'CancelWithdraw', args, options);
   },
   /**
@@ -305,7 +305,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateWithdrawStatus: function (args, options: ApiOptions = {}) {
+  updateWithdrawStatus: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MarketplacePayment', 'UpdateWithdrawStatus', args, options);
   },
   /**
@@ -315,7 +315,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  synchronizeBankStatus: function (args, options: ApiOptions = {}) {
+  synchronizeBankStatus: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MarketplacePayment', 'SynchronizeBankStatus', args, options);
   },
   /**
@@ -336,7 +336,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  exportWithdraws: function (args, options: ApiOptions = {}) {
+  exportWithdraws: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MarketplacePayment', 'ExportWithdraws', args, options);
   },
   /**
@@ -346,7 +346,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getMarketplaceConfig: function (args, options: ApiOptions = {}) {
+  getMarketplaceConfig: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MarketplacePayment', 'GetMarketplaceConfig', args, options);
   },
   /**
@@ -358,7 +358,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  vatInvoiceOCR: function (args, options: ApiOptions = {}) {
+  vatInvoiceOCR: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MarketplacePayment', 'VatInvoiceOCR', args, options);
   },
   /**
@@ -370,7 +370,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  bizLicenseOCR: function (args, options: ApiOptions = {}) {
+  bizLicenseOCR: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MarketplacePayment', 'BizLicenseOCR', args, options);
   },
   /**
@@ -382,7 +382,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  iDCardOCR: function (args, options: ApiOptions = {}) {
+  iDCardOCR: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MarketplacePayment', 'IDCardOCR', args, options);
   },
   /**
@@ -394,7 +394,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  smartStructuralOCR: function (args, options: ApiOptions = {}) {
+  smartStructuralOCR: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MarketplacePayment', 'SmartStructuralOCR', args, options);
   },
   /**
@@ -406,7 +406,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  tradeRefund: function (args, options: ApiOptions = {}) {
+  tradeRefund: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MarketplacePayment', 'TradeRefund', args, options);
   },
   /**
@@ -434,7 +434,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getRefundList: function (args, options: ApiOptions = {}) {
+  getRefundList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MarketplacePayment', 'GetRefundList', args, options);
   },
   /**
@@ -462,7 +462,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  exportRefundOrders: function (args, options: ApiOptions = {}) {
+  exportRefundOrders: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MarketplacePayment', 'ExportRefundOrders', args, options);
   },
   /**
@@ -474,7 +474,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  applyRefund: function (args, options: ApiOptions = {}) {
+  applyRefund: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MarketplacePayment', 'ApplyRefund', args, options);
   },
   /**
@@ -494,7 +494,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getRefundSummary: function (args, options: ApiOptions = {}) {
+  getRefundSummary: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MarketplacePayment', 'GetRefundSummary', args, options);
   },
 };

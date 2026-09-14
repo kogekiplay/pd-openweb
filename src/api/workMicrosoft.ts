@@ -7,7 +7,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorkMicrosoftProjectSettingInfo: function (args, options: ApiOptions = {}) {
+  getWorkMicrosoftProjectSettingInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkMicrosoft', 'GetWorkMicrosoftProjectSettingInfo', args, options);
   },
   /**
@@ -19,7 +19,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setWorkMicrosoftTenantId: function (args, options: ApiOptions = {}) {
+  setWorkMicrosoftTenantId: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkMicrosoft', 'SetWorkMicrosoftTenantId', args, options);
   },
   /**
@@ -32,7 +32,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editMicrosoftProjectSetting: function (args, options: ApiOptions = {}) {
+  editMicrosoftProjectSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkMicrosoft', 'EditMicrosoftProjectSetting', args, options);
   },
   /**
@@ -44,7 +44,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setEntraOnlyLogin: function (args, options: ApiOptions = {}) {
+  setEntraOnlyLogin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkMicrosoft', 'SetEntraOnlyLogin', args, options);
   },
   /**
@@ -56,7 +56,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  syncMicrosoftToMingByApp: function (args, options: ApiOptions = {}) {
+  syncMicrosoftToMingByApp: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkMicrosoft', 'SyncMicrosoftToMingByApp', args, options);
   },
   /**
@@ -67,7 +67,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  checkMicrosoftToMingByApp: function (args, options: ApiOptions = {}) {
+  checkMicrosoftToMingByApp: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkMicrosoft', 'CheckMicrosoftToMingByApp', args, options);
   },
   /**
@@ -79,7 +79,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getMicrosoftStructureInfo: function (args, options: ApiOptions = {}) {
+  getMicrosoftStructureInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkMicrosoft', 'GetMicrosoftStructureInfo', args, options);
   },
   /**
@@ -94,7 +94,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getMicrosoftUserRelations: function (args, options: ApiOptions = {}) {
+  getMicrosoftUserRelations: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkMicrosoft', 'GetMicrosoftUserRelations', args, options);
   },
   /**
@@ -107,7 +107,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  unbindMicrosoftUserRelation: function (args, options: ApiOptions = {}) {
+  unbindMicrosoftUserRelation: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorkMicrosoft', 'UnbindMicrosoftUserRelation', args, options);
   },
 };

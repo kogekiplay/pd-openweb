@@ -9,7 +9,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getViewPermission: function (args, options: ApiOptions = {}) {
+  getViewPermission: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetViewPermission', args, options);
   },
   /**
@@ -21,7 +21,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAppExtendAttr: function (args, options: ApiOptions = {}) {
+  getAppExtendAttr: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetAppExtendAttr', args, options);
   },
   /**
@@ -33,7 +33,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getExtendAttrOptionalControl: function (args, options: ApiOptions = {}) {
+  getExtendAttrOptionalControl: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetExtendAttrOptionalControl', args, options);
   },
   /**
@@ -49,7 +49,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  saveAppExtendAttr: function (args, options: ApiOptions = {}) {
+  saveAppExtendAttr: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'SaveAppExtendAttr', args, options);
   },
   /**
@@ -69,7 +69,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  copyWorksheet: function (args, options: ApiOptions = {}) {
+  copyWorksheet: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'CopyWorksheet', args, options);
   },
   /**
@@ -82,7 +82,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateEntityName: function (args, options: ApiOptions = {}) {
+  updateEntityName: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'UpdateEntityName', args, options);
   },
   /**
@@ -94,7 +94,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editDeveloperNotes: function (args, options: ApiOptions = {}) {
+  editDeveloperNotes: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'EditDeveloperNotes', args, options);
   },
   /**
@@ -107,7 +107,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateWorksheetAlias: function (args, options: ApiOptions = {}) {
+  updateWorksheetAlias: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'UpdateWorksheetAlias', args, options);
   },
   /**
@@ -121,7 +121,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateWorksheetDec: function (args, options: ApiOptions = {}) {
+  updateWorksheetDec: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'UpdateWorksheetDec', args, options);
   },
   /**
@@ -137,7 +137,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateWorksheetShareRange: function (args, options: ApiOptions = {}) {
+  updateWorksheetShareRange: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'UpdateWorksheetShareRange', args, options);
   },
   /**
@@ -161,7 +161,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetInfo: function (args, options: ApiOptions = {}) {
+  getWorksheetInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetWorksheetInfo', args, options);
   },
   /**
@@ -185,7 +185,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetBaseInfo: function (args, options: ApiOptions = {}) {
+  getWorksheetBaseInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetWorksheetBaseInfo', args, options);
   },
   /**
@@ -209,7 +209,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetById: function (args, options: ApiOptions = {}) {
+  getWorksheetById: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetWorksheetById', args, options);
   },
   /**
@@ -237,7 +237,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetInfoByWorkItem: function (args, options: ApiOptions = {}) {
+  getWorksheetInfoByWorkItem: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetWorksheetInfoByWorkItem', args, options);
   },
   /**
@@ -256,7 +256,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetShareUrl: function (args, options: ApiOptions = {}) {
+  getWorksheetShareUrl: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetWorksheetShareUrl', args, options);
   },
   /**
@@ -276,7 +276,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getShareInfoByShareId: function (args, options: ApiOptions = {}) {
+  getShareInfoByShareId: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetShareInfoByShareId', args, options);
   },
   /**
@@ -286,7 +286,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getRefreshRowsMinute: function (args, options: ApiOptions = {}) {
+  getRefreshRowsMinute: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetRefreshRowsMinute', args, options);
   },
   /**
@@ -309,7 +309,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getRowByID: function (args, options: ApiOptions = {}) {
+  getRowByID: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetRowByID', args, options);
   },
   /**
@@ -321,7 +321,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAttachmentDetail: function (args, options: ApiOptions = {}) {
+  getAttachmentDetail: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetAttachmentDetail', args, options);
   },
   /**
@@ -346,7 +346,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAttachmentList: function (args, options: ApiOptions = {}) {
+  getAttachmentList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetAttachmentList', args, options);
   },
   /**
@@ -364,7 +364,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAttachmentShareId: function (args, options: ApiOptions = {}) {
+  getAttachmentShareId: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetAttachmentShareId', args, options);
   },
   /**
@@ -387,7 +387,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getRowDetail: function (args, options: ApiOptions = {}) {
+  getRowDetail: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetRowDetail', args, options);
   },
   /**
@@ -400,7 +400,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  checkRowEditLock: function (args, options: ApiOptions = {}) {
+  checkRowEditLock: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'CheckRowEditLock', args, options);
   },
   /**
@@ -413,7 +413,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getRowEditLock: function (args, options: ApiOptions = {}) {
+  getRowEditLock: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetRowEditLock', args, options);
   },
   /**
@@ -426,7 +426,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  cancelRowEditLock: function (args, options: ApiOptions = {}) {
+  cancelRowEditLock: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'CancelRowEditLock', args, options);
   },
   /**
@@ -438,7 +438,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorkItem: function (args, options: ApiOptions = {}) {
+  getWorkItem: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetWorkItem', args, options);
   },
   /**
@@ -471,7 +471,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getRowRelationRows: function (args, options: ApiOptions = {}) {
+  getRowRelationRows: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetRowRelationRows', args, options);
   },
   /**
@@ -499,7 +499,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addWorksheetRow: function (args, options: ApiOptions = {}) {
+  addWorksheetRow: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'AddWorksheetRow', args, options);
   },
   /**
@@ -527,7 +527,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  saveDraftRow: function (args, options: ApiOptions = {}) {
+  saveDraftRow: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'SaveDraftRow', args, options);
   },
   /**
@@ -555,7 +555,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addWSRowsBatch: function (args, options: ApiOptions = {}) {
+  addWSRowsBatch: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'AddWSRowsBatch', args, options);
   },
   /**
@@ -578,7 +578,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateWorksheetRow: function (args, options: ApiOptions = {}) {
+  updateWorksheetRow: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'UpdateWorksheetRow', args, options);
   },
   /**
@@ -592,7 +592,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  checkFieldUnique: function (args, options: ApiOptions = {}) {
+  checkFieldUnique: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'CheckFieldUnique', args, options);
   },
   /**
@@ -622,7 +622,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateWorksheetRows: function (args, options: ApiOptions = {}) {
+  updateWorksheetRows: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'UpdateWorksheetRows', args, options);
   },
   /**
@@ -642,7 +642,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateRowRelationRows: function (args, options: ApiOptions = {}) {
+  updateRowRelationRows: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'UpdateRowRelationRows', args, options);
   },
   /**
@@ -658,7 +658,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  replaceRowRelationRows: function (args, options: ApiOptions = {}) {
+  replaceRowRelationRows: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'ReplaceRowRelationRows', args, options);
   },
   /**
@@ -678,7 +678,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  refreshSummary: function (args, options: ApiOptions = {}) {
+  refreshSummary: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'RefreshSummary', args, options);
   },
   /**
@@ -708,7 +708,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  refreshWorksheetRows: function (args, options: ApiOptions = {}) {
+  refreshWorksheetRows: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'RefreshWorksheetRows', args, options);
   },
   /**
@@ -733,7 +733,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteWorksheetRows: function (args, options: ApiOptions = {}) {
+  deleteWorksheetRows: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'DeleteWorksheetRows', args, options);
   },
   /**
@@ -755,7 +755,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  restoreWorksheetRows: function (args, options: ApiOptions = {}) {
+  restoreWorksheetRows: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'RestoreWorksheetRows', args, options);
   },
   /**
@@ -773,7 +773,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeWorksheetRows: function (args, options: ApiOptions = {}) {
+  removeWorksheetRows: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'RemoveWorksheetRows', args, options);
   },
   /**
@@ -821,7 +821,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getFilterRows: function (args, options: ApiOptions = {}) {
+  getFilterRows: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetFilterRows', args, options);
   },
   /**
@@ -869,7 +869,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  chooseRelationRows: function (args, options: ApiOptions = {}) {
+  chooseRelationRows: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'ChooseRelationRows', args, options);
   },
   /**
@@ -919,7 +919,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getFilterRowsByQueryDefault: function (args, options: ApiOptions = {}) {
+  getFilterRowsByQueryDefault: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetFilterRowsByQueryDefault', args, options);
   },
   /**
@@ -967,7 +967,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getFilterRowsTotalNum: function (args, options: ApiOptions = {}) {
+  getFilterRowsTotalNum: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetFilterRowsTotalNum', args, options);
   },
   /**
@@ -990,7 +990,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFilterRowsReport: function (args, options: ApiOptions = {}) {
+  getFilterRowsReport: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetFilterRowsReport', args, options);
   },
   /**
@@ -1004,7 +1004,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getLogs: function (args, options: ApiOptions = {}) {
+  getLogs: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetLogs', args, options);
   },
   /**
@@ -1028,7 +1028,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetOperationLogs: function (args, options: ApiOptions = {}) {
+  getWorksheetOperationLogs: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetWorksheetOperationLogs', args, options);
   },
   /**
@@ -1049,7 +1049,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDetailTableLog: function (args, options: ApiOptions = {}) {
+  getDetailTableLog: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetDetailTableLog', args, options);
   },
   /**
@@ -1073,7 +1073,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  batchGetWorksheetOperationLogs: function (args, options: ApiOptions = {}) {
+  batchGetWorksheetOperationLogs: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'BatchGetWorksheetOperationLogs', args, options);
   },
   /**
@@ -1089,7 +1089,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateWorksheetRowShareRange: function (args, options: ApiOptions = {}) {
+  updateWorksheetRowShareRange: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'UpdateWorksheetRowShareRange', args, options);
   },
   /**
@@ -1103,7 +1103,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getRowsShortUrl: function (args, options: ApiOptions = {}) {
+  getRowsShortUrl: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetRowsShortUrl', args, options);
   },
   /**
@@ -1125,7 +1125,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  copyRow: function (args, options: ApiOptions = {}) {
+  copyRow: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'CopyRow', args, options);
   },
   /**
@@ -1148,7 +1148,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getNavGroup: function (args, options: ApiOptions = {}) {
+  getNavGroup: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetNavGroup', args, options);
   },
   /**
@@ -1159,7 +1159,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetArchives: function (args, options: ApiOptions = {}) {
+  getWorksheetArchives: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetWorksheetArchives', args, options);
   },
   /**
@@ -1176,7 +1176,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  saveWorksheetFilter: function (args, options: ApiOptions = {}) {
+  saveWorksheetFilter: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'SaveWorksheetFilter', args, options);
   },
   /**
@@ -1188,7 +1188,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetFilters: function (args, options: ApiOptions = {}) {
+  getWorksheetFilters: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetWorksheetFilters', args, options);
   },
   /**
@@ -1202,7 +1202,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetFilterById: function (args, options: ApiOptions = {}) {
+  getWorksheetFilterById: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetWorksheetFilterById', args, options);
   },
   /**
@@ -1214,7 +1214,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteWorksheetFilter: function (args, options: ApiOptions = {}) {
+  deleteWorksheetFilter: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'DeleteWorksheetFilter', args, options);
   },
   /**
@@ -1227,7 +1227,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  sortWorksheetFilters: function (args, options: ApiOptions = {}) {
+  sortWorksheetFilters: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'SortWorksheetFilters', args, options);
   },
   /**
@@ -1271,7 +1271,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  saveWorksheetView: function (args, options: ApiOptions = {}) {
+  saveWorksheetView: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'SaveWorksheetView', args, options);
   },
   /**
@@ -1284,7 +1284,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetViews: function (args, options: ApiOptions = {}) {
+  getWorksheetViews: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetWorksheetViews', args, options);
   },
   /**
@@ -1297,7 +1297,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetViewById: function (args, options: ApiOptions = {}) {
+  getWorksheetViewById: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetWorksheetViewById', args, options);
   },
   /**
@@ -1310,7 +1310,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteWorksheetView: function (args, options: ApiOptions = {}) {
+  deleteWorksheetView: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'DeleteWorksheetView', args, options);
   },
   /**
@@ -1323,7 +1323,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  restoreWorksheetView: function (args, options: ApiOptions = {}) {
+  restoreWorksheetView: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'RestoreWorksheetView', args, options);
   },
   /**
@@ -1335,7 +1335,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  copyWorksheetView: function (args, options: ApiOptions = {}) {
+  copyWorksheetView: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'CopyWorksheetView', args, options);
   },
   /**
@@ -1348,7 +1348,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  sortWorksheetViews: function (args, options: ApiOptions = {}) {
+  sortWorksheetViews: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'SortWorksheetViews', args, options);
   },
   /**
@@ -1362,7 +1362,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  copyWorksheetViewConfig: function (args, options: ApiOptions = {}) {
+  copyWorksheetViewConfig: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'CopyWorksheetViewConfig', args, options);
   },
   /**
@@ -1373,7 +1373,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editGenerateViewDefaultAlias: function (args, options: ApiOptions = {}) {
+  editGenerateViewDefaultAlias: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'EditGenerateViewDefaultAlias', args, options);
   },
   /**
@@ -1385,7 +1385,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editViewAlias: function (args, options: ApiOptions = {}) {
+  editViewAlias: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'EditViewAlias', args, options);
   },
   /**
@@ -1404,7 +1404,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetBtns: function (args, options: ApiOptions = {}) {
+  getWorksheetBtns: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetWorksheetBtns', args, options);
   },
   /**
@@ -1423,7 +1423,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  checkWorksheetRowBtn: function (args, options: ApiOptions = {}) {
+  checkWorksheetRowBtn: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'CheckWorksheetRowBtn', args, options);
   },
   /**
@@ -1442,7 +1442,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  checkWorksheetRowsBtn: function (args, options: ApiOptions = {}) {
+  checkWorksheetRowsBtn: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'CheckWorksheetRowsBtn', args, options);
   },
   /**
@@ -1461,7 +1461,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetBtnByID: function (args, options: ApiOptions = {}) {
+  getWorksheetBtnByID: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetWorksheetBtnByID', args, options);
   },
   /**
@@ -1476,7 +1476,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  optionWorksheetBtn: function (args, options: ApiOptions = {}) {
+  optionWorksheetBtn: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'OptionWorksheetBtn', args, options);
   },
   /**
@@ -1514,7 +1514,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  saveWorksheetBtn: function (args, options: ApiOptions = {}) {
+  saveWorksheetBtn: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'SaveWorksheetBtn', args, options);
   },
   /**
@@ -1529,7 +1529,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  copyWorksheetBtn: function (args, options: ApiOptions = {}) {
+  copyWorksheetBtn: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'CopyWorksheetBtn', args, options);
   },
   /**
@@ -1543,7 +1543,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getControlRules: function (args, options: ApiOptions = {}) {
+  getControlRules: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetControlRules', args, options);
   },
   /**
@@ -1564,7 +1564,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  saveControlRule: function (args, options: ApiOptions = {}) {
+  saveControlRule: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'SaveControlRule', args, options);
   },
   /**
@@ -1585,7 +1585,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  sortControlRules: function (args, options: ApiOptions = {}) {
+  sortControlRules: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'SortControlRules', args, options);
   },
   /**
@@ -1604,7 +1604,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  saveWorksheetControls: function (args, options: ApiOptions = {}) {
+  saveWorksheetControls: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'SaveWorksheetControls', args, options);
   },
   /**
@@ -1623,7 +1623,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addWorksheetControls: function (args, options: ApiOptions = {}) {
+  addWorksheetControls: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'AddWorksheetControls', args, options);
   },
   /**
@@ -1639,7 +1639,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetControls: function (args, options: ApiOptions = {}) {
+  getWorksheetControls: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetWorksheetControls', args, options);
   },
   /**
@@ -1655,7 +1655,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getControlsByIds: function (args, options: ApiOptions = {}) {
+  getControlsByIds: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetControlsByIds', args, options);
   },
   /**
@@ -1672,7 +1672,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getControlTemplate: function (args, options: ApiOptions = {}) {
+  getControlTemplate: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetControlTemplate', args, options);
   },
   /**
@@ -1691,7 +1691,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  saveControlTemplate: function (args, options: ApiOptions = {}) {
+  saveControlTemplate: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'SaveControlTemplate', args, options);
   },
   /**
@@ -1703,7 +1703,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  operationControlTemplate: function (args, options: ApiOptions = {}) {
+  operationControlTemplate: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'OperationControlTemplate', args, options);
   },
   /**
@@ -1715,7 +1715,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAiFieldRecommendation: function (args, options: ApiOptions = {}) {
+  getAiFieldRecommendation: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetAiFieldRecommendation', args, options);
   },
   /**
@@ -1739,7 +1739,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetsControls: function (args, options: ApiOptions = {}) {
+  getWorksheetsControls: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetWorksheetsControls', args, options);
   },
   /**
@@ -1750,7 +1750,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetsRoleType: function (args, options: ApiOptions = {}) {
+  getWorksheetsRoleType: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetWorksheetsRoleType', args, options);
   },
   /**
@@ -1769,7 +1769,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editControlsAlias: function (args, options: ApiOptions = {}) {
+  editControlsAlias: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'EditControlsAlias', args, options);
   },
   /**
@@ -1782,7 +1782,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editGenerateControlsDefaultAlias: function (args, options: ApiOptions = {}) {
+  editGenerateControlsDefaultAlias: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'EditGenerateControlsDefaultAlias', args, options);
   },
   /**
@@ -1801,7 +1801,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editWorksheetControls: function (args, options: ApiOptions = {}) {
+  editWorksheetControls: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'EditWorksheetControls', args, options);
   },
   /**
@@ -1820,7 +1820,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  resetControlIncrease: function (args, options: ApiOptions = {}) {
+  resetControlIncrease: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'ResetControlIncrease', args, options);
   },
   /**
@@ -1844,7 +1844,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteWorksheetAutoID: function (args, options: ApiOptions = {}) {
+  deleteWorksheetAutoID: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'DeleteWorksheetAutoID', args, options);
   },
   /**
@@ -1863,7 +1863,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editControlsStatus: function (args, options: ApiOptions = {}) {
+  editControlsStatus: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'EditControlsStatus', args, options);
   },
   /**
@@ -1880,7 +1880,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetReferences: function (args, options: ApiOptions = {}) {
+  getWorksheetReferences: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetWorksheetReferences', args, options);
   },
   /**
@@ -1893,7 +1893,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSystemPrintClientId: function (args, options: ApiOptions = {}) {
+  getSystemPrintClientId: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetSystemPrintClientId', args, options);
   },
   /**
@@ -1906,7 +1906,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPrintList: function (args, options: ApiOptions = {}) {
+  getPrintList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetPrintList', args, options);
   },
   /**
@@ -1924,7 +1924,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPrintDetailList: function (args, options: ApiOptions = {}) {
+  getPrintDetailList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetPrintDetailList', args, options);
   },
   /**
@@ -1935,7 +1935,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFormComponent: function (args, options: ApiOptions = {}) {
+  getFormComponent: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetFormComponent', args, options);
   },
   /**
@@ -1961,7 +1961,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPrint: function (args, options: ApiOptions = {}) {
+  getPrint: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetPrint', args, options);
   },
   /**
@@ -1987,7 +1987,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getCodePrint: function (args, options: ApiOptions = {}) {
+  getCodePrint: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetCodePrint', args, options);
   },
   /**
@@ -2013,7 +2013,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPrintTemplate: function (args, options: ApiOptions = {}) {
+  getPrintTemplate: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetPrintTemplate', args, options);
   },
   /**
@@ -2026,7 +2026,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editPrint: function (args, options: ApiOptions = {}) {
+  editPrint: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'EditPrint', args, options);
   },
   /**
@@ -2041,7 +2041,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editPrintFile: function (args, options: ApiOptions = {}) {
+  editPrintFile: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'EditPrintFile', args, options);
   },
   /**
@@ -2060,7 +2060,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  saveRecordCodePrintConfig: function (args, options: ApiOptions = {}) {
+  saveRecordCodePrintConfig: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'SaveRecordCodePrintConfig', args, options);
   },
   /**
@@ -2072,7 +2072,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editPrintName: function (args, options: ApiOptions = {}) {
+  editPrintName: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'EditPrintName', args, options);
   },
   /**
@@ -2086,7 +2086,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editPrintRange: function (args, options: ApiOptions = {}) {
+  editPrintRange: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'EditPrintRange', args, options);
   },
   /**
@@ -2098,7 +2098,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editPrintFilter: function (args, options: ApiOptions = {}) {
+  editPrintFilter: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'EditPrintFilter', args, options);
   },
   /**
@@ -2111,7 +2111,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editPrintTemplateSort: function (args, options: ApiOptions = {}) {
+  editPrintTemplateSort: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'EditPrintTemplateSort', args, options);
   },
   /**
@@ -2122,7 +2122,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deletePrint: function (args, options: ApiOptions = {}) {
+  deletePrint: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'DeletePrint', args, options);
   },
   /**
@@ -2133,7 +2133,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  copyPrint: function (args, options: ApiOptions = {}) {
+  copyPrint: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'CopyPrint', args, options);
   },
   /**
@@ -2148,7 +2148,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  createCloudPrint: function (args, options: ApiOptions = {}) {
+  createCloudPrint: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'CreateCloudPrint', args, options);
   },
   /**
@@ -2158,7 +2158,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  loadCloudPrintDatas: function (args, options: ApiOptions = {}) {
+  loadCloudPrintDatas: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'LoadCloudPrintDatas', args, options);
   },
   /**
@@ -2173,7 +2173,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateCloudPrint: function (args, options: ApiOptions = {}) {
+  updateCloudPrint: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'UpdateCloudPrint', args, options);
   },
   /**
@@ -2189,7 +2189,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  sendCloudPrint: function (args, options: ApiOptions = {}) {
+  sendCloudPrint: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'SendCloudPrint', args, options);
   },
   /**
@@ -2200,7 +2200,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getRowIndexes: function (args, options: ApiOptions = {}) {
+  getRowIndexes: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetRowIndexes', args, options);
   },
   /**
@@ -2218,7 +2218,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addRowIndex: function (args, options: ApiOptions = {}) {
+  addRowIndex: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'AddRowIndex', args, options);
   },
   /**
@@ -2240,7 +2240,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  updateRowIndex: function (args, options: ApiOptions = {}) {
+  updateRowIndex: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'UpdateRowIndex', args, options);
   },
   /**
@@ -2254,7 +2254,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateRowIndexCustomeIndexName: function (args, options: ApiOptions = {}) {
+  updateRowIndexCustomeIndexName: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'UpdateRowIndexCustomeIndexName', args, options);
   },
   /**
@@ -2269,7 +2269,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeRowIndex: function (args, options: ApiOptions = {}) {
+  removeRowIndex: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'RemoveRowIndex', args, options);
   },
   /**
@@ -2285,7 +2285,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getLinkDetail: function (args, options: ApiOptions = {}) {
+  getLinkDetail: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetLinkDetail', args, options);
   },
   /**
@@ -2297,7 +2297,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFormSubmissionSettings: function (args, options: ApiOptions = {}) {
+  getFormSubmissionSettings: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetFormSubmissionSettings', args, options);
   },
   /**
@@ -2312,7 +2312,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editWorksheetSetting: function (args, options: ApiOptions = {}) {
+  editWorksheetSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'EditWorksheetSetting', args, options);
   },
   /**
@@ -2323,7 +2323,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSwitch: function (args, options: ApiOptions = {}) {
+  getSwitch: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetSwitch', args, options);
   },
   /**
@@ -2339,7 +2339,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editSwitch: function (args, options: ApiOptions = {}) {
+  editSwitch: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'EditSwitch', args, options);
   },
   /**
@@ -2351,7 +2351,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  batchEditSwitch: function (args, options: ApiOptions = {}) {
+  batchEditSwitch: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'BatchEditSwitch', args, options);
   },
   /**
@@ -2363,7 +2363,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSwitchPermit: function (args, options: ApiOptions = {}) {
+  getSwitchPermit: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetSwitchPermit', args, options);
   },
   /**
@@ -2376,7 +2376,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetApiInfo: function (args, options: ApiOptions = {}) {
+  getWorksheetApiInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetWorksheetApiInfo', args, options);
   },
   /**
@@ -2388,7 +2388,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  handleAIRequest: function (args, options: ApiOptions = {}) {
+  handleAIRequest: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'HandleAIRequest', args, options);
   },
   /**
@@ -2407,7 +2407,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getCollectionsByAppId: function (args, options: ApiOptions = {}) {
+  getCollectionsByAppId: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetCollectionsByAppId', args, options);
   },
   /**
@@ -2426,7 +2426,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  saveOptionsCollection: function (args, options: ApiOptions = {}) {
+  saveOptionsCollection: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'SaveOptionsCollection', args, options);
   },
   /**
@@ -2445,7 +2445,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateOptionsCollectionAppId: function (args, options: ApiOptions = {}) {
+  updateOptionsCollectionAppId: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'UpdateOptionsCollectionAppId', args, options);
   },
   /**
@@ -2464,7 +2464,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteOptionsCollection: function (args, options: ApiOptions = {}) {
+  deleteOptionsCollection: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'DeleteOptionsCollection', args, options);
   },
   /**
@@ -2483,7 +2483,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getCollectionByCollectId: function (args, options: ApiOptions = {}) {
+  getCollectionByCollectId: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetCollectionByCollectId', args, options);
   },
   /**
@@ -2502,7 +2502,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getCollectionsByCollectIds: function (args, options: ApiOptions = {}) {
+  getCollectionsByCollectIds: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetCollectionsByCollectIds', args, options);
   },
   /**
@@ -2521,7 +2521,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getQuoteControlsById: function (args, options: ApiOptions = {}) {
+  getQuoteControlsById: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetQuoteControlsById', args, options);
   },
   /**
@@ -2531,7 +2531,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addOrUpdateOptionSetApiInfo: function (args, options: ApiOptions = {}) {
+  addOrUpdateOptionSetApiInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'AddOrUpdateOptionSetApiInfo', args, options);
   },
   /**
@@ -2541,7 +2541,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  optionSetListApiInfo: function (args, options: ApiOptions = {}) {
+  optionSetListApiInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'OptionSetListApiInfo', args, options);
   },
   /**
@@ -2555,7 +2555,7 @@ remark:待识别文件url ，图片的 Url 地址。要求图片经Base64编码�
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  ocr: function (args, options: ApiOptions = {}) {
+  ocr: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'Ocr', args, options);
   },
   /**
@@ -2566,7 +2566,7 @@ remark:待识别文件url ，图片的 Url 地址。要求图片经Base64编码�
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getQuery: function (args, options: ApiOptions = {}) {
+  getQuery: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetQuery', args, options);
   },
   /**
@@ -2577,7 +2577,7 @@ remark:待识别文件url ，图片的 Url 地址。要求图片经Base64编码�
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getQueries: function (args, options: ApiOptions = {}) {
+  getQueries: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetQueries', args, options);
   },
   /**
@@ -2588,7 +2588,7 @@ remark:待识别文件url ，图片的 Url 地址。要求图片经Base64编码�
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getQueryBySheetId: function (args, options: ApiOptions = {}) {
+  getQueryBySheetId: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetQueryBySheetId', args, options);
   },
   /**
@@ -2611,7 +2611,7 @@ remark:待识别文件url ，图片的 Url 地址。要求图片经Base64编码�
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  saveQuery: function (args, options: ApiOptions = {}) {
+  saveQuery: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'SaveQuery', args, options);
   },
   /**
@@ -2629,7 +2629,7 @@ remark:待识别文件url ，图片的 Url 地址。要求图片经Base64编码�
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  saveFiltersGroup: function (args, options: ApiOptions = {}) {
+  saveFiltersGroup: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'SaveFiltersGroup', args, options);
   },
   /**
@@ -2647,7 +2647,7 @@ remark:待识别文件url ，图片的 Url 地址。要求图片经Base64编码�
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFiltersGroupByIds: function (args, options: ApiOptions = {}) {
+  getFiltersGroupByIds: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetFiltersGroupByIds', args, options);
   },
   /**
@@ -2665,7 +2665,7 @@ remark:待识别文件url ，图片的 Url 地址。要求图片经Base64编码�
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteFiltersGroupByIds: function (args, options: ApiOptions = {}) {
+  deleteFiltersGroupByIds: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'DeleteFiltersGroupByIds', args, options);
   },
   /**
@@ -2686,7 +2686,7 @@ remark:待识别文件url ，图片的 Url 地址。要求图片经Base64编码�
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  excuteApiQuery: function (args, options: ApiOptions = {}) {
+  excuteApiQuery: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'ExcuteApiQuery', args, options);
   },
   /**
@@ -2699,7 +2699,7 @@ remark:待识别文件url ，图片的 Url 地址。要求图片经Base64编码�
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getApiControlDetail: function (args, options: ApiOptions = {}) {
+  getApiControlDetail: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetApiControlDetail', args, options);
   },
   /**
@@ -2719,7 +2719,7 @@ remark:待识别文件url ，图片的 Url 地址。要求图片经Base64编码�
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  importWorksheetAttachments: function (args, options: ApiOptions = {}) {
+  importWorksheetAttachments: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'ImportWorksheetAttachments', args, options);
   },
   /**
@@ -2730,7 +2730,7 @@ remark:待识别文件url ，图片的 Url 地址。要求图片经Base64编码�
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getImportByAttachmentsLog: function (args, options: ApiOptions = {}) {
+  getImportByAttachmentsLog: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetImportByAttachmentsLog', args, options);
   },
   /**
@@ -2741,7 +2741,7 @@ remark:待识别文件url ，图片的 Url 地址。要求图片经Base64编码�
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  downImportByAttachmentsLog: function (args, options: ApiOptions = {}) {
+  downImportByAttachmentsLog: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'DownImportByAttachmentsLog', args, options);
   },
   /**
@@ -2756,7 +2756,7 @@ remark:待识别文件url ，图片的 Url 地址。要求图片经Base64编码�
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  sortAttachment: function (args, options: ApiOptions = {}) {
+  sortAttachment: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'SortAttachment', args, options);
   },
   /**
@@ -2782,7 +2782,7 @@ remark:待识别文件url ，图片的 Url 地址。要求图片经Base64编码�
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editAttachmentName: function (args, options: ApiOptions = {}) {
+  editAttachmentName: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'EditAttachmentName', args, options);
   },
   /**
@@ -2794,7 +2794,7 @@ remark:待识别文件url ，图片的 Url 地址。要求图片经Base64编码�
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getExportConfig: function (args, options: ApiOptions = {}) {
+  getExportConfig: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetExportConfig', args, options);
   },
   /**
@@ -2818,7 +2818,7 @@ remark:待识别文件url ，图片的 Url 地址。要求图片经Base64编码�
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  saveExportConfig: function (args, options: ApiOptions = {}) {
+  saveExportConfig: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'SaveExportConfig', args, options);
   },
   /**
@@ -2828,7 +2828,7 @@ remark:待识别文件url ，图片的 Url 地址。要求图片经Base64编码�
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetCurrencyInfos: function (args, options: ApiOptions = {}) {
+  getWorksheetCurrencyInfos: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetWorksheetCurrencyInfos', args, options);
   },
   /**
@@ -2843,7 +2843,7 @@ remark:待识别文件url ，图片的 Url 地址。要求图片经Base64编码�
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setFollow: function (args, options: ApiOptions = {}) {
+  setFollow: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'SetFollow', args, options);
   },
   /**
@@ -2858,7 +2858,7 @@ remark:待识别文件url ，图片的 Url 地址。要求图片经Base64编码�
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFollower: function (args, options: ApiOptions = {}) {
+  getFollower: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Worksheet', 'GetFollower', args, options);
   },
 };

@@ -6,7 +6,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDeclareByAcountId: function (args, options: ApiOptions = {}) {
+  getDeclareByAcountId: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateLegal', 'GetDeclareByAcountId', args, options);
   },
   /**
@@ -17,7 +17,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addDeclareAgreeLog: function (args, options: ApiOptions = {}) {
+  addDeclareAgreeLog: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateLegal', 'AddDeclareAgreeLog', args, options);
   },
   /**
@@ -27,7 +27,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getLegalList: function (args, options: ApiOptions = {}) {
+  getLegalList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateLegal', 'GetLegalList', args, options);
   },
   /**
@@ -38,7 +38,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getLegalDetailById: function (args, options: ApiOptions = {}) {
+  getLegalDetailById: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateLegal', 'GetLegalDetailById', args, options);
   },
   /**
@@ -49,7 +49,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getLegalDetailByKey: function (args, options: ApiOptions = {}) {
+  getLegalDetailByKey: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateLegal', 'GetLegalDetailByKey', args, options);
   },
   /**
@@ -63,7 +63,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addLegal: function (args, options: ApiOptions = {}) {
+  addLegal: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateLegal', 'AddLegal', args, options);
   },
   /**
@@ -78,7 +78,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editLegal: function (args, options: ApiOptions = {}) {
+  editLegal: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateLegal', 'EditLegal', args, options);
   },
   /**
@@ -90,7 +90,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editLegalStatus: function (args, options: ApiOptions = {}) {
+  editLegalStatus: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateLegal', 'EditLegalStatus', args, options);
   },
   /**
@@ -101,7 +101,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editLegalSortIndex: function (args, options: ApiOptions = {}) {
+  editLegalSortIndex: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateLegal', 'EditLegalSortIndex', args, options);
   },
   /**
@@ -112,7 +112,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeLegal: function (args, options: ApiOptions = {}) {
+  removeLegal: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateLegal', 'RemoveLegal', args, options);
   },
 };

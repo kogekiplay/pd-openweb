@@ -6,7 +6,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAi: function (args, options: ApiOptions = {}) {
+  getAi: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateAi', 'GetAi', args, options);
   },
   /**
@@ -20,7 +20,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editAi: function (args, options: ApiOptions = {}) {
+  editAi: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateAi', 'EditAi', args, options);
   },
   /**
@@ -30,7 +30,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeAi: function (args, options: ApiOptions = {}) {
+  removeAi: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateAi', 'RemoveAi', args, options);
   },
 };

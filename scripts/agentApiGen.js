@@ -84,10 +84,11 @@ function renderFn(fn) {
   const { name, summary, httpMethod, url, pathParams, queryParams, bodyProps, isStream } = fn;
 
   const jsdoc = renderJsDoc(summary, pathParams, queryParams, bodyProps);
-  // 带默认值就必须标类型：`args = {}` 会被 TS 推成 `{}`，
-  // 下面 restExpr 的解构（const { sessionId, ...rest } = args）随即报 TS2339。
-  // 无默认值的那支保持裸 `args`（隐式 any），不引入新诊断。
-  const sigArgs = pathParams.length > 0 || queryParams.length > 0 ? 'args: ApiArgs = {}' : 'args';
+  // 两支都标 ApiArgs：
+  // - 带默认值那支不标的话 `args = {}` 会被推成 `{}`，
+  //   下面 restExpr 的解构（const { sessionId, ...rest } = args）随即报 TS2339；
+  // - 不带默认值那支不标就是隐式 any（TS7006），挡在 noImplicitAny 前面。
+  const sigArgs = pathParams.length > 0 || queryParams.length > 0 ? 'args: ApiArgs = {}' : 'args: ApiArgs';
   const restExpr = pathParams.length > 0 ? `const { ${pathParams.map(p => p.name).join(', ')}, ...rest } = args;` : '';
   const payload = pathParams.length > 0 ? 'rest' : 'args';
 

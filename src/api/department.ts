@@ -9,7 +9,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addDepartment: function (args, options: ApiOptions = {}) {
+  addDepartment: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'AddDepartment', args, options);
   },
   /**
@@ -25,7 +25,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editDepartment: function (args, options: ApiOptions = {}) {
+  editDepartment: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'EditDepartment', args, options);
   },
   /**
@@ -38,7 +38,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editDepartmentSingleChargeUser: function (args, options: ApiOptions = {}) {
+  editDepartmentSingleChargeUser: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'EditDepartmentSingleChargeUser', args, options);
   },
   /**
@@ -50,7 +50,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteDepartments: function (args, options: ApiOptions = {}) {
+  deleteDepartments: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'DeleteDepartments', args, options);
   },
   /**
@@ -62,7 +62,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  disabledDepartments: function (args, options: ApiOptions = {}) {
+  disabledDepartments: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'DisabledDepartments', args, options);
   },
   /**
@@ -74,7 +74,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  enabledDepartment: function (args, options: ApiOptions = {}) {
+  enabledDepartment: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'EnabledDepartment', args, options);
   },
   /**
@@ -89,7 +89,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  pagedSubDepartments: function (args, options: ApiOptions = {}) {
+  pagedSubDepartments: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'PagedSubDepartments', args, options);
   },
   /**
@@ -103,7 +103,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectSubDepartment: function (args, options: ApiOptions = {}) {
+  getProjectSubDepartment: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'GetProjectSubDepartment', args, options);
   },
   /**
@@ -116,7 +116,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  searchDeptAndUsers: function (args, options: ApiOptions = {}) {
+  searchDeptAndUsers: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'SearchDeptAndUsers', args, options);
   },
   /**
@@ -128,7 +128,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectDepartmentFullTreeByDepartmentId: function (args, options: ApiOptions = {}) {
+  getProjectDepartmentFullTreeByDepartmentId: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'GetProjectDepartmentFullTreeByDepartmentId', args, options);
   },
   /**
@@ -140,7 +140,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getOneDepartmentFullTree: function (args, options: ApiOptions = {}) {
+  getOneDepartmentFullTree: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'GetOneDepartmentFullTree', args, options);
   },
   /**
@@ -155,7 +155,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectContactDepartments: function (args, options: ApiOptions = {}) {
+  getProjectContactDepartments: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'GetProjectContactDepartments', args, options);
   },
   /**
@@ -167,7 +167,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDepartmentInfo: function (args, options: ApiOptions = {}) {
+  getDepartmentInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'GetDepartmentInfo', args, options);
   },
   /**
@@ -184,7 +184,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  searchProjectDepartment2: function (args, options: ApiOptions = {}) {
+  searchProjectDepartment2: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'SearchProjectDepartment2', args, options);
   },
   /**
@@ -199,7 +199,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  searchProjectDepartment: function (args, options: ApiOptions = {}) {
+  searchProjectDepartment: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'SearchProjectDepartment', args, options);
   },
   /**
@@ -215,7 +215,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  importDepartmentList: function (args, options: ApiOptions = {}) {
+  importDepartmentList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'ImportDepartmentList', args, options);
   },
   /**
@@ -231,7 +231,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  pagedDeptAccountShrotInfos: function (args, options: ApiOptions = {}) {
+  pagedDeptAccountShrotInfos: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'PagedDeptAccountShrotInfos', args, options);
   },
   /**
@@ -247,7 +247,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectDepartmentUsers: function (args, options: ApiOptions = {}) {
+  getProjectDepartmentUsers: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'GetProjectDepartmentUsers', args, options);
   },
   /**
@@ -259,7 +259,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTopDisplayMembers: function (args, options: ApiOptions = {}) {
+  getTopDisplayMembers: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'GetTopDisplayMembers', args, options);
   },
   /**
@@ -273,7 +273,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getNoDepartmentUsers: function (args, options: ApiOptions = {}) {
+  getNoDepartmentUsers: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'GetNoDepartmentUsers', args, options);
   },
   /**
@@ -287,7 +287,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  moveDepartment: function (args, options: ApiOptions = {}) {
+  moveDepartment: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'MoveDepartment', args, options);
   },
   /**
@@ -300,7 +300,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setTopDisplayOrder: function (args, options: ApiOptions = {}) {
+  setTopDisplayOrder: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'SetTopDisplayOrder', args, options);
   },
   /**
@@ -313,7 +313,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  cancelTopDisplayOrder: function (args, options: ApiOptions = {}) {
+  cancelTopDisplayOrder: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'CancelTopDisplayOrder', args, options);
   },
   /**
@@ -326,7 +326,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  resetTopDisplayOrders: function (args, options: ApiOptions = {}) {
+  resetTopDisplayOrders: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'ResetTopDisplayOrders', args, options);
   },
   /**
@@ -336,7 +336,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDepartmentFullNameById: function (args, options: ApiOptions = {}) {
+  getDepartmentFullNameById: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('Department', 'GetDepartmentFullNameById', args, options);
   },
@@ -349,7 +349,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDepartmentFullNameByIds: function (args, options: ApiOptions = {}) {
+  getDepartmentFullNameByIds: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'GetDepartmentFullNameByIds', args, options);
   },
   /**
@@ -365,7 +365,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectSubDepartmentByDepartmentId: function (args, options: ApiOptions = {}) {
+  getProjectSubDepartmentByDepartmentId: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'GetProjectSubDepartmentByDepartmentId', args, options);
   },
   /**
@@ -381,7 +381,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getMembersAndSubs: function (args, options: ApiOptions = {}) {
+  getMembersAndSubs: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'GetMembersAndSubs', args, options);
   },
   /**
@@ -398,7 +398,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectDepartmentByPage: function (args, options: ApiOptions = {}) {
+  getProjectDepartmentByPage: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'GetProjectDepartmentByPage', args, options);
   },
   /**
@@ -415,7 +415,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  pagedDepartmentTrees: function (args, options: ApiOptions = {}) {
+  pagedDepartmentTrees: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'PagedDepartmentTrees', args, options);
   },
   /**
@@ -432,7 +432,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  pagedProjectDepartmentTrees: function (args, options: ApiOptions = {}) {
+  pagedProjectDepartmentTrees: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'PagedProjectDepartmentTrees', args, options);
   },
   /**
@@ -447,7 +447,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getContactProjectDepartments: function (args, options: ApiOptions = {}) {
+  getContactProjectDepartments: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'GetContactProjectDepartments', args, options);
   },
   /**
@@ -464,7 +464,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getDepartmentUsers: function (args, options: ApiOptions = {}) {
+  getDepartmentUsers: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'GetDepartmentUsers', args, options);
   },
   /**
@@ -477,7 +477,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDepartmentsByAccountId: function (args, options: ApiOptions = {}) {
+  getDepartmentsByAccountId: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'GetDepartmentsByAccountId', args, options);
   },
   /**
@@ -492,7 +492,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getNotInDepartmentUsers: function (args, options: ApiOptions = {}) {
+  getNotInDepartmentUsers: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'GetNotInDepartmentUsers', args, options);
   },
   /**
@@ -507,7 +507,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  searchDepartment: function (args, options: ApiOptions = {}) {
+  searchDepartment: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'SearchDepartment', args, options);
   },
   /**
@@ -525,7 +525,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  appointedDepartment: function (args, options: ApiOptions = {}) {
+  appointedDepartment: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'AppointedDepartment', args, options);
   },
   /**
@@ -543,7 +543,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDepartmentByJoinProject: function (args, options: ApiOptions = {}) {
+  getDepartmentByJoinProject: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'GetDepartmentByJoinProject', args, options);
   },
   /**
@@ -560,7 +560,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  searchDepartment2: function (args, options: ApiOptions = {}) {
+  searchDepartment2: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'SearchDepartment2', args, options);
   },
   /**
@@ -573,7 +573,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  keepHasMemberIds: function (args, options: ApiOptions = {}) {
+  keepHasMemberIds: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Department', 'KeepHasMemberIds', args, options);
   },
 };

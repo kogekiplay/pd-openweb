@@ -6,7 +6,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAccountApps: function (args, options: ApiOptions = {}) {
+  getAccountApps: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Application', 'GetAccountApps', args, options);
   },
   /**
@@ -18,7 +18,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateAccountAppTop: function (args, options: ApiOptions = {}) {
+  updateAccountAppTop: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Application', 'UpdateAccountAppTop', args, options);
   },
   /**
@@ -34,7 +34,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addApplication: function (args, options: ApiOptions = {}) {
+  addApplication: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Application', 'AddApplication', args, options);
   },
   /**
@@ -51,7 +51,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editApplication: function (args, options: ApiOptions = {}) {
+  editApplication: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Application', 'EditApplication', args, options);
   },
   /**
@@ -63,7 +63,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeApplication: function (args, options: ApiOptions = {}) {
+  removeApplication: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Application', 'RemoveApplication', args, options);
   },
   /**
@@ -74,7 +74,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectApplicationList: function (args, options: ApiOptions = {}) {
+  getProjectApplicationList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Application', 'GetProjectApplicationList', args, options);
   },
 };

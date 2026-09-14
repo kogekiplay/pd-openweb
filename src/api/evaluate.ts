@@ -7,7 +7,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getByUser: function (args, options: ApiOptions = {}) {
+  getByUser: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Evaluate', 'GetByUser', args, options);
   },
   /**
@@ -20,7 +20,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  gets: function (args, options: ApiOptions = {}) {
+  gets: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Evaluate', 'Gets', args, options);
   },
   /**
@@ -31,7 +31,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  get: function (args, options: ApiOptions = {}) {
+  get: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Evaluate', 'Get', args, options);
   },
   /**
@@ -45,7 +45,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  add: function (args, options: ApiOptions = {}) {
+  add: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Evaluate', 'Add', args, options);
   },
   /**
@@ -60,7 +60,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  edit: function (args, options: ApiOptions = {}) {
+  edit: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Evaluate', 'Edit', args, options);
   },
   /**
@@ -76,7 +76,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addTopic: function (args, options: ApiOptions = {}) {
+  addTopic: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Evaluate', 'AddTopic', args, options);
   },
   /**
@@ -89,7 +89,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteTopic: function (args, options: ApiOptions = {}) {
+  deleteTopic: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Evaluate', 'DeleteTopic', args, options);
   },
 };

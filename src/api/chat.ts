@@ -9,7 +9,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPreviewLink: function (args, options: ApiOptions = {}) {
+  getPreviewLink: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Chat', 'GetPreviewLink', args, options);
   },
   /**
@@ -25,7 +25,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getCardDetails: function (args, options: ApiOptions = {}) {
+  getCardDetails: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Chat', 'GetCardDetails', args, options);
   },
   /**
@@ -36,7 +36,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getGroupInfo: function (args, options: ApiOptions = {}) {
+  getGroupInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Chat', 'GetGroupInfo', args, options);
   },
   /**
@@ -54,7 +54,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getGroupFileList: function (args, options: ApiOptions = {}) {
+  getGroupFileList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Chat', 'GetGroupFileList', args, options);
   },
   /**
@@ -73,7 +73,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUserFileList: function (args, options: ApiOptions = {}) {
+  getUserFileList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Chat', 'GetUserFileList', args, options);
   },
   /**
@@ -86,7 +86,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getGroupCountByTabName: function (args, options: ApiOptions = {}) {
+  getGroupCountByTabName: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Chat', 'GetGroupCountByTabName', args, options);
   },
   /**
@@ -99,7 +99,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUserCountByTabName: function (args, options: ApiOptions = {}) {
+  getUserCountByTabName: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Chat', 'GetUserCountByTabName', args, options);
   },
   /**
@@ -113,7 +113,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  sendFileToChat: function (args, options: ApiOptions = {}) {
+  sendFileToChat: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Chat', 'SendFileToChat', args, options);
   },
   /**
@@ -127,7 +127,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  sendCardToChat: function (args, options: ApiOptions = {}) {
+  sendCardToChat: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Chat', 'SendCardToChat', args, options);
   },
   /**
@@ -139,7 +139,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getChatList: function (args, options: ApiOptions = {}) {
+  getChatList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Chat', 'GetChatList', args, options);
   },
   /**
@@ -150,7 +150,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  convertToOtherAttachment: function (args, options: ApiOptions = {}) {
+  convertToOtherAttachment: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Chat', 'ConvertToOtherAttachment', args, options);
   },
 };

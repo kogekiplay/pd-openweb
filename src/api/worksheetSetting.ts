@@ -23,7 +23,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  savPaymentSetting: function (args, options: ApiOptions = {}) {
+  savPaymentSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorksheetSetting', 'SavPaymentSetting', args, options);
   },
   /**
@@ -33,7 +33,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPaymentSetting: function (args, options: ApiOptions = {}) {
+  getPaymentSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('WorksheetSetting', 'GetPaymentSetting', args, options);
   },
@@ -44,7 +44,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getRowDetailIsShowOrder: function (args, options: ApiOptions = {}) {
+  getRowDetailIsShowOrder: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('WorksheetSetting', 'GetRowDetailIsShowOrder', args, options);
   },
@@ -64,7 +64,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  saveInvoiceSetting: function (args, options: ApiOptions = {}) {
+  saveInvoiceSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorksheetSetting', 'SaveInvoiceSetting', args, options);
   },
   /**
@@ -74,7 +74,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getInvoiceSetting: function (args, options: ApiOptions = {}) {
+  getInvoiceSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('WorksheetSetting', 'GetInvoiceSetting', args, options);
   },
@@ -90,7 +90,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  shareCardSetting: function (args, options: ApiOptions = {}) {
+  shareCardSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WorksheetSetting', 'ShareCardSetting', args, options);
   },
   /**
@@ -100,7 +100,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getShareCardSetting: function (args, options: ApiOptions = {}) {
+  getShareCardSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('WorksheetSetting', 'GetShareCardSetting', args, options);
   },

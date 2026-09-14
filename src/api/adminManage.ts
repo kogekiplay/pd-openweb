@@ -7,7 +7,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  expansionInfos: function (args, options: ApiOptions = {}) {
+  expansionInfos: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AdminManage', 'ExpansionInfos', args, options);
   },
   /**
@@ -18,7 +18,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getHidBalance: function (args, options: ApiOptions = {}) {
+  getHidBalance: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AdminManage', 'GetHidBalance', args, options);
   },
   /**
@@ -29,7 +29,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  projectExpireDays: function (args, options: ApiOptions = {}) {
+  projectExpireDays: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AdminManage', 'ProjectExpireDays', args, options);
   },
   /**
@@ -40,7 +40,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  announcement: function (args, options: ApiOptions = {}) {
+  announcement: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AdminManage', 'Announcement', args, options);
   },
 };

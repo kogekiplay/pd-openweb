@@ -8,7 +8,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSystemIntegrationList: function (args, options: ApiOptions = {}) {
+  getSystemIntegrationList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('SystemIntegration', 'GetSystemIntegrationList', args, options);
   },
   /**
@@ -20,7 +20,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSystemIntegration: function (args, options: ApiOptions = {}) {
+  getSystemIntegration: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('SystemIntegration', 'GetSystemIntegration', args, options);
   },
   /**
@@ -33,7 +33,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addSystemIntegration: function (args, options: ApiOptions = {}) {
+  addSystemIntegration: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('SystemIntegration', 'AddSystemIntegration', args, options);
   },
   /**
@@ -46,7 +46,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateSystemIntegration: function (args, options: ApiOptions = {}) {
+  updateSystemIntegration: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('SystemIntegration', 'UpdateSystemIntegration', args, options);
   },
   /**
@@ -58,7 +58,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deletSystemIntegration: function (args, options: ApiOptions = {}) {
+  deletSystemIntegration: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('SystemIntegration', 'DeletSystemIntegration', args, options);
   },
   /**
@@ -71,7 +71,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  changeSystemIntegrationStatus: function (args, options: ApiOptions = {}) {
+  changeSystemIntegrationStatus: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('SystemIntegration', 'ChangeSystemIntegrationStatus', args, options);
   },
 };

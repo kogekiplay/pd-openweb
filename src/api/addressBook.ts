@@ -10,7 +10,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAccountByAccount: function (args, options: ApiOptions = {}) {
+  getAccountByAccount: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AddressBook', 'GetAccountByAccount', args, options);
   },
   /**
@@ -22,7 +22,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getNewFriends: function (args, options: ApiOptions = {}) {
+  getNewFriends: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AddressBook', 'GetNewFriends', args, options);
   },
   /**
@@ -34,7 +34,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getMobileAddressRecommend: function (args, options: ApiOptions = {}) {
+  getMobileAddressRecommend: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AddressBook', 'GetMobileAddressRecommend', args, options);
   },
   /**
@@ -52,7 +52,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getAllAddressbook: function (args, options: ApiOptions = {}) {
+  getAllAddressbook: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AddressBook', 'GetAllAddressbook', args, options);
   },
   /**
@@ -70,7 +70,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  searchAddressbookAndDepartment: function (args, options: ApiOptions = {}) {
+  searchAddressbookAndDepartment: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AddressBook', 'SearchAddressbookAndDepartment', args, options);
   },
   /**
@@ -83,7 +83,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getAllChatAddressbookByKeywords: function (args, options: ApiOptions = {}) {
+  getAllChatAddressbookByKeywords: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AddressBook', 'GetAllChatAddressbookByKeywords', args, options);
   },
   /**
@@ -101,7 +101,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getUserAddressbookByKeywords: function (args, options: ApiOptions = {}) {
+  getUserAddressbookByKeywords: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AddressBook', 'GetUserAddressbookByKeywords', args, options);
   },
   /**
@@ -112,7 +112,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addIgnoreMobileAddress: function (args, options: ApiOptions = {}) {
+  addIgnoreMobileAddress: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AddressBook', 'AddIgnoreMobileAddress', args, options);
   },
   /**
@@ -126,7 +126,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addFriend: function (args, options: ApiOptions = {}) {
+  addFriend: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AddressBook', 'AddFriend', args, options);
   },
   /**
@@ -137,7 +137,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeFriend: function (args, options: ApiOptions = {}) {
+  removeFriend: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AddressBook', 'RemoveFriend', args, options);
   },
   /**
@@ -148,7 +148,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editAgreeFriend: function (args, options: ApiOptions = {}) {
+  editAgreeFriend: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AddressBook', 'EditAgreeFriend', args, options);
   },
   /**
@@ -159,7 +159,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editRefuseFriend: function (args, options: ApiOptions = {}) {
+  editRefuseFriend: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AddressBook', 'EditRefuseFriend', args, options);
   },
   /**
@@ -170,7 +170,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editIgnoreFriend: function (args, options: ApiOptions = {}) {
+  editIgnoreFriend: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AddressBook', 'EditIgnoreFriend', args, options);
   },
   /**
@@ -182,7 +182,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  editAddressBookOftenMetioned: function (args, options: ApiOptions = {}) {
+  editAddressBookOftenMetioned: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AddressBook', 'EditAddressBookOftenMetioned', args, options);
   },
 };

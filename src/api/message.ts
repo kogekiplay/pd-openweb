@@ -10,7 +10,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  sendMessageToAccountIds: function (args, options: ApiOptions = {}) {
+  sendMessageToAccountIds: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Message', 'SendMessageToAccountIds', args, options);
   },
   /**
@@ -22,7 +22,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  sendEmailMessageToAccountIds: function (args, options: ApiOptions = {}) {
+  sendEmailMessageToAccountIds: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Message', 'SendEmailMessageToAccountIds', args, options);
   },
   /**
@@ -43,7 +43,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  sendNotice: function (args, options: ApiOptions = {}) {
+  sendNotice: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Message', 'SendNotice', args, options);
   },
 };

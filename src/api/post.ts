@@ -29,7 +29,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addPost: function (args, options: ApiOptions = {}) {
+  addPost: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Post', 'AddPost', args, options);
   },
   /**
@@ -47,7 +47,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addPostComment: function (args, options: ApiOptions = {}) {
+  addPostComment: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Post', 'AddPostComment', args, options);
   },
   /**
@@ -58,7 +58,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removePost: function (args, options: ApiOptions = {}) {
+  removePost: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Post', 'RemovePost', args, options);
   },
   /**
@@ -70,7 +70,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removePostComment: function (args, options: ApiOptions = {}) {
+  removePostComment: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Post', 'RemovePostComment', args, options);
   },
   /**
@@ -82,7 +82,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editPostShareScope: function (args, options: ApiOptions = {}) {
+  editPostShareScope: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Post', 'EditPostShareScope', args, options);
   },
   /**
@@ -99,7 +99,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editPost: function (args, options: ApiOptions = {}) {
+  editPost: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Post', 'EditPost', args, options);
   },
   /**
@@ -113,7 +113,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPostDetail: function (args, options: ApiOptions = {}) {
+  getPostDetail: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Post', 'GetPostDetail', args, options);
   },
   /**
@@ -132,7 +132,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPostList: function (args, options: ApiOptions = {}) {
+  getPostList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Post', 'GetPostList', args, options);
   },
   /**
@@ -159,7 +159,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPostListByLegacyPara: function (args, options: ApiOptions = {}) {
+  getPostListByLegacyPara: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Post', 'GetPostListByLegacyPara', args, options);
   },
   /**
@@ -172,7 +172,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getIRepliedList: function (args, options: ApiOptions = {}) {
+  getIRepliedList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Post', 'GetIRepliedList', args, options);
   },
   /**
@@ -185,7 +185,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getLinkViewInfo: function (args, options: ApiOptions = {}) {
+  getLinkViewInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Post', 'GetLinkViewInfo', args, options);
   },
   /**
@@ -196,7 +196,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getMorePostComments: function (args, options: ApiOptions = {}) {
+  getMorePostComments: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Post', 'GetMorePostComments', args, options);
   },
   /**
@@ -208,7 +208,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getReplyMessage: function (args, options: ApiOptions = {}) {
+  getReplyMessage: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Post', 'GetReplyMessage', args, options);
   },
   /**
@@ -219,7 +219,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTopPosts: function (args, options: ApiOptions = {}) {
+  getTopPosts: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Post', 'GetTopPosts', args, options);
   },
   /**
@@ -231,7 +231,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addTopPost: function (args, options: ApiOptions = {}) {
+  addTopPost: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Post', 'AddTopPost', args, options);
   },
   /**
@@ -242,7 +242,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeTopPost: function (args, options: ApiOptions = {}) {
+  removeTopPost: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Post', 'RemoveTopPost', args, options);
   },
   /**
@@ -254,7 +254,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  like: function (args, options: ApiOptions = {}) {
+  like: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Post', 'Like', args, options);
   },
   /**
@@ -266,7 +266,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  favorite: function (args, options: ApiOptions = {}) {
+  favorite: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Post', 'Favorite', args, options);
   },
   /**
@@ -277,7 +277,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getLikeUsers: function (args, options: ApiOptions = {}) {
+  getLikeUsers: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Post', 'GetLikeUsers', args, options);
   },
   /**
@@ -289,7 +289,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  votePost: function (args, options: ApiOptions = {}) {
+  votePost: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Post', 'VotePost', args, options);
   },
   /**
@@ -301,7 +301,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editVoteDeadline: function (args, options: ApiOptions = {}) {
+  editVoteDeadline: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Post', 'EditVoteDeadline', args, options);
   },
 };

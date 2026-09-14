@@ -10,7 +10,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setIosPushSetting: function (args, options: ApiOptions = {}) {
+  setIosPushSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivatePush', 'SetIosPushSetting', args, options);
   },
   /**
@@ -23,7 +23,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setMiPushSetting: function (args, options: ApiOptions = {}) {
+  setMiPushSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivatePush', 'SetMiPushSetting', args, options);
   },
   /**
@@ -35,7 +35,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setHuaweiPushSetting: function (args, options: ApiOptions = {}) {
+  setHuaweiPushSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivatePush', 'SetHuaweiPushSetting', args, options);
   },
   /**
@@ -49,7 +49,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setVivoPushSetting: function (args, options: ApiOptions = {}) {
+  setVivoPushSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivatePush', 'SetVivoPushSetting', args, options);
   },
   /**
@@ -61,7 +61,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setOppoPushSetting: function (args, options: ApiOptions = {}) {
+  setOppoPushSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivatePush', 'SetOppoPushSetting', args, options);
   },
   /**
@@ -74,7 +74,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setJPushSetting: function (args, options: ApiOptions = {}) {
+  setJPushSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivatePush', 'SetJPushSetting', args, options);
   },
   /**
@@ -86,7 +86,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setPushSettingEnable: function (args, options: ApiOptions = {}) {
+  setPushSettingEnable: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivatePush', 'SetPushSettingEnable', args, options);
   },
   /**
@@ -97,7 +97,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deletePushSetting: function (args, options: ApiOptions = {}) {
+  deletePushSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivatePush', 'DeletePushSetting', args, options);
   },
   /**
@@ -107,7 +107,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPushSetting: function (args, options: ApiOptions = {}) {
+  getPushSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivatePush', 'GetPushSetting', args, options);
   },
 };

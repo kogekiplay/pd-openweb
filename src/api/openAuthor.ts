@@ -6,7 +6,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSetting: function (args, options: ApiOptions = {}) {
+  getSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('OpenAuthor', 'GetSetting', args, options);
   },
@@ -20,7 +20,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editSetting: function (args, options: ApiOptions = {}) {
+  editSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('OpenAuthor', 'EditSetting', args, options);
   },
   /**
@@ -31,7 +31,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getCliAccessPolicySetting: function (args, options: ApiOptions = {}) {
+  getCliAccessPolicySetting: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('OpenAuthor', 'GetCliAccessPolicySetting', args, options);
   },
   /**
@@ -43,7 +43,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editCliAccessPolicySetting: function (args, options: ApiOptions = {}) {
+  editCliAccessPolicySetting: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('OpenAuthor', 'EditCliAccessPolicySetting', args, options);
   },
   /**
@@ -56,7 +56,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAppConfigs: function (args, options: ApiOptions = {}) {
+  getAppConfigs: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('OpenAuthor', 'GetAppConfigs', args, options);
   },
   /**
@@ -70,7 +70,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAppConfig: function (args, options: ApiOptions = {}) {
+  getAppConfig: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('OpenAuthor', 'GetAppConfig', args, options);
   },
   /**
@@ -87,7 +87,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editAppConfigs: function (args, options: ApiOptions = {}) {
+  editAppConfigs: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('OpenAuthor', 'EditAppConfigs', args, options);
   },
   /**
@@ -97,7 +97,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  userGrantedList: function (args, options: ApiOptions = {}) {
+  userGrantedList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('OpenAuthor', 'UserGrantedList', args, options);
   },
   /**
@@ -108,7 +108,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  closeUserGranted: function (args, options: ApiOptions = {}) {
+  closeUserGranted: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('OpenAuthor', 'CloseUserGranted', args, options);
   },
   /**
@@ -119,7 +119,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPATs: function (args, options: ApiOptions = {}) {
+  getPATs: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('OpenAuthor', 'GetPATs', args, options);
   },
   /**
@@ -131,7 +131,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPATsByProject: function (args, options: ApiOptions = {}) {
+  getPATsByProject: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('OpenAuthor', 'GetPATsByProject', args, options);
   },
   /**
@@ -142,7 +142,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPAT: function (args, options: ApiOptions = {}) {
+  getPAT: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('OpenAuthor', 'GetPAT', args, options);
   },
   /**
@@ -162,7 +162,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  createPAT: function (args, options: ApiOptions = {}) {
+  createPAT: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('OpenAuthor', 'CreatePAT', args, options);
   },
   /**
@@ -180,7 +180,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updatePAT: function (args, options: ApiOptions = {}) {
+  updatePAT: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('OpenAuthor', 'UpdatePAT', args, options);
   },
   /**
@@ -192,7 +192,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  renamePAT: function (args, options: ApiOptions = {}) {
+  renamePAT: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('OpenAuthor', 'RenamePAT', args, options);
   },
   /**
@@ -203,7 +203,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  resetPAT: function (args, options: ApiOptions = {}) {
+  resetPAT: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('OpenAuthor', 'ResetPAT', args, options);
   },
   /**
@@ -214,7 +214,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  expirePAT: function (args, options: ApiOptions = {}) {
+  expirePAT: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('OpenAuthor', 'ExpirePAT', args, options);
   },
   /**
@@ -225,7 +225,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deletePAT: function (args, options: ApiOptions = {}) {
+  deletePAT: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('OpenAuthor', 'DeletePAT', args, options);
   },
   /**
@@ -235,7 +235,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  introspectPATTest: function (args, options: ApiOptions = {}) {
+  introspectPATTest: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('OpenAuthor', 'IntrospectPATTest', args, options);
   },
@@ -246,7 +246,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getOAuthAppInfoByClientIdTest: function (args, options: ApiOptions = {}) {
+  getOAuthAppInfoByClientIdTest: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('OpenAuthor', 'GetOAuthAppInfoByClientIdTest', args, options);
   },
@@ -257,7 +257,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  userAuthorizeCheckTest: function (args, options: ApiOptions = {}) {
+  userAuthorizeCheckTest: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('OpenAuthor', 'UserAuthorizeCheckTest', args, options);
   },
   /**
@@ -267,7 +267,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  userAuthorizeTest: function (args, options: ApiOptions = {}) {
+  userAuthorizeTest: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('OpenAuthor', 'UserAuthorizeTest', args, options);
   },
   /**
@@ -277,7 +277,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  issueTokenTest: function (args, options: ApiOptions = {}) {
+  issueTokenTest: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('OpenAuthor', 'IssueTokenTest', args, options);
   },
   /**
@@ -287,7 +287,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  refreshTokenTest: function (args, options: ApiOptions = {}) {
+  refreshTokenTest: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('OpenAuthor', 'RefreshTokenTest', args, options);
   },
   /**
@@ -297,7 +297,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  introspectTokenTest: function (args, options: ApiOptions = {}) {
+  introspectTokenTest: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('OpenAuthor', 'IntrospectTokenTest', args, options);
   },

@@ -88,7 +88,7 @@ EnableOnlinSearch:bool，是否开启联网搜索
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  editSysSettings: function (args, options: ApiOptions = {}) {
+  editSysSettings: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateSysSetting', 'EditSysSettings', args, options);
   },
   /**
@@ -100,7 +100,7 @@ EnableOnlinSearch:bool，是否开启联网搜索
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjects: function (args, options: ApiOptions = {}) {
+  getProjects: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateSysSetting', 'GetProjects', args, options);
   },
   /**
@@ -111,7 +111,7 @@ EnableOnlinSearch:bool，是否开启联网搜索
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProject: function (args, options: ApiOptions = {}) {
+  getProject: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateSysSetting', 'GetProject', args, options);
   },
   /**
@@ -125,7 +125,7 @@ EnableOnlinSearch:bool，是否开启联网搜索
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setSso: function (args, options: ApiOptions = {}) {
+  setSso: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateSysSetting', 'SetSso', args, options);
   },
   /**
@@ -137,7 +137,7 @@ EnableOnlinSearch:bool，是否开启联网搜索
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setSsoStatus: function (args, options: ApiOptions = {}) {
+  setSsoStatus: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateSysSetting', 'SetSsoStatus', args, options);
   },
   /**
@@ -148,7 +148,7 @@ EnableOnlinSearch:bool，是否开启联网搜索
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeSso: function (args, options: ApiOptions = {}) {
+  removeSso: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateSysSetting', 'RemoveSso', args, options);
   },
   /**
@@ -158,7 +158,7 @@ EnableOnlinSearch:bool，是否开启联网搜索
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSsoSettings: function (args, options: ApiOptions = {}) {
+  getSsoSettings: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateSysSetting', 'GetSsoSettings', args, options);
   },
   /**
@@ -168,7 +168,7 @@ EnableOnlinSearch:bool，是否开启联网搜索
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSsonSettingsFroLogin: function (args, options: ApiOptions = {}) {
+  getSsonSettingsFroLogin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateSysSetting', 'GetSsonSettingsFroLogin', args, options);
   },
   /**
@@ -178,7 +178,7 @@ EnableOnlinSearch:bool，是否开启联网搜索
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  sendCsmWebhookTest: function (args, options: ApiOptions = {}) {
+  sendCsmWebhookTest: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateSysSetting', 'SendCsmWebhookTest', args, options);
   },
   /**
@@ -188,7 +188,7 @@ EnableOnlinSearch:bool，是否开启联网搜索
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getIdentityIntegrationConfig: function (args, options: ApiOptions = {}) {
+  getIdentityIntegrationConfig: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateSysSetting', 'GetIdentityIntegrationConfig', args, options);
   },
   /**
@@ -201,7 +201,7 @@ EnableOnlinSearch:bool，是否开启联网搜索
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editIdentityIntegrationConfig: function (args, options: ApiOptions = {}) {
+  editIdentityIntegrationConfig: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateSysSetting', 'EditIdentityIntegrationConfig', args, options);
   },
 };

@@ -9,7 +9,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  pagedApplyRoleList: function (args, options: ApiOptions = {}) {
+  pagedApplyRoleList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Role', 'PagedApplyRoleList', args, options);
   },
   /**
@@ -22,7 +22,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getMyJoinedRoleList: function (args, options: ApiOptions = {}) {
+  getMyJoinedRoleList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Role', 'GetMyJoinedRoleList', args, options);
   },
   /**
@@ -35,7 +35,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  pagedRoleList: function (args, options: ApiOptions = {}) {
+  pagedRoleList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Role', 'PagedRoleList', args, options);
   },
   /**
@@ -48,7 +48,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getRoleStandardPermission: function (args, options: ApiOptions = {}) {
+  getRoleStandardPermission: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Role', 'GetRoleStandardPermission', args, options);
   },
   /**
@@ -61,7 +61,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getRoleHRPermission: function (args, options: ApiOptions = {}) {
+  getRoleHRPermission: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Role', 'GetRoleHRPermission', args, options);
   },
   /**
@@ -76,7 +76,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addRole: function (args, options: ApiOptions = {}) {
+  addRole: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Role', 'AddRole', args, options);
   },
   /**
@@ -89,7 +89,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editRoleName: function (args, options: ApiOptions = {}) {
+  editRoleName: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Role', 'EditRoleName', args, options);
   },
   /**
@@ -104,7 +104,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editRole: function (args, options: ApiOptions = {}) {
+  editRole: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Role', 'EditRole', args, options);
   },
   /**
@@ -119,7 +119,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editRoleHR: function (args, options: ApiOptions = {}) {
+  editRoleHR: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Role', 'EditRoleHR', args, options);
   },
   /**
@@ -132,7 +132,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setAllowAssignSamePermission: function (args, options: ApiOptions = {}) {
+  setAllowAssignSamePermission: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Role', 'SetAllowAssignSamePermission', args, options);
   },
   /**
@@ -144,7 +144,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeRole: function (args, options: ApiOptions = {}) {
+  removeRole: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Role', 'RemoveRole', args, options);
   },
   /**
@@ -161,7 +161,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  pagedRoleMembers: function (args, options: ApiOptions = {}) {
+  pagedRoleMembers: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Role', 'PagedRoleMembers', args, options);
   },
   /**
@@ -174,7 +174,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addUserToRole: function (args, options: ApiOptions = {}) {
+  addUserToRole: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Role', 'AddUserToRole', args, options);
   },
   /**
@@ -188,7 +188,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  removeUserFromRole: function (args, options: ApiOptions = {}) {
+  removeUserFromRole: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Role', 'RemoveUserFromRole', args, options);
   },
   /**
@@ -200,7 +200,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  applyRole: function (args, options: ApiOptions = {}) {
+  applyRole: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Role', 'ApplyRole', args, options);
   },
   /**
@@ -213,7 +213,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  agreeUserToRole: function (args, options: ApiOptions = {}) {
+  agreeUserToRole: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Role', 'AgreeUserToRole', args, options);
   },
   /**
@@ -226,7 +226,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  refuseUserToRole: function (args, options: ApiOptions = {}) {
+  refuseUserToRole: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Role', 'RefuseUserToRole', args, options);
   },
   /**
@@ -237,7 +237,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUnauditedUserCount: function (args, options: ApiOptions = {}) {
+  getUnauditedUserCount: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Role', 'GetUnauditedUserCount', args, options);
   },
   /**
@@ -250,7 +250,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUnauditedUserDetail: function (args, options: ApiOptions = {}) {
+  getUnauditedUserDetail: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Role', 'GetUnauditedUserDetail', args, options);
   },
   /**
@@ -263,7 +263,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPageLogs: function (args, options: ApiOptions = {}) {
+  getPageLogs: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Role', 'GetPageLogs', args, options);
   },
   /**
@@ -274,7 +274,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  isSuperAdmin: function (args, options: ApiOptions = {}) {
+  isSuperAdmin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Role', 'IsSuperAdmin', args, options);
   },
   /**
@@ -285,7 +285,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  isLastSuperAdmin: function (args, options: ApiOptions = {}) {
+  isLastSuperAdmin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Role', 'IsLastSuperAdmin', args, options);
   },
   /**
@@ -296,7 +296,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  isProjectAdmin: function (args, options: ApiOptions = {}) {
+  isProjectAdmin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Role', 'IsProjectAdmin', args, options);
   },
   /**
@@ -307,7 +307,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectPermissionsByUser: function (args, options: ApiOptions = {}) {
+  getProjectPermissionsByUser: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Role', 'GetProjectPermissionsByUser', args, options);
   },
   /**
@@ -318,7 +318,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getMyPermissions: function (args, options: ApiOptions = {}) {
+  getMyPermissions: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Role', 'GetMyPermissions', args, options);
   },
 };
