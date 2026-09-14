@@ -28,8 +28,23 @@ declare module 'styled-components' {
   // 与升级前一致 —— 那时它就是 any。
   type StyledResult = any;
 
+  // 插值里的函数【必须】带上参数类型，否则 `styled.div\`${props => props.x}\`` 里的
+  // props 拿不到上下文类型，在 noImplicitAny 下每一处都报 TS7006。
+  // 全仓 1536 个文件用 styled，这是通往 strict 的一个系统性阻塞点。
+  // 默认类型参数写 any 是【如实反映现状】：本仓从未给 styled 组件声明过 props 泛型，
+  // 所以 props 本来就是 any —— 区别只在于现在是【显式】的、且调用点可以写
+  // styled.div<Props>\`...\` 逐个收紧，而不是全仓一起挡在 strict 门外。
+  type StyledInterpolation<P> =
+    | ((props: P) => string | number | false | null | undefined | object)
+    | string
+    | number
+    | boolean
+    | null
+    | undefined
+    | object;
+
   interface StyledTemplate {
-    (strings: TemplateStringsArray, ...interpolations: any[]): StyledResult;
+    <P = any>(strings: TemplateStringsArray, ...interpolations: StyledInterpolation<P>[]): StyledResult;
     // 函数/对象调用形式：仓里有 45 处这么写，例如
     //   styled.div(({ hsList }) => `margin-top: ${!hsList ? 0 : -20}px;`)
     // 少了这条重载它们会全部报 TS2769（第一版 stub 就漏了这个）。
@@ -47,9 +62,9 @@ declare module 'styled-components' {
   const styled: StyledInterface;
 
   export default styled;
-  export const css: (strings: TemplateStringsArray, ...interpolations: any[]) => any;
-  export const keyframes: (strings: TemplateStringsArray, ...interpolations: any[]) => any;
-  export const createGlobalStyle: (strings: TemplateStringsArray, ...interpolations: any[]) => any;
+  export const css: <P = any>(strings: TemplateStringsArray, ...interpolations: StyledInterpolation<P>[]) => any;
+  export const keyframes: <P = any>(strings: TemplateStringsArray, ...interpolations: StyledInterpolation<P>[]) => any;
+  export const createGlobalStyle: <P = any>(strings: TemplateStringsArray, ...interpolations: StyledInterpolation<P>[]) => any;
   export const ThemeProvider: any;
   export const StyleSheetManager: any;
   export const withTheme: any;
