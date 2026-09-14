@@ -30,9 +30,24 @@ import { ControlTag } from '../styled';
 import { batchRemoveItems, insertControlInSameLine } from './drag';
 import { canAsUniqueWidget, getAdvanceSetting, handleAdvancedSettingChange, isExceedMaxControlLimit } from './setting';
 import { getPathById, isHaveGap } from './widgets';
+import type { ControlAdvancedSetting, FormControl, RecordRow } from 'src/utils/controlTypes';
+
+/**
+ * 表单配置页透传的上下文（由 widgetConfig 的容器组件组装）。
+ * 字段按本文件实际读到的点列：activeWidget / setWidgets / globalSheetInfo，
+ * 其余用索引签名兜住 —— 它是个在多层组件间透传的大袋子，
+ * 精确建模要先把 widgetConfig 的容器组件类型化，是另一件事。
+ */
+interface WidgetProps {
+  activeWidget?: FormControl;
+  setWidgets?: (...args: any[]) => void;
+  globalSheetInfo?: Record<string, any>;
+  [key: string]: any;
+}
+
 
 // 获取动态默认值
-export const getDynamicDefaultValue = data => {
+export const getDynamicDefaultValue = (data: FormControl) => {
   const value = _.get(data, ['advancedSetting', 'defsource']);
 
   try {
@@ -43,7 +58,16 @@ export const getDynamicDefaultValue = data => {
   }
 };
 
-export const getMsgByCode = ({ code, data, controls }) => {
+export const getMsgByCode = ({
+  code,
+  data,
+  controls,
+}: {
+  code?: number | string;
+  /** 错误详情载荷 —— 不是控件：code=2 时是错误码数字，code=16 时是重复的别名字符串 */
+  data?: number | string;
+  controls?: FormControl[];
+}) => {
   if (code === 1) {
     alert(_l('保存成功'));
     return '';
@@ -91,7 +115,7 @@ export const getMsgByCode = ({ code, data, controls }) => {
   return errorText;
 };
 
-export function handleExtremeValue(data) {
+export function handleExtremeValue(data: FormControl) {
   const { advancedSetting = {} } = data;
   const { checkrange = '0', min = '', max = '' } = advancedSetting;
   const transferValue = value => (value ? value.toString() : '').replace(/,/g, '');
@@ -122,7 +146,7 @@ export function handleExtremeValue(data) {
   return data;
 }
 
-export function dealRelateSheetDefaultValue(data) {
+export function dealRelateSheetDefaultValue(data: FormControl) {
   const dynamicValue = getDynamicDefaultValue(data);
   if (!dynamicValue) return data;
   const newValue = dynamicValue.map(value => {
@@ -160,12 +184,12 @@ const use_ids = {
   48: 'organizeId',
 };
 
-const getCopyDefaultSetting = (advancedSetting = {}) => ({
+const getCopyDefaultSetting = (advancedSetting: ControlAdvancedSetting = {}) => ({
   dynamicsrc: '',
   defaulttype: advancedSetting.defaulttype === '1' ? '1' : '',
 });
 
-export function dealUserId(data, key = 'defsource') {
+export function dealUserId(data: FormControl, key = 'defsource') {
   const value = _.get(data, ['advancedSetting', key]) || '[]';
   let dataType = use_ids[data.type];
 
@@ -204,7 +228,7 @@ export function dealUserId(data, key = 'defsource') {
   return data;
 }
 
-export function dealCascaderId(data) {
+export function dealCascaderId(data: FormControl) {
   const value = _.get(data, ['advancedSetting', 'topfilters']) || '[]';
 
   try {
@@ -232,7 +256,7 @@ export function dealCascaderId(data) {
 /**
  * 处理 成员 部门 地区 他表字段 级联 组织角色 这几个类型的字段 values 处理成 [id, id]
  */
-export function handleCondition(condition, isRelate) {
+export function handleCondition(condition: any, isRelate?: boolean) {
   // 关联记录(动态值只能选择当前记录字段)特殊处理 rcid置空
   if (_.isBoolean(isRelate) && isRelate && !isEmpty(condition.dynamicSource)) {
     condition.dynamicSource.forEach(item => (item.rcid = ''));
@@ -264,7 +288,7 @@ export function handleCondition(condition, isRelate) {
 /**
  * 处理关联表叠加筛选条件里的 成员 部门 地区 他表字段 级联 这几个类型的字段 values 处理成 [id, id]
  */
-export function handleFilters(data, isRelate = false, filterKey) {
+export function handleFilters(data: FormControl, isRelate = false, filterKey?: string) {
   const keyName = filterKey ? filterKey : 'filters';
   const filters = getAdvanceSetting(data, [keyName]);
 
@@ -296,7 +320,7 @@ const canSelectedControls = (controls, data) => {
 const isSingleRelateSheet = data => data.type === 29 && data.enumDefault === 1;
 
 // 获取文本组合可选取的控件
-export const getConcatenateControls = (controls, data) => {
+export const getConcatenateControls = (controls: FormControl[], data: FormControl) => {
   controls = canSelectedControls(controls, data);
   return controls.filter(item => {
     if (isSingleRelateSheet(item)) return true;
@@ -314,7 +338,7 @@ export const getConcatenateControls = (controls, data) => {
 };
 
 // 获取数值公式可用控件
-export const getFormulaControls = (controls, data) => {
+export const getFormulaControls = (controls: FormControl[], data: FormControl) => {
   controls = canSelectedControls(controls, data);
   return controls.filter(item => {
     let type = item.type;
@@ -322,7 +346,7 @@ export const getFormulaControls = (controls, data) => {
     let enumDefault = item.enumDefault;
 
     if (type === 30 || isSingleRelateSheet(item)) {
-      const sourceControl = get(item, 'sourceControl') || {};
+      const sourceControl: FormControl = get(item, 'sourceControl') || {};
 
       if (includes([9, 10, 11], sourceControl.type)) return false;
 
@@ -347,14 +371,14 @@ export const getFormulaControls = (controls, data) => {
 };
 
 // 获取大写金额可用控件
-export const getMoneyCnControls = (controls, data) => {
+export const getMoneyCnControls = (controls: FormControl[], data: FormControl) => {
   controls = canSelectedControls(filterOnlyShowField(controls), data);
   return controls.filter(item => {
     let type = item.type;
     let enumDefault2 = item.enumDefault2;
 
     if (type === 30 || isSingleRelateSheet(item)) {
-      const sourceControl = get(item, 'sourceControl') || {};
+      const sourceControl: FormControl = get(item, 'sourceControl') || {};
 
       if (sourceControl.type) {
         type = sourceControl.type;
@@ -371,7 +395,12 @@ export const getMoneyCnControls = (controls, data) => {
 };
 
 // 获取控件的文本呈现值
-export function formatColumnToText(column, numberOnly, noMask, options = {}) {
+export function formatColumnToText(
+  column: FormControl,
+  numberOnly?: boolean,
+  noMask?: boolean,
+  options: Record<string, any> = {},
+) {
   return renderCellText(column, {
     noUnit: numberOnly,
     noSplit: numberOnly,
@@ -381,12 +410,17 @@ export function formatColumnToText(column, numberOnly, noMask, options = {}) {
 }
 
 // 通过id 获取控件的值
-export function getControlValue(id, allControls, worksheetData) {
+export function getControlValue(id: string, allControls: FormControl[], worksheetData?: RecordRow) {
   return getControlTextValue(id, allControls, worksheetData, true);
 }
 
 // 通过id 获取控件的文本值
-export function getControlTextValue(id, allControls, worksheetData, numberOnly) {
+export function getControlTextValue(
+  id: string,
+  allControls: FormControl[],
+  worksheetData?: RecordRow,
+  numberOnly?: boolean,
+) {
   const control = getControlByControlId(allControls, id);
 
   if (!control || _.isEmpty(worksheetData)) {
@@ -419,7 +453,7 @@ export function getControlTextValue(id, allControls, worksheetData, numberOnly) 
  * @param  {object} options 配置
  * @return {element} 返回一个dom元素
  */
-export function createWorksheetColumnTag(id, options) {
+export function createWorksheetColumnTag(id: string, options?: Record<string, any>) {
   const { allControls, errorCallback, mode, isLast } = options;
   const control = getControlByControlId(allControls, id);
   const node = document.createElement('div');
@@ -446,7 +480,7 @@ export function createWorksheetColumnTag(id, options) {
   return node;
 }
 
-export function genControlTag(allControls, id) {
+export function genControlTag(allControls: FormControl[], id: string) {
   const control = getControlByControlId(allControls, id);
   const invalid = isEmpty(control);
   const invalidError = control && control.type === 30 && (control.strDefault || '')[0] === '1';
@@ -459,7 +493,7 @@ export function genControlTag(allControls, id) {
   );
 }
 
-export function navigateToApp(worksheetId) {
+export function navigateToApp(worksheetId: string) {
   sheetAjax.getWorksheetInfo({ worksheetId }).then(data => {
     const storage = JSON.parse(localStorage.getItem(`mdAppCache_${md.global.Account.accountId}_${data.appId}`));
     const viewId =
@@ -474,14 +508,14 @@ export function navigateToApp(worksheetId) {
   });
 }
 
-export const navigateToView = (worksheetId, viewId) => {
+export const navigateToView = (worksheetId: string, viewId: string) => {
   homeAppApi.getAppSimpleInfo({ workSheetId: worksheetId }).then(data => {
     const { appId, appSectionId } = data;
     window.open(pathCompletion(`/app/${appId}/${appSectionId}/${worksheetId}/${viewId}`));
   });
 };
 
-export const dealControlPos = controls => {
+export const dealControlPos = (controls: FormControl[]) => {
   const sortableControls = controls.reduce((p, c) => {
     return update(p, { $push: [[c]] });
   }, []);
@@ -489,7 +523,7 @@ export const dealControlPos = controls => {
 };
 
 // 自定义事件保存时处理执行动作内默认值
-export const dealCusTomEventActions = (actionItems = [], controls = []) => {
+export const dealCusTomEventActions = (actionItems: any[] = [], controls: FormControl[] = []) => {
   return (actionItems || []).map(item => {
     // 函数、查询不处理，动态值处理
     if (_.includes(['1', '2'], item.type)) return item;
@@ -565,7 +599,7 @@ const findInvalidRelateWorksheetControl = (controls = []) => {
 };
 
 // 表单保存前校验
-export const checkWidgetErrorBeforeSave = (controls = [], originControls = []) => {
+export const checkWidgetErrorBeforeSave = (controls: FormControl[] = [], originControls: FormControl[] = []) => {
   let errorMsg = '';
   let errorNum = 3;
 
@@ -650,7 +684,12 @@ export const checkWidgetErrorBeforeSave = (controls = [], originControls = []) =
 };
 
 // 重置等处理
-export const checkWidgetBeforeSave = (controls = [], originControls = [], globalInfo = {}, deep = 0) => {
+export const checkWidgetBeforeSave = (
+  controls: FormControl[] = [],
+  originControls: FormControl[] = [],
+  globalInfo: Record<string, any> = {},
+  deep = 0,
+) => {
   controls.forEach(data => {
     // 自动编号重置
     if (data.type === 33 && !data.controlId.includes('-')) {
@@ -688,7 +727,7 @@ const checkAutoIdReset = (data = {}, originControls = [], globalInfo = {}) => {
   }
 };
 
-export const formatControlsData = (controls = [], fromSub = false) => {
+export const formatControlsData = (controls: FormControl[] = [], fromSub = false) => {
   return controls.map(item => {
     const { type } = item;
     let data = { ...item };
@@ -926,7 +965,7 @@ export const formatControlsData = (controls = [], fromSub = false) => {
 };
 
 // 处理查询输入参数层级关系
-export const dealRequestControls = (controls, needChild) => {
+export const dealRequestControls = (controls: FormControl[], needChild?: boolean) => {
   if (!(controls && controls.length)) return [];
   let newControls = [];
 
@@ -968,7 +1007,7 @@ export const dealRequestControls = (controls, needChild) => {
 };
 
 // 处理自定义事件--查询api成立条件filters里控件type
-export const getFilterControls = (controls = []) => {
+export const getFilterControls = (controls: FormControl[] = []) => {
   const result = [];
   if (_.isEmpty(controls)) return result;
   controls.forEach(c => {
@@ -992,7 +1031,7 @@ export const getFilterControls = (controls = []) => {
 };
 
 // 如果新增控件在可视区外则滚动至可视区内
-export const scrollToVisibleRange = (data, widgetProps) => {
+export const scrollToVisibleRange = (data: FormControl, widgetProps: WidgetProps) => {
   const { activeWidget } = widgetProps;
   const $contentWrap = document.getElementById('widgetDisplayWrap');
   const $activeWidget = document.getElementById(`widget-${(activeWidget || {}).controlId}`);
@@ -1015,7 +1054,12 @@ export const scrollToVisibleRange = (data, widgetProps) => {
 };
 
 // 清除所有原有控件，全部换成新的
-export const clearAndSetWidgets = (data, para, widgetProps, callback) => {
+export const clearAndSetWidgets = (
+  data: FormControl[],
+  para: any,
+  widgetProps: WidgetProps,
+  callback?: (...args: any[]) => void,
+) => {
   const { setWidgets, globalSheetInfo = {} } = widgetProps;
 
   // 检查是否超出控件数量限制
@@ -1048,7 +1092,11 @@ export const clearAndSetWidgets = (data, para, widgetProps, callback) => {
   }
 };
 
-export const handleDeleteWidgetsForMingo = ({ needDeleteWidgets } = {}, widgetProps, callback) => {
+export const handleDeleteWidgetsForMingo = (
+  { needDeleteWidgets }: { needDeleteWidgets?: any[] } = {},
+  widgetProps: WidgetProps,
+  callback?: (...args: any[]) => void,
+) => {
   const { widgets, setWidgets } = widgetProps;
   // 根据alias删除控件, alias === needDeleteWidget.alias immutable update
   const newWidgets = update(widgets, {
@@ -1062,7 +1110,11 @@ export const handleDeleteWidgetsForMingo = ({ needDeleteWidgets } = {}, widgetPr
 };
 
 // 更新某个属性
-export const handleUpdateWidgetsAttribute = ({ needUpdateWidgets } = {}, widgetProps, callback) => {
+export const handleUpdateWidgetsAttribute = (
+  { needUpdateWidgets }: { needUpdateWidgets?: any[] } = {},
+  widgetProps: WidgetProps,
+  callback?: (...args: any[]) => void,
+) => {
   const { widgets, setWidgets } = widgetProps;
   const newWidgets = update(widgets, {
     $apply: arr =>
@@ -1086,7 +1138,11 @@ export const handleUpdateWidgetsAttribute = ({ needUpdateWidgets } = {}, widgetP
   }
 };
 
-export function batchUpdateWidgetsLayout(layoutOfAllWidgets = {}, widgetProps, callback) {
+export function batchUpdateWidgetsLayout(
+  layoutOfAllWidgets: Record<string, any> = {},
+  widgetProps: WidgetProps,
+  callback?: (...args: any[]) => void,
+) {
   const { widgets, setWidgets } = widgetProps;
   // widgets 是原控件，是二维数组，根据row来划分二维数组，同一个row表示同一行
   // layoutOfAllWidgets 所有控件的布局属性 { [widget.controlId]: { row, col, size } }

@@ -8,6 +8,7 @@ import { ROW_ID_CONTROL, SYSTEM_CONTROL } from '../../config/widget';
 import { ControlTag, SettingItem } from '../../styled';
 import { getConcatenateControls } from '../../util/data';
 import SelectControl from './SelectControl';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function Concatenate({
   data,
@@ -21,7 +22,9 @@ export default function Concatenate({
   const $tagtextarea = useRef(null);
   const { controlId, dataSource } = data;
   const [visible, setVisible] = useState(false);
-  const availableControls = !withSYS
+  // SYSTEM_CONTROL / ROW_ID_CONTROL 是只带 controlId/type/controlName 的字面量，
+  // 不标类型会和 FormControl 拼成联合，下面读 strDefault 就报错
+  const availableControls: FormControl[] = !withSYS
     ? [...getConcatenateControls(allControls, data)]
     : [...SYSTEM_CONTROL, ...ROW_ID_CONTROL, ...getConcatenateControls(allControls, data)];
   useEffect(() => {
