@@ -49,7 +49,18 @@ declare type ApiResult = Promise<any> & { [key: string]: any };
 
 declare var mdyAPI: (...args: any[]) => ApiResult;
 declare var agentAPI: any; // src/common/global.js:936 `window.agentAPI = (args = {}, options = {}) =>`
-declare var safeParse: any; // src/common/global.js:265 `window.safeParse = (str, type) => {`
+/**
+ * src/common/global.js:265 `window.safeParse = (str, type) => {`
+ *
+ * 【不要按第二个参数重载】试过写成
+ *   safeParse(str, 'array'): any[] / safeParse(str, 'object'): Record<string, any>
+ * 想让 `safeParse(x, 'array').map(item => ...)` 的 item 由上下文推出类型（987 个调用点）。
+ * 但看实现就知道这是撒谎：type 只决定【空值或解析失败时】的兜底值，
+ * 有值时一律 `return JSON.parse(str)` —— 传 'array' 照样可能拿到对象
+ * （例：WorksheetRecordLogSelectTags 的定位分支就是 safeParse(v,'array') 之后读 .address/.x/.y）。
+ * 标成 any[] 之后那些地方立刻报错，而错的是类型不是代码。
+ */
+declare var safeParse: any;
 declare var createTimeSpan: any; // src/common/global.js:291 `window.createTimeSpan = (dateStr, showType = 1) =>`
 declare var getCurrentLang: any; // src/common/global.js:74 `window.getCurrentLang = () => {`
 declare var getCurrentLangCode: any; // src/common/global.js:82 `window.getCurrentLangCode = lang => {`
