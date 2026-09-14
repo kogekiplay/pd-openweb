@@ -1,10 +1,12 @@
 import _ from 'lodash';
+import type { EnumOption, EnumTable, PrintLabelConfig } from './types';
 
-function getList(value = {}) {
+function getList(value: EnumTable = {}): EnumOption[] {
   return Object.keys(value)
     .filter(key => !_.includes(['texts', 'shorts'], key))
     .map(key => ({
-      value: value[key],
+      // 这里的断言对应 EnumOption.value 的 number：上面的 filter 已排除 texts / shorts
+      value: value[key] as number,
       text: (value.texts || {})[key],
       label: (value.texts || {})[key],
     }));
@@ -266,7 +268,7 @@ function getTextByValue(obj, value) {
 }
 
 // 获取模板卡片显示信息;
-export function getPrintCardInfoOfTemplate(template = {}) {
+export function getPrintCardInfoOfTemplate(template: PrintLabelConfig = {}) {
   const { printType, labelSize, layout } = template;
   const icon =
     {

@@ -16,6 +16,7 @@ import {
   QR_POSITION,
   SOURCE_TYPE,
 } from './enum';
+import type { CodeUrlSource } from './types';
 
 export function getDefaultText({
   printType,
@@ -167,7 +168,7 @@ export function getCodeContent({
   controls,
 }: PrintLabelConfig & {
   row?: Record<string, any>;
-  urls?: Record<string, any>;
+  urls?: CodeUrlSource;
   index?: number;
   controls?: any[];
 }) {
@@ -196,7 +197,9 @@ export function createBarLabeObjectFromConfig(
   config: PrintLabelConfig = {},
   value,
   texts = [],
-  { isPreview = false }: { isPreview?: boolean } = {},
+  // 调用点除了 isPreview 还会传 pixelRadio（print.ts 的条码分支传 1.5），
+  // 这一项直接并进 BarLabel 的配置里，所以类型取 BarLabelOptions 的子集。
+  { isPreview = false, ...restLabelOptions }: BarLabelOptions = {},
 ) {
   let width, height;
 

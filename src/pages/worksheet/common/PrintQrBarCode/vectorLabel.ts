@@ -21,6 +21,28 @@ export const QRErrorCorrectLevel = {
   H: 2, // 30%
 };
 
+/** doc.text() / doc.widthOfString() 的排版选项，键取自本文件实际传的那几个。 */
+/** JsBarcode 的 CODE128 编码结果，只用到 data（由 0/1 组成的条纹串）。 */
+export interface Code128Encoding {
+  data: string;
+}
+
+export interface PdfTextOptions {
+  align?: 'left' | 'center' | 'right';
+  width?: number;
+  height?: number;
+  lineBreak?: boolean;
+}
+
+/** new PDFDocument(...) 的构造配置，键取自 init() 实际传的那几个。 */
+export interface PdfDocumentConfig {
+  /** [宽, 高]，单位 pt */
+  size?: [number, number];
+  /** 传 null 表示不预载内置字体，字体由 loadFont() 自己 registerFont */
+  font?: string | null;
+  info?: { Title?: string; Author?: string };
+}
+
 /**
  * pdfkit 文档对象的最小形状。
  *
@@ -34,14 +56,14 @@ export const QRErrorCorrectLevel = {
  * widthOfString 返回宽度、pipe 返回流，是仅有的两个例外。
  */
 export interface PdfDoc {
-  pipe(destination: unknown): PdfBlobStream;
+  pipe(destination: PdfBlobStream): PdfBlobStream;
   addPage(): PdfDoc;
   end(): void;
-  registerFont(name: string, src: unknown): PdfDoc;
+  registerFont(name: string, src: ArrayBuffer): PdfDoc;
   font(name: string): PdfDoc;
   fontSize(size: number): PdfDoc;
-  text(value: string, x?: number, y?: number, options?: Record<string, unknown>): PdfDoc;
-  widthOfString(value: string, options?: Record<string, unknown>): number;
+  text(value: string, x?: number, y?: number, options?: PdfTextOptions): PdfDoc;
+  widthOfString(value: string, options?: PdfTextOptions): number;
   rect(x: number, y: number, width: number, height: number): PdfDoc;
   fill(color?: string): PdfDoc;
   fillColor(color: string): PdfDoc;
@@ -172,7 +194,7 @@ export default class Label {
   // 用 declare 而不是普通字段声明：declare 是纯类型声明，babel 的 TS preset 会整行擦除，
   // 不会生成 `this.x = undefined` 这种类字段初始化，对运行时零影响。
   declare options: LabelOptions;
-  declare PDFDocument: new (config: Record<string, unknown>) => PdfDoc;
+  declare PDFDocument: new (config: PdfDocumentConfig) => PdfDoc;
   declare doc: PdfDoc;
   declare stream: PdfBlobStream;
   /** 画尺寸的基准单位，init() 里按 min(width,height)/30 算出 */
@@ -276,7 +298,7 @@ export default class Label {
     const { doc } = this;
 
     async function load(fontKey, fontName, fontUrl) {
-      const savedFont = await localForage.getItem(fontKey);
+      const savedFont = await localForage.getItem<ArrayBuffer>(fontKey);
 
       if (savedFont) {
         doc.registerFont(fontName, savedFont);
@@ -393,11 +415,17 @@ export default class Label {
       const parsed = JsBarcode({}, value, {
         format: 'CODE128',
       });
-      return _.get(parsed, '_encodings.0.0');
+      return _.get(parsed, '_encodings.0.0') as Code128Encoding | undefined;
     }
 
     if (barValue && barValue.trim()) {
       const code128 = parseToCode128(barValue);
+
+      // JsBarcode 取不到编码时这里原本会在 code128.data 上直接抛 TypeError。
+      // 加守卫既消掉 TS18048，也把崩溃变成「这张标签不画条码」，
+      // 与上面 if (barValue && barValue.trim()) 的防御风格一致。
+      if (!code128) return;
+
       const barWidth = width - this.paddingX * this.unitSize * 2;
       let realBarWidth = barWidth;
       let leftOffset = 0;

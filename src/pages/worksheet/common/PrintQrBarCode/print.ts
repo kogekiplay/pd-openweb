@@ -1,3 +1,4 @@
+import type { jsPDF as JsPdf } from 'jspdf';
 import _ from 'lodash';
 import PDFObject from 'pdfobject';
 import {
@@ -11,6 +12,7 @@ import {
 } from './enum';
 import genQrDataurl, { QRErrorCorrectLevel } from './genQrDataurl';
 import { A4_OPTS, A4_SIZE } from './printConfig';
+import type { LabelRecord, PrintLabelConfig, QrPdfOptions } from './types';
 import { createBarLabeObjectFromConfig, createQrLabeObjectFromConfig } from './util';
 
 function cutString(text, maxWidth, fontSize, maxLine = 3) {
@@ -124,7 +126,29 @@ function getQrDataurl(
 }
 
 export class QrPdf {
-  constructor({ worksheetName, printType, layout, printData, correctLevel, config } = {}) {
+  // 字段只在构造函数/各 renderXxx 里用 this.x = ... 赋值，TS 不当作字段声明，
+  // 不写这几行每次读取都报 TS2339。declare 是纯类型声明，babel 整行擦除，运行时无影响。
+  declare worksheetName: string;
+  declare printType: number;
+  declare layout: number;
+  declare printData: LabelRecord[];
+  declare correctLevel: number;
+  declare config: PrintLabelConfig;
+  /** jspdf 是动态 import 进来的，这里存的是【构造器】本身 */
+  declare jsPDF: typeof JsPdf;
+  declare doc: JsPdf;
+  /** A4 版面的像素/毫米尺寸表，来自 ./printConfig */
+  declare size: typeof A4_SIZE;
+  /** 当前 A4 排版（几行几列），A4_OPTS 按 layout 取 */
+  // A4_OPTS 是【数组】，索引类型要用 [number]；写成 keyof 会把 length/flat 这些
+  // 数组自带成员也并进联合类型，后面解构 { col, row } 就全报 TS2339。
+  declare option: (typeof A4_OPTS)[number];
+  /** 打印预览用的临时容器 */
+  declare $dialog: HTMLElement;
+  /** 标签类走 pdfkit 渲染（见 GeneratingPdf），A4 走 jspdf */
+  declare isPdfKit: boolean;
+
+  constructor({ worksheetName, printType, layout, printData, correctLevel, config }: QrPdfOptions = {}) {
     this.worksheetName = worksheetName;
     this.worksheetName = worksheetName;
     this.correctLevel = correctLevel;
@@ -458,8 +482,8 @@ export class QrPdf {
 }
 
 export default async function (
-  { worksheetName, printType, layout, printData, correctLevel, config } = {},
-  cb = () => {},
+  { worksheetName, printType, layout, printData, correctLevel, config }: QrPdfOptions = {},
+  cb: () => void = () => {},
 ) {
   console.time('render qr');
   const pdf = new QrPdf({ worksheetName, printType, layout, printData, correctLevel, config });
