@@ -1,5 +1,4 @@
 import { TinyColor } from '@ctrl/tinycolor';
-import copy from 'src/utils/copyToClipboard';
 import dayjs from 'dayjs';
 import _, { find, get, includes, isArray, isEmpty } from 'lodash';
 import moment from 'moment';
@@ -29,6 +28,8 @@ import {
   handleAdvancedSettingChange,
   isSheetDisplay,
 } from 'src/utils/controlCommon';
+import type { ControlAdvancedSetting, ControlValue, FormControl } from 'src/utils/controlTypes';
+import copy from 'src/utils/copyToClipboard';
 import RegExpValidator from 'src/utils/expression';
 import { dateConvertToUserZone, dateServerZoneToAppZone, getTimeZone } from 'src/utils/project';
 
@@ -202,7 +203,7 @@ export function checkCellIsEmpty(value) {
 /**
  * 字段是否支持排序
  */
-export function fieldCanSort(type, control = {}) {
+export function fieldCanSort(type, control: FormControl = {}) {
   const canSortTypes = [
     2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 15, 16, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 37, 38, 42, 46, 48, 50, 53,
   ];
@@ -217,7 +218,7 @@ export function fieldCanSort(type, control = {}) {
 /**
  * 获取字段排序数据
  */
-export function getSortData(type, control = {}) {
+export function getSortData(type, control: FormControl = {}) {
   const descendingValue = 1; // 降序
   const ascendingValue = 2; // 升序
 
@@ -352,8 +353,8 @@ export function controlIsNumber({ type, sourceControlType, enumDefault, enumDefa
  * 是否是按关联表格呈现的控件
  */
 export function isRelateRecordTableControl(
-  { type, enumDefault, advancedSetting = {} },
-  { ignoreInFormTable = false } = {},
+  { type, enumDefault, advancedSetting = {} }: FormControl,
+  { ignoreInFormTable = false }: { ignoreInFormTable?: boolean } = {},
 ) {
   return (
     (type === 29 &&
@@ -425,7 +426,7 @@ export function updateOptionsOfControls(controls, data) {
 /**
  * 对字段的 advancedSettings 进行解析处理
  */
-export function parseAdvancedSetting(setting = {}) {
+export function parseAdvancedSetting(setting: ControlAdvancedSetting = {}) {
   const {
     allowlink = '1',
     allowimport = '1',
@@ -807,7 +808,12 @@ export function getRecordCardStyle(control) {
  * @param  {} controls 所有控件
  * @param  {} data 控件所在记录数据[可选]
  */
-export function getTitleTextFromControls(controls, data, titleSourceControlType, options = {}) {
+export function getTitleTextFromControls(
+  controls: FormControl[],
+  data,
+  titleSourceControlType?,
+  options: Record<string, ControlValue> = {},
+) {
   let titleControl = _.find(controls, control => control.attribute === 1) || {};
 
   // 原来这里是 titleControl.sourceControlType = titleSourceControlType，先改后拷 ——
@@ -835,7 +841,11 @@ export function getTitleTextFromControls(controls, data, titleSourceControlType,
  * @param  {} controls 所有控件
  * @param  {} data 控件所在记录数据[可选]
  */
-export function getTitleTextFromRelateControl(control = {}, data, options = {}) {
+export function getTitleTextFromRelateControl(
+  control: FormControl = {},
+  data,
+  options: Record<string, ControlValue> = {},
+) {
   let newTitleControlId = control.advancedSetting.showtitleid;
 
   if (control.type === 51 && control.enumDefault === 1 && control.showControls[0]) {
@@ -878,7 +888,7 @@ export function getTitleTextFromRelateControl(control = {}, data, options = {}) 
   return getTitleTextFromControls(relationControls, data, control.sourceControlType, options);
 }
 
-export function renderText(cell, options = {}) {
+export function renderText(cell: FormControl, options: Record<string, ControlValue> = {}) {
   try {
     if (!cell) {
       return '';
@@ -1300,7 +1310,7 @@ export const isLightColor = (color = '') => {
  * relateControl 被引用的金额字段
  * 金额转中文大写、繁体大写、英文大写
  */
-export const formatNumberToWords = (control = {}, relateControl = {}) => {
+export const formatNumberToWords = (control: FormControl = {}, relateControl: FormControl = {}) => {
   const value = relateControl.value || '';
   if (!value.toString()) return '';
   const { currency, currencynames } = relateControl.advancedSetting || {};
@@ -1725,7 +1735,9 @@ export function convertAiRecommendControlToControlData(recommendControl, { works
     displayField = [],
     relatedWorksheet = {},
   } = recommendControl;
-  let control = {
+  // 必须标类型：不标的话 TS 按这个字面量推出固定形状，
+  // 下面几十处 control.type = ... / control.enumDefault = ... 全报 TS2339（实测 51 条）。
+  let control: FormControl = {
     controlName: name,
     controlId: id || uuidv4(),
     col,
@@ -2091,7 +2103,7 @@ export const getTimeZoneText = (data, appId) => {
   return `UTC${timeZone > 0 ? '+' : ''}${timeZone / 60}`;
 };
 
-export const getDefaultCount = (data = {}, value = 0) => {
+export const getDefaultCount = (data: FormControl = {}, value: ControlValue = 0) => {
   value = parseInt(value);
   if (value) {
     // 下拉框50，卡片200，列表500
