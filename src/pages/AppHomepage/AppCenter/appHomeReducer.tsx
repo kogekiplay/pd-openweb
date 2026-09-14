@@ -3,6 +3,7 @@ import _ from 'lodash';
 import { Dialog } from 'ming-ui';
 import appManagementAjax from 'src/api/appManagement';
 import homeAppAjax from 'src/api/homeApp';
+import type { ControlValue } from 'src/utils/controlTypes';
 
 export const initialState = {
   groupsLoading: true,
@@ -72,7 +73,35 @@ function updateGroupOfState(state, groupId, update = data => data) {
   return state;
 }
 
-export function reducer(state, action = {}) {
+/**
+ * 应用主页 reducer 的 action。
+ * 键取自 reducer 里各 case 实际读取的那些 —— 这个 reducer 用的是
+ * 「type + 若干自由字段」的朴素写法，没有 payload 包装，所以字段直接铺在顶层。
+ * 全部可选：每个 action 只用其中一两个。
+ */
+interface AppHomeAction {
+  type?: string;
+  /** 最常用的载荷位，含义随 type 变化（关键词、loading 布尔、列表…） */
+  value?: ControlValue;
+  values?: ControlValue;
+  data?: ControlValue;
+  id?: string;
+  appId?: string;
+  newAppId?: string;
+  groupId?: string;
+  groupType?: string;
+  activeGroup?: ControlValue;
+  app?: ControlValue;
+  apps?: ControlValue[];
+  itemData?: ControlValue;
+  addedData?: ControlValue;
+  delData?: ControlValue;
+  isMark?: boolean;
+  isMarked?: boolean;
+  isRemove?: boolean;
+}
+
+export function reducer(state, action: AppHomeAction = {}) {
   let newState = { ...state };
   let newApp;
 
@@ -407,6 +436,11 @@ function getAppLangs(dispatch, projectId, noCache = false) {
 }
 
 export class CreateActions {
+  // dispatch / state 只在构造函数里赋值，TS 不当作字段声明，
+  // 不写这两行每次 this.dispatch(...) / this.state.x 都报 TS2339（本文件 46 条）。
+  declare dispatch: (action: AppHomeAction) => void;
+  declare state: ControlValue;
+
   constructor(props) {
     this.dispatch = props.dispatch;
     this.state = props.state;
