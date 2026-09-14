@@ -19,7 +19,7 @@ export function buildSystemPrompt({ worksheetInfo = {} } = {}) {
       .filter(c => c.controlId.length === 24)
       .map(
         control =>
-          `controlId: ${control.controlId}, name: ${control.controlName}, type: ${convertControlTypeToAiRecommendControlType(control.type)} ${get(control, 'options', []).length > 0 ? `options: ${JSON.stringify(get(control, 'options', []).map(item => pick(item, ['value', 'key'])))} ` : ''}`,
+          `controlId: ${control.controlId}, name: ${control.controlName}, type: ${convertControlTypeToAiRecommendControlType(control)} ${get(control, 'options', []).length > 0 ? `options: ${JSON.stringify(get(control, 'options', []).map(item => pick(item, ['value', 'key'])))} ` : ''}`,
       )
       .join('\n')}
 

@@ -1811,7 +1811,10 @@ export function convertAiRecommendControlToControlData(
     source: recommendControl,
   };
 
-  if (['text', 'longText'].includes(recommendControl.type)) {
+  if (recommendControl.type === 'text') {
+    // 原来这里是 `['text', 'longText'].includes(...)`，把 longText 一并吞掉，
+    // 于是下面那个专门给长文本置 enumDefault = 2 的分支永远走不到 ——
+    // AI 推荐的长文本字段全被建成单行文本。
     control.type = WIDGETS_TO_API_TYPE_ENUM.TEXT;
   } else if (recommendControl.type === 'longText') {
     control.type = WIDGETS_TO_API_TYPE_ENUM.TEXT;
@@ -1953,11 +1956,24 @@ export function convertAiRecommendControlToControlData(
   return control;
 }
 
-export function convertControlTypeToAiRecommendControlType(type?: number) {
+/**
+ * 控件类型 -> AI 推荐字段类型名，是 convertAiRecommendControlToControlData 的反向。
+ *
+ * 入参从「裸 type」改成整个 control：longText 与 related/multiRelated/relatedTable
+ * 光看 type 分不出来（前者是 TEXT + enumDefault 2，后三者都是 RELATE_SHEET，
+ * 靠 enumDefault + advancedSetting.showtype 区分），必须拿到整个控件。
+ *
+ * 修之前这里引用了 7 个 WIDGETS_TO_API_TYPE_ENUM 上不存在的成员
+ * （LONG_TEXT / AUTOID / FORMULA / RELATE / MULTI_RELATED / RELATED_TABLE / TAB），
+ * 等于在比较 `type === undefined`：对任何真实控件都走不到，自增ID/公式/关联记录/
+ * 分割线/标签页一律返回 null，在「生成示例数据」的 prompt 里渲染成 `type: null`。
+ */
+export function convertControlTypeToAiRecommendControlType(control?: FormControl) {
+  const type = control?.type;
+
   if (type === WIDGETS_TO_API_TYPE_ENUM.TEXT) {
-    return 'text';
-  } else if (type === WIDGETS_TO_API_TYPE_ENUM.LONG_TEXT) {
-    return 'longText';
+    // 长文本没有独立控件类型，是 TEXT + enumDefault 2
+    return control?.enumDefault === 2 ? 'longText' : 'text';
   } else if (type === WIDGETS_TO_API_TYPE_ENUM.NUMBER) {
     return 'number';
   } else if (type === WIDGETS_TO_API_TYPE_ENUM.MONEY) {
@@ -1978,7 +1994,7 @@ export function convertControlTypeToAiRecommendControlType(type?: number) {
     return 'radio';
   } else if (type === WIDGETS_TO_API_TYPE_ENUM.MULTI_SELECT) {
     return 'checkbox';
-  } else if (type === WIDGETS_TO_API_TYPE_ENUM.AUTOID) {
+  } else if (type === WIDGETS_TO_API_TYPE_ENUM.AUTO_ID) {
     return 'autoid';
   } else if (type === WIDGETS_TO_API_TYPE_ENUM.USER_PICKER) {
     return 'member';
@@ -1990,19 +2006,22 @@ export function convertControlTypeToAiRecommendControlType(type?: number) {
     return 'email';
   } else if (type === WIDGETS_TO_API_TYPE_ENUM.ATTACHMENT) {
     return 'attachment';
-  } else if (type === WIDGETS_TO_API_TYPE_ENUM.FORMULA) {
+  } else if (type === WIDGETS_TO_API_TYPE_ENUM.FORMULA_NUMBER) {
     return 'formula';
   } else if (type === WIDGETS_TO_API_TYPE_ENUM.SUB_LIST) {
     return 'subform';
-  } else if (type === WIDGETS_TO_API_TYPE_ENUM.RELATE) {
-    return 'related';
-  } else if (type === WIDGETS_TO_API_TYPE_ENUM.MULTI_RELATED) {
-    return 'multiRelated';
-  } else if (type === WIDGETS_TO_API_TYPE_ENUM.RELATED_TABLE) {
-    return 'relatedTable';
+  } else if (type === WIDGETS_TO_API_TYPE_ENUM.RELATE_SHEET) {
+    // 三种关联都是 RELATE_SHEET，区分方式与 convertAiRecommendControlToControlData 里写的一致
+    const showtype = _.get(control, 'advancedSetting.showtype');
+
+    if (showtype === String(RELATE_RECORD_SHOW_TYPE.TAB_TABLE)) {
+      return 'relatedTable';
+    }
+
+    return control?.enumDefault === 2 ? 'multiRelated' : 'related';
   } else if (type === WIDGETS_TO_API_TYPE_ENUM.SPLIT_LINE) {
     return 'section';
-  } else if (type === WIDGETS_TO_API_TYPE_ENUM.TAB) {
+  } else if (type === WIDGETS_TO_API_TYPE_ENUM.SECTION) {
     return 'tab';
   }
 

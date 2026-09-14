@@ -19,10 +19,15 @@ const WIDGETS_TO_API_TYPE_ENUM = {
   AREA_PROVINCE: 19,
   AREA_CITY: 23,
   AREA_COUNTY: 24,
+  SPLIT_LINE: 22,
+  SECTION: 52,
   USER_PICKER: 26,
   DEPARTMENT: 27,
   SCORE: 28,
   RELATE_SHEET: 29,
+  SHEET_FIELD: 30,
+  FORMULA_NUMBER: 31,
+  AUTO_ID: 33,
   SUB_LIST: 34,
   CASCADER: 35,
   SWITCH: 36,
@@ -79,11 +84,20 @@ global.safeParse =
     }
   });
 
-const { formatAttachmentValue, getControlsSorts, toFixed, updateOptionsOfControl } = requireEsm('./control.js', {
+const RELATE_RECORD_SHOW_TYPE = { CARD: 1, LIST: 2, DROPDOWN: 3, TABLE: 5, TAB_TABLE: 6 };
+
+const {
+  convertAiRecommendControlToControlData,
+  convertControlTypeToAiRecommendControlType,
+  formatAttachmentValue,
+  getControlsSorts,
+  toFixed,
+  updateOptionsOfControl,
+} = requireEsm('./control.js', {
   'copy-to-clipboard': () => {},
   'worksheet/constants/enum': {
     CONTROL_EDITABLE_WHITELIST: {},
-    RELATE_RECORD_SHOW_TYPE: {},
+    RELATE_RECORD_SHOW_TYPE,
     RELATION_SEARCH_SHOW_TYPE: {},
     SYSTEM_CONTROLS: [],
   },
@@ -196,5 +210,41 @@ assert.doesNotThrow(() => {
     },
   ]);
 });
+
+// ── AI 推荐字段类型的双向映射 ────────────────────────────────────────
+// 这两个函数以前各有一处"永远走不到的分支"：
+//   正向：引用了 WIDGETS_TO_API_TYPE_ENUM 上不存在的成员（LONG_TEXT / AUTOID /
+//         FORMULA / RELATE / MULTI_RELATED / RELATED_TABLE / TAB），
+//         等于在比较 `type === undefined`，自增ID/公式/关联记录/分割线/标签页一律返回 null；
+//   反向：`['text','longText'].includes(type)` 把 longText 提前吞掉，
+//         下面给长文本置 enumDefault = 2 的分支永远执行不到。
+// 下面这些断言就是用来钉住修好之后的行为的。
+assert.strictEqual(convertControlTypeToAiRecommendControlType({ type: 2 }), 'text');
+assert.strictEqual(convertControlTypeToAiRecommendControlType({ type: 2, enumDefault: 2 }), 'longText');
+assert.strictEqual(convertControlTypeToAiRecommendControlType({ type: 33 }), 'autoid');
+assert.strictEqual(convertControlTypeToAiRecommendControlType({ type: 31 }), 'formula');
+assert.strictEqual(convertControlTypeToAiRecommendControlType({ type: 22 }), 'section');
+assert.strictEqual(convertControlTypeToAiRecommendControlType({ type: 52 }), 'tab');
+
+// 三种关联都是 RELATE_SHEET(29)，只能靠 enumDefault + showtype 区分
+assert.strictEqual(convertControlTypeToAiRecommendControlType({ type: 29 }), 'related');
+assert.strictEqual(convertControlTypeToAiRecommendControlType({ type: 29, enumDefault: 2 }), 'multiRelated');
+assert.strictEqual(
+  convertControlTypeToAiRecommendControlType({
+    type: 29,
+    enumDefault: 2,
+    advancedSetting: { showtype: String(RELATE_RECORD_SHOW_TYPE.TAB_TABLE) },
+  }),
+  'relatedTable',
+);
+
+// 不认识的类型仍然返回 null，不要退化成某个具体名字
+assert.strictEqual(convertControlTypeToAiRecommendControlType({ type: 99 }), null);
+assert.strictEqual(convertControlTypeToAiRecommendControlType(), null);
+
+// 反向：长文本必须建成 TEXT + enumDefault 2，而不是单行文本
+assert.strictEqual(convertAiRecommendControlToControlData({ type: 'text' }).enumDefault, undefined);
+assert.strictEqual(convertAiRecommendControlToControlData({ type: 'longText' }).type, 2);
+assert.strictEqual(convertAiRecommendControlToControlData({ type: 'longText' }).enumDefault, 2);
 
 console.log('control utils tests passed');

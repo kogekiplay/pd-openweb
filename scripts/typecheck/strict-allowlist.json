@@ -552,6 +552,7 @@
     "src/router/PageHeader/config.ts",
     "src/router/expandRoutePaths.ts",
     "src/utils/agentSession.ts",
+    "src/utils/control.ts",
     "src/utils/controlCommon.ts",
     "src/utils/controlTypes.ts",
     "src/utils/copyToClipboard.ts",
