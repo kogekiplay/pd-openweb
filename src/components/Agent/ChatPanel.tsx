@@ -200,7 +200,7 @@ const EmptyState = styled.div`
 const uid = prefix => `${prefix}-${Math.random().toString(36).slice(2, 10)}`;
 
 // 由 doc/image 待解析数量派生过渡态文案：「正在解析文档…」「正在解析 2 个文档、1 张图片…」
-function buildExtractHint({ doc, image } = {}) {
+function buildExtractHint({ doc, image }: { doc?: number; image?: number } = {}) {
   const segs = [];
 
   if (doc) segs.push(doc > 1 ? _l('%0 个文档', doc) : _l('文档'));
@@ -337,7 +337,73 @@ function getStreamFailureError(error, shouldPickSingleMingoPlanError) {
   return { errorCode: '', message: (error && error.message) || _l('Agent 请求失败') };
 }
 
-export default function ChatPanel({ runtime = {}, isSingleMingoPlan = false }) {
+/**
+ * Agent 会话协议里的载荷对象：artifact 引用、历史消息、事件总线等。
+ *
+ * 这些对象的形状由 Agent 服务端定义，本仓只是透传和局部取字段，
+ * 精确建模要先从 agent swagger 拿到契约（scripts/agentApiGen.js 已经在拉那份 swagger，
+ * 后续可以顺带生成这些类型）。在那之前用具名别名而不是裸 any ——
+ * 可 grep、可逐步收窄，收窄时只改这一处。
+ */
+type ChatPanelArg = any;
+
+/**
+ * ChatPanel 的 runtime 配置（匿名 / 续建 / 官网承接页等场景由外部注入）。
+ * 各项的语义见下面 ChatPanel 里那段逐条注释 —— 那是本接口的权威说明，不在这里重复。
+ * 全部可选：调用点按场景只传其中几项，默认值写在解构里。
+ */
+export interface ChatPanelRuntime {
+  anonymous?: boolean;
+  /** 固定使用的 agent，不让用户切换 */
+  agentName?: string;
+  initialSessionId?: string;
+  /** 点「开始搭建」时回调，参数见 ChatPanel 内 onRequestBuild({ isSingleMingoPlan }) 的调用点 */
+  onRequestBuild?: (payload: { isSingleMingoPlan?: boolean }) => void;
+  /** 接管重试按钮；返回真表示已被接管，ChatPanel 不再自己重试 */
+  onRetryIntercept?: () => boolean | void;
+  enableMention?: boolean;
+  projectId?: string;
+  requireMobileOverviewBuildConfirm?: boolean;
+  autoFocus?: boolean;
+  forceEnableVoice?: boolean;
+  autoOpenInitialOverview?: boolean;
+  autoOpenInitialBuilder?: boolean;
+  disableAppBuilder?: boolean;
+  disableArtifactFileFetch?: boolean;
+  disableArtifactMetaFetch?: boolean;
+  disableCommittedFileLoad?: boolean;
+  autoLoadInitialSession?: boolean;
+  initialPlanArtifact?: ChatPanelArg;
+  /** 覆盖历史产物文件的加载逻辑，参数形状见 PlanPage 的 loadHistoryPlanArtifactFiles */
+  loadCommittedArtifactFiles?: (params: {
+    artifactId?: string;
+    versionId?: string;
+    bus?: ChatPanelArg;
+    /** 跳过缓存强制重新拉取 */
+    force?: boolean;
+  }) => Promise<boolean>;
+  deferCommittedAppMetaUntilFilesLoaded?: boolean;
+  initialHistoryMessages?: ChatPanelArg[];
+  contentTopInset?: number;
+  disableSessionRestore?: boolean;
+  landingLayout?: boolean;
+  promptInputClassName?: string;
+  promptAttachmentButtonClassName?: string;
+  /** 图标名（ming-ui Icon 的 icon 值），不是 ReactNode */
+  promptAttachmentButtonIcon?: string;
+  /** 图标名（ming-ui Icon 的 icon 值），不是 ReactNode */
+  promptMentionButtonIcon?: string;
+  promptMentionButtonText?: string;
+  promptPlaceholder?: string;
+}
+
+export default function ChatPanel({
+  runtime = {},
+  isSingleMingoPlan = false,
+}: {
+  runtime?: ChatPanelRuntime;
+  isSingleMingoPlan?: boolean;
+}) {
   // runtime（匿名/续建模式）：
   //  - anonymous：跳过登录态 context/上传/历史，附件走匿名 upload-token（官网免登录漏斗）
   //  - agentName：钉住目标 agent（匿名版 app-plan-builder-public）并关掉自动路由
