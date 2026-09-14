@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { DatePicker, Form } from 'antd';
+import { Form } from 'antd';
 import localeEn from 'antd/es/date-picker/locale/en_US';
 import localeJaJp from 'antd/es/date-picker/locale/ja_JP';
 import localeZhCn from 'antd/es/date-picker/locale/zh_CN';
@@ -9,6 +9,7 @@ import moment from 'moment';
 import styled from 'styled-components';
 import { Dropdown, Input } from 'ming-ui';
 import marketplacePaymentApi from 'src/api/marketplacePayment';
+import { DatePicker } from 'src/ming-ui/components/mdAntPickers';
 import { ENTERPRISE_FIELD_LABEL, ENTERPRISE_TYPE_OPTIONS } from '../../constant';
 import UploadCertificate from './UploadCertificate';
 

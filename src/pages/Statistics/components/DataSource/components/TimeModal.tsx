@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Button, Checkbox, DatePicker, Input, Modal, Select } from 'antd';
+import { Button, Checkbox, Input, Modal, Select } from 'antd';
 import locale from 'antd/es/date-picker/locale/zh_CN';
 import _ from 'lodash';
 import moment from 'moment';
@@ -15,6 +15,7 @@ import {
   timeTypes,
   unitTypes,
 } from 'statistics/common/timeUtils';
+import { DatePicker } from 'src/ming-ui/components/mdAntPickers';
 import { formatNumberFromInput } from 'src/utils/control';
 
 const { RangePicker } = DatePicker;
@@ -373,7 +374,7 @@ export default class TimeModal extends Component<any, any> {
     const { dropdownVisible } = this.state;
     const { visible, onCancel } = this.props;
     return (
-      (<Modal
+      <Modal
         title={_l('时间范围')}
         style={dropdownVisible ? { top: -100 } : {}}
         width={560}
@@ -386,7 +387,7 @@ export default class TimeModal extends Component<any, any> {
         onCancel={onCancel}
       >
         {this.renderContent()}
-      </Modal>)
+      </Modal>
     );
   }
 }

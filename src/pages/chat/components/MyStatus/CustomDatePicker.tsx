@@ -1,13 +1,14 @@
 import React, { useRef, useState } from 'react';
-import { DatePicker, Select } from 'antd';
+import { Select } from 'antd';
 import en_US from 'antd/es/date-picker/locale/en_US';
 import ja_JP from 'antd/es/date-picker/locale/ja_JP';
 import zh_CN from 'antd/es/date-picker/locale/zh_CN';
 import zh_TW from 'antd/es/date-picker/locale/zh_TW';
-import moment from 'moment';
 import Trigger from '@rc-component/trigger';
+import moment from 'moment';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
+import { DatePicker } from 'src/ming-ui/components/mdAntPickers';
 import { dateOptions } from './config';
 import { formatDateShow } from './util';
 

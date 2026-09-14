@@ -34,13 +34,24 @@
  * variant/bordered 合并、semantic classNames/styles 合并、addon 的弃用告警。
  * 本仓没有通过 ConfigProvider 配 picker variant，实测渲染一致。
  */
+import React from 'react';
 import generatePicker from 'antd/es/date-picker/generatePicker';
 import momentGenerateConfig from '@rc-component/picker/generate/moment';
 
 const MomentPicker = generatePicker(momentGenerateConfig);
 
-export const DatePicker = MomentPicker;
+// generatePicker 产出的 TimePicker 上【没有】RangePicker，而 antd 的 TimePicker 有
+//（antd/es/time-picker/index.js 里它就是 RangePicker + 强制 picker="time" + mode: undefined）。
+// 调用点普遍写 `TimePicker.RangePicker`，补上这个形状它们才能原样迁过来。
+// picker / mode 放在 {...props} 【之后】，和 antd 一样强制覆盖，不让调用点改掉。
+const TimeRangePicker = React.forwardRef((props: any, ref) =>
+  React.createElement(MomentPicker.RangePicker, { ...props, picker: 'time', mode: undefined, ref }),
+);
+
+TimeRangePicker.displayName = 'TimePicker.RangePicker';
+
+export const DatePicker = MomentPicker; // 自带 .RangePicker / .TimePicker，与 antd 同形
 export const RangePicker = MomentPicker.RangePicker;
-export const TimePicker = MomentPicker.TimePicker;
+export const TimePicker = Object.assign(MomentPicker.TimePicker, { RangePicker: TimeRangePicker });
 
 export default MomentPicker;

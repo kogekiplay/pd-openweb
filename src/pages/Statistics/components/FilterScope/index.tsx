@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { DatePicker, Dropdown, Input, Menu, Select } from 'antd';
+import { Dropdown, Input, Menu, Select } from 'antd';
 import locale from 'antd/es/date-picker/locale/zh_CN';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -22,6 +22,7 @@ import {
 import * as actions from 'statistics/redux/actions';
 import FilterConfig from 'worksheet/common/WorkSheetFilter/common/FilterConfig';
 import { formatValuesOfOriginConditions } from 'worksheet/common/WorkSheetFilter/util';
+import { DatePicker } from 'src/ming-ui/components/mdAntPickers';
 import { filterData } from 'src/pages/FormSet/components/columnRules/config';
 import FilterItemTexts from 'src/pages/widgetConfig/widgetSetting/components/FilterData/FilterItemTexts';
 import type { RootState } from 'src/redux/types';

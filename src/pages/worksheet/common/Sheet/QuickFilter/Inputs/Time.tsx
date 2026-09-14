@@ -1,5 +1,4 @@
 import React from 'react';
-import { TimePicker } from 'antd';
 import en_US from 'antd/es/date-picker/locale/en_US';
 import ja_JP from 'antd/es/date-picker/locale/ja_JP';
 import zh_CN from 'antd/es/date-picker/locale/zh_CN';
@@ -9,6 +8,7 @@ import _ from 'lodash';
 import moment from 'moment';
 import { func, shape, string } from 'prop-types';
 import styled from 'styled-components';
+import { TimePicker } from 'src/ming-ui/components/mdAntPickers';
 
 const Con = styled.div`
   position: relative;

@@ -1,11 +1,12 @@
 import React, { Component, Fragment } from 'react';
-import { Checkbox, DatePicker, Select } from 'antd';
+import { Checkbox, Select } from 'antd';
 import locale from 'antd/es/date-picker/locale/zh_CN';
 import _ from 'lodash';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 import { Icon } from 'ming-ui';
 import { formatContrastTypes, formatLineChartContrastTypes } from 'statistics/common/timeUtils';
+import { DatePicker } from 'src/ming-ui/components/mdAntPickers';
 
 const { RangePicker } = DatePicker;
 

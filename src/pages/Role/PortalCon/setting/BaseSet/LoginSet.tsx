@@ -1,6 +1,5 @@
 import React from 'react';
 import { useSetState } from 'react-use';
-import { DatePicker } from 'antd';
 import localeEn from 'antd/es/date-picker/locale/en_US';
 import localeJaJp from 'antd/es/date-picker/locale/ja_JP';
 import localeZhCn from 'antd/es/date-picker/locale/zh_CN';
@@ -8,6 +7,7 @@ import localeZhTw from 'antd/es/date-picker/locale/zh_TW';
 import _ from 'lodash';
 import moment from 'moment';
 import { Icon } from 'ming-ui';
+import { DatePicker } from 'src/ming-ui/components/mdAntPickers';
 import EditAgreementOrPrivacy from 'src/pages/Role/PortalCon/components/EditAgreementOrPrivacy';
 import { SwitchStyle } from './style';
 
