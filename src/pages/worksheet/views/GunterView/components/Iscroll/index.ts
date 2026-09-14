@@ -9,8 +9,61 @@ var rAF =
     window.setTimeout(callback, 1000 / 60);
   };
 
+/**
+ * iScroll 内部工具对象 utils 的成员表。
+ *
+ * 本文件是【逐字 vendored 的 iScroll 5.2.0】（见文件头的上游版权声明）。
+ * 原代码里 utils 是先 var me = {} 再逐个挂方法，TS 会把它推成 {}，
+ * 于是每次 utils.xxx 调用都报 TS2339 —— 实测 135 条，占全仓 {} 类诊断的头名。
+ *
+ * 成员【全部写成可选】是刻意的：这样 var me: IScrollUtils = {} 不需要类型断言，
+ * 与上游代码的写法保持一致，改动量最小（只多这一处类型标注）。
+ * 本仓 strictNullChecks 是关的，可选不会带来「可能 undefined」的连锁。
+ */
+interface IScrollUtils {
+  getTime?: () => number;
+  extend?: (target: object, obj: object) => void;
+  addEvent?: (el: EventTarget, type: string, fn: EventListenerOrEventListenerObject, capture?: boolean) => void;
+  removeEvent?: (el: EventTarget, type: string, fn: EventListenerOrEventListenerObject, capture?: boolean) => void;
+  // 同 style：_prefixStyle 在不支持时返回 false，但调用点从不检查，
+  // 直接把返回值当事件名用。写 string 是如实反映调用契约。
+  prefixPointerEvent?: (pointerEvent: string) => string;
+  momentum?: (
+    current: number,
+    start: number,
+    time: number,
+    lowerMargin: number,
+    wrapperSize: number,
+    deceleration?: number,
+  ) => { destination: number; duration: number };
+  isBadAndroid?: boolean;
+  hasClass?: (e: Element, c: string) => boolean;
+  addClass?: (e: Element, c: string) => void;
+  removeClass?: (e: Element, c: string) => void;
+  offset?: (el: Element) => { left: number; top: number };
+  preventDefaultException?: (el: Element, exceptions: Record<string, RegExp>) => boolean;
+  tap?: (e: MouseEvent | TouchEvent, eventName: string) => void;
+  click?: (e: MouseEvent | TouchEvent) => void;
+  getTouchAction?: (eventPassthrough: string, addPinch: boolean) => string;
+  getRect?: (el: Element) => { top: number; left: number; width: number; height: number };
+  /** 下面这组由 me.extend(me, {...}) 一次性挂上（特性检测结果） */
+  hasTransform?: boolean;
+  hasPerspective?: boolean;
+  hasTouch?: boolean;
+  hasPointer?: boolean;
+  hasTransition?: boolean;
+  // 值写 string 而不是 string | false：_prefixStyle 在不支持时确实会返回 false，
+  // 但上游代码从不检查这一点，直接把它当样式名用（如 elementStyle[utils.style.transform]）。
+  // 写成联合类型只会在 20 多处调用点报 TS2538/TS2345，如实反映'上游没处理这个分支'才是这里该做的。
+  style?: Record<string, string>;
+  /** 指针/触摸/鼠标三套事件的类型映射 */
+  eventType?: Record<string, number>;
+  /** 缓动函数表 */
+  ease?: Record<string, { style: string; fn: (k: number) => number }>;
+}
+
 var utils = (function () {
-  var me = {};
+  var me: IScrollUtils = {};
 
   var _elementStyle = document.createElement('div').style;
   var _vendor = (function () {
@@ -661,7 +714,10 @@ IScroll.prototype = {
       distanceX = Math.abs(newX - this.startX),
       distanceY = Math.abs(newY - this.startY),
       time = 0,
-      easing = '';
+      // 这个变量先被初始化成 ''，之后可能被赋成 options.bounceEasing 或
+      // utils.ease.quadratic（一个 { style, fn } 对象）。不标类型的话 TS 从 ''
+      // 推成 string，赋 ease 对象时报 TS2322。
+      easing: string | { style: string; fn: (k: number) => number } = '';
 
     this.isInTransition = 0;
     this.initiated = 0;
