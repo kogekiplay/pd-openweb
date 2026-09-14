@@ -10,6 +10,7 @@ import { emitter, pathCompletion } from 'src/utils/common';
 import { checkCellIsEmpty, updateOptionsOfControls } from 'src/utils/control';
 import { handleRecordError } from 'src/utils/record';
 import { updateRecord } from '../common/recordInfo/crtl';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export async function downloadAttachmentById({
   fileId,
@@ -74,7 +75,7 @@ export function getFormDataForNewRecord({
     function handle() {
       try {
         controls = controls
-          .filter(c => !_.includes(FORM_HIDDEN_CONTROL_IDS, c.controlId))
+          .filter((c: FormControl) => !_.includes(FORM_HIDDEN_CONTROL_IDS, c.controlId))
           .map(control => {
             if (
               control.type === 29 &&
@@ -118,7 +119,7 @@ export function getFormDataForNewRecord({
 
             return { ...control };
           });
-        controls = controls.map(control => {
+        controls = controls.map((control: FormControl) => {
           const writeControl = _.find(writeControls, wc => control.controlId === wc.controlId) || {};
 
           if (writeControl.defsource) {

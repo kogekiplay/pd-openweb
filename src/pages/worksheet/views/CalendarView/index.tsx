@@ -48,6 +48,7 @@ import {
   setShowTip,
 } from './util';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 let time;
 let clickData = null;
@@ -905,7 +906,7 @@ class RecordCalendarBase extends Component<any, any> {
             worksheetId={worksheetId}
             rules={worksheetInfo.rules}
             updateSuccess={(ids, updated) => {
-              let attribute = controls.find(o => o.attribute === 1);
+              let attribute = controls.find((o: FormControl) => o.attribute === 1);
 
               // 更改了 开始时间/结束时间/标题字段/颜色 =>更新日历视图数据
               if (

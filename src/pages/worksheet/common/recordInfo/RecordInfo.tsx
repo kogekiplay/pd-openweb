@@ -36,6 +36,7 @@ import Header from './RecordForm/Header';
 import RecordInfoContext from './RecordInfoContext';
 import RecordInfoRight from './RecordInfoRight';
 import './RecordInfo.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const SIDE_MIN_WIDTH = 200 + 226;
 
@@ -509,7 +510,7 @@ export default class RecordInfo extends Component<any, any> {
       // 关联记录可能属于其他应用，工作表名翻译需以记录实际所在应用 data.appId 为准
       data.worksheetName = getTranslateInfo(data.appId || appId, null, worksheetId).name || data.worksheetName;
       // 设置隐藏字段的 hidden 属性
-      data.formData = data.formData.map(c => {
+      data.formData = data.formData.map((c: FormControl) => {
         const newControl = {
           ...c,
           hidden: c.hidden || (view.controls || _.get(data, 'view.controls') || []).includes(c.controlId),
@@ -1050,7 +1051,7 @@ export default class RecordInfo extends Component<any, any> {
           });
         }, 600);
         if (!err) {
-          let newFormData = recordinfo.formData.map(c => {
+          let newFormData = recordinfo.formData.map((c: FormControl) => {
             let value = resdata[c.controlId];
             return _.assign({}, c, { value, count: resdata[`rq${c.controlId}`] });
           });
@@ -1406,7 +1407,7 @@ export default class RecordInfo extends Component<any, any> {
               });
             },
             updateWorksheetControls: newControls => {
-              newControls.forEach(control => {
+              newControls.forEach((control: FormControl) => {
                 try {
                   if (control.type === 34) {
                     this.recordform.current.dataFormat.data.filter(
@@ -1552,7 +1553,7 @@ export default class RecordInfo extends Component<any, any> {
                       newValue = _.omit(record, ['allowedit', 'allowdelete']);
                     }
 
-                    const newFormData = recordinfo.formData.map(c =>
+                    const newFormData = recordinfo.formData.map((c: FormControl) =>
                       _.assign({}, c, {
                         value: !_.isUndefined(newValue[c.controlId]) ? newValue[c.controlId] : c.value,
                       }),
@@ -1746,7 +1747,7 @@ export default class RecordInfo extends Component<any, any> {
                 }}
                 updateWorksheetControls={(needUpdateControls = []) => {
                   updateWorksheetControls(
-                    controls.map(c => _.find(needUpdateControls, { controlId: c.controlId }) || c),
+                    controls.map((c: FormControl) => _.find(needUpdateControls, { controlId: c.controlId }) || c),
                   );
                 }}
                 renderAbnormal={renderAbnormal}

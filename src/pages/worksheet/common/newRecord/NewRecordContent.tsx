@@ -29,6 +29,7 @@ import { formatRecordToRelateRecord, getRecordTempValue, parseRecordTempValue } 
 import RecordInfoContext from '../recordInfo/RecordInfoContext';
 import MobileRecordRecoverConfirm from './MobileNewRecord/components/RecordRecoverConfirm';
 import './NewRecord.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   height: 100%;
@@ -852,7 +853,7 @@ function NewRecordForm(props) {
     <RecordInfoContext.Provider
       value={{
         updateWorksheetControls: newControls => {
-          newControls.forEach(control => {
+          newControls.forEach((control: FormControl) => {
             try {
               if (control.type === 34) {
                 customwidget.current.dataFormat.data.filter(

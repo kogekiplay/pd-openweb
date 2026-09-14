@@ -11,6 +11,7 @@ import {
   RENDER_RECORD_NECESSARY_ATTR,
 } from '../util';
 import { CAN_AS_BOARD_OPTION } from './config';
+import type { FormControl } from 'src/utils/controlTypes';
 
 // 处理从后端获取的看板数据
 export const dealBoardViewData = props => {
@@ -75,8 +76,8 @@ export const dealBoardViewData = props => {
             allowEdit,
             allowDelete,
             ...getRecordAttachments(parsedRow[coverCid]),
-            coverData: { ...(controls.find(it => it.controlId === coverCid) || {}), value: item[coverCid] },
-            formData: controls.map(o => {
+            coverData: { ...(controls.find((it: FormControl) => it.controlId === coverCid) || {}), value: item[coverCid] },
+            formData: controls.map((o: FormControl) => {
               return { ...o, value: parsedRow[o.controlId] };
             }),
           };

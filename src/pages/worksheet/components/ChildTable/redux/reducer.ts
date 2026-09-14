@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import _, { includes, uniq } from 'lodash';
 import { handleTreeNodeRow, treeTableViewData } from 'worksheet/common/TreeTableHelper/index.js';
 import { browserIsMobile } from 'src/utils/common';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 function dataLoading(state = true, action) {
   switch (action.type) {
@@ -112,7 +113,7 @@ function lastAction(state, action) {
 function originRows(state = [], action) {
   switch (action.type) {
     case 'LOAD_ROWS':
-      return action.rows.map(row => ({ ...row }));
+      return action.rows.map((row: RecordRow) => ({ ...row }));
     default:
       return state;
   }
@@ -166,7 +167,7 @@ function rows(state = [], action) {
     case 'INIT_ROWS':
     case 'FORCE_SET_OUT_ROWS':
     case 'CLEAR_AND_SET_ROWS':
-      newState = action.rows.map(row => ({ ...row }));
+      newState = action.rows.map((row: RecordRow) => ({ ...row }));
       break;
     case 'ADD_ROW':
       if (action.insertRowId === '__HEAD__') {

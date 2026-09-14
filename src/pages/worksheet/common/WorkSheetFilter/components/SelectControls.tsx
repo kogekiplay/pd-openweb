@@ -6,6 +6,7 @@ import { Input, Menu, MenuItem } from 'ming-ui';
 import { VerticalMiddle } from 'worksheet/components/Basics';
 import { getIconByType } from 'src/pages/widgetConfig/util';
 import '../WorkSheetFilter.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function SelectControls(props) {
   const {
@@ -21,7 +22,7 @@ export default function SelectControls(props) {
   const inputRef = useRef(null);
   const [keyword, setKeyword] = useState('');
   const controls = keyword
-    ? props.controls.filter(c => c.controlName.toLowerCase().indexOf(keyword.toLowerCase()) > -1)
+    ? props.controls.filter((c: FormControl) => c.controlName.toLowerCase().indexOf(keyword.toLowerCase()) > -1)
     : props.controls;
 
   useEffect(() => {

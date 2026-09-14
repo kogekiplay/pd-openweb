@@ -14,6 +14,7 @@ import { getAdvanceSetting } from 'src/utils/control';
 import { NavSet } from './components';
 import StructureSet from './components/StructureSet';
 import { ViewSettingWrap } from './style';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const DisplayControlOption = styled(FlexCenter)`
   .icon {
@@ -115,7 +116,7 @@ export default class CardAppearance extends Component<any, any> {
       }),
     });
     const { viewControl, childType, viewType, advancedSetting } = view;
-    const viewControlData = worksheetControls.find(o => o.controlId === viewControl) || {};
+    const viewControlData = worksheetControls.find((o: FormControl) => o.controlId === viewControl) || {};
     const {
       navshow = [26, 27, 48].includes(viewControlData.type) ||
       (viewControlData.type === 30 && [26, 27, 48].includes(viewControlData.sourceControlType))
@@ -169,7 +170,7 @@ export default class CardAppearance extends Component<any, any> {
                 hoverTheme
                 renderTitle={obj => {
                   const { icon, text } = obj || {};
-                  const groupControl = worksheetControls.find(o => o.controlId === viewControl);
+                  const groupControl = worksheetControls.find((o: FormControl) => o.controlId === viewControl);
                   const isErr = viewControl && !groupControl;
                   return (
                     <SelectValue className={cx({ Red: isErr })}>
@@ -187,7 +188,7 @@ export default class CardAppearance extends Component<any, any> {
                     navsorts: '',
                     customitems: '',
                   };
-                  const viewControlData = worksheetControls.find(o => o.controlId === value) || {};
+                  const viewControlData = worksheetControls.find((o: FormControl) => o.controlId === value) || {};
                   const type = viewControlData.type === 30 ? viewControlData.sourceControlType : viewControlData.type;
 
                   if (
@@ -220,7 +221,7 @@ export default class CardAppearance extends Component<any, any> {
               <NavSet
                 {...this.props}
                 navGroupId={viewControl}
-                viewControlData={worksheetControls.find(o => o.controlId === _.get(view, 'viewControl')) || {}}
+                viewControlData={worksheetControls.find((o: FormControl) => o.controlId === _.get(view, 'viewControl')) || {}}
               />
             )}
             {isBoardView && (

@@ -3,6 +3,7 @@ import _ from 'lodash';
 import NavShow from 'src/pages/worksheet/common/ViewConfig/components/navGroup/NavShow';
 import { NAVSHOW_TYPE } from 'src/pages/worksheet/common/ViewConfig/components/navGroup/util';
 import { NAV_SHOW_TYPE } from '../util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 // 选项、人员等字段的快速筛选显示项配置。
 export default function NavShowSetting(props) {
@@ -13,7 +14,7 @@ export default function NavShowSetting(props) {
   }
 
   const { advancedSetting = {}, controlId } = control;
-  const info = worksheetControls.find(it => it.controlId === controlId) || {};
+  const info = worksheetControls.find((it: FormControl) => it.controlId === controlId) || {};
   const { navshow, navfilters = [] } = advancedSetting;
 
   return (
@@ -69,10 +70,10 @@ export default function NavShowSetting(props) {
           'switches',
         ]),
         globalSheetControls: [
-          ...view.fastFilters.map(o => worksheetControls.find(it => it.controlId === o.controlId)),
+          ...view.fastFilters.map(o => worksheetControls.find((it: FormControl) => it.controlId === o.controlId)),
           view.navGroup && view.navGroup.length > 0
             ? {
-                ...worksheetControls.find(it => it.controlId === view.navGroup[0].controlId),
+                ...worksheetControls.find((it: FormControl) => it.controlId === view.navGroup[0].controlId),
                 isNavGroup: true,
               }
             : null,

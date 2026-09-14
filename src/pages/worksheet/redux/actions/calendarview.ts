@@ -12,6 +12,7 @@ import {
 import { getFilledRequestParams } from 'src/utils/common';
 import { getAdvanceSetting, isTimeStyle } from 'src/utils/control';
 import { formatQuickFilter } from 'src/utils/filter';
+import type { FormControl } from 'src/utils/controlTypes';
 
 let getRows;
 let getRowsIds = [];
@@ -251,7 +252,7 @@ export function getCalendarData() {
       console.log(error);
     }
 
-    let colorList = colorid ? controls.find(it => it.controlId === colorid) || [] : [];
+    let colorList = colorid ? controls.find((it: FormControl) => it.controlId === colorid) || [] : [];
     let timeControls = getTimeControls(controls);
 
     if (calendarcids.length <= 0) {

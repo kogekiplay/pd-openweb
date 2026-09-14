@@ -6,6 +6,7 @@ import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Checkbox, Icon, Menu, MenuItem } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 const SheetTabWrap = styled.div`
   padding: ${props => (props.disabled ? '' : '0 20px')};
@@ -223,7 +224,7 @@ export default class WorksheetItem extends Component<any, any> {
                                       !m.state ||
                                       !m.rows ||
                                       !m.rows.length ||
-                                      (m.rows && m.rows.some(v => v.cells && v.cells.length > 200))
+                                      (m.rows && m.rows.some((v: RecordRow) => v.cells && v.cells.length > 200))
                                     )
                                   ) {
                                     return { ...m, disabled: false };

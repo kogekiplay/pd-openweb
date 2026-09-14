@@ -16,6 +16,7 @@ import { handleRecordClick } from 'src/utils/record';
 import { getRecordColor, getRecordColorConfig } from 'src/utils/record';
 import EditableCard from '../../components/EditableCard';
 import Marker from '../amap/Maker';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const wrapStyles = `
 .iconCon {
@@ -215,10 +216,10 @@ export default function MarkerCard(props) {
   );
 
   const coverControl = view.coverCid
-    ? controls.find(l => l.controlId === view.coverCid)
-    : (controls.filter(l => l.type === 14) || [])[0];
+    ? controls.find((l: FormControl) => l.controlId === view.coverCid)
+    : (controls.filter((l: FormControl) => l.type === 14) || [])[0];
   const formData = sortControlByIds(
-    controls.map(l => {
+    controls.map((l: FormControl) => {
       return {
         ...l,
         value: marker.record[l.controlId] || undefined,
@@ -358,7 +359,7 @@ export default function MarkerCard(props) {
                         ? coverUrl.replace(/imageView2\/\d\/w\/\d+\/h\/\d+(\/q\/\d+)?/, 'imageView2/0/h/200')
                         : `${coverUrl}&imageView2/0/h/200`
                       : '',
-                    fields: formData.filter(l =>
+                    fields: formData.filter((l: FormControl) =>
                       _.includes((view.displayControls || []).concat([titleId]), l.controlId),
                     ),
                     rawRow: JSON.stringify(marker.record),

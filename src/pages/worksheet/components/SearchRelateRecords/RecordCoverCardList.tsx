@@ -3,6 +3,7 @@ import { find, get, identity } from 'lodash';
 import { arrayOf, bool, func, number, shape, string } from 'prop-types';
 import styled from 'styled-components';
 import RecordCoverCard from '../RelateRecordCards/RecordCoverCard';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   padding: 10px 0;
@@ -37,7 +38,7 @@ export default function RecordCoverCardList(props) {
         <RecordCoverCard
           style={{ margin: 0 }}
           key={i}
-          controls={showControls.map(scid => find(controls, c => c.controlId === scid)).filter(identity)}
+          controls={showControls.map((scid: FormControl) => find(controls, c => c.controlId === scid)).filter(identity)}
           parentControl={control}
           data={record}
           viewId={viewId}

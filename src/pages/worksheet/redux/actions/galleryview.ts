@@ -5,6 +5,7 @@ import { formatQuickFilter } from 'src/utils/filter';
 import { getGroupControlId } from 'src/utils/worksheet';
 import { getNavGroupCount } from './navFilter';
 import { sortDataByGroupItems } from './util';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 let getGalleryRequest = null;
 let preWorksheetIds = [];
@@ -179,11 +180,11 @@ export const updateRow = (data, groupId) => {
         list: gallery.map(o => {
           if (o.key === groupId) {
             const { rows = [] } = o;
-            const rowData = rows.find(it => safeParse(it).rowid === data.rowid);
+            const rowData = rows.find((it: RecordRow) => safeParse(it).rowid === data.rowid);
             return {
               ...o,
               rows: rowData
-                ? rows.map(it => {
+                ? rows.map((it: RecordRow) => {
                     if (safeParse(it).rowid === data.rowid) {
                       return JSON.stringify({ ..._.pick(safeParse(it), ['allowedit', 'allowdelete']), ...data });
                     }
@@ -236,7 +237,7 @@ export const deleteRow = (id, groupId) => {
         type: 'CHANGE_GALLERY_VIEW_DATA',
         list: gallery.map(o => {
           if (o.key === groupId) {
-            return { ...o, rows: o.rows.filter(a => safeParse(a)?.rowid !== id), totalNum: o.totalNum - 1 };
+            return { ...o, rows: o.rows.filter((a: RecordRow) => safeParse(a)?.rowid !== id), totalNum: o.totalNum - 1 };
           } else {
             return o;
           }

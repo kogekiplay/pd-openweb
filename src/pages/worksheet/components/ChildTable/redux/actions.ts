@@ -6,6 +6,7 @@ import { createRequestPool } from 'worksheet/api/standard';
 import { getTreeExpandSize, handleUpdateTreeNodeExpansion, treeDataUpdater } from 'worksheet/common/TreeTableHelper';
 import { postWithToken } from 'src/utils/common';
 import { filterEmptyChildTableRows } from 'src/utils/record';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const PAGE_SIZE = 200;
 
@@ -83,7 +84,7 @@ export const updateTreeTableViewData =
     const { treeMap, maxLevel } = treeDataUpdater(
       {},
       {
-        rootRows: rows.filter(r => !r.pid),
+        rootRows: rows.filter((r: RecordRow) => !r.pid),
         rows: rows,
         levelLimit: 20,
         expandSize: getTreeExpandSize(base.control),
@@ -142,7 +143,7 @@ function getChangesControlIds(oldRow, newRow, controls) {
 
   const ids = oldRow.updatedControlIds || [];
   controls
-    .map(c => c.controlId)
+    .map((c: FormControl) => c.controlId)
     .forEach(key => {
       if (key.length === 24) {
         if (oldRow[key] !== newRow[key]) {
@@ -164,7 +165,7 @@ export const clearAndSetRows = (
 
     if (isSetValueFromEvent) {
       deleted = oldRows.filter(oldRow => !find(rows, r => r.rowid === oldRow.rowid)).map(r => r.rowid);
-      newRows = newRows.map(row => ({
+      newRows = newRows.map((row: RecordRow) => ({
         ...row,
         updatedControlIds: getChangesControlIds(
           find(oldRows, r => r.rowid === row.rowid),
@@ -352,7 +353,7 @@ export const loadRows = ({
           const { treeMap, maxLevel } = treeDataUpdater(
             {},
             {
-              rootRows: rows.filter(r => typeof r.pid !== 'undefined' && !r.pid),
+              rootRows: rows.filter((r: RecordRow) => typeof r.pid !== 'undefined' && !r.pid),
               rows: rows,
               levelLimit: 5,
               expandSize,
@@ -417,7 +418,7 @@ export const loadPageRows =
 export const addRows =
   (rows, options = {}) =>
   (dispatch, getState) => {
-    dispatch({ type: 'ADD_ROWS', rows: rows.map(row => omit(row, 'needShowLoading')), ...options });
+    dispatch({ type: 'ADD_ROWS', rows: rows.map((row: RecordRow) => omit(row, 'needShowLoading')), ...options });
     dispatch(updateTreeTableViewData());
     dispatch(updatePagination({ count: _.get(getState(), 'pagination.count') + rows.length }));
     dispatch(adjustRealCount(rows.length));
@@ -515,7 +516,7 @@ class RowData {
     this.handleAsyncChange = this.handleAsyncChange.bind(this);
     this.formData = new DataFormat({
       requestPool,
-      data: controls.map(c => {
+      data: controls.map((c: FormControl) => {
         let controlValue = (row || {})[c.controlId];
 
         if (_.isUndefined(controlValue) && (isCreate || !row)) {
@@ -549,7 +550,7 @@ class RowData {
     // 收集受异步赋值影响的派生字段（他表字段30/公式31/文本组合32），需包含传递依赖：
     // 例如「关联字段 -> 数值字段 -> 公式字段」中公式并未直接引用关联字段，单跳过滤会漏掉，导致界面不实时计算
     const affectedIds = new Set([controlId, ...this.formData.controlIds]);
-    const derivedControls = controls.filter(c => includes([30, 31, 32], c.type));
+    const derivedControls = controls.filter((c: FormControl) => includes([30, 31, 32], c.type));
     let hasNewAffected = true;
 
     while (hasNewAffected) {

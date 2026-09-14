@@ -27,6 +27,7 @@ import {
   getCodeTexts,
   getDefaultText,
 } from './util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   height: 100vh;
@@ -388,7 +389,7 @@ export default function PrintQrBarCode(props) {
               config={config}
               maxLineNumber={maxLineNumber}
               controls={controls.filter(
-                c =>
+                (c: FormControl) =>
                   FILTER[2]({ ...c, type: c.type === 30 ? c.sourceControlType : c.type }) || _.includes([37], c.type),
               )}
               onUpdate={changes => {

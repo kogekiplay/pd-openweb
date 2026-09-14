@@ -11,6 +11,7 @@ import { getIconByType } from 'src/pages/widgetConfig/util';
 import { replaceControlsTranslateInfo } from 'src/utils/translate';
 import DropDownItem from './DropDownItem';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const recordObj = {
   label: _l('记录ID'),
@@ -114,7 +115,7 @@ export default class ConfigControl extends Component<any, any> {
   /**
    * 通过API获取模板
    */
-  async getWorksheetInfo(args = {}, isRelate) {
+  async getWorksheetInfo(args: Record<string, any> = {}, isRelate?: boolean) {
     const { hideControlIds } = this.props;
     const data = await sheetAjax.getWorksheetInfo({
       ...args,
@@ -125,7 +126,7 @@ export default class ConfigControl extends Component<any, any> {
     data.template.controls = replaceControlsTranslateInfo(
       args.appId,
       args.worksheetId,
-      data.template.controls.filter(item => !_.includes(ALL_SYS.concat(hideControlIds), item.controlId)),
+      data.template.controls.filter((item: FormControl) => !_.includes(ALL_SYS.concat(hideControlIds), item.controlId)),
     );
 
     // 处理关联表数据
@@ -135,7 +136,7 @@ export default class ConfigControl extends Component<any, any> {
 
       // 关联表字段
       const controls = data.template.controls
-        .filter(item => _.includes([2, 3, 4, 5, 7, 32, 33], item.type))
+        .filter((item: FormControl) => _.includes([2, 3, 4, 5, 7, 32, 33], item.type))
         .map(item => {
           return {
             text: item.controlName,
@@ -145,13 +146,13 @@ export default class ConfigControl extends Component<any, any> {
         });
 
       // 获取标题字段
-      const title = controls.find(item => item.attribute == 1);
+      const title = controls.find((item: FormControl) => item.attribute == 1);
 
       // 支持把记录ID作为映射
       controls.unshift({ ...recordObj, text: recordObj.label });
 
       // 把标题作为关联字段默认映射
-      for (const control of worksheetControls.filter(item => item.dataSource == worksheetId)) {
+      for (const control of worksheetControls.filter((item: FormControl) => item.dataSource == worksheetId)) {
         const mapping = controlMapping.find(item => item.ControlId == control.controlId);
         if (!mapping) continue;
         const { sourceConfig } = mapping;
@@ -163,7 +164,8 @@ export default class ConfigControl extends Component<any, any> {
           // 模糊匹配映射字段
           const arr = (mapping.ColumnName || '').split('-');
           const suffix = arr[arr.length - 1].toLowerCase();
-          const item = controls.find(item => item.text.toLowerCase() == suffix);
+          // 这里的 controls 是导入映射用的列描述（带 text / value），不是表单控件 —— 撤销误标
+          const item = controls.find((item: any) => item.text.toLowerCase() == suffix);
 
           if (item) {
             control.sourceConfig = item.value;
@@ -297,7 +299,7 @@ export default class ConfigControl extends Component<any, any> {
 
     let fieldsList = data.template.controls
       .filter(
-        item =>
+        (item: FormControl) =>
           _.includes([2, 3, 4, 5, 7, 33], item.type) ||
           (item.type === 26 && item.enumDefault === 0 && (item.advancedSetting || {}).usertype !== '2'),
       )
@@ -327,7 +329,7 @@ export default class ConfigControl extends Component<any, any> {
     });
 
     // 获取先前保存的导入配置
-    let configObjState = {
+    let configObjState: Record<string, any> = {
       errorSkip: configData.data.errorSkip,
       edited: configData.data.edited,
     };
@@ -352,7 +354,7 @@ export default class ConfigControl extends Component<any, any> {
           // 选项字段
           item.isAddOption = editItem.isAddOption;
 
-          const control = data.template.controls.find(control => control.controlId == item.ControlId);
+          const control = data.template.controls.find((control: FormControl) => control.controlId == item.ControlId);
           if (control && _.includes([29, 35], control.type)) control.sourceConfig = editItem.sourceConfig.controlId;
 
           // 成员、部门字段默认匹配映射字段
@@ -369,7 +371,7 @@ export default class ConfigControl extends Component<any, any> {
       configObjState.repeatConfig = {
         controlIds: repeatConfig.controlIds || [],
         controlName: data.template.controls
-          .filter(item => _.includes(repeatConfig.controlIds, item.controlId))
+          .filter((item: FormControl) => _.includes(repeatConfig.controlIds, item.controlId))
           .map(item => item.controlName)
           .join('、'),
         handleEnum: repeatConfig.handleEnum,
@@ -472,7 +474,7 @@ export default class ConfigControl extends Component<any, any> {
       const repeatIds = repeatConfig.controlIds.filter(o => o !== recordObj.value);
 
       worksheetControls
-        .filter(o => !this.notSupportFiled(o) && o.advancedSetting.required === '1')
+        .filter((o: FormControl) => !this.notSupportFiled(o) && o.advancedSetting.required === '1')
         .forEach(o => {
           if (!controlMappingFilter.find(obj => obj.ControlId === o.controlId)) {
             requiredFiledNoSetArray.push(o.controlName);
@@ -488,7 +490,7 @@ export default class ConfigControl extends Component<any, any> {
       for (const relateMapping of controlMappingFilter) {
         // 判断需要匹配的字段
         const { type, sourceConfig, matchId, ControlId } = relateMapping;
-        const { controlName } = worksheetControls.find(item => item.controlId == ControlId) || {};
+        const { controlName } = worksheetControls.find((item: FormControl) => item.controlId == ControlId) || {};
         // 获取关联表中的字段
         const relationControls = (relateSource[sourceConfig.worksheetId] || {}).controls || [];
 
@@ -509,7 +511,7 @@ export default class ConfigControl extends Component<any, any> {
       if (repeatRecord) {
         if (!repeatConfig.controlIds.length) throw _l('请选择重复记录的依据字段');
         // 依据字段是否删除
-        if (repeatIds.length !== worksheetControls.filter(o => _.includes(repeatIds, o.controlId)).length) {
+        if (repeatIds.length !== worksheetControls.filter((o: FormControl) => _.includes(repeatIds, o.controlId)).length) {
           throw !isCharge && edited
             ? _l('导入配置存在错误，依据字段异常，请联系管理员处理')
             : _l('请设置重复记录的依据字段');
@@ -595,7 +597,7 @@ export default class ConfigControl extends Component<any, any> {
       [_.includes(repeatConfig.controlIds, recordObj.value) ? recordObj.value : '']
         .concat(
           worksheetControls
-            .filter(item => _.includes(repeatConfig.controlIds, item.controlId))
+            .filter((item: FormControl) => _.includes(repeatConfig.controlIds, item.controlId))
             .map(item => item.controlName),
         )
         .filter(o => o)
@@ -1024,7 +1026,7 @@ export default class ConfigControl extends Component<any, any> {
       const { controls } = relateSource[worksheetId];
 
       let currentItem = selectItem.sourceConfig.controlId;
-      const defaultItem = controls.find(item => item.attribute) || {};
+      const defaultItem = controls.find((item: FormControl) => item.attribute) || {};
       const currentSourceConfig =
         (_.find(controlMapping, o => o.ControlId === controlItem.controlId) || {}).sourceConfig || {};
 
@@ -1208,11 +1210,11 @@ export default class ConfigControl extends Component<any, any> {
                                   const relationControls =
                                     (relateSource[control.sourceConfig.worksheetId] || {}).controls || [];
                                   const relationControl = relationControls.find(
-                                    item => item.text.toLowerCase() == dataItemName,
+                                    (item: FormControl) => item.text.toLowerCase() == dataItemName,
                                   );
 
                                   // 关联表中的标题字段
-                                  const title = relationControls.find(item => item.attribute == 1);
+                                  const title = relationControls.find((item: FormControl) => item.attribute == 1);
                                   let sourceControlId = '';
 
                                   // 模糊匹配字段

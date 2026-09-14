@@ -18,7 +18,7 @@ import {
   getDateCompareRangeValues,
   getFilterTypeLabel,
 } from './enum';
-import type { FormControl } from 'src/utils/controlTypes';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 export function getConditionType(condition) {
   return (condition.controlType === 28 || condition.dataType === 28) &&
@@ -1309,7 +1309,7 @@ export function fillConditionValue({
             )
           : dynamicControl.store
               .getState()
-              .records.map(r => r.rowid)
+              .records.map((r: RecordRow) => r.rowid)
               .filter(_.identity);
       } else {
         if (isRelateRecordTableControl(dynamicControl) && browserIsMobile() && relateControl.recordId) {

@@ -19,6 +19,7 @@ import { GROUP_OPEN_OPTIONS } from './config';
 import bg from './img/bg.png';
 import { SelectValue, Wrap } from './style';
 import { canSetGroup } from './util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const NAV_GROUP_MAPPING = {
   navfilters: 'groupfilters',
@@ -181,7 +182,7 @@ export default function (props) {
                       return;
                     }
 
-                    let advanced = getInfo(worksheetControls.find(o => o.controlId === value) || {});
+                    let advanced = getInfo(worksheetControls.find((o: FormControl) => o.controlId === value) || {});
                     updateAdvancedSetting(advanced);
                   }}
                   border
@@ -210,7 +211,7 @@ export default function (props) {
                   navGroupId={_.get(safeParse(_.get(view, 'advancedSetting.groupsetting'), 'array'), '[0].controlId')}
                   viewControlData={
                     worksheetControls.find(
-                      o =>
+                      (o: FormControl) =>
                         o.controlId ===
                         _.get(safeParse(_.get(view, 'advancedSetting.groupsetting'), 'array'), '[0].controlId'),
                     ) || {}

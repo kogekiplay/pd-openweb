@@ -6,6 +6,7 @@ import { canEditForGroupControl } from '../util';
 import AddGalleryCard from './AddGalleryCard';
 import GalleryCard from './GalleryCard';
 import ViewMore from './ViewMore';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 // 渲染一个画廊分组，包括分组头、组内卡片、新增入口和组内分页。
 const GalleryGroup = props => {
@@ -24,7 +25,7 @@ const GalleryGroup = props => {
   const { viewId, appId, worksheetId } = base;
   const { groupsetting } = getAdvanceSetting(currentView);
   const { galleryGroupLoading, gallery = [] } = galleryview;
-  const control = controls.find(o => o.controlId === _.get(safeParse(groupsetting, 'array'), '[0].controlId')) || {};
+  const control = controls.find((o: FormControl) => o.controlId === _.get(safeParse(groupsetting, 'array'), '[0].controlId')) || {};
   const allowAdd = canEditForGroupControl({
     allowAdd: worksheetInfo?.allowAdd,
     control,
@@ -60,7 +61,7 @@ const GalleryGroup = props => {
       {isOpen && (
         <React.Fragment>
           {rows.length <= 0 && <AddGalleryCard {...props} rowKey={row.key} cardWidth={cardWidth} />}
-          {rows.map(it => (
+          {rows.map((it: RecordRow) => (
             <GalleryCard
               {...props}
               key={safeParse(it)?.rowid}

@@ -13,6 +13,7 @@ import {
   getFormatCustomWriteData,
   getRealData,
 } from 'src/pages/worksheet/common/CreateCustomBtn/utils.js';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const ChooseWidgetWrap = styled.div`
   z-index: 1;
@@ -170,7 +171,7 @@ let ChooseWidget = class ChooseWidget extends React.Component<any, any> {
     const writeControlsIds = this.state.writeControls.map(it => it.controlId);
     const list = getRealData(
       item,
-      controls.filter(o => writeControlsIds.includes(o.controlId)),
+      controls.filter((o: FormControl) => writeControlsIds.includes(o.controlId)),
       controls,
       isAdd,
     );

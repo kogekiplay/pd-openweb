@@ -21,6 +21,7 @@ import Abnormal from './Abnormal';
 import FormCover from './FormCover';
 import FormHeader from './FormHeader';
 import FormSection, { getDefaultIsUnfold } from './FormSection';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export const RecordFormContext = React.createContext();
 
@@ -229,7 +230,7 @@ function RecordForm(props) {
 
     if (relationControls && relationControls.length) {
       const needsUpdate = relationControls.some(
-        c =>
+        (c: FormControl) =>
           !c.defaultState ||
           c.defaultState.required !== c.required ||
           c.defaultState.controlPermissions !== c.controlPermissions ||
@@ -237,7 +238,7 @@ function RecordForm(props) {
       );
 
       if (needsUpdate) {
-        item.relationControls = relationControls.map(c => ({
+        item.relationControls = relationControls.map((c: FormControl) => ({
           ...c,
           defaultState: {
             required: c.required,

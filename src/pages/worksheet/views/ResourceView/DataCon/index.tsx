@@ -4,6 +4,7 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import { browserIsMobile } from 'src/utils/common';
 import GroupCon from './GroupCon';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrap = styled.div`
   width: ${props => (!props.width ? '100%' : props.width + 'px')};
@@ -63,7 +64,7 @@ export default function DataCon(props) {
     const { resourceview, updateKeyWords, view, controls } = props;
     const { keywords } = resourceview;
     const { viewControl } = view;
-    const str = (controls.find(o => o.controlId === viewControl) || {}).controlName;
+    const str = (controls.find((o: FormControl) => o.controlId === viewControl) || {}).controlName;
     return (
       <div className="dataCon flexColumn h100">
         {isMobile ? (

@@ -7,6 +7,7 @@ import worksheetAjax from 'src/api/worksheet';
 import { getFilter } from 'worksheet/common/WorkSheetFilter/util';
 import { getTitleTextFromRelateControl } from 'src/utils/control';
 import Option from './StyledOption';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   position: relative;
@@ -64,7 +65,7 @@ export default function RelateRecordOptions(props) {
 
   useEffect(() => {
     load();
-  }, [JSON.stringify(formData.map(c => c.value))]);
+  }, [JSON.stringify(formData.map((c: FormControl) => c.value))]);
   useEffect(() => {
     setRecords(staticRecords || []);
   }, [JSON.stringify(staticRecords)]);

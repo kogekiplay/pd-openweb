@@ -110,6 +110,21 @@ export interface FormControl {
   uniqueInRecord?: boolean;
   /** 业务规则里标记为自定义项 */
   isCustom?: boolean;
+  /** 该控件来自主记录（子表/自定义动作里用来区分主表字段） */
+  fromMaster?: boolean;
+  /** 加密字段的标识，有值即表示该字段加密 */
+  encryId?: string;
+  /**
+   * 刷新记录弹层把关联字段展开成树时挂上的子节点。
+   * 与 child（分段控件的成员）不是一回事：那个由 getControlsByTab 归拢，这个是刷新弹层自己拼的。
+   */
+  children?: FormControl[];
+  /** 选项类控件被写入默认值时，同时落一份到 default（见 FillRecordControls） */
+  default?: ControlValue;
+  /** 表格列宽（视图里可拖拽调整后落到控件上） */
+  width?: number;
+  /** 展开态单元格额外占用的宽度 */
+  appendWidth?: number;
   disabled?: boolean;
   required?: boolean;
   sectionId?: string;

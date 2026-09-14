@@ -9,6 +9,7 @@ import {
   RELATION_SHEET_TYPE,
   RENDER_RECORD_NECESSARY_ATTR,
 } from '../util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 // 获取svg的相关位置数据
 export const getPosition = ($parent, $cur, scale = 1, isStraightLine = false) => {
@@ -80,7 +81,7 @@ export const dealHierarchyData = (
       value: item[key],
     }));
   items.push(...displayItems);
-  let formData = worksheetControls.map(o => {
+  let formData = worksheetControls.map((o: FormControl) => {
     return { ...o, value: item[o.controlId] };
   });
   return {
@@ -90,7 +91,7 @@ export const dealHierarchyData = (
     allowEdit,
     allowDelete,
     ...getRecordAttachments(item[coverCid]),
-    coverData: { ...(worksheetControls.find(it => it.controlId === coverCid) || {}), value: item[coverCid] },
+    coverData: { ...(worksheetControls.find((it: FormControl) => it.controlId === coverCid) || {}), value: item[coverCid] },
     formData,
   };
   // }

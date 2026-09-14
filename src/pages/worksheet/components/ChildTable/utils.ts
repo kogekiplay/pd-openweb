@@ -7,6 +7,7 @@ import { controlState } from 'src/utils/control';
 import { checkCellIsEmpty } from 'src/utils/control';
 import { filterEmptyChildTableRows } from 'src/utils/record';
 import { checkRulesErrorOfRow } from 'src/utils/rule';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 function getControlCompareValue(c, value) {
   if (c.type === 26) {
@@ -56,7 +57,7 @@ export function getSubListError(
         from,
         rules,
         controls: controls.filter(
-          c =>
+          (c: FormControl) =>
             _.find(showControls, id => id === c.controlId) ||
             _.find(rules, rule => JSON.stringify(rule.filters).indexOf(c.controlId) > -1),
         ),
@@ -64,11 +65,11 @@ export function getSubListError(
       });
       const rulesErrors = rulesResult.errors;
       const controldata = rulesResult.formData.filter(
-        c => _.find(showControls, id => id === c.controlId) && controlState(c).visible && controlState(c).editable,
+        (c: FormControl) => _.find(showControls, id => id === c.controlId) && controlState(c).visible && controlState(c).editable,
       );
       const isLock = checkRuleLocked(
         rules,
-        rulesResult.formData.filter(c => _.find(showControls, id => id === c.controlId) && controlState(c).visible),
+        rulesResult.formData.filter((c: FormControl) => _.find(showControls, id => id === c.controlId) && controlState(c).visible),
         row.rowid,
       );
 
@@ -117,11 +118,11 @@ export function getSubListError(
       });
     });
     const uniqueControls = controls.filter(
-      c => _.find(showControls, id => id === c.controlId) && (c.unique || c.uniqueInRecord),
+      (c: FormControl) => _.find(showControls, id => id === c.controlId) && (c.unique || c.uniqueInRecord),
     );
     uniqueControls.forEach(c => {
       const hadValueRows = rows.filter(
-        row =>
+        (row: RecordRow) =>
           !isUndefined(row[c.controlId]) &&
           !isNull(row[c.controlId]) &&
           !row[c.controlId].startsWith('deleteRowIds') &&
@@ -179,7 +180,7 @@ function mergeRequiredState(controls = [], control = {}) {
 
   if (_.isEmpty(resetControls)) return controls;
 
-  return controls.map(item => {
+  return controls.map((item: FormControl) => {
     const resetControl = _.find(resetControls, { controlId: item.controlId });
 
     return resetControl

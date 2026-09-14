@@ -7,6 +7,7 @@ import { isTimeStyle, renderText as renderCellText } from 'src/utils/control';
 import { FIELD_REG_EXP } from 'src/utils/controlCommon';
 import RegExpValidator from 'src/utils/expression';
 import { dateConvertToServerZone } from 'src/utils/project';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 export const RENDER_RECORD_NECESSARY_ATTR = [
   'controlId',
@@ -209,7 +210,7 @@ export const getSearchData = sheet => {
   } else if (Number(view.viewType) === 5) {
     data = _.flatten(
       grouping.map(item => {
-        return withoutArrangementVisible ? item.rows : item.rows.filter(item => item.diff > 0);
+        return withoutArrangementVisible ? item.rows : item.rows.filter((item: RecordRow) => item.diff > 0);
       }),
     );
   } else if (Number(view.viewType) === 8) {
@@ -228,7 +229,7 @@ export const renderTitleByViewtitle = (row, controls, view, useDateConvertToServ
   let str = '';
   defaultValue.map(o => {
     if (controlFields.includes(`$${o}$`)) {
-      const control = controls.find(it => it.controlId === o);
+      const control = controls.find((it: FormControl) => it.controlId === o);
       if (!control) return;
       str =
         str +

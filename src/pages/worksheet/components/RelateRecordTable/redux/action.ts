@@ -29,6 +29,7 @@ import { controlState, replaceByIndex } from 'src/utils/control';
 import { handleRowData } from 'src/utils/record';
 import { replaceAdvancedSettingTranslateInfo, replaceControlsTranslateInfo } from 'src/utils/translate';
 import { getVisibleControls } from '../utils';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 /**
  * 解析字符串为数字
@@ -51,13 +52,26 @@ const parseNumber = numStr => {
  */
 function getTreeRootRows(records = [], { requireDefinedPid = false } = {}) {
   const childIds = new Set();
-  records.forEach(r => {
+  records.forEach((r: RecordRow) => {
     safeParse(r.childrenids, 'array').forEach(id => id && childIds.add(id));
   });
-  return records.filter(r => !r.pid && !childIds.has(r.rowid) && (!requireDefinedPid || typeof r.pid !== 'undefined'));
+  return records.filter((r: RecordRow) => !r.pid && !childIds.has(r.rowid) && (!requireDefinedPid || typeof r.pid !== 'undefined'));
 }
 
-export function updateTreeNodeExpansion(row = {}, { expandAll, forceUpdate, getNewRows, updateRows } = {}) {
+export function updateTreeNodeExpansion(
+  row: RecordRow = {},
+  {
+    expandAll,
+    forceUpdate,
+    getNewRows,
+    updateRows,
+  }: {
+    expandAll?: boolean;
+    forceUpdate?: boolean;
+    getNewRows?: (...args: any[]) => any;
+    updateRows?: (...args: any[]) => any;
+  } = {},
+) {
   return (dispatch, getState) => {
     const { base = {}, records = [], changes = {}, treeTableViewData } = getState();
     const { control, recordId, worksheetId, instanceId, workId, from, isDraft } = base;
@@ -643,7 +657,7 @@ export function updateCell({ cell, row }, options = {}) {
           };
           dispatch({
             type: 'UPDATE_CONTROLS',
-            controls: controls.map(c =>
+            controls: controls.map((c: FormControl) =>
               c.controlId === cell.controlId ? { ...c, options: [...c.options, newOption] } : c,
             ),
           });
@@ -842,19 +856,19 @@ export function syncRelateRecordSummaryFromCache() {
 }
 
 export function getDefaultRelatedSheetValue(formData = [], recordId) {
-  const titleControl = formData.filter(c => c.attribute === 1) || {};
+  const titleControl = formData.filter((c: FormControl) => c.attribute === 1) || {};
   return {
     name: titleControl.value,
     sid: recordId,
     type: 8,
     sourcevalue: JSON.stringify({
       ...assign(
-        ...formData.map(c => ({
+        ...formData.map((c: FormControl) => ({
           [c.controlId]:
             c.type === 29 && isObject(c.value) && c.value.records
               ? JSON.stringify(
                   // 子表使用双向关联字段作为默认值 RELATERECORD_OBJECT
-                  c.value.records.map(r => ({ sid: r.rowid, sourcevalue: JSON.stringify(r) })),
+                  c.value.records.map((r: RecordRow) => ({ sid: r.rowid, sourcevalue: JSON.stringify(r) })),
                 )
               : c.value,
         })),
@@ -930,7 +944,7 @@ export function handleSaveSheetLayout({ updateWorksheetControls, columns, column
     }
 
     if (!isEmpty(sheetHiddenColumnIds)) {
-      newControl.showControls = newControl.showControls.filter(id => !includes(sheetHiddenColumnIds, id));
+      newControl.showControls = newControl.showControls.filter((id: FormControl) => !includes(sheetHiddenColumnIds, id));
     }
 
     // 筛选条件保存时values处理一下;
@@ -1018,7 +1032,7 @@ export function handleAddRelation(records) {
           recordId,
           controlId: control.controlId,
           isAdd: true,
-          recordIds: records.map(c => c.rowid),
+          recordIds: records.map((c: RecordRow) => c.rowid),
           instanceId,
           workId,
           updateType: from === RECORD_INFO_FROM.DRAFT ? from : undefined,
@@ -1142,7 +1156,7 @@ export function batchUpdateRecords({ selectedRowIds = [], records = [], activeCo
         }, {});
         dispatch(
           updateRowsWithChanges(
-            selectedRows.map(r => r.rowid),
+            selectedRows.map((r: RecordRow) => r.rowid),
             changes,
           ),
         );

@@ -1,5 +1,6 @@
 import _, { difference, find, get, intersection, isUndefined, pickBy, sortBy } from 'lodash';
 import { parseAdvancedSetting } from 'src/utils/control';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 function getSortedValue(list) {
   return _.map(list, function (num) {
@@ -252,7 +253,7 @@ export const handleUpdateTreeNodeExpansion =
         loading: true,
       });
       const childRows = await getNewRows();
-      const newRows = rows.filter(r => !find(childRows, { rowid: r.rowid })).concat(childRows);
+      const newRows = rows.filter((r: RecordRow) => !find(childRows, { rowid: r.rowid })).concat(childRows);
       dispatch({
         type: 'WORKSHEET_SHEETVIEW_APPEND_ROWS',
         rows: childRows,
@@ -274,7 +275,7 @@ export const handleUpdateTreeNodeExpansion =
 
       const currentTreeNode = treeMap[treeMapKey] || {};
       const treeDataUpdaterResult = isAddsSubTree
-        ? treeDataUpdater({}, { rootRows: newRows.filter(r => !r.pid), rows: newRows })
+        ? treeDataUpdater({}, { rootRows: newRows.filter((r: RecordRow) => !r.pid), rows: newRows })
         : treeDataUpdater(
             { treeMap: {} },
             {

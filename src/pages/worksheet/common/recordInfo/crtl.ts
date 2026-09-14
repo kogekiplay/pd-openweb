@@ -380,7 +380,7 @@ export function handleSubmitDraft(
   }, []);
 
   const receiveControls = formData
-    .filter(item => !_.includes([30, 31, 32, 51], item.type) && _.includes(receiveControlsIds, item.controlId))
+    .filter((item: FormControl) => !_.includes([30, 31, 32, 51], item.type) && _.includes(receiveControlsIds, item.controlId))
     .map(c => formatControlToServer(c, { isNewRecord: true, isDraft: true }));
 
   const args = {

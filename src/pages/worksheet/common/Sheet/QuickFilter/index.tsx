@@ -5,6 +5,7 @@ import { arrayOf, func, number, shape, string } from 'prop-types';
 import { fireWhenViewLoaded, refreshSheet, resetQuickFilter, updateQuickFilter } from 'worksheet/redux/actions';
 import type { RootState } from 'src/redux/types';
 import QuickFilter from './QuickFilter';
+import type { FormControl } from 'src/utils/controlTypes';
 
 function Comp(props) {
   return <QuickFilter {...props} />;
@@ -24,7 +25,7 @@ Comp.propTypes = {
 export default connect(
   (state: RootState) => ({
     // worksheet
-    controls: state.sheet.controls.map(c => ({ ...c })),
+    controls: state.sheet.controls.map((c: FormControl) => ({ ...c })),
     navGroupFilters: state.sheet.navGroupFilters,
     base: state.sheet.base,
   }),

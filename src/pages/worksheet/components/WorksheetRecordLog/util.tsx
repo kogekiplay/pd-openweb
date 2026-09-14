@@ -15,6 +15,7 @@ import {
   WF_STATUS,
   WFSTATUS_OPTIONS,
 } from './enum.js';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const reg = new RegExp('<[^<>]+>', 'g');
 
@@ -384,7 +385,7 @@ export const renderTitleText = (data, extendParam) => {
 
         if (SUBLIST_FILE_EDIT_TYPE.includes(editType)) {
           const controlId = _.get(data, 'child[0].operatContent.logData[0].id');
-          control = controls.find(l => l.controlId === controlId);
+          control = controls.find((l: FormControl) => l.controlId === controlId);
         }
 
         content = (

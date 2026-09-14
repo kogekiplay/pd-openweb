@@ -12,6 +12,7 @@ import SavedFilters from './components/SavedFilters';
 import { CONTROL_FILTER_WHITELIST } from './enum';
 import { formatForSave } from './model';
 import { filterUnavailableConditions, getDefaultCondition, redefineComplexControl } from './util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   width: 480px;
@@ -155,7 +156,7 @@ function Filters(props, ref) {
       showWorkflowControl
         ? controls
         : controls.filter(
-            c =>
+            (c: FormControl) =>
               !_.includes(
                 WORKFLOW_SYSTEM_CONTROL.map(c => c.controlId),
                 c.controlId,

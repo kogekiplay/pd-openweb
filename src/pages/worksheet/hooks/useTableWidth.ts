@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { sum } from 'lodash';
+import type { FormControl } from 'src/utils/controlTypes';
 
 function getDefaultWidth(control) {
   if ((control.type === 2 || control.type === 1) && control.attribute === 1) {
@@ -15,7 +16,7 @@ export default function useTableWidth(props) {
     controls =>
       sum(
         controls.map(
-          control =>
+          (control: FormControl) =>
             (sheetColumnWidths[control.controlId] ||
               control.width ||
               ((control.type === 2 || control.type === 1) && control.attribute === 1 && 350) ||
@@ -25,7 +26,7 @@ export default function useTableWidth(props) {
     [sheetColumnWidths],
   );
   const summedWidth = useMemo(
-    () => sumControlWidth(visibleControls.map(c => ({ ...c, width: c.width || getDefaultWidth(c) }))),
+    () => sumControlWidth(visibleControls.map((c: FormControl) => ({ ...c, width: c.width || getDefaultWidth(c) }))),
     [visibleControls, sheetColumnWidths],
   );
   const averageWidth = useMemo(
@@ -34,7 +35,7 @@ export default function useTableWidth(props) {
       Math.floor(
         (width - sumControlWidth(visibleControls)) /
           visibleControls.filter(
-            c => !(sheetColumnWidths[c.controlId] || c.width || ((c.type === 2 || c.type === 1) && c.attribute === 1)),
+            (c: FormControl) => !(sheetColumnWidths[c.controlId] || c.width || ((c.type === 2 || c.type === 1) && c.attribute === 1)),
           ).length,
       ),
     [width, summedWidth],

@@ -23,6 +23,7 @@ import { isLightColor } from 'src/utils/control';
 import { formatQuickFilter } from 'src/utils/filter';
 import { dateConvertToServerZone, dateConvertToUserZone } from 'src/utils/project';
 import { replaceControlsTranslateInfo } from 'src/utils/translate.js';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 export const initData = () => {
   return dispatch => {
@@ -150,7 +151,7 @@ export const fetchRowsByGroupId = (kanbanKey, kanbanIndex) => {
         let rowsData = [];
         resourceData.map(o => {
           if (o.key === kanbanKey) {
-            rowsData = o.rows.map(it => {
+            rowsData = o.rows.map((it: RecordRow) => {
               return _.omit(it, [
                 'color',
                 'width',
@@ -225,7 +226,7 @@ const formatRows = (item, view, controls, gridTimes, mustParse = true, currentTi
       ...formatRecordTime(mustParse ? JSON.parse(row) : row, view, controls), // startTime, endTime
       groupId: item.key,
     };
-    let colorData = controls.find(it => it.controlId === _.get(view, 'advancedSetting.colorid')) || {};
+    let colorData = controls.find((it: FormControl) => it.controlId === _.get(view, 'advancedSetting.colorid')) || {};
     data = fillRecordTimeBlockColor(data, colorData);
     const hoverColor = getHoverColor(data.color);
     const fontColor = isLightColor(data.color) ? '#151515' : '#fff';
@@ -311,8 +312,8 @@ export const updateRecordTime = (row, start, end, key, newKey) => {
     const { base, controls, resourceview, views } = getState().sheet;
     const view = base.viewId ? _.find(views, { viewId: base.viewId }) : views[0];
     const { resourceData } = resourceview;
-    const startControl = controls.find(o => o.controlId === _.get(view, 'advancedSetting.begindate')) || {};
-    const endControl = controls.find(o => o.controlId === _.get(view, 'advancedSetting.enddate')) || {};
+    const startControl = controls.find((o: FormControl) => o.controlId === _.get(view, 'advancedSetting.begindate')) || {};
+    const endControl = controls.find((o: FormControl) => o.controlId === _.get(view, 'advancedSetting.enddate')) || {};
     const newOldControl = [];
 
     if (!_.isNull(start)) {
@@ -335,7 +336,7 @@ export const updateRecordTime = (row, start, end, key, newKey) => {
       });
     }
 
-    const viewControlData = controls.find(o => o.controlId === view.viewControl) || {};
+    const viewControlData = controls.find((o: FormControl) => o.controlId === view.viewControl) || {};
 
     if (!!newKey && (viewControlData.fieldPermission || '111')[1] === '1') {
       const newData = resourceData.find(o => o.key === newKey);
@@ -375,7 +376,7 @@ export const updateRecordTime = (row, start, end, key, newKey) => {
         if (!newKey) {
           resourceData.map(o => {
             if (o.key === key) {
-              rowsData = o.rows.map(it => {
+              rowsData = o.rows.map((it: RecordRow) => {
                 if (it.rowid === res.data.rowid) {
                   return _.omit({ ...it, ...res.data }, [
                     'color',
@@ -423,7 +424,7 @@ export const updateRecordTime = (row, start, end, key, newKey) => {
             } else {
               if (key === o.key) {
                 rowsOldData = o.rows
-                  .filter(it => it.rowid !== row.rowid)
+                  .filter((it: RecordRow) => it.rowid !== row.rowid)
                   .map(it => {
                     return _.omit(it, [
                       'color',

@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { getAdvanceSetting, renderText } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 
 // 特殊字段map关系
 const extraFieldGenerators = {
@@ -134,7 +135,7 @@ export const groupByOptionKey = (viewData, view, control, options) => {
   viewData.forEach(({ key: groupKey, data }) => {
     data.forEach((item, index) => {
       let valueStr = '';
-      const fd = item.formData.find(f => f.controlId === controlId);
+      const fd = item.formData.find((f: FormControl) => f.controlId === controlId);
       if (fd) valueStr = fd.value ?? '';
 
       // 等级字段处理

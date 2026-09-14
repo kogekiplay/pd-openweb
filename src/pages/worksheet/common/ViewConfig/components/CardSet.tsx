@@ -5,6 +5,7 @@ import Abstract from './Abstract';
 import CoverSetting from './CoverSettingCon';
 import DisplayControl from './DisplayControl';
 import TitleControl from './TitleControl';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function CardSet(props) {
   const { appId, view, updateCurrentView, worksheetControls, columns } = props;
@@ -15,7 +16,7 @@ export default function CardSet(props) {
   const getWorksheetControls = () => {
     if (['gunter'].includes(viewTypeText)) {
       const ids = [_.get(view, 'advancedSetting.begindate'), _.get(view, 'advancedSetting.enddate')].filter(o => !!o);
-      return worksheetControls.filter(o => !ids.includes(o.controlId));
+      return worksheetControls.filter((o: FormControl) => !ids.includes(o.controlId));
     }
 
     if (['calendar'].includes(viewTypeText)) {
@@ -25,7 +26,7 @@ export default function CardSet(props) {
         ids.push(item.begin, item.end);
       });
       ids = ids.filter(o => !!o);
-      return worksheetControls.filter(o => !ids.includes(o.controlId));
+      return worksheetControls.filter((o: FormControl) => !ids.includes(o.controlId));
     }
 
     return worksheetControls;

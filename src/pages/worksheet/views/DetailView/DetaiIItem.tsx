@@ -10,6 +10,7 @@ import { getTitleControlForCard } from 'src/pages/worksheet/views/util.js';
 import { getRecordColor, getRecordColorConfig } from 'src/utils/record';
 import EditableCard from '../components/EditableCard';
 import { getRecordAttachments, RENDER_RECORD_NECESSARY_ATTR } from '../util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function DetailItem(props) {
   const {
@@ -30,11 +31,11 @@ export default function DetailItem(props) {
   const currentView = views.find(o => o.viewId === viewId) || {};
   const coverCid = currentView.coverCid || _.get(worksheetInfo, ['advancedSetting', 'coverid']);
 
-  let formData = controls.map(o => {
+  let formData = controls.map((o: FormControl) => {
     return { ...o, value: itemData[o.controlId] };
   });
   const { coverImage, allAttachments } = getRecordAttachments(itemData[coverCid]);
-  let coverData = { ...(controls.find(it => it.controlId === coverCid) || {}), value: itemData[coverCid] };
+  let coverData = { ...(controls.find((it: FormControl) => it.controlId === coverCid) || {}), value: itemData[coverCid] };
 
   if (coverData.type === 45) {
     //嵌入字段 dataSource需要转换

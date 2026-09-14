@@ -16,6 +16,7 @@ import { controlTypeList, defaultData, PARAM_TYPES } from './config';
 import Edit from './Edit';
 import SettingList from './SettingList';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrap = styled.div`
   .tit {
@@ -411,7 +412,7 @@ function PluginSettings(params) {
       >
         {showEdit && (
           <Edit
-            controls={worksheetControls.filter(o => controlTypeList.includes(o.type))}
+            controls={worksheetControls.filter((o: FormControl) => controlTypeList.includes(o.type as number))}
             info={editInfo}
             onClickAwayExceptions={[
               '.ant-select',
@@ -476,7 +477,7 @@ function PluginSettings(params) {
                   !!o.fieldId &&
                   !!o.type &&
                   //每个的控件类型符合
-                  PARAM_TYPES.map(it => it.type).includes(o.type)
+                  PARAM_TYPES.map(it => it.type).includes(o.type as number)
                 ),
             );
 

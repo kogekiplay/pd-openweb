@@ -7,6 +7,7 @@ import { SYS } from 'src/pages/widgetConfig/config/widget.js';
 import { getIconByType } from 'src/pages/widgetConfig/util';
 import { AS_ABSTRACT_CONTROL, filterAndFormatterControls } from 'src/pages/worksheet/views/util';
 import NumInput from './NumInput';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const MaxLineWrap = styled.div`
   justify-content: space-between;
@@ -22,7 +23,7 @@ export default class Abstract extends React.Component<any, any> {
     const { abstract, maxlinenum = 3 } = advancedSetting;
     let abstractControls = filterAndFormatterControls({
       controls: worksheetControls.filter(
-        item =>
+        (item: FormControl) =>
           !SYS.includes(item.controlId) && // 排除系统字段
           !((_.includes([48], item.sourceControlType) || item.strDefault === '10') && item.type === 30), //排除他表字段 组织角色控件
       ),
@@ -31,10 +32,10 @@ export default class Abstract extends React.Component<any, any> {
     abstractControls = abstractControls.map(it => {
       return {
         ...it,
-        iconName: getIconByType((worksheetControls.find(item => item.controlId === it.value) || {}).type, false),
+        iconName: getIconByType((worksheetControls.find((item: FormControl) => item.controlId === it.value) || {}).type, false),
       };
     });
-    const isExistAbstract = !!worksheetControls.filter(item => item.controlId === abstract).length;
+    const isExistAbstract = !!worksheetControls.filter((item: FormControl) => item.controlId === abstract).length;
 
     return (
       <React.Fragment>

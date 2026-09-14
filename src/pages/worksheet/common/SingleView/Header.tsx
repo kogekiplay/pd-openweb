@@ -18,6 +18,7 @@ import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import { browserIsMobile } from 'src/utils/common';
 import { renderText as renderCellText } from 'src/utils/control';
 import { getGroupControlId } from 'src/utils/worksheet';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   display: flex;
@@ -109,7 +110,7 @@ export default function Header(props) {
     if (!searchData) return;
 
     const controls = _.get(worksheetInfo, 'template.controls') || [];
-    const titleField = controls.find(m => m.controlId === searchData.queryKey);
+    const titleField = controls.find((m: FormControl) => m.controlId === searchData.queryKey);
     const searchRecordData = searchData.data.map(l => {
       return {
         ...l,

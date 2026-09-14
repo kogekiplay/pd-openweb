@@ -31,6 +31,7 @@ import PinMarker from './components/PinMarker';
 import ToolBar from './components/ToolBar';
 import GMap from './GMap/GMap';
 import { calculatePoleCenter, calculateZoomLevel, parseRecord } from './utils';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const DEFAULT_MAP_ZOOM = 5;
 
@@ -226,14 +227,14 @@ function MapView(props) {
     if (!viewId || !viewControl) return;
 
     const { showtitle, viewtitle } = mapViewConfigRef.current;
-    const mapControl = controls.find(l => l.controlId === viewControl);
+    const mapControl = controls.find((l: FormControl) => l.controlId === viewControl);
     setMapControl(mapControl);
     setMapViewConfig({
       positionId: viewControl,
       loadNum: 1000,
       titleId: viewAdvancedSetting.viewtitle
         ? viewAdvancedSetting.viewtitle
-        : (controls.find(l => l.attribute === 1) || {}).controlId,
+        : (controls.find((l: FormControl) => l.attribute === 1) || {}).controlId,
       abstract: viewAdvancedSetting.abstract,
       coverId: coverCid,
       tagcolorid: viewAdvancedSetting.tagcolorid,

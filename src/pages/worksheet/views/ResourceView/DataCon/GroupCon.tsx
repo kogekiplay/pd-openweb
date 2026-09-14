@@ -19,6 +19,7 @@ import RegExpValidator from 'src/utils/expression';
 import { addBehaviorLog } from 'src/utils/project';
 import { lineBottomHeight, minControlWidth, types } from '../config';
 import { getResourceRowHoverHandlers } from '../util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrap = styled.div`
   .flexShrink0 {
@@ -168,7 +169,7 @@ export default function GroupCon(props) {
   const tbodyContainer = useRef(null);
   const { resourceview, view, controls, viewId, appId, worksheetInfo, base = {} } = props;
   const { resourceDataByKey, keywords } = resourceview;
-  const viewControlInfo = controls.find(o => o.controlId === _.get(view, 'viewControl')) || {};
+  const viewControlInfo = controls.find((o: FormControl) => o.controlId === _.get(view, 'viewControl')) || {};
   const { dataSource } = viewControlInfo;
   const isM = browserIsMobile();
 
@@ -318,7 +319,7 @@ export default function GroupCon(props) {
     }
 
     e.stopPropagation();
-    const viewControlInfo = controls.find(o => o.controlId === _.get(view, 'viewControl')) || {};
+    const viewControlInfo = controls.find((o: FormControl) => o.controlId === _.get(view, 'viewControl')) || {};
     const { viewId, dataSource } = viewControlInfo;
     sheetAjax
       .getWorksheetInfo({
@@ -419,7 +420,7 @@ export default function GroupCon(props) {
               }}
             >
               <span className="overflow_ellipsis WordBreak flex w100">
-                {(controls.find(o => o.controlId === _.get(view, 'viewControl')) || {}).controlName}
+                {(controls.find((o: FormControl) => o.controlId === _.get(view, 'viewControl')) || {}).controlName}
               </span>
               {displayControlsInfo.length > 0 && renderDrag(0)}
             </TbWrap>
@@ -462,7 +463,7 @@ export default function GroupCon(props) {
           )}
           {resourceDataByKey.map((o, i) => {
             const height = o.height + lineBottomHeight + 1; //底部有lineBottomHeight间距,
-            const viewControlData = controls.find(o => o.controlId === _.get(view, 'viewControl')) || {};
+            const viewControlData = controls.find((o: FormControl) => o.controlId === _.get(view, 'viewControl')) || {};
 
             const renderAccount = name => {
               const data = safeParse(name);
@@ -613,14 +614,14 @@ export default function GroupCon(props) {
                 })}
 
                 {worksheetInfo.allowAdd &&
-                  ((controls.find(o => o.controlId === view.viewControl) || {}).fieldPermission || '111')[1] === '1' &&
+                  ((controls.find((o: FormControl) => o.controlId === view.viewControl) || {}).fieldPermission || '111')[1] === '1' &&
                   isOpenPermit(permitList.createButtonSwitch, worksheetInfo.switches, viewId) && //功能开关，是否允许创建
                   !(_.get(window, 'shareState.isPublicView') || _.get(window, 'shareState.isPublicPage') || isM) && (
                     <div
                       className="add"
                       onClick={() => {
                         let value = o.key;
-                        const info = controls.find(o => o.controlId === view.viewControl) || {};
+                        const info = controls.find((o: FormControl) => o.controlId === view.viewControl) || {};
 
                         if (isSameType([26], info)) {
                           const { name = '' } = o;

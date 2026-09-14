@@ -38,7 +38,7 @@ import {
 import { updateNavGroup } from './navFilter.js';
 import { sortDataByGroupItems } from './util.js';
 import type { AppDispatch, GetState, RootState } from 'src/redux/types';
-import type { RecordRow } from 'src/utils/controlTypes';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const DEFAULT_PAGESIZE = 50;
 const DEFAULT_GROUP_PAGESIZE = 20;
@@ -73,7 +73,7 @@ function flatRowsFromGroups(groups, groupControl, view, controls) {
     };
     result.push(groupRow);
     result.push(
-      ...group.rows.map(rowStr => ({
+      ...group.rows.map((rowStr: RecordRow) => ({
         ...safeParse(rowStr),
         groupKey: group.key,
         group: {
@@ -328,7 +328,7 @@ export const fetchRows = ({
         if (isGroupedView) {
           dispatch({
             type: 'WORKSHEET_SHEETVIEW_UPDATE_COUNT',
-            count: sum(rows.filter(r => r.rowid === 'groupTitle').map(r => r.count)),
+            count: sum(rows.filter((r: RecordRow) => r.rowid === 'groupTitle').map(r => r.count)),
           });
         }
 
@@ -434,7 +434,7 @@ export const loadGroupMore = groupKey => {
 
         if (!isEmpty(newRowsOfGroup)) {
           newRows = [...rows.slice(0, lastRowIndex + 1), ...newRowsOfGroup, ...rows.slice(lastRowIndex + 1)];
-          const rowsOfGroup = newRows.filter(r => r.groupKey === groupKey);
+          const rowsOfGroup = newRows.filter((r: RecordRow) => r.groupKey === groupKey);
           const group = find(newRows, r => r.rowid === 'groupTitle' && r.key === groupKey);
 
           if (group && rowsOfGroup.length < group.count) {
@@ -648,7 +648,7 @@ export function insertToGroupedRow(newRow) {
       { ...newRow, groupKey: newRow.group.key, group: newRow.group },
       ...rows.slice(lastRowIndexOfGroup + 1),
     ];
-    newRows = newRows.map(row => {
+    newRows = newRows.map((row: RecordRow) => {
       if (row.rowid === 'groupTitle' && row.key === newRow?.group?.key) {
         row = {
           ...row,
@@ -674,7 +674,7 @@ export function updateRows(rowIds, value) {
     if (value.group) {
       let rows = get(getState().sheet.sheetview.sheetViewData, 'rows', []);
       const prevRow = find(rows, r => r.rowid === value.rowid);
-      rows = rows.filter(row => row.rowid !== value.rowid);
+      rows = rows.filter((row: RecordRow) => row.rowid !== value.rowid);
       const groupOldRow = find(rows, r => r.rowid === 'groupTitle' && r.key === prevRow.groupKey);
       const lastRowIndexOfGroup = _.findLastIndex(rows, r => r.groupKey === value.group.key);
 
@@ -688,7 +688,7 @@ export function updateRows(rowIds, value) {
         { ...pick(oldRow, ['allowedit', 'allowdelete']), ...value, groupKey: value.group.key, group: value.group },
         ...rows.slice(lastRowIndexOfGroup + 1),
       ];
-      newRows = newRows.map(row => {
+      newRows = newRows.map((row: RecordRow) => {
         if (row.rowid === 'groupTitle') {
           let count = row.count;
 
@@ -817,10 +817,10 @@ export function hideRows(rowIds) {
     if (rowIds.length) {
       dispatch(clearSelect());
       if (getGroupControlId(view)) {
-        const newRows = rows.map(groupRow => {
+        const newRows = rows.map((groupRow: RecordRow) => {
           if (groupRow.rowid === 'groupTitle') {
             const deletedRowsLengthOfGroup = rowIds.filter(rowId => {
-              const row = rows.find(r => r.rowid === rowId);
+              const row = rows.find((r: RecordRow) => r.rowid === rowId);
               return row && row.groupKey === groupRow.key;
             }).length;
             return { ...groupRow, count: groupRow.count - deletedRowsLengthOfGroup };
@@ -840,7 +840,7 @@ export function hideRows(rowIds) {
       });
       if (checkIsTreeTableView(getState())) {
         rowIds.forEach(rowId => {
-          rows.forEach(row => {
+          rows.forEach((row: RecordRow) => {
             if (row.pid === rowId || includes(row.childrenids, rowId)) {
               const changes = {};
 
@@ -883,7 +883,7 @@ export function changeToSelectCurrentPageFromSelectAll() {
     const { sheetview } = getState().sheet;
     const { rows = [] } = sheetview.sheetViewData;
     dispatch(clearSelect());
-    dispatch(selectRows({ rows: rows.filter(r => r.rowid !== 'groupTitle' && r.rowid !== 'loadGroupMore') }));
+    dispatch(selectRows({ rows: rows.filter((r: RecordRow) => r.rowid !== 'groupTitle' && r.rowid !== 'loadGroupMore') }));
   };
 }
 
@@ -944,12 +944,12 @@ export function saveSheetLayout({ isApplyAll, closePopup = () => {} }) {
     if (sheetHiddenColumns.length) {
       updates.editAttrs = updates.editAttrs.concat('ShowControls');
       if (view.advancedSetting.customdisplay === '1' && view.showControls.length) {
-        updates.showControls = view.showControls.filter(cid => !_.find(sheetHiddenColumns, hcid => hcid === cid));
+        updates.showControls = view.showControls.filter((cid: FormControl) => !_.find(sheetHiddenColumns, hcid => hcid === cid));
       } else {
         updates.advancedSetting.customdisplay = '1';
         updates.showControls = controls
           .filter(
-            c =>
+            (c: FormControl) =>
               /^\w{24}$/.test(c.controlId) || _.includes(safeParse(view.advancedSetting.sysids, 'array'), c.controlId),
           )
           .sort((a, b) => (a.row * 10 + a.col > b.row * 10 + b.col ? 1 : -1))
@@ -1386,7 +1386,7 @@ export function changeWorksheetSheetViewSummaryType({ controlId, value, groupArg
     const { rows = [], rowsSummary, groupRowsSummary } = sheetview.sheetViewData;
     const { viewId } = base;
     let newTypes = {};
-    const groupRows = rows.filter(row => row.rowid === 'groupTitle');
+    const groupRows = rows.filter((row: RecordRow) => row.rowid === 'groupTitle');
 
     if (!groupArgs.groupKey) {
       newTypes = Object.assign({}, rowsSummary.types, { [controlId]: value });
@@ -1583,7 +1583,7 @@ export function refreshTreeOfTreeTableView(cb = () => {}) {
     const { sheetview = {} } = getState().sheet;
     const oldTreeMap = get(sheetview, 'treeTableViewData.treeMap');
     const { rows = [] } = sheetview.sheetViewData || {};
-    const { treeMap, maxLevel } = treeDataUpdater({}, { rootRows: rows.filter(r => !r.pid), rows });
+    const { treeMap, maxLevel } = treeDataUpdater({}, { rootRows: rows.filter((r: RecordRow) => !r.pid), rows });
     dispatch({
       type: 'UPDATE_TREE_TABLE_VIEW_DATA',
       value: {
@@ -1665,7 +1665,7 @@ export function updateFolded(key, value) {
       if (value) {
         const { sheetview = {} } = getState().sheet;
         const { rows = [] } = sheetview.sheetViewData || {};
-        const groupRows = rows.filter(row => row.rowid === 'groupTitle');
+        const groupRows = rows.filter((row: RecordRow) => row.rowid === 'groupTitle');
         dispatch({
           type: 'WORKSHEET_SHEETVIEW_UPDATE_FOLDED',
           value: groupRows.reduce((a, b) => ({ ...a, [b.key]: value }), {}),

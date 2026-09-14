@@ -14,6 +14,7 @@ import { controlState } from 'src/utils/control';
 import Header from './Header';
 import TrashBatchOperate from './TrashBatchOperate';
 import ColumnHead from './TrashColumnHead';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   width: 100%;
@@ -47,7 +48,7 @@ const trashReducer = (state, action) => {
       return update(state, { $merge: _.omit(action, ['type']) });
     case 'DELETE_RECORD':
       return update(state, {
-        records: { $apply: records => records.filter(r => !_.includes(action.ids, r.rowid)) },
+        records: { $apply: records => records.filter((r: RecordRow) => !_.includes(action.ids, r.rowid)) },
         count: { $set: state.count - action.ids.length },
       });
     case 'UPDATE_LOADING':
@@ -177,7 +178,7 @@ export default function WorkSheetTrash(props) {
   const actions = createActions(dispatch);
   const controlsForShow = controls
     .filter(
-      column =>
+      (column: FormControl) =>
         !_.includes(SHEET_VIEW_HIDDEN_TYPES, column.type) &&
         !_.includes(['utime', 'uaid'], column.controlId) &&
         controlState(column).visible,
@@ -280,7 +281,7 @@ export default function WorkSheetTrash(props) {
                   });
                 };
 
-                if (controls.find(c => c.type === 29)) {
+                if (controls.find((c: FormControl) => c.type === 29)) {
                   Dialog.confirm({
                     title: _l('恢复记录'),
                     description: (
@@ -459,7 +460,7 @@ export default function WorkSheetTrash(props) {
 
                       if (isAll) {
                         newSelected.forEach(() => {
-                          newSelectRows = records.filter(r => _.find(newSelected, id => r.rowid !== id));
+                          newSelectRows = records.filter((r: RecordRow) => _.find(newSelected, id => r.rowid !== id));
                           newSelected = newSelectRows.map(r => r.rowid);
                         });
                         setIsAll(false);
@@ -484,7 +485,7 @@ export default function WorkSheetTrash(props) {
                         setSelectRows([]);
                       } else {
                         const newSelectedRows = records
-                          .filter(r => !_.find(selected, selectedRowId => selectedRowId === r.rowid))
+                          .filter((r: RecordRow) => !_.find(selected, selectedRowId => selectedRowId === r.rowid))
                           .filter(_.identity);
                         setSelectRows(newSelectedRows);
                         setSelected(newSelectedRows.map(r => r.rowid));

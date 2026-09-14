@@ -5,10 +5,11 @@ import { Dropdown } from 'ming-ui';
 import { DATE_FORMAT_BY_DATERANGETYPE } from 'src/pages/worksheet/common/ViewConfig/components/fastFilter/config.js';
 import { FILTER_CONDITION_TYPE } from 'src/pages/worksheet/common/WorkSheetFilter/enum';
 import { getControlFormatType, getDateRangeTypeListByShowtype, getDefaultDateRangeType } from '../util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function DropCom(props) {
   const { data, worksheetControls, control, advancedSetting, updateViewSet } = props;
-  let conData = worksheetControls.find(item => item.controlId === control.controlId) || {};
+  let conData = worksheetControls.find((item: FormControl) => item.controlId === control.controlId) || {};
   let dataInfo = data.types.map(o => {
     return { ...o, disabled: !!conData.encryId && o.value !== FILTER_CONDITION_TYPE.EQ };
   });

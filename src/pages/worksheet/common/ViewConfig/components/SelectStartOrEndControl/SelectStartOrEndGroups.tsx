@@ -10,6 +10,7 @@ import { setSysWorkflowTimeControlFormat } from 'src/pages/worksheet/views/Calen
 import { getStringBytes } from 'src/utils/common';
 import AddControlDiaLog from './AddControlDiaLog';
 import SelectStartOrEnd from './SelectStartOrEnd';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const WrapFragment = styled.div`
   .addMarkInput,
@@ -168,8 +169,8 @@ export default function SelectStartOrEndGroups(props) {
                 item =>
                   !(calendarIds.includes(item.controlId) && item.controlId !== o.begin && item.controlId !== o.end),
               )}
-              beginIsDel={o.begin && !controls.find(a => a.controlId === o.begin)}
-              endIsDel={o.end && !controls.find(a => a.controlId === o.end)}
+              beginIsDel={o.begin && !controls.find((a: FormControl) => a.controlId === o.begin)}
+              endIsDel={o.end && !controls.find((a: FormControl) => a.controlId === o.end)}
               handleChange={data => {
                 // begindate ,enddate
                 if (!data.begindate && !data.enddate) {

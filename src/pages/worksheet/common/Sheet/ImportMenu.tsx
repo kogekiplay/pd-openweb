@@ -3,6 +3,7 @@ import { Menu, MenuItem } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { importAttachmentsDialog } from '../WorksheetBody/ImportAttachments';
 import { importDataFromExcel } from '../WorksheetBody/ImportDataFromExcel';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function ImportMenu(props) {
   const {
@@ -31,10 +32,10 @@ export default function ImportMenu(props) {
           {_l('导入 Excel')}
         </MenuItem>
       )}
-      {controls.some(control => control.type === 14) ? (
+      {controls.some((control: FormControl) => control.type === 14) ? (
         <MenuItem
           data-event="importAttachments"
-          disabled={!controls.some(control => control.type === 14)}
+          disabled={!controls.some((control: FormControl) => control.type === 14)}
           onClick={() => {
             onMenuClick();
             importAttachmentsDialog({ controls, projectId, appId, worksheetId, viewId, allowAdd });

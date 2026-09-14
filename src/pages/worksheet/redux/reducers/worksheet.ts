@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export function loading(state = true, action) {
   switch (action.type) {
@@ -52,7 +53,7 @@ export function worksheetInfo(state = {}, action) {
           ...state,
           template: {
             ...state.template,
-            controls: state.template.controls.map(c => {
+            controls: state.template.controls.map((c: FormControl) => {
               const matchedControl = _.find(action.controls, { controlId: c.controlId });
               return matchedControl ? { ...matchedControl, value: c.value } : c;
             }),

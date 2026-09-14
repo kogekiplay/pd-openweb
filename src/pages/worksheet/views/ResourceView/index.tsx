@@ -17,6 +17,7 @@ import 'src/pages/worksheet/views/ResourceView/index.less';
 import type { RootState } from 'src/redux/types';
 import { isRelateRecordTableControl } from 'src/utils/control';
 import Resource from './Resource.jsx';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrap = styled.div`
   width: 100%;
@@ -71,7 +72,7 @@ function ResourceView(props) {
       (
         setSysWorkflowTimeControlFormat(
           controls.filter(
-            item =>
+            (item: FormControl) =>
               (_.includes([27, 48, 9, 10, 11, 26, 29, 28], item.type) ||
                 (item.type === 30 &&
                   _.includes([27, 48, 9, 10, 11, 26, 29, 28], item.sourceControlType) &&
@@ -101,7 +102,7 @@ function ResourceView(props) {
                   data={setSysWorkflowTimeControlFormat(
                     controls
                       .filter(
-                        item =>
+                        (item: FormControl) =>
                           (_.includes([27, 48, 9, 10, 11, 26, 29, 28], item.type) ||
                             (item.type === 30 &&
                               _.includes([27, 48, 9, 10, 11, 26, 29, 28], item.sourceControlType) &&
@@ -128,7 +129,7 @@ function ResourceView(props) {
                       return;
                     }
 
-                    const viewControlInfo = controls.find(o => o.controlId === viewControl) || {};
+                    const viewControlInfo = controls.find((o: FormControl) => o.controlId === viewControl) || {};
                     let data = {
                       viewControl,
                       advancedSetting: {

@@ -10,6 +10,7 @@ import CustomFields from 'src/components/Form';
 import { updateRulesData } from 'src/components/Form/core/formUtils/updateRulesData';
 import { getAdvanceSetting } from 'src/utils/control';
 import { isRelateRecordTableControl } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const MobileTableContent = styled.div`
   .mobileTableHeader {
@@ -131,9 +132,9 @@ export default function MobileTable(props) {
 
   const showRows = isEdit ? rows : rows.slice(0, maxShowLength);
   const showControls =
-    _.isEmpty(h5abstractids) || _.isEmpty(controls.filter(v => _.includes(h5abstractids, v.controlId)))
+    _.isEmpty(h5abstractids) || _.isEmpty(controls.filter((v: FormControl) => _.includes(h5abstractids, v.controlId)))
       ? controls.slice(0, 3)
-      : controls.filter(v => _.includes(h5abstractids, v.controlId));
+      : controls.filter((v: FormControl) => _.includes(h5abstractids, v.controlId));
 
   const isShowAll = maxShowLength === rows.length;
   let deleteConformAction = null;
@@ -343,7 +344,7 @@ export default function MobileTable(props) {
               const tableFormData = updateRulesData({
                 rules,
                 recordId: row.rowid,
-                data: controls.map(v => ({ ...v, value: row[v.controlId] })),
+                data: controls.map((v: FormControl) => ({ ...v, value: row[v.controlId] })),
               });
 
               const currentCell = _.find(tableFormData, v => v.controlId === c.controlId);
@@ -386,7 +387,7 @@ export default function MobileTable(props) {
                     from={4}
                     mode="mobileSub"
                     masterData={masterData}
-                    rowFormData={() => controls.map(c => Object.assign({}, c, { value: row[c.controlId] }))}
+                    rowFormData={() => controls.map((c: FormControl) => Object.assign({}, c, { value: row[c.controlId] }))}
                     projectId={projectId}
                     worksheetId={worksheetId}
                     canedit={c.type === 36 && controlPermission.editable}

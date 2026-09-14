@@ -31,7 +31,9 @@ const CONTROL_RECEIVERS = new Set([
   'originControls',
   'relationControls',
   'templateControls',
-  'showControls',
+  // 注意：showControls 【不能】收 —— 它是 string[]（控件 id 列表）不是控件数组。
+  // 误收过一次：worksheet 的日志子表 showControls.map((key) => ...) 被标成 FormControl，
+  // 下游 record.oldValue[key] 立刻报 "FormControl cannot be used as an index type"。
   'formData',
   'newControls',
   'visibleControls',

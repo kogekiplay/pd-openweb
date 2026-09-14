@@ -13,6 +13,7 @@ import { addBehaviorLog } from 'src/utils/project';
 import { handleRecordClick } from 'src/utils/record';
 import { lineHeight, timeWidth, timeWidthHalf, types } from '../config';
 import { getTops } from '../util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const CLICK_MOVE_THRESHOLD = 3;
 
@@ -134,7 +135,7 @@ export default function RecordBlock(props) {
       let oldTop = allList.find(it => it.key === keyForGroup).top + top;
       let newTop = oldTop + changValueY + 3; //3px偏差
       const { controls = [] } = props;
-      const viewControlData = controls.find(o => o.controlId === view.viewControl) || {};
+      const viewControlData = controls.find((o: FormControl) => o.controlId === view.viewControl) || {};
       newKey =
         (viewControlData.fieldPermission || '111')[1] === '1'
           ? (allList.find(o => (o.top < newTop || o.top === newTop) && newTop < o.bottom) || {}).key
@@ -263,8 +264,8 @@ export default function RecordBlock(props) {
   };
 
   const { row, controls, minHeight } = props;
-  const startControl = controls.find(o => o.controlId === _.get(view, 'advancedSetting.begindate'));
-  const endControl = controls.find(o => o.controlId === _.get(view, 'advancedSetting.enddate'));
+  const startControl = controls.find((o: FormControl) => o.controlId === _.get(view, 'advancedSetting.begindate'));
+  const endControl = controls.find((o: FormControl) => o.controlId === _.get(view, 'advancedSetting.enddate'));
   const startDisable =
     !controlState(startControl, 3).editable ||
     _.get(window, 'shareState.isPublicView') ||

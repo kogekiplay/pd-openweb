@@ -27,6 +27,7 @@ import { formatQuickFilter } from 'src/utils/filter';
 import { dateConvertToServerZone, dateConvertToUserZone } from 'src/utils/project';
 import { handleRecordError } from 'src/utils/record';
 import type { AppDispatch, GetState } from 'src/redux/types';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const updatePeriodList = ({ result, parent }) => {
   return (dispatch: AppDispatch, getState: GetState) => {
@@ -235,7 +236,7 @@ export const updateGroupingData = grouping => {
     const { viewControl } = viewConfig;
     let lastOpenCount = 0;
     const newGrouping = grouping.map(item => {
-      const rowLength = withoutArrangementVisible ? item.rows.length : item.rows.filter(item => item.diff > 0).length;
+      const rowLength = withoutArrangementVisible ? item.rows.length : item.rows.filter((item: RecordRow) => item.diff > 0).length;
       const count = 1 + (item.subVisible ? rowLength : 0);
       let openCount = lastOpenCount ? count + lastOpenCount : count;
       let subVisible = item.subVisible;
@@ -562,7 +563,7 @@ export const addRecord = (cell, row) => {
 
     dispatch(updateGroupingRow({ [cell.controlId]: cell.value }, row.rowid));
 
-    controls.forEach(c => {
+    controls.forEach((c: FormControl) => {
       if (
         c.advancedSetting &&
         c.advancedSetting.defsource &&
@@ -570,7 +571,7 @@ export const addRecord = (cell, row) => {
         !_.find(receiveControls, { controlId: c.controlId })
       ) {
         let value = getDynamicValue(
-          controls.map(i => ({ ...i, value: row[i.controlId] })),
+          controls.map((i: FormControl) => ({ ...i, value: row[i.controlId] })),
           { ...c, value: row[c.controlId] },
         );
 
@@ -579,7 +580,7 @@ export const addRecord = (cell, row) => {
             const records = safeParse(value || '[]');
 
             if (records.length) {
-              const tempValue = records.map(staticRow => {
+              const tempValue = records.map((staticRow: RecordRow) => {
                 const rows = [];
                 Object.keys(staticRow).forEach(key => {
                   rows.push({ controlId: key === 'rowid' ? 'tempRowId' : key, value: staticRow[key] });
@@ -626,7 +627,7 @@ export const addRecord = (cell, row) => {
         if (errors[data.resultCode]) {
           alert(errors[data.resultCode], 3);
           const newGrouping = grouping.map(item => {
-            const newRows = item.rows.filter(item => item.rowid !== row.rowid);
+            const newRows = item.rows.filter((item: RecordRow) => item.rowid !== row.rowid);
             return {
               ...item,
               rows: newRows,
@@ -651,7 +652,7 @@ export const removeRecord = id => {
       .then(data => {
         if (data.isSuccess) {
           let newGrouping = gunterView.grouping.map(item => {
-            const newRows = item.rows.filter(row => row.rowid !== id);
+            const newRows = item.rows.filter((row: RecordRow) => row.rowid !== id);
             const times = getRowsTime(newRows);
             return {
               ...item,
@@ -670,7 +671,7 @@ export const hideRecord = id => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { gunterView } = getState().sheet;
     let newGrouping = gunterView.grouping.map(item => {
-      const newRows = item.rows.filter(row => row.rowid !== id);
+      const newRows = item.rows.filter((row: RecordRow) => row.rowid !== id);
       const times = getRowsTime(newRows);
       return {
         ...item,
@@ -866,7 +867,7 @@ export const updateGroupingRow = (data, id) => {
         return item;
       }
 
-      const newRows = item.rows.map(row => {
+      const newRows = item.rows.map((row: RecordRow) => {
         if (id === row.rowid) {
           return {
             ...row,
@@ -896,7 +897,7 @@ export const moveGroupingRow = (data, newKey, oldKey) => {
       let newRows = item.rows;
 
       if (item.key === oldKey) {
-        newRows = item.rows.filter(item => item.rowid !== data.rowid);
+        newRows = item.rows.filter((item: RecordRow) => item.rowid !== data.rowid);
       }
 
       if (item.key === newKey) {

@@ -4,6 +4,7 @@ import { updateRulesData } from 'src/components/Form/core/formUtils/updateRulesD
 import { canSetWidgetStyle, getTitleStyle } from 'src/pages/widgetConfig/util/setting';
 import { emitter } from 'src/utils/common';
 import { controlState, replaceByIndex } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const KEY_MAP = {
   DELETE: 8,
@@ -367,12 +368,12 @@ export function getControlFieldPermissionsAfterRules(row, controls, rules) {
   const formData = updateRulesData({
     rules,
     recordId: row.rowid,
-    data: controls.map(c => ({ ...c, value: row[c.controlId] })),
+    data: controls.map((c: FormControl) => ({ ...c, value: row[c.controlId] })),
   });
   const isLock = !/^(temp|default)/.test(row.rowid) && checkRuleLocked(rules, formData, row.rowid);
   const fieldPermissions = {};
   const ruleControlAdvancedSettings = {};
-  formData.forEach(item => {
+  formData.forEach((item: FormControl) => {
     const permKey = row.rowid + '-' + item.controlId;
     const base = _.find(controls, c => c.controlId === item.controlId) || {};
     const baseAdv = base.advancedSetting || {};

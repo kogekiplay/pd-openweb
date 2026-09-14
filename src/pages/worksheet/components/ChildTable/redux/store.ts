@@ -12,6 +12,7 @@ import { getSubListUniqueError } from 'src/utils/record';
 import { handleUpdateDefsourceOfControl } from 'src/utils/record';
 import { clearRows, loadRows, resetRows, updateTreeTableViewData } from './actions';
 import reducer from './reducer';
+import type { FormControl } from 'src/utils/controlTypes';
 
 function loadWorksheetInfo(worksheetId, { controlId, relationWorksheetId, recordId, instanceId, workId } = {}) {
   const args = { worksheetId, getTemplate: true, getRules: true, relationWorksheetId };
@@ -141,7 +142,7 @@ export default function generateStore(
       }
 
       const { uniqueControlIds } = parseAdvancedSetting(control.advancedSetting);
-      controls = controls.map(c => ({
+      controls = controls.map((c: FormControl) => ({
         ...c,
         uniqueInRecord: includes(uniqueControlIds, c.controlId) && canAsUniqueWidget(c),
       }));

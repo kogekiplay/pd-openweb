@@ -1,4 +1,5 @@
 import _, { get } from 'lodash';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 export { treeTableViewData } from 'worksheet/common/TreeTableHelper/index.js';
 
@@ -126,7 +127,7 @@ export function sheetViewData(state = initialSheetViewData, action) {
       return {
         ...state,
         loading: false,
-        rows: state.rows.map(row =>
+        rows: state.rows.map((row: RecordRow) =>
           _.includes(action.rowIds, row.rowid) ? { ...row, ...action.rowUpdatedValue } : row,
         ),
       };
@@ -158,7 +159,7 @@ export function sheetViewData(state = initialSheetViewData, action) {
       return {
         ...state,
         loading: false,
-        rows: state.rows.filter(row => !_.includes(action.rowIds, row.rowid)),
+        rows: state.rows.filter((row: RecordRow) => !_.includes(action.rowIds, row.rowid)),
         count: state.count - action.rowIds.length,
       };
     // 更新批量编辑权限

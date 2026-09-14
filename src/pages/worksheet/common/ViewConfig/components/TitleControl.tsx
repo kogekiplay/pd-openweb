@@ -8,6 +8,7 @@ import { ALL_SYS } from 'src/pages/widgetConfig/config/widget';
 import { canSetAsTitle, getIconByType } from 'src/pages/widgetConfig/util';
 import ConcatenateSetting from 'src/pages/widgetConfig/widgetSetting/settings/concatenate.jsx';
 import { getWrappedViewTitleControlId } from 'src/pages/worksheet/views/util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrap = styled.div`
   .fieldsWrap .fieldList li {
@@ -37,7 +38,7 @@ function TitleDrop(props) {
     if (!viewtitle && cancelAble) return {};
     // 兼容 $单个字段ID$：高亮按归一后的真实字段 ID 匹配；保存仍走 handleChange 写回原值。
     const controlId = getWrappedViewTitleControlId(viewtitle);
-    return worksheetControls.find(o => (controlId ? o.controlId === controlId : o.attribute === 1)) || {};
+    return worksheetControls.find((o: FormControl) => (controlId ? o.controlId === controlId : o.attribute === 1)) || {};
   };
 
   const [{ titleControl }, setState] = useSetState({
@@ -77,7 +78,7 @@ export default function (props) {
   const { isCard, advancedSetting, className, worksheetControls, handleChange, title } = props;
   const { viewtitle } = advancedSetting;
   const controls = worksheetControls
-    .filter(o => canSetAsTitle(o) && !_.includes(ALL_SYS, o.controlId))
+    .filter((o: FormControl) => canSetAsTitle(o) && !_.includes(ALL_SYS, o.controlId))
     .map(it => {
       return {
         ...it,

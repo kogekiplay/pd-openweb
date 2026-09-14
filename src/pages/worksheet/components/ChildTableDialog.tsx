@@ -15,6 +15,7 @@ import { formatControlToServer } from 'src/components/Form/core/utils';
 import { formatSearchConfigs } from 'src/pages/widgetConfig/util';
 import { getSubListErrorOfStore } from 'src/pages/worksheet/components/ChildTable/utils';
 import { emitter } from 'src/utils/common';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   width: 100%;
@@ -406,7 +407,7 @@ export default function ChildTableDialog(props) {
                   } else if (lastAction.type === 'UPDATE_ROWS') {
                     updated = _.uniqBy(updated.concat(lastAction.rowIds));
                   } else if (lastAction.type === 'ADD_ROWS' || lastAction.type === 'CLEAR_AND_SET_ROWS') {
-                    updated = _.uniqBy(updated.concat(lastAction.rows.map(r => r.rowid)));
+                    updated = _.uniqBy(updated.concat(lastAction.rows.map((r: RecordRow) => r.rowid)));
                   }
 
                   return { ...oldValue, updated, deleted, rows };

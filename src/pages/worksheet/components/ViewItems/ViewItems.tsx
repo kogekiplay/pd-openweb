@@ -20,6 +20,7 @@ import HideItem from './HideItem';
 import Item from './Item';
 import 'rc-trigger/assets/index.css';
 import './ViewItems.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const EmptyData = styled.div`
   font-size: 12px;
@@ -146,7 +147,7 @@ let ViewItems = class ViewItems extends Component<any, any> {
     );
 
     const defaultDisplayControls = worksheetControls
-      .filter(item => item.controlId !== titleControl && !_.includes([22, 43, 10010, 45, 51], item.type)) //卡片上不显示的类型
+      .filter((item: FormControl) => item.controlId !== titleControl && !_.includes([22, 43, 10010, 45, 51], item.type)) //卡片上不显示的类型
       .map(item => item.controlId);
 
     const coverId = _.get(

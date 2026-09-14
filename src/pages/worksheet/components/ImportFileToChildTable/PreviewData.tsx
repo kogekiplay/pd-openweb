@@ -7,6 +7,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { getWithToken } from 'src/utils/common';
 import convert from './convertData';
 import PreviewTable from './PreviewTable';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 const Header = styled.div`
   height: 52px;
@@ -197,7 +198,7 @@ export default function PreviewData(props) {
                   );
 
                   if (_.get(data, 'rows')) {
-                    setCellsData(data.rows.map(r => r.cells));
+                    setCellsData(data.rows.map((r: RecordRow) => r.cells));
                   } else {
                     setCellsData([]);
                   }

@@ -5,6 +5,7 @@ import { arrayOf, bool, number, shape, string } from 'prop-types';
 import { toFixed } from 'src/utils/control';
 import { controlIsNumber, formatNumberThousand } from 'src/utils/control';
 import { getSummaryNameByType, getSummaryResult } from 'src/utils/record';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 export default function SummaryContent({
   isChildTableSummaryCell,
@@ -36,11 +37,11 @@ export default function SummaryContent({
     summaryName = getSummaryNameByType(summaryType);
     if (rows.length && ((selectedIds.length && !allWorksheetIsSelected) || isChildTableSummaryCell)) {
       if (isChildTableSummaryCell && isEmpty(selectedIds)) {
-        selectedIds = rows.map(row => row.rowid);
+        selectedIds = rows.map((row: RecordRow) => row.rowid);
       }
 
       summaryDataValue = getSummaryResult(
-        rows.filter(row => _.includes(selectedIds, row.rowid)),
+        rows.filter((row: RecordRow) => _.includes(selectedIds, row.rowid)),
         control,
         summaryType,
       );

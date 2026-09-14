@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import RecordInfoContext from 'worksheet/common/recordInfo/RecordInfoContext';
 import CustomFields from 'src/components/Form';
 import { isRelateRecordTableControl } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default class RowDetail extends React.Component<any, any> {
   static propTypes = {
@@ -145,7 +146,7 @@ export default class RowDetail extends React.Component<any, any> {
     const formdata = _.isEmpty(data)
       ? controls
       : controls
-          .filter(c => !_.includes(['ownerid', 'caid', 'ctime', 'utime'], c.controlId))
+          .filter((c: FormControl) => !_.includes(['ownerid', 'caid', 'ctime', 'utime'], c.controlId))
           .map(c => ({
             ...c,
             value:

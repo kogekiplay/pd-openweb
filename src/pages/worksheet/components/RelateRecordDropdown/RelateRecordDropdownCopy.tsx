@@ -20,6 +20,7 @@ import { checkIsTextControl } from 'src/utils/control';
 import AutoWidthInput from './AutoWidthInput';
 import RelateRecordList from './RelateRecordList';
 import './style.less';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const OnlyScanTip = styled.div`
   width: 310px;
@@ -195,7 +196,7 @@ export default class RelateRecordDropdown extends React.Component<any, any> {
     return {
       ...control,
       relationControls: control.relationControls.map(
-        c => find(newOptionsControlsForRelationControls, { controlId: c.controlId }) || c,
+        (c: FormControl) => find(newOptionsControlsForRelationControls, { controlId: c.controlId }) || c,
       ),
     };
   }
@@ -335,7 +336,7 @@ export default class RelateRecordDropdown extends React.Component<any, any> {
   handleAddRecords = records => {
     const { selected } = this.state;
     const newRecords = _.uniqBy(
-      records.filter(record => !_.find(selected, r => r.rowid === record.rowid)),
+      records.filter((record: RecordRow) => !_.find(selected, r => r.rowid === record.rowid)),
       'rowid',
     );
 
@@ -797,7 +798,7 @@ export default class RelateRecordDropdown extends React.Component<any, any> {
             onChange={records => {
               this.setState({ keywords: '' });
               if (multiple) {
-                this.handleAddRecords(records.map(record => _.assign({}, record, { isNewAdd: true })));
+                this.handleAddRecords(records.map((record: RecordRow) => _.assign({}, record, { isNewAdd: true })));
               } else {
                 onChange(records);
                 onVisibleChange(false);
@@ -916,7 +917,7 @@ export default class RelateRecordDropdown extends React.Component<any, any> {
                 onOk: records => {
                   this.setState({ keywords: '' });
                   if (multiple) {
-                    this.handleAddRecords(records.map(record => _.assign({}, record, { isNewAdd: true })));
+                    this.handleAddRecords(records.map((record: RecordRow) => _.assign({}, record, { isNewAdd: true })));
                   } else {
                     onChange(records);
                     onVisibleChange(false);

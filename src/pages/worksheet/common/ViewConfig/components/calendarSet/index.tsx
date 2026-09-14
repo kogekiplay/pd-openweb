@@ -15,6 +15,7 @@ import { AnimationWrap } from 'src/pages/worksheet/common/ViewConfig/style.jsx';
 import { getCalendartypeData, getCalendarViewType, getTimeControls } from 'src/pages/worksheet/views/CalendarView/util';
 import { getAdvanceSetting, isTimeStyle } from 'src/utils/control';
 import SelectStartOrEndGroups from '../SelectStartOrEndControl/SelectStartOrEndGroups';
+import type { FormControl } from 'src/utils/controlTypes';
 
 let obj = [_l('月'), _l('周'), _l('日')];
 let weekObj = [_l('周一'), _l('周二'), _l('周三'), _l('周四'), _l('周五'), _l('周六'), _l('周日')];
@@ -133,12 +134,12 @@ export default function CalendarSet(props) {
       ? [{ begin: begindate, end: enddate }]
       : [
           {
-            begin: (worksheetControls.filter(o => isTimeStyle(o))[0] || {}).controlId,
+            begin: (worksheetControls.filter((o: FormControl) => isTimeStyle(o))[0] || {}).controlId,
           },
         ];
   }
 
-  const startData = calendarcids[0] ? worksheetControls.filter(item => item.controlId === calendarcids[0].begin) : [];
+  const startData = calendarcids[0] ? worksheetControls.filter((item: FormControl) => item.controlId === calendarcids[0].begin) : [];
   const isDelete = calendarcids[0] && calendarcids[0].begin && (!startData || startData.length <= 0);
   return (
     (<React.Fragment>

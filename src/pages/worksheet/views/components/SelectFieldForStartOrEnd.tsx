@@ -8,6 +8,7 @@ import { updateViewAdvancedSetting } from 'src/pages/worksheet/common/ViewConfig
 import { isIllegal, isIllegalFormat } from 'src/pages/worksheet/views/CalendarView/util';
 import { getAdvanceSetting, isTimeStyle } from 'src/utils/control';
 import { getTimeControls } from '../CalendarView/util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const BtnForSure = styled.div`
   padding: 0 32px;
@@ -71,25 +72,25 @@ export default function SelectFieldForStartOrEnd(props) {
 
     if (!isCalendarcids) {
       start = begindate
-        ? props.controls.find(it => it.controlId === begindate) || {}
+        ? props.controls.find((it: FormControl) => it.controlId === begindate) || {}
         : begindateOrFirst
           ? timeControls[0] || {}
           : {};
-      end = enddate ? props.controls.find(it => it.controlId === enddate) || {} : {};
+      end = enddate ? props.controls.find((it: FormControl) => it.controlId === enddate) || {} : {};
     } else {
       start =
         ids.length > 0 && ids[0].begin
-          ? props.controls.find(it => it.controlId === ids[0].begin) || {}
+          ? props.controls.find((it: FormControl) => it.controlId === ids[0].begin) || {}
           : begindateOrFirst
             ? timeControls[0] || {}
             : {};
-      end = ids.length > 0 && ids[0].end ? props.controls.find(it => it.controlId === ids[0].end) || {} : {};
+      end = ids.length > 0 && ids[0].end ? props.controls.find((it: FormControl) => it.controlId === ids[0].end) || {} : {};
     }
 
     let listData = ids.map(o => {
       return {
-        startData: props.controls.find(it => it.controlId === o.begin) || {},
-        endData: props.controls.find(it => it.controlId === o.end) || {},
+        startData: props.controls.find((it: FormControl) => it.controlId === o.begin) || {},
+        endData: props.controls.find((it: FormControl) => it.controlId === o.end) || {},
       };
     });
     let isErr =
@@ -152,8 +153,8 @@ export default function SelectFieldForStartOrEnd(props) {
           controls={props.controls}
           begindate={begindate}
           enddate={enddate}
-          beginIsDel={begindate && !props.controls.find(a => a.controlId === begindate)}
-          endIsDel={enddate && !props.controls.find(a => a.controlId === enddate)}
+          beginIsDel={begindate && !props.controls.find((a: FormControl) => a.controlId === begindate)}
+          endIsDel={enddate && !props.controls.find((a: FormControl) => a.controlId === enddate)}
           handleChange={obj => {
             setView({
               ...view,

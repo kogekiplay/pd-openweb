@@ -10,6 +10,7 @@ import { getAdvanceSetting } from 'src/utils/control';
 import Abstract from '../Abstract';
 import CoverSetting from '../CoverSettingCon';
 import DisplayControl from '../DisplayControl';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrap = styled.div`
   .rowColumns {
@@ -144,7 +145,7 @@ export default class MobileSet extends React.Component<any, any> {
 
   renderCheckRadio = () => {
     const { worksheetControls = [], view, appId } = this.props;
-    let switchList = worksheetControls.filter(it => it.type === 36);
+    let switchList = worksheetControls.filter((it: FormControl) => it.type === 36);
     const { checkradioid } = this.state;
     const switchData =
       switchList.length > 0

@@ -26,6 +26,7 @@ import {
   renderTxt,
   transformCountsToData,
 } from './util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 let getNavGroupRequest = null;
 let preWorksheetIds = [];
@@ -400,7 +401,7 @@ function GroupFilter(props) {
     else {
       let data = result.data || [];
       const controls = _.get(result, ['template', 'controls']) || [];
-      const control = controls.find(item => item.attribute === 1);
+      const control = controls.find((item: FormControl) => item.attribute === 1);
 
       if (navlayer && Number(navlayer) > 1 && !rowId) {
         //配置了默认展开层级 接口一次性的返回对于数据 处理成相关结果

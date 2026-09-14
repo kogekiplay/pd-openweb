@@ -13,6 +13,7 @@ import { isTimeStyle } from 'src/utils/control';
 import { dateAppZoneToServerZone, dateConvertToServerZone } from 'src/utils/project';
 import { getRecordColor, getRecordColorConfig } from 'src/utils/record';
 import { DEFAULT_BORDER_COLOR_DARK, DEFAULT_BORDER_COLOR_LIGHT, DEFAULT_COLOR, DEFAULT_TEXT_COLOR } from './constants';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export const getHoverColor = color => {
   return OPTION_COLORS_LIST_HOVER[OPTION_COLORS_LIST.indexOf(color.toUpperCase())];
@@ -138,7 +139,7 @@ const getIsOverOneDay = (beginValue, endValue) => {
 };
 
 const getTitleControls = worksheetControls => {
-  return worksheetControls.find(item => item.attribute === 1);
+  return worksheetControls.find((item: FormControl) => item.attribute === 1);
 };
 
 const getStringColor = (calendarData, data, currentView) => {
@@ -283,7 +284,7 @@ export const getCalendarViewType = (strType, data) => {
 
 export const getTimeControls = controls => {
   return controls.filter(
-    item =>
+    (item: FormControl) =>
       item.controlId !== 'utime' &&
       (_.includes([15, 16], item.type) ||
         (item.type === 30 && //支持他表字段 仅存储(9,10,11)
@@ -319,7 +320,7 @@ export const isIllegalFormat = (calendarInfo = []) => {
 
 export const setSysWorkflowTimeControlFormat = (controls = [], sheetSwitchPermit = [], key = 'controlId') => {
   const isPermitted = isOpenPermit(permitList.sysControlSwitch, sheetSwitchPermit);
-  return controls.filter(o => isPermitted || !SYS_CONTROLS_WORKFLOW.includes(o[key]));
+  return controls.filter((o: FormControl) => isPermitted || !SYS_CONTROLS_WORKFLOW.includes(o[key]));
 };
 
 export const getCurrentView = props => {

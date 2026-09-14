@@ -36,6 +36,7 @@ import {
   renderTitleText,
 } from './util';
 import './WorksheetRocordLog.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const reg = new RegExp('<[^<>]+>', 'g');
 const PAGE_SIZE = 20;
@@ -736,7 +737,7 @@ function WorksheetRecordLog(props, ref) {
                     const editType = _.get(childData, 'operatContent.logData[0].editType');
                     const editTypeText = editType ? EDIT_TYPE_TEXT[editType] : undefined;
                     const control = SUBLIST_FILE_EDIT_TYPE.includes(editType)
-                      ? controls.find(l => l.controlId === _.get(childData, 'operatContent.logData[0].id'))
+                      ? controls.find((l: FormControl) => l.controlId === _.get(childData, 'operatContent.logData[0].id'))
                       : undefined;
 
                     return (

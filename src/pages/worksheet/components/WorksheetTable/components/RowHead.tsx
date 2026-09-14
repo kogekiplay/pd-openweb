@@ -15,6 +15,7 @@ import RecordOperate from 'worksheet/components/RecordOperate';
 import { VIEW_CONFIG_RECORD_CLICK_ACTION } from 'worksheet/constants/enum';
 import { getHighAuthControls } from 'src/utils/control';
 import { handleRowData } from 'src/utils/record';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   user-select: none;
@@ -247,7 +248,7 @@ export default function RowHead(props) {
                 printCharge,
                 view,
               }}
-              formdata={controls.map(c => ({ ...c, value: row[c.controlId] }))}
+              formdata={controls.map((c: FormControl) => ({ ...c, value: row[c.controlId] }))}
               shows={['share', 'print', 'copy', 'copyId', 'openinnew', 'recreate', 'fav', 'lock']}
               allowCopy={allowAdd && row.allowedit}
               allowEdit={row.allowedit}

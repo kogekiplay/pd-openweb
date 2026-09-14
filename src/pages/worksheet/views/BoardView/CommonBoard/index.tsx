@@ -17,6 +17,7 @@ import { ITEM_TYPE } from '../config';
 import { dealBoardViewData, viewSortRecord } from '../util';
 import Board from './RecordList';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export const RecordBoardWrap = styled.div`
   height: 100%;
@@ -218,7 +219,7 @@ function CommonBoard(props) {
     ]);
 
     if (advancedSetting.navshow && _.get(nextView, 'viewControl')) {
-      let control = controls.find(o => o.controlId === _.get(nextView, 'viewControl'));
+      let control = controls.find((o: FormControl) => o.controlId === _.get(nextView, 'viewControl'));
       let type = control.type;
 
       if (type === 30) {

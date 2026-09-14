@@ -21,6 +21,7 @@ import * as actions from './redux/action';
 import ColumnHead from './RelateRecordTableColumnHead';
 import RowHead from './RelateRecordTableRowHead';
 import { getVisibleControls } from './utils';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const ColumnPopupOperateCon = styled.div`
   border-radius: 4px;
@@ -64,7 +65,7 @@ function getCellWidths(control, controls) {
   if (isArray(widths)) {
     const result = {};
     control.showControls
-      .map(scid => find((controls || control.relationControls || []).concat(SYSTEM_CONTROL), c => c.controlId === scid))
+      .map((scid: FormControl) => find((controls || control.relationControls || []).concat(SYSTEM_CONTROL), c => c.controlId === scid))
       .filter(c => c)
       .forEach((c, i) => {
         result[c.controlId] = widths[i];
@@ -101,8 +102,8 @@ function getPageRecords({ records = [], pageSize = PAGE_SIZE, pageIndex = 1, isT
     return records.slice(0, pageSize);
   }
 
-  const newRecords = records.filter(record => record.isNew);
-  const savedRecords = records.filter(record => !record.isNew);
+  const newRecords = records.filter((record: RecordRow) => record.isNew);
+  const savedRecords = records.filter((record: RecordRow) => !record.isNew);
   return newRecords.concat(savedRecords.slice(0, isTreeTableView ? undefined : pageSize));
 }
 
@@ -201,7 +202,7 @@ function TableComp(props) {
   const emptyRowCount = isTab ? 3 : 1;
 
   if (recordId && !base.saveSync && pageIndex === 1) {
-    records = addedRecords.concat(records.filter(r => !find(addedRecords, { rowid: r.rowid })));
+    records = addedRecords.concat(records.filter((r: RecordRow) => !find(addedRecords, { rowid: r.rowid })));
   }
 
   const isNewRecord = !recordId;
@@ -300,7 +301,7 @@ function TableComp(props) {
         isDraft={isDraft}
         from={from}
         removeRecords={rows => {
-          deleteRecords(rows.map(r => r.rowid));
+          deleteRecords(rows.map((r: RecordRow) => r.rowid));
         }}
         openRecord={id => handleOpenRecordInfo({ recordId: id })}
         addRecord={(record, afterRecordId) => {

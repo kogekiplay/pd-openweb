@@ -12,6 +12,7 @@ import { isOpenPermit } from 'src/pages/FormSet/util';
 import { filterHidedControls } from 'src/utils/control';
 import { VersionProductType } from 'src/utils/enum';
 import { getFeatureStatus } from 'src/utils/project';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   position: relative;
@@ -60,7 +61,7 @@ export default function ExportList(props) {
   const [menuVisible, setMenuVisible] = useState(false);
   const attachmentControls =
     isCharge || canEditData(permissionType)
-      ? controls.filter(item => item.type === 14)
+      ? controls.filter((item: FormControl) => item.type === 14)
       : filterHidedControls(controls, view.controls).filter(item => {
           const controlPermissions = item.controlPermissions || '111';
           const fieldPermission = item.fieldPermission || '111';
@@ -118,9 +119,9 @@ export default function ExportList(props) {
                       projectId: projectId,
                       searchArgs: filters,
                       sheetSwitchPermit,
-                      selectRowIds: selectedRows.map(item => item.rowid),
+                      selectRowIds: selectedRows.map((item: RecordRow) => item.rowid),
                       columns: hasCharge
-                        ? controls.filter(item => {
+                        ? controls.filter((item: FormControl) => {
                             return item.controlId !== 'rowid';
                           })
                         : filterHidedControls(controls, view.controls, false).filter(item => {
@@ -161,7 +162,7 @@ export default function ExportList(props) {
                       worksheetId,
                       viewId: view.viewId,
                       attachmentControls,
-                      selectRowIds: selectedRows.map(item => item.rowid),
+                      selectRowIds: selectedRows.map((item: RecordRow) => item.rowid),
                       quickFilter,
                       searchArgs: filters,
                       filtersGroup,

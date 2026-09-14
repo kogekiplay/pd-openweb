@@ -15,6 +15,7 @@ import type { RootState } from 'src/redux/types';
 import Operate from './Operate';
 import * as actions from './redux/action';
 import TableComp from './TableComp';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 const TableCon = styled.div`
   &.userSelectNone {
@@ -71,7 +72,7 @@ function RelateRecordTable(props) {
         disableOpenRecordFromRelateRecord:
           get(window, 'shareState.isPublicRecord') || get(window, 'shareState.isPublicView'),
         showPrevNext: true,
-        currentSheetRows: records.filter(r => r.rowid),
+        currentSheetRows: records.filter((r: RecordRow) => r.rowid),
         from: 2,
         visible: true,
         appId: relateWorksheetInfo.appId,

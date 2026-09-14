@@ -4,6 +4,7 @@ import { SYS } from 'src/pages/widgetConfig/config/widget';
 import { sortDataByCustomItems } from 'src/pages/worksheet/redux/actions/util.js';
 import { browserIsMobile } from 'src/utils/common';
 import { PERIOD_TYPE, PERIODS } from './config';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 /**
  * 修改当前视图配置
@@ -472,7 +473,7 @@ export const getRowsTime = rows => {
   const f = t => (t ? moment(t).valueOf() : 0);
   const d = t => moment(t).format('YYYY-MM-DD');
   const data = rows.filter(
-    item => (item.dragBeforeStartTime || item.startTime) && (item.dragBeforeEndTime || item.endTime),
+    (item: RecordRow) => (item.dragBeforeStartTime || item.startTime) && (item.dragBeforeEndTime || item.endTime),
   );
   const startTimes = data.map(item => f(item.dragBeforeStartTime || item.startTime)).filter(item => item);
   const endTimes = data.map(item => f(item.dragBeforeEndTime || item.endTime)).filter(item => item);
@@ -567,7 +568,7 @@ export const groupingTimeBlock = (grouping, periodList, viewConfig) => {
   return grouping.map(item => {
     const data = calculateTimeBlock(item, periodList, viewConfig);
     const itemWithoutBlock = _.omit(item, ['left', 'right', 'rows']);
-    const newRows = item.rows.map(row => {
+    const newRows = item.rows.map((row: RecordRow) => {
       const rowWithoutBlock = _.omit(row, ['left', 'right']);
       const data = calculateTimeBlock(row, periodList, viewConfig);
       return {
@@ -590,7 +591,7 @@ export const groupingTimeBlock = (grouping, periodList, viewConfig) => {
 export const fillRecordsTimeBlockColor = (grouping, colorControl) => {
   return grouping.map(item => ({
     ...item,
-    rows: item.rows.map(row => fillRecordTimeBlockColor(row, colorControl)),
+    rows: item.rows.map((row: RecordRow) => fillRecordTimeBlockColor(row, colorControl)),
   }));
 };
 
@@ -657,7 +658,7 @@ export const getRecordIndex = (id, grouping, withoutArrangementVisible) => {
 
   for (let i = 0; i < grouping.length; i++) {
     let { groupingIndex } = grouping[i];
-    let rows = grouping[i].rows.filter(item => (withoutArrangementVisible ? true : item.diff > 0));
+    let rows = grouping[i].rows.filter((item: RecordRow) => (withoutArrangementVisible ? true : item.diff > 0));
 
     for (let j = 0; j < rows.length; j++) {
       if (id === rows[j].rowid) {
@@ -711,7 +712,7 @@ export const percentageToTime = percentage => {
  */
 export const getControlsForGunter = worksheetControls => {
   return worksheetControls.filter(
-    item =>
+    (item: FormControl) =>
       !SYS.includes(item.controlId) &&
       (_.includes([15, 16], item.type) ||
         (item.type === 38 && item.enumDefault === 2) ||

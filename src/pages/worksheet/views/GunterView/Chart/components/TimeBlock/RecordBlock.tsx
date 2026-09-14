@@ -18,6 +18,7 @@ import { browserIsMobile } from 'src/utils/common';
 import { renderText as renderCellText } from 'src/utils/control';
 import { sortControlByIds } from 'src/utils/control';
 import { getRecordColorConfig } from 'src/utils/record';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const isMobile = browserIsMobile();
 
@@ -610,7 +611,7 @@ let RowBlock = class RowBlock extends Component<any, any> {
     const cover = row[coverControl.controlId];
     const showControls = [viewConfig.startId, viewConfig.endId].concat(view.showControls);
     const formData = sortControlByIds(
-      controls.map(c => {
+      controls.map((c: FormControl) => {
         return { ...c, value: newRow[c.controlId] || undefined };
       }),
       view.controlsSorts || [],

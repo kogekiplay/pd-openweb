@@ -6,6 +6,7 @@ import { formatQuickFilter } from 'src/utils/filter';
 import { getCurrentView } from '../util';
 import { updateNavGroup } from './navFilter.js';
 import { dealData, getHierarchyViewIds, getItemByRowId, getParaIds } from './util';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 const MULTI_RELATE_MAX_PAGE_SIZE = 500;
 let hierarchyPromiseObj;
@@ -277,7 +278,7 @@ export function deleteHierarchyRecord({ rows, path, pathId, ...rest }) {
     const { sheet } = getState();
     const { hierarchyView } = sheet;
     let { hierarchyViewData } = hierarchyView;
-    const rowIds = rows.filter(item => !!item.allowDelete).map(item => item.rowid);
+    const rowIds = rows.filter((item: RecordRow) => !!item.allowDelete).map(item => item.rowid);
     sheetAjax.deleteWorksheetRows({ rowIds, ...getHierarchyViewIds(sheet, path), ...rest }).then(data => {
       const id = rowIds[0];
 

@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { getTitleTextFromRelateControl } from 'src/utils/control';
 import { renderText as renderCellText } from 'src/utils/control';
 import RegExpValidator from 'src/utils/expression';
+import type { FormControl } from 'src/utils/controlTypes';
 
 function getCoverControlData(data) {
   return _.find(data, file => RegExpValidator.fileIsPicture(file.ext) || file.previewUrl);
@@ -84,7 +85,7 @@ export default class RecordItem extends React.PureComponent<any, any> {
       { controlId: 'utime', controlName: _l('最近修改时间'), type: 16 },
     ].concat(controls);
     const cardControls = new Array(showControls.length);
-    allControls.forEach(control => {
+    allControls.forEach((control: FormControl) => {
       const indexOfShowControls = showControls.indexOf(control.controlId);
 
       if (
