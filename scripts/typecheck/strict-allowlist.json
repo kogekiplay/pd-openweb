@@ -539,6 +539,7 @@
     "src/pages/worksheet/views/BoardView/config.ts",
     "src/pages/worksheet/views/CalendarView/constants.ts",
     "src/pages/worksheet/views/CalendarView/styles.ts",
+    "src/pages/worksheet/views/GunterView/components/GunterScroll/index.ts",
     "src/pages/worksheet/views/GunterView/config.ts",
     "src/pages/worksheet/views/HierarchyView/config.ts",
     "src/pages/worksheet/views/HierarchyView/styled.ts",
