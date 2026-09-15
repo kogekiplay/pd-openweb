@@ -106,7 +106,7 @@ class QuickCreateTask {
   bindCreateSinlgeTaskEvent() {
     const _this = this;
     // 星星
-    $('.createNewSingle  .taskStar').on('click', function () {
+    $('.createNewSingle  .taskStar').on('click', function (this: HTMLElement) {
       $(this).toggleClass('icon-task-star icon-star-hollow');
       if ($(this).hasClass('icon-task-star')) {
         $(this).removeClass('colorPrimary');
@@ -164,7 +164,7 @@ class QuickCreateTask {
 
     // 点击切换阶段
     $('.createNewSingle')
-      .on('click', '.showStage', function () {
+      .on('click', '.showStage', function (this: HTMLElement) {
         const $stageDrop = $('ul.stageDrop').show();
         const WINHEIGHT = $(window).height();
         const top = $(this).offset().top;
@@ -177,7 +177,7 @@ class QuickCreateTask {
           $stageDrop.css('top', '38px');
         }
       })
-      .on('click', '.stageDrop li', function () {
+      .on('click', '.stageDrop li', function (this: HTMLElement) {
         const that = $(this);
         _this.settings.stageId = that.data('stageid');
         _this.settings.stageName = that.text().trim();
@@ -212,7 +212,7 @@ class QuickCreateTask {
       });
 
     // 点击切换负责人
-    $('.createNewSingle .chargeImgWrapQuick').on('click', function () {
+    $('.createNewSingle .chargeImgWrapQuick').on('click', function (this: HTMLElement) {
       const $this = $(this);
 
       const callback = function (users) {

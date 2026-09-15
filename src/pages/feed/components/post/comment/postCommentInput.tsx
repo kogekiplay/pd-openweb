@@ -107,7 +107,7 @@ class PostCommentInput extends React.Component<any, any> {
       .off()
       .removeAttr('data-mentions-input')
       .removeData('mentionsInput')
-      .focus(function commentInputOnFocus() {
+      .focus(function commentInputOnFocus(this: HTMLElement) {
         $(this).removeClass('textPlaceholder');
         if (!isToComment && $(this).val() === LET_ME_REPLY) {
           $(this).val('');

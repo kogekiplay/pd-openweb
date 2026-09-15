@@ -87,7 +87,7 @@ SelectSendTo.prototype = {
     // 按键up触发搜索
     ST.elements.$searchInput.on(
       'keyup',
-      _.debounce(function (e) {
+      _.debounce(function (this: HTMLElement, e) {
         var keywords = _.trim($(this).val());
         const $list = ST.elements.$searchList.find('.listItem');
         const index = $list.index($('.listItem.active'));
@@ -140,7 +140,7 @@ SelectSendTo.prototype = {
       ST.elements.$selected.hide();
       e.stopPropagation();
     });
-    ST.elements.$searchList.on('click', '.listItem', function (e) {
+    ST.elements.$searchList.on('click', '.listItem', function (this: HTMLElement, e) {
       e.stopPropagation();
       var $this = $(this);
       var key = $this.data('key');
@@ -212,7 +212,7 @@ SelectSendTo.prototype = {
 
     $list.eq(0).addClass('active');
     $list.hover(
-      function () {
+      function (this: HTMLElement) {
         $(this).closest('.searchList').find('.active').removeClass('active');
         $(this).addClass('active');
         ST.isHoverList = true;
@@ -350,7 +350,7 @@ ShareAttachment.prototype = {
   },
   bindEvent: function () {
     var SA = this;
-    SA.$dialog.on('change', '#fileName', function () {
+    SA.$dialog.on('change', '#fileName', function (this: HTMLElement) {
       SA.newFileName = $(this).val();
     });
     SA.$dialog.on('click', '.shareAttachmentFooter .yes', function () {
@@ -574,14 +574,14 @@ ShareAttachment.prototype = {
     }
 
     showControlBtn();
-    $targetBtnList.on('click', '.prev, .next', function () {
+    $targetBtnList.on('click', '.prev, .next', function (this: HTMLElement) {
       left += listBoxWidth * ($(this).hasClass('prev') ? 1 : -1);
       showControlBtn();
       $listCon.animate({
         left: left,
       });
     });
-    $targetBtnList.on('click', '.targetBtn', function () {
+    $targetBtnList.on('click', '.targetBtn', function (this: HTMLElement) {
       var type = $(this).data('type');
       SA.activeSendToOther(type);
     });

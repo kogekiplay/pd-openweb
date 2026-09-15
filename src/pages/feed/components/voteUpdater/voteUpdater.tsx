@@ -79,7 +79,7 @@ const VoteUpdater = {
         $options
           .find('li')
           .find('.voteIndex')
-          .each(function (i) {
+          .each(function (this: HTMLElement, i) {
             $(this).text(i + 1);
           });
 
@@ -106,10 +106,10 @@ const VoteUpdater = {
         .on('click', '.addItem', function () {
           addItem(true);
         })
-        .on('click', '.voteOptions li .removeVoteItem', function () {
+        .on('click', '.voteOptions li .removeVoteItem', function (this: HTMLElement) {
           var voteCount = $el.find('.voteOptions li').length;
           $(this).parent().parent().remove();
-          $el.find('.voteOptions li .voteIndex').each(function (i) {
+          $el.find('.voteOptions li .voteIndex').each(function (this: HTMLElement, i) {
             $(this).text(i + 1);
           });
           var oldVoteAvailableNumber = $el.find('.voteAvailableNumber').val();

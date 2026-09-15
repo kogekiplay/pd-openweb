@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import doT from 'dot';
 import _ from 'lodash';
 import { Button, Dialog } from 'ming-ui';
@@ -50,7 +50,7 @@ export default function ({ id, recurTime, members, address, description, allDay,
           type="primary"
           onClick={() => {
             var ids = [];
-            $('.postMessageList .markCompletedSmall').each(function () {
+            $('.postMessageList .markCompletedSmall').each(function (this: HTMLElement) {
               var $this = $(this).parent();
               if ($this.attr('uid')) {
                 ids.push($this.attr('uid'));
@@ -101,7 +101,7 @@ export default function ({ id, recurTime, members, address, description, allDay,
     });
 
     // 勾选
-    $('.postMessageList', $dialog).on('click', 'li', function () {
+    $('.postMessageList', $dialog).on('click', 'li', function (this: HTMLElement) {
       var $postCheck = $(this).find('.postCheck');
       if (!$postCheck.hasClass('markCompletedSmall')) {
         $postCheck.removeClass('markUnCompleteSmall').addClass('markCompletedSmall');
@@ -111,7 +111,7 @@ export default function ({ id, recurTime, members, address, description, allDay,
     });
 
     // 全选
-    $('#postAllCheck', $dialog).on('click', function () {
+    $('#postAllCheck', $dialog).on('click', function (this: HTMLElement) {
       if (!$(this).hasClass('markCompletedSmall')) {
         $(this).removeClass('markUnCompleteSmall').addClass('markCompletedSmall');
         $('.postMessageList .postCheck').removeClass('markUnCompleteSmall').addClass('markCompletedSmall');
@@ -122,7 +122,7 @@ export default function ({ id, recurTime, members, address, description, allDay,
     });
 
     // 选择发送类型
-    $('#btnprivate,#btnEmail').on('click', function () {
+    $('#btnprivate,#btnEmail').on('click', function (this: HTMLElement) {
       var className = ['', 'postContentPrivate', 'postContentEmail'];
       var type = $(this).attr('type');
       $(this).addClass('colorPrimary').siblings().removeClass('colorPrimary');

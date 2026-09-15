@@ -299,7 +299,7 @@ Calendar.Method = {
     $('.fc-center')
       .find('button')
       .off()
-      .on('click', function () {
+      .on('click', function (this: HTMLElement) {
         $('.hoverTitleMessage').remove();
 
         if ($(this).hasClass('fc-list-button')) {
@@ -395,7 +395,7 @@ Calendar.Method = {
     );
 
     // 鼠标经过title显示title内容
-    $container.on('mousemove', '.showActiveTitle', function (event) {
+    $container.on('mousemove', '.showActiveTitle', function (this: HTMLElement, event) {
       var $this = $(this);
       var pointX = event.clientX;
       var pointY = event.clientY;
@@ -469,14 +469,14 @@ Calendar.Method = {
 
     $('.fc-button-group button').addClass('colorPrimary borderColorPrimary');
     $('.fc-prev-button,.fc-next-button,.fc-today-button').hover(
-      function () {
+      function (this: HTMLElement) {
         $(this).addClass('bgColorPrimary');
       },
-      function () {
+      function (this: HTMLElement) {
         $(this).removeClass('bgColorPrimary');
       },
     );
-    $('.fc-today-button').on('click', function () {
+    $('.fc-today-button').on('click', function (this: HTMLElement) {
       $(this).removeClass('bgColorPrimary');
     });
   },
@@ -561,7 +561,7 @@ Calendar.Method = {
       }
 
       if (viewName == 'agendaWeek') {
-        $('.fc-day-header').each(function () {
+        $('.fc-day-header').each(function (this: HTMLElement) {
           if ($(this).css('border-bottom-color').indexOf('rgb(255, 153, 153)') >= 0) {
             isToday = true;
           }
@@ -584,7 +584,7 @@ Calendar.Method = {
       // 时间轴位置调整
       $('.fc-slats')
         .find('.fc-axis')
-        .each(function () {
+        .each(function (this: HTMLElement) {
           var timeVal = ($(this).text() || '').trim();
           if (timeVal != '') {
             var top = timeVal == '00:00' ? '-5px' : '-10px';
@@ -615,7 +615,7 @@ Calendar.Method = {
     }
 
     // 日周视图滚动条处理
-    $('.fc-scroller').on('scroll', function (event) {
+    $('.fc-scroller').on('scroll', function (this: HTMLElement, event) {
       var height = $(this).height();
       var scrollTop = $(this)[0].scrollTop;
       var scrollHeight = $(this)[0].scrollHeight;
@@ -973,7 +973,7 @@ Calendar.Event = function () {
     .on('click', '.calendarNoListBtn', function () {
       createCalendar();
     })
-    .on('click', '.calendarListModel li', function (event) {
+    .on('click', '.calendarListModel li', function (this: HTMLElement, event) {
       var $el = $(this);
       var pageX = event.clientX;
       var gapRight = $(window).width() - pageX; // 离右边距离
@@ -1002,7 +1002,7 @@ Calendar.Event = function () {
         },
       });
     })
-    .on('click', '#calendarListMore', function () {
+    .on('click', '#calendarListMore', function (this: HTMLElement) {
       var startDate2 = $(this).attr('queryend');
       var restCalCount = $(this).attr('restCalCount');
 

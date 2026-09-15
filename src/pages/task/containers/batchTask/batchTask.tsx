@@ -249,7 +249,7 @@ BatchTask.initEvent = function () {
   });
 
   // 标记完成 未完成
-  $batchTask.on('click', '.taskDetailStatusBtn', function () {
+  $batchTask.on('click', '.taskDetailStatusBtn', function (this: HTMLElement) {
     // 任务权限
     BatchTask.loadBatchData(2);
     // 是否完成
@@ -287,7 +287,7 @@ BatchTask.initEvent = function () {
   });
 
   // 批量添加任务成员
-  $batchTask.on('click', '#batchAddTask', function () {
+  $batchTask.on('click', '#batchAddTask', function (this: HTMLElement) {
     const $this = $(this);
 
     const callback = function (users) {
@@ -306,7 +306,7 @@ BatchTask.initEvent = function () {
       }
     });
     projectId = size === $('.selectTask').length ? projectId : '';
-    $('.barchTaskContent .members .singleuser').each(function () {
+    $('.barchTaskContent .members .singleuser').each(function (this: HTMLElement) {
       existsIds.push($(this).attr('data-accountid'));
     });
     quickSelectUser($this[0], {
@@ -329,7 +329,7 @@ BatchTask.initEvent = function () {
   });
 
   // 任务星星
-  $batchTask.on('click', '#batchFavorite', function () {
+  $batchTask.on('click', '#batchFavorite', function (this: HTMLElement) {
     const isStar = !$(this).hasClass('icon-task-star');
     // 加载数据
     BatchTask.loadBatchData();

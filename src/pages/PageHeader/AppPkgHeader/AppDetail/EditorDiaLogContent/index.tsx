@@ -98,7 +98,7 @@ export default class Editor extends Component<any, any> {
 
   componentDidMount() {
     // a 链接点击
-    $('body').on('click.editor', '.mdEditorContent a', function (e) {
+    $('body').on('click.editor', '.mdEditorContent a', function (this: HTMLElement, e) {
       e.stopPropagation();
       e.preventDefault();
 

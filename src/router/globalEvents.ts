@@ -39,7 +39,7 @@ export default () => {
     return isContain;
   };
 
-  $('body').on('click', 'a', function (e) {
+  $('body').on('click', 'a', function (this: HTMLElement, e) {
     if (e.which !== 1) return;
     if (e.ctrlKey || e.shiftKey || e.metaKey) return;
     if ($(e.target).closest('.mdEditorContent').length) return;

@@ -8,7 +8,7 @@ var EVENTS = _.map(['keyup', 'blur', 'focus'], function (e) {
 
 export default (function ($) {
   $.fn.autoTextarea = function (options) {
-    return $(this).each(function () {
+    return $(this).each(function (this: HTMLElement) {
       var $this = $(this);
       var opts = $.extend(
         {
@@ -47,7 +47,7 @@ export default (function ($) {
           }
         });
 
-        $this.on(EVENTS, function () {
+        $this.on(EVENTS, function (this: HTMLElement) {
           if (!$this.val()) {
             $this.height(opts.minHeight);
           }

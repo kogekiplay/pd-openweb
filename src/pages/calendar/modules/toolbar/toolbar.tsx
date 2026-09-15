@@ -37,7 +37,7 @@ Toolbar.Calendar = Calendar;
 // 绑定事件
 Toolbar.Event = function () {
   // 未确认日程
-  $('#calInvite').on('click', function () {
+  $('#calInvite').on('click', function (this: HTMLElement) {
     $('#calendarLoading').show();
     $('#calendar,#calendarList').hide();
 
@@ -65,7 +65,7 @@ Toolbar.Event = function () {
   });
 
   // 未确认日程颜色分类show
-  $('#invitedCalendars').on('click', '.inviteCalendarType', function (event) {
+  $('#invitedCalendars').on('click', '.inviteCalendarType', function (this: HTMLElement, event) {
     var $calendarTypeList = $(this).find('.inviteCalendarTypeList');
     if (!$calendarTypeList.find('li').length) {
       Toolbar.Comm.getUserAllCalCategories(function (categorys) {
@@ -86,7 +86,7 @@ Toolbar.Event = function () {
   });
 
   // 未确认日程颜色分类click
-  $('#invitedCalendars').on('click', '.inviteCalendarTypeList li', function (event) {
+  $('#invitedCalendars').on('click', '.inviteCalendarTypeList li', function (this: HTMLElement, event) {
     var catID = $(this).attr('catID');
     var catClassName = $(this).find('.editColor').attr('class');
     var $calendarType = $(this).parents('.inviteCalendarType');
@@ -127,7 +127,7 @@ Toolbar.Event = function () {
           var $li;
           var newCategoryList = [];
 
-          $list.each(function () {
+          $list.each(function (this: HTMLElement) {
             $li = $(this);
             catId = $li.attr('catid') || '';
             catName = $li.find('.classificationListName').val().trim();
@@ -158,7 +158,7 @@ Toolbar.Event = function () {
     setTimeout(() => {
       if (!Toolbar.Comm.settings.categorys.length) {
         var categorysArray = [];
-        $('.allowDrop').each(function () {
+        $('.allowDrop').each(function (this: HTMLElement) {
           if ($(this).find('.iconTickStyle').hasClass('icon-calendar-check')) {
             categorysArray.push($(this).attr('catid'));
           }
@@ -175,7 +175,7 @@ Toolbar.Event = function () {
 
       // 点击下拉选择颜色
       $('.classificationCalendarList')
-        .on('click', '.classificationListDropdown', function (event) {
+        .on('click', '.classificationListDropdown', function (this: HTMLElement, event) {
           if (!$(event.target).closest('.colorBlockList').length) {
             var $colorBlockMain = $(this).find('.colorBlockMain');
             $('.colorBlockMain').not($colorBlockMain).hide();
@@ -188,7 +188,7 @@ Toolbar.Event = function () {
 
           event.stopPropagation();
         })
-        .on('click', '.colorBlockList', function () {
+        .on('click', '.colorBlockList', function (this: HTMLElement) {
           // 改变颜色框
           var $colorBlockMain = $(this).parent();
           var className = $(this).find('span').attr('class');
@@ -201,7 +201,7 @@ Toolbar.Event = function () {
         });
 
       // 点击删除操作
-      $('.classificationCalendarList').on('click', '.classificationListDel', function () {
+      $('.classificationCalendarList').on('click', '.classificationListDel', function (this: HTMLElement) {
         var _this = $(this);
         var catId = _this.closest('li').attr('catid');
 
@@ -216,7 +216,7 @@ Toolbar.Event = function () {
 
   // 列表点击 选中未选中切换
   var $calendarTypeList = $('#calendarTypeList');
-  $calendarTypeList.on('click', 'li .iconTickStyle', function () {
+  $calendarTypeList.on('click', 'li .iconTickStyle', function (this: HTMLElement) {
     var $this = $(this);
     var className = 'icon-calendar-check';
 
@@ -231,7 +231,7 @@ Toolbar.Event = function () {
     Toolbar.Comm.settings.isTaskCalendar = !!$('#taskCalendar .icon-calendar-check').length; // 任务
     Toolbar.Comm.settings.categorys = [];
 
-    $('.allowDrop').each(function () {
+    $('.allowDrop').each(function (this: HTMLElement) {
       if ($(this).find('.icon-calendar-check').length) {
         Toolbar.Comm.settings.categorys.push($(this).attr('catid'));
       }
@@ -245,7 +245,7 @@ Toolbar.Event = function () {
   });
 
   // 更改任务分类
-  $calendarTypeList.on('click', '#filterTaskType', function (event) {
+  $calendarTypeList.on('click', '#filterTaskType', function (this: HTMLElement, event) {
     var $this = $(this);
     var oldTaskType = $this.attr('data-tasktype');
     var $filterTaskTypeList = $this.siblings('.filterTaskTypeList');
@@ -262,7 +262,7 @@ Toolbar.Event = function () {
   });
 
   // 更改分类点击
-  $calendarTypeList.on('click', '.filterTaskTypeList li', function (event) {
+  $calendarTypeList.on('click', '.filterTaskTypeList li', function (this: HTMLElement, event) {
     var taskType = $(this).find('.filterTaskTypeListIcon').attr('data-tasktype');
     var taskTypeName = $(this).find('span').html();
     var $filterTaskType = $('#filterTaskType');
@@ -336,7 +336,7 @@ Toolbar.Event = function () {
   });
 
   // 隐藏自己
-  $('#hideOneself .cbComplete').on('click', function () {
+  $('#hideOneself .cbComplete').on('click', function (this: HTMLElement) {
     var $this = $(this);
     var className = 'icon-calendar-nocheck';
     if ($this.hasClass('icon-calendar-nocheck')) {
@@ -356,7 +356,7 @@ Toolbar.Event = function () {
 
   // 删除添加的任务成员
   var $tb_OtherUserCalendar = $('#tb_OtherUserCalendar');
-  $tb_OtherUserCalendar.on('click', '.addOtherUserDelImg', function () {
+  $tb_OtherUserCalendar.on('click', '.addOtherUserDelImg', function (this: HTMLElement) {
     var accountId = $(this).closest('.addOtherUser').attr('data-id');
 
     Toolbar.Comm.settings.otherUsers.splice(_.indexOf(Toolbar.Comm.settings.otherUsers, accountId), 1);
@@ -394,7 +394,7 @@ Toolbar.Event = function () {
 
   // 确认参加
   $('#invitedCalendars')
-    .on('click', '.enterInvite', function () {
+    .on('click', '.enterInvite', function (this: HTMLElement) {
       var $element = $(this).parent();
       var calendarId = $element.data('calendarid');
       var recurTime = $element.data('recurtime');
@@ -402,7 +402,7 @@ Toolbar.Event = function () {
 
       Toolbar.Comm.inviteCalendar.confirm(calendarId, recurTime, catID);
     })
-    .on('click', '.refuseInvite', function () {
+    .on('click', '.refuseInvite', function (this: HTMLElement) {
       var $element = $(this).parent();
       var calendarId = $element.data('calendarid');
       var recurTime = $element.data('recurtime');
@@ -479,7 +479,7 @@ Toolbar.Method = {
             });
 
           // 点击切换
-          $iCalAbout.click(function () {
+          $iCalAbout.click(function (this: HTMLElement) {
             $('#iCalAbout td').removeClass('bgColorPrimaryTransparent Select');
             $(this).addClass('Select bgColorPrimaryTransparent');
             var type = $(this).attr('type');
@@ -500,12 +500,12 @@ Toolbar.Method = {
           });
           // 经过改变背景颜色
           $iCalAbout.hover(
-            function () {
+            function (this: HTMLElement) {
               if (!$(this).hasClass('bgColorPrimaryTransparent')) {
                 $(this).addClass('iCalAboutHover');
               }
             },
-            function () {
+            function (this: HTMLElement) {
               $(this).removeClass('iCalAboutHover');
             },
           );

@@ -1,4 +1,4 @@
-﻿import React, { Component } from 'react';
+import React, { Component } from 'react';
 import { Dialog } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import ClickAway from 'ming-ui/components/ClickAway';
@@ -23,7 +23,7 @@ export default class CopyFolder extends Component<any, any> {
   }
 
   componentDidMount() {
-    $('.copyFolder').on('click', '.checkOperation:not(.noClick)', function () {
+    $('.copyFolder').on('click', '.checkOperation:not(.noClick)', function (this: HTMLElement) {
       let className = 'checkOperation ';
       $(this).toggleClass('checked');
 

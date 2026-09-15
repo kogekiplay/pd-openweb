@@ -1,4 +1,4 @@
-﻿import kcAjax from 'src/api/kc';
+import kcAjax from 'src/api/kc';
 import postAjax from 'src/api/post';
 import 'src/components/autoTextarea/autoTextarea';
 import MentionsInput from 'src/components/MentionsInput';
@@ -35,7 +35,7 @@ const MyUpdater = {
     // 用于动态更新框 Updater切换Type
     $('.myUpdateItem_Content a[targetDiv]')
       .off()
-      .on('click', function () {
+      .on('click', function (this: HTMLElement) {
         let targetDivID = $(this).attr('targetDiv');
 
         // $('#Div_JoinKnowledge').hide();
@@ -100,7 +100,7 @@ const MyUpdater = {
           }
 
           $('#Link_updater .visualDocTextBox').show();
-          $('#text_LinkUrl').on('keydown', function (e) {
+          $('#text_LinkUrl').on('keydown', function (this: HTMLElement, e) {
             let key = window.event ? e.keyCode : e.which;
 
             if (key == 13) {
@@ -206,7 +206,7 @@ const MyUpdater = {
 
         $textareaUpdater.removeClass('textTertiary');
         MyUpdater.options.updaterInputAreaFocus = true;
-        $('#myupdaterOP').slideDown(function () {
+        $('#myupdaterOP').slideDown(function (this: HTMLElement) {
           $(this).attr('style', 'display: block');
         });
 
@@ -218,7 +218,7 @@ const MyUpdater = {
         //     });
         // });
       })
-      .blur(function () {
+      .blur(function (this: HTMLElement) {
         textareaUpdaterEl.store();
         if (!$(this).val().trim()) {
           $textareaUpdater.val(_l('知会工作是一种美德') + '...').addClass('textTertiary');

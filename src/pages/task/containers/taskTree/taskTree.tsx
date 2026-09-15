@@ -105,7 +105,7 @@ class TaskTree extends Component<any, any> {
     });
 
     // 子任务折叠展开
-    $taskList.on('click', '.nodeSwitch.on', function (event) {
+    $taskList.on('click', '.nodeSwitch.on', function (this: HTMLElement, event) {
       const $li = $(this).closest('li');
       const $children = $li.children('ul');
 
@@ -125,7 +125,7 @@ class TaskTree extends Component<any, any> {
     });
 
     // 子任务折叠收起
-    $taskList.on('click', '.nodeSwitch.off', function (event) {
+    $taskList.on('click', '.nodeSwitch.off', function (this: HTMLElement, event) {
       const $li = $(this).closest('li');
       const $singleTreeTask = $li.children('.singleTreeTask');
       $singleTreeTask.find('.nodeSwitch').removeClass('off').addClass('on');
@@ -218,7 +218,7 @@ class TaskTree extends Component<any, any> {
       '.taskListStageName',
     );
 
-    $taskList.on('scroll', function () {
+    $taskList.on('scroll', function (this: HTMLElement) {
       // 非未关联的返回 或者没有更多了  0   1   -1
       if (
         (that.props.taskConfig.listStatus != 1 && that.props.taskConfig.listStatus != -1) ||

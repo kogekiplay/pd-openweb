@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import doT from 'dot';
 import _ from 'lodash';
 import Dialog from 'ming-ui/components/Dialog';
@@ -109,7 +109,7 @@ Comm.confirmOrUnconfirmInviteMe = function (calendarId, status, remark, recurTim
           }
 
           // 收起动画
-          $('#inviteSinlge_' + calendarId).slideUp(600, function () {
+          $('#inviteSinlge_' + calendarId).slideUp(600, function (this: HTMLElement) {
             $(this).remove();
             if ($('#invitedCalendars .inviteSinlge').length === 0) {
               $('#calInvite').click();

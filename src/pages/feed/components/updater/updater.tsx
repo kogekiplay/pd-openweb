@@ -46,7 +46,7 @@ class Updater extends React.Component<any, any> {
   componentDidMount() {
     this._isMounted = true;
     const comp = this;
-    $('.myUpdateItem_Content a').each(function () {
+    $('.myUpdateItem_Content a').each(function (this: HTMLElement) {
       if ($(this).data('targetdiv')) {
         $(this).attr('targetdiv', $(this).data('targetdiv'));
       }

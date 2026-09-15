@@ -1069,7 +1069,7 @@ export const addCalculateControlHighlight = () => {
   const highlightEl = document.querySelector('.addCalculateControl');
   $(highlightEl)
     .addClass(className)
-    .on('webkitAnimationEnd oAnimationEnd MSAnimationEnd animationend', function () {
+    .on('webkitAnimationEnd oAnimationEnd MSAnimationEnd animationend', function (this: HTMLElement) {
       $(this).removeClass(className);
     });
 };

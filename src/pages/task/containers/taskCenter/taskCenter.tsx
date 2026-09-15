@@ -96,7 +96,7 @@ class TaskCenter extends Component<any, any> {
     $container.on(
       'click.task',
       '#tasks .taskStar:not(.createNewSingle .taskStar, .addNewTask .taskStar)',
-      function (event) {
+      function (this: HTMLElement, event) {
         const taskId = $(this).closest('li').data('taskid') || $(this).closest('tr').data('taskid');
         const hasStar = $(this).hasClass('icon-star-hollow');
 
@@ -135,7 +135,7 @@ class TaskCenter extends Component<any, any> {
             $('#taskList .selectTask').removeClass('selectTask bgColorPrimaryTransparent');
             $('#batchTask')
               .removeClass('slideLeft')
-              .on('webkitTransitionEnd transitionEnd', function () {
+              .on('webkitTransitionEnd transitionEnd', function (this: HTMLElement) {
                 $(this).html('');
               });
             $('#tasks').removeClass('slideDetail');
@@ -192,7 +192,7 @@ class TaskCenter extends Component<any, any> {
             return;
           }
 
-          $('li.addNewTask').each(function () {
+          $('li.addNewTask').each(function (this: HTMLElement) {
             if (!$(this).find('.teaStageName').val().trim()) {
               const $li = $(this).closest('li.singleStage');
               // 隐藏创建层层

@@ -453,7 +453,7 @@ export const formatFileSize = (size = 0) => {
  */
 export const shake = id => {
   const el = $(`#ChatPanel-${id}`).find('.ChatPanel-sessionList');
-  el.addClass('ChatPanel-shake').on('webkitAnimationEnd oAnimationEnd MSAnimationEnd animationend', function () {
+  el.addClass('ChatPanel-shake').on('webkitAnimationEnd oAnimationEnd MSAnimationEnd animationend', function (this: HTMLElement) {
     $(this).removeClass('ChatPanel-shake');
   });
 };
@@ -484,7 +484,7 @@ export const highlightMessage = id => {
  */
 const highlight = el => {
   const className = 'highlight';
-  el.addClass(className).on('webkitAnimationEnd oAnimationEnd MSAnimationEnd animationend', function () {
+  el.addClass(className).on('webkitAnimationEnd oAnimationEnd MSAnimationEnd animationend', function (this: HTMLElement) {
     $(this).removeClass(className);
   });
 };

@@ -18,7 +18,7 @@ User.init = function () {
 
   $('#accountNav')
     .off()
-    .on('click', 'li', function () {
+    .on('click', 'li', function (this: HTMLElement) {
       var $this = $(this);
       $this.addClass('ThemeBGColor8').siblings('li').removeClass('ThemeBGColor8');
       var typeTag = $this.attr('typeTag');

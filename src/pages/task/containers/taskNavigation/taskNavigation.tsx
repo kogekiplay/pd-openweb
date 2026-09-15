@@ -495,7 +495,7 @@ class TaskNavigation extends Component<any, any> {
     });
 
     // 我负责的任务 我托付 我参与
-    $taskNavigator.on('click', '.taskType li', function () {
+    $taskNavigator.on('click', '.taskType li', function (this: HTMLElement) {
       const dataType = $(this).attr('data-type');
       let taskFilter;
 
@@ -553,7 +553,7 @@ class TaskNavigation extends Component<any, any> {
     });
 
     // 置顶项目展开隐藏
-    $taskNavigator.on('click', '.popTops', function () {
+    $taskNavigator.on('click', '.popTops', function (this: HTMLElement) {
       const $this = $(this);
       const $folderList = $this.siblings('.folderList');
       const visible = $folderList.is(':visible');
@@ -568,7 +568,7 @@ class TaskNavigation extends Component<any, any> {
     });
 
     // 网络名称点击隐藏和显示项目列表
-    $taskNavigator.on('click', '.networkFolderList .allFolders', function () {
+    $taskNavigator.on('click', '.networkFolderList .allFolders', function (this: HTMLElement) {
       const $folderList = $(this).siblings('.folderList');
       let isVisible = $folderList.is(':visible');
       const noFolderList = $folderList.hasClass('notFolderList');
@@ -1073,7 +1073,7 @@ class TaskNavigation extends Component<any, any> {
     );
 
     // 项目文件夹操作
-    $('body').on('click.task', '.fileFoldersBox li', function () {
+    $('body').on('click.task', '.fileFoldersBox li', function (this: HTMLElement) {
       // 移动 或者新增文件夹
       let projectId = $('.folderSettingsList').data('projectid');
       const folderId = $('.folderSettingsList').data('folderid');
@@ -1151,7 +1151,7 @@ class TaskNavigation extends Component<any, any> {
     );
 
     // 放到body中了  项目文件夹操作
-    $('body').on('click.task', '.projectFolderOp li', function () {
+    $('body').on('click.task', '.projectFolderOp li', function (this: HTMLElement) {
       const $this = $(this);
       const fileId = $this.parent().data('fileid');
       const projectId = $this.parent().data('projectid');
@@ -1890,7 +1890,7 @@ class TaskNavigation extends Component<any, any> {
           const $lis = $project.find('li').hide();
 
           // 移除当前文件夹
-          $project.slideUp(function () {
+          $project.slideUp(function (this: HTMLElement) {
             $(this).remove();
           });
 

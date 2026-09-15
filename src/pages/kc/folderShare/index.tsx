@@ -113,7 +113,7 @@ ShareFolder.prototype = {
   },
   bindEvent: function () {
     var SF = this;
-    this.$container.on('click', '.fileItem', function () {
+    this.$container.on('click', '.fileItem', function (this: HTMLElement) {
       var isFolder = $(this).data('type') == 1;
       var id = $(this).data('id');
       var index = parseInt($(this).data('index'), 10);
@@ -140,7 +140,7 @@ ShareFolder.prototype = {
         );
       }
     });
-    $('.shareFolderCon .main').on('scroll', function () {
+    $('.shareFolderCon .main').on('scroll', function (this: HTMLElement) {
       var conHeight = $(this).height();
       var scrollTop = $(this).scrollTop();
       var contentHeight = $('.shareFolderCon .main .fileList').height();

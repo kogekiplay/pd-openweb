@@ -373,7 +373,7 @@ class CalendarShare extends Component<any, any> {
             '<div class="promptDiv"><img src="/staticfiles/images/calendar/prompt.png" alt="提示浏览器打开" /></div>',
           );
           $('body').append($addPrompt);
-          $addPrompt.on('click', function () {
+          $addPrompt.on('click', function (this: HTMLElement) {
             $(this).remove();
           });
           return false;
@@ -393,7 +393,7 @@ class CalendarShare extends Component<any, any> {
           '<div class="promptDiv"><img src="/staticfiles/images/calendar/prompt.png" alt="提示浏览器打开" /></div>',
         );
         $('body').append($addPrompt);
-        $addPrompt.on('click', function () {
+        $addPrompt.on('click', function (this: HTMLElement) {
           $(this).remove();
         });
       });

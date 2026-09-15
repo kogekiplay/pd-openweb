@@ -396,7 +396,7 @@ Emotion.prototype.show = function show(left, top) {
   this.$emotion = this.emotion()
     .on('click', '.emotionItem', $.proxy(this.select, this))
     .insertAfter(_this.options.popupContainer || this.$el)
-    .on('click', '.mdEmotionTab .tabItem', function () {
+    .on('click', '.mdEmotionTab .tabItem', function (this: HTMLElement) {
       var $this = $(this);
       if (!$this.hasClass('active')) {
         $this.siblings('.active').removeClass('active').end().addClass('active');
@@ -406,12 +406,12 @@ Emotion.prototype.show = function show(left, top) {
 
       return false;
     })
-    .on('mouseover', '.emotionItemBear', function () {
+    .on('mouseover', '.emotionItemBear', function (this: HTMLElement) {
       //  鼠标移过来时，显示gif图片
       var $bear = $(this).toggleClass('active').find('img');
       $bear.attr('src', $bear.attr('src').replace('.png', '.gif'));
     })
-    .on('mouseout', '.emotionItemBear', function () {
+    .on('mouseout', '.emotionItemBear', function (this: HTMLElement) {
       // 鼠标移出时，显示png
       var $bear = $(this).toggleClass('active').find('img');
       $bear.attr('src', $bear.attr('src').replace('.gif', '.png'));

@@ -115,7 +115,7 @@ class Commenter extends React.Component<any, any> {
 
     // 缓存未发送成功的讨论
     if (this.props.storageId) {
-      $textarea.on('keyup', function () {
+      $textarea.on('keyup', function (this: HTMLElement) {
         const text = $(this).val().trim();
 
         if (!text) {

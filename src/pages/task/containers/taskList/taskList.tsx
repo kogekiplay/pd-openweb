@@ -224,7 +224,7 @@ class TaskList extends Component<any, any> {
     const that = this;
 
     // 点击出详情
-    $taskList.on('click', '.listStageTaskContent tr', function (event) {
+    $taskList.on('click', '.listStageTaskContent tr', function (this: HTMLElement, event) {
       const _this = $(this);
       let isMuil = false;
       let metaKeyType;
@@ -310,7 +310,7 @@ class TaskList extends Component<any, any> {
     );
 
     // 页面滚动加载更多
-    $taskList.on('scroll', function () {
+    $taskList.on('scroll', function (this: HTMLElement) {
       const { folderId, taskFilter } = that.props.taskConfig;
 
       // 阶段视图不分页
@@ -347,7 +347,7 @@ class TaskList extends Component<any, any> {
     });
 
     // 我的任务 菜单弹层
-    $taskList.on('click', '.myTaskTag', function (event) {
+    $taskList.on('click', '.myTaskTag', function (this: HTMLElement, event) {
       // 防止出详情
       event.stopPropagation();
       const projectId = $(this).closest('tr').data('projectid');
@@ -381,7 +381,7 @@ class TaskList extends Component<any, any> {
       }
     });
 
-    $('.myTaskSettingList li').on('click', function () {
+    $('.myTaskSettingList li').on('click', function (this: HTMLElement) {
       const $this = $(this);
       const taskId = $this.closest('ul').data('taskid');
       const type = $this.data('type');
@@ -519,7 +519,7 @@ class TaskList extends Component<any, any> {
           const existsFolderIdArray = [];
 
           // 获取页面存在的folderId
-          $('#taskList .taskListFolderName').each(function () {
+          $('#taskList .taskListFolderName').each(function (this: HTMLElement) {
             const folderId = $(this).data('folderid');
 
             if (existsFolderIdArray.indexOf(folderId) < 0) {
@@ -816,7 +816,7 @@ class TaskList extends Component<any, any> {
         clonedHeaderRow.before(clonedHeaderRow.clone()).addClass('floatingHeader');
       });
       $('#taskList').on('scroll', () => {
-        $('.persist-area').each(function () {
+        $('.persist-area').each(function (this: HTMLElement) {
           const el = $(this);
           const offset = el.offset();
           const top = offset.top - 152;
@@ -858,7 +858,7 @@ class TaskList extends Component<any, any> {
     config.FilterTaskID = [];
     // 重置pageIndex
     taskListSettings.pageIndex = 0;
-    $types.each(function () {
+    $types.each(function (this: HTMLElement) {
       const $this = $(this);
       const $tasks = $this.siblings('.listStageTaskContent').find('tr');
       const isClosed = $this.find('.downArrow').length > 0;
@@ -869,7 +869,7 @@ class TaskList extends Component<any, any> {
         $('.listStageTaskContent')
           .filter(':visible')
           .find('tr')
-          .each(function () {
+          .each(function (this: HTMLElement) {
             const $task = $(this);
             const taskId = $task.data('taskid');
 
@@ -878,7 +878,7 @@ class TaskList extends Component<any, any> {
             }
           });
       } else {
-        $tasks.each(function () {
+        $tasks.each(function (this: HTMLElement) {
           const $task = $(this);
           const taskId = $task.data('taskid');
           config.FilterTaskID.push(taskId);
@@ -918,7 +918,7 @@ class TaskList extends Component<any, any> {
     const $animatedFarFast = $('#taskList tr.animatedFarFast td.animatedFarFast');
     const $trs = $('#taskList tr');
 
-    $animatedFarFast.each(function (i) {
+    $animatedFarFast.each(function (this: HTMLElement, i) {
       $(this)
         .animate(
           {
@@ -929,7 +929,7 @@ class TaskList extends Component<any, any> {
         .delay((i + 1) * 30);
     });
 
-    $trs.each(function () {
+    $trs.each(function (this: HTMLElement) {
       $(this).animate(
         {
           opacity: 1,
@@ -1129,7 +1129,7 @@ class TaskList extends Component<any, any> {
           width: '0px',
         },
         150,
-        function () {
+        function (this: HTMLElement) {
           $(this).remove();
         },
       );
@@ -1139,7 +1139,7 @@ class TaskList extends Component<any, any> {
           'border-left-width': '0px',
         },
         150,
-        function () {
+        function (this: HTMLElement) {
           $(this).removeClass('newTaskTipName');
         },
       );

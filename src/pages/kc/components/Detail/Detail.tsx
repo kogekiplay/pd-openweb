@@ -45,7 +45,7 @@ class Detail extends React.Component<any, any> {
         }
       });
     this.getShareUrl();
-    $('.slideDetail').on('click', '.copyLink', function () {
+    $('.slideDetail').on('click', '.copyLink', function (this: HTMLElement) {
       $(this).select();
     });
 

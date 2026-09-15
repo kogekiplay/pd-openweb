@@ -64,7 +64,7 @@ export default class SystemMessage extends PureComponent<any, any> {
     const that = this;
 
     if (this.msg) {
-      $(this.msg).on('click', 'a', function (evt) {
+      $(this.msg).on('click', 'a', function (this: HTMLElement, evt) {
         const $this = $(this);
         const href = removeWebUrlPrefix($(evt.target).attr('href'));
         const hrefWithoutQuery = href.split('?')[0];

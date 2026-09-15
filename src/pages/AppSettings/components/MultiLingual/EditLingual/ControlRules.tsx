@@ -48,7 +48,7 @@ export default function ControlRules(props) {
     const highlightEl = el.querySelector('.itemName');
     $(highlightEl)
       .addClass(className)
-      .on('webkitAnimationEnd oAnimationEnd MSAnimationEnd animationend', function () {
+      .on('webkitAnimationEnd oAnimationEnd MSAnimationEnd animationend', function (this: HTMLElement) {
         $(this).removeClass(className);
       });
     if (scrollViewRef.current) {
