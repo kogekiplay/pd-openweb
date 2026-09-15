@@ -402,7 +402,7 @@ RoleSelect.propTypes = {
   onClose: func, //关闭
 };
 
-export default function quickSelectRole(target, props = {}) {
+export default function quickSelectRole(target, props: Record<string, any> = {}) {
   const panelWidth = 360;
   const panelHeight = 41 + (props.minHeight || 358);
   let targetLeft;

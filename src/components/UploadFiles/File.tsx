@@ -105,7 +105,7 @@ export default class FileComponent extends Component<any, any> {
     }
 
     const { data } = this.props;
-    let attachment = {};
+    let attachment: Record<string, any> = {};
     let attachmentType = 1;
 
     if (data.refId) {

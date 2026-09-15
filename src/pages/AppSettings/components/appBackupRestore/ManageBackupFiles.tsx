@@ -130,7 +130,7 @@ export default function ManageBackupFiles(props) {
   };
 
   // 编辑备份定时任务
-  const editBackupTaskInfo = (params = {}) => {
+  const editBackupTaskInfo = (params: Record<string, any> = {}) => {
     appManagementAjax
       .editBackupTaskInfo({
         appId,
@@ -161,7 +161,7 @@ export default function ManageBackupFiles(props) {
       });
   };
 
-  const handleUpdateBackupTxt = (data = {}) => {
+  const handleUpdateBackupTxt = (data: Record<string, any> = {}) => {
     if (data.status === 0) {
       setBackupTaskText('');
       return;

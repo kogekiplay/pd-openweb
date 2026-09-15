@@ -506,7 +506,7 @@ class RecordCalendarBase extends Component<any, any> {
       );
     }
 
-    let others = {};
+    let others: Record<string, any> = {};
 
     if (_.get(currentView, 'advancedSetting.showtime')) {
       const times = _.get(currentView, 'advancedSetting.showtime').split('-');

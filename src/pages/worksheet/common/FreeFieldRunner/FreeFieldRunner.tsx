@@ -26,7 +26,7 @@ const Con = styled.div`
   }
 `;
 
-function pickControl(control = {}) {
+function pickControl(control: Record<string, any> = {}) {
   const result = pick(control, ['controlId', 'controlName', 'value', 'type', 'options']);
 
   if (control.type === 34 && isFunction(get(control, 'store.getState'))) {

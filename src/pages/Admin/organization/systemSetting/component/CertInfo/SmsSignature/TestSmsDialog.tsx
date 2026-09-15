@@ -59,7 +59,7 @@ function TestSms(props) {
       return;
     }
 
-    const onSend = (captchaData = {}) => {
+    const onSend = (captchaData: Record<string, any> = {}) => {
       if (!_.isEmpty(captchaData) && captchaData.ret !== 0) {
         return;
       }

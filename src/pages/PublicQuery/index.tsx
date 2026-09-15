@@ -131,7 +131,7 @@ class WorksheetSahre extends React.Component<any, any> {
         });
       });
   };
-  loadSheet = (querydata = {}) => {
+  loadSheet = (querydata: Record<string, any> = {}) => {
     const { viewId, worksheetId } = this.state;
 
     if (this.promiseRowsData) {

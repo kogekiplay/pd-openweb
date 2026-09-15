@@ -182,7 +182,7 @@ function NewRecordForm(props) {
     formdataRef.current = formdata;
   }, [formdata]);
 
-  function newRecord(options = {}) {
+  function newRecord(options: Record<string, any> = {}) {
     function handleSubmit() {
       if (!customwidget.current?.dataFormat) {
         // loading 已经提前打开，这里必须收尾，否则遮罩关不掉

@@ -69,7 +69,7 @@ export default props => {
           data={timeZones}
           openSearch
           showItemTitle
-          renderTitle={(selectedData = {}) => <span title={selectedData.text}>{selectedData.text}</span>}
+          renderTitle={(selectedData: Record<string, any> = {}) => <span title={selectedData.text}>{selectedData.text}</span>}
           onChange={value => {
             handleSureSettings('timeZone', value, () => {
               setCurrentTimeZone(value);

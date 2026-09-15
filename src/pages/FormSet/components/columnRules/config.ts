@@ -295,7 +295,7 @@ export function getNewDropDownData(controls: FormControl[] = [], actionType) {
 }
 
 // 过滤不符合条件的已选字段
-export const filterUnAvailable = (controlConfig = {}, worksheetControls: FormControl[] = [], type) => {
+export const filterUnAvailable = (controlConfig: Record<string, any> = {}, worksheetControls: FormControl[] = [], type) => {
   const { controls = [] } = controlConfig;
   const dropDownData = getNewDropDownData(worksheetControls, controlConfig.type);
   let newControls: FormControl[] = [];
@@ -655,7 +655,7 @@ export const filterData = (columns = [], filterItem = [], isSetting?, relationCo
         column.controlId ? column.controlId === item.controlId : (column.data || {}).controlId === item.controlId,
       );
     } else {
-      controlData = columns.filter((column = {}) =>
+      controlData = columns.filter((column: Record<string, any> = {}) =>
         column.controlId ? column.controlId === item.controlId : (column.data || {}).controlId === item.controlId,
       );
     }
@@ -745,7 +745,7 @@ export function getActionError(value = {}) {
 }
 
 // 对比是否有变更
-export function hasRuleChanged(data = [], selectRule = {}, passAlert?) {
+export function hasRuleChanged(data = [], selectRule: Record<string, any> = {}, passAlert?) {
   const originData = _.find(data, i => i.ruleId === selectRule.ruleId);
   const { ruleId = '' } = selectRule;
 

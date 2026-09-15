@@ -5,16 +5,16 @@ import filterFn from './filterFn';
 import { updateRulesDataByRule } from './ruleDataCore';
 import { flattenArr, getAvailableFilters, getResult, isRelateMoreList, replaceStr } from './ruleUtils';
 
-const getFieldIds = (filter = {}) => {
+const getFieldIds = (filter: Record<string, any> = {}) => {
   const isDynamic = filter.dynamicSource && filter.dynamicSource.length > 0;
   return isDynamic ? [filter.controlId, ...(filter.dynamicSource || []).map(dy => dy.cid)] : [filter.controlId];
 };
 
-const getIds = (filterGroup = {}) => {
+const getIds = (filterGroup: Record<string, any> = {}) => {
   return (filterGroup.groupFilters || []).reduce((total, filter) => total.concat(getFieldIds(filter)), []);
 };
 
-const getItemGroupFilters = (filterGroup = {}, data = [], recordId: string, from) => {
+const getItemGroupFilters = (filterGroup: Record<string, any> = {}, data = [], recordId: string, from) => {
   const isOrCondition = (filterGroup.groupFilters || []).findIndex(filter => filter.spliceType === 2) > -1;
   let groupFilters = [filterGroup.groupFilters || []];
 
@@ -37,7 +37,7 @@ const getItemGroupFilters = (filterGroup = {}, data = [], recordId: string, from
   return { ...filterGroup, groupFilters: _.flatten(groupFilters) };
 };
 
-const checkValueAvailable = (rule = {}, data = [], recordId: string, from) => {
+const checkValueAvailable = (rule: Record<string, any> = {}, data = [], recordId: string, from) => {
   let isAvailable = false;
   let filterControlIds = {};
   let availableControlIds = {};

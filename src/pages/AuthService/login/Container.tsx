@@ -65,7 +65,7 @@ export default function (props) {
       return;
     }
 
-    let callback = (res = {}) => {
+    let callback = (res: Record<string, any> = {}) => {
       if (frequentLogin && res.ret !== 0) {
         return;
       }

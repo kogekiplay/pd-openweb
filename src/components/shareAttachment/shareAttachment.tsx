@@ -248,7 +248,7 @@ SelectSendTo.prototype = {
     var ST = this;
     var formatTpl = ST.formatTpl;
     return data.map(function (item) {
-      var result = {};
+      var result: Record<string, any> = {};
       if (formatTpl.value) {
         result.value = item[formatTpl.value];
       }

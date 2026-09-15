@@ -48,7 +48,7 @@ const _initPost = function (acceptor, options, callback) {
  * @param {*} acceptor
  * @param {*} options
  */
-export const newTask = (acceptor, options = {}) => {
+export const newTask = (acceptor, options: Record<string, any> = {}) => {
   return new Promise((resolve, reject) => {
     let members = {};
 
@@ -123,7 +123,7 @@ export const selectTask = () => {
  * @param {*} acceptor
  * @param {*} options
  */
-export const newSchedule = (acceptor, options = {}) => {
+export const newSchedule = (acceptor, options: Record<string, any> = {}) => {
   return new Promise((resolve, reject) => {
     let members = [];
 

@@ -12,7 +12,7 @@ import type { ChildTableDispatch, ChildTableGetState } from './types';
 const PAGE_SIZE = 200;
 
 export function updateTreeNodeExpansion(
-  row = {},
+  row: Record<string, any> = {},
   { expandAll, forceUpdate, getNewRows, updateRows, worksheetId, recordId } = {},
 ) {
   return (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {

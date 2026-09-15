@@ -225,7 +225,7 @@ export function getRowGetType(from, { discussId } = {}) {
   }
 }
 
-export async function postWithToken(url: string, tokenArgs = {}, body = {}, axiosConfig = {}) {
+export async function postWithToken(url: string, tokenArgs = {}, body = {}, axiosConfig: Record<string, any> = {}) {
   let token;
 
   if (!_.get(window, 'shareState.shareId')) {

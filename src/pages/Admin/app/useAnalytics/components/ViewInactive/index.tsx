@@ -168,7 +168,7 @@ export default function ViewInactive({ projectId }: { projectId?: string; [key: 
       });
   };
 
-  const getInactiveUsers = (params = {}) => {
+  const getInactiveUsers = (params: Record<string, any> = {}) => {
     setState({ loading: true });
     appManagementAjax
       .pagedInactiveUsers({

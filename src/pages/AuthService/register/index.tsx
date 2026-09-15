@@ -135,7 +135,7 @@ export default function () {
 
   //注册相关数据处理
   const initRegisterData = () => {
-    let accountInfo = {};
+    let accountInfo: Record<string, any> = {};
     // 如果 url 带 mobile 参数
     let { mobile } = request;
 

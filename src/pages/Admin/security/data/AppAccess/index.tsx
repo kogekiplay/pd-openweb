@@ -191,7 +191,7 @@ export default function AppAccess(props) {
     ];
   }, [actionId, list]);
 
-  const getData = (params = {}) => {
+  const getData = (params: Record<string, any> = {}) => {
     setState({ loading: true });
     dataLimitAjax
       .getAppLimitList({

@@ -230,7 +230,7 @@ export const addSession = (result, id?) => (dispatch: AppDispatch, getState: Get
  * @param {*} msg
  */
 export const addGroupSession =
-  (groupId: string, msg = {}, isOpen = true) =>
+  (groupId: string, msg: Record<string, any> = {}, isOpen = true) =>
   (dispatch: AppDispatch, getState: GetState) => {
     const { sessionList } = getState().chat;
     // if (utils.chatWindow.is(groupId)) {
@@ -298,7 +298,7 @@ export const addGroupSession =
  * @param {*} cb
  */
 export const addUserSession =
-  (id, msg = {}, isOpen = true, cb?) =>
+  (id, msg: Record<string, any> = {}, isOpen = true, cb?) =>
   (dispatch: AppDispatch, getState: GetState) => {
     const { sessionList } = getState().chat;
     // if (utils.chatWindow.is(id)) {

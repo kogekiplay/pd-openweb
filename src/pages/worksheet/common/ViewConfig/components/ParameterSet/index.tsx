@@ -156,7 +156,7 @@ const CustomControlDrop = props => {
       <Dropdown
         placeholder={_l('请选择')}
         className={cx('paramControlDropdown', props.sourceControlType === 29 ? 'flex' : 'w100')}
-        renderItem={(item = {}) => {
+        renderItem={(item: Record<string, any> = {}) => {
           return (
             <div className={cx('itemText', { isCur: allColumns.find(it => it.controlId === item.controlId) })}>
               <Icon icon={getIconByType(item.type, false)} className="Font18" />

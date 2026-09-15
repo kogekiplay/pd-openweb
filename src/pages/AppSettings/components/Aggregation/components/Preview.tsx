@@ -164,7 +164,7 @@ function Preview(props) {
     const sourceDt = getNodeInfo(flowData, 'DATASOURCE');
 
     controlList = groupFields
-      .map((o = {}) => {
+      .map((o: Record<string, any> = {}) => {
         return {
           ...o.resultField,
           ...(_.get(o, 'resultField.controlSetting') || {}),
@@ -194,7 +194,7 @@ function Preview(props) {
         }),
       )
       .filter(o => !!o);
-    controlList = (controlList || []).map((o = {}) => {
+    controlList = (controlList || []).map((o: Record<string, any> = {}) => {
       const sourceList = getAllSourceList(flowData) || [];
       const index = getSourceIndex(flowData, o);
       return {
@@ -355,7 +355,7 @@ function Preview(props) {
     });
   };
 
-  const changeInfoWithWorksheetId = (data = {}) => {
+  const changeInfoWithWorksheetId = (data: Record<string, any> = {}) => {
     if (data.worksheetId) {
       const worksheetId = data.worksheetId || flowData.worksheetId;
       let newData = { ...flowData, worksheetId };

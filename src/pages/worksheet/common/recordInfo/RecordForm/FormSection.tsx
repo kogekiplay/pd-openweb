@@ -73,7 +73,7 @@ const FormSectionWrap = styled.div`
 
 const getSheetSectionIsUnfold = () => safeParse(localStorage.getItem('sheetSectionIsUnfold') || '{}') || {};
 
-export const getDefaultIsUnfold = (value = true, widgetStyle = {}, sheetSectionIsUnfold?) => {
+export const getDefaultIsUnfold = (value = true, widgetStyle: Record<string, any> = {}, sheetSectionIsUnfold?) => {
   let tempIsUnfold = value;
   const localValue = sheetSectionIsUnfold || getSheetSectionIsUnfold();
   const showIcon = widgetStyle.showicon || '1';

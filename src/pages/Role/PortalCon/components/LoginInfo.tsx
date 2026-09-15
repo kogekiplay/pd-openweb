@@ -78,7 +78,7 @@ function LoginInfo(props) {
       id: 'accountId',
       width: 150,
       name: _l('用户'),
-      render: (control, data = {}) => {
+      render: (control, data: Record<string, any> = {}) => {
         return (
           <div className="userImgBox">
             <span className="name mLeft5">{data.log.fullname}</span>
@@ -90,7 +90,7 @@ function LoginInfo(props) {
       id: 'mobilePhone',
       width: 150,
       name: _l('手机号'),
-      render: (control, data = {}) => {
+      render: (control, data: Record<string, any> = {}) => {
         return data.log.mobilePhone;
       },
     },
@@ -98,7 +98,7 @@ function LoginInfo(props) {
       id: 'email',
       width: 150,
       name: _l('邮箱'),
-      render: (control, data = {}) => {
+      render: (control, data: Record<string, any> = {}) => {
         return data.log.email;
       },
     },
@@ -106,7 +106,7 @@ function LoginInfo(props) {
       id: 'userAgent',
       width: 170,
       name: _l('终端平台'),
-      render: (control, data = {}) => {
+      render: (control, data: Record<string, any> = {}) => {
         return data.log.userAgent;
       },
     },
@@ -114,7 +114,7 @@ function LoginInfo(props) {
       id: 'ip',
       width: 150,
       name: _l('IP地址'),
-      render: (control, data = {}) => {
+      render: (control, data: Record<string, any> = {}) => {
         return data.log.ip;
       },
     },
@@ -122,7 +122,7 @@ function LoginInfo(props) {
       id: 'date',
       name: _l('登录时间'),
       width: 170,
-      render: (control, data = {}) => {
+      render: (control, data: Record<string, any> = {}) => {
         return data.date;
       },
     },

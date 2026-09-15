@@ -62,7 +62,7 @@ export default class GetMoreRecord extends Component<any, any> {
   /**
    * 获取节点详情
    */
-  getNodeDetail(props, extra = {}) {
+  getNodeDetail(props, extra: Record<string, any> = {}) {
     const { processId, selectNodeId, selectNodeType, instanceId } = props;
     const { data } = this.state;
 

@@ -202,7 +202,7 @@ function WorksheetRecordLog(props, ref) {
     );
   }
 
-  const getParams = (param = {}) => {
+  const getParams = (param: Record<string, any> = {}) => {
     const { filedId, opeartorIds, startDateTime, endDateTime, archiveId } = param;
 
     return {

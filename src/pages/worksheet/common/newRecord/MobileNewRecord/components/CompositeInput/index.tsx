@@ -49,7 +49,7 @@ const Footer = styled.div`
   }
 `;
 
-const formatAppFile = (file = {}) => ({
+const formatAppFile = (file: Record<string, any> = {}) => ({
   id: file.id || file.fileID,
   fileID: file.fileID,
   name: file.name || file.originalFileName || file.originalFilename || file.fileName,

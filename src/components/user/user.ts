@@ -2,7 +2,7 @@ import { getRequest } from 'src/utils/common';
 import './user.less';
 
 var common = require('./common');
-var User = {};
+var User: Record<string, any> = {};
 var type = 'acount'; // 账户一览
 var projectId = '';
 

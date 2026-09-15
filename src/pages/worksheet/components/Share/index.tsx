@@ -14,7 +14,7 @@ import { pathCompletion } from 'src/utils/common';
 import { getPublicShare, getUrl, updatePublicShareStatus } from './controller';
 import Validity from './Validity';
 
-function genCard(from, type = 'public', params = {}) {
+function genCard(from, type = 'public', params: Record<string, any> = {}) {
   if (from === 'recordInfo' && type === 'private') {
     return {
       entityId: params.worksheetId,

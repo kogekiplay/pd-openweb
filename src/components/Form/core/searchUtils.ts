@@ -8,7 +8,7 @@ import { getDynamicValue } from './formUtils';
 import { getAttachmentData } from './formUtils/helper';
 import type { RecordRow } from 'src/utils/controlTypes';
 
-const getRelateValue = (control = {}, controlState, recordId: string) => {
+const getRelateValue = (control: Record<string, any> = {}, controlState, recordId: string) => {
   if (!_.isEmpty(controlState)) {
     const records: RecordRow[] = _.get(controlState, 'records') || [];
 
@@ -26,7 +26,7 @@ const getRelateValue = (control = {}, controlState, recordId: string) => {
   });
 };
 
-const getValue = (control = {}, type) => {
+const getValue = (control: Record<string, any> = {}, type) => {
   if (!control.value) return '';
   const effectiveType = control.type === 30 ? control.sourceControlType : control.type;
 

@@ -191,7 +191,7 @@ function AddSourceOrDest(props) {
             const infoTxt = nodeType === 'SOURCE_TABLE' ? 'source' : 'dest';
             const { className, id, iconBgColor, type, sourceName, formData } = data[infoTxt];
             onUpdateFlowDatasources({ ...data[infoTxt], name: sourceName });
-            let param = {};
+            let param: Record<string, any> = {};
 
             if (nodeType !== 'SOURCE_TABLE') {
               param = {

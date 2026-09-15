@@ -372,11 +372,11 @@ export const levelSafeParse = value => {
   return levelValue;
 };
 
-export const isOtherShowFeild = (control = {}) => {
+export const isOtherShowFeild = (control: Record<string, any> = {}) => {
   return (control.type === 30 || control.originType === 30) && (control.strDefault || '')[0] === '1';
 };
 
-export const formatSearchConfigs = (res = {}) => {
+export const formatSearchConfigs = (res: Record<string, any> = {}) => {
   if (!(res.queries || []).length) return [];
   return res.queries.map(item => {
     return { ...item, templates: [{ controls: (res.templates || {})[item.sourceId] || [] }] };
@@ -419,21 +419,21 @@ export const getFilterRelateControls = ({ controls = [], showControls = [], data
 };
 
 // 标签页内不支持的控件
-export const notInsetSectionTab = (data = {}) => {
+export const notInsetSectionTab = (data: Record<string, any> = {}) => {
   return (
     (includes([29, 51], data.type) && _.includes(['2', '6'], get(data, 'advancedSetting.showtype'))) || data.type === 52
   );
 };
 
 // 不支持字段说明----显示方式的控件
-export const notExplainDisplay = (data = {}) => {
+export const notExplainDisplay = (data: Record<string, any> = {}) => {
   return (
     (includes([29, 51], data.type) && _.includes(['2', '5', '6'], get(data, 'advancedSetting.showtype'))) ||
     _.includes([22, 52], data.type)
   );
 };
 
-export const notWidgetDes = (data = {}) => {
+export const notWidgetDes = (data: Record<string, any> = {}) => {
   return fixedBottomWidgets(data) || _.includes(NO_DES_WIDGET, data.type);
 };
 
@@ -492,7 +492,7 @@ export function SearchFn(keywords = '', value = '') {
 }
 
 // 汇总是否显示单位及小数点配置
-export const isShowUnitConfig = (data = {}, selectedControl = {}) => {
+export const isShowUnitConfig = (data = {}, selectedControl: Record<string, any> = {}) => {
   const { enumDefault, enumDefault2 } = data;
   // 如果是日期格式汇总 不显示
   if ([2, 3].includes(enumDefault) && [15, 16, 46].includes(enumDefault2)) return false;
@@ -505,7 +505,7 @@ export const isShowUnitConfig = (data = {}, selectedControl = {}) => {
 };
 
 // 关联多条列表显示的控件
-export const isSheetDisplay = (data = {}) => {
+export const isSheetDisplay = (data: Record<string, any> = {}) => {
   return includes([29, 51], data.type) && _.includes(['2', '5', '6'], get(data, 'advancedSetting.showtype'));
 };
 
@@ -603,7 +603,7 @@ export const supportSettingCollapse = (props, key: string) => {
 
 // 各控件分别支持哪些配置
 // 设置、样式、说明、事件
-export const supportWidgetIntroOptions = (data = {}, introType, from?, isRecycle = false) => {
+export const supportWidgetIntroOptions = (data: Record<string, any> = {}, introType, from?, isRecycle = false) => {
   // 回收站不显示样式、说明
   if (isRecycle) return false;
   // 分段、他表、标签页

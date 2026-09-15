@@ -13,7 +13,7 @@ const normalizeFileExt = fileExt => {
   return String(fileExt).startsWith('.') ? String(fileExt).toLowerCase() : `.${String(fileExt).toLowerCase()}`;
 };
 
-const isImageAttachment = (file = {}) => {
+const isImageAttachment = (file: Record<string, any> = {}) => {
   const type = String(file.type || '').toLowerCase();
   return (
     type === 'image' || /^image\//.test(type) || IMAGE_FILE_EXTS.includes(normalizeFileExt(file.fileExt || file.ext))

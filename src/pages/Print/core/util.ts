@@ -44,7 +44,7 @@ export const getControlsForPrint = ({ receiveControls, relationMaps = {}, needVi
   const controls: FormControl[] = receiveControls
     .filter(c => isSupportedPrintControl({ control: c, needVisible }))
     .map(control => {
-      const extendAttr = {};
+      const extendAttr: Record<string, any> = {};
 
       // 关联记录、子表、查询记录 数据处理
       if (isRelationControl(control.type)) {

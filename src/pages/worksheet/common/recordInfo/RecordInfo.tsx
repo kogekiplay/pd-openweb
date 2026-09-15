@@ -484,7 +484,7 @@ export default class RecordInfo extends Component<any, any> {
         notDialog &&
         addBehaviorLog('worksheetRecord', worksheetId, { rowId: recordId }, true);
 
-      let portalConfigSet = {};
+      let portalConfigSet: Record<string, any> = {};
       const { id: windowAppId, portalConfig = {} } = window?.appInfo || {};
       const isSameApp = data?.appId === windowAppId;
       const isPublic =

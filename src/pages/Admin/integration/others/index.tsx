@@ -299,7 +299,7 @@ export default class OtherTool extends Component<any, any> {
         : loginSetting;
     const list = formListTop.concat(formListBottom).concat(loginSettingData);
     const dnGroupError = searchRange === 0 || (searchRange === 1 && DNGroupList.every(it => !!it.dn && !!it.groupName));
-    const errorInfo = {};
+    const errorInfo: Record<string, any> = {};
     list.forEach(({ key, errorMsg }) => {
       if (errorMsg) {
         if (!this.state[key]) {

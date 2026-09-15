@@ -607,7 +607,7 @@ export default class AppAndWorksheetLog extends Component<any, any> {
     });
   };
 
-  getLogList = (params = {}) => {
+  getLogList = (params: Record<string, any> = {}) => {
     this.setState({ loading: true, pageIndex: params.pageIndex });
     const { projectId, appId } = this.props;
     const { logType, searchValues, archivedItem = {}, appPageIndex, appList, worksheetList } = this.state;

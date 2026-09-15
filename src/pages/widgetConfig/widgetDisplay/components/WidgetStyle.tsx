@@ -293,7 +293,7 @@ export function WidgetStyleSetting(props) {
                       <div className="settingItemTitle">{_l('背景色')}</div>
                       <Dropdown
                         border
-                        renderTitle={(i = {}) => i.text}
+                        renderTitle={(i: Record<string, any> = {}) => i.text}
                         data={[FILL_COLOR.map(item => ({ text: renderShowValue(item), value: item.value }))]}
                         value={covercolor}
                         onChange={value => handleChange({ covercolor: value })}

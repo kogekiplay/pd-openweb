@@ -146,7 +146,7 @@ export default function (props) {
   };
 
   const onSubmit = (isFrequentLoginError?) => {
-    let callback = (res = {}) => {
+    let callback = (res: Record<string, any> = {}) => {
       if (isFrequentLoginError && res.ret !== 0) return;
       doAddProjectCode(res);
     };

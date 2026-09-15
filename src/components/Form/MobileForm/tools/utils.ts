@@ -152,7 +152,7 @@ export const getExpandWidgetIds = (controls: FormControl[] = [], data = {}, from
 };
 
 // 关联多条列表显示的控件
-export const isSheetDisplay = (data = {}) => {
+export const isSheetDisplay = (data: Record<string, any> = {}) => {
   return includes([29, 51], data.type) && _.includes(['2', '5', '6'], get(data, 'advancedSetting.showtype'));
 };
 

@@ -346,7 +346,7 @@ export const loadSavedFilters = (worksheetId: string) => (dispatch: AppDispatch)
 const promiseRequests = {};
 
 export const fetchSheetRows =
-  (param = {}) =>
+  (param: Record<string, any> = {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
     const {
       base,

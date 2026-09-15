@@ -93,7 +93,7 @@ export const isHistoryLayerPopstate = event => Boolean(event && _historyLayerPop
  * 传入 urlParams 时，仅在明道云 App 内同步显示到 URL，关闭时通过 history.go 自动恢复上一帧 URL。
  * @returns {boolean} 是否成功入栈（非移动端 / 重复入栈返回 false）
  */
-export const pushHistoryLayer = (id, onClose, options = {}) => {
+export const pushHistoryLayer = (id, onClose, options: Record<string, any> = {}) => {
   if (!browserIsMobile() || !id) return false;
   _bindPopstateOnce();
   // 同 id 已在栈顶 → 视为"刷新 onClose 引用"，不重复 push

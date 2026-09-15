@@ -52,7 +52,7 @@ export default function AIModelRule(props) {
 
   const { loading, keyword, list, showDrawer, actionType, actionRecord } = state;
 
-  const getData = (params = {}) => {
+  const getData = (params: Record<string, any> = {}) => {
     const ruleName = _.isUndefined(params.ruleName) ? keyword : params.ruleName;
 
     setState({ loading: true });

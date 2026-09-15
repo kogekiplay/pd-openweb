@@ -44,7 +44,7 @@ export default function CreateAIActionDialog(props) {
       });
   };
 
-  const handleOk = (params = {}) => {
+  const handleOk = (params: Record<string, any> = {}) => {
     setState({ generateLoading: true });
     const description = params?.remark || remark;
     agentApi

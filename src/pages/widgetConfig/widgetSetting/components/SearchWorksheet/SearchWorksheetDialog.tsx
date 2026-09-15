@@ -261,7 +261,7 @@ export default class SearchWorksheetDialog extends Component<any, any> {
   }, 300);
 
   // 获取子表下拉数据或查询表下拉数据
-  getDropData = (controls: FormControl[] = [], control = {}, hasRowId?) => {
+  getDropData = (controls: FormControl[] = [], control: Record<string, any> = {}, hasRowId?) => {
     let filterControls = getControls({
       data: control,
       controls,
@@ -628,7 +628,7 @@ export default class SearchWorksheetDialog extends Component<any, any> {
                         disabled={!sheetId}
                         value={isDelete ? undefined : _.get(configs[0] || {}, 'subCid')}
                         data={this.getDropData(controls, data)}
-                        renderItem={(selectData = {}) => {
+                        renderItem={(selectData: Record<string, any> = {}) => {
                           return (
                             <span title={selectData.text}>
                               {selectData.text}

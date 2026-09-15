@@ -82,7 +82,7 @@ function getBrowserLang() {
   return normalizeLang((navigator.languages && navigator.languages[0]) || navigator.language);
 }
 
-function getEntryLang(options = {}) {
+function getEntryLang(options: Record<string, any> = {}) {
   return normalizeLang(
     options.lang ||
       options.language ||
@@ -93,7 +93,7 @@ function getEntryLang(options = {}) {
   );
 }
 
-function getLocaleScriptUrl(lang, options = {}) {
+function getLocaleScriptUrl(lang, options: Record<string, any> = {}) {
   const localePath = LANG_PATH_MAP[lang] || LANG_PATH_MAP[DEFAULT_LANG];
 
   if (options.localeUrl) {
@@ -269,7 +269,7 @@ function createEntryAlert(content, type = 1) {
 }
 
 function createMdyAPI(apiServer) {
-  const mdyAPI = (controllerName, actionName, requestData, options = {}) => {
+  const mdyAPI = (controllerName, actionName, requestData, options: Record<string, any> = {}) => {
     const controller = options.abortController || new AbortController();
     const ajaxOptions = options.ajaxOptions || {};
     const method = (ajaxOptions.type || 'POST').toUpperCase();
@@ -350,12 +350,12 @@ function getFirstProjectId() {
   return firstProject && firstProject.projectId;
 }
 
-function getContextProjectId(args = {}) {
+function getContextProjectId(args: Record<string, any> = {}) {
   return args.context && args.context.projectId;
 }
 
 function bindAgentAPIToMdyAPI() {
-  const agentAPI = (args = {}, options = {}) => {
+  const agentAPI = (args: Record<string, any> = {}, options = {}) => {
     const { url, method = 'POST', isStream, silent, header, abortController } = options;
     const agentHost = ((window.md && window.md.global && window.md.global.Config.AgentUrl) || '').replace(/\/$/, '');
     const fullUrl = window.isProduction && agentHost && url && url.startsWith('/') ? agentHost + url : url;
@@ -427,7 +427,7 @@ function applyGlobalMeta(data) {
   };
 }
 
-function setupRuntime(options = {}) {
+function setupRuntime(options: Record<string, any> = {}) {
   const webUrl = trimSlash(options.webUrl || window.location.origin);
   const apiServer = ensureTrailingSlash(options.apiServer || joinUrl(webUrl, '/api'));
   const agentUrl = trimSlash(options.agentUrl || webUrl);
@@ -534,7 +534,7 @@ function loadStyles() {
   require('src/common/mdcss/mingoEntryUtilities.css');
 }
 
-function mount(container, options = {}) {
+function mount(container, options: Record<string, any> = {}) {
   if (!container) {
     throw new Error('MingoEntry.mount requires a container element.');
   }

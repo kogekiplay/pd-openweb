@@ -45,7 +45,7 @@ class AttachmentError {
   }
 }
 
-function loadAttachment(attachment, options = {}) {
+function loadAttachment(attachment, options: Record<string, any> = {}) {
   return new Promise(resolve => {
     if (!attachment) attachment = {};
     let { previewAttachmentType, previewType } = attachment;

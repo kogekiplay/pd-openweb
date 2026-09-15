@@ -4,7 +4,7 @@ const APPROVE_ACTION_BUTTON_DESC_KEYS = {
   return: 17,
 };
 
-export function getApproveActionTypeList(action, auth = {}) {
+export function getApproveActionTypeList(action, auth: Record<string, any> = {}) {
   return action === 'pass' ? auth.passTypeList || [] : auth.overruleTypeList || [];
 }
 

@@ -1279,7 +1279,7 @@ class PivotTable extends Component<any, any> {
     }
 
     if (_.isObject(data) && 'value' in data) {
-      const props = {};
+      const props: Record<string, any> = {};
 
       if (data.sum) {
         props.colSpan = data.length;
@@ -1369,8 +1369,8 @@ class PivotTable extends Component<any, any> {
   }) {
     const { yaxisList } = this.props.reportData;
     const { yaxisMap = {}, colorRuleMap = {} } = colorRuleConfig;
-    const style = {};
-    const barStyle = {};
+    const style: Record<string, any> = {};
+    const barStyle: Record<string, any> = {};
     const { controlType, normType, emptyShowType, percent: percentConfig } = yaxisMap[controlId] || {};
     const isNumberValue = _.isNumber(value);
     const originalValue = value;

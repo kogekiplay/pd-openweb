@@ -157,11 +157,11 @@ function templateControlsHasRelationField(controls) {
   return _.some(controls, c => isValidControl(c) && _.includes(TEMPLATE_RELATION_CONTROL_TYPES, c.type));
 }
 
-function isWorksheetRoleControl(control = {}) {
+function isWorksheetRoleControl(control: Record<string, any> = {}) {
   return _.includes(WORKSHEET_ROLE_CONTROL_TYPES, control.type);
 }
 
-function getWorksheetIdByControl(allControls, control = {}) {
+function getWorksheetIdByControl(allControls, control: Record<string, any> = {}) {
   const parsedDataSource = parseDataSource(control.dataSource);
 
   if (_.includes([WIDGETS_TO_API_TYPE_ENUM.SHEET_FIELD, WIDGETS_TO_API_TYPE_ENUM.SUBTOTAL], control.type)) {
@@ -174,7 +174,7 @@ function getWorksheetIdByControl(allControls, control = {}) {
   return parsedDataSource;
 }
 
-function getSourceControl(allControls, control = {}) {
+function getSourceControl(allControls, control: Record<string, any> = {}) {
   const parsedDataSource = parseDataSource(control.dataSource);
 
   if (!parsedDataSource) return;
@@ -182,7 +182,7 @@ function getSourceControl(allControls, control = {}) {
   return _.find(allControls, item => item.controlId === parsedDataSource);
 }
 
-function isBlankSubListControl(control = {}) {
+function isBlankSubListControl(control: Record<string, any> = {}) {
   if (control.type !== WIDGETS_TO_API_TYPE_ENUM.SUB_LIST) return false;
 
   return (
@@ -192,7 +192,7 @@ function isBlankSubListControl(control = {}) {
   );
 }
 
-function isBlankSubListRoleControl(allControls, control = {}) {
+function isBlankSubListRoleControl(allControls, control: Record<string, any> = {}) {
   if (isBlankSubListControl(control)) return true;
 
   return (
@@ -204,7 +204,7 @@ function supportReferencedTemplateControl(control = {}) {
   return !isBlankSubListControl(control);
 }
 
-function normalizeTemplateControl(allControls, control = {}) {
+function normalizeTemplateControl(allControls, control: Record<string, any> = {}) {
   if (control.type === WIDGETS_TO_API_TYPE_ENUM.SUBTOTAL && isBlankSubListRoleControl(allControls, control)) {
     return {
       ...control,
@@ -230,7 +230,7 @@ function normalizeTemplateControl(allControls, control = {}) {
   return control;
 }
 
-function isDirectReferencedWorksheetRoleControl(allControls, control = {}, worksheetId: string) {
+function isDirectReferencedWorksheetRoleControl(allControls, control: Record<string, any> = {}, worksheetId: string) {
   return (
     isBlankSubListRoleControl(allControls, control) ||
     (_.includes([WIDGETS_TO_API_TYPE_ENUM.SHEET_FIELD, WIDGETS_TO_API_TYPE_ENUM.SUBTOTAL], control.type) &&

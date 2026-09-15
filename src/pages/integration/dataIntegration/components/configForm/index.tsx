@@ -169,7 +169,7 @@ export default function ConfigForm(props) {
 
   const onTestConnect = () => {
     const { data, error } = fieldRef.current.getSubmitData();
-    const formData = {};
+    const formData: Record<string, any> = {};
 
     if (error) return;
 

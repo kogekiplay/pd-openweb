@@ -34,7 +34,7 @@ import { updateFilterComponents } from './redux/actions';
 import WidgetDisplay from './WidgetDisplay';
 
 const getLayout = components =>
-  components.map((item = {}, index: number) => {
+  components.map((item: Record<string, any> = {}, index: number) => {
     const { id } = item;
     const { layout, titleVisible } = item.mobile;
     const layoutType = 'mobile';

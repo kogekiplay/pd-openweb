@@ -1275,19 +1275,19 @@ export const onValidator = ({
  */
 
 //获取字段值
-const getFieldIds = (its = {}) => {
+const getFieldIds = (its: Record<string, any> = {}) => {
   const isDynamic = its.dynamicSource && its.dynamicSource.length > 0;
   return isDynamic ? [its.controlId, ...(its.dynamicSource || []).map(dy => dy.cid)] : [its.controlId];
 };
 
-const getIds = (arr = {}) => {
+const getIds = (arr: Record<string, any> = {}) => {
   return (arr.groupFilters || []).reduce((total, its) => {
     return total.concat(getFieldIds(its));
   }, []);
 };
 
 // 提示错误：单个条件组字段、条件值隐藏过滤(补充条件为或的情况)
-const getItemGroupFilters = (arrItem = {}, data = [], recordId: string, from) => {
+const getItemGroupFilters = (arrItem: Record<string, any> = {}, data = [], recordId: string, from) => {
   const isOrCondition = (arrItem.groupFilters || []).findIndex(its => its.spliceType === 2) > -1;
   let newArr = [arrItem.groupFilters || []];
 
@@ -1312,7 +1312,7 @@ const getItemGroupFilters = (arrItem = {}, data = [], recordId: string, from) =>
 };
 
 //判断业务规则配置条件是否满足
-export const checkValueAvailable = (rule = {}, data = [], recordId: string, from?) => {
+export const checkValueAvailable = (rule: Record<string, any> = {}, data = [], recordId: string, from?) => {
   let isAvailable = false;
   //不满足条件的id,过滤错误
   let filterControlIds = {};

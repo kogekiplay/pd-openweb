@@ -28,7 +28,7 @@ export function getDefaultMjml(theme = getMjmlPreviewTheme()) {
 </mjml>`;
 }
 
-export function getEmailContentType(data = {}) {
+export function getEmailContentType(data: Record<string, any> = {}) {
   const { emailContentType } = data;
 
   if ([CONTENT_TYPE.TEXT, CONTENT_TYPE.RICH_TEXT, CONTENT_TYPE.MJML].includes(emailContentType)) {
@@ -138,7 +138,7 @@ export function getMjmlPreviewTheme() {
   };
 }
 
-export function getMjmlPreviewHtml(value = '', formulaMap = {}, previewTheme = {}) {
+export function getMjmlPreviewHtml(value = '', formulaMap = {}, previewTheme: Record<string, any> = {}) {
   let html = replaceMjmlFormulaForPreview(value, formulaMap).replace(/max-width\s*:\s*600px;?/gi, '');
   const defaultThemeColorPair = DEFAULT_MJML_THEME_COLOR_PAIRS.find(
     item =>

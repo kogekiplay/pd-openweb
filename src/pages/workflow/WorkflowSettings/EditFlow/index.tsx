@@ -499,7 +499,7 @@ class EditFlow extends Component<any, any> {
         isApproval: flowInfo.startAppType === APP_TYPE.APPROVAL_START,
       };
     } else {
-      let approvalProcessDetail = {};
+      let approvalProcessDetail: Record<string, any> = {};
 
       Object.keys(workflowDetail.flowNodeMap).forEach(key => {
         if (

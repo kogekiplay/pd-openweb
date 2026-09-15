@@ -305,7 +305,7 @@ export default class EditorCon extends Component<any, any> {
     }
   };
 
-  renderCard = (nodeData = {}) => {
+  renderCard = (nodeData: Record<string, any> = {}) => {
     const { flowData } = this.props;
     const defaultInfo = NODE_TYPE_LIST.find(it => it.nodeType === nodeData.nodeType) || {};
     const isAct = ACTION_LIST.map(o => o.type).includes(nodeData.nodeType);

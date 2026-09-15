@@ -38,7 +38,7 @@ export function error(state = false, action: ReduxAction) {
   }
 }
 
-export function worksheetInfo(state = {}, action: ReduxAction) {
+export function worksheetInfo(state: Record<string, any> = {}, action: ReduxAction) {
   let newState;
 
   switch (action.type) {

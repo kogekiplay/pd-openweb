@@ -61,7 +61,7 @@ export default class Search extends Component<any, any> {
   /**
    * 获取节点详情
    */
-  getNodeDetail(props, obj = {}) {
+  getNodeDetail(props, obj: Record<string, any> = {}) {
     const { processId, selectNodeId, selectNodeType, instanceId } = props;
     const { data } = this.state;
 

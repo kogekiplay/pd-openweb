@@ -236,7 +236,7 @@ export default function (props) {
         },
       },
     });
-    lineChart.on('slider:mouseup', (e = {}) => {
+    lineChart.on('slider:mouseup', (e: Record<string, any> = {}) => {
       const { filteredData = [] } = e.view;
       setState({
         startTime: (filteredData[0] || {}).time || '',

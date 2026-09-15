@@ -95,7 +95,7 @@ export const replaceControlsTranslateInfo = (appId: string, worksheetId: string,
   });
 };
 
-export const replaceAdvancedSettingTranslateInfo = (appId: string, worksheetId: string, advancedSetting = {}) => {
+export const replaceAdvancedSettingTranslateInfo = (appId: string, worksheetId: string, advancedSetting: Record<string, any> = {}) => {
   const translateInfo = getTranslateInfo(appId, null, worksheetId);
   const data = {
     ...advancedSetting,

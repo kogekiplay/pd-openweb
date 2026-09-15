@@ -175,7 +175,7 @@ function filterPendingCellErrors(errors = {}, rows: RecordRow[] = [], showContro
   });
 }
 
-function mergeRequiredState(controls: FormControl[] = [], control = {}) {
+function mergeRequiredState(controls: FormControl[] = [], control: Record<string, any> = {}) {
   const resetControls = control.relationControls || [];
 
   if (_.isEmpty(resetControls)) return controls;

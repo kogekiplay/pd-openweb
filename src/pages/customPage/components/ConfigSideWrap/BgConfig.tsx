@@ -68,7 +68,7 @@ export default props => {
 
   const colors = pageStyleType === 'light' ? lightColors : darkColors;
 
-  const handleChangeColor = (pageBgColor, data = {}) => {
+  const handleChangeColor = (pageBgColor, data: Record<string, any> = {}) => {
     if (_.find(themeColors, { value: pageBgColor }) && !config.chartColor) {
       handleChangeConfig({
         pageBgColor,

@@ -163,7 +163,7 @@ export default class LoginLog extends Component<any, any> {
     this.getLogList({ pageIndex: 1, pageSize: 50 });
   }
 
-  getLogList = (params = {}) => {
+  getLogList = (params: Record<string, any> = {}) => {
     this.setState({ loading: true, pageIndex: params.pageIndex });
     let { pageIndex = 1, pageSize = 50 } = params;
     const { searchValues } = this.state;

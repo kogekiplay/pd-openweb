@@ -13,7 +13,7 @@ export default function Custom(props) {
       <AddCustomDialog
         {...props}
         onCancel={() => deleteWidget(data.controlId)}
-        onOk={(nextData, saveInfo = {}) => {
+        onOk={(nextData, saveInfo: Record<string, any> = {}) => {
           onChange(nextData, widgets => {
             // 关联本表
             if (saveInfo.relateSelf) {

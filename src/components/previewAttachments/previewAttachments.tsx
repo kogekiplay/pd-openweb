@@ -34,7 +34,7 @@ const previewAttachments = function (options, extra?) {
 
 export default previewAttachments;
 
-export const transformQiniuUrl = (file, options = {}) => {
+export const transformQiniuUrl = (file, options: Record<string, any> = {}) => {
   options = {
     index: 0,
     attachments: [],

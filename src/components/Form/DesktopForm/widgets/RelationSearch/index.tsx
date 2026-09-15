@@ -215,7 +215,7 @@ function Cards(props) {
 function Texts(props) {
   const { control, entityName, allowOpenRecord, allowNewRecord, records = [], onAdd, onOpen }: { records: RecordRow[]; [key: string]: any } = props;
 
-  let valueStyle = {};
+  let valueStyle: Record<string, any> = {};
   let style = {};
 
   if (control.type === 51) {

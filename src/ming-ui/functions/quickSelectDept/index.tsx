@@ -669,7 +669,7 @@ export function DeptSelect(props) {
   );
 }
 
-export default function quickSelectDept(target, props = {}) {
+export default function quickSelectDept(target, props: Record<string, any> = {}) {
   const panelWidth = 360;
   const panelHeight = 41 + (props.minHeight || 358);
   let targetLeft;

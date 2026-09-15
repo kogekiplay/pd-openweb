@@ -415,7 +415,7 @@ export const getDateRangeTypeListByShowtype = showtype => {
   }
 };
 
-export const getSetDefault = (control = {}) => {
+export const getSetDefault = (control: Record<string, any> = {}) => {
   let type = getControlFormatType(control);
   let fastFilterSet = {
     controlId: control.controlId,

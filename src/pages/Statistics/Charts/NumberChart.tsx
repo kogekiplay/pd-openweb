@@ -409,7 +409,7 @@ export default class extends Component<any, any> {
     const control = _.find(yaxisList, { controlId: id }) || {};
     return control.rename || control.controlName;
   };
-  handleClick = (event, data = {}) => {
+  handleClick = (event, data: Record<string, any> = {}) => {
     const { xaxes, appId, reportId, name, reportType, style, displaySetup, map } = this.props.reportData;
     const param = {};
     const linkageMatch = {

@@ -154,7 +154,7 @@ export const handleAPPScanCode = ({
  * @param {*} updateData - 更新数据
  * @returns
  */
-export const handleRelateRow = (control = {}, content, worksheetInfo, updateData) => {
+export const handleRelateRow = (control: Record<string, any> = {}, content, worksheetInfo, updateData) => {
   const currentWorksheetId = control.dataSource;
 
   if (content.includes('worksheetshare') || content.includes('public/record')) {
@@ -213,7 +213,7 @@ export const handleRelateRow = (control = {}, content, worksheetInfo, updateData
  * @param {*} updateData - 更新数据
  * @returns
  */
-const getRelateData = (control = {}, content, extra = {}, worksheetInfo = {}, updateData) => {
+const getRelateData = (control: Record<string, any> = {}, content, extra = {}, worksheetInfo = {}, updateData) => {
   const { controlId, controlName } = control;
   const { scanlink, scancontrol, scancontrolid } = _.get(control, 'advancedSetting') || {};
   const scanControl =

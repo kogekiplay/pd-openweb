@@ -114,7 +114,7 @@ class PrintForm extends React.Component<any, any> {
 
   getClientId = () => _.get(this.state, 'params.clientId') || window.clientId || sessionStorage.getItem('clientId');
 
-  setAppInfo = (data = {}, cb) => {
+  setAppInfo = (data: Record<string, any> = {}, cb) => {
     const { params } = this.state;
     const { type, from, appId, printType } = params;
 
@@ -200,7 +200,7 @@ class PrintForm extends React.Component<any, any> {
     }
   };
 
-  setWorksheetInfo = (res = {}) => {
+  setWorksheetInfo = (res: Record<string, any> = {}) => {
     const { params } = this.state;
     const { worksheetId, viewId } = params;
     const worksheetInfo = {
@@ -461,7 +461,7 @@ class PrintForm extends React.Component<any, any> {
     return result;
   };
 
-  handChange = (changeData, extraData = {}) => {
+  handChange = (changeData, extraData: Record<string, any> = {}) => {
     this.setState({
       printData: Object.assign(this.state.printData, changeData),
       isChange: true,

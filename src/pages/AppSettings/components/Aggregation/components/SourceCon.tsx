@@ -23,7 +23,7 @@ export default function SourceCon(props) {
     isChange: false,
   });
 
-  const renderSourceItem = (dataInfo = {}, canChange = false, filters = []) => {
+  const renderSourceItem = (dataInfo: Record<string, any> = {}, canChange = false, filters = []) => {
     if (dataInfo.isRelative) {
       return (
         <div className="Dropdown--input Dropdown--border" onClick={e => e.stopPropagation()}>
@@ -122,9 +122,9 @@ export default function SourceCon(props) {
                           sourceTables.length <= 0
                             ? []
                             : (_.get(groupDt, 'nodeConfig.config.groupFields') || [])
-                                .map((o = {}) => {
+                                .map((o: Record<string, any> = {}) => {
                                   let fields = (o.fields || []).filter(
-                                    (it = {}) =>
+                                    (it: Record<string, any> = {}) =>
                                       !!(sourceTables || []).find(a =>
                                         _.get(it, 'parentFieldInfo.oid')
                                           ? _.get(it, 'parentFieldInfo.oid').indexOf(`${a.workSheetId}_`) >= 0
@@ -145,7 +145,7 @@ export default function SourceCon(props) {
                                           },
                                   };
                                 })
-                                .filter((o = {}) => (o.fields || []).length > 0),
+                                .filter((o: Record<string, any> = {}) => (o.fields || []).length > 0),
                       }),
                     ],
                     {
@@ -380,7 +380,7 @@ export default function SourceCon(props) {
       let newData = updateConfig(sourceDt, {
         sourceTables: (_.get(sourceDt, 'nodeConfig.config.sourceTables') || []).map(o => {
           if (o.workSheetId === filterVisibleId) {
-            let param = {};
+            let param: Record<string, any> = {};
 
             if (items.length > 0) {
               param.filterConfig = {

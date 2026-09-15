@@ -379,7 +379,7 @@ export default function DisplayItem(props) {
     return { width: dragLineWidth, left: -(itemLeft - left - 20) };
   };
 
-  const handleOperate = (mode, option = {}) => {
+  const handleOperate = (mode, option: Record<string, any> = {}) => {
     const deleteWidgetById = ({ widgets, controlId, path }: { controlId?: string; [key: string]: any }) => {
       const [row, col] = path;
 

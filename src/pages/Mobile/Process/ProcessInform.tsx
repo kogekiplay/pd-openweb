@@ -42,7 +42,7 @@ export default class ProcessInform extends Component<any, any> {
   }
 
   getTodoList() {
-    const param = {};
+    const param: Record<string, any> = {};
     const { loading, isMore, currentTab, searchValue, sortParam, queryParam } = this.state;
 
     if (loading || !isMore) {

@@ -141,7 +141,7 @@ function pickArtifactReferenceFrom(source, { allowId = false, fallback = {} } = 
   };
 }
 
-function pickArtifactReferenceFromText(text, fallback = {}) {
+function pickArtifactReferenceFromText(text, fallback: Record<string, any> = {}) {
   if (!text) return null;
   const artifactId = text.match(/art-[a-z0-9-]+/i)?.[0];
   const versionId = text.match(/ver-[a-z0-9-]+/i)?.[0];

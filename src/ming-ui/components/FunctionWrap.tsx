@@ -12,7 +12,7 @@ import { browserIsMobile } from 'src/utils/common';
  * export const selectRole = props => functionWrap(DialogSelectOrgRole, { ...props, visibleName: 'orgRoleDialogVisible', closeFnName: 'onHide'  });
  */
 
-export default function (Comp, props = {}) {
+export default function (Comp, props: Record<string, any> = {}) {
   const div = document.createElement('div');
   let destroyed = false;
 

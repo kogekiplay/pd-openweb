@@ -7,7 +7,7 @@ import Config from '../config';
 import { PERMISSION_ENUM } from '../enum';
 import './common.less';
 
-const AdminCommon = {};
+const AdminCommon: Record<string, any> = {};
 
 AdminCommon.getAuthority = async () => {
   Config.getParams();

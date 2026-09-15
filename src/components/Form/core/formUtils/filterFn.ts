@@ -875,7 +875,7 @@ export default function filterFn({ filterData, originControl, data = [], recordI
           case CONTROL_FILTER_WHITELIST.CASCADER.value:
             let isInV = true;
             _.map(compareValues, it => {
-              let itValue = {};
+              let itValue: Record<string, any> = {};
               itValue = dynamicSource.length > 0 ? it || {} : safeParse(it || '{}');
               let valueN = _.isArray(value) ? value : safeParse(value || '[]', 'array');
               _.map(valueN, item => {
@@ -1380,7 +1380,7 @@ export default function filterFn({ filterData, originControl, data = [], recordI
           case CONTROL_FILTER_WHITELIST.CASCADER.value:
             let isInValue = true;
             _.map(compareValues, it => {
-              let itValue = {};
+              let itValue: Record<string, any> = {};
               itValue = dynamicSource.length > 0 ? it || {} : safeParse(it || '{}');
               let valueN = _.isArray(value) ? value : safeParse(value || '[]', 'array');
               _.map(valueN, item => {

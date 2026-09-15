@@ -115,7 +115,7 @@ export const getItemFilters = items => {
 };
 
 // 时间字段处理
-export const formatTimeValue = (control = {}, isCurrent = false, value?) => {
+export const formatTimeValue = (control: Record<string, any> = {}, isCurrent = false, value?) => {
   // 汇总输出格式unit为9
   const mode = control.unit === '6' || control.unit === '9' ? 'HH:mm:ss' : 'HH:mm';
   if (isCurrent) return moment(moment().format(mode), mode).format('HH:mm:ss');
@@ -229,7 +229,7 @@ export const getControlValue = (data, currentItem, controlId: string, objValue?)
   return _.isUndefined(value) ? '' : value;
 };
 
-export const checkChildTableIsEmpty = (control = {}) => {
+export const checkChildTableIsEmpty = (control: Record<string, any> = {}) => {
   const store = control.store;
   const state = store && store.getState();
 
@@ -248,7 +248,7 @@ export const checkChildTableIsEmpty = (control = {}) => {
   }
 };
 
-export const getAttachmentData = (control = {}) => {
+export const getAttachmentData = (control: Record<string, any> = {}) => {
   let fileData;
 
   if (control.value && _.isArray(JSON.parse(control.value))) {

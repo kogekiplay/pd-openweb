@@ -50,7 +50,7 @@ export default class DetailList extends Component<any, any> {
     });
 
     this.postList
-      .then((data = {}) => {
+      .then((data: Record<string, any> = {}) => {
         this.setState({
           list: list.concat(data.listDetail),
           isMore: (data.listDetail || []).length < data.allCount,
@@ -101,7 +101,7 @@ export default class DetailList extends Component<any, any> {
       });
   };
 
-  renderLinkList = (item = {}) => {
+  renderLinkList = (item: Record<string, any> = {}) => {
     const date = moment(item.deadTime);
     return (
       <div className="linkListItem">

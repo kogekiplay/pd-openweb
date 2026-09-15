@@ -28,7 +28,7 @@ export const getMarkdownContent = text => {
   return filterXss(md.render(text));
 };
 
-export const getPluginOperateText = (recentOperation = {}) => {
+export const getPluginOperateText = (recentOperation: Record<string, any> = {}) => {
   let operateText = '';
 
   switch (recentOperation.type) {

@@ -154,7 +154,7 @@ export default class ProcessMatters extends Component<any, any> {
     localStorage.removeItem('currentProcessTab');
   }
   getTodoList() {
-    const param = {};
+    const param: Record<string, any> = {};
     const { loading, isMore, topTab, bottomTab, searchValue, sortParam, queryParam } = this.state;
     const { appId } = getRequest();
 

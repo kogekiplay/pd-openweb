@@ -1,5 +1,5 @@
 ﻿export class SpeechSynthesizer {
-  constructor(options = {}) {
+  constructor(options: Record<string, any> = {}) {
     this.synth = window.speechSynthesis;
     this.hasUtteranceSupport = typeof window.SpeechSynthesisUtterance === 'function';
     this.voice = null;

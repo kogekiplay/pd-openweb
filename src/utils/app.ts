@@ -14,7 +14,7 @@ export const getWidgetTypeName = type => {
   return { controlTypeName: _.get(DEFAULT_CONFIG, `${widgetType}.widgetName`), controlType: String(widgetType) };
 };
 
-export const getExistWorksheet = (data = {}) => {
+export const getExistWorksheet = (data: Record<string, any> = {}) => {
   const existWorksheet = [];
   const sections = Array.isArray(data) ? data : data.sections || [];
 

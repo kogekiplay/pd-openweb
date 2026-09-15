@@ -526,7 +526,7 @@ export default class Authentication extends Component<any, any> {
   /**
    * 发送
    */
-  send = (testMap = {}) => {
+  send = (testMap: Record<string, any> = {}) => {
     const { processId, selectNodeId } = this.props;
     const { data, sendRequest } = this.state;
 

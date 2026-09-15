@@ -15,7 +15,7 @@ export const handleShare = (data, isDownload) => {
     return;
   }
 
-  let attachment = {};
+  let attachment: Record<string, any> = {};
   let attachmentType = 1;
 
   if (data.refId) {

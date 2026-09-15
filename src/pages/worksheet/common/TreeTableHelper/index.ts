@@ -214,7 +214,7 @@ export function treeTableViewData(state = initialTreeViewParams, action: ReduxAc
  */
 export const handleUpdateTreeNodeExpansion =
   (
-    row = {},
+    row: Record<string, any> = {},
     {
       runTimes,
       expandAll,

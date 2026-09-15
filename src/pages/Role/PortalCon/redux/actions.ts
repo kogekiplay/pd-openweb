@@ -405,7 +405,7 @@ export const getList = (PotralStatus = 0, cb?) => {
   };
 };
 
-export const setQuickTag = (data = {}) => {
+export const setQuickTag = (data: Record<string, any> = {}) => {
   return dispatch => {
     dispatch({ type: 'UPDATE_QUICKTAG', data });
     dispatch(setRoleId(data.roleId || 'all'));

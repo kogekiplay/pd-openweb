@@ -501,7 +501,7 @@ function MingoContent(props, ref) {
   // 同一地址不会触发上面的 [props.conversationId] 重置副作用，需由会话列表广播事件主动重置。
   useEffect(() => {
     if (showMessagesOnly) return;
-    const handleNewConversation = (payload = {}) => {
+    const handleNewConversation = (payload: Record<string, any> = {}) => {
       if (payload.chatbotId && payload.chatbotId !== chatbotId) return;
       resetToNewConversation();
     };

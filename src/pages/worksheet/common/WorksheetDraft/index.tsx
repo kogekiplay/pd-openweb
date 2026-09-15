@@ -417,7 +417,7 @@ function WorksheetDraft(props) {
     loadDraftDataCount();
   }, []);
 
-  const updateTotal = (obj = {}) => {
+  const updateTotal = (obj: Record<string, any> = {}) => {
     if (worksheetId === obj.worksheetId) {
       setTotal(obj.total);
     }

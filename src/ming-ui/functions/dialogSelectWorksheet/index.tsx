@@ -139,7 +139,7 @@ function SelectWorksheet(props) {
   });
   let appPromise: ApiResult | null = null;
 
-  const getAppList = (params = {}) => {
+  const getAppList = (params: Record<string, any> = {}) => {
     // 加载更多
     if (appPageIndex > 1 && ((loadingApp && isMoreApp) || !isMoreApp)) {
       return;

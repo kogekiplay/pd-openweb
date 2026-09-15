@@ -144,7 +144,7 @@ export function canPreviewHtml() {
   return !(_.get(window, 'platformENV.isLocal') || _.get(window, 'platformENV.isOverseas'));
 }
 
-export function getHtmlPreviewUrl(attachment = {}) {
+export function getHtmlPreviewUrl(attachment: Record<string, any> = {}) {
   const sourceNode = attachment.sourceNode || {};
   const urlFromFilePath = sourceNode.filepath && sourceNode.filename ? sourceNode.filepath + sourceNode.filename : '';
 

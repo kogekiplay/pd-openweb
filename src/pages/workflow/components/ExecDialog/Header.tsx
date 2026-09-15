@@ -215,7 +215,7 @@ export default class Header extends Component<any, any> {
   /**
    * 请求后台接口，因参数一致故统一处理
    */
-  request = (action, restPara = {}, noSave = false) => {
+  request = (action, restPara: Record<string, any> = {}, noSave = false) => {
     const { id, workId, onSave, onLoad, onClose, onSubmit } = this.props;
     const { isRequest } = this.state;
     const isStash = restPara.operationType === 13;

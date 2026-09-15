@@ -285,7 +285,7 @@ class RoleManage extends Component<any, any> {
     });
   };
 
-  loadData = (treeNode = {}) => {
+  loadData = (treeNode: Record<string, any> = {}) => {
     const { treeData, showDisabledOrgRole } = this.state;
     const { match, searchValue } = this.props;
     const { params = {} } = match;
@@ -659,7 +659,7 @@ class RoleManage extends Component<any, any> {
     const { searchValue, currentRole, authority } = this.props;
     const { showDeleteId = '', actionPopupVisible, treeData } = this.state;
     const hasRoleAuth = hasPermission(authority, PERMISSION_ENUM.ROLE_MENAGE);
-    let orgGroup = {};
+    let orgGroup: Record<string, any> = {};
 
     if (searchValue) {
       orgGroup = treeData.find(m => m.orgRoleGroupId === l.orgRoleGroupId) || {};

@@ -20,7 +20,7 @@ const pickDefined = (source = {}, fields: string[] = []) =>
     return result;
   }, {});
 
-export const getPrintCacheAppDetail = (appDetail = {}) =>
+export const getPrintCacheAppDetail = (appDetail: Record<string, any> = {}) =>
   pickDefined(appDetail?.detail || appDetail || {}, APP_DETAIL_CACHE_FIELDS);
 
 export const getPrintCacheWorksheetInfo = (worksheetInfo = {}, viewId: string) => {

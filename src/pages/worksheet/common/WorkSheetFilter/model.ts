@@ -17,7 +17,7 @@ export const initialState = {
   needSave: false,
 };
 
-export function formatForSave(filter, options = {}) {
+export function formatForSave(filter, options: Record<string, any> = {}) {
   let items;
 
   if (filter.isGroup) {
@@ -318,7 +318,7 @@ export function createActions(dispatch) {
   return new Actions(dispatch);
 }
 
-export function createReducer(state = {}, action: ReduxAction) {
+export function createReducer(state: Record<string, any> = {}, action: ReduxAction) {
   function updateWithLastAction(oldState, updates) {
     if (_.isEmpty(updates)) return oldState;
     return update(oldState || {}, { ...updates, lastAction: { $set: action.type + Date.now() } });

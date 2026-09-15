@@ -231,7 +231,7 @@ export default class OrderPay extends Component<any, any> {
   };
 
   // 轮询订单状态
-  pollOrderStatus = (orderInfo = {}) => {
+  pollOrderStatus = (orderInfo: Record<string, any> = {}) => {
     const params = getOrderPayParams();
     const { orderId } = orderInfo;
 

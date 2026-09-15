@@ -11,7 +11,7 @@ const translateArrayNames = (appId: string, array, idKey: string, nameKey: strin
 };
 
 // 翻译工作表相关信息
-export const fillTranslateInfo = (appId: string, roleDetail = {}) => {
+export const fillTranslateInfo = (appId: string, roleDetail: Record<string, any> = {}) => {
   (roleDetail.sheets || []).forEach(sheet => {
     translateObjectName(appId, sheet, 'sheetId', 'sheetName');
     translateArrayNames(appId, sheet.views, 'viewId', 'viewName');

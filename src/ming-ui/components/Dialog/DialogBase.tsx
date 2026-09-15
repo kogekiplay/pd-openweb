@@ -256,7 +256,7 @@ class DialogBase extends Component<any, any> {
   render() {
     const { autoZIndex, dialogClasses, containerClassName, style, overlayClosable } = this.props;
     const { dislocateIndex } = this.state;
-    const dialogContainerStyle = {};
+    const dialogContainerStyle: Record<string, any> = {};
 
     if (autoZIndex) {
       dialogContainerStyle.zIndex = this.getZIndex();

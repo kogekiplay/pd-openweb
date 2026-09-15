@@ -7,7 +7,7 @@ import { FREQUENCY, RECURLAYERS, RECURTYPE, REMINDTYPE, WEEKDAYS } from './const
 import afterRefreshOp from './lib/afterRefreshOp';
 import recurCalendarUpdate from './lib/recurCalendarUpdateDialog';
 
-export const Config = {};
+export const Config: Record<string, any> = {};
 
 export function getParamsFromUrl() {
   const result = /detail_([^_?]+)_?([^_?]+)?/.exec(location.href);

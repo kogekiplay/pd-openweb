@@ -52,7 +52,7 @@ export function getCurrentPos() {
 
       return new Promise((resolve, reject) => {
         mapHandler.getCurrentPos(
-          (status, result = {}) => {
+          (status, result: Record<string, any> = {}) => {
             if (!isCurrentLifecycle(currentVersion)) {
               reject(new Error('Location lifecycle expired after callback'));
               return;

@@ -121,7 +121,7 @@ function appendHost(host = '', path = '') {
 }
 
 function getPresetUsersAndFiles(config) {
-  const result = {};
+  const result: Record<string, any> = {};
 
   if (config.includeSamplePeople) {
     result.users = (mingoTemplateFiles.Users || []).map(user => ({

@@ -144,7 +144,7 @@ export function getRootNameAndLink(baseUrl, root) {
  * 移除文件名中的非法字符
  * @param  {String} str 传入的字符串
  */
-export function validateFileName(str, shouldAlert = true, out = null, options = {}) {
+export function validateFileName(str, shouldAlert = true, out = null, options: Record<string, any> = {}) {
   str = trim(str);
   if (!str) {
     if (shouldAlert) {
