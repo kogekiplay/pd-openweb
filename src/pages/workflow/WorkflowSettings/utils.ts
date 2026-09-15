@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import store from 'src/redux/configureStore';
 import { ACTION_ID, APP_TYPE, CONDITION_TYPE, CONTROLS_NAME, GLOBAL_VARIABLE, NODE_TYPE, TRIGGER_ID } from './enum';
+import type { FormControl } from 'src/utils/controlTypes';
 
 /**
  * 遍历获取统计id
@@ -695,7 +696,7 @@ export const formatTestParameters = (source, testMap, isArray?: boolean) => {
 /**
  * 获取字段类型名称
  */
-export const getControlTypeName = ({ type, originalType }) => {
+export const getControlTypeName = ({ type, originalType }: Partial<FormControl>) => {
   return (originalType === 30 ? `${CONTROLS_NAME[originalType]}-` : '') + CONTROLS_NAME[type];
 };
 

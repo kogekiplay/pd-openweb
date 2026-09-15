@@ -23,8 +23,34 @@ import ActionFields from '../ActionFields';
 import SelectOtherFields from '../SelectOtherFields';
 import Tag from '../Tag';
 import TagInput from '../TagInput';
+import type { ControlOption, FormControl } from 'src/utils/controlTypes';
+
+/** 一条触发条件里的取值项 */
+interface ConditionValue {
+  value: any;
+  [key: string]: any;
+}
+
+/** 一条触发条件 */
+interface ConditionItem {
+  filedId: string;
+  filedTypeId: number;
+  conditionId: string;
+  conditionValues: ConditionValue[];
+  [key: string]: any;
+}
+
+/** 字段选择器里的一组控件（按节点/表分组） */
+interface ControlGroup {
+  nodeId?: string;
+  nodeName?: string;
+  controls: FormControl[];
+  [key: string]: any;
+}
 
 export default class Condition extends Component<any, any> {
+  // 纯类型声明（babel 的 TS preset 整条抹掉）；不能写成有初值的类字段，那会覆盖 ref 回调写进去的值
+  declare cityPickerSearchRef: any;
   static propTypes = {
     processId: PropTypes.string,
     selectNodeId: PropTypes.string,
@@ -91,12 +117,12 @@ export default class Condition extends Component<any, any> {
 
   cacheCityPickerData = [];
 
-  getConditionItemValue = item => _.get(item, 'value');
+  getConditionItemValue = (item: ConditionValue) => _.get(item, 'value');
 
-  getConditionItemKey = item => _.get(item, 'value.key');
+  getConditionItemKey = (item: ConditionValue) => _.get(item, 'value.key');
 
-  getValidConditionValues = conditionValues => {
-    return (conditionValues || []).filter(item => {
+  getValidConditionValues = (conditionValues: ConditionValue[]) => {
+    return (conditionValues || []).filter((item: ConditionValue) => {
       const value = this.getConditionItemValue(item);
       return !_.isUndefined(value) && !_.isNull(value);
     });
@@ -105,12 +131,12 @@ export default class Condition extends Component<any, any> {
   /**
    * 获取字段
    */
-  getFieldData(controls) {
+  getFieldData(controls: (ControlGroup | FormControl)[]) {
     const { isNodeHeader } = this.props;
     let data;
 
     if (isNodeHeader) {
-      data = controls.map(obj => {
+      data = (controls as ControlGroup[]).map(obj => {
         return {
           text: obj.nodeName,
           id: obj.nodeId,
@@ -121,7 +147,7 @@ export default class Condition extends Component<any, any> {
           actionId: obj.actionId,
           isSourceApp: obj.isSourceApp,
           subFlowNodeApps: obj.subFlowNodeApps,
-          items: obj.controls.map(o => {
+          items: obj.controls.map((o: FormControl) => {
             return {
               type: o.type,
               value: o.controlId,
@@ -133,7 +159,7 @@ export default class Condition extends Component<any, any> {
         };
       });
     } else {
-      data = controls.map(item => {
+      data = (controls as FormControl[]).map(item => {
         return {
           text: this.renderTitle(item),
           value: item.controlId,
@@ -148,7 +174,7 @@ export default class Condition extends Component<any, any> {
   /**
    * dropdown title
    */
-  renderTitle(item) {
+  renderTitle(item: Partial<FormControl>) {
     return (
       <Fragment>
         <span className="textSecondary mRight5">[{getControlTypeName(item)}]</span>
@@ -164,7 +190,7 @@ export default class Condition extends Component<any, any> {
   /**
    * 渲染单个条件
    */
-  renderItem(item, i, j, hasOr, hasAnd) {
+  renderItem(item: ConditionItem, i: number, j: number, hasOr: boolean, hasAnd: boolean) {
     const {
       singleCondition,
       controls,
@@ -182,7 +208,7 @@ export default class Condition extends Component<any, any> {
     let single;
 
     if (isNodeHeader) {
-      controls.forEach(obj => {
+      controls.forEach((obj: ControlGroup) => {
         if (obj.nodeId === item.nodeId) {
           single = _.find(obj.controls, o => o.controlId === item.filedId);
         }
@@ -260,7 +286,7 @@ export default class Condition extends Component<any, any> {
                 </span>
               )
             }
-            onChange={conditionId => this.switchCondition(conditionId, i, j)}
+            onChange={(conditionId: string) => this.switchCondition(conditionId, i, j)}
           />
           <div className="flex"></div>
           {item.conditionId &&
@@ -271,7 +297,7 @@ export default class Condition extends Component<any, any> {
               <Checkbox
                 text={_l('条件异常时忽略')}
                 checked={item.ignoreEmpty === 1}
-                onClick={checked => this.switchFilterCondition('ignoreEmpty', checked ? 0 : 1, i, j)}
+                onClick={(checked: boolean) => this.switchFilterCondition('ignoreEmpty', checked ? 0 : 1, i, j)}
               />
             )}
 
@@ -280,7 +306,7 @@ export default class Condition extends Component<any, any> {
               className="mLeft15"
               text={_l('值为空时忽略')}
               checked={item.ignoreValueEmpty === 1}
-              onClick={checked => this.switchFilterCondition('ignoreValueEmpty', checked ? 0 : 1, i, j)}
+              onClick={(checked: boolean) => this.switchFilterCondition('ignoreValueEmpty', checked ? 0 : 1, i, j)}
             />
           )}
         </div>
@@ -348,7 +374,7 @@ export default class Condition extends Component<any, any> {
   /**
    * 渲染控件选择器
    */
-  renderControls(item, i, j) {
+  renderControls(item: ConditionItem, i: number, j: number) {
     const { isNodeHeader } = this.props;
     const { showControlsIndex, controlsData } = this.state;
 
@@ -398,7 +424,7 @@ export default class Condition extends Component<any, any> {
               item.filedId &&
               this.renderTitle({ type: item.filedTypeId, controlName: item.filedValue, controlId: item.filedId })
             }
-            onChange={filedId => this.switchField({ i, j, filedId })}
+            onChange={(filedId: string) => this.switchField({ i, j, filedId })}
           />
         )}
         <i className="icon-trash Font16 colorPrimary triggerTipIcon" onClick={() => this.deleteCondition(i, j)} />
@@ -443,13 +469,23 @@ export default class Condition extends Component<any, any> {
     appType = -1,
     actionId = '',
     sourceType,
+  }: {
+    filedId: string;
+    i: number;
+    j: number;
+    nodeId?: string;
+    nodeName?: string;
+    nodeType?: number;
+    appType?: number;
+    actionId?: string;
+    sourceType?: number;
   }) => {
     const data = _.cloneDeep(this.props.data);
     const { controls, updateSource, isNodeHeader, selectNodeId } = this.props;
     let single;
 
     if (isNodeHeader) {
-      controls.forEach(obj => {
+      controls.forEach((obj: ControlGroup) => {
         if (obj.nodeId === nodeId) {
           single = _.find(obj.controls, o => o.controlId === filedId);
         }
@@ -479,7 +515,7 @@ export default class Condition extends Component<any, any> {
   /**
    * 删除条件
    */
-  deleteCondition = (i, j) => {
+  deleteCondition = (i: number, j: number) => {
     const data = _.cloneDeep(this.props.data);
     const { updateSource } = this.props;
 
@@ -499,7 +535,7 @@ export default class Condition extends Component<any, any> {
   /**
    * 渲染单个条件的值
    */
-  renderItemValue(item, controlNumber = 0, i, j, currentControl) {
+  renderItemValue(item: ConditionItem, controlNumber = 0, i: number, j: number, currentControl?: FormControl) {
     const { isNodeHeader } = this.props;
     const { search, keywords } = this.state;
 
@@ -532,9 +568,9 @@ export default class Condition extends Component<any, any> {
             <TagInput
               disable={_.includes(['9', '10', '33', '34', '43'], item.conditionId) && filedTypeId === 29}
               className="flex clearBorderRadius"
-              tags={conditionValues.map(obj => obj.value)}
-              createTag={val => this.updateConditionValue({ value: val, i, j })}
-              delTag={val => this.updateConditionValue({ value: val, i, j })}
+              tags={conditionValues.map((obj: ConditionValue) => obj.value)}
+              createTag={(val: string) => this.updateConditionValue({ value: val, i, j })}
+              delTag={(val: string) => this.updateConditionValue({ value: val, i, j })}
             />
           )}
 
@@ -613,7 +649,7 @@ export default class Condition extends Component<any, any> {
 
       if (!conditionValues[0] || !conditionValues[0].controlId) {
         if (isNodeHeader) {
-          controls.forEach(obj => {
+          controls.forEach((obj: ControlGroup) => {
             if (obj.nodeId === item.nodeId) {
               options = (_.find(obj.controls, o => o.controlId === filedId) || {}).options;
             }
@@ -623,7 +659,7 @@ export default class Condition extends Component<any, any> {
         }
 
         options = options || [];
-        data = options.map(opts => {
+        data = options.map((opts: ControlOption) => {
           return {
             text: opts.value,
             value: opts.key,
@@ -645,7 +681,7 @@ export default class Condition extends Component<any, any> {
               placeholder={_l('请选择')}
               border
               openSearch
-              onChange={key => {
+              onChange={(key: string) => {
                 const selectedOption = _.find(options, opts => opts.key === key);
                 if (!selectedOption) return;
 
@@ -730,7 +766,7 @@ export default class Condition extends Component<any, any> {
                           </span>
                         )
                   }
-                  onChange={type =>
+                  onChange={(type: number) =>
                     this.updateConditionDateValue({
                       type,
                       value: type === 20 ? '' : DATE_LIST.find(obj => obj.value === type).text,
@@ -753,7 +789,7 @@ export default class Condition extends Component<any, any> {
                   timePicker={showTimePicker}
                   timeMode={timeMode}
                   allowClear={false}
-                  onOk={e => this.updateConditionDateValue({ value: e.format(formatString), i, j })}
+                  onOk={(e: moment.Moment) => this.updateConditionDateValue({ value: e.format(formatString), i, j })}
                 >
                   {conditionValues[0] && conditionValues[0].value
                     ? moment(conditionValues[0].value).format(formatString)
@@ -781,7 +817,7 @@ export default class Condition extends Component<any, any> {
                   timePicker={showTimePicker}
                   timeMode={timeMode}
                   allowClear={false}
-                  onOk={e => this.updateConditionDateValue({ value: e.format(formatString), i, j })}
+                  onOk={(e: moment.Moment) => this.updateConditionDateValue({ value: e.format(formatString), i, j })}
                 >
                   {conditionValues[0] && conditionValues[0].value
                     ? moment(conditionValues[0].value).format(formatString)
@@ -808,7 +844,7 @@ export default class Condition extends Component<any, any> {
                     timePicker={showTimePicker}
                     timeMode={timeMode}
                     allowClear={false}
-                    onOk={e => this.updateConditionDateValue({ value: e.format(formatString), i, j, second: true })}
+                    onOk={(e: moment.Moment) => this.updateConditionDateValue({ value: e.format(formatString), i, j, second: true })}
                   >
                     {conditionValues[1] && conditionValues[1].value
                       ? moment(conditionValues[1].value).format(formatString)
@@ -844,7 +880,7 @@ export default class Condition extends Component<any, any> {
                 commcountries={_.get(currentControl || {}, 'advancedSetting.commcountries')}
                 level={enumDefault}
                 projectId={this.props.projectId}
-                callback={citys => {
+                callback={(citys: any[]) => {
                   search && this.setState({ search: '', keywords: '' });
                   this.cacheCityPickerData = citys;
                   level === citys.length && this.updateConditionValue({ value: citys, i, j });
@@ -855,7 +891,7 @@ export default class Condition extends Component<any, any> {
                 }
               >
                 <ul className="pLeft6 tagWrap">
-                  {conditionValues.map((list, index) => {
+                  {conditionValues.map((list: ConditionValue, index: number) => {
                     return (
                       <li key={index} className="tagItem flexRow">
                         <span className="tag" title={list.value.value}>
@@ -880,7 +916,7 @@ export default class Condition extends Component<any, any> {
                       placeholder={!conditionValues.length ? _l('选择地区') : ''}
                       value={search}
                       manualRef={this.cityPickerSearchRef}
-                      onChange={value => {
+                      onChange={(value: string) => {
                         this.setState({ search: value });
                         this.onFetchData(value);
                       }}
@@ -944,7 +980,7 @@ export default class Condition extends Component<any, any> {
                 </div>
               ) : (
                 <ul className="pLeft6 tagWrap">
-                  {conditionValues.map((list, index) => {
+                  {conditionValues.map((list: ConditionValue, index: number) => {
                     return (
                       <li key={index} className="tagItem flexRow">
                         <span className="tag" title={list.value.value}>
@@ -1040,7 +1076,13 @@ export default class Condition extends Component<any, any> {
   /**
    * 清除不是数字的字符
    */
-  clearNoNum = (evt, isBlur?: boolean, i?, j?, second = false) => {
+  clearNoNum = (
+    evt: React.SyntheticEvent<HTMLInputElement>,
+    isBlur?: boolean,
+    i?: number,
+    j?: number,
+    second = false,
+  ) => {
     let num = evt.target.value
       .replace(/[^-\d.]/g, '')
       .replace(/^\./g, '')
@@ -1066,7 +1108,7 @@ export default class Condition extends Component<any, any> {
   /**
    * 渲染标签式下拉选择
    */
-  renderDropdownTagList(conditionValues, i, j) {
+  renderDropdownTagList(conditionValues: ConditionValue[], i: number, j: number) {
     const validConditionValues = this.getValidConditionValues(conditionValues);
 
     return (
@@ -1075,7 +1117,7 @@ export default class Condition extends Component<any, any> {
           <div className="textDisabled pLeft10 pRight10">{_l('请选择')}</div>
         ) : (
           <ul className="pLeft6 tagWrap">
-            {validConditionValues.map((list, index) => {
+            {validConditionValues.map((list: ConditionValue, index: number) => {
               return (
                 <li key={index} className="tagItem flexRow">
                   <span className="tag ellipsis" title={list.value.value}>
@@ -1102,7 +1144,7 @@ export default class Condition extends Component<any, any> {
   /**
    * 成员选择
    */
-  selectUser(evt, users, i, j, unique) {
+  selectUser(evt: React.MouseEvent, users: any[], i: number, j: number, unique?: boolean) {
     dialogSelectUser({
       title: _l('选择人员'),
       SelectUserSettings: {
@@ -1162,7 +1204,19 @@ export default class Condition extends Component<any, any> {
   /**
    * 更新筛选条件的值
    */
-  updateConditionValue = ({ value, i, j, second, isSingle }) => {
+  updateConditionValue = ({
+    value,
+    i,
+    j,
+    second,
+    isSingle,
+  }: {
+    value: any;
+    i: number;
+    j: number;
+    second?: boolean;
+    isSingle?: boolean;
+  }) => {
     const data = _.cloneDeep(this.props.data);
     const { updateSource } = this.props;
     const { filedTypeId, conditionId } = data[i][j];
@@ -1301,7 +1355,7 @@ export default class Condition extends Component<any, any> {
     let dataSource = '';
 
     if (item.filedTypeId === 29 || (item.filedTypeId === 2 && item.filedId === 'rowid')) {
-      controls.forEach(obj => {
+      controls.forEach((obj: ControlGroup) => {
         if (obj.controls) {
           obj.controls.forEach(o => {
             if (o.controlId === item.filedId) {
