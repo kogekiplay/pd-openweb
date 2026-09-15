@@ -14,8 +14,13 @@
  * 数组，连遍历 token 都省了，而且 jsx / typescript 两个插件一开就能同时
  * 处理 .ts/.tsx/.js/.jsx。
  *
- * 正确性由 comment-ranges.spec.js 的负向控制保证：正则里的 `//`、模板字符串
+ * 正确性由 comment-ranges.spec.ts 的负向控制保证：正则里的 `//`、模板字符串
  * 里的 `//`、JSX 文本里的 `//` 都【不能】被判成注释。
+ *
+ * 【本文件是 CommonJS，不要改成 import/export】Node 26 按「有没有 ESM 语法」
+ * 判断 .ts 文件的模块类型。写 `export` 就会被当成 ESM，而 `module.exports`
+ * 在 ESM 里不存在，当场 `ReferenceError: module is not defined`。
+ * 门禁链上全是 `require`，保持 CJS。
  */
 const fs = require('fs');
 const path = require('path');
@@ -23,18 +28,27 @@ const parser = require('@babel/parser');
 
 const PLUGINS = ['jsx', 'typescript', 'decorators-legacy', 'classProperties', 'classPrivateProperties'];
 
-function buildInfo(absPath, fileName) {
-  let text;
+/** 注释区间，[起, 止) 的字符偏移 */
+type Range = [number, number];
+
+interface FileInfo {
+  /** 每一行起始位置的字符偏移，lineStarts[0] === 0 */
+  lineStarts: number[];
+  ranges: Range[];
+}
+
+function buildInfo(absPath: string, _fileName?: string): FileInfo | null {
+  let text: string;
   try {
     text = fs.readFileSync(absPath, 'utf8');
   } catch {
     return null;
   }
 
-  const lineStarts = [0];
+  const lineStarts: number[] = [0];
   for (let i = 0; i < text.length; i++) if (text[i] === '\n') lineStarts.push(i + 1);
 
-  let ast;
+  let ast: any;
   try {
     ast = parser.parse(text, {
       sourceType: 'module',
@@ -51,18 +65,23 @@ function buildInfo(absPath, fileName) {
     return { lineStarts, ranges: [] };
   }
 
-  const ranges = (ast.comments || []).map(c => [c.start, c.end]).sort((a, b) => a[0] - b[0]);
+  const ranges: Range[] = (ast.comments || [])
+    .map((c: any): Range => [c.start, c.end])
+    .sort((a: Range, b: Range) => a[0] - b[0]);
   return { lineStarts, ranges };
 }
 
 class CommentIndex {
-  constructor(root) {
+  root: string;
+  cache: Map<string, FileInfo | null>;
+
+  constructor(root: string) {
     this.root = root;
     this.cache = new Map();
   }
 
   /** true=注释内, false=真代码, null=文件读不到/位置越界 */
-  isInComment(relPath, line, col) {
+  isInComment(relPath: string, line: number, col: number): boolean | null {
     let info = this.cache.get(relPath);
     if (info === undefined) {
       info = buildInfo(path.join(this.root, relPath), relPath);

@@ -10,7 +10,7 @@
  *
  * 所以这里走【棘轮】而不是【一刀切】：
  *   - 名单里的文件必须在 --strict --noImplicitAny 下零诊断，否则 pre-push 失败；
- *   - 名单外的文件不管，照常用宽松基线（scripts/typecheck/tsc-gate.js）；
+ *   - 名单外的文件不管，照常用宽松基线（scripts/typecheck/tsc-gate.ts）；
  *   - 文件清干净后用 --widen 把它加进名单，只进不退。
  *
  * 为什么必须跑【全量】tsc 而不是只编译名单里的文件
@@ -21,9 +21,9 @@
  * 所以这里编译整个 program，只在【报告】阶段按名单过滤。
  *
  * 用法：
- *   node scripts/typecheck/tsc-strict-gate.js            # 校验名单
- *   node scripts/typecheck/tsc-strict-gate.js --widen    # 重新计算并写入名单（棘轮收紧）
- *   node scripts/typecheck/tsc-strict-gate.js --stats    # 打印全仓 strict 进度
+ *   node scripts/typecheck/tsc-strict-gate.ts            # 校验名单
+ *   node scripts/typecheck/tsc-strict-gate.ts --widen    # 重新计算并写入名单（棘轮收紧）
+ *   node scripts/typecheck/tsc-strict-gate.ts --stats    # 打印全仓 strict 进度
  *   SKIP_TYPECHECK=1 ...                                 # 与既有闸门一致的跳过开关
  */
 const fs = require('fs');
@@ -113,7 +113,9 @@ if (STATS) {
   const totalDiag = [...byFile.values()].reduce((a, l) => a + l.length, 0);
   console.log(chalk.cyan(`strict 全量诊断 ${totalDiag} 条，涉及 ${byFile.size} 个文件`));
   console.log(chalk.cyan(`已 strict-clean ${clean.length} / ${compiled.length} 个文件（${((clean.length / compiled.length) * 100).toFixed(1)}%）`));
-  const codes = {};
+  // 错误码 -> 条数。不写类型的话 Object.entries 推出来是 [string, unknown][]，
+  // 下面 b[1] - a[1] 当场报「算术运算的操作数类型不对」。
+  const codes: Record<string, number> = {};
   for (const lines of byFile.values()) {
     for (const l of lines) {
       const c = l.match(/(TS\d+)/)[1];

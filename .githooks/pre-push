@@ -70,11 +70,14 @@ if [ "$SKIP_TYPECHECK" = "1" ]; then
   exit 0
 fi
 
+echo "pre-push: 工具链类型门禁（约 0.1s）..."
+node scripts/typecheck/tools-gate.ts
+
 echo "pre-push: 后缀并存检查（约 1s）..."
 node scripts/checkExtensionCollisions.js
 
 echo "pre-push: 语法门禁（约 8s）..."
-node --max-old-space-size=8192 scripts/typecheck/tsc-syntax-gate.js
+node --max-old-space-size=8192 scripts/typecheck/tsc-syntax-gate.ts
 
 echo "pre-push: 语义差分门禁（冷跑，约 30s）..."
-node --max-old-space-size=8192 scripts/typecheck/tsc-gate.js --no-incremental
+node --max-old-space-size=8192 scripts/typecheck/tsc-gate.ts --no-incremental

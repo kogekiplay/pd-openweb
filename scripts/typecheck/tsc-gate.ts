@@ -7,17 +7,17 @@
  * checkJs 打开后有 1078 条 TS1xxx，其中 1023 条落在 JSDoc 注释里。
  *
  * 用法：
- *   node scripts/typecheck/tsc-gate.js --write-baseline   # 记录当前状态为基线
- *   node scripts/typecheck/tsc-gate.js                    # 门禁：只对新增诊断报错
- *   node scripts/typecheck/tsc-gate.js --stats            # 打印噪声剔除明细
- *   node scripts/typecheck/tsc-gate.js --from out.txt     # 用缓存的 tsc 输出（实验用）
- *   node scripts/typecheck/tsc-gate.js --key line         # 换 key 方案（实验用）
- *   node scripts/typecheck/tsc-gate.js --incremental      # 复用缓存（快，但会出幻影诊断，见下）
+ *   node scripts/typecheck/tsc-gate.ts --write-baseline   # 记录当前状态为基线
+ *   node scripts/typecheck/tsc-gate.ts                    # 门禁：只对新增诊断报错
+ *   node scripts/typecheck/tsc-gate.ts --stats            # 打印噪声剔除明细
+ *   node scripts/typecheck/tsc-gate.ts --from out.txt     # 用缓存的 tsc 输出（实验用）
+ *   node scripts/typecheck/tsc-gate.ts --key line         # 换 key 方案（实验用）
+ *   node scripts/typecheck/tsc-gate.ts --incremental      # 复用缓存（快，但会出幻影诊断，见下）
  */
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
-const { CommentIndex } = require('./comment-ranges.js');
+const { CommentIndex } = require('./comment-ranges.ts');
 
 const ROOT = path.resolve(__dirname, '../..');
 const BASELINE = path.join(__dirname, 'baseline.json');
@@ -36,7 +36,7 @@ const NOISE = {
 };
 
 // (3) 注释内诊断：checkJs 会把 JSDoc 里写的 TS 语法当代码解析。
-//     这一类要靠真解析器定位（见 comment-ranges.js），不能靠正则猜。
+//     这一类要靠真解析器定位（见 comment-ranges.ts），不能靠正则猜。
 
 // ------------------------------------------------------------ 解析 tsc 输出
 // tsc --pretty false 诊断头行： path(line,col): error TSxxxx: message
@@ -219,7 +219,7 @@ function main() {
       console.error(
         `\n拒绝执行：剔噪后诊断数 ${kept.length} 不足预期 ${expectKept} 的 ${COLLAPSE_RATIO * 100}%。` +
           `\n这几乎一定是某个文件有语法错误导致 tsc 跳过了整个 program 的语义诊断。` +
-          `\n先跑 node scripts/typecheck/tsc-syntax-gate.js 定位。` +
+          `\n先跑 node scripts/typecheck/tsc-syntax-gate.ts 定位。` +
           `\n若确认是机械 codemod 带来的合法下降，用 --allow-shrink 显式放行。`,
       );
       process.exit(2);
@@ -237,7 +237,7 @@ function main() {
       BASELINE,
       JSON.stringify(
         {
-          _note: '差分基线。由 scripts/typecheck/tsc-gate.js --write-baseline 生成，请勿手改。',
+          _note: '差分基线。由 scripts/typecheck/tsc-gate.ts --write-baseline 生成，请勿手改。',
           key: keyName,
           tsVersion: require(path.join(ROOT, 'node_modules/typescript/package.json')).version,
           tsconfig: TSCONFIG,
@@ -267,7 +267,9 @@ function main() {
     process.exit(2);
   }
   assertNotCollapsed(base.keptCount);
-  const baseMap = new Map(Object.entries(base.entries));
+  // 显式写出 <string, number>：base 是 JSON.parse 出来的，Object.entries 给的是
+  // [string, unknown][]，不标的话下面 n - b 报「算术运算的操作数类型不对」。
+  const baseMap = new Map<string, number>(Object.entries(base.entries));
 
   // 新增 = key 不在基线里，或同 key 计数变多
   const added = [];

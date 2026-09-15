@@ -45,11 +45,18 @@ function parseArgs(argv) {
   return args;
 }
 
+// suffix 可以是单个字符串，也可以是一组（.spec.js / .spec.ts 两种都要发现）。
+// 【为什么要收 .ts】全仓在往 TypeScript 迁，spec 也会跟着改名。如果这里只认 .js，
+// 改名的那一刻那条 spec 就【静默消失】——门禁数字从 72 掉到 71，没有任何报错。
+const SPEC_SUFFIXES = ['.spec.js', '.spec.ts'];
+const TEST_SUFFIXES = ['.test.js', '.test.ts'];
+
 function discover(dir, out, suffix) {
+  const suffixes = Array.isArray(suffix) ? suffix : [suffix];
   const abs = path.join(ROOT, dir);
   if (!fs.existsSync(abs)) return out;
   for (const entry of fs.readdirSync(abs, { recursive: true, withFileTypes: true })) {
-    if (!entry.isFile() || !entry.name.endsWith(suffix)) continue;
+    if (!entry.isFile() || !suffixes.some(x => entry.name.endsWith(x))) continue;
     out.push(path.relative(ROOT, path.join(entry.parentPath || entry.path, entry.name)));
   }
   return out;
@@ -93,16 +100,16 @@ async function main() {
   // the same 7.4.1 commit that deleted these tests), which silently swallowed
   // any test file so it never appeared in `git status`. *.spec.js is the only
   // supported name; fail loudly rather than let a file vanish again.
-  const strays = discover('src', discover('scripts', [], '.test.js'), '.test.js');
+  const strays = discover('src', discover('scripts', [], TEST_SUFFIXES), TEST_SUFFIXES);
   if (strays.length) {
-    console.error(chalk.red(`Found ${strays.length} *.test.js file(s). Rename to *.spec.js:`));
+    console.error(chalk.red(`Found ${strays.length} *.test.{js,ts} file(s). Rename to *.spec.{js,ts}:`));
     strays.forEach(f => console.error(`  ${f}`));
     process.exitCode = 1;
     return;
   }
 
   const args = parseArgs(process.argv.slice(2));
-  let specs = SEARCH_DIRS.reduce((acc, d) => discover(d, acc, '.spec.js'), []).sort();
+  let specs = SEARCH_DIRS.reduce((acc, d) => discover(d, acc, SPEC_SUFFIXES), []).sort();
   if (args.filter) specs = specs.filter(s => s.includes(args.filter));
 
   if (!specs.length) {

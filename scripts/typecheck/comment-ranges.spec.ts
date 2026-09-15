@@ -13,7 +13,7 @@ const assert = require('assert');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { CommentIndex } = require('./comment-ranges');
+const { CommentIndex } = require('./comment-ranges.ts');
 
 const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'comment-ranges-'));
 

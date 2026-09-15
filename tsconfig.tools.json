@@ -1,0 +1,46 @@
+// 工具链自身的类型检查（scripts/ 与 tools/）。
+//
+// 【为什么要单开一份】根 tsconfig.json 的 include 只有 ["src","types"]，
+// 门禁脚本、codemod、构建脚本【一条都不在里面】。2026-09-15 把
+// scripts/typecheck/*.js 改名成 .ts 时才意识到：光改后缀而不纳入任何 tsconfig，
+// 写的类型标注一个字都不会被验证，纯装饰。
+//
+// 【为什么不直接并进根 tsconfig】两边的形态不一样，混在一起两头难受：
+//   · src 是浏览器代码（lib 要 DOM、module 是 ESNext、走 webpack alias）；
+//     工具链是 Node 脚本（require/module.exports、__dirname、process）。
+//   · 更要紧的是差分门禁的基线是按根 tsconfig 的诊断多重集算的。把几十个
+//     工具文件塞进去会一次性改变基线口径，之后再也说不清某条诊断的来源。
+//
+// 【口径】和根 tsconfig 一样是宽松基线：不开 strict、不开 noImplicitAny。
+// 目的是「标注写错了要报错」，不是「一次把工具链也 strict 化」——后者是另一件事。
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+
+    // 工具链是 CommonJS：全部 require/module.exports。
+    // Node 26 按「有没有 ESM 语法」判断 .ts 的模块类型，写 export 就会被当 ESM，
+    // 届时 module.exports 直接 ReferenceError。这里的配置与运行时保持一致。
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
+
+    "allowJs": true,
+    "checkJs": false,
+    "noEmit": true,
+
+    "strict": false,
+    "noImplicitAny": false,
+    "skipLibCheck": true,
+
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "types": ["node"]
+  },
+
+  // 只收 .ts。scripts/ 和 tools/ 下还有大量 .js（build.js、lang.js、CI 那套等），
+  // allowJs 只是允许解析，checkJs:false 表示不检查它们 —— 它们会随后续批次
+  // 逐个改成 .ts 再自动进入检查范围。
+  "include": ["scripts/**/*.ts", "tools/**/*.ts"],
+  "exclude": ["node_modules"]
+}

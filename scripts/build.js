@@ -324,13 +324,14 @@ function typecheckGate() {
 
   const steps = [
     ['后缀并存检查（零容忍）', [resolvePath('scripts/checkExtensionCollisions.js')]],
-    ['语法门禁（零容忍）', [resolvePath('scripts/typecheck/tsc-syntax-gate.js')]],
-    ['语义差分门禁', [resolvePath('scripts/typecheck/tsc-gate.js'), '--no-incremental']],
+    ['工具链类型门禁（零容忍）', [resolvePath('scripts/typecheck/tools-gate.ts')]],
+    ['语法门禁（零容忍）', [resolvePath('scripts/typecheck/tsc-syntax-gate.ts')]],
+    ['语义差分门禁', [resolvePath('scripts/typecheck/tsc-gate.ts'), '--no-incremental']],
     // strict 棘轮：只校验【已经能通过 strict 的那批文件】不退化。
     // 全仓开 strict 还差 7 万多条，不是这道闸门的职责；它守的是「已清理的部分只进不退」。
     // 放在 release 而不是 pre-push：本仓的分工是 pre-push 可绕过、release 才是必经点，
     // 而这一步要跑一次全量 strict tsc（约 30s），加在每次 push 上代价不划算。
-    ['strict 棘轮', [resolvePath('scripts/typecheck/tsc-strict-gate.js')]],
+    ['strict 棘轮', [resolvePath('scripts/typecheck/tsc-strict-gate.ts')]],
   ];
 
   for (const [label, args] of steps) {
