@@ -25,7 +25,7 @@ const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
 const { match } = require('path-to-regexp');
-const { parser, ROOT } = require('../../scripts/spec-harness');
+const { parser, ROOT } = require('../../scripts/spec-harness.ts');
 
 const SRC = path.join(ROOT, 'src');
 

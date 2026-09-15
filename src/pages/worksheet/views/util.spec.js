@@ -1,7 +1,7 @@
 const assert = require('assert');
 const path = require('path');
 const fs = require('fs');
-const { transformFileSync } = require('../../../../scripts/spec-harness');
+const { transformFileSync } = require('../../../../scripts/spec-harness.ts');
 
 global._l = global._l || ((text, value) => (value === undefined ? text : text.replace('%0', value)));
 

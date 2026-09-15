@@ -11,7 +11,7 @@ const print = {
 };
 
 function runCommand(command, args, options = {}) {
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     const child = spawn(command, args, { stdio: 'inherit', ...options });
 
     child.on('error', reject);
@@ -59,7 +59,9 @@ function collectBodyProps(swagger, op) {
   const schema = resolveSchema(swagger, contentObj.schema.$ref);
   if (!schema || !schema.properties) return [];
 
-  return Object.entries(schema.properties).map(([name, prop]) => ({
+  // Object.entries 在无索引签名的对象上给的是 [string, unknown][]，
+  // 不标就读不了 prop.type / prop.$ref。
+  return Object.entries(schema.properties).map(([name, prop]: [string, any]) => ({
     name,
     type: prop.type || (prop.$ref ? 'Object' : 'any'),
     description: normalizeDescription(prop.description || ''),

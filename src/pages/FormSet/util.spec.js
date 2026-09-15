@@ -1,7 +1,7 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
-const { transformSync, resolveSpecTarget } = require('../../../scripts/spec-harness');
+const { transformSync, resolveSpecTarget } = require('../../../scripts/spec-harness.ts');
 
 global._l = text => text;
 

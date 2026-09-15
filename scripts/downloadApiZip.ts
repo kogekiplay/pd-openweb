@@ -1,7 +1,7 @@
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { ROOT_PATH, print, runCommand } = require('./utils');
+const { ROOT_PATH, print, runCommand } = require('./utils.ts');
 
 const API_ZIP_TARGETS = {
   report: {

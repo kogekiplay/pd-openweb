@@ -34,7 +34,7 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
-const { parser, ROOT } = require('../../scripts/spec-harness');
+const { parser, ROOT } = require('../../scripts/spec-harness.ts');
 
 const SCAN_DIRS = ['src'];
 const SKIP_DIR = /(^|\/)(node_modules|library)(\/|$)/;

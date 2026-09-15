@@ -1,6 +1,6 @@
 const assert = require('assert');
 const path = require('path');
-const { transformFileSync } = require('../../scripts/spec-harness');
+const { transformFileSync } = require('../../scripts/spec-harness.ts');
 
 const WIDGETS_TO_API_TYPE_ENUM = {
   TEXT: 2,

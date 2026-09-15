@@ -2,7 +2,7 @@ const assert = require('assert');
 const path = require('path');
 const React = require('react');
 const ReactDOMServer = require('react-dom/server');
-const { transformFileSync } = require('../../../scripts/spec-harness');
+const { transformFileSync } = require('../../../scripts/spec-harness.ts');
 const { ServerStyleSheet } = require('styled-components');
 
 function requireEsm(file, stubs = {}) {

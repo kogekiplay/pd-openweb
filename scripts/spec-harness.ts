@@ -103,7 +103,7 @@ function babelPresets(file, extra = []) {
  * Drop-in replacement for `require('@babel/core').transformFileSync`.
  * Specs swap only their `require('@babel/core')` line; call sites are untouched.
  */
-function transformFileSync(filePath, opts = {}) {
+function transformFileSync(filePath, opts: Record<string, any> = {}) {
   const file = resolveSpecTarget(filePath);
   return babel.transformFileSync(file, {
     ...opts,
@@ -115,7 +115,7 @@ function transformFileSync(filePath, opts = {}) {
 }
 
 /** Drop-in for `transformSync`, but `filename` drives TS/TSX detection. */
-function transformSync(code, opts = {}) {
+function transformSync(code, opts: Record<string, any> = {}) {
   const file = opts.filename || 'unknown.tsx';
   return babel.transformSync(code, {
     ...opts,
@@ -134,7 +134,7 @@ function readSource(...parts) {
 /** `@babel/parser` with the `typescript` plugin forced on, for the AST-walking spec. */
 const parser = {
   ...realParser,
-  parse(code, opts = {}) {
+  parse(code, opts: Record<string, any> = {}) {
     const plugins = new Set([...(opts.plugins || []), 'typescript', 'decorators-legacy']);
     return realParser.parse(code, { ...opts, plugins: [...plugins] });
   },

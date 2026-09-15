@@ -22,7 +22,7 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
-const { ROOT } = require('../../scripts/spec-harness');
+const { ROOT } = require('../../scripts/spec-harness.ts');
 
 const EXTS = new Set(['.js', '.jsx', '.ts', '.tsx']);
 const SKIP_DIR = /(^|\/)(node_modules|library)(\/|$)/;

@@ -24,7 +24,7 @@ const fs = require('fs');
 const path = require('path');
 const React = require('react');
 const ReactDOMServer = require('react-dom/server');
-const { transformSync, resolveSpecTarget } = require('../../../scripts/spec-harness');
+const { transformSync, resolveSpecTarget } = require('../../../scripts/spec-harness.ts');
 
 global._l = text => text;
 

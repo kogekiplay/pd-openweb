@@ -22,7 +22,7 @@ const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
 
-const raw = fs.readFileSync(path.join(__dirname, 'serve.js'), 'utf8');
+const raw = fs.readFileSync(path.join(__dirname, 'serve.ts'), 'utf8');
 
 // 先剥注释再解析。两个理由：
 //   1. 注释里写满了 '/api/xxx' 这样的路径举例，不剥会被当成配置项读进来。
@@ -81,10 +81,16 @@ const source = stripComments(raw);
 // 单行数组（REWRITE_PREFIXES）和多行数组（proxyConfigs）都要能切，
 // 所以按括号配对找结尾，不能靠 '\n];' 这种形状假设。
 function sliceArray(varName) {
-  const decl = source.indexOf(`const ${varName} = [`);
-  assert.notStrictEqual(decl, -1, `serve.js 里找不到 ${varName} —— 改名了就同步改这条 spec`);
-
-  const open = source.indexOf('[', decl);
+  // 【别用 `const X = [` 这种定长前缀匹配】源文件从 .js 改成 .ts 之后，声明可能带
+  // 类型标注（`const proxyConfigs: {...}[] = [`），定长前缀当场失配，
+  // 而失败信息只会说「找不到 proxyConfigs」，看着像变量被删了。
+  // 用正则，让声明名和 `=` 之间可以夹任意标注。
+  const m = new RegExp(`const\\s+${varName}\\s*(?::[^=]+)?=\\s*\\[`).exec(source);
+  assert.notStrictEqual(m, null, `serve.ts 里找不到 ${varName} —— 改名了就同步改这条 spec`);
+  // 【从正则匹配的末尾取 `[`，不要 indexOf】类型标注里自己就带方括号
+  //（`const proxyConfigs: {...}[] = [`），indexOf('[') 会切到类型里那个，
+  // 括号配对随即错位，报出来的却是「没解析到 path」，跟真实原因毫无关系。
+  const open = m.index + m[0].length - 1;
   let depth = 0;
 
   for (let i = open; i < source.length; i++) {

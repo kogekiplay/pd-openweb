@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
-const { mdAgentApiServer } = require('../CI/publishConfig');
+const { mdAgentApiServer } = require('../CI/publishConfig.ts');
 const {
   ROOT_PATH,
   collectBodyProps,
@@ -12,7 +12,7 @@ const {
   normalizeDescription,
   print,
   toCamelCase,
-} = require('./utils');
+} = require('./utils.ts');
 
 const SWAGGER_URL =
   (process.env.AGENT_SWAGGER_URL || mdAgentApiServer)?.replace(/\/$/, '') + '/swagger/v1.0.0.0/swagger.json';
@@ -138,7 +138,7 @@ function parseSwagger(swagger) {
   }
 
   // 同名（去 path-param 后命名碰撞）：path-param 最少的保留原名，其余用末尾 path-param 拼 By 后缀
-  const grouped = fns.reduce((m, fn) => ((m[fn.name] = m[fn.name] || []).push(fn), m), {});
+  const grouped: Record<string, any[]> = fns.reduce((m, fn) => ((m[fn.name] = m[fn.name] || []).push(fn), m), {});
   Object.values(grouped)
     .filter(list => list.length > 1)
     .forEach(list => {

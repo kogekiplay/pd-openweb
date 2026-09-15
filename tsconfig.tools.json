@@ -38,9 +38,15 @@
     "types": ["node"]
   },
 
-  // 只收 .ts。scripts/ 和 tools/ 下还有大量 .js（build.js、lang.js、CI 那套等），
-  // allowJs 只是允许解析，checkJs:false 表示不检查它们 —— 它们会随后续批次
-  // 逐个改成 .ts 再自动进入检查范围。
-  "include": ["scripts/**/*.ts", "tools/**/*.ts"],
+  // 只收 .ts。目录下残留的 .js 由 allowJs 允许解析、checkJs:false 表示不检查，
+  // 改名成 .ts 就【自动】进入检查范围，不用再动这里。
+  // 根目录那两个配置文件（.prettierrc.ts / eslint.config.ts）也显式列进来。
+  "include": [
+    "scripts/**/*.ts",
+    "tools/**/*.ts",
+    "CI/**/*.ts",
+    ".prettierrc.ts",
+    "eslint.config.ts"
+  ],
   "exclude": ["node_modules"]
 }

@@ -134,7 +134,7 @@ function walk(entryPaths, isBefore) {
 
 function summarize(fileMap) {
   const files = [...fileMap.values()];
-  const byCategory = {};
+  const byCategory: Record<string, number> = {};
   let total = 0;
   files.forEach(({ size, category }) => {
     total += size;
@@ -167,9 +167,9 @@ function sumSizes(paths, fileMap) {
 
 function topModules(widgetModules, limit = 10) {
   return Object.entries(widgetModules)
-    .sort((a, b) => b[1] - a[1])
+    .sort((a: [string, number], b: [string, number]) => b[1] - a[1])
     .slice(0, limit)
-    .map(([name, bytes]) => ({ name, kiB: +(bytes / 1024).toFixed(1) }));
+    .map(([name, bytes]: [string, number]) => ({ name, kiB: +(bytes / 1024).toFixed(1) }));
 }
 
 function analyze(entries, label) {

@@ -1,6 +1,6 @@
 const assert = require('assert');
 const path = require('path');
-const { transformFileSync } = require('../../../scripts/spec-harness');
+const { transformFileSync } = require('../../../scripts/spec-harness.ts');
 
 // 国际化函数由运行时全局注入（buildSteps 等模块在顶层就调用），测试里补一个恒等实现
 global._l = s => s;

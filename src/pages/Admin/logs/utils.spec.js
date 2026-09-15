@@ -1,7 +1,7 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
-const { transformFileSync, readSource } = require('../../../../scripts/spec-harness');
+const { transformFileSync, readSource } = require('../../../../scripts/spec-harness.ts');
 
 function requireEsm(file, stubs = {}) {
   const module = { exports: {} };

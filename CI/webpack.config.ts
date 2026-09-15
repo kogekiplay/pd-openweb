@@ -8,7 +8,7 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const { sentryWebpackPlugin } = require('@sentry/webpack-plugin');
 const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 const { EsbuildPlugin } = require('esbuild-loader');
-const { getWebpackCacheDirectory, getWebpackCacheName } = require('./webpackCache');
+const { getWebpackCacheDirectory, getWebpackCacheName } = require('./webpackCache.ts');
 
 // Environment and build configuration
 const ENV = {
@@ -76,7 +76,9 @@ const LOADERS = {
 
 // Module rules configuration
 const getModuleRules = () => {
-  const rules = [
+  // 显式标成 webpack 自己的 RuleSetRule[]：不标的话元素类型会被前几条字面量
+  // 推死，后面 push 一条带 enforce 的规则就报「属性不存在」。
+  const rules: import('webpack').RuleSetRule[] = [
     {
       test: /\.css$/,
       use: LOADERS.css,
@@ -417,12 +419,12 @@ const getCacheConfig = alonePath => ({
   buildDependencies: {
     config: [
       __filename,
-      path.resolve(PATHS.root, 'CI/webpackCache.js'),
+      path.resolve(PATHS.root, 'CI/webpackCache.ts'),
       path.resolve(PATHS.root, '.babelrc'),
       path.resolve(PATHS.root, 'package.json'),
       path.resolve(PATHS.root, 'bun.lock'),
-      path.resolve(PATHS.root, 'CI/publishConfig.js'),
-      path.resolve(PATHS.root, 'scripts/build.js'),
+      path.resolve(PATHS.root, 'CI/publishConfig.ts'),
+      path.resolve(PATHS.root, 'scripts/build.ts'),
     ],
   },
 });

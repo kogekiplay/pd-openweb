@@ -1,6 +1,6 @@
 const assert = require('assert');
 const path = require('path');
-const { transformFileSync } = require('../../../../../../../scripts/spec-harness');
+const { transformFileSync } = require('../../../../../../../scripts/spec-harness.ts');
 
 // 一个够用的 viewport 假件：只实现 GunterScroll 真正读写的那几个属性，
 // 外加事件订阅，好让 spec 能手动触发原生 scroll。

@@ -5,7 +5,7 @@ const UglifyJS = require('uglify-js');
 const _ = require('lodash');
 const moment = require('moment');
 const fetch = require('node-fetch').default;
-const { ROOT_PATH, print } = require('./utils');
+const { ROOT_PATH, print } = require('./utils.ts');
 
 const SOURCE_DIR = path.join(ROOT_PATH, 'src');
 // 漏掉任一扩展名不会报错,只会让该类文件里的 _l() 词条静默提取不到,故 TS 迁移时必须同步补 .ts/.tsx

@@ -4,7 +4,7 @@ const path = require('path');
 const React = require('react');
 const ReactDOMServer = require('react-dom/server');
 const moment = require('moment');
-const { transformFileSync } = require('../../../../../scripts/spec-harness');
+const { transformFileSync } = require('../../../../../scripts/spec-harness.ts');
 
 function requireEsm(file, stubs = {}) {
   const module = { exports: {} };

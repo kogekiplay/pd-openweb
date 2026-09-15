@@ -1,7 +1,7 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
-const { readSource } = require('../../../../../scripts/spec-harness');
+const { readSource } = require('../../../../../scripts/spec-harness.ts');
 
 const source = readSource(__dirname, 'index.jsx');
 

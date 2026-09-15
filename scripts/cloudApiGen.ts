@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
-const { cloudApiServer } = require('../CI/publishConfig');
+const { cloudApiServer } = require('../CI/publishConfig.ts');
 const {
   ROOT_PATH,
   collectBodyProps,
@@ -10,7 +10,7 @@ const {
   normalizeDescription,
   print,
   toCamelCase,
-} = require('./utils');
+} = require('./utils.ts');
 
 const SWAGGER_URL =
   process.env.CLOUD_API_SWAGGER_URL || cloudApiServer.replace(/\/$/, '') + '/swagger/v1.0.0.0/swagger.json';
@@ -123,7 +123,7 @@ function renderFn(fn, dirName) {
 }
 
 function parseSwagger(swagger) {
-  const dirMap = {};
+  const dirMap: Record<string, any[]> = {};
   const paths = swagger.paths || {};
 
   for (const swaggerPath of Object.keys(paths)) {

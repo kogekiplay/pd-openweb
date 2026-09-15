@@ -132,7 +132,7 @@ const webpackTaskFactory = (webpackConfigArg, isWatch) => {
 
   return callback => {
     const webpackCompiler = webpack(webpackConfig);
-    const finish = error => {
+    const finish = (error?: any) => {
       if (isWatch || !webpackCompiler.close) {
         callback(error);
         return;

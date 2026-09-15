@@ -1,9 +1,9 @@
 const path = require('path');
 const fs = require('fs-extra');
 const axios = require('axios');
-const { API_SERVER } = require('../CI/publishConfig');
-const agentApiGen = require('./agentApiGen');
-const { ROOT_PATH, formatWithPrettier, print } = require('./utils');
+const { API_SERVER } = require('../CI/publishConfig.ts');
+const agentApiGen = require('./agentApiGen.ts');
+const { ROOT_PATH, formatWithPrettier, print } = require('./utils.ts');
 const AJAX_PATH = path.join(ROOT_PATH, 'src/api');
 const OUTPUT_EXT = '.ts';
 // 按「去掉扩展名的文件名」保留,否则 agent.js -> agent.ts 后白名单失配,会被 clearDir 静默删掉
@@ -140,7 +140,7 @@ function escapeTemplateValue(value = '') {
     .replace(/'/g, '&#39;');
 }
 
-function renderParamLine(name, param = {}) {
+function renderParamLine(name, param: Record<string, any> = {}) {
   const description = param.description ? ` ${escapeTemplateValue(param.description)}` : '';
   return `  * @param {${escapeTemplateValue(param.type)}} args.${escapeTemplateValue(name)}${description}`;
 }

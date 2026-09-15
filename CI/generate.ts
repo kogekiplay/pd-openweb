@@ -4,8 +4,8 @@ const moment = require('moment');
 const cheerio = require('cheerio');
 const minify = require('html-minifier-terser').minify;
 const _ = require('lodash');
-const { htmlTemplatesPath, getEntryName, getEntryFromHtml } = require('./utils');
-const { apiServer, webpackPublicPath } = require('./publishConfig');
+const { htmlTemplatesPath, getEntryName, getEntryFromHtml } = require('./utils.ts');
+const { apiServer, webpackPublicPath } = require('./publishConfig.ts');
 const isProduction = process.env.NODE_ENV === 'production';
 const buildPath = path.join(__dirname, '../build');
 const htmlDestPath = path.join(__dirname, '../build/files');
@@ -65,7 +65,9 @@ async function generate() {
     let html = fs.readFileSync(path.join(htmlTemplatesPath, filename)).toString();
     const $ = cheerio.load(html);
     const entry = getEntryFromHtml(filename);
-    const apiMap = {
+    // 下面按条件往里挂 workflow / report / integration 等键，不标类型的话
+    // 推出来只有 { main }，挂一个报一条 TS2339。
+    const apiMap: Record<string, string> = {
       main: isProduction ? apiServer : '/api/',
     };
 

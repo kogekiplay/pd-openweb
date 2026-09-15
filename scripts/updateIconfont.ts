@@ -1,7 +1,7 @@
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { ROOT_PATH, print, runCommand } = require('./utils');
+const { ROOT_PATH, print, runCommand } = require('./utils.ts');
 
 const DEFAULT_DOWNLOAD_URL = 'https://www.iconfont.cn/api/project/download.zip?pid=2032949';
 const DEFAULT_REFERER = 'https://www.iconfont.cn/manage/index?manage_type=myprojects&projectId=2032949';

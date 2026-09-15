@@ -8,13 +8,13 @@ const { fork, spawnSync } = require('child_process');
 const chalk = require('chalk').default;
 const { merge } = require('webpack-merge');
 
-const generate = require('../CI/generate');
-const serve = require('../CI/serve');
-const { findEntryMap, uploadFunctionFileToWorksheet, webpackTaskFactory } = require('../CI/utils');
-const webpackConfig = require('../CI/webpack.config');
-const webpackConfigForMdFunction = require('../CI/webpack.mdfunction.config');
-const webpackConfigForMingoEntryWidget = require('../CI/webpack.mingo-entry-widget.config');
-const { ROOT_PATH } = require('./utils');
+const generate = require('../CI/generate.ts');
+const serve = require('../CI/serve.ts');
+const { findEntryMap, uploadFunctionFileToWorksheet, webpackTaskFactory } = require('../CI/utils.ts');
+const webpackConfig = require('../CI/webpack.config.ts');
+const webpackConfigForMdFunction = require('../CI/webpack.mdfunction.config.ts');
+const webpackConfigForMingoEntryWidget = require('../CI/webpack.mingo-entry-widget.config.ts');
+const { ROOT_PATH } = require('./utils.ts');
 
 const isProduction = process.env.NODE_ENV === 'production';
 const blackWordList = [
@@ -62,7 +62,7 @@ function formatDuration(ms) {
 
 // 将 callback 风格任务包装成 Promise，方便按构建顺序串行执行。
 function runTask(task) {
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     let settled = false;
 
     const done = err => {
@@ -131,7 +131,7 @@ async function generateMainweb() {
 
 // 启动本地静态服务，服务启动成功后 resolve。
 function startServer(options = {}) {
-  return new Promise(resolve => {
+  return new Promise<void>(resolve => {
     serve({ ...options, done: resolve });
   });
 }
@@ -154,7 +154,7 @@ function watchWebpack() {
 // 把 webpack watch 丢到独立子进程执行，避免编译占满事件循环时阻塞主进程的代理 / 静态服务。
 // 子进程复用 build.js 的 webpack:watch 命令，首轮编译完成后通过 IPC 通知父进程。
 function forkWebpackWatch() {
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     // 保留 ipc 通道，同时让子进程的日志直接打到当前终端
     const child = fork(__filename, ['webpack:watch'], { stdio: ['inherit', 'inherit', 'inherit', 'ipc'] });
 
@@ -299,7 +299,7 @@ function specGate() {
   }
 
   console.log(chalk.cyan('test: 行为门禁 62 个 spec ...'));
-  const r = spawnSync(process.execPath, [resolvePath('scripts/run-specs.js')], {
+  const r = spawnSync(process.execPath, [resolvePath('scripts/run-specs.ts')], {
     cwd: ROOT_PATH,
     stdio: 'inherit',
   });
@@ -323,7 +323,7 @@ function typecheckGate() {
   }
 
   const steps = [
-    ['后缀并存检查（零容忍）', [resolvePath('scripts/checkExtensionCollisions.js')]],
+    ['后缀并存检查（零容忍）', [resolvePath('scripts/checkExtensionCollisions.ts')]],
     ['工具链类型门禁（零容忍）', [resolvePath('scripts/typecheck/tools-gate.ts')]],
     ['语法门禁（零容忍）', [resolvePath('scripts/typecheck/tsc-syntax-gate.ts')]],
     ['语义差分门禁', [resolvePath('scripts/typecheck/tsc-gate.ts'), '--no-incremental']],
@@ -465,7 +465,7 @@ function uploadMdFunction() {
   const filePath = resolvePath('build/dist/mdfunction.bundle.js');
   console.log(chalk.green('Uploading mdfunction.bundle.js'));
 
-  return new Promise(resolve => {
+  return new Promise<void>(resolve => {
     uploadFunctionFileToWorksheet(filePath, err => {
       if (err) {
         console.log(chalk.red('Upload failed'));

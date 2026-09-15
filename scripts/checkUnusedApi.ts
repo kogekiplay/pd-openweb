@@ -1,7 +1,7 @@
 const { spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
-const { ROOT_PATH, print } = require('./utils');
+const { ROOT_PATH, print } = require('./utils.ts');
 
 const API_DIR = path.join(ROOT_PATH, 'src/api');
 const OUTPUT_DIR = path.join(ROOT_PATH, 'build/unused-api');

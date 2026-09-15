@@ -1,7 +1,7 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
-const { parser, readSource, expectedFailure } = require('../../scripts/spec-harness');
+const { parser, readSource, expectedFailure } = require('../../scripts/spec-harness.ts');
 
 const projectRoot = path.resolve(__dirname, '../..');
 const files = [

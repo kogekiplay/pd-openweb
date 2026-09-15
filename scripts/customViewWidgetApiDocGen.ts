@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const parser = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
-const { ROOT_PATH, print } = require('./utils');
+const { ROOT_PATH, print } = require('./utils.ts');
 
 const OUTPUT_DIR = path.join(ROOT_PATH, 'build/custom-view-widget-api-doc');
 const AI_DOC_DIR = path.join(OUTPUT_DIR, 'ai-doc');

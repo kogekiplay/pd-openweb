@@ -23,7 +23,7 @@
  */
 const assert = require('assert');
 const path = require('path');
-const { transformFileSync, readSource, ROOT } = require('../../scripts/spec-harness');
+const { transformFileSync, readSource, ROOT } = require('../../scripts/spec-harness.ts');
 
 global._l = global._l || ((s, ...args) => args.reduce((acc, a, i) => acc.replace('%' + i, a), String(s)));
 global.window = global.window || {};

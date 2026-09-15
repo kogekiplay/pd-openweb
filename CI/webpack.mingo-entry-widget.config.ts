@@ -2,8 +2,8 @@ const webpack = require('webpack');
 const path = require('path');
 const { EsbuildPlugin } = require('esbuild-loader');
 const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
-const webpackConfig = require('./webpack.config');
-const { getWebpackCacheDirectory, getWebpackCacheName } = require('./webpackCache');
+const webpackConfig = require('./webpack.config.ts');
+const { getWebpackCacheDirectory, getWebpackCacheName } = require('./webpackCache.ts');
 
 const config = webpackConfig();
 const ROOT_PATH = path.join(__dirname, '..');
@@ -82,8 +82,8 @@ module.exports = {
     buildDependencies: {
       config: [
         __filename,
-        path.resolve(ROOT_PATH, 'CI/webpack.config.js'),
-        path.resolve(ROOT_PATH, 'CI/webpackCache.js'),
+        path.resolve(ROOT_PATH, 'CI/webpack.config.ts'),
+        path.resolve(ROOT_PATH, 'CI/webpackCache.ts'),
         path.resolve(ROOT_PATH, '.babelrc'),
         path.resolve(ROOT_PATH, 'package.json'),
         path.resolve(ROOT_PATH, 'bun.lock'),

@@ -14,10 +14,11 @@ const { createProxyMiddleware, responseInterceptor } = require('http-proxy-middl
 // 少写 .default 的表现是 `chalk.xxx is not a function`，不是 require 报错。
 const chalk = require('chalk').default;
 
-const utils = require('./utils');
-const publishConfig = require('./publishConfig');
-const generate = require('./generate');
-const statusData = {};
+const utils = require('./utils.ts');
+const publishConfig = require('./publishConfig.ts');
+const generate = require('./generate.ts');
+// dev server 的运行态，localUrl 等字段在启动过程中才填上
+const statusData: Record<string, any> = {};
 const projectRootPath = path.join(__dirname, '..');
 const iconViewerPath = path.join(projectRootPath, 'scripts/iconViewer');
 
@@ -29,8 +30,8 @@ function logObj(obj) {
 function getLanIp() {
   return Object.values(networkInterfaces())
     .flat()
-    .filter(details => details.family === 'IPv4' && !details.internal)
-    .map(details => details.address);
+    .filter((details: import('os').NetworkInterfaceInfo) => details.family === 'IPv4' && !details.internal)
+    .map((details: import('os').NetworkInterfaceInfo) => details.address);
 }
 
 function checkPort(port) {
@@ -69,7 +70,9 @@ async function getValuedPort(port = 30001) {
 // 它也是唯一不需要 proxyConfigs 条目的前缀 —— '/' 就是 dev server 自己的根，本地直接就有。
 const PLATFORM_REWRITE_PREFIXES = ['/accountapi/', '/account/', '/platformapi/', '/pm/', '/'];
 
-const proxyConfigs = [
+// rewriteHosts 只有部分条目有，不标类型的话 TS 会把数组推成三种字面量形状的联合，
+// 下游 makeProxy(config) 当场报「缺 rewriteHosts」。
+const proxyConfigs: { name: string; path: string; replace: string; server: any; rewriteHosts?: any }[] = [
   {
     name: 'md_agent_api',
     path: '/api/agent/',
@@ -274,7 +277,20 @@ function rewriteAbsoluteHosts(buffer, server, prefixes = REWRITE_PREFIXES) {
 // - 错误统一在 on.error 里兜底，不会让 dev server 进程崩溃
 // rewriteHosts: true 用默认的 REWRITE_PREFIXES；传数组则用这一条自己的前缀表
 // （见 PLATFORM_REWRITE_PREFIXES —— 平台管理那份响应里的地址和主站不是一套）。
-function makeProxy({ name, server, path: matchPath, replace, rewriteHosts: rewrite }) {
+function makeProxy({
+  name,
+  server,
+  path: matchPath,
+  replace,
+  rewriteHosts: rewrite,
+}: {
+  name: string;
+  server: any;
+  path: string;
+  replace: string;
+  // 只有部分代理条目配了它，所以是可选的
+  rewriteHosts?: any;
+}) {
   const prefixes = Array.isArray(rewrite) ? rewrite : REWRITE_PREFIXES;
 
   return createProxyMiddleware({
@@ -385,7 +401,7 @@ async function resolveApiRoutes(mainPrefix) {
   logObj({ ...resolved, api: `${publishConfig.apiServer}${mainPrefix.replace(/^\//, '')}` });
 }
 
-const proxyMiddlewares = {};
+const proxyMiddlewares: Record<string, any> = {};
 
 function buildProxyMiddlewares() {
   for (const config of proxyConfigs) {
