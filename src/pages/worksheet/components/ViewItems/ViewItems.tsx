@@ -569,7 +569,7 @@ let ViewItems = class ViewItems extends Component<any, any> {
     );
   };
   getManageView = () => _.find(this.props.viewList, l => l.viewId === this.props.worksheetId);
-  toManageView = (manageView, isToView) => {
+  toManageView = (manageView, isToView: boolean) => {
     const { getNavigateUrl } = this.props;
     navigateTo(getNavigateUrl(manageView));
     !isToView && this.handleOpenView(manageView);

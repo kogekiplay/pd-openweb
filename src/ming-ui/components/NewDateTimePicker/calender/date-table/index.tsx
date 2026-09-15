@@ -23,7 +23,7 @@ class DateTable extends Component<any, any> {
 
   renderBodyList = () => {
     const trList = this.props.bodyData.map((row, i) => {
-      const tdList = row.map((item, j) => {
+      const tdList = row.map((item, j: number) => {
         const classList = [];
         const labelClassList = [];
 

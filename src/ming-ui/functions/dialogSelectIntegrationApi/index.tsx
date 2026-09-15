@@ -137,7 +137,7 @@ class SelectIntegrationApi extends Component<any, any> {
     window.open(pathCompletion(`/integration`));
   };
 
-  handleSearch = type => {
+  handleSearch = (type: string) => {
     if (type === 'link') {
       this.getLinkList();
     } else {

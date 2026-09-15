@@ -590,7 +590,7 @@ export async function fetchArtifactAppMeta({ artifactId, versionId } = {}) {
 
 // 显式终止服务端正在执行的 run：仅 abort 本地 SSE 不会停掉服务端，需调取消接口。
 // agentCancel 按 accountId|sessionId 物理隔离取消活跃执行；无活跃 run 返回 not_in_flight，静默忽略。
-export function cancelAgentRun(sessionId) {
+export function cancelAgentRun(sessionId: string) {
   if (!sessionId) return Promise.resolve();
   return agentAjax.agentCancel({ sessionId }, { silent: true }).catch(() => {});
 }

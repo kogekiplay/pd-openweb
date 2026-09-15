@@ -399,7 +399,7 @@ const withoutChatPathList = [
  * tools/verify-without-url-predicates.ts 拿真的 react-router 4 对着 1292 条
  * 真实 URL 语料 + 一批边界用例逐条比过，两个谓词都是 0 差异。改这里之前先跑它。
  */
-const buildWithoutUrlRegExp = list =>
+const buildWithoutUrlRegExp = (list: string[]) =>
   new RegExp(`^/.*(?:${list.map(p => p.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})(?:/(?=$))?(?=/|$)`, 'i');
 
 const withoutHeaderRegExp = buildWithoutUrlRegExp(withoutHeaderPathList);

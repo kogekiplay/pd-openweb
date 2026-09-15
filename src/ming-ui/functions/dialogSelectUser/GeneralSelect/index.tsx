@@ -1199,7 +1199,7 @@ export default class GeneraSelect extends Component<any, any> {
     }
   };
 
-  changeChooseType = type => {
+  changeChooseType = (type: string) => {
     this.setState(
       {
         chooseType: type,

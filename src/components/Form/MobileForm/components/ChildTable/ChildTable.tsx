@@ -318,7 +318,7 @@ class ChildTable extends React.Component<any, any> {
     this.setState({ viewportSize });
   };
 
-  updateExpandPagination = showExpand => {
+  updateExpandPagination = (showExpand: boolean) => {
     const { updatePagination = () => {} } = this.props;
 
     if (window.cancelAnimationFrame && this.expandPaginationFrame) {

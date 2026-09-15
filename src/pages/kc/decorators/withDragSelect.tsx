@@ -118,7 +118,7 @@ class DragSelect extends React.Component<any, any> {
     this.dragSelectItemNodes[i] = node;
   };
   getRootNode = () => this.rootNode;
-  getChildNode = i => getDomNode((this.dragSelectItemNodes || {})[i]) || getDomNode(this['dragSelectItem$' + i]);
+  getChildNode = (i: number) => getDomNode((this.dragSelectItemNodes || {})[i]) || getDomNode(this['dragSelectItem$' + i]);
   componentDidMount() {
     const fn = this.handleMouseDown.bind(this);
     const container = this.getContainer();

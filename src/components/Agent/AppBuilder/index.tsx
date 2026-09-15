@@ -101,7 +101,7 @@ function buildPreviewUrl(
   const withLang = appLanguage ? `&sys_lang=${encodeURIComponent(appLanguage)}` : '';
   const withRp = path => `${path}?rp=no${withLang}`;
   // 应用根这类静态预览 URL 不随产物变化，附加 nonce 让 src 变化以触发 PreviewFrame 重新导航刷新
-  const withRefresh = path => `${withRp(path)}${previewNonce ? `&_r=${previewNonce}` : ''}`;
+  const withRefresh = (path: string) => `${withRp(path)}${previewNonce ? `&_r=${previewNonce}` : ''}`;
 
   switch (activeKey) {
     case 'roles':

@@ -70,7 +70,7 @@ const normalizeCode = code => {
   return String(code).startsWith('+') ? String(code) : `+${code}`;
 };
 
-const normalizeValue = value => String(value || '').trim();
+const normalizeValue = (value: string) => String(value || '').trim();
 
 export class DialCodeSelectInstance {
   // 这些字段全部只在构造函数里 this.x = ... 赋值。TS 不把构造函数赋值当作字段声明，

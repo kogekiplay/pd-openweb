@@ -218,7 +218,7 @@ export default class MyProcess extends Component<any, any> {
       });
     });
   };
-  handleChangeTab = tab => {
+  handleChangeTab = (tab: number) => {
     const { filter, archivedItem } = this.state;
     const isSame = tab === this.state.stateTab;
     this.setState(

@@ -107,7 +107,7 @@ const Content = styled.div`
   }
 `;
 
-function formatDuration(ms) {
+function formatDuration(ms: number) {
   if (!ms || ms < 0) return '';
   // 有测得耗时但不足 1 秒时按 1 秒计，避免出现无意义的「0秒」
   const sec = Math.max(1, Math.floor(ms / 1000));

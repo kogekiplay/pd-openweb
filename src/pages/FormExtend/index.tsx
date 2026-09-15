@@ -63,7 +63,7 @@ export default function FormExtend(props) {
     }
   };
 
-  const handleClickNav = type => {
+  const handleClickNav = (type: string) => {
     saveSelectExtensionNavType(worksheetId, 'extensionNav', type);
     checkConfigChanged(() => navigateTo(`/worksheet/form/edit/${worksheetId}/${type}`));
   };

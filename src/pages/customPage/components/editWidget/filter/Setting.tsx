@@ -188,7 +188,7 @@ function Setting(props) {
     setActiveId(newFilters[0].filterId);
   };
 
-  const handleChangeRequiredcids = requiredcids => {
+  const handleChangeRequiredcids = (requiredcids: string) => {
     setFilterInfo({
       ...filterInfo,
       advancedSetting: {

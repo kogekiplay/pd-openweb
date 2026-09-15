@@ -93,7 +93,7 @@ const MentionsInput = props => {
     return mentionState.current.requestId;
   };
 
-  const isLatestRequest = requestId => mentionState.current.requestId === requestId;
+  const isLatestRequest = (requestId: number) => mentionState.current.requestId === requestId;
 
   const syncMentionsCollection = message => {
     const mentionTextCounts = {};

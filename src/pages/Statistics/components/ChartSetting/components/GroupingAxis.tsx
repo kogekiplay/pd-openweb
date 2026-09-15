@@ -87,7 +87,7 @@ export default class GroupingAxis extends Component<any, any> {
       particleSizeType: 0,
     });
   };
-  handleChangeTimeParticleSizeType = value => {
+  handleChangeTimeParticleSizeType = (value: number) => {
     this.props.onChangeCurrentReport({
       particleSizeType: value,
     });

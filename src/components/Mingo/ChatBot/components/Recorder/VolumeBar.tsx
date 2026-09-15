@@ -44,7 +44,7 @@ export default function VolumeBar({
   className = '',
 }) {
   // 创建 SVG 背景模式
-  const createSVGPattern = color => {
+  const createSVGPattern = (color: string) => {
     const patternWidth = segmentWidth + segmentGap;
     const svg = `
       <svg xmlns="http://www.w3.org/2000/svg" width="${patternWidth}" height="${height}">

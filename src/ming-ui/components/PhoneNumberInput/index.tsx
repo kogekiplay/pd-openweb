@@ -119,7 +119,7 @@ export default function PhoneNumberInput({
     return isEditing ? numberValue : formatPhoneDisplay(value, numberValue);
   }, [numberValue, isEditing, value]);
 
-  const emitIfChanged = nextValue => {
+  const emitIfChanged = (nextValue: string) => {
     if (nextValue !== value) {
       onChange(nextValue);
     }

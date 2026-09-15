@@ -929,7 +929,7 @@ const getDays = hour => {
  * @param  {boolean} filterWeekend 是否过滤周末
  * @return {string}
  */
-const offsetDay = (currentTime, day, filterWeekend) => {
+const offsetDay = (currentTime, day: number, filterWeekend) => {
   // 如果不包含周末
   if (!filterWeekend) {
     currentTime = currentTime.add(day, 'd');
@@ -1095,7 +1095,7 @@ const offsetEndNegativeHour = (currentTime, hour) => {
  * @param  {number} viewType 当前视图
  * @return {object}
  */
-const offsetTime = (start, end, filterWeekend, offsetTime: number, minStartTime, maxEndTime, viewType) => {
+const offsetTime = (start: string, end: string, filterWeekend, offsetTime: number, minStartTime, maxEndTime, viewType) => {
   const startOffset = getDays(offsetTime);
   const endOffset = getDays(offsetTime);
 

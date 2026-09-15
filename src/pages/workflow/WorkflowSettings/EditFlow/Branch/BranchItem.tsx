@@ -83,7 +83,7 @@ export default class BranchItem extends Component<any, any> {
           item.operateCondition.map((conditions, i) => {
             return (
               <Fragment key={i}>
-                {conditions.map((obj, j) => {
+                {conditions.map((obj, j: number) => {
                   const isOldCondition =
                     (_.includes([15, 16], obj.filedTypeId) || (obj.filedTypeId === 38 && obj.enumDefault === 2)) &&
                     _.includes(['15', '16', '17', '18'], obj.conditionId);

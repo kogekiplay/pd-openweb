@@ -38,7 +38,7 @@ export function isSilentEmbedSegment(suffix: string, data) {
 }
 
 // 解析 fence：命中前缀、后缀已登记、JSON 可解析为非空对象 → { suffix, data }；否则 null。
-export function parseEmbed(language, code) {
+export function parseEmbed(language: string, code) {
   if (typeof language !== 'string' || !language.startsWith(EMBED_LANGUAGE_PREFIX)) return null;
 
   const suffix = language.slice(EMBED_LANGUAGE_PREFIX.length);

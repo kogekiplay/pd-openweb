@@ -198,7 +198,7 @@ export default function SourceSelectModal({ projectId, isCreateConnector, onChan
                     >
                       {item.text}
                     </p>
-                    {item.list.map((sourceType, j) => {
+                    {item.list.map((sourceType, j: number) => {
                       return (
                         <DataSourceCard key={`${i}-${j}`} onClick={() => onChange(sourceType)}>
                           <div className="content">

@@ -135,7 +135,7 @@ export default function RolesPanel({ roles }) {
             {role.description && <Description>{role.description}</Description>}
             {perms.length > 0 && (
               <TagList>
-                {perms.map((p, j) => {
+                {perms.map((p, j: number) => {
                   const { name: pName, type } = parsePermission(p);
                   const cfg = TAG_CONFIG[type] || {};
 

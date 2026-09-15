@@ -997,7 +997,7 @@ export const createFolder = (data, isOpen = true) => {
 };
 
 // 项目置顶
-export const updateFolderTop = (folderId, isTop, callback) => {
+export const updateFolderTop = (folderId, isTop: boolean, callback) => {
   ajaxRequest
     .updateFolderTop({
       folderID: folderId,

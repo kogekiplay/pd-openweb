@@ -75,7 +75,7 @@ const getBaseInfo = moveX => {
 };
 
 // 根据基础信息计算用户人数，离左侧距离
-const formatValue = moveX => {
+const formatValue = (moveX: number) => {
   if (moveX < 0 || moveX > 675) return;
   const { itemWidth, stepCount, baseLeft } = getBaseInfo(moveX);
   const value = moveX < 15 ? 1 : Math.round((moveX - baseLeft) / itemWidth) + 1;

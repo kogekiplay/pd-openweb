@@ -1519,7 +1519,7 @@ export default class CreateNodeDialog extends Component<any, any> {
                     <div className="bold pLeft12 Font14 ellipsis">{item.typeText}</div>
                     {item.describe && <div className="textSecondary pLeft12 mTop5">{item.describe}</div>}
                     <ul className="secondNodeList mBottom25">
-                      {(item.source || []).map((o, j) => {
+                      {(item.source || []).map((o, j: number) => {
                         return (
                           <li
                             key={j}

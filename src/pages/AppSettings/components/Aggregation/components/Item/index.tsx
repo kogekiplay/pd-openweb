@@ -248,7 +248,7 @@ export default function ItemCard(props) {
                 {reportsRes?.map((app, i) => (
                   <div className="mTop20" key={i}>
                     <div className="textPrimary Bold">{_l('统计图表')}</div>
-                    {app?.reports?.map((report, j) => (
+                    {app?.reports?.map((report, j: number) => (
                       <div className="ic mTop6" key={j}>
                         <span
                           className="textPrimary hoverColorPrimary Hand"
@@ -266,7 +266,7 @@ export default function ItemCard(props) {
                   <div className="mTop20" key={i}>
                     <div className="textPrimary Bold">{_l('工作流')}</div>
                     {app?.references?.flatMap(workflow =>
-                      workflow.referenceItems?.map((item, j) => (
+                      workflow.referenceItems?.map((item, j: number) => (
                         <div className="ic mTop6" key={j}>
                           <span
                             className="textPrimary hoverColorPrimary Hand"

@@ -210,7 +210,7 @@ export default ({ data, updateSource, isIntegration, isPlugin }) => {
     updateSource({ controls });
   };
 
-  const updateOptions = (action: string, value, { controlId, options }: { controlId?: string; [key: string]: any }, index: number, isBlur?: boolean) => {
+  const updateOptions = (action: string, value: string, { controlId, options }: { controlId?: string; [key: string]: any }, index: number, isBlur?: boolean) => {
     if (isBlur && !!options.find((o, i) => o[action] === value && i !== index)) {
       value =
         value +

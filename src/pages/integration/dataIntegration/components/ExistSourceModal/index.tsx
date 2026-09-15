@@ -331,7 +331,7 @@ export default function ExistSourceModal(props) {
                       item.list.length > 0 && (
                         <React.Fragment key={i}>
                           <p className="categoryText">{item.text}</p>
-                          {item.list.map((connectorConfigData, j) => {
+                          {item.list.map((connectorConfigData, j: number) => {
                             return (
                               <li
                                 key={`${i}-${j}`}

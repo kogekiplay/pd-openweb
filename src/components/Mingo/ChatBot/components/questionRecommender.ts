@@ -49,7 +49,7 @@ export function buildRecommenderMessage({ appInfo }) {
 // agent 输出为流式 JSON：{ "questions": ["问题1", "问题2", ...] }。
 // 用 partial-json 容忍半截 JSON，边流边解析 questions 数组：未闭合的对象/数组/字符串都能尽力取出已到内容，
 // 末条问题会随增量逐步补全。空白/异常状态统一返回 []。
-export function parseQuestions(raw) {
+export function parseQuestions(raw: string) {
   if (!raw) return [];
 
   try {

@@ -36,6 +36,8 @@
 const fs = require('fs');
 const path = require('path');
 const { API } = require('typescript/unstable/sync');
+const is = require('typescript/unstable/ast/is');
+const { SyntaxKind: SK } = require('typescript/unstable/ast');
 
 const ROOT: string = path.resolve(__dirname, '..');
 const SRC: string = path.join(ROOT, 'src') + path.sep;
@@ -109,4 +111,70 @@ function posToLineCol(text: string, pos: number): { line: number; col: number } 
   return { line, col: pos - last + 1 };
 }
 
-module.exports = { ROOT, SRC, openProject, writeSource, posToLineCol };
+/**
+ * ── 逐点用法校验（两个 codemod 共用）──────────────────────────────────────
+ * 名字共识也好、调用点推断也好，得出的都是「这个形参【通常】是什么」，
+ * 说明不了「这一处是什么」。这里在【这一处】直接验三件事：
+ *   1. 成员访问：原始类型的形参不可能被访问不属于它的成员（p.fileName）
+ *   2. 展开：`...p` 只有对象/数组能展开
+ *   3. 比较与赋值：`p === '字面量'` 时字面量的原始类型要对得上
+ *   4. typeof 分支：函数体里写了 `typeof p === '别的类型'`，说明它不止一种形态
+ * 任何一条不符就跳过这一处 —— 是【按点】挡，不会因为一处用错丢掉这个名字其余几百处。
+ */
+const MEMBERS: Record<string, Set<string>> = {
+  string: new Set([
+    'length','charAt','charCodeAt','codePointAt','concat','endsWith','includes','indexOf','lastIndexOf',
+    'localeCompare','match','matchAll','normalize','padEnd','padStart','repeat','replace','replaceAll',
+    'search','slice','split','startsWith','substr','substring','at','toLowerCase','toUpperCase',
+    'toLocaleLowerCase','toLocaleUpperCase','trim','trimEnd','trimStart','toString','valueOf',
+  ]),
+  number: new Set(['toFixed','toPrecision','toExponential','toString','valueOf','toLocaleString']),
+  boolean: new Set(['toString','valueOf']),
+};
+
+/** 字面量节点的原始类型；不是字面量返回 null */
+function literalPrimitive(node: any): string | null {
+  if (!node) return null;
+  if (is.isStringLiteral(node) || is.isNoSubstitutionTemplateLiteral(node)) return 'string';
+  if (is.isNumericLiteral(node)) return 'number';
+  if (node.kind === SK.TrueKeyword || node.kind === SK.FalseKeyword) return 'boolean';
+  return null;
+}
+
+function usageFits(fnNode: any, paramName: string, type: string): boolean {
+  const allowed = MEMBERS[type];
+  if (!allowed || !fnNode) return true; // 数组类型不做这个检查
+  let ok = true;
+  (function walk(n: any) {
+    if (!ok) return;
+    if ((is.isSpreadAssignment(n) || is.isSpreadElement(n)) && n.expression && is.isIdentifier(n.expression)) {
+      if (n.expression.text === paramName) ok = false;
+    }
+    if (is.isPropertyAccessExpression(n) && n.expression && is.isIdentifier(n.expression) && n.name) {
+      if (n.expression.text === paramName && !allowed.has(n.name.text)) ok = false;
+    }
+    if (is.isBinaryExpression(n) && n.left && n.right && n.operatorToken) {
+      const op = n.operatorToken.kind;
+      const isCmpOrAssign =
+        op === SK.EqualsEqualsToken || op === SK.EqualsEqualsEqualsToken ||
+        op === SK.ExclamationEqualsToken || op === SK.ExclamationEqualsEqualsToken || op === SK.EqualsToken;
+      if (isCmpOrAssign) {
+        for (const [a, b] of [[n.left, n.right], [n.right, n.left]]) {
+          // typeof p === '别的类型' —— 说明这个形参不止一种形态，别钉死
+          if (is.isTypeOfExpression(a) && a.expression && is.isIdentifier(a.expression) && a.expression.text === paramName) {
+            const lit = is.isStringLiteral(b) ? b.text : null;
+            if (lit && lit !== type) ok = false;
+            continue;
+          }
+          if (!is.isIdentifier(a) || a.text !== paramName) continue;
+          const lit = literalPrimitive(b);
+          if (lit && lit !== type) ok = false;
+        }
+      }
+    }
+    n.forEachChild(walk);
+  })(fnNode);
+  return ok;
+}
+
+module.exports = { ROOT, SRC, openProject, writeSource, posToLineCol, usageFits, literalPrimitive, MEMBERS };

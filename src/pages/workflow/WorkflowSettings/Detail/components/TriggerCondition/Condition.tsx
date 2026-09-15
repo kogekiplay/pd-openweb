@@ -1166,7 +1166,7 @@ export default class Condition extends Component<any, any> {
   /**
    * 部门选择
    */
-  selectDepartment(oldDepartments, i, j, unique) {
+  selectDepartment(oldDepartments, i, j: number, unique) {
     dialogSelectDept({
       projectId: this.props.projectId,
       selectedDepartment: [],
@@ -1186,7 +1186,7 @@ export default class Condition extends Component<any, any> {
   /**
    * 组织角色选择
    */
-  selectRole(oldRoles, i, j, unique) {
+  selectRole(oldRoles, i, j: number, unique) {
     dialogSelectOrgRole({
       projectId: this.props.projectId,
       unique,
@@ -1314,7 +1314,7 @@ export default class Condition extends Component<any, any> {
   /**
    * 切换条件
    */
-  switchCondition = (conditionId, i, j) => {
+  switchCondition = (conditionId, i, j: number) => {
     const data = _.cloneDeep(this.props.data);
     const { updateSource } = this.props;
 
@@ -1326,7 +1326,7 @@ export default class Condition extends Component<any, any> {
   /**
    * 切换过滤为空条件
    */
-  switchFilterCondition = (key: string, value: number, i, j) => {
+  switchFilterCondition = (key: string, value: number, i: number, j: number) => {
     const data = _.cloneDeep(this.props.data);
     const { updateSource } = this.props;
 
@@ -1337,7 +1337,7 @@ export default class Condition extends Component<any, any> {
   /**
    * 更新日期类型筛选条件的值
    */
-  updateConditionDateValue = ({ value, i, j, type = 20, second = false }) => {
+  updateConditionDateValue = ({ value, i, j, type = 20, second = false }: { j?: number; [key: string]: any }) => {
     const data = _.cloneDeep(this.props.data);
     const { updateSource } = this.props;
 
@@ -1348,7 +1348,7 @@ export default class Condition extends Component<any, any> {
   /**
    * 更多节点的值
    */
-  renderOtherFields(item, i, j, second = false) {
+  renderOtherFields(item, i: number, j: number, second = false) {
     const { projectId, processId, relationId, selectNodeId, sourceAppId, isIntegration, isPlugin, controls } =
       this.props;
     const { moreFieldsIndex } = this.state;
@@ -1434,7 +1434,7 @@ export default class Condition extends Component<any, any> {
   /**
    * 渲染选中的单个值
    */
-  renderSelectFieldsValue(item, i, j, second?: boolean) {
+  renderSelectFieldsValue(item, i: number, j: number, second?: boolean) {
     const { data } = this.props;
 
     return (
@@ -1494,7 +1494,7 @@ export default class Condition extends Component<any, any> {
         <Header />
         <div className="flowDetailTrigger">
           {data.map((item, i) =>
-            item.map((source, j) => this.renderItem(source, i, j, i === data.length - 1, j === item.length - 1)),
+            item.map((source, j: number) => this.renderItem(source, i, j, i === data.length - 1, j === item.length - 1)),
           )}
         </div>
       </Fragment>

@@ -1,4 +1,4 @@
-﻿export default function (arr) {
+﻿export default function (arr: string[]) {
   const obj = {};
 
   if (!arr) {

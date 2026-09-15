@@ -48,7 +48,7 @@
 const path = require('path');
 const is = require('typescript/unstable/ast/is');
 const { SyntaxKind: SK } = require('typescript/unstable/ast');
-const { ROOT, openProject, writeSource } = require('./ts7.ts');
+const { ROOT, openProject, usageFits, writeSource } = require('./ts7.ts');
 
 const APPLY = !process.argv.includes('--list');
 const onlyArg = process.argv.find((a: string) => a.startsWith('--only='));
@@ -122,70 +122,7 @@ const EXCLUDE = new Set([
  * 这条规则把之前手工排除的 field / dataSource / visible / hint / icon / rowId
  * 全部自动挡住了，而且是【按点】挡，不会因为一处用错就丢掉这个名字的其余几百处。
  */
-const MEMBERS: Record<string, Set<string>> = {
-  string: new Set([
-    'length','charAt','charCodeAt','codePointAt','concat','endsWith','includes','indexOf','lastIndexOf',
-    'localeCompare','match','matchAll','normalize','padEnd','padStart','repeat','replace','replaceAll',
-    'search','slice','split','startsWith','substr','substring','at','toLowerCase','toUpperCase',
-    'toLocaleLowerCase','toLocaleUpperCase','trim','trimEnd','trimStart','toString','valueOf',
-  ]),
-  number: new Set(['toFixed','toPrecision','toExponential','toString','valueOf','toLocaleString']),
-  boolean: new Set(['toString','valueOf']),
-};
-
-/** 字面量节点的原始类型；不是字面量返回 null */
-function literalPrimitive(node: any): string | null {
-  if (!node) return null;
-  if (is.isStringLiteral(node) || is.isNoSubstitutionTemplateLiteral(node)) return 'string';
-  if (is.isNumericLiteral(node)) return 'number';
-  if (node.kind === SK.TrueKeyword || node.kind === SK.FalseKeyword) return 'boolean';
-  return null;
-}
-
-/** 这一处的用法与 type 相容吗？不相容就别标。 */
-function usageFits(fnNode: any, paramName: string, type: string): boolean {
-  const allowed = MEMBERS[type];
-  if (!allowed) return true; // 数组类型不做这个检查
-  let ok = true;
-  (function walk(n: any) {
-    if (!ok) return;
-    // ...p —— 只有对象/数组才能展开
-    if ((is.isSpreadAssignment(n) || is.isSpreadElement(n)) && n.expression && is.isIdentifier(n.expression)) {
-      if (n.expression.text === paramName) ok = false;
-    }
-    // p.foo —— foo 不是该原始类型的成员就说明 p 是对象
-    if (is.isPropertyAccessExpression(n) && n.expression && is.isIdentifier(n.expression) && n.name) {
-      if (n.expression.text === paramName && !allowed.has(n.name.text)) ok = false;
-    }
-    // p === '字面量' / p = '字面量' —— 字面量的原始类型和共识类型对不上，
-    // 说明这一处的 p 不是那个类型。
-    // 【为什么必须单独看比较和赋值】上面只看成员访问，看不到这一类。
-    // 实测漏网的：unit 与 TIME_TYPE.MINUTE 这种数字常量比；
-    // WriteFields 里 checked 被当字符串比；Action 里 width 被赋字符串。
-    // 补上这条之后，这些不用再按名字排除。
-    if (is.isBinaryExpression(n) && n.left && n.right && n.operatorToken) {
-      const op = n.operatorToken.kind;
-      const isCmpOrAssign =
-        op === SK.EqualsEqualsToken ||
-        op === SK.EqualsEqualsEqualsToken ||
-        op === SK.ExclamationEqualsToken ||
-        op === SK.ExclamationEqualsEqualsToken ||
-        op === SK.EqualsToken;
-      if (isCmpOrAssign) {
-        for (const [a, b] of [
-          [n.left, n.right],
-          [n.right, n.left],
-        ]) {
-          if (!is.isIdentifier(a) || a.text !== paramName) continue;
-          const lit = literalPrimitive(b);
-          if (lit && lit !== type) ok = false;
-        }
-      }
-    }
-    n.forEachChild(walk);
-  })(fnNode);
-  return ok;
-}
+// MEMBERS / literalPrimitive / usageFits 已收进 tools/ts7.ts，两个 codemod 共用。
 
 const project = openProject('tsconfig.strictprobe.json');
 
