@@ -1,0 +1,72 @@
+
+:root{
+  --color-border-primary:#e0e0e0; --color-border-secondary:#eaeaea;
+  --color-background-primary:#fff; --color-text-primary:#333;
+  --color-text-secondary:#757575; --color-error-bg:#fff4f4;
+  --color-cyan-blue:#2196f3; --color-cyan-dark:#1565c0; --color-white:#fff;
+}
+/**
+ * 老「日程」页的 FullCalendar 主题定制。
+ *
+ * 【这个文件原来是什么】原先是 798 行，第 5 行写着 `FullCalendar v2.1.0 Stylesheet`
+ * —— 它【整份是 vendor 自带的样式表】，被拷进仓里再嵌进 .AppCalendar {} 做作用域隔离。
+ * 162 条裸 .fc-* 规则是库自己的基础样式，只有 25 行把硬编码颜色换成了设计变量，
+ * 那 25 行才是本仓真正的定制。
+ *
+ * 【为什么现在只剩这么点】v7 自带 skeleton.css + 主题（见 modules/calendar/fcInstance.ts
+ * 里的三条样式引入），基础样式不需要我们再供一份。留下的只有两类：
+ *   1. 把 v7 classic 主题的语义变量指到本仓的设计变量上（替代原来逐条改颜色）
+ *   2. 几条 v7 主题给不了的、属于这个页面自己的规则
+ *
+ * 【类名说明】v7 把内部类名哈希化了，这里用的语义类名是由
+ * src/pages/worksheet/views/CalendarView/fcClassCompat.ts 通过 *Class 钩子挂回来的。
+ * 视图名也跟着 v7 变了：agendaDay -> timeGridDay、agendaWeek -> timeGridWeek、
+ * month -> dayGridMonth。
+ */
+.AppCalendar .fc-view,
+.AppCalendar .fc-toolbar {
+  --fc-classic-border: var(--color-border-primary);
+  --fc-classic-background: var(--color-background-primary);
+  --fc-classic-faint: var(--color-border-secondary);
+  --fc-classic-muted-foreground: var(--color-text-secondary);
+  --fc-classic-foreground: var(--color-text-primary);
+  --fc-classic-today: var(--color-error-bg);
+  --fc-classic-highlight: var(--color-cyan-blue);
+}
+.AppCalendar .fc-event {
+  font-size: 0.85em;
+  line-height: 1.3;
+  border-radius: 3px;
+  border: 1px solid var(--color-cyan-dark);
+  font-weight: normal;
+  text-decoration: none;
+}
+.AppCalendar .fc-event[href],
+.AppCalendar .fc-event.fc-draggable {
+  cursor: pointer;
+  color: var(--color-text-primary) !important;
+}
+.AppCalendar .fc-event:not(.fc-draggable) {
+  color: #757575 !important;
+}
+.AppCalendar .fc-timeGridDay-view .fc-event.fc-draggable,
+.AppCalendar .fc-timeGridWeek-view .fc-event.fc-draggable {
+  color: #151515 !important;
+}
+.AppCalendar .fc-daygrid-event {
+  margin: 1px 2px 0;
+  padding: 0 1px;
+}
+.AppCalendar .fc-daygrid-event:hover .fc-event-title {
+  color: var(--color-white) !important;
+}
+.AppCalendar .fc-timeGridDay-view .fc-col-header-cell,
+.AppCalendar .fc-timeGridWeek-view .fc-col-header-cell {
+  border-bottom: 1px solid var(--color-border-secondary);
+}
+.AppCalendar .fc-dayGridMonth-view .fc-daygrid-day {
+  border-top: 1px solid var(--color-border-secondary);
+}
+.AppCalendar td.fc-day-today {
+  border-style: double;
+}

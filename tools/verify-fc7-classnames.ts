@@ -75,6 +75,9 @@ const REQUIRED: { sel: string; why: string }[] = [
   { sel: '.fc-daygrid-day-top', why: '日号区' },
   { sel: '.fc-day-today', why: 'util.ts:335 判断今天' },
   { sel: '.fc-view', why: 'viewClass 还原' },
+  { sel: '.fc-event', why: '老「日程」页的事件样式' },
+  { sel: '.fc-event-title', why: 'calendar.ts eventDidMount 往标题里插头像/任务图标' },
+  { sel: '.fc-event.fc-draggable', why: '老「日程」页按它区分可改/只读日程的文字色' },
 ];
 
 const root = createRoot(document.getElementById('root'));
@@ -85,7 +88,8 @@ root.render(
     initialView: 'dayGridMonth',
     initialDate: '2026-09-15',
     headerToolbar: { left: 'today prev,next', center: 'title', right: 'dayGridMonth' },
-    events: [],
+    editable: true,
+    events: [{ id: '1', title: '用来让事件相关的选择器有东西可查', start: '2026-09-15', allDay: true }],
   }),
 );
 

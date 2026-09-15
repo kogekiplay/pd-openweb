@@ -123,7 +123,15 @@ export const FC_CLASS_COMPAT = {
   // v6 的事件元素同时带 fc-event 和按呈现形态分的 fc-h-event / fc-v-event，
   // 再加所在视图的 fc-daygrid-event / fc-timegrid-event。
   eventClass: (info: EventDisplayInfo) =>
-    ['fc-event', info.isMirror && 'fc-event-mirror', info.isStart && 'fc-event-start', info.isEnd && 'fc-event-end']
+    [
+      'fc-event',
+      info.isMirror && 'fc-event-mirror',
+      info.isStart && 'fc-event-start',
+      info.isEnd && 'fc-event-end',
+      // 老「日程」页按 .fc-draggable 区分「能改的日程」和「只读的日程」并给不同文字色，
+      // v6 会挂这个类，v7 不挂但渲染参数里有 isDraggable。
+      info.isDraggable && 'fc-draggable',
+    ]
       .filter(Boolean)
       .join(' '),
   eventInnerClass: 'fc-event-main',
