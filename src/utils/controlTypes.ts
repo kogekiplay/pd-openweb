@@ -74,6 +74,8 @@ export interface FormControl {
   originalType?: number;
   /** 关联表控件上挂的被关联表控件列表（另有同义的 relationControls） */
   relateControls?: FormControl[];
+  /** 打印明细时这个控件是否参与统计计算 */
+  needEvaluate?: boolean;
   /** 打印模块给控件挂的：明细表打印形态 */
   printDetailType?: number;
   /** 打印配置/字段选择器里给控件挂的勾选态 */

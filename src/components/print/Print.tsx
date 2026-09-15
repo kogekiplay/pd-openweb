@@ -238,7 +238,7 @@ export default class Print extends Component<any, any> {
         });
       });
   }
-  componentDidUpdate = function () {
+  componentDidUpdate = function (this: Print) {
     $('#container, .AppHr form').addClass('hrApprovalBox');
     $('html.AppHr').addClass('hrApprovalAppHr');
   };
@@ -249,6 +249,7 @@ export default class Print extends Component<any, any> {
   relationItemKey: 他表字段选择关联控件，循环key
   */
   getShowContent = function (
+    this: Print,
     item: FormControl,
     sourceControlType?: number,
     valueItem?: RecordRow,
@@ -366,8 +367,8 @@ export default class Print extends Component<any, any> {
           if (this.state.type === 'worksheet' || this.state.type === 'workflow') {
             try {
               newValue =
-                JSON.parse(value).filter(item => item).length > 0
-                  ? JSON.parse(value).map(item => {
+                JSON.parse(value).filter((item: any) => item).length > 0
+                  ? JSON.parse(value).map((item: string) => {
                       return item ? moment(item).format('x') : '';
                     })
                   : '';
@@ -406,8 +407,8 @@ export default class Print extends Component<any, any> {
           if (this.state.type === 'worksheet' || this.state.type === 'workflow') {
             try {
               newValue =
-                JSON.parse(value).filter(item => item).length > 0
-                  ? JSON.parse(value).map(item => {
+                JSON.parse(value).filter((item: any) => item).length > 0
+                  ? JSON.parse(value).map((item: string) => {
                       return item ? moment(item).format('x') : '';
                     })
                   : '';
@@ -713,7 +714,7 @@ export default class Print extends Component<any, any> {
     );
   }
   // controls 是【按行分好的控件二维数组】，不是一维控件列表 —— 下面 item.filter 就是证据
-  getEvaluateValue = function (controls: FormControl[][], mapControl: FormControl) {
+  getEvaluateValue = function (this: Print, controls: FormControl[][], mapControl: FormControl) {
     const controlId = mapControl.controlId;
     const evaluateType = mapControl.enumDefault2;
     const showMoney = mapControl.enumDefault;
@@ -778,19 +779,19 @@ export default class Print extends Component<any, any> {
       </span>
     );
   };
-  showPrintDialog = function () {
+  showPrintDialog = function (this: Print) {
     const controlOption = this.state.controlOption || [];
 
     if (controlOption.length === 0) {
       this.state.reqInfo.controls
-        .filter(item => !item.printHide)
-        .forEach(item => {
+        .filter((item: FormControl) => !item.printHide)
+        .forEach((item: FormControl) => {
           if (item && item.controlId) {
             controlOption.push(item.controlId);
           }
         });
-      this.state.reqInfo.formControls.forEach(formControlItem => {
-        if (formControlItem.tempControls.filter(item => item.needEvaluate).length > 0) {
+      this.state.reqInfo.formControls.forEach((formControlItem: { tempControls: FormControl[]; formId: string; [key: string]: any }) => {
+        if (formControlItem.tempControls.filter((item: FormControl) => item.needEvaluate).length > 0) {
           controlOption.push('formDetailEvaluate-' + formControlItem.formId);
         }
       });
@@ -798,7 +799,16 @@ export default class Print extends Component<any, any> {
 
     this.setState({ showPrintDialog: true, printCheckAll: this.state.printCheckAll, controlOption });
   }.bind(this);
-  changePrintVisible = function (processOption, printCheckAll, controlOption, options) {
+  changePrintVisible = function (
+    this: Print,
+    // 同上：processOption 也是「有时是数组、有时是 'some'/'no' 字符串」，先不标
+    processOption,
+    printCheckAll: boolean,
+    // 不标类型：这个参数既被当数组 .filter，又跟字符串 'all' 比 ——
+    // 那个比较恒为真（到那儿一定是数组），是死代码。标成任何一种都会把它翻出来。
+    controlOption,
+    options?: Record<string, any>,
+  ) {
     let controls: FormControl[] = [];
 
     if (this.state.type === 'worksheet') {
@@ -911,7 +921,7 @@ export default class Print extends Component<any, any> {
       });
     }
   }.bind(this);
-  getEvaluateType = function (detailsEvaluateItem) {
+  getEvaluateType = function (this: Print, detailsEvaluateItem: FormControl) {
     switch (detailsEvaluateItem.enumDefault2) {
       case 2:
         return _l('求和');
@@ -925,7 +935,7 @@ export default class Print extends Component<any, any> {
         return _l('乘积');
     }
   };
-  beforeControlIsDetail = function (key) {
+  beforeControlIsDetail = function (this: Print, key: string) {
     const { type } = this.state;
 
     if (type !== 'hr') {
@@ -1174,7 +1184,7 @@ export default class Print extends Component<any, any> {
                                 ))}
                             {this.state.formControls
                               .filter(item => item.formId === controlItem[0].formId)[0]
-                              .tempControls.filter(item => item.needEvaluate).length > 0 &&
+                              .tempControls.filter((item: FormControl) => item.needEvaluate).length > 0 &&
                               (controlItem[0].printDetailType === 1 || controlItem[0].printDetailType === 3) && (
                                 <tr key={key + 'evaluateTr'} className="evaluateTr">
                                   <td className="titleTd">=</td>
@@ -1328,13 +1338,13 @@ export default class Print extends Component<any, any> {
                       })()}
                       {this.state.formControls
                         .filter(item => item.formId === controlItem[0].formId)[0]
-                        .tempControls.filter(item => item.needEvaluate).length > 0 &&
+                        .tempControls.filter((item: FormControl) => item.needEvaluate).length > 0 &&
                         (controlItem[0].printDetailType === 1 || controlItem[0].printDetailType === 3) && (
                           <div className="evaluateItemBox">
                             {(() => {
                               const tempControls = this.state.formControls
                                 .filter(item => item.formId === controlItem[0].formId)[0]
-                                .tempControls.filter(item => item.needEvaluate);
+                                .tempControls.filter((item: FormControl) => item.needEvaluate);
                               const newTempControls = [];
                               tempControls
                                 .sort((a, b) => a.innerRow - b.innerRow)
@@ -1567,9 +1577,9 @@ export default class Print extends Component<any, any> {
             }
 
             return (
-              controlItem.filter(item => !item.printHide).length > 0 && (
+              controlItem.filter((item: FormControl) => !item.printHide).length > 0 && (
                 <tr key={key} className="row clearfix Relative notDetails">
-                  {/* {controlItem.filter(item => !item.printHide).length === 2 && <i className="firstLine" />}*/}
+                  {/* {controlItem.filter((item: FormControl) => !item.printHide).length === 2 && <i className="firstLine" />}*/}
                   {!controlItem.filter(rowChildren => rowChildren.col === 0)[0].printHide && (
                     <td
                       style={{
