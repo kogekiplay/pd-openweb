@@ -31,6 +31,14 @@ interface TaskApiResult {
   value?: any;
 }
 
+/** 任务（含子任务）。这个模块里到处只读几个字段，列出来的就是实际读到的 */
+interface TaskLike {
+  taskID?: string;
+  taskName?: string;
+  status?: number;
+  [key: string]: any;
+}
+
 export const addTask = data => (dispatch: AppDispatch, getState: GetState) => {
   const { taskConfig } = getState().task;
 
@@ -79,7 +87,7 @@ export const updateStateConfig = taskConfig => {
 };
 
 // 切换网络
-export const updateNetwork = lastMyProjectId => {
+export const updateNetwork = (lastMyProjectId: string) => {
   return {
     type: 'UPDATE_NETWORK',
     lastMyProjectId,
@@ -87,7 +95,7 @@ export const updateNetwork = lastMyProjectId => {
 };
 
 // 切换任务状态
-export const updateTaskStatus = (listStatus, listSort) => (dispatch: AppDispatch) => {
+export const updateTaskStatus = (listStatus: number, listSort: number) => (dispatch: AppDispatch) => {
   dispatch({
     type: 'UPDATE_LIST_SORT',
     listSort,
@@ -107,7 +115,7 @@ export const updateFolderRange = folderSearchRange => {
 };
 
 // 更新项目的筛选内容
-export const updateKeyWords = searchKeyWords => {
+export const updateKeyWords = (searchKeyWords: string) => {
   return {
     type: 'UPDATE_FOLDER_KEYWORDS',
     searchKeyWords,
@@ -115,7 +123,7 @@ export const updateKeyWords = searchKeyWords => {
 };
 
 // 更新完成时间
-export const updateCompleteTime = completeTime => {
+export const updateCompleteTime = (completeTime: string) => {
   return {
     type: 'UPDATE_COMPLETE_TIME',
     completeTime,
@@ -123,7 +131,7 @@ export const updateCompleteTime = completeTime => {
 };
 
 // 更新排序
-export const updateListSort = listSort => {
+export const updateListSort = (listSort: number) => {
   return {
     type: 'UPDATE_LIST_SORT',
     listSort,
@@ -155,7 +163,7 @@ export const updateCustomFilter = customFilter => {
 };
 
 // 更新负责人
-export const updateChargeIds = selectChargeIds => {
+export const updateChargeIds = (selectChargeIds: string[]) => {
   return {
     type: 'UPDATE_CHARGE_IDS',
     selectChargeIds,
@@ -168,7 +176,7 @@ export const taskFirstSetStorage = () => {
   };
 };
 
-export const attachmentSwitch = attachmentViewType => {
+export const attachmentSwitch = (attachmentViewType: number) => {
   return {
     type: 'ATTACHMENT_SWITCH',
     attachmentViewType,
@@ -224,7 +232,7 @@ export const clearFolderTip = () => {
 };
 
 // 修改置顶
-export const updateFolderTopState = isTop => {
+export const updateFolderTopState = (isTop: boolean) => {
   return {
     type: 'UPDATE_FOLDER_TOP',
     isTop,
@@ -232,7 +240,7 @@ export const updateFolderTopState = isTop => {
 };
 
 // 修改项目提醒
-export const updateFolderNotice = (folderID: string, unNotice) => (dispatch: AppDispatch) => {
+export const updateFolderNotice = (folderID: string, unNotice: boolean) => (dispatch: AppDispatch) => {
   ajaxRequest
     .updateFolderMemberNotice({
       folderId: folderID,
@@ -251,7 +259,7 @@ export const updateFolderNotice = (folderID: string, unNotice) => (dispatch: App
 };
 
 // 归档
-export const updateFolderArchivedState = isArchived => {
+export const updateFolderArchivedState = (isArchived: boolean) => {
   return {
     type: 'UPDATE_FOLDER_ARCHIVED',
     isArchived,
@@ -276,7 +284,7 @@ export const updateTopFolderList = data => {
 
 // 获取任务详情
 export const getTaskDetail =
-  (taskId, callback = () => {}, addPostSuccessCount = () => {}) =>
+  (taskId: string, callback = () => {}, addPostSuccessCount = () => {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
     const { taskConfig } = getState().task;
     const listSort = taskConfig.listSort || 10;
@@ -303,7 +311,7 @@ export const getTaskDetail =
   };
 
 // 修改任务提醒
-export const updateTaskNotice = (taskId: string, notice) => (dispatch: AppDispatch, getState: GetState) => {
+export const updateTaskNotice = (taskId: string, notice: boolean) => (dispatch: AppDispatch, getState: GetState) => {
   ajaxRequest.updateTaskMemberNotice({ notice, taskID: taskId }).then((result: TaskApiResult) => {
     if (result.status) {
       const taskDetail = _.cloneDeep(getState().task.taskDetails[taskId]);
@@ -322,7 +330,7 @@ export const updateTaskNotice = (taskId: string, notice) => (dispatch: AppDispat
 
 // 修改任务锁定状态
 export const updateTaskLocked =
-  (taskId, locked, callback = () => {}) =>
+  (taskId: string, locked: boolean, callback = () => {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
     ajaxRequest.updateTaskLocked({ locked, taskID: taskId }).then((result: TaskApiResult) => {
       if (result.status) {
@@ -352,7 +360,7 @@ export const destroyTask = (taskId: string) => {
 
 // 更改任务状态
 export const editTaskStatus =
-  (taskId, status, isSubTask, subTaskId, callback = () => {}) =>
+  (taskId: string, status: number, isSubTask: boolean, subTaskId: string, callback = () => {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
     const updateTaskStatus = (code = 0) => {
       ajaxRequest.updateTaskStatus({ taskID: subTaskId || taskId, status, isSubTask, code }).then((result: TaskApiResult) => {
@@ -365,8 +373,8 @@ export const editTaskStatus =
             return;
           }
 
-          taskDetail.data.subTask.forEach(item => {
-            result.data.tasks.forEach(task => {
+          taskDetail.data.subTask.forEach((item: TaskLike) => {
+            result.data.tasks.forEach((task: TaskLike) => {
               if (item.taskID === task.taskId) {
                 item.startTime = task.startTime;
                 item.deadline = task.deadline;
@@ -405,7 +413,7 @@ export const editTaskStatus =
 
 // 更改项目
 export const updateTaskFolderId =
-  (taskId, folderId, callback = () => {}) =>
+  (taskId: string, folderId: string, callback = () => {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
     ajaxRequest.updateTaskFolderID({ taskID: taskId, folderID: folderId }).then((result: TaskApiResult) => {
       if (result.status) {
@@ -552,7 +560,7 @@ export const updateTaskName =
 
           // 子任务
           if (subTaskId) {
-            taskDetail.data.subTask.forEach(item => {
+            taskDetail.data.subTask.forEach((item: TaskLike) => {
               if (item.taskID === subTaskId) {
                 item.taskName = taskName;
               }
@@ -621,7 +629,7 @@ export const updateTaskCharge =
 
         // 子任务
         if (subTaskId) {
-          taskDetail.data.subTask.forEach(item => {
+          taskDetail.data.subTask.forEach((item: TaskLike) => {
             if (item.taskID === subTaskId) {
               item.charge.accountID = user.accountId;
               item.charge.avatar = user.avatar;
@@ -1322,7 +1330,7 @@ export const updateTaskStartTimeAndDeadline =
               taskDetail.data.startTime = currentTask.startTime;
               taskDetail.data.deadline = currentTask.deadline;
 
-              taskDetail.data.subTask.forEach(item => {
+              taskDetail.data.subTask.forEach((item: TaskLike) => {
                 result.data.changedTasks.forEach(obj => {
                   if (item.taskID === obj.taskId) {
                     item.startTime = obj.startTime;
