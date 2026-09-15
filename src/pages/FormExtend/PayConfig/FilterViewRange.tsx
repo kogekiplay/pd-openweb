@@ -75,7 +75,7 @@ export default function FilterViewRange(props) {
                     className="mTop15 mLeft25 Normal"
                     text={it.name}
                     checked={viewIds.includes(it.viewId)}
-                    onClick={checked => {
+                    onClick={(checked: boolean) => {
                       changeViewRange({
                         type,
                         viewIds: checked ? _.pull(viewIds, it.viewId) : (viewIds || []).concat(it.viewId),

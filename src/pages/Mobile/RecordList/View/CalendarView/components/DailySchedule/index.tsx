@@ -34,7 +34,7 @@ const DailySchedule = forwardRef((props, ref) => {
   };
 
   // 数据搜索
-  const searchResult = (keywords, data = dailyScheduleData) => {
+  const searchResult = (keywords: string, data = dailyScheduleData) => {
     if (!keywords) {
       setState({ filterData: data, keywords });
       return;

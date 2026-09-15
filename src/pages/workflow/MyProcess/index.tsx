@@ -1144,7 +1144,7 @@ export default class MyProcess extends Component<any, any> {
                   approveCards: approveCards.concat(item),
                 });
               }}
-              onRemoveApproveRecord={workId => {
+              onRemoveApproveRecord={(workId: string) => {
                 const { approveCards } = this.state;
                 this.setState({
                   approveCards: approveCards.filter(item => item.workId !== workId),

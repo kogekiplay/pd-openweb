@@ -112,7 +112,7 @@ export default class extends React.Component<any, any> {
           render: (text, record) => {
             const { departmentInfos = [] } = record;
             const { fullDepartmentInfo = {} } = this.state;
-            const txt = departmentInfos.map((item, index) => {
+            const txt = departmentInfos.map((item, index: number) => {
               return item.departmentName + (index < departmentInfos.length - 1 ? ';' : '');
             });
             const departmentIds = departmentInfos.map(item => item.departmentId);
@@ -122,7 +122,7 @@ export default class extends React.Component<any, any> {
                   placement="bottom"
                   title={
                     <div>
-                      {departmentInfos.map((it, index) => {
+                      {departmentInfos.map((it, index: number) => {
                         const fullName = (fullDepartmentInfo[it.departmentId] || '').split('/');
                         return (
                           <div
@@ -152,7 +152,7 @@ export default class extends React.Component<any, any> {
           dataIndex: 'jobInfos',
           render: (text, record) => {
             const { jobInfos = [] } = record;
-            const txt = jobInfos.map((item, index) => {
+            const txt = jobInfos.map((item, index: number) => {
               return item.jobName + (index < jobInfos.length - 1 ? ';' : '');
             });
             return (
@@ -248,7 +248,7 @@ export default class extends React.Component<any, any> {
   };
 
   // 恢复权限
-  recovery = (accountId, fullName) => {
+  recovery = (accountId: string, fullName) => {
     const { projectId } = this.props;
 
     Dialog.confirm({

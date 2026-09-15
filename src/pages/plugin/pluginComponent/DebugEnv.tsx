@@ -82,14 +82,14 @@ export default function DebugEnv(props) {
   const { configType, debugEnvList, onChangeDebugEnvList, onUpdate, appList, belongType, onGetAppList } = props;
   const [worksheetList, setWorksheetList] = useSetState({});
 
-  const updateDebugEnv = (data, index) => {
+  const updateDebugEnv = (data, index: number) => {
     const newDebugEnvList = debugEnvList.map((item, i) => {
       return i === index ? data : item;
     });
     onChangeDebugEnvList(newDebugEnvList);
   };
 
-  const onChangeApp = (env, index) => {
+  const onChangeApp = (env, index: number) => {
     updateDebugEnv(env, index);
     if (!worksheetList[env.appId]) {
       homeAppApi.getWorksheetsByAppId({ type: 0, appId: env.appId }).then(res => {
@@ -107,7 +107,7 @@ export default function DebugEnv(props) {
     {
       dataIndex: 'appName',
       title: _l('应用'),
-      render: (item, index) =>
+      render: (item, index: number) =>
         item.isEdit ? (
           <Dropdown
             border={true}
@@ -122,7 +122,7 @@ export default function DebugEnv(props) {
                 onGetAppList();
               }
             }}
-            onChange={appId => onChangeApp({ ...item, appId, worksheetId: null }, index)}
+            onChange={(appId: string) => onChangeApp({ ...item, appId, worksheetId: null }, index)}
           />
         ) : (
           <Tooltip placement="topLeft" title={item.appName || item.appId}>
@@ -133,7 +133,7 @@ export default function DebugEnv(props) {
     {
       dataIndex: 'worksheetName',
       title: _l('工作表'),
-      render: (item, index) =>
+      render: (item, index: number) =>
         item.isEdit ? (
           <Dropdown
             border={true}
@@ -143,7 +143,7 @@ export default function DebugEnv(props) {
             placeholder={_l('请选择工作表')}
             data={worksheetList[item.appId] || []}
             value={item.worksheetId}
-            onChange={worksheetId => updateDebugEnv({ ...item, worksheetId }, index)}
+            onChange={(worksheetId: string) => updateDebugEnv({ ...item, worksheetId }, index)}
           />
         ) : (
           <div className={cx('overflow_ellipsis', { isDel: !item.worksheetName })} title={item.worksheetName}>
@@ -160,7 +160,7 @@ export default function DebugEnv(props) {
     {
       dataIndex: 'viewName',
       title: _l('视图'),
-      render: (item, index) => {
+      render: (item, index: number) => {
         const isValidView = item.viewId && item.viewName;
         return item.isEdit ? (
           configType !== pluginConfigType.create ? (
@@ -226,7 +226,7 @@ export default function DebugEnv(props) {
     {
       dataIndex: 'operate',
       title: '',
-      render: (item, index) =>
+      render: (item, index: number) =>
         !item.isEdit ? (
           <Icon
             icon="trash"

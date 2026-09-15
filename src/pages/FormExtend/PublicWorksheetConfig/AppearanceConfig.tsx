@@ -225,7 +225,7 @@ class AppearanceConfig extends React.Component<any, any> {
               }}
             />
           </li>
-          {customColors.map((item, index) => (
+          {customColors.map((item, index: number) => (
             <Tooltip key={index} title={item} placement="bottom">
               <li
                 className={cx({

@@ -219,7 +219,7 @@ export const filterSessionList = list => {
  * @param {*} messages
  */
 export const formatMessages = messages => {
-  return messages.map((item, index) => {
+  return messages.map((item, index: number) => {
     return formatMessage(item, messages[index - 1]);
   });
 };
@@ -570,7 +570,7 @@ export const playSystemNewMsgAudio = () => {
  * @param {*} id
  * @param {*} isGroup
  */
-export const windowOpen = (id, name, isGroup) => {
+export const windowOpen = (id, name: string, isGroup) => {
   const type = isGroup ? Constant.SESSIONTYPE_GROUP : Constant.SESSIONTYPE_USER;
   const iTop = (window.screen.availHeight - 660) / 2; // 获得窗口的垂直位置;
   const iLeft = (window.screen.availWidth - 930) / 2; // 获得窗口的水平位置;

@@ -72,7 +72,7 @@ export default class SearchPanel extends Component<any, any> {
       });
     });
   }
-  handleSetTab(item, index) {
+  handleSetTab(item, index: number) {
     const { type } = item;
     this.setState({
       tabIndex: index,
@@ -83,7 +83,7 @@ export default class SearchPanel extends Component<any, any> {
     const { tab, tabIndex } = this.state;
     return (
       <div className="ChatPanel-SearchPanelTab">
-        {tab.map((item, index) => (
+        {tab.map((item, index: number) => (
           <div className="item-box" key={index} onClick={this.handleSetTab.bind(this, item, index)}>
             <span className={cx('item', { borderColorPrimary: index === tabIndex, colorPrimary: index === tabIndex })}>
               {item.title}

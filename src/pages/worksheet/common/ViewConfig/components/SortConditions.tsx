@@ -202,7 +202,7 @@ export default class SortConditions extends React.Component<any, any> {
     onChange(newSortConditions);
   };
 
-  handleChangeSortControl = (index, value) => {
+  handleChangeSortControl = (index: number, value) => {
     const { sortConditions } = this.state;
     const newSortConditions = update(sortConditions, {
       [index]: {
@@ -215,7 +215,7 @@ export default class SortConditions extends React.Component<any, any> {
     this.handleChange(newSortConditions);
   };
 
-  handleChangeSortType = (index, value) => {
+  handleChangeSortType = (index: number, value) => {
     const { sortConditions } = this.state;
     const newSortConditions = update(sortConditions, {
       [index]: {
@@ -227,7 +227,7 @@ export default class SortConditions extends React.Component<any, any> {
     this.handleChange(newSortConditions);
   };
 
-  handleAddCondition = index => {
+  handleAddCondition = (index: number) => {
     const newCondition = this.getCanSelectColumns()[0];
 
     if (!newCondition) {
@@ -250,7 +250,7 @@ export default class SortConditions extends React.Component<any, any> {
     this.handleChange(newSortConditions);
   };
 
-  handleAddConditionByValue = (index, value) => {
+  handleAddConditionByValue = (index: number, value) => {
     const { sortConditions } = this.state;
     const newSortConditions = update(sortConditions, {
       $splice: [
@@ -267,7 +267,7 @@ export default class SortConditions extends React.Component<any, any> {
     this.handleChange(newSortConditions);
   };
 
-  handleDeleteCondition = controlId => {
+  handleDeleteCondition = (controlId: string) => {
     const { sortConditions } = this.state;
     const newSortConditions = sortConditions.filter(sc => sc.controlId !== controlId);
     this.handleChange(newSortConditions);
@@ -278,7 +278,7 @@ export default class SortConditions extends React.Component<any, any> {
     return getCanSelectColumnsForSort(controlId, columns, sortConditions);
   };
 
-  getSortTypes = controlId => {
+  getSortTypes = (controlId: string) => {
     const { columns } = this.state;
     const control = _.find(columns, c => c.controlId === controlId) || {};
     return getSortData(control.type, control);

@@ -476,7 +476,7 @@ function preLoadMoreAttachments(state, dispatch) {
   loadMoreAttachments(state, dispatch, true);
 }
 
-function changeIndexThunk(dispatch, getState, index, flag, extra = {}) {
+function changeIndexThunk(dispatch, getState, index: number, flag, extra = {}) {
   const state = getState();
   const options = { ...(state.extra || {}), ...extra };
 
@@ -722,7 +722,7 @@ export function saveToKnowlwdge(savePath) {
   };
 }
 
-export function replaceAttachment(originAttachment, index, callFrom) {
+export function replaceAttachment(originAttachment, index: number, callFrom) {
   return dispatch => {
     const currentAttachment = formatAttachment([originAttachment], callFrom)[0];
     loadAttachment(currentAttachment)
@@ -744,7 +744,7 @@ export function replaceAttachment(originAttachment, index, callFrom) {
   };
 }
 
-export function changeStateOfAttachment(attachment, index) {
+export function changeStateOfAttachment(attachment, index: number) {
   return dispatch => {
     dispatch({
       type: 'FILE_PREVIEW_LOAD_FILE_SUCESS',

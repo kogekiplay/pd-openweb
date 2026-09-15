@@ -57,7 +57,7 @@ function A4Preview({ layout }) {
   return <A4PreviewImage className={`img${layout}`} />;
 }
 
-function getPreviewSize(width, height) {
+function getPreviewSize(width: number, height: number) {
   let previewWidth, previewHeight;
   const maxHeight = (window.innerHeight - 50) * 0.9;
   const maxWidth = (window.innerWidth - 320) * 0.9;

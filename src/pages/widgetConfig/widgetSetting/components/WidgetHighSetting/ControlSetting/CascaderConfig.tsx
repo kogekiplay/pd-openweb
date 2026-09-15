@@ -228,7 +228,7 @@ export default function CascaderConfig(props) {
                 size="small"
                 checked={!!Number(minlayer)}
                 text={_l('至少向后选到的层数')}
-                onClick={checked => onChange(handleAdvancedSettingChange(data, { minlayer: checked ? '' : '1' }))}
+                onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { minlayer: checked ? '' : '1' }))}
               />
             </div>
             {!!Number(minlayer) && (
@@ -249,7 +249,7 @@ export default function CascaderConfig(props) {
           <Checkbox
             size="small"
             checked={allpath === '1'}
-            onClick={checked => onChange(handleAdvancedSettingChange(data, { allpath: String(+!checked) }))}
+            onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { allpath: String(+!checked) }))}
           >
             <span>{_l('选择结果显示层级路径')}</span>
             <Tooltip
@@ -266,7 +266,7 @@ export default function CascaderConfig(props) {
           <Checkbox
             size="small"
             checked={storelayer === '1'}
-            onClick={checked => onChange(handleAdvancedSettingChange(data, { storelayer: String(+!checked) }))}
+            onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { storelayer: String(+!checked) }))}
           >
             <span>{_l('存储层级路径')}</span>
             <Tooltip

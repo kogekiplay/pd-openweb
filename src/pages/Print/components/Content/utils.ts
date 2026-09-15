@@ -4,7 +4,7 @@ export const getPrintOperationLogActionText = ({
   translateInfo = {},
   operationLogActionMap = {},
   triggerActionMap = {},
-  formatReturnText = name => `退回到${name}`,
+  formatReturnText = (name: string) => `退回到${name}`,
   noNeedFillText = '',
 }) => {
   const { workItemLog } = workItem;

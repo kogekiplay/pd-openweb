@@ -25,7 +25,7 @@ export default function SubListConfig(props) {
               size="small"
               text={_l('显示计数')}
               checked={showcount !== '1'}
-              onClick={checked =>
+              onClick={(checked: boolean) =>
                 onChange(
                   handleAdvancedSettingChange(data, {
                     showcount: checked ? '1' : '0',
@@ -49,7 +49,7 @@ export default function SubListConfig(props) {
                 size="small"
                 text={_l('按用户权限访问')}
                 checked={!!+isHiddenOtherViewRecord}
-                onClick={checked => {
+                onClick={(checked: boolean) => {
                   onChange({
                     strDefault: updateConfig({
                       config: strDefault,

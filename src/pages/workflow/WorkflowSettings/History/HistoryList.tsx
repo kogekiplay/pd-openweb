@@ -209,7 +209,7 @@ export default class HistoryList extends Component<any, any> {
         {!_.isEmpty(accumulation) && accumulation.difference > 0 && this.renderAccumulation()}
         {data.length ? (
           <ul className={cx('historyList', { littleData: data.length < 20 })}>
-            {data.map((item, index) => (
+            {data.map((item, index: number) => (
               <HistoryListItem key={index} index={index} {...item} {...res} />
             ))}
             {!hasMoreData && data.length > 20 && (
@@ -249,7 +249,7 @@ export default class HistoryList extends Component<any, any> {
                 <Checkbox
                   checked={!!res.batchIds.length}
                   clearselected={!!res.batchIds.length && res.batchIds.length !== (data || []).length}
-                  onClick={checked => {
+                  onClick={(checked: boolean) => {
                     res.onUpdateBatchIds(
                       !checked || (checked && res.batchIds.length !== (data || []).length)
                         ? (data || []).map(o => {

@@ -46,7 +46,7 @@ export default class DeleteNodeObj extends Component<any, any> {
             className="InlineFlex"
             text={_l('彻底删除记录，不放入回收站')}
             checked={data.destroy}
-            onClick={checked => updateSource({ destroy: !checked })}
+            onClick={(checked: boolean) => updateSource({ destroy: !checked })}
           />
         </div>
         <div className="Font13 textSecondary mTop5 mLeft26">{_l('彻底删除后数据不可恢复，请谨慎操作')}</div>

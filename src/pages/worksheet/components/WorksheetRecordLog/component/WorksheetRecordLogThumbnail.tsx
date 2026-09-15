@@ -34,13 +34,13 @@ function WorksheetRecordLogThumbnail(props) {
         <WorksheetRecordLogSelectTags
           type="rect"
           oldValue={oldList
-            .filter((m, index) => open || index < 8)
+            .filter((m, index: number) => open || index < 8)
             .map(l => (type === 14 ? l.originalFilename + l.ext : _l('签名.jpg')))}
           newValue={newList
-            .filter((m, index) => open || index < 8 - oldList.length)
+            .filter((m, index: number) => open || index < 8 - oldList.length)
             .map(l => (type === 14 ? l.originalFilename + l.ext : _l('签名.jpg')))}
           defaultValue={defaultList
-            .filter((m, index) => open || index < 8 - oldList.length - newList.length)
+            .filter((m, index: number) => open || index < 8 - oldList.length - newList.length)
             .map(l => (type === 14 ? l.originalFilename + l.ext : _l('签名.jpg')))}
         />
         {count > 8 && (
@@ -143,15 +143,15 @@ function WorksheetRecordLogThumbnail(props) {
   return (
     <div className="WorksheetRecordLogThumbnail paddingLeft27">
       {renderList(
-        oldList.filter((m, index) => open || index < 8),
+        oldList.filter((m, index: number) => open || index < 8),
         'oldBackground',
       )}
       {renderList(
-        newList.filter((m, index) => open || index < 8 - oldList.length),
+        newList.filter((m, index: number) => open || index < 8 - oldList.length),
         'newBackground',
       )}
       {renderList(
-        defaultList.filter((m, index) => open || index < 8 - oldList.length - newList.length),
+        defaultList.filter((m, index: number) => open || index < 8 - oldList.length - newList.length),
         'defaultBackground',
       )}
       {count > 8 && (

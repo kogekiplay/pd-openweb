@@ -188,7 +188,7 @@ export default function FieldMappingList(props) {
     );
   };
 
-  const onCheckAll = (checked, isSystemFields?) => {
+  const onCheckAll = (checked: boolean, isSystemFields?) => {
     const newFieldsMapping = fieldsMapping.map(item => {
       const { sourceField = {}, destField = {} } = item;
       return (isSystemFields ? isSystemField(item.sourceField) : !isSystemField(item.sourceField))
@@ -800,7 +800,7 @@ export default function FieldMappingList(props) {
     const columns = [
       {
         dataIndex: 'checkColumn',
-        renderTitle: () => <Checkbox size="small" checked={isCheckAll()} onClick={checked => onCheckAll(checked)} />,
+        renderTitle: () => <Checkbox size="small" checked={isCheckAll()} onClick={(checked: boolean) => onCheckAll(checked)} />,
         render: data => renderCheckbox(data, 'isCheck'),
       },
       ...leftColumns.filter(item => sourceData.dsType !== DATABASE_TYPE.KAFKA || item.dataIndex !== 'isNotNull'),
@@ -845,7 +845,7 @@ export default function FieldMappingList(props) {
         {isSystemFields && !sourceData.isDbType && destData.isDbType && (
           <div className="systemFieldsHeader">
             {isCreate && (
-              <Checkbox size="small" checked={isCheckAll(true)} onClick={checked => onCheckAll(checked, true)} />
+              <Checkbox size="small" checked={isCheckAll(true)} onClick={(checked: boolean) => onCheckAll(checked, true)} />
             )}
             <div className="content" onClick={() => setSystemFieldsExpand(!systemFieldsExpand)}>
               <span>{_l('系统字段')}</span>

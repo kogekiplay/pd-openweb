@@ -179,7 +179,7 @@ export default class Files extends Component<any, any> {
           ) : undefined}
         </div>
         <div className="ChatPanel-Files-body">
-          {files.map((item, index) => (
+          {files.map((item, index: number) => (
             <FileItem item={item} key={item.fileId || index} />
           ))}
           {loading ? <LoadDiv size="small" /> : undefined}

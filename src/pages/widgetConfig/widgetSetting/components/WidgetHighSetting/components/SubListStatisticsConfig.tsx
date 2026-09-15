@@ -20,7 +20,7 @@ export default function SubListStatisticsConfig(props) {
           size="small"
           text={_l('显示统计行')}
           checked={openstatistics === '1'}
-          onClick={checked => {
+          onClick={(checked: boolean) => {
             if (!checked) setVisible(true);
             onChange(
               handleAdvancedSettingChange(data, {

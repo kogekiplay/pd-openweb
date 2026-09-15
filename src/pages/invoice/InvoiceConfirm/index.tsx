@@ -59,7 +59,7 @@ const InvoiceConfirm = props => {
     }
   };
 
-  const getProductList = (taxNo, projectId, cb = () => {}) => {
+  const getProductList = (taxNo, projectId: string, cb = () => {}) => {
     merchantInvoiceApi.getInvoiceProducts({ taxNo, projectId }).then(res => {
       const list = _.uniqBy(res.products, 'categoryName').map(item => ({
         text: item.categoryName,

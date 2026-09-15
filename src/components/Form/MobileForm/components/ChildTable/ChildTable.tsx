@@ -487,7 +487,7 @@ class ChildTable extends React.Component<any, any> {
     this.dataFormatCacheMap.clear();
   };
 
-  getControl(controlId) {
+  getControl(controlId: string) {
     return _.find(this.state.controls, { controlId });
   }
 
@@ -953,7 +953,7 @@ class ChildTable extends React.Component<any, any> {
     this.triggerCustomEvent();
   }
 
-  handleClearCellError = (rowid, updatedControlIds = [], { validateAll } = {}) => {
+  handleClearCellError = (rowid: string, updatedControlIds = [], { validateAll } = {}) => {
     const { cellErrors, updateCellErrors } = this.props;
 
     if (!rowid || _.isEmpty(cellErrors)) {
@@ -1022,7 +1022,7 @@ class ChildTable extends React.Component<any, any> {
     this.openDetail(newRowIndex);
   };
 
-  openDetail = index => {
+  openDetail = (index: number) => {
     this.setState({
       previewRowIndex: index,
       recordVisible: true,
@@ -1046,7 +1046,7 @@ class ChildTable extends React.Component<any, any> {
     }
   }
 
-  handleUniqueValidate = (controlId, value, rowId, backendCheck) => {
+  handleUniqueValidate = (controlId: string, value, rowId: string, backendCheck) => {
     const { rows, control, updateCellErrors } = this.props;
     const { controls } = this.state;
     const checkControl = _.find(controls, { controlId });
@@ -1083,7 +1083,7 @@ class ChildTable extends React.Component<any, any> {
   };
 
   // 删除记录
-  deleteRecord = (rowid, callback = () => {}) => {
+  deleteRecord = (rowid: string, callback = () => {}) => {
     const { deleteRow } = this.props;
     this.deleteConformAction = ActionSheet.show({
       popupClassName: 'md-adm-actionSheet',

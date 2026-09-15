@@ -1,0 +1,234 @@
+// jsencrypt 3.5.4 起 main 指向 bin/jsencrypt.min.js，该压缩版在模块加载时
+// 就引用浏览器全局 self。浏览器里没问题（webpack 走 module 字段 lib/index.js），
+// 但 Node 下的 spec 会 ReferenceError。补一个最小垫片。
+if (typeof globalThis.self === 'undefined') globalThis.self = globalThis;
+
+/**
+ * Shared harness for the *.spec.js behaviour tests.
+ *
+ * Why this file exists
+ * --------------------
+ * The specs were written before the repo-wide `.js/.jsx -> .ts/.tsx` codemod.
+ * They address their targets with the OLD extensions (`requireEsm('./control.js')`,
+ * `path.join(__dirname, 'index.jsx')`, ...). Rather than rewrite ~86 hardcoded
+ * extensions across 61 files, every path that reaches this module is re-resolved
+ * against disk: a stale `.js`/`.jsx` suffix is stripped and `.ts` / `.tsx` /
+ * `.js` / `.jsx` / `index.*` are tried in order.
+ *
+ * >>> Stale extensions in the spec bodies are EXPECTED and intentional. <<<
+ * Do not "fix" `'./control.js'` to `'./control.ts'` -- the codemod renamed files
+ * but did NOT rewrite import specifiers, so the product sources still import
+ * `'src/pages/FormSet/config.js'` too. Leaving both alone keeps the two in sync.
+ *
+ * Deliberately NOT using the project .babelrc (`babelrc: false` AND
+ * `configFile: false`, both load-bearing):
+ *   1. `.babelrc` enables babel-plugin-import for `ming-ui`, which rewrites
+ *      `import { Icon } from 'ming-ui'` into `require('ming-ui/components/Icon')`.
+ *      15 specs stub the bare `'ming-ui'` request and would all break at once.
+ *      (`src/ming-ui/` has no index file, so the bare form only works here.)
+ *   2. `.babelrc`'s preset-env sets `modules: false`, which fights the
+ *      `plugin-transform-modules-commonjs` the `new Function(...)` harness needs.
+ *   3. `.babelrc`'s `production` env adds plugin-transform-runtime, making
+ *      behaviour depend on NODE_ENV.
+ *
+ * Zero new dependencies: everything below already ships in the repo.
+ */
+
+const fs = require('fs');
+const path = require('path');
+const Module = require('module');
+const babel = require('@babel/core');
+const realParser = require('@babel/parser');
+
+const ROOT = path.resolve(__dirname, '..');
+const EXTS = ['', '.ts', '.tsx', '.js', '.jsx'];
+
+/** Resolve `base` to a real file, trying bare, then each extension, then index.*. */
+function resolveFile(base) {
+  for (const ext of EXTS) {
+    const candidate = base + ext;
+    if (fs.existsSync(candidate) && fs.statSync(candidate).isFile()) return candidate;
+  }
+  for (const ext of EXTS) {
+    if (!ext) continue;
+    const candidate = path.join(base, 'index' + ext);
+    if (fs.existsSync(candidate) && fs.statSync(candidate).isFile()) return candidate;
+  }
+  return null;
+}
+
+/** Drop a `.js`/`.jsx` suffix that no longer exists on disk, so it can be re-resolved. */
+function stripStale(p) {
+  return fs.existsSync(p) ? p : p.replace(/\.(js|jsx)$/, '');
+}
+
+/** Full resolve used by every entry point below. Throws with the original request. */
+function resolveSpecTarget(request) {
+  const raw = path.isAbsolute(request) ? request : path.resolve(ROOT, request);
+  const found = resolveFile(stripStale(raw));
+  if (!found) throw new Error(`spec-harness: cannot resolve "${request}"`);
+  return found;
+}
+
+function babelPresets(file, extra = []) {
+  const isTS = /\.tsx?$/.test(file);
+  // Babel 8 的 preset-react 默认从 classic 切成了 automatic runtime。真实构建在 .babelrc 里
+  // 钉死了 classic，spec 必须跟着，否则 JSX 会编译成 jsx() 而不是 React.createElement——
+  // 那些注入自己的假 createElement 来观察渲染树的 spec 会静默拿到空树（踩过：5 个 spec 全红）。
+  // 注意不能只在「调用方没传 preset-react」时才钉：多数 spec 自己传了裸的 '@babel/preset-react'，
+  // 所以这里对调用方传进来的那份也做归一化（调用方若显式指定了 runtime 则尊重它）。
+  const withClassicJsx = p => {
+    const name = Array.isArray(p) ? p[0] : p;
+
+    if (!String(name).includes('preset-react')) return p;
+
+    const opts = Array.isArray(p) ? p[1] || {} : {};
+
+    return [name, { runtime: 'classic', ...opts }];
+  };
+  const presets = extra
+    .filter(p => !String(Array.isArray(p) ? p[0] : p).includes('preset-typescript'))
+    .map(withClassicJsx);
+
+  if (!presets.some(p => String(Array.isArray(p) ? p[0] : p).includes('preset-react'))) {
+    presets.push(['@babel/preset-react', { runtime: 'classic' }]);
+  }
+  // Babel 8 移除了 .isTSX / .allExtensions，改为默认按文件扩展名判断是否 TSX——
+  // 这里本来就是按扩展名算的，且传的是真实文件名，所以直接去掉即等价。
+  if (isTS) presets.push('@babel/preset-typescript');
+  return presets;
+}
+
+/**
+ * Drop-in replacement for `require('@babel/core').transformFileSync`.
+ * Specs swap only their `require('@babel/core')` line; call sites are untouched.
+ */
+function transformFileSync(filePath, opts: Record<string, any> = {}) {
+  const file = resolveSpecTarget(filePath);
+  return babel.transformFileSync(file, {
+    ...opts,
+    babelrc: false,
+    configFile: false,
+    presets: babelPresets(file, opts.presets || []),
+    plugins: opts.plugins || ['@babel/plugin-transform-modules-commonjs'],
+  });
+}
+
+/** Drop-in for `transformSync`, but `filename` drives TS/TSX detection. */
+function transformSync(code, opts: Record<string, any> = {}) {
+  const file = opts.filename || 'unknown.tsx';
+  return babel.transformSync(code, {
+    ...opts,
+    babelrc: false,
+    configFile: false,
+    presets: babelPresets(file, opts.presets || []),
+    plugins: opts.plugins || ['@babel/plugin-transform-modules-commonjs'],
+  });
+}
+
+/** Read a source file as text, re-resolving a stale extension. Used by the text-assert specs. */
+function readSource(...parts) {
+  return fs.readFileSync(resolveSpecTarget(path.join(...parts)), 'utf8');
+}
+
+/** `@babel/parser` with the `typescript` plugin forced on, for the AST-walking spec. */
+const parser = {
+  ...realParser,
+  parse(code, opts: Record<string, any> = {}) {
+    const plugins = new Set([...(opts.plugins || []), 'typescript', 'decorators-legacy']);
+    return realParser.parse(code, { ...opts, plugins: [...plugins] });
+  },
+};
+
+/* ------------------------------------------------------------------ *
+ * require() hook: lets UNSTUBBED transitive imports inside a target
+ * module resolve to .ts/.tsx. Without it, `import './buildSteps'` in
+ * streamEvents.ts dies with MODULE_NOT_FOUND once localRequire falls
+ * through to Node's real require.
+ * ------------------------------------------------------------------ */
+function compileTs(module_, filename) {
+  const { code } = babel.transformFileSync(filename, {
+    babelrc: false,
+    configFile: false,
+    presets: babelPresets(filename, []),
+    plugins: ['@babel/plugin-transform-modules-commonjs'],
+  });
+  module_._compile(code, filename);
+}
+
+let hookInstalled = false;
+function installRequireHook() {
+  if (hookInstalled) return;
+  hookInstalled = true;
+
+  Module._extensions['.ts'] = compileTs;
+  Module._extensions['.tsx'] = compileTs;
+
+  const origResolve = Module._resolveFilename;
+  Module._resolveFilename = function (request, parent, ...rest) {
+    try {
+      return origResolve.call(this, request, parent, ...rest);
+    } catch (err) {
+      // 1. relative request that needs a .ts/.tsx (or a stale .js stripped)
+      if (request.startsWith('.') && parent && parent.filename) {
+        const found = resolveFile(stripStale(path.resolve(path.dirname(parent.filename), request)));
+        if (found) return found;
+      }
+      // 2. webpack-style root-absolute request, e.g. 'src/utils/controlCommon'
+      if (/^(src|scripts)\//.test(request)) {
+        const found = resolveFile(stripStale(path.join(ROOT, request)));
+        if (found) return found;
+      }
+      throw err;
+    }
+  };
+}
+
+installRequireHook();
+
+/**
+ * Quarantine for an assertion that encodes CORRECT intent but fails against a
+ * known, still-open upstream defect. Warns instead of throwing, so the other
+ * assertions in the file can still act as a gate.
+ *
+ * It is deliberately self-retiring: if the wrapped assertion starts PASSING,
+ * this throws. That forces whoever fixes the underlying defect to delete the
+ * quarantine rather than leave a stale "known failure" lying around forever.
+ */
+function expectedFailure(label, fn) {
+  let passed = false;
+  try {
+    fn();
+    passed = true;
+  } catch (err) {
+    // 只吞断言失败。别的异常（模块解析失败、readSource 出错、TypeError…）
+    // 说明隔离区本身坏了，而不是「已知缺陷仍在」——必须原样抛出去。
+    // 否则一个无关的 harness 故障会被伪装成 [known-failure]，spec 照样报绿，
+    // 隔离区从此变成一个永远不会响的黑洞。
+    if (err && err.code !== 'ERR_ASSERTION') {
+      err.message =
+        `expectedFailure("${label}") 捕获到【非断言】异常，隔离区可能已失效：\n` + err.message;
+      throw err;
+    }
+    console.warn(`  [known-failure] ${label}\n    ${String(err.message).split('\n')[0]}`);
+  }
+  if (passed) {
+    throw new Error(
+      `expectedFailure("${label}") PASSED. The underlying defect appears fixed -- ` +
+        `remove the expectedFailure() wrapper and let the assertion run normally.`,
+    );
+  }
+}
+
+module.exports = {
+  expectedFailure,
+  transformFileSync,
+  transformSync,
+  readSource,
+  resolveFile,
+  resolveSpecTarget,
+  stripStale,
+  parser,
+  installRequireHook,
+  ROOT,
+};

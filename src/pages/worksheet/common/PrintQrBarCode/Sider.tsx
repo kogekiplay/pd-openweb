@@ -189,7 +189,7 @@ function OptionsSlider(props) {
         max={options.length - 1}
         step={1}
         value={options.length - 1 - selectedIndex}
-        onChange={index => {
+        onChange={(index: number) => {
           if (options[options.length - 1 - index]) {
             onChange(options[options.length - 1 - index].value);
           }

@@ -83,7 +83,7 @@ let GunterDirectory = class GunterDirectory extends Component<any, any> {
     this.documentDragListeners = null;
   };
 
-  handleMouseDown = (event, index) => {
+  handleMouseDown = (event, index: number) => {
     const { groupingScroll } = this.props;
     const { target } = event;
     const startClientX = event.clientX;
@@ -93,7 +93,7 @@ let GunterDirectory = class GunterDirectory extends Component<any, any> {
       dragValue: startDragValue,
     });
 
-    const setColumnWidth = width => {
+    const setColumnWidth = (width: number) => {
       const { widthConfig } = this.state;
       const data = { ...widthConfig, [index]: width };
       this.setState(
@@ -135,7 +135,7 @@ let GunterDirectory = class GunterDirectory extends Component<any, any> {
     this.setDocumentDragListeners(handleMouseMove, handleMouseUp);
   };
 
-  renderDrag(index) {
+  renderDrag(index: number) {
     return (
       <div
         onMouseDown={event => {
@@ -180,7 +180,7 @@ let GunterDirectory = class GunterDirectory extends Component<any, any> {
               {this.renderDrag(0)}
             </div>
           )}
-          {displayControls.map((data, index) => (
+          {displayControls.map((data, index: number) => (
             <div
               className="field"
               key={data.controlId}

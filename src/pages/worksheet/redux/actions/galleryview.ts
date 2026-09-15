@@ -28,7 +28,7 @@ const getGroupName = (newName, oldName, groupControl = {}) => {
   return newName;
 };
 
-export const fetch = index => {
+export const fetch = (index: number) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { base, filters, galleryview, quickFilter, navGroupFilters, controls, views = [] } = getState().sheet;
     const { appId, viewId, worksheetId, chartId, maxCount } = base;
@@ -102,7 +102,7 @@ export const fetch = index => {
   };
 };
 
-export const fetchMoreByGroup = (index, kanbanKey) => {
+export const fetchMoreByGroup = (index: number, kanbanKey) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { base, filters, galleryview, quickFilter, navGroupFilters, controls, views = [] } = getState().sheet;
     const { appId, viewId, worksheetId, chartId } = base;
@@ -149,7 +149,7 @@ export const fetchMoreByGroup = (index, kanbanKey) => {
   };
 };
 
-export const changeIndex = index => {
+export const changeIndex = (index: number) => {
   return dispatch => {
     dispatch({ type: 'CHANGE_GALLERY_VIEW_INDEX', pageIndex: index });
   };
@@ -170,7 +170,7 @@ export const getCurrentView = () => {
 };
 
 //new | add
-export const updateRow = (data, groupId) => {
+export const updateRow = (data, groupId: string) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { galleryview } = getState().sheet;
     let { gallery } = galleryview;
@@ -228,7 +228,7 @@ export const updateRow = (data, groupId) => {
 };
 
 //删除
-export const deleteRow = (id, groupId) => {
+export const deleteRow = (id, groupId: string) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { galleryview } = getState().sheet;
     let { gallery } = galleryview;

@@ -43,7 +43,7 @@ export default function RelateConfig(props) {
         <Checkbox
           size="small"
           checked={isRelateView}
-          onClick={checked => {
+          onClick={(checked: boolean) => {
             setState({ isRelateView: !checked });
             if (checked) {
               onChange({ ...handleAdvancedSettingChange(data, { batchbtn: '', batchprint: '' }), viewId: '' });
@@ -89,7 +89,7 @@ export default function RelateConfig(props) {
             <Checkbox
               size="small"
               checked={resultVisible}
-              onClick={checked => {
+              onClick={(checked: boolean) => {
                 if (checked) {
                   onChange({
                     ...handleAdvancedSettingChange(data, { resultfilters: '' }),
@@ -114,7 +114,7 @@ export default function RelateConfig(props) {
                 <Checkbox
                   size="small"
                   checked={resultfilters && resultfilters.length > 0}
-                  onClick={checked => {
+                  onClick={(checked: boolean) => {
                     if (checked) {
                       onChange(handleAdvancedSettingChange(data, { resultfilters: '' }));
                       setState({ resultVisible: !!+isHiddenOtherViewRecord });
@@ -170,7 +170,7 @@ export default function RelateConfig(props) {
                   className="allowSelectRecords"
                   size="small"
                   checked={!!+isHiddenOtherViewRecord}
-                  onClick={checked => {
+                  onClick={(checked: boolean) => {
                     onChange({
                       strDefault: updateConfig({
                         config: strDefault,
@@ -205,7 +205,7 @@ export default function RelateConfig(props) {
                 size="small"
                 text={_l('显示计数')}
                 checked={showcount !== '1'}
-                onClick={checked =>
+                onClick={(checked: boolean) =>
                   onChange(
                     handleAdvancedSettingChange(data, {
                       showcount: checked ? '1' : '0',

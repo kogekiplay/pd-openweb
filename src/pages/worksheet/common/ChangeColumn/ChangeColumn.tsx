@@ -66,14 +66,14 @@ export default class ChangeColumn extends Component<any, any> {
     const { onChange } = this.props;
     onChange({
       selected: sortControlByIds(
-        (selected || this.props.selected).map(controlId => ({ controlId })),
+        (selected || this.props.selected).map((controlId: string) => ({ controlId })),
         controlsSorts || this.state.controlsSorts,
       ).map(c => c.controlId),
       newControlSorts: controlsSorts || this.state.controlsSorts,
     });
   }
 
-  isOverRange = checked => {
+  isOverRange = (checked: boolean) => {
     const { noempty, min1msg, maxSelectedNum, selected } = this.props;
 
     if (
@@ -95,7 +95,7 @@ export default class ChangeColumn extends Component<any, any> {
     if (this.isOverRange(cheched)) return;
 
     if (!cheched) {
-      let _selected = selected.filter(controlId => {
+      let _selected = selected.filter((controlId: string) => {
         if (column.type === 52) {
           return (
             controlId !== column.controlId &&
@@ -156,7 +156,7 @@ export default class ChangeColumn extends Component<any, any> {
         }
 
         param.selected = oldIsShow
-          ? selected.filter(controlId => controlId !== newList[newIndex].controlId)
+          ? selected.filter((controlId: string) => controlId !== newList[newIndex].controlId)
           : selected.concat(newList[newIndex].controlId);
       }
 
@@ -183,7 +183,7 @@ export default class ChangeColumn extends Component<any, any> {
     });
   };
 
-  handleClearSearch = controlId => {
+  handleClearSearch = (controlId: string) => {
     this.setState({ search: '', focusControlId: controlId }, () => {
       let focusElem = document.querySelector('.columnCheckList .focusColumnItem');
 

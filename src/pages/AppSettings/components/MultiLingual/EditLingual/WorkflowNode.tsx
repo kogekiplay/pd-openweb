@@ -176,7 +176,7 @@ export default function WorkflowNode(props) {
     const translateInfo = data.data || {};
     const comparisonLangInfo = getTranslateInfo(app.id, selectNode.processId, item.nodeId, comparisonLangData);
 
-    const renderBtn = (key: string, name) => {
+    const renderBtn = (key: string, name: string) => {
       return (
         <div className="flexRow alignItemsCenter nodeItem pLeft0">
           <Input className="flex mRight20" value={comparisonLangId ? comparisonLangInfo[key] : name} disabled={true} />

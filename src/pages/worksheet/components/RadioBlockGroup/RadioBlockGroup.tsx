@@ -13,7 +13,7 @@ export default class RadioBlockGroup extends Component<any, any> {
     const { data, value, onChange } = this.props;
     return (
       <div className="radioBlockGroup">
-        {data.map((item, index) => (
+        {data.map((item, index: number) => (
           <div
             key={index}
             className={cx('item', {

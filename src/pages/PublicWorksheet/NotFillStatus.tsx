@@ -76,7 +76,7 @@ const Receipt = styled.div`
   }
 `;
 
-function getIcon(status, worksheetId) {
+function getIcon(status, worksheetId: string) {
   if (!worksheetId) {
     return { icon: 'icon-cancel', color: 'var(--color-error)' };
   }
@@ -88,7 +88,7 @@ function getIcon(status, worksheetId) {
   return { icon: 'icon-error1', color: 'var(--color-warning)' };
 }
 
-function getTip(worksheetId, status) {
+function getTip(worksheetId: string, status) {
   if (!worksheetId) {
     return _l('你访问的表单不存在');
   }
@@ -140,7 +140,7 @@ export default function NotFillStatus(props) {
 
   const handleReceive = () => {
     const text = afterSubmit.content || '';
-    const output = text.replace(/#\{([^}]+)\}/g, (match, controlId) => {
+    const output = text.replace(/#\{([^}]+)\}/g, (match, controlId: string) => {
       const control = _.find(fillData, l => l.controlId === controlId) || {};
 
       if (control.type === 14 && control.value && !_.isArray(safeParse(control.value))) {

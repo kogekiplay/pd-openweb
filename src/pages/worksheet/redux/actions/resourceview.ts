@@ -172,7 +172,7 @@ export const fetchRowsByGroupId = (kanbanKey, kanbanIndex) => {
   };
 };
 
-export const getRelationControls = (appId, sourceId) => {
+export const getRelationControls = (appId: string, sourceId) => {
   return dispatch => {
     if (sourceId) {
       sheetAjax
@@ -286,7 +286,7 @@ export const getTimeList = cb => {
   };
 };
 
-export const updateKeyWords = keywords => {
+export const updateKeyWords = (keywords: string) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { resourceview } = getState().sheet;
     const { resourceData = [] } = resourceview;

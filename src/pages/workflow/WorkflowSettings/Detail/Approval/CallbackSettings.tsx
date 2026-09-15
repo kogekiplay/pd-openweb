@@ -108,7 +108,7 @@ export default ({ data, getCallBackNodeNames, updateSource, onClose }) => {
                     <div className="textDisabled pLeft10 pRight10">{_l('请选择')}</div>
                   ) : (
                     <ul className="pLeft6 tagWrap">
-                      {callbackOptions.callBackNodeIds.map((key, index) => {
+                      {callbackOptions.callBackNodeIds.map((key, index: number) => {
                         const currentNode = _.find(data.callBackNodes, o => Object.keys(o)[0] === key);
 
                         return (

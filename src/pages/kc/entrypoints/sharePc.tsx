@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import NodeShare from '../common/NodeShare';
 import '../main.css';
 
-export default function (projectId) {
+export default function (projectId: string) {
   const root = createRoot(document.getElementById('app'));
 
   root.render(<NodeShare projectId={projectId} />);

@@ -161,7 +161,7 @@ export default class AppManagement extends Component<any, any> {
   /**
    * 标准版不能导入导出
    */
-  checkExportOrImportAuth(projectId) {
+  checkExportOrImportAuth(projectId: string) {
     const { licenseType } = getCurrentProject(projectId, true);
     this.setState({ isFree: licenseType === 0 });
   }
@@ -307,7 +307,7 @@ export default class AppManagement extends Component<any, any> {
             <Switch
               checked={!!item.status}
               text={item.status ? _l('开启') : _l('关闭')}
-              onClick={checked => this.editAppStatus(item.appId, checked ? 0 : 1)}
+              onClick={(checked: boolean) => this.editAppStatus(item.appId, checked ? 0 : 1)}
             />
           ) : (
             '-'
@@ -448,7 +448,7 @@ export default class AppManagement extends Component<any, any> {
   }
 
   //关闭各类型dialog
-  closeDialog(name) {
+  closeDialog(name: string) {
     $(`.${name}`).parents('.mui-dialog-container').parents('div').remove();
   }
 
@@ -464,7 +464,7 @@ export default class AppManagement extends Component<any, any> {
   /**
    * 修改应用状态
    */
-  editAppStatus(appId, status) {
+  editAppStatus(appId: string, status) {
     const { projectId } = this.props;
     let list = _.cloneDeep(this.state.list);
 
@@ -526,7 +526,7 @@ export default class AppManagement extends Component<any, any> {
     );
   }
 
-  chargeFn = (appId, accountId) => {
+  chargeFn = (appId: string, accountId: string) => {
     if (this.state.transferLoading) {
       return;
     }
@@ -559,7 +559,7 @@ export default class AppManagement extends Component<any, any> {
   /**
    * 变更拥有者
    */
-  updateAppOwner(appId, user) {
+  updateAppOwner(appId: string, user) {
     ajaxRequest
       .updateAppOwner({ appId, memberId: user.accountId })
       .then(result => {
@@ -767,7 +767,7 @@ export default class AppManagement extends Component<any, any> {
             total={total}
             pageIndex={pageIndex}
             pageSize={50}
-            onChange={pageIndex => this.setState({ pageIndex }, this.getAppList)}
+            onChange={(pageIndex: number) => this.setState({ pageIndex }, this.getAppList)}
           />
         </div>
 

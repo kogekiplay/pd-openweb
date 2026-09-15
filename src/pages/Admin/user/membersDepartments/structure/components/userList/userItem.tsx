@@ -37,7 +37,7 @@ class UserItem extends Component<any, any> {
     };
   }
 
-  updateFullDepartmentInfo = (projectId, departmentIds) => {
+  updateFullDepartmentInfo = (projectId: string, departmentIds) => {
     const { fullDepartmentInfo = {} } = this.state;
     departmentIds = _.uniq(departmentIds).filter(it => it && !fullDepartmentInfo[it]);
 
@@ -63,7 +63,7 @@ class UserItem extends Component<any, any> {
       });
   };
 
-  refreshData = (departmentId, typeCursor, projectId, pageIndex = 1) => {
+  refreshData = (departmentId, typeCursor, projectId: string, pageIndex = 1) => {
     if (departmentId) {
       this.props.loadUsers(departmentId, pageIndex);
     } else {
@@ -215,7 +215,7 @@ class UserItem extends Component<any, any> {
     });
   };
 
-  handleCheckbox = (isChecked, accountId) => {
+  handleCheckbox = (isChecked, accountId: string) => {
     if (!isChecked) {
       this.props.addUserToSet([accountId]);
     } else {
@@ -489,7 +489,7 @@ class UserItem extends Component<any, any> {
               key={`checkBox-${user.accountId}`}
               className="TxtMiddle InlineBlock"
               checked={isChecked}
-              onClick={(checked, id, e) => {
+              onClick={(checked: boolean, id, e) => {
                 e.stopPropagation();
                 this.handleCheckbox(isChecked, user.accountId);
               }}

@@ -252,7 +252,7 @@ export function getBoardViewPageData({ alwaysCallback = noop }) {
         const existedKeys = boardData.map(item => item.key);
         const filterData = data
           .filter(item => !includes(existedKeys, item.key))
-          .map((item, index) => ({ ...item, sort: existedKeys.length + index + 1 }));
+          .map((item, index: number) => ({ ...item, sort: existedKeys.length + index + 1 }));
         dispatch(changeBoardViewData(boardData.concat(filterData)));
         dispatch(initBoardViewRecordCount({ ...boardViewRecordCount, ...dealBoardViewRecordCount(filterData) }));
         let nextState = { kanbanIndex: kanbanIndex + 1 };

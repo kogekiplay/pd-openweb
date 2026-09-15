@@ -119,7 +119,7 @@ export default class ProjectGroups extends React.Component<any, any> {
     });
   }
 
-  updateGroupModel(groupId, info) {
+  updateGroupModel(groupId: string, info) {
     const { listData } = this.state;
     const keys = _.keys(listData);
     const result = {};
@@ -141,7 +141,7 @@ export default class ProjectGroups extends React.Component<any, any> {
     });
   }
 
-  getGroupModel(groupId) {
+  getGroupModel(groupId: string) {
     const { listData, keywords } = this.state;
     let result = null;
 
@@ -179,7 +179,7 @@ export default class ProjectGroups extends React.Component<any, any> {
     );
   }
 
-  search(keywords) {
+  search(keywords: string) {
     this.abortRequest();
     this.setState(
       {

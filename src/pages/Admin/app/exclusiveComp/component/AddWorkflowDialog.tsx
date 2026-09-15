@@ -207,7 +207,7 @@ const enabledList = [
   { label: _l('关闭'), value: false },
 ];
 
-const renderEmpty = appId => {
+const renderEmpty = (appId: string) => {
   return (
     <EmptyWrap>
       <span className="iconCon icon-department Font48"></span>

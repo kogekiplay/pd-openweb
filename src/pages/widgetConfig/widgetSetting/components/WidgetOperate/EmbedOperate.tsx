@@ -14,7 +14,7 @@ export default function EmbedOperate(props) {
           size="small"
           text={_l('显示新增记录按钮')}
           checked={enumDefault2 !== 1}
-          onClick={checked => {
+          onClick={(checked: boolean) => {
             onChange({ enumDefault2: checked ? 1 : 0 });
           }}
         />

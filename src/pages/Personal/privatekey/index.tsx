@@ -101,7 +101,7 @@ export default class PersonalEntrypoint extends Component<any, any> {
     this.reloadLicenseList({ activeProduct, licenseCount: 0, pageIndex: 1 });
   };
 
-  handleChangePage = pageIndex => {
+  handleChangePage = (pageIndex: number) => {
     if (pageIndex === this.state.pageIndex) return;
 
     this.reloadLicenseList({ pageIndex });
@@ -131,7 +131,7 @@ export default class PersonalEntrypoint extends Component<any, any> {
     });
   };
 
-  renderLicenseItem(item, index) {
+  renderLicenseItem(item, index: number) {
     const { serverId, licenseCode, startDate, expirationDate, licenseVersion, visible } = item;
 
     return (
@@ -222,7 +222,7 @@ export default class PersonalEntrypoint extends Component<any, any> {
             {loading ? (
               <LoadDiv className="mTop10" />
             ) : licenseList.length ? (
-              <Fragment>{licenseList.map((item, index) => this.renderLicenseItem(item, index))}</Fragment>
+              <Fragment>{licenseList.map((item, index: number) => this.renderLicenseItem(item, index))}</Fragment>
             ) : (
               <div className="withoutList flexColumn valignWrapper">
                 <div className="iconWrapper flexRow valignWrapper">

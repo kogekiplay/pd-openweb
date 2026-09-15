@@ -137,7 +137,7 @@ const SelectApp = props => {
             className="pLeft8"
             disabled={unique}
             checked={selectedApps.length === appList.length && !!appList.length}
-            onClick={checked => setSelectedApps(checked ? [] : appList)}
+            onClick={(checked: boolean) => setSelectedApps(checked ? [] : appList)}
           />
         );
       },
@@ -147,7 +147,7 @@ const SelectApp = props => {
             size="small"
             className="pLeft8"
             checked={!!selectedApps.filter(app => app.appId === item.appId).length}
-            onClick={checked =>
+            onClick={(checked: boolean) =>
               setSelectedApps(
                 checked
                   ? selectedApps.filter(app => app.appId !== item.appId)

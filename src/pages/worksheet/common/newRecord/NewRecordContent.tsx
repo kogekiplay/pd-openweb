@@ -1066,7 +1066,7 @@ function NewRecordForm(props) {
                       );
                     }
                   }}
-                  updateRelateRecordTableCount={(controlId, num) => {
+                  updateRelateRecordTableCount={(controlId: string, num) => {
                     if (customwidget.current && customwidget.current.dataFormat) {
                       customwidget.current.dataFormat?.updateDataSource({
                         controlId,

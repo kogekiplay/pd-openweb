@@ -290,7 +290,7 @@ const taskTimeBars = (source, viewType: number, filterWeekend: boolean) => {
      * @param  {string} taskId
      * @return {boolean}
      */
-    const checkIsContain = taskId => {
+    const checkIsContain = (taskId: string) => {
       // 是否包含
       let isContain = false;
       // 检查数组中是否已经包含了该项
@@ -833,7 +833,7 @@ const syncUpdateScroll = () => {
   // timeAxisMonths 类上文字的宽度
   const textWith = 65;
   const monthsEls = $('.timeAxisContent .timeAxisMonths');
-  const monthsLeft = monthsEls.map((index, el) => {
+  const monthsLeft = monthsEls.map((index: number, el) => {
     return el.offsetLeft;
   });
   const index = getScrollIndex(value, monthsLeft);

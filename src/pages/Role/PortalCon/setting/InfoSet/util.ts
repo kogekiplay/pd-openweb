@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { DEFAULT_DATA } from 'src/pages/widgetConfig/config/widget';
 import { enumWidgetType } from 'src/pages/widgetConfig/util';
 
-export const initData = (enumType, type, controlId) => {
+export const initData = (enumType, type, controlId: string) => {
   const tempDefault = {
     ...DEFAULT_DATA[enumType],
     size: 12,

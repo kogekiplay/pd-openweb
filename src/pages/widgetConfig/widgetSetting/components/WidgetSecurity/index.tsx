@@ -50,7 +50,7 @@ export default function ControlMask(props) {
           className="customWidgetCheckbox"
           size="small"
           checked={datamask === '1'}
-          onClick={checked => {
+          onClick={(checked: boolean) => {
             if (!checked) {
               setVisible(true);
             } else {
@@ -97,7 +97,7 @@ export default function ControlMask(props) {
             className="customWidgetCheckbox"
             size="small"
             checked={encryId}
-            onClick={checked => {
+            onClick={(checked: boolean) => {
               if (!checked) {
                 if (isPayType) {
                   buriedUpgradeVersionDialog(globalSheetInfo.projectId, VersionProductType.dataEnctypt);

@@ -58,7 +58,7 @@ export default class extends Component<any, any> {
       this.loadWorksheetsOfApp(this.props.selectedAppId);
     }
   }
-  loadWorksheetsOfApp(appId) {
+  loadWorksheetsOfApp(appId: string) {
     const { projectId, worksheetType } = this.props;
 
     if (worksheetType === 2) {

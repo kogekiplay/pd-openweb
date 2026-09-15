@@ -282,7 +282,7 @@ export default function SelectDialog({ ...args }) {
     get(control, 'advancedSetting.chooseshow') === '1' && !isSingleRelateRecordDropdown
       ? safeParse(get(control, 'advancedSetting.chooseshowids'), 'array')
       : showControls;
-  let controlsForShow = controlIdsForShow.map(controlId => find(controls, { controlId })).filter(identity);
+  let controlsForShow = controlIdsForShow.map((controlId: string) => find(controls, { controlId })).filter(identity);
   const titleControl = getTitleControl(control, controls);
   const titleControlId = get(titleControl, 'controlId');
   const titleMaskData =
@@ -674,7 +674,7 @@ export default function SelectDialog({ ...args }) {
                         tempSheetColumnWidths,
                         tempSheetColumnWidths,
                       )}
-                      onColumnWidthChange={(controlId, value) => {
+                      onColumnWidthChange={(controlId: string, value) => {
                         setTempSheetColumnWidths(prev => ({ ...prev, [controlId]: value }));
                       }}
                       columnStyles={sheetStyles ? sheetStyles.columnStyles : {}}

@@ -215,7 +215,7 @@ export const updateWorksheetInfo = value => (dispatch: AppDispatch, getState: Ge
 export const updateWorksheetVisibleType =
   (value, cb = () => {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
-    updateBaseConfig(dispatch, getState, { visibleType: value }, worksheetId => {
+    updateBaseConfig(dispatch, getState, { visibleType: value }, (worksheetId: string) => {
       cb();
       if (value === 1) {
         dispatch({ type: 'PUBLICWORKSHEET_UPDATE_INFO', value: { visibleType: value } });
@@ -225,7 +225,7 @@ export const updateWorksheetVisibleType =
     });
   };
 
-export const hideControl = controlId => (dispatch: AppDispatch, getState: GetState) => {
+export const hideControl = (controlId: string) => (dispatch: AppDispatch, getState: GetState) => {
   const {
     publicWorksheet: { hidedControlIds, controls, worksheetSettings, originalControls },
   } = getState();
@@ -257,7 +257,7 @@ export function showControl(showControls = []) {
     //每次更改字段显隐时，需要将禁用的字段隐藏
     const disabledControlIds = getDisabledControls(originalControls, worksheetSettings);
     const newHidedControlIds = _.uniqBy(
-      hidedControlIds.concat(disabledControlIds).filter(controlId => !_.find(newShowControls, { controlId })),
+      hidedControlIds.concat(disabledControlIds).filter((controlId: string) => !_.find(newShowControls, { controlId })),
     );
     const newControls: FormControl[] = controls.concat(
       newShowControls.map(control => _.pick(control, ['controlId', 'col', 'row', 'size'])),

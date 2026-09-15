@@ -122,7 +122,7 @@ export default function AssignValue(props) {
           <ul className={cx('valueList', { disabled: !checked })}>
             <li className="Bold title">{_l('分值')}</li>
             {options.map(
-              (item, index) =>
+              (item, index: number) =>
                 !item.isDeleted && (
                   <li>
                     {checked && (

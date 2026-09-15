@@ -26,14 +26,14 @@ export const showEditFn =
  * action: 设置当前网络id
  * @param projectId
  */
-export const updateProjectId = projectId => dispatch => {
+export const updateProjectId = (projectId: string) => dispatch => {
   dispatch({
     type: 'UPDATE_PROJECT_ID',
     projectId,
   });
 };
 
-export const getRulesAll = projectId => dispatch => {
+export const getRulesAll = (projectId: string) => dispatch => {
   dispatch({
     type: 'ACTION_ING',
   });
@@ -53,7 +53,7 @@ export const getRulesAll = projectId => dispatch => {
     });
 };
 
-export const deleteRules = (projectId, ruleId) => dispatch => {
+export const deleteRules = (projectId: string, ruleId) => dispatch => {
   dispatch({
     type: 'ACTION_ING',
   });
@@ -107,7 +107,7 @@ export const updateRulesByRuleId = data => dispatch => {
   });
 };
 
-export const saveFn = (projectId, items, ruleId, ruleType, errorCallback) => dispatch => {
+export const saveFn = (projectId: string, items, ruleId, ruleType, errorCallback) => dispatch => {
   dispatch({
     type: 'ISLOADING',
     isSaveing: true,

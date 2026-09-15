@@ -36,7 +36,7 @@ export default function WidgetName(props) {
               <Checkbox
                 size="small"
                 checked={hidetitle === 1}
-                onClick={checked => onChange(handleAdvancedSettingChange(data, { hidetitle: String(+!checked) }))}
+                onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { hidetitle: String(+!checked) }))}
                 text={_l('隐藏')}
               />
             </div>

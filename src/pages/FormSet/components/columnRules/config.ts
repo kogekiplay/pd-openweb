@@ -100,7 +100,7 @@ export const SUBLIST_PERMISSION_DISPLAY = [
 ];
 
 //获取规则名字段长度
-export const getNameWidth = name => {
+export const getNameWidth = (name: string) => {
   let nameNode = $('<span />')
     .text(name || '')
     .css({
@@ -124,7 +124,7 @@ export function getReTree(tree) {
 }
 
 //根据controlId找到node
-export function deepSearch(tree = [], controlId) {
+export function deepSearch(tree = [], controlId: string) {
   let results = null;
 
   function recurse(nodes) {

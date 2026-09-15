@@ -190,7 +190,7 @@ export default props => {
         </Fragment>
       )}
 
-      {fields.map((item, index) => (
+      {fields.map((item, index: number) => (
         <Fragment key={index}>
           <div className="Font13 bold mTop20">
             {item.fieldName}

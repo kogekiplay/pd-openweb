@@ -288,7 +288,7 @@ export default class Welink extends React.Component<any, any> {
                 placement="bottomLeft"
               >
                 <span className="mLeft10 switchBtn">
-                  <Switch checked={!this.state.isCloseDing} onClick={checked => this.editDingStatus(checked ? 2 : 1)} />
+                  <Switch checked={!this.state.isCloseDing} onClick={(checked: boolean) => this.editDingStatus(checked ? 2 : 1)} />
                 </span>
               </Tooltip>
             </span>

@@ -102,7 +102,7 @@ export default class SecuritySetting extends Component<any, any> {
       .catch();
   }
 
-  openVerify = checked => {
+  openVerify = (checked: boolean) => {
     if (md.global?.SysSettings?.twoFactorAuthenticationSwitchType === 2 && checked) {
       alert(_l('平台强制开启两步验证'), 2);
       return;

@@ -332,7 +332,7 @@ const KnowledgeList = props => {
             <div className="mBottom20">{_l('注：并不会删除原始工作表')}</div>
             <Checkbox
               text={_l('我确认删除知识库')}
-              onClick={checked => setDialogState(prev => ({ ...prev, isChecked: checked }))}
+              onClick={(checked: boolean) => setDialogState(prev => ({ ...prev, isChecked: checked }))}
             />
           </div>
         </Dialog>
@@ -360,7 +360,7 @@ const KnowledgeList = props => {
             </div>
             <Checkbox
               text={_l('我确认重置知识库')}
-              onClick={checked => setDialogState(prev => ({ ...prev, isChecked: checked }))}
+              onClick={(checked: boolean) => setDialogState(prev => ({ ...prev, isChecked: checked }))}
             />
           </div>
         </Dialog>

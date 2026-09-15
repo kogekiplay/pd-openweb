@@ -104,7 +104,7 @@ const DropdownComp = props => {
     onChange(JSON.stringify(value ? [value] : []));
   };
 
-  const handleSearch = useCallback(keywords => {
+  const handleSearch = useCallback((keywords: string) => {
     setKeywords(keywords.trim());
   }, []);
 

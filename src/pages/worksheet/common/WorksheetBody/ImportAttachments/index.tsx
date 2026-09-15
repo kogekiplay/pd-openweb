@@ -268,7 +268,7 @@ function ImportAttachments(props) {
             advancedSetting={
               writeFieldOptions.find(control => control.value === setting.attachmentControlId)?.advancedSetting
             }
-            checkValueByFilterRegex={name => {
+            checkValueByFilterRegex={(name: string) => {
               const control = writeFieldOptions.find(control => control.value === setting.attachmentControlId);
               return checkValueByFilterRegex(
                 { advancedSetting: control?.advancedSetting },

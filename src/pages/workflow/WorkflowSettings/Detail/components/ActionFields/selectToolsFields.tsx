@@ -145,7 +145,7 @@ const SelectToolsFields = props => {
                 false,
               )
             }
-            onChange={controlId => setSelectControlId(controlId)}
+            onChange={(controlId: string) => setSelectControlId(controlId)}
           />
         </Fragment>
       )}

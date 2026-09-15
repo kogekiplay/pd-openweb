@@ -351,7 +351,7 @@ function TableComp(props) {
                 updateTableState({
                   selectedRowIds: isSelect
                     ? selectedRowIds.concat(row.rowid)
-                    : selectedRowIds.filter(rowid => rowid !== row.rowid),
+                    : selectedRowIds.filter((rowid: string) => rowid !== row.rowid),
                 });
               }
 
@@ -526,7 +526,7 @@ function TableComp(props) {
                 newDefaultScrollLeft,
               });
             }}
-            hideColumn={controlId => {
+            hideColumn={(controlId: string) => {
               updateTableState({
                 sheetHiddenColumnIds: uniqBy(sheetHiddenColumnIds.concat(controlId)),
               });
@@ -537,7 +537,7 @@ function TableComp(props) {
                 sheetHiddenColumnIds: [],
               });
             }}
-            frozen={index => {
+            frozen={(index: number) => {
               updateTableState({
                 layoutChanged: true,
                 fixedColumnCount: index,
@@ -578,7 +578,7 @@ function TableComp(props) {
           },
         });
       }}
-      onColumnWidthChange={(controlId, value) => {
+      onColumnWidthChange={(controlId: string, value) => {
         updateTableState({
           layoutChanged: true,
           sheetColumnWidths: { ...sheetColumnWidths, [controlId]: value },

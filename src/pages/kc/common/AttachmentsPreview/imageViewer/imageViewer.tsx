@@ -47,7 +47,7 @@ class ImageViewer extends React.Component<any, any> {
 
   static defaultProps = {
     size: 0, // 图片大小
-    getResizedSrc: (src, width, height) => {
+    getResizedSrc: (src, width: number, height: number) => {
       if (!src) {
         return '';
       }

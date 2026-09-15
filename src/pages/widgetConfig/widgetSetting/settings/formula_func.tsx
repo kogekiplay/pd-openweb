@@ -114,7 +114,7 @@ export default function FormulaFunc(props) {
             size="small"
             text={_l('参与计算的字段值为空时，视为0')}
             checked={nullzero === '1'}
-            onClick={checked => onChange(handleAdvancedSettingChange(data, { nullzero: checked ? '0' : '1' }))}
+            onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { nullzero: checked ? '0' : '1' }))}
           />
         </div>
       )}

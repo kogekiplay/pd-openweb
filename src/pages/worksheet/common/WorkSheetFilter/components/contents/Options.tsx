@@ -81,7 +81,7 @@ export default class Options extends Component<any, any> {
       return [];
     }
   }
-  getAreaLevel(enumDefault2, filterType) {
+  getAreaLevel(enumDefault2: number, filterType) {
     const isAreaContain = _.includes([FILTER_CONDITION_TYPE.LIKE, FILTER_CONDITION_TYPE.NCONTAIN], filterType);
 
     if (isAreaContain) {

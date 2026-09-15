@@ -361,7 +361,7 @@ export default class StatTable extends React.Component<any, any> {
     );
   }
 
-  renderTds(item, index) {
+  renderTds(item, index: number) {
     const { reportType, projectId } = this.props;
     const { user: { accountId, fullname, department, userId } = {} } = item;
 
@@ -482,7 +482,7 @@ export default class StatTable extends React.Component<any, any> {
             total={allCount}
             pageSize={pageSize}
             pageIndex={pageIndex}
-            onChange={pageIndex => this.setState({ pageIndex }, this.refreshData)}
+            onChange={(pageIndex: number) => this.setState({ pageIndex }, this.refreshData)}
           />
         ) : null}
       </div>

@@ -38,7 +38,7 @@ class PostOperator extends React.Component<any, any> {
     if (!postItem) return;
     const { projectIds } = postItem;
     if (!projectIds || !projectIds.length) return;
-    projectIds.forEach(projectId => {
+    projectIds.forEach((projectId: string) => {
       this.setState({ allowOperate: checkPermission(projectId, PERMISSION_ENUM.MANAGE_TREND) });
     });
 

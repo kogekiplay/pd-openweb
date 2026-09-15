@@ -7,7 +7,7 @@ import { canEditApp } from 'worksheet/redux/actions/util';
 import store from 'src/redux/configureStore';
 import './SheetMove.less';
 
-const formatApps = function (validProject, projectId) {
+const formatApps = function (validProject, projectId: string) {
   const appList = [];
   const project = validProject.filter(item => item.projectId === projectId)[0];
 
@@ -51,7 +51,7 @@ export default class SheetMove extends Component<any, any> {
     });
     this.handleChangeApp(appId);
   }
-  handleChangeApp(appId) {
+  handleChangeApp(appId: string) {
     this.setState({
       appValue: appId,
       groupingValue: '',

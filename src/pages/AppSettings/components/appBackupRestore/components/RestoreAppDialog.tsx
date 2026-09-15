@@ -59,7 +59,7 @@ export const RestoreContent = props => {
                 disabled={item.type === 'appItem' || (fileType === 1 && item.type === 'data')}
                 checked={item.type === 'appItem' ? appItemChecked : dataChecked}
                 text={item.txt}
-                onClick={checked => setData({ [`${item.type}Checked`]: !checked })}
+                onClick={(checked: boolean) => setData({ [`${item.type}Checked`]: !checked })}
               />
             </div>
             <div className="Font12 textTertiary pLeft24">
@@ -91,7 +91,7 @@ export const RestoreContent = props => {
         <Checkbox
           text={_l('还原前备份当前版本') + (dataChecked ? _l('(同时备份数据)') : '')}
           checked={backupCurrentVersion}
-          onClick={checked => {
+          onClick={(checked: boolean) => {
             if (validLimit !== -1 && currentValid >= validLimit) {
               alert(_l('备份文件已达上限，升级旗舰版可以无限备份'), 3);
               return;

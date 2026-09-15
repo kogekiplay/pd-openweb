@@ -143,7 +143,7 @@ export default class RelateFilter extends Component<any, any> {
             sourceControlId={sourceControlId}
             showCustom={showCustom}
             widgetControlData={widgetControlData}
-            setKeys={keywords => {
+            setKeys={(keywords: string) => {
               this.setState({
                 keywords,
               });

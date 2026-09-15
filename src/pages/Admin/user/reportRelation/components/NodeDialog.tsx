@@ -134,7 +134,7 @@ function NodeDialogWrap(props) {
           dataFromProps: true,
         },
       };
-      res.forEach((l, index) => {
+      res.forEach((l, index: number) => {
         users[l.accountId] = {
           ...l,
           id: l.accountId,

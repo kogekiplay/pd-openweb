@@ -22,7 +22,7 @@ import DiaActionTree from './diaActionTree';
 import './departmentTree.less';
 
 const loop = (data, key, callback) => {
-  data.forEach((item, index, arr) => {
+  data.forEach((item, index: number, arr) => {
     if (item.departmentId === key) {
       return callback(item, index, arr);
     }
@@ -144,7 +144,7 @@ class DepartmentTree extends React.Component<any, any> {
 
     // Find dragObject
     let dragObj;
-    loop(data, dragKey, (item, index, arr) => {
+    loop(data, dragKey, (item, index: number, arr) => {
       arr.splice(index, 1);
       dragObj = item;
     });
@@ -178,7 +178,7 @@ class DepartmentTree extends React.Component<any, any> {
       sortedDepartmentIds = [];
       let ar;
       let i;
-      loop(data, dropKey, (item, index, arr) => {
+      loop(data, dropKey, (item, index: number, arr) => {
         ar = arr;
         i = index;
       });
@@ -257,7 +257,7 @@ class DepartmentTree extends React.Component<any, any> {
           if (!props.departmentId) {
             list = list.concat(subDepartments);
           } else {
-            loop(list, props.departmentId, (item, index, arr) => {
+            loop(list, props.departmentId, (item, index: number, arr) => {
               arr[index].subDepartments = subDepartments;
             });
           }

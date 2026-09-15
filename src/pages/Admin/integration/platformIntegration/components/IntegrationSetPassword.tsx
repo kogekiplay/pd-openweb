@@ -89,7 +89,7 @@ export default class IntegrationSetPassword extends Component<any, any> {
   };
 
   // 开始未同步账号设置初始密码
-  changeSetInitialPassword = checked => {
+  changeSetInitialPassword = (checked: boolean) => {
     this.setState({ isSetPassword: !checked });
     if (checked) {
       this.changeInitialPassword('');

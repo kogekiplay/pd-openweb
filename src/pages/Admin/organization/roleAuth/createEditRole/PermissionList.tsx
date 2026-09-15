@@ -71,7 +71,7 @@ export default function PermissionList(props) {
   };
 
   const renderPermissions = (list, deep = 1) => {
-    return list.map((item, index) => {
+    return list.map((item, index: number) => {
       const isFolded = foldedId.includes(item.permissionId);
       const hasChildren = !!(item.subPermission || []).length;
       const checked = selectedIds.includes(item.permissionId);

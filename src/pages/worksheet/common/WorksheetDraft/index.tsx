@@ -279,7 +279,7 @@ function DraftModal(props) {
                     }}
                     onSelect={newSelected => {
                       const selectRows = [];
-                      newSelected.forEach(rowId => {
+                      newSelected.forEach((rowId: string) => {
                         const row = _.find(records, trashRow => trashRow.rowid === rowId);
 
                         if (row && (row.allowedit || row.allowEdit)) {
@@ -335,7 +335,7 @@ function DraftModal(props) {
             addNewRecord={props.addNewRecord}
             setHighLightOfRows={setHighLightOfRows}
             loadRowsWhenChildTableStoreCreated={true}
-            updateDraftList={(rowId, rowData) => {
+            updateDraftList={(rowId: string, rowData) => {
               let data = _.clone(records);
 
               if (!rowData) {

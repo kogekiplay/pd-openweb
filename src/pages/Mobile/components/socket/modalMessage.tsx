@@ -205,7 +205,7 @@ function MessageComp(props) {
         <div className="mobileNoticeContent">{description}</div>
       </div>
       <div className={cx('btnsWrap flexRow mTop20', { mBottom20: btnList.length })}>
-        {btnList.reverse().map((item, index) => (
+        {btnList.reverse().map((item, index: number) => (
           <div key={`${item.text}-${index}`} className="flex ellipsis btnItem" onClick={item.onClick}>
             {item.text}
           </div>

@@ -262,7 +262,7 @@ export default class Template extends Component<any, any> {
           openSearch
           noData={_l('服务号未添加消息模板')}
           placeholder={_l('搜索模板')}
-          onChange={appId => this.getNodeDetail(this.props, appId)}
+          onChange={(appId: string) => this.getNodeDetail(this.props, appId)}
         />
 
         {data.appId && (

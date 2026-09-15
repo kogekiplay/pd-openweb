@@ -26,7 +26,7 @@ export default class DateInput extends Component<any, any> {
     }
   }
   // 成员多选数据处理
-  removeItem = accountId => {
+  removeItem = (accountId: string) => {
     const { dynamicValue } = this.props;
 
     const getUserId = item => {

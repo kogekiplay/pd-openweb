@@ -110,7 +110,7 @@ export default class Action extends Component<any, any> {
   /**
    * 获取自定义字段
    */
-  getAppTemplateControls = (selectNodeId, appId) => {
+  getAppTemplateControls = (selectNodeId, appId: string) => {
     const { data } = this.state;
 
     flowNode

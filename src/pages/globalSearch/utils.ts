@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-export const getAppResultCodeText = (code, name) => {
+export const getAppResultCodeText = (code, name: string) => {
   if (code === 2) {
     return _l('数据正在初始化，请耐心等待');
   }

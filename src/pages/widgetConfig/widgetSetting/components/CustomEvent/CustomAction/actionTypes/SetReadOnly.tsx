@@ -71,7 +71,7 @@ export default function SetReadOnly(props) {
             size="small"
             className="mTop8"
             checked={isAll}
-            onClick={checked => setState({ isAll: !checked, actionItems: checked ? actionItems : [] })}
+            onClick={(checked: boolean) => setState({ isAll: !checked, actionItems: checked ? actionItems : [] })}
             text={_l('所有字段')}
           />
         )}

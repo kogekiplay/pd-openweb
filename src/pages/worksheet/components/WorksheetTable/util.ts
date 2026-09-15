@@ -445,7 +445,7 @@ export function getSheetCellRuleFieldStyleVars(control) {
   return { '--rule-value-color': valuecolor, ...styleObject };
 }
 
-function getTextHeight(text = '', width, style = '') {
+function getTextHeight(text = '', width: number, style = '') {
   let result;
   const div = document.createElement('div');
   div.innerText = text;

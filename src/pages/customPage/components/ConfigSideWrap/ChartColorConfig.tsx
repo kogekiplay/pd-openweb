@@ -380,7 +380,7 @@ export default props => {
             onClick={() => setSelectChartColorVisible(true)}
           >
             <div className="flexRow alignItemsCenter flex">
-              {showColors.map((color, index) => (
+              {showColors.map((color, index: number) => (
                 <div key={index} style={{ background: color }} className="colorBlock" />
               ))}
               <div className="colorName ellipsis">{name}</div>

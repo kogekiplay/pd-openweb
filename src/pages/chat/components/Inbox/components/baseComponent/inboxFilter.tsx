@@ -254,7 +254,7 @@ export default class InboxFilter extends React.Component<any, any> {
             <div className="flexColumn flex">
               <AppFilter
                 apkId={this.state.appId}
-                onChange={appId => {
+                onChange={(appId: string) => {
                   this.setState(
                     {
                       appId,

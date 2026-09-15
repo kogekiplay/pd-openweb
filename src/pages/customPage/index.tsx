@@ -442,7 +442,7 @@ let CustomPage = class CustomPage extends Component<any, any> {
           });
         });
         Promise.all(saveFilterRequest).then(data => {
-          const filterIds = filterComponent.map((component, index) => {
+          const filterIds = filterComponent.map((component, index: number) => {
             return {
               id: component.id || component.uuid,
               filtersGroupId: data[index].filtersGroupId,

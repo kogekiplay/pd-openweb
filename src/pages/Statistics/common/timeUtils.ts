@@ -679,7 +679,7 @@ export const formatrChartTimeText = ({ rangeType, rangeValue, dynamicFilter, tod
 
 export const formatterTooltipTitle = (xaxes, key?) => {
   if (isTimeControl(xaxes.controlType) && xaxes.particleSizeType === 2) {
-    return (title, data) => {
+    return (title: string, data) => {
       const value = key ? data[key] : title;
       const start = moment(value, 'GGGG[W]WW').startOf('isoWeek').format('YYYY-MM-DD');
       const end = moment(value, 'GGGG[W]WW').endOf('isoWeek').format('YYYY-MM-DD');

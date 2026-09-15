@@ -370,7 +370,7 @@ class EditPublishSetDialog extends React.Component<any, any> {
           </p>
           <React.Fragment>
             <div className="flexRow alignItemsCenter" style={{ marginLeft: -4 }}>
-              <MDSwitch size="default" checked={fixed} onChange={checked => this.fixedApp(checked)} />
+              <MDSwitch size="default" checked={fixed} onChange={(checked: boolean) => this.fixedApp(checked)} />
               {fixed && <span className="textTertiary"> {_l('正在维护中...')}</span>}
             </div>
             {fixed && (

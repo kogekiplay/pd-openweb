@@ -120,7 +120,7 @@ export default class SheetModal extends Component<any, any> {
         });
       });
   }
-  getSheets(appId) {
+  getSheets(appId: string) {
     this.setState({ sheetsLoading: true });
     homeAppApi
       .getWorksheetsByAppId({
@@ -134,7 +134,7 @@ export default class SheetModal extends Component<any, any> {
         });
       });
   }
-  getAggregationSheetList(appId) {
+  getAggregationSheetList(appId: string) {
     const { projectId } = this.props;
     this.setState({ aggregationSheetsLoading: true });
     syncTaskApi
@@ -158,7 +158,7 @@ export default class SheetModal extends Component<any, any> {
         });
       });
   }
-  setViewsData = (worksheetId, data) => {
+  setViewsData = (worksheetId: string, data) => {
     const { viewsData } = this.state;
     this.setState({
       viewsData: {
@@ -170,7 +170,7 @@ export default class SheetModal extends Component<any, any> {
       },
     });
   };
-  getWorksheetViews(worksheetId) {
+  getWorksheetViews(worksheetId: string) {
     const { views = [], loading, show } = this.state.viewsData[worksheetId] || {};
 
     if (loading) {

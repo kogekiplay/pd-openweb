@@ -282,7 +282,7 @@ export const formatSheetsToDropdown = sheets =>
 export const formatControlsToDropdown = controls =>
   controls.map(({ controlId, controlName }) => ({ text: controlName, value: controlId }));
 
-export const getControlByControlId = (controls, controlId, key?) => {
+export const getControlByControlId = (controls, controlId: string, key?) => {
   const control = _.find(controls, item => item.controlId === controlId) || {};
   return key ? get(control, key) : control;
 };
@@ -349,7 +349,7 @@ export const getAdvanceSetting = (data, key?) => {
   }
 };
 
-export const getRelationText = enumDefault => {
+export const getRelationText = (enumDefault: number) => {
   return (
     _.get(
       _.find(RELATION_OPTIONS, i => i.value === enumDefault && enumDefault),

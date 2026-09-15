@@ -83,7 +83,7 @@ export default function CascaderWidget(props) {
   /**
    * 获取目前层级
    */
-  const getLayer = rowId => {
+  const getLayer = (rowId: string) => {
     if (keywords) {
       let currentSearch = { currentItem: {}, currentLayer: 0 };
       (searchOptions || []).forEach(item => {
@@ -136,7 +136,7 @@ export default function CascaderWidget(props) {
   /**
    * 更新数据
    */
-  const deepDataUpdate = (key, options, data, rowId) => {
+  const deepDataUpdate = (key, options, data, rowId: string) => {
     let newOptions = [].concat(options);
 
     if (rowId) {

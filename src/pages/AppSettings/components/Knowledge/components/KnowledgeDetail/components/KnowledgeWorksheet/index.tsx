@@ -782,7 +782,7 @@ const KnowledgeWorksheet = props => {
             <div className="mBottom20">{_l('删除后，工作表中所有向量化内容将被永久清空，且无法被语义检索到。')}</div>
             <Checkbox
               text={_l('我确认删除所有向量化内容')}
-              onClick={checked => setDialogState(prev => ({ ...prev, isChecked: checked }))}
+              onClick={(checked: boolean) => setDialogState(prev => ({ ...prev, isChecked: checked }))}
             />
           </div>
         </Dialog>

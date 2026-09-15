@@ -201,7 +201,7 @@ function Func(props, ref) {
             <Switch
               size="small"
               checked={type === 'javascript'}
-              onClick={checked => {
+              onClick={(checked: boolean) => {
                 const tempValue = codeEditor.current ? codeEditor.current.getValue() : '';
                 const nextType = checked ? 'mdfunction' : 'javascript';
                 setPendingEditorValue(tempValue);

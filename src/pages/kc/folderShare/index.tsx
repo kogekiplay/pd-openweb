@@ -335,7 +335,7 @@ ShareFolder.prototype = {
 
     function getPathWidth() {
       return _.sum(
-        $path.map(function (index, ele) {
+        $path.map(function (index: number, ele) {
           return $(ele).width();
         }),
       );
@@ -344,7 +344,7 @@ ShareFolder.prototype = {
     function render(pathArray, cut?) {
       $path = $(
         _.compact(
-          pathArray.map(function (path, index) {
+          pathArray.map(function (path, index: number) {
             if (cut && index === 1) {
               return '<span class="ellipsis">...</span>';
             }
@@ -362,7 +362,7 @@ ShareFolder.prototype = {
   },
   getListHtml: function (nodes) {
     return nodes
-      .map(function (node, index) {
+      .map(function (node, index: number) {
         return fileItemTpl({
           index: index.toString(),
           isPicture: RegExpValidator.fileIsPicture('.' + node.ext),

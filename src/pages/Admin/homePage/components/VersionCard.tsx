@@ -212,7 +212,7 @@ export default function VersionCard(props) {
             <span className="remainTime">{_l('(剩余时间%0天)', data.leftDays || 0)}</span>
           </div>
           <ul className="inviteRules">
-            {(data.rules || []).map(({ inviteCount, achieveDays }, index) => (
+            {(data.rules || []).map(({ inviteCount, achieveDays }, index: number) => (
               <li key={inviteCount} style={{ flex: index + 1 }}>
                 <div className="achieveDays">
                   <span>{achieveDays}</span>

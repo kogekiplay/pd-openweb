@@ -119,7 +119,7 @@ function ChooseControl(props) {
               const isFull =
                 o.isFull || ([29, 34, 35].includes(o.type) && !canChooseForParent(props.flowData, o.dataSource));
 
-              const isValidName = name => {
+              const isValidName = (name: string) => {
                 return /^(?!.*@@)[^`]+$/.test(name);
               };
 
@@ -219,7 +219,7 @@ export default function ChooseControls(props) {
         }}
         key={'choose_control'}
         controlId={controlId}
-        showNext={controlId => {
+        showNext={(controlId: string) => {
           setState({
             controlId,
           });

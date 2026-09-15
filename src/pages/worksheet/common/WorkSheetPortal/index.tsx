@@ -164,7 +164,7 @@ const WorkSheetPortal = props => {
             {(isCharge && appPkg.viewHideNavi
               ? items
               : items.filter(item => [1, 4].includes(item.status) && !item.navigateHide)
-            ).map((data, index) => (
+            ).map((data, index: number) => (
               <AppItem
                 key={data.workSheetId}
                 appItem={{

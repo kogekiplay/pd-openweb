@@ -196,7 +196,7 @@ export function loadTop(projectId?) {
   };
 }
 
-export function changeFontSize(fontSize) {
+export function changeFontSize(fontSize: number) {
   safeLocalStorageSetItem(md.global.Account.accountId + '_fontsize', fontSize);
   return {
     type: 'POST_CHANGE_FONT_SIZE',
@@ -264,11 +264,11 @@ export function changeListType(inputOptions, showLoading = false) {
   };
 }
 
-export function changeSearchKeywords(keywords) {
+export function changeSearchKeywords(keywords: string) {
   return { type: 'POST_CHANGE_SEARCH_KEYWORDS', keywords };
 }
 
-export function searchAll(keywords) {
+export function searchAll(keywords: string) {
   return changeListType({ keywords });
 }
 
@@ -639,7 +639,7 @@ export function edit(args, successCallback, failCallback) {
   };
 }
 
-export function changeTitle(title) {
+export function changeTitle(title: string) {
   return {
     type: 'POST_CHANGE_TITLE',
     title,

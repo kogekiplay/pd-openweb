@@ -228,7 +228,7 @@ export default function PrintQrBarCode(props) {
     }
   }
 
-  function updatePreviewRowShareUrl(recordId) {
+  function updatePreviewRowShareUrl(recordId: string) {
     if (viewId) {
       worksheetAjax
         .getRowsShortUrl({

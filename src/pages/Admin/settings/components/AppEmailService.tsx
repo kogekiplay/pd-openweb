@@ -189,7 +189,7 @@ export default function AppEmailService(props) {
     });
   };
 
-  const removeApp = (serviceId, appId) => {
+  const removeApp = (serviceId, appId: string) => {
     if (serviceLoading[serviceId]) return;
 
     setServiceOperateLoading(serviceId, true);
@@ -219,7 +219,7 @@ export default function AppEmailService(props) {
     getSmtpEntityBindings({ keepExpanded: false });
   }, [projectId]);
 
-  const renderServiceCard = (service, index) => {
+  const renderServiceCard = (service, index: number) => {
     const isDefault = index === 0 && _.isEmpty(filterSceneEntityIds); // 第一个是默认服务
 
     return (

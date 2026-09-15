@@ -44,7 +44,7 @@ const renderEducationList = eduLists => {
   return (
     <div className="resumeWrap mTop10 mBottom10">
       <h5 className="Font14 bold">{_l('教育经历')}</h5>
-      {eduLists.map((item, index) => {
+      {eduLists.map((item, index: number) => {
         return (
           <div className={cx('resumeItem', { noBorder: index === eduLists.length - 1 })} key={index}>
             <div>

@@ -49,7 +49,7 @@ const REMOVED_BRAND_ICON_FALLBACK = {
 };
 
 // 用户代码可能写 Github / GithubIcon / LucideGithub 任一形式，统一归一到基名再查表。
-function resolveLucideIcon(name) {
+function resolveLucideIcon(name: string) {
   if (LucideIconComp[name]) return LucideIconComp[name];
 
   const base = String(name || '')

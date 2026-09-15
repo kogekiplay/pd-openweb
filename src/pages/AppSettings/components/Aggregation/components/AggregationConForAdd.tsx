@@ -59,7 +59,7 @@ export default function AddAggregation(props) {
     );
   };
 
-  const onChange = ({ control = {}, childrenControl }, worksheetId) => {
+  const onChange = ({ control = {}, childrenControl }, worksheetId: string) => {
     const controlData = childrenControl ? childrenControl : control;
     const aggregateDt = getNodeInfo(flowData, 'AGGREGATE');
     const { hs, aggFuncType, aggFuncName } = getAggFuncTypes(

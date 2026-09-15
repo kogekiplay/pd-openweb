@@ -199,7 +199,7 @@ export default class LineChart extends React.Component<any, any> {
             position: 'top-left',
             offsetX: legendOffsetX,
             itemName: {
-              formatter: (text, item, index) => {
+              formatter: (text, item, index: number) => {
                 let total = index === 0 ? total1 : total2;
                 return text + '：' + total;
               },
@@ -215,7 +215,7 @@ export default class LineChart extends React.Component<any, any> {
             flipPage: false,
           },
           tooltip: {
-            customContent: (title, items) => {
+            customContent: (title: string, items) => {
               const isVirtual = (_.find(items, v => _.get(v, 'data.date') === title) || {}).category === 'virtual';
               if (isVirtual) return null;
 
@@ -366,7 +366,7 @@ export default class LineChart extends React.Component<any, any> {
             position: 'top-left',
             offsetX: attachmentLegendOffsetX,
             itemName: {
-              formatter: (text, item, index) => {
+              formatter: (text, item, index: number) => {
                 const total = (_.find(subTypeTotal, v => v.subType === index + 1) || { size: 0 }).size;
                 return text + '：' + formatFileSize(total, 2);
               },
@@ -386,7 +386,7 @@ export default class LineChart extends React.Component<any, any> {
             maxRow: 2,
           },
           tooltip: {
-            customContent: (title, items) => {
+            customContent: (title: string, items) => {
               const currentTotal = _.reduce(items, (sum, item) => (sum = sum + Number(item.value)), 0);
               let unit = currentTotal > 0 ? _.get(items, '[0].data.unit') : total.slice(total.length - 2);
 

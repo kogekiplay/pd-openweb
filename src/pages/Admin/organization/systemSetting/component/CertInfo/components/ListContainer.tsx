@@ -28,7 +28,7 @@ export default function ListContainer(props) {
 
   return (
     <Wrapper className={className}>
-      {list.slice(0, showMore ? undefined : 5).map((item, index) => (
+      {list.slice(0, showMore ? undefined : 5).map((item, index: number) => (
         <div key={index} className="listItem">
           {renderItem(item)}
         </div>

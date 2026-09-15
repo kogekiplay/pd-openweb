@@ -88,7 +88,7 @@ export default class Files extends Component<any, any> {
         className="ChatPanel-SearchPanelContent ChatPanel-SearchPanel-Files"
         onScrollEnd={this.handleScrollEnd.bind(this)}
       >
-        {files.map((item, index) => (
+        {files.map((item, index: number) => (
           <FileItem item={item} key={item.fileId || index} />
         ))}
         <LoadDiv className={cx('loading', { Hidden: !loading })} size="small" />

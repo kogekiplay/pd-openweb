@@ -138,7 +138,7 @@ export default function DeleteOptionList({ collectionId, name, title, type, ...r
               return (
                 <div key={appId} className="mBottom20">
                   <div className="bold mBottom10">{appName || _l('其他')}</div>
-                  {data.map((item, index) => {
+                  {data.map((item, index: number) => {
                     const { controlId, controlName, worksheetId, worksheetName, worksheetType } = item;
                     return (
                       <div

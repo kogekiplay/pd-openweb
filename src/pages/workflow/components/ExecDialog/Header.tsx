@@ -470,7 +470,7 @@ export default class Header extends Component<any, any> {
                       onClickAwayExceptions={['.workflowExecPrintTrigger']}
                       onClickAway={() => this.setState({ moreOperationVisible: false })}
                     >
-                      {operationTypeList[1].map((item, index) => (
+                      {operationTypeList[1].map((item, index: number) => (
                         <MenuItem key={index} onClick={() => this.handleMoreOperation(OPERATION_LIST[item].id)}>
                           <Icon icon={OPERATION_LIST[item].icon} />
                           <span className="actionText">{OPERATION_LIST[item].text}</span>

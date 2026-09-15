@@ -31,7 +31,7 @@ export default function CheckboxComp(props) {
   const itemnames = getSwitchItemNames(props.control);
   const isChecked = filterType === FILTER_CONDITION_TYPE.EQ;
 
-  const handleChange = checked => {
+  const handleChange = (checked: boolean) => {
     onChange({
       filterType: checked ? FILTER_CONDITION_TYPE.NE : FILTER_CONDITION_TYPE.EQ,
       value: 1,

@@ -41,7 +41,7 @@ export const getAppId = params => {
   return appId;
 };
 
-export const toApp = appId => {
+export const toApp = (appId: string) => {
   //手机端来源
   if (browserIsMobile()) {
     window.location.replace(pathCompletion(`/mobile/app/${appId}`));
@@ -78,7 +78,7 @@ export const getCurrentId = cb => {
 };
 
 // 重新验证必须刷新整页以丢弃 PC 扫码状态，不能保留 mdAppId/wxState/status 等回调模式。
-export function restartPortalLogin(appId, customLink) {
+export function restartPortalLogin(appId: string, customLink) {
   const loginUrl = new URL(pathCompletion('/login', { hasDomain: false }), location.origin);
   const source = new URL(location.href);
   const appUrl = new URL(`app/${encodeURIComponent(appId)}`, loginUrl);
@@ -142,7 +142,7 @@ export const resetPortalUrl = () => {
 };
 
 //获取当前自定义链接的后缀
-export const getCurrentExt = (appId, suffix) => {
+export const getCurrentExt = (appId: string, suffix) => {
   const request = getRequest();
   const { ReturnUrl = '', customLink } = request;
 
@@ -182,7 +182,7 @@ export const getCurrentExt = (appId, suffix) => {
   return null;
 };
 
-export const goApp = (sessionId, appId, customLink) => {
+export const goApp = (sessionId, appId: string, customLink) => {
   setPssId(sessionId);
   const request = getRequest();
   let { ReturnUrl = '' } = request;

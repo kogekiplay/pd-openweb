@@ -322,7 +322,7 @@ function PublishDialog(props) {
               selectedList={selectedList}
               onChange={selectedList => setState({ selectedList, isCheckAll: selectedList.length >= list.length })}
               isCheckAll={isCheckAll}
-              onCheck={checked => setState({ selectedList: checked ? list.map(o => o.id) : [], isCheckAll: checked })}
+              onCheck={(checked: boolean) => setState({ selectedList: checked ? list.map(o => o.id) : [], isCheckAll: checked })}
             />
           </div>
         </Wrap>

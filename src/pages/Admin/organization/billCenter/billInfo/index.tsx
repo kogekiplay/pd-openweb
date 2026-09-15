@@ -191,7 +191,7 @@ const getBillingAccountName = createAccountInfo => {
   return createAccountInfo.fullName || createAccountInfo.fullname || createAccountInfo.accountId || _l('未知成员');
 };
 
-const getAgentBillingCacheKey = (projectId, traceId) => `${projectId}_${traceId}`;
+const getAgentBillingCacheKey = (projectId: string, traceId) => `${projectId}_${traceId}`;
 
 const formatMsDate = dateStr => {
   if (!dateStr) return '-';
@@ -650,7 +650,7 @@ export default function BillInfo({ match }) {
                 payType,
                 extendId,
               },
-              index,
+              index: number,
             ) => {
               const hasExtendId = !_.isNil(extendId) && !_.isEmpty(_.trim(String(extendId)));
               const canViewAgentBillingDetail = Number(recordType) === orderRecordType.Mingo && hasExtendId;

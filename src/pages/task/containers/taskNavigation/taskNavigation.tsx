@@ -465,7 +465,7 @@ class TaskNavigation extends Component<any, any> {
     }
 
     // 多个网络获取项目数据
-    $.map(networks, projectId => {
+    $.map(networks, (projectId: string) => {
       if (projectId) {
         $('.networkFolderList[data-projectid=' + projectId + ']')
           .find('.clipLoader')
@@ -1315,7 +1315,7 @@ class TaskNavigation extends Component<any, any> {
   /**
    * 获取各个网络数据
    */
-  getNetworkData(projectId, folders, callback?) {
+  getNetworkData(projectId: string, folders, callback?) {
     const { filterUserId } = this.props.taskConfig;
 
     ajaxRequest
@@ -1347,7 +1347,7 @@ class TaskNavigation extends Component<any, any> {
   /**
    * 渲染项目数据
    */
-  renderSlideFolder(data, projectId, callback) {
+  renderSlideFolder(data, projectId: string, callback) {
     const singleFolderTpl = singleFolder.replace('#include.singleFolderComm', singleFolderComm);
     const projectFolderTpl = projectFolder.replace('#include.singleFolderComm', singleFolderComm);
     const $folderList = projectId
@@ -1454,7 +1454,7 @@ class TaskNavigation extends Component<any, any> {
   /**
    * 生成项目文件夹
    */
-  builFileFolder(data, projectFolderTpl, projectId) {
+  builFileFolder(data, projectFolderTpl, projectId: string) {
     const { folderId } = this.props.taskConfig;
 
     // 存在
@@ -1477,7 +1477,7 @@ class TaskNavigation extends Component<any, any> {
   /**
    * 生成项目
    */
-  buildFolders(data, singleFolderTpl, projectId) {
+  buildFolders(data, singleFolderTpl, projectId: string) {
     if (data.folderList && data.folderList.length > 0) {
       const { folderId } = this.props.taskConfig;
       const allFolders = doT.template(singleFolderTpl)(data.folderList); // 数据
@@ -1791,7 +1791,7 @@ class TaskNavigation extends Component<any, any> {
   /**
    * 移动项目至指定文件夹(fileID空为移出)
    */
-  updateFolderIntoFile(projectId, folderId, fileId) {
+  updateFolderIntoFile(projectId: string, folderId, fileId) {
     ajaxRequest
       .updateFolderIntoFile({
         folderID: folderId,
@@ -1878,7 +1878,7 @@ class TaskNavigation extends Component<any, any> {
   /**
    * 解散项目文件夹
    */
-  abortProjectFolder(projectId, fileId) {
+  abortProjectFolder(projectId: string, fileId) {
     ajaxRequest
       .deleteUserFolderFile({
         ffileID: fileId,
@@ -2021,7 +2021,7 @@ class TaskNavigation extends Component<any, any> {
   /**
    * 隐藏项目
    */
-  updateFolderDisplay(projectId, folderId, isHidden) {
+  updateFolderDisplay(projectId: string, folderId, isHidden) {
     const that = this;
 
     ajaxRequest

@@ -468,7 +468,7 @@ function Operate(props) {
                 handleRemoveRelation(selectedRowIds);
                 break;
               case 'deleteRecords':
-                allowDeleteRowIds = selectedRowIds.filter(rowId => {
+                allowDeleteRowIds = selectedRowIds.filter((rowId: string) => {
                   const selectedRow = find(records, { rowid: rowId });
                   return selectedRow && selectedRow.allowdelete;
                 });

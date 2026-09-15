@@ -216,28 +216,28 @@ const Add = styled.div`
   }
 `;
 
-function addAttachmentIndex(submitData, enumDefault) {
+function addAttachmentIndex(submitData, enumDefault: number) {
   // 补充 index
   if ([2, 3].includes(enumDefault)) {
     // 旧的在前
-    submitData.attachmentData.forEach((data, index) => {
+    submitData.attachmentData.forEach((data, index: number) => {
       data.index = index;
     });
-    submitData.attachments.forEach((data, index) => {
+    submitData.attachments.forEach((data, index: number) => {
       data.index = submitData.attachmentData.length + index;
     });
-    submitData.knowledgeAtts.forEach((data, index) => {
+    submitData.knowledgeAtts.forEach((data, index: number) => {
       data.index = submitData.attachmentData.length + submitData.attachments.length + index;
     });
   } else {
     // 新的在前
-    submitData.attachments.forEach((data, index) => {
+    submitData.attachments.forEach((data, index: number) => {
       data.index = index;
     });
-    submitData.knowledgeAtts.forEach((data, index) => {
+    submitData.knowledgeAtts.forEach((data, index: number) => {
       data.index = submitData.attachments.length + index;
     });
-    submitData.attachmentData.forEach((data, index) => {
+    submitData.attachmentData.forEach((data, index: number) => {
       data.index = submitData.attachments.length + submitData.knowledgeAtts.length + index;
     });
   }
@@ -916,7 +916,7 @@ function CellAttachments(props, sourceRef) {
     setTemporaryKnowledgeAtts([]);
   }
 
-  const attachmentsComp = attachments.map((attachment, index) => (
+  const attachmentsComp = attachments.map((attachment, index: number) => (
     <Attachment
       showShape={showShape}
       objectFit={objectFit}
@@ -993,7 +993,7 @@ function CellAttachments(props, sourceRef) {
         onOk={() => {
           handleChange();
         }}
-        checkValueByFilterRegex={name => {
+        checkValueByFilterRegex={(name: string) => {
           const formData = isFunction(props.rowFormData) ? props.rowFormData() : props.rowFormData;
           return checkValueByFilterRegex(
             { advancedSetting },

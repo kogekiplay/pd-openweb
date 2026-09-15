@@ -72,7 +72,7 @@ export default function (props) {
     }
   }, [props.isFrequentLoginError]);
 
-  const getProjectLang = projectId => {
+  const getProjectLang = (projectId: string) => {
     appManagementController
       .getProjectLang({ projectId })
       .then(res => {

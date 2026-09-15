@@ -37,7 +37,7 @@ export default function SetHiddenControls(props) {
           size="small"
           text={_l('返回隐藏的字段')}
           checked={checked}
-          onClick={checked => {
+          onClick={(checked: boolean) => {
             if (checked) {
               setChecked(false);
               onChange(handleAdvancedSettingChange(data, { additionalids: '' }));

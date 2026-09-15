@@ -125,7 +125,7 @@ export default function SelectCountryDialog(props) {
         <SelectInfoWrap>
           <div className="countryList">
             {data.length > 0 ? (
-              data.map((item, index) => (
+              data.map((item, index: number) => (
                 <div key={item.name} className="countryItem">
                   <span className="countryName overflow_ellipsis">{item.name}</span>
                   <i
@@ -207,7 +207,7 @@ export function SelectAreaCountryDialog(props) {
         <SelectInfoWrap>
           <div className="countryList">
             {selectableData.length > 0 ? (
-              selectableData.map((id, index) => {
+              selectableData.map((id, index: number) => {
                 const name = _.get(
                   _.find(data, d => d.id === id),
                   'name',

@@ -126,7 +126,7 @@ const Attachments = ({ disabled, scanId, scanInfo, defaultAttachments }) => {
       <Content>
         {!!attachments.length && (
           <AttachmentsList>
-            {attachments.map((attachment, index) => (
+            {attachments.map((attachment, index: number) => (
               <AttachmentItem attachment={attachment} key={index} />
             ))}
           </AttachmentsList>

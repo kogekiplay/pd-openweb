@@ -362,7 +362,7 @@ export default function ViewInactive({ projectId }) {
               }}
               total={totalCount}
               pageIndex={pageIndex}
-              changePage={pageIndex => setState({ pageIndex })}
+              changePage={(pageIndex: number) => setState({ pageIndex })}
             />
           )}
         </DialogContent>

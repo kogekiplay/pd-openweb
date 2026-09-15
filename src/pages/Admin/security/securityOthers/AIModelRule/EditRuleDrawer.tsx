@@ -352,7 +352,7 @@ export default function EditRuleDrawer(props) {
     });
   };
 
-  const handleRemoveApp = appId => {
+  const handleRemoveApp = (appId: string) => {
     setState({ apps: apps.filter(a => a.appId !== appId) });
   };
 

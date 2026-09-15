@@ -149,12 +149,12 @@ let Gunter = class Gunter extends Component<any, any> {
     }
   }
 
-  handleInitGroupingVisible = viewId => {
+  handleInitGroupingVisible = (viewId: string) => {
     const gunterGroupingVisible = localStorage.getItem(`gunterGroupingVisible-${viewId}`) === 'false' ? false : true;
     this.props.updateGroupingVisible(isGunterExport ? true : gunterGroupingVisible);
   };
 
-  getDirectoryWidth(viewId) {
+  getDirectoryWidth(viewId: string) {
     const gunterDirectoryWidth = localStorage.getItem(`gunterDirectoryWidth-${viewId}`);
     const worksheetContentBoxEl = document.querySelector('.worksheetSheet');
     const contentBoxWidth = worksheetContentBoxEl ? worksheetContentBoxEl.clientWidth / 3 : 210;

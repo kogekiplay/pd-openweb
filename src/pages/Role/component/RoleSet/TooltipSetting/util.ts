@@ -15,7 +15,7 @@ export const getDecryptCheckboxProps = fields => {
   return { isAll, isPart };
 };
 
-export const formatFields = (checked, fieldId, key, fields) => {
+export const formatFields = (checked: boolean, fieldId, key, fields) => {
   const changeField = field => {
     if (key === 'notEdit' && !checked) {
       return {

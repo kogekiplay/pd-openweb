@@ -14,7 +14,7 @@ export default function WeChatServiceAccountList(props) {
           )}
         </div>
       )}
-      {weiXinInfo.map((item, index) => {
+      {weiXinInfo.map((item, index: number) => {
         const { appId, nickName } = item;
 
         return (

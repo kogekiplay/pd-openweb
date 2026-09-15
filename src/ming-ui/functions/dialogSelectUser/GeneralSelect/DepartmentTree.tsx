@@ -288,7 +288,7 @@ export default class DepartmentTree extends Component<any, any> {
     );
   }
 
-  onlyShowJoinDepartment = checked => {
+  onlyShowJoinDepartment = (checked: boolean) => {
     this.setState({ onlyJoinDepartmentChecked: !checked });
     safeLocalStorageSetItem('isCheckedOnlyMyJoin', !checked);
     this.props.userAction();

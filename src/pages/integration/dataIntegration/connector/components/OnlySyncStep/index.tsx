@@ -667,7 +667,7 @@ export default function OnlySyncStep(props) {
             size="small"
             text={_l('在本次同步数据之前，彻底清空目标表数据')}
             checked={_.get(sheetData, [currentTab.db, currentTab.table, 'isCleanDestTableData'])}
-            onClick={checked => {
+            onClick={(checked: boolean) => {
               !checked
                 ? Dialog.confirm({
                     title: _l('清空目标表数据'),
@@ -904,7 +904,7 @@ export default function OnlySyncStep(props) {
                         <SheetGroupSelect
                           appId={dest.id}
                           value={_.get(sheetData, [currentTab.db, currentTab.table, 'appSectionId'])}
-                          onChange={appSectionId => {
+                          onChange={(appSectionId: string) => {
                             onChangeStateData(sheetData, setSheetData, { appSectionId });
                           }}
                         />

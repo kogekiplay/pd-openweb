@@ -71,7 +71,7 @@ class WorksheetRowLand extends Component<any, any> {
       }
     }
   }
-  navigate(worksheetId, rowId) {
+  navigate(worksheetId: string, rowId: string) {
     homeAppAjax.getAppSimpleInfo({ workSheetId: worksheetId }).then(data => {
       if (data.appId) {
         navigateTo(`/app/${data.appId}/${worksheetId}/row/${rowId}${location.search || ''}`, true);

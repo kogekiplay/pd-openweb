@@ -80,11 +80,11 @@ const list = [
   },
 ];
 
-const getTranslatedRoleInfo = (appId, role = {}) => getTranslateInfo(appId, null, role.roleId);
+const getTranslatedRoleInfo = (appId: string, role = {}) => getTranslateInfo(appId, null, role.roleId);
 
-const getTranslatedRoleName = (appId, role = {}) => getTranslatedRoleInfo(appId, role).name || role.name;
+const getTranslatedRoleName = (appId: string, role = {}) => getTranslatedRoleInfo(appId, role).name || role.name;
 
-const getTranslatedRoleDescription = (appId, role = {}) =>
+const getTranslatedRoleDescription = (appId: string, role = {}) =>
   getTranslatedRoleInfo(appId, role).description || role.description;
 
 class Con extends React.Component<any, any> {
@@ -225,7 +225,7 @@ class Con extends React.Component<any, any> {
               className="roleSearch"
               placeholder={_l('搜索角色')}
               value={keywords}
-              onChange={keywords => {
+              onChange={(keywords: string) => {
                 this.setState({
                   keywords,
                   navList: roleList.filter(

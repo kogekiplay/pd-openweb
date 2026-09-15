@@ -97,7 +97,7 @@ export default class Discuss extends Component<any, any> {
     const { loading, discussList, pageIndex } = this.state;
     const children = (
       <div className="logBox">
-        {discussList.map((item, index) => {
+        {discussList.map((item, index: number) => {
           return (
             <div className="logItem" key={index}>
               <Icon icon={[undefined, 'plus', 'edit', 'trash', 'restart', 'download', 'reply'][item.type]} />

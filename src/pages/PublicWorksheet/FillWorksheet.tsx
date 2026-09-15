@@ -266,7 +266,7 @@ export default class FillWorksheet extends React.Component<any, any> {
         ref={this.sectionTab}
         tabControls={tabData}
         widgetStyle={publicWorksheetInfo.advancedSetting}
-        onClick={controlId => {
+        onClick={(controlId: string) => {
           if (this.customwidget.current) {
             this.customwidget.current.setActiveTabControlId(controlId);
           }

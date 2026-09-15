@@ -51,7 +51,7 @@ const CheckWidget = props => {
   const itemnames = getSwitchItemNames(props);
   const isChecked = Number(value) === 1;
 
-  const onChange = checked => {
+  const onChange = (checked: boolean) => {
     props.onChange(checked ? '0' : '1');
   };
 

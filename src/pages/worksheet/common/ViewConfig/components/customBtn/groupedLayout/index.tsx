@@ -185,7 +185,7 @@ export default function CustomBtnGroupedLayout({
                       collapsed={isGroupCollapsed}
                       listExpanded={!isGroupCollapsed}
                       onToggleCollapsed={() => toggleGroupCollapsed(seg.id)}
-                      onRename={name => handleRenameGroup(si, name)}
+                      onRename={(name: string) => handleRenameGroup(si, name)}
                       onRemoveGroup={() => handleRemoveGroup(si)}
                       onEditFromMenu={() => handleEditGroup(si)}
                       moreKey={`group:${seg.id}`}

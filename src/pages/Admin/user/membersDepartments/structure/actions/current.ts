@@ -28,7 +28,7 @@ export const UPDATE_SELECT_ALL = 'UPDATE_SELECT_ALL';
  * action: 设置当前网络id
  * @param projectId
  */
-export const updateProjectId = projectId => ({
+export const updateProjectId = (projectId: string) => ({
   type: UPDATE_PROJECT_ID,
   projectId,
 });
@@ -70,7 +70,7 @@ export const removeCursor = () => ({
  * action: 打开对应accountId用户的设置列表
  * @param accountId
  */
-export const updateUserOpList = accountId => ({
+export const updateUserOpList = (accountId: string) => ({
   type: UPDATE_ACTIVE_OPLIST,
   accountId,
 });
@@ -112,7 +112,7 @@ export const updateSelectAll = isSelectAll => ({
  * action: 获取网络下未激活的用户数
  * @param projectId
  */
-export const fetchApproval = projectId => dispatch => {
+export const fetchApproval = (projectId: string) => dispatch => {
   return dispatch({
     [CALL_API]: {
       types: [APPROVAL_LOAD, APPROVAL_SUCCESS, APPROVAL_FAILED],
@@ -121,7 +121,7 @@ export const fetchApproval = projectId => dispatch => {
   });
 };
 
-export const fetchInActive = projectId => dispatch => {
+export const fetchInActive = (projectId: string) => dispatch => {
   return dispatch({
     [CALL_API]: {
       types: [INACTIVE_LOAD, INACTIVE_SUCCESS, INACTIVE_FAILED],

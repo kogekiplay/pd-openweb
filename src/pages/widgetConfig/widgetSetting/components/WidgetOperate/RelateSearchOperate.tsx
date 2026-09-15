@@ -25,7 +25,7 @@ export default function RelateSearchOperate(props) {
           size="small"
           text={_l('允许新增记录')}
           checked={enumDefault2 !== 1}
-          onClick={checked => {
+          onClick={(checked: boolean) => {
             onChange({ enumDefault2: checked ? 1 : 0 });
           }}
         />
@@ -35,7 +35,7 @@ export default function RelateSearchOperate(props) {
           size="small"
           text={_l('允许打开记录')}
           checked={+allowlink}
-          onClick={checked =>
+          onClick={(checked: boolean) =>
             onChange(handleAdvancedSettingChange(data, { allowlink: +!checked, openview: checked ? '' : openview }))
           }
         />
@@ -71,7 +71,7 @@ export default function RelateSearchOperate(props) {
           <Checkbox
             size="small"
             checked={allowexport === '1'}
-            onClick={checked => onChange(handleAdvancedSettingChange(data, { allowexport: String(+!checked) }))}
+            onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { allowexport: String(+!checked) }))}
           >
             <span style={{ marginRight: '4px' }}>{_l('允许导出')}</span>
             <Tooltip placement="bottom" title={_l('勾选后支持在主记录详情中将查询到的可见记录导出为 Excel')}>

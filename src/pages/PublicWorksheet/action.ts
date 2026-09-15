@@ -93,7 +93,7 @@ async function replacePublicWorksheetTranslateInfo(data) {
   };
 }
 
-export function getPublicWorksheetInfo(worksheetId, cb) {
+export function getPublicWorksheetInfo(worksheetId: string, cb) {
   publicWorksheetAjax.getPublicWorksheetInfo({ worksheetId }).then(async data => {
     data = await replacePublicWorksheetTranslateInfo(data);
     const controls: FormControl[] = getVisibleControls(data);
@@ -323,7 +323,7 @@ function fillWxInfo(formData: FormControl[], weChatSetting) {
   return data;
 }
 
-async function fillRowRelationRows(control, rowId, worksheetId) {
+async function fillRowRelationRows(control, rowId: string, worksheetId: string) {
   let filledControl = control;
   await worksheetAjax
     .getRowRelationRows({

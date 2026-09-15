@@ -202,7 +202,7 @@ function RoleSelect(props) {
           className="roleSearch"
           placeholder={_l('搜索')}
           value={search}
-          onChange={keywords => setSearch(keywords.trim())}
+          onChange={(keywords: string) => setSearch(keywords.trim())}
         />
       </div>
       <ul className="roleSelectList flex">
@@ -225,7 +225,7 @@ function RoleSelect(props) {
                 {type === 1 && (
                   <Checkbox
                     checked={value.includes(item.roleId)}
-                    onClick={checked => changeValue(item.roleId, !checked)}
+                    onClick={(checked: boolean) => changeValue(item.roleId, !checked)}
                   />
                 )}
                 <span className="flex overflow_ellipsis valignWrapper">

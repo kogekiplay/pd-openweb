@@ -53,7 +53,7 @@ export default class PrintOptDialog extends Component<any, any> {
       workflow: props.workflow,
     };
   }
-  toggleCheckItem = function (controlId) {
+  toggleCheckItem = function (controlId: string) {
     const controlOption = this.state.controlOption;
     const index = controlOption.indexOf(controlId);
     let formDetailEvaluateLength = 0;
@@ -294,7 +294,7 @@ export default class PrintOptDialog extends Component<any, any> {
                 }
               })
               .map(
-                (item, index) =>
+                (item, index: number) =>
                   !item.printHide && (
                     <Checkbox
                       className="controlOptionItem mBottom15"
@@ -324,7 +324,7 @@ export default class PrintOptDialog extends Component<any, any> {
             <div className="formDetailEvaluate">
               {this.state.reqInfo.formControls &&
                 this.state.reqInfo.formControls.map(
-                  (formControlItem, index) =>
+                  (formControlItem, index: number) =>
                     formControlItem.tempControls.filter(item => item.needEvaluate).length > 0 &&
                     formControlItem.tempControls.filter(item => !item.printHide).length > 0 && (
                       <Checkbox

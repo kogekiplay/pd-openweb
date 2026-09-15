@@ -312,7 +312,7 @@ export class UploadFileWrapper extends Component<any, any> {
     this.uploading = locked;
     this.setBrowseDisabled(uploader, locked);
   }
-  setBrowseDisabled(uploader, disabled) {
+  setBrowseDisabled(uploader, disabled: boolean) {
     const target = uploader || this.currentFile;
 
     if (target && target.disableBrowse) {
@@ -400,7 +400,7 @@ export default class AttachmentList extends Component<any, any> {
     const newFiles = attachments.filter(item => item.fileID !== fileID);
     this.props.onChange(newFiles, true);
   }
-  previewAttachment(index) {
+  previewAttachment(index: number) {
     const { attachments, hideDownload } = this.props;
     const { updateTime } = attachments[index];
     const hideFunctions = ['editFileName'];
@@ -428,7 +428,7 @@ export default class AttachmentList extends Component<any, any> {
       hideFunctions,
     });
   }
-  renderImage(item, index) {
+  renderImage(item, index: number) {
     const isKc = item.refId ? true : false;
     const path = item.previewUrl || item.viewUrl || item.url || '';
     const url = isKc
@@ -453,7 +453,7 @@ export default class AttachmentList extends Component<any, any> {
       </div>
     );
   }
-  renderFile(item, index) {
+  renderFile(item, index: number) {
     const fileExt = getClassNameByExt((item.fileExt || item.ext).replace('.', ''));
     return (
       <div
@@ -506,7 +506,7 @@ export default class AttachmentList extends Component<any, any> {
     const emptys = Array.from({ length: 6 });
     return (
       <div className="attachmentFiles flexRow">
-        {attachments.map((item, index) =>
+        {attachments.map((item, index: number) =>
           'progress' in item
             ? this.renderProgress(item)
             : RegExpValidator.fileIsPicture(item.fileExt || item.ext)

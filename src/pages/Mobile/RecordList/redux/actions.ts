@@ -330,7 +330,7 @@ export const loadWorksheet = noNeedGetApp => (dispatch: AppDispatch, getState: G
     });
 };
 
-export const loadSavedFilters = worksheetId => (dispatch: AppDispatch) => {
+export const loadSavedFilters = (worksheetId: string) => (dispatch: AppDispatch) => {
   if (!worksheetId) return;
   sheetAjax.getWorksheetFilters({ worksheetId }).then(data => {
     let filters = data.map(formatOriginFilterGroupValue);
@@ -650,7 +650,7 @@ export const loadGroupMore = groupKey => (dispatch: AppDispatch, getState: GetSt
 
         const buttonsCheckStatus = {};
         result.forEach(item => {
-          item.rowIds.forEach(rowId => {
+          item.rowIds.forEach((rowId: string) => {
             buttonsCheckStatus[`${rowId}-${item.btnId}`] = true;
           });
         });
@@ -671,7 +671,7 @@ export const unshiftSheetRow = data => (dispatch: AppDispatch) => {
   });
 };
 
-export const changePageIndex = pageIndex => (dispatch: AppDispatch, getState: GetState) => {
+export const changePageIndex = (pageIndex: number) => (dispatch: AppDispatch, getState: GetState) => {
   const { sheetView, sheetRowLoading, isPullRefreshing } = getState().mobile;
   const index = pageIndex || sheetView.pageIndex + 1;
 
@@ -836,7 +836,7 @@ export const changeMobileGroupFilters = data => (dispatch: AppDispatch) => {
   dispatch({ type: 'CHANGE_MOBILE_GROUPFILTERS', data });
 };
 
-export const changeMobielSheetLoading = loading => (dispatch: AppDispatch) => {
+export const changeMobielSheetLoading = (loading: boolean) => (dispatch: AppDispatch) => {
   dispatch({ type: 'MOBILE_WORK_SHEET_UPDATE_LOADING', loading });
 };
 
@@ -965,7 +965,7 @@ export const loadBoardViewNextGroup = ({ callback = _.noop }) => {
         const existedKeys = boardData.map(item => item.key);
         const filterData = data
           .filter(item => !_.includes(existedKeys, item.key))
-          .map((item, index) => ({ ...item, sort: existedKeys.length + index + 1 }));
+          .map((item, index: number) => ({ ...item, sort: existedKeys.length + index + 1 }));
         dispatch(changeBoardViewData(boardData.concat(filterData)));
         dispatch(initBoardViewRecordCount({ ...boardViewRecordCount, ...dealBoardViewRecordCount(filterData) }));
         let nextBoardViewState = { kanbanIndex: nextKanbanIndex, hasMoreData };
@@ -1299,13 +1299,13 @@ export const resetCalendarNotScheduled = () => {
   };
 };
 
-export const deleteCalendarNotScheduled = rowid => {
+export const deleteCalendarNotScheduled = (rowid: string) => {
   return dispatch => {
     dispatch({ type: 'MOBILE_DELETE_CALENDAR_NOT_SCHEDULED', rowid });
   };
 };
 
-export const updateCalendarNotScheduled = (rowid, rowData = {}) => {
+export const updateCalendarNotScheduled = (rowid: string, rowData = {}) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const sheet = getState().mobile;
     const { calendarView } = sheet;

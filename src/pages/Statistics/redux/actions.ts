@@ -487,7 +487,7 @@ export const requestOriginalData = data => {
 let worksheetInfoRequest: ApiResult | null = null;
 let worksheetFilterByIdRequest = null;
 
-export const getWorksheetInfo = worksheetId => {
+export const getWorksheetInfo = (worksheetId: string) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { currentReport } = getState().statistics;
     const { filter } = currentReport;
@@ -1124,7 +1124,7 @@ export const addValueAxis = (key, control, isRequest = true) => {
   };
 };
 
-export const addTargetValueAxis = (index, control) => {
+export const addTargetValueAxis = (index: number, control) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { currentReport } = getState().statistics;
     const { advancedSetting = {} } = control;
@@ -1163,7 +1163,7 @@ export const addTargetValueAxis = (index, control) => {
   };
 };
 
-export const removeTargetValueAxis = index => {
+export const removeTargetValueAxis = (index: number) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { currentReport } = getState().statistics;
     const { targetList = [] } = currentReport.config || {};
@@ -1258,7 +1258,7 @@ export const addYaxisList = (data, isRequest = true) => {
   };
 };
 
-export const addIndexYaxisList = (data, index, isRequest = true) => {
+export const addIndexYaxisList = (data, index: number, isRequest = true) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { currentReport } = getState().statistics;
     const { reportType, yaxisList, displaySetup, summary } = currentReport;

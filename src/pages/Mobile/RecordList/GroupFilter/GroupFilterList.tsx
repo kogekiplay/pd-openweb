@@ -538,7 +538,7 @@ const GroupFilterList = props => {
       return (
         <div className="breadNavbar" ref={breadNavBar}>
           <Breadcrumb separator={''}>
-            {breadlist.reverse().map((item, index) => {
+            {breadlist.reverse().map((item, index: number) => {
               return (
                 <Breadcrumb.Item
                   key={item.value}
@@ -742,7 +742,7 @@ const GroupFilterList = props => {
     );
   };
 
-  const getSearchRecordResult = keywords => {
+  const getSearchRecordResult = (keywords: string) => {
     let param = keywords
       ? {}
       : source.type === 35

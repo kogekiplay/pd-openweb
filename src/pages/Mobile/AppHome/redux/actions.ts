@@ -4,7 +4,7 @@ import favoriteAjax from 'src/api/favorite';
 import homeAppAjax from 'src/api/homeApp';
 import type { AppDispatch, GetState } from 'src/redux/types';
 
-export const getMyApp = (projectId, isPullRefresh?) => dispatch => {
+export const getMyApp = (projectId: string, isPullRefresh?) => dispatch => {
   if (!isPullRefresh) {
     dispatch({ type: 'MOBILE_FETCHHOMELIST_START' });
   }
@@ -81,7 +81,7 @@ export const markedGroup =
     });
   };
 
-export const getHomePlatformSetting = projectId => dispatch => {
+export const getHomePlatformSetting = (projectId: string) => dispatch => {
   homeAppAjax.getHomePlatformSetting({ projectId }).then(res => {
     dispatch({
       type: 'PLATE_FORM_SETTING',
@@ -90,7 +90,7 @@ export const getHomePlatformSetting = projectId => dispatch => {
   });
 };
 
-export const myPlatform = (projectId, isPullRefresh) => dispatch => {
+export const myPlatform = (projectId: string, isPullRefresh) => dispatch => {
   if (!isPullRefresh) {
     dispatch({ type: 'MOBILE_FETCHHOMELIST_START' });
   }
@@ -130,7 +130,7 @@ export const myPlatform = (projectId, isPullRefresh) => dispatch => {
   });
 };
 
-export const getAllFavorites = projectId => dispatch => {
+export const getAllFavorites = (projectId: string) => dispatch => {
   favoriteAjax.getAllFavorites({ projectId, isRefresh: 1 }).then(res => {
     dispatch({
       type: 'COLLECT_RECORDS',
@@ -139,7 +139,7 @@ export const getAllFavorites = projectId => dispatch => {
   });
 };
 
-export const getAllCollectCharts = projectId => dispatch => {
+export const getAllCollectCharts = (projectId: string) => dispatch => {
   favoriteAjax.getAllFavorites({ projectId, type: 2, isRefresh: 1 }).then(res => {
     dispatch({
       type: 'COLLECT_CHARTS',

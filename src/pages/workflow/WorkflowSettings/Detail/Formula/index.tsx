@@ -339,7 +339,7 @@ export default class Formula extends Component<any, any> {
             className="InlineFlex"
             text={_l('参与计算的字段值为空时，视为0')}
             checked={data.nullZero}
-            onClick={checked => this.updateSource({ nullZero: !checked })}
+            onClick={(checked: boolean) => this.updateSource({ nullZero: !checked })}
           />
         </div>
       </Fragment>
@@ -521,7 +521,7 @@ export default class Formula extends Component<any, any> {
           ]}
           value={data.unit}
           border
-          onChange={unit => this.updateSource({ unit })}
+          onChange={(unit: string) => this.updateSource({ unit })}
         />
 
         {_.includes([1, 3], data.unit) && this.renderDateType('showFormat', true)}
@@ -614,7 +614,7 @@ export default class Formula extends Component<any, any> {
             className="InlineFlex"
             text={_l('按汇总对象数量限制返回结果')}
             checked={data.limit}
-            onClick={checked => this.updateSource({ limit: !checked })}
+            onClick={(checked: boolean) => this.updateSource({ limit: !checked })}
           />
         </div>
       </Fragment>
@@ -885,7 +885,7 @@ export default class Formula extends Component<any, any> {
           }
           border
           openSearch
-          onChange={appId => {
+          onChange={(appId: string) => {
             if (appId === 'other') {
               this.setState({ showOtherWorksheet: true });
             } else {
@@ -941,7 +941,7 @@ export default class Formula extends Component<any, any> {
   renderTotalMethod() {
     const { data } = this.state;
 
-    const getTotalTypes = controlId => {
+    const getTotalTypes = (controlId: string) => {
       const currentControl = _.find(data.controls, o => o.controlId === controlId);
       return getSummaryInfo(currentControl.type, currentControl);
     };
@@ -1016,7 +1016,7 @@ export default class Formula extends Component<any, any> {
             className="InlineFlex"
             text={_l('汇总结果为空时，视为0')}
             checked={data.nullZero}
-            onClick={checked => this.updateSource({ nullZero: !checked })}
+            onClick={(checked: boolean) => this.updateSource({ nullZero: !checked })}
           />
         </div>
       </Fragment>
@@ -1026,7 +1026,7 @@ export default class Formula extends Component<any, any> {
   /**
    * 切换工作表
    */
-  switchWorksheet = (appId, name?, otherApkId = '', otherApkName = '') => {
+  switchWorksheet = (appId: string, name?, otherApkId = '', otherApkName = '') => {
     const { data } = this.state;
     const appList = _.cloneDeep(data.appList);
 
@@ -1137,7 +1137,7 @@ export default class Formula extends Component<any, any> {
             selectedAppId={this.props.relationId}
             selectedWorksheetId={data.appId}
             visible
-            onOk={(selectedAppId, worksheetId, obj) => {
+            onOk={(selectedAppId, worksheetId: string, obj) => {
               const isCurrentApp = this.props.relationId === selectedAppId;
               this.switchWorksheet(
                 worksheetId,

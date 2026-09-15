@@ -27,7 +27,7 @@ export default class Skeleton extends Component<any, any> {
     return (
       <div className={cx('loadingSkeleton', className, { active })} style={style}>
         <ul style={{ flexDirection: direction }}>
-          {widths.map((width, index) => (
+          {widths.map((width: number, index: number) => (
             <li key={index} style={{ width, height, ...itemStyle }} className={cx('loadingParagraph', itemClassName)} />
           ))}
         </ul>

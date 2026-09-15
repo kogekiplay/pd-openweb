@@ -18,7 +18,7 @@ export default class DataContrast extends Component<any, any> {
       customRangeVisible: displaySetup.contrastType === 5 && filter.customRangeValue,
     };
   }
-  handleChangeLifecycle = checked => {
+  handleChangeLifecycle = (checked: boolean) => {
     this.props.onChangeDisplaySetup({
       isLifecycle: checked,
       lifecycleValue: 0,

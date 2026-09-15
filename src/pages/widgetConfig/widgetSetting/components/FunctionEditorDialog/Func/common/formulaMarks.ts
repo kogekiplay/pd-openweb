@@ -8,7 +8,7 @@ import { functions } from '../enum';
  * 换成 CM6 的扁平偏移量（CM6 的 Decoration 只认偏移量）。
  *
  * 为什么要抽出来：这 5 条就是公式编辑器的全部校验逻辑，而它们只依赖文本、不依赖编辑器实例。
- * 抽成纯函数后可以脱离 DOM 穷举测试（见 tools/verify-cm6-formulamarks.cjs），
+ * 抽成纯函数后可以脱离 DOM 穷举测试（见 tools/verify-cm6-formulamarks.ts），
  * 而 CM6 那边只负责把结果翻译成 Decoration —— 这样迁移的风险面就从「整个编辑器」缩到「翻译层」。
  *
  * 注意 markFunction / markSymbol 没有搬：它们在 CM5 版的 markElements() 里是被注释掉的死代码。

@@ -29,7 +29,7 @@ const TABS = [
   { text: _l('自定义'), value: 1 },
 ];
 
-const isCustomIcon = icon => !icon.startsWith('sys_');
+const isCustomIcon = (icon: string) => !icon.startsWith('sys_');
 
 const getSystemTypeScrollTop = () => {
   SYSTEM_TYLE.forEach((item, index) => {

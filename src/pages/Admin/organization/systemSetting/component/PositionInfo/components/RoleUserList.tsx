@@ -26,7 +26,7 @@ class RoleUserList extends Component<any, any> {
             <Checkbox
               clearselected={!_.isEmpty(temp) && !isSelectAll}
               checked={isSelectAll || !_.isEmpty(temp)}
-              onClick={checked => {
+              onClick={(checked: boolean) => {
                 let ids = [];
 
                 if (!checked || (!_.isEmpty(selectUserIds) && selectUserIds.length !== userList.length)) {
@@ -53,7 +53,7 @@ class RoleUserList extends Component<any, any> {
           <td className="checkBoxCol">
             <Checkbox
               checked={_.includes(selectUserIds, item.accountId)}
-              onClick={checked => {
+              onClick={(checked: boolean) => {
                 let ids = [...selectUserIds];
 
                 if (!checked) {

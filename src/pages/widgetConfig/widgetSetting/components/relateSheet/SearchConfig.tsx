@@ -154,7 +154,7 @@ export default function ApiSearchConfig(props) {
               <Checkbox
                 checked={clicksearch === '1'}
                 text={_l('在搜索后显示可选记录')}
-                onClick={checked => {
+                onClick={(checked: boolean) => {
                   setState({ clicksearch: checked ? '0' : '1' });
                 }}
               />

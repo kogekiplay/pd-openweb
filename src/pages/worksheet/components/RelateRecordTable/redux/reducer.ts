@@ -127,7 +127,7 @@ function changes(state = cloneDeep(initialChanges), action: ReduxAction) {
         addedRecordIds: state.addedRecordIds.filter(recordId => !includes(action.recordIds, recordId)),
         addedRecords: state.addedRecords.filter(record => !includes(action.recordIds, record.rowid)),
         deletedRecordIds: uniq(
-          state.deletedRecordIds.concat(action.recordIds.filter(recordId => !includes(state.addedRecordIds, recordId))),
+          state.deletedRecordIds.concat(action.recordIds.filter((recordId: string) => !includes(state.addedRecordIds, recordId))),
         ),
       };
     case 'DELETE_ALL':

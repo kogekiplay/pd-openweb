@@ -17,7 +17,7 @@ export default function PublicFormDisplay(props) {
 
   const [activeWidget, setActiveWidget] = useState({});
 
-  const handleHide = controlId => {
+  const handleHide = (controlId: string) => {
     const nextControls = controls.filter(item => item.controlId !== controlId);
     onChange(nextControls, controlId);
   };

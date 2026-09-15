@@ -58,7 +58,7 @@ export default props => {
   };
 
   const renderSortableTab = ({ item, DragHandle, index }) => {
-    const handleChangeName = name => {
+    const handleChangeName = (name: string) => {
       handleChangeConfig({
         tabs: tabs.map(n => {
           if (n.id === item.id) {

@@ -182,7 +182,7 @@ class TaskControl extends Component<any, any> {
   /**
    * 删除附件
    */
-  deleteFile(controlId, delFile, newFiles) {
+  deleteFile(controlId: string, delFile, newFiles) {
     const { taskId } = this.props;
 
     deleteAttachment(
@@ -284,7 +284,7 @@ class TaskControl extends Component<any, any> {
               data={controlData}
               widgetStyle={{ align_pc: '1', titlelayout_pc: '2', titlewidth_pc: '84' }}
               onChange={(values, ids, { controlId }) => this.updateFieldsData({ controlId })}
-              onBlur={controlId => this.updateFieldsData({ isBlur: true, controlId })}
+              onBlur={(controlId: string) => this.updateFieldsData({ isBlur: true, controlId })}
             />
           </div>
         )}

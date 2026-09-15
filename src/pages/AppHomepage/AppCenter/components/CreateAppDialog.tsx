@@ -148,7 +148,7 @@ const CreateAppDialog = props => {
               className="w100"
               placeholder={_l('请输入')}
               value={appInfo.name}
-              onChange={name => setAppInfo(values => ({ ...values, name }))}
+              onChange={(name: string) => setAppInfo(values => ({ ...values, name }))}
             />
           </div>
         </div>

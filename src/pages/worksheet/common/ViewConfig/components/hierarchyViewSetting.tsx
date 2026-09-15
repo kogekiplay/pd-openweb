@@ -218,7 +218,7 @@ export default function HierarchyViewSetting(props) {
     controlLoading: false,
   });
 
-  const switchActive = index => {
+  const switchActive = (index: number) => {
     if (index === activeIndex) {
       setSetting({ activeIndex: -1 });
     } else {
@@ -282,7 +282,7 @@ export default function HierarchyViewSetting(props) {
     });
   };
 
-  const deleteViewControl = index => {
+  const deleteViewControl = (index: number) => {
     if (index <= 1) {
       handleChange({
         viewControls: [
@@ -335,7 +335,7 @@ export default function HierarchyViewSetting(props) {
 
   return (
     <HierarchyViewSettingWrap hsList={viewControls.length > 0}>
-      {viewControls.map((item, index) => {
+      {viewControls.map((item, index: number) => {
         const visible = activeIndex === index;
         return item.worksheetId === currentSheetInfo.worksheetId ? (
           <li className="currentSheet">

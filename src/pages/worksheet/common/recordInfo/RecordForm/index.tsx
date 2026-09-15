@@ -459,7 +459,7 @@ function RecordForm(props) {
         tabControls={tabControls}
         widgetStyle={widgetStyle}
         ref={sectionTab}
-        onClick={controlId => handleSectionClick(controlId)}
+        onClick={(controlId: string) => handleSectionClick(controlId)}
         onUpdateFormSectionWidth={onUpdateFormSectionWidth}
       />
     );
@@ -724,7 +724,7 @@ function RecordForm(props) {
                   setSplit={setSplit}
                   isSplit={isSplit}
                   controls={tabControls}
-                  onClick={controlId => {
+                  onClick={(controlId: string) => {
                     customwidget.current.setActiveTabControlId(controlId);
                     scrollToTable();
                   }}

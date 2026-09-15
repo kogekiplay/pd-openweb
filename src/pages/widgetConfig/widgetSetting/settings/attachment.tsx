@@ -129,7 +129,7 @@ export default function Attachment(props) {
         className="mTop16"
         checked={showfilename === '1'}
         text={_l('在单元格中显示文件名')}
-        onClick={checked => onChange(handleAdvancedSettingChange(data, { showfilename: String(+!checked) }))}
+        onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { showfilename: String(+!checked) }))}
       />
 
       <SettingItem>

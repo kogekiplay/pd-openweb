@@ -265,7 +265,7 @@ export default class WeiXin extends Component<any, any> {
             <WeChatServiceAccountList
               weiXinInfo={weiXinInfo}
               authLoading={authLoading}
-              handleClick={appId => this.setState({ currentAppId: appId })}
+              handleClick={(appId: string) => this.setState({ currentAppId: appId })}
             />
           ) : (
             this.renderBindContent()

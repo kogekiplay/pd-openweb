@@ -102,7 +102,7 @@ let EditBlock = class EditBlock extends Component<any, any> {
           <div className="FormControl TxtMiddle">
             <CheckBox
               checked={allDay}
-              onClick={checked => {
+              onClick={(checked: boolean) => {
                 change({
                   allDay: !checked,
                 });

@@ -60,7 +60,7 @@ function joinUrl(base, path: string) {
   return normalizedBase + '/' + normalizedPath;
 }
 
-function getCookieValue(name) {
+function getCookieValue(name: string) {
   const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]*)(;|$)`));
 
   try {
@@ -469,7 +469,7 @@ function setupRuntime(options = {}) {
 
   window.getCookie =
     window.getCookie ||
-    function (name) {
+    function (name: string) {
       const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]*)(;|$)`));
 
       return match ? decodeURIComponent(match[2]) : null;
@@ -477,13 +477,13 @@ function setupRuntime(options = {}) {
 
   window.setCookie =
     window.setCookie ||
-    function (name, value) {
+    function (name: string, value) {
       document.cookie = `${name}=${encodeURIComponent(value)};path=/;SameSite=Lax`;
     };
 
   window.delCookie =
     window.delCookie ||
-    function (name) {
+    function (name: string) {
       document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
     };
 

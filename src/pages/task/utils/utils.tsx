@@ -85,7 +85,7 @@ export const setStateToStorage = (taskFilter, config) => {
 };
 
 // 验证当前用户是否在该网络
-export const checkIsProject = projectId => {
+export const checkIsProject = (projectId: string) => {
   let isExist = false;
   _.map(md.global.Account.projects, project => {
     if (projectId === project.projectId) {

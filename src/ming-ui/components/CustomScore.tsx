@@ -84,7 +84,7 @@ class CustomScore extends Component<any, any> {
       }
     }
   }
-  onSelect(index, event) {
+  onSelect(index: number, event) {
     if (this.props.disabled) return;
     event.stopPropagation();
     if (index === this.state.lastScore) {
@@ -97,7 +97,7 @@ class CustomScore extends Component<any, any> {
     });
     this.props.callback(index, event);
   }
-  onMouseEnter(index) {
+  onMouseEnter(index: number) {
     this.setState({
       score: index,
     });

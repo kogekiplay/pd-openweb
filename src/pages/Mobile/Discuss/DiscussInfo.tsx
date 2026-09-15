@@ -24,7 +24,7 @@ const tabs = md.global.Account.isPortal
       { title: _l('日志'), type: 3 },
     ];
 
-const getGroupId = (appSectionDetail, worksheetId) => {
+const getGroupId = (appSectionDetail, worksheetId: string) => {
   let groupId = null;
 
   for (let i = 0; i < appSectionDetail.length; i++) {

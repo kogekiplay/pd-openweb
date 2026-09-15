@@ -30,7 +30,10 @@ let FeedDetailEntrypoint = class FeedDetailEntrypoint extends Component<any, any
 
   handleQueryChange(props) {
     const data = qs.parse(props.location.search.slice(1));
-    const { itemID, knowledgeId, knowledgeID, projectId } = data;
+    // projectId 单独断言成 string：parse 的返回类型是 string | string[] | null，
+    // 数组只在同名参数重复出现时才可能，动态详情页的链接不会那样拼。
+    const { itemID, knowledgeId, knowledgeID } = data;
+    const projectId = data.projectId as string;
 
     if (!itemID) {
       navigateTo('/feed', true);

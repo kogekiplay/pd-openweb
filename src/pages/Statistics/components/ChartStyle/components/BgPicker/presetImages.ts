@@ -19,12 +19,12 @@ const presetImageLoaders = {
 
 const presetImageCache = {};
 
-export const normalizePresetImageIndex = index => {
+export const normalizePresetImageIndex = (index: number) => {
   const value = Number(index);
   return Number.isInteger(value) && presetImageLoaders[value] ? value : null;
 };
 
-export const loadPresetImage = index => {
+export const loadPresetImage = (index: number) => {
   const normalizedIndex = normalizePresetImageIndex(index);
 
   if (!normalizedIndex) {

@@ -187,7 +187,7 @@ function SelectWorksheet(props) {
     [],
   );
 
-  const fetchItemList = (appId, { allSelect, app } = {}) => {
+  const fetchItemList = (appId: string, { allSelect, app } = {}) => {
     setData({ itemLoading: { [appId]: true } });
     appManagementAjax.getAppItems({ appIds: [appId], isFilterCustomPage: true, projectId }).then(res => {
       if (res) {

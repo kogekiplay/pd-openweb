@@ -171,7 +171,7 @@ const MobileBoardView = props => {
     updateBoardViewRecord(param);
   };
 
-  const deleteCallback = rowId => {
+  const deleteCallback = (rowId: string) => {
     delBoardViewRecord({ key: updateRowParam.key, rowId });
   };
 

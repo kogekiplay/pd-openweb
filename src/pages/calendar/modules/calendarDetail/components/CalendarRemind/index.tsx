@@ -112,7 +112,7 @@ export default class CalendarRemind extends Component<any, any> {
     }
   }
   // 修改日程语音提醒
-  changeVoiceRemind(checked) {
+  changeVoiceRemind(checked: boolean) {
     const { id } = this.props;
     const voiceRemind = !checked;
     updateRemindVoice({

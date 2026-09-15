@@ -47,7 +47,7 @@ export default function GlobalVarRight(props) {
           loading={loading}
           onRefreshVarList={onRefreshVarList}
           emptyText={keyWord ? _l('暂无搜索结果') : _l('暂无全局变量')}
-          onAdd={name => {
+          onAdd={(name: string) => {
             setAddOrEditVar({ visible: true, isEdit: false });
             setDefaultFormValue({ name });
           }}

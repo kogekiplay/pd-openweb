@@ -41,7 +41,7 @@ export default function Switch({ data, onChange }) {
                 <Checkbox
                   size="small"
                   checked={itemnames.length > 0}
-                  onClick={checked => {
+                  onClick={(checked: boolean) => {
                     onChange(
                       handleAdvancedSettingChange(data, {
                         itemnames: checked ? '' : JSON.stringify(DEFAULT_TEXT[showtype]),
@@ -54,7 +54,7 @@ export default function Switch({ data, onChange }) {
             )}
             {itemnames.length > 0 && (
               <Fragment>
-                {(DEFAULT_TEXT[showtype] || []).map((item, index) => {
+                {(DEFAULT_TEXT[showtype] || []).map((item, index: number) => {
                   return (
                     // antd 6 废弃了 Input 的 addonBefore，官方指向 Space.Compact。
                     // 两者不是一回事：addonBefore 是「输入框前面挂一块共用外框的附属标签」，

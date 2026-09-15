@@ -118,7 +118,7 @@ let RangeDrop = class RangeDrop extends React.Component<any, any> {
                       className="mTop15 mLeft25"
                       text={it.name}
                       checked={printData.views.map(o => o.viewId).includes(it.viewId)}
-                      onClick={checked => {
+                      onClick={(checked: boolean) => {
                         setData({
                           printData: {
                             ...printData,

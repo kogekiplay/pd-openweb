@@ -29,7 +29,7 @@ export default class OriginalData extends Component<any, any> {
     const { showControls = [] } = view;
 
     if (showControls.length) {
-      return showControls.map(controlId => _.find(columns, { controlId })).filter(_ => _);
+      return showControls.map((controlId: string) => _.find(columns, { controlId })).filter(_ => _);
     } else {
       return columns
         .filter(item => {

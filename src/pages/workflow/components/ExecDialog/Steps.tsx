@@ -26,7 +26,7 @@ export default ({
 
   return (
     <Fragment>
-      {works.map((item, index) => (
+      {works.map((item, index: number) => (
         <StepItem
           key={index}
           appId={appId}

@@ -214,7 +214,7 @@ class TaskDetail extends Component<any, any> {
   /**
    * 切换任务详情
    */
-  switchTaskDetail = taskId => {
+  switchTaskDetail = (taskId: string) => {
     const { openType } = this.props;
 
     if (openType === OPEN_TYPE.detail) {
@@ -241,7 +241,7 @@ class TaskDetail extends Component<any, any> {
     const { taskId } = this.state;
     const { data } = this.props.taskDetails[taskId];
 
-    const ajaxPost = keywords => {
+    const ajaxPost = (keywords: string) => {
       if (type === RELATION_TYPES.task) {
         return ajaxRequest.getTaskList_RelationParent({ taskID: taskId, keyword: keywords });
       }
@@ -352,7 +352,7 @@ class TaskDetail extends Component<any, any> {
   /**
    * 移除任务成员
    */
-  removeTaskMember = accountId => {
+  removeTaskMember = (accountId: string) => {
     const { taskId } = this.state;
     const { openType } = this.props;
     const isMe = accountId === md.global.Account.accountId;

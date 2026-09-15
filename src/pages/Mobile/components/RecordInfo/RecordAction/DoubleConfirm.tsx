@@ -164,7 +164,7 @@ function RemarkMode(props) {
           </span>
         )}
         <div className="flex">
-          {listData.map((item, index) => (
+          {listData.map((item, index: number) => (
             <div
               key={index}
               className="modeItem textPrimary"

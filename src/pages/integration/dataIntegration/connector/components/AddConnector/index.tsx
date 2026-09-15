@@ -619,7 +619,7 @@ export default function AddConnector(props) {
           >
             {resDialog.errorMsgList && resDialog.errorMsgList.length > 0 && (
               <div className="errorInfo">
-                {resDialog.errorMsgList.map((error, index) => {
+                {resDialog.errorMsgList.map((error, index: number) => {
                   return <div key={index} className="mTop5">{`${index + 1}. ${error}`}</div>;
                 })}
               </div>

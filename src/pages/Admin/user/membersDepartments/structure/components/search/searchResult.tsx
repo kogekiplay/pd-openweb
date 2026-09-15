@@ -6,7 +6,7 @@ import ClickAway from 'ming-ui/components/ClickAway';
 import { formatSearchDeptData } from '../../modules/util';
 
 let Result = class Result extends React.Component<any, any> {
-  renderDepartments = (departments = [], keywords) => {
+  renderDepartments = (departments = [], keywords: string) => {
     if (!departments || !departments.length) return null;
     const result = formatSearchDeptData(departments, keywords);
 

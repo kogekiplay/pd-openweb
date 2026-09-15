@@ -37,7 +37,7 @@ export default function NavigationConfig(props) {
   const renderDisplayIcon = list => {
     return (
       <Fragment>
-        {list.map((item, index) => (
+        {list.map((item, index: number) => (
           <Checkbox
             className={cx('mLeft0 mRight10', { hide: !item.show })}
             checked={displayIcon.split('')[index] === '1'}

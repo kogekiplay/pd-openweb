@@ -209,7 +209,7 @@ export default class WebhookContent extends Component<any, any> {
                       className="mLeft10"
                       checked={data.hooksBody}
                       text={_l('生成Body全文参数')}
-                      onClick={checked => updateSource({ hooksBody: !checked }, onSave)}
+                      onClick={(checked: boolean) => updateSource({ hooksBody: !checked }, onSave)}
                     />
                     <Tooltip title={_l('勾选后，将会生成一个记录Body全文的文本格式参数')}>
                       <i className="Font14 icon-help textTertiary mLeft5" />

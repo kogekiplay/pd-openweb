@@ -172,7 +172,7 @@ let Record = class Record extends Component<any, any> {
       },
     );
   };
-  handleCreate = (event, title, titleControl) => {
+  handleCreate = (event, title: string, titleControl) => {
     const { row, addRecord, updateRecordTitle } = this.props;
     const value = event.target.value;
     const { checkrange, min, max } = getAdvanceSetting(titleControl);
@@ -530,7 +530,7 @@ let Record = class Record extends Component<any, any> {
     );
   }
 
-  renderControl(data, index) {
+  renderControl(data, index: number) {
     const { row, widthConfig, base, controls, worksheetInfo } = this.props;
     const cell = Object.assign({}, data, {
       value: row[data.controlId],
@@ -594,7 +594,7 @@ let Record = class Record extends Component<any, any> {
           this.renderMore()
         )}
         {this.renderTitle()}
-        {(displayControls || []).map((data, index) =>
+        {(displayControls || []).map((data, index: number) =>
           this.renderControl(
             _.find(controls, {
               controlId: data.controlId,

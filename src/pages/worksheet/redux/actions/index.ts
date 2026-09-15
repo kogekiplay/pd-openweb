@@ -205,14 +205,14 @@ export const updateWorksheetSomeControls = controls => ({
   controls,
 });
 
-export const updateIsCharge = isCharge => ({ type: 'WORKSHEET_UPDATE_IS_CHARGE', isCharge });
+export const updateIsCharge = (isCharge: boolean) => ({ type: 'WORKSHEET_UPDATE_IS_CHARGE', isCharge });
 export const updateAppPkgData = appPkgData => ({ type: 'WORKSHEET_UPDATE_APPPKGDATA', appPkgData });
 
-export const updateWorksheetLoading = loading => ({ type: 'WORKSHEET_UPDATE_LOADING', loading });
+export const updateWorksheetLoading = (loading: boolean) => ({ type: 'WORKSHEET_UPDATE_LOADING', loading });
 
 let worksheetRequest: ApiResult | null = null;
 
-export function loadWorksheet(worksheetId, setRequest) {
+export function loadWorksheet(worksheetId: string, setRequest) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { base = {}, appPkgData = {}, views = [] } = getState().sheet;
     const { viewId, chartId } = base;
@@ -518,7 +518,7 @@ function getSaveViewEditAttrs(saveParams = {}) {
   const attrs = Array.isArray(saveParams.editAttrs) ? saveParams.editAttrs : Object.keys(saveParams);
 
   return attrs.filter(
-    (attr, index) =>
+    (attr, index: number) =>
       attr &&
       !SAVE_WORKSHEET_VIEW_NON_EDITABLE_ATTRS.includes(attr) &&
       attrs.findIndex(item => item === attr) === index,
@@ -526,7 +526,7 @@ function getSaveViewEditAttrs(saveParams = {}) {
 }
 
 // 更新单个视图
-export function saveView(viewId, newConfig, cb) {
+export function saveView(viewId: string, newConfig, cb) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const sheet = getState().sheet;
     const { base, views, navGroupFilters, worksheetInfo } = sheet;
@@ -1026,7 +1026,7 @@ export function updateViewShowcount(showcount) {
   };
 }
 
-export function loadManageView(worksheetId, callback) {
+export function loadManageView(worksheetId: string, callback) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { base = {}, appPkgData = {} } = getState().sheet;
     const { appId } = base;

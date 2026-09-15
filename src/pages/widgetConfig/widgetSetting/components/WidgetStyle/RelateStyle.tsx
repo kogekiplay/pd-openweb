@@ -102,7 +102,7 @@ export default function RelateStyle(props) {
             size="small"
             checked={hidenumber !== '1'}
             text={_l('显示序号')}
-            onClick={checked => onChange(handleAdvancedSettingChange(data, { hidenumber: String(+checked) }))}
+            onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { hidenumber: String(+checked) }))}
           />
         </div>
         {querytype !== '1' && (
@@ -110,7 +110,7 @@ export default function RelateStyle(props) {
             <Checkbox
               size="small"
               checked={allowedit === '1'}
-              onClick={checked => onChange(handleAdvancedSettingChange(data, { allowedit: String(+!checked) }))}
+              onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { allowedit: String(+!checked) }))}
             >
               <span style={{ marginRight: '4px' }}>{_l('允许行内编辑')}</span>
               <Tooltip placement="bottom" title={_l('无需打开记录详情，在表格行内直接编辑字段')}>
@@ -124,7 +124,7 @@ export default function RelateStyle(props) {
             size="small"
             checked={alternatecolor === '1'}
             text={_l('显示交替行颜色')}
-            onClick={checked => onChange(handleAdvancedSettingChange(data, { alternatecolor: String(+!checked) }))}
+            onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { alternatecolor: String(+!checked) }))}
           />
         </div>
         {direction !== '1' && (
@@ -134,7 +134,7 @@ export default function RelateStyle(props) {
                 size="small"
                 checked={titlewrap === '1'}
                 text={_l('标题行文字换行')}
-                onClick={checked => onChange(handleAdvancedSettingChange(data, { titlewrap: String(+!checked) }))}
+                onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { titlewrap: String(+!checked) }))}
               />
             </div>
             {titlewrap === '1' && (

@@ -72,7 +72,7 @@ async function fetchSuggestions({ projectId, forceRefresh, signal }) {
 // 无 projectId（如应用内）时不请求 agent，直接回退静态样例。
 // enabled=false 时完全不请求（推荐由 agent 实时生成，隐藏 AI 功能的环境下不应发起）：
 // 保持 status='idle' 与空列表，调用方按「无推荐」渲染即可。Hook 不可条件调用，故用参数控制。
-export function useDailyBuildSuggestions(projectId, enabled = true) {
+export function useDailyBuildSuggestions(projectId: string, enabled = true) {
   const [suggestions, setSuggestions] = useState([]);
   const [nextSuggestion, setNextSuggestion] = useState('');
   const [randomSamples, setRandomSamples] = useState([]);

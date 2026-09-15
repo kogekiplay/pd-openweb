@@ -1369,7 +1369,7 @@ class WorksheetApi extends Component<any, any> {
               </div>
             ))}
           </div>
-          {(isFieldTable ? item.controls : item.views).map((o, index) => {
+          {(isFieldTable ? item.controls : item.views).map((o, index: number) => {
             return (
               <div key={`${o.controlId || o.viewId}-${index}`} className="flexRow worksheetApiLine flexRowHeight">
                 {this.MENU_LIST[i].fields.map(field => {
@@ -1599,7 +1599,7 @@ class WorksheetApi extends Component<any, any> {
           <div className="mTop24">
             {_l('在 IP 白名单内的 IP 来源地址才能发起请求。未设置则所有 IP 来源都可发起请求。')}
           </div>
-          {(dataApp.openApiWhiteList || []).map((ip, index) => {
+          {(dataApp.openApiWhiteList || []).map((ip, index: number) => {
             return (
               <div className={index === 0 ? 'mTop20' : ''} key={index}>
                 {ip}
@@ -1897,7 +1897,7 @@ class WorksheetApi extends Component<any, any> {
     let totalHeight = 0;
     let isExist = false;
 
-    $('.scrollViewContainer .worksheetApiLi').map((index, el) => {
+    $('.scrollViewContainer .worksheetApiLi').map((index: number, el) => {
       heightArr.push({
         id: $(el).attr('id').replace('-content', ''),
         h: $(el).height(),

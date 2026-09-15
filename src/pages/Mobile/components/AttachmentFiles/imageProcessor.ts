@@ -49,7 +49,7 @@ function loadImageFromFile(file) {
   });
 }
 
-function getResizeSize(width, height, maxSide) {
+function getResizeSize(width: number, height: number, maxSide) {
   if (!maxSide || Math.max(width, height) <= maxSide) {
     return { width, height };
   }
@@ -61,7 +61,7 @@ function getResizeSize(width, height, maxSide) {
   };
 }
 
-function getCanvasSafeMaxSide(width, height, needCompress) {
+function getCanvasSafeMaxSide(width: number, height: number, needCompress) {
   if (needCompress) {
     return IMAGE_COMPRESS_MAX_SIDE;
   }
@@ -118,7 +118,7 @@ function getLimitedWatermarkText(text) {
   return chars.length > WATERMARK_TEXT_LIMIT ? `${chars.slice(0, WATERMARK_TEXT_LIMIT).join('')}...` : text;
 }
 
-function getDynamicWrapTxt(dynamicTxt, canvasWidth, ctx, fontSize) {
+function getDynamicWrapTxt(dynamicTxt, canvasWidth, ctx, fontSize: number) {
   if (!dynamicTxt) return [];
 
   ctx.font = `${fontSize}px 'Fira Sans'`;

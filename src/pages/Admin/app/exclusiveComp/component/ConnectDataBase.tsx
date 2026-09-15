@@ -297,7 +297,7 @@ function ConnectDataBase(props) {
           <Switch
             className="mRight8"
             checked={!!data.status}
-            onClick={checked => {
+            onClick={(checked: boolean) => {
               setData({ ...data, status: !checked ? 1 : 0 });
             }}
           />

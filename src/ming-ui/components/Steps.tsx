@@ -344,7 +344,7 @@ export default function Steps(props) {
                 barRef.current && (barRef.current.style.background = 'var(--color-border-secondary)');
               }}
             >
-              {filterOptions.map((option, index) => {
+              {filterOptions.map((option, index: number) => {
                 return (
                   <div className="portraitPointItem">
                     <Tooltip
@@ -372,7 +372,7 @@ export default function Steps(props) {
             </div>
             {showScaleText && (
               <div className="portraitScaleContent">
-                {filterOptions.map((option, index) => {
+                {filterOptions.map((option, index: number) => {
                   return (
                     <span className="portraitContentItem">
                       <span
@@ -468,7 +468,7 @@ export default function Steps(props) {
               barRef.current && (barRef.current.style.background = 'var(--color-border-secondary)');
             }}
           >
-            {filterOptions.map((option, index) => {
+            {filterOptions.map((option, index: number) => {
               return (
                 <div className="pointItem">
                   <Tooltip
@@ -500,7 +500,7 @@ export default function Steps(props) {
           </div>
           {showScaleText && (
             <div className="scaleContent">
-              {filterOptions.map((option, index) => {
+              {filterOptions.map((option, index: number) => {
                 return (
                   <span className="contentItem">
                     <span

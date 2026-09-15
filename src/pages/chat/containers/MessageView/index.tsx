@@ -554,7 +554,7 @@ class MessageView extends Component<any, any> {
           }}
         >
           {isMore ? this.renderLoading('up') : this.renderTopInfo()}
-          {messageList.map((item, index) => (
+          {messageList.map((item, index: number) => (
             <Message
               key={item.id || item.waitingId}
               message={item}

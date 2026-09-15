@@ -219,7 +219,7 @@ class ColorLevel extends Component<any, any> {
       max: data,
     });
   };
-  renderItem(name, placeholder, data, onChange) {
+  renderItem(name: string, placeholder: string, data, onChange) {
     const { value, color } = data;
     return (
       <Fragment>
@@ -369,7 +369,7 @@ class ColorScope extends Component<any, any> {
     this.state = {
       controlId: controlId || props.currentControlId,
       scopeRules: scopeRules
-        ? scopeRules.map((n, index) => {
+        ? scopeRules.map((n, index: number) => {
             return {
               ...n,
               id: index + 1,
@@ -398,7 +398,7 @@ class ColorScope extends Component<any, any> {
       scopeRules: this.state.scopeRules,
     };
   };
-  handleSetRule = (data, index) => {
+  handleSetRule = (data, index: number) => {
     const { scopeRules } = this.state;
     this.setState({
       scopeRules: scopeRules.map((rule, i) => {
@@ -413,7 +413,7 @@ class ColorScope extends Component<any, any> {
       }),
     });
   };
-  handleDeleteRule = index => {
+  handleDeleteRule = (index: number) => {
     const { scopeRules } = this.state;
     this.setState({
       scopeRules: scopeRules.filter((_, i) => i !== index),

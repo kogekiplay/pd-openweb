@@ -156,7 +156,7 @@ export default function FilledRecord(props) {
     return false;
   };
 
-  const onDeleteRow = rowId => {
+  const onDeleteRow = (rowId: string) => {
     publicWorksheetAjax
       .deleteWorksheetRows({
         appId,
@@ -176,7 +176,7 @@ export default function FilledRecord(props) {
       });
   };
 
-  const onDeleteRecord = rowId => {
+  const onDeleteRecord = (rowId: string) => {
     isMobile
       ? MobileDialog.confirm({
           content: _l('确认删除该填写记录吗?'),
@@ -191,7 +191,7 @@ export default function FilledRecord(props) {
         });
   };
 
-  const onUpdateRecord = (rowId, updateObj) => {
+  const onUpdateRecord = (rowId: string, updateObj) => {
     const newRecordList = filledRecord.list.map(item => {
       return item.rowid === rowId ? { ...item, ...updateObj } : item;
     });
@@ -438,7 +438,7 @@ export default function FilledRecord(props) {
               })
             }
             publicWorksheetInfo={publicWorksheetInfo}
-            onRefreshList={(recordId, data) => onUpdateRecord(recordId, data)}
+            onRefreshList={(recordId: string, data) => onUpdateRecord(recordId, data)}
           />
         </Suspense>
       )}

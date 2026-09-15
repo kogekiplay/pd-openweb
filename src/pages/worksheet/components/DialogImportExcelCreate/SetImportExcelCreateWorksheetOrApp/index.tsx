@@ -92,7 +92,7 @@ let SetImportExcelCreateWorksheetOrApp = class SetImportExcelCreateWorksheetOrAp
               <Checkbox
                 disabled={isTitle}
                 checked={_.includes(selectCells, item.columnNumber)}
-                onClick={checked => {
+                onClick={(checked: boolean) => {
                   if (!checked) {
                     this.props.updateCurrentSheetInfo({
                       ...currentSheetInfo,

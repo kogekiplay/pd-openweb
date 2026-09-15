@@ -196,7 +196,7 @@ export default class EncryptRules extends Component<any, any> {
                         className="mTop18"
                         checked={item.state === 1}
                         text={item.state === 1 ? _l('启用') : _l('停用')}
-                        onClick={checked => {
+                        onClick={(checked: boolean) => {
                           projectEncryptAjax
                             .setEncryptRuleState({
                               projectId,
@@ -329,7 +329,7 @@ export default class EncryptRules extends Component<any, any> {
               total={totalCount}
               pageIndex={pageIndex}
               pageSize={50}
-              onChange={pageIndex => this.setState({ pageIndex }, this.getDataList)}
+              onChange={(pageIndex: number) => this.setState({ pageIndex }, this.getDataList)}
             />
           </div>
         </div>

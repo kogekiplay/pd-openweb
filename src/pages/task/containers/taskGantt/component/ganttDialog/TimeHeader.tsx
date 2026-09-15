@@ -33,7 +33,7 @@ export default class TimeHeader extends Component<any, any> {
     let pubWidth, subWidth;
     return (
       <div className="timeHeader flexRow">
-        {time.map((item, index) => {
+        {time.map((item, index: number) => {
           if (type === 'day') {
             pubWidth = width * item.sub.length;
             subWidth = width;
@@ -52,7 +52,7 @@ export default class TimeHeader extends Component<any, any> {
             <div key={`pub-${index}`} style={{ width: pubWidth }} className="timeBox">
               <div className="pubTime">{item.pub}</div>
               <div className="subTimeBox">
-                {item.sub.map((sub, index) => {
+                {item.sub.map((sub, index: number) => {
                   let isToday;
 
                   if (type === 'day') {

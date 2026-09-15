@@ -50,14 +50,16 @@ export function mdAppResponse(param) {
 /**
  * 获取网络信息
  */
-export const getSyncLicenseInfo = projectId => {
+// projectId 和 getFeatureStatus 同理：下面那行 UUID 正则就是用来挡非法入参的，
+// 匹配不上直接返回 {}。调用方里有从 query 解出来的 string | string[]。
+export const getSyncLicenseInfo = (projectId: string | string[] | null | undefined) => {
   const { projects = [], externalProjects = [] } = md.global.Account;
   let projectInfo = _.find(projects.concat(externalProjects), o => o.projectId === projectId) || {};
 
   if (_.isEmpty(projectInfo)) {
     if (
       window.isPublicApp ||
-      !/^[A-Za-z0-9]{8}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{12}$/.test(projectId)
+      !/^[A-Za-z0-9]{8}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{12}$/.test(String(projectId))
     ) {
       return {};
     }
@@ -74,7 +76,9 @@ export const getSyncLicenseInfo = projectId => {
 /**
  *  获取功能状态 1: 正常 2: 升级
  */
-export function getFeatureStatus(projectId, featureId) {
+// projectId 允许为 undefined：下面那行 UUID 正则本来就是用来挡非法入参的，
+// undefined 过不了正则、直接早返回。多处调用方的 projectId 就是可选的。
+export function getFeatureStatus(projectId: string | undefined, featureId) {
   if (window.shareState.shareId) return;
   if (!/^[A-Za-z0-9]{8}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{12}$/.test(projectId)) return;
 
@@ -144,7 +148,7 @@ export const addBehaviorLog = (type, entityId, params = {}, isLinkVisited?) => {
  * @param {string} projectId - 网络ID
  * @returns {Object} - 包含图表颜色和主题颜色配置的对象。
  */
-export const getProjectColor = projectId => {
+export const getProjectColor = (projectId: string) => {
   const { PorjectColor, Account } = md.global;
   const { projects = [] } = Account;
   const currentProjectId = localStorage.getItem('currentProjectId');
@@ -183,7 +187,7 @@ export const getProjectColor = projectId => {
  * @param {string} projectId - 网络ID
  * @returns {[]} - 包含系统色和自定义色的颜色数组。
  */
-export const getThemeColors = projectId => {
+export const getThemeColors = (projectId: string) => {
   // 获取项目颜色配置
   const { themeColor } = getProjectColor(projectId);
   // 过滤并映射系统色，去除未启用的项

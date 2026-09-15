@@ -43,7 +43,7 @@ export default ({ projectId }) => {
     });
   };
 
-  const setAutoPurchaseDataPipelineExtPack = checked => {
+  const setAutoPurchaseDataPipelineExtPack = (checked: boolean) => {
     ajaxPromise.setAutoPurchaseDataPipelineExtPack = projectSettingAjax.setAutoPurchaseDataPipelineExtPack({
       projectId: projectId,
       autoPurchaseDataPipelineExtPack: checked,
@@ -58,7 +58,7 @@ export default ({ projectId }) => {
     });
   };
 
-  const handleAutoOrder = checked => {
+  const handleAutoOrder = (checked: boolean) => {
     if (!checked) {
       Dialog.confirm({
         title: _l('是否开启自动订购？'),

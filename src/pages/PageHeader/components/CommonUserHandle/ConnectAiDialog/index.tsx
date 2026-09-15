@@ -93,7 +93,7 @@ function ConnectAiDialog({ visible, projectId, initialPersonalTokens = null, onC
   }, [projectId, request]);
 
   const fetchAuthKeys = useCallback(
-    (appId, { keepSelected = false } = {}) => {
+    (appId: string, { keepSelected = false } = {}) => {
       if (!appId) return;
 
       request('auth', appManagementAjax.getAuthorizes({ appId }))
@@ -350,7 +350,7 @@ function ConnectAiDialog({ visible, projectId, initialPersonalTokens = null, onC
     <div className="installActions">
       {['MCP', 'CLI'].includes(activeTab) && (
         <div className="installOptionRow">
-          <Checkbox checked={withSkills} onClick={checked => setWithSkills(!checked)} text={_l('同时安装配套Skills')} />
+          <Checkbox checked={withSkills} onClick={(checked: boolean) => setWithSkills(!checked)} text={_l('同时安装配套Skills')} />
           <span className="recommendTag">{_l('推荐')}</span>
         </div>
       )}

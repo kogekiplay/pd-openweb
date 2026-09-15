@@ -123,7 +123,7 @@ function ViewControl(props) {
   const [showFastFilter, setShowFastFilter] = useState<boolean | undefined>();
   const [customBtnIsEdit, setCustomBtnIsEdit] = useState();
   const [activeBtnId, setActiveBtnId] = useState();
-  const [activeFastFilterId, setActiveFastFilterId] = useState();
+  const [activeFastFilterId, setActiveFastFilterId] = useState<string | undefined>();
   const [btnDataInfo, setActiveBtnIdInfo] = useState();
   const newSheetSwitchPermit =
     viewId !== worksheetId ? sheetSwitchPermit : sheetSwitchPermit.map(l => ({ ...l, state: true }));
@@ -486,13 +486,13 @@ function ViewControl(props) {
             setActiveBtnId(btnId);
             setIsListOption(isListOption);
           }}
-          setFastFilter={(value, controlId) => {
+          setFastFilter={(value, controlId: string) => {
             setShowFastFilter(value);
             setActiveFastFilterId(controlId);
           }}
           viewId={viewId}
           btnList={sheetButtons}
-          refreshFn={(worksheetId, appId, viewId, rowId) => {
+          refreshFn={(worksheetId: string, appId: string, viewId: string, rowId: string) => {
             loadCustomButtons({ worksheetId, appId, viewId, rowId });
           }}
           updateWorksheetControls={updateWorksheetControls}
@@ -526,7 +526,7 @@ function ViewControl(props) {
           appId={appId}
           worksheetId={worksheetId}
           workflowId={''}
-          refreshFn={(worksheetId, appId, viewId, rowId) => {
+          refreshFn={(worksheetId: string, appId: string, viewId: string, rowId: string) => {
             loadCustomButtons({ worksheetId, appId, viewId, rowId });
           }}
           updateCustomButtons={updateCustomButtons}

@@ -254,7 +254,7 @@ export function confirm(header: string, content: string, showClose: boolean, ckT
     if (yesText === false) {
       container.removeOkBtn = true;
     } else {
-      container.onOk = checked => resolve(checked);
+      container.onOk = (checked: boolean) => resolve(checked);
       container.okText = yesText;
     }
 
@@ -306,7 +306,7 @@ export function getUrlBase64Encode(str) {
  * @param  {Boolean} toLowerCase 是否转换为小写
  * @return {String}              扩展名
  */
-export function getFileExt(name, toLowerCase = false) {
+export function getFileExt(name: string, toLowerCase = false) {
   if (!name || name.indexOf('.') === -1) {
     return '';
   }

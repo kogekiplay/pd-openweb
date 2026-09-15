@@ -41,7 +41,7 @@ export const GROUPFILTER_CONDITION_TYPE = [
   48, //组织角色
 ];
 
-export const canNavGroup = (control, worksheetId) => {
+export const canNavGroup = (control, worksheetId: string) => {
   if (
     GROUPFILTER_CONDITION_TYPE.includes(control.type) ||
     (control.type === 30 && //支持他表字段 仅存储(9,10,11)

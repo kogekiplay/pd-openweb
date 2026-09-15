@@ -65,7 +65,7 @@ export default class Friends extends React.Component<any, any> {
     }
   }
 
-  search(keywords) {
+  search(keywords: string) {
     this.abortRequest();
     this.setState(
       {

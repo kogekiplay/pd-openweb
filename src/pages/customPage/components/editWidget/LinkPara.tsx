@@ -165,7 +165,7 @@ export default function LinkPara(props) {
         <div className="paraListWrap">
           <div className="title Bold">{_l('查询参数')}</div>
           <div className="paraList">
-            {paras.map((item, index) => (
+            {paras.map((item, index: number) => (
               <ParaItem
                 key={index}
                 index={index}

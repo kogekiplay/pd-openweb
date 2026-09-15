@@ -55,7 +55,7 @@ export default function CustomPageButton(props) {
     }
   };
 
-  const renderNav = (item, index) => {
+  const renderNav = (item, index: number) => {
     return (
       <div
         className="navItem flexRow alignItemsCenter pointer"
@@ -67,7 +67,7 @@ export default function CustomPageButton(props) {
     );
   };
 
-  const renderContent = (item, index) => {
+  const renderContent = (item, index: number) => {
     const { button } = item;
     const data = _.find(translateData, { correlationId: item.id }) || {};
     const translateInfo = data.data || {};

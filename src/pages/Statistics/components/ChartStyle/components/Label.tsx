@@ -259,7 +259,7 @@ export default class Label extends Component<any, any> {
                 <div
                   className="entranceWrap ruleIcon flexRow valignWrapper pointer"
                   onClick={() => {
-                    const newColorRules = colorRules.map((item, index) => (index === 0 ? {} : item));
+                    const newColorRules = colorRules.map((item, index: number) => (index === 0 ? {} : item));
                     onChangeDisplayValue('colorRules', newColorRules);
                   }}
                 >

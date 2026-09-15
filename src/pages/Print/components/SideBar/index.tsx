@@ -101,7 +101,7 @@ class SideNav extends React.Component<any, any> {
     });
   }
 
-  toggleApprovalCheckItem(index) {
+  toggleApprovalCheckItem(index: number) {
     const { handChange, printData = [] } = this.props;
     const { approval = [] } = printData;
     let approvalParentId = '';
@@ -168,7 +168,7 @@ class SideNav extends React.Component<any, any> {
 
     return (
       <React.Fragment>
-        {approval.map((item, index) => {
+        {approval.map((item, index: number) => {
           // const isOpen = !!openApprovalList.find(l => l === item.processId);
 
           return (
@@ -286,7 +286,7 @@ class SideNav extends React.Component<any, any> {
     handChange(list);
   };
 
-  setReceiveControls = (o, checked) => {
+  setReceiveControls = (o, checked: boolean) => {
     const { printData = [] } = this.props;
     const { receiveControls = [] }: { receiveControls: FormControl[]; [key: string]: any } = printData;
 

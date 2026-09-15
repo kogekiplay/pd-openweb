@@ -660,7 +660,7 @@ class PivotTable extends Component<any, any> {
     const yaxisListLength = yaxisList.filter((n: AxisField) => !n.hide).length;
     const isHideHeaderLastTr = columns.length && !lines.length && yaxisListLength === 1;
     const contentColumnIndexOffset = lines.length || (isHideHeaderLastTr ? 1 : 0);
-    const getColumnWidthIndex = index => contentColumnIndexOffset + index;
+    const getColumnWidthIndex = (index: number) => contentColumnIndexOffset + index;
 
     const getTitle = (id, data) => {
       if (_.isNull(data)) return;
@@ -680,7 +680,7 @@ class PivotTable extends Component<any, any> {
       }
     };
 
-    const getYaxisList = index => {
+    const getYaxisList = (index: number) => {
       const yaxisColumn = yaxisList.map((item, i) => {
         const { rename, controlName, showNumber = true, percent = {} } = item;
         const name = rename || controlName;
@@ -1015,7 +1015,7 @@ class PivotTable extends Component<any, any> {
       sum: true,
     };
 
-    linesData.forEach((item, index) => {
+    linesData.forEach((item, index: number) => {
       if (index === 0) {
         summary[item.key] = sum;
       } else if (isFreeze && index === fIndex) {
@@ -1105,7 +1105,7 @@ class PivotTable extends Component<any, any> {
 
     return config;
   }
-  getMaxFileLength(data, index) {
+  getMaxFileLength(data, index: number) {
     const maxValue = 10;
     data = data.map(item => {
       if (item && item.value && _.isArray(item.value[index])) {
@@ -1123,7 +1123,7 @@ class PivotTable extends Component<any, any> {
   }
   getAllMaxFilesWidth(data, fields) {
     let width = 0;
-    fields.forEach((field, index) => {
+    fields.forEach((field, index: number) => {
       if (field.controlType === 14) {
         width += this.getMaxFileLength(data, index) * _.find(relevanceImageSize, { value: field.size }).px;
       } else {
@@ -1132,7 +1132,7 @@ class PivotTable extends Component<any, any> {
     });
     return width;
   }
-  renderDrag(index) {
+  renderDrag(index: number) {
     return (
       <div
         onMouseDown={event => {
@@ -1263,7 +1263,7 @@ class PivotTable extends Component<any, any> {
 
     return data;
   }
-  renderLineTd(data, row, index, control, diffWidth, linesData = []) {
+  renderLineTd(data, row, index: number, control, diffWidth, linesData = []) {
     const { style } = this.props.reportData;
     const { pivotTableUnilineShow } = style ? style : {};
     const { controlType, fields, displayMode = 'text' } = control;

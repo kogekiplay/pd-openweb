@@ -215,7 +215,7 @@ export function DateHour12(props) {
       <Checkbox
         size="small"
         checked={hour12 === '1'}
-        onClick={checked => onChange(handleAdvancedSettingChange(data, { hour12: checked ? '0' : '1' }))}
+        onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { hour12: checked ? '0' : '1' }))}
       >
         <span>
           {_l('12小时制')}（{moment().format('h:mm A')}）
@@ -241,7 +241,7 @@ function StartEndTime(props) {
         <Checkbox
           size="small"
           checked={min}
-          onClick={checked =>
+          onClick={(checked: boolean) =>
             onChange(
               handleAdvancedSettingChange(
                 data,
@@ -266,7 +266,7 @@ function StartEndTime(props) {
             <Checkbox
               size="small"
               checked={!!locationbegin}
-              onClick={checked => onChange(handleAdvancedSettingChange(data, { locationbegin: checked ? '0' : '1' }))}
+              onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { locationbegin: checked ? '0' : '1' }))}
             >
               <span>{_l('默认定位到起始日期')}</span>
               <Tooltip
@@ -284,7 +284,7 @@ function StartEndTime(props) {
         <Checkbox
           size="small"
           checked={max}
-          onClick={checked => onChange(handleAdvancedSettingChange(data, { max: checked ? '' : JSON.stringify([]) }))}
+          onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { max: checked ? '' : JSON.stringify([]) }))}
         >
           <span>{_l('结束日期')}</span>
         </Checkbox>
@@ -326,7 +326,7 @@ export default function DateConfig(props) {
           <Checkbox
             size="small"
             checked={!!timeinterval}
-            onClick={checked => onChange(handleAdvancedSettingChange(data, { timeinterval: checked ? '' : '1' }))}
+            onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { timeinterval: checked ? '' : '1' }))}
           >
             <span>{_l('预设分钟间隔')}</span>
             <Tooltip

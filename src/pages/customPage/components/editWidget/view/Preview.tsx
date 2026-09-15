@@ -133,7 +133,7 @@ const createLoadableSingleView = loader => lazy(loader);
 const LoadableMobileSingleView = createLoadableSingleView(() => import('mobile/components/SingleView'));
 const LoadableSingleView = createLoadableSingleView(() => import('worksheet/common/SingleView'));
 
-const navigateToView = (workSheetId, viewId) => {
+const navigateToView = (workSheetId, viewId: string) => {
   homeAppApi
     .getAppSimpleInfo({
       workSheetId,

@@ -113,7 +113,7 @@ const Entrance = React.forwardRef((componentProps, ref) => {
    * 更新error显示状态
    */
 
-  const updateErrorState = (isShow, controlId) => {
+  const updateErrorState = (isShow, controlId: string) => {
     updateErrorStateAction(dispatch, {
       getState,
       isShow,
@@ -178,7 +178,7 @@ const Entrance = React.forwardRef((componentProps, ref) => {
     updateUniqueErrorItemsAction(dispatch, items);
   };
 
-  const updateRulesLoading = loading => {
+  const updateRulesLoading = (loading: boolean) => {
     updateRulesLoadingAction(dispatch, loading);
   };
 
@@ -196,7 +196,7 @@ const Entrance = React.forwardRef((componentProps, ref) => {
   const uniqueErrorUpdate = uniqueErrorIds => {
     const { uniqueErrorItems } = getState();
     alert(_l('记录提交失败：数据重复'), 2);
-    (uniqueErrorIds || []).forEach(controlId => {
+    (uniqueErrorIds || []).forEach((controlId: string) => {
       if (
         !_.find(uniqueErrorItems, item => item.controlId === controlId && item.errorType === FORM_ERROR_TYPE.UNIQUE)
       ) {
@@ -231,7 +231,7 @@ const Entrance = React.forwardRef((componentProps, ref) => {
     });
   };
 
-  const checkControlUnique = (controlId, controlType, controlValue) => {
+  const checkControlUnique = (controlId: string, controlType, controlValue) => {
     checkControlUniqueAction(dispatch, {
       props,
       getState,
@@ -259,7 +259,7 @@ const Entrance = React.forwardRef((componentProps, ref) => {
    * 初始化数据
    */
 
-  const initSourceAction = (data, disabled, reInit = false) => {
+  const initSourceAction = (data, disabled: boolean, reInit = false) => {
     const {
       appId,
       isCharge,

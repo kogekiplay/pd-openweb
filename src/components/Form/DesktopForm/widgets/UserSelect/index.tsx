@@ -76,7 +76,7 @@ const UserSelect = props => {
     onChange(JSON.stringify(newAccounts));
   };
 
-  const removeUser = accountId => {
+  const removeUser = (accountId: string) => {
     const newValue = currentValue.filter(item => item.accountId !== accountId);
     onChange(JSON.stringify(newValue));
   };

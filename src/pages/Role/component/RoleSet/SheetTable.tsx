@@ -13,7 +13,7 @@ const Wrap = styled.div`
   flex: 52;
 `;
 
-export const changeSheetModel = (sheet, type, checked) => {
+export const changeSheetModel = (sheet, type, checked: boolean) => {
   const KEYS = {
     READ: 'canRead',
     EDIT: 'canEdit',
@@ -58,7 +58,7 @@ export const changeSheetModel = (sheet, type, checked) => {
   };
 };
 
-const changeViewModel = (sheet, viewId, payload) => {
+const changeViewModel = (sheet, viewId: string, payload) => {
   return {
     ...sheet,
     views: _.map(sheet.views, view => {
@@ -116,12 +116,12 @@ export default class extends PureComponent<any, any> {
     return { readSize, editSize, removeSize, showRead, showEdit, showRemove };
   };
 
-  toggleViewAuth = (key, checked) => {
+  toggleViewAuth = (key, checked: boolean) => {
     const { sheet, onChange } = this.props;
     onChange(changeSheetModel(sheet, key, checked));
   };
 
-  toggleViewLevel = (viewId, payload, isAllNoRead?) => {
+  toggleViewLevel = (viewId: string, payload, isAllNoRead?) => {
     const { sheet, onChange } = this.props;
     onChange(changeViewModel({ ...sheet, canAdd: isAllNoRead ? false : sheet.canAdd }, viewId, payload));
   };
@@ -219,7 +219,7 @@ export default class extends PureComponent<any, any> {
                         item.key === 'ADD' ? (readSize <= 0 ? false : sheet.canAdd) : item.size === viewList.length
                       }
                       clearselected={item.key !== 'ADD' && item.size > 0 && item.size !== viewList.length}
-                      onClick={(checked, value, event) => {
+                      onClick={(checked: boolean, value, event) => {
                         this.toggleViewAuth(item.key, !checked);
                         event.stopPropagation();
                       }}
@@ -259,7 +259,7 @@ export default class extends PureComponent<any, any> {
                         <Checkbox
                           checked={view.canRead}
                           className="InlineBlock"
-                          onClick={checked => {
+                          onClick={(checked: boolean) => {
                             const payload = checked
                               ? {
                                   canEdit: false,
@@ -277,7 +277,7 @@ export default class extends PureComponent<any, any> {
                         <Checkbox
                           checked={view.canEdit}
                           className="InlineBlock"
-                          onClick={checked => {
+                          onClick={(checked: boolean) => {
                             const payload = checked
                               ? {
                                   canEdit: false,
@@ -295,7 +295,7 @@ export default class extends PureComponent<any, any> {
                         <Checkbox
                           checked={view.canRemove}
                           className="InlineBlock"
-                          onClick={checked => {
+                          onClick={(checked: boolean) => {
                             const payload = checked
                               ? {
                                   canRemove: false,

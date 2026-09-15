@@ -170,7 +170,7 @@ const getLangDataIndex = langData => {
  */
 export type TranslateInfo = Record<string, string>;
 
-export const getTranslateInfo = (appId, parentId, id, data?): TranslateInfo => {
+export const getTranslateInfo = (appId: string, parentId, id, data?): TranslateInfo => {
   const langData = data || window[`langData-${appId}`] || [];
 
   if (!Array.isArray(langData)) {
@@ -224,7 +224,7 @@ export const getAppLangDetail = appDetail => {
  * 按 appId 按需加载应用翻译包
  * 仅加载「当前应用」之外的语言包（如跨应用打开关联记录），保证 getTranslateInfo / replaceControlsTranslateInfo 能命中缓存
  */
-export const ensureAppLangData = async appId => {
+export const ensureAppLangData = async (appId: string) => {
   if (!appId || window[`langData-${appId}`]) return;
 
   // 公开分享 / 公开表单等未登录态由 shareGetAppLangDetail 处理，避免在此调用需鉴权接口

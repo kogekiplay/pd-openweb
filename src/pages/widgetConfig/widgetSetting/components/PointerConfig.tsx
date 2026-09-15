@@ -119,7 +119,7 @@ export default function PointConfig({ data = {}, onChange }) {
           size="small"
           className="mTop8"
           checked={dotformat === '1'}
-          onClick={checked => onChange(handleAdvancedSettingChange(data, { dotformat: checked ? '0' : '1' }))}
+          onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { dotformat: checked ? '0' : '1' }))}
         >
           <span style={{ marginRight: '4px' }}>{_l('省略末尾的 0')}</span>
           <Tooltip

@@ -279,7 +279,7 @@ export default function Dashboard(props) {
       rowCollect;
     return (
       <div className="sortableCardsWrap">
-        {sortModuleIds.map((type, index) => {
+        {sortModuleIds.map((type, index: number) => {
           switch (type) {
             case MODULE_TYPES.APP_COLLECTION:
               return markedApps.length ? (

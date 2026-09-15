@@ -142,7 +142,7 @@ Emotion.prototype.emotion = function emotion() {
     return result;
   }
 
-  $.each(emotionData, function (index, item) {
+  $.each(emotionData, function (index: number, item) {
     // 明道云和历史表情是否显示
     if ((!_this.options.mdBear && item.tab.name === _l('笨笨熊')) || (!_this.options.history && index === 0)) {
       return;
@@ -439,7 +439,7 @@ Emotion.prototype.show = function show(left, top) {
  * 载入表情
  * @param index
  */
-Emotion.prototype.load = function (index) {
+Emotion.prototype.load = function (index: number) {
   var $targetEmotion = this.emotion().find(`.panel${index + 1}`);
   var _this = this;
   var content = '';

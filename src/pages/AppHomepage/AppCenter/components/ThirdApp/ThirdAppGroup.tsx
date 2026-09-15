@@ -61,7 +61,7 @@ export default class ThirdAppGroup extends Component<any, any> {
       <div className="thirdAppGroupWrap">
         <div className="title">{companyName || TYPE_TO_TITLE[type]}</div>
         <div className="thirdAppItemWrap">
-          {apps.map((item, index) => (
+          {apps.map((item, index: number) => (
             <ThirdAppItem key={`${item.appId}-${index}`} {...rest} {...item} />
           ))}
         </div>

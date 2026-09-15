@@ -16,7 +16,7 @@ export default ({ selectNodeType, data, updateSource }) => {
         <Checkbox
           checked={data.fromTrigger}
           text={TEXT[selectNodeType]}
-          onClick={checked => updateSource({ fromTrigger: !checked })}
+          onClick={(checked: boolean) => updateSource({ fromTrigger: !checked })}
         />
       </div>
     </Fragment>

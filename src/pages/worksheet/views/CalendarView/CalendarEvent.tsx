@@ -326,7 +326,7 @@ export const eventDidMount = (
   worksheetInfo,
   base,
   sheetSwitchPermit,
-  isCharge,
+  isCharge: boolean,
   props,
   eventClick,
   isMove,

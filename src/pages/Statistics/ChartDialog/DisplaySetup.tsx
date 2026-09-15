@@ -30,7 +30,7 @@ const DisplaySetup = ({
                 displaySetup={displaySetup}
                 mapKeys={Object.keys(reportData.map || [])}
                 reportType={isDualAxes ? yreportType : reportData.reportType}
-                onUpdateDisplaySetup={(data, name) => {
+                onUpdateDisplaySetup={(data, name: string) => {
                   if (name === 'default') {
                     changeCurrentReport(
                       {

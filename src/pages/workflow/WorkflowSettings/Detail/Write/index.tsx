@@ -336,13 +336,13 @@ export default class Write extends Component<any, any> {
                     className="mTop15 flexRow"
                     text={_l('暂存')}
                     checked={_.includes(data.operationTypeList, 13)}
-                    onClick={checked => this.switchWriteSettings(!checked, 13)}
+                    onClick={(checked: boolean) => this.switchWriteSettings(!checked, 13)}
                   />
                   <Checkbox
                     className="mTop15 flexRow"
                     text={_l('转交他人填写')}
                     checked={_.includes(data.operationTypeList, 10)}
-                    onClick={checked => this.switchWriteSettings(!checked, 10)}
+                    onClick={(checked: boolean) => this.switchWriteSettings(!checked, 10)}
                   />
                   {_.includes(data.operationTypeList, 10) && (
                     <UserRange
@@ -384,7 +384,7 @@ export default class Write extends Component<any, any> {
                       </span>
                     }
                     checked={data.encrypt}
-                    onClick={checked => this.updateSource({ encrypt: !checked })}
+                    onClick={(checked: boolean) => this.updateSource({ encrypt: !checked })}
                   />
 
                   <div className="Font13 bold mTop25">{_l('填写说明')}</div>
@@ -425,7 +425,7 @@ export default class Write extends Component<any, any> {
                     className="mTop15 flexRow"
                     text={<span>{_l('开启限时处理')}</span>}
                     checked={(data.schedule || {}).enable}
-                    onClick={checked =>
+                    onClick={(checked: boolean) =>
                       this.updateSource({ schedule: Object.assign({}, data.schedule, { enable: !checked }) })
                     }
                   />

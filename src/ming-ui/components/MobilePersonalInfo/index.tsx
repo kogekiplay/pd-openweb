@@ -54,7 +54,7 @@ const MobilePersonalInfo = props => {
         { id: 'mobilePhone', text: _l('手机'), value: mobilePhone },
         { id: 'email', text: _l('邮箱'), value: email },
       ];
-      const extendedList = portalValues.map(({ key, value }, index) => ({
+      const extendedList = portalValues.map(({ key, value }, index: number) => ({
         id: `custom-${index}`,
         text: key,
         value,

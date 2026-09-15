@@ -68,7 +68,7 @@ export default class MobileDraftList extends Component<any, any> {
             worksheetId={worksheetId}
             worksheetInfo={worksheetInfo}
             getDraftData={this.getDraftData}
-            updateDraftList={(rowId, rowData) => {
+            updateDraftList={(rowId: string, rowData) => {
               let data = _.clone(draftData);
 
               if (!rowData) {

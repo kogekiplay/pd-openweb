@@ -111,7 +111,7 @@ export default class DingSyncCourse extends React.Component<any, any> {
     );
   }
 
-  getAppInfo = (isWX: boolean, projectId, apkId) => {
+  getAppInfo = (isWX: boolean, projectId: string, apkId) => {
     if (isWX) {
       Ajax.getWorkWXSsoUrlInfo({
         projectId: projectId,
@@ -160,7 +160,7 @@ export default class DingSyncCourse extends React.Component<any, any> {
     }
   };
 
-  getDetail = appId => {
+  getDetail = (appId: string) => {
     Api.getApp({ appId: appId }, { silent: true }).then(data => {
       this.setState({
         loading: false,

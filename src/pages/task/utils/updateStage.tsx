@@ -6,7 +6,7 @@ import { htmlEncodeReg } from 'src/utils/common';
 import { returnCustonValue } from './utils';
 
 // 更新阶段视图下的任务列表自定义数据自动更新
-export default (taskId, controls) => {
+export default (taskId: string, controls) => {
   const { viewType, folderId } = Store.getState().task.taskConfig;
 
   if (viewType === 2 && folderId) {

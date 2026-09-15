@@ -1,17 +1,17 @@
 import { getTranslateInfo } from 'src/utils/app';
 
-const getTranslatedName = (appId, id, originalName) => getTranslateInfo(appId, null, id).name || originalName;
+const getTranslatedName = (appId: string, id, originalName) => getTranslateInfo(appId, null, id).name || originalName;
 
-const translateObjectName = (appId, obj, idKey: string, nameKey: string) => {
+const translateObjectName = (appId: string, obj, idKey: string, nameKey: string) => {
   obj[nameKey] = getTranslatedName(appId, obj[idKey], obj[nameKey]);
 };
 
-const translateArrayNames = (appId, array, idKey: string, nameKey: string) => {
+const translateArrayNames = (appId: string, array, idKey: string, nameKey: string) => {
   (array || []).forEach(item => translateObjectName(appId, item, idKey, nameKey));
 };
 
 // 翻译工作表相关信息
-export const fillTranslateInfo = (appId, roleDetail = {}) => {
+export const fillTranslateInfo = (appId: string, roleDetail = {}) => {
   (roleDetail.sheets || []).forEach(sheet => {
     translateObjectName(appId, sheet, 'sheetId', 'sheetName');
     translateArrayNames(appId, sheet.views, 'viewId', 'viewName');

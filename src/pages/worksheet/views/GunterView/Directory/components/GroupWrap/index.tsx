@@ -117,7 +117,7 @@ let GroupWrap = class GroupWrap extends Component<any, any> {
     const { grouping } = this.props;
     return (
       <GroupingTotalWrapper className="Relative">
-        {grouping.map((item, index) => (
+        {grouping.map((item, index: number) => (
           <div
             key={index} // style={{ top: index ? (grouping[index - 1].openCount * 32) : 0 }}
             style={{

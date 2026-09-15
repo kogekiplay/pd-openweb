@@ -239,7 +239,7 @@ export default class extends PureComponent<any, any> {
                   size="small"
                   className="InlineBlock"
                   checked={isChecked}
-                  onClick={checked => {
+                  onClick={(checked: boolean) => {
                     if (checked) {
                       const index = PERMISSION_WAYS_WITH_CHECKED.indexOf(permissionWay);
                       this.changePermissionWay(PERMISSION_WAYS_WITH_UNCHECKED[index]);
@@ -263,7 +263,7 @@ export default class extends PureComponent<any, any> {
                       className="InlineBlock"
                       checked={optionalControls.filter(l => extendAttrs.includes(l.id)).length > 0}
                       size="small"
-                      onClick={checked => {
+                      onClick={(checked: boolean) => {
                         if (checked) {
                           onChange({ extendAttrs: [] });
                         } else {
@@ -497,7 +497,7 @@ export default class extends PureComponent<any, any> {
                         className="InlineBlock"
                         checked={checked}
                         clearselected={clearselected}
-                        onClick={checked => this.toggleAllViewAuth(item.operatorKey, !checked)}
+                        onClick={(checked: boolean) => this.toggleAllViewAuth(item.operatorKey, !checked)}
                       />
                       {item.text}
                     </div>
@@ -582,7 +582,7 @@ export default class extends PureComponent<any, any> {
     );
   }
 
-  toggleAllViewAuth(key, checked) {
+  toggleAllViewAuth(key, checked: boolean) {
     const { roleDetail, onChange } = this.props;
     const sheets = (roleDetail.sheets || []).map(item => changeSheetModel(item, key, checked));
 
@@ -621,7 +621,7 @@ export default class extends PureComponent<any, any> {
     });
   };
 
-  updateLookPages = (id, checked, type) => {
+  updateLookPages = (id, checked: boolean, type) => {
     const { roleDetail, onChange } = this.props;
     const data = _.cloneDeep(roleDetail[type]).map(o => {
       if (id === o.pageId || id === o.id) {

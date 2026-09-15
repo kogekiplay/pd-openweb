@@ -1287,7 +1287,7 @@ const getIds = (arr = {}) => {
 };
 
 // 提示错误：单个条件组字段、条件值隐藏过滤(补充条件为或的情况)
-const getItemGroupFilters = (arrItem = {}, data = [], recordId, from) => {
+const getItemGroupFilters = (arrItem = {}, data = [], recordId: string, from) => {
   const isOrCondition = (arrItem.groupFilters || []).findIndex(its => its.spliceType === 2) > -1;
   let newArr = [arrItem.groupFilters || []];
 
@@ -1312,7 +1312,7 @@ const getItemGroupFilters = (arrItem = {}, data = [], recordId, from) => {
 };
 
 //判断业务规则配置条件是否满足
-export const checkValueAvailable = (rule = {}, data = [], recordId, from?) => {
+export const checkValueAvailable = (rule = {}, data = [], recordId: string, from?) => {
   let isAvailable = false;
   //不满足条件的id,过滤错误
   let filterControlIds = {};
@@ -1341,7 +1341,7 @@ export const checkValueAvailable = (rule = {}, data = [], recordId, from?) => {
 
     if (arr.groupFilters && arr.groupFilters.length) {
       let childItemAvailable = true;
-      arr.groupFilters.forEach((its, index) => {
+      arr.groupFilters.forEach((its, index: number) => {
         let filterControl = data.find(a => a.controlId === its.controlId);
 
         if (filterControl && !isRelateMoreList(filterControl, its)) {
@@ -1387,7 +1387,7 @@ export const checkValueAvailable = (rule = {}, data = [], recordId, from?) => {
 };
 
 //判断所有业务规则是否满足条件
-export const checkAllValueAvailable = (rules = [], data = [], recordId, from) => {
+export const checkAllValueAvailable = (rules = [], data = [], recordId: string, from) => {
   let errors = [];
   const { errorRules = [] } = getAvailableFilters(rules, data, recordId);
 

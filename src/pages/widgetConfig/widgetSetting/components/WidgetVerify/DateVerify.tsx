@@ -145,7 +145,7 @@ export default function DateVerify({ data, onChange }) {
               <Checkbox
                 size="small"
                 checked={allowweek}
-                onClick={checked =>
+                onClick={(checked: boolean) =>
                   onChange(handleAdvancedSettingChange(data, { allowweek: checked ? '' : '1234567' }))
                 }
               >
@@ -200,7 +200,7 @@ export default function DateVerify({ data, onChange }) {
             <Checkbox
               size="small"
               checked={allowtime}
-              onClick={checked =>
+              onClick={(checked: boolean) =>
                 onChange(handleAdvancedSettingChange(data, { allowtime: checked ? '' : '00:00-24:00' }))
               }
               text={_l('允许选择的时段')}

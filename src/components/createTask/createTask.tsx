@@ -538,7 +538,7 @@ $.extend(CreateTask.prototype, {
     var has;
     var i;
     var _that = this;
-    var newMemberCheckFun = function (index, item) {
+    var newMemberCheckFun = function (index: number, item) {
       if (item.accountId === memberArr[i].accountId) {
         has = true;
         return false;
@@ -602,7 +602,7 @@ $.extend(CreateTask.prototype, {
           memberList = '';
           var isExistes;
           var accountId = '';
-          var existsIdsCheckFun = function (index, id) {
+          var existsIdsCheckFun = function (index: number, id) {
             if (id.split('MD_SpecialAccounts')[0] === accountId.split('MD_SpecialAccounts')[0]) {
               if (!users[i].accountId) {
                 $('.createTaskAddMemberBox .imgMemberBox[data-id=' + id + ']')
@@ -775,7 +775,7 @@ CreateTask.Motheds = {
           var folderList = '';
           CreateTask.settings.isMore = source.data && source.data.length === 20;
           if (source.data) {
-            $.each(source.data, function (index, item) {
+            $.each(source.data, function (index: number, item) {
               folderList +=
                 '<li class="item overflow_ellipsis bgColorPrimary" data-folderid="' +
                 item.folderID +
@@ -1046,7 +1046,7 @@ CreateTask.Motheds = {
   },
 
   // 验证当前用户是否在该网络
-  checkIsProject: function (projectId) {
+  checkIsProject: function (projectId: string) {
     var isExist = false;
     _.map(md.global.Account.projects, function (project) {
       if (projectId === project.projectId) {

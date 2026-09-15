@@ -268,7 +268,7 @@ class Enterprise extends Component<any, any> {
           </div>
         ) : currentProject && !_.isEmpty(projectList) ? (
           <Fragment>
-            {projectList.map((item, index) => (
+            {projectList.map((item, index: number) => (
               <ProjectCard
                 key={item.projectId}
                 item={item}

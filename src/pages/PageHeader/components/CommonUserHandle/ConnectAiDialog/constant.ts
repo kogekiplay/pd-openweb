@@ -33,7 +33,7 @@ export const QUICK_CONNECT_TOOLS = [
     injectChat: true,
     getChatUrl: msg =>
       `cursor://anysphere.cursor-deeplink/prompt?text=${encodeURIComponent(msg.replace(/&/g, '\\u0026'))}`,
-    getMcpInstallUrl: (name, config) =>
+    getMcpInstallUrl: (name: string, config) =>
       `cursor://anysphere.cursor-deeplink/mcp/install?name=${encodeURIComponent(name)}&config=${encodeURIComponent(config)}`,
   },
   {

@@ -49,7 +49,7 @@ export function cancelStream(sessionId) {
   return agentApi.agentCancel({ sessionId }, { silent: true }).catch(() => {});
 }
 
-export async function insertChatHistory(chatId, title) {
+export async function insertChatHistory(chatId, title: string) {
   if (!chatId || !title) {
     return;
   }
@@ -68,7 +68,7 @@ export async function insertChatHistory(chatId, title) {
   return mingoAjax.saveRecord(newHistory);
 }
 
-export async function updateChatTitle(chatId, title) {
+export async function updateChatTitle(chatId, title: string) {
   if (!chatId || !title) {
     return;
   }

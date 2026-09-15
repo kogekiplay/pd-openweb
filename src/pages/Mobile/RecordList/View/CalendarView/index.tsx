@@ -103,7 +103,7 @@ const Calendar = memo(
       setState({ showTodayBtn });
     };
 
-    const setCalendarTitle = title => {
+    const setCalendarTitle = (title: string) => {
       setState({ calendarTitle: title });
     };
 
@@ -181,7 +181,7 @@ const Calendar = memo(
       });
     };
 
-    const recordUpdateCallback = (rowid, rowData) => {
+    const recordUpdateCallback = (rowid: string, rowData) => {
       // 未排期弹层的数据需要手动更新
       if (isNotScheduled) {
         updateCalendarNotScheduled(rowid, rowData);
@@ -191,7 +191,7 @@ const Calendar = memo(
       refreshCalendarViewData();
     };
 
-    const recordDeleteCallback = rowid => {
+    const recordDeleteCallback = (rowid: string) => {
       if (isNotScheduled) {
         deleteCalendarNotScheduled(rowid);
         return;

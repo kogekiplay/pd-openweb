@@ -787,7 +787,7 @@ export const setHighLightOfRows = (rowIds, tableId?) => {
     const { sheetview } = getState().sheet;
     const { rows } = sheetview.sheetViewData;
     dispatch(clearHighLight(tableId));
-    rowIds.forEach(rowId => {
+    rowIds.forEach((rowId: string) => {
       let rowIndex = _.findIndex(rows, row => row.rowid === rowId);
 
       if (_.isUndefined(rowIndex)) {
@@ -813,13 +813,13 @@ export function hideRows(rowIds) {
     const { sheetview, views, base = {} } = getState().sheet;
     const view = _.find(views, v => v.viewId === base.viewId);
     const { rows } = sheetview.sheetViewData;
-    rowIds = rowIds.filter(rowId => _.find(rows, r => rowId === r.rowid));
+    rowIds = rowIds.filter((rowId: string) => _.find(rows, r => rowId === r.rowid));
     if (rowIds.length) {
       dispatch(clearSelect());
       if (getGroupControlId(view)) {
         const newRows: RecordRow[] = rows.map((groupRow: RecordRow) => {
           if (groupRow.rowid === 'groupTitle') {
-            const deletedRowsLengthOfGroup = rowIds.filter(rowId => {
+            const deletedRowsLengthOfGroup = rowIds.filter((rowId: string) => {
               const row = rows.find((r: RecordRow) => r.rowid === rowId);
               return row && row.groupKey === groupRow.key;
             }).length;
@@ -839,7 +839,7 @@ export function hideRows(rowIds) {
         rowIds,
       });
       if (checkIsTreeTableView(getState())) {
-        rowIds.forEach(rowId => {
+        rowIds.forEach((rowId: string) => {
           rows.forEach((row: RecordRow) => {
             if (row.pid === rowId || includes(row.childrenids, rowId)) {
               const changes = {};
@@ -887,14 +887,14 @@ export function changeToSelectCurrentPageFromSelectAll() {
   };
 }
 
-export const updateSheetColumnWidths = (controlId, value, changes) => ({
+export const updateSheetColumnWidths = (controlId: string, value, changes) => ({
   type: 'WORKSHEET_SHEETVIEW_UPDATE_COLUMN_WIDTH',
   controlId,
   value,
   changes,
 });
 
-export const hideColumn = controlId => ({
+export const hideColumn = (controlId: string) => ({
   type: 'WORKSHEET_SHEETVIEW_HIDE_COLUMN',
   controlId,
 });
@@ -1035,7 +1035,7 @@ export const updateDefaultScrollLeft = value => ({
 });
 
 // 更新每页数量
-export function changePageSize(pageSize, pageIndex, { refetch = true } = {}) {
+export function changePageSize(pageSize, pageIndex: number, { refetch = true } = {}) {
   return function (dispatch: AppDispatch, getState: GetState) {
     const { base } = getState().sheet;
     saveLRUWorksheetConfig('WORKSHEET_VIEW_PAGESIZE', base.worksheetId, pageSize);
@@ -1047,7 +1047,7 @@ export function changePageSize(pageSize, pageIndex, { refetch = true } = {}) {
 }
 
 // 分页
-export function changePageIndex(pageIndex, sleep?) {
+export function changePageIndex(pageIndex: number, sleep?) {
   return function (dispatch) {
     if (sleep) {
       setTimeout(() => {
@@ -1080,7 +1080,7 @@ function resetView() {
  * 新配置-本地：列宽(和对齐方式) - liststyle，列冻结 fixedcolumncount，更新时间 layoutupdatetime
  */
 
-export function setViewLayout(viewId) {
+export function setViewLayout(viewId: string) {
   // pageSize 更新逻辑
   return (dispatch: AppDispatch, getState: GetState) => {
     const { base = {}, views, worksheetInfo } = getState().sheet;

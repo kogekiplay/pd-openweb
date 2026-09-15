@@ -38,7 +38,7 @@ export default class SheetPagination extends Component<any, any> {
       </span>
     );
   }
-  renderAllPage(length: number, pageIndex, offset = 0) {
+  renderAllPage(length: number, pageIndex: number, offset = 0) {
     return [...new Array(length)].map((a, index) => this.renderPage(index + 1 + offset, pageIndex));
   }
   renderPiecePage() {

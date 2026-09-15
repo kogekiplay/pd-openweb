@@ -138,7 +138,7 @@ export default function CreateAIDialog(props) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [customRemark, setCustomRemark] = useState<string | undefined>();
 
-  const renderItem = (item, index) => {
+  const renderItem = (item, index: number) => {
     const isActive = item.summary === name;
 
     return (
@@ -262,7 +262,7 @@ export default function CreateAIDialog(props) {
               className="aiContent flexRow Absolute"
               style={{ transform: currentIndex > 0 ? `translateX(-${currentIndex * (180 + 10)}px)` : 'none' }}
             >
-              {aiList.map((item, index) => renderItem(item, index))}
+              {aiList.map((item, index: number) => renderItem(item, index))}
             </div>
             {aiList.length > 4 && currentIndex < aiList.length - 4 && (
               <div className="nextWrap">

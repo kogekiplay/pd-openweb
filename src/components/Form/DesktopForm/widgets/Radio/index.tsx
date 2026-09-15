@@ -149,7 +149,7 @@ const RadioWidget = props => {
             flexColumn: vertical || direction === '1',
           })}
         >
-          {displayOptions.map((item, index) => {
+          {displayOptions.map((item, index: number) => {
             return (
               <Fragment key={index}>
                 <div className="flexColumn" style={direction === '0' ? { width: getItemWidth(displayOptions) } : {}}>

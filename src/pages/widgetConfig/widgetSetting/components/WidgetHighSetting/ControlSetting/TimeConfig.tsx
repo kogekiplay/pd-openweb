@@ -34,7 +34,7 @@ function StartEndTime(props) {
         <Checkbox
           size="small"
           checked={min}
-          onClick={checked => onChange(handleAdvancedSettingChange(data, { min: checked ? '' : JSON.stringify([]) }))}
+          onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { min: checked ? '' : JSON.stringify([]) }))}
         >
           <span>{_l('起始时间')}</span>
         </Checkbox>
@@ -52,7 +52,7 @@ function StartEndTime(props) {
         <Checkbox
           size="small"
           checked={max}
-          onClick={checked => onChange(handleAdvancedSettingChange(data, { max: checked ? '' : JSON.stringify([]) }))}
+          onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { max: checked ? '' : JSON.stringify([]) }))}
         >
           <span>{_l('结束时间')}</span>
         </Checkbox>
@@ -82,7 +82,7 @@ export default function TimeConfig(props) {
         <Checkbox
           size="small"
           checked={!!timeinterval}
-          onClick={checked => onChange(handleAdvancedSettingChange(data, { timeinterval: checked ? '' : '1' }))}
+          onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { timeinterval: checked ? '' : '1' }))}
         >
           <span>{_l('预设分钟间隔')}</span>
           <Tooltip

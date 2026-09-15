@@ -681,7 +681,7 @@ const triggerCustomActions = async props => {
       // 错误提示
       case ACTION_VALUE_ENUM.ERROR:
         const errorInfos = [];
-        actionItems.map((item, index) => {
+        actionItems.map((item, index: number) => {
           const errorControl = _.find(formData, f => f.controlId === item.controlId);
 
           if (errorControl) {

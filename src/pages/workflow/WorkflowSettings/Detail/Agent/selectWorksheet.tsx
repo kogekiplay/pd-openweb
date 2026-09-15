@@ -50,7 +50,7 @@ const SelectWorksheet = props => {
                       className="mTop15 mLeft30"
                       text={o.workSheetName}
                       checked={_.includes(worksheetIds, o.workSheetId)}
-                      onClick={checked =>
+                      onClick={(checked: boolean) =>
                         setWorksheetIds(
                           checked ? worksheetIds.filter(id => id !== o.workSheetId) : [...worksheetIds, o.workSheetId],
                         )

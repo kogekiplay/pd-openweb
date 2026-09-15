@@ -25,7 +25,7 @@ export default function PromptError(props) {
     });
   }, []);
 
-  const getDetail = controlId => {
+  const getDetail = (controlId: string) => {
     const currentControl = _.find(allControls, s => s.controlId === controlId) || {};
     const enumType = enumWidgetType[currentControl.type];
     const { icon } = DEFAULT_CONFIG[enumType];
@@ -61,7 +61,7 @@ export default function PromptError(props) {
                 <span className="Red">*</span>
               </div>
             </div>
-            {actionItems.map((item, index) => {
+            {actionItems.map((item, index: number) => {
               const { icon, currentControl } = getDetail(item.controlId);
               const isDelete = _.isEmpty(currentControl);
               return (

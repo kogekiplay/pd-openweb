@@ -252,7 +252,7 @@ export default class CardMessage extends Component<any, any> {
       ></div>
     );
   }
-  renderCardContent(title) {
+  renderCardContent(title: string) {
     return <div className="Message-cardItem">{title}</div>;
   }
   renderVote() {
@@ -264,7 +264,7 @@ export default class CardMessage extends Component<any, any> {
       <div>
         <div className="Message-cardItem-voteTitle">{message}</div>
         <div>
-          {Options.slice(0, 3).map((item, index) => (
+          {Options.slice(0, 3).map((item, index: number) => (
             <div key={index} className="Message-cardItem-voteOptions-item">
               <span className="Message-cardItem-voteOptions-itemInput" title={item.name}>
                 {item.name}

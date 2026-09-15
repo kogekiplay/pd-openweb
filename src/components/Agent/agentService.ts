@@ -352,7 +352,7 @@ export async function fetchAgentSessions({ page = 1, size = 50, keyword = '' } =
 
 // 会话重命名：改的就是列表展示标题（后端 firstMessage 字段）。title 需 trim 非空、≤100 字。
 // 成功返回后端回显的 trim 后标题，失败抛错由调用方提示。
-export async function renameAgentSession(sessionId, title) {
+export async function renameAgentSession(sessionId, title: string) {
   const res = await agentAjax.agentSessionsRename({ sessionId, title }, { silent: true });
 
   if (!res || res.success === false) {
@@ -661,7 +661,7 @@ export async function fetchBuildEstimate(artifactId, versionId) {
 // 返回 { settled, credits }：settled 为 accountStatus==='settled'（已扣完、credits 为终值，含 0 合法值）；
 // pending_aggregate / traceId 未落库（接口返 credits=0+pending）/ 异常都视作未结算（settled:false），由调用方继续轮询。
 // 调用方只在 settled 时写入 credits，避免把阶段值 / 未命中的 0 误显示。
-export async function fetchTraceUsage(traceId, projectId) {
+export async function fetchTraceUsage(traceId, projectId: string) {
   if (!traceId || !projectId) return { settled: false, credits: null };
 
   try {

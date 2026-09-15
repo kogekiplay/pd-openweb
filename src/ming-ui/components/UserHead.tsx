@@ -29,7 +29,7 @@ export default class UserHead extends React.Component<any, any> {
     size: 48,
   };
 
-  getDefaultImg = accountId => {
+  getDefaultImg = (accountId: string) => {
     let host = `${md.global.FileStoreConfig.pictureHost}/UserAvatar/`;
 
     switch (accountId) {

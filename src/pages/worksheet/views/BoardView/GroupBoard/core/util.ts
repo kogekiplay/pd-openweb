@@ -59,7 +59,7 @@ const parseDoubleEncoded = raw => {
   }
 };
 
-const extractValues = (viewData, controlId, type, relationTitleControl) => {
+const extractValues = (viewData, controlId: string, type, relationTitleControl) => {
   const rule = typeRules[type];
   if (!rule) return [];
 
@@ -133,7 +133,7 @@ export const groupByOptionKey = (viewData, view, control, options) => {
 
   // 遍历 viewData 填充分组数据
   viewData.forEach(({ key: groupKey, data }) => {
-    data.forEach((item, index) => {
+    data.forEach((item, index: number) => {
       let valueStr = '';
       const fd = item.formData.find((f: FormControl) => f.controlId === controlId);
       if (fd) valueStr = fd.value ?? '';

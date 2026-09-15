@@ -278,7 +278,7 @@ class AppHome extends React.Component<any, any> {
           showMore: markedAppItems.length > 6,
         })}
         <div className="groupCon">
-          {markedAppItems.slice(0, 6).map((item, index) => {
+          {markedAppItems.slice(0, 6).map((item, index: number) => {
             return (
               <ApplicationItem
                 key={item.id}
@@ -331,7 +331,7 @@ class AppHome extends React.Component<any, any> {
           {_.isEmpty(list) ? (
             <EmptyStatus emptyType="recent" emptyTxt={_l('没有最近使用')} />
           ) : (
-            list.slice(0, 6).map((item, index) => {
+            list.slice(0, 6).map((item, index: number) => {
               return (
                 <ApplicationItem
                   key={`${item.id}-${index}`}
@@ -428,7 +428,7 @@ class AppHome extends React.Component<any, any> {
           showMore: collectCharts.length > 3,
         })}
         <div className="pLeft16 pRight16">
-          {collectCharts.slice(0, 3).map((item, index) => {
+          {collectCharts.slice(0, 3).map((item, index: number) => {
             const isLast = index === collectCharts.slice(0, 3).length - 1;
 
             return (

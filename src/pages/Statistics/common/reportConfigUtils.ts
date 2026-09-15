@@ -38,7 +38,7 @@ export function initConfigDetail(id, data, currentReport, customPageConfig) {
 
   // 兼容双轴排序
   if (reportType === reportTypes.DualAxes && result.sorts.length > 1) {
-    result.sorts = result.sorts.map((item, index) => {
+    result.sorts = result.sorts.map((item, index: number) => {
       if (index) {
         const key = Object.keys(item)[0];
         if (!key) return item;
@@ -292,7 +292,7 @@ export function initConfigDetail(id, data, currentReport, customPageConfig) {
       result.displaySetup.showPileTotal = false;
       result.displaySetup.hideOverlapText = false;
       result.displaySetup.showDimension = false;
-      result.yaxisList = currentReport.yaxisList.filter((n, index) => index < 3);
+      result.yaxisList = currentReport.yaxisList.filter((n, index: number) => index < 3);
     }
 
     if (reportTypes.DualAxes === reportType) {
@@ -829,7 +829,7 @@ export const systemControls = [
 /**
  * 是否是系统控件
  */
-export function isSystemControl(controlId) {
+export function isSystemControl(controlId: string) {
   return !_.isEmpty(_.find(systemControls, { controlId }));
 }
 

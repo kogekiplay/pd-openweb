@@ -411,7 +411,7 @@ export function buttonsCheckStatus(state = {}, action: ReduxAction) {
   switch (action.type) {
     case 'MOBILE_UPDATE_BUTTONS_CHECK_STATUS': {
       const nextState = { ...state };
-      action.rowIds.forEach(rowId => {
+      action.rowIds.forEach((rowId: string) => {
         action.btnIds.forEach(btnId => {
           delete nextState[`${rowId}-${btnId}`];
         });

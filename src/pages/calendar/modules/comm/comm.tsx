@@ -26,7 +26,7 @@ Comm.settings = {
 Comm.doT = doT;
 
 // url参数
-Comm.getQueryString = function (name) {
+Comm.getQueryString = function (name: string) {
   var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
   var r = window.location.search.substr(1).match(reg);
   if (r != null) return unescape(r[2]);

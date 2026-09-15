@@ -687,7 +687,7 @@ export const sortGrouping = (grouping, view = {}, controls: FormControl[] = []) 
 /**
  * 把一个日期时间的小时转成一个宽度占比
  */
-export const timeToPercentage = (time, width) => {
+export const timeToPercentage = (time, width: number) => {
   const [, hours] = time.split(' ');
 
   if (hours) {

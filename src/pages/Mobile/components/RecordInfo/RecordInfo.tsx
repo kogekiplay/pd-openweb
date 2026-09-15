@@ -1197,7 +1197,7 @@ let RecordInfo = class RecordInfo extends Component<any, any> {
       },
     );
   };
-  handleDeleteSuccess = rowid => {
+  handleDeleteSuccess = (rowid: string) => {
     const { isModal, onClose = () => {}, deleteRow, deleteCallback = () => {} } = this.props;
 
     if (isModal) {
@@ -1371,7 +1371,7 @@ let RecordInfo = class RecordInfo extends Component<any, any> {
                 this.refreshEvents[id] = fn;
               },
               refreshRecord: this.refreshRecord,
-              updateRelationControls: (controlId, newControls) => {
+              updateRelationControls: (controlId: string, newControls) => {
                 if (!this.customwidget.current || !this.customwidget.current.dataFormat) return;
                 this.customwidget.current.dataFormat.data = this.customwidget.current.dataFormat.data.map(item => {
                   if (item.type === 34 && item.controlId === controlId) {

@@ -119,7 +119,7 @@ const OpenRecordBtn = styled(FlexCenter)`
   }
 `;
 
-function getApplyToAllChecked(worksheetInfo, viewId) {
+function getApplyToAllChecked(worksheetInfo, viewId: string) {
   const view = find(worksheetInfo.views, o => o.viewId === viewId);
 
   if (!view) {
@@ -399,7 +399,7 @@ export default function RowHead(props) {
                       ? !selectedIds.length
                       : !!dataLength && selectedIds.length === dataLength
                   }
-                  onClick={(checked, value, e) => {
+                  onClick={(checked: boolean, value, e) => {
                     e.stopPropagation();
                     handleCheckAll();
                   }}

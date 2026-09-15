@@ -306,7 +306,7 @@ function ConnectAuth(props) {
             className="InlineBlock bold"
             text={_l('配置 Access Token 刷新条件')}
             checked={!!refreshType}
-            onClick={checked =>
+            onClick={(checked: boolean) =>
               updateAjaxParameter(
                 checked
                   ? {

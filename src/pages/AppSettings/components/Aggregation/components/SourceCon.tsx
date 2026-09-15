@@ -279,7 +279,7 @@ export default function SourceCon(props) {
     );
   };
 
-  const onChangeSource = (newappId, worksheetId, worksheet) => {
+  const onChangeSource = (newappId, worksheetId: string, worksheet) => {
     const sourceDt = getNodeInfo(props.flowData, 'DATASOURCE');
 
     // 当前应用或其他应用下的工作表（一个工作表只能选择一次）

@@ -334,7 +334,7 @@ export default function FormCover(props) {
           }
           effect={animation === '1' ? 'scrollx' : 'fade'}
           autoplaySpeed={parseInt(autosecond) * 1000}
-          afterChange={index => {
+          afterChange={(index: number) => {
             setCurrentIndex(index);
           }}
         >

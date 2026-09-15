@@ -43,7 +43,7 @@ export default ({
         {status === 2 || cause === 7777 || isDelete ? null : (
           <Checkbox
             checked={!!batchIds.find(o => o.id === id)}
-            onClick={(checked, value, e) => {
+            onClick={(checked: boolean, value, e) => {
               e.stopPropagation();
               onUpdateBatchIds(
                 !checked ? batchIds.concat({ id, status, cause, instanceType }) : batchIds.filter(o => o.id !== id),

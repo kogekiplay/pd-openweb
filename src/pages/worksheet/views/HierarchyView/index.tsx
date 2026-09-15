@@ -598,7 +598,7 @@ function Hierarchy(props) {
                 }
               />
             ) : (
-              hierarchyViewState.map((item, index) => {
+              hierarchyViewState.map((item, index: number) => {
                 return (
                   <TreeNode
                     {..._.pick(props, [

@@ -195,7 +195,7 @@ export default class ShareUrl extends React.Component<any, any> {
     const qrurl = md.global.Config.AjaxApiUrl + `code/CreateQrCodeImage?url=${encodeUrl}`;
     const qrurlDownload = md.global.Config.AjaxApiUrl + `code/CreateQrCodeImage?url=${encodeUrl}&size=20&download=true`;
 
-    const renderButtons = (btn, index) =>
+    const renderButtons = (btn, index: number) =>
       btn.showCompletely ? (
         <SeparateDisplayButton style={btn.style} theme={theme} onClick={btn.onClick}>
           <i style={btn.iconStyle} className={`icon-${btn.icon}`}></i>
@@ -276,7 +276,7 @@ export default class ShareUrl extends React.Component<any, any> {
                 )}
               </React.Fragment>
             )}
-            {inputBtns.map((btn, index) => (
+            {inputBtns.map((btn, index: number) => (
               <Tooltip key={index} placement="bottom" title={btn.tip}>
                 <InputIcon theme={theme} onClick={btn.onClick}>
                   <i style={btn.iconStyle} className={`icon-${btn.icon}`}></i>

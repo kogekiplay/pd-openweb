@@ -377,7 +377,7 @@ export default class OtherAction extends Component<any, any> {
         )}
 
         <div>
-          {selectedUsers.map((user, index) => {
+          {selectedUsers.map((user, index: number) => {
             return (
               <Member key={index}>
                 <img src={user.avatar} />
@@ -584,7 +584,7 @@ export default class OtherAction extends Component<any, any> {
           <Fragment>
             <div className="textSecondary mTop15 mBottom6">{_l('选择预设')}</div>
             <TemplateList>
-              {list.map((item, index) => (
+              {list.map((item, index: number) => (
                 <span
                   className={cx('ellipsis', { active: content.trim() === item.value.trim() })}
                   key={index}
@@ -613,7 +613,7 @@ export default class OtherAction extends Component<any, any> {
             </div>
             {!hideOpinion && (
               <TemplateList>
-                {opinionList.map((item, index) => (
+                {opinionList.map((item, index: number) => (
                   <span
                     className={cx('ellipsis pRight30', { active: content.trim() === item.opinion.trim() })}
                     key={index}

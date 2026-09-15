@@ -253,7 +253,7 @@ export default class Link extends Component<any, any> {
                     : () => <span>{selectView.text}</span>
               }
               border
-              onChange={viewId => this.updateSource({ viewId })}
+              onChange={(viewId: string) => this.updateSource({ viewId })}
             />
           </Fragment>
         ) : (
@@ -316,7 +316,7 @@ export default class Link extends Component<any, any> {
                 className="InlineFlex bold"
                 text={_l('设置链接有效期')}
                 checked={data.time.enable}
-                onClick={checked => {
+                onClick={(checked: boolean) => {
                   const parameter = { enable: !checked };
 
                   // 初始化
@@ -375,7 +375,7 @@ export default class Link extends Component<any, any> {
               className="InlineFlex bold"
               text={_l('提交后允许查看/修改')}
               checked={data.submitType !== 0}
-              onClick={checked => this.updateSource({ submitType: checked ? 0 : 1, modifyTime: -1 })}
+              onClick={(checked: boolean) => this.updateSource({ submitType: checked ? 0 : 1, modifyTime: -1 })}
             />
           </div>
         )}
@@ -489,7 +489,7 @@ export default class Link extends Component<any, any> {
   /**
    * 获取工作表详情
    */
-  getWorksheetInfo(worksheetId) {
+  getWorksheetInfo(worksheetId: string) {
     worksheet.getWorksheetInfo({ worksheetId, getViews: true }).then(result => {
       if (result.resultCode === 1) {
         this.setState({ views: result.views });

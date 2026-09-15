@@ -53,7 +53,7 @@ export const getColumns = (
   setFilterStatus,
   setFastFilters,
   filterStatusNum,
-  appId,
+  appId: string,
 ) => {
   let columns = [];
   let controlsFormat = controls

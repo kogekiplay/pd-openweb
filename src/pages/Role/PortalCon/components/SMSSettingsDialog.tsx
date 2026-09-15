@@ -29,7 +29,7 @@ const CheckRow = styled.div`
   }
 `;
 
-function wrapCn(name) {
+function wrapCn(name: string) {
   return `【${name}】`;
 }
 

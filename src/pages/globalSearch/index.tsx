@@ -332,7 +332,7 @@ class GlobalSearch extends Component<any, any> {
     } else if (type === 'record') {
       startType = _list[0] ? _list[0].type : '';
     } else {
-      let obj = _list.find((l, index) => index !== 0 && _list[index - 1].type === type);
+      let obj = _list.find((l, index: number) => index !== 0 && _list[index - 1].type === type);
       startType = obj ? obj.type : '';
     }
 
@@ -448,7 +448,7 @@ class GlobalSearch extends Component<any, any> {
                 style={{ marginLeft: '18px' }}
                 currentProjectId={(item === 'apps' ? appProjectId : projectId) || getCurrentProjectId()}
                 needAll={false}
-                onChange={projectId => {
+                onChange={(projectId: string) => {
                   if (item === 'apps') {
                     this.setState({ appProjectId: projectId }, () => this.updateSearchApp({ type: 7 }));
                     return;
@@ -626,7 +626,7 @@ class GlobalSearch extends Component<any, any> {
                     <OrgSelect
                       currentProjectId={projectId || getCurrentProjectId()}
                       needAll={NEED_ALL_ORG_TAB.includes(searchType)}
-                      onChange={projectId => this.updateSearchParam({ projectId, pageIndex: 1 })}
+                      onChange={(projectId: string) => this.updateSearchParam({ projectId, pageIndex: 1 })}
                     />
                     <div className="mRight24 valignWrapper">
                       {searchType === 'record' && (

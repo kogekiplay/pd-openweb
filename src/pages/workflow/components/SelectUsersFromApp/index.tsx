@@ -68,7 +68,7 @@ export default class SelectUsersFromApp extends Component<any, any> {
   /**
    * 根据应用获取角色
    */
-  getRolesByApp(appId) {
+  getRolesByApp(appId: string) {
     ajaxRequest.getRolesWithUsers({ appId }).then(res => {
       res = res.map(({ roleId, name, users, departmentsInfos }) => {
         return {

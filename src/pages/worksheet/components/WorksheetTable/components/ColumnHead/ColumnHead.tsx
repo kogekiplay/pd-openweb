@@ -100,7 +100,7 @@ class ColumnHead extends Component<any, any> {
     return itemType;
   }
 
-  changeSortType(controlId, isAsc, type) {
+  changeSortType(controlId: string, isAsc, type) {
     const { sortByControl } = this.props;
     sortByControl({
       controlId,
@@ -109,7 +109,7 @@ class ColumnHead extends Component<any, any> {
     });
   }
 
-  handleColumnWidthLRUSave(controlId, value, changes?) {
+  handleColumnWidthLRUSave(controlId: string, value, changes?) {
     const { readonly, saveColumnStylesToLocal, updateColumnStyles } = this.props;
 
     if (readonly) return;
@@ -139,7 +139,7 @@ class ColumnHead extends Component<any, any> {
     updateDefaultScrollLeft();
   };
 
-  frozen(index) {
+  frozen(index: number) {
     const { isTreeTableView, readonly, viewId, frozenColumn } = this.props;
 
     if (isTreeTableView && index > 0) {

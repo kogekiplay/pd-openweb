@@ -75,7 +75,7 @@ export default class SingleFilter extends Component<any, any> {
       this.handleConditionsChange(newConditions);
     }
   };
-  updateCondition(index, value) {
+  updateCondition(index: number, value) {
     const { from = '' } = this.props;
     const { conditions } = this.state;
     const newConditions = conditions.map((c, i) => (i === index ? Object.assign({}, c, value) : c));
@@ -96,7 +96,7 @@ export default class SingleFilter extends Component<any, any> {
       }
     }
   }
-  deleteCondition(index) {
+  deleteCondition(index: number) {
     const { conditions } = this.state;
     const newConditions = conditions.filter((c, i) => i !== index);
     this.setState({
@@ -149,7 +149,7 @@ export default class SingleFilter extends Component<any, any> {
       filterResigned = true,
     } = this.props;
     const { relationType, conditions } = this.state;
-    return conditions.map((condition, index) => {
+    return conditions.map((condition, index: number) => {
       const control = _.find(columns, column => condition.controlId === column.controlId);
       const conditionGroupKey = control && getTypeKey(control.type);
       const conditionGroupType = conditionGroupKey && CONTROL_FILTER_WHITELIST[conditionGroupKey].value;

@@ -138,7 +138,7 @@ export default function AppMentionPopup({
             <LoadDiv size={24} />
           </div>
         ) : apps.length ? (
-          apps.map((app, index) => (
+          apps.map((app, index: number) => (
             <div
               key={app.id}
               className={cx('mentionAppItem', { active: index === activeIndex })}

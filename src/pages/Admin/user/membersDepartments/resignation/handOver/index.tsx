@@ -218,7 +218,7 @@ export default class HandOver extends React.Component<any, any> {
             total={allCount}
             pageIndex={pageIndex}
             pageSize={20}
-            onChange={pageIndex => {
+            onChange={(pageIndex: number) => {
               this.setState({ pageIndex }, () => {
                 this.fetchList();
               });

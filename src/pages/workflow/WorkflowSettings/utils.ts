@@ -345,7 +345,7 @@ export const replaceField = (text, fieldMap, connector = '>') => {
   if (!reg.test(text)) return text;
   const handledText = text.replace(reg, ($0, $1) => {
     const ids = $1.split(/([a-zA-Z0-9#]{24,32})-/).filter(item => item);
-    const value = ids.map((v, index) => fieldMap[index === 0 ? v : ids.join('-')].name);
+    const value = ids.map((v, index: number) => fieldMap[index === 0 ? v : ids.join('-')].name);
     return ` (${value.join(connector)}) `;
   });
   return replaceField(handledText, fieldMap);
@@ -367,7 +367,7 @@ export const checkJSON = value => {
 /**
  * 获取筛选的控件条件
  */
-export const getConditionList = (type, enumDefault) => {
+export const getConditionList = (type, enumDefault: number) => {
   let list;
 
   switch (type) {

@@ -32,7 +32,7 @@ const formatChartData = (data, yaxisList, splitControlId, xaxesControlId, minVal
 
   value.forEach(item => {
     const name = item.x;
-    data.forEach((element, index) => {
+    data.forEach((element, index: number) => {
       const target = element.value.filter(n => n.x === name);
 
       if (target.length) {

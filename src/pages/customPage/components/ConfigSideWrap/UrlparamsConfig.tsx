@@ -17,7 +17,7 @@ export default props => {
     }, 0);
   };
 
-  const onValidate = index => {
+  const onValidate = (index: number) => {
     const currentValue = urlParams[index];
 
     if (!currentValue.trim()) {
@@ -39,7 +39,7 @@ export default props => {
           '指定参数名，可作为查询字符串附加在自定义页面链接后。在加载页面时可动态获取参数值用于自定义页面的筛选条件。',
         )}
       </div>
-      {urlParams.map((value, index) => (
+      {urlParams.map((value, index: number) => (
         <div className="flexRow alignItemsCenter mBottom10 urlParamsWrap">
           <Input
             placeholder={_l('请输入参数名')}

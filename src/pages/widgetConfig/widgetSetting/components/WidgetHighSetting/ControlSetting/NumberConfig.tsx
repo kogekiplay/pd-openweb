@@ -29,7 +29,7 @@ export default function NumberConfig(props) {
           <Checkbox
             size="small"
             checked={showinput === '1'}
-            onClick={checked => onChange(handleAdvancedSettingChange(data, { showinput: checked ? '0' : '1' }))}
+            onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { showinput: checked ? '0' : '1' }))}
             text={_l('显示输入框')}
           />
         </div>
@@ -37,7 +37,7 @@ export default function NumberConfig(props) {
           <Checkbox
             size="small"
             checked={itemnames}
-            onClick={checked => {
+            onClick={(checked: boolean) => {
               if (checked) {
                 onChange(handleAdvancedSettingChange(data, { itemnames: '' }));
               } else {
@@ -67,7 +67,7 @@ export default function NumberConfig(props) {
           <Checkbox
             size="small"
             checked={numshow === '1'}
-            onClick={checked =>
+            onClick={(checked: boolean) =>
               onChange(
                 handleAdvancedSettingChange(data, {
                   suffix: checked ? '' : '%',
@@ -102,7 +102,7 @@ export default function NumberConfig(props) {
         <Checkbox
           size="small"
           checked={thousandth !== '1'}
-          onClick={checked => onChange(handleAdvancedSettingChange(data, { thousandth: checked ? '1' : '0' }))}
+          onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { thousandth: checked ? '1' : '0' }))}
           text={_l('显示千分位')}
         />
       </div>
@@ -111,7 +111,7 @@ export default function NumberConfig(props) {
           <Checkbox
             size="small"
             checked={numshow === '1'}
-            onClick={checked =>
+            onClick={(checked: boolean) =>
               onChange(
                 handleAdvancedSettingChange(data, {
                   suffix: checked ? '' : '%',

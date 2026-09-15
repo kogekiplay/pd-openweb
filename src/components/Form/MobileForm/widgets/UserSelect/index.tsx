@@ -134,7 +134,7 @@ function UserSelect(props) {
     onChange(JSON.stringify(newAccounts));
   };
 
-  const removeUser = (e, accountId) => {
+  const removeUser = (e, accountId: string) => {
     e.stopPropagation();
     const newValue = selectUsers.filter(item => (item.accountId ?? item.id) !== accountId);
     onChange(JSON.stringify(newValue));

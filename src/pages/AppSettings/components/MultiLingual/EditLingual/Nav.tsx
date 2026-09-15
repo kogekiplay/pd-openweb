@@ -146,7 +146,7 @@ const customPageConfig = [
   },
 ];
 
-const getTreeData = (appId, { sections, collections, workflows, searchValue }) => {
+const getTreeData = (appId: string, { sections, collections, workflows, searchValue }) => {
   const getChildren = (appItem, childSections = []) => {
     if (appItem.type === 0) {
       const res = sheetConfig.map(item => {

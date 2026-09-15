@@ -23,7 +23,7 @@ export default class GanttSideBar extends Component<any, any> {
     const prefix = args.length ? args.map(v => ++v).join('.') + '.' : '';
     return (
       data &&
-      data.map((item, index) => {
+      data.map((item, index: number) => {
         const nextArgs = args.slice();
         nextArgs.push(index);
         return (

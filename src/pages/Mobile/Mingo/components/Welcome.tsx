@@ -103,7 +103,7 @@ export default function Welcome({
                 <Skeleton active widths={['100%']} height="16px" />
               </div>
             ))
-          : tryItems.map((item, index) => (
+          : tryItems.map((item, index: number) => (
               <div className="tryItem" key={index} onClick={() => item.onClick(item)}>
                 {item.title && <div className="tryTitle">{item.title}</div>}
                 <div className="tryText">

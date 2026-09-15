@@ -13,7 +13,7 @@ export default function SignatureOperate(props) {
         size="small"
         text={_l('允许从移动设备扫码上传')}
         checked={allowappupload !== '0'}
-        onClick={checked => onChange(handleAdvancedSettingChange(data, { allowappupload: String(+!checked) }))}
+        onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { allowappupload: String(+!checked) }))}
       />
     </div>
   );

@@ -252,7 +252,7 @@ class SelectIntegrationApi extends Component<any, any> {
                     this.getLinkList();
                   }}
                 >
-                  {linkList.map((item, index) => (
+                  {linkList.map((item, index: number) => (
                     <div
                       key={index}
                       className={cx('groupItem', { active: relationId === item.id })}
@@ -304,7 +304,7 @@ class SelectIntegrationApi extends Component<any, any> {
                       this.getApiList();
                     }}
                   >
-                    {apiList.map((child, index) => (
+                    {apiList.map((child, index: number) => (
                       <div
                         key={index}
                         className="childItem"

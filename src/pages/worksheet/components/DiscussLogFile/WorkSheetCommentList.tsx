@@ -338,7 +338,7 @@ export default class WorkSheetCommentList extends Component<any, any> {
               {focusUsers.length > 0 && (
                 <div className={cx('pLeft10 pRight10 pBottom10', { focusUserCon: isFocus })}>
                   <div className="textTertiary mTop10">{_l('已关注 %0', focusUsers.length)}</div>
-                  {focusUsers.map((o, index) => {
+                  {focusUsers.map((o, index: number) => {
                     return (
                       <div key={o.accountId || index} className="flexRow alignItemsCenter mTop12">
                         <UserHead

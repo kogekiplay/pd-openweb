@@ -63,7 +63,7 @@ export default class SideAppGroup extends Component<any, any> {
           <div className="displayState">{isShow ? _l('收起') : _l('展开')}</div>
         </div>
         <div ref={this.$appGroupWrap} className={cx('sideAppGroup', { hideGroup: !isShow })}>
-          {items && items.map((item, index) => <SideAppItem {...item} {...props} key={index} type={type} />)}
+          {items && items.map((item, index: number) => <SideAppItem {...item} {...props} key={index} type={type} />)}
         </div>
       </div>
     );

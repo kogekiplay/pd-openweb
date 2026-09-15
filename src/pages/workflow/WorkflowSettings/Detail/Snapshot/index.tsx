@@ -336,7 +336,7 @@ export default class Snapshot extends Component<any, any> {
           <Checkbox
             checked={data.openSSL}
             text={_l('开启SSL证书验证')}
-            onClick={checked => this.updateSource({ openSSL: !checked })}
+            onClick={(checked: boolean) => this.updateSource({ openSSL: !checked })}
           />
         </div>
       </Fragment>
@@ -396,7 +396,7 @@ export default class Snapshot extends Component<any, any> {
             selectedAppId={data.appDetails.apkId || this.props.relationId}
             selectedWorksheetId={data.appId}
             visible
-            onOk={(selectedAppId, worksheetId, obj) => {
+            onOk={(selectedAppId, worksheetId: string, obj) => {
               this.updateSource({
                 appId: worksheetId,
                 appDetails: {

@@ -188,7 +188,7 @@ export function triggerLoadMoreNodes() {
   };
 }
 
-export function searchNodes(keywords) {
+export function searchNodes(keywords: string) {
   return dispatch => {
     dispatch({ type: 'KC_CLEAR_KC' });
     dispatch({
@@ -203,7 +203,7 @@ export function searchNodes(keywords) {
   };
 }
 
-export function startGlobalSearch(keywords) {
+export function startGlobalSearch(keywords: string) {
   return dispatch => {
     dispatch({ type: 'KC_CLEAR_KC' });
     dispatch({
@@ -218,7 +218,7 @@ export function startGlobalSearch(keywords) {
   };
 }
 
-export function globalSearch(keywords) {
+export function globalSearch(keywords: string) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const kcState = getState().kc;
     const { skip, limit, sortBy, sortType } = kcState.params.toObject();

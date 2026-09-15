@@ -14,7 +14,7 @@ const getIds = (filterGroup = {}) => {
   return (filterGroup.groupFilters || []).reduce((total, filter) => total.concat(getFieldIds(filter)), []);
 };
 
-const getItemGroupFilters = (filterGroup = {}, data = [], recordId, from) => {
+const getItemGroupFilters = (filterGroup = {}, data = [], recordId: string, from) => {
   const isOrCondition = (filterGroup.groupFilters || []).findIndex(filter => filter.spliceType === 2) > -1;
   let groupFilters = [filterGroup.groupFilters || []];
 
@@ -37,7 +37,7 @@ const getItemGroupFilters = (filterGroup = {}, data = [], recordId, from) => {
   return { ...filterGroup, groupFilters: _.flatten(groupFilters) };
 };
 
-const checkValueAvailable = (rule = {}, data = [], recordId, from) => {
+const checkValueAvailable = (rule = {}, data = [], recordId: string, from) => {
   let isAvailable = false;
   let filterControlIds = {};
   let availableControlIds = {};
@@ -151,7 +151,7 @@ const updateDataPermission = ({ attrs = [], it, checkRuleValidator, item = {} })
   if (_.includes(types, 2) || eventPermissions[0] === '0') {
     fieldPermission = replaceStr(fieldPermission, 0, '0');
     if (isSubList && _.includes(item.showControls || [], it.controlId)) {
-      item.showControls = (item.showControls || []).filter(controlId => controlId !== it.controlId);
+      item.showControls = (item.showControls || []).filter((controlId: string) => controlId !== it.controlId);
     }
   } else if (_.includes(types, 1) || eventPermissions[0] === '1') {
     fieldPermission = replaceStr(fieldPermission, 0, '1');

@@ -381,7 +381,7 @@ export default class Sort extends Component<any, any> {
         const { valueMap } = reportData;
         const controlValueMap = valueMap[controlId] || {};
         this.setState({
-          sortList: result.map((item, index) => {
+          sortList: result.map((item, index: number) => {
             const key = _.findKey(item);
             const value = controlValueMap[key] || item[key];
             return {

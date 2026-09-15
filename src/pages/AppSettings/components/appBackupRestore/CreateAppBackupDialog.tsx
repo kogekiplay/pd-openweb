@@ -185,7 +185,7 @@ export default function CreateBackupModal(props) {
                 <Checkbox
                   text={_l('同时备份数据')}
                   checked={containData}
-                  onClick={checked => {
+                  onClick={(checked: boolean) => {
                     setContainData(!checked);
                   }}
                 />

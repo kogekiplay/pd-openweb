@@ -1,6 +1,6 @@
 // 提示邀请结果
 export const existAccountHint = function (result) {
-  const inviteNoticeMessage = function (title, accounts) {
+  const inviteNoticeMessage = function (title: string, accounts) {
     if (!accounts.length) return '';
     const USER_STATUS = {
       2: _l('（被拒绝加入，需从后台恢复权限）'),

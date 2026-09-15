@@ -144,7 +144,7 @@ class BatchOperate extends React.Component<any, any> {
     }
   }
 
-  loadCustomButtons(rowId) {
+  loadCustomButtons(rowId: string) {
     const { appId, worksheetId, viewId } = this.props;
     this.setState({
       customButtonLoading: true,

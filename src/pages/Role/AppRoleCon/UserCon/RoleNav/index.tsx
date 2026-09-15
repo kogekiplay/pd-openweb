@@ -108,7 +108,7 @@ export default class Con extends React.Component<any, any> {
               className="roleSearch"
               placeholder={_l('搜索角色')}
               value={keywords}
-              onChange={keywords => {
+              onChange={(keywords: string) => {
                 this.props.onChange({
                   keywords,
                   roleList: roleInfos.filter(

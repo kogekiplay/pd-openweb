@@ -444,7 +444,7 @@ export default class AggregationTable extends Component<any, any> {
               total={count}
               pageIndex={pageIndex}
               pageSize={50}
-              onChange={pageIndex => this.setState({ pageIndex }, this.getList)}
+              onChange={(pageIndex: number) => this.setState({ pageIndex }, this.getList)}
             />
           )}
         </div>

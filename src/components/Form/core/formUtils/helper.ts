@@ -184,7 +184,7 @@ export function handleDotAndRound(currentItem, value, ignoreAddZero = true) {
 
 // 获取控件的值（处理特殊选项控件）
 // objValue是外层新值，覆盖obj.value
-export const getControlValue = (data, currentItem, controlId, objValue?) => {
+export const getControlValue = (data, currentItem, controlId: string, objValue?) => {
   const obj = _.find(data, o => o.controlId === controlId) || {};
   const value = objValue || obj.value;
 

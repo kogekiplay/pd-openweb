@@ -71,7 +71,7 @@ class Actions {
     });
   };
 
-  loadFilters = (worksheetId, cb = () => {}) => {
+  loadFilters = (worksheetId: string, cb = () => {}) => {
     if (!worksheetId) return;
     worksheetAjax.getWorksheetFilters({ worksheetId }).then(data => {
       let filters = data.map(formatOriginFilterGroupValue);
@@ -295,7 +295,7 @@ class Actions {
       });
   };
 
-  sortFilters = (appId, worksheetId, sortedIds) => {
+  sortFilters = (appId: string, worksheetId: string, sortedIds) => {
     worksheetAjax.sortWorksheetFilters({
       appId,
       worksheetId,

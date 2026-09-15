@@ -7,7 +7,7 @@ import { getAppLangDetail, getTranslateInfo } from 'src/utils/app';
 import type { AppDispatch, GetState } from 'src/redux/types';
 
 export const getAppDetail =
-  (appId, cb, isPullRefresh = false) =>
+  (appId: string, cb, isPullRefresh = false) =>
   dispatch => {
     if (!isPullRefresh) {
       dispatch({ type: 'MOBILE_FETCH_START' });
@@ -34,7 +34,7 @@ export const getAppDetail =
       });
   };
 
-const getApp = (appId, cb) => dispatch => {
+const getApp = (appId: string, cb) => dispatch => {
   homeAppApi
     .getApp({ appId, getSection: true, getLang: true, isMobile: true })
     .then(detail => {
@@ -89,7 +89,7 @@ const getApp = (appId, cb) => dispatch => {
     });
 };
 
-const getTodoCount = appId => dispatch => {
+const getTodoCount = (appId: string) => dispatch => {
   if (window.isPublicApp) return;
   instanceVersion.getTodoListFilter({ type: -1 }).then(processTodoList => {
     const processData = _.find(processTodoList, { app: { id: appId } });
@@ -122,7 +122,7 @@ export const addAppApply =
       });
   };
 
-export const updateAppMark = (appId, projectId, isMarked) => (dispatch: AppDispatch, getState: GetState) => {
+export const updateAppMark = (appId: string, projectId: string, isMarked) => (dispatch: AppDispatch, getState: GetState) => {
   const { mobile } = getState();
   const { appDetail } = mobile;
 

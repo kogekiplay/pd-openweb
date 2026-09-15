@@ -409,7 +409,7 @@ export default function AppList(props) {
       {renderEmpty()}
       <ul className="list">
         {list &&
-          list.map((item, index) => {
+          list.map((item, index: number) => {
             return (
               <li
                 className={cx('listItem valignWrapper', {

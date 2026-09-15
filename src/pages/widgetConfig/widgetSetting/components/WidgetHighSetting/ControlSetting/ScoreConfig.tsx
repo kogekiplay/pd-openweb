@@ -88,7 +88,7 @@ export default function ScoreConfig({ data, onChange }) {
           size="small"
           checked={showvalue === '1'}
           text={_l('显示选中结果')}
-          onClick={checked => onChange(handleAdvancedSettingChange(data, { showvalue: checked ? '0' : '1' }))}
+          onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { showvalue: checked ? '0' : '1' }))}
         />
       </div>
       <div className="labelWrap">
@@ -96,7 +96,7 @@ export default function ScoreConfig({ data, onChange }) {
           size="small"
           checked={itemnames.length}
           text={_l('自定义等级文案')}
-          onClick={checked => {
+          onClick={(checked: boolean) => {
             if (!checked) {
               if (!names.length && Number(max) === 5) {
                 setNames(defaultNames);

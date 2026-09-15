@@ -689,7 +689,7 @@ export default class ConfigControl extends Component<any, any> {
             className="mTop20 textPrimary"
             text={_l('不允许用户修改默认配置')}
             defaultChecked={this.state.edited}
-            onClick={checked => this.setState({ edited: checked })}
+            onClick={(checked: boolean) => this.setState({ edited: checked })}
           />
         </div>
       ),
@@ -786,7 +786,7 @@ export default class ConfigControl extends Component<any, any> {
                 text={_l('识别重复记录')}
                 checked={repeatRecord}
                 disabled={!isCharge && edited}
-                onClick={checked => {
+                onClick={(checked: boolean) => {
                   if (fieldsList.length) {
                     this.setState({ repeatRecord: !checked, showStar: !checked ? repeatConfig.controlIds : [] });
                   } else {
@@ -852,7 +852,7 @@ export default class ConfigControl extends Component<any, any> {
                   text={_l('跳过错误数据')}
                   disabled={!isCharge && edited}
                   checked={!!skipSize}
-                  onClick={checked =>
+                  onClick={(checked: boolean) =>
                     this.setState({
                       errorSkip: errorSkip.map(item => {
                         item.value = !checked;
@@ -886,7 +886,7 @@ export default class ConfigControl extends Component<any, any> {
                             text={_l('全选') + `（${skipSize}/${errorSkip.length}）`}
                             checked={!!skipSize}
                             clearselected={!!skipSize && skipSize !== errorSkip.length}
-                            onClick={checked =>
+                            onClick={(checked: boolean) =>
                               this.setState({
                                 errorSkip: errorSkip.map(item => {
                                   item.value = !checked;
@@ -902,7 +902,7 @@ export default class ConfigControl extends Component<any, any> {
                             <Checkbox
                               text={ERROR_SKIP[o.key].text}
                               checked={o.value}
-                              onClick={checked =>
+                              onClick={(checked: boolean) =>
                                 this.setState({
                                   errorSkip: errorSkip.map(item => {
                                     if (item.key === o.key) {
@@ -929,7 +929,7 @@ export default class ConfigControl extends Component<any, any> {
                 text={_l('触发工作流')}
                 disabled={!isCharge && edited}
                 checked={tigger}
-                onClick={checked => this.setState({ tigger: !checked })}
+                onClick={(checked: boolean) => this.setState({ tigger: !checked })}
               />
             )}
 
@@ -1008,7 +1008,7 @@ export default class ConfigControl extends Component<any, any> {
             data={controls}
             value={controlItem.matchId || null}
             isAppendToBody
-            onChange={controlId => {
+            onChange={(controlId: string) => {
               // 修改映射字段
               const newControlMapping = [...controlMapping];
               const item = newControlMapping.find(item => item.ControlId === controlItem.controlId);
@@ -1070,7 +1070,7 @@ export default class ConfigControl extends Component<any, any> {
                   : () => <span>{_.find(controls, o => o.value === currentSourceConfig.controlId).text}</span>
             }
             isAppendToBody
-            onChange={controlId => {
+            onChange={(controlId: string) => {
               // 修改映射字段
               const newControlMapping = [...controlMapping];
               const item = newControlMapping.find(item => item.ControlId === controlItem.controlId);
@@ -1105,7 +1105,7 @@ export default class ConfigControl extends Component<any, any> {
     if (!repeatConfig.controlIds?.length) return _l('请选择');
 
     return repeatConfig.controlIds
-      .map(controlId => _.find(fieldsList, o => o.value === controlId)?.label || _l('无权限或已删除'))
+      .map((controlId: string) => _.find(fieldsList, o => o.value === controlId)?.label || _l('无权限或已删除'))
       .join('、');
   }
 
@@ -1147,7 +1147,7 @@ export default class ConfigControl extends Component<any, any> {
                 <LoadDiv className="mTop32" />
               ) : (
                 <Fragment>
-                  {worksheetControls.map((controlItem, index) => {
+                  {worksheetControls.map((controlItem, index: number) => {
                     const { type, advancedSetting } = controlItem;
 
                     // 不支持映射的字段
@@ -1277,7 +1277,7 @@ export default class ConfigControl extends Component<any, any> {
                                       !!controlMapping.find(item => item.ControlId === controlItem.controlId)
                                         .isAddOption
                                     }
-                                    onClick={checked => {
+                                    onClick={(checked: boolean) => {
                                       const newMapping = _.cloneDeep(controlMapping);
                                       newMapping.forEach(item => {
                                         if (item.ControlId === controlItem.controlId) {

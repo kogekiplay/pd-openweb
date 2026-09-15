@@ -6,7 +6,7 @@ import type { ReduxAction } from 'src/redux/types';
 import type { FormControl } from 'src/utils/controlTypes';
 
 // 按已有顺序排序
-const sortChildIds = (treeData, rowId, childrenids) => {
+const sortChildIds = (treeData, rowId: string, childrenids) => {
   const sortIds = Object.values(treeData).filter(i => i.pid === rowId);
   const idByOrder = new Map(sortIds.map((t, i) => [t.rowid, i]));
   // 未指定固定第一项
@@ -426,7 +426,7 @@ export function hierarchyTopLevelDataCount(state = 0, action: ReduxAction) {
 }
 
 const addRelateControls = (state, { ids, controls }) => {
-  const newControls: FormControl[] = ids.reduce((p, c, index) => {
+  const newControls: FormControl[] = ids.reduce((p, c, index: number) => {
     p[c] = controls[index];
     return p;
   }, {});
@@ -439,7 +439,7 @@ export function hierarchyRelateSheetControls(state = {}, action: ReduxAction) {
 
   switch (type) {
     case 'INIT_HIERARCHY_RELATE_SHEET_CONTROLS':
-      return ids.reduce((p, c, index) => {
+      return ids.reduce((p, c, index: number) => {
         p[c] = controls[index];
         return p;
       }, {});

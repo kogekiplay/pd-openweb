@@ -156,12 +156,12 @@ export default args => {
     message,
     'cid',
     getReplaceHtmlFunc(
-      function (id, name) {
+      function (id, name: string) {
         const category = findCategory(id);
         name = category ? category.catName : _l('未知话题');
         return `<a target="_blank" href="${pathCompletion('/feed?catId=' + id, { hasDomain: false })}">#${htmlEncodeReg(name)}#</a>`;
       },
-      function (id, name) {
+      function (id, name: string) {
         const category = findCategory(id);
         name = category ? category.catName : _l('未知话题');
         return '#' + htmlEncodeReg(name) + '#';
@@ -172,7 +172,7 @@ export default args => {
   message = replaceMessageCustomTag(
     message,
     'tid',
-    getReplaceHtmlFunc(function (id, name) {
+    getReplaceHtmlFunc(function (id, name: string) {
       return `<a target="_blank" href="${pathCompletion('/apps/task/task_' + id, { hasDomain: false })}">${htmlEncodeReg(name)}</a>`;
     }),
   );
@@ -180,7 +180,7 @@ export default args => {
   message = replaceMessageCustomTag(
     message,
     'fid',
-    getReplaceHtmlFunc(function (id, name) {
+    getReplaceHtmlFunc(function (id, name: string) {
       return `<a target="_blank" href="${pathCompletion('/apps/task/folder_' + id, { hasDomain: false })}">${htmlEncodeReg(name)}</a>`;
     }),
   );
@@ -188,7 +188,7 @@ export default args => {
   message = replaceMessageCustomTag(
     message,
     ['[CALENDAR]', '[CALENDAR]'],
-    getReplaceHtmlFunc(function (id, name) {
+    getReplaceHtmlFunc(function (id, name: string) {
       return `<a target="_blank" href="${pathCompletion('/apps/calendar/detail_' + id, { hasDomain: false })}">${htmlEncodeReg(name)}</a>`;
     }),
   );
@@ -196,7 +196,7 @@ export default args => {
   message = replaceMessageCustomTag(
     message,
     ['[STARTANSWER]', '[ENDANSWER]'],
-    getReplaceHtmlFunc(function (id, name) {
+    getReplaceHtmlFunc(function (id, name: string) {
       return `<a target="_blank" href="${pathCompletion('/feeddetail?itemID=' + id, { hasDomain: false })}">${htmlEncodeReg(name)}</a>`;
     }),
   );
@@ -204,7 +204,7 @@ export default args => {
   message = replaceMessageCustomTag(
     message,
     ['[docversion]', '[docversion]'],
-    getReplaceHtmlFunc(function (id, name) {
+    getReplaceHtmlFunc(function (id, name: string) {
       return `<a href="${pathCompletion('/feeddetail?itemID=' + id, { hasDomain: false })}" target="_blank">${htmlEncodeReg(name.split('|')[0]) || _l('文件')}</a>`;
     }),
   );

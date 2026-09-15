@@ -461,7 +461,7 @@ export default class Overview extends Component<any, any> {
   /**
    * 获得应用列表
    */
-  getAppList(projectId) {
+  getAppList(projectId: string) {
     const { appList } = this.state;
     const { appPageIndex = 1, isMoreApp, loadingApp, keyword = '' } = this.state;
 

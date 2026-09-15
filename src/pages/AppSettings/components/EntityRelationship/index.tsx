@@ -518,7 +518,7 @@ function EntityRelationship(props) {
     });
   };
 
-  const onCenterCell = worksheetId => {
+  const onCenterCell = (worksheetId: string) => {
     const cell = graphRef.current.getCellById(worksheetId);
 
     if (cell) {
@@ -549,7 +549,7 @@ function EntityRelationship(props) {
     );
   };
 
-  const showItemForAllControls = worksheetId => {
+  const showItemForAllControls = (worksheetId: string) => {
     controlShowAllMap.current[worksheetId] = !controlShowAllMap.current[worksheetId];
     onLayout(allData.current);
   };

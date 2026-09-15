@@ -424,7 +424,7 @@ class Filter extends Component<any, any> {
   /**
    * 选择负责人
    */
-  selectCharges(accountId) {
+  selectCharges(accountId: string) {
     const { filterSettings } = this.props.taskConfig;
     const selectChargeIds = _.cloneDeep(filterSettings.selectChargeIds);
 
@@ -593,7 +593,7 @@ class Filter extends Component<any, any> {
   /**
    * 自定义字段
    */
-  switchCustoms = (controlId, keys) => {
+  switchCustoms = (controlId: string, keys) => {
     const customFilter = _.cloneDeep(this.props.taskConfig.filterSettings.customFilter);
 
     if (keys.length) {
@@ -608,7 +608,7 @@ class Filter extends Component<any, any> {
   /**
    * 清除自定义选中项
    */
-  clearCustoms = (controlId, key) => {
+  clearCustoms = (controlId: string, key) => {
     const customFilter = _.cloneDeep(this.props.taskConfig.filterSettings.customFilter);
 
     _.remove(customFilter[controlId], item => item === key);
@@ -624,7 +624,7 @@ class Filter extends Component<any, any> {
   /**
    * 清除自定义字段
    */
-  clearAllCustoms = controlId => {
+  clearAllCustoms = (controlId: string) => {
     const customFilter = _.cloneDeep(this.props.taskConfig.filterSettings.customFilter);
     delete customFilter[controlId];
     this.props.dispatch(updateCustomFilter(customFilter));
@@ -719,7 +719,7 @@ class Filter extends Component<any, any> {
               <div className="filterFolderSearch">
                 <Checkbox
                   checked={folderSearchRange === 7}
-                  onClick={checked => this.switchFolderRange(checked ? 6 : 7)}
+                  onClick={(checked: boolean) => this.switchFolderRange(checked ? 6 : 7)}
                 >
                   {_l('仅看与我有关的任务')}
                 </Checkbox>

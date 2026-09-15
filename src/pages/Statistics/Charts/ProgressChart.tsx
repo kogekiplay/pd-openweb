@@ -338,7 +338,7 @@ export default props => {
       style={style.allowScroll ? { overflowY: 'scroll', alignItems: 'flex-start' } : null}
     >
       <Row gutter={[8, 0]} className="w100">
-        {yaxisList.map((data, index) => (
+        {yaxisList.map((data, index: number) => (
           <ProgressChart
             key={data.controlId}
             {...props}

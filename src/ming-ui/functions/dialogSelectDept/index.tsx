@@ -102,7 +102,7 @@ class DialogSelectDept extends React.Component<any, any> {
     const pathData = this.getParentId(this.state.list, dept.departmentId) || [];
     return pathData
       .filter(item => item.departmentId !== dept.departmentId)
-      .map((item, index) => ({
+      .map((item, index: number) => ({
         departmentId: item.departmentId,
         departmentName: item.departmentName,
         depth: index + 1,

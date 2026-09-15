@@ -36,7 +36,7 @@ class WidgetEventManager {
    * @param {string} controlId
    * @param {Function} callback
    */
-  subscribe(controlId, callback) {
+  subscribe(controlId: string, callback) {
     this.subscribers.set(controlId, callback);
 
     // 返回取消订阅函数
@@ -50,7 +50,7 @@ class WidgetEventManager {
    * @param {string} controlId - 控件ID
    * @param {any} data - 事件数据
    */
-  publish(controlId, data = {}) {
+  publish(controlId: string, data = {}) {
     const callback = this.subscribers.get(controlId);
     if (callback) callback(data);
   }
@@ -58,7 +58,7 @@ class WidgetEventManager {
   /**
    * 清理所有订阅
    */
-  clear(instanceId) {
+  clear(instanceId: string) {
     if (instanceId) {
       // 清理包含特定instanceId的controlId
       const keysToDelete = [];
@@ -86,7 +86,7 @@ const widgetEventManager = new WidgetEventManager();
  * @param {Function} callback - 键盘事件回调
  * @returns {Object} - 发布事件的函数
  */
-export const useWidgetEvent = (controlId, callback) => {
+export const useWidgetEvent = (controlId: string, callback) => {
   const unsubscribeRef = useRef(null);
 
   useEffect(() => {
@@ -114,7 +114,7 @@ export const useWidgetEvent = (controlId, callback) => {
  * 为 Class 组件事件提供
  */
 export class WidgetEventHelper {
-  constructor(controlId) {
+  constructor(controlId: string) {
     this.controlId = controlId;
     this.callback = null;
     this.unsubscribe = null;

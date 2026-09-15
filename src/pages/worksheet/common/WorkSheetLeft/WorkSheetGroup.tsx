@@ -62,7 +62,7 @@ export default function WorkSheetGroup(props) {
   };
 
   const renderGroupItems = () => {
-    return childrenItems.map((item, index) => (
+    return childrenItems.map((item, index: number) => (
       <WorkSheetItem
         key={item.workSheetId}
         className={cx({ pLeft40: sheetListVisible })}

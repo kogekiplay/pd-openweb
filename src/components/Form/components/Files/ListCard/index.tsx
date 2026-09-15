@@ -164,7 +164,7 @@ const ListCard = props => {
                     originalFileName={data.originalFilename}
                     isEdit={isEdit}
                     setIsEdit={setIsEdit}
-                    onSave={name => {
+                    onSave={(name: string) => {
                       onAttachmentName(data.fileID, name);
                     }}
                   >
@@ -276,7 +276,7 @@ const NotSaveListCard = props => {
               originalFileName={data.originalFileName}
               isEdit={isEdit}
               setIsEdit={setIsEdit}
-              onSave={name => {
+              onSave={(name: string) => {
                 onResetNameFile(data.fileID, name);
               }}
             >

@@ -12,7 +12,7 @@ export default function ProcessSync(props) {
   const [originApproveName, setOriginApproveName] = useState(props.approveName);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleChangeScanEnabled = checked => {
+  const handleChangeScanEnabled = (checked: boolean) => {
     setIsLoading(true);
     workWeiXinAjax
       .editFeishuTodoMessageEnabled({ projectId, enableTodo: !checked, isLark })

@@ -19,7 +19,7 @@ const iteratee = item => {
   return item.parentId + '|' + item.id;
 };
 
-const filterByAppId = (list = [], appId, appType, subModule: number) => {
+const filterByAppId = (list = [], appId: string, appType, subModule: number) => {
   const filterList = list.filter(r => {
     if (appType === 'sub') return r.appId === appId;
     if (appType === 'subList') return !r.appId;

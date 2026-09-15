@@ -25,7 +25,7 @@ export default function DropConfig(props) {
           <Checkbox
             size="small"
             checked={!!enumDefault}
-            onClick={checked => {
+            onClick={(checked: boolean) => {
               if (checked) {
                 onChange({ enumDefault: +checked });
               } else {
@@ -59,7 +59,7 @@ export default function DropConfig(props) {
           <Checkbox
             size="small"
             checked={readonlyshowall === '1'}
-            onClick={checked => onChange(handleAdvancedSettingChange(data, { readonlyshowall: checked ? '0' : '1' }))}
+            onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { readonlyshowall: checked ? '0' : '1' }))}
           >
             <span>{_l('只读时显示全部选项')}</span>
           </Checkbox>
@@ -70,7 +70,7 @@ export default function DropConfig(props) {
           <Checkbox
             size="small"
             checked={allowadd === '1'}
-            onClick={checked => onChange(handleAdvancedSettingChange(data, { allowadd: checked ? '0' : '1' }))}
+            onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { allowadd: checked ? '0' : '1' }))}
           >
             <span>{_l('允许用户增加选项')}</span>
             <Tooltip
@@ -89,7 +89,7 @@ export default function DropConfig(props) {
           <Checkbox
             size="small"
             checked={showselectall === '1'}
-            onClick={checked => onChange(handleAdvancedSettingChange(data, { showselectall: checked ? '0' : '1' }))}
+            onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { showselectall: checked ? '0' : '1' }))}
           >
             <span>{_l('显示全选操作')}</span>
           </Checkbox>

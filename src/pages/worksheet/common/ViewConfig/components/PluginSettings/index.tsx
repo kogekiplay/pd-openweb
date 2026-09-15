@@ -195,7 +195,7 @@ function PluginSettings(params) {
         <Input
           className="flex"
           value={name}
-          onChange={name => {
+          onChange={(name: string) => {
             setState({
               name,
             });

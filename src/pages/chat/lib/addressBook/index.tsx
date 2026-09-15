@@ -59,7 +59,7 @@ class AddressBook extends React.Component<any, any> {
     }
   }
 
-  updateHighlightTab(type, projectId) {
+  updateHighlightTab(type, projectId: string) {
     this.setState({
       type,
       projectId,

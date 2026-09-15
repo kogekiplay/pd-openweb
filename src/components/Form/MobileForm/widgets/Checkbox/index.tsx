@@ -75,7 +75,7 @@ const CheckboxWidget = props => {
     onSave(checkIds.concat(otherIds));
   };
 
-  const onChange = (checked, key) => {
+  const onChange = (checked: boolean, key) => {
     const checkIds = JSON.parse(value || '[]');
 
     if (checked) {
@@ -134,7 +134,7 @@ const CheckboxWidget = props => {
     return (
       <Fragment>
         {renderSelectAll(checkIds, displayOptions)}
-        {displayOptions.map((item, index) => {
+        {displayOptions.map((item, index: number) => {
           return (
             <div
               className="flexColumn"

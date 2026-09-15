@@ -160,14 +160,14 @@ export default class MsgTemplate extends Component<any, any> {
                 </div>
               </li>
               <ScrollView className="workflowMsgTemplateScrollView" onScrollEnd={this.handleScroll}>
-                {data.map((template, index) => {
+                {data.map((template, index: number) => {
                   const { companySignature, messageContent, createDate, type } = template;
                   return (
                     <li key={index} className="templates">
                       <Checkbox
                         disabled={template.status === 0}
                         checked={_.includes(messageTemplateIds, template.id)}
-                        onClick={checked => {
+                        onClick={(checked: boolean) => {
                           let copyCheckedIds = [...messageTemplateIds];
 
                           if (!checked) {

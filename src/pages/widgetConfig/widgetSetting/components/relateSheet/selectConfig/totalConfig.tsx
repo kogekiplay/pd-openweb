@@ -64,7 +64,7 @@ export default function ReportConfig(props) {
   const reportsetting = getAdvanceSetting(data, 'reportsetting') || [];
   const isDisabled = reportsetting.length >= 10;
 
-  const getTypeList = controlId => {
+  const getTypeList = (controlId: string) => {
     const control = _.find(controls, c => c.controlId === controlId);
     if (!control) return [];
     let type = control.sourceControlType || control.type;

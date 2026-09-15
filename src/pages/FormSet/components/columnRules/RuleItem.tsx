@@ -47,7 +47,7 @@ function renderFilterItemTexts(filters = [], disabled = false, worksheetControls
     };
   });
 
-  const renderItemText = (item, index) => {
+  const renderItemText = (item, index: number) => {
     return (
       <span key={index}>
         {index ? (
@@ -111,7 +111,7 @@ class RuleItems extends React.Component<any, any> {
     }
   }
 
-  renderActionItem = (actionItem, disabled) => {
+  renderActionItem = (actionItem, disabled: boolean) => {
     const { worksheetControls, projectId } = this.props;
     let leftText = _.includes([7], actionItem.type) ? '' : getActionLabelByType(actionItem.type);
 
@@ -122,7 +122,7 @@ class RuleItems extends React.Component<any, any> {
     const currentArr = getTextById(worksheetControls, actionItem.controls, actionItem.type, 'rule') || [];
 
     const renderDetailValue = () => {
-      function renderDynamicValue(value, controlId) {
+      function renderDynamicValue(value, controlId: string) {
         const dynamicValue = safeParse(value, 'array');
 
         let currentControl = { type: 2 };

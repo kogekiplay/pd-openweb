@@ -154,7 +154,7 @@ const fillTranslate = (result, pageId) => {
     }
   };
 
-  const translateValueMap = (dataSource, controlId, displayMode?) => {
+  const translateValueMap = (dataSource, controlId: string, displayMode?) => {
     const isFieldStyle = displayMode === 'fieldStyle';
     const valueMapTranslateInfo = getTranslateInfo(appId, null, dataSource);
 

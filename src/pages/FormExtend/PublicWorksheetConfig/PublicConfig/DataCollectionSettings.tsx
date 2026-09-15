@@ -279,13 +279,13 @@ export default function DataCollectionSettings(props) {
     }
   };
 
-  const onTimeChange = (timeString, index, from: string) => {
+  const onTimeChange = (timeString, index: number, from: string) => {
     const newTimeRange = _.cloneDeep(timeRange);
     newTimeRange[TIME_TYPE.HOUR][index][from] = timeString;
     setState({ timeRange: newTimeRange });
   };
 
-  const renderTimePeriodItem = (itemProps, index) => {
+  const renderTimePeriodItem = (itemProps, index: number) => {
     const { type, text } = itemProps;
     const selectedMonths = limitWriteTime.monthSetting.defineMonth || [];
     const selectedDays = limitWriteTime.daySetting.defineDay || [];
@@ -443,7 +443,7 @@ export default function DataCollectionSettings(props) {
         )}
         {type === TIME_TYPE.HOUR && currentPeriodType === TIME_PERIOD_TYPE.SPECIFY_RANGE_HOUR && (
           <div className="flexColumn flex">
-            {timeRange[type].map((item, index) => {
+            {timeRange[type].map((item, index: number) => {
               return (
                 <div className={`flexRow alignItemsCenter ${index !== 0 ? 'mTop10' : ''}`} key={index}>
                   <CustomTimePicker
@@ -502,7 +502,7 @@ export default function DataCollectionSettings(props) {
           <div className="mBottom24">
             <CommonSwitch
               checked={linkSwitchTime.isEnable}
-              onClick={checked => setState({ linkSwitchTime: { isEnable: !checked, isShowCountDown: false } })}
+              onClick={(checked: boolean) => setState({ linkSwitchTime: { isEnable: !checked, isShowCountDown: false } })}
               name={_l('设置链接开始/停止时间')}
               tip={_l('打开后，填写者只有在设置的时间范围内填写，方可正常提交表单。')}
             />
@@ -545,7 +545,7 @@ export default function DataCollectionSettings(props) {
           <div className="mBottom24">
             <CommonSwitch
               checked={limitWriteTime.isEnable}
-              onClick={checked => {
+              onClick={(checked: boolean) => {
                 const newLimitWriteTime = !checked
                   ? {
                       isEnable: !checked,
@@ -572,7 +572,7 @@ export default function DataCollectionSettings(props) {
           <div className="mBottom24">
             <CommonSwitch
               checked={limitWriteCount.isEnable}
-              onClick={checked => setState({ limitWriteCount: { isEnable: !checked } })}
+              onClick={(checked: boolean) => setState({ limitWriteCount: { isEnable: !checked } })}
               name={_l('限制收集数量上限')}
               tip={_l('打开后，当数据量达到设置的上限时，该表单将不能继续提交数据。')}
             />
@@ -644,7 +644,7 @@ export default function DataCollectionSettings(props) {
           <div className="mTop24">
             <CommonSwitch
               checked={limitPasswordWrite.isEnable}
-              onClick={checked =>
+              onClick={(checked: boolean) =>
                 setState({
                   limitPasswordWrite: {
                     isEnable: !checked,

@@ -17,7 +17,7 @@ import NotFoundRedirect from './NotFoundRedirect';
  *   - 匹配则把前缀剥掉、按 v4 的参数名塞回 match.params.id，
  *     下游组件（读 match.params.id）一行不用改
  *
- * tools/verify-router-matching.cjs 的例外表放行这几条差异，前提就是这个守卫
+ * tools/verify-router-matching.ts 的例外表放行这几条差异，前提就是这个守卫
  * 真的存在 —— 那里写了「没写守卫就是骗自己」。改这里之前先看那段注释。
  */
 export default function SegmentPrefixGuard(props) {

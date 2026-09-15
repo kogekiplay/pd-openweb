@@ -47,7 +47,7 @@ export default function SmsSignSet(props) {
     certificationApi
       .getListSmsSignatures({ projectId })
       .then(res => {
-        const platformList = (_.get(md, 'global.Config.DefaultSmsProvider') || []).map((item, index) => ({
+        const platformList = (_.get(md, 'global.Config.DefaultSmsProvider') || []).map((item, index: number) => ({
           id: index + 1,
           signName: item,
         }));

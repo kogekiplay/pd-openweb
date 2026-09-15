@@ -29,7 +29,7 @@ const List = styled.div`
 `;
 
 export default ({ data, updateSource }) => {
-  const updateItem = (controlId, key: string, value: string) => {
+  const updateItem = (controlId: string, key: string, value: string) => {
     updateSource({
       controls: data.controls.map(o => {
         if (o.controlId === controlId) {
@@ -67,7 +67,7 @@ export default ({ data, updateSource }) => {
                 <div className="flex mLeft10">{_l('说明')}</div>
                 <div className="w30 mLeft10">{_l('标题')}</div>
               </div>
-              {data.controls.map((item, index) => {
+              {data.controls.map((item, index: number) => {
                 return (
                   <div key={index} className="flexRow mTop4 relative">
                     <Dropdown

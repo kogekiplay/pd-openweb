@@ -32,7 +32,7 @@ export default function SetValue(props) {
     return _.includes(HAS_DYNAMIC_TYPE, i.type) && !_.find(actionItems, a => a.controlId === i.controlId);
   });
 
-  const getDetail = controlId => {
+  const getDetail = (controlId: string) => {
     const currentControl = _.find(allControls, s => s.controlId === controlId) || {};
     const enumType = enumWidgetType[currentControl.type];
     const { icon } = DEFAULT_CONFIG[enumType] || {};
@@ -65,7 +65,7 @@ export default function SetValue(props) {
               <div className="itemFiledTitle textSecondary">{_l('字段')}</div>
               <div className="itemValueTitle textSecondary">{_l('值设为')}</div>
             </div>
-            {actionItems.map((item, index) => {
+            {actionItems.map((item, index: number) => {
               const { icon, currentControl } = getDetail(item.controlId);
               const isDelete = !_.get(currentControl, 'controlName');
               const queryId = item.type === '2' && _.get(safeParse(item.value), 'id');

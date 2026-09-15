@@ -101,7 +101,7 @@ export default function ChooseControlsForAggregation(props) {
         <ChooseWorksheet
           worksheets={worksheets}
           worksheetId={worksheetId}
-          onChange={worksheetId => {
+          onChange={(worksheetId: string) => {
             setState({
               worksheetId,
             });

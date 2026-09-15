@@ -1674,7 +1674,7 @@ export default class CreateNodeDialog extends Component<any, any> {
 
                   {o.key === 'system' && (
                     <ul className="createNodeDialogNavTags">
-                      {(tab === 1 ? source : list).map((o, index) => (
+                      {(tab === 1 ? source : list).map((o, index: number) => (
                         <li
                           key={o.id}
                           className={cx('hoverColorPrimary pointer ellipsis', {

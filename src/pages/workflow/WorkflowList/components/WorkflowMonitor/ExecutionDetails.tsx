@@ -269,7 +269,7 @@ export default class ExecutionDetails extends Component<any, any> {
 
     return (
       <Fragment>
-        {detailList.map((item, index) => {
+        {detailList.map((item, index: number) => {
           const {
             id,
             name,
@@ -298,7 +298,7 @@ export default class ExecutionDetails extends Component<any, any> {
                 <Checkbox
                   className="checkFlow"
                   checked={_.includes(checkedIds, item.id)}
-                  onClick={checked => {
+                  onClick={(checked: boolean) => {
                     if (!checked) {
                       let copyCheckedIds = [...checkedIds];
                       copyCheckedIds.push(item.id);

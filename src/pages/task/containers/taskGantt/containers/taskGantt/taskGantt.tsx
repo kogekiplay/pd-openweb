@@ -142,7 +142,7 @@ class TaskGantt extends Component<any, any> {
    * @param {array} members
    */
   subordinateSocketSubscribe(members) {
-    members.forEach(accountId => {
+    members.forEach((accountId: string) => {
       IM.socket.emit('subscribe', {
         type: 'subordinate',
         sourceId: `${config.projectId}|${md.global.Account.accountId}|${accountId}`,
@@ -174,7 +174,7 @@ class TaskGantt extends Component<any, any> {
    * 获取单个网络的成员
    * @param {string} projectId
    */
-  getSetting(projectId) {
+  getSetting(projectId: string) {
     config.projectId = projectId;
 
     ajaxRequest.getSetting({ projectId }).then(source => {

@@ -2,13 +2,13 @@ import React from 'react';
 import cx from 'classnames';
 import { Icon, SvgIcon } from 'ming-ui';
 
-export function normalizeGroupIconForStorage(icon, iconUrl) {
+export function normalizeGroupIconForStorage(icon: string, iconUrl) {
   const raw = String(icon || 'adds');
   return !iconUrl || raw.startsWith('sys_') ? raw : `${raw.replace(/_svg$/, '')}_svg`;
 }
 
 /** 与自定义动作行一致：带 URL 的自定义(_svg)或系统(sys_)用 SvgIcon；否则 ming Icon */
-export function renderCustomBtnStyleIcon(icon, iconUrl, color) {
+export function renderCustomBtnStyleIcon(icon: string, iconUrl, color) {
   const ic = icon || '';
   const useSvg = !!iconUrl && !!ic && (String(ic).endsWith('_svg') || String(ic).startsWith('sys_'));
 

@@ -78,7 +78,7 @@ export default class User extends React.Component<any, any> {
 
   cell = React.createRef();
 
-  renderCellUser(user, index) {
+  renderCellUser(user, index: number) {
     const { isediting, projectId, appId, cell, disabled, chatButton } = this.props;
     const { value } = this.state;
 
@@ -323,7 +323,7 @@ export default class User extends React.Component<any, any> {
     this.pickUser(event);
   };
 
-  deleteUser = accountId => {
+  deleteUser = (accountId: string) => {
     const { value } = this.state;
     this.setState(
       {
@@ -380,7 +380,7 @@ export default class User extends React.Component<any, any> {
             ...(single ? { minHeight: 'auto', height: style.height - 1 } : { minHeight: rowHeight }),
           }}
         >
-          {value.map((user, index) => this.renderCellUser(user, index))}
+          {value.map((user, index: number) => this.renderCellUser(user, index))}
           {!single && (
             <span className="addUserBtn" onClick={this.pickUser}>
               <i className="icon icon-add textSecondary Font14"></i>
@@ -402,7 +402,7 @@ export default class User extends React.Component<any, any> {
         <div>
           {!!value && (
             <div className={cx('cellUsers cellControl', { singleLine })}>
-              {value.map((user, index) => this.renderCellUser(user, index))}
+              {value.map((user, index: number) => this.renderCellUser(user, index))}
             </div>
           )}
         </div>
@@ -439,7 +439,7 @@ export default class User extends React.Component<any, any> {
         >
           {!!value && (
             <div className={cx('cellUsers cellControl', { singleLine })}>
-              {value.map((user, index) => this.renderCellUser(user, index))}
+              {value.map((user, index: number) => this.renderCellUser(user, index))}
             </div>
           )}
         </EditableCellCon>

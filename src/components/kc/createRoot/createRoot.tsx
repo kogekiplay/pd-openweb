@@ -1022,7 +1022,7 @@ $.extend(RootSettings.prototype, {
       alert(_l('您邀请的用户已在共享文件夹中'), 3);
     }
   },
-  verifyName: function (name, originalName) {
+  verifyName: function (name: string, originalName) {
     var $txtFolderName = $('.createFolderBox .folderName .txtFolderName');
     //名称为null时
     if (!name) {

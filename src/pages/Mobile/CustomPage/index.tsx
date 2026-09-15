@@ -34,7 +34,7 @@ import { updateFilterComponents } from './redux/actions';
 import WidgetDisplay from './WidgetDisplay';
 
 const getLayout = components =>
-  components.map((item = {}, index) => {
+  components.map((item = {}, index: number) => {
     const { id } = item;
     const { layout, titleVisible } = item.mobile;
     const layoutType = 'mobile';
@@ -280,7 +280,7 @@ let CustomPage = class CustomPage extends Component<any, any> {
           draggableCancel=".componentTitle"
           layout={layout}
         >
-          {pageComponents.map((widget, index) => {
+          {pageComponents.map((widget, index: number) => {
             const { id, type } = widget;
             const { title, titleVisible } = widget.mobile;
             const componentType = getEnumType(type);

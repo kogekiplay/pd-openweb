@@ -116,7 +116,7 @@ export default function Btn(props) {
     // 验证业务流程是否有必填项
     const { buttonList } = btnSetting;
     const emptyParamBtns = [];
-    buttonList.forEach((btn, index) => {
+    buttonList.forEach((btn, index: number) => {
       const { inputs } = btn.config || {};
       const requiredInput = _.find(inputs, { required: true });
 

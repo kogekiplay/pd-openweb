@@ -82,7 +82,7 @@ export const getParentDepartments = (node, filter, matcher = defaultMatcher) => 
   return arr;
 };
 
-export const formatSearchDeptData = (data, keywords) => {
+export const formatSearchDeptData = (data, keywords: string) => {
   const departments = [].concat(data);
   const result = [];
   departments.forEach(dept => {
@@ -238,7 +238,7 @@ export const getParentNode = (newDepartments, departmentId) => {
 const getCurrentPath = path => {
   return (path || '')
     .split('-')
-    .map((item, index) => {
+    .map((item, index: number) => {
       if (index == 0) {
         return `[${item}]`;
       } else {
@@ -255,7 +255,7 @@ const getCurrentPath = path => {
  * @returns {Object} 返回更新后的部门树数据
  */
 
-const disabledChildren = (departments, disabled) => {
+const disabledChildren = (departments, disabled: boolean) => {
   if (!departments) return;
 
   return _.map(departments, dept => {

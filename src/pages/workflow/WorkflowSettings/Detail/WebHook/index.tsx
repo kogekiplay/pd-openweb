@@ -468,7 +468,7 @@ export default class WebHook extends Component<any, any> {
             className="flexRow"
             text={_l('使用网络代理')}
             checked={data.settings.useProxy}
-            onClick={checked =>
+            onClick={(checked: boolean) =>
               this.updateSource({ settings: Object.assign({}, data.settings, { useProxy: !checked }) })
             }
           />
@@ -479,7 +479,7 @@ export default class WebHook extends Component<any, any> {
             className="flexRow"
             text={_l('开启SSL证书验证')}
             checked={data.settings.openSSL}
-            onClick={checked =>
+            onClick={(checked: boolean) =>
               this.updateSource({ settings: Object.assign({}, data.settings, { openSSL: !checked }) })
             }
           />
@@ -693,7 +693,7 @@ export default class WebHook extends Component<any, any> {
                 text={_l('超时自动重试（最多重试2次）')}
                 disabled={data.settings.timeout > 30}
                 checked={data.settings.maxRetries > 0}
-                onClick={checked =>
+                onClick={(checked: boolean) =>
                   this.updateSource({ settings: Object.assign({}, data.settings, { maxRetries: checked ? 0 : 2 }) })
                 }
               />

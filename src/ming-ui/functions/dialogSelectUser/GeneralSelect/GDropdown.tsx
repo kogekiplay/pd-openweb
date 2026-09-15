@@ -200,7 +200,7 @@ class Dropdown extends Component<any, any> {
             onClickAwayExceptions={[this._input]}
           >
             {this.props.data && this.props.data.length ? (
-              this.props.data.map((item, index) => (
+              this.props.data.map((item, index: number) => (
                 <MenuItem
                   {...item}
                   key={index}

@@ -58,7 +58,7 @@ class QuickCreateTask {
     const _this = this;
     $('.createNewSingle')
       .find('.chargeImgWrapQuick[data-id]')
-      .each((index, ele) => {
+      .each((index: number, ele) => {
         let $ele = $(ele);
         if ($ele.data('hasbusinesscard')) return;
         let avatar = $ele.data('avatar');

@@ -467,7 +467,7 @@ class PublicConfig extends React.Component<any, any> {
     this.handleUpdateExpandDatas({ pageConfigs: JSON.stringify(configs.concat({ ...configs[0], key: value })) }, true);
   };
 
-  handleRemoveUrl = index => {
+  handleRemoveUrl = (index: number) => {
     const { sourceKeys } = this.state;
     this.handleChange('sourceKeys', update(sourceKeys, { $splice: [[index, 1]] }));
   };

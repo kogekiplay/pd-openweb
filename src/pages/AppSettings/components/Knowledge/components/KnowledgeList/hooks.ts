@@ -15,7 +15,7 @@ const POLLING_STATUS = [
   KNOWLEDGE_STATUS.VECTORIZING,
 ];
 
-export const useKnowledgeList = appId => {
+export const useKnowledgeList = (appId: string) => {
   const [loading, setLoading] = useState(true);
   const [list, setList] = useState([]);
 

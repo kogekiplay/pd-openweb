@@ -12,7 +12,7 @@ export default function WidgetOcr({ data, onChange }) {
       <Checkbox
         size="small"
         checked={disableAlbum === '1'}
-        onClick={checked =>
+        onClick={(checked: boolean) =>
           onChange({ strDefault: updateConfig({ config: strDefault || '00', value: +!checked, index: 0 }) })
         }
         text={_l('禁用相册')}

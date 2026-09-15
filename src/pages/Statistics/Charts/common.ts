@@ -194,7 +194,7 @@ export const colorGroup = {
 /**
  * 获取组织管理主题色
  */
-export const getPorjectChartColors = projectId => {
+export const getPorjectChartColors = (projectId: string) => {
   const { chartColor } = getProjectColor(projectId);
   const systemColorList = (chartColor.system || []).filter(item => item.enable !== false && !_.isEmpty(item.colors));
   const customColorList = (chartColor.custom || []).filter(item => item.enable !== false && !_.isEmpty(item.colors));
@@ -204,7 +204,7 @@ export const getPorjectChartColors = projectId => {
 /**
  * 获取图表颜色
  */
-export const getChartColors = (style, themeColor, projectId) => {
+export const getChartColors = (style, themeColor, projectId: string) => {
   const chartColors = getPorjectChartColors(projectId);
   const { colorType, colorGroupIndex, colorGroupId, customColors, personColor = {} } = style ? style : {};
 
@@ -505,7 +505,7 @@ export const formatYaxisList = (map, yaxisList, id?) => {
   const maxValue = getMaxValue(map, []);
   const newYaxisList = _.cloneDeep(yaxisList);
 
-  newYaxisList.forEach((item, index) => {
+  newYaxisList.forEach((item, index: number) => {
     if ((id ? item.controlId == id : index === 0) && item.magnitude === 0) {
       if (window.getCurrentLang() === 'en') {
         if (maxValue >= 1000000000) {
@@ -599,7 +599,7 @@ export const formatControlValueDot = (value, data) => {
   const isRecordCount = controlId === 'record_count';
   const ydot = Number(data.ydot);
 
-  const formatValue = (value, dot) => {
+  const formatValue = (value, dot: number) => {
     return formatNumberValue(value, { dot, roundType, dotFormat });
   };
 

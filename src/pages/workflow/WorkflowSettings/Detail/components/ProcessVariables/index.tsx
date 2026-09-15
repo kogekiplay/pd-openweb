@@ -91,7 +91,7 @@ export default props => {
         <div style={{ width: 56 }} />
       </div>
 
-      {list.map((item, index) => {
+      {list.map((item, index: number) => {
         if (item.dataSource && (_.find(list, o => o.controlId === item.dataSource) || {}).type === 10000007) {
           return null;
         }

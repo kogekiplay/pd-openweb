@@ -148,7 +148,7 @@ export function SelectGroup(props) {
     });
   };
 
-  const handleSelect = (item, checked) => {
+  const handleSelect = (item, checked: boolean) => {
     let selectObj = _.cloneDeep(selectIds);
     let list = [];
 
@@ -346,7 +346,7 @@ export function SelectGroupTrigger(props) {
     getGroupInfo(value[0].id);
   }, [value]);
 
-  const getGroupInfo = groupId => {
+  const getGroupInfo = (groupId: string) => {
     groupAjax.getGroupInfo({ groupId }).then(res => setValue([{ id: groupId, value: res.name }]));
   };
 

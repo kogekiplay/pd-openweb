@@ -475,7 +475,7 @@ let ChartDialog = class ChartDialog extends Component<any, any> {
                   dataIsUnfold: !dataIsUnfold,
                 });
               }}
-              onChangeSheetId={worksheetId => {
+              onChangeSheetId={(worksheetId: string) => {
                 this.props.changeSheetId(worksheetId);
                 this.props.changeBase({
                   sheetId: worksheetId,

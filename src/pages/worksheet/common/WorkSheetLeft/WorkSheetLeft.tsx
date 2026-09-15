@@ -90,7 +90,7 @@ class WorkSheetLeft extends Component<any, any> {
       ? sheetList
       : sheetList.filter(item => [1, 4].includes(item.status) && !item.navigateHide).filter(filterEmptyAppItem);
   }
-  renderSheetAppItem(item, workSheetItemProps, index) {
+  renderSheetAppItem(item, workSheetItemProps, index: number) {
     const { groupId, firstGroupIndex } = this.props;
     const isAppItem = item.type !== 2;
     const Wrap = isAppItem ? WorkSheetItem : WorkSheetGroup;
@@ -135,7 +135,7 @@ class WorkSheetLeft extends Component<any, any> {
         <div className="flex flexColumn overflowHidden">
           <Wrap>
             <DndProvider key="navigationList" context={window} backend={HTML5Backend}>
-              {data.map((item, index) => this.renderSheetAppItem(item, workSheetItemProps, index))}
+              {data.map((item, index: number) => this.renderSheetAppItem(item, workSheetItemProps, index))}
             </DndProvider>
             {!secondLevelGroup && (
               <CreateAppItem

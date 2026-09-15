@@ -1502,7 +1502,7 @@ class ChildTable extends React.Component<any, any> {
     }
 
     const selectedRows: RecordRow[] = selectedRowIds
-      .map(rowId => find(tableRows, { rowid: rowId }))
+      .map((rowId: string) => find(tableRows, { rowid: rowId }))
       .filter(_.identity)
       .filter((row: RecordRow) => row.allowedit);
 
@@ -1563,7 +1563,7 @@ class ChildTable extends React.Component<any, any> {
         } else {
           updateRows({ rowIds: selectedRowIds, value: baseChanges });
         }
-        selectedRowIds.forEach(rowId => {
+        selectedRowIds.forEach((rowId: string) => {
           this.dataFormatCacheMap.delete(rowId);
         });
         // 批量编辑（含清空）后，被修改单元格的旧格式校验错误（手机/证件等）已不对应新值，需同步清掉 cellErrors，否则失焦时持久化的错误状态会残留。
@@ -2153,7 +2153,7 @@ class ChildTable extends React.Component<any, any> {
                         if (selectedRowIds.length) {
                           this.copyRows(
                             selectedRowIds
-                              .map(rowId => _.find(tableRows, { rowid: rowId }))
+                              .map((rowId: string) => _.find(tableRows, { rowid: rowId }))
                               .filter(_.identity)
                               .slice(0, maxCount - tableRows.length),
                           );
@@ -2286,7 +2286,7 @@ class ChildTable extends React.Component<any, any> {
                         </Tooltip>
                       </div>
                     )),
-                  onOpenRecord: index => this.openDetail(index),
+                  onOpenRecord: (index: number) => this.openDetail(index),
                   onDeleteRecord: row => {
                     deleteRow(row.rowid);
                     this.triggerCustomEvent();
@@ -2340,7 +2340,7 @@ class ChildTable extends React.Component<any, any> {
                       if (isAdd) {
                         this.setState({ selectedRowIds: _.uniq(selectedRowIds.concat(selectedRowId)) });
                       } else {
-                        this.setState({ selectedRowIds: selectedRowIds.filter(rowId => rowId !== selectedRowId) });
+                        this.setState({ selectedRowIds: selectedRowIds.filter((rowId: string) => rowId !== selectedRowId) });
                       }
                     }}
                     onSelectAll={selectAll => {
@@ -2350,7 +2350,7 @@ class ChildTable extends React.Component<any, any> {
                         this.setState({ selectedRowIds: [] });
                       }
                     }}
-                    onOpen={index => this.openDetail(index)}
+                    onOpen={(index: number) => this.openDetail(index)}
                     onDelete={() => {
                       deleteRow(args.row.rowid);
                       this.triggerCustomEvent();
@@ -2548,7 +2548,7 @@ class ChildTable extends React.Component<any, any> {
                   );
                 }}
                 updateCell={this.handleUpdateCell}
-                onColumnWidthChange={(controlId, value) => {
+                onColumnWidthChange={(controlId: string, value) => {
                   this.setState({
                     tempSheetColumnWidths: { ...tempSheetColumnWidths, [controlId]: value },
                   });

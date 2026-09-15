@@ -95,7 +95,7 @@ export const useEsc = (callback, active = true) => {
 };
 
 // 知识库使用情况
-export const useKnowledgeUsage = projectId => {
+export const useKnowledgeUsage = (projectId: string) => {
   const [data, setData] = useState({});
   const [attachmentEnhancedTip, setAttachmentEnhancedTip] = useState('');
 

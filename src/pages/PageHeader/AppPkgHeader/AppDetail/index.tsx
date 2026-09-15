@@ -251,7 +251,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
     emitter.removeListener('REFRESH_APP_DETAIL', this.getData);
   }
 
-  checkIsFull = worksheetId => {
+  checkIsFull = (worksheetId: string) => {
     const wrapper = document.querySelector('#wrapper');
     if (!wrapper) return;
 
@@ -283,7 +283,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
 
     return 'theme';
   };
-  translateDebugRoles = (data, appId) => {
+  translateDebugRoles = (data, appId: string) => {
     const selectedRoles = _.get(data, 'debugRole.selectedRoles') || [];
 
     if (!selectedRoles.length) return;

@@ -57,7 +57,7 @@ export default ({ executeType, updateSource, allowAdd = false, nodeType, appType
                   className="InlineFlex mRight5"
                   text={_l('新增失败时继续执行')}
                   checked={ignoreError}
-                  onClick={checked => updateSource({ ignoreError: !checked })}
+                  onClick={(checked: boolean) => updateSource({ ignoreError: !checked })}
                 />
                 <Tooltip
                   placement="topLeft"

@@ -351,7 +351,7 @@ export default class Footer extends Component<any, any> {
     const { instance } = this.props;
     const { btnMap = {} } = instance;
     this.actionSelectOperationHandler = ActionSheet.show({
-      actions: buttons.map((item, index) => {
+      actions: buttons.map((item, index: number) => {
         return {
           key: index,
           text: (
@@ -469,7 +469,7 @@ export default class Footer extends Component<any, any> {
               <Icon icon="expand_less" className="Font20" />
             </div>
           ) : (
-            buttons.map((item, index) => (
+            buttons.map((item, index: number) => (
               <div
                 key={index}
                 className="flexColumn optionBtn bold"

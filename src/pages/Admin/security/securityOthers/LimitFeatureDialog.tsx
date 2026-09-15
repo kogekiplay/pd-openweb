@@ -59,7 +59,7 @@ function LimitFeatureDialog(props) {
               <Switch
                 size="small"
                 checked={data[item.value]}
-                onClick={checked => {
+                onClick={(checked: boolean) => {
                   setData({ [item.value]: !checked });
                 }}
               />

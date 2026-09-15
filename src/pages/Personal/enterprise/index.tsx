@@ -94,11 +94,11 @@ export default class AccountChart extends React.Component<any, any> {
         helperClass="projectCardSortHelper"
         onSortEnd={newItems => {
           const sortedProjectIds = newItems.map(item => item.projectId);
-          this.setState({ list: sortedProjectIds.map(projectId => _.find(list, { projectId })) });
+          this.setState({ list: sortedProjectIds.map((projectId: string) => _.find(list, { projectId })) });
           accountSettingApi.editJoinedProjectSort({ projectIds: sortedProjectIds }).then(res => {
             res &&
               (md.global.Account.projects = sortedProjectIds
-                .map(projectId => _.find(md.global.Account.projects, { projectId }))
+                .map((projectId: string) => _.find(md.global.Account.projects, { projectId }))
                 .filter(item => item));
           });
         }}
@@ -187,7 +187,7 @@ export default class AccountChart extends React.Component<any, any> {
             {!!unAuthList.length && (
               <React.Fragment>
                 <div className="groupTitle mTop0">{_l('待审核')}</div>
-                {unAuthList.map((item, index) => (
+                {unAuthList.map((item, index: number) => (
                   <EnterpriseCard key={index} card={item} getData={() => this.getData()} />
                 ))}
                 <div className="groupTitle">{_l('已加入')}</div>

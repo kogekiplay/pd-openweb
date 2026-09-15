@@ -198,7 +198,7 @@ const getWidthDataSource = (dataSource, showExpand) => {
   if (!showExpand || dataSource.length <= INITIAL_EXPAND_RENDER_COUNT) return dataSource;
 
   const step = Math.ceil(dataSource.length / INITIAL_EXPAND_RENDER_COUNT);
-  return dataSource.filter((item, index) => index % step === 0).slice(0, INITIAL_EXPAND_RENDER_COUNT);
+  return dataSource.filter((item, index: number) => index % step === 0).slice(0, INITIAL_EXPAND_RENDER_COUNT);
 };
 
 const lineHeightInfo = { 0: 'compactness', 1: 'mediumTable', 2: 'heightTable', 3: 'adaptive' }; // h5height: 0=>紧凑 1=>中等 2=>高 3=>自适应
@@ -506,7 +506,7 @@ function TableComponent(props) {
               );
             },
           }))}
-          onRow={(record, index) => {
+          onRow={(record, index: number) => {
             return {
               onClick: event => {
                 event.stopPropagation();

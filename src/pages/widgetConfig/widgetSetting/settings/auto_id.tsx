@@ -394,7 +394,7 @@ export default function AutoId({ data, onChange, ...rest }) {
     onChange(handleAdvancedSettingChange(data, { increase: JSON.stringify(newRules) }));
   };
 
-  const deleteRule = index => {
+  const deleteRule = (index: number) => {
     const nextRules = update(rules, { $splice: [[index, 1]] });
     handleRulesChange(nextRules);
   };
@@ -405,7 +405,7 @@ export default function AutoId({ data, onChange, ...rest }) {
     handleRulesChange(nextRules);
   };
 
-  const updateRule = (index, obj) => {
+  const updateRule = (index: number, obj) => {
     const nextRules = update(rules, { [index]: { $apply: item => ({ ...item, ...obj }) } });
     handleRulesChange(nextRules.filter(r => r.type));
   };

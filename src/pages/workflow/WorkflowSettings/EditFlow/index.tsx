@@ -272,7 +272,7 @@ class EditFlow extends Component<any, any> {
   /**
    * 修改节点名称
    */
-  updateNodeName = (processId, id, name) => {
+  updateNodeName = (processId, id, name: string) => {
     this.props.dispatch(updateFlowNodeName(processId, id, name));
   };
 

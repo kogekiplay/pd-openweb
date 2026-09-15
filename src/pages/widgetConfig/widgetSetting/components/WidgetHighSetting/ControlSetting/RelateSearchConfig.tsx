@@ -22,7 +22,7 @@ export default function RelateSearchConfig(props) {
           className="allowSelectRecords"
           size="small"
           checked={!!+isHiddenOtherViewRecord}
-          onClick={checked => {
+          onClick={(checked: boolean) => {
             onChange({
               strDefault: updateConfig({
                 config: strDefault,

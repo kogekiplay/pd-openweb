@@ -55,8 +55,8 @@ export default class UseInfoDisplaySettings extends Component<any, any> {
         if (res) {
           this.setState({
             settings: {
-              psersonalSetList: baseSettingData.map(({ typeId }, index) => ({ typeId, order: index + 1 })),
-              cardSetList: cardSettingData.map(({ typeId }, index) => ({ typeId, order: index + 51 })),
+              psersonalSetList: baseSettingData.map(({ typeId }, index: number) => ({ typeId, order: index + 1 })),
+              cardSetList: cardSettingData.map(({ typeId }, index: number) => ({ typeId, order: index + 51 })),
               displayFieldForName,
             },
             flag: Date.now(),

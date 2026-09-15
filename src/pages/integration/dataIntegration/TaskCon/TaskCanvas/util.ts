@@ -207,7 +207,7 @@ export const formatControls = controls => {
   return templateControls;
 };
 
-export const getNodeInfo = async (projectId, flowId, nodeId) => {
+export const getNodeInfo = async (projectId: string, flowId, nodeId) => {
   const node = await TaskFlow.getNodeInfo({
     projectId,
     flowId,

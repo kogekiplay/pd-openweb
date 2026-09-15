@@ -17,12 +17,12 @@ let GunterChartHeader = class GunterChartHeader extends Component<any, any> {
     return (
       <Fragment>
         <div className="majorTimeAxis flexRow">
-          {periodParentList.map((item, index) => (
+          {periodParentList.map((item, index: number) => (
             <MajorAxisLabel key={index} item={item} periodType={periodType} />
           ))}
         </div>
         <div className="minorTimeAxis flexRow">
-          {periodList.map((item, index) => (
+          {periodList.map((item, index: number) => (
             <MinorAxisLabel key={index} item={item} periodType={periodType} />
           ))}
         </div>

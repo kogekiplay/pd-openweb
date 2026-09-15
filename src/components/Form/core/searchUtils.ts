@@ -8,7 +8,7 @@ import { getDynamicValue } from './formUtils';
 import { getAttachmentData } from './formUtils/helper';
 import type { RecordRow } from 'src/utils/controlTypes';
 
-const getRelateValue = (control = {}, controlState, recordId) => {
+const getRelateValue = (control = {}, controlState, recordId: string) => {
   if (!_.isEmpty(controlState)) {
     const records: RecordRow[] = _.get(controlState, 'records') || [];
 
@@ -170,7 +170,7 @@ const getApiDynamicValue = (item, formData, keywords: string, recordId = '') => 
   return _.isEmpty(dealValue) ? '' : dealValue;
 };
 
-export const getParamsByConfigs = (recordId, requestMap = [], formData = [], keywords = '') => {
+export const getParamsByConfigs = (recordId: string, requestMap = [], formData = [], keywords = '') => {
   let params = {};
   requestMap.forEach(item => {
     if (item.pid) return;

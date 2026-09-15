@@ -370,7 +370,7 @@ export default function TextVerify(props) {
         <Checkbox
           size="small"
           checked={!!filterRegex.length}
-          onClick={checked => {
+          onClick={(checked: boolean) => {
             if (checked) {
               onChange(handleAdvancedSettingChange(data, { filterregex: '' }));
               setTestValue('');

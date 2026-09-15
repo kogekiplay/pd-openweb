@@ -454,7 +454,7 @@ export const updateTaskFolderId =
 
 // 更改母任务
 export const updateTaskParentId =
-  (taskId, parentId, callback = () => {}) =>
+  (taskId: string, parentId, callback = () => {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
     ajaxRequest.updateTaskParentID({ taskID: taskId, parentID: parentId }).then((result: TaskApiResult) => {
       if (result.status) {
@@ -496,7 +496,7 @@ export const updateTaskParentId =
 
 // 更改阶段
 export const updateTaskStageId =
-  (taskId, stageId, stageName, callback = () => {}) =>
+  (taskId: string, stageId, stageName, callback = () => {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
     ajaxRequest.updateTaskStageID({ taskID: taskId, stageID: stageId }).then((result: TaskApiResult) => {
       if (result.status) {
@@ -551,7 +551,7 @@ export const removeTaskMember = (taskId: string, accountId: string) => (dispatch
 
 // 更改任务名称
 export const updateTaskName =
-  (taskId, taskName: string, subTaskId, callback = () => {}) =>
+  (taskId: string, taskName: string, subTaskId, callback = () => {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
     _.debounce(() => {
       ajaxRequest.updateTaskName({ taskID: subTaskId || taskId, name: taskName }).then((result: TaskApiResult) => {
@@ -587,7 +587,7 @@ export const updateTaskName =
 
 // 更改任务星标
 export const updateTaskMemberStar =
-  (taskId, star, callback = () => {}) =>
+  (taskId: string, star, callback = () => {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
     ajaxRequest.updateTaskMemberStar({ taskID: taskId, star }).then((result: TaskApiResult) => {
       if (result.status) {
@@ -614,7 +614,7 @@ export const updateTaskMemberStar =
 
 // 更改任务负责人
 export const updateTaskCharge =
-  (taskId, user, subTaskId, callback = () => {}) =>
+  (taskId: string, user, subTaskId, callback = () => {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
     ajaxRequest.updateTaskCharge({ taskID: subTaskId || taskId, charge: user.accountId }).then((result: TaskApiResult) => {
       if (result.status) {
@@ -692,7 +692,7 @@ export const updateTaskSummary = (taskId: string, summary) => (dispatch: AppDisp
 
 // 添加成员
 export const addTaskMember =
-  (taskId, users, specialAccounts, callback = () => {}) =>
+  (taskId: string, users, specialAccounts, callback = () => {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
     ajaxRequest
       .batchAddTaskMember({
@@ -779,7 +779,7 @@ export const refuseJoinTask = (taskId: string, accountId: string) => (dispatch: 
 
 // 添加子任务
 export const addSubTask =
-  (taskId, taskName, accountId, projectId, callback = () => {}) =>
+  (taskId: string, taskName, accountId: string, projectId: string, callback = () => {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
     ajaxRequest.addTask({ taskName, chargeAccountID: accountId, parentID: taskId, projectId }).then((result: TaskApiResult) => {
       if (result.status) {
@@ -805,7 +805,7 @@ export const addSubTask =
 
 // 获取检查清单
 export const getCheckListsWithItemsInTask =
-  (taskId, addPostSuccessCount = () => {}) =>
+  (taskId: string, addPostSuccessCount = () => {}) =>
   dispatch => {
     ajaxRequest.getCheckListsWithItemsInTask({ taskId }).then((result: TaskApiResult) => {
       if (result.status) {
@@ -843,7 +843,7 @@ export const addCheckList = (taskId: string, value) => (dispatch: AppDispatch) =
 
 // 修改清单顺序
 export const updateCheckListIndex =
-  (taskId, currentCheckListId, previousCheckListId, insertIndex) => (dispatch: AppDispatch, getState: GetState) => {
+  (taskId: string, currentCheckListId, previousCheckListId, insertIndex) => (dispatch: AppDispatch, getState: GetState) => {
     ajaxRequest.updateCheckListIndex({ currentCheckListId, previousCheckListId }).then((result: TaskApiResult) => {
       if (result.status) {
         const checklist = _.cloneDeep(getState().task.taskChecklists[taskId]);
@@ -864,7 +864,7 @@ export const updateCheckListIndex =
   };
 
 // 修改清单名称
-export const updateCheckListName = (taskId: string, checkListId: string, name) => (dispatch: AppDispatch, getState: GetState) => {
+export const updateCheckListName = (taskId: string, checkListId: string, name: string) => (dispatch: AppDispatch, getState: GetState) => {
   ajaxRequest.updateCheckListName({ checkListId, name }).then((result: TaskApiResult) => {
     if (result.status) {
       const checklist = _.cloneDeep(getState().task.taskChecklists[taskId]);
@@ -907,7 +907,7 @@ export const removeCheckList = (taskId: string, checkListId: string) => (dispatc
 
 // 修改检查项顺序
 export const updateItemIndex =
-  (taskId, currentItemId, previousItemId, targetCheckListId, insertIndex) => (dispatch: AppDispatch, getState: GetState) => {
+  (taskId: string, currentItemId, previousItemId, targetCheckListId, insertIndex) => (dispatch: AppDispatch, getState: GetState) => {
     ajaxRequest.updateItemIndex({ currentItemId, previousItemId, targetCheckListId }).then((result: TaskApiResult) => {
       if (result.status) {
         const checklist = _.cloneDeep(getState().task.taskChecklists[taskId]);
@@ -974,7 +974,7 @@ export const addItems = (taskId: string, checkListId: string, names) => (dispatc
 };
 
 // 修改检查项名称
-export const updateItemName = (taskId: string, itemId: string, name) => (dispatch: AppDispatch, getState: GetState) => {
+export const updateItemName = (taskId: string, itemId: string, name: string) => (dispatch: AppDispatch, getState: GetState) => {
   ajaxRequest.updateItemName({ itemId, name }).then((result: TaskApiResult) => {
     if (result.status) {
       const checklist = _.cloneDeep(getState().task.taskChecklists[taskId]);
@@ -1062,7 +1062,7 @@ export const updateItemStatus = (taskId: string, itemId: string, status) => (dis
 
 // 自定义字段
 export const getTaskControls =
-  (taskId, addPostSuccessCount = () => {}) =>
+  (taskId: string, addPostSuccessCount = () => {}) =>
   dispatch => {
     ajaxRequest.getTaskControls({ taskID: taskId }).then((result: TaskApiResult) => {
       if (result.status) {
@@ -1143,7 +1143,7 @@ export const updateTaskControlFiles = (taskId: string, controlId: string, value)
 
 // 任务详情折叠项
 export const taskFoldStatus =
-  (taskId, foldId, callback = () => {}) =>
+  (taskId: string, foldId, callback = () => {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
     const foldStatus = _.cloneDeep(getState().task.taskFoldStatus[taskId]) || [];
 
@@ -1212,7 +1212,7 @@ export const discussionsAddMembers = (taskId: string, data) => (dispatch: AppDis
 
 // 添加标签
 export const addTaskTag =
-  (taskId, tagId, tagName, callback = () => {}) =>
+  (taskId: string, tagId, tagName, callback = () => {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
     tagController
       .addTaskTag2({
@@ -1242,7 +1242,7 @@ export const addTaskTag =
 
 // 删除标签
 export const removeTasksTag =
-  (taskId, tagId, callback = () => {}) =>
+  (taskId: string, tagId, callback = () => {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
     tagController
       .removeTasksTag({
@@ -1267,7 +1267,7 @@ export const removeTasksTag =
 
 // 添加附件
 export const addTaskAttachments =
-  (taskId, attachmentData, kcAttachmentData, callback = () => {}) =>
+  (taskId: string, attachmentData, kcAttachmentData, callback = () => {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
     ajaxRequest
       .addTaskAttachments({
@@ -1307,7 +1307,7 @@ export const deleteAttachmentData = (taskId: string, attachments) => (dispatch: 
 
 // 修改任务计划时间
 export const updateTaskStartTimeAndDeadline =
-  (taskId, startTime, deadline, callback = () => {}) =>
+  (taskId: string, startTime, deadline, callback = () => {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
     const updateTaskTimes = (startTime, deadline, updateType = 0, timeLock = '') => {
       ajaxRequest
@@ -1363,7 +1363,7 @@ export const updateTaskStartTimeAndDeadline =
 
 // 修改任务实际开始时间
 export const updateTaskActualStartTime =
-  (taskId, actualStartTime, callback = () => {}) =>
+  (taskId: string, actualStartTime, callback = () => {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
     ajaxRequest
       .updateTaskActualStartTime({
@@ -1395,7 +1395,7 @@ export const updateTaskActualStartTime =
 
 // 修改任务完成时间
 export const updateCompletedTime =
-  (taskId, time, callback = () => {}) =>
+  (taskId: string, time, callback = () => {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
     ajaxRequest
       .updateCompletedTime({

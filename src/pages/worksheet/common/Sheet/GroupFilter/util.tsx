@@ -55,7 +55,7 @@ export const isSourceTree = (source, navGroup, view) => {
   );
 };
 
-export const renderTxt = (source, keywords, item, control, viewId, navGroup) => {
+export const renderTxt = (source, keywords: string, item, control, viewId: string, navGroup) => {
   if (keywords && (source.type === 35 || (source.type === 29 && navGroup.viewId && !!viewId && !!item.path))) {
     //视图是否删除 !!viewId
     const path = safeParse(item.path, 'array');
@@ -95,7 +95,7 @@ const expandedHierarchy = ({ data = [], treeData, level, info }) => {
 };
 
 // 按已有顺序排序
-const sortChildIds = (treeData, rowId, childrenids) => {
+const sortChildIds = (treeData, rowId: string, childrenids) => {
   const sortIds = Object.values(treeData).filter(i => i.pid === rowId);
   const idByOrder = new Map(sortIds.map((t, i) => [t.rowid, i]));
   // 未指定固定第一项
@@ -214,7 +214,7 @@ export const transformCountsToData = counts => {
     }));
 };
 
-export const buildNavGroupFilters = (view, source, controls, keywords) => {
+export const buildNavGroupFilters = (view, source, controls, keywords: string) => {
   const { navsearchcontrol = '', navsearchtype = '' } = getAdvanceSetting(view);
   return [
     {

@@ -230,7 +230,7 @@ export default function useCustomBtnGroupedLayout({
     [segments, projectId, commit],
   );
 
-  const toggleGroupCollapsed = useCallback(groupId => {
+  const toggleGroupCollapsed = useCallback((groupId: string) => {
     setCollapsedGroupIds(prev => {
       const next = new Set(prev);
 

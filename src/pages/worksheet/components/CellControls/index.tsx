@@ -531,7 +531,7 @@ export default class CellControl extends React.Component<any, any> {
     });
   };
 
-  handleUpdateEditing = (isediting, cb = () => {}, options = {}) => {
+  handleUpdateEditing = (isediting: boolean, cb = () => {}, options = {}) => {
     if (isediting && !this.editable) {
       return;
     }

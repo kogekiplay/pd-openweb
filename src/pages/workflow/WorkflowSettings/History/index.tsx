@@ -460,7 +460,7 @@ let History = class History extends Component<any, any> {
             isChatbot={flowInfo.startAppType === APP_TYPE.CHATBOT}
             data={data}
             accumulation={accumulation}
-            updateSource={(item, index) => {
+            updateSource={(item, index: number) => {
               const newData = [].concat(data);
               newData[index] = item;
               this.setState({

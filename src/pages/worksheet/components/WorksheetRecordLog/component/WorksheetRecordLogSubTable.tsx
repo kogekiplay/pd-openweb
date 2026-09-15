@@ -287,7 +287,7 @@ function WorksheetRecordLogSubTable(props) {
   };
 
   const renderUpdataList = (list, control, type: string) => {
-    return list.map((item, index) => {
+    return list.map((item, index: number) => {
       let cell = {
         ...control,
         value: typeof item !== 'string' ? JSON.stringify([item]) : item,

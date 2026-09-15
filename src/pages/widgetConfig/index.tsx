@@ -508,7 +508,7 @@ export default function Container({ isDialog, ...props }) {
     }
   };
 
-  const deleteWidget = controlId => {
+  const deleteWidget = (controlId: string) => {
     const [row, col] = getPathById(widgets, controlId);
     setWidgets(update(widgets, { [row]: { $splice: [[col, 1]] } }));
     setActiveWidget({});

@@ -136,7 +136,7 @@ const InvoiceList = forwardRef((props, ref) => {
       .catch(() => setFetchAppState({ loading: false }));
   };
 
-  const getWorksheetList = appId => {
+  const getWorksheetList = (appId: string) => {
     appManagementApi.getWorksheetsUnderTheApp({ projectId, appIds: [appId], isFilterCustomPage: true }).then(res => {
       const list = appId ? (res[appId] || []).map(it => ({ label: it.worksheetName, value: it.worksheetId })) : [];
       setWorksheetList(list);

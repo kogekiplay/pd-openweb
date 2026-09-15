@@ -16,7 +16,7 @@ const SideMaskWrap = styled.div`
   background: rgba(0, 0, 0, 0.7);
 `;
 
-function clearLatestMessagesOfMingoCreateRecord(worksheetId) {
+function clearLatestMessagesOfMingoCreateRecord(worksheetId: string) {
   const latestMessagesOfMingoCreateRecord = localStorage.getItem('latestMessagesOfMingoCreateRecord');
   const parsedData = safeParse(latestMessagesOfMingoCreateRecord);
 

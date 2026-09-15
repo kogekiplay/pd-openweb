@@ -175,7 +175,7 @@ class ErrorDialog extends Component<any, any> {
             </div>
           </div>
           <ScrollView className="importErrorBox flex mTop15">
-            {logs.map((item, index) => {
+            {logs.map((item, index: number) => {
               return (
                 <div key={index} className="mBottom10 pLeft12 pRight12">
                   <span className="Bold mRight8 textPrimary">{item.fileName}</span>

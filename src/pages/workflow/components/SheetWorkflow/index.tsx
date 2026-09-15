@@ -321,7 +321,7 @@ function WorkflowCard(props) {
                 data.parentCurrents = currents;
                 return data;
               })
-              .map((data, index) => (
+              .map((data, index: number) => (
                 <Fragment key={data.workId}>
                   <div
                     className={cx('branchWrap pointer', {
@@ -837,7 +837,7 @@ export default function SheetWorkflow(props) {
   const renderStepItem = () => {
     const { processId, cardData = {}, processName, works = [], status } = currentWorkflow;
     const { id, workId, completed, parentCurrents = [] } = cardData;
-    const allowTaskRevokeWorks = works.filter((_, index) => index).filter(n => n.allowTaskRevokeBackNodeId && isCharge);
+    const allowTaskRevokeWorks = works.filter((_, index: number) => index).filter(n => n.allowTaskRevokeBackNodeId && isCharge);
 
     const currentWork = (function () {
       if (allowTaskRevokeBackNodeId) {
@@ -893,7 +893,7 @@ export default function SheetWorkflow(props) {
             currentWork={currentWork}
             currentType={_.get(currentWork, 'flowNode.type')}
             currents={stepsCurrents.map(n => n.workId)}
-            onChangeCurrentWork={workId => {
+            onChangeCurrentWork={(workId: string) => {
               if (allowTaskRevokeWorks.length) {
                 const work =
                   _.find(works, {

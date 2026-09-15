@@ -197,7 +197,7 @@ class TaskCanvas extends Component<any, any> {
           className: 'connectorErrorDialog',
           description: (
             <div className="errorInfo" style={{ marginBottom: -30 }}>
-              {errorMsgList.map((error, index) => {
+              {errorMsgList.map((error, index: number) => {
                 return (
                   <div key={index} className="mTop5">
                     {error}

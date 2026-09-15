@@ -23,7 +23,7 @@ export default class CalendarCommentList extends Component<any, any> {
     }
   }
 
-  handleFocusClick(checked) {
+  handleFocusClick(checked: boolean) {
     // toggle state and get first page topics
     this.setState({
       isOnlyMe: !checked,
@@ -56,7 +56,7 @@ export default class CalendarCommentList extends Component<any, any> {
         <CheckBox
           className="mBottom8 pTop5 mTop5"
           checked={isOnlyMe}
-          onClick={checked => {
+          onClick={(checked: boolean) => {
             this.handleFocusClick.bind(this)(checked);
           }}
         >

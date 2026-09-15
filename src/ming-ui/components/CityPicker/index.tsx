@@ -199,7 +199,7 @@ export default function CityPicker(props) {
   const getSortCitys = citys => {
     if (!chooserange) {
       const orderMap = new Map();
-      countrySortData.forEach((id, index) => orderMap.set(id, index));
+      countrySortData.forEach((id, index: number) => orderMap.set(id, index));
       return _.sortBy(citys || [], s => orderMap.get(s.id));
     }
 

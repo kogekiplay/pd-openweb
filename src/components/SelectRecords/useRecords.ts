@@ -369,7 +369,7 @@ export default function useRecords(props) {
   };
 }
 
-export function getWorksheetInfo(worksheetId, parentWorksheetId) {
+export function getWorksheetInfo(worksheetId: string, parentWorksheetId) {
   return getWorksheetAjax()
     .getWorksheetInfo({
       worksheetId,

@@ -83,7 +83,7 @@ export default function LockAppCom(props) {
         <Switch
           disabled={isRecovery && !(isNormalApp && isOwner)}
           checked={isRecovery}
-          onClick={checked => {
+          onClick={(checked: boolean) => {
             if (!checked) {
               lockAppFunc({
                 appId,

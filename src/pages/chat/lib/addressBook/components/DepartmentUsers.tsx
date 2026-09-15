@@ -132,7 +132,7 @@ export default class DepartmentUsers extends Component<any, any> {
                 <ScrollView className="h100" onScrollEnd={this.handleScrollEnd}>
                   {groupList.length ? (
                     <Fragment>
-                      {groupList.map((item, index) => {
+                      {groupList.map((item, index: number) => {
                         let jobs = (item.jobInfos || []).map(n => n.jobName).join(';');
                         return (
                           <UserItem

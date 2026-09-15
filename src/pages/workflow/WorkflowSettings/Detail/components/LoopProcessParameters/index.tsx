@@ -45,7 +45,7 @@ const List = styled.div`
 export default props => {
   const { companyId, processId, relationId, selectNodeId, data, updateSource, isFirstNode } = props;
 
-  const updateItem = (controlId, key: string, value) => {
+  const updateItem = (controlId: string, key: string, value) => {
     updateSource({
       controls: data.controls.map(o => {
         if (o.controlId === controlId) {
@@ -76,7 +76,7 @@ export default props => {
           <div className="w265 mLeft10">{isFirstNode ? _l('默认值') : _l('参数值')}</div>
           {isFirstNode && <div className="w45 mLeft10"></div>}
         </div>
-        {data[isFirstNode ? 'controls' : 'fields'].map((item, index) => {
+        {data[isFirstNode ? 'controls' : 'fields'].map((item, index: number) => {
           const isDisabled = item.processVariableType === 3 || !isFirstNode;
 
           return (

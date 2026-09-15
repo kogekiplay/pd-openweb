@@ -124,7 +124,7 @@ export default class Cancellation extends Component<any, any> {
           </div>
         </div>
         <div className="protocol TxtLeft flexRow alignItemsCenter mTop24">
-          <Checkbox checked={checkedAgree} onClick={checked => this.setState({ checkedAgree: !checked })} />
+          <Checkbox checked={checkedAgree} onClick={(checked: boolean) => this.setState({ checkedAgree: !checked })} />
           <div>
             <spam className="Font20">{_l('同意（注销后15天内可撤销操作）')}</spam>
           </div>

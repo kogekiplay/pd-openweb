@@ -961,7 +961,7 @@ export const addNewRecord = (record, addIndex?) => {
   };
 };
 
-export const updateEditIndex = index => {
+export const updateEditIndex = (index: number) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     if (_.isString(index)) {
       const { gunterView } = getState().sheet;

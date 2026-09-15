@@ -213,7 +213,7 @@ export default function BulletinSetting(props) {
     });
   };
 
-  const onSwitchItem = index => {
+  const onSwitchItem = (index: number) => {
     if (index === activeIndex) return;
     if (editStatus.editing) {
       alert(_l('请先保存正在编辑的内容'), 3);
@@ -228,7 +228,7 @@ export default function BulletinSetting(props) {
     const isAdded = bulletins.length > bulletinBoards.length && currentIndex === bulletins.length - 1;
 
     const deleteItem = (isUpdate?) => {
-      const newBulletins = bulletins.filter((_, index) => index !== currentIndex);
+      const newBulletins = bulletins.filter((_, index: number) => index !== currentIndex);
       setActiveIndex(0);
       setBulletins(newBulletins);
       setEditStatus({ editing: false, saved: false });

@@ -2,7 +2,7 @@ import _ from 'lodash';
 import weixinApi from 'src/api/weixin';
 import workWeiXinApi from 'src/api/workWeiXin';
 
-export const bindWeiXin = projectId => {
+export const bindWeiXin = (projectId: string) => {
   return new Promise((reslove, reject) => {
     const entryUrl = sessionStorage.getItem('entryUrl');
     const url = (window.isIphone ? entryUrl || location.href : location.href).split('#')[0];
@@ -39,7 +39,7 @@ export const bindWeiXin = projectId => {
   });
 };
 
-export const bindWxWork = projectId => {
+export const bindWxWork = (projectId: string) => {
   return new Promise((reslove, reject) => {
     const url = location.href.split('#')[0];
 
@@ -80,7 +80,7 @@ export const bindWxWork = projectId => {
   });
 };
 
-export const bindFeishu = projectId => {
+export const bindFeishu = (projectId: string) => {
   return new Promise((reslove, reject) => {
     const url = encodeURI(location.href.split('#')[0]);
     workWeiXinApi
@@ -117,7 +117,7 @@ export const bindFeishu = projectId => {
   });
 };
 
-export const bindDing = projectId => {
+export const bindDing = (projectId: string) => {
   return new Promise((reslove, reject) => {
     const entryUrl = sessionStorage.getItem('entryUrl') || location.href;
     const url = (window.isIphone ? location.href : entryUrl).split('#')[0];
@@ -153,7 +153,7 @@ export const bindDing = projectId => {
   });
 };
 
-export const bindWeLink = projectId => {
+export const bindWeLink = (projectId: string) => {
   return new Promise((reslove, reject) => {
     const url = encodeURI(location.href.split('#')[0]);
     workWeiXinApi

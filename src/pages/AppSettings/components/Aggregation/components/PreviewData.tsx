@@ -19,7 +19,7 @@ import ControlsDataTable from 'src/pages/worksheet/components/ControlsDataTable'
 import { canEditApp, canEditData } from 'src/pages/worksheet/redux/actions/util.js';
 import emptyImg from './img/null.png';
 
-const getAppInfo = appId => {
+const getAppInfo = (appId: string) => {
   return homeAppApi.getApp({
     appId,
   });
@@ -230,7 +230,7 @@ export default function PreviewData(props) {
     });
   };
 
-  const changePageIndex = index => {
+  const changePageIndex = (index: number) => {
     if (loading) {
       return;
     }

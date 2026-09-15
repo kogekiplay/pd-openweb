@@ -327,7 +327,7 @@ const CodeSnippet = ({ projectId, type = 0, onSave = () => {}, onClose = () => {
     setSelectId(newData.length ? newData[0].id : '');
   };
 
-  const getCodeTemplateList = pageIndex => {
+  const getCodeTemplateList = (pageIndex: number) => {
     setLoading(true);
 
     flowNodeAjax
@@ -541,7 +541,7 @@ const CodeSnippet = ({ projectId, type = 0, onSave = () => {}, onClose = () => {
                   className="InlineBlock"
                   text={_l('使用时清空现有input参数与代码块')}
                   checked={clearParams}
-                  onClick={checked => setParams(!checked)}
+                  onClick={(checked: boolean) => setParams(!checked)}
                 />
               )}
               <div className="flex" />

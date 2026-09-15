@@ -60,7 +60,7 @@ export default function ({
     }
   };
 
-  const handleDelete = (key, index) => {
+  const handleDelete = (key, index: number) => {
     const configs = safeParse(pageConfigs);
     const newConfigs = configs.filter(l => l.key !== key);
 
@@ -68,7 +68,7 @@ export default function ({
     onDelete(index);
   };
 
-  return sourceKeys.map((key, index) => (
+  return sourceKeys.map((key, index: number) => (
     <Fragment>
       <Con key={key} className="mBottom6 flexRow">
         <No>

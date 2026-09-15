@@ -220,7 +220,7 @@ export default props => {
             className="InlineBlock"
             text={_l('允许重新发起')}
             checked={data.processConfig.callBackType !== -1}
-            onClick={checked =>
+            onClick={(checked: boolean) =>
               updateSource({
                 processConfig: Object.assign({}, data.processConfig, { callBackType: !checked ? 0 : -1 }),
               })
@@ -417,7 +417,7 @@ export default props => {
             className="mTop15 flexRow"
             text={item.text}
             checked={data.processConfig[item.key]}
-            onClick={checked =>
+            onClick={(checked: boolean) =>
               updateSource({
                 processConfig: Object.assign(
                   {},
@@ -440,7 +440,7 @@ export default props => {
             ? !!data.processConfig.viewNodeIds.length
             : data.processConfig.viewNodeIds === null
         }
-        onClick={checked =>
+        onClick={(checked: boolean) =>
           updateSource({
             processConfig: Object.assign({}, data.processConfig, { viewNodeIds: !checked ? null : [] }),
           })
@@ -556,7 +556,7 @@ export default props => {
               <Checkbox
                 text={item.text}
                 checked={data.processConfig[item.key]}
-                onClick={checked =>
+                onClick={(checked: boolean) =>
                   updateSource({
                     processConfig: Object.assign({}, data.processConfig, { [item.key]: !checked }),
                   })
@@ -572,7 +572,7 @@ export default props => {
                 <Checkbox
                   text={_l('必填字段为空时')}
                   checked={data.processConfig.required}
-                  onClick={checked =>
+                  onClick={(checked: boolean) =>
                     updateSource({
                       processConfig: Object.assign({}, data.processConfig, { required: !checked }),
                     })
@@ -586,7 +586,7 @@ export default props => {
                 <Checkbox
                   text={_l('设置为必须审批的节点')}
                   checked={selected}
-                  onClick={checked => {
+                  onClick={(checked: boolean) => {
                     setSelected(!checked);
                     checked &&
                       updateSource({
@@ -726,7 +726,7 @@ export default props => {
             <Checkbox
               text={_l('允许审批人撤回上次审批结果')}
               checked={data.processConfig.allowTaskRevoke}
-              onClick={checked =>
+              onClick={(checked: boolean) =>
                 updateSource({
                   processConfig: Object.assign({}, data.processConfig, { allowTaskRevoke: !checked }),
                 })
@@ -737,7 +737,7 @@ export default props => {
             <Checkbox
               text={_l('当没有上级负责人时，由当前人员进行处理')}
               checked={data.processConfig.defaultCandidateUser}
-              onClick={checked =>
+              onClick={(checked: boolean) =>
                 updateSource({
                   processConfig: Object.assign({}, data.processConfig, { defaultCandidateUser: !checked }),
                 })
@@ -755,7 +755,7 @@ export default props => {
             <Checkbox
               text={_l('验证节点负责人的记录查看权限')}
               checked={data.processConfig.permissionLevel === 1}
-              onClick={checked =>
+              onClick={(checked: boolean) =>
                 updateSource({
                   processConfig: Object.assign({}, data.processConfig, { permissionLevel: !checked ? 1 : 0 }),
                 })
@@ -804,7 +804,7 @@ export default props => {
             <Checkbox
               text={_l('审批流程中允许查看他人填写字段')}
               checked={data.processConfig.allowUpdateView}
-              onClick={checked =>
+              onClick={(checked: boolean) =>
                 updateSource({
                   processConfig: Object.assign({}, data.processConfig, { allowUpdateView: !checked }),
                 })

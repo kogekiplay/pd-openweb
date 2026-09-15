@@ -76,7 +76,7 @@ export default ({
                 className="flexRow"
                 text={_l('忽略排序规则，随机获取')}
                 checked={data.random}
-                onClick={checked => updateSource({ random: !checked })}
+                onClick={(checked: boolean) => updateSource({ random: !checked })}
               />
             )}
           </div>

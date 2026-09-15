@@ -126,7 +126,7 @@ export default class EncryptFieldList extends Component<any, any> {
         this.setState({ loadingApp: false });
       });
   };
-  getWorksheetList = appId => {
+  getWorksheetList = (appId: string) => {
     if (!appId) {
       this.setState({ worksheetList: [] });
       return;
@@ -277,7 +277,7 @@ export default class EncryptFieldList extends Component<any, any> {
           ) : _.isEmpty(dataList) ? (
             <Empty className="w100 h100" detail={{ icon: 'icon-verify', desc: _l('无数据') }} />
           ) : (
-            dataList.map((item, index) => {
+            dataList.map((item, index: number) => {
               const { controlName, type, appName, iconColor, appIconUrl, worksheetName, iconUrl } = item;
 
               return (

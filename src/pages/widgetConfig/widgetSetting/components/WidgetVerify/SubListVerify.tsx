@@ -25,7 +25,7 @@ export default function SubListVerify(props) {
         <Checkbox
           size="small"
           checked={enablelimit === '1'}
-          onClick={checked => {
+          onClick={(checked: boolean) => {
             onChange(
               handleAdvancedSettingChange(
                 data,

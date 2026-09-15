@@ -289,7 +289,7 @@ class SearchWorksheetActionDialog extends Component<any, any> {
     });
   };
 
-  renderMappingItem = (item, index) => {
+  renderMappingItem = (item, index: number) => {
     const { allControls = [] } = this.props;
     const { controls = [], configs = [], childVisible } = this.state;
     const { cid, subCid, pid } = item;
@@ -359,7 +359,7 @@ class SearchWorksheetActionDialog extends Component<any, any> {
             }
             value={isSubCidDelete ? undefined : subCid || undefined}
             data={this.getDropData(subCidControls, cidControl, pid)}
-            onChange={controlId => {
+            onChange={(controlId: string) => {
               let newConfigs = configs.map((i, idx) => (idx === index ? { ...i, subCid: controlId } : i));
 
               if (curIsSubList) {
@@ -632,7 +632,7 @@ class SearchWorksheetActionDialog extends Component<any, any> {
               <div className="mappingTitle">{_l('当前表单字段')}</div>
               <div className="mappingTitle">{_l('查询表字段')}</div>
             </div>
-            {configs.map((item, index) => this.renderMappingItem(item, index))}
+            {configs.map((item, index: number) => this.renderMappingItem(item, index))}
             <Trigger
               action={['click']}
               popupVisible={controlVisible}

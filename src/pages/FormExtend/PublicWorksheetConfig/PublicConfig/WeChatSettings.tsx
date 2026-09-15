@@ -111,7 +111,7 @@ export default function WeChatSettings(props) {
             <div>
               <CommonSwitch
                 checked={weChatSetting.isCollectWxInfo}
-                onClick={checked =>
+                onClick={(checked: boolean) =>
                   setState({
                     weChatSetting: {
                       isCollectWxInfo: !checked,
@@ -222,7 +222,7 @@ export default function WeChatSettings(props) {
           <div>
             <CommonSwitch
               checked={weChatSetting.onlyWxCollect}
-              onClick={checked =>
+              onClick={(checked: boolean) =>
                 setState({ weChatSetting: Object.assign({}, weChatSetting, { onlyWxCollect: !checked }) })
               }
               name={_l('只允许在微信中填写')}

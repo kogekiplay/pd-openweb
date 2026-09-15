@@ -35,7 +35,7 @@ export default class AddressBookInvite extends Component<any, any> {
     });
   };
 
-  deleteFn = accountId => {
+  deleteFn = (accountId: string) => {
     this.setState({ selectUsers: this.state.selectUsers.filter(u => u.accountId !== accountId) });
   };
 

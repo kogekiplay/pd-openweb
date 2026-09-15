@@ -9,7 +9,7 @@ export default ({ checked, fields, index, updateSource }) => {
         style={{ lineHeight: 'normal' }}
         checked={checked}
         text={_l('允许新增选项')}
-        onClick={checked =>
+        onClick={(checked: boolean) =>
           updateSource({
             fields: fields.map((o, i) => {
               if (i === index) {

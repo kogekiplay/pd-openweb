@@ -135,7 +135,7 @@ export default class BaseColor extends Component<any, any> {
       </div>
     );
   }
-  renderColorGroup({ name, id, colors }, index) {
+  renderColorGroup({ name, id, colors }, index: number) {
     const { colorGroupId } = this.state;
     return (
       <div
@@ -148,7 +148,7 @@ export default class BaseColor extends Component<any, any> {
         }}
       >
         <div className="flexRow valignWrapper wrap" style={{ width: '65%' }}>
-          {colors.map((item, index) => (
+          {colors.map((item, index: number) => (
             <div
               key={index}
               className="item narrow"
@@ -166,7 +166,7 @@ export default class BaseColor extends Component<any, any> {
       </div>
     );
   }
-  renderColor(item, index) {
+  renderColor(item, index: number) {
     const { customColors, colorIndex } = this.state;
     return (
       <div
@@ -246,17 +246,17 @@ export default class BaseColor extends Component<any, any> {
         {type === 1 && (
           <div className="colorSwatches">
             <div className="textSecondary pLeft20 pRight20">{_l('组织')}</div>
-            {adaptThemeColors.map((item, index) =>
+            {adaptThemeColors.map((item, index: number) =>
               this.renderColorGroup({ ...item, id: 'adaptThemeColor', name: _l('适应主题') }, index, true),
             )}
             {this.chartColors
               .filter(item => !adaptThemeId.includes(item.id))
-              .map((item, index) => this.renderColorGroup(item, index))}
+              .map((item, index: number) => this.renderColorGroup(item, index))}
           </div>
         )}
         {type === 2 && (
           <div className="colorSwatches customSwatches">
-            {customColors.map((item, index) => this.renderColor(item, index))}
+            {customColors.map((item, index: number) => this.renderColor(item, index))}
             {customColors.length < 18 && (
               <div className="flexRow valignWrapper colorItem hoverText" onClick={this.handleAddCustomColor}>
                 <div className="addWrap flexRow alignItemsCenter justifyContentCenter">

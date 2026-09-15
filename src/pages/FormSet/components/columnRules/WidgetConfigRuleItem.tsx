@@ -141,7 +141,7 @@ function renderFilterItemTexts(filters = [], disabled = false, worksheetControls
     };
   });
 
-  const renderItemText = (item, index) => {
+  const renderItemText = (item, index: number) => {
     return (
       <span key={index}>
         {index ? (

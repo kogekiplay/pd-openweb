@@ -50,7 +50,7 @@ export const renderContent = data => {
   if (showtype === '2') {
     return (
       <div className="ming RadioGroup">
-        {itemnames.map((o, index) => {
+        {itemnames.map((o, index: number) => {
           return <Radio text={o.value} value={o.key} key={index} checked={`${value}` === o.key} size={'middle'} />;
         })}
       </div>

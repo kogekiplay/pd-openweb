@@ -43,7 +43,7 @@ class SubordinateMembers extends Component<any, any> {
    * 切换网络
    * @param  {string} projectId
    */
-  switchNetwork(projectId) {
+  switchNetwork(projectId: string) {
     this.setState({ showNetwork: false });
     this.props.getSetting(projectId);
   }
@@ -92,7 +92,7 @@ class SubordinateMembers extends Component<any, any> {
    * @param  {string} accountId
    * @param  {boolean} hidden
    */
-  updateUserStatus(accountId, hidden) {
+  updateUserStatus(accountId: string, hidden) {
     ajaxRequest.updateUserStatusOfSetting({
       projectId: config.projectId,
       accountId,
@@ -239,7 +239,7 @@ class SubordinateMembers extends Component<any, any> {
    * 删除关注的同事
    * @param {string} accountId
    */
-  removeMembers(accountId) {
+  removeMembers(accountId: string) {
     ajaxRequest
       .unfollowUserOfSetting({
         projectId: config.projectId,

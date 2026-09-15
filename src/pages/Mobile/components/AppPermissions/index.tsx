@@ -156,7 +156,7 @@ const appPermissions = Component => {
         fixedData: {},
       };
     }
-    getLoadedAppDetail = appId => {
+    getLoadedAppDetail = (appId: string) => {
       const { appDetail = {}, match = {} } = this.props;
       const { detail = {}, status } = appDetail;
       const { path = '' } = match;
@@ -171,7 +171,7 @@ const appPermissions = Component => {
         return detail;
       }
     };
-    useLoadedAppDetail = (appId, data) => {
+    useLoadedAppDetail = (appId: string, data) => {
       const { fixAccount, fixRemark, fixed, webMobileDisplay, permissionType, appDisplay } = data;
       const isAuthorityApp = permissionType >= APP_ROLE_TYPE.ADMIN_ROLE;
 
@@ -248,7 +248,7 @@ const appPermissions = Component => {
           this.setState({ appStatus: error.errorCode, loading: false });
         });
     }
-    getApp = appId => {
+    getApp = (appId: string) => {
       homeAppApi
         .getApp({
           appId,

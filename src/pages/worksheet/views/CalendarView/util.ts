@@ -364,7 +364,7 @@ export const renderLine = (random, view) => {
 };
 
 //格式化时间用于保存
-export const formatTimeForSave = (value: Date, data = {}, appId) => {
+export const formatTimeForSave = (value: Date, data = {}, appId: string) => {
   if (data.type === 16) {
     return data?.advancedSetting?.timezonetype === '1'
       ? dateAppZoneToServerZone(value, window[`timeZone_${appId}`])

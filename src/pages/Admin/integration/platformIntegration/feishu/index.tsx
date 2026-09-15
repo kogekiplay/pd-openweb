@@ -293,7 +293,7 @@ export default class FeiShu extends React.Component<any, any> {
                 <span className="mLeft10 switchBtn">
                   <Switch
                     checked={!this.state.isCloseDing}
-                    onClick={checked => this.editFeishuProjectSettingStatus({ tag: checked ? 2 : 1 })}
+                    onClick={(checked: boolean) => this.editFeishuProjectSettingStatus({ tag: checked ? 2 : 1 })}
                   />
                 </span>
               </Tooltip>
@@ -425,7 +425,7 @@ export default class FeiShu extends React.Component<any, any> {
           </div>
           <EnabledWebProxy
             isProxy={isProxy}
-            handleChangeProxy={checked =>
+            handleChangeProxy={(checked: boolean) =>
               this.editFeishuProjectSettingStatus({ tag: this.state.isCloseDing ? 2 : 1, isProxy: !checked })
             }
           />

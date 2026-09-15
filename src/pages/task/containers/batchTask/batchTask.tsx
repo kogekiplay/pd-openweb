@@ -992,7 +992,7 @@ BatchTask.taskAuth = function (type: string, title: string, args?: any, minorCon
 };
 
 // 生成没有权限的任务
-BatchTask.builAuthTask = function (data, args, type, title) {
+BatchTask.builAuthTask = function (data, args, type, title: string) {
   const { folderId, viewType } = Store.getState().task.taskConfig;
   const noAuth = data.data.noAuth;
 
@@ -1096,7 +1096,7 @@ BatchTask.getTaskIdByItem = function ($item) {
 };
 
 // 显示没有权限的任务
-BatchTask.showAuthTask = function (authObj, title, type) {
+BatchTask.showAuthTask = function (authObj, title: string, type) {
   const taskCount = authObj.length;
 
   if (taskCount) {

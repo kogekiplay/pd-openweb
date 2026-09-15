@@ -34,7 +34,7 @@ export function getSheetViewRows(sheetViewData = {}, treeTableViewData = {}) {
     : rows;
 }
 
-export function getTreeExpandCellWidth(index, rowsLength) {
+export function getTreeExpandCellWidth(index: number, rowsLength) {
   rowsLength = rowsLength || 1;
   let strLength = String(rowsLength).length;
 

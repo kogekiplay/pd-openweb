@@ -14,7 +14,7 @@ const replaceOptionControlTranslateInfo = (data, { translateInfo, optionTranslat
   }
 };
 
-export const replaceControlsTranslateInfo = (appId, worksheetId, controls: FormControl[] = []) => {
+export const replaceControlsTranslateInfo = (appId: string, worksheetId: string, controls: FormControl[] = []) => {
   if (!window[`langData-${appId}`]) return controls;
   return controls.map(c => {
     const translateInfo = getTranslateInfo(appId, worksheetId, c.controlId);
@@ -95,7 +95,7 @@ export const replaceControlsTranslateInfo = (appId, worksheetId, controls: FormC
   });
 };
 
-export const replaceAdvancedSettingTranslateInfo = (appId, worksheetId, advancedSetting = {}) => {
+export const replaceAdvancedSettingTranslateInfo = (appId: string, worksheetId: string, advancedSetting = {}) => {
   const translateInfo = getTranslateInfo(appId, null, worksheetId);
   const data = {
     ...advancedSetting,
@@ -124,7 +124,7 @@ export const replaceAdvancedSettingTranslateInfo = (appId, worksheetId, advanced
   return data;
 };
 
-export const replaceRulesTranslateInfo = (appId, worksheetId, rules: any[]) => {
+export const replaceRulesTranslateInfo = (appId: string, worksheetId: string, rules: any[]) => {
   return rules.map(rule => {
     const translateInfo = getTranslateInfo(appId, worksheetId, rule.ruleId);
 
@@ -137,7 +137,7 @@ export const replaceRulesTranslateInfo = (appId, worksheetId, rules: any[]) => {
 };
 
 // 不标类型的话 `= []` 会被推成 never[]，调用方传任何真实数组都报 TS2345
-export const replaceBtnsTranslateInfo = (appId, btns: any[] = []) => {
+export const replaceBtnsTranslateInfo = (appId: string, btns: any[] = []) => {
   if (!window[`langData-${appId}`]) return btns;
   return btns.map(btn => {
     const translateInfo = getTranslateInfo(appId, null, btn.btnId);

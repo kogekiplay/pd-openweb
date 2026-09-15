@@ -81,7 +81,7 @@ export default class ActionFields extends Component<any, any> {
   /**
    * 点击切换
    */
-  handleClick = index => {
+  handleClick = (index: number) => {
     if (this.state.activeIndex === index) index = -1;
     this.setState({ activeIndex: index });
     this.search && this.search.focus();
@@ -152,7 +152,7 @@ export default class ActionFields extends Component<any, any> {
               {!condition.length && noData && !keywords && (
                 <div className="conditionDetail flexRow textSecondary">{noData}</div>
               )}
-              {condition.map((item, index) => (
+              {condition.map((item, index: number) => (
                 <div key={index} className="conditionBox">
                   <div
                     className={cx('conditionDetail flexRow hoverColorPrimary', {
@@ -213,7 +213,7 @@ export default class ActionFields extends Component<any, any> {
                           <div className="ellipsis">{noItemTips}</div>
                         </li>
                       )}
-                      {item.items.map((obj, index) => (
+                      {item.items.map((obj, index: number) => (
                         <li
                           className="flexRow hoverBgColorPrimaryDark"
                           key={index}

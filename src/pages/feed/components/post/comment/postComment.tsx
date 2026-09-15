@@ -45,7 +45,7 @@ class PostComment extends React.Component<any, any> {
     const { projectIds } = this.props;
     if (!projectIds || !projectIds.length) return;
 
-    Promise.all(projectIds.map(projectId => checkPermission(projectId, PERMISSION_ENUM.MANAGE_TREND))).then(results => {
+    Promise.all(projectIds.map((projectId: string) => checkPermission(projectId, PERMISSION_ENUM.MANAGE_TREND))).then(results => {
       if (!results.some(result => !result)) {
         this.setState({ allowOperate: true });
       }

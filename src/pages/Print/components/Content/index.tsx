@@ -907,7 +907,7 @@ export default class Con extends React.Component<any, any> {
                         );
                       })}
                     </tr>
-                    {works.map((item, index) => {
+                    {works.map((item, index: number) => {
                       return item.workItems.map((workItem, workItemIndex) => {
                         const { workItemLog, signature, operationTime, receiveTime } = workItem;
                         const translateInfo = parentId ? getTranslateInfo(appId, parentId, item.flowNode.id) : {};
@@ -1117,7 +1117,7 @@ export default class Con extends React.Component<any, any> {
     return list.filter(o => this.isShow(printData[o], printData[o + 'Checked'])).length;
   };
 
-  isShow = (data, checked) => {
+  isShow = (data, checked: boolean) => {
     if (!checked) {
       return false;
     }

@@ -210,7 +210,7 @@ export default function GroupCon(props) {
   const type =
     localStorage.getItem(`${view.viewId}_resource_type`) || types[_.get(view, 'advancedSetting.calendarType') || 0];
 
-  const handleMouseDown = (event, index) => {
+  const handleMouseDown = (event, index: number) => {
     const { target } = event;
     const startClientX = event.clientX;
     const startDragValue = target.parentElement.offsetLeft + target.parentElement.clientWidth;
@@ -218,7 +218,7 @@ export default function GroupCon(props) {
     setState({
       dragValue: startDragValue,
     });
-    const setColumnWidth = width => {
+    const setColumnWidth = (width: number) => {
       const data = {
         ...widthConfig,
         [index]: width,
@@ -257,7 +257,7 @@ export default function GroupCon(props) {
     };
   };
 
-  const renderDrag = index => {
+  const renderDrag = (index: number) => {
     return (
       <div
         onMouseDown={event => {
@@ -312,7 +312,7 @@ export default function GroupCon(props) {
     });
   };
 
-  const previewAttachment = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, allAttachments, rowId) => {
+  const previewAttachment = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, allAttachments, rowId: string) => {
     // 不允许预览
     if (_.get(view, 'advancedSetting.opencover') === '2' || isM) {
       return;
@@ -465,7 +465,7 @@ export default function GroupCon(props) {
             const height = o.height + lineBottomHeight + 1; //底部有lineBottomHeight间距,
             const viewControlData = controls.find((o: FormControl) => o.controlId === _.get(view, 'viewControl')) || {};
 
-            const renderAccount = name => {
+            const renderAccount = (name: string) => {
               const data = safeParse(name);
               return (
                 <div className="flexRow alignItemsCenter">

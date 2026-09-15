@@ -729,7 +729,7 @@ function WorksheetRecordLog(props, ref) {
                     />
                   </div>
 
-                  {item.child.map((childData, index) => {
+                  {item.child.map((childData, index: number) => {
                     const showTooltips = hasHiddenControl(childData.operatContent.logData, controlsArray);
                     const updateControlCount = childData.operatContent.logData.filter(
                       l => (l.oldValue || l.oldText) !== '' || (l.newValue || l.newText) !== '',

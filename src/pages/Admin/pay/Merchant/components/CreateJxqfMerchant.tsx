@@ -385,7 +385,7 @@ export default class CreateJxqfMerchant extends Component<any, any> {
                   <Checkbox
                     className="mRight6"
                     checked={aliPayStatus}
-                    onClick={checked => this.setState({ aliPayStatus: checked ? 0 : 1 })}
+                    onClick={(checked: boolean) => this.setState({ aliPayStatus: checked ? 0 : 1 })}
                   />
                   <IconWrap className="aliBgColor">
                     <Icon icon="order-alipay" className="Font24" />
@@ -397,7 +397,7 @@ export default class CreateJxqfMerchant extends Component<any, any> {
                     className="mRight6"
                     disabled={!currentWeChatServiceAccount?.appId || _.isEmpty(weChatServiceAccounts)}
                     checked={wechatPayStatus}
-                    onClick={checked => this.setState({ wechatPayStatus: checked ? 0 : 1 })}
+                    onClick={(checked: boolean) => this.setState({ wechatPayStatus: checked ? 0 : 1 })}
                   />
                   <IconWrap className="wechatBgColor">
                     <Icon icon="wechat_pay" className="Font24" />

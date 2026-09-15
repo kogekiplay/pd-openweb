@@ -37,7 +37,7 @@ const getXAxisLabel = (value, data) => {
   return _.isNil(value) || value === '' ? _l('空') : value;
 };
 
-const getLineChartXAxis = (controlId, data) => {
+const getLineChartXAxis = (controlId: string, data) => {
   if (controlId) {
     const result = [];
     data.forEach(item => {

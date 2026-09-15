@@ -174,7 +174,7 @@ export default class OutsourcingList extends Component<any, any> {
     });
   };
 
-  handleView(text, type, accountId) {
+  handleView(text, type, accountId: string) {
     if (Number(text) <= 0) {
       return;
     }
@@ -223,7 +223,7 @@ export default class OutsourcingList extends Component<any, any> {
   };
 
   //搜索框筛选
-  handleInputChange(keywords) {
+  handleInputChange(keywords: string) {
     this.setState(
       {
         keywords,

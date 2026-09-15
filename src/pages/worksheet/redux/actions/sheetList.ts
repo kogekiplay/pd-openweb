@@ -118,7 +118,7 @@ export function refreshSheetList() {
   };
 }
 
-export function getAllAppSectionDetail(appId, callBack) {
+export function getAllAppSectionDetail(appId: string, callBack) {
   return function (dispatch) {
     homeAppApi
       .getApp({
@@ -255,7 +255,7 @@ export function updateSheetListIsUnfold(visible) {
   };
 }
 
-export function updateAppItemInfo(id, type, name) {
+export function updateAppItemInfo(id, type, name: string) {
   return function (dispatch) {
     if (type) {
       dispatch(updatePageInfo({ pageName: name }));
@@ -452,7 +452,7 @@ export function deleteSheet({ appId, groupId, worksheetId, projectId, type, pare
   };
 }
 
-export function sortSheetList(appId, appSectionId, sheetList) {
+export function sortSheetList(appId: string, appSectionId: string, sheetList) {
   return function (dispatch) {
     dispatch({ type: 'SHEET_LIST', data: sheetList });
     homeAppApi.updateSectionChildSort({
@@ -758,4 +758,4 @@ export function copyChatBot(para) {
   };
 }
 
-export const updateSheetListLoading = loading => ({ type: 'SHEET_LIST_UPDATE_LOADING', loading });
+export const updateSheetListLoading = (loading: boolean) => ({ type: 'SHEET_LIST_UPDATE_LOADING', loading });

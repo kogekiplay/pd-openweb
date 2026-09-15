@@ -25,7 +25,7 @@ export default ({ data, controls, showRequired, updateSource, hideControlType })
                 <div className="mLeft15">
                   <Checkbox
                     checked={item.required}
-                    onClick={checked => {
+                    onClick={(checked: boolean) => {
                       const newControls: FormControl[] = [].concat(data);
 
                       newControls.forEach(o => {

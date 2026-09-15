@@ -305,7 +305,7 @@ export default class SearchWorksheetDialog extends Component<any, any> {
           <div className="mappingTitle">{_l('子表')}</div>
           <div className="mappingTitle">{_l('查询表字段')}</div>
         </div>
-        {configs.map((item, index) => {
+        {configs.map((item, index: number) => {
           //已选择的子表字段
           const selectControl = _.find(relationControls, re => re.controlId === item.cid);
           // 根据选中子表字段匹配默认值规则，筛选可匹配的查询表字段
@@ -337,7 +337,7 @@ export default class SearchWorksheetDialog extends Component<any, any> {
                 }
                 value={isDelete ? undefined : item.subCid || undefined}
                 data={subControls}
-                onChange={controlId => {
+                onChange={(controlId: string) => {
                   const currentItem = _.find(subControls, subControl => subControl.value === controlId) || {};
                   this.setState({
                     configs: configs.map((i, idx) =>
@@ -638,7 +638,7 @@ export default class SearchWorksheetDialog extends Component<any, any> {
                             </span>
                           );
                         }}
-                        onChange={controlId => this.setState({ configs: [{ cid: data.controlId, subCid: controlId }] })}
+                        onChange={(controlId: string) => this.setState({ configs: [{ cid: data.controlId, subCid: controlId }] })}
                       />
                       {_l('的值写入当前字段')}
                     </div>

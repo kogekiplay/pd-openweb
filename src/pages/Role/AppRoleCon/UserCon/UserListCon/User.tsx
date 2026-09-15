@@ -200,7 +200,7 @@ const buildAppRoleExportFileName = appDetail => {
   return `${_l('应用角色')}_${appName}_${timeStr}.xlsx`;
 };
 
-const getTranslatedRoleNames = (roleName = [], roleInfos = [], appId) => {
+const getTranslatedRoleNames = (roleName = [], roleInfos = [], appId: string) => {
   return roleName.map(name => {
     const role = roleInfos.find(o => o.name === name);
 

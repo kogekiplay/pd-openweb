@@ -330,7 +330,7 @@ export default class ExportSheet extends Component<any, any> {
    */
   showControlsSort = (a, b) => {
     const grouped = _.groupBy(a, obj => (b.includes(obj.controlId) ? 'matched' : 'unmatched'));
-    const orderMap = _.fromPairs(b.map((id, index) => [id, index]));
+    const orderMap = _.fromPairs(b.map((id, index: number) => [id, index]));
     const matchedSorted = _.sortBy(grouped.matched || [], obj => orderMap[obj.controlId]);
     const unmatched = grouped.unmatched || [];
 
@@ -365,7 +365,7 @@ export default class ExportSheet extends Component<any, any> {
             className="mTop20 textPrimary"
             text={_l('不允许用户修改默认配置')}
             defaultChecked={this.state.initEdited}
-            onClick={checked => this.setState({ initEdited: checked })}
+            onClick={(checked: boolean) => this.setState({ initEdited: checked })}
           />
         </div>
       ),

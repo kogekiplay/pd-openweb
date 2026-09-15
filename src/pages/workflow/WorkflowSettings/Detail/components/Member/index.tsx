@@ -13,7 +13,7 @@ export default class Member extends Component<any, any> {
   /**
    * 删除成员
    */
-  removeMember = index => {
+  removeMember = (index: number) => {
     const accounts = _.cloneDeep(this.props.accounts);
 
     _.remove(accounts, (obj, i) => i === index);
@@ -66,7 +66,7 @@ export default class Member extends Component<any, any> {
   /**
    * render字段
    */
-  renderControl(item, index) {
+  renderControl(item, index: number) {
     const { removeOrganization } = this.props;
     const list = [
       [
@@ -166,7 +166,7 @@ export default class Member extends Component<any, any> {
   /**
    * 更改组织结构
    */
-  onChange(roleTypeId, index) {
+  onChange(roleTypeId, index: number) {
     const accounts = _.cloneDeep(this.props.accounts);
 
     if (roleTypeId === 14) {
@@ -184,7 +184,7 @@ export default class Member extends Component<any, any> {
   /**
    * 渲染额外扩展信息
    */
-  renderExtensionInfo(item, index) {
+  renderExtensionInfo(item, index: number) {
     const roleExtension = {
       14: {
         placeholder: _l('选择职位'),
@@ -218,7 +218,7 @@ export default class Member extends Component<any, any> {
   /**
    * 选择职位
    */
-  selectJob = index => {
+  selectJob = (index: number) => {
     const { companyId } = this.props;
 
     dialogSelectJob({
@@ -243,7 +243,7 @@ export default class Member extends Component<any, any> {
   /**
    * 选择组织角色
    */
-  selectOrgRole = index => {
+  selectOrgRole = (index: number) => {
     const { companyId } = this.props;
 
     dialogSelectOrgRole({
@@ -309,7 +309,7 @@ export default class Member extends Component<any, any> {
   /**
    * 渲染部门
    */
-  renderDepartment(item, index) {
+  renderDepartment(item, index: number) {
     const { removeOrganization } = this.props;
     const list = [
       [

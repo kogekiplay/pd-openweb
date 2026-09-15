@@ -360,7 +360,7 @@ export default class StepItem extends Component<any, any> {
                 placement="bottom"
                 title={
                   <ul>
-                    {fields.map(({ name, toValue }, index) => (
+                    {fields.map(({ name, toValue }, index: number) => (
                       <li key={index} className="writeFields">
                         <span className="field">{`${name}: `}</span>
                         <span className="val">{toValue}</span>
@@ -400,7 +400,7 @@ export default class StepItem extends Component<any, any> {
         <div className="mTop4">
           {files
             .filter(o => RegExpValidator.fileIsPicture(o.ext))
-            .map((o, index) => {
+            .map((o, index: number) => {
               return (
                 <div className="fileItemImg InlineBlock pointer" key={index} onClick={() => this.previewAttachments(o)}>
                   <img src={o.previewUrl} />
@@ -411,7 +411,7 @@ export default class StepItem extends Component<any, any> {
         <div className="mTop4">
           {files
             .filter(o => !RegExpValidator.fileIsPicture(o.ext))
-            .map((o, index) => {
+            .map((o, index: number) => {
               return (
                 <div
                   className="fileItemDoc hoverColorPrimary pointer"
@@ -450,13 +450,13 @@ export default class StepItem extends Component<any, any> {
     value = value || '';
     const links = value.match(/<a.*?<\/a>/g) || [];
 
-    links.forEach((item, index) => {
+    links.forEach((item, index: number) => {
       value = value.replace(item, `$${index}$`);
     });
 
     value = renderToString(<Linkify properties={{ target: '_blank' }}>{value}</Linkify>);
 
-    (value.match(/\$[^ \r\n]+?\$/g) || []).forEach((item, index) => {
+    (value.match(/\$[^ \r\n]+?\$/g) || []).forEach((item, index: number) => {
       value = value.replace(item, links[index]);
     });
 
@@ -684,7 +684,7 @@ export default class StepItem extends Component<any, any> {
               <div className="mTop6 mLeft14 mRight14 WordBreak">{explain}</div>
             )}
 
-            {(isCC && workItems.length > 5 && !showMore ? workItems.slice(0, 5) : workItems).map((item, index) => {
+            {(isCC && workItems.length > 5 && !showMore ? workItems.slice(0, 5) : workItems).map((item, index: number) => {
               let { workItemAccount } = item;
               const { avatar, accountId } = workItemAccount;
               return (

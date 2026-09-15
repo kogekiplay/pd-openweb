@@ -246,7 +246,7 @@ export default class BatchResign extends Component<any, any> {
       noFooter: true,
       children: (
         <div>
-          {failedAccountIds.map((accountId, index) => {
+          {failedAccountIds.map((accountId: string, index: number) => {
             return <FailedAccountIdItem key={`${accountId}-${index}`}>{accountId}</FailedAccountIdItem>;
           })}
         </div>
@@ -314,7 +314,7 @@ export default class BatchResign extends Component<any, any> {
               <UserItem>
                 <Checkbox
                   checked={checkedAll}
-                  onClick={checked => {
+                  onClick={(checked: boolean) => {
                     this.setState({
                       selectedAccountIds: checked ? [] : users.map(user => user.accountId),
                     });
@@ -332,7 +332,7 @@ export default class BatchResign extends Component<any, any> {
                       onClick={() => {
                         this.setState({
                           selectedAccountIds: checked
-                            ? selectedAccountIds.filter(accountId => accountId !== user.accountId)
+                            ? selectedAccountIds.filter((accountId: string) => accountId !== user.accountId)
                             : selectedAccountIds.concat(user.accountId),
                         });
                       }}

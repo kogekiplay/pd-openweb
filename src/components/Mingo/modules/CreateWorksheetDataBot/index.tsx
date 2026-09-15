@@ -262,7 +262,7 @@ async function getPresetRelatedRecords({ controls, worksheetId }) {
     .catch(() => undefined);
 }
 
-function getDefaultValueOfMessagesOfMingoCreateWorksheetDataBot(storageKey, worksheetId) {
+function getDefaultValueOfMessagesOfMingoCreateWorksheetDataBot(storageKey, worksheetId: string) {
   if (!storageKey || !localStorage.getItem(storageKey)) {
     return {};
   }
@@ -345,7 +345,7 @@ class PromiseQueue {
     await Promise.allSettled(this.promises);
 
     // 确保所有结果都已填充
-    const completeResults = this.results.map((result, index) => {
+    const completeResults = this.results.map((result, index: number) => {
       if (result === null) {
         // 如果某个结果还是 null（理论上不应该发生），返回错误
         return {
@@ -505,7 +505,7 @@ function MingoContent(props, ref) {
         setCreatedDataMap(prev => ({
           ...prev,
           [messageId]: (prev[messageId] || []).concat(
-            parsedData.map((row, index) => {
+            parsedData.map((row, index: number) => {
               return {
                 ...row,
                 rowid: row.rowid || `temp-${uuidv4()}`,

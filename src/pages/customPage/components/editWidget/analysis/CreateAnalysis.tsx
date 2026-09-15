@@ -14,7 +14,7 @@ function CreateAnalysis(props) {
       projectId={projectId}
       viewId={''}
       worksheetInfo={dataSource}
-      onChange={(worksheetId, viewId, appType) => {
+      onChange={(worksheetId: string, viewId: string, appType) => {
         if (worksheetId) {
           setDataSource({ worksheetId, viewId, appType });
           onCreate();

@@ -391,7 +391,7 @@ export default function CustomEvent(props) {
 
     return (
       <Fragment>
-        {eventActions.map((item, index) => {
+        {eventActions.map((item, index: number) => {
           const { eventName, filters = [], actions = [] } = item;
           const { color, bgColor } = EVENT_DETAIL[index % EVENT_DETAIL.length];
           const eventActionKey = `${eventId}-${index}`;

@@ -16,7 +16,7 @@ export default class SideBar extends React.Component<any, any> {
     updateHighlightTab: PropTypes.func.isRequired,
   };
 
-  getOpenState(list, projectId, type) {
+  getOpenState(list, projectId: string, type) {
     return !!_.find(list, item => {
       if (projectId) {
         return item.projectId === projectId && item.type === type;
@@ -26,7 +26,7 @@ export default class SideBar extends React.Component<any, any> {
     });
   }
 
-  renderItem(item, index) {
+  renderItem(item, index: number) {
     const { type, projectId, updateHighlightTab } = this.props;
     const isProject = !!item.projectId;
     const isActive = isProject ? type === item.type && projectId === item.projectId : type === item.type;
@@ -41,7 +41,7 @@ export default class SideBar extends React.Component<any, any> {
     return <SiderBarTabItem {...props} />;
   }
 
-  renderTabs(item, index) {
+  renderTabs(item, index: number) {
     const { type, projectId } = this.props;
 
     if (item.dividor) {

@@ -103,14 +103,14 @@ export default class SelectWorkflow extends Component<any, any> {
     return (
       <Fragment key={item.apkId}>
         <div className="bold ellipsis">{relationId === item.apkId ? _l('当前应用') : item.apkName}</div>
-        {item.processList.map((obj, index) => {
+        {item.processList.map((obj, index: number) => {
           return (
             <Checkbox
               key={index}
               className="mTop15 flexRow"
               checked={!!_.find(selectItems, o => o.id === obj.id)}
               text={obj.name}
-              onClick={checked => this.onSelect(item.apkName, obj, !checked)}
+              onClick={(checked: boolean) => this.onSelect(item.apkName, obj, !checked)}
             />
           );
         })}
@@ -119,7 +119,7 @@ export default class SelectWorkflow extends Component<any, any> {
     );
   }
 
-  onSelect(apkName, item, checked) {
+  onSelect(apkName, item, checked: boolean) {
     const selectItems = _.cloneDeep(this.state.selectItems);
 
     if (checked) {

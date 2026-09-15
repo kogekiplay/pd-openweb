@@ -558,7 +558,7 @@ const LeftAppGroup = props => {
             {skeletonVisible && <Skeleton className="w100 h100 Absolute" />}
             <DndProvider key="navigationList" context={window} backend={HTML5Backend}>
               <ScrollView className={cx({ hide: skeletonVisible })}>
-                {appSectionDetail.map((data, index) => (
+                {appSectionDetail.map((data, index: number) => (
                   <AppSectionItem
                     key={data.workSheetId}
                     ids={ids}
@@ -623,12 +623,12 @@ const LeftAppGroup = props => {
   );
 };
 
-export const getAppSectionRef = appSectionId => {
+export const getAppSectionRef = (appSectionId: string) => {
   const ref = appSectionRefs[`AppSectionRef-${appSectionId}`] || {};
   return ref.current;
 };
 
-export const getAppSectionData = appSectionId => {
+export const getAppSectionData = (appSectionId: string) => {
   const ref = getAppSectionRef(appSectionId);
   return ref ? ref.getState().sheetList.data : [];
 };

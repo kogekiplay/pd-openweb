@@ -40,7 +40,7 @@ export default function AppOfflineSubmit(props) {
   };
 
   // 添加离线应用项
-  const addOfflineItem = worksheetId => {
+  const addOfflineItem = (worksheetId: string) => {
     if (_.includes(offlineItemIds, worksheetId)) {
       return;
     }
@@ -56,7 +56,7 @@ export default function AppOfflineSubmit(props) {
   };
 
   // 编辑离线应用项
-  const editOfflineItemStatus = (worksheetId, status) => {
+  const editOfflineItemStatus = (worksheetId: string, status) => {
     // status: 0=关闭 1=启用 2=删除
     appManagementAjax
       .editOfflineItemStatus({ appId, worksheetId, status: status === 1 ? 0 : status == 0 ? 1 : status })

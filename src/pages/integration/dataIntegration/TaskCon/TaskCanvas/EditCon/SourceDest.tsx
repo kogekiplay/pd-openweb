@@ -134,7 +134,7 @@ export default class SourceDest extends Component<any, any> {
   };
 
   //应用
-  getAppList = projectId => {
+  getAppList = (projectId: string) => {
     this.setState({
       loading: true,
     });
@@ -209,7 +209,7 @@ export default class SourceDest extends Component<any, any> {
     });
   };
   //应用信息
-  getAppInfo = appId => {
+  getAppInfo = (appId: string) => {
     homeAppAjax
       .getApp({
         appId,
@@ -229,7 +229,7 @@ export default class SourceDest extends Component<any, any> {
   };
 
   //获取数据源对应数据库列表
-  getDatasourceList = (node, projectId) => {
+  getDatasourceList = (node, projectId: string) => {
     let { datasourceId, dataDestId, dsType, appId, workSheetId } = _.get(node, ['nodeConfig', 'config']) || {};
     datasourceId = datasourceId || dataDestId;
     if (dsType === DATABASE_TYPE.APPLICATION_WORKSHEET) {
@@ -256,7 +256,7 @@ export default class SourceDest extends Component<any, any> {
     }
   };
   //获取数据源对应Schemas列表
-  getSchemasList = projectId => {
+  getSchemasList = (projectId: string) => {
     let { datasourceId, dataDestId, dbName } = _.get(this.state.node, ['nodeConfig', 'config']) || {};
     datasourceId = datasourceId || dataDestId;
     if (!dbName) {
@@ -680,7 +680,7 @@ export default class SourceDest extends Component<any, any> {
                     suffixIcon={<Icon icon="expand_more" className="textTertiary Font20" />}
                     appId={appId}
                     value={appSectionId}
-                    onChange={appSectionId => {
+                    onChange={(appSectionId: string) => {
                       this.onChangeConfig(
                         {
                           tableName: '',

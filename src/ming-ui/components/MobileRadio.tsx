@@ -68,7 +68,7 @@ export default class MobileRadio extends Component<any, any> {
           <div className="flexColumn h100">
             <MobileSearch
               placeholder={allowAdd ? _l('搜索或添加选项') : _l('搜索')}
-              onSearch={keywords => this.setState({ keywords })}
+              onSearch={(keywords: string) => this.setState({ keywords })}
             />
             <List className="flex" style={{ overflow: 'auto' }}>
               {data

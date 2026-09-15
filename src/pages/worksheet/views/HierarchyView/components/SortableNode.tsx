@@ -144,7 +144,7 @@ export default class SortableRecordItem extends Component<any, any> {
 
     if (this.isFirstSkip) this.isFirstSkip = false;
   };
-  handleRecordVisible = rowId => {
+  handleRecordVisible = (rowId: string) => {
     if (window.isMingDaoApp && (!window.shareState.shareId || window.APP_OPEN_NEW_PAGE)) {
       const { appId, treeData } = this.props;
       const curInfo = treeData[rowId];

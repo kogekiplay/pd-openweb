@@ -112,7 +112,7 @@ export const getCanSelectColumnsForSort = (controlId = '', columns = [], sortCon
     }));
 };
 
-export const getSortTypes = (controlId, columns) => {
+export const getSortTypes = (controlId: string, columns) => {
   const control = _.find(columns, c => c.controlId === controlId) || {};
   return getSortData(control.type, control);
 };

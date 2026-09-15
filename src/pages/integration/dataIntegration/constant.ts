@@ -163,7 +163,7 @@ export const SORT_TYPE = {
   DESC: 'DESC',
 };
 
-export const isValidName = (name, allowDash = false) => {
+export const isValidName = (name: string, allowDash = false) => {
   const pattern = allowDash
     ? /^[^`~!@#$%^&*()+=<>?:"{}|,./;'[\]·！￥…（）—《》？：“”【】、；‘，。\s\\]+$/
     : /^[^`~!@#$%^&*()\-+=<>?:"{}|,./;'[\]·！￥…（）—《》？：“”【】、；‘，。\s\\]+$/;

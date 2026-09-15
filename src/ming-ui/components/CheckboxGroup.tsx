@@ -49,7 +49,7 @@ class CheckboxGroup extends Component<any, any> {
     }
   }
 
-  handleClick(checked, value) {
+  handleClick(checked: boolean, value) {
     const { onChange } = this.props;
 
     if (onChange) {
@@ -87,7 +87,7 @@ class CheckboxGroup extends Component<any, any> {
     });
     return (
       <div className={cls}>
-        {this.state.data.map((props, index) => (
+        {this.state.data.map((props, index: number) => (
           <Checkbox
             {...props}
             onClick={(...arg) => this.handleClick(...arg)}

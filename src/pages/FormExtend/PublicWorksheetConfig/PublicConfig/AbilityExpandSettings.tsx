@@ -56,7 +56,7 @@ export default function AbilityExpandSettings(props) {
               <CommonSwitch
                 disabled={writeScope === 1 && !weChatSetting.isCollectWxInfo}
                 checked={_.get(abilityExpand, 'autoFillField.isAutoFillField')}
-                onClick={checked => {
+                onClick={(checked: boolean) => {
                   const newAbilityExpand = _.cloneDeep(abilityExpand);
                   newAbilityExpand.autoFillField = {
                     isAutoFillField: !checked,
@@ -96,7 +96,7 @@ export default function AbilityExpandSettings(props) {
             <CommonSwitch
               disabled={writeScope === 1 && !weChatSetting.isCollectWxInfo}
               checked={_.get(abilityExpand, 'allowViewChange.isAllowViewChange')}
-              onClick={checked => {
+              onClick={(checked: boolean) => {
                 const newAbilityExpand = _.cloneDeep(abilityExpand);
                 newAbilityExpand.allowViewChange = {
                   isAllowViewChange: !checked,

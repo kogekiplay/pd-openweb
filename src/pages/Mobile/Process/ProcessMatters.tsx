@@ -793,7 +793,7 @@ export default class ProcessMatters extends Component<any, any> {
                 });
               }}
               onApproveDone={this.handleApproveDone}
-              onChangeApproveCards={checked => {
+              onChangeApproveCards={(checked: boolean) => {
                 if (checked) {
                   this.setState({
                     approveCards: approveCards.concat(item),

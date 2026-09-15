@@ -203,7 +203,7 @@ export default function UserBaseProfile(props) {
                 noBorder: !getFilterDisplayData(noProject ? NoProjectCardInfoData : cardInfoData).length,
               })}
             >
-              {currentUserProject.departmentJobInfos.map((item, index) => (
+              {currentUserProject.departmentJobInfos.map((item, index: number) => (
                 <div key={index} className="mTop8">
                   <div className="flexRow alignItemsCenter LineHeight30">
                     <div className="textSecondary Font14">{_l('任职信息%0', index + 1)}</div>

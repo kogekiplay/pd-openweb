@@ -48,7 +48,7 @@ let AppLib = class AppLib extends Component<any, any> {
       // installUrl: 'http://118.24.27.163:29288/',
       isPrivate: window.platformENV.isOverseas || window.platformENV.isLocal,
       avatar: avatar,
-      contactUser: accountId => {
+      contactUser: (accountId: string) => {
         this.props.dispatch(actions.addUserSession(accountId));
       },
     }; //调整成用本地文件

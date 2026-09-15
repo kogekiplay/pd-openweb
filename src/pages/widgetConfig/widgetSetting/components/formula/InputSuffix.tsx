@@ -19,7 +19,7 @@ export default function InputSuffix({ data, onChange }) {
           <Checkbox
             size="small"
             checked={setting.autocarry === '1'}
-            onClick={checked => {
+            onClick={(checked: boolean) => {
               onChange(
                 handleAdvancedSettingChange(data, {
                   autocarry: checked ? '0' : '1',

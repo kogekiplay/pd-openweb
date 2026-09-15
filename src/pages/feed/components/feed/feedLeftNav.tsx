@@ -120,7 +120,7 @@ class FeedLeftNav extends React.Component<any, any> {
     safeLocalStorageSetItem(key, this.state.foldedProjects.join(','));
   }
 
-  getCreateGroupIcon = projectId => {
+  getCreateGroupIcon = (projectId: string) => {
     return (
       <div
         className="right panelIcon Hand textSecondary hoverTextPrimary"
@@ -131,7 +131,7 @@ class FeedLeftNav extends React.Component<any, any> {
     );
   };
 
-  fetchGroupsByProjectId = (projectId, openProject) => {
+  fetchGroupsByProjectId = (projectId: string, openProject) => {
     if (!this.state.loadingProjects.includes(projectId)) {
       const loadingProjects = this.state.loadingProjects.add(projectId);
       let foldedProjects = this.state.foldedProjects;
@@ -178,7 +178,7 @@ class FeedLeftNav extends React.Component<any, any> {
     });
   };
 
-  toggleFoldProject = projectId => {
+  toggleFoldProject = (projectId: string) => {
     if (this.state.foldedProjects.includes(projectId)) {
       this.fetchGroupsByProjectId(projectId, true);
     } else {
@@ -187,7 +187,7 @@ class FeedLeftNav extends React.Component<any, any> {
     }
   };
 
-  renderProjectGroups = projectId => {
+  renderProjectGroups = (projectId: string) => {
     projectId = projectId || '';
     const isFolded = this.state.foldedProjects.includes(projectId);
     const isLoading = this.state.loadingProjects.includes(projectId);
@@ -321,7 +321,7 @@ class FeedLeftNav extends React.Component<any, any> {
           onChange={evt => {
             this.setState({ searchAllKeywords: evt.target.value });
           }}
-          onSearch={keywords => {
+          onSearch={(keywords: string) => {
             this.props.dispatch(searchAll(keywords));
           }}
         />

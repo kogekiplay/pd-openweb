@@ -52,7 +52,7 @@ const clearActiveDialog = props => {
   dispatch(updateUserOpList(null));
 };
 
-const refreshData = (departmentId, typeCursor, projectId, pageIndex, dispatch) => {
+const refreshData = (departmentId, typeCursor, projectId: string, pageIndex: number, dispatch) => {
   if (departmentId) {
     dispatch(loadUsers(departmentId, pageIndex));
   } else {
@@ -395,7 +395,7 @@ class UserTable extends React.Component<any, any> {
       </div>
     );
   }
-  handleClickStastics = checked => {
+  handleClickStastics = (checked: boolean) => {
     const columnsInfo = this.getColumnsInfo();
     let copyColumnsInfo = [];
 
@@ -414,7 +414,7 @@ class UserTable extends React.Component<any, any> {
     safeLocalStorageSetItem(COLUMN_INFO_STORAGE_KEY, JSON.stringify(copyColumnsInfo));
     this.setState({ columnsInfo: copyColumnsInfo });
   };
-  handleSingleColumn = (checked, value) => {
+  handleSingleColumn = (checked: boolean, value) => {
     const columnsInfo = this.getColumnsInfo();
     let copyColumnsInfo = columnsInfo.map(item => {
       if (item.value === value) {
@@ -447,7 +447,7 @@ class UserTable extends React.Component<any, any> {
             <li key={item.value}>
               <Checkbox
                 checked={item.checked}
-                onClick={checked => this.handleSingleColumn(checked, item.value)}
+                onClick={(checked: boolean) => this.handleSingleColumn(checked, item.value)}
                 disabled={item.value === 'name'}
               >
                 <span className="verticalAlign">{item.label}</span>
@@ -528,7 +528,7 @@ class UserTable extends React.Component<any, any> {
     );
     const nameColumnStyle = { width: hasHorizontalScroll ? NAME_COLUMN_WIDTH : 'unset' };
 
-    return usersCurrentPage.map((user, index) => {
+    return usersCurrentPage.map((user, index: number) => {
       return (
         <UserItem
           authority={authority}

@@ -361,9 +361,9 @@ function NewRecord(props) {
                   className="textSecondary hoverColorPrimary"
                   value={promptCancelAddRecord}
                   text={_l('不再提示')}
-                  onClick={checked => {
+                  onClick={(checked: boolean) => {
                     setPromptCancelAddRecord(checked);
-                    localStorage.setItem('promptCancelAddRecord', checked);
+                    localStorage.setItem('promptCancelAddRecord', String(checked));
                   }}
                 />
               </div>

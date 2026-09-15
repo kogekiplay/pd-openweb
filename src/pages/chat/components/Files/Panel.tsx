@@ -154,7 +154,7 @@ export default class FilesPanel extends Component<any, any> {
       visible,
     });
   }
-  handleDateChange(date, index) {
+  handleDateChange(date, index: number) {
     const [start, end] = date;
     this.setState(
       {
@@ -283,7 +283,7 @@ export default class FilesPanel extends Component<any, any> {
         <div className="content">
           <ScrollView onScrollEnd={this.handleScrollEnd.bind(this)}>
             <div className={cx('flex', { 'ChatPanel-Image-list': fileType === 2 })}>
-              {files.map((item, index) => (
+              {files.map((item, index: number) => (
                 <FileItem item={item} key={item.fileId || index} fileType={fileType} />
               ))}
               <LoadDiv className={cx({ Hidden: !loading })} size="small" />

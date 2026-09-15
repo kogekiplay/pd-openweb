@@ -108,7 +108,7 @@ let TimeDot = class TimeDot extends Component<any, any> {
     this.props.refreshGunterView(time);
   };
 
-  renderRow(row, index) {
+  renderRow(row, index: number) {
     const { left, right, width } = row;
     const top = index * lineHeight + (lineHeight / 2 - rowDotHeight / 2);
 
@@ -157,7 +157,7 @@ let TimeDot = class TimeDot extends Component<any, any> {
       item.subVisible &&
       item.rows
         .filter((item: RecordRow) => (withoutArrangementVisible ? true : item.diff > 0))
-        .map((row, index) => this.renderRow(row, item.hide ? index : item.groupingIndex + index + 1))
+        .map((row, index: number) => this.renderRow(row, item.hide ? index : item.groupingIndex + index + 1))
     );
   }
 

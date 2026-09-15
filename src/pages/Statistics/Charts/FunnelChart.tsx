@@ -14,7 +14,7 @@ const mergeDataTime = (data, contrastData) => {
   const maxLengthData = data.length > contrastData.length ? data : contrastData;
   const maxLength = maxLengthData.length;
   const newData = (maxLength !== data.length ? data.concat(Array.from({ length: maxLength - data.length })) : data).map(
-    (item, index) => {
+    (item, index: number) => {
       if (item) {
         item.name = maxLengthData[index].name;
         return item;
@@ -31,7 +31,7 @@ const mergeDataTime = (data, contrastData) => {
     maxLength !== contrastData.length
       ? contrastData.concat(Array.from({ length: maxLength - contrastData.length }))
       : contrastData
-  ).map((item, index) => {
+  ).map((item, index: number) => {
     let groupName = _l('上一期');
 
     if (item) {
@@ -98,7 +98,7 @@ const formatChartData = (data, { isAccumulate, showOptionIds = [] }, { controlId
 
   if (isAccumulate) {
     cloneData.map(item => {
-      item.value.reverse().map((n, index) => {
+      item.value.reverse().map((n, index: number) => {
         const lastn = item.value[index - 1];
         n.v = n.v + (lastn ? lastn.v : 0);
         return n;
@@ -108,7 +108,7 @@ const formatChartData = (data, { isAccumulate, showOptionIds = [] }, { controlId
     });
   }
 
-  value.forEach((item, index) => {
+  value.forEach((item, index: number) => {
     const yaxis = controlId ? {} : _.find(yaxisList, { controlId: item.originalX });
     const name = yaxis.rename || item.x;
     cloneData.forEach(element => {
