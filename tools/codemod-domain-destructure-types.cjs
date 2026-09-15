@@ -13,6 +13,13 @@
  * 【只在初值类型是 any 时改】。初值是具体类型时，加注解等于要求它可赋值给带索引
  * 签名的类型 —— interface 没有隐式索引签名，会当场报错。any 则永远可赋值。
  *
+ * 【只管变量声明的解构，不要扩到解构形参】——扩过一次，闸门一次拦下 159 条。
+ * 根子上的原因：`function f({ controls })` 标成 `{ controls: FormControl[]; ... }`
+ * 会让 controls 变成【必填】，于是所有不传它的调用点齐刷刷 TS2741
+ * （"Property 'newControls' is missing in type '{}'"）。想避开就得给每个属性加 `?`，
+ * 可一加 `?`，strictNullChecks 下下游又全是"可能是 undefined"——换一类错而已。
+ * 变量声明没有这个问题：它右边一定有初值，不存在"调用方没传"。
+ *
  * 名字表和排除名单都在 tools/domain-names.cjs，与 codemod-domain-variable-types.cjs 共用。
  *
  * 用法：

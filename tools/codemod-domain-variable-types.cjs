@@ -16,6 +16,18 @@
  *   - 不在 src/*.ts(x) 下的（allowJs 把 .js 也拉进 program 了）
  *   - 推断结果不是 any / any[] 的
  *
+ * 【只管变量声明，不要扩到形参】——扩过一次，闸门一次拦下 159 条，原因有两条：
+ *   1) 形参上的名字证据比变量弱得多。变量是本地刚算出来的，名字由写的人定；
+ *      形参的内容由调用方决定。实测 chat/messageContent.tsx 和
+ *      kc/attachmentInfo.tsx 里叫 records 的形参收到的是一个【数字】（条数），
+ *      标成 RecordRow[] 当场 TS2345。
+ *   2) 无括号单参箭头（`records => ...`）标类型要补括号，而 '(' 和 ')' 跟类型
+ *      标注插在同一个偏移上，顺序稍有不慎就写成 `(records): RecordRow[] => ...`
+ *      —— 那是给箭头标【返回类型】，语法合法、语义全错，只会在下游冒出
+ *      "Type 'void' is not assignable to 'RecordRow[]'" 这种看不懂的报错。
+ *
+ * 解构目标归 codemod-domain-destructure-types.cjs。
+ *
  * 用法：
  *   node tools/codemod-domain-variable-types.cjs --list
  *   node tools/codemod-domain-variable-types.cjs
@@ -28,8 +40,6 @@ const { DOMAIN, EXCLUDE } = require('./domain-names.cjs');
 const ROOT = path.resolve(__dirname, '..');
 const SRC = path.join(ROOT, 'src') + path.sep;
 const APPLY = !process.argv.includes('--list');
-
-
 
 const cfg = ts.parseJsonConfigFileContent(
   ts.readConfigFile(path.join(ROOT, 'tsconfig.json'), ts.sys.readFile).config,
@@ -52,7 +62,9 @@ for (const sf of program.getSourceFiles()) {
       if (t === 'any' || t === 'any[]') {
         const file = sf.fileName;
         if (!byFile.has(file)) byFile.set(file, { text: sf.getFullText(), ins: [] });
-        byFile.get(file).ins.push({ pos: n.name.end, type: DOMAIN.get(n.name.text), name: n.name.text });
+        byFile
+          .get(file)
+          .ins.push({ pos: n.name.end, text: `: ${DOMAIN.get(n.name.text)}`, type: DOMAIN.get(n.name.text), name: n.name.text });
       } else {
         skippedTyped += 1;
       }
@@ -93,7 +105,7 @@ for (const [file, bucket] of [...byFile].sort()) {
   console.log(`${path.relative(ROOT, file)}: ${bucket.ins.map(i => i.name).join(', ')}`);
   if (!APPLY) continue;
   let src = bucket.text;
-  for (const i of bucket.ins) src = src.slice(0, i.pos) + `: ${i.type}` + src.slice(i.pos);
+  for (const i of bucket.ins) src = src.slice(0, i.pos) + i.text + src.slice(i.pos);
   // 名字已经在文件里绑过就别再 import（有的文件自己有同名的本地类型）
   const need = [...new Set(bucket.ins.map(i => i.type.replace('[]', '')))].filter(
     n => !new RegExp(`\\b${n}\\b`).test(bucket.text),
