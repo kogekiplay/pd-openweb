@@ -28,7 +28,7 @@ import { Menu, MenuItem, Skeleton } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import worksheetAjax from 'src/api/worksheet';
 import { createRequestPool } from 'worksheet/api/standard';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import type { ControlValue, FormControl, RecordRow } from 'src/utils/controlTypes';
 import { mobileSelectRecord } from 'mobile/components/RecordCardListDialog';
 import { batchEditRecord } from 'worksheet/common/BatchEditRecord';
 import RecordInfoContext from 'worksheet/common/recordInfo/RecordInfoContext';
@@ -190,6 +190,12 @@ const getDefaultSummaryTypes = (control?: FormControl) => {
   }, {});
 };
 
+/** refresh / loadRows 的第二个参数 */
+interface RefreshOptions {
+  needResetControls?: boolean;
+  isRefresh?: boolean;
+}
+
 class ChildTable extends React.Component<any, any> {
   // 下面这些都是构造函数 / render / ref 回调里用 this.x = ... 赋的实例字段。
   // TS 不把构造函数赋值当字段声明，不写这几行每次读取都报 TS2339。
@@ -321,7 +327,7 @@ class ChildTable extends React.Component<any, any> {
     }
 
     if (_.isFunction(control.addRefreshEvents)) {
-      control.addRefreshEvents(control.controlId, options => this.refresh(null, options));
+      control.addRefreshEvents(control.controlId, (options?: RefreshOptions) => this.refresh(null, options));
     }
 
     if (browserIsMobile()) return;
@@ -355,12 +361,12 @@ class ChildTable extends React.Component<any, any> {
         nextControl.controlId !== control.controlId ||
         !_.isEqual(nextControl.showControls, control.showControls) ||
         !_.isEqual(
-          (control.relationControls || []).map(a => a.fieldPermission),
-          (nextControl.relationControls || []).map(a => a.fieldPermission),
+          (control.relationControls || []).map((a: FormControl) => a.fieldPermission),
+          (nextControl.relationControls || []).map((a: FormControl) => a.fieldPermission),
         ) ||
         !_.isEqual(
-          (control.relationControls || []).map(a => a.required),
-          (nextControl.relationControls || []).map(a => a.required),
+          (control.relationControls || []).map((a: FormControl) => a.required),
+          (nextControl.relationControls || []).map((a: FormControl) => a.required),
         )
       ) {
         this.setState(
@@ -526,7 +532,7 @@ class ChildTable extends React.Component<any, any> {
     return get(this, 'props.control.advancedSetting.showtype') === '2' && !isMobile && !base.isTreeTableView;
   }
 
-  getControls(props, { newControls } = {}) {
+  getControls(props, { newControls }: { newControls?: FormControl[] } = {}) {
     props = props || this.props;
     const { baseLoading, from, appId, base = {}, control = {}, updateBase } = props;
     const { useUserPermission } = this;
@@ -639,11 +645,11 @@ class ChildTable extends React.Component<any, any> {
     this.dataFormatCacheMap.clear();
   };
 
-  getControl(controlId) {
+  getControl(controlId: string) {
     return _.find(this.state.controls, { controlId });
   }
 
-  handleKeyDown = e => {
+  handleKeyDown = (e: KeyboardEvent) => {
     if (
       (window.isMacOs ? e.metaKey : e.ctrlKey) &&
       e.key === 'Enter' &&
@@ -656,7 +662,7 @@ class ChildTable extends React.Component<any, any> {
     }
   };
 
-  handleClearAndSetRows(rows) {
+  handleClearAndSetRows(rows: RecordRow[]) {
     const { control, clearAndSetRows } = this.props;
     const { controls = [] } = this.state;
     const sort = safeParse(control.advancedSetting.sorts)[0];
@@ -803,7 +809,7 @@ class ChildTable extends React.Component<any, any> {
     return columns;
   }
 
-  getSheetColumnWidths(control?) {
+  getSheetColumnWidths(control?: FormControl) {
     control = control || this.props.control;
     const columns = this.getShowColumns();
     let widths = {};
@@ -816,7 +822,7 @@ class ChildTable extends React.Component<any, any> {
 
     if (isArray(widths)) {
       let result = {};
-      columns.forEach((column, i) => {
+      columns.forEach((column: FormControl, i: number) => {
         result[column.controlId] = widths[i];
       });
       return result;
@@ -844,7 +850,7 @@ class ChildTable extends React.Component<any, any> {
     };
   };
 
-  copyRow(row) {
+  copyRow(row: RecordRow) {
     const { addRow } = this.props;
     const rowId = `temp-${uuidv4()}`;
     addRow(
@@ -870,7 +876,7 @@ class ChildTable extends React.Component<any, any> {
       }
     }, 100);
   }
-  copyRows(rows) {
+  copyRows(rows: RecordRow[]) {
     const { addRows } = this.props;
     const newRows: RecordRow[] = rows.map((row: RecordRow) =>
       Object.assign({}, _.omit(copySublistRow(this.state.controls, row), ['updatedControlIds']), {
@@ -887,13 +893,25 @@ class ChildTable extends React.Component<any, any> {
 
   rowUpdate(
     { row, controlId, value, rowId } = {},
-    { isCreate = false, isQueryWorksheetFill = false, isImportFromExcel, userTriggerChange = true } = {},
+    {
+      isCreate = false,
+      isQueryWorksheetFill = false,
+      isImportFromExcel,
+      userTriggerChange = true,
+    }: {
+      isCreate?: boolean;
+      isQueryWorksheetFill?: boolean;
+      isImportFromExcel?: boolean;
+      userTriggerChange?: boolean;
+      // 调用方还会把 control 一起铺进来（handleUpdateCell 那条），这里用不到但得收得下
+      [key: string]: any;
+    } = {},
   ) {
     const { masterData, recordId } = this.props;
     const { projectId, rules = [] } = this.worksheetInfo;
     const { searchConfig } = this;
 
-    const asyncUpdateCell = (cid, newValue) => {
+    const asyncUpdateCell = (cid: string, newValue: ControlValue) => {
       this.handleUpdateCell(
         {
           control: this.getControl(cid),
@@ -907,7 +925,7 @@ class ChildTable extends React.Component<any, any> {
           isQueryWorksheetFill,
           asyncUpdate: true,
           userTriggerChange: false,
-          updateSuccessCb: needUpdateRow => {
+          updateSuccessCb: (needUpdateRow: RecordRow) => {
             if (isMobile) {
               this.handleRowDetailSave(needUpdateRow);
             }
@@ -979,7 +997,7 @@ class ChildTable extends React.Component<any, any> {
             }
 
             if (!_.isEmpty(changes.controlIds)) {
-              changes.controlIds.forEach(cid => {
+              changes.controlIds.forEach((cid: string) => {
                 asyncUpdateCell(cid, changes.value);
               });
             } else if (changes.controlId) {
@@ -1017,7 +1035,7 @@ class ChildTable extends React.Component<any, any> {
     ].reduce((a = {}, b = {}) => Object.assign(a, { [b.controlId]: b.value }));
   }
 
-  handleSetPageIndexWhenAddRow(newRowsLength) {
+  handleSetPageIndexWhenAddRow(newRowsLength: number) {
     const { pageSize, pageIndex } = this.state;
     let newPageIndex = pageIndex;
 
@@ -1134,7 +1152,7 @@ class ChildTable extends React.Component<any, any> {
     });
   };
 
-  handleAddRowsFromRelateRecord = batchAddControls => {
+  handleAddRowsFromRelateRecord = (batchAddControls: FormControl[]) => {
     const { addRows, control, rows, appId } = this.props;
     let { h5showtype, h5abstractids = [] } = parseAdvancedSetting(control.advancedSetting);
     const { entityName } = this.worksheetInfo;
@@ -1166,7 +1184,7 @@ class ChildTable extends React.Component<any, any> {
               .filter(_.identity)
           : [],
       formData: controls.map((c: FormControl) => ({ ...c, value: tempRow[c.controlId] })).concat(this.props.masterData.formData),
-      onOk: selectedRecords => {
+      onOk: (selectedRecords: RecordRow[]) => {
         const rowsLength = filterEmptyChildTableRows(rows).length;
 
         if (rowsLength + selectedRecords.length > this.settings.maxCount) {
@@ -1174,7 +1192,7 @@ class ChildTable extends React.Component<any, any> {
         }
 
         addRows(
-          selectedRecords.slice(0, this.settings.maxCount - rowsLength).map(selectedRecord => {
+          selectedRecords.slice(0, this.settings.maxCount - rowsLength).map((selectedRecord: RecordRow) => {
             const row = this.rowUpdate({
               row: this.newRow(),
               controlId: relateRecordControl.controlId,
@@ -1204,7 +1222,10 @@ class ChildTable extends React.Component<any, any> {
     });
   };
 
-  handleUpdateCell({ control, cell, row = {} }, options) {
+  handleUpdateCell(
+    { control, cell, row = {} }: { control: FormControl; cell: FormControl; row?: RecordRow },
+    options?: Record<string, any>,
+  ) {
     const { rows, updateRow } = this.props;
     const { controls } = this.state;
     const rowData = _.find(rows, (r: RecordRow) => r.rowid === row.rowid);
@@ -1280,7 +1301,7 @@ class ChildTable extends React.Component<any, any> {
     update.apply(this);
   }
 
-  handleRowDetailSave = (row, updatedControlIds?) => {
+  handleRowDetailSave = (row: RecordRow, updatedControlIds?: string[]) => {
     const { updateRow, addRow } = this.props;
     const { previewRowIndex, controls } = this.state;
     const newControls = updateOptionsOfControls(
@@ -1312,7 +1333,7 @@ class ChildTable extends React.Component<any, any> {
     );
   };
 
-  handleSwitch = ({ prev }) => {
+  handleSwitch = ({ prev }: { prev: boolean }) => {
     const { previewRowIndex } = this.state;
     let newRowIndex;
 
@@ -1325,7 +1346,7 @@ class ChildTable extends React.Component<any, any> {
     this.openDetail(newRowIndex);
   };
 
-  openDetail = index => {
+  openDetail = (index: number) => {
     this.setState({
       previewRowIndex: index,
       recordVisible: true,
@@ -1333,7 +1354,7 @@ class ChildTable extends React.Component<any, any> {
     });
   };
 
-  handleClearCellError = (key, error) => {
+  handleClearCellError = (key: string, error?: string) => {
     const { cellErrors, persistedCellErrors = {}, updateCellErrors } = this.props;
 
     if (error) {
@@ -1354,7 +1375,7 @@ class ChildTable extends React.Component<any, any> {
     updateCellErrors(_.omit(cellErrors, [key]));
   };
 
-  compareValue(control, value1, value2) {
+  compareValue(control: FormControl, value1: ControlValue, value2: ControlValue) {
     try {
       if (control && _.includes([26, 27, 48], control.type)) {
         return _.isEqual(
@@ -1370,7 +1391,7 @@ class ChildTable extends React.Component<any, any> {
     }
   }
 
-  handleUniqueValidate = (controlId, value, rowId, backendCheck) => {
+  handleUniqueValidate = (controlId: string, value: ControlValue, rowId: string, backendCheck?: boolean) => {
     const { rows, control, updateCellErrors } = this.props;
     const { controls } = this.state;
     const checkControl = _.find(controls, { controlId });
