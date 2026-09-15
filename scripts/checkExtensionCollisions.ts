@@ -35,12 +35,6 @@ const JS_ALLOWLIST = [
   // 门禁的噪声剔除、tsconfig 的 exclude 一直把这里当外部代码处理。
   'src/library/',
 
-  // FullCalendar v2.1.0 的 vendor 副本 + 40 个语言包，供老的独立「日历」页使用
-  //（src/pages/calendar/index.tsx）。仓里另外装了 @fullcalendar/* v6 服务工作表
-  // 日历视图，是两个不同功能。把这一份换成 v6 是一次【真正的功能迁移】
-  //（2.x 是 jQuery 插件式 API，与 v6 完全不同），不是机械改名，单独排期。
-  'src/pages/calendar/modules/calendarControl/',
-
   // iconfont.cn 生成的 SVG symbol 注入脚本，由 scripts/updateIconfont.ts 更新。
   // 改成 .ts 会在下次重新生成时被覆盖回去。
   'src/pages/integration/svgIcon.js',

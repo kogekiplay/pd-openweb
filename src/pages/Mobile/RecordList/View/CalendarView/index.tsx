@@ -3,8 +3,14 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useSetState } from 'react-use';
 import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin from '@fullcalendar/interaction';
+// v7 的插件改成子路径入口，理由见 worksheet/views/CalendarView/index.tsx
+import dayGridPlugin from '@fullcalendar/react/daygrid';
+import interactionPlugin from '@fullcalendar/react/interaction';
+import themePlugin from '@fullcalendar/react/themes/classic';
+import '@fullcalendar/react/skeleton.css';
+import '@fullcalendar/react/themes/classic/theme.css';
+import '@fullcalendar/react/themes/classic/palette.css';
+import { FC_CLASS_COMPAT } from 'src/pages/worksheet/views/CalendarView/fcClassCompat';
 import _ from 'lodash';
 import LunarCalendar from 'lunar-calendar';
 import moment from 'moment';
@@ -338,8 +344,8 @@ const Calendar = memo(
             <FullCalendar
               key={`calendar-${viewId}-${monthDay}`}
               ref={calendarRef}
-              themeSystem="bootstrap"
-              plugins={[dayGridPlugin, interactionPlugin]}
+              {...FC_CLASS_COMPAT}
+              plugins={[dayGridPlugin, interactionPlugin, themePlugin]}
               locale="zh-cn"
               initialView="dayGridMonth"
               initialDate={monthDay}
@@ -375,7 +381,8 @@ const Calendar = memo(
                         return +o;
                       })
               } // 隐藏周几
-              dayCellContent={item => {
+              // v7：日号所在的顶部区改叫 dayCellTopContent
+              dayCellTopContent={item => {
                 return (
                   <React.Fragment>
                     <span className="lunar">{getLunar(item)}</span>
@@ -410,11 +417,12 @@ const Calendar = memo(
               }}
               // 点击日期
               dateClick={handleMoreClick}
-              moreLinkClick={(info, jsEvent) => {
+              // v7 的 moreLinkClick 只收一个参数，jsEvent 被收进了 info 里
+              moreLinkClick={info => {
                 handleMoreClick({ ...info, dateStr: moment(info.date).format('YYYY-MM-DD') });
                 // 阻止所有默认行为
-                jsEvent.preventDefault();
-                jsEvent.stopPropagation();
+                info.jsEvent.preventDefault();
+                info.jsEvent.stopPropagation();
                 return;
               }}
             />

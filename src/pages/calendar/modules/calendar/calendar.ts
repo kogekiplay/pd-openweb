@@ -6,7 +6,28 @@ import afterRefreshOp from '../calendarDetail/lib/afterRefreshOp';
 import recurCalendarUpdate from '../calendarDetail/lib/recurCalendarUpdateDialog';
 import Comm from '../comm/comm';
 import listHtml from './tpl/list.html';
+import {
+  changeView as fcChangeView,
+  createCalendarInstance,
+  destroyCalendar,
+  getCalendar,
+  getDate as fcGetDate,
+  getViewName as fcGetViewName,
+  refetchEvents as fcRefetchEvents,
+  renderCalendar as fcRender,
+  toV2View,
+  toV7View,
+} from './fcInstance';
 import './calendar.less';
+
+/**
+ * v7 的事件对象是 EventApi，自定义字段收在 extendedProps 里；
+ * 老回调体是直接 `event.isTask` / `event.head` 这样读的。把形状摊平回去，
+ * 这样回调体不用逐行改，改动集中在签名上。
+ */
+function v2Event(e: any): FcEvent {
+  return { ...(e.extendedProps || {}), id: e.id, title: e.title, start: e.start, end: e.end };
+}
 
 /** fullcalendar v3 的事件对象 */
 interface FcEvent {
@@ -68,6 +89,7 @@ Calendar.settings = {
   isRangeTime: [], // 记录点击事件
   isRangeTimeOut: null,
   lastDate: new Date(), // 上次选择的日期
+  lastDateKey: 0, // 上次选择日期的时间戳，双击判定用（v2 比的是 moment.toString()）
   selectedTime: {
     Start: null,
     End: null,
@@ -81,52 +103,80 @@ Calendar.settings = {
 
 Calendar.Method = {
   loadFullCalendar: function (parameter: Record<string, any>) {
-    $('#calendar').fullCalendar({
-      header: {
-        left: 'today prev,next,title',
-        center: 'agendaDay,agendaWeek,month',
+    createCalendarInstance(document.getElementById('calendar'), {
+      headerToolbar: {
+        left: 'today prev,next title',
+        // v2 的 agendaDay/agendaWeek/month 改成 v7 的名字；"列表"不再靠往工具栏
+        // 注入一个假按钮再 destroy 掉日历，直接用 v7 内置的 listMonth 视图。
+        center: 'timeGridDay,timeGridWeek,dayGridMonth,listMonth',
         right: '',
       },
-      timezone: 'local',
-      defaultDate: parameter.date, // 默认时间
+      // v7：buttonText 被移除，改成 buttons 映射的 .text，且 key 必须是精确视图名
+      buttons: {
+        today: { text: _l('今天') },
+        timeGridDay: { text: _l('日') },
+        timeGridWeek: { text: _l('周') },
+        dayGridMonth: { text: _l('月') },
+        listMonth: { text: _l('列表') },
+      },
+      timeZone: 'local',
+      locale: getCookie('i18n_langtag') || window.getDefaultLangKey(),
+      initialDate: parameter.date,
       firstDay: 0, // 第一列显示周几  0：周日
-      startParam: 'startDate', // 提交请求时开始时间的名称:即XXX.aspx?sstart=XXX&eend=YYYY;
-      endParam: 'endDate',
-      defaultView: parameter.currentView, // 默认视图
-      slotMinutes: 30,
-      scrollTime: parameter.scrollTime, // 开始时间
-      height: $(window).height() - $('.fc-day-grid').height() - $('#topBarContainer').height() - 15, // 高度
-      selectable: true, // 允许拖拽
-      selectHelper: true,
+      initialView: toV7View(parameter.currentView),
+      slotDuration: '00:30:00',
+      scrollTime: parameter.scrollTime,
+      height: $(window).height() - $('.fc-day-grid').height() - $('#topBarContainer').height() - 15,
+      selectable: true,
+      selectMirror: true,
       editable: true,
-      eventLimit: eventLimitNum(),
+      dayMaxEventRows: eventLimitNum(),
       handleWindowResize: false,
-      eventLimitClick: 'popover',
-      axisFormat: 'HH:mm', // 左侧时间列表格式 24小时制
-      titleFormat: {
-        // 头部标题格式
-        month: _l('YYYY 年 MMM'), // ****年 *月
-        week: _l('YYYY 年 MMMD日'), // ****年 *月*日
-        day: _l('YYYY 年 MMMD日 dddd'), // ****年 *月*日 星期*
-      },
-      columnFormat: {
-        // 列标题格式
-        month: 'ddd', // 周*
-        week: 'DD ddd', // 15日 周*
-        day: '', //
-      },
-      events: {
-        url: calendarAjax.getCalendars,
-        data: {
-          isWorkCalendar: Calendar.Comm.settings.isWorkCalendar,
-          isTaskCalendar: Calendar.Comm.settings.isTaskCalendar,
-          filterTaskType: Calendar.Comm.settings.filterTaskType,
-          categoryIDs: Calendar.Method.getCategoryIDsFun(),
-          memberIDs: Calendar.Comm.settings.otherUsers.join(','),
+      moreLinkClick: 'popover',
+      // v7 内置的当前时间红线 —— 取代原来往 .fc-time-grid 手工塞 .rect div 的那段
+      nowIndicator: true,
+      // v2 的 axisFormat
+      slotHeaderFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
+      // v2 的 timeFormat
+      eventTimeFormat: { hour: 'numeric', minute: '2-digit', hour12: false },
+      // v2 的 titleFormat / columnFormat 是「一个对象里按视图分」，v7 要拆进 views
+      views: {
+        dayGridMonth: { titleFormat: { year: 'numeric', month: 'long' }, dayHeaderFormat: { weekday: 'short' } },
+        timeGridWeek: {
+          titleFormat: { year: 'numeric', month: 'long', day: 'numeric' },
+          dayHeaderFormat: { day: '2-digit', weekday: 'short' },
+        },
+        timeGridDay: {
+          titleFormat: { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' },
         },
       },
-      timeFormat: 'H:mm', // 事件日期格式
-      eventClick: function (events: FcEvent, jsEvent: MouseEvent) {
+      // v2 是 events: { url, data }，由库自己发请求并按 startParam/endParam 传时间范围。
+      // v7 用函数式事件源：范围由 info.start / info.end 给出，我们自己发请求。
+      events: function (info: any, success: (events: any[]) => void, failure: (err: any) => void) {
+        calendarAjax
+          .getCalendars({
+            startDate: moment(info.start).format('YYYY-MM-DD HH:mm:ss'),
+            endDate: moment(info.end).format('YYYY-MM-DD HH:mm:ss'),
+            isWorkCalendar: Calendar.Comm.settings.isWorkCalendar,
+            isTaskCalendar: Calendar.Comm.settings.isTaskCalendar,
+            filterTaskType: Calendar.Comm.settings.filterTaskType,
+            categoryIDs: Calendar.Method.getCategoryIDsFun(),
+            memberIDs: Calendar.Comm.settings.otherUsers.join(','),
+          })
+          .then((list: any[]) =>
+            success(
+              // 任务不允许拉伸时长。v2 是渲染完把 .fc-resizer 这个 DOM 删掉，
+              // v7 有正经的逐事件开关，在数据侧标注更稳，也不依赖库的 DOM 结构。
+              (list || []).map((e: any) => (e.isTask ? { ...e, durationEditable: false } : e)),
+            ),
+          )
+          .catch(failure);
+      },
+      eventClick: function (info: any) {
+        // v7：事件对象是 EventApi，自定义字段在 extendedProps 里；jsEvent 在 info 上
+        const events = v2Event(info.event);
+        const jsEvent = info.jsEvent;
+
         // 点击 日程时 事件
         if (events.isTask) {
           $('.calendarEdit,.showActiveTitleMessage').remove();
@@ -160,12 +210,15 @@ Calendar.Method = {
           });
 
           $('.hoverContentColor').removeClass('hoverContentColor');
-          $(this).addClass('hoverContentColor');
+          // v2 的回调里 this 是事件元素；v7 给的是 info.el
+          $(info.el).addClass('hoverContentColor');
         }
       },
-      eventAfterRender: function (event: FcEvent, element: JQueryLike) {
-        // 事件呈现后触发,可用来做头像显示
-        var $fcTitle = $(element).find('.fc-title');
+      // v2 的 eventAfterRender
+      eventDidMount: function (info: any) {
+        const event = v2Event(info.event);
+        // 事件呈现后触发,可用来做头像显示。类名用 v6 那套（兼容层挂的就是这套）
+        var $fcTitle = $(info.el).find('.fc-event-title');
         if (!event.isTask) {
           if (
             Calendar.Comm.settings.otherUsers.length > 1 ||
@@ -181,11 +234,20 @@ Calendar.Method = {
         } else {
           $fcTitle.prepend(
             '<span class="icon-calendartask" data-endtime="' +
-              moment(event.end._i).format('HH:mm') +
+              // v2 给的是 moment，这里读的是它的内部字段 _i；v7 给原生 Date，直接格式化
+              moment(event.end).format('HH:mm') +
               '" style="width:14px;display: inline-block;height:14px;margin: 1px 3px -2px 0;font-size: 16px;vertical-align: top;"> </span>',
           );
-          $(element).find('.fc-resizer').remove();
+          // 任务不允许拉伸：v2 是把 .fc-resizer 这个 DOM 删掉，v7 有正经开关，
+          // 在事件源里给任务加 durationEditable: false（见上面的 events 函数）。
         }
+      },
+      // 视图/日期范围变化后触发。取代了原来挂在头部按钮上的那段点击劫持：
+      // 记住当前视图（仍按 v2 的名字写回 localStorage，与旧版本互相兼容），
+      // 再做一次视图相关的样式调整。
+      datesSet: function (info: any) {
+        safeLocalStorageSetItem('lastView', toV2View(info.view.type));
+        Calendar.Method.editViewStyle();
       },
       loading: function (isLoading: boolean) {
         if (isLoading) {
@@ -199,37 +261,31 @@ Calendar.Method = {
           Calendar.Method.editViewStyle();
         }
       },
-      select: function (start: any, end: any) {
-        // 执行 添加
-        var multiSelect = '';
-        var multiSelectDay = '';
-        if ($('.fc-highlight').length > 1 || $('.fc-highlight').attr('colspan') > 1) {
-          multiSelectDay = true; // 全天事件多选
-        }
+      select: function (info: any) {
+        // 【多选判定改成算时间跨度，不再嗅探 DOM】
+        // v2 靠 $('.fc-highlight').attr('colspan') 猜是不是多选，那是拿库的内部 DOM 当 API。
+        // v7 直接给了 allDay 和 start/end，按跨度算既更准也不会随库的 DOM 变化而失效。
+        const start = info.start;
+        const end = info.end;
+        const isAllDay = !!info.allDay;
 
-        // 判断是否是多选事件
-        if ($('.fc-month-view').length > 0 && multiSelectDay) {
-          // 月多选
-          multiSelect = true;
-        }
-
-        Calendar.settings.selectedTime.Start = moment(start).format(); // 开始时间
-        Calendar.settings.selectedTime.End = moment(end).format(); // 结束时间
+        Calendar.settings.selectedTime.Start = moment(start).format();
+        Calendar.settings.selectedTime.End = moment(end).format();
         var settings = {
           Start: Calendar.settings.selectedTime.Start,
           End: Calendar.settings.selectedTime.End,
           AllDay: '',
         };
 
-        var rangeStart = moment(settings.Start).unix();
-        var rangeEnd = moment(settings.End).unix();
-        if (rangeEnd - rangeStart > 30 * 60 && $('.fc-highlight').attr('colspan') != 1) {
-          multiSelect = true; // 周、日视图多选情况(除全天事件外)
-        }
+        var rangeSeconds = (moment(end).valueOf() - moment(start).valueOf()) / 1000;
+        // 全天行：跨度超过一天才算多选（单格选中正好是 1 天）
+        var multiSelectDay = isAllDay && rangeSeconds > 24 * 60 * 60;
+        // 时间网格：跨度超过一格（30 分钟）才算多选
+        var multiSelect = isAllDay ? multiSelectDay : rangeSeconds > 30 * 60;
 
         if (multiSelectDay) {
-          // 全天事件多选 日期处理
-          settings.End = moment(settings.End).add(-1, 'day').format(); // 处理多选的日期多一天
+          // 全天事件多选 日期处理：结束日期是排他的，回退一天给业务用
+          settings.End = moment(settings.End).add(-1, 'day').format();
           settings.AllDay = true;
         }
 
@@ -238,23 +294,30 @@ Calendar.Method = {
           createCalendar(settings);
         }
       },
-      eventMouseover: function (event: FcEvent, jsEvent: MouseEvent) {
-        Calendar.Method.changeEventColor(event, jsEvent, 0);
+      // v2 的 eventMouseover / eventMouseout
+      eventMouseEnter: function (info: any) {
+        Calendar.Method.changeEventColor(v2Event(info.event), info.jsEvent, 0);
       },
-      eventMouseout: function (event: FcEvent, jsEvent: MouseEvent) {
-        Calendar.Method.changeEventColor(event, jsEvent, 1);
+      eventMouseLeave: function (info: any) {
+        Calendar.Method.changeEventColor(v2Event(info.event), info.jsEvent, 1);
       },
-      // 新方法  需要修改参数
-      eventDrop: function (event: FcEvent, delta: any, revertFunc: () => void, jsEvent: MouseEvent, ui: any, view: any) {
+      eventDrop: function (info: any) {
         Calendar.settings.isResize = false;
-        Calendar.Method.dropResize(event, delta, revertFunc, jsEvent, ui, view);
+        Calendar.Method.dropResize(v2Event(info.event), info.delta, info.revert, info.jsEvent, null, info.view);
       },
-      // 新方法  需要修改参数
-      eventResize: function (event: FcEvent, delta: any, revertFunc: () => void, jsEvent: MouseEvent, ui: any, view: any) {
+      eventResize: function (info: any) {
         Calendar.settings.isResize = true;
-        Calendar.Method.dropResize(event, delta, revertFunc, jsEvent, ui, view);
+        Calendar.Method.dropResize(v2Event(info.event), info.delta, info.revert, info.jsEvent, null, info.view);
       },
-      dayClick: function (date) {
+      // v2 的 dayClick
+      dateClick: function (info: any) {
+        // 【全天判定改用 info.allDay】v2 靠 `date.format().length <= 10`——
+        // 即"格式化后没有时间部分"——来判全天。v7 给的是原生 Date，
+        // moment(date).format() 永远带时间，那个判据【恒为假】，必须换成 info.allDay。
+        const date = moment(info.date);
+        const isAllDay = !!info.allDay;
+        const dateKey = date.valueOf();
+
         // 操作方法
         var calendarClickFun = function () {
           if (Calendar.settings.isRange >= 2) {
@@ -266,18 +329,18 @@ Calendar.Method = {
                 End: '',
                 AllDay: '',
               };
-              if (date.format().length <= 10) {
+              if (isAllDay) {
                 // 全天事件
-                if (date.format() !== moment(new Date()).format('YYYY-MM-DD')) {
+                if (date.format('YYYY-MM-DD') !== moment(new Date()).format('YYYY-MM-DD')) {
                   // 非当天
-                  settings.Start = moment(date).set('hour', 10).format('YYYY-MM-DD HH:mm:ss');
-                  settings.End = moment(date).set('hour', 11).format('YYYY-MM-DD HH:mm:ss'); // 结束时间计算
+                  settings.Start = date.clone().set('hour', 10).format('YYYY-MM-DD HH:mm:ss');
+                  settings.End = date.clone().set('hour', 11).format('YYYY-MM-DD HH:mm:ss');
                   settings.AllDay = true;
                 }
               } else {
                 // 非全天事件
-                settings.Start = date.format(); // 开始时间
-                settings.End = date.add(30, 'm').format(); // 结束时间计算
+                settings.Start = date.format();
+                settings.End = date.clone().add(30, 'm').format();
               }
 
               createCalendar(settings);
@@ -288,7 +351,7 @@ Calendar.Method = {
             Calendar.settings.isRange = 0;
           } else if (Calendar.settings.isRange == 1) {
             // 单击
-            Calendar.settings.isFirstData = date;
+            Calendar.settings.isFirstData = info.date;
             Calendar.settings.isRangeTimeOut = setTimeout(function () {
               Calendar.settings.lastDate = '';
               Calendar.settings.isRangeTime = [];
@@ -297,7 +360,8 @@ Calendar.Method = {
           }
         };
 
-        if (date.toString() != Calendar.settings.lastDate.toString()) {
+        // 双击判定：v2 比的是 moment 的 toString()，这里用时间戳，等价且不依赖格式
+        if (dateKey !== Calendar.settings.lastDateKey) {
           Calendar.settings.isRange = 0;
           Calendar.settings.isRangeTime = [];
           Calendar.settings.isRangeTime[0] = +new Date();
@@ -305,7 +369,8 @@ Calendar.Method = {
           Calendar.settings.isRangeTime[1] = +new Date();
         }
 
-        Calendar.settings.lastDate = date;
+        Calendar.settings.lastDateKey = dateKey;
+        Calendar.settings.lastDate = info.date;
         Calendar.settings.isRange++;
 
         calendarClickFun(); // 操作方法
@@ -328,45 +393,10 @@ Calendar.Method = {
         );
     }
 
-    // 点击切换视图
-    $('.fc-center')
-      .find('button')
-      .off()
-      .on('click', function (this: HTMLElement) {
-        $('.hoverTitleMessage').remove();
-
-        if ($(this).hasClass('fc-list-button')) {
-          // 点击的是列表选项
-          safeLocalStorageSetItem('lastView', 'list');
-        } else {
-          // 点击的不是列表选项
-          $('#calendar').fullCalendar('render');
-          $('#calendar').find('.fc-view-container').show();
-          $('#calendarList').hide();
-          $('#calendar').find('.fc-left').show();
-        }
-
-        if ($(this).hasClass('fc-agendaDay-button')) {
-          $('#calendar').fullCalendar('changeView', 'agendaDay');
-          safeLocalStorageSetItem('lastView', 'agendaDay');
-        }
-
-        if ($(this).hasClass('fc-agendaWeek-button')) {
-          $('#calendar').fullCalendar('changeView', 'agendaWeek');
-          safeLocalStorageSetItem('lastView', 'agendaWeek');
-        }
-
-        if ($(this).hasClass('fc-month-button')) {
-          $('#calendar').fullCalendar('changeView', 'month');
-          safeLocalStorageSetItem('lastView', 'month');
-        }
-
-        $(this).addClass('fc-state-active').siblings().removeClass('fc-state-active'); // 当前添加样式，移除同级下面的样式
-
-        Calendar.Method.editViewStyle(); // 视图样式调整
-        Calendar.Method.rememberClickRefresh(); // 刷新视图
-      });
-
+    // 【按钮劫持整段删除】v2 时代这里把 FullCalendar 自己的头部按钮 .off() 掉，
+    // 再手工 changeView、手工加 fc-state-active。v7 里那些是真的视图按钮，
+    // 点击原生切换视图，选中态由类名兼容层的 buttonClass 负责。
+    // 需要跟着视图切换做的两件事（记住视图、调整样式）挪到了 datesSet 回调里。
     // 列表视图数据刷新 ； 用户 创建日程层
     $('.fc-list-button').bind('refreshList', function () {
       Calendar.Method.calendarList(
@@ -539,12 +569,13 @@ Calendar.Method = {
         moment().add('2', 'months').format('YYYY-MM-01'),
         true,
       ); // 添加列表数据
-      $('#calendar').fullCalendar('destroy');
+      destroyCalendar();
       Calendar.Method.loadFullCalendar(parameter);
 
       $('#calendar').find('.fc-view-container,.fc-left').hide();
       $('#calendarList').css('display', 'block');
-      $('#calendar').fullCalendar('getView').name = 'list';
+      // v2 时代靠给 view.name 赋值伪装成 list 视图；v7 有内置 listMonth，直接切过去
+      fcChangeView('list');
     } else {
       if (['agendaDay', 'agendaWeek', 'month'].indexOf(lastView) == -1) {
         lastView = 'agendaDay';
@@ -575,7 +606,7 @@ Calendar.Method = {
       $('.fewWeeks').remove();
 
       $('.fc-toolbar .fc-left h2').append(
-        ' <span class="fewWeeks">' + _l('第%0周', $('#calendar').fullCalendar('getDate').weeks()) + '</span>',
+        ' <span class="fewWeeks">' + _l('第%0周', moment(fcGetDate()).week()) + '</span>',
       );
     }
 
@@ -584,7 +615,7 @@ Calendar.Method = {
 
       // 如果是天 视图 时间轴
       // 只在当天出现
-      var agendaActiveDay = moment($('#calendar').fullCalendar('getDate')).format('YYYY-MM-DD'); // 日视图当前时间
+      var agendaActiveDay = moment(fcGetDate()).format('YYYY-MM-DD'); // 日视图当前时间
       var isToday = false;
 
       if (viewName == 'agendaDay') {
@@ -748,7 +779,7 @@ Calendar.Method = {
 
   // 返回当前视图的名称
   getViewName: function () {
-    return $('#calendar').fullCalendar('getView').name;
+    return fcGetViewName();
   },
 
   getCategoryIDsFun: function () {
@@ -893,11 +924,11 @@ Calendar.Method = {
     var $calendar = $('#calendar');
     if ($calendar.length > 0) {
       if (Calendar.Method.getViewName() == 'agendaDay') {
-        $calendar.fullCalendar('refetchEvents');
+        fcRefetchEvents();
       } else if (Calendar.Method.getViewName() == 'agendaWeek') {
-        $calendar.fullCalendar('refetchEvents');
+        fcRefetchEvents();
       } else if (Calendar.Method.getViewName() == 'month') {
-        $calendar.fullCalendar('refetchEvents');
+        fcRefetchEvents();
       } else if (Calendar.Method.getViewName() == 'list') {
         $('.fc-list-button').trigger('refreshList');
       }
@@ -912,10 +943,10 @@ Calendar.Method = {
 
     $('#invitedMain').hide();
 
-    Calendar.settings.lastTime = $('#calendar').fullCalendar('getDate');
-    $('#calendar').fullCalendar('destroy');
+    Calendar.settings.lastTime = fcGetDate();
+    destroyCalendar();
     Calendar.Method.init();
-    $('#calendar').fullCalendar('refetchEvents');
+    fcRefetchEvents();
   },
 
   // 日程列表加载

@@ -3,9 +3,17 @@ import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin from '@fullcalendar/interaction';
-import timeGridPlugin from '@fullcalendar/timegrid';
+// v7 删掉了 @fullcalendar/daygrid 这类独立包，改成 connector 的子路径入口。
+// 它们的 dist-tags.latest 永远停在 6.1.21，看 npm 会误判成「官方没发 stable 7」。
+import dayGridPlugin from '@fullcalendar/react/daygrid';
+import interactionPlugin from '@fullcalendar/react/interaction';
+import timeGridPlugin from '@fullcalendar/react/timegrid';
+// v7 起样式必须显式引入：骨架 + 一个主题。classic 最接近 v6 外观。
+import themePlugin from '@fullcalendar/react/themes/classic';
+import '@fullcalendar/react/skeleton.css';
+import '@fullcalendar/react/themes/classic/theme.css';
+import '@fullcalendar/react/themes/classic/palette.css';
+import { FC_CLASS_COMPAT } from './fcClassCompat';
 import cx from 'classnames';
 import _ from 'lodash';
 import LunarCalendar from 'lunar-calendar';
@@ -33,7 +41,7 @@ import SelectField from '../components/SelectField';
 import SelectFieldForStartOrEnd from '../components/SelectFieldForStartOrEnd';
 import { eventDidMount } from './CalendarEvent';
 import CalendarIds from './CalendarIds';
-import { CALENDAR_BUTTON_TEXT, CALENDAR_VIEW_FORMATS, TAB_LIST } from './constants';
+import { CALENDAR_BUTTONS, CALENDAR_VIEW_FORMATS, TAB_LIST } from './constants';
 import External from './External';
 import { Wrap, WrapNum } from './styles';
 import { getCalendartypeData, getRows, getShowExternalData, isIllegalFormat } from './util';
@@ -591,7 +599,9 @@ class RecordCalendarBase extends Component<any, any> {
             <FullCalendar
               key={this.state.fullCalendarKey}
               dragScroll={true}
-              themeSystem="bootstrap"
+              // v7 移除了 themeSystem：主题改成插件了，见文件头的 themePlugin
+              // 把 v6 的语义类名挂回来，放在最前面展开，后面的 props 仍可覆盖
+              {...FC_CLASS_COMPAT}
               height={height}
               ref={this.calendarComponentRef}
               initialView={initialView} // 选中的日历模式
@@ -606,7 +616,8 @@ class RecordCalendarBase extends Component<any, any> {
               }}
               eventDragStop={() => this.setState({ isMove: false })}
               views={CALENDAR_VIEW_FORMATS}
-              dayCellContent={item => {
+              // v7 把 dayCellContent 拆细了，日号所在的顶部区叫 dayCellTopContent
+              dayCellTopContent={item => {
                 return (
                   <React.Fragment>
                     {item.view.type === 'dayGridMonth' && this.getLunar(item)}
@@ -662,9 +673,9 @@ class RecordCalendarBase extends Component<any, any> {
                   clickData = null;
                 });
               }}
-              plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+              plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, themePlugin]}
               locale={window.getCurrentLang() || 'zh-cn'}
-              buttonText={CALENDAR_BUTTON_TEXT}
+              buttons={CALENDAR_BUTTONS}
               allDayText={_l('全天')}
               hiddenDays={
                 unweekday.length >= 7
@@ -678,7 +689,7 @@ class RecordCalendarBase extends Component<any, any> {
               } // 隐藏周几
               editable={true}
               firstDay={weekbegin ? Number(weekbegin) % 7 : 1} // 周一至周六为1～6，周日为0
-              slotLabelFormat={{
+              slotHeaderFormat={{
                 hour: '2-digit',
                 minute: '2-digit',
                 meridiem: false,
@@ -692,7 +703,8 @@ class RecordCalendarBase extends Component<any, any> {
                 this.getEventsFn();
               }}
               viewWillUnmount={this.calendarActionOff}
-              viewClassNames={'worksheetFullCalendar'}
+              // 合成而不是覆盖：FC_CLASS_COMPAT.viewClass 负责还原 fc-view / fc-{type}-view
+              viewClass={info => `${FC_CLASS_COMPAT.viewClass(info)} worksheetFullCalendar`}
               eventTimeFormat={{
                 hour: 'numeric',
                 minute: '2-digit',

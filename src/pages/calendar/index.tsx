@@ -1,8 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import LoadDiv from 'ming-ui/components/LoadDiv';
 import TaskDetail from 'src/pages/task/containers/taskDetail/taskDetail';
-import fullCalendar from './modules/calendarControl/javascript/fullcalendar';
 import toolBar from './modules/toolbar/toolbar';
+import { destroyCalendar } from './modules/calendar/fcInstance';
 import './modules/calendarControl/css/fullcalendar.less';
 import './modules/css/share.less';
 
@@ -13,33 +13,17 @@ export default class CalendarEntrypoint extends Component<any, any> {
       openTaskDetail: false,
       taskId: '',
     };
-
-    fullCalendar();
+    // v2 时代这里要先把 vendor 进来的 fullcalendar 注册成 jQuery 插件（fullCalendar()）。
+    // v7 是正常的 npm 包，由 modules/calendar/fcInstance 负责创建实例，这里不用做任何事。
   }
   componentDidMount() {
     $('html').addClass('AppCalendar');
     toolBar.bindEvent();
 
-    let promise;
-    const lang = getCookie('i18n_langtag') || window.getDefaultLangKey();
-
-    if (lang === 'zh-Hant') {
-      promise = import('./modules/calendarControl/lang/zh-tw');
-    } else if (lang === 'ja') {
-      promise = import('./modules/calendarControl/lang/ja');
-    } else if (lang === 'th') {
-      promise = import('./modules/calendarControl/lang/th');
-    } else if (lang === 'ms') {
-      promise = import('./modules/calendarControl/lang/ms');
-    } else if (lang !== 'en') {
-      promise = import('./modules/calendarControl/lang/zh-cn');
-    } else {
-      promise = Promise.resolve();
-    }
-
-    if (promise) {
-      promise.then(() => toolBar.init());
-    }
+    // 语言包不再动态 import：v2 那 40 个 vendor 语言文件是靠副作用往插件上注册的，
+    // v7 的 locale 由 modules/calendar/fcInstance 在建实例时一次性注册（体积很小），
+    // 顺带消掉了"语言包还没加载完就 init"的时序问题。
+    toolBar.init();
 
     const _this = this;
     $('#calendar').on('openTask', function (event, taskId: string) {
@@ -48,9 +32,7 @@ export default class CalendarEntrypoint extends Component<any, any> {
   }
   componentWillUnmount() {
     $('html').removeClass('AppCalendar');
-    if ($.fn.fullCalendar) {
-      $('#calendar').fullCalendar('exit');
-    }
+    destroyCalendar();
   }
   render() {
     const { openTaskDetail, taskId } = this.state;
