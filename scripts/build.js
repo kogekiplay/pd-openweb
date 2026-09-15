@@ -335,10 +335,11 @@ function typecheckGate() {
 
   for (const [label, args] of steps) {
     console.log(chalk.cyan(`typecheck: ${label} ...`));
-    const r = spawnSync(process.execPath, args, {
+    // 【不要覆盖 NODE_OPTIONS】PnP 就是靠它注入 `--require .pnp.cjs`，
+    // 覆盖掉子进程就解析不到任何依赖。内存上限改成直接传 node 的命令行参数。
+    const r = spawnSync(process.execPath, ['--max-old-space-size=8192', ...args], {
       cwd: ROOT_PATH,
       stdio: 'inherit',
-      env: { ...process.env, NODE_OPTIONS: '--max_old_space_size=8192' },
     });
     if (r.status !== 0) {
       console.log(chalk.red(`typecheck 失败（${label}），release 中止。`));

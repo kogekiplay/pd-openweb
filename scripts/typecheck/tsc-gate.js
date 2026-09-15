@@ -106,7 +106,11 @@ function filterNoise(diags, ci) {
 
 // ------------------------------------------------------------------ 跑 tsc
 function runTsc({ incremental }) {
-  const tsc = path.join(ROOT, 'node_modules/typescript/bin/tsc');
+  // 【别写死 node_modules 路径，也不能 require.resolve('typescript/bin/tsc')】
+  // 写死路径在 pnpm 的符号链接布局下会失效；而 TS 7 的 exports 只放行
+  // '.'、'./package.json'、'./unstable/*'，直接解析 bin/tsc 会
+  // ERR_PACKAGE_PATH_NOT_EXPORTED。从 package.json 反推包目录是唯一两边都成立的写法。
+  const tsc = path.join(path.dirname(require.resolve('typescript/package.json')), 'bin/tsc');
   const args = ['-p', TSCONFIG, '--pretty', 'false'];
   if (!incremental) args.push('--incremental', 'false');
   const t0 = Date.now();

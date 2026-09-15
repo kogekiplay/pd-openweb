@@ -36,7 +36,7 @@ set -e
 # 前提，不可能缺席。能力与原来的 `yarn check --integrity` 一致（依据见
 # scripts/install-stamp.js 文件头，那里记了 yarn 1 源码的核对结果）。
 if [ -d node_modules ]; then
-  node scripts/install-stamp.js check
+  yarn node scripts/install-stamp.js check
   STAMP_RC=$?
   if [ "$STAMP_RC" = "1" ]; then
     echo "pre-push: !! node_modules 与 package.json/yarn.lock 不一致。"
@@ -65,7 +65,7 @@ if [ "$SKIP_TESTS" = "1" ]; then
   echo "pre-push: SKIP_TESTS=1，跳过行为门禁"
 else
   echo "pre-push: 行为门禁（约 4s）..."
-  node scripts/run-specs.js
+  yarn node scripts/run-specs.js
 fi
 
 # ── 类型门禁 ─────────────────────────────────────────────────────────────
@@ -75,10 +75,10 @@ if [ "$SKIP_TYPECHECK" = "1" ]; then
 fi
 
 echo "pre-push: 后缀并存检查（约 1s）..."
-node scripts/checkExtensionCollisions.js
+yarn node scripts/checkExtensionCollisions.js
 
 echo "pre-push: 语法门禁（约 8s）..."
-NODE_OPTIONS=--max_old_space_size=8192 node scripts/typecheck/tsc-syntax-gate.js
+yarn node --max-old-space-size=8192 scripts/typecheck/tsc-syntax-gate.js
 
 echo "pre-push: 语义差分门禁（冷跑，约 30s）..."
-NODE_OPTIONS=--max_old_space_size=8192 node scripts/typecheck/tsc-gate.js --no-incremental
+yarn node --max-old-space-size=8192 scripts/typecheck/tsc-gate.js --no-incremental
