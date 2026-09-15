@@ -1,0 +1,62 @@
+# bun 安装配置。
+
+[install]
+
+linker = "hoisted"
+# ── 为什么是 hoisted 而不是 isolated ──────────────────────────────────────
+# bun 两种都支持（--linker=isolated|hoisted）。isolated 是严格软链布局，能把
+# 「幽灵依赖」（用了但没声明的包）全部暴露出来。本仓最大的一个隐患就是这么抓到的：
+# .babelrc 开了 @babel/plugin-transform-runtime，它往【我们自己的产物】里注入
+# @babel/runtime/helpers/*，而 @babel/runtime 从头到尾没被声明过，一直靠 antd /
+# rc-util 提升到顶层才碰巧能解析 —— 2816 条 Module not found。
+# 那一条已按正解修好：在 dependencies 里显式声明。
+#
+# 但还剩两类【责任方在外部包】的幽灵依赖：
+#   - @antv/l7plot 用 tslib 没声明（6 处）
+#   - @antv/g-webgpu-core 用 @babel/runtime 没声明
+# bun 没有「替第三方包补声明」的配置项，只能给每个包打 `bun patch` 真补丁。
+# 这两个包都不是本仓能修的，也不值得各维护一个补丁文件，所以选 hoisted。
+#
+# 【代价说清楚】hoisted 之后，新混进来的幽灵依赖不会再被当场抓住。
+# 要复查时临时跑一次：
+#     bun install --linker=isolated && bun run release   # 看有没有 Module not found
+#     bun install                                        # ← 别忘了装回来
+# 第二条必须跑：--linker 会把 node_modules 整个按另一种布局重铺，不装回来后面
+# 所有以 `node ./xxx` 直接调用的脚本都会解析不到依赖。
+#
+# 另外三条也需要 node_modules 真实落盘的理由：
+#   - scripts/build.js、tools/*.cjs、scripts/typecheck/* 全部以 `node ./xxx` 直接调用
+#   - @ant-design/cli（antd doctor / antd lint）按 node_modules 布局找包
+#   - 排障要能直接读 node_modules/antd/es/**（antd 6 迁移里 showSearch 传对象
+#     =强制开搜索、Select 的 CSS 变量来源，全是读 antd 源码查出来的，不是靠猜）
+
+# ── minimumReleaseAge 为什么【没有】常开 ──────────────────────────────────
+# 它的用意是好的：拒绝安装刚发布的版本。npm 包被投毒后攻击窗口正是发布后的头几
+# 小时（chalk/debug 2025-09 那次就是），投毒版本几乎都在数小时内被撤。
+#
+# 但 bun 的实现是【硬失败，不回退】—— 实测：
+#   dependencies: { "lucide-react": "^1.43.0" }，minimumReleaseAge = 604800
+#   → error: No version matching "lucide-react" found for specifier "^1.43.0"
+#     (blocked by minimum-release-age)
+# 这个 range 里明明有一堆超过 7 天的版本，bun 并不去挑，它只对「range 内最新的
+# 那一个」判年龄，不满足就整个装不上。
+# 本仓有意跟进新版（babel 8.0.5 发布 4.4 天、markdown-it 15.0.2 发布 4.1 天都是
+# 当前的显式 pin），常开等于每次 install 都失败。
+#
+# 【但这个开关当审计用很好】升级依赖时临时跑一次：
+#     bun install --minimum-release-age=604800 --lockfile-only
+# 它会把「解析到了发布不足 7 天的版本」的包【逐个点名】。确认过的就正常装，
+# 名单之外突然冒出来的新鲜版本就值得看一眼 —— 尤其是传递依赖。
+
+# ── 两条没写进来、但需要知道的 ────────────────────────────────────────────
+# · 依赖的 install 脚本 bun 默认【一个都不跑】，要跑的走 package.json 的
+#   trustedDependencies 白名单（那个文件放不下注释，依据记在这里）。
+#   全树只有 3 个包声明了 install 脚本，逐个看过之后名单里只放了 2 个：
+#     esbuild      install.js 装平台二进制 —— 必须，不跑就没有可执行文件
+#     @sentry/cli  install.js 装二进制 —— 保留（新版主要靠 @sentry/cli-<平台>
+#                  这个 optional 包发二进制，postinstall 是兜底路径）
+#     core-js      【故意不放】它的 postinstall 只是 OpenCollective / Patreon
+#                  赞助横幅，62 行里唯一的副作用是一句 console.log，
+#                  而且外层写成 `node -e "try{require('./postinstall')}catch(e){}"`，
+#                  不跑没有任何影响。信任名单上每多一条就是多一份安装期执行面。
+# · cache 默认在 ~/.bun/install/cache，不落仓库，无需配置。

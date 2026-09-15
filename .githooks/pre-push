@@ -24,30 +24,26 @@ set -e
 #（实际见过的：react-dnd 16 的代码撞上 v11 的 DragObjectWithType；
 #  chalk 6 的代码撞上 v4 → `Cannot read properties of undefined (reading 'gray')`），
 # 看起来像是代码写错了，其实一条都不是。连栽两次，所以在最前面直接说清楚。
-# 【第三次栽进来的教训】曾经写成
-# `if command -v yarn && [ -f .yarn-integrity ]`，yarn 不在时整个 if 被跳过，
-# 一个字都不提示 —— 等于这条预检在没装 yarn 的机器上完全不存在。
-# 2026-09-11 就是这么中的：本机没有 yarn，主检出合完 antd 5 分支后 node_modules
-# 还是 antd 4.19.0，push 被类型门禁挡下并吐出 131 个新 key，全是
+# 【第三次栽进来的教训】这条预检曾经写成 `if command -v <包管理器> && ...`，
+# 那个命令不在时整个 if 被跳过，一个字都不提示 —— 等于预检在那台机器上完全不存在。
+# 2026-09-11 就是这么中的：主检出合完 antd 5 分支后 node_modules 还是 antd 4.19.0，
+# push 被类型门禁挡下并吐出 131 个新 key，全是
 # `TS2322 … maskStyle … not assignable to ModalProps` 这种指向业务文件的假错。
 #
-# 现在【不依赖 yarn 在不在】了：yarn 2 删掉了 `yarn check`（yarnpkg/rfcs#106），
-# 迁到 yarn 4 时改成自己写的戳，只需要 node —— 而 node 本来就是下面几道门禁的
-# 前提，不可能缺席。能力与原来的 `yarn check --integrity` 一致（依据见
-# scripts/install-stamp.js 文件头，那里记了 yarn 1 源码的核对结果）。
+# 所以现在这条【只依赖 node】—— 而 node 本来就是下面几道门禁的前提，不可能缺席。
 if [ -d node_modules ]; then
-  yarn node scripts/install-stamp.js check
+  node scripts/install-stamp.js check
   STAMP_RC=$?
   if [ "$STAMP_RC" = "1" ]; then
-    echo "pre-push: !! node_modules 与 package.json/yarn.lock 不一致。"
-    echo "           先跑 yarn install 再 push —— 否则下面的类型门禁会报出一堆"
+    echo "pre-push: !! node_modules 与 package.json/bun.lock 不一致。"
+    echo "           先跑 bun install 再 push —— 否则下面的类型门禁会报出一堆"
     echo "           指向业务文件、但其实是版本不匹配造成的假错误。"
     exit 1
   elif [ "$STAMP_RC" != "0" ]; then
-    # 走到这里说明戳不在（没跑过 yarn install，或用 npm/别的工具装的）。
+    # 走到这里说明戳不在（没跑过 bun install，或用别的工具装的）。
     # 沿用上面那条教训：不拦，但必须【明确说出来】，不能静默消失。
     echo "pre-push: !! 没有安装戳，node_modules 一致性预检【未生效】。"
-    echo "           跑一次 yarn install 就会补上（.yarn/plugins 里的插件自动写）。"
+    echo "           跑一次 bun install 就会补上（package.json 的 postinstall 自动写）。"
     echo "           在此之前，如果下面的类型门禁报出大量指向业务文件的类型错，"
     echo "           先确认 node_modules 是否与当前 package.json 匹配。"
   fi
@@ -65,7 +61,7 @@ if [ "$SKIP_TESTS" = "1" ]; then
   echo "pre-push: SKIP_TESTS=1，跳过行为门禁"
 else
   echo "pre-push: 行为门禁（约 4s）..."
-  yarn node scripts/run-specs.js
+  node scripts/run-specs.js
 fi
 
 # ── 类型门禁 ─────────────────────────────────────────────────────────────
@@ -75,10 +71,10 @@ if [ "$SKIP_TYPECHECK" = "1" ]; then
 fi
 
 echo "pre-push: 后缀并存检查（约 1s）..."
-yarn node scripts/checkExtensionCollisions.js
+node scripts/checkExtensionCollisions.js
 
 echo "pre-push: 语法门禁（约 8s）..."
-yarn node --max-old-space-size=8192 scripts/typecheck/tsc-syntax-gate.js
+node --max-old-space-size=8192 scripts/typecheck/tsc-syntax-gate.js
 
 echo "pre-push: 语义差分门禁（冷跑，约 30s）..."
-yarn node --max-old-space-size=8192 scripts/typecheck/tsc-gate.js --no-incremental
+node --max-old-space-size=8192 scripts/typecheck/tsc-gate.js --no-incremental

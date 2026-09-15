@@ -420,7 +420,7 @@ const getCacheConfig = alonePath => ({
       path.resolve(PATHS.root, 'CI/webpackCache.js'),
       path.resolve(PATHS.root, '.babelrc'),
       path.resolve(PATHS.root, 'package.json'),
-      path.resolve(PATHS.root, 'yarn.lock'),
+      path.resolve(PATHS.root, 'bun.lock'),
       path.resolve(PATHS.root, 'CI/publishConfig.js'),
       path.resolve(PATHS.root, 'scripts/build.js'),
     ],

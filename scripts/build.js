@@ -335,8 +335,8 @@ function typecheckGate() {
 
   for (const [label, args] of steps) {
     console.log(chalk.cyan(`typecheck: ${label} ...`));
-    // 【不要覆盖 NODE_OPTIONS】PnP 就是靠它注入 `--require .pnp.cjs`，
-    // 覆盖掉子进程就解析不到任何依赖。内存上限改成直接传 node 的命令行参数。
+    // 【不要用 NODE_OPTIONS 传内存上限】它是整条命令链共享的环境变量，
+    // 在这里覆盖会把调用方设的内容整个抹掉。直接传 node 的命令行参数，只影响这个子进程。
     const r = spawnSync(process.execPath, ['--max-old-space-size=8192', ...args], {
       cwd: ROOT_PATH,
       stdio: 'inherit',
