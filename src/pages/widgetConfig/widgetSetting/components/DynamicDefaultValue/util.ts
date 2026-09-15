@@ -188,7 +188,7 @@ export const FILTER = {
   // 多选可以选择单选字段 单选不能选多选字段
   // 必须是同类型用户
   // 用户
-  26: (item, enumDefault) =>
+  26: (item, enumDefault: number) =>
     enumDefault === 0
       ? _.includes(CAN_AS_USER_DYNAMIC_FIELD, item.type) && item.enumDefault === enumDefault
       : _.includes(CAN_AS_USER_DYNAMIC_FIELD, item.type),

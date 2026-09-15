@@ -12,7 +12,7 @@ import SummaryCom from 'src/components/MobileCardCellControls/SummaryCom';
 import { controlState, getTitleTextFromControls, isRelateRecordTableControl } from 'src/utils/control';
 import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
-function getFieldsAfterRules(displayFields, formData, rules, rowId) {
+function getFieldsAfterRules(displayFields, formData, rules, rowId: string) {
   if (!rules || !rules.length) return displayFields;
   const { defaultRules = [] } = getAvailableFilters(rules, formData, rowId);
   const hiddenIds = new Set();
@@ -239,7 +239,7 @@ export default function ChildTableFlatComp(props) {
     : showFields;
 
   // 平铺展开收起
-  const handleExpandFlat = (isExpand, index: number, rowid) => {
+  const handleExpandFlat = (isExpand, index: number, rowid: string) => {
     setRandom(Date.now());
     setExpandRowIndex(!isExpand ? index : undefined);
     // 呈现&编辑均可同时展开多条

@@ -167,7 +167,7 @@ const CheckboxWidgets = props => {
     onChange(JSON.stringify(values));
   };
 
-  const handleChange = (checked, key) => {
+  const handleChange = (checked: boolean, key) => {
     const checkIds = JSON.parse(value || '[]');
 
     if (checked) {

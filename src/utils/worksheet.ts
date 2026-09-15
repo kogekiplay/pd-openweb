@@ -48,7 +48,7 @@ export function getSheetListFirstId(sheetList = [], isCharge = true) {
   return result;
 }
 
-export const moveSheetCache = (appId: string, groupId) => {
+export const moveSheetCache = (appId: string, groupId: string) => {
   const storageKey = `mdAppCache_${md.global.Account.accountId}_${appId}`;
   const storage = safeParse(localStorage.getItem(storageKey) || '{}');
   const worksheets = (storage.worksheets || []).map(data => {

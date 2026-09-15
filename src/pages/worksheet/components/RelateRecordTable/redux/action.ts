@@ -242,7 +242,7 @@ export function loadRecords({
   };
 }
 
-export function updatePageIndex(pageIndex) {
+export function updatePageIndex(pageIndex: number) {
   return async dispatch => {
     dispatch({
       type: 'UPDATE_TABLE_STATE',
@@ -571,7 +571,7 @@ export function refresh({ doNotResetPageIndex, doNotClearKeywords } = {}) {
   };
 }
 
-export function search(keywords) {
+export function search(keywords: string) {
   return dispatch => {
     dispatch({
       type: 'UPDATE_TABLE_STATE',

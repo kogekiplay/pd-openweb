@@ -47,7 +47,7 @@ export default class Users extends Component<any, any> {
       _.includes([FILTER_CONDITION_TYPE.ARREQ, FILTER_CONDITION_TYPE.ARRNE], this.props.type)
     );
   }
-  selectUser(title, projectId: string, options, callback) {
+  selectUser(title: string, projectId: string, options, callback) {
     dialogSelectUser({
       title,
       sourceId: 0,

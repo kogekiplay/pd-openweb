@@ -581,7 +581,7 @@ export function searchKeys(keyWords) {
   };
 }
 
-export function searchEventArgs(keyWords, pageIndex) {
+export function searchEventArgs(keyWords, pageIndex: number) {
   return dispatch => {
     const typeEvent = dispatch(getInitType());
     dispatch({ type: 'CHANGE_CALENDAR_LOADING', data: true });
@@ -589,7 +589,7 @@ export function searchEventArgs(keyWords, pageIndex) {
   };
 }
 
-export function updateEventList(pageIndex, isUp) {
+export function updateEventList(pageIndex: number, isUp) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { calendarview } = getState().sheet;
     const { calenderEventList = {} } = calendarview;
@@ -599,7 +599,7 @@ export function updateEventList(pageIndex, isUp) {
   };
 }
 
-export function deleteEventList(rowid) {
+export function deleteEventList(rowid: string) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { calendarview } = getState().sheet;
     const { calenderEventList = {} } = calendarview;
@@ -644,7 +644,7 @@ export function updateCalendarEventIsAdd(data) {
 }
 
 // 更改 已获取的  排期/未排期数据
-export function updateEventData(rowId, data, time) {
+export function updateEventData(rowId: string, data, time) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { calendarview, controls } = getState().sheet;
     const { calendarData, calenderEventList = {} } = calendarview;

@@ -489,7 +489,7 @@ class UserItem extends Component<any, any> {
               key={`checkBox-${user.accountId}`}
               className="TxtMiddle InlineBlock"
               checked={isChecked}
-              onClick={(checked, id, e) => {
+              onClick={(checked: boolean, id, e) => {
                 e.stopPropagation();
                 this.handleCheckbox(isChecked, user.accountId);
               }}

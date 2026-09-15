@@ -398,7 +398,7 @@ export default function TaskList({ projectId, onRefreshComponents }) {
     fetchState.sort,
   ]);
 
-  const switchTaskStatus = (checked, record) => {
+  const switchTaskStatus = (checked: boolean, record) => {
     if (statusAjaxPromise.current) return;
     setSwitchLoading({ [record.id]: true });
     const request = syncTaskApi[checked ? 'startTask' : 'stopTask']({

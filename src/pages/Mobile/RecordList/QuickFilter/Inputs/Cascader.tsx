@@ -147,7 +147,7 @@ export default class Cascader extends Component<any, any> {
       this.sourcePath[item.value] = title + item.label;
     });
   }
-  deepDataUpdate(key, options, data, rowId) {
+  deepDataUpdate(key, options, data, rowId: string) {
     if (rowId) {
       options.forEach(item => {
         if (item.value === rowId) {
@@ -270,7 +270,7 @@ export default class Cascader extends Component<any, any> {
     return sourceData;
   }
 
-  formatSearchData = (item, keywords) => {
+  formatSearchData = (item, keywords: string) => {
     const searchPath = safeParse(item.searchPath) || [];
     const nodes = [];
 
@@ -294,7 +294,7 @@ export default class Cascader extends Component<any, any> {
   };
 
   // 简单展示内容（无 Radio）
-  renderSimpleContent = (item, keywords) => {
+  renderSimpleContent = (item, keywords: string) => {
     return (
       <div className="flexRow">
         <div className={cx('flex ellipsis', { canWrap: keywords })}>

@@ -722,7 +722,7 @@ class RecordAction extends Component<any, any> {
           hideNewRecord={() => {
             this.setState({ newRecordVisible: false });
           }}
-          openRecord={(rowId, viewId: string) => {
+          openRecord={(rowId: string, viewId: string) => {
             this.setState({
               previewRecord: { rowId, viewId },
             });

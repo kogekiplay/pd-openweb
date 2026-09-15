@@ -347,7 +347,7 @@ export const fetchParent =
     });
   };
 
-export const loadMore = (parentId, pageIndex) => dispatch => {
+export const loadMore = (parentId, pageIndex: number) => dispatch => {
   if (parentId) {
     dispatch(fetchSubordinates(parentId, pageIndex));
   } else {

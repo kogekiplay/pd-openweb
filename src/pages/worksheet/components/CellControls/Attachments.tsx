@@ -216,7 +216,7 @@ const Add = styled.div`
   }
 `;
 
-function addAttachmentIndex(submitData, enumDefault) {
+function addAttachmentIndex(submitData, enumDefault: number) {
   // 补充 index
   if ([2, 3].includes(enumDefault)) {
     // 旧的在前

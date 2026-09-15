@@ -259,7 +259,7 @@ const Entrance = React.forwardRef((componentProps, ref) => {
    * 初始化数据
    */
 
-  const initSourceAction = (data, disabled, reInit = false) => {
+  const initSourceAction = (data, disabled: boolean, reInit = false) => {
     const {
       appId,
       isCharge,

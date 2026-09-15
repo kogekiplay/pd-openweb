@@ -181,7 +181,7 @@ const Calendar = memo(
       });
     };
 
-    const recordUpdateCallback = (rowid, rowData) => {
+    const recordUpdateCallback = (rowid: string, rowData) => {
       // 未排期弹层的数据需要手动更新
       if (isNotScheduled) {
         updateCalendarNotScheduled(rowid, rowData);

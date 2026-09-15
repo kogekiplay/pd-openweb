@@ -58,7 +58,7 @@ class WidgetEventManager {
   /**
    * 清理所有订阅
    */
-  clear(instanceId) {
+  clear(instanceId: string) {
     if (instanceId) {
       // 清理包含特定instanceId的controlId
       const keysToDelete = [];

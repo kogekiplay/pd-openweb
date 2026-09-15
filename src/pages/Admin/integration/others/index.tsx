@@ -333,7 +333,7 @@ export default class OtherTool extends Component<any, any> {
 
   changeAccountTxtInfo = () => {};
 
-  renderCompType(key, compType = 'input', inputDisabled, placeholder) {
+  renderCompType(key, compType = 'input', inputDisabled, placeholder: string) {
     const { searchRange, DNGroupList = [], errorInfo = {} } = this.state;
 
     switch (compType) {

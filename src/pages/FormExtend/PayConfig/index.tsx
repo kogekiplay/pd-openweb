@@ -222,7 +222,7 @@ export default class PayConfig extends Component<any, any> {
     }
   };
 
-  changeScenes = (checked, key: string) => {
+  changeScenes = (checked: boolean, key: string) => {
     const { scenes = {}, merchantList = [], mchId = [], initSettings = {}, isPaySuccessAddRecord } = this.state;
     const selectedMerchants = merchantList.filter(v => !v.disabled);
 

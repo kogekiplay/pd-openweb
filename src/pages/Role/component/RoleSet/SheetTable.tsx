@@ -13,7 +13,7 @@ const Wrap = styled.div`
   flex: 52;
 `;
 
-export const changeSheetModel = (sheet, type, checked) => {
+export const changeSheetModel = (sheet, type, checked: boolean) => {
   const KEYS = {
     READ: 'canRead',
     EDIT: 'canEdit',
@@ -116,7 +116,7 @@ export default class extends PureComponent<any, any> {
     return { readSize, editSize, removeSize, showRead, showEdit, showRemove };
   };
 
-  toggleViewAuth = (key, checked) => {
+  toggleViewAuth = (key, checked: boolean) => {
     const { sheet, onChange } = this.props;
     onChange(changeSheetModel(sheet, key, checked));
   };
@@ -219,7 +219,7 @@ export default class extends PureComponent<any, any> {
                         item.key === 'ADD' ? (readSize <= 0 ? false : sheet.canAdd) : item.size === viewList.length
                       }
                       clearselected={item.key !== 'ADD' && item.size > 0 && item.size !== viewList.length}
-                      onClick={(checked, value, event) => {
+                      onClick={(checked: boolean, value, event) => {
                         this.toggleViewAuth(item.key, !checked);
                         event.stopPropagation();
                       }}

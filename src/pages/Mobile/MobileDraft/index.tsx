@@ -77,7 +77,7 @@ function MobileDraftList(props) {
             worksheetInfo={worksheetInfo}
             addNewRecord={addNewRecord}
             getDraftData={getDraftData}
-            updateDraftList={(rowId, rowData) => {
+            updateDraftList={(rowId: string, rowData) => {
               let data = _.clone(draftData);
 
               if (!rowData) {

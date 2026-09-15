@@ -166,7 +166,7 @@ function mmToPt(mm) {
 // 不能用浏览器 DOM/canvas 的 sans-serif 度量：sans-serif 在 mac（Helvetica/苹方）和 windows（Arial/微软雅黑）
 // 解析成不同字体，与内嵌的阿里巴巴普惠体宽度也不一致，切行点会跨平台漂移，
 // 切出的行再被 PDFKit 按真实宽度二次折行，就会出现多余换行和错乱行距
-function cutTextByWidth(doc, text = '', maxWidth) {
+function cutTextByWidth(doc, text = '', maxWidth: number) {
   const result = [];
   let tempText = '';
 

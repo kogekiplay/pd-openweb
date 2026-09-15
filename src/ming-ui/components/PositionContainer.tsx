@@ -108,7 +108,7 @@ class PositionContainer extends Component<any, any> {
       }
     }, 200);
   }
-  getHasParent(el, className) {
+  getHasParent(el, className: string) {
     let result = false;
 
     if (el.classList.contains(className)) {

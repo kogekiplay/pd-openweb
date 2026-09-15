@@ -81,7 +81,7 @@ export default function ControlsSetting(props) {
     }
   };
 
-  const setReceiveControls = (o, checked) => {
+  const setReceiveControls = (o, checked: boolean) => {
     let isChecked = checked;
     const controls: FormControl[] =
       o.showControls.length > 0 ? o.relationControls.filter(it => o.showControls.includes(it.controlId)) : [];

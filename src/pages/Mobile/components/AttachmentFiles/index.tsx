@@ -312,7 +312,7 @@ export class UploadFileWrapper extends Component<any, any> {
     this.uploading = locked;
     this.setBrowseDisabled(uploader, locked);
   }
-  setBrowseDisabled(uploader, disabled) {
+  setBrowseDisabled(uploader, disabled: boolean) {
     const target = uploader || this.currentFile;
 
     if (target && target.disableBrowse) {

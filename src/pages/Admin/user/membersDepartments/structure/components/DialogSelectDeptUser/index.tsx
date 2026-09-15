@@ -44,7 +44,7 @@ export default class SelectDeptUser extends Component<any, any> {
       });
   };
 
-  checkedCurrentUser = (checked, user) => {
+  checkedCurrentUser = (checked: boolean, user) => {
     const { isUnique, maxCount } = this.props;
     const { selectedUsersIds } = this.state;
     const copySelectedUsersIds = !checked

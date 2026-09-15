@@ -219,7 +219,7 @@ class ColorLevel extends Component<any, any> {
       max: data,
     });
   };
-  renderItem(name: string, placeholder, data, onChange) {
+  renderItem(name: string, placeholder: string, data, onChange) {
     const { value, color } = data;
     return (
       <Fragment>

@@ -111,7 +111,7 @@ class RuleItems extends React.Component<any, any> {
     }
   }
 
-  renderActionItem = (actionItem, disabled) => {
+  renderActionItem = (actionItem, disabled: boolean) => {
     const { worksheetControls, projectId } = this.props;
     let leftText = _.includes([7], actionItem.type) ? '' : getActionLabelByType(actionItem.type);
 

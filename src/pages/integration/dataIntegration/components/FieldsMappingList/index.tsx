@@ -188,7 +188,7 @@ export default function FieldMappingList(props) {
     );
   };
 
-  const onCheckAll = (checked, isSystemFields?) => {
+  const onCheckAll = (checked: boolean, isSystemFields?) => {
     const newFieldsMapping = fieldsMapping.map(item => {
       const { sourceField = {}, destField = {} } = item;
       return (isSystemFields ? isSystemField(item.sourceField) : !isSystemField(item.sourceField))

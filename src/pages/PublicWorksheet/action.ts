@@ -323,7 +323,7 @@ function fillWxInfo(formData: FormControl[], weChatSetting) {
   return data;
 }
 
-async function fillRowRelationRows(control, rowId, worksheetId: string) {
+async function fillRowRelationRows(control, rowId: string, worksheetId: string) {
   let filledControl = control;
   await worksheetAjax
     .getRowRelationRows({

@@ -127,7 +127,7 @@ class DialogSelectOrgRole extends Component<any, any> {
       });
   }
 
-  toggle(item, checked) {
+  toggle(item, checked: boolean) {
     const { unique } = this.props;
     let selectData = _.cloneDeep(this.state.selectData);
 

@@ -271,7 +271,7 @@ export default class DropDownItem extends Component<any, any> {
       <Checkbox
         checked={!!checked}
         disabled={disabled}
-        onClick={(checked, value, e) => {
+        onClick={(checked: boolean, value, e) => {
           e.stopPropagation();
           if (disabled) return;
           this.updateValues(hasParentControl ? parentControl.controlId : '', item.controlId);

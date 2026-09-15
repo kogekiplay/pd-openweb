@@ -49,7 +49,7 @@ class CheckboxGroup extends Component<any, any> {
     }
   }
 
-  handleClick(checked, value) {
+  handleClick(checked: boolean, value) {
     const { onChange } = this.props;
 
     if (onChange) {

@@ -30,7 +30,7 @@ export const updateUniqueErrorItemsAction = (dispatch, items) => {
   });
 };
 
-export const updateRulesLoadingAction = (dispatch, loading) => {
+export const updateRulesLoadingAction = (dispatch, loading: boolean) => {
   dispatch({
     type: 'SET_RULES_LOADING',
     payload: loading,

@@ -218,7 +218,7 @@ export function RoleSelect(props) {
 
   const searchRequest = _.debounce(fetchData, 200);
 
-  const toggle = (item, checked) => {
+  const toggle = (item, checked: boolean) => {
     let selected = _.cloneDeep(selectData);
 
     if (!checked) {

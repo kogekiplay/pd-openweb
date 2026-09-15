@@ -13,7 +13,7 @@ import { checkCellIsEmpty, sortPathsBySearchKeyword } from '../../tools/utils';
 import { CustomMobileCascadeControl, OptionWrap, PopupContentBox } from './style';
 import type { FormControl } from 'src/utils/controlTypes';
 
-const formatSearchData = (item, keywords) => {
+const formatSearchData = (item, keywords: string) => {
   const searchPath = safeParse(item.searchPath) || [];
   const nodes = [];
 
@@ -137,7 +137,7 @@ const Cascader = props => {
   /**
    * 更新数据
    */
-  const deepDataUpdate = (list, data, rowId) => {
+  const deepDataUpdate = (list, data, rowId: string) => {
     if (rowId) {
       list.forEach(item => {
         if (item.value === rowId) {

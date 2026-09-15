@@ -286,7 +286,7 @@ class SideNav extends React.Component<any, any> {
     handChange(list);
   };
 
-  setReceiveControls = (o, checked) => {
+  setReceiveControls = (o, checked: boolean) => {
     const { printData = [] } = this.props;
     const { receiveControls = [] }: { receiveControls: FormControl[]; [key: string]: any } = printData;
 

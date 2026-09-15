@@ -8,7 +8,7 @@ const RETRY_INTERVAL = 300;
 let titleTimer;
 let latestTitle = '';
 
-export function setDingTalkNavigationTitle(title) {
+export function setDingTalkNavigationTitle(title: string) {
   const nextTitle = title ? `${title}` : '';
 
   if (!window.isDingTalk || !nextTitle) {

@@ -352,7 +352,7 @@ export async function fetchAgentSessions({ page = 1, size = 50, keyword = '' } =
 
 // 会话重命名：改的就是列表展示标题（后端 firstMessage 字段）。title 需 trim 非空、≤100 字。
 // 成功返回后端回显的 trim 后标题，失败抛错由调用方提示。
-export async function renameAgentSession(sessionId, title) {
+export async function renameAgentSession(sessionId, title: string) {
   const res = await agentAjax.agentSessionsRename({ sessionId, title }, { silent: true });
 
   if (!res || res.success === false) {

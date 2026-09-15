@@ -367,7 +367,7 @@ export const checkJSON = value => {
 /**
  * 获取筛选的控件条件
  */
-export const getConditionList = (type, enumDefault) => {
+export const getConditionList = (type, enumDefault: number) => {
   let list;
 
   switch (type) {

@@ -119,7 +119,7 @@ export default class SelectWorkflow extends Component<any, any> {
     );
   }
 
-  onSelect(apkName, item, checked) {
+  onSelect(apkName, item, checked: boolean) {
     const selectItems = _.cloneDeep(this.state.selectItems);
 
     if (checked) {

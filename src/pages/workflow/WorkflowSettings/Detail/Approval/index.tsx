@@ -930,7 +930,7 @@ export default class Approval extends Component<any, any> {
   /**
    * 切换审批设置
    */
-  switchApprovalSettings(checked, value: number) {
+  switchApprovalSettings(checked: boolean, value: number) {
     const { data } = this.state;
     const operationTypeList = _.cloneDeep(data.operationTypeList);
 

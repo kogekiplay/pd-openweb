@@ -67,7 +67,7 @@ export default class Others extends React.Component<any, any> {
     }
   }
 
-  search(keywords) {
+  search(keywords: string) {
     this.promise.abort();
     this.setState(
       {

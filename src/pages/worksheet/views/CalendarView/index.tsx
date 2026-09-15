@@ -225,7 +225,7 @@ class RecordCalendarBase extends Component<any, any> {
     });
   };
 
-  updateData = (newOldControl, rowId, cb?) => {
+  updateData = (newOldControl, rowId: string, cb?) => {
     const { base, updataEditable } = this.props;
     const { appId, worksheetId, viewId } = base;
     updataEditable(false);
@@ -527,7 +527,7 @@ class RecordCalendarBase extends Component<any, any> {
             currentView={currentView}
             showExternal={this.state.showExternal}
             recordInfoVisible={this.state.recordInfoVisible}
-            showRecordInfo={(rowid, data, eventData) => {
+            showRecordInfo={(rowid: string, data, eventData) => {
               handleRecordClick(currentView, data.extendedProps, () => {
                 this.setState({
                   recordId: rowid,

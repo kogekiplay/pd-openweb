@@ -191,7 +191,7 @@ export default function FilledRecord(props) {
         });
   };
 
-  const onUpdateRecord = (rowId, updateObj) => {
+  const onUpdateRecord = (rowId: string, updateObj) => {
     const newRecordList = filledRecord.list.map(item => {
       return item.rowid === rowId ? { ...item, ...updateObj } : item;
     });

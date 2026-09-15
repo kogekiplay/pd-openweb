@@ -30,7 +30,7 @@ const SearchBox = props => {
     });
   };
 
-  const handleSearch = (props, keywords) => {
+  const handleSearch = (props, keywords: string) => {
     const {
       advancedSetting: { requestmap, itemsource, itemtitle, authaccount } = {},
       dataSource,

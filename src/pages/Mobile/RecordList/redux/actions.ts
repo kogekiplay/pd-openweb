@@ -1305,7 +1305,7 @@ export const deleteCalendarNotScheduled = rowid => {
   };
 };
 
-export const updateCalendarNotScheduled = (rowid, rowData = {}) => {
+export const updateCalendarNotScheduled = (rowid: string, rowData = {}) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const sheet = getState().mobile;
     const { calendarView } = sheet;

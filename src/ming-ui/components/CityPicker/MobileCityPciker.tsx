@@ -79,7 +79,7 @@ export default class MobileCityPicker extends Component<any, any> {
     });
   }
 
-  handleSearch(keywords) {
+  handleSearch(keywords: string) {
     this.props.getCitys({ keywords });
   }
 

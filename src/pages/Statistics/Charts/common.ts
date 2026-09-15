@@ -599,7 +599,7 @@ export const formatControlValueDot = (value, data) => {
   const isRecordCount = controlId === 'record_count';
   const ydot = Number(data.ydot);
 
-  const formatValue = (value, dot) => {
+  const formatValue = (value, dot: number) => {
     return formatNumberValue(value, { dot, roundType, dotFormat });
   };
 

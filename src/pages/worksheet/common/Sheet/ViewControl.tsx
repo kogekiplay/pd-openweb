@@ -492,7 +492,7 @@ function ViewControl(props) {
           }}
           viewId={viewId}
           btnList={sheetButtons}
-          refreshFn={(worksheetId: string, appId: string, viewId: string, rowId) => {
+          refreshFn={(worksheetId: string, appId: string, viewId: string, rowId: string) => {
             loadCustomButtons({ worksheetId, appId, viewId, rowId });
           }}
           updateWorksheetControls={updateWorksheetControls}
@@ -526,7 +526,7 @@ function ViewControl(props) {
           appId={appId}
           worksheetId={worksheetId}
           workflowId={''}
-          refreshFn={(worksheetId: string, appId: string, viewId: string, rowId) => {
+          refreshFn={(worksheetId: string, appId: string, viewId: string, rowId: string) => {
             loadCustomButtons({ worksheetId, appId, viewId, rowId });
           }}
           updateCustomButtons={updateCustomButtons}

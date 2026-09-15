@@ -31,7 +31,7 @@ class DiscussList extends Component<any, any> {
     this.actionSheetHandler && this.actionSheetHandler.close();
     this.props.dispatch(actions.emptySheetDiscussion());
   }
-  getSheetDiscussion(pageIndex, isPullRefreshing = false) {
+  getSheetDiscussion(pageIndex: number, isPullRefreshing = false) {
     const { worksheetId, rowId, entityType } = this.props;
 
     if (!isPullRefreshing) {

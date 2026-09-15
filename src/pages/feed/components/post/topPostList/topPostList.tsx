@@ -77,7 +77,7 @@ class TopPostList extends React.Component<any, any> {
   blur() {
     this.setState({ focus: false });
   }
-  handleChangeItem(pageIndex) {
+  handleChangeItem(pageIndex: number) {
     this.setState({ pageIndex }, this.nextItem);
   }
   renderRoot = props => (

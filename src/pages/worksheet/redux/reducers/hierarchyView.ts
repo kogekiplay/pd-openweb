@@ -6,7 +6,7 @@ import type { ReduxAction } from 'src/redux/types';
 import type { FormControl } from 'src/utils/controlTypes';
 
 // 按已有顺序排序
-const sortChildIds = (treeData, rowId, childrenids) => {
+const sortChildIds = (treeData, rowId: string, childrenids) => {
   const sortIds = Object.values(treeData).filter(i => i.pid === rowId);
   const idByOrder = new Map(sortIds.map((t, i) => [t.rowid, i]));
   // 未指定固定第一项

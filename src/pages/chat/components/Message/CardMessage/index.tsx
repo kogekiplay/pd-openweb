@@ -252,7 +252,7 @@ export default class CardMessage extends Component<any, any> {
       ></div>
     );
   }
-  renderCardContent(title) {
+  renderCardContent(title: string) {
     return <div className="Message-cardItem">{title}</div>;
   }
   renderVote() {

@@ -231,7 +231,7 @@ export function getDownloadUrl(attachment, extra) {
  *   ext: 'ext',
  * }
  */
-export function splitFileName(fullname) {
+export function splitFileName(fullname: string) {
   let name;
 
   if (fullname[0] === '.') {

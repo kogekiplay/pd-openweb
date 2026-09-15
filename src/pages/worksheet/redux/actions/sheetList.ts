@@ -452,7 +452,7 @@ export function deleteSheet({ appId, groupId, worksheetId, projectId, type, pare
   };
 }
 
-export function sortSheetList(appId: string, appSectionId, sheetList) {
+export function sortSheetList(appId: string, appSectionId: string, sheetList) {
   return function (dispatch) {
     dispatch({ type: 'SHEET_LIST', data: sheetList });
     homeAppApi.updateSectionChildSort({

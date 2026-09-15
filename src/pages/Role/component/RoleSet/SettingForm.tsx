@@ -582,7 +582,7 @@ export default class extends PureComponent<any, any> {
     );
   }
 
-  toggleAllViewAuth(key, checked) {
+  toggleAllViewAuth(key, checked: boolean) {
     const { roleDetail, onChange } = this.props;
     const sheets = (roleDetail.sheets || []).map(item => changeSheetModel(item, key, checked));
 
@@ -621,7 +621,7 @@ export default class extends PureComponent<any, any> {
     });
   };
 
-  updateLookPages = (id, checked, type) => {
+  updateLookPages = (id, checked: boolean, type) => {
     const { roleDetail, onChange } = this.props;
     const data = _.cloneDeep(roleDetail[type]).map(o => {
       if (id === o.pageId || id === o.id) {

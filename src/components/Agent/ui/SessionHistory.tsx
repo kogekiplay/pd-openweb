@@ -176,7 +176,7 @@ export default function SessionHistory({
       });
   };
 
-  const doRename = (item, title) => {
+  const doRename = (item, title: string) => {
     renameAgentSession(item.sessionId, title)
       .then(newTitle => {
         setSessions(prev => prev.map(s => (s.sessionId === item.sessionId ? { ...s, title: newTitle } : s)));

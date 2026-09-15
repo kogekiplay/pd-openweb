@@ -75,7 +75,7 @@ const CheckboxWidget = props => {
     onSave(checkIds.concat(otherIds));
   };
 
-  const onChange = (checked, key) => {
+  const onChange = (checked: boolean, key) => {
     const checkIds = JSON.parse(value || '[]');
 
     if (checked) {

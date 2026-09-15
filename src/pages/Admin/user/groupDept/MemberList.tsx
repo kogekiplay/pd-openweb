@@ -101,7 +101,7 @@ export default class MemberList extends Component<any, any> {
   }
 
   //搜索框筛选
-  handleInputChange(keywords) {
+  handleInputChange(keywords: string) {
     this.setState(
       {
         keywords,

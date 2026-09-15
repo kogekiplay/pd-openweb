@@ -195,7 +195,7 @@ class SessionList extends Component<any, any> {
       this.resizeObserver.observe(this.sessionListWrap);
     }
   }
-  getChatSessionList(pageIndex) {
+  getChatSessionList(pageIndex: number) {
     const { loading, isMore } = this.state;
 
     if (this.loading || loading || !isMore) {

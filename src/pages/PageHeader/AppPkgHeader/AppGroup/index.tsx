@@ -376,7 +376,7 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
    * @param {Boolean} isNeedModify 是否需要更新
    */
 
-  handleRenameAppGroup = (appSectionId, obj, isNeedModify = true) => {
+  handleRenameAppGroup = (appSectionId: string, obj, isNeedModify = true) => {
     const { appId } = this.ids;
 
     if (isNeedModify) {
@@ -400,7 +400,7 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
     });
   }; // 更新单个应用分组数据
 
-  updateSingleAppGroup = (appSectionId, obj) => {
+  updateSingleAppGroup = (appSectionId: string, obj) => {
     const { data } = this.state;
 
     const temp = _.cloneDeep(data);

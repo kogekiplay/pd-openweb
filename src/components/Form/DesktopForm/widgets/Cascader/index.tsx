@@ -136,7 +136,7 @@ export default function CascaderWidget(props) {
   /**
    * 更新数据
    */
-  const deepDataUpdate = (key, options, data, rowId) => {
+  const deepDataUpdate = (key, options, data, rowId: string) => {
     let newOptions = [].concat(options);
 
     if (rowId) {

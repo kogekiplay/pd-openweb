@@ -1112,7 +1112,7 @@ export default class GeneraSelect extends Component<any, any> {
   };
 
   /** 全选部门或群组联系人 */
-  allSelectUserItem = (id, checked) => {
+  allSelectUserItem = (id, checked: boolean) => {
     let tabItem = this.userSettings.defaultTabs.filter((tab: UserTab) => tab.id === this.state.selectedUserTabId)[0];
     let { ID, COUNT } = this.getKeys(this.state.selectedUserTabId);
     let data = this.state.mainData.data;

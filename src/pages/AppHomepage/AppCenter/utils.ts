@@ -96,7 +96,7 @@ export function getAppNavigateUrl(appId: string, pcNaviStyle, selectAppItmeType 
   }
 }
 
-export const getAppItemUrl = (appId: string, appSectionId, worksheetId: string) => {
+export const getAppItemUrl = (appId: string, appSectionId: string, worksheetId: string) => {
   const storage = safeParse(localStorage.getItem(`mdAppCache_${md.global.Account.accountId}_${appId}`) || '{}');
   const cacheViewId = (
     (storage.worksheets || []).filter(w => w.groupId === appSectionId && w.worksheetId === worksheetId)[0] || {}
@@ -122,7 +122,7 @@ export const transferExternalLinkUrl = (urlTemplate, projectId: string, appId: s
   return transferUrl;
 };
 
-export const getFilterApps = (apps, keywords) => {
+export const getFilterApps = (apps, keywords: string) => {
   if (!keywords.trim()) {
     return apps;
   }

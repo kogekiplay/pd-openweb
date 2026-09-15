@@ -170,7 +170,7 @@ export const getCurrentView = () => {
 };
 
 //new | add
-export const updateRow = (data, groupId) => {
+export const updateRow = (data, groupId: string) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { galleryview } = getState().sheet;
     let { gallery } = galleryview;
@@ -228,7 +228,7 @@ export const updateRow = (data, groupId) => {
 };
 
 //删除
-export const deleteRow = (id, groupId) => {
+export const deleteRow = (id, groupId: string) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { galleryview } = getState().sheet;
     let { gallery } = galleryview;

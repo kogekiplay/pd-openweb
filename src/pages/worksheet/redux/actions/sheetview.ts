@@ -1035,7 +1035,7 @@ export const updateDefaultScrollLeft = value => ({
 });
 
 // 更新每页数量
-export function changePageSize(pageSize, pageIndex, { refetch = true } = {}) {
+export function changePageSize(pageSize, pageIndex: number, { refetch = true } = {}) {
   return function (dispatch: AppDispatch, getState: GetState) {
     const { base } = getState().sheet;
     saveLRUWorksheetConfig('WORKSHEET_VIEW_PAGESIZE', base.worksheetId, pageSize);
@@ -1047,7 +1047,7 @@ export function changePageSize(pageSize, pageIndex, { refetch = true } = {}) {
 }
 
 // 分页
-export function changePageIndex(pageIndex, sleep?) {
+export function changePageIndex(pageIndex: number, sleep?) {
   return function (dispatch) {
     if (sleep) {
       setTimeout(() => {

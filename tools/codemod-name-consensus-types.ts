@@ -60,12 +60,38 @@ const PORTABLE = new Set(['string', 'number', 'boolean', 'string[]', 'number[]',
  *   key  477 条 99% —— 分歧里有 4 条 number，实测会引入比较类诊断
  * 要重新评估某一个，用 --only=<名字> 单独跑一遍门禁看代价，别直接从这里删。
  */
-const EXCLUDE = new Set(['field', 'id', 'text', 'url', 'key']);
+const EXCLUDE = new Set([
+  'field',
+  'id',
+  'text',
+  'url',
+  'key',
+  // 下面三个是接入 PropTypes 证据之后才冒出来的，同样是「已标注处的共识推广不到
+  // 未标注处」，实测各自的反例：
+  //   dataSource 有 13 条 PropTypes.string（控件的数据源 id），但 ChildTable 那边
+  //              是数组：addWidthToColumns(columns, dataSource) 里 dataSource.map
+  //   visible    28 条 PropTypes.bool，但 folderSelectDialog 里
+  //              settings.visibleType.forEach(visible => visible.rootFolder) 是对象
+  //   hint       23 条 PropTypes.string，但 AppBuilder 里 hints.map(hint => hint.label)
+  //   direction  11 条 91% string，但 segmentUtils 里是 ±1 的数字：
+  //              `const j = groupSegmentIndex + direction`
+  'dataSource',
+  'visible',
+  'hint',
+  'direction',
+]);
 
 const project = openProject('tsconfig.strictprobe.json');
 
-// ── 第一遍：收集全仓【已有显式标注】的名字 -> 类型文本 ────────────────────
+// ── 第一遍：收集全仓已有的「名字 -> 类型」证据 ──────────────────────────
+// 两个来源，等权计数：
+//   A. TS 显式类型标注
+//   B. PropTypes 声明 —— 全仓 3842 条，比 A 大一个数量级。它是同一批作者写的
+//      意图声明、dev 下还有运行时校验，作为证据不比 TS 标注弱。
+// 两个来源【打架】时共识自然掉到阈值以下、名字被整个排除，这正是想要的：
+// 说明这个名字在本仓被用作了不止一种东西。
 const evidence = new Map<string, Map<string, number>>();
+const fromPropTypes = new Map<string, number>();
 
 function note(name: string, typeText: string): void {
   const t = typeText.trim();
@@ -73,6 +99,22 @@ function note(name: string, typeText: string): void {
   if (!evidence.has(name)) evidence.set(name, new Map());
   const m = evidence.get(name)!;
   m.set(t, (m.get(t) || 0) + 1);
+}
+
+/** PropTypes.string / PropTypes.bool.isRequired -> 'string' / 'boolean'；其余返回 null */
+const PROPTYPE_MAP: Record<string, string> = { string: 'string', number: 'number', bool: 'boolean' };
+function propTypeOf(init: any): string | null {
+  // 把 a.b.c 摊平成 ['a','b','c']
+  const chain: string[] = [];
+  let cur = init;
+  while (cur && is.isPropertyAccessExpression(cur)) {
+    if (!cur.name || !is.isIdentifier(cur.name)) return null;
+    chain.unshift(cur.name.text);
+    cur = cur.expression;
+  }
+  if (!cur || !is.isIdentifier(cur) || cur.text !== 'PropTypes') return null;
+  // array/func/object/oneOf(...) 一律不收：不是可移植原始类型，写 any[] 没意义
+  return chain.length ? PROPTYPE_MAP[chain[0]] || null : null;
 }
 
 project.eachSrcFile(({ text, node }: any) => {
@@ -89,6 +131,12 @@ project.eachSrcFile(({ text, node }: any) => {
         is.isVariableDeclaration(n))
     ) {
       note(n.name.text, text.slice(n.type.pos, n.type.end));
+    } else if (is.isPropertyAssignment(n) && n.name && is.isIdentifier(n.name) && n.initializer) {
+      const t = propTypeOf(n.initializer);
+      if (t) {
+        note(n.name.text, t);
+        fromPropTypes.set(n.name.text, (fromPropTypes.get(n.name.text) || 0) + 1);
+      }
     }
     n.forEachChild(walk);
   })(node);
@@ -187,8 +235,10 @@ for (const t of targets) used.set(t.name, (used.get(t.name) || 0) + 1);
 console.log(`共识表（证据 >= ${MIN_EVIDENCE} 条且最高票占比 >= ${CONSENSUS * 100}%，且是可移植原始类型）：`);
 for (const [name, n] of [...used].sort((a, b) => b[1] - a[1])) {
   const c = consensus.get(name)!;
+  const pt = fromPropTypes.get(name) || 0;
   console.log(
-    `  ${name.padEnd(18)} -> ${c.type.padEnd(10)} 证据 ${String(c.total).padStart(4)} 条 / 共识 ${(c.share * 100).toFixed(0)}%  本次可标 ${n}`,
+    `  ${name.padEnd(18)} -> ${c.type.padEnd(10)} 证据 ${String(c.total).padStart(4)} 条` +
+      `（其中 PropTypes ${String(pt).padStart(3)}）/ 共识 ${(c.share * 100).toFixed(0)}%  本次可标 ${n}`,
   );
 }
 

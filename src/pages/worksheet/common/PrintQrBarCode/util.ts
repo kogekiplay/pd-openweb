@@ -795,7 +795,7 @@ export class QrLabel {
         : 5;
   }
   // 处理文字换行
-  cutTextByWidth(fontSize: number, context, maxWidth, isBold) {
+  cutTextByWidth(fontSize: number, context, maxWidth: number, isBold) {
     let result = [];
     this.ctx.font = (isBold ? 'bold ' : '') + fontSize * this.fontSize + 'px sans-serif';
     if (this.ctx.measureText(context).width < maxWidth) {

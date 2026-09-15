@@ -431,7 +431,7 @@ class FolderDetail extends Component<any, any> {
   /**
    * 绑定名片层事件
    */
-  bindEvents(evt, accountId: string, avatar, fullname) {
+  bindEvents(evt, accountId: string, avatar, fullname: string) {
     // 设为负责人
     evt.find('.updateFolderChargeFix').on('click', () => {
       this.updateFolderCharge(accountId, avatar, fullname);
@@ -468,7 +468,7 @@ class FolderDetail extends Component<any, any> {
     });
   }
 
-  clickEvents(type: string, accountId: string, avatar, fullname) {
+  clickEvents(type: string, accountId: string, avatar, fullname: string) {
     switch (type) {
       // 设为负责人
       case 'updateFolderChargeFix':
@@ -540,7 +540,7 @@ class FolderDetail extends Component<any, any> {
   /**
    * 更改项目负责人
    */
-  updateFolderCharge(accountId: string, avatar, fullname) {
+  updateFolderCharge(accountId: string, avatar, fullname: string) {
     Dialog.confirm({
       dialogClasses: 'updateFolderCharge',
       closable: false,
@@ -594,7 +594,7 @@ class FolderDetail extends Component<any, any> {
   /**
    * 设为成员和管理员
    */
-  updateFolderMemberAuth(accountId: string, avatar, fullname, isAdmin) {
+  updateFolderMemberAuth(accountId: string, avatar, fullname: string, isAdmin) {
     ajaxRequest
       .updateFolderMemberAuth({
         folderID: this.props.taskConfig.folderId,
@@ -686,7 +686,7 @@ class FolderDetail extends Component<any, any> {
   /**
    * 申请用户设为管理员和成员
    */
-  updateFolderMemberStatusAndAuth(accountId: string, avatar, fullname, isAdmin: boolean) {
+  updateFolderMemberStatusAndAuth(accountId: string, avatar, fullname: string, isAdmin: boolean) {
     ajaxRequest
       .updateFolderMemberStatusAndAuth({
         folderID: this.props.taskConfig.folderId,

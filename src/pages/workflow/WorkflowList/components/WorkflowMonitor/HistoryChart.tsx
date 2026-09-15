@@ -131,7 +131,7 @@ export default class HistoryChart extends PureComponent<any, any> {
           'g2-tooltip-list-item': { textAlign: 'left', color: 'var(--color-text-title)' },
           'g2-tooltip-title': { color: 'var(--color-text-secondary)' },
         },
-        customContent: (title, items) => {
+        customContent: (title: string, items) => {
           const [data1 = {}] = items;
           const date = _.get(data1, 'data.date');
 

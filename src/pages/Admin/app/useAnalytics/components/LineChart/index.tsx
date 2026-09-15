@@ -215,7 +215,7 @@ export default class LineChart extends React.Component<any, any> {
             flipPage: false,
           },
           tooltip: {
-            customContent: (title, items) => {
+            customContent: (title: string, items) => {
               const isVirtual = (_.find(items, v => _.get(v, 'data.date') === title) || {}).category === 'virtual';
               if (isVirtual) return null;
 
@@ -386,7 +386,7 @@ export default class LineChart extends React.Component<any, any> {
             maxRow: 2,
           },
           tooltip: {
-            customContent: (title, items) => {
+            customContent: (title: string, items) => {
               const currentTotal = _.reduce(items, (sum, item) => (sum = sum + Number(item.value)), 0);
               let unit = currentTotal > 0 ? _.get(items, '[0].data.unit') : total.slice(total.length - 2);
 

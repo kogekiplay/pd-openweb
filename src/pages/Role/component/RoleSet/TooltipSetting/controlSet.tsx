@@ -66,7 +66,7 @@ export default class extends React.PureComponent<any, any> {
     }
   }
 
-  changeFields = (checked, fieldId, key: string) => {
+  changeFields = (checked: boolean, fieldId, key: string) => {
     const { onChange } = this.props;
     const fields = formatFields(checked, fieldId, key, this.state.fields);
     this.setState(
@@ -81,19 +81,19 @@ export default class extends React.PureComponent<any, any> {
     );
   };
 
-  changeFieldReadAuth = (checked, fieldId) => {
+  changeFieldReadAuth = (checked: boolean, fieldId) => {
     this.changeFields(checked, fieldId, 'notRead');
   };
 
-  changeFieldEditAuth = (checked, fieldId) => {
+  changeFieldEditAuth = (checked: boolean, fieldId) => {
     this.changeFields(checked, fieldId, 'notEdit');
   };
 
-  changeFieldAddAuth = (checked, fieldId) => {
+  changeFieldAddAuth = (checked: boolean, fieldId) => {
     this.changeFields(checked, fieldId, 'notAdd');
   };
 
-  changeFieldDecryptAuth = (checked, fieldId) => {
+  changeFieldDecryptAuth = (checked: boolean, fieldId) => {
     this.changeFields(!checked, fieldId, 'isDecrypt');
   };
 

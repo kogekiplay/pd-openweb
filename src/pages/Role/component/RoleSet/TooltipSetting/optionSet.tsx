@@ -84,7 +84,7 @@ export default function Set(props) {
       });
   };
 
-  const renderList = (title, actionList) => {
+  const renderList = (title: string, actionList) => {
     let isNotAll = actionList.filter(o => !(sheet[o.key] || {}).enable).length > 0;
     return (
       <React.Fragment>
@@ -173,7 +173,7 @@ export default function Set(props) {
     );
   };
 
-  const renderAcitionList = (title, actionList = [], list = [], key: string, noline?) => {
+  const renderAcitionList = (title: string, actionList = [], list = [], key: string, noline?) => {
     let isAll = list.length <= 0;
     let s = 'unableCustomButtons' === key ? 'buttonId' : 'templateId';
     let unableList = list.map(o => o[s]);

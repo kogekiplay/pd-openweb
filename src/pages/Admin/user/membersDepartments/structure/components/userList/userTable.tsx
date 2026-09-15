@@ -52,7 +52,7 @@ const clearActiveDialog = props => {
   dispatch(updateUserOpList(null));
 };
 
-const refreshData = (departmentId, typeCursor, projectId: string, pageIndex, dispatch) => {
+const refreshData = (departmentId, typeCursor, projectId: string, pageIndex: number, dispatch) => {
   if (departmentId) {
     dispatch(loadUsers(departmentId, pageIndex));
   } else {
@@ -414,7 +414,7 @@ class UserTable extends React.Component<any, any> {
     safeLocalStorageSetItem(COLUMN_INFO_STORAGE_KEY, JSON.stringify(copyColumnsInfo));
     this.setState({ columnsInfo: copyColumnsInfo });
   };
-  handleSingleColumn = (checked, value) => {
+  handleSingleColumn = (checked: boolean, value) => {
     const columnsInfo = this.getColumnsInfo();
     let copyColumnsInfo = columnsInfo.map(item => {
       if (item.value === value) {

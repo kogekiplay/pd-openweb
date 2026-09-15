@@ -47,7 +47,7 @@ class DialogSelectJob extends Component<any, any> {
       });
   }
 
-  toggle(item, checked) {
+  toggle(item, checked: boolean) {
     const { unique } = this.props;
     let selectData = [].concat(this.state.selectData);
 

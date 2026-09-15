@@ -61,7 +61,7 @@ let GroupItem = class GroupItem extends Component<any, any> {
       }
     }, 100);
   };
-  handleCreateRecord = (groupId, isMilepost?) => {
+  handleCreateRecord = (groupId: string, isMilepost?) => {
     const { base, grouping, controls, viewConfig, sheetSwitchPermit } = this.props;
     const { viewControl, milepost, navTitle } = viewConfig;
 

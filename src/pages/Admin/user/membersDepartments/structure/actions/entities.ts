@@ -53,7 +53,7 @@ export const USER_FAILURE = 'USER_FAILURE';
 /** fetch users
  * relies on middleware `api`
  */
-const fetchUser = (departmentId, pageIndex) => {
+const fetchUser = (departmentId, pageIndex: number) => {
   const params = {
     departmentId,
     pageIndex,
@@ -171,7 +171,7 @@ export const sortDepartmentsFn =
 /**
  * 部门停用/启用
  */
-export const disabledAndEnabledDepartments = (departmentId, disabled, parentId) => (dispatch: StructureDispatch, getState: StructureGetState) => {
+export const disabledAndEnabledDepartments = (departmentId, disabled: boolean, parentId) => (dispatch: StructureDispatch, getState: StructureGetState) => {
   const { newDepartments } = getState().entities;
   const request = disabled ? departmentController.enabledDepartment : departmentController.disabledDepartments;
 
@@ -248,7 +248,7 @@ export const APPROVAL_USER_FAILURE = 'APPROVAL_USER_FAILURE';
 /** fetch approval_user
  * relies on middleware `api`
  */
-const fetchApprovalUser = (projectId: string, pageIndex, userStatus, applyDateOrderBy) => {
+const fetchApprovalUser = (projectId: string, pageIndex: number, userStatus, applyDateOrderBy) => {
   const params = {
     pageIndex,
     projectId,
@@ -269,7 +269,7 @@ const fetchApprovalUser = (projectId: string, pageIndex, userStatus, applyDateOr
 /** fetch approvalUser before hand
  * relies on redux-thunk
  */
-export const loadApprovalUsers = (projectId: string, pageIndex) => (dispatch: StructureDispatch, getState: StructureGetState) => {
+export const loadApprovalUsers = (projectId: string, pageIndex: number) => (dispatch: StructureDispatch, getState: StructureGetState) => {
   const { userStatus } = getState().current;
   const { applyDateOrderBy } = getState().entities;
   return dispatch(fetchApprovalUser(projectId, pageIndex || 1, userStatus, applyDateOrderBy));
@@ -287,7 +287,7 @@ const fetchInactiveUser = (
   // sortType,
   // keywords,
   projectId: string,
-  pageIndex,
+  pageIndex: number,
 ) => {
   const params = {
     pageIndex,
@@ -310,7 +310,7 @@ const fetchInactiveUser = (
 /** fetch InactiveUser before hand
  * relies on redux-thunk
  */
-export const loadInactiveUsers = (projectId: string, pageIndex) => dispatch => {
+export const loadInactiveUsers = (projectId: string, pageIndex: number) => dispatch => {
   return dispatch(fetchInactiveUser(projectId, pageIndex || 1));
 };
 
@@ -329,7 +329,7 @@ const USER_STATUS = {
   REMOVED: 4, // 已删除
 };
 
-const fetchAllUser = (projectId: string, pageIndex) => {
+const fetchAllUser = (projectId: string, pageIndex: number) => {
   const params = {
     pageIndex,
     projectId,
@@ -349,7 +349,7 @@ const fetchAllUser = (projectId: string, pageIndex) => {
 /** fetch InactiveUser before hand
  * relies on redux-thunk
  */
-export const loadAllUsers = (projectId: string, pageIndex) => dispatch => {
+export const loadAllUsers = (projectId: string, pageIndex: number) => dispatch => {
   return dispatch(fetchAllUser(projectId, pageIndex || 1));
 };
 

@@ -148,7 +148,7 @@ export function SelectGroup(props) {
     });
   };
 
-  const handleSelect = (item, checked) => {
+  const handleSelect = (item, checked: boolean) => {
     let selectObj = _.cloneDeep(selectIds);
     let list = [];
 
