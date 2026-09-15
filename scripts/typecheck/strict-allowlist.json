@@ -585,6 +585,7 @@
     "src/redux/types.ts",
     "src/router/Application/config.ts",
     "src/router/NotFoundRedirect.tsx",
+    "src/router/OptionalRouter.tsx",
     "src/router/PageHeader/config.ts",
     "src/router/PageHeader/index.tsx",
     "src/router/expandRoutePaths.ts",
