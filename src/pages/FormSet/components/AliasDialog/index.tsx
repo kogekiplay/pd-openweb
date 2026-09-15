@@ -32,7 +32,7 @@ export default function AliasDialog(props) {
   const [isUpdate, setIsUpdate] = useState(false);
   const [isError, setIsError] = useState(false);
   const [controlTypeList, setControlTypeList] = useState(controlTypeListProp);
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const mountedRef = useRef(false);
   const initializedRef = useRef(false);
   const loadingRef = useRef(false);

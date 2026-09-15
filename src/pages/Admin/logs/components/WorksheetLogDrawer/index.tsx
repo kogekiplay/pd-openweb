@@ -11,7 +11,7 @@ import './index.less';
 
 export default function WorksheetLogDrawer(props) {
   const { visible, appId, onClose = () => {} } = props;
-  const worksheetListRef = useRef(null);
+  const worksheetListRef = useRef<HTMLDivElement | null>(null);
   const [{ worksheetLoading, worksheetList, selectWorksheetId, searchValue, searchWorksheetList }, setData] =
     useSetState({
       worksheetLoading: true,

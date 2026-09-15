@@ -108,7 +108,7 @@ const trialListening = ({ language, pitch, speed, content }, formulaMap) => {
 export default ({ companyId, processId, relationId, selectNodeId, promptSound, formulaMap, updateSource }) => {
   const [uploading, setUploading] = useState(false);
   const [audioEnd, setAudioEnd] = useState(true);
-  const audioRef = useRef(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const playAudio = src => {
     audioRef.current.src = src;

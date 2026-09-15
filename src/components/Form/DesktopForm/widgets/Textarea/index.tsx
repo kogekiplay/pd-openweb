@@ -57,7 +57,7 @@ const Text = props => {
   const [originValue, setOriginValue] = useState('');
 
   const textRef = useRef(null);
-  const boxRef = useRef(null);
+  const boxRef = useRef<HTMLDivElement | null>(null);
   const valueRef = useRef(value);
 
   useEffect(() => {

@@ -53,7 +53,7 @@ const renderErrerDialog = errorMsgList => {
 };
 
 export default function Info(props) {
-  const scrollDivRef = useRef(null);
+  const scrollDivRef = useRef<HTMLDivElement | null>(null);
   const { onClose, projectId, appId, id } = props;
   const [
     {

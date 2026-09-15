@@ -28,7 +28,7 @@ const WorkSheetPortal = props => {
     isCharge && appPkg.viewHideNavi
       ? props.data
       : props.data.filter(item => [1, 4].includes(item.status) && !item.navigateHide).filter(filterEmptyAppItem);
-  const ref = useRef(null);
+  const ref = useRef<HTMLInputElement | null>(null);
   const isEditApp = canEditApp(_.get(appPkg, ['permissionType']), _.get(appPkg, ['isLock']));
 
   const getSheetList = () => {

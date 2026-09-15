@@ -25,7 +25,7 @@ const OtherInput = props => {
   const { advancedSetting = {}, value, options = {}, className, disabled, fromFilter } = props;
   const { checkIds, otherValue } = getCheckAndOther(value);
 
-  const textareaRef = useRef(null);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const isOnComposition = useRef(false);
   const [currentValue, setCurrentValue] = useState('');
 
@@ -40,7 +40,8 @@ const OtherInput = props => {
   useEffect(() => {
     // 动态设置高度
     if (textareaRef.current) {
-      textareaRef.current.style.height = 0;
+      // '0' 而不是 0：运行时一致，见 Textarea 那处的说明
+      textareaRef.current.style.height = '0';
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight + 2}px`;
     }
   }, [currentValue, disabled]);

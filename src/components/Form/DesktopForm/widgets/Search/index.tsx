@@ -82,7 +82,7 @@ const Search = props => {
   const [keywords, setKeywords] = useState('');
   const [data, setData] = useState(null);
 
-  const boxRef = useRef(null);
+  const boxRef = useRef<HTMLDivElement | null>(null);
   const searchRef = useRef(null);
   const postListRef = useRef(null);
   const keywordsRef = useRef(keywords);
@@ -260,7 +260,7 @@ const Search = props => {
       if (boxRef.current) {
         setTimeout(() => {
           try {
-            boxRef.current.querySelector('.ant-select-input').focus();
+            boxRef.current.querySelector<HTMLElement>('.ant-select-input').focus();
           } catch (err) {
             console.log(err);
           }

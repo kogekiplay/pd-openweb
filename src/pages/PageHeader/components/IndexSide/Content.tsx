@@ -23,7 +23,7 @@ export default function SideContent(props) {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const [expandKeys, setExpandKeys] = useState([]);
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const getData = () => {
     setLoading(true);

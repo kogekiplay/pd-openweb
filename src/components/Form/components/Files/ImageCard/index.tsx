@@ -217,7 +217,7 @@ const ImageCard = props => {
                 e.stopPropagation();
               }}
               onBlur={e => {
-                onAttachmentName(data.fileID, e.target.value);
+                onAttachmentName(data.fileID, (e.target as HTMLInputElement).value);
                 setIsEdit(false);
               }}
               onKeyDown={e => {
@@ -364,8 +364,8 @@ const NotSaveImageCard = props => {
   const [isEdit, setIsEdit] = useState(false);
   const [isPicture, setIsPicture] = useState(props.isPicture);
   const [imgClassName, setImgClassName] = useState('w100');
-  const wrapRef = useRef(null);
-  const ref = useRef(null);
+  const wrapRef = useRef<HTMLDivElement | null>(null);
+  const ref = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (wrapRef && wrapRef.current) {

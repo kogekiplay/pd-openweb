@@ -63,7 +63,7 @@ const CompositeInput = forwardRef((props, ref) => {
   const { step, text, loading, error, onStart, onReset, onGenerateRecord } = useVoice();
 
   const uploadFileRef = useRef(null);
-  const attachmentBoxRef = useRef(null);
+  const attachmentBoxRef = useRef<HTMLDivElement | null>(null);
   const [visible, setVisible] = useState(false);
   const [value, setValue] = useState('');
   const [existingFiles, setExistingFiles] = useState([]);

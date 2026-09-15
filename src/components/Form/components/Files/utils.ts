@@ -127,7 +127,9 @@ export const handleDownload = (data, isDownload, logData) => {
 };
 
 export const loadImage = url => {
-  return new Promise((reslove, reject) => {
+  // 【写出 <HTMLImageElement>】不写的话是 Promise<unknown>，调用方 .then(image => image.width)
+  // 就报「width 不存在」。resolve 的确实是 new Image()，这不是放宽是写准。
+  return new Promise<HTMLImageElement>((reslove, reject) => {
     const image = new Image();
 
     image.onload = () => {

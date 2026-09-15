@@ -170,7 +170,7 @@ function MdMarkdown(props) {
     handleBlur,
   } = props;
   const [isFocus, setFocus] = useState(false);
-  const vditorRef = useRef(null);
+  const vditorRef = useRef<HTMLDivElement | null>(null);
   const vditorInstance = useRef(null);
   const destroyedRef = useRef(false);
   const latestDataRef = useRef(data);

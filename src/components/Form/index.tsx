@@ -65,7 +65,7 @@ const Entrance = React.forwardRef((componentProps, ref) => {
   const storeCenter = useRef({});
   const changeStatus = useRef(false);
   const submitBegin = useRef(false);
-  const containerRef = useRef(null); // 专门用于获取真实DOM的ref
+  const containerRef = useRef<HTMLDivElement | null>(null); // 专门用于获取真实DOM的ref
 
   const firstRenderMap = useRef({
     flag: true,

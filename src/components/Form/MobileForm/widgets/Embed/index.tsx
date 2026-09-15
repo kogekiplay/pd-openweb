@@ -76,7 +76,7 @@ const Embed = props => {
     appId,
     flag,
   } = props;
-  const iframeRef = useRef(null);
+  const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const embedWatch = useRef(null);
   const viewControlsRef = useRef([]);
   const currentTimeRef = useRef(new Date());

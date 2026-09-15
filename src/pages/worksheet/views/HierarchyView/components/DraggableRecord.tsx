@@ -86,7 +86,7 @@ export default function DraggableRecord(props) {
   const skeletonHeight = recordData.fields?.length * 30 || 200;
 
   const $ref = useRef(null);
-  const $dragDropRef = useRef(null);
+  const $dragDropRef = useRef<HTMLDivElement | null>(null);
 
   const [{ isOver, canDrop }, drop] = useDrop<any, any, any>({
     accept: ITEM_TYPE.ITEM,

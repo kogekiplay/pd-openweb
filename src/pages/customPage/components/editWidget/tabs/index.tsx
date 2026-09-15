@@ -172,7 +172,7 @@ export const Tabs = props => {
     .filter(c => c.sectionId === objectId && (isTabs ? c.tabId === currentTab : true))
     .filter(c => (isMobileLayout ? _.get(c, 'mobile.visible') : true));
   const displayRefs = [];
-  const elementRef = useRef(null);
+  const elementRef = useRef<HTMLDivElement | null>(null);
   const [width, setWidth] = useState(0);
   const WidgetDisplay = isMobile ? LoadableMobileWidgetDisplay : LoadableWidgetDisplay;
   const translateInfo = getTranslateInfo(ids.appId, ids.worksheetId, widget.id);

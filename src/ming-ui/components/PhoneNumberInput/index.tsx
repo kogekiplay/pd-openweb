@@ -93,7 +93,7 @@ export default function PhoneNumberInput({
   const [numberValue, setNumberValue] = useState('');
   const inputRef = useRef(null);
   const dialCodeRef = useRef(null);
-  const countryTriggerRef = useRef(null);
+  const countryTriggerRef = useRef<HTMLDivElement | null>(null);
   const handleCodeClickRef = useRef(() => {});
   const isSelectingCountryRef = useRef(false);
   const selectingTimerRef = useRef(null);

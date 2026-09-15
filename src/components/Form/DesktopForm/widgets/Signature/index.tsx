@@ -174,7 +174,7 @@ const Signature = props => {
   const allowappupload = (advancedSetting.allowappupload || '1') === '1';
 
   const $ref = useRef(null);
-  const signatureRef = useRef(null);
+  const signatureRef = useRef<HTMLCanvasElement | null>(null);
   const signaturePadRef = useRef(null);
   const valueRef = useRef(value);
 

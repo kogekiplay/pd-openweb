@@ -23,7 +23,7 @@ export default function HideItem(props) {
 
   const [visible, setVisible] = useState(false);
   const [edit, setEdit] = useState(false);
-  const nameRef = useRef(null);
+  const nameRef = useRef<HTMLInputElement | null>(null);
   const isSimple = type === 'recycle';
 
   const clickEditName = () => {

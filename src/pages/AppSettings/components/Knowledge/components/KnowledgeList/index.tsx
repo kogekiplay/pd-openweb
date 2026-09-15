@@ -29,7 +29,7 @@ const KnowledgeList = props => {
   const { overLimit, attachmentEnhancedTip } = useKnowledgeUsage(projectId);
   const knowledgeOverLimit = disabledKnowledge ? false : overLimit;
 
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const [currentKnowledge, setCurrentKnowledge] = useState({});
   const [activeId, setActiveId] = useState(null);

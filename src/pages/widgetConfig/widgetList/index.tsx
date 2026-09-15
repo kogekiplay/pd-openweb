@@ -472,7 +472,7 @@ function TemplatePanelHeader(props) {
   const firstControl = controls[0] || {};
   const { icon: firstControlIcon } = getWidgetInfo(firstControl.type);
   const enumType = enumWidgetType[firstControl.type];
-  const moreBtnRef = useRef(null);
+  const moreBtnRef = useRef<HTMLElement | null>(null);
   const [dropdownPlacement, setDropdownPlacement] = useState('bottomRight');
 
   const handleDropdownVisibleChange = visible => {

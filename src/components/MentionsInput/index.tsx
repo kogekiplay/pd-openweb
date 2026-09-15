@@ -61,7 +61,7 @@ const MentionsInput = props => {
   const [loading, setLoading] = useState(false);
   const [activeId, setActiveId] = useState('');
   const popupVisible = useRef(false);
-  const popupRef = useRef(null);
+  const popupRef = useRef<HTMLDivElement | null>(null);
   const chatPage = useRef({
     query: '',
     pageIndex: 1,
@@ -82,7 +82,8 @@ const MentionsInput = props => {
     currentDataQuery: null,
     promiseObj: null,
     requestId: 0,
-    externalResults: {},
+    // 外部检索结果按需挂 accounts / groups / categorys，形状随检索类型变
+    externalResults: {} as Record<string, any>,
     externalActiveId: '',
     mentionsCollection: [],
   });

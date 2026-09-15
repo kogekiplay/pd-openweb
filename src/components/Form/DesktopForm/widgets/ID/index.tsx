@@ -38,7 +38,7 @@ const IDWidget = props => {
   const [originValue, setOriginValue] = useState('');
   const [isEditing, setIsEditing] = useState(false);
 
-  const textRef = useRef(null);
+  const textRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (textRef.current && value !== textRef.current.value) {

@@ -48,8 +48,8 @@ export default function Board(props) {
     loading: false,
     isMore: true,
   });
-  const $contentRef = useRef(null);
-  const $scrollerRef = useRef(null);
+  const $contentRef = useRef<HTMLDivElement | null>(null);
+  const $scrollerRef = useRef<HTMLDivElement | null>(null);
 
   const pendingFlag = useRef(false);
 

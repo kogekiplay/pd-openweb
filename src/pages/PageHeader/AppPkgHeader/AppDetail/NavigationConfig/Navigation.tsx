@@ -83,7 +83,7 @@ const Group = props => {
   const { id, layerIndex, items = [] } = data;
   const name = data.name || _l('未命名分组');
   const { onUpdateAppItem, onDeleteGroup, onAddGroup, onMoveGroup } = otherProps;
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement | null>(null);
   const [active, setActive] = useState(false);
   const [activeGroup, setActiveGroup] = useState(false);
   const [activeFirst, setActiveFirst] = useState(false);

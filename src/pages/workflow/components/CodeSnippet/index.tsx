@@ -281,7 +281,7 @@ const CodeSnippet = ({ projectId, type = 0, onSave = () => {}, onClose = () => {
   const [data, setData] = useState([]);
   const [selectId, setSelectId] = useState('');
   const [editCodeId, setEditCodeId] = useState('');
-  const inputName = useRef(null);
+  const inputName = useRef<HTMLInputElement | null>(null);
   const tagtextarea = useRef(null);
   const hasAppResourceAuth = checkPermission(projectId, PERMISSION_ENUM.APP_RESOURCE_SERVICE);
 

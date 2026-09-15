@@ -76,7 +76,7 @@ const Numeric = props => {
     suffix = '';
   }
 
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const prevIsEditing = useRef(isEditing);
   const [originValue, setOriginValue] = useState('');

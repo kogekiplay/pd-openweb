@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 
 const Collapse = ({ open, duration = 300, children }) => {
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const el = ref.current;

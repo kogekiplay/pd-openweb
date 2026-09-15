@@ -9,7 +9,7 @@ const MobileSearch = props => {
   const { itemtitle = '', clicksearch, searchfirst, min = '0' } = advancedSetting;
   const optionData = (props.optionData || []).map((it, index: number) => ({ ...it, index }));
 
-  const searchInput = useRef(null);
+  const searchInput = useRef<HTMLInputElement | null>(null);
   const isOnComposition = useRef(false);
   const [visible, setVisible] = useState(false);
   const [mobileSearchResult, setMobileSearchResult] = useState([]);

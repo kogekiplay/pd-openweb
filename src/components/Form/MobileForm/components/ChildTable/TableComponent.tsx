@@ -271,7 +271,7 @@ function TableComponent(props) {
   }, [allowcancel, controls, disabled, isEdit, recordId, rows, showControls, useUserPermission, widthDataSource]);
   const tableScrollX = _.sumBy(columns, item => item.width || 180);
   const timerRef = useRef(null);
-  const tableRef = useRef(null);
+  const tableRef = useRef<HTMLDivElement | null>(null);
   const touchRef = useRef(null);
   const rowRuleDataMap = useMemo(() => {
     const map = new Map();

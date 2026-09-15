@@ -159,7 +159,7 @@ let ajaxRequest = null;
 
 export default function CustomLibrary(props) {
   const { width, currentProjectId, loadMore, setHasMore, myPermissions } = props;
-  const keywordsRef = useRef(null);
+  const keywordsRef = useRef<HTMLInputElement | null>(null);
   const [addAPIDialogVisible, setAddAPIDialogVisible] = useState(false);
   const [applyDialog, setApplyDialog] = useSetState({ visible: false });
   const [authListVisible, setAuthListVisible] = useState(false);

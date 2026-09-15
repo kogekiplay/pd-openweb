@@ -162,7 +162,7 @@ const Signature = props => {
     worksheetId,
     disabled,
   } = props;
-  const signatureRef = useRef(null);
+  const signatureRef = useRef<HTMLCanvasElement | null>(null);
   const signatureContentRef = useRef(null);
   const signaturePad = useRef(null);
   const removeCanvasTouchBlockRef = useRef(null);

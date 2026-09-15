@@ -45,7 +45,7 @@ const DialogWrap = styled(Dialog)`
 
 export default function HapAiDialog({ visible, onCancel = () => {} }) {
   const [iframeLoaded, setIframeLoaded] = useState(false);
-  const iframeRef = useRef(null);
+  const iframeRef = useRef<HTMLIFrameElement | null>(null);
 
   useEffect(() => {
     const iframe = iframeRef.current;

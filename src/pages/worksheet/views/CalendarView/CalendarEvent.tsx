@@ -185,7 +185,7 @@ const EventCard = ({
   const eventEl = el;
   const [visible, setVisible] = useState(false);
   const [offsetX, setOffsetX] = useState(0);
-  const hoverRef = useRef(null);
+  const hoverRef = useRef<HTMLDivElement | null>(null);
 
   const { stringColor, backgroundColor, borderColor, textColor, recordColor } = _.get(event, 'extendedProps', {});
   const colortype = getAdvanceSetting(currentView).colortype || RECORD_COLOR_SHOW_TYPE.BG;

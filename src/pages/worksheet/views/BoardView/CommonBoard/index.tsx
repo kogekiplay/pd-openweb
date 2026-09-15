@@ -66,7 +66,7 @@ function CommonBoard(props) {
     ...rest
   }: { controls: FormControl[]; [key: string]: any } = props;
 
-  const $listWrapRef = useRef(null);
+  const $listWrapRef = useRef<HTMLDivElement | null>(null);
 
   const [, drop] = useDrop({
     accept: ITEM_TYPE.RECORD,

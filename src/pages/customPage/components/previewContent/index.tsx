@@ -65,7 +65,7 @@ const iframeReg = /<iframe.*>\s*<\/iframe>/;
 
 function PreviewContent(props) {
   const { value, param, info } = props;
-  const ref = useRef(null);
+  const ref = useRef<HTMLIFrameElement | null>(null);
 
   useEffect(() => {
     const $iframe = ref.current;
@@ -73,15 +73,16 @@ function PreviewContent(props) {
     if (_.includes(value, 'worksheetshare')) {
       const $doc = $iframe.contentDocument;
       if (!$doc) return;
-      const $header = $doc.querySelector('.WorksheetShareHeaderBox');
-      const $shareBox = $doc.querySelector('.shareConBox');
+      const $header = $doc.querySelector<HTMLElement>('.WorksheetShareHeaderBox');
+      const $shareBox = $doc.querySelector<HTMLElement>('.shareConBox');
 
       if ($header) {
         $header.parentElement.removeChild($header);
       }
 
       if ($shareBox) {
-        $shareBox.style.marginTop = 0;
+        // '0' 而不是 0：CSSOM 会 ToString，运行时一致，CSS 里零值不需要单位
+      $shareBox.style.marginTop = '0';
       }
     }
   }, [ref.current]);

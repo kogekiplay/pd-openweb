@@ -71,7 +71,7 @@ const MobileForm = props => {
   let { commonData, tabData } = getControlsByTab(renderData, widgetStyle, from, ignoreSection, otherTabs);
   tabData = tabData.filter(control => controlState(control, from).visible).filter(c => !c.hidden);
 
-  const containerRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   /**
    * 渲染表单

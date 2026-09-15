@@ -70,7 +70,7 @@ const WrapCon = styled.div`
 `;
 
 function ChooseControl(props) {
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const { title, onChange, parentName, showNext, controlId, hasFormat } = props;
   const [{ keywords }, setState] = useSetState({ keywords: '' });
   useEffect(() => {
