@@ -39,7 +39,7 @@ import {
   validateIdCardBirthDate,
 } from './helper';
 import type { FormRule } from '../types';
-import type { FormControl } from 'src/utils/controlTypes';
+import type { ControlValue, FormControl } from 'src/utils/controlTypes';
 
 export const checkValueByFilterRegex = (
   data: FormControl = {},
@@ -305,6 +305,11 @@ export const formatSearchResultValue = ({
   currentControl = {},
   controls = [],
   searchResult = '',
+}: {
+  targetControl?: FormControl;
+  currentControl?: FormControl;
+  controls?: FormControl[];
+  searchResult?: ControlValue;
 }) => {
   if (_.includes([9, 10, 11], currentControl.type)) {
     return getControlValue(controls, currentControl, targetControl.controlId, searchResult);

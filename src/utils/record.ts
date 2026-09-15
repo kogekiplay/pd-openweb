@@ -635,7 +635,7 @@ export function getSubListUniqueError({
 
     if (get(state, 'base.isTreeTableView')) {
       rows = getSheetViewRows(
-        { rows: _.filter(rows, r => !/^empty-/.test(r.rowid)) },
+        { rows: _.filter(rows, r => !/^empty-/.test(r.rowid || '')) },
         { treeMap: get(state, 'treeTableViewData.treeMap', {}) },
       );
     }
