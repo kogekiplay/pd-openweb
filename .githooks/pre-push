@@ -32,8 +32,13 @@ set -e
 #
 # 所以现在这条【只依赖 node】—— 而 node 本来就是下面几道门禁的前提，不可能缺席。
 if [ -d node_modules ]; then
-  node scripts/install-stamp.ts check
-  STAMP_RC=$?
+  # 【必须写成 `|| STAMP_RC=$?`】脚本开头有 set -e，而这条命令的【非零退出是有意义的】
+  # （1=过期、2=没有戳）。直接裸调用的话，set -e 会在它返回 1 的当场终止整个 hook，
+  # 下面那段本该打印原因的 if 根本走不到 —— 表现就是 `git push` 失败却【一个字都不说】。
+  # 2026-09-15 真的这么中过一次：合并带进新依赖后推送一直失败，没有任何提示。
+  # 一个失败却不说原因的门禁，会直接把人逼去用 --no-verify。
+  STAMP_RC=0
+  node scripts/install-stamp.ts check || STAMP_RC=$?
   if [ "$STAMP_RC" = "1" ]; then
     echo "pre-push: !! node_modules 与 package.json/bun.lock 不一致。"
     echo "           先跑 bun install 再 push —— 否则下面的类型门禁会报出一堆"
