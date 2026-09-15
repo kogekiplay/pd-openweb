@@ -205,6 +205,22 @@ export interface SummaryHeadControl {
 }
 export type MaybeSummaryHeadControl = FormControl | SummaryHeadControl;
 
+/**
+ * 表格里有两格不是真控件：统计行最左侧那格（'summaryhead'）和操作列（'operates'），
+ * 都是靠 type 上的哨兵字符串认出来的。
+ *
+ * 【为什么不直接比 control.type === 'operates'】FormControl['type'] 是 number，
+ * 拿它跟字符串比 TS 直接判 TS2367「两边没有交集」。而把这两个字符串并进
+ * FormControl['type'] 的代价上一轮量过：全仓 `[9, 10, 11].includes(control.type)`
+ * 这类数值判断会一起变成 TS2345。所以哨兵判定单独走这个函数。
+ */
+export function isPseudoControl(
+  control: { type?: unknown } | undefined | null,
+  kind: 'summaryhead' | 'operates',
+): boolean {
+  return (control?.type as unknown) === kind;
+}
+
 export interface RecordRow {
   rowid?: string;
   [controlId: string]: any;
