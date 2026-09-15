@@ -48,6 +48,7 @@ import {
 import { MENU_LIST_MAP, SIDEBAR_LIST_MAP, TAB_TYPE } from './core/enum';
 import { convertControl } from './core/utils';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const FIELD_TYPE = FIELD_TYPE_LIST.concat([
   { text: _l('对象'), value: 10000006, en: 'object' },
@@ -366,7 +367,7 @@ class WorksheetApi extends Component<any, any> {
   /**
    * 滚动到固定位置
    */
-  scrollToFixedPosition(id) {
+  scrollToFixedPosition(id?) {
     const selectId = (id || this.state.selectId).replace('dataPipeline', '');
 
     if (!$(`#${selectId}-content`)[0]) return;
@@ -410,7 +411,7 @@ class WorksheetApi extends Component<any, any> {
   /**
    * 渲染二三级工作表
    */
-  renderSideItem(props) {
+  renderSideItem(props?) {
     const { worksheetList = [], selectId, dataPipelineList = [], expandIds = [] } = this.state;
     const type = _.get(props, 'type') || 'worksheetCreateForm';
     const list =
@@ -1174,9 +1175,9 @@ class WorksheetApi extends Component<any, any> {
   /**
    * 渲染附录内容
    */
-  renderAppendixContent(list) {
+  renderAppendixContent(list?) {
     const { tabIndex } = this.state;
-    const getWidth = (headerData, key) => _.get(_.find(headerData, headerObj => headerObj.key === key) || {}, 'width');
+    const getWidth = (headerData, key: string) => _.get(_.find(headerData, headerObj => headerObj.key === key) || {}, 'width');
     const data = list || MENU_LIST_APPENDIX;
 
     return (
@@ -1414,7 +1415,7 @@ class WorksheetApi extends Component<any, any> {
   renderAuthorizationManagement = () => {
     const { authorizes = [], addSecretKey, visibleAppKeys, visibleSigns, tabIndex } = this.state;
 
-    const renderIconRow = (visibleState, text) => {
+    const renderIconRow = (visibleState: string, text) => {
       const visible = this.state[visibleState].includes(text);
 
       return (
@@ -1827,7 +1828,7 @@ class WorksheetApi extends Component<any, any> {
     if (specification.errorData) rightOptions.errorData = specification.errorData;
     if (specification.id === 'List') otherOptions.filters = this.fillFilters();
     if (['AddRow', 'AddRows', 'UpdateDetail', 'UpdateDetails'].includes(specification.id)) {
-      const controls = this.fillControls(item, specification.id === 'UpdateDetails');
+      const controls: FormControl[] = this.fillControls(item, specification.id === 'UpdateDetails');
       otherOptions[specification.id === 'AddRows' ? 'rows' : 'controls'] =
         specification.id === 'AddRows' ? [controls] : controls;
     }

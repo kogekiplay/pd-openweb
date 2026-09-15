@@ -21,6 +21,7 @@ import Abnormal from './Abnormal';
 import FormCover from './FormCover';
 import FormHeader from './FormHeader';
 import FormSection, { getDefaultIsUnfold } from './FormSection';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export const RecordFormContext = React.createContext();
 
@@ -120,7 +121,7 @@ function getTopHeight() {
   return height;
 }
 
-function mergeTabData(tabData = [], eventData = [], dealFrom) {
+function mergeTabData(tabData: FormControl[] = [], eventData = [], dealFrom: number) {
   const filterFn = (data = []) => {
     // 标签页下无可见字段，隐藏标签页
     return data
@@ -225,11 +226,11 @@ function RecordForm(props) {
     // 所以只在确实需要更新时才重建 —— 第一次跑完 defaultState 就与自身字段一致了，
     // 之后除非 required / controlPermissions / fieldPermission 真的变了才会再建，
     // 与「每次渲染都按当前值重算」的旧语义等价。
-    const relationControls = item.relationControls;
+    const relationControls: FormControl[] = item.relationControls;
 
     if (relationControls && relationControls.length) {
       const needsUpdate = relationControls.some(
-        c =>
+        (c: FormControl) =>
           !c.defaultState ||
           c.defaultState.required !== c.required ||
           c.defaultState.controlPermissions !== c.controlPermissions ||
@@ -237,7 +238,7 @@ function RecordForm(props) {
       );
 
       if (needsUpdate) {
-        item.relationControls = relationControls.map(c => ({
+        item.relationControls = relationControls.map((c: FormControl) => ({
           ...c,
           defaultState: {
             required: c.required,
@@ -292,17 +293,17 @@ function RecordForm(props) {
   );
   const [formHeight, setFormHeight] = useState(0);
   const [topHeight, setTopHeight] = useState(getTopHeight());
-  const [dragVisible, setDragVisible] = useState();
+  const [dragVisible, setDragVisible] = useState<boolean | undefined>();
 
   // 左右布局，非默认标签页，显示单独header
-  const getActiveTabControl = tempId => {
+  const getActiveTabControl = (tempId?) => {
     const sectionTabId = tempId || _.get(sectionTab, 'current.activeControlId') || defaultTabId;
     return (isFixedLeft || isFixedRight) && sectionTabId !== 'detail'
       ? _.find(tabControls, t => t.controlId === sectionTabId)
       : '';
   };
 
-  const handleSectionClick = controlId => {
+  const handleSectionClick = (controlId?) => {
     const tempId = controlId || defaultTabId;
 
     if (isFixedLeft || isFixedRight) {

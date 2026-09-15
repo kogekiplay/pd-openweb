@@ -18,6 +18,7 @@ import { ITEM_TYPE } from '../config';
 import { dealHierarchyData, getRelateDefaultValue } from '../util';
 import AddRecord from './AddRecord';
 import CountTip from './CountTip';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const OperationWrap = styled(FlexCenter)`
   position: absolute;
@@ -71,7 +72,7 @@ export default function DraggableRecord(props) {
     hierarchyTopLevelDataCount = 0,
     drawConnector = () => {},
     buttonsCheckStatus,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const { rowId, visible, path = [], pathId = [], children } = data;
   const recordData = dealHierarchyData(treeData[rowId], {
     worksheetControls: controls,

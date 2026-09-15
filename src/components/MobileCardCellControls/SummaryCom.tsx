@@ -3,6 +3,7 @@ import { find, includes, isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import MobileCardCellControl from './MobileCardCellControl';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const SummaryWrap = styled.div`
   display: flex;
@@ -81,7 +82,7 @@ export default function SummaryCom(props) {
     row,
     className,
     handleClick = () => {},
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
 
   const showFields = controls.filter(c => find(showControls || [], scid => scid === c.controlId));
   const summaryControls =

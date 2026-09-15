@@ -59,7 +59,7 @@ export default class SelectOrgRole extends Component<any, any> {
     return this.searchRef.current && this.searchRef.current.keywords ? this.searchRef.current.keywords.trim() : '';
   };
 
-  getData = (groups, orgRoleGroupId, index) => {
+  getData = (groups?, orgRoleGroupId?, index?) => {
     const { projectId, appointedOrganizeIds = [] } = this.props;
     let { pageIndex = 1, treeData, searchList } = this.state;
     let keywords = this.getKeywords();
@@ -213,7 +213,7 @@ export default class SelectOrgRole extends Component<any, any> {
     }
   };
 
-  renderChildren = groupItem => {
+  renderChildren = (groupItem?) => {
     const { unique } = this.props;
     const { expendTreeNodeKey, selectedOrgRole, searchList } = this.state;
     const selectedOrgRoleIds = selectedOrgRole.map(item => item.organizeId);

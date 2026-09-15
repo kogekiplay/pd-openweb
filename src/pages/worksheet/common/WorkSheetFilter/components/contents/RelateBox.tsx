@@ -18,7 +18,7 @@ let RelateBox = class RelateBox extends Component<any, any> {
   static defaultProps = {
     values: [],
   };
-  renderLi = (item, i, onChangeFn) => {
+  renderLi = (item, i: number, onChangeFn) => {
     return (
       <React.Fragment>
         {item.isNavGroup && i !== 0 && <div className="BorderTopGrayC"></div>}
@@ -29,7 +29,7 @@ let RelateBox = class RelateBox extends Component<any, any> {
       </React.Fragment>
     );
   };
-  renderCustom = (data, type, isTop) => {
+  renderCustom = (data, type, isTop?) => {
     const id = _.includes([2, 15, 16, 26, 46], type)
       ? _.get(
           _.find(DEFAULT_COLUMNS, d => d.type === type),
@@ -57,7 +57,7 @@ let RelateBox = class RelateBox extends Component<any, any> {
     );
   }; // 符合动态值的本表字段异化，关联记录筛选用
 
-  filterDynamicControls = isGlobal => {
+  filterDynamicControls = (isGlobal?) => {
     const {
       conditionType,
       columns,

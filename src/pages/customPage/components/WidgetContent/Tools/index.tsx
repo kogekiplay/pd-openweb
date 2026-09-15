@@ -239,7 +239,7 @@ export default function Tools(props) {
     return tip;
   };
 
-  const getIcon = (type, icon, next) => {
+  const getIcon = (type, icon, next?) => {
     if (isSwitchButton(type)) {
       const value =
         widgetType === 'button' ? _.get(widget, ['button', 'mobileCount']) : _.get(widget, ['config', 'mobileCount']);
@@ -293,8 +293,11 @@ export default function Tools(props) {
             className={cx(type, { switchButton: isSwitchButton(type) })}
             key={type}
             onClick={() => {
-              onClick && onClick();
-              handleToolClick(type);
+              if (onClick) {
+                onClick();
+              } else {
+                handleToolClick(type);
+              }
             }}
           >
             <i className={`icon-${getIcon(type, icon)} Font18 current`}></i>

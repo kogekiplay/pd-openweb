@@ -12,6 +12,7 @@ import { SPRING_DEFAULT } from 'src/utils/spring';
 import FilterInput, { NumberTypes, TextTypes } from './Inputs';
 import { validate } from './utils';
 import { formatFilterValuesToServer } from './utils';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   display: flex;
@@ -252,7 +253,7 @@ export default function Conditions(props) {
     resetQuickFilter,
     onFilterClick,
     viewRowsLoading,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const [values, setValues] = useState({});
   const [isQuerying, setIsQuerying] = useState(false);
   const [requiredErrorVisible, setRequiredErrorVisible] = useState(false);
@@ -283,8 +284,8 @@ export default function Conditions(props) {
     }, // 分享状态快速筛选不应该显示 成员 部门 角色
     [
       JSON.stringify(filters),
-      JSON.stringify(controls.map(c => _.pick(c, ['controlName', 'options']))),
-      JSON.stringify(controls.filter(c => c.relationControls).map(c => _.map(c.relationControls, rc => rc.controlId))),
+      JSON.stringify(controls.map((c: FormControl) => _.pick(c, ['controlName', 'options']))),
+      JSON.stringify(controls.filter((c: FormControl) => c.relationControls).map(c => _.map(c.relationControls, rc => rc.controlId))),
       _.get(view, 'advancedSetting.fastrequired'),
       _.get(view, 'advancedSetting.requiredcids'),
     ],
@@ -296,7 +297,7 @@ export default function Conditions(props) {
     setValues({});
   }
 
-  function update(newValues, { noDebounce, skipRequiredCheck } = {}) {
+  function update(newValues?, { noDebounce, skipRequiredCheck } = {}) {
     didMount.current = true;
     const valuesToUpdate = newValues || values;
     const needCheckRequired = _.get(view, 'advancedSetting.fastrequired') === '1' && !skipRequiredCheck;

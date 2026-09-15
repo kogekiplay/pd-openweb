@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react';
-import withRouter from '../../../../router/withRouter';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -8,7 +7,9 @@ import { MdLink, ScrollView } from 'ming-ui';
 import api from '../../api/instance';
 import processVersion from '../../api/processVersion';
 import ArchivedList from 'src/components/ArchivedList';
+import type { RootState } from 'src/redux/types';
 import { pathCompletion } from 'src/utils/common';
+import withRouter from '../../../../router/withRouter';
 import chatbot from '../../apiV2/chatbot';
 import Detail from '../Detail';
 import { APP_TYPE } from '../enum';
@@ -359,7 +360,12 @@ let History = class History extends Component<any, any> {
     const { data, hasMoreData, accumulation, requestPending, batchIds, archivedItem, cacheKey } = this.state;
     const { lastPublishDate, parentId, enabled } = flowInfo;
     return (
-      <ScrollView className="workflowHistoryWrap flex" ref={contentScroll => { this.contentScroll = contentScroll; }}>
+      <ScrollView
+        className="workflowHistoryWrap flex"
+        ref={contentScroll => {
+          this.contentScroll = contentScroll;
+        }}
+      >
         <div className="lastPublishInfo">
           {!_.isEmpty(archivedItem) ? (
             <ArchivedList
@@ -508,4 +514,4 @@ let History = class History extends Component<any, any> {
   }
 };
 History = withRouter(History);
-export default connect(state => state.workflow)(History);
+export default connect((state: RootState) => state.workflow)(History);

@@ -1,7 +1,8 @@
+import type { ReduxAction } from 'src/redux/types';
 ﻿import config from '../config/stateConfig';
 
 // config状态
-export const stateConfig = (state = config, action) => {
+export const stateConfig = (state = config, action: ReduxAction) => {
   switch (action.type) {
     case 'CHANGE_TASK_STATUS':
       state.currentStatus = action.status;
@@ -27,7 +28,7 @@ export const stateConfig = (state = config, action) => {
 };
 
 // 处理data数据
-export const accountTasksKV = (state = [], action) => {
+export const accountTasksKV = (state = [], action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_DATA_SOURCE':
       return action.data;
@@ -39,7 +40,7 @@ export const accountTasksKV = (state = [], action) => {
 };
 
 // 时间轴数据
-export const timeAxisSource = (state = [], action) => {
+export const timeAxisSource = (state = [], action: ReduxAction) => {
   switch (action.type) {
     case 'GET_TIME_AXIS_SOURCE':
       return action.timeAxis;

@@ -44,7 +44,7 @@ export default function SliderScaleDialog(props) {
 
   const removeDisabled = scales.length === 1;
 
-  function updateScale(i, key, value) {
+  function updateScale(i, key, value?) {
     setScales(oldScales => [
       ...oldScales.slice(0, i),
       {

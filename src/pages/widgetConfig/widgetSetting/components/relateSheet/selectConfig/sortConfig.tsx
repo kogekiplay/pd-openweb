@@ -6,6 +6,7 @@ import { UN_SORT_WIDGET } from '../../../../config';
 import { RELATE_SORT_DISPLAY } from '../../../../config/setting';
 import { SettingItem } from '../../../../styled';
 import { getAdvanceSetting, handleAdvancedSettingChange } from '../../../../util/setting';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const DISPLAY_OPTIONS = [
   { text: _l('与关联记录的排序保持一致'), value: '0' },
@@ -13,7 +14,7 @@ const DISPLAY_OPTIONS = [
 ];
 
 export default function SortConfig(props) {
-  const { data, controls = [], handleChange } = props;
+  const { data, controls = [], handleChange }: { controls: FormControl[]; [key: string]: any } = props;
   const { rcsorttype } = getAdvanceSetting(data);
   const sorts = getAdvanceSetting(data, 'sorts') || [];
   const isRelateView = Boolean(data.viewId);

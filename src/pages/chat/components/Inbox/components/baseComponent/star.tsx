@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import Icon from 'ming-ui/components/Icon';
 import inboxController from 'src/api/inbox';
 import { browserIsMobile } from 'src/utils/common';
@@ -12,7 +12,7 @@ export default class Star extends React.Component<any, any> {
     this.clickHandler = this.clickHandler.bind(this);
   }
 
-  clickHandler(flag) {
+  clickHandler(flag: string) {
     const { inboxId } = this.props;
 
     return () => {

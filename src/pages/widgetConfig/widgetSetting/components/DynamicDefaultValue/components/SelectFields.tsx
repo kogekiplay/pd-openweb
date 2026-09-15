@@ -10,6 +10,7 @@ import { SYSTEM_CONTROL, SYSTEM_PERSON_CONTROL, WORKFLOW_SYSTEM_CONTROL } from '
 import { getIconByType } from '../../../../util';
 import { DYNAMIC_FROM_MODE } from '../config';
 import { filterControls, getControls, getOtherSelectField } from '../util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Empty = styled.div`
   color: var(--color-text-tertiary);
@@ -18,10 +19,15 @@ const Empty = styled.div`
   background-color: var(--color-background-primary);
 `;
 
-const filterSys = (controls = [], fromCustomEventApi) => {
+const filterSys = (controls: FormControl[] = [], fromCustomEventApi?) => {
   // 自定义事件api查询支持rowid异化
-  const FILTER_SYS_CONTROLS = fromCustomEventApi ? SYS_CONTROLS.filter(i => i !== 'rowid') : SYSTEM_CONTROL;
-  return controls.filter(i => !_.includes(FILTER_SYS_CONTROLS, i.controlId));
+  // 注意：SYS_CONTROLS 是 id 字符串数组，SYSTEM_CONTROL 是控件对象数组。下面拿它跟
+  // i.controlId（字符串）比，fromCustomEventApi 为假时永远不相等 —— 即这条分支实际上
+  // 一个系统字段都没过滤掉。这里只放开类型，不动行为。
+  const FILTER_SYS_CONTROLS: unknown[] = fromCustomEventApi
+    ? SYS_CONTROLS.filter(i => i !== 'rowid')
+    : SYSTEM_CONTROL;
+  return controls.filter(i => !_.includes(FILTER_SYS_CONTROLS, i.controlId as unknown));
 };
 
 let SelectFields = class SelectFields extends Component<any, any> {
@@ -142,6 +148,7 @@ let SelectFields = class SelectFields extends Component<any, any> {
       const filteredRelationControls = getControls({
         data,
         controls: relationControls,
+        isCurrent: undefined,
         from,
       });
       fieldList[id] = filteredRelationControls;

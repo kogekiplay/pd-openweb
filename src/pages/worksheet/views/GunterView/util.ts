@@ -4,6 +4,7 @@ import { SYS } from 'src/pages/widgetConfig/config/widget';
 import { sortDataByCustomItems } from 'src/pages/worksheet/redux/actions/util.js';
 import { browserIsMobile } from 'src/utils/common';
 import { PERIOD_TYPE, PERIODS } from './config';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 /**
  * 修改当前视图配置
@@ -88,7 +89,7 @@ export const getAssignWorkDays = (value, time, dayOff) => {
 /**
  * 获取日视图数据(仅工作日)
  */
-export const getWorkDays = (start, end, center, viewConfig) => {
+export const getWorkDays = (start, end, center?, viewConfig?) => {
   const { minDayWidth, periodCount, dayOff } = viewConfig;
   const movePeriodCount = periodCount / 2;
   const days = [];
@@ -180,7 +181,7 @@ export const getDays = (start, end, center, viewConfig) => {
 /**
  * 获取今天的位置
  */
-const getTodayLeftValue = (start, end, dayOff) => {
+const getTodayLeftValue = (start: moment.Moment, end: moment.Moment, dayOff) => {
   const diff = Math.abs(start.diff(end, 'd'));
   let value = 0;
 
@@ -472,7 +473,7 @@ export const getRowsTime = rows => {
   const f = t => (t ? moment(t).valueOf() : 0);
   const d = t => moment(t).format('YYYY-MM-DD');
   const data = rows.filter(
-    item => (item.dragBeforeStartTime || item.startTime) && (item.dragBeforeEndTime || item.endTime),
+    (item: RecordRow) => (item.dragBeforeStartTime || item.startTime) && (item.dragBeforeEndTime || item.endTime),
   );
   const startTimes = data.map(item => f(item.dragBeforeStartTime || item.startTime)).filter(item => item);
   const endTimes = data.map(item => f(item.dragBeforeEndTime || item.endTime)).filter(item => item);
@@ -567,7 +568,7 @@ export const groupingTimeBlock = (grouping, periodList, viewConfig) => {
   return grouping.map(item => {
     const data = calculateTimeBlock(item, periodList, viewConfig);
     const itemWithoutBlock = _.omit(item, ['left', 'right', 'rows']);
-    const newRows = item.rows.map(row => {
+    const newRows: RecordRow[] = item.rows.map((row: RecordRow) => {
       const rowWithoutBlock = _.omit(row, ['left', 'right']);
       const data = calculateTimeBlock(row, periodList, viewConfig);
       return {
@@ -590,7 +591,7 @@ export const groupingTimeBlock = (grouping, periodList, viewConfig) => {
 export const fillRecordsTimeBlockColor = (grouping, colorControl) => {
   return grouping.map(item => ({
     ...item,
-    rows: item.rows.map(row => fillRecordTimeBlockColor(row, colorControl)),
+    rows: item.rows.map((row: RecordRow) => fillRecordTimeBlockColor(row, colorControl)),
   }));
 };
 
@@ -657,7 +658,7 @@ export const getRecordIndex = (id, grouping, withoutArrangementVisible) => {
 
   for (let i = 0; i < grouping.length; i++) {
     let { groupingIndex } = grouping[i];
-    let rows = grouping[i].rows.filter(item => (withoutArrangementVisible ? true : item.diff > 0));
+    let rows: RecordRow[] = grouping[i].rows.filter((item: RecordRow) => (withoutArrangementVisible ? true : item.diff > 0));
 
     for (let j = 0; j < rows.length; j++) {
       if (id === rows[j].rowid) {
@@ -677,7 +678,7 @@ export const getRecordIndex = (id, grouping, withoutArrangementVisible) => {
 /**
  * 排序分组
  */
-export const sortGrouping = (grouping, view = {}, controls = []) => {
+export const sortGrouping = (grouping, view = {}, controls: FormControl[] = []) => {
   const empty = grouping.filter(item => item.key == '-1');
   const sortGrouping = grouping.filter(item => item.key !== '-1').sort((a, b) => a.sort - b.sort);
   return sortDataByCustomItems(sortGrouping.concat(empty), view, controls, false);
@@ -711,7 +712,7 @@ export const percentageToTime = percentage => {
  */
 export const getControlsForGunter = worksheetControls => {
   return worksheetControls.filter(
-    item =>
+    (item: FormControl) =>
       !SYS.includes(item.controlId) &&
       (_.includes([15, 16], item.type) ||
         (item.type === 38 && item.enumDefault === 2) ||

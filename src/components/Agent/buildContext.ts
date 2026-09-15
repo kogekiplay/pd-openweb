@@ -44,7 +44,7 @@ export function getCurrentAppId() {
   return APP_ID_RE.test(seg) ? seg : '';
 }
 
-function parsedOf(files, path) {
+function parsedOf(files, path: string) {
   return files && files[path] && files[path].parsed;
 }
 

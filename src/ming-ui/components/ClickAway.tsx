@@ -80,7 +80,7 @@ function useCompatibleClickAway({ ref, onClickAway, onClickAwayExceptions, speci
   );
 }
 
-function useClickAwayElement(props, ref, shouldForwardClickAwayProps) {
+function useClickAwayElement(props, ref: React.ForwardedRef<unknown>, shouldForwardClickAwayProps: boolean) {
   const { component: Component = 'div', onClickAway, onClickAwayExceptions, specialFilter, ...rest } = props;
   const clickAwayRef = useRef(null);
   const handleRef = useCallback(

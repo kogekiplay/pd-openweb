@@ -9,9 +9,10 @@ import { getAdvanceSetting, handleAdvancedSettingChange } from '../../../util/se
 import { DEFAULT_TYPES } from './config';
 import { TYPE_TO_COMP } from './inputTypes';
 import { dealIds, getControlType } from './util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function DynamicDefaultValue(props) {
-  const { data, allControls, onChange, from, hideTitle } = props;
+  const { data, allControls, onChange, from, hideTitle }: { allControls: FormControl[]; [key: string]: any } = props;
   const type = getControlType(data);
 
   if (!type) return null;

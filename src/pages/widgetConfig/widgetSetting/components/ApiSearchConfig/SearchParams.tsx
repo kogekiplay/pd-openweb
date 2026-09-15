@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { ROW_ID_CONTROL } from 'src/pages/widgetConfig/config/widget';
 import { getAdvanceSetting, handleAdvancedSettingChange } from 'src/pages/widgetConfig/util/setting';
 import DynamicDefaultValue from '../DynamicDefaultValue';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const ControlWrap = styled.div`
   .childWrap {
@@ -34,7 +35,7 @@ const ControlWrap = styled.div`
 `;
 
 export default function SearchParams(props) {
-  const { requestControls = [], data = {}, allControls = [], onChange, fromOperationFlow } = props;
+  const { requestControls = [], data = {}, allControls = [], onChange, fromOperationFlow }: { allControls: FormControl[]; [key: string]: any } = props;
   const requestmap = getAdvanceSetting(data, 'requestmap') || [];
 
   // 获取对象数组本身选择的子表或关联记录控件

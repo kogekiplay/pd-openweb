@@ -4,6 +4,7 @@ import addRecord from 'worksheet/common/newRecord/addRecord';
 import { getDefaultValue } from 'src/pages/worksheet/components/GroupByControl.jsx';
 import { getAdvanceSetting } from 'src/utils/control';
 import { canEditForGroupControl } from '../util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 // 渲染分组下的新增记录入口，并按分组控件写入默认值。
 const AddGalleryCard = props => {
@@ -18,11 +19,11 @@ const AddGalleryCard = props => {
     controls = [],
     galleryview = {},
     allowAddNewRecord = true,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const currentView = views.find(o => o.viewId === base.viewId) || {};
   const { gallery = [] } = galleryview;
   const { groupsetting } = getAdvanceSetting(currentView);
-  const control = controls.find(o => o.controlId === _.get(safeParse(groupsetting, 'array'), '[0].controlId'));
+  const control = controls.find((o: FormControl) => o.controlId === _.get(safeParse(groupsetting, 'array'), '[0].controlId'));
   const allowAdd =
     canEditForGroupControl({
       allowAdd: worksheetInfo?.allowAdd,

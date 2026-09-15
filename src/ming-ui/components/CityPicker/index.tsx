@@ -345,7 +345,7 @@ export default function CityPicker(props) {
     activeItemScrollView();
   };
 
-  const handleClick = (item, key, autoClose = true) => {
+  const handleClick = (item, key: number, autoClose = true) => {
     let value = key > select.length ? select.concat(item) : select.slice(0, key - 1).concat(item);
 
     setSelect(value);

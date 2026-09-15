@@ -10,7 +10,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTransferRecordByProject: function (args, options = {}) {
+  getTransferRecordByProject: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Transfer', 'GetTransferRecordByProject', args, options);
   },
   /**
@@ -25,7 +25,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTransferRecordByType: function (args, options = {}) {
+  getTransferRecordByType: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Transfer', 'GetTransferRecordByType', args, options);
   },
   /**
@@ -38,7 +38,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  transferAll: function (args, options = {}) {
+  transferAll: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Transfer', 'TransferAll', args, options);
   },
   /**
@@ -51,7 +51,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  transferAllOneClick: function (args, options = {}) {
+  transferAllOneClick: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Transfer', 'TransferAllOneClick', args, options);
   },
   /**
@@ -66,7 +66,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  transferOne: function (args, options = {}) {
+  transferOne: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Transfer', 'TransferOne', args, options);
   },
   /**
@@ -81,7 +81,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  transferMany: function (args, options = {}) {
+  transferMany: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Transfer', 'TransferMany', args, options);
   },
   /**
@@ -95,7 +95,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  transferByType: function (args, options = {}) {
+  transferByType: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Transfer', 'TransferByType', args, options);
   },
   /**
@@ -110,7 +110,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getRelationDetailByAid: function (args, options = {}) {
+  getRelationDetailByAid: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Transfer', 'GetRelationDetailByAid', args, options);
   },
   /**
@@ -124,7 +124,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getRelationStatistics: function (args, options = {}) {
+  getRelationStatistics: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Transfer', 'GetRelationStatistics', args, options);
   },
   /**
@@ -136,7 +136,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  exitAllRelation: function (args, options = {}) {
+  exitAllRelation: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Transfer', 'ExitAllRelation', args, options);
   },
   /**
@@ -152,7 +152,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getOATransferRecordByType: function (args, options = {}) {
+  getOATransferRecordByType: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Transfer', 'GetOATransferRecordByType', args, options);
   },
   /**
@@ -166,7 +166,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  oATransferToAccountId: function (args, options = {}) {
+  oATransferToAccountId: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Transfer', 'OATransferToAccountId', args, options);
   },
   /**
@@ -181,7 +181,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  oATransferAllToAccountId: function (args, options = {}) {
+  oATransferAllToAccountId: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Transfer', 'OATransferAllToAccountId', args, options);
   },
 };

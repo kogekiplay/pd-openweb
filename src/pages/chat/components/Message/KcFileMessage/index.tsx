@@ -33,7 +33,7 @@ export default class KcFileMessage extends Component<any, any> {
       });
     }
   }
-  format(kcFile) {
+  format(kcFile?) {
     const { message } = this.props;
     message.msg.files = {
       name: message.card.title,

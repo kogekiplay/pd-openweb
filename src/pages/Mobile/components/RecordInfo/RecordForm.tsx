@@ -16,6 +16,7 @@ import { permitList } from 'src/pages/FormSet/config.js';
 import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import SheetWorkflow from 'src/pages/workflow/components/SheetWorkflow';
 import PayLog from 'src/pages/worksheet/components/DiscussLogFile/PayLog';
+import type { RootState } from 'src/redux/types';
 import { controlState, getTitleTextFromControls } from 'src/utils/control';
 import RecordOwner from './components/RecordOwner';
 
@@ -374,7 +375,9 @@ let RecordForm = class RecordForm extends Component<any, any> {
           edit: isEditRecord,
           overflowHidden: !isEditRecord && _.includes([29, 51], currentTab.type) && !window.isDingTalk,
         })}
-        ref={con => { this.con = con; }}
+        ref={con => {
+          this.con = con;
+        }}
       >
         <CustomFields
           ref={customwidget}
@@ -466,7 +469,9 @@ let RecordForm = class RecordForm extends Component<any, any> {
       <Fragment>
         {this.renderHeader()}
         <div
-          ref={ele => { this.formWrap = ele; }}
+          ref={ele => {
+            this.formWrap = ele;
+          }}
           className="flexColumn flex recordScroll"
           style={{
             overflowX: 'hidden',
@@ -534,7 +539,7 @@ let RecordForm = class RecordForm extends Component<any, any> {
   }
 };
 RecordForm = connect(
-  state => ({ ..._.pick(state.mobile, ['relationRow', 'loadParams']) }),
+  (state: RootState) => ({ ..._.pick(state.mobile, ['relationRow', 'loadParams']) }),
   dispatch => bindActionCreators({ ..._.pick(actions, ['updatePageIndex']) }, dispatch),
 )(RecordForm);
 export default RecordForm;

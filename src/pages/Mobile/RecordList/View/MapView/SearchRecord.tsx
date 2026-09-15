@@ -12,6 +12,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { getSearchData } from 'worksheet/views/util';
 import * as baseAction from 'src/pages/worksheet/redux/actions';
 import * as viewActions from 'src/pages/worksheet/redux/actions/mapView';
+import type { RootState } from 'src/redux/types';
 import { browserIsMobile } from 'src/utils/common';
 import { htmlDecodeReg, htmlEncodeReg } from 'src/utils/common';
 import { renderText as renderCellText } from 'src/utils/control';
@@ -213,7 +214,7 @@ function SearchRecord(props) {
 }
 
 const ConnectedSearchRecord = connect(
-  state => ({
+  (state: RootState) => ({
     ..._.pick(state.sheet, ['mapView', 'worksheetInfo', 'filters', 'controls', 'sheetSwitchPermit', 'sheetButtons']),
     searchData: getSearchData(state.sheet),
   }),

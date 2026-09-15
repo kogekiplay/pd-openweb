@@ -1,9 +1,10 @@
 import React from 'react';
 import { useSetState } from 'react-use';
 import FunctionEditorDialog from '../../../FunctionEditorDialog';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function FunctionEditor(props) {
-  const { filterData = {}, data, handleOk, allControls } = props;
+  const { filterData = {}, data, handleOk, allControls }: { allControls: FormControl[]; [key: string]: any } = props;
   const { valueType, advancedSetting = {}, spliceType } = filterData;
   const defaultFunc = advancedSetting.defaultfunc
     ? safeParse(advancedSetting.defaultfunc)

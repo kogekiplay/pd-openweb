@@ -15,6 +15,7 @@ import {
 import { WHOLE_SIZE } from '../config/Drag';
 import { RELATION_OPTIONS } from '../config/setting';
 import { ALL_SYS, DEFAULT_CONFIG, DEFAULT_DATA, SYS_CONTROLS, WIDGETS_TO_API_TYPE_ENUM } from '../config/widget';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const FORMULA_FN_LIST = [
   'SUM',
@@ -143,7 +144,7 @@ export const putControlByOrder = controls => {
     .reduce((result, key) => {
       // 每一行里按照col排序
       const row = sortBy(obj[key], [({ item }) => item.col, 'originIndex']).map(({ item }) => item);
-      const rows = [];
+      const rows: RecordRow[] = [];
 
       row.forEach(item => {
         const currentRow = rows[rows.length - 1];
@@ -161,7 +162,7 @@ export const putControlByOrder = controls => {
     }, []);
 };
 
-export const dealControlData = (controls = []) => {
+export const dealControlData = (controls: FormControl[] = []) => {
   return controls.map(item => {
     const { type } = item;
 
@@ -208,15 +209,15 @@ const replaceRowWithControls = widgets => {
   return genWidgetRowAndCol(newWidgets);
 };
 
-export const genWidgetsByControls = (controls = []) => {
+export const genWidgetsByControls = (controls: FormControl[] = []) => {
   /**
    * 依次处理数据
    */
-  const newControls = compose(putControlByOrder, dealControlData, replaceHalfWithSizeControls)(controls);
+  const newControls: FormControl[] = compose(putControlByOrder, dealControlData, replaceHalfWithSizeControls)(controls);
   return replaceRowWithControls(newControls);
 };
 
-export const resortControlByColRow = (controls = []) => {
+export const resortControlByColRow = (controls: FormControl[] = []) => {
   return _.flatten(putControlByOrder(controls));
 };
 
@@ -262,7 +263,7 @@ export const resetWidgets = (widgets, obj) => {
 /**
  * 从当前表所有控件中获取满足规则的控件
  */
-export const filterControlsFromAll = (allControls = [], filter = item => item) => {
+export const filterControlsFromAll = (allControls: FormControl[] = [], filter = item => item) => {
   return allControls.filter(filter).map(({ controlId, controlName }) => ({ value: controlId, text: controlName }));
 };
 
@@ -281,7 +282,7 @@ export const formatSheetsToDropdown = sheets =>
 export const formatControlsToDropdown = controls =>
   controls.map(({ controlId, controlName }) => ({ text: controlName, value: controlId }));
 
-export const getControlByControlId = (controls, controlId, key) => {
+export const getControlByControlId = (controls, controlId, key?) => {
   const control = _.find(controls, item => item.controlId === controlId) || {};
   return key ? get(control, key) : control;
 };
@@ -333,7 +334,7 @@ export const adjustControlSize = (row = [], data) => {
   return { ...data, size: WHOLE_SIZE / nextRow.length };
 };
 
-export const getAdvanceSetting = (data, key) => {
+export const getAdvanceSetting = (data, key?) => {
   const setting = get(data, ['advancedSetting']) || {};
   if (!key) return setting;
   let value = get(setting, key);
@@ -357,7 +358,7 @@ export const getRelationText = enumDefault => {
   );
 };
 
-export const filterOnlyShowField = (controls = []) => {
+export const filterOnlyShowField = (controls: FormControl[] = []) => {
   return controls.filter(i => !((i.type === 30 || i.originType === 30) && (i.strDefault || '')[0] === '1'));
 };
 
@@ -509,8 +510,8 @@ export const isSheetDisplay = (data = {}) => {
 };
 
 // 基础设置各控件分别支持哪些模块
-export const supportSettingCollapse = (props, key) => {
-  const { data = {}, allControls = [], isRecycle, from } = props;
+export const supportSettingCollapse = (props, key: string) => {
+  const { data = {}, allControls = [], isRecycle, from }: { allControls: FormControl[]; [key: string]: any } = props;
   const {
     dataSource,
     sourceControlId,
@@ -557,7 +558,7 @@ export const supportSettingCollapse = (props, key) => {
           return mode === 'relate' ? true : !advancedSetting.layercontrolid;
         case 37:
           const parsedDataSource = parseDataSource(dataSource);
-          const { relationControls = [] } = getControlByControlId(allControls, parsedDataSource);
+          const { relationControls = [] }: { relationControls: FormControl[]; [key: string]: any } = getControlByControlId(allControls, parsedDataSource);
           const selectedControl = getControlByControlId(relationControls, sourceControlId);
           return isShowUnitConfig(data, selectedControl);
         case 51:
@@ -574,7 +575,7 @@ export const supportSettingCollapse = (props, key) => {
 
       if (currentControl.type === 30) {
         const parsedDataSource = parseDataSource(dataSource);
-        const { relationControls = [] } = getControlByControlId(allControls, parsedDataSource);
+        const { relationControls = [] }: { relationControls: FormControl[]; [key: string]: any } = getControlByControlId(allControls, parsedDataSource);
         const parsedControl = getControlByControlId(relationControls, sourceControlId);
         currentControl = parsedControl;
       }
@@ -602,7 +603,7 @@ export const supportSettingCollapse = (props, key) => {
 
 // 各控件分别支持哪些配置
 // 设置、样式、说明、事件
-export const supportWidgetIntroOptions = (data = {}, introType, from, isRecycle = false) => {
+export const supportWidgetIntroOptions = (data = {}, introType, from?, isRecycle = false) => {
   // 回收站不显示样式、说明
   if (isRecycle) return false;
   // 分段、他表、标签页
@@ -614,12 +615,12 @@ export const supportWidgetIntroOptions = (data = {}, introType, from, isRecycle 
 };
 
 // 过滤系统字段专用
-export const filterSysControls = (controls = []) => {
+export const filterSysControls = (controls: FormControl[] = []) => {
   return controls.filter(c => !_.includes(ALL_SYS, c.controlId));
 };
 
 // 拖拽补key,完成去key
-export const getSortItems = (items = [], addKey, controlId = '') => {
+export const getSortItems = (items = [], addKey: boolean, controlId = '') => {
   return items.map((i, index) => {
     return addKey ? { ...i, key: `${controlId}item_${index}` } : { ..._.omit(i, ['key']) };
   });
@@ -631,7 +632,7 @@ export const isCustomWidget = data => {
 };
 
 // 校验某些控件上限
-export const checkWidgetMaxNumErr = (data, allControls = []) => {
+export const checkWidgetMaxNumErr = (data, allControls: FormControl[] = []) => {
   // 自定义控件超出提示
   if (isCustomWidget(data) && allControls.filter(isCustomWidget).length >= 5) {
     return _l('超过自定义字段数量限制');
@@ -650,7 +651,7 @@ export const parseDataSource = dataSource => {
 };
 
 // 表单保存选项集不校验
-export const checkOptionsRepeat = (controls = [], checkCollections = true) => {
+export const checkOptionsRepeat = (controls: FormControl[] = [], checkCollections = true) => {
   for (const c of controls) {
     if (_.includes([9, 10, 11], c.type) && c.dataSource ? checkCollections : true) {
       const noDelOptions = (c.options || []).filter(o => o && !o.isDeleted);

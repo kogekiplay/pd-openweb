@@ -14,6 +14,7 @@ import { filterControlsFromAll } from '../../../util';
 import { getAdvanceSetting, isSingleRelateSheet } from '../../../util/setting';
 import EmptyRuleConfig from '../EmptyRuleConfig';
 import './FilterDialog.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function FilterDialog(props) {
   const {
@@ -36,7 +37,7 @@ export default function FilterDialog(props) {
     sheetSwitchPermit = [],
     showEmptyRule = false,
     from,
-  } = props;
+  }: { allControls: FormControl[]; relationControls: FormControl[]; [key: string]: any } = props;
 
   const { sourceControlId = '', type = '' } = data;
   const originFilters = props.filters || getAdvanceSetting(data, [filterKey]);

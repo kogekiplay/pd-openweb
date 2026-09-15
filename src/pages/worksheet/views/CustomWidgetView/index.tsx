@@ -6,10 +6,12 @@ import { arrayOf, bool, func, shape, string } from 'prop-types';
 import styled from 'styled-components';
 import { CUSTOM_WIDGET_VIEW_STATUS, PLUGIN_INFO_SOURCE, PLUGIN_INFO_STATE } from 'worksheet/constants/enum';
 import * as actions from 'src/pages/worksheet/redux/actions/customWidgetView';
+import type { RootState } from 'src/redux/types';
 import { browserIsMobile } from 'src/utils/common';
 import { emitter } from 'src/utils/common';
 import Abnormal from './Abnormal';
 import WidgetContainer from './WidgetContainer';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   height: 100%;
@@ -71,7 +73,7 @@ function CustomWidgetViewContent(props) {
     quickFilter,
     navGroupFilters,
     refresh,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
 
   const { isPublished = false, currentScriptUrl } = view;
   const debugUrl = localStorage.getItem('customViewDebugUrl_' + viewId);
@@ -154,7 +156,7 @@ CustomWidgetView.propTypes = {
 };
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     ..._.pick(state.sheet, [
       'customWidgetView',
       'controls',

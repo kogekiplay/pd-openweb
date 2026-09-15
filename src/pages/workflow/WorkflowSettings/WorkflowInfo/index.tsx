@@ -5,6 +5,7 @@ import { Drawer } from 'antd';
 import styled from 'styled-components';
 import { SvgIcon, Textarea } from 'ming-ui';
 import { dialogSelectIcon } from 'ming-ui/functions';
+import type { RootState } from 'src/redux/types';
 import { updateProcess } from '../../redux/actions';
 import { DetailFooter } from '../Detail/components';
 import './index.less';
@@ -158,4 +159,4 @@ class WorkflowInfo extends Component<any, any> {
   }
 }
 
-export default connect(state => state.workflow)(WorkflowInfo);
+export default connect((state: RootState) => state.workflow)(WorkflowInfo);

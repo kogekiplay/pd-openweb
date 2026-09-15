@@ -185,7 +185,8 @@ function ContainerCon(props) {
   //根据appid 或  domainName 获取当前应用的登录页面 以及应用状态
   const getBaseInfo = ({ cb }) => {
     let domainName = '';
-    let ajaxPromise = '';
+    // 装在途 ajax 句柄；初值 '' 会把它推成 string
+    let ajaxPromise: ApiResult | string = '';
     let request = getRequest();
 
     if (paramForPcWx) {

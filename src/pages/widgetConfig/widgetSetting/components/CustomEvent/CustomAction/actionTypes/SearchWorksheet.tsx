@@ -22,6 +22,7 @@ import { getControls } from '../../../DynamicDefaultValue/util';
 import EmptyRuleConfig from '../../../EmptyRuleConfig';
 import SelectWorksheet from '../../../SearchWorksheet/SelectWorksheet';
 import SelectControl from '../../../SelectControl';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const RadioDisplay = [
   {
@@ -50,7 +51,7 @@ const EmptyDisplay = [
 ];
 
 // 关联记录、子表等他表字段需要处理controls
-const dealRelationControls = (controls = []) => {
+const dealRelationControls = (controls: FormControl[] = []) => {
   return controls.map((control = {}) => {
     if (control.type === 30) {
       const currentItemRelate = _.find(controls, c => (control.dataSource || '').includes(c.controlId)) || {};
@@ -167,7 +168,7 @@ class SearchWorksheetActionDialog extends Component<any, any> {
     worksheetAjax
       .getWorksheetInfo({ worksheetId: sheetId, getTemplate: true, getSwitchPermit: true, appId, getViews: true })
       .then(res => {
-        const { controls = [] } = res.template || {};
+        const { controls = [] }: { controls: FormControl[]; [key: string]: any } = res.template || {};
         this.setState({
           controls: controls,
           sheetName: res.name,
@@ -236,7 +237,7 @@ class SearchWorksheetActionDialog extends Component<any, any> {
   }, 300);
 
   // 获取查询表映射数据
-  getDropData = (controls = [], control = {}, hasRowId) => {
+  getDropData = (controls: FormControl[] = [], control = {}, hasRowId) => {
     const { configs = [] } = this.state;
     controls = controls.filter(
       a =>
@@ -273,7 +274,7 @@ class SearchWorksheetActionDialog extends Component<any, any> {
   };
 
   // 过滤已经选中的本表字段
-  filterSelectControls = controls => {
+  filterSelectControls = (controls?) => {
     const { allControls = [] } = this.props;
     const { configs = [] } = this.state;
     controls = (controls || allControls).filter(a => !_.find(configs, c => c.cid === a.controlId));
@@ -307,7 +308,7 @@ class SearchWorksheetActionDialog extends Component<any, any> {
     const curIsSubList = _.get(cidControl, 'type') === 34;
 
     if (curIsSubList) {
-      const { relationControls = [], showControls = [] } = cidControl;
+      const { relationControls = [], showControls = [] }: { relationControls: FormControl[]; [key: string]: any } = cidControl;
       cidControls = relationControls.filter(r => _.includes(showControls, r.controlId));
     }
 

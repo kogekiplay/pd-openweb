@@ -20,7 +20,7 @@ export default function (props) {
     });
   }, [keys, isOpen, password]);
 
-  const passwordOnWarn = (txt, changeWarn, info) => {
+  const passwordOnWarn = (txt: string, changeWarn: boolean, info) => {
     if (keys.includes('setPassword') || (changeWarn && keys.includes('password'))) {
       let data = _.filter(warnList, it => !('inputPassword' === it.tipDom));
 

@@ -9,6 +9,7 @@ import { canSetAsTitle, formatControlsToDropdown } from 'src/pages/widgetConfig/
 import SortColumns from 'src/pages/worksheet/components/SortColumns/SortColumns';
 import { DisplayMode, SettingItem } from '../../../styled';
 import { getAdvanceSetting, getControlsSorts, handleAdvancedSettingChange } from '../../../util/setting';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const MobileSubListWrap = styled.div`
   .targetEle .Dropdown--input {
@@ -66,7 +67,7 @@ const FIELD_DISPLAY_OPTIONS = [
 
 // 移动端设置
 export default function MobileSubList({ data, onChange }) {
-  const { showControls = [], relationControls = [] } = data;
+  const { showControls = [], relationControls = [] }: { relationControls: FormControl[]; [key: string]: any } = data;
   let { h5showtype = '1', h5abstractids, h5height, columnnum, showtitleid } = getAdvanceSetting(data);
   const columnNum = columnnum || '1';
   const abstractIds = safeParse(h5abstractids || '[]').filter(i => _.find(relationControls, r => r.controlId === i));

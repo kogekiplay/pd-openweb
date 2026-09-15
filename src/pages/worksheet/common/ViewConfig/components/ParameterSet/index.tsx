@@ -9,6 +9,7 @@ import { isUnTextWidget } from 'src/components/Form/core/utils';
 import { getIconByType } from 'src/pages/widgetConfig/util';
 import RefreshTime from 'src/pages/worksheet/common/ViewConfig/components/RefreshTime.jsx';
 import SortColumns from 'src/pages/worksheet/components/SortColumns/SortColumns';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrap = styled.div`
   .emptyCon {
@@ -76,8 +77,9 @@ const Wrap = styled.div`
   }
 `;
 
-const getAllTypes = (controls = []) => {
-  let allTypes = [];
+// 注意：这里的 controls 装的是【类型码字符串】（'11' 单选 / '15' 日期 …），不是控件对象
+const getAllTypes = (controls: string[] = []) => {
+  let allTypes: number[] = [];
   controls.forEach(o => {
     switch (o) {
       // case 'DROP_DOWN':
@@ -108,7 +110,7 @@ const ColumnDrop = props => {
   let { value, advancedSetting = {}, controls = [], worksheetControls = [] } = props;
   const { max } = advancedSetting;
   const allTypes = getAllTypes(controls);
-  const allColumns = worksheetControls.filter(o => allTypes.includes(o.type));
+  const allColumns = worksheetControls.filter((o: FormControl) => allTypes.includes(o.type as number));
 
   return (
     <div className="">
@@ -148,7 +150,7 @@ const CustomControlDrop = props => {
   }
 
   const allTypes = props.sourceControlType === 29 ? [29, 34] : getAllTypes(props.controls);
-  const allColumns = worksheetControls.filter(o => allTypes.includes(o.type));
+  const allColumns = worksheetControls.filter((o: FormControl) => allTypes.includes(o.type as number));
   return (
     <div className="flexRow">
       <Dropdown
@@ -180,7 +182,7 @@ const CustomControlDrop = props => {
           }
 
           if (props.sourceControlType === 29) {
-            const info = worksheetControls.find(o => o.controlId === value) || {};
+            const info = worksheetControls.find((o: FormControl) => o.controlId === value) || {};
             props.onChange({ type: info.type, value: { cid: value, showControls: [] } });
             return;
           }
@@ -325,7 +327,7 @@ export default function ParameterSet(params) {
     cache.current.paramSettings = paramSettings;
   }, [paramSettings]);
 
-  const handleUpdate = data => {
+  const handleUpdate = (data?) => {
     let newData = {};
     (data || cache.current.paramSettings).map(item => {
       newData[item.fieldId] =
@@ -340,7 +342,7 @@ export default function ParameterSet(params) {
     );
   };
 
-  const renderReshTime = isNull => {
+  const renderReshTime = (isNull?) => {
     const { pluginInfo = {} } = view;
     const { switchSettings = {} } = pluginInfo;
     return switchSettings.showRefresh === '1' ? (

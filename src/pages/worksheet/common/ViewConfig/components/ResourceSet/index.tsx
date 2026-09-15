@@ -10,6 +10,7 @@ import { AnimationWrap } from 'src/pages/worksheet/common/ViewConfig/style.jsx';
 import { resourceTypes, weekObj } from 'src/pages/worksheet/views/ResourceView/config.js';
 import BaseInfo from './BaseInfo';
 import EditTimes from './EditTimes';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrap = styled.div`
   .ming.Dropdown.isDelete .Dropdown--input .value,
@@ -60,10 +61,10 @@ export default function ResourceSet(props) {
   });
 
   useEffect(() => {
-    const { worksheetControls = [] } = props;
+    const { worksheetControls = [] }: { worksheetControls: FormControl[]; [key: string]: any } = props;
     const timeControls = worksheetControls
       .filter(
-        item =>
+        (item: FormControl) =>
           //支持的字段类型：日期、他表字段（日期）、汇总（日期）、公式（日期）
           _.includes([15, 16], item.type) || //日期
           (item.type === 30 && _.includes([15, 16], item.sourceControlType)) || //他表字段（日期）

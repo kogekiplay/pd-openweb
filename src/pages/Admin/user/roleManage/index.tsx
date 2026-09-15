@@ -2,10 +2,10 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Tree } from 'antd';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Checkbox, Dialog, Icon, LoadDiv, Menu, MenuItem, ScrollView } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -16,6 +16,7 @@ import DisabledDepartmentAndRoleName from 'src/components/DisabledDepartmentAndR
 import AdminTitle from 'src/pages/Admin/common/AdminTitle';
 import { CLEAR_CACHE_PROCESS_TYPE, PERMISSION_ENUM } from 'src/pages/Admin/enum';
 import { downloadFile } from 'src/pages/Admin/util';
+import type { RootState } from 'src/redux/types';
 import { getCurrentProject } from 'src/utils/project';
 import ImportDeptAndRole from '../../components/ImportDeptAndRole';
 import * as actions from '../../redux/roleManage/action';
@@ -1059,7 +1060,7 @@ class RoleManage extends Component<any, any> {
 }
 
 export default connect(
-  state => {
+  (state: RootState) => {
     const { roleList, isLoading, currentRole, projectId, isImportRole, rolePageInfo, searchValue } =
       state.orgManagePage.roleManage;
     return { roleList, isLoading, currentRole, projectId, isImportRole, rolePageInfo, searchValue };

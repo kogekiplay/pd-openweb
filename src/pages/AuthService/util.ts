@@ -114,7 +114,7 @@ export const cacheDefaultCountry = ({ emailOrTel = '', dialCode = '' } = {}) => 
 };
 
 //  注册流程后登录成功跳转
-export const registerSuc = (registerData, action) => {
+export const registerSuc = (registerData, action?) => {
   const { emailOrTel, dialCode, password } = registerData;
   let request = getRequest();
   let returnUrl = getDataByFilterXSS(request.ReturnUrl || '');
@@ -198,7 +198,7 @@ export const getDefaultCountry = () => {
   return window.localStorage.getItem('DefaultCountry') || _.get(md, 'global.Config.DefaultRegion') || 'cn';
 };
 
-export const getAccountTypes = isLogin => {
+export const getAccountTypes = (isLogin?: boolean) => {
   const { enableMobilePhoneRegister, enableEmailRegister, hideRegister } = _.get(md, 'global.SysSettings');
 
   //登录 ｜ 关闭了注册

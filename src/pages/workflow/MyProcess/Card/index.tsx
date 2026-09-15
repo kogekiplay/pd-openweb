@@ -9,6 +9,7 @@ import { FLOW_FAIL_REASON } from 'src/pages/workflow/WorkflowSettings/History/co
 import { dateConvertToUserZone } from 'src/utils/project';
 import { covertTime, FLOW_NODE_TYPE_STATUS, INSTANCELOG_STATUS, TABS } from '../config';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default class Card extends Component<any, any> {
   constructor(props) {
@@ -367,7 +368,7 @@ export default class Card extends Component<any, any> {
     );
   }
   renderControl(item) {
-    const { controls } = this.props.item;
+    const { controls }: { controls: FormControl[]; [key: string]: any } = this.props.item;
     return (
       <div key={item.controlId} className={cx('controlWrapper flexColumn mTop10', { flex: controls.length <= 1 })}>
         <div className="textSecondary ellipsis">{item.controlName}</div>
@@ -376,7 +377,7 @@ export default class Card extends Component<any, any> {
     );
   }
   renderFooter() {
-    const { controls } = this.props.item;
+    const { controls }: { controls: FormControl[]; [key: string]: any } = this.props.item;
     return (
       <div className="cardFooter flexRow Font13">
         {controls.filter(item => item.controlName).map(item => this.renderControl(item))}

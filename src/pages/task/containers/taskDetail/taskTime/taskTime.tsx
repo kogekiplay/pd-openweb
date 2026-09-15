@@ -4,6 +4,7 @@ import cx from 'classnames';
 import moment from 'moment';
 import { Tooltip } from 'ming-ui/antd-components';
 import { DateTime } from 'ming-ui/components/NewDateTimePicker';
+import type { RootState } from 'src/redux/types';
 import config, { OPEN_TYPE } from '../../../config/config';
 import { updateCompletedTime, updateTaskActualStartTime, updateTaskStartTimeAndDeadline } from '../../../redux/actions';
 import { afterUpdateTaskDate, afterUpdateTaskDateInfo } from '../../../utils/taskComm';
@@ -277,7 +278,7 @@ class TaskTime extends Component<any, any> {
   /**
    * 修改计划开始时间或计划结束时间
    */
-  updatePlanTime(time, isUpdateStartTime) {
+  updatePlanTime(time, isUpdateStartTime?: boolean) {
     const { taskId, openType } = this.props;
     const { data } = this.props.taskDetails[taskId];
 
@@ -533,4 +534,4 @@ class TaskTime extends Component<any, any> {
   }
 }
 
-export default connect(state => state.task)(TaskTime);
+export default connect((state: RootState) => state.task)(TaskTime);

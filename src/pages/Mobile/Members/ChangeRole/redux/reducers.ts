@@ -1,3 +1,4 @@
+import type { ReduxAction } from 'src/redux/types';
 export const roleList = (
   state = {
     data: [],
@@ -12,7 +13,7 @@ export const roleList = (
   }
 };
 
-export const isRoleListLoading = (state = true, action) => {
+export const isRoleListLoading = (state = true, action: ReduxAction) => {
   switch (action.type) {
     case 'MOBILE_ROLE_LIST_FETCH_START':
       return true;
@@ -23,7 +24,7 @@ export const isRoleListLoading = (state = true, action) => {
   }
 };
 
-export const moveRoleFetch = (state = false, action) => {
+export const moveRoleFetch = (state = false, action: ReduxAction) => {
   switch (action.type) {
     case 'MOBILE_ROLE_MOVE_FETCH_START':
       return false;

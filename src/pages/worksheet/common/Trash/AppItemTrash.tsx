@@ -99,7 +99,7 @@ export default function AppItemTrash(props) {
   const cache = useRef({});
   const [loading, setLoading] = useState(true);
   const [pageIndex, setPageIndex] = useState(1);
-  const [loadOuted, setLoadOuted] = useState();
+  const [loadOuted, setLoadOuted] = useState<boolean | undefined>();
   const [appItems, setAppItems] = useState([]);
   const [keyword, setKeyword] = useState();
 
@@ -140,7 +140,7 @@ export default function AppItemTrash(props) {
     <span className="textTertiary">{createTimeSpan(dateConvertToUserZone(appItem.deleteTime))}</span>,
   ]);
 
-  function setPendingCache(key, value) {
+  function setPendingCache(key, value: boolean) {
     cache.current['pending_' + key] = value;
   }
 

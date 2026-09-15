@@ -6,6 +6,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { ShowFormatDialog } from 'src/pages/widgetConfig/widgetSetting/components/WidgetHighSetting/ControlSetting/DateConfig';
 import { PRINT_FILE_OPTIONS, SYST_PRINT, TIME_FORMAT, UN_PRINT_CONTROL, USER_CONTROLS } from '../../core/config';
 import { isRelation, sortByShowControls } from '../../core/util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const ControlsSettingConfig = [
   {
@@ -33,8 +34,8 @@ export default function ControlsSetting(props) {
     handChange,
     getIsChecked,
     changeAdvanceSettings,
-  } = props;
-  const { orderNumber, receiveControls = [], advanceSettings = [] } = printData;
+  }: { controls: FormControl[]; [key: string]: any } = props;
+  const { orderNumber, receiveControls = [], advanceSettings = [] }: { receiveControls: FormControl[]; [key: string]: any } = printData;
   const fileStyle = safeParse(
     _.get(
       advanceSettings.find(l => l.key === 'atta_style'),
@@ -70,7 +71,7 @@ export default function ControlsSetting(props) {
   const getRelationControlsShowPart = it => {
     if (it.checked) {
       let orderNumberCheck = (orderNumber.find(o => o.receiveControlId === it.controlId) || []).checked;
-      let controls =
+      let controls: FormControl[] =
         it.showControls.length > 0
           ? (it.relationControls || []).filter(o => it.showControls.includes(o.controlId))
           : [];
@@ -82,7 +83,7 @@ export default function ControlsSetting(props) {
 
   const setReceiveControls = (o, checked) => {
     let isChecked = checked;
-    const controls =
+    const controls: FormControl[] =
       o.showControls.length > 0 ? o.relationControls.filter(it => o.showControls.includes(it.controlId)) : [];
 
     if (controls.map(o => o.checked).includes(true)) {

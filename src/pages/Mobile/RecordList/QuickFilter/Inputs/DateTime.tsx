@@ -22,7 +22,7 @@ const InputCon = styled(Input)`
 
 const replaceTimeValue = value => (value.replace ? value.replace(/[\u4e00-\u9fa5]+/g, '-') : value);
 
-const formatValue = (control, value, valueFormat) => {
+const formatValue = (control, value, valueFormat: string) => {
   const showType = _.get(control, 'advancedSetting.showtype');
   return value
     ? control.controlId === 'ctime' || control.controlId === 'utime'

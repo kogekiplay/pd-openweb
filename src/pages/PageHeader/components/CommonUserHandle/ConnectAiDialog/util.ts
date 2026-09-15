@@ -27,7 +27,7 @@ export const buildPersonalConfig = (tokenItem, needMask = false) => {
 };
 
 export const buildAppConfig = (appItem, authItem, needMask = false) => {
-  const maskAppCredential = (str, startW, endW, middleW) => {
+  const maskAppCredential = (str, startW: number, endW, middleW: number) => {
     if (typeof str !== 'string') return '';
     const start = str.slice(0, startW);
     const end = str.slice(-endW);

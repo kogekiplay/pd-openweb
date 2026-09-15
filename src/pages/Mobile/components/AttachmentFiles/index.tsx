@@ -308,7 +308,7 @@ export class UploadFileWrapper extends Component<any, any> {
     };
     return method;
   }
-  setUploadLock(uploader, locked) {
+  setUploadLock(uploader, locked: boolean) {
     this.uploading = locked;
     this.setBrowseDisabled(uploader, locked);
   }

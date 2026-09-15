@@ -59,7 +59,7 @@ function ConnectDataBase(props) {
     }
   }, [id]);
 
-  const updateAddressPost = (data, index) => {
+  const updateAddressPost = (data, index: number) => {
     const newAddressList = addressList.map((item, i) => (i === index ? data : item));
     setAddressList(newAddressList);
   };

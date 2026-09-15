@@ -1,4 +1,5 @@
-export const sheetDiscussions = (state = [], action) => {
+import type { ReduxAction } from 'src/redux/types';
+export const sheetDiscussions = (state = [], action: ReduxAction) => {
   switch (action.type) {
     case 'MOBILE_SET_SHEET_DISCUSSION':
       return action.data;
@@ -11,7 +12,7 @@ export const sheetDiscussions = (state = [], action) => {
   }
 };
 
-export const sheetLogs = (state = [], action) => {
+export const sheetLogs = (state = [], action: ReduxAction) => {
   switch (action.type) {
     case 'MOBILE_SET_SHEET_LOG':
       return action.data;
@@ -22,7 +23,7 @@ export const sheetLogs = (state = [], action) => {
   }
 };
 
-export const sheetAttachments = (state = [], action) => {
+export const sheetAttachments = (state = [], action: ReduxAction) => {
   switch (action.type) {
     case 'MOBILE_SET_SHEET_ATTACHMENTS':
       return action.data;

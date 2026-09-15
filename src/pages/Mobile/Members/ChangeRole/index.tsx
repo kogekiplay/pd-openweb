@@ -4,6 +4,7 @@ import { Button, Dialog, List, SpinLoading } from 'antd-mobile';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Icon } from 'ming-ui';
+import type { RootState } from 'src/redux/types';
 import { pathCompletion } from 'src/utils/common';
 import * as actions from './redux/actions';
 import './index.less';
@@ -125,7 +126,7 @@ class ChangeRole extends React.Component<any, any> {
   }
 }
 
-export default connect(state => {
+export default connect((state: RootState) => {
   const { roleList, isRoleListLoading, moveRoleFetch } = state.mobile;
   return {
     roleList,

@@ -10,6 +10,7 @@ import { browserIsMobile } from 'src/utils/common';
 import { getRecordCardStyle, getTitleTextFromRelateControl } from 'src/utils/control';
 import { CardButton } from '../Basics';
 import CardCellControls from './CardCellControls';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   ${({ isMobile }) => (isMobile ? 'margin-bottom:10px' : 'display: inline-flex;')}
@@ -125,7 +126,7 @@ export default function RecordCoverCard(props) {
     isCharge,
     sheetSwitchPermit = [],
     onReplaceRecord = () => {},
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const isMobile = browserIsMobile();
   const [forceShowFullValue, setForceShowFullValue] = useState(false);
   const titleControl = _.find(parentControl.relationControls, { attribute: 1 });

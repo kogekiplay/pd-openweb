@@ -12,12 +12,30 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo, useR
 //   const bus = useAgentBus(); bus.emit('file:begin', { path: 'plan.md' });
 //   useAgentEvent('file:begin', ({ path }) => ...);
 
-const BusContext = createContext(null);
+/**
+ * payload 的形状随 topic 变，而 topic 是使用方按需加的开放集合
+ * （见上面的约定），所以这里不可能有比 any 更精确的类型。
+ * 要收窄得先把 topic 收成有限联合并逐个绑定 payload，那是另一件事。
+ */
+type BusPayload = any;
 
-export function AgentBusProvider({ children }) {
-  const listenersRef = useRef(new Map());
+type BusHandler = (payload: BusPayload, topic: string) => void;
 
-  const on = useCallback((topic, handler) => {
+export interface AgentBus {
+  /** 订阅 topic，返回取消订阅的函数 */
+  on: (topic: string, handler: BusHandler) => () => void;
+  emit: (topic: string, payload?: BusPayload) => void;
+}
+
+// 必须写成 AgentBus | null：只写 createContext(null) 的话 context 类型就是 null，
+// 下面 useAgentBus 里 `if (!ctx) throw` 之后 ctx 被收窄成 never，
+// 于是每一个 bus.emit(...) 调用点都报「emit 不存在于 never」（全仓 38 处）。
+const BusContext = createContext<AgentBus | null>(null);
+
+export function AgentBusProvider({ children }: { children?: React.ReactNode }) {
+  const listenersRef = useRef(new Map<string, Set<BusHandler>>());
+
+  const on = useCallback((topic: string, handler: BusHandler) => {
     let set = listenersRef.current.get(topic);
 
     if (!set) {
@@ -31,7 +49,7 @@ export function AgentBusProvider({ children }) {
     };
   }, []);
 
-  const emit = useCallback((topic, payload) => {
+  const emit = useCallback((topic: string, payload?: BusPayload) => {
     const set = listenersRef.current.get(topic);
 
     if (!set || set.size === 0) return;
@@ -50,7 +68,7 @@ export function AgentBusProvider({ children }) {
   return <BusContext.Provider value={value}>{children}</BusContext.Provider>;
 }
 
-export function useAgentBus() {
+export function useAgentBus(): AgentBus {
   const ctx = useContext(BusContext);
 
   if (!ctx) {
@@ -60,7 +78,7 @@ export function useAgentBus() {
 }
 
 // 语法糖：组件挂载时订阅 topic，卸载时自动取消
-export function useAgentEvent(topic, handler) {
+export function useAgentEvent(topic: string, handler: BusHandler) {
   const { on } = useAgentBus();
   // handler 用 ref 持续指向最新闭包，避免每次重新订阅
   const handlerRef = useRef(handler);

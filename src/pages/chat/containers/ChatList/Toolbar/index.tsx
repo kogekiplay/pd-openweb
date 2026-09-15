@@ -8,6 +8,7 @@ import { Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import * as actions from 'src/pages/chat/redux/actions';
 import GlobalSearch from 'src/pages/PageHeader/components/GlobalSearch';
+import type { RootState } from 'src/redux/types';
 import { getAppFeaturesVisible } from 'src/utils/common';
 import errorIcon from '../../SessionList/resource/errorIcon.png';
 import Avatar from '../Avatar';
@@ -169,7 +170,7 @@ const Toolbar = props => {
 };
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     toolbarConfig: state.chat.toolbarConfig,
     sessionList: state.chat.sessionList,
     socketState: state.chat.socketState,

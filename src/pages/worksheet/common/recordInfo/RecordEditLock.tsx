@@ -17,7 +17,69 @@ const EDIT_LOCK_STATUS = {
   ROW_READ_ONLY: 8, //记录只读
 };
 
+/** 表单高级设置里的 roweditlock，safeParse 出来的值都是后端存的字符串；关掉编辑锁时是 {}，所以全部可选 */
+interface RowEditLock {
+  /** 编辑保护超时（分钟） */
+  expiretime?: string;
+  /** 超时前多久开始倒计时提醒（分钟），'0' 表示不提醒 */
+  countdown?: string;
+  /** 超时后的动作，'2' = 只能重新获取最新记录 */
+  expiredaction?: string;
+}
+
+/**
+ * CheckRowEditLock / GetRowEditLock 的返回。
+ * 这两处都带 ajaxOptions.sync，接口【直接返回结果对象】而不是 Promise ——
+ * 所以 lockData 的类型是它本身，不要写成 Promise<LockData>。
+ */
+interface LockData {
+  /** 见 EDIT_LOCK_STATUS */
+  status: number;
+  /** 锁定者账号信息，只用于渲染提示 */
+  lockAccount?: { [key: string]: any };
+  /** 他人提交记录的时间；晚于本次 timeoutTime 说明当前编辑已失效 */
+  submitTime?: string;
+}
+
+/** _.throttle 的返回值：可调用 + cancel/flush。显式写出来是为了切断 checkAndLock ↔ resetLockTimers 的类型推断环 */
+type ThrottledCheck = ((getRowUpdateTime?: boolean) => boolean | undefined) & {
+  cancel: () => void;
+  flush: () => boolean | undefined;
+};
+
+/** 两个超时弹层共用的入参（onClose 由 FunctionWrap 注入，不在调用方手里） */
+interface LockDialogProps {
+  rowEditLock: RowEditLock;
+  onRefreshRecord: () => void;
+  checkAndLock: ThrottledCheck;
+  clearThrottle: () => void;
+  updateTimeoutTime: (time: number | null) => void;
+}
+
+interface RecordEditLockOptions {
+  worksheetId: string;
+  recordId: string;
+  rowEditLock?: RowEditLock;
+  updateLockedUser?: (user: LockData['lockAccount'] | null) => void;
+  onLockCallBack?: () => void;
+  onRefreshRecord?: () => void;
+}
+
 export default class RecordEditLock {
+  declare worksheetId: string;
+  declare recordId: string;
+  declare rowEditLock: RowEditLock;
+  declare updateLockedUser: NonNullable<RecordEditLockOptions['updateLockedUser']>;
+  declare onLockCallBack: () => void;
+  declare onRefreshRecord: () => void;
+  declare lockStatusInterval: ReturnType<typeof setInterval> | null;
+  declare toastTimer: ReturnType<typeof setTimeout> | null;
+  declare lockTimer: ReturnType<typeof setTimeout> | null;
+  /** 本次编辑开始计时的时刻；null 表示没有在计时 */
+  declare timeoutTime: number | null;
+  /** 构造函数里 getEditLockStatus() 必定赋值，所以不是可选 */
+  declare lockData: LockData;
+
   constructor({
     worksheetId,
     recordId,
@@ -25,7 +87,7 @@ export default class RecordEditLock {
     updateLockedUser = () => {},
     onLockCallBack = () => {},
     onRefreshRecord = () => {},
-  }) {
+  }: RecordEditLockOptions) {
     this.worksheetId = worksheetId;
     this.recordId = recordId;
     this.rowEditLock = rowEditLock || {};
@@ -44,7 +106,11 @@ export default class RecordEditLock {
   //获取锁状态
   getEditLockStatus() {
     const { worksheetId, recordId } = this;
-    this.lockData = worksheetAjax.checkRowEditLock({ worksheetId, rowId: recordId }, { ajaxOptions: { sync: true } });
+    // sync 调用【同步返回结果对象】，但 src/api/* 的包装函数统一声明成 ApiResult（见 types/global.d.ts）
+    this.lockData = worksheetAjax.checkRowEditLock(
+      { worksheetId, rowId: recordId },
+      { ajaxOptions: { sync: true } },
+    ) as unknown as LockData;
 
     if (this.lockData.status === EDIT_LOCK_STATUS.LOCKED) {
       if (this.lockStatusInterval) {
@@ -61,7 +127,7 @@ export default class RecordEditLock {
     const { worksheetId, recordId } = this;
 
     this.lockStatusInterval = setInterval(() => {
-      worksheetAjax.checkRowEditLock({ worksheetId, rowId: recordId }).then(res => {
+      worksheetAjax.checkRowEditLock({ worksheetId, rowId: recordId }).then((res: LockData) => {
         if (res.status === EDIT_LOCK_STATUS.UNLOCK) {
           if (this.lockStatusInterval) clearInterval(this.lockStatusInterval);
           this.updateLockedUser(null);
@@ -70,7 +136,8 @@ export default class RecordEditLock {
     }, 10 * 1000);
   }
 
-  updateTimeoutDialog = locked => {
+  // locked 省略时表示"记录已被修改"，传 true 表示"正在被其他人编辑"
+  updateTimeoutDialog = (locked?: boolean) => {
     //更新超时弹层的description文本
     const descDom = document.getElementById('timeoutDesc');
 
@@ -82,7 +149,7 @@ export default class RecordEditLock {
     }
 
     //disabled按钮
-    const continueBtn = document.querySelector('.editTimeoutConfirmClass [data-id="confirmBtn"]');
+    const continueBtn = document.querySelector<HTMLButtonElement>('.editTimeoutConfirmClass [data-id="confirmBtn"]');
 
     if (continueBtn) {
       continueBtn.disabled = true;
@@ -91,14 +158,14 @@ export default class RecordEditLock {
   };
 
   //检查锁状态并且占用锁
-  checkAndLock = _.throttle(
+  checkAndLock: ThrottledCheck = _.throttle(
     (getRowUpdateTime = false) => {
       const { worksheetId, recordId } = this;
 
       const res = worksheetAjax.getRowEditLock(
         { worksheetId, rowId: recordId, getRowUpdateTime },
         { ajaxOptions: { sync: true } },
-      );
+      ) as unknown as LockData;
 
       this.lockData = res;
 
@@ -131,14 +198,18 @@ export default class RecordEditLock {
   );
 
   //占锁计时
-  resetLockTimers() {
+  // 显式标 void：不标的话 TS 要从函数体推断，而函数体又用到 checkAndLock，
+  // 与 checkAndLock 的类型互相依赖成环。
+  resetLockTimers(): void {
     this.destroy();
 
     const { expiretime, countdown } = this.rowEditLock;
-    const timeOutMs = parseInt(expiretime) * 60 * 1000;
-    const countDownMs = parseInt(countdown) * 60 * 1000;
+    // 包一层 String 而不是 `|| '0'`：字段缺失时 parseInt 得到 NaN，
+    // setTimeout 当 0 处理立刻触发 —— 这是改造前的行为，别顺手"修好"它。
+    const timeOutMs = parseInt(String(expiretime)) * 60 * 1000;
+    const countDownMs = parseInt(String(countdown)) * 60 * 1000;
 
-    const dialogProps = {
+    const dialogProps: LockDialogProps = {
       rowEditLock: this.rowEditLock,
       onRefreshRecord: this.onRefreshRecord,
       checkAndLock: this.checkAndLock,
@@ -152,7 +223,7 @@ export default class RecordEditLock {
       this.toastTimer = setTimeout(() => {
         openCountdownDialog({
           ...dialogProps,
-          onAbortCountdown: seconds => {
+          onAbortCountdown: (seconds: number) => {
             this.lockTimer = setTimeout(() => {
               openTimeoutDialog(dialogProps);
             }, seconds * 1000);
@@ -170,7 +241,7 @@ export default class RecordEditLock {
     const { worksheetId, recordId } = this;
 
     if ([EDIT_LOCK_STATUS.CURRENT_USER_LOCK, EDIT_LOCK_STATUS.UNLOCK].includes(this.lockData?.status)) {
-      worksheetAjax.cancelRowEditLock({ worksheetId, rowId: recordId }).then(res => {
+      worksheetAjax.cancelRowEditLock({ worksheetId, rowId: recordId }).then((res: boolean) => {
         if (res) {
           // 清除 throttle
           this.checkAndLock.cancel();
@@ -187,17 +258,19 @@ export default class RecordEditLock {
   }
 }
 
-const CountDownDialog = props => {
+const CountDownDialog = (
+  props: LockDialogProps & { onClose: () => void; onAbortCountdown: (seconds: number) => void },
+) => {
   const { onClose, rowEditLock, onRefreshRecord, checkAndLock, clearThrottle, onAbortCountdown, updateTimeoutTime } =
     props;
-  const [remainingSeconds, setRemainingSeconds] = useState(parseInt(rowEditLock.countdown) * 60);
-  const countdownRef = useRef(null);
+  const [remainingSeconds, setRemainingSeconds] = useState(parseInt(String(rowEditLock.countdown)) * 60);
+  const countdownRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     countdownRef.current = setInterval(() => {
       setRemainingSeconds(prev => {
         if (prev <= 1) {
-          clearInterval(countdownRef.current);
+          if (countdownRef.current) clearInterval(countdownRef.current);
           countdownRef.current = null;
           onClose();
           openTimeoutDialog({ rowEditLock, onRefreshRecord, checkAndLock, clearThrottle, updateTimeoutTime });
@@ -208,7 +281,10 @@ const CountDownDialog = props => {
       });
     }, 1000);
 
-    return () => clearInterval(countdownRef.current); // 组件卸载时清理定时器
+    // 组件卸载时清理定时器
+    return () => {
+      if (countdownRef.current) clearInterval(countdownRef.current);
+    };
   }, []);
 
   const title = (
@@ -247,11 +323,11 @@ const CountDownDialog = props => {
   );
 };
 
-const openCountdownDialog = props => {
+const openCountdownDialog = (props: LockDialogProps & { onAbortCountdown: (seconds: number) => void }) => {
   FunctionWrap(CountDownDialog, props);
 };
 
-const TimeOutDialog = props => {
+const TimeOutDialog = (props: LockDialogProps & { onClose: () => void }) => {
   const { onClose, rowEditLock, onRefreshRecord, checkAndLock, clearThrottle, updateTimeoutTime } = props;
   const { expiredaction, expiretime } = rowEditLock;
 
@@ -316,6 +392,6 @@ const TimeOutDialog = props => {
   );
 };
 
-const openTimeoutDialog = props => {
+const openTimeoutDialog = (props: LockDialogProps) => {
   FunctionWrap(TimeOutDialog, props);
 };

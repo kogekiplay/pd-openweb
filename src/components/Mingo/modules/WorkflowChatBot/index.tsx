@@ -1,4 +1,4 @@
-﻿import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { useMeasure } from 'react-use';
 import cx from 'classnames';
 import { chain, findLast, findLastIndex, flatten, get, identity, isArray, isEmpty, omit } from 'lodash';
@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { BgIconButton } from 'ming-ui';
 import processApi from 'src/pages/workflow/api/process';
+import type { ChatLoadingStatus, StreamError } from 'src/components/Mingo/ChatBot/utils';
 import chatBotDefaultIcon from 'src/pages/Chatbot/assets/profile.png';
 import chatbotAjax from 'src/pages/workflow/apiV2/chatbot';
 import chatbotSSEApi from 'src/pages/workflow/apiV2/chatbotsse';
@@ -174,12 +175,13 @@ function getContentOfMessage(message) {
   return content;
 }
 
-export function formatMessage(message) {
+export function formatMessage(message: any) {
   if (!['user', 'assistant'].includes(message.role)) {
     return;
   }
 
-  const result = {};
+  // 逐个字段拼出来的消息对象，键在下面几行才补齐，不标类型会被推成 {}
+  const result: Record<string, any> = {};
   result.id = get(message, 'metadata.id');
   result.instanceId = message.instanceId;
   result.workId = message.workId;
@@ -273,13 +275,13 @@ function MingoContent(props, ref) {
   const sendRef = useRef(null);
   const cache = useRef({});
   const [isGuideVisible, setIsGuideVisible] = useState(!!sessionStorage.getItem(`chatbotNewCreate-${chatbotId}`));
-  const [loadingStatus, setLoadingStatus] = useState();
-  const [shareMode, setShareMode] = useState();
+  const [loadingStatus, setLoadingStatus] = useState<ChatLoadingStatus | undefined>();
+  const [shareMode, setShareMode] = useState<boolean | undefined>();
   const [selectedMessageIds, setSelectedMessageIds] = useState([]);
   const [isSelectAll, setIsSelectAll] = useState(false);
   const [conversationId, setConversationId] = useState(props.conversationId);
   const [isLoadingMessages, setIsLoadingMessages] = useState(!!props.conversationId && !showMessagesOnly);
-  const [error, setError] = useState();
+  const [error, setError] = useState<StreamError | undefined>();
   const [isChatting, setIsChatting] = useState(defaultIsChatting);
   const [isExecutingToolCalls, setIsExecutingToolCalls] = useState(false);
   const [{ name, iconUrl, welcomeText, presetQuestion, uploadPermission = '11' }, setChatbotConfig] = useState(

@@ -22,6 +22,7 @@ import {
 } from 'src/pages/worksheet/common/WorkSheetFilter/util.js';
 import { getUnUniqName } from 'src/utils/common';
 import { getSwitchItemNames } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 
 //初始规则数据
 export const originRuleItem = {
@@ -176,7 +177,7 @@ export const showArrowSetting = (data, values = [], actionType, from) => {
 };
 
 //根据controls获取controlName
-export function getTextById(data, controls = [], actionType, from) {
+export function getTextById(data, controls: FormControl[] = [], actionType, from?) {
   const tree = getNewDropDownData(data, actionType);
   let currentArr = [];
   if (_.find(tree, i => i.sectionId)) return;
@@ -240,7 +241,7 @@ function formatSectionData(data = []) {
   return newData;
 }
 
-export function getNewDropDownData(controls = [], actionType) {
+export function getNewDropDownData(controls: FormControl[] = [], actionType) {
   let filterControls = [];
 
   if (_.includes([3, 4, 5], actionType)) {
@@ -262,13 +263,13 @@ export function getNewDropDownData(controls = [], actionType) {
     });
   }
 
-  let newControls = [];
+  let newControls: FormControl[] = [];
 
   controls.forEach(item => {
     if (!_.includes(filterControls, item.type)) {
       if (_.includes([29, 34], item.type)) {
         // 关联卡片、下拉框不支持配置内部控件
-        const relationControls =
+        const relationControls: FormControl[] =
           item.type === 29 && !_.includes(['2', '5', '6'], _.get(item, 'advancedSetting.showtype'))
             ? []
             : filterRelations(item);
@@ -294,10 +295,10 @@ export function getNewDropDownData(controls = [], actionType) {
 }
 
 // 过滤不符合条件的已选字段
-export const filterUnAvailable = (controlConfig = {}, worksheetControls = [], type) => {
+export const filterUnAvailable = (controlConfig = {}, worksheetControls: FormControl[] = [], type) => {
   const { controls = [] } = controlConfig;
   const dropDownData = getNewDropDownData(worksheetControls, controlConfig.type);
-  let newControls = [];
+  let newControls: FormControl[] = [];
   controls.map(item => {
     let newItem = { ...item };
 
@@ -468,7 +469,7 @@ export function formatValues(items) {
 }
 
 //过滤删除选项
-export function filterDeleteOptions(items, controls = []) {
+export function filterDeleteOptions(items, controls: FormControl[] = []) {
   return items.map(item => {
     if (_.includes([9, 10, 11], item.dataType)) {
       const options = (_.find(controls, con => con.controlId === item.controlId) || {}).options || [];
@@ -635,7 +636,7 @@ export const filterDataRelationText = (dynamicSource = [], columns) => {
   return data;
 };
 
-export const filterData = (columns = [], filterItem = [], isSetting, relationControls = [], sourceControlId = '') => {
+export const filterData = (columns = [], filterItem = [], isSetting?, relationControls: FormControl[] = [], sourceControlId = '') => {
   columns = columns.concat(DEFAULT_COLUMNS);
   let dataList = [];
   filterItem.forEach(item => {
@@ -744,7 +745,7 @@ export function getActionError(value = {}) {
 }
 
 // 对比是否有变更
-export function hasRuleChanged(data = [], selectRule = {}, passAlert) {
+export function hasRuleChanged(data = [], selectRule = {}, passAlert?) {
   const originData = _.find(data, i => i.ruleId === selectRule.ruleId);
   const { ruleId = '' } = selectRule;
 
@@ -757,7 +758,7 @@ export function hasRuleChanged(data = [], selectRule = {}, passAlert) {
 }
 
 // 符合错误提示配置的指定字段
-export const getErrorControls = (controls = []) => {
+export const getErrorControls = (controls: FormControl[] = []) => {
   const filterControl = i => {
     if (_.includes(SYS_CONTROLS.concat(SYS), i.controlId)) return false;
     if (_.includes([29, 51], i.type) && _.includes(['2', '5', '6'], _.get(i, 'advancedSetting.showtype'))) return false;
@@ -794,7 +795,7 @@ export const checkRuleEnableLimit = (data = []) => {
 };
 
 // 支持样式配置的字段
-export const getStyleRuleControls = (worksheetControls = []) => {
+export const getStyleRuleControls = (worksheetControls: FormControl[] = []) => {
   const filterControls = worksheetControls.filter(
     i => !_.includes([22, 30], i.type) && !_.includes(ALL_SYS, i.controlId) && !isCustomWidget(i),
   );

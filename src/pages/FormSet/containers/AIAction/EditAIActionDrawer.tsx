@@ -279,7 +279,7 @@ export default function EditAIActionDrawer(props) {
         className="Absolute editAIActionDrawer"
         showChatbotDialog={showChatbotDialog}
         width={showChatbotDialog ? 1200 : 800}
-        visible
+        open
         mask={false}
         placement="right"
         closable={false}

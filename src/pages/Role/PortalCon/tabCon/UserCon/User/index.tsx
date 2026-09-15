@@ -12,10 +12,12 @@ import UserInfoWrap from 'src/pages/Role/PortalCon/components/UserInfoWrap';
 import { pageSizeForPortal } from 'src/pages/Role/PortalCon/tabCon/config';
 import { formatDataForPortalControl, formatPortalData } from 'src/pages/Role/PortalCon/tabCon/util';
 import { translatePortalRoleOptions } from 'src/pages/Role/PortalCon/tabCon/util-pure';
+import type { RootState } from 'src/redux/types';
 import * as actions from '../../../redux/actions';
 import HeaderCon from './Header';
 import { Wrap } from './style';
 import { getColumns, getColumnsShowControls } from './util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 function User(props) {
   const {
@@ -50,7 +52,7 @@ function User(props) {
     fastFilters = [],
     filters,
     telFilters,
-  } = portal;
+  }: { controls: FormControl[]; [key: string]: any } = portal;
 
   const { isSendMsgs } = baseInfo;
   const [changeRoleDialog, setChangeRoleDialog] = useState(false);
@@ -108,7 +110,7 @@ function User(props) {
         appId,
       })
       .then(res => {
-        const { controls, showControlIds = [] } = res;
+        const { controls, showControlIds = [] }: { controls: FormControl[]; [key: string]: any } = res;
         setHideIds(showControlIds);
         setControls(translatePortalRoleOptions(appId, controls));
       });
@@ -290,7 +292,7 @@ function User(props) {
   );
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   portal: state.portal,
 });
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);

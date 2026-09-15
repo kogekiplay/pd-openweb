@@ -8,6 +8,8 @@ import MingoAttachmentUploader from 'src/components/Mingo/ChatBot/components/Att
 import { upgradeVersionDialog } from 'src/components/upgradeVersion';
 import { browserIsMobile, emitter, pathCompletion } from 'src/utils/common';
 import { useAgentBus, useAgentEvent } from './agentBus';
+import type { AgentBus } from './agentBus';
+import type { ChatMessage, ChatMessagePart } from './types';
 import {
   AGENT_ATTACHMENT_MIME_TYPES,
   AGENT_HEADER_EVENT,
@@ -94,8 +96,8 @@ const HIDDEN_USAGE_AGENTS = ['help-agent'];
 
 // 计费展示统一门控：非平台版（platformENV.isPlatform 为 false，如普通私有部署）无信用点计费体系，
 // 计费相关交互整体隐藏——气泡下不显示费用（含历史消息自带的 usage.credits）、也不轮询用量。
-function shouldHideUsage(agentName) {
-  return !window.platformENV.isPlatform || HIDDEN_USAGE_AGENTS.includes(agentName);
+function shouldHideUsage(agentName?: string) {
+  return !window.platformENV.isPlatform || HIDDEN_USAGE_AGENTS.includes(agentName as string);
 }
 
 const PROMPT_INPUT_ID = 'agent-prompt-input';
@@ -197,10 +199,10 @@ const EmptyState = styled.div`
   }
 `;
 
-const uid = prefix => `${prefix}-${Math.random().toString(36).slice(2, 10)}`;
+const uid = (prefix: string) => `${prefix}-${Math.random().toString(36).slice(2, 10)}`;
 
 // 由 doc/image 待解析数量派生过渡态文案：「正在解析文档…」「正在解析 2 个文档、1 张图片…」
-function buildExtractHint({ doc, image } = {}) {
+function buildExtractHint({ doc, image }: { doc?: number; image?: number } = {}) {
   const segs = [];
 
   if (doc) segs.push(doc > 1 ? _l('%0 个文档', doc) : _l('文档'));
@@ -208,8 +210,8 @@ function buildExtractHint({ doc, image } = {}) {
   return segs.length ? _l('正在解析%0…', segs.join('、')) : '';
 }
 
-function userMessageFrom(text, attachments) {
-  const parts = [];
+function userMessageFrom(text?: string, attachments: any[] = []): ChatMessage {
+  const parts: ChatMessagePart[] = [];
 
   if (attachments.length) parts.push({ kind: 'attachment', items: attachments, ts: Date.now() });
   // 用户消息不走 markdown：把 ```mingo_embed_data_*``` 抽成独立 embed part，其余按纯文本渲染
@@ -219,7 +221,7 @@ function userMessageFrom(text, attachments) {
         // 静默段（系统触发语 / 全部跳过的 ask_reply）不进 parts：parts 为空时整条消息不渲染（见 submitPrompt）
         if (isSilentEmbedSegment(seg.suffix, seg.data)) return;
         parts.push({ kind: 'embed', suffix: seg.suffix, data: seg.data, ts: Date.now() });
-      } else if (seg.text.trim()) {
+      } else if ((seg.text || '').trim()) {
         parts.push({ kind: 'text', text: seg.text, ts: Date.now() });
       }
     });
@@ -229,27 +231,27 @@ function userMessageFrom(text, attachments) {
   return { id: uid('user'), role: 'user', name: _l('你'), parts, time: Date.now() };
 }
 
-function assistantMessage() {
+function assistantMessage(): ChatMessage {
   // time：本轮助手消息生成时间，与信用点同一行展示（见 MessageMeta）
   return { id: uid('assistant'), role: 'assistant', name: ASSISTANT_NAME, parts: [], time: Date.now() };
 }
 
 // 流式中，artifact-file-written 回写时拉取签名 URL 并 fetch 内容，覆盖 file 状态
-function fetchAndWriteArtifact(bus, data) {
+function fetchAndWriteArtifact(bus: AgentBus, data: any) {
   const artifactId = data.artifactId || data.ArtifactId;
   const versionId = data.versionId || data.VersionId || data.draftVersionId || data.DraftVersionId;
 
   if (!artifactId || !versionId || !data.path) return Promise.resolve();
   return fetchArtifactFile({ artifactId, versionId, path: data.path })
-    .then(meta => {
+    .then((meta: { url?: string } | null) => {
       if (!meta || !meta.url) throw new Error('missing url');
       return fetch(meta.url).then(r => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         return r.text();
       });
     })
-    .then(content => bus.emit('file:write', { path: data.path, content }))
-    .catch(err => console.error('[agent] fetch artifact failed', data.path, err));
+    .then((content: string) => bus.emit('file:write', { path: data.path, content }))
+    .catch((err: unknown) => console.error('[agent] fetch artifact failed', data.path, err));
 }
 
 // 历史：并行拉取已提交版本的文件，但严格按 FILE_ENTRIES 顺序回写 file:write。
@@ -259,7 +261,7 @@ function fetchAndWriteArtifact(bus, data) {
 // 先列出该版本「实际存在」的文件（含签名 url），与前端登记表 FILE_ENTRIES 取交集后再拉——避免对不存在的
 // 已登记文件（如本应用没有 AI 助手时的 ai-assistants.json）硬拉、并误生成空 tab；列表已带 url，直接拉内容。
 // 列举接口异常时回退到逐文件按 path 取 url 再拉的全量模式，不漏文件。
-async function loadCommittedArtifactFiles(bus, artifactId, versionId) {
+async function loadCommittedArtifactFiles(bus: AgentBus, artifactId?: string, versionId?: string) {
   let urlByPath = null;
 
   try {
@@ -294,11 +296,11 @@ async function loadCommittedArtifactFiles(bus, artifactId, versionId) {
   loaded.forEach(item => item && bus.emit('file:write', { path: item.path, content: item.content }));
 }
 
-function getArtifactVersionKey(artifactId, versionId) {
+function getArtifactVersionKey(artifactId?: string, versionId?: string) {
   return artifactId && versionId ? `${artifactId}:${versionId}` : '';
 }
 
-function normalizeArtifactRef(artifact) {
+function normalizeArtifactRef(artifact: any) {
   if (!artifact) return null;
   const artifactId = stringValue(readField(artifact, 'artifactId')) || stringValue(readField(artifact, 'id'));
   const versionId =
@@ -317,7 +319,7 @@ function normalizeArtifactRef(artifact) {
   };
 }
 
-function getSingleMingoPlanAnonSessionError(error) {
+function getSingleMingoPlanAnonSessionError(error: any) {
   const body = safeParse((error && error.message) || '', 'object');
   const errorCode = stringValue(readField(body, 'errorCode')) || '';
   const message = stringValue(readField(body, 'errorMessage'));
@@ -327,7 +329,7 @@ function getSingleMingoPlanAnonSessionError(error) {
   return { errorCode, message };
 }
 
-function getStreamFailureError(error, shouldPickSingleMingoPlanError) {
+function getStreamFailureError(error: any, shouldPickSingleMingoPlanError?: boolean) {
   if (shouldPickSingleMingoPlanError) {
     const singleMingoPlanError = getSingleMingoPlanAnonSessionError(error);
 
@@ -337,7 +339,81 @@ function getStreamFailureError(error, shouldPickSingleMingoPlanError) {
   return { errorCode: '', message: (error && error.message) || _l('Agent 请求失败') };
 }
 
-export default function ChatPanel({ runtime = {}, isSingleMingoPlan = false }) {
+/**
+ * Agent 会话协议里的载荷对象：artifact 引用、历史消息、事件总线等。
+ *
+ * 这些对象的形状由 Agent 服务端定义，本仓只是透传和局部取字段，
+ * 精确建模要先从 agent swagger 拿到契约（scripts/agentApiGen.js 已经在拉那份 swagger，
+ * 后续可以顺带生成这些类型）。在那之前用具名别名而不是裸 any ——
+ * 可 grep、可逐步收窄，收窄时只改这一处。
+ */
+type ChatPanelArg = any;
+
+/**
+ * ChatPanel 的 runtime 配置（匿名 / 续建 / 官网承接页等场景由外部注入）。
+ * 各项的语义见下面 ChatPanel 里那段逐条注释 —— 那是本接口的权威说明，不在这里重复。
+ * 全部可选：调用点按场景只传其中几项，默认值写在解构里。
+ */
+export interface ChatPanelRuntime {
+  anonymous?: boolean;
+  /** 固定使用的 agent，不让用户切换 */
+  agentName?: string;
+  initialSessionId?: string;
+  /** 点「开始搭建」时回调，参数见 ChatPanel 内 onRequestBuild({ isSingleMingoPlan }) 的调用点 */
+  onRequestBuild?: (payload: { isSingleMingoPlan?: boolean }) => void;
+  /** 接管重试按钮；返回真表示已被接管，ChatPanel 不再自己重试 */
+  onRetryIntercept?: () => boolean | void;
+  enableMention?: boolean;
+  projectId?: string;
+  requireMobileOverviewBuildConfirm?: boolean;
+  autoFocus?: boolean;
+  forceEnableVoice?: boolean;
+  autoOpenInitialOverview?: boolean;
+  autoOpenInitialBuilder?: boolean;
+  disableAppBuilder?: boolean;
+  disableArtifactFileFetch?: boolean;
+  disableArtifactMetaFetch?: boolean;
+  disableCommittedFileLoad?: boolean;
+  autoLoadInitialSession?: boolean;
+  initialPlanArtifact?: ChatPanelArg;
+  /** 覆盖历史产物文件的加载逻辑，参数形状见 PlanPage 的 loadHistoryPlanArtifactFiles */
+  loadCommittedArtifactFiles?: (params: {
+    artifactId?: string;
+    versionId?: string;
+    bus?: ChatPanelArg;
+    /** 跳过缓存强制重新拉取 */
+    force?: boolean;
+  }) => Promise<boolean>;
+  deferCommittedAppMetaUntilFilesLoaded?: boolean;
+  initialHistoryMessages?: ChatPanelArg[];
+  contentTopInset?: number;
+  disableSessionRestore?: boolean;
+  landingLayout?: boolean;
+  promptInputClassName?: string;
+  promptAttachmentButtonClassName?: string;
+  /** 图标名（ming-ui Icon 的 icon 值），不是 ReactNode */
+  promptAttachmentButtonIcon?: string;
+  /** 图标名（ming-ui Icon 的 icon 值），不是 ReactNode */
+  promptMentionButtonIcon?: string;
+  promptMentionButtonText?: string;
+  promptPlaceholder?: string;
+}
+
+/** submitPrompt / streamAgentResponse 的单次覆盖项，只对本次请求生效 */
+interface SubmitOptions {
+  /** 单次覆盖目标 agent，不污染下一次 */
+  agentName?: string;
+  onSubmitStart?: () => void;
+  [key: string]: any;
+}
+
+export default function ChatPanel({
+  runtime = {},
+  isSingleMingoPlan = false,
+}: {
+  runtime?: ChatPanelRuntime;
+  isSingleMingoPlan?: boolean;
+}) {
   // runtime（匿名/续建模式）：
   //  - anonymous：跳过登录态 context/上传/历史，附件走匿名 upload-token（官网免登录漏斗）
   //  - agentName：钉住目标 agent（匿名版 app-plan-builder-public）并关掉自动路由
@@ -393,11 +469,11 @@ export default function ChatPanel({ runtime = {}, isSingleMingoPlan = false }) {
   const bus = useAgentBus();
   const initialAppBuilderVisible = landingLayout && autoOpenInitialBuilder && !disableAppBuilder && !isMobile;
   const [sessionId, setSessionId] = useState(() => initialSessionId || createAgentSessionId());
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [draft, setDraft] = useState('');
-  const [draftAttachments, setDraftAttachments] = useState([]);
+  const [draftAttachments, setDraftAttachments] = useState<any[]>([]);
   // 卡片「修改」聚合的待提交修改：1 条→填入输入框纯文本；≥2 条→输入框上方聚合成「修改搭建计划」chip
-  const [pendingEdits, setPendingEdits] = useState([]);
+  const [pendingEdits, setPendingEdits] = useState<any[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [appBuilderVisible, setAppBuilderVisible] = useState(initialAppBuilderVisible);
   // 落地页左侧会话列表是否收起（由 AgentLand 广播）：决定中栏 AppBuilder 左上角是否显示「展开会话列表」icon
@@ -411,18 +487,21 @@ export default function ChatPanel({ runtime = {}, isSingleMingoPlan = false }) {
   // 当前在 AppBuilder 中激活/展示的版本（versionLabel）：用于让对应 plan-card 高亮为选中态，其余仅 committed 不高亮
   const [activeVersionLabel, setActiveVersionLabel] = useState('');
   // 执行中断 / 拦截提示：贴在输入框上方的浮动卡（信用点不足、服务异常等）。{ errorCode, message }，null 时不展示。
-  const [interceptError, setInterceptError] = useState(null);
+  // { errorCode, message }，null 时不展示
+  const [interceptError, setInterceptError] = useState<{ errorCode?: number | string; message?: string } | null>(
+    null,
+  );
   // 附件解析过渡态：route-selected 后、text-delta 前，后端同步「下载+解析」doc/图片附件（vision），
   // 这段窗口原本黑屏。记 doc/image 各自待解析数量（0=未在解析），给 loading 三点补「正在解析文档/图片…」步骤文案。
   // doc 与 image 可同时出现（一条消息既带文档又带图），分开记，避免一方先完成把另一方文案误清。
   // 成功路径 *-completed 清；失败只会有 terminal error（无 *-completed），故 error/completed 也要兜底清空。
   const [extracting, setExtracting] = useState({ doc: 0, image: 0 });
 
-  const filesRef = useRef({});
+  const filesRef = useRef<Record<string, any>>({});
   // 「生成应用」发起中闸：预检为异步（await 工作表上限接口），在这段窗口内 submitting 尚未置位、
   // 按钮也还没变「已搭建」，靠它挡住重复点击，避免并发预检 / 发起两次搭建。发起完成（提交或被拒）即放开。
   const buildKickoffRef = useRef(false);
-  const messagesRef = useRef([]);
+  const messagesRef = useRef<ChatMessage[]>([]);
   const appBuilderVisibleRef = useRef(initialAppBuilderVisible);
   // 已拉取过 app.json 的版本（artifactId:versionId），避免历史 plan 卡片补图标时重复请求
   const planMetaFetchedRef = useRef(new Set());
@@ -430,21 +509,21 @@ export default function ChatPanel({ runtime = {}, isSingleMingoPlan = false }) {
   const committedFilesFetchedRef = useRef(new Set());
   const committedFilesLoadingRef = useRef(new Map());
   const appMetaRef = useRef({ name: '', appId: '', sectionIdByName: {} });
-  const abortRef = useRef(null);
+  const abortRef = useRef<AbortController | null>(null);
   const autoOpenInitialOverviewRef = useRef(autoOpenInitialOverview);
   const autoOpenInitialBuilderRef = useRef(autoOpenInitialBuilder);
   const initialOverviewOpenedRef = useRef(false);
-  const latestRuntimeRef = useRef({});
+  const latestRuntimeRef = useRef<Record<string, any>>({});
   // 镜像最新 sessionId：卸载清理在闭包里拿不到最新 state，用 ref 取当前会话调取消接口
   const sessionIdRef = useRef('');
-  const promptInputRef = useRef(null);
+  const promptInputRef = useRef<any>(null);
   // 从首页分组内「AI 创建应用」交接来的分组 id：拼进 stream context.groupId，让新建应用归入该分组
   const groupIdRef = useRef('');
   // 已开过流的 path 集合：用于决定首次 delta 时是否触发 file:begin + file:focus
   const startedPathsRef = useRef(new Set());
   // 当前查看/选中的版本 + 已知最新版本 label：继续对话时若查看的不是最新版本，
   // 就带 artifactId + basedOnVersionId 让后端基于该旧版本 fork（LOCKED）；在最新版本上则走 AUTO。
-  const selectedVerRef = useRef(null); // { artifactId, versionId, versionLabel }
+  const selectedVerRef = useRef<{ artifactId?: string; versionId?: string; versionLabel?: string } | null>(null);
   const latestVerLabelRef = useRef('');
   // build 成功收尾标记：completed 事件（带 worksheetContext 的 build 轮）置 true，
   // 由发起方在本轮 stream await 结束后消费——追加调用 app-build-summary 流式生成搭建总结。
@@ -464,12 +543,17 @@ export default function ChatPanel({ runtime = {}, isSingleMingoPlan = false }) {
   // 靠它保证一轮只做一次；每轮 stream 开始时复位。
   const buildRoundOpenedRef = useRef(false);
   // 在途的用量轮询定时器集合：切会话 / 新建会话 / 卸载时统一清掉，避免轮询写进已不存在的消息。
-  const usagePollTimersRef = useRef(new Set());
+  const usagePollTimersRef = useRef(new Set<ReturnType<typeof setTimeout>>());
 
   // 当前选中组织：落地页空态可切换（仅影响新会话）；优先级 runtime 固定值 > 用户所选 > 全局默认
   const [selectedProjectId, setSelectedProjectId] = useState(() => getCurrentProjectId());
 
-  function loadCommittedArtifactFilesOnce({ artifactId, versionId, loading = false, force = false } = {}) {
+  function loadCommittedArtifactFilesOnce({
+    artifactId,
+    versionId,
+    loading = false,
+    force = false,
+  }: { artifactId?: string; versionId?: string; loading?: boolean; force?: boolean } = {}) {
     const key = getArtifactVersionKey(artifactId, versionId);
 
     if (!key || disableCommittedFileLoad) return Promise.resolve(false);
@@ -504,7 +588,7 @@ export default function ChatPanel({ runtime = {}, isSingleMingoPlan = false }) {
     const file = filesRef.current && filesRef.current['/jsons/worksheets.json'];
     const parsed = file && file.parsed;
 
-    return Array.isArray(parsed) ? parsed.filter(i => i && i.type === 'worksheet').length : 0;
+    return Array.isArray(parsed) ? parsed.filter((i: any) => i && i.type === 'worksheet').length : 0;
   }
 
   // 点「生成应用」前的预检：组织无创建应用权限、或「已用 + 本次计划」工作表数会超组织上限时拦截，
@@ -515,7 +599,7 @@ export default function ChatPanel({ runtime = {}, isSingleMingoPlan = false }) {
     // 预检①：组织创建应用权限。global 已按组织下发 cannotCreateApp（见 md.global.Account.projects）。
     const projects =
       (window.md && window.md.global && window.md.global.Account && window.md.global.Account.projects) || [];
-    const project = projects.find(p => p.projectId === projectId);
+    const project = projects.find((p: any) => p.projectId === projectId);
 
     if (project && project.cannotCreateApp) {
       alert(_l('您当前所在的组织没有创建应用的权限，请联系组织管理员。'), 3);
@@ -542,7 +626,12 @@ export default function ChatPanel({ runtime = {}, isSingleMingoPlan = false }) {
     return true;
   }
 
-  function autoOpenInitialBuilderIfNeeded({ artifactId, versionId, versionLabel, name } = {}) {
+  function autoOpenInitialBuilderIfNeeded({
+    artifactId,
+    versionId,
+    versionLabel,
+    name,
+  }: { artifactId?: string; versionId?: string; versionLabel?: string; name?: string } = {}) {
     if (!disableAppBuilder && !isMobile && autoOpenInitialBuilderRef.current && artifactId && versionId) {
       autoOpenInitialBuilderRef.current = false;
       bus.emit('builder:open', {
@@ -569,13 +658,16 @@ export default function ChatPanel({ runtime = {}, isSingleMingoPlan = false }) {
   // 保证首页与右侧 Mingo 两边选中组织同步。runtime 固定组织（承接页）时不跟随。
   useEffect(() => {
     if (runtimeProjectId) return undefined;
-    const onChangeProject = project => {
+    const onChangeProject = (project?: { projectId?: string }) => {
       const pid = project && project.projectId;
       if (pid) setSelectedProjectId(pid);
     };
 
     emitter.addListener('CHANGE_CURRENT_PROJECT', onChangeProject);
-    return () => emitter.removeListener('CHANGE_CURRENT_PROJECT', onChangeProject);
+    // 包成块：emitter.removeListener 返回 EventEmitter，箭头表达式体会把它当 cleanup 返回值
+    return () => {
+      emitter.removeListener('CHANGE_CURRENT_PROJECT', onChangeProject);
+    };
   }, [runtimeProjectId]);
 
   useAgentEvent('builder:close', hideAppBuilder);
@@ -585,9 +677,9 @@ export default function ChatPanel({ runtime = {}, isSingleMingoPlan = false }) {
   useAgentEvent('builder:open-preview', () => {
     if (!disableAppBuilder) revealAppBuilder();
   });
-  useAgentEvent('builder:open', (payload = {}) => {
+  useAgentEvent('builder:open', (payload: any = {}) => {
     const { artifactId, versionId, name, versionLabel, source, appId, built } = payload || {};
-    let loadFilesPromise = Promise.resolve();
+    let loadFilesPromise: Promise<any> = Promise.resolve();
     // 历史已搭建版本：透传 appId + built，让 AppBuilder 还原完成态（Sidebar「打开应用」/ Header「已使用 v* 搭建」）；
     // built 为显式布尔，切回未搭建版本时（built=false）由 AppBuilder 清掉残留的 appId / 完成态
     const appMetaPayload = { name, versionLabel, artifactId, versionId, appId, built };
@@ -693,7 +785,7 @@ export default function ChatPanel({ runtime = {}, isSingleMingoPlan = false }) {
     // 预检通过（有创建应用权限 + 工作表不超上限）才真正发起搭建；被拦截时通知 AppBuilder
     // 撤销发起态，让「生成应用」按钮恢复可点以便修复后重试。
     runBuildPrecheck()
-      .then(ok => {
+      .then((ok: boolean) => {
         if (ok) {
           // 预检通过、即将发送「开始搭建应用」：此刻视为真实触发搭建，通知 AppBuilder 切「已使用 v* 搭建」
           bus.emit('builder:generate-accepted');
@@ -726,9 +818,11 @@ export default function ChatPanel({ runtime = {}, isSingleMingoPlan = false }) {
 
   useEffect(() => {
     if (!landingLayout) return;
-    const onSidebarState = ({ visible } = {}) => setSidebarCollapsed(!visible);
+    const onSidebarState = ({ visible }: { visible?: boolean } = {}) => setSidebarCollapsed(!visible);
     emitter.on(AGENT_HEADER_EVENT.SIDEBAR_STATE, onSidebarState);
-    return () => emitter.off(AGENT_HEADER_EVENT.SIDEBAR_STATE, onSidebarState);
+    return () => {
+      emitter.off(AGENT_HEADER_EVENT.SIDEBAR_STATE, onSidebarState);
+    };
   }, [landingLayout]);
 
   useEffect(() => {
@@ -762,7 +856,7 @@ export default function ChatPanel({ runtime = {}, isSingleMingoPlan = false }) {
   useEffect(() => {
     if (disableArtifactMetaFetch) return;
 
-    const targets = [];
+    const targets: { artifactId?: string; versionId?: string }[] = [];
 
     messages.forEach(m =>
       (m.parts || []).forEach(p => {
@@ -786,7 +880,7 @@ export default function ChatPanel({ runtime = {}, isSingleMingoPlan = false }) {
       if (planMetaFetchedRef.current.has(key)) return;
       planMetaFetchedRef.current.add(key);
 
-      const resolve = meta =>
+      const resolve = (meta: any) =>
         setMessages(cur =>
           cur.map(m => ({
             ...m,
@@ -805,7 +899,7 @@ export default function ChatPanel({ runtime = {}, isSingleMingoPlan = false }) {
 
       fetchArtifactAppMeta({ artifactId, versionId })
         .then(resolve)
-        .catch(err => {
+        .catch((err: unknown) => {
           console.error('[agent] fetch plan-card app meta failed', key, err);
           resolve(null);
         });
@@ -816,7 +910,7 @@ export default function ChatPanel({ runtime = {}, isSingleMingoPlan = false }) {
   // 输入框文字保留作为补充说明，发送时与多条修改一并打包，避免漏带（旧版 1 条回填依赖 PromptInput 回写非空
   // value，但其只处理清空，导致填充不可见且发送禁用）。
 
-  function applyAgentEvent(assistantId, event) {
+  function applyAgentEvent(assistantId: string, event: any) {
     const data = (event.payload && event.payload.data) || {};
 
     logSseEvent(event);
@@ -1162,7 +1256,7 @@ export default function ChatPanel({ runtime = {}, isSingleMingoPlan = false }) {
     // 默认应用 id：供 app-query-agent 等在用户未指定时作默认。有则带、无则省略。
     // appId 优先用本会话 build 流新建的应用，其次回退到当前所在应用（URL /app/:appId）。
     // 但停留在应用列表页（/app/my、/app/lib）时显式判为不在应用下，不让续建会话的 appId 泄漏。
-    const defaults = {};
+    const defaults: Record<string, any> = {};
     const defaultAppId = isAppListPage() ? '' : appMetaRef.current.appId || getCurrentAppId();
 
     if (defaultAppId) defaults.defaultAppId = defaultAppId;
@@ -1183,21 +1277,21 @@ export default function ChatPanel({ runtime = {}, isSingleMingoPlan = false }) {
   async function fetchCommonApps() {
     const candidates = await fetchAppCandidates(getContextProjectId());
 
-    return candidates.slice(0, 20).map(a => ({ name: a.name, id: a.id }));
+    return candidates.slice(0, 20).map((a: any) => ({ name: a.name, id: a.id }));
   }
 
   // 在 build context 之外，按设计稿补充对话上下文：
   // mentions（@ 的应用）、currentApp（应用内默认当前应用）、commonApps（非应用内且未 @ 时的常用应用兜底）。
   // currentOrganization 暂不处理。
-  async function composeChatContext(mentions, { omitPlanContext = false } = {}) {
+  async function composeChatContext(mentions?: any[], { omitPlanContext = false }: { omitPlanContext?: boolean } = {}) {
     // 续建态省略 plan 派生字段（worksheets/groupNames…），只保留对话上下文（默认应用 / @ / 常用应用），
     // 后端据 __original_inputs__ 续建，不触发 plan 漂移判定。
     const base = omitPlanContext ? composeDefaultContext() : composeCurrentContext() || {};
-    const extra = {};
+    const extra: Record<string, any> = {};
 
     const normalizedMentions = (Array.isArray(mentions) ? mentions : [])
-      .filter(m => m && m.id)
-      .map(m => ({ type: m.type || 'app', name: m.name, id: m.id }));
+      .filter((m: any) => m && m.id)
+      .map((m: any) => ({ type: m.type || 'app', name: m.name, id: m.id }));
 
     if (normalizedMentions.length) extra.mentions = normalizedMentions;
 
@@ -1248,7 +1342,7 @@ export default function ChatPanel({ runtime = {}, isSingleMingoPlan = false }) {
           projectId: getContextProjectId(),
         },
         {
-          onEvent: event => {
+          onEvent: (event: any) => {
             if (event && event.eventName === 'error') return;
             applyAgentEvent(assistant.id, event);
           },
@@ -1262,7 +1356,8 @@ export default function ChatPanel({ runtime = {}, isSingleMingoPlan = false }) {
 
   // 清掉所有在途的用量查询延迟定时器（切会话 / 新建会话 / 卸载时调）：避免回调写进已销毁会话的消息。
   function clearUsagePolls() {
-    usagePollTimersRef.current.forEach(clearTimeout);
+    // forEach 会把 (value, value2, set) 三个参数一起喂给 clearTimeout，重载对不上；包一层只传第一个
+    usagePollTimersRef.current.forEach(timer => clearTimeout(timer));
     usagePollTimersRef.current.clear();
   }
 
@@ -1270,7 +1365,7 @@ export default function ChatPanel({ runtime = {}, isSingleMingoPlan = false }) {
   //  - settled（已扣完）→ 写入 credits（终值，0 也合法），清掉计算中态；
   //  - pending_aggregate（a2a 后台 async 还在扣）→ 置 creditsPending，气泡显示「费用计算中…」+ 刷新按钮，
   //    并把 traceId / projectId 记在消息上供手动刷新重查。
-  function applyTraceUsage(messageId, traceId, projectId) {
+  function applyTraceUsage(messageId?: string, traceId?: string, projectId?: string) {
     return fetchTraceUsage(traceId, projectId).then(({ settled, credits }) => {
       setMessages(current =>
         current.map(m => {
@@ -1284,7 +1379,7 @@ export default function ChatPanel({ runtime = {}, isSingleMingoPlan = false }) {
   }
 
   // 新消息收尾后延迟 1s 查一次本轮用量（给后端落账留出时间）。pending 时由气泡上的刷新按钮手动重查，不再自动轮询。
-  function startUsagePoll(messageId, traceId, projectId) {
+  function startUsagePoll(messageId?: string, traceId?: string, projectId?: string) {
     if (!traceId || !projectId) return;
     const timer = setTimeout(() => {
       usagePollTimersRef.current.delete(timer);
@@ -1295,12 +1390,18 @@ export default function ChatPanel({ runtime = {}, isSingleMingoPlan = false }) {
   }
 
   // 「费用计算中…」刷新按钮：手动重查该条消息本轮用量（projectId 兜底取当前上下文组织）
-  function handleRefreshUsage(message) {
+  function handleRefreshUsage(message: ChatMessage) {
     if (!message || !message.creditsTraceId) return;
     applyTraceUsage(message.id, message.creditsTraceId, message.creditsProjectId || getContextProjectId());
   }
 
-  async function streamAgentResponse(assistantId, promptText, attachments, mentions, options = {}) {
+  async function streamAgentResponse(
+    assistantId: string,
+    promptText?: string,
+    attachments?: any[],
+    mentions?: any[],
+    options: SubmitOptions = {},
+  ) {
     setSubmitting(true);
     const controller = new AbortController();
 
@@ -1345,7 +1446,7 @@ export default function ChatPanel({ runtime = {}, isSingleMingoPlan = false }) {
           basedOnVersionId: baseOnOldVersion ? sel.versionId : undefined,
         },
         {
-          onEvent: event => {
+          onEvent: (event: any) => {
             applyAgentEvent(assistantId, event);
           },
           enableCaptcha: anonymous && isSingleMingoPlan,
@@ -1368,7 +1469,7 @@ export default function ChatPanel({ runtime = {}, isSingleMingoPlan = false }) {
       if (!anonymous && !controller.signal.aborted && !shouldHideUsage(roundAgentRef.current)) {
         startUsagePoll(assistantId, roundTraceId, projectId);
       }
-    } catch (error) {
+    } catch (error: any) {
       // 用户主动点"停止"/关闭会话会 abort fetch（浏览器抛英文 BodyStreamBuffer was aborted），属正常终止非错误：
       // 不弹拦截卡，静默收尾即可；仅真实请求失败才走贴底拦截卡（无 errorCode → 可重试态）。
       const aborted = controller.signal.aborted || (error && error.name === 'AbortError');
@@ -1389,7 +1490,7 @@ export default function ChatPanel({ runtime = {}, isSingleMingoPlan = false }) {
     }
   }
 
-  async function submitPrompt(text, presetAttachments, mentions, options = {}) {
+  async function submitPrompt(text?: string, presetAttachments?: any[], mentions?: any[], options: SubmitOptions = {}) {
     const promptText = (text || '').trim();
     const attachments =
       presetAttachments || draftAttachments.filter(f => f.status === 'uploaded').map(mapAttachmentForRequest);
@@ -1416,13 +1517,13 @@ export default function ChatPanel({ runtime = {}, isSingleMingoPlan = false }) {
     await streamAgentResponse(assistant.id, promptText, attachments, mentions, options);
   }
 
-  function handleDeleteEdit(id) {
+  function handleDeleteEdit(id: string) {
     setPendingEdits(prev => prev.filter(item => item.id !== id));
   }
 
   // 「提交修改」：把多条修改（+ 当前输入框补充文字）打包成 ```mingo_embed_data_modify_plan``` 作为一条用户消息发送。
   // extraText 来自主发送按钮（编辑器实时文本，最可靠）；从 chip 弹窗「提交修改」进入时无参，回退取 draft。
-  function handleSubmitEdits(extraText) {
+  function handleSubmitEdits(extraText?: string) {
     if (!pendingEdits.length) return;
     const items = pendingEdits.map(({ module, card, text }) => ({ module, card, text }));
     const extra = (typeof extraText === 'string' ? extraText : draft || '').trim();
@@ -1434,7 +1535,7 @@ export default function ChatPanel({ runtime = {}, isSingleMingoPlan = false }) {
     });
   }
 
-  function retryAssistant(assistantId, promptText) {
+  function retryAssistant(assistantId: string, promptText?: string) {
     if (submitting || !promptText) return;
     startedPathsRef.current = new Set();
     setMessages(current => current.map(m => (m.id === assistantId ? { ...m, parts: [] } : m)));
@@ -1465,7 +1566,7 @@ export default function ChatPanel({ runtime = {}, isSingleMingoPlan = false }) {
   // 必须带当前 plan context：rebuild 要按新方案从头建（plan 数据全在 context 里），
   // resume_with_old_plan 也无害（已完成步骤走 checkpoint 投回、不消费 context）。
   // 带一句 message 仅为通过后端 legality 校验（决策由 confirmation 驱动，与 message 内容无关）。
-  async function sendPlanDriftConfirmation(driftMessageId, action) {
+  async function sendPlanDriftConfirmation(driftMessageId: string, action: string) {
     if (submitting) return;
 
     // 先把卡片标记为已决策，禁用按钮、展示选择
@@ -1501,7 +1602,7 @@ export default function ChatPanel({ runtime = {}, isSingleMingoPlan = false }) {
         pendingBuildSummaryRef.current = false;
         await streamBuildSummary();
       }
-    } catch (error) {
+    } catch (error: any) {
       // 用户主动点"停止"/关闭会话会 abort fetch（浏览器抛英文 BodyStreamBuffer was aborted），属正常终止非错误：
       // 不弹拦截卡，静默收尾即可；仅真实请求失败才走贴底拦截卡（无 errorCode → 可重试态）。
       const aborted = controller.signal.aborted || (error && error.name === 'AbortError');
@@ -1558,7 +1659,7 @@ export default function ChatPanel({ runtime = {}, isSingleMingoPlan = false }) {
         pendingBuildSummaryRef.current = false;
         await streamBuildSummary();
       }
-    } catch (error) {
+    } catch (error: any) {
       const aborted = controller.signal.aborted || (error && error.name === 'AbortError');
 
       if (!aborted) {
@@ -1628,7 +1729,7 @@ export default function ChatPanel({ runtime = {}, isSingleMingoPlan = false }) {
   }
 
   // 加载历史会话：拉取消息还原对话，并把后续请求切到该 sessionId
-  async function loadSession(targetSessionId, options = {}) {
+  async function loadSession(targetSessionId?: string, options: { silent?: boolean; [key: string]: any } = {}) {
     if (!targetSessionId || historyLoading) return;
     const shouldAutoOpenInitialBuilder = !!options.autoOpenBuilder;
     const initialPlanArtifactRef = normalizeArtifactRef(options.initialPlanArtifact);
@@ -1782,12 +1883,12 @@ export default function ChatPanel({ runtime = {}, isSingleMingoPlan = false }) {
     }
   }
 
-  function handleSelectSession(session) {
+  function handleSelectSession(session: any) {
     if (session && session.sessionId) loadSession(session.sessionId);
   }
 
   // 会话被删除：清掉记住的会话（避免重开抽屉再恢复已删会话）；若删的是当前正在查看的会话，回到 MingoWelcome 首页
-  function handleSessionDeleted(deletedSessionId) {
+  function handleSessionDeleted(deletedSessionId?: string) {
     if (!deletedSessionId) return;
     const accountId =
       (window.md && window.md.global && window.md.global.Account && window.md.global.Account.accountId) || '';

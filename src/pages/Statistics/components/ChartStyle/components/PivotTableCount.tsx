@@ -285,7 +285,7 @@ export default function pivotTableCountPanelGenerator(props) {
     const { showColumnTotal, columnSummary = {} } = pivotTable;
     const { controlList = [], rename } = columnSummary;
 
-    const onChangeCountVisible = (id, checked, data) => {
+    const onChangeCountVisible = (id, checked: boolean, data) => {
       if (checked) {
         const control = {
           controlId: id,

@@ -13,6 +13,7 @@ import { filterAlias, WIDGETS_TO_API_TYPE_ENUM_N } from './config';
 import Item from './Item';
 import { Wrap, WrapSortControls } from './style';
 import './portalSort.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function InfoSet(props) {
   const { portal = {}, appId, onChangePortalSetModel = () => {} } = props;
@@ -27,7 +28,7 @@ export default function InfoSet(props) {
 
   useEffect(() => {
     let { controlTemplate = {} } = portalSet;
-    let { controls = [] } = controlTemplate;
+    let { controls = [] }: { controls: FormControl[]; [key: string]: any } = controlTemplate;
     setHs(false);
     setControls(
       (controls.length > 0 ? controls.filter(o => !filterAlias.includes(o.alias)) : []).sort((a, b) => {

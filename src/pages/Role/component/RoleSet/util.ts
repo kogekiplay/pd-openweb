@@ -2,11 +2,11 @@ import { getTranslateInfo } from 'src/utils/app';
 
 const getTranslatedName = (appId, id, originalName) => getTranslateInfo(appId, null, id).name || originalName;
 
-const translateObjectName = (appId, obj, idKey, nameKey) => {
+const translateObjectName = (appId, obj, idKey: string, nameKey: string) => {
   obj[nameKey] = getTranslatedName(appId, obj[idKey], obj[nameKey]);
 };
 
-const translateArrayNames = (appId, array, idKey, nameKey) => {
+const translateArrayNames = (appId, array, idKey: string, nameKey: string) => {
   (array || []).forEach(item => translateObjectName(appId, item, idKey, nameKey));
 };
 

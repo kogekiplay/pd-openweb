@@ -14,6 +14,7 @@ import { defaultConfig } from 'src/pages/customPage/components/ConfigSideWrap/de
 import { formatControlsData } from 'src/pages/widgetConfig/util/data';
 import { formatValuesOfCondition } from 'src/pages/worksheet/common/WorkSheetFilter/util';
 import { updateSheetListAppItem } from 'src/pages/worksheet/redux/actions/sheetList';
+import type { RootState } from 'src/redux/types';
 import ConfigHeader from './ConfigHeader';
 import * as actions from './redux/action';
 import {
@@ -26,6 +27,7 @@ import {
 } from './util';
 import WebLayout from './webLayout';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const MobileLayout = lazy(() => import('./mobileLayout'));
 
@@ -55,7 +57,7 @@ const CustomPageWrap = styled.div`
   }
 `;
 
-const mapStateToProps = ({ customPage, sheet, appPkg }) => ({ ...customPage, ...sheet.base, appPkg });
+const mapStateToProps = ({ customPage, sheet, appPkg }: RootState) => ({ ...customPage, ...sheet.base, appPkg });
 
 const mapDispatchToProps = dispatch => bindActionCreators({ ...actions, updateSheetListAppItem }, dispatch);
 
@@ -257,7 +259,7 @@ let CustomPage = class CustomPage extends Component<any, any> {
       if (createRecordBtns.length) {
         // 找到创建按钮
         const saveBtnRequest = createRecordBtns.map(item => {
-          const { temporaryWriteControls, controls } = item.config; // 保存的时候对 writeControls 数据处理
+          const { temporaryWriteControls, controls }: { controls: FormControl[]; [key: string]: any } = item.config; // 保存的时候对 writeControls 数据处理
 
           let writeControlsFormat = temporaryWriteControls.map(o => {
             let control = _.find(controls, item => item.controlId === o.controlId) || {};

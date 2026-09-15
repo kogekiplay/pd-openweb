@@ -8,7 +8,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getCertInfoList: function (args, options = {}) {
+  getCertInfoList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Certification', 'GetCertInfoList', args, options);
   },
   /**
@@ -21,7 +21,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getCertInfo: function (args, options = {}) {
+  getCertInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Certification', 'GetCertInfo', args, options);
   },
   /**
@@ -32,7 +32,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getListCertInfo: function (args, options = {}) {
+  getListCertInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Certification', 'GetListCertInfo', args, options);
   },
   /**
@@ -45,7 +45,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  checkIsCert: function (args, options = {}) {
+  checkIsCert: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Certification', 'CheckIsCert', args, options);
   },
   /**
@@ -58,7 +58,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFaceCertUrl: function (args, options = {}) {
+  getFaceCertUrl: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Certification', 'GetFaceCertUrl', args, options);
   },
   /**
@@ -69,7 +69,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFaceCertResult: function (args, options = {}) {
+  getFaceCertResult: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Certification', 'GetFaceCertResult', args, options);
   },
   /**
@@ -82,7 +82,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFaceCertToken: function (args, options = {}) {
+  getFaceCertToken: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Certification', 'GetFaceCertToken', args, options);
   },
   /**
@@ -97,7 +97,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAdvFaceCertUrl: function (args, options = {}) {
+  getAdvFaceCertUrl: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Certification', 'GetAdvFaceCertUrl', args, options);
   },
   /**
@@ -108,7 +108,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  personalFaceCert: function (args, options = {}) {
+  personalFaceCert: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Certification', 'PersonalFaceCert', args, options);
   },
   /**
@@ -122,7 +122,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  personalCertification: function (args, options = {}) {
+  personalCertification: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Certification', 'PersonalCertification', args, options);
   },
   /**
@@ -137,7 +137,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  enterpriseCertification: function (args, options = {}) {
+  enterpriseCertification: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Certification', 'EnterpriseCertification', args, options);
   },
   /**
@@ -153,7 +153,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setCertContact: function (args, options = {}) {
+  setCertContact: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Certification', 'SetCertContact', args, options);
   },
   /**
@@ -165,7 +165,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeCertification: function (args, options = {}) {
+  removeCertification: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Certification', 'RemoveCertification', args, options);
   },
   /**
@@ -180,7 +180,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  renewEnterpriseCertification: function (args, options = {}) {
+  renewEnterpriseCertification: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Certification', 'RenewEnterpriseCertification', args, options);
   },
   /**
@@ -193,7 +193,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getCertFailedInfo: function (args, options = {}) {
+  getCertFailedInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Certification', 'GetCertFailedInfo', args, options);
   },
   /**
@@ -204,7 +204,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getListSmsSignatures: function (args, options = {}) {
+  getListSmsSignatures: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Certification', 'GetListSmsSignatures', args, options);
   },
   /**
@@ -215,7 +215,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSmsSignatures: function (args, options = {}) {
+  getSmsSignatures: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Certification', 'GetSmsSignatures', args, options);
   },
   /**
@@ -232,7 +232,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addSmsSignature: function (args, options = {}) {
+  addSmsSignature: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Certification', 'AddSmsSignature', args, options);
   },
   /**
@@ -250,7 +250,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editSmsSignature: function (args, options = {}) {
+  editSmsSignature: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Certification', 'EditSmsSignature', args, options);
   },
   /**
@@ -262,7 +262,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeSmsSignature: function (args, options = {}) {
+  removeSmsSignature: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Certification', 'RemoveSmsSignature', args, options);
   },
   /**
@@ -275,7 +275,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  disableSmsSignature: function (args, options = {}) {
+  disableSmsSignature: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Certification', 'DisableSmsSignature', args, options);
   },
   /**
@@ -287,7 +287,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setDefaultSmsSignature: function (args, options = {}) {
+  setDefaultSmsSignature: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Certification', 'SetDefaultSmsSignature', args, options);
   },
   /**
@@ -303,7 +303,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  sendTestSmsSignature: function (args, options = {}) {
+  sendTestSmsSignature: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Certification', 'SendTestSmsSignature', args, options);
   },
 };

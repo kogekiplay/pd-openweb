@@ -170,7 +170,7 @@ export default class WebProxySetting extends Component<any, any> {
     });
   };
 
-  changeValue = (val, field, type) => {
+  changeValue = (val, field: string, type: string) => {
     let value;
 
     switch (type) {

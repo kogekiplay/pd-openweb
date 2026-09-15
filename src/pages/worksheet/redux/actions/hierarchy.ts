@@ -6,6 +6,8 @@ import { formatQuickFilter } from 'src/utils/filter';
 import { getCurrentView } from '../util';
 import { updateNavGroup } from './navFilter.js';
 import { dealData, getHierarchyViewIds, getItemByRowId, getParaIds } from './util';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import type { AppDispatch, GetState } from 'src/redux/types';
 
 const MULTI_RELATE_MAX_PAGE_SIZE = 500;
 let hierarchyPromiseObj;
@@ -26,8 +28,8 @@ const getTotalDataIds = (hierarchyViewData = {}, total = 0) => {
 };
 
 // 展开多级数据
-export function expandedMultiLevelHierarchyData(args, changeFilters) {
-  return (dispatch, getState) => {
+export function expandedMultiLevelHierarchyData(args, changeFilters?) {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { sheet } = getState();
     const { quickFilter, navGroupFilters } = sheet;
     const { searchType, ...rest } = sheet.filters || {};
@@ -155,7 +157,7 @@ function getHierarchyDataRecursion({ worksheet, records, kanbanKey, index, para 
 }
 
 export const expandMultiLevelHierarchyDataOfMultiRelate = level => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { sheet } = getState();
     const { worksheetInfo = {}, filters } = sheet;
     const { worksheetId } = worksheetInfo;
@@ -208,7 +210,7 @@ export const expandMultiLevelHierarchyDataOfMultiRelate = level => {
   };
 };
 
-export const addHierarchyRecord = args => (dispatch, getState) => {
+export const addHierarchyRecord = args => (dispatch: AppDispatch, getState: GetState) => {
   const { path, pathId, data, reGetData = false } = args;
   dispatch({
     type: 'CHANGE_HIERARCHY_VIEW_DATA',
@@ -273,11 +275,11 @@ export const getTopLevelHierarchyData = args => dispatch => {
 
 // 删除层级记录
 export function deleteHierarchyRecord({ rows, path, pathId, ...rest }) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { sheet } = getState();
     const { hierarchyView } = sheet;
     let { hierarchyViewData } = hierarchyView;
-    const rowIds = rows.filter(item => !!item.allowDelete).map(item => item.rowid);
+    const rowIds = rows.filter((item: RecordRow) => !!item.allowDelete).map(item => item.rowid);
     sheetAjax.deleteWorksheetRows({ rowIds, ...getHierarchyViewIds(sheet, path), ...rest }).then(data => {
       const id = rowIds[0];
 
@@ -309,7 +311,7 @@ export function deleteHierarchyRecord({ rows, path, pathId, ...rest }) {
   };
 }
 
-export const hideHierarchyRecord = (id, path, pathId) => (dispatch, getState) => {
+export const hideHierarchyRecord = (id, path, pathId) => (dispatch: AppDispatch, getState: GetState) => {
   const { sheet } = getState();
   const { hierarchyView } = sheet;
   let { hierarchyViewData } = hierarchyView;
@@ -351,7 +353,7 @@ const isSibling = (src, target) => {
 };
 
 export function updateMovedRecord(args) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { src, target, ...rest } = args;
     const { sheet } = getState();
     const { controls } = sheet;
@@ -422,14 +424,14 @@ export function updateMovedRecord(args) {
 }
 
 export function moveMultiSheetRecord(args) {
-  return function (dispatch, getState) {
+  return function (dispatch: AppDispatch, getState: GetState) {
     const { sheet } = getState();
     const { src, target } = args;
     const { viewControls } = getCurrentView(sheet);
     const { worksheetId } = viewControls[target.path.length - 1];
     const { controlId, worksheetId: relationWorksheetId } = viewControls[target.path.length];
     const { hierarchyView } = sheet;
-    const { pid: fromRowId, controls } = get(hierarchyView, ['hierarchyViewData', [src.rowId]]);
+    const { pid: fromRowId, controls }: { controls: FormControl[]; [key: string]: any } = get(hierarchyView, ['hierarchyViewData', [src.rowId]]);
     const { viewId } = _.find(controls, item => item.controlId === controlId) || {};
 
     const targetControl = _.find(sheet.controls || [], item => item.controlId === controlId) || {};
@@ -482,7 +484,7 @@ export function moveMultiSheetRecord(args) {
 
 // 关联多表层级视图获取子级数据
 export function multiRelateGetChildren(para) {
-  return function (dispatch, getState) {
+  return function (dispatch: AppDispatch, getState: GetState) {
     const { sheet } = getState();
     const { viewControls = [] } = getCurrentView(sheet);
     const layerInfo = viewControls[para.path.length];
@@ -500,7 +502,7 @@ export function multiRelateGetChildren(para) {
 }
 
 export function getAssignChildren({ path = [], pathId = [], callback, ...args }, onlyUpdateChildren = false) {
-  return function (dispatch, getState) {
+  return function (dispatch: AppDispatch, getState: GetState) {
     const { sheet } = getState();
     const { filters, quickFilter, navGroupFilters } = sheet;
     const { viewType, childType, viewControls = [] } = getCurrentView(sheet);
@@ -563,7 +565,7 @@ export const changeHierarchyChildrenVisible = data => {
 
 // 成为顶级记录
 export function becomeTopLevelRecord(data) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { sheet } = getState();
 
     const { hierarchyView, controls } = sheet;
@@ -614,7 +616,7 @@ export const addTopLevelStateFromTemp = data => {
 
 // 更新层级记录数据
 export function updateHierarchyData({ recordId, value, path, pathId, relateSheet }) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { sheet } = getState();
     const { hierarchyView } = sheet;
     const { hierarchyViewData } = hierarchyView;
@@ -679,7 +681,7 @@ export function moveRecord(data) {
 }
 
 export function getHierarchyRecord(args, cb) {
-  return function (dispatch, getState) {
+  return function (dispatch: AppDispatch, getState: GetState) {
     const { sheet } = getState();
     args = {
       ...getParaIds(sheet),
@@ -706,7 +708,7 @@ export function getHierarchyRecord(args, cb) {
 
 // 更新标题控件数据
 export function updateTitleData({ data, rowId }) {
-  return function (dispatch, getState) {
+  return function (dispatch: AppDispatch, getState: GetState) {
     const { sheet } = getState();
     const originData = get(sheet, ['hierarchyView', 'hierarchyViewData', rowId]);
     dispatch({ type: 'UPDATE_HIERARCHY_VIEW_DATA', data: { [rowId]: { ...originData, ...data } } });
@@ -729,8 +731,8 @@ export function initHierarchyRelateSheetControls(payload) {
   return { type: 'INIT_HIERARCHY_RELATE_SHEET_CONTROLS', payload };
 }
 
-export function getDefaultHierarchyData(view, { changeFilters } = {}) {
-  return (dispatch, getState) => {
+export function getDefaultHierarchyData(view?, { changeFilters } = {}) {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { sheet } = getState();
     const { viewId, viewControl, viewControls, childType } = isEmpty(view) ? getCurrentView(sheet) : view;
     const pageSize =
@@ -779,7 +781,7 @@ export function addMultiRelateHierarchyControls(ids) {
 }
 
 export const updateHierarchySearchRecord = record => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { sheet } = getState();
     const count = sheet.hierarchyView.hierarchyTopLevelDataCount || 0;
 

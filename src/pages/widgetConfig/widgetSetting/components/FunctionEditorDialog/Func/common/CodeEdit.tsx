@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { Tooltip } from 'ming-ui/antd-components';
 import { validateFnExpression } from 'src/utils/common';
 import FunctionEditor from './FunctionEditor';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   padding: ${({ readOnly }) => (readOnly ? '4px 6px;' : '20px 0 0;')};
@@ -162,7 +163,7 @@ function CodeEdit(props, ref) {
     onChange = () => {},
     insertTagToEditor = () => {},
     openTestFunctionDialog = () => {},
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const cache = useRef({});
   const [error, updateError] = useState();
 

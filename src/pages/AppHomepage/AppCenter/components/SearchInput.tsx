@@ -48,7 +48,7 @@ export default function SearchInput(props) {
   // 盖住搜索结果——两个一起加才是「消掉提示且行为不变」。
   const { clickShowInput, placeholder, value, onChange, name = 'search' } = props;
   const inputRef = useRef<any>(undefined);
-  const [isFocus, setIsFocus] = useState();
+  const [isFocus, setIsFocus] = useState<boolean | undefined>();
 
   useEffect(() => {
     if (clickShowInput && isFocus && inputRef.current) {

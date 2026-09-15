@@ -1,4 +1,4 @@
-﻿import _ from 'lodash';
+import _ from 'lodash';
 import moment from 'moment';
 import AjaxRequest from 'src/api/calendar';
 import createShare from 'src/components/createShare/createShare';
@@ -168,7 +168,7 @@ export const formatShowTime = function (calendar) {
    * @desc 同一年的时间格式: MM月DD日 非同一年显示年份 全天日程不显示 HH:mm
    * @returns { String } formatString
    */
-  const timeFormat = (time, isEndTime) => {
+  const timeFormat = (time: moment.Moment, isEndTime?: boolean) => {
     const isCurrYear = moment(time).isSame(moment(), 'year');
     let TIMEFORMAT = isCurrYear ? _l('MM月DD日 (ddd)') : _l('YYYY年MM月DD日 (ddd)');
 
@@ -417,7 +417,7 @@ export const editCalendar = (calendar, isEdit, { originStartTime, originEndTime 
   const { members } = calendar;
 
   return new Promise(resolve => {
-    const updateFunc = reInvite => {
+    const updateFunc = (reInvite?) => {
       return function (isAllCalendar) {
         let {
           id,

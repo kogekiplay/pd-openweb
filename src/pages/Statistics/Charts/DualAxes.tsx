@@ -53,7 +53,7 @@ const getLineChartXAxis = (controlId, data) => {
   }
 };
 
-const filterAuxiliaryLines = (location, auxiliaryLines = [], yaxisList) => {
+const filterAuxiliaryLines = (location: string, auxiliaryLines = [], yaxisList) => {
   return auxiliaryLines.filter(item => {
     if (item.type === 'constantLine') {
       return item.location === location;

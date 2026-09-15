@@ -137,7 +137,7 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
       this.ensurePointerVisible();
     }
   };
-  switchVisible = (obj, cb) => {
+  switchVisible = (obj, cb?) => {
     this.setState(obj, cb);
   };
   onSortEnd = newList => {
@@ -205,7 +205,7 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
       isAppItemOverflow: offsetWidth < scrollWidth,
     });
   };
-  scrollEle = ($ele, distance) => {
+  scrollEle = ($ele, distance: number) => {
     if (!$ele) return;
     $ele.scrollLeft = distance;
   }; // 滚动指示器点击
@@ -279,7 +279,7 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
     });
   }; // 删除分组
 
-  handleDelAppSection = sourceAppSectionId => {
+  handleDelAppSection = (sourceAppSectionId?) => {
     const { appId } = this.ids;
     api
       .deleteAppSection({

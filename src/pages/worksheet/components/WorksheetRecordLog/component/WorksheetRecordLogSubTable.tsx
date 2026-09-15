@@ -11,6 +11,7 @@ import { TEXT_FIELD_SHOWTEXT_TYPE, UPDATA_ITEM_CLASSNAME_BY_TYPE } from '../enum
 import { getDepartmentName } from '../util';
 import WorksheetRecordLogThumbnail from './WorksheetRecordLogThumbnail';
 import '../WorksheetRecordLogValue.less';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 function MaskCell(props) {
   const { cell, appId } = props;
@@ -39,7 +40,7 @@ function WorksheetRecordLogSubTable(props) {
   const [loadEnd, setLoadEnd] = useState(false);
   const [log, setLog] = useState(null);
 
-  const getData = param => {
+  const getData = (param?) => {
     let _pageIndex = param ? param.pageIndex : pageIndex;
     sheetAjax
       .getDetailTableLog({
@@ -57,7 +58,7 @@ function WorksheetRecordLogSubTable(props) {
       .then(res => {
         setLoading(false);
         setPageIndex(_pageIndex + 1);
-        const { oldRows, newRows } = res;
+        const { oldRows, newRows }: { newRows: RecordRow[]; [key: string]: any } = res;
         let oldList = safeParse(oldRows, 'array');
         let newList = safeParse(newRows, 'array');
         let defaultList = _.intersectionBy(newList, oldList, 'rowid').map(l => {
@@ -99,7 +100,8 @@ function WorksheetRecordLogSubTable(props) {
           control.dataSource,
           res.template.controls,
         );
-        let _column = showControls.map(key => {
+        // showControls 是控件 id 数组（string[]），不是控件
+        let _column = showControls.map((key: string) => {
           let _cont = res.template.controls.concat(SYSTEM_CONTROL).find(l => l.controlId === key);
           const visible = _cont ? controlState(_cont).visible : false;
 
@@ -109,7 +111,8 @@ function WorksheetRecordLogSubTable(props) {
                 width: 200,
                 dataIndex: key,
                 key: key,
-                render: (value, record) => {
+                // record 是变更日志条目（带 type/oldValue/newValue），不是记录行
+                render: (value: any, record: any) => {
                   if (record.type === 'update') {
                     let oldValue = record.oldValue[key] ? [record.oldValue[key]] : [];
                     let newValue = record.newValue[key] ? [record.newValue[key]] : [];
@@ -250,7 +253,7 @@ function WorksheetRecordLogSubTable(props) {
           _value = String(_value) === '1' ? '☑' : '☐';
           break;
         case 35:
-          const titleControl = cell.relationControls.find(l => l.controlId === cell.sourceTitleControlId);
+          const titleControl = cell.relationControls.find((l: FormControl) => l.controlId === cell.sourceTitleControlId);
           _value = titleControl
             ? renderText(
                 {
@@ -283,7 +286,7 @@ function WorksheetRecordLogSubTable(props) {
     }
   };
 
-  const renderUpdataList = (list, control, type) => {
+  const renderUpdataList = (list, control, type: string) => {
     return list.map((item, index) => {
       let cell = {
         ...control,

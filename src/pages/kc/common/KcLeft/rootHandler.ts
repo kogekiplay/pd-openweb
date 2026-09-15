@@ -5,7 +5,7 @@ import createRoot from 'src/components/kc/createRoot/createRoot';
 /**
  *创建左侧文件夹
  **/
-export function addNewRoot(args, cb) {
+export function addNewRoot(args, cb?) {
   if (typeof args === 'function') {
     cb = args;
   }

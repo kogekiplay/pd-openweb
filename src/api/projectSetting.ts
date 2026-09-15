@@ -7,7 +7,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSysColor: function (args, options = {}) {
+  getSysColor: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'GetSysColor', args, options);
   },
   /**
@@ -18,7 +18,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAllowApplyManageRole: function (args, options = {}) {
+  getAllowApplyManageRole: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'GetAllowApplyManageRole', args, options);
   },
   /**
@@ -29,7 +29,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getMDLoginSetting: function (args, options = {}) {
+  getMDLoginSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'GetMDLoginSetting', args, options);
   },
   /**
@@ -40,7 +40,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSsoSettings: function (args, options = {}) {
+  getSsoSettings: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'GetSsoSettings', args, options);
   },
   /**
@@ -51,7 +51,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSubDomain: function (args, options = {}) {
+  getSubDomain: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'GetSubDomain', args, options);
   },
   /**
@@ -62,7 +62,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPrivacy: function (args, options = {}) {
+  getPrivacy: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'GetPrivacy', args, options);
   },
   /**
@@ -73,7 +73,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getStructureForAll: function (args, options = {}) {
+  getStructureForAll: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'GetStructureForAll', args, options);
   },
   /**
@@ -84,7 +84,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getEnabledWatermark: function (args, options = {}) {
+  getEnabledWatermark: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'GetEnabledWatermark', args, options);
   },
   /**
@@ -95,7 +95,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getEnabledNoneVerification: function (args, options = {}) {
+  getEnabledNoneVerification: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'GetEnabledNoneVerification', args, options);
   },
   /**
@@ -106,7 +106,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getOnlyManagerCreateApp: function (args, options = {}) {
+  getOnlyManagerCreateApp: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'GetOnlyManagerCreateApp', args, options);
   },
   /**
@@ -117,7 +117,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getOnlyManagerDeleteApp: function (args, options = {}) {
+  getOnlyManagerDeleteApp: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'GetOnlyManagerDeleteApp', args, options);
   },
   /**
@@ -128,7 +128,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAutoPurchaseWorkflowExtPack: function (args, options = {}) {
+  getAutoPurchaseWorkflowExtPack: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'GetAutoPurchaseWorkflowExtPack', args, options);
   },
   /**
@@ -139,7 +139,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAutoPurchaseDataPipelineExtPack: function (args, options = {}) {
+  getAutoPurchaseDataPipelineExtPack: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'GetAutoPurchaseDataPipelineExtPack', args, options);
   },
   /**
@@ -150,7 +150,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAutoPurchaseExternalUserExtPack: function (args, options = {}) {
+  getAutoPurchaseExternalUserExtPack: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'GetAutoPurchaseExternalUserExtPack', args, options);
   },
   /**
@@ -161,7 +161,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getOnlyManagerSettings: function (args, options = {}) {
+  getOnlyManagerSettings: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'GetOnlyManagerSettings', args, options);
   },
   /**
@@ -172,7 +172,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getBalanceLimitNoticeSettings: function (args, options = {}) {
+  getBalanceLimitNoticeSettings: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'GetBalanceLimitNoticeSettings', args, options);
   },
   /**
@@ -197,7 +197,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setLogo: function (args, options = {}) {
+  setLogo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetLogo', args, options);
   },
   /**
@@ -222,7 +222,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  clearLogo: function (args, options = {}) {
+  clearLogo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'ClearLogo', args, options);
   },
   /**
@@ -247,7 +247,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setCustomeHomeImage: function (args, options = {}) {
+  setCustomeHomeImage: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetCustomeHomeImage', args, options);
   },
   /**
@@ -272,7 +272,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setStructureForAll: function (args, options = {}) {
+  setStructureForAll: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetStructureForAll', args, options);
   },
   /**
@@ -297,7 +297,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setStructureSelfEdit: function (args, options = {}) {
+  setStructureSelfEdit: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetStructureSelfEdit', args, options);
   },
   /**
@@ -309,7 +309,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setOnlyManagerCreateApp: function (args, options = {}) {
+  setOnlyManagerCreateApp: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetOnlyManagerCreateApp', args, options);
   },
   /**
@@ -334,7 +334,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setEnabledWatermark: function (args, options = {}) {
+  setEnabledWatermark: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetEnabledWatermark', args, options);
   },
   /**
@@ -359,7 +359,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setEnabledWatermarkTxt: function (args, options = {}) {
+  setEnabledWatermarkTxt: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetEnabledWatermarkTxt', args, options);
   },
   /**
@@ -384,7 +384,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setEnabledNoneVerification: function (args, options = {}) {
+  setEnabledNoneVerification: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetEnabledNoneVerification', args, options);
   },
   /**
@@ -396,7 +396,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setAutoPurchaseWorkflowExtPack: function (args, options = {}) {
+  setAutoPurchaseWorkflowExtPack: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetAutoPurchaseWorkflowExtPack', args, options);
   },
   /**
@@ -408,7 +408,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setAutoPurchaseDataPipelineExtPack: function (args, options = {}) {
+  setAutoPurchaseDataPipelineExtPack: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetAutoPurchaseDataPipelineExtPack', args, options);
   },
   /**
@@ -420,7 +420,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setAutoPurchaseApkStorageExtPack: function (args, options = {}) {
+  setAutoPurchaseApkStorageExtPack: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetAutoPurchaseApkStorageExtPack', args, options);
   },
   /**
@@ -432,7 +432,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setAutoPurchaseExternalUserExtPack: function (args, options = {}) {
+  setAutoPurchaseExternalUserExtPack: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetAutoPurchaseExternalUserExtPack', args, options);
   },
   /**
@@ -444,7 +444,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setAllowMingoAgentCharge: function (args, options = {}) {
+  setAllowMingoAgentCharge: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetAllowMingoAgentCharge', args, options);
   },
   /**
@@ -457,7 +457,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  setAllowApplyManageRole: function (args, options = {}) {
+  setAllowApplyManageRole: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetAllowApplyManageRole', args, options);
   },
   /**
@@ -469,7 +469,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setMDLoginSetting: function (args, options = {}) {
+  setMDLoginSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetMDLoginSetting', args, options);
   },
   /**
@@ -481,7 +481,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setSso: function (args, options = {}) {
+  setSso: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetSso', args, options);
   },
   /**
@@ -493,7 +493,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setSsoName: function (args, options = {}) {
+  setSsoName: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetSsoName', args, options);
   },
   /**
@@ -506,7 +506,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setSsoUrl: function (args, options = {}) {
+  setSsoUrl: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetSsoUrl', args, options);
   },
   /**
@@ -531,7 +531,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setSubDomin: function (args, options = {}) {
+  setSubDomin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetSubDomin', args, options);
   },
   /**
@@ -549,7 +549,7 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  setPrivacy: function (args, options = {}) {
+  setPrivacy: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetPrivacy', args, options);
   },
   /**
@@ -566,7 +566,7 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setOnlyManager: function (args, options = {}) {
+  setOnlyManager: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetOnlyManager', args, options);
   },
   /**
@@ -582,7 +582,7 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  setPrivacys: function (args, options = {}) {
+  setPrivacys: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetPrivacys', args, options);
   },
   /**
@@ -598,7 +598,7 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  setBalanceLimitNotice: function (args, options = {}) {
+  setBalanceLimitNotice: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetBalanceLimitNotice', args, options);
   },
   /**
@@ -609,7 +609,7 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectLdapSetting: function (args, options = {}) {
+  getProjectLdapSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'GetProjectLdapSetting', args, options);
   },
   /**
@@ -642,7 +642,7 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateProjectLdapSetting: function (args, options = {}) {
+  updateProjectLdapSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'UpdateProjectLdapSetting', args, options);
   },
   /**
@@ -654,7 +654,7 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateLdapState: function (args, options = {}) {
+  updateLdapState: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'UpdateLdapState', args, options);
   },
   /**
@@ -667,7 +667,7 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateLdapName: function (args, options = {}) {
+  updateLdapName: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'UpdateLdapName', args, options);
   },
   /**
@@ -678,7 +678,7 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getColorSettings: function (args, options = {}) {
+  getColorSettings: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'GetColorSettings', args, options);
   },
   /**
@@ -692,7 +692,7 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editColorSettings: function (args, options = {}) {
+  editColorSettings: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'EditColorSettings', args, options);
   },
   /**
@@ -704,7 +704,7 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setApiProxyState: function (args, options = {}) {
+  setApiProxyState: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetApiProxyState', args, options);
   },
   /**
@@ -715,7 +715,7 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getApiProxyState: function (args, options = {}) {
+  getApiProxyState: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'GetApiProxyState', args, options);
   },
   /**
@@ -726,7 +726,7 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getApiProxySettings: function (args, options = {}) {
+  getApiProxySettings: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'GetApiProxySettings', args, options);
   },
   /**
@@ -743,7 +743,7 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editApiProxySettings: function (args, options = {}) {
+  editApiProxySettings: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'EditApiProxySettings', args, options);
   },
   /**
@@ -754,7 +754,7 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUserFieldSettings: function (args, options = {}) {
+  getUserFieldSettings: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'GetUserFieldSettings', args, options);
   },
   /**
@@ -768,7 +768,7 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setUserFieldSettings: function (args, options = {}) {
+  setUserFieldSettings: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetUserFieldSettings', args, options);
   },
   /**
@@ -790,7 +790,7 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  projectClearCache: function (args, options = {}) {
+  projectClearCache: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'ProjectClearCache', args, options);
   },
   /**
@@ -803,7 +803,7 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  clearItemCache: function (args, options = {}) {
+  clearItemCache: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'ClearItemCache', args, options);
   },
 };

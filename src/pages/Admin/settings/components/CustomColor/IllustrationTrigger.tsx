@@ -38,8 +38,13 @@ function IllustrationTrigger(props) {
           </div>
         </GuildWrap>
       }
-      // @rc-component/trigger 去掉了 popupTransitionName，动画改走 popupMotion。
-      popupMotion={{ motionName: 'Tooltip-move-top' }}
+      // 这里【不要】加 popupMotion。rc-trigger 5 时代写的是
+      // popupTransitionName="Tooltip-move-top"，但那套 CSS 类名（-enter/-leave 等）
+      // 全仓从来就不存在，所以迁移前本就没有动画、纯属无效属性。
+      // 迁移时照搬成 popupMotion={{ motionName: 'Tooltip-move-top' }} 会出事：
+      // rc-motion 会等 animationend/transitionend 才结束离场，而没有 CSS 就永远等不到，
+      // 弹层留在页面上不卸载（autoDestroy 也要等离场结束才生效）。
+      // 表现：鼠标依次划过几个视图类型，右侧预览一个个堆叠、全都不消失。
       autoDestroy
       action={['hover']}
       popupAlign={{

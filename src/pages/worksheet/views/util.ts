@@ -7,6 +7,7 @@ import { isTimeStyle, renderText as renderCellText } from 'src/utils/control';
 import { FIELD_REG_EXP } from 'src/utils/controlCommon';
 import RegExpValidator from 'src/utils/expression';
 import { dateConvertToServerZone } from 'src/utils/project';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 export const RENDER_RECORD_NECESSARY_ATTR = [
   'controlId',
@@ -121,13 +122,13 @@ export function getRecordAttachments(coverImageStr) {
  * @param {*} id
  * @param {*} key  取control中的属性
  */
-export const getControlById = (controls = [], id, key) => {
+export const getControlById = (controls: FormControl[] = [], id, key) => {
   const control = find(controls, item => item.controlId === id);
   return key ? get(control, key) : control;
 };
 
 // 判断标题控件是否是文本控件
-export const isTextTitle = (controls = []) =>
+export const isTextTitle = (controls: FormControl[] = []) =>
   _.findIndex(controls, item => item.attribute === 1 && item.type === 2) > -1;
 
 export const getCardDisplayPara = ({ currentView = {}, data = {} }) => {
@@ -173,7 +174,7 @@ export const isDisabledCreate = permit => {
   return !isOpenPermit(permitList.createButtonSwitch, permit);
 };
 
-export const isAllowQuickSwitch = (permit, viewId) => isOpenPermit(permitList.quickSwitch, permit, viewId);
+export const isAllowQuickSwitch = (permit, viewId?) => isOpenPermit(permitList.quickSwitch, permit, viewId);
 
 export const getSearchData = sheet => {
   const {
@@ -183,7 +184,7 @@ export const getSearchData = sheet => {
     hierarchyView: { hierarchyViewState = [], hierarchyViewData = {} },
     gunterView: { grouping = [], withoutArrangementVisible },
     mapView: { mapViewData = [] },
-  } = sheet;
+  }: { controls: FormControl[]; [key: string]: any } = sheet;
   const view = find(views, item => item.viewId === base.viewId) || {};
   const titleControlId = (_.find(controls, { attribute: 1 }) || {}).controlId;
   let data = [];
@@ -209,7 +210,7 @@ export const getSearchData = sheet => {
   } else if (Number(view.viewType) === 5) {
     data = _.flatten(
       grouping.map(item => {
-        return withoutArrangementVisible ? item.rows : item.rows.filter(item => item.diff > 0);
+        return withoutArrangementVisible ? item.rows : item.rows.filter((item: RecordRow) => item.diff > 0);
       }),
     );
   } else if (Number(view.viewType) === 8) {
@@ -221,14 +222,14 @@ export const getSearchData = sheet => {
   return { queryKey: titleControlId, data };
 };
 
-export const renderTitleByViewtitle = (row, controls, view, useDateConvertToServerZone) => {
+export const renderTitleByViewtitle = (row, controls, view, useDateConvertToServerZone?) => {
   const viewtitle = _.get(view, 'advancedSetting.viewtitle');
   const controlFields = viewtitle.match(FIELD_REG_EXP) || [];
   const defaultValue = _.filter(viewtitle.split('$'), v => !_.isEmpty(v));
   let str = '';
   defaultValue.map(o => {
     if (controlFields.includes(`$${o}$`)) {
-      const control = controls.find(it => it.controlId === o);
+      const control = controls.find((it: FormControl) => it.controlId === o);
       if (!control) return;
       str =
         str +
@@ -266,7 +267,7 @@ export const getWrappedViewTitleControlId = viewtitle => {
 };
 
 // 卡片标题的呈现侧兼容：配置仍保存原值，只有 $单个字段ID$ 展示时归一成真实字段 ID。
-export const getCardTitleFieldForView = (row = {}, worksheetControls = [], currentView = {}) => {
+export const getCardTitleFieldForView = (row = {}, worksheetControls: FormControl[] = [], currentView = {}) => {
   const viewtitle = _.get(currentView, 'advancedSetting.viewtitle');
   const controlId = getWrappedViewTitleControlId(viewtitle);
   const titleControl = getTitleControlForCard(

@@ -1,4 +1,4 @@
-﻿import attachmentAjax from 'src/api/attachment';
+import attachmentAjax from 'src/api/attachment';
 import kc from 'src/api/kc';
 import createShare from 'src/components/createShare/createShare';
 import kcUtil from 'src/pages/kc/util';
@@ -169,6 +169,6 @@ SaveToKnowledge.prototype = {
   },
 };
 
-export default function (nodeType, sourceData, options) {
+export default function (nodeType, sourceData, options?) {
   return new SaveToKnowledge(nodeType, sourceData, options);
 }

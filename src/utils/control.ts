@@ -1,5 +1,4 @@
 import { TinyColor } from '@ctrl/tinycolor';
-import copy from 'src/utils/copyToClipboard';
 import dayjs from 'dayjs';
 import _, { find, get, includes, isArray, isEmpty } from 'lodash';
 import moment from 'moment';
@@ -29,6 +28,8 @@ import {
   handleAdvancedSettingChange,
   isSheetDisplay,
 } from 'src/utils/controlCommon';
+import type { ControlAdvancedSetting, ControlValue, FormControl, RecordRow } from 'src/utils/controlTypes';
+import copy from 'src/utils/copyToClipboard';
 import RegExpValidator from 'src/utils/expression';
 import { dateConvertToUserZone, dateServerZoneToAppZone, getTimeZone } from 'src/utils/project';
 
@@ -68,27 +69,37 @@ const stringCellList = [2, 3, 4, 25, 7, 19, 23, 24, 10010, 32, 33, 41, 15, 16, 5
 const stringUnitCellList = [8, 6, 31, 38, 53];
 
 /** 是否是文本了控件 */
-export function checkIsTextControl(type) {
+export function checkIsTextControl(type?: FormControl['type']) {
   const STRING = stringCellList.concat(stringUnitCellList);
   return _.includes(STRING, type);
 }
 
 /** 是否是文本了控件 */
-export function checkControlCanSetStyle(type) {
+export function checkControlCanSetStyle(type?: FormControl['type']) {
   const STRING = stringCellList.concat(stringUnitCellList).concat([46]);
   return _.includes(STRING, type);
 }
 
-const isCustomOptionKey = key => key.indexOf('other') > -1 || key.indexOf('add_') > -1;
+const isCustomOptionKey = (key: string) => key.indexOf('other') > -1 || key.indexOf('add_') > -1;
 
 /** 获取选项 */
-export function getSelectedOptions(options = [], value, control) {
+/** 选项控件的一个选项 */
+interface ControlOption {
+  key: string;
+  value?: string;
+  color?: string;
+  isDeleted?: boolean;
+  index?: number;
+  score?: number;
+}
+
+export function getSelectedOptions(options: ControlOption[] = [], value?: string, control?: FormControl) {
   if (!value || value === '[]') {
     return [];
   }
 
   try {
-    const selectedKeys = JSON.parse(value);
+    const selectedKeys: string[] = JSON.parse(value);
     const optionList = options || [];
     const optionMap = new Map();
 
@@ -101,7 +112,7 @@ export function getSelectedOptions(options = [], value, control) {
     const selectedKeySet = new Set(selectedKeys.filter(key => !isCustomOptionKey(key)));
     const customSelectedKeys = selectedKeys.filter(isCustomOptionKey);
 
-    const findOptionByKey = key => {
+    const findOptionByKey = (key: string) => {
       if (isCustomOptionKey(key)) {
         return optionList.find(option => key.indexOf(option.key) > -1);
       }
@@ -115,7 +126,7 @@ export function getSelectedOptions(options = [], value, control) {
             .filter(
               option =>
                 (selectedKeySet.has(option.key) ||
-                  customSelectedKeys.some(selectedKey => selectedKey.indexOf(option.key) > -1)) &&
+                  customSelectedKeys.some((selectedKey: string) => selectedKey.indexOf(option.key) > -1)) &&
                 !option.isDeleted,
             )
             .map(option => option.key)
@@ -131,7 +142,18 @@ export function getSelectedOptions(options = [], value, control) {
 /**
  * 格式化日期公式控件
  */
-export function formatFormulaDate({ value, unit = '6', hideUnitStr, dot = 0 }) {
+// hideUnitStr 没有默认值会被判必填，而调用点普遍不传 —— 显式标可选。
+export function formatFormulaDate({
+  value,
+  unit = '6',
+  hideUnitStr,
+  dot = 0,
+}: {
+  value?: ControlValue;
+  unit?: string;
+  hideUnitStr?: boolean;
+  dot?: number;
+}) {
   const isNegative = value < 0; // 处理负数
   value = toFixed(Math.floor(value * Math.pow(10, dot)) / Math.pow(10, dot), dot);
   if (isNegative) {
@@ -147,7 +169,7 @@ export function formatFormulaDate({ value, unit = '6', hideUnitStr, dot = 0 }) {
   const unitStr = unitType.text;
   // 逐级进位规则：12 月 = 1 年、30 天 = 1 月、24 时 = 1 天、60 分 = 1 时、60 秒 = 1 分
   // 年必须按 12 个月折算，否则与月的进位基数不自洽（如 120 月会算成 9 年 10 月）
-  const unitTimes = {
+  const unitTimes: { [unit: number]: number } = {
     6: 1, // 秒
     5: 12 * 30 * 24 * 60 * 60, // 年
     4: 30 * 24 * 60 * 60, // 月
@@ -155,7 +177,7 @@ export function formatFormulaDate({ value, unit = '6', hideUnitStr, dot = 0 }) {
     2: 60 * 60, // 时
     1: 60, // 分
   };
-  let allSeconds = Number(value) * unitTimes[unit];
+  let allSeconds = Number(value) * unitTimes[Number(unit)];
   const years = Math.floor(allSeconds / unitTimes[5]);
   allSeconds -= years * unitTimes[5];
   const months = Math.floor(allSeconds / unitTimes[4]);
@@ -195,14 +217,14 @@ export function formatFormulaDate({ value, unit = '6', hideUnitStr, dot = 0 }) {
  * 验证字段值是否为空
  * @param value
  */
-export function checkCellIsEmpty(value) {
+export function checkCellIsEmpty(value?: any) {
   return typeof value === 'undefined' || value === '' || value === '[]' || value === '["",""]' || value === null;
 }
 
 /**
  * 字段是否支持排序
  */
-export function fieldCanSort(type, control = {}) {
+export function fieldCanSort(type?: FormControl['type'], control: FormControl = {}) {
   const canSortTypes = [
     2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 15, 16, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 37, 38, 42, 46, 48, 50, 53,
   ];
@@ -217,7 +239,7 @@ export function fieldCanSort(type, control = {}) {
 /**
  * 获取字段排序数据
  */
-export function getSortData(type, control = {}) {
+export function getSortData(type?: FormControl['type'], control: FormControl = {}) {
   const descendingValue = 1; // 降序
   const ascendingValue = 2; // 升序
 
@@ -295,7 +317,7 @@ export function getSortData(type, control = {}) {
  * 排除隐藏字段
  */
 
-export function filterHidedControls(controls, hidedControlIds = [], forceShowSys = true) {
+export function filterHidedControls(controls: FormControl[], hidedControlIds: string[] = [], forceShowSys = true) {
   return controls.filter(
     c =>
       !_.find(
@@ -308,21 +330,24 @@ export function filterHidedControls(controls, hidedControlIds = [], forceShowSys
 }
 
 /** 根据 id 对控件排序 */
-export function sortControlByIds(controls = [], sortedIds = []) {
+/** 这两个排序函数收到的既可能是裸控件，也可能是配置面板里 { data: control } 的包装项 */
+type ControlOrWidgetItem = FormControl & { data?: FormControl };
+
+export function sortControlByIds(controls: ControlOrWidgetItem[] = [], sortedIds: string[] = []) {
   if (!sortedIds.length) {
     return controls;
   }
 
   sortedIds = sortedIds.filter(_.identity);
-  const leftControls = controls.filter(c => !_.find(sortedIds, id => (c.controlId || c.data.controlId) === id));
+  const leftControls = controls.filter(c => !_.find(sortedIds, id => (c.controlId || c.data?.controlId) === id));
   return sortedIds
-    .map(id => _.find(controls, c => (c.controlId || c.data.controlId) === id))
+    .map(id => _.find(controls, c => (c.controlId || c.data?.controlId) === id))
     .filter(_.identity)
     .concat(leftControls);
 }
 
 /** 获取控件默认排序 */
-export function getControlsSorts(controls = [], sortedIds = []) {
+export function getControlsSorts(controls: ControlOrWidgetItem[] = [], sortedIds: string[] = []) {
   if (!sortedIds.length) {
     return controls.map(c => c?.controlId || c?.data?.controlId).filter(_.identity);
   }
@@ -337,7 +362,10 @@ export function getControlsSorts(controls = [], sortedIds = []) {
   return sortedIds.concat(leftControlIds);
 }
 
-export function controlIsNumber({ type, sourceControlType, enumDefault, enumDefault2 }) {
+// 这几个键在调用点是按需传的（controlIsNumber({ type }) / ({ type, enumDefault })），
+// 解构参数不标可选会被判必填，报 TS2345。
+// 递归调用自己（他表字段 / 汇总字段要看被引用控件的类型），所以必须显式标返回类型
+export function controlIsNumber({ type, sourceControlType, enumDefault, enumDefault2 }: FormControl): boolean {
   return (
     type === 6 ||
     type === 8 ||
@@ -352,8 +380,8 @@ export function controlIsNumber({ type, sourceControlType, enumDefault, enumDefa
  * 是否是按关联表格呈现的控件
  */
 export function isRelateRecordTableControl(
-  { type, enumDefault, advancedSetting = {} },
-  { ignoreInFormTable = false } = {},
+  { type, enumDefault, advancedSetting = {} }: FormControl,
+  { ignoreInFormTable = false }: { ignoreInFormTable?: boolean } = {},
 ) {
   return (
     (type === 29 &&
@@ -376,26 +404,28 @@ export function replaceByIndex(str = '111', index = 0, replacestr = '') {
   return str.substring(0, index) + replacestr + str.substring(index + 1);
 }
 
-export function updateOptionsOfControl(control, value, realValue) {
-  let parsedValue = safeParse(value);
-  let newOption;
+export function updateOptionsOfControl(control: FormControl, value?: string, realValue?: string) {
+  const parsedValue = safeParse(value);
+  // 单选时是一个选项对象，多选时是一个数组；下面 concat 两种都吃得下
+  let newOption: ControlOption | ControlOption[];
+  const options: ControlOption[] = control.options || [];
 
   if (parsedValue.length > 1) {
     const parsedRealValue = safeParse(realValue);
     newOption = parsedValue
-      .map((v, i) => ({
-        index: control.options.length + i + 1,
+      .map((v: string, i: number) => ({
+        index: options.length + i + 1,
         isDeleted: false,
         key: parsedRealValue[i],
         color: '#1677ff',
         value: v && (v.match(/add_(.*)/) || '')[1],
       }))
-      .filter(v => v.value);
+      .filter((v: ControlOption) => v.value);
   } else {
     newOption = {
-      index: control.options.length + 1,
+      index: options.length + 1,
       isDeleted: false,
-      key: _.last(safeParse(realValue, 'array')),
+      key: _.last(safeParse(realValue, 'array')) as string,
       color: '#1677ff',
       value: value && (value.match(/"add_(.*)"]/) || '')[1],
     };
@@ -403,17 +433,17 @@ export function updateOptionsOfControl(control, value, realValue) {
 
   return {
     ...control,
-    options: control.options.concat(newOption),
+    options: options.concat(newOption as ControlOption),
   };
 }
 
 // 处理选项自定义选项
-export function updateOptionsOfControls(controls, data) {
-  let newOptionControls = [];
+export function updateOptionsOfControls(controls: FormControl[], data: RecordRow) {
+  let newOptionControls: FormControl[] = [];
 
   try {
     newOptionControls = _.filter(controls, item => _.includes([10, 11], item.type) && /"add_/.test(item.value)).map(c =>
-      updateOptionsOfControl(c, c.value, data[c.controlId]),
+      updateOptionsOfControl(c, c.value, data[c.controlId as string]),
     );
   } catch (err) {
     console.error(err);
@@ -425,7 +455,7 @@ export function updateOptionsOfControls(controls, data) {
 /**
  * 对字段的 advancedSettings 进行解析处理
  */
-export function parseAdvancedSetting(setting = {}) {
+export function parseAdvancedSetting(setting: ControlAdvancedSetting = {}) {
   const {
     allowlink = '1',
     allowimport = '1',
@@ -477,7 +507,7 @@ export function parseAdvancedSetting(setting = {}) {
  * 对 controls 缺失做补齐
  */
 
-export function completeControls(controls) {
+export function completeControls(controls: FormControl[]) {
   // 不存在系统字段的话 补充系统字段
   const sysIds = SYSTEM_CONTROLS.map(c => c.controlId);
 
@@ -488,7 +518,7 @@ export function completeControls(controls) {
   return controls;
 }
 
-export const getHighAuthControls = controls => {
+export const getHighAuthControls = (controls: FormControl[]) => {
   return controls.map(l => ({
     ...l,
     disabled: false,
@@ -498,14 +528,17 @@ export const getHighAuthControls = controls => {
   }));
 };
 
-export function controlBatchCanEdit(control, view = { controls: [] }) {
+export function controlBatchCanEdit(
+  control: FormControl,
+  view: { controls?: string[]; viewId?: string; worksheetId?: string } = { controls: [] },
+) {
   return (
-    ((control.type < 10000 &&
+    ((Number(control.type) < 10000 &&
       includes(CONTROL_EDITABLE_WHITELIST, control.type) &&
       !(control.type === 29 && includes(['2', '5', '6'], get(control, 'advancedSetting.showtype'))) &&
       !(control.type === 14 && includes(['0'], get(control, 'advancedSetting.allowdelete') || '1')) &&
       !find(SYSTEM_CONTROL_WITH_UAID.concat(WORKFLOW_SYSTEM_CONTROL), { controlId: control.controlId }) &&
-      !find(view.controls, id => control.controlId === id)) ||
+      !find(view.controls, (id: string) => control.controlId === id)) ||
       control.controlId === 'ownerid') &&
     ((controlState(control).visible && controlState(control).editable) ||
       (view.viewId && view.viewId === view.worksheetId))
@@ -516,15 +549,29 @@ export function controlBatchCanEdit(control, view = { controls: [] }) {
  * 对将复杂字段数据处理成简单数据 用来呈现或参与计算
  * return undefined string number bool [string] [number]
  */
-export function formatControlValue(cell) {
+/** 定位控件的值（JSON 串解析后） */
+interface LocationValue {
+  /** 坐标系，'wgs84' 需要转成 gcj02 */
+  coordinate?: string;
+  x?: number | string;
+  y?: number | string;
+  title?: string;
+  address?: string;
+}
+
+// 显式标返回 any：函数在 case 29 / 30 里递归调用自己，不标就是 TS7023（返回类型循环依赖）。
+// 返回值形状确实随控件类型变（string / number / bool / 数组 / 对象），这里不假装它是一种。
+export function formatControlValue(cell?: FormControl & { sourceControl?: FormControl }): any {
   try {
     if (!cell) {
       return;
     }
 
-    let newPos = [];
+    let newPos: number[] = [];
     let { type, value } = cell;
-    let parsedData, selectedOptions;
+    let parsedData: any;
+    let selectedOptions: ControlOption[];
+    let locationValue: LocationValue;
 
     if (type === 37) {
       if (cell.advancedSetting && cell.advancedSetting.summaryresult === '1') {
@@ -558,16 +605,20 @@ export function formatControlValue(cell) {
           return undefined;
         }
 
-        if ((parsedData.coordinate || '').toLowerCase() === 'wgs84') {
-          newPos = wgs84togcj02(parsedData.x, parsedData.y);
+        // _.isObject 把 parsedData 收窄成 object（没有任何属性），下面读 .x/.y 就报错；
+        // 这里换一个有形状的别名，运行时是同一个对象。
+        locationValue = parsedData as LocationValue;
+
+        if ((locationValue.coordinate || '').toLowerCase() === 'wgs84') {
+          newPos = wgs84togcj02(locationValue.x || 0, locationValue.y || 0);
           return {
-            ...parsedData,
+            ...locationValue,
             x: newPos[0],
             y: newPos[1],
           };
         }
 
-        return parsedData;
+        return locationValue;
       // 组件
       case 9: // OPTIONS 单选 平铺
       case 10: // MULTI_SELECT 多选
@@ -575,7 +626,7 @@ export function formatControlValue(cell) {
         selectedOptions = getSelectedOptions(cell.options, cell.value, cell);
         return selectedOptions.map(option => {
           if (_.get(option, 'key') === 'other') {
-            const matchText = safeParse(cell.value || '[]').find(i => i.indexOf('other:') > -1);
+            const matchText = safeParse(cell.value || '[]').find((i: string) => i.indexOf('other:') > -1);
             return matchText ? matchText.replace('other:', '') : option.value;
           }
 
@@ -587,9 +638,9 @@ export function formatControlValue(cell) {
           parsedData = [parsedData];
         }
 
-        return parsedData.filter(user => !!user).map(user => (typeof user === 'string' ? user : user.fullname));
+        return parsedData.filter((user: any) => !!user).map((user: any) => (typeof user === 'string' ? user : user.fullname));
       case 27: // GROUP_PICKER 部门
-        return JSON.parse(cell.value).map(department => {
+        return JSON.parse(cell.value).map((department: any) => {
           if (typeof department === 'string') {
             return department;
           }
@@ -597,7 +648,7 @@ export function formatControlValue(cell) {
           return department.departmentName ? department.departmentName : _l('该部门已删除');
         });
       case 48: // ORG_ROLE 组织角色
-        return JSON.parse(cell.value).map(organization => {
+        return JSON.parse(cell.value).map((organization: any) => {
           if (typeof organization === 'string') {
             return organization;
           }
@@ -607,19 +658,19 @@ export function formatControlValue(cell) {
       case 36: // SWITCH 检查框
         return value === '1' || value === 1;
       case 14: // ATTACHMENT 附件
-        return JSON.parse(value).map(attachment => `${attachment.originalFilename + attachment.ext}`);
+        return JSON.parse(value).map((attachment: any) => `${attachment.originalFilename + attachment.ext}`);
       case 35: // CASCADER 级联
         parsedData = JSON.parse(value);
         return _.isArray(parsedData) && parsedData.length ? parsedData[0].name : undefined;
       case 29: // RELATESHEET 关联表
         if (_.isNumber(+value) && !_.isNaN(+value)) {
-          parsedData = new Array(+value).fill();
+          parsedData = new Array(+value).fill(undefined);
         } else {
           parsedData = JSON.parse(value);
           parsedData =
             _.isArray(parsedData) &&
             parsedData
-              .map(record =>
+              .map((record: any) =>
                 formatControlValue(_.assign({}, cell, { type: cell.sourceControlType || 2, value: record.name })),
               )
               .filter(_.identity);
@@ -655,8 +706,8 @@ export function formatControlValue(cell) {
   }
 }
 
-function transformLat(lng, lat) {
-  let pi = 3.14159265358979324;
+function transformLat(lng: number, lat: number) {
+  const pi = 3.14159265358979324;
   let dLat = -100.0 + 2.0 * lng + 3.0 * lat + 0.2 * lat * lat + 0.1 * lng * lat + 0.2 * Math.sqrt(Math.abs(lng));
   dLat += ((20.0 * Math.sin(6.0 * lng * pi) + 20.0 * Math.sin(2.0 * lng * pi)) * 2.0) / 3.0;
   dLat += ((20.0 * Math.sin(lat * pi) + 40.0 * Math.sin((lat / 3.0) * pi)) * 2.0) / 3.0;
@@ -664,8 +715,8 @@ function transformLat(lng, lat) {
   return dLat;
 }
 
-function transformLng(lng, lat) {
-  let pi = 3.14159265358979324;
+function transformLng(lng: number, lat: number) {
+  const pi = 3.14159265358979324;
   let dLng = 300.0 + lng + 2.0 * lat + 0.1 * lng * lng + 0.1 * lng * lat + 0.1 * Math.sqrt(Math.abs(lng));
   dLng += ((20.0 * Math.sin(6.0 * lng * pi) + 20.0 * Math.sin(2.0 * lng * pi)) * 2.0) / 3.0;
   dLng += ((20.0 * Math.sin(lng * pi) + 40.0 * Math.sin((lng / 3.0) * pi)) * 2.0) / 3.0;
@@ -673,9 +724,9 @@ function transformLng(lng, lat) {
   return dLng;
 }
 
-export function wgs84togcj02(longitude, latitude) {
-  let lng = parseFloat(longitude);
-  let lat = parseFloat(latitude);
+export function wgs84togcj02(longitude: number | string, latitude: number | string) {
+  let lng = parseFloat(String(longitude));
+  let lat = parseFloat(String(latitude));
   let a = 6378245.0;
   let ee = 0.00669342162296594323;
   let pi = 3.14159265358979324;
@@ -692,7 +743,7 @@ export function wgs84togcj02(longitude, latitude) {
   return [mgLng, mgLat];
 }
 
-export const getValueStyle = data => {
+export const getValueStyle = (data?: FormControl & { sourceControl?: FormControl; titleStyle?: string }) => {
   const item = Object.assign({}, data);
   let type = item.type;
   let { valuecolor = 'var(--color-text-primary)', valuesize = '0', valuestyle = '0000' } = item.advancedSetting || {};
@@ -709,13 +760,13 @@ export const getValueStyle = data => {
         type,
         isTextArea: item.type === 2 && item.enumDefault !== 2, // 多行、加单行line-height: 1.5,单行计算
         height: valuesize !== '0' ? (parseInt(valuesize) - 1) * 2 + 40 : 36,
-        size: TITLE_SIZE_OPTIONS[valuesize],
+        size: TITLE_SIZE_OPTIONS[Number(valuesize) as keyof typeof TITLE_SIZE_OPTIONS],
         valueStyle: isEmptyValue(item.value) ? '' : `color: ${valuecolor} !important;${getTitleStyle(valuestyle)}`,
       }
     : { type };
 };
 
-export function getControlStyles(controls) {
+export function getControlStyles(controls: FormControl[]) {
   return controls
     .map(c => ({
       controlId: c.controlId,
@@ -726,9 +777,11 @@ export function getControlStyles(controls) {
         enumDefault: 1,
         advancedSetting: {
           ...(c.advancedSetting || {}),
-          valuecolor: get(c, 'advancedSetting.titlecolor'),
-          valuesize: get(c, 'advancedSetting.titlesize'),
-          valuestyle: get(c, 'advancedSetting.titlestyle'),
+          // ControlAdvancedSetting 的索引签名是 string（后端就是全存字符串），
+          // 这三个 get 取不到时是 undefined，兜个空串保持类型一致，真值判断不变
+          valuecolor: get(c, 'advancedSetting.titlecolor') || '',
+          valuesize: get(c, 'advancedSetting.titlesize') || '',
+          valuestyle: get(c, 'advancedSetting.titlestyle') || '',
         },
         value: '_',
       }).valueStyle,
@@ -756,7 +809,7 @@ export function getControlStyles(controls) {
     );
 }
 
-function parseCardStyle(control, value, type) {
+function parseCardStyle(control: FormControl, value?: string, type?: string) {
   try {
     const parsedValue = safeParse(value);
     return {
@@ -779,7 +832,7 @@ function parseCardStyle(control, value, type) {
   }
 }
 
-export function getRecordCardStyle(control) {
+export function getRecordCardStyle(control?: FormControl) {
   if (!control) {
     return {};
   }
@@ -789,7 +842,7 @@ export function getRecordCardStyle(control) {
     cardvaluestyle, // 字段值
     rowtitlestyle, // 记录标题
     cardstyle,
-  } = control.advancedSetting;
+  } = control.advancedSetting || {};
   const cardStyle = safeParse(cardstyle);
   return {
     controlTitleStyle: parseCardStyle(control, cardtitlestyle),
@@ -807,8 +860,13 @@ export function getRecordCardStyle(control) {
  * @param  {} controls 所有控件
  * @param  {} data 控件所在记录数据[可选]
  */
-export function getTitleTextFromControls(controls, data, titleSourceControlType, options = {}) {
-  let titleControl = _.find(controls, control => control.attribute === 1) || {};
+export function getTitleTextFromControls(
+  controls: FormControl[] = [],
+  data?: RecordRow,
+  titleSourceControlType?: number,
+  options: Record<string, ControlValue> = {},
+) {
+  let titleControl: FormControl = _.find(controls, control => control.attribute === 1) || {};
 
   // 原来这里是 titleControl.sourceControlType = titleSourceControlType，先改后拷 ——
   // _.find 返回的是 controls 里的【原对象】，而这个函数最常见的调用方
@@ -824,7 +882,9 @@ export function getTitleTextFromControls(controls, data, titleSourceControlType,
   }
 
   if (titleControl && data) {
-    titleControl = Object.assign({}, titleControl, { value: data[titleControl.controlId] || data.titleValue });
+    titleControl = Object.assign({}, titleControl, {
+      value: data[titleControl.controlId as string] || data.titleValue,
+    });
   }
 
   return titleControl ? renderText(titleControl, options) || titleControl.value || _l('未命名') : _l('未命名');
@@ -835,10 +895,14 @@ export function getTitleTextFromControls(controls, data, titleSourceControlType,
  * @param  {} controls 所有控件
  * @param  {} data 控件所在记录数据[可选]
  */
-export function getTitleTextFromRelateControl(control = {}, data, options = {}) {
-  let newTitleControlId = control.advancedSetting.showtitleid;
+export function getTitleTextFromRelateControl(
+  control: FormControl = {},
+  data?: RecordRow,
+  options: Record<string, ControlValue> = {},
+) {
+  let newTitleControlId = control.advancedSetting?.showtitleid;
 
-  if (control.type === 51 && control.enumDefault === 1 && control.showControls[0]) {
+  if (control.type === 51 && control.enumDefault === 1 && control.showControls?.[0]) {
     newTitleControlId = control.showControls[0];
   }
 
@@ -849,7 +913,7 @@ export function getTitleTextFromRelateControl(control = {}, data, options = {}) 
       ...control,
       ...(newTitleControlId
         ? {
-            relationControls: control.relationControls.map(c => ({
+            relationControls: (control.relationControls || []).map(c => ({
               ...c,
               attribute: newTitleControlId === c.controlId ? 1 : 0,
             })),
@@ -867,7 +931,7 @@ export function getTitleTextFromRelateControl(control = {}, data, options = {}) 
   // 直接写在 redux 的 sheet.controls[i].relationControls 元素上 —— 与上面
   // sourceControlType 同一类问题，只是碰巧还没被 immutableCheck 撞上。
   // 改成只为这次取标题构造一份带 options 的副本，不回写 store。
-  let relationControls = control.relationControls;
+  let relationControls = control.relationControls || [];
 
   if (_.includes([9, 10, 11], control.sourceControlType) && !_.isEmpty(control.options)) {
     relationControls = relationControls.map(c =>
@@ -878,7 +942,7 @@ export function getTitleTextFromRelateControl(control = {}, data, options = {}) 
   return getTitleTextFromControls(relationControls, data, control.sourceControlType, options);
 }
 
-export function renderText(cell, options = {}) {
+export function renderText(cell: FormControl, options: Record<string, ControlValue> = {}) {
   try {
     if (!cell) {
       return '';
@@ -890,8 +954,10 @@ export function renderText(cell, options = {}) {
 
     let { type, value = '', unit, advancedSetting = {} } = cell;
     let { suffix = '', prefix = '', thousandth } = advancedSetting;
-    let selectedOptions = [];
-    let parsedData;
+    let selectedOptions: ControlOption[] = [];
+    let parsedData: any;
+    // 不要叫 location：不声明局部变量时它会静默落到全局 window.location 的类型上
+    let locationValue: LocationValue;
 
     // 公式函数
     if (type === 53) {
@@ -914,7 +980,7 @@ export function renderText(cell, options = {}) {
       return '';
     }
 
-    if (!checkIsTextControl(cell) && cell.value === '已删除') {
+    if (!checkIsTextControl(cell.type) && cell.value === '已删除') {
       // 处理关联已删除，非文本作为标题时卡片标题显示异常问题
       return _l('已删除');
     }
@@ -925,7 +991,7 @@ export function renderText(cell, options = {}) {
         value = Math.round(parseFloat(cell.value) * 100) + '%';
       } else {
         if (_.includes([15, 16], cell.enumDefault2) && _.includes([2, 3], cell.enumDefault)) {
-          cell.advancedSetting = { ...advancedSetting, showtype: cell.unit };
+          cell.advancedSetting = { ...advancedSetting, showtype: cell.unit || '' };
         }
 
         type = cell.enumDefault2 || 6;
@@ -1017,7 +1083,7 @@ export function renderText(cell, options = {}) {
               : dateConvertToUserZone(cell.value);
         }
 
-        value = ['partal_regtime', 'dtime'].includes(cell.controlId)
+        value = _.includes(['partal_regtime', 'dtime'], cell.controlId)
           ? createTimeSpan(dateTime)
           : getDateToEn(showFormat, dateTime, advancedSetting.showformat);
 
@@ -1044,10 +1110,10 @@ export function renderText(cell, options = {}) {
             : moment(cell.value, value.indexOf('-') > -1 ? undefined : showFormat);
           value = moment(convertedTime).format(showFormat);
         } else {
-          if (cell.advancedSetting.autocarry === '1') {
+          if (cell.advancedSetting?.autocarry === '1') {
             value = (prefix ? `${prefix} ` : '') + formatFormulaDate({ value: cell.value, unit, dot: cell.dot });
           } else {
-            const suffixValue = suffix || UNIT_TO_TEXT[unit] || '';
+            const suffixValue = suffix || UNIT_TO_TEXT[Number(unit) as keyof typeof UNIT_TO_TEXT] || '';
             value =
               (prefix ? `${prefix} ` : '') +
               toFixed(value, cell.dot) +
@@ -1070,7 +1136,7 @@ export function renderText(cell, options = {}) {
         }
 
         value = parsedData
-          .map(time => (time ? moment(time).format(cell.type === 17 ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm') : ''))
+          .map((time: string) => (time ? moment(time).format(cell.type === 17 ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm') : ''))
           .join(' - ');
         break;
       case 10010: // REMARK 备注
@@ -1085,9 +1151,11 @@ export function renderText(cell, options = {}) {
           value = '';
         }
 
+        // 同 formatControlValue 的定位分支：_.isObject 会把 parsedData 收窄成无属性的 object
+        locationValue = parsedData as LocationValue;
         value =
-          _.isObject(parsedData) && (parsedData.title || parsedData.address)
-            ? `${parsedData.title || ''} ${parsedData.address || ''}`
+          _.isObject(parsedData) && (locationValue.title || locationValue.address)
+            ? `${locationValue.title || ''} ${locationValue.address || ''}`
             : '';
         break;
       // 组件
@@ -1119,8 +1187,8 @@ export function renderText(cell, options = {}) {
         }
 
         value = parsedData
-          .filter(user => !!user)
-          .map(user => user.fullname)
+          .filter((user: any) => !!user)
+          .map((user: any) => user.fullname)
           .join('、');
         break;
       case 27: // GROUP_PICKER 部门
@@ -1132,7 +1200,7 @@ export function renderText(cell, options = {}) {
         }
 
         value = parsedData
-          .map(department => (department.departmentName ? department.departmentName : _l('该部门已删除')))
+          .map((department: any) => (department.departmentName ? department.departmentName : _l('该部门已删除')))
           .join('、');
         break;
       case 36: // SWITCH 检查框
@@ -1151,7 +1219,7 @@ export function renderText(cell, options = {}) {
           value = '';
         }
 
-        value = parsedData.map(attachment => `${attachment.originalFilename + attachment.ext}`).join('、');
+        value = parsedData.map((attachment: any) => `${attachment.originalFilename + attachment.ext}`).join('、');
         break;
       case 35: // CASCADER 级联
         try {
@@ -1165,7 +1233,7 @@ export function renderText(cell, options = {}) {
           parsedData = [];
         }
 
-        value = parsedData.length ? parsedData.map(item => item.name || _l('未命名')).join(',') : '';
+        value = parsedData.length ? parsedData.map((item: any) => item.name || _l('未命名')).join(',') : '';
         break;
       case 29: // RELATESHEET 关联表
         try {
@@ -1182,14 +1250,14 @@ export function renderText(cell, options = {}) {
         if (cell.enumDefault === 1 || _.get(cell, 'sourceControl.controlId')) {
           value = parsedData
             .map(
-              record =>
+              (record: any) =>
                 renderText(_.assign({}, cell, { type: cell.sourceControlType || 2, value: record.name }), options) ||
                 _l('未命名'),
             )
             .join('、');
         } else if (_.get(cell, 'advancedSetting.showtype') === '2') {
           value = cell.value;
-        } else if (cell.enumDefault === 2 && cell.relationControls.length) {
+        } else if (cell.enumDefault === 2 && (cell.relationControls || []).length) {
           // 关联记录标题统一取每条记录的 name（与上面 enumDefault===1 分支一致）。
           // 标题控件按 sourceControlId → sourceTitleControlId（关联他表标题控件 ID）→ 标题属性控件 依次匹配，
           // 仅用于决定标题文本的类型格式化；即便匹配不到也照常渲染 name，避免把原始关联值 JSON 直接吐出来
@@ -1201,7 +1269,7 @@ export function renderText(cell, options = {}) {
 
           value = parsedData
             .map(
-              record =>
+              (record: any) =>
                 renderText(
                   _.assign({}, cell, {
                     type: (titleControl && titleControl.sourceControlType) || 2,
@@ -1231,7 +1299,9 @@ export function renderText(cell, options = {}) {
           value = '';
         }
 
-        value = parsedData.map(relation => `[${RELATION_TYPE_NAME[relation.type]}]${relation.name}`).join('、');
+        value = parsedData
+          .map((relation: any) => `[${RELATION_TYPE_NAME[relation.type as keyof typeof RELATION_TYPE_NAME]}]${relation.name}`)
+          .join('、');
         break;
       case 28: // SCORE 等级
         if (!cell.value) {
@@ -1259,7 +1329,7 @@ export function renderText(cell, options = {}) {
         }
 
         value = parsedData
-          .map(organize => (organize.organizeName ? organize.organizeName : _l('该组织角色已删除')))
+          .map((organize: any) => (organize.organizeName ? organize.organizeName : _l('该组织角色已删除')))
           .join('、');
         break;
       default:
@@ -1300,12 +1370,12 @@ export const isLightColor = (color = '') => {
  * relateControl 被引用的金额字段
  * 金额转中文大写、繁体大写、英文大写
  */
-export const formatNumberToWords = (control = {}, relateControl = {}) => {
+export const formatNumberToWords = (control: FormControl = {}, relateControl: FormControl = {}) => {
   const value = relateControl.value || '';
   if (!value.toString()) return '';
   const { currency, currencynames } = relateControl.advancedSetting || {};
   // 转换最多两位小数，先四舍五入在转
-  const dot = relateControl.dot > 2 ? 2 : relateControl.dot;
+  const dot = Number(relateControl.dot) > 2 ? 2 : relateControl.dot;
   const { currencycode, symbol } = safeParse(currency || '{}');
   const currencytype = getAdvanceSetting(control, 'currencytype');
   // 繁体前缀，主单位单复数、辅助单位单复数
@@ -1318,6 +1388,8 @@ export const formatNumberToWords = (control = {}, relateControl = {}) => {
   } else if (currencytype === 1) {
     const toWords = new ToWords({
       localeCode: 'en-US',
+      // ToWords 的 ConverterOptions 类型里 currencyOptions 是必填；这里按需展开，
+      // 少给的时候库自己有默认值，所以宽成 any 而不是硬凑一个假的 currencyOptions。
       converterOptions: {
         currency: true,
         ignoreDecimal: false,
@@ -1337,7 +1409,7 @@ export const formatNumberToWords = (control = {}, relateControl = {}) => {
               },
             }
           : {}),
-      },
+      } as any,
     });
     // to-words 7 在半分位上换了舍入方向（4.5 从 en-US 的 banker rounding 变成常规），
     // 金额大写与旁边的数字差一分是发票/合同事故。先按 2 位小数预舍入再转，
@@ -1355,8 +1427,8 @@ export const getMapConfig = () => {
 };
 
 // 数值转换
-export const formatNumberFromInput = (value, pointReturnEmpty = true) => {
-  value = (value || '')
+export const formatNumberFromInput = (value?: string | number, pointReturnEmpty = true) => {
+  let result = String(value || '')
     .replace('。', '.')
     .replace(/[^-\d.]/g, '')
     .replace(/^\./g, '')
@@ -1368,24 +1440,24 @@ export const formatNumberFromInput = (value, pointReturnEmpty = true) => {
     .replace(/\./g, '')
     .replace('$#$', '.');
 
-  if (pointReturnEmpty && value === '.') {
-    value = '';
+  if (pointReturnEmpty && result === '.') {
+    result = '';
   }
 
-  return value;
+  return result;
 };
 
 /**
  * 是否是空值
  */
-export const isEmptyValue = value => {
+export const isEmptyValue = (value?: any) => {
   return _.isUndefined(value) || _.isNull(value) || String(value).trim() === '';
 };
 
 /**
  * 数值千分位显示
  */
-export const formatNumberThousand = value => {
+export const formatNumberThousand = (value?: any) => {
   const content = (value || _.isNumber(value) ? value : '').toString();
   const reg = content.indexOf('.') > -1 ? /(\d{1,3})(?=(?:\d{3})+\.)/g : /(\d{1,3})(?=(?:\d{3})+$)/g;
   return content.replace(reg, '$1,');
@@ -1394,14 +1466,14 @@ export const formatNumberThousand = value => {
 /**
  * 解决 JavaScript 原生 toFixed 方法精度问题
  */
-export function toFixed(num, dot = 0) {
+export function toFixed(num: number | string, dot = 0) {
   if (_.isObject(num) || _.isNaN(Number(num))) {
     console.error(num, '不是数字');
     return '';
   }
 
   if (dot === 0) {
-    return String(Math.round(num));
+    return String(Math.round(Number(num)));
   }
 
   if (dot < 0 || dot > 20) {
@@ -1430,7 +1502,7 @@ export function toFixed(num, dot = 0) {
     const isNegative = Number(num) < 0;
 
     if (isNegative) {
-      num = Math.abs(num);
+      num = Math.abs(Number(num));
     }
 
     let data = String(Math.round(Number(`${num}e${dot}`)));
@@ -1453,14 +1525,14 @@ export function formatStrZero(str = '') {
 
 export { controlState, getAdvanceSetting, getControlStateAndCheckSectionControl, handleAdvancedSettingChange };
 
-export function formatAttachmentValue(value, isRecreate = false, isRelation = false) {
+export function formatAttachmentValue(value?: string, isRecreate = false, isRelation = false) {
   const attachmentArr = safeParse(value || '[]', 'array');
   let attachmentValue = attachmentArr;
 
   if (attachmentArr.length) {
     attachmentValue = attachmentArr
-      .filter(item => !item.refId)
-      .map((item, index) => {
+      .filter((item: any) => !item.refId)
+      .map((item: any, index: number) => {
         let fileUrl = item.fileUrl || item.fileRealPath;
         const isLinkFile = item.ext === '.url';
 
@@ -1468,7 +1540,8 @@ export function formatAttachmentValue(value, isRecreate = false, isRelation = fa
           fileUrl = `${item.filepath}${item.filename}`;
         }
 
-        const url = isLinkFile ? {} : new URL(fileUrl);
+        // 链接类附件没有真实 URL，用空壳顶住后面的 url.pathname / url.origin 读取
+        const url: Partial<URL> = isLinkFile ? {} : new URL(fileUrl);
         const urlPathNameArr = (url.pathname || '').split('/');
         const fileName = isLinkFile ? item.filename : (urlPathNameArr[urlPathNameArr.length - 1] || '').split('.')[0];
         let filePath = isLinkFile ? fileUrl : (url.pathname || '').slice(1).replace(fileName + item.ext, '');
@@ -1511,9 +1584,12 @@ export function formatAttachmentValue(value, isRecreate = false, isRelation = fa
   });
 }
 
-export const getSwitchItemNames = (data, { needDefault, isShow } = {}) => {
+export const getSwitchItemNames = (
+  data?: FormControl,
+  { needDefault, isShow }: { needDefault?: boolean; isShow?: boolean } = {},
+) => {
   const itemnames = getAdvanceSetting(data, 'itemnames') || [];
-  const showtype = getAdvanceSetting(data, 'showtype');
+  const showtype: keyof typeof DEFAULT_TEXT = getAdvanceSetting(data, 'showtype');
   const defaultData = DEFAULT_TEXT[showtype];
 
   // 筛选按默认来
@@ -1529,25 +1605,22 @@ export const getSwitchItemNames = (data, { needDefault, isShow } = {}) => {
   // 需要兜底显示
   if (needDefault && defaultData) {
     return defaultData.map(i => {
-      const cur = _.find(itemnames, it => it.key === i.key);
+      const cur = _.find(itemnames, (it: { key?: string }) => it.key === i.key);
       return _.get(cur, 'value') ? cur : i;
     });
   }
 
   // radio框必须要文案
   if (showtype === 2) {
-    return itemnames.every(i => !!i.value) ? itemnames : defaultData;
+    return itemnames.every((i: { value?: string }) => !!i.value) ? itemnames : defaultData;
   }
 
   return itemnames;
 };
 
-function hexWithAlphaMixWhiteToHex(hex) {
+function hexWithAlphaMixWhiteToHex(hex: string) {
   try {
-    let [r, g, b, a] = hex
-      .replace('#', '')
-      .match(/../g)
-      .map(a => parseInt(a, 16));
+    let [r, g, b, a] = (hex.replace('#', '').match(/../g) || []).map((a: string) => parseInt(a, 16));
     a = a / 255;
     const finalR = Math.round(r * a + 255 * (1 - a));
     const finalG = Math.round(g * a + 255 * (1 - a));
@@ -1559,7 +1632,7 @@ function hexWithAlphaMixWhiteToHex(hex) {
   }
 }
 
-export const getButtonColor = (mainColor, showAsPrimary = true) => {
+export const getButtonColor = (mainColor: string, showAsPrimary = true) => {
   if (mainColor !== 'transparent' && mainColor.length === 9 && mainColor.slice(-2) !== 'ff') {
     mainColor = hexWithAlphaMixWhiteToHex(mainColor);
   }
@@ -1616,32 +1689,28 @@ export const getButtonColor = (mainColor, showAsPrimary = true) => {
       };
 };
 
-export function getCopyControlText(control) {
-  let content;
+export function getCopyControlText(control: FormControl) {
+  let content: string | undefined;
 
   try {
     if (_.includes([WIDGETS_TO_API_TYPE_ENUM.SIGNATURE, WIDGETS_TO_API_TYPE_ENUM.SUB_LIST], control.type)) {
       content = control.value;
     } else if (control.type === WIDGETS_TO_API_TYPE_ENUM.ATTACHMENT) {
       content = safeParse(control.value)
-        .map(c => `${c.originalFilename}${c.ext}(${c.previewUrl})`)
+        .map((c: any) => `${c.originalFilename}${c.ext}(${c.previewUrl})`)
         .join(',');
     } else if (control.type === WIDGETS_TO_API_TYPE_ENUM.RELATION) {
+      const RELATION_TEXT: { [type: number]: string } = {
+        1: _l('任务'),
+        2: _l('项目'),
+        3: _l('日程'),
+        4: _l('文件'),
+        5: _l('申请单'),
+        6: '',
+        7: _l('日程'),
+      };
       content = safeParse(control.value)
-        .map(
-          c =>
-            `[${
-              {
-                1: _l('任务'),
-                2: _l('项目'),
-                3: _l('日程'),
-                4: _l('文件'),
-                5: _l('申请单'),
-                6: '',
-                7: _l('日程'),
-              }[c.type]
-            }]${c.name}(${c.link})`,
-        )
+        .map((c: any) => `[${RELATION_TEXT[c.type]}]${c.name}(${c.link})`)
         .join(',');
     } else if (_.includes([WIDGETS_TO_API_TYPE_ENUM.SCORE], control.type)) {
       content = control.value;
@@ -1655,14 +1724,14 @@ export function getCopyControlText(control) {
   return content;
 }
 
-export function handleCopyControlText(control, tableId) {
+export function handleCopyControlText(control: FormControl, tableId?: string) {
   const content = getCopyControlText(control);
   window.tempCopyForSheetView = JSON.stringify({ type: 'text', value: content, controlType: control.type, tableId });
-  copy(content);
+  copy(String(content));
 }
 
 // 支持参与函数计算的字段
-export function checkTypeSupportForFunction(control) {
+export function checkTypeSupportForFunction(control: FormControl) {
   if (
     [
       1,
@@ -1694,7 +1763,7 @@ export function checkTypeSupportForFunction(control) {
       WIDGETS_TO_API_TYPE_ENUM.FORMULA_FUNC, // 公式函数 53
       WIDGETS_TO_API_TYPE_ENUM.SUBTOTAL, // 汇总 37
       WIDGETS_TO_API_TYPE_ENUM.SCORE, // 等级 28
-    ].indexOf(control.type) > -1
+    ].indexOf(control.type as number) > -1
   ) {
     return true;
   } else if (control.type === WIDGETS_TO_API_TYPE_ENUM.RELATE_SHEET) {
@@ -1706,7 +1775,10 @@ export function checkTypeSupportForFunction(control) {
   }
 }
 
-export function convertAiRecommendControlToControlData(recommendControl, { worksheetId, allWidgets = [] } = {}) {
+export function convertAiRecommendControlToControlData(
+  recommendControl: any,
+  { worksheetId, allWidgets = [] }: { worksheetId?: string; allWidgets?: any[] } = {},
+) {
   const {
     id,
     type,
@@ -1725,7 +1797,9 @@ export function convertAiRecommendControlToControlData(recommendControl, { works
     displayField = [],
     relatedWorksheet = {},
   } = recommendControl;
-  let control = {
+  // 必须标类型：不标的话 TS 按这个字面量推出固定形状，
+  // 下面几十处 control.type = ... / control.enumDefault = ... 全报 TS2339（实测 51 条）。
+  let control: FormControl = {
     controlName: name,
     controlId: id || uuidv4(),
     col,
@@ -1737,7 +1811,10 @@ export function convertAiRecommendControlToControlData(recommendControl, { works
     source: recommendControl,
   };
 
-  if (['text', 'longText'].includes(recommendControl.type)) {
+  if (recommendControl.type === 'text') {
+    // 原来这里是 `['text', 'longText'].includes(...)`，把 longText 一并吞掉，
+    // 于是下面那个专门给长文本置 enumDefault = 2 的分支永远走不到 ——
+    // AI 推荐的长文本字段全被建成单行文本。
     control.type = WIDGETS_TO_API_TYPE_ENUM.TEXT;
   } else if (recommendControl.type === 'longText') {
     control.type = WIDGETS_TO_API_TYPE_ENUM.TEXT;
@@ -1786,11 +1863,12 @@ export function convertAiRecommendControlToControlData(recommendControl, { works
     control.type = WIDGETS_TO_API_TYPE_ENUM.RELATE_SHEET;
   }
 
-  if (REQUIRED_SUPPORTED_WIDGET_TYPES.includes(control.type)) {
+  if (REQUIRED_SUPPORTED_WIDGET_TYPES.includes(control.type as number)) {
     control.required = isRequired;
   }
 
-  const defaultData = DEFAULT_DATA[enumWidgetType[control.type]] || {};
+  const defaultData: FormControl =
+    (DEFAULT_DATA[enumWidgetType[String(control.type)] as keyof typeof DEFAULT_DATA] as FormControl) || {};
   control = {
     ...defaultData,
     ...{
@@ -1806,7 +1884,7 @@ export function convertAiRecommendControlToControlData(recommendControl, { works
 
   if (includes(['related', 'multiRelated', 'relatedTable'], type)) {
     control.dataSource = relatedWorksheet === 'self' ? worksheetId : relatedWorksheet?.id;
-    control.showControls = (displayField || []).map(item => item.fieldID);
+    control.showControls = (displayField || []).map((item: any) => item.fieldID);
     if (type === 'related') {
       control.advancedSetting.showtype = String(RELATE_RECORD_SHOW_TYPE.DROPDOWN);
     } else if (type === 'multiRelated') {
@@ -1820,7 +1898,7 @@ export function convertAiRecommendControlToControlData(recommendControl, { works
 
   if (control.type === WIDGETS_TO_API_TYPE_ENUM.FORMULA_NUMBER && formulaExpression) {
     let expression = formulaExpression;
-    allWidgets.forEach(widget => {
+    allWidgets.forEach((widget: any) => {
       if (widget.code) {
         expression = expression.replace(new RegExp(widget.code, 'g'), `\$${widget.id}\$`);
       }
@@ -1829,10 +1907,10 @@ export function convertAiRecommendControlToControlData(recommendControl, { works
   }
 
   if (control.type === WIDGETS_TO_API_TYPE_ENUM.SUB_LIST) {
-    const relationControls = (recommendControl.subFields || []).map(convertAiRecommendControlToControlData);
+    const relationControls: FormControl[] = (recommendControl.subFields || []).map(convertAiRecommendControlToControlData);
     control.dataSource = uuidv4();
     control.relationControls = relationControls;
-    control.showControls = relationControls.map(item => item.controlId);
+    control.showControls = relationControls.map((item: FormControl) => item.controlId as string);
   }
 
   // 处理人员、部门字段多选属性
@@ -1848,7 +1926,7 @@ export function convertAiRecommendControlToControlData(recommendControl, { works
     )
   ) {
     if (options.length) {
-      control.options = (options || []).map((item, index) => ({
+      control.options = (options || []).map((item: any, index: number) => ({
         key: uuidv4(),
         value: item.label,
         isDeleted: false,
@@ -1878,11 +1956,24 @@ export function convertAiRecommendControlToControlData(recommendControl, { works
   return control;
 }
 
-export function convertControlTypeToAiRecommendControlType(type) {
+/**
+ * 控件类型 -> AI 推荐字段类型名，是 convertAiRecommendControlToControlData 的反向。
+ *
+ * 入参从「裸 type」改成整个 control：longText 与 related/multiRelated/relatedTable
+ * 光看 type 分不出来（前者是 TEXT + enumDefault 2，后三者都是 RELATE_SHEET，
+ * 靠 enumDefault + advancedSetting.showtype 区分），必须拿到整个控件。
+ *
+ * 修之前这里引用了 7 个 WIDGETS_TO_API_TYPE_ENUM 上不存在的成员
+ * （LONG_TEXT / AUTOID / FORMULA / RELATE / MULTI_RELATED / RELATED_TABLE / TAB），
+ * 等于在比较 `type === undefined`：对任何真实控件都走不到，自增ID/公式/关联记录/
+ * 分割线/标签页一律返回 null，在「生成示例数据」的 prompt 里渲染成 `type: null`。
+ */
+export function convertControlTypeToAiRecommendControlType(control?: FormControl) {
+  const type = control?.type;
+
   if (type === WIDGETS_TO_API_TYPE_ENUM.TEXT) {
-    return 'text';
-  } else if (type === WIDGETS_TO_API_TYPE_ENUM.LONG_TEXT) {
-    return 'longText';
+    // 长文本没有独立控件类型，是 TEXT + enumDefault 2
+    return control?.enumDefault === 2 ? 'longText' : 'text';
   } else if (type === WIDGETS_TO_API_TYPE_ENUM.NUMBER) {
     return 'number';
   } else if (type === WIDGETS_TO_API_TYPE_ENUM.MONEY) {
@@ -1903,7 +1994,7 @@ export function convertControlTypeToAiRecommendControlType(type) {
     return 'radio';
   } else if (type === WIDGETS_TO_API_TYPE_ENUM.MULTI_SELECT) {
     return 'checkbox';
-  } else if (type === WIDGETS_TO_API_TYPE_ENUM.AUTOID) {
+  } else if (type === WIDGETS_TO_API_TYPE_ENUM.AUTO_ID) {
     return 'autoid';
   } else if (type === WIDGETS_TO_API_TYPE_ENUM.USER_PICKER) {
     return 'member';
@@ -1915,19 +2006,22 @@ export function convertControlTypeToAiRecommendControlType(type) {
     return 'email';
   } else if (type === WIDGETS_TO_API_TYPE_ENUM.ATTACHMENT) {
     return 'attachment';
-  } else if (type === WIDGETS_TO_API_TYPE_ENUM.FORMULA) {
+  } else if (type === WIDGETS_TO_API_TYPE_ENUM.FORMULA_NUMBER) {
     return 'formula';
   } else if (type === WIDGETS_TO_API_TYPE_ENUM.SUB_LIST) {
     return 'subform';
-  } else if (type === WIDGETS_TO_API_TYPE_ENUM.RELATE) {
-    return 'related';
-  } else if (type === WIDGETS_TO_API_TYPE_ENUM.MULTI_RELATED) {
-    return 'multiRelated';
-  } else if (type === WIDGETS_TO_API_TYPE_ENUM.RELATED_TABLE) {
-    return 'relatedTable';
+  } else if (type === WIDGETS_TO_API_TYPE_ENUM.RELATE_SHEET) {
+    // 三种关联都是 RELATE_SHEET，区分方式与 convertAiRecommendControlToControlData 里写的一致
+    const showtype = _.get(control, 'advancedSetting.showtype');
+
+    if (showtype === String(RELATE_RECORD_SHOW_TYPE.TAB_TABLE)) {
+      return 'relatedTable';
+    }
+
+    return control?.enumDefault === 2 ? 'multiRelated' : 'related';
   } else if (type === WIDGETS_TO_API_TYPE_ENUM.SPLIT_LINE) {
     return 'section';
-  } else if (type === WIDGETS_TO_API_TYPE_ENUM.TAB) {
+  } else if (type === WIDGETS_TO_API_TYPE_ENUM.SECTION) {
     return 'tab';
   }
 
@@ -1939,7 +2033,7 @@ export function convertControlTypeToAiRecommendControlType(type) {
  * aiGeneratedControls 会被加入到字段列表里，但是别名是不可以重复的
  * 这个函数的目的就是处理 aiGeneratedControls 的 code 属性，当这个 别名在 existingControls 里存在时，自动在 code 后面加上 _1, _2, _3, ...
  */
-export function changeCodeOfAIGenControl(existingControls, aiGeneratedControls) {
+export function changeCodeOfAIGenControl(existingControls: FormControl[], aiGeneratedControls: FormControl[]) {
   return aiGeneratedControls;
   // if (!aiGeneratedControls || !Array.isArray(aiGeneratedControls)) {
   //   return aiGeneratedControls;
@@ -1987,15 +2081,17 @@ export function changeCodeOfAIGenControl(existingControls, aiGeneratedControls) 
   // });
 }
 
-export function formatAiGenControlValue(control, value = '') {
+// 返回类型显式标 any：函数在子表分支里递归调用自己，不标就是 TS7023。
+// result 也是 any —— 中途会被换成数组/对象，最后才统一 stringify。
+export function formatAiGenControlValue(control: FormControl, value: any = ''): any {
   try {
     const { type } = control;
-    let result = value;
+    let result: any = value;
 
     if (type === WIDGETS_TO_API_TYPE_ENUM.ATTACHMENT) {
       result = isArray(value)
         ? {
-            attachments: value.map(({ ext, name, url }) =>
+            attachments: value.map(({ ext, name, url }: { ext?: string; name?: string; url?: string }) =>
               getTemporaryAttachmentFromUrl({
                 fileUrl: url,
                 fileName: name,
@@ -2013,13 +2109,13 @@ export function formatAiGenControlValue(control, value = '') {
       type === WIDGETS_TO_API_TYPE_ENUM.FLAT_MENU
     ) {
       const matchedValues = typeof value === 'string' ? value.split(',') : value;
-      const matchedOptions = get(control, 'options', []).filter(option =>
-        find(matchedValues, value => option.value === value),
+      const matchedOptions = get(control, 'options', []).filter((option: ControlOption) =>
+        find(matchedValues, (value: string) => option.value === value),
       );
-      result = matchedOptions.map(item => item.key);
+      result = matchedOptions.map((item: ControlOption) => item.key);
     } else if (type === WIDGETS_TO_API_TYPE_ENUM.USER_PICKER) {
       result = isArray(value)
-        ? value.slice(0, control.enumDefault === 0 ? 1 : undefined).map(item => {
+        ? value.slice(0, control.enumDefault === 0 ? 1 : undefined).map((item: any) => {
             return {
               fullname: item.name,
               accountId: item.id,
@@ -2029,7 +2125,7 @@ export function formatAiGenControlValue(control, value = '') {
         : [];
     } else if (type === WIDGETS_TO_API_TYPE_ENUM.ORG_ROLE) {
       result = isArray(value)
-        ? value.slice(0, control.enumDefault === 0 ? 1 : undefined).map(item => {
+        ? value.slice(0, control.enumDefault === 0 ? 1 : undefined).map((item: any) => {
             return {
               organizeName: item.name,
               organizeId: item.id,
@@ -2038,7 +2134,7 @@ export function formatAiGenControlValue(control, value = '') {
         : [];
     } else if (type === WIDGETS_TO_API_TYPE_ENUM.DEPARTMENT) {
       result = isArray(value)
-        ? value.slice(0, control.enumDefault === 0 ? 1 : undefined).map(item => {
+        ? value.slice(0, control.enumDefault === 0 ? 1 : undefined).map((item: any) => {
             return {
               departmentName: item.name,
               departmentId: item.id,
@@ -2047,7 +2143,7 @@ export function formatAiGenControlValue(control, value = '') {
         : [];
     } else if (type === WIDGETS_TO_API_TYPE_ENUM.RELATE_SHEET || type === WIDGETS_TO_API_TYPE_ENUM.CASCADER) {
       result = isArray(value)
-        ? value.map(item => {
+        ? value.map((item: any) => {
             return {
               name: item.name,
               sid: item.id || item.sid,
@@ -2055,10 +2151,12 @@ export function formatAiGenControlValue(control, value = '') {
           })
         : [];
     } else if (type === WIDGETS_TO_API_TYPE_ENUM.SUB_LIST) {
-      result = (value || []).map(row => {
-        const newRow = {};
+      result = (value || []).map((row: RecordRow) => {
+        const newRow: RecordRow = {};
         Object.keys(row).forEach(controlId => {
-          const matchedControl = get(control, 'relationControls', []).find(c => c.controlId === controlId);
+          const matchedControl = get(control, 'relationControls', []).find(
+            (c: FormControl) => c.controlId === controlId,
+          );
 
           if (matchedControl) {
             newRow[controlId] = formatAiGenControlValue(matchedControl, row[controlId]);
@@ -2082,7 +2180,7 @@ export function formatAiGenControlValue(control, value = '') {
 /**
  * 根据控件配置显示时区文本
  */
-export const getTimeZoneText = (data, appId) => {
+export const getTimeZoneText = (data: FormControl, appId?: string) => {
   const { advancedSetting = {} } = data;
   const appTimeZone = window[`timeZone_${appId}`];
   const { userZone } = getTimeZone();
@@ -2091,7 +2189,7 @@ export const getTimeZoneText = (data, appId) => {
   return `UTC${timeZone > 0 ? '+' : ''}${timeZone / 60}`;
 };
 
-export const getDefaultCount = (data = {}, value = 0) => {
+export const getDefaultCount = (data: FormControl = {}, value: ControlValue = 0) => {
   value = parseInt(value);
   if (value) {
     // 下拉框50，卡片200，列表500
@@ -2115,7 +2213,7 @@ export const getDefaultCount = (data = {}, value = 0) => {
   return value;
 };
 
-export const isTimeStyle = (data = {}) => {
+export const isTimeStyle = (data: FormControl = {}) => {
   let type = data.type;
 
   if (type === 30) {

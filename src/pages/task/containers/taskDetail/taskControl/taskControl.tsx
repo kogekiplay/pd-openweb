@@ -6,9 +6,11 @@ import _ from 'lodash';
 import { Tooltip } from 'ming-ui/antd-components';
 import CustomFields from 'src/components/Form';
 import { deleteAttachment } from 'src/pages/kc/common/AttachmentsPreview/ajax';
+import type { RootState } from 'src/redux/types';
 import config from '../../../config/config';
 import { taskFoldStatus, updateControlValue, updateTaskControlFiles } from '../../../redux/actions';
 import './taskControl.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 class TaskControl extends Component<any, any> {
   constructor(props) {
@@ -106,7 +108,7 @@ class TaskControl extends Component<any, any> {
     const errorItems = this.fields.state.errorItems || [];
     const { data = [] } = this.fields.getSubmitData({ silent: true });
     const currentData = data.find(item => item.controlId === controlId);
-    const controls = this.props.taskControls[this.props.taskId];
+    const controls: FormControl[] = this.props.taskControls[this.props.taskId];
     const oldCurrentData = _.find(controls, item => item.controlId === controlId);
 
     if (!currentData || !oldCurrentData) return;
@@ -205,7 +207,7 @@ class TaskControl extends Component<any, any> {
    * 更新关联控件的值
    */
   updateRelationValue(id, values) {
-    const controls = this.props.taskControls[this.props.taskId];
+    const controls: FormControl[] = this.props.taskControls[this.props.taskId];
     const relations = JSON.parse(_.find(controls, item => item.controlId === id).value);
     const diffItem = {};
     let singleItem;
@@ -291,4 +293,4 @@ class TaskControl extends Component<any, any> {
   }
 }
 
-export default connect(state => state.task)(TaskControl);
+export default connect((state: RootState) => state.task)(TaskControl);

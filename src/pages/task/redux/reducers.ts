@@ -1,8 +1,9 @@
 ﻿import { combineReducers } from 'redux';
 import config from '../config/config';
 import * as taskGanttReducers from '../containers/taskGantt/redux/reducers';
+import type { ReduxAction } from 'src/redux/types';
 
-const taskConfig = (state = config.defaultState, action) => {
+const taskConfig = (state = config.defaultState, action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_STATE_CONFIG':
       return Object.assign({}, state, action.taskConfig);
@@ -43,7 +44,7 @@ const taskConfig = (state = config.defaultState, action) => {
   }
 };
 
-const taskFirstSetStorage = (state = false, action) => {
+const taskFirstSetStorage = (state = false, action: ReduxAction) => {
   switch (action.type) {
     case 'SET_STORAGE_SUCCESS':
       return true;
@@ -52,7 +53,7 @@ const taskFirstSetStorage = (state = false, action) => {
   }
 };
 
-const folderSettings = (state = {}, action) => {
+const folderSettings = (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_FOLDER_SETTINGS':
       return action.data;
@@ -73,7 +74,7 @@ const folderSettings = (state = {}, action) => {
   }
 };
 
-const myTaskDataSource = (state = {}, action) => {
+const myTaskDataSource = (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_MY_TASK_DATA_SOURCE':
       return action.data;
@@ -82,7 +83,7 @@ const myTaskDataSource = (state = {}, action) => {
   }
 };
 
-const topFolderDataSource = (state = [], action) => {
+const topFolderDataSource = (state = [], action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_TOP_FOLDER_LIST':
       return action.data;
@@ -91,7 +92,7 @@ const topFolderDataSource = (state = [], action) => {
   }
 };
 
-const taskDetails = (state = {}, action) => {
+const taskDetails = (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'GET_TASK_DETAIL':
     case 'EDIT_TASK_STATUS':
@@ -125,7 +126,7 @@ const taskDetails = (state = {}, action) => {
   }
 };
 
-const taskControls = (state = {}, action) => {
+const taskControls = (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'GET_TASK_CONTROLS':
     case 'UPDATE_TASK_CONTROLS':
@@ -136,7 +137,7 @@ const taskControls = (state = {}, action) => {
   }
 };
 
-const taskChecklists = (state = {}, action) => {
+const taskChecklists = (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'GET_CHECK_LIST':
     case 'UPDATE_CHECKLIST_INDEX':
@@ -155,7 +156,7 @@ const taskChecklists = (state = {}, action) => {
   }
 };
 
-const taskDiscussions = (state = {}, action) => {
+const taskDiscussions = (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'TASK_DISCUSSIONS':
     case 'UPDATE_TASK_DISCUSSIONS':
@@ -167,7 +168,7 @@ const taskDiscussions = (state = {}, action) => {
   }
 };
 
-const taskFoldStatus = (state = {}, action) => {
+const taskFoldStatus = (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_TASK_FOLD_STATUS':
       return Object.assign({}, state, { [action.taskId]: action.data });
@@ -176,7 +177,7 @@ const taskFoldStatus = (state = {}, action) => {
   }
 };
 
-const searchTaskCount = (state = 0, action) => {
+const searchTaskCount = (state = 0, action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_SEARCH_TASK_COUNT':
       return action.searchTaskCount;

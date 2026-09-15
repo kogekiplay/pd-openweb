@@ -9,6 +9,7 @@ import { DEFAULT_CONFIG } from 'src/pages/widgetConfig/config/widget';
 import { enumWidgetType } from 'src/pages/widgetConfig/util';
 import { AddRelate } from '../relationSearch/styled';
 import SelectSheetFromApp from '../SelectSheetFromApp';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const InputWrap = styled.div`
   display: flex;
@@ -32,7 +33,7 @@ const RELATE_TYPE = [
 ];
 
 export default function ConfigRelate(props) {
-  const { globalSheetInfo, value = '', allControls = [], deleteWidget, onOk, fromPortal } = props;
+  const { globalSheetInfo, value = '', allControls = [], deleteWidget, onOk, fromPortal }: { allControls: FormControl[]; [key: string]: any } = props;
   const { appId: defaultAppId, worksheetId: sourceId, name: sourceName } = globalSheetInfo;
   const [{ appId, sheetId, sheetName }, setSelectedId] = useSetState({
     appId: defaultAppId,
@@ -88,7 +89,7 @@ export default function ConfigRelate(props) {
   }, [relateType, sheetId]);
 
   const handleSetSource = ({ newControls, open } = {}) => {
-    const controls = (newControls || relateControls || [])
+    const controls: FormControl[] = (newControls || relateControls || [])
       .filter(i => i.dataSource === sheetId)
       .filter(i => !_.find(allControls, a => a.controlId === i.controlId));
     setFields({ relateFields: controls, open: _.isUndefined(open) ? !_.isEmpty(controls) : open });

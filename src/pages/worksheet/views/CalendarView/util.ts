@@ -13,6 +13,7 @@ import { isTimeStyle } from 'src/utils/control';
 import { dateAppZoneToServerZone, dateConvertToServerZone } from 'src/utils/project';
 import { getRecordColor, getRecordColorConfig } from 'src/utils/record';
 import { DEFAULT_BORDER_COLOR_DARK, DEFAULT_BORDER_COLOR_LIGHT, DEFAULT_COLOR, DEFAULT_TEXT_COLOR } from './constants';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export const getHoverColor = color => {
   return OPTION_COLORS_LIST_HOVER[OPTION_COLORS_LIST.indexOf(color.toUpperCase())];
@@ -138,7 +139,7 @@ const getIsOverOneDay = (beginValue, endValue) => {
 };
 
 const getTitleControls = worksheetControls => {
-  return worksheetControls.find(item => item.attribute === 1);
+  return worksheetControls.find((item: FormControl) => item.attribute === 1);
 };
 
 const getStringColor = (calendarData, data, currentView) => {
@@ -154,7 +155,7 @@ const getStringColor = (calendarData, data, currentView) => {
 };
 
 // 提取获取颜色的公共逻辑
-const getColorData = (calendarData, data, currentView, worksheetControls) => {
+const getColorData = (calendarData, data, currentView, worksheetControls: FormControl[]) => {
   const stringColor = getStringColor(calendarData, data, currentView);
   const recordColorConfig = getRecordColorConfig(currentView);
   let recordColor =
@@ -184,7 +185,7 @@ const splitCalendarEventColors = recordColor => {
 // type === 16 ? 'YYYY-MM-DD HH:mm' : 'YYYY-MM-DD';
 //格式events数据//根据多组时间拆分出多条数据
 export const setDataFormat = pram => {
-  const { worksheetControls = [], currentView = {}, calendarData = {}, byRowId, ...data } = pram;
+  const { worksheetControls = [], currentView = {}, calendarData = {}, byRowId, ...data }: { worksheetControls: FormControl[]; [key: string]: any } = pram;
 
   if (byRowId) {
     return setDataFormatByRowId(pram);
@@ -223,7 +224,7 @@ export const setDataFormat = pram => {
     });
 };
 
-const renderTitleTxt = (worksheetControls, currentView, dataInfo) => {
+const renderTitleTxt = (worksheetControls: FormControl[], currentView, dataInfo) => {
   const titleControls = getTitleControls(worksheetControls);
   const viewtitle = _.get(currentView, 'advancedSetting.viewtitle');
 
@@ -246,7 +247,7 @@ const renderTitleTxt = (worksheetControls, currentView, dataInfo) => {
 
 //格式events数据//未排期 以及全部 一条数据卡片显示多个时间信息
 export const setDataFormatByRowId = pram => {
-  const { worksheetControls = [], currentView = {}, calendarData = {}, ...data } = pram;
+  const { worksheetControls = [], currentView = {}, calendarData = {}, ...data }: { worksheetControls: FormControl[]; [key: string]: any } = pram;
   const { calendarInfo = [] } = calendarData;
   const { stringColor, recordColor } = getColorData(calendarData, data, currentView, worksheetControls);
   const colortype = getAdvanceSetting(currentView).colortype || RECORD_COLOR_SHOW_TYPE.BG;
@@ -283,7 +284,7 @@ export const getCalendarViewType = (strType, data) => {
 
 export const getTimeControls = controls => {
   return controls.filter(
-    item =>
+    (item: FormControl) =>
       item.controlId !== 'utime' &&
       (_.includes([15, 16], item.type) ||
         (item.type === 30 && //支持他表字段 仅存储(9,10,11)
@@ -317,9 +318,9 @@ export const isIllegalFormat = (calendarInfo = []) => {
   return calendarInfo.some(o => [o.endData, o.startData].some(item => isIllegal(item)));
 };
 
-export const setSysWorkflowTimeControlFormat = (controls = [], sheetSwitchPermit = [], key = 'controlId') => {
+export const setSysWorkflowTimeControlFormat = (controls: FormControl[] = [], sheetSwitchPermit = [], key = 'controlId') => {
   const isPermitted = isOpenPermit(permitList.sysControlSwitch, sheetSwitchPermit);
-  return controls.filter(o => isPermitted || !SYS_CONTROLS_WORKFLOW.includes(o[key]));
+  return controls.filter((o: FormControl) => isPermitted || !SYS_CONTROLS_WORKFLOW.includes(o[key]));
 };
 
 export const getCurrentView = props => {
@@ -363,7 +364,7 @@ export const renderLine = (random, view) => {
 };
 
 //格式化时间用于保存
-export const formatTimeForSave = (value, data = {}, appId) => {
+export const formatTimeForSave = (value: Date, data = {}, appId) => {
   if (data.type === 16) {
     return data?.advancedSetting?.timezonetype === '1'
       ? dateAppZoneToServerZone(value, window[`timeZone_${appId}`])

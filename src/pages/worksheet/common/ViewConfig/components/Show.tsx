@@ -9,6 +9,7 @@ import { NORMAL_SYSTEM_FIELDS_SORT, WORKFLOW_SYSTEM_FIELDS_SORT } from 'src/page
 import SortColumns from 'src/pages/worksheet/components/SortColumns/';
 import { getAdvanceSetting } from 'src/utils/control';
 import { filterHidedControls } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrap = styled.div`
   height: 100%;
@@ -159,7 +160,7 @@ export default class Show extends React.Component<any, any> {
     const filteredColumns = filterHidedControls(columns, controls, false).filter(
       c => !!c.controlName && !_.includes([22, 10010, 43, 45, 49, 51, 52], c.type),
     );
-    const showControlsForSortControl = showControls.filter(id =>
+    const showControlsForSortControl = showControls.filter((id: FormControl) =>
       _.find(filteredColumns, column => column.controlId === id),
     );
     const sysControlsColumnsForSort = isShowWorkflowSys

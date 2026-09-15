@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { allSwitchKeys } from 'src/pages/FormSet/containers/FunctionalSwitch/config.js';
 
-export const isOpenPermit = (type, list = [], viewId) => {
+export const isOpenPermit = (type: number, list = [], viewId?) => {
   if (Array.isArray(list)) {
     list = list.length > 0 ? formatSwitches(list) : list;
     let data = list.find(o => o.type === type);

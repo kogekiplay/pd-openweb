@@ -12,9 +12,10 @@ import FunctionEditorDialog from '../components/FunctionEditorDialog';
 import PointConfig from '../components/PointerConfig';
 import PreSuffix from '../components/PreSuffix';
 import Date from './date';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function FormulaFunc(props) {
-  const { data, allControls, onChange } = props;
+  const { data, allControls, onChange }: { allControls: FormControl[]; [key: string]: any } = props;
   const { controlName, dataSource, enumDefault2, controlId } = data;
   const { numshow, nullzero } = getAdvanceSetting(data);
   const [visible, setVisible] = useState(false);

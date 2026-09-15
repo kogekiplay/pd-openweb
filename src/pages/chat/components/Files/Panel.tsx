@@ -149,7 +149,7 @@ export default class FilesPanel extends Component<any, any> {
       },
     );
   }
-  handleChange(visible) {
+  handleChange(visible: boolean) {
     this.setState({
       visible,
     });

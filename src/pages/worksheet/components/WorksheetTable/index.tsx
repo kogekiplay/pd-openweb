@@ -19,6 +19,7 @@ import { checkRulesErrorOfRowControl } from 'src/utils/rule';
 import { Cell, NoRecords, NoSearch } from './components';
 import { checkCellFullVisible, getRulePermissions, getTableHeadHeight, handleLifeEffect } from './util';
 import './style.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const StyledFixedTable = styled(FixedTable)`
   font-size: 13px;
@@ -251,7 +252,7 @@ function WorksheetTable(props, ref) {
     cellProps = {},
     // onHoverColumnChange = () => {},
     renderCompInMainCenter,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const { emptyIcon, emptyText, sheetIsFiltered, allowAdd, noRecordAllowAdd, showNewRecord } = props; // 空状态
   const { keyWords } = props; // 搜索
   const {
@@ -341,7 +342,8 @@ function WorksheetTable(props, ref) {
         .concat(columns.filter(c => c.type !== 'operates'))
         .concat(direction === 'horizontal' && showEmptyForResize ? { type: 'emptyForResize', width: 36 } : [])
         .concat(columns.filter(c => c.type === 'operates'))
-        .filter(c => !_.includes(SHEET_VIEW_HIDDEN_TYPES, c.type)),
+        // columns 里混了 type 为 'operates' / 'emptyForResize' 的伪列，所以比较目标要放宽到 string|number
+        .filter(c => !_.includes(SHEET_VIEW_HIDDEN_TYPES as (number | string)[], c.type)),
     [direction, columns, rowHeadWidth],
   );
   let tableRowCount = rowCount || data.length;

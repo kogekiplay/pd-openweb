@@ -9,6 +9,7 @@ import sheetAjax from 'src/api/worksheet';
 import { isSameType } from 'src/pages/worksheet/common/ViewConfig/util.js';
 import { renderText as renderCellText } from 'src/utils/control';
 import Option from './Options';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrap = styled.div`
   .customInput {
@@ -149,7 +150,7 @@ export default function (props) {
     }
 
     if (29 === controlInfo.type) {
-      const control = controls.find(o => o.attribute === 1);
+      const control = controls.find((o: FormControl) => o.attribute === 1);
       return renderCellText({ ...control, value: record[control.controlId] }) || _l('未命名');
     }
   };

@@ -23,6 +23,8 @@ import { isLightColor } from 'src/utils/control';
 import { formatQuickFilter } from 'src/utils/filter';
 import { dateConvertToServerZone, dateConvertToUserZone } from 'src/utils/project';
 import { replaceControlsTranslateInfo } from 'src/utils/translate.js';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import type { AppDispatch, GetState } from 'src/redux/types';
 
 export const initData = () => {
   return dispatch => {
@@ -35,7 +37,7 @@ export const initData = () => {
 };
 
 export const fetchRows = (refresh = true) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, controls, views, filters, quickFilter = [], resourceview } = getState().sheet;
     const { filterControls } = getState().mobile;
     const view = (base.viewId ? _.find(views, { viewId: base.viewId }) : views[0]) || {};
@@ -101,7 +103,7 @@ export const fetchRows = (refresh = true) => {
 
 //加载分组下的更多
 export const fetchRowsByGroupId = (kanbanKey, kanbanIndex) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, controls, views, filters, quickFilter = [], resourceview } = getState().sheet;
     const { filterControls } = getState().mobile;
     const { resourceData = [] } = resourceview;
@@ -150,7 +152,7 @@ export const fetchRowsByGroupId = (kanbanKey, kanbanIndex) => {
         let rowsData = [];
         resourceData.map(o => {
           if (o.key === kanbanKey) {
-            rowsData = o.rows.map(it => {
+            rowsData = o.rows.map((it: RecordRow) => {
               return _.omit(it, [
                 'color',
                 'width',
@@ -180,7 +182,7 @@ export const getRelationControls = (appId, sourceId) => {
         })
         .then(({ code, data }) => {
           if (code === 1) {
-            const { controls } = data;
+            const { controls }: { controls: FormControl[]; [key: string]: any } = data;
             dispatch({
               type: 'CHANGE_RESOURCE_RESOURCE_RELATION_CONTROLS',
               data: replaceControlsTranslateInfo(appId, sourceId, controls),
@@ -200,7 +202,7 @@ const formatByGroup = (info, view, controls, gridTimes, currentTime) => {
     info
       .filter(o => o.key !== '-1')
       .map(item => {
-        const rows =
+        const rows: RecordRow[] =
           _.get(view, 'advancedSetting.begindate') && _.get(view, 'advancedSetting.enddate') //未配置开始和结束时间，不显示时间块
             ? formatRows(item, view, controls, gridTimes, true, currentTime)
             : [];
@@ -220,12 +222,12 @@ const formatByGroup = (info, view, controls, gridTimes, currentTime) => {
 };
 
 const formatRows = (item, view, controls, gridTimes, mustParse = true, currentTime) => {
-  const rows = (item.rows || []).map(row => {
+  const rows: RecordRow[] = (item.rows || []).map(row => {
     let data = {
       ...formatRecordTime(mustParse ? JSON.parse(row) : row, view, controls), // startTime, endTime
       groupId: item.key,
     };
-    let colorData = controls.find(it => it.controlId === _.get(view, 'advancedSetting.colorid')) || {};
+    let colorData = controls.find((it: FormControl) => it.controlId === _.get(view, 'advancedSetting.colorid')) || {};
     data = fillRecordTimeBlockColor(data, colorData);
     const hoverColor = getHoverColor(data.color);
     const fontColor = isLightColor(data.color) ? '#151515' : '#fff';
@@ -249,7 +251,7 @@ export const refresh = () => {
 };
 
 export const getTimeList = cb => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { views, base, resourceview } = getState().sheet;
     const view = base.viewId ? _.find(views, { viewId: base.viewId }) : views[0];
     const list = getViewTimesList(
@@ -285,7 +287,7 @@ export const getTimeList = cb => {
 };
 
 export const updateKeyWords = keywords => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { resourceview } = getState().sheet;
     const { resourceData = [] } = resourceview;
     dispatch({ type: 'CHANGE_RESOURCE_KEYWORDS', data: keywords });
@@ -307,12 +309,12 @@ export const updateCurrnetTime = time => {
 };
 
 export const updateRecordTime = (row, start, end, key, newKey) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, controls, resourceview, views } = getState().sheet;
     const view = base.viewId ? _.find(views, { viewId: base.viewId }) : views[0];
     const { resourceData } = resourceview;
-    const startControl = controls.find(o => o.controlId === _.get(view, 'advancedSetting.begindate')) || {};
-    const endControl = controls.find(o => o.controlId === _.get(view, 'advancedSetting.enddate')) || {};
+    const startControl = controls.find((o: FormControl) => o.controlId === _.get(view, 'advancedSetting.begindate')) || {};
+    const endControl = controls.find((o: FormControl) => o.controlId === _.get(view, 'advancedSetting.enddate')) || {};
     const newOldControl = [];
 
     if (!_.isNull(start)) {
@@ -335,7 +337,7 @@ export const updateRecordTime = (row, start, end, key, newKey) => {
       });
     }
 
-    const viewControlData = controls.find(o => o.controlId === view.viewControl) || {};
+    const viewControlData = controls.find((o: FormControl) => o.controlId === view.viewControl) || {};
 
     if (!!newKey && (viewControlData.fieldPermission || '111')[1] === '1') {
       const newData = resourceData.find(o => o.key === newKey);
@@ -375,7 +377,7 @@ export const updateRecordTime = (row, start, end, key, newKey) => {
         if (!newKey) {
           resourceData.map(o => {
             if (o.key === key) {
-              rowsData = o.rows.map(it => {
+              rowsData = o.rows.map((it: RecordRow) => {
                 if (it.rowid === res.data.rowid) {
                   return _.omit({ ...it, ...res.data }, [
                     'color',
@@ -423,7 +425,7 @@ export const updateRecordTime = (row, start, end, key, newKey) => {
             } else {
               if (key === o.key) {
                 rowsOldData = o.rows
-                  .filter(it => it.rowid !== row.rowid)
+                  .filter((it: RecordRow) => it.rowid !== row.rowid)
                   .map(it => {
                     return _.omit(it, [
                       'color',
@@ -447,8 +449,8 @@ export const updateRecordTime = (row, start, end, key, newKey) => {
   };
 };
 
-export const updateByKey = (key, rowsData, key1, rowsData1) => {
-  return (dispatch, getState) => {
+export const updateByKey = (key, rowsData, key1?, rowsData1?) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, controls, resourceview, views } = getState().sheet;
     const view = base.viewId ? _.find(views, { viewId: base.viewId }) : views[0];
     const { keywords = '', resourceData, gridTimes, currentTime } = resourceview;
@@ -458,7 +460,7 @@ export const updateByKey = (key, rowsData, key1, rowsData1) => {
         ...o,
         rows: rowsData,
       };
-      const rows = formatRows(item, view, controls, gridTimes, false, currentTime);
+      const rows: RecordRow[] = formatRows(item, view, controls, gridTimes, false, currentTime);
       const type =
         localStorage.getItem(`${view.viewId}_resource_type`) || types[_.get(view, 'advancedSetting.calendarType') || 0];
       const oneWidth = type !== 'Day' ? timeWidth : timeWidthHalf;

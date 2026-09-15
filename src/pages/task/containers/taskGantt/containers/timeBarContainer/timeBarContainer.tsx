@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import ajaxRequest from 'src/api/taskCenter';
+import type { RootState } from 'src/redux/types';
 import { updateTimeError, updateTimeErrorDialog } from '../../../../components/updateTimeError/updateTimeError';
 import TaskDetail from '../../../taskDetail/taskDetail';
 import TaskTimeBar from '../../component/taskTimeBar/taskTimeBar';
@@ -313,7 +314,7 @@ class TimeBarContainer extends Component<any, any> {
   }
 }
 
-export default connect(state => {
+export default connect((state: RootState) => {
   const { accountTasksKV, stateConfig, timeAxisSource } = state.task;
 
   return {

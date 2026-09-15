@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import type { AppDispatch, GetState } from 'src/redux/types';
 
 export const updateExcelDetailData = data => dispatch => {
   const excelDetailData = data.map(item => ({
@@ -12,7 +13,7 @@ export const updateExcelDetailData = data => dispatch => {
   dispatch({ type: 'UPDATE_EXCEL_DETAIL_DATA', data: excelDetailData });
 };
 
-export const updateCurrentSheetInfo = data => (dispatch, getState) => {
+export const updateCurrentSheetInfo = data => (dispatch: AppDispatch, getState: GetState) => {
   const { excelDetailData = {} } = getState().sheet.excelCreateAppAndSheet || {};
 
   dispatch({ type: 'UPDATE_CURRENT_SHEET_INFO', data });

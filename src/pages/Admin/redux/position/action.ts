@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import jobAjax from 'src/api/job';
+import type { AppDispatch, GetState } from 'src/redux/types';
 
 const PAGE_SIZE = 50;
 
@@ -7,7 +8,7 @@ export const updateProjectId = projectId => dispatch => {
   dispatch({ type: 'CHANGE_PROJECT_ID', projectId });
 };
 
-export const getPositionList = () => (dispatch, getState) => {
+export const getPositionList = () => (dispatch: AppDispatch, getState: GetState) => {
   const { positionPageInfo = {}, projectId, positionList = [], searchValue } = getState().orgManagePage.position;
   const { pageIndex } = positionPageInfo;
   let extra = searchValue ? { keywords: searchValue } : { pageIndex: pageIndex || 1, pageSize: PAGE_SIZE };
@@ -64,7 +65,7 @@ export const updateUserPageIndex = userPageIndex => dispatch => {
   dispatch({ type: 'UPDATE_USER_PAGE_INDEX', userPageIndex });
 };
 
-export const getUserList = params => (dispatch, getState) => {
+export const getUserList = params => (dispatch: AppDispatch, getState: GetState) => {
   const { jobId = '' } = params;
   const { projectId, userPageIndex } = getState().orgManagePage.position;
   dispatch({ type: 'UPDATE_USER_LOADING', userLoading: true });

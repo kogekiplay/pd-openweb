@@ -11,6 +11,7 @@ import FastFilterCon from './fastFilterCon';
 import bgFastFilters from './img/bgFastFilters.png';
 import { formatFastFilterData, getSetDefault } from './util';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrap = styled.div`
   .hasData {
@@ -86,11 +87,11 @@ const Wrap = styled.div`
 `;
 
 export default function FastFilter(params) {
-  const { worksheetControls = [], setFastFilter, view = {}, updateCurrentView, currentSheetInfo } = params;
+  const { worksheetControls = [], setFastFilter, view = {}, updateCurrentView, currentSheetInfo }: { worksheetControls: FormControl[]; [key: string]: any } = params;
   const { advancedSetting = {} } = view;
   let { enablebtn, clicksearch, fastrequired, requiredcids } = advancedSetting;
   let [fastFilters, setData] = useState(view.fastFilters || []);
-  let [showAddCondition, setShowAddCondition] = useState();
+  let [showAddCondition, setShowAddCondition] = useState<boolean | undefined>();
   const [{ dropDownVisible }, setState] = useSetState({
     dropDownVisible: false,
   });
@@ -118,7 +119,7 @@ export default function FastFilter(params) {
     }
   };
 
-  const updateView = (fastFilters, advanced) => {
+  const updateView = (fastFilters, advanced?) => {
     let data =
       fastFilters.length > 0
         ? {
@@ -279,7 +280,7 @@ export default function FastFilter(params) {
                       return (
                         <div className="">
                           {(safeParse(requiredcids, 'array') || []).map(it => {
-                            const info = worksheetControls.find(o => o.controlId === it);
+                            const info = worksheetControls.find((o: FormControl) => o.controlId === it);
                             const isDel = !fastFilters.find(item => item.controlId === it) || !info;
                             return (
                               <div className={cx('itemT InlineBlock', { Red: isDel })}>
@@ -310,7 +311,7 @@ export default function FastFilter(params) {
                       // { value: 'all', text: _l('全部') },
                       ...fastFilters
                         .map(o => {
-                          const info = worksheetControls.find(it => it.controlId === o.controlId) || {};
+                          const info = worksheetControls.find((it: FormControl) => it.controlId === o.controlId) || {};
                           return {
                             ...o,
                             value: o.controlId,

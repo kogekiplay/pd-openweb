@@ -8,6 +8,7 @@ import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import { SYS_CONTROLS_WORKFLOW } from 'src/pages/widgetConfig/config/widget.js';
 import { VIEW_DISPLAY_TYPE, VIEW_TYPE_ICON } from 'src/pages/worksheet/constants/enum';
 import { baseSetList, manageViewFilter, viewTypeConfig, viewTypeCustomList, viewTypeGroup } from '../config';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const RecordColorSign = styled.div`
   display: inline-block;
@@ -41,7 +42,7 @@ export default function SideNav(props) {
     onChangeType,
     btnList = [],
   } = props;
-  const { filters = [], controls = [], moreSort = [], fastFilters = [] } = view;
+  const { filters = [], controls = [], moreSort = [], fastFilters = [] }: { controls: FormControl[]; [key: string]: any } = view;
   const { icon } = VIEW_TYPE_ICON.find(it => it.id === VIEW_DISPLAY_TYPE[view.viewType]) || {};
   const viewTypeText = VIEW_DISPLAY_TYPE[view.viewType];
   const columnsList = formatColumnsListForControlsWithoutHide(currentSheetInfo?.template?.controls || []);

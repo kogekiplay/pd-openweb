@@ -1,8 +1,9 @@
 import _ from 'lodash';
 import { renderText as renderCellText } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 
-export function parseRecord(record = {}, mapViewConfig, controls) {
-  const titleField = controls.find(l => l.attribute === 1) || {};
+export function parseRecord(record = {}, mapViewConfig, controls: FormControl[]) {
+  const titleField = controls.find((l: FormControl) => l.attribute === 1) || {};
   const titleValue = renderCellText(
     { ...titleField, value: titleField.controlId ? record[titleField.controlId] : undefined },
     { noMask: _.get(titleField, 'advancedSetting.datamask') !== '1' },

@@ -15,6 +15,7 @@ import { handleAutoScroll } from './core/autoScroll';
 import { getGroupOpenKeys, getGroupOptions, groupByOptionKey } from './core/util';
 import SecondGroupItem from './SecondGroupItem';
 import './index.less';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const GroupBoardWrap = styled.div`
   .groupHeaderItemWrap,
@@ -41,7 +42,7 @@ const GroupBoard = props => {
     viewId,
     worksheetId,
     ...rest
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const scrollViewRef = useRef<any>(undefined);
   const isManualExpand = useRef(false);
   const [, drop] = useDrop({
@@ -57,7 +58,7 @@ const GroupBoard = props => {
 
   // 获取所有记录 ID
   const allRecordIds = useMemo(() => {
-    return _.flatMap(boardData, item => item.rows.map(row => row.rowid)).filter(Boolean);
+    return _.flatMap(boardData, item => item.rows.map((row: RecordRow) => row.rowid)).filter(Boolean);
   }, [boardData]);
 
   // 获取操作按钮

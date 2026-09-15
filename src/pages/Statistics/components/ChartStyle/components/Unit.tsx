@@ -12,7 +12,7 @@ class Unit extends Component<any, any> {
     super(props);
     this.state = {};
   }
-  handleChangeYaxis = (key, value, current) => {
+  handleChangeYaxis = (key: string, value, current) => {
     const { changeAllYaxis, yaxisList, onChangeYaxisList } = this.props;
     const data = yaxisList.map(item => {
       if (changeAllYaxis ? true : item.controlId === current.controlId) {
@@ -61,7 +61,7 @@ class Unit extends Component<any, any> {
       true,
     );
   };
-  handleChangeYdot = (value, current) => {
+  handleChangeYdot = (value: number | string, current) => {
     const { changeAllYaxis, yaxisList, onChangeYaxisList } = this.props;
     let count = '';
 

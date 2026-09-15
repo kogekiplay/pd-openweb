@@ -49,7 +49,7 @@ export default class Api extends Component<any, any> {
   /**
    * 获取节点详情
    */
-  getNodeDetail(props, appId) {
+  getNodeDetail(props, appId?) {
     const { processId, selectNodeId, selectNodeType, instanceId } = props;
     const { data } = this.state;
 

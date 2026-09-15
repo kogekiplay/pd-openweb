@@ -8,6 +8,7 @@ import { Icon, LoadDiv, PullToRefreshWrapper, ScrollView } from 'ming-ui';
 import { RecordInfoModal } from 'mobile/Record';
 import RecordCardIO from 'mobile/RecordList/RecordCard/RecordCardIO';
 import GroupByControl from 'src/pages/Mobile/components/GroupByControl';
+import type { RootState } from 'src/redux/types';
 import { browserIsMobile, pathCompletion } from 'src/utils/common';
 import RegExpValidator from 'src/utils/expression';
 import { addBehaviorLog } from 'src/utils/project';
@@ -275,7 +276,7 @@ export const WithoutSearchRows = props => {
 };
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     ..._.pick(
       state.mobile,
       'base',

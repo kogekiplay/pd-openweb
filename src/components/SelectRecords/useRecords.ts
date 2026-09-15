@@ -78,7 +78,7 @@ export default function useRecords(props) {
   const effectiveDefaultPageSize = listMode ? LIST_MODE_PAGE_SIZE : defaultPageSize || 10;
   const [pageSize, setPageSize] = useState(effectiveDefaultPageSize);
   const [total, setTotal] = useState(0);
-  const [error, setError] = useState();
+  const [error, setError] = useState<number | undefined>();
   const [quickFilters, setQuickFilters] = useState([]);
   const [ignoreAllFilters, setIgnoreAllFilters] = useState(false); // 忽略所有过滤条件
   const [loadMoreLoading, setLoadMoreLoading] = useState(false);

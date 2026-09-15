@@ -128,7 +128,7 @@ export default class Text extends React.Component<any, any> {
     });
   };
 
-  handleSelect = e => {
+  handleSelect = (e?) => {
     const { cell, updateEditingStatus } = this.props;
 
     this.isSelecting = true;
@@ -188,7 +188,7 @@ export default class Text extends React.Component<any, any> {
     );
   };
 
-  renderDepartmentTag(department, allowDelete) {
+  renderDepartmentTag(department, allowDelete?) {
     const { style, isediting, cell = {} } = this.props;
     const needRTL = _.get(cell, 'advancedSetting.allpath') === '1' && !department.isDelete;
     const renderName = needRTL ? <bdi dir="ltr">{department.departmentName}</bdi> : department.departmentName;

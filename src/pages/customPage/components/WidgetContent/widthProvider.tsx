@@ -51,7 +51,7 @@ export default function widthProvider(GridOutComponent) {
       this.resizeObserver && this.resizeObserver.disconnect();
     }
 
-    onWindowResize = width => {
+    onWindowResize = (width?: number) => {
       if (!this.mounted) return;
       const { layoutType } = this.props;
       const node =

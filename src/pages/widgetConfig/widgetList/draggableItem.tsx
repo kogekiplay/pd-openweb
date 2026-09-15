@@ -9,9 +9,10 @@ import { DRAG_ITEMS } from '../config/Drag';
 import { DEFAULT_DATA, WIDGETS_TO_API_TYPE_ENUM } from '../config/widget';
 import { checkWidgetMaxNumErr, enumWidgetType } from '../util';
 import addTabWidget from './addTabWidget';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function DraggableItem(props) {
-  const { item, addWidget, allControls, setStyleInfo, styleInfo: { info = {} } = {}, globalSheetInfo } = props;
+  const { item, addWidget, allControls, setStyleInfo, styleInfo: { info = {} } = {}, globalSheetInfo }: { allControls: FormControl[]; [key: string]: any } = props;
   const { widgetName, icon, enumType, featureType } = item;
   const isCustomWidget = enumType === 'CUSTOM';
 

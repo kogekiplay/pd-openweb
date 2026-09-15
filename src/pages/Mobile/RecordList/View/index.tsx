@@ -13,6 +13,7 @@ import { VIEW_DISPLAY_TYPE } from 'src/pages/worksheet/constants/enum';
 import * as worksheetActions from 'src/pages/worksheet/redux/actions';
 import * as navFilterActions from 'src/pages/worksheet/redux/actions/navFilter';
 import { isHaveCharge } from 'src/pages/worksheet/redux/actions/util';
+import type { RootState } from 'src/redux/types';
 import { getRequest } from 'src/utils/common';
 import { emitter } from 'src/utils/common';
 import { mdAppResponse } from 'src/utils/project';
@@ -392,7 +393,7 @@ class View extends Component<any, any> {
 }
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     controls: state.sheet.controls,
     views: state.sheet.views,
     ...state.sheet,

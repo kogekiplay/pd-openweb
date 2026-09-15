@@ -15,6 +15,7 @@ import {
   WF_STATUS,
   WFSTATUS_OPTIONS,
 } from './enum.js';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const reg = new RegExp('<[^<>]+>', 'g');
 
@@ -174,7 +175,7 @@ export function handleSelectTagsValue(param) {
     case 29:
       const { advancedSetting = {} } = control || {};
       const oldRows = (safeParse(oldValue) || {}).rows;
-      const newRows = (safeParse(newValue) || {}).rows;
+      const newRows: RecordRow[] = (safeParse(newValue) || {}).rows;
 
       if (
         ([8, 2].includes(requestType) || ['1', '2', '5', '6'].includes(advancedSetting.showtype)) &&
@@ -265,7 +266,7 @@ export function diffSelectTagsValue(param) {
   return { _oldValue, _newValue, _defaultValue };
 }
 
-export function getExtendParams(extendParams = [], name) {
+export function getExtendParams(extendParams = [], name: string) {
   let info = extendParams.find(l => _.startsWith(l, `${name}:`));
 
   return info ? info.replace(`${name}:`, '') : '';
@@ -352,7 +353,7 @@ const OPTION_TYPE_TEXT = {
 };
 
 export const renderTitleText = (data, extendParam) => {
-  const { controls } = extendParam;
+  const { controls }: { controls: FormControl[]; [key: string]: any } = extendParam;
   const count = data.child[0].operatContent.logData.filter(l => l.oldValue !== '' || l.newValue !== '').length;
   const showTooltips = hasHiddenControl(data.child[0].operatContent.logData, controls);
 
@@ -384,7 +385,7 @@ export const renderTitleText = (data, extendParam) => {
 
         if (SUBLIST_FILE_EDIT_TYPE.includes(editType)) {
           const controlId = _.get(data, 'child[0].operatContent.logData[0].id');
-          control = controls.find(l => l.controlId === controlId);
+          control = controls.find((l: FormControl) => l.controlId === controlId);
         }
 
         content = (

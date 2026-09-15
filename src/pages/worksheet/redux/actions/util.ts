@@ -1,6 +1,7 @@
 import { find } from 'lodash';
 import _ from 'lodash';
 import { APP_ROLE_TYPE } from 'src/pages/worksheet/constants/enum';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export const dealData = data => {
   const res = {};
@@ -33,13 +34,13 @@ export const getHierarchyViewIds = (worksheet, path = []) => {
 };
 
 //当前角色是否具有管理员权限
-export const isHaveCharge = (type, isLock) => {
+export const isHaveCharge = (type, isLock?) => {
   const { isAdmin, isOwner } = getUserRole(type, isLock);
   return !!isAdmin || !!isOwner;
 };
 
 //获取当前用户对应角色
-export const getUserRole = (type, isLock) => {
+export const getUserRole = (type, isLock?) => {
   let data = {};
 
   if (type === APP_ROLE_TYPE.POSSESS_ROLE) {
@@ -72,7 +73,7 @@ export const getUserRole = (type, isLock) => {
 };
 
 //可以编辑应用、拥有应用搭建权限(管理员，拥有者，开发者)
-export const canEditApp = (type, isLock) => {
+export const canEditApp = (type, isLock?) => {
   const { isAdmin, isOwner, isDeveloper } = getUserRole(type, isLock);
   return !!isAdmin || !!isOwner || !!isDeveloper;
 };
@@ -114,7 +115,7 @@ export function getItemByRowId(rowId = null, data = []) {
   }
 }
 
-export function sortDataByCustomItems(data, view = {}, controls = [], firstNotSpecified = true) {
+export function sortDataByCustomItems(data, view = {}, controls: FormControl[] = [], firstNotSpecified = true) {
   let customItems = safeParse(_.get(view, 'advancedSetting.customitems'), 'array');
 
   if (_.get(view, 'advancedSetting.navshow') === '2') {
@@ -154,7 +155,7 @@ export function sortDataByCustomItems(data, view = {}, controls = [], firstNotSp
 }
 
 //根据视图下的分组配置，处理视图呈现数据的顺序，以及是否呈现未分组数据
-export function sortDataByGroupItems(list = [], currentView = {}, controls = []) {
+export function sortDataByGroupItems(list = [], currentView = {}, controls: FormControl[] = []) {
   const sortedData = sortDataByCustomItems(
     list.sort((a, b) => {
       if (a.sort === -1) return 1;

@@ -4,6 +4,7 @@ import { toFixed } from 'src/utils/controlCommon';
 import { getContactInfo } from 'src/utils/project';
 import { filterEmptyChildTableRows } from 'src/utils/record';
 import { FORM_ERROR_TYPE } from '../config';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export { flattenArr, getAvailableFilters, getResult, isRelateMoreList, replaceStr } from './ruleUtils';
 
@@ -26,7 +27,7 @@ export const getEmbedValue = (embedData = {}, id) => {
   }
 };
 
-export const compareWithTime = (start, end, type) => {
+export const compareWithTime = (start, end, type: string) => {
   if (!start || !end) return false;
   const startTime = parseInt(start.split(':')[0]) * 60 + parseInt(start.split(':')[1]);
   const endTime = parseInt(end.split(':')[0]) * 60 + parseInt(end.split(':')[1]);
@@ -43,8 +44,8 @@ export const compareWithTime = (start, end, type) => {
   }
 };
 
-export const getRangeErrorType = ({ type, value, advancedSetting = {} }) => {
-  const formatValue = value => parseFloat(value.replace(/,/g, ''));
+export const getRangeErrorType = ({ type, value, advancedSetting = {} }: FormControl) => {
+  const formatValue = (value: string) => parseFloat(String(value).replace(/,/g, ''));
   const { min, max, checkrange } = advancedSetting;
 
   if (!value || checkrange !== '1') return '';
@@ -114,7 +115,7 @@ export const getItemFilters = items => {
 };
 
 // 时间字段处理
-export const formatTimeValue = (control = {}, isCurrent = false, value) => {
+export const formatTimeValue = (control = {}, isCurrent = false, value?) => {
   // 汇总输出格式unit为9
   const mode = control.unit === '6' || control.unit === '9' ? 'HH:mm:ss' : 'HH:mm';
   if (isCurrent) return moment(moment().format(mode), mode).format('HH:mm:ss');
@@ -183,7 +184,7 @@ export function handleDotAndRound(currentItem, value, ignoreAddZero = true) {
 
 // 获取控件的值（处理特殊选项控件）
 // objValue是外层新值，覆盖obj.value
-export const getControlValue = (data, currentItem, controlId, objValue) => {
+export const getControlValue = (data, currentItem, controlId, objValue?) => {
   const obj = _.find(data, o => o.controlId === controlId) || {};
   const value = objValue || obj.value;
 

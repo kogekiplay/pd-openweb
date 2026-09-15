@@ -63,7 +63,7 @@ const AppContent = styled.div`
 export default function SearchWrap(props) {
   const { apps = [], handleSearchList = () => {} } = props;
   const [drawerVisible, setDrawerVisible] = useState(false);
-  const [searchValue, setSearchValue] = useState();
+  const [searchValue, setSearchValue] = useState<string | undefined>();
   const [selectAppId, setSelectAppId] = useState('all');
 
   return (

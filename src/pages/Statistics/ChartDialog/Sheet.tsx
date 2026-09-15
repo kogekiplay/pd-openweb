@@ -12,6 +12,7 @@ import * as actions from 'statistics/redux/actions';
 import { permitList } from 'src/pages/FormSet/config.js';
 import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import SingleView from 'src/pages/worksheet/common/SingleView';
+import type { RootState } from 'src/redux/types';
 import { emitter } from 'src/utils/common';
 import charts from '../Charts';
 import { reportTypes } from '../Charts/common';
@@ -293,7 +294,7 @@ let ChartSheet = class ChartSheet extends Component<any, any> {
   }
 };
 ChartSheet = connect(
-  state => ({
+  (state: RootState) => ({
     ..._.pick(state.statistics, [
       'base',
       'currentReport',

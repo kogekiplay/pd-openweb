@@ -84,7 +84,11 @@ function renderFn(fn) {
   const { name, summary, httpMethod, url, pathParams, queryParams, bodyProps, isStream } = fn;
 
   const jsdoc = renderJsDoc(summary, pathParams, queryParams, bodyProps);
-  const sigArgs = pathParams.length > 0 || queryParams.length > 0 ? 'args = {}' : 'args';
+  // 两支都标 ApiArgs：
+  // - 带默认值那支不标的话 `args = {}` 会被推成 `{}`，
+  //   下面 restExpr 的解构（const { sessionId, ...rest } = args）随即报 TS2339；
+  // - 不带默认值那支不标就是隐式 any（TS7006），挡在 noImplicitAny 前面。
+  const sigArgs = pathParams.length > 0 || queryParams.length > 0 ? 'args: ApiArgs = {}' : 'args: ApiArgs';
   const restExpr = pathParams.length > 0 ? `const { ${pathParams.map(p => p.name).join(', ')}, ...rest } = args;` : '';
   const payload = pathParams.length > 0 ? 'rest' : 'args';
 
@@ -98,7 +102,10 @@ function renderFn(fn) {
   if (restExpr) bodyLines.push(`    ${restExpr}`);
   bodyLines.push(`    return agentAPI(${payload}, {\n${reqOptionsLines.join('\n')}\n    });`);
 
-  return `${jsdoc}\n  ${name}: function (${sigArgs}, options = {}) {\n${bodyLines.join('\n')}\n  },`;
+  // options 标 ApiOptions（types/global.d.ts 的 ambient 声明，无需 import）：
+  // 只写 `options = {}` 的话 TS 会把它推成 `{}`，调用点再往上写 options.xxx 就报 TS2339。
+  // 与 scripts/mainApiGen.js 保持一致。
+  return `${jsdoc}\n  ${name}: function (${sigArgs}, options: ApiOptions = {}) {\n${bodyLines.join('\n')}\n  },`;
 }
 
 function parseSwagger(swagger) {

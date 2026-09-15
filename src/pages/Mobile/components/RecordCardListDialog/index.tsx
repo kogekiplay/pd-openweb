@@ -24,6 +24,7 @@ import { replaceControlsTranslateInfo } from 'src/utils/translate';
 import Filter from './Filter';
 import QuickFilterView from './QuickFilterView';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default class RecordCardListDialog extends Component<any, any> {
   static propTypes = {
@@ -491,7 +492,7 @@ export default class RecordCardListDialog extends Component<any, any> {
     );
   };
 
-  handleSelect = (record, selected) => {
+  handleSelect = (record, selected: boolean) => {
     const { multiple, onOk, onClose, maxCount, selectedCount, handleReplaceHistoryState = () => {} } = this.props;
     const { selectedRecords } = this.state;
 
@@ -612,7 +613,7 @@ export default class RecordCardListDialog extends Component<any, any> {
     const filterControls = getFilter({ control, formData, appId: this.props.appId });
     const { searchfilters = '[]' } = _.get(control, 'advancedSetting') || {};
     const searchFilters = safeParse(searchfilters, 'array');
-    const controls = _.get(worksheetInfo, 'template.controls');
+    const controls: FormControl[] = _.get(worksheetInfo, 'template.controls');
     const enableFastFilters = _.get(control, 'advancedSetting.openfastfilters') !== '0';
     const fastFiltersViewId =
       enableFastFilters &&

@@ -32,6 +32,7 @@ import {
 } from 'src/pages/PageHeader/redux/action';
 import { APP_ROLE_TYPE } from 'src/pages/worksheet/constants/enum';
 import { canEditApp, canEditData, isHaveCharge } from 'src/pages/worksheet/redux/actions/util.js';
+import type { RootState } from 'src/redux/types';
 import { navigateTo } from 'src/router/navigateTo';
 import { getTranslateInfo, setFavicon } from 'src/utils/app';
 import { emitter, getAppFeaturesVisible, pathCompletion } from 'src/utils/common';
@@ -70,7 +71,7 @@ const Drag = styled.div(
 `,
 );
 
-const mapStateToProps = ({ sheet, sheetList, appPkg: { appStatus } }) => ({
+const mapStateToProps = ({ sheet, sheetList, appPkg: { appStatus } }: RootState) => ({
   sheet,
   sheetList,
   appStatus,
@@ -428,7 +429,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
     safeLocalStorageSetItem(`appCache-${data.id}`, JSON.stringify(this.dataCache));
     setFavicon(data.iconUrl, data.iconColor);
   };
-  switchVisible = (obj, cb) => {
+  switchVisible = (obj, cb?) => {
     this.setState(obj, cb);
   };
   updateData = obj => {

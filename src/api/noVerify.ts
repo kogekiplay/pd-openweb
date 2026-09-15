@@ -7,7 +7,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  get: function (args, options = {}) {
+  get: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('NoVerify', 'Get', args, options);
   },
   /**
@@ -18,7 +18,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPreview: function (args, options = {}) {
+  getPreview: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('NoVerify', 'GetPreview', args, options);
   },
   /**
@@ -35,7 +35,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  update: function (args, options = {}) {
+  update: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('NoVerify', 'Update', args, options);
   },
   /**
@@ -46,7 +46,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  delete: function (args, options = {}) {
+  delete: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('NoVerify', 'Delete', args, options);
   },
   /**
@@ -59,7 +59,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  verify: function (args, options = {}) {
+  verify: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('NoVerify', 'Verify', args, options);
   },
 };

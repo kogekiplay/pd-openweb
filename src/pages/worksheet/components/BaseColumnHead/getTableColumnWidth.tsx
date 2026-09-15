@@ -3,6 +3,7 @@ import { flushSync } from 'react-dom';
 import { createRoot } from 'react-dom/client';
 import _ from 'lodash';
 import CellControl from 'worksheet/components/CellControls';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 export default function getTableColumnWidth(
   tableDom = document.querySelector('.sheetViewTable'),
@@ -63,7 +64,7 @@ export default function getTableColumnWidth(
       return width;
     }
 
-    rows.forEach(row => {
+    rows.forEach((row: RecordRow) => {
       const width = getValueWidthOfRow(row);
 
       if (width > result) {
@@ -109,7 +110,7 @@ export function getMaxControlNameWidthOfControls(controls) {
   }
 
   let result = 60;
-  controls.forEach(control => {
+  controls.forEach((control: FormControl) => {
     const widthOfControl = getControlNameWidth(control);
 
     if (widthOfControl > result) {

@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import * as actions from 'worksheet/redux/actions/gunterview';
 import { PERIOD_TYPE } from 'src/pages/worksheet/views/GunterView/config';
 import { getDays, getMonths, getWeeks, getWorkDays } from 'src/pages/worksheet/views/GunterView/util';
+import type { RootState } from 'src/redux/types';
 
 const SpeedCreateTimeWrapper = styled.div`
   height: 100%;
@@ -339,7 +340,7 @@ let SpeedCreateTime = class SpeedCreateTime extends Component<any, any> {
   }
 };
 SpeedCreateTime = connect(
-  state => ({ ..._.pick(state.sheet, ['gunterView', 'base']) }),
+  (state: RootState) => ({ ..._.pick(state.sheet, ['gunterView', 'base']) }),
   dispatch => bindActionCreators(actions, dispatch),
 )(SpeedCreateTime);
 export default SpeedCreateTime;

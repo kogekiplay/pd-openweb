@@ -42,10 +42,12 @@ import { exportAttachment } from 'src/pages/worksheet/common/ExportAttachment';
 import EditFastFilter from 'src/pages/worksheet/common/ViewConfig/components/fastFilter/Edit';
 import { openShareDialog } from 'src/pages/worksheet/components/Share';
 import { APP_ROLE_TYPE, VIEW_DISPLAY_TYPE } from 'src/pages/worksheet/constants/enum';
+import type { RootState } from 'src/redux/types';
 import { navigateTo } from 'src/router/navigateTo';
 import { renderText as renderCellText } from 'src/utils/control';
 import { filterHidedControls } from 'src/utils/control';
 import { getGroupControlId } from 'src/utils/worksheet';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   display: flex;
@@ -110,15 +112,15 @@ function ViewControl(props) {
     fireWhenViewLoaded,
     updateWorksheetInfo,
     loadManageView,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const { worksheetId, projectId, appName } = worksheetInfo;
   const { count, pageCountAbnormal, rowsSummary } = sheetViewData;
   const { pageIndex, pageSize, sortControls } = sheetFetchParams;
   const { allWorksheetIsSelected, sheetSelectedRows, sheetHiddenColumns } = sheetViewConfig;
-  const cache = useRef({});
-  const [createCustomBtnVisible, setCreateCustomBtnVisible] = useState();
+  const cache = useRef<{ isRefreshing?: boolean; [key: string]: any }>({});
+  const [createCustomBtnVisible, setCreateCustomBtnVisible] = useState<boolean | undefined>();
   const [isListOption, setIsListOption] = useState(false);
-  const [showFastFilter, setShowFastFilter] = useState();
+  const [showFastFilter, setShowFastFilter] = useState<boolean | undefined>();
   const [customBtnIsEdit, setCustomBtnIsEdit] = useState();
   const [activeBtnId, setActiveBtnId] = useState();
   const [activeFastFilterId, setActiveFastFilterId] = useState();
@@ -145,7 +147,7 @@ function ViewControl(props) {
   const handleSearchData = () => {
     if (!searchData) return;
 
-    const titleField = controls.find(m => m.controlId === searchData.queryKey);
+    const titleField = controls.find((m: FormControl) => m.controlId === searchData.queryKey);
     const searchRecordData = searchData.data.map(l => {
       return {
         ...l,
@@ -185,7 +187,7 @@ function ViewControl(props) {
       selectRowIds: sheetSelectedRows.map(item => item.rowid),
       sheetSwitchPermit: newSheetSwitchPermit,
       columns: hasCharge
-        ? controls.filter(item => {
+        ? controls.filter((item: FormControl) => {
             return item.controlId !== 'rowid';
           })
         : filterHidedControls(controls, view.controls, false).filter(item => {
@@ -283,7 +285,7 @@ function ViewControl(props) {
             worksheetId,
             viewId,
             attachmentControls: hasCharge
-              ? controls.filter(item => item.type === 14)
+              ? controls.filter((item: FormControl) => item.type === 14)
               : filterHidedControls(controls, view.controls).filter(
                   item => item.controlPermissions && item.controlPermissions[0] === '1' && item.type === 14,
                 ),
@@ -455,7 +457,7 @@ function ViewControl(props) {
             '.ant-popover',
           ]}
           onClickAway={() => setViewConfigVisible(false)}
-          columns={controls.filter(item => {
+          columns={controls.filter((item: FormControl) => {
             if (isShowWorkflowSys) {
               return item.viewDisplay || !('viewDisplay' in item);
             }
@@ -508,7 +510,7 @@ function ViewControl(props) {
           isEdit={customBtnIsEdit}
           onClose={() => setCreateCustomBtnVisible(false)}
           columns={controls
-            .filter(item => {
+            .filter((item: FormControl) => {
               return item.viewDisplay || !('viewDisplay' in item);
             })
             .map(control => redefineComplexControl(control))}
@@ -593,7 +595,7 @@ ViewControl.propTypes = {
 };
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     saveViewSetLoading: state.sheet.saveViewSetLoading,
     views: state.sheet.views,
     sheetList: state.sheet.sheetList,

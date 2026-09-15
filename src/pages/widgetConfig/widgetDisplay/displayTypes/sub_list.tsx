@@ -4,9 +4,10 @@ import { SYSTEM_FIELD_TO_TEXT } from 'src/pages/widgetConfig/widgetSetting/compo
 import { EditModelWrap, EmptySheetPlaceHolder } from '../../styled';
 import { isSheetDisplay } from '../../util';
 import { getAdvanceSetting, getShowControls } from '../../util/setting';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function SubList({ data }) {
-  const { relationControls = [], desc = '' } = data;
+  const { relationControls = [], desc = '' }: { relationControls: FormControl[]; [key: string]: any } = data;
   const showControls = getShowControls(
     relationControls.concat(
       Object.keys(SYSTEM_FIELD_TO_TEXT).map(item => ({ controlId: item, controlName: SYSTEM_FIELD_TO_TEXT[item] })),

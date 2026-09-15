@@ -1,6 +1,7 @@
 ﻿import _ from 'lodash';
 import Config from '../../../../config';
 import * as ACTIONS from '../actions/current';
+import type { ReduxAction } from 'src/redux/types';
 
 const initialState = () => {
   let typeCursor = 0;
@@ -47,7 +48,7 @@ const updateUserSet = (state, action) => {
   }
 };
 
-export default (state = initialState(), action) => {
+export default (state = initialState(), action: ReduxAction) => {
   const {
     departmentId,
     type,

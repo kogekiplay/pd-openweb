@@ -189,7 +189,7 @@ function PromptInput(
     onChange && onChange(t);
   }
 
-  function handleSubmit(textOverride) {
+  function handleSubmit(textOverride?) {
     if (sendDisabled && typeof textOverride !== 'string') return;
     // 提交瞬间实时从编辑器序列化取 @ 应用列表，避免依赖 onChange 缓存（mentionsRef）的时序，
     // 第二参回抛给调用方拼进发送 context（设计稿 mentions 字段）。

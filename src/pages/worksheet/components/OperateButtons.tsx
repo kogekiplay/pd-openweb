@@ -13,6 +13,7 @@ import {
   getSheetOperatesButtons,
   getSheetOperatesButtonsStyle,
 } from 'src/utils/worksheet';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const CardWrapper = styled.div`
   height: 48px;
@@ -250,7 +251,7 @@ export default function OperateButtons({
                             projectId,
                             template: button.printItem,
                             attriData: controls
-                              .filter(o => o.attribute === 1)
+                              .filter((o: FormControl) => o.attribute === 1)
                               .map(o => ({
                                 ...o,
                                 value: get(row, o.controlId),

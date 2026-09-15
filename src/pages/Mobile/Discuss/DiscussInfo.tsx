@@ -10,6 +10,7 @@ import worksheetAjax from 'src/api/worksheet';
 import AddDiscuss from 'mobile/AddDiscuss';
 import { permitList } from 'src/pages/FormSet/config.js';
 import { isOpenPermit } from 'src/pages/FormSet/util.js';
+import type { RootState } from 'src/redux/types';
 import Back from '../components/Back';
 import DiscussList from './DiscussList';
 import Logs from './Logs';
@@ -443,7 +444,7 @@ class Discuss extends Component<any, any> {
   }
 }
 
-export default connect(state => {
+export default connect((state: RootState) => {
   const { sheetDiscussions } = state.mobile;
   return {
     sheetDiscussions,

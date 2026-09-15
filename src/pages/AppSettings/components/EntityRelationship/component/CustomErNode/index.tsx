@@ -14,6 +14,7 @@ import { controlState } from 'src/utils/control';
 import { iconSvg } from '../../config';
 import { HIDE_FIELDS, LINE_HEIGHT, NODE_WIDTH } from '../../utils';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const TIPS = [_l('焦点'), _l('编辑表单')];
 
@@ -51,7 +52,7 @@ export default function CustomErNode(props) {
     onFilter,
     showItemForAllControls,
     hasMoreControls,
-  } = data;
+  }: { controls: FormControl[]; allControls: FormControl[]; [key: string]: any } = data;
   const worksheetName = getTranslateInfo(appId, null, item.worksheetId).name || item.worksheetName;
 
   const [visible, setVisible] = useState(false);
@@ -62,7 +63,7 @@ export default function CustomErNode(props) {
       worksheetId: item.worksheetId,
     });
     const newAllControls = _.get(newWorksheetInfo, 'template.controls').filter(l => l.controlId.length === 24);
-    const newControls = newAllControls
+    const newControls: FormControl[] = newAllControls
       .filter(c => controlState(c).visible)
       .filter(l => !HIDE_FIELDS.includes(l.type))
       .map(l => _.pick(l, ['controlId', 'controlName', 'dataSource', 'enumDefault', 'sourceControlId', 'type']));

@@ -1,7 +1,6 @@
 import React, { Component, createRef, Fragment, useEffect, useState } from 'react';
 import { Input } from 'antd';
 import cx from 'classnames';
-import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Button, Dialog, VerifyPasswordInput } from 'ming-ui';
@@ -11,6 +10,7 @@ import { captcha } from 'ming-ui/functions';
 import appManagementAjax from 'src/api/appManagement';
 import verifyPassword from 'src/components/verifyPassword';
 import { generateRandomPassword } from 'src/utils/common';
+import copy from 'src/utils/copyToClipboard';
 import RegExpValidator from 'src/utils/expression';
 
 const PasswordInputBox = styled.div`
@@ -107,7 +107,7 @@ const actionFeedback = (msg, { onCancel, refreshPage }) => {
   });
 };
 
-const handleRequest = (requestName, requestParams, props) => {
+const handleRequest = (requestName: string, requestParams, props) => {
   appManagementAjax[requestName](requestParams).then(res => {
     if (res === 1) {
       actionFeedback(ACTION_TEXT[requestName], props);
@@ -135,7 +135,7 @@ function LockApp(props) {
   const { visible, onCancel = () => {}, appId } = props;
   const passwordInputRef = createRef();
   const [canEdit, setCanEdit] = useState(true);
-  const [password, setPassword] = useState();
+  const [password, setPassword] = useState<string | undefined>();
   const inputExtra = canEdit ? {} : { readonly: 'readonly' };
 
   useEffect(() => {
@@ -304,7 +304,9 @@ class UnLockDialog extends Component<any, any> {
                 {_l('当前应用为不可配置状态，验证应用锁密码后将会解锁您在该应用下的相关操作权限')}
               </div>
               <Input.Password
-                ref={input => { this.passwordInput = input; }}
+                ref={input => {
+                  this.passwordInput = input;
+                }}
                 className="mBottom16"
                 placeholder={_l('请输入应用锁密码')}
                 autoComplete="new-password"

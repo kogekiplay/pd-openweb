@@ -14,6 +14,8 @@ import { controlState } from 'src/utils/control';
 import Header from './Header';
 import TrashBatchOperate from './TrashBatchOperate';
 import ColumnHead from './TrashColumnHead';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import type { ReduxAction } from 'src/redux/types';
 
 const Con = styled.div`
   width: 100%;
@@ -41,13 +43,13 @@ const SearchIcon = styled.div`
   margin-bottom: 12px;
 `;
 
-const trashReducer = (state, action) => {
+const trashReducer = (state, action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_RECORDS':
       return update(state, { $merge: _.omit(action, ['type']) });
     case 'DELETE_RECORD':
       return update(state, {
-        records: { $apply: records => records.filter(r => !_.includes(action.ids, r.rowid)) },
+        records: { $apply: records => records.filter((r: RecordRow) => !_.includes(action.ids, r.rowid)) },
         count: { $set: state.count - action.ids.length },
       });
     case 'UPDATE_LOADING':
@@ -151,13 +153,14 @@ export default function WorkSheetTrash(props) {
     worksheetInfo = {},
     reloadWorksheet = () => {},
     onCancel = () => {},
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const headerRef = useRef<any>(undefined);
   const needRestoreRelation = useRef(true);
   const [isAll, setIsAll] = useState(false);
   const [selected, setSelected] = useState([]);
   const [selectRows, setSelectRows] = useState([]);
-  const [sortControl, setSortControl] = useState();
+  // 排序状态：未排序时为 undefined，排序后是 { 字段, 升序? }
+  const [sortControl, setSortControl] = useState<{ controlId?: string; isAsc?: boolean } | undefined>();
   const [disableMaskDataControls, setDisableMaskDataControls] = useState({});
   const [state, dispatch] = useReducer(trashReducer, { records: [] });
   const {
@@ -169,14 +172,14 @@ export default function WorkSheetTrash(props) {
     filterControls,
     searchText = '',
     errorCode,
-  } = state;
+  }: { records: RecordRow[]; [key: string]: any } = state;
   const lineNumberBegin = (pageIndex - 1) * pageSize;
   const hasAuthRows = selectRows.filter(item => item.allowedit || item.allowEdit);
   const hasAuthRowIds = hasAuthRows.map(item => item.rowid);
   const actions = createActions(dispatch);
   const controlsForShow = controls
     .filter(
-      column =>
+      (column: FormControl) =>
         !_.includes(SHEET_VIEW_HIDDEN_TYPES, column.type) &&
         !_.includes(['utime', 'uaid'], column.controlId) &&
         controlState(column).visible,
@@ -279,7 +282,7 @@ export default function WorkSheetTrash(props) {
                   });
                 };
 
-                if (controls.find(c => c.type === 29)) {
+                if (controls.find((c: FormControl) => c.type === 29)) {
                   Dialog.confirm({
                     title: _l('恢复记录'),
                     description: (
@@ -458,7 +461,7 @@ export default function WorkSheetTrash(props) {
 
                       if (isAll) {
                         newSelected.forEach(() => {
-                          newSelectRows = records.filter(r => _.find(newSelected, id => r.rowid !== id));
+                          newSelectRows = records.filter((r: RecordRow) => _.find(newSelected, id => r.rowid !== id));
                           newSelected = newSelectRows.map(r => r.rowid);
                         });
                         setIsAll(false);
@@ -483,7 +486,7 @@ export default function WorkSheetTrash(props) {
                         setSelectRows([]);
                       } else {
                         const newSelectedRows = records
-                          .filter(r => !_.find(selected, selectedRowId => selectedRowId === r.rowid))
+                          .filter((r: RecordRow) => !_.find(selected, selectedRowId => selectedRowId === r.rowid))
                           .filter(_.identity);
                         setSelectRows(newSelectedRows);
                         setSelected(newSelectedRows.map(r => r.rowid));

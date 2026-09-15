@@ -12,7 +12,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  importUserList: function (args, options = {}) {
+  importUserList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ImportUser', 'ImportUserList', args, options);
   },
   /**
@@ -28,7 +28,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  importEditUserList: function (args, options = {}) {
+  importEditUserList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ImportUser', 'ImportEditUserList', args, options);
   },
   /**
@@ -52,7 +52,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  inviteUser: function (args, options = {}) {
+  inviteUser: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ImportUser', 'InviteUser', args, options);
   },
   /**
@@ -64,7 +64,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  reInviteImportUser: function (args, options = {}) {
+  reInviteImportUser: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ImportUser', 'ReInviteImportUser', args, options);
   },
   /**
@@ -76,7 +76,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  cancelImportUser: function (args, options = {}) {
+  cancelImportUser: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ImportUser', 'CancelImportUser', args, options);
   },
   /**
@@ -89,7 +89,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getImportUserDetails: function (args, options = {}) {
+  getImportUserDetails: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ImportUser', 'GetImportUserDetails', args, options);
   },
   /**
@@ -100,7 +100,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUnusedInfosByProjectIdCount: function (args, options = {}) {
+  getUnusedInfosByProjectIdCount: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ImportUser', 'GetUnusedInfosByProjectIdCount', args, options);
   },
 };

@@ -3,6 +3,7 @@ import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import ErrorState from 'src/components/errorPage/errorState';
+import type { RootState } from 'src/redux/types';
 import config from '../../config/config';
 import {
   clearFolderSettings,
@@ -434,4 +435,4 @@ class TaskCenter extends Component<any, any> {
   }
 }
 
-export default connect(state => state.task)(TaskCenter);
+export default connect((state: RootState) => state.task)(TaskCenter);

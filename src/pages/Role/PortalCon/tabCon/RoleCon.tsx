@@ -9,6 +9,7 @@ import externalPortalAjax from 'src/api/externalPortal';
 import RoleTem from 'src/pages/Role/component/RolePermissions';
 import CopyRoleDialog from 'src/pages/Role/PortalCon/components/CopyRoleDialog';
 import * as actions from 'src/pages/Role/PortalCon/redux/actions';
+import type { RootState } from 'src/redux/types';
 
 class Con extends React.Component<any, any> {
   constructor(props) {
@@ -256,7 +257,7 @@ class Con extends React.Component<any, any> {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   portal: state.portal,
 });
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);

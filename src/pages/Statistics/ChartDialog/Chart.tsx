@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { LoadDiv } from 'ming-ui';
 import { isOptionControl } from 'statistics/common/controlUtils';
 import DragMask from 'worksheet/common/DragMask';
+import type { RootState } from 'src/redux/types';
 import { browserIsMobile } from 'src/utils/common';
 import charts from '../Charts';
 import { reportTypes } from '../Charts/common';
@@ -368,7 +369,7 @@ let Chart = class Chart extends Component<any, any> {
   }
 };
 Chart = connect(
-  state => ({
+  (state: RootState) => ({
     ..._.pick(state.statistics, ['loading', 'currentReport', 'worksheetInfo', 'reportData', 'base', 'direction']),
   }),
   dispatch => bindActionCreators(actions, dispatch),

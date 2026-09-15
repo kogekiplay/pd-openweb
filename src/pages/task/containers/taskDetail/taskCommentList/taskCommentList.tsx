@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import cx from 'classnames';
 import Commenter from 'src/components/comment/commenter';
 import CommentList from 'src/components/comment/commentList';
+import type { RootState } from 'src/redux/types';
 import { htmlDecodeReg } from 'src/utils/common';
 import {
   addTaskDiscussions,
@@ -101,4 +102,4 @@ class TaskCommentList extends Component<any, any> {
   }
 }
 
-export default connect(state => state.task)(TaskCommentList);
+export default connect((state: RootState) => state.task)(TaskCommentList);

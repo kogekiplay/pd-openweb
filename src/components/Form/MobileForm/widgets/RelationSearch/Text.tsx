@@ -4,6 +4,7 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import { Tooltip } from 'ming-ui/antd-components';
 import { getTitleTextFromRelateControl } from 'src/utils/control';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 const MobileTextWrap = styled.div`
   display: flex;
@@ -26,7 +27,7 @@ const MobileTextWrap = styled.div`
 `;
 
 export default function Texts(props) {
-  const { control, entityName, allowOpenRecord, allowNewRecord, records = [], onAdd, onOpen, disabled } = props;
+  const { control, entityName, allowOpenRecord, allowNewRecord, records = [], onAdd, onOpen, disabled }: { records: RecordRow[]; [key: string]: any } = props;
 
   return (
     <MobileTextWrap>

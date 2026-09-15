@@ -12,10 +12,12 @@ import ChangeRoleDialog from 'src/pages/Role/PortalCon/components/ChangeRoleDial
 import ReviewFree from 'src/pages/Role/PortalCon/components/ReviewFree';
 import UserInfoWrap from 'src/pages/Role/PortalCon/components/UserInfoWrap';
 import { pageSizeForPortal } from 'src/pages/Role/PortalCon/tabCon/config';
+import type { RootState } from 'src/redux/types';
 import { renderText as renderCellText } from 'src/utils/control';
 import * as actions from '../../redux/actions';
 import PortalBar from '../portalComponent/PortalBar';
 import { formatDataForPortalControl, formatPortalData, renderText } from '../util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrap = styled.div`
   .wrapTr:not(.checkBoxTr):not(.optionWrapTr) {
@@ -100,7 +102,7 @@ function PendingReview(props) {
     handleChangeSort,
     setTelFilters,
   } = props;
-  const { roleList = [], controls = [], unApproveCount, pageIndex, keyWords, filters = [], telFilters } = portal;
+  const { roleList = [], controls = [], unApproveCount, pageIndex, keyWords, filters = [], telFilters }: { controls: FormControl[]; [key: string]: any } = portal;
   const [show, setShow] = useState(false);
   const [showPassDrop, setShowPassDrop] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
@@ -266,7 +268,7 @@ function PendingReview(props) {
       });
   };
 
-  const rejectDialog = rowIds => {
+  const rejectDialog = (rowIds?) => {
     if (selectedIds.length <= 0 && (rowIds || []).length <= 0) {
       return;
     }
@@ -482,7 +484,7 @@ function PendingReview(props) {
   );
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   portal: state.portal,
 });
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);

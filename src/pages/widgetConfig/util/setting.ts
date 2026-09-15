@@ -17,6 +17,7 @@ import {
 import { getMaxControlsCount, NO_CONTENT_CONTROL, NOT_HAVE_WIDTH_CONFIG } from '../config';
 import { DISPLAY_TYPE } from '../config/setting';
 import { getRowById, isFullLineControl } from './widgets';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export {
   canAsUniqueWidget,
@@ -38,7 +39,7 @@ export const handleAdvancedSettingChange = (data, obj) => {
 };
 
 // 根据row、col排序controls
-export const sortControlsByRowAndCol = (controls = []) => {
+export const sortControlsByRowAndCol = (controls: FormControl[] = []) => {
   return controls.sort((a, b) => {
     if (a.row === b.row) {
       return a.col - b.col;
@@ -73,7 +74,7 @@ export const getDefaultShowControls = allControls => {
     .map(({ controlId }) => controlId);
 };
 
-export const filterByTypeAndSheetFieldType = (controls = [], filter) => {
+export const filterByTypeAndSheetFieldType = (controls: FormControl[] = [], filter) => {
   return controls
     .filter(item => {
       if (item.type === 30) return filter(item.sourceControlType);
@@ -270,7 +271,7 @@ export const isAutoNumberSelectableControl = item => {
  * 控件数量200以内
  * @param {*} controls
  */
-export const isExceedMaxControlLimit = (controls = [], addCount = 0) => {
+export const isExceedMaxControlLimit = (controls: FormControl[] = [], addCount = 0) => {
   const existedControls = controls.filter(item => !NO_CONTENT_CONTROL.includes(item.type)) || [];
   const maxControlsCount = getMaxControlsCount();
 
@@ -285,7 +286,7 @@ export const isExceedMaxControlLimit = (controls = [], addCount = 0) => {
 // 获取可用的option
 export const getOptions = data => (data.options || []).filter(item => !item.isDeleted);
 
-export const getShowControls = (controls = [], showControls = []) => {
+export const getShowControls = (controls: FormControl[] = [], showControls = []) => {
   // 删除掉showControls 中已经被删掉的控件
   const allControlId = controls
     .filter(i => !_.includes([51], i.type))

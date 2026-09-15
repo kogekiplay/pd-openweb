@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import emptyPng from './empty.png';
 import SelectControls from './SelectControls';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   text-align: center;
@@ -24,7 +25,7 @@ const Con = styled.div`
 `;
 
 export default function Empty(props) {
-  const { isNew, maxHeight, controls, onAdd = () => {} } = props;
+  const { isNew, maxHeight, controls, onAdd = () => {} }: { controls: FormControl[]; [key: string]: any } = props;
   return isNew ? (
     <SelectControls
       maxHeight={maxHeight}

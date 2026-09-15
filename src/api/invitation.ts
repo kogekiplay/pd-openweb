@@ -6,7 +6,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getInviteAccountInfo: function (args, options = {}) {
+  getInviteAccountInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Invitation', 'GetInviteAccountInfo', args, options);
   },
   /**
@@ -20,7 +20,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  inviteUser: function (args, options = {}) {
+  inviteUser: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Invitation', 'InviteUser', args, options);
   },
   /**
@@ -34,7 +34,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getInviteLink: function (args, options = {}) {
+  getInviteLink: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Invitation', 'GetInviteLink', args, options);
   },
   /**
@@ -48,7 +48,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getQRCodeInviteLink: function (args, options = {}) {
+  getQRCodeInviteLink: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Invitation', 'GetQRCodeInviteLink', args, options);
   },
   /**
@@ -62,7 +62,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAllValidTokenByAccountId: function (args, options = {}) {
+  getAllValidTokenByAccountId: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Invitation', 'GetAllValidTokenByAccountId', args, options);
   },
   /**
@@ -73,7 +73,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateAuthToExpire: function (args, options = {}) {
+  updateAuthToExpire: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Invitation', 'UpdateAuthToExpire', args, options);
   },
   /**
@@ -85,7 +85,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateAuthDeadtime: function (args, options = {}) {
+  updateAuthDeadtime: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Invitation', 'UpdateAuthDeadtime', args, options);
   },
 };

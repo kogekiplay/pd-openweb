@@ -10,6 +10,7 @@ import styled from 'styled-components';
 import ErrorBoundary from 'ming-ui/components/ErrorBoundary';
 import 'src/pages/customPage/reactGridLayoutOverrides.css';
 import { APP_ROLE_TYPE } from 'src/pages/worksheet/constants/enum';
+import type { RootState } from 'src/redux/types';
 import { COLUMN_HEIGHT } from '../../config';
 import * as actions from '../../redux/action';
 import { getEnumType, getLayout } from '../../util';
@@ -340,7 +341,7 @@ function WidgetContent(props) {
 
 export default ErrorBoundary.wrap(
   connect(
-    state => ({
+    (state: RootState) => ({
       sheetListVisible: state.sheetList.isUnfold,
       isCharge: state.sheet.isCharge || state.appPkg.permissionType === 2,
       appPkg: state.appPkg,

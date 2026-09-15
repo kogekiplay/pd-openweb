@@ -101,7 +101,7 @@ function NewRecord(props) {
   const aiParseRef = useRef(null);
   const propsRef = useRef(props);
 
-  const [loading, setLoading] = useState();
+  const [loading, setLoading] = useState<boolean | undefined>();
   const [autoFill, setAutoFill] = useState(null);
   // worksheetInfo 异步加载后 worksheetId 可能从空值变为真实值；固定 layerId，避免 Hook 将其误判为旧层卸载并触发 history.go。
   const [historyLayerId] = useState(
@@ -213,7 +213,7 @@ function NewRecord(props) {
     });
   };
 
-  const handleAdd = async (isContinue, appScanAutoFill) => {
+  const handleAdd = async (isContinue, appScanAutoFill?) => {
     if (window.isPublicApp) {
       alert(_l('预览模式下，不能操作'), 3);
       return;

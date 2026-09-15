@@ -8,7 +8,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getShareNode: function (args, options = {}) {
+  getShareNode: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Share', 'GetShareNode', args, options);
   },
   /**
@@ -20,7 +20,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getShareFolder: function (args, options = {}) {
+  getShareFolder: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Share', 'GetShareFolder', args, options);
   },
   /**
@@ -33,7 +33,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getShareLocalAttachment: function (args, options = {}) {
+  getShareLocalAttachment: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Share', 'GetShareLocalAttachment', args, options);
   },
   /**
@@ -43,7 +43,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  shareCheckLogin: function (args, options = {}) {
+  shareCheckLogin: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('Share', 'ShareCheckLogin', args, options);
   },

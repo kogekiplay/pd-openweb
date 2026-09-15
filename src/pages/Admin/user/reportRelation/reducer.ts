@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import * as ACTIONS from './actions';
+import type { ReduxAction } from 'src/redux/types';
 
 const updateSingleEntity = (user, action) => {
   const { type, payload } = action;
@@ -63,7 +64,7 @@ const initialState = {
   highLightRootId: null,
 };
 
-export default (state = initialState, action) => {
+export default (state = initialState, action: ReduxAction) => {
   const { type, payload } = action;
   if (ACTIONS[type] === undefined) return state;
   const users = state.entities.users;

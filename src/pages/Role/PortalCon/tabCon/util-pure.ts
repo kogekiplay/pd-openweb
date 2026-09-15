@@ -1,4 +1,5 @@
 import { getTranslateInfo } from 'src/utils/app';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export const getStrBytesLength = (str = '', bytesLength = 16) => {
   let result = '';
@@ -26,7 +27,7 @@ export const getStrBytesLength = (str = '', bytesLength = 16) => {
   }
 };
 
-export const translatePortalRoleOptions = (appId, controls = []) => {
+export const translatePortalRoleOptions = (appId, controls: FormControl[] = []) => {
   return controls.map(item => {
     if (item.controlId === 'portal_role') {
       return {

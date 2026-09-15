@@ -14,6 +14,7 @@ import AutoNumberConfig from '../components/autoId/AutoNumberConfig';
 import StrInput from '../components/autoId/StrInput';
 import TimeFormatConfig from '../components/autoId/TimeFormatConfig';
 import SelectControlWithRelate from '../components/SelectControlWithRelate';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const RuleInfo = styled.li`
   display: flex;
@@ -170,7 +171,7 @@ function SortableItem({
     timeFormatVisible: false,
   });
   const { controlId, rcid, relationControlName, controlType, format, type, repeatType } = rule;
-  const relationControls = rcid
+  const relationControls: FormControl[] = rcid
     ? rcid === globalSheetInfo.worksheetId
       ? globalSheetControls
       : _.get(getControlByControlId(allControls, rcid), 'relationControls', [])

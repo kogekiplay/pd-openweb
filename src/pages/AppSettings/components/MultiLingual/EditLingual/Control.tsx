@@ -5,6 +5,7 @@ import sheetApi from 'src/api/worksheet';
 import { ALL_SYS } from 'src/pages/widgetConfig/config/widget';
 import { getIconByType } from 'src/pages/widgetConfig/util';
 import ControlContent from './ControlContent';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function Control(props) {
   const { app, selectNode, translateData, comparisonLangId, comparisonLangData, onEditAppLang } = props;
@@ -49,7 +50,7 @@ export default function Control(props) {
   };
 
   const { template = {} } = sheetInfo;
-  const controls = (template.controls || []).filter(c => !ALL_SYS.includes(c.controlId));
+  const controls: FormControl[] = (template.controls || []).filter(c => !ALL_SYS.includes(c.controlId));
 
   const renderControlNav = c => {
     const data = _.find(translateData, { correlationId: c.controlId, parentId: selectNode.workSheetId }) || {};

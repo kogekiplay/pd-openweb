@@ -13,6 +13,8 @@ import {
   originRuleItem,
   TAB_TYPES,
 } from '../../config';
+import type { AppDispatch, GetState } from 'src/redux/types';
+import type { FormControl } from 'src/utils/controlTypes';
 
 /**
  * 获取规则列表
@@ -82,9 +84,9 @@ export function loadColumnRules({ worksheetRuleControls, worksheetInfo }) {
  * 表单配置中插入规则时初始化
  */
 export function initGlobalRuleInfo(props) {
-  const { allControls = [], globalSheetInfo = {} } = props;
+  const { allControls = [], globalSheetInfo = {} }: { allControls: FormControl[]; [key: string]: any } = props;
   const { worksheetId, systemControls = [] } = globalSheetInfo || {};
-  const worksheetControls = allControls.concat(systemControls);
+  const worksheetControls: FormControl[] = allControls.concat(systemControls);
 
   return dispatch => {
     dispatch({
@@ -134,7 +136,7 @@ export function initWorksheetRuleList(props) {
  * 新增规则
  */
 export function addColumnRules() {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const stateList = getState().formSet;
     let { columnRulesListData = [], activeTab } = stateList;
 
@@ -180,7 +182,7 @@ export function updateActiveTab(value) {
  * 保存规则
  */
 export function saveControlRules() {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const stateList = getState().formSet;
     const { worksheetId = '', selectRules = {}, columnRulesListData = [], worksheetRuleControls } = stateList;
     const { filters = [], name = '', ruleItems = [] } = selectRules;
@@ -266,7 +268,7 @@ export function clearColumnRules() {
 
 //删除规则
 export function deleteControlRules(rule) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const stateList = getState().formSet;
     let { worksheetId, columnRulesListData = [] } = stateList;
 
@@ -290,7 +292,7 @@ export function deleteControlRules(rule) {
 
 //复制规则
 export function copyControlRules(rule) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const stateList = getState().formSet;
     let { worksheetId, columnRulesListData = [], copyLoading } = stateList;
 
@@ -336,7 +338,7 @@ export function copyControlRules(rule) {
 
 //拖拽规则
 export function grabControlRules(list = []) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const stateList = getState().formSet;
     let { worksheetId, columnRulesListData } = stateList;
     const ruleIds = list.map(item => item.ruleId);
@@ -356,7 +358,7 @@ export function grabControlRules(list = []) {
 
 // 更新数据
 export function updateSelectRule(attr, value) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const stateList = getState().formSet;
     const { selectRules = {} } = stateList;
     dispatch({
@@ -367,8 +369,8 @@ export function updateSelectRule(attr, value) {
 }
 
 // 校验配置错误
-export function updateError(attr, value, index) {
-  return (dispatch, getState) => {
+export function updateError(attr: string, value, index?) {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const stateList = getState().formSet;
     const { ruleError = {} } = stateList;
 
@@ -424,7 +426,7 @@ export function updateError(attr, value, index) {
 
 //更改属性直接保存（名称、禁用等操作）
 export function updateRuleAttr(attr, value, ruleId) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const stateList = getState().formSet;
     const { worksheetId, columnRulesListData = [] } = stateList;
 

@@ -1,16 +1,18 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import _ from 'lodash';
 import * as baseAction from 'src/pages/worksheet/redux/actions';
 import * as boardActions from 'src/pages/worksheet/redux/actions/boardView';
 import { setSysWorkflowTimeControlFormat } from 'src/pages/worksheet/views/CalendarView/util';
+import type { RootState } from 'src/redux/types';
 import { getAdvanceSetting } from 'src/utils/control';
 import CommonBoard from './CommonBoard';
 import GroupBoard from './GroupBoard';
 import { getViewSelectFields, hasSecondGroupControl } from './util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const BoardView = props => {
   const {
@@ -22,7 +24,7 @@ const BoardView = props => {
     worksheetInfo,
     updateBoardViewSortedOptionKeys,
     sheetSwitchPermit,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const { viewControl } = view;
   const { groupsetting } = getAdvanceSetting(view);
   // 一级分组有字段，且未被删除
@@ -103,7 +105,7 @@ const BoardView = props => {
 };
 
 const ConnectedBoardView = connect(
-  state =>
+  (state: RootState) =>
     _.pick(state.sheet, [
       'boardView',
       'worksheetInfo',

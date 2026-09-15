@@ -7,7 +7,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setAccountGuide: function (args, options = {}) {
+  setAccountGuide: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AccountGuide', 'SetAccountGuide', args, options);
   },
 };

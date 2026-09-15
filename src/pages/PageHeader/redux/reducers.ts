@@ -6,10 +6,11 @@ import {
   SYNC_APP_DETAIL,
   UPDATE_APP_GROUP,
 } from './action';
+import type { ReduxAction } from 'src/redux/types';
 
 const defaultState = { iconColor: '#1677ff', projectId: '', appGroups: [], appStatus: 0, name: _l('应用') };
 
-export default function appDetailState(state = defaultState, action) {
+export default function appDetailState(state = defaultState, action: ReduxAction) {
   const { type, iconColor, navColor, detail, appGroups = [], status = 0 } = action;
 
   switch (type) {

@@ -312,7 +312,7 @@ export default class AIGC extends Component<any, any> {
   }
 
   // 渲染信息
-  renderMessage(key) {
+  renderMessage(key: string) {
     const { data } = this.state;
     const MESSAGE_MAPS = {
       prompt: {

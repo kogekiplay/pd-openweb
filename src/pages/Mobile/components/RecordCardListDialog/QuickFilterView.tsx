@@ -1,6 +1,7 @@
 import React from 'react';
 import { Popup } from 'antd-mobile';
 import { QuickFilter } from 'mobile/RecordList/QuickFilter';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function QuickFilterView(props) {
   const {
@@ -11,7 +12,7 @@ export default function QuickFilterView(props) {
     filtersVisible,
     onChangeFiltersVisible,
     onChangeQuickFilter,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   return (
     <Popup
       bodyStyle={{

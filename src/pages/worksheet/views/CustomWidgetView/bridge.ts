@@ -26,7 +26,7 @@ export default class WidgetBridge {
       );
     }
   };
-  mountPropertyOnWindow(propertyName, propertyValue) {
+  mountPropertyOnWindow(propertyName: string, propertyValue) {
     let safeValue;
     try {
       safeValue = JSON.parse(JSON.stringify(propertyValue, (_, val) => (typeof val === 'function' ? undefined : val)));

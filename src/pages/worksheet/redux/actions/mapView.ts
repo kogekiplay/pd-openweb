@@ -3,6 +3,7 @@ import worksheetAjax from 'src/api/worksheet';
 import { getFilledRequestParams } from 'src/utils/common';
 import { formatQuickFilter } from 'src/utils/filter';
 import { getCurrentView } from '../util';
+import type { AppDispatch, GetState } from 'src/redux/types';
 
 const mapViewRequest = {};
 
@@ -51,8 +52,8 @@ function getMapViewData({ para, dispatch, mapViewRequestKey }) {
   });
 }
 
-export function initMapViewData(view, refreshMap = false, mapViewRequestKey) {
-  return (dispatch, getState) => {
+export function initMapViewData(view, refreshMap = false, mapViewRequestKey?) {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { sheet } = getState();
     const para = getMapViewPara(sheet, view);
 
@@ -75,7 +76,7 @@ export function initMapViewData(view, refreshMap = false, mapViewRequestKey) {
 }
 
 export function mapNavGroupFiltersUpdate(navGroupFilters, view) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { sheet } = getState();
     const para = getMapViewPara(sheet, view);
     const preNavGroupFilters = _.get(sheet, 'mapView.mapViewState.navGroupFilters') || [];

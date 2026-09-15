@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { createRoot } from 'react-dom/client';
 import copy from 'src/utils/copyToClipboard';
 import doT from 'dot';
@@ -1453,6 +1453,6 @@ ShareAttachment.prototype = {
   },
 };
 
-export default function (options, callbacks) {
+export default function (options, callbacks?) {
   return new ShareAttachment(options, callbacks);
 }

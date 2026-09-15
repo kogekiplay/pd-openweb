@@ -404,7 +404,7 @@ function SelectOptions(props, ref) {
     onChange({ options: newItems.map((item, index) => ({ ...item, index })) });
   };
 
-  const updateVisible = (type, visible = true) => {
+  const updateVisible = (type: string, visible = true) => {
     setVisible({ [`${type}Visible`]: visible });
   };
 

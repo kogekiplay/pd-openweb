@@ -27,12 +27,13 @@ import {
 import { replaceStr } from './formUtils/helper';
 import { dealAuthAccount, getParamsByConfigs, handleUpdateApi } from './searchUtils';
 import { formatControlToServer } from './utils';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 // 显隐、只读编辑等处理
 const dealDataPermission = props => {
   const { actionItems = [], actions = [], actionType, formData = [] } = props;
 
-  function setEventPermission(item) {
+  function setEventPermission(item: FormControl) {
     // eventPermissions给默认值111，计算会覆盖字段原始只读(x用来区分是否由事件导致变更过)
     let eventPermissions = item.eventPermissions || 'xxx';
 
@@ -58,9 +59,9 @@ const dealDataPermission = props => {
 
   // 只读所有字段
   if (actionType === ACTION_VALUE_ENUM.READONLY && _.some(actions, a => a.isAll)) {
-    formData.forEach(item => setEventPermission(item));
+    formData.forEach((item: FormControl) => setEventPermission(item));
   } else {
-    formData.forEach(item => {
+    formData.forEach((item: FormControl) => {
       actionItems.map(i => {
         const { controlId, childControlIds = [] } = i || {};
 
@@ -125,7 +126,7 @@ const getSearchWorksheetData = async props => {
   const { formData, recordId, queryConfig = {}, control, appId } = props;
   const { items = [], templates = [], sourceId, moreSort, controlId, id, moreType, recordsNotFound } = queryConfig;
   const currentControl = control || _.find(formData, da => da.controlId === controlId);
-  const controls = _.get(templates[0] || {}, 'controls') || [];
+  const controls: FormControl[] = _.get(templates[0] || {}, 'controls') || [];
   let queryCount = getDefaultCount(currentControl, queryConfig.queryCount);
 
   if (templates.length > 0 && controls.length > 0) {
@@ -187,7 +188,7 @@ const getSubListData = async props => {
   return listResult.resultCode === 1 ? listResult.data : [];
 };
 
-const getRelateSearchResult = (control, searchResult, isMix) => {
+const getRelateSearchResult = (control, searchResult, isMix?) => {
   let newValue = [];
 
   if (isMix) {
@@ -232,7 +233,7 @@ const getRelateSearchResult = (control, searchResult, isMix) => {
 const handleUpdateSearchResult = async props => {
   const { handleChange, queryConfig = {}, formData = [], isMix, control } = props;
   const { configs = [], templates = {}, recordsNotFound, moreType } = queryConfig;
-  const controls = _.get(templates[0] || {}, 'controls') || [];
+  const controls: FormControl[] = _.get(templates[0] || {}, 'controls') || [];
   const { count, result: searchResult } = props.searchResult || {};
 
   // 保留原值
@@ -373,7 +374,7 @@ const getSearchWorksheetResult = async props => {
   const { id } = safeParse(advancedSetting.dynamicsrc || '{}');
   const currentSearchConfig = _.find(searchConfig, s => s.id === id) || {};
   const { items = [], templates = [], sourceId, moreSort, resultType, controlId } = currentSearchConfig;
-  const controls = _.get(templates[0] || {}, 'controls') || [];
+  const controls: FormControl[] = _.get(templates[0] || {}, 'controls') || [];
 
   if (templates.length > 0 && controls.length > 0) {
     const filterControls = getFilter({
@@ -431,11 +432,11 @@ const getSearchWorksheetResult = async props => {
 const createRecord = async props => {
   const { actionItems = [], advancedSetting = {}, projectId } = props;
 
-  const receiveControls = [];
+  const receiveControls: FormControl[] = [];
 
   const sheetData = await sheetAjax.getWorksheetInfo({ worksheetId: advancedSetting.sheetId, getTemplate: true });
 
-  const controls = _.get(sheetData, 'template.controls') || [];
+  const controls: FormControl[] = _.get(sheetData, 'template.controls') || [];
 
   actionItems.map(item => {
     const control = _.find(controls, f => f.controlId === item.controlId);
@@ -609,13 +610,13 @@ export const handleSetValueActions = async (actionItems, props) => {
           if (value !== control.value && !canNotSet) {
             if (control.type === 29) {
               try {
-                const records = safeParse(value || '[]');
+                const records: RecordRow[] = safeParse(value || '[]');
 
                 if (_.isEmpty(records)) {
                   value = 'deleteRowIds: all';
                 } else {
                   value = JSON.stringify(
-                    records.map(record => ({
+                    records.map((record: RecordRow) => ({
                       ...record,
                       count: records.length,
                     })),
@@ -628,7 +629,7 @@ export const handleSetValueActions = async (actionItems, props) => {
 
             if (control.type === 34) {
               try {
-                const records = safeParse(value || '[]');
+                const records: RecordRow[] = safeParse(value || '[]');
                 value = {
                   action: 'clearAndSet',
                   isDefault: true,

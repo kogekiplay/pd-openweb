@@ -26,6 +26,7 @@ import { isSheetDisplay } from '../widgetConfig/util';
 import { FILL_STATUS, SYSTEM_FIELD_IDS } from './enum';
 import { getInfo } from './utils';
 import { canSubmitByLimitFrequency } from './utils';
+import type { FormControl } from 'src/utils/controlTypes';
 
 function getVisibleControls(data) {
   const disabledControlIds = getDisabledControls(
@@ -95,7 +96,7 @@ async function replacePublicWorksheetTranslateInfo(data) {
 export function getPublicWorksheetInfo(worksheetId, cb) {
   publicWorksheetAjax.getPublicWorksheetInfo({ worksheetId }).then(async data => {
     data = await replacePublicWorksheetTranslateInfo(data);
-    const controls = getVisibleControls(data);
+    const controls: FormControl[] = getVisibleControls(data);
     cb(false, {
       publicWorksheetInfo: {
         ...data,
@@ -277,7 +278,7 @@ async function getStatus(data, shareId) {
 }
 
 //获取填写者微信信息, 自动填充
-function fillWxInfo(formData, weChatSetting) {
+function fillWxInfo(formData: FormControl[], weChatSetting) {
   let data = formData;
   const fieldMaps = weChatSetting.fieldMaps;
   const cacheUserInfo = localStorage.getItem('wxUserInfo');
@@ -338,7 +339,7 @@ async function fillRowRelationRows(control, rowId, worksheetId) {
         let defSource;
 
         if (control.type === 34) {
-          const subControls = ((res.template || {}).controls || []).filter(
+          const subControls: FormControl[] = ((res.template || {}).controls || []).filter(
             c => !_.includes(SYSTEM_FIELD_IDS, c.controlId),
           );
           const staticValue = (res.data || []).map(item => {
@@ -367,7 +368,7 @@ async function fillRowRelationRows(control, rowId, worksheetId) {
   return filledControl;
 }
 
-export async function getFormData(data, status) {
+export async function getFormData(data, status: string) {
   const {
     shareId,
     appId,
@@ -378,7 +379,7 @@ export async function getFormData(data, status) {
     abilityExpand = {},
     writeScope,
   } = data;
-  const controls = getVisibleControls(data);
+  const controls: FormControl[] = getVisibleControls(data);
 
   if (status === FILL_STATUS.NOT_IN_FILL_TIME) {
     return controls.map(c => {
@@ -665,7 +666,7 @@ export function addWorksheetRow(
   cb = () => {},
 ) {
   const infoControl = getInfoControl(formData, publicWorksheetInfo);
-  let receiveControls = formData
+  let receiveControls: FormControl[] = formData
     .filter(c => !_.find(infoControl, ic => c.controlId === ic.controlId))
     .concat(infoControl)
     .filter(item => !_.includes([27, 21, 30, 31, 32, 48], item.type));

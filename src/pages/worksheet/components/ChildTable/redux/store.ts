@@ -12,6 +12,8 @@ import { getSubListUniqueError } from 'src/utils/record';
 import { handleUpdateDefsourceOfControl } from 'src/utils/record';
 import { clearRows, loadRows, resetRows, updateTreeTableViewData } from './actions';
 import reducer from './reducer';
+import type { FormControl } from 'src/utils/controlTypes';
+import type { ReduxAction } from 'src/redux/types';
 
 function loadWorksheetInfo(worksheetId, { controlId, relationWorksheetId, recordId, instanceId, workId } = {}) {
   const args = { worksheetId, getTemplate: true, getRules: true, relationWorksheetId };
@@ -67,7 +69,7 @@ export default function generateStore(
     reducer,
     // base / lastAction 这两片整体豁免两个 dev 检查（豁免理由见下），其余 slice
     // （rows / originRows / changes / treeTableViewData…）仍然受保护 —— 真正会藏 bug 的是那几片。
-    // lastAction 必须一起豁免：它的 reducer 是 `(state, action) => action`，
+    // lastAction 必须一起豁免：它的 reducer 是 `(state, action: ReduxAction) => action`，
     // 把【整个 action 原样存进 state】，于是 UPDATE_BASE 的 payload 又从
     // lastAction.value.control 这条路进来一次。只豁免 base 的话报错只会换个路径继续崩。
     //
@@ -141,7 +143,7 @@ export default function generateStore(
       }
 
       const { uniqueControlIds } = parseAdvancedSetting(control.advancedSetting);
-      controls = controls.map(c => ({
+      controls = controls.map((c: FormControl) => ({
         ...c,
         uniqueInRecord: includes(uniqueControlIds, c.controlId) && canAsUniqueWidget(c),
       }));

@@ -11,7 +11,7 @@ const WORKSHEET_INFO_CACHE_FIELDS = [
   'roleType',
 ];
 
-const pickDefined = (source = {}, fields = []) =>
+const pickDefined = (source = {}, fields: string[] = []) =>
   fields.reduce((result, field) => {
     if (source[field] !== undefined) {
       result[field] = source[field];

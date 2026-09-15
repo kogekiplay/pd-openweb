@@ -5,6 +5,7 @@ import { SettingItem } from '../../styled';
 import { formatControlsToDropdown, parseDataSource } from '../../util';
 import { getMoneyCnControls } from '../../util/data';
 import { getAdvanceSetting, handleAdvancedSettingChange } from '../../util/setting';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const DISPLAY_OPTIONS = [
   { text: _l('中文大写'), value: '0' },
@@ -12,7 +13,7 @@ const DISPLAY_OPTIONS = [
   { text: _l('繁体大写'), value: '3' },
 ];
 
-const relateMoneyControl = (value, controls = []) => {
+const relateMoneyControl = (value, controls: FormControl[] = []) => {
   return _.find(controls, a => a.controlId === value) || {};
 };
 

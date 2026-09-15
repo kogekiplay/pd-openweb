@@ -150,7 +150,7 @@ export default class BranchItem extends Component<any, any> {
   /**
    * 渲染或 或者 且
    */
-  renderOrAnd(item, text) {
+  renderOrAnd(item, text?) {
     const conditionValues = this.getValidConditionValues(item.conditionValues);
 
     return (

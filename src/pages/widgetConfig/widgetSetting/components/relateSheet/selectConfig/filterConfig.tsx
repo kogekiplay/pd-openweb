@@ -9,6 +9,7 @@ import { SYSTEM_CONTROL } from '../../../../config/widget';
 import { filterControlsFromAll } from '../../../../util';
 import { getAdvanceSetting, handleAdvancedSettingChange, isSingleRelateSheet } from '../../../../util/setting';
 import EmptyRuleConfig from '../../EmptyRuleConfig';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const formatCondition = ({ filters = [], relationControls = [], ruleValue }) => {
   function formatCondition(condition) {
@@ -76,13 +77,13 @@ export default function FilterDialog(props) {
     globalSheetControls, //主标控件 用于 子表中的关联记录字段筛选选择范围，支持使用主表中的字段
     sheetSwitchPermit = [],
     from,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
 
   const [ruleValue, setValue] = useState('');
 
   const { sourceControlId = '', type = '' } = data;
   const filters = getAdvanceSetting(data, 'filters') || [];
-  const allControls = props.allControls.concat(
+  const allControls: FormControl[] = props.allControls.concat(
     SYSTEM_CONTROL.filter(c => _.includes(['caid', 'ownerid'], c.controlId)),
   );
   const relateSheetList = filterControlsFromAll(

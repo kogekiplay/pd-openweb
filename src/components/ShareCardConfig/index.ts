@@ -2,6 +2,7 @@ import loadScript from 'load-script';
 import weixinApi from 'src/api/weixin';
 import sheetSetAjax from 'src/api/worksheetSetting';
 import { getDynamicValue } from 'src/components/Form/core/formUtils';
+import type { FormControl } from 'src/utils/controlTypes';
 
 // 微信脚本加载
 const loadWeiXinScript = () => {
@@ -25,7 +26,7 @@ const isDesktopMacWeChat = () => {
 
 // 微信分享卡片配置
 const initShareConfig = async props => {
-  const { title = '', desc = '', projectId, controls = [], worksheetId, type } = props;
+  const { title = '', desc = '', projectId, controls = [], worksheetId, type }: { controls: FormControl[]; [key: string]: any } = props;
 
   const renderTxt = value => {
     if (!value || !(value || '').startsWith('[')) {

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { TimePicker as AntTimePicker } from 'antd';
 import en_US from 'antd/es/date-picker/locale/en_US';
 import ja_JP from 'antd/es/date-picker/locale/ja_JP';
 import zh_CN from 'antd/es/date-picker/locale/zh_CN';
@@ -8,6 +7,7 @@ import _ from 'lodash';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import TimePicker from 'src/components/Form/DesktopForm/widgets/Time';
+import { TimePicker as AntTimePicker } from 'src/ming-ui/components/mdAntPickers';
 import { FILTER_CONDITION_TYPE } from '../../enum';
 
 export default class Date extends Component<any, any> {

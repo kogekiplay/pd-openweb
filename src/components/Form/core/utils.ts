@@ -8,12 +8,13 @@ import { browserIsMobile, getStringBytes, pathCompletion } from 'src/utils/commo
 import { checkCellIsEmpty, controlState } from 'src/utils/control';
 import { filterEmptyChildTableRows, getNewRecordPageUrl, getRelateRecordCountFromValue } from 'src/utils/record';
 import { FORM_ERROR_TYPE, FORM_ERROR_TYPE_TEXT, FROM, WIDGET_VALUE_ID } from './config';
+import type { ControlAdvancedSetting, FormControl, RecordRow } from 'src/utils/controlTypes';
 
 export function validate(id = '') {
   return !/^(temp|default|public-temp|deleterowids)/.test(id.toLowerCase());
 }
 
-export const convertControl = type => {
+export const convertControl = (type: FormControl['type']) => {
   switch (type) {
     case 2:
       return 'TEXTAREA'; // 多行文本框
@@ -147,8 +148,12 @@ export const convertControl = type => {
   }
 };
 
-function formatRowToServer(row, controls = [], { isDraft, isSubList } = {}) {
-  controls = controls.filter(c => c.type !== 34);
+function formatRowToServer(
+  row: RecordRow,
+  controls: FormControl[] = [],
+  { isDraft, isSubList }: Pick<FormatControlOptions, 'isDraft' | 'isSubList'> = {},
+) {
+  controls = controls.filter((c: FormControl) => c.type !== 34);
   return Object.keys(row)
     .map(key => {
       const c = _.find(controls, c => c.controlId === key);
@@ -168,7 +173,7 @@ function formatRowToServer(row, controls = [], { isDraft, isSubList } = {}) {
               isSubList,
               isSubListCopy: row.isCopy,
               isDraft,
-              isNewRecord: row.rowid && (row.rowid.startsWith('temp') || row.rowid.startsWith('default')),
+              isNewRecord: !!row.rowid && (row.rowid.startsWith('temp') || row.rowid.startsWith('default')),
             },
           ),
           ['controlId', 'value', 'editType'],
@@ -179,11 +184,44 @@ function formatRowToServer(row, controls = [], { isDraft, isSubList } = {}) {
 }
 
 /**
+ * 提交给后端的单个控件，也就是 newOldControl 数组的元素。
+ * 只列 formatControlToServer 真正写进去的键 —— 加字段就往这里补一行。
+ */
+export interface ServerControl {
+  controlId?: string;
+  type?: FormControl['type'];
+  value?: any;
+  controlName?: string;
+  dot?: number;
+  /** 增量更新方式：0 覆盖、2 删除、9 增删差异；不走增量时不下发 */
+  editType?: number;
+}
+
+/**
+ * formatControlToServer 的第二个参数。
+ * 不写出来的话，TS 只能从 `hasDefaultRelateRecordTableControls = []` 推出
+ * `{ hasDefaultRelateRecordTableControls?: never[] }`，
+ * 于是任何调用方传 isNewRecord / isDraft 都报 TS2353「未知属性」。
+ */
+interface FormatControlOptions {
+  /** 子表整行复制，value 里的行 id 要重新生成 */
+  isSubListCopy?: boolean;
+  isDraft?: boolean;
+  isSubList?: boolean;
+  isFromMingoData?: boolean;
+  isNewRecord?: boolean;
+  needSourceValue?: boolean;
+  needFullUpdate?: boolean;
+  /** 带默认值的关联表控件 id，新建记录时要一并提交 */
+  hasDefaultRelateRecordTableControls?: string[];
+}
+
+/**
  * 将控件数据格式化成后端需要的数据
  * @param  {} control 控件
  */
 export function formatControlToServer(
-  control,
+  control: FormControl,
   {
     isSubListCopy,
     isDraft,
@@ -193,9 +231,9 @@ export function formatControlToServer(
     needSourceValue,
     needFullUpdate,
     hasDefaultRelateRecordTableControls = [],
-  } = {},
+  }: FormatControlOptions = {},
 ) {
-  let result = {
+  const result: ServerControl = {
     controlId: control.controlId,
     type: control.type,
     value: control.value,
@@ -207,7 +245,12 @@ export function formatControlToServer(
     return result;
   }
 
-  let parsedValue, childTableControls, isFromDefault, state, rows;
+  // state 是子表/关联表 store 的快照（形状由 ChildTableStore 决定），其余几个都是按控件类型临时解出来的值
+  let parsedValue: any;
+  let childTableControls: FormControl[];
+  let isFromDefault: boolean;
+  let state: any;
+  let rows: any[];
   const isRelateRecordDropdown =
     control.type === 29 &&
     String(_.get(control, 'advancedSetting.showtype')) === String(RELATE_RECORD_SHOW_TYPE.DROPDOWN);
@@ -219,7 +262,7 @@ export function formatControlToServer(
       let options = safeParse(result.value, 'array');
       if (!Array.isArray(options)) options = [];
 
-      options.forEach((item, i) => {
+      options.forEach((item: string, i: number) => {
         if ((item || '').indexOf('add_') > -1) {
           options[i] = JSON.stringify({
             color: '#1677ff',
@@ -231,16 +274,16 @@ export function formatControlToServer(
       result.value = JSON.stringify(options);
       break;
     case 14: // 附件
-      let parsed = safeParse(control.value);
-      let oldAttachments = [];
-      let oldKnowledgeAtts = [];
+      const parsed = safeParse(control.value);
+      const oldAttachments: any[] = [];
+      const oldKnowledgeAtts: any[] = [];
 
       if ((isSubListCopy || isDraft) && _.isArray(parsed) && !_.isEmpty(parsed)) {
         result.value = JSON.stringify(parsed.map(a => a.fileID || a.fileId));
         break;
       }
 
-      (parsed.attachmentData || []).forEach(item => {
+      (parsed.attachmentData || []).forEach((item: any) => {
         item = Object.assign({}, item, { fileExt: item.ext }, { isEdit: true });
         if (item.fileId && !item.fileID) {
           item.fileID = item.fileId;
@@ -256,10 +299,10 @@ export function formatControlToServer(
       result.value = JSON.stringify({
         attachmentData: [],
         attachments: (parsed.attachments || [])
-          .map(item => Object.assign({}, item, { isEdit: false }))
+          .map((item: any) => Object.assign({}, item, { isEdit: false }))
           .concat(oldAttachments),
         knowledgeAtts: (parsed.knowledgeAtts || [])
-          .map(item => Object.assign({}, item, { isEdit: false }))
+          .map((item: any) => Object.assign({}, item, { isEdit: false }))
           .concat(oldKnowledgeAtts),
       });
       break;
@@ -286,34 +329,34 @@ export function formatControlToServer(
             String(RELATE_RECORD_SHOW_TYPE.TAB_TABLE),
             String(RELATE_RECORD_SHOW_TYPE.TABLE),
           ],
-          control.advancedSetting.showtype,
+          control.advancedSetting?.showtype,
         ) &&
         control.store
       ) {
         state = control.store.getState();
-        if (isDraft && control.advancedSetting.showtype === String(RELATE_RECORD_SHOW_TYPE.TABLE)) {
+        if (isDraft && control.advancedSetting?.showtype === String(RELATE_RECORD_SHOW_TYPE.TABLE)) {
           result.value = JSON.stringify(
             state.records
-              .map(record => ({ sid: record.rowid }))
-              .concat(state.changes.addedRecordIds.map(id => ({ sid: id }))),
+              .map((record: RecordRow) => ({ sid: record.rowid }))
+              .concat(state.changes.addedRecordIds.map((id: string) => ({ sid: id }))),
           );
         } else if (isNewRecord || _.includes(hasDefaultRelateRecordTableControls, control.controlId)) {
-          result.value = JSON.stringify(state.records.map(record => ({ sid: record.rowid })));
+          result.value = JSON.stringify(state.records.map((record: RecordRow) => ({ sid: record.rowid })));
         } else if (
           get(state, 'changes.isDeleteAll') &&
-          control.advancedSetting.showtype === String(RELATE_RECORD_SHOW_TYPE.TABLE)
+          control.advancedSetting?.showtype === String(RELATE_RECORD_SHOW_TYPE.TABLE)
         ) {
           result.editType = 0;
-          result.value = JSON.stringify(state.changes.addedRecordIds.map(id => ({ sid: id })));
+          result.value = JSON.stringify(state.changes.addedRecordIds.map((id: string) => ({ sid: id })));
         } else if (
           !isEmpty(state.changes) &&
-          control.advancedSetting.showtype === String(RELATE_RECORD_SHOW_TYPE.TABLE)
+          control.advancedSetting?.showtype === String(RELATE_RECORD_SHOW_TYPE.TABLE)
         ) {
           result.editType = 9;
           result.value = JSON.stringify(
             state.changes.addedRecordIds
-              .map(id => ({ editType: 1, rowid: id }))
-              .concat(state.changes.deletedRecordIds.map(id => ({ editType: 2, rowid: id }))),
+              .map((id: string) => ({ editType: 1, rowid: id }))
+              .concat(state.changes.deletedRecordIds.map((id: string) => ({ editType: 2, rowid: id }))),
           );
         } else {
           result.value = undefined;
@@ -353,12 +396,12 @@ export function formatControlToServer(
             result.editType = 9;
             const addedIds = parsedValue.filter(r => r.isNew).map(r => r.sid);
             const deletedIds = (_.get(parsedValue, '0.deletedIds') || []).filter(
-              id => !_.find(parsedValue, r => r.sid === id),
+              (id: string) => !_.find(parsedValue, r => r.sid === id),
             );
             result.value = JSON.stringify(
               addedIds
-                .map(id => ({ editType: 1, rowid: id }))
-                .concat(deletedIds.map(id => ({ editType: 2, rowid: id }))),
+                .map((id: string) => ({ editType: 1, rowid: id }))
+                .concat(deletedIds.map((id: string) => ({ editType: 2, rowid: id }))),
             );
           }
         } else if (
@@ -366,7 +409,7 @@ export function formatControlToServer(
           control.value.startsWith('deleteRowIds') &&
           control.value !== 'deleteRowIds: all'
         ) {
-          let deletedIds = [];
+          let deletedIds: string[] = [];
 
           try {
             deletedIds = control.value.replace('deleteRowIds: ', '').split(',').filter(_.identity);
@@ -376,7 +419,7 @@ export function formatControlToServer(
           }
 
           result.editType = 9;
-          result.value = JSON.stringify(deletedIds.map(id => ({ editType: 2, rowid: id })));
+          result.value = JSON.stringify(deletedIds.map((id: string) => ({ editType: 2, rowid: id })));
         } else {
           result.value = undefined;
         }
@@ -386,7 +429,7 @@ export function formatControlToServer(
     case 34: // 子表
       if (isFromMingoData) {
         result.value = JSON.stringify(
-          safeParse(control.value, 'array').map(row =>
+          safeParse(control.value, 'array').map((row: RecordRow) =>
             formatRowToServer(row, control.relationControls || [], { isSubList: true }),
           ),
         );
@@ -400,7 +443,7 @@ export function formatControlToServer(
       }
 
       childTableControls = childTableControls
-        .filter(c => !_.includes(_.get(window, 'shareState.isPublicForm') ? [48] : [], c.type))
+        .filter((c: FormControl) => !_.includes(_.get(window, 'shareState.isPublicForm') ? [48] : [], c.type))
         .filter(v => (isDraft ? v.controlId !== 'ownerid' : true));
 
       if (
@@ -451,11 +494,11 @@ export function formatControlToServer(
         }
       } else {
         result.editType = 9;
-        let resultvalue = [];
+        let resultvalue: any[] = [];
 
         if (!_.isEmpty(result.value.deleted)) {
           resultvalue = resultvalue.concat(
-            result.value.deleted.map(rowid => ({
+            result.value.deleted.map((rowid: string) => ({
               rowid,
               editType: 2,
             })),
@@ -470,14 +513,14 @@ export function formatControlToServer(
                 .map(row => row.rowid)
                 .filter(id => /^(temp|default)/.test(String(id)))
             : [];
-        const updatedRowIds = _.uniq((result.value.updated || []).concat(storeNewRowIds));
+        const updatedRowIds: string[] = _.uniq((result.value.updated || []).concat(storeNewRowIds));
 
         if (!_.isEmpty(updatedRowIds)) {
           resultvalue = resultvalue.concat(
             updatedRowIds
               .map(rowid => {
                 const isNew = /^(temp|default)/.test(rowid);
-                let row = _.find(get(state, 'rows', []), r => r.rowid === rowid);
+                let row: RecordRow | undefined = _.find(get(state, 'rows', []), (r: RecordRow) => r.rowid === rowid);
 
                 if (!row) {
                   return undefined;
@@ -521,7 +564,7 @@ export function formatControlToServer(
 
         if (_.isEmpty(resultvalue) && control && typeof control.value === 'string') {
           try {
-            const rows = JSON.parse(control.value);
+            const rows: RecordRow[] = JSON.parse(control.value);
             result.value = JSON.stringify(
               filterEmptyChildTableRows(rows).map(row =>
                 formatRowToServer(row, childTableControls || [], { isDraft, isSubList: true }),
@@ -539,14 +582,14 @@ export function formatControlToServer(
   return result;
 }
 
-export function getTitleControlId(control = {}) {
-  let newTitleControlId;
+export function getTitleControlId(control: FormControl = {}) {
+  let newTitleControlId: string | undefined;
 
   if (control.type === 29) {
-    newTitleControlId = control.advancedSetting.showtitleid;
+    newTitleControlId = control.advancedSetting?.showtitleid;
   } else if (control.type === 51 && control.enumDefault !== 1) {
-    newTitleControlId = control.advancedSetting.showtitleid;
-  } else if (control.type === 51 && control.enumDefault === 1 && control.showControls[0]) {
+    newTitleControlId = control.advancedSetting?.showtitleid;
+  } else if (control.type === 51 && control.enumDefault === 1 && control.showControls?.[0]) {
     newTitleControlId = control.showControls[0];
   }
 
@@ -555,14 +598,22 @@ export function getTitleControlId(control = {}) {
   return matchedTitleControl ? matchedTitleControl.controlId : attributeTitle ? attributeTitle.controlId : undefined;
 }
 
-export function getTitleControlIdFromRelateControl(control = {}) {
+export function getTitleControlIdFromRelateControl(control: FormControl = {}) {
   let newTitleControlId = get(control, 'advancedSetting.showtitleid');
   const attributeTitle = find(control.relationControls, { attribute: 1 });
   const matchedTitleControl = find(control.relationControls, { controlId: newTitleControlId });
   return matchedTitleControl ? matchedTitleControl.controlId : attributeTitle ? attributeTitle.controlId : undefined;
 }
 
-const getCodeUrl = ({ appId, worksheetId, viewId, recordId }) => {
+/** 二维码/条码控件里用来拼记录链接的定位信息 */
+interface CodeInfo {
+  appId?: string;
+  worksheetId?: string;
+  viewId?: string;
+  recordId?: string;
+}
+
+const getCodeUrl = ({ appId, worksheetId, viewId, recordId }: CodeInfo) => {
   if (recordId) {
     let baseUrl = `/app/${appId}/${worksheetId}`;
 
@@ -577,7 +628,15 @@ const getCodeUrl = ({ appId, worksheetId, viewId, recordId }) => {
   }
 };
 
-export const getBarCodeValue = ({ data, control, codeInfo }) => {
+export const getBarCodeValue = ({
+  data,
+  control,
+  codeInfo,
+}: {
+  data: FormControl[];
+  control: FormControl;
+  codeInfo: CodeInfo;
+}) => {
   const { enumDefault, enumDefault2, dataSource } = control;
   if ((enumDefault === 1 || (enumDefault === 2 && enumDefault2 === 3)) && !dataSource) return '';
   if (dataSource === 'rowid') return codeInfo.recordId;
@@ -589,7 +648,8 @@ export const getBarCodeValue = ({ data, control, codeInfo }) => {
   }
 
   const selectControl = _.find(data, i => i.controlId === dataSource);
-  if (!(selectControl || {}).value) return '';
+  // 原写法是 `(selectControl || {}).value`，TS 收窄不到 selectControl 本身；判空语义完全一样
+  if (!selectControl || !selectControl.value) return '';
   if (enumDefault === 1) {
     const repVal = String(selectControl.value).replace(/[^a-zA-Z0-9@#$%&-=_;:,<>?!/^*()+[\]{}|.\s]/g, '');
     return getStringBytes(repVal) <= 128 ? repVal : getStrBytesLength(repVal, 128);
@@ -600,7 +660,7 @@ export const getBarCodeValue = ({ data, control, codeInfo }) => {
 };
 
 // 是否需要校验短信验证码
-export const checkMobileVerify = (data, smsVerificationFiled) => {
+export const checkMobileVerify = (data: FormControl[], smsVerificationFiled?: string) => {
   if (!smsVerificationFiled) return false;
   const selectControl = _.find(data, i => i.controlId === smsVerificationFiled);
   if (!selectControl) return false;
@@ -612,12 +672,12 @@ export const checkMobileVerify = (data, smsVerificationFiled) => {
 };
 
 // 选项其他类型处理
-export const getCheckAndOther = value => {
-  let checkIds = [];
+export const getCheckAndOther = (value?: string) => {
+  const checkIds: string[] = [];
   let otherValue = '';
 
-  if (/^\[.*\]$/.test(value)) {
-    safeParse(value, 'array').forEach(item => {
+  if (/^\[.*\]$/.test(value as string)) {
+    safeParse(value, 'array').forEach((item: string) => {
       if ((item || '').toString().indexOf('other:') > -1) {
         otherValue = _.replace(item, 'other:', '');
         checkIds.push('other');
@@ -631,20 +691,20 @@ export const getCheckAndOther = value => {
 };
 
 // 渲染计数
-export const renderCount = item => {
+export const renderCount = (item: FormControl) => {
   const { type, enumDefault, value, advancedSetting } = item;
   let count;
 
   // 人员多选、部门多选、多条卡片
   if (
     (_.includes([26, 27], type) && enumDefault === 1) ||
-    (type === 29 && enumDefault === 2 && _.includes(['1', '2'], advancedSetting.showtype))
+    (type === 29 && enumDefault === 2 && _.includes(['1', '2'], advancedSetting?.showtype))
   ) {
     const recordsCount = getRelateRecordCountFromValue(value, item.count);
     count = _.isUndefined(recordsCount) ? item.count : recordsCount;
   }
 
-  if (type === 29 && advancedSetting.showtype === String(RELATE_RECORD_SHOW_TYPE.TABLE)) {
+  if (type === 29 && advancedSetting?.showtype === String(RELATE_RECORD_SHOW_TYPE.TABLE)) {
     const state = item.store.getState();
     count =
       state.loading && /^\d+$/.test(item.value)
@@ -692,13 +752,13 @@ export const renderCount = item => {
 };
 
 //控件切换成size情况，兼容老数据
-export const halfSwitchSize = (item, from) => {
+export const halfSwitchSize = (item: FormControl, from?: number) => {
   const half =
     item.half ||
     (item.type === 28 && item.enumDefault === 1) ||
     (item.type === 29 &&
       item.enumDefault === 1 &&
-      parseInt(item.advancedSetting.showtype, 10) === 3 &&
+      parseInt(String(item.advancedSetting?.showtype), 10) === 3 &&
       from !== FROM.H5_ADD &&
       from !== FROM.PUBLIC_ADD);
 
@@ -706,14 +766,21 @@ export const halfSwitchSize = (item, from) => {
 };
 
 // 人员控件选择范围处理
-export const dealUserRange = (control = {}, data = [], masterData = {}) => {
+/** dealUserRange 的产出：按「用户 / 部门 / 组织」三类分桶的 id 列表 */
+type UserRanges = { [rangeKey: string]: string[] };
+
+export const dealUserRange = (
+  control: FormControl = {},
+  data: FormControl[] = [],
+  masterData: { worksheetId?: string; formData?: FormControl[] } = {},
+): UserRanges | false => {
   if (!JSON.parse(_.get(control, 'advancedSetting.chooserange') || '[]').length) return false;
 
-  let ranges = {};
+  const ranges: UserRanges = {};
 
-  function getArrKey(item) {
+  function getArrKey(item: FormControl) {
     let curKey = '';
-    const range_types = {
+    const range_types: { [key: string]: number[] } = {
       appointedAccountIds: [1, 26], // 用户
       appointedDepartmentIds: [2, 27], // 部门
       appointedOrganizeIds: [3, 48], // 组织
@@ -726,7 +793,7 @@ export const dealUserRange = (control = {}, data = [], masterData = {}) => {
     return curKey;
   }
 
-  JSON.parse(_.get(control, 'advancedSetting.chooserange') || '[]').map(item => {
+  JSON.parse(_.get(control, 'advancedSetting.chooserange') || '[]').map((item: any) => {
     if (item.type === 4) {
       if (item.rcid && item.rcid !== masterData.worksheetId) {
         const parentControl = _.find(data, i => i.controlId === item.rcid) || {};
@@ -742,7 +809,7 @@ export const dealUserRange = (control = {}, data = [], masterData = {}) => {
           };
           const arrKey = getArrKey(currentItem);
           ranges[arrKey] = _.uniq(
-            (ranges[arrKey] || []).concat(sourceVal.map(s => s[WIDGET_VALUE_ID[currentItem.type]])),
+            (ranges[arrKey] || []).concat(sourceVal.map((s: any) => s[WIDGET_VALUE_ID[currentItem.type as number]])),
           );
         }
       } else {
@@ -755,7 +822,7 @@ export const dealUserRange = (control = {}, data = [], masterData = {}) => {
           const arrKey = getArrKey(currentItem);
           ranges[arrKey] = _.uniq(
             (ranges[arrKey] || []).concat(
-              JSON.parse(currentItem.value || '[]').map(i => i[WIDGET_VALUE_ID[currentItem.type]]),
+              JSON.parse(currentItem.value || '[]').map((i: any) => i[WIDGET_VALUE_ID[currentItem.type as number]]),
             ),
           );
         }
@@ -808,23 +875,39 @@ export function loadSDK() {
   }
 }
 
-export const getControlsByTab = (controls = [], widgetStyle = {}, from, ignoreSection = false, otherTabs = []) => {
+/** 表单的展示样式（保存在表单高级设置里，值都是字符串） */
+interface WidgetStyle {
+  /** 分段页签的位置：'1' 左侧、'2'/'3'/'4' 顶部若干变体 */
+  tabposition?: string;
+  /** 默认页签的名字 */
+  deftabname?: string;
+  tabicon?: string;
+  [key: string]: string | undefined;
+}
+
+export const getControlsByTab = (
+  controls: FormControl[] = [],
+  widgetStyle: WidgetStyle = {},
+  from?: number,
+  ignoreSection = false,
+  otherTabs: FormControl[] = [],
+) => {
   // 基础控件
-  let commonData = [];
+  let commonData: FormControl[] = [];
   // 特殊控件
-  let tabData = [];
+  let tabData: FormControl[] = [];
   // 老的关联列表
-  let oldRelateList = [];
+  const oldRelateList: FormControl[] = [];
   const tabPosition = widgetStyle.tabposition || '1';
   const isMobile = browserIsMobile();
 
-  function sortList(list = []) {
+  function sortList(list: FormControl[] = []) {
     return list.sort((a, b) => {
       if (a.row === b.row) {
-        return a.col - b.col;
+        return (a.col as number) - (b.col as number);
       }
 
-      return a.row - b.row;
+      return (a.row as number) - (b.row as number);
     });
   }
 
@@ -832,22 +915,22 @@ export const getControlsByTab = (controls = [], widgetStyle = {}, from, ignoreSe
     return { commonData: sortList(controls), tabData: [] };
   }
 
-  const sectionControlsMap = {};
+  const sectionControlsMap: { [sectionId: string]: FormControl[] } = {};
 
-  controls.forEach(item => {
+  controls.forEach((item: FormControl) => {
     if (item.sectionId) {
       sectionControlsMap[item.sectionId] = sectionControlsMap[item.sectionId] || [];
       sectionControlsMap[item.sectionId].push(item);
     }
   });
 
-  controls.forEach(item => {
+  controls.forEach((item: FormControl) => {
     if (_.includes(ALL_SYS, item.controlId)) {
       return;
     }
 
     if (item.type === 52) {
-      item.child = sortList(sectionControlsMap[item.controlId] || []);
+      item.child = sortList(sectionControlsMap[item.controlId as string] || []);
       tabData.push(item);
     } else if (isTabSheetList(item)) {
       tabData.push(item);
@@ -863,14 +946,14 @@ export const getControlsByTab = (controls = [], widgetStyle = {}, from, ignoreSe
 
   // h5或者配置在顶部的
   if (isMobile || (_.includes(['2', '3', '4'], tabPosition) && !ignoreSection)) {
-    const defaultTab = [
+    const defaultTab: FormControl[] = [
       {
         controlId: 'detail',
         controlName: widgetStyle.deftabname || _l('详情'),
         type: 52,
         sectionId: '',
         child: commonData,
-        advancedSetting: { icon: widgetStyle.tabicon },
+        advancedSetting: { icon: widgetStyle.tabicon } as ControlAdvancedSetting,
       },
     ];
     const allCommonHide = _.every(commonData, c => !(controlState(c, from).visible && !c.hidden));
@@ -882,11 +965,11 @@ export const getControlsByTab = (controls = [], widgetStyle = {}, from, ignoreSe
     commonData = [];
   }
 
-  tabData = tabData.filter(v => (v.type == 52 ? v.child.length : true));
+  tabData = tabData.filter(v => (v.type == 52 ? (v.child || []).length : true));
 
   if (isMobile) {
     // 将关联列表表格、标签页表格转换为卡片形式
-    const updateMobileControls = (control = {}) => {
+    const updateMobileControls = (control: FormControl = {}): FormControl => {
       if (_.includes([29, 51], control.type)) {
         const showType = _.get(control, 'advancedSetting.showtype');
         return {
@@ -895,7 +978,7 @@ export const getControlsByTab = (controls = [], widgetStyle = {}, from, ignoreSe
             ...control.advancedSetting,
             showtype: control.type === 51 && showType === '5' ? '1' : _.includes(['5', '6'], showType) ? '2' : showType,
             icon: control.type === 29 && _.includes(['2', '6'], showType) ? 'link_record' : 'Worksheet_query',
-          },
+          } as ControlAdvancedSetting,
           sourceControlType: _.includes(['5', '6'], showType) ? 2 : control.sourceControlType,
         };
       }
@@ -911,7 +994,7 @@ export const getControlsByTab = (controls = [], widgetStyle = {}, from, ignoreSe
     });
     commonData = commonData.map(v => updateMobileControls(v));
     if (_.isEmpty(commonData) && _.isEmpty(otherTabs) && tabData.length === 1) {
-      commonData = tabData[0].child;
+      commonData = tabData[0].child || [];
       tabData = [];
     }
   }
@@ -920,18 +1003,20 @@ export const getControlsByTab = (controls = [], widgetStyle = {}, from, ignoreSe
 };
 
 // 部门控件渲染数据处理，后期可能有组织角色
-export const dealRenderValue = (value, advancedSetting = {}) => {
+export const dealRenderValue = (value: any, advancedSetting: ControlAdvancedSetting = {}) => {
   const { showdelete, allpath } = advancedSetting;
   const tempValue = _.isArray(value) ? value : safeParse(value || '[]');
   let deleteCount = 0;
-  const result = [];
+  const result: any[] = [];
 
-  tempValue.map(item => {
+  tempValue.map((item: any) => {
     if (item.isDelete) {
       deleteCount += 1;
     } else {
       const pathValue = (
-        allpath === '1' ? (item.departmentPath || []).sort((a, b) => b.depth - a.depth).map(i => i.departmentName) : []
+        allpath === '1'
+          ? (item.departmentPath || []).sort((a: any, b: any) => b.depth - a.depth).map((i: any) => i.departmentName)
+          : []
       ).concat([item.departmentName]);
 
       result.push({
@@ -954,7 +1039,15 @@ export const dealRenderValue = (value, advancedSetting = {}) => {
 };
 
 // 标题是否横向布局、隐藏按横向排列
-export const getWidgetDisplayRow = ({ item = {}, data = [], widgetStyle = {} }) => {
+export const getWidgetDisplayRow = ({
+  item = {},
+  data = [],
+  widgetStyle = {},
+}: {
+  item?: FormControl;
+  data?: FormControl[];
+  widgetStyle?: WidgetStyle;
+}) => {
   const { titlelayout_pc = '1', titlelayout_app = '1' } = widgetStyle;
 
   if ((browserIsMobile() ? titlelayout_app : titlelayout_pc) === '2' && supportDisplayRow(item)) {
@@ -970,10 +1063,11 @@ export const getWidgetDisplayRow = ({ item = {}, data = [], widgetStyle = {} }) 
   return {};
 };
 
-export const getArrBySpliceType = (filters = []) => {
+/** 过滤条件按 spliceType（2 = 或）切成若干组 */
+export const getArrBySpliceType = (filters: { spliceType?: number }[] = []) => {
   let num = 0;
   return Object.values(
-    filters.reduce((res, item) => {
+    filters.reduce((res: { [group: number]: any[] }, item) => {
       res[num] ? res[num].push(item) : (res[num] = [item]);
       if (item.spliceType === 2) {
         num++;
@@ -985,10 +1079,10 @@ export const getArrBySpliceType = (filters = []) => {
 };
 
 // 不允许重复传参格式处理
-export const formatControlValue = (value, type) => {
+export const formatControlValue = (value: string, type?: number) => {
   if (_.includes([26, 27, 29, 48], type)) {
     return safeParse(value.startsWith('deleteRowIds') ? '[]' : value || '[]')
-      .map(ac => ac[WIDGET_VALUE_ID[type]])
+      .map((ac: any) => ac[WIDGET_VALUE_ID[type as number]])
       .join('');
   }
 
@@ -996,7 +1090,7 @@ export const formatControlValue = (value, type) => {
 };
 
 //非文本类控件
-export const isUnTextWidget = (data = {}) => {
+export const isUnTextWidget = (data: FormControl = {}) => {
   //200自定义控件
   const UN_TEXT_TYPE = [9, 10, 11, 14, 15, 16, 19, 23, 24, 26, 27, 28, 29, 34, 35, 36, 40, 42, 45, 46, 47, 48, 50, 200];
   if (isCustomWidget(data)) return true;
@@ -1029,9 +1123,9 @@ export const isPublicLink = () => {
 };
 
 // 后端接口报错
-export const getServiceError = (badData = [], data, from) => {
-  const serviceError = [];
-  const hideControlErrors = [];
+export const getServiceError = (badData: string[] = [], data?: FormControl[], from?: number) => {
+  const serviceError: any[] = [];
+  const hideControlErrors: string[] = [];
   badData.forEach(controlId => {
     const control = _.find(data, d => d.controlId === controlId);
     const error = {
@@ -1051,7 +1145,7 @@ export const getServiceError = (badData = [], data, from) => {
 };
 
 // 计算汇总去重、单个去重计数
-export function calcSubTotalCount(values = [], control = {}, currentItem = {}) {
+export function calcSubTotalCount(values: any[] = [], control: FormControl = {}, currentItem: FormControl = {}) {
   const unique = currentItem.enumDefault === 21;
   const filterValues = values.filter(c => {
     if (control.type === 36) {
@@ -1063,16 +1157,16 @@ export function calcSubTotalCount(values = [], control = {}, currentItem = {}) {
     }
   });
 
-  let formatValues = filterValues.map(f => {
+  const formatValues = filterValues.map(f => {
     if (_.includes([9, 10, 11, 26, 27, 29, 35, 48], control.type)) {
       const safeValue = safeParse(f || '[]');
       if (_.isEmpty(safeValue)) return [];
 
       if (_.includes([9, 10, 11], control.type)) {
-        return safeValue.map(i => (i.indexOf('other') > -1 ? 'other' : i));
+        return safeValue.map((i: string) => (i.indexOf('other') > -1 ? 'other' : i));
       }
 
-      const value = safeValue.map(i => i[WIDGET_VALUE_ID[control.type]]);
+      const value = safeValue.map((i: any) => i[WIDGET_VALUE_ID[control.type as number]]);
       return unique ? value.sort() : value;
     }
 
@@ -1086,17 +1180,30 @@ export function calcSubTotalCount(values = [], control = {}, currentItem = {}) {
 
   const totalValues = _.reduce(
     formatValues,
-    (total, v) => {
+    (total: any[], v) => {
       const itemValues = _.isArray(v) ? v : [v];
       return total.concat(itemValues);
     },
-    [],
+    [] as any[],
   );
 
   return _.uniq(totalValues).length + containsEmptyValues;
 }
 
-export const showRefreshBtn = ({ disabledFunctions = [], from, recordId, item, isEditing }) => {
+export const showRefreshBtn = ({
+  disabledFunctions = [],
+  from,
+  recordId,
+  item,
+  isEditing,
+}: {
+  /** 被关闭的功能开关名单，如 'controlRefresh' */
+  disabledFunctions?: string[];
+  from?: number;
+  recordId?: string;
+  item: FormControl;
+  isEditing?: boolean;
+}) => {
   // 仅公式类字段在编辑态隐藏刷新按钮，其他可刷新字段不受编辑态影响
   const isFormulaControl = _.includes([31, 38, 53], item.type);
   const hideFormulaRefreshInEdit = isFormulaControl && isEditing;
@@ -1114,12 +1221,17 @@ export const showRefreshBtn = ({ disabledFunctions = [], from, recordId, item, i
   );
 };
 
-export const getControlDisabled = (item = {}, from, disabledChildTableCheck) => {
+export const getControlDisabled = (item: FormControl = {}, from?: number, disabledChildTableCheck?: boolean) => {
   const isEditable = controlState(item, from).editable;
   return item.type === 36 ? disabledChildTableCheck || item.disabled || !isEditable : item.disabled || !isEditable;
 };
 
-export const supportTabKeyDown = (data, from, disabledChildTableCheck, supportMarkdownLeave) => {
+export const supportTabKeyDown = (
+  data?: FormControl,
+  from?: number,
+  disabledChildTableCheck?: boolean,
+  supportMarkdownLeave?: boolean,
+) => {
   if (!data) return false;
   const { advancedSetting = {} } = data;
   const disabled = getControlDisabled(data, from, disabledChildTableCheck);
@@ -1161,7 +1273,7 @@ export const supportTabKeyDown = (data, from, disabledChildTableCheck, supportMa
 };
 
 // 获取人员字段值
-export const getUserValue = value => {
+export const getUserValue = (value?: any) => {
   if (!value) return [];
   if (_.isArray(value)) return value.filter(Boolean);
   if (value && typeof value === 'string') {

@@ -12,6 +12,7 @@ import { getControlStyles } from 'src/utils/control';
 import { controlState, isRelateRecordTableControl } from 'src/utils/control';
 import { updateRulesData } from '../../../core/formUtils/updateRulesData';
 import { addWidthToColumns } from './utils';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const TableWrap = styled(Table)`
   height: 100%;
@@ -237,7 +238,7 @@ function TableComponent(props) {
     updatePagination = () => {},
     onOpen = () => {},
     onDelete = () => {},
-  } = props;
+  }: { controls: FormControl[]; rows: RecordRow[]; [key: string]: any } = props;
   const { pageIndex, count, pageSize } = pagination;
   const totalPage = Math.ceil(count / pageSize);
   const dataSource = useMemo(
@@ -258,7 +259,7 @@ function TableComponent(props) {
         row => /^temp/.test(row.rowid) || (allowcancel && (useUserPermission && !!recordId ? row.allowdelete : true)),
       ) > -1;
     let visibleColumns = showControls
-      .map(item => _.find(controls, c => c.controlId === item))
+      .map((item: FormControl) => _.find(controls, c => c.controlId === item))
       .filter(_.identity)
       .filter(c => c.type !== 34 && controlState(c).visible && !isRelateRecordTableControl(c));
     visibleColumns =
@@ -281,7 +282,7 @@ function TableComponent(props) {
         updateRulesData({
           rules,
           recordId: record.rowid,
-          data: controls.map(v => ({ ...v, value: record[v.controlId] })),
+          data: controls.map((v: FormControl) => ({ ...v, value: record[v.controlId] })),
         }),
       );
     });
@@ -488,7 +489,7 @@ function TableComponent(props) {
                       : {}
                   }
                   masterData={masterData}
-                  rowFormData={() => controls.map(c => Object.assign({}, c, { value: record[c.controlId] }))}
+                  rowFormData={() => controls.map((c: FormControl) => Object.assign({}, c, { value: record[c.controlId] }))}
                   canedit={cellControl.type === 36 && controlPermission.editable && !control.mobileCheckRuleLocked}
                   updateCell={({ value }) => {
                     if (cellControl.type !== 36) return;

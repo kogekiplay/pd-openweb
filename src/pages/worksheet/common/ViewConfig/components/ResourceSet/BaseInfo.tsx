@@ -14,6 +14,7 @@ import { isRelateRecordTableControl } from 'src/utils/control';
 import DisplayControl from '../DisplayControl';
 import DropDownSet from '../DropDownSet';
 import { SwitchStyle } from '../style';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const WrapNullTxt = styled.div`
   font-weight: 400;
@@ -34,14 +35,14 @@ export default function BaseInfo(props) {
 
   const [{ type, coverControls, viewControlInfo, navshow }, setState] = useSetState({
     type:
-      (worksheetControls.find(it => it.controlId === viewControl) || {}).type === 30
-        ? (worksheetControls.find(it => it.controlId === viewControl) || {}).sourceControlType
-        : (worksheetControls.find(it => it.controlId === viewControl) || {}).type,
+      (worksheetControls.find((it: FormControl) => it.controlId === viewControl) || {}).type === 30
+        ? (worksheetControls.find((it: FormControl) => it.controlId === viewControl) || {}).sourceControlType
+        : (worksheetControls.find((it: FormControl) => it.controlId === viewControl) || {}).type,
     coverControls: [],
     viewControlInfo: {},
     navshow:
-      [26, 27, 48].includes((worksheetControls.find(it => it.controlId === viewControl) || {}).type) ||
-      [26, 27, 48].includes((worksheetControls.find(it => it.controlId === viewControl) || {}).sourceControlType)
+      [26, 27, 48].includes((worksheetControls.find((it: FormControl) => it.controlId === viewControl) || {}).type) ||
+      [26, 27, 48].includes((worksheetControls.find((it: FormControl) => it.controlId === viewControl) || {}).sourceControlType)
         ? '1'
         : '0',
   });
@@ -49,13 +50,13 @@ export default function BaseInfo(props) {
   useEffect(() => {
     const { view, worksheetControls = [] } = props;
     const { viewControl = '' } = view;
-    const viewControlInfo = worksheetControls.find(it => it.controlId === viewControl) || {};
+    const viewControlInfo = worksheetControls.find((it: FormControl) => it.controlId === viewControl) || {};
     const { relationControls = [], type, sourceControlType } = viewControlInfo;
     setState({
       type: type === 30 ? sourceControlType : type,
       viewControlInfo,
       coverControls: relationControls
-        .filter(o => o.type === 14 && _.get(o, 'advancedSetting.hide') !== '1')
+        .filter((o: FormControl) => o.type === 14 && _.get(o, 'advancedSetting.hide') !== '1')
         .map(o => {
           return { ...o, value: o.controlId, text: o.controlName };
         }),
@@ -68,7 +69,7 @@ export default function BaseInfo(props) {
       <DropDownSet
         {...props}
         handleChange={viewControl => {
-          const viewControlInfo = worksheetControls.find(o => o.controlId === viewControl) || {};
+          const viewControlInfo = worksheetControls.find((o: FormControl) => o.controlId === viewControl) || {};
           const navshowN =
             [26, 27, 48].includes(viewControlInfo.type) || [26, 27, 48].includes(viewControlInfo.sourceControlType)
               ? '1'
@@ -96,7 +97,7 @@ export default function BaseInfo(props) {
         //部门、组织角色、选项、人员、关联（单/多）
         controlList={setSysWorkflowTimeControlFormat(
           worksheetControls.filter(
-            item =>
+            (item: FormControl) =>
               (_.includes([27, 48, 9, 10, 11, 26, 29, 28], item.type) ||
                 (item.type === 30 &&
                   _.includes([27, 48, 9, 10, 11, 26, 29, 28], item.sourceControlType) &&

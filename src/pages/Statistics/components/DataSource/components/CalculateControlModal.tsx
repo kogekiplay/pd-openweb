@@ -10,6 +10,7 @@ import { isNumberControl } from 'statistics/common/controlUtils';
 import { textNormTypes } from 'statistics/common/reportConfigUtils';
 import SelectControls from 'worksheet/common/WorkSheetFilter/components/SelectControls';
 import { normTypes } from '../../../enum';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const ControlTag = styled.div`
   line-height: 24px;
@@ -215,7 +216,7 @@ class CalculateControl extends Component<any, any> {
   }
   renderControlOverlay = () => {
     const { axisControls } = this.props;
-    const allControls = axisControls.map(n => {
+    const allControls: FormControl[] = axisControls.map(n => {
       if (n.type === 10000000) {
         return {
           ...n,

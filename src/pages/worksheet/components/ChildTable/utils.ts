@@ -7,8 +7,9 @@ import { controlState } from 'src/utils/control';
 import { checkCellIsEmpty } from 'src/utils/control';
 import { filterEmptyChildTableRows } from 'src/utils/record';
 import { checkRulesErrorOfRow } from 'src/utils/rule';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
-function getControlCompareValue(c, value) {
+function getControlCompareValue(c: FormControl, value) {
   if (c.type === 26) {
     return safeParse(value, 'array')
       .map(u => u.accountId)
@@ -42,7 +43,7 @@ function getControlCompareValue(c, value) {
 
 export function getSubListError(
   { rows, rules },
-  controls = [],
+  controls: FormControl[] = [],
   showControls = [],
   from = 3,
   masterData,
@@ -56,7 +57,7 @@ export function getSubListError(
         from,
         rules,
         controls: controls.filter(
-          c =>
+          (c: FormControl) =>
             _.find(showControls, id => id === c.controlId) ||
             _.find(rules, rule => JSON.stringify(rule.filters).indexOf(c.controlId) > -1),
         ),
@@ -64,11 +65,11 @@ export function getSubListError(
       });
       const rulesErrors = rulesResult.errors;
       const controldata = rulesResult.formData.filter(
-        c => _.find(showControls, id => id === c.controlId) && controlState(c).visible && controlState(c).editable,
+        (c: FormControl) => _.find(showControls, id => id === c.controlId) && controlState(c).visible && controlState(c).editable,
       );
       const isLock = checkRuleLocked(
         rules,
-        rulesResult.formData.filter(c => _.find(showControls, id => id === c.controlId) && controlState(c).visible),
+        rulesResult.formData.filter((c: FormControl) => _.find(showControls, id => id === c.controlId) && controlState(c).visible),
         row.rowid,
       );
 
@@ -117,11 +118,11 @@ export function getSubListError(
       });
     });
     const uniqueControls = controls.filter(
-      c => _.find(showControls, id => id === c.controlId) && (c.unique || c.uniqueInRecord),
+      (c: FormControl) => _.find(showControls, id => id === c.controlId) && (c.unique || c.uniqueInRecord),
     );
     uniqueControls.forEach(c => {
       const hadValueRows = rows.filter(
-        row =>
+        (row: RecordRow) =>
           !isUndefined(row[c.controlId]) &&
           !isNull(row[c.controlId]) &&
           !row[c.controlId].startsWith('deleteRowIds') &&
@@ -152,7 +153,7 @@ export function getSubListError(
   }
 }
 
-function filterPendingCellErrors(errors = {}, rows = [], showControls = []) {
+function filterPendingCellErrors(errors = {}, rows: RecordRow[] = [], showControls = []) {
   const validRows = filterEmptyChildTableRows(rows);
 
   return _.pickBy(errors, (error, key) => {
@@ -174,12 +175,12 @@ function filterPendingCellErrors(errors = {}, rows = [], showControls = []) {
   });
 }
 
-function mergeRequiredState(controls = [], control = {}) {
+function mergeRequiredState(controls: FormControl[] = [], control = {}) {
   const resetControls = control.relationControls || [];
 
   if (_.isEmpty(resetControls)) return controls;
 
-  return controls.map(item => {
+  return controls.map((item: FormControl) => {
     const resetControl = _.find(resetControls, { controlId: item.controlId });
 
     return resetControl
@@ -191,16 +192,16 @@ function mergeRequiredState(controls = [], control = {}) {
   });
 }
 
-export function getSubListErrorOfStore(store, currentControl) {
+export function getSubListErrorOfStore(store, currentControl?) {
   const state = store.getState();
-  const { rows, base = {}, persistedCellErrors: pendingCellErrors = {} } = state;
+  const { rows, base = {}, persistedCellErrors: pendingCellErrors = {} }: { rows: RecordRow[]; [key: string]: any } = state;
   const { recordId, control = {} } = base;
   const isWorkflow =
     ((base.instanceId && base.workId) || _.get(window, 'shareState.isPublicWorkflowRecord')) &&
     _.get(base, 'worksheetInfo.workflowChildTableSwitch') !== false;
   const mergedControl = isWorkflow && currentControl ? currentControl : control;
   // 只同步工作流审批规则改写后的必填状态，避免影响普通记录子表的权限判断。
-  const controls = isWorkflow ? mergeRequiredState(base.controls, mergedControl) : base.controls;
+  const controls: FormControl[] = isWorkflow ? mergeRequiredState(base.controls, mergedControl) : base.controls;
   const error = getSubListError(
     {
       rows,

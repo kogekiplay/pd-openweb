@@ -53,7 +53,7 @@ export default class FindSystem extends Component<any, any> {
   /**
    * 获取节点详情
    */
-  getNodeDetail(props, sId, fields) {
+  getNodeDetail(props, sId?, fields?) {
     const { processId, selectNodeId, selectNodeType, instanceId } = props;
     const { data } = this.state;
 

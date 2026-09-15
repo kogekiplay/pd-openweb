@@ -131,7 +131,7 @@ let MyAppItem = class MyAppItem extends Component<any, any> {
 
     this.props.handleModify({ ...obj, appId, projectId });
   };
-  switchVisible = (obj, cb) => {
+  switchVisible = (obj, cb?) => {
     this.setState(obj, cb);
   };
   handleMoreClick = type => {

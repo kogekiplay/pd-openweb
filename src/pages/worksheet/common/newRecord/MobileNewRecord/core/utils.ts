@@ -1,9 +1,10 @@
-﻿import _ from 'lodash';
+import _ from 'lodash';
 import agentApi from 'src/api/agent';
 import { buildFormFieldsControls } from 'src/components/Mingo/ChatBot/utils';
 import { genBotSessionId } from 'src/utils/agentSession';
 import { emitter } from 'src/utils/common';
 import { formatAiGenControlValue } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const IMAGE_FILE_EXTS = ['.jpg', '.jpeg', '.png', '.heic'];
 
@@ -79,7 +80,7 @@ export const generateRecord = ({
             return;
           }
 
-          const controls = _.get(worksheetInfo, 'template.controls');
+          const controls: FormControl[] = _.get(worksheetInfo, 'template.controls');
           const aiValue = parsedArray.reduce((acc, cur) => {
             const control = _.find(controls, { controlId: cur.controlId });
             if (!control) return acc;

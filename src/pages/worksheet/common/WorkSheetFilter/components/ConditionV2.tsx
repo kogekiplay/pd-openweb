@@ -117,7 +117,7 @@ export default class Condition extends Component<any, any> {
     return isDynamicsource;
   };
 
-  isCanDynamicsource = data => {
+  isCanDynamicsource = (data?) => {
     const { condition = {}, from = '', control } = data || this.props;
     const { type = '', controlType = '' } = condition;
     // 附件 检查框 地区 地区 地区 没有动态值

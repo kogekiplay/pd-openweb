@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import { getStrBytesLength } from 'src/pages/Role/PortalCon/tabCon/util-pure.js';
@@ -10,6 +10,7 @@ import { setSysWorkflowTimeControlFormat } from 'src/pages/worksheet/views/Calen
 import { getStringBytes } from 'src/utils/common';
 import AddControlDiaLog from './AddControlDiaLog';
 import SelectStartOrEnd from './SelectStartOrEnd';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const WrapFragment = styled.div`
   .addMarkInput,
@@ -108,12 +109,12 @@ export default function SelectStartOrEndGroups(props) {
     updateWorksheetControls,
     worksheetId,
     sheetSwitchPermit = [],
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   timeControls = setSysWorkflowTimeControlFormat(timeControls, sheetSwitchPermit);
   let $ref = useRef(null);
   const [calendarcids, setCalendarcids] = useState([]);
   const [visible, setVisible] = useState(false);
-  const [showInput, setShowInput] = useState();
+  const [showInput, setShowInput] = useState<number | undefined>();
   const [calendarIds, setCalendarIds] = useState([]);
   const [visibleAddControlDiaLog, setVisibleAddControlDiaLog] = useState(false);
 
@@ -168,8 +169,8 @@ export default function SelectStartOrEndGroups(props) {
                 item =>
                   !(calendarIds.includes(item.controlId) && item.controlId !== o.begin && item.controlId !== o.end),
               )}
-              beginIsDel={o.begin && !controls.find(a => a.controlId === o.begin)}
-              endIsDel={o.end && !controls.find(a => a.controlId === o.end)}
+              beginIsDel={o.begin && !controls.find((a: FormControl) => a.controlId === o.begin)}
+              endIsDel={o.end && !controls.find((a: FormControl) => a.controlId === o.end)}
               handleChange={data => {
                 // begindate ,enddate
                 if (!data.begindate && !data.enddate) {

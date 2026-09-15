@@ -24,6 +24,7 @@ import { getControls } from '../DynamicDefaultValue/util';
 import EmptyRuleConfig from '../EmptyRuleConfig';
 import SelectControl from '../SelectControl';
 import SelectWorksheet from './SelectWorksheet';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const RadioDisplay = [
   {
@@ -52,7 +53,7 @@ const EmptyDisplay = [
 ];
 
 // 关联记录、子表等他表字段需要处理controls
-const dealRelationControls = (controls = []) => {
+const dealRelationControls = (controls: FormControl[] = []) => {
   return controls.map((control = {}) => {
     if (control.type === 30) {
       const currentItemRelate = _.find(controls, c => (control.dataSource || '').includes(c.controlId)) || {};
@@ -179,7 +180,7 @@ export default class SearchWorksheetDialog extends Component<any, any> {
     worksheetAjax
       .getWorksheetInfo({ worksheetId: sheetId, getTemplate: true, getSwitchPermit: true, appId, getViews: true })
       .then(res => {
-        const { controls = [] } = res.template || {};
+        const { controls = [] }: { controls: FormControl[]; [key: string]: any } = res.template || {};
         this.setState({
           controls: controls,
           sheetName: res.name,
@@ -260,7 +261,7 @@ export default class SearchWorksheetDialog extends Component<any, any> {
   }, 300);
 
   // 获取子表下拉数据或查询表下拉数据
-  getDropData = (controls = [], control = {}, hasRowId) => {
+  getDropData = (controls: FormControl[] = [], control = {}, hasRowId?) => {
     let filterControls = getControls({
       data: control,
       controls,
@@ -284,7 +285,7 @@ export default class SearchWorksheetDialog extends Component<any, any> {
   };
 
   // 过滤已经选中的映射字段
-  filterSelectControls = (controls = []) => {
+  filterSelectControls = (controls: FormControl[] = []) => {
     const { configs = [] } = this.state;
     controls = controls.filter(i => !_.includes([...SYS_CONTROLS, ...FORM_HIDDEN_CONTROL_IDS], i.controlId));
     controls = controls.filter(co => {
@@ -308,7 +309,7 @@ export default class SearchWorksheetDialog extends Component<any, any> {
           //已选择的子表字段
           const selectControl = _.find(relationControls, re => re.controlId === item.cid);
           // 根据选中子表字段匹配默认值规则，筛选可匹配的查询表字段
-          const subControls = this.getDropData(controls, selectControl, true);
+          const subControls: FormControl[] = this.getDropData(controls, selectControl, true);
           // 查询表字段已删除
           const isDelete = item.subCid && !_.find(subControls, subControl => subControl.value === item.subCid);
           return (

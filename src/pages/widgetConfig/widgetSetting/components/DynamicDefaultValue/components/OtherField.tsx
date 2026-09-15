@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import cx from 'classnames';
 import update from 'immutability-helper';
 import _ from 'lodash';
@@ -22,6 +22,7 @@ import {
 } from '../config';
 import { OtherFieldWrap } from '../styled';
 import { getControls, getControlType } from '../util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function OtherField(props) {
   const {
@@ -36,7 +37,7 @@ export default function OtherField(props) {
     from,
   } = props;
   const { worksheetId } = globalSheetInfo;
-  const originControls = props.controls.concat(globalSheetControls);
+  const originControls: FormControl[] = props.controls.concat(globalSheetControls);
   const [controls, setControls] = useState(originControls);
 
   useEffect(() => {
@@ -145,10 +146,10 @@ export default function OtherField(props) {
     onDynamicValueChange(update(dynamicValue, { $splice: [[index, 1]] }));
   };
 
-  const isFieldDeleteFn = (item, controls = []) => {
+  const isFieldDeleteFn = (item, controls: FormControl[] = []) => {
     const { cid, rcid } = item;
 
-    const isFieldNotInControls = (controls, cid) => {
+    const isFieldNotInControls = (controls: FormControl[], cid) => {
       if (
         _.includes(
           [

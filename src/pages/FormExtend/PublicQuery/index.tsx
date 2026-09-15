@@ -11,7 +11,7 @@ import QueryConfigDialog from './QueryConfigDialog';
 export default function PublicQuery(props) {
   const { worksheetId, worksheetInfo, projectId } = props;
   const [queryInfo, setQueryInfo] = useState({});
-  const [configVisible, setConfigVisible] = useState();
+  const [configVisible, setConfigVisible] = useState<boolean | undefined>();
   const enabled = queryInfo.visibleType === VISIBLE_TYPE.PUBLIC;
 
   useEffect(() => {

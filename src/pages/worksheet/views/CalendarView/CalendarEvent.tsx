@@ -17,6 +17,7 @@ import { getAdvanceSetting, isTimeStyle } from 'src/utils/control';
 import { getRecordColorConfig } from 'src/utils/record';
 import { CARD_WIDTH } from './constants';
 import { isEmojiCharacter } from './util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const EventCardContent = ({
   info,
@@ -46,10 +47,10 @@ const EventCardContent = ({
   }
 
   const coverCid = currentView.coverCid || _.get(worksheetInfo, 'advancedSetting.coverid');
-  let formData = controls.map(o => ({ ...o, value: item[o.controlId] }));
+  let formData = controls.map((o: FormControl) => ({ ...o, value: item[o.controlId] }));
   const { coverImage, allAttachments } = getRecordAttachments(item[coverCid]);
   const { viewId, appId, worksheetId, groupId } = base;
-  let coverData = { ...(controls.find(it => it.controlId === coverCid) || {}), value: item[coverCid] };
+  let coverData = { ...(controls.find((it: FormControl) => it.controlId === coverCid) || {}), value: item[coverCid] };
 
   if (coverData.type === 45) {
     let dataSource = transferValue(coverData.value);
@@ -81,7 +82,7 @@ const EventCardContent = ({
     const parsedRow = row;
     const arr = [];
 
-    const titleControl = controls.find(o => o.attribute === 1);
+    const titleControl = controls.find((o: FormControl) => o.attribute === 1);
 
     if (titleControl) {
       arr.push({

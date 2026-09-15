@@ -4,6 +4,7 @@ import SortColumns from 'src/pages/worksheet/components/SortColumns/SortColumns'
 import { SettingItem } from '../../../../styled';
 import { getFilterRelateControls } from '../../../../util';
 import { getAdvanceSetting, getControlsSorts, handleAdvancedSettingChange } from '../../../../util/setting';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const DISPLAY_OPTIONS = [
   { text: _l('与关联记录的显示字段保持一致'), value: '0' },
@@ -11,7 +12,7 @@ const DISPLAY_OPTIONS = [
 ];
 
 export default function ShowControls(props) {
-  const { data, controls = [], handleChange } = props;
+  const { data, controls = [], handleChange }: { controls: FormControl[]; [key: string]: any } = props;
   const { showControls = [] } = data;
   const { chooseshow = '0' } = getAdvanceSetting(data);
   const chooseshowids = getAdvanceSetting(data, 'chooseshowids') || [];

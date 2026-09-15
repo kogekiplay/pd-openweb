@@ -341,7 +341,7 @@ const BaseCard = props => {
   const abstractValue = abstract ? renderCellText(abstractControl, { noMask: absShowFullValue, appId }) : '';
   const otherFields = update(cardFields, { $splice: [[titleIndex, 1]] });
 
-  const titleMasked = key => {
+  const titleMasked = (key?: string) => {
     const controlField = key === 'title' ? titleField : abstractControl;
     const fullValue = key === 'title' ? forceShowFullValue : absShowFullValue;
     return (

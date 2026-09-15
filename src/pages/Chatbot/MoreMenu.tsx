@@ -11,6 +11,7 @@ import SheetDesc from 'worksheet/common/SheetDesc';
 import selectIconDialog from 'worksheet/components/selectIconDialog';
 import * as actions from 'worksheet/redux/actions/sheetList';
 import { getAppSectionRef } from 'src/pages/PageHeader/AppPkgHeader/LeftAppGroup';
+import type { RootState } from 'src/redux/types';
 
 const MenuWrap = styled(Menu)`
   .ant-dropdown-menu-item,
@@ -82,14 +83,14 @@ const MoreMenu = props => {
   };
 
   return (
-    (<Fragment>
+    <Fragment>
       {desc && (
         <Popover
           arrow={{ pointAtCenter: true }}
           title={null}
           zIndex={2000}
           placement="bottomLeft"
-          classNames={{ root: "sheetDescPopoverOverlay" }}
+          classNames={{ root: 'sheetDescPopoverOverlay' }}
           content={
             <div className="popoverContent" style={{ maxHeight: document.body.clientHeight / 2 }}>
               <RichText data={desc || ''} disabled={true} />
@@ -112,7 +113,8 @@ const MoreMenu = props => {
           trigger={['click']}
           open={popupVisible}
           onOpenChange={value => setPopupVisible(value)}
-          popupRender={() => <MenuWrap style={{ width: 200 }}>
+          popupRender={() => (
+            <MenuWrap style={{ width: 200 }}>
               <Menu.Item
                 key="edit"
                 onClick={() => {
@@ -159,7 +161,8 @@ const MoreMenu = props => {
                   </Menu.Item>
                 </Fragment>
               )}
-            </MenuWrap>}
+            </MenuWrap>
+          )}
         >
           {props.children}
         </Dropdown>
@@ -180,12 +183,12 @@ const MoreMenu = props => {
           setEditIntroVisible(false);
         }}
       />
-    </Fragment>)
+    </Fragment>
   );
 };
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     base: state.sheet.base,
   }),
   dispatch => bindActionCreators({ ..._.pick(actions, ['deleteSheet', 'updateSheetListAppItem']) }, dispatch),

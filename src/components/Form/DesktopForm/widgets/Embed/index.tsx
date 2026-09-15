@@ -83,7 +83,7 @@ const Embed = props => {
   propsRef.current = props;
   latestResultData.current = resultData;
 
-  const initFunc = callback => {
+  const initFunc = (callback?) => {
     if (enumDefault === 2) {
       setValue();
     } else if (enumDefault === 3) {

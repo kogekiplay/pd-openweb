@@ -162,7 +162,7 @@ export default class ResetPassword extends React.Component<any, any> {
       return <div className={cx('warnTips')}>{warn.warnTxt}</div>;
     };
 
-    const renderClassName = (key, value) => {
+    const renderClassName = (key: string, value) => {
       const warn = warnList.find(o => o.tipDom === key);
       return {
         hasValue: !!value || focusDiv === key,

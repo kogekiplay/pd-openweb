@@ -6,8 +6,10 @@ import { getFilledRequestParams, pathCompletion } from 'src/utils/common';
 import { PRINT_TYPE, SOURCE_TYPE, SOURCE_URL_TYPE } from './enum';
 import GeneratingPopup from './GeneratingPopup';
 import { QrPdf } from './print';
+import type { CodeUrlSource } from './types';
 import { getCodeContent, getCodeTexts } from './util';
 import { generateLabelPdf } from './vectorLabel';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const PAGE_SIZE = 200;
 
@@ -28,13 +30,15 @@ export default function GeneratingPdf(props) {
     fastFilters,
     navGroupFilters,
     onClose,
-  } = props;
+  }: { controls: FormControl[]; selectedRows: RecordRow[]; [key: string]: any } = props;
   const [printConfig, setPrintConfig] = useState(config && { ...config });
   const [loading, setLoading] = useState(true);
-  const [loadingText, setLoadingText] = useState();
+  // 必须显式给类型参数：useState() 不带初值会被推成 useState<undefined>，
+  // setter 就只收 undefined，setLoadingText(字符串) / setEmbedUrl(地址) 都报 TS2345。
+  const [loadingText, setLoadingText] = useState<string | undefined>();
   const rows = useRef(selectedRows);
   const [pageIndex, setPageIndex] = useState(1);
-  const [embedUrl, setEmbedUrl] = useState();
+  const [embedUrl, setEmbedUrl] = useState<string | undefined>();
   const [name, setName] = useState(props.name);
 
   function loadData(pageIndex = 1, cb = () => {}) {
@@ -60,7 +64,7 @@ export default function GeneratingPdf(props) {
   }
 
   async function handlePrint(config) {
-    async function execute(urls) {
+    async function execute(urls?: CodeUrlSource) {
       const printData = rows.current.map((row, i) => ({
         value: getCodeContent({
           printType: config.printType,
@@ -102,7 +106,9 @@ export default function GeneratingPdf(props) {
           config: config,
         });
         await pdf.render();
-        setEmbedUrl(pdf.doc.output('bloburl'));
+        // jspdf 的 output('bloburl') 返回 URL 对象，而 embedUrl 要当 iframe 的 src 用，
+        // 显式转成字符串（React 渲染时本来也会 stringify，这里只是把类型摆正）。
+        setEmbedUrl(String(pdf.doc.output('bloburl')));
         setLoading(false);
       }
     }
@@ -117,7 +123,7 @@ export default function GeneratingPdf(props) {
         })
         .then(data => {
           if (data && _.isObject(data)) {
-            execute(data);
+            execute(data as CodeUrlSource);
           }
         });
     } else if (config.sourceType === SOURCE_TYPE.URL && config.sourceUrlType === SOURCE_URL_TYPE.MEMBER) {

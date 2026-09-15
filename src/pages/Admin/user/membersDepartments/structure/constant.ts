@@ -1,4 +1,4 @@
-﻿import _ from 'lodash';
+import _ from 'lodash';
 import RegExpValidator from 'src/utils/expression';
 
 export const PAGE_SIZE = 50;
@@ -35,7 +35,7 @@ export const getEllipsisDep = str => {
   return arr[0] + '/' + '...' + '/' + arr[arr.length - 2] + '/' + arr[arr.length - 1];
 };
 
-const checkUser = (input, iti) => {
+const checkUser = (input, iti?) => {
   if (!input) {
     return _l('请输入手机或者邮箱');
   }

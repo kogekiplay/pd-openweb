@@ -10,6 +10,7 @@ import { updateFilter, updateTableConfigByControl } from './redux/action';
 import { initialChanges } from './redux/reducer';
 import generateStore from './redux/store';
 import RelateRecordTable from './RelateRecordTable';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   position: relative;
@@ -112,7 +113,7 @@ export default function RelateRecordTableIndex(props) {
   }, [
     recordId,
     formData
-      .filter(a => (get(control, 'advancedSetting.resultfilters') || '').indexOf(a.controlId) > -1)
+      .filter((a: FormControl) => (get(control, 'advancedSetting.resultfilters') || '').indexOf(a.controlId) > -1)
       .map(c => c.value)
       .join(''),
   ]);

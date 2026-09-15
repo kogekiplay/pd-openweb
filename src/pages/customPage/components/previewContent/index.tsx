@@ -5,6 +5,7 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
+import type { RootState } from 'src/redux/types';
 import { browserIsMobile } from 'src/utils/common';
 import { addIframePermissions, CUSTOM_PAGE_IFRAME_ALLOW, genUrl, insertPortal, parseLink } from '../../util';
 
@@ -176,7 +177,7 @@ export function PreviewWraper(props) {
   );
 }
 
-export default connect(({ sheet, appPkg, customPage }) => ({
+export default connect(({ sheet, appPkg, customPage }: RootState) => ({
   info: {
     ...sheet.base,
     projectId: appPkg.projectId,

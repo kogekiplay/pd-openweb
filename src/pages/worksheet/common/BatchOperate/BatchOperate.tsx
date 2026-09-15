@@ -31,6 +31,7 @@ import ExportList from './ExportList';
 import PrintList from './PrintList';
 import SubButton from './SubButton';
 import './BatchOperate.less';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const CancelTextContent = styled.div`
   display: flex;
@@ -221,7 +222,7 @@ class BatchOperate extends React.Component<any, any> {
         getFilledRequestParams(
           {
             appId: worksheetId,
-            sources: selectedRows.map(item => item.rowid),
+            sources: selectedRows.map((item: RecordRow) => item.rowid),
             triggerId: btn.btnId,
             pushUniqueId: _.get(window, 'md.global.Config.pushUniqueId'),
             ...args,
@@ -276,9 +277,9 @@ class BatchOperate extends React.Component<any, any> {
       getWorksheetSheetViewSummary,
       refreshWorksheetControls,
     } = this.props;
-    const rowIds = selectedRows.map(row => row.rowid);
+    const rowIds = selectedRows.map((row: RecordRow) => row.rowid);
     const isEditSingle = rowIds.length === 1 && !allWorksheetIsSelected;
-    const controls =
+    const controls: FormControl[] =
       rowIds.length === 1 ? args.newOldControl : args.newOldControl.filter(c => !checkCellIsEmpty(c.value));
     delete args.newOldControl;
     const updateArgs = {
@@ -300,7 +301,7 @@ class BatchOperate extends React.Component<any, any> {
     if (allWorksheetIsSelected) {
       delete args.rowIds;
       updateArgs.isAll = true;
-      updateArgs.excludeRowIds = selectedRows.map(row => row.rowid);
+      updateArgs.excludeRowIds = selectedRows.map((row: RecordRow) => row.rowid);
       updateArgs.filterControls = filters.filterControls;
       updateArgs.keyWords = filters.keyWords;
       updateArgs.searchType = filters.searchType;
@@ -501,9 +502,9 @@ class BatchOperate extends React.Component<any, any> {
       </div>
     );
 
-    function handleLock(isLock) {
+    function handleLock(isLock: boolean) {
       const hasAuthRowIds = selectedRows
-        .filter(item => (item.allowdelete || item.allowDelete) && !(isLock ? item.sys_lock : false))
+        .filter((item: RecordRow) => (item.allowdelete || item.allowDelete) && !(isLock ? item.sys_lock : false))
         .map(item => item.rowid);
 
       if (!allWorksheetIsSelected && !hasAuthRowIds.length) {
@@ -522,7 +523,7 @@ class BatchOperate extends React.Component<any, any> {
       if (allWorksheetIsSelected) {
         delete args.rowIds;
         args.isAll = true;
-        args.excludeRowIds = selectedRows.map(row => row.rowid);
+        args.excludeRowIds = selectedRows.map((row: RecordRow) => row.rowid);
         args.filterControls = filters.filterControls;
         args.fastFilters = (_.isArray(quickFilter) ? quickFilter : []).map(f =>
           _.pick(f, [
@@ -651,7 +652,7 @@ class BatchOperate extends React.Component<any, any> {
                   Dialog.confirm({
                     title: _l('您确认复制这%0条记录吗？', selectedRows.length),
                     onOk: () => {
-                      const rowIds = selectedRows.map(r => r.rowid);
+                      const rowIds = selectedRows.map((r: RecordRow) => r.rowid);
                       copyRow(
                         {
                           worksheetId,
@@ -666,7 +667,7 @@ class BatchOperate extends React.Component<any, any> {
 
                           addRecord(newRows, this.findLastId(rowIds));
                           clearSelect();
-                          setHighLightOfRows(newRows.map(r => r.rowid));
+                          setHighLightOfRows(newRows.map((r: RecordRow) => r.rowid));
                         },
                       );
                     },
@@ -685,7 +686,7 @@ class BatchOperate extends React.Component<any, any> {
                 viewId,
                 controls,
                 selectedRows: selectedRows.length ? selectedRows : rows,
-                selectedRowIds: selectedRows.map(r => r.rowid),
+                selectedRowIds: selectedRows.map((r: RecordRow) => r.rowid),
                 count: count,
                 allowLoadMore: allWorksheetIsSelected,
                 selectedLength,
@@ -707,7 +708,7 @@ class BatchOperate extends React.Component<any, any> {
 
                   function handleDelete(thoroughDelete) {
                     const hasAuthRowIds = selectedRows
-                      .filter(item => (item.allowdelete || item.allowDelete) && !item.sys_lock)
+                      .filter((item: RecordRow) => (item.allowdelete || item.allowDelete) && !item.sys_lock)
                       .map(item => item.rowid);
 
                     if (!allWorksheetIsSelected && hasAuthRowIds.length === 0) {
@@ -722,7 +723,7 @@ class BatchOperate extends React.Component<any, any> {
                       };
 
                       if (args.isAll) {
-                        args.excludeRowIds = selectedRows.map(item => item.rowid);
+                        args.excludeRowIds = selectedRows.map((item: RecordRow) => item.rowid);
                         args.fastFilters = formatQuickFilter(_.isArray(quickFilter) ? quickFilter : []);
                         args.navGroupFilters = navGroupFilters;
                         args.filterControls = filters.filterControls;

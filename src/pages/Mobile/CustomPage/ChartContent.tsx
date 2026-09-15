@@ -13,6 +13,7 @@ import { version } from 'statistics/common/reportConfigUtils';
 import { fillValueMap } from 'statistics/common/reportDataUtils';
 import { formatFiltersGroup } from 'src/pages/customPage/components/editWidget/filter/util';
 import { formatLinkageFiltersGroup } from 'src/pages/customPage/util';
+import type { RootState } from 'src/redux/types';
 import { getFilledRequestParams } from 'src/utils/common';
 import Chart from '../components/Chart';
 import ChartFilter from '../components/Chart/Filter';
@@ -112,7 +113,7 @@ function ChartComponent(props) {
     handleReportRequest();
   }, [reportId, filtersGroup, linkageFiltersGroup, needUpdate]);
 
-  const handleReportRequest = param => {
+  const handleReportRequest = (param?) => {
     let requestParam = {
       pageId,
       reportId,
@@ -159,7 +160,7 @@ function ChartComponent(props) {
     });
   };
 
-  const handleNextReportRequest = (reportId, param) => {
+  const handleNextReportRequest = (reportId, param?) => {
     let requestParam = {
       pageId,
       reportId,
@@ -430,7 +431,7 @@ function ChartContent(props) {
 }
 
 export const StateChartContent = connect(
-  state => ({
+  (state: RootState) => ({
     filtersGroup: state.mobile.filtersGroup,
     linkageFiltersGroup: state.mobile.linkageFiltersGroup,
     filterComponents: state.mobile.filterComponents,

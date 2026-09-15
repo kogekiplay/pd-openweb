@@ -1,3 +1,3 @@
-export default function createCalendar(options) {
+export default function createCalendar(options?) {
   return import('./createCalendar').then(({ default: createCalendar }) => createCalendar(options));
 }

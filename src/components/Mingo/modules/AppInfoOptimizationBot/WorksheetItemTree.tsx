@@ -94,7 +94,7 @@ const TreeWrap = styled.div`
   }
 `;
 
-const buildIconFileNameByStyle = (iconName, isLineStyle) => {
+const buildIconFileNameByStyle = (iconName, isLineStyle: boolean) => {
   if (!iconName) return iconName;
   if (isLineStyle) {
     return iconName.endsWith('_line') ? iconName : `${iconName}_line`;

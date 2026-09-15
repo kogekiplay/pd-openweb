@@ -26,7 +26,7 @@ const PRECISION_UNIT = {
   second: 'second',
 };
 
-const getPrecisionRangeDate = (date, precision, type) => {
+const getPrecisionRangeDate = (date, precision, type: string) => {
   if (!date) return date;
 
   const momentDate = moment(date);

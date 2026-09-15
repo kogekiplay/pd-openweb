@@ -486,7 +486,7 @@ export default class OtherAction extends Component<any, any> {
     });
   };
 
-  getCode(fixedSignMode) {
+  getCode(fixedSignMode?) {
     const { action, workId } = this.props;
     const { auth } = (this.props.data || {}).flowNode || {};
     let signMode;

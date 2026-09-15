@@ -20,7 +20,7 @@ const formatDate = value => {
   return moment(value).format('YYYY-MM-DD');
 };
 
-const getValue = (value, type) => {
+const getValue = (value, type: string) => {
   if (type === 'start') {
     return value ? `${value} 00:00` : value;
   }

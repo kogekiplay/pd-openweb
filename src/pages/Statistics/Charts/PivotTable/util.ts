@@ -35,7 +35,7 @@ export const uniqMerge = (data, config) => {
 /**
  * 多维度单元格合并
  */
-export const mergeTableCell = (list, pageSize, mergeCell) => {
+export const mergeTableCell = (list, pageSize?, mergeCell?) => {
   list.map((item, index) => {
     const last = list[index - 1];
     const defaultEmpty = item.xaxisEmptyType ? '--' : ' ';

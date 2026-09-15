@@ -10,6 +10,7 @@ import RoleTem from 'src/pages/Role/component/RolePermissions';
 import { sysRoleType } from 'src/pages/Role/config.js';
 import CopyRoleDialog from 'src/pages/Role/PortalCon/components/CopyRoleDialog';
 import { APP_ROLE_TYPE } from 'src/pages/worksheet/constants/enum.js';
+import type { RootState } from 'src/redux/types';
 import DeleRoleDialog from './component/DeleRoleDialog';
 
 class Con extends React.Component<any, any> {
@@ -246,7 +247,7 @@ class Con extends React.Component<any, any> {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   appRole: state.appRole,
 });
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);

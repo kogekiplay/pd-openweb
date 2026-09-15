@@ -6,6 +6,7 @@ import { Button, Dialog, Icon, Radio, ScrollView } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import ClickAway from 'ming-ui/components/ClickAway';
 import './index.less';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 const titleLineArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const ClickAwayable = ClickAway;
@@ -20,13 +21,13 @@ export default class ImportConfig extends Component<any, any> {
     super(props);
     let maxColumn = 4;
     this.props.fileList.forEach(sheetItem => {
-      sheetItem.rows.forEach(item => {
+      sheetItem.rows.forEach((item: RecordRow) => {
         if (item.rowNumber < 10 && item.cells.length > maxColumn) {
           maxColumn = item.cells.length;
         }
       });
       for (let i = 0; i < maxColumn; i++) {
-        sheetItem.rows.forEach(rowItem => {
+        sheetItem.rows.forEach((rowItem: RecordRow) => {
           if (!rowItem.cells[i]) {
             rowItem.cells.push({ columnNumber: i, value: '' });
           }
@@ -35,7 +36,7 @@ export default class ImportConfig extends Component<any, any> {
     });
     let maxColumnNumber = 0; // 获取第一个sheet 中实际列数最多的一行(第一列不为空且有值的列数最多)
     let maxValidColumn = 0; // 单行有效列数
-    this.props.fileList[0].rows.forEach(rowItem => {
+    this.props.fileList[0].rows.forEach((rowItem: RecordRow) => {
       if (rowItem.rowNumber < 10) {
         let validCells = rowItem.cells;
 
@@ -96,7 +97,7 @@ export default class ImportConfig extends Component<any, any> {
     let maxValidColumn = 0; // 单行有效列数
     let maxValidColumnRow = {}; // 有效列最多的一行
 
-    selectSheet.rows.forEach(rowItem => {
+    selectSheet.rows.forEach((rowItem: RecordRow) => {
       if (rowItem.rowNumber < 10) {
         let validCells = rowItem.cells;
 
@@ -294,7 +295,7 @@ export default class ImportConfig extends Component<any, any> {
                       >
                         <tbody>
                           {selectSheet.rows
-                            .filter(item => item.rowNumber < 10)
+                            .filter((item: RecordRow) => item.rowNumber < 10)
                             .map((rowItem, rowIndex) => (
                               <tr
                                 key={'tr-' + rowIndex}

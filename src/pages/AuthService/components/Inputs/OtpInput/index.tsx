@@ -204,7 +204,7 @@ const OtpInput = forwardRef(function OtpInput(props, ref) {
   );
 
   const handleChange = useCallback(
-    (index, inputValue) => {
+    (index: number, inputValue) => {
       const digits = inputValue.replace(/[^\d]/g, '');
 
       if (!digits) {

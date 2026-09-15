@@ -66,12 +66,12 @@ function NewRecord(props) {
   const cache = useRef({});
   const scrollViewRef = useRef(null);
   const recordContentRef = useRef(null);
-  const [shareVisible, setShareVisible] = useState();
+  const [shareVisible, setShareVisible] = useState<boolean | undefined>();
   const [newTitle, setNewTitle] = useState(title);
   const [modalClassName] = useState(Math.random().toString().slice(2));
-  const [abnormal, setAbnormal] = useState();
+  const [abnormal, setAbnormal] = useState<boolean | undefined>();
   const [autoFill, setAutoFill] = useState(advancedSetting.autoreserve === '1');
-  const [loading, setLoading] = useState();
+  const [loading, setLoading] = useState<boolean | undefined>();
   const [promptCancelAddRecord, setPromptCancelAddRecord] = useState(
     localStorage.getItem('promptCancelAddRecord') === 'true',
   );

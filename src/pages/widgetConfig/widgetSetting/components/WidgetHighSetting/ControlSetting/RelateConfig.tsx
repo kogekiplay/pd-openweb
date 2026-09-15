@@ -10,14 +10,15 @@ import FilterItemTexts from 'src/pages/widgetConfig/widgetSetting/components/Fil
 import { SYSTEM_CONTROL } from '../../../../config/widget';
 import { formatViewToDropdown } from '../../../../util';
 import SubListStatisticsConfig from '../components/SubListStatisticsConfig';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function RelateConfig(props) {
-  const { data, onChange, globalSheetControls, allControls } = props;
+  const { data, onChange, globalSheetControls, allControls }: { allControls: FormControl[]; [key: string]: any } = props;
   const { enumDefault, strDefault, dataSource, viewId, controlId } = data;
   let { showtype = String(enumDefault), showcount = '0', layercontrolid } = getAdvanceSetting(data);
   const resultfilters = getAdvanceSetting(data, 'resultfilters');
   const [isHiddenOtherViewRecord] = strDefault.split('');
-  const { loading = true, views = [], controls = [], sheetInfo = {} } = window.subListSheetConfig[controlId] || {};
+  const { loading = true, views = [], controls = [], sheetInfo = {} }: { controls: FormControl[]; [key: string]: any } = window.subListSheetConfig[controlId] || {};
 
   const [{ isRelateView, resultFilterVisible, resultVisible }, setState] = useSetState({
     isRelateView: Boolean(viewId),

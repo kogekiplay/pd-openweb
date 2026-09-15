@@ -1,4 +1,4 @@
-﻿import React, { Fragment, useEffect, useRef, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { useKey } from 'react-use';
 import cx from 'classnames';
 import _, { get, includes } from 'lodash';
@@ -15,6 +15,7 @@ import { formatControlToServer } from 'src/components/Form/core/utils';
 import { formatSearchConfigs } from 'src/pages/widgetConfig/util';
 import { getSubListErrorOfStore } from 'src/pages/worksheet/components/ChildTable/utils';
 import { emitter } from 'src/utils/common';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   width: 100%;
@@ -145,7 +146,7 @@ export default function ChildTableDialog(props) {
     projectId,
     mobileIsEdit,
     onClose,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const cache = useRef({});
   const callFromDialog = openFrom !== 'cell';
   const rowHeight = ROW_HEIGHT[Number(_.get(control, 'advancedSetting.rowheight'))] || 34;
@@ -162,7 +163,7 @@ export default function ChildTableDialog(props) {
   const maxShowRowCount = Math.floor((maxHeight - 30 - 40) / rowHeight);
   const width = window.innerWidth - 32 * 2 > 1600 ? 1600 : window.innerWidth - 32 * 2;
 
-  function handleSave(close) {
+  function handleSave(close?) {
     function submit() {
       if (cache.current.isSaving) {
         return;
@@ -367,7 +368,7 @@ export default function ChildTableDialog(props) {
             projectId={projectId}
             onChange={changedValues => {
               if (openFrom === 'cell') {
-                const { rows, lastAction = {} } = changedValues;
+                const { rows, lastAction = {} }: { rows: RecordRow[]; [key: string]: any } = changedValues;
 
                 if (
                   !_.includes(
@@ -406,7 +407,7 @@ export default function ChildTableDialog(props) {
                   } else if (lastAction.type === 'UPDATE_ROWS') {
                     updated = _.uniqBy(updated.concat(lastAction.rowIds));
                   } else if (lastAction.type === 'ADD_ROWS' || lastAction.type === 'CLEAR_AND_SET_ROWS') {
-                    updated = _.uniqBy(updated.concat(lastAction.rows.map(r => r.rowid)));
+                    updated = _.uniqBy(updated.concat(lastAction.rows.map((r: RecordRow) => r.rowid)));
                   }
 
                   return { ...oldValue, updated, deleted, rows };

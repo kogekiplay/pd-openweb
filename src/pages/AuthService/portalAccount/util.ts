@@ -1,4 +1,4 @@
-﻿import _ from 'lodash';
+import _ from 'lodash';
 import externalPortalAjax from 'src/api/externalPortal';
 import { browserIsMobile, getRequest, pathCompletion } from 'src/utils/common';
 import { setPssId } from 'src/utils/pssId';
@@ -233,7 +233,7 @@ export const setAutoLoginKey = (res, removeLink = true) => {
   }
 };
 
-export const accountResultAction = (res, customLink) => {
+export const accountResultAction = (res, customLink?) => {
   const { accountResult, sessionId, appId, state } = res;
   window.localStorage.removeItem(`${appId}_portalCustomLink`);
   let msg = '';

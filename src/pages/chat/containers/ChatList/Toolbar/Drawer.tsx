@@ -9,6 +9,7 @@ import Favorite from 'src/pages/chat/containers/FavoriteDrawer';
 import Mingo from 'src/pages/chat/containers/MingoDrawer';
 import SessionList from 'src/pages/chat/containers/SessionListDrawer';
 import * as actions from 'src/pages/chat/redux/actions';
+import type { RootState } from 'src/redux/types';
 
 const FixingWrap = styled.div`
   border-left: 2px solid var(--color-border-secondary);
@@ -104,7 +105,7 @@ const ToolbarDrawer = props => {
   };
 
   return (
-    (<Fragment>
+    <Fragment>
       {fixing ? (
         visible && (
           <FixingWrap style={{ width: drawerWidht }}>
@@ -118,11 +119,14 @@ const ToolbarDrawer = props => {
           open={visible}
           destroyOnHidden={false}
           closable={false}
-          styles={{ mask: {
-            backgroundColor: 'transparent',
-          }, body: {
-            padding: 0,
-          } }}
+          styles={{
+            mask: {
+              backgroundColor: 'transparent',
+            },
+            body: {
+              padding: 0,
+            },
+          }}
           onClose={() => {
             onClose();
             localStorage.removeItem('toolBarOpenType');
@@ -141,7 +145,7 @@ const ToolbarDrawer = props => {
           })}
         </Drawer>
       )}
-    </Fragment>)
+    </Fragment>
   );
 };
 
@@ -187,7 +191,7 @@ const DrawerWrap = props => {
 };
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     toolbarConfig: state.chat.toolbarConfig,
   }),
   dispatch => bindActionCreators(_.pick(actions, ['setToolbarConfig']), dispatch),

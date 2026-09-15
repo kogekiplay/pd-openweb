@@ -1,10 +1,11 @@
 import { get, pick } from 'lodash';
 import { convertControlTypeToAiRecommendControlType } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export const title = _l('生成示例数据');
 
 export function buildSystemPrompt({ worksheetInfo = {} } = {}) {
-  const controls = get(worksheetInfo, 'template.controls', []);
+  const controls: FormControl[] = get(worksheetInfo, 'template.controls', []);
   return `您是一名示例数据生成专家。
   # 任务
   根据工作表的字段列表和用户需求生成5组示例数据，生成的内容贴近真实有多样性。避免生成重复或无意义的数据。
@@ -19,7 +20,7 @@ export function buildSystemPrompt({ worksheetInfo = {} } = {}) {
       .filter(c => c.controlId.length === 24)
       .map(
         control =>
-          `controlId: ${control.controlId}, name: ${control.controlName}, type: ${convertControlTypeToAiRecommendControlType(control.type)} ${get(control, 'options', []).length > 0 ? `options: ${JSON.stringify(get(control, 'options', []).map(item => pick(item, ['value', 'key'])))} ` : ''}`,
+          `controlId: ${control.controlId}, name: ${control.controlName}, type: ${convertControlTypeToAiRecommendControlType(control)} ${get(control, 'options', []).length > 0 ? `options: ${JSON.stringify(get(control, 'options', []).map(item => pick(item, ['value', 'key'])))} ` : ''}`,
       )
       .join('\n')}
 

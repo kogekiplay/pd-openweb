@@ -16,7 +16,8 @@ export default class ExportSheet extends Component<any, any> {
   static propTypes = {
     allCount: PropTypes.number,
     sheetHiddenColumns: PropTypes.array,
-    allWorksheetIsSelected: PropTypes.boolean,
+    // 同上：PropTypes.boolean 不存在，正确是 bool。
+    allWorksheetIsSelected: PropTypes.bool,
     worksheetId: PropTypes.string,
     exportView: PropTypes.object,
     projectId: PropTypes.string,
@@ -146,7 +147,8 @@ export default class ExportSheet extends Component<any, any> {
   }
 
   getDefaultColumnsSelected() {
-    const selected = {};
+    // 标注索引签名：下面按 controlId 动态写入，还要加一个 rowid。
+    const selected: Record<string, boolean> = {};
     const { sheetHiddenColumns, exportView, columns, isCharge } = this.props;
     const { viewType, showControls, advancedSetting } = exportView;
 

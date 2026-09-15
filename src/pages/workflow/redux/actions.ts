@@ -4,6 +4,7 @@ import process from '../api/process';
 import appManagementApi from 'src/api/appManagement';
 import homeAppApi from 'src/api/homeApp';
 import { APP_TYPE, RELATION_TYPE } from '../WorkflowSettings/enum';
+import type { AppDispatch, GetState } from 'src/redux/types';
 
 const getAppLangDetail = async flowInfo => {
   const appId = _.get(flowInfo, 'relationId');
@@ -32,7 +33,7 @@ const getAppLangDetail = async flowInfo => {
 };
 
 // 获取工作流基础信息
-export const getFlowInfo = processId => dispatch => {
+export const getFlowInfo = processId => (dispatch: AppDispatch) => {
   process
     .getProcessPublish({ processId }, { isIntegration: location.href.indexOf('integration') > -1 })
     .then(async result => {
@@ -46,7 +47,7 @@ export const getFlowInfo = processId => dispatch => {
 };
 
 // 更新工作流基础信息
-export const updateProcess = (companyId, processId, obj) => dispatch => {
+export const updateProcess = (companyId, processId, obj) => (dispatch: AppDispatch) => {
   process
     .updateProcess({
       companyId,
@@ -62,7 +63,7 @@ export const updateProcess = (companyId, processId, obj) => dispatch => {
 };
 
 // 更新发布状态
-export const updatePublishState = obj => (dispatch, getState) => {
+export const updatePublishState = obj => (dispatch: AppDispatch, getState: GetState) => {
   const { workflowDetail } = getState().workflow;
 
   dispatch({
@@ -78,7 +79,7 @@ export const updatePublishState = obj => (dispatch, getState) => {
 // 获取工作流配置详情
 export const getProcessById =
   (processId, count = 200) =>
-  dispatch => {
+  (dispatch: AppDispatch) => {
     flowNode.get({ processId, count }, { isIntegration: location.href.indexOf('integration') > -1 }).then(result => {
       const isSimple = count && Object.keys(result.flowNodeMap).length > count;
 
@@ -94,7 +95,7 @@ export const getProcessById =
   };
 
 // 清除工作流数据
-export const clearSource = () => dispatch => {
+export const clearSource = () => (dispatch: AppDispatch) => {
   dispatch({
     type: 'CLEAR_FLOW_SOURCE',
   });
@@ -119,7 +120,7 @@ const getApprovalProcessNodeId = (flowNodeMap, processId) => {
 // 添加工作流节点
 export const addFlowNode =
   (processId, args, callback = () => {}) =>
-  (dispatch, getState) => {
+  (dispatch: AppDispatch, getState: GetState) => {
     flowNode
       .add({
         processId,
@@ -165,7 +166,7 @@ export const addFlowNode =
   };
 
 // 删除工作流节点
-export const deleteFlowNode = (processId, nodeId) => (dispatch, getState) => {
+export const deleteFlowNode = (processId, nodeId) => (dispatch: AppDispatch, getState: GetState) => {
   flowNode
     .delete({
       nodeId,
@@ -217,7 +218,7 @@ export const deleteFlowNode = (processId, nodeId) => (dispatch, getState) => {
 };
 
 // 修改工作流节点的名称
-export const updateFlowNodeName = (processId, nodeId, name) => (dispatch, getState) => {
+export const updateFlowNodeName = (processId, nodeId, name) => (dispatch: AppDispatch, getState: GetState) => {
   flowNode
     .updateFlowNodeName({
       nodeId,
@@ -248,7 +249,7 @@ export const updateFlowNodeName = (processId, nodeId, name) => (dispatch, getSta
 };
 
 // 更新单个节点数据
-export const updateNodeData = (processId, data) => (dispatch, getState) => {
+export const updateNodeData = (processId, data) => (dispatch: AppDispatch, getState: GetState) => {
   const { workflowDetail } = _.cloneDeep(getState().workflow);
 
   if (workflowDetail.id !== processId) {
@@ -282,7 +283,7 @@ export const updateNodeData = (processId, data) => (dispatch, getState) => {
 };
 
 // 更新单个节点说明
-export const updateNodeDesc = (processId, id, alias, desc) => (dispatch, getState) => {
+export const updateNodeDesc = (processId, id, alias, desc) => (dispatch: AppDispatch, getState: GetState) => {
   const { workflowDetail } = _.cloneDeep(getState().workflow);
 
   if (workflowDetail.id !== processId) {
@@ -309,7 +310,7 @@ export const updateNodeDesc = (processId, id, alias, desc) => (dispatch, getStat
 /**
  * 更新分支节点类型
  */
-export const updateBranchGatewayType = (processId, nodeId, gatewayType) => (dispatch, getState) => {
+export const updateBranchGatewayType = (processId, nodeId, gatewayType) => (dispatch: AppDispatch, getState: GetState) => {
   flowNode
     .saveNode({
       nodeId,
@@ -342,7 +343,7 @@ export const updateBranchGatewayType = (processId, nodeId, gatewayType) => (disp
 /**
  * 调整分支顺序
  */
-export const updateBranchSort = (processId, nodeId, flowIds) => (dispatch, getState) => {
+export const updateBranchSort = (processId, nodeId, flowIds) => (dispatch: AppDispatch, getState: GetState) => {
   flowNode
     .saveNode({
       nodeId,
@@ -374,7 +375,7 @@ export const updateBranchSort = (processId, nodeId, flowIds) => (dispatch, getSt
 /**
  * 更新工作流测试状态 0: 进行中 1: 成功 2: 失败
  */
-export const updateTestRunning = result => (dispatch, getState) => {
+export const updateTestRunning = result => (dispatch: AppDispatch, getState: GetState) => {
   const { workflowTestRunning } = _.cloneDeep(getState().workflow);
   const { processId, flowNodeId, preFlowNodeId, running, instanceId, exception, toolNode } = result;
 

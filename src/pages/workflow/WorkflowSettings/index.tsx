@@ -5,6 +5,7 @@ import _ from 'lodash';
 import { Tooltip } from 'ming-ui/antd-components';
 import LoadDiv from 'ming-ui/components/LoadDiv';
 import processVersion from '../api/processVersion';
+import type { RootState } from 'src/redux/types';
 import { pathCompletion } from 'src/utils/common';
 import { clearSource, getFlowInfo, getProcessById } from '../redux/actions';
 import EditFlow from './EditFlow';
@@ -149,4 +150,4 @@ class WorkflowSettings extends Component<any, any> {
   }
 }
 
-export default connect(state => state.workflow)(WorkflowSettings);
+export default connect((state: RootState) => state.workflow)(WorkflowSettings);

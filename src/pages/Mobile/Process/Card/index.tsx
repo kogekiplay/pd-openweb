@@ -11,6 +11,7 @@ import { ACTION_TO_METHOD } from 'src/pages/workflow/components/ExecDialog/confi
 import { covertTime, FLOW_NODE_TYPE_STATUS, INSTANCELOG_STATUS } from 'src/pages/workflow/MyProcess/config';
 import { processInformTabs } from '../enum';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default class Card extends Component<any, any> {
   constructor(props) {
@@ -22,7 +23,7 @@ export default class Card extends Component<any, any> {
     };
   }
   processInformTabs = processInformTabs.map(item => item.id);
-  handleApprove = (event, action) => {
+  handleApprove = (event, action: string) => {
     const { item } = this.props;
     event.stopPropagation();
     instanceVersion
@@ -309,7 +310,7 @@ export default class Card extends Component<any, any> {
   }
   renderBody() {
     const { currentTab, item, renderBodyTitle } = this.props;
-    const { createAccount, controls } = item;
+    const { createAccount, controls }: { controls: FormControl[]; [key: string]: any } = item;
     return (
       <div className="mobileProcessCardBody flexColumn">
         <div className="flexRow">

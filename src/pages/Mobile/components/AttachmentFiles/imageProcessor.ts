@@ -92,7 +92,7 @@ function canvasToBlob(canvas, type, quality) {
   });
 }
 
-function releaseImageResource(image, objectUrl, canvas) {
+function releaseImageResource(image, objectUrl, canvas?) {
   const urlCreator = window.URL || window.webkitURL;
 
   if (objectUrl && urlCreator && urlCreator.revokeObjectURL) {

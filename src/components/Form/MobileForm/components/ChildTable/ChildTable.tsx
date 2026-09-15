@@ -45,6 +45,7 @@ import RowDetailMobile from './RowDetailMobileModal';
 import SearchInput from './SearchInput';
 import TableComponent from './TableComponent';
 import { normalizeSDKFilterControls } from './utils';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const HorizontalChildTableContent = styled.div`
   position: relative;
@@ -382,7 +383,7 @@ class ChildTable extends React.Component<any, any> {
     const isWorkflow =
       ((instanceId && workId) || window.shareState.isPublicWorkflowRecord) &&
       worksheetInfo.workflowChildTableSwitch !== false;
-    const { showControls = [], advancedSetting = {}, relationControls = [] } = control;
+    const { showControls = [], advancedSetting = {}, relationControls = [] }: { relationControls: FormControl[]; [key: string]: any } = control;
 
     if (baseLoading) {
       return [];
@@ -490,7 +491,7 @@ class ChildTable extends React.Component<any, any> {
     return _.find(this.state.controls, { controlId });
   }
 
-  updateDefsourceOfControl(nextProps) {
+  updateDefsourceOfControl(nextProps?) {
     const { recordId, masterData } = nextProps || this.props;
     const relateRecordControl = (nextProps || this.props).control;
     this.setState(oldState => {
@@ -507,7 +508,7 @@ class ChildTable extends React.Component<any, any> {
 
   loadRows = (nextProps, { needResetControls, isRefresh } = {}) => {
     const { control, recordId, masterData, loadRows, from, base = {} } = nextProps || this.props;
-    const { instanceId, workId, worksheetInfo, originControls } = base;
+    const { instanceId, workId, worksheetInfo, originControls }: { originControls: FormControl[]; [key: string]: any } = base;
     const isWorkflow =
       ((instanceId && workId) || window?.shareState?.isPublicWorkflowRecord) &&
       worksheetInfo?.workflowChildTableSwitch !== false;
@@ -538,12 +539,12 @@ class ChildTable extends React.Component<any, any> {
         const state = { loading: false };
 
         if (needResetControls) {
-          let newControls = (_.get(res, 'worksheet.template.controls') || _.get(res, 'template.controls')).concat(
+          let newControls: FormControl[] = (_.get(res, 'worksheet.template.controls') || _.get(res, 'template.controls')).concat(
             systemControls,
           );
           // 这里要和 getControls 一起统一到 action 内处理
           const { uniqueControlIds } = parseAdvancedSetting(control.advancedSetting);
-          newControls = newControls.map(c => ({
+          newControls = newControls.map((c: FormControl) => ({
             ...c,
             uniqueInRecord: includes(uniqueControlIds, c.controlId) && canAsUniqueWidget(c),
           }));
@@ -563,7 +564,7 @@ class ChildTable extends React.Component<any, any> {
     });
   };
 
-  refresh = (nextProps, { needResetControls = true } = {}) => {
+  refresh = (nextProps?, { needResetControls = true } = {}) => {
     const { updatePagination = () => {} } = nextProps || this.props;
     const { showExpand } = this.state;
 
@@ -645,7 +646,7 @@ class ChildTable extends React.Component<any, any> {
     let columns = !controls.length
       ? [{}]
       : controls
-          .filter(c =>
+          .filter((c: FormControl) =>
             h5showtype == '2'
               ? c.type !== 34 &&
                 !isRelateRecordTableControl(c) &&
@@ -661,7 +662,7 @@ class ChildTable extends React.Component<any, any> {
     return columns;
   }
 
-  newRow = (defaultRow, { isDefaultValue, isCreate, isQueryWorksheetFill, isImportFromExcel } = {}) => {
+  newRow = (defaultRow?, { isDefaultValue, isCreate, isQueryWorksheetFill, isImportFromExcel } = {}) => {
     const tempRowId = !isDefaultValue ? `temp-${uuidv4()}` : `default-${uuidv4()}`;
     const row = this.rowUpdate(
       { row: defaultRow, rowId: tempRowId },
@@ -736,7 +737,7 @@ class ChildTable extends React.Component<any, any> {
 
     const formdata = new DataFormat({
       requestPool: this.requestPool,
-      data: this.state.controls.map(c => {
+      data: this.state.controls.map((c: FormControl) => {
         const importedValue = (row || {})[c.controlId];
         let controlValue = importedValue;
 
@@ -866,7 +867,7 @@ class ChildTable extends React.Component<any, any> {
               .map(r => _.get(safeParse(r[relateRecordControl.controlId], 'array'), '0.sid'))
               .filter(_.identity)
           : [],
-      formData: controls.map(c => ({ ...c, value: tempRow[c.controlId] })).concat(this.props.masterData.formData),
+      formData: controls.map((c: FormControl) => ({ ...c, value: tempRow[c.controlId] })).concat(this.props.masterData.formData),
       onOk: selectedRecords => {
         const rowsLength = filterEmptyChildTableRows(rows).length;
 
@@ -939,7 +940,7 @@ class ChildTable extends React.Component<any, any> {
         key: _.last(JSON.parse(value)),
         ...JSON.parse(_.last(JSON.parse(value))),
       };
-      controls.forEach(c => {
+      controls.forEach((c: FormControl) => {
         if (c.controlId === control.controlId) {
           c.options = _.uniqBy([...control.options, newOption], 'key');
         }
@@ -971,16 +972,16 @@ class ChildTable extends React.Component<any, any> {
     }
   };
 
-  handleRowDetailSave = (row, updatedControlIds, saveOptions = {}) => {
+  handleRowDetailSave = (row, updatedControlIds?, saveOptions = {}) => {
     const { updateRow, addRow } = this.props;
     const { previewRowIndex, controls } = this.state;
     const newControls = updateOptionsOfControls(
-      controls.map(c => ({ ...{}, ...c, value: row[c.controlId] })),
+      controls.map((c: FormControl) => ({ ...{}, ...c, value: row[c.controlId] })),
       row,
     );
     this.setState(
       {
-        controls: controls.map(c => {
+        controls: controls.map((c: FormControl) => {
           const newControl = _.find(newControls, { controlId: c.controlId });
           return newControl ? { ...newControl, value: c.value } : c;
         }),
@@ -991,7 +992,7 @@ class ChildTable extends React.Component<any, any> {
           : _.uniqBy(row.updatedControlIds.concat(updatedControlIds));
         row.updatedControlIds = row.updatedControlIds.concat(
           controls
-            .filter(c => _.find(updatedControlIds, cid => ((c.advancedSetting || {}).defsource || '').includes(cid)))
+            .filter((c: FormControl) => _.find(updatedControlIds, cid => ((c.advancedSetting || {}).defsource || '').includes(cid)))
             .map(c => c.controlId),
         );
 
@@ -1050,7 +1051,7 @@ class ChildTable extends React.Component<any, any> {
     const { controls } = this.state;
     const checkControl = _.find(controls, { controlId });
     const { uniqueControlIds } = parseAdvancedSetting(control.advancedSetting);
-    const isUniqueInRecord = !_.find(rowId ? rows.filter(row => row.rowid !== rowId) : rows, row =>
+    const isUniqueInRecord = !_.find(rowId ? rows.filter((row: RecordRow) => row.rowid !== rowId) : rows, row =>
       this.compareValue(checkControl, row[controlId], value),
     );
 
@@ -1207,7 +1208,7 @@ class ChildTable extends React.Component<any, any> {
     const allowAddByLine =
       (_.isUndefined(_.get(control, 'advancedSetting.allowsingle')) && !addRowFromRelateRecords) || allowsingle;
     const controlPermission = controlState(control, from);
-    let tableRows = rows.map(row => {
+    let tableRows = rows.map((row: RecordRow) => {
       if (/^temp/.test(row.rowid)) {
         return row;
       } else if (/^empty/.test(row.rowid)) {
@@ -1216,7 +1217,7 @@ class ChildTable extends React.Component<any, any> {
         return { ...row, allowedit: allowedit && (useUserPermission ? row.allowedit : true) };
       }
     });
-    const originRows = tableRows;
+    const originRows: RecordRow[] = tableRows;
     const disabled = !controlPermission.editable || control.disabled;
     const noColumns = !controls.length;
     const columns = this.getShowColumns();
@@ -1475,7 +1476,7 @@ class ChildTable extends React.Component<any, any> {
               (allowcancel && (useUserPermission && !!recordId ? _.get(currentRow, 'allowdelete') : true))
             }
             allowCopy={allowadd && allowCopy && isEditCurrentRow && !disabled}
-            controls={controls.map(c => ({
+            controls={controls.map((c: FormControl) => ({
               ...c,
               hidden: !_.includes(control.showControls, c.controlId) ? true : c.hidden,
             }))}

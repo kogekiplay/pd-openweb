@@ -18,6 +18,7 @@ import {
   getDateCompareRangeValues,
   getFilterTypeLabel,
 } from './enum';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 export function getConditionType(condition) {
   return (condition.controlType === 28 || condition.dataType === 28) &&
@@ -26,7 +27,11 @@ export function getConditionType(condition) {
     : condition.conditionGroupType;
 }
 
-export function formatConditionForSave(condition, relationType, options = {}) {
+export function formatConditionForSave(
+  condition: any,
+  relationType?: number,
+  options: { returnFullValues?: boolean } = {},
+) {
   let { controlId, values, controlType } = condition;
   const { returnFullValues } = options;
 
@@ -306,7 +311,7 @@ export function checkConditionAvailable(condition) {
   }
 }
 
-export function getConditionOverrideValue(type, condition, valueType, from) {
+export function getConditionOverrideValue(type, condition, valueType?, from?) {
   const { value, values, dateRange, dateRangeType, fullValues } = condition;
   let newDateRangeType = dateRangeType;
   const conditionGroupType = getConditionType(condition);
@@ -422,7 +427,7 @@ export function compareControlType(widget, type) {
   return false;
 }
 
-export function getFilterTypes(control = {}, conditionType, from) {
+export function getFilterTypes(control = {}, conditionType?, from?) {
   let typeEnums = [];
   const { type, advancedSetting = {} } = control;
   const typeKey = getTypeKey(type);
@@ -732,7 +737,7 @@ function getDefaultFilterType(control, from) {
   }
 }
 
-export function getDefaultCondition(control, from) {
+export function getDefaultCondition(control, from?) {
   const conditionGroupKey = getTypeKey(control.type);
   const conditionGroupType =
     CONTROL_FILTER_WHITELIST[conditionGroupKey] && CONTROL_FILTER_WHITELIST[conditionGroupKey].value;
@@ -1103,6 +1108,14 @@ export function getFilter({
   ignoreEmptyRule = false,
   appId,
   currentTimeForSecond,
+}: {
+  control?: FormControl;
+  formData?: FormControl[];
+  /** advancedSetting 里存筛选条件的键名，查询配置用 'filters' 之外的值 */
+  filterKey?: string;
+  ignoreEmptyRule?: boolean;
+  appId?: string;
+  currentTimeForSecond?: boolean;
 }) {
   if (
     !control ||
@@ -1296,7 +1309,7 @@ export function fillConditionValue({
             )
           : dynamicControl.store
               .getState()
-              .records.map(r => r.rowid)
+              .records.map((r: RecordRow) => r.rowid)
               .filter(_.identity);
       } else {
         if (isRelateRecordTableControl(dynamicControl) && browserIsMobile() && relateControl.recordId) {
@@ -1699,7 +1712,7 @@ export function validate(condition) {
 const SHEET_FILTER_URL_KEY = 'sf';
 
 // 把选中的已保存筛选器 id 写入 url，刷新后可还原选中；不传 filterId 时仅清除该参数
-export function saveSheetFilterIdToUrl(filterId) {
+export function saveSheetFilterIdToUrl(filterId?) {
   if (typeof window === 'undefined' || !window.history) return;
   try {
     const search = new URLSearchParams(window.location.search);

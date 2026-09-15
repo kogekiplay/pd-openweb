@@ -153,7 +153,7 @@ export default function Join(props) {
     );
   };
 
-  const updateData = (key, i, data) => {
+  const updateData = (key: string, i: number, data) => {
     let dat = {
       ...node,
       nodeConfig: {

@@ -14,8 +14,9 @@ import mapView from './mapView';
 import * as resourceView from './resourceview';
 import * as sheetview from './sheetview';
 import * as worksheet from './worksheet';
+import type { ReduxAction } from 'src/redux/types';
 
-function base(state = {}, action) {
+function base(state = {}, action: ReduxAction) {
   switch (action.type) {
     case 'WORKSHEET_UPDATE_BASE':
       return { ...state, ...action.base };
@@ -50,7 +51,7 @@ function base(state = {}, action) {
   }
 }
 
-function isCharge(state = false, action) {
+function isCharge(state = false, action: ReduxAction) {
   switch (action.type) {
     case 'WORKSHEET_UPDATE_IS_CHARGE':
       return action.isCharge;
@@ -59,7 +60,7 @@ function isCharge(state = false, action) {
   }
 }
 
-function appPkgData(state = false, action) {
+function appPkgData(state = false, action: ReduxAction) {
   switch (action.type) {
     case 'WORKSHEET_UPDATE_APPPKGDATA':
       return action.appPkgData;
@@ -68,7 +69,7 @@ function appPkgData(state = false, action) {
   }
 }
 
-function activeViewStatus(state = 1, action) {
+function activeViewStatus(state = 1, action: ReduxAction) {
   switch (action.type) {
     case 'WORKSHEET_UPDATE_ACTIVE_VIEW_STATUS':
     case 'WORKSHEET_SHEETVIEW_FETCH_ROWS':
@@ -83,7 +84,7 @@ function activeViewStatus(state = 1, action) {
   }
 }
 
-function fieldShowCount(state = 0, action) {
+function fieldShowCount(state = 0, action: ReduxAction) {
   switch (action.type) {
     case 'VIEW_UPDATE_SHOW_COUNT':
       return action.showcount || 0;
@@ -92,7 +93,7 @@ function fieldShowCount(state = 0, action) {
   }
 }
 
-function saveViewSetLoading(state = false, action) {
+function saveViewSetLoading(state = false, action: ReduxAction) {
   switch (action.type) {
     case 'VIEW_UPDATE_VIEW_SET_LOADING':
       return action.saveViewSetLoading || false;
@@ -101,7 +102,7 @@ function saveViewSetLoading(state = false, action) {
   }
 }
 
-function viewRowsLoading(state = false, action) {
+function viewRowsLoading(state = false, action: ReduxAction) {
   switch (action.type) {
     case 'WORKSHEET_VIEW_UPDATE_ROWS_LOADING':
       return action.value;

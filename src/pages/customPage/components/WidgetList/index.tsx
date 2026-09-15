@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
+import type { RootState } from 'src/redux/types';
 import { containerWidgets, widgets } from '../../enum';
 import { componentCountLimit, getEnumType } from '../../util';
 import EditWidget from '../editWidget';
@@ -178,6 +179,6 @@ function WidgetList({ components, activeContainerInfo = {}, addWidget = _.noop, 
   );
 }
 
-export default connect(state => ({
+export default connect((state: RootState) => ({
   activeContainerInfo: state.customPage.activeContainerInfo,
 }))(WidgetList);

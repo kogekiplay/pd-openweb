@@ -14,9 +14,53 @@
 // ---- 由 src/common/global.js 在启动时挂到 window 上 ----
 declare var _l: any; // src/common/global.js:108 `window._l = function (key, ...args) {`（i18n）
 declare var md: any; // src/common/global.js:190 `window.md = {`（全局配置树 md.global.*）
-declare var mdyAPI: any; // src/common/global.js:721 `window.mdyAPI = (controllerName, actionName, ...) =>`
+/**
+ * src/common/global.js:721 `window.mdyAPI = (controllerName, actionName, requestData, options = {}) =>`
+ *
+ * 【为什么要写成函数而不是 `any`】写 any 的话 src/api/* 里所有生成的方法
+ * 返回类型也是 any，于是调用点 `.then(res => ...)` 拿不到任何上下文类型，
+ * res 成了【隐式 any】—— 光 res/result/data/response 这四个名字就 3745 条 TS7006。
+ * 声明成返回 Promise<any> 之后，这些回调参数由上下文推出类型，一个调用点都不用改。
+ *
+ * 【为什么是 Promise<any> 而不是更精确的类型】本仓没有响应体的 schema
+ * （src/api/* 由 scripts/mainApiGen.js 从 swagger 生成，swagger 只给了入参）。
+ * 要收窄得先让生成器把 response schema 也带出来，那是独立的一件事。
+ * 在那之前 Promise<any> 是【如实】描述，而不是拿 any 搪塞 —— 它至少让
+ * .then / .catch / await 这条链本身可被检查。
+ *
+ * 注意 ajaxOptions.sync 那条路：带 sync 时接口是【同步返回结果对象】而不是 Promise
+ * （见 RecordEditLock 的 checkRowEditLock），所以返回类型带上 any 这一支。
+ */
+/**
+ * 返回类型是 Promise 和开放对象的【交集】，两条返回路径都要覆盖：
+ *   - 默认是异步，调用点 `.then(res => ...)` 靠它拿到上下文类型；
+ *   - 带 ajaxOptions.sync 时接口【同步返回结果对象】（见 RecordEditLock、
+ *     checkPermission、preall 的 getGlobalMeta），调用点直接读 data.config / data.status。
+ *
+ * 为什么不用重载：sync 这条路几乎都经由 src/api/* 生成的包装函数
+ * （wrapper 自己的 options 是 ApiOptions，匹配不到 sync 那条重载），
+ * 要让重载生效得改生成器、影响 1000+ 个函数，不划算。
+ *
+ * 为什么不直接写 any：那样 src/api/* 的返回也是 any，
+ * 调用点 `.then(res => ...)` 的 res 就成了隐式 any —— 光 res/result/data/response
+ * 四个名字就 3745 条 TS7006。交集写法能保住 .then 的上下文类型。
+ */
+declare type ApiResult = Promise<any> & { [key: string]: any };
+
+declare var mdyAPI: (...args: any[]) => ApiResult;
 declare var agentAPI: any; // src/common/global.js:936 `window.agentAPI = (args = {}, options = {}) =>`
-declare var safeParse: any; // src/common/global.js:265 `window.safeParse = (str, type) => {`
+/**
+ * src/common/global.js:265 `window.safeParse = (str, type) => {`
+ *
+ * 【不要按第二个参数重载】试过写成
+ *   safeParse(str, 'array'): any[] / safeParse(str, 'object'): Record<string, any>
+ * 想让 `safeParse(x, 'array').map(item => ...)` 的 item 由上下文推出类型（987 个调用点）。
+ * 但看实现就知道这是撒谎：type 只决定【空值或解析失败时】的兜底值，
+ * 有值时一律 `return JSON.parse(str)` —— 传 'array' 照样可能拿到对象
+ * （例：WorksheetRecordLogSelectTags 的定位分支就是 safeParse(v,'array') 之后读 .address/.x/.y）。
+ * 标成 any[] 之后那些地方立刻报错，而错的是类型不是代码。
+ */
+declare var safeParse: any;
 declare var createTimeSpan: any; // src/common/global.js:291 `window.createTimeSpan = (dateStr, showType = 1) =>`
 declare var getCurrentLang: any; // src/common/global.js:74 `window.getCurrentLang = () => {`
 declare var getCurrentLangCode: any; // src/common/global.js:82 `window.getCurrentLangCode = lang => {`
@@ -145,6 +189,19 @@ declare function alert(content?: any, alertType?: number): void;
 declare interface ApiOptions {
   silent?: boolean;
   ajaxOptions?: any;
+  [key: string]: any;
+}
+
+// src/api/agent.ts 里带路径参数的方法，第一个参数 args 的类型。
+// 生成器 scripts/agentApiGen.js:87 在有 path/query 参数时发 `args = {}`，
+// 不标类型的话 TS 从默认值推成 `{}`，紧接着的
+// `const { sessionId, ...rest } = args;` 就报 TS2339（实测 29 条）。
+//
+// 索引签名用 any 而不是 unknown：这个 args 是直接交给网络层的异构参数包，
+// 取出来的值会当字符串用（如 encodeURIComponent(sessionId)）。
+// 写成 unknown 不会消诊断，只会把 TS2339 换成一批 TS2345，属于原地打转。
+// 真正的收敛应该是按接口给出各自的参数类型，那要从 swagger 生成，是另一件事。
+declare interface ApiArgs {
   [key: string]: any;
 }
 

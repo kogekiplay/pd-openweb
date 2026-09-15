@@ -1,4 +1,5 @@
-export const filtersGroup = (state = {}, action) => {
+import type { ReduxAction } from 'src/redux/types';
+export const filtersGroup = (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'MOBILE_UPDATE_ALL_FILTERS_GROUP':
       return { ...state, [action.id]: action.filters };
@@ -7,7 +8,7 @@ export const filtersGroup = (state = {}, action) => {
   }
 };
 
-export const linkageFiltersGroup = (state = {}, action) => {
+export const linkageFiltersGroup = (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'MOBILE_UPDATE_LINKAGE_FILTERS_GROUP':
       return { ...state, [action.id]: action.filters };
@@ -21,7 +22,7 @@ export const linkageFiltersGroup = (state = {}, action) => {
   }
 };
 
-export const filterComponents = (state = [], action) => {
+export const filterComponents = (state = [], action: ReduxAction) => {
   switch (action.type) {
     case 'MOBILE_UPDATE_FILTER_COMPONENTS':
       return action.value;
@@ -30,7 +31,7 @@ export const filterComponents = (state = [], action) => {
   }
 };
 
-export const loadFilterComponentCount = (state = 0, action) => {
+export const loadFilterComponentCount = (state = 0, action: ReduxAction) => {
   switch (action.type) {
     case 'MOBILE_UPDATE_LOAD_FILTER_COMPONENT_COUNT':
       return action.value;

@@ -6,6 +6,7 @@ import { lineBottomHeight, minHeightObj, pageSize } from 'src/pages/worksheet/vi
 import { getResourceRowHoverHandlers } from 'src/pages/worksheet/views/ResourceView/util';
 import { browserIsMobile } from 'src/utils/common';
 import RecordBlock from './RecordBlock';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const Wrap = styled.div`
   z-index: 1;
@@ -59,9 +60,9 @@ export default function RecordWrap(props) {
   };
 
   const renderContent = () => {
-    const { view, viewId, fetchRowsByGroupId, controls } = props;
-    const dateStart = controls.find(o => o.controlId === _.get(view, 'advancedSetting.begindate'));
-    const dateEnd = controls.find(o => o.controlId === _.get(view, 'advancedSetting.enddate'));
+    const { view, viewId, fetchRowsByGroupId, controls }: { controls: FormControl[]; [key: string]: any } = props;
+    const dateStart = controls.find((o: FormControl) => o.controlId === _.get(view, 'advancedSetting.begindate'));
+    const dateEnd = controls.find((o: FormControl) => o.controlId === _.get(view, 'advancedSetting.enddate'));
     const hasStartAndEnd = !!dateStart && !!dateEnd;
     return (
       <React.Fragment>
@@ -70,7 +71,7 @@ export default function RecordWrap(props) {
           return (
             <div className="thByGroup" id={`resourceRow_${viewId}_${i}`} {...hoverHandlers}>
               <div className="lineTimeHr Relative" style={{ height: o.height }}>
-                {o.rows.map(it => {
+                {o.rows.map((it: RecordRow) => {
                   return (
                     <RecordBlock
                       {...props}

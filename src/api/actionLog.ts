@@ -17,7 +17,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getActionLogs: function (args, options = {}) {
+  getActionLogs: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ActionLog', 'GetActionLogs', args, options);
   },
   /**
@@ -38,7 +38,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getOrgLogs: function (args, options = {}) {
+  getOrgLogs: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ActionLog', 'GetOrgLogs', args, options);
   },
   /**
@@ -48,7 +48,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAccountDevices: function (args, options = {}) {
+  getAccountDevices: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ActionLog', 'GetAccountDevices', args, options);
   },
   /**
@@ -62,7 +62,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  addLog: function (args, options = {}) {
+  addLog: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ActionLog', 'AddLog', args, options);
   },
 };

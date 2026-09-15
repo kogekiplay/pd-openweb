@@ -39,7 +39,7 @@ const getTrOrLi = function (taskId) {
 };
 
 // 修改任务状态之后数据处理
-export const afterUpdateTaskStatus = (data, status, isAll, $el) => {
+export const afterUpdateTaskStatus = (data, status, isAll, $el?) => {
   if (data == null) {
     return;
   }
@@ -308,7 +308,7 @@ export const taskTreeAfterDeleteTask = (taskId, listSort) => {
 };
 
 // 删除任务后处理 退出任务
-export const afterDeleteTask = (taskIdArray, parentTaskId) => {
+export const afterDeleteTask = (taskIdArray, parentTaskId?) => {
   const { viewType, folderId, listSort } = Store.getState().task.taskConfig;
   const taskCount = taskIdArray.length;
   let taskId;
@@ -665,7 +665,7 @@ const afterUpdateTaskParentList = (taskId, parentId, oldParentId) => {
 };
 
 // 更新母任务后操作
-const afterUpdateTaskParentComm = (taskId, parentId, oldParentId, $dyLi) => {
+const afterUpdateTaskParentComm = (taskId, parentId, oldParentId, $dyLi?) => {
   let $li = getTrOrLi(taskId);
   let $singleFolderTask = $li.closest('.singleFolderTask');
   const $oldParent = $li.parent();
@@ -897,7 +897,7 @@ const updateTaskParentDeep = $li => {
 };
 
 // 更新任务名称后处理
-export const afterUpdateTaskName = (taskId, taskName) => {
+export const afterUpdateTaskName = (taskId, taskName: string) => {
   const { viewType, folderId } = Store.getState().task.taskConfig;
 
   if (!folderId) {
@@ -1054,7 +1054,7 @@ export const updateFolderTop = (folderId, isTop, callback) => {
 };
 
 // 退出与删除 项目callback
-const exitAndDeleteCallback = (folderId, isDelete, hideNavigation) => {
+const exitAndDeleteCallback = (folderId, isDelete: boolean, hideNavigation) => {
   alert(isDelete ? _l('删除成功') : _l('退出成功'));
 
   if (hideNavigation) {
@@ -1075,7 +1075,7 @@ const exitAndDeleteCallback = (folderId, isDelete, hideNavigation) => {
 };
 
 // 删除项目
-export const deleteFolder = (folderId, hideNavigation) => {
+export const deleteFolder = (folderId, hideNavigation?) => {
   DeleteReconfirm({
     title: _l(
       '彻底删除项目“%0”',
@@ -1111,7 +1111,7 @@ export const deleteFolder = (folderId, hideNavigation) => {
 };
 
 // 退出项目
-export const exitFolder = (folderId, hideNavigation) => {
+export const exitFolder = (folderId, hideNavigation?) => {
   Dialog.confirm({
     title: _l('确定退出该项目？'),
     closable: false,
@@ -1134,7 +1134,7 @@ export const exitFolder = (folderId, hideNavigation) => {
 };
 
 // 项目归档
-export const updateFolderArchived = (projectId, folderId, pigeonhole, callback) => {
+export const updateFolderArchived = (projectId, folderId, pigeonhole: boolean, callback?) => {
   ajaxRequest
     .updateFolderArchived({
       folderID: folderId,

@@ -4,6 +4,7 @@ import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget';
 import { CARD_WIDTH_SETTING } from 'src/pages/worksheet/common/ViewConfig/config';
 import { getCoverStyle } from 'src/pages/worksheet/common/ViewConfig/utils';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 export function findSheet(id, sheetList = []) {
   let result = null;
@@ -67,7 +68,7 @@ export const getHighAuthSheetSwitchPermit = (sheetSwitchPermit, worksheetId) => 
 };
 
 // 本地存储当前选中菜单
-export const saveSelectExtensionNavType = (worksheetId, navType, navValue) => {
+export const saveSelectExtensionNavType = (worksheetId, navType: string, navValue) => {
   const sheetConfigNavInfo = safeParse(localStorage.getItem('sheetConfigNavInfo') || '{}');
 
   if (!sheetConfigNavInfo[worksheetId]) {
@@ -321,10 +322,11 @@ export function getOperatesButtonsWidth({ buttons, style, visibleNum, showIcon }
 }
 
 export function filterButtonBySheetSwitchPermit(
-  buttons = [],
-  sheetSwitchPermit,
-  viewId,
-  row = {
+  buttons: any[] = [],
+  sheetSwitchPermit?: any,
+  viewId?: string,
+  // 调用点传进来的是整行记录，不是只有这两个开关的字面量 —— 按调用点标类型
+  row: RecordRow = {
     allowedit: true,
     allowdelete: true,
   },

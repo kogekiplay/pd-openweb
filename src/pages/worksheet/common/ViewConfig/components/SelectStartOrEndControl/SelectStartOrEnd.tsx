@@ -9,6 +9,7 @@ import { isTimeStyle } from 'src/utils/control';
 import { SYS } from '../../../../../widgetConfig/config/widget';
 import AddControlDiaLog from './AddControlDiaLog';
 import './SelectStartOrEnd.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const renderOptionLabel = item => (
   <div className="flexRow alignItemsCenter">
@@ -121,7 +122,7 @@ export default function SelectStartOrEnd(props) {
     beginIsDel,
     endIsDel,
     classNames,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
 
   const getData = () => {
     const timeControlsList = setSysWorkflowTimeControlFormat(timeControls, sheetSwitchPermit);
@@ -166,7 +167,7 @@ export default function SelectStartOrEnd(props) {
     handleChange({ begindate, enddate: value });
   };
 
-  const showAddDialog = (name, key) => {
+  const showAddDialog = (name, key: string) => {
     setAddName(name);
     setAddKey(key);
     setVisible(true);
@@ -233,7 +234,7 @@ export default function SelectStartOrEnd(props) {
             let controlInfo = data;
 
             if (data.filter(o => SYS.includes(o.controlId)).length <= 0) {
-              const sys = controls.filter(o => SYS.includes(o.controlId));
+              const sys = controls.filter((o: FormControl) => SYS.includes(o.controlId));
               controlInfo = controlInfo.concat(sys);
             }
 

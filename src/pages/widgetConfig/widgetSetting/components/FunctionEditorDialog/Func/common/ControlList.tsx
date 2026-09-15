@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { getIconByType } from 'src/pages/widgetConfig/util';
 import { SearchFn } from 'src/pages/widgetConfig/util';
 import { checkTypeSupportForFunction } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   padding: 10px 0;
@@ -63,7 +64,7 @@ const Icon = styled.i`
   line-height: 36px;
 `;
 
-export function getControlType(control) {
+export function getControlType(control: FormControl) {
   if (control.type === 30) {
     return control.sourceControlType;
   } else if (control.type === 53) {
@@ -74,8 +75,8 @@ export function getControlType(control) {
 }
 
 export default function ControlList(props) {
-  const { keywords, controls, controlGroups, insertTagToEditor } = props;
-  const visibleControls = controls.filter(c => c.controlName && checkTypeSupportForFunction(c));
+  const { keywords, controls, controlGroups, insertTagToEditor }: { controls: FormControl[]; [key: string]: any } = props;
+  const visibleControls: FormControl[] = controls.filter(c => c.controlName && checkTypeSupportForFunction(c));
 
   if (controlGroups && controlGroups.length) {
     return (

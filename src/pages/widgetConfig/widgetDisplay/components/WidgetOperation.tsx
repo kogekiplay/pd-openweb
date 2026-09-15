@@ -209,7 +209,7 @@ export default function WidgetOperation(props) {
       );
     }
 
-    const handleDelete = e => {
+    const handleDelete = (e?) => {
       if (e && e.stopPropagation) e.stopPropagation();
       handleOperate('delete', queryConfig);
       setVisible(false);

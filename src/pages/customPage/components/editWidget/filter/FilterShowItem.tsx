@@ -10,6 +10,7 @@ import FilterDialog from 'src/pages/widgetConfig/widgetSetting/components/Filter
 import FilterItemTexts from 'src/pages/widgetConfig/widgetSetting/components/FilterData/FilterItemTexts';
 import SortCustom from 'src/pages/worksheet/common/ViewConfig/components/NavSort/customSet';
 import { getTitleTextFromRelateControl } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const SHOW_ITEMS = [
   { text: _l('全部'), value: '1' },
@@ -30,7 +31,7 @@ const filterShowItem = control => {
 };
 
 function FilterShowItem(props) {
-  const { sheet, allControls, control, advancedSetting, onChangeAdvancedSetting } = props;
+  const { sheet, allControls, control, advancedSetting, onChangeAdvancedSetting }: { allControls: FormControl[]; [key: string]: any } = props;
   const { navshow = '1', navfilters } = advancedSetting;
   const [filterVisible, setFilterVisible] = useState(false);
   const [showCustomVisible, setShowCustomVisible] = useState(false);

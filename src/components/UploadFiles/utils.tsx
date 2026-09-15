@@ -252,7 +252,7 @@ export const findIndex = (res, id) => {
   return index;
 };
 
-export const checkAccountUploadLimit = (size, params = {}) => {
+export const checkAccountUploadLimit = (size: number, params = {}) => {
   return kcCtrl.getUsage(params).then(function (usage) {
     return usage.used + size < usage.total;
   });

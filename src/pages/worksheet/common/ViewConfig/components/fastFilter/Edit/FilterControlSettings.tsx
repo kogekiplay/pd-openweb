@@ -20,6 +20,7 @@ import {
 } from '../util';
 import DropCom from './DropCom';
 import ShowTypeCom from './ShowTypeCom';
+import type { FormControl } from 'src/utils/controlTypes';
 
 // 快速筛选字段类型相关配置：筛选方式、显示方式、日期范围、位数和扫码。
 export default function FilterControlSettings(props) {
@@ -32,12 +33,12 @@ export default function FilterControlSettings(props) {
     updateViewSet,
     setAdvancedSetting,
     children,
-  } = props;
+  }: { worksheetControls: FormControl[]; [key: string]: any } = props;
 
   const getDaterange = () => safeParse(advancedSetting.daterange, 'array');
 
   const getShowTypeForDataRange = () => {
-    const controlData = worksheetControls.find(item => item.controlId === control.controlId) || {};
+    const controlData = worksheetControls.find((item: FormControl) => item.controlId === control.controlId) || {};
 
     if (controlData.type === 38) {
       return _.get(controlData, 'unit');

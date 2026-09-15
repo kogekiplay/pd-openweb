@@ -156,7 +156,7 @@ export function RoleSelect(props) {
     fetchData();
   }, [pageIndex]);
 
-  const fetchData = (groups, orgRoleGroupId, index) => {
+  const fetchData = (groups?, orgRoleGroupId?, index?) => {
     let treeList = _.cloneDeep(groups || treeData);
     const fetchPageIndex = index || pageIndex;
 
@@ -263,7 +263,7 @@ export function RoleSelect(props) {
 
   const checkedUserSelf = () => !!_.find(selectData, o => o.organizeId === 'user-role');
 
-  const renderChildren = groupItem => {
+  const renderChildren = (groupItem?) => {
     if (groupItem && !expendTreeNodeKey.includes(groupItem.orgRoleGroupId)) return;
 
     const list = treeData.filter(l => l.orgRoleGroupId !== '' || l.children.length);

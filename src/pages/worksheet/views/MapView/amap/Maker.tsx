@@ -125,7 +125,7 @@ class Marker extends React.Component<any, any> {
     this.setChildComponent(nextProps);
   }
 
-  getSetterParam(key, val) {
+  getSetterParam(key: string, val) {
     if (MarkerAllProps.indexOf(key) === -1) {
       return null;
     }

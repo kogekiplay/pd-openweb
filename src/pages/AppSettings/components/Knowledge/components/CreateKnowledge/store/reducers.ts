@@ -1,3 +1,4 @@
+import type { ReduxAction } from 'src/redux/types';
 export const initialState = {
   loading: false,
   appId: null,
@@ -47,7 +48,7 @@ export const initialState = {
   knowledgeDesc: '',
 };
 
-export const reducer = (state = initialState, action) => {
+export const reducer = (state = initialState, action: ReduxAction) => {
   switch (action.type) {
     case 'SET_LOADING':
       return { ...state, loading: action.loading };

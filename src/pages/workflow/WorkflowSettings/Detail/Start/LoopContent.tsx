@@ -124,7 +124,7 @@ export default class LoopContent extends Component<any, any> {
   /**
    * 验证数值控件
    */
-  checkNumberControl(evt, isBlur) {
+  checkNumberControl(evt, isBlur?) {
     const { updateSource } = this.props;
     let num = evt.target.value.replace(/[^\d]/g, '');
 
@@ -471,7 +471,7 @@ export default class LoopContent extends Component<any, any> {
   /**
    * 渲染范围内容
    */
-  renderRangeContent(key) {
+  renderRangeContent(key: string) {
     const { data } = this.props;
     const KEYS_ENUM = {
       minute: {
@@ -527,7 +527,7 @@ export default class LoopContent extends Component<any, any> {
   /**
    * 验证范围开始值、结束值
    */
-  checkRangeNumber(evt, key, min, max, isEnd) {
+  checkRangeNumber(evt, key?: string, min?, max?, isEnd?) {
     let num = evt.target.value.replace(/[^\d]/g, '');
     evt.target.value = num;
 
@@ -567,7 +567,7 @@ export default class LoopContent extends Component<any, any> {
   /**
    * 渲染固定值
    */
-  renderFixedContent(key) {
+  renderFixedContent(key: string) {
     const { data } = this.props;
     const values = data.config[key].values;
     const KEYS_ENUM = {
@@ -642,7 +642,7 @@ export default class LoopContent extends Component<any, any> {
   /**
    * 更新固定值配置
    */
-  updateFixedConfig(key, value) {
+  updateFixedConfig(key: string, value) {
     const { data } = this.props;
     const values = [].concat(data.config[key].values);
 
@@ -663,7 +663,7 @@ export default class LoopContent extends Component<any, any> {
   /**
    * 渲染增量内容
    */
-  renderIncrementContent(key) {
+  renderIncrementContent(key: string) {
     const { data } = this.props;
     const KEYS_ENUM = {
       minute: {
@@ -725,7 +725,7 @@ export default class LoopContent extends Component<any, any> {
   /**
    * 验证增量开始值
    */
-  checkIncrementStartNumber(evt, key, min, max) {
+  checkIncrementStartNumber(evt, key?, min?, max?) {
     let num = evt.target.value.replace(/[^\d]/g, '');
     evt.target.value = num;
 
@@ -753,7 +753,7 @@ export default class LoopContent extends Component<any, any> {
   /**
    * 验证增量值
    */
-  checkIncrementNumber(evt, key) {
+  checkIncrementNumber(evt, key?) {
     let num = evt.target.value.replace(/[^\d]/g, '');
     evt.target.value = num;
 

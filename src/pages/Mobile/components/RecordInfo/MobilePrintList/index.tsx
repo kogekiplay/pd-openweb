@@ -15,6 +15,7 @@ import { VersionProductType } from 'src/utils/enum';
 import { compatibleMDJS, getCurrentProject, getFeatureStatus } from 'src/utils/project';
 import { sendCloudPrint } from 'src/utils/record';
 import { buildAppPrintParams, getPrintCacheAppDetail, getPrintCacheWorksheetInfo } from './utils';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const DEFAULT_TEMPLATE_TYPES = [PRINT_TYPE.SYS_PRINT, PRINT_TYPE.WORD_PRINT, PRINT_TYPE.EXCEL_PRINT];
 const CODE_TEMPLATE_TYPES = [PRINT_TYPE.QR_CODE_PRINT, PRINT_TYPE.BAR_CODE_PRINT];
@@ -175,7 +176,7 @@ export default function MobilePrintList(props) {
     getWorksheetShareUrl,
     hideRecordActionVisible = noop,
     updatePrintList = noop,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
 
   const [printList, setPrintList] = useState([]);
   const [showPrintListVisible, setShowPrintListVisible] = useState(false);
@@ -359,7 +360,7 @@ export default function MobilePrintList(props) {
   };
 
   // APP网页集成word模版打印\excel打印\二维码打印\条码打印 调用原生方法处理
-  const handleAPPPrint = (it, printUrl) => {
+  const handleAPPPrint = (it, printUrl?) => {
     closePrintList();
 
     // 单条打印全走APP原生逻辑

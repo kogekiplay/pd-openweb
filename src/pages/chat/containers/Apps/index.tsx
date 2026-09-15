@@ -9,6 +9,7 @@ import { Icon, LoadDiv, SvgIcon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import homeAppApi from 'src/api/homeApp';
 import { getAppNavigateUrl, transferExternalLinkUrl } from 'src/pages/AppHomepage/AppCenter/utils';
+import type { RootState } from 'src/redux/types';
 import { navigateTo } from 'src/router/navigateTo';
 import { emitter } from 'src/utils/common';
 import { addBehaviorLog, getCurrentProject } from 'src/utils/project';
@@ -184,7 +185,7 @@ const Apps = props => {
               <Popover
                 title={null}
                 placement="leftBottom"
-                classNames={{ root: "userConfigPopover" }}
+                classNames={{ root: 'userConfigPopover' }}
                 styles={{ root: { padding: 0 } }}
                 content={
                   <PopoverWrap
@@ -226,7 +227,7 @@ const Apps = props => {
 };
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     appId: state.appPkg.id,
     toolbarConfig: state.chat.toolbarConfig,
   }),

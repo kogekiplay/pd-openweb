@@ -6,7 +6,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAPIUrl: function (args, options = {}) {
+  getAPIUrl: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Private', 'GetAPIUrl', args, options);
   },
   /**
@@ -16,7 +16,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAPIInfo: function (args, options = {}) {
+  getAPIInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('Private', 'GetAPIInfo', args, options);
   },

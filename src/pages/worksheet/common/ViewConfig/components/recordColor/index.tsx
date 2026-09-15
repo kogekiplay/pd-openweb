@@ -9,6 +9,7 @@ import Checkbox from 'src/components/Form/DesktopForm/widgets/Checkbox';
 import { getIconByType } from 'src/pages/widgetConfig/util';
 import { SwitchStyle } from 'src/pages/worksheet/common/ViewConfig/components/style.jsx';
 import AddCondition from 'src/pages/worksheet/common/WorkSheetFilter/components/AddCondition';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrap = styled.div`
   .line {
@@ -111,7 +112,7 @@ const SelectedControlCon = styled.div`
   }
 `;
 
-function typesInclude(types = [], control = {}) {
+function typesInclude(types: number[] = [], control = {}) {
   return _.includes(types, control.type) || (control.type === 30 && _.includes(types, control.sourceControlType));
 }
 
@@ -119,7 +120,7 @@ function SelectControl({ value, controls = [], onChange, onClear }) {
   const selectedControl = _.find(controls, { controlId: value });
   return (
     <AddCondition
-      columns={controls.filter(c => typesInclude([9, 11], c) && c.controlId.length === 24)}
+      columns={controls.filter((c: FormControl) => typesInclude([9, 11], c) && c.controlId.length === 24)}
       onAdd={onChange}
       style={{
         width: '440px',
@@ -233,7 +234,7 @@ SelectColorShowType.propTypes = {
 };
 
 function RecordColor(params) {
-  const { worksheetControls = [], view = {}, onChange } = params;
+  const { worksheetControls = [], view = {}, onChange }: { worksheetControls: FormControl[]; [key: string]: any } = params;
   const { advancedSetting = {} } = view;
   const { colorid, coloritems, colortype } = advancedSetting;
 
@@ -241,7 +242,7 @@ function RecordColor(params) {
     onChange(data);
   };
 
-  const filteredControls = worksheetControls.filter(c => typesInclude([9, 11], c));
+  const filteredControls = worksheetControls.filter((c: FormControl) => typesInclude([9, 11], c));
   const selectedControl = _.find(filteredControls, { controlId: colorid });
   return (
     <Con>
@@ -258,7 +259,7 @@ function RecordColor(params) {
           </div>
           <SelectControl
             value={colorid}
-            controls={worksheetControls.filter(c => typesInclude([9, 10, 11], c) && c.controlId.length === 24)}
+            controls={worksheetControls.filter((c: FormControl) => typesInclude([9, 10, 11], c) && c.controlId.length === 24)}
             onChange={newSelectedControl => {
               updateAdvancedSetting({
                 colorid: newSelectedControl.controlId,
@@ -327,7 +328,7 @@ function RecordColor(params) {
         </div>
       ) : (
         <AddCondition
-          columns={worksheetControls.filter(c => typesInclude([9, 11], c) && c.controlId.length === 24)}
+          columns={worksheetControls.filter((c: FormControl) => typesInclude([9, 11], c) && c.controlId.length === 24)}
           onAdd={newSelectedControl => {
             updateAdvancedSetting({
               colorid: newSelectedControl.controlId,

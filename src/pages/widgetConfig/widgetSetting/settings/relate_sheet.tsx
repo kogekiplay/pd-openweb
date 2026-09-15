@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import update from 'immutability-helper';
@@ -30,6 +30,7 @@ import RelateDetailInfo from '../components/RelateDetailInfo';
 import ConfigRelate from '../components/relateSheet/ConfigRelate';
 import openSelectConfig from '../components/relateSheet/selectConfig';
 import WidgetVerify from '../components/WidgetVerify';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const DISPLAY_COUNT = [
   { text: _l('单条'), value: 1 },
@@ -128,7 +129,7 @@ export default function RelateSheet(props) {
     coverCid,
     advancedSetting = {},
     enumDefault2 = 1,
-  } = data;
+  }: { relationControls: FormControl[]; [key: string]: any } = data;
   let {
     showtype = '3',
     allowlink,
@@ -155,7 +156,7 @@ export default function RelateSheet(props) {
 
   const isRelateView = Boolean(viewId);
 
-  const isSheetDisplay = value => {
+  const isSheetDisplay = (value?) => {
     return _.includes(['2', '5', '6'], value || showtype);
   };
 
@@ -244,7 +245,7 @@ export default function RelateSheet(props) {
     }
   }, [scancontrol, scanlink]);
 
-  const getShowControls = (controls, showType) => {
+  const getShowControls = (controls, showType?) => {
     if (_.isUndefined(showControls) || _.isEmpty(showControls)) return [];
     // 删除掉showControls 中已经被删掉的控件
     return showControls.filter(i => {
@@ -256,7 +257,7 @@ export default function RelateSheet(props) {
   };
 
   // 显示字段
-  const renderShowControl = (isExtra, hideTitle) => {
+  const renderShowControl = (isExtra, hideTitle?) => {
     const coverId = isExtra ? choosecoverid : coverCid;
 
     const renderCover = () => {

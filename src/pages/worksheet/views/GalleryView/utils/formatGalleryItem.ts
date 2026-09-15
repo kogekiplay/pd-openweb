@@ -5,15 +5,16 @@ import { getAdvanceSetting } from 'src/utils/control';
 import { getRecordColorConfig } from 'src/utils/record';
 import { getRecordAttachments } from '../../util';
 import { getDataWithFormat } from '../util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 // 将接口行数据整理成 EditableCard 需要的卡片数据结构。
 export const formatGalleryItem = (item, props, currentView) => {
-  const { worksheetInfo, base = {}, controls = [] } = props;
+  const { worksheetInfo, base = {}, controls = [] }: { controls: FormControl[]; [key: string]: any } = props;
   const { coverCid } = currentView;
   const { abstract = '' } = getAdvanceSetting(currentView);
-  const formData = controls.map(o => ({ ...o, value: item[o.controlId] }));
+  const formData = controls.map((o: FormControl) => ({ ...o, value: item[o.controlId] }));
   const { coverImage, allAttachments } = getRecordAttachments(item[coverCid]);
-  let coverData = { ...(controls.find(it => it.controlId === coverCid) || {}), value: item[coverCid] };
+  let coverData = { ...(controls.find((it: FormControl) => it.controlId === coverCid) || {}), value: item[coverCid] };
 
   // 嵌入控件被配置为封面时，需按当前记录上下文解析出实际展示地址。
   if (coverData.type === 45) {
@@ -36,7 +37,7 @@ export const formatGalleryItem = (item, props, currentView) => {
     coverData = { ...coverData, value: urlList.join('') };
   }
 
-  const abstractData = controls.find(it => it.controlId === abstract) || {};
+  const abstractData = controls.find((it: FormControl) => it.controlId === abstract) || {};
 
   return {
     coverData,
@@ -55,11 +56,11 @@ export const formatGalleryItem = (item, props, currentView) => {
 
 // 为卡片的移动分组操作准备可选分组和分组控件信息。
 export const getGalleryItemGroupInfo = (item, rowKey, props, currentView) => {
-  const { controls = [], galleryview = {} } = props;
+  const { controls = [], galleryview = {} }: { controls: FormControl[]; [key: string]: any } = props;
   const { gallery = [] } = galleryview;
   const { groupsetting } = getAdvanceSetting(currentView);
   const groupControlId = _.get(safeParse(groupsetting, 'array'), '[0].controlId');
-  const groupControl = groupsetting && item.allowedit ? controls.find(o => o.controlId === groupControlId) : null;
+  const groupControl = groupsetting && item.allowedit ? controls.find((o: FormControl) => o.controlId === groupControlId) : null;
 
   if (!groupControl) return {};
 

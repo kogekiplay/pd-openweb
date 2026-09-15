@@ -52,7 +52,7 @@ export default class SyncDialog extends Component<any, any> {
     }
   }
 
-  getBindList = params => {
+  getBindList = (params?) => {
     const { integrationType } = this.props;
     const { pageIndex = 1, pageSize = 20, platformKeyword, workwxKeyword } = params || {};
 

@@ -10,6 +10,7 @@ import Textarea from 'ming-ui/components/Textarea';
 import { dialogSelectUser, quickSelectUser } from 'ming-ui/functions';
 import UploadFiles from 'src/components/UploadFiles';
 import UploadFilesTrigger from 'src/components/UploadFilesTrigger';
+import type { RootState } from 'src/redux/types';
 import { navigateTo } from 'src/router/navigateTo';
 import { htmlDecodeReg } from 'src/utils/common';
 import config, { OPEN_TYPE, RELATION_TYPES } from '../../../config/config';
@@ -484,7 +485,7 @@ class TaskBasic extends Component<any, any> {
   /**
    * 成员 op操作
    */
-  clickMemberFn = (clickOp, account) => {
+  clickMemberFn = (clickOp: string, account) => {
     const { taskId, removeTaskMember } = this.props;
     const user = {
       accountId: account.accountID,
@@ -786,4 +787,4 @@ class TaskBasic extends Component<any, any> {
   }
 }
 
-export default connect(state => state.task)(TaskBasic);
+export default connect((state: RootState) => state.task)(TaskBasic);

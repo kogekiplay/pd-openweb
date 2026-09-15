@@ -96,7 +96,7 @@ export default function HomeSetting(props) {
   const { setting = {}, onUpdate = _.noop } = props;
   const [customDrawerVisible, setCustomDrawerVisible] = useState(false);
 
-  function handleUpdate(key, value) {
+  function handleUpdate(key: string, value: boolean | number) {
     onUpdate({ ...setting, [key]: value });
   }
 
@@ -112,7 +112,7 @@ export default function HomeSetting(props) {
         width={360}
         title={_l('自定义')}
         placement="right"
-        visible={customDrawerVisible}
+        open={customDrawerVisible}
         closeIcon={<i className="icon-close Font20" />}
         onClose={() => setCustomDrawerVisible(false)}
       >

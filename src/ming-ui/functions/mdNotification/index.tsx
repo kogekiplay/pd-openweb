@@ -34,7 +34,7 @@ export function renderBtnList(list) {
   );
 }
 
-function notify(type = 'success', content) {
+function notify(type = 'success', content?) {
   let message = '';
   let description = '';
   let btnList = [];

@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider, useDrop } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useSetState } from 'react-use';
 import domtoimage from 'dom-to-image';
 import { saveAs } from 'file-saver';
@@ -17,6 +17,7 @@ import * as hierarchyActions from 'worksheet/redux/actions/hierarchy';
 import * as viewActions from 'worksheet/redux/actions/index';
 import { getDynamicValue } from 'src/components/Form/core/formUtils';
 import { getCoverStyle } from 'src/pages/worksheet/common/ViewConfig/utils';
+import type { RootState } from 'src/redux/types';
 import { browserIsMobile } from 'src/utils/common';
 import { emitter } from 'src/utils/common';
 import {
@@ -35,6 +36,7 @@ import ToolBar from '../HierarchyView/ToolBar';
 import { hierarchyViewCanSelectFields } from '../HierarchyView/util';
 import { getSearchData, isAllowQuickSwitch, isDisabledCreate, isTextTitle } from '../util';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const RecordStructureWrap = styled.div`
   padding-left: 48px;
@@ -105,7 +107,7 @@ function HierarchyMix(props) {
     recordInfoId,
     navGroupFilters,
     ...rest
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const IS_MOBILE = browserIsMobile();
   const uniqId = useMemo(() => uuidv4());
   const { scale: configScale, level: configLevel = '' } = safeParse(localStorage.getItem(`hierarchyConfig-${viewId}`));
@@ -266,7 +268,7 @@ function HierarchyMix(props) {
           getTemplate: true,
         })
         .then(res => {
-          const allControls = _.get(res, 'template.controls') || [];
+          const allControls: FormControl[] = _.get(res, 'template.controls') || [];
           updateWorksheetControls(allControls);
           updateWorksheetInfo(res);
         });
@@ -618,7 +620,12 @@ function HierarchyMix(props) {
   };
 
   return (
-    <div ref={el => { drop(el); }} className="structureViewWrap">
+    <div
+      ref={el => {
+        drop(el);
+      }}
+      className="structureViewWrap"
+    >
       <DragLayer
         scale={scale}
         treeData={hierarchyViewData}
@@ -658,7 +665,7 @@ function HierarchyMix(props) {
 }
 
 const ConnectedHierarchyMixView = connect(
-  state => ({
+  (state: RootState) => ({
     ..._.pick(state.sheet, [
       'worksheetInfo',
       'filters',

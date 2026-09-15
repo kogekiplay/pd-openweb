@@ -145,7 +145,7 @@ class SelectIntegrationApi extends Component<any, any> {
     }
   };
 
-  renderSearch(type) {
+  renderSearch(type: string) {
     const keyName = type === 'link' ? 'keyword' : 'apiKeyword';
     const pageIndex = type === 'link' ? { pageIndex: 1, pageApiIndex: 1 } : { pageApiIndex: 1 };
 

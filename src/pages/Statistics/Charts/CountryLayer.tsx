@@ -12,6 +12,7 @@ import reportRequestAjax from '../api/report';
 import { formatSummaryName } from 'statistics/common/reportDataUtils';
 import { countryLayerCodeMap } from 'statistics/enum';
 import * as actions from 'statistics/redux/actions';
+import type { RootState } from 'src/redux/types';
 import { version } from '../common/reportConfigUtils';
 import { fillValueMap } from '../common/reportDataUtils';
 import { formatrChartValue, formatYaxisList, getChartColors, getControlMinAndMax, getStyleColor } from './common';
@@ -180,7 +181,7 @@ export class CountryLayer extends Component<any, any> {
       }
     });
   };
-  resetChart = props => {
+  resetChart = (props?) => {
     this.CountryLayerChart && this.CountryLayerChart.destroy();
     this.renderChart(props || this.props);
     this.setState({ path: [] });
@@ -802,7 +803,7 @@ export class CountryLayer extends Component<any, any> {
 }
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     base: state.statistics.base,
   }),
   dispatch => bindActionCreators(actions, dispatch),

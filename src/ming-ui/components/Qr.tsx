@@ -4,7 +4,7 @@ import genQr from 'src/pages/worksheet/common/PrintQrBarCode/genQrDataurl';
 
 export default function Qr(props) {
   const { content, width = 100, height = 100, gap = 0, correctLevel } = props;
-  const [url, setUrl] = useState();
+  const [url, setUrl] = useState<string | undefined>();
   useEffect(() => {
     const data = genQr({
       value: String(content),

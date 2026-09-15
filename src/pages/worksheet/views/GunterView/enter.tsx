@@ -8,10 +8,12 @@ import SelectFieldForStartOrEnd from 'worksheet/views/components/SelectFieldForS
 import { isIllegal } from 'src/pages/worksheet/views/CalendarView/util';
 import { setSysWorkflowTimeControlFormat } from 'src/pages/worksheet/views/CalendarView/util.js';
 import { getControlsForGunter, isGunterGroupMultiSelectControl } from 'src/pages/worksheet/views/GunterView/util.js';
+import type { RootState } from 'src/redux/types';
 import { getAdvanceSetting } from 'src/utils/control';
 import SelectField from '../components/SelectField';
 import UnNormal from '../components/UnNormal';
 import Gunter from './index.jsx';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrap = styled.div`
   width: 100%;
@@ -36,7 +38,7 @@ let GunterEnter = class GunterEnter extends Component<any, any> {
       setViewConfigVisible,
     } = this.props;
     const { begindate = '', enddate = '' } = getAdvanceSetting(view);
-    const groupControl = controls.find(item => item.controlId === view.viewControl);
+    const groupControl = controls.find((item: FormControl) => item.controlId === view.viewControl);
     let timeControls = getControlsForGunter(controls);
     timeControls = setSysWorkflowTimeControlFormat(timeControls, sheetSwitchPermit);
     const timeControlsIds = timeControls.map(o => o.controlId);
@@ -53,8 +55,8 @@ let GunterEnter = class GunterEnter extends Component<any, any> {
       !begindate ||
       !enddate ||
       isDeleteEnd ||
-      isIllegal(controls.find(item => item.controlId === begindate) || {}) ||
-      isIllegal(controls.find(item => item.controlId === enddate) || {})
+      isIllegal(controls.find((item: FormControl) => item.controlId === begindate) || {}) ||
+      isIllegal(controls.find((item: FormControl) => item.controlId === enddate) || {})
     ) {
       return (
         <Wrap>
@@ -126,7 +128,7 @@ let GunterEnter = class GunterEnter extends Component<any, any> {
   }
 };
 GunterEnter = connect(
-  state => ({ ...state.sheet }),
+  (state: RootState) => ({ ...state.sheet }),
   dispatch =>
     bindActionCreators(
       {

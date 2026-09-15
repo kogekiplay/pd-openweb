@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { NAVSHOW_TYPE } from 'src/pages/worksheet/common/ViewConfig/components/navGroup/util';
 import NavShow from './navGroup/NavShow';
 import NavSort from './NavSort';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrap = styled.div`
   .Dropdown {
@@ -27,7 +28,7 @@ export default function NavSet(props) {
     canShowNull,
     forBoard,
     hideSort,
-  } = props;
+  }: { worksheetControls: FormControl[]; [key: string]: any } = props;
   const { advancedSetting = {} } = view;
   const type = viewControlData.type === 30 ? viewControlData.sourceControlType : viewControlData.type;
   const { navshow = [26, 27, 48].includes(type) ? '1' : '0', navfilters = '[]' } = advancedSetting;

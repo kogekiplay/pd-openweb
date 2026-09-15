@@ -53,6 +53,7 @@ import {
   getTableConfig,
   getTitleControl,
 } from './util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   padding: 0 24px;
@@ -599,7 +600,7 @@ export default function SelectDialog({ ...args }) {
                   : {},
               defaultRelatedSheet,
               // 新建时新增的选项需要同步出去，否则列表和关联记录卡片里该选项字段匹配不到选项、显示为空
-              updateWorksheetControls: (newControls = []) => {
+              updateWorksheetControls: (newControls: FormControl[] = []) => {
                 setNewOptionControls(prev =>
                   prev.filter(c => !find(newControls, { controlId: c.controlId })).concat(newControls),
                 );

@@ -4,10 +4,10 @@ import { bindActionCreators } from 'redux';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { TinyColor } from '@ctrl/tinycolor';
+import Trigger from '@rc-component/trigger';
 import homeAppApi from 'api/homeApp';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, Menu, MenuItem, ScrollView, Skeleton, SvgIcon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -23,6 +23,7 @@ import {
   getSheetList,
   updateALLSheetList,
 } from 'worksheet/redux/actions/sheetList';
+import type { RootState } from 'src/redux/types';
 import { getTranslateInfo } from 'src/utils/app';
 import { getAppFeaturesVisible } from 'src/utils/common';
 import { findSheet } from 'src/utils/worksheet';
@@ -633,7 +634,7 @@ export const getAppSectionData = appSectionId => {
 };
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     appSectionDetail: state.sheetList.appSectionDetail,
     appStatus: state.appPkg.appStatus,
   }),

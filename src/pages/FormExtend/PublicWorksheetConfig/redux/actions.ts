@@ -2,6 +2,8 @@ import _ from 'lodash';
 import formAjax from 'src/api/form';
 import publicWorksheetAjax from 'src/api/publicWorksheet';
 import { getDisabledControls, getNewControlColRow } from '../../utils';
+import type { AppDispatch, GetState } from 'src/redux/types';
+import type { FormControl } from 'src/utils/controlTypes';
 
 function changeKeyToServer(value) {
   if (!_.isUndefined(value.coverUrl)) {
@@ -24,7 +26,7 @@ function changeKeyToServer(value) {
 
 export const updateSettings =
   (value, cb = () => {}) =>
-  (dispatch, getState) => {
+  (dispatch: AppDispatch, getState: GetState) => {
     const {
       publicWorksheet: {
         worksheetInfo: { worksheetId, projectId },
@@ -48,7 +50,7 @@ export const updateSettings =
       });
   };
 
-function updateBaseConfig(dispatch, getState, value, cb) {
+function updateBaseConfig(dispatch, getState, value, cb?) {
   const {
     publicWorksheet: {
       worksheetInfo: { worksheetId, projectId },
@@ -75,7 +77,7 @@ function updateBaseConfig(dispatch, getState, value, cb) {
 }
 
 export function refreshShareUrl() {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const {
       publicWorksheet: {
         worksheetInfo: { worksheetId },
@@ -89,7 +91,7 @@ export function refreshShareUrl() {
 }
 
 export function addWorksheetControl(controlName, cb = () => {}) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const state = getState();
 
     if (state.publicWorksheet.originalControls.length + 1 > 200) {
@@ -197,7 +199,7 @@ export function loadPublicWorksheet({ worksheetId }) {
 
 export const changeControls =
   (controls, isSave = true) =>
-  (dispatch, getState) => {
+  (dispatch: AppDispatch, getState: GetState) => {
     dispatch({ type: 'PUBLICWORKSHEET_UPDATE_CONTROLS', controls });
     isSave &&
       updateBaseConfig(dispatch, getState, {
@@ -205,14 +207,14 @@ export const changeControls =
       });
   };
 
-export const updateWorksheetInfo = value => (dispatch, getState) => {
+export const updateWorksheetInfo = value => (dispatch: AppDispatch, getState: GetState) => {
   dispatch({ type: 'PUBLICWORKSHEET_UPDATE_INFO', value });
   updateBaseConfig(dispatch, getState, value);
 };
 
 export const updateWorksheetVisibleType =
   (value, cb = () => {}) =>
-  (dispatch, getState) => {
+  (dispatch: AppDispatch, getState: GetState) => {
     updateBaseConfig(dispatch, getState, { visibleType: value }, worksheetId => {
       cb();
       if (value === 1) {
@@ -223,7 +225,7 @@ export const updateWorksheetVisibleType =
     });
   };
 
-export const hideControl = controlId => (dispatch, getState) => {
+export const hideControl = controlId => (dispatch: AppDispatch, getState: GetState) => {
   const {
     publicWorksheet: { hidedControlIds, controls, worksheetSettings, originalControls },
   } = getState();
@@ -231,7 +233,7 @@ export const hideControl = controlId => (dispatch, getState) => {
   //每次更改字段显隐时，需要将禁用的字段隐藏
   const disabledControlIds = getDisabledControls(originalControls, worksheetSettings);
   const newHidedControlIds = _.uniqBy(hidedControlIds.concat(controlId).concat(disabledControlIds));
-  const newControls = controls.filter(item => !_.includes(newHidedControlIds, item.controlId));
+  const newControls: FormControl[] = controls.filter(item => !_.includes(newHidedControlIds, item.controlId));
 
   updateBaseConfig(dispatch, getState, { hidedControlIds: newHidedControlIds, controls: newControls });
   dispatch({ type: 'WORKSHEET_HIDE_CONTROL', controlId });
@@ -239,7 +241,7 @@ export const hideControl = controlId => (dispatch, getState) => {
 };
 
 export function showControl(showControls = []) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const state = getState();
     const {
       publicWorksheet: { controls, hidedControlIds, originalControls, worksheetSettings },
@@ -247,7 +249,7 @@ export function showControl(showControls = []) {
 
     const newShowControls = showControls.reduce((acc, control) => {
       // 将原始 controls 和已经处理过的控件合并，用于计算新控件位置
-      const currentControls = controls.concat(acc);
+      const currentControls: FormControl[] = controls.concat(acc);
       const rowCol = getNewControlColRow(currentControls, control.half);
       return acc.concat({ ...control, col: rowCol.col, row: rowCol.row });
     }, []);
@@ -257,7 +259,7 @@ export function showControl(showControls = []) {
     const newHidedControlIds = _.uniqBy(
       hidedControlIds.concat(disabledControlIds).filter(controlId => !_.find(newShowControls, { controlId })),
     );
-    const newControls = controls.concat(
+    const newControls: FormControl[] = controls.concat(
       newShowControls.map(control => _.pick(control, ['controlId', 'col', 'row', 'size'])),
     );
 
@@ -275,7 +277,7 @@ export function showControl(showControls = []) {
 }
 
 export function resetControls() {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const {
       publicWorksheet: {
         worksheetInfo: { worksheetId },

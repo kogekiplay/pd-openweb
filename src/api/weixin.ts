@@ -6,7 +6,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWeiXinServiceNumberQRCode: function (args, options = {}) {
+  getWeiXinServiceNumberQRCode: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Weixin', 'GetWeiXinServiceNumberQRCode', args, options);
   },
   /**
@@ -16,7 +16,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  checkWeiXinServiceNumberBind: function (args, options = {}) {
+  checkWeiXinServiceNumberBind: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Weixin', 'CheckWeiXinServiceNumberBind', args, options);
   },
   /**
@@ -29,7 +29,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getWeiXinConfig: function (args, options = {}) {
+  getWeiXinConfig: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Weixin', 'GetWeiXinConfig', args, options);
   },
 };

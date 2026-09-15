@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Drawer } from 'antd';
-import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
+import _ from 'lodash';
 import styled from 'styled-components';
 import { Icon, UpgradeIcon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -79,7 +79,7 @@ export default function ManageBackupFiles(props) {
   const [backupInfo, setBackupInfo] = useState({ isLoading: false, fileList: [], pageIndex: 1 });
   const [backupTask, setBackupTask] = useState({});
   const [popupVisible, setPopupVisible] = useState(false);
-  const [backupTaskText, setBackupTaskText] = useState();
+  const [backupTaskText, setBackupTaskText] = useState<string | undefined>();
   const { isLoading, fileList } = backupInfo;
   const featureType = getFeatureStatus(projectId, VersionProductType.regularBackup);
 
@@ -322,7 +322,7 @@ export default function ManageBackupFiles(props) {
         <DrawerWrap
           title={_l('操作日志')}
           onClose={() => setShowLog(false)}
-          visible={showLog}
+          open={showLog}
           headerStyle={{ display: 'none' }}
         >
           <ActionLogs projectId={projectId} appId={appId} onClose={() => setShowLog(false)} />

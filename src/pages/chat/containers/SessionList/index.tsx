@@ -9,6 +9,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import ClickAway from 'ming-ui/components/ClickAway';
 import LoadDiv from 'ming-ui/components/LoadDiv';
 import GroupController from 'src/api/group';
+import type { RootState } from 'src/redux/types';
 import { getRequest, pathCompletion } from 'src/utils/common';
 import SessionItem from '../../components/SessionItem';
 import * as actions from '../../redux/actions';
@@ -59,7 +60,7 @@ class ContextMenu extends Component<any, any> {
   }
 }
 
-const getOffsetData = function (rootW, rootH, nativeEvent) {
+const getOffsetData = function (rootW: number, rootH: number, nativeEvent) {
   const { clientX, clientY } = nativeEvent;
   const screenW = window.innerWidth;
   const screenH = window.innerHeight;
@@ -729,7 +730,7 @@ class SessionList extends Component<any, any> {
   }
 }
 
-export default connect(state => {
+export default connect((state: RootState) => {
   const { currentSession, currentSessionList, sessionList, socketState, toolbarConfig } = state.chat;
   return {
     currentSession,

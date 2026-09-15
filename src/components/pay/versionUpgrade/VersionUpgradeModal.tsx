@@ -195,7 +195,7 @@ export default function VersionUpgrade(props) {
     }
   };
 
-  const onPurchase = v => {
+  const onPurchase = (v?) => {
     if ((!type && hasUpgraded(v)) || showOffLine) {
       return;
     }

@@ -1,4 +1,4 @@
-﻿import { Parser } from 'hot-formula-parser';
+import { Parser } from 'hot-formula-parser';
 import _ from 'lodash';
 import moment from 'moment';
 import { telIsValidNumber } from 'ming-ui/components/PhoneNumberInput/util';
@@ -38,8 +38,15 @@ import {
   replaceStr,
   validateIdCardBirthDate,
 } from './helper';
+import type { FormRule } from '../types';
+import type { ControlValue, FormControl } from 'src/utils/controlTypes';
 
-export const checkValueByFilterRegex = (data = {}, name, formData, recordId) => {
+export const checkValueByFilterRegex = (
+  data: FormControl = {},
+  name?: string,
+  formData?: FormControl[],
+  recordId?: string,
+) => {
   const filterRegex = safeParse(_.get(data, 'advancedSetting.filterregex') || '[]');
 
   if (filterRegex.length) {
@@ -298,6 +305,11 @@ export const formatSearchResultValue = ({
   currentControl = {},
   controls = [],
   searchResult = '',
+}: {
+  targetControl?: FormControl;
+  currentControl?: FormControl;
+  controls?: FormControl[];
+  searchResult?: ControlValue;
 }) => {
   if (_.includes([9, 10, 11], currentControl.type)) {
     return getControlValue(controls, currentControl, targetControl.controlId, searchResult);
@@ -397,7 +409,8 @@ const parseStaticValue = (item, staticValue) => {
 };
 
 // 获取动态默认值
-export const getDynamicValue = (data, currentItem, masterData, embedData) => {
+// embedData 标可选：多数调用点只传前三个参数，不标会报 TS2554。
+export const getDynamicValue = (data, currentItem, masterData?, embedData?) => {
   if (currentItem.isQueryWorksheetFill && !checkCellIsEmpty(currentItem.value)) {
     return currentItem.value;
   }
@@ -610,7 +623,20 @@ export const getDynamicValue = (data, currentItem, masterData, embedData) => {
 };
 
 // 处理公式
-export const parseNewFormula = (data, currentItem = {}) => {
+/**
+ * parseNewFormula 的结果。
+ * 两个 return 分支只会给出 columnIsUndefined 或 result 之一，
+ * 但调用点普遍还会读 .error —— 那个键【从来没有被赋过值】，读到的永远是 undefined。
+ * 这里如实列出来，是为了让"它一直是 undefined"这件事可被看见，而不是被类型掩盖。
+ */
+interface FormulaResult {
+  columnIsUndefined?: boolean;
+  result?: number | null;
+  /** 历史遗留键：没有任何地方给它赋值 */
+  error?: unknown;
+}
+
+export const parseNewFormula = (data: FormControl[], currentItem: FormControl = {}): FormulaResult => {
   const { dot = 2 } = currentItem;
   const nullzero = _.includes([2, 3, 6], currentItem.enumDefault)
     ? '1'
@@ -618,7 +644,7 @@ export const parseNewFormula = (data, currentItem = {}) => {
   const isPercent = _.get(currentItem, 'advancedSetting.numshow') === '1';
   let columnIsUndefined;
 
-  const formulaStr = currentItem.dataSource
+  const formulaStr = String(currentItem.dataSource)
     .replace(/cSUM/gi, 'SUM')
     .replace(/cAVG/gi, 'AVERAGE')
     .replace(/cMIN/gi, 'MIN')
@@ -697,7 +723,9 @@ export const parseNewFormula = (data, currentItem = {}) => {
 };
 
 // 函数处理
-export function calcDefaultValueFunction({ formData, fnControl, forceSyncRun }) {
+// forceSyncRun 标可选：调用点（DataFormat 的默认值计算）不传它，
+// 不标的话解构参数默认是必填，报 TS2345。
+export function calcDefaultValueFunction({ formData, fnControl, forceSyncRun = false }) {
   let expression = _.get(safeParse(fnControl.advancedSetting.defaultfunc), 'expression');
 
   if (!expression) {
@@ -722,7 +750,7 @@ export function asyncUpdateMdFunction({ formData, fnControl, update }) {
 }
 
 // 嵌入字段处理
-export const parseValueIframe = (data, currentItem, masterData, embedData) => {
+export const parseValueIframe = (data: FormControl[], currentItem: FormControl, masterData, embedData) => {
   return getDynamicValue(
     data,
     {
@@ -740,10 +768,11 @@ export const parseValueIframe = (data, currentItem, masterData, embedData) => {
 /**
  * ignoreAddZero 不走补零逻辑
  */
-export function handleDotAndRound(currentItem, value, ignoreAddZero = true) {
-  const isNegative = value < 0;
-  value = Math.abs(value);
-  const roundType = currentItem.advancedSetting.roundtype || (_.includes([6, 8, 31, 37], currentItem.type) ? '2' : '0');
+export function handleDotAndRound(currentItem: FormControl, value: number | string, ignoreAddZero = true) {
+  const isNegative = Number(value) < 0;
+  value = Math.abs(Number(value));
+  const roundType =
+    currentItem.advancedSetting?.roundtype || (_.includes([6, 8, 31, 37], currentItem.type) ? '2' : '0');
   // 取整方式 空或者0 向下取整 1 向上取整 2 代表四舍五入
   let dot = Number(currentItem.dot);
 
@@ -773,7 +802,7 @@ export function handleDotAndRound(currentItem, value, ignoreAddZero = true) {
 
 // 处理日期公式
 export const parseDateFormula = (data, currentItem, recordCreateTime) => {
-  const getTime = (str, pos) => {
+  const getTime = (str, pos: string) => {
     if (str === '$ctime$') {
       return recordCreateTime || new Date();
     } else if (str === '$utime$') {
@@ -1030,7 +1059,21 @@ export const checkRequired = item => {
 };
 
 // 验证必填及格式
-export const onValidator = ({ item, data, masterData, ignoreRequired, verifyAllControls, appId }) => {
+export const onValidator = ({
+  item,
+  data,
+  masterData,
+  ignoreRequired,
+  verifyAllControls,
+  appId,
+}: {
+  item: FormControl;
+  data?: FormControl[];
+  masterData?: any;
+  ignoreRequired?: boolean;
+  verifyAllControls?: boolean;
+  appId?: string;
+}) => {
   let errorType = '';
   let errorText = '';
 
@@ -1126,7 +1169,7 @@ export const onValidator = ({ item, data, masterData, ignoreRequired, verifyAllC
               }
             }
 
-            if (allowweek.indexOf(mAppTime.day() === 0 ? '7' : mAppTime.day()) === -1 && !errorType) {
+            if (allowweek.indexOf(String(mAppTime.day() === 0 ? '7' : mAppTime.day())) === -1 && !errorType) {
               errorType = FORM_ERROR_TYPE.DATE;
             }
 
@@ -1259,7 +1302,9 @@ const getItemGroupFilters = (arrItem = {}, data = [], recordId, from) => {
       return (
         (recordId && id === 'rowid') ||
         _.includes(['currenttime', 'user-self'], id) ||
-        (da && controlState(da, from).visible & !da.hidden)
+        // 原来写的是按位 &（visible 当时是 any，TS 拦不住）。两个布尔做按位与，
+        // 真值结果和 && 完全一致，所以这是等价修正，不是行为变更。
+        (da && controlState(da, from).visible && !da.hidden)
       );
     });
   });
@@ -1267,7 +1312,7 @@ const getItemGroupFilters = (arrItem = {}, data = [], recordId, from) => {
 };
 
 //判断业务规则配置条件是否满足
-export const checkValueAvailable = (rule = {}, data = [], recordId, from) => {
+export const checkValueAvailable = (rule = {}, data = [], recordId, from?) => {
   let isAvailable = false;
   //不满足条件的id,过滤错误
   let filterControlIds = {};
@@ -1361,7 +1406,8 @@ export const checkAllValueAvailable = (rules = [], data = [], recordId, from) =>
 };
 
 // 业务规则后端校验
-export const getRuleErrorInfo = (rules = [], badData = []) => {
+// 两个 `= []` 不标类型会被推成 never[]，调用方传真实数组一律报 TS2345
+export const getRuleErrorInfo = (rules: any[] = [], badData: any[] = []) => {
   return badData
     .map(itemBadData => {
       const errorInfo = [];
@@ -1392,7 +1438,7 @@ export const getRuleErrorInfo = (rules = [], badData = []) => {
 };
 
 //判断所有业务规则是否有锁定状态
-export const checkRuleLocked = (rules = [], data = [], recordId) => {
+export const checkRuleLocked = (rules: FormRule[] = [], data: FormControl[] = [], recordId?: string) => {
   let isLocked = false;
   const { defaultRules = [] } = getAvailableFilters(rules, data, recordId);
 

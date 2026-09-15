@@ -660,7 +660,7 @@ export default function AppGrid(props) {
     }
   }, [groups]);
 
-  const onMarkGroup = (e, group) => {
+  const onMarkGroup = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, group) => {
     e.stopPropagation();
     actions.markGroup({
       id: group.id,

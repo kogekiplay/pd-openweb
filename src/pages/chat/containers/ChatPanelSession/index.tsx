@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import ErrorBoundary from 'ming-ui/components/ErrorBoundary';
 import { mdNotification } from 'ming-ui/functions';
 import userAJAX from 'src/api/user';
+import type { RootState } from 'src/redux/types';
 import { setCaretPosition } from 'src/utils/common';
 import CardToolbar from '../../components/CardToolbar';
 import MessageSendText from '../../components/MessageSendText';
@@ -518,7 +519,7 @@ class ChatPanelSession extends Component<any, any> {
   }
 }
 
-const ChatPanelSessionConnect = connect(state => {
+const ChatPanelSessionConnect = connect((state: RootState) => {
   const { currentSession, messages, referMessage, currentSessionList, isWindow, socketState } = state.chat;
 
   return {
@@ -546,7 +547,7 @@ class ChatPanelWrapper extends Component<any, any> {
   }
 }
 
-export default connect(state => {
+export default connect((state: RootState) => {
   const { currentSession } = state.chat;
   return {
     currentSession,

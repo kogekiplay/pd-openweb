@@ -1,4 +1,4 @@
-﻿import React, { Component } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import cx from 'classnames';
@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { Icon, VerifyPasswordConfirm } from 'ming-ui';
 import { captcha, dialogSelectDept } from 'ming-ui/functions';
 import importUser from 'src/api/importUser';
+import type { RootState } from 'src/redux/types';
 import { getCurrentProject } from 'src/utils/project';
 import Config from '../../../../../config';
 import { downloadFile } from '../../../../../util';
@@ -301,7 +302,7 @@ class ImportAndExport extends Component<any, any> {
 }
 
 export default connect(
-  state => {
+  (state: RootState) => {
     const { current } = state;
     const { projectId } = current;
     return {

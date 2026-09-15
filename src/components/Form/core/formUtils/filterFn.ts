@@ -1,4 +1,4 @@
-﻿import _ from 'lodash';
+import _ from 'lodash';
 import moment from 'moment';
 import {
   API_ENUM_TO_TYPE,
@@ -10,6 +10,7 @@ import {
 import { getConditionType, getTypeKey, redefineComplexControl } from 'src/pages/worksheet/common/WorkSheetFilter/util';
 import { accDiv, accMul } from 'src/utils/common';
 import { getDatePickerConfigs, isEmptyValue, toFixed } from 'src/utils/controlCommon';
+import type { ControlValue, FormControl, SelectedEntityValue } from 'src/utils/controlTypes';
 import { dateAppZoneToServerZone } from 'src/utils/project';
 import { filterEmptyChildTableRows } from 'src/utils/record';
 
@@ -35,7 +36,8 @@ const TIME_MODE_OPTIONS = {
 };
 
 const timeModeByDateRangeType = dateRangeType => {
-  let rangeTypes = {};
+  // 索引类型必须写出来：字面量 {} 会被推成 {}，rangeTypes[x] = y 与后面的取值都报错
+  const rangeTypes: Record<string, string> = {};
   _.keys(DATE_RANGE_TYPE).forEach(key => {
     rangeTypes[DATE_RANGE_TYPE[key]] = key.toLowerCase();
   });
@@ -43,14 +45,14 @@ const timeModeByDateRangeType = dateRangeType => {
 };
 
 // 时间格式化数值
-const formatFnTimeValue = (value, mode) => {
+const formatFnTimeValue = (value, mode: string) => {
   return moment(value).year()
     ? moment(moment(value).format(mode), mode).format(`YYYY-MM-DD ${mode}`)
     : moment(value, mode).format(`YYYY-MM-DD ${mode}`);
 };
 
 // 时间字段根据显示格式处理数据
-const getFormatMode = (control = {}, currentControl, type) => {
+const getFormatMode = (control: FormControl = {}, currentControl?: FormControl, type?: number) => {
   let mode = '';
   let curMode = '';
 
@@ -83,7 +85,7 @@ const getValueByDateRange = dateRange => {
   return value;
 };
 
-const dateFn = (filterData, value, isEQ, appTimeZone) => {
+const dateFn = (filterData, value, isEQ: boolean, appTimeZone) => {
   const { dateRange, dataType } = filterData;
   let result = true;
   let date = '';
@@ -166,7 +168,13 @@ const dateFn = (filterData, value, isEQ, appTimeZone) => {
   return isEQ ? result : !result;
 };
 
-const dayFn = (filterData = {}, value, isGT, currentControl = {}, appTimeZone) => {
+const dayFn = (
+  filterData: Record<string, ControlValue> = {},
+  value?: ControlValue,
+  isGT?: boolean,
+  currentControl: FormControl = {},
+  appTimeZone?: ControlValue,
+) => {
   let { dateRange, dynamicSource = [], dataType, dateRangeType, value: editValue } = filterData;
   const { type } = currentControl;
 
@@ -413,7 +421,7 @@ export default function filterFn({ filterData, originControl, data = [], recordI
       type: filterType,
     });
     const { showtype } = advancedSetting; // 1 卡片 2 列表 3 下拉
-    let currentControl = {};
+    let currentControl: FormControl = {};
 
     //是否多选
     if (dynamicSource.length > 0) {
@@ -521,7 +529,7 @@ export default function filterFn({ filterData, originControl, data = [], recordI
 
     // value精度处理(公式、汇总计算)
     // 邮箱value忽略大小写
-    function formatControlValue(v, con = {}) {
+    function formatControlValue(v, con: FormControl = {}) {
       if (
         (con.originType === 37 || con.type === 31 || (con.originType === 30 && con.sourceControltype === 37)) &&
         v &&
@@ -568,7 +576,7 @@ export default function filterFn({ filterData, originControl, data = [], recordI
             if (_.isEmpty(value) && _.isEmpty(compareValues)) return true;
 
             let isEQ = false;
-            _.map(compareValues, (it = {}) => {
+            _.map(compareValues, (it: SelectedEntityValue = {}) => {
               let user = safeParse(value || '[]');
               _.map(user, its => {
                 if (its.accountId === (it.id || it.accountId)) {
@@ -597,7 +605,7 @@ export default function filterFn({ filterData, originControl, data = [], recordI
               if (_.isEmpty(value) && _.isEmpty(compareValues)) return true;
 
               let isEQ = false;
-              _.map(compareValues, (it = {}) => {
+              _.map(compareValues, (it: SelectedEntityValue = {}) => {
                 let valueN = safeParse(value || '[]');
                 _.map(valueN, item => {
                   if ((it.departmentId || it.id) === item.departmentId) {
@@ -611,7 +619,7 @@ export default function filterFn({ filterData, originControl, data = [], recordI
               if (_.isEmpty(value) && _.isEmpty(compareValues)) return true;
 
               let isEQ = false;
-              _.map(compareValues, (it = {}) => {
+              _.map(compareValues, (it: SelectedEntityValue = {}) => {
                 let valueN = safeParse(value || '[]');
                 _.map(valueN, item => {
                   if ((it.organizeId || it.id) === item.organizeId) {
@@ -766,7 +774,7 @@ export default function filterFn({ filterData, originControl, data = [], recordI
             if (_.isEmpty(value) && _.isEmpty(compareValues)) return false;
 
             let isInValue = true;
-            _.map(compareValues, (it = {}) => {
+            _.map(compareValues, (it: SelectedEntityValue = {}) => {
               let user = safeParse(value || '[]');
               _.map(user, its => {
                 if (its.accountId === (it.id || it.accountId)) {
@@ -795,7 +803,7 @@ export default function filterFn({ filterData, originControl, data = [], recordI
               if (_.isEmpty(value) && _.isEmpty(compareValues)) return false;
 
               let isNE = true;
-              _.map(compareValues, (it = {}) => {
+              _.map(compareValues, (it: SelectedEntityValue = {}) => {
                 let valueN = safeParse(value || '[]');
                 _.map(valueN, item => {
                   if ((it.departmentId || it.id) === item.departmentId) {
@@ -809,7 +817,7 @@ export default function filterFn({ filterData, originControl, data = [], recordI
               if (_.isEmpty(value) && _.isEmpty(compareValues)) return false;
 
               let isNE = true;
-              _.map(compareValues, (it = {}) => {
+              _.map(compareValues, (it: SelectedEntityValue = {}) => {
                 let valueN = safeParse(value || '[]');
                 _.map(valueN, item => {
                   if ((it.organizeId || it.id) === item.organizeId) {
@@ -828,7 +836,7 @@ export default function filterFn({ filterData, originControl, data = [], recordI
 
               if (dataType === API_ENUM_TO_TYPE.OPTIONS_10) {
                 let isEQ = true;
-                _.map(compareValues, (it = {}) => {
+                _.map(compareValues, (it: SelectedEntityValue = {}) => {
                   let valueN = safeParse(value || '[]');
                   _.map(valueN, item => {
                     if (it === item) {
@@ -1395,7 +1403,7 @@ export default function filterFn({ filterData, originControl, data = [], recordI
             if (_.isEmpty(value) && _.isEmpty(compareValues)) return true;
 
             return _.isEqual(
-              compareValues.map((it = {}) => it.id || it.accountId).sort(),
+              compareValues.map((it: SelectedEntityValue = {}) => it.id || it.accountId).sort(),
               safeParse(value || '[]')
                 .map(its => its.accountId)
                 .sort(),
@@ -1406,7 +1414,7 @@ export default function filterFn({ filterData, originControl, data = [], recordI
               if (_.isEmpty(value) && _.isEmpty(compareValues)) return true;
 
               return _.isEqual(
-                compareValues.map((it = {}) => it.id || it.departmentId).sort(),
+                compareValues.map((it: SelectedEntityValue = {}) => it.id || it.departmentId).sort(),
                 safeParse(value || '[]')
                   .map(its => its.departmentId)
                   .sort(),
@@ -1416,7 +1424,7 @@ export default function filterFn({ filterData, originControl, data = [], recordI
               if (_.isEmpty(value) && _.isEmpty(compareValues)) return true;
 
               return _.isEqual(
-                compareValues.map((it = {}) => it.id || it.organizeId).sort(),
+                compareValues.map((it: SelectedEntityValue = {}) => it.id || it.organizeId).sort(),
                 safeParse(value || '[]')
                   .map(its => its.organizeId)
                   .sort(),
@@ -1455,7 +1463,7 @@ export default function filterFn({ filterData, originControl, data = [], recordI
             if (_.isEmpty(value) && _.isEmpty(compareValues)) return false;
 
             return !_.isEqual(
-              compareValues.map((it = {}) => it.id || it.accountId).sort(),
+              compareValues.map((it: SelectedEntityValue = {}) => it.id || it.accountId).sort(),
               safeParse(value || '[]', 'array')
                 .map(its => its.accountId)
                 .sort(),
@@ -1466,7 +1474,7 @@ export default function filterFn({ filterData, originControl, data = [], recordI
               if (_.isEmpty(value) && _.isEmpty(compareValues)) return false;
 
               return !_.isEqual(
-                compareValues.map((it = {}) => it.id || it.departmentId).sort(),
+                compareValues.map((it: SelectedEntityValue = {}) => it.id || it.departmentId).sort(),
                 safeParse(value || '[]', 'array')
                   .map(its => its.departmentId)
                   .sort(),
@@ -1476,7 +1484,7 @@ export default function filterFn({ filterData, originControl, data = [], recordI
               if (_.isEmpty(value) && _.isEmpty(compareValues)) return false;
 
               return !_.isEqual(
-                compareValues.map((it = {}) => it.id || it.organizeId).sort(),
+                compareValues.map((it: SelectedEntityValue = {}) => it.id || it.organizeId).sort(),
                 safeParse(value || '[]', 'array')
                   .map(its => its.organizeId)
                   .sort(),
@@ -1514,7 +1522,7 @@ export default function filterFn({ filterData, originControl, data = [], recordI
           case CONTROL_FILTER_WHITELIST.USERS.value: // ???
             if (_.isEmpty(value) && _.isEmpty(compareValues)) return false;
 
-            const userCompareArr = compareValues.map((it = {}) => it.id || it.accountId);
+            const userCompareArr = compareValues.map((it: SelectedEntityValue = {}) => it.id || it.accountId);
             const userArr = safeParse(value || '[]', 'array').map(it => it.accountId);
             return _.every(userCompareArr, its => _.includes(userArr, its));
           case CONTROL_FILTER_WHITELIST.OPTIONS.value:
@@ -1522,14 +1530,14 @@ export default function filterFn({ filterData, originControl, data = [], recordI
             if (dataType === API_ENUM_TO_TYPE.GROUP_PICKER) {
               if (_.isEmpty(value) && _.isEmpty(compareValues)) return false;
 
-              const deptCompareArr = compareValues.map((it = {}) => it.id || it.departmentId);
+              const deptCompareArr = compareValues.map((it: SelectedEntityValue = {}) => it.id || it.departmentId);
               const deptArr = safeParse(value || '[]', 'array').map(it => it.departmentId);
               return _.every(deptCompareArr, its => _.includes(deptArr, its));
               // 组织角色
             } else if (dataType === API_ENUM_TO_TYPE.ORG_ROLE) {
               if (_.isEmpty(value) && _.isEmpty(compareValues)) return false;
 
-              const orgCompareArr = compareValues.map((it = {}) => it.id || it.organizeId);
+              const orgCompareArr = compareValues.map((it: SelectedEntityValue = {}) => it.id || it.organizeId);
               const orgArr = safeParse(value || '[]', 'array').map(it => it.organizeId);
               return _.every(orgCompareArr, its => _.includes(orgArr, its));
               // 选项

@@ -97,7 +97,7 @@ export default class SourceDest extends Component<any, any> {
     }
   }
 
-  initData = async (nextProps, isNext) => {
+  initData = async (nextProps, isNext: boolean) => {
     const { currentProjectId: projectId, node = {} } = nextProps || this.props;
 
     if (schemaTypes.length <= 0) {
@@ -200,7 +200,7 @@ export default class SourceDest extends Component<any, any> {
     });
   };
   //表信息
-  getWorksheetInfo = (workSheetId, cb) => {
+  getWorksheetInfo = (workSheetId, cb?) => {
     homeAppAjax.getAppItemDetail([workSheetId]).then(res => {
       cb && cb(res[0]);
       this.setState({
@@ -295,7 +295,7 @@ export default class SourceDest extends Component<any, any> {
       this.getSheetListByAppId();
     }
   };
-  onChangeConfig = (options, cb, nextCb) => {
+  onChangeConfig = (options, cb, nextCb?) => {
     const { onUpdate, node = {} } = this.props;
     let config = {
       ...(_.get(node, 'nodeConfig.config') || {}),
@@ -368,7 +368,7 @@ export default class SourceDest extends Component<any, any> {
     return { idsMD, idsDB, dBs, sourceTables };
   };
 
-  filterSheet = (sheetList = [], withoutAdd) => {
+  filterSheet = (sheetList = [], withoutAdd?) => {
     const { node = {} } = this.props;
     const { dsType } = _.get(node, ['nodeConfig', 'config']) || {};
     const { idsMD, idsDB } = this.getAllSource();

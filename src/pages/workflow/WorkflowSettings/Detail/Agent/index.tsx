@@ -488,7 +488,7 @@ export default class Agent extends Component<any, any> {
   }
 
   // 渲染智能体信息
-  renderMessage(key) {
+  renderMessage(key: string) {
     const { flowInfo, workflowDetail, selectNodeId, isAIActions } = this.props;
     const { data } = this.state;
     const isFirstAgent =
@@ -638,7 +638,7 @@ export default class Agent extends Component<any, any> {
               <MORE_TOOLS_LIST>
                 {MORE_TOOLS.map((o, index) => {
                   const tool = AGENT_TOOLS[o.type];
-                  const getNewTool = (configs = [], name) => ({
+                  const getNewTool = (configs = [], name?) => ({
                     auto: !configs.length,
                     configs,
                     enabled: true,

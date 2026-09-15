@@ -10,7 +10,29 @@ import { FAST_GPT_CONFIG } from 'src/utils/enum';
 // 流式错误事件 → { errorMsg, sourceData }：优先取后端真实错误信息（兼容 ErrorMessage / errorMessage 大小写，
 // 与新版 Agent 的归一逻辑一致），取不到再退回「模型调用失败」。
 // error 为 useChat 透传的 message（旧 OpenAI 风格错误信息在 .message），eventData 为原始错误事件文本。
-export function resolveStreamError(error, eventData) {
+/**
+ * 流式对话出错时的统一错误形状。resolveStreamError 产出，各 bot 用 useState 持有，
+ * 再交给 ChatPanel 渲染错误条。
+ */
+export interface StreamError {
+  /** 给用户看的错误文案 */
+  errorMsg: string;
+  /** 原始 SSE 事件负载，排查时用 */
+  sourceData: string;
+}
+
+/**
+ * 流式对话进行中的状态提示。清空时各 bot 直接调 setLoadingStatus()（传 undefined），
+ * 所以两个字段都是可选的。
+ */
+export interface ChatLoadingStatus {
+  /** 状态文案，如「正在调用工具」 */
+  statusText?: string;
+  /** 触发来源，目前只有 TOOL */
+  type?: string;
+}
+
+export function resolveStreamError(error?: string, eventData?: string): StreamError {
   const data = safeParse(eventData, 'object') || {};
 
   return {

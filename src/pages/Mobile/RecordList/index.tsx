@@ -15,6 +15,7 @@ import { VIEW_DISPLAY_TYPE } from 'worksheet/constants/enum';
 import { addNewRecord } from 'src/pages/worksheet/redux/actions';
 import { updateHierarchyConfigLevel } from 'src/pages/worksheet/views';
 import { getShowViews } from 'src/pages/worksheet/views/util';
+import type { RootState } from 'src/redux/types';
 import { getRequest, pathCompletion } from 'src/utils/common';
 import { mdAppResponse } from 'src/utils/project';
 import withRouter from '../../../router/withRouter';
@@ -442,7 +443,7 @@ let RecordList = class RecordList extends Component<any, any> {
 };
 RecordList = withRouter(AppPermissions(RecordList));
 export default connect(
-  state => ({
+  (state: RootState) => ({
     ..._.pick(
       state.mobile,
       'base',

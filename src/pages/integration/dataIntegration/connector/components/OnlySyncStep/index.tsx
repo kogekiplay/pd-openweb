@@ -28,6 +28,22 @@ import {
 import LeftTableList from './LeftTableList';
 import SheetGroupSelect from './SheetGroupSelect';
 
+/** 左侧选中的源表标识。db/table 是库名与表名，schema 只有部分数据源有。 */
+interface SourceTableTab {
+  db?: string;
+  table?: string;
+  tableName?: string;
+  schema?: string;
+}
+
+/** 切换「新建表 / 选已有表」时重置的目标表配置。 */
+interface DestSheetInit {
+  sheetName?: string;
+  appSectionId?: string | null;
+  writeMode?: string;
+  isCleanDestTableData?: boolean;
+}
+
 const OnlySyncWrapper = styled.div`
   padding: 16px 24px;
   width: 100%;
@@ -107,7 +123,9 @@ const NoDataContent = styled.div`
 
 export default function OnlySyncStep(props) {
   const { onClose, source, dest, setSubmitData, currentProjectId } = props;
-  const [currentTab, setCurrentTab] = useState({});
+  // 必须显式给类型：useState({}) 会被推成 useState<{}>，
+  // 之后读 currentTab.db / .table 等一律报 TS2339（本文件因此有 158 条）。
+  const [currentTab, setCurrentTab] = useState<SourceTableTab>({});
   const [optionList, setOptionList] = useSetState({ dbOptionList: [], sheetOptionList: [] });
   const [sheetData, setSheetData] = useSetState({});
   const [sourceFields, setSourceFields] = useSetState({});
@@ -477,7 +495,7 @@ export default function OnlySyncStep(props) {
   };
 
   const onChangeSheetCreateType = async sheetCreateType => {
-    const initSheetData = {};
+    const initSheetData: DestSheetInit = {};
     const { sheetNameValue, writeNode } = _.get(sheetData, [currentTab.db, currentTab.table]);
 
     if (sheetCreateType === CREATE_TYPE.NEW) {

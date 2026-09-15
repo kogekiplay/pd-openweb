@@ -12,6 +12,7 @@ import { Icon } from 'ming-ui';
 import { RecordInfoModal } from 'mobile/Record';
 import * as actions from 'mobile/RecordList/redux/actions';
 import { RECORD_COLOR_SHOW_TYPE } from 'worksheet/constants/enum';
+import type { RootState } from 'src/redux/types';
 import { pathCompletion } from 'src/utils/common';
 import { getAdvanceSetting } from 'src/utils/control';
 import RegExpValidator from 'src/utils/expression';
@@ -472,7 +473,7 @@ const Calendar = memo(
 );
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     ..._.pick(state.mobile, [
       'base',
       'worksheetInfo',

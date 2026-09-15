@@ -10,6 +10,7 @@ import { emitter } from 'src/utils/common';
 import { formatAiGenControlValue } from 'src/utils/control';
 import { checkCellIsEmpty } from 'src/utils/control';
 import { parseStreamingJsonlData } from 'src/utils/sse';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   border-radius: 8px;
@@ -227,7 +228,7 @@ export default function MingoGeneratedWidgetsSelector({
   const disabled = !isLastAssistantMessage;
   // 使用 useMemo 缓存解析结果，避免重复解析
   const cache = useRef({});
-  const allControls = useMemo(() => {
+  const allControls: FormControl[] = useMemo(() => {
     if (!content) return [];
     return parseStreamingJsonlData(content, isStreaming);
   }, [content, isStreaming]);

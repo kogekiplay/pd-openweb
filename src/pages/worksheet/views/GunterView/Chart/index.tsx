@@ -7,12 +7,13 @@ import _ from 'lodash';
 import { Icon, Skeleton } from 'ming-ui';
 import useButtonStatusOfRows from 'worksheet/hooks/useButtonStatusOfRows';
 import * as actions from 'worksheet/redux/actions/gunterview';
-import IScroll from 'worksheet/views/GunterView/components/Iscroll';
+import GunterScroll from 'worksheet/views/GunterView/components/GunterScroll';
 import {
   isGroupingScrollLocked,
   setChartScrollLock,
   setGroupingScrollLock,
 } from 'worksheet/views/GunterView/scrollState';
+import type { RootState } from 'src/redux/types';
 import {
   filterButtonBySheetSwitchPermit,
   getSheetOperateButtonIds,
@@ -38,7 +39,7 @@ class GunterChart extends Component<any, any> {
   }
   componentDidMount() {
     const { isMobile } = this.props;
-    const scroll = new IScroll(this.$ref.current, {
+    const scroll = new GunterScroll(this.$ref.current, {
       scrollX: true,
       scrollY: true,
       mouseWheelScrollsHorizontally: false,
@@ -356,7 +357,7 @@ function GunterChartContainer(props) {
 }
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     gunterView: state.sheet.gunterView,
     base: state.sheet.base,
     worksheetInfo: state.sheet.worksheetInfo,

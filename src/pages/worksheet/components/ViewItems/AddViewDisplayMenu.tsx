@@ -1,7 +1,7 @@
 import React, { Component, lazy, Suspense } from 'react';
 import { shallowEqual } from 'react-redux';
-import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
+import _ from 'lodash';
 import styled from 'styled-components';
 import { Icon, LoadDiv, SvgIcon } from 'ming-ui';
 import pluginAjax from 'src/api/plugin';
@@ -162,6 +162,13 @@ const GuildWrap = styled.div`
     }
   }
   .rightCon {
+    /* 必须预留高度：里面的 Lottie 是 lazy() 懒加载的，外面包着
+       <Suspense fallback={null}>，所以首帧这一栏是空的 —— 弹层先以 36px 高度出现，
+       chunk 加载完（实测约 300ms）再突然撑到 270px，看起来就是"闪一下跳一下"，
+       而不是任何动画。预留之后首帧即最终尺寸，Lottie 到位后原地出现。
+       234px 是实测值：9 种视图类型的引导图尺寸完全一致（弹层 270 / 本栏 234 /
+       svg 235x171）。将来换引导图导致高度变化时，这个值要跟着改。 */
+    min-height: 234px;
     > div {
       text-align: center;
     }
@@ -278,7 +285,7 @@ export default class AddViewDisplayMenu extends Component<any, any> {
       retract: retract.includes(key) ? retract.filter(item => item !== key) : [...retract, key],
     });
   };
-  renderCon = (info, isDev) => {
+  renderCon = (info, isDev?) => {
     const { onClick } = this.props;
     return info.map(o => {
       const { icon, id, iconColor = 'var(--color-cyan-dark)', name, iconUrl } = o;
@@ -350,8 +357,13 @@ export default class AddViewDisplayMenu extends Component<any, any> {
                   </div>
                 </GuildWrap>
               }
-              // @rc-component/trigger 去掉了 popupTransitionName，动画改走 popupMotion。
-              popupMotion={{ motionName: 'Tooltip-move-top' }}
+              // 这里【不要】加 popupMotion。rc-trigger 5 时代写的是
+              // popupTransitionName="Tooltip-move-top"，但那套 CSS 类名（-enter/-leave 等）
+              // 全仓从来就不存在，所以迁移前本就没有动画、纯属无效属性。
+              // 迁移时照搬成 popupMotion={{ motionName: 'Tooltip-move-top' }} 会出事：
+              // rc-motion 会等 animationend/transitionend 才结束离场，而没有 CSS 就永远等不到，
+              // 弹层留在页面上不卸载（autoDestroy 也要等离场结束才生效）。
+              // 表现：鼠标依次划过几个视图类型，右侧预览一个个堆叠、全都不消失。
               autoDestroy
               action={['hover']}
               mouseEnterDelay={0.3}

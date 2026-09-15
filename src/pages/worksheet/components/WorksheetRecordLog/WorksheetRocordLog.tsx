@@ -36,6 +36,7 @@ import {
   renderTitleText,
 } from './util';
 import './WorksheetRocordLog.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const reg = new RegExp('<[^<>]+>', 'g');
 const PAGE_SIZE = 20;
@@ -55,7 +56,7 @@ function WorksheetRecordLog(props, ref) {
     allowExport: propsAllowExport,
     showOperatorFilter: propsShowOperatorFilter,
     showRequestTypeFilter: propsShowRequestTypeFilter,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const [{ loading, loadouted, sign, showDivider, lastMark, loadingAll }, setMark] = useSetState({
     loading: false,
     loadouted: false,
@@ -216,7 +217,7 @@ function WorksheetRecordLog(props, ref) {
     };
   };
 
-  function loadNewEdition(prop = {}, isPullRefresh) {
+  function loadNewEdition(prop = {}, isPullRefresh?) {
     const { worksheetId, rowId, pageSize = PAGE_SIZE, filterUniqueIds } = props;
     const params = getParams(prop);
     if (!isPullRefresh) setMark({ loading: true, loadingAll: !params.lastMark });
@@ -315,7 +316,7 @@ function WorksheetRecordLog(props, ref) {
       });
   }
 
-  const changeSelect = (e, para = {}, loadParam) => {
+  const changeSelect = (e, para = {}, loadParam?) => {
     e && e.stopPropagation();
     !loadParam && (loadParam = para);
     setMark({ lastMark: undefined });
@@ -736,7 +737,7 @@ function WorksheetRecordLog(props, ref) {
                     const editType = _.get(childData, 'operatContent.logData[0].editType');
                     const editTypeText = editType ? EDIT_TYPE_TEXT[editType] : undefined;
                     const control = SUBLIST_FILE_EDIT_TYPE.includes(editType)
-                      ? controls.find(l => l.controlId === _.get(childData, 'operatContent.logData[0].id'))
+                      ? controls.find((l: FormControl) => l.controlId === _.get(childData, 'operatContent.logData[0].id'))
                       : undefined;
 
                     return (

@@ -5,6 +5,8 @@ import { formatQuickFilter } from 'src/utils/filter';
 import { getGroupControlId } from 'src/utils/worksheet';
 import { getNavGroupCount } from './navFilter';
 import { sortDataByGroupItems } from './util';
+import type { RecordRow } from 'src/utils/controlTypes';
+import type { AppDispatch, GetState } from 'src/redux/types';
 
 let getGalleryRequest = null;
 let preWorksheetIds = [];
@@ -27,7 +29,7 @@ const getGroupName = (newName, oldName, groupControl = {}) => {
 };
 
 export const fetch = index => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, filters, galleryview, quickFilter, navGroupFilters, controls, views = [] } = getState().sheet;
     const { appId, viewId, worksheetId, chartId, maxCount } = base;
     let { gallery } = galleryview;
@@ -101,7 +103,7 @@ export const fetch = index => {
 };
 
 export const fetchMoreByGroup = (index, kanbanKey) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, filters, galleryview, quickFilter, navGroupFilters, controls, views = [] } = getState().sheet;
     const { appId, viewId, worksheetId, chartId } = base;
     let { gallery } = galleryview;
@@ -160,7 +162,7 @@ export const refresh = () => {
 };
 
 export const getCurrentView = () => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base = {}, views = [] } = getState().sheet;
     const { viewId = '' } = base;
     dispatch({ type: 'CHANGE_GALLERY_VIEW', data: views.find(o => o.viewId === viewId) || {} });
@@ -169,7 +171,7 @@ export const getCurrentView = () => {
 
 //new | add
 export const updateRow = (data, groupId) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { galleryview } = getState().sheet;
     let { gallery } = galleryview;
 
@@ -178,12 +180,12 @@ export const updateRow = (data, groupId) => {
         type: 'CHANGE_GALLERY_VIEW_DATA',
         list: gallery.map(o => {
           if (o.key === groupId) {
-            const { rows = [] } = o;
-            const rowData = rows.find(it => safeParse(it).rowid === data.rowid);
+            const { rows = [] }: { rows: RecordRow[]; [key: string]: any } = o;
+            const rowData = rows.find((it: RecordRow) => safeParse(it).rowid === data.rowid);
             return {
               ...o,
               rows: rowData
-                ? rows.map(it => {
+                ? rows.map((it: RecordRow) => {
                     if (safeParse(it).rowid === data.rowid) {
                       return JSON.stringify({ ..._.pick(safeParse(it), ['allowedit', 'allowdelete']), ...data });
                     }
@@ -227,7 +229,7 @@ export const updateRow = (data, groupId) => {
 
 //删除
 export const deleteRow = (id, groupId) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { galleryview } = getState().sheet;
     let { gallery } = galleryview;
 
@@ -236,7 +238,7 @@ export const deleteRow = (id, groupId) => {
         type: 'CHANGE_GALLERY_VIEW_DATA',
         list: gallery.map(o => {
           if (o.key === groupId) {
-            return { ...o, rows: o.rows.filter(a => safeParse(a)?.rowid !== id), totalNum: o.totalNum - 1 };
+            return { ...o, rows: o.rows.filter((a: RecordRow) => safeParse(a)?.rowid !== id), totalNum: o.totalNum - 1 };
           } else {
             return o;
           }

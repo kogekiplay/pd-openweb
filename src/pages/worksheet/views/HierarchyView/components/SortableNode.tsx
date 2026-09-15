@@ -13,6 +13,7 @@ import { handleRecordClick } from 'src/utils/record';
 import { getCardWidth } from 'src/utils/worksheet';
 import { getPosition, getRelateSheetId } from '../util';
 import DraggableRecord from './DraggableRecord';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const isMobile = browserIsMobile();
 
@@ -169,7 +170,7 @@ export default class SortableRecordItem extends Component<any, any> {
 
       // 获取关联控件配置的viewId
       const relateSheetId = getRelateSheetId(view, data.pathId);
-      const currentControls = configIndex > 1 ? hierarchyRelateSheetControls[relateSheetId] : controls;
+      const currentControls: FormControl[] = configIndex > 1 ? hierarchyRelateSheetControls[relateSheetId] : controls;
 
       const configViewId = _.get(
         _.find(currentControls, item => item.controlId === controlId),
@@ -189,7 +190,7 @@ export default class SortableRecordItem extends Component<any, any> {
   getCurrentSheetRows = () => {
     const { stateTree = [] } = this.props;
 
-    const getLayerRows = (arr = [], rows = []) => {
+    const getLayerRows = (arr = [], rows: RecordRow[] = []) => {
       const { data = {}, treeData = {} } = this.props;
 
       if (arr.length) {

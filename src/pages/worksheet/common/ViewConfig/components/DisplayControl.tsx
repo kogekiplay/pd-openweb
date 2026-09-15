@@ -9,6 +9,7 @@ import { getCanDisplayControls } from 'src/pages/worksheet/common/ViewConfig/uti
 import SortColumns from 'src/pages/worksheet/components/SortColumns/SortColumns';
 import { getAdvanceSetting } from 'src/utils/control';
 import NumInput from './NumInput';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export const SwitchStyle = styled.div`
   display: inline-block;
@@ -52,7 +53,7 @@ export default function DisplayControl(props) {
     isShowWorkflowSys,
     canShowCount,
     disableTypes,
-  } = props;
+  }: { worksheetControls: FormControl[]; [key: string]: any } = props;
 
   const [{ data, allCanDisplayControls }, setState] = useSetState({
     data: !fromRelative ? view : props,
@@ -69,14 +70,14 @@ export default function DisplayControl(props) {
 
   let { displayControls = [], showControlName = true, controlsSorts } = data;
   const controlIds = isShowWorkflowSys
-    ? worksheetControls.map(o => o.controlId).concat([...NORMAL_SYSTEM_FIELDS_SORT, ...WORKFLOW_SYSTEM_FIELDS_SORT])
-    : worksheetControls.map(o => o.controlId).concat(NORMAL_SYSTEM_FIELDS_SORT);
+    ? worksheetControls.map((o: FormControl) => o.controlId).concat([...NORMAL_SYSTEM_FIELDS_SORT, ...WORKFLOW_SYSTEM_FIELDS_SORT])
+    : worksheetControls.map((o: FormControl) => o.controlId).concat(NORMAL_SYSTEM_FIELDS_SORT);
   displayControls = displayControls.filter(c => controlIds.includes(c)); //排除已删除的控件
 
   const { appshowtype = '0' } = getAdvanceSetting(view);
   const showControls = maxCount3 ? displayControls.slice(0, 3) : displayControls;
   //有效的配置字段
-  const effectiveControls = showControls.filter(o => allCanDisplayControls.find(it => it.controlId === o));
+  const effectiveControls = showControls.filter((o: FormControl) => allCanDisplayControls.find(it => it.controlId === o));
   return (
     <div className="mTop32">
       <div className="title Font13 bold">{_l('显示字段')}</div>

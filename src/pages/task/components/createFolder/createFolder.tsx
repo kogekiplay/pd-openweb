@@ -1,4 +1,4 @@
-﻿import React, { Component } from 'react';
+import React, { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import DialogBase from 'ming-ui/components/Dialog/DialogBase';
@@ -117,7 +117,7 @@ export default class CreateFolder extends Component<any, any> {
    * 分享范围选择
    * @param  {boolean} onlyMemberLook
    */
-  rangeSelect(onlyMemberLook) {
+  rangeSelect(onlyMemberLook: boolean) {
     this.setState({ onlyMemberLook });
   }
 

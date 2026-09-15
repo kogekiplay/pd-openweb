@@ -18,7 +18,7 @@ export const getGreetingText = () => {
   }
 };
 
-export const getAppOrItemColor = (appItem, isItem) => {
+export const getAppOrItemColor = (appItem, isItem?: boolean) => {
   const iconColor = appItem.iconColor || '#1677ff';
   const navColor = appItem.navColor || iconColor;
   const black = '#1b2025' === navColor;

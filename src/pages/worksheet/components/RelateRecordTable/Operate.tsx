@@ -1,4 +1,4 @@
-﻿import React, { Fragment, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { Fragment, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import cx from 'classnames';
@@ -24,6 +24,7 @@ import * as actions from './redux/action';
 import { initialChanges } from './redux/reducer';
 import RelateRecordBtn from './RelateRecordBtn';
 import { getVisibleControls } from './utils';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   display: flex;
@@ -272,7 +273,7 @@ function Operate(props) {
     controls,
     formItemId,
     syncRelateRecordSummaryFromCache,
-  } = props;
+  }: { records: RecordRow[]; controls: FormControl[]; [key: string]: any } = props;
   const { addedRecords } = changes;
   const {
     from,

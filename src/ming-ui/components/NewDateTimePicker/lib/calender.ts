@@ -38,7 +38,7 @@ const Calender = {
   /**
    * 计算日期是否在范围内
    */
-  dateInRange: (date, min, max) => {
+  dateInRange: (date: Date, min, max) => {
     const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
     let n = null;
 
@@ -63,7 +63,7 @@ const Calender = {
   /**
    * 计算月份是否在范围内
    */
-  monthInRange: (month, min, max) => {
+  monthInRange: (month: Date, min, max) => {
     const d = new Date(month.getFullYear(), month.getMonth());
     let n = null;
 

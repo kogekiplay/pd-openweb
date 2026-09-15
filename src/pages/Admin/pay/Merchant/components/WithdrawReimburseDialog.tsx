@@ -39,7 +39,9 @@ function WithdrawReimburseDialog(props) {
     updateStatus = () => {},
   } = props;
   const { merchantNo, orderId, merchantOrderId, taxAmount, description } = orderInfo;
-  const [amount, setAmount] = useState();
+  // 既存字符串（输入框原样值、toFixed 结果）也存数字（点「全部」时 setAmount(max)），
+  // 所以 amount === 0 那个判断是真有意义的，不是死代码。
+  const [amount, setAmount] = useState<string | number | undefined>();
   const [isFocus, setIsFocus] = useState(false);
   const inputRef = useRef<any>(undefined);
 

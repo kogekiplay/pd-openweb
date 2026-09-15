@@ -18,6 +18,7 @@ import { checkIsDeleted } from '../utils';
 import FilterViewRange from './FilterViewRange';
 import '../common/payAndInvoice.less';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const PAYMENT_CHANNEL = { 0: _l('聚合支付'), 2: _l('微信支付'), 1: _l('支付宝支付') };
 
@@ -57,10 +58,10 @@ const isCNY = (control = {}) => {
   return type === 8 && (!currency || currencycode === 'CNY');
 };
 
-const getMapControls = (controls, fieldMapIds, field) => {
+const getMapControls = (controls, fieldMapIds, field: string) => {
   return controls
     .filter(v => {
-      let relationControls = [];
+      let relationControls: FormControl[] = [];
 
       if (v.type === 30) {
         relationControls = (_.find(controls, c => `$${c.controlId}$` === v.dataSource) || {}).relationControls || [];
@@ -156,7 +157,7 @@ export default class PayConfig extends Component<any, any> {
         boundControlIds = [],
       } = settings;
       const { internalUser = {}, externalUser = {} } = worksheetPaymentSetting;
-      const controls = _.get(worksheetInfo, 'template.controls') || [];
+      const controls: FormControl[] = _.get(worksheetInfo, 'template.controls') || [];
       const list = merchantList
         .filter(v => v.status === 3)
         .map(({ shortName, merchantNo, subscribeMerchant, planExpiredTime, merchantPaymentChannel }) => ({
@@ -221,7 +222,7 @@ export default class PayConfig extends Component<any, any> {
     }
   };
 
-  changeScenes = (checked, key) => {
+  changeScenes = (checked, key: string) => {
     const { scenes = {}, merchantList = [], mchId = [], initSettings = {}, isPaySuccessAddRecord } = this.state;
     const selectedMerchants = merchantList.filter(v => !v.disabled);
 

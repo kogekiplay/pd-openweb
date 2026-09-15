@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import { Icon, ScrollView, Skeleton } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import * as sheetListActions from 'src/pages/worksheet/redux/actions/sheetList';
+import type { RootState } from 'src/redux/types';
 import { getAppFeaturesVisible } from 'src/utils/common';
 import CreateAppItem from './CreateAppItem';
 import WorkSheetGroup from './WorkSheetGroup';
@@ -199,7 +200,7 @@ const mapDispatchToProps = dispatch => ({
   dispatch,
 });
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   data: state.sheetList.data,
   loading: state.sheetList.loading,
   isUnfold: state.sheetList.isUnfold,

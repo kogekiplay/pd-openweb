@@ -4,8 +4,9 @@ import moment from 'moment';
 import { RELATION_SEARCH_SHOW_TYPE } from 'worksheet/constants/enum';
 import { TIME_PERIOD_TYPE, TIME_TYPE, WEEKS } from './enum';
 import CountDown from './PublicWorksheetConfig/CountDown';
+import type { FormControl } from 'src/utils/controlTypes';
 
-export function getNewControlColRow(controls, halfOfNewControl = true) {
+export function getNewControlColRow(controls: FormControl[], halfOfNewControl = true) {
   if (!controls.length) {
     return { col: 0, row: 0 };
   }
@@ -63,11 +64,11 @@ export function getDisabledControls(controls, systemRelatedIds = {}) {
   return _.uniqBy(defaultHided.concat(systemRelated).concat(hidedWhenNew));
 }
 
-export function overridePos(controls = [], newPosControls = []) {
+export function overridePos(controls: FormControl[] = [], newPosControls = []) {
   const newPos = [{}, ...newPosControls].reduce((a, b) =>
     _.assign({}, a, { [(b || {}).controlId]: _.pick(b || {}, ['col', 'row', 'size']) }),
   );
-  const newControls = controls.map(control =>
+  const newControls: FormControl[] = controls.map(control =>
     _.assign({}, control, newPos[control.controlId] ? newPos[control.controlId] : { col: -1, row: -1 }),
   );
   newControls.forEach((control, index) => {
@@ -91,7 +92,7 @@ export function overridePos(controls = [], newPosControls = []) {
   return newControls;
 }
 
-export function getLimitWriteTimeDisplayText(type, limitWriteTime) {
+export function getLimitWriteTimeDisplayText(type: string, limitWriteTime) {
   const setting = limitWriteTime[`${type}Setting`];
 
   if (type === TIME_TYPE.MONTH) {
@@ -188,7 +189,7 @@ export function renderLimitInfo(worksheetSettings) {
   );
 }
 
-export const getPageConfig = (pageConfigs = '[]', pageConfigKey) => {
+export const getPageConfig = (pageConfigs = '[]', pageConfigKey?) => {
   const configs = safeParse(pageConfigs);
 
   if (!pageConfigKey) return configs[0] || {};

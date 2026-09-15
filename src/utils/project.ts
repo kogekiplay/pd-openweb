@@ -6,7 +6,9 @@ import projectAjax from 'src/api/project';
 import { SYS_CHART_COLORS, SYS_COLOR } from 'src/pages/Admin/settings/config';
 
 // 获取当前网络信息
-export const getCurrentProject = (id, isExternalProject) => {
+// id 的调用点里既有 string，也有 localStorage.getItem 的 string | null，
+// 还有从 query 里解出来的 string | string[]（那种匹配不上，返回 {}）
+export const getCurrentProject = (id?: string | string[] | null, isExternalProject?: boolean) => {
   if (!id) return {};
 
   const externalProjects = _.get(md, ['global', 'Account', 'externalProjects']) || [];
@@ -92,7 +94,7 @@ export function getFeatureStatus(projectId, featureId) {
  * @param {Object} params - 额外的参数，用于记录日志的详细信息。
  * @param {boolean} isLinkVisited - 是否通过链接访问
  */
-export const addBehaviorLog = (type, entityId, params = {}, isLinkVisited) => {
+export const addBehaviorLog = (type, entityId, params = {}, isLinkVisited?) => {
   if (!get(md, 'global.Account.accountId')) return;
 
   const typeObj = {
@@ -285,7 +287,7 @@ export const getContactInfo = key => {
  * h5callBack h5处理方法
  * appCallBack app处理方法
  */
-export const compatibleMDJS = (jsFuncName, jsParams = {}, h5callBack = () => {}, appCallBack = () => {}) => {
+export const compatibleMDJS = (jsFuncName: string, jsParams = {}, h5callBack = () => {}, appCallBack = () => {}) => {
   if (window.isMingDaoApp && window.MDJS && window.MDJS[jsFuncName]) {
     window.MDJS[jsFuncName](jsParams);
     appCallBack();

@@ -256,7 +256,7 @@ function AddWorkflowDialog(props) {
     if (checkedDialog.list.length === 0) return;
   }, [checkedDialog.list]);
 
-  const getAppList = (pageIndex, keywords) => {
+  const getAppList = (pageIndex?, keywords?) => {
     const _pageIndex = pageIndex || appIndex;
 
     if ((_pageIndex > 1 && appList.length >= total) || appLoading) return;

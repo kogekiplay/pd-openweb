@@ -17,7 +17,7 @@ const VoteUpdater = {
         $el.attr('id', idPrefix + 'Vote_updater');
       }
 
-      var addItem = function (canClose) {
+      var addItem = function (canClose?) {
         var $options = $el.find('.voteOptions');
         var $items = $options.find('li');
         var voteCount = $items.length;

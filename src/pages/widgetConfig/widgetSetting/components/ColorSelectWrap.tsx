@@ -13,7 +13,7 @@ export default function ColorSelectWrap({ color: activeColor, handleChange }) {
     setCustomColor(JSON.parse(window.localStorage.getItem('customColor') || '[]'));
   }, []);
 
-  const getColorList = customIcon => {
+  const getColorList = (customIcon?) => {
     const list = customIcon ? customColor : SCORE_COLORS_LIST;
     return (
       <ul>

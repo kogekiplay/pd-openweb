@@ -241,7 +241,7 @@ export default function SelectSheetFromApp(props) {
     });
   }, []);
 
-  const getList = key => {
+  const getList = (key?) => {
     if (!appId || loading) return;
     const currentType = key || queryType;
     setData({ loading: true });

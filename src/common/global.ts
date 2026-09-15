@@ -364,7 +364,7 @@ window.addEventListener('beforeunload', () => {
  * 获取错误信息
  * @returns {Object}
  */
-const getErrorMessage = (jqXHR = {}, textStatus, exception, silent = false) => {
+const getErrorMessage = (jqXHR = {}, textStatus: string, exception, silent = false) => {
   let errorMessage;
 
   switch (jqXHR.status) {

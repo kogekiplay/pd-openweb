@@ -1,6 +1,7 @@
 import React from 'react';
 import propTypes from 'prop-types';
 import QuickFilter from './QuickFilter';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function Filters(props) {
   const {
@@ -17,7 +18,7 @@ export default function Filters(props) {
     updateQuickFilter = () => {},
     resetQuickFilter = () => {},
     onFilterClick = () => {},
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   return (
     <QuickFilter
       showTextAdvanced={showTextAdvanced}

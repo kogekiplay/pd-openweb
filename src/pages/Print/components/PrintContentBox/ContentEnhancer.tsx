@@ -4,6 +4,7 @@ import { fromType, typeForCon } from '../../core/config';
 import { getControlsForPrint, isRelationControl } from '../../core/util';
 import Content from '../Content';
 import { getApproval, getApprovalDetail, getAttributeName } from './utils';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const uniqByProcessId = arr => {
   const map = {};
@@ -31,7 +32,7 @@ const ContentEnhancer = props => {
     view = {},
     signature = [],
     ...rest
-  } = props;
+  }: { receiveControls: FormControl[]; [key: string]: any } = props;
   const { rowId } = rowValue;
   const { type, from, printType, printId, rowIds = [] } = params;
   // console.log('缓存的关联记录值', relationRowsValues);
@@ -81,7 +82,7 @@ const ContentEnhancer = props => {
     approvalAjaxRef.current = ajaxMap;
   };
 
-  const syncApprovalChecked = (approval, map) => {
+  const syncApprovalChecked = (approval, map?) => {
     const realMap = map || approvalCheckedMap;
     return approval.map(item => ({
       ...item,

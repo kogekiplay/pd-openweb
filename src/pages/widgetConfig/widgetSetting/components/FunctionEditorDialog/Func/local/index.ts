@@ -156,6 +156,6 @@ export function initLang(langCode) {
   };
 }
 
-export function getLang(key, ...args) {
+export function getLang(key: string, ...args) {
   return translate(key, ...args);
 }

@@ -635,7 +635,7 @@ let ExpansionService = class ExpansionService extends Component<any, any> {
     this.props.history.go(-1);
   }
 
-  setStep(step) {
+  setStep(step: number) {
     this.setState({
       step,
     });

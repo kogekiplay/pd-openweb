@@ -98,7 +98,7 @@ export default function (props) {
   };
 
   //导出
-  const down = isAll => {
+  const down = (isAll?) => {
     const { worksheetId, appId, projectId } = baseInfo;
     appManagement.getToken({ worksheetId, viewId: '' }).then(token => {
       const args = {

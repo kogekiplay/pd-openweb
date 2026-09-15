@@ -11,6 +11,7 @@ import { usePasteText } from 'worksheet/hooks';
 import { getWithToken } from 'src/utils/common';
 import { isKeyBoardInputChar } from 'src/utils/common';
 import PreviewTable from './PreviewTable';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 // ctrl Z 撤销最多支持次数
 const CACHE_STACK_LENGTH = 20;
@@ -106,7 +107,7 @@ function splitCsvRows(csvData, splitter) {
   // 如果是Excel粘贴且包含非标准CSV格式的双引号（如尺寸标记26"），使用简单的行分割
   if (isExcelPaste) {
     const rows = csvData.split(/\r\n|\n|\r/);
-    return rows.filter(row => row.trim() !== '');
+    return rows.filter((row: RecordRow) => row.trim() !== '');
   }
 
   // 标准CSV解析逻辑（用于非Excel粘贴或标准CSV格式）

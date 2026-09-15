@@ -4,6 +4,7 @@ import _, { omit } from 'lodash';
 import PropTypes from 'prop-types';
 import { getTitleTextFromControls } from 'src/utils/control';
 import { FILTER_CONDITION_TYPE } from '../../enum';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 function safeParse(str) {
   try {
@@ -43,9 +44,9 @@ export default class RelateRecord extends React.Component<any, any> {
   addRecord = selectedRecords => {
     const { control, onChange } = this.props;
     const { records } = this.state;
-    const { relationControls } = control;
+    const { relationControls }: { relationControls: FormControl[]; [key: string]: any } = control;
     const newRecords = (
-      this.selectSingle ? [] : records.filter(r => !_.find(selectedRecords, sr => r.id === sr.rowid))
+      this.selectSingle ? [] : records.filter((r: RecordRow) => !_.find(selectedRecords, sr => r.id === sr.rowid))
     ).concat(
       selectedRecords.map(sr => ({
         name: getTitleTextFromControls(relationControls, sr),
@@ -61,7 +62,7 @@ export default class RelateRecord extends React.Component<any, any> {
   removeRecord = record => {
     const { onChange } = this.props;
     const { records } = this.state;
-    const newRecords = records.filter(r => r.id !== record.id);
+    const newRecords = records.filter((r: RecordRow) => r.id !== record.id);
     this.setState({
       records: newRecords,
     });
@@ -86,7 +87,7 @@ export default class RelateRecord extends React.Component<any, any> {
                 allowNewRecord: false,
                 multiple: !this.selectSingle,
                 coverCid: control.coverCid,
-                filterRowIds: records.map(r => r.id),
+                filterRowIds: records.map((r: RecordRow) => r.id),
                 showControls: control.showControls,
                 appId: control.appId,
                 viewId: control.viewId,

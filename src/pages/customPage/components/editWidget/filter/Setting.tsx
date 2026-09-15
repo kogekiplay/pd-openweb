@@ -7,9 +7,11 @@ import styled from 'styled-components';
 import { Dialog, Dropdown, Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { getIconByType } from 'src/pages/widgetConfig/util';
+import type { RootState } from 'src/redux/types';
 import FilterControl from './FilterControl';
 import FilterListSort from './FilterListSort';
 import FilterObject from './FilterObject';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Tab = [
   { text: _l('配置'), type: 'setting' },
@@ -93,7 +95,7 @@ function Setting(props) {
   const [displayType, setDisplayType] = useState('setting');
   const [dropDownVisible, setDropDownVisible] = useState(false);
 
-  const allControls = filters.map(data => {
+  const allControls: FormControl[] = filters.map(data => {
     const { control, objectControls } = data;
     return control || _.get(objectControls[0], 'control');
   });
@@ -402,6 +404,6 @@ function Setting(props) {
   );
 }
 
-export default connect(state => ({
+export default connect((state: RootState) => ({
   appPkg: state.appPkg,
 }))(Setting);

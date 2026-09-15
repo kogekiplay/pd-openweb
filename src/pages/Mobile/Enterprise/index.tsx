@@ -85,7 +85,7 @@ class ProjectCard extends Component<any, any> {
       this.getUserCard();
     }
   };
-  getItems(list, key) {
+  getItems(list, key: string) {
     const listInfo = list.map(item => item[key]);
     return listInfo.join(' ; ');
   }

@@ -15,6 +15,7 @@ import WorksheetReference, { renderDialog } from 'src/pages/widgetConfig/widgetS
 import { pathCompletion } from 'src/utils/common';
 import CreateNew from './CreateNew';
 import { EditExternalLink } from './ExternalLink';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const LoadableDialogImportExcelCreate = lazy(() => import('worksheet/components/DialogImportExcelCreate'));
 
@@ -48,9 +49,9 @@ const CopySheetConfirmDescription = props => {
           worksheetId: workSheetId,
         })
         .then(data => {
-          const controls = _.get(data, 'template.controls') || [];
+          const controls: FormControl[] = _.get(data, 'template.controls') || [];
           setLoading(false);
-          setControls(controls.filter(c => [29, 34, 35].includes(c.type)));
+          setControls(controls.filter((c: FormControl) => [29, 34, 35].includes(c.type as number)));
         });
     } else {
       setLoading(false);
@@ -111,12 +112,12 @@ const CopySheetConfirmDescription = props => {
                   if (value) {
                     setSelectIds([]);
                   } else {
-                    setSelectIds(controls.map(c => c.controlId));
+                    setSelectIds(controls.map((c: FormControl) => c.controlId));
                   }
                 }}
               />
               <div className="mLeft25" style={{ maxHeight: 200, overflowY: 'auto' }}>
-                {controls.map(c => (
+                {controls.map((c: FormControl) => (
                   <Checkbox
                     key={c.controlId}
                     className="mBottom10 textPrimary"
@@ -332,7 +333,7 @@ const handleCopyWorkSheet = props => {
   });
 };
 
-const handleUpdateWorksheetStatus = (status, props) => {
+const handleUpdateWorksheetStatus = (status: number, props) => {
   const { appId, appItem, sheetListActions } = props;
   homeAppApi
     .setWorksheetStatus({

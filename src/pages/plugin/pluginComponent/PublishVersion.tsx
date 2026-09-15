@@ -122,7 +122,7 @@ export default function PublishVersion(props) {
       });
   };
 
-  const onChangeVersionValue = (value, objName) => {
+  const onChangeVersionValue = (value, objName: string) => {
     if (!value) {
       setFormData({ [objName]: '' });
       return;

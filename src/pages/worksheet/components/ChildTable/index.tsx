@@ -3,11 +3,12 @@ import { shallowEqual } from 'react-redux';
 import { connect, Provider } from 'react-redux';
 import { get, isFunction } from 'lodash';
 import DataFormat from 'src/components/Form/core/DataFormat';
+import type { RootState } from 'src/redux/types';
 import ChildTable from './ChildTable';
 import generateStore from './redux/store';
 import './style.less';
 
-const ChildTableComp = connect(state => ({
+const ChildTableComp = connect((state: RootState) => ({
   baseLoading: state.baseLoading,
   base: state.base,
   rows: state.rows,

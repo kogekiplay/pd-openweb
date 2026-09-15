@@ -79,7 +79,7 @@ const PreinstallStyle = props => {
   const iconColor = _.get(store.getState().appPkg, 'iconColor');
   const { pivoTableColor, pivoTableColorIndex = 1 } = customPageConfig;
 
-  const handleChangePivotTableStyle = (data, isRequest) => {
+  const handleChangePivotTableStyle = (data, isRequest?) => {
     const config = {
       ...pivotTableStyle,
       ...data,

@@ -41,7 +41,13 @@ export const upgradeVersionDialog = options => {
 /**
  * 功能埋点授权显示升级版本内容dialogType： dialog弹层（默认） content 页面
  */
-export function buriedUpgradeVersionDialog(projectId, featureId, extra, onOk) {
+// extra / onOk 绝大多数调用点不传，标成可选；不标的话它们算必填参数，一律报 TS2554
+export function buriedUpgradeVersionDialog(
+  projectId?: string,
+  featureId?: number | string,
+  extra?: { explainText?: string; dialogType?: string },
+  onOk?: () => void,
+) {
   const { Versions = [] } = md.global || {};
   const { licenseType, version = {} } = getSyncLicenseInfo(projectId);
   const { explainText = '', dialogType } = extra || {};

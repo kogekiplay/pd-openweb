@@ -35,6 +35,7 @@ import {
 } from './enum';
 import SelectControlWithInput from './SelectControlWithInput';
 import { getDefaultText } from './util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const LABEL_MIN_WIDTH = 20;
 const LABEL_MIN_HEIGHT = 20;
@@ -331,7 +332,7 @@ function LabeSizeConfig(props) {
 }
 
 export default function Sider(props) {
-  const { config = {}, maxLineNumber, controls, onUpdate = () => {} } = props;
+  const { config = {}, maxLineNumber, controls, onUpdate = () => {} }: { controls: FormControl[]; [key: string]: any } = props;
   const {
     sourceType = 0,
     sourceUrlType = 0,

@@ -52,7 +52,7 @@ const DepartmentSelect = props => {
   /**
    * 选择部门
    */
-  const pickDepartment = replaceItem => {
+  const pickDepartment = (replaceItem?) => {
     if (!_.find(md.global.Account.projects, item => item.projectId === projectId)) {
       alert(_l('您不是该组织成员，无法获取其部门列表，请联系组织管理员'), 3);
       return;

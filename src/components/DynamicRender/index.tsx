@@ -14,7 +14,7 @@ export default function DynamicRender(props) {
   }, [data]);
 
   const handleChange = useCallback(
-    (value, type, fieldKey, fieldIndex) => {
+    (value, type, fieldKey, fieldIndex?) => {
       setFormData(prevData => {
         const newData = [...prevData];
         const index = newData.findIndex(item => item.fieldKey === fieldKey);

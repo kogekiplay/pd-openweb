@@ -1,7 +1,8 @@
 import { combineReducers } from 'redux';
 import _ from 'lodash';
+import type { ReduxAction } from 'src/redux/types';
 
-export function loading(state = true, action) {
+export function loading(state = true, action: ReduxAction) {
   switch (action.type) {
     case 'PUBLICWORKSHEET_LOAD_SUCCESS':
       return false;
@@ -12,7 +13,7 @@ export function loading(state = true, action) {
   }
 }
 
-export function shareUrl(state = '', action) {
+export function shareUrl(state = '', action: ReduxAction) {
   switch (action.type) {
     case 'PUBLICWORKSHEET_LOAD_SUCCESS':
       return action.url || '';
@@ -25,7 +26,7 @@ export function shareUrl(state = '', action) {
   }
 }
 
-export function worksheetSettings(state = {}, action) {
+export function worksheetSettings(state = {}, action: ReduxAction) {
   switch (action.type) {
     case 'PUBLICWORKSHEET_LOAD_SUCCESS':
       return action.worksheetSettings;
@@ -38,7 +39,7 @@ export function worksheetSettings(state = {}, action) {
   }
 }
 
-export function worksheetInfo(state = {}, action) {
+export function worksheetInfo(state = {}, action: ReduxAction) {
   switch (action.type) {
     case 'PUBLICWORKSHEET_LOAD_SUCCESS':
       return action.worksheetInfo;
@@ -51,7 +52,7 @@ export function worksheetInfo(state = {}, action) {
   }
 }
 
-export function originalControls(state = [], action) {
+export function originalControls(state = [], action: ReduxAction) {
   switch (action.type) {
     case 'PUBLICWORKSHEET_LOAD_SUCCESS':
       return action.originalControls;
@@ -64,7 +65,7 @@ export function originalControls(state = [], action) {
   }
 }
 
-export function controls(state = [], action) {
+export function controls(state = [], action: ReduxAction) {
   switch (action.type) {
     case 'PUBLICWORKSHEET_LOAD_SUCCESS':
     case 'PUBLICWORKSHEET_UPDATE_CONTROLS':
@@ -78,7 +79,7 @@ export function controls(state = [], action) {
   }
 }
 
-export function hidedControlIds(state = [], action) {
+export function hidedControlIds(state = [], action: ReduxAction) {
   switch (action.type) {
     case 'PUBLICWORKSHEET_LOAD_SUCCESS':
       return action.hidedControlIds;

@@ -128,7 +128,7 @@ export default class JSONParse extends Component<any, any> {
   /**
    * 获取节点详情
    */
-  getNodeDetail(props, sId) {
+  getNodeDetail(props, sId?) {
     const { processId, selectNodeId, selectNodeType, isIntegration, instanceId } = props;
     const { data } = this.state;
 

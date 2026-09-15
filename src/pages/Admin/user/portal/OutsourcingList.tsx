@@ -143,7 +143,7 @@ export default class OutsourcingList extends Component<any, any> {
   }
 
   //移除成员
-  handleDelete = accountId => {
+  handleDelete = (accountId?) => {
     Confirm({
       title: _l('您确定要将成员从各个模块移除吗?'),
       description: _l(

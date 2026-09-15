@@ -19,6 +19,7 @@ import {
 } from '../common/reportConfigUtils';
 import { fillValueMap, mergeReportData } from '../common/reportDataUtils';
 import { filterTimeParticleSizeDropdownData } from '../common/timeUtils';
+import type { AppDispatch, GetState } from 'src/redux/types';
 
 export const changeBase = data => {
   return dispatch => {
@@ -31,8 +32,8 @@ export const changeBase = data => {
 
 let reportConfigDetailRequest = null;
 
-export const getReportConfigDetail = (data, callBack) => {
-  return (dispatch, getState) => {
+export const getReportConfigDetail = (data, callBack?) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { reportId, reportType, appId, customPageConfig = {} } = data;
     const { currentReport: oldReport, base } = getState().statistics;
     const { viewId, permissions, pageId, appType } = base;
@@ -121,7 +122,7 @@ let reportConfigRequest = null;
 let reportRequest = null;
 
 export const getReportData = ({ reload = false } = {}) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, currentReport, reportData } = getState().statistics;
     const { permissions, report, pageId, settingVisible, sheetVisible, filters, filtersGroup, linkageFiltersGroup } =
       base;
@@ -174,7 +175,7 @@ export const getReportData = ({ reload = false } = {}) => {
       });
     };
 
-    const fail = error => {
+    const fail = (error?) => {
       const { errorCode } = error || {};
       dispatch({
         type: 'CHANGE_STATISTICS_REPORT_DATA',
@@ -282,7 +283,7 @@ export const getReportData = ({ reload = false } = {}) => {
 };
 
 export const getTableData = () => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, reportData } = getState().statistics;
     const { report, pageId, settingVisible, filters, filtersGroup, linkageFiltersGroup } = base;
     const data = getNewReport(getState().statistics);
@@ -396,7 +397,7 @@ export const getTableData = () => {
 };
 
 export const getReportSingleCacheId = data => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, worksheetInfo, currentReport } = getState().statistics;
     const { report, sheetId, filters = [], filtersGroup = [], linkageFiltersGroup = [] } = base;
     const {
@@ -460,7 +461,7 @@ export const getReportSingleCacheId = data => {
 };
 
 export const requestOriginalData = data => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { worksheetInfo, currentReport } = getState().statistics;
     const { filter = {} } = currentReport;
     const style = currentReport.style || {};
@@ -487,7 +488,7 @@ let worksheetInfoRequest = null;
 let worksheetFilterByIdRequest = null;
 
 export const getWorksheetInfo = worksheetId => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { currentReport } = getState().statistics;
     const { filter } = currentReport;
     const filterId = _.get(filter, 'filterId');
@@ -605,8 +606,8 @@ export const changeFilterItem = data => {
   };
 };
 
-export const changeCurrentReport = (data, isRequest) => {
-  return (dispatch, getState) => {
+export const changeCurrentReport = (data, isRequest: boolean) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { currentReport } = getState().statistics;
     dispatch({
       type: 'CHANGE_STATISTICS_CURRENT_REPORT',
@@ -663,7 +664,7 @@ export const changeSheetId = activeSheetId => {
 };
 
 export const changeControlCheckbox = (event, item) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { currentReport, base } = getState().statistics;
     const { reportType, xaxes, yaxisList, rightY, split, pivotTable, config = {} } = currentReport;
     const targetList = _.get(config, 'targetList') || [];
@@ -987,7 +988,7 @@ export const changeControlCheckbox = (event, item) => {
 };
 
 export const removeXaxes = () => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { currentReport } = getState().statistics;
     const { xaxes, sorts, reportType } = currentReport;
     const id = xaxes.particleSizeType ? `${xaxes.controlId}-${xaxes.particleSizeType}` : xaxes.controlId;
@@ -1017,7 +1018,7 @@ export const removeXaxes = () => {
 };
 
 export const addXaxes = (control, isRequest = true) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { currentReport } = getState().statistics;
     const { xaxes, split, displaySetup, reportType } = currentReport;
     const isTime = isTimeControl(control.type);
@@ -1085,7 +1086,7 @@ export const addXaxes = (control, isRequest = true) => {
 };
 
 export const addValueAxis = (key, control, isRequest = true) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { currentReport } = getState().statistics;
     const { advancedSetting = {} } = control;
     const isPercent = advancedSetting.numshow === '1';
@@ -1124,7 +1125,7 @@ export const addValueAxis = (key, control, isRequest = true) => {
 };
 
 export const addTargetValueAxis = (index, control) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { currentReport } = getState().statistics;
     const { advancedSetting = {} } = control;
     const isPercent = advancedSetting.numshow === '1';
@@ -1163,7 +1164,7 @@ export const addTargetValueAxis = (index, control) => {
 };
 
 export const removeTargetValueAxis = index => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { currentReport } = getState().statistics;
     const { targetList = [] } = currentReport.config || {};
     targetList[index] = null;
@@ -1176,7 +1177,7 @@ export const removeTargetValueAxis = index => {
 };
 
 export const changeConfig = (data, isRequest = true) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { currentReport } = getState().statistics;
     const config = {
       ...currentReport.config,
@@ -1187,7 +1188,7 @@ export const changeConfig = (data, isRequest = true) => {
 };
 
 export const addYaxisList = (data, isRequest = true) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { currentReport } = getState().statistics;
     const { yaxisList = [], reportType, pivotTable } = currentReport;
     const firstYAxis = reportType !== reportTypes.PivotTable && yaxisList[0];
@@ -1258,7 +1259,7 @@ export const addYaxisList = (data, isRequest = true) => {
 };
 
 export const addIndexYaxisList = (data, index, isRequest = true) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { currentReport } = getState().statistics;
     const { reportType, yaxisList, displaySetup, summary } = currentReport;
     const firstYAxis = _.isEmpty(yaxisList[0]) ? null : yaxisList[0];
@@ -1316,7 +1317,7 @@ export const addIndexYaxisList = (data, index, isRequest = true) => {
 };
 
 export const changeYaxisList = (data, isRequest = true) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { currentReport } = getState().statistics;
     const { reportType, displaySetup, split = {} } = currentReport;
     const { yaxisList = [], sorts = [] } = data;
@@ -1350,7 +1351,7 @@ export const changeYaxisList = (data, isRequest = true) => {
 };
 
 export const removeYaxisList = id => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { currentReport } = getState().statistics;
     const { yaxisList, split, sorts, reportType, pivotTable, summary, config = {} } = currentReport;
     const newYaxisList = yaxisList.filter(item => item.controlId !== id);
@@ -1409,7 +1410,7 @@ export const removeYaxisList = id => {
 };
 
 export const changeSplit = (data, isRequest = true) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { currentReport } = getState().statistics;
     const { xaxes, sorts, split } = currentReport;
     const deleteId = split.controlId
@@ -1458,7 +1459,7 @@ export const changeSplit = (data, isRequest = true) => {
 };
 
 export const addRightYaxisList = (data, isRequest = true) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { currentReport } = getState().statistics;
     const { rightY } = currentReport;
     const { yaxisList } = rightY;
@@ -1496,7 +1497,7 @@ export const addRightYaxisList = (data, isRequest = true) => {
 };
 
 export const changeRightYaxisList = (data, isRequest = true) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { currentReport } = getState().statistics;
     const { rightY } = currentReport;
     const { yaxisList, split, sorts } = data;
@@ -1525,7 +1526,7 @@ export const changeRightYaxisList = (data, isRequest = true) => {
 };
 
 export const removeRightYaxisList = id => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { currentReport } = getState().statistics;
     const { sorts, rightY, reportType } = currentReport;
     const { yaxisList, split, summary } = rightY;
@@ -1552,7 +1553,7 @@ export const removeRightYaxisList = id => {
 };
 
 export const changeRightSplit = (data, isRequest = true) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { currentReport } = getState().statistics;
     const { sorts, rightY } = currentReport;
     const split = rightY.split;
@@ -1581,7 +1582,7 @@ export const changeRightSplit = (data, isRequest = true) => {
 };
 
 export const addLines = (data, isRequest = true) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { currentReport } = getState().statistics;
     const { pivotTable } = currentReport;
     const { lines, columns } = pivotTable;
@@ -1629,7 +1630,7 @@ export const addLines = (data, isRequest = true) => {
 };
 
 export const removeLines = ({ controlId, particleSizeType }) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { currentReport } = getState().statistics;
     const { pivotTable, sorts } = currentReport;
     const { lines } = pivotTable;
@@ -1657,7 +1658,7 @@ export const removeLines = ({ controlId, particleSizeType }) => {
 };
 
 export const addColumns = (data, isRequest = true) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { currentReport } = getState().statistics;
     const { pivotTable } = currentReport;
     const { lines, columns } = pivotTable;
@@ -1705,7 +1706,7 @@ export const addColumns = (data, isRequest = true) => {
 };
 
 export const removeColumns = ({ controlId, particleSizeType }) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { currentReport } = getState().statistics;
     const { pivotTable, sorts } = currentReport;
     const { columns } = pivotTable;
@@ -1733,7 +1734,7 @@ export const removeColumns = ({ controlId, particleSizeType }) => {
 };
 
 export const changeDirection = value => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { direction, reportData } = getState().statistics;
     const style = reportData.style || {};
     const newDirection = value ? value : direction === 'vertical' ? 'horizontal' : 'vertical';

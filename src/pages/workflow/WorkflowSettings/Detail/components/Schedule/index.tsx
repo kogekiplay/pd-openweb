@@ -134,7 +134,7 @@ export default ({
     changeData(Object.assign({}, data, { actions: newActions }));
   };
 
-  const renderDeadlineContent = (item, autoPass) => {
+  const renderDeadlineContent = (item, autoPass?) => {
     return (
       <div className="mTop10 flexRow alignItemsCenter">
         <div>{_l('在截止时刻')}</div>

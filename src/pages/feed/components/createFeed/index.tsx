@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { createRoot } from 'react-dom/client';
 import doT from 'dot';
 import _ from 'lodash';
@@ -120,7 +120,7 @@ export default function (options) {
         this.render();
       }
     },
-    resetUpdater: function (options, clearCallback) {
+    resetUpdater: function (options?, clearCallback?) {
       if (!options) {
         options = {};
       }

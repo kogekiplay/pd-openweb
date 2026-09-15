@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Menu, MenuItem } from 'ming-ui';
 
@@ -71,7 +71,7 @@ const DropdownIcon = styled.div`
 
 export default function SaveButton(props) {
   const { disabled, downList, onClick } = props;
-  const [popupVisible, setPopupVisible] = useState();
+  const [popupVisible, setPopupVisible] = useState<boolean | undefined>();
   const hasDownList = _.isArray(downList) && !_.isEmpty(downList);
   const content = (
     <Con className={cx({ hasDownList, disabled })}>

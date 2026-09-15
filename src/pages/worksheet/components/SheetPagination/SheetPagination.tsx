@@ -14,7 +14,7 @@ export default class SheetPagination extends Component<any, any> {
     pageIndex: 1,
     onChange: () => {},
   };
-  renderPage(index, pageIndex) {
+  renderPage(index: number, pageIndex?) {
     if (index === -1) {
       return (
         <span key={index} className="pageNum">
@@ -38,7 +38,7 @@ export default class SheetPagination extends Component<any, any> {
       </span>
     );
   }
-  renderAllPage(length, pageIndex, offset = 0) {
+  renderAllPage(length: number, pageIndex, offset = 0) {
     return [...new Array(length)].map((a, index) => this.renderPage(index + 1 + offset, pageIndex));
   }
   renderPiecePage() {

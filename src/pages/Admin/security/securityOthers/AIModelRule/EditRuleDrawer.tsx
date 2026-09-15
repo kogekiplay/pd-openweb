@@ -386,7 +386,7 @@ export default function EditRuleDrawer(props) {
     <DrawerWrap
       title={title}
       width={660}
-      visible={visible}
+      open={visible}
       onClose={onClose}
       destroyOnClose
       footer={

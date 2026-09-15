@@ -9,6 +9,7 @@ import homeAppApi from 'src/api/homeApp';
 import { getAppSectionData } from 'src/pages/PageHeader/AppPkgHeader/LeftAppGroup';
 import * as sheetListActions from 'src/pages/worksheet/redux/actions/sheetList';
 import configureStore from 'src/redux/configureStore';
+import type { RootState } from 'src/redux/types';
 
 const dndAccept = 'navigationListGroup';
 
@@ -399,7 +400,7 @@ const mapDispatchToProps = dispatch => ({
   updateSheetList: bindActionCreators(sheetListActions.updateSheetList, dispatch),
   dispatch,
 });
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   sheetList: state.sheetList.data,
   appSectionDetail: configureStore.getState().sheetList.appSectionDetail,
 });

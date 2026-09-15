@@ -44,7 +44,7 @@ export default class CreateRecordAndTask extends Component<any, any> {
   /**
    * 切换工作表
    */
-  switchWorksheet = (appId, name, otherApkId = '', otherApkName = '') => {
+  switchWorksheet = (appId, name?, otherApkId = '', otherApkName = '') => {
     const { updateSource, getAppTemplateControls } = this.props;
     const appList = _.cloneDeep(this.props.data.appList);
 

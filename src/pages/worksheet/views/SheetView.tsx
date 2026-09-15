@@ -36,9 +36,11 @@ import { putControlByOrder } from 'src/pages/widgetConfig/util';
 import { renderBatchSetDialog } from 'src/pages/worksheet/common/ViewConfig/components/BatchSet';
 import { NORMAL_SYSTEM_FIELDS_SORT, WORKFLOW_SYSTEM_FIELDS_SORT } from 'src/pages/worksheet/common/ViewConfig/enum';
 import { getUserRole } from 'src/pages/worksheet/redux/actions/util';
+import type { RootState } from 'src/redux/types';
 import { browserIsMobile, emitter, getLRUWorksheetConfig } from 'src/utils/common';
 import { controlState } from 'src/utils/control';
 import { getAdvanceSetting, getHighAuthControls } from 'src/utils/control';
+import type { ControlValue, FormControl, MaybeSummaryHeadControl, RecordRow } from 'src/utils/controlTypes';
 import { addBehaviorLog } from 'src/utils/project';
 import { getRecordColorConfig, handleRecordClick } from 'src/utils/record';
 import {
@@ -53,9 +55,9 @@ import SheetContext from '../common/Sheet/SheetContext';
 import ColumnVisibilityControl from './components/ColumnVisibilityControl';
 import ToolBar from './HierarchyView/ToolBar';
 
-function setRowIndexForSheetView(rows) {
-  let rowIndexMap = {};
-  rows.forEach(r => {
+function setRowIndexForSheetView(rows: RecordRow[]) {
+  const rowIndexMap: Record<string, number> = {};
+  rows.forEach((r: RecordRow) => {
     if (typeof r.allowedit !== 'undefined' && r.groupKey) {
       const newRowIndex = rowIndexMap[r.groupKey] || 1;
       r.rowIndexNumber = newRowIndex;
@@ -63,6 +65,34 @@ function setRowIndexForSheetView(rows) {
     }
   });
   return rows;
+}
+
+/** 分组标题格的 props。字段就是下面解构出来的那 22 个。 */
+interface GroupTitleCellProps {
+  className?: string;
+  style?: React.CSSProperties;
+  /** 分组行，key 是分组值 */
+  row?: { key?: string; [field: string]: ControlValue };
+  columnIndex?: number;
+  getColumnWidth?: (index: number) => number;
+  view?: ControlValue;
+  appId?: string;
+  worksheetId?: string;
+  viewId?: string;
+  projectId?: string;
+  /** 分组折叠状态：分组 key -> 是否折叠 */
+  foldedMap?: Record<string, boolean>;
+  updateFolded?: (key: string, folded: boolean) => void;
+  sheetViewData?: ControlValue;
+  changeWorksheetSheetViewSummaryType?: (...args: ControlValue[]) => void;
+  insertToGroupedRow?: (...args: ControlValue[]) => void;
+  fixedColumnCount?: number;
+  allWorksheetIsSelected?: boolean;
+  sheetSelectedRows?: { rowid?: string }[];
+  allowAdd?: boolean;
+  lineEditable?: boolean;
+  columns?: FormControl[];
+  rowHeadOnlyNum?: boolean;
 }
 
 // 优化的分组标题组件
@@ -90,23 +120,28 @@ const GroupTitleCell = React.memo(
     lineEditable,
     columns,
     rowHeadOnlyNum,
-  }) => {
+  }: GroupTitleCellProps) => {
     // 缓存计算结果
     const groupRows = useMemo(
-      () => (sheetViewData.rows || []).filter(({ rowid }) => rowid === 'groupTitle'),
+      () => (sheetViewData.rows || []).filter(({ rowid }: RecordRow) => rowid === 'groupTitle'),
       [sheetViewData.rows],
     );
 
     const allFolded = useMemo(() => _.every(groupRows, ({ key }) => foldedMap[key]), [groupRows, foldedMap]);
 
     const rowsOfThisGroup = useMemo(
-      () => (sheetViewData.rows || []).filter(({ groupKey }) => groupKey === row.key),
+      () => (sheetViewData.rows || []).filter(({ groupKey }: RecordRow) => groupKey === row.key),
       [sheetViewData.rows, row.key],
     );
 
     const selectedIds = useMemo(() => sheetSelectedRows.map(r => r.rowid), [sheetSelectedRows]);
 
-    const control = useMemo(() => [{ type: 'summaryhead' }].concat(columns)[columnIndex], [columns, columnIndex]);
+    const control = useMemo(
+      () =>
+        // 裸字面量里 type 会被推成 string，得显式钉成哨兵联合
+        ([{ type: 'summaryhead' }] as MaybeSummaryHeadControl[]).concat(columns)[columnIndex],
+      [columns, columnIndex],
+    );
 
     // 缓存回调函数
     const handleFold = React.useCallback(
@@ -132,7 +167,7 @@ const GroupTitleCell = React.memo(
 
     const handleSummaryTypeChange = React.useCallback(
       args => {
-        groupRows.forEach(r => {
+        groupRows.forEach((r: RecordRow) => {
           changeWorksheetSheetViewSummaryType({
             ...args,
             groupArgs: {
@@ -188,8 +223,8 @@ const GroupTitleCell = React.memo(
 
     const newClassName = className + ' noRightBorder';
     const { groupRowsSummary } = sheetViewData;
-    const summaryType = control && get(groupRowsSummary, `types.${control.controlId}`);
-    const summaryValue = control && get(groupRowsSummary, `${row.key}.values.${control.controlId}`);
+    const summaryType = control && get(groupRowsSummary, `types.${get(control, 'controlId')}`);
+    const summaryValue = control && get(groupRowsSummary, `${row.key}.values.${get(control, 'controlId')}`);
     return (
       <SummaryCell
         className={newClassName}
@@ -321,7 +356,7 @@ const MemoizedRowHead = React.memo(
         onSelect={onSelect}
         onReverseSelect={onReverseSelect}
         updateRows={updateRows}
-        hideRows={rowIds => {
+        hideRows={(rowIds: string[]) => {
           hideRows(rowIds);
         }}
         rowIndex={rowIndex}
@@ -376,7 +411,34 @@ const MemoizedRowHead = React.memo(
   },
 );
 
+/** getDerivedStateFromProps 里攒出来的 state 增量，键就是下面几处赋值用到的那些。 */
+interface SheetViewStatePatch {
+  __lastViewId?: string;
+  __lastWorksheetId?: string;
+  /** sheetViewData.refreshFlag 的上一次取值，用来判断是否需要重置打码字段 */
+  __lastRefreshFlag?: string | number;
+  /** 自定义按钮的校验状态，切视图时清空 */
+  buttonsCheckStatus?: Record<string, boolean>;
+  /** 需要打码的字段，刷新时清空 */
+  disableMaskDataControls?: Record<string, boolean>;
+}
+
 class TableViewBase extends React.Component<any, any> {
+  // 这些字段只在构造函数/各方法里 this.x = ... 赋值，TS 不当作字段声明，
+  // 不写这几行每次读取都报 TS2339（本文件因此有 26 条）。
+  // declare 是纯类型声明，babel 整行擦除，运行时无影响。
+  declare tableId: string;
+  declare shiftActive: boolean;
+  declare shiftActiveRowIndex: number;
+  /** 列配置的缓存，与 _lastPropsHash 配对使用（props 未变时直接复用） */
+  declare _columnsCache: FormControl[] | null;
+  // 不是字符串哈希，是一份「参与列计算的 props 快照」对象，用 isEqual 比对
+  declare _lastPropsHash: Record<string, ControlValue> | null;
+  /** 未应用个人列设置前的原始列，导出等场景要用 */
+  declare columnsNoPersonalSetting: FormControl[];
+  declare expandCellAppendWidth: number;
+  declare refreshTimer: ReturnType<typeof setTimeout> | null;
+
   static propTypes = {
     isTreeTableView: bool,
     worksheetInfo: PropTypes.shape({}),
@@ -411,7 +473,7 @@ class TableViewBase extends React.Component<any, any> {
       };
     }
 
-    const patch = {};
+    const patch: SheetViewStatePatch = {};
     const changeView = state.__lastWorksheetId === props.worksheetId && state.__lastViewId !== props.viewId;
 
     if (changeView) {
@@ -486,7 +548,7 @@ class TableViewBase extends React.Component<any, any> {
     emitter.addListener('ADD_RECORD_TO_SHEETVIEW', this.addRecordToViewEvent);
     emitter.addListener('RECORD_WORKFLOW_UPDATE', this.recordWorkflowUpdateEvent);
     this.bindShift();
-    window[`getTableColumnWidth-${this.props.worksheetId}`] = control => {
+    window[`getTableColumnWidth-${this.props.worksheetId}`] = (control: FormControl) => {
       const width = getTableColumnWidth(
         document.querySelector('.sheetViewTable'),
         _.get(this.props, 'sheetViewData.rows'),
@@ -522,7 +584,7 @@ class TableViewBase extends React.Component<any, any> {
     }
 
     return Math.max(
-      ...rows.map(r => {
+      ...rows.map((r: RecordRow) => {
         const buttons = filterButtonBySheetSwitchPermit(operatesButtons, this.sheetSwitchPermit, view.viewId, r);
         return getOperatesButtonsWidth({ buttons, style, visibleNum, showIcon, row: r });
       }),
@@ -643,8 +705,8 @@ class TableViewBase extends React.Component<any, any> {
           const operatesButtons = this.getOperateButtons(this.props);
 
           if (operatesButtons.length && !_.get(window, 'shareState.shareId')) {
-            const rows = this.props.sheetViewData.rows;
-            const rowIds = rows.map(r => r.rowid).filter(identity);
+            const rows: RecordRow[] = this.props.sheetViewData.rows;
+            const rowIds = rows.map((r: RecordRow) => r.rowid).filter(identity);
 
             if (_.isEmpty(rowIds)) {
               return;
@@ -681,8 +743,8 @@ class TableViewBase extends React.Component<any, any> {
       !_.isEqual(prevProps.foldedMap, this.props.foldedMap) ||
       (!!getGroupControlId(view) &&
         !_.isEqual(
-          prevProps.sheetViewData.rows.filter(r => r.rowid === 'groupTitle').map(r => r.count),
-          this.props.sheetViewData.rows.filter(r => r.rowid === 'groupTitle').map(r => r.count),
+          prevProps.sheetViewData.rows.filter((r: RecordRow) => r.rowid === 'groupTitle').map((r: RecordRow) => r.count),
+          this.props.sheetViewData.rows.filter((r: RecordRow) => r.rowid === 'groupTitle').map((r: RecordRow) => r.count),
         )) ||
       // 操作列「快捷按钮」集合变化（如启用/停用分组内按钮导致空分组显隐）会改变 operatesButtonsWidth，
       // 但 react-window 列宽是缓存的，仅 re-render 传入新宽度不会重测量，需显式 forceUpdate 让其按新宽度重算。
@@ -694,7 +756,7 @@ class TableViewBase extends React.Component<any, any> {
     }
   }
 
-  navGroupToSearch = props => {
+  navGroupToSearch = (props?) => {
     const { view, worksheetInfo } = props || this.props;
     const navGroupData = (get(worksheetInfo, 'template.controls') || []).find(
       o => o.controlId === get(view, 'navGroup[0].controlId'),
@@ -800,14 +862,14 @@ class TableViewBase extends React.Component<any, any> {
     window.removeEventListener('blur', this.handleWindowBlur);
   }
 
-  activeShift = e => {
+  activeShift = (e: KeyboardEvent) => {
     if (e.keyCode === 16) {
       this.shiftActive = true;
       document.querySelector('#worksheetRightContentBox')?.classList.add('noSelect');
     }
   };
 
-  deActiveShift = e => {
+  deActiveShift = (e: KeyboardEvent) => {
     if (e.keyCode === 16) {
       this.shiftActive = false;
       document.querySelector('#worksheetRightContentBox')?.classList.remove('noSelect');
@@ -835,7 +897,7 @@ class TableViewBase extends React.Component<any, any> {
 
   updateRecordEvent = ({ worksheetId, recordId }) => {
     const { viewId, updateRows, hideRows, sheetViewData } = this.props;
-    const { rows } = sheetViewData;
+    const { rows }: { rows: RecordRow[]; [key: string]: any } = sheetViewData;
 
     if (worksheetId === this.props.worksheetId && _.find(rows, r => r.rowid === recordId)) {
       getRowDetail({
@@ -931,7 +993,7 @@ class TableViewBase extends React.Component<any, any> {
     setHighLight(this.tableId, rowIndex);
   };
 
-  handleColumnHeadHeightUpdate = height => {
+  handleColumnHeadHeightUpdate = (height: number) => {
     if (height && height !== this.state.columnHeadHeight) {
       this.setState({ columnHeadHeight: height });
     }
@@ -964,10 +1026,10 @@ class TableViewBase extends React.Component<any, any> {
     // 生成选项字段的 options 哈希值，用于检测选项变化
     const optionsHash =
       controls
-        ?.filter(control =>
+        ?.filter((control: FormControl) =>
           _.includes([WIDGETS_TO_API_TYPE_ENUM.MULTI_SELECT, WIDGETS_TO_API_TYPE_ENUM.DROP_DOWN], control.type),
         )
-        ?.map(control => `${control.controlId}:${control.options?.length || 0}`)
+        ?.map((control: FormControl) => `${control.controlId}:${control.options?.length || 0}`)
         ?.join(',') || '';
     const currentHash = {
       showControlIds,
@@ -1004,11 +1066,11 @@ class TableViewBase extends React.Component<any, any> {
   _computeColumns() {
     const { isTreeTableView, view, showControlIds = [], treeTableViewData } = this.props;
     const { maxLevel } = treeTableViewData;
-    const rows = get(this.props, 'sheetViewData.rows') || [];
+    const rows: RecordRow[] = get(this.props, 'sheetViewData.rows') || [];
     const isShowWorkflowSys = isOpenPermit(permitList.sysControlSwitch, this.sheetSwitchPermit);
-    const controls = isShowWorkflowSys
+    const controls: FormControl[] = isShowWorkflowSys
       ? this.props.controls
-      : this.props.controls.filter(it => !_.includes(WORKFLOW_SYSTEM_FIELDS_SORT, it.controlId));
+      : this.props.controls.filter((it: FormControl) => !_.includes(WORKFLOW_SYSTEM_FIELDS_SORT, it.controlId));
 
     const { sheetHiddenColumns } = this.props.sheetViewConfig;
     let { showControls = [] } = view || {};
@@ -1017,15 +1079,15 @@ class TableViewBase extends React.Component<any, any> {
       // 有视图配置(showControls)时按其顺序排列，并保留 showControls 中不存在的选中列(放末尾)；
       // 未关联视图或视图未配置显示列时，尊重传入的 showControlIds 顺序
       const orderedIds = showControls.length
-        ? _.uniq([...showControls.filter(cid => showControlIds.includes(cid)), ...showControlIds])
+        ? _.uniq([...showControls.filter((cid: FormControl) => showControlIds.includes(cid)), ...showControlIds])
         : showControlIds;
-      return orderedIds.map(cid => _.find(controls, { controlId: cid })).filter(_.identity);
+      return orderedIds.map((cid: string) => _.find(controls, { controlId: cid })).filter(_.identity);
     }
 
     let columns = [];
     const hiddenColumnIds = (this.showColumnControl ? [] : sheetHiddenColumns).concat(view.controls || []); //view.controls 为视图配置的隐藏列，需始终过滤
     let filteredControls = controls
-      .map(c => ({ ...c }))
+      .map((c: FormControl) => ({ ...c }))
       .filter(
         control =>
           !_.includes(SHEET_VIEW_HIDDEN_TYPES, control.type) &&
@@ -1078,8 +1140,8 @@ class TableViewBase extends React.Component<any, any> {
         .slice(0, 50)
         .concat(
           syssort
-            .filter(ssid => _.includes(sysids, ssid))
-            .map(ssid => _.find(filteredControls, { controlId: ssid }))
+            .filter((ssid: string) => _.includes(sysids, ssid))
+            .map((ssid: string) => _.find(filteredControls, { controlId: ssid }))
             .filter(_.identity),
         );
     }
@@ -1120,8 +1182,8 @@ class TableViewBase extends React.Component<any, any> {
       const showControls = _.cloneDeep(columns) || [];
       const controlsSorts = personalSetting?.controlsSorts || [];
       columns = [
-        ...controlsSorts.map(id => showControls.find(c => c.controlId === id)).filter(o => !!o),
-        ...showControls.filter(c => !controlsSorts.includes(c.controlId)),
+        ...controlsSorts.map((id: string) => showControls.find((c: FormControl) => c.controlId === id)).filter(o => !!o),
+        ...showControls.filter((c: FormControl) => !controlsSorts.includes(c.controlId)),
       ];
     }
 
@@ -1186,13 +1248,13 @@ class TableViewBase extends React.Component<any, any> {
 
   get highLightRows() {
     try {
-      const rows = get(this.props, 'sheetViewData.rows');
+      const rows: RecordRow[] = get(this.props, 'sheetViewData.rows');
       const { allWorksheetIsSelected, sheetSelectedRows } = this.props.sheetViewConfig || {};
       return [
         {},
         ...(allWorksheetIsSelected
-          ? rows.filter(row => !_.find(sheetSelectedRows, r => r.rowid === row.rowid)).map(row => row.rowid)
-          : sheetSelectedRows.map(row => row.rowid)),
+          ? rows.filter((row: RecordRow) => !_.find(sheetSelectedRows, r => r.rowid === row.rowid)).map(row => row.rowid)
+          : sheetSelectedRows.map((row: RecordRow) => row.rowid)),
       ].reduce((a, b) => ({ ...a, [b]: true }));
     } catch (err) {
       console.error(err);
@@ -1215,7 +1277,7 @@ class TableViewBase extends React.Component<any, any> {
 
   get numberWidth() {
     const { sheetViewData } = this.props;
-    const { rows } = sheetViewData;
+    const { rows }: { rows: RecordRow[]; [key: string]: any } = sheetViewData;
     const { lineNumberBegin } = this;
     let numberWidth = String(lineNumberBegin + rows.length).length * 8;
     return numberWidth > 14 ? numberWidth : 14;
@@ -1281,7 +1343,7 @@ class TableViewBase extends React.Component<any, any> {
   // 缓存分组行，避免重复过滤
   get groupRows() {
     const { sheetViewData = {} } = this.props;
-    const { rows = [] } = sheetViewData;
+    const { rows = [] }: { rows: RecordRow[]; [key: string]: any } = sheetViewData;
     return rows.filter(({ rowid }) => rowid === 'groupTitle');
   }
 
@@ -1294,7 +1356,7 @@ class TableViewBase extends React.Component<any, any> {
   renderSummaryCell = ({ className = '', style, columnIndex }) => {
     const { viewId, sheetViewData, changeWorksheetSheetViewSummaryType, sheetViewConfig } = this.props;
     const { allWorksheetIsSelected, sheetSelectedRows } = sheetViewConfig;
-    const { rowsSummary, rows } = sheetViewData;
+    const { rowsSummary, rows }: { rows: RecordRow[]; [key: string]: any } = sheetViewData;
     const control = [{ type: 'summaryhead' }].concat(this.columns)[columnIndex];
     return (
       <SummaryCell
@@ -1354,7 +1416,7 @@ class TableViewBase extends React.Component<any, any> {
       const { personal_setting } = getAdvanceSetting(view);
       const personalSetting = safeParse(personal_setting || '{}');
       param.sheetHiddenColumns = personalSetting?.controls;
-      param.hideColumn = id => {
+      param.hideColumn = (id: string) => {
         const { personal_setting } = getAdvanceSetting(view);
         const personalSetting = safeParse(personal_setting || '{}');
         saveView(
@@ -1409,7 +1471,7 @@ class TableViewBase extends React.Component<any, any> {
           renderBatchSetDialog({
             columns: isShowWorkflowSys
               ? controls
-              : controls.filter(it => !_.includes(WORKFLOW_SYSTEM_FIELDS_SORT, it.controlId)),
+              : controls.filter((it: FormControl) => !_.includes(WORKFLOW_SYSTEM_FIELDS_SORT, it.controlId)),
             view,
             currentSheetInfo: worksheetInfo,
             onClose: () => {},
@@ -1523,13 +1585,13 @@ class TableViewBase extends React.Component<any, any> {
       });
     };
 
-    const handleSelect = (newSelected, selectRowId) => {
+    const handleSelect = (newSelected: string[], selectRowId: string) => {
       if (allWorksheetIsSelected) {
         selectRows({
           selectAll: false,
           rows: data
-            .filter(function (row) {
-              return !_.find(newSelected, function (rowid) {
+            .filter(function (row: RecordRow) {
+              return !_.find(newSelected, function (rowid: string) {
                 return row.rowid === rowid;
               });
             })
@@ -1552,7 +1614,7 @@ class TableViewBase extends React.Component<any, any> {
         } else {
           this.shiftActiveRowIndex = selectIndex;
           selectRows({
-            rows: newSelected.map(rowid => _.find(data, row => row.rowid === rowid)).filter(_.identity),
+            rows: newSelected.map((rowid: string) => _.find(data, (row: RecordRow) => row.rowid === rowid)).filter(_.identity),
           });
         }
       }
@@ -1568,7 +1630,7 @@ class TableViewBase extends React.Component<any, any> {
         selectRows({
           rows: data
             .filter(
-              r =>
+              (r: RecordRow) =>
                 r.rowid !== 'groupTitle' &&
                 r.rowid !== 'loadGroupMore' &&
                 !_.find(sheetSelectedRows, row => row.rowid === r.rowid),
@@ -1578,7 +1640,7 @@ class TableViewBase extends React.Component<any, any> {
       }
     };
 
-    const handleHideRows = rowIds => {
+    const handleHideRows = (rowIds: string[]) => {
       hideRows(rowIds);
       getWorksheetSheetViewSummary();
     };
@@ -1685,7 +1747,7 @@ class TableViewBase extends React.Component<any, any> {
             const rowId = data.rowid || recordId;
             updateRows([rowId], _.omit(data, ['allowedit', 'allowdelete']));
           }}
-          onCopySuccess={(record, afterRowId) => {
+          onCopySuccess={(record: RecordRow, afterRowId: string) => {
             setHighLight(this.tableId, rowIndex + 1);
             addRecord(record ? Object.assign({}, record, { group: row.group }) : {}, afterRowId);
           }}
@@ -1792,7 +1854,7 @@ class TableViewBase extends React.Component<any, any> {
       b.type === 'group_ref' && _.isArray(b.buttons) ? b.buttons.map(member => member.btnId) : [b.btnId],
     );
 
-  checkSingleRowBtns = rowId => {
+  checkSingleRowBtns = (rowId: string) => {
     const { worksheetId, sheetFetchParams } = this.props;
     const operatesButtons = this.getOperateButtons(this.props);
     if (!operatesButtons.length || !rowId) return;
@@ -1851,12 +1913,12 @@ class TableViewBase extends React.Component<any, any> {
 
   asyncUpdate(row, cell, options) {
     const { worksheetInfo, updateControlOfRow, controls, sheetSearchConfig, sheetViewData = {} } = this.props;
-    const { rows = [] } = sheetViewData;
+    const { rows = [] }: { rows: RecordRow[]; [key: string]: any } = sheetViewData;
     row = _.find(rows, { rowid: row.rowid }) || {};
     const { projectId, rules = [] } = worksheetInfo;
     const asyncUpdateControlOfRow = this.debounceUpdateControlOfRow();
 
-    const asyncUpdateCell = (cid, newValue) => {
+    const asyncUpdateCell = (cid: string, newValue: ControlValue) => {
       if (typeof newValue === 'object' || cid === cell.controlId) {
         return;
       }
@@ -1865,14 +1927,14 @@ class TableViewBase extends React.Component<any, any> {
     };
 
     const dataFormat = new DataFormat({
-      data: controls.filter(c => c.advancedSetting).map(c => ({ ...c, value: (row || {})[c.controlId] || c.value })),
+      data: controls.filter((c: FormControl) => c.advancedSetting).map(c => ({ ...c, value: (row || {})[c.controlId] || c.value })),
       projectId,
       rules,
       // masterData,
       searchConfig: sheetSearchConfig,
       onAsyncChange: changes => {
         if (!_.isEmpty(changes.controlIds)) {
-          changes.controlIds.forEach(cid => {
+          changes.controlIds.forEach((cid: string) => {
             asyncUpdateCell(cid, changes.value);
           });
         } else if (changes.controlId) {
@@ -1949,7 +2011,7 @@ class TableViewBase extends React.Component<any, any> {
     } = this.props;
     const { readonly } = this;
     const { loading } = sheetViewData;
-    let rows = sheetViewData.rows;
+    let rows: RecordRow[] = sheetViewData.rows;
     const operatesButtons = this.getOperateButtons(this.props);
     const operatesButtonsStyle = getSheetOperatesButtonsStyle(view);
     const showOperatesInRow = !!operatesButtons.length && !get(window, 'shareState.shareId');
@@ -1958,7 +2020,7 @@ class TableViewBase extends React.Component<any, any> {
       style: operatesButtonsStyle.style,
       visibleNum: operatesButtonsStyle.visibleNum,
       showIcon: operatesButtonsStyle.showIcon,
-      rows: rows.filter(r => r.rowid !== 'groupTitle' && r.rowid !== 'loadGroupMore'),
+      rows: rows.filter((r: RecordRow) => r.rowid !== 'groupTitle' && r.rowid !== 'loadGroupMore'),
     });
     const { sheetSelectedRows = [], sheetColumnWidths, columnStyles, defaultScrollLeft } = sheetViewConfig;
     const { worksheetId, projectId, allowAdd, rules = [], isWorksheetQuery } = worksheetInfo;
@@ -1996,14 +2058,14 @@ class TableViewBase extends React.Component<any, any> {
 
     const rowHeights =
       isGroupTableView &&
-      rows.map(row => {
+      rows.map((row: RecordRow) => {
         if (row.rowid === 'groupTitle') {
           return 34;
         }
 
         return ROW_HEIGHT[view.rowHeight] || 34;
       });
-    const getRowHeight = rowIndex => rowHeights[rowIndex];
+    const getRowHeight = (rowIndex: number) => rowHeights[rowIndex];
     return (
       <React.Fragment>
         {!!recordInfoVisible && (
@@ -2026,7 +2088,7 @@ class TableViewBase extends React.Component<any, any> {
             appSectionId={groupId}
             view={view}
             visible={!!recordInfoVisible}
-            hideRecordInfo={closeId => {
+            hideRecordInfo={(closeId: string) => {
               if (!closeId || closeId === this.state.recordId) {
                 this.setState({ recordInfoVisible: false, tempViewIdForRecordInfo: undefined });
               }
@@ -2045,7 +2107,7 @@ class TableViewBase extends React.Component<any, any> {
               hideRows([recordId]);
             }}
             getWorksheetSummary={getWorksheetSheetViewSummary}
-            currentSheetRows={rows.filter(r => r.rowid !== 'groupTitle' && r.rowid !== 'loadGroupMore')}
+            currentSheetRows={rows.filter((r: RecordRow) => r.rowid !== 'groupTitle' && r.rowid !== 'loadGroupMore')}
             handleAddSheetRow={addRecord}
             workflowStatus={recordInfoVisible && recordInfoVisible.wfstatus}
             printCharge={printCharge}
@@ -2274,7 +2336,7 @@ function SheetViewConnecter(props) {
     updateTreeByRowChange,
   } = props;
   const context = useContext(SheetContext);
-  const rows = useMemo(() => {
+  const rows: RecordRow[] = useMemo(() => {
     if (!isTreeTableView || !!filters.keyWords) {
       return sheetViewData.rows;
     } else {
@@ -2290,7 +2352,7 @@ function SheetViewConnecter(props) {
       printCharge={get(context, 'config.printCharge')}
       fromEmbed={get(context, 'config.fromEmbed')}
       sheetViewData={{ ...sheetViewData, rows }}
-      updateRows={(rowIds, value, changedValue) => {
+      updateRows={(rowIds: string[], value: ControlValue, changedValue: ControlValue) => {
         if (isTreeTableView && !filters.keyWords && view.viewControl && get(changedValue, view.viewControl)) {
           updateTreeByRowChange({ recordId: rowIds[0], changedValue });
           updateRows(rowIds, value);
@@ -2313,7 +2375,7 @@ SheetViewConnecter.propTypes = {
 };
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     // worksheet
     isCharge: state.sheet.isCharge,
     worksheetInfo: state.sheet.worksheetInfo,

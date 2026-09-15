@@ -25,19 +25,22 @@ export default function HiddenMenu(props) {
   let type = showhide === 'hide' ? 1 : 0;
 
   return (
-    <Menu className="hiddenMenu" {...rest}>
-      {HIDDEN_MENU.map((item, index) => {
-        return (
-          <Menu.Item
-            key={'hiddenMenu' + index}
-            className={`hiddenMenuItem ${showhide === HIDDEN_MENU[index].key[type] ? 'current' : ''}`}
-            onClick={() => onClick(showhide === HIDDEN_MENU[index].key[type] ? '' : HIDDEN_MENU[index].key[type])}
-          >
+    // children 写法在 antd 5 起已弃用，改用 items（详见 viewDisplayMenu.tsx 的注释）。
+    // DOM 结构与选择器不变，className / onClick 在 items 里同样可用。
+    <Menu
+      className="hiddenMenu"
+      {...rest}
+      items={HIDDEN_MENU.map((item, index) => ({
+        key: 'hiddenMenu' + index,
+        className: `hiddenMenuItem ${showhide === HIDDEN_MENU[index].key[type] ? 'current' : ''}`,
+        onClick: () => onClick(showhide === HIDDEN_MENU[index].key[type] ? '' : HIDDEN_MENU[index].key[type]),
+        label: (
+          <React.Fragment>
             {item[showhide !== 'hide' ? 'text' : 'textShow']}
             {showhide === HIDDEN_MENU[index].key[type] && <Icon icon="done" />}
-          </Menu.Item>
-        );
-      })}
-    </Menu>
+          </React.Fragment>
+        ),
+      }))}
+    />
   );
 }

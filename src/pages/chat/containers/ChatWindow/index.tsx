@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import LoadDiv from 'ming-ui/components/LoadDiv';
 import preall from 'src/common/preall';
+import type { RootState } from 'src/redux/types';
 import { socketInit } from 'src/socket';
 import * as actions from '../../redux/actions';
 import * as utils from '../../utils/';
@@ -105,7 +106,7 @@ let ChatWindow = class ChatWindow extends Component<any, any> {
   }
 };
 ChatWindow = preall(ChatWindow);
-const ConnectChatWindow = connect(state => {
+const ConnectChatWindow = connect((state: RootState) => {
   const { currentSessionList, isWindow } = state.chat;
   return {
     currentSessionList,

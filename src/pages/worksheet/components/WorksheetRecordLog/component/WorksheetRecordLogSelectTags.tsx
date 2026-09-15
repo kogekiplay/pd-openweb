@@ -126,7 +126,7 @@ function WorksheetRecordLogSelectTags(props) {
     return showMaskData && _.indexOf(maskList, text) < 0 ? dealMaskValue({ ...control, value: text }) : text;
   };
 
-  const renderList = (list, listType) => {
+  const renderList = (list, listType: string) => {
     let prefix = isChangeValue ? (listType === 'old' ? '-' : '+') : '';
     return list.map((item, index) => {
       return item ? (

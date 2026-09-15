@@ -1,7 +1,7 @@
 import React from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import ClickAway from 'ming-ui/components/ClickAway';
 import './EditableCellCon.less';
@@ -36,6 +36,12 @@ function EditableCellCon(props) {
     hideOutline,
     onClick,
     onClear,
+    // 本组件常被当作 <Trigger> 的直接子元素（CellControls 下 Date/Text/User/
+    // Department/Time/OrgRole/MobilePhone/Cascader 共 8 处）。
+    // @rc-component/trigger 靠挂在子元素上的 ref 取 DOM 节点（rc-trigger 5 用的是
+    // findDOMNode，子组件接不接 ref 都无所谓）。接不住的话 targetEle 恒为 null，
+    // 弹层会被算到屏幕外 —— 表现为「单元格校验错误提示不显示」，且【不报任何错】。
+    ref,
   } = props;
   return (
     <Trigger
@@ -55,7 +61,17 @@ function EditableCellCon(props) {
           cellControlErrorStatus: !hideOutline && error,
           isediting,
         })}
-        ref={conRef}
+        // 外部 ref 与既有的 conRef 都要挂上。
+        // 必须写成【块体】：React 19 把 callback ref 的返回值当作清理函数，
+        // 简写体 `node => assign(node)` 会把赋值结果当 cleanup 返回，报
+        // "Unexpected return value from a callback ref"。
+        ref={node => {
+          if (typeof conRef === 'function') conRef(node);
+          else if (conRef) conRef.current = node;
+
+          if (typeof ref === 'function') ref(node);
+          else if (ref) ref.current = node;
+        }}
         style={style}
         onClick={onClick}
       >

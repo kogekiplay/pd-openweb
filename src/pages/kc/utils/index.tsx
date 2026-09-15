@@ -247,7 +247,7 @@ export function getDefaultSortType(sortBy) {
  * @param  {Boolean|String} noText    取消按钮的内容，如果为 false 不显示取消按钮
  * @return {Promise}                  [description]
  */
-export function confirm(header, content, showClose, ckText, minorContent, yesText = undefined, noText = undefined) {
+export function confirm(header: string, content: string, showClose: boolean, ckText: string, minorContent: string, yesText = undefined, noText = undefined) {
   return new Promise((resolve, reject) => {
     const container = {};
 
@@ -378,7 +378,7 @@ export function isOffice(fileExt) {
   return false;
 }
 
-export function isWpsPreview(fileExt, isEdit) {
+export function isWpsPreview(fileExt, isEdit?: boolean) {
   var fileExts = [
     'doc',
     'dot',

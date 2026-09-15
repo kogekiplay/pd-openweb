@@ -21,6 +21,7 @@ import { getVerifyInfo, handleAdvancedSettingChange } from '../util/setting';
 import { changeWidgetSize, getPathById, isFullLineControl } from '../util/widgets';
 import WidgetOperation from './components/WidgetOperation';
 import WidgetDisplay from './widgetDisplay';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const DisplayItemWrap = styled.div`
   align-self: stretch;
@@ -110,7 +111,7 @@ export default function DisplayItem(props) {
     settingPanelVisible,
     setPanelVisible = () => {},
     styleInfo = {},
-  } = props;
+  }: { allControls: FormControl[]; [key: string]: any } = props;
   const { type, controlId, dataSource, sourceControlId } = data;
   const { titlestorage } = styleInfo.info || {};
   const { worksheetId: globalSheetId } = globalSheetInfo;

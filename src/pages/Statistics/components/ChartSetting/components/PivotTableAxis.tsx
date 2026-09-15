@@ -29,6 +29,7 @@ import {
 } from 'statistics/common/timeUtils';
 import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget';
 import { ShowFormatDialog } from 'src/pages/widgetConfig/widgetSetting/components/WidgetHighSetting/ControlSetting/DateConfig';
+import type { RootState } from 'src/redux/types';
 import { normTypes } from '../../../enum';
 import RenameModal from './RenameModal';
 import ShowControlModal from './ShowControlModal';
@@ -707,5 +708,5 @@ let PivotTableAxis = class PivotTableAxis extends Component<any, any> {
     );
   }
 };
-PivotTableAxis = connect(state => ({ ..._.pick(state.statistics, ['worksheetInfo']) }))(PivotTableAxis);
+PivotTableAxis = connect((state: RootState) => ({ ..._.pick(state.statistics, ['worksheetInfo']) }))(PivotTableAxis);
 export default PivotTableAxis;

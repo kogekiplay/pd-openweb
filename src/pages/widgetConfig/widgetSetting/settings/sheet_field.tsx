@@ -21,6 +21,7 @@ import {
 import { handleAdvancedSettingChange, isSingleRelateSheet, updateConfig } from '../../util/setting';
 import { isFullLineControl } from '../../util/widgets';
 import WorksheetReference from '../components/WorksheetReference';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const SHEET_FIELD_TYPES = [
   {
@@ -33,7 +34,7 @@ const SHEET_FIELD_TYPES = [
   },
 ];
 
-const getFieldsByControls = (controls = []) => {
+const getFieldsByControls = (controls: FormControl[] = []) => {
   return resortControlByColRow(controls.filter(i => !_.includes(SYS_CONTROLS, i.controlId))).filter(
     ({ type, enumDefault }) => !(_.includes(CAN_NOT_AS_OTHER_FIELD, type) || (type === 38 && enumDefault === 3)),
   );
@@ -46,7 +47,7 @@ export default function SheetField(props) {
     onChange,
     globalSheetInfo = {},
     status: { saveIndex },
-  } = props;
+  }: { allControls: FormControl[]; [key: string]: any } = props;
   const { controlId, dataSource, strDefault = '10' } = data;
 
   const showType = strDefault.split('')[0] || '0';
@@ -90,7 +91,7 @@ export default function SheetField(props) {
 
   const updateDisabledInfo = () => {
     const sheetObj = _.find(sheetList, item => item.value === parsedDataSource);
-    const relationControls = _.get(
+    const relationControls: FormControl[] = _.get(
       allControls.find(item => _.get(item, 'controlId') === parsedDataSource),
       'relationControls',
     );

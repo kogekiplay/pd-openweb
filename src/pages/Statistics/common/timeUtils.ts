@@ -495,7 +495,7 @@ export const timeDataParticle = [
   {
     text: _l('月'),
     value: 3,
-    getTime: showFormat => {
+    getTime: (showFormat?) => {
       if (showFormat === '0') {
         return moment().format('YYYY-MM');
       }
@@ -677,7 +677,7 @@ export const formatrChartTimeText = ({ rangeType, rangeValue, dynamicFilter, tod
  * 根据文字内容获取尺寸
  */
 
-export const formatterTooltipTitle = (xaxes, key) => {
+export const formatterTooltipTitle = (xaxes, key?) => {
   if (isTimeControl(xaxes.controlType) && xaxes.particleSizeType === 2) {
     return (title, data) => {
       const value = key ? data[key] : title;

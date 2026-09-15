@@ -138,7 +138,7 @@ function asyncRun(code, cb, { timeout = 1000 } = {}) {
   // cb(null, result);
 }
 
-function replaceControlIdToValue(expression, formData, nullzero = '0', inString) {
+function replaceControlIdToValue(expression, formData, nullzero = '0', inString?) {
   expression = expression.replace(/\$(.+?)\$/g, matched => {
     const controlId = matched.match(/\$(.+?)\$/)[1];
     const control = _.find(formData, obj => obj.controlId === controlId);

@@ -5,6 +5,7 @@ import { Input } from 'antd';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
+import type { RootState } from 'src/redux/types';
 import { Header } from '../../styled';
 import { FlexCenter, genUrl } from '../../util';
 import PreviewWraper from '../previewContent';
@@ -78,7 +79,7 @@ function EmbedUrl({ onClose, onEdit, widget = {}, info }) {
   };
 
   return (
-    (<Modal
+    <Modal
       className="editWidgetDialogWrap"
       open
       transitionName=""
@@ -137,11 +138,11 @@ function EmbedUrl({ onClose, onEdit, widget = {}, info }) {
           </div>
         </ContentWrap>
       </ConfigProvider>
-    </Modal>)
+    </Modal>
   );
 }
 
-export default connect(({ sheet, appPkg, customPage }) => ({
+export default connect(({ sheet, appPkg, customPage }: RootState) => ({
   info: {
     ...sheet.base,
     projectId: appPkg.projectId,

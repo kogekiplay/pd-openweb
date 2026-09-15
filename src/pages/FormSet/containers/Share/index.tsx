@@ -7,6 +7,7 @@ import sheetAjax from 'src/api/worksheet';
 import { SHARECARDTYPS } from 'src/components/ShareCardConfig/config';
 import SelectExDrop from 'src/pages/Role/PortalCon/components/SelectExDrop';
 import ShareCardSetting from './ShareCardSet';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Container = styled.div`
   padding: 35px 40px 10px;
@@ -90,7 +91,7 @@ const TYPES = [
 ];
 
 const SharingSettings = props => {
-  const { worksheetId, worksheetInfo, onChange, worksheetControls } = props;
+  const { worksheetId, worksheetInfo, onChange, worksheetControls }: { worksheetControls: FormControl[]; [key: string]: any } = props;
   const { views = [], appId } = worksheetInfo;
   const [activeTab, setActiveTab] = useState('view');
   const [isView, setIsView] = useState(false);

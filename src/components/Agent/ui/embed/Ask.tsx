@@ -242,7 +242,7 @@ export default function Ask({ data, docked = false }) {
   const ans = answers[current] || { selected: [], custom: '' };
   const isLast = current >= questions.length - 1;
 
-  function patch(idx, next) {
+  function patch(idx: number, next) {
     setAnswers(prev => ({ ...prev, [idx]: { selected: [], custom: '', ...prev[idx], ...next } }));
   }
 
@@ -311,7 +311,7 @@ export default function Ask({ data, docked = false }) {
     });
   }
 
-  function submit(skipCurrent, answersOverride) {
+  function submit(skipCurrent: boolean, answersOverride?) {
     if (submittedRef.current) return;
     submittedRef.current = true;
     bus.emit('ask:submit', { answers: collect(skipCurrent, answersOverride) });

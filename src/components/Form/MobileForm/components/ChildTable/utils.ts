@@ -7,8 +7,9 @@ import { checkRulesErrorOfRow } from 'src/utils/rule';
 import { FORM_ERROR_TYPE, FORM_ERROR_TYPE_TEXT, FROM } from '../../../core/config';
 import { checkRuleLocked } from '../../../core/formUtils';
 import { checkValueByFilterRegex } from '../../../core/formUtils';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
-function getControlCompareValue(c, value) {
+function getControlCompareValue(c: FormControl, value) {
   if (c.type === 26) {
     return safeParse(value, 'array')
       .map(u => u.accountId)
@@ -40,7 +41,7 @@ function getControlCompareValue(c, value) {
  * @param  {} data
  */
 
-export function getSubListError({ rows, rules }, controls = [], showControls = [], from = 3, masterData) {
+export function getSubListError({ rows, rules }, controls: FormControl[] = [], showControls = [], from = 3, masterData) {
   const result = {};
 
   try {
@@ -49,7 +50,7 @@ export function getSubListError({ rows, rules }, controls = [], showControls = [
         from,
         rules,
         controls: controls.filter(
-          c =>
+          (c: FormControl) =>
             _.find(showControls, id => id === c.controlId) ||
             _.find(rules, rule => JSON.stringify(rule.filters).indexOf(c.controlId) > -1),
         ),
@@ -57,11 +58,11 @@ export function getSubListError({ rows, rules }, controls = [], showControls = [
       });
       const rulesErrors = rulesResult.errors;
       const controldata = rulesResult.formData.filter(
-        c => _.find(showControls, id => id === c.controlId) && controlState(c).visible && controlState(c).editable,
+        (c: FormControl) => _.find(showControls, id => id === c.controlId) && controlState(c).visible && controlState(c).editable,
       );
       const isLock = checkRuleLocked(
         rules,
-        rulesResult.formData.filter(c => _.find(showControls, id => id === c.controlId) && controlState(c).visible),
+        rulesResult.formData.filter((c: FormControl) => _.find(showControls, id => id === c.controlId) && controlState(c).visible),
         row.rowid,
       );
 
@@ -91,11 +92,11 @@ export function getSubListError({ rows, rules }, controls = [], showControls = [
       });
     });
     const uniqueControls = controls.filter(
-      c => _.find(showControls, id => id === c.controlId) && (c.unique || c.uniqueInRecord),
+      (c: FormControl) => _.find(showControls, id => id === c.controlId) && (c.unique || c.uniqueInRecord),
     );
     uniqueControls.forEach(c => {
       const hadValueRows = rows.filter(
-        row =>
+        (row: RecordRow) =>
           typeof row[c.controlId] !== 'undefined' &&
           !checkCellIsEmpty(row[c.controlId]) &&
           !row[c.controlId].startsWith('deleteRowIds'),

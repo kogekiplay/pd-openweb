@@ -19,6 +19,7 @@ import FilterDetailName from './FilterDetailName';
 import QueryButton from './QueryButton';
 import SaveButton from './SaveButton';
 import SplitDropdown from './SplitDropdown';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   display: flex;
@@ -110,7 +111,7 @@ export default function FilterDetail(props) {
     filterError = [],
     isRules,
     showCustom,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const formattedCondition = formatForSave(filter);
   const notEmptyConditionsNum = _.sum(formattedCondition.map(c => (c.isGroup ? _.get(c, 'groupFilters.length') : 1)));
   const canSave = !!notEmptyConditionsNum;

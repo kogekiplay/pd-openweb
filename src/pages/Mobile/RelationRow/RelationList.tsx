@@ -9,9 +9,11 @@ import { RecordInfoModal } from 'mobile/Record';
 import { WithoutRows } from 'mobile/RecordList/SheetRows';
 import RecordCoverCard from 'src/components/Form/MobileForm/components/RelateRecordCards/RecordCoverCard';
 import { getCoverUrl } from 'src/components/Form/MobileForm/tools/utils';
+import type { RootState } from 'src/redux/types';
 import { addBehaviorLog } from 'src/utils/project';
 import * as actions from './redux/actions';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 class RelationList extends Component<any, any> {
   constructor(props) {
@@ -90,7 +92,7 @@ class RelationList extends Component<any, any> {
   };
   renderRow = item => {
     const { actionParams, control, viewId } = this.props;
-    const { showControls, relationControls, selectedRecordIds, isEdit, coverCid } = actionParams;
+    const { showControls, relationControls, selectedRecordIds, isEdit, coverCid }: { relationControls: FormControl[]; [key: string]: any } = actionParams;
     const selected = !!_.find(selectedRecordIds, id => id === item.rowid);
 
     return (
@@ -231,7 +233,7 @@ class RelationList extends Component<any, any> {
 }
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     ..._.pick(state.mobile, ['rowInfo', 'relationRow', 'relationRows', 'loadParams', 'actionParams', 'permissionInfo']),
   }),
   dispatch =>

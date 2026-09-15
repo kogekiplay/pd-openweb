@@ -13,6 +13,7 @@ import * as actions from 'src/pages/Role/AppRoleCon/redux/actions';
 import { ROLE_CONFIG } from 'src/pages/Role/config';
 import DropOption from 'src/pages/Role/PortalCon/components/DropOption';
 import { WrapCon, WrapContext, WrapHeader } from 'src/pages/Role/style';
+import type { RootState } from 'src/redux/types';
 import { navigateTo } from 'src/router/navigateTo';
 import { VersionProductType } from 'src/utils/enum';
 import { getFeatureStatus } from 'src/utils/project';
@@ -297,7 +298,7 @@ class Con extends React.Component<any, any> {
     );
   }
 }
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   appRole: state.appRole,
 });
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);

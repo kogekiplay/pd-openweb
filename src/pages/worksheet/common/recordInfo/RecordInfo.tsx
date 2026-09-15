@@ -36,8 +36,30 @@ import Header from './RecordForm/Header';
 import RecordInfoContext from './RecordInfoContext';
 import RecordInfoRight from './RecordInfoRight';
 import './RecordInfo.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const SIDE_MIN_WIDTH = 200 + 226;
+
+/**
+ * onSubmit 的入参。全都可选 —— 调用方既有 onSubmit()（普通保存），
+ * 也有 onSubmit({ draftType: 'submit' })、以及草稿的一整套 ignore*。
+ * 不写这个类型的话 TS 只会从几个默认值推出
+ * `{ ignoreAlert?: boolean; ignoreDialog?: boolean; silent?: boolean }`，
+ * 于是 callback / noSave / draftType 全部报 TS2339。
+ */
+interface SubmitOptions {
+  /** 提交结束回调，实参形如 { error } / { logId }，不传参表示成功 */
+  callback?: (res?: { error?: any; logId?: string }) => void;
+  /** 只跑校验、不落库 */
+  noSave?: boolean;
+  /** 校验有错也继续提交 */
+  ignoreError?: boolean;
+  ignoreAlert?: boolean;
+  ignoreDialog?: boolean;
+  silent?: boolean;
+  /** save: 保存  submit: 提交 */
+  draftType?: 'save' | 'submit';
+}
 
 const Drag = styled(DragCore)`
   z-index: 11;
@@ -74,6 +96,31 @@ function getSideVisible(from) {
 }
 
 export default class RecordInfo extends Component<any, any> {
+  // 下面这些都是构造函数或 ref 回调里赋的实例字段。
+  // declare 是纯类型声明，babel 的 TS preset 会整行擦掉，运行时零影响 ——
+  // 不要改成带初始值的类字段，那会真的生成赋值语句，覆盖掉 ref 回调写进来的值。
+  /** 水印开关，挂在 window 上由部署层注入 */
+  declare hadWaterMark: boolean;
+  declare debounceRefresh: (...args: Parameters<RecordInfo['refreshEvent']>) => void;
+  /** 子组件注册上来的刷新回调，key 是 controlId 或 'loadcustombtns' 这类固定名 */
+  declare refreshEvents: { [key: string]: (...args: any[]) => void };
+  /** 子组件注册上来的单元格实例，key 是 controlId */
+  declare cellObjs: { [controlId: string]: { item: any; cell: any } };
+  /** save: 保存  submit: 提交 */
+  declare draftType: 'save' | 'submit' | undefined;
+  /** onSubmit 的入参暂存，等表单校验回调时再取出来用 */
+  declare submitOptions: Pick<SubmitOptions, 'callback' | 'noSave' | 'ignoreError'> | undefined;
+  /** saveTempRecordValueToLocal 的返回值；只写不读，留着是为了保持原行为 */
+  declare tempSaving: ReturnType<typeof saveTempRecordValueToLocal>;
+  declare recordEditLock: RecordEditLock | undefined;
+  declare hasFocusingRelateRecordTags: boolean;
+  /** 记录详情最外层容器 */
+  declare con: HTMLElement;
+  /** 左右分栏的拖拽手柄 */
+  declare drag: HTMLElement;
+  /** RecordForm 通过 mountRef 回传的 customwidget ref */
+  declare recordform: React.RefObject<any>;
+
   static propTypes = {
     width: PropTypes.number,
     visible: PropTypes.bool,
@@ -330,7 +377,7 @@ export default class RecordInfo extends Component<any, any> {
     return externalPortalAjax.getConfig({ appId });
   };
 
-  getPayConfig = (recordId, updateFlag) => {
+  getPayConfig = (recordId?, updateFlag?) => {
     const { worksheetId, viewId, enablePayment, from } = this.props;
     const isPayShare = location.search.includes('payshare=true');
     // 支付配置（开启支付或分享支付） && 不是草稿箱
@@ -408,7 +455,7 @@ export default class RecordInfo extends Component<any, any> {
       isRelateRecord,
       onError = _.noop,
       notDialog,
-    } = props || this.props;
+    }: { controls: FormControl[]; [key: string]: any } = props || this.props;
     let { sheetSwitchPermit } = this.state;
     const { isPublicShare } = this;
     const { tempFormData } = this.state;
@@ -463,7 +510,7 @@ export default class RecordInfo extends Component<any, any> {
       // 关联记录可能属于其他应用，工作表名翻译需以记录实际所在应用 data.appId 为准
       data.worksheetName = getTranslateInfo(data.appId || appId, null, worksheetId).name || data.worksheetName;
       // 设置隐藏字段的 hidden 属性
-      data.formData = data.formData.map(c => {
+      data.formData = data.formData.map((c: FormControl) => {
         const newControl = {
           ...c,
           hidden: c.hidden || (view.controls || _.get(data, 'view.controls') || []).includes(c.controlId),
@@ -845,7 +892,7 @@ export default class RecordInfo extends Component<any, any> {
     ignoreDialog = false,
     silent = false,
     draftType,
-  } = {}) => {
+  }: SubmitOptions = {}) => {
     if (window.isPublicApp) {
       alert(_l('预览模式下，不能操作'), 3);
       return;
@@ -1004,7 +1051,7 @@ export default class RecordInfo extends Component<any, any> {
           });
         }, 600);
         if (!err) {
-          let newFormData = recordinfo.formData.map(c => {
+          let newFormData = recordinfo.formData.map((c: FormControl) => {
             let value = resdata[c.controlId];
             return _.assign({}, c, { value, count: resdata[`rq${c.controlId}`] });
           });
@@ -1360,7 +1407,7 @@ export default class RecordInfo extends Component<any, any> {
               });
             },
             updateWorksheetControls: newControls => {
-              newControls.forEach(control => {
+              newControls.forEach((control: FormControl) => {
                 try {
                   if (control.type === 34) {
                     this.recordform.current.dataFormat.data.filter(
@@ -1506,7 +1553,7 @@ export default class RecordInfo extends Component<any, any> {
                       newValue = _.omit(record, ['allowedit', 'allowdelete']);
                     }
 
-                    const newFormData = recordinfo.formData.map(c =>
+                    const newFormData = recordinfo.formData.map((c: FormControl) =>
                       _.assign({}, c, {
                         value: !_.isUndefined(newValue[c.controlId]) ? newValue[c.controlId] : c.value,
                       }),
@@ -1700,7 +1747,7 @@ export default class RecordInfo extends Component<any, any> {
                 }}
                 updateWorksheetControls={(needUpdateControls = []) => {
                   updateWorksheetControls(
-                    controls.map(c => _.find(needUpdateControls, { controlId: c.controlId }) || c),
+                    controls.map((c: FormControl) => _.find(needUpdateControls, { controlId: c.controlId }) || c),
                   );
                 }}
                 renderAbnormal={renderAbnormal}

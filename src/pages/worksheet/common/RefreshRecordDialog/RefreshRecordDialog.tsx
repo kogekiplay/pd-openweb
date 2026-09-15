@@ -9,6 +9,7 @@ import { FORM_HIDDEN_CONTROL_IDS, WORKFLOW_SYSTEM_CONTROL } from 'src/pages/widg
 import { getIconByType } from 'src/pages/widgetConfig/util';
 import { FlexCenter } from 'src/pages/worksheet/components/Basics';
 import { refreshRecord } from './dal';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const NewDialog = styled(Dialog)`
   .titleTag {
@@ -74,7 +75,7 @@ const Info = styled.div`
 
 function getRefreshControls(controls) {
   return controls.filter(
-    c =>
+    (c: FormControl) =>
       _.includes(
         [
           WIDGETS_TO_API_TYPE_ENUM.FORMULA_NUMBER, // 公式数值
@@ -89,7 +90,7 @@ function getRefreshControls(controls) {
 }
 
 function getRefreshSortControls(controls) {
-  return controls.filter(c =>
+  return controls.filter((c: FormControl) =>
     _.includes(
       [
         WIDGETS_TO_API_TYPE_ENUM.FLAT_MENU, // 单选
@@ -103,7 +104,7 @@ function getRefreshSortControls(controls) {
 
 function getOtherTableControls(controls) {
   const list = controls.filter(
-    l =>
+    (l: FormControl) =>
       l.dataSource &&
       (WIDGETS_TO_API_TYPE_ENUM.SUBTOTAL === l.type ||
         (l.type === WIDGETS_TO_API_TYPE_ENUM.SHEET_FIELD && _.get(l, 'strDefault.0') !== '1')),
@@ -112,7 +113,7 @@ function getOtherTableControls(controls) {
   const data = [];
   _.forEach(group, (value, key) => {
     const sourceControlId = key.slice(1, key.length - 1);
-    const control = controls.find(l => l.controlId === sourceControlId);
+    const control = controls.find((l: FormControl) => l.controlId === sourceControlId);
     data.push({
       ...(control
         ? _.pick(control, ['controlId', 'controlName', 'type'])
@@ -163,15 +164,15 @@ export default function RefreshRecordDialog(props) {
     getWorksheetSheetViewSummary = () => {},
     clearSelect = () => {},
     onClose = () => {},
-  } = props;
-  const visibleControls = controls.filter(
-    c => !_.includes(FORM_HIDDEN_CONTROL_IDS.concat(WORKFLOW_SYSTEM_CONTROL.map(cc => cc.controlId)), c.controlId),
+  }: { controls: FormControl[]; selectedRows: RecordRow[]; [key: string]: any } = props;
+  const visibleControls: FormControl[] = controls.filter(
+    (c: FormControl) => !_.includes(FORM_HIDDEN_CONTROL_IDS.concat(WORKFLOW_SYSTEM_CONTROL.map(cc => cc.controlId)), c.controlId),
   );
   const refreshControls = getRefreshControls(visibleControls);
   const refreshSortControls = getRefreshSortControls(visibleControls);
-  const encryptControls = visibleControls.filter(c => c.encryId);
+  const encryptControls = visibleControls.filter((c: FormControl) => c.encryId);
   const otherTableControls = getOtherTableControls(visibleControls);
-  const relationControls = visibleControls.filter(c =>
+  const relationControls: FormControl[] = visibleControls.filter((c: FormControl) =>
     _.includes([WIDGETS_TO_API_TYPE_ENUM.RELATE_SHEET, WIDGETS_TO_API_TYPE_ENUM.SUB_LIST], c.type),
   );
   const refreshVisible = !!refreshControls.concat(
@@ -223,7 +224,7 @@ export default function RefreshRecordDialog(props) {
   }, []);
 
   const handleOk = () => {
-    const hasAuthRowIds = selectedRows.filter(row => row.allowedit || row.allowEdit).map(row => row.rowid);
+    const hasAuthRowIds = selectedRows.filter((row: RecordRow) => row.allowedit || row.allowEdit).map(row => row.rowid);
     const allConfig = Object.assign({}, calibrateConfig);
     const updateControls = Object.keys(allConfig)
       .filter(key => allConfig[key])
@@ -272,7 +273,7 @@ export default function RefreshRecordDialog(props) {
 
   const handleAllChecked = (controls, checked) => {
     const value = {};
-    controls.forEach(l => {
+    controls.forEach((l: FormControl) => {
       value[l.controlId] = checked;
     });
     setCalibrateConfig({ ...calibrateConfig, ...value });
@@ -356,7 +357,7 @@ export default function RefreshRecordDialog(props) {
                 {isExpand && (
                   <div className="mLeft17">
                     {item.hasChildren
-                      ? item.controls.map(l => {
+                      ? item.controls.map((l: FormControl) => {
                           const notAllChecked = _.some(l.children, l => !calibrateConfig[l.controlId]);
 
                           return (

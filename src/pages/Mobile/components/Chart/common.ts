@@ -111,7 +111,7 @@ export const formatPerPileChartData = result => {
 /**
  * 截取N条数据
  */
-const sliceXAxisCount = (data, showXAxisCount) => {
+const sliceXAxisCount = (data, showXAxisCount: number) => {
   const { length } = data;
   return data.slice(0, showXAxisCount || length);
 };

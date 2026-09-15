@@ -1,7 +1,8 @@
 import { combineReducers } from 'redux';
 import { initData } from '../UserCon/config';
+import type { ReduxAction } from 'src/redux/types';
 
-export const loading = (state = false, action) => {
+export const loading = (state = false, action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_ROLE_LOADING':
       return action.data;
@@ -10,7 +11,7 @@ export const loading = (state = false, action) => {
   }
 };
 
-export const pageLoading = (state = false, action) => {
+export const pageLoading = (state = false, action: ReduxAction) => {
   switch (action.type) {
     case 'ROLE_UPDATE_PAGE_LOADING':
       return action.data;
@@ -19,7 +20,7 @@ export const pageLoading = (state = false, action) => {
   }
 };
 
-export const quickTag = (state = { tab: '', roleId: '' }, action) => {
+export const quickTag = (state = { tab: '', roleId: '' }, action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_QUICKTAG':
       return action.data || { tab: '', roleId: '' };
@@ -28,7 +29,7 @@ export const quickTag = (state = { tab: '', roleId: '' }, action) => {
   }
 };
 
-export const roleId = (state = 'all', action) => {
+export const roleId = (state = 'all', action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_ROLEID':
       return action.data;
@@ -38,7 +39,7 @@ export const roleId = (state = 'all', action) => {
 };
 
 //成员数据
-export const user = (state = [], action) => {
+export const user = (state = [], action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_APPUSER':
       return action.data;
@@ -48,7 +49,7 @@ export const user = (state = [], action) => {
 };
 
 //成员全部总数
-export const total = (state = 0, action) => {
+export const total = (state = 0, action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_APPUSER_LIST_ALL_TOTAL':
       return action.data;
@@ -58,7 +59,7 @@ export const total = (state = 0, action) => {
 };
 
 //成员数组数据
-export const userList = (state = [], action) => {
+export const userList = (state = [], action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_APPUSER_LIST':
       return action.data;
@@ -68,7 +69,7 @@ export const userList = (state = [], action) => {
 };
 
 //申请数据
-export const apply = (state = [], action) => {
+export const apply = (state = [], action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_APPLYINFO':
       return action.data;
@@ -78,7 +79,7 @@ export const apply = (state = [], action) => {
 };
 
 //外协数据
-export const outsourcing = (state = {}, action) => {
+export const outsourcing = (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_OUTSOURCING':
       return action.data;
@@ -88,7 +89,7 @@ export const outsourcing = (state = {}, action) => {
 };
 
 //角色数据
-export const roleInfos = (state = [], action) => {
+export const roleInfos = (state = [], action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_APPROLESUMMARY':
       return action.data;
@@ -98,7 +99,7 @@ export const roleInfos = (state = [], action) => {
 };
 
 //安装应用相关限制数据
-export const roleLimitInfo = (state = [], action) => {
+export const roleLimitInfo = (state = [], action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_APPROLESUMMARY_ROLELIMITINFO':
       return action.data;
@@ -107,7 +108,7 @@ export const roleLimitInfo = (state = [], action) => {
   }
 };
 
-export const selectedIds = (state = [], action) => {
+export const selectedIds = (state = [], action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_SELECTLIST':
       return action.data;
@@ -116,7 +117,7 @@ export const selectedIds = (state = [], action) => {
   }
 };
 
-export const appRolePagingModel = (state = initData, action) => {
+export const appRolePagingModel = (state = initData, action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_APPROLEPAGINGMODEL':
       return action.data || initData;

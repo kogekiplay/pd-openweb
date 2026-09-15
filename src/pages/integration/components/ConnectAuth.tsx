@@ -237,7 +237,7 @@ function ConnectAuth(props) {
       });
   };
 
-  const checkNumberControl = (evt, isBlur) => {
+  const checkNumberControl = (evt, isBlur?) => {
     let num = evt.target.value.replace(/[^\d]/g, '');
     evt.target.value = num;
 
@@ -255,7 +255,7 @@ function ConnectAuth(props) {
     }
   };
 
-  const updateAjaxParameter = (obj, i, isBlur) => {
+  const updateAjaxParameter = (obj, i: number, isBlur: boolean) => {
     const webHookNodes = _.cloneDeep(node.webHookNodes);
 
     Object.keys(obj).forEach(key => {
@@ -278,7 +278,7 @@ function ConnectAuth(props) {
     }
   };
 
-  const updateTokenRefreshValue = (evt, key, isBlur = false) => {
+  const updateTokenRefreshValue = (evt, key: string, isBlur = false) => {
     let value = evt.target.value;
 
     if (isBlur) {

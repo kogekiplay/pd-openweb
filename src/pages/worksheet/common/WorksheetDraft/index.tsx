@@ -19,6 +19,7 @@ import { emitter } from 'src/utils/common';
 import { controlState } from 'src/utils/control';
 import { updateDraftTotalInfo } from './utils';
 import WorksheetDraftOperate from './WorksheetDraftOperate';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   width: 100%;
@@ -88,10 +89,10 @@ function DraftModal(props) {
   const [disableMaskDataControls, setDisableMaskDataControls] = useState({});
   const [errorCode, setErrorCode] = useState(0);
 
-  const controls = resortControlByColRow(_.get(worksheetInfo, 'template.controls'));
+  const controls: FormControl[] = resortControlByColRow(_.get(worksheetInfo, 'template.controls'));
   const columns = controls
     .filter(
-      item =>
+      (item: FormControl) =>
         !_.includes(SHEET_VIEW_HIDDEN_TYPES, item.type) &&
         !_.includes(SYSTEM_ENUM, item.controlId) &&
         controlState(item, 2).visible,
@@ -194,7 +195,7 @@ function DraftModal(props) {
       .then(res => {
         if (res.successCount === ids.length) {
           alert(_l('删除成功'));
-          const data = records.filter(it => !_.includes(ids, it.rowid));
+          const data = records.filter((it: RecordRow) => !_.includes(ids, it.rowid));
           setRecords(data);
           setSelected([]);
           updateDraftTotal(data.length);
@@ -273,7 +274,7 @@ function DraftModal(props) {
                     allowEdit={false}
                     selectedIds={selected}
                     onSelectAllWorksheet={() => {
-                      setSelected(records.map(row => row.rowid));
+                      setSelected(records.map((row: RecordRow) => row.rowid));
                     }}
                     onSelect={newSelected => {
                       const selectRows = [];

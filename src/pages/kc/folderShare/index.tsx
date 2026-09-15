@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { renderToString } from 'react-dom/server';
 import doT from 'dot';
 import _ from 'lodash';
@@ -21,7 +21,7 @@ var fileItemTpl = doT.template(fileItemHtml);
 
 const loading = renderToString(<LoadDiv />);
 
-var ShareFolder = function (options) {
+var ShareFolder = function (options?) {
   var SF = this;
   var DEFAULTS = {
     isMobile: browserIsMobile(),
@@ -341,7 +341,7 @@ ShareFolder.prototype = {
       );
     }
 
-    function render(pathArray, cut) {
+    function render(pathArray, cut?) {
       $path = $(
         _.compact(
           pathArray.map(function (path, index) {

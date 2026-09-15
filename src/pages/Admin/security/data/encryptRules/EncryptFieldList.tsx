@@ -175,7 +175,7 @@ export default class EncryptFieldList extends Component<any, any> {
       });
   };
 
-  changeConditions = (fields, value) => {
+  changeConditions = (fields: string, value) => {
     const { searchParams } = this.state;
     this.setState(
       {

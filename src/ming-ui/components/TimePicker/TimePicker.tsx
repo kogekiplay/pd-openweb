@@ -180,7 +180,7 @@ class TimePicker extends Component<any, any> {
     }
   };
 
-  addEvent(element, type, handler) {
+  addEvent(element, type: string, handler) {
     element.addEventListener(type, handler);
     return {
       remove() {

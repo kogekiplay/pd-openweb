@@ -76,7 +76,7 @@ export default function ScoreConfig({ data, onChange }) {
     }
   }, [max]);
 
-  const updateNames = (value, it) => {
+  const updateNames = (value: string, it) => {
     const newItemNames = names.map(n => (n.key === it.key ? Object.assign({}, n, { value }) : n));
     setNames(newItemNames);
   };

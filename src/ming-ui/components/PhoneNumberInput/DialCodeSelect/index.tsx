@@ -4,11 +4,66 @@ import { isValidPhoneNumber } from 'libphonenumber-js/max';
 import _ from 'lodash';
 import DialCodePanel from './DialCodePanel';
 import { buildCountryOptions, getDefaultCode, parseDialCode, parseFullNumberInput } from './utils';
+import type { CountryInput, CountryOption, LocaleTag } from './utils';
 
 const PANEL_WIDTH = 400;
 const PANEL_HEIGHT = 445;
 const COMPACT_PANEL_MAX_HEIGHT = 300;
 const VIEWPORT_GAP = 8;
+
+/**
+ * 挂载区号选择的宿主元素。调用点既可能传真正的 <input>，也可能传区号触发区那个 div，
+ * 而代码只读 value（都带 ?. 和 || ''）以及 contains/tagName/事件方法。
+ * 写成 HTMLInputElement 会让传 div 的那条路报 TS2740，写成 HTMLElement 又没有 value ——
+ * 这个交集形状才是调用点的真实契约。
+ */
+type DialCodeHostElement = HTMLElement & { value?: string; disabled?: boolean };
+
+/** getSelectedCountryData 对外返回的形状，沿用旧 intl-tel-input 的字段名。 */
+export interface SelectedCountryData {
+  name: string;
+  /** 小写 ISO2 */
+  iso2: string;
+  /** 不带 + 的区号 */
+  dialCode: string;
+  /** 带 + 的区号 */
+  code: string;
+}
+
+/** 下拉面板的尺寸参数，_positionPanel() 算完展开给 DialCodePanel。初值是 {}，所以全是可选。 */
+interface DialCodePanelLayout {
+  panelWidth?: number;
+  maxPanelHeight?: number;
+  hideIndexBar?: boolean;
+}
+
+/** DialCodeSelectInstance 的构造参数，键名与构造函数里 options.x 的读取点一一对应。 */
+export interface DialCodeSelectOptions {
+  /** 既可能是真正的 input，也可能是区号触发区那个 div —— 只读 value/contains/tagName */
+  dom?: DialCodeHostElement | null;
+  /** 外部拿实例用的 ref，构造末尾会写 ref.current = this */
+  ref?: { current: DialCodeSelectInstance | null } | null;
+  value?: string;
+  defaultCountry?: string;
+  preferredCountries?: CountryInput[];
+  onlyCountries?: CountryInput[];
+  locale?: LocaleTag;
+  onSelectCode?: (code: string) => void;
+}
+
+/** IntlTelInputAdapter 的构造参数，沿用旧 intl-tel-input 的键名。 */
+export interface IntlTelInputOptions {
+  initialCountry?: string;
+  preferredCountries?: CountryInput[];
+  onlyCountries?: CountryInput[];
+  locale?: LocaleTag;
+  /** 是否把区号做成输入框左侧的独立触发区 */
+  showDialCodeInput?: boolean;
+  /** 区号触发区与输入内容之间的间距，非有限数时回落 24 */
+  dialCodeInputGap?: number;
+  /** 覆盖默认 placeholder */
+  customPlaceholder?: () => string;
+}
 
 const normalizeCode = code => {
   if (!code) return '';
@@ -18,7 +73,32 @@ const normalizeCode = code => {
 const normalizeValue = value => String(value || '').trim();
 
 export class DialCodeSelectInstance {
-  constructor(options = {}) {
+  // 这些字段全部只在构造函数里 this.x = ... 赋值。TS 不把构造函数赋值当作字段声明，
+  // 不写这几行每次读取都报 TS2339（本类因此有 101 条）。
+  // declare 是纯类型声明，babel 的 TS preset 整行擦除，运行时无影响。
+  declare element: DialCodeHostElement | null;
+  declare ref: { current: DialCodeSelectInstance | null } | null;
+  declare value: string;
+  declare defaultCountry: string;
+  declare preferredCountries: CountryInput[];
+  declare onlyCountries: CountryInput[];
+  declare locale: LocaleTag;
+  declare onSelectCode: (code: string) => void;
+  /** 当前区号，形如 '+86' */
+  declare code: string;
+  declare isOpen: boolean;
+  /** 面板挂载的容器节点，关闭时销毁 */
+  declare container: HTMLElement | null;
+  declare root: ReturnType<typeof createRoot> | null;
+  declare panelLayout: DialCodePanelLayout;
+  declare _onTriggerClick: (event: MouseEvent) => void;
+  declare _onTriggerKeydown: (event: KeyboardEvent) => void;
+  declare _onOutsideClick: (event: MouseEvent) => void;
+  declare _onEsc: (event: KeyboardEvent) => void;
+  declare _onReposition: () => void;
+  declare _destroy: () => void;
+
+  constructor(options: DialCodeSelectOptions = {}) {
     this.element = options.dom || null;
     this.ref = options.ref;
     this.value = normalizeValue(options.value || this.element?.value || '');
@@ -50,7 +130,8 @@ export class DialCodeSelectInstance {
     };
 
     this._onOutsideClick = event => {
-      if (this.element?.contains(event.target) || this.container?.contains(event.target)) return;
+      const target = event.target as Node;
+      if (this.element?.contains(target) || this.container?.contains(target)) return;
       this._closePanel();
     };
 
@@ -97,9 +178,9 @@ export class DialCodeSelectInstance {
     }
   }
 
-  _getCurrentValue = value => normalizeValue(value || this.element?.value || this.value);
+  _getCurrentValue = (value?: string): string => normalizeValue(value || this.element?.value || this.value);
 
-  _syncCodeByValue = value => {
+  _syncCodeByValue = (value?: string): string => {
     const nextCode = parseDialCode({
       value,
       defaultCountry: this.defaultCountry,
@@ -232,7 +313,9 @@ export class DialCodeSelectInstance {
     }
   };
 
-  getCountryOptions = options => {
+  // 参数写成可选：调用点多数不传（this.getCountryOptions()），
+  // 箭头函数的参数默认是【必填】，不加 ? 会报 TS2554「Expected 1 arguments, but got 0」。
+  getCountryOptions = (options?: Parameters<typeof buildCountryOptions>[0]): CountryOption[] => {
     return buildCountryOptions({
       preferredCountries: this.preferredCountries,
       onlyCountries: this.onlyCountries,
@@ -242,7 +325,9 @@ export class DialCodeSelectInstance {
   };
 
   _getCountryByCode = code => {
-    return this.getCountryOptions().find(option => option.code === code) || {};
+    // 兜底要带类型：写成裸 {} 的话返回类型变成 CountryOption | {}，
+    // 调用点读 .localName / .iso2 全部报 TS2339。
+    return this.getCountryOptions().find(option => option.code === code) || ({} as CountryOption);
   };
 
   getSelectedCountryData = value => {
@@ -287,7 +372,30 @@ export class DialCodeSelectInstance {
 }
 
 export class IntlTelInputAdapter {
-  constructor(element, options = {}) {
+  // 同上，不声明每次读取都报 TS2339（本类因此有 125 条）。
+  declare element: DialCodeHostElement | null;
+  declare options: IntlTelInputOptions;
+  declare locale: LocaleTag;
+  /** 为了给触发区定位而临时改过 position 的父节点，销毁时要还原 */
+  declare parentElement: HTMLElement | null;
+  declare parentPosition: string;
+  declare needRestoreParentPosition: boolean;
+  declare inputPaddingLeft: string;
+  declare dialCodeTrigger: HTMLElement | null;
+  declare dialCodeLabel: HTMLElement | null;
+  declare showDialCodeInput: boolean;
+  declare dialCodeInputGap: number;
+  declare defaultCountry: string;
+  declare preferredCountries: CountryInput[];
+  declare onlyCountries: CountryInput[];
+  // 用 ReturnType 而不是另写一份形状：buildCountryOptions 现在还没标返回类型，
+  // 写死会和它对不上；这样等 ./utils 标了类型，这里自动跟着精确起来。
+  declare countryOptions: ReturnType<typeof buildCountryOptions>;
+  declare code: string;
+  declare instance: DialCodeSelectInstance;
+  declare handleElementInput: (event: Event) => void;
+
+  constructor(element: DialCodeHostElement | null, options: IntlTelInputOptions = {}) {
     this.element = element;
     this.options = options;
     this.locale = options.locale;
@@ -361,11 +469,11 @@ export class IntlTelInputAdapter {
   }
 
   _getCountryByCode = code => {
-    return this.countryOptions.find(item => item.code === code) || {};
+    return this.countryOptions.find(item => item.code === code) || ({} as CountryOption);
   };
 
   _getCountryByIso2 = iso2 => {
-    return this.countryOptions.find(item => item.iso2 === String(iso2).toUpperCase()) || {};
+    return this.countryOptions.find(item => item.iso2 === String(iso2).toUpperCase()) || ({} as CountryOption);
   };
 
   setupDialCodeInput = () => {

@@ -3,6 +3,7 @@ import { useSetState } from 'react-use';
 import styled from 'styled-components';
 import { Dropdown, RadioGroup } from 'ming-ui';
 import { formatControlsToDropdown } from 'src/pages/widgetConfig/util/index.js';
+import type { FormControl } from 'src/utils/controlTypes';
 
 //可搜索的字段仅支持文本类型字段（文本、号码、邮箱、证件、自动编号、文本组合）
 const TEXT_TYPE_CONTROL = [2, 3, 4, 5, 7, 32, 33];
@@ -39,10 +40,10 @@ const ConfigWrap = styled.div`
 `;
 
 export default function SearchConfig(props) {
-  const { data, onChange, controls = [] } = props;
+  const { data, onChange, controls = [] }: { controls: FormControl[]; [key: string]: any } = props;
 
   const searchableControls = formatControlsToDropdown(
-    controls.filter(item => TEXT_TYPE_CONTROL.includes(item.type) && /^\w{24}$/.test(item.controlId)),
+    controls.filter((item: FormControl) => TEXT_TYPE_CONTROL.includes(item.type as number) && /^\w{24}$/.test(item.controlId)),
   );
   const [{ navsearchcontrol, navsearchtype }, setState] = useSetState({
     navsearchtype: data.navsearchtype || '0',

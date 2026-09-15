@@ -20,6 +20,7 @@ import { SYS_CONTROLS_WORKFLOW } from 'src/pages/widgetConfig/config/widget.js';
 import RecordInfoWrapper from 'src/pages/worksheet/common/recordInfo/RecordInfoWrapper';
 import { saveView, updateWorksheetControls } from 'src/pages/worksheet/redux/actions';
 import * as Actions from 'src/pages/worksheet/redux/actions/calendarview';
+import type { RootState } from 'src/redux/types';
 import { getAdvanceSetting, isTimeStyle } from 'src/utils/control';
 import { addBehaviorLog } from 'src/utils/project';
 import { handleRecordClick } from 'src/utils/record';
@@ -47,6 +48,7 @@ import {
   setShowTip,
 } from './util';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 let time;
 let clickData = null;
@@ -223,7 +225,7 @@ class RecordCalendarBase extends Component<any, any> {
     });
   };
 
-  updateData = (newOldControl, rowId, cb) => {
+  updateData = (newOldControl, rowId, cb?) => {
     const { base, updataEditable } = this.props;
     const { appId, worksheetId, viewId } = base;
     updataEditable(false);
@@ -317,7 +319,7 @@ class RecordCalendarBase extends Component<any, any> {
     });
   };
 
-  showTip = (event, flag) => {
+  showTip = (event, flag: boolean) => {
     setShowTip(event, flag, this.state.canNew);
   };
 
@@ -904,7 +906,7 @@ class RecordCalendarBase extends Component<any, any> {
             worksheetId={worksheetId}
             rules={worksheetInfo.rules}
             updateSuccess={(ids, updated) => {
-              let attribute = controls.find(o => o.attribute === 1);
+              let attribute = controls.find((o: FormControl) => o.attribute === 1);
 
               // 更改了 开始时间/结束时间/标题字段/颜色 =>更新日历视图数据
               if (
@@ -976,7 +978,7 @@ const RecordCalendarWrapper = props => {
 };
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     ...state.sheet,
     sheetSwitchPermit: state.sheet.sheetSwitchPermit || [],
     worksheetInfo: state.sheet.worksheetInfo,

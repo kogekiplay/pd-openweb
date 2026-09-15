@@ -47,6 +47,7 @@ import {
   ViewFilter,
 } from './components';
 import { baseSetList, viewTypeConfig } from './config';
+import type { FormControl } from 'src/utils/controlTypes';
 
 class ViewConfigCon extends Component<any, any> {
   constructor(props) {
@@ -378,7 +379,7 @@ class ViewConfigCon extends Component<any, any> {
             worksheetControls={
               isShowWorkflowSys
                 ? this.props.worksheetControls
-                : this.props.worksheetControls.filter(c => !_.includes(WORKFLOW_SYSTEM_FIELDS_SORT, c.controlId))
+                : this.props.worksheetControls.filter((c: FormControl) => !_.includes(WORKFLOW_SYSTEM_FIELDS_SORT, c.controlId))
             }
             isShowWorkflowSys={isShowWorkflowSys}
             coverColumns={filterHidedControls(columns, view.controls, false).filter(

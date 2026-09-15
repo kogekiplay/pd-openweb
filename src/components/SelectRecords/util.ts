@@ -2,6 +2,7 @@ import _, { find, get, isNumber } from 'lodash';
 import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget';
 import { turnControl } from 'src/pages/worksheet/common/Sheet/QuickFilter/Conditions';
 import { ERROR_MESSAGE } from './useRecords';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export function enrichFilters(filters) {
   return filters.map(f => ({
@@ -10,7 +11,7 @@ export function enrichFilters(filters) {
   }));
 }
 
-export function formatSearchFilters(filters = [], controls = []) {
+export function formatSearchFilters(filters = [], controls: FormControl[] = []) {
   return filters.map(f => {
     let control = _.find(controls, { controlId: f.controlId });
 
@@ -64,7 +65,7 @@ export function getTitleControl(control, controls) {
 
 export function getTableConfig(controlsForShow, { titleControl, coverControl } = {}) {
   let fixedColumnCount = 1;
-  let visibleControls = controlsForShow;
+  let visibleControls: FormControl[] = controlsForShow;
 
   if (titleControl) {
     visibleControls = [titleControl].concat(visibleControls.filter(c => c.controlId !== titleControl.controlId));

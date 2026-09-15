@@ -16,7 +16,7 @@ const apiKey = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  keysCreate: function (args, options) {
+  keysCreate: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + '/api/keys/create';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'apiKeyKeysCreate', JSON.stringify(args), $.extend(base, options));
@@ -31,7 +31,7 @@ const apiKey = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  keysDelete: function (args, options) {
+  keysDelete: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + '/api/keys/delete';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'apiKeyKeysDelete', JSON.stringify(args), $.extend(base, options));
@@ -47,7 +47,7 @@ const apiKey = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  keysDescriptionUpdate: function (args, options) {
+  keysDescriptionUpdate: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + '/api/keys/description/update';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'apiKeyKeysDescriptionUpdate', JSON.stringify(args), $.extend(base, options));
@@ -62,7 +62,7 @@ const apiKey = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  keysIpWhitelistGet: function (args, options) {
+  keysIpWhitelistGet: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + '/api/keys/ip-whitelist/get';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'apiKeyKeysIpWhitelistGet', JSON.stringify(args), $.extend(base, options));
@@ -78,7 +78,7 @@ const apiKey = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  keysIpWhitelistSave: function (args, options) {
+  keysIpWhitelistSave: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + '/api/keys/ip-whitelist/save';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'apiKeyKeysIpWhitelistSave', JSON.stringify(args), $.extend(base, options));
@@ -96,7 +96,7 @@ const apiKey = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  keysList: function (args, options) {
+  keysList: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + '/api/keys/list';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'apiKeyKeysList', JSON.stringify(args), $.extend(base, options));
@@ -112,7 +112,7 @@ const apiKey = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  keysStatusUpdate: function (args, options) {
+  keysStatusUpdate: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + '/api/keys/status/update';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'apiKeyKeysStatusUpdate', JSON.stringify(args), $.extend(base, options));

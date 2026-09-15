@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
-import { initZendeskWidget } from 'src/utils/services/zendeskWidget';
+import type { RootState } from 'src/redux/types';
 import * as actions from '../../redux/actions';
 import * as socket from '../../utils/socketEvent';
 import Apps from '../Apps';
@@ -18,9 +18,6 @@ class Chat extends Component<any, any> {
   }
   componentDidMount() {
     if (location.href.includes('chat_window')) return;
-    if (!window.platformENV.isLocal && window.platformENV.isOverseas) {
-      initZendeskWidget();
-    }
 
     // 注册事件
     socket.socketInitEvent.call(this);
@@ -128,7 +125,7 @@ class Chat extends Component<any, any> {
   }
 }
 
-export default connect(state => {
+export default connect((state: RootState) => {
   const { toolbarConfig } = state.chat;
   return {
     toolbarConfig,

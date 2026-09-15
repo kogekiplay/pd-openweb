@@ -3,6 +3,7 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import { Input } from 'ming-ui';
 import DynamicDefaultValue from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrap = styled.div`
   &.chooseControl {
@@ -16,7 +17,7 @@ const Wrap = styled.div`
 `;
 
 function InputForShare(props) {
-  const { canUseControl, controls, defaultValue, onChangeValue, worksheetInfo, placeholder } = props;
+  const { canUseControl, controls, defaultValue, onChangeValue, worksheetInfo, placeholder }: { controls: FormControl[]; [key: string]: any } = props;
 
   const renderInput = () => {
     return (

@@ -12,6 +12,7 @@ import ajaxRequest from 'src/api/taskCenter';
 import Commenter from 'src/components/comment/commenter';
 import CommentList from 'src/components/comment/commentList';
 import Editor from 'src/pages/PageHeader/AppPkgHeader/AppDetail/EditorDiaLogContent';
+import type { RootState } from 'src/redux/types';
 import { htmlEncodeReg } from 'src/utils/common';
 import editFolder from '../../components/editFolder/editFolder';
 import { clearFolderTip } from '../../redux/actions';
@@ -310,7 +311,7 @@ class FolderDetail extends Component<any, any> {
   renderFolderMember() {
     const { data } = this.state;
 
-    const getOpHtml = (item, isApply) => {
+    const getOpHtml = (item, isApply: boolean) => {
       const { accountID, avatar, fullName } = item;
 
       if (isApply && data.isAdmin) {
@@ -467,7 +468,7 @@ class FolderDetail extends Component<any, any> {
     });
   }
 
-  clickEvents(type, accountId, avatar, fullname) {
+  clickEvents(type: string, accountId, avatar, fullname) {
     switch (type) {
       // 设为负责人
       case 'updateFolderChargeFix':
@@ -505,7 +506,7 @@ class FolderDetail extends Component<any, any> {
   /**
    * 添加项目人员事件
    */
-  addFolderMembersEvents(evt, isAdmin) {
+  addFolderMembersEvents(evt: React.MouseEvent<HTMLElement, MouseEvent>, isAdmin) {
     const { data } = this.state;
     const { folderId, projectId } = this.props.taskConfig;
     let existsIds = [];
@@ -685,7 +686,7 @@ class FolderDetail extends Component<any, any> {
   /**
    * 申请用户设为管理员和成员
    */
-  updateFolderMemberStatusAndAuth(accountId, avatar, fullname, isAdmin) {
+  updateFolderMemberStatusAndAuth(accountId, avatar, fullname, isAdmin: boolean) {
     ajaxRequest
       .updateFolderMemberStatusAndAuth({
         folderID: this.props.taskConfig.folderId,
@@ -748,7 +749,7 @@ class FolderDetail extends Component<any, any> {
   /**
    * 添加项目人员
    */
-  addFolderMembers(users, isAdmin, callbackInviteResult) {
+  addFolderMembers(users, isAdmin, callbackInviteResult?) {
     const userIdArr = [];
     const specialAccounts = {};
 
@@ -823,7 +824,7 @@ class FolderDetail extends Component<any, any> {
   /**
    * 切换tabs
    */
-  switchTabs(tabIndex) {
+  switchTabs(tabIndex: number) {
     const isForceUpdate = tabIndex === this.state.tabIndex;
 
     // 强制更新
@@ -1139,4 +1140,4 @@ class FolderDetail extends Component<any, any> {
   }
 }
 
-export default connect(state => state.task)(FolderDetail);
+export default connect((state: RootState) => state.task)(FolderDetail);

@@ -2,11 +2,12 @@ import update from 'immutability-helper';
 import _, { get, includes } from 'lodash';
 import moment from 'moment';
 import { HAVE_VALUE_STYLE_WIDGET } from 'src/components/Form/core/enum';
+import type { ControlAdvancedSetting, FormControl } from 'src/utils/controlTypes';
 
 const NEW_RECORD_FROM = [2, 4, 5, 21];
 
 // 获取advancedSetting属性转化为对象
-export const getAdvanceSetting = (data, key) => {
+export const getAdvanceSetting = (data?: FormControl, key?: string | string[]) => {
   const setting = get(data, ['advancedSetting']) || {};
 
   if (!key) return setting;
@@ -24,10 +25,12 @@ export const getAdvanceSetting = (data, key) => {
 };
 
 // 更新advancedSetting数据
-export const handleAdvancedSettingChange = (data, obj) => {
+export const handleAdvancedSettingChange = (data: FormControl, obj: ControlAdvancedSetting) => {
   return {
     ...data,
-    advancedSetting: update(data.advancedSetting || {}, { $apply: item => ({ ...item, ...obj }) }),
+    advancedSetting: update(data.advancedSetting || {}, {
+      $apply: (item: ControlAdvancedSetting) => ({ ...item, ...obj }),
+    }),
   };
 };
 
@@ -39,7 +42,7 @@ const DATE_SHOW_TYPES = [
   { value: '3', text: 'EU', format: 'D/M/YYYY' },
 ];
 
-export const getDatePickerConfigs = (data = {}) => {
+export const getDatePickerConfigs = (data: FormControl = {}) => {
   let showType = getAdvanceSetting(data, 'showtype');
 
   if (data.originType === 38 || data.type === 38) {
@@ -106,15 +109,26 @@ export const getDatePickerConfigs = (data = {}) => {
   }
 };
 
+/** 控件在当前上下文下是否可见、可编辑 */
+export interface ControlState {
+  visible: boolean;
+  editable: boolean;
+}
+
 // 控件状态
-export const controlState = (data, from) => {
+// 返回值必须标出来：data 为空时原来返回 `{}`，推断出的联合类型让所有
+// `controlState(x).visible` 调用点报 TS2339。
+// 空分支给 false/false 而不是 true/true —— 原来读 `{}.visible` 拿到 undefined，
+// 两边在真值判断下完全一致，不要顺手改成 true。
+export const controlState = (data?: FormControl, from?: number): ControlState => {
   if (!data) {
-    return {};
+    return { visible: false, editable: false };
   }
 
-  const controlPermissions = data.controlPermissions || '111';
+  // 后端就是用 '111' 这样的三位字符串存权限位的；类型上留了对象那一支，这里按字符串取位
+  const controlPermissions = String(data.controlPermissions || '111');
   const fieldPermission = data.fieldPermission || '111';
-  let state = {
+  const state: ControlState = {
     visible: true,
     editable: true,
   };
@@ -130,7 +144,11 @@ export const controlState = (data, from) => {
   return state;
 };
 
-export const getControlStateAndCheckSectionControl = (data, from, formData) => {
+export const getControlStateAndCheckSectionControl = (
+  data: FormControl,
+  from?: number,
+  formData?: FormControl[],
+): ControlState => {
   const sectionControl = data.sectionId && _.find(formData, c => c.controlId === data.sectionId);
 
   if (!sectionControl) {
@@ -148,21 +166,21 @@ export const getControlStateAndCheckSectionControl = (data, from, formData) => {
 /**
  * 是否是空值
  */
-export const isEmptyValue = value => {
+export const isEmptyValue = (value?: any) => {
   return _.isUndefined(value) || _.isNull(value) || String(value).trim() === '';
 };
 
 /**
  * 解决 JavaScript 原生 toFixed 方法精度问题
  */
-export function toFixed(num, dot = 0) {
+export function toFixed(num: number | string, dot = 0) {
   if (_.isObject(num) || _.isNaN(Number(num))) {
     console.error(num, '不是数字');
     return '';
   }
 
   if (dot === 0) {
-    return String(Math.round(num));
+    return String(Math.round(Number(num)));
   }
 
   if (dot < 0 || dot > 20) {
@@ -185,7 +203,7 @@ export function toFixed(num, dot = 0) {
     const isNegative = Number(num) < 0;
 
     if (isNegative) {
-      num = Math.abs(num);
+      num = Math.abs(Number(num));
     }
 
     let data = String(Math.round(Number(`${num}e${dot}`)));
@@ -194,17 +212,19 @@ export function toFixed(num, dot = 0) {
   }
 }
 
-export const getShowFormat = data => {
+export const getShowFormat = (data: FormControl) => {
   const { formatMode, mode } = getDatePickerConfigs(data);
   const { advancedSetting: { showformat = '0', hour12 } = {} } = data;
   let type = data.type;
   const isCustomFormat = _.isNaN(Number(showformat));
-  const showType = isCustomFormat
+  // 取不到 format（showformat 不在 DATE_SHOW_TYPES 里）时兜成空串：
+  // 下面全是 showType.match / replace，原来拿 undefined 会直接抛。
+  const showType: string = isCustomFormat
     ? showformat.replace(/#EN#$/g, '')
     : _.get(
         _.find(DATE_SHOW_TYPES, i => i.value === showformat),
         'format',
-      );
+      ) || '';
 
   if (data.type === 53) {
     type = data.enumDefault2;
@@ -229,7 +249,7 @@ export const getShowFormat = data => {
 
   if (type === 16) {
     const hasTime = /[H|h|m|s|S|Z]/.test(showType);
-    const newShowType = isCustomFormat && hasTime ? showType : formatMode.replace('YYYY-MM-DD', showType);
+    const newShowType: string = isCustomFormat && hasTime ? showType : formatMode.replace('YYYY-MM-DD', showType);
     return hour12 === '1' ? `${newShowType.replace(/H/g, 'h')} A` : newShowType;
   }
 
@@ -237,7 +257,7 @@ export const getShowFormat = data => {
 };
 
 // 日期控件自定义格式语言环境处理
-export const getDateToEn = (showformat = '', value, originShowFormat = '') => {
+export const getDateToEn = (showformat = '', value?: any, originShowFormat = '') => {
   const dealFormat = showformat.replace(/#EN#$/g, '');
   const customLang = showformat.indexOf('EN') > -1;
   const oldLocale = moment.locale();
@@ -281,7 +301,7 @@ export const getTitleStyle = (titleStyle = '0000') => {
 };
 
 // 有字段值样式设置的控件
-export const canSetWidgetStyle = (item = {}) => {
+export const canSetWidgetStyle = (item: FormControl = {}) => {
   const { type, enumDefault, showControls = [] } = item;
   const { showtype } = getAdvanceSetting(item);
   return (
@@ -292,7 +312,7 @@ export const canSetWidgetStyle = (item = {}) => {
 };
 
 // 不允许重复的控件
-export const canAsUniqueWidget = item => {
+export const canAsUniqueWidget = (item: FormControl) => {
   return (
     _.includes([3, 4, 5, 7, 9, 11], item.type) ||
     (item.type === 2 && item.enumDefault !== 3) ||
@@ -302,12 +322,12 @@ export const canAsUniqueWidget = item => {
 };
 
 // 关联多条列表显示的控件
-export const isSheetDisplay = (data = {}) => {
+export const isSheetDisplay = (data: FormControl = {}) => {
   return includes([29, 51], data.type) && _.includes(['2', '5', '6'], get(data, 'advancedSetting.showtype'));
 };
 
 // 根据配置获取地区提示文案
-export const getAreaHintText = data => {
+export const getAreaHintText = (data: FormControl) => {
   const { enumDefault, enumDefault2, advancedSetting = {} } = data;
   const chooserange = advancedSetting.chooserange || 'CN';
   const areaDisplayOption = [
@@ -355,21 +375,21 @@ const END_ENUM = {
 };
 
 // 格式化虚拟掩码长度
-const formatPad = (masklen, value) => {
+const formatPad = (masklen: string, value: string) => {
   const num = parseInt(masklen);
   return value.replace(/\*+/g, '*'.repeat(num));
 };
 
 // 自定义字符转正则
-const formatReg = str => {
-  const formatWord = str.replace(/(\(|\[|\{|\\|\^|\$|\||\)|\?|\*|\+|\.|\]|\}|\))+/, a => {
+const formatReg = (str: string) => {
+  const formatWord = str.replace(/(\(|\[|\{|\\|\^|\$|\||\)|\?|\*|\+|\.|\]|\}|\))+/, (a: string) => {
     return a ? `\\${a[0]}{${a.length}}` : '';
   });
   return new RegExp(formatWord, 'g');
 };
 
 // 格式化自定义处理字符
-const formatWords = words => {
+const formatWords = (words?: string) => {
   return words
     ? words
         .replace(/，/g, ',')
@@ -379,7 +399,19 @@ const formatWords = words => {
 };
 
 // 中间显示 + 始终掩码 + 虚拟掩码长度(配置 ｜ 原始值 ｜ 处理值)
-const getValueByMaskSetting = ({ maskmid = '', maskwords = '', masklen = '', value = '', maskValue = '' }) => {
+const getValueByMaskSetting = ({
+  maskmid = '',
+  maskwords = '',
+  masklen = '',
+  value = '',
+  maskValue = '',
+}: {
+  maskmid?: string;
+  maskwords?: string;
+  masklen?: string;
+  value?: string;
+  maskValue?: string;
+}) => {
   // 中间显示
   const maskMidArr = formatWords(maskmid);
 
@@ -387,11 +419,15 @@ const getValueByMaskSetting = ({ maskmid = '', maskwords = '', masklen = '', val
     maskMidArr.forEach(mid => {
       let isGet = false;
       const reg = formatReg(mid);
-      value.replace(reg, (a, b) => {
+      // 这里是借 replace 做遍历、靠副作用改 maskValue，返回值本身被丢弃；
+      // 回调签名要求返回 string，所以原样把匹配返回去。
+      value.replace(reg, (a: string, b: number) => {
         if (maskValue[b] === '*' && !isGet) {
           isGet = true;
           maskValue = maskValue.slice(0, b) + a + maskValue.slice(a.length + b);
         }
+
+        return a;
       });
     });
   }
@@ -403,10 +439,12 @@ const getValueByMaskSetting = ({ maskmid = '', maskwords = '', masklen = '', val
     maskWordsArr.forEach(word => {
       const reg = formatReg(word);
       maskmid = maskmid.replace(reg, '');
-      value.replace(reg, (a, b) => {
+      value.replace(reg, (a: string, b: number) => {
         if (b > -1) {
           maskValue = maskValue.slice(0, b) + '*'.repeat(a.length) + maskValue.slice(a.length + b);
         }
+
+        return a;
       });
     });
   }
@@ -419,7 +457,17 @@ const getValueByMaskSetting = ({ maskmid = '', maskwords = '', masklen = '', val
 };
 
 // 指定字数
-const dealValueByCharNum = ({ charNum, value, maskValue, isBegin }) => {
+const dealValueByCharNum = ({
+  charNum,
+  value,
+  maskValue,
+  isBegin,
+}: {
+  charNum?: string;
+  value: string;
+  maskValue: string;
+  isBegin?: boolean;
+}) => {
   if (charNum && parseInt(charNum)) {
     if (isBegin) {
       return value.slice(0, parseInt(charNum)) + maskValue.slice(parseInt(charNum));
@@ -433,12 +481,24 @@ const dealValueByCharNum = ({ charNum, value, maskValue, isBegin }) => {
 };
 
 // 检索字符串位置
-const findChar = (char, value, isBegin) => {
+const findChar = (char: string, value: string, isBegin?: boolean) => {
   return isBegin ? value.indexOf(char) : value.lastIndexOf(char);
 };
 
 // 指定字符
-const dealValueByChar = ({ char, value, maskValue, isBegin, isIncluded }) => {
+const dealValueByChar = ({
+  char,
+  value,
+  maskValue,
+  isBegin,
+  isIncluded,
+}: {
+  char?: string;
+  value: string;
+  maskValue: string;
+  isBegin?: boolean;
+  isIncluded?: boolean;
+}) => {
   if (char) {
     const meIndex = findChar(char, value, isBegin);
 
@@ -457,7 +517,7 @@ const dealValueByChar = ({ char, value, maskValue, isBegin, isIncluded }) => {
   return maskValue;
 };
 
-export const dealMaskValue = (data = {}) => {
+export const dealMaskValue = (data: FormControl = {}) => {
   let {
     datamask,
     masktype = '',
@@ -485,10 +545,12 @@ export const dealMaskValue = (data = {}) => {
       let maskValue = value;
       maskWordsArr.forEach(word => {
         const reg = formatReg(word);
-        value.replace(reg, (a, b) => {
+        value.replace(reg, (a: string, b: number) => {
           if (b > -1) {
             maskValue = maskValue.slice(0, b) + '*'.repeat(a.length) + maskValue.slice(a.length + b);
           }
+
+          return a;
         });
       });
       if (masklen) {
@@ -673,7 +735,7 @@ export const getColorValue = (color = '') => {
   return color;
 };
 
-export const getRgbaByColor = (color, alpha) => {
+export const getRgbaByColor = (color: string, alpha: number | string) => {
   color = getColorValue(color);
   const sColorChange = [];
 

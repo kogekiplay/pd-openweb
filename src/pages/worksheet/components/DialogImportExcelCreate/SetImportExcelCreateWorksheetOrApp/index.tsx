@@ -1,17 +1,19 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Select } from 'antd';
-import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
+import _ from 'lodash';
 import styled from 'styled-components';
 import { Button, Checkbox, Dialog, Icon, LoadDiv, Menu, MenuItem, Support } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { DEFAULT_CONFIG } from 'src/pages/widgetConfig/config/widget.js';
 import { canSetAsTitle } from 'src/pages/widgetConfig/util';
+import type { RootState } from 'src/redux/types';
 import { FILEDS_TYPE_INFO } from '../util';
 import ExcelControlSetting from './ExcelControlSetting';
 import WorksheetItem from './WorksheetItem';
 import './index.less';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 const ImportLoadingWrap = styled.div`
   position: absolute;
@@ -50,7 +52,7 @@ let SetImportExcelCreateWorksheetOrApp = class SetImportExcelCreateWorksheetOrAp
 
   renderCells = () => {
     const { currentSheetInfo = {} } = this.props;
-    const { rows = [], selectCells = [], matchControl } = currentSheetInfo;
+    const { rows = [], selectCells = [], matchControl }: { rows: RecordRow[]; [key: string]: any } = currentSheetInfo;
     const cells = rows.length ? rows[0].cells : [];
 
     const titleCellNumber = _.get(
@@ -120,7 +122,7 @@ let SetImportExcelCreateWorksheetOrApp = class SetImportExcelCreateWorksheetOrAp
       </div>
     );
   };
-  updateTriggerVisible = (it, action, visible) => {
+  updateTriggerVisible = (it, action: string, visible: boolean) => {
     const { currentSheetInfo = {} } = this.props;
     let temp = {
       ...currentSheetInfo,
@@ -382,7 +384,7 @@ let SetImportExcelCreateWorksheetOrApp = class SetImportExcelCreateWorksheetOrAp
   };
   getTableWidth = () => {
     const { currentSheetInfo = {} } = this.props;
-    const { rows = [], selectCells = [] } = currentSheetInfo;
+    const { rows = [], selectCells = [] }: { rows: RecordRow[]; [key: string]: any } = currentSheetInfo;
     const tableWidth =
       rows.length && rows[0].cells && rows[0].cells.length
         ? rows[0].cells.filter(it => _.includes(selectCells, it.columnNumber)).length * 150 + 60
@@ -401,7 +403,7 @@ let SetImportExcelCreateWorksheetOrApp = class SetImportExcelCreateWorksheetOrAp
       currentSheetCount,
       importLoading,
     } = this.props;
-    const { rows = [], selectCells = [], rowNum } = currentSheetInfo;
+    const { rows = [], selectCells = [], rowNum }: { rows: RecordRow[]; [key: string]: any } = currentSheetInfo;
     const cells = rows.length ? rows[0].cells : [];
     const showRows = rows.filter((it, index) => index === 0).concat(rows.slice(rowNum, rowNum + 10));
     return (
@@ -527,7 +529,12 @@ let SetImportExcelCreateWorksheetOrApp = class SetImportExcelCreateWorksheetOrAp
                     </Trigger>
                   </div>
                 </div>
-                <div className="tableWrap flex" ref={node => { this.tableWrap = node; }}>
+                <div
+                  className="tableWrap flex"
+                  ref={node => {
+                    this.tableWrap = node;
+                  }}
+                >
                   <table
                     cellSpacing="0"
                     cellPadding="0"
@@ -567,7 +574,7 @@ let SetImportExcelCreateWorksheetOrApp = class SetImportExcelCreateWorksheetOrAp
     );
   }
 };
-SetImportExcelCreateWorksheetOrApp = connect(({ appPkg }) => ({
+SetImportExcelCreateWorksheetOrApp = connect(({ appPkg }: RootState) => ({
   worksheetList: getWorksheetList(appPkg.appGroups || []),
   projectId: appPkg.projectId,
 }))(SetImportExcelCreateWorksheetOrApp);

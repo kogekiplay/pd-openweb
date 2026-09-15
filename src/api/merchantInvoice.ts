@@ -12,7 +12,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  createTaxInfo: function (args, options = {}) {
+  createTaxInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MerchantInvoice', 'CreateTaxInfo', args, options);
   },
   /**
@@ -25,7 +25,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateTaxInfoChannelPassword: function (args, options = {}) {
+  updateTaxInfoChannelPassword: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MerchantInvoice', 'UpdateTaxInfoChannelPassword', args, options);
   },
   /**
@@ -37,7 +37,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTaxInfo: function (args, options = {}) {
+  getTaxInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MerchantInvoice', 'GetTaxInfo', args, options);
   },
   /**
@@ -53,7 +53,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setAppAuth: function (args, options = {}) {
+  setAppAuth: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MerchantInvoice', 'SetAppAuth', args, options);
   },
   /**
@@ -64,7 +64,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  checkTaxInfo: function (args, options = {}) {
+  checkTaxInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MerchantInvoice', 'CheckTaxInfo', args, options);
   },
   /**
@@ -74,7 +74,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getInvoiceInfoUsage: function (args, options = {}) {
+  getInvoiceInfoUsage: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MerchantInvoice', 'GetInvoiceInfoUsage', args, options);
   },
   /**
@@ -87,7 +87,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  uploadProductExcel: function (args, options = {}) {
+  uploadProductExcel: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MerchantInvoice', 'UploadProductExcel', args, options);
   },
   /**
@@ -108,7 +108,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTaxInfoList: function (args, options = {}) {
+  getTaxInfoList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MerchantInvoice', 'GetTaxInfoList', args, options);
   },
   /**
@@ -120,7 +120,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTaxInfoForDropdownList: function (args, options = {}) {
+  getTaxInfoForDropdownList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MerchantInvoice', 'GetTaxInfoForDropdownList', args, options);
   },
   /**
@@ -132,7 +132,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getInvoiceProducts: function (args, options = {}) {
+  getInvoiceProducts: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MerchantInvoice', 'GetInvoiceProducts', args, options);
   },
   /**
@@ -144,7 +144,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSimpleInvoiceProducts: function (args, options = {}) {
+  getSimpleInvoiceProducts: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MerchantInvoice', 'GetSimpleInvoiceProducts', args, options);
   },
   /**
@@ -164,7 +164,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  create: function (args, options = {}) {
+  create: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MerchantInvoice', 'Create', args, options);
   },
   /**
@@ -177,7 +177,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  confirmInvoice: function (args, options = {}) {
+  confirmInvoice: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MerchantInvoice', 'ConfirmInvoice', args, options);
   },
   /**
@@ -191,7 +191,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  testInvoice: function (args, options = {}) {
+  testInvoice: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MerchantInvoice', 'TestInvoice', args, options);
   },
   /**
@@ -202,7 +202,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  cancelInvoice: function (args, options = {}) {
+  cancelInvoice: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MerchantInvoice', 'CancelInvoice', args, options);
   },
   /**
@@ -214,7 +214,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  isTipsForRefund: function (args, options = {}) {
+  isTipsForRefund: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MerchantInvoice', 'IsTipsForRefund', args, options);
   },
   /**
@@ -251,7 +251,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getInvoiceList: function (args, options = {}) {
+  getInvoiceList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MerchantInvoice', 'GetInvoiceList', args, options);
   },
   /**
@@ -263,7 +263,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getInvoice: function (args, options = {}) {
+  getInvoice: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MerchantInvoice', 'GetInvoice', args, options);
   },
   /**
@@ -281,7 +281,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getInvoiceSummary: function (args, options = {}) {
+  getInvoiceSummary: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MerchantInvoice', 'GetInvoiceSummary', args, options);
   },
   /**
@@ -293,7 +293,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  companySearch: function (args, options = {}) {
+  companySearch: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MerchantInvoice', 'CompanySearch', args, options);
   },
   /**
@@ -304,7 +304,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  syncInvoice: function (args, options = {}) {
+  syncInvoice: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MerchantInvoice', 'SyncInvoice', args, options);
   },
   /**
@@ -317,7 +317,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  fastRed: function (args, options = {}) {
+  fastRed: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MerchantInvoice', 'FastRed', args, options);
   },
   /**
@@ -354,7 +354,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  exportInvoices: function (args, options = {}) {
+  exportInvoices: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('MerchantInvoice', 'ExportInvoices', args, options);
   },
 };

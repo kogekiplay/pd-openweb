@@ -13,7 +13,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  create: function (args, options = {}) {
+  create: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Plugin', 'Create', args, options);
   },
   /**
@@ -39,7 +39,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  edit: function (args, options = {}) {
+  edit: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Plugin', 'Edit', args, options);
   },
   /**
@@ -53,7 +53,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDetail: function (args, options = {}) {
+  getDetail: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Plugin', 'GetDetail', args, options);
   },
   /**
@@ -67,7 +67,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  checkExists: function (args, options = {}) {
+  checkExists: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Plugin', 'CheckExists', args, options);
   },
   /**
@@ -85,7 +85,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getList: function (args, options = {}) {
+  getList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Plugin', 'GetList', args, options);
   },
   /**
@@ -100,7 +100,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAll: function (args, options = {}) {
+  getAll: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Plugin', 'GetAll', args, options);
   },
   /**
@@ -112,7 +112,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  remove: function (args, options = {}) {
+  remove: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Plugin', 'Remove', args, options);
   },
   /**
@@ -128,7 +128,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  release: function (args, options = {}) {
+  release: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Plugin', 'Release', args, options);
   },
   /**
@@ -141,7 +141,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  rollback: function (args, options = {}) {
+  rollback: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Plugin', 'Rollback', args, options);
   },
   /**
@@ -155,7 +155,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getReleaseHistory: function (args, options = {}) {
+  getReleaseHistory: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Plugin', 'GetReleaseHistory', args, options);
   },
   /**
@@ -168,7 +168,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeRelease: function (args, options = {}) {
+  removeRelease: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Plugin', 'RemoveRelease', args, options);
   },
   /**
@@ -182,7 +182,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  commit: function (args, options = {}) {
+  commit: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Plugin', 'Commit', args, options);
   },
   /**
@@ -194,7 +194,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeCommit: function (args, options = {}) {
+  removeCommit: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Plugin', 'RemoveCommit', args, options);
   },
   /**
@@ -209,7 +209,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getCommitHistory: function (args, options = {}) {
+  getCommitHistory: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Plugin', 'GetCommitHistory', args, options);
   },
   /**
@@ -223,7 +223,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUseDetail: function (args, options = {}) {
+  getUseDetail: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Plugin', 'GetUseDetail', args, options);
   },
   /**
@@ -236,7 +236,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  import: function (args, options = {}) {
+  import: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Plugin', 'Import', args, options);
   },
   /**
@@ -250,7 +250,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  export: function (args, options = {}) {
+  export: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Plugin', 'Export', args, options);
   },
   /**
@@ -264,7 +264,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getExportHistory: function (args, options = {}) {
+  getExportHistory: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Plugin', 'GetExportHistory', args, options);
   },
   /**
@@ -276,7 +276,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPluginListBySourece: function (args, options = {}) {
+  getPluginListBySourece: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Plugin', 'GetPluginListBySourece', args, options);
   },
   /**
@@ -289,7 +289,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  stateSave: function (args, options = {}) {
+  stateSave: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Plugin', 'StateSave', args, options);
   },
   /**
@@ -301,7 +301,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  stateRead: function (args, options = {}) {
+  stateRead: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Plugin', 'StateRead', args, options);
   },
 };

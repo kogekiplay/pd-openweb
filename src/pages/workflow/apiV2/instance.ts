@@ -61,7 +61,7 @@ const instance = {
    * null
    * @param {Object} options 配置参数
    */
-  removeOperation: function(args, options) {
+  removeOperation: function(args, options?) {
     base.ajaxOptions.url = base.server(options) + '/instance/removeOperation';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'instanceremoveOperation', args, $.extend({}, base, options));
@@ -117,7 +117,7 @@ const instance = {
    * @param {null} [args.request] *null
    * @param {Object} options 配置参数
    */
-  getOperationDetail: function(args, options) {
+  getOperationDetail: function(args, options?) {
     base.ajaxOptions.url = base.server(options) + '/instance/getOperationDetail';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'instancegetOperationDetail', args, $.extend({}, base, options));

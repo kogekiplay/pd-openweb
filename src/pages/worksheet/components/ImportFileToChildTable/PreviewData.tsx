@@ -7,6 +7,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { getWithToken } from 'src/utils/common';
 import convert from './convertData';
 import PreviewTable from './PreviewTable';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const Header = styled.div`
   height: 52px;
@@ -69,7 +70,7 @@ const ConvertingMask = styled.div`
   align-items: center;
 `;
 
-function getMapConfigByExcel(controls = [], excelData = []) {
+function getMapConfigByExcel(controls: FormControl[] = [], excelData = []) {
   const result = {};
 
   if (excelData.length < controls.length) {
@@ -87,7 +88,7 @@ function getMapConfigByExcel(controls = [], excelData = []) {
   return result;
 }
 
-function getDefaultMap(controls) {
+function getDefaultMap(controls: FormControl[]) {
   return [...new Array(controls.length)]
     .map((a, i) => ({ [i]: _.get(controls, `${i}.controlId`) }))
     .reduce((a, b) => Object.assign({}, a, b));
@@ -107,7 +108,7 @@ export default function PreviewData(props) {
     controls,
     setStep,
     onClose,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const [mapByExcel, setMapByExcel] = useState(dataFrom === 'excel');
   const [tableLoading, setTableLoading] = useState(false);
   const [isConverting, setIsConverting] = useState(false);
@@ -197,7 +198,7 @@ export default function PreviewData(props) {
                   );
 
                   if (_.get(data, 'rows')) {
-                    setCellsData(data.rows.map(r => r.cells));
+                    setCellsData(data.rows.map((r: RecordRow) => r.cells));
                   } else {
                     setCellsData([]);
                   }

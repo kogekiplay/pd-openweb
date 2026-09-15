@@ -154,7 +154,7 @@ class DateTimePicker extends Component<any, any> {
     );
   };
 
-  buttonOnClick = (event, action) => {
+  buttonOnClick = (event, action: string) => {
     if (this.props.onChange) {
       const value = action === 'ok' ? this.state.value : null;
 

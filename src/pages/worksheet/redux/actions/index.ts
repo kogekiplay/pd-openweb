@@ -45,9 +45,10 @@ import {
   refresh as sheetViewRefresh,
 } from './sheetview';
 import { isHaveCharge } from './util';
+import type { AppDispatch, GetState } from 'src/redux/types';
 
 export function fireWhenViewLoaded(view = {}, { forceUpdate, controls } = {}) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, quickFilter } = getState().sheet;
     const { chartId } = base || {};
     if (!get(view, 'fastFilters')) return;
@@ -150,7 +151,7 @@ export function handleLoadOperateButtons({ worksheetInfo }) {
 }
 
 export const updateBase = base => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const sheet = getState().sheet;
     const viewChanged = _.get(sheet, 'base.viewId') && base.viewId && _.get(sheet, 'base.viewId') !== base.viewId;
 
@@ -212,7 +213,7 @@ export const updateWorksheetLoading = loading => ({ type: 'WORKSHEET_UPDATE_LOAD
 let worksheetRequest = null;
 
 export function loadWorksheet(worksheetId, setRequest) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base = {}, appPkgData = {}, views = [] } = getState().sheet;
     const { viewId, chartId } = base;
     const appId = base.type === 'single' ? base.singleAppId : base.appId;
@@ -307,92 +308,111 @@ export function loadWorksheet(worksheetId, setRequest) {
           ),
         });
         worksheetRequest = worksheetAjax.getWorksheetInfo({ ...args, resultType: undefined });
-        worksheetRequest.then(async infoRes => {
-          let queryRes;
-          infoRes.name = translateInfo.name || infoRes.name;
-          if (infoRes.isWorksheetQuery) {
-            queryRes = await worksheetAjax.getQueryBySheetId({ worksheetId }, { silent: true });
-          }
+        worksheetRequest
+          .then(async infoRes => {
+            let queryRes;
+            infoRes.name = translateInfo.name || infoRes.name;
+            if (infoRes.isWorksheetQuery) {
+              queryRes = await worksheetAjax.getQueryBySheetId({ worksheetId }, { silent: true });
+            }
 
-          if (_.get(window, 'shareState.isPublicView') || _.get(window, 'shareState.isPublicPage')) {
-            infoRes.allowAdd = false;
-          }
+            if (_.get(window, 'shareState.isPublicView') || _.get(window, 'shareState.isPublicPage')) {
+              infoRes.allowAdd = false;
+            }
 
-          if (queryRes) {
-            dispatch({
-              type: 'WORKSHEET_SEARCH_CONFIG_INIT',
-              value: formatSearchConfigs(queryRes),
-            });
-          }
-
-          window[`timeZone_${appId}`] = infoRes.appTimeZone;
-          const newControls = replaceControlsTranslateInfo(appId, worksheetId, _.get(infoRes, 'template.controls'));
-          infoRes.entityName = translateInfo.recordName || infoRes.entityName;
-          if (infoRes.advancedSetting) {
-            infoRes.advancedSetting = replaceAdvancedSettingTranslateInfo(
-              appId,
-              worksheetId,
-              res.advancedSetting || {},
-            );
-          }
-
-          if (infoRes.rules && infoRes.rules.length) {
-            infoRes.rules = replaceRulesTranslateInfo(appId, worksheetId, res.rules);
-          }
-
-          if (infoRes.views) {
-            infoRes.views.forEach(view => {
-              (view.viewControls || []).forEach(item => {
-                item.worksheetName = getTranslateInfo(appId, null, item.worksheetId).name || item.worksheetName;
+            if (queryRes) {
+              dispatch({
+                type: 'WORKSHEET_SEARCH_CONFIG_INIT',
+                value: formatSearchConfigs(queryRes),
               });
-            });
-          }
+            }
 
-          if (_.isEmpty(newControls)) {
-            return;
-          }
+            window[`timeZone_${appId}`] = infoRes.appTimeZone;
+            const newControls = replaceControlsTranslateInfo(appId, worksheetId, _.get(infoRes, 'template.controls'));
+            infoRes.entityName = translateInfo.recordName || infoRes.entityName;
+            if (infoRes.advancedSetting) {
+              infoRes.advancedSetting = replaceAdvancedSettingTranslateInfo(
+                appId,
+                worksheetId,
+                res.advancedSetting || {},
+              );
+            }
 
-          dispatch({
-            type: 'WORKSHEET_UPDATE_VIEWS',
-            views: isAIPreview && _.isEmpty(infoRes.views) && !chartId ? [...aiPreviewViews] : infoRes.views,
-          });
+            if (infoRes.rules && infoRes.rules.length) {
+              infoRes.rules = replaceRulesTranslateInfo(appId, worksheetId, res.rules);
+            }
 
-          infoRes.template.controls = newControls;
-          dispatch(updateWorksheetSomeControls(newControls));
-          dispatch({
-            type: 'WORKSHEET_UPDATE_WORKSHEETINFO',
-            info: Object.assign(
-              !chartId
-                ? infoRes
-                : {
-                    ...infoRes,
-                    views: infoRes.views.map(v => ({ ...v, viewType: 0 })),
-                  },
-            ),
-          });
-          dispatch(handleLoadOperateButtons({ worksheetInfo: infoRes }));
-          const currentView = find(infoRes.views, { viewId });
+            if (infoRes.views) {
+              infoRes.views.forEach(view => {
+                (view.viewControls || []).forEach(item => {
+                  item.worksheetName = getTranslateInfo(appId, null, item.worksheetId).name || item.worksheetName;
+                });
+              });
+            }
 
-          if (currentView) {
-            dispatch(fireWhenViewLoaded(currentView, { controls: infoRes.template.controls }));
-          }
+            if (_.isEmpty(newControls)) {
+              return;
+            }
 
-          dispatch(setViewLayout(viewId));
-          if (worksheetId) {
             dispatch({
-              type: 'WORKSHEET_PERMISSION_INIT',
-              value: infoRes.switches,
+              type: 'WORKSHEET_UPDATE_VIEWS',
+              views: isAIPreview && _.isEmpty(infoRes.views) && !chartId ? [...aiPreviewViews] : infoRes.views,
             });
-          }
 
-          dispatch({
-            type: 'WORKSHEET_UPDATE_IS_REQUESTING_RELATION_CONTROLS',
-            value: false,
+            infoRes.template.controls = newControls;
+            dispatch(updateWorksheetSomeControls(newControls));
+            dispatch({
+              type: 'WORKSHEET_UPDATE_WORKSHEETINFO',
+              info: Object.assign(
+                !chartId
+                  ? infoRes
+                  : {
+                      ...infoRes,
+                      views: infoRes.views.map(v => ({ ...v, viewType: 0 })),
+                    },
+              ),
+            });
+            dispatch(handleLoadOperateButtons({ worksheetInfo: infoRes }));
+            const currentView = find(infoRes.views, { viewId });
+
+            if (currentView) {
+              dispatch(fireWhenViewLoaded(currentView, { controls: infoRes.template.controls }));
+            }
+
+            dispatch(setViewLayout(viewId));
+            if (worksheetId) {
+              dispatch({
+                type: 'WORKSHEET_PERMISSION_INIT',
+                value: infoRes.switches,
+              });
+            }
+
+            dispatch({
+              type: 'WORKSHEET_UPDATE_IS_REQUESTING_RELATION_CONTROLS',
+              value: false,
+            });
+          })
+          // 这条内层链必须自己兜住 catch：上面第 309 行【重新赋值】了 worksheetRequest，
+          // 于是下一次进工作表时 fetchSheet 开头那句 worksheetRequest.abort() 打的是
+          // 【这个】请求。它既没有被 return 进外层链、外层的 .catch 也就接不到，
+          // 被 abort 后直接变成 "Uncaught (in promise) {errorCode: 1,
+          // errorMessage: '请求被取消'}" 刷在控制台。
+          // errorCode 1 = 主动取消（见 src/common/global.ts:424 的 textStatus === 'abort'），
+          // 是预期行为，不该报；其余错误仍标记初始化失败。
+          .catch(err => {
+            if (get(err, 'errorCode') !== 1) {
+              dispatch({
+                type: 'WORKSHEET_INIT_FAIL',
+              });
+            }
           });
-        });
       })
       .catch(err => {
-        if (!get(err, 'errorCode') === 1) {
+        // 原来写的是 `!get(err, 'errorCode') === 1`，按 (!errorCode) === 1 解析 ——
+        // 布尔值永远不等于 1，整个条件【恒为 false】，等于任何错误下
+        // WORKSHEET_INIT_FAIL 都从不派发，页面只会一直停在加载态。
+        // 本意是"不是取消才算失败"。
+        if (get(err, 'errorCode') !== 1) {
           dispatch({
             type: 'WORKSHEET_INIT_FAIL',
           });
@@ -440,7 +460,7 @@ export function loadCustomButtons({ appId, viewId, rowId, worksheetId }, cb = ()
 }
 
 export function updateCustomButtons(btns, isAdd) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const sheet = getState().sheet;
     let { buttons = [], sheetButtons = [] } = sheet;
 
@@ -507,7 +527,7 @@ function getSaveViewEditAttrs(saveParams = {}) {
 
 // 更新单个视图
 export function saveView(viewId, newConfig, cb) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const sheet = getState().sheet;
     const { base, views, navGroupFilters, worksheetInfo } = sheet;
     const view = _.find(views, v => v.viewId === viewId);
@@ -601,7 +621,7 @@ export function saveView(viewId, newConfig, cb) {
 }
 
 // 刷新视图
-export function refreshSheet(view, options) {
+export function refreshSheet(view, options?) {
   return dispatch => {
     if (
       String(view.viewType) === VIEW_DISPLAY_TYPE.sheet ||
@@ -673,7 +693,7 @@ export function addNewRecord(data, view) {
 
 // 打开创建记录弹层
 export function openNewRecord({ isDraft, allowShowMingoCreate } = {}) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, views, worksheetInfo, navGroupFilters, sheetSwitchPermit, isCharge, appPkgData } = getState().sheet;
     const { appId, viewId, groupId, worksheetId } = base;
     const isManageView = isHaveCharge(appPkgData.appRoleType) && viewId === worksheetId;
@@ -820,7 +840,7 @@ export const updateWorksheetControls = controls => ({
 
 // 更新字段
 export const refreshWorksheetControls = () => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const sheet = getState().sheet;
     const { worksheetId } = sheet.base;
     worksheetAjax.getWorksheetInfo({ worksheetId, getTemplate: true }).then(res => {
@@ -880,7 +900,7 @@ export function updateQuickFilterWithDefault(filter = []) {
 
 // 重置快速筛选条件
 export function resetQuickFilter(view) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { quickFilter } = getState().sheet;
 
     if (_.isEmpty(quickFilter)) {
@@ -895,7 +915,7 @@ export function resetQuickFilter(view) {
 }
 
 // 更新分组筛选条件
-export function updateGroupFilter(navGroupFilters = [], view) {
+export function updateGroupFilter(navGroupFilters = [], view?) {
   return dispatch => {
     dispatch({
       type: 'WORKSHEET_UPDATE_GROUP_FILTER',
@@ -915,7 +935,7 @@ export function updateSheetListVisible(visible) {
 }
 
 export function copyCustomPage(para) {
-  return function (dispatch, getState) {
+  return function (dispatch: AppDispatch, getState: GetState) {
     const sheetList = getState().sheetList.data;
     appManagementAjax.copyCustomPage(para).then(data => {
       if (data) {
@@ -977,7 +997,7 @@ export function initMobileGunter({ appId, worksheetId, viewId }) {
 }
 
 export function updateCurrentViewState(updates) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, views } = getState().sheet;
     const { viewId } = base;
     const view = _.find(views, v => v.viewId === viewId);
@@ -989,7 +1009,7 @@ export function updateCurrentViewState(updates) {
 }
 
 export function updateViewShowcount(showcount) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base } = getState().sheet;
     const { viewId } = base;
 
@@ -1007,7 +1027,7 @@ export function updateViewShowcount(showcount) {
 }
 
 export function loadManageView(worksheetId, callback) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base = {}, appPkgData = {} } = getState().sheet;
     const { appId } = base;
 

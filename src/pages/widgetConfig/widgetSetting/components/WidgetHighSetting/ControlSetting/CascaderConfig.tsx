@@ -9,6 +9,7 @@ import { EditInfo, SettingItem, SheetViewWrap } from '../../../../styled';
 import { getAdvanceSetting, handleAdvancedSettingChange } from '../../../../util/setting';
 import DynamicDefaultValue from '../../DynamicDefaultValue';
 import SearchConfig from '../../relateSheet/SearchConfig';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const TOP_SHOW_OPTIONS = [
   { text: _l('全部顶层'), value: '0' },
@@ -58,7 +59,7 @@ const topFiltersToDefsource = data => {
 
 export default function CascaderConfig(props) {
   const { data, onChange, globalSheetControls } = props;
-  const { relationControls = [] } = data;
+  const { relationControls = [] }: { relationControls: FormControl[]; [key: string]: any } = data;
   const [visibleInfo, setVisibleInfo] = useState({
     filtersVisible: false,
     topfiltersVisible: false,

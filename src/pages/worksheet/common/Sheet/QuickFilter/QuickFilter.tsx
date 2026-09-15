@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import autoSize from 'ming-ui/components/AutoSize';
 import { FASTFILTER_CONDITION_TYPE } from 'worksheet/common/ViewConfig/components/fastFilter/util';
 import Conditions from './Conditions';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   position: relative;
@@ -54,7 +55,7 @@ function QuickFilter(props) {
     resetQuickFilter = () => {},
     fireWhenViewLoaded = () => {},
     onFilterClick = () => {},
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const { worksheetId } = base;
   const isConfigMode = mode === 'config';
   const filtersLength = useRef(filters.length);
@@ -154,7 +155,7 @@ function QuickFilter(props) {
         operateIsNewLine={operateIsNewLine}
         firstIsFullLine={firstIsFullLine}
         view={view}
-        controls={controls.filter(c => {
+        controls={controls.filter((c: FormControl) => {
           let tempType = c.type;
 
           if (c.type === 30) {

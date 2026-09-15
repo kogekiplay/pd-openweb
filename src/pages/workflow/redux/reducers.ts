@@ -1,6 +1,7 @@
+import type { ReduxAction } from 'src/redux/types';
 ﻿import { combineReducers } from 'redux';
 
-const flowInfo = (state = {}, action) => {
+const flowInfo = (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'GET_FLOW_INFO':
       return action.data;
@@ -23,7 +24,7 @@ const flowInfo = (state = {}, action) => {
   }
 };
 
-const workflowDetail = (state = {}, action) => {
+const workflowDetail = (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'GET_PROCESS_INFO':
     case 'ADD_FLOW_NODE':
@@ -41,7 +42,7 @@ const workflowDetail = (state = {}, action) => {
   }
 };
 
-const workflowTestRunning = (state = {}, action) => {
+const workflowTestRunning = (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_WORKFLOW_TEST_RUNNING':
     case 'CLEAR_WORKFLOW_TEST_RUNNING':

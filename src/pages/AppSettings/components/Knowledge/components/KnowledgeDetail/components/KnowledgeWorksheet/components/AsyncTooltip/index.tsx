@@ -1,6 +1,7 @@
 import React, { memo, useEffect, useRef, useState } from 'react';
 import { Tooltip } from 'ming-ui/antd-components';
 import { fetchFilterData, formatFilterConditionToText } from '../../../../../../core/utils';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const AsyncTooltip = props => {
   const {
@@ -11,7 +12,7 @@ const AsyncTooltip = props => {
     controls,
     setWorksheetControlsMap,
     children,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
 
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);

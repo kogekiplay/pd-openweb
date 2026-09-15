@@ -1,13 +1,14 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import { conditionAdapter, formatQuickFilter } from 'mobile/RecordList/QuickFilter/utils';
 import * as actions from 'mobile/RecordList/redux/actions';
+import type { RootState } from 'src/redux/types';
 import { validate } from './utils';
 import './index.less';
 
@@ -232,7 +233,7 @@ class Search extends Component<any, any> {
 }
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     filters: state.mobile.filters,
     sheetView: state.mobile.sheetView,
     base: state.mobile.base,

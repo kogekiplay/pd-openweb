@@ -153,7 +153,7 @@ export default class SelectApp extends React.Component<any, any> {
   }
 
   //选中列表变化
-  updateSelectList(isSelect, item) {
+  updateSelectList(isSelect: boolean, item) {
     this.setState({
       selectList: isSelect
         ? this.state.selectList.filter(app => app.appId !== item.appId)

@@ -9,6 +9,7 @@ import ClickAway from 'ming-ui/components/ClickAway';
 import Textarea from 'ming-ui/components/Textarea';
 import { dialogSelectUser, quickSelectUser } from 'ming-ui/functions';
 import { expireDialogAsync } from 'src/components/upgradeVersion';
+import type { RootState } from 'src/redux/types';
 import config, { OPEN_TYPE } from '../../../config/config';
 import { addSubTask, editTaskStatus, taskFoldStatus, updateTaskCharge, updateTaskName } from '../../../redux/actions';
 import {
@@ -481,4 +482,4 @@ class Subtask extends Component<any, any> {
   }
 }
 
-export default connect(state => state.task)(Subtask);
+export default connect((state: RootState) => state.task)(Subtask);

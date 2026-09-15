@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import { ScrollView } from 'ming-ui';
+import type { RootState } from 'src/redux/types';
 import * as actions from '../../redux/actions';
 import * as utils from '../../utils';
 import * as ajax from '../../utils/ajax';
@@ -166,7 +167,7 @@ class MessageView extends Component<any, any> {
     const { session } = this.props;
     utils.scrollEnd(session.id, true);
   }
-  getMessage(param, direction) {
+  getMessage(param, direction: string) {
     this.setState({
       loading: true,
       errorParam: false,
@@ -473,7 +474,7 @@ class MessageView extends Component<any, any> {
       </div>
     );
   }
-  renderLoading(direction) {
+  renderLoading(direction: string) {
     const { loading, errorParam } = this.state;
     return (
       <div
@@ -571,7 +572,7 @@ class MessageView extends Component<any, any> {
   }
 }
 
-export default connect(state => {
+export default connect((state: RootState) => {
   const { currentSession, messages, sessionList, gotoMessage, bottomUnreadMessage } = state.chat;
 
   return {

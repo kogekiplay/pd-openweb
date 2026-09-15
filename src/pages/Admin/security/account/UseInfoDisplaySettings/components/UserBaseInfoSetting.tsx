@@ -281,7 +281,7 @@ export default class UserBaseInfoSetting extends Component<any, any> {
     );
   };
 
-  renderPreviewValue = (item, underName) => {
+  renderPreviewValue = (item, underName?) => {
     if (!item) return null;
     const { userInfo = {} } = this.state;
     let content = '';

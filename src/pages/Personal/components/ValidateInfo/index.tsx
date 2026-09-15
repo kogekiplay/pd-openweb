@@ -91,7 +91,7 @@ export default class ValidateInfoCon extends Component<any, any> {
     }
   }
 
-  changeValue = (e, filed) => {
+  changeValue = (e, filed: string) => {
     let val = e.target.value;
     this.setState({ [filed]: ['verifyCode', 'mobile'].includes(filed) ? val.replace(/[^\d]/g, '') : val.trim() });
   };

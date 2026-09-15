@@ -1,6 +1,7 @@
 import React, { lazy, Suspense } from 'react';
 import { connect } from 'react-redux';
 import ErrorBoundary from 'ming-ui/components/ErrorBoundary';
+import type { RootState } from 'src/redux/types';
 import { componentCountLimit, getEnumType } from '../../util';
 
 const TYPE_TO_COMPONENTS = {
@@ -51,7 +52,7 @@ function EditWidget(props) {
 }
 
 export default ErrorBoundary.wrap(
-  connect(({ appPkg, customPage }) => ({
+  connect(({ appPkg, customPage }: RootState) => ({
     appPkg: appPkg,
     projectId: appPkg.projectId,
     components: customPage.components,

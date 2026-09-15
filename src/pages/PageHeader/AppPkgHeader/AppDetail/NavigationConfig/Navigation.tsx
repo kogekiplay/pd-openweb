@@ -581,7 +581,7 @@ const Container = props => {
     }
   };
 
-  const handleAddGroup = target => {
+  const handleAddGroup = (target?) => {
     const name = _l('未命名分组');
     const icon = target ? '8_4_folder' : undefined;
 

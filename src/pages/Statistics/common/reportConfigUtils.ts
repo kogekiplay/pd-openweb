@@ -5,6 +5,7 @@ import { reportTypes } from '../Charts/reportTypes';
 import { defaultNumberChartStyle, defaultPivotTableStyle, normTypes } from '../enum';
 import { isAreaControl, isNumberControl, isTimeControl } from './controlUtils';
 import { defaultDropdownScopeData } from './timeUtils';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 export function initConfigDetail(id, data, currentReport, customPageConfig) {
   const { controls, ...result } = data;
@@ -614,7 +615,7 @@ export const formatSorts = (sorts, ids, ySameList = []) => {
     sortQueues[key].push(item);
   });
 
-  const rows = sortRows.map(row => {
+  const rows: RecordRow[] = sortRows.map(row => {
     let item = sortQueues[row.id] && sortQueues[row.id].shift();
 
     if (!item && row.originalId !== row.id) {
@@ -1044,7 +1045,7 @@ const hexToRgb = hex => {
 /**
  * 根据开始颜色和结束颜色获取渐变颜色
  */
-export const getGradientColors = (startColor, endColor, step) => {
+export const getGradientColors = (startColor, endColor, step: number) => {
   let sColor = hexToRgb(startColor);
   let eColor = hexToRgb(endColor);
 

@@ -340,7 +340,7 @@ class Map extends Component<any, any> {
     this.setPlugins(nextProps);
   }
 
-  runMapSetter(key, setterParam) {
+  runMapSetter(key: string, setterParam) {
     if (key === 'limitBounds' && !setterParam) {
       this.map.clearLimitBounds();
     } else {
@@ -349,7 +349,7 @@ class Map extends Component<any, any> {
     }
   }
 
-  getSetterValue(key, props) {
+  getSetterValue(key: string, props) {
     if (key === 'center') {
       console.log('----center----', props, this.state.currentPosition);
       const center = props.isCurrentPosition && this.state.currentPosition ? this.state.currentPosition : props.center;
@@ -370,7 +370,7 @@ class Map extends Component<any, any> {
     }
   }
 
-  detectPropChanged(key, prevProps, nextProps) {
+  detectPropChanged(key: string, prevProps, nextProps) {
     return prevProps[key] !== nextProps[key];
   }
 

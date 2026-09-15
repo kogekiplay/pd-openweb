@@ -789,7 +789,7 @@ export default class WebHook extends Component<any, any> {
   /**
    * 更新错误消息
    */
-  updateErrorMsg(key, value, i) {
+  updateErrorMsg(key: string, value: string, i) {
     const errorMsgArray = _.cloneDeep(this.state.errorMsgArray);
 
     errorMsgArray[i][key] = value;

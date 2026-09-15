@@ -22,6 +22,7 @@ import { openChildTable } from '../ChildTableDialog';
 import EditableCellCon from '../EditableCellCon';
 import { openRelateRelateRecordTable } from '../RelateRecordTableDialog';
 import RelateRecordTags from './comps/RelateRecordTags';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const RecordCardCellRelateRecord = styled.div`
   display: inline-block;
@@ -49,7 +50,7 @@ export default class RelateRecord extends React.Component<any, any> {
 
   constructor(props) {
     super(props);
-    const records = props.cell.value ? this.parseValue(props.cell.value) : [];
+    const records: RecordRow[] = props.cell.value ? this.parseValue(props.cell.value) : [];
     this.state = {
       records,
       dialogActive: false,
@@ -167,7 +168,7 @@ export default class RelateRecord extends React.Component<any, any> {
   }
   renderSelected() {
     const { isMobileTable, cell = {}, appId } = this.props;
-    const { relationControls = [] } = cell;
+    const { relationControls = [] }: { relationControls: FormControl[]; [key: string]: any } = cell;
     let titleControl = _.find(relationControls, c => c.attribute === 1);
     const matchedTitleControl = find(relationControls, { controlId: cell.advancedSetting.showtitleid });
 
@@ -175,7 +176,7 @@ export default class RelateRecord extends React.Component<any, any> {
       titleControl = matchedTitleControl;
     }
 
-    let records = [];
+    let records: RecordRow[] = [];
 
     if (!titleControl) {
       return null;

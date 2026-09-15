@@ -21,6 +21,7 @@ import { VersionProductType } from 'src/utils/enum';
 import { addBehaviorLog, getFeatureStatus } from 'src/utils/project';
 import { sendCloudPrint } from 'src/utils/record';
 import IconBtn from './IconBtn';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const MenuItemWrap = styled(MenuItem)`
   &.printItem.Item {
@@ -370,7 +371,7 @@ export default class PrintList extends Component<any, any> {
       instanceId,
     } = this.props;
     const { tempList, templateId, printLoading } = this.state;
-    let attriData = controls.filter(it => it.attribute === 1);
+    let attriData = controls.filter((it: FormControl) => it.attribute === 1);
     const defaultTempList = tempList.filter(it =>
       [PRINT_TYPE.SYS_PRINT, PRINT_TYPE.WORD_PRINT, PRINT_TYPE.EXCEL_PRINT].includes(it.type),
     );

@@ -16,6 +16,7 @@ import { canEditApp, canEditData } from 'worksheet/redux/actions/util.js';
 import View from 'worksheet/views';
 import { defaultNavCloseW, defaultNavOpenW, MaxNavW, MinNavW } from 'src/pages/worksheet/common/ViewConfig/config.js';
 import { setSysWorkflowTimeControlFormat } from 'src/pages/worksheet/views/CalendarView/util.js';
+import type { RootState } from 'src/redux/types';
 import { navigateTo } from 'src/router/navigateTo';
 import { getTranslateInfo } from 'src/utils/app';
 import { emitter as globalEmitter } from 'src/utils/common';
@@ -26,6 +27,7 @@ import SheetContext from './SheetContext';
 import SheetHeader from './SheetHeader';
 import ViewControl from './ViewControl';
 import './style.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const { sheet, gallery, board, calendar, gunter, detail, customize, map, resource, structure } = VIEW_DISPLAY_TYPE;
 
@@ -145,7 +147,7 @@ function Sheet(props) {
     printList,
     sheetSwitchPermit,
     viewRowsLoading,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const isDevAndOps = canEditApp(appPkg.permissionType) || canEditData(appPkg.permissionType);
   const cache = useRef({});
   const [viewConfigVisible, setViewConfigVisible] = useState(false);
@@ -154,7 +156,7 @@ function Sheet(props) {
   let [isOpenGroup, setIsOpenGroup] = useState(
     !window.localStorage.getItem('navGroupIsOpen') ? true : window.localStorage.getItem('navGroupIsOpen') === 'true',
   );
-  let [groupFilterWidth, setGroupFilterWidth] = useState();
+  let [groupFilterWidth, setGroupFilterWidth] = useState<number | string | undefined>();
   let { viewId } = props;
   const { loadWorksheet } = props;
   const showViews = views.filter(view => {
@@ -494,7 +496,7 @@ Sheet.propTypes = {
 };
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     appId: state.sheet.base.appId,
     appPkg: state.appPkg,
     groupId: state.sheet.base.groupId,

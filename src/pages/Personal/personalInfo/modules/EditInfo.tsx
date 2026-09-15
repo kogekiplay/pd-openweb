@@ -13,7 +13,7 @@ export default class EditInfo extends React.Component<any, any> {
     };
   }
 
-  updateValue(key, value) {
+  updateValue(key: string, value: string) {
     this.setState(preState => ({
       baseInfo: {
         ...preState.baseInfo,

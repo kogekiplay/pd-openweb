@@ -14,7 +14,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  applyLicenseCode: function (args, options = {}) {
+  applyLicenseCode: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateGuide', 'ApplyLicenseCode', args, options);
   },
   /**
@@ -24,7 +24,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getLicenseList: function (args, options = {}) {
+  getLicenseList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateGuide', 'GetLicenseList', args, options);
   },
   /**
@@ -37,7 +37,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getApplyLicenseList: function (args, options = {}) {
+  getApplyLicenseList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateGuide', 'GetApplyLicenseList', args, options);
   },
   /**
@@ -47,7 +47,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getServerInfo: function (args, options = {}) {
+  getServerInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateGuide', 'GetServerInfo', args, options);
   },
   /**
@@ -57,7 +57,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPlatformLicenseInfo: function (args, options = {}) {
+  getPlatformLicenseInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateGuide', 'GetPlatformLicenseInfo', args, options);
   },
   /**
@@ -69,7 +69,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPlatformLicenseLogs: function (args, options = {}) {
+  getPlatformLicenseLogs: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateGuide', 'GetPlatformLicenseLogs', args, options);
   },
   /**
@@ -79,7 +79,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSupportInfo: function (args, options = {}) {
+  getSupportInfo: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateGuide', 'GetSupportInfo', args, options);
   },
   /**
@@ -90,7 +90,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  verifyLicenseCode: function (args, options = {}) {
+  verifyLicenseCode: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateGuide', 'VerifyLicenseCode', args, options);
   },
   /**
@@ -104,7 +104,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  bindLicenseCode: function (args, options = {}) {
+  bindLicenseCode: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateGuide', 'BindLicenseCode', args, options);
   },
   /**
@@ -116,7 +116,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  bindTrialLicenseCode: function (args, options = {}) {
+  bindTrialLicenseCode: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateGuide', 'BindTrialLicenseCode', args, options);
   },
   /**
@@ -127,7 +127,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectQuota: function (args, options = {}) {
+  getProjectQuota: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateGuide', 'GetProjectQuota', args, options);
   },
   /**
@@ -140,7 +140,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setProjectQuota: function (args, options = {}) {
+  setProjectQuota: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateGuide', 'SetProjectQuota', args, options);
   },
   /**
@@ -151,7 +151,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjects: function (args, options = {}) {
+  getProjects: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateGuide', 'GetProjects', args, options);
   },
   /**
@@ -161,7 +161,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getGuideStepStatus: function (args, options = {}) {
+  getGuideStepStatus: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateGuide', 'GetGuideStepStatus', args, options);
   },
   /**
@@ -174,7 +174,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addAdmin: function (args, options = {}) {
+  addAdmin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateGuide', 'AddAdmin', args, options);
   },
   /**
@@ -185,7 +185,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addProject: function (args, options = {}) {
+  addProject: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateGuide', 'AddProject', args, options);
   },
   /**
@@ -195,7 +195,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPlatformRemindInfo: function (args, options = {}) {
+  getPlatformRemindInfo: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateGuide', 'GetPlatformRemindInfo', args, options);
   },
 };

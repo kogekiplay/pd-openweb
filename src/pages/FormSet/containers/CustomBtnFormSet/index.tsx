@@ -13,9 +13,10 @@ import Header from './Header';
 import List from './List';
 import SearchBox from './SearchBox';
 import { Con } from './style';
+import type { FormControl } from 'src/utils/controlTypes';
 
 function CustomBtnFormSet(props) {
-  const { worksheetId, worksheetControls, worksheetInfo } = props;
+  const { worksheetId, worksheetControls, worksheetInfo }: { worksheetControls: FormControl[]; [key: string]: any } = props;
   const [{ showCreateCustomBtn, btnId, showTrash, isEdit, btnList, sortDirection, searchKeywords }, setState] =
     useSetState({
       showCreateCustomBtn: false,

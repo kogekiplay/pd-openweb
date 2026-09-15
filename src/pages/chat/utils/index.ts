@@ -61,7 +61,7 @@ const sortTop = (list, value) => {
  * @param  {Array} sessions 列表
  * @return {Array}          排序之后的结果
  */
-export const sortSession = (sessions, value, messageListShowType = md.global.Account.messageListShowType) => {
+export const sortSession = (sessions, value?, messageListShowType = md.global.Account.messageListShowType) => {
   sessions = _.orderBy(sessions, ['sendMsg']);
   const other = [];
   const top = [];

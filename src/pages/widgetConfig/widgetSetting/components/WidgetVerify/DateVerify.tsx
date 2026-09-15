@@ -94,7 +94,7 @@ export default function DateVerify({ data, onChange }) {
     return update(weeks, { $splice: [[idx, 0, key]] }).join('');
   };
 
-  const handleTimeChange = (e, key) => {
+  const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>, key: string) => {
     let value = e.target.value.trim();
     const reg = /^\D*(?:\d{0,2}(?::\d{0,2})?)$/;
 
@@ -103,11 +103,11 @@ export default function DateVerify({ data, onChange }) {
     }
   };
 
-  const handleTimeBlur = (e, key) => {
+  const handleTimeBlur = (e: React.FocusEvent<HTMLInputElement, Element>, key: string) => {
     const value = e.target.value.trim();
     const formatValue = value
       .split(':')
-      .map(c => c.padStart(2, 0))
+      .map(c => c.padStart(2, '0'))
       .join(':');
     let [startVal, endVal] = allowtime.split('-');
 

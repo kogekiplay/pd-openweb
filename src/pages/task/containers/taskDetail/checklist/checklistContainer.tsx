@@ -7,6 +7,7 @@ import _ from 'lodash';
 import { Dialog } from 'ming-ui';
 import ajaxRequest from 'src/api/taskCenter';
 import createTask from 'src/components/createTask/load';
+import type { RootState } from 'src/redux/types';
 import { htmlEncodeReg } from 'src/utils/common';
 import {
   addItems,
@@ -358,4 +359,4 @@ const ChecklistContainerWithDnd = props => (
     <ChecklistContainer {...props} />
   </DndRoot>
 );
-export default connect(state => state.task)(ChecklistContainerWithDnd);
+export default connect((state: RootState) => state.task)(ChecklistContainerWithDnd);

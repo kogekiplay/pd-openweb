@@ -8,6 +8,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import ClickAway from 'ming-ui/components/ClickAway';
 import ajaxRequest from 'src/api/taskCenter';
 import { expireDialogAsync } from 'src/components/upgradeVersion';
+import type { RootState } from 'src/redux/types';
 import { navigateTo } from 'src/router/navigateTo';
 import { pathCompletion } from 'src/utils/common';
 import ShareFolderOrTask from '../../../components/shareFolderOrTask/shareFolderOrTask';
@@ -520,4 +521,4 @@ class Header extends Component<any, any> {
   }
 }
 
-export default connect(state => state.task)(Header);
+export default connect((state: RootState) => state.task)(Header);

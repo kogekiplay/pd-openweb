@@ -1,4 +1,10 @@
 import React from 'react';
+import dayjs from 'dayjs';
+import 'dayjs/locale/ja';
+import 'dayjs/locale/ms';
+import 'dayjs/locale/th';
+import 'dayjs/locale/zh-cn';
+import 'dayjs/locale/zh-tw';
 import _ from 'lodash';
 import moment from 'moment';
 import { LoadDiv } from 'ming-ui';
@@ -183,8 +189,26 @@ const getGlobalMeta = ({ allowNotLogin, requestParams } = {}) => {
     return;
   }
 
-  // 设置moment语言
-  moment.locale(_.includes(['en', 'ja', 'th', 'ms'], lang) ? lang : lang === 'zh-Hant' ? 'zh-tw' : 'zh-cn');
+  // 设置日期库语言。moment 和 dayjs 的 locale id 完全一致，所以共用一个取值。
+  //
+  // 【为什么 dayjs 也要设，而且语言包必须在文件顶部显式 import】
+  // dayjs 的语言包【不会】随 antd 的 locale 一起生效：antd 的 zh_CN 只管
+  //「今天」「YYYY年」这些它自己的文案，月份缩写和星期缩写取自底层日期库的
+  // localeData（generateConfig 的 getShortMonths / getShortWeekDays）。
+  // 语言包没 import 进来时 dayjs【静默】退回 en，日历头会是「2026年 Sep」、
+  // 星期是 Su Mo Tu —— 中英混杂，且不报任何错。
+  //
+  // moment 这边的语言包由 webpack 的 MomentLocalesPlugin 保留（localesToKeep），
+  // dayjs 没有对应机制，只能静态 import（各 1~2KB；动态 import 会和首屏渲染抢时序）。
+  // 两边保留的语言集保持一致。
+  //
+  // 注：ming-ui 的 MdAnt* 系列已改用 moment 底层（见 ming-ui/components/mdAntPickers.ts），
+  // 不依赖 dayjs 这一支；但仍有一批文件直接 `import { DatePicker } from 'antd'`，
+  // 用的是 antd 默认的 dayjs 版本，对它们这行是实打实生效的。
+  const dateLocale = _.includes(['en', 'ja', 'th', 'ms'], lang) ? lang : lang === 'zh-Hant' ? 'zh-tw' : 'zh-cn';
+
+  moment.locale(dateLocale);
+  dayjs.locale(dateLocale);
 
   // 设置语言
   $('body').attr('id', lang);

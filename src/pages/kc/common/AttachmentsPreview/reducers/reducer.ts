@@ -1,6 +1,7 @@
+import type { ReduxAction } from 'src/redux/types';
 ﻿import { combineReducers } from 'redux';
 
-function attachments(state = [], action) {
+function attachments(state = [], action: ReduxAction) {
   let newAttachments = state.slice(0);
 
   switch (action.type) {
@@ -24,7 +25,7 @@ function attachments(state = [], action) {
   }
 }
 
-function originAttachments(state = [], action) {
+function originAttachments(state = [], action: ReduxAction) {
   let newAttachments = state.slice(0);
 
   switch (action.type) {
@@ -36,7 +37,7 @@ function originAttachments(state = [], action) {
   }
 }
 
-function index(state = 0, action) {
+function index(state = 0, action: ReduxAction) {
   switch (action.type) {
     case 'FILE_PREVIEW_INIT':
     case 'FILE_PREVIEW_CHANGE_INDEX':
@@ -54,7 +55,7 @@ function index(state = 0, action) {
   }
 }
 
-function extra(state = {}, action) {
+function extra(state = {}, action: ReduxAction) {
   switch (action.type) {
     case 'FILE_PREVIEW_INIT':
       return action.extra;
@@ -63,7 +64,7 @@ function extra(state = {}, action) {
   }
 }
 
-function loading(state = true, action) {
+function loading(state = true, action: ReduxAction) {
   switch (action.type) {
     case 'FILE_PREVIEW_LOAD_FILE_SUCESS':
       return false;
@@ -75,7 +76,7 @@ function loading(state = true, action) {
   }
 }
 
-function showThumbnail(state = true, action) {
+function showThumbnail(state = true, action: ReduxAction) {
   switch (action.type) {
     case 'FILE_PREVIEW_INIT':
       return typeof action.showThumbnail === 'undefined' ? state : action.showThumbnail;
@@ -84,7 +85,7 @@ function showThumbnail(state = true, action) {
   }
 }
 
-function showAttInfo(state = false, action) {
+function showAttInfo(state = false, action: ReduxAction) {
   switch (action.type) {
     case 'FILE_PREVIEW_INIT':
       return typeof action.showAttInfo === 'undefined' ? false : action.showAttInfo;
@@ -93,7 +94,7 @@ function showAttInfo(state = false, action) {
   }
 }
 
-function error(state = false, action) {
+function error(state = false, action: ReduxAction) {
   switch (action.type) {
     case 'FILE_PREVIEW_ERROR':
     case 'FILE_PREVIEW_LOAD_FILE_SUCESS':
@@ -103,7 +104,7 @@ function error(state = false, action) {
   }
 }
 
-function hideFunctions(state = [], action) {
+function hideFunctions(state = [], action: ReduxAction) {
   switch (action.type) {
     case 'FILE_PREVIEW_INIT':
       return typeof action.hideFunctions === 'undefined' ? [] : action.hideFunctions;
@@ -112,7 +113,7 @@ function hideFunctions(state = [], action) {
   }
 }
 
-function fromType(state = null, action) {
+function fromType(state = null, action: ReduxAction) {
   switch (action.type) {
     case 'FILE_PREVIEW_INIT':
       return typeof action.fromType === 'undefined' ? null : action.fromType;
@@ -121,7 +122,7 @@ function fromType(state = null, action) {
   }
 }
 
-function onClose(state = null, action) {
+function onClose(state = null, action: ReduxAction) {
   switch (action.type) {
     case 'FILE_PREVIEW_INIT':
       return typeof action.onClose === 'undefined' ? null : action.onClose;
@@ -130,7 +131,7 @@ function onClose(state = null, action) {
   }
 }
 
-function isLoadingMore(state = false, action) {
+function isLoadingMore(state = false, action: ReduxAction) {
   switch (action.type) {
     case 'FILE_PREVIEW_LOAD_MORE_START':
       return true;
@@ -142,7 +143,7 @@ function isLoadingMore(state = false, action) {
   }
 }
 
-function loadMoreFinished(state = false, action) {
+function loadMoreFinished(state = false, action: ReduxAction) {
   switch (action.type) {
     case 'FILE_PREVIEW_LOAD_MORE_OUT':
       return true;
@@ -153,7 +154,7 @@ function loadMoreFinished(state = false, action) {
   }
 }
 
-function previewService(state = false, action) {
+function previewService(state = false, action: ReduxAction) {
   switch (action.type) {
     case 'CHANGE_PREVIEW_SERVICE':
       return action.previewService;
@@ -162,7 +163,7 @@ function previewService(state = false, action) {
   }
 }
 
-function wpsEditUrl(state = '', action) {
+function wpsEditUrl(state = '', action: ReduxAction) {
   switch (action.type) {
     case 'ATTACHMENT_EDIT_DETAIL':
       return action.wpsEditUrl;

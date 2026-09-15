@@ -136,7 +136,7 @@ export default function CreateAIDialog(props) {
   } = props;
   const [name, setName] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [customRemark, setCustomRemark] = useState();
+  const [customRemark, setCustomRemark] = useState<string | undefined>();
 
   const renderItem = (item, index) => {
     const isActive = item.summary === name;

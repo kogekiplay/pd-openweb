@@ -13,7 +13,7 @@ const FullScreenCon = styled.div`
   background: var(--color-background-primary);
 `;
 
-function FullScreen(props = {}) {
+function FullScreen(props: Partial<React.ComponentProps<typeof PrintQrBarCode>> & { zIndex?: number } = {}) {
   return (
     <FullScreenCon style={props.zIndex ? { zIndex: props.zIndex } : {}}>
       <PrintQrBarCode {...props} />

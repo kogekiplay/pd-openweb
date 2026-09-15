@@ -5,6 +5,7 @@ import _ from 'lodash';
 import { LoadDiv } from 'ming-ui';
 import * as actions from 'mobile/RecordList/redux/actions';
 import 'src/pages/worksheet/views/HierarchyView/index.less';
+import type { RootState } from 'src/redux/types';
 import ViewErrorPage from '../components/ViewErrorPage';
 
 const LoadableHierarchyVerticalView = lazy(() => import('src/pages/worksheet/views/HierarchyVerticalView'));
@@ -42,7 +43,7 @@ class MobileHierarchyView extends Component<any, any> {
 }
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     controls: state.sheet.controls,
     currentSheetRows: state.mobile.currentSheetRows,
   }),

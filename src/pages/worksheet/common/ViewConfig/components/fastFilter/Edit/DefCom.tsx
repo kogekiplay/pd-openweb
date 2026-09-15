@@ -6,9 +6,10 @@ import { getDaterange } from 'src/pages/worksheet/common/ViewConfig/components/f
 import { DATE_RANGE_TYPE } from 'src/pages/worksheet/common/WorkSheetFilter/enum.js';
 import { DATE_SHOW_TYPE, DATE_TYPE_M, DATE_TYPE_Y } from '../config';
 import DefaultValue from '../DefaultValue';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function DefCom(props) {
-  const { dataType, control, dataControls, worksheetControls, advancedSetting, view, currentSheetInfo, updateViewSet } =
+  const { dataType, control, dataControls, worksheetControls, advancedSetting, view, currentSheetInfo, updateViewSet }: { worksheetControls: FormControl[]; [key: string]: any } =
     props;
 
   const getDefsource = () => {

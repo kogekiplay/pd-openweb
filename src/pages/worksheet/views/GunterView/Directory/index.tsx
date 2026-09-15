@@ -6,6 +6,7 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import * as actions from 'worksheet/redux/actions/gunterview';
+import type { RootState } from 'src/redux/types';
 import GroupWrap from './components/GroupWrap';
 import { RecordWrapper } from './components/Record';
 
@@ -281,7 +282,7 @@ let GunterDirectory = class GunterDirectory extends Component<any, any> {
   }
 };
 GunterDirectory = connect(
-  state => ({
+  (state: RootState) => ({
     ..._.pick(state.sheet.gunterView, [
       'loading',
       'grouping',

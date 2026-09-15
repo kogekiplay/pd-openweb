@@ -64,7 +64,7 @@ export default function autoSize(Comp, { onlyWidth }: { onlyWidth?: boolean } = 
       );
 
       const commitSize = useCallback(
-        (nextSize, forceUpdate) => {
+        (nextSize, forceUpdate: boolean) => {
           setSize(prevSize => (shouldUpdateSize(nextSize, prevSize, watchHeight, forceUpdate) ? nextSize : prevSize));
         },
         [watchHeight],

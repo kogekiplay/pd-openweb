@@ -288,7 +288,7 @@ function Preview(props) {
   };
 
   //根据状态轮询
-  const refresh = id => {
+  const refresh = (id?) => {
     if (cache.current.syncTaskStatus === 'STOP') return;
     let currentWorksheetId = id || cache.current.worksheetId || worksheetId;
 

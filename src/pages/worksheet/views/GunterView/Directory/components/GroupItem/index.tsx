@@ -11,7 +11,9 @@ import GroupContent from 'worksheet/views/GunterView/components/GroupContent';
 import { MenuOverlayWrapper } from 'worksheet/views/GunterView/Directory';
 import { permitList } from 'src/pages/FormSet/config.js';
 import { isOpenPermit } from 'src/pages/FormSet/util.js';
+import type { RootState } from 'src/redux/types';
 import Record from '../Record';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 const GroupingItem = styled.div`
   width: 100%;
@@ -51,7 +53,7 @@ let GroupItem = class GroupItem extends Component<any, any> {
     };
   }
 
-  handleChangeSubVisible = (id, visible) => {
+  handleChangeSubVisible = (id, visible?: boolean) => {
     this.props.updateGroupSubVisible(id);
     setTimeout(() => {
       if (visible) {
@@ -59,7 +61,7 @@ let GroupItem = class GroupItem extends Component<any, any> {
       }
     }, 100);
   };
-  handleCreateRecord = (groupId, isMilepost) => {
+  handleCreateRecord = (groupId, isMilepost?) => {
     const { base, grouping, controls, viewConfig, sheetSwitchPermit } = this.props;
     const { viewControl, milepost, navTitle } = viewConfig;
 
@@ -165,7 +167,7 @@ let GroupItem = class GroupItem extends Component<any, any> {
     const { width, viewConfig, widthConfig, group, worksheetInfo, sheetSwitchPermit, withoutArrangementVisible } =
       this.props;
     const { viewControl } = viewConfig;
-    const rows = group.rows.filter(item => (withoutArrangementVisible ? true : item.diff > 0));
+    const rows: RecordRow[] = group.rows.filter((item: RecordRow) => (withoutArrangementVisible ? true : item.diff > 0));
     const allowAdd =
       isOpenPermit(permitList.createButtonSwitch, sheetSwitchPermit) &&
       worksheetInfo.allowAdd &&
@@ -209,7 +211,7 @@ let GroupItem = class GroupItem extends Component<any, any> {
           </GroupingItem>
         )}
         {group.subVisible &&
-          rows.map(row => <Record key={row.rowid} groupKey={group.key} row={row} widthConfig={widthConfig} />)}
+          rows.map((row: RecordRow) => <Record key={row.rowid} groupKey={group.key} row={row} widthConfig={widthConfig} />)}
         {_.isEmpty(viewControl) && allowAdd && (
           <GroupingItem
             className="valignWrapper addGunterRecord textTertiary pointer"
@@ -264,7 +266,7 @@ let GroupItem = class GroupItem extends Component<any, any> {
   }
 };
 GroupItem = connect(
-  state => ({
+  (state: RootState) => ({
     ..._.pick(state.sheet.gunterView, ['grouping', 'viewConfig', 'withoutArrangementVisible']),
     ..._.pick(state.sheet, ['base', 'controls', 'worksheetInfo', 'sheetSwitchPermit']),
   }),

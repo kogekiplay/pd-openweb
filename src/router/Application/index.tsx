@@ -10,6 +10,7 @@ import FixedContent from 'src/components/FixedContent';
 import UnusualContent from 'src/components/UnusualContent';
 import UpgradeContent from 'src/components/UpgradeContent';
 import { canEditApp } from 'src/pages/worksheet/redux/actions/util';
+import type { RootState } from 'src/redux/types';
 import { setAppStatus } from '../../pages/PageHeader/redux/action';
 import { getIds } from '../../pages/PageHeader/util';
 import genRouteComponent from '../genRouteComponent';
@@ -169,7 +170,7 @@ let Application = class Application extends Component<any, any> {
   }
 };
 Application = connect(
-  state => ({
+  (state: RootState) => ({
     appPkg: state.appPkg,
   }),
   dispatch => ({

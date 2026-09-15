@@ -21,6 +21,7 @@ import { getButtonColor } from 'src/utils/control';
 import { handleRecordError } from 'src/utils/record';
 import FillRecordControls from '../FillRecordControls';
 import CustomButtonConfirm from './CustomButtonConfirm';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 export const MenuItemWrap = styled(MenuItem)`
   .btnName {
@@ -484,7 +485,7 @@ export default class CustomButtons extends React.Component<any, any> {
         }
 
         if (targetOptions.recordId === recordId) {
-          onUpdate(_.pick(res.data, newControls.map(c => c.controlId).concat('isviewdata')), res.data, newControls);
+          onUpdate(_.pick(res.data, newControls.map((c: FormControl) => c.controlId).concat('isviewdata')), res.data, newControls);
         }
 
         if (this.activeBtn.writeObject === 1 && !res.data.isviewdata) {
@@ -553,7 +554,7 @@ export default class CustomButtons extends React.Component<any, any> {
   }
 
   overrideValue(controls, data) {
-    return controls.map(control => {
+    return controls.map((control: FormControl) => {
       const dataControl = _.find(data, item => item.controlId === control.controlId);
       return {
         ...control,
@@ -788,7 +789,7 @@ export default class CustomButtons extends React.Component<any, any> {
     });
   }
 
-  setStateFn = (args, fn) => {
+  setStateFn = (args, fn?) => {
     const { setCustomButtonActive } = this.props;
 
     if (typeof args.fillRecordControlsVisible !== 'undefined') {
@@ -815,7 +816,7 @@ export default class CustomButtons extends React.Component<any, any> {
     const { fillRecordControlsVisible } = this.state;
     const { activeBtn = {}, fillRecordId, btnRelateWorksheetId, fillRecordProps } = this;
     const btnTypeStr = activeBtn.writeObject + '' + activeBtn.writeType;
-    const isBatchRecordLock = selectedRows.some(s => s.sys_lock);
+    const isBatchRecordLock = selectedRows.some((s: RecordRow) => s.sys_lock);
     return (
       <React.Fragment key="dialogs">
         {fillRecordControlsVisible && (

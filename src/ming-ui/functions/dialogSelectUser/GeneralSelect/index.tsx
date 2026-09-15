@@ -161,6 +161,7 @@ export default class GeneraSelect extends Component<any, any> {
         let state = this.receiveProps(this.props);
         this.setState(state, () => {
           this.defaultAction();
+          this.focusSearchInput();
         });
       }
     }
@@ -169,15 +170,16 @@ export default class GeneraSelect extends Component<any, any> {
   componentDidMount() {
     window.addEventListener('keydown', this.handleKeyDown, false);
     this.defaultAction();
-    this.focusSearchInputTimer = setTimeout(() => {
-      this._searchInput?.focus();
-    });
+    this.focusSearchInput();
   }
 
   componentWillUnmount() {
     window.removeEventListener('keydown', this.handleKeyDown);
-    clearTimeout(this.focusSearchInputTimer);
   }
+
+  focusSearchInput = () => {
+    this._searchInput?.focus({ preventScroll: true });
+  };
 
   updateEvent() {
     let page = false;
@@ -263,7 +265,7 @@ export default class GeneraSelect extends Component<any, any> {
     }
   };
 
-  adjustViewport(direction, flattenResult) {
+  adjustViewport(direction: string, flattenResult) {
     const { currentIndex } = this.state;
     const scrollViewEl = this.boxRef.current.querySelector('.GSelect-container');
     const $scrollViewEl = $(scrollViewEl);
@@ -783,7 +785,7 @@ export default class GeneraSelect extends Component<any, any> {
     );
   };
 
-  changeSelect(chooseType, data, idKey) {
+  changeSelect(chooseType: string, data, idKey: string) {
     let selectedArr;
 
     switch (chooseType) {
@@ -826,7 +828,7 @@ export default class GeneraSelect extends Component<any, any> {
    * @param {*实体id} id
    * @param {*实体的id的key} idKey
    */
-  deleteData = (chooseType, id, idKey) => {
+  deleteData = (chooseType, id, idKey: string) => {
     let selectedArr = [...this.state.selectedData];
     selectedArr = selectedArr.filter(item => {
       if (item.type === chooseType) {

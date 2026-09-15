@@ -229,7 +229,7 @@ export default class Text extends React.Component<any, any> {
   con = React.createRef();
   input = React.createRef();
 
-  focus = time => {
+  focus = (time?) => {
     setTimeout(() => {
       if (this.input && this.input.current) {
         const valueLength = (this.input.current.value || '').length;

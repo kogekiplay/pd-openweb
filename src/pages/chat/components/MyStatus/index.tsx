@@ -94,7 +94,7 @@ export default function MyStatus() {
   const [data, setData] = useState({});
   const [visible, setVisible] = useState(false);
   const [statusList, setStatusList] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState();
+  const [currentIndex, setCurrentIndex] = useState<number | undefined>();
   const currentStatus = statusList[currentIndex] || {};
   const { statusOptions } = data;
   const emotionRefs = useRef([]);
@@ -315,7 +315,9 @@ export default function MyStatus() {
                     className={cx('emojiWrap flexRow alignItemsCenter Relative', {
                       transparentBg: defaultStatusInfo[item.statusId],
                     })}
-                    ref={el => { !isDefaultStatus ? (emotionRefs.current[index] = el) : null; }}
+                    ref={el => {
+                      !isDefaultStatus ? (emotionRefs.current[index] = el) : null;
+                    }}
                     onClick={e => !isDefaultStatus && e.stopPropagation()}
                   >
                     <span

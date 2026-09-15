@@ -6,6 +6,7 @@ import { v4 } from 'uuid';
 import { getTitleTextFromControls } from 'src/utils/control';
 import { MessageHandler } from 'src/utils/iframeCommunicate';
 import { getRowsRelation } from './functions';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   position: relative;
@@ -31,8 +32,8 @@ function pickControl(control = {}) {
   if (control.type === 34 && isFunction(get(control, 'store.getState'))) {
     try {
       const state = control.store.getState();
-      const rows = get(state, 'rows', []);
-      result.rows = rows.filter(row => !get(row, 'rowid', '').startsWith('empty-'));
+      const rows: RecordRow[] = get(state, 'rows', []);
+      result.rows = rows.filter((row: RecordRow) => !get(row, 'rowid', '').startsWith('empty-'));
       result.rowsLoading = get(state, 'dataLoading', true);
     } catch (error) {
       console.error(error);
@@ -44,7 +45,7 @@ function pickControl(control = {}) {
 
 function formatFormData(formData) {
   const result = {};
-  formData.forEach(item => {
+  formData.forEach((item: FormControl) => {
     result[item.controlId] = pickControl(item);
   });
   return result;

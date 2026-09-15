@@ -51,7 +51,7 @@ const Empty = styled.span`
 
 export default function Departments(props) {
   const { values = [], projectId, isMultiple, onChange = () => {} } = props;
-  const [active, setActive] = useState();
+  const [active, setActive] = useState<boolean | undefined>();
   const valueRef = useRef<any>(undefined);
 
   useEffect(() => {

@@ -17,6 +17,7 @@ import { navigateTo } from 'src/router/navigateTo';
 import { emitter } from 'src/utils/common';
 import { moveSheetCache } from 'src/utils/worksheet';
 import { getSheetListFirstId } from 'src/utils/worksheet';
+import type { AppDispatch, GetState } from 'src/redux/types';
 
 export const formatLeftSectionDetail = data => {
   return data.workSheetInfo.map(s => {
@@ -99,7 +100,7 @@ export function getSheetList(args) {
 }
 
 export function refreshSheetList() {
-  return function (dispatch, getState) {
+  return function (dispatch: AppDispatch, getState: GetState) {
     const { appId, groupId } = getState().sheet.base;
     homeAppApi
       .getAppSectionDetail({
@@ -162,7 +163,7 @@ export function getAllAppSectionDetail(appId, callBack) {
 }
 
 export function updateSheetListAppItem(id, args) {
-  return function (dispatch, getState) {
+  return function (dispatch: AppDispatch, getState: GetState) {
     const { data } = getState().sheetList;
 
     const update = list => {
@@ -195,7 +196,7 @@ export function updateALLSheetList(data) {
 }
 
 export function addFirstAppSection() {
-  return function (dispatch, getState) {
+  return function (dispatch: AppDispatch, getState: GetState) {
     const { appPkg, sheetList } = getState();
     const appSectionDetail = sheetList.appSectionDetail.map(data => {
       return {
@@ -234,7 +235,7 @@ export function clearSheetList() {
 }
 
 export function updateSheetIconColor(iconColor) {
-  return function (dispatch, getState) {
+  return function (dispatch: AppDispatch, getState: GetState) {
     const { data } = getState().sheetList;
     const newSheetList = data.map(item => {
       item.iconColor = iconColor;
@@ -265,7 +266,7 @@ export function updateAppItemInfo(id, type, name) {
 }
 
 export function copySheet(baseArgs, iconArgs) {
-  return function (dispatch, getState) {
+  return function (dispatch: AppDispatch, getState: GetState) {
     const { projectId } = store.getState().appPkg;
     const args = {
       ...baseArgs,
@@ -319,7 +320,7 @@ export function copySheet(baseArgs, iconArgs) {
 }
 
 export function moveSheet(ages) {
-  return function (dispatch, getState) {
+  return function (dispatch: AppDispatch, getState: GetState) {
     const { data: sheetList } = getState().sheetList;
     const { sourceAppId, sourceAppSectionId, ResultAppSectionId } = ages;
     const appItem = ages.workSheetsInfo[0];
@@ -381,7 +382,7 @@ export function moveSheet(ages) {
 }
 
 export function deleteSheet({ appId, groupId, worksheetId, projectId, type, parentGroupId }) {
-  return function (dispatch, getState) {
+  return function (dispatch: AppDispatch, getState: GetState) {
     const { data: sheetList } = getState().sheetList;
 
     const deleteFun = function (data) {

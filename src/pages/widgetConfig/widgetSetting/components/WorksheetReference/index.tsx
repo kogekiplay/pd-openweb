@@ -19,7 +19,7 @@ const iteratee = item => {
   return item.parentId + '|' + item.id;
 };
 
-const filterByAppId = (list = [], appId, appType, subModule) => {
+const filterByAppId = (list = [], appId, appType, subModule: number) => {
   const filterList = list.filter(r => {
     if (appType === 'sub') return r.appId === appId;
     if (appType === 'subList') return !r.appId;
@@ -54,7 +54,7 @@ const groupByDisabled = (list = []) => {
   return _.sortBy(totalRe, 'disabled');
 };
 
-const getGroupCount = (list, subModule) => {
+const getGroupCount = (list, subModule: number) => {
   const totalList = _.reduce(
     list,
     (total, cur) => {
@@ -158,7 +158,7 @@ function WorksheetReferenceDialog(props) {
     });
   };
 
-  const getReferenceList = options => {
+  const getReferenceList = (options?) => {
     if (loading) return;
 
     setState({ loading: true });

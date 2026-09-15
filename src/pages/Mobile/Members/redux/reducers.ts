@@ -1,3 +1,4 @@
+import type { ReduxAction } from 'src/redux/types';
 export const memberData = (
   state = {
     data: [],
@@ -12,7 +13,7 @@ export const memberData = (
   }
 };
 
-export const isMemberLoading = (state = true, action) => {
+export const isMemberLoading = (state = true, action: ReduxAction) => {
   switch (action.type) {
     case 'MOBILE_FETCH_MEMBER_START':
       return true;

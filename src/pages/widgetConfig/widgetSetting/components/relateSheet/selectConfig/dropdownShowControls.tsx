@@ -9,6 +9,7 @@ import { SettingItem } from '../../../../styled';
 import { getFilterRelateControls } from '../../../../util';
 import { getAdvanceSetting, getControlsSorts, handleAdvancedSettingChange } from '../../../../util/setting';
 import DropdownCover from './DropdownCover';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const DropdownShowControlsWrap = styled.div`
   .ming.Radio {
@@ -55,7 +56,7 @@ const DISPLAY_OPTIONS = [
 ];
 
 export default function DropdownShowControls(props) {
-  const { data, controls = [], handleChange } = props;
+  const { data, controls = [], handleChange }: { controls: FormControl[]; [key: string]: any } = props;
   const { showControls = [], enumDefault, coverCid } = data;
   const { openfastfilters, ddset } = getAdvanceSetting(data);
   const chooseshowIds = getAdvanceSetting(data, 'chooseshowids') || [];

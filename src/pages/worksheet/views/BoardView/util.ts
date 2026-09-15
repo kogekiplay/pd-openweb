@@ -11,10 +11,11 @@ import {
   RENDER_RECORD_NECESSARY_ATTR,
 } from '../util';
 import { CAN_AS_BOARD_OPTION } from './config';
+import type { FormControl } from 'src/utils/controlTypes';
 
 // 处理从后端获取的看板数据
 export const dealBoardViewData = props => {
-  const { view, controls } = props;
+  const { view, controls }: { controls: FormControl[]; [key: string]: any } = props;
   let { data } = props;
   if (!data || isEmpty(data)) return [];
   data = data.sort((a, b) => a.sort - b.sort);
@@ -75,8 +76,8 @@ export const dealBoardViewData = props => {
             allowEdit,
             allowDelete,
             ...getRecordAttachments(parsedRow[coverCid]),
-            coverData: { ...(controls.find(it => it.controlId === coverCid) || {}), value: item[coverCid] },
-            formData: controls.map(o => {
+            coverData: { ...(controls.find((it: FormControl) => it.controlId === coverCid) || {}), value: item[coverCid] },
+            formData: controls.map((o: FormControl) => {
               return { ...o, value: parsedRow[o.controlId] };
             }),
           };
@@ -185,7 +186,7 @@ export const getSecondGroupDefaultValue = (control, opt) => {
 };
 
 // 记录排序
-export const viewSortRecord = (obj, view, props, selectControl, secondGroupControl) => {
+export const viewSortRecord = (obj, view, props, selectControl, secondGroupControl?) => {
   const { rowId, value, firstGroupChange, secondGroupChange, secondGroupValue } = obj;
   const defaultValue = [];
   const firstGroupControl = selectControl();

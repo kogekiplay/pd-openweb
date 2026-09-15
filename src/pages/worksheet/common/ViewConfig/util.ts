@@ -3,6 +3,7 @@ import _ from 'lodash';
 import { filterOnlyShowField, getIconByType } from 'src/pages/widgetConfig/util';
 import { handleCondition } from 'src/pages/widgetConfig/util/data';
 import { getSortData } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export const updateViewAdvancedSetting = (view, obj) => {
   const { navfilters } = obj;
@@ -63,13 +64,13 @@ export const formatObjWithNavfilters = o => {
   }
 };
 
-export const getCanDisplayControls = (worksheetControls, disableTypes) => {
+export const getCanDisplayControls = (worksheetControls, disableTypes?) => {
   return worksheetControls.filter(
-    c => !!c.controlName && !_.includes(disableTypes || [22, 10010, 43, 45, 47, 49, 51, 52], c.type),
+    (c: FormControl) => !!c.controlName && !_.includes(disableTypes || [22, 10010, 43, 45, 47, 49, 51, 52], c.type),
   );
 };
 
-export const isSameType = (list, control) => {
+export const isSameType = (list: number[], control) => {
   return list.includes(control.type) || (list.includes(control.sourceControlType) && control.type === 30);
 };
 

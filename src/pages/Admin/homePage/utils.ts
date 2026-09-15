@@ -8,7 +8,7 @@ export const formatValue = num => {
 
 const pow1024 = num => Math.pow(1024, num);
 
-const roundFun = (value, n) => {
+const roundFun = (value: number, n: number) => {
   return Math.round(value * Math.pow(10, n)) / Math.pow(10, n);
 };
 

@@ -12,8 +12,10 @@ import { checkCellIsEmpty, controlIsNumber, isRelateRecordTableControl } from 's
 import { getRecordColor } from 'src/utils/record';
 import CollapseExpandButton from './CollapseExpandButton';
 import DataCell from './DataCell';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
-const EMPTY_ROW = {};
+// rows[i] 取空时的占位行；标成 RecordRow 是为了让下游 row.rowid 这类读取仍然按行来算
+const EMPTY_ROW: RecordRow = {};
 
 export function getRelateRecordCountOfControlFromRow(control, row = {}) {
   try {
@@ -22,7 +24,7 @@ export function getRelateRecordCountOfControlFromRow(control, row = {}) {
     if (isTable) {
       return row['rq' + control.controlId] || row[control.controlId];
     } else {
-      const records = safeParse(row[control.controlId], 'array');
+      const records: RecordRow[] = safeParse(row[control.controlId], 'array');
       return records.length || 0;
     }
   } catch (err) {
@@ -163,6 +165,16 @@ export function getIndex({
   bottomFixed,
   rightFixedCount,
   leftFixedCount,
+}: {
+  columnIndex?: number;
+  rowIndex?: number;
+  tableColumnCount?: number;
+  leftFixed?: boolean;
+  rightFixed?: boolean;
+  topFixed?: boolean;
+  bottomFixed?: boolean;
+  rightFixedCount?: number;
+  leftFixedCount?: number;
 } = {}) {
   let result = {
     columnIndex: columnIndex,
@@ -313,7 +325,7 @@ function Cell(props) {
     inView,
     direction = 'horizontal',
     cellProps = {},
-  } = data;
+  }: { rows: RecordRow[]; controls: FormControl[]; [key: string]: any } = data;
   const isHorizontal = direction === 'horizontal';
   const { columnIndex, rowIndex } = getIndex({
     columnIndex: props.columnIndex,

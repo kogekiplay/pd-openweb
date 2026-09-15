@@ -13,6 +13,7 @@ import { batchCopyWidgets, batchResetWidgets, handleMoveWidgets } from '../../ut
 import { batchRemoveItems } from '../../util/drag';
 import { updateConfig } from '../../util/setting';
 import WidgetWarning from '../../widgetSetting/components/WidgetBase/WidgetWarning';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const WidgetBatchWrap = styled.div`
   position: absolute;
@@ -75,7 +76,7 @@ const PERMISSION_OPTIONS = [
 ];
 
 function WidgetBatch(props) {
-  const { allControls = [], batchActive, handleChange, handleOperate, handleCancel } = props;
+  const { allControls = [], batchActive, handleChange, handleOperate, handleCancel }: { allControls: FormControl[]; [key: string]: any } = props;
   const sectionData = allControls.filter(i => i.type === 52);
   const isRequiredAll = batchActive.every(i => i.required);
   const isRequiredNotAll = !isRequiredAll && batchActive.some(i => i.required);
@@ -193,7 +194,7 @@ function WidgetBatch(props) {
 }
 
 export default function WidgetBatchOption(props) {
-  const { allControls = [], widgets = [], globalSheetInfo = {}, batchActive, setBatchActive, setWidgets } = props;
+  const { allControls = [], widgets = [], globalSheetInfo = {}, batchActive, setBatchActive, setWidgets }: { allControls: FormControl[]; [key: string]: any } = props;
   const { worksheetId } = globalSheetInfo;
 
   const handleOperate = (mode, id) => {

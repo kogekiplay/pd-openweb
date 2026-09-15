@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { Dropdown } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import DateFilter from 'src/components/DateFilter';
+import type { RootState } from 'src/redux/types';
 import { setCaretPosition } from 'src/utils/common';
 import postEnum from '../../../constants/postEnum';
 import { changeFontSize, changeListType, changeSearchKeywords, filter } from '../../../redux/postActions';
@@ -242,4 +243,4 @@ class HomePostFilter extends React.Component<any, any> {
   }
 }
 
-export default connect(state => state.post)(HomePostFilter);
+export default connect((state: RootState) => state.post)(HomePostFilter);

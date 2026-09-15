@@ -18,6 +18,7 @@ import RegExpValidator from 'src/utils/expression';
 import model from './model';
 import PrintOptDialog from './PrintOptDialog';
 import './index.less';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const nzhCn = nzh.cn;
 const { task } = model;
@@ -240,7 +241,7 @@ export default class Print extends Component<any, any> {
   valueItem: 他表字段valueItem；[valueItem, valueItem]
   relationItemKey: 他表字段选择关联控件，循环key
   */
-  getShowContent = function (item, sourceControlType, valueItem, relationItemKey) {
+  getShowContent = function (item, sourceControlType?, valueItem?, relationItemKey?) {
     const value = sourceControlType ? valueItem : item.value;
     const type = sourceControlType || item.type;
 
@@ -505,7 +506,7 @@ export default class Print extends Component<any, any> {
         return value ? (item.enumDefault === 1 ? value + '星' : value + '/10') : '';
       case 29:
         if (item.enumDefault === 1) {
-          let records = [];
+          let records: RecordRow[] = [];
 
           try {
             records = JSON.parse(value);
@@ -639,7 +640,7 @@ export default class Print extends Component<any, any> {
   }
   renderTable(relateRecord, control) {
     const { detailsType } = this.state;
-    const controls = control.showControls
+    const controls: FormControl[] = control.showControls
       .map(controlId => _.find(relateRecord.template.controls.concat(systemControl), c => c.controlId === controlId))
       .filter(c => c && !((c.type === 29 && c.enumDefault === 2) || c.type === 41));
     return detailsType === 2 ? (
@@ -785,7 +786,7 @@ export default class Print extends Component<any, any> {
     this.setState({ showPrintDialog: true, printCheckAll: this.state.printCheckAll, controlOption });
   }.bind(this);
   changePrintVisible = function (processOption, printCheckAll, controlOption, options) {
-    let controls = [];
+    let controls: FormControl[] = [];
 
     if (this.state.type === 'worksheet') {
       controls = this.state.rowInfo.controls;
@@ -802,7 +803,7 @@ export default class Print extends Component<any, any> {
       });
     // printDetailType:打印明细的类型  1：明细和统计都打印 2：只打印明细 3：只打印统计
     if (controlOption !== 'all') {
-      const newControls = controls.filter(item => controlOption.indexOf(item.controlId) > -1);
+      const newControls: FormControl[] = controls.filter(item => controlOption.indexOf(item.controlId) > -1);
       newControls.forEach((item, index) => {
         if (item.type === 0) {
           newControls[index].printDetailType = 2;
@@ -928,7 +929,7 @@ export default class Print extends Component<any, any> {
       return this.beforeControlIsDetail(Number(key) - 1);
     }
   }.bind(this);
-  renderTaskItem(name, value, key, classname) {
+  renderTaskItem(name, value, key, classname?: string) {
     return (
       <tr className="row clearfix Relative notDetails" key={key}>
         <td className="noHalf rowItem BorderRight0 taskRowItem" colSpan={1}>

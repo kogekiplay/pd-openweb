@@ -10,6 +10,7 @@ import SelectCount from 'src/pages/customPage/components/editWidget/button/Selec
 import { getIconByType } from 'src/pages/widgetConfig/util';
 import SelectWorksheet from 'src/pages/worksheet/components/SelectWorksheet/SelectWorksheet';
 import { getShowViews } from 'src/pages/worksheet/views/util';
+import type { RootState } from 'src/redux/types';
 import { getTranslateInfo } from 'src/utils/app';
 import { replaceControlsTranslateInfo } from 'src/utils/translate';
 
@@ -212,11 +213,13 @@ function Setting(props) {
       <div className="mBottom16">
         <div className="mBottom12">{_l('视图')}</div>
         <Select
-          showSearch={{ filterOption: (searchValue, option) => {
-            const { value } = option;
-            const { name } = _.find(views, { viewId: value }) || {};
-            return searchValue && name ? name.toLowerCase().includes(searchValue.toLowerCase()) : true;
-          } }}
+          showSearch={{
+            filterOption: (searchValue, option) => {
+              const { value } = option;
+              const { name } = _.find(views, { viewId: value }) || {};
+              return searchValue && name ? name.toLowerCase().includes(searchValue.toLowerCase()) : true;
+            },
+          }}
           className={cx('customPageSelect w100', { Red: viewId && !_.find(views, { viewId }) })}
           value={viewId ? (_.find(views, { viewId }) ? viewId : _l('视图已删除')) : undefined}
           suffixIcon={<Icon icon="expand_more" className="textTertiary Font20" />}
@@ -478,6 +481,6 @@ function Setting(props) {
   );
 }
 
-export default connect(state => ({
+export default connect((state: RootState) => ({
   appPkg: state.appPkg,
 }))(Setting);

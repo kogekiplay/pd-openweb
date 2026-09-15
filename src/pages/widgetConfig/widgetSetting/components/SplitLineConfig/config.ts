@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { fixedBottomWidgets } from 'src/pages/widgetConfig/util';
 import { controlState } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export const THEME_COLOR_OPTIONS = [
   '#9A060C',
@@ -43,7 +44,7 @@ export const getBgData = theme => {
   return [...rgbArr, '#fff'];
 };
 
-export const getExpandWidgetIds = (controls = [], data = {}, from) => {
+export const getExpandWidgetIds = (controls: FormControl[] = [], data = {}, from) => {
   const { controlId, sectionId } = data;
   const expandWidgetIds = [];
   const widgets = controls.sort((a, b) => {
@@ -76,7 +77,7 @@ export const getExpandWidgetIds = (controls = [], data = {}, from) => {
   return expandWidgetIds;
 };
 
-export const getExpandWidgetIdsMap = (controls = [], from) => {
+export const getExpandWidgetIdsMap = (controls: FormControl[] = [], from) => {
   const expandWidgetIdsMap = {};
   const activeSections = [];
   const widgets = [].concat(controls || []).sort((a, b) => {

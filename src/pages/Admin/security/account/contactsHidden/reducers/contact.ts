@@ -1,3 +1,4 @@
+import type { ReduxAction } from 'src/redux/types';
 const initialState = {
   loading: true,
   isEdit: false, //是否更改
@@ -9,7 +10,7 @@ const initialState = {
   ruleId: '',
 };
 
-export default (state = initialState, action) => {
+export default (state = initialState, action: ReduxAction) => {
   const { showEdit, type, editType = '', projectId, data, ruleId, isSaveing } = action;
 
   switch (type) {

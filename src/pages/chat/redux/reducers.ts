@@ -1,12 +1,13 @@
 import { combineReducers } from 'redux';
 import * as utils from '../utils/';
+import type { ReduxAction } from 'src/redux/types';
 
 /**
  * 会话列表
  * @param {*} state
  * @param {*} action
  */
-const sessionList = (state = [], action) => {
+const sessionList = (state = [], action: ReduxAction) => {
   switch (action.type) {
     case 'SET_SESSION_LIST':
       return utils.filterSessionList(Object.assign([], action.result));
@@ -28,7 +29,7 @@ const sessionList = (state = [], action) => {
  * @param {*} state
  * @param {*} action
  */
-const toolbarConfig = (state = utils.getToolbarConfig(), action) => {
+const toolbarConfig = (state = utils.getToolbarConfig(), action: ReduxAction) => {
   switch (action.type) {
     case 'SET_TOOLBAR_CONFIG':
       return Object.assign({}, state, action.result);
@@ -42,7 +43,7 @@ const toolbarConfig = (state = utils.getToolbarConfig(), action) => {
  * @param {*} state
  * @param {*} action
  */
-const currentSession = (state = {}, action) => {
+const currentSession = (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'SET_CURRENT_SESSION':
       return Object.assign({}, action.result);
@@ -56,7 +57,7 @@ const currentSession = (state = {}, action) => {
  * @param {*} state
  * @param {*} action
  */
-const currentSessionList = (state = [], action) => {
+const currentSessionList = (state = [], action: ReduxAction) => {
   switch (action.type) {
     case 'ADD_CURRENT_SESSION':
       return Object.assign([], state.concat(action.result));
@@ -74,7 +75,7 @@ const currentSessionList = (state = [], action) => {
  * @param {*} state
  * @param {*} action
  */
-const currentInboxList = (state = [], action) => {
+const currentInboxList = (state = [], action: ReduxAction) => {
   switch (action.type) {
     case 'ADD_INBOX_SESSION':
       return Object.assign([], state.concat(action.result));
@@ -103,7 +104,7 @@ const currentInboxList = (state = [], action) => {
  * @param {*} state
  * @param {*} action
  */
-const messages = (state = {}, action) => {
+const messages = (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'SET_MESSAGE':
       return Object.assign({}, state, { [action.id]: action.result });
@@ -135,7 +136,7 @@ const messages = (state = {}, action) => {
  * @param {*} state
  * @param {*} action
  */
-const referMessage = (state = {}, action) => {
+const referMessage = (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'SET_REFER_MESSAGE':
       return Object.assign({}, state, { [action.id]: action.message });
@@ -152,7 +153,7 @@ const referMessage = (state = {}, action) => {
  * @param {*} state
  * @param {*} action
  */
-const gotoMessage = (state = {}, action) => {
+const gotoMessage = (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'SET_GOTO_MESSAGE':
       return Object.assign({}, state, { [action.id]: action.messageId });
@@ -169,7 +170,7 @@ const gotoMessage = (state = {}, action) => {
  * @param {*} state
  * @param {*} action
  */
-const bottomUnreadMessage = (state = {}, action) => {
+const bottomUnreadMessage = (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'SET_BOTTOM_UNREAD_MESSAGE':
       return Object.assign({}, state, { [action.id]: [action.message] });
@@ -190,7 +191,7 @@ const bottomUnreadMessage = (state = {}, action) => {
  * @param {*} state
  * @param {*} action
  */
-const isWindow = (state = false, action) => {
+const isWindow = (state = false, action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_IS_WINDOW':
       return action.result;
@@ -204,7 +205,7 @@ const isWindow = (state = false, action) => {
  * @param {*} state
  * @param {*} action
  */
-const showAddressBook = (state = false, action) => {
+const showAddressBook = (state = false, action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_SHOW_ADD_RESSBOOK':
       return action.result;
@@ -218,7 +219,7 @@ const showAddressBook = (state = false, action) => {
  * @param {*} state (0：正常、1：正在重连、2：重连失败)
  * @param {*} action
  */
-const socketState = (state = 0, action) => {
+const socketState = (state = 0, action: ReduxAction) => {
   switch (action.type) {
     case 'UPDATE_SOCKET_STATE':
       return action.result;

@@ -8,6 +8,7 @@ import moment from 'moment';
 import { LoadDiv } from 'ming-ui';
 import { loadWorksheet, updateBase } from 'worksheet/redux/actions';
 import Gunter from 'src/pages/worksheet/views/GunterView';
+import type { RootState } from 'src/redux/types';
 import printGunter from './print';
 import './index.less';
 
@@ -104,7 +105,7 @@ let GunterExport = class GunterExport extends Component<any, any> {
   }
 };
 GunterExport = connect(
-  state => ({ ..._.pick(state.sheet, ['base', 'views']), ..._.pick(state.sheet.gunterView, ['loading']) }),
+  (state: RootState) => ({ ..._.pick(state.sheet, ['base', 'views']), ..._.pick(state.sheet.gunterView, ['loading']) }),
   dispatch =>
     bindActionCreators(
       {

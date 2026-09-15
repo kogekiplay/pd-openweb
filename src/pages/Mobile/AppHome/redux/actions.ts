@@ -2,8 +2,9 @@ import _ from 'lodash';
 import appManagementApi from 'src/api/appManagement';
 import favoriteAjax from 'src/api/favorite';
 import homeAppAjax from 'src/api/homeApp';
+import type { AppDispatch, GetState } from 'src/redux/types';
 
-export const getMyApp = (projectId, isPullRefresh) => dispatch => {
+export const getMyApp = (projectId, isPullRefresh?) => dispatch => {
   if (!isPullRefresh) {
     dispatch({ type: 'MOBILE_FETCHHOMELIST_START' });
   }
@@ -33,7 +34,7 @@ export const getMyApp = (projectId, isPullRefresh) => dispatch => {
 
 export const markedGroup =
   ({ id, isMarked, groupType, projectId }) =>
-  (dispatch, getState) => {
+  (dispatch: AppDispatch, getState: GetState) => {
     homeAppAjax.markedGroup({ id, isMarked, groupType, projectId }).then(res => {
       if (res) {
         const { myAppData = {} } = getState().mobile || {};

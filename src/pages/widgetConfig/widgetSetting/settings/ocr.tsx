@@ -9,6 +9,7 @@ import { Button, SettingItem } from '../../styled';
 import { getAdvanceSetting, handleAdvancedSettingChange } from '../../util/setting';
 import ApiSearchConfig from '../components/ApiSearchConfig';
 import OcrMap from '../components/OcrMap';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const API_DISPLAY = [
   {
@@ -70,7 +71,7 @@ function OcrMapType({ data, allControls = [], onChange }) {
 }
 
 export default function OcrDisplay(props) {
-  const { data, allControls = [], onChange } = props;
+  const { data, allControls = [], onChange }: { allControls: FormControl[]; [key: string]: any } = props;
   const { enumDefault } = data;
   const [visible, setVisible] = useState(false);
   const ocrMap = getAdvanceSetting(data, 'ocrmap');

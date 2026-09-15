@@ -27,6 +27,7 @@ import UpgradeItemWrap from '../UpgradeItemWrap';
 import UpgradeSelectApp from '../UpgradeSelectApp';
 import UpgradeStatus from '../UpgradeStatus';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 
 export const detailTypeList = UPGRADE_DETAIL_TYPE_LIST.map(v => v.type);
@@ -224,7 +225,7 @@ export default class UpgradeProcess extends Component<any, any> {
     this.destroyUploadWrap();
   };
 
-  batchCheckUpgrade = (i, upgrade) => {
+  batchCheckUpgrade = (i, upgrade?) => {
     const { files } = this.state;
 
     if (files[i].index !== undefined && !upgrade) {
@@ -742,7 +743,7 @@ export default class UpgradeProcess extends Component<any, any> {
         batchId: batchUpdate ? batchId : undefined,
       })
       .then(res => {
-        let { controls = [], views = [] } = res;
+        let { controls = [], views = [] }: { controls: FormControl[]; [key: string]: any } = res;
         const data = {
           ...res,
           controls: controls.map(item => {

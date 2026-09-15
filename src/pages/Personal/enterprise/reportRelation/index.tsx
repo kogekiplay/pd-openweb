@@ -71,7 +71,7 @@ export default class ReportRelation extends Component<any, any> {
     );
   }
 
-  fetchRender(pageIndex) {
+  fetchRender(pageIndex: number) {
     this.fetchSubordinates(pageIndex).then(({ parent = {}, mySelf = {}, subordinates = [], subTotalCount }) => {
       if (!_.isEmpty(mySelf) && pageIndex === 1) {
         this.setState({

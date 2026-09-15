@@ -8,7 +8,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setInboxFavorite: function (args, options = {}) {
+  setInboxFavorite: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Inbox', 'SetInboxFavorite', args, options);
   },
   /**
@@ -31,7 +31,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getInboxMessage: function (args, options = {}) {
+  getInboxMessage: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Inbox', 'GetInboxMessage', args, options);
   },
 };

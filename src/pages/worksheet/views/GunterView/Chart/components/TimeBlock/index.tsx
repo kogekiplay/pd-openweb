@@ -4,8 +4,10 @@ import { bindActionCreators } from 'redux';
 import _ from 'lodash';
 import * as actions from 'worksheet/redux/actions/gunterview';
 import GroupContent from 'worksheet/views/GunterView/components/GroupContent';
+import type { RootState } from 'src/redux/types';
 import RecordWrapper from './RecordWrapper';
 import './index.less';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 const lineHeight = 32;
 const groupingBlockHeight = 7;
@@ -57,7 +59,7 @@ let TimeBlock = class TimeBlock extends Component<any, any> {
         )}
         {item.subVisible &&
           item.rows
-            .filter(item => (withoutArrangementVisible ? true : item.diff > 0))
+            .filter((item: RecordRow) => (withoutArrangementVisible ? true : item.diff > 0))
             .map(
               (row, index) =>
                 row.width > 0 && this.renderRow(row, item.key, item.hide ? index : groupingIndex + index + 1),
@@ -74,7 +76,7 @@ let TimeBlock = class TimeBlock extends Component<any, any> {
   }
 };
 TimeBlock = connect(
-  state => ({ ..._.pick(state.sheet, ['gunterView']) }),
+  (state: RootState) => ({ ..._.pick(state.sheet, ['gunterView']) }),
   dispatch => bindActionCreators(actions, dispatch),
 )(TimeBlock);
 export default TimeBlock;

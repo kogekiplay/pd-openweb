@@ -8,6 +8,7 @@ import homeAppAjax from 'src/api/homeApp';
 import worksheetAjax from 'src/api/worksheet';
 import FixedContent from 'src/components/FixedContent';
 import { canEditApp } from 'src/pages/worksheet/redux/actions/util';
+import type { RootState } from 'src/redux/types';
 import { navigateTo } from 'src/router/navigateTo';
 import withRouter from '../../../../router/withRouter';
 import RecordInfoWrapper from '../../common/recordInfo/RecordInfoWrapper';
@@ -114,7 +115,7 @@ class WorksheetRowLand extends Component<any, any> {
 }
 
 export default withRouter(
-  connect(state => {
+  connect((state: RootState) => {
     return {
       appPkg: state.appPkg,
     };

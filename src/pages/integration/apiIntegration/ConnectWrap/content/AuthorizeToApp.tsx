@@ -315,7 +315,7 @@ function AuthorizeToApp(props) {
   ];
 
   // 授权
-  const authorizeApp = (apkIds, type) => {
+  const authorizeApp = (apkIds, type: number) => {
     if (optionLoading) {
       return;
     }

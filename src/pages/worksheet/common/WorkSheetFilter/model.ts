@@ -8,6 +8,7 @@ import {
   formatOriginFilterGroupValue,
   getDefaultCondition,
 } from './util';
+import type { ReduxAction } from 'src/redux/types';
 
 export const initialState = {
   filters: [],
@@ -317,7 +318,7 @@ export function createActions(dispatch) {
   return new Actions(dispatch);
 }
 
-export function createReducer(state = {}, action) {
+export function createReducer(state = {}, action: ReduxAction) {
   function updateWithLastAction(oldState, updates) {
     if (_.isEmpty(updates)) return oldState;
     return update(oldState || {}, { ...updates, lastAction: { $set: action.type + Date.now() } });

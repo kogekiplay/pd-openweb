@@ -123,7 +123,7 @@ export default class EditUser extends Component<any, any> {
         });
       });
   };
-  changeFormInfo = (e, field) => {
+  changeFormInfo = (e, field: string) => {
     this.setState({
       [field]: field === 'mobilePhone' ? e.target.value.replace(/ +/g, '') : e.target.value,
       isClickSubmit: false,

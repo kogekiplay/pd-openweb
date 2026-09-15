@@ -1,4 +1,5 @@
-export const rowInfo = (state = {}, action) => {
+import type { ReduxAction } from 'src/redux/types';
+export const rowInfo = (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'MOBILE_RELATION_ROW_INFO':
       return action.data;
@@ -7,7 +8,7 @@ export const rowInfo = (state = {}, action) => {
   }
 };
 
-export const loadParams = (state = { pageIndex: 1, isMore: true, loading: true, keywords: '' }, action) => {
+export const loadParams = (state = { pageIndex: 1, isMore: true, loading: true, keywords: '' }, action: ReduxAction) => {
   switch (action.type) {
     case 'MOBILE_RELATION_LOAD_PARAMS':
       return { ...state, ...action.data };
@@ -16,7 +17,7 @@ export const loadParams = (state = { pageIndex: 1, isMore: true, loading: true, 
   }
 };
 
-export const relationRows = (state = [], action) => {
+export const relationRows = (state = [], action: ReduxAction) => {
   switch (action.type) {
     case 'MOBILE_RELATION_ROWS':
       return action.data;
@@ -25,7 +26,7 @@ export const relationRows = (state = [], action) => {
   }
 };
 
-export const relationRow = (state = {}, action) => {
+export const relationRow = (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'MOBILE_RELATION_ROW':
       return { ...state, ...action.data };
@@ -34,7 +35,7 @@ export const relationRow = (state = {}, action) => {
   }
 };
 
-export const permissionInfo = (state = {}, action) => {
+export const permissionInfo = (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'MOBILE_PERMISSION_INFO':
       return action.data;

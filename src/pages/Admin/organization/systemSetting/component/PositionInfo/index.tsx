@@ -8,6 +8,7 @@ import moment from 'moment';
 import { Icon, LoadDiv, ScrollView } from 'ming-ui';
 import jobAjax from 'src/api/job';
 import ImportDeptAndRole from 'src/pages/Admin/components/ImportDeptAndRole';
+import type { RootState } from 'src/redux/types';
 import { getCurrentProject } from 'src/utils/project';
 import Config from '../../../../config';
 import * as actions from '../../../../redux/position/action';
@@ -144,7 +145,9 @@ class PositionInfo extends Component<any, any> {
                   name="componentPositionInfo1"
                   autoComplete="off"
                   defaultValue={searchValue}
-                  ref={input => { this.input = input; }}
+                  ref={input => {
+                    this.input = input;
+                  }}
                   onChange={e => {
                     this.props.updateSearchValue(e.target.value);
                     if (this.ajaxObj && this.ajaxObj.abort) {
@@ -185,10 +188,11 @@ class PositionInfo extends Component<any, any> {
                   {_l('创建职位')}
                 </span>
                 <Dropdown
-                  classNames={{ root: "createMoreDropDown" }}
+                  classNames={{ root: 'createMoreDropDown' }}
                   trigger={['click']}
                   placement="bottomLeft"
-                  popupRender={() => <Menu>
+                  popupRender={() => (
+                    <Menu>
                       <Menu.Item
                         key="0"
                         onClick={() => {
@@ -200,7 +204,8 @@ class PositionInfo extends Component<any, any> {
                       <Menu.Item key="1" disabled={_.isEmpty(positionList)} onClick={this.exportJobList}>
                         {_l('导出职位')}
                       </Menu.Item>
-                    </Menu>}
+                    </Menu>
+                  )}
                 >
                   <Icon icon="moreop" className="textSecondary Hand Font20 TxtMiddle iconHover" />
                 </Dropdown>
@@ -294,7 +299,7 @@ class PositionInfo extends Component<any, any> {
 }
 
 export default connect(
-  state => {
+  (state: RootState) => {
     const { positionList, isLoading, currentPosition, projectId, isImportRole, positionPageInfo, searchValue } =
       state.orgManagePage.position;
     return {

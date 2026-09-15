@@ -63,7 +63,7 @@ class Calender extends Component<any, any> {
    * @param {number} startDate - 开始日期
    * @param {number} endDate - 结束日期
    */
-  generateDates = (props, other, year, month, startDate, endDate) => {
+  generateDates = (props, other: boolean | number, year, month, startDate: number, endDate: number) => {
     const list = [];
 
     let i = 0;
@@ -397,7 +397,7 @@ class Calender extends Component<any, any> {
   /**
    * 选择日期、月份或年份
    */
-  onPick = (event, type, value, time) => {
+  onPick = (event, type: string, value, time) => {
     if (this.props.onPick) {
       this.props.onPick(event, type, value, time);
     }

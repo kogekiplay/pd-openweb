@@ -17,6 +17,7 @@ import AttachmentConfig from '../components/AttachmentConfig';
 import FilterDialog from '../components/embed/filterDialog';
 import SelectStaticChartFromSheet from '../components/embed/SelectStaticChartFromSheet';
 import SelectViewFromSheet from '../components/embed/SelectViewFromSheet';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const EMBED_TYPES = [
   {
@@ -46,7 +47,7 @@ const EmbedSettingWrap = styled.div`
 `;
 
 export default function Embed(props) {
-  const { data = {}, allControls, globalSheetInfo, onChange } = props;
+  const { data = {}, allControls, globalSheetInfo, onChange }: { allControls: FormControl[]; [key: string]: any } = props;
   const { dataSource, enumDefault, controlId, size } = data;
   const { height, allowlink, rownum = '10', filters = [] } = getAdvanceSetting(data);
   const { appid, wsid, reportid, type } = safeParse(dataSource || '{}');
@@ -95,7 +96,7 @@ export default function Embed(props) {
     });
   };
 
-  const getSheetInfo = (id, currentReport) => {
+  const getSheetInfo = (id, currentReport?) => {
     if (!id) return;
 
     worksheetAjax

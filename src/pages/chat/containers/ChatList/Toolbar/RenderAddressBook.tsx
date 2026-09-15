@@ -8,6 +8,7 @@ import Constant from 'src/pages/chat/utils/constant';
 import { createDiscussion } from 'src/pages/chat/utils/group';
 import * as socket from 'src/pages/chat/utils/socket';
 import GlobalSearch from 'src/pages/PageHeader/components/GlobalSearch/index';
+import type { RootState } from 'src/redux/types';
 import { getPathWithoutSubPath } from 'src/utils/common';
 
 const LoadableAddressBook = lazy(() => import('src/pages/chat/lib/addressBook'));
@@ -178,7 +179,7 @@ const RenderAddressBook = props => {
 };
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     showAddressBook: state.chat.showAddressBook,
   }),
   dispatch =>

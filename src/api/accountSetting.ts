@@ -6,7 +6,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAccountSettings: function (args, options = {}) {
+  getAccountSettings: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AccountSetting', 'GetAccountSettings', args, options);
   },
   /**
@@ -16,7 +16,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSign: function (args, options = {}) {
+  getSign: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AccountSetting', 'GetSign', args, options);
   },
   /**
@@ -29,7 +29,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  editAccountSetting: function (args, options = {}) {
+  editAccountSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AccountSetting', 'EditAccountSetting', args, options);
   },
   /**
@@ -42,7 +42,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  editAccountTwoAuthenticationSetting: function (args, options = {}) {
+  editAccountTwoAuthenticationSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AccountSetting', 'EditAccountTwoAuthenticationSetting', args, options);
   },
   /**
@@ -53,7 +53,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  autoEditAccountLangSetting: function (args, options = {}) {
+  autoEditAccountLangSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AccountSetting', 'AutoEditAccountLangSetting', args, options);
   },
   /**
@@ -64,7 +64,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editSign: function (args, options = {}) {
+  editSign: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AccountSetting', 'EditSign', args, options);
   },
   /**
@@ -76,7 +76,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  editJoinedProjectSort: function (args, options = {}) {
+  editJoinedProjectSort: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AccountSetting', 'EditJoinedProjectSort', args, options);
   },
 };

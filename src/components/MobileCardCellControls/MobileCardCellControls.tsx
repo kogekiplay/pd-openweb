@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import MobileCardCellControl from './MobileCardCellControl';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const MobileCardCellControlsWrap = styled.div`
   ${props => (props.colNuber === 2 ? ' display: grid;grid-template-columns: 1fr 1fr;grid-column-gap: 4px;' : '')}
@@ -10,7 +11,7 @@ const MobileCardCellControlsWrap = styled.div`
 `;
 
 export default function MobileCardCellControls(props) {
-  const { className, colNuber = 1, controls, row } = props;
+  const { className, colNuber = 1, controls, row }: { controls: FormControl[]; [key: string]: any } = props;
 
   return (
     <MobileCardCellControlsWrap colNuber={colNuber} className={className}>

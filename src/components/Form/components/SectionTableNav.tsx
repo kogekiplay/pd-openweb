@@ -8,6 +8,7 @@ import { Icon, SvgIcon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { getTitleStyle } from 'src/utils/controlCommon';
 import { SPRING_DEFAULT } from 'src/utils/spring';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   display: flex;
@@ -92,7 +93,7 @@ const IconCon = styled.span`
 `;
 
 export function renderTabs(props) {
-  const { widgetStyle = {}, controls = [], activeControlId, onClick, showTip = false, isFixedLeft } = props;
+  const { widgetStyle = {}, controls = [], activeControlId, onClick, showTip = false, isFixedLeft }: { controls: FormControl[]; [key: string]: any } = props;
 
   function renderIcon(control) {
     let iconUrl = control.iconUrl;
@@ -174,12 +175,12 @@ export function renderTabs(props) {
 export default function SectionTableNav(props) {
   const { style = {}, sideVisible, formWidth, showSplitIcon, isSplit, setSplit } = props;
   const tabConRef = useRef<any>(undefined);
-  const [clientWidth = 0, setClientWidth] = useState();
-  const [scrollWidth = 0, setScrollWidth] = useState();
-  const [scrollBtnVisible, setScrollBtnVisible] = useState();
+  const [clientWidth = 0, setClientWidth] = useState<number | undefined>();
+  const [scrollWidth = 0, setScrollWidth] = useState<number | undefined>();
+  const [scrollBtnVisible, setScrollBtnVisible] = useState<boolean | undefined>();
   const [scrollLeft, setScrollLeft] = useState(0);
 
-  function scroll(type) {
+  function scroll(type: string) {
     let newScrollLeft;
     const stepWidth = clientWidth / 2;
 

@@ -240,12 +240,12 @@ export default class OtherTool extends Component<any, any> {
     );
   }
 
-  toggleComp(level) {
+  toggleComp(level: string) {
     const { initLdapData = {}, initSsoData = {} } = this.state;
     this.setState({ level, isSaveWebProxy: false, ...initLdapData, ...initSsoData });
   }
 
-  handleUpdateItem(e, key) {
+  handleUpdateItem(e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>, key) {
     this.setState({
       [key]: e.target.value,
     });
@@ -713,7 +713,7 @@ export default class OtherTool extends Component<any, any> {
   };
 
   // 保存自定义名称
-  saveCustomName = (key, { icon, success = () => {} } = {}) => {
+  saveCustomName = (key: string, { icon, success = () => {} } = {}) => {
     const currentName = this.state[`${key}CustomName`];
 
     if (!currentName) {

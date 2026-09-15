@@ -46,7 +46,7 @@ export default class File extends Component<any, any> {
   /**
    * 获取节点详情
    */
-  getNodeDetail(props, sId) {
+  getNodeDetail(props, sId?) {
     const { processId, selectNodeId, selectNodeType, instanceId } = props;
     const { data } = this.state;
 

@@ -7,7 +7,7 @@ const chatbot = {
    * null
    * @param {Object} options 配置参数
    */
-  updateConversation: function(args, options) {
+  updateConversation: function(args, options?) {
     base.ajaxOptions.url = base.server(options) + '/chatbot/updateConversation';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'chatbotupdateConversation', args, $.extend({}, base, options));
@@ -16,7 +16,7 @@ const chatbot = {
    * null
    * @param {Object} options 配置参数
    */
-  shareToConversation: function(args, options) {
+  shareToConversation: function(args, options?) {
     base.ajaxOptions.url = base.server(options) + '/chatbot/shareToConversation';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'chatbotshareToConversation', args, $.extend({}, base, options));
@@ -25,7 +25,7 @@ const chatbot = {
    * null
    * @param {Object} options 配置参数
    */
-  resetConversation: function(args, options) {
+  resetConversation: function(args, options?) {
     base.ajaxOptions.url = base.server(options) + '/chatbot/resetConversation';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'chatbotresetConversation', args, $.extend({}, base, options));
@@ -34,7 +34,7 @@ const chatbot = {
    * null
    * @param {Object} options 配置参数
    */
-  ocr: function(args, options) {
+  ocr: function(args, options?) {
     base.ajaxOptions.url = base.server(options) + '/chatbot/ocr';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'chatbotocr', args, $.extend({}, base, options));
@@ -43,7 +43,7 @@ const chatbot = {
    * null
    * @param {Object} options 配置参数
    */
-  getOwner: function(args, options) {
+  getOwner: function(args, options?) {
     base.ajaxOptions.url = base.server(options) + '/chatbot/getOwner';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'chatbotgetOwner', args, $.extend({}, base, options));
@@ -52,7 +52,7 @@ const chatbot = {
    * null
    * @param {Object} options 配置参数
    */
-  getMessageList: function(args, options) {
+  getMessageList: function(args, options?) {
     base.ajaxOptions.url = base.server(options) + '/chatbot/getMessageList';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'chatbotgetMessageList', args, $.extend({}, base, options));
@@ -61,7 +61,7 @@ const chatbot = {
    * null
    * @param {Object} options 配置参数
    */
-  getMessageListAndConversation: function(args, options) {
+  getMessageListAndConversation: function(args, options?) {
     base.ajaxOptions.url = base.server(options) + '/chatbot/getMessageListAndConversation';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'chatbotgetMessageListAndConversation', args, $.extend({}, base, options));
@@ -70,7 +70,7 @@ const chatbot = {
    * null
    * @param {Object} options 配置参数
    */
-  getConversation: function(args, options) {
+  getConversation: function(args, options?) {
     base.ajaxOptions.url = base.server(options) + '/chatbot/getConversation';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'chatbotgetConversation', args, $.extend({}, base, options));
@@ -88,7 +88,7 @@ const chatbot = {
    * null
    * @param {Object} options 配置参数
    */
-  getAllConversationList: function(args, options) {
+  getAllConversationList: function(args, options?) {
     base.ajaxOptions.url = base.server(options) + '/chatbot/getAllConversationList';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'chatbotgetAllConversationList', args, $.extend({}, base, options));
@@ -97,7 +97,7 @@ const chatbot = {
    * null
    * @param {Object} options 配置参数
    */
-  feedback: function(args, options) {
+  feedback: function(args, options?) {
     base.ajaxOptions.url = base.server(options) + '/chatbot/feedback';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'chatbotfeedback', args, $.extend({}, base, options));
@@ -106,7 +106,7 @@ const chatbot = {
    * null
    * @param {Object} options 配置参数
    */
-  clearConversation: function(args, options) {
+  clearConversation: function(args, options?) {
     base.ajaxOptions.url = base.server(options) + '/chatbot/clearConversation';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'chatbotclearConversation', args, $.extend({}, base, options));
@@ -115,7 +115,7 @@ const chatbot = {
    * null
    * @param {Object} options 配置参数
    */
-  addShareConversation: function(args, options) {
+  addShareConversation: function(args, options?) {
     base.ajaxOptions.url = base.server(options) + '/chatbot/addShareConversation';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'chatbotaddShareConversation', args, $.extend({}, base, options));
@@ -124,7 +124,7 @@ const chatbot = {
    * null
    * @param {Object} options 配置参数
    */
-  handleAIRequest: function(args, options) {
+  handleAIRequest: function(args, options?) {
     base.ajaxOptions.url = base.server(options) + '/chatbot/HandleAIRequest';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'chatbotHandleAIRequest', args, $.extend({}, base, options));

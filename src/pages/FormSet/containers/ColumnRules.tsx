@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { LoadDiv } from 'ming-ui';
+import type { RootState } from 'src/redux/types';
 import ColumnRulesCon from '../components/columnRules/ColumnRulesCon';
 import * as columnRules from '../components/columnRules/redux/actions/columnRules';
 
@@ -26,7 +27,7 @@ class ColumnRules extends React.Component<any, any> {
     );
   }
 }
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   formSet: state.formSet,
 });
 const mapDispatchToProps = dispatch => bindActionCreators(columnRules, dispatch);

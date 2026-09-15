@@ -29,7 +29,7 @@ export default function BtnTd(props) {
       input.current.focus();
     }
   }, [isRename]);
-  const editBtn = (obj, cb) => {
+  const editBtn = (obj, cb?) => {
     sheetAjax
       .saveWorksheetBtn({
         btnId: it.btnId,

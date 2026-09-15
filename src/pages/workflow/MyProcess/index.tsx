@@ -303,7 +303,7 @@ export default class MyProcess extends Component<any, any> {
     });
     this.updateCountData({ ...countData, waitingExamine: waitingExamine - 1, myProcessCount: myProcessCount - 1 });
   };
-  hanndleApprove = (approveType, batchType) => {
+  hanndleApprove = (approveType: number, batchType: string) => {
     const { approveCards } = this.state;
     const rejectCards = approveCards.filter(c => '5' in _.get(c, 'flowNode.btnMap'));
     const cards = approveType === 5 ? rejectCards : approveCards;

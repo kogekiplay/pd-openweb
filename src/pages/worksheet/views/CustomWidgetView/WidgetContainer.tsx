@@ -9,6 +9,7 @@ import { LoadDiv } from 'ming-ui';
 import { emitter } from 'src/utils/common';
 import { formatQuickFilter } from 'src/utils/filter';
 import WidgetBridge from './bridge';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   width: 100%;
@@ -49,7 +50,7 @@ export default function WidgetContainer(props) {
     quickFilter,
     navGroupFilters,
     onLoadScript = () => {},
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   let scriptUrl = props.scriptUrl;
   // 调试模式：通过 ?bundle= 指定本地/沙箱构建的插件脚本地址进行调试
   let isDebugBundle = false;

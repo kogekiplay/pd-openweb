@@ -10,9 +10,10 @@ import { getAdvanceSetting } from '../../../../../util/setting';
 import DynamicDefaultValue from '../../../DynamicDefaultValue';
 import { CustomActionWrap } from '../../style';
 import AddFields from '../AddFields';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function PromptError(props) {
-  const { actionData = {}, handleOk, allControls = [] } = props;
+  const { actionData = {}, handleOk, allControls = [] }: { allControls: FormControl[]; [key: string]: any } = props;
   const [{ actionItems, visible }, setState] = useSetState({
     actionItems: actionData.actionItems || [],
     visible: true,

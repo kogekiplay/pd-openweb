@@ -23,6 +23,7 @@ import Files from '../../../components/Files';
 import FileEditModal from '../../../components/Files/FileEditModal';
 import { WidgetEventHelper } from '../../../core/useFormEventManager';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default class Widgets extends Component<any, any> {
   static propTypes = {
@@ -147,7 +148,7 @@ export default class Widgets extends Component<any, any> {
     return false;
   }
 
-  loadAttachments(props) {
+  loadAttachments(props?) {
     const { value, worksheetId, recordId, controlId, isDraft } = props || this.props;
     let fileIds = [];
 
@@ -186,7 +187,7 @@ export default class Widgets extends Component<any, any> {
 
   id = uuidv4();
 
-  filesChanged = (files, key) => {
+  filesChanged = (files, key: string) => {
     const enumDefault = this.props.enumDefault || 3;
     const value = JSON.parse(this.state.value || '[]');
     const isArray = _.isArray(value);
@@ -416,7 +417,7 @@ export default class Widgets extends Component<any, any> {
 
     if (!mingdaoAppError && advancedSetting.h5watermark) {
       const h5watermarkArr = advancedSetting.h5watermark.split('$');
-      const data = formData.filter(v => _.includes([2, 3, 4, 5, 6, 8, 15, 16, 46], v.type));
+      const data = formData.filter((v: FormControl) => _.includes([2, 3, 4, 5, 6, 8, 15, 16, 46], v.type));
 
       h5watermark = h5watermarkArr
         .map(item => {

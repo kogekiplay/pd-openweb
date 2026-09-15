@@ -27,7 +27,7 @@ const monitor = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getRunTime: function (args, options) {
+  getRunTime: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + 'monitor/getRunTime';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'monitorgetRunTime', JSON.stringify(args), $.extend(base, options));
@@ -59,7 +59,7 @@ const monitor = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTasksTotal: function (args, options) {
+  getTasksTotal: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + 'monitor/getTasksTotal';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'monitorgetTasksTotal', JSON.stringify(args), $.extend(base, options));
@@ -91,7 +91,7 @@ const monitor = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getHistoricalData: function (args, options) {
+  getHistoricalData: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + 'monitor/getHistoricalData';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'monitorgetHistoricalData', JSON.stringify(args), $.extend(base, options));
@@ -109,7 +109,7 @@ const monitor = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getArithmetic: function (args, options) {
+  getArithmetic: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + 'monitor/getArithmetic';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'monitorgetArithmetic', JSON.stringify(args), $.extend(base, options));
@@ -145,7 +145,7 @@ const monitor = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTaskCount: function (args, options) {
+  getTaskCount: function (args, options?) {
     base.ajaxOptions.url = base.server(options) + 'monitor/getTaskCount';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'monitorgetTaskCount', JSON.stringify(args), $.extend(base, options));

@@ -1,4 +1,4 @@
-﻿import React, { Fragment } from 'react';
+import React, { Fragment } from 'react';
 import Api from 'api/homeApp';
 import cx from 'classnames';
 import copy from 'src/utils/copyToClipboard';
@@ -111,7 +111,7 @@ export default class DingSyncCourse extends React.Component<any, any> {
     );
   }
 
-  getAppInfo = (isWX, projectId, apkId) => {
+  getAppInfo = (isWX: boolean, projectId, apkId) => {
     if (isWX) {
       Ajax.getWorkWXSsoUrlInfo({
         projectId: projectId,

@@ -5,6 +5,7 @@ import { Drawer } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Icon, ScrollView, SortableList, Support } from 'ming-ui';
+import type { RootState } from 'src/redux/types';
 import DrawerFooter from '../DrawerFooter';
 import { hasRuleChanged, TAB_TYPES, TABS_DISPLAY } from './config';
 import EditBox from './EditBox';
@@ -93,7 +94,7 @@ class ColumnRulesCon extends React.Component<any, any> {
     );
 
     return (
-      (<Fragment>
+      <Fragment>
         <div className="columnRuleTitle">
           <div className="flexRow">
             <span className="Font17 Bold flex LineHeight36">{_l('业务规则')}</span>
@@ -162,12 +163,12 @@ class ColumnRulesCon extends React.Component<any, any> {
             <EditBox />
           </Drawer>
         )}
-      </Fragment>)
+      </Fragment>
     );
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   columnRulesListData: state.formSet.columnRulesListData,
   selectRules: state.formSet.selectRules,
   activeTab: state.formSet.activeTab,

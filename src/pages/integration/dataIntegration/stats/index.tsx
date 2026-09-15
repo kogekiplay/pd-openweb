@@ -92,7 +92,7 @@ export default function (props) {
     getDetailInfo();
   };
 
-  const getDetailInfo = dimension => {
+  const getDetailInfo = (dimension?) => {
     getHistory(dimension);
   };
 
@@ -140,7 +140,7 @@ export default function (props) {
     });
   };
 
-  const getList = data => {
+  const getList = (data?) => {
     if (listLoading && ajaxFetch) {
       ajaxFetch.abort();
     }

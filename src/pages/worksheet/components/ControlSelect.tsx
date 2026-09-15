@@ -4,6 +4,7 @@ import { arrayOf, bool, func, number, shape, string } from 'prop-types';
 import styled from 'styled-components';
 import { getIconByType } from 'src/pages/widgetConfig/util';
 import AddCondition from 'src/pages/worksheet/common/WorkSheetFilter/components/AddCondition';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div(
   ({ disabled }) => `
@@ -68,14 +69,14 @@ export default function ControlSelect(props) {
     children,
     isAppendToBody,
     onChange = () => {},
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const control = _.find(controls, { controlId: selected });
   return (
     <AddCondition
       style={popupStyle}
       disabled={disabled}
       renderInParent={!isAppendToBody}
-      columns={controls.filter(c => !_.includes(hiddenIds, c.controlId))}
+      columns={controls.filter((c: FormControl) => !_.includes(hiddenIds, c.controlId))}
       doNotCloseMenuWhenAdd={doNotCloseMenuWhenAdd}
       onAdd={onChange}
       offset={offset || [0, 0]}

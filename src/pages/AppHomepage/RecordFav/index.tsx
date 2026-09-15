@@ -168,7 +168,7 @@ function RecordFav(props) {
     setState({ recordList: list.filter(item => !item.isTop), topList: list.filter(item => item.isTop) });
   }, [keywords, appId]);
 
-  const getList = data => {
+  const getList = (data?) => {
     return (data || recordListAll)
       .filter(
         o =>
@@ -217,7 +217,7 @@ function RecordFav(props) {
     setState({ keywords: value });
   };
 
-  const renderSkeleton = height => {
+  const renderSkeleton = (height?: number) => {
     return (
       <div className={cx({ 'pLeft16 pRight16': props.forCard })}>
         {Array.from({ length: 3 }).map((_, index) => (
@@ -316,7 +316,7 @@ function RecordFav(props) {
     );
   };
 
-  const onRefresh = isClear => {
+  const onRefresh = (isClear?) => {
     isClear &&
       setState({
         recordListAll: [],
@@ -356,7 +356,7 @@ function RecordFav(props) {
     setState({ record: info });
   };
 
-  const onUpdateFavoriteTop = (favoriteId, isTop) => {
+  const onUpdateFavoriteTop = (favoriteId, isTop: boolean) => {
     favoriteApi.updateFavoriteTop({ projectId, favoriteId, isTop }).then(res => {
       if (res) {
         alert(isTop ? _l('置顶成功') : _l('取消置顶成功'));

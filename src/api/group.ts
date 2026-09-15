@@ -11,7 +11,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getGroupsSearch: function (args, options = {}) {
+  getGroupsSearch: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'GetGroupsSearch', args, options);
   },
   /**
@@ -23,7 +23,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getGroupsNameAndIsVerified: function (args, options = {}) {
+  getGroupsNameAndIsVerified: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'GetGroupsNameAndIsVerified', args, options);
   },
   /**
@@ -34,7 +34,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  selectGroupMostFrequent: function (args, options = {}) {
+  selectGroupMostFrequent: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'SelectGroupMostFrequent', args, options);
   },
   /**
@@ -46,7 +46,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  selectGroup: function (args, options = {}) {
+  selectGroup: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'SelectGroup', args, options);
   },
   /**
@@ -69,7 +69,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getGroups: function (args, options = {}) {
+  getGroups: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'GetGroups', args, options);
   },
   /**
@@ -86,7 +86,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getContactGroups: function (args, options = {}) {
+  getContactGroups: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'GetContactGroups', args, options);
   },
   /**
@@ -101,7 +101,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getGroupUsers: function (args, options = {}) {
+  getGroupUsers: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'GetGroupUsers', args, options);
   },
   /**
@@ -115,7 +115,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getGroupEffectUsers: function (args, options = {}) {
+  getGroupEffectUsers: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'GetGroupEffectUsers', args, options);
   },
   /**
@@ -125,7 +125,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getGroupAvatarSelectList: function (args, options = {}) {
+  getGroupAvatarSelectList: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'GetGroupAvatarSelectList', args, options);
   },
   /**
@@ -137,7 +137,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getGroupInfo: function (args, options = {}) {
+  getGroupInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'GetGroupInfo', args, options);
   },
   /**
@@ -148,7 +148,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getGroupCardInfo: function (args, options = {}) {
+  getGroupCardInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'GetGroupCardInfo', args, options);
   },
   /**
@@ -164,7 +164,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addGroup: function (args, options = {}) {
+  addGroup: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'AddGroup', args, options);
   },
   /**
@@ -175,7 +175,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addDiscussionGroup: function (args, options = {}) {
+  addDiscussionGroup: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'AddDiscussionGroup', args, options);
   },
   /**
@@ -187,7 +187,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addAdmin: function (args, options = {}) {
+  addAdmin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'AddAdmin', args, options);
   },
   /**
@@ -198,7 +198,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  applyJoinGroup: function (args, options = {}) {
+  applyJoinGroup: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'ApplyJoinGroup', args, options);
   },
   /**
@@ -210,7 +210,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  passJoinGroup: function (args, options = {}) {
+  passJoinGroup: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'PassJoinGroup', args, options);
   },
   /**
@@ -221,7 +221,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  exitGroup: function (args, options = {}) {
+  exitGroup: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'ExitGroup', args, options);
   },
   /**
@@ -232,7 +232,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  openGroup: function (args, options = {}) {
+  openGroup: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'OpenGroup', args, options);
   },
   /**
@@ -243,7 +243,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  closeGroup: function (args, options = {}) {
+  closeGroup: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'CloseGroup', args, options);
   },
   /**
@@ -255,7 +255,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateGroupPushNotice: function (args, options = {}) {
+  updateGroupPushNotice: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'UpdateGroupPushNotice', args, options);
   },
   /**
@@ -267,7 +267,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateGroupAvatar: function (args, options = {}) {
+  updateGroupAvatar: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'UpdateGroupAvatar', args, options);
   },
   /**
@@ -279,7 +279,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateGroupName: function (args, options = {}) {
+  updateGroupName: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'UpdateGroupName', args, options);
   },
   /**
@@ -291,7 +291,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateGroupAbout: function (args, options = {}) {
+  updateGroupAbout: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'UpdateGroupAbout', args, options);
   },
   /**
@@ -303,7 +303,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateGroupApproval: function (args, options = {}) {
+  updateGroupApproval: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'UpdateGroupApproval', args, options);
   },
   /**
@@ -315,7 +315,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateGroupHidden: function (args, options = {}) {
+  updateGroupHidden: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'UpdateGroupHidden', args, options);
   },
   /**
@@ -327,7 +327,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateGroupToPost: function (args, options = {}) {
+  updateGroupToPost: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'UpdateGroupToPost', args, options);
   },
   /**
@@ -340,7 +340,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateGroupVerified: function (args, options = {}) {
+  updateGroupVerified: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'UpdateGroupVerified', args, options);
   },
   /**
@@ -352,7 +352,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateGroupForbidSpeak: function (args, options = {}) {
+  updateGroupForbidSpeak: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'UpdateGroupForbidSpeak', args, options);
   },
   /**
@@ -364,7 +364,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateGroupForbidInvite: function (args, options = {}) {
+  updateGroupForbidInvite: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'UpdateGroupForbidInvite', args, options);
   },
   /**
@@ -375,7 +375,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeGroup: function (args, options = {}) {
+  removeGroup: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'RemoveGroup', args, options);
   },
   /**
@@ -387,7 +387,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeAdmin: function (args, options = {}) {
+  removeAdmin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'RemoveAdmin', args, options);
   },
   /**
@@ -399,7 +399,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeUser: function (args, options = {}) {
+  removeUser: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'RemoveUser', args, options);
   },
   /**
@@ -411,7 +411,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  refuseUser: function (args, options = {}) {
+  refuseUser: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'RefuseUser', args, options);
   },
   /**
@@ -423,7 +423,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  cancelInviteUser: function (args, options = {}) {
+  cancelInviteUser: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'CancelInviteUser', args, options);
   },
   /**
@@ -434,7 +434,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  valideUserJoinGroup: function (args, options = {}) {
+  valideUserJoinGroup: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Group', 'ValideUserJoinGroup', args, options);
   },
 };

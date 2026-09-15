@@ -9,6 +9,7 @@ import { SYS } from 'src/pages/widgetConfig/config/widget';
 import { enumWidgetType } from 'src/pages/widgetConfig/util';
 import WidgetBase from 'src/pages/widgetConfig/widgetSetting/components/WidgetBase';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrap = styled.div(
   ({ height }) => `
@@ -31,7 +32,7 @@ const Wrap = styled.div(
 );
 
 export default function AddControlDiaLog(params) {
-  const { controls = [], setVisible, visible, type, addName, onAdd, enumType, title, worksheetId, onChange } = params;
+  const { controls = [], setVisible, visible, type, addName, onAdd, enumType, title, worksheetId, onChange }: { controls: FormControl[]; [key: string]: any } = params;
   let initData = {
     ...DEFAULT_DATA[enumType],
     type: type || enumWidgetType[enumType],
@@ -52,7 +53,7 @@ export default function AddControlDiaLog(params) {
   };
 
   const onSave = () => {
-    let row = Math.max(...controls.filter(o => !SYS.includes(o.controlId)).map(o => o.row));
+    let row = Math.max(...controls.filter((o: FormControl) => !SYS.includes(o.controlId)).map(o => o.row));
     let control = { ...data, row: row + 1 };
     worksheetAjax
       .addWorksheetControls({

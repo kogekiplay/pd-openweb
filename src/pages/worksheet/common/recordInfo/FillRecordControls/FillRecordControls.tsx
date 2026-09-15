@@ -11,6 +11,7 @@ import { formatControlToServer } from 'src/components/Form/core/utils';
 import { isRelateRecordTableControl } from 'src/utils/control';
 import withWorksheetRowProvider from '../WorksheetRecordProvider';
 import './FillRecordControls.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const LoadMask = styled.div`
   margin: -58px -24px;
@@ -25,6 +26,9 @@ const LoadMask = styled.div`
   z-index: 2;
 `;
 let FillRecordControls = class FillRecordControls extends React.Component<any, any> {
+  // 构造函数里赋的实例字段：带默认值的关联表控件 id 名单，提交时要一并下发
+  declare hasDefaultRelateRecordTableControls: string[];
+
   static propTypes = {
     isBatchOperate: PropTypes.bool,
     visible: PropTypes.bool,
@@ -46,12 +50,12 @@ let FillRecordControls = class FillRecordControls extends React.Component<any, a
     super(props);
     const { projectId } = props;
     this.hasDefaultRelateRecordTableControls = [];
-    const controls = update(
+    const controls: FormControl[] = update(
       (props.formData || []).concat((props.masterFormData || []).map(c => ({ ...c, fromMaster: true }))),
       {
         $apply: formData => {
           let hasDefaultControls = [];
-          const formDataForDataFormat = formData.map(c => {
+          const formDataForDataFormat = formData.map((c: FormControl) => {
             const newControl = { ...c };
 
             const writeControl = _.find(props.writeControls, wc => newControl.controlId === wc.controlId);
@@ -121,7 +125,7 @@ let FillRecordControls = class FillRecordControls extends React.Component<any, a
                     setTimeout(() => {
                       this.setState(oldState => ({
                         formFlag: Math.random(),
-                        formData: oldState.formData.map(c => (c.controlId === controlId ? { ...c, value } : c)),
+                        formData: oldState.formData.map((c: FormControl) => (c.controlId === controlId ? { ...c, value } : c)),
                       }));
                     }, 500);
                   }
@@ -137,7 +141,7 @@ let FillRecordControls = class FillRecordControls extends React.Component<any, a
                 )
             : [];
           formData = formData
-            .map(c => {
+            .map((c: FormControl) => {
               const writeControl = _.find(props.writeControls, wc => c.controlId === wc.controlId);
 
               if (_.isUndefined(c.dataSource)) {
@@ -413,7 +417,7 @@ let FillRecordControls = class FillRecordControls extends React.Component<any, a
             flag={formFlag}
             ref={this.customwidget}
             popupContainer={document.body}
-            data={formData.map(c => ({ ...c, isCustomButtonFillRecord: true }))}
+            data={formData.map((c: FormControl) => ({ ...c, isCustomButtonFillRecord: true }))}
             controlProps={{ customButton }}
             recordId={recordId}
             viewId={viewId}

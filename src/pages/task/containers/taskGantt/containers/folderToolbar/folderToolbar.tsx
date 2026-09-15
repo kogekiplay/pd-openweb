@@ -6,6 +6,7 @@ import _ from 'lodash';
 import { Tooltip } from 'ming-ui/antd-components';
 import ClickAway from 'ming-ui/components/ClickAway';
 import createTask from 'src/components/createTask/load';
+import type { RootState } from 'src/redux/types';
 import GanttDialog from '../../component/ganttDialog';
 import config from '../../config/config';
 import {
@@ -250,7 +251,7 @@ class FolderToolbar extends Component<any, any> {
   }
 }
 
-export default connect(state => {
+export default connect((state: RootState) => {
   const { stateConfig, taskConfig } = state.task;
 
   return {

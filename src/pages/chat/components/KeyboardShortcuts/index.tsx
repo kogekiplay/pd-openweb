@@ -183,4 +183,4 @@ export default function KeyboardShortcuts(props) {
   );
 }
 
-export const dialogKeyboardShortcuts = props => functionWrap(KeyboardShortcuts, { ...props });
+export const dialogKeyboardShortcuts = (props?) => functionWrap(KeyboardShortcuts, { ...props });

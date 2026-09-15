@@ -9,7 +9,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getGlobalMeta: function (args, options = {}) {
+  getGlobalMeta: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Global', 'GetGlobalMeta', args, options);
   },
   /**
@@ -20,7 +20,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getSystemConfiguration: function (args, options = {}) {
+  getSystemConfiguration: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Global', 'GetSystemConfiguration', args, options);
   },
   /**
@@ -31,7 +31,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSystemTranslation: function (args, options = {}) {
+  getSystemTranslation: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Global', 'GetSystemTranslation', args, options);
   },
 };

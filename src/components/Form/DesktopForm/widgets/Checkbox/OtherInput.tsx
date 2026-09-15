@@ -28,7 +28,7 @@ export default function OtherInput(props) {
     }
   }, [value]);
 
-  const handleChange = (checkIds, value) => {
+  const handleChange = (checkIds: string[], value) => {
     const newValues = checkIds.map(i => (i === 'other' && value ? `other:${value}` : i));
     onChange(JSON.stringify(newValues));
     changeValue(value);

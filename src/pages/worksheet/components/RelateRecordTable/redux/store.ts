@@ -5,9 +5,11 @@ import { RELATE_RECORD_SHOW_TYPE } from 'worksheet/constants/enum';
 import { isRelateRecordTableControl } from 'src/utils/control';
 import { init, updateTreeTableViewData } from './action';
 import reducer from './reducer';
+import type { FormControl } from 'src/utils/controlTypes';
+import type { ReduxAction } from 'src/redux/types';
 
 export default function generateStore(
-  control,
+  control: FormControl,
   {
     mode,
     from,
@@ -22,6 +24,21 @@ export default function generateStore(
     workId,
     isDraft,
     openFrom,
+  }: {
+    mode?: string;
+    from?: number;
+    isCharge?: boolean;
+    appId?: string;
+    recordId?: string;
+    allowEdit?: boolean;
+    worksheetId?: string;
+    /** 父表单的整份控件数组 */
+    formData?: FormControl[];
+    instanceId?: string;
+    pageSize?: number;
+    workId?: string;
+    isDraft?: boolean;
+    openFrom?: string;
   } = {},
 ) {
   if (!pageSize) {
@@ -36,7 +53,7 @@ export default function generateStore(
   // （详见那边的长注释）：这两片存的是构造期接过来的活对象 —— base.control 是父表单控件
   // 实例，base.formData 是父表单整份控件数组，两者里的子表控件都挂着自己的 store，store
   // 上又挂着 React 组件实例，绕回来成环；immutableCheck 撞环是直接 RangeError 而不是报警。
-  // lastAction 的 reducer 同样是 `(state, action) => action`，会把 UPDATE_BASE 的
+  // lastAction 的 reducer 同样是 `(state, action: ReduxAction) => action`，会把 UPDATE_BASE 的
   // payload 原样再存一份，所以必须一起豁免。
   // 其余 slice（records / controls / changes / tableState…）仍然受保护。
   const store = configureStore({

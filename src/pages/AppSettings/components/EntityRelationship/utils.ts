@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { DEFAULT_CONFIG, WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export function getControlTypeInfo(type) {
   const key = _.findKey(WIDGETS_TO_API_TYPE_ENUM, o => o === type);
@@ -7,7 +8,7 @@ export function getControlTypeInfo(type) {
 }
 
 export function isBothWayRelate(control, sourceWorksheet) {
-  const sourceControls = sourceWorksheet.controls || [];
+  const sourceControls: FormControl[] = sourceWorksheet.controls || [];
 
   if (
     !control.dataSource ||
@@ -26,7 +27,7 @@ export function createLabelOption(control, sourceWorksheet) {
 
   texts[1] = control.enumDefault === 1 ? '1' : 'N';
   if (isBothWayRelate(control, sourceWorksheet)) {
-    const sourceControls = sourceWorksheet.controls || [];
+    const sourceControls: FormControl[] = sourceWorksheet.controls || [];
     const sourceControl = sourceControls.find(l => l.controlId === control.sourceControlId);
     texts[0] = sourceControl.enumDefault === 1 ? '1' : 'N';
   }

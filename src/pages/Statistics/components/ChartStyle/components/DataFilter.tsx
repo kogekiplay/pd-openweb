@@ -98,7 +98,7 @@ export default class DataFilter extends Component<any, any> {
             }}
             onChange={event => {
               let value = formatNumberFromInput(event.target.value);
-              let count = parseInt(value || 0);
+              let count = parseInt(String(value || 0));
               count = count > 1000 ? 1000 : count;
               this.setState({
                 count,

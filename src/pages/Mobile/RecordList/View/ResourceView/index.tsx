@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { LoadDiv } from 'ming-ui';
 import * as actions from 'mobile/RecordList/redux/actions';
 import { setSysWorkflowTimeControlFormat } from 'src/pages/worksheet/views/CalendarView/util.js';
+import type { RootState } from 'src/redux/types';
 import { isRelateRecordTableControl } from 'src/utils/control';
 import ViewErrorPage from '../components/ViewErrorPage';
 
@@ -49,7 +50,7 @@ function MobileResourceView(props) {
 }
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     quickFilter: state.mobile.quickFilter,
     worksheetInfo: state.mobile.worksheetInfo,
     filters: state.mobile.filters,

@@ -9,6 +9,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import SearchMember from 'src/pages/chat/components/SearchMember';
 import * as actions from 'src/pages/chat/redux/actions';
 import * as socket from 'src/pages/chat/utils/socket';
+import type { RootState } from 'src/redux/types';
 import { pathCompletion } from 'src/utils/common';
 import Avatar from '../ChatList/Avatar';
 import RenderAddressBook from '../ChatList/Toolbar/RenderAddressBook';
@@ -139,7 +140,7 @@ const SessionListDrawer = props => {
 };
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     toolbarConfig: state.chat.toolbarConfig,
     socketState: state.chat.socketState,
   }),

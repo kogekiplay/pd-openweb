@@ -20,7 +20,7 @@ const getComponent = component => {
 export default () => {
   const components = [];
 
-  return (ROUTE_CONFIG, preCallback) => {
+  return (ROUTE_CONFIG, preCallback?) => {
     /**
      * 缓存生成的路由组件
      */

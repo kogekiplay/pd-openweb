@@ -8,6 +8,7 @@ import worksheetAjax from 'src/api/worksheet';
 import { filterAndFormatterControls } from 'src/pages/worksheet/views/util';
 import { replaceControlsTranslateInfo } from 'src/utils/translate';
 import VerifyDel from './VerifyDel';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const ControlsWrap = styled.div`
   .grade {
@@ -103,7 +104,7 @@ const isVisible = control => {
 
 export default function HierarchyRelateMultiSheet({ worksheetInfo, viewControls, updateViewControls }) {
   const getSelectableControls = sheetInfo => {
-    const { controls = [] } = _.get(sheetInfo, 'template') || {};
+    const { controls = [] }: { controls: FormControl[]; [key: string]: any } = _.get(sheetInfo, 'template') || {};
     const existSheet = viewControls.map(item => item.worksheetId);
     return _.filter(
       controls,
@@ -164,9 +165,9 @@ export default function HierarchyRelateMultiSheet({ worksheetInfo, viewControls,
 
   const addViewControl = item => {
     worksheetAjax.getWorksheetInfo({ worksheetId: item.dataSource, getTemplate: true }).then(data => {
-      const controls = data.template.controls;
+      const controls: FormControl[] = data.template.controls;
       const coverControls = filterAndFormatterControls({
-        controls: controls.filter(l => isVisible(l)).filter(c => !!c.controlName),
+        controls: controls.filter((l: FormControl) => isVisible(l)).filter(c => !!c.controlName),
         ////扫码|附件可作为封面
         filter: item => [14, 47].includes(item.type) || [14, 47].includes(item.sourceControlType),
       });
@@ -184,7 +185,7 @@ export default function HierarchyRelateMultiSheet({ worksheetInfo, viewControls,
           coverType: 0,
           advancedSetting: { coverposition: '0' },
           showControls: controls
-            .filter(item => item.attribute !== 1)
+            .filter((item: FormControl) => item.attribute !== 1)
             .slice(0, 2)
             .map(({ controlId }) => controlId),
         }),
@@ -195,7 +196,7 @@ export default function HierarchyRelateMultiSheet({ worksheetInfo, viewControls,
   const renderRelate = () => {
     if (controlLoading) return <LoadDiv />;
     const filterData = searchValue
-      ? availableControls.filter(i => i.controlName.includes(searchValue))
+      ? availableControls.filter((i: FormControl) => i.controlName.includes(searchValue))
       : availableControls;
     return (
       <Menu style={{ maxHeight: 300, overflowY: 'auto' }}>

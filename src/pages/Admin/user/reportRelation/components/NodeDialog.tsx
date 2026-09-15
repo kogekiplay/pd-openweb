@@ -4,6 +4,7 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import { Dialog, Icon, LoadDiv } from 'ming-ui';
 import StructureController from 'src/api/structure';
+import type { RootState } from 'src/redux/types';
 import { getCurrentProject } from 'src/utils/project';
 import Config from '../../../config';
 import ConnectedNode from './node';
@@ -269,7 +270,7 @@ function NodeDialogWrap(props) {
   );
 }
 
-const NodeDialog = connect((state, ownProps) => {
+const NodeDialog = connect((state: RootState, ownProps) => {
   const {
     entities: { users },
   } = state;

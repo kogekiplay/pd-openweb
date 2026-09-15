@@ -98,7 +98,7 @@ export default class ExportAppCom extends Component<any, any> {
     }
   };
 
-  renderPassword = (item, passwordType) => {
+  renderPassword = (item, passwordType: string) => {
     const {
       id,
       hasExportPassword,

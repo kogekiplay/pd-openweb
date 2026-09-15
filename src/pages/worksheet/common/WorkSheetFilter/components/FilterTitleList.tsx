@@ -7,6 +7,7 @@ import { Icon, Menu, MenuItem, SortableList } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { VerticalMiddle } from 'worksheet/components/Basics';
 import { FILTER_TYPE } from '../enum';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   .title {
@@ -244,7 +245,7 @@ export default function FilterTitleList(props) {
     onToggleFilterType = () => {},
     triggerFilter = () => {},
     onHideFilterPopup = () => {},
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   return (
     <Con>
       <div className="title">{title}</div>

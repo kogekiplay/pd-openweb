@@ -11,6 +11,7 @@ import { renderText as renderCellText } from 'src/utils/control';
 import { CustomCommonCapsule } from '../../style';
 import { checkCellIsEmpty, sortPathsBySearchKeyword } from '../../tools/utils';
 import { CustomMobileCascadeControl, OptionWrap, PopupContentBox } from './style';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const formatSearchData = (item, keywords) => {
   const searchPath = safeParse(item.searchPath) || [];
@@ -192,7 +193,7 @@ const Cascader = props => {
       .then(result => {
         if (result.resultCode === 1) {
           const { template } = result;
-          const control = template.controls.find(item => item.attribute === 1);
+          const control = template.controls.find((item: FormControl) => item.attribute === 1);
           const data = result.data.map(item => {
             return {
               value: item.rowid,
@@ -359,7 +360,7 @@ const Cascader = props => {
   };
 
   // 简单展示内容
-  const renderSimpleContent = (item, keywords) => {
+  const renderSimpleContent = (item, keywords?) => {
     return (
       <OptionWrap
         onClick={

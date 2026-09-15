@@ -8,6 +8,7 @@ import { Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import * as actions from 'worksheet/redux/actions/gunterview';
 import { PERIOD_TYPE, PERIODS } from 'worksheet/views/GunterView/config';
+import type { RootState } from 'src/redux/types';
 import { browserIsMobile } from 'src/utils/common';
 
 const IconWrap = styled(Icon)`
@@ -112,7 +113,7 @@ let Zoom = class Zoom extends Component<any, any> {
   }
 };
 Zoom = connect(
-  state => ({ ..._.pick(state.sheet.gunterView, ['periodType', 'zoom']) }),
+  (state: RootState) => ({ ..._.pick(state.sheet.gunterView, ['periodType', 'zoom']) }),
   dispatch => bindActionCreators(actions, dispatch),
 )(Zoom);
 export default Zoom;

@@ -358,7 +358,7 @@ class QuickCreateTask {
   }
 
   // 快速创建任务
-  quickCreateTask(isEnter) {
+  quickCreateTask(isEnter: boolean) {
     // 创建中
     if ($('#taskList .createNewSingle').data('create')) {
       return;

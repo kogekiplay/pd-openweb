@@ -1,4 +1,4 @@
-﻿import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Dialog } from 'antd-mobile';
 import cx from 'classnames';
 import _, { find, get, isEmpty } from 'lodash';
@@ -29,6 +29,7 @@ import { formatRecordToRelateRecord, getRecordTempValue, parseRecordTempValue } 
 import RecordInfoContext from '../recordInfo/RecordInfoContext';
 import MobileRecordRecoverConfirm from './MobileNewRecord/components/RecordRecoverConfirm';
 import './NewRecord.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   height: 100%;
@@ -157,16 +158,16 @@ function NewRecordForm(props) {
   const propsWorksheetInfo = useMemo(() => _.cloneDeep(props.worksheetInfo || {}), []);
   const [formLoading, setFormLoading] = useState(true);
   const [isSettingTempData, setIsSettingTempData] = useState(false);
-  const [restoreVisible, setRestoreVisible] = useState();
+  const [restoreVisible, setRestoreVisible] = useState<boolean | undefined>();
   const [relateRecordData, setRelateRecordData] = useState({});
   const [worksheetInfo, setWorksheetInfo] = useState(propsWorksheetInfo);
   const [originFormdata, setOriginFormdata] = useState([]);
   const [formdata, setFormdata] = useState([]);
   const { projectId, publicShareUrl, visibleType } = worksheetInfo;
   const [formError, setFormError] = useState();
-  const [errorVisible, setErrorVisible] = useState();
-  const [random, setRandom] = useState();
-  const [requesting, setRequesting] = useState();
+  const [errorVisible, setErrorVisible] = useState<boolean | undefined>();
+  const [random, setRandom] = useState<number | string | undefined>();
+  const [requesting, setRequesting] = useState<boolean | undefined>();
   const [offlineTempId, setOfflineTempId] = useState('');
   const [filledByAiMap, setFilledByAiMap] = useState({});
   const [isRenderForm, setIsRenderForm] = useState(true);
@@ -633,7 +634,7 @@ function NewRecordForm(props) {
   const handleAPPScanCodeFunc = newFormdata => {
     const { autoFill } = cache.current.newRecordOptions || {};
     newFormdata = newFormdata && !_.isEmpty(newFormdata) ? newFormdata : formdata;
-    const controls = newFormdata.map(item => {
+    const controls: FormControl[] = newFormdata.map(item => {
       if (_.get(item, 'advancedSetting.defsource')) {
         return { ...item, value: getDynamicValue(newFormdata, item) };
       }
@@ -690,7 +691,7 @@ function NewRecordForm(props) {
             sheetId: props.worksheetId,
             success: res => {
               const tempId = res.tempId; // 临时记录ID
-              const controls = res.controls;
+              const controls: FormControl[] = res.controls;
               const data = newFormdata.map(item => {
                 const it = _.find(controls, v => v.controlId === item.controlId) || {};
 
@@ -852,7 +853,7 @@ function NewRecordForm(props) {
     <RecordInfoContext.Provider
       value={{
         updateWorksheetControls: newControls => {
-          newControls.forEach(control => {
+          newControls.forEach((control: FormControl) => {
             try {
               if (control.type === 34) {
                 customwidget.current.dataFormat.data.filter(

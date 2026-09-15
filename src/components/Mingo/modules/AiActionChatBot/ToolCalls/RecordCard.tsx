@@ -5,6 +5,7 @@ import { LoadDiv } from 'ming-ui';
 import sheetAjax from 'src/api/worksheet';
 import CardCellControls from 'src/pages/worksheet/components/RelateRecordCards/CardCellControls';
 import { getTitleTextFromControls } from 'src/utils/control';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   padding: 16px;
@@ -26,7 +27,7 @@ function RecordCard({ showAsTitle, config, functionArguments }) {
     const worksheetId = functionArguments.worksheet_id;
     // 过滤掉空字段对象：AI 偶尔回吐 fields:[{},{}]，会让后端 HandleAIRequest 空引用异常
     const fields = (functionArguments.fields || []).filter(f => f && Object.keys(f).length > 0);
-    const rows = [fields];
+    const rows: RecordRow[] = [fields];
     sheetAjax.handleAIRequest({ worksheetId, rows }).then(async res => {
       const titleControl = find(get(res.worksheet, 'template.controls', []), c => c.attribute === 1);
       const updatedRow = res.data ? res.data[0] : {};

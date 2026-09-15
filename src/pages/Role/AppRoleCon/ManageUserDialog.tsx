@@ -12,6 +12,7 @@ import * as actions from 'src/pages/Role/AppRoleCon/redux/actions';
 import UserTable from 'src/pages/Role/AppRoleCon/UserCon/UserListCon/index.jsx';
 import 'src/pages/Role/style.less';
 import { canEditApp, canEditData, getUserRole } from 'src/pages/worksheet/redux/actions/util';
+import type { RootState } from 'src/redux/types';
 
 const Wrapper = styled.div`
   min-height: 640px; //最小高度
@@ -189,7 +190,7 @@ function ManageUserDialog(props) {
   );
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   appRole: state.appRole,
 });
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);

@@ -10,6 +10,7 @@ import { emitter, pathCompletion } from 'src/utils/common';
 import { checkCellIsEmpty, updateOptionsOfControls } from 'src/utils/control';
 import { handleRecordError } from 'src/utils/record';
 import { updateRecord } from '../common/recordInfo/crtl';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export async function downloadAttachmentById({
   fileId,
@@ -69,12 +70,12 @@ export function getFormDataForNewRecord({
       return;
     }
 
-    let controls = _.cloneDeep(worksheetInfo.template.controls);
+    let controls: FormControl[] = _.cloneDeep(worksheetInfo.template.controls);
 
     function handle() {
       try {
         controls = controls
-          .filter(c => !_.includes(FORM_HIDDEN_CONTROL_IDS, c.controlId))
+          .filter((c: FormControl) => !_.includes(FORM_HIDDEN_CONTROL_IDS, c.controlId))
           .map(control => {
             if (
               control.type === 29 &&
@@ -118,7 +119,7 @@ export function getFormDataForNewRecord({
 
             return { ...control };
           });
-        controls = controls.map(control => {
+        controls = controls.map((control: FormControl) => {
           const writeControl = _.find(writeControls, wc => control.controlId === wc.controlId) || {};
 
           if (writeControl.defsource) {
@@ -227,7 +228,7 @@ export function submitNewRecord(props) {
     setServiceError,
     alertLockError,
   } = props;
-  const receiveControls = formdata
+  const receiveControls: FormControl[] = formdata
     .filter(item => item.type !== 30 && item.type !== 31 && item.type !== 32 && item.type !== 51)
     .map(c => formatControlToServer(c, { isNewRecord: true }))
     .filter(item => !checkCellIsEmpty(item.value));
@@ -278,7 +279,7 @@ export function submitNewRecord(props) {
       }
 
       if (res.resultCode === 1) {
-        let newControls;
+        let newControls: FormControl[];
         let newOptionControls = updateOptionsOfControls(formdata, res.data);
 
         if (newOptionControls.length && _.isFunction(updateWorksheetControls)) {

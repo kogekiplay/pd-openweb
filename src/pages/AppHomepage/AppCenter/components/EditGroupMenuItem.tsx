@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
-import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
+import _ from 'lodash';
 import styled from 'styled-components';
 import { Checkbox, Icon, MenuItem } from 'ming-ui';
 import { FlexCenter, VerticalMiddle } from 'worksheet/components/Basics';
@@ -65,7 +65,7 @@ function EditPanel(props) {
     projectGroupsLang,
   } = props;
   const [selectedIds, setSelectedIds] = useState(selectedGroupIds);
-  const [keywords, setKeywords] = useState();
+  const [keywords, setKeywords] = useState<string | undefined>();
   const filteredPersonalGroups = personalGroups.filter(
     g => !keywords || new RegExp(keywords.toLowerCase()).test((g.name || '').toLowerCase()),
   );

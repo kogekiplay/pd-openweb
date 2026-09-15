@@ -2,9 +2,10 @@ import React, { Fragment, useState } from 'react';
 import { Checkbox } from 'ming-ui';
 import { getAdvanceSetting, handleAdvancedSettingChange } from '../../../../util/setting';
 import SubListSummaryWidget from './SubListSummaryWidget';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function SubListStatisticsConfig(props) {
-  const { data, controls, onChange } = props;
+  const { data, controls, onChange }: { controls: FormControl[]; [key: string]: any } = props;
   const { openstatistics, statisticsseting, layercontrolid } = getAdvanceSetting(data);
   const [visible, setVisible] = useState(false);
   const hasStatisticsSetting = safeParse(statisticsseting || '[]').length > 0;

@@ -5,6 +5,7 @@ import Abstract from './Abstract';
 import CoverSetting from './CoverSettingCon';
 import DisplayControl from './DisplayControl';
 import TitleControl from './TitleControl';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const isVisible = control => {
   let { fieldPermission = '111' } = control;
@@ -17,7 +18,7 @@ const isVisible = control => {
   return true;
 };
 
-const excludeTitleControls = controls => controls.filter(item => item.attribute !== 1);
+const excludeTitleControls = controls => controls.filter((item: FormControl) => item.attribute !== 1);
 
 // 默认取标题控件 和 前三个控件
 const getDefaultShowControls = controls => {
@@ -34,10 +35,10 @@ export default function CardDisplay(props) {
   useEffect(() => {
     if (!worksheetId) return;
     worksheetAjax.getWorksheetInfo({ worksheetId, getTemplate: true }).then(data => {
-      const controls = _.get(data, ['template', 'controls']);
+      const controls: FormControl[] = _.get(data, ['template', 'controls']);
       const excludedTitle = excludeTitleControls(controls);
       const defaultShowControls = getDefaultShowControls(excludedTitle);
-      const coverColumns = controls.filter(l => isVisible(l)).filter(c => !!c.controlName);
+      const coverColumns = controls.filter((l: FormControl) => isVisible(l)).filter(c => !!c.controlName);
       setInfo({
         sheetInfo: data,
         controls,

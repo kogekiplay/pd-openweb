@@ -15,6 +15,7 @@ import RecordOperate from 'worksheet/components/RecordOperate';
 import { VIEW_CONFIG_RECORD_CLICK_ACTION } from 'worksheet/constants/enum';
 import { getHighAuthControls } from 'src/utils/control';
 import { handleRowData } from 'src/utils/record';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   user-select: none;
@@ -174,7 +175,7 @@ export default function RowHead(props) {
     refreshWorksheetControls = () => {},
     onOpenRecord = () => {},
     printCharge,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   let { className } = props;
   // 必须给初值 false：不给的话状态类型被推成 undefined，三处 setSelectAllPanelVisible(true/false) 全是 TS2345。
   // 运行时等价（undefined 本来也是假值），rc-trigger 5 给 onPopupVisibleChange
@@ -187,7 +188,7 @@ export default function RowHead(props) {
   const recordOperateVisible = showOperate && !readonly && !isTrash && !isDraftTable;
   const dataLength = data.filter(r => r.rowid !== 'groupTitle').length;
 
-  function handleCheckAll(force) {
+  function handleCheckAll(force?) {
     if (canSelectAll && allWorksheetIsSelected) {
       onSelectAllWorksheet(false);
       if (force) {
@@ -247,7 +248,7 @@ export default function RowHead(props) {
                 printCharge,
                 view,
               }}
-              formdata={controls.map(c => ({ ...c, value: row[c.controlId] }))}
+              formdata={controls.map((c: FormControl) => ({ ...c, value: row[c.controlId] }))}
               shows={['share', 'print', 'copy', 'copyId', 'openinnew', 'recreate', 'fav', 'lock']}
               allowCopy={allowAdd && row.allowedit}
               allowEdit={row.allowedit}

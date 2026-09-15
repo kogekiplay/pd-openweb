@@ -34,6 +34,7 @@ import ErrorDialog from './components/ErrorDialog';
 import { useKnowledgeDetail } from './core/hooks';
 import { getBannerConfig } from './utils';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const FORMAT_TIME = 'YYYY-MM-DD HH:mm:ss';
 
@@ -131,7 +132,7 @@ const KnowledgeWorksheet = props => {
     return allWorksheetList.filter(item => !selectedWorksheetIdSet.has(item.worksheetId));
   }, [allWorksheetList, selectedWorksheetIdSet]);
 
-  const openDialog = (type, updateType = 'edit') =>
+  const openDialog = (type: string, updateType = 'edit') =>
     setDialogState({ type, isChecked: false, loading: false, updateType });
 
   const closeDialog = () => setDialogState(prev => ({ ...prev, type: null }));
@@ -214,7 +215,7 @@ const KnowledgeWorksheet = props => {
     let nextControlsMap = { ...worksheetControlsMap };
 
     let filterConditions = nextFilterMap[filterId];
-    let worksheetControls = nextControlsMap[worksheetId];
+    let worksheetControls: FormControl[] = nextControlsMap[worksheetId];
 
     if (!filterConditions?.length || !worksheetControls?.length) {
       const res = await fetchFilterData({
@@ -267,7 +268,7 @@ const KnowledgeWorksheet = props => {
     openDialog(DIALOG_TYPE_MAP.COLLECTION_SCOPE);
   };
 
-  const getFilterConditions = async (item, filterId) => {
+  const getFilterConditions = async (item, filterId?) => {
     const filterItems = formatValuesOfOriginConditions(item.filterConditions);
 
     const data = await worksheetAjax.saveWorksheetFilter({
@@ -446,7 +447,7 @@ const KnowledgeWorksheet = props => {
               filterId,
               discussionEnabled,
               attachmentParseEnhanced,
-            } = item;
+            }: { controls: FormControl[]; [key: string]: any } = item;
             return (
               <div className="worksheetItem" key={id} onClick={() => handleOpenChunkPreview(knowledgeDetail, item)}>
                 {item.isDeleted ? (

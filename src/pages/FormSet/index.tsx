@@ -22,6 +22,7 @@ import Share from './containers/Share';
 import Sidenav from './containers/Sidenav';
 import SubmitFormSetting from './containers/SubmitFormSetting/index';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function FormSet(props) {
   const { match = { params: {} } } = props;
@@ -67,7 +68,7 @@ export default function FormSet(props) {
           setNoRight(true);
           setLoading(false);
         } else {
-          const controls = _.sortBy(data.template.controls, o => o.row);
+          const controls: FormControl[] = _.sortBy(data.template.controls, o => o.row);
           setWorksheetName(data.name);
           setLoading(false);
           setWorksheetControls(data.template.controls);

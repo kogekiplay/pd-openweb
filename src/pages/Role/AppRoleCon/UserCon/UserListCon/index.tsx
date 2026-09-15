@@ -252,7 +252,7 @@ export default class UserListCon extends React.Component<any, any> {
     return userIds.map(o => o.split('_')[0]);
   };
   //批量编辑用户角色,添加角色
-  editRole = (roleIds, cb) => {
+  editRole = (roleIds, cb?) => {
     const { roleId, isExternal } = this.props;
     const { appRole = {}, setOutsourcingList, setUserList, setUser, getRoleSummary } = this.props;
     const { outsourcing = {}, userList = [], user = {}, roleInfos = [] } = appRole;

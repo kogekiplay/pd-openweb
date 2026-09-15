@@ -20,6 +20,7 @@ import { dateConvertToUserZone } from 'src/utils/project';
 import StepHeader from '../ExecDialog/StepHeader';
 import WorkflowAction, { TaskRevokeAction } from './Action';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const isMobile = browserIsMobile();
 const LoadableMobileProcessRecord = lazy(() => import('src/pages/Mobile/ProcessRecord'));
@@ -388,7 +389,7 @@ export default function SheetWorkflow(props) {
     appId,
     controls = [],
     reloadRecord,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const [loading, setLoading] = useState(true);
   const [list, setList] = useState([]);
   const [currentWorkflow, setCurrentWorkflow] = useState({});

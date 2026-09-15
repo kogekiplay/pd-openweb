@@ -1,4 +1,5 @@
-﻿export function postId(state = null, action) {
+import type { ReduxAction } from 'src/redux/types';
+﻿export function postId(state = null, action: ReduxAction) {
   switch (action.type) {
     case 'POST_DETAIL_CHANGE_ID':
       return action.postId || '';
@@ -7,7 +8,7 @@
   }
 }
 
-export function errors(state = {}, action) {
+export function errors(state = {}, action: ReduxAction) {
   switch (action.type) {
     case 'POST_DETAIL_CHANGE_ID':
       state = Object.assign({}, state);

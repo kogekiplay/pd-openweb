@@ -349,7 +349,7 @@ export default class ProcessMatters extends Component<any, any> {
       ),
     });
   };
-  hanndleApprove = (type, batchType) => {
+  hanndleApprove = (type: number, batchType: string) => {
     const { approveCards } = this.state;
     const rejectCards = approveCards.filter(c => '5' in _.get(c, 'flowNode.btnMap'));
     const cards = type === 5 ? rejectCards : approveCards;

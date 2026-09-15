@@ -39,7 +39,7 @@ export default ({ isSingle = false, controls, fields, updateSource }) => {
     { title: _l('刷新他表字段和汇总结果'), controls: getOtherTableControls(), hasChildren: true },
   ];
 
-  const handleAllChecked = (controls, checked) => {
+  const handleAllChecked = (controls, checked: boolean) => {
     const ids = controls.map(o => o.controlId);
 
     updateSource({

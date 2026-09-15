@@ -1,6 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import RecordInfoWrapper from 'src/pages/worksheet/common/recordInfo/RecordInfoWrapper';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 function RecordInfoForGallery(props) {
   const { base, worksheetInfo, galleryview, sheetSwitchPermit, views, state, onChangeState, updateRecordEvent } = props;
@@ -10,7 +11,7 @@ function RecordInfoForGallery(props) {
   const currentView = views.find(o => o.viewId === base.viewId) || {};
 
   const isGroup = _.get(currentView, 'advancedSetting.groupsetting');
-  const list = isGroup ? (gallery.find(o => o.key === rowKey) || {}).rows.map(o => safeParse(o)) : gallery;
+  const list = isGroup ? (gallery.find(o => o.key === rowKey) || {}).rows.map((o: RecordRow) => safeParse(o)) : gallery;
 
   const recordInfo = {
     visible: true,

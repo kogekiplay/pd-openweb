@@ -4,9 +4,10 @@ import { DndProvider } from 'react-dnd';
 import { flatten } from 'lodash';
 import { genControlsByWidgets, genWidgetsByControls } from '../util';
 import DisplayRow from './displayRow';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function PublicFormDisplay(props) {
-  const { controls, onChange, ...rest } = props;
+  const { controls, onChange, ...rest }: { controls: FormControl[]; [key: string]: any } = props;
 
   const [widgets, setWidgets] = useState([]);
 

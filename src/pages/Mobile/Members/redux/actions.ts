@@ -1,10 +1,11 @@
 import ajaxRequest from 'src/api/appManagement';
 import homeAppAjax from 'src/api/homeApp';
 import { APP_ROLE_TYPE } from 'src/pages/worksheet/constants/enum.js';
+import type { AppDispatch, GetState } from 'src/redux/types';
 import { getTranslateInfo } from 'src/utils/app';
 
 // 申请状况
-const getAppApplyInfo = appId => (dispatch, getState) => {
+const getAppApplyInfo = appId => (dispatch: AppDispatch, getState: GetState) => {
   const { memberData } = getState().mobile;
   ajaxRequest.getAppApplyInfo({ appId }).then(res => {
     dispatch({

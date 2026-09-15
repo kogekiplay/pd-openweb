@@ -1,4 +1,4 @@
-﻿import React, { Component, Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
@@ -35,6 +35,7 @@ import {
 } from '../../enum';
 import { completeAdminLogLinks } from '../../utils';
 import WorksheetLogDrawer from '../WorksheetLogDrawer';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const FlexWrap = styled.div`
   flex: 1;
@@ -757,7 +758,7 @@ export default class AppAndWorksheetLog extends Component<any, any> {
     sheetAjax
       .getWorksheetInfo({ getRules: true, getTemplate: true, worksheetId: _.get(record, 'appItem.id') })
       .then(res => {
-        const controls = (res.template.controls || []).map(it => {
+        const controls: FormControl[] = (res.template.controls || []).map(it => {
           return { ...it };
         });
 

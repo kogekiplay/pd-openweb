@@ -6,8 +6,9 @@ import { dealChildren } from 'src/pages/worksheet/redux/reducers/util.js';
 import { renderText as renderCellText } from 'src/utils/control';
 import { getAdvanceSetting } from 'src/utils/control';
 import { AREA, TYPES } from './constants.js';
+import type { FormControl } from 'src/utils/controlTypes';
 
-export function sortDataByCustomNavs(data, view = {}, controls = []) {
+export function sortDataByCustomNavs(data, view = {}, controls: FormControl[] = []) {
   let customItems = safeParse(_.get(view, 'advancedSetting.customnavs'), 'array');
 
   if (_.get(view, 'advancedSetting.navshow') === '2') {
@@ -36,7 +37,7 @@ export function sortDataByCustomNavs(data, view = {}, controls = []) {
 }
 
 export const getSourceControlByNav = (navGroup, controls) => {
-  let source = controls.find(o => o.controlId === navGroup.controlId) || {};
+  let source = controls.find((o: FormControl) => o.controlId === navGroup.controlId) || {};
   return {
     ...source,
     type: 30 === source.type ? source.sourceControlType : source.type,
@@ -82,7 +83,7 @@ export const renderTxt = (source, keywords, item, control, viewId, navGroup) => 
   return control ? renderCellText(Object.assign({}, control, { value: item[control.controlId] })) : _l('未命名');
 };
 
-export const getListByNavlayer = (data, level, info) => {
+export const getListByNavlayer = (data, level: number, info) => {
   const treeData = dealData(data);
   return expandedHierarchy({ treeData, data: data, level, info });
 };
@@ -154,7 +155,7 @@ export const formatData = (source, navGroup, controls, view) => {
     case 9:
     case 10:
     case 11:
-      const controlOptions = (controls.find(o => o.controlId === _.get(navGroup, 'controlId')) || []).options || [];
+      const controlOptions = (controls.find((o: FormControl) => o.controlId === _.get(navGroup, 'controlId')) || []).options || [];
       data = (navGroup.isAsc ? controlOptions : [...controlOptions].reverse())
         .filter(o => !o.isDeleted)
         .map(o => ({
@@ -166,7 +167,7 @@ export const formatData = (source, navGroup, controls, view) => {
     case 28: // Level
       const maxLevel = parseInt(
         _.get(
-          controls.find(o => o.controlId === _.get(source, 'controlId')),
+          controls.find((o: FormControl) => o.controlId === _.get(source, 'controlId')),
           'advancedSetting.max',
           '1',
         ),
@@ -222,7 +223,7 @@ export const buildNavGroupFilters = (view, source, controls, keywords) => {
       groupFilters: [
         {
           dataType: (
-            ((controls.find(o => o.controlId === _.get(source, 'controlId')) || {}).relationControls || []).find(
+            ((controls.find((o: FormControl) => o.controlId === _.get(source, 'controlId')) || {}).relationControls || []).find(
               o => o.controlId === navsearchcontrol,
             ) || {}
           ).type,

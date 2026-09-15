@@ -10,6 +10,7 @@ import { dialogSelectUser, quickSelectUser } from 'ming-ui/functions';
 import ajaxRequest from 'src/api/taskCenter';
 import 'src/components/autoTextarea/autoTextarea';
 import { expireDialogAsync } from 'src/components/upgradeVersion';
+import type { RootState } from 'src/redux/types';
 import config from '../../config/config';
 import { updateTaskCharge } from '../../redux/actions';
 import { listLoadingContent } from '../../utils/taskComm';
@@ -33,7 +34,8 @@ const taskStageSettings = {
   globalEvent: null,
   isDragEnd: true,
   dragAuth: false,
-  ajaxPost: '',
+  // 在途 ajax 句柄（要 abort），初值 '' 会把它推成 string
+  ajaxPost: '' as ApiResult | string,
 };
 
 class TaskStage extends Component<any, any> {
@@ -146,7 +148,7 @@ class TaskStage extends Component<any, any> {
       );
     });
   }
-  renderChargeHeaderAvatar(params) {
+  renderChargeHeaderAvatar(params?) {
     const { taskConfig } = this.props;
     $('#tasks .listStageContent .chargeHeaderAvatar').each((i, ele) => {
       let $ele = $(ele);
@@ -1633,7 +1635,7 @@ class TaskStage extends Component<any, any> {
   /**
    * 创建
    */
-  addNewTaskEnter($el, isEnter) {
+  addNewTaskEnter($el, isEnter?) {
     const $parent = $el.parent();
     const taskName = $parent.find('.teaStageName').val().trim();
 
@@ -1760,4 +1762,4 @@ class TaskStage extends Component<any, any> {
   }
 }
 
-export default connect(state => state.task)(TaskStage);
+export default connect((state: RootState) => state.task)(TaskStage);

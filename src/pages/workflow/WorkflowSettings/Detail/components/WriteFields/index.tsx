@@ -1,4 +1,4 @@
-﻿import React, { Component, Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -69,7 +69,7 @@ export default class WriteFields extends Component<any, any> {
   /**
    * 是否禁用
    */
-  isDisabled(item, type) {
+  isDisabled(item, type?: string) {
     const { readonlyControlTypes, selectNodeType } = this.props;
 
     if (
@@ -150,7 +150,7 @@ export default class WriteFields extends Component<any, any> {
     }
   }
 
-  onChange(item, value, key = 'property') {
+  onChange(item, value: number | string, key = 'property') {
     const { data, updateSource } = this.props;
     const { showTableControls, selectItem } = this.state;
     const formProperties = _.cloneDeep(showTableControls ? selectItem.subFormProperties : data);
@@ -335,7 +335,7 @@ export default class WriteFields extends Component<any, any> {
   /**
    * 渲染字段
    */
-  renderField(data, showCard, isChildTable, isSubData) {
+  renderField(data, showCard, isChildTable, isSubData?) {
     const { hideTypes, selectNodeType } = this.props;
     const { foldIds, keywords } = this.state;
 

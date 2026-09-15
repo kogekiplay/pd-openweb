@@ -6,7 +6,7 @@ import { genBotSessionId } from 'src/utils/agentSession';
 import { getTranslateInfo } from 'src/utils/app';
 import { replaceControlsTranslateInfo } from 'src/utils/translate';
 
-export const setLoading = (dispatch, loading) => {
+export const setLoading = (dispatch, loading: boolean) => {
   dispatch({ type: 'SET_LOADING', loading });
 };
 

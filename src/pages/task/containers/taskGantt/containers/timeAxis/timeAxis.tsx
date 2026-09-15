@@ -1,6 +1,7 @@
-﻿import React, { Component } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import type { RootState } from 'src/redux/types';
 import config from '../../config/config';
 import utils from '../../utils/utils';
 import './timeAxis.less';
@@ -158,7 +159,7 @@ class TimeAxis extends Component<any, any> {
   }
 }
 
-export default connect(state => {
+export default connect((state: RootState) => {
   const { stateConfig, timeAxisSource } = state.task;
 
   return {

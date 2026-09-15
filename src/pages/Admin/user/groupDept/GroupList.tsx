@@ -243,7 +243,7 @@ export default class GroupsList extends Component<any, any> {
     });
   }
 
-  optionAlert = (title, type) => {
+  optionAlert = (title, type?: number) => {
     alert({
       msg: title,
       type: type,
@@ -252,7 +252,7 @@ export default class GroupsList extends Component<any, any> {
   };
 
   //更新关联部门
-  updateDeptMappingGroup = (groupId, isVerified, departmentId) => {
+  updateDeptMappingGroup = (groupId, isVerified: boolean, departmentId) => {
     let reqData = {
       groupId: groupId,
       isVerified: isVerified,
@@ -276,7 +276,7 @@ export default class GroupsList extends Component<any, any> {
     });
   };
 
-  handleOpen(id) {
+  handleOpen(id?) {
     Confirm({
       title: _l('开启群组'),
       description: _l('确认开启所选择的群组?'),
@@ -297,7 +297,7 @@ export default class GroupsList extends Component<any, any> {
     });
   }
 
-  handleClose(id) {
+  handleClose(id?) {
     Confirm({
       title: _l('是否确认关闭群组？'),
       description: (
@@ -329,7 +329,7 @@ export default class GroupsList extends Component<any, any> {
     });
   }
 
-  handleDissolve(id) {
+  handleDissolve(id?) {
     Confirm({
       title: _l('是否确认解散？'),
       description: _l('群组解散后，将永久删除该群组。不可恢复'),
@@ -366,7 +366,7 @@ export default class GroupsList extends Component<any, any> {
   }
 
   //下拉筛选
-  handleSelectChange(value, key) {
+  handleSelectChange(value, key: string) {
     this.setState(
       {
         [key]: value,

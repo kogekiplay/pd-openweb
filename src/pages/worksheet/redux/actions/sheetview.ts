@@ -1,4 +1,4 @@
-﻿import _, {
+import _, {
   assign,
   find,
   findKey,
@@ -37,6 +37,8 @@ import {
 } from 'src/utils/worksheet';
 import { updateNavGroup } from './navFilter.js';
 import { sortDataByGroupItems } from './util.js';
+import type { AppDispatch, GetState, RootState } from 'src/redux/types';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const DEFAULT_PAGESIZE = 50;
 const DEFAULT_GROUP_PAGESIZE = 20;
@@ -47,7 +49,7 @@ function getGroupPageSize(maxCount) {
   return pageSize > 0 ? pageSize : DEFAULT_GROUP_PAGESIZE;
 }
 
-function checkIsTreeTableView(state = {}) {
+function checkIsTreeTableView(state: RootState) {
   const { base, views } = state.sheet;
   const view = find(views, { viewId: base.viewId });
   return view && view.viewType === 2 && get(view, 'advancedSetting.hierarchyViewType') === '3';
@@ -71,7 +73,7 @@ function flatRowsFromGroups(groups, groupControl, view, controls) {
     };
     result.push(groupRow);
     result.push(
-      ...group.rows.map(rowStr => ({
+      ...group.rows.map((rowStr: RecordRow) => ({
         ...safeParse(rowStr),
         groupKey: group.key,
         group: {
@@ -90,12 +92,18 @@ function flatRowsFromGroups(groups, groupControl, view, controls) {
   return result;
 }
 
-export function updateTreeNodeExpansion(row = {}, { expandAll, forceUpdate, runTimes = 0 } = {}) {
-  return (dispatch, getState) => {
-    const { base = {}, sheetview = {}, navGroupFilters, filters: { filtersGroup } = {} } = getState().sheet;
+export function updateTreeNodeExpansion(
+  row: RecordRow = {},
+  { expandAll, forceUpdate, runTimes = 0 }: { expandAll?: boolean; forceUpdate?: boolean; runTimes?: number } = {},
+) {
+  return (dispatch: AppDispatch, getState: GetState) => {
+    // sheet.sheetview 这一层的 reducer 初值就是 {}，解构默认值又把它钉成 {}，
+    // 所以下面读 treeTableViewData / sheetViewData 拿不到类型。先取出来再按需读。
+    const { base = {}, navGroupFilters, filters: { filtersGroup } = {} } = getState().sheet;
+    const sheetview: Record<string, any> = getState().sheet.sheetview || {};
     const { appId, viewId, worksheetId } = base;
     const { treeMap, maxLevel } = sheetview.treeTableViewData || {};
-    const { rows = [] } = sheetview.sheetViewData || {};
+    const { rows = [] }: { rows: RecordRow[]; [key: string]: any } = sheetview.sheetViewData || {};
 
     if (runTimes > 20) {
       return;
@@ -161,11 +169,19 @@ export const fetchRows = ({
   noLoading,
   noClearSelected,
   updateWorksheetControls,
+}: {
+  /** 树形表格：要展开到第几层 */
+  levelCount?: number;
+  isFirst?: boolean;
+  changeView?: boolean;
+  noLoading?: boolean;
+  noClearSelected?: boolean;
+  updateWorksheetControls?: boolean;
 } = {}) => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, filters, views, sheetview, quickFilter, navGroupFilters } = getState().sheet;
     const { appId, viewId, worksheetId, forcePageSize, maxCount, chartId, showAsSheetView } = base;
-    let controls = getState().sheet.controls;
+    let controls: FormControl[] = getState().sheet.controls;
     const view = _.find(views, { viewId });
     const isGroupedView = !!getGroupControlId(view);
     const abortController = sheetview.abortController;
@@ -276,7 +292,7 @@ export const fetchRows = ({
     fetchRowsAjax
       .then(res => {
         if (updateWorksheetControls && _.get(res, 'template.controls')) {
-          const newControls = _.get(res, 'template.controls').filter(
+          const newControls: FormControl[] = _.get(res, 'template.controls').filter(
             c =>
               c.controlId.length === 24 ||
               _.includes(
@@ -297,7 +313,7 @@ export const fetchRows = ({
           dispatch(setViewLayout(viewId));
         }
 
-        let rows = res.data;
+        let rows: RecordRow[] = res.data;
 
         if (groupControl && !isTreeTableView) {
           rows = flatRowsFromGroups(rows, groupControl, view, controls);
@@ -312,7 +328,7 @@ export const fetchRows = ({
         if (isGroupedView) {
           dispatch({
             type: 'WORKSHEET_SHEETVIEW_UPDATE_COUNT',
-            count: sum(rows.filter(r => r.rowid === 'groupTitle').map(r => r.count)),
+            count: sum(rows.filter((r: RecordRow) => r.rowid === 'groupTitle').map(r => r.count)),
           });
         }
 
@@ -367,14 +383,14 @@ export const fetchRows = ({
 };
 
 export const loadGroupMore = groupKey => {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, filters, sheetview, quickFilter, navGroupFilters } = getState().sheet;
     const { appId, viewId, worksheetId, maxCount } = base;
     const abortController = sheetview.abortController;
     let { sortControls } = sheetview.sheetFetchParams;
     const currentRows = get(sheetview, 'sheetViewData.rows', []);
     const loadMoreRow = find(currentRows, r => r.groupKey === groupKey && r.rowid === 'loadGroupMore');
-    const rows = currentRows.filter(r => !(r.groupKey === groupKey && r.rowid === 'loadGroupMore'));
+    const rows: RecordRow[] = currentRows.filter(r => !(r.groupKey === groupKey && r.rowid === 'loadGroupMore'));
     const groupFetchParams = sheetview.groupFetchParams;
     const prevPageIndex = get(groupFetchParams, `${groupKey}.pageIndex`, 1);
     const nextPageIndex = prevPageIndex + 1;
@@ -414,11 +430,11 @@ export const loadGroupMore = groupKey => {
           ...safeParse(rowStr),
           groupKey,
         }));
-        let newRows = rows;
+        let newRows: RecordRow[] = rows;
 
         if (!isEmpty(newRowsOfGroup)) {
           newRows = [...rows.slice(0, lastRowIndex + 1), ...newRowsOfGroup, ...rows.slice(lastRowIndex + 1)];
-          const rowsOfGroup = newRows.filter(r => r.groupKey === groupKey);
+          const rowsOfGroup = newRows.filter((r: RecordRow) => r.groupKey === groupKey);
           const group = find(newRows, r => r.rowid === 'groupTitle' && r.key === groupKey);
 
           if (group && rowsOfGroup.length < group.count) {
@@ -455,7 +471,7 @@ export const loadGroupMore = groupKey => {
   };
 };
 
-export const setRowsEmpty = () => dispatch => {
+export const setRowsEmpty = () => (dispatch: AppDispatch) => {
   dispatch({
     type: 'WORKSHEET_SHEETVIEW_FETCH_ROWS',
     rows: [],
@@ -472,7 +488,7 @@ export const sortByControl = sortControl => ({
 });
 
 export function updateViewPermission(param) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base } = getState().sheet;
     const { appId, viewId, worksheetId } = base;
     worksheetAjax
@@ -498,7 +514,7 @@ export function updateViewPermission(param) {
 }
 
 export function updateControlOfRow({ cell = {}, cells = [], recordId, rules }, options = {}) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     if (!_.isEmpty(cell) && _.isEmpty(cells)) {
       cells = [cell];
     }
@@ -605,7 +621,7 @@ export function updateControlOfRow({ cell = {}, cells = [], recordId, rules }, o
 }
 
 export function insertToGroupedRow(newRow) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     if (!newRow.group) {
       return;
     }
@@ -627,12 +643,12 @@ export function insertToGroupedRow(newRow) {
       lastRowIndexOfGroup = groupIndex;
     }
 
-    let newRows = [
+    let newRows: RecordRow[] = [
       ...rows.slice(0, lastRowIndexOfGroup + 1),
       { ...newRow, groupKey: newRow.group.key, group: newRow.group },
       ...rows.slice(lastRowIndexOfGroup + 1),
     ];
-    newRows = newRows.map(row => {
+    newRows = newRows.map((row: RecordRow) => {
       if (row.rowid === 'groupTitle' && row.key === newRow?.group?.key) {
         row = {
           ...row,
@@ -654,11 +670,11 @@ export function insertToGroupedRow(newRow) {
 }
 
 export function updateRows(rowIds, value) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     if (value.group) {
-      let rows = get(getState().sheet.sheetview.sheetViewData, 'rows', []);
+      let rows: RecordRow[] = get(getState().sheet.sheetview.sheetViewData, 'rows', []);
       const prevRow = find(rows, r => r.rowid === value.rowid);
-      rows = rows.filter(row => row.rowid !== value.rowid);
+      rows = rows.filter((row: RecordRow) => row.rowid !== value.rowid);
       const groupOldRow = find(rows, r => r.rowid === 'groupTitle' && r.key === prevRow.groupKey);
       const lastRowIndexOfGroup = _.findLastIndex(rows, r => r.groupKey === value.group.key);
 
@@ -667,12 +683,12 @@ export function updateRows(rowIds, value) {
       }
 
       const oldRow = rows[lastRowIndexOfGroup];
-      let newRows = [
+      let newRows: RecordRow[] = [
         ...rows.slice(0, lastRowIndexOfGroup + 1),
         { ...pick(oldRow, ['allowedit', 'allowdelete']), ...value, groupKey: value.group.key, group: value.group },
         ...rows.slice(lastRowIndexOfGroup + 1),
       ];
-      newRows = newRows.map(row => {
+      newRows = newRows.map((row: RecordRow) => {
         if (row.rowid === 'groupTitle') {
           let count = row.count;
 
@@ -714,7 +730,7 @@ export function refresh({
   noClearSelected,
   updateWorksheetControls,
 } = {}) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const {
       sheetview,
       filters,
@@ -766,8 +782,8 @@ export const setHighLight = (tableId, rowIndex) => {
   };
 };
 
-export const setHighLightOfRows = (rowIds, tableId) => {
-  return (dispatch, getState) => {
+export const setHighLightOfRows = (rowIds, tableId?) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { sheetview } = getState().sheet;
     const { rows } = sheetview.sheetViewData;
     dispatch(clearHighLight(tableId));
@@ -793,7 +809,7 @@ export const clearSelect = () => ({
 });
 
 export function hideRows(rowIds) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { sheetview, views, base = {} } = getState().sheet;
     const view = _.find(views, v => v.viewId === base.viewId);
     const { rows } = sheetview.sheetViewData;
@@ -801,10 +817,10 @@ export function hideRows(rowIds) {
     if (rowIds.length) {
       dispatch(clearSelect());
       if (getGroupControlId(view)) {
-        const newRows = rows.map(groupRow => {
+        const newRows: RecordRow[] = rows.map((groupRow: RecordRow) => {
           if (groupRow.rowid === 'groupTitle') {
             const deletedRowsLengthOfGroup = rowIds.filter(rowId => {
-              const row = rows.find(r => r.rowid === rowId);
+              const row = rows.find((r: RecordRow) => r.rowid === rowId);
               return row && row.groupKey === groupRow.key;
             }).length;
             return { ...groupRow, count: groupRow.count - deletedRowsLengthOfGroup };
@@ -824,7 +840,7 @@ export function hideRows(rowIds) {
       });
       if (checkIsTreeTableView(getState())) {
         rowIds.forEach(rowId => {
-          rows.forEach(row => {
+          rows.forEach((row: RecordRow) => {
             if (row.pid === rowId || includes(row.childrenids, rowId)) {
               const changes = {};
 
@@ -863,11 +879,11 @@ export function selectRows({ rows = [], selectAll }) {
 }
 
 export function changeToSelectCurrentPageFromSelectAll() {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { sheetview } = getState().sheet;
     const { rows = [] } = sheetview.sheetViewData;
     dispatch(clearSelect());
-    dispatch(selectRows({ rows: rows.filter(r => r.rowid !== 'groupTitle' && r.rowid !== 'loadGroupMore') }));
+    dispatch(selectRows({ rows: rows.filter((r: RecordRow) => r.rowid !== 'groupTitle' && r.rowid !== 'loadGroupMore') }));
   };
 }
 
@@ -892,7 +908,7 @@ export function frozenColumn(columnIndex) {
 }
 
 export function saveSheetLayout({ isApplyAll, closePopup = () => {} }) {
-  return function (dispatch, getState) {
+  return function (dispatch: AppDispatch, getState: GetState) {
     const { base, controls, views, sheetview, worksheetInfo } = getState().sheet;
     const { appId, worksheetId, viewId } = base;
     const { fixedColumnCount, sheetHiddenColumns, columnStyles, sheetColumnWidths } = sheetview.sheetViewConfig;
@@ -928,12 +944,12 @@ export function saveSheetLayout({ isApplyAll, closePopup = () => {} }) {
     if (sheetHiddenColumns.length) {
       updates.editAttrs = updates.editAttrs.concat('ShowControls');
       if (view.advancedSetting.customdisplay === '1' && view.showControls.length) {
-        updates.showControls = view.showControls.filter(cid => !_.find(sheetHiddenColumns, hcid => hcid === cid));
+        updates.showControls = view.showControls.filter((cid: FormControl) => !_.find(sheetHiddenColumns, hcid => hcid === cid));
       } else {
         updates.advancedSetting.customdisplay = '1';
         updates.showControls = controls
           .filter(
-            c =>
+            (c: FormControl) =>
               /^\w{24}$/.test(c.controlId) || _.includes(safeParse(view.advancedSetting.sysids, 'array'), c.controlId),
           )
           .sort((a, b) => (a.row * 10 + a.col > b.row * 10 + b.col ? 1 : -1))
@@ -991,7 +1007,7 @@ export function saveSheetLayout({ isApplyAll, closePopup = () => {} }) {
 }
 
 export function resetSheetLayout() {
-  return function (dispatch, getState) {
+  return function (dispatch: AppDispatch, getState: GetState) {
     const { base, views, worksheetInfo } = getState().sheet;
     const { viewId } = base;
     const view = _.find(views, v => v.viewId === viewId);
@@ -1020,7 +1036,7 @@ export const updateDefaultScrollLeft = value => ({
 
 // 更新每页数量
 export function changePageSize(pageSize, pageIndex, { refetch = true } = {}) {
-  return function (dispatch, getState) {
+  return function (dispatch: AppDispatch, getState: GetState) {
     const { base } = getState().sheet;
     saveLRUWorksheetConfig('WORKSHEET_VIEW_PAGESIZE', base.worksheetId, pageSize);
     dispatch({ type: 'WORKSHEET_SHEETVIEW_CHANGE_PAGESIZE', pageSize, pageIndex });
@@ -1031,7 +1047,7 @@ export function changePageSize(pageSize, pageIndex, { refetch = true } = {}) {
 }
 
 // 分页
-export function changePageIndex(pageIndex, sleep) {
+export function changePageIndex(pageIndex, sleep?) {
   return function (dispatch) {
     if (sleep) {
       setTimeout(() => {
@@ -1066,7 +1082,7 @@ function resetView() {
 
 export function setViewLayout(viewId) {
   // pageSize 更新逻辑
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base = {}, views, worksheetInfo } = getState().sheet;
     let view = _.find(views, { viewId });
 
@@ -1227,7 +1243,7 @@ export function setColumnStyles(view = {}, worksheetInfo, { updateWidths = true 
 }
 
 export function updateColumnStyles(changes) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { sheetview } = getState().sheet;
     const { columnStyles } = sheetview.sheetViewConfig;
     dispatch({
@@ -1238,7 +1254,7 @@ export function updateColumnStyles(changes) {
 }
 
 export function saveColumnStylesToLocal(changes) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { sheetview, base } = getState().sheet;
     const viewId = get(base, 'viewId');
 
@@ -1258,7 +1274,7 @@ export function saveColumnStylesToLocal(changes) {
 }
 
 function triggerGroupedSummary() {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base } = getState().sheet;
     const { viewId } = base;
     const groupedSavedData = safeParse(getLRUWorksheetConfig('GROUPED_WORKSHEET_VIEW_SUMMARY_TYPES', viewId));
@@ -1279,7 +1295,7 @@ function triggerGroupedSummary() {
 }
 
 export function getWorksheetSheetViewSummary({ reset = false, groupArgs = {} } = {}) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, sheetview, filters, quickFilter, navGroupFilters, views = [] } = getState().sheet;
     const { appId, viewId, worksheetId, chartId } = base;
     const { rowsSummary } = sheetview.sheetViewData;
@@ -1365,12 +1381,12 @@ export function getWorksheetSheetViewSummary({ reset = false, groupArgs = {} } =
 }
 
 export function changeWorksheetSheetViewSummaryType({ controlId, value, groupArgs = {} }) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { sheetview, base } = getState().sheet;
     const { rows = [], rowsSummary, groupRowsSummary } = sheetview.sheetViewData;
     const { viewId } = base;
     let newTypes = {};
-    const groupRows = rows.filter(row => row.rowid === 'groupTitle');
+    const groupRows = rows.filter((row: RecordRow) => row.rowid === 'groupTitle');
 
     if (!groupArgs.groupKey) {
       newTypes = Object.assign({}, rowsSummary.types, { [controlId]: value });
@@ -1417,8 +1433,8 @@ export function changeWorksheetSheetViewSummaryType({ controlId, value, groupArg
   };
 }
 
-export function addRecord(records, afterRowId) {
-  return (dispatch, getState) => {
+export function addRecord(records, afterRowId?) {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const state = getState();
     const { sheetview, base = {}, views = [], controls = [] } = state.sheet;
     const { worksheetId, viewId } = base;
@@ -1444,7 +1460,7 @@ export function addRecord(records, afterRowId) {
     dispatch(getWorksheetSheetViewSummary());
     if (afterRowId) {
       const afterRowIndex = _.findIndex(rows, row => row.rowid === afterRowId);
-      const newRows = _.isUndefined(afterRowId)
+      const newRows: RecordRow[] = _.isUndefined(afterRowId)
         ? [...records, ...rows]
         : [...rows.slice(0, afterRowIndex + 1), ...records, ...rows.slice(afterRowIndex + 1)];
       dispatch({
@@ -1524,9 +1540,9 @@ export function changeTreeTableViewLevelCount(levelCount) {
  * 展开所有节点
  */
 export function expandAllTreeTableViewNode() {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { sheetview = {} } = getState().sheet;
-    const { rows = [] } = sheetview.sheetViewData || {};
+    const { rows = [] }: { rows: RecordRow[]; [key: string]: any } = sheetview.sheetViewData || {};
     const { treeMap } = sheetview.treeTableViewData || {};
     const needLoadNodes = Object.keys(treeMap)
       .filter(key => treeMap[key].folded)
@@ -1545,7 +1561,7 @@ export function expandAllTreeTableViewNode() {
  * 收起所有节点
  */
 export function collapseAllTreeTableViewNode() {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { sheetview = {} } = getState().sheet;
     const { treeMap } = sheetview.treeTableViewData || {};
     dispatch({
@@ -1563,11 +1579,11 @@ export function collapseAllTreeTableViewNode() {
  * 重新渲染树
  */
 export function refreshTreeOfTreeTableView(cb = () => {}) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { sheetview = {} } = getState().sheet;
     const oldTreeMap = get(sheetview, 'treeTableViewData.treeMap');
-    const { rows = [] } = sheetview.sheetViewData || {};
-    const { treeMap, maxLevel } = treeDataUpdater({}, { rootRows: rows.filter(r => !r.pid), rows });
+    const { rows = [] }: { rows: RecordRow[]; [key: string]: any } = sheetview.sheetViewData || {};
+    const { treeMap, maxLevel } = treeDataUpdater({}, { rootRows: rows.filter((r: RecordRow) => !r.pid), rows });
     dispatch({
       type: 'UPDATE_TREE_TABLE_VIEW_DATA',
       value: {
@@ -1586,9 +1602,9 @@ export function refreshTreeOfTreeTableView(cb = () => {}) {
 }
 
 export function updateTreeByRowChange({ recordId, changedValue = {} } = {}) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const { base, views, sheetview = {} } = getState().sheet;
-    const { rows = [] } = sheetview.sheetViewData || {};
+    const { rows = [] }: { rows: RecordRow[]; [key: string]: any } = sheetview.sheetViewData || {};
     const { treeMap } = sheetview.treeTableViewData || {};
     const { viewId } = base;
     const view = find(views, v => v.viewId === viewId) || {};
@@ -1633,7 +1649,7 @@ export const initAbortController = () => ({
 });
 
 export function abortRequest() {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const abortController = get(getState(), 'sheet.sheetview.abortController');
 
     if (abortController) {
@@ -1644,12 +1660,12 @@ export function abortRequest() {
 }
 
 export function updateFolded(key, value) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     if (key === 'all') {
       if (value) {
         const { sheetview = {} } = getState().sheet;
-        const { rows = [] } = sheetview.sheetViewData || {};
-        const groupRows = rows.filter(row => row.rowid === 'groupTitle');
+        const { rows = [] }: { rows: RecordRow[]; [key: string]: any } = sheetview.sheetViewData || {};
+        const groupRows = rows.filter((row: RecordRow) => row.rowid === 'groupTitle');
         dispatch({
           type: 'WORKSHEET_SHEETVIEW_UPDATE_FOLDED',
           value: groupRows.reduce((a, b) => ({ ...a, [b.key]: value }), {}),

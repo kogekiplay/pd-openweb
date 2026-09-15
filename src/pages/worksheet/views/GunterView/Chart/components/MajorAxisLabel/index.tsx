@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { PERIOD_TYPE } from 'worksheet/views/GunterView/config';
+import type { RootState } from 'src/redux/types';
 
 const AxisLabel = styled.div`
   font-size: 14px;
@@ -126,5 +127,7 @@ let MajorAxisLabel = class MajorAxisLabel extends Component<any, any> {
     );
   }
 };
-MajorAxisLabel = connect(state => ({ ..._.pick(state.sheet.gunterView, ['chartScroll']) }))(MajorAxisLabel);
+MajorAxisLabel = connect((state: RootState) => ({ ..._.pick(state.sheet.gunterView, ['chartScroll']) }))(
+  MajorAxisLabel,
+);
 export default MajorAxisLabel;

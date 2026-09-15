@@ -5,6 +5,7 @@ import _ from 'lodash';
 import autoSize from 'ming-ui/components/AutoSize';
 import useButtonStatusOfRows from 'worksheet/hooks/useButtonStatusOfRows';
 import * as actions from 'worksheet/redux/actions/galleryview';
+import type { RootState } from 'src/redux/types';
 import {
   filterButtonBySheetSwitchPermit,
   getSheetOperateButtonIds,
@@ -45,7 +46,7 @@ const RecordGalleryWrapper = props => {
 
 export default autoSize(
   connect(
-    state => ({
+    (state: RootState) => ({
       ...state.sheet,
       chatVisible: state.chat.visible,
       sheetListVisible: state.sheetList.isUnfold,

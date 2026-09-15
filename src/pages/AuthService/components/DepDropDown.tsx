@@ -31,7 +31,8 @@ export default class DepDropDown extends Component<any, any> {
     };
   }
 
-  ajax = '';
+  // 在途 ajax 句柄（切换组织时 abort 掉上一次）；空闲时置回 ''
+  ajax: ApiResult | string = '';
   sourcePath = {};
   cachePath = {};
   treeSelectComp = React.createRef();
@@ -77,7 +78,7 @@ export default class DepDropDown extends Component<any, any> {
         if (result) {
           this.cachePath = {};
           if (keywords) {
-            const getItem = (item = [], path) => {
+            const getItem = (item = [], path?) => {
               return item.map(o => {
                 this.cachePath[o.departmentId] = path ? `${path} / ${o.departmentName}` : o.departmentName;
                 let name = o.departmentName;

@@ -8,6 +8,7 @@ import { filterOnlyShowField, isOtherShowFeild } from 'src/pages/widgetConfig/ut
 import AddCondition from 'src/pages/worksheet/common/WorkSheetFilter/components/AddCondition';
 import { FASTFILTER_CONDITION_TYPE } from './util';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrap = styled.div`
   .hasData {
@@ -153,7 +154,7 @@ export default function FastFilterCon(params) {
     showAddCondition,
     onAdd,
     customAdd,
-  } = params;
+  }: { worksheetControls: FormControl[]; [key: string]: any } = params;
   let [fastFilterDataControls, setDatas] = useState([]);
   useEffect(() => {
     setDatas(

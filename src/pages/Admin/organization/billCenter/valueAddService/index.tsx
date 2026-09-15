@@ -113,7 +113,7 @@ let ValueAddService = class ValueAddService extends Component<any, any> {
     });
   }
 
-  setStep(step) {
+  setStep(step: number) {
     this.setState({
       step,
     });

@@ -125,7 +125,7 @@ function QuickFilter(props) {
     [JSON.stringify(filters)],
   );
 
-  const update = (newValues, { closeDrawer = true, skipRequiredCheck } = {}) => {
+  const update = (newValues?, { closeDrawer = true, skipRequiredCheck } = {}) => {
     const valuesToUpdate = newValues || values;
     const needCheckRequired = _.get(advancedSetting, 'requiredcids.length') && !skipRequiredCheck;
     const itemsWithValues = items.map((filter, i) => ({

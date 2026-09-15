@@ -5,6 +5,7 @@ import { filterOnlyShowField, getIconByType } from 'src/pages/widgetConfig/util'
 import AddCondition from 'src/pages/worksheet/common/WorkSheetFilter/components/AddCondition';
 import { setSysWorkflowTimeControlFormat } from 'src/pages/worksheet/views/CalendarView/util.js';
 import { FASTFILTER_CONDITION_TYPE, getControlFormatType, getSetDefault } from '../util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 // 快速筛选字段切换，替换字段时同步清理必填筛选配置。
 export default function FastFilterFieldSelector(props) {
@@ -17,7 +18,7 @@ export default function FastFilterFieldSelector(props) {
     view,
     setActiveFastFilterId,
     updateView,
-  } = props;
+  }: { worksheetControls: FormControl[]; [key: string]: any } = props;
   const boxConT = useRef(null);
 
   return (
@@ -55,7 +56,7 @@ export default function FastFilterFieldSelector(props) {
         classNamePopup="addControlDrop"
         comp={() => {
           const iconName = getIconByType(
-            (worksheetControls.find(item => item.controlId === control.controlId) || {}).type,
+            (worksheetControls.find((item: FormControl) => item.controlId === control.controlId) || {}).type,
             false,
           );
           return (

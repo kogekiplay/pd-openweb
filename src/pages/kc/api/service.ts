@@ -1,4 +1,4 @@
-﻿import { assign, map, trim } from 'lodash';
+import { assign, map, trim } from 'lodash';
 import kc from 'src/api/kc';
 import { NODE_TYPE } from '../constant/enum';
 import { IdItem } from '../utils';
@@ -40,7 +40,7 @@ function getRoots(args) {
 }
 
 /** 获取根目录详情 */
-function getRootDetail(rootId, options) {
+function getRootDetail(rootId: string, options?: ApiOptions) {
   return kc
     .getRootDetail({ id: rootId }, options || {})
     .then(assignHashFunc)
@@ -242,7 +242,7 @@ function updateRootStar(rootId, isStar) {
  * @param  {String} path 节点路径
  * @return {Node}      节点信息，如果是文件夹包含子节点
  */
-function getNodeByPath(path) {
+function getNodeByPath(path: string) {
   return kc.getNodeDetail({ path }).then(assignHashFunc);
 }
 
@@ -260,7 +260,7 @@ function getNodeById(id) {
  * @param  {String} id 节点 id
  * @param  {String} versionId 节点 versionId
  */
-function getNodeByVersionId(id, versionId, isOldest) {
+function getNodeByVersionId(id, versionId?, isOldest?) {
   return kc.getNodeDetail(id, versionId, isOldest).then(assignHashFunc);
 }
 
@@ -320,12 +320,12 @@ function getRootLogDetail(args) {
 /**
  * 获取我的文件日志详情
  **/
-function getMyLogDetail(args) {
+function getMyLogDetail(args?) {
   return kc.getMyLogDetail(args).then(assignHashFunc);
 }
 
 /** 添加节点预览次数 */
-function addNodeViewCount(id, versionId) {
+function addNodeViewCount(id, versionId?) {
   return kc.addNodeViewCount({ id, versionId }, undefined, undefined, false);
 }
 

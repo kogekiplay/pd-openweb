@@ -21,11 +21,13 @@ import {
   updateExcelDetailData,
   updateSelectedImportSheetIds,
 } from 'src/pages/worksheet/redux/actions/excelCreateAppAndSheet';
+import type { RootState } from 'src/redux/types';
 import { VersionProductType } from 'src/utils/enum';
 import { getFeatureStatus } from 'src/utils/project';
 import DialogCreateApp from './DialogCreateApp';
 import DialogUpload from './DialogUpload';
 import SetImportExcelCreateWorksheetOrApp from './SetImportExcelCreateWorksheetOrApp';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 class DialogImportExcelCreate extends Component<any, any> {
   static propTypes = {
@@ -127,7 +129,7 @@ class DialogImportExcelCreate extends Component<any, any> {
               !item.rows ||
               !item.rows.length ||
               item.total - 1 > worksheetExcelImportDataLimitCount ||
-              (item.rows && item.rows.some(v => v.cells && v.cells.length > 200)),
+              (item.rows && item.rows.some((v: RecordRow) => v.cells && v.cells.length > 200)),
           };
         });
         let selectedSheetIds = [];
@@ -197,7 +199,7 @@ class DialogImportExcelCreate extends Component<any, any> {
     this.props.changeDialogCreateAppVisible(false);
   };
 
-  getCells = (rows = [], matchControl = [], selectCells = []) => {
+  getCells = (rows: RecordRow[] = [], matchControl = [], selectCells = []) => {
     const cells = rows.length && rows[0].cells ? rows[0].cells : [];
     return _.filter(cells, it => _.includes(selectCells, it.columnNumber)).map(item => {
       return {
@@ -207,7 +209,7 @@ class DialogImportExcelCreate extends Component<any, any> {
     });
   };
 
-  getParams = isMore => {
+  getParams = (isMore?) => {
     const { id, filePath, freeRowCount } = this.state;
     const {
       createType,
@@ -227,7 +229,7 @@ class DialogImportExcelCreate extends Component<any, any> {
         : { appId, sectionId: groupId };
     let hasEmptyRows = importSheets.some(it => !it.rows || !it.rows.length);
     let hasEmptyCells = importSheets.some(
-      it => it.rows && it.rows.length && it.rows.some(v => !v.cells || !v.cells.length),
+      it => it.rows && it.rows.length && it.rows.some((v: RecordRow) => !v.cells || !v.cells.length),
     );
     let noRowNum = importSheets.some(it => !it.rowNum);
     const licenseType = _.get(
@@ -258,7 +260,7 @@ class DialogImportExcelCreate extends Component<any, any> {
     } else if (importSheets.some(item => item.total - 1 > worksheetExcelImportDataLimitCount)) {
       alert(_l('当前版本单个sheet最多支持%0行', worksheetExcelImportDataLimitCount), 3);
       return;
-    } else if (importSheets.some(item => item.rows && item.rows.some(it => it.cells && it.cells.length > 200))) {
+    } else if (importSheets.some(item => item.rows && item.rows.some((it: RecordRow) => it.cells && it.cells.length > 200))) {
       alert(_l('当前版本单个sheet最多支持200列'), 3);
       return;
     } else if (noRowNum || hasEmptyRows || hasEmptyCells) {
@@ -327,7 +329,7 @@ class DialogImportExcelCreate extends Component<any, any> {
       this.props.changeDialogCreateAppVisible(true);
     }
   };
-  createApp = dbInstanceId => {
+  createApp = (dbInstanceId?) => {
     const { excelDetailData = [], selectedImportSheetIds } = this.props;
     const importSheets = excelDetailData.filter(it => _.includes(selectedImportSheetIds, it.sheetId));
     const isMore = importSheets.length > 10;
@@ -497,7 +499,7 @@ class DialogImportExcelCreate extends Component<any, any> {
 }
 
 export default connect(
-  state => {
+  (state: RootState) => {
     const { excelCreateAppAndSheet = {} } = state.sheet;
     return excelCreateAppAndSheet;
   },

@@ -15,6 +15,7 @@ import DisplayControl from '../DisplayControl';
 import DropDownSet from '../DropDownSet';
 import Group from '../Group';
 import SelectStartOrEnd from '../SelectStartOrEndControl/SelectStartOrEnd';
+import type { FormControl } from 'src/utils/controlTypes';
 
 let obj = [
   { txt: _l('日'), key: '0' },
@@ -26,14 +27,14 @@ let obj = [
 let weekObj = [_l('周一'), _l('周二'), _l('周三'), _l('周四'), _l('周五'), _l('周六'), _l('周天')];
 
 export default function GunterSet(props) {
-  const { appId, view, updateCurrentView, worksheetControls = [] } = props;
+  const { appId, view, updateCurrentView, worksheetControls = [] }: { worksheetControls: FormControl[]; [key: string]: any } = props;
   const { advancedSetting = {} } = view;
   const { calendartype = '0', unweekday = '', milepost, showgroupcolor } = advancedSetting;
   let [checkedWorkDate, setCheckedWorkDate] = useState(unweekday === '');
   let [timeControls, setTimeControls] = useState(getControlsForGunter(worksheetControls));
   const { begindate = '', enddate = '' } = getAdvanceSetting(view);
-  const beginIsDel = begindate && !worksheetControls.find(item => item.controlId === begindate);
-  const endIsDel = enddate && !worksheetControls.find(item => item.controlId === enddate);
+  const beginIsDel = begindate && !worksheetControls.find((item: FormControl) => item.controlId === begindate);
+  const endIsDel = enddate && !worksheetControls.find((item: FormControl) => item.controlId === enddate);
   useEffect(() => {
     setCheckedWorkDate(unweekday !== '');
   }, [unweekday]);
@@ -107,7 +108,7 @@ export default function GunterSet(props) {
         addTxt={_l('添加里程碑字段')}
         controls={worksheetControls}
         setDataId={milepost}
-        controlList={worksheetControls.filter(item => _.includes([36], item.type))}
+        controlList={worksheetControls.filter((item: FormControl) => _.includes([36], item.type))}
         key="milepost"
         className="mTop32"
         addName={_l('里程碑')}
@@ -133,7 +134,7 @@ export default function GunterSet(props) {
       <DisplayControl
         {...props}
         hideShowControlName
-        worksheetControls={worksheetControls.filter(c => ![begindate, enddate].includes(c.controlId))}
+        worksheetControls={worksheetControls.filter((c: FormControl) => ![begindate, enddate].includes(c.controlId))}
         handleChangeSort={({ newControlSorts, newShowControls }) => {
           updateCurrentView(
             Object.assign(
@@ -154,7 +155,7 @@ export default function GunterSet(props) {
       />
       <Group {...props} />
       {_.get(view, 'viewControl') &&
-        [9, 10, 11].includes((worksheetControls.find(o => o.controlId === _.get(view, 'viewControl')) || {}).type) && (
+        [9, 10, 11].includes((worksheetControls.find((o: FormControl) => o.controlId === _.get(view, 'viewControl')) || {}).type) && (
           <SwitchStyle className="flexRow alignItemsCenter mTop8">
             <Icon
               icon={showgroupcolor === '1' ? 'ic_toggle_on' : 'ic_toggle_off'}
@@ -178,7 +179,7 @@ export default function GunterSet(props) {
         <NavSet
           {...props}
           navGroupId={view.viewControl}
-          viewControlData={worksheetControls.find(o => o.controlId === _.get(view, 'viewControl')) || {}}
+          viewControlData={worksheetControls.find((o: FormControl) => o.controlId === _.get(view, 'viewControl')) || {}}
         />
       )}
       <div className="title Font13 bold mTop32">{_l('默认视图')}</div>

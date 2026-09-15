@@ -9,6 +9,7 @@ import sheetAjax from 'src/api/worksheet';
 import { updateGroupFilter } from 'worksheet/redux/actions';
 import { getNavGroupCount } from 'worksheet/redux/actions/navFilter';
 import { FILTER_CONDITION_TYPE } from 'src/pages/worksheet/common/WorkSheetFilter/enum.js';
+import type { RootState } from 'src/redux/types';
 import { emitter } from 'src/utils/common';
 import { getFilledRequestParams } from 'src/utils/common';
 import { getAdvanceSetting } from 'src/utils/control';
@@ -25,6 +26,7 @@ import {
   renderTxt,
   transformCountsToData,
 } from './util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 let getNavGroupRequest = null;
 let preWorksheetIds = [];
@@ -44,7 +46,7 @@ function GroupFilter(props) {
     navGroupFilters,
     worksheetInfo,
     isSingle,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
 
   const searchRef = useRef({});
   const { viewId } = base;
@@ -398,8 +400,8 @@ function GroupFilter(props) {
     } // 级联 关联
     else {
       let data = result.data || [];
-      const controls = _.get(result, ['template', 'controls']) || [];
-      const control = controls.find(item => item.attribute === 1);
+      const controls: FormControl[] = _.get(result, ['template', 'controls']) || [];
+      const control = controls.find((item: FormControl) => item.attribute === 1);
 
       if (navlayer && Number(navlayer) > 1 && !rowId) {
         //配置了默认展开层级 接口一次性的返回对于数据 处理成相关结果
@@ -453,7 +455,7 @@ function GroupFilter(props) {
   const loadData = obj => fetchData(obj);
 
   //更新当前的navGroupData
-  const updateNavGroupData = ({ filterData, data, rowId, cb }, notUpdate) => {
+  const updateNavGroupData = ({ filterData, data, rowId, cb }, notUpdate?) => {
     if (rowId && !searchRef.current.value) {
       filterData.forEach(item => {
         if (item.value === rowId) {
@@ -512,7 +514,7 @@ function GroupFilter(props) {
 }
 
 export default connect(
-  state => ({ ...state.sheet }),
+  (state: RootState) => ({ ...state.sheet }),
   dispatch =>
     bindActionCreators(
       {

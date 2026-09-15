@@ -13,6 +13,7 @@ import { NORMAL_SYSTEM_FIELDS_SORT, WORKFLOW_SYSTEM_FIELDS_SORT } from 'src/page
 import { generateRandomPassword } from 'src/utils/common';
 import RegExpValidator from 'src/utils/expression';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const SEPARATOR_OPTIONS = [
   { text: '_', value: '_' },
@@ -48,7 +49,7 @@ const getFiledOptions = controls => {
 };
 
 function ImportAttachments(props) {
-  const { onCancel, controls, projectId, appId, worksheetId, viewId, allowAdd } = props;
+  const { onCancel, controls, projectId, appId, worksheetId, viewId, allowAdd }: { controls: FormControl[]; [key: string]: any } = props;
   const { matchFieldOptions, writeFieldOptions } = getFiledOptions(controls);
 
   const [step, setStep] = useState(1);
@@ -74,7 +75,7 @@ function ImportAttachments(props) {
         ? _l('导入设置')
         : _l(
             '上传文件（%0）',
-            controls.find(control => control.controlId === setting.attachmentControlId)?.controlName,
+            controls.find((control: FormControl) => control.controlId === setting.attachmentControlId)?.controlName,
           ),
     description:
       step === 1

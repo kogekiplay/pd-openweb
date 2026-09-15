@@ -18,6 +18,7 @@ import BasicsSetting from './BasicsSetting';
 import ControlsSetting from './ControlsSetting';
 import LayoutSetting from './LayoutSetting';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Setting = [
   {
@@ -77,7 +78,7 @@ class SideNav extends React.Component<any, any> {
     const { printData = [] } = this.props;
     const { orderNumber = [] } = printData;
     let orderNumberCheck = (orderNumber.find(o => o.receiveControlId === it.controlId) || []).checked;
-    let controls =
+    let controls: FormControl[] =
       it.showControls.length > 0 ? it.relationControls.filter(o => it.showControls.includes(o.controlId)) : [];
     let list = controls.filter(o => o.checked);
 
@@ -228,7 +229,7 @@ class SideNav extends React.Component<any, any> {
 
   setData = (o, key, isRelationControls) => {
     const { printData = [], handChange } = this.props;
-    const { receiveControls = [] } = printData;
+    const { receiveControls = [] }: { receiveControls: FormControl[]; [key: string]: any } = printData;
     let dataOther = [];
     let isCheck;
     let sectionOrder = [];
@@ -287,10 +288,10 @@ class SideNav extends React.Component<any, any> {
 
   setReceiveControls = (o, checked) => {
     const { printData = [] } = this.props;
-    const { receiveControls = [] } = printData;
+    const { receiveControls = [] }: { receiveControls: FormControl[]; [key: string]: any } = printData;
 
     let isChecked = checked;
-    const controls =
+    const controls: FormControl[] =
       o.showControls.length > 0 ? o.relationControls.filter(it => o.showControls.includes(it.controlId)) : [];
 
     if (controls.map(o => o.checked).includes(true)) {
@@ -309,7 +310,7 @@ class SideNav extends React.Component<any, any> {
   checkAll = isReceiveControls => {
     const { receiveControlsCheckAll, workflowCheckAll } = this.state;
     const { handChange, printData } = this.props;
-    const { receiveControls = [], workflow = [], systemControl = [] } = printData;
+    const { receiveControls = [], workflow = [], systemControl = [] }: { receiveControls: FormControl[]; [key: string]: any } = printData;
 
     if (isReceiveControls) {
       handChange({

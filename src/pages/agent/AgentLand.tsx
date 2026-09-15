@@ -88,7 +88,7 @@ if (hideHeader) {
   window.hideHeader = true;
 }
 
-function getQueryValue(key) {
+function getQueryValue(key: string) {
   return new URL(location.href).searchParams.get(key) || '';
 }
 

@@ -16,7 +16,7 @@ function useChat({
   onEvent = () => {},
 }) {
   const cache = useRef({});
-  const [firstInputMessage, setFirstInputMessage] = useState();
+  const [firstInputMessage, setFirstInputMessage] = useState<string | undefined>();
   const [messages, setMessages] = useState(defaultMessages);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);

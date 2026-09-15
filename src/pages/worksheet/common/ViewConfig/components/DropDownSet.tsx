@@ -7,6 +7,7 @@ import { Icon } from 'ming-ui';
 import { SYS } from 'src/pages/widgetConfig/config/widget';
 import { getIconByType } from 'src/pages/widgetConfig/util';
 import AddControlDiaLog from 'src/pages/worksheet/common/ViewConfig/components/SelectStartOrEndControl/AddControlDiaLog';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const DropDownSetChoose = styled.div`
   position: relative;
@@ -146,7 +147,7 @@ export default class DropDownSet extends React.Component<any, any> {
             type={36}
             controls={controls}
             onAdd={data => {
-              let sys = controls.filter(o => SYS.includes(o.controlId));
+              let sys = controls.filter((o: FormControl) => SYS.includes(o.controlId));
               updateWorksheetControls(data.concat(sys));
             }}
             onChange={handleChange}

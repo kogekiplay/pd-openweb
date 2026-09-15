@@ -1,3 +1,4 @@
+import type { FormControl } from 'src/utils/controlTypes';
 export const getRelationCellPrintData = ({ control, dataInfo, tableList, record }) => {
   const baseData = {
     ...dataInfo,
@@ -21,7 +22,7 @@ export const getRelationCellPrintData = ({ control, dataInfo, tableList, record 
   };
 };
 
-const getFormData = (controls = [], record = {}) => {
+const getFormData = (controls: FormControl[] = [], record = {}) => {
   return controls.map(control => ({
     ...control,
     value: record[control.controlId],

@@ -5,7 +5,9 @@ import _ from 'lodash';
 import { RecordInfoModal } from 'mobile/Record';
 import RecordInfoWrapper from 'worksheet/common/recordInfo/RecordInfoWrapper';
 import * as actions from 'worksheet/redux/actions/gunterview';
+import type { RootState } from 'src/redux/types';
 import { browserIsMobile } from 'src/utils/common';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 const isMobile = browserIsMobile();
 let RecordInfo = class RecordInfo extends Component<any, any> {
@@ -21,7 +23,7 @@ let RecordInfo = class RecordInfo extends Component<any, any> {
   getCurrentSheetRows() {
     const { row, grouping } = this.props;
     const { groupId } = row;
-    const { rows } =
+    const { rows }: { rows: RecordRow[]; [key: string]: any } =
       _.find(grouping, {
         key: groupId,
       }) || {};
@@ -74,7 +76,7 @@ let RecordInfo = class RecordInfo extends Component<any, any> {
   }
 };
 RecordInfo = connect(
-  state => ({
+  (state: RootState) => ({
     ..._.pick(state.sheet.gunterView, ['viewConfig', 'grouping']),
     ..._.pick(state.sheet, ['isCharge', 'base', 'worksheetInfo', 'controls', 'sheetSwitchPermit']),
     view: (state.sheet.views || []).find(v => v.viewId === _.get(state.sheet, 'base.viewId')) || {},

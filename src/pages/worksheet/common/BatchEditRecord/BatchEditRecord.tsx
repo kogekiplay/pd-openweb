@@ -13,6 +13,7 @@ import { replaceControlsTranslateInfo } from 'src/utils/translate';
 import { getGroupControlId } from 'src/utils/worksheet';
 import { getEditType, handleBatchUpdateRecords } from './controller';
 import EditControlItem from './EditControlItem';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   padding: 16px 23px;
@@ -93,7 +94,7 @@ export default function BatchEditRecord(props) {
     onUpdate = () => {},
     getWorksheetSheetViewSummary = () => {},
     onClose,
-  } = props;
+  }: { selectedRows: RecordRow[]; [key: string]: any } = props;
   const editConRef = useRef(null);
   const addRef = useRef(null);
   const refCache = useRef({});
@@ -110,7 +111,7 @@ export default function BatchEditRecord(props) {
   const [selectedControls, setSelectedControls] = useState([]);
   const controlsForSelect = useMemo(() => {
     const formData = replaceControlsTranslateInfo(appId, worksheetId, get(worksheetInfo, 'template.controls', []));
-    const result = formData.filter(c => controlBatchCanEdit(c, view));
+    const result = formData.filter((c: FormControl) => controlBatchCanEdit(c, view));
     return result;
   }, [worksheetInfo]);
   const filteredSelectedControls = useMemo(() => {
@@ -129,7 +130,7 @@ export default function BatchEditRecord(props) {
         ),
     );
     const hasAuthRowIds = selectedRows
-      .filter(row => (row.allowedit || row.allowEdit) && !row.sys_lock)
+      .filter((row: RecordRow) => (row.allowedit || row.allowEdit) && !row.sys_lock)
       .map(row => row.rowid);
 
     if (!allWorksheetIsSelected && hasAuthRowIds.length === 0) {

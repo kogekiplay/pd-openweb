@@ -1,8 +1,8 @@
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import { find, flatten, get, includes, isEmpty, isFunction, isObject, last, uniq } from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import agentApi from 'src/api/agent';
@@ -13,6 +13,7 @@ import worksheetAjax from 'src/api/worksheet';
 import { SHEET_VIEW_HIDDEN_TYPES } from 'worksheet/constants/enum';
 import { useGlobalStore } from 'src/common/GlobalStore';
 import { formatControlToServer } from 'src/components/Form/core/utils';
+import type { StreamError } from 'src/components/Mingo/ChatBot/utils';
 import {
   SYSTEM_CONTROL,
   WIDGETS_TO_API_TYPE_ENUM,
@@ -35,6 +36,7 @@ import CreateWorksheetDataMask from './CreateWorksheetDataMask';
 import Recommend from './Recommend';
 import { ConfigPanel } from './Recommend';
 import WorksheetDataGenerator from './WorksheetDataGenerator';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const MessageListWrap = styled.div`
   position: relative;
@@ -148,7 +150,7 @@ function getPresetUsersAndFiles(config) {
   return result;
 }
 
-function getAvailableControls(controls = []) {
+function getAvailableControls(controls: FormControl[] = []) {
   return controls.reduce((result, control) => {
     if (
       !includes(SHEET_VIEW_HIDDEN_TYPES, control.type) &&
@@ -405,7 +407,7 @@ function MingoContent(props, ref) {
   const [selectedDataMessageId, setSelectedDataMessageId] = useState([]);
   const [previewTempData, setPreviewTempData] = useState([]);
   const [messageIdOfIsGeneratingMoreData, setMessageIdOfIsGeneratingMoreData] = useState();
-  const [error, setError] = useState();
+  const [error, setError] = useState<StreamError | undefined>();
   const {
     sendMessage,
     loading,
@@ -420,7 +422,7 @@ function MingoContent(props, ref) {
   } = useChat({
     defaultMessages: defaultData.messages || [],
     aiCompletionApi: async (_, { abortController, agentParams = {} }) => {
-      const availableControls = getAvailableControls(get(worksheetInfo, 'template.controls', []));
+      const availableControls: FormControl[] = getAvailableControls(get(worksheetInfo, 'template.controls', []));
       const [presetDepartmentsAndRoles, presetRelatedRecords] = await Promise.all([
         getPresetDepartmentsAndRoles({
           controls: availableControls,
@@ -612,7 +614,7 @@ function MingoContent(props, ref) {
       onClose();
     }
   }, [activeWorksheet]);
-  const visibleControls = get(worksheetInfo, 'template.controls', []).filter(
+  const visibleControls: FormControl[] = get(worksheetInfo, 'template.controls', []).filter(
     control =>
       !includes(SHEET_VIEW_HIDDEN_TYPES, control.type) &&
       !includes(
@@ -755,7 +757,7 @@ function MingoContent(props, ref) {
           controls={visibleControls}
           data={dataForPreview}
           onAppendToWorksheet={() => {
-            function getValue(control, row) {
+            function getValue(control: FormControl, row) {
               return typeof row[control.controlId] === 'string'
                 ? row[control.controlId]
                 : isObject(row[control.controlId])

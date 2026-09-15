@@ -27,10 +27,12 @@ import {
 import { FILTER_CONDITION_TYPE } from 'src/pages/worksheet/common/WorkSheetFilter/enum';
 import * as worksheetActions from 'src/pages/worksheet/redux/actions';
 import * as navFilterActions from 'src/pages/worksheet/redux/actions/navFilter';
+import type { RootState } from 'src/redux/types';
 import { getFilledRequestParams } from 'src/utils/common';
 import { getTitleTextFromControls } from 'src/utils/control';
 import { getAdvanceSetting } from 'src/utils/control';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const GroupFilterList = props => {
   const {
@@ -208,7 +210,7 @@ const GroupFilterList = props => {
     }
   };
 
-  const setData = obj => {
+  const setData = (obj?) => {
     const { rowId, cb, isNext } = obj || {};
     const { navshow, navlayer } = getAdvanceSetting(view);
 
@@ -369,7 +371,7 @@ const GroupFilterList = props => {
     } // 级联 关联
     else {
       let data = result.data || [];
-      const controls = _.get(result, ['template', 'controls']) || [];
+      const controls: FormControl[] = _.get(result, ['template', 'controls']) || [];
       const control = controls.find(item => item.attribute === 1);
 
       if (navlayer && Number(navlayer) > 1 && !rowId) {
@@ -414,7 +416,7 @@ const GroupFilterList = props => {
   const loadData = obj => fetchData(obj);
 
   //更新当前的navGroupData
-  const updateNavGroupData = ({ filterData, data, rowId, cb }, notUpdate) => {
+  const updateNavGroupData = ({ filterData, data, rowId, cb }, notUpdate?) => {
     if (rowId && !keywords) {
       filterData.forEach(item => {
         if (item.value === rowId) {
@@ -825,7 +827,7 @@ const GroupFilterList = props => {
 };
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     controls: state.sheet.controls,
     views: state.sheet.views,
     ...state.sheet,

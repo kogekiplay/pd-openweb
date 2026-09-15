@@ -51,7 +51,7 @@ const InputWrap = styled(Input)`
 
 export default function Areas(props) {
   const { values = [], control = {}, isMultiple, onChange = () => {}, projectId } = props;
-  const [active, setActive] = useState();
+  const [active, setActive] = useState<boolean | undefined>();
   const [search, setSearch] = useState(undefined);
   const [keywords, setKeywords] = useState('');
   const [defaultValue, setDefaultValue] = useState(null);

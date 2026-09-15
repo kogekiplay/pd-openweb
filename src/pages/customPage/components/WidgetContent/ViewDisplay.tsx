@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 import { LoadDiv } from 'ming-ui';
 import { formatFiltersGroup } from 'src/pages/customPage/components/editWidget/filter/util';
+import type { RootState } from 'src/redux/types';
 import { View } from '../editWidget/view/Preview';
 
 const emptyArray = [];
@@ -91,7 +92,7 @@ const ViewDisplay = props => {
   return <View {...props} filtersGroup={filtersGroup.length ? filtersGroup : emptyArray} />;
 };
 
-export default connect((state, ownProps) => ({
+export default connect((state: RootState, ownProps) => ({
   filtersGroup: state.customPage.filtersGroup,
   filterComponents: state.customPage.filterComponents.filter(n =>
     ownProps.layoutType === 'mobile' ? n.mobileVisible : true,

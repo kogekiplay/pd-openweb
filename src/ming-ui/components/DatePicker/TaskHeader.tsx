@@ -6,7 +6,7 @@ class TaskHeader extends Component<any, any> {
   /**
    * 切换开始和结束的选中状态
    */
-  toggle = (type, checked) => {
+  toggle = (type: string, checked: boolean) => {
     if (this.props.toggle) {
       this.props.toggle(type, checked);
     }

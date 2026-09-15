@@ -198,7 +198,7 @@ export default function TimingSettingList({ projectId, sourceId, onViewUseDetail
 
         {settingDetail && (
           <SettingDrawer
-            visible={true}
+            open={true}
             width={600}
             placement="right"
             mask={false}

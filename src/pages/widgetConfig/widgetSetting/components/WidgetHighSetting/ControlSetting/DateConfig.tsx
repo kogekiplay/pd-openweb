@@ -12,6 +12,7 @@ import { DATE_SHOW_TYPES } from '../../../../config/setting';
 import { DropdownContent, DropdownPlaceholder, EditInfo, SettingItem } from '../../../../styled';
 import { getAdvanceSetting, getDateToEn, handleAdvancedSettingChange } from '../../../../util/setting';
 import DateInput from '../../DynamicDefaultValue/inputTypes/DateInput.jsx';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const INTERVAL = [1, 5, 10, 15, 30, 60];
 
@@ -225,12 +226,12 @@ export function DateHour12(props) {
 }
 
 function StartEndTime(props) {
-  const { data, onChange, allControls } = props;
+  const { data, onChange, allControls }: { allControls: FormControl[]; [key: string]: any } = props;
   const min = getAdvanceSetting(data, 'min');
   const max = getAdvanceSetting(data, 'max');
   const locationbegin = getAdvanceSetting(data, 'locationbegin');
 
-  const handleValueChange = (value, mode) => {
+  const handleValueChange = (value, mode: string) => {
     onChange(handleAdvancedSettingChange(data, { [mode]: JSON.stringify(value) }));
   };
 

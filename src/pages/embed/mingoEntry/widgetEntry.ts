@@ -52,7 +52,7 @@ function ensureTrailingSlash(url = '') {
   return value && !value.endsWith('/') ? value + '/' : value;
 }
 
-function joinUrl(base, path) {
+function joinUrl(base, path: string) {
   const normalizedBase = trimSlash(base);
   const normalizedPath = String(path || '').replace(/^\/+/, '');
 

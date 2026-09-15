@@ -226,7 +226,9 @@ function useStickyScroll(visible, focus, focusedContent) {
     stickRef.current = true;
   }, []);
 
-  return [ref, reset];
+  // 返回元组而不是数组：不加 as const 的话推断成 (RefObject | (() => void))[]，
+  // 解构出来的两个变量都是联合类型，resetScroll 传给 useAgentEvent 就报类型不匹配。
+  return [ref, reset] as const;
 }
 
 export default function AppBuilder({

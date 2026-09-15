@@ -10,6 +10,7 @@ import {
   SUPPORT_FIELD_TYPES,
   SYSTEM_FIELD_IDS,
 } from './config';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export const getFileIcon = fileName => {
   if (!fileName) return 'file';
@@ -53,7 +54,7 @@ const isValidValue = v => v !== undefined && v !== null && v !== '';
  * @param {Array} controls - 控件列表，每个包含 { controlId, controlName, options? }
  * @returns {string} 中文描述
  */
-export const formatFilterConditionToText = (filters = [], controls = []) => {
+export const formatFilterConditionToText = (filters = [], controls: FormControl[] = []) => {
   const spliceText = type => SPLICE_TYPE[type] || '且';
 
   const controlMap = new Map(controls.map(c => [c.controlId, c]));
@@ -166,7 +167,7 @@ export const externalSupportField = control => {
   );
 };
 
-export const isCustomField = ({ advancedSetting }) => ['1', '2'].includes(advancedSetting?.customtype);
+export const isCustomField = ({ advancedSetting }: Partial<FormControl>) => ['1', '2'].includes(advancedSetting?.customtype);
 
 export async function fetchFilterData({ worksheetId, filterId, setWorksheetControlsMap, setFilterConditionsMap }) {
   if (!filterId) return;
@@ -178,7 +179,7 @@ export async function fetchFilterData({ worksheetId, filterId, setWorksheetContr
     ]);
 
     const { template = {} } = worksheetInfo;
-    const { controls = [] } = template;
+    const { controls = [] }: { controls: FormControl[]; [key: string]: any } = template;
 
     const dataFilterFields = controls.filter(isSupportFilterField);
 

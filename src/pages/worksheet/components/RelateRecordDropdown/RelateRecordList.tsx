@@ -12,6 +12,7 @@ import { getTranslateInfo } from 'src/utils/app';
 import { replaceControlsTranslateInfo } from 'src/utils/translate';
 import ChildTableContext from '../ChildTable/ChildTableContext';
 import ReacordItem from './RecordItem';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 export default class RelateRecordList extends React.PureComponent<any, any> {
   static contextType = ChildTableContext;
@@ -402,7 +403,7 @@ export default class RelateRecordList extends React.PureComponent<any, any> {
       allowNewRecord &&
       allowAdd &&
       !(_.get(window, 'shareState.isPublicFormPreview') || _.get(window, 'shareState.isPublicForm'));
-    let records = (loading ? [] : prefixRecords).concat(this.state.records);
+    let records: RecordRow[] = (loading ? [] : prefixRecords).concat(this.state.records);
 
     if (!_.isEmpty(staticRecords) && keyWords) {
       records = _.filter(staticRecords, row => new RegExp(keyWords, 'i').test(row.name));

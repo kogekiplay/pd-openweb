@@ -15,6 +15,7 @@ import * as actions from 'statistics/redux/actions';
 import { permitList } from 'src/pages/FormSet/config.js';
 import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import { WORKFLOW_SYSTEM_CONTROL } from 'src/pages/widgetConfig/config/widget';
+import type { RootState } from 'src/redux/types';
 import { controlState } from 'src/utils/control';
 import CalculateControlItem from './components/CalculateControlItem';
 import CalculateControlModal from './components/CalculateControlModal';
@@ -22,6 +23,7 @@ import ControlItem from './components/ControlItem';
 import SheetModal from './components/SheetModal';
 import TimeModal from './components/TimeModal';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const authList = [
   {
@@ -72,7 +74,7 @@ let DataSource = class DataSource extends Component<any, any> {
     }
   }
 
-  formatAxisControls = (axisControls, newViewId) => {
+  formatAxisControls = (axisControls, newViewId?) => {
     const { worksheetInfo, ownerId, currentReport } = this.props;
 
     if (!ownerId) {
@@ -249,7 +251,7 @@ let DataSource = class DataSource extends Component<any, any> {
 
     if (base.appType === 2) {
       const alreadySelectControlId = getAlreadySelectControlId(currentReport);
-      const controls = alreadySelectControlId.map(id =>
+      const controls: FormControl[] = alreadySelectControlId.map(id =>
         _.find(axisControls, {
           controlId: id,
         }),
@@ -575,7 +577,7 @@ let DataSource = class DataSource extends Component<any, any> {
   }
 };
 DataSource = connect(
-  state => ({ ..._.pick(state.statistics, ['currentReport', 'axisControls', 'worksheetInfo', 'base']) }),
+  (state: RootState) => ({ ..._.pick(state.statistics, ['currentReport', 'axisControls', 'worksheetInfo', 'base']) }),
   dispatch => bindActionCreators(actions, dispatch),
 )(DataSource);
 export default DataSource;

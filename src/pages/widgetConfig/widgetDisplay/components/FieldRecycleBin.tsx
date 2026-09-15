@@ -110,7 +110,7 @@ export default class FieldRecycleBin extends Component<any, any> {
     });
   };
 
-  updateStatus = (item, status) => {
+  updateStatus = (item, status: string) => {
     const { filterList, activeWidget = {}, isComplete } = this.state;
     const { globalSheetInfo = {}, allControls } = this.props;
 

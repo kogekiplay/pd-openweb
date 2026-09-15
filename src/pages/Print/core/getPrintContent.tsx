@@ -11,6 +11,7 @@ import { getSwitchItemNames, getTitleTextFromRelateControl, renderText as render
 import RegExpValidator from 'src/utils/expression';
 import { USER_CONTROLS } from './config';
 import STYLE_PRINT from './exportWordPrintTemCssString';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const getPictureImageUrl = data => {
   return data.previewUrl.indexOf('imageView2') > -1
@@ -148,7 +149,7 @@ const renderRecordAttachments = (value, isRelateMultipleSheet, fileStyle = '0') 
   sourceControlType: 他表字段type
   valueItem: 他表字段valueItem；[valueItem, valueItem]
   */
-const getPrintContent = (item, sourceControlType, valueItem) => {
+const getPrintContent = (item, sourceControlType?, valueItem?) => {
   const { realShowData, enableEmptyPlaceholder, emptyPlaceholderMode } = item;
   const placeholderMode =
     realShowData && !!Number(enableEmptyPlaceholder) && emptyPlaceholderMode ? emptyPlaceholderMode : '';
@@ -234,7 +235,7 @@ const getPrintContent = (item, sourceControlType, valueItem) => {
       if (item.advancedSetting && !['2', '5', '6'].includes(item.advancedSetting.showtype)) {
         const showtitleid = _.get(item, 'advancedSetting.showtitleid');
 
-        let records = [];
+        let records: RecordRow[] = [];
 
         try {
           records = JSON.parse(value);
@@ -410,7 +411,7 @@ const getPrintContent = (item, sourceControlType, valueItem) => {
       if (item.advancedSetting && !['2', '5', '6'].includes(item.advancedSetting.showtype)) {
         const showtitleid = _.get(item, 'advancedSetting.showtitleid');
         //非列表
-        let records = [];
+        let records: RecordRow[] = [];
 
         try {
           records = JSON.parse(value);
@@ -634,7 +635,7 @@ const getPrintContent = (item, sourceControlType, valueItem) => {
 
     case 47: {
       const dataSource = parseDataSource(item.dataSource);
-      const controls = dataItem.allControls || dataItem.controls || [];
+      const controls: FormControl[] = dataItem.allControls || dataItem.controls || [];
       const formData = controls.map(it => {
         if (dataSource && it.controlId === dataSource && _.isUndefined(it.value)) {
           return { ...it, value: item.value };

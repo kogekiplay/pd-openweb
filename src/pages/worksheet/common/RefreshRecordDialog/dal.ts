@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import worksheetAjax from 'src/api/worksheet';
 import { getFilledRequestParams } from 'src/utils/common';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 export function refreshRecord({
   updateControls,
@@ -27,7 +28,7 @@ export function refreshRecord({
   if (allWorksheetIsSelected) {
     delete args.rowIds;
     args.isAll = true;
-    args.excludeRowIds = selectedRows.map(row => row.rowid);
+    args.excludeRowIds = selectedRows.map((row: RecordRow) => row.rowid);
     args.filterControls = searchArgs.filterControls;
     args.fastFilters = (_.isArray(quickFilter) ? quickFilter : []).map(f =>
       _.pick(f, [

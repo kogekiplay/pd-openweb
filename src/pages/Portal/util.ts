@@ -1,10 +1,10 @@
-﻿import _ from 'lodash';
+import _ from 'lodash';
 import api from 'src/api/homeApp';
 import { getSuffix } from 'src/pages/AuthService/portalAccount/util';
 import { navigateToLogout } from 'src/router/navigateTo';
 import { pathCompletion } from 'src/utils/common';
 
-export const compatibleWorksheetRoute = (worksheetId, rowId, viewId) => {
+export const compatibleWorksheetRoute = (worksheetId, rowId, viewId?) => {
   //工作表老路由id补齐
   api.getAppSimpleInfo({ workSheetId: worksheetId }).then(({ appId, appSectionId, workSheetId }) => {
     if (appId) {

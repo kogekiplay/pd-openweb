@@ -12,6 +12,7 @@ import SavedFilters from './components/SavedFilters';
 import { CONTROL_FILTER_WHITELIST } from './enum';
 import { formatForSave } from './model';
 import { filterUnavailableConditions, getDefaultCondition, redefineComplexControl } from './util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   width: 480px;
@@ -110,7 +111,7 @@ function Filters(props, ref) {
     Object.keys(CONTROL_FILTER_WHITELIST).map(key => CONTROL_FILTER_WHITELIST[key].keys),
   );
   const showWorkflowControl = isOpenPermit(permitList.sysControlSwitch, sheetSwitchPermit, viewId);
-  const controls = columns
+  const controls: FormControl[] = columns
     .filter(o => (md.global.Account.isPortal ? !_.includes(['ownerid', 'caid', 'uaid'], o.controlId) : true))
     .filter(c => (c.controlPermissions || '111')[0] === '1')
     .map(redefineComplexControl)
@@ -136,7 +137,7 @@ function Filters(props, ref) {
     })(),
   );
   const [queryType, setQueryType] = useState(NEW_FILTER_QUERY_TYPE.IMMEDIATELY);
-  const [queryFlag, setQueryFlag] = useState();
+  const [queryFlag, setQueryFlag] = useState<number | undefined>();
   const [queryButtonDisabled, setQueryButtonDisabled] = useState(false);
   const isSavedEditing = !!editingFilter && !/^new/.test(editingFilter.id);
   const isNewEditing = !!editingFilter && /^new/.test(editingFilter.id);
@@ -145,9 +146,9 @@ function Filters(props, ref) {
     _.isEmpty(editingFilter.conditions) &&
     !_.some(editingFilter.conditionsGroups.map(g => g.conditions.length));
 
-  function updateActiveTab(newType) {
+  function updateActiveTab(newType: number) {
     setActiveTab(newType);
-    localStorage.setItem('worksheetFilters_activeTab', newType);
+    localStorage.setItem('worksheetFilters_activeTab', String(newType));
   }
 
   function filterAddConditionControls(controls) {
@@ -155,7 +156,7 @@ function Filters(props, ref) {
       showWorkflowControl
         ? controls
         : controls.filter(
-            c =>
+            (c: FormControl) =>
               !_.includes(
                 WORKFLOW_SYSTEM_CONTROL.map(c => c.controlId),
                 c.controlId,
@@ -358,9 +359,7 @@ function Filters(props, ref) {
                   onAdd={selectedControl => {
                     const defaultCondition = getDefaultCondition(selectedControl);
                     setTimeout(() => {
-                      const dom = document.querySelector(
-                        '.keyStr_' + defaultCondition.keyStr + ' .ant-select-content',
-                      );
+                      const dom = document.querySelector('.keyStr_' + defaultCondition.keyStr + ' .ant-select-content');
 
                       if (dom) {
                         dom.click();

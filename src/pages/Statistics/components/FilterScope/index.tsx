@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { DatePicker, Dropdown, Input, Menu, Select } from 'antd';
+import { Dropdown, Input, Menu, Select } from 'antd';
 import locale from 'antd/es/date-picker/locale/zh_CN';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -22,8 +22,10 @@ import {
 import * as actions from 'statistics/redux/actions';
 import FilterConfig from 'worksheet/common/WorkSheetFilter/common/FilterConfig';
 import { formatValuesOfOriginConditions } from 'worksheet/common/WorkSheetFilter/util';
+import { DatePicker } from 'src/ming-ui/components/mdAntPickers';
 import { filterData } from 'src/pages/FormSet/components/columnRules/config';
 import FilterItemTexts from 'src/pages/widgetConfig/widgetSetting/components/FilterData/FilterItemTexts';
+import type { RootState } from 'src/redux/types';
 import { formatNumberFromInput } from 'src/utils/control';
 import './index.less';
 
@@ -265,7 +267,8 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
       const { customRangeDay, currentRangeValue } = this.state;
       return (
         <Dropdown
-          popupRender={() => <Menu className="rangeDayOverlayMenu">
+          popupRender={() => (
+            <Menu className="rangeDayOverlayMenu">
               {dropdownDayData
                 .filter(item => item.value <= currentRangeValue)
                 .map(item => (
@@ -284,7 +287,8 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
                     {item.text}
                   </Menu.Item>
                 ))}
-            </Menu>}
+            </Menu>
+          )}
           trigger={['click']}
         >
           <div className="w100 Relative">
@@ -650,7 +654,7 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
   }
 };
 DecoratedComponent = connect(
-  state => ({ ..._.pick(state.statistics, ['currentReport', 'worksheetInfo', 'base']) }),
+  (state: RootState) => ({ ..._.pick(state.statistics, ['currentReport', 'worksheetInfo', 'base']) }),
   dispatch => bindActionCreators(actions, dispatch),
 )(DecoratedComponent);
 export default DecoratedComponent;

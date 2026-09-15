@@ -15,6 +15,7 @@ import CardDisplay from './CardDisplay';
 import CoverSetting from './CoverSettingCon';
 import DisplayControl from './DisplayControl';
 import TitleControl from './TitleControl';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const EmptyHint = styled.div`
   margin: -6px 0 0 20px;
@@ -201,7 +202,7 @@ export default function HierarchyViewSetting(props) {
   });
 
   const getSelectableControls = sheetInfo => {
-    const { controls = [] } = _.get(sheetInfo, 'template') || {};
+    const { controls = [] }: { controls: FormControl[]; [key: string]: any } = _.get(sheetInfo, 'template') || {};
     const existSheet = viewControls.map(item => item.worksheetId);
     return _.filter(
       controls,
@@ -252,9 +253,9 @@ export default function HierarchyViewSetting(props) {
 
   const addViewControl = item => {
     worksheetAjax.getWorksheetInfo({ worksheetId: item.dataSource, getTemplate: true }).then(data => {
-      const controls = data.template.controls;
+      const controls: FormControl[] = data.template.controls;
       const coverControls = filterAndFormatterControls({
-        controls: controls.filter(l => isVisible(l)).filter(c => !!c.controlName),
+        controls: controls.filter((l: FormControl) => isVisible(l)).filter(c => !!c.controlName),
         ////扫码|附件可作为封面
         filter: item => [14, 47].includes(item.type) || [14, 47].includes(item.sourceControlType),
       });
@@ -272,7 +273,7 @@ export default function HierarchyViewSetting(props) {
           coverType: 0,
           advancedSetting: { coverposition: '0' },
           showControls: controls
-            .filter(item => item.attribute !== 1)
+            .filter((item: FormControl) => item.attribute !== 1)
             .slice(0, 2)
             .map(({ controlId }) => controlId),
         }),
@@ -309,7 +310,7 @@ export default function HierarchyViewSetting(props) {
     if (controlLoading) return <LoadDiv />;
     return availableControls.length > 0 ? (
       <Menu style={{ maxHeight: 300, overflowY: 'auto' }}>
-        {availableControls.map(item => {
+        {availableControls.map((item: FormControl) => {
           const { controlId, controlName } = item;
           return (
             <Menu.Item

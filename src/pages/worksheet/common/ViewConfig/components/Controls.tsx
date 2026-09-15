@@ -5,6 +5,7 @@ import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import { NORMAL_SYSTEM_FIELDS_SORT, WORKFLOW_SYSTEM_FIELDS_SORT } from 'src/pages/worksheet/common/ViewConfig/enum';
 import SortColumns from 'src/pages/worksheet/components/SortColumns/';
 import { getAdvanceSetting } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 
 // 字段
 export default class Controls extends React.Component<any, any> {
@@ -63,7 +64,7 @@ export default class Controls extends React.Component<any, any> {
       editAttrs,
       controls,
       displayControls: (_.get(view, 'displayControls') || []).filter(o => !controls.includes(o)),
-      showControls: showControls.filter(o => !controls.includes(o)),
+      showControls: showControls.filter((o: FormControl) => !controls.includes(o)),
       ...(editAttrs.includes('advancedSetting') ? { advancedSetting: data, editAdKeys: Object.keys(data) } : {}),
     });
   };
@@ -72,7 +73,7 @@ export default class Controls extends React.Component<any, any> {
     const { height } = this.state;
     const { columns, view = {}, formatColumnsListForControls } = this.props;
     const { controls = [] } = view;
-    const viewcontrols = controls.filter(id => _.find(columns, column => column.controlId === id));
+    const viewcontrols = controls.filter((id: FormControl) => _.find(columns, column => column.controlId === id));
     return (
       <div className="commonConfigItem">
         <div className="textSecondary mTop8 mBottom4">{_l('设置此视图下的表单中需要对用户隐藏的字段')}</div>

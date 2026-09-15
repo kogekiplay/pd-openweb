@@ -14,6 +14,7 @@ import {
   handleShareNode,
 } from '../../utils/common';
 import { clearSelect } from './selectAction';
+import type { AppDispatch, GetState } from 'src/redux/types';
 
 export function updateKcListElement(ele) {
   return {
@@ -23,7 +24,7 @@ export function updateKcListElement(ele) {
 }
 
 export function changeFolder(path) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const kcState = getState().kc;
     const root = getRootByPath(path);
 
@@ -64,7 +65,7 @@ export function loadListById(id) {
 }
 
 export function fetchKcNodes(path, id, cb) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     let type;
     const kcState = getState().kc;
     path = decodeURIComponent(path || kcState.path || '');
@@ -151,10 +152,11 @@ export function reloadList() {
 }
 
 export function loadMoreKcNodes(cb = () => {}) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const kcState = getState().kc;
     const { params, isGlobalSearch } = kcState;
-    const { keywords, skip, limit } = params.toObject();
+    // params 是 Immutable Map，toObject() 的返回在类型上是 unknown 索引
+    const { keywords, skip, limit } = params.toObject() as { keywords?: string; skip: number; limit: number };
     dispatch({
       type: 'KC_UPDATE_PARAMS',
       value: {
@@ -170,7 +172,7 @@ export function loadMoreKcNodes(cb = () => {}) {
 }
 
 export function triggerLoadMoreNodes() {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const kcState = getState().kc;
     const { kcListElement, list, totalCount } = kcState;
 
@@ -217,7 +219,7 @@ export function startGlobalSearch(keywords) {
 }
 
 export function globalSearch(keywords) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const kcState = getState().kc;
     const { skip, limit, sortBy, sortType } = kcState.params.toObject();
     dispatch({
@@ -246,7 +248,7 @@ export function globalSearch(keywords) {
 }
 
 export function updateRoot(path) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const kcState = getState().kc;
     const root = getRootByPath(path);
     const { type, isRecycle, queryPath } = root;
@@ -293,7 +295,7 @@ export function updateRoot(path) {
 }
 
 export function changeSortBy(newSortBy) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     let newSortType;
     const kcState = getState().kc;
     const { sortBy, sortType } = kcState.params.toObject();
@@ -339,7 +341,7 @@ export function updateKcUsage() {
 
 /** 上传完成添加流量 */
 export function handleAddUsage(fsize) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const kcState = getState().kc;
     const { kcUsage, currentRoot } = kcState;
     const isUsage =
@@ -361,7 +363,7 @@ export function handleAddUsage(fsize) {
 }
 
 export function openUploadAssistant() {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const kcState = getState().kc;
     const { currentRoot, currentFolder, kcUsage, isRecycle } = kcState;
     handleOpenUploadAssistant({
@@ -380,7 +382,7 @@ export function openUploadAssistant() {
 }
 
 export function addLinkFile(isEdit = false, item = {}) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const kcState = getState().kc;
     const { currentRoot, currentFolder } = kcState;
     const args = {
@@ -400,7 +402,7 @@ export function addLinkFile(isEdit = false, item = {}) {
 }
 
 export function addNewFolder(folderName, cb = () => {}) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const kcState = getState().kc;
     const { currentRoot, currentFolder } = kcState;
     const validateOut = {};
@@ -436,7 +438,7 @@ export function addNewFolder(folderName, cb = () => {}) {
 }
 
 export function updateNodeItem(item) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     item = new IdItem(item);
     const kcState = getState().kc;
     const { list, selectedItems } = kcState;
@@ -460,7 +462,7 @@ export function updateNodeItem(item) {
 }
 
 export function removeNodeItem(ids) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     ids = _.isArray(ids) ? ids : [ids];
     const kcState = getState().kc;
     let { list, selectedItems } = kcState;
@@ -483,7 +485,7 @@ export function removeNodeItem(ids) {
 }
 
 export function removeNode(nodeStatus) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const kcState = getState().kc;
     const { list, totalCount, currentFolder, currentRoot, selectAll, selectedItems, params } = kcState;
     const { keywords } = params.toObject();
@@ -536,7 +538,7 @@ export function starNode(item) {
 }
 
 export function moveOrCopyClick(type, rootId) {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const kcState = getState().kc;
     const { list, baseUrl, currentFolder, currentRoot, selectAll, selectedItems, params } = kcState;
     const { keywords } = params.toObject();
@@ -575,7 +577,7 @@ export function moveOrCopyClick(type, rootId) {
 }
 
 export function restoreNode() {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const kcState = getState().kc;
     const { list, selectedItems, selectAll, currentFolder, currentRoot } = kcState;
     const { keywords } = kcState.params.toObject();
@@ -600,7 +602,7 @@ export function restoreNode() {
 }
 
 export function batchDownload() {
-  return (dispatch, getState) => {
+  return (dispatch: AppDispatch, getState: GetState) => {
     const kcState = getState().kc;
     const { list, selectedItems, currentFolder, currentRoot, selectAll } = kcState;
     handleBatchDownload({

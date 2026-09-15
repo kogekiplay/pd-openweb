@@ -171,7 +171,7 @@ export default function AIAction(props) {
       });
   };
 
-  const handleSave = (params, isCreate, callback = () => {}, newCurrentActionItem = {}) => {
+  const handleSave = (params, isCreate: boolean, callback = () => {}, newCurrentActionItem = {}) => {
     if (saveLoading) {
       return;
     }

@@ -509,7 +509,7 @@ class PublicConfig extends React.Component<any, any> {
     return `${this.props.shareUrl}?bg=no&submit=${buttonPosition}${coverPic}${logo}${title}${description}`;
   }
 
-  getDropdownControls(key) {
+  getDropdownControls(key: string) {
     const { originalControls, worksheetSettings } = this.props;
     const { extendSourceId, ipControlId, browserControlId, deviceControlId, systemControlId, weChatSetting } =
       this.state;

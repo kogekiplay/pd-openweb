@@ -3,6 +3,7 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import { Button, Input } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   display: flex;
@@ -87,7 +88,7 @@ export default function Header(props) {
     onKeyDown,
     onNewRecord,
     onExpandFastFilters,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const inputRef = createRef();
   const [keyword, setKeyword] = useState('');
   const searchControl = searchConfig.searchControl || _.find(controls, { attribute: 1 }) || {};

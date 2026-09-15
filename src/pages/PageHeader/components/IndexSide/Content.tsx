@@ -100,7 +100,7 @@ export default function SideContent(props) {
     return keys;
   };
 
-  const onExpandCollapse = key => {
+  const onExpandCollapse = (key?) => {
     if (key) {
       const isExpand = expandKeys.includes(key);
       safeLocalStorageSetItem(key, !isExpand);

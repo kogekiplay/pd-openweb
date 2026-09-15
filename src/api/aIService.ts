@@ -6,7 +6,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAIServiceStatus: function (args, options = {}) {
+  getAIServiceStatus: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'GetAIServiceStatus', args, options);
   },
   /**
@@ -17,7 +17,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editAIServiceStatus: function (args, options = {}) {
+  editAIServiceStatus: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'EditAIServiceStatus', args, options);
   },
   /**
@@ -28,7 +28,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addDeveloper: function (args, options = {}) {
+  addDeveloper: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'AddDeveloper', args, options);
   },
   /**
@@ -39,7 +39,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editDeveloper: function (args, options = {}) {
+  editDeveloper: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'EditDeveloper', args, options);
   },
   /**
@@ -52,7 +52,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editDeveloperStatus: function (args, options = {}) {
+  editDeveloperStatus: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'EditDeveloperStatus', args, options);
   },
   /**
@@ -63,7 +63,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getBuiltInModel: function (args, options = {}) {
+  getBuiltInModel: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'GetBuiltInModel', args, options);
   },
   /**
@@ -74,7 +74,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addServiceProvider: function (args, options = {}) {
+  addServiceProvider: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'AddServiceProvider', args, options);
   },
   /**
@@ -85,7 +85,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getServiceProviderDetail: function (args, options = {}) {
+  getServiceProviderDetail: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'GetServiceProviderDetail', args, options);
   },
   /**
@@ -97,7 +97,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getServiceProviderList: function (args, options = {}) {
+  getServiceProviderList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'GetServiceProviderList', args, options);
   },
   /**
@@ -109,7 +109,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editServiceProvider: function (args, options = {}) {
+  editServiceProvider: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'EditServiceProvider', args, options);
   },
   /**
@@ -121,7 +121,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editServiceProviderStatus: function (args, options = {}) {
+  editServiceProviderStatus: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'EditServiceProviderStatus', args, options);
   },
   /**
@@ -132,7 +132,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addModel: function (args, options = {}) {
+  addModel: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'AddModel', args, options);
   },
   /**
@@ -144,7 +144,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editModel: function (args, options = {}) {
+  editModel: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'EditModel', args, options);
   },
   /**
@@ -157,7 +157,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editModelStatus: function (args, options = {}) {
+  editModelStatus: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'EditModelStatus', args, options);
   },
   /**
@@ -168,7 +168,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAvailableModelProvider: function (args, options = {}) {
+  getAvailableModelProvider: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'GetAvailableModelProvider', args, options);
   },
   /**
@@ -180,7 +180,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getModelDetail: function (args, options = {}) {
+  getModelDetail: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'GetModelDetail', args, options);
   },
   /**
@@ -194,7 +194,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDeveloperWithModes: function (args, options = {}) {
+  getDeveloperWithModes: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'GetDeveloperWithModes', args, options);
   },
   /**
@@ -204,7 +204,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAllowDeveloperWithModes: function (args, options = {}) {
+  getAllowDeveloperWithModes: function (args?: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'GetAllowDeveloperWithModes', args, options);
   },
   /**
@@ -215,7 +215,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editFeatureBinding: function (args, options = {}) {
+  editFeatureBinding: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'EditFeatureBinding', args, options);
   },
   /**
@@ -227,7 +227,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFeatureBinding: function (args, options = {}) {
+  getFeatureBinding: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'GetFeatureBinding', args, options);
   },
   /**
@@ -237,7 +237,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  autoBindFeatures: function (args, options = {}) {
+  autoBindFeatures: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'AutoBindFeatures', args, options);
   },
   /**
@@ -248,7 +248,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editRagFeatureBinding: function (args, options = {}) {
+  editRagFeatureBinding: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'EditRagFeatureBinding', args, options);
   },
   /**
@@ -259,7 +259,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getRagFeatureBinding: function (args, options = {}) {
+  getRagFeatureBinding: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'GetRagFeatureBinding', args, options);
   },
   /**
@@ -269,7 +269,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorkFlowAIGCStatus: function (args, options = {}) {
+  getWorkFlowAIGCStatus: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'GetWorkFlowAIGCStatus', args, options);
   },
   /**
@@ -280,7 +280,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editWorkFlowAIGCStatus: function (args, options = {}) {
+  editWorkFlowAIGCStatus: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'EditWorkFlowAIGCStatus', args, options);
   },
   /**
@@ -290,7 +290,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getModelExtDetail: function (args, options = {}) {
+  getModelExtDetail: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'GetModelExtDetail', args, options);
   },
   /**
@@ -303,7 +303,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editModelExtDetail: function (args, options = {}) {
+  editModelExtDetail: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'EditModelExtDetail', args, options);
   },
   /**
@@ -315,7 +315,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editModelExtDetailStatus: function (args, options = {}) {
+  editModelExtDetailStatus: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'EditModelExtDetailStatus', args, options);
   },
   /**
@@ -326,7 +326,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editAIModelPricingPolicy: function (args, options = {}) {
+  editAIModelPricingPolicy: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'EditAIModelPricingPolicy', args, options);
   },
   /**
@@ -336,7 +336,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAIPricingPolicyDetail: function (args, options = {}) {
+  getAIPricingPolicyDetail: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'GetAIPricingPolicyDetail', args, options);
   },
   /**
@@ -346,7 +346,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getBasePricingPolicy: function (args, options = {}) {
+  getBasePricingPolicy: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'GetBasePricingPolicy', args, options);
   },
   /**
@@ -357,7 +357,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editBasicFeaturePricingPolicy: function (args, options = {}) {
+  editBasicFeaturePricingPolicy: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'EditBasicFeaturePricingPolicy', args, options);
   },
   /**
@@ -371,7 +371,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateSort: function (args, options = {}) {
+  updateSort: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'UpdateSort', args, options);
   },
   /**
@@ -384,7 +384,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  testConnection: function (args, options = {}) {
+  testConnection: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'TestConnection', args, options);
   },
   /**
@@ -398,7 +398,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  hasDuplicateName: function (args, options = {}) {
+  hasDuplicateName: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'HasDuplicateName', args, options);
   },
   /**
@@ -410,7 +410,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  sendAIServiceErrorMsg: function (args, options = {}) {
+  sendAIServiceErrorMsg: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('AIService', 'SendAIServiceErrorMsg', args, options);
   },
 };

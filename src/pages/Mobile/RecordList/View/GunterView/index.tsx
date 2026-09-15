@@ -5,6 +5,7 @@ import { LoadDiv } from 'ming-ui';
 import { SYS } from 'src/pages/widgetConfig/config/widget';
 import { isIllegal } from 'src/pages/worksheet/views/CalendarView/util';
 import { isGunterGroupMultiSelectControl } from 'src/pages/worksheet/views/GunterView/util.js';
+import type { RootState } from 'src/redux/types';
 import { getAdvanceSetting } from 'src/utils/control';
 import ViewErrorPage from '../components/ViewErrorPage';
 
@@ -54,7 +55,7 @@ class MobileGunterView extends Component<any, any> {
   }
 }
 
-export default connect(state => ({
+export default connect((state: RootState) => ({
   controls: state.sheet.controls,
   currentSheetRows: state.mobile.currentSheetRows,
 }))(MobileGunterView);

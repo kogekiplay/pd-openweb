@@ -74,11 +74,11 @@ const changeViewModel = (sheet, viewId, payload) => {
   };
 };
 
-const isExist = (views, keyName) => {
+const isExist = (views, keyName: string) => {
   return _.some(views, view => view[keyName]);
 };
 
-const getViewSize = (views, keyName) => {
+const getViewSize = (views, keyName: string) => {
   return _.filter(views, view => view[keyName]).length;
 };
 
@@ -121,7 +121,7 @@ export default class extends PureComponent<any, any> {
     onChange(changeSheetModel(sheet, key, checked));
   };
 
-  toggleViewLevel = (viewId, payload, isAllNoRead) => {
+  toggleViewLevel = (viewId, payload, isAllNoRead?) => {
     const { sheet, onChange } = this.props;
     onChange(changeViewModel({ ...sheet, canAdd: isAllNoRead ? false : sheet.canAdd }, viewId, payload));
   };

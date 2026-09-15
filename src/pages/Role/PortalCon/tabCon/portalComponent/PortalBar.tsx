@@ -2,20 +2,22 @@ import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Switch } from 'antd';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import { Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import externalPortalAjax from 'src/api/externalPortal';
+import type { RootState } from 'src/redux/types';
 import * as actions from '../../redux/actions';
 import FilterDrop from './FilterDrop';
 import SearchTelsDialog from './SearchTels';
 import { ClearIcon, Popup, PortalBarWrap } from './style';
+import type { FormControl } from 'src/utils/controlTypes';
 
 function PortalBar(props) {
   const { portal, setHideIds, setKeyWords, keys, appId } = props;
-  const { showPortalControlIds = [], controls = [] } = portal;
+  const { showPortalControlIds = [], controls = [] }: { controls: FormControl[]; [key: string]: any } = portal;
   const [showTels, setShowTels] = useState(false);
   const [columnsKey, setcolumnsKey] = useState('');
   const [inputValue, setInputValue] = useState('');
@@ -213,7 +215,7 @@ function PortalBar(props) {
   );
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   portal: state.portal,
 });
 

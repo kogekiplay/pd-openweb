@@ -7,6 +7,7 @@ import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget';
 import { browserIsMobile } from 'src/utils/common';
 import { getRecordCardStyle } from 'src/utils/control';
 import { checkCellIsEmpty, checkControlCanSetStyle } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 
 function getCellContentPaddingTop(control, isNotEmpty) {
   if (!isNotEmpty) {
@@ -119,7 +120,7 @@ export default function CardCellControls(props) {
     viewId,
     isCharge,
     sheetSwitchPermit,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const isMobile = browserIsMobile();
 
   return (

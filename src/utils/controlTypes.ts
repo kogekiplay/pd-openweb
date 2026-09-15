@@ -1,0 +1,226 @@
+/**
+ * 控件（字段）的领域类型。
+ *
+ * 放在 src/utils 而不是 Form 下：src/utils/control.ts、worksheet 各处都要用它，
+ * 放在 components 里会让 utils 反向依赖 components。
+ * 表单侧通过 src/components/Form/core/types.ts 再导出使用。
+ *
+ * 这里的字段【不是照着后端文档抄的】，是把 src/components/Form/core 下
+ * 对控件对象的读写点统计出来、按出现次数从高到低补齐的（type 91 次、controlId 61 次、
+ * value 50 次、advancedSetting 42 次……）。所以它描述的是「本仓实际怎么用控件」，
+ * 而不是「控件理论上有哪些字段」——后者要从 swagger 生成，是另一件事。
+ *
+ * 因此它【故意不完备】：遇到没列的字段，补一行进来，而不是退回 any。
+ */
+
+/**
+ * 控件的运行时值。
+ *
+ * 形状【随控件类型变化】：文本是 string，数值是 number/string，附件和子表是数组，
+ * 级联/关联是对象或 JSON 字符串。要精确建模得按 50 多种控件类型做判别联合，
+ * 那是一件独立工程（且需要先从 swagger 拿到各类型的值契约）。
+ *
+ * 在那之前用具名别名而不是裸 any：至少它可以被 grep 出来、可以被逐步收窄，
+ * 收窄时也只需要改这一处定义。
+ */
+export type ControlValue = any;
+
+/**
+ * 子表/关联表的行存储句柄，由外部通过 setSubListStore 挂到控件上。
+ * 实现在 Form/core 之外（ChildTableStore），这里只需要「有这么个东西」。
+ */
+export type SubListStore = any;
+
+/** 控件的高级设置。键极多且按控件类型各不相同，值统一是字符串（后端就是这么存的）。 */
+export interface ControlAdvancedSetting {
+  [key: string]: string;
+}
+
+/** 控件权限位。 */
+export interface ControlPermissions {
+  [key: string]: boolean | number | string;
+}
+
+/**
+ * 表单控件（字段）。
+ * 递归字段（relationControls / showControls）用自身类型，子表控件靠它们描述内层结构。
+ */
+export interface FormControl {
+  controlId?: string;
+  /** 控件类型，见 src/utils/enum 的控件类型表 */
+  type?: number;
+  controlName?: string;
+  value?: ControlValue;
+  advancedSetting?: ControlAdvancedSetting;
+  /** 控件上挂的自定义事件权限配置 */
+  eventPermissions?: any;
+  /** 关联记录控件指定的关联视图 */
+  viewId?: string;
+  /** 关联记录控件指向的应用 */
+  appId?: string;
+  /** 移动端卡片给控件挂的外层 class */
+  className?: string;
+  /** 卡片/详情里给控件挂的可编辑标记 */
+  canEdit?: boolean;
+  /** 卡片单元格自带的写回函数 */
+  updateCell?: (data: any) => void;
+  /** 打印时是否隐藏这个控件 */
+  printHide?: boolean;
+  /** 该控件在当前视图是否可见（自定义动作/打印模板按它过滤） */
+  viewDisplay?: boolean;
+  /** 应用升级 / 公式编辑器挂的原始控件类型，和 originType 不是一回事 */
+  originalType?: number;
+  /** 关联表控件上挂的被关联表控件列表（另有同义的 relationControls） */
+  relateControls?: FormControl[];
+  /** 打印模块给控件挂的：明细表打印形态 */
+  printDetailType?: number;
+  /** 打印配置/字段选择器里给控件挂的勾选态 */
+  checked?: boolean;
+  /** Mingo AI 建表时标记这个控件是 AI 智能填充出来的 */
+  isSmartFill?: boolean;
+  /** Mingo AI 建表时给出的理由 */
+  Reason?: string;
+  /** 关联记录控件上的「新建」按钮文案 */
+  sourceBtnName?: string;
+  /** 他表字段/快速筛选里挂着的源控件 */
+  sourceControl?: FormControl;
+  /** 子表/关联表的行存储，由 setSubListStore 挂上 */
+  store?: SubListStore;
+  /** 复制控件时的原始 controlId */
+  cid?: string;
+  sid?: string;
+  rcid?: string;
+  rowid?: string;
+  enumDefault?: number;
+  enumDefault2?: number;
+  /** 关联表的字段列表 */
+  relationControls?: FormControl[];
+  /** 分段控件（type 52）下挂的子控件，由 getControlsByTab 按 sectionId 归拢出来 */
+  child?: FormControl[];
+  /** 关联记录在表单上展示的字段 */
+  showControls?: string[];
+  dataSource?: string;
+  /** 动态默认值配置 */
+  dynamicSource?: ControlValue[];
+  defsource?: string;
+  sourcevalue?: string;
+  sourceControlId?: string;
+  /** 关联表里作为标题显示的字段 */
+  sourceTitleControlId?: string;
+  sourceControlType?: number;
+  /** 汇总/公式控件里指向的原始控件类型（注意大小写与 sourceControlType 不同，后端就是两个键） */
+  sourceControltype?: number;
+  /** 他表字段的原始控件类型 */
+  originType?: number;
+  strDefault?: string;
+  storeFromDefault?: boolean;
+  fieldPermission?: string;
+  /**
+   * 权限位，后端存成 '111' 这样的三位字符串，全仓都是按下标取字符
+   * （controlPermissions[0] / [1] / [2]）。
+   * 不要写成 `string | ControlPermissions`：对象那一支没有任何读取点，
+   * 只会让每个下标访问都要先判别一次类型。
+   */
+  controlPermissions?: string;
+  /** 人员控件的用途：2 表示这一列里的人是记录拥有者 */
+  userPermission?: number;
+  /** 关联记录/附件等多值控件的条数，由 getRowDetail 从 rq{controlId} 拼上来 */
+  count?: number;
+  /** 手机号等掩码字段：解码后是否展示全值 */
+  showMaskValue?: boolean;
+  /** 业务规则里这一项覆盖的子控件 id（分段/子表展开后的成员） */
+  childControlIds?: string[];
+  /** 业务规则赋予该控件的权限位 */
+  permission?: number | string;
+  /** 该字段不允许重复（全表唯一） */
+  unique?: boolean;
+  /** 该字段在同一条记录的子表内不允许重复 */
+  uniqueInRecord?: boolean;
+  /** 业务规则里标记为自定义项 */
+  isCustom?: boolean;
+  /** 该控件来自主记录（子表/自定义动作里用来区分主表字段） */
+  fromMaster?: boolean;
+  /** 加密字段的标识，有值即表示该字段加密 */
+  encryId?: string;
+  /**
+   * 刷新记录弹层把关联字段展开成树时挂上的子节点。
+   * 与 child（分段控件的成员）不是一回事：那个由 getControlsByTab 归拢，这个是刷新弹层自己拼的。
+   */
+  children?: FormControl[];
+  /** 选项类控件被写入默认值时，同时落一份到 default（见 FillRecordControls） */
+  default?: ControlValue;
+  /** 表格列宽（视图里可拖拽调整后落到控件上） */
+  width?: number;
+  /** 展开态单元格额外占用的宽度 */
+  appendWidth?: number;
+  disabled?: boolean;
+  required?: boolean;
+  sectionId?: string;
+  id?: string;
+  editType?: number;
+  size?: number;
+  options?: ControlValue[];
+  isSubList?: boolean;
+  dot?: number;
+  unit?: string;
+  hint?: string;
+  desc?: string;
+  attribute?: number;
+  row?: number;
+  col?: number;
+  half?: boolean;
+  /** 生成来源（如 AI 推荐的原始描述），保留备查 */
+  source?: ControlValue;
+  isRequired?: boolean;
+  isHeading?: boolean;
+  description?: string;
+  code?: string;
+  alias?: string;
+  /** 子表控件的行数据 */
+  data?: ControlValue;
+  /** 规则求值前的原始状态，用于还原 */
+  defaultState?: ControlValue;
+  hidden?: boolean;
+  /** 规则把控件置灰时不参与必填校验 */
+  ignoreDisabled?: boolean;
+  /** 由 Excel 导入创建，跳过部分校验 */
+  isImportFromExcel?: boolean;
+  /** 移动端规则锁，避免重复触发 */
+  mobileCheckRuleLocked?: boolean;
+}
+
+/**
+ * 一行记录的原始值。
+ * 索引签名在这里【不是偷懒】：这个对象的键就是 controlId，
+ * 代码里也确实是 row[control.controlId] 这么取的。
+ */
+/**
+ * 统计行最左侧那一格不是真控件，只有一个哨兵 type。
+ * 【不能】把 'summaryhead' 并进 FormControl['type'] —— 一并进去，全仓
+ * `[9, 10, 11].includes(control.type)` 这类数值判断就全部 TS2345，
+ * 为了一格表头污染所有真控件的取值不划算。要它的地方用这个联合。
+ */
+export interface SummaryHeadControl {
+  type: 'summaryhead';
+}
+export type MaybeSummaryHeadControl = FormControl | SummaryHeadControl;
+
+export interface RecordRow {
+  rowid?: string;
+  [controlId: string]: any;
+}
+
+/**
+ * 人员 / 部门 / 组织角色 / 选项 这类选择型控件的【值元素】。
+ * 控件的 value 是一段 JSON 串，解析出来是这种对象的数组。
+ * 字段按各控件类型不同只出现其中几个，所以全部可选。
+ */
+export interface SelectedEntityValue {
+  id?: string;
+  sid?: string;
+  accountId?: string;
+  departmentId?: string;
+  organizeId?: string;
+  name?: string;
+  value?: ControlValue;
+}

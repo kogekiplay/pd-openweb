@@ -186,7 +186,7 @@ export default class User extends React.Component<any, any> {
     });
   };
 
-  pickUser = event => {
+  pickUser = (event?) => {
     const { isSubList, cell, projectId, appId, rowFormData, onValidate, masterData = () => {} } = this.props;
     const { value } = this.state;
     const target = (this.cell && this.cell.current) || (event || {}).target;

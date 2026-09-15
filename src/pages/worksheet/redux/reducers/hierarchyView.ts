@@ -2,6 +2,8 @@ import update from 'immutability-helper';
 import { isArray, isEmpty } from 'lodash';
 import _ from 'lodash';
 import { dealChildren, dealPath, initState } from './util';
+import type { ReduxAction } from 'src/redux/types';
+import type { FormControl } from 'src/utils/controlTypes';
 
 // 按已有顺序排序
 const sortChildIds = (treeData, rowId, childrenids) => {
@@ -279,7 +281,7 @@ function removeHierarchyTempItem({ state, data }) {
 }
 
 // 更新层级记录状态树
-export function hierarchyViewState(state = [], action) {
+export function hierarchyViewState(state = [], action: ReduxAction) {
   const { type, data } = action;
 
   switch (type) {
@@ -370,7 +372,7 @@ export function hierarchyViewState(state = [], action) {
   }
 }
 
-export function hierarchyViewData(state = {}, action) {
+export function hierarchyViewData(state = {}, action: ReduxAction) {
   const { type, data } = action;
 
   switch (type) {
@@ -403,7 +405,7 @@ export function hierarchyViewData(state = {}, action) {
   }
 }
 
-export function hierarchyDataStatus(state = { loading: false, hasMoreData: true, pageIndex: 1, pageSize: 50 }, action) {
+export function hierarchyDataStatus(state = { loading: false, hasMoreData: true, pageIndex: 1, pageSize: 50 }, action: ReduxAction) {
   const { type, data } = action;
 
   switch (type) {
@@ -414,7 +416,7 @@ export function hierarchyDataStatus(state = { loading: false, hasMoreData: true,
   }
 }
 
-export function hierarchyTopLevelDataCount(state = 0, action) {
+export function hierarchyTopLevelDataCount(state = 0, action: ReduxAction) {
   switch (action.type) {
     case 'CHANGE_HIERARCHY_TOP_LEVEL_DATA_COUNT':
       return action.count;
@@ -424,16 +426,16 @@ export function hierarchyTopLevelDataCount(state = 0, action) {
 }
 
 const addRelateControls = (state, { ids, controls }) => {
-  const newControls = ids.reduce((p, c, index) => {
+  const newControls: FormControl[] = ids.reduce((p, c, index) => {
     p[c] = controls[index];
     return p;
   }, {});
   return { ...state, ...newControls };
 };
 
-export function hierarchyRelateSheetControls(state = {}, action) {
+export function hierarchyRelateSheetControls(state = {}, action: ReduxAction) {
   const { type, payload = {} } = action;
-  const { ids = [], controls = [] } = payload;
+  const { ids = [], controls = [] }: { controls: FormControl[]; [key: string]: any } = payload;
 
   switch (type) {
     case 'INIT_HIERARCHY_RELATE_SHEET_CONTROLS':
@@ -448,7 +450,7 @@ export function hierarchyRelateSheetControls(state = {}, action) {
   }
 }
 
-export function searchRecordId(state = null, action) {
+export function searchRecordId(state = null, action: ReduxAction) {
   switch (action.type) {
     case 'CHANGE_HIERARCHY_SEARCH_RECORD_ID':
       return action.data;
@@ -457,7 +459,7 @@ export function searchRecordId(state = null, action) {
   }
 }
 
-export function recordInfoId(state = null, action) {
+export function recordInfoId(state = null, action: ReduxAction) {
   switch (action.type) {
     case 'CHANGE_HIERARCHY_RECORD_INFO_ID':
       return action.data;

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import { Icon } from 'ming-ui';
 import { DEFAULT_CONFIG, SYS, SYS_CONTROLS } from '../../../../config/widget';
 import { DropdownOverlay } from '../../../../styled';
@@ -31,7 +31,9 @@ export default function AddFields(props) {
       }
 
       requestAnimationFrame(() => {
-        triggerRef.current?.forcePopupAlign?.();
+        // 名字随 rc-trigger → @rc-component/trigger 改了：forcePopupAlign → forceAlign
+        //（es/index.js:285）。原来的 ?.forcePopupAlign?.() 不报错，但恒为 no-op。
+        triggerRef.current?.forceAlign?.();
       });
     });
   };

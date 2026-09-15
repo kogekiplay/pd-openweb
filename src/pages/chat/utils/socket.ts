@@ -6,7 +6,7 @@ export const Message = {
    * @param {*} type 个人消息 or 群组消息
    * @param {*} param 消息内容
    */
-  send(type, param) {
+  send(type: number, param) {
     delete param.atParam;
     return new Promise((resolve, reject) => {
       if (type === Constant.SESSIONTYPE_USER) {
@@ -33,7 +33,7 @@ export const Message = {
    * @param {*} type 个人消息 or 群组消息
    * @param {*} param
    */
-  sendShake(type, param) {
+  sendShake(type: number, param) {
     return new Promise((resolve, reject) => {
       if (type === Constant.SESSIONTYPE_USER) {
         IM.socket.emit('shake shake', param, (err, data) => {

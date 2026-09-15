@@ -20,6 +20,7 @@ import MobileConfig from './MobileConfig';
 import NavShow from './NavShow';
 import SearchConfig from './SearchConfig';
 import { canNavGroup, getSetDefault, getSetHtmlData } from './util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrap = styled.div`
   .hasData {
@@ -241,11 +242,11 @@ const WrapDrop = styled.div`
 
 export default function NavGroup(params) {
   let ajaxInfoFn = null;
-  const { worksheetControls = [], view = {}, updateCurrentView, worksheetId, columns, currentSheetInfo = {} } = params;
+  const { worksheetControls = [], view = {}, updateCurrentView, worksheetId, columns, currentSheetInfo = {} }: { worksheetControls: FormControl[]; [key: string]: any } = params;
   let [navGroup, setData] = useState({});
   let [filterData, setDatas] = useState();
-  let [usenav, setUsenav] = useState(); //空或者0：不使用筛选条件作为默认值 1：使用筛选条件作为默认值 ，老数据后端回兼容，新配置需要前端把这个值设为1
-  let [showAddCondition, setShowAddCondition] = useState();
+  let [usenav, setUsenav] = useState<string | undefined>(); //空或者0：不使用筛选条件作为默认值 1：使用筛选条件作为默认值 ，老数据后端回兼容，新配置需要前端把这个值设为1
+  let [showAddCondition, setShowAddCondition] = useState<boolean | undefined>();
   const [relateSheetInfo, setRelateSheetInfo] = useState([]);
   const [relateControls, setRelateControls] = useState([]);
   const [{ navshow, navfilters, navwidth, appnavtype }, setState] = useSetState({
@@ -269,7 +270,7 @@ export default function NavGroup(params) {
     let navGroup = groupData.length > 0 ? groupData[0] : {};
     setData(navGroup);
     let { controlId } = navGroup;
-    const d = worksheetControls.find(item => item.controlId === controlId) || {};
+    const d = worksheetControls.find((item: FormControl) => item.controlId === controlId) || {};
     setDatas({
       ...navGroup,
       isErr: !d.controlId,
@@ -285,7 +286,7 @@ export default function NavGroup(params) {
     updateView(undefined);
   };
 
-  const updateView = (navGroup, advancedSetting) => {
+  const updateView = (navGroup, advancedSetting?) => {
     setData(navGroup);
     let editAttrs = ['navGroup'];
     let param = { navGroup: navGroup ? [navGroup] : [] };
@@ -467,16 +468,16 @@ export default function NavGroup(params) {
             />
             {/*  支持排序的字段：关联记录、人员、选项、等级*/}
             {([29, 26, 9, 10, 11, 28, 27, 48].includes(
-              (worksheetControls.find(o => o.controlId === navGroup.controlId) || {}).type,
+              (worksheetControls.find((o: FormControl) => o.controlId === navGroup.controlId) || {}).type,
             ) ||
               [29, 26, 9, 10, 11, 28, 27, 48].includes(
-                (worksheetControls.find(o => o.controlId === navGroup.controlId) || {}).sourceControlType,
+                (worksheetControls.find((o: FormControl) => o.controlId === navGroup.controlId) || {}).sourceControlType,
               )) &&
               !['2'].includes(navshow) && (
                 <NavSort
                   view={view}
                   customitemsKey={'customnavs'}
-                  viewControlData={worksheetControls.find(o => o.controlId === navGroup.controlId) || {}}
+                  viewControlData={worksheetControls.find((o: FormControl) => o.controlId === navGroup.controlId) || {}}
                   appId={_.get(currentSheetInfo, 'appId')}
                   projectId={_.get(currentSheetInfo, 'projectId')}
                   controls={worksheetControls}
@@ -489,10 +490,10 @@ export default function NavGroup(params) {
                     if (
                       editAdKeys.includes('navsorts') &&
                       ([9, 10, 11, 28].includes(
-                        (worksheetControls.find(o => o.controlId === navGroup.controlId) || {}).type,
+                        (worksheetControls.find((o: FormControl) => o.controlId === navGroup.controlId) || {}).type,
                       ) ||
                         [9, 10, 11, 28].includes(
-                          (worksheetControls.find(o => o.controlId === navGroup.controlId) || {}).sourceControlType,
+                          (worksheetControls.find((o: FormControl) => o.controlId === navGroup.controlId) || {}).sourceControlType,
                         ))
                     ) {
                       //  _l('升序') '0', _l('降序') '1',
@@ -583,7 +584,7 @@ export default function NavGroup(params) {
                   const iconName = filterData.isErr
                     ? 'error1'
                     : getIconByType(
-                        (worksheetControls.find(item => item.controlId === _.get(filterData, ['controlId'])) || {})
+                        (worksheetControls.find((item: FormControl) => item.controlId === _.get(filterData, ['controlId'])) || {})
                           .type,
                         false,
                       );
@@ -673,7 +674,7 @@ export default function NavGroup(params) {
           </React.Fragment>
           {_.get(filterData, 'type') === 29 && (
             <SearchConfig
-              controls={(worksheetControls.find(o => o.controlId === navGroup.controlId) || {}).relationControls || []}
+              controls={(worksheetControls.find((o: FormControl) => o.controlId === navGroup.controlId) || {}).relationControls || []}
               data={view.advancedSetting}
               onChange={newValue => {
                 updateAdvancedSetting({ ...newValue });

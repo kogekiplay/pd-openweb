@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import * as actions from 'statistics/redux/actions';
+import type { RootState } from 'src/redux/types';
 import { reportTypes } from '../../Charts/common';
 import { chartType, funnelCurvatureList, funnelShapeList } from '../../common/chartTypeConfig';
 import { filterDisableParticleSizeTypes, getAxisText } from '../../common/reportConfigUtils';
@@ -17,6 +18,7 @@ import WithoutFidldItem from './components/WithoutFidldItem';
 import XAxis from './components/XAxis';
 import YAxis from './components/YAxis';
 import './index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 let ChartSetting = class ChartSetting extends Component<any, any> {
   constructor(props) {
@@ -239,7 +241,7 @@ let ChartSetting = class ChartSetting extends Component<any, any> {
 
             if (specificValue) {
               const columnSummary = _.get(currentReport, 'pivotTable.columnSummary') || {};
-              const controlList = columnSummary.controlList.filter(item => item.controlId !== specificValue.controlId);
+              const controlList: FormControl[] = columnSummary.controlList.filter(item => item.controlId !== specificValue.controlId);
               data.pivotTable = {
                 ...currentReport.pivotTable,
                 columnSummary: { ...columnSummary, controlList },
@@ -616,7 +618,7 @@ let ChartSetting = class ChartSetting extends Component<any, any> {
   }
 };
 ChartSetting = connect(
-  state => ({
+  (state: RootState) => ({
     ..._.pick(state.statistics, ['currentReport', 'reportData', 'axisControls', 'worksheetInfo', 'filterItem']),
   }),
   dispatch => bindActionCreators(actions, dispatch),

@@ -54,7 +54,7 @@ function WorksheetRecordLogThumbnail(props) {
     );
   }
 
-  const renderList = (list, bgColor) => {
+  const renderList = (list, bgColor: string) => {
     if (isMobile) {
       return list.map(item => (
         <span

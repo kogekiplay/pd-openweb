@@ -17,7 +17,7 @@ function isRecord(value) {
 }
 
 // 大小写不敏感的字段读取：后端 Pascal / camel 混用，统一兜底
-export function readField(source, key) {
+export function readField(source, key: string) {
   if (!isRecord(source)) return undefined;
   if (key in source) return source[key];
   const target = key.toLowerCase();
@@ -84,7 +84,7 @@ export const AGENT_HEADER_EVENT = {
 };
 
 // 后端返回列表的字段名 Pascal / camel 混用，且外层可能套 data / messages / items：统一兜底取数组
-function pickList(body, keys) {
+function pickList(body, keys: string[]) {
   if (Array.isArray(body)) return body;
   if (!isRecord(body)) return [];
   for (const key of keys) {
@@ -96,7 +96,7 @@ function pickList(body, keys) {
   return [];
 }
 
-function readFirstField(source, keys) {
+function readFirstField(source, keys: string[]) {
   for (const key of keys) {
     const value = stringValue(readField(source, key));
 
@@ -385,8 +385,11 @@ function readCredits(usage) {
 
 // 拉取指定会话的原始消息分页。官网免登录 plan 页用它先做“是否有历史”的门控，
 // 其他登录态历史仍走 fetchAgentSessionMessages，并默认带 includeUsage=true 展示信用点。
-export async function fetchAgentSessionMessagePage(sessionId, { page = 1, size = 50, includeUsage = false } = {}) {
-  const params = { sessionId, page, size };
+export async function fetchAgentSessionMessagePage(
+  sessionId?: string,
+  { page = 1, size = 50, includeUsage = false }: { page?: number; size?: number; includeUsage?: boolean } = {},
+) {
+  const params: ApiArgs = { sessionId, page, size };
 
   if (includeUsage === true) params.includeUsage = true;
 
@@ -407,8 +410,21 @@ export async function fetchAgentSessionMessagePage(sessionId, { page = 1, size =
 // includeUsage=true：已结算轮的 assistant 消息附带 usage.credits，历史里直接展示本轮消耗的信用点。
 // includeAnonymousPlanArtifact=true：仅官网免登录 plan 历史使用，兼容匿名接口的 artifactId/artifactVersionId。
 export async function fetchAgentSessionMessages(
-  sessionId,
-  { page = 1, size = 50, includeUsage = true, includeAnonymousPlanArtifact = false, rawItems } = {},
+  sessionId?: string,
+  {
+    page = 1,
+    size = 50,
+    includeUsage = true,
+    includeAnonymousPlanArtifact = false,
+    rawItems,
+  }: {
+    page?: number;
+    size?: number;
+    includeUsage?: boolean;
+    includeAnonymousPlanArtifact?: boolean;
+    /** 已经拉过的原始消息，传了就不再请求（官网 plan 页历史门控复用） */
+    rawItems?: any[];
+  } = {},
 ) {
   const rawList = Array.isArray(rawItems)
     ? rawItems
@@ -698,6 +714,31 @@ function parseSseBlock(block) {
   }
 }
 
+/**
+ * 一次 agent 流式请求的入参。调用方按场景传子集（首轮 / 续建 / 确认弹层回执 / 匿名），
+ * 所以全部可选 —— 不写出来的话 TS 会把这 13 个解构项全判成必填，
+ * 每个调用点都报「缺 10 个属性」。
+ */
+export interface AgentStreamRequest {
+  sessionId?: string;
+  message?: string;
+  agentName?: string;
+  projectId?: string;
+  /** 是否强制重新路由 agent；钉住 agent 时为 false */
+  forceReroute?: boolean;
+  forceRefresh?: boolean;
+  attachments?: any[];
+  /** 搭建上下文（plan 派生字段 + 对话上下文） */
+  context?: any;
+  artifactId?: string;
+  /** 基于哪个版本继续改 */
+  basedOnVersionId?: string;
+  /** 计划漂移 / 重建确认弹层的回执 */
+  confirmation?: any;
+  captchaTicket?: string;
+  captchaRandstr?: string;
+}
+
 export async function requestAgentStream(
   {
     sessionId,
@@ -713,9 +754,9 @@ export async function requestAgentStream(
     confirmation,
     captchaTicket,
     captchaRandstr,
-  },
-  { onEvent, enableCaptcha = false } = {},
-  externalSignal,
+  }: AgentStreamRequest,
+  { onEvent, enableCaptcha = false }: { onEvent?: (event: any) => void; enableCaptcha?: boolean } = {},
+  externalSignal?: AbortSignal,
 ) {
   const abortController = new AbortController();
 
@@ -744,7 +785,7 @@ export async function requestAgentStream(
     return error;
   };
 
-  const requestStream = async extra => {
+  const requestStream = async (extra?) => {
     const response = await agentAjax.agentExecuteStream(
       {
         sessionId,

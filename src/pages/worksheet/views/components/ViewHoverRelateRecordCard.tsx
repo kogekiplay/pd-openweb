@@ -8,6 +8,7 @@ import { browserIsMobile } from 'src/utils/common';
 import { completeControls } from 'src/utils/control';
 import { replaceControlsTranslateInfo } from 'src/utils/translate';
 import { getCoverUrl } from 'src/utils/view.js';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const CardWrapper = styled.div`
   width: 300px;
@@ -46,7 +47,7 @@ export default class ViewHoverRelateRecordCard extends Component<any, any> {
       worksheetId,
       formData = [],
     } = this.props;
-    const { showControls, relationControls = [], advancedSetting = {} } = control;
+    const { showControls, relationControls = [], advancedSetting = {} }: { relationControls: FormControl[]; [key: string]: any } = control;
     const { chooseshowids } = advancedSetting;
     const chooseShowIds = safeParse(chooseshowids, 'array');
     const showControlIds = control.enumDefault === 1 && advancedSetting.showtype === '3' ? chooseShowIds : showControls;

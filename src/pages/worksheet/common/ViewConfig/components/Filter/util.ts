@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { CONTROL_FILTER_WHITELIST } from 'src/pages/worksheet/common/WorkSheetFilter/enum.js';
 import { getTypeKey, redefineComplexControl } from 'src/pages/worksheet/common/WorkSheetFilter/util';
 
-export function formatCondition(condition, relationControls, fromCondition) {
+export function formatCondition(condition, relationControls, fromCondition?) {
   if ((_.get(condition, 'groupFilters') || []).length > 0) {
     return {
       ...condition,

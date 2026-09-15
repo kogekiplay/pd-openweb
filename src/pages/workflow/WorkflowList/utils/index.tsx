@@ -185,7 +185,7 @@ export const TYPES = [
   { text: _l('事件推送'), value: FLOW_TYPE.EVENT_PUSH, icon: 'icon-sending' },
 ];
 
-export const getActionTypeContent = (type, item, disable) => {
+export const getActionTypeContent = (type, item, disable?) => {
   const days = [_l('星期日'), _l('星期一'), _l('星期二'), _l('星期三'), _l('星期四'), _l('星期五'), _l('星期六')];
   const triggerText = {
     1: _l('仅新增记录时'),

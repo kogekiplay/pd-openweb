@@ -8,6 +8,7 @@ import RoleController from 'src/api/role';
 import addFriends from 'src/components/addFriends';
 import { checkCertification } from 'src/components/checkCertification';
 import PaginationWrap from 'src/pages/Admin/components/PaginationWrap';
+import type { RootState } from 'src/redux/types';
 import * as currentActions from '../../actions/current';
 import * as entitiesActions from '../../actions/entities';
 import DialogBatchEdit from '../../modules/dialogBatchEdit';
@@ -300,7 +301,7 @@ class StructureContent extends Component<any, any> {
 }
 
 export default connect(
-  state => {
+  (state: RootState) => {
     const {
       current,
       pagination: { userList = [] },

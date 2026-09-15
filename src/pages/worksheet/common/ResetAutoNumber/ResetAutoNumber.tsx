@@ -5,6 +5,7 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import { Button, Dialog, Icon } from 'ming-ui';
 import worksheetAjax from 'src/api/worksheet';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const ResetContent = styled.div`
   width: 400px;
@@ -47,7 +48,7 @@ const ResetWrap = styled.div`
 
 export default function ResetAutoNumber(props) {
   const { worksheetInfo, onHide } = props;
-  const controls = get(worksheetInfo, ['template', 'controls']);
+  const controls: FormControl[] = get(worksheetInfo, ['template', 'controls']);
   const autoNumberControls = filter(controls, item => item.type === 33);
   const [activeIndex, setIndex] = useState(-1);
   const [initNum, setNum] = useState(1);

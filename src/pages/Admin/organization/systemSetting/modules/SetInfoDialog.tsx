@@ -62,7 +62,7 @@ export default class SetInfoDialog extends Component<any, any> {
   }
 
   // 获取国家和地区数据
-  getRegionConfigInfos(keywords) {
+  getRegionConfigInfos(keywords?) {
     if (this.searchRequest && this.searchRequest.abort) {
       this.searchRequest.abort();
     }

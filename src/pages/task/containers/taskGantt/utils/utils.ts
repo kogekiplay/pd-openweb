@@ -105,7 +105,7 @@ const getValidHours = (startTime, endTime, filterWeekend) => {
  * @param  {boolean} filterWeekend  是否过滤周末
  * @return {object}  showStartTime, showEndTime, showHourLong
  */
-const checkTime = (startTime, endTime, filterWeekend) => {
+const checkTime = (startTime, endTime, filterWeekend?) => {
   // 最大截止时间
   const maxWorkingEnd = workingTimes[workingTimes.length - 1][1];
 
@@ -251,7 +251,7 @@ const checkTime = (startTime, endTime, filterWeekend) => {
  * @param  {boolean} filterWeekend  是否过滤周末
  * @return {[]}  数据源
  */
-const taskTimeBars = (source, viewType, filterWeekend) => {
+const taskTimeBars = (source, viewType: number, filterWeekend: boolean) => {
   // 不同视图下任务名称代表多少小时
   let taskNameTime;
 
@@ -531,7 +531,7 @@ const singleTaskArrow = (tasks, task, level) => {
  * @param  {number} level  当前层级
  * @return {[]}  数据源
  */
-const updateTasksDataSource = (source, status, viewType, filterWeekend, level) => {
+const updateTasksDataSource = (source, status: number, viewType: number, filterWeekend: boolean, level: number) => {
   source.forEach(data => {
     // 循环处理任务箭头的问题
     data.tasks.forEach(task => {
@@ -733,7 +733,7 @@ const singleDayWidth = viewType => {
  * @param  {string} month 月份
  * @return {number}
  */
-const singleTableWidth = (viewType, filterWeekend, month) => {
+const singleTableWidth = (viewType, filterWeekend?, month?) => {
   // 日
   if (viewType === VIEWTYPE.DAY) {
     return singleDayWidth(viewType);
@@ -986,7 +986,7 @@ const offsetStartPositiveHour = (currentTime, hour) => {
  * @param  {string} hour 偏移的小时
  * @return {object}
  */
-const offsetStartNegativeHour = (currentTime, hour) => {
+const offsetStartNegativeHour = (currentTime, hour: number) => {
   let day = 0;
 
   for (let i = 0; i < hour; i++) {
@@ -1020,7 +1020,7 @@ const offsetStartNegativeHour = (currentTime, hour) => {
  * @param  {string} hour 偏移的小时
  * @return {object}
  */
-const offsetEndPositiveHour = (currentTime, hour) => {
+const offsetEndPositiveHour = (currentTime, hour: number) => {
   let day = 0;
 
   for (let i = 0; i < hour; i++) {
@@ -1095,7 +1095,7 @@ const offsetEndNegativeHour = (currentTime, hour) => {
  * @param  {number} viewType 当前视图
  * @return {object}
  */
-const offsetTime = (start, end, filterWeekend, offsetTime, minStartTime, maxEndTime, viewType) => {
+const offsetTime = (start, end, filterWeekend, offsetTime: number, minStartTime, maxEndTime, viewType) => {
   const startOffset = getDays(offsetTime);
   const endOffset = getDays(offsetTime);
 

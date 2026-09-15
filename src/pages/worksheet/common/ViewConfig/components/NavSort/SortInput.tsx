@@ -6,9 +6,10 @@ import { EditInfo, SettingItem } from 'src/pages/widgetConfig/styled/index.js';
 import { getAdvanceSetting } from 'src/pages/widgetConfig/util/index.js';
 import Sort from 'src/pages/widgetConfig/widgetSetting/components/sublist/Sort';
 import { getSortData } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function (props) {
-  const { view, onChange, relationControls, advancedSettingKey, viewControlData, canClear } = props;
+  const { view, onChange, relationControls, advancedSettingKey, viewControlData, canClear }: { relationControls: FormControl[]; [key: string]: any } = props;
   const [{ sortVisible }, setConfig] = useSetState({
     sortVisible: false,
   });
@@ -20,7 +21,7 @@ export default function (props) {
           {getAdvanceSetting(view, advancedSettingKey).length > 0 ? (
             getAdvanceSetting(view, advancedSettingKey).reduce((p, item) => {
               const sortsRelationControls = relationControls
-                .filter(column => !_.find(SYSTEM_CONTROLS, c => c.controlId === column.controlId))
+                .filter((column: FormControl) => !_.find(SYSTEM_CONTROLS, c => c.controlId === column.controlId))
                 .concat(SYSTEM_CONTROLS);
               const control = sortsRelationControls.find(({ controlId }) => item.controlId === controlId) || {};
               const flag = item.isAsc === true ? 2 : 1;
@@ -55,7 +56,7 @@ export default function (props) {
           data={view}
           advancedSettingKey={advancedSettingKey}
           fromRelate
-          controls={relationControls.filter(o => o?.advancedSetting?.hide !== '1')} //排除隐藏的字段
+          controls={relationControls.filter((o: FormControl) => o?.advancedSetting?.hide !== '1')} //排除隐藏的字段
           onChange={data => {
             onChange(data);
           }}

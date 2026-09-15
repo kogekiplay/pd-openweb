@@ -2,14 +2,15 @@ import React, { Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import { Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { redefineComplexControl } from 'worksheet/common/WorkSheetFilter/util';
 import { isRelateMoreList } from 'src/components/Form/core/formUtils/helper';
 import DynamicText from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/components/DynamicText';
+import type { RootState } from 'src/redux/types';
 import {
   checkRuleEnableLimit,
   filterData,
@@ -22,8 +23,9 @@ import {
 import * as actions from './redux/actions/columnRules';
 import * as columnRules from './redux/actions/columnRules';
 import { StyleDiv } from './WidgetConfigRuleItem';
+import type { FormControl } from 'src/utils/controlTypes';
 
-function renderFilterItemTexts(filters = [], disabled = false, worksheetControls = []) {
+function renderFilterItemTexts(filters = [], disabled = false, worksheetControls: FormControl[] = []) {
   if (_.isEmpty(filters)) return '';
   const formatControls = worksheetControls.map(redefineComplexControl);
   let filterItemTexts = filters.map(item => {
@@ -320,7 +322,7 @@ class RuleItems extends React.Component<any, any> {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   worksheetControls: state.formSet.worksheetRuleControls,
   selectRules: state.formSet.selectRules,
   columnRulesListData: state.formSet.columnRulesListData,

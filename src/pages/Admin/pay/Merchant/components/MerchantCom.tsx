@@ -163,7 +163,7 @@ export default class MerchantCom extends Component<any, any> {
     });
   };
 
-  changeCreateMerchant = (key, visible) => {
+  changeCreateMerchant = (key: string, visible) => {
     const { projectId, featureType } = this.props;
     const { currentMerchantInfo, merchantUsage = {} } = this.state;
 

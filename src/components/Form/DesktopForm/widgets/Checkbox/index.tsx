@@ -182,7 +182,7 @@ const CheckboxWidgets = props => {
     onSave(checkIds);
   };
 
-  const handleSelectAll = (options = [], isChecked) => {
+  const handleSelectAll = (options = [], isChecked?) => {
     // 多选平铺, 多选选中则清空
     if (type === 10 && checktype !== '1' && isChecked) {
       onChange('');

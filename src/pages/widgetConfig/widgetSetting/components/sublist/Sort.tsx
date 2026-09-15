@@ -5,6 +5,7 @@ import SortConditions from 'src/pages/worksheet/common/ViewConfig/components/Sor
 import { UN_SORT_WIDGET } from '../../../config';
 import { getAdvanceSetting } from '../../../util';
 import { handleAdvancedSettingChange } from '../../../util/setting';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const defaultSort = [
   {
@@ -22,7 +23,7 @@ export default function SubListSort(props) {
     onClose,
     advancedSettingKey = 'sorts',
     onlyShowSystemDateControl,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const [sorts, setSorts] = useState(getAdvanceSetting(data, advancedSettingKey));
   return (
     <Dialog

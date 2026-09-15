@@ -11,9 +11,11 @@ import { v4 } from 'uuid';
 import { openRecordInfo } from 'worksheet/common/recordInfo';
 import { RecordFormContext } from 'worksheet/common/recordInfo/RecordForm';
 import { RELATE_RECORD_SHOW_TYPE } from 'worksheet/constants/enum';
+import type { RootState } from 'src/redux/types';
 import Operate from './Operate';
 import * as actions from './redux/action';
 import TableComp from './TableComp';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 const TableCon = styled.div`
   &.userSelectNone {
@@ -48,7 +50,7 @@ function RelateRecordTable(props) {
     isDraft,
     formItemId,
     onUpdateCell = () => {},
-  } = props;
+  }: { records: RecordRow[]; [key: string]: any } = props;
   const { updateWorksheetControls } = props;
   const { updateRecord, deleteRecords, refresh, updateBase, updateTableConfigByControl } = props;
   const { isInForm, allowEdit, controlPermission, relateWorksheetInfo } = base;
@@ -70,7 +72,7 @@ function RelateRecordTable(props) {
         disableOpenRecordFromRelateRecord:
           get(window, 'shareState.isPublicRecord') || get(window, 'shareState.isPublicView'),
         showPrevNext: true,
-        currentSheetRows: records.filter(r => r.rowid),
+        currentSheetRows: records.filter((r: RecordRow) => r.rowid),
         from: 2,
         visible: true,
         appId: relateWorksheetInfo.appId,
@@ -228,7 +230,7 @@ RelateRecordTable.propTypes = {
   onUpdateCell: func,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   ...state,
 });
 const mapDispatchToProps = dispatch => ({

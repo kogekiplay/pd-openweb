@@ -197,7 +197,7 @@ let TimeBars: any = class TimeBars extends Component<any, any> {
    * @param  {number} direction
    */
 
-  dragMouseMove(direction) {
+  dragMouseMove(direction: number) {
     const that = this;
     $(document).on({
       'mousemove.ganttDragSingle': function (evt) {
@@ -345,7 +345,7 @@ let TimeBars: any = class TimeBars extends Component<any, any> {
    * @return {number}
    */
 
-  getTimePosition(time, startTime) {
+  getTimePosition(time, startTime?) {
     const { viewType, filterWeekend, minStartTime } = this.props;
     return utils.getTimePosition(startTime || minStartTime, time, viewType, filterWeekend);
   }

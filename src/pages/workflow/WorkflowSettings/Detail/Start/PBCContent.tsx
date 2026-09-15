@@ -10,6 +10,7 @@ import homeAppAjax from 'src/api/homeApp';
 import { pathCompletion } from 'src/utils/common';
 import { FIELD_TYPE_LIST } from '../../enum';
 import { checkJSON } from '../../utils';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const GenerateJSONBox = styled.textarea`
   padding: 12px;
@@ -169,7 +170,7 @@ let cacheItem = {};
 export default ({ data, updateSource, isIntegration, isPlugin }) => {
   const [selectControlId, setControlId] = useState('');
 
-  const updateControls = (action, value, { controlId, type, dataSource }, isBlur) => {
+  const updateControls = (action: string, value, { controlId, type, dataSource }: Partial<FormControl>, isBlur?: boolean) => {
     const controls = _.cloneDeep(data.controls);
 
     controls.forEach(item => {
@@ -209,7 +210,7 @@ export default ({ data, updateSource, isIntegration, isPlugin }) => {
     updateSource({ controls });
   };
 
-  const updateOptions = (action, value, { controlId, options }, index, isBlur) => {
+  const updateOptions = (action: string, value, { controlId, options }, index, isBlur?: boolean) => {
     if (isBlur && !!options.find((o, i) => o[action] === value && i !== index)) {
       value =
         value +
@@ -330,7 +331,7 @@ export default ({ data, updateSource, isIntegration, isPlugin }) => {
     );
   };
 
-  const renderControlRequired = (item, showText) => {
+  const renderControlRequired = (item, showText?) => {
     return (
       <Checkbox
         className="InlineBlock Font12 TxtMiddle LineHeight20"

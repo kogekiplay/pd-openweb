@@ -11,6 +11,7 @@ import PrintList from 'worksheet/common/BatchOperate/PrintList';
 import { importDataFromExcel } from 'worksheet/common/WorksheetBody/ImportDataFromExcel';
 import { permitList } from 'src/pages/FormSet/config.js';
 import { isOpenPermit } from 'src/pages/FormSet/util.js';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   position: relative;
@@ -131,7 +132,7 @@ export default function RelateRecordBtn(props) {
     onSelect,
     onBatchOperate,
     updateRowsWithChanges,
-  } = props;
+  }: { records: RecordRow[]; [key: string]: any } = props;
   const { enterBatchEdit, deleteRecords, removeRelation, exportRecords, edit, print, customButton, importFromFile } =
     btnVisible;
   const isShareState = !!get(window, 'shareState.shareId');
@@ -153,7 +154,7 @@ export default function RelateRecordBtn(props) {
 
   useEffect(() => {
     if (!isEmpty(records) && !isEmpty(selectedRowIds)) {
-      setSelectedRecords(records.filter(record => selectedRowIds.includes(record.rowid)));
+      setSelectedRecords(records.filter((record: RecordRow) => selectedRowIds.includes(record.rowid)));
     }
   }, [records, selectedRowIds]);
   return (

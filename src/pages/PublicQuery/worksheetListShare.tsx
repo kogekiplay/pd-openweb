@@ -10,6 +10,7 @@ import { SYS } from 'src/pages/widgetConfig/config/widget.js';
 import { browserIsMobile } from 'src/utils/common';
 import { controlState } from 'src/utils/control';
 import './worksheetListShare.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const hiddenIds = WORKFLOW_SYSTEM_CONTROL.map(c => c.controlId);
 const FILTER_CONTROLS_TYPE = [43, 51, 52, 49, 22, 47];
@@ -30,12 +31,12 @@ class WorksheetListShare extends React.Component<any, any> {
   }
 
   getCardControlsForTitle = list => {
-    let controls = list;
+    let controls: FormControl[] = list;
     let titleControl = _.find(controls, c => c.attribute === 1) || {};
 
     let athterControl = _.filter(controls, c => c.attribute !== 1);
 
-    let allControls = [titleControl].concat(athterControl);
+    let allControls: FormControl[] = [titleControl].concat(athterControl);
     return allControls;
   }; //根据showControls排序
 

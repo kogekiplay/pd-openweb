@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import { UserCard } from 'ming-ui';
+import type { RootState } from 'src/redux/types';
 import AudioMessage from '../../components/Message/AudioMessage';
 import CardMessage from '../../components/Message/CardMessage';
 import FileMessage from '../../components/Message/FileMessage';
@@ -223,7 +224,7 @@ class Message extends Component<any, any> {
   }
 }
 
-export default connect(state => {
+export default connect((state: RootState) => {
   const { currentSession, messages } = state.chat;
 
   return {

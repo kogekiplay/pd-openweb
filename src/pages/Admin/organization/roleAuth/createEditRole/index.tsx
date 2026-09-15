@@ -84,7 +84,7 @@ export default function CreateEditRole(props) {
 
   return (
     <RoleDrawer
-      visible={true}
+      open={true}
       width={720}
       maskClosable={false}
       title={roleId ? (isEditHr ? _l('编辑人事权限') : _l('编辑权限')) : _l('新建管理员角色')}

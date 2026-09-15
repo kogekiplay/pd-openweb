@@ -38,7 +38,7 @@ export default class TimeInput extends Component<any, any> {
     }
   }
 
-  updateValue(nextProps) {
+  updateValue(nextProps?) {
     const { dynamicValue = [] } = nextProps || this.props;
     const { staticValue, cid = '' } = _.get(dynamicValue, '0') || {};
     const tempValue = !cid && staticValue && staticValue !== '2' ? staticValue : '';
@@ -52,7 +52,7 @@ export default class TimeInput extends Component<any, any> {
     this.updateValue();
   };
 
-  handleTimeChange = (date, formatMode) => {
+  handleTimeChange = (date, formatMode: string) => {
     if (_.isNull(date)) {
       this.setState({ defValue: '', isDynamic: false });
       this.props.onDynamicValueChange([]);

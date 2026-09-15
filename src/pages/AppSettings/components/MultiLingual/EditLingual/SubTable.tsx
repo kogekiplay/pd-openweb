@@ -4,6 +4,7 @@ import { Dialog, Icon, ScrollView } from 'ming-ui';
 import sheetApi from 'src/api/worksheet';
 import { ALL_SYS } from 'src/pages/widgetConfig/config/widget';
 import { getIconByType } from 'src/pages/widgetConfig/util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function SubTable(props) {
   const { app, comparisonLangId, comparisonLangData, worksheetId, control, translateData, translateInfo } = props;
@@ -28,7 +29,7 @@ export default function SubTable(props) {
     return null;
   }
 
-  const controls = (_.get(sheetInfo, 'template.controls') || []).filter(c => !ALL_SYS.includes(c.controlId));
+  const controls: FormControl[] = (_.get(sheetInfo, 'template.controls') || []).filter(c => !ALL_SYS.includes(c.controlId));
 
   const renderSubTableDialog = () => {
     const handlePositionControl = c => {

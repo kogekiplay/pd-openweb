@@ -164,7 +164,7 @@ export default class FeiShu extends React.Component<any, any> {
     });
   };
 
-  inputRender = (strId, name) => {
+  inputRender = (strId: string, name: string) => {
     return (
       <React.Fragment>
         <div className="inputTitleBox">

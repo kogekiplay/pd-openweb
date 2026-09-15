@@ -14,6 +14,7 @@ import homeAppApi from 'src/api/homeApp';
 import DragMask from 'worksheet/common/DragMask';
 import UnNormal from 'worksheet/views/components/UnNormal';
 import { updateSheetListLoading } from 'src/pages/worksheet/redux/actions/sheetList';
+import type { RootState } from 'src/redux/types';
 import { navigateTo } from 'src/router/navigateTo';
 import { emitter } from 'src/utils/common';
 import { browserIsMobile, updateGlobalStoreForMingo } from 'src/utils/common';
@@ -71,25 +72,38 @@ const WorkSheetContainer = props => {
           sectionId: params.groupId,
         });
 
-        request.then(data => {
-          const storage = JSON.parse(localStorage.getItem(`mdAppCache_${md.global.Account.accountId}_${appId}`)) || {};
+        request
+          .then(data => {
+            const storage =
+              JSON.parse(localStorage.getItem(`mdAppCache_${md.global.Account.accountId}_${appId}`)) || {};
 
-          if (![1, 4].includes(data.resultCode) || (storage.lastWorksheetId === id && data.resultCode === 4)) {
-            moveSheetCache(appId, params.groupId);
-            homeAppApi
-              .getAppFirstInfo({
-                appId,
-                appSectionId: params.groupId,
-              })
-              .then(data => {
-                navigateTo(`/app/${appId}/${data.appSectionId}/${data.workSheetId || ''}`);
-              });
-            return;
-          }
+            if (![1, 4].includes(data.resultCode) || (storage.lastWorksheetId === id && data.resultCode === 4)) {
+              moveSheetCache(appId, params.groupId);
+              homeAppApi
+                .getAppFirstInfo({
+                  appId,
+                  appSectionId: params.groupId,
+                })
+                .then(data => {
+                  navigateTo(`/app/${appId}/${data.appSectionId}/${data.workSheetId || ''}`);
+                });
+              return;
+            }
 
-          setData({ ...data, routeKey });
-          setLoading(false);
-        });
+            setData({ ...data, routeKey });
+            setLoading(false);
+          })
+          // 必须兜 catch：上面刚 abort 掉上一个 getPageInfo（第 63-65 行），
+          // 被 abort 的 promise 会以 { errorCode: 1, errorMessage: '请求被取消' } 拒绝
+          // （见 src/common/global.ts:424 的 textStatus === 'abort'）。
+          // 没有 catch 就变成 "Uncaught (in promise)" 刷控制台 —— 快速连点几个工作表
+          // 必现。取消是预期行为，静默即可；其余错误停掉 loading，不要让页面
+          // 永远停在 LoadDiv 上。
+          .catch(err => {
+            if (_.get(err, 'errorCode') !== 1) {
+              setLoading(false);
+            }
+          });
       }
     } else {
       setData({ wsType: type, resultCode: 1, routeKey });
@@ -406,7 +420,7 @@ class WorkSheet extends Component<any, any> {
 
     safeLocalStorageSetItem(`mdAppCache_${md.global.Account.accountId}_${appId}`, JSON.stringify(storage));
   }
-  getValidedWorksheetId(props) {
+  getValidedWorksheetId(props?) {
     const { match } = props || this.props;
     let id;
 
@@ -538,7 +552,7 @@ class WorkSheet extends Component<any, any> {
 
 export default withRouter(
   connect(
-    state => ({
+    (state: RootState) => ({
       sheetListLoading: state.sheetList.loading,
       sheetListIsUnfold: state.sheetList.isUnfold,
       sheetList: [1, 3].includes(state.appPkg.currentPcNaviStyle)

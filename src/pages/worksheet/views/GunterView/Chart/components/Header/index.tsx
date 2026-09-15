@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { Skeleton } from 'ming-ui';
+import type { RootState } from 'src/redux/types';
 import MajorAxisLabel from '../MajorAxisLabel';
 import MinorAxisLabel from '../MinorAxisLabel';
 import Today from '../Today';
@@ -66,5 +67,7 @@ let GunterChartHeader = class GunterChartHeader extends Component<any, any> {
     );
   }
 };
-GunterChartHeader = connect(state => ({ ..._.pick(state.sheet, ['gunterView', 'base']) }))(GunterChartHeader);
+GunterChartHeader = connect((state: RootState) => ({ ..._.pick(state.sheet, ['gunterView', 'base']) }))(
+  GunterChartHeader,
+);
 export default GunterChartHeader;

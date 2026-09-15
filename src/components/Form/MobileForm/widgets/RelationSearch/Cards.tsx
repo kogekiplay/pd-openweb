@@ -4,6 +4,7 @@ import { Icon } from 'ming-ui';
 import { LoadingButton } from '../../components/RelateRecordCards';
 import RecordCoverCard from '../../components/RelateRecordCards/RecordCoverCard';
 import { getCoverUrl } from '../../tools/utils';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 export default function Cards(props) {
   const {
@@ -25,8 +26,8 @@ export default function Cards(props) {
     onAdd,
     onOpen,
     disabled,
-  } = props;
-  let { records } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
+  let { records }: { records: RecordRow[]; [key: string]: any } = props;
   const showNewRecord = !disabled && allowNewRecord;
 
   if (control.type === 51 && control.enumDefault === 1) {
@@ -54,7 +55,7 @@ export default function Cards(props) {
               hideTitle={hideTitle}
               key={i}
               cover={getCoverUrl(control.coverCid, record, controls)}
-              controls={control.showControls.map(cid => _.find(controls, { controlId: cid })).filter(identity)}
+              controls={control.showControls.map((cid: FormControl) => _.find(controls, { controlId: cid })).filter(identity)}
               data={record}
               allowlink={allowOpenRecord ? '1' : '0'}
               parentControl={{ ...control, relationControls: controls }}

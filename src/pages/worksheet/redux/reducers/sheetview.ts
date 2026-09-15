@@ -1,4 +1,6 @@
 import _, { get } from 'lodash';
+import type { RecordRow } from 'src/utils/controlTypes';
+import type { ReduxAction } from 'src/redux/types';
 
 export { treeTableViewData } from 'worksheet/common/TreeTableHelper/index.js';
 
@@ -15,7 +17,7 @@ const initialSheetViewConfig = {
   columnStyles: {},
 };
 
-export function sheetViewConfig(state = initialSheetViewConfig, action) {
+export function sheetViewConfig(state = initialSheetViewConfig, action: ReduxAction) {
   switch (action.type) {
     // 记录选择逻辑
     case 'WORKSHEET_SHEETVIEW_SELECT_ALL':
@@ -66,7 +68,7 @@ const initialSheetFetchParams = {
   sortControls: [],
 };
 
-export function sheetFetchParams(state = initialSheetFetchParams, action) {
+export function sheetFetchParams(state = initialSheetFetchParams, action: ReduxAction) {
   switch (action.type) {
     case 'WORKSHEET_SHEETVIEW_CHANGE_PAGEINDEX':
       return { ...state, pageIndex: action.pageIndex };
@@ -102,7 +104,7 @@ const initialSheetViewData = {
   permission: {},
 };
 
-export function sheetViewData(state = initialSheetViewData, action) {
+export function sheetViewData(state = initialSheetViewData, action: ReduxAction) {
   switch (action.type) {
     // 开始获取记录数据
     case 'WORKSHEET_SHEETVIEW_FETCH_ROWS_START':
@@ -126,7 +128,7 @@ export function sheetViewData(state = initialSheetViewData, action) {
       return {
         ...state,
         loading: false,
-        rows: state.rows.map(row =>
+        rows: state.rows.map((row: RecordRow) =>
           _.includes(action.rowIds, row.rowid) ? { ...row, ...action.rowUpdatedValue } : row,
         ),
       };
@@ -158,7 +160,7 @@ export function sheetViewData(state = initialSheetViewData, action) {
       return {
         ...state,
         loading: false,
-        rows: state.rows.filter(row => !_.includes(action.rowIds, row.rowid)),
+        rows: state.rows.filter((row: RecordRow) => !_.includes(action.rowIds, row.rowid)),
         count: state.count - action.rowIds.length,
       };
     // 更新批量编辑权限
@@ -173,11 +175,11 @@ export function sheetViewData(state = initialSheetViewData, action) {
   }
 }
 
-export function abortController(state = new AbortController(), action) {
+export function abortController(state = new AbortController(), action: ReduxAction) {
   return action.type === 'WORKSHEET_SHEETVIEW_INIT_ABORT_CONTROLLER' ? new AbortController() : state;
 }
 
-export function foldedMap(state = {}, action) {
+export function foldedMap(state = {}, action: ReduxAction) {
   switch (action.type) {
     case 'WORKSHEET_SHEETVIEW_FETCH_ROWS_START':
     case 'WORKSHEET_SHEETVIEW_CLEAR_FOLDED':
@@ -192,7 +194,7 @@ export function foldedMap(state = {}, action) {
   }
 }
 
-export function groupFetchParams(state = {}, action) {
+export function groupFetchParams(state = {}, action: ReduxAction) {
   switch (action.type) {
     case 'WORKSHEET_SHEETVIEW_CHANGE_GROUP_FETCH_PARAMS':
       return { ...state, [action.groupKey]: { ...state[action.groupKey], ...action.changes } };

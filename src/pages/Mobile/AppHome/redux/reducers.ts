@@ -1,3 +1,4 @@
+import type { ReduxAction } from 'src/redux/types';
 export const myAppData = (state = {}, actions) => {
   switch (actions.type) {
     case 'UPDATE_MYAPPLIST':
@@ -7,7 +8,7 @@ export const myAppData = (state = {}, actions) => {
   }
 };
 
-export const isHomeLoading = (state = true, action) => {
+export const isHomeLoading = (state = true, action: ReduxAction) => {
   switch (action.type) {
     case 'MOBILE_FETCHHOMELIST_START':
       return true;
@@ -18,7 +19,7 @@ export const isHomeLoading = (state = true, action) => {
   }
 };
 
-export const platformSetting = (state = {}, action) => {
+export const platformSetting = (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'PLATE_FORM_SETTING':
       return action.data;
@@ -27,7 +28,7 @@ export const platformSetting = (state = {}, action) => {
   }
 };
 
-export const myPlatformData = (state = {}, action) => {
+export const myPlatformData = (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'PLATE_FORM_DATA':
       return action.data;
@@ -36,7 +37,7 @@ export const myPlatformData = (state = {}, action) => {
   }
 };
 
-export const myPlatformLang = (state = {}, action) => {
+export const myPlatformLang = (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'PLATE_FORM_LANG':
       return action.data;
@@ -45,7 +46,7 @@ export const myPlatformLang = (state = {}, action) => {
   }
 };
 
-export const collectRecords = (state = [], action) => {
+export const collectRecords = (state = [], action: ReduxAction) => {
   switch (action.type) {
     case 'COLLECT_RECORDS':
       return action.data;
@@ -54,7 +55,7 @@ export const collectRecords = (state = [], action) => {
   }
 };
 
-export const collectCharts = (state = [], action) => {
+export const collectCharts = (state = [], action: ReduxAction) => {
   switch (action.type) {
     case 'COLLECT_CHARTS':
       return action.data;
@@ -63,7 +64,7 @@ export const collectCharts = (state = [], action) => {
   }
 };
 
-export const projectGroupsNameLang = (state = {}, action) => {
+export const projectGroupsNameLang = (state = {}, action: ReduxAction) => {
   switch (action.type) {
     case 'PROJECT_GROUPS_NAME_LANG':
       return action.data;
@@ -72,7 +73,7 @@ export const projectGroupsNameLang = (state = {}, action) => {
   }
 };
 
-export const appHomeScrollY = (state = 0, action) => {
+export const appHomeScrollY = (state = 0, action: ReduxAction) => {
   switch (action.type) {
     case 'APP_HOME_SCROLL_Y':
       return action.data;

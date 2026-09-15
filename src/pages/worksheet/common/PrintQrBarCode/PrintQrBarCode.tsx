@@ -27,6 +27,7 @@ import {
   getCodeTexts,
   getDefaultText,
 } from './util';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   height: 100vh;
@@ -111,7 +112,7 @@ export default function PrintQrBarCode(props) {
     fastFilters,
     navGroupFilters,
     onClose = () => {},
-  } = props;
+  }: { selectedRows: RecordRow[]; controls: FormControl[]; [key: string]: any } = props;
   const [base, setBase] = useState({
     id: props.id,
     name: props.id ? '' : printType === PRINT_TYPE.BAR ? _l('打印条形码') : _l('打印二维码'),
@@ -388,7 +389,7 @@ export default function PrintQrBarCode(props) {
               config={config}
               maxLineNumber={maxLineNumber}
               controls={controls.filter(
-                c =>
+                (c: FormControl) =>
                   FILTER[2]({ ...c, type: c.type === 30 ? c.sourceControlType : c.type }) || _.includes([37], c.type),
               )}
               onUpdate={changes => {

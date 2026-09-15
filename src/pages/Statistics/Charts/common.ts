@@ -501,7 +501,7 @@ export const roundTypes = [
 /**
  * 为 yaxisList 添加自动数量级单位
  */
-export const formatYaxisList = (map, yaxisList, id) => {
+export const formatYaxisList = (map, yaxisList, id?) => {
   const maxValue = getMaxValue(map, []);
   const newYaxisList = _.cloneDeep(yaxisList);
 
@@ -637,7 +637,7 @@ export const formatControlValueDot = (value, data) => {
 /**
  * 处理图表 label value
  */
-export const formatrChartValue = (value, isPerPile, yaxisList, id, isHideEmptyValue = true) => {
+export const formatrChartValue = (value, isPerPile, yaxisList, id?, isHideEmptyValue = true) => {
   if (!value && isHideEmptyValue) {
     const { emptyShowType } = _.find(yaxisList, { controlId: id }) || yaxisList[0] || {};
 
@@ -663,7 +663,7 @@ export const formatrChartValue = (value, isPerPile, yaxisList, id, isHideEmptyVa
 /**
  * 处理图表 axis value
  */
-export const formatrChartAxisValue = (value, isPerPile, yaxisList) => {
+export const formatrChartAxisValue = (value: number, isPerPile, yaxisList) => {
   if (isPerPile) {
     return `${toFixed(value * 100, 0)}%`;
   } else {
@@ -877,7 +877,7 @@ export const getControlMinAndMax = (yaxisList, data) => {
 /**
  * 获取图表所有数据中的最大值
  */
-export const getMaxValue = (map, contrastMap) => {
+export const getMaxValue = (map, contrastMap?) => {
   const mapRes = map.map(item => item.value);
   const contrastMapRes = contrastMap ? contrastMap.map(item => item.value) : [0];
   const mapMaxValue = _.max(mapRes);
@@ -888,7 +888,7 @@ export const getMaxValue = (map, contrastMap) => {
 /**
  * 获取图表所有数据中的最小值
  */
-export const getMinValue = (map, contrastMap) => {
+export const getMinValue = (map, contrastMap?) => {
   const mapRes = map.map(item => item.value);
   const contrastMapRes = contrastMap ? contrastMap.map(item => item.value) : [0];
   const mapMinValue = _.min(mapRes) || 0;

@@ -9,6 +9,7 @@ import { RecordInfoModal } from 'mobile/Record';
 import TextScanQRCode from 'src/components/Form/MobileForm/components/TextScanQRCode';
 import BulletinBoard from 'src/pages/AppHomepage/Dashboard/BulletinBoard';
 import { MODULE_TYPES } from 'src/pages/AppHomepage/Dashboard/utils';
+import type { RootState } from 'src/redux/types';
 import RegExpValidator from 'src/utils/expression';
 import { addBehaviorLog, getCurrentProject } from 'src/utils/project';
 import * as appActions from '../App/redux/actions';
@@ -558,7 +559,7 @@ class AppHome extends React.Component<any, any> {
 }
 
 export default connect(
-  state => {
+  (state: RootState) => {
     const {
       isHomeLoading,
       collectRecords,

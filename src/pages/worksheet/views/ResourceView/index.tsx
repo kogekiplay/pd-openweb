@@ -14,8 +14,10 @@ import * as viewAction from 'src/pages/worksheet/redux/actions/resourceview.js';
 import { setSysWorkflowTimeControlFormat } from 'src/pages/worksheet/views/CalendarView/util.js';
 import SelectField from 'src/pages/worksheet/views/components/SelectField.jsx';
 import 'src/pages/worksheet/views/ResourceView/index.less';
+import type { RootState } from 'src/redux/types';
 import { isRelateRecordTableControl } from 'src/utils/control';
 import Resource from './Resource.jsx';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrap = styled.div`
   width: 100%;
@@ -52,7 +54,7 @@ const BtnForSure = styled.div`
 `;
 
 function ResourceView(props) {
-  const { view, saveView, controls = [], isCharge, sheetSwitchPermit, viewId, initData } = props;
+  const { view, saveView, controls = [], isCharge, sheetSwitchPermit, viewId, initData }: { controls: FormControl[]; [key: string]: any } = props;
 
   const [{ viewControlInfo, viewControl }, setState] = useSetState({
     viewControlInfo: {},
@@ -64,13 +66,13 @@ function ResourceView(props) {
   }, [viewId, _.get(view, 'advancedSetting.showtitle')]);
 
   useEffect(() => {
-    const { view, controls = [] } = props;
+    const { view, controls = [] }: { controls: FormControl[]; [key: string]: any } = props;
     const { viewControl = '' } = view;
     const viewControlInfo =
       (
         setSysWorkflowTimeControlFormat(
           controls.filter(
-            item =>
+            (item: FormControl) =>
               (_.includes([27, 48, 9, 10, 11, 26, 29, 28], item.type) ||
                 (item.type === 30 &&
                   _.includes([27, 48, 9, 10, 11, 26, 29, 28], item.sourceControlType) &&
@@ -100,7 +102,7 @@ function ResourceView(props) {
                   data={setSysWorkflowTimeControlFormat(
                     controls
                       .filter(
-                        item =>
+                        (item: FormControl) =>
                           (_.includes([27, 48, 9, 10, 11, 26, 29, 28], item.type) ||
                             (item.type === 30 &&
                               _.includes([27, 48, 9, 10, 11, 26, 29, 28], item.sourceControlType) &&
@@ -127,7 +129,7 @@ function ResourceView(props) {
                       return;
                     }
 
-                    const viewControlInfo = controls.find(o => o.controlId === viewControl) || {};
+                    const viewControlInfo = controls.find((o: FormControl) => o.controlId === viewControl) || {};
                     let data = {
                       viewControl,
                       advancedSetting: {
@@ -161,7 +163,7 @@ function ResourceView(props) {
 }
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     ..._.omit(state.sheet, [
       'boardView',
       'hierarchyView',

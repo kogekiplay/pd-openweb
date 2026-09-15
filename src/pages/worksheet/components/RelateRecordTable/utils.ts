@@ -1,8 +1,9 @@
 import { find, identity } from 'lodash';
+import type { FormControl } from 'src/utils/controlTypes';
 
 // 业务规则
 function overrideControls(control, controls) {
-  return controls.map(c => {
+  return controls.map((c: FormControl) => {
     const resetControl = find(control.relationControls, { controlId: c.controlId });
 
     if (resetControl) {
@@ -27,5 +28,5 @@ export function getVisibleControls(control, controls, sheetHiddenColumnIds = [],
           }
         : c,
     );
-  return control.showControls.map(sid => find(overriddenControls, { controlId: sid })).filter(identity);
+  return control.showControls.map((sid: FormControl) => find(overriddenControls, { controlId: sid })).filter(identity);
 }

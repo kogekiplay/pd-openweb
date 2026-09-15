@@ -13,6 +13,7 @@ import { ALL_SYS, DEFAULT_CONFIG, WIDGETS_TO_API_TYPE_ENUM } from '../config/wid
 import { SettingItem } from '../styled';
 import { enumWidgetType } from '../util';
 import { formatControlsData } from './data';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const TemplateRelationNotice = styled.div`
   margin-top: 10px;
@@ -347,7 +348,7 @@ function getControlByDefault(allControls, control, queryConfigs) {
 }
 
 // 解析filters获取控件
-function getControlByFilters(allControls, advancedSetting, filterkey) {
+function getControlByFilters(allControls, advancedSetting, filterkey: string) {
   advancedSetting = advancedSetting || {};
   const filters = safeParse(advancedSetting[filterkey] || '[]');
   let referencedControls = [];
@@ -652,7 +653,7 @@ function getAllReferencedControlInfo(allControls, templateControls, queryConfigs
     return { referencedControls, worksheetRoleControls };
   };
 
-  let currentControls = templateControls.filter(
+  let currentControls: FormControl[] = templateControls.filter(
     control => isValidControl(control) && supportReferencedTemplateControl(control),
   );
 
@@ -697,7 +698,7 @@ function getAllReferencedControlInfo(allControls, templateControls, queryConfigs
   };
 }
 
-function getAllReferencedControls(allControls, templateControls, queryConfigs) {
+function getAllReferencedControls(allControls: FormControl[], templateControls: FormControl[], queryConfigs) {
   const { referencedControls, noPermissionSheetNames, deletedWorksheetControlNames } = getAllReferencedControlInfo(
     allControls,
     templateControls,
@@ -720,7 +721,7 @@ function CreateTemplateDialog(props) {
     templateOrganizationList,
     getTemplateListByPersonal = () => {},
     getTemplateListByOrganization = () => {},
-  } = props;
+  }: { allControls: FormControl[]; templateControls: FormControl[]; [key: string]: any } = props;
   void globalSheetInfo;
   const [visible, setVisible] = useState(true);
   const [loading, setLoading] = useState(true);
@@ -1020,7 +1021,7 @@ function CreateTemplateDialog(props) {
 }
 
 export const createTemplateDialog = props => {
-  const { allControls = [], templateInfo = {}, templateControls = [], queryConfigs = [] } = props || {};
+  const { allControls = [], templateInfo = {}, templateControls = [], queryConfigs = [] }: { allControls: FormControl[]; templateControls: FormControl[]; [key: string]: any } = props || {};
 
   if (!templateInfo.templateId) {
     const supportedTemplateControls = templateControls.filter(

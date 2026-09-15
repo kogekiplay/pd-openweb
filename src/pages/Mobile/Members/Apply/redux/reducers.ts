@@ -1,3 +1,4 @@
+import type { ReduxAction } from 'src/redux/types';
 export const applyData = (
   state = {
     data: [],
@@ -12,7 +13,7 @@ export const applyData = (
   }
 };
 
-export const isApplyLoading = (state = true, action) => {
+export const isApplyLoading = (state = true, action: ReduxAction) => {
   switch (action.type) {
     case 'APPLY_LIST_START':
       return true;

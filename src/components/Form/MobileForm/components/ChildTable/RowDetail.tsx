@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import RecordInfoContext from 'worksheet/common/recordInfo/RecordInfoContext';
 import CustomFields from 'src/components/Form';
 import { isRelateRecordTableControl } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default class RowDetail extends React.Component<any, any> {
   static propTypes = {
@@ -56,7 +57,7 @@ export default class RowDetail extends React.Component<any, any> {
     return this.handleSave(false, false, false, true);
   };
 
-  handleSave = (nextContinue, isSwitchSave, ignoreAlert, isCopy = false, extraParams = {}) => {
+  handleSave = (nextContinue, isSwitchSave: boolean, ignoreAlert: boolean, isCopy = false, extraParams = {}) => {
     if (!this.customwidget.current) {
       return;
     }
@@ -119,7 +120,7 @@ export default class RowDetail extends React.Component<any, any> {
 
     const formData = this.customwidget.current.dataFormat.getDataSource();
     const affectedIds = new Set(updatedControlIds);
-    const derivedControls = formData.filter(control => _.includes([30, 31, 32], control.type));
+    const derivedControls = formData.filter((control: FormControl) => _.includes([30, 31, 32], control.type));
     let hasNewAffected = true;
 
     while (hasNewAffected) {
@@ -201,7 +202,7 @@ export default class RowDetail extends React.Component<any, any> {
     const formdata = _.isEmpty(data)
       ? controls
       : controls
-          .filter(c => !_.includes(['ownerid', 'caid', 'ctime', 'utime'], c.controlId))
+          .filter((c: FormControl) => !_.includes(['ownerid', 'caid', 'ctime', 'utime'], c.controlId))
           .map(c => ({
             ...c,
             value:

@@ -11,6 +11,7 @@ import FilterDetail from '../components/FilterDetail';
 import { CONTROL_FILTER_WHITELIST } from '../enum';
 import { createActions, createReducer, formatForSave, initialState } from '../model';
 import { formatOriginFilterGroupValue, redefineComplexControl } from '../util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div``;
 
@@ -70,10 +71,10 @@ export default function SingleFilter(props) {
   const showWorkflowControl = isOpenPermit(permitList.sysControlSwitch, sheetSwitchPermit, viewId);
 
   function filterAddConditionControls(controls) {
-    const availableControls = showWorkflowControl
+    const availableControls: FormControl[] = showWorkflowControl
       ? controls
       : controls.filter(
-          c =>
+          (c: FormControl) =>
             !_.includes(
               WORKFLOW_SYSTEM_CONTROL.map(c => c.controlId),
               c.controlId,

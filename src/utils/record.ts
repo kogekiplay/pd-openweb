@@ -18,8 +18,9 @@ import {
 } from 'src/utils/control';
 import { VersionProductType } from 'src/utils/enum';
 import { getFeatureStatus } from 'src/utils/project';
+import type { ControlAdvancedSetting, FormControl, RecordRow } from 'src/utils/controlTypes';
 
-export function filterEmptyChildTableRows(rows = []) {
+export function filterEmptyChildTableRows<T extends { rowid?: string }>(rows: T[] = []): T[] {
   try {
     return rows.filter(row => !(row.rowid || '').startsWith('empty'));
   } catch (err) {
@@ -28,11 +29,19 @@ export function filterEmptyChildTableRows(rows = []) {
   }
 }
 
-export function getNewRecordPageUrl({ appId, worksheetId, viewId }) {
+export function getNewRecordPageUrl({
+  appId,
+  worksheetId,
+  viewId,
+}: {
+  appId?: string;
+  worksheetId?: string;
+  viewId?: string;
+}) {
   return pathCompletion(`/app/${appId}/newrecord/${worksheetId}/${viewId}/`);
 }
 
-export function getRelateRecordCountFromValue(value, propsCount) {
+export function getRelateRecordCountFromValue(value?: any, propsCount?: number) {
   let count = 0;
 
   try {
@@ -63,7 +72,18 @@ export function getRelateRecordCountFromValue(value, propsCount) {
   return count;
 }
 
-export function handleUpdateDefsourceOfControl({ recordId, relateRecordControl, masterData, controls = [] } = {}) {
+export function handleUpdateDefsourceOfControl({
+  recordId,
+  relateRecordControl,
+  masterData,
+  controls = [],
+}: {
+  recordId?: string;
+  /** 主记录侧的关联字段，用来找出本表里与之配对的那个关联控件 */
+  relateRecordControl: FormControl & { worksheetId?: string };
+  masterData?: { formData?: FormControl[] };
+  controls?: FormControl[];
+} = { relateRecordControl: {} }) {
   return controls.map(control => {
     if (
       control.type === 29 &&
@@ -77,17 +97,18 @@ export function handleUpdateDefsourceOfControl({ recordId, relateRecordControl, 
               staticValue: JSON.stringify([
                 JSON.stringify({
                   rowid: recordId,
-                  ...[{}, ...(get(masterData, 'formData') || []).filter(c => c.type !== 34)].reduce((a = {}, b = {}) =>
-                    Object.assign(a, {
-                      [b.controlId]:
-                        b.type === 29 && _.isObject(b.value) && b.value.records
-                          ? JSON.stringify(
-                              // 子表使用双向关联字段作为默认值 RELATERECORD_OBJECT
-                              b.value.records.map(r => ({ sid: r.rowid, sourcevalue: JSON.stringify(r) })),
-                            )
-                          : b.value,
-                    }),
-                  ),
+                  ...[{}, ...(get(masterData, 'formData') || []).filter((c: FormControl) => c.type !== 34)].reduce(
+                (a: any = {}, b: any = {}) =>
+                  Object.assign(a, {
+                    [b.controlId]:
+                      b.type === 29 && _.isObject(b.value) && b.value.records
+                        ? JSON.stringify(
+                            // 子表使用双向关联字段作为默认值 RELATERECORD_OBJECT
+                            b.value.records.map((r: RecordRow) => ({ sid: r.rowid, sourcevalue: JSON.stringify(r) })),
+                          )
+                        : b.value,
+                  }),
+              ),
                 }),
               ]),
             },
@@ -126,7 +147,7 @@ export const SUMMARY_LIST = [
 /**
  * 获取统计方式名称
  */
-export function getSummaryNameByType(type) {
+export function getSummaryNameByType(type: number) {
   const summary = SUMMARY_LIST.filter(item => item.value === type)[0];
   return summary ? summary.label : '';
 }
@@ -134,15 +155,16 @@ export function getSummaryNameByType(type) {
 /**
  * 获取统计默认统计类型
  */
-export function getSummaryInfo(type, control) {
+export function getSummaryInfo(type?: number, control?: FormControl) {
   if (type === 37 || type === 53) {
-    type = control.enumDefault2;
+    type = control?.enumDefault2;
   }
 
   if (type === 6 || type === 8 || type === 31 || type === 28 || (type === 38 && control && control.enumDefault === 1)) {
     return {
       list: SUMMARY_LIST.filter(item => item.type === 'COMMON')
-        .concat(undefined)
+        // 这个 undefined 是分隔线占位，渲染层靠它插一条分割；不是漏写
+        .concat(undefined as unknown as (typeof SUMMARY_LIST)[number])
         .concat(SUMMARY_LIST.filter(item => item.type === 'NUMBER')),
       default: 3,
     };
@@ -161,17 +183,29 @@ export function getSummaryInfo(type, control) {
  */
 
 export function formatRecordToRelateRecord(
-  controls,
-  records = [],
-  { addedIds = [], deletedIds = [], needFullUpdate, count = 0, isFromDefault } = {},
+  controls: FormControl[],
+  records: RecordRow[] = [],
+  {
+    addedIds = [],
+    deletedIds = [],
+    needFullUpdate,
+    count = 0,
+    isFromDefault,
+  }: {
+    addedIds?: string[];
+    deletedIds?: string[];
+    needFullUpdate?: boolean;
+    count?: number;
+    isFromDefault?: boolean;
+  } = {},
 ) {
   if (!_.isArray(records)) {
     records = [];
   }
 
   const titleControl = _.find(controls, control => control.attribute === 1);
-  const value = records.map((record = {}) => {
-    let name = titleControl ? record[titleControl.controlId] : '';
+  const value = records.map((record: RecordRow = {}) => {
+    let name = titleControl ? record[titleControl.controlId as string] : '';
 
     if (titleControl && titleControl.type === 29 && name) {
       /**
@@ -179,7 +213,7 @@ export function formatRecordToRelateRecord(
        * 他表字段数据里的 name 不再返回字段原始数据，而是返回格式化后的文本
        */
       try {
-        const cellData = JSON.parse(record[titleControl.controlId]);
+        const cellData = JSON.parse(record[titleControl.controlId as string]);
         name = cellData[0].name;
       } catch (err) {
         console.error(err);
@@ -203,7 +237,7 @@ export function formatRecordToRelateRecord(
   return value;
 }
 
-function checkCellIsFilled(control, value) {
+function checkCellIsFilled(control: FormControl, value: any) {
   if (control.type === 36) {
     return value === true || String(value) === '1';
   }
@@ -214,31 +248,33 @@ function checkCellIsFilled(control, value) {
 // 浮点直接累加会积累误差，如 13607.55+13607.55+18143.4+13607.55-65769.82+6803.77 本应为 0，
 // 实际得到 -3.637978807091713e-12。这里按最大小数位放大到整数域求和再还原，避免残差；
 // 数量级超出安全整数或本身就是科学计数法时退回普通求和。
-const sumNumbers = values => {
-  const decimals = _.max(values.map(value => (String(value).split('.')[1] || '').length)) || 0;
+const sumNumbers = (values: number[]) => {
+  const decimals: number = _.max(values.map(value => (String(value).split('.')[1] || '').length)) || 0;
 
   if (!decimals || _.some(values, value => /e/i.test(String(value)))) {
     return _.sum(values);
   }
 
   const multiple = Math.pow(10, decimals);
-  const total = values.reduce((sum, value) => sum + Math.round(value * multiple), 0);
+  const total = values.reduce((sum: number, value: number) => sum + Math.round(value * multiple), 0);
 
   return Number.isSafeInteger(total) ? total / multiple : _.sum(values);
 };
 
-const getNumberValues = (rows, control) =>
-  rows.map(row => Number(row[control.controlId])).filter(value => _.isNumber(value) && !_.isNaN(value));
+const getNumberValues = (rows: RecordRow[], control: FormControl) =>
+  rows
+    .map(row => Number(row[control.controlId as string]))
+    .filter(value => _.isNumber(value) && !_.isNaN(value));
 
-export const getSummaryResult = (rows, control, summaryType) => {
+export const getSummaryResult = (rows: RecordRow[], control: FormControl, summaryType?: number) => {
   let result;
 
   switch (summaryType) {
     case SUMMARY_TYPE.COMPLETED:
-      result = rows.filter(row => checkCellIsFilled(control, row[control.controlId])).length;
+      result = rows.filter(row => checkCellIsFilled(control, row[control.controlId as string])).length;
       break;
     case SUMMARY_TYPE.INCOMPLETE:
-      result = rows.filter(row => !checkCellIsFilled(control, row[control.controlId])).length;
+      result = rows.filter(row => !checkCellIsFilled(control, row[control.controlId as string])).length;
       break;
     case SUMMARY_TYPE.SUM:
       result = sumNumbers(getNumberValues(rows, control));
@@ -248,12 +284,12 @@ export const getSummaryResult = (rows, control, summaryType) => {
       break;
     case SUMMARY_TYPE.MAXIMUM:
       result = _.max(
-        rows.map(row => Number(row[control.controlId])).filter(value => _.isNumber(value) && !_.isNaN(value)),
+        rows.map(row => Number(row[control.controlId as string])).filter(value => _.isNumber(value) && !_.isNaN(value)),
       );
       break;
     case SUMMARY_TYPE.MINIMUM:
       result = _.min(
-        rows.map(row => Number(row[control.controlId])).filter(value => _.isNumber(value) && !_.isNaN(value)),
+        rows.map(row => Number(row[control.controlId as string])).filter(value => _.isNumber(value) && !_.isNaN(value)),
       );
       break;
   }
@@ -261,7 +297,7 @@ export const getSummaryResult = (rows, control, summaryType) => {
   return result;
 };
 
-export function copySublistControlValue(control, value) {
+export function copySublistControlValue(control: FormControl, value: any) {
   if (checkCellIsEmpty(value)) {
     return value;
   }
@@ -306,34 +342,38 @@ export function copySublistControlValue(control, value) {
   }
 }
 
-export function copySublistRow(controls, row) {
-  const newRow = {};
+export function copySublistRow(controls: FormControl[], row: RecordRow) {
+  const newRow: RecordRow = {};
   controls.forEach(control => {
-    newRow[control.controlId] = copySublistControlValue(control, row[control.controlId]);
+    newRow[control.controlId as string] = copySublistControlValue(control, row[control.controlId as string]);
   });
   return newRow;
 }
 
-export function getRecordTempValue(data = [], relateRecordMultipleData = {}, { updateControlIds } = {}) {
-  const results = {};
+export function getRecordTempValue(
+  data: FormControl[] = [],
+  relateRecordMultipleData: { [controlId: string]: FormControl } = {},
+  { updateControlIds }: { updateControlIds?: string[] } = {},
+) {
+  const results: { [controlId: string]: any } = {};
   data
     .filter(
       c =>
         (updateControlIds ? _.includes(updateControlIds, c.controlId) : !checkCellIsEmpty(c.value)) &&
-        c.controlId.length === 24 &&
+        (c.controlId || '').length === 24 &&
         !isRelateRecordTableControl(c),
     )
     .forEach(control => {
       if (control.type === WIDGETS_TO_API_TYPE_ENUM.SUB_LIST) {
         if (control.value && control.value.rows && filterEmptyChildTableRows(control.value.rows).length) {
-          results[control.controlId] = filterEmptyChildTableRows(control.value.rows).map(r => {
-            const newRow = _.pickBy(r, v => !checkCellIsEmpty(v));
+          results[control.controlId as string] = filterEmptyChildTableRows<RecordRow>(control.value.rows).map(r => {
+            const newRow: RecordRow = _.pickBy(r, v => !checkCellIsEmpty(v));
             const relateRecordKeys = _.keys(_.pickBy(r, v => typeof v === 'string' && v.indexOf('sourcevalue') > -1));
             relateRecordKeys.forEach(key => {
               try {
-                const parsed = JSON.parse([newRow[key]]);
+                const parsed = JSON.parse(String(newRow[key]));
                 newRow[key] = JSON.stringify(
-                  parsed.map(relateRecord => ({
+                  parsed.map((relateRecord: any) => ({
                     ...relateRecord,
                     sourcevalue: JSON.stringify(
                       _.pickBy(
@@ -354,8 +394,8 @@ export function getRecordTempValue(data = [], relateRecordMultipleData = {}, { u
       } else if (control.type === WIDGETS_TO_API_TYPE_ENUM.RELATE_SHEET) {
         try {
           if (get(control, 'value', '')[0] === '[') {
-            results[control.controlId] = JSON.stringify(
-              JSON.parse(control.value).map(r => ({
+            results[control.controlId as string] = JSON.stringify(
+              JSON.parse(control.value).map((r: any) => ({
                 type: r.type,
                 sid: r.sid,
                 name: getTitleTextFromRelateControl(control, r.name ? r : r.row || safeParse(r.sourcevalue)),
@@ -369,29 +409,33 @@ export function getRecordTempValue(data = [], relateRecordMultipleData = {}, { u
         control.type !== WIDGETS_TO_API_TYPE_ENUM.SUB_LIST &&
         _.includes(['string', 'number'], typeof control.value)
       ) {
-        results[control.controlId] = control.value;
+        results[control.controlId as string] = control.value;
       }
     });
   Object.keys(relateRecordMultipleData).forEach(controlId => {
     const control = relateRecordMultipleData[controlId];
 
     if (control) {
-      results[control.controlId] = control.value;
+      results[control.controlId as string] = control.value;
     }
   });
   return results;
 }
 
-export function parseRecordTempValue(data = {}, originFormData, defaultRelatedSheet = {}) {
-  let formdata = [];
-  let relateRecordData = {};
+export function parseRecordTempValue(
+  data: { [controlId: string]: any } = {},
+  originFormData: FormControl[] = [],
+  defaultRelatedSheet: { relateSheetControlId?: string; value?: any } = {},
+) {
+  let formdata: FormControl[] = [];
+  const relateRecordData: { [controlId: string]: any } = {};
 
   try {
     formdata = originFormData.map(c => {
-      if (c.type === WIDGETS_TO_API_TYPE_ENUM.SUB_LIST && data[c.controlId]) {
+      if (c.type === WIDGETS_TO_API_TYPE_ENUM.SUB_LIST && data[c.controlId as string]) {
         return {
           ...c,
-          value: JSON.stringify(data[c.controlId]),
+          value: JSON.stringify(data[c.controlId as string]),
         };
       } else if (c.sourceControlId === defaultRelatedSheet.relateSheetControlId) {
         try {
@@ -401,17 +445,17 @@ export function parseRecordTempValue(data = {}, originFormData, defaultRelatedSh
           };
         } catch (err) {
           console.error(err);
-          return { ...c, value: data[c.controlId] };
+          return { ...c, value: data[c.controlId as string] };
         }
       } else {
-        return { ...c, value: data[c.controlId] };
+        return { ...c, value: data[c.controlId as string] };
       }
     });
     originFormData.forEach(c => {
-      if (c.type === WIDGETS_TO_API_TYPE_ENUM.RELATE_SHEET && c.enumDefault === 2 && data[c.controlId]) {
-        relateRecordData[c.controlId] = {
+      if (c.type === WIDGETS_TO_API_TYPE_ENUM.RELATE_SHEET && c.enumDefault === 2 && data[c.controlId as string]) {
+        relateRecordData[c.controlId as string] = {
           ...c,
-          value: data[c.controlId],
+          value: data[c.controlId as string],
         };
       }
     });
@@ -422,8 +466,8 @@ export function parseRecordTempValue(data = {}, originFormData, defaultRelatedSh
   return { formdata, relateRecordData };
 }
 
-export function handleSortRows(rows, control, isAsc) {
-  function getControlValueSortType(control) {
+export function handleSortRows(rows: RecordRow[], control: FormControl, isAsc?: boolean) {
+  function getControlValueSortType(control: FormControl) {
     const controlType = control.sourceControlType || control.type;
 
     if (controlType === 6 || controlType === 8 || controlType === 31 || controlType === 36) {
@@ -441,8 +485,8 @@ export function handleSortRows(rows, control, isAsc) {
 
   let newRows = _.sortBy(rows, row =>
     controlValueType === 'NUMBER'
-      ? parseFloat(row[control.controlId])
-      : renderCellText({ ...control, value: row[control.controlId] }),
+      ? parseFloat(row[control.controlId as string])
+      : renderCellText({ ...control, value: row[control.controlId as string] }),
   );
 
   if (!isAsc) {
@@ -452,25 +496,36 @@ export function handleSortRows(rows, control, isAsc) {
   return newRows;
 }
 
-export function getRecordColor({ controlId, controls, colorItems, row }) {
+export function getRecordColor({
+  controlId,
+  controls,
+  colorItems,
+  row,
+}: {
+  controlId?: string;
+  controls?: FormControl[];
+  /** 参与着色的选项 key 名单；'' 表示不限 */
+  colorItems?: string[] | '';
+  row: RecordRow;
+}) {
   const colorControl = _.find(controls, { controlId });
 
   if (!colorControl || colorControl.enumDefault2 !== 1) {
     return;
   }
 
-  if (!row[colorControl.controlId]) {
+  if (!row[colorControl.controlId as string]) {
     return;
   }
 
-  let activeKey = safeParse(row[colorControl.controlId])[0];
+  let activeKey = safeParse(row[colorControl.controlId as string])[0];
 
   if (activeKey && typeof activeKey === 'string' && activeKey.startsWith('other')) {
     activeKey = 'other';
   }
 
-  const activeOption = colorControl.options.find(
-    c => c.key === activeKey && (colorItems === '' || _.includes(colorItems, c.key)),
+  const activeOption = (colorControl.options || []).find(
+    (c: any) => c.key === activeKey && (colorItems === '' || _.includes(colorItems, c.key)),
   );
   const lightColor = activeOption && activeOption.color && generate(activeOption.color)[5];
   return (
@@ -484,7 +539,7 @@ export function getRecordColor({ controlId, controls, colorItems, row }) {
   );
 }
 
-export function getRecordColorConfig(view = {}) {
+export function getRecordColorConfig(view: { advancedSetting?: { [key: string]: string } } = {}) {
   const controlId = _.get(view, 'advancedSetting.colorid');
   const colorItems = _.get(view, 'advancedSetting.coloritems')
     ? safeParse(_.get(view, 'advancedSetting.coloritems'), 'array')
@@ -500,7 +555,15 @@ export function getRecordColorConfig(view = {}) {
   );
 }
 
-export function filterRowsByKeywords({ rows, keywords = '', controls }) {
+export function filterRowsByKeywords({
+  rows,
+  keywords = '',
+  controls,
+}: {
+  rows: RecordRow[];
+  keywords?: string;
+  controls: FormControl[];
+}) {
   if (!keywords) {
     return rows;
   }
@@ -508,17 +571,17 @@ export function filterRowsByKeywords({ rows, keywords = '', controls }) {
   return rows.filter(
     row =>
       controls
-        .filter(c => c.controlId.length === 24)
-        .map(c => renderCellText({ ...c, value: row[c.controlId] || '' }))
+        .filter(c => (c.controlId || '').length === 24)
+        .map(c => renderCellText({ ...c, value: row[c.controlId as string] || '' }))
         .join('')
         .toLocaleLowerCase()
         .indexOf(keywords.toLocaleLowerCase()) > -1,
   );
 }
 
-export const openLinkFromRecord = (linkControlId, record = {}) => {
+export const openLinkFromRecord = (linkControlId?: string, record: RecordRow = {}) => {
   if (linkControlId) {
-    const link = record[linkControlId];
+    const link = record[linkControlId as string];
 
     if (link && /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i.test(link.replace(/\? /, ''))) {
       window.open(link);
@@ -526,7 +589,7 @@ export const openLinkFromRecord = (linkControlId, record = {}) => {
   }
 };
 
-export const handleRecordClick = (view, row, openRecord = () => {}) => {
+export const handleRecordClick = (view: any, row: RecordRow, openRecord: () => void = () => {}) => {
   const clickType = _.get(view, 'advancedSetting.clicktype') || VIEW_CONFIG_RECORD_CLICK_ACTION.OPEN_RECORD;
 
   if (clickType === VIEW_CONFIG_RECORD_CLICK_ACTION.OPEN_RECORD) {
@@ -537,7 +600,8 @@ export const handleRecordClick = (view, row, openRecord = () => {}) => {
   }
 };
 
-export function handleRecordError(resultCode, control, isNewRecord = false) {
+// control 只在 resultCode 11 的提示里用到，多数调用点只传 resultCode，所以标成可选
+export function handleRecordError(resultCode?: number, control?: FormControl, isNewRecord = false) {
   if (resultCode === 11) {
     alert(_l('编辑失败，%0不允许重复', control ? control.controlName : ''), 2);
   } else if (resultCode === 31) {
@@ -553,29 +617,42 @@ export function handleRecordError(resultCode, control, isNewRecord = false) {
   }
 }
 
-export function getSubListUniqueError({ store, control, badData = [] } = {}) {
+export function getSubListUniqueError({
+  store,
+  control,
+  badData = [],
+}: {
+  /** 子表的 ChildTableStore */
+  store: any;
+  control: FormControl;
+  /** 形如 ['子表controlId:控件controlId:重复值'] */
+  badData?: string[];
+}) {
   if (badData[0]) {
     const [childTableControlId, controlId, value = ''] = badData[0].split(':');
     const state = store.getState();
-    let rows = state.rows;
+    let rows: RecordRow[] = state.rows;
 
     if (get(state, 'base.isTreeTableView')) {
       rows = getSheetViewRows(
-        { rows: _.filter(rows, r => !/^empty-/.test(r.rowid)) },
+        { rows: _.filter(rows, r => !/^empty-/.test(r.rowid || '')) },
         { treeMap: get(state, 'treeTableViewData.treeMap', {}) },
       );
     }
 
-    const badRowIds = filterEmptyChildTableRows(rows)
+    const badRowIds = filterEmptyChildTableRows<RecordRow>(rows)
       .filter(r =>
         value.indexOf('-') > -1 ? (r[controlId] || '').indexOf(value) > -1 : (r[controlId] || '') === value,
       )
       .map(r => r.rowid);
-    const lastRowBaIndex = findLastIndex(filterEmptyChildTableRows(rows), r =>
+    const lastRowBaIndex = findLastIndex(filterEmptyChildTableRows<RecordRow>(rows), r =>
       value.indexOf('-') > -1 ? (r[controlId] || '').indexOf(value) > -1 : (r[controlId] || '') === value,
     );
     if (!badRowIds.length) return {};
-    const controlName = _.find(control.relationControls, c => c.controlId === controlId).controlName;
+    const controlName = _.get(
+      _.find(control.relationControls, c => c.controlId === controlId),
+      'controlName',
+    );
     alert(
       _l('记录提交失败：%0中第%1行记录的%2与已有记录重复', control.controlName, lastRowBaIndex + 1, controlName),
       2,
@@ -591,7 +668,17 @@ export function getSubListUniqueError({ store, control, badData = [] } = {}) {
   }
 }
 
-export async function getRecordLandUrl({ appId, worksheetId, viewId, recordId }) {
+export async function getRecordLandUrl({
+  appId,
+  worksheetId,
+  viewId,
+  recordId,
+}: {
+  appId?: string;
+  worksheetId?: string;
+  viewId?: string;
+  recordId?: string;
+}) {
   if (md.global.Account.isPortal) {
     appId = md.global.Account.appId;
   }
@@ -608,7 +695,12 @@ export async function getRecordLandUrl({ appId, worksheetId, viewId, recordId })
   }
 }
 
-export async function fillRowRelationRows(control, rowId, worksheetId, isRecreate = false) {
+export async function fillRowRelationRows(
+  control: FormControl,
+  rowId?: string,
+  worksheetId?: string,
+  isRecreate = false,
+) {
   const SYSTEM_FIELD_IDS = [
     'rowid',
     'ownerid',
@@ -624,10 +716,11 @@ export async function fillRowRelationRows(control, rowId, worksheetId, isRecreat
     'wfftime',
     'wfstatus',
   ];
-  let defSource = '';
-  let filledControl = _.cloneDeep(control);
+  // 拼好之后整体 JSON.stringify；空串是「没取到关联行」的初值
+  let defSource: string | { cid: string; rcid: string; isAsync: boolean; staticValue: string }[] = '';
+  const filledControl = _.cloneDeep(control);
 
-  const addPrefixForRowIdOfRows = (rows = [], prefix = '') => {
+  const addPrefixForRowIdOfRows = (rows: RecordRow[] = [], prefix = '') => {
     const rowIds = rows.map(row => row.rowid);
     return rows.map(row => {
       const newRow = { ...row };
@@ -651,34 +744,34 @@ export async function fillRowRelationRows(control, rowId, worksheetId, isRecreat
       pageSize: 200,
       getWorksheet: true,
     })
-    .then(res => {
+    .then((res: { resultCode?: number; template?: { controls?: FormControl[] }; data?: RecordRow[] }) => {
       if (res.resultCode === 1) {
         const subControls = ((res.template || {}).controls || []).filter(
           c => !_.includes(SYSTEM_FIELD_IDS, c.controlId),
         );
         const staticValue = addPrefixForRowIdOfRows(res.data || [], 'temp-').map(item => {
-          let itemValue = {
+          const itemValue: RecordRow = {
             rowid: item.rowid,
             pid: item.pid,
             childrenids: item.childrenids,
           };
 
-          subControls.forEach(c => {
+          subControls.forEach((c: FormControl) => {
             if (isRecreate && c.type === 29 && c.enumDefault === 1 && c.dataSource === worksheetId) {
-              itemValue[c.controlId] = undefined;
+              itemValue[c.controlId as string] = undefined;
               return;
             }
 
-            if (isRecreate && c.type === 29 && c.advancedSetting.showtype === '3') {
-              let value = safeParse(item[c.controlId], 'array').slice(0, 5);
-              itemValue[c.controlId] = JSON.stringify(value);
+            if (isRecreate && c.type === 29 && c.advancedSetting?.showtype === '3') {
+              const value = safeParse(item[c.controlId as string], 'array').slice(0, 5);
+              itemValue[c.controlId as string] = JSON.stringify(value);
               return;
             }
 
-            itemValue[c.controlId] =
+            itemValue[c.controlId as string] =
               c.type === WIDGETS_TO_API_TYPE_ENUM.ATTACHMENT
-                ? formatAttachmentValue(item[c.controlId], isRecreate, true)
-                : item[c.controlId];
+                ? formatAttachmentValue(item[c.controlId as string], isRecreate, true)
+                : item[c.controlId as string];
           });
           return itemValue;
         });
@@ -694,9 +787,9 @@ export async function fillRowRelationRows(control, rowId, worksheetId, isRecreat
   return filledControl;
 }
 
-export async function handleRowData(props) {
+export async function handleRowData(props: { rowId?: string; worksheetId?: string; columns: FormControl[] }) {
   const { rowId, worksheetId, columns } = props;
-  const RE_CREATE_ERROR = {
+  const RE_CREATE_ERROR: { [resultCode: number]: string } = {
     4: _l('记录不存在，请刷新视图'),
   };
 
@@ -710,28 +803,28 @@ export async function handleRowData(props) {
   if (data.resultCode === 1) {
     let defaultData = JSON.parse(data.rowData || '{}');
 
-    let subTablePromise = [];
-    let defcontrols = _.cloneDeep(columns);
-    _.forIn(defaultData, (value, key) => {
-      let control = columns.find(l => l.controlId === key);
+    const subTablePromise: Promise<FormControl>[] = [];
+    const defcontrols = _.cloneDeep(columns);
+    _.forIn(defaultData, (value: any, key: string) => {
+      const control = columns.find(l => l.controlId === key);
 
       if (!control) return;
-      else if ([38, 32, 33].includes(control.type) || (control.fieldPermission || '111').split('')[2] === '0') {
+      else if (_.includes([38, 32, 33], control.type) || (control.fieldPermission || '111').split('')[2] === '0') {
         defaultData[key] = null;
       } else if (control.type === 14) {
         defaultData[key] = formatAttachmentValue(value, true);
       } else if (control.type === 34) {
         subTablePromise.push(fillRowRelationRows(control, rowId, worksheetId, true));
       } else if (control.type === 29) {
-        defaultData[key] = !['2', '5', '6'].includes(control.advancedSetting.showtype)
+        defaultData[key] = !['2', '5', '6'].includes(String(control.advancedSetting?.showtype))
           ? JSON.stringify(JSON.parse(value || '[]').slice(0, 5))
           : 0;
       } else if (control.type === 37 && control.dataSource) {
-        const sourceId = control.dataSource.substring(1, control.dataSource.length - 1);
+        const sourceId = String(control.dataSource).substring(1, String(control.dataSource).length - 1);
         const sourceControl = columns.find(l => l.controlId === sourceId);
         defaultData[key] =
           _.get(sourceControl, 'type') === 29 &&
-          ['2', '5', '6'].includes(_.get(sourceControl, 'advancedSetting.showtype'))
+          _.includes(['2', '5', '6'], _.get(sourceControl, 'advancedSetting.showtype'))
             ? undefined
             : value;
       } else {
@@ -740,11 +833,11 @@ export async function handleRowData(props) {
     });
 
     const res = await Promise.all(subTablePromise);
-    res.forEach(item => {
+    res.forEach((item: FormControl) => {
       const index = _.findIndex(defcontrols, o => {
         return o.controlId == item.controlId;
       });
-      ((defaultData[item.controlId] = undefined), index > -1 && (defcontrols[index] = item));
+      ((defaultData[item.controlId as string] = undefined), index > -1 && (defcontrols[index] = item));
     });
 
     return { defaultData, defcontrols };
@@ -770,6 +863,15 @@ export function sendCloudPrint({
   rowIds,
   mobileUpgradeCallback,
   finishCallback = () => {},
+}: {
+  /** 打印模板 id */
+  id?: string;
+  projectId?: string;
+  appId?: string;
+  worksheetId?: string;
+  rowIds: string[];
+  mobileUpgradeCallback?: () => void;
+  finishCallback?: () => void;
 }) {
   if (rowIds.length > 50) {
     alert(_l('单次最多打印 50 条'), 3);
@@ -803,7 +905,9 @@ export function sendCloudPrint({
     });
 }
 
-export function getRecordControlStyles(ruleControlAdvancedSettings) {
+export function getRecordControlStyles(ruleControlAdvancedSettings: {
+  [rowIdAndControlId: string]: ControlAdvancedSetting;
+}) {
   return Object.keys(ruleControlAdvancedSettings).map(key => {
     const [rowId, controlId] = [key.slice(0, key.lastIndexOf('-')), key.slice(key.lastIndexOf('-') + 1)];
     const advancedSetting = ruleControlAdvancedSettings[key];

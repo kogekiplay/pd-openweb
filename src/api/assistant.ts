@@ -12,7 +12,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getListKnowledgeBase: function (args, options = {}) {
+  getListKnowledgeBase: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Assistant', 'GetListKnowledgeBase', args, options);
   },
   /**
@@ -24,7 +24,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getKnowledgeBase: function (args, options = {}) {
+  getKnowledgeBase: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Assistant', 'GetKnowledgeBase', args, options);
   },
   /**
@@ -42,7 +42,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  upsertKnowledgeBase: function (args, options = {}) {
+  upsertKnowledgeBase: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Assistant', 'UpsertKnowledgeBase', args, options);
   },
   /**
@@ -54,7 +54,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteKnowledgeBase: function (args, options = {}) {
+  deleteKnowledgeBase: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Assistant', 'DeleteKnowledgeBase', args, options);
   },
   /**
@@ -66,7 +66,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getListAllowUploadFile: function (args, options = {}) {
+  getListAllowUploadFile: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Assistant', 'GetListAllowUploadFile', args, options);
   },
   /**
@@ -79,7 +79,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  uploadFile: function (args, options = {}) {
+  uploadFile: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Assistant', 'UploadFile', args, options);
   },
   /**
@@ -89,7 +89,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getKnowledgeFileTotalSize: function (args, options = {}) {
+  getKnowledgeFileTotalSize: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('Assistant', 'GetKnowledgeFileTotalSize', args, options);
   },
@@ -102,7 +102,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getListKnowledgeFile: function (args, options = {}) {
+  getListKnowledgeFile: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Assistant', 'GetListKnowledgeFile', args, options);
   },
   /**
@@ -114,7 +114,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteKnowledgeFile: function (args, options = {}) {
+  deleteKnowledgeFile: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Assistant', 'DeleteKnowledgeFile', args, options);
   },
   /**
@@ -124,7 +124,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAIAssistantLimitNumber: function (args, options = {}) {
+  getAIAssistantLimitNumber: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('Assistant', 'GetAIAssistantLimitNumber', args, options);
   },
@@ -138,7 +138,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getList: function (args, options = {}) {
+  getList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Assistant', 'GetList', args, options);
   },
   /**
@@ -150,7 +150,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  get: function (args, options = {}) {
+  get: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Assistant', 'Get', args, options);
   },
   /**
@@ -170,7 +170,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  upsert: function (args, options = {}) {
+  upsert: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Assistant', 'Upsert', args, options);
   },
   /**
@@ -183,7 +183,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setStatus: function (args, options = {}) {
+  setStatus: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Assistant', 'SetStatus', args, options);
   },
   /**
@@ -195,7 +195,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  delete: function (args, options = {}) {
+  delete: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Assistant', 'Delete', args, options);
   },
   /**
@@ -207,7 +207,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getThread: function (args, options = {}) {
+  getThread: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Assistant', 'GetThread', args, options);
   },
   /**
@@ -220,7 +220,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  generateAssistantPreamble: function (args, options = {}) {
+  generateAssistantPreamble: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Assistant', 'GenerateAssistantPreamble', args, options);
   },
   /**
@@ -231,7 +231,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSimpleInfo: function (args, options = {}) {
+  getSimpleInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Assistant', 'GetSimpleInfo', args, options);
   },
   /**
@@ -243,7 +243,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  resetThread: function (args, options = {}) {
+  resetThread: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Assistant', 'ResetThread', args, options);
   },
   /**
@@ -256,7 +256,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  stopReply: function (args, options = {}) {
+  stopReply: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Assistant', 'StopReply', args, options);
   },
   /**
@@ -266,7 +266,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getListAssistantMessage: function (args, options = {}) {
+  getListAssistantMessage: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('Assistant', 'GetListAssistantMessage', args, options);
   },

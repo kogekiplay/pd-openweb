@@ -9,7 +9,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  add: function (args, options = {}) {
+  add: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WebCache', 'Add', args, options);
   },
   /**
@@ -20,7 +20,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  clear: function (args, options = {}) {
+  clear: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WebCache', 'Clear', args, options);
   },
   /**
@@ -31,7 +31,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  clears: function (args, options = {}) {
+  clears: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WebCache', 'Clears', args, options);
   },
   /**
@@ -42,7 +42,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  get: function (args, options = {}) {
+  get: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WebCache', 'Get', args, options);
   },
   /**
@@ -53,7 +53,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  gets: function (args, options = {}) {
+  gets: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('WebCache', 'Gets', args, options);
   },
 };

@@ -7,7 +7,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFolderStatisticsNow: function (args, options = {}) {
+  getFolderStatisticsNow: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('TaskFolderStatistics', 'GetFolderStatisticsNow', args, options);
   },
   /**
@@ -20,7 +20,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDailyFolderStatistics: function (args, options = {}) {
+  getDailyFolderStatistics: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('TaskFolderStatistics', 'GetDailyFolderStatistics', args, options);
   },
   /**
@@ -31,7 +31,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFolderControlsPieChart: function (args, options = {}) {
+  getFolderControlsPieChart: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('TaskFolderStatistics', 'GetFolderControlsPieChart', args, options);
   },
   /**
@@ -44,7 +44,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFolderControlsBarChart: function (args, options = {}) {
+  getFolderControlsBarChart: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('TaskFolderStatistics', 'GetFolderControlsBarChart', args, options);
   },
   /**
@@ -55,7 +55,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTaskCharges: function (args, options = {}) {
+  getTaskCharges: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('TaskFolderStatistics', 'GetTaskCharges', args, options);
   },
   /**
@@ -66,7 +66,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSubordinate: function (args, options = {}) {
+  getSubordinate: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('TaskFolderStatistics', 'GetSubordinate', args, options);
   },
   /**
@@ -79,7 +79,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTaskChargeStatistics: function (args, options = {}) {
+  getTaskChargeStatistics: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('TaskFolderStatistics', 'GetTaskChargeStatistics', args, options);
   },
   /**
@@ -90,7 +90,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFolderStageStatistics: function (args, options = {}) {
+  getFolderStageStatistics: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('TaskFolderStatistics', 'GetFolderStageStatistics', args, options);
   },
 };

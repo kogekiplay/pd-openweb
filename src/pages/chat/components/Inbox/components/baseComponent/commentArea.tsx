@@ -181,7 +181,6 @@ class CommentItem extends React.Component<any, any> {
           <UserCard sourceId={accountId || groupId} type={groupId ? 2 : 1}>
             <span>{ele.innerHTML}</span>
           </UserCard>,
-          ele,
         );
       });
   }

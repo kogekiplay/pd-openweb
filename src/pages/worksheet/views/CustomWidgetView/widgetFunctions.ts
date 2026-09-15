@@ -1,4 +1,4 @@
-﻿import { isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 import { dialogSelectDept, dialogSelectOrgRole, dialogSelectUser } from 'ming-ui/functions';
 import actionLogAjax from 'src/api/actionLog';
 import appManagementAjax from 'src/api/appManagement';
@@ -30,6 +30,7 @@ import { emitter } from 'src/utils/common';
 import { renderText } from 'src/utils/control';
 import { addBehaviorLog, compatibleMDJS, mdAppResponse } from 'src/utils/project';
 import selectLocation from './selectLocation';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 export const api = {
   getFilterRowsTotalNum: data => window.mdyAPI('Worksheet', 'GetFilterRowsTotalNum', getFilledRequestParams(data)),
@@ -111,7 +112,7 @@ export const mainWebApi = getMainWebApi();
 
 const isMobile = browserIsMobile();
 
-function emitWidgetAction(action, value) {
+function emitWidgetAction(action: string, value) {
   emitter.emit('POST_MESSAGE_TO_CUSTOM_WIDGET', {
     action,
     value,
@@ -363,7 +364,7 @@ export const utils = {
         if (res.action === 'close') {
           return;
         } else if (res.action === 'selectRecord') {
-          const records = safeParse(res.value, 'array');
+          const records: RecordRow[] = safeParse(res.value, 'array');
           emitWidgetAction('select-records', records);
           return records;
         }

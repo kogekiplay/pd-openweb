@@ -6,6 +6,7 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import { chartNav } from 'statistics/common/chartNav';
+import type { RootState } from 'src/redux/types';
 import { htmlEncodeReg } from 'src/utils/common';
 import * as actions from './redux/actions';
 
@@ -138,7 +139,7 @@ const LinkageBtn = props => {
 };
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     linkageFiltersGroup: state.mobile.linkageFiltersGroup,
   }),
   dispatch =>

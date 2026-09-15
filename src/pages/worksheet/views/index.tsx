@@ -12,6 +12,7 @@ import TreeTableView from 'worksheet/views/TreeTableView';
 import { REFRESH_TIME_VALUES } from 'src/pages/worksheet/common/ViewConfig/config';
 import { hierarchyViewCanSelectFields } from 'src/pages/worksheet/views/HierarchyView/util';
 import ViewContext from './ViewContext';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const { board, sheet, calendar, gallery, structure, gunter, detail, customize, resource, map } = VIEW_DISPLAY_TYPE;
 
@@ -139,7 +140,7 @@ function View(props) {
 
   if (!showAsSheetView && view.viewType === 2) {
     const { viewControl, viewControls } = view;
-    const { controls = [], worksheetId = '' } = props;
+    const { controls = [], worksheetId = '' }: { controls: FormControl[]; [key: string]: any } = props;
     const hierarchyData = hierarchyViewCanSelectFields({
       controls,
       worksheetId,

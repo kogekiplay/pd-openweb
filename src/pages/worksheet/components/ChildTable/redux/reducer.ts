@@ -2,8 +2,10 @@ import { combineReducers } from 'redux';
 import _, { includes, uniq } from 'lodash';
 import { handleTreeNodeRow, treeTableViewData } from 'worksheet/common/TreeTableHelper/index.js';
 import { browserIsMobile } from 'src/utils/common';
+import type { RecordRow } from 'src/utils/controlTypes';
+import type { ReduxAction } from 'src/redux/types';
 
-function dataLoading(state = true, action) {
+function dataLoading(state = true, action: ReduxAction) {
   switch (action.type) {
     case 'UPDATE_DATA_LOADING':
       return action.value;
@@ -12,7 +14,7 @@ function dataLoading(state = true, action) {
   }
 }
 
-function baseLoading(state = true, action) {
+function baseLoading(state = true, action: ReduxAction) {
   switch (action.type) {
     case 'UPDATE_BASE_LOADING':
       return action.value;
@@ -21,7 +23,7 @@ function baseLoading(state = true, action) {
   }
 }
 
-function base(state = {}, action) {
+function base(state = {}, action: ReduxAction) {
   // controls, searchConfig, rules, projectId, workflowChildTableSwitch, entityName, appId
   // masterData, recordId
 
@@ -63,7 +65,7 @@ const DIRTY_MARKING_ACTIONS = [
   'CLEAR_AND_SET_ROWS',
 ];
 
-function changes(state = {}, action) {
+function changes(state = {}, action: ReduxAction) {
   if (_.includes(DIRTY_MARKING_ACTIONS, action.type)) {
     return { ...state, isDirty: true };
   }
@@ -82,7 +84,7 @@ function changes(state = {}, action) {
   }
 }
 
-function cellErrors(state = {}, action) {
+function cellErrors(state = {}, action: ReduxAction) {
   switch (action.type) {
     case 'UPDATE_CELL_ERRORS':
       return action.value;
@@ -96,7 +98,7 @@ function cellErrors(state = {}, action) {
 // 否则上一次保存写回 cellErrors 的必填/规则错误会被当成待处理错误反复保留，
 // 出现「改了业务规则条件字段、该字段已不必填，保存仍报必填」。
 // 未标记的 key 随 cellErrors 收敛（清空、删行、改值清错误时同步失效）。
-function persistedCellErrors(state = {}, action) {
+function persistedCellErrors(state = {}, action: ReduxAction) {
   switch (action.type) {
     case 'UPDATE_CELL_ERRORS':
       return _.pickBy({ ...state, ...(action.persisted || {}) }, (error, key) => key in (action.value || {}));
@@ -105,14 +107,14 @@ function persistedCellErrors(state = {}, action) {
   }
 }
 
-function lastAction(state, action) {
+function lastAction(state, action: ReduxAction) {
   return action;
 }
 
-function originRows(state = [], action) {
+function originRows(state = [], action: ReduxAction) {
   switch (action.type) {
     case 'LOAD_ROWS':
-      return action.rows.map(row => ({ ...row }));
+      return action.rows.map((row: RecordRow) => ({ ...row }));
     default:
       return state;
   }
@@ -143,7 +145,7 @@ const ROWS_HANDLED_ACTIONS = [
   'UPDATE_STATE',
 ];
 
-function rows(state = [], action) {
+function rows(state = [], action: ReduxAction) {
   const emptyCount = action.emptyCount || 0;
 
   // 无关 action 不重建空行，避免重新生成 empty rowid 导致在途交互（focus/paste）丢失行引用
@@ -166,7 +168,7 @@ function rows(state = [], action) {
     case 'INIT_ROWS':
     case 'FORCE_SET_OUT_ROWS':
     case 'CLEAR_AND_SET_ROWS':
-      newState = action.rows.map(row => ({ ...row }));
+      newState = action.rows.map((row: RecordRow) => ({ ...row }));
       break;
     case 'ADD_ROW':
       if (action.insertRowId === '__HEAD__') {
@@ -218,7 +220,7 @@ function rows(state = [], action) {
   return newState.length < emptyCount && !browserIsMobile() ? fillEmptyRows(newState, emptyCount) : newState;
 }
 
-function pagination(state = { pageIndex: 1, pageSize: 20, count: 0 }, action) {
+function pagination(state = { pageIndex: 1, pageSize: 20, count: 0 }, action: ReduxAction) {
   switch (action.type) {
     case 'UPDATE_PAGINATION':
       return { ...state, ...action.pagination };
@@ -230,7 +232,7 @@ function pagination(state = { pageIndex: 1, pageSize: 20, count: 0 }, action) {
 // 子表"未筛选时的真实总行数"：筛选态下 state.rows 只是服务端筛选后的子集，
 // 无法据此判空触发必填，故由 actions 在未筛选加载时落总数、筛选态下按本地增删增量维护。
 // 默认 null = 未知（从未在未筛选态加载过），判空时回退旧的安全策略，避免误报必填。
-function realCount(state = null, action) {
+function realCount(state = null, action: ReduxAction) {
   switch (action.type) {
     case 'SET_REAL_COUNT':
       return _.isNumber(action.value) ? Math.max(0, action.value) : null;
@@ -241,7 +243,7 @@ function realCount(state = null, action) {
   }
 }
 
-function sortConfig(state = null, action) {
+function sortConfig(state = null, action: ReduxAction) {
   switch (action.type) {
     case 'UPDATE_SORT_CONFIG':
       return action.sortConfig;
@@ -254,7 +256,7 @@ function sortConfig(state = null, action) {
   }
 }
 
-function filterControls(state = [], action) {
+function filterControls(state = [], action: ReduxAction) {
   switch (action.type) {
     case 'UPDATE_FILTER_CONTROLS':
       return action.filterControls || [];

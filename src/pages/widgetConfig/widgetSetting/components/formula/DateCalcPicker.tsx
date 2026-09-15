@@ -47,7 +47,7 @@ export default class DateCalcPicker extends Component<any, any> {
     return type === 15 ? moment(dateStr).format('YYYY-MM-DD') : moment(dateStr).format('YYYY-MM-DD HH:mm');
   }
 
-  handleChange(value) {
+  handleChange(value?) {
     const { onChange } = this.props;
     this.setState({ value, showMenu: false });
     onChange(value ? `$${value}$` : '');

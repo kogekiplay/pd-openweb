@@ -3,6 +3,7 @@ import { controlState, isEmptyValue } from 'src/utils/control';
 import RegExpValidator from 'src/utils/expression';
 import { allSwitchKeys, HAVE_VALUE_STYLE_WIDGET } from '../../core/enum';
 import { FIELD_SIZE_OPTIONS, TITLE_SIZE_OPTIONS } from './config';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export const fixWeixinInputBlurScroll = () => {
   if (!window.isWeiXin) return;
@@ -84,7 +85,7 @@ export const getValueStyle = (data, isField = true) => {
     : { type };
 };
 
-export const getAdvanceSetting = (data, key) => {
+export const getAdvanceSetting = (data, key?) => {
   const setting = get(data, ['advancedSetting']) || {};
   if (!key) return setting;
   let value = get(setting, key);
@@ -117,7 +118,7 @@ export const fixedBottomWidgets = data => {
   return data.type === 52 || (_.includes([29, 51], data.type) && get(data, 'advancedSetting.showtype') === '6');
 };
 
-export const getExpandWidgetIds = (controls = [], data = {}, from) => {
+export const getExpandWidgetIds = (controls: FormControl[] = [], data = {}, from) => {
   const { controlId, sectionId } = data;
   const expandWidgetIds = [];
   const widgets = controls.sort((a, b) => {
@@ -163,7 +164,7 @@ export const checkCellIsEmpty = value => {
   return typeof value === 'undefined' || value === '' || value === '[]' || value === '["",""]' || value === null;
 };
 
-function parseCardStyle(control, value, type) {
+function parseCardStyle(control, value, type: string) {
   try {
     const parsedValue = safeParse(value) || {};
     return {

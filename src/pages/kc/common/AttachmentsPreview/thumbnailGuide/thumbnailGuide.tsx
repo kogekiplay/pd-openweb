@@ -117,7 +117,7 @@ class ThumbnailGuide extends React.Component<any, any> {
     });
   };
 
-  imageExec = (key, options = {}) => {
+  imageExec = (key: string, options = {}) => {
     if (this.props[key]) {
       this.props[key](options);
     }

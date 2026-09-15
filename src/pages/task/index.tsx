@@ -1,6 +1,7 @@
-﻿import React, { Component } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import type { RootState } from 'src/redux/types';
 import UniformRoute from 'src/router/withTitle';
 import { emitter } from 'src/utils/common';
 import TaskCenter from './containers/taskCenter/taskCenter';
@@ -36,4 +37,4 @@ class TaskEntrypoint extends Component<any, any> {
   }
 }
 
-export default connect(state => state.task)(TaskEntrypoint);
+export default connect((state: RootState) => state.task)(TaskEntrypoint);

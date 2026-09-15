@@ -18,7 +18,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addDiscussion: function (args, options = {}) {
+  addDiscussion: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Discussion', 'AddDiscussion', args, options);
   },
   /**
@@ -39,7 +39,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDiscussions: function (args, options = {}) {
+  getDiscussions: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Discussion', 'GetDiscussions', args, options);
   },
   /**
@@ -60,7 +60,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDiscussionsCount: function (args, options = {}) {
+  getDiscussionsCount: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Discussion', 'GetDiscussionsCount', args, options);
   },
   /**
@@ -72,7 +72,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeDiscussion: function (args, options = {}) {
+  removeDiscussion: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Discussion', 'RemoveDiscussion', args, options);
   },
   /**
@@ -84,7 +84,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDiscussionMsg: function (args, options = {}) {
+  getDiscussionMsg: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Discussion', 'GetDiscussionMsg', args, options);
   },
   /**
@@ -96,7 +96,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSourceAtts: function (args, options = {}) {
+  getSourceAtts: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Discussion', 'GetSourceAtts', args, options);
   },
 };

@@ -66,7 +66,7 @@ const SheetSelector = () => {
     return Math.max(-maxOffset, Math.min(value, 0));
   };
 
-  const handleCardClick = (e, scheme) => {
+  const handleCardClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, scheme) => {
     if (aiLoading && scheme?.id !== 'createKnowledge') return;
 
     const viewport = viewportRef.current;

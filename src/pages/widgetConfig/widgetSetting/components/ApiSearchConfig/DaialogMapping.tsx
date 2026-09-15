@@ -9,8 +9,9 @@ import { getAdvanceSetting, handleAdvancedSettingChange } from 'src/pages/widget
 import { dealRequestControls } from '../../../util/data';
 import { getMapControls } from '../DynamicDefaultValue/util';
 import './DialogMapping.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
-const renderHeader = showSupport => {
+const renderHeader = (showSupport?) => {
   return (
     <div className={cx('mappingHeader mBottom20', { mTop44: !showSupport })}>
       <span className="Font14 Bold">
@@ -38,7 +39,7 @@ const getOptions = item => {
 
   return { iconType: item.type, placeholder: item.dataSource ? _l('请选择子表中的字段') : _l('请选择') };
 };
-const findCurrentValue = (item = {}, i = {}) => {
+const findCurrentValue = (item: Partial<FormControl> = {}, i: { subid?: string; cid?: string } = {}) => {
   if (item.dataSource) return i.subid;
   if (item.type === 10000007) return i.subid || i.cid;
   if (!item.dataSource && !i.subid) return i.cid;
@@ -67,7 +68,7 @@ export default function DialogMapping(props) {
     onClose,
     onChange,
     fromOperationFlow,
-  } = props;
+  }: { allControls: FormControl[]; [key: string]: any } = props;
   const { itemsource = '' } = getAdvanceSetting(data);
   const responsemap = getAdvanceSetting(data, 'responsemap') || [];
   const [mappingData, setMappingData] = useState(responsemap);
@@ -127,7 +128,7 @@ export default function DialogMapping(props) {
       const filterIds = mappingData
         .filter(i => i.pid && i.cid === parentControl.controlId && i.subid !== showValue)
         .map(i => i.subid);
-      const relationControls = (parentControl.relationControls || []).filter(i => {
+      const relationControls: FormControl[] = (parentControl.relationControls || []).filter(i => {
         return !_.includes([...filterSYS, ...filterIds], i.controlId);
       });
       filterData = getMapControls(item, relationControls);

@@ -535,7 +535,7 @@ export default class PBC extends Component<any, any> {
   /**
    * 更新输出PBC字段的值
    */
-  updateExportFields = (action, value, { fieldId, type, dataSource }, isBlur) => {
+  updateExportFields = (action: string, value, { fieldId, type, dataSource }, isBlur?: boolean) => {
     const { data } = this.state;
     const fields = _.cloneDeep(data.fields);
 
@@ -875,7 +875,7 @@ export default class PBC extends Component<any, any> {
   /**
    * 拆分fields
    */
-  splitFields(processVariableType) {
+  splitFields(processVariableType: number) {
     const { data } = this.state;
 
     return data.fields.filter(

@@ -4,6 +4,7 @@ import cx from 'classnames';
 import _ from 'lodash';
 import { UserHead } from 'ming-ui';
 import { isSameType } from 'worksheet/common/ViewConfig/util';
+import type { RootState } from 'src/redux/types';
 
 let GroupContent = class GroupContent extends Component<any, any> {
   constructor(props) {
@@ -49,7 +50,7 @@ let GroupContent = class GroupContent extends Component<any, any> {
     return group.name || _l('为空');
   }
 };
-GroupContent = connect(state => ({
+GroupContent = connect((state: RootState) => ({
   ..._.pick(state.sheet.gunterView, ['viewConfig']),
   ..._.pick(state.sheet, ['isCharge', 'base', 'worksheetInfo', 'controls']),
 }))(GroupContent);

@@ -27,6 +27,7 @@ import { FixedIcon } from '../widgetDisplay/components/WidgetStyle';
 import { SettingCollapseWrap } from '../widgetSetting/content/styled';
 import DraggableItem from './draggableItem';
 import ListItemLayer from './ListItemLayer';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const { Panel } = Collapse;
 
@@ -466,7 +467,7 @@ function TemplatePanelHeader(props) {
     onEdit,
     onDelete,
     showOperate = true,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const templateId = item.templateId || item.id;
   const firstControl = controls[0] || {};
   const { icon: firstControlIcon } = getWidgetInfo(firstControl.type);
@@ -603,7 +604,7 @@ export default function List(props) {
     setConfig = () => {},
     getTemplateListByPersonal = () => {},
     getTemplateListByOrganization = () => {},
-  } = props;
+  }: { allControls: FormControl[]; [key: string]: any } = props;
   const { hideWorksheetControl } = md.global.SysSettings;
   const [activeWidgetTab, setActiveWidgetTab] = useState(1);
   const [expandedGroups, setExpandedGroups] = useState(['organization', 'personal']);
@@ -727,7 +728,7 @@ export default function List(props) {
     };
   }, []);
 
-  const handleTemplateDropdownVisibleChange = (templateKey, visible) => {
+  const handleTemplateDropdownVisibleChange = (templateKey: string, visible) => {
     setActiveDropdownKey(currentKey => {
       if (visible) return templateKey;
 
@@ -737,7 +738,7 @@ export default function List(props) {
 
   const handleAddTemplate = async (item, para = {}) => {
     try {
-      const controls = await cloneTemplateControls(getTemplateControls(item), props.updateQueryConfigs);
+      const controls: FormControl[] = await cloneTemplateControls(getTemplateControls(item), props.updateQueryConfigs);
       if (_.isEmpty(controls)) return;
 
       for (let i = 0; i < controls.length; i++) {
@@ -861,7 +862,7 @@ export default function List(props) {
               {group.list.map(item => {
                 const templateId = getTemplateId(item);
                 const templateKey = `${group.key}-${templateId}`;
-                const controls = getTemplateControls(item);
+                const controls: FormControl[] = getTemplateControls(item);
                 const controlCount = getTemplateControlCount(item);
                 const showOperate = group.key !== 'organization' || hasCreateTemplatePermission;
 

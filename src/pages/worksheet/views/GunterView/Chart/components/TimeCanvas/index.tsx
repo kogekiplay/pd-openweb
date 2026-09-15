@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import { isWeekEndDay } from 'worksheet/views/GunterView/util';
+import type { RootState } from 'src/redux/types';
 
 let TimeCanvas = class TimeCanvas extends Component<any, any> {
   constructor(props) {
@@ -39,7 +40,7 @@ let TimeCanvas = class TimeCanvas extends Component<any, any> {
     window.removeEventListener('resize', this.debounceUpdateHeight);
   }
 
-  updateHeight = (event, props) => {
+  updateHeight = (event?, props?) => {
     const { grouping, chartScroll, groupingScroll, base } = props || this.props;
     const gunterChartWrapperEl = document.querySelector(`.gunterView-${base.viewId} .gunterChartWrapper`);
     const gunterGroupingScrollerEl = document.querySelector(`.gunterView-${base.viewId} .gunterGroupingScroller`);
@@ -94,7 +95,7 @@ let TimeCanvas = class TimeCanvas extends Component<any, any> {
     );
   }
 };
-TimeCanvas = connect(state => ({
+TimeCanvas = connect((state: RootState) => ({
   ..._.pick(state.sheet.gunterView, [
     'grouping',
     'periodList',

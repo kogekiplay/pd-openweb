@@ -84,7 +84,7 @@ export default class CC extends Component<any, any> {
   /**
    * 获取节点详情
    */
-  getNodeDetail(props, sId) {
+  getNodeDetail(props, sId?) {
     const { processId, selectNodeId, selectNodeType, isApproval, instanceId } = props;
     const { isNewCC } = this.state;
 
@@ -122,7 +122,7 @@ export default class CC extends Component<any, any> {
   /**
    * 更新节点对象数据
    */
-  updateFlowMapSource = (key, obj, callback = () => {}) => {
+  updateFlowMapSource = (key: number, obj, callback = () => {}) => {
     const { data } = this.state;
 
     this.updateSource(

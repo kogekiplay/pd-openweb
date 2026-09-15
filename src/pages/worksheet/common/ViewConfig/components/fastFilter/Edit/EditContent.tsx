@@ -8,6 +8,7 @@ import DefCom from './DefCom';
 import FastFilterFieldSelector from './FastFilterFieldSelector';
 import FilterControlSettings from './FilterControlSettings';
 import NavShowSetting from './NavShowSetting';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export default function EditContent(params) {
   const {
@@ -18,7 +19,7 @@ export default function EditContent(params) {
     setActiveFastFilterId,
     currentSheetInfo,
     saveViewSetLoading,
-  } = params;
+  }: { worksheetControls: FormControl[]; [key: string]: any } = params;
   const [{ fastFilters, control, advancedSetting, dataType, dataControls }, setState] = useSetState({
     fastFilters: [],
     control: {},
@@ -31,7 +32,7 @@ export default function EditContent(params) {
     if (saveViewSetLoading) return;
     const d = view.fastFilters || [];
     let controlsFilter = d.map(o => {
-      const c = worksheetControls.find(item => item.controlId === o.controlId) || {};
+      const c = worksheetControls.find((item: FormControl) => item.controlId === o.controlId) || {};
       return {
         ...o,
         isErr: !o,
@@ -40,7 +41,7 @@ export default function EditContent(params) {
         sourceControl: c.sourceControl,
       };
     });
-    let dd = worksheetControls.find(item => item.controlId === activeFastFilterId) || {};
+    let dd = worksheetControls.find((item: FormControl) => item.controlId === activeFastFilterId) || {};
     let controlNew = controlsFilter.find(o => o.controlId === activeFastFilterId) || {};
 
     if ([10].includes(controlNew.type) && controlNew.filterType === 0) {

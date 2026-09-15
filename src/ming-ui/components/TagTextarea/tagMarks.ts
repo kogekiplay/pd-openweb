@@ -53,7 +53,7 @@ export function lineStartOffsets(text = '') {
 /**
  * 把 {line, start, stop} 换算成全文绝对 offset。
  */
-export function toDocRange(pos, offsets) {
+export function toDocRange(pos, offsets: number[]) {
   const base = offsets[pos.line];
 
   return { from: base + pos.start, to: base + pos.stop };

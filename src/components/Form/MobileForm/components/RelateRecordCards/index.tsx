@@ -24,6 +24,7 @@ import SearchInput from '../ChildTable/SearchInput';
 import RelateScanQRCode from '../RelateScanQRCode';
 import RecordCoverCard from './RecordCoverCard';
 import RecordTag from './RecordTag';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const MAX_COUNT = 200;
 
@@ -260,7 +261,7 @@ class RelateRecordCards extends Component<any, any> {
       showControls = safeParse(advancedSetting.chooseshowids, 'array');
     }
 
-    return showControls.map(scid => _.find(controls, c => c.controlId === scid)).filter(identity);
+    return showControls.map((scid: FormControl) => _.find(controls, c => c.controlId === scid)).filter(identity);
   }
 
   get onlyRelateByScanCode() {
@@ -341,12 +342,12 @@ class RelateRecordCards extends Component<any, any> {
 
   hasRelateControl(relationControls, showControls) {
     return !!_.find(
-      relationControls.filter(rc => _.find(showControls, scid => scid === rc.controlId)),
+      relationControls.filter((rc: FormControl) => _.find(showControls, scid => scid === rc.controlId)),
       c => _.includes([29, 30], c.type),
     );
   }
 
-  loadControls(nextProps) {
+  loadControls(nextProps?) {
     const { dataSource, worksheetId } = (nextProps || this.props).control;
     sheetAjax
       .getWorksheetInfo({ worksheetId: dataSource, getTemplate: true, relationWorksheetId: worksheetId })
@@ -359,7 +360,7 @@ class RelateRecordCards extends Component<any, any> {
       });
   }
 
-  loadMoreRecords = (pageIndex = 2, nextProps) => {
+  loadMoreRecords = (pageIndex = 2, nextProps?) => {
     const { formDisabled } = this.props;
     const { from, controlId, recordId, worksheetId, advancedSetting, instanceId, workId, disabled } = (
       nextProps || this.props
@@ -427,7 +428,7 @@ class RelateRecordCards extends Component<any, any> {
         deletedIds: _.includes(addedIds, deletedRecord.rowid)
           ? deletedIds
           : _.uniq(deletedIds.concat(deletedRecord.rowid)),
-        records: records.filter(r => r.rowid !== deletedRecord.rowid),
+        records: records.filter((r: RecordRow) => r.rowid !== deletedRecord.rowid),
         addedIds: addedIds.filter(id => id !== deletedRecord.rowid),
         count: count - 1,
       },
@@ -437,7 +438,7 @@ class RelateRecordCards extends Component<any, any> {
 
   handleClear = () => {
     const { records, addedIds, deletedIds } = this.state;
-    const recordIds = records.map(r => r.rowid);
+    const recordIds = records.map((r: RecordRow) => r.rowid);
     const changes = {
       deletedIds: _.uniq(deletedIds.concat(recordIds)),
       records: [],
@@ -449,7 +450,7 @@ class RelateRecordCards extends Component<any, any> {
 
   deleteAllRecord = cb => {
     const { records, addedIds, deletedIds } = this.state;
-    const recordIds = records.map(r => r.rowid);
+    const recordIds = records.map((r: RecordRow) => r.rowid);
     const changes = {
       deletedIds: _.uniq(deletedIds.concat(recordIds)),
       records: [],
@@ -492,7 +493,7 @@ class RelateRecordCards extends Component<any, any> {
     const newRecords = multiple ? _.uniqBy(newAdded.concat(records), r => r.rowid) : newAdded;
 
     if (!multiple && records.length) {
-      const recordIds = records.map(r => r.rowid);
+      const recordIds = records.map((r: RecordRow) => r.rowid);
       this.setState(
         {
           records: newRecords,
@@ -529,7 +530,7 @@ class RelateRecordCards extends Component<any, any> {
       }
     });
 
-    const updatedRecords = records.map(item => {
+    const updatedRecords = records.map((item: RecordRow) => {
       if (item.rowid === targetRowId) {
         const newItem = { ...item };
         Object.keys(newItem).forEach(key => {
@@ -573,7 +574,7 @@ class RelateRecordCards extends Component<any, any> {
         sid: recordId,
         type: 8,
         sourcevalue: JSON.stringify({
-          ..._.assign(...formData.map(c => ({ [c.controlId]: c.value }))),
+          ..._.assign(...formData.map((c: FormControl) => ({ [c.controlId]: c.value }))),
           [titleControl.controlId]: titleControl.value,
           rowid: recordId,
         }),
@@ -640,7 +641,7 @@ class RelateRecordCards extends Component<any, any> {
     } = control;
     const { records, deletedIds } = this.state;
     const { disabledManualWrite, isCard } = this;
-    const selectedRowIds = records.map(r => r.rowid);
+    const selectedRowIds = records.map((r: RecordRow) => r.rowid);
     const ignoreRowIds = _.uniq(deletedIds.concat(selectedRowIds));
     const selectOptions = {
       className: `mobileSelectRecordWrap-${controlId}`,
@@ -653,7 +654,7 @@ class RelateRecordCards extends Component<any, any> {
       multiple: enumDefault === 2,
       coverCid: coverCid,
       filterRowIds: records
-        .map(r => r.rowid)
+        .map((r: RecordRow) => r.rowid)
         .concat(control.dataSource === worksheetId ? recordId : [])
         .concat(
           control.isSubList && (control.unique || control.uniqueInRecord)
@@ -939,7 +940,7 @@ class RelateRecordCards extends Component<any, any> {
                 filterControls={filterControls}
                 parentWorksheetId={worksheetId}
                 control={control}
-                relateRecordIds={records.map(r => r.rowid)}
+                relateRecordIds={records.map((r: RecordRow) => r.rowid)}
                 onChange={data => {
                   this.handleAdd([data]);
                 }}

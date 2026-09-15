@@ -6,7 +6,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getLinkList: function (args, options = {}) {
+  getLinkList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateLink', 'GetLinkList', args, options);
   },
   /**
@@ -17,7 +17,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addLink: function (args, options = {}) {
+  addLink: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateLink', 'AddLink', args, options);
   },
 };

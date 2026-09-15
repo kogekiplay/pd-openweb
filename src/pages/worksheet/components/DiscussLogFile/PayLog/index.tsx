@@ -262,7 +262,7 @@ export default function PayLog(props) {
       });
   };
 
-  const changeStatus = (refundOrderId, status) => {
+  const changeStatus = (refundOrderId, status: number) => {
     if (editing) return;
     setState({
       editing: true,

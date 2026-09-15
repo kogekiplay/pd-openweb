@@ -12,6 +12,7 @@ import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget.j
 import execValueFunction from 'src/pages/widgetConfig/widgetSetting/components/FunctionEditorDialog/Func/exec';
 import { isRelateRecordTableControl } from 'src/utils/control';
 import CodeEdit from './CodeEdit';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Header = styled.div`
   height: 50px;
@@ -146,7 +147,7 @@ export default function TestFunctionDialog(props) {
     onChange,
     onCancel,
     onUpdate,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const codeEditorRef = useRef<any>(undefined);
   const [expression, setExpression] = useState(value);
   const controlIdsInExpression = uniq((expression.match(/\$(.+?)\$/g) || []).map(id => id.slice(1, -1)));

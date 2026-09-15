@@ -8,7 +8,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeTasksTag: function (args, options = {}) {
+  removeTasksTag: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Tag', 'RemoveTasksTag', args, options);
   },
   /**
@@ -20,7 +20,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addTaskTag: function (args, options = {}) {
+  addTaskTag: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Tag', 'AddTaskTag', args, options);
   },
   /**
@@ -33,7 +33,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addTaskTag2: function (args, options = {}) {
+  addTaskTag2: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Tag', 'AddTaskTag2', args, options);
   },
 };

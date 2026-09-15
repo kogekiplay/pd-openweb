@@ -6,7 +6,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  createQrCodeImage: function (args, options = {}) {
+  createQrCodeImage: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('Code', 'CreateQrCodeImage', args, options);
   },
@@ -17,7 +17,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  createVerifyCodeImage: function (args, options = {}) {
+  createVerifyCodeImage: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('Code', 'CreateVerifyCodeImage', args, options);
   },
@@ -28,7 +28,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getGenerateCodeRecord: function (args, options = {}) {
+  getGenerateCodeRecord: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('Code', 'GetGenerateCodeRecord', args, options);
   },
@@ -42,7 +42,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  saveGenerateCodeRecord: function (args, options = {}) {
+  saveGenerateCodeRecord: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Code', 'SaveGenerateCodeRecord', args, options);
   },
 };

@@ -270,7 +270,7 @@ export default function VarAddOrEditModal(props) {
   return (
     <VarDrawer
       autoFocus={false}
-      visible={visible}
+      open={visible}
       width={600}
       placement="right"
       mask={false}

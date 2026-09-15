@@ -1,4 +1,4 @@
-﻿import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import { isEmpty } from 'lodash';
@@ -22,6 +22,7 @@ import { AnimationWrap, EditInfo, SettingItem } from '../../styled';
 import { filterSysControls, formatControlsToDropdown, getFilterRelateControls, toEditWidgetPage } from '../../util';
 import { getAdvanceSetting, getControlsSorts, handleAdvancedSettingChange } from '../../util/setting';
 import { RelateSearchWorksheet, relateSearchWorksheet } from '../components/relationSearch/relateSearchWorksheet';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const FILL_TYPES = [
   { text: _l('填满'), value: '0' },
@@ -99,7 +100,7 @@ const CoverWrap = styled.div`
 `;
 
 export default function RelationSearch(props) {
-  let { data, onChange, allControls, globalSheetInfo, deleteWidget, status: { saveIndex } = {} } = props;
+  let { data, onChange, allControls, globalSheetInfo, deleteWidget, status: { saveIndex } = {} }: { allControls: FormControl[]; [key: string]: any } = props;
   const {
     controlId,
     enumDefault = 1,
@@ -108,7 +109,7 @@ export default function RelationSearch(props) {
     dataSource,
     coverCid,
     sourceControlId,
-  } = data;
+  }: { relationControls: FormControl[]; [key: string]: any } = data;
   let {
     showtype = String(enumDefault),
     covertype = '0',
@@ -151,7 +152,7 @@ export default function RelationSearch(props) {
 
   const filterControls = getFilterRelateControls({ controls: relationControls, data });
 
-  const isSheetDisplay = value => {
+  const isSheetDisplay = (value?) => {
     return _.includes(['2', '5', '6'], value || showtype);
   };
 
@@ -176,7 +177,7 @@ export default function RelationSearch(props) {
     }
   }, [loading]);
 
-  const getShowControls = (reControls, needDefault) => {
+  const getShowControls = (reControls, needDefault?) => {
     if (_.isEmpty(showControls) && needDefault) return reControls.slice(0, 4).map(item => item.controlId);
     // 删除掉showControls 中已经被删掉的控件
     const allControlId = reControls.map(item => item.controlId);

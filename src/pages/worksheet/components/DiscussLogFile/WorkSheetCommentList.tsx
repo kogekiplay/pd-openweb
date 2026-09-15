@@ -69,7 +69,7 @@ export default class WorkSheetCommentList extends Component<any, any> {
     });
   };
 
-  getFollower = nextProps => {
+  getFollower = (nextProps?) => {
     const { worksheet, hiddenTabs = [], entityType } = nextProps || this.props;
 
     if (hiddenTabs.includes('discuss') || entityType === 2) return;

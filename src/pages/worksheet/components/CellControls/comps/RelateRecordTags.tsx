@@ -15,8 +15,9 @@ import ViewHoverRelateRecordCard from 'src/pages/worksheet/views/components/View
 import { browserIsMobile, htmlEncodeReg } from 'src/utils/common';
 import { getTitleTextFromRelateControl } from 'src/utils/control';
 import { addBehaviorLog } from 'src/utils/project';
+import type { RecordRow } from 'src/utils/controlTypes';
 
-function getCellHeight(texts = [], width) {
+function getCellHeight(texts = [], width: number) {
   let result;
   const div = document.createElement('div');
   div.style.position = 'absolute';
@@ -187,7 +188,7 @@ export default forwardRef(function RelateRecordTags(props, ref) {
   const canAdd = control.enumDefault === 2 ? count < 50 : records.length === 0;
   const isMobile = browserIsMobile();
   let maxShowNum = getCellMaxShowNum(
-    records.map(r => getTitleTextFromRelateControl(control, r)),
+    records.map((r: RecordRow) => getTitleTextFromRelateControl(control, r)),
     { width: style.width, maxHeight: style.height },
   );
   useClickAway(conRef, () => {
@@ -209,7 +210,7 @@ export default forwardRef(function RelateRecordTags(props, ref) {
     setRecords(props.records);
   }, [
     JSON.stringify(
-      props.records.map(r => pick(r, ['rowid'].concat(getTitleControlIdFromRelateControl(control) || []))),
+      props.records.map((r: RecordRow) => pick(r, ['rowid'].concat(getTitleControlIdFromRelateControl(control) || []))),
     ),
   ]);
   function handleOpenRecord({ appId, worksheetId, recordId, viewId }) {
@@ -251,7 +252,7 @@ export default forwardRef(function RelateRecordTags(props, ref) {
             },
       onDelete: deletedRecord => {
         setChanged(true);
-        setRecords(records.filter(r => r.rowid !== deletedRecord.rowid));
+        setRecords(records.filter((r: RecordRow) => r.rowid !== deletedRecord.rowid));
         setDeletedIds([...deletedIds, deletedRecord.rowid]);
         setCount(count - 1);
       },
@@ -282,7 +283,7 @@ export default forwardRef(function RelateRecordTags(props, ref) {
       recordId,
       worksheetId: control.dataSource,
       filterRowIds: records
-        .map(r => r.rowid)
+        .map((r: RecordRow) => r.rowid)
         .concat(needIgnoreRowIds)
         .concat(control.dataSource === worksheetId ? recordId : []),
       ignoreRowIds: deletedIds,
@@ -370,7 +371,7 @@ export default forwardRef(function RelateRecordTags(props, ref) {
                   onClick={e => {
                     e.stopPropagation();
                     setChanged(true);
-                    setRecords(records.filter(r => r.rowid !== record.rowid));
+                    setRecords(records.filter((r: RecordRow) => r.rowid !== record.rowid));
                     setDeletedIds([...deletedIds, record.rowid]);
                     setCount(count - 1);
                   }}

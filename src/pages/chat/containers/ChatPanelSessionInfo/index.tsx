@@ -3,6 +3,7 @@ import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import { ScrollView } from 'ming-ui';
+import type { RootState } from 'src/redux/types';
 import Announcement from '../../components/Announcement';
 import DiscussionAnnouncement from '../../components/DiscussionAnnouncement';
 import Feeds from '../../components/Feeds';
@@ -167,7 +168,7 @@ class ChatPanelSessionInfo extends Component<any, any> {
   }
 }
 
-export default connect(state => {
+export default connect((state: RootState) => {
   const { currentSession, currentSessionList, isWindow } = state.chat;
 
   return {

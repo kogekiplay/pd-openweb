@@ -16,6 +16,7 @@ import {
 import { isRelateRecordTableControl } from 'src/utils/control';
 import Input from '../components/Inputs';
 import ChooseWidget from './ChooseWidget';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrap = styled.div`
   .controlname {
@@ -86,10 +87,10 @@ class AppointDialog extends React.Component<any, any> {
   };
 
   handDel = item => {
-    const controls = this.state.writeObject !== 1 ? this.props.relationControls : this.state.widgetList;
+    const controls: FormControl[] = this.state.writeObject !== 1 ? this.props.relationControls : this.state.widgetList;
     const list = getRealData(
-      controls.find(o => o.controlId === item.controlId),
-      controls.filter(o => this.state.writeControls.map(it => it.controlId).includes(o.controlId)),
+      controls.find((o: FormControl) => o.controlId === item.controlId),
+      controls.filter((o: FormControl) => this.state.writeControls.map(it => it.controlId).includes(o.controlId)),
       controls,
       false,
     );

@@ -74,14 +74,14 @@ export default class InitBindAccountDialog extends Component<any, any> {
     });
   };
 
-  handleFieldInput(e, field) {
+  handleFieldInput(e, field: string) {
     const val = field === 'account' ? e.target.value.replace(/ +/g, '') : e.target.value;
     this.setState({
       [field]: val,
     });
   }
 
-  handleFieldBlur(field) {
+  handleFieldBlur(field: string) {
     return e => {
       let value;
 
@@ -102,7 +102,7 @@ export default class InitBindAccountDialog extends Component<any, any> {
     };
   }
 
-  clearError(field) {
+  clearError(field: string) {
     return () => {
       let errorMsg = this.state.errorMsg;
       delete errorMsg[field];

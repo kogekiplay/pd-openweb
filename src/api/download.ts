@@ -6,7 +6,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getExAccountImportTemplate: function (args, options = {}) {
+  getExAccountImportTemplate: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('Download', 'GetExAccountImportTemplate', args, options);
   },
@@ -17,7 +17,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  verify: function (args, options = {}) {
+  verify: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('Download', 'Verify', args, options);
   },
@@ -28,7 +28,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  exportFolderToExcel: function (args, options = {}) {
+  exportFolderToExcel: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('Download', 'ExportFolderToExcel', args, options);
   },
@@ -39,7 +39,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  exportCalendarByCalendarId: function (args, options = {}) {
+  exportCalendarByCalendarId: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('Download', 'ExportCalendarByCalendarId', args, options);
   },
@@ -50,7 +50,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  exportCalendarByToken: function (args, options = {}) {
+  exportCalendarByToken: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('Download', 'ExportCalendarByToken', args, options);
   },
@@ -61,7 +61,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  exportSharedCalendar: function (args, options = {}) {
+  exportSharedCalendar: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('Download', 'ExportSharedCalendar', args, options);
   },
@@ -72,7 +72,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  exportProjectEntityToExcel: function (args, options = {}) {
+  exportProjectEntityToExcel: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('Download', 'ExportProjectEntityToExcel', args, options);
   },
@@ -87,7 +87,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  exportProjectUserList: function (args, options = {}) {
+  exportProjectUserList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Download', 'ExportProjectUserList', args, options);
   },
   /**
@@ -103,7 +103,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  exportAppRoleMembers: function (args, options = {}) {
+  exportAppRoleMembers: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Download', 'ExportAppRoleMembers', args, options);
   },
   /**
@@ -122,7 +122,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  exportInactiveUsers: function (args, options = {}) {
+  exportInactiveUsers: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Download', 'ExportInactiveUsers', args, options);
   },
   /**
@@ -135,7 +135,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  exportImportUserFailList: function (args, options = {}) {
+  exportImportUserFailList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Download', 'ExportImportUserFailList', args, options);
   },
   /**
@@ -148,7 +148,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  exportImportEditUserFailList: function (args, options = {}) {
+  exportImportEditUserFailList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Download', 'ExportImportEditUserFailList', args, options);
   },
   /**
@@ -161,7 +161,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  exportFailJobOrDepartmentErrorList: function (args, options = {}) {
+  exportFailJobOrDepartmentErrorList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Download', 'ExportFailJobOrDepartmentErrorList', args, options);
   },
   /**
@@ -172,7 +172,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  exportProjectJobList: function (args, options = {}) {
+  exportProjectJobList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Download', 'ExportProjectJobList', args, options);
   },
   /**
@@ -183,7 +183,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  exportProjectOrgRoleList: function (args, options = {}) {
+  exportProjectOrgRoleList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Download', 'ExportProjectOrgRoleList', args, options);
   },
   /**
@@ -194,7 +194,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  exportProjectDepartmentList: function (args, options = {}) {
+  exportProjectDepartmentList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Download', 'ExportProjectDepartmentList', args, options);
   },
   /**
@@ -204,7 +204,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  downloadBankInfo: function (args, options = {}) {
+  downloadBankInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('Download', 'DownloadBankInfo', args, options);
   },
@@ -221,7 +221,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  customIcon: function (args, options = {}) {
+  customIcon: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Download', 'CustomIcon', args, options);
   },
   /**
@@ -231,7 +231,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  appFile: function (args, options = {}) {
+  appFile: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('Download', 'AppFile', args, options);
   },
@@ -242,7 +242,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  worksheetExcel: function (args, options = {}) {
+  worksheetExcel: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('Download', 'WorksheetExcel', args, options);
   },
@@ -264,7 +264,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  exportLoginLog: function (args, options = {}) {
+  exportLoginLog: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Download', 'ExportLoginLog', args, options);
   },
   /**
@@ -291,7 +291,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  exportGlobalLogs: function (args, options = {}) {
+  exportGlobalLogs: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Download', 'ExportGlobalLogs', args, options);
   },
   /**
@@ -312,7 +312,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  exportOrgOperateLogs: function (args, options = {}) {
+  exportOrgOperateLogs: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Download', 'ExportOrgOperateLogs', args, options);
   },
   /**
@@ -329,7 +329,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  exportTransactionRecords: function (args, options = {}) {
+  exportTransactionRecords: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Download', 'ExportTransactionRecords', args, options);
   },
   /**
@@ -346,7 +346,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  exportAppUsageOverviewStatisticsLog: function (args, options = {}) {
+  exportAppUsageOverviewStatisticsLog: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Download', 'ExportAppUsageOverviewStatisticsLog', args, options);
   },
   /**
@@ -368,7 +368,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  exportUsageStatisticsForDimensionLog: function (args, options = {}) {
+  exportUsageStatisticsForDimensionLog: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Download', 'ExportUsageStatisticsForDimensionLog', args, options);
   },
   /**
@@ -395,7 +395,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  rowAttachments: function (args, options = {}) {
+  rowAttachments: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Download', 'RowAttachments', args, options);
   },
   /**
@@ -405,7 +405,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  downloadBackupFile: function (args, options = {}) {
+  downloadBackupFile: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('Download', 'DownloadBackupFile', args, options);
   },
@@ -416,7 +416,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  downloadBackupDataFile: function (args, options = {}) {
+  downloadBackupDataFile: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('Download', 'DownloadBackupDataFile', args, options);
   },
@@ -427,7 +427,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  appLibrary: function (args, options = {}) {
+  appLibrary: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('Download', 'AppLibrary', args, options);
   },
@@ -438,7 +438,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  trade: function (args, options = {}) {
+  trade: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('Download', 'Trade', args, options);
   },
@@ -449,7 +449,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  historyFile: function (args, options = {}) {
+  historyFile: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('Download', 'HistoryFile', args, options);
   },
@@ -460,7 +460,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  plugin: function (args, options = {}) {
+  plugin: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('Download', 'Plugin', args, options);
   },
@@ -487,7 +487,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  exportWorksheetOperationLogs: function (args, options = {}) {
+  exportWorksheetOperationLogs: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Download', 'ExportWorksheetOperationLogs', args, options);
   },
 };

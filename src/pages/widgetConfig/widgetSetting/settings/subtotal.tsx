@@ -22,6 +22,7 @@ import {
 import { filterByTypeAndSheetFieldType, getAdvanceSetting, handleAdvancedSettingChange } from '../../util/setting';
 import PointerConfig from '../components/PointerConfig';
 import PreSuffix from '../components/PreSuffix';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const DATE_FORMULA_UNIT = [_l('分钟'), _l('小时'), _l('天'), _l('月'), _l('年')];
 
@@ -120,7 +121,7 @@ const RecordCount = styled.div`
 `;
 
 export default function Subtotal(props) {
-  const { data, onChange, allControls, globalSheetInfo = {} } = props;
+  const { data, onChange, allControls, globalSheetInfo = {} }: { allControls: FormControl[]; [key: string]: any } = props;
   const { sourceControlId, dataSource, enumDefault, enumDefault2, unit } = data;
   const { summaryresult = '0', numshow, reportempty } = getAdvanceSetting(data);
   const [visible, setVisible] = useState(false);
@@ -139,10 +140,10 @@ export default function Subtotal(props) {
   }, [data.controlId]);
 
   // 获取汇总关联表控件的表id
-  const { dataSource: worksheetId, relationControls } = getControlByControlId(allControls, parsedDataSource);
+  const { dataSource: worksheetId, relationControls }: { relationControls: FormControl[]; [key: string]: any } = getControlByControlId(allControls, parsedDataSource);
   const { loading, data: sheetData } = useSheetInfo({ worksheetId, relationWorksheetId: globalSheetInfo.worksheetId });
   // 空白子表手动取值
-  const availableControls = (
+  const availableControls: FormControl[] = (
     (sheetData.info || {}).worksheetId ? sheetData.controls || [] : (relationControls || []).concat(SYSTEM_CONTROL)
   ).filter(
     i =>

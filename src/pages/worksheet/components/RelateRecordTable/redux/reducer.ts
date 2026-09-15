@@ -1,8 +1,9 @@
 ﻿import { combineReducers } from 'redux';
 import { assign, cloneDeep, findIndex, get, includes, uniq, uniqBy } from 'lodash';
 import { handleTreeNodeRow, treeTableViewData } from 'worksheet/common/TreeTableHelper/index.js';
+import type { ReduxAction } from 'src/redux/types';
 
-function loading(state = true, action) {
+function loading(state = true, action: ReduxAction) {
   switch (action.type) {
     case 'UPDATE_LOADING':
       return action.value;
@@ -11,7 +12,7 @@ function loading(state = true, action) {
   }
 }
 
-function base(state = {}, action) {
+function base(state = {}, action: ReduxAction) {
   switch (action.type) {
     case 'UPDATE_BASE':
       return Object.assign({}, state, action.value);
@@ -80,7 +81,7 @@ function tableState(
   }
 }
 
-function controls(state = [], action) {
+function controls(state = [], action: ReduxAction) {
   switch (action.type) {
     case 'UPDATE_CONTROLS':
       return action.controls;
@@ -95,7 +96,7 @@ export const initialChanges = {
   addedRecords: [],
 };
 
-function changes(state = cloneDeep(initialChanges), action) {
+function changes(state = cloneDeep(initialChanges), action: ReduxAction) {
   if (action.saveSync) {
     if (includes(['APPEND_RECORDS', 'DELETE_RECORDS'], action.type)) {
       return { ...state, changed: true };
@@ -142,7 +143,7 @@ function changes(state = cloneDeep(initialChanges), action) {
   }
 }
 
-function originFirstPageResult(state = [], action) {
+function originFirstPageResult(state = [], action: ReduxAction) {
   switch (action.type) {
     case 'INIT_FIRST_PAGE_RESULT':
       return action.value;
@@ -151,7 +152,7 @@ function originFirstPageResult(state = [], action) {
   }
 }
 
-function records(state = [], action) {
+function records(state = [], action: ReduxAction) {
   let newRecords;
 
   switch (action.type) {
@@ -195,7 +196,7 @@ function records(state = [], action) {
   }
 }
 
-export function initialized(state = false, action) {
+export function initialized(state = false, action: ReduxAction) {
   switch (action.type) {
     case 'UPDATE_INIT_STATE':
       return action.value;
@@ -204,11 +205,11 @@ export function initialized(state = false, action) {
   }
 }
 
-function lastAction(state, action) {
+function lastAction(state, action: ReduxAction) {
   return action;
 }
 
-function rowsSummary(state = { types: {}, values: {} }, action) {
+function rowsSummary(state = { types: {}, values: {} }, action: ReduxAction) {
   switch (action.type) {
     case 'UPDATE_ROWS_SUMMARY':
       return {

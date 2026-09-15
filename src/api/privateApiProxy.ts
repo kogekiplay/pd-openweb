@@ -6,7 +6,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getApiProxy: function (args, options = {}) {
+  getApiProxy: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateApiProxy', 'GetApiProxy', args, options);
   },
   /**
@@ -22,7 +22,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  editApiProxy: function (args, options = {}) {
+  editApiProxy: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateApiProxy', 'EditApiProxy', args, options);
   },
   /**
@@ -32,7 +32,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  removeApiProxy: function (args, options = {}) {
+  removeApiProxy: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('PrivateApiProxy', 'RemoveApiProxy', args, options);
   },
 };

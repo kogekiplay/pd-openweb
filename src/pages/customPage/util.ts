@@ -199,7 +199,7 @@ export const computeWidth = ({ count, margin = 20 }) => {
   return { width: `calc(${100 / count}% - ${margin}px)` };
 };
 
-export const genUrl = (url, para, info) => {
+export const genUrl = (url, para, info?) => {
   para = para || [];
 
   if (!url) return url;

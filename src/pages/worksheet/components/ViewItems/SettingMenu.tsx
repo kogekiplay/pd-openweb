@@ -11,6 +11,7 @@ import { VersionProductType } from 'src/utils/enum';
 import { getFeatureStatus } from 'src/utils/project';
 import HiddenMenu from './HiddenMenu';
 import ViewDisplayMenu from './viewDisplayMenu';
+import type { FormControl } from 'src/utils/controlTypes';
 
 function SettingMenu(props) {
   const {
@@ -34,7 +35,7 @@ function SettingMenu(props) {
     onCopyConfig,
     onExportAttachment,
     changeViewDisplayType,
-  } = props;
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const [changeHiddenTypeVisible, setChangeHiddenTypeVisible] = useState(false);
   const [exportVisible, setExportVisible] = useState(false);
   const [changeViewDisplayTypeVisible, setChangeViewDisplayTypeVisible] = useState(false);
@@ -95,9 +96,9 @@ function SettingMenu(props) {
 
   const getAttachmentControls = () => {
     return isCharge
-      ? controls.filter(it => it.type === 14)
+      ? controls.filter((it: FormControl) => it.type === 14)
       : controls
-          .filter(it => it.type === 14)
+          .filter((it: FormControl) => it.type === 14)
           .filter(item => {
             const controlPermissions = item.controlPermissions || '111';
             const fieldPermission = item.fieldPermission || '111';
@@ -128,7 +129,7 @@ function SettingMenu(props) {
       }
 
       if (advancedSetting.navshow && _.get(item, 'navGroup[0].controlId')) {
-        let control = controls.find(o => o.controlId === _.get(item, 'navGroup[0].controlId')) || {};
+        let control = controls.find((o: FormControl) => o.controlId === _.get(item, 'navGroup[0].controlId')) || {};
         let type = control.type;
 
         if (type === 30) {

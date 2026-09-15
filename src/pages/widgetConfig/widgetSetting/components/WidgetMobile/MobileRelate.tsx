@@ -6,13 +6,14 @@ import { SettingItem } from '../../../styled';
 import { formatControlsToDropdown } from '../../../util';
 import { getAdvanceSetting, handleAdvancedSettingChange, updateConfig } from '../../../util/setting';
 import SheetDealDataType from '../SheetDealDataType';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const TEXT_TYPE_CONTROL = [2, 3, 4, 5, 7, 32, 33];
 
 // 移动端设置
 export default function WidgetRelate(props) {
   const { data, onChange } = props;
-  const { strDefault, relationControls = [] } = data;
+  const { strDefault, relationControls = [] }: { relationControls: FormControl[]; [key: string]: any } = data;
   let { dismanual = 0, scanlink = '1', scancontrol = '1', scancontrolid } = getAdvanceSetting(data);
   const [, disableAlbum, onlyRelateByScanCode] = strDefault.split('');
 

@@ -13,6 +13,7 @@ import { addBehaviorLog } from 'src/utils/project';
 import { handleRecordClick } from 'src/utils/record';
 import { lineHeight, timeWidth, timeWidthHalf, types } from '../config';
 import { getTops } from '../util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const CLICK_MOVE_THRESHOLD = 3;
 
@@ -133,8 +134,8 @@ export default function RecordBlock(props) {
       $ref.current.style.zIndex = 100;
       let oldTop = allList.find(it => it.key === keyForGroup).top + top;
       let newTop = oldTop + changValueY + 3; //3px偏差
-      const { controls = [] } = props;
-      const viewControlData = controls.find(o => o.controlId === view.viewControl) || {};
+      const { controls = [] }: { controls: FormControl[]; [key: string]: any } = props;
+      const viewControlData = controls.find((o: FormControl) => o.controlId === view.viewControl) || {};
       newKey =
         (viewControlData.fieldPermission || '111')[1] === '1'
           ? (allList.find(o => (o.top < newTop || o.top === newTop) && newTop < o.bottom) || {}).key
@@ -222,7 +223,7 @@ export default function RecordBlock(props) {
     updateRecordTime(row, startTime, end, keyForGroup);
   };
 
-  const handleUpdateRecordTime = (start, end, newKey) => {
+  const handleUpdateRecordTime = (start: string, end: string, newKey?) => {
     updateRecordTime(row, start, end, keyForGroup, newKey);
   };
 
@@ -262,9 +263,9 @@ export default function RecordBlock(props) {
     };
   };
 
-  const { row, controls, minHeight } = props;
-  const startControl = controls.find(o => o.controlId === _.get(view, 'advancedSetting.begindate'));
-  const endControl = controls.find(o => o.controlId === _.get(view, 'advancedSetting.enddate'));
+  const { row, controls, minHeight }: { controls: FormControl[]; [key: string]: any } = props;
+  const startControl = controls.find((o: FormControl) => o.controlId === _.get(view, 'advancedSetting.begindate'));
+  const endControl = controls.find((o: FormControl) => o.controlId === _.get(view, 'advancedSetting.enddate'));
   const startDisable =
     !controlState(startControl, 3).editable ||
     _.get(window, 'shareState.isPublicView') ||

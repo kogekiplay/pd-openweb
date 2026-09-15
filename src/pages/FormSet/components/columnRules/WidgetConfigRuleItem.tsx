@@ -3,14 +3,15 @@ import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Drawer } from 'antd';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { redefineComplexControl } from 'worksheet/common/WorkSheetFilter/util';
 import { isRelateMoreList } from 'src/components/Form/core/formUtils/helper';
+import type { RootState } from 'src/redux/types';
 import { getValueStyle } from 'src/utils/control';
 import DrawerFooter from '../DrawerFooter';
 import { checkRuleEnableLimit, filterData, hasRuleChanged, TAB_TYPES } from './config';
@@ -18,6 +19,7 @@ import EditBox from './EditBox';
 import * as actions from './redux/actions/columnRules';
 import * as columnRules from './redux/actions/columnRules';
 import '../../index.less';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const StyleDivWrap = styled.div`
   border-radius: 3px;
@@ -117,7 +119,7 @@ export const StyleDiv = props => {
   );
 };
 
-function renderFilterItemTexts(filters = [], disabled = false, worksheetControls = []) {
+function renderFilterItemTexts(filters = [], disabled = false, worksheetControls: FormControl[] = []) {
   if (_.isEmpty(filters)) return '';
   const formatControls = worksheetControls.map(redefineComplexControl);
   let filterItemTexts = filters.map(item => {
@@ -320,7 +322,7 @@ class WidgetConfigRuleItem extends React.Component<any, any> {
     } = this.props;
     const isAdd = (selectRules.ruleId || '').indexOf('-') >= 0;
     const styleRuleList = columnRulesListData.filter(rule => {
-      const controls = _.get(rule, 'ruleItems.0.controls', []);
+      const controls: FormControl[] = _.get(rule, 'ruleItems.0.controls', []);
       return rule.type === TAB_TYPES.STYLE_RULE && _.some(controls, control => control.controlId === data.controlId);
     });
 
@@ -360,7 +362,7 @@ class WidgetConfigRuleItem extends React.Component<any, any> {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   worksheetControls: state.formSet.worksheetRuleControls,
   selectRules: state.formSet.selectRules,
   columnRulesListData: state.formSet.columnRulesListData,

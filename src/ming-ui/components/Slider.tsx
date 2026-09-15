@@ -189,7 +189,7 @@ function formatByStep(num, step, min = 0) {
   return (Math.floor(num / step) * step + min).toFixed(((String(step).match(/\.(\d+)/) || '')[1] || '').length);
 }
 
-function fixedByStep(num, step) {
+function fixedByStep(num: number, step) {
   return num.toFixed(((String(step).match(/\.(\d+)/) || '')[1] || '').length);
 }
 
@@ -260,12 +260,13 @@ export default function Slider(props) {
   const contentRef = useRef<any>(undefined);
   const inputRef = useRef<any>(undefined);
   const [tempValue, setTempValue] = useState();
-  const [numberIsFocusing, setNumberIsFocusing] = useState();
-  const [isDragging, setIsDragging] = useState();
+  const [numberIsFocusing, setNumberIsFocusing] = useState<boolean | undefined>();
+  const [isDragging, setIsDragging] = useState<boolean | undefined>();
   const [value, setValue] = useState(
     getDefaultValue(showAsPercent ? fixedByStep(props.value * 100, step) : props.value),
   );
-  const [valueForInput, setValueForInput] = useState(value);
+  // 这个 state 除了数字还会存 '' 和 formatNumberFromInput 的字符串结果
+  const [valueForInput, setValueForInput] = useState<number | string | undefined>(value);
   const isMobile = browserIsMobile();
   const inputAttribute = isMobile ? (window.isIphone ? { type: 'text' } : { inputmode: 'decimal' }) : {};
   const color = getColor(itemcolor, value, showAsPercent);
@@ -299,7 +300,7 @@ export default function Slider(props) {
     valuePercent = 0;
   }
 
-  function updateValue(v, update, updateInput) {
+  function updateValue(v, update, updateInput?: boolean) {
     v = formatByMinMax(v, min, max);
 
     setValue(v);

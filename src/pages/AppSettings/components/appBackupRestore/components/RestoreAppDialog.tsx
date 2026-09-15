@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { Button, Checkbox, Dialog, VerifyPasswordConfirm } from 'ming-ui';
 import appManagementAjax from 'src/api/appManagement';
 import { syncAppDetail } from 'src/pages/PageHeader/redux/action';
+import type { RootState } from 'src/redux/types';
 import { navigateTo } from 'src/router/navigateTo';
 
 const RestoreContentWrap = styled.div`
@@ -173,7 +174,7 @@ function RestoreAppDialog(props) {
 }
 
 export default connect(
-  state => {
+  (state: RootState) => {
     const { appPkg } = state;
     return { appPkg };
   },

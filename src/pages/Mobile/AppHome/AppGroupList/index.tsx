@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Icon, SvgIcon } from 'ming-ui';
+import type { RootState } from 'src/redux/types';
 import { getCurrentProject } from 'src/utils/project';
 import Back from '../../components/Back';
 import * as actions from '../redux/actions';
@@ -27,7 +28,7 @@ class AppGroupList extends Component<any, any> {
     this.setState({ projectId: currentProject.projectId });
     this.props.dispatch(actions.getMyApp(currentProject.projectId));
   }
-  renderlist = (data = [], type) => {
+  renderlist = (data = [], type: string) => {
     return (
       <div key={type} className="groupItem">
         {!_.isEmpty(data) && <div className="textSecondary Font13 groupTitle">{groupTitleList[type]}</div>}
@@ -97,7 +98,7 @@ class AppGroupList extends Component<any, any> {
     );
   }
 }
-export default connect(state => {
+export default connect((state: RootState) => {
   const { isHomeLoading, myAppData, projectGroupsNameLang } = state.mobile;
   return {
     myAppData,

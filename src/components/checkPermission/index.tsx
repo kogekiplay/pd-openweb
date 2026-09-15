@@ -7,7 +7,7 @@ import { PERMISSION_ENUM, ROUTE_CONFIG } from 'src/pages/Admin/enum';
 
 let cachePermission = {};
 
-const setCacheData = (projectId, data, version) => {
+const setCacheData = (projectId, data, version: string) => {
   cachePermission[projectId] = {
     data,
     time: moment().format('YYYY-MM-DD HH:mm:ss'),
@@ -100,7 +100,7 @@ export const getMyPermissions = (projectId, isSync = true) => {
 };
 
 //校验权限--需要获取权限
-export const checkPermission = (projectId, needPermission) => {
+export const checkPermission = (projectId, needPermission: number | number[]) => {
   return hasPermission(getMyPermissions(projectId), needPermission);
 };
 

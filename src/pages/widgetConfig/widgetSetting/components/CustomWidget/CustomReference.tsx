@@ -7,6 +7,7 @@ import { ALL_SYS, SYSTEM_CONTROL, WORKFLOW_SYSTEM_CONTROL } from 'src/pages/widg
 import { isCustomWidget } from 'src/pages/widgetConfig/util';
 import { getUnUniqName } from 'src/utils/common';
 import AddFields from '../CustomEvent/CustomAction/AddFields';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const CustomReferenceWrap = styled.div`
   display: flex;
@@ -86,7 +87,7 @@ export default function CustomReference(props) {
     customButton,
     onEnvValueClick = _.noop,
     onAddReference = _.noop,
-  } = props;
+  }: { allControls: FormControl[]; [key: string]: any } = props;
   const showEnvIcon = typeof envValueAvailable !== 'undefined';
   const [errors, setErrors] = useState([]);
 

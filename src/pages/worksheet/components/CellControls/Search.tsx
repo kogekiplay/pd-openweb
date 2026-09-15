@@ -5,6 +5,7 @@ import { func, number, shape, string } from 'prop-types';
 import styled from 'styled-components';
 import Search from 'src/components/Form/DesktopForm/widgets/Search';
 import EditableCellCon from '../EditableCellCon';
+import type { RecordRow } from 'src/utils/controlTypes';
 
 const Con = styled(EditableCellCon)`
   > div {
@@ -130,7 +131,7 @@ export default function CellSearch(props) {
                             rowid: 'all',
                           },
                         ].concat(
-                          value.rows.map(row => ({
+                          value.rows.map((row: RecordRow) => ({
                             editType: 0,
                             newOldControl: Object.keys(row)
                               .filter(key => key.length === 24)
