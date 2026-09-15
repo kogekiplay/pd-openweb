@@ -161,6 +161,7 @@ export default class GeneraSelect extends Component<any, any> {
         let state = this.receiveProps(this.props);
         this.setState(state, () => {
           this.defaultAction();
+          this.focusSearchInput();
         });
       }
     }
@@ -169,15 +170,16 @@ export default class GeneraSelect extends Component<any, any> {
   componentDidMount() {
     window.addEventListener('keydown', this.handleKeyDown, false);
     this.defaultAction();
-    this.focusSearchInputTimer = setTimeout(() => {
-      this._searchInput?.focus();
-    });
+    this.focusSearchInput();
   }
 
   componentWillUnmount() {
     window.removeEventListener('keydown', this.handleKeyDown);
-    clearTimeout(this.focusSearchInputTimer);
   }
+
+  focusSearchInput = () => {
+    this._searchInput?.focus({ preventScroll: true });
+  };
 
   updateEvent() {
     let page = false;

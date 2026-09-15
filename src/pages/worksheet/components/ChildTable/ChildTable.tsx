@@ -1593,6 +1593,7 @@ class ChildTable extends React.Component<any, any> {
       filterControls = [],
       setFilterControls,
       changes = {},
+      enableRules = true,
     } = this.props;
     const { isTreeTableView } = base;
     const isDirty = !!changes.isDirty;
@@ -2201,6 +2202,7 @@ class ChildTable extends React.Component<any, any> {
                 wrapControlName={titleWrap}
                 headTitleCenter={titleCenter}
                 rules={rules}
+                enableRules={enableRules}
                 allowAdd={allowadd}
                 height={tableHeight}
                 fromModule={WORKSHEETTABLE_FROM_MODULE.SUBLIST}

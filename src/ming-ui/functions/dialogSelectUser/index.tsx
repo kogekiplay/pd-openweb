@@ -17,6 +17,11 @@ const dataRangeTypes = {
 };
 
 class DialogSelectUser extends Component<any, any> {
+  // 纯类型声明：babel 的 TS preset 会把 declare 行整条抹掉，零运行时影响。
+  // 【不能】改成有初值的类字段 —— 那会在构造后把 ref 回调写进去的值覆盖掉。
+  declare focusSearchInputFrame: number;
+  declare generalSelect: any;
+
   constructor(props) {
     super(props);
     const { SelectUserSettings: { projectId = '', dataRange = 0, filterProjectId } = {} } = props;
@@ -31,9 +36,20 @@ class DialogSelectUser extends Component<any, any> {
     this.initDropList();
   }
 
+  componentWillUnmount() {
+    window.cancelAnimationFrame(this.focusSearchInputFrame);
+  }
+
+  focusSearchInput = () => {
+    window.cancelAnimationFrame(this.focusSearchInputFrame);
+    this.focusSearchInputFrame = window.requestAnimationFrame(() => {
+      this.generalSelect?.focusSearchInput();
+    });
+  };
+
   getSettings = (dropLists = []) => {
     const { SelectUserSettings: { filterAll, filterFriend } = {} } = this.props;
-    let settings = {};
+    let settings: { dataRange?: number; projectId?: string } = {};
 
     if (filterAll && filterFriend) {
       settings.dataRange = dataRangeTypes.project;
@@ -106,7 +122,7 @@ class DialogSelectUser extends Component<any, any> {
     }
 
     this.getSettings(list);
-    this.setState({ list });
+    this.setState({ list }, this.focusSearchInput);
   };
 
   /**
@@ -129,10 +145,13 @@ class DialogSelectUser extends Component<any, any> {
           onChange={value => {
             if (value === curValue) return;
             const isProjectId = !_.includes([dataRangeTypes.all, dataRangeTypes.friend], value);
-            this.setState({
-              dataRange: isProjectId ? dataRangeTypes.project : value,
-              projectId: isProjectId ? (_.find(md.global.Account.projects, { projectId: value }) ? value : '') : '',
-            });
+            this.setState(
+              {
+                dataRange: isProjectId ? dataRangeTypes.project : value,
+                projectId: isProjectId ? (_.find(md.global.Account.projects, { projectId: value }) ? value : '') : '',
+              },
+              this.focusSearchInput,
+            );
           }}
         />
       </div>
@@ -203,6 +222,9 @@ class DialogSelectUser extends Component<any, any> {
 
     return (
       <GeneralSelect
+        ref={generalSelect => {
+          this.generalSelect = generalSelect;
+        }}
         chooseType={chooseType}
         commonSettings={commonSettings}
         userSettings={userSettings}
