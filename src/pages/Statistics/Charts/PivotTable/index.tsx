@@ -46,6 +46,8 @@ interface AxisField {
 interface PivotColumn {
   key?: string;
   fixed?: boolean | string;
+  // 【必须是可选的】linesChildren 里的叶子列就没有 children，写成必填会让
+  // linesChildren.filter(...) 整个不兼容
   children?: PivotColumn[];
   [key: string]: any;
 }
@@ -61,7 +63,7 @@ export const replaceColor = ({
   themeColor,
   sourceType,
 }: {
-  pivotTableStyle?: Record<string, any>;
+  pivotTableStyle: Record<string, any>;
   customPageConfig?: Record<string, any>;
   themeColor?: string;
   sourceType?: number;
