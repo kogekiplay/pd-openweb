@@ -20,7 +20,7 @@ export default function useCustomBtnGroupedLayout({
   flatBtnOrderJson,
   projectId,
   onSaveLayout,
-}) {
+}: { projectId?: string; [key: string]: any }) {
   const btnFingerprint = useMemo(() => (btnData || []).map(b => b.btnId).join(','), [btnData]);
   const iconDraftRef = useRef({});
   const segmentsRef = useRef([]);
@@ -141,7 +141,7 @@ export default function useCustomBtnGroupedLayout({
       onModify: patch => {
         iconDraftRef.current = { ...iconDraftRef.current, ...patch };
       },
-      onChange: ({ name, icon, iconColor }) => {
+      onChange: ({ name, icon, iconColor }: { name?: string; icon?: string; [key: string]: any }) => {
         const trimmed = (name || '').trim();
 
         if (!trimmed) {
@@ -199,7 +199,7 @@ export default function useCustomBtnGroupedLayout({
         onModify: patch => {
           iconDraftRef.current = { ...iconDraftRef.current, ...patch };
         },
-        onChange: ({ name, icon, iconColor }) => {
+        onChange: ({ name, icon, iconColor }: { name?: string; icon?: string; [key: string]: any }) => {
           const trimmed = (name || '').trim();
 
           if (!trimmed) {

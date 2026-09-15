@@ -21,7 +21,7 @@ export const Wrapper = styled.div`
   }
 `;
 
-const EllipsisText = ({ text, icon, className }) => {
+const EllipsisText = ({ text, icon, className }: { icon?: string; className?: string; [key: string]: any }) => {
   const textRef = useRef(null);
   const checkedRef = useRef(false);
   const [overflow, setOverflow] = useState(false);

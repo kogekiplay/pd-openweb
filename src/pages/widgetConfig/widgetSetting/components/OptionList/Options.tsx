@@ -419,7 +419,7 @@ function SelectOptions(props, ref) {
         itemKey="key"
         onSortEnd={onSortEnd}
         moveItem={() => setIsDrag(true)}
-        renderItem={({ item, index, DragHandle }) => {
+        renderItem={({ item, index, DragHandle }: { index?: number; [key: string]: any }) => {
           const currentItem = item && _.find(options, option => option && option.key === item.key);
           if (!currentItem) return null;
 

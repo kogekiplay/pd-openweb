@@ -16,7 +16,7 @@ const DisplayRowWrap = styled.div`
   margin: 0;
 `;
 
-export default function RowItem({ row, displayItemType, sectionId, index, ...rest }) {
+export default function RowItem({ row, displayItemType, sectionId, index, ...rest }: { index?: number; [key: string]: any }) {
   const [pointerDir, setPointerDir] = useState('');
   const $ref = useRef(null);
   const [{ isOver }, drop] = useDrop({

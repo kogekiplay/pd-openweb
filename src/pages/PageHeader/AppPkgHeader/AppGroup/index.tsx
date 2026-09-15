@@ -155,7 +155,7 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
   updateAppGroupSort = () => {
     const { appId } = this.ids;
     const { data } = this.state;
-    const sortedAppGroupIds = data.map(({ appSectionId }) => appSectionId);
+    const sortedAppGroupIds = data.map(({ appSectionId }: { appSectionId?: string; [key: string]: any }) => appSectionId);
     api.updateAppSectionSort({
       appId,
       appSectionIds: sortedAppGroupIds,
@@ -229,7 +229,7 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
     this.ensurePointerStatus();
   }; // 分组配置点击
 
-  handleAppItemConfigClick = ({ id, type, appSectionId }) => {
+  handleAppItemConfigClick = ({ id, type, appSectionId }: { appSectionId?: string; [key: string]: any }) => {
     const { data } = this.state;
     const { appId } = this.ids;
     this.handledAppItemId = appSectionId;
@@ -422,8 +422,8 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
 
   formatDataToDropdownItems = data =>
     data
-      .filter(({ appSectionId, name }) => !!name && appSectionId !== this.handledAppItemId)
-      .map(({ appSectionId, name }) => ({
+      .filter(({ appSectionId, name }: { appSectionId?: string; name?: string; [key: string]: any }) => !!name && appSectionId !== this.handledAppItemId)
+      .map(({ appSectionId, name }: { appSectionId?: string; name?: string; [key: string]: any }) => ({
         value: appSectionId,
         text: name,
       }));
@@ -454,7 +454,7 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
     const isOnlyDefaultGroup = data.length === 1 && !data[0].name && appStatus !== 300016;
     const renderedData =
       data.length === 1
-        ? data.filter(({ name }) => !!name)
+        ? data.filter(({ name }: { name?: string; [key: string]: any }) => !!name)
         : data.map(item => (item.name ? item : { ...item, name: _l('未命名分组') }));
 
     const renderContent = ({ count, waitingExamine }, onClick) => {

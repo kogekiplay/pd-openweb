@@ -132,7 +132,7 @@ export default function Process(props) {
     });
   };
 
-  const handleApproveDone = ({ workId }) => {
+  const handleApproveDone = ({ workId }: { workId?: string; [key: string]: any }) => {
     const countDataState = { ...countData };
 
     if (currentTab === 'waitingApproval') {

@@ -262,7 +262,7 @@ const GroupFilterList = props => {
     }
   };
 
-  const fetchData = ({ worksheetId, viewId, rowId, cb, isNext }) => {
+  const fetchData = ({ worksheetId, viewId, rowId, cb, isNext }: { worksheetId?: string; viewId?: string; rowId?: string; [key: string]: any }) => {
     const requestParams = prepareRequestParams({ worksheetId, viewId, rowId, appId }, view, source, controls, keywords);
     apiRequestRef.current?.abort?.();
 
@@ -287,7 +287,7 @@ const GroupFilterList = props => {
   };
 
   //发起API请求
-  const makeApiRequest = ({ rowId, params }) => {
+  const makeApiRequest = ({ rowId, params }: { rowId?: string; [key: string]: any }) => {
     const isArea = AREA.includes(source.type);
     const { navshow, navlayer } = getAdvanceSetting(view);
 
@@ -333,7 +333,7 @@ const GroupFilterList = props => {
   };
 
   //处理API响应
-  const processApiResponse = ({ result, worksheetId, viewId, rowId, cb, isNext }) => {
+  const processApiResponse = ({ result, worksheetId, viewId, rowId, cb, isNext }: { worksheetId?: string; viewId?: string; rowId?: string; [key: string]: any }) => {
     const isArea = AREA.includes(source.type);
     const { navshow, navlayer } = getAdvanceSetting(view);
     const { navfilters = '[]' } = getAdvanceSetting(view);
@@ -416,7 +416,7 @@ const GroupFilterList = props => {
   const loadData = obj => fetchData(obj);
 
   //更新当前的navGroupData
-  const updateNavGroupData = ({ filterData, data, rowId, cb }, notUpdate?) => {
+  const updateNavGroupData = ({ filterData, data, rowId, cb }: { rowId?: string; [key: string]: any }, notUpdate?) => {
     if (rowId && !keywords) {
       filterData.forEach(item => {
         if (item.value === rowId) {

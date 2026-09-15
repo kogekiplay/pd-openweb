@@ -200,7 +200,7 @@ export function handleCopyRecord({
   }
 }
 
-export function handleShareRecord({ isCharge, appId, worksheetId, viewId, recordId, sheetSwitchPermit }) {
+export function handleShareRecord({ isCharge, appId, worksheetId, viewId, recordId, sheetSwitchPermit }: { isCharge?: boolean; appId?: string; worksheetId?: string; viewId?: string; recordId?: string; [key: string]: any }) {
   handleShare({
     isCharge,
     appId,

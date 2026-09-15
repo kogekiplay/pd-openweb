@@ -35,7 +35,7 @@ export const filterPrintButton = buttons => {
 
 export const getVisibleButtons = (buttons, index: number) => _.slice(buttons, 0, index);
 
-export const getPrintAuthInfo = async ({ appId, worksheetId, viewId, rowIds = [], printId = '' }) => {
+export const getPrintAuthInfo = async ({ appId, worksheetId, viewId, rowIds = [], printId = '' }: { appId?: string; worksheetId?: string; viewId?: string; [key: string]: any }) => {
   const clientIdPromise = worksheetAjax.getSystemPrintClientId({ appId, worksheetId, printId }, { silent: true });
   const shareShortUrlsPromise =
     rowIds.length && viewId
@@ -253,7 +253,7 @@ export const setAttrToButtons = ({
   return buttons.map(normalizeButton);
 };
 
-export const getRowDetail = ({ recordId, viewId, worksheetId }) => {
+export const getRowDetail = ({ recordId, viewId, worksheetId }: { recordId?: string; viewId?: string; worksheetId?: string; [key: string]: any }) => {
   return new Promise((resolve, reject) => {
     worksheetAjax
       .getRowDetail({

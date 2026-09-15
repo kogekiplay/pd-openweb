@@ -189,7 +189,7 @@ const getDispatchData = (data = {}) => {
   };
 };
 
-export function loadPublicWorksheet({ worksheetId }) {
+export function loadPublicWorksheet({ worksheetId }: { worksheetId?: string; [key: string]: any }) {
   return dispatch => {
     publicWorksheetAjax.getPublicWorksheetInfo({ worksheetId }).then(data => {
       dispatch(getDispatchData(data));

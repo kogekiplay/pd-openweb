@@ -82,7 +82,7 @@ export default function CustomEvent(props) {
   /**
    * 编辑筛选条件名称
    */
-  const handleEdit = ({ eventId, index, value }) => {
+  const handleEdit = ({ eventId, index, value }: { index?: number; [key: string]: any }) => {
     const newCustomEvent = customEvent.map(i => {
       if (i.eventId === eventId) {
         return update(i, {
@@ -102,7 +102,7 @@ export default function CustomEvent(props) {
   /**
    * 且或切换
    */
-  const handleSplice = ({ eventId, index, value }) => {
+  const handleSplice = ({ eventId, index, value }: { index?: number; [key: string]: any }) => {
     const newCustomEvent = customEvent.map(i => {
       if (i.eventId === eventId) {
         return update(i, {

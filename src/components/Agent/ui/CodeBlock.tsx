@@ -81,7 +81,7 @@ const Pre = styled.pre`
   white-space: pre;
 `;
 
-export function CodeBlock({ code, language, isStreaming, showCopyButton = true, className }) {
+export function CodeBlock({ code, language, isStreaming, showCopyButton = true, className }: { className?: string; [key: string]: any }) {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {

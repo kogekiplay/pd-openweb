@@ -36,7 +36,7 @@ const Footer = styled.div`
   }
 `;
 
-const SignatureComp = ({ disabled, scanId, scanInfo, onComplete = () => {} }) => {
+const SignatureComp = ({ disabled, scanId, scanInfo, onComplete = () => {} }: { disabled?: boolean; [key: string]: any }) => {
   const signatureRef = useRef<any>(undefined);
   const wrapRef = useRef<any>(undefined);
   const [isUploading, setIsUploading] = useState(false);

@@ -109,8 +109,8 @@ export default class MapField extends Component<any, any> {
       .concat(filterIds);
 
     const columns = controls
-      .filter(({ controlId }) => !_.includes([...NORMAL_SYSTEM_FIELDS_SORT, ...WORKFLOW_SYSTEM_FIELDS_SORT], controlId))
-      .map(({ controlName, controlId, type }) => ({
+      .filter(({ controlId }: { controlId?: string; [key: string]: any }) => !_.includes([...NORMAL_SYSTEM_FIELDS_SORT, ...WORKFLOW_SYSTEM_FIELDS_SORT], controlId))
+      .map(({ controlName, controlId, type }: { controlId?: string; [key: string]: any }) => ({
         iconName: getIconByType(type),
         text: controlName,
         value: controlId,

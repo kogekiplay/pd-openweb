@@ -241,7 +241,7 @@ let SelectFields = class SelectFields extends Component<any, any> {
           ></input>
         </div>
         <div className="fieldsWrap">
-          {sheetList.map(({ id: recordId, name }) => {
+          {sheetList.map(({ id: recordId, name }: { recordId?: string; name?: string; [key: string]: any }) => {
             const list = filteredList[recordId];
             return list && list.length > 0 ? (
               <ul className="relateSheetList">
@@ -252,7 +252,7 @@ let SelectFields = class SelectFields extends Component<any, any> {
                     </div>
                   )}
                   <ul className="fieldList">
-                    {list.map(({ type, controlName, controlId, id, isEqualSource }) => {
+                    {list.map(({ type, controlName, controlId, id, isEqualSource }: { controlId?: string; [key: string]: any }) => {
                       const ids = {
                         type,
                         relateSheetControlId: recordId === 'current' ? '' : recordId,

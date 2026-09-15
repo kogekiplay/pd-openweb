@@ -91,7 +91,7 @@ const fillMapValue = map => {
   return [data[0]];
 };
 
-const formatChartData = (data, { isAccumulate, showOptionIds = [] }, { controlId, xaxisEmpty }, yaxisList) => {
+const formatChartData = (data, { isAccumulate, showOptionIds = [] }, { controlId, xaxisEmpty }: { controlId?: string; [key: string]: any }, yaxisList) => {
   const result = [];
   const cloneData = formatEmptyDataPosition(controlId ? data : fillMapValue(data), isAccumulate, xaxisEmpty);
   const { value } = cloneData[0] || { value: [] };
@@ -426,7 +426,7 @@ export default class extends Component<any, any> {
       theme: {
         background: isDark || widgetBgColor === 'transparent' ? widgetBgColor : '#ffffffcc',
       },
-      color: ({ name }) => {
+      color: ({ name }: { name?: string; [key: string]: any }) => {
         const index = _.findIndex(data, { name });
         const { id, value } = _.find(data, { name }) || {};
         let color = colors[index % colors.length];

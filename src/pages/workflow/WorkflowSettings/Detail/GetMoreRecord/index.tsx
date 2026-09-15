@@ -554,7 +554,7 @@ export default class GetMoreRecord extends Component<any, any> {
     const selectAppItem = data.appList.find(({ id }) => id === data.appId);
     const list = data.appList
       .filter(item => !item.otherApkId)
-      .map(({ name, id }) => ({
+      .map(({ name, id }: { name?: string; [key: string]: any }) => ({
         text: name,
         value: id,
       }));
@@ -624,8 +624,8 @@ export default class GetMoreRecord extends Component<any, any> {
   renderRecord() {
     const { data } = this.state;
     const fieldId = ((data.fields || [])[0] || {}).fieldId || '';
-    const item = data.relationControls.find(({ controlId }) => controlId === fieldId);
-    const list = data.relationControls.map(({ controlId, controlName, sourceEntityName }) => ({
+    const item = data.relationControls.find(({ controlId }: { controlId?: string; [key: string]: any }) => controlId === fieldId);
+    const list = data.relationControls.map(({ controlId, controlName, sourceEntityName }: { controlId?: string; [key: string]: any }) => ({
       text: (
         <span>
           {controlName}
@@ -676,7 +676,7 @@ export default class GetMoreRecord extends Component<any, any> {
               onChange={fieldId => {
                 this.updateSource({ fields: [{ fieldId }], conditions: [] }, () => {
                   this.getWorksheetFields(
-                    data.relationControls.find(({ controlId }) => controlId === fieldId).dataSource,
+                    data.relationControls.find(({ controlId }: { controlId?: string; [key: string]: any }) => controlId === fieldId).dataSource,
                   );
                 });
               }}
@@ -724,8 +724,8 @@ export default class GetMoreRecord extends Component<any, any> {
   renderArray() {
     const { data } = this.state;
     const fieldId = ((data.fields || [])[0] || {}).fieldId || '';
-    const item = data.relationControls.find(({ controlId }) => controlId === fieldId);
-    const list = data.relationControls.map(({ controlId, controlName }) => ({
+    const item = data.relationControls.find(({ controlId }: { controlId?: string; [key: string]: any }) => controlId === fieldId);
+    const list = data.relationControls.map(({ controlId, controlName }: { controlId?: string; [key: string]: any }) => ({
       text: controlName,
       value: controlId,
     }));

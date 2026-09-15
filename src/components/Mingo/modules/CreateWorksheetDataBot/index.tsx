@@ -199,7 +199,7 @@ function formatOrgRoles(orgRoles = []) {
   }));
 }
 
-async function getPresetDepartmentsAndRoles({ controls, projectId }) {
+async function getPresetDepartmentsAndRoles({ controls, projectId }: { projectId?: string; [key: string]: any }) {
   const hasDepartment = !!find(controls, { type: WIDGETS_TO_API_TYPE_ENUM.DEPARTMENT });
   const hasOrgRole = !!find(controls, { type: WIDGETS_TO_API_TYPE_ENUM.ORG_ROLE });
 
@@ -244,7 +244,7 @@ async function getPresetDepartmentsAndRoles({ controls, projectId }) {
   };
 }
 
-async function getPresetRelatedRecords({ controls, worksheetId }) {
+async function getPresetRelatedRecords({ controls, worksheetId }: { worksheetId?: string; [key: string]: any }) {
   const hasRelatedRecord = !!find(
     controls,
     control => control.type === WIDGETS_TO_API_TYPE_ENUM.RELATE_SHEET && control.dataSource,

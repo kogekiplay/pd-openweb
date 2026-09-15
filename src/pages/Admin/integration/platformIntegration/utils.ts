@@ -28,7 +28,7 @@ export const integrationFailed = (projectId: string) => {
 };
 
 // 判断是否需要清理集成关系
-export const checkClearIntergrationData = ({ projectId, onSave = () => {}, integrationType, onClose = () => {} }) => {
+export const checkClearIntergrationData = ({ projectId, onSave = () => {}, integrationType, onClose = () => {} }: { projectId?: string; [key: string]: any }) => {
   return workwxAjax.checkClearIntergrationData({ projectId }).then(res => {
     if (res) {
       checkClearIntegrationDialog({ projectId, integrationType, onSave, onClose });
@@ -43,7 +43,7 @@ export const checkClearIntergrationData = ({ projectId, onSave = () => {}, integ
  * @param {*} projectId
  * @param {*} integrationType 集成类型 1:钉钉 3:企微 6:飞书
  */
-export const getIntegrationHomeUrl = ({ projectId, integrationType }) => {
+export const getIntegrationHomeUrl = ({ projectId, integrationType }: { projectId?: string; [key: string]: any }) => {
   const isSaas = location.host.endsWith('.mingdao.com');
   const host = 'https://www.mingdao.com';
 

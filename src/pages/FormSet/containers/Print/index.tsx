@@ -153,7 +153,7 @@ class Print extends React.Component<any, any> {
     this.checkedCloudPrint();
   }
 
-  loadPrint = ({ worksheetId }) => {
+  loadPrint = ({ worksheetId }: { worksheetId?: string; [key: string]: any }) => {
     this.setState({ loading: true });
     sheetAjax
       .getPrintList({

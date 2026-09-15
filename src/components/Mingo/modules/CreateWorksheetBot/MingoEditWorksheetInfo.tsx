@@ -118,7 +118,7 @@ export default function MingoEditWorksheetInfo({
   appId,
   worksheetId,
   ...rest
-}) {
+}: { appId?: string; worksheetId?: string; [key: string]: any }) {
   const [worksheetName, setWorksheetName] = useState(rest.worksheetName);
   const [selectedIconName, setSelectedIconName] = useState(rest.iconName);
   const [isEditing, setIsEditing] = useState(checkIsEditing(taskStatus));

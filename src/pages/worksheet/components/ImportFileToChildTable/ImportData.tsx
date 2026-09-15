@@ -418,7 +418,7 @@ function PasteEdit(props) {
           rowCount={data.length + 1}
           activeIndex={activeIndex}
           controls={controls}
-          renderCellContent={({ index, rowIndex, columnIndex }) =>
+          renderCellContent={({ index, rowIndex, columnIndex }: { index?: number; [key: string]: any }) =>
             index === activeIndex && isEditing ? (
               <Input
                 className="editingCellInput"

@@ -116,7 +116,7 @@ export default class Friends extends React.Component<any, any> {
     });
   }
 
-  itemClickHandler({ accountId }) {
+  itemClickHandler({ accountId }: { accountId?: string; [key: string]: any }) {
     this.setState({
       selectedAccountId: accountId,
     });

@@ -128,7 +128,7 @@ function getStatusLabel(item) {
   }
 }
 
-export function Attachments({ items, variant = 'inline', align = 'left', removable = false, onRemove, className }) {
+export function Attachments({ items, variant = 'inline', align = 'left', removable = false, onRemove, className }: { className?: string; [key: string]: any }) {
   if (!items.length) return null;
 
   return (

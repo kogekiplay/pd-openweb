@@ -152,13 +152,13 @@ class ColumnHead extends Component<any, any> {
     saveLRUWorksheetConfig('WORKSHEET_VIEW_COLUMN_FROZON', viewId, index);
   }
 
-  updateColumnWidth = ({ controlId, value }) => {
+  updateColumnWidth = ({ controlId, value }: { controlId?: string; [key: string]: any }) => {
     const { updateSheetColumnWidths } = this.props;
     this.handleColumnWidthLRUSave(controlId, value);
     updateSheetColumnWidths({ controlId, value });
   };
 
-  updateColumnStyle = ({ controlId, key, value }) => {
+  updateColumnStyle = ({ controlId, key, value }: { controlId?: string; [key: string]: any }) => {
     const { saveColumnStylesToLocal, updateColumnStyles } = this.props;
 
     if (!get(window, 'shareState.shareId')) {

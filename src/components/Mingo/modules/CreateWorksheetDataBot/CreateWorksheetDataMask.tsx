@@ -112,20 +112,20 @@ export default function CreateWorksheetDataMask({
           // selectedIds={selected}
           data={data}
           sheetColumnWidths={tableColumnWidths}
-          renderColumnHead={({ className, style, columnIndex }) => {
+          renderColumnHead={({ className, style, columnIndex }: { className?: string; [key: string]: any }) => {
             return (
               <BaseColumnHead
                 className={className}
                 style={style}
                 control={columns[columnIndex - 1] || {}}
                 isLast={columnIndex === columns.length - 1}
-                updateSheetColumnWidths={({ controlId, value }) => {
+                updateSheetColumnWidths={({ controlId, value }: { controlId?: string; [key: string]: any }) => {
                   setTableColumnWidth(prev => ({ ...prev, [controlId]: value }));
                 }}
               />
             );
           }}
-          renderRowHead={({ className, style, rowIndex }) => {
+          renderRowHead={({ className, style, rowIndex }: { className?: string; [key: string]: any }) => {
             const isLast = rowIndex === data.length - 1;
 
             if (isLoading && isLast && rowIndex >= 0) {

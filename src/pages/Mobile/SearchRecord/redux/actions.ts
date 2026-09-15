@@ -4,7 +4,7 @@ import { WORKSHEET_TABLE_PAGESIZE } from 'src/pages/worksheet/constants/enum';
 let request: ApiResult | null = null;
 
 export const changeSearchSheetRows =
-  ({ worksheetId, appId, viewId, keyWords, pageIndex }, callback) =>
+  ({ worksheetId, appId, viewId, keyWords, pageIndex }: { worksheetId?: string; appId?: string; viewId?: string; pageIndex?: number; [key: string]: any }, callback) =>
   dispatch => {
     if (request) {
       request.abort();

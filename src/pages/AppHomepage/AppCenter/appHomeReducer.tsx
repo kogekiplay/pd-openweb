@@ -452,7 +452,7 @@ export class CreateActions {
       value: keywords,
     });
   }
-  loadDashboardInfo({ projectId, noCache }) {
+  loadDashboardInfo({ projectId, noCache }: { projectId?: string; [key: string]: any }) {
     this.dispatch({
       type: 'UPDATE_DASHBOARD_LOADING',
       value: true,
@@ -472,7 +472,7 @@ export class CreateActions {
       handleDashboardOrAppResponse(this.dispatch, data, true);
     });
   }
-  loadAppAndGroups({ projectId, activeGroupType, activeGroupId, noGroupsLoading, noCache, isOwnedApp = false }) {
+  loadAppAndGroups({ projectId, activeGroupType, activeGroupId, noGroupsLoading, noCache, isOwnedApp = false }: { projectId?: string; [key: string]: any }) {
     if (!activeGroupId) {
       localStorage.removeItem(`latest_group_${md.global.Account.accountId}`);
     }
@@ -530,7 +530,7 @@ export class CreateActions {
       }
     });
   }
-  loadOwnedApps({ projectId }) {
+  loadOwnedApps({ projectId }: { projectId?: string; [key: string]: any }) {
     this.dispatch({
       type: 'UPDATE_APPS_LOADING',
       value: true,
@@ -546,7 +546,7 @@ export class CreateActions {
       });
     });
   }
-  loadGroup({ activeGroupId, activeGroupType, projectId }) {
+  loadGroup({ activeGroupId, activeGroupType, projectId }: { projectId?: string; [key: string]: any }) {
     safeLocalStorageSetItem(
       `latest_group_${md.global.Account.accountId}`,
       JSON.stringify({
@@ -579,7 +579,7 @@ export class CreateActions {
       });
     });
   }
-  addGroup({ projectId, name, icon, groupType, cb = () => {} }) {
+  addGroup({ projectId, name, icon, groupType, cb = () => {} }: { projectId?: string; name?: string; icon?: string; [key: string]: any }) {
     homeAppAjax
       .addGroup({ projectId, name, icon, groupType })
       .then(({ id, status }) => {
@@ -601,7 +601,7 @@ export class CreateActions {
       })
       .catch(cb);
   }
-  editGroup({ id, projectId, name, icon, groupType, cb = () => {} }) {
+  editGroup({ id, projectId, name, icon, groupType, cb = () => {} }: { projectId?: string; name?: string; icon?: string; [key: string]: any }) {
     homeAppAjax
       .editGroup({ id, projectId, name, icon, groupType })
       .then(status => {
@@ -621,7 +621,7 @@ export class CreateActions {
       })
       .catch(cb);
   }
-  deleteGroup({ id, projectId, groupType, cb = () => {} }) {
+  deleteGroup({ id, projectId, groupType, cb = () => {} }: { projectId?: string; [key: string]: any }) {
     homeAppAjax
       .deleteGroup({ id, projectId, groupType })
       .then(() => {
@@ -633,7 +633,7 @@ export class CreateActions {
       })
       .catch(cb);
   }
-  markGroup({ id, isMarked, groupType, projectId, cb = () => {} }) {
+  markGroup({ id, isMarked, groupType, projectId, cb = () => {} }: { projectId?: string; [key: string]: any }) {
     homeAppAjax
       .markedGroup({
         id,
@@ -651,7 +651,7 @@ export class CreateActions {
       })
       .catch(cb);
   }
-  updateAppBelongGroups({ appId, editingGroup, isRemove }) {
+  updateAppBelongGroups({ appId, editingGroup, isRemove }: { appId?: string; [key: string]: any }) {
     const args = {
       appId,
     };
@@ -675,7 +675,7 @@ export class CreateActions {
         alert(_l('更新分组失败'), 2);
       });
   }
-  updateApp({ appId, ...rest }) {
+  updateApp({ appId, ...rest }: { appId?: string; [key: string]: any }) {
     this.dispatch({
       type: 'UPDATE_APP',
       appId,
@@ -815,7 +815,7 @@ export class CreateActions {
         !window.platformENV.isOverseas && !window.platformENV.isLocal && alert(_l('新建应用失败！'), 2);
       });
   }
-  updateAppSort({ sortType, appIds, projectId, groupId }) {
+  updateAppSort({ sortType, appIds, projectId, groupId }: { projectId?: string; groupId?: string; [key: string]: any }) {
     const markedAppDisplay = _.get(this.state, 'origin.homeSetting.markedAppDisplay');
 
     if (!_.isUndefined(markedAppDisplay) && sortType === 1) {
@@ -845,7 +845,7 @@ export class CreateActions {
         alert(_l('更新应用排序失败！'), 2);
       });
   }
-  editHomeSetting({ projectId, setting = {}, editingKey }) {
+  editHomeSetting({ projectId, setting = {}, editingKey }: { projectId?: string; [key: string]: any }) {
     const oldValue = _.get(this.state, 'origin.homeSetting');
     this.dispatch({ type: 'UPDATE_SETTING', value: setting });
     homeAppAjax

@@ -150,7 +150,7 @@ function getDynamicWrapTxt(dynamicTxt, canvasWidth, ctx, fontSize: number) {
 
 function getWatermarkTextLayouts(
   watermark,
-  { dynamicControls, advancedSetting, currentLocation, ctx, fontSize, textMaxWidth },
+  { dynamicControls, advancedSetting, currentLocation, ctx, fontSize, textMaxWidth }: { fontSize?: number; [key: string]: any },
 ) {
   const isNew = !!_.get(advancedSetting, 'h5watermark');
 

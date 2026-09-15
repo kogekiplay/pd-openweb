@@ -124,7 +124,7 @@ function MapItem(props) {
   const isHaveSelectableControls = selectableControls.some(item => item.controls.length > 0);
   const info = getControlInfo(value);
 
-  const renderControlItem = ({ id, name, controls }) => {
+  const renderControlItem = ({ id, name, controls }: { name?: string; [key: string]: any }) => {
     if (!isHaveSelectableControls) {
       return id === 'current' ? <div className="emptyText textTertiary">{_l('无可选控件')}</div> : null;
     }
@@ -138,7 +138,7 @@ function MapItem(props) {
             </div>
           )}
           <ul className="fieldList">
-            {controls.map(({ type, controlId, controlName }) => {
+            {controls.map(({ type, controlId, controlName }: { controlId?: string; [key: string]: any }) => {
               let para = {
                 type: value,
                 name: text,

@@ -1629,7 +1629,7 @@ export const addLines = (data, isRequest = true) => {
   };
 };
 
-export const removeLines = ({ controlId, particleSizeType }) => {
+export const removeLines = ({ controlId, particleSizeType }: { controlId?: string; [key: string]: any }) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { currentReport } = getState().statistics;
     const { pivotTable, sorts } = currentReport;
@@ -1705,7 +1705,7 @@ export const addColumns = (data, isRequest = true) => {
   };
 };
 
-export const removeColumns = ({ controlId, particleSizeType }) => {
+export const removeColumns = ({ controlId, particleSizeType }: { controlId?: string; [key: string]: any }) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { currentReport } = getState().statistics;
     const { pivotTable, sorts } = currentReport;

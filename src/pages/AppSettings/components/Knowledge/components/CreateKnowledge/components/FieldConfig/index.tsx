@@ -34,31 +34,31 @@ const FieldConfig = ({ attachmentEnhancedTip }) => {
     hasInitExpanded.current = true;
   }, [selectedWorksheetList]);
 
-  const handleAddSelectedField = ({ worksheetId, control }) => {
+  const handleAddSelectedField = ({ worksheetId, control }: { worksheetId?: string; [key: string]: any }) => {
     addSelectedField(dispatch, { worksheetId, control });
   };
 
-  const handleRemoveSelectedField = ({ worksheetId, control }) => {
+  const handleRemoveSelectedField = ({ worksheetId, control }: { worksheetId?: string; [key: string]: any }) => {
     removeSelectedField(dispatch, { worksheetId, control });
   };
 
-  const handleSetWorksheetDiscuss = ({ worksheetId }) => {
+  const handleSetWorksheetDiscuss = ({ worksheetId }: { worksheetId?: string; [key: string]: any }) => {
     setWorksheetDiscuss(dispatch, { worksheetId });
   };
 
-  const handleSetWorksheetEnhance = ({ worksheetId }) => {
+  const handleSetWorksheetEnhance = ({ worksheetId }: { worksheetId?: string; [key: string]: any }) => {
     setWorksheetEnhance(dispatch, { worksheetId });
   };
 
-  const handleSetAttachmentParseEnhanced = ({ worksheetId }) => {
+  const handleSetAttachmentParseEnhanced = ({ worksheetId }: { worksheetId?: string; [key: string]: any }) => {
     setAttachmentParseEnhanced(dispatch, { worksheetId });
   };
 
-  const handleSaveFilterConditions = ({ filter, worksheetId }) => {
+  const handleSaveFilterConditions = ({ filter, worksheetId }: { worksheetId?: string; [key: string]: any }) => {
     setFilterConditions(dispatch, { filterConditions: filter, worksheetId });
   };
 
-  const handleRemoveSelectedWorksheet = ({ worksheetId }) => {
+  const handleRemoveSelectedWorksheet = ({ worksheetId }: { worksheetId?: string; [key: string]: any }) => {
     removeSelectedWorksheet(dispatch, worksheetId);
   };
 

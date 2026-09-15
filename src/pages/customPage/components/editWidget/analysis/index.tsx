@@ -56,7 +56,7 @@ export default function Analysis(props) {
             reportName,
             reportType,
             worksheetId,
-          }) => {
+          }: { worksheetId?: string; [key: string]: any }) => {
             const { config = {} } = widget;
             const newConfig = config.objectId ? config : { ...config, objectId: uuidv4() };
 

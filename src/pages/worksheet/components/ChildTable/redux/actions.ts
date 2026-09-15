@@ -255,7 +255,7 @@ export const deleteRows =
     dispatch(updateTreeTableViewData());
   };
 
-export const updateRow = ({ rowid, value }, { asyncUpdate, noRealUpdate } = {}) => {
+export const updateRow = ({ rowid, value }: { rowid?: string; [key: string]: any }, { asyncUpdate, noRealUpdate } = {}) => {
   return dispatch => {
     dispatch({
       type: 'UPDATE_ROW',
@@ -388,7 +388,7 @@ export const loadRows = ({
 
 // 分页加载数据
 export const loadPageRows =
-  ({ worksheetId, recordId, controlId, getWorksheet, from, callback = () => {} }) =>
+  ({ worksheetId, recordId, controlId, getWorksheet, from, callback = () => {} }: { worksheetId?: string; recordId?: string; controlId?: string; [key: string]: any }) =>
   (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
     const { base, pagination, filterControls = [] } = getState();
     const { instanceId, workId } = base;

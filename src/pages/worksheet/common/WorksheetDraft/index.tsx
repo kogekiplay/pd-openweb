@@ -144,7 +144,7 @@ function DraftModal(props) {
       });
   };
 
-  const renderColumnHead = ({ className, style, control, isLast, updateSheetColumnWidths }) => {
+  const renderColumnHead = ({ className, style, control, isLast, updateSheetColumnWidths }: { className?: string; [key: string]: any }) => {
     const maskData =
       _.get(control, 'advancedSetting.datamask') === '1' && _.get(control, 'advancedSetting.isdecrypt') === '1';
 
@@ -265,7 +265,7 @@ function DraftModal(props) {
                 renderColumnHead={renderColumnHead}
                 sheetSwitchPermit={sheetSwitchPermit}
                 projectId={projectId}
-                renderRowHead={({ className, style, rowIndex }) => (
+                renderRowHead={({ className, style, rowIndex }: { className?: string; [key: string]: any }) => (
                   <RowHead
                     isDraftTable
                     className={className}

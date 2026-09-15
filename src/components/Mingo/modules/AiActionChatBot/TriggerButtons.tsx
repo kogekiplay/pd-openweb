@@ -88,7 +88,7 @@ export default function TriggerButtons({
   buttons = [],
   onChat = () => {},
   onReloadButtons = () => {},
-}) {
+}: { isCharge?: boolean; [key: string]: any }) {
   const [createAIActionDialogVisible, setCreateAIActionDialogVisible] = useState(false);
 
   const handleCreateAction = () => {

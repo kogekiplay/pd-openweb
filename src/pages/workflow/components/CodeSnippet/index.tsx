@@ -269,7 +269,7 @@ const TYPES = [
   { text: _l('个人'), value: 3 },
 ];
 
-const CodeSnippet = ({ projectId, type = 0, onSave = () => {}, onClose = () => {} }) => {
+const CodeSnippet = ({ projectId, type = 0, onSave = () => {}, onClose = () => {} }: { projectId?: string; [key: string]: any }) => {
   const [tabIndex, setTabIndex] = useState(window.platformENV.isOverseas || window.platformENV.isLocal ? 2 : 1);
   const [keywords, setKeywords] = useState('');
   const [langType, setLangType] = useState(type === 2 ? '103' : '102');
@@ -297,7 +297,7 @@ const CodeSnippet = ({ projectId, type = 0, onSave = () => {}, onClose = () => {
     [],
   );
 
-  const deleteCode = ({ id, name }) => {
+  const deleteCode = ({ id, name }: { name?: string; [key: string]: any }) => {
     Dialog.confirm({
       className: 'deleteCodeSnippet',
       title: _l('您确定要删除片段“%0”吗？', name),
@@ -576,7 +576,7 @@ const CodeSnippet = ({ projectId, type = 0, onSave = () => {}, onClose = () => {
           id={editCodeId}
           codeName={data.find(item => item.id === editCodeId).name}
           source={data.find(item => item.id === editCodeId).source}
-          onSave={({ id, name, source }) => {
+          onSave={({ id, name, source }: { name?: string; [key: string]: any }) => {
             setEditCodeId('');
 
             // 不是当前分组的移除

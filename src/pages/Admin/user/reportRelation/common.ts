@@ -35,7 +35,7 @@ export function setStructureSelfEdit(params) {
     );
 }
 
-export function selectUser({ accountId, unique, isSetParent, callback }) {
+export function selectUser({ accountId, unique, isSetParent, callback }: { accountId?: string; [key: string]: any }) {
   dialogSelectUser({
     fromAdmin: true,
     SelectUserSettings: {

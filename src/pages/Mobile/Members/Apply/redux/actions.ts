@@ -3,7 +3,7 @@ import ajaxRequest from 'src/api/appManagement';
 import { getTranslateInfo } from 'src/utils/app';
 
 export const getAppApplyInfo =
-  ({ appId }) =>
+  ({ appId }: { appId?: string; [key: string]: any }) =>
   dispath => {
     dispath({
       type: 'APPLY_LIST_START',

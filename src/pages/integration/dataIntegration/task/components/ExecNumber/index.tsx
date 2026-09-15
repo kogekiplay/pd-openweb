@@ -9,7 +9,7 @@ import PurchaseExpandPack from 'src/pages/Admin/components/PurchaseExpandPack';
 
 let ajaxPromise: Record<string, any> = {};
 
-export default ({ projectId }) => {
+export default ({ projectId }: { projectId?: string; [key: string]: any }) => {
   const [autoOrder, setAutoOrder] = useState(false);
   const [balance, setBalance] = useState(0);
   const licenseType = md.global.Account.projects.find(o => o.projectId === projectId).licenseType;

@@ -824,7 +824,7 @@ function getSummaryCacheKey(base = {}) {
   return `${base.recordId}_${get(base, 'control.controlId')}`;
 }
 
-export function changeRelateRecordSummaryType({ controlId, value }) {
+export function changeRelateRecordSummaryType({ controlId, value }: { controlId?: string; [key: string]: any }) {
   return (dispatch: RelateRecordTableDispatch, getState: RelateRecordTableGetState) => {
     const { base, rowsSummary = { types: {}, values: {} } } = getState();
     const newTypes = { ...rowsSummary.types };

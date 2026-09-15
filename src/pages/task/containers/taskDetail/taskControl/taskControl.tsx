@@ -102,7 +102,7 @@ class TaskControl extends Component<any, any> {
   /**
    * 更新字段数据
    */
-  updateFieldsData = ({ controlId, isBlur }) => {
+  updateFieldsData = ({ controlId, isBlur }: { controlId?: string; [key: string]: any }) => {
     if (!controlId || !this.fields) return;
 
     const errorItems = this.fields.state.errorItems || [];
@@ -283,7 +283,7 @@ class TaskControl extends Component<any, any> {
               disableRules={true}
               data={controlData}
               widgetStyle={{ align_pc: '1', titlelayout_pc: '2', titlewidth_pc: '84' }}
-              onChange={(values, ids, { controlId }) => this.updateFieldsData({ controlId })}
+              onChange={(values, ids, { controlId }: { controlId?: string; [key: string]: any }) => this.updateFieldsData({ controlId })}
               onBlur={(controlId: string) => this.updateFieldsData({ isBlur: true, controlId })}
             />
           </div>

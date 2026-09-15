@@ -47,7 +47,7 @@ const KnowledgeSearch = ({ knowledgeDetail, onClose }) => {
       });
   };
 
-  const handlePreviewAttachment = async ({ fileId, rowId, worksheet }) => {
+  const handlePreviewAttachment = async ({ fileId, rowId, worksheet }: { rowId?: string; [key: string]: any }) => {
     if (!fileId) return;
 
     const data = await attachmentAjax.getAttachmentDetail({

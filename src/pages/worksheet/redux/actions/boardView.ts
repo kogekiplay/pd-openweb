@@ -272,7 +272,7 @@ function mergeUniqBoardData(boardViewData, currentData) {
 }
 
 // 分页获取单个看板数据
-export function getSingleBoardPageData({ pageIndex, kanbanKey, alwaysCallback, checkIsMore }) {
+export function getSingleBoardPageData({ pageIndex, kanbanKey, alwaysCallback, checkIsMore }: { pageIndex?: number; [key: string]: any }) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { sheet } = getState();
     const { boardView } = sheet;

@@ -16,7 +16,7 @@ import { pathCompletion } from 'src/utils/common';
 import MoveDialog from '../MoveDialog';
 import { Wrap, WrapDialog, WrapS } from './style';
 
-const ReSyncDialog = ({ aggTableId, onClose, onChange, items, projectId, appId }) => {
+const ReSyncDialog = ({ aggTableId, onClose, onChange, items, projectId, appId }: { projectId?: string; appId?: string; [key: string]: any }) => {
   const [reCheck, setReCheck] = useState(false);
   const [reCheckLoading, setReCheckLoading] = useState(true);
   const [aggNameList, setAggNameList] = useState([]);

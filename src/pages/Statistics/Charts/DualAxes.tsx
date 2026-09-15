@@ -376,7 +376,7 @@ export default class extends Component<any, any> {
               displaySetup.isPile ? { type: 'adjust-color' } : null,
               { type: 'limit-in-plot' },
             ],
-            content: ({ value, controlId }) => {
+            content: ({ value, controlId }: { controlId?: string; [key: string]: any }) => {
               const id = split.controlId ? newYaxisList[0].controlId : controlId;
               return formatrChartValue(value, false, newYaxisList, value ? undefined : id);
             },

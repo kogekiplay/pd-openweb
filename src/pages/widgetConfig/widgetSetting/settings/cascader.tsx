@@ -169,7 +169,7 @@ export default function Cascader(props) {
           onClose={() => {
             deleteWidget(controlId);
           }}
-          onOk={({ appId, sheetId, viewId }) => {
+          onOk={({ appId, sheetId, viewId }: { appId?: string; viewId?: string; [key: string]: any }) => {
             setVisible(false);
             onChange({ viewId, dataSource: sheetId, appId });
             setEdit({ editType: 3 });
@@ -211,7 +211,7 @@ export default function Cascader(props) {
           globalSheetInfo={globalSheetInfo}
           viewId={viewId}
           onClose={() => setEdit({ editVisible: false })}
-          onOk={({ appId, sheetId, viewId }) => {
+          onOk={({ appId, sheetId, viewId }: { appId?: string; viewId?: string; [key: string]: any }) => {
             onChange({ viewId, dataSource: sheetId, appId });
             setEdit({ editVisible: false, editType: 3 });
             setInfo({ hasError: false, viewInfo: _.find(sheetInfo.views, item => item.viewId === viewId) });

@@ -50,7 +50,7 @@ export default class SelectProcess extends Component<any, any> {
     const { selectAppId } = this.state;
 
     ajaxRequest.getManagerApps({ projectId: this.props.companyId }).then(result => {
-      result = result.map(({ appId, appName }) => {
+      result = result.map(({ appId, appName }: { appId?: string; [key: string]: any }) => {
         if (selectAppId === appId) {
           appName += _l('（本应用）');
         }
@@ -85,7 +85,7 @@ export default class SelectProcess extends Component<any, any> {
             item =>
               (processListType !== 13 || (processListType === 13 && item.triggerId)) && item.id !== filterProcessId,
           )
-          .forEach(({ id, name, triggerId }) => {
+          .forEach(({ id, name, triggerId }: { name?: string; [key: string]: any }) => {
             processList.push({
               value: id,
               text: name,

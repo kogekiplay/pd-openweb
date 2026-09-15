@@ -118,7 +118,7 @@ export default class Others extends React.Component<any, any> {
     });
   }
 
-  itemClickHandler({ accountId, isFriend, isContact }) {
+  itemClickHandler({ accountId, isFriend, isContact }: { accountId?: string; [key: string]: any }) {
     this.setState({
       selectedAccountId: accountId,
       isFriend,

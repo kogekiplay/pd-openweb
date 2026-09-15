@@ -75,7 +75,7 @@ export const getMembers = (appId: string) => dispatch => {
 
 // 删除应用
 export const deleteApp =
-  ({ projectId, appId }, cb) =>
+  ({ projectId, appId }: { projectId?: string; appId?: string; [key: string]: any }, cb) =>
   dispatch => {
     dispatch({
       type: 'MOBILE_ACTION_ING',
@@ -93,7 +93,7 @@ export const deleteApp =
 
 // 退出应用
 export const quitApp =
-  ({ appId, projectId }, cb) =>
+  ({ appId, projectId }: { appId?: string; projectId?: string; [key: string]: any }, cb) =>
   dispatch => {
     dispatch({
       type: 'MOBILE_ACTION_ING',

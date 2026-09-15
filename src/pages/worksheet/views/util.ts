@@ -61,7 +61,7 @@ const filterAllCanSelectInBoardControls = item =>
   (item.type === 30 &&
     SELECTABLE_FIELDS_TYPE_IN_BOARD.includes(item.sourceControlType) &&
     (item.strDefault || '').split('')[0] !== '1');
-const defaultFormatter = ({ controlName, controlId }) => ({ value: controlId, text: controlName });
+const defaultFormatter = ({ controlName, controlId }: { controlId?: string; [key: string]: any }) => ({ value: controlId, text: controlName });
 export const filterAndFormatterControls = (
   { controls = [], filter = filterAllCanSelectInBoardControls, formatter = defaultFormatter } = {
     controls: [],

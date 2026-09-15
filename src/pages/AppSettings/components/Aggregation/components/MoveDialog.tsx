@@ -25,7 +25,7 @@ export default function MoveDialog(props) {
   }, []);
   const getApp = () => {
     ajaxRequest.getManagerApps({ projectId }).then(result => {
-      result = result.map(({ appId, appName }) => {
+      result = result.map(({ appId, appName }: { appId?: string; [key: string]: any }) => {
         if (props.appId === appId) {
           appName += _l('（本应用）');
         }

@@ -65,13 +65,13 @@ export const getControlsSorts = (data, controls, key = 'controlssorts') => {
 
 // 默认取标题控件 和 前三个控件
 export const getDefaultShowControls = allControls => {
-  if (allControls.length <= 3) return allControls.map(({ controlId }) => controlId);
+  if (allControls.length <= 3) return allControls.map(({ controlId }: { controlId?: string; [key: string]: any }) => controlId);
   const titleControlIndex = _.findIndex(allControls, item => item.attribute === 1);
-  if (titleControlIndex <= 3) return allControls.slice(0, 4).map(({ controlId }) => controlId);
+  if (titleControlIndex <= 3) return allControls.slice(0, 4).map(({ controlId }: { controlId?: string; [key: string]: any }) => controlId);
   return allControls
     .slice(0, 3)
     .concat(allControls[titleControlIndex])
-    .map(({ controlId }) => controlId);
+    .map(({ controlId }: { controlId?: string; [key: string]: any }) => controlId);
 };
 
 export const filterByTypeAndSheetFieldType = (controls: FormControl[] = [], filter) => {

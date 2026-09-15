@@ -15,7 +15,7 @@ import RecordInfoForGallery from '../RecordInfoForGallery';
 import { getWidth } from '../util';
 import GalleryContent from './GalleryContent';
 
-const LoadingIndicator = ({ loading }) =>
+const LoadingIndicator = ({ loading }: { loading?: boolean; [key: string]: any }) =>
   loading && (
     <div className="w100">
       <LoadDiv size="big" className="mTop32" />
@@ -75,7 +75,7 @@ const RecordGalleryInner = props => {
   }, []);
 
   // 详情页关闭或外部刷新记录时，同步画廊中的当前卡片数据。
-  const updateRecordEvent = useCallback(({ worksheetId, recordId, rowKey }) => {
+  const updateRecordEvent = useCallback(({ worksheetId, recordId, rowKey }: { worksheetId?: string; recordId?: string; [key: string]: any }) => {
     const { base = {}, galleryview = {} } = propsRef.current;
     const { gallery = [] } = galleryview;
 

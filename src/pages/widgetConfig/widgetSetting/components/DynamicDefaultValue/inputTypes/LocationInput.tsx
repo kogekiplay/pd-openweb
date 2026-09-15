@@ -39,7 +39,7 @@ export default class LocationInput extends Component<any, any> {
             allowCustom={advancedSetting.allowcustom === '1'}
             distance={enumDefault2 ? parseInt(advancedSetting.distance, 10) : 0}
             defaultAddress={staticValue ? JSON.parse(staticValue) : null}
-            onAddressChange={({ lng, lat, address, name }) => {
+            onAddressChange={({ lng, lat, address, name }: { name?: string; [key: string]: any }) => {
               onDynamicValueChange([
                 {
                   rcid: '',

@@ -269,7 +269,7 @@ function parseSegments(text, isStreaming = false) {
   return segments;
 }
 
-export function MarkdownText({ children, className, streaming = false }) {
+export function MarkdownText({ children, className, streaming = false }: { className?: string; [key: string]: any }) {
   const text = typeof children === 'string' ? children : String(children ?? '');
   const segments = useMemo(() => parseSegments(text, streaming), [text, streaming]);
 

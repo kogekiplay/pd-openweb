@@ -381,7 +381,7 @@ export async function uploadAnonymousFiles(fileList, sessionId) {
 
 // §7 登录后「转正」认领：把匿名会话 + 产物改派到登录账号。返回 { success, artifactId, versionId, sessionId }。
 // 404 session_claim_empty（过期/已认领）由调用方按全新建兜底。
-export function claimAnonymousSession({ sessionId, projectId }) {
+export function claimAnonymousSession({ sessionId, projectId }: { projectId?: string; [key: string]: any }) {
   return agentRequest({ sessionId, projectId }, { url: '/api/agent/session-claim', silent: true });
 }
 

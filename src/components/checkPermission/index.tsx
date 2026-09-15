@@ -104,7 +104,7 @@ export const checkPermission = (projectId: string, needPermission: number | numb
   return hasPermission(getMyPermissions(projectId), needPermission);
 };
 
-export const canPurchase = ({ projectId, myPermissions = [] }) => {
+export const canPurchase = ({ projectId, myPermissions = [] }: { projectId?: string; [key: string]: any }) => {
   const permissionsExceptHr = Object.values(PERMISSION_ENUM)
     .map(item => parseInt(item))
     .filter(item => item);
@@ -114,7 +114,7 @@ export const canPurchase = ({ projectId, myPermissions = [] }) => {
     : hasPermission(myPermissions, permissionsExceptHr);
 };
 
-export const hasBackStageAdminAuth = ({ projectId, myPermissions = [] }) => {
+export const hasBackStageAdminAuth = ({ projectId, myPermissions = [] }: { projectId?: string; [key: string]: any }) => {
   const permissionArr = Object.keys(ROUTE_CONFIG)
     .map(item => parseInt(item))
     .filter(item => item);

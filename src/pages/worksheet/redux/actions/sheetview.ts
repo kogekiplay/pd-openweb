@@ -513,7 +513,7 @@ export function updateViewPermission(param) {
   };
 }
 
-export function updateControlOfRow({ cell = {}, cells = [], recordId, rules }, options = {}) {
+export function updateControlOfRow({ cell = {}, cells = [], recordId, rules }: { recordId?: string; [key: string]: any }, options = {}) {
   return (dispatch: AppDispatch, getState: GetState) => {
     if (!_.isEmpty(cell) && _.isEmpty(cells)) {
       cells = [cell];
@@ -1380,7 +1380,7 @@ export function getWorksheetSheetViewSummary({ reset = false, groupArgs = {} } =
   };
 }
 
-export function changeWorksheetSheetViewSummaryType({ controlId, value, groupArgs = {} }) {
+export function changeWorksheetSheetViewSummaryType({ controlId, value, groupArgs = {} }: { controlId?: string; [key: string]: any }) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { sheetview, base } = getState().sheet;
     const { rows = [], rowsSummary, groupRowsSummary } = sheetview.sheetViewData;

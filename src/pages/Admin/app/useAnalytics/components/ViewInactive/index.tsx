@@ -43,7 +43,7 @@ const DialogContent = styled.div`
   }
 `;
 
-export default function ViewInactive({ projectId }) {
+export default function ViewInactive({ projectId }: { projectId?: string; [key: string]: any }) {
   const [
     {
       users,

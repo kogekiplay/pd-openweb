@@ -128,7 +128,7 @@ export function getRowDetail(params, controls?, options = {}) {
 }
 
 export function deleteAttachmentOfControl(
-  { appId, viewId, worksheetId, recordId, controlId, attachment },
+  { appId, viewId, worksheetId, recordId, controlId, attachment }: { appId?: string; viewId?: string; worksheetId?: string; recordId?: string; controlId?: string; [key: string]: any },
   cb = () => {},
 ) {
   const deleteObj = [

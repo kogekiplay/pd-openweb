@@ -446,7 +446,7 @@ function PluginConfig(props) {
           iconColor: detailData.iconColor,
           icon: detailData.icon,
           projectId,
-          onModify: ({ iconColor, icon, iconUrl }) => {
+          onModify: ({ iconColor, icon, iconUrl }: { icon?: string; [key: string]: any }) => {
             const updateObj = { iconColor, icon, iconUrl };
 
             if (configType !== pluginConfigType.create) {

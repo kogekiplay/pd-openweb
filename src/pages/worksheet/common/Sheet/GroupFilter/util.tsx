@@ -250,7 +250,7 @@ export const getAllDepartmentIds = view => {
 };
 
 // 准备请求参数
-export const prepareRequestParams = ({ worksheetId, viewId, rowId, appId }, view, source, controls, keyWords) => {
+export const prepareRequestParams = ({ worksheetId, viewId, rowId, appId }: { worksheetId?: string; viewId?: string; rowId?: string; appId?: string; [key: string]: any }, view, source, controls, keyWords) => {
   const { navfilters = '[]', navshow, navlayer } = getAdvanceSetting(view);
   const filters = safeParse(navfilters, 'array'); // 解析导航过滤器
 

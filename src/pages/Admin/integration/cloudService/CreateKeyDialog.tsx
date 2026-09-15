@@ -60,7 +60,7 @@ const CreateFormItem = styled.div`
   }
 `;
 
-export default function CreateKeyDialog({ visible, projectId, mode = 'create', data = {}, onSuccess, onCancel }) {
+export default function CreateKeyDialog({ visible, projectId, mode = 'create', data = {}, onSuccess, onCancel }: { projectId?: string; [key: string]: any }) {
   const isEdit = mode === 'edit';
   const inputKey = `${mode}-${visible ? 'open' : 'close'}-${data.id || 'new'}`;
   const { description = '' } = data;

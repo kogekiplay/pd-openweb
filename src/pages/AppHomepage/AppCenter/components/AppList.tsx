@@ -28,7 +28,7 @@ export default function AppList(props) {
         onAppChange={(app, isUpdateExternalLink) => {
           actions.saveApp(app, isUpdateExternalLink);
         }}
-        onCopy={({ id, appId }) => {
+        onCopy={({ id, appId }: { appId?: string; [key: string]: any }) => {
           actions.copyApp({ id, groupId }, appId);
         }}
         createAppFromEmpty={(app, cb) => {

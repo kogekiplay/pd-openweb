@@ -82,7 +82,7 @@ export default class RecordCollect extends Component<any, any> {
       });
   };
 
-  handleSearchList = ({ appId, searchValue }) => {
+  handleSearchList = ({ appId, searchValue }: { appId?: string; [key: string]: any }) => {
     const { collectRecords } = this.state;
 
     this.setState({ loading: true });

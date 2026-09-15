@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { Checkbox, Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 
-export default ({ checked, fields, index, updateSource }) => {
+export default ({ checked, fields, index, updateSource }: { checked?: boolean; index?: number; [key: string]: any }) => {
   return (
     <Fragment>
       <Checkbox

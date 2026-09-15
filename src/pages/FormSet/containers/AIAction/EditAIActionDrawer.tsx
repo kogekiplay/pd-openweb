@@ -257,7 +257,7 @@ export default function EditAIActionDrawer(props) {
           worksheetInfo={worksheetInfo}
           recordData={recordInfo}
           onClose={() => setState({ showChatbotDialog: false })}
-          onOpenMessageLog={({ instanceId }) => {
+          onOpenMessageLog={({ instanceId }: { instanceId?: string; [key: string]: any }) => {
             import('src/pages/workflow/WorkflowSettings/History/components/logDialog')
               .then(({ default: logDialog }) => {
                 logDialog({

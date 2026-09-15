@@ -184,7 +184,7 @@ function PluginSettings(params) {
               iconColor,
               icon,
               projectId,
-              onModify: ({ iconColor, icon }) => {
+              onModify: ({ iconColor, icon }: { icon?: string; [key: string]: any }) => {
                 onChangeView({ iconColor, icon }, true);
               },
             });

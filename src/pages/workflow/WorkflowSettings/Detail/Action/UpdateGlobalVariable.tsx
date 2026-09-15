@@ -58,7 +58,7 @@ export default props => {
               projectId: props.companyId,
               appId: relationId,
               filterNoEdit: true,
-              onOk: ({ id, controlType, name, sourceType }) => {
+              onOk: ({ id, controlType, name, sourceType }: { name?: string; [key: string]: any }) => {
                 updateSource({
                   fields: [
                     {

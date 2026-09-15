@@ -380,7 +380,7 @@ export default function DisplayItem(props) {
   };
 
   const handleOperate = (mode, option = {}) => {
-    const deleteWidgetById = ({ widgets, controlId, path }) => {
+    const deleteWidgetById = ({ widgets, controlId, path }: { controlId?: string; [key: string]: any }) => {
       const [row, col] = path;
 
       if (activeWidget.controlId === controlId) {

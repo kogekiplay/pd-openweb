@@ -6,7 +6,7 @@ import { getCurrentProject } from 'src/utils/project';
 
 const LOADING_TEXT = _l('加载中...');
 
-const DepartmentTooltip = ({ item = {}, projectId, advancedSetting = {}, dragging, children }) => {
+const DepartmentTooltip = ({ item = {}, projectId, advancedSetting = {}, dragging, children }: { projectId?: string; [key: string]: any }) => {
   const [departmentName, setDepartmentName] = useState(LOADING_TEXT);
   const [visible, setVisible] = useState(false);
 

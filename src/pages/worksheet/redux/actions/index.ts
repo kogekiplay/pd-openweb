@@ -426,7 +426,7 @@ export const updateWorksheetInfo = info => ({
   info,
 });
 
-export function loadCustomButtons({ appId, viewId, rowId, worksheetId }, cb = () => {}) {
+export function loadCustomButtons({ appId, viewId, rowId, worksheetId }: { appId?: string; viewId?: string; rowId?: string; worksheetId?: string; [key: string]: any }, cb = () => {}) {
   return dispatch => {
     if (!worksheetId || _.get(window, 'shareState.isPublicView') || _.get(window, 'shareState.isPublicPage')) {
       return;
@@ -976,7 +976,7 @@ export function updateSearchRecord(view = {}, record) {
 }
 
 // 初始化移动端甘特图所需要的数据
-export function initMobileGunter({ appId, worksheetId, viewId }) {
+export function initMobileGunter({ appId, worksheetId, viewId }: { appId?: string; worksheetId?: string; viewId?: string; [key: string]: any }) {
   return function (dispatch) {
     const base = {
       appId,

@@ -27,7 +27,7 @@ export const getAttributeName = (receiveControls, rowValue) => {
   return renderCellText({ ...control, value }) || '';
 };
 
-export const getApproval = ({ rowId, approvalIds, params, updateApprovalAjax }) => {
+export const getApproval = ({ rowId, approvalIds, params, updateApprovalAjax }: { rowId?: string; [key: string]: any }) => {
   const { from, printType, type, worksheetId, appId } = params;
   const clientId = getPrintClientId(params);
 

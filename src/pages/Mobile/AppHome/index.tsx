@@ -224,7 +224,7 @@ class AppHome extends React.Component<any, any> {
   };
 
   // 应用收藏/最近使用/记录收藏 title
-  renderTitle = ({ type = 'collectAppList', wrapTitle, icon, showMore, moreText, iconClass }) => {
+  renderTitle = ({ type = 'collectAppList', wrapTitle, icon, showMore, moreText, iconClass }: { icon?: string; [key: string]: any }) => {
     const projectObj = getCurrentProject(
       localStorage.getItem('currentProjectId') || (md.global.Account.projects[0] || {}).projectId,
     );

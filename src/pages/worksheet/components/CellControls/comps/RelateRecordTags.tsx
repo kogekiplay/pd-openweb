@@ -213,7 +213,7 @@ export default forwardRef(function RelateRecordTags(props, ref) {
       props.records.map((r: RecordRow) => pick(r, ['rowid'].concat(getTitleControlIdFromRelateControl(control) || []))),
     ),
   ]);
-  function handleOpenRecord({ appId, worksheetId, recordId, viewId }) {
+  function handleOpenRecord({ appId, worksheetId, recordId, viewId }: { appId?: string; worksheetId?: string; recordId?: string; viewId?: string; [key: string]: any }) {
     openDialogCallback();
     openRecordInfo({
       appId: appId,

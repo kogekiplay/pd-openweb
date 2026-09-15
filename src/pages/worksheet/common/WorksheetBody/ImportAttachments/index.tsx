@@ -29,8 +29,8 @@ const WRITE_MODE_OPTIONS = [
 
 const getFiledOptions = controls => {
   const controlOptions = controls
-    .filter(({ controlId }) => ![...NORMAL_SYSTEM_FIELDS_SORT, ...WORKFLOW_SYSTEM_FIELDS_SORT].includes(controlId))
-    .map(({ controlName, controlId, type, sourceControlType, advancedSetting }) => ({
+    .filter(({ controlId }: { controlId?: string; [key: string]: any }) => ![...NORMAL_SYSTEM_FIELDS_SORT, ...WORKFLOW_SYSTEM_FIELDS_SORT].includes(controlId))
+    .map(({ controlName, controlId, type, sourceControlType, advancedSetting }: { controlId?: string; [key: string]: any }) => ({
       iconName: getIconByType(type),
       text: controlName,
       value: controlId,

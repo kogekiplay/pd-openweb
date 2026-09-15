@@ -102,7 +102,7 @@ export default class ExportSheet extends Component<any, any> {
 
       columns
         .filter(item => (isRelateRecordTableControl(item) && item.type !== 51) || item.type === 34)
-        .forEach(({ controlId }) => {
+        .forEach(({ controlId }: { controlId?: string; [key: string]: any }) => {
           if (_.includes(res.controlIds, controlId)) {
             columnsSelected[controlId] = true;
             exportRelationalSheet = true;

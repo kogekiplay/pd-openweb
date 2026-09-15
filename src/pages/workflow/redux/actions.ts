@@ -379,7 +379,7 @@ export const updateTestRunning = result => (dispatch: AppDispatch, getState: Get
   const { workflowTestRunning } = _.cloneDeep(getState().workflow);
   const { processId, flowNodeId, preFlowNodeId, running, instanceId, exception, toolNode } = result;
 
-  const getToolId = ({ name }) => {
+  const getToolId = ({ name }: { name?: string; [key: string]: any }) => {
     let toolNameReg = '';
     const TOOL_REG_MAP = {
       get_record_list: /^(.*?)(get_record_list)(.*?)$/,

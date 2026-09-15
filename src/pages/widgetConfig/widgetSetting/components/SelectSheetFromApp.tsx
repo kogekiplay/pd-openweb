@@ -107,7 +107,7 @@ export default function SelectSheetFromApp(props) {
     if (!viewConfig) return;
     worksheetAjax.getWorksheetInfo({ worksheetId: sheetId, getViews: true, appId }).then(res => {
       const views = viewConfig.filter ? _.filter(res.views, viewConfig.filter) : res.views;
-      const view = views.map(({ viewType, name, viewId }) => ({
+      const view = views.map(({ viewType, name, viewId }: { name?: string; viewId?: string; [key: string]: any }) => ({
         viewType,
         value: viewId,
         text: name,
@@ -121,7 +121,7 @@ export default function SelectSheetFromApp(props) {
     });
   }, [sheetId]);
 
-  return config.map(({ text, key, disabled, filter = item => item }, index: number) => (
+  return config.map(({ text, key, disabled, filter = item => item }: { disabled?: boolean; [key: string]: any }, index: number) => (
     <SelectItem key={key}>
       <div className={cx('title Bold', { mTop0: index === 0 && fromCustomEvent })}>{text}</div>
       <Dropdown

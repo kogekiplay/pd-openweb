@@ -78,14 +78,14 @@ export default props => {
     hideColor: true,
     name: originalName,
     iconColor,
-    onChange: ({ name, icon: newIcon }) => {
+    onChange: ({ name, icon: newIcon }: { name?: string; [key: string]: any }) => {
       const newName = name.slice(0, 100);
 
       if ((newName && newName !== originalName) || originalIcon !== newIcon) {
         onChange(newName, newIcon);
       }
     },
-    onModify: ({ name, icon, iconUrl }) => {
+    onModify: ({ name, icon, iconUrl }: { name?: string; icon?: string; [key: string]: any }) => {
       name && updateName(name);
       icon && iconUrl && updateIcon({ icon, iconUrl });
     },

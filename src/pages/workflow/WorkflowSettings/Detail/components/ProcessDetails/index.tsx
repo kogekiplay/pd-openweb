@@ -8,8 +8,8 @@ import SingleControlValue from '../SingleControlValue';
 export default props => {
   const { data, getNodeDetail, updateSource } = props;
   const fieldId = ((data.fields || [])[0] || {}).fieldId || '';
-  const item = data.controls.find(({ controlId }) => controlId === fieldId);
-  const list = data.controls.map(({ controlId, controlName, sourceEntityName }) => ({
+  const item = data.controls.find(({ controlId }: { controlId?: string; [key: string]: any }) => controlId === fieldId);
+  const list = data.controls.map(({ controlId, controlName, sourceEntityName }: { controlId?: string; [key: string]: any }) => ({
     text: (
       <span>
         {controlName}

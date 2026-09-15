@@ -6,7 +6,7 @@ import { SelectFieldsWrap } from '../../styled';
 import { getIconByType } from '../../util';
 import type { FormControl } from 'src/utils/controlTypes';
 
-export default function SelectControl({ className, list, searchable = true, onClick, onClickAway = _.noop }) {
+export default function SelectControl({ className, list, searchable = true, onClick, onClickAway = _.noop }: { className?: string; [key: string]: any }) {
   const ref = useRef(null);
   const inputEl = useRef(null);
   const [keyword, setKeyWord] = useState('');

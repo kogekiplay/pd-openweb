@@ -75,7 +75,7 @@ const PrintContentBox = props => {
     const nextSignatureMap = {};
     const allControls: FormControl[] = printData?.allControls || [];
 
-    rowValues.forEach(({ rowId }) => {
+    rowValues.forEach(({ rowId }: { rowId?: string; [key: string]: any }) => {
       const rowValueMap = rowsValuesMapRef.current[rowId];
 
       const fillValue = control => ({

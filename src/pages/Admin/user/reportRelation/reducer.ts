@@ -11,7 +11,7 @@ const updateSingleEntity = (user, action) => {
       return { ...user };
     case ACTIONS.UPDATE_ENTITY_CHILDS:
       const { source, moreLoading, pageIndex, totalCount } = payload;
-      const result = source.map(({ accountId }) => accountId);
+      const result = source.map(({ accountId }: { accountId?: string; [key: string]: any }) => accountId);
 
       return {
         ...user,

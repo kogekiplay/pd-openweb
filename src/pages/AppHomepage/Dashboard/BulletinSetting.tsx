@@ -284,7 +284,7 @@ export default function BulletinSetting(props) {
     );
   };
 
-  const renderItem = ({ item, index, dragging }) => {
+  const renderItem = ({ item, index, dragging }: { index?: number; [key: string]: any }) => {
     const { title, url } = item;
 
     return (

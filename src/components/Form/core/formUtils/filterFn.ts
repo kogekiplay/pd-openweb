@@ -372,7 +372,7 @@ const dayFn = (
   }
 };
 
-export default function filterFn({ filterData, originControl, data = [], recordId, appTimeZone }) {
+export default function filterFn({ filterData, originControl, data = [], recordId, appTimeZone }: { recordId?: string; [key: string]: any }) {
   try {
     let { filterType = '', dataType = '', dynamicSource = [], dateRange, dateRangeType } = filterData;
     const control = redefineComplexControl(originControl);

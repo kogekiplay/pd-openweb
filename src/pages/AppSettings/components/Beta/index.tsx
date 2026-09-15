@@ -14,6 +14,6 @@ const Com = styled.span`
   vertical-align: middle;
 `;
 
-export default function Beta({ className }) {
+export default function Beta({ className }: { className?: string; [key: string]: any }) {
   return <Com className={className}>beta</Com>;
 }

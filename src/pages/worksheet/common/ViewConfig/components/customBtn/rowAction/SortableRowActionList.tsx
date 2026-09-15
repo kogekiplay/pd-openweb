@@ -130,7 +130,7 @@ function RowDropGap({ gapIndex, activeGap }) {
   );
 }
 
-function DraggableRowAction({ item, index, onDelete, onDropRow, activeGap, setActiveGap }) {
+function DraggableRowAction({ item, index, onDelete, onDropRow, activeGap, setActiveGap }: { index?: number; [key: string]: any }) {
   const rowRef = useRef(null);
   const [{ isDragging }, drag, dragPreview] = useDrag({
     type: ITEM_TYPE,

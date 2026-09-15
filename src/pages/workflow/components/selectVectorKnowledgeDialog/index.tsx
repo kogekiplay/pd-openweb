@@ -47,7 +47,7 @@ class SelectVectorKnowledge extends Component<any, any> {
     const { selectAppId } = this.state;
 
     ajaxRequest.getManagerApps({ projectId: this.props.companyId }).then(result => {
-      result = result.map(({ appId, appName }) => {
+      result = result.map(({ appId, appName }: { appId?: string; [key: string]: any }) => {
         return {
           value: appId,
           text: selectAppId === appId ? appName + _l('（本应用）') : appName,
@@ -69,7 +69,7 @@ class SelectVectorKnowledge extends Component<any, any> {
    */
   getKnowledgeByApp(appId: string) {
     knowledgeAjax.getKnowledgeBase({ apkId: appId }).then(res => {
-      res = res.map(({ id, name }) => {
+      res = res.map(({ id, name }: { name?: string; [key: string]: any }) => {
         return {
           value: id,
           label: name,

@@ -3,7 +3,7 @@ import homeAppAjax from 'src/api/homeApp';
 import { getTranslateInfo } from 'src/utils/app';
 import { setAllWorksheetList, setWorksheetIsLoaded } from '../../store/actions';
 
-export function useSheetList({ appId, selectedWorksheetList = [], allWorksheetList = [], dispatch }) {
+export function useSheetList({ appId, selectedWorksheetList = [], allWorksheetList = [], dispatch }: { appId?: string; [key: string]: any }) {
   // 如果 store 里已经有数据，直接使用
   const worksheetList = useMemo(() => {
     return allWorksheetList.length ? allWorksheetList : [];

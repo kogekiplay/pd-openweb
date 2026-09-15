@@ -218,7 +218,7 @@ function SimpleRow({ title, value }) {
 }
 
 // 单张工作表行：表名 + 字段数（平铺，不再下钻——对齐「工作表去掉下一层级」）
-function WorksheetRow({ name, fieldCount }) {
+function WorksheetRow({ name, fieldCount }: { name?: string; [key: string]: any }) {
   return (
     <IterRow>
       <span>{name}</span>
@@ -228,7 +228,7 @@ function WorksheetRow({ name, fieldCount }) {
 }
 
 // 单张表的视图/动作行：表名 + 「视图 N 个，动作 M 个」（两者均为 0 时仅显示表名）
-function ViewRow({ name, viewCount, actionCount }) {
+function ViewRow({ name, viewCount, actionCount }: { name?: string; [key: string]: any }) {
   const parts = [];
 
   if (viewCount > 0) parts.push(_l('视图 %0 个', viewCount));

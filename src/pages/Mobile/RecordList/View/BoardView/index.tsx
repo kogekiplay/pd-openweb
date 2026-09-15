@@ -129,7 +129,7 @@ const MobileBoardView = props => {
     setUpdateRowParam(updateRowParam);
   };
 
-  const updateRow = ({ recordId, rowData }) => {
+  const updateRow = ({ recordId, rowData }: { recordId?: string; [key: string]: any }) => {
     if (!updateRowParam.key) {
       return;
     }

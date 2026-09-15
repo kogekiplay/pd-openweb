@@ -61,7 +61,7 @@ const Content = styled.div`
   }
 `;
 
-export default function MobileMentionPopup({ apps, loading, onSearch, onSelect, onClose }) {
+export default function MobileMentionPopup({ apps, loading, onSearch, onSelect, onClose }: { loading?: boolean; [key: string]: any }) {
   return (
     <PopupWrapper
       visible

@@ -151,7 +151,7 @@ export default function WeChatSettings(props) {
                       projectId={projectId}
                       appId={appId}
                       selectedServiceAppId={weChatBind.appId}
-                      updateWeChatServiceInfo={({ weChatServiceAccounts, service, appId }) => {
+                      updateWeChatServiceInfo={({ weChatServiceAccounts, service, appId }: { appId?: string; [key: string]: any }) => {
                         updateCurrentWeChatServiceAccount({ weChatServiceAccounts, service, appId });
                       }}
                     />

@@ -214,7 +214,7 @@ export const getConfigAction = async (dispatch, { props, getRules, getSearchConf
 /**
  * 更新error显示状态
  */
-export const updateErrorStateAction = (dispatch, { getState, isShow, controlId }) => {
+export const updateErrorStateAction = (dispatch, { getState, isShow, controlId }: { controlId?: string; [key: string]: any }) => {
   const { errorItems, uniqueErrorItems } = getState();
 
   if (controlId) {
@@ -660,7 +660,7 @@ export const triggerCustomEventAction = (
 /**
  * 验证唯一值
  */
-export const checkControlUniqueAction = (dispatch, { props, getState, controlId, controlType, controlValue }) => {
+export const checkControlUniqueAction = (dispatch, { props, getState, controlId, controlType, controlValue }: { controlId?: string; [key: string]: any }) => {
   const { uniqueErrorItems } = getState();
   const { worksheetId, recordId, checkCellUnique, onError = () => {} } = props;
 

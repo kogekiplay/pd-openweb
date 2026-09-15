@@ -6,7 +6,7 @@ import worksheetAjax from 'src/api/worksheet';
 import { getTranslateInfo } from 'src/utils/app';
 
 // 获取表信息
-export const useSheetInfo = ({ worksheetId, saveIndex = 0, setConfigLoading, ...rest }) => {
+export const useSheetInfo = ({ worksheetId, saveIndex = 0, setConfigLoading, ...rest }: { worksheetId?: string; [key: string]: any }) => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useSetState({});
   useEffect(() => {

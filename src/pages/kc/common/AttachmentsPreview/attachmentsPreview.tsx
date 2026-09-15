@@ -147,7 +147,7 @@ class AttachmentsPreview extends React.Component<any, any> {
     this.refImageViewer && this.refImageViewer.rotate(reverse ? 90 : -90);
   };
 
-  getIframeKey({ mode, attachment, index, ext }) {
+  getIframeKey({ mode, attachment, index, ext }: { index?: number; [key: string]: any }) {
     const sourceNode = attachment.sourceNode || {};
     const fileId =
       attachment.fileID ||

@@ -59,7 +59,7 @@ function formatDuration(ms) {
 // 工作阶段：<workEnd /> 之前的所有部件折叠成「已工作」，点击展开。items 为有序子部件，
 // reasoning 嵌成可再次展开的「已思考」折叠块（限高、用切分时算好的真实时长），text 为正文叙述，
 // 一并缩进收纳在「已工作」里。时长由流式层捕获的 startedAt / finishedAt 计算（组件出现时该阶段已结束）。
-export function WorkPhase({ items = [], startedAt, finishedAt, defaultOpen = false, className }) {
+export function WorkPhase({ items = [], startedAt, finishedAt, defaultOpen = false, className }: { className?: string; [key: string]: any }) {
   const [open, setOpen] = useState(defaultOpen);
   const duration = startedAt && finishedAt ? formatDuration(finishedAt - startedAt) : '';
 

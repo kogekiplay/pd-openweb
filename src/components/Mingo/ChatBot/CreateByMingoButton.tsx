@@ -23,7 +23,7 @@ const Con = styled.div`
   }
 `;
 
-export default function CreateByMingoButton({ className, children, onClick }) {
+export default function CreateByMingoButton({ className, children, onClick }: { className?: string; [key: string]: any }) {
   return (
     <Con className={className} onClick={onClick}>
       <i className="icon icon-auto_awesome"></i>

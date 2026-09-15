@@ -400,7 +400,7 @@ export default class Sort extends Component<any, any> {
     };
     this.handleChangeSorts([obj]);
   };
-  handleChangeXSort = (value, { controlId }) => {
+  handleChangeXSort = (value, { controlId }: { controlId?: string; [key: string]: any }) => {
     const { currentReport } = this.props;
     const { yaxisList, split = {}, displaySetup } = currentReport;
     const sorts = this.getSorts();
@@ -438,7 +438,7 @@ export default class Sort extends Component<any, any> {
       value && this.createSortItem(controlId, value);
     }
   };
-  handleChangeYSort = (value, { controlId }) => {
+  handleChangeYSort = (value, { controlId }: { controlId?: string; [key: string]: any }) => {
     const { reportType, currentReport } = this.props;
     const { yaxisList, split, xaxes, displaySetup } = currentReport;
     const sorts = this.getSorts();
@@ -488,7 +488,7 @@ export default class Sort extends Component<any, any> {
       value && this.createSortItem(controlId, value);
     }
   };
-  handleChangePivotTableSort = (value, { controlId }) => {
+  handleChangePivotTableSort = (value, { controlId }: { controlId?: string; [key: string]: any }) => {
     const sorts = this.getSorts();
 
     if (sorts.length) {

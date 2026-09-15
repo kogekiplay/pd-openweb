@@ -170,7 +170,7 @@ export default class SelectOtherFields extends Component<any, any> {
               projectId,
               appId: relationId,
               filterTypes,
-              onOk: ({ id, controlType, name, sourceType }) => {
+              onOk: ({ id, controlType, name, sourceType }: { name?: string; [key: string]: any }) => {
                 handleFieldClick({
                   nodeId: GLOBAL_VARIABLE,
                   fieldValueId: id,

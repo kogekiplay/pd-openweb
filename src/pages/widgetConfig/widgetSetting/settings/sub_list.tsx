@@ -153,7 +153,7 @@ export default function SubListSetting(props) {
     }
   }, [status.saveIndex]);
 
-  const getQueryConfigs = ({ isWorksheetQuery, worksheetId }) => {
+  const getQueryConfigs = ({ isWorksheetQuery, worksheetId }: { worksheetId?: string; [key: string]: any }) => {
     if (isWorksheetQuery) {
       worksheetAjax.getQueryBySheetId({ worksheetId }).then(res => {
         const formatSearchData = formatSearchConfigs(res);
@@ -253,7 +253,7 @@ export default function SubListSetting(props) {
       });
   }, [dataSource, needUpdate]);
 
-  const onOk = ({ createType, sheetId, appId, controlName }) => {
+  const onOk = ({ createType, sheetId, appId, controlName }: { appId?: string; [key: string]: any }) => {
     // 从空白创建时,创建一个占位dataSource
     if (createType === '1') {
       onChange({ dataSource: uuidv4() });

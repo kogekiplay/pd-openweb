@@ -62,7 +62,7 @@ const SideWrap = styled.div`
   }
 `;
 
-export default function sideWrap({ isMask = true, className, children, headerText, onClick, onClose }) {
+export default function sideWrap({ isMask = true, className, children, headerText, onClick, onClose }: { className?: string; [key: string]: any }) {
   return (
     <SideWrap className={className} onClick={onClick}>
       {isMask && <div className="mask" onClick={onClose}></div>}

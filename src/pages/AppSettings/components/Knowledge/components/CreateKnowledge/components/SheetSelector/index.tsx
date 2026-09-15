@@ -202,7 +202,7 @@ const SheetSelector = () => {
         <ScrollView className="sheetListScroll" options={{ overflow: { x: 'hidden' } }}>
           {selectedWorksheetList?.length > 0 ? (
             <div className="sheetListWrapper">
-              {selectedWorksheetList.map(({ worksheetId, worksheetName, worksheet }) => (
+              {selectedWorksheetList.map(({ worksheetId, worksheetName, worksheet }: { worksheetId?: string; [key: string]: any }) => (
                 <div key={worksheetId} className="sheetItemBox">
                   <div className="sheetItem">
                     <div className="worksheetIcon">

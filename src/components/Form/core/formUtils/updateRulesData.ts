@@ -9,7 +9,7 @@ export const updateRulesData = props => {
     getAvailableFilters,
     checkValueAvailable,
     updateDataPermission,
-    handleDynamicRules: ({ relateRuleType, formatData, from, recordId, searchConfig, handleChange }) => {
+    handleDynamicRules: ({ relateRuleType, formatData, from, recordId, searchConfig, handleChange }: { recordId?: string; [key: string]: any }) => {
       const dynamicKeys = Object.keys(relateRuleType.dynamic);
 
       Promise.all(

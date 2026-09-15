@@ -524,7 +524,7 @@ class RelateRecordCards extends Component<any, any> {
     if (!targetRowId) return;
 
     const valueObj = {};
-    cells.forEach(({ controlId, value }) => {
+    cells.forEach(({ controlId, value }: { controlId?: string; [key: string]: any }) => {
       if (controlId !== 'rowid') {
         valueObj[controlId] = value;
       }

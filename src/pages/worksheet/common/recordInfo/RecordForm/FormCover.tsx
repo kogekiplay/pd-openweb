@@ -263,7 +263,7 @@ export default function FormCover(props) {
     });
   };
 
-  const renderImage = ({ data, index, fromThumbnail = false }) => {
+  const renderImage = ({ data, index, fromThumbnail = false }: { index?: number; [key: string]: any }) => {
     const isVideo = videoReg(data);
     return (
       <CoverImgWrap

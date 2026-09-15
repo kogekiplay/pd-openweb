@@ -19,7 +19,7 @@ const Wrap = styled.div`
   background-color: var(--color-background-inverse);
 `;
 
-export default function DebugInfo({ appId, debugRoles = [] }) {
+export default function DebugInfo({ appId, debugRoles = [] }: { appId?: string; [key: string]: any }) {
   const setDebugRoles = () => {
     appManagementApi.setDebugRoles({ appId, roleIds: [] }).then(res => {
       if (res) {

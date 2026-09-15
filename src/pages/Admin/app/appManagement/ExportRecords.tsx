@@ -31,7 +31,7 @@ const TableColumn = styled(PageTableCon)`
 
 const PAGE_SIZE = 50;
 
-export default function ExportRecords({ projectId, type }) {
+export default function ExportRecords({ projectId, type }: { projectId?: string; [key: string]: any }) {
   const [{ pageIndex, loading, list, total, userInfo, appId }, setState] = useSetState({
     pageIndex: 1,
     loading: false,

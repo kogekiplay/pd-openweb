@@ -93,7 +93,7 @@ export default function SideContent(props) {
       if (group.length) {
         ['markedApps', 'externalApps', 'aloneApps'].includes(type)
           ? keys.push(`${type}/@INIT`)
-          : group.forEach(({ projectId, projectApps }) => !!projectApps.length && keys.push(`${type}/${projectId}`));
+          : group.forEach(({ projectId, projectApps }: { projectId?: string; [key: string]: any }) => !!projectApps.length && keys.push(`${type}/${projectId}`));
       }
     });
 
@@ -153,7 +153,7 @@ export default function SideContent(props) {
           const group = _.get(getFilterData(), type);
           return _.includes(['validProject', 'expireProject'], type)
             ? group &&
-                group.map(({ projectId, projectApps, projectName }, index: number) =>
+                group.map(({ projectId, projectApps, projectName }: { projectId?: string; [key: string]: any }, index: number) =>
                   projectApps.length > 0 ? (
                     <SideAppGroup
                       key={`${projectId}-${index}`}

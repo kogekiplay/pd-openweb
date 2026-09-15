@@ -152,7 +152,7 @@ function NodeDialogWrap(props) {
     });
   };
 
-  const getSubordinates = ({ id, pageIndex }) => {
+  const getSubordinates = ({ id, pageIndex }: { pageIndex?: number; [key: string]: any }) => {
     StructureController.pagedGetAccountList({
       projectId: Config.projectId,
       pageIndex: pageIndex,

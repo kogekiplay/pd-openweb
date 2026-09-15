@@ -95,7 +95,7 @@ const FilterTextWrap = styled.div`
 `;
 
 export default class FilterItemTexts extends React.Component<any, any> {
-  renderFilterItem({ item, index, key, spliceText }) {
+  renderFilterItem({ item, index, key, spliceText }: { index?: number; [key: string]: any }) {
     let { fromCondition } = this.props;
     return (
       <div key={`${item.id}--${key || index}`} className="pRight10 mTop6 flexBox renderFilterItem">

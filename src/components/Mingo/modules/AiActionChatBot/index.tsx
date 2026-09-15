@@ -820,7 +820,7 @@ function MingoContent(props, ref) {
           isLoadingMore={isLoadingMore}
           messages={filteredMessages}
           messageListHeader={messageListHeader}
-          openMessageLog={({ messageId, instanceId, workId }) => {
+          openMessageLog={({ messageId, instanceId, workId }: { instanceId?: string; workId?: string; [key: string]: any }) => {
             onOpenMessageLog({
               chatbotId,
               conversationId,

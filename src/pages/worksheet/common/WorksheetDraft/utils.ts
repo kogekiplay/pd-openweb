@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-export const updateDraftTotalInfo = ({ worksheetId, total, isAdd, isMinus, callback = () => {} }) => {
+export const updateDraftTotalInfo = ({ worksheetId, total, isAdd, isMinus, callback = () => {} }: { worksheetId?: string; [key: string]: any }) => {
   if (!window.draftTotalNumInfo) {
     window.draftTotalNumInfo = {};
   }

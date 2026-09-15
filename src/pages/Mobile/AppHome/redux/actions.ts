@@ -33,7 +33,7 @@ export const getMyApp = (projectId: string, isPullRefresh?) => dispatch => {
 };
 
 export const markedGroup =
-  ({ id, isMarked, groupType, projectId }) =>
+  ({ id, isMarked, groupType, projectId }: { projectId?: string; [key: string]: any }) =>
   (dispatch: AppDispatch, getState: GetState) => {
     homeAppAjax.markedGroup({ id, isMarked, groupType, projectId }).then(res => {
       if (res) {

@@ -128,7 +128,7 @@ const createActions = dispatch => ({
       ids,
     });
   },
-  clear: ({ appId, worksheetId }) => {
+  clear: ({ appId, worksheetId }: { appId?: string; worksheetId?: string; [key: string]: any }) => {
     worksheetAjax
       .removeWorksheetRows({
         appId,
@@ -443,7 +443,7 @@ export default function WorkSheetTrash(props) {
                     }}
                   />
                 )}
-                renderRowHead={({ className, style, rowIndex }) => (
+                renderRowHead={({ className, style, rowIndex }: { className?: string; [key: string]: any }) => (
                   <RowHead
                     isTrash
                     canSelectAll

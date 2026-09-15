@@ -211,7 +211,7 @@ function getValueToShow({ formData, reference, control, envIsMobile, envIsDisabl
   return result;
 }
 
-function EnvValueShow({ worksheetId, recordId, control, data }) {
+function EnvValueShow({ worksheetId, recordId, control, data }: { worksheetId?: string; recordId?: string; [key: string]: any }) {
   const [loading, setLoading] = useState(control.type === 34);
   const [rows, setRows] = useState([]);
   useEffect(() => {

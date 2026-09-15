@@ -108,7 +108,7 @@ const AttachmentItem = function AttachmentItem({ attachment = {} }) {
   );
 };
 
-const Attachments = ({ disabled, scanId, scanInfo, defaultAttachments }) => {
+const Attachments = ({ disabled, scanId, scanInfo, defaultAttachments }: { disabled?: boolean; [key: string]: any }) => {
   const cache = useRef({});
   const [attachments, setAttachments] = useState(defaultAttachments);
   const control = get(scanInfo, ['control']);

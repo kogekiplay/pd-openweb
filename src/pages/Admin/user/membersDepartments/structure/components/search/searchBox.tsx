@@ -114,7 +114,7 @@ class SearchBox extends Component<any, any> {
             },
           );
         }}
-        onDepartmentClick={({ id: departmentId, name }) => {
+        onDepartmentClick={({ id: departmentId, name }: { name?: string; [key: string]: any }) => {
           this.input.value = name;
           this.setState(
             {

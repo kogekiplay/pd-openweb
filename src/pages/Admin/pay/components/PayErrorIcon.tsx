@@ -13,7 +13,7 @@ const ErrorIconWrap = styled.div`
   }
 `;
 
-export default ({ className }) => {
+export default ({ className }: { className?: string; [key: string]: any }) => {
   return (
     <ErrorIconWrap className={className}>
       <i className="icon icon-account_balance_wallet Font50 textDisabled" />

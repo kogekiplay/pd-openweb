@@ -81,7 +81,7 @@ const DropIcon = styled.span`
  * @param {boolean} disabled - 是否禁用按钮
  * @param {string} className - 附加的CSS类名
  */
-const GenericDropdownButton = ({ buttonText, icon, dropdownItems, onClick, disabled, className }) => {
+const GenericDropdownButton = ({ buttonText, icon, dropdownItems, onClick, disabled, className }: { icon?: string; disabled?: boolean; className?: string; [key: string]: any }) => {
   const [menuVisible, setMenuVisible] = useState(false);
   const conRef = useRef<any>(undefined);
 

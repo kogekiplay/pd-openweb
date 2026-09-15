@@ -3,7 +3,7 @@ import cx from 'classnames';
 import { RelateDetail } from 'src/pages/widgetConfig/styled';
 import { toEditWidgetPage } from '../../util';
 
-export default function RelateSheetInfo({ name, id }) {
+export default function RelateSheetInfo({ name, id }: { name?: string; [key: string]: any }) {
   return (
     <RelateDetail>
       <i className="icon-link_record Font16 textTertiary"></i>

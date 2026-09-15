@@ -212,10 +212,10 @@ export default function ConfigureControl(props) {
   // 子表字段增删改序后，controlssorts 必须跟着 showControls 一起更新，否则渲染时列顺序会错乱
   const updateControlsWithSorts = nextControls => ({
     ...handleAdvancedSettingChange(data, {
-      controlssorts: JSON.stringify(nextControls.map(({ controlId }) => controlId)),
+      controlssorts: JSON.stringify(nextControls.map(({ controlId }: { controlId?: string; [key: string]: any }) => controlId)),
     }),
     relationControls: nextControls,
-    showControls: nextControls.map(({ controlId }) => controlId),
+    showControls: nextControls.map(({ controlId }: { controlId?: string; [key: string]: any }) => controlId),
   });
 
   const addControl = control => {
@@ -409,7 +409,7 @@ export default function ConfigureControl(props) {
             setVisible({ selectCascadeDataSourceVisible: false });
           }}
           globalSheetInfo={globalSheetInfo}
-          onOk={({ sheetId, viewId }) => {
+          onOk={({ sheetId, viewId }: { viewId?: string; [key: string]: any }) => {
             const defaultData = DEFAULT_DATA.CASCADER;
             setVisible({ selectCascadeDataSourceVisible: false });
             if (!sheetId) {
@@ -441,7 +441,7 @@ export default function ConfigureControl(props) {
             onSortEnd={nextControls => {
               onChange(updateControlsWithSorts(nextControls));
             }}
-            renderItem={({ item, index, DragHandle }) => (
+            renderItem={({ item, index, DragHandle }: { index?: number; [key: string]: any }) => (
               <SortableItem
                 item={item}
                 DragHandle={DragHandle}

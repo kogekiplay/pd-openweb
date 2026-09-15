@@ -21,7 +21,7 @@ export default props => {
   const { updateSource, processVariables } = props;
   const list = processVariables.filter(item => item.processVariableType === 0);
 
-  const addParameters = ({ type, dataSource, controlId }) => {
+  const addParameters = ({ type, dataSource, controlId }: { controlId?: string; [key: string]: any }) => {
     let defaultParameters = getDefaultParameters();
     let index = 0;
 
@@ -45,7 +45,7 @@ export default props => {
     updateSource({ processVariables });
   };
 
-  const updateControls = (action: string, value, { controlId, type, dataSource }, isBlur?) => {
+  const updateControls = (action: string, value, { controlId, type, dataSource }: { controlId?: string; [key: string]: any }, isBlur?) => {
     processVariables.forEach(item => {
       if (item.controlId === controlId) {
         item[action] =

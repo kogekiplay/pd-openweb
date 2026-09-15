@@ -115,7 +115,7 @@ export const useKnowledgeList = (appId: string) => {
   /**
    * 更新
    */
-  const updateItem = ({ id, name, description }) => {
+  const updateItem = ({ id, name, description }: { name?: string; [key: string]: any }) => {
     setList(prev => prev.map(item => (item.id === id ? { ...item, name, description } : item)));
   };
 

@@ -171,7 +171,7 @@ export default class Push extends Component<any, any> {
   /**
    * 检查是否报错
    */
-  checkHasError({ pushType, content, appId, selectNodeId, title, viewId }) {
+  checkHasError({ pushType, content, appId, selectNodeId, title, viewId }: { appId?: string; viewId?: string; [key: string]: any }) {
     if (_.includes([PUSH_TYPE.ALERT, PUSH_TYPE.LINK], pushType) && !content.trim()) {
       alert(pushType === PUSH_TYPE.ALERT ? _l('提示内容不允许为空') : _l('链接不允许为空'), 2);
       return true;

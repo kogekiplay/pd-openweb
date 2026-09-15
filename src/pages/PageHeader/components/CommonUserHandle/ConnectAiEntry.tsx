@@ -42,7 +42,7 @@ const ConnectAiButton = styled.div`
   }
 `;
 
-export default function ConnectAiEntry({ projectId }) {
+export default function ConnectAiEntry({ projectId }: { projectId?: string; [key: string]: any }) {
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [initialPersonalTokens, setInitialPersonalTokens] = useState(null);

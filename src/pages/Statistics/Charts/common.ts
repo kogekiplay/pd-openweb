@@ -760,7 +760,7 @@ export const getScopeRuleColor = (value, controlMinAndMax = {}, scopeRules, empt
   return result;
 };
 
-export const getStyleColor = ({ value = 0, controlMinAndMax, rule, controlId, record = {}, emptyShowType }) => {
+export const getStyleColor = ({ value = 0, controlMinAndMax, rule, controlId, record = {}, emptyShowType }: { controlId?: string; [key: string]: any }) => {
   const { model, applyValue } = rule;
 
   if (model === 1 && isApplyStyle(applyValue, record.key)) {

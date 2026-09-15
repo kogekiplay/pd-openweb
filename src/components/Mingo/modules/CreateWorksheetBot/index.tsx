@@ -431,7 +431,7 @@ function MingoContent(props, ref) {
                 appName={appName}
                 appDescription={appDescription}
                 worksheets={worksheets}
-                onSelect={({ name }) => handleSend(name)}
+                onSelect={({ name }: { name?: string; [key: string]: any }) => handleSend(name)}
               />
             </Fragment>
           )

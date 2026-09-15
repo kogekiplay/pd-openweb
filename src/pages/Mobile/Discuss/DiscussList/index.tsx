@@ -102,7 +102,7 @@ class DiscussList extends Component<any, any> {
     this.getSheetDiscussion(1, true);
     if (refreshDiscussCount) refreshDiscussCount();
   };
-  openPersonalInfoPopup = ({ accountId }) => {
+  openPersonalInfoPopup = ({ accountId }: { accountId?: string; [key: string]: any }) => {
     this.setState({
       personalInfoVisible: true,
       accountId,

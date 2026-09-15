@@ -541,7 +541,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
       navigateTo(`/app/${appId}/${groupId}/${firstSheetId}/${firstViewId}`);
     }
   };
-  renderMenu = ({ type, icon, text, action, ...rest }) => {
+  renderMenu = ({ type, icon, text, action, ...rest }: { icon?: string; [key: string]: any }) => {
     const { data } = this.state;
     const { projectId, isPassword, permissionType, license } = data;
 
@@ -605,7 +605,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
       ...rest,
     });
   };
-  renderMenuHtml = ({ type, icon, text, action, ...rest }) => {
+  renderMenuHtml = ({ type, icon, text, action, ...rest }: { icon?: string; [key: string]: any }) => {
     const { appId } = this.ids;
     const { projectId, sourceType, permissionType, isPassword, isLock, license = {} } = this.state.data;
     const featureType = getFeatureStatus(projectId, rest.featureId);
@@ -934,7 +934,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
                     }
                     onClickAwayExceptions={['.appLicenseWrap', '.mui-dialog-container']}
                   >
-                    {list.map(({ type, icon, text, action, ...rest }) => {
+                    {list.map(({ type, icon, text, action, ...rest }: { icon?: string; [key: string]: any }) => {
                       return this.renderMenu({
                         type,
                         icon,

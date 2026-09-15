@@ -59,7 +59,7 @@ function getTryTryList(oldIds = [], num = 3) {
   return result;
 }
 
-export default function TryTry({ data, className, onSelect = () => {}, onFocus = () => {} }) {
+export default function TryTry({ data, className, onSelect = () => {}, onFocus = () => {} }: { className?: string; [key: string]: any }) {
   const isRecommend = !!data;
   const [tryTryList, setTryTryList] = useState(data ? data.map(item => ({ text: item })) : getTryTryList());
   return (

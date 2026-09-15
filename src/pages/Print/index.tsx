@@ -476,7 +476,7 @@ class PrintForm extends React.Component<any, any> {
     });
   };
 
-  setApprovalList = ({ list, rowId }, cb) => {
+  setApprovalList = ({ list, rowId }: { rowId?: string; [key: string]: any }, cb) => {
     this.setState(preState => {
       const { approval, approvalCheckedMap, immediateGetApprovalDetail } = preState;
       const nextApproval = _.cloneDeep(approval);

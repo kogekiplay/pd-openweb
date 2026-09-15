@@ -3,7 +3,7 @@ import worksheetAjax from 'src/api/worksheet';
 import type { AppDispatch, GetState } from 'src/redux/types';
 
 export const getSheetDiscussion =
-  ({ worksheetId, rowId, pageIndex, entityType }, callback) =>
+  ({ worksheetId, rowId, pageIndex, entityType }: { worksheetId?: string; rowId?: string; pageIndex?: number; [key: string]: any }, callback) =>
   dispatch => {
     const sourceType = rowId ? 8 : 7;
     const sourceId = rowId ? `${worksheetId}|${rowId}` : worksheetId;
@@ -57,7 +57,7 @@ export const removeSheetDiscussion = (discussionId, rowId: string) => (dispatch:
 };
 
 export const getSheetLogs =
-  ({ worksheetId, rowId, pageIndex }, callback) =>
+  ({ worksheetId, rowId, pageIndex }: { worksheetId?: string; rowId?: string; pageIndex?: number; [key: string]: any }, callback) =>
   dispatch => {
     worksheetAjax
       .getLogs({
@@ -80,7 +80,7 @@ export const getSheetLogs =
   };
 
 export const getSheetAttachments =
-  ({ worksheetId, rowId }, callback) =>
+  ({ worksheetId, rowId }: { worksheetId?: string; rowId?: string; [key: string]: any }, callback) =>
   dispatch => {
     const sourceId = rowId ? `${worksheetId}|${rowId}` : worksheetId;
     discussionAjax

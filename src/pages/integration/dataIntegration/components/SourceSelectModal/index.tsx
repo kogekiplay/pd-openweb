@@ -93,7 +93,7 @@ const NoDataWrapper = styled.div`
   justify-content: center;
 `;
 
-export default function SourceSelectModal({ projectId, isCreateConnector, onChange, onClose, roleType }) {
+export default function SourceSelectModal({ projectId, isCreateConnector, onChange, onClose, roleType }: { projectId?: string; [key: string]: any }) {
   const [currentTab, setCurrentTab] = useState(SOURCE_FROM_TYPE.COMMON);
   const [searchKeyWords, setSearchKeyWords] = useState('');
   const [dataSourceList, setDataSourceList] = useState([]);

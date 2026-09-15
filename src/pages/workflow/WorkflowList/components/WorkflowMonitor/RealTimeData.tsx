@@ -69,7 +69,7 @@ export default class RealTimeData extends PureComponent<any, any> {
       });
   };
 
-  renderJustifyInfo = ({ type, name }) => {
+  renderJustifyInfo = ({ type, name }: { name?: string; [key: string]: any }) => {
     const { projectId } = this.props;
     let { realTimeData = {}, warningValue, notifiers = [], noticeTypes } = this.state;
     let isWarning = notifiers.length;

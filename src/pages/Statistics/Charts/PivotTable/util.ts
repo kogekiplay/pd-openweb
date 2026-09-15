@@ -367,7 +367,7 @@ export const getCompiledStyleColor = ({
   controlId,
   record = {},
   emptyShowType,
-}) => {
+}: { controlId?: string; [key: string]: any }) => {
   const { model, applyValue } = rule;
 
   if (model === 1 && isApplyStyle(applyValue, record.key)) {

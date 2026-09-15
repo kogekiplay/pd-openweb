@@ -262,7 +262,7 @@ function TableComp(props) {
     rowCount = pageSize;
   }
 
-  const renderRowHead = ({ className, style, rowIndex, row, isColumnPopup = false }) => {
+  const renderRowHead = ({ className, style, rowIndex, row, isColumnPopup = false }: { className?: string; [key: string]: any }) => {
     const isSavedRecord = !!find(originalRecords, { rowid: row.rowid });
     const canRemoveRelation = allowRemoveRelation || !isSavedRecord;
     return (
@@ -393,7 +393,7 @@ function TableComp(props) {
     !!recordId &&
     records.length > 0;
 
-  const renderFooterCell = ({ columnIndex, className, style }) => {
+  const renderFooterCell = ({ columnIndex, className, style }: { className?: string; [key: string]: any }) => {
     const summaryControl = [{ type: 'summaryhead' }].concat(columns)[columnIndex];
     return (
       <SummaryCell
@@ -404,7 +404,7 @@ function TableComp(props) {
         summaryValue={summaryControl && rowsSummary.values[summaryControl.controlId]}
         rows={records}
         selectedIds={selectedRowIds}
-        changeWorksheetSheetViewSummaryType={({ controlId, value }) =>
+        changeWorksheetSheetViewSummaryType={({ controlId, value }: { controlId?: string; [key: string]: any }) =>
           changeRelateRecordSummaryType({ controlId, value })
         }
       />

@@ -229,7 +229,7 @@ class Actions {
     });
   };
 
-  saveFilter = ({ appId, worksheetId, filter }, cb = () => {}) => {
+  saveFilter = ({ appId, worksheetId, filter }: { appId?: string; worksheetId?: string; [key: string]: any }, cb = () => {}) => {
     const isNew = !filter.id || filter.id.startsWith('new');
     const items = formatForSave(filter);
     worksheetAjax
@@ -270,7 +270,7 @@ class Actions {
       });
   };
 
-  deleteFilter = ({ appId, filter }) => {
+  deleteFilter = ({ appId, filter }: { appId?: string; [key: string]: any }) => {
     worksheetAjax
       .deleteWorksheetFilter({
         appId,

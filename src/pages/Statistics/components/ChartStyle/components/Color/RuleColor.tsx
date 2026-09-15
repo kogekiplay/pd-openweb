@@ -31,7 +31,7 @@ const MemoColorPicker = props => {
   );
 };
 
-const renderSortableItem = ({ DragHandle, index, item, otherProps }) => {
+const renderSortableItem = ({ DragHandle, index, item, otherProps }: { index?: number; [key: string]: any }) => {
   const { rulesLength, isPercent } = otherProps;
   const ruleIndex = index;
   const { type, and, min, max, value, color } = item;

@@ -146,7 +146,7 @@ const WithoutRowsWrap = styled.div`
   background-color: var(--color-background-secondary);
 `;
 
-export function getCardColNum({ width, isMobile, enumDefault }) {
+export function getCardColNum({ width, isMobile, enumDefault }: { enumDefault?: number; [key: string]: any }) {
   let colNum = 1;
 
   if (!isMobile || enumDefault === 1) {

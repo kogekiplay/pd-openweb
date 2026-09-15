@@ -109,7 +109,7 @@ function getTip(worksheetId: string, status) {
   }
 }
 
-const StatusIcon = ({ status, worksheetId }) => {
+const StatusIcon = ({ status, worksheetId }: { worksheetId?: string; [key: string]: any }) => {
   return (
     <i
       className={`icon ${getIcon(status, worksheetId).icon}`}
