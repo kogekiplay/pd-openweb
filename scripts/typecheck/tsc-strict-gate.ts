@@ -76,7 +76,12 @@ function allCompiledFiles() {
   const res = spawnSync('git', ['ls-files', 'src', 'types'], { cwd: ROOT, encoding: 'utf8' });
   return (res.stdout || '')
     .split('\n')
-    .filter(f => /\.tsx?$/.test(f) && !f.startsWith('src/library/') && !/\.spec\.js$/.test(f));
+    // 【两个后缀都要排】spec 是测试脚手架不是产品代码，口径要和差分门禁
+    //（tsconfig.gate.json 的 exclude）一致。2026-09-15 把 69 个 spec 改成 .ts
+    // 时这里还只排 .spec.js，它们整批混进来，把「strict-clean 605/4252」
+    // 一夜刷成「674/4321」——进度数字凭空虚高 69，而产品代码一行没改。
+    // 它们由 tsconfig.tools.json 的零容忍门禁负责。
+    .filter(f => /\.tsx?$/.test(f) && !f.startsWith('src/library/') && !/\.spec\.(js|ts)$/.test(f));
 }
 
 if (process.env.SKIP_TYPECHECK === '1') {

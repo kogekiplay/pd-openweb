@@ -16,6 +16,8 @@
 {
   "compilerOptions": {
     "target": "ES2022",
+    // 【故意不带 DOM】工具链跑在 Node 里。spec 模拟浏览器环境用的那几个全局，
+    // 走 types/spec-globals.d.ts 一处声明，理由写在那个文件头。
     "lib": ["ES2022"],
 
     // 工具链是 CommonJS：全部 require/module.exports。
@@ -46,7 +48,15 @@
     "tools/**/*.ts",
     "CI/**/*.ts",
     ".prettierrc.ts",
-    "eslint.config.ts"
+    "eslint.config.ts",
+    // src 下的 spec 也归这里：它们【从不静态 import 被测模块】，一律用
+    // spec-harness 的 transformFileSync 动态载入，所以是自包含的 Node 脚本，
+    // 不需要 src 那套 DOM lib / webpack alias。根 tsconfig 里对应地把它们排除掉，
+    // 否则 69 个 spec 的诊断会一次性挤进差分门禁的基线，之后再也分不清来源。
+    "src/**/*.spec.ts",
+    // spec 模拟浏览器环境用的全局（window / location / document / md），
+    // 有界放宽，理由见该文件头
+    "types/spec-globals.d.ts"
   ],
   "exclude": ["node_modules"]
 }

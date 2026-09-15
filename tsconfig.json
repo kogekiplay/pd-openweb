@@ -68,5 +68,7 @@
 
   // src/library 是预打包的压缩产物（applibrary_v2.js 等单行数 MB），
   // 与 jsconfig.json 原有 exclude 保持一致。
-  "exclude": ["node_modules", "src/library"]
+  // src/library 是预打包的压缩产物（applibrary_v2.js 等单行数 MB）。
+  // *.spec.ts 交给 tsconfig.tools.json 的零容忍门禁管，理由见那边的注释。
+  "exclude": ["node_modules", "src/library", "src/**/*.spec.ts"]
 }

@@ -31,5 +31,9 @@
     "incremental": true,
     "tsBuildInfoFile": "node_modules/.cache/tsc-gate/gate.tsbuildinfo"
   },
-  "exclude": ["node_modules", "src/library", "**/*.spec.js"]
+  // spec 一律排除：它们由 tsconfig.tools.json 的零容忍门禁管。
+  // 【两个后缀都要写】2026-09-15 把 69 个 spec 从 .js 改成 .ts 时，这里还只排了
+  // .spec.js，结果它们整批进了差分门禁，一次多出 448 条诊断 / 155 个新 key，
+  // 看着像代码写坏了，其实一条都不是。
+  "exclude": ["node_modules", "src/library", "**/*.spec.js", "**/*.spec.ts"]
 }
