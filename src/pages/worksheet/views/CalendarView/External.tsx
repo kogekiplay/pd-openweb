@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Draggable } from '@fullcalendar/interaction';
+import { Draggable } from '@fullcalendar/react/interaction';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
