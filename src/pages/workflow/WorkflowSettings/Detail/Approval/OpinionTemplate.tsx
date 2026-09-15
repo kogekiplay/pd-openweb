@@ -35,7 +35,7 @@ const Btn = styled.div`
   }
 `;
 
-export default ({ title, description, keys, opinionTemplate, onSave, onClose }) => {
+export default ({ title, description, keys, opinionTemplate, onSave, onClose }: { title?: string; [key: string]: any }) => {
   const [inputType, setType] = useState(opinionTemplate.inputType);
   const [data, setData] = useState(opinionTemplate.opinions);
 

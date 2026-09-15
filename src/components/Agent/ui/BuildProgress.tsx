@@ -347,7 +347,7 @@ function iterMeta(stepId, iter) {
 
 // 顶层简单步骤行（创建应用 / 创建分组）：标题 + 值/准备中。
 // 交互（建应用 / 建分组进行中）时前导槽显示 ••• loading 反馈；完成后槽位归空。
-function SimpleRow({ title, status, value }) {
+function SimpleRow({ title, status, value }: { title?: string; [key: string]: any }) {
   const running = status === 'running';
   const pending = !status || status === 'pending';
 
@@ -373,7 +373,7 @@ function PrepRow({ label }) {
 }
 
 // loop 步骤：标题行（可折叠）+ 子项列表。子项平铺、不再下钻一层。
-function LoopStep({ stepId, title, cur }) {
+function LoopStep({ stepId, title, cur }: { title?: string; [key: string]: any }) {
   const iters = Array.isArray(cur.iterations) ? cur.iterations : [];
   const total = cur.total || iters.length;
   const status = cur.status || 'pending';

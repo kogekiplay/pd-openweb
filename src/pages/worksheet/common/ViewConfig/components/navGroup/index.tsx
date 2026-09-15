@@ -369,7 +369,7 @@ export default function NavGroup(params) {
     );
   };
 
-  const renderAdd = ({ width, comp }) => {
+  const renderAdd = ({ width, comp }: { width?: number; [key: string]: any }) => {
     return (
       <AddCondition
         renderInParent

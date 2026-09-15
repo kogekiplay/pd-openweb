@@ -207,7 +207,7 @@ function lenOf(v) {
 }
 
 // 顶层简单步骤行（非 loop，无下钻）：空前导占位 + 标题 + 值（设计稿无完成对勾）
-function SimpleRow({ title, value }) {
+function SimpleRow({ title, value }: { title?: string; [key: string]: any }) {
   return (
     <LoopHeader>
       <LeadBox />
@@ -243,7 +243,7 @@ function ViewRow({ name, viewCount, actionCount }: { name?: string; [key: string
 }
 
 // 可收起的循环块：标题（模块名）前导折叠箭头，可点击收起/展开自身子项列表，默认展开。
-function CollapsibleLoop({ title, count, children }) {
+function CollapsibleLoop({ title, count, children }: { title?: string; [key: string]: any }) {
   const [open, setOpen] = useState(true);
 
   return (
@@ -263,7 +263,7 @@ function CollapsibleLoop({ title, count, children }) {
 }
 
 // 通用「标题 + 名称列表」循环块（角色 / 自定义页面 / 工作台 / 工作流——只展示名称，无下钻明细）。
-function NameLoop({ title, items }) {
+function NameLoop({ title, items }: { title?: string; [key: string]: any }) {
   return (
     <CollapsibleLoop title={title} count={items.length}>
       {items.map((item, index: number) => (

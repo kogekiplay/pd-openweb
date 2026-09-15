@@ -4,7 +4,7 @@ import { VIEW_CONFIG_RECORD_CLICK_ACTION } from 'worksheet/constants/enum';
 import { ALL_SYS } from 'src/pages/widgetConfig/config/widget';
 import CustomBtnCon from '../CustomBtnCon';
 
-export function ToggleHeader({ open, title, count, onClick }) {
+export function ToggleHeader({ open, title, count, onClick }: { title?: string; [key: string]: any }) {
   return (
     <div className="headerCon mTop24 Hand" onClick={onClick}>
       <Icon icon={open ? 'arrow-down' : 'arrow-right-tip'} className="Font14 textTertiary" />
@@ -64,7 +64,7 @@ export function CustomActionPanel({
   hideUnavailable,
   onToggleHideUnavailable,
   customBtnProps,
-}) {
+}: { title?: string; [key: string]: any }) {
   return (
     <div className="customBtnBox">
       {inlineHeader ? (

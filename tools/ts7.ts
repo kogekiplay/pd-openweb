@@ -177,4 +177,117 @@ function usageFits(fnNode: any, paramName: string, type: string): boolean {
   return ok;
 }
 
-module.exports = { ROOT, SRC, openProject, writeSource, posToLineCol, usageFits, literalPrimitive, MEMBERS };
+/**
+ * ── 调用点证据（两个 codemod 共用）────────────────────────────────────────
+ * 扫全程序的调用点，按形参身份收集「实参实际是什么类型」。
+ *
+ * 【形参身份用 `path|index`】TS 7 里 getResolvedSignature().getParameters() 拿到的
+ * 形参声明是个【惰性句柄】，自有键只有 { canonicalProject, kind, path, index }，
+ * name / pos / end / forEachChild 全是 undefined。但 path 是文件路径、index 是节点
+ * 在该文件里的下标，而【物化后的节点带同一个 index】—— 所以两边都不用物化。
+ * （先后试过「声明 pos + 形参下标」和「形参标识符的 end」，都匹配不上，见
+ *   codemod-callsite-types.ts 的文件头。）
+ *
+ * 解构形参另外按属性名收一份：`path|index|propName`。调用点传的是对象字面量时，
+ * 把每个属性的值类型记到对应的绑定名下 —— 这是 title / width 那类误判唯一的信号源
+ *（DeleteConfirm({ title: <span/> })、renderDropdownOverlay({ width: '100%' })，
+ *  函数体里看不出任何问题）。
+ */
+interface CallSiteEvidence {
+  /** `path|index` 或 `path|index|propName` -> 实参类型集合 */
+  types: Map<string, Set<string>>;
+  /** 出现过 any 实参的键：这个位置本来就什么都可能进来，别下结论 */
+  dirty: Set<string>;
+  counts: Map<string, number>;
+}
+
+function callSiteKey(filePath: string, nodeIndex: number, prop?: string): string {
+  const base = `${String(filePath).toLowerCase()}|${nodeIndex}`;
+  return prop === undefined ? base : `${base}|${prop}`;
+}
+
+function collectCallSiteEvidence(project: OpenedProject): CallSiteEvidence {
+  const checker = project.checker;
+  const types = new Map<string, Set<string>>();
+  const dirty = new Set<string>();
+  const counts = new Map<string, number>();
+
+  const add = (k: string, node: any) => {
+    counts.set(k, (counts.get(k) || 0) + 1);
+    let t = '';
+    try {
+      t = checker.typeToString(checker.getTypeAtLocation(node));
+    } catch {
+      t = 'any';
+    }
+    if (!t || t === 'any' || /\bany\b/.test(t)) {
+      dirty.add(k);
+      return;
+    }
+    if (!types.has(k)) types.set(k, new Set());
+    types.get(k)!.add(t);
+  };
+
+  project.eachSrcFile(({ node }: any) => {
+    (function walk(n: any) {
+      if (is.isCallExpression(n) && n.arguments && n.arguments.length) {
+        let params: any[] | null = null;
+        try {
+          const sig = checker.getResolvedSignature(n);
+          params = sig ? sig.getParameters() : null;
+        } catch {
+          params = null;
+        }
+        if (params && params.length) {
+          n.arguments.forEach((arg: any, i: number) => {
+            const pdecl = params![i] && params![i].valueDeclaration;
+            if (!pdecl || !pdecl.path || pdecl.index === undefined) return;
+            if (!String(pdecl.path).toLowerCase().startsWith(SRC.toLowerCase())) return;
+            add(callSiteKey(pdecl.path, pdecl.index), arg);
+            // 实参是对象字面量：按属性名再收一份，给解构形参用
+            if (is.isObjectLiteralExpression(arg) && arg.properties) {
+              for (const prop of arg.properties) {
+                if (!is.isPropertyAssignment(prop) || !prop.name || !is.isIdentifier(prop.name)) continue;
+                add(callSiteKey(pdecl.path, pdecl.index, prop.name.text), prop.initializer);
+              }
+            }
+          });
+        }
+      }
+      n.forEachChild(walk);
+    })(node);
+  });
+
+  return { types, dirty, counts };
+}
+
+/**
+ * 调用点传进来的东西，和我们打算写的类型相容吗？
+ * 【有 any 就放行】不是"没证据就拦"，而是"有反证才拦" —— 这一层是【否决权】，
+ * 不是准入条件；准入由名字共识或调用点推断负责。
+ */
+function callSiteFits(ev: CallSiteEvidence, key: string, type: string): boolean {
+  if (ev.dirty.has(key)) return true;
+  const set = ev.types.get(key);
+  if (!set || !set.size) return true;
+  for (const t of set) {
+    // 字面量类型（'foo' / 42 / true）折回它的原始类型再比
+    const norm = /^(['"`]).*\1$/.test(t) ? 'string' : /^-?\d+(\.\d+)?$/.test(t) ? 'number' : t === 'true' || t === 'false' ? 'boolean' : t;
+    if (norm !== type) return false;
+  }
+  return true;
+}
+
+module.exports = {
+  ROOT,
+  SRC,
+  openProject,
+  writeSource,
+  posToLineCol,
+  usageFits,
+  literalPrimitive,
+  MEMBERS,
+  collectCallSiteEvidence,
+  callSiteKey,
+  callSiteFits,
+};

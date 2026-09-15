@@ -48,7 +48,15 @@
 const path = require('path');
 const is = require('typescript/unstable/ast/is');
 const { SyntaxKind: SK } = require('typescript/unstable/ast');
-const { ROOT, openProject, usageFits, writeSource } = require('./ts7.ts');
+const {
+  ROOT,
+  callSiteFits,
+  callSiteKey,
+  collectCallSiteEvidence,
+  openProject,
+  usageFits,
+  writeSource,
+} = require('./ts7.ts');
 
 const APPLY = !process.argv.includes('--list');
 const onlyArg = process.argv.find((a: string) => a.startsWith('--only='));
@@ -99,15 +107,10 @@ const EXCLUDE = new Set([
   //              比较。逐点用法校验只看成员访问和展开，看不到比较操作，挡不住它。
   'direction',
   'unit',
-  //   title      共识 string，但对话框组件（DeleteConfirm 等）的 title 接受 ReactNode，
-  //              调用方传 <span>…</span>。这类反例的信号在【调用点】不在函数体，
-  //              逐点用法校验（只看函数体里的成员访问和展开）看不到它。
-  'title',
-  //   width      共识 number（15 条证据 100%），但 CSS 宽度是字符串：
-  //              renderDropdownOverlay({ width: '100%' })。和 title 一样，
-  //              信号在【调用点】不在函数体，逐点用法校验看不到。
-  //              —— 这两条说明：要再往下推，下一步该给校验加"看调用点"的能力。
-  'width',
+  // 【title 和 width 已经从这里【撤掉】】它们当初进名单是因为"信号在调用点不在函数体"
+  // （DeleteConfirm({ title: <span/> })、renderDropdownOverlay({ width: '100%' })）。
+  // 现在 callSiteFits 能看调用点了，这两个交给它【按点】否决，
+  // 而不是把整个名字丢掉 —— 那会连同其余几十处正确的一起丢。
 ]);
 
 /**
@@ -125,6 +128,10 @@ const EXCLUDE = new Set([
 // MEMBERS / literalPrimitive / usageFits 已收进 tools/ts7.ts，两个 codemod 共用。
 
 const project = openProject('tsconfig.strictprobe.json');
+
+// 调用点证据：用来【否决】那些「名字共识对、但这一处调用方传的根本不是那个类型」的标注。
+// 这是 title / width 那类误判唯一的信号源 —— 函数体里看不出任何问题。
+const callSites = collectCallSiteEvidence(project);
 
 // ── 第一遍：收集全仓已有的「名字 -> 类型」证据 ──────────────────────────
 // 两个来源，等权计数：
@@ -210,7 +217,7 @@ for (const [name, counts] of evidence) {
 // ── 第二遍：按 TS7006 诊断定位待标注的形参 ────────────────────────────────
 type Target = { fileName: string; text: string; pos: number; name: string; type: string; openParenAt?: number };
 const targets: Target[] = [];
-const skip = { noConsensus: 0, usageMismatch: 0, rest: 0, notFound: 0 };
+const skip = { noConsensus: 0, usageMismatch: 0, callSiteMismatch: 0, rest: 0, notFound: 0 };
 
 const diags = project.program
   .getSemanticDiagnostics()
@@ -260,6 +267,11 @@ for (const [fileName, ds] of byFile) {
       skip.usageMismatch += 1;
       continue;
     }
+    // 调用点传进来的和共识类型对不上也跳过（函数体看不到的那一类）
+    if (p.index !== undefined && !callSiteFits(callSites, callSiteKey(fileName, p.index), c.type)) {
+      skip.callSiteMismatch += 1;
+      continue;
+    }
 
     // 插入点：questionToken 之后（写在它之前就是 TS17019）
     const pos = p.questionToken ? p.questionToken.end : p.name.end;
@@ -291,7 +303,7 @@ for (const [fileName, ds] of byFile) {
 // ── 第三遍：解构形参（TS7031）──────────────────────────────────────────────
 type DestructureTarget = { fileName: string; text: string; pos: number; names: string[]; type: string };
 const destructures: DestructureTarget[] = [];
-const dskip = { annotated: 0, noConsensus: 0, usageMismatch: 0, tooManyBindings: 0 };
+const dskip = { annotated: 0, noConsensus: 0, usageMismatch: 0, callSiteMismatch: 0, tooManyBindings: 0 };
 
 const d7031 = project.program
   .getSemanticDiagnostics()
@@ -345,6 +357,12 @@ for (const [fileName, ends] of byFile7031) {
           dskip.usageMismatch += 1;
           continue;
         }
+        // 调用点按属性名否决：DeleteConfirm({ title: <span/> }) 这种，
+        // 函数体里 title 只是被渲染，看不出任何问题，唯一的信号在调用点。
+        if (n.index !== undefined && !callSiteFits(callSites, callSiteKey(fileName, n.index, bname), c.type)) {
+          dskip.callSiteMismatch += 1;
+          continue;
+        }
         props.push(`${bname}?: ${c.type}`);
         picked.push(bname);
       }
@@ -392,7 +410,7 @@ console.log(
   `\n${APPLY ? '已标' : '可标'} ${targets.length} 处，涉及 ${fileCount} 个文件；` +
     `其中补括号的单参箭头 ${targets.filter(t => t.openParenAt !== undefined).length} 处；\n` +
     `另标解构形参 ${destructures.length} 处（覆盖 ${[...dNames.values()].reduce((a, b) => a + b, 0)} 个绑定名）；` +
-    `跳过：名字无共识 ${skip.noConsensus} / 本处用法与类型不符 ${skip.usageMismatch} / rest 形参 ${skip.rest} / 定位不到 ${skip.notFound}`,
+    `跳过：名字无共识 ${skip.noConsensus} / 本处用法与类型不符 ${skip.usageMismatch} / 调用点与类型不符 ${skip.callSiteMismatch + dskip.callSiteMismatch} / rest 形参 ${skip.rest} / 定位不到 ${skip.notFound}`,
 );
 
 if (APPLY && (targets.length || destructures.length)) {

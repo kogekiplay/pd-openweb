@@ -97,7 +97,7 @@ export default function (props) {
     setShowAddCondition(false);
   };
 
-  const renderAdd = ({ width, comp }) => {
+  const renderAdd = ({ width, comp }: { width?: number; [key: string]: any }) => {
     return (
       <AddCondition
         renderInParent

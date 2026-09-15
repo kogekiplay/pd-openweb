@@ -54,7 +54,7 @@ function createElement(tag: string, className: string, text?) {
 /**
  * 渲染授权卡片，lines 为正文段落，buttons 为底部操作按钮。
  */
-function renderCard({ title, lines = [], buttons = [] }) {
+function renderCard({ title, lines = [], buttons = [] }: { title?: string; [key: string]: any }) {
   const app = document.getElementById('app');
 
   if (app) {
