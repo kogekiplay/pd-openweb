@@ -30,7 +30,7 @@ const getCommon = ({ id, title, msg, status }) => {
   };
 };
 
-let timeout = null;
+let timeout: NodeJS.Timeout | null = null;
 
 export default () => {
   if (!window.IM) return;

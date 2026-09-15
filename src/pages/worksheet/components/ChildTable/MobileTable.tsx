@@ -139,7 +139,7 @@ export default function MobileTable(props) {
   const isShowAll = maxShowLength === rows.length;
   let deleteConformAction = null;
 
-  let timer = null;
+  let timer: NodeJS.Timeout | null = null;
 
   // 删除记录
   const deleteRecord = rowid => {

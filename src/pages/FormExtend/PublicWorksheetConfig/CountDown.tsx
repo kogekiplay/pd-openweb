@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import moment from 'moment';
 
-let timer = null;
+let timer: NodeJS.Timeout | null = null;
 
 export default class CountDown extends Component<any, any> {
   constructor(props) {

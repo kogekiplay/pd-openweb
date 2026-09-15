@@ -107,7 +107,7 @@ export const canSubmitByLimitFrequency = (shareId, limitWriteFrequencySetting) =
   const limitCount = _.get(limitWriteFrequencySetting, 'limitWriteCount');
 
   if (submitStorage.length > 0 && !!_.get(limitWriteFrequencySetting, 'isEnable') && !!limitCount) {
-    let m = null;
+    let m: "day" | "month" | "week" | "year" | null = null;
 
     switch (_.get(limitWriteFrequencySetting, 'limitRangType')) {
       case FILLLIMIT_TYPE.SPECIFIEDTIMES:

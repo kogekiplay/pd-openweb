@@ -157,7 +157,7 @@ export default function ItemCard(props) {
       return;
     }
 
-    let Ajax = null;
+    let Ajax: ApiResult | null = null;
     setState({
       updating: true,
     });

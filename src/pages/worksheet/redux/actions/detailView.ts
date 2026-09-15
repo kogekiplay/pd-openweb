@@ -4,7 +4,7 @@ import type { AppDispatch, GetState } from 'src/redux/types';
 import { getFilledRequestParams } from 'src/utils/common';
 import { formatQuickFilter } from 'src/utils/filter';
 
-let detailRowsRequest = null;
+let detailRowsRequest: ApiResult | null = null;
 let requestViewIds = [];
 
 export const fetchRows = (pageIndex, keyWords) => {

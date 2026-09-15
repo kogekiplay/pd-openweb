@@ -64,7 +64,7 @@ class CalendarHeader extends Component<any, any> {
       monthClassList.push('active');
     }
 
-    let month = null;
+    let month: React.JSX.Element | null = null;
 
     if (this.props.mode !== 'year') {
       month = (

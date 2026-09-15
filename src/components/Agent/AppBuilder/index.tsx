@@ -546,7 +546,7 @@ export default function AppBuilder({
     }
 
     let cancelled = false;
-    let timer = null;
+    let timer: NodeJS.Timeout | null = null;
     let attempts = 0;
     const MAX_ATTEMPTS = 15;
 

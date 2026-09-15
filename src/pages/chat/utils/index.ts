@@ -518,7 +518,7 @@ export const sessionListScrollTop = () => {
 /**
  * 开启消息提示
  */
-let flashTitleInterval = null;
+let flashTitleInterval: null | number = null;
 
 export const flashTitle = () => {
   if (!window.isOpenMessageTwinkle) return;

@@ -376,7 +376,7 @@ export default class GlobalSearchAllContent extends Component<any, any> {
       );
     }
 
-    let content = null;
+    let content: React.JSX.Element | null = null;
 
     if (
       (!appData || appData.total === 0) &&

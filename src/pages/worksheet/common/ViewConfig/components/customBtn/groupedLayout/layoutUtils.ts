@@ -152,7 +152,7 @@ function segmentsFromLegacyFlatAndGroups(flatBtnIds, groupRaw, idSet) {
       const start = i;
 
       while (i < flatFiltered.length) {
-        let innerMatch = null;
+        let innerMatch: null | true = null;
 
         for (const meta of metas) {
           if (usedGroupIds.has(meta.id)) {

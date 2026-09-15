@@ -404,7 +404,7 @@ class Calender extends Component<any, any> {
   };
 
   renderContent = () => {
-    let content = null;
+    let content: React.JSX.Element | null = null;
 
     if (this.props.mode === 'date') {
       content = (

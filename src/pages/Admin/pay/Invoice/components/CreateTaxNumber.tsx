@@ -97,7 +97,7 @@ const StepContentWrap = styled.div`
   }
 `;
 
-let timer = null;
+let timer: NodeJS.Timeout | null = null;
 
 const privateFields = [
   { label: _l('百望账号'), key: 'account' },

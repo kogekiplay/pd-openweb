@@ -57,7 +57,7 @@ export default function MingoCreateWorksheet({ taskStatus, content, disabled, on
     'create-worksheet-success': taskStatus === MINGO_TASK_STATUS.CREATE_WORKSHEET_ASSIGNMENT_CREATE_WORKSHEET_SUCCESS,
   });
 
-  let button = null;
+  let button: React.JSX.Element | null = null;
 
   if (taskStatus === MINGO_TASK_STATUS.CREATE_WORKSHEET_ASSIGNMENT_PREPARING_WORKSHEET_DESCRIPTION) {
     button = (

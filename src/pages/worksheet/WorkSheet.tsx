@@ -41,7 +41,7 @@ const Drag = styled.div(
 `,
 );
 
-let request = null;
+let request: ApiResult | null = null;
 
 const LoadableCreateRecordSideMask = lazy(
   () => import('src/components/Mingo/modules/CreateRecordBot/CreateRecordSideMask'),

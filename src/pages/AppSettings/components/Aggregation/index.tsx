@@ -97,7 +97,7 @@ const ArrowDown = styled.span`
     border-color: var(--color-primary) transparent transparent transparent;
   }
 `;
-let ajaxPromise = null;
+let ajaxPromise: ApiResult | null = null;
 const pageSize = 40;
 
 const renderNull = txt => {

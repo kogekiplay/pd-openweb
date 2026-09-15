@@ -156,7 +156,7 @@ const NoDataWrapper = styled.div`
   }
 `;
 
-let listAjaxPromise = null;
+let listAjaxPromise: ApiResult | null = null;
 
 export default function ExistSourceModal(props) {
   const { connectorConfigData = {}, roleType, setConnectorConfigData, onClose, from = '' } = props;

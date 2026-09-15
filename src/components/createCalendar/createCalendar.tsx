@@ -951,7 +951,7 @@ CreateCalendar.methods = {
       time = '00:00';
     }
 
-    var dateTime = null;
+    var dateTime: Date | null = null;
 
     if (date) {
       dateTime = new Date(date + ' ' + time);

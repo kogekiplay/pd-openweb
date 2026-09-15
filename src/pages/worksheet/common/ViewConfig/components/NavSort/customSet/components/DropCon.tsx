@@ -66,7 +66,7 @@ const TxtCenter = styled.div`
   text-align: center;
   padding-top: 30px;
 `;
-let Ajax = null;
+let Ajax: ApiResult | null = null;
 
 export default function (props) {
   const trigger = useRef(null);

@@ -252,7 +252,7 @@ export default class extends Component<any, any> {
           const sectionColors = getSectionColors();
 
           const getIndex = () => {
-            let index = null;
+            let index: null | number = null;
             ticks.forEach((n, i) => {
               if (n >= percent && _.isNull(index)) {
                 index = i;

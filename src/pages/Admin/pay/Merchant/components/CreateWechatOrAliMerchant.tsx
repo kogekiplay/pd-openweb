@@ -81,7 +81,7 @@ export default function CreateWechatOrAliMerchant(props) {
     : aliFormInfo.filter(item => item.field !== 'shortName');
   const [isScroll, setIsScroll] = useState(false);
   const [loading, setLoading] = useState(!isCreate || isWechat);
-  let timer = null;
+  let timer: NodeJS.Timeout | null = null;
 
   const requestConfigInfo = {
     appId: _.trim(appId) || initData.appId,

@@ -72,8 +72,8 @@ const RelationList = props => {
     const iconName = item.type === 4 ? getClassNameByExt(item.ext1) : Icons[item.type];
     const linkName = item.type === 4 ? `${item.name}${item.ext1}` : item.name;
 
-    let textA = null;
-    let textB = null;
+    let textA: React.JSX.Element | null = null;
+    let textB: React.JSX.Element | null = null;
 
     if (item.type === 3 || item.type === 5 || item.type === 7) {
       const contentA =

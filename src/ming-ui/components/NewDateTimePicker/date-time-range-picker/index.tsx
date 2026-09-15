@@ -406,7 +406,7 @@ class DateTimeRangeDoublePicker extends Component<any, any> {
 
     const dateType = this.props.type === 'datetime' || this.props.type === 'half' ? 'date' : this.props.type;
 
-    let partialToolbar = null;
+    let partialToolbar: React.JSX.Element | null = null;
 
     if (this.props.partial) {
       partialToolbar = (
@@ -435,8 +435,8 @@ class DateTimeRangeDoublePicker extends Component<any, any> {
       );
     }
 
-    let startTimePicker = null;
-    let endTimePicker = null;
+    let startTimePicker: React.JSX.Element | null = null;
+    let endTimePicker: React.JSX.Element | null = null;
     const halfOptions = [
       {
         value: 'AM',
@@ -500,7 +500,7 @@ class DateTimeRangeDoublePicker extends Component<any, any> {
 
     const clearText = _l('清空');
     const okText = _l('确定');
-    let clearBtn = null;
+    let clearBtn: React.JSX.Element | null = null;
 
     if (this.props.allowClear) {
       clearBtn = (

@@ -199,7 +199,7 @@ export default class Filter extends Component<any, any> {
     const { searchValue, createAccount, apkId, processId, status, startDate, endDate, companyId } = this.state;
     const operationType = this.state.operationType.value;
 
-    let newType = null;
+    let newType: null | number = null;
     let newOperationType = null;
 
     if (operationType && typeof operationType === 'string') {

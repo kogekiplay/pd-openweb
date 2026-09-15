@@ -5,7 +5,7 @@ import externalPortalAjax from 'src/api/externalPortal';
 import WorkflowDialog from 'src/pages/workflow/components/WorkflowDialog';
 import { SwitchStyle } from './style';
 
-let ajaxRequest = null;
+let ajaxRequest: ApiResult | null = null;
 
 export default function (props) {
   const { admin, exAccountSmsNotice, epDiscussWorkFlow, portalSetModel, onChangePortalSet, appId } = props;

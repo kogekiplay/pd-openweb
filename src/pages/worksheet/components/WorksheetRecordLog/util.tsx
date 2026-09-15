@@ -359,7 +359,7 @@ export const renderTitleText = (data, extendParam) => {
 
   const { requestType } = _.get(data, 'child[0].operatContent') || {};
   const { type, accountId } = data;
-  let content = null;
+  let content: React.JSX.Element | null = null;
 
   if (accountId === 'user-integration' && type === 4) {
     content = (

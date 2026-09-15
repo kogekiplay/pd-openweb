@@ -281,7 +281,7 @@ class CalendarRange extends Component<any, any> {
     const startValue = this.getStartValue();
     const endValue = this.getEndValue();
 
-    let taskHeader = null;
+    let taskHeader: React.JSX.Element | null = null;
 
     if (this.props.mode === 'task') {
       let startChecked = false;

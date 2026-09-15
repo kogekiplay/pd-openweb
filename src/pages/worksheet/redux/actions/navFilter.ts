@@ -14,7 +14,7 @@ export const updateNavGroup = () => {
   };
 };
 
-let getNavGroupRequest = null;
+let getNavGroupRequest: ApiResult | null = null;
 let preWorksheetIds = [];
 
 // 获取分组筛选的count

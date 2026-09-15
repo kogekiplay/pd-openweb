@@ -737,9 +737,9 @@ export default class GeneraSelect extends Component<any, any> {
 
   /** 获取部门和群组的key值 */
   getKeys = (tabId: string) => {
-    let ID = null;
-    let NAME = null;
-    let COUNT = null;
+    let ID: "departmentId" | "groupId" | null = null;
+    let NAME: "departmentName" | "name" | null = null;
+    let COUNT: "groupMemberCount" | "userCount" | null = null;
 
     switch (tabId) {
       case UserTabsId.DEPARTMENT:
@@ -1428,7 +1428,7 @@ export default class GeneraSelect extends Component<any, any> {
   /** 用户已选择列表 */
   renderResult() {
     return this.state.selectedData.map(item => {
-      let avatar = null;
+      let avatar: React.JSX.Element | null = null;
       let id = null;
       let name = null;
 

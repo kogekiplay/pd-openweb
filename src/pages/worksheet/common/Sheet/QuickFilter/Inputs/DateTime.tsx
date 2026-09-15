@@ -180,7 +180,7 @@ export default function DateTime(props) {
   }
 
   const dropdownData = dateOptions.map(os => os.filter(o => _.includes(allowedDateRange.concat(18), o.value)));
-  let pickerComp = null;
+  let pickerComp: React.JSX.Element | null = null;
 
   if (showDatePicker) {
     if (filterType === FILTER_CONDITION_TYPE.DATE_BETWEEN) {

@@ -19,7 +19,7 @@ const DropComponentWrap = styled(DropComponent)`
 `;
 
 const renderItem = newVal => {
-  let iconContent = null;
+  let iconContent: React.JSX.Element | null = null;
 
   if (newVal === '1') {
     iconContent = <div className="rangeIcon"></div>;

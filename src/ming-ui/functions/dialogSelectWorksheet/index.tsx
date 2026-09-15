@@ -137,7 +137,7 @@ function SelectWorksheet(props) {
     appList: [],
     itemLoading: {},
   });
-  let appPromise = null;
+  let appPromise: ApiResult | null = null;
 
   const getAppList = (params = {}) => {
     // 加载更多

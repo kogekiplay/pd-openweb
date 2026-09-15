@@ -47,7 +47,7 @@ const Wrap = styled.div`
     color: var(--color-success);
   }
 `;
-let Ajax = null;
+let Ajax: ApiResult | null = null;
 
 export default function Cite(props) {
   const [{ data, loading }, setState] = useSetState({

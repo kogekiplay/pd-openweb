@@ -200,7 +200,7 @@ class Task extends Component<any, any> {
       return;
     }
 
-    let Ajax = null;
+    let Ajax: ApiResult | null = null;
     this.setState({
       updating: true,
     });

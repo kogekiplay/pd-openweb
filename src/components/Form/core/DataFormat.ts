@@ -1629,7 +1629,7 @@ export default class DataFormat {
         success: (res: ControlValue) => {
           const { cLongitude, cLatitude, longitude, latitude, address, title } = res;
           ids.forEach(controlId => {
-            let value = null;
+            let value: null | string = null;
             const control = _.find(this.data, { controlId }) || {};
 
             if ((typeof control.strDefault === 'string' ? control.strDefault : '00')[0] === '1') {

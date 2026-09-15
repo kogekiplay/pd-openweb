@@ -14,7 +14,7 @@ import { isTel, toMDApp, validation } from 'src/pages/AuthService/util.js';
 import { emitter, encrypt } from 'src/utils/common';
 
 // 'inputCode',//验证码
-let sendVerifyCodeTimer = null;
+let sendVerifyCodeTimer: NodeJS.Timeout | null = null;
 
 export default function (props) {
   const {

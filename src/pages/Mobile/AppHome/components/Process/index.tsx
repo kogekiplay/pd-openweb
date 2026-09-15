@@ -68,7 +68,7 @@ const ListWrap = styled.div`
   }
 `;
 
-let request = null;
+let request: ApiResult | null = null;
 
 const getStateParam = tab => {
   let param = {};

@@ -70,7 +70,7 @@ export const SetAppRolePagingModel = data => {
   };
 };
 
-let ajaxOut = null;
+let ajaxOut: ApiResult | null = null;
 
 export const getOutList = (props, isOut) => {
   return (dispatch: AppDispatch, getState: GetState) => {
@@ -92,7 +92,7 @@ export const getOutList = (props, isOut) => {
   };
 };
 
-let ajaxAppRoleSummary = null;
+let ajaxAppRoleSummary: ApiResult | null = null;
 
 export const getRoleSummary = (appId, cb?, loading?) => {
   return dispatch => {
@@ -118,7 +118,7 @@ export const getRoleSummary = (appId, cb?, loading?) => {
   };
 };
 
-let ajaxApply = null;
+let ajaxApply: ApiResult | null = null;
 
 export const getApplyList = (props, isApply) => {
   return dispatch => {
@@ -138,7 +138,7 @@ export const getApplyList = (props, isApply) => {
   };
 };
 
-let ajax = null;
+let ajax: ApiResult | null = null;
 
 const isDefaultPagingModel = (appRolePagingModel = {}) => {
   const { keywords = '', searchMemberType = 0 } = appRolePagingModel;
@@ -178,7 +178,7 @@ export const getUserList = (props, isUserList) => {
   };
 };
 
-let CountAllAjax = null;
+let CountAllAjax: ApiResult | null = null;
 
 export const getUserAllCount = props => {
   // isAllCount 用于左侧nav的计数 全部

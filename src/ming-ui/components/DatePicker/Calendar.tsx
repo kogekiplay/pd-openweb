@@ -311,7 +311,7 @@ let Calendar = class Calendar extends Component<any, any> {
     const { locale, prefixCls, timePicker, disabledDate, showMinute = true, showSecond = false } = props;
     const state = this.state;
     const { value, selectedValue } = state;
-    let table = null;
+    let table: React.JSX.Element | null = null;
 
     if (this.state.view === 'date') {
       table = (

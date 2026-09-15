@@ -30,7 +30,7 @@ export const changeBase = data => {
   };
 };
 
-let reportConfigDetailRequest = null;
+let reportConfigDetailRequest: ApiResult | null = null;
 
 export const getReportConfigDetail = (data, callBack?) => {
   return (dispatch: AppDispatch, getState: GetState) => {
@@ -118,8 +118,8 @@ export const getReportConfigDetail = (data, callBack?) => {
   };
 };
 
-let reportConfigRequest = null;
-let reportRequest = null;
+let reportConfigRequest: ApiResult | null = null;
+let reportRequest: ApiResult | null = null;
 
 export const getReportData = ({ reload = false } = {}) => {
   return (dispatch: AppDispatch, getState: GetState) => {
@@ -484,7 +484,7 @@ export const requestOriginalData = data => {
   };
 };
 
-let worksheetInfoRequest = null;
+let worksheetInfoRequest: ApiResult | null = null;
 let worksheetFilterByIdRequest = null;
 
 export const getWorksheetInfo = worksheetId => {

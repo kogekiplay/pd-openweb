@@ -86,7 +86,7 @@ class UserItem extends Component<any, any> {
 
   renderContact(user) {
     const { mobilePhone, isPrivateMobile } = user;
-    let mobileTpl = null;
+    let mobileTpl: React.JSX.Element | null = null;
 
     if (mobilePhone) {
       mobileTpl = (
@@ -116,7 +116,7 @@ class UserItem extends Component<any, any> {
   }
 
   renderEmail(user) {
-    let emailTpl = null;
+    let emailTpl: React.JSX.Element | null = null;
     const { email, isPrivateEmail } = user;
 
     if (email) {

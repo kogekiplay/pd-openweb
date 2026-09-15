@@ -6,7 +6,7 @@ export default () => {
     let message = '';
     let description = '';
     let action = '';
-    let duration = null;
+    let duration: 5 | null = null;
 
     if (status === 1) {
       action = 'info';
