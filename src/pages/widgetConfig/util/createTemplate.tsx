@@ -698,7 +698,7 @@ function getAllReferencedControlInfo(allControls, templateControls, queryConfigs
   };
 }
 
-function getAllReferencedControls(allControls, templateControls, queryConfigs) {
+function getAllReferencedControls(allControls: FormControl[], templateControls: FormControl[], queryConfigs) {
   const { referencedControls, noPermissionSheetNames, deletedWorksheetControlNames } = getAllReferencedControlInfo(
     allControls,
     templateControls,

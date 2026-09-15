@@ -64,7 +64,7 @@ const Icon = styled.i`
   line-height: 36px;
 `;
 
-export function getControlType(control) {
+export function getControlType(control: FormControl) {
   if (control.type === 30) {
     return control.sourceControlType;
   } else if (control.type === 53) {

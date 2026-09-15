@@ -52,6 +52,8 @@ export interface FormControl {
   controlName?: string;
   value?: ControlValue;
   advancedSetting?: ControlAdvancedSetting;
+  /** 控件上挂的自定义事件权限配置 */
+  eventPermissions?: any;
   /** 关联记录控件指定的关联视图 */
   viewId?: string;
   /** 关联记录控件指向的应用 */

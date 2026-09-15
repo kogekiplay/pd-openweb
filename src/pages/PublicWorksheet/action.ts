@@ -278,7 +278,7 @@ async function getStatus(data, shareId) {
 }
 
 //获取填写者微信信息, 自动填充
-function fillWxInfo(formData, weChatSetting) {
+function fillWxInfo(formData: FormControl[], weChatSetting) {
   let data = formData;
   const fieldMaps = weChatSetting.fieldMaps;
   const cacheUserInfo = localStorage.getItem('wxUserInfo');

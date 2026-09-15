@@ -155,7 +155,7 @@ const getStringColor = (calendarData, data, currentView) => {
 };
 
 // 提取获取颜色的公共逻辑
-const getColorData = (calendarData, data, currentView, worksheetControls) => {
+const getColorData = (calendarData, data, currentView, worksheetControls: FormControl[]) => {
   const stringColor = getStringColor(calendarData, data, currentView);
   const recordColorConfig = getRecordColorConfig(currentView);
   let recordColor =
@@ -224,7 +224,7 @@ export const setDataFormat = pram => {
     });
 };
 
-const renderTitleTxt = (worksheetControls, currentView, dataInfo) => {
+const renderTitleTxt = (worksheetControls: FormControl[], currentView, dataInfo) => {
   const titleControls = getTitleControls(worksheetControls);
   const viewtitle = _.get(currentView, 'advancedSetting.viewtitle');
 

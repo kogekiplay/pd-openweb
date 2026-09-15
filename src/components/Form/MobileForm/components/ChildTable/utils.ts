@@ -9,7 +9,7 @@ import { checkRuleLocked } from '../../../core/formUtils';
 import { checkValueByFilterRegex } from '../../../core/formUtils';
 import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
-function getControlCompareValue(c, value) {
+function getControlCompareValue(c: FormControl, value) {
   if (c.type === 26) {
     return safeParse(value, 'array')
       .map(u => u.accountId)

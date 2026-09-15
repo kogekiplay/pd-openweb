@@ -245,7 +245,7 @@ export default class OtherTool extends Component<any, any> {
     this.setState({ level, isSaveWebProxy: false, ...initLdapData, ...initSsoData });
   }
 
-  handleUpdateItem(e, key) {
+  handleUpdateItem(e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>, key) {
     this.setState({
       [key]: e.target.value,
     });

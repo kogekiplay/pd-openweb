@@ -417,7 +417,7 @@ export const loadPageRows =
   };
 
 export const addRows =
-  (rows, options = {}) =>
+  (rows: RecordRow[], options = {}) =>
   (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
     dispatch({ type: 'ADD_ROWS', rows: rows.map((row: RecordRow) => omit(row, 'needShowLoading')), ...options });
     dispatch(updateTreeTableViewData());

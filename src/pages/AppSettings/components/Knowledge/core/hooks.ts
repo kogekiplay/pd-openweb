@@ -48,7 +48,7 @@ export const useLinkTargetBlank = ({ selector, onlyExternal = false } = {}) => {
 };
 
 // 自动聚焦
-export const useAutoFocus = (ref, active = true) => {
+export const useAutoFocus = (ref: React.RefObject<any>, active = true) => {
   useEffect(() => {
     if (!active) return;
 

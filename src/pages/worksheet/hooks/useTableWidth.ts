@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react';
 import { sum } from 'lodash';
 import type { FormControl } from 'src/utils/controlTypes';
 
-function getDefaultWidth(control) {
+function getDefaultWidth(control: FormControl) {
   if ((control.type === 2 || control.type === 1) && control.attribute === 1) {
     return 350;
   }

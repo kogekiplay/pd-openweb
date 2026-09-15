@@ -745,7 +745,7 @@ export function asyncUpdateMdFunction({ formData, fnControl, update }) {
 }
 
 // 嵌入字段处理
-export const parseValueIframe = (data, currentItem, masterData, embedData) => {
+export const parseValueIframe = (data: FormControl[], currentItem: FormControl, masterData, embedData) => {
   return getDynamicValue(
     data,
     {

@@ -109,7 +109,7 @@ export default props => {
   const autoClear = !!data.processConfig.expireType;
   const featureType = getFeatureStatus(companyId, VersionProductType.encapsulatingBusinessProcess);
 
-  const selectCharge = (event, callback) => {
+  const selectCharge = (event: React.MouseEvent<HTMLDivElement, MouseEvent>, callback) => {
     quickSelectUser(event.target, {
       offset: {
         top: 10,

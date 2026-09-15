@@ -149,7 +149,7 @@ export default function OtherField(props) {
   const isFieldDeleteFn = (item, controls: FormControl[] = []) => {
     const { cid, rcid } = item;
 
-    const isFieldNotInControls = (controls, cid) => {
+    const isFieldNotInControls = (controls: FormControl[], cid) => {
       if (
         _.includes(
           [

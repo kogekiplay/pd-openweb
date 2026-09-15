@@ -56,7 +56,7 @@ const getAnalysisResult = (renderData, templateType) => {
   return result;
 };
 
-const getControls = (controls, isMaster: boolean) => {
+const getControls = (controls: FormControl[], isMaster: boolean) => {
   let result = [];
 
   if (isMaster) {

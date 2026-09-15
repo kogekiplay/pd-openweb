@@ -88,7 +88,7 @@ class Score extends Component<any, any> {
       }
     }
   }
-  onSelect(index, event) {
+  onSelect(index, event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     event.stopPropagation();
     if (index === this.state.lastScore) {
       index = 0;
@@ -100,7 +100,7 @@ class Score extends Component<any, any> {
     });
     this.props.callback(index, event);
   }
-  onMouseEnter(index, event) {
+  onMouseEnter(index, event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     const color = this.props.hover(index, event) || this.props.foregroundColor;
     this.setState({
       foregroundColor: color,

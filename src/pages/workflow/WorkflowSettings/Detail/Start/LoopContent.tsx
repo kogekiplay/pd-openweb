@@ -527,7 +527,7 @@ export default class LoopContent extends Component<any, any> {
   /**
    * 验证范围开始值、结束值
    */
-  checkRangeNumber(evt, key?, min?, max?, isEnd?) {
+  checkRangeNumber(evt, key?: string, min?, max?, isEnd?) {
     let num = evt.target.value.replace(/[^\d]/g, '');
     evt.target.value = num;
 
@@ -642,7 +642,7 @@ export default class LoopContent extends Component<any, any> {
   /**
    * 更新固定值配置
    */
-  updateFixedConfig(key, value) {
+  updateFixedConfig(key: string, value) {
     const { data } = this.props;
     const values = [].concat(data.config[key].values);
 

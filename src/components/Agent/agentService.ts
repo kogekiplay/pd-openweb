@@ -17,7 +17,7 @@ function isRecord(value) {
 }
 
 // 大小写不敏感的字段读取：后端 Pascal / camel 混用，统一兜底
-export function readField(source, key) {
+export function readField(source, key: string) {
   if (!isRecord(source)) return undefined;
   if (key in source) return source[key];
   const target = key.toLowerCase();

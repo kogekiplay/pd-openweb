@@ -315,7 +315,7 @@ export function handleFilters(data: FormControl, isRelate = false, filterKey?: s
   }
 }
 
-const canSelectedControls = (controls, data) => {
+const canSelectedControls = (controls: FormControl[], data: FormControl) => {
   return controls.filter(item => item.controlId !== data.controlId && !includes(CAN_NOT_AS_TEXT_GROUP, item.type));
 };
 

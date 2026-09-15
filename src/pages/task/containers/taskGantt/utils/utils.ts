@@ -251,7 +251,7 @@ const checkTime = (startTime, endTime, filterWeekend?) => {
  * @param  {boolean} filterWeekend  是否过滤周末
  * @return {[]}  数据源
  */
-const taskTimeBars = (source, viewType, filterWeekend) => {
+const taskTimeBars = (source, viewType: number, filterWeekend: boolean) => {
   // 不同视图下任务名称代表多少小时
   let taskNameTime;
 

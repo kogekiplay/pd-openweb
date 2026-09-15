@@ -312,7 +312,7 @@ export default function GroupCon(props) {
     });
   };
 
-  const previewAttachment = (e, allAttachments, rowId) => {
+  const previewAttachment = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, allAttachments, rowId) => {
     // 不允许预览
     if (_.get(view, 'advancedSetting.opencover') === '2' || isM) {
       return;

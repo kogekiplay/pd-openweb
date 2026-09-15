@@ -428,7 +428,7 @@ export function accDiv(arg1, arg2: number) {
  * 调用：accAdd(arg1,arg2)
  * 返回值：arg1加上arg2的精确结果
  */
-export function accAdd(arg1, arg2) {
+export function accAdd(arg1: number, arg2) {
   let r1, r2, m;
 
   try {

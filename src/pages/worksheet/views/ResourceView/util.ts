@@ -5,7 +5,7 @@ import { renderTitleByViewtitle } from 'src/pages/worksheet/views/util.js';
 import { isTimeStyle, renderText as renderCellText } from 'src/utils/control';
 import { dateConvertToUserZone } from 'src/utils/project';
 import { lineBottomHeight, lineHeight, minHeightObj, timeWidth, timeWidthHalf, types } from './config';
-import type { FormControl } from 'src/utils/controlTypes';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 //获取年的时间数组
 export const getTimesByYear = dateData => {
@@ -384,7 +384,7 @@ export const formatRecordPoint = (row, view, list = [], controls, currentTime) =
   };
 };
 
-export const calculateTop = (res, view) => {
+export const calculateTop = (res: RecordRow[], view) => {
   const minHeight = minHeightObj[Number(_.get(view, 'rowHeight') || '0')];
   //去除无效数据
   const dataList = res.filter(o => !!o.startTime && !!o.endTime && o.width > 0);

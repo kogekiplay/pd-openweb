@@ -88,7 +88,7 @@ function getMapConfigByExcel(controls: FormControl[] = [], excelData = []) {
   return result;
 }
 
-function getDefaultMap(controls) {
+function getDefaultMap(controls: FormControl[]) {
   return [...new Array(controls.length)]
     .map((a, i) => ({ [i]: _.get(controls, `${i}.controlId`) }))
     .reduce((a, b) => Object.assign({}, a, b));

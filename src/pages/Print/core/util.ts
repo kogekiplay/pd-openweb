@@ -105,7 +105,7 @@ export const useUserPermission = control => {
   return !!+isHiddenOtherViewRecord;
 };
 
-export const getFormData = (controls, data) => {
+export const getFormData = (controls: FormControl[], data) => {
   return controls.map(it => ({
     ...it,
     value: data[it.controlId],

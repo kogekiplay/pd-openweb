@@ -181,7 +181,7 @@ export const getDays = (start, end, center, viewConfig) => {
 /**
  * 获取今天的位置
  */
-const getTodayLeftValue = (start, end, dayOff) => {
+const getTodayLeftValue = (start: moment.Moment, end: moment.Moment, dayOff) => {
   const diff = Math.abs(start.diff(end, 'd'));
   let value = 0;
 

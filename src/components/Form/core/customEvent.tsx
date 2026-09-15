@@ -33,7 +33,7 @@ import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 const dealDataPermission = props => {
   const { actionItems = [], actions = [], actionType, formData = [] } = props;
 
-  function setEventPermission(item) {
+  function setEventPermission(item: FormControl) {
     // eventPermissions给默认值111，计算会覆盖字段原始只读(x用来区分是否由事件导致变更过)
     let eventPermissions = item.eventPermissions || 'xxx';
 

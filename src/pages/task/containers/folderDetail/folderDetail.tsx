@@ -506,7 +506,7 @@ class FolderDetail extends Component<any, any> {
   /**
    * 添加项目人员事件
    */
-  addFolderMembersEvents(evt, isAdmin) {
+  addFolderMembersEvents(evt: React.MouseEvent<HTMLElement, MouseEvent>, isAdmin) {
     const { data } = this.state;
     const { folderId, projectId } = this.props.taskConfig;
     let existsIds = [];

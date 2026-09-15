@@ -61,7 +61,7 @@ export default class EditDetail extends React.Component<any, any> {
     );
   };
 
-  setTxterr = (e, domStr: string) => {
+  setTxterr = (e: React.FocusEvent<HTMLInputElement, Element>, domStr: string) => {
     const { errTxtInfo } = this.state;
     fixedDataAjax.checkSensitive({ content: e.target.value }).then(res => {
       if (res) {

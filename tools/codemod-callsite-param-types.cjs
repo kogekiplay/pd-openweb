@@ -43,6 +43,8 @@ const EXCLUDE = [
   'src/components/Form/MobileForm/widgets/Embed/index.tsx',
   'src/pages/Admin/integration/platformIntegration/microsoft/index.tsx', // 有调用点往 string 位传 true
   'src/pages/task/containers/folderChart/folderChart.tsx',
+  'src/components/dnd/legacyDecorators.tsx',
+  'src/components/UploadFiles/File.tsx',
 ];
 
 // 白名单：这些名字在任何文件里都可用，写进源码不需要 import
@@ -59,11 +61,29 @@ const PORTABLE = new Set([
   'Element',
   'Event',
 ]);
-const isPortable = s =>
-  s
+// 这几个不是全局可用的，但本仓里好补：领域类型自己 import，React/moment 事件类型
+// 只在文件本来就 import 了它们时才用（不新增第三方 import）
+const DOMAIN_TYPES = new Set(['FormControl', 'RecordRow']);
+const isReactType = x => /^React\.[A-Za-z]+(<.*>)?$/.test(x);
+const isMomentType = x => x === 'moment.Moment';
+
+const classify = x => {
+  const base = x.endsWith('[]') ? x.slice(0, -2) : x;
+  if (PORTABLE.has(base)) return 'portable';
+  if (DOMAIN_TYPES.has(base)) return 'domain';
+  if (isReactType(x)) return 'react';
+  if (isMomentType(x)) return 'moment';
+  return null;
+};
+
+const classifyUnion = s => {
+  const kinds = s
     .split('|')
     .map(x => x.trim())
-    .every(x => PORTABLE.has(x) || (x.endsWith('[]') && PORTABLE.has(x.slice(0, -2))));
+    .map(classify);
+  if (kinds.some(k => k === null)) return null;
+  return new Set(kinds);
+};
 
 const cfg = ts.parseJsonConfigFileContent(
   ts.readConfigFile(path.join(ROOT, 'tsconfig.json'), ts.sys.readFile).config,
@@ -103,7 +123,7 @@ for (const sf of program.getSourceFiles()) {
         n.forEachChild(visit);
         return;
       }
-      params.set(n, { sf, name: n.name.text, types: new Set(), dirty: false, hits: 0 });
+      params.set(n, { sf, name: n.name.text, types: new Set(), kinds: new Set(), dirty: false, hits: 0 });
     }
     n.forEachChild(visit);
   })(sf);
@@ -154,10 +174,12 @@ for (const sf of program.getSourceFiles()) {
           const t = checker.getBaseTypeOfLiteralType(checker.getTypeAtLocation(args[i]));
           const s = checker.typeToString(t, args[i], ts.TypeFormatFlags.NoTruncation);
           if (s === 'undefined' || s === 'null' || s === 'never') return;
-          if (!isPortable(s)) {
+          const kinds = classifyUnion(s);
+          if (!kinds) {
             rec.dirty = true;
             return;
           }
+          kinds.forEach(k => rec.kinds.add(k));
           s.split('|').forEach(x => rec.types.add(x.trim()));
         });
       }
@@ -168,7 +190,7 @@ for (const sf of program.getSourceFiles()) {
 
 // 3) 定型
 const byFile = new Map();
-const stat = { ok: 0, dirty: 0, noCall: 0, tooWide: 0 };
+const stat = { ok: 0, dirty: 0, noCall: 0, tooWide: 0, noImport: 0 };
 for (const [node, rec] of params) {
   // 【至少两个调用点】。单个调用点的证据太薄：实参类型本身可能来自第三方泛型，
   // 而那个泛型未必对得上运行时。columnRules 的 filterUnAvailable 只有一处调用，
@@ -187,14 +209,24 @@ for (const [node, rec] of params) {
     stat.tooWide += 1;
     continue;
   }
+  const text = rec.sf.getFullText();
+  // React/moment 的类型只在文件本来就 import 了它们时才敢写
+  if (rec.kinds.has('react') && !/from ['"]react['"]/.test(text)) {
+    stat.noImport += 1;
+    continue;
+  }
+  if (rec.kinds.has('moment') && !/from ['"]moment['"]/.test(text)) {
+    stat.noImport += 1;
+    continue;
+  }
   stat.ok += 1;
   const file = rec.sf.fileName;
-  if (!byFile.has(file)) byFile.set(file, { text: rec.sf.getFullText(), ins: [] });
+  if (!byFile.has(file)) byFile.set(file, { text, ins: [] });
   // 【插在 ? 后面】：上一轮 codemod-optional-params 给不少形参补过 `?`，
   // name.end 在 `?` 之前，插进去会变成 `foo: boolean?` —— TS17019，
   // 而且整个签名跟着废掉，下游冒出一片看不懂的 "Expected N arguments"。
   const at = node.questionToken ? node.questionToken.end : node.name.end;
-  byFile.get(file).ins.push({ pos: at, type: u, name: rec.name });
+  byFile.get(file).ins.push({ pos: at, type: u, name: rec.name, domain: rec.kinds.has('domain') });
 }
 
 let total = 0;
@@ -205,10 +237,37 @@ for (const [file, bucket] of [...byFile].sort()) {
   if (!APPLY) continue;
   let src = bucket.text;
   for (const i of bucket.ins) src = src.slice(0, i.pos) + `: ${i.type}` + src.slice(i.pos);
+  const need = [...new Set(bucket.ins.filter(i => i.domain).flatMap(i => i.type.split('|').map(x => x.trim().replace('[]', ''))))]
+    .filter(n => DOMAIN_TYPES.has(n))
+    .filter(n => !new RegExp(`\\b${n}\\b`).test(bucket.text));
+  if (need.length) src = addImport(src, need);
   fs.writeFileSync(file, src);
+}
+
+function addImport(src, names) {
+  const re = /^import type \{([^}]*)\} from 'src\/utils\/controlTypes';$/m;
+  const m = src.match(re);
+  if (m) {
+    const merged = [...new Set([...m[1].split(',').map(x => x.trim()).filter(Boolean), ...names])].sort();
+    return src.replace(re, `import type { ${merged.join(', ')} } from 'src/utils/controlTypes';`);
+  }
+  const lines = src.split('\n');
+  let idx = 0;
+  let depth = 0;
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i].startsWith('import ')) {
+      depth = (lines[i].match(/\{/g) || []).length - (lines[i].match(/\}/g) || []).length;
+      idx = i + 1;
+    } else if (depth > 0) {
+      depth += (lines[i].match(/\{/g) || []).length - (lines[i].match(/\}/g) || []).length;
+      idx = i + 1;
+    }
+  }
+  lines.splice(idx, 0, `import type { ${[...names].sort().join(', ')} } from 'src/utils/controlTypes';`);
+  return lines.join('\n');
 }
 
 console.log(
   `\n${APPLY ? '已标' : '可标'} ${total} 个形参（候选 ${params.size}）；` +
-    `跳过：调用点少于 2 个 ${stat.noCall} / 有调用点传 any 或非白名单类型 ${stat.dirty} / 并集过长 ${stat.tooWide}`,
+    `跳过：调用点少于 2 个 ${stat.noCall} / 有调用点传 any 或非白名单类型 ${stat.dirty} / 并集过长 ${stat.tooWide} / 文件没 import 对应库 ${stat.noImport}`,
 );

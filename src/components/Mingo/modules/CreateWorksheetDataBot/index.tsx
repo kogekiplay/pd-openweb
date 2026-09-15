@@ -757,7 +757,7 @@ function MingoContent(props, ref) {
           controls={visibleControls}
           data={dataForPreview}
           onAppendToWorksheet={() => {
-            function getValue(control, row) {
+            function getValue(control: FormControl, row) {
               return typeof row[control.controlId] === 'string'
                 ? row[control.controlId]
                 : isObject(row[control.controlId])

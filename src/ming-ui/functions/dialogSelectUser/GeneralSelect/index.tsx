@@ -826,7 +826,7 @@ export default class GeneraSelect extends Component<any, any> {
    * @param {*实体id} id
    * @param {*实体的id的key} idKey
    */
-  deleteData = (chooseType, id, idKey) => {
+  deleteData = (chooseType, id, idKey: string) => {
     let selectedArr = [...this.state.selectedData];
     selectedArr = selectedArr.filter(item => {
       if (item.type === chooseType) {

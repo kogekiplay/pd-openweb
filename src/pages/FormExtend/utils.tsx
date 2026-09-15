@@ -6,7 +6,7 @@ import { TIME_PERIOD_TYPE, TIME_TYPE, WEEKS } from './enum';
 import CountDown from './PublicWorksheetConfig/CountDown';
 import type { FormControl } from 'src/utils/controlTypes';
 
-export function getNewControlColRow(controls, halfOfNewControl = true) {
+export function getNewControlColRow(controls: FormControl[], halfOfNewControl = true) {
   if (!controls.length) {
     return { col: 0, row: 0 };
   }

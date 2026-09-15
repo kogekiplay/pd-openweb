@@ -98,7 +98,7 @@ export default function ExportRecords({ projectId, type }) {
   }, []);
 
   const checkPassword = useCallback(
-    (record, passwordType) => {
+    (record, passwordType: string) => {
       const hasPassword = passwordType === 'exportPassword' ? record.hasExportPassword : record.hasLockPassword;
       const showPassword = record[`show_${passwordType}`];
       const password = record[passwordType];

@@ -101,7 +101,7 @@ export const getCurrentTime = () => {
   return moment().format('YYYY-MM-DD HH:mm');
 };
 
-export const formatTimeInfo = (time, isCompleteAppear) => {
+export const formatTimeInfo = (time: moment.Moment, isCompleteAppear: boolean) => {
   // 当前时间
   const currentTime = moment(getCurrentTime());
 

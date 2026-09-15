@@ -286,7 +286,7 @@ export default class PersonalInfo extends React.Component<any, any> {
   //添加或者编辑教育经历---工作履历
   //type: work(1) | education(2)
   //data: list([]) | listItem({})
-  handleAddOrEditItem(type, data) {
+  handleAddOrEditItem(type: number, data) {
     Dialog.confirm({
       title: `${_.isArray(data) ? _l('添加') : _l('编辑')}${type === 1 ? _l('工作履历') : _l('教育经历')} `,
       dialogClasses: 'addOrEditItemDialog',
