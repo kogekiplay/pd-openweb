@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { BrowserRouter } from 'react-router';
+
 import { Popup } from 'antd-mobile';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -9,6 +9,7 @@ import { openMobileRecordInfo } from 'src/pages/Mobile/Record';
 import { updateDraftTotalInfo } from 'src/pages/worksheet/common/WorksheetDraft/utils';
 import DraftList from './DraftList';
 import type { FormControl } from 'src/utils/controlTypes';
+import OptionalRouter from 'src/router/OptionalRouter';
 
 const ModalWrap = styled(Popup)`
   .mobileContainer {
@@ -62,7 +63,7 @@ function MobileDraftList(props) {
   }, []);
 
   return (
-    <BrowserRouter>
+    <OptionalRouter>
       <ModalWrap onClose={onCancel} visible={visible} className="mobileModal full">
         <div className="flexColumn h100">
           <div className="flexRow valignWrapper pTop15 pLeft20 pRight20 pBottom8">
@@ -105,7 +106,7 @@ function MobileDraftList(props) {
           />
         </div>
       </ModalWrap>
-    </BrowserRouter>
+    </OptionalRouter>
   );
 }
 

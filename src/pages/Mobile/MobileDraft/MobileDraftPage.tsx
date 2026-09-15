@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { BrowserRouter } from 'react-router';
+
 import _ from 'lodash';
 import { LoadDiv } from 'ming-ui';
 import worksheetAjax from 'src/api/worksheet';
 import DraftList from './DraftList';
+import OptionalRouter from 'src/router/OptionalRouter';
 
 export default class MobileDraftList extends Component<any, any> {
   constructor(props) {
@@ -59,7 +60,7 @@ export default class MobileDraftList extends Component<any, any> {
     }
 
     return (
-      <BrowserRouter>
+      <OptionalRouter>
         <div className="pTop20 flexColumn h100">
           <DraftList
             draftData={draftData}
@@ -81,7 +82,7 @@ export default class MobileDraftList extends Component<any, any> {
             }}
           />
         </div>
-      </BrowserRouter>
+      </OptionalRouter>
     );
   }
 }

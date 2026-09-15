@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useRef, useState } from 'react';
-import { BrowserRouter } from 'react-router';
+
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -17,6 +17,7 @@ import EmptyRuleConfig from '../EmptyRuleConfig';
 import SelectSearchSheetFromApp from './SelectSearchSheetFromApp';
 import { AddRelate, FilterContent } from './styled';
 import type { FormControl } from 'src/utils/controlTypes';
+import OptionalRouter from 'src/router/OptionalRouter';
 
 const RELATE_SEARCH_TYPE = [
   { key: 'new', text: _l('新建查询') },
@@ -402,7 +403,7 @@ export function RelateSearchWorksheet(props) {
   };
 
   return (
-    <BrowserRouter>
+    <OptionalRouter>
       <Dialog
         width={640}
         type="scroll"
@@ -486,7 +487,7 @@ export function RelateSearchWorksheet(props) {
           </div>
         </AddRelate>
       </Dialog>
-    </BrowserRouter>
+    </OptionalRouter>
   );
 }
 

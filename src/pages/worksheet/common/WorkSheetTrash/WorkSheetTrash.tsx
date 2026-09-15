@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer, useRef, useState } from 'react';
-import { BrowserRouter } from 'react-router';
+
 import update from 'immutability-helper';
 import _ from 'lodash';
 import { arrayOf, bool, func, shape, string } from 'prop-types';
@@ -16,6 +16,7 @@ import TrashBatchOperate from './TrashBatchOperate';
 import ColumnHead from './TrashColumnHead';
 import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import type { ReduxAction } from 'src/redux/types';
+import OptionalRouter from 'src/router/OptionalRouter';
 
 const Con = styled.div`
   width: 100%;
@@ -217,7 +218,7 @@ export default function WorkSheetTrash(props) {
     loadRows({ appId, worksheetId, pageIndex, sortControls: [sortControl] });
   }, []);
   return (
-    <BrowserRouter>
+    <OptionalRouter>
       <Modal
         visible
         closable={false}
@@ -507,7 +508,7 @@ export default function WorkSheetTrash(props) {
           )}
         </Con>
       </Modal>
-    </BrowserRouter>
+    </OptionalRouter>
   );
 }
 
