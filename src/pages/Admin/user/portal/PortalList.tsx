@@ -264,7 +264,7 @@ export default class PortalList extends Component<any, any> {
   /**
    * 批量选择
    */
-  handleSelect(accountId) {
+  handleSelect(accountId: string) {
     this.setState({
       selectedColumnIds: _.includes(this.state.selectedColumnIds, accountId)
         ? this.state.selectedColumnIds.filter(i => i !== accountId)

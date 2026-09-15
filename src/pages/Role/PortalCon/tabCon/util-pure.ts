@@ -27,7 +27,7 @@ export const getStrBytesLength = (str = '', bytesLength = 16) => {
   }
 };
 
-export const translatePortalRoleOptions = (appId, controls: FormControl[] = []) => {
+export const translatePortalRoleOptions = (appId: string, controls: FormControl[] = []) => {
   return controls.map(item => {
     if (item.controlId === 'portal_role') {
       return {

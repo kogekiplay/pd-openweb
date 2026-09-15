@@ -72,7 +72,7 @@ export default class Agent extends Component<any, any> {
                   : item.appId)}
           </span>
           <div className="flexRow mTop2" style={{ flexWrap: 'wrap' }}>
-            {item.tools.map((o, index) => {
+            {item.tools.map((o, index: number) => {
               const tool = AGENT_TOOLS[o.type];
               const { status } =
                 workflowTestRunning[

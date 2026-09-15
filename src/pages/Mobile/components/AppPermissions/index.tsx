@@ -171,7 +171,7 @@ const appPermissions = Component => {
         return detail;
       }
     };
-    useLoadedAppDetail = (appId, data) => {
+    useLoadedAppDetail = (appId: string, data) => {
       const { fixAccount, fixRemark, fixed, webMobileDisplay, permissionType, appDisplay } = data;
       const isAuthorityApp = permissionType >= APP_ROLE_TYPE.ADMIN_ROLE;
 

@@ -244,7 +244,7 @@ export const isBefore = time => {
   return currentTime < contrastTime;
 };
 
-export const setCookie = (name, value, expire) => {
+export const setCookie = (name: string, value, expire) => {
   let expireDate;
 
   if (!expire) {

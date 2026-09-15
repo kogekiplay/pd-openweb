@@ -240,7 +240,7 @@ export default function ChartSettingDialog(props) {
     setOtherThemeColors(_data);
   }, [id]);
 
-  const renderColorSelectWrap = (color, index) => {
+  const renderColorSelectWrap = (color, index: number) => {
     return (
       <ColorPicker
         key={`ColorPicker-${index}`}
@@ -337,7 +337,7 @@ export default function ChartSettingDialog(props) {
         />
         <div className="label mBottom16 mTop24">{_l('颜色')}</div>
         <div className="colorList">
-          {colors.map((color, index) => (
+          {colors.map((color, index: number) => (
             <div className="colorSelectItem" key={`chatSetting-${index}`}>
               {renderColorSelectWrap(color, index)}
               <div className="Font13 flex">{_l('色值%0', index + 1)}</div>

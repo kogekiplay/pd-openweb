@@ -311,7 +311,7 @@ export default class ProjectContacts extends React.Component<any, any> {
       });
   };
 
-  selectCurrentDepartment = (id, name) => {
+  selectCurrentDepartment = (id, name: string) => {
     this.setState({ groupId: id, groupList: [], usersPageIndex: 1, groupName: name, usersLoading: true }, () => {
       if (this.props.projectId === id) {
         this.handleLoadAll(id);

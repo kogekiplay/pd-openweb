@@ -240,7 +240,7 @@ export const Tabs = props => {
   };
 
   const handleLayoutChange = layouts => {
-    const res = tabComponents.map((c, index) => {
+    const res = tabComponents.map((c, index: number) => {
       const data = layouts[index];
       return { ...c, [layoutType]: { ...c[layoutType], layout: _.pick(data, ['x', 'y', 'w', 'h', 'minW', 'minH']) } };
     });
@@ -408,7 +408,7 @@ export const Tabs = props => {
             onLayoutChange={handleLayoutChange}
             {...getLayoutConfig()}
           >
-            {tabComponents.map((widget, index) => {
+            {tabComponents.map((widget, index: number) => {
               const { type } = widget;
               const { titleVisible } = false;
               const enumType = getEnumType(type);

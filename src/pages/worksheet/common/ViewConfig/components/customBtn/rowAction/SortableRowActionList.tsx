@@ -274,7 +274,7 @@ export default function SortableRowActionList({ items, onSortEnd, onDelete }) {
       <RowActionDragLayer items={items} />
       <DropCleanup setActiveGap={setActiveGap} />
       <div className="customBtnRowActionList">
-        {items.map((item, index) => (
+        {items.map((item, index: number) => (
           <React.Fragment key={item.actionKey}>
             <RowDropGap gapIndex={index} activeGap={activeGap} />
             <DraggableRowAction

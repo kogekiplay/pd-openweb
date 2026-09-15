@@ -71,7 +71,7 @@ export default function CustomPageFilter(props) {
     }
   };
 
-  const renderNav = (item, index) => {
+  const renderNav = (item, index: number) => {
     return (
       <div
         className="navItem flexRow alignItemsCenter pointer"
@@ -83,7 +83,7 @@ export default function CustomPageFilter(props) {
     );
   };
 
-  const renderContent = (item, index) => {
+  const renderContent = (item, index: number) => {
     const data = _.find(translateData, { correlationId: item.id }) || {};
     const translateInfo = data.data || {};
     const comparisonLangInfo = getTranslateInfo(app.id, null, item.id, comparisonLangData);

@@ -28,7 +28,7 @@ export const listLoadingContent = pageIndex => {
 };
 
 // 获取tr 或者li
-const getTrOrLi = function (taskId) {
+const getTrOrLi = function (taskId: string) {
   let $el = $("#taskList tr[data-taskid='" + taskId + "']");
 
   if (!$el.length) {
@@ -159,7 +159,7 @@ export const afterUpdateTaskStatus = (data, status, isAll, $el?) => {
 };
 
 // 检查任务是否有子任务
-export const checkTaskSubTask = (taskId, callback) => {
+export const checkTaskSubTask = (taskId: string, callback) => {
   const $li = getTrOrLi(taskId);
   let $markTask = $li.find('.markTask');
 
@@ -194,7 +194,7 @@ export const checkTaskSubTask = (taskId, callback) => {
 };
 
 // 修改负责人后操作
-export const afterUpdateTaskCharge = (taskId, userImg, accountId) => {
+export const afterUpdateTaskCharge = (taskId: string, userImg, accountId: string) => {
   const $li = getTrOrLi(taskId);
 
   $li.find('.updateUserHead:first').data('id', accountId).data('src', userImg).data('hasbusinesscard', false).off();
@@ -229,7 +229,7 @@ export const afterUpdateTaskDate = changedTasks => {
 };
 
 // 修改任务时间信息
-export const afterUpdateTaskDateInfo = (taskId, startTime, deadline, actualStartTime, completeTime) => {
+export const afterUpdateTaskDateInfo = (taskId: string, startTime, deadline, actualStartTime, completeTime) => {
   let $tr = getTrOrLi(taskId);
 
   // 嵌套 所以先取出
@@ -246,7 +246,7 @@ export const afterUpdateTaskDateInfo = (taskId, startTime, deadline, actualStart
 };
 
 // 改变锁的状态后处理
-export const afterUpdateLock = (taskId, locked) => {
+export const afterUpdateLock = (taskId: string, locked) => {
   const $elem = getTrOrLi(taskId);
   const $markTask = $elem.find('.markTask:first');
 
@@ -274,7 +274,7 @@ export const afterUpdateLock = (taskId, locked) => {
 };
 
 // 删除未打开的任务节点
-export const taskTreeAfterDeleteTask = (taskId, listSort) => {
+export const taskTreeAfterDeleteTask = (taskId: string, listSort) => {
   ajaxRequest
     .getSubTask({
       taskID: taskId,
@@ -490,7 +490,7 @@ export const afterDeleteTask = (taskIdArray, parentTaskId?) => {
   }
 
   // 清除localStorage中的评论
-  $.each(taskIdArray, (index, v) => {
+  $.each(taskIdArray, (index: number, v) => {
     const localStorageKey = 'task_' + v;
     window.localStorage.removeItem(localStorageKey);
   });
@@ -531,7 +531,7 @@ export const afterDeep = ($item, deep) => {
 };
 
 // 更改项目后处理
-export const afterUpdateTaskFolder = (taskId, parentTaskId) => {
+export const afterUpdateTaskFolder = (taskId: string, parentTaskId) => {
   const { viewType, folderId } = Store.getState().task.taskConfig;
 
   if (folderId && viewType === 1) {
@@ -541,7 +541,7 @@ export const afterUpdateTaskFolder = (taskId, parentTaskId) => {
 };
 
 // 任务修改阶段
-export const afterUpdateTaskStage = (stageId, taskId, data) => {
+export const afterUpdateTaskStage = (stageId, taskId: string, data) => {
   const { viewType, folderId } = Store.getState().task.taskConfig;
 
   // 查看项目的时候才存在阶段
@@ -575,7 +575,7 @@ export const afterUpdateTaskStage = (stageId, taskId, data) => {
 };
 
 // 更新母任务后操作
-export const afterUpdateTaskParent = (taskId, parentId, oldParentId, data) => {
+export const afterUpdateTaskParent = (taskId: string, parentId, oldParentId, data) => {
   const { folderId } = Store.getState().task.taskConfig;
 
   // 非项目列表处理
@@ -629,7 +629,7 @@ export const afterUpdateTaskParent = (taskId, parentId, oldParentId, data) => {
 };
 
 // 更新母任务后列表处理
-const afterUpdateTaskParentList = (taskId, parentId, oldParentId) => {
+const afterUpdateTaskParentList = (taskId: string, parentId, oldParentId) => {
   const $tr = getTrOrLi(oldParentId);
 
   if ($tr.length > 0) {
@@ -665,7 +665,7 @@ const afterUpdateTaskParentList = (taskId, parentId, oldParentId) => {
 };
 
 // 更新母任务后操作
-const afterUpdateTaskParentComm = (taskId, parentId, oldParentId, $dyLi?) => {
+const afterUpdateTaskParentComm = (taskId: string, parentId, oldParentId, $dyLi?) => {
   let $li = getTrOrLi(taskId);
   let $singleFolderTask = $li.closest('.singleFolderTask');
   const $oldParent = $li.parent();
@@ -897,7 +897,7 @@ const updateTaskParentDeep = $li => {
 };
 
 // 更新任务名称后处理
-export const afterUpdateTaskName = (taskId, taskName: string) => {
+export const afterUpdateTaskName = (taskId: string, taskName: string) => {
   const { viewType, folderId } = Store.getState().task.taskConfig;
 
   if (!folderId) {
@@ -922,7 +922,7 @@ export const afterUpdateTaskName = (taskId, taskName: string) => {
 };
 
 // 加星后处理
-export const afterUpdateTaskStar = (taskId, hasStar) => {
+export const afterUpdateTaskStar = (taskId: string, hasStar) => {
   const $el = getTrOrLi(taskId).find('.taskStar');
 
   if (hasStar) {
@@ -1134,7 +1134,7 @@ export const exitFolder = (folderId, hideNavigation?) => {
 };
 
 // 项目归档
-export const updateFolderArchived = (projectId, folderId, pigeonhole: boolean, callback?) => {
+export const updateFolderArchived = (projectId: string, folderId, pigeonhole: boolean, callback?) => {
   ajaxRequest
     .updateFolderArchived({
       folderID: folderId,
@@ -1254,7 +1254,7 @@ export const joinProjectPrompt = folderId => {
 };
 
 // 获取左侧计数
-export const getLeftMenuCount = (filterUserId, projectId) => {
+export const getLeftMenuCount = (filterUserId, projectId: string) => {
   ajaxRequest
     .getLeftMenu({
       other: filterUserId,

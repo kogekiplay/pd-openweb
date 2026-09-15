@@ -6,7 +6,7 @@ export const flattenArr = (obj = {}) => {
   }, []);
 };
 
-export const getResult = (arr, index, result, available: boolean) => {
+export const getResult = (arr, index: number, result, available: boolean) => {
   if (!index) {
     return result;
   } else {
@@ -19,7 +19,7 @@ export const replaceStr = (str, index: number, value: string) => {
 };
 
 // 过滤不必要走（字段都删除）的业务规则
-export const getAvailableFilters = (rules = [], formatData = [], recordId) => {
+export const getAvailableFilters = (rules = [], formatData = [], recordId: string) => {
   // 过滤禁用规则及单个且数组中字段全部删除情况
   // 注意如果是记录id，data里不包含系统字段，所以必须recordId存在才生效
   let filterRules = [];

@@ -39,7 +39,7 @@ export default class IntegrationSync extends Component<any, any> {
           this.setState({ overLimitLength, dialogOverLimit: true, loading: false });
           return;
         } else {
-          let temp = mingDaoUserInfos.map((item, index) => {
+          let temp = mingDaoUserInfos.map((item, index: number) => {
             const { wxUserInfo = {}, tpUserInfo = {} } = item;
             item.userInfo = integrationType === 3 ? wxUserInfo : tpUserInfo;
             let isSame = false;

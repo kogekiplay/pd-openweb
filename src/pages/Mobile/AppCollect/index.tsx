@@ -69,7 +69,7 @@ export default class RecordCollect extends Component<any, any> {
               <LoadDiv />
             </div>
           ) : (
-            markedAppItems.map((item, index) => {
+            markedAppItems.map((item, index: number) => {
               return (
                 <ApplicationItem
                   key={item.id}

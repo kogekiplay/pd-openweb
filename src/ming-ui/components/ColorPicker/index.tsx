@@ -236,7 +236,7 @@ class ColorPicker extends Component<any, any> {
     const { color } = this.state;
     return (
       <div className={cx('commonColors', { hide: !expand })}>
-        {list.map((colorItem, index) => (
+        {list.map((colorItem, index: number) => (
           <div
             className="commonColorItem"
             style={{ background: colorItem }}

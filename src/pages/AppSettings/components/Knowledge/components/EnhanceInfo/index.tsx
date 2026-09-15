@@ -40,7 +40,7 @@ const EnhanceInfoDialog = props => {
           <EnhanceInfoContent>
             <ScrollView>
               <div className="contentBox">
-                {content?.map((item, index) => (
+                {content?.map((item, index: number) => (
                   <MarkdownPreview key={index} content={item} />
                 ))}
               </div>

@@ -247,7 +247,7 @@ export default function RelateRecordTableDialog(props) {
               onUpdateCount,
               updateWorksheetControls,
             }}
-            addRefreshEvents={(name, value) => {
+            addRefreshEvents={(name: string, value) => {
               cache.current[name] = value;
             }}
           />

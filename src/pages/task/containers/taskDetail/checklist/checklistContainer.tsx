@@ -71,7 +71,7 @@ let ChecklistContainer = class ChecklistContainer extends Component<any, any> {
    * @param {number} index
    */
 
-  checklistBeginDrag(item, index) {
+  checklistBeginDrag(item, index: number) {
     const source = this.state.source;
     this.dragItem = item;
     source.splice(index, 1, 'blank');
@@ -84,7 +84,7 @@ let ChecklistContainer = class ChecklistContainer extends Component<any, any> {
    * @param {number} index
    */
 
-  checklistHover(index) {
+  checklistHover(index: number) {
     const source = this.state.source;
 
     _.remove(source, item => item === 'blank');
@@ -104,7 +104,7 @@ let ChecklistContainer = class ChecklistContainer extends Component<any, any> {
     const currentCheckListId = this.dragItem.checkListId;
     let previousCheckListId = '';
     let prevIndex;
-    source = source.map((item, index) => {
+    source = source.map((item, index: number) => {
       if (item === 'blank') {
         prevIndex = index - 1;
         return this.dragItem;
@@ -131,7 +131,7 @@ let ChecklistContainer = class ChecklistContainer extends Component<any, any> {
    * @param {number} topIndex 上一级的index
    */
 
-  checklistItemBeginDrag(item, index, topIndex) {
+  checklistItemBeginDrag(item, index: number, topIndex) {
     const source = this.state.source;
     this.dragItem = item;
     source[topIndex].items.splice(index, 1, {
@@ -148,7 +148,7 @@ let ChecklistContainer = class ChecklistContainer extends Component<any, any> {
    * @param {number} topIndex 上一级的index
    */
 
-  checklistItemHover(index, topIndex) {
+  checklistItemHover(index: number, topIndex) {
     if (!this.dragItem) return;
     const source = this.state.source;
 
@@ -177,7 +177,7 @@ let ChecklistContainer = class ChecklistContainer extends Component<any, any> {
     let topIndex = 0;
     let prevIndex;
     source.forEach((data, i) => {
-      data.items = data.items.map((item, index) => {
+      data.items = data.items.map((item, index: number) => {
         if (item.type === 'blank') {
           topIndex = i;
           prevIndex = index - 1;
@@ -204,7 +204,7 @@ let ChecklistContainer = class ChecklistContainer extends Component<any, any> {
    * @param  {number} index
    */
 
-  noDragIndexUpdate(index) {
+  noDragIndexUpdate(index: number) {
     this.setState({
       noDragIndex: index,
     });
@@ -215,7 +215,7 @@ let ChecklistContainer = class ChecklistContainer extends Component<any, any> {
    * @param {string} name
    */
 
-  updateCheckListName(checkListId, name) {
+  updateCheckListName(checkListId, name: string) {
     this.props.dispatch(updateCheckListName(this.props.taskId, checkListId, name));
   }
   /**
@@ -248,7 +248,7 @@ let ChecklistContainer = class ChecklistContainer extends Component<any, any> {
    * @param  {string} name
    */
 
-  updateItemName(itemId, name) {
+  updateItemName(itemId, name: string) {
     this.props.dispatch(updateItemName(this.props.taskId, itemId, name));
   }
   /**
@@ -274,7 +274,7 @@ let ChecklistContainer = class ChecklistContainer extends Component<any, any> {
    * @param  {string} name
    */
 
-  createTask(itemId, name) {
+  createTask(itemId, name: string) {
     ajaxRequest
       .getProjectIdAndFolderIdForItemConvertTask({
         itemId,

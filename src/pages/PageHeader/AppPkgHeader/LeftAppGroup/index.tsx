@@ -558,7 +558,7 @@ const LeftAppGroup = props => {
             {skeletonVisible && <Skeleton className="w100 h100 Absolute" />}
             <DndProvider key="navigationList" context={window} backend={HTML5Backend}>
               <ScrollView className={cx({ hide: skeletonVisible })}>
-                {appSectionDetail.map((data, index) => (
+                {appSectionDetail.map((data, index: number) => (
                   <AppSectionItem
                     key={data.workSheetId}
                     ids={ids}

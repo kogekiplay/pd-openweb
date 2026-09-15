@@ -90,7 +90,7 @@ const SectionColorConfigModal = props => {
             <Button
               type="primary"
               onClick={() => {
-                const filterSectionColors = sectionColors.filter((item, index) => {
+                const filterSectionColors = sectionColors.filter((item, index: number) => {
                   const next = sectionColors[index + 1] || {};
                   return item.value >= next.value || _.isUndefined(next.value);
                 });
@@ -248,7 +248,7 @@ const SectionColorConfigModal = props => {
           </div>
         )}
         <div className="mBottom16 mTop10">{_l('按百分比区间划分依据')}</div>
-        {sectionColors.map((data, index) => (
+        {sectionColors.map((data, index: number) => (
           <div className="flexRow valignWrapper mBottom10" key={index}>
             <div className="mRight10">{_l('当前值 <=')}</div>
             <Input
@@ -426,7 +426,7 @@ const GaugeColor = props => {
             <div
               className="entranceWrap ruleIcon flexRow valignWrapper pointer"
               onClick={() => {
-                const newColorRules = colorRules.map((item, index) => (index === 1 ? {} : item));
+                const newColorRules = colorRules.map((item, index: number) => (index === 1 ? {} : item));
                 onChangeDisplayValue('colorRules', newColorRules);
               }}
             >

@@ -167,7 +167,7 @@ export default function AllOptionList(props) {
     const firstLine = list.slice(0, maxCol);
     const others = list.slice(maxCol);
 
-    let pos = firstLine.map((item, index) => ({ top: 0, left: index * itemWidth, y: computeHeight(item) }));
+    let pos = firstLine.map((item, index: number) => ({ top: 0, left: index * itemWidth, y: computeHeight(item) }));
 
     const findPrevItem = () => {
       const cols = groupBy(pos, 'left');

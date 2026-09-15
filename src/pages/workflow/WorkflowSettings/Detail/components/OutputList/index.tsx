@@ -260,7 +260,7 @@ export default class OutputList extends Component<any, any> {
   /**
    * 删除参数
    */
-  removeParameters(controlId) {
+  removeParameters(controlId: string) {
     const { outputType, data, updateSource } = this.props;
     const { outputs, conditions } = data;
 

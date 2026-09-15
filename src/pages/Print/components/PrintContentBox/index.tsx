@@ -194,7 +194,7 @@ const PrintContentBox = props => {
     return <LoadDiv className="mTop50" size="big" />;
   }
 
-  const printItems = rowValues.map((rowValue, index) => (
+  const printItems = rowValues.map((rowValue, index: number) => (
     <Fragment key={`enhancer-${rowValue.rowId}`}>
       <ContentEnhancer
         {...rest}

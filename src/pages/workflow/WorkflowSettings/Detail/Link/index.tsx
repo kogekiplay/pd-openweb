@@ -489,7 +489,7 @@ export default class Link extends Component<any, any> {
   /**
    * 获取工作表详情
    */
-  getWorksheetInfo(worksheetId) {
+  getWorksheetInfo(worksheetId: string) {
     worksheet.getWorksheetInfo({ worksheetId, getViews: true }).then(result => {
       if (result.resultCode === 1) {
         this.setState({ views: result.views });

@@ -73,7 +73,7 @@ export default class DepartmentList extends Component<any, any> {
     if (departments && departments.length) {
       return (
         <div className="GSelect-departmentList">
-          {departments.map((department, index) => {
+          {departments.map((department, index: number) => {
             return (
               <Department
                 active={_.includes(activeIds, department.departmentId)}

@@ -405,7 +405,7 @@ export default function AutoId({ data, onChange, ...rest }) {
     handleRulesChange(nextRules);
   };
 
-  const updateRule = (index, obj) => {
+  const updateRule = (index: number, obj) => {
     const nextRules = update(rules, { [index]: { $apply: item => ({ ...item, ...obj }) } });
     handleRulesChange(nextRules.filter(r => r.type));
   };

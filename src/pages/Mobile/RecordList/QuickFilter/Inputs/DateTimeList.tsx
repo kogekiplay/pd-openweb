@@ -32,7 +32,7 @@ export default function DateTimeList(props) {
 
   return (
     <div>
-      {date.map((item, index) => (
+      {date.map((item, index: number) => (
         <Fragment key={index}>
           {renderItem(item)}
           {index !== date.length - 1 && (

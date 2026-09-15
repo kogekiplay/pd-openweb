@@ -90,7 +90,7 @@ let RecordList = class RecordList extends Component<any, any> {
     this.props.emptySheetControls();
   }
 
-  sheetViewOpenRecord = (recordId, viewId) => {
+  sheetViewOpenRecord = (recordId: string, viewId: string) => {
     this.setState({
       previewRecordId: recordId,
       tempViewIdForRecordInfo: viewId,

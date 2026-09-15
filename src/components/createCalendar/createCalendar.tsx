@@ -807,10 +807,10 @@ CreateCalendar.methods = {
         continue;
       }
 
-      $.each(existsIds, function (index, id) {
+      $.each(existsIds, function (index: number, id) {
         existsIdsCheckFun(i, id);
       });
-      $.each(existsAccounts, function (index, account) {
+      $.each(existsAccounts, function (index: number, account) {
         existsAccountsCheckFun(i, account);
       });
 
@@ -823,7 +823,7 @@ CreateCalendar.methods = {
     }
 
     var $memberList = $(memberList);
-    $memberList.each(function (index, elem) {
+    $memberList.each(function (index: number, elem) {
       CreateCalendar.methods.checkUserBusyState($(elem));
     });
     $('.createAddMemberBox .createAddMember').before($memberList);
@@ -1032,7 +1032,7 @@ CreateCalendar.methods = {
       if (weekDay.length === 5 && weekDay[0] == 1 && weekDay[4] == 5) {
         messages += _l('在 工作日');
       } else {
-        $.map(weekDay, function (item, index) {
+        $.map(weekDay, function (item, index: number) {
           if (index === 0) {
             messages += _l('星期');
           } else {
@@ -1349,7 +1349,7 @@ CreateCalendar.methods = {
     // 日程成员
     var members = [];
     var specialAccounts = {};
-    $('#addCalendarMembers .createMember').each(function (index, item) {
+    $('#addCalendarMembers .createMember').each(function (index: number, item) {
       if ($(item).attr('data-id')) {
         members.push($(item).attr('data-id'));
       } else {

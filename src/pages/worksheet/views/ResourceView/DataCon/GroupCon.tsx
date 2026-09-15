@@ -210,7 +210,7 @@ export default function GroupCon(props) {
   const type =
     localStorage.getItem(`${view.viewId}_resource_type`) || types[_.get(view, 'advancedSetting.calendarType') || 0];
 
-  const handleMouseDown = (event, index) => {
+  const handleMouseDown = (event, index: number) => {
     const { target } = event;
     const startClientX = event.clientX;
     const startDragValue = target.parentElement.offsetLeft + target.parentElement.clientWidth;

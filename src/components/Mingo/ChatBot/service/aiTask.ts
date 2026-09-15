@@ -55,7 +55,7 @@ export async function fetchWorksheetNameIconRecommend({ message, context, projec
   }
 }
 
-export async function getWorksheetNameAndIcon(appId, createPrompt, abortController) {
+export async function getWorksheetNameAndIcon(appId: string, createPrompt, abortController) {
   return new Promise(async resolve => {
     const response = await sseAjax.buildWorkSheet(
       {

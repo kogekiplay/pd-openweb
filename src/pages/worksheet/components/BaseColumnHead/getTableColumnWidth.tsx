@@ -10,7 +10,7 @@ export default function getTableColumnWidth(
   rows,
   control,
   columnStyle,
-  worksheetId,
+  worksheetId: string,
 ) {
   try {
     let result = 60;

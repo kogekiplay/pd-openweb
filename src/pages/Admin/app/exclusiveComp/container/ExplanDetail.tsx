@@ -224,7 +224,7 @@ function ExplanDetail(props) {
       title: '',
       width: 50,
       dataIndex: 'id',
-      render: (value, record, index) => {
+      render: (value, record, index: number) => {
         return (
           <Trigger
             popupVisible={actionOp === index}

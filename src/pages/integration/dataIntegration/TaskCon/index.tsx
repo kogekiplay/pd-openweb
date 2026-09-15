@@ -154,7 +154,7 @@ class Task extends Component<any, any> {
     });
   };
   //获取当前画布所有的数据源信息
-  getDatasourcesList = (flowData, projectId, cb) => {
+  getDatasourcesList = (flowData, projectId: string, cb) => {
     const nodes =
       _.values(flowData.flowNodes).filter(
         o =>
@@ -317,7 +317,7 @@ class Task extends Component<any, any> {
                   className: 'connectorErrorDialog',
                   description: (
                     <div className="errorInfo" style={{ marginBottom: -30, 'max-height': 400, overflow: 'auto' }}>
-                      {errorMsgList.map((error, index) => {
+                      {errorMsgList.map((error, index: number) => {
                         return (
                           <div key={index} className="mTop5">
                             {error}

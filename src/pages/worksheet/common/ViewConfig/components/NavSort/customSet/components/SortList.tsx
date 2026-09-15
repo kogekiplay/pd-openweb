@@ -12,7 +12,7 @@ const Wrap = styled.div``;
 export default function (props) {
   const { setting, onChange, maxCount } = props;
 
-  const onUpdateSetting = (data, index) => {
+  const onUpdateSetting = (data, index: number) => {
     if (!data) {
       onChange(setting.filter(o => o !== 'add'));
     } else if (isArray(data)) {
@@ -101,7 +101,7 @@ export default function (props) {
                 {...options}
                 setting={setting}
                 onAdd={index => onAdd(index)}
-                onUpdate={(data, index) => onUpdateSetting(data, index)}
+                onUpdate={(data, index: number) => onUpdateSetting(data, index)}
                 onDelete={data =>
                   onChange(
                     setting.filter(o =>

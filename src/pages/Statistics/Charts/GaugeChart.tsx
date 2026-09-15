@@ -308,7 +308,7 @@ export default class extends Component<any, any> {
     const getSectionColors = () => {
       const colors = SYS_CHART_COLORS[0].colors;
       const { sectionColors = [] } = sectionColorConfig;
-      return sectionColors.map((data, index) => data.color || colors[index % colors.length]).reverse();
+      return sectionColors.map((data, index: number) => data.color || colors[index % colors.length]).reverse();
     };
 
     const getTicks = () => {

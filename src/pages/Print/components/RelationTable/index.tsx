@@ -95,7 +95,7 @@ export default class RelationTable extends React.Component<any, any> {
           dataIndex: 'number',
           className: 'orderNumber',
           width: orderNumberWidth,
-          render: (text, record, index) => index + 1,
+          render: (text, record, index: number) => index + 1,
         },
       ];
     }
@@ -226,7 +226,7 @@ export default class RelationTable extends React.Component<any, any> {
     return [14, 42].includes(it.type) || (it.type === 30 && it.sourceControlType === 14);
   };
 
-  resizeWidth = (controlId, w) => {
+  resizeWidth = (controlId: string, w) => {
     const { handChange } = this.props;
     const { list } = this.state;
     let n = list.findIndex(it => it.controlId === controlId);
@@ -272,7 +272,7 @@ export default class RelationTable extends React.Component<any, any> {
     );
   };
 
-  changeData = (controlId, w, dataList?) => {
+  changeData = (controlId: string, w, dataList?) => {
     const { printData, id } = this.props;
     let { controlStyles = [] } = printData;
     let data = [];

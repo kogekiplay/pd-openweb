@@ -112,7 +112,7 @@ class ModalWrap extends Component<any, any> {
 
             {opinions
               .filter(data => data.value.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()))
-              .map((data, index) => (
+              .map((data, index: number) => (
                 <Fragment key={index}>
                   {index === 0 && <div className="opinionItem bold Font14">{_l('选择预设')}</div>}
                   <div
@@ -129,7 +129,7 @@ class ModalWrap extends Component<any, any> {
 
             {opinionList
               .filter(data => data.opinion.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()))
-              .map((data, index) => (
+              .map((data, index: number) => (
                 <Fragment key={index}>
                   {index === 0 && <div className="opinionItem bold Font14">{_l('上次输入')}</div>}
                   <div

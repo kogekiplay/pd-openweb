@@ -189,7 +189,7 @@ const Group = props => {
   });
   dragPreview(drop(ref));
 
-  const renderChildren = (item, index) => {
+  const renderChildren = (item, index: number) => {
     item.layerIndex = layerIndex + 1;
     item.isAppItem = item.type !== 2;
     item.parentId = id;
@@ -674,7 +674,7 @@ const Container = props => {
 
   const hideAppSection = navigationGroup.length === 1 && _.isEmpty(navigationGroup[0].name);
 
-  const renderGroup = (item, index) => {
+  const renderGroup = (item, index: number) => {
     item.layerIndex = 0;
     item.index = index;
     return (

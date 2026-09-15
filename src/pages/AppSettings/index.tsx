@@ -86,7 +86,7 @@ class AppSettings extends Component<any, any> {
     }
   }
 
-  getFilteredRouterConfigs = (routerConfigs, projectId, permissionType) => {
+  getFilteredRouterConfigs = (routerConfigs, projectId: string, permissionType) => {
     const { hideRagEmbedFun } = md.global.SysSettings;
     const filtered = hideRagEmbedFun
       ? routerConfigs.filter(item => item.featureId !== VersionProductType.vectorKnowledgeBase)

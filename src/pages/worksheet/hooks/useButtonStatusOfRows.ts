@@ -9,7 +9,7 @@ import worksheetAjax from 'src/api/worksheet';
  * @param {Array} btnIds - 按钮 ID 数组
  * @returns {Object} - { buttonsCheckStatus, loading }
  */
-export default function useButtonStatusOfRows(worksheetId, rowIds = [], btnIds = []) {
+export default function useButtonStatusOfRows(worksheetId: string, rowIds = [], btnIds = []) {
   const [buttonsCheckStatus, setButtonsCheckStatus] = useState({});
   const [loading, setLoading] = useState(false);
 

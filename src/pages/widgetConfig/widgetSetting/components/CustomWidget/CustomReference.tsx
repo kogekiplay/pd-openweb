@@ -102,7 +102,7 @@ export default function CustomReference(props) {
         <div className="customField">{_l('字段')}</div>
         <div className="fieldName">{_l('变量名 (env.*)')}</div>
       </div>
-      {reference.map((item, index) => {
+      {reference.map((item, index: number) => {
         const control = _.find(referenceControls, a => a.controlId === item.cid);
         return (
           <div className="customItem" key={`${data.controlId}-${index}`}>

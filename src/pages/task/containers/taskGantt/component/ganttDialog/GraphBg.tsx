@@ -16,10 +16,10 @@ export default class GraphBg extends Component<any, any> {
     if (type === 'week') subWidth = width * 7;
     return (
       <div className="graphBg flex flexRow">
-        {time.map((item, index) => {
+        {time.map((item, index: number) => {
           return (
             <div key={`graphFiled-${index}`} className="fields flexRow">
-              {item.sub.map((sub, index) => {
+              {item.sub.map((sub, index: number) => {
                 if (type === 'month') {
                   const days = moment(`${item.pub}${sub}`, 'YYYYM月').daysInMonth();
                   subWidth = width * days;

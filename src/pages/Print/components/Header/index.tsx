@@ -46,7 +46,7 @@ class Header extends React.Component<any, any> {
       const separators = contentNode.querySelectorAll('.printItemSeparator');
       separators.forEach(node => node.remove());
       let nodes = contentNode.querySelectorAll('.printContent');
-      nodes.forEach((node, index) => {
+      nodes.forEach((node, index: number) => {
         if (index) {
           node.style.pageBreakBefore = 'always';
         }

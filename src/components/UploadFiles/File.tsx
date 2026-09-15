@@ -357,7 +357,7 @@ export default class FileComponent extends Component<any, any> {
       </div>
     );
   }
-  renderTwicePenel(fileResponse, index) {
+  renderTwicePenel(fileResponse, index: number) {
     let isKc = !!fileResponse.refId;
     let { isEdit, penelVisible } = this.state;
     let isPicture = RegExpValidator.fileIsPicture(fileResponse.fileExt);
@@ -527,7 +527,7 @@ export default class FileComponent extends Component<any, any> {
       </div>
     );
   }
-  renderPenel(fileResponse, index, isKc?) {
+  renderPenel(fileResponse, index: number, isKc?) {
     let { isEdit, penelVisible } = this.state;
     let isPicture = RegExpValidator.fileIsPicture(fileResponse.fileExt);
     let penelClass = cx(
@@ -710,7 +710,7 @@ export default class FileComponent extends Component<any, any> {
       </div>
     );
   }
-  renderMDPenel(fileResponse, index) {
+  renderMDPenel(fileResponse, index: number) {
     const { hideDownload = false, handleOpenControlAttachmentInNewTab } = this.props;
     let browse = true;
     let { penelVisible, moreVisible, isDelete } = this.state;

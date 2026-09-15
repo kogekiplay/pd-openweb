@@ -218,7 +218,7 @@ export const deleteFlowNode = (processId, nodeId) => (dispatch: AppDispatch, get
 };
 
 // 修改工作流节点的名称
-export const updateFlowNodeName = (processId, nodeId, name) => (dispatch: AppDispatch, getState: GetState) => {
+export const updateFlowNodeName = (processId, nodeId, name: string) => (dispatch: AppDispatch, getState: GetState) => {
   flowNode
     .updateFlowNodeName({
       nodeId,

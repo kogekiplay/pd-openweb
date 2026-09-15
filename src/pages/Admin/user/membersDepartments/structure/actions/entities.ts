@@ -248,7 +248,7 @@ export const APPROVAL_USER_FAILURE = 'APPROVAL_USER_FAILURE';
 /** fetch approval_user
  * relies on middleware `api`
  */
-const fetchApprovalUser = (projectId, pageIndex, userStatus, applyDateOrderBy) => {
+const fetchApprovalUser = (projectId: string, pageIndex, userStatus, applyDateOrderBy) => {
   const params = {
     pageIndex,
     projectId,
@@ -269,7 +269,7 @@ const fetchApprovalUser = (projectId, pageIndex, userStatus, applyDateOrderBy) =
 /** fetch approvalUser before hand
  * relies on redux-thunk
  */
-export const loadApprovalUsers = (projectId, pageIndex) => (dispatch: StructureDispatch, getState: StructureGetState) => {
+export const loadApprovalUsers = (projectId: string, pageIndex) => (dispatch: StructureDispatch, getState: StructureGetState) => {
   const { userStatus } = getState().current;
   const { applyDateOrderBy } = getState().entities;
   return dispatch(fetchApprovalUser(projectId, pageIndex || 1, userStatus, applyDateOrderBy));
@@ -286,7 +286,7 @@ const fetchInactiveUser = (
   // sortField,
   // sortType,
   // keywords,
-  projectId,
+  projectId: string,
   pageIndex,
 ) => {
   const params = {
@@ -310,7 +310,7 @@ const fetchInactiveUser = (
 /** fetch InactiveUser before hand
  * relies on redux-thunk
  */
-export const loadInactiveUsers = (projectId, pageIndex) => dispatch => {
+export const loadInactiveUsers = (projectId: string, pageIndex) => dispatch => {
   return dispatch(fetchInactiveUser(projectId, pageIndex || 1));
 };
 
@@ -329,7 +329,7 @@ const USER_STATUS = {
   REMOVED: 4, // 已删除
 };
 
-const fetchAllUser = (projectId, pageIndex) => {
+const fetchAllUser = (projectId: string, pageIndex) => {
   const params = {
     pageIndex,
     projectId,
@@ -349,7 +349,7 @@ const fetchAllUser = (projectId, pageIndex) => {
 /** fetch InactiveUser before hand
  * relies on redux-thunk
  */
-export const loadAllUsers = (projectId, pageIndex) => dispatch => {
+export const loadAllUsers = (projectId: string, pageIndex) => dispatch => {
   return dispatch(fetchAllUser(projectId, pageIndex || 1));
 };
 

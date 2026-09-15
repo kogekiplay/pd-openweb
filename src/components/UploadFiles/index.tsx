@@ -482,7 +482,7 @@ export default class UploadFiles extends Component<any, any> {
       },
     );
   }
-  onMDPreview(id, index) {
+  onMDPreview(id, index: number) {
     const currentFile = this.state.attachmentData[index];
 
     if (!currentFile) {
@@ -555,7 +555,7 @@ export default class UploadFiles extends Component<any, any> {
       },
     );
   }
-  onPreview(id, index, event) {
+  onPreview(id, index: number, event) {
     if (event.target.classList.contains('UploadFiles-editInput')) {
       return;
     }
@@ -1089,7 +1089,7 @@ export default class UploadFiles extends Component<any, any> {
           className={cx('UploadFiles-filesWrapper', { rowDisplay: this.props.rowDisplay })}
           style={{ display: length ? '' : 'none' }}
         >
-          {attachmentData.map((item, index) => (
+          {attachmentData.map((item, index: number) => (
             <FileComponent
               isUpload={isUpload}
               hideDownload={hideDownload}
@@ -1106,7 +1106,7 @@ export default class UploadFiles extends Component<any, any> {
                 : {})}
             />
           ))}
-          {temporaryData.map((item, index) => (
+          {temporaryData.map((item, index: number) => (
             <FileComponent
               isUpload={isUpload}
               hideDownload={hideDownload}
@@ -1123,7 +1123,7 @@ export default class UploadFiles extends Component<any, any> {
                 : {})}
             />
           ))}
-          {kcAttachmentData.map((item, index) => (
+          {kcAttachmentData.map((item, index: number) => (
             <FileComponent
               isUpload={isUpload}
               hideDownload={hideDownload}

@@ -113,7 +113,7 @@ const Entrance = React.forwardRef((componentProps, ref) => {
    * 更新error显示状态
    */
 
-  const updateErrorState = (isShow, controlId) => {
+  const updateErrorState = (isShow, controlId: string) => {
     updateErrorStateAction(dispatch, {
       getState,
       isShow,
@@ -231,7 +231,7 @@ const Entrance = React.forwardRef((componentProps, ref) => {
     });
   };
 
-  const checkControlUnique = (controlId, controlType, controlValue) => {
+  const checkControlUnique = (controlId: string, controlType, controlValue) => {
     checkControlUniqueAction(dispatch, {
       props,
       getState,

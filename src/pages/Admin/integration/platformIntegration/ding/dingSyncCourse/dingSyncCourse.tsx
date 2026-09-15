@@ -111,7 +111,7 @@ export default class DingSyncCourse extends React.Component<any, any> {
     );
   }
 
-  getAppInfo = (isWX: boolean, projectId, apkId) => {
+  getAppInfo = (isWX: boolean, projectId: string, apkId) => {
     if (isWX) {
       Ajax.getWorkWXSsoUrlInfo({
         projectId: projectId,

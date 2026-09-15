@@ -480,7 +480,7 @@ function PluginConfig(props) {
     return (
       <div className="tabList">
         <ul>
-          {getTabList().map((item, index) => {
+          {getTabList().map((item, index: number) => {
             return (
               <li
                 key={index}

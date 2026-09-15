@@ -25,7 +25,7 @@ const rejectErr = function (ajaxPromise) {
   });
 };
 
-export function getKcNodeDetail(nodeId, worksheetId) {
+export function getKcNodeDetail(nodeId, worksheetId: string) {
   return kcAjax.getNodeDetail({ id: nodeId, actionType: 14, worksheetId });
 }
 
@@ -88,7 +88,7 @@ export function renameFile(docVersionID, fileID, newName, ext, sourceID) {
   );
 }
 
-export function renameKcFile(id, name, ext) {
+export function renameKcFile(id, name: string, ext) {
   return rejectErr(
     kcService.updateNode({
       name: name + (ext ? '.' + ext : ''),

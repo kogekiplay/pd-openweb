@@ -183,7 +183,7 @@ export default props => {
         >
           <div className="Font14 bold">{_l('用户')}</div>
           <div className="mTop10 flexRow alignItemsCenter">
-            {users.map((user, index) => {
+            {users.map((user, index: number) => {
               return (
                 <Member key={index}>
                   <img src={user.avatar} />

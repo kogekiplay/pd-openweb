@@ -6,7 +6,7 @@ import homeApp from 'src/api/homeApp';
 import { canEditApp } from 'src/pages/worksheet/redux/actions/util';
 import store from 'src/redux/configureStore';
 
-const formatApps = function (validProject, projectId, appId) {
+const formatApps = function (validProject, projectId: string, appId: string) {
   const appList = [];
   const project = validProject.filter(item => item.projectId === projectId)[0];
 

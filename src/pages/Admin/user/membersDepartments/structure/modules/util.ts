@@ -238,7 +238,7 @@ export const getParentNode = (newDepartments, departmentId) => {
 const getCurrentPath = path => {
   return (path || '')
     .split('-')
-    .map((item, index) => {
+    .map((item, index: number) => {
       if (index == 0) {
         return `[${item}]`;
       } else {

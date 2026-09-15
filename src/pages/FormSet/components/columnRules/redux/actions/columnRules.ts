@@ -200,7 +200,7 @@ export function saveControlRules() {
     if (!name || !dealFilters.length || !checkConditionCanSave(dealFilters) || !ruleItems.length || !ruleItemError) {
       filters.length > 0 && dispatch(updateError('filters', filters));
       ruleItems.length > 0 &&
-        ruleItems.map((item, index) => {
+        ruleItems.map((item, index: number) => {
           if (item.type === 9) {
             if (item.controls && item.controls.length > 0) {
               item.controls.map((c, cidx) => dispatch(updateError('setValue', c.value, `${index}-${cidx}`)));

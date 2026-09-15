@@ -417,7 +417,7 @@ class App extends Component<any, any> {
 
     let noGroupData = [];
     let groupData = [];
-    workSheetInfo.forEach((item, index) => {
+    workSheetInfo.forEach((item, index: number) => {
       if (item.type === 2) {
         noGroupData.length &&
           groupData.push({ name: '', workSheetId: noGroupData[0].workSheetId, workSheetInfo: noGroupData });

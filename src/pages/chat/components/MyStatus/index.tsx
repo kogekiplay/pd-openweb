@@ -112,7 +112,7 @@ export default function MyStatus() {
           history: false,
           hideClassic: true,
           placement: 'left bottom',
-          onSelect: (name, value, emotionText) => {
+          onSelect: (name: string, value, emotionText) => {
             setCurrentIndex(refIndex);
             setStatusList(prevList => {
               const copyList = _.cloneDeep(prevList);

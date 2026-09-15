@@ -487,7 +487,7 @@ class ChildTable extends React.Component<any, any> {
     this.dataFormatCacheMap.clear();
   };
 
-  getControl(controlId) {
+  getControl(controlId: string) {
     return _.find(this.state.controls, { controlId });
   }
 
@@ -1046,7 +1046,7 @@ class ChildTable extends React.Component<any, any> {
     }
   }
 
-  handleUniqueValidate = (controlId, value, rowId, backendCheck) => {
+  handleUniqueValidate = (controlId: string, value, rowId, backendCheck) => {
     const { rows, control, updateCellErrors } = this.props;
     const { controls } = this.state;
     const checkControl = _.find(controls, { controlId });

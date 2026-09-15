@@ -330,7 +330,7 @@ export default class ExportSheet extends Component<any, any> {
    */
   showControlsSort = (a, b) => {
     const grouped = _.groupBy(a, obj => (b.includes(obj.controlId) ? 'matched' : 'unmatched'));
-    const orderMap = _.fromPairs(b.map((id, index) => [id, index]));
+    const orderMap = _.fromPairs(b.map((id, index: number) => [id, index]));
     const matchedSorted = _.sortBy(grouped.matched || [], obj => orderMap[obj.controlId]);
     const unmatched = grouped.unmatched || [];
 

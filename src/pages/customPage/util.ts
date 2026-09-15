@@ -186,7 +186,7 @@ export const reorderComponents = components => {
 
 //  获取layout布局, 如果没有设置好的layout,则生成一个默认的
 export const getLayout = (components, layoutType) => {
-  return components.map((item = {}, index) => {
+  return components.map((item = {}, index: number) => {
     const { id } = item;
     const { layout, titleVisible } = item[layoutType] || {};
     return layout

@@ -290,7 +290,7 @@ export const ssoLogin = (returnUrl = '') => {
   }
 };
 
-export const getWorkWeiXinCorpInfoByApp = (projectId, returnUrl = '') => {
+export const getWorkWeiXinCorpInfoByApp = (projectId: string, returnUrl = '') => {
   loginController
     .getWorkWeiXinCorpInfoByApp({
       projectId,

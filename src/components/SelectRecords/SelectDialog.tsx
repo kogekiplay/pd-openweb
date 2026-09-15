@@ -674,7 +674,7 @@ export default function SelectDialog({ ...args }) {
                         tempSheetColumnWidths,
                         tempSheetColumnWidths,
                       )}
-                      onColumnWidthChange={(controlId, value) => {
+                      onColumnWidthChange={(controlId: string, value) => {
                         setTempSheetColumnWidths(prev => ({ ...prev, [controlId]: value }));
                       }}
                       columnStyles={sheetStyles ? sheetStyles.columnStyles : {}}

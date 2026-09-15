@@ -210,7 +210,7 @@ export default ({ data, updateSource, isIntegration, isPlugin }) => {
     updateSource({ controls });
   };
 
-  const updateOptions = (action: string, value, { controlId, options }, index, isBlur?: boolean) => {
+  const updateOptions = (action: string, value, { controlId, options }, index: number, isBlur?: boolean) => {
     if (isBlur && !!options.find((o, i) => o[action] === value && i !== index)) {
       value =
         value +
@@ -555,7 +555,7 @@ export default ({ data, updateSource, isIntegration, isPlugin }) => {
           {selectItem.type === 9 && (
             <Fragment>
               <div className="mTop20 bold">{_l('选项')}</div>
-              {selectItem.options.map((o, index) => (
+              {selectItem.options.map((o, index: number) => (
                 <div className="mTop10 flexRow alignItemsCenter" key={index}>
                   <input
                     name="startPBCContent4"

@@ -48,7 +48,7 @@ export default class UserDetail extends React.Component<any, any> {
     }
   }
 
-  fetchUserDetail(accountId) {
+  fetchUserDetail(accountId: string) {
     this.setState({
       isLoading: true,
     });

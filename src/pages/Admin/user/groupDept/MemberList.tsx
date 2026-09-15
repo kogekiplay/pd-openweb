@@ -133,7 +133,7 @@ export default class MemberList extends Component<any, any> {
     });
   };
 
-  handleDelete(id, name) {
+  handleDelete(id, name: string) {
     Confirm({
       title: _l('移除管理员'),
       description: _l('确认移除%0的管理员权限？', name),

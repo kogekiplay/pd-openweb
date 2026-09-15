@@ -272,7 +272,7 @@ class TaskBasic extends Component<any, any> {
   /**
    * 更改负责人之后回调处理列表
    */
-  afterUpdateTaskCharge(avatar, accountId) {
+  afterUpdateTaskCharge(avatar, accountId: string) {
     const { taskId, openType } = this.props;
 
     if (openType === OPEN_TYPE.slide) {

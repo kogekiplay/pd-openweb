@@ -48,7 +48,7 @@ export function getSheetListFirstId(sheetList = [], isCharge = true) {
   return result;
 }
 
-export const moveSheetCache = (appId, groupId) => {
+export const moveSheetCache = (appId: string, groupId) => {
   const storageKey = `mdAppCache_${md.global.Account.accountId}_${appId}`;
   const storage = safeParse(localStorage.getItem(storageKey) || '{}');
   const worksheets = (storage.worksheets || []).map(data => {
@@ -63,12 +63,12 @@ export const moveSheetCache = (appId, groupId) => {
   safeLocalStorageSetItem(storageKey, JSON.stringify(storage));
 };
 
-export const getHighAuthSheetSwitchPermit = (sheetSwitchPermit, worksheetId) => {
+export const getHighAuthSheetSwitchPermit = (sheetSwitchPermit, worksheetId: string) => {
   return sheetSwitchPermit.map(l => ({ ...l, state: true, viewIds: (l.viewIds || []).concat(worksheetId) }));
 };
 
 // 本地存储当前选中菜单
-export const saveSelectExtensionNavType = (worksheetId, navType: string, navValue) => {
+export const saveSelectExtensionNavType = (worksheetId: string, navType: string, navValue) => {
   const sheetConfigNavInfo = safeParse(localStorage.getItem('sheetConfigNavInfo') || '{}');
 
   if (!sheetConfigNavInfo[worksheetId]) {

@@ -7,7 +7,7 @@ import './index.less';
 const MobileSearch = props => {
   const { enumDefault, controlName, value, loading, advancedSetting = {}, disabled, hint, formDisabled } = props;
   const { itemtitle = '', clicksearch, searchfirst, min = '0' } = advancedSetting;
-  const optionData = (props.optionData || []).map((it, index) => ({ ...it, index }));
+  const optionData = (props.optionData || []).map((it, index: number) => ({ ...it, index }));
 
   const searchInput = useRef(null);
   const isOnComposition = useRef(false);

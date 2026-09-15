@@ -588,7 +588,7 @@ export function updateRecord(newRecord) {
   };
 }
 
-export function updateRecordByRecordId(recordId, changes = {}) {
+export function updateRecordByRecordId(recordId: string, changes = {}) {
   return {
     type: 'UPDATE_RECORD_BY_RECORD_ID',
     recordId,
@@ -868,7 +868,7 @@ export function syncRelateRecordSummaryFromCache() {
   };
 }
 
-export function getDefaultRelatedSheetValue(formData = [], recordId) {
+export function getDefaultRelatedSheetValue(formData = [], recordId: string) {
   const titleControl = formData.filter((c: FormControl) => c.attribute === 1) || {};
   return {
     name: titleControl.value,

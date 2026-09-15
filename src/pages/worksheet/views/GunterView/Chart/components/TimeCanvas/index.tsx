@@ -70,7 +70,7 @@ let TimeCanvas = class TimeCanvas extends Component<any, any> {
     const { periodType, periodList, viewConfig } = this.props;
     return (
       <div className="timeCanvasWrapper flexRow" ref={this.$ref}>
-        {periodList.map((item, index) => (
+        {periodList.map((item, index: number) => (
           <div
             key={index}
             className={cx('item', {

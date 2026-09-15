@@ -60,7 +60,7 @@ const defaultWorksheetState = {
   currentWorksheetType: 5,
 };
 
-export const callDialogSelectUser = function (projectId, callback = () => { }) {
+export const callDialogSelectUser = function (projectId: string, callback = () => { }) {
   dialogSelectUser({
     fromAdmin: true,
     SelectUserSettings: {

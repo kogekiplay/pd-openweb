@@ -49,7 +49,7 @@ export default class MapHandler {
     this.eventHandlers.push({ map, name, callback });
   }
   // 解除绑定
-  _unBindListener(map, name, callback) {
+  _unBindListener(map, name: string, callback) {
     map.off(name, callback);
   }
   // 监听地图点击
@@ -58,7 +58,7 @@ export default class MapHandler {
     this._bindListener(map, 'click', e => {
       const lng = e.lnglat.getLng(); // 经度
       const lat = e.lnglat.getLat(); // 纬度
-      this.getAddress(lng, lat, (address, name) => {
+      this.getAddress(lng, lat, (address, name: string) => {
         // 获取经纬度,以及地址
         callback(lng, lat, address, name);
       });
@@ -69,7 +69,7 @@ export default class MapHandler {
     const map = this.map;
     this._bindListener(map, 'moveend', () => {
       const { lng, lat } = map.getCenter();
-      this.getAddress(lng, lat, (address, name) => {
+      this.getAddress(lng, lat, (address, name: string) => {
         callback(lng, lat, address, name);
       });
     });

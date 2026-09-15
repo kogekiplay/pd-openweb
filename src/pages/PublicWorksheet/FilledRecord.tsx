@@ -438,7 +438,7 @@ export default function FilledRecord(props) {
               })
             }
             publicWorksheetInfo={publicWorksheetInfo}
-            onRefreshList={(recordId, data) => onUpdateRecord(recordId, data)}
+            onRefreshList={(recordId: string, data) => onUpdateRecord(recordId, data)}
           />
         </Suspense>
       )}

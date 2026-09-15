@@ -426,7 +426,7 @@ export function hierarchyTopLevelDataCount(state = 0, action: ReduxAction) {
 }
 
 const addRelateControls = (state, { ids, controls }) => {
-  const newControls: FormControl[] = ids.reduce((p, c, index) => {
+  const newControls: FormControl[] = ids.reduce((p, c, index: number) => {
     p[c] = controls[index];
     return p;
   }, {});
@@ -439,7 +439,7 @@ export function hierarchyRelateSheetControls(state = {}, action: ReduxAction) {
 
   switch (type) {
     case 'INIT_HIERARCHY_RELATE_SHEET_CONTROLS':
-      return ids.reduce((p, c, index) => {
+      return ids.reduce((p, c, index: number) => {
         p[c] = controls[index];
         return p;
       }, {});

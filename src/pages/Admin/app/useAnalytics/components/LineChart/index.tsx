@@ -199,7 +199,7 @@ export default class LineChart extends React.Component<any, any> {
             position: 'top-left',
             offsetX: legendOffsetX,
             itemName: {
-              formatter: (text, item, index) => {
+              formatter: (text, item, index: number) => {
                 let total = index === 0 ? total1 : total2;
                 return text + '：' + total;
               },
@@ -366,7 +366,7 @@ export default class LineChart extends React.Component<any, any> {
             position: 'top-left',
             offsetX: attachmentLegendOffsetX,
             itemName: {
-              formatter: (text, item, index) => {
+              formatter: (text, item, index: number) => {
                 const total = (_.find(subTypeTotal, v => v.subType === index + 1) || { size: 0 }).size;
                 return text + '：' + formatFileSize(total, 2);
               },

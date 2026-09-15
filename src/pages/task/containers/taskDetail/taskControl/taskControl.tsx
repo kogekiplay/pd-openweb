@@ -182,7 +182,7 @@ class TaskControl extends Component<any, any> {
   /**
    * 删除附件
    */
-  deleteFile(controlId, delFile, newFiles) {
+  deleteFile(controlId: string, delFile, newFiles) {
     const { taskId } = this.props;
 
     deleteAttachment(

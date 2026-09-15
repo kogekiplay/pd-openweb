@@ -128,7 +128,7 @@ export default class RecordCard extends Component<any, any> {
       this.setState({ coverError: true });
     }
   };
-  previewAttachment(attachments, index) {
+  previewAttachment(attachments, index: number) {
     const { data, view, controls, projectId } = this.props;
     const coverCidControl = _.find(controls, { controlId: view.coverCid }) || {};
     const hideFunctions = ['editFileName'];

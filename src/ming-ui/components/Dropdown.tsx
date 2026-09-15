@@ -298,7 +298,7 @@ class Dropdown extends Component<any, any> {
 
     return data
       .filter(item => !_.includes(hiddenValue, item.value))
-      .map((item, index) => {
+      .map((item, index: number) => {
         if (_.isArray(item)) {
           return (
             <Fragment key={index}>

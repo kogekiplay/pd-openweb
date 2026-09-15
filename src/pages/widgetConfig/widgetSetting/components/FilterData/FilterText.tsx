@@ -22,7 +22,7 @@ export default function FilterText({ data, allControls }) {
   const filters = getAdvanceSetting(data, 'filters');
   return (
     <FilterTextWrap>
-      {filters.map((item, index) => {
+      {filters.map((item, index: number) => {
         const { controlId } = item;
         const { controlName } = getControlByControlId(allControls, controlId);
         return (

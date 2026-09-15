@@ -7,7 +7,7 @@ export default props => {
     let newData;
 
     if (conditions.length) {
-      newData = props.data.map((item, index) => {
+      newData = props.data.map((item, index: number) => {
         if (i === index) {
           item.conditions = conditions;
         }
@@ -15,7 +15,7 @@ export default props => {
         return item;
       });
     } else {
-      newData = props.data.filter((item, index) => i !== index);
+      newData = props.data.filter((item, index: number) => i !== index);
     }
 
     props.updateSource(newData);

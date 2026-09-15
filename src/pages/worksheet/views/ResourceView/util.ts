@@ -597,7 +597,7 @@ export const getRuleTimes = view => {
 };
 
 //获鼠标悬停样式处理
-export const getResourceRowHoverHandlers = (viewId, index) => {
+export const getResourceRowHoverHandlers = (viewId: string, index: number) => {
   const resourceRowId = `resourceRow_${viewId}_${index}`;
   const resourceGroupId = `resourceGroup_${viewId}_${index}`;
 

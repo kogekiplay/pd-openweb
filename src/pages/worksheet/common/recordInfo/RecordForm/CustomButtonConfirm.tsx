@@ -185,7 +185,7 @@ export default function CustomButtonConfirm(props) {
         onClickAwayExceptions={['.customButtonConfirmDialog .Textarea']}
         onClickAway={() => setState({ showTemplateList: false })}
       >
-        {list.map((item, index) => (
+        {list.map((item, index: number) => (
           <MenuItem key={index} onClick={() => setState({ remark: item.value, showTemplateList: false })}>
             {item.value}
           </MenuItem>

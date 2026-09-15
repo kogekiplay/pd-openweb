@@ -2548,7 +2548,7 @@ class ChildTable extends React.Component<any, any> {
                   );
                 }}
                 updateCell={this.handleUpdateCell}
-                onColumnWidthChange={(controlId, value) => {
+                onColumnWidthChange={(controlId: string, value) => {
                   this.setState({
                     tempSheetColumnWidths: { ...tempSheetColumnWidths, [controlId]: value },
                   });

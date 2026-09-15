@@ -13,7 +13,7 @@ import './index.less';
 const classify = files => {
   const imagelist = [];
   const filelist = [];
-  files.forEach((item, index) => {
+  files.forEach((item, index: number) => {
     if (item.attachmentType === 1) {
       item.index = index;
       imagelist.push(item);

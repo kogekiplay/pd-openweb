@@ -154,7 +154,7 @@ export default class EnterpriseCard extends Component<any, any> {
     return res;
   };
 
-  exitProject(projectId) {
+  exitProject(projectId: string) {
     account.exitProject({ projectId: projectId }).then(res => {
       if (res === 1) alert(_l('退出成功'));
     });
@@ -244,7 +244,7 @@ export default class EnterpriseCard extends Component<any, any> {
   };
 
   // 指定同事
-  transferAdminProject = (projectId, companyName, password, type) => {
+  transferAdminProject = (projectId: string, companyName, password, type) => {
     const needTransfer = type === 3;
 
     Dialog.confirm({

@@ -204,7 +204,7 @@ export default function List(props) {
       )}
       <ul className="list">
         {list &&
-          list.map((item, index) => {
+          list.map((item, index: number) => {
             let prefix = settingInfo.prefix;
 
             return (

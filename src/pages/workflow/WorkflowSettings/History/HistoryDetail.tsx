@@ -166,7 +166,7 @@ export default class HistoryDetail extends Component<any, any> {
                   {isApproval ? _l('发起人：') : type === 0 ? _l('触发者：') : _l('%0人：', NODE_TYPE[type].text)}
                 </span>
                 {names.map(
-                  (item, index) =>
+                  (item, index: number) =>
                     item && (
                       <span className={cx({ overrule: item.action === 5 })} key={index}>
                         {item.name}
@@ -433,7 +433,7 @@ export default class HistoryDetail extends Component<any, any> {
               )}
             </div>
             <ul className="logList">
-              {works.map((item, index) => {
+              {works.map((item, index: number) => {
                 const { flowNode, startDate, endDate, status, logs, multipleLevelType, sort, app } = item;
                 const { name, alias, resultTypeId, appType } = flowNode;
                 const { type } = NODE_TYPE[flowNode.child && flowNode.type === 0 ? 16 : flowNode.type] || {};

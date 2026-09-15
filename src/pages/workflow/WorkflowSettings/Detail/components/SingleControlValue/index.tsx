@@ -1085,7 +1085,7 @@ export default class SingleControlValue extends Component<any, any> {
                     {!JSON.parse(item.fieldValue || '[]').length && (
                       <span className="textDisabled LineHeight34 mLeft4">{TYPES[item.type].placeholder}</span>
                     )}
-                    {JSON.parse(item.fieldValue || '[]').map((list, index) => {
+                    {JSON.parse(item.fieldValue || '[]').map((list, index: number) => {
                       return (
                         <li key={index} className="tagItem flexRow">
                           <span className="tag bold" title={list[TYPES[item.type].name]}>

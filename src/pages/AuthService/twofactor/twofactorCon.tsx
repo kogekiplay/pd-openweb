@@ -322,7 +322,7 @@ const Twofactor = forwardRef(function Twofactor(props, ref) {
               <TitleSwitchOther className="Font15">{_l('其他验证方式')}</TitleSwitchOther>
               {enabledTypes
                 .filter(t => t !== type)
-                .map((method, index) => (
+                .map((method, index: number) => (
                   <MethodItem
                     key={index}
                     isMobile={browserIsMobile()}

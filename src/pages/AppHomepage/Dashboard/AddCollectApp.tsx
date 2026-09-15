@@ -179,7 +179,7 @@ function AddCollectApp(props) {
 
     return (
       <div className="appList">
-        {appList.map((app, index) => {
+        {appList.map((app, index: number) => {
           const isExpand = _.includes(expandIds, app.id);
           const isAppChecked = !!_.find(selectedItems, item => item.appId === app.id && !item.type);
           const appName = _.get(_.find(appLang, { key: app.id }), 'value') || app.name;

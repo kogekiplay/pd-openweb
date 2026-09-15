@@ -114,7 +114,7 @@ let ViewItems = class ViewItems extends Component<any, any> {
     }
   };
 
-  getWorksheetViews(worksheetId, status?: number) {
+  getWorksheetViews(worksheetId: string, status?: number) {
     const { appId } = this.props;
     sheetAjax
       .getWorksheetViews({

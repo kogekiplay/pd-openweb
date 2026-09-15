@@ -72,7 +72,7 @@ export const formatAdvancedThemes = (
     });
 };
 
-export function getAppNavigateUrl(appId, pcNaviStyle, selectAppItmeType = 2) {
+export function getAppNavigateUrl(appId: string, pcNaviStyle, selectAppItmeType = 2) {
   const storage = safeParse(localStorage.getItem(`mdAppCache_${md.global.Account.accountId}_${appId}`) || '{}');
 
   if (storage && selectAppItmeType === 2) {
@@ -96,7 +96,7 @@ export function getAppNavigateUrl(appId, pcNaviStyle, selectAppItmeType = 2) {
   }
 }
 
-export const getAppItemUrl = (appId, appSectionId, worksheetId) => {
+export const getAppItemUrl = (appId: string, appSectionId, worksheetId: string) => {
   const storage = safeParse(localStorage.getItem(`mdAppCache_${md.global.Account.accountId}_${appId}`) || '{}');
   const cacheViewId = (
     (storage.worksheets || []).filter(w => w.groupId === appSectionId && w.worksheetId === worksheetId)[0] || {}
@@ -107,7 +107,7 @@ export const getAppItemUrl = (appId, appSectionId, worksheetId) => {
     : `/app/${appId}/${appSectionId}/${worksheetId}`;
 };
 
-export const transferExternalLinkUrl = (urlTemplate, projectId, appId) => {
+export const transferExternalLinkUrl = (urlTemplate, projectId: string, appId: string) => {
   let transferUrl = '';
   const urlValue = transferValue(urlTemplate);
   urlValue.forEach(item => {

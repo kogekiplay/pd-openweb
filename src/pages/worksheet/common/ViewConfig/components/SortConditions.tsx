@@ -202,7 +202,7 @@ export default class SortConditions extends React.Component<any, any> {
     onChange(newSortConditions);
   };
 
-  handleChangeSortControl = (index, value) => {
+  handleChangeSortControl = (index: number, value) => {
     const { sortConditions } = this.state;
     const newSortConditions = update(sortConditions, {
       [index]: {
@@ -215,7 +215,7 @@ export default class SortConditions extends React.Component<any, any> {
     this.handleChange(newSortConditions);
   };
 
-  handleChangeSortType = (index, value) => {
+  handleChangeSortType = (index: number, value) => {
     const { sortConditions } = this.state;
     const newSortConditions = update(sortConditions, {
       [index]: {
@@ -250,7 +250,7 @@ export default class SortConditions extends React.Component<any, any> {
     this.handleChange(newSortConditions);
   };
 
-  handleAddConditionByValue = (index, value) => {
+  handleAddConditionByValue = (index: number, value) => {
     const { sortConditions } = this.state;
     const newSortConditions = update(sortConditions, {
       $splice: [

@@ -15,7 +15,7 @@ import reducer from './reducer';
 import type { FormControl } from 'src/utils/controlTypes';
 import type { ReduxAction } from 'src/redux/types';
 
-function loadWorksheetInfo(worksheetId, { controlId, relationWorksheetId, recordId, instanceId, workId } = {}) {
+function loadWorksheetInfo(worksheetId: string, { controlId, relationWorksheetId, recordId, instanceId, workId } = {}) {
   const args = { worksheetId, getTemplate: true, getRules: true, relationWorksheetId };
   let getWorksheetInfoPromise;
 

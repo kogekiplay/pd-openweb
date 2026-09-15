@@ -178,7 +178,7 @@ const TitleStyle = props => {
 
                 if (!e.target.checked) {
                   const { lines = [] } = pivotTable;
-                  const newLines = lines.map((n, index) => {
+                  const newLines = lines.map((n, index: number) => {
                     return index ? { ...n, subTotal: false } : n;
                   });
 
@@ -286,7 +286,7 @@ const TitleStyle = props => {
                   <Select.Option className="selectOptionWrapper" value="all">
                     {_l('全部列')}
                   </Select.Option>
-                  {lines.slice(0, lines.length - 1).map((data, index) => (
+                  {lines.slice(0, lines.length - 1).map((data, index: number) => (
                     <Select.Option className="selectOptionWrapper" value={index} key={index}>
                       {_l('%0列', index + 1)}
                     </Select.Option>
@@ -322,7 +322,7 @@ const TitleStyle = props => {
                   <Select.Option className="selectOptionWrapper" value="all">
                     {_l('全部列')}
                   </Select.Option>
-                  {lines.slice(0, lines.length - 1).map((data, index) => (
+                  {lines.slice(0, lines.length - 1).map((data, index: number) => (
                     <Select.Option className="selectOptionWrapper" value={index} key={index}>
                       {_l('%0列', index + 1)}
                     </Select.Option>

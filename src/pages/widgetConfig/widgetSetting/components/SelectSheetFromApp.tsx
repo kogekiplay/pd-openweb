@@ -121,7 +121,7 @@ export default function SelectSheetFromApp(props) {
     });
   }, [sheetId]);
 
-  return config.map(({ text, key, disabled, filter = item => item }, index) => (
+  return config.map(({ text, key, disabled, filter = item => item }, index: number) => (
     <SelectItem key={key}>
       <div className={cx('title Bold', { mTop0: index === 0 && fromCustomEvent })}>{text}</div>
       <Dropdown

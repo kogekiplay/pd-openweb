@@ -774,7 +774,7 @@ export default class Search extends Component<any, any> {
             selectedAppId={this.props.relationId}
             selectedWorksheetId={data.appId}
             visible
-            onOk={(selectedAppId, worksheetId, { workSheetName, appName }) => {
+            onOk={(selectedAppId, worksheetId: string, { workSheetName, appName }) => {
               const isCurrentApp = this.props.relationId === selectedAppId;
 
               if (

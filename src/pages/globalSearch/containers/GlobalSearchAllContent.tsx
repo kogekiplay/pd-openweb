@@ -252,7 +252,7 @@ export default class GlobalSearchAllContent extends Component<any, any> {
     } else if (type === 'record') {
       startType = _list[0] ? _list[0].type : '';
     } else {
-      let obj = _list.find((l, index) => index !== 0 && _list[index - 1].type === type);
+      let obj = _list.find((l, index: number) => index !== 0 && _list[index - 1].type === type);
       startType = obj ? obj.type : '';
     }
 

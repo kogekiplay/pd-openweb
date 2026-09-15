@@ -147,7 +147,7 @@ export default class SyncDialog extends Component<any, any> {
     this.setState({ confirmVisible: true, syncLoading: false });
   };
   // 选择绑定用户
-  bindQWUser = (accountId, userInfo) => {
+  bindQWUser = (accountId: string, userInfo) => {
     let temp = [...this.state.mingDaoUserInfos].map(item => {
       if (item.accountId === accountId) {
         return {
@@ -294,7 +294,7 @@ export default class SyncDialog extends Component<any, any> {
     });
   };
   // 解绑
-  cancelBind = (accountId, userId) => {
+  cancelBind = (accountId: string, userId) => {
     const { projectId, integrationType } = this.props;
     Dialog.confirm({
       title: _l('确定解绑'),

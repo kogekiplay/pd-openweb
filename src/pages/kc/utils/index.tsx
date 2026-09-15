@@ -306,7 +306,7 @@ export function getUrlBase64Encode(str) {
  * @param  {Boolean} toLowerCase 是否转换为小写
  * @return {String}              扩展名
  */
-export function getFileExt(name, toLowerCase = false) {
+export function getFileExt(name: string, toLowerCase = false) {
   if (!name || name.indexOf('.') === -1) {
     return '';
   }

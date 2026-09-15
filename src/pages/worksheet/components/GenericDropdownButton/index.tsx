@@ -106,7 +106,7 @@ const GenericDropdownButton = ({ buttonText, icon, dropdownItems, onClick, disab
               onClickAway={() => setMenuVisible(false)}
             >
               {dropdownItems &&
-                dropdownItems.map((item, index) => (
+                dropdownItems.map((item, index: number) => (
                   <MenuItem key={index} onClick={item.onClick}>
                     {item.text}
                   </MenuItem>

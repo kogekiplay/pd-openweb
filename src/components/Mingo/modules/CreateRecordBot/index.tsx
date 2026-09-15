@@ -118,7 +118,7 @@ const MessageRecommendWrap = styled.div`
   }
 `;
 
-function getDefaultValueOfMessagesOfMingoCreateRecord(worksheetId) {
+function getDefaultValueOfMessagesOfMingoCreateRecord(worksheetId: string) {
   const latestMessagesOfMingoCreateRecord = localStorage.getItem(`latestMessagesOfMingoCreateRecord`);
   const parsedData = safeParse(latestMessagesOfMingoCreateRecord);
   return parsedData?.worksheetId === worksheetId ? parsedData.messages : [];

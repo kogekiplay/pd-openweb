@@ -71,7 +71,7 @@ export const getLegendType = displaySetup => {
  * 计算百分比图表的y轴位置
  */
 const calculatePerPilePosition = data => {
-  data.map((item, index) => {
+  data.map((item, index: number) => {
     const last = data[index - 1];
     const next = data[index + 1];
 

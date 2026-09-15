@@ -381,7 +381,7 @@ const Search = props => {
           onVisibleChange(false);
         }}
       >
-        {optionData.map((item, index) => {
+        {optionData.map((item, index: number) => {
           const label = getShowValue(getMappingItem(itemtitle), item[itemtitle]);
           return (
             <Select.Option key={index} value={index} label={label}>

@@ -88,7 +88,7 @@ class Score extends Component<any, any> {
       }
     }
   }
-  onSelect(index, event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+  onSelect(index: number, event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     event.stopPropagation();
     if (index === this.state.lastScore) {
       index = 0;
@@ -100,7 +100,7 @@ class Score extends Component<any, any> {
     });
     this.props.callback(index, event);
   }
-  onMouseEnter(index, event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+  onMouseEnter(index: number, event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     const color = this.props.hover(index, event) || this.props.foregroundColor;
     this.setState({
       foregroundColor: color,
@@ -114,7 +114,7 @@ class Score extends Component<any, any> {
       score: lastScore,
     });
   }
-  renderLine(index) {
+  renderLine(index: number) {
     const { score, foregroundColor } = this.state;
     const { backgroundColor, hideTip } = this.props;
 
@@ -138,7 +138,7 @@ class Score extends Component<any, any> {
       </Tooltip>
     );
   }
-  renderStar(index) {
+  renderStar(index: number) {
     const { score, foregroundColor } = this.state;
     const { backgroundColor, defaultIcon, hideTip } = this.props;
 

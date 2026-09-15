@@ -98,7 +98,7 @@ export default class CreateFolder extends Component<any, any> {
    * @param  {string} projectId
    * @param  {string} companyName
    */
-  networkSelect(projectId, companyName) {
+  networkSelect(projectId: string, companyName) {
     if (projectId !== this.state.projectId) {
       // 监测网络是否过期
       expireDialogAsync(projectId)
@@ -216,7 +216,7 @@ export default class CreateFolder extends Component<any, any> {
             </div>
             <div className="createFolderSlider">
               {this.props.materials
-                .filter((o, index) => index === 0)
+                .filter((o, index: number) => index === 0)
                 .map((material, i) => {
                   return (
                     <div style={{ ...sliderHeight }} key={i}>

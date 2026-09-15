@@ -148,7 +148,7 @@ class KcLeft extends Component<any, any> {
     return id === rootId;
   };
 
-  fetchRootsByProjectId = (projectId, openProject) => {
+  fetchRootsByProjectId = (projectId: string, openProject) => {
     if (!this.state.loadingProjects.includes(projectId)) {
       const loadingProjects = this.state.loadingProjects.add(projectId);
       let foldedProjects = this.state.foldedProjects;
@@ -427,7 +427,7 @@ class KcLeft extends Component<any, any> {
     }
   };
 
-  renderProjectRoots = (projectId, index, filterRoots) => {
+  renderProjectRoots = (projectId: string, index: number, filterRoots) => {
     projectId = projectId || '';
     const { projectRootKeywords = {} } = this.state;
     const isFolded = this.state.foldedProjects.includes(projectId);

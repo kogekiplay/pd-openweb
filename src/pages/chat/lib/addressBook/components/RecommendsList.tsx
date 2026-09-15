@@ -40,7 +40,7 @@ export default class RecommendsList extends React.Component<any, any> {
     }
   }
 
-  updateListData(accountId, isAdd) {
+  updateListData(accountId: string, isAdd) {
     const { listData } = this.state;
     this.setState({
       listData: _.map(listData, item => {
@@ -56,13 +56,13 @@ export default class RecommendsList extends React.Component<any, any> {
     });
   }
 
-  add(accountId) {
+  add(accountId: string) {
     addFriendConfirm({
       accountId,
     });
   }
 
-  ignore(accountId) {
+  ignore(accountId: string) {
     return editIgnoreRecommends(accountId).then(data => {
       if (data) {
         this.updateListData(accountId, false);

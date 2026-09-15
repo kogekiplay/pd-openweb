@@ -887,7 +887,7 @@ export function changeToSelectCurrentPageFromSelectAll() {
   };
 }
 
-export const updateSheetColumnWidths = (controlId, value, changes) => ({
+export const updateSheetColumnWidths = (controlId: string, value, changes) => ({
   type: 'WORKSHEET_SHEETVIEW_UPDATE_COLUMN_WIDTH',
   controlId,
   value,
@@ -1080,7 +1080,7 @@ function resetView() {
  * 新配置-本地：列宽(和对齐方式) - liststyle，列冻结 fixedcolumncount，更新时间 layoutupdatetime
  */
 
-export function setViewLayout(viewId) {
+export function setViewLayout(viewId: string) {
   // pageSize 更新逻辑
   return (dispatch: AppDispatch, getState: GetState) => {
     const { base = {}, views, worksheetInfo } = getState().sheet;

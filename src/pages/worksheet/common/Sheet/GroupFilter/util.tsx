@@ -55,7 +55,7 @@ export const isSourceTree = (source, navGroup, view) => {
   );
 };
 
-export const renderTxt = (source, keywords, item, control, viewId, navGroup) => {
+export const renderTxt = (source, keywords, item, control, viewId: string, navGroup) => {
   if (keywords && (source.type === 35 || (source.type === 29 && navGroup.viewId && !!viewId && !!item.path))) {
     //视图是否删除 !!viewId
     const path = safeParse(item.path, 'array');

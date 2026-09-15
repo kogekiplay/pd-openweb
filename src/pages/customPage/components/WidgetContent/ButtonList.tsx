@@ -43,7 +43,7 @@ const ButtonListWrap = styled.div`
   margin: 0 auto;
 `;
 
-const getDepartments = (projectId, accountId) => {
+const getDepartments = (projectId: string, accountId: string) => {
   return new Promise(resolve => {
     departmentApi
       .getDepartmentsByAccountId({
@@ -58,7 +58,7 @@ const getDepartments = (projectId, accountId) => {
   });
 };
 
-const getOrganize = (projectId, accountId) => {
+const getOrganize = (projectId: string, accountId: string) => {
   return new Promise(resolve => {
     organizeApi
       .getOrganizesByAccountId({
@@ -593,7 +593,7 @@ export function ButtonList({
           showDraftsEntry={isMobile ? true : false}
           openRecord={
             isMobile
-              ? (recordId, viewId, extra) => {
+              ? (recordId: string, viewId: string, extra) => {
                   setPreviewRecord({
                     appId,
                     worksheetId,

@@ -181,7 +181,7 @@ export default class WorkflowMonitor extends Component<any, any> {
           monitorContainer={this.monitorContainer}
           changeSorter={this.changeSorter}
           updateDetailList={this.updateDetailList}
-          checkIsAppAdmin={(appId, id, name) =>
+          checkIsAppAdmin={(appId: string, id, name: string) =>
             checkIsAppAdmin({
               appId,
               title: _l('管理工作流“%0”', name),

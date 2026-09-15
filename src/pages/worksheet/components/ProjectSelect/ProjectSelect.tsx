@@ -21,7 +21,7 @@ export default class ProjectSelect extends Component<any, any> {
   }
   renderProjects() {
     const { onChange } = this.props;
-    return md.global.Account.projects.map((project, index) => (
+    return md.global.Account.projects.map((project, index: number) => (
       <MenuItem
         key={index}
         onClick={() => {

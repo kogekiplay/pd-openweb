@@ -282,7 +282,7 @@ export const formatSheetsToDropdown = sheets =>
 export const formatControlsToDropdown = controls =>
   controls.map(({ controlId, controlName }) => ({ text: controlName, value: controlId }));
 
-export const getControlByControlId = (controls, controlId, key?) => {
+export const getControlByControlId = (controls, controlId: string, key?) => {
   const control = _.find(controls, item => item.controlId === controlId) || {};
   return key ? get(control, key) : control;
 };

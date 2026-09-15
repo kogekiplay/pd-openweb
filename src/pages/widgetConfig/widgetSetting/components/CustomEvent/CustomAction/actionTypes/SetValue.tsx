@@ -65,7 +65,7 @@ export default function SetValue(props) {
               <div className="itemFiledTitle textSecondary">{_l('字段')}</div>
               <div className="itemValueTitle textSecondary">{_l('值设为')}</div>
             </div>
-            {actionItems.map((item, index) => {
+            {actionItems.map((item, index: number) => {
               const { icon, currentControl } = getDetail(item.controlId);
               const isDelete = !_.get(currentControl, 'controlName');
               const queryId = item.type === '2' && _.get(safeParse(item.value), 'id');

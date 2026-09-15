@@ -288,7 +288,7 @@ export default class SelectUser extends Component<any, any> {
       });
     });
   };
-  handleSelectSubDepartment = (department, index) => {
+  handleSelectSubDepartment = (department, index: number) => {
     const { departmentId } = department;
     const { projectId } = this.state;
     const { selectDepartmentType, allPath } = this.props;
@@ -389,7 +389,7 @@ export default class SelectUser extends Component<any, any> {
         ...item,
         departmentPath:
           item.departmentPath && _.isArray(item.departmentPath)
-            ? item.departmentPath.reverse().map((v, index) => ({ ...v, depth: index + 1 }))
+            ? item.departmentPath.reverse().map((v, index: number) => ({ ...v, depth: index + 1 }))
             : undefined,
       }));
       this.props.onClose();
@@ -680,7 +680,7 @@ export default class SelectUser extends Component<any, any> {
                     {_l('按部门选择')}
                   </span>
                 )}
-                {selectUserDepPath.map((department, index) => (
+                {selectUserDepPath.map((department, index: number) => (
                   <span
                     className="avtive mLeft5"
                     key={department.departmentId}
@@ -708,7 +708,7 @@ export default class SelectUser extends Component<any, any> {
                 >
                   {_l('全部部门')}
                 </span>
-                {departmentPath.map((department, index) => (
+                {departmentPath.map((department, index: number) => (
                   <span
                     className="avtive mLeft5"
                     key={department.departmentId}

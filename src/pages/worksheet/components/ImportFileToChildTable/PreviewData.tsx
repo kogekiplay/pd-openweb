@@ -227,7 +227,7 @@ export default function PreviewData(props) {
                 <CellText className="ellipsis">{_.get(needImportCellData, `${rowIndex}.${columnIndex}`)}</CellText>
               );
             }}
-            onUpdateMapConfig={(index, value) => {
+            onUpdateMapConfig={(index: number, value) => {
               const newConfig = { ...mapConfig };
               Object.keys(newConfig).forEach(key => {
                 if (value && newConfig[key] === value) {

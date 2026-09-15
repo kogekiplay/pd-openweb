@@ -305,7 +305,7 @@ export default class SearchWorksheetDialog extends Component<any, any> {
           <div className="mappingTitle">{_l('子表')}</div>
           <div className="mappingTitle">{_l('查询表字段')}</div>
         </div>
-        {configs.map((item, index) => {
+        {configs.map((item, index: number) => {
           //已选择的子表字段
           const selectControl = _.find(relationControls, re => re.controlId === item.cid);
           // 根据选中子表字段匹配默认值规则，筛选可匹配的查询表字段

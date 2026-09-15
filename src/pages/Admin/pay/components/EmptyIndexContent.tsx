@@ -69,7 +69,7 @@ export default function EmptyIndexContent(props) {
       <div className="Font24 bold mTop30">{data.title}</div>
       <div className="textSecondary Font18 mTop12">{data.desc}</div>
       <DescWrap>
-        {data.cardList.map((item, index) => {
+        {data.cardList.map((item, index: number) => {
           const { title, desc, icon } = item;
           return (
             <div className="item" key={index}>

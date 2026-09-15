@@ -343,7 +343,7 @@ class SelectAIModelDialog extends Component<any, any> {
       <ScrollView className="h100" style={{ width: 320 }}>
         <div className="textSecondary pLeft16 mTop18 mBottom10 Font13">{_l('选择模型')}</div>
         <ModelList>
-          {models.map((item, index) => {
+          {models.map((item, index: number) => {
             return (
               <li
                 className={cx({ active: item.id === selectModel, multipleItem: isMultiple })}
@@ -426,7 +426,7 @@ class SelectAIModelDialog extends Component<any, any> {
       <ContentBox className="flex pLeft16 pRight16 blue">
         <div className="Font14 bold mTop15">{model.alias}</div>
         <div className="textSecondary Font12 mTop10">
-          {MODEL_DESCRIPTIONS[model.name] || model.description.map((o, index) => <div key={index}>{o}</div>)}
+          {MODEL_DESCRIPTIONS[model.name] || model.description.map((o, index: number) => <div key={index}>{o}</div>)}
         </div>
 
         {modelPriceItems.length > 0 && (
@@ -596,7 +596,7 @@ class SelectAIModelDialog extends Component<any, any> {
                   </div>
                 )}
 
-                {list.map((item, index) => {
+                {list.map((item, index: number) => {
                   const brandState = isMultiple ? this.getBrandCheckState(item.developer.id) : null;
                   return (
                     <div

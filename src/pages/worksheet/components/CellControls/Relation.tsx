@@ -31,7 +31,7 @@ function Relation(props) {
         <div className={cx('cellRelations common cellControl', className)} style={style} onClick={props.onClick}>
           {relationData.length > 1
             ? _l('%0 个关联', relationData.length)
-            : relationData.slice(0, 1).map((relation, index) =>
+            : relationData.slice(0, 1).map((relation, index: number) =>
                 relation.name ? (
                   <a
                     className="cellRelation ellipsis"
@@ -58,7 +58,7 @@ function Relation(props) {
     case FROM.LAND:
       return (
         <div className="cellRelations land cellControl">
-          {relationData.map((relation, index) => (
+          {relationData.map((relation, index: number) => (
             <div className="cellRelation" key={index}>
               <div className="cellRelationIcon">
                 <i className={Icons[relation.type]}></i>

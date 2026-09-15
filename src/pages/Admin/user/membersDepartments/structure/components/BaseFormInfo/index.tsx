@@ -642,7 +642,7 @@ export default class BaseFormInfo extends Component<any, any> {
     return (
       <Fragment>
         {useMultiJobs
-          ? departmentJobInfos.map((item, index) => this.renderDepartmentJob('multiple', item, index))
+          ? departmentJobInfos.map((item, index: number) => this.renderDepartmentJob('multiple', item, index))
           : this.renderDepartmentJob()}
         {typeCursor !== 2 && (
           <div

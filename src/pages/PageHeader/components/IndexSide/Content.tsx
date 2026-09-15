@@ -153,7 +153,7 @@ export default function SideContent(props) {
           const group = _.get(getFilterData(), type);
           return _.includes(['validProject', 'expireProject'], type)
             ? group &&
-                group.map(({ projectId, projectApps, projectName }, index) =>
+                group.map(({ projectId, projectApps, projectName }, index: number) =>
                   projectApps.length > 0 ? (
                     <SideAppGroup
                       key={`${projectId}-${index}`}

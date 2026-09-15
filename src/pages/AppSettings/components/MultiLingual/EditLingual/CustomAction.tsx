@@ -88,7 +88,7 @@ export default function CustomAction(props) {
     const remark = comparisonLangId ? comparisonLangInfo.remark : _.get(btn.advancedSetting, 'remarkname');
     const hintText = comparisonLangId ? comparisonLangInfo.hintText : _.get(btn.advancedSetting, 'remarkhint');
     const remarkoptions = _.get(JSON.parse(_.get(btn.advancedSetting, 'remarkoptions') || '{}'), 'template') || [];
-    const withoutRemarkoptions = remarkoptions.filter((item, index) => !translateInfo[`templateName_${index}`]);
+    const withoutRemarkoptions = remarkoptions.filter((item, index: number) => !translateInfo[`templateName_${index}`]);
 
     const handleSave = info => {
       onEditAppLang({
@@ -241,7 +241,7 @@ export default function CustomAction(props) {
             showFooter={false}
             onCancel={() => setOptionsEditDialogVisible('')}
           >
-            {remarkoptions.map((item, index) => (
+            {remarkoptions.map((item, index: number) => (
               <div className="flexRow alignItemsCenter nodeItem" key={index}>
                 <Input className="flex mRight20" value={item.value} disabled={true} />
                 <EditInput

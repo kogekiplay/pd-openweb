@@ -30,7 +30,7 @@ export const addSelectedWorksheet = (dispatch, sheet) => {
   dispatch({ type: 'ADD_SELECTED_WORKSHEET', sheet });
 };
 
-export const removeSelectedWorksheet = (dispatch, worksheetId) => {
+export const removeSelectedWorksheet = (dispatch, worksheetId: string) => {
   dispatch({ type: 'REMOVE_SELECTED_WORKSHEET', worksheetId });
 };
 
@@ -195,7 +195,7 @@ export const generateKnowledgeBasePlan = async (dispatch, { appId, allWorksheetL
       }, {});
       const formattedList = recommended_plans
         .filter(item => item.worksheets?.length > 0)
-        .map((item, index) => ({
+        .map((item, index: number) => ({
           isInit: true,
           id: `recommend_${index}`,
           num: item.worksheets.length,
@@ -246,7 +246,7 @@ export const improveKnowledgeBasePlan = async (dispatch, { itemRecommend, appId 
     });
     Promise.all(promiseList).then(res => {
       const { worksheetList } = targetRecommend;
-      targetRecommend.worksheetList = worksheetList.map((item, index) => ({
+      targetRecommend.worksheetList = worksheetList.map((item, index: number) => ({
         ...item,
         fields: replaceControlsTranslateInfo(
           appId,

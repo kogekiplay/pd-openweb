@@ -80,7 +80,7 @@ export default class SubDomain extends Component<any, any> {
   }
 
   //系统默认更新图片
-  updateHomeImage(currentHomeImage, index) {
+  updateHomeImage(currentHomeImage, index: number) {
     this.setState({
       homeImage: `HomeImage_1${index + 1}.jpg`,
       currentHomeImage,
@@ -243,7 +243,7 @@ export default class SubDomain extends Component<any, any> {
               <div className="common-info-row mTop40">
                 <div className="common-info-row-label">{_l('系统默认')}</div>
                 <div className="common-images">
-                  {this.images.map((img, index) => {
+                  {this.images.map((img, index: number) => {
                     return (
                       <img
                         key={index}

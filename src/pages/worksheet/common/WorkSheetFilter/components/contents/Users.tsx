@@ -47,7 +47,7 @@ export default class Users extends Component<any, any> {
       _.includes([FILTER_CONDITION_TYPE.ARREQ, FILTER_CONDITION_TYPE.ARRNE], this.props.type)
     );
   }
-  selectUser(title, projectId, options, callback) {
+  selectUser(title, projectId: string, options, callback) {
     dialogSelectUser({
       title,
       sourceId: 0,
@@ -202,7 +202,7 @@ export default class Users extends Component<any, any> {
       <div className="worksheetFilterUsersCondition">
         <div className={cx('usersCon', { disabled })} ref={con => { this.userscon = con; }} onClick={this.addUser}>
           {users.length ? (
-            users.map((user, index) => (
+            users.map((user, index: number) => (
               <div className="userItem" key={index}>
                 {this.renderHead(user)}
                 <span className="fullname breakAll">{user.fullname}</span>

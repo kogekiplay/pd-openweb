@@ -349,7 +349,7 @@ class TextMeasure {
     `;
   }
 
-  measureText(text, fontSize, fontFamily) {
+  measureText(text, fontSize: number, fontFamily) {
     this.ctx.font = `${fontSize}px ${fontFamily}`;
     return this.ctx.measureText(text).width;
   }
@@ -379,7 +379,7 @@ class TextMeasure {
   }
 }
 
-export function getCompressedFontSize(value, width, options = {}) {
+export function getCompressedFontSize(value, width: number, options = {}) {
   const textMeasure = new TextMeasure();
   return textMeasure.findOptimalFontSize(value, width, options);
 }
@@ -641,7 +641,7 @@ export class BarLabel {
         : this._height - (paddingY + height * 1.08) * this.unitSize,
     );
   }
-  measureTextWidth(value, fontSize) {
+  measureTextWidth(value, fontSize: number) {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     ctx.font = fontSize + 'px sans-serif';
@@ -795,7 +795,7 @@ export class QrLabel {
         : 5;
   }
   // 处理文字换行
-  cutTextByWidth(fontSize, context, maxWidth, isBold) {
+  cutTextByWidth(fontSize: number, context, maxWidth, isBold) {
     let result = [];
     this.ctx.font = (isBold ? 'bold ' : '') + fontSize * this.fontSize + 'px sans-serif';
     if (this.ctx.measureText(context).width < maxWidth) {
@@ -820,7 +820,7 @@ export class QrLabel {
 
     return result;
   }
-  measureTextWidth(value, fontSize) {
+  measureTextWidth(value, fontSize: number) {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     ctx.font = fontSize + 'px sans-serif';

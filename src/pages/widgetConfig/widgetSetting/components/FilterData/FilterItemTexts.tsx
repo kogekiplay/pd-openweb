@@ -170,7 +170,7 @@ export default class FilterItemTexts extends React.Component<any, any> {
       >
         <div className="txtFilter fieldEditTxtFilter">
           {filterItemTexts.length > 0 ? (
-            filterItemTexts.map((item, index) => {
+            filterItemTexts.map((item, index: number) => {
               if (item.isGroup) {
                 return (
                   <div className="filterGroup flexRow">

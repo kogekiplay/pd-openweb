@@ -204,7 +204,7 @@ export const getPorjectChartColors = projectId => {
 /**
  * 获取图表颜色
  */
-export const getChartColors = (style, themeColor, projectId) => {
+export const getChartColors = (style, themeColor, projectId: string) => {
   const chartColors = getPorjectChartColors(projectId);
   const { colorType, colorGroupIndex, colorGroupId, customColors, personColor = {} } = style ? style : {};
 
@@ -505,7 +505,7 @@ export const formatYaxisList = (map, yaxisList, id?) => {
   const maxValue = getMaxValue(map, []);
   const newYaxisList = _.cloneDeep(yaxisList);
 
-  newYaxisList.forEach((item, index) => {
+  newYaxisList.forEach((item, index: number) => {
     if ((id ? item.controlId == id : index === 0) && item.magnitude === 0) {
       if (window.getCurrentLang() === 'en') {
         if (maxValue >= 1000000000) {

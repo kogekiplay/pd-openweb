@@ -172,7 +172,7 @@ export const fetchRowsByGroupId = (kanbanKey, kanbanIndex) => {
   };
 };
 
-export const getRelationControls = (appId, sourceId) => {
+export const getRelationControls = (appId: string, sourceId) => {
   return dispatch => {
     if (sourceId) {
       sheetAjax

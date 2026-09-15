@@ -44,7 +44,7 @@ const BoardView = props => {
   const hasSecondGroup = groupsetting && viewControl && isValidField && hasSecondGroupControl(groupsetting, controls);
   const [viewCardUpdateMap, setViewCardHeightMap] = useState({});
 
-  const updateBoardViewCard = (rowid, height) => {
+  const updateBoardViewCard = (rowid, height: number) => {
     if (viewCardUpdateMap[rowid] === height) return;
     setViewCardHeightMap(prev => ({
       ...prev,

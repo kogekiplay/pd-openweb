@@ -143,7 +143,7 @@ export default function UrlParams(props) {
       </div>
       {!!params.length && (
         <ParamsWrapper ref={paramsRef}>
-          {params.map((item, index) => {
+          {params.map((item, index: number) => {
             return (
               <div key={index} className="flexRow alignItemsCenter mBottom12">
                 <Input

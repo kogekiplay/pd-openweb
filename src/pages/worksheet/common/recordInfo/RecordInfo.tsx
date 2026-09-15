@@ -1644,7 +1644,7 @@ export default class RecordInfo extends Component<any, any> {
                   addRefreshEvents: (id, fn) => {
                     this.refreshEvents[id] = fn;
                   },
-                  updateRelationControls: (controlId, newControls) => {
+                  updateRelationControls: (controlId: string, newControls) => {
                     if (!this.recordform?.current) return;
                     this.recordform.current.dataFormat.data = this.recordform.current.dataFormat.data.map(item => {
                       if (item.type === 34 && item.controlId === controlId) {
@@ -1670,7 +1670,7 @@ export default class RecordInfo extends Component<any, any> {
                 updateRecordLock={this.updateRecordLock}
                 updateRows={updateRows}
                 onChange={this.handleFormChange}
-                updateRelateRecordTableCount={(controlId, num, { changed } = {}) => {
+                updateRelateRecordTableCount={(controlId: string, num, { changed } = {}) => {
                   if (!get(this, 'recordform.current')) {
                     return;
                   }

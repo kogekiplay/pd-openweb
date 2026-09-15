@@ -42,7 +42,7 @@ function WorksheetRecordLogSelectTags(props) {
     isChangeValue = false,
   } = props;
   const isMobile = browserIsMobile();
-  const [preview, setPreview] = useState(false);
+  const [preview, setPreview] = useState<boolean | number>(false);
   const [preType, setPreType] = useState(undefined);
   const [recordInfo, setRecordInfo] = useState(undefined);
   const [showMaskData, setShowMaskData] = useState(false);
@@ -50,7 +50,7 @@ function WorksheetRecordLogSelectTags(props) {
   const advancedSetting = _.get(control, ['advancedSetting']) || {};
   const isdecrypt = advancedSetting.isdecrypt;
 
-  const clickHandle = (type, index) => {
+  const clickHandle = (type, index: number) => {
     if (isMobile) return;
     setPreview(index);
     setPreType({
@@ -128,7 +128,7 @@ function WorksheetRecordLogSelectTags(props) {
 
   const renderList = (list, listType: string) => {
     let prefix = isChangeValue ? (listType === 'old' ? '-' : '+') : '';
-    return list.map((item, index) => {
+    return list.map((item, index: number) => {
       return item ? (
         <span
           key={`WorksheetRocordLogSelectTag-${listType}-${item}-${index}`}

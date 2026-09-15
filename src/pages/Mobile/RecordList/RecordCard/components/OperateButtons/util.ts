@@ -33,7 +33,7 @@ export const filterPrintButton = buttons => {
   });
 };
 
-export const getVisibleButtons = (buttons, index) => _.slice(buttons, 0, index);
+export const getVisibleButtons = (buttons, index: number) => _.slice(buttons, 0, index);
 
 export const getPrintAuthInfo = async ({ appId, worksheetId, viewId, rowIds = [], printId = '' }) => {
   const clientIdPromise = worksheetAjax.getSystemPrintClientId({ appId, worksheetId, printId }, { silent: true });
@@ -226,7 +226,7 @@ export const setAttrToButtons = ({
     }
   };
 
-  const normalizeButton = (button, index) => {
+  const normalizeButton = (button, index: number) => {
     const nextButton = {
       ...button,
       icon: button.icon || (style === 'icon' ? 'custom_actions' : ''),

@@ -242,7 +242,7 @@ export default function HierarchyRelateMultiSheet({ worksheetInfo, viewControls,
   return (
     <ControlsWrap>
       <ul>
-        {viewControls.map(({ controlName, worksheetId, worksheetName }, index) => {
+        {viewControls.map(({ controlName, worksheetId, worksheetName }, index: number) => {
           return worksheetId === worksheetInfo.worksheetId ? (
             <li className="relateItem">
               <span className="grade textTertiary">{_l('第1级')}</span>

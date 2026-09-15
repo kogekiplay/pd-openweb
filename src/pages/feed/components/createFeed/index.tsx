@@ -326,7 +326,7 @@ export default function (options) {
       }
     },
     // 拦截层选群组
-    dialogChooseGroup: function (el, hidGroupID, projectId) {
+    dialogChooseGroup: function (el, hidGroupID, projectId: string) {
       $(el).dialogSelectGroup({
         projectId: projectId,
         callback: function (groupIDs) {

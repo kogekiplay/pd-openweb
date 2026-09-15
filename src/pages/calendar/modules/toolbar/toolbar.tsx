@@ -301,7 +301,7 @@ Toolbar.Event = function () {
         filterOthers: true,
         filterAccountIds: [md.global.Account.accountId],
         filterAll: true,
-        projectCallback: function (projectId) {
+        projectCallback: function (projectId: string) {
           safeLocalStorageSetItem('calendarLastPId', projectId);
         },
         callback: function (users) {

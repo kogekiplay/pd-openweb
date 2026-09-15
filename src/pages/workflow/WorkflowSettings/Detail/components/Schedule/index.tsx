@@ -204,7 +204,7 @@ export default ({
     );
   };
 
-  const renderRemindContent = (item, index) => {
+  const renderRemindContent = (item, index: number) => {
     return (
       <div className={index === 0 ? 'mTop8' : 'mTop3'} key={item.id}>
         <span className="textSecondary">{_l('在截止时刻')}</span>
@@ -300,7 +300,7 @@ export default ({
 
             actions
               .filter(o => o.type === 1)
-              .forEach((item, index) => {
+              .forEach((item, index: number) => {
                 if (!(item.accounts && item.accounts.length)) {
                   accountNullIndex.push(index + 1);
                 }
@@ -346,7 +346,7 @@ export default ({
           <div className="mTop25 bold">{_l('截止提醒')}</div>
           {(data.actions || [])
             .filter(o => o.type === 1)
-            .map((item, index) => {
+            .map((item, index: number) => {
               return (
                 <EndBox className="mTop10" key={item.id}>
                   <div className="flexRow">

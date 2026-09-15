@@ -94,7 +94,7 @@ class TimeBarContainer extends Component<any, any> {
    * @param  {string} id
    * @param  {number} arrowStatus
    */
-  showOrHideTask(index, id, arrowStatus) {
+  showOrHideTask(index: number, id, arrowStatus) {
     this.props.dispatch(showOrHideTask(index, id, arrowStatus));
   }
 
@@ -102,7 +102,7 @@ class TimeBarContainer extends Component<any, any> {
    * 任务时间条开始拖拽
    * @param  {string} taskId
    */
-  ganttBeginDrag(taskId) {
+  ganttBeginDrag(taskId: string) {
     this.props.dispatch(ganttDragRecordId(taskId));
   }
 
@@ -110,7 +110,7 @@ class TimeBarContainer extends Component<any, any> {
    * 任务时间条拖拽经过他人
    * @param  {number} index  -1: 表示经过自己
    */
-  ganttDragHover(index) {
+  ganttDragHover(index: number) {
     this.props.dispatch(ganttDragRecordIndex(index));
   }
 
@@ -156,7 +156,7 @@ class TimeBarContainer extends Component<any, any> {
    * @param  {number} updateType
    * @param  {string} chargeAccountId
    */
-  updateTaskStartTimeAndDeadline(taskId, timeLock, startTime, endTime, updateType = 0, chargeAccountId = '') {
+  updateTaskStartTimeAndDeadline(taskId: string, timeLock, startTime, endTime, updateType = 0, chargeAccountId = '') {
     ajaxRequest
       .updateTaskStartTimeAndDeadline({
         taskId,
@@ -209,7 +209,7 @@ class TimeBarContainer extends Component<any, any> {
    * @param  {number} type
    * @param  {boolean} isReset
    */
-  updateStartTimeAndEndTime(taskId, index, time, type, isReset = false) {
+  updateStartTimeAndEndTime(taskId: string, index: number, time, type, isReset = false) {
     this.props.dispatch(updateStartTimeAndEndTime(taskId, index, time, type, isReset));
   }
 
@@ -217,7 +217,7 @@ class TimeBarContainer extends Component<any, any> {
    * 修改用户配置展开缩起状态
    * @param  {string} accountId
    */
-  updateUserStatus(accountId) {
+  updateUserStatus(accountId: string) {
     ajaxRequest.updateUserStatusOfSetting({
       projectId: config.projectId,
       accountId,

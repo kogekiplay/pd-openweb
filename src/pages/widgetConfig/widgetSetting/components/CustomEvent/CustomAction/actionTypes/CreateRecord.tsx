@@ -88,7 +88,7 @@ export default function CreateRecord(props) {
               <div className="itemFiledTitle textSecondary">{_l('字段')}</div>
               <div className="itemValueTitle textSecondary">{_l('默认值')}</div>
             </div>
-            {actionItems.map((item, index) => {
+            {actionItems.map((item, index: number) => {
               const { icon, currentControl } = getDetail(item.controlId);
               return (
                 <div className="setItem">

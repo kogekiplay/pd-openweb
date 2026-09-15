@@ -155,7 +155,7 @@ class AdminWorkflowList extends Component<any, any> {
   /**
    * 获取工作流数量
    */
-  getWorkflowCount(projectId) {
+  getWorkflowCount(projectId: string) {
     processVersion.getProcessUseCount({ companyId: projectId }).then(result => {
       this.setState({ useCount: result });
     });
@@ -164,7 +164,7 @@ class AdminWorkflowList extends Component<any, any> {
   /**
    * 获得应用列表
    */
-  getAppList(projectId) {
+  getAppList(projectId: string) {
     const { appList } = this.state;
     const { appPageIndex = 1, isMoreApp, loadingApp, keyword = '' } = this.state;
 
@@ -202,7 +202,7 @@ class AdminWorkflowList extends Component<any, any> {
   /**
    * 获取自动订购
    */
-  getAutoOrderStatus(projectId) {
+  getAutoOrderStatus(projectId: string) {
     projectSetting.getAutoPurchaseWorkflowExtPack({ projectId }).then(res => {
       this.setState({
         autoPurchaseWorkflowExtPack: res.autoPurchaseWorkflowExtPack,

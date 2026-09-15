@@ -194,7 +194,7 @@ class Subtask extends Component<any, any> {
   /**
    * 更改任务状态
    */
-  editTaskStatus = (taskId, status) => {
+  editTaskStatus = (taskId: string, status) => {
     const callback = source => {
       if (this.props.openType === OPEN_TYPE.slide) {
         afterUpdateTaskStatus(source, status, false);
@@ -283,7 +283,7 @@ class Subtask extends Component<any, any> {
   /**
    * 点击切换负责人
    */
-  clickChargeAvatar = (evt, accountId, taskId = '') => {
+  clickChargeAvatar = (evt, accountId: string, taskId = '') => {
     const { data } = this.props.taskDetails[this.props.taskId];
 
     const updateChargeCallback = user => {
@@ -378,7 +378,7 @@ class Subtask extends Component<any, any> {
     return data.auth === config.auth.Charger || data.auth === config.auth.Member;
   }
 
-  callback = (user, taskId) => {
+  callback = (user, taskId: string) => {
     if (this.props.openType === OPEN_TYPE.slide) {
       afterUpdateTaskCharge(taskId, user.avatar, user.accountId);
     } else {
@@ -386,7 +386,7 @@ class Subtask extends Component<any, any> {
     }
   };
 
-  clickOp = (projectId, taskId, accountId) => {
+  clickOp = (projectId: string, taskId: string, accountId: string) => {
     dialogSelectUser({
       sourceId: taskId,
       title: _l('选择负责人'),

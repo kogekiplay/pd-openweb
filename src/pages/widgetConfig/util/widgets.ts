@@ -13,7 +13,7 @@ export const isHaveGap = (row, widget) => {
 };
 
 // 更新二维数组中的控件
-export const updateWidgets = (widgets, controlId, obj) => {
+export const updateWidgets = (widgets, controlId: string, obj) => {
   return widgets.map(row => row.map(item => (item.controlId === controlId ? { ...item, ...obj } : item)));
 };
 
@@ -51,7 +51,7 @@ export const isFullLineControl = data => {
   return false;
 };
 
-export const getRowById = (widgets, controlId) => {
+export const getRowById = (widgets, controlId: string) => {
   const [rowIndex] = getPathById(widgets, controlId);
   return { row: widgets[rowIndex], rowIndex };
 };

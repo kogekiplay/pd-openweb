@@ -578,7 +578,7 @@ function TableComp(props) {
           },
         });
       }}
-      onColumnWidthChange={(controlId, value) => {
+      onColumnWidthChange={(controlId: string, value) => {
         updateTableState({
           layoutChanged: true,
           sheetColumnWidths: { ...sheetColumnWidths, [controlId]: value },

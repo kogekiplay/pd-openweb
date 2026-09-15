@@ -44,7 +44,7 @@ export default class CreateRecordAndTask extends Component<any, any> {
   /**
    * 切换工作表
    */
-  switchWorksheet = (appId, name?, otherApkId = '', otherApkName = '') => {
+  switchWorksheet = (appId: string, name?, otherApkId = '', otherApkName = '') => {
     const { updateSource, getAppTemplateControls } = this.props;
     const appList = _.cloneDeep(this.props.data.appList);
 
@@ -387,7 +387,7 @@ export default class CreateRecordAndTask extends Component<any, any> {
             selectedAppId={this.props.relationId}
             selectedWorksheetId={data.appId}
             visible
-            onOk={(selectedAppId, worksheetId, obj) => {
+            onOk={(selectedAppId, worksheetId: string, obj) => {
               const isCurrentApp = this.props.relationId === selectedAppId;
               this.switchWorksheet(
                 worksheetId,

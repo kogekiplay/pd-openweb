@@ -34,7 +34,7 @@ function updateAppOfState(state, appId: string, update = data => data) {
   return state;
 }
 
-function deleteAppOfState(state, appId) {
+function deleteAppOfState(state, appId: string) {
   [
     'apps',
     'markedApps',
@@ -404,7 +404,7 @@ function handleDashboardOrAppResponse(dispatch, data, isDashboard?) {
 }
 
 // 分组名称多语言
-function getGroupsLangs(dispatch, projectId) {
+function getGroupsLangs(dispatch, projectId: string) {
   appManagementAjax.getProjectLangs({ projectId, type: 20 }).then(res => {
     dispatch({
       type: 'PROJECT_GROUPS_NAME_LANG',
@@ -417,7 +417,7 @@ function getGroupsLangs(dispatch, projectId) {
 }
 
 // 应用名称多语言
-function getAppLangs(dispatch, projectId, noCache = false) {
+function getAppLangs(dispatch, projectId: string, noCache = false) {
   if (md.global.Account.lang === '') {
     return;
   }

@@ -266,7 +266,7 @@ function CollapsibleLoop({ title, count, children }) {
 function NameLoop({ title, items }) {
   return (
     <CollapsibleLoop title={title} count={items.length}>
-      {items.map((item, index) => (
+      {items.map((item, index: number) => (
         <IterRow key={(item && (item.pageId || item.id || item.name)) || index}>
           <span>{(item && item.name) || _l('项 %0', index + 1)}</span>
         </IterRow>

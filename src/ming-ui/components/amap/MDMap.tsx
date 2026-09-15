@@ -70,7 +70,7 @@ class GDMap extends Component<any, any> {
     }); // 初始定位
 
     // 点击地图
-    this._maphHandler.onClick((lng, lat, address, name) => {
+    this._maphHandler.onClick((lng, lat, address, name: string) => {
       if (this.compareDistance(lng, lat)) {
         this.geoLocation(lng, lat, address, name);
       } else {
@@ -79,7 +79,7 @@ class GDMap extends Component<any, any> {
     });
 
     // 移动地图
-    this._maphHandler.moveEnd((lng, lat, address, name) => {
+    this._maphHandler.moveEnd((lng, lat, address, name: string) => {
       this.geoLocation(lng, lat, address, name);
     });
   }
@@ -118,7 +118,7 @@ class GDMap extends Component<any, any> {
   };
 
   // 定位
-  geoLocation = (lng, lat, address, name) => {
+  geoLocation = (lng, lat, address, name: string) => {
     if (this._maphHandler) {
       this.setState(
         {
@@ -348,7 +348,7 @@ class GDMap extends Component<any, any> {
             </div>
           </div>
         )}
-        {(keywords ? list : defaultList).map((item, index) => {
+        {(keywords ? list : defaultList).map((item, index: number) => {
           if (item.address && typeof item.address === 'string') {
             return (
               <div className="MDMapList">

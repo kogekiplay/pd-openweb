@@ -149,7 +149,7 @@ function VertricalTreeNode(props) {
 
     return (
       <VerticalTreeChildNode isFirst={isRoot}>
-        {childrenData.map((item, index) => {
+        {childrenData.map((item, index: number) => {
           if (!item) return null;
 
           const itemData = treeData[typeof item === 'string' ? item : item.rowId];

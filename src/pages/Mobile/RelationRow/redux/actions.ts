@@ -209,7 +209,7 @@ export const updateRelationRows = (data, value) => (dispatch: AppDispatch, getSt
 };
 
 export const updatePageIndex =
-  (index, params = {}) =>
+  (index: number, params = {}) =>
   dispatch => {
     dispatch({
       type: 'MOBILE_RELATION_LOAD_PARAMS',

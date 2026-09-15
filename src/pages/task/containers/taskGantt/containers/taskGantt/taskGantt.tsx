@@ -174,7 +174,7 @@ class TaskGantt extends Component<any, any> {
    * 获取单个网络的成员
    * @param {string} projectId
    */
-  getSetting(projectId) {
+  getSetting(projectId: string) {
     config.projectId = projectId;
 
     ajaxRequest.getSetting({ projectId }).then(source => {

@@ -59,7 +59,7 @@ const getPointData = reportData => {
     const nControlId = _.get(yaxisList[0], 'controlId');
     const sizeControlId = _.get(yaxisList[inheritLastYaxis ? 0 : 1], 'controlId');
     value.map(item => {
-      map.forEach((element, index) => {
+      map.forEach((element, index: number) => {
         const target = element.value.filter(n => n.x === item.x)[0];
 
         if (!target) {

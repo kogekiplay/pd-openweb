@@ -307,7 +307,7 @@ export const formatSwitches = switches => {
   });
 };
 
-export const isOpenPermit = (type, list = [], viewId) => {
+export const isOpenPermit = (type, list = [], viewId: string) => {
   if (Array.isArray(list)) {
     list = list.length > 0 ? formatSwitches(list) : list;
     let data = list.find(o => o.type === type);

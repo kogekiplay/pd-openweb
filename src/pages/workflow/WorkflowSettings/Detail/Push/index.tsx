@@ -160,7 +160,7 @@ export default class Push extends Component<any, any> {
   /**
    * 更新按钮数据
    */
-  updateButtonSource(obj, index, callback = () => {}) {
+  updateButtonSource(obj, index: number, callback = () => {}) {
     const { data } = this.state;
     const buttons = data.buttons;
 
@@ -392,7 +392,7 @@ export default class Push extends Component<any, any> {
 
             <div className="Font13 bold mTop20">{_l('卡片按钮')}</div>
 
-            {(data.buttons || []).map((button, index) => {
+            {(data.buttons || []).map((button, index: number) => {
               return (
                 <BtnContent>
                   <div className="workflowMessageTitle">{_l('按钮%0', index + 1)}</div>
@@ -740,7 +740,7 @@ export default class Push extends Component<any, any> {
   /**
    * 切换工作表
    */
-  switchWorksheet = (appId, index) => {
+  switchWorksheet = (appId: string, index: number) => {
     if (index === undefined) {
       this.updateSource({ appId, viewId: '', actionId: '' });
     } else {

@@ -134,7 +134,7 @@ const CheckboxWidget = props => {
     return (
       <Fragment>
         {renderSelectAll(checkIds, displayOptions)}
-        {displayOptions.map((item, index) => {
+        {displayOptions.map((item, index: number) => {
           return (
             <div
               className="flexColumn"

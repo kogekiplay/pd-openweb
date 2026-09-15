@@ -380,7 +380,7 @@ export default class Authentication extends Component<any, any> {
   /**
    * 渲染OAuth2参数
    */
-  renderOAuth2Parameter(item, index, key) {
+  renderOAuth2Parameter(item, index: number, key) {
     const { data } = this.state;
     const TABS = {
       Params: {

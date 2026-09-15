@@ -101,7 +101,7 @@ const OtpInput = forwardRef(function OtpInput(props, ref) {
 
   // 聚焦到指定索引的输入框
   const focusInput = useCallback(
-    (index, delay = 0, shouldSelect = true) => {
+    (index: number, delay = 0, shouldSelect = true) => {
       setTimeout(() => {
         const input = inputRefs.current[index];
 
@@ -228,7 +228,7 @@ const OtpInput = forwardRef(function OtpInput(props, ref) {
   );
 
   const handlePaste = useCallback(
-    (e, index) => {
+    (e, index: number) => {
       e.preventDefault();
       const pastedText = e.clipboardData?.getData('Text') || '';
       processPasteText(pastedText, value, verifyLen, index, onChange, focusInput);
@@ -246,7 +246,7 @@ const OtpInput = forwardRef(function OtpInput(props, ref) {
   );
 
   const handleKeyDown = useCallback(
-    (e, index) => {
+    (e, index: number) => {
       const { key } = e;
 
       if (key === 'Backspace') {

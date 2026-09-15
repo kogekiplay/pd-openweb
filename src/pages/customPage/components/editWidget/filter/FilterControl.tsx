@@ -60,7 +60,7 @@ export default function FilterControl(props) {
   const firstControlData =
     _.find(_.get(firstSheet, 'template.controls'), { controlId: _.get(filterObjectControls[0], 'controlId') }) || {};
 
-  const renderSelect = (item, index) => {
+  const renderSelect = (item, index: number) => {
     const lastControl = filterObjectControls[index - 1] || {};
     const sheet = _.find(sheetList, { worksheetId: item.worksheetId });
     const templateControls = _.get(sheet, 'template.controls') || [];

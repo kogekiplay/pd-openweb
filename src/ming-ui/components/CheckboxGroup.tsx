@@ -87,7 +87,7 @@ class CheckboxGroup extends Component<any, any> {
     });
     return (
       <div className={cls}>
-        {this.state.data.map((props, index) => (
+        {this.state.data.map((props, index: number) => (
           <Checkbox
             {...props}
             onClick={(...arg) => this.handleClick(...arg)}

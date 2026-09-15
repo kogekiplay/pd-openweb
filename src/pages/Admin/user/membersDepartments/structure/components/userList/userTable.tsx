@@ -52,7 +52,7 @@ const clearActiveDialog = props => {
   dispatch(updateUserOpList(null));
 };
 
-const refreshData = (departmentId, typeCursor, projectId, pageIndex, dispatch) => {
+const refreshData = (departmentId, typeCursor, projectId: string, pageIndex, dispatch) => {
   if (departmentId) {
     dispatch(loadUsers(departmentId, pageIndex));
   } else {
@@ -528,7 +528,7 @@ class UserTable extends React.Component<any, any> {
     );
     const nameColumnStyle = { width: hasHorizontalScroll ? NAME_COLUMN_WIDTH : 'unset' };
 
-    return usersCurrentPage.map((user, index) => {
+    return usersCurrentPage.map((user, index: number) => {
       return (
         <UserItem
           authority={authority}

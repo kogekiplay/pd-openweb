@@ -3,7 +3,7 @@ import { pageSizeForPortal } from 'src/pages/Role/PortalCon/tabCon/config';
 import { translatePortalRoleOptions } from 'src/pages/Role/PortalCon/tabCon/util-pure';
 import type { AppDispatch, GetState } from 'src/redux/types';
 
-export const getControls = (appId, projectId) => {
+export const getControls = (appId: string, projectId: string) => {
   return dispatch => {
     dispatch(
       setBaseInfo({
@@ -339,7 +339,7 @@ const getFilterTels = telFilters => {
   }
 
   let code = telFilters.split(/[(\r\n)\r\n]+/); // 根据换行或者回车进行识别
-  code.forEach((item, index) => {
+  code.forEach((item, index: number) => {
     // 删除空项
     if (!item) {
       code.splice(index, 1);

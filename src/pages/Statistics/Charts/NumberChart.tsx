@@ -196,7 +196,7 @@ const formatData = ({ map, contrast, contrastMap, displaySetup, yaxisList, isTim
   const result = [];
   const data = fillMap(map, contrast, contrastMap);
   const isHide = yaxisList.length === 1 && yaxisList[0].emptyShowType === 0;
-  data.forEach((item, index) => {
+  data.forEach((item, index: number) => {
     if (index) {
       item.value.forEach((n, i) => {
         const minorList = result[i].minorList || [];
@@ -210,7 +210,7 @@ const formatData = ({ map, contrast, contrastMap, displaySetup, yaxisList, isTim
     } else {
       const contrastList = _.get(contrast[index], 'value') || [];
       const contrastMapList = _.get(contrastMap[index], 'value') || [];
-      item.value.forEach((n, index) => {
+      item.value.forEach((n, index: number) => {
         const contrastData: Record<string, any> = {};
 
         if (isTime) {
@@ -821,7 +821,7 @@ export default class extends Component<any, any> {
             )}
           {xaxes.controlId
             ? list.map(data => this.renderMapItem(data, controlMinAndMax, span))
-            : list.map((data, index) =>
+            : list.map((data, index: number) =>
                 this.renderMapItem(
                   {
                     controlId: data.c_id,

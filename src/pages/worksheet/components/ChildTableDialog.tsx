@@ -356,7 +356,7 @@ export default function ChildTableDialog(props) {
                     fieldPermission: '100',
                   }),
               worksheetId,
-              addRefreshEvents: (name, value) => {
+              addRefreshEvents: (name: string, value) => {
                 cache.current.reload = value;
               },
             }}
@@ -431,7 +431,7 @@ export default function ChildTableDialog(props) {
               }
             }}
             mobileIsEdit={mobileIsEdit}
-            addRefreshEvents={(name, value) => {
+            addRefreshEvents={(name: string, value) => {
               cache.current[name] = value;
             }}
           />

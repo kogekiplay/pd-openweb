@@ -46,7 +46,7 @@ export default class AppSettings extends React.Component<any, any> {
     if (entities.length > 0) {
       return (
         <ScrollView className="singleItemAppContent">
-          {entities.map((entity, index) => {
+          {entities.map((entity, index: number) => {
             return (
               <div className="singleItemHeader mBottom10">
                 <div className="singleItemLeft">

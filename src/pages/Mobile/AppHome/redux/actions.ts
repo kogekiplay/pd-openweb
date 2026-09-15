@@ -4,7 +4,7 @@ import favoriteAjax from 'src/api/favorite';
 import homeAppAjax from 'src/api/homeApp';
 import type { AppDispatch, GetState } from 'src/redux/types';
 
-export const getMyApp = (projectId, isPullRefresh?) => dispatch => {
+export const getMyApp = (projectId: string, isPullRefresh?) => dispatch => {
   if (!isPullRefresh) {
     dispatch({ type: 'MOBILE_FETCHHOMELIST_START' });
   }
@@ -90,7 +90,7 @@ export const getHomePlatformSetting = projectId => dispatch => {
   });
 };
 
-export const myPlatform = (projectId, isPullRefresh) => dispatch => {
+export const myPlatform = (projectId: string, isPullRefresh) => dispatch => {
   if (!isPullRefresh) {
     dispatch({ type: 'MOBILE_FETCHHOMELIST_START' });
   }

@@ -1147,7 +1147,7 @@ export default class ConfigControl extends Component<any, any> {
                 <LoadDiv className="mTop32" />
               ) : (
                 <Fragment>
-                  {worksheetControls.map((controlItem, index) => {
+                  {worksheetControls.map((controlItem, index: number) => {
                     const { type, advancedSetting } = controlItem;
 
                     // 不支持映射的字段

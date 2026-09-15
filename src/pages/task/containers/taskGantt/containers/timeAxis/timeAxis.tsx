@@ -46,14 +46,14 @@ class TimeAxis extends Component<any, any> {
           style={{ width: utils.getViewSumWidth(currentView, timeAxisSource, filterWeekend), transform: translateX }}
         >
           <div className="timeAxisMonthsWrapper">
-            {timeAxisSource.map((item, index) => (
+            {timeAxisSource.map((item, index: number) => (
               <div className="timeAxisMonths" style={{ width: width * item.dateList.length }} key={index}>
                 {this.adjustYear(item.month)}
               </div>
             ))}
           </div>
           <div className="timeAxisDaysWrapper">
-            {timeAxisSource.map((item, index) => (
+            {timeAxisSource.map((item, index: number) => (
               <div className="timeAxisDays" key={index}>
                 {item.dateList.map((day, dayIndex) => (
                   <div className="timeAxisDay" style={dayStyle} key={dayIndex}>
@@ -81,14 +81,14 @@ class TimeAxis extends Component<any, any> {
           style={{ width: utils.getViewSumWidth(currentView, timeAxisSource, filterWeekend) }}
         >
           <div className="timeAxisMonthsWrapper">
-            {timeAxisSource.map((item, index) => (
+            {timeAxisSource.map((item, index: number) => (
               <div className="timeAxisMonths" style={{ width: width * item.dateList.length }} key={index}>
                 {this.adjustYear(item.month)}
               </div>
             ))}
           </div>
           <div className="timeAxisDaysWrapper">
-            {timeAxisSource.map((item, index) => (
+            {timeAxisSource.map((item, index: number) => (
               <div className="timeAxisDays" key={index}>
                 {item.dateList.map((day, dayIndex) => (
                   <div className="timeAxisDay" style={dayStyle} key={dayIndex}>
@@ -115,7 +115,7 @@ class TimeAxis extends Component<any, any> {
           style={{ width: utils.getViewSumWidth(currentView, timeAxisSource, filterWeekend), transform: translateX }}
         >
           <div className="timeAxisMonthsWrapper">
-            {timeAxisSource.map((item, index) => (
+            {timeAxisSource.map((item, index: number) => (
               <div
                 className="timeAxisMonths"
                 style={{ width: this.getYearCount(item.dateList, currentView, filterWeekend) }}
@@ -126,7 +126,7 @@ class TimeAxis extends Component<any, any> {
             ))}
           </div>
           <div className="timeAxisDaysWrapper">
-            {timeAxisSource.map((item, index) => (
+            {timeAxisSource.map((item, index: number) => (
               <div className="timeAxisDays" key={index}>
                 {item.dateList.map((month, dayIndex) => (
                   <div

@@ -106,7 +106,7 @@ class ImportAndExport extends Component<any, any> {
     });
   };
 
-  exportUsers = (projectId, departmentIds = []) => {
+  exportUsers = (projectId: string, departmentIds = []) => {
     const url = `${md.global.Config.AjaxApiUrl}download/exportProjectUserList`;
     let projectName = getCurrentProject(projectId, true).companyName;
     let date = moment().format('YYYYMMDDHHmmss');

@@ -66,7 +66,7 @@ async function ensureMingoEntryGlobalMeta() {
   await window.__mingoEntryEnsureGlobalMeta().catch(() => null);
 }
 
-function extOf(name) {
+function extOf(name: string) {
   return ((name || '').split('.').pop() || '').toLowerCase();
 }
 

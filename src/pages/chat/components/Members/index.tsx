@@ -94,7 +94,7 @@ export default class Members extends Component<any, any> {
         </div>
         <div className="ChatPanel-Members-body">
           <div className="ChatPanel-Members-list">
-            {members.map((item, index) => (
+            {members.map((item, index: number) => (
               <div
                 key={item.accountId}
                 className={cx('ChatPanel-Members-item', { 'ChatPanel-Members-creator': index === 0 })}

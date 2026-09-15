@@ -46,7 +46,7 @@ export default class GraphContent extends Component<any, any> {
   renderProcess(data) {
     const { width, handleTaskItemHover, beginTime } = this.props;
 
-    return data.map((item, index) => {
+    return data.map((item, index: number) => {
       let expectState, actualState, status;
       let { actualStartTime, completeTime, deadline, startTime } = item;
 

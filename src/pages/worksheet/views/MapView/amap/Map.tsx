@@ -428,7 +428,7 @@ class Map extends Component<any, any> {
     }
   }
 
-  installPlugin(name, opts) {
+  installPlugin(name: string, opts) {
     opts = opts || {};
     switch (name) {
       case 'Scale':
@@ -445,7 +445,7 @@ class Map extends Component<any, any> {
     }
   }
 
-  setMapPlugin(name, opts) {
+  setMapPlugin(name: string, opts) {
     if (this.pluginMap[name]) {
       this.pluginMap[name].show();
     } else {

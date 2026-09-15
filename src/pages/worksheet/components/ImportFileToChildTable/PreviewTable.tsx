@@ -155,7 +155,7 @@ renderNormalHead.propTypes = {
   columnIndex: number,
 };
 
-function getCellWidth(width, columnCount, showNumber) {
+function getCellWidth(width: number, columnCount, showNumber) {
   const averageWidth = (showNumber ? width - 60 : width) / (columnCount - (showNumber ? 1 : 0));
   return averageWidth > 150 ? averageWidth : 150;
 }

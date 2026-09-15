@@ -187,7 +187,7 @@ export default class AccountChart extends React.Component<any, any> {
             {!!unAuthList.length && (
               <React.Fragment>
                 <div className="groupTitle mTop0">{_l('待审核')}</div>
-                {unAuthList.map((item, index) => (
+                {unAuthList.map((item, index: number) => (
                   <EnterpriseCard key={index} card={item} getData={() => this.getData()} />
                 ))}
                 <div className="groupTitle">{_l('已加入')}</div>

@@ -17,7 +17,7 @@ let TimeBlock = class TimeBlock extends Component<any, any> {
     super(props);
   }
 
-  renderRow(row, groupKey, index) {
+  renderRow(row, groupKey, index: number) {
     const { buttonsCheckStatus } = this.props;
     const style = {
       top: index * lineHeight + (lineHeight / 2 - rowBlockHeight / 2),
@@ -61,7 +61,7 @@ let TimeBlock = class TimeBlock extends Component<any, any> {
           item.rows
             .filter((item: RecordRow) => (withoutArrangementVisible ? true : item.diff > 0))
             .map(
-              (row, index) =>
+              (row, index: number) =>
                 row.width > 0 && this.renderRow(row, item.key, item.hide ? index : groupingIndex + index + 1),
             )}
       </Fragment>

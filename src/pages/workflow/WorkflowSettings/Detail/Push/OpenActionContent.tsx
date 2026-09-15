@@ -26,7 +26,7 @@ export default class OpenActionContent extends Component<any, any> {
   /**
    * 获取应用详情
    */
-  getAppDetail(appId) {
+  getAppDetail(appId: string) {
     homeApp.getApp({ appId }).then(result => {
       this.setState({ otherAppName: result.name });
     });
@@ -35,7 +35,7 @@ export default class OpenActionContent extends Component<any, any> {
   /**
    * 获取工作表详情
    */
-  getWorksheetInfo(worksheetId) {
+  getWorksheetInfo(worksheetId: string) {
     const { data, relationId } = this.props;
     const { otherAppName } = this.state;
     let ajax;
@@ -355,7 +355,7 @@ export default class OpenActionContent extends Component<any, any> {
             selectedAppId={this.props.relationId}
             selectedWorksheetId={data.appId}
             visible
-            onOk={(selectedAppId, worksheetId, obj) => {
+            onOk={(selectedAppId, worksheetId: string, obj) => {
               const isCurrentApp = this.props.relationId === selectedAppId;
 
               if (!isCurrentApp && selectedAppId) {

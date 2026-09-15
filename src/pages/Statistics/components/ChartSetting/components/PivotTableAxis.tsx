@@ -616,7 +616,7 @@ let PivotTableAxis = class PivotTableAxis extends Component<any, any> {
     });
     this.props.onUpdateList(newList);
   };
-  handleUpdateParticleSizeType = (controlId, particleSizeType, value) => {
+  handleUpdateParticleSizeType = (controlId: string, particleSizeType, value) => {
     const { list } = this.props;
     const id = particleSizeType ? `${controlId}-${particleSizeType}` : controlId;
     const newList = list.map(item => {
@@ -629,7 +629,7 @@ let PivotTableAxis = class PivotTableAxis extends Component<any, any> {
     });
     this.props.onUpdateList(newList, id);
   };
-  handleChangeData = (controlId, data) => {
+  handleChangeData = (controlId: string, data) => {
     const { list } = this.props;
     const newList = list.map(item => {
       if (item.controlId === controlId) {

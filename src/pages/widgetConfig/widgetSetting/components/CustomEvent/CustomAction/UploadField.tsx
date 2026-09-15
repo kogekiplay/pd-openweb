@@ -170,7 +170,7 @@ export default class UploadFile extends Component<any, any> {
             <div className="Width110">{_l('操作')}</div>
           </div>
           <div className="listContent">
-            {files.map((file, index) => {
+            {files.map((file, index: number) => {
               return (
                 <div className="uploadItem">
                   <div className="flex flexCenter flexRow overflow_ellipsis">

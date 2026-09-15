@@ -74,7 +74,9 @@ export const getSyncLicenseInfo = projectId => {
 /**
  *  获取功能状态 1: 正常 2: 升级
  */
-export function getFeatureStatus(projectId, featureId) {
+// projectId 允许为 undefined：下面那行 UUID 正则本来就是用来挡非法入参的，
+// undefined 过不了正则、直接早返回。多处调用方的 projectId 就是可选的。
+export function getFeatureStatus(projectId: string | undefined, featureId) {
   if (window.shareState.shareId) return;
   if (!/^[A-Za-z0-9]{8}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{12}$/.test(projectId)) return;
 

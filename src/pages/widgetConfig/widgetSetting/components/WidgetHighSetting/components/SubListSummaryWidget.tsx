@@ -87,7 +87,7 @@ export default function SubListSummaryWidget(props) {
       <div className="summaryContent flexColumn">
         {settingList.length > 0 && (
           <Fragment>
-            {settingList.map((s, index) => {
+            {settingList.map((s, index: number) => {
               const currentControl = _.find(filterControls, c => c.controlId === s.id);
               if (!currentControl) return null;
               const summaryTypeOptions = getTypeList(currentControl)

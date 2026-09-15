@@ -1249,7 +1249,7 @@ export const handleAddWidgets = (data, para = {}, widgetProps, callback?) => {
   let newWidgets = [].concat(widgets);
   let lastItem = null;
 
-  data.forEach((item, index) => {
+  data.forEach((item, index: number) => {
     let currentRowIndex = 0;
 
     // 没有激活控件或者激活的控件不存在 则直接添加在最后一行
@@ -1339,7 +1339,7 @@ export const handleMoveWidgets = (data, widgetProps) => {
 
   currentRowIndex = currentRowIndex + childrenList.length;
 
-  data.map((item, index) => {
+  data.map((item, index: number) => {
     // 如果当前激活控件所在行没有空位则另起下一行，否则放到当前行后面
     if (newWidgets[currentRowIndex] && isHaveGap(newWidgets[currentRowIndex], item)) {
       newWidgets = update(newWidgets, { [currentRowIndex]: { $push: [item] } });

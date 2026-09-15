@@ -32,7 +32,7 @@ export default class QuerySheet extends Component<any, any> {
         project.worksheets.length > 0 && (
           <div className="projectSheetList" key={i}>
             <div className="title textDisabled"> {project.projectId ? project.name : _l('个人')} </div>
-            {project.worksheets.map((sheet, index) => (
+            {project.worksheets.map((sheet, index: number) => (
               <WorkSheetItem
                 className="hoverBgColorPrimaryDark"
                 showRight={false}

@@ -130,7 +130,7 @@ export default function ControlsSetting(props) {
     });
   };
 
-  const handleFileRadio = (controlId, value) => {
+  const handleFileRadio = (controlId: string, value) => {
     fileStyle[controlId] = value;
     changeAdvanceSettings({
       key: 'atta_style',
@@ -138,7 +138,7 @@ export default function ControlsSetting(props) {
     });
   };
 
-  const handleUserInfo = (controlId, info) => {
+  const handleUserInfo = (controlId: string, info) => {
     userConfig[controlId] = _.assign(userConfig[controlId], info);
     changeAdvanceSettings({
       key: 'user_info',

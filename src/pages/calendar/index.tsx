@@ -42,7 +42,7 @@ export default class CalendarEntrypoint extends Component<any, any> {
     }
 
     const _this = this;
-    $('#calendar').on('openTask', function (event, taskId) {
+    $('#calendar').on('openTask', function (event, taskId: string) {
       _this.setState({ openTaskDetail: true, taskId });
     });
   }

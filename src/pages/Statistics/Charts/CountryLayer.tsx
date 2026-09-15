@@ -755,7 +755,7 @@ export class CountryLayer extends Component<any, any> {
             />
             {!_.isEmpty(path) && (
               <PathWrapper className="flexRow valignWrapper card">
-                {path.map((item, index) => (
+                {path.map((item, index: number) => (
                   <Fragment>
                     {index ? <span className="mLeft5 mRight5">/</span> : null}
                     <div

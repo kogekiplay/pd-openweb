@@ -45,6 +45,23 @@ const CONSENSUS = 0.9;
 /** 只有这些类型可以跨文件照抄——不依赖任何 import */
 const PORTABLE = new Set(['string', 'number', 'boolean', 'string[]', 'number[]', 'boolean[]']);
 
+/**
+ * 【方法本身的局限，以及由此排除的名字】
+ * 共识是在「已经写了标注的地方」统计出来的，它不保证能推广到没写标注的地方。
+ * 2026-09-15 实测抓到的反例就是 `field`：已标注的 13 处 100% 都是 string，
+ * 但未标注处大量是 `data.map(field => field.isPk / field.name / field.alias)`
+ * 这种【对象】。标上 string 当场引入 3 条新诊断。
+ * 提高证据门槛救不了它（13 条已经过线，而且共识是满分），所以只能按名字排除。
+ * 这也说明差分门禁是这个工具【必须】的配套，不是走过场。
+ *
+ * 另外四个同样排除（都实测过，一起跑时它们贡献了 51 条新诊断里的大部分）：
+ *   text 13 条 / url 13 条 —— 对应 179 和 36 处改写，证据与影响面严重不成比例
+ *   id   44 条 91% —— 分歧里有 3 条是 FormControl，是真冲突不是可空化
+ *   key  477 条 99% —— 分歧里有 4 条 number，实测会引入比较类诊断
+ * 要重新评估某一个，用 --only=<名字> 单独跑一遍门禁看代价，别直接从这里删。
+ */
+const EXCLUDE = new Set(['field', 'id', 'text', 'url', 'key']);
+
 const project = openProject('tsconfig.strictprobe.json');
 
 // ── 第一遍：收集全仓【已有显式标注】的名字 -> 类型文本 ────────────────────
@@ -94,6 +111,8 @@ for (const [name, counts] of evidence) {
   const share = bestN / total;
   if (share < CONSENSUS) continue;
   if (!PORTABLE.has(best)) continue;
+  // --only 是显式点名，视为「我知道它在排除名单里，就是要单独评估它」
+  if (EXCLUDE.has(name) && !(ONLY && ONLY.has(name))) continue;
   consensus.set(name, { type: best, share, total });
 }
 

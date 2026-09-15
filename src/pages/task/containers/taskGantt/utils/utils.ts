@@ -833,7 +833,7 @@ const syncUpdateScroll = () => {
   // timeAxisMonths 类上文字的宽度
   const textWith = 65;
   const monthsEls = $('.timeAxisContent .timeAxisMonths');
-  const monthsLeft = monthsEls.map((index, el) => {
+  const monthsLeft = monthsEls.map((index: number, el) => {
     return el.offsetLeft;
   });
   const index = getScrollIndex(value, monthsLeft);

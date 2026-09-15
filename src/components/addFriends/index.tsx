@@ -250,7 +250,7 @@ class SelectProject extends Component<any, any> {
     friendVisible: true,
   };
 
-  onSelect(projectId) {
+  onSelect(projectId: string) {
     FunctionWrap(AddFriends, { ...this.props, onClose: () => {}, fromType: projectId ? 4 : 0, projectId });
   }
 
@@ -261,7 +261,7 @@ class SelectProject extends Component<any, any> {
       <Dialog className="inviteDialog" width={420} visible title={_l('邀请到')} footer={null} onCancel={onClose}>
         <div className="inviteList">
           <ul className="projectList">
-            {md.global.Account.projects.concat(friendVisible ? { projectId: '' } : []).map((item, index) => {
+            {md.global.Account.projects.concat(friendVisible ? { projectId: '' } : []).map((item, index: number) => {
               const type = (index % 5) + 2;
 
               return (

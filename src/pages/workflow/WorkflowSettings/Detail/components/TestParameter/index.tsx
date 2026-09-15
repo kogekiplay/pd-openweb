@@ -33,7 +33,7 @@ export default ({
   hasAuth = false,
 }) => {
   const [cacheTestMap, setTestMap] = useState(testMap);
-  const [isUploadingIndex, setUploadingIndex] = useState('');
+  const [isUploadingIndex, setUploadingIndex] = useState<string | number>('');
   const [auth2Id, setAuth2Id] = useState(authId);
   let pollingTimer: NodeJS.Timeout | null = null;
 
@@ -63,7 +63,7 @@ export default ({
   }, []);
 
   const renderList = (source, isFile?) => {
-    return source.map((key, index) => {
+    return source.map((key, index: number) => {
       const [nodeId, controlId] = parseId(key);
 
       if (
@@ -108,7 +108,7 @@ export default ({
     });
   };
 
-  const renderFile = (key, index) => {
+  const renderFile = (key, index: number) => {
     key = key + '14';
 
     return (

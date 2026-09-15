@@ -409,7 +409,7 @@ const ChunkPreview = props => {
                                   {_l('增强信息')}
                                 </div>
                                 <div className="recordEnhanceContent">
-                                  {item.enhanceInfo.texts?.map((text, index) => (
+                                  {item.enhanceInfo.texts?.map((text, index: number) => (
                                     <MarkdownPreview key={`${item.chunkId}-${index}`} content={text} />
                                   ))}
                                 </div>

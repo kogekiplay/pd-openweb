@@ -15,7 +15,7 @@ export default function TextHeightLine(props) {
   let list = text.split(heightLineText);
   return (
     <TextBox className={cx({ [className]: className })}>
-      {list.map((it, index) => {
+      {list.map((it, index: number) => {
         if (index === 0) return it;
         return (
           <React.Fragment>

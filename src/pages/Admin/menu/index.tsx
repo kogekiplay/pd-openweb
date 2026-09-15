@@ -35,7 +35,7 @@ const toAbsoluteAdminPath = path => (!path ? '' : path.startsWith('/') ? path : 
  */
 const isRoutePathMatched = (path, pathname) => !!matchPath(toAbsoluteAdminPath(path), getPathWithoutSubPath(pathname));
 
-const buildMenuHref = (pattern, projectId) =>
+const buildMenuHref = (pattern, projectId: string) =>
   generatePath(pattern, pattern.includes(':projectId') ? { projectId } : { '*': projectId });
 
 let AdminLeftMenu = class AdminLeftMenu extends Component<any, any> {
@@ -246,7 +246,7 @@ let AdminLeftMenu = class AdminLeftMenu extends Component<any, any> {
           </div>
           <div className="listContainer pTop8 pBottom30">
             {isExtend
-              ? menuList.map((item, index) => {
+              ? menuList.map((item, index: number) => {
                   const { key, title, icon } = item;
                   let { subMenuList = [] } = item;
                   subMenuList = _.filter(

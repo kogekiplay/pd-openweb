@@ -278,7 +278,7 @@ export default class Email extends Component<any, any> {
     );
   };
 
-  handleAutoConvertForEmailClick = (item, index) => {
+  handleAutoConvertForEmailClick = (item, index: number) => {
     const { data, autoConvertForEmailLoading } = this.state;
     const richTextValue = item.fieldValue || '';
 

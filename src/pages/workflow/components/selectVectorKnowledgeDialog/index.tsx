@@ -67,7 +67,7 @@ class SelectVectorKnowledge extends Component<any, any> {
   /**
    * 根据应用获取知识库
    */
-  getKnowledgeByApp(appId) {
+  getKnowledgeByApp(appId: string) {
     knowledgeAjax.getKnowledgeBase({ apkId: appId }).then(res => {
       res = res.map(({ id, name }) => {
         return {

@@ -472,7 +472,7 @@ export default function Slider(props) {
             ))}
         {showScale && showScaleText && (
           <ScaleTextWrap>
-            {data.map((scale, index) => {
+            {data.map((scale, index: number) => {
               const getPercent = target => {
                 if (!target || !_.isNumber(target.percent)) return 0;
                 if (target.percent < 0) return 0;

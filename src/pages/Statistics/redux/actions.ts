@@ -1124,7 +1124,7 @@ export const addValueAxis = (key, control, isRequest = true) => {
   };
 };
 
-export const addTargetValueAxis = (index, control) => {
+export const addTargetValueAxis = (index: number, control) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { currentReport } = getState().statistics;
     const { advancedSetting = {} } = control;
@@ -1258,7 +1258,7 @@ export const addYaxisList = (data, isRequest = true) => {
   };
 };
 
-export const addIndexYaxisList = (data, index, isRequest = true) => {
+export const addIndexYaxisList = (data, index: number, isRequest = true) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { currentReport } = getState().statistics;
     const { reportType, yaxisList, displaySetup, summary } = currentReport;

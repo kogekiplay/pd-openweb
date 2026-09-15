@@ -147,7 +147,7 @@ export class FlowChart extends Component<any, any> {
     const { selectNodeId } = this.props;
     const { flowNodeMap, execIds, execPendingIds } = this.state;
 
-    ids.forEach((id, index) => {
+    ids.forEach((id, index: number) => {
       const $el = $(`.flowChartModal .workflowBox[data-id=${id}]`);
 
       if (isPending) {

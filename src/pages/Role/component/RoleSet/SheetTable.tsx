@@ -58,7 +58,7 @@ export const changeSheetModel = (sheet, type, checked) => {
   };
 };
 
-const changeViewModel = (sheet, viewId, payload) => {
+const changeViewModel = (sheet, viewId: string, payload) => {
   return {
     ...sheet,
     views: _.map(sheet.views, view => {
@@ -121,7 +121,7 @@ export default class extends PureComponent<any, any> {
     onChange(changeSheetModel(sheet, key, checked));
   };
 
-  toggleViewLevel = (viewId, payload, isAllNoRead?) => {
+  toggleViewLevel = (viewId: string, payload, isAllNoRead?) => {
     const { sheet, onChange } = this.props;
     onChange(changeViewModel({ ...sheet, canAdd: isAllNoRead ? false : sheet.canAdd }, viewId, payload));
   };

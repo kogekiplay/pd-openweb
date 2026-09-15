@@ -147,7 +147,7 @@ export default function Board(props) {
       <div className="boardDataItemScrollWrap" ref={$scrollerRef} onScroll={_.throttle(scrollLoad, 400)}>
         <div className="boardDataContentWrap" ref={$contentRef}>
           {isOver && list.key !== dragItemKey && <div className="isDragTempBlock"></div>}
-          {list.data.map((item, index) => (
+          {list.data.map((item, index: number) => (
             <RecordItem
               fieldShowCount={fieldShowCount}
               key={`${props.viewId}-${item.rowId}-${index}`}

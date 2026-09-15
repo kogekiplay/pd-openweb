@@ -692,7 +692,7 @@ const MentionsInput = props => {
       let atDataIndex = null;
       let userIndex = null;
 
-      responseData.accounts = responseData.accounts.map((item, index) => {
+      responseData.accounts = responseData.accounts.map((item, index: number) => {
         if (item.isAtData && atDataIndex == null && props.forReacordDiscussion && !query) {
           atDataIndex = index;
           item.atDataIndex = index;
@@ -786,7 +786,7 @@ const MentionsInput = props => {
           onScroll={handleScroll}
           style={{ maxHeight: getMaxHeight(), width: getWidth() }}
         >
-          {accounts.map((item, index) => (
+          {accounts.map((item, index: number) => (
             <Fragment key={item.id}>
               {item.atDataIndex === index && (
                 <Fragment>

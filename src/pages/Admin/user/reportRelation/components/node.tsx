@@ -65,7 +65,7 @@ class Node extends Component<any, any> {
 
       return (
         <div className="childNodeList">
-          {sortSubordinates.map((child, index) => {
+          {sortSubordinates.map((child, index: number) => {
             const _props = {
               id: child,
               parentId: id,

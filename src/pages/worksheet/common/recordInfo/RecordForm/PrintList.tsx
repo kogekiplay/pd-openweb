@@ -399,7 +399,7 @@ export default class PrintList extends Component<any, any> {
               ? _l('条码打印')
               : _l('云打印')}
         </div>
-        {list.map((it, index) => {
+        {list.map((it, index: number) => {
           let isCustom = [2, 5].includes(it.type);
 
           return (

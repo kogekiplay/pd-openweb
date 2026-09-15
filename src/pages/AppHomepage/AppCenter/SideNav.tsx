@@ -319,7 +319,7 @@ export default function SideNav(props) {
     });
   }, []);
 
-  const renderModuleItem = (entry, index) => {
+  const renderModuleItem = (entry, index: number) => {
     if (isExternal && ['favorite', 'integration', 'plugin'].includes(entry.type)) {
       return '';
     }
@@ -417,7 +417,7 @@ export default function SideNav(props) {
     }
   };
 
-  const renderResourceItem = (entry, index) => {
+  const renderResourceItem = (entry, index: number) => {
     const content = (
       <ResourceEntry
         {...(entry.href ? { target: '_blank' } : {})}

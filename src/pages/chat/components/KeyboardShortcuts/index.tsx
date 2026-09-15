@@ -100,7 +100,7 @@ export default function KeyboardShortcuts(props) {
 
   const renderShortcut = shortcut => {
     if (!shortcut[shortcutKey]) return null;
-    return shortcut[shortcutKey].split(' ').map((v, index) => (
+    return shortcut[shortcutKey].split(' ').map((v, index: number) => (
       <span key={index} className="shortcutKey">
         {v}
       </span>
@@ -110,7 +110,7 @@ export default function KeyboardShortcuts(props) {
   const renderShortcutsList = shortcuts => {
     if (!shortcuts || shortcuts.length === 0) return null;
 
-    return shortcuts.map((shortcut, index) => (
+    return shortcuts.map((shortcut, index: number) => (
       <div key={index} className="shortcutItem flexRow alignItemsCenter">
         <span className="textPrimary flex">{shortcut.action}</span>
         {renderShortcut(shortcut)}
@@ -126,7 +126,7 @@ export default function KeyboardShortcuts(props) {
         {data.shortcuts && renderShortcutsList(data.shortcuts)}
 
         {data.children &&
-          data.children.map((child, index) => (
+          data.children.map((child, index: number) => (
             <div key={index}>
               {child.section && (
                 <div className={level === 0 ? 'sectionTitle subTitle' : 'mTop20 textSecondary'}>{child.section}</div>

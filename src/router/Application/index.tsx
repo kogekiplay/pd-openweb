@@ -59,7 +59,7 @@ let Application = class Application extends Component<any, any> {
    * 检测应用有效性
    */
 
-  checkApp(appId) {
+  checkApp(appId: string) {
     if (md.global.Account.isPortal) {
       appId = md.global.Account.appId;
     }
@@ -96,7 +96,7 @@ let Application = class Application extends Component<any, any> {
    * 兼容老路由补齐参数
    */
 
-  compatibleWorksheetRoute(worksheetId) {
+  compatibleWorksheetRoute(worksheetId: string) {
     ajaxRequest
       .getAppSimpleInfo(
         {

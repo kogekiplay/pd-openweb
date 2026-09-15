@@ -36,7 +36,7 @@ export const uniqMerge = (data, config) => {
  * 多维度单元格合并
  */
 export const mergeTableCell = (list, pageSize?, mergeCell?) => {
-  list.map((item, index) => {
+  list.map((item, index: number) => {
     const last = list[index - 1];
     const defaultEmpty = item.xaxisEmptyType ? '--' : ' ';
 
@@ -91,7 +91,7 @@ export const mergeColumnsCell = (data, columns, yaxisList) => {
       });
   }
 
-  mergeTableCell(result).forEach((item, index) => {
+  mergeTableCell(result).forEach((item, index: number) => {
     item.data.forEach((n, i) => {
       data.filter(item => !item.summary_col)[i].y[index] = n;
     });
@@ -102,7 +102,7 @@ export const mergeColumnsCell = (data, columns, yaxisList) => {
 
 export const renderValue = (value, advancedSetting) => dealMaskValue({ value, advancedSetting });
 
-const getTotalCount = (data, index) => {
+const getTotalCount = (data, index: number) => {
   return data
     .map(item => {
       const key = Object.keys(item)[0];
@@ -122,7 +122,7 @@ export const mergeLinesCell = (data, lines, valueMap, config) => {
   const isFreeze = freeze && _.isNumber(freezeIndex);
 
   const result = mergeTableCell(
-    data.map((item, index) => {
+    data.map((item, index: number) => {
       const key = Object.keys(item)[0];
       const res = item[key].map((value, valueIndex) => {
         if (value.includes('subTotal')) {
@@ -479,7 +479,7 @@ export const compileColorRuleConfig = (yaxisList, colorRules = []) => {
     }
   };
 
-  yaxisList.forEach((item, index) => {
+  yaxisList.forEach((item, index: number) => {
     yaxisMap[item.controlId] = item;
     yaxisIndexMap[item.controlId] = index;
   });
@@ -540,7 +540,7 @@ export const compileColorRuleConfig = (yaxisList, colorRules = []) => {
     return data;
   };
 
-  const compileDataBarRule = (rule, controlId) => {
+  const compileDataBarRule = (rule, controlId: string) => {
     if (!rule) {
       return undefined;
     }
@@ -583,7 +583,7 @@ export const compileColorRuleConfig = (yaxisList, colorRules = []) => {
   };
 };
 
-export const getLineSubTotal = (data = [], index) => {
+export const getLineSubTotal = (data = [], index: number) => {
   let count = '';
 
   for (let i = index; i < data.length; i++) {

@@ -116,7 +116,7 @@ export default class DropDownItem extends Component<any, any> {
     });
   }
 
-  updateValues(parentId, controlId) {
+  updateValues(parentId, controlId: string) {
     const { values, onChange, actionType, from } = this.props;
     const { dropDownData = [] } = this.state;
     let newValues = values.concat([]);

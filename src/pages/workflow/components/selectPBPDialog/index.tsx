@@ -166,7 +166,7 @@ class SelectPBPDialog extends Component<any, any> {
   /**
    * 根据应用获取PBC列表
    */
-  getPBCList(appId) {
+  getPBCList(appId: string) {
     const list = [];
 
     if (this.ajaxRequest) {
@@ -233,7 +233,7 @@ class SelectPBPDialog extends Component<any, any> {
                   {(!(list || []).length && keyword.trim()
                     ? appList.filter(o => o.appName.toLowerCase().includes(keyword.toLowerCase()))
                     : appList
-                  ).map((o, index) => (
+                  ).map((o, index: number) => (
                     <li
                       key={index}
                       className={cx({ active: o.appId === selectAppId })}
@@ -275,7 +275,7 @@ class SelectPBPDialog extends Component<any, any> {
               {list && !list.length && <div className="emptyContent">{_l('暂无数据')}</div>}
               {list && !!list.length && (
                 <ScrollView className="flex pTop6 pBottom6">
-                  {list.map((o, index) => (
+                  {list.map((o, index: number) => (
                     <div
                       className="listItem flexRow alignItemsCenter"
                       key={index}

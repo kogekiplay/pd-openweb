@@ -431,7 +431,7 @@ class FolderDetail extends Component<any, any> {
   /**
    * 绑定名片层事件
    */
-  bindEvents(evt, accountId, avatar, fullname) {
+  bindEvents(evt, accountId: string, avatar, fullname) {
     // 设为负责人
     evt.find('.updateFolderChargeFix').on('click', () => {
       this.updateFolderCharge(accountId, avatar, fullname);
@@ -468,7 +468,7 @@ class FolderDetail extends Component<any, any> {
     });
   }
 
-  clickEvents(type: string, accountId, avatar, fullname) {
+  clickEvents(type: string, accountId: string, avatar, fullname) {
     switch (type) {
       // 设为负责人
       case 'updateFolderChargeFix':
@@ -540,7 +540,7 @@ class FolderDetail extends Component<any, any> {
   /**
    * 更改项目负责人
    */
-  updateFolderCharge(accountId, avatar, fullname) {
+  updateFolderCharge(accountId: string, avatar, fullname) {
     Dialog.confirm({
       dialogClasses: 'updateFolderCharge',
       closable: false,
@@ -594,7 +594,7 @@ class FolderDetail extends Component<any, any> {
   /**
    * 设为成员和管理员
    */
-  updateFolderMemberAuth(accountId, avatar, fullname, isAdmin) {
+  updateFolderMemberAuth(accountId: string, avatar, fullname, isAdmin) {
     ajaxRequest
       .updateFolderMemberAuth({
         folderID: this.props.taskConfig.folderId,
@@ -639,7 +639,7 @@ class FolderDetail extends Component<any, any> {
   /**
    * 移除项目成员
    */
-  removeFolderMember(accountId) {
+  removeFolderMember(accountId: string) {
     const that = this;
     let msg = _l('是否确认移除该成员');
 
@@ -686,7 +686,7 @@ class FolderDetail extends Component<any, any> {
   /**
    * 申请用户设为管理员和成员
    */
-  updateFolderMemberStatusAndAuth(accountId, avatar, fullname, isAdmin: boolean) {
+  updateFolderMemberStatusAndAuth(accountId: string, avatar, fullname, isAdmin: boolean) {
     ajaxRequest
       .updateFolderMemberStatusAndAuth({
         folderID: this.props.taskConfig.folderId,
@@ -721,7 +721,7 @@ class FolderDetail extends Component<any, any> {
   /**
    * 申请用户拒绝
    */
-  refuseFolderMember(accountId) {
+  refuseFolderMember(accountId: string) {
     const that = this;
 
     Dialog.confirm({

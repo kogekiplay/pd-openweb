@@ -170,7 +170,7 @@ const getLangDataIndex = langData => {
  */
 export type TranslateInfo = Record<string, string>;
 
-export const getTranslateInfo = (appId, parentId, id, data?): TranslateInfo => {
+export const getTranslateInfo = (appId: string, parentId, id, data?): TranslateInfo => {
   const langData = data || window[`langData-${appId}`] || [];
 
   if (!Array.isArray(langData)) {

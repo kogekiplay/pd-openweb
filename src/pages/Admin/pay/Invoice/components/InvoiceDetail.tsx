@@ -448,7 +448,7 @@ export default function InvoiceDetail(props) {
                   <PageTableCon
                     className="productTable"
                     columns={columns}
-                    dataSource={invoiceDetails.map((item, index) => ({ ...item, indexNumber: index + 1 }))}
+                    dataSource={invoiceDetails.map((item, index: number) => ({ ...item, indexNumber: index + 1 }))}
                   />
                 </div>
               )}

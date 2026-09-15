@@ -88,7 +88,7 @@ export default class MobileOrEmailInvite extends Component<any, any> {
     });
   };
 
-  handleChange = (data, index) => {
+  handleChange = (data, index: number) => {
     this.setState({
       list: this.state.list.map((o, i) => {
         if (i === index) {
@@ -187,7 +187,7 @@ export default class MobileOrEmailInvite extends Component<any, any> {
       });
   };
 
-  renderItem = (item, index) => {
+  renderItem = (item, index: number) => {
     let content = '';
 
     if (this.state.selectType === TYPE_MODE.MOBILE) {
@@ -337,7 +337,7 @@ export default class MobileOrEmailInvite extends Component<any, any> {
             </div>
           )}
         <div className="resultContent" style={{ minHeight: 230, overflow: 'unset' }}>
-          {list.map((item, index) => this.renderItem(item, index))}
+          {list.map((item, index: number) => this.renderItem(item, index))}
           <div className="addBox colorPrimary">
             <span onClick={this.handleAdd}>
               <Icon icon="add1" />

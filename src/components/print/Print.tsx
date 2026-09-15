@@ -952,7 +952,7 @@ export default class Print extends Component<any, any> {
       return this.beforeControlIsDetail(Number(key) - 1);
     }
   }.bind(this);
-  renderTaskItem(name, value, key, classname?: string) {
+  renderTaskItem(name: string | number, value, key, classname?: string) {
     return (
       <tr className="row clearfix Relative notDetails" key={key}>
         <td className="noHalf rowItem BorderRight0 taskRowItem" colSpan={1}>
@@ -993,7 +993,7 @@ export default class Print extends Component<any, any> {
             style={{ fontSize: this.state.fontSize }}
           >
             <tbody>
-              {item.checkListData.map((item, index) =>
+              {item.checkListData.map((item, index: number) =>
                 this.renderTaskItem(index + 1, item.name, index, item.status ? 'lineThrough' : ''),
               )}
             </tbody>
@@ -1023,7 +1023,7 @@ export default class Print extends Component<any, any> {
             style={{ fontSize: this.state.fontSize }}
           >
             <tbody>
-              {subTask.map((item, index) =>
+              {subTask.map((item, index: number) =>
                 this.renderTaskItem(index + 1, item.name, index, item.status ? 'lineThrough' : ''),
               )}
             </tbody>
@@ -1083,7 +1083,7 @@ export default class Print extends Component<any, any> {
                               {this.state.formControls
                                 .filter(item => item.formId === controlItem[0].formId)[0]
                                 .tempControls.sort((a, b) => a.innerRow - b.innerRow)
-                                .map((tempControlItem, index) =>
+                                .map((tempControlItem, index: number) =>
                                   (tempControlItem.type === 17 || tempControlItem.type === 18) &&
                                   tempControlItem.dataSource &&
                                   tempControlItem.dataSource !== 0 &&
@@ -1141,7 +1141,7 @@ export default class Print extends Component<any, any> {
                             {(controlItem[0].printDetailType === 1 || controlItem[0].printDetailType === 2) &&
                               this.state.formControls
                                 .filter(item => item.formId === controlItem[0].formId)[0]
-                                .controls.map((detailsChildItem, index) => (
+                                .controls.map((detailsChildItem, index: number) => (
                                   <tr key={key + 'tr' + index}>
                                     <td className="titleTd">{index + 1}</td>
                                     {detailsChildItem
@@ -1190,7 +1190,7 @@ export default class Print extends Component<any, any> {
                                   <td className="titleTd">=</td>
                                   {this.state.formControls
                                     .filter(item => item.formId === controlItem[0].formId)[0]
-                                    .tempControls.map((detailsEvaluateItem, index) => (
+                                    .tempControls.map((detailsEvaluateItem, index: number) => (
                                       <td
                                         style={{
                                           width:
@@ -1267,7 +1267,7 @@ export default class Print extends Component<any, any> {
                                     const newDetailItem = detailItem.filter(item => item.innerRow >= 0);
                                     newDetailItem
                                       .sort((a, b) => a.innerRow - b.innerRow)
-                                      .forEach((item, index) => {
+                                      .forEach((item, index: number) => {
                                         if (index % 4 === 0) {
                                           if (
                                             newDetailItem[index + 1] &&
@@ -1300,7 +1300,7 @@ export default class Print extends Component<any, any> {
                                             {index1 + 1}
                                           </td>
                                         )}
-                                        {newControlRow.map((newControlRowItem, index) => (
+                                        {newControlRow.map((newControlRowItem, index: number) => (
                                           <td
                                             style={{
                                               width:
@@ -1348,7 +1348,7 @@ export default class Print extends Component<any, any> {
                               const newTempControls = [];
                               tempControls
                                 .sort((a, b) => a.innerRow - b.innerRow)
-                                .forEach((item, index) => {
+                                .forEach((item, index: number) => {
                                   if (index % 4 === 0) {
                                     if (tempControls[index + 1] && tempControls[index + 2] && tempControls[index + 3]) {
                                       newTempControls.push([
@@ -1376,7 +1376,7 @@ export default class Print extends Component<any, any> {
                                             =
                                           </td>
                                         )}
-                                        {newTempControlRow.map((newTempControlRowItem, index) => (
+                                        {newTempControlRow.map((newTempControlRowItem, index: number) => (
                                           <td
                                             style={{
                                               width:

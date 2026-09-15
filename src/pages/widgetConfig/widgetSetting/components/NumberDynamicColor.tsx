@@ -48,7 +48,7 @@ export default function NumberDynamicColor(props) {
     }
   }, []);
 
-  const onChange = (obj, index) => {
+  const onChange = (obj, index: number) => {
     const newColors = dynamicColor.map((co, idx) => (idx === index ? Object.assign({}, co, obj) : co));
     setDynamicColor(newColors);
   };
@@ -70,7 +70,7 @@ export default function NumberDynamicColor(props) {
         <div className="textTertiary mBottom24">
           {_l('为进度区间设置颜色。当鼠标悬停或字段值在对应区间，显示该区间设置的颜色。')}
         </div>
-        {dynamicColor.map((item, index) => {
+        {dynamicColor.map((item, index: number) => {
           const deleteDisabled = dynamicColor.length === 1;
           return (
             <DynamicColorWrap>

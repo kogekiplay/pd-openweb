@@ -546,7 +546,7 @@ export default function RecordOperate(props) {
               </React.Fragment>
             )}
             {!!preMenuItems.length &&
-              preMenuItems.map((item, index) =>
+              preMenuItems.map((item, index: number) =>
                 item === 'hr' ? (
                   <Hr key={index} />
                 ) : (

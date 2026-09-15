@@ -86,7 +86,7 @@ export default class FilterItem extends Component<any, any> {
     const { columns, filter, updateCondition, deleteCondition, updateFilter, projectId, appId } = this.props;
     const { relationType, conditions } = filter;
     const canEdit = this.checkFilterEditable();
-    return conditions.map((condition, index) => {
+    return conditions.map((condition, index: number) => {
       const control = _.find(columns, column => condition.controlId === column.controlId);
       const conditionGroupKey = getTypeKey((control || {}).type);
       const conditionGroupType = control ? CONTROL_FILTER_WHITELIST[conditionGroupKey].value : '';

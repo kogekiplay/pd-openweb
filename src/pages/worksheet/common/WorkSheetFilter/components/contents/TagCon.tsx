@@ -25,7 +25,7 @@ function TagCon(props) {
   return (
     <div className={cx('filterTagCon', { disabled })} onClick={() => inputRef.current?.focus()}>
       {data.length
-        ? data.map((item, index) => (
+        ? data.map((item, index: number) => (
             <span className="fiterTagItem" key={index}>
               {renderItem ? renderItem(item) : <span className="text breakAll">{item.name}</span>}
               <span

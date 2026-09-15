@@ -180,24 +180,24 @@ export default class Widgets extends Component<any, any> {
     // 补充 index
     if ([2, 3].includes(enumDefault)) {
       // 旧的在前
-      newValue.attachmentData.forEach((data, index) => {
+      newValue.attachmentData.forEach((data, index: number) => {
         data.index = index;
       });
-      newValue.attachments.forEach((data, index) => {
+      newValue.attachments.forEach((data, index: number) => {
         data.index = newValue.attachmentData.length + index;
       });
-      newValue.knowledgeAtts.forEach((data, index) => {
+      newValue.knowledgeAtts.forEach((data, index: number) => {
         data.index = newValue.attachmentData.length + newValue.attachments.length + index;
       });
     } else {
       // 新的在前
-      newValue.attachments.forEach((data, index) => {
+      newValue.attachments.forEach((data, index: number) => {
         data.index = index;
       });
-      newValue.knowledgeAtts.forEach((data, index) => {
+      newValue.knowledgeAtts.forEach((data, index: number) => {
         data.index = newValue.attachments.length + index;
       });
-      newValue.attachmentData.forEach((data, index) => {
+      newValue.attachmentData.forEach((data, index: number) => {
         data.index = newValue.attachments.length + newValue.knowledgeAtts.length + index;
       });
     }

@@ -227,7 +227,7 @@ const LogDialog = props => {
     alert(_l('复制成功'));
   };
 
-  const diffTime = (item, list, index, showDesc = false) => {
+  const diffTime = (item, list, index: number, showDesc = false) => {
     const formatTime = diff => {
       let min = 0;
       let sec = 0;
@@ -324,7 +324,7 @@ const LogDialog = props => {
         const modelData = getModel ? [{ ...getModel, role: 'model' }] : [];
         const ocrData = ocr ? [{ ...ocr, role: 'ocr' }] : [];
         const historyData = history
-          .map((o, index) => {
+          .map((o, index: number) => {
             const nextItem = history[index + 1] || {};
 
             if (o.isUser && nextItem.isUser && nextItem.role === 'assistant') {
@@ -373,7 +373,7 @@ const LogDialog = props => {
             <Nav className="flexColumn">
               <ScrollView className="flex">
                 <ul>
-                  {list.map((item, index) => (
+                  {list.map((item, index: number) => (
                     <li
                       key={index}
                       className={cx({ active: currentSectionIndex === index })}
@@ -404,7 +404,7 @@ const LogDialog = props => {
 
             <Content>
               <ScrollView onScroll={onScroll}>
-                {list.map((item, index) => (
+                {list.map((item, index: number) => (
                   <Fragment key={index}>
                     <div className={cx('flexRow alignItemsCenter workflowSectionName', { mTop24: index !== 0 })}>
                       <div

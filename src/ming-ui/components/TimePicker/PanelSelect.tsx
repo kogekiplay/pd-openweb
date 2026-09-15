@@ -32,7 +32,7 @@ class PanelSelect extends Component<any, any> {
     return (
       <div className="TimePicker-panel-item">
         <ul ref={select => { this._select = select; }} className="TimePicker-select">
-          {options.map((option, index) => (
+          {options.map((option, index: number) => (
             <SelectItem
               key={option}
               value={index}

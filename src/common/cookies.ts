@@ -19,7 +19,7 @@ window.safeLocalStorageSetItem = (...args) => {
  * @param {string} value - Cookie值
  * @param {Date} expire - 过期时间
  */
-window.setCookie = function setCookie(name, value, expire) {
+window.setCookie = function setCookie(name: string, value, expire) {
   if (get(window, 'md.global.Config.HttpOnly') && name === 'md_pss_id') {
     safeLocalStorageSetItem(name, value);
     return;
@@ -48,7 +48,7 @@ window.setCookie = function setCookie(name, value, expire) {
  * @param {string} name - Cookie名称
  * @returns {string|null} - Cookie值
  */
-window.getCookie = function getCookie(name) {
+window.getCookie = function getCookie(name: string) {
   if (get(window, 'md.global.Config.HttpOnly') && name === 'md_pss_id') {
     return localStorage.getItem(name) || null;
   }
@@ -67,7 +67,7 @@ window.getCookie = function getCookie(name) {
  * Cookies 删除
  * @param {string} name - Cookie名称
  */
-window.delCookie = function delCookie(name) {
+window.delCookie = function delCookie(name: string) {
   const cookieValue = getCookie(name);
 
   if (cookieValue) {

@@ -474,7 +474,7 @@ const Files = props => {
     const attachments = [];
     const knowledgeAtts = [];
     const attachmentData = [];
-    files.forEach((data, index) => {
+    files.forEach((data, index: number) => {
       const { accountId, sourceID, refId } = data;
       const isMdFile = accountId || sourceID;
       const isKc = !!refId;
@@ -590,7 +590,7 @@ const Files = props => {
         smallSize={smallSize}
         list={
           isLargeImageCard && viewMoreVisible && viewMore
-            ? sortAllAttachments.filter(filterImageAttachments).filter((_, index) => index < showLineCount)
+            ? sortAllAttachments.filter(filterImageAttachments).filter((_, index: number) => index < showLineCount)
             : sortAllAttachments
         }
         wpsEditUrls={wpsEditUrls}
@@ -604,7 +604,7 @@ const Files = props => {
         onDeleteKCFile={handleDeleteKCFile}
         onDeleteFile={handleDeleteFile}
         onResetNameFile={handleResetNameFile}
-        onAttachmentName={(id, name) => {
+        onAttachmentName={(id, name: string) => {
           name = name.trim();
           if (/[/\\:*?"<>|]/g.test(name)) {
             alert(_l('名称不能包含以下字符：') + '\\ / : * ? " < > |', 3);

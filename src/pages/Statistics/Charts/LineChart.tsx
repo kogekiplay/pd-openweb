@@ -26,12 +26,12 @@ const lastDateText = _l('上一期');
 
 const mergeDataTime = (data, contrastData) => {
   const maxLengthData = data.length > contrastData.length ? data : contrastData;
-  const newData = data.map((item, index) => {
+  const newData = data.map((item, index: number) => {
     item.originalName = item.originalId;
     item.originalId = maxLengthData[index].originalId;
     return item;
   });
-  const newcontrastData = contrastData.map((item, index) => {
+  const newcontrastData = contrastData.map((item, index: number) => {
     item.originalName = item.originalId;
     item.originalId = maxLengthData[index].originalId;
     item.isContrast = true;
@@ -63,7 +63,7 @@ export const formatChartData = (data, yaxisList, { isPile, isAccumulate, accumul
 
   if (isAccumulate) {
     cloneData.map(item => {
-      item.value.map((n, index) => {
+      item.value.map((n, index: number) => {
         const lastn = item.value[index - 1];
         n.v = n.v + (lastn ? lastn.v : 0);
         return n;
@@ -76,7 +76,7 @@ export const formatChartData = (data, yaxisList, { isPile, isAccumulate, accumul
     const { ydot = 2 } = yaxisList[0];
     cloneData.map(item => {
       const count = item.value.reduce((count, item) => count + (item.v || 0), 0);
-      item.value.map((n, index) => {
+      item.value.map((n, index: number) => {
         const lastn = item.value[index - 1];
         n.lastnValue = n.v + (lastn ? lastn.lastnValue : 0);
         const value = (n.lastnValue / count) * 100;
@@ -89,7 +89,7 @@ export const formatChartData = (data, yaxisList, { isPile, isAccumulate, accumul
 
   value.forEach(item => {
     const name = item.originalX;
-    cloneData.forEach((element, index) => {
+    cloneData.forEach((element, index: number) => {
       const lastElement = cloneData[index - 1];
       const lastValue =
         lastElement && isPile ? (lastElement.value.filter(n => n.originalX === item.originalX)[0]?.v ?? 0) : 0;

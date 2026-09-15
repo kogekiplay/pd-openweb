@@ -90,7 +90,7 @@ export const getFilterDataByRuleAction = (
     currentRuleControlIds: dataFormat.getCurrentRuleControlIds(),
     disabledRuleSet,
     ignoreHideControl,
-    checkRuleValidator: (controlId, errorType, errorMessage, rule) => {
+    checkRuleValidator: (controlId: string, errorType, errorMessage, rule) => {
       dataFormat.setErrorControl(controlId, errorType, errorMessage, rule, isInit);
     },
     verifyAllControls,
@@ -625,7 +625,7 @@ export const triggerCustomEventAction = (
     formData: mergeFormDataWidthSystem(dataFormat.getDataSource(), replaceData), // 合并系统字段和最新变更字段值
     renderData,
     searchConfig: searchConfig.filter(i => i.eventType === 1),
-    checkRuleValidator: (controlId, errorType, errorMessage) => {
+    checkRuleValidator: (controlId: string, errorType, errorMessage) => {
       dataFormat.setErrorControl(controlId, errorType, errorMessage);
     },
     checkEventComplete: eventLoading => {

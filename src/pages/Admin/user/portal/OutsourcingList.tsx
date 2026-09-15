@@ -174,7 +174,7 @@ export default class OutsourcingList extends Component<any, any> {
     });
   };
 
-  handleView(text, type, accountId) {
+  handleView(text, type, accountId: string) {
     if (Number(text) <= 0) {
       return;
     }

@@ -23,7 +23,7 @@ export default class TreeNode extends Component<any, any> {
         )}
         {visible && !_.isEmpty(children) && (
           <div className="childNodeWrap">
-            {children.map((item, index) => {
+            {children.map((item, index: number) => {
               if (!item) return null;
               const itemData = treeData[typeof item === 'string' ? item : item.rowId];
               if (!itemData) return null;

@@ -153,7 +153,7 @@ export default class CopyFolder extends Component<any, any> {
     return name;
   }
 
-  switchNetwork(projectId) {
+  switchNetwork(projectId: string) {
     expireDialogAsync(projectId)
       .then(() => {
         this.setState({ projectId, showNetwork: false });

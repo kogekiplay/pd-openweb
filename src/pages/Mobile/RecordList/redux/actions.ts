@@ -965,7 +965,7 @@ export const loadBoardViewNextGroup = ({ callback = _.noop }) => {
         const existedKeys = boardData.map(item => item.key);
         const filterData = data
           .filter(item => !_.includes(existedKeys, item.key))
-          .map((item, index) => ({ ...item, sort: existedKeys.length + index + 1 }));
+          .map((item, index: number) => ({ ...item, sort: existedKeys.length + index + 1 }));
         dispatch(changeBoardViewData(boardData.concat(filterData)));
         dispatch(initBoardViewRecordCount({ ...boardViewRecordCount, ...dealBoardViewRecordCount(filterData) }));
         let nextBoardViewState = { kanbanIndex: nextKanbanIndex, hasMoreData };

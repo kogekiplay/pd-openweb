@@ -213,7 +213,7 @@ let DataSource = class DataSource extends Component<any, any> {
             projectId={projectId}
             viewId={filter.viewId || null}
             worksheetInfo={worksheetInfo}
-            onChange={(worksheetId, viewId, appType) => {
+            onChange={(worksheetId: string, viewId: string, appType) => {
               this.props.changeBase({
                 appType,
               });

@@ -61,7 +61,7 @@ export default function PromptError(props) {
                 <span className="Red">*</span>
               </div>
             </div>
-            {actionItems.map((item, index) => {
+            {actionItems.map((item, index: number) => {
               const { icon, currentControl } = getDetail(item.controlId);
               const isDelete = _.isEmpty(currentControl);
               return (

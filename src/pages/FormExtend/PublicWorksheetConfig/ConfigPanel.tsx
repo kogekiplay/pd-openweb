@@ -203,7 +203,7 @@ class ConfigPanel extends React.Component<any, any> {
 
     // 1列排列
     if (columnNumber === 1) {
-      newControls = data.map((item, index) => ({ ...item, row: index, col: 0, size: 12 }));
+      newControls = data.map((item, index: number) => ({ ...item, row: index, col: 0, size: 12 }));
       changeControls(newControls, false);
       return;
     }

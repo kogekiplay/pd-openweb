@@ -212,7 +212,7 @@ export default class ImportConfig extends Component<any, any> {
     const emptyRows = (selectSheet.rows || []).filter(item => !(item.cells || []).some(cell => cell.value));
     const rows = (selectSheet.rows || []).filter(item => (item.cells || []).some(cell => cell.value));
     selectSheet.rows = rows.concat(emptyRows);
-    selectSheet.rows.map((item, index) => {
+    selectSheet.rows.map((item, index: number) => {
       item.rowNumber = index;
     });
     const hasSheetImport = _.findIndex(fileList, item => item.state) > -1;

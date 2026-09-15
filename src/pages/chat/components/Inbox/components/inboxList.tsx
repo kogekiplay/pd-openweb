@@ -122,7 +122,7 @@ let InboxList = class InboxList extends React.Component<any, any> {
     const { list, pageIndex, isLoading, failed } = this.state;
 
     if (list.length) {
-      return this.state.list.map((inboxItem, index) => (
+      return this.state.list.map((inboxItem, index: number) => (
         <Fragment key={inboxItem.inboxId}>
           <Message
             {...{

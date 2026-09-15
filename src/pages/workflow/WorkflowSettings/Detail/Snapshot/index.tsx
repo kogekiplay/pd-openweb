@@ -396,7 +396,7 @@ export default class Snapshot extends Component<any, any> {
             selectedAppId={data.appDetails.apkId || this.props.relationId}
             selectedWorksheetId={data.appId}
             visible
-            onOk={(selectedAppId, worksheetId, obj) => {
+            onOk={(selectedAppId, worksheetId: string, obj) => {
               this.updateSource({
                 appId: worksheetId,
                 appDetails: {

@@ -142,7 +142,7 @@ const CollapsePanel = props => {
         <div className={cx('panelContent', { single: isSingle })}>
           <div className="fieldBox">
             {fields?.length > 0 ? (
-              fields?.map((control, index) => (
+              fields?.map((control, index: number) => (
                 <div className={cx('fieldItem', { single: isSingle })} key={index}>
                   <div className="left">
                     <Icon icon={getControlIcon(control)} className="controlIcon" />

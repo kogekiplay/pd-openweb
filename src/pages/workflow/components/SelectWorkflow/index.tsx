@@ -103,7 +103,7 @@ export default class SelectWorkflow extends Component<any, any> {
     return (
       <Fragment key={item.apkId}>
         <div className="bold ellipsis">{relationId === item.apkId ? _l('当前应用') : item.apkName}</div>
-        {item.processList.map((obj, index) => {
+        {item.processList.map((obj, index: number) => {
           return (
             <Checkbox
               key={index}

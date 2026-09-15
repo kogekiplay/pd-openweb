@@ -39,7 +39,7 @@ const OPTIONS = [
   },
 ];
 
-const renderUser = (user, projectId) => {
+const renderUser = (user, projectId: string) => {
   return (
     <div className="userCon valignWrapper">
       <UserHead

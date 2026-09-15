@@ -38,7 +38,7 @@ const renderErrerDialog = errorMsgList => {
     className: 'connectorErrorDialog',
     description: (
       <div className="errorInfo" style={{ 'max-height': 400, overflow: 'auto' }}>
-        {errorMsgList.map((error, index) => {
+        {errorMsgList.map((error, index: number) => {
           return (
             <div key={index} className="mTop5">
               {error}

@@ -251,7 +251,7 @@ const VoteUpdater = {
   '
     );
   },
-  initUploadify: function (index, idPrefix) {
+  initUploadify: function (index: number, idPrefix) {
     var picContainerHtml = doT.template(
       '<div class="votePicContainer Hidden votePicContainer{{=it.index}}">\
         <div class="votePicUploaded">\

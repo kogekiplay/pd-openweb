@@ -93,7 +93,7 @@ function ConnectAiDialog({ visible, projectId, initialPersonalTokens = null, onC
   }, [projectId, request]);
 
   const fetchAuthKeys = useCallback(
-    (appId, { keepSelected = false } = {}) => {
+    (appId: string, { keepSelected = false } = {}) => {
       if (!appId) return;
 
       request('auth', appManagementAjax.getAuthorizes({ appId }))

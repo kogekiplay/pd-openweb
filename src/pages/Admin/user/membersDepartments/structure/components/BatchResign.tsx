@@ -246,7 +246,7 @@ export default class BatchResign extends Component<any, any> {
       noFooter: true,
       children: (
         <div>
-          {failedAccountIds.map((accountId, index) => {
+          {failedAccountIds.map((accountId: string, index: number) => {
             return <FailedAccountIdItem key={`${accountId}-${index}`}>{accountId}</FailedAccountIdItem>;
           })}
         </div>

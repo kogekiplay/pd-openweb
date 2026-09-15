@@ -102,7 +102,7 @@ export const fetch = index => {
   };
 };
 
-export const fetchMoreByGroup = (index, kanbanKey) => {
+export const fetchMoreByGroup = (index: number, kanbanKey) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { base, filters, galleryview, quickFilter, navGroupFilters, controls, views = [] } = getState().sheet;
     const { appId, viewId, worksheetId, chartId } = base;

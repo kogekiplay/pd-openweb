@@ -677,7 +677,7 @@ export default class Agent extends Component<any, any> {
                               projectId: this.props.companyId,
                               appId: this.props.relationId,
                               excludeTypes: [3],
-                              onOk: (id, name) => {
+                              onOk: (id, name: string) => {
                                 if (!data.tools.find(o => o.type === 5 && o.configs[0].appId === id)) {
                                   this.updateSource({
                                     tools: data.tools.concat(getNewTool([{ appId: id, appName: name }], name)),
@@ -984,7 +984,7 @@ export default class Agent extends Component<any, any> {
 
   // 渲染知识库列表
   renderKnowledgeList({ knowledgeIds, appList }) {
-    return knowledgeIds.map((kid, index) => {
+    return knowledgeIds.map((kid, index: number) => {
       const item = _.find(appList, o => o.id === kid);
       const delimiter = index < knowledgeIds.length - 1 ? '、' : '';
 

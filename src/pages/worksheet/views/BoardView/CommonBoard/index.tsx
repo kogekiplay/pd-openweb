@@ -285,7 +285,7 @@ function CommonBoard(props) {
 
       return (viewData || [])
         .slice(freezenav === '1' && !fixFirst ? 1 : 0, fixFirst ? 1 : undefined)
-        .map((board, index) => {
+        .map((board, index: number) => {
           if (!(_.get(board, 'rows') || []).length && !fixFirst) {
             // 看板无数据时 当配置隐藏无数据看板或看板本身是未分类时 看板不显示
             if (board.noGroup || navshow === '1') return null;

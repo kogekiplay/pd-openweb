@@ -90,7 +90,7 @@ class RadioGroup extends Component<any, any> {
     });
     return (
       <div style={style} className={cls}>
-        {this.state.data.map((item, index) => (
+        {this.state.data.map((item, index: number) => (
           <Radio
             {...this.props}
             {...item}

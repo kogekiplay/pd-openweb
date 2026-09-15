@@ -81,7 +81,7 @@ export default class PortalUserSet extends Component<any, any> {
     };
   };
 
-  updatePortalDetail = (appId, data) => {
+  updatePortalDetail = (appId: string, data) => {
     externalPortalAjax
       .getDetail({
         exAccountId: md.global.Account.accountId,

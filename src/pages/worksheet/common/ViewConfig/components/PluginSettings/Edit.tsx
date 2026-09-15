@@ -24,7 +24,7 @@ const setOptions = values => {
   return values
     .split(/[\r\n]/)
     .filter(o => o.trim())
-    .map((o, index) => {
+    .map((o, index: number) => {
       const item = o.split('=');
       return {
         key: item[0].trim(),

@@ -257,7 +257,7 @@ export default function MingoGeneratedWidgetsSelector({
     if (cache.current.isStreaming || cache.current.disabled) return;
     setSelectedWidgetIds([]);
   }, []);
-  const emitFillValueByAi = useCallback((controlId, value) => {
+  const emitFillValueByAi = useCallback((controlId: string, value) => {
     emitter.emit('MINGO_TRIGGER_ACTION', {
       action: 'fillValueByAi',
       params: {
@@ -297,7 +297,7 @@ export default function MingoGeneratedWidgetsSelector({
         setSelectedWidgetIds={setSelectedWidgetIds}
         selectedWidgetIds={selectedWidgetIds}
         disabled={disabled}
-        onFill={(controlId, value) => {
+        onFill={(controlId: string, value) => {
           emitFillValueByAi(controlId, value);
         }}
         onClear={controlId => {

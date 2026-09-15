@@ -122,7 +122,7 @@ export default function pivotTableCountPanelGenerator(props) {
                   ...currentReport.pivotTable,
                 },
               };
-              const newLines = lines.map((n, index) => {
+              const newLines = lines.map((n, index: number) => {
                 return index ? { ...n, subTotal: checked } : n;
               });
 

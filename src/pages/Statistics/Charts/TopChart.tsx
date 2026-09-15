@@ -274,7 +274,7 @@ export default class extends Component<any, any> {
 
     return color;
   };
-  renderIndex(index) {
+  renderIndex(index: number) {
     const { style } = this.props.reportData;
     const { topStyle } = style;
 
@@ -322,7 +322,7 @@ export default class extends Component<any, any> {
       </div>
     );
   }
-  renderItem(data, index, progressControlId, maxValue) {
+  renderItem(data, index: number, progressControlId, maxValue) {
     const { projectId, reportData, isViewOriginalData, isLinkageData, isThumbnail, sourceType } = this.props;
     const { style = {}, yaxisList, displaySetup, xaxes } = reportData;
     const { valueProgressVisible } = style;

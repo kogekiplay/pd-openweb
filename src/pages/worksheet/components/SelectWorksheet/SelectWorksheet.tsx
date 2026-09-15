@@ -144,7 +144,7 @@ export default class SelectWroksheet extends React.Component<any, any> {
     }
   }
 
-  loadWorksheets(appId, worksheetId, worksheetType) {
+  loadWorksheets(appId: string, worksheetId: string, worksheetType) {
     homeAppAjax
       .getWorksheetsByAppId({ appId, type: worksheetType })
       .then(data => {
@@ -168,7 +168,7 @@ export default class SelectWroksheet extends React.Component<any, any> {
       });
   }
 
-  loadSelectedWorksheet(worksheetId, worksheetType) {
+  loadSelectedWorksheet(worksheetId: string, worksheetType) {
     if (!worksheetId) {
       this.setState({ selectedWorksheet: null });
       return;
@@ -221,7 +221,7 @@ export default class SelectWroksheet extends React.Component<any, any> {
     });
   };
 
-  handleSelectOtherChange = (newappId, worksheetId, worksheet) => {
+  handleSelectOtherChange = (newappId, worksheetId: string, worksheet) => {
     const { currentWorksheetId } = this.props;
     this.props.onChange(newappId, worksheetId, worksheet);
     if (!worksheet || worksheet.workSheetId === currentWorksheetId) {

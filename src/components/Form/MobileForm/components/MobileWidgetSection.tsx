@@ -230,7 +230,7 @@ function MobileWidgetSection(props) {
           changeMobileTab(_.find(allTabs, t => t.controlId === tab));
         }}
       >
-        {allTabs.map((tab, index) => {
+        {allTabs.map((tab, index: number) => {
           const count = getCount(tab);
           const titleStyle = getTitleStyle(tab.advancedSetting?.titlestyle);
           const titleColor = tab.advancedSetting?.titlecolor;

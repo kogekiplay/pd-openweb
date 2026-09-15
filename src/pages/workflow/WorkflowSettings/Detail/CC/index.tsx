@@ -396,7 +396,7 @@ export default class CC extends Component<any, any> {
   /**
    * 获取工作表详情
    */
-  getWorksheetInfo(worksheetId) {
+  getWorksheetInfo(worksheetId: string) {
     worksheet.getWorksheetInfo({ worksheetId, getViews: true }).then(data => {
       if (data.resultCode === 1) {
         this.setState({ views: data.views || [] });

@@ -89,7 +89,7 @@ export const getTimeAxisSource = () => (dispatch: AppDispatch, getState: GetStat
 };
 
 // 显示或隐藏任务
-export const showOrHideTask = (index, id, arrowStatus) => (dispatch: AppDispatch, getState: GetState) => {
+export const showOrHideTask = (index: number, id, arrowStatus) => (dispatch: AppDispatch, getState: GetState) => {
   let { accountTasksKV, stateConfig } = getState().task;
   accountTasksKV = _.cloneDeep(accountTasksKV);
 
@@ -137,7 +137,7 @@ export const ganttDragRecordIndex = index => {
 
 // 拖拽单侧调整视图呈现
 export const updateStartTimeAndEndTime =
-  (id, index, time, type, isReset) => (dispatch: AppDispatch, getState: GetState) => {
+  (id, index: number, time, type, isReset) => (dispatch: AppDispatch, getState: GetState) => {
     let { accountTasksKV, stateConfig } = getState().task;
     accountTasksKV = _.cloneDeep(accountTasksKV);
 
@@ -450,7 +450,7 @@ export const removeFollowMembers = accountId => (dispatch: AppDispatch, getState
 };
 
 // 修改用户配置展开缩起状态
-export const updateUserStatus = (accountId, hidden) => (dispatch: AppDispatch, getState: GetState) => {
+export const updateUserStatus = (accountId: string, hidden) => (dispatch: AppDispatch, getState: GetState) => {
   let { accountTasksKV } = getState().task;
   accountTasksKV = _.cloneDeep(accountTasksKV);
 

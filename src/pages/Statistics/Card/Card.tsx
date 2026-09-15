@@ -432,7 +432,7 @@ class Card extends Component<any, any> {
                     </div>
                     {initiateChartInfo.map(item => (
                       <div className="linkageFilter">
-                        {item.filters.map((n, index) => (
+                        {item.filters.map((n, index: number) => (
                           <div className="flexRow alignItemsCenter" key={n.controlId}>
                             {!index && (
                               <Icon

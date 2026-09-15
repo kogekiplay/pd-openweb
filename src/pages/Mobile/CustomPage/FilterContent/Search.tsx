@@ -73,7 +73,7 @@ class Search extends Component<any, any> {
         <Mask onClick={this.handleVisibleChange}></Mask>
         <div style={{ width: document.body.clientWidth }} className="pLeft10 pRight10">
           <div className="bgPrimary card pLeft15 pRight15 pTop10 pBottom10">
-            {textFilters.map((item, index) => (
+            {textFilters.map((item, index: number) => (
               <div
                 key={item.control.controlId}
                 style={{ color: index === filterIndex ? 'var(--color-primary)' : null }}

@@ -267,7 +267,7 @@ function WidgetContent(props) {
         onLayoutChange={handleLayoutChange}
         {...getLayoutConfig()}
       >
-        {components.map((widget, index) => {
+        {components.map((widget, index: number) => {
           const { id, type } = widget;
           const { titleVisible } = widget[layoutType] || {};
           const enumType = getEnumType(type);

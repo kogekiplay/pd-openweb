@@ -250,7 +250,7 @@ export const filterForFilterDialog = controls => {
     .filter(o => !(o.type === 29 && _.get(o, 'enumDefault') === 2)); //暂时排除关联多条的筛选
 };
 
-export const getAggFuncTypes = (aggregateFields, parentControl, control, worksheetId) => {
+export const getAggFuncTypes = (aggregateFields, parentControl, control, worksheetId: string) => {
   let hs = false;
   let aggFuncType = 'COUNT';
   let aggFuncName = _l('计数');

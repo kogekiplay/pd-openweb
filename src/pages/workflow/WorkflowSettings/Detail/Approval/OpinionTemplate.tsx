@@ -152,7 +152,7 @@ export default ({ title, description, keys, opinionTemplate, onSave, onClose }) 
         />
       </div>
 
-      {keys.map((item, index) => {
+      {keys.map((item, index: number) => {
         return (
           <Fragment key={index}>
             <div className="mTop25 bold">{item.text}</div>

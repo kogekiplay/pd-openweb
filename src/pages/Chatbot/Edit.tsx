@@ -241,7 +241,7 @@ const Edit = props => {
               onClick={() => {
                 const res = uploadPermission
                   .split('')
-                  .map((item, index) => (index === 0 ? (allowUploadImage ? '0' : '1') : item))
+                  .map((item, index: number) => (index === 0 ? (allowUploadImage ? '0' : '1') : item))
                   .join('');
                 handleSave({
                   uploadPermission: res,
@@ -257,7 +257,7 @@ const Edit = props => {
               onClick={() => {
                 const res = uploadPermission
                   .split('')
-                  .map((item, index) => (index === 1 ? (allowUploadOffice ? '0' : '1') : item))
+                  .map((item, index: number) => (index === 1 ? (allowUploadOffice ? '0' : '1') : item))
                   .join('');
                 handleSave({
                   uploadPermission: res,

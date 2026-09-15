@@ -335,7 +335,7 @@ export default function HierarchyViewSetting(props) {
 
   return (
     <HierarchyViewSettingWrap hsList={viewControls.length > 0}>
-      {viewControls.map((item, index) => {
+      {viewControls.map((item, index: number) => {
         const visible = activeIndex === index;
         return item.worksheetId === currentSheetInfo.worksheetId ? (
           <li className="currentSheet">

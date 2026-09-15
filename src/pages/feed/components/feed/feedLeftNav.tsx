@@ -131,7 +131,7 @@ class FeedLeftNav extends React.Component<any, any> {
     );
   };
 
-  fetchGroupsByProjectId = (projectId, openProject) => {
+  fetchGroupsByProjectId = (projectId: string, openProject) => {
     if (!this.state.loadingProjects.includes(projectId)) {
       const loadingProjects = this.state.loadingProjects.add(projectId);
       let foldedProjects = this.state.foldedProjects;

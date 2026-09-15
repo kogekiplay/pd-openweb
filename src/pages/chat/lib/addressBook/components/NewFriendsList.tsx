@@ -67,7 +67,7 @@ export default class NewFriendsList extends React.Component<any, any> {
     });
   }
 
-  updateListData(accountId, isAdd: boolean) {
+  updateListData(accountId: string, isAdd: boolean) {
     const { listData } = this.state;
     this.setState({
       listData: _.map(listData, item => {
@@ -83,7 +83,7 @@ export default class NewFriendsList extends React.Component<any, any> {
     });
   }
 
-  add(accountId) {
+  add(accountId: string) {
     return editAgreeFriend(accountId).then(data => {
       if (data) {
         this.updateListData(accountId, true);
@@ -93,7 +93,7 @@ export default class NewFriendsList extends React.Component<any, any> {
     });
   }
 
-  refuse(accountId) {
+  refuse(accountId: string) {
     return editRefuseFriend(accountId).then(data => {
       if (data) {
         this.updateListData(accountId, false);

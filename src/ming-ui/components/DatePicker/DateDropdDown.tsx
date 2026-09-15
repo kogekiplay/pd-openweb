@@ -105,7 +105,7 @@ class DateDropdDown extends Component<any, any> {
     const props = this.props;
     const state = this.state;
 
-    const menuItems = props.data.map((item, index) => {
+    const menuItems = props.data.map((item, index: number) => {
       const cls = classNames({
         active: item.value === state.activeKey,
       });

@@ -477,7 +477,7 @@ export default class CellEdit extends Component<any, any> {
       }
 
       const fieldsCheck = fields.filter(o => _.get(o, 'isCheck'));
-      duplicates = fieldsCheck.reduce((acc, curr, index) => {
+      duplicates = fieldsCheck.reduce((acc, curr, index: number) => {
         const alias = curr.alias;
         const isDuplicate = fieldsCheck.slice(index + 1).some(item => item.alias === alias);
 
@@ -573,7 +573,7 @@ export default class CellEdit extends Component<any, any> {
       }
 
       const fieldsCheck = fields.filter(o => _.get(o, 'isCheck'));
-      duplicates = fieldsCheck.reduce((acc, curr, index) => {
+      duplicates = fieldsCheck.reduce((acc, curr, index: number) => {
         const alias = curr.alias;
         const isDuplicate = fieldsCheck.slice(index + 1).some(item => item.alias === alias);
 

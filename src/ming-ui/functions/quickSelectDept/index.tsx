@@ -171,7 +171,7 @@ export function DeptSelect(props) {
 
     return pathData
       .filter(item => item.departmentId !== dept.departmentId)
-      .map((item, index) => ({
+      .map((item, index: number) => ({
         departmentId: item.departmentId,
         departmentName: item.departmentName,
         depth: index + 1,

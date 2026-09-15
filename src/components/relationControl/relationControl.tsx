@@ -185,7 +185,7 @@ export default class RelationControl extends Component<any, any> {
    * 切换tabs
    * @param  {number} index
    */
-  switchType(index) {
+  switchType(index: number) {
     this.setState(
       {
         selectIndex: index,

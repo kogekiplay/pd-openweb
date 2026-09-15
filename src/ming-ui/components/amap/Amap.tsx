@@ -226,7 +226,7 @@ export default class Amap extends Component<any, any> {
         />
         {autoCompleteResult && autoCompleteResult.length && autoCompleteVisible ? (
           <Menu className="Amap-autocomplete-list">
-            {autoCompleteResult.map((item, index) => {
+            {autoCompleteResult.map((item, index: number) => {
               if (item.address && typeof item.address === 'string') {
                 return (
                   <MenuItem key={index} onClick={() => this.handleSelect(item)} className="Amap-autocomplete-list-item">

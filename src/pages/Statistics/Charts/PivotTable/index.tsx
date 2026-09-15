@@ -1015,7 +1015,7 @@ class PivotTable extends Component<any, any> {
       sum: true,
     };
 
-    linesData.forEach((item, index) => {
+    linesData.forEach((item, index: number) => {
       if (index === 0) {
         summary[item.key] = sum;
       } else if (isFreeze && index === fIndex) {
@@ -1105,7 +1105,7 @@ class PivotTable extends Component<any, any> {
 
     return config;
   }
-  getMaxFileLength(data, index) {
+  getMaxFileLength(data, index: number) {
     const maxValue = 10;
     data = data.map(item => {
       if (item && item.value && _.isArray(item.value[index])) {
@@ -1123,7 +1123,7 @@ class PivotTable extends Component<any, any> {
   }
   getAllMaxFilesWidth(data, fields) {
     let width = 0;
-    fields.forEach((field, index) => {
+    fields.forEach((field, index: number) => {
       if (field.controlType === 14) {
         width += this.getMaxFileLength(data, index) * _.find(relevanceImageSize, { value: field.size }).px;
       } else {
@@ -1132,7 +1132,7 @@ class PivotTable extends Component<any, any> {
     });
     return width;
   }
-  renderDrag(index) {
+  renderDrag(index: number) {
     return (
       <div
         onMouseDown={event => {
@@ -1263,7 +1263,7 @@ class PivotTable extends Component<any, any> {
 
     return data;
   }
-  renderLineTd(data, row, index, control, diffWidth, linesData = []) {
+  renderLineTd(data, row, index: number, control, diffWidth, linesData = []) {
     const { style } = this.props.reportData;
     const { pivotTableUnilineShow } = style ? style : {};
     const { controlType, fields, displayMode = 'text' } = control;

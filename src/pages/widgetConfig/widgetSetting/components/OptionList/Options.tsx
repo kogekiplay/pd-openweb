@@ -367,7 +367,7 @@ function SelectOptions(props, ref) {
     }, 50);
   };
 
-  const updateOption = (index, obj, isBlur = false) => {
+  const updateOption = (index: number, obj, isBlur = false) => {
     const isDeleteExtIndex = options.findIndex(
       item =>
         item.isDeleted &&

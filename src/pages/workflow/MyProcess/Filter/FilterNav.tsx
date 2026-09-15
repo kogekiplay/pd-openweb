@@ -8,7 +8,7 @@ export default class FilterNav extends Component<any, any> {
     super(props);
     let currentIndex = 0;
 
-    props.data.forEach((item, index) => {
+    props.data.forEach((item, index: number) => {
       if (item.value.type === (props.checked || {}).type) {
         currentIndex = index;
       }
@@ -33,7 +33,7 @@ export default class FilterNav extends Component<any, any> {
     const { currentIndex } = this.state;
     return (
       <div className="filterNav flexRow valignWrapper">
-        {data.map((item, index) => (
+        {data.map((item, index: number) => (
           <div
             key={index}
             className={cx('item', { active: currentIndex === index })}

@@ -212,7 +212,7 @@ const CustomButtons = props => {
   return (
     <Fragment>
       {isInCard &&
-        actionableButtons.map((button, index) => {
+        actionableButtons.map((button, index: number) => {
           const buttonColor = getButtonColor(button.color, button.showAsPrimary);
           const isLastButton = index === actionableButtons.length - 1;
           const isBeforeLast = index < actionableButtons.length - 1;

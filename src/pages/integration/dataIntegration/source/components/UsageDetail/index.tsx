@@ -185,7 +185,7 @@ export default function UsageDetail({ projectId, sourceId }) {
       title: _l('作为源'),
       render: item => {
         return item.sourceTables.length > 0
-          ? item.sourceTables.map((table, index) => {
+          ? item.sourceTables.map((table, index: number) => {
               return (
                 <p key={index} className="mBottom0">
                   {table}
@@ -200,7 +200,7 @@ export default function UsageDetail({ projectId, sourceId }) {
       title: _l('作为目的地'),
       render: item => {
         return item.destTables.length > 0
-          ? item.destTables.map((table, index) => {
+          ? item.destTables.map((table, index: number) => {
               return (
                 <p key={index} className="mBottom0">
                   {table}

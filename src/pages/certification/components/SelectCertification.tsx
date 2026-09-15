@@ -78,7 +78,7 @@ function SelectCertification(props) {
       onOk={onOk}
       onCancel={onClose}
     >
-      {certList.map((item, index) => (
+      {certList.map((item, index: number) => (
         <React.Fragment>
           <div
             className={cx('certItem', {

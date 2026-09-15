@@ -212,7 +212,7 @@ export const getControlIcon = control => {
   return getIconByType(type);
 };
 
-export const isDisabledKnowledge = (projectId, isSilence = false, callback = () => {}) => {
+export const isDisabledKnowledge = (projectId: string, isSilence = false, callback = () => {}) => {
   const featureType = getFeatureStatus(projectId, VersionProductType.vectorKnowledgeBase);
   const isDisabled = featureType === '2';
 

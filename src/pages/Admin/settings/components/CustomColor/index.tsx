@@ -262,7 +262,7 @@ export default class CustomColor extends Component<any, any> {
 
     return (
       <div className="chartSettingWrap">
-        {list.map((item, index) => {
+        {list.map((item, index: number) => {
           return (
             <ChartColorSetting
               name={item.name}

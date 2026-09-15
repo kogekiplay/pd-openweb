@@ -124,7 +124,7 @@ export function getReTree(tree) {
 }
 
 //根据controlId找到node
-export function deepSearch(tree = [], controlId) {
+export function deepSearch(tree = [], controlId: string) {
   let results = null;
 
   function recurse(nodes) {

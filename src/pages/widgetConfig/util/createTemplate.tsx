@@ -230,7 +230,7 @@ function normalizeTemplateControl(allControls, control = {}) {
   return control;
 }
 
-function isDirectReferencedWorksheetRoleControl(allControls, control = {}, worksheetId) {
+function isDirectReferencedWorksheetRoleControl(allControls, control = {}, worksheetId: string) {
   return (
     isBlankSubListRoleControl(allControls, control) ||
     (_.includes([WIDGETS_TO_API_TYPE_ENUM.SHEET_FIELD, WIDGETS_TO_API_TYPE_ENUM.SUBTOTAL], control.type) &&

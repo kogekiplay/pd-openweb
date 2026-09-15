@@ -8,7 +8,7 @@ import { browserIsMobile } from 'src/utils/common';
 import { getExpandWidgetIds } from './config';
 import { SectionItemWrap } from './style';
 
-const getFormItemMap = (container, widgetIds, worksheetId) => {
+const getFormItemMap = (container, widgetIds, worksheetId: string) => {
   if (!container) return {};
 
   const prefix = `formItem-${worksheetId}-`;

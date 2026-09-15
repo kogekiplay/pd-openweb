@@ -739,7 +739,7 @@ export const removeCurrentInbox = id => {
  * @param {*} id
  * @param {*} name
  */
-export const resetGroupName = (groupId, name) => (dispatch: AppDispatch, getState: GetState) => {
+export const resetGroupName = (groupId, name: string) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSessionList, sessionList } = getState().chat;
   const newCurrentSessionList = currentSessionList.map(item => {
     if (item.id === groupId) {
@@ -770,7 +770,7 @@ export const resetGroupName = (groupId, name) => (dispatch: AppDispatch, getStat
  * @param {*} id
  * @param {*} name
  */
-export const resetGroupIsPost = (groupId, projectId) => (dispatch: AppDispatch, getState: GetState) => {
+export const resetGroupIsPost = (groupId, projectId: string) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSessionList, sessionList } = getState().chat;
   const newCurrentSessionList = currentSessionList.map(item => {
     if (item.id === groupId) {
@@ -1209,7 +1209,7 @@ export const updateWithdrawMessage = (id, newMessage) => (dispatch: AppDispatch,
     return;
   }
 
-  currentMessage.forEach((item, index) => {
+  currentMessage.forEach((item, index: number) => {
     if (item.id == messageId) {
       const nextMessage = currentMessage[index + 1];
       item.iswd = true;
@@ -1229,7 +1229,7 @@ export const updateWithdrawMessage = (id, newMessage) => (dispatch: AppDispatch,
     }
   });
 
-  bottomUnread.forEach((item, index) => {
+  bottomUnread.forEach((item, index: number) => {
     if (item.id == messageId) {
       const nextMessage = bottomUnread[index + 1];
       item.iswd = true;

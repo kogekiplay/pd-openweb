@@ -55,7 +55,7 @@ export function writeAppCache(key: string, apps) {
 
 // 收藏应用（markedApps），归一化后用于默认列表置顶。
 // abortController：透传给 mdyAPI，调用方切换关键字 / 关闭浮层时可中断已发出的请求。
-export async function fetchFavoriteApps(projectId, { abortController } = {}) {
+export async function fetchFavoriteApps(projectId: string, { abortController } = {}) {
   const data = await homeAppAjax
     .getMyApp({ projectId, containsLinks: true }, { silent: true, abortController })
     .catch(() => null);
@@ -65,14 +65,14 @@ export async function fetchFavoriteApps(projectId, { abortController } = {}) {
 }
 
 // 按关键字搜索应用（SearchMyApps，后端排序）。
-export async function searchApps(projectId, keywords: string, { abortController } = {}) {
+export async function searchApps(projectId: string, keywords: string, { abortController } = {}) {
   const res = await homeAppAjax.searchMyApps({ projectId, keywords }, { silent: true, abortController });
 
   return normalizeApps(res);
 }
 
 // 无关键字默认列表：收藏置顶 + SearchMyApps 常用应用（按 id 去重，收藏在前）。
-export async function fetchDefaultApps(projectId, { abortController } = {}) {
+export async function fetchDefaultApps(projectId: string, { abortController } = {}) {
   const [favorites, recents] = await Promise.all([
     fetchFavoriteApps(projectId, { abortController }),
     searchApps(projectId, '', { abortController }),
@@ -83,7 +83,7 @@ export async function fetchDefaultApps(projectId, { abortController } = {}) {
 }
 
 // 统一入口：有关键字走搜索，无关键字走收藏置顶默认列表；命中缓存直接返回，失败返回 []。
-export async function fetchAppCandidates(projectId, keywords = '') {
+export async function fetchAppCandidates(projectId: string, keywords = '') {
   if (!projectId) return [];
   const key = `${projectId}::${keywords || ''}`;
   const cached = readAppCache(key);

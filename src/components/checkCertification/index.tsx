@@ -7,7 +7,7 @@ import { browserIsMobile, pathCompletion } from 'src/utils/common';
 import { getCurrentProject } from 'src/utils/project';
 import './index.less';
 
-export const identityInterception = (projectId, isPersonal) => {
+export const identityInterception = (projectId: string, isPersonal) => {
   const isMobile = browserIsMobile();
 
   Dialog.confirm({

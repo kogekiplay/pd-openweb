@@ -233,7 +233,7 @@ export default class GetMoreRecord extends Component<any, any> {
   /**
    * 获取发送API请求数组的参数
    */
-  getArrayFields = (appType, selectNodeId, controlId) => {
+  getArrayFields = (appType, selectNodeId, controlId: string) => {
     const { processId } = this.props;
 
     flowNode
@@ -252,7 +252,7 @@ export default class GetMoreRecord extends Component<any, any> {
   /**
    * 获取自定义字段
    */
-  getCustomControls = (appId, selectNodeId) => {
+  getCustomControls = (appId: string, selectNodeId) => {
     const { data } = this.state;
 
     flowNode
@@ -276,7 +276,7 @@ export default class GetMoreRecord extends Component<any, any> {
   /**
    * 获取人工节点字段
    */
-  getArtificialControls = (appId, selectNodeId) => {
+  getArtificialControls = (appId: string, selectNodeId) => {
     const { data } = this.state;
 
     flowNode
@@ -819,7 +819,7 @@ export default class GetMoreRecord extends Component<any, any> {
   /**
    * 切换工作表
    */
-  switchWorksheet = (appId, name?, otherApkId = '', otherApkName = '') => {
+  switchWorksheet = (appId: string, name?, otherApkId = '', otherApkName = '') => {
     const { data } = this.state;
     const appList = _.cloneDeep(this.state.data.appList);
 
@@ -960,7 +960,7 @@ export default class GetMoreRecord extends Component<any, any> {
             selectedAppId={this.props.relationId}
             selectedWorksheetId={data.appId}
             visible
-            onOk={(selectedAppId, worksheetId, obj) => {
+            onOk={(selectedAppId, worksheetId: string, obj) => {
               const isCurrentApp = this.props.relationId === selectedAppId;
               this.switchWorksheet(
                 worksheetId,

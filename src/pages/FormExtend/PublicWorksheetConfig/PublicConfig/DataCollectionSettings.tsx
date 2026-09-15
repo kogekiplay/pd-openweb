@@ -279,13 +279,13 @@ export default function DataCollectionSettings(props) {
     }
   };
 
-  const onTimeChange = (timeString, index, from: string) => {
+  const onTimeChange = (timeString, index: number, from: string) => {
     const newTimeRange = _.cloneDeep(timeRange);
     newTimeRange[TIME_TYPE.HOUR][index][from] = timeString;
     setState({ timeRange: newTimeRange });
   };
 
-  const renderTimePeriodItem = (itemProps, index) => {
+  const renderTimePeriodItem = (itemProps, index: number) => {
     const { type, text } = itemProps;
     const selectedMonths = limitWriteTime.monthSetting.defineMonth || [];
     const selectedDays = limitWriteTime.daySetting.defineDay || [];
@@ -443,7 +443,7 @@ export default function DataCollectionSettings(props) {
         )}
         {type === TIME_TYPE.HOUR && currentPeriodType === TIME_PERIOD_TYPE.SPECIFY_RANGE_HOUR && (
           <div className="flexColumn flex">
-            {timeRange[type].map((item, index) => {
+            {timeRange[type].map((item, index: number) => {
               return (
                 <div className={`flexRow alignItemsCenter ${index !== 0 ? 'mTop10' : ''}`} key={index}>
                   <CustomTimePicker

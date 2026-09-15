@@ -236,7 +236,7 @@ export default class CreateIndex extends Component<any, any> {
 
     this.props.onClose();
   };
-  changeIndexField = (value, index) => {
+  changeIndexField = (value, index: number) => {
     let { selectedIndexList = [] } = this.state;
     const { worksheetAvailableFields = [] } = this.props;
     if (value === selectedIndexList[index].fieldId) return;
@@ -267,7 +267,7 @@ export default class CreateIndex extends Component<any, any> {
       selectedIndexList: copySelectedIndexList,
     });
   };
-  changeFieldValue = (value, index) => {
+  changeFieldValue = (value, index: number) => {
     let { selectedIndexList = [] } = this.state;
     let copySelectedIndexList = [...selectedIndexList];
     copySelectedIndexList[index] = {
@@ -352,7 +352,7 @@ export default class CreateIndex extends Component<any, any> {
             </Tooltip>
           </div>
           <div className="selectedInfo">
-            {selectedIndexList.map((item, index) => {
+            {selectedIndexList.map((item, index: number) => {
               return (
                 <div className="selectedRow" key={item.fieldId}>
                   {item.isSystem || item.isDelete ? (

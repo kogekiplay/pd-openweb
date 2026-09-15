@@ -319,7 +319,7 @@ export default class Label {
     if (!this.isDebug) return;
     this.doc.strokeColor(color).lineWidth(0.1).moveTo(0, top).lineTo(width, top).stroke();
   }
-  drawRect(left, top, width, height, color = 'green', lineWidth = 0.1) {
+  drawRect(left, top, width: number, height: number, color = 'green', lineWidth = 0.1) {
     if (!this.isDebug) return;
     this.doc.strokeColor(color).lineWidth(lineWidth).rect(left, top, width, height).stroke();
   }

@@ -558,7 +558,7 @@ let ChartSetting = class ChartSetting extends Component<any, any> {
             <WithoutFidldItem disable={true} allowInput={true} />
           </Fragment>
         )}
-        {yaxisList.map((data, index) => (
+        {yaxisList.map((data, index: number) => (
           <ValueAxis
             key={data.controlId}
             name={data.controlName}

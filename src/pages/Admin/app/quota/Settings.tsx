@@ -381,7 +381,7 @@ export default class LimitAttachmentUpload extends Component<any, any> {
     this.setState({ limits });
   };
 
-  handleReset = (app, projectId) => {
+  handleReset = (app, projectId: string) => {
     Dialog.confirm({
       title: _l('重置应用的附件上传量'),
       description: (
@@ -844,7 +844,7 @@ export default class LimitAttachmentUpload extends Component<any, any> {
           </div>
           <div className="list">
             <div className="header flexRow mBottom10">
-              {columns.map((item, index) => (
+              {columns.map((item, index: number) => (
                 <div
                   key={index}
                   className={`pLeft8 ${item.dataIndex} ${item.className ? item.className : undefined}`}
@@ -862,7 +862,7 @@ export default class LimitAttachmentUpload extends Component<any, any> {
                   {businessType === 2 ? _l('未添加工作表') : _l('未添加应用')}
                 </div>
               ) : (
-                limits.map((row, index) => (
+                limits.map((row, index: number) => (
                   <div className="flexRow alignItemsCenter pTop6 pBottom6" key={index}>
                     {columns.map((col, i) => (
                       <div

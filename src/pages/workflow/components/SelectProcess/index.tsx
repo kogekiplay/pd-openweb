@@ -73,7 +73,7 @@ export default class SelectProcess extends Component<any, any> {
   /**
    * 根据应用获取流程
    */
-  getProcessByApp(appId) {
+  getProcessByApp(appId: string) {
     const { processListType, filterProcessId } = this.props;
 
     processVersion.list({ relationId: appId, processListType }).then(data => {

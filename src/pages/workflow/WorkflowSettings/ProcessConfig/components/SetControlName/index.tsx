@@ -118,7 +118,7 @@ export default ({ data = [], list = [], errorItems, setErrorItems, updateSource 
   };
 
   const renderList = source => {
-    return source.map((obj, index) => {
+    return source.map((obj, index: number) => {
       if (obj.dataSource && _.find(list, o => o.controlId === obj.dataSource).type === 10000007) {
         return null;
       }

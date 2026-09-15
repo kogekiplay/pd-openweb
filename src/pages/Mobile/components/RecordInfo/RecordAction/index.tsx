@@ -191,7 +191,7 @@ class RecordAction extends Component<any, any> {
             const { template = [] } = remarkoptions;
             return JSON.stringify({
               ...remarkoptions,
-              template: template.map((item, index) => {
+              template: template.map((item, index: number) => {
                 return {
                   ...item,
                   value: item.value ? translateInfo[`templateName_${index}`] || item.value : '',
@@ -722,7 +722,7 @@ class RecordAction extends Component<any, any> {
           hideNewRecord={() => {
             this.setState({ newRecordVisible: false });
           }}
-          openRecord={(rowId, viewId) => {
+          openRecord={(rowId, viewId: string) => {
             this.setState({
               previewRecord: { rowId, viewId },
             });

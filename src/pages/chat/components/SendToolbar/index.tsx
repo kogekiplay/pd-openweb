@@ -88,7 +88,7 @@ export default class SendToolbar extends Component<any, any> {
       showAru: true,
       offset: isFileTrsnsfer ? 313 : 263,
       relatedLeftSpace: isFileTrsnsfer ? -304 : -264,
-      onMDBearSelect: (name, src, targetEmotionSrc) => {
+      onMDBearSelect: (name: string, src, targetEmotionSrc) => {
         // 注意：ft 这个字段是作为七牛文件存储的类型判断的，所以要注意加上这个字段
         // 1.图片 2.附件 3.音频
         name = name == 'null' ? null : name;
@@ -107,7 +107,7 @@ export default class SendToolbar extends Component<any, any> {
         };
         this.props.onSendEmotionPicMsg(message);
       },
-      onSelect: (name, value, emotionText) => {
+      onSelect: (name: string, value, emotionText) => {
         this.props.onSendEmotionTextMsg(emotionText || name);
       },
     });
@@ -243,7 +243,7 @@ export default class SendToolbar extends Component<any, any> {
           var items = e.originalEvent.clipboardData && e.originalEvent.clipboardData.items;
           var data = { files: [] };
           if (items && items.length) {
-            $.each(items, function (index, item) {
+            $.each(items, function (index: number, item) {
               var file = item.getAsFile && item.getAsFile();
               if (file) {
                 file.isFromClipBoard = true;

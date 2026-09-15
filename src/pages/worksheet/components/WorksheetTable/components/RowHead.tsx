@@ -119,7 +119,7 @@ const OpenRecordBtn = styled(FlexCenter)`
   }
 `;
 
-function getApplyToAllChecked(worksheetInfo, viewId) {
+function getApplyToAllChecked(worksheetInfo, viewId: string) {
   const view = find(worksheetInfo.views, o => o.viewId === viewId);
 
   if (!view) {

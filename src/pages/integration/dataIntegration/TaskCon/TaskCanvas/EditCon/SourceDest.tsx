@@ -229,7 +229,7 @@ export default class SourceDest extends Component<any, any> {
   };
 
   //获取数据源对应数据库列表
-  getDatasourceList = (node, projectId) => {
+  getDatasourceList = (node, projectId: string) => {
     let { datasourceId, dataDestId, dsType, appId, workSheetId } = _.get(node, ['nodeConfig', 'config']) || {};
     datasourceId = datasourceId || dataDestId;
     if (dsType === DATABASE_TYPE.APPLICATION_WORKSHEET) {

@@ -191,7 +191,7 @@ export default ({ flowInfo, isPlugin, customBtn, wrapClassName, isIntegration = 
     });
   };
 
-  const renderItem = (item, index) => {
+  const renderItem = (item, index: number) => {
     return (
       <ListItem key={index} className="flexRow alignItemsCenter">
         <div className="historyListAvatar mRight15">
