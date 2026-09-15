@@ -138,7 +138,7 @@ export default class CardMessage extends Component<any, any> {
 
             // 格式化返回的数据
             if (!postItem) return postItem;
-            const properties = {};
+            const properties: Record<string, any> = {};
 
             if (typeof postItem.commentCount !== 'number') {
               properties.commentCount = parseInt(postItem.commentCount, 10);

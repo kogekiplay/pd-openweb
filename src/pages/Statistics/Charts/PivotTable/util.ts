@@ -420,7 +420,7 @@ export const getCompiledStyleColor = ({
 export const getCompiledBarStyleColor = ({ value, controlMinAndMax = {}, rule }) => {
   const minValue = _.isNumber(rule.minValue) ? rule.minValue : rule.useDefaultMin ? 0 : controlMinAndMax.min || 0;
   const maxValue = _.isNumber(rule.maxValue) ? rule.maxValue : controlMinAndMax.max || 0;
-  const barStyle = {};
+  const barStyle: Record<string, any> = {};
 
   if (rule.direction === 1) {
     barStyle.left = 0;

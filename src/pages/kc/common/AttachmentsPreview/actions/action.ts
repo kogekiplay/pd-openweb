@@ -687,7 +687,7 @@ export function saveToKnowlwdge(savePath) {
 
     Promise.all([savePromise])
       .then(([path]) => {
-        const sourceData = {};
+        const sourceData: Record<string, any> = {};
         let attachmentType;
 
         if (previewAttachmentType === 'COMMON') {

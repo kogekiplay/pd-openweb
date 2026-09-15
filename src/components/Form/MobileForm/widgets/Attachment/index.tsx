@@ -211,7 +211,7 @@ export default class Widgets extends Component<any, any> {
 
   filesChangedAll = files => {
     const { attachments, knowledgeAtts, attachmentData } = files;
-    const newValue = {};
+    const newValue: Record<string, any> = {};
 
     newValue.attachments = attachments;
     newValue.knowledgeAtts = knowledgeAtts;

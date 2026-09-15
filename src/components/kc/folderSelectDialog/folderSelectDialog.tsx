@@ -632,7 +632,7 @@ $.extend(FolderSelect.prototype, {
       if ((type && (type == PICK_TYPE.ROOT || type == PICK_TYPE.MYFILE)) || (extra && extra.forceRenderNet)) {
         var _rootNode = extra && extra.forceRenderNet ? extra.rootFolder : rootNode;
         var _type = extra && extra.forceRenderNet ? (extra.rootFolder.id ? PICK_TYPE.ROOT : PICK_TYPE.MYFILE) : type;
-        var currentRoot = {};
+        var currentRoot: Record<string, any> = {};
         var project;
         if (settings.appointRoot && settings.appointRoot.id) {
           project = settings.appointRoot.project;

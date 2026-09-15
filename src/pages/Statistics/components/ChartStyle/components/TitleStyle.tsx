@@ -208,7 +208,7 @@ const TitleStyle = props => {
               themeColor={themeColor}
               value={textColor}
               onChange={value => {
-                const data = {};
+                const data: Record<string, any> = {};
 
                 if (type === 'line') {
                   data.lineTextColor = value;
@@ -236,7 +236,7 @@ const TitleStyle = props => {
               themeColor={themeColor}
               value={bgColor}
               onChange={value => {
-                const data = {};
+                const data: Record<string, any> = {};
 
                 if (type === 'line') {
                   data.lineBgColor = value;

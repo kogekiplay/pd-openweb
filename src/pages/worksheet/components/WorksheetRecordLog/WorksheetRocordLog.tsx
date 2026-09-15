@@ -340,7 +340,7 @@ function WorksheetRecordLog(props, ref) {
     )
       return;
 
-    const param = {};
+    const param: Record<string, any> = {};
 
     if (!sign.newDataEnd) {
       param.newLogIndex = pageIndexs.newLogIndex + 1;

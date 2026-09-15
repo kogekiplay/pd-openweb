@@ -74,7 +74,7 @@ export const handleSaveKcCloud = (data, isDownload) => {
   }
 
   let nodeType = 0;
-  let sourceData = {};
+  let sourceData: Record<string, any> = {};
 
   if (data.refId) {
     nodeType = 2;

@@ -61,7 +61,7 @@ let Menu = class Menu extends Component<any, any> {
 
   calcPos() {
     let { isAppendToBody, renderToTop } = this.props;
-    const pos = {};
+    const pos: Record<string, any> = {};
 
     if (this.props.isSubMenu) {
       const parentMenuItem =

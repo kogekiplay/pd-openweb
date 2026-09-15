@@ -9,7 +9,7 @@ import inviteSingleTpl from './tpl/refuserDialogHtml.html';
 // 公用配置
 // 页面 初始化
 // 公用配置
-const Comm = {};
+const Comm: Record<string, any> = {};
 // 公共设置
 Comm.settings = {
   date: '',

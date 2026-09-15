@@ -992,7 +992,7 @@ ShareAttachment.prototype = {
     var SA = this;
     var options = SA.options;
     var attachmentType = options.attachmentType;
-    var file = {};
+    var file: Record<string, any> = {};
     var ext = options.ext.replace(/^\./, '');
     file.fullName = options.name + (ext ? '.' + ext : '');
     switch (attachmentType) {
@@ -1049,7 +1049,7 @@ ShareAttachment.prototype = {
     var allowDown = true;
     var attachmentType = SA.options.attachmentType;
     var shareDesc = SA.$dialog.find('#shareDesc').val().trim();
-    var params = {};
+    var params: Record<string, any> = {};
     var files;
     if (SA.options.attachmentType !== ATTACHMENT_TYPE.KC && SA.dialogEle.$canDownloadSwitch.length) {
       allowDown = SA.dialogEle.$canDownloadSwitch.prop('checked');
@@ -1253,7 +1253,7 @@ ShareAttachment.prototype = {
           return;
         }
 
-        var sourceData = {};
+        var sourceData: Record<string, any> = {};
         sourceData.des = shareDesc;
         sourceData.allowDown = allowDown;
         if (attachmentType === ATTACHMENT_TYPE.COMMON) {

@@ -211,7 +211,7 @@ const formatData = ({ map, contrast, contrastMap, displaySetup, yaxisList, isTim
       const contrastList = _.get(contrast[index], 'value') || [];
       const contrastMapList = _.get(contrastMap[index], 'value') || [];
       item.value.forEach((n, index) => {
-        const contrastData = {};
+        const contrastData: Record<string, any> = {};
 
         if (isTime) {
           contrastData.lastContrastValue = _.get(contrastList[index], 'v') || (displaySetup.contrast ? 0 : null);

@@ -1459,7 +1459,7 @@ class TableViewBase extends React.Component<any, any> {
 
     const isShowWorkflowSys = isOpenPermit(permitList.sysControlSwitch, this.sheetSwitchPermit);
 
-    let param = {};
+    let param: Record<string, any> = {};
 
     if (this.showColumnControl) {
       const { personal_setting } = getAdvanceSetting(view);

@@ -1079,7 +1079,7 @@ class PivotTable extends Component<any, any> {
     const columnFreeze = isMobile ? mobilePivotTableColumnFreeze : pivotTableColumnFreeze;
     const lineFreeze = isMobile ? mobilePivotTableLineFreeze : pivotTableLineFreeze;
     const parent = this.getParentNode();
-    const config = {};
+    const config: Record<string, any> = {};
 
     if (isPrintPivotTable) {
       return config;

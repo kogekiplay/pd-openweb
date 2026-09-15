@@ -594,7 +594,7 @@ export function handleMoveOrCopy(options) {
 
 /* 批量操作提示*/
 export function returnOperationTips(data, message = {}) {
-  const result = {};
+  const result: Record<string, any> = {};
   const messages = $.extend(EXECUTE_ERROR_MESSAGE, message);
   const failIds = data[EXECUTE_RESULT.FAIL];
   const successIds = data[EXECUTE_RESULT.SUCCESS];

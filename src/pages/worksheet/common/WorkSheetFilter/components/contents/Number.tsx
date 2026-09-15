@@ -48,7 +48,7 @@ export default class Number extends Component<any, any> {
       return _.isUndefined(v) || v === '';
     }
 
-    const changes = {};
+    const changes: Record<string, any> = {};
 
     if (isEmpty(value) && isEmpty(minValue) && isEmpty(maxValue)) {
       return;

@@ -237,7 +237,7 @@ export default class RecordInfo extends Component<any, any> {
         this.getPayConfig(this.props.recordId);
       }
 
-      const changes = {};
+      const changes: Record<string, any> = {};
 
       if (this.props.worksheetId !== this.state.worksheetId) {
         changes.worksheetId = this.props.worksheetId;

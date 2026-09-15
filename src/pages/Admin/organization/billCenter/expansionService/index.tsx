@@ -528,7 +528,7 @@ let ExpansionService = class ExpansionService extends Component<any, any> {
       this.ajax.abort();
     }
 
-    let param = {};
+    let param: Record<string, any> = {};
 
     if (expandType === EXPAND_TYPE.COMPUTING) {
       param.productId = this.state.exclusiveInfo.specs;
@@ -707,7 +707,7 @@ let ExpansionService = class ExpansionService extends Component<any, any> {
     let actionType = this.getCurrentType();
     const isNotPlatformLocal =
       [EXPAND_TYPE.COMPUTING, EXPAND_TYPE.RENEWCOMPUTING].includes(expandType) && !window.platformENV.isPlatform;
-    let param = {};
+    let param: Record<string, any> = {};
 
     if (expandType === EXPAND_TYPE.COMPUTING) {
       param.productId = exclusiveInfo.specs;

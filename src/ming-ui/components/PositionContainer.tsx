@@ -167,7 +167,7 @@ class PositionContainer extends Component<any, any> {
     let { popupParentNode, bounding, popup } = this;
     let { placement } = this.props;
     let popupBounding = (this.popupBounding = popup.getBoundingClientRect());
-    let result = {};
+    let result: Record<string, any> = {};
 
     let popupParentNodeBounding = popupParentNode.getBoundingClientRect();
 
@@ -291,7 +291,7 @@ class PositionContainer extends Component<any, any> {
     let { placement } = this.props;
     let popupBounding = (this.popupBounding = popup.getBoundingClientRect());
     let { clientWidth, clientHeight } = document.body;
-    let result = {};
+    let result: Record<string, any> = {};
 
     let verticalSpace = this.getVerticalSpace(bounding, popupBounding);
     let horizontalSpace = this.getHorizontalSpace(bounding, popupBounding);

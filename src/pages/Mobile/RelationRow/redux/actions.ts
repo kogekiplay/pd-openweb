@@ -52,7 +52,7 @@ export const updateBase = base => dispatch => {
 export const loadRow = (control, getType) => (dispatch: AppDispatch, getState: GetState) => {
   const { base, rowInfo } = getState().mobile;
   const { instanceId, workId, worksheetId, rowId } = base;
-  const params = {};
+  const params: Record<string, any> = {};
 
   if (instanceId && workId) {
     params.instanceId = instanceId;

@@ -21,7 +21,7 @@ import toolbarTpl from './tpl/toolbar.html';
 import updateCategoryListTpl from './tpl/updateCategoryList.html';
 import './toolbar.less';
 
-var Toolbar = {};
+var Toolbar: Record<string, any> = {};
 
 Toolbar.settings = {
   oldCategoryList: [],

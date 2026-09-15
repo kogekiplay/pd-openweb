@@ -65,7 +65,7 @@ export default function Number(props) {
       return _.isUndefined(v) || v === '';
     }
 
-    let changes = {};
+    let changes: Record<string, any> = {};
 
     if (isEmpty(min)) {
       onChange(handleAdvancedSettingChange(data, { min: '0' }));

@@ -2,7 +2,7 @@
  * [Common 账务中心公用模块]
  * @type {Object}
  */
-const Common = {};
+const Common: Record<string, any> = {};
 /**
  * [respEnum ajax 响应枚举]
  * @type {Object}

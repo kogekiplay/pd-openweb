@@ -68,7 +68,7 @@ const getOffsetData = function (rootW: number, rootH: number, nativeEvent) {
   const left = !right;
   const top = screenH - clientY > rootH;
   const bottom = !top;
-  const offset = {};
+  const offset: Record<string, any> = {};
 
   if (right) {
     offset.x = clientX + 5;

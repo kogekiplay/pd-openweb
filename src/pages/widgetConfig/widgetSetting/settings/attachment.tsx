@@ -84,7 +84,7 @@ export default function Attachment(props) {
               <div
                 className={cx('displayItem', { active: showtype === item.value })}
                 onClick={() => {
-                  let resProps = {};
+                  let resProps: Record<string, any> = {};
 
                   if (item.value === '2') {
                     resProps.covertype = '1';

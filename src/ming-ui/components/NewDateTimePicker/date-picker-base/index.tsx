@@ -47,7 +47,7 @@ class DatePickerBase extends Component<any, any> {
   };
 
   headerButtonOnClick = (event, action) => {
-    const data = {};
+    const data: Record<string, any> = {};
 
     // toggle calender mode
     if (action === 'year' || action === 'month' || action === 'date') {

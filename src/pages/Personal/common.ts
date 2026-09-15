@@ -1,6 +1,6 @@
 import qs from 'query-string';
 
-const Common = {};
+const Common: Record<string, any> = {};
 
 Common.url = function (params) {
   return location.pathname + '?' + qs.stringify(params);

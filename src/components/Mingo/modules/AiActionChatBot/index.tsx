@@ -197,7 +197,7 @@ export function formatMessage(message) {
     return;
   }
 
-  const result = {};
+  const result: Record<string, any> = {};
   result.id = get(message, 'metadata.id');
   result.instanceId = message.instanceId;
   result.workId = message.workId;

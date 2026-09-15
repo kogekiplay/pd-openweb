@@ -116,7 +116,7 @@ export default function (props) {
             canClear
             onChange={value => {
               const first = value[0] || {};
-              let param = {};
+              let param: Record<string, any> = {};
 
               if (!first.controlId) {
                 param.advancedSetting = { closedefsort: '0' };

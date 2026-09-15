@@ -1,4 +1,4 @@
-﻿import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import _ from 'lodash';
 import { Dialog, Switch } from 'ming-ui';
 import projectSettingAjax from 'src/api/projectSetting';
@@ -7,7 +7,7 @@ import { purchaseMethodFunc } from 'src/components/pay/versionUpgrade/PurchaseMe
 import { versionUpgradeModal } from 'src/components/pay/versionUpgrade/VersionUpgradeModal';
 import PurchaseExpandPack from 'src/pages/Admin/components/PurchaseExpandPack';
 
-let ajaxPromise = {};
+let ajaxPromise: Record<string, any> = {};
 
 export default ({ projectId }) => {
   const [autoOrder, setAutoOrder] = useState(false);

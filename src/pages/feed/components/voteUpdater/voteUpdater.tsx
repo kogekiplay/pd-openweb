@@ -22,7 +22,7 @@ const VoteUpdater = {
         var $items = $options.find('li');
         var voteCount = $items.length;
         if (voteCount >= 99) return;
-        var it = {};
+        var it: Record<string, any> = {};
         it.canClose = canClose;
         it.idPrefix = idPrefix;
 
