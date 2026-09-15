@@ -54,6 +54,8 @@ export interface FormControl {
   advancedSetting?: ControlAdvancedSetting;
   /** 控件上挂的自定义事件权限配置 */
   eventPermissions?: any;
+  /** 打印里标记这个关联控件是「关联多条·列表」形态 */
+  isRelateMultipleSheet?: boolean;
   /** 关联记录控件指定的关联视图 */
   viewId?: string;
   /** 关联记录控件指向的应用 */
@@ -159,7 +161,7 @@ export interface FormControl {
   id?: string;
   editType?: number;
   size?: number;
-  options?: ControlValue[];
+  options?: ControlOption[];
   isSubList?: boolean;
   dot?: number;
   unit?: string;
@@ -200,6 +202,20 @@ export interface FormControl {
  * `[9, 10, 11].includes(control.type)` 这类数值判断就全部 TS2345，
  * 为了一格表头污染所有真控件的取值不划算。要它的地方用这个联合。
  */
+/**
+ * 选项类控件（单选/多选/等级/…）的一个选项。
+ * key 是存库的值，value 是显示文案 —— 记录里存的是 key，别拿 value 去比。
+ */
+export interface ControlOption {
+  key: string;
+  value?: string;
+  index?: number;
+  isDeleted?: boolean;
+  color?: string;
+  score?: number;
+  [key: string]: any;
+}
+
 export interface SummaryHeadControl {
   type: 'summaryhead';
 }

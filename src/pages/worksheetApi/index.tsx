@@ -56,6 +56,35 @@ const FIELD_TYPE = FIELD_TYPE_LIST.concat([
 ]);
 const isMobile = browserIsMobile();
 
+/** 左侧列表里的工作表 / 流程 / 数据管道条目 */
+interface ApiSideItem {
+  id?: string;
+  workSheetId?: string;
+  workSheetName?: string;
+  name?: string;
+  startAppType?: number;
+  [key: string]: any;
+}
+
+/** 接口文档正文里的一个节点（分组、视图、字段说明都走这个形状） */
+interface ApiDocNode {
+  type?: number;
+  desc?: string;
+  items?: ApiDocNode[];
+  data?: ApiDocNode[];
+  views?: ApiDocNode[];
+  [key: string]: any;
+}
+
+/** 封装业务流程的入参 / 出参 */
+interface ApiField {
+  controlId?: string;
+  controlName?: string;
+  dataSource?: string;
+  type?: number;
+  [key: string]: any;
+}
+
 class WorksheetApi extends Component<any, any> {
   constructor(props) {
     super(props);
@@ -205,7 +234,7 @@ class WorksheetApi extends Component<any, any> {
 
       dataApp.name = getTranslateInfo(appId, null, appId).name || dataApp.name;
 
-      worksheetList.forEach(item => {
+      worksheetList.forEach((item: ApiSideItem) => {
         item.workSheetName = getTranslateInfo(appId, null, item.workSheetId).name || item.workSheetName;
       });
 
@@ -238,8 +267,8 @@ class WorksheetApi extends Component<any, any> {
             appInfo,
             addOptionsParams,
             getOptionsParams,
-            pbcList: processList.filter(l => l.startAppType !== 7),
-            webhookList: processList.filter(l => l.startAppType === 7),
+            pbcList: processList.filter((l: ApiSideItem) => l.startAppType !== 7),
+            webhookList: processList.filter((l: ApiSideItem) => l.startAppType === 7),
           },
           () => {
             document.title = dataApp.name + ' - ' + _l('API说明');
@@ -261,7 +290,7 @@ class WorksheetApi extends Component<any, any> {
   };
 
   // 获取工作表信息
-  getWorksheetApiInfo = worksheetId => {
+  getWorksheetApiInfo = (worksheetId: string) => {
     const { selectId } = this.state;
     Promise.all([
       // 获取工作表信息
@@ -281,7 +310,7 @@ class WorksheetApi extends Component<any, any> {
         const isDataPipeline = selectId.includes('dataPipeline');
 
         if (list.alias) {
-          data = data.map(o => {
+          data = data.map((o: ApiDocNode) => {
             return { ...o, alias: list.alias };
           });
         }
@@ -289,9 +318,9 @@ class WorksheetApi extends Component<any, any> {
         if (!isDataPipeline) {
           this.MENU_LIST.forEach(item => {
             if (item.id === 'List') {
-              item.data.forEach(obj => {
+              item.data.forEach((obj: ApiDocNode) => {
                 if (obj.name === 'viewId') {
-                  obj.desc = data[0].views.map(o => {
+                  obj.desc = data[0].views.map((o: ApiDocNode) => {
                     return {
                       [o.name]: o.viewId,
                     };
@@ -321,7 +350,7 @@ class WorksheetApi extends Component<any, any> {
   };
 
   // 获取工作流信息
-  getWorkflowApiInfo = processId => {
+  getWorkflowApiInfo = (processId: string) => {
     processAjax.getProcessApiInfo({ processId, relationId: this.getId() }).then(res => {
       this.setState({ workflowInfo: { ...res, processId } }, () => {
         this.scrollToFixedPosition();
@@ -367,7 +396,7 @@ class WorksheetApi extends Component<any, any> {
   /**
    * 滚动到固定位置
    */
-  scrollToFixedPosition(id?) {
+  scrollToFixedPosition(id?: string) {
     const selectId = (id || this.state.selectId).replace('dataPipeline', '');
 
     if (!$(`#${selectId}-content`)[0]) return;
@@ -383,7 +412,17 @@ class WorksheetApi extends Component<any, any> {
   /**
    * 设置selectId并滚动(三级工作表需获取数据)
    */
-  setSelectId({ selectId, worksheetId, workflowId, expandIds }) {
+  setSelectId({
+    selectId,
+    worksheetId,
+    workflowId,
+    expandIds,
+  }: {
+    selectId?: string;
+    worksheetId?: string;
+    workflowId?: string;
+    expandIds?: string[];
+  }) {
     this.canScroll = false;
     this.setState(
       { selectId, selectWorkflowId: workflowId, workflowInfo: {}, expandIds: expandIds || this.state.expandIds },
@@ -417,7 +456,7 @@ class WorksheetApi extends Component<any, any> {
     const list =
       type === 'dataPipeline' ? this.MENU_LIST.filter(l => DATA_PIPELINE_MENUS.includes(l.id)) : this.MENU_LIST;
 
-    return (type === 'dataPipeline' ? dataPipelineList : worksheetList).map(item => {
+    return (type === 'dataPipeline' ? dataPipelineList : worksheetList).map((item: ApiSideItem) => {
       const worksheetId = item.workSheetId || item.worksheetId;
       const isSelect = (expandIds[1] || '').includes(worksheetId);
       const prefix = type === 'dataPipeline' ? type : '';
@@ -541,7 +580,7 @@ class WorksheetApi extends Component<any, any> {
   /**
    * 渲染封装业务流程、webhook侧栏
    */
-  renderPBCSide({ type, listKey, title }) {
+  renderPBCSide({ type, listKey, title }: { type: string; listKey: string; title: string }) {
     const { selectWorkflowId, expandIds = [] } = this.state;
     const isOpen = expandIds[1] === type;
 
@@ -567,7 +606,7 @@ class WorksheetApi extends Component<any, any> {
           {title}
         </div>
         {isOpen &&
-          list.map(item => {
+          list.map((item: ApiSideItem) => {
             return (
               <div
                 className={cx('worksheetApiMenuItem pLeft58 overflow_ellipsis', {
@@ -617,7 +656,7 @@ class WorksheetApi extends Component<any, any> {
   /**
    * 渲染应用角色、筛选侧栏(应用角色为1、筛选为2)
    */
-  renderOtherSide(type) {
+  renderOtherSide(type: string) {
     const { selectId, addOptionsParams, getOptionsParams, expandIds } = this.state;
     OPTIONS_FUNCTION_LIST[0].data = addOptionsParams.requestParams;
     OPTIONS_FUNCTION_LIST[1].data = getOptionsParams.requestParams;
@@ -670,7 +709,7 @@ class WorksheetApi extends Component<any, any> {
   /**
    * 渲染内容
    */
-  renderContent(item, i, type = 'worksheet') {
+  renderContent(item: ApiDocNode, i: number, type = 'worksheet') {
     const menuList =
       type === 'dataPipeline' ? this.MENU_LIST.filter(l => DATA_PIPELINE_MENUS.includes(l.id)) : this.MENU_LIST;
 
@@ -801,11 +840,11 @@ class WorksheetApi extends Component<any, any> {
       return null;
     }
 
-    const sectionIds = _.get(appInfo, 'apiResponse.sections').flatMap(l => {
-      let items = l.items.filter(it => it.type === 2);
+    const sectionIds = _.get(appInfo, 'apiResponse.sections').flatMap((l: ApiDocNode) => {
+      let items = l.items.filter((it: ApiDocNode) => it.type === 2);
       if (items.length === 0) return l;
 
-      let items2 = items.map(m => {
+      let items2 = items.map((m: ApiDocNode) => {
         return {
           ...m,
           keyName: `${l.name}-${m.name}`,
@@ -814,7 +853,7 @@ class WorksheetApi extends Component<any, any> {
 
       return [l].concat(items2);
     });
-    const sectionIdsFlat = sectionIds.map(l => {
+    const sectionIdsFlat = sectionIds.map((l: ApiDocNode) => {
       return {
         [l.keyName || l.name]: l.id || l.sectionId,
       };
@@ -941,8 +980,8 @@ class WorksheetApi extends Component<any, any> {
     let inputExample = {};
     let outputExample = {};
 
-    const renderInputs = source => {
-      return source.map(o => {
+    const renderInputs = (source: ApiField[]) => {
+      return source.map((o: ApiField) => {
         if (o.dataSource && _.find(workflowInfo.inputs, item => item.controlId === o.dataSource).type === 10000007) {
           return null;
         }
@@ -958,14 +997,14 @@ class WorksheetApi extends Component<any, any> {
               <div className="mLeft30 w14">{FIELD_TYPE.find(obj => obj.value === o.type).text}</div>
               <div className="mLeft30 w36">{o.desc}</div>
             </div>
-            {renderInputs(workflowInfo.inputs.filter(item => item.dataSource === o.controlId))}
+            {renderInputs(workflowInfo.inputs.filter((item: ApiField) => item.dataSource === o.controlId))}
           </Fragment>
         );
       });
     };
 
-    const renderOutputs = source => {
-      return source.map(o => {
+    const renderOutputs = (source: ApiField[]) => {
+      return source.map((o: ApiField) => {
         if (o.dataSource && _.find(workflowInfo.outputs, item => item.controlId === o.dataSource).type === 10000007) {
           return null;
         }
@@ -979,7 +1018,7 @@ class WorksheetApi extends Component<any, any> {
               </div>
               <div className="mLeft30 w36">{o.desc}</div>
             </div>
-            {renderOutputs(workflowInfo.outputs.filter(item => item.dataSource === o.controlId))}
+            {renderOutputs(workflowInfo.outputs.filter((item: ApiField) => item.dataSource === o.controlId))}
           </Fragment>
         );
       });
@@ -992,8 +1031,8 @@ class WorksheetApi extends Component<any, any> {
     }
 
     workflowInfo.inputs
-      .filter(item => !item.dataSource)
-      .forEach(item => {
+      .filter((item: ApiField) => !item.dataSource)
+      .forEach((item: ApiField) => {
         inputExample[item.alias || item.controlName] =
           item.value && _.includes([10000003, 10000007, 10000008], item.type)
             ? JSON.parse(item.value)
@@ -1001,8 +1040,8 @@ class WorksheetApi extends Component<any, any> {
       });
 
     workflowInfo.outputs
-      .filter(item => !item.dataSource)
-      .forEach(item => {
+      .filter((item: ApiField) => !item.dataSource)
+      .forEach((item: ApiField) => {
         outputExample[item.alias || item.controlName] =
           item.value && _.includes([10000003, 10000007, 10000008], item.type)
             ? JSON.parse(item.value)
@@ -1062,7 +1101,7 @@ class WorksheetApi extends Component<any, any> {
               <div className="mLeft30 w36">{_l('用于接受流程执行完毕输出的参数')}</div>
             </div>
           )}
-          {renderInputs(workflowInfo.inputs.filter(o => !o.dataSource))}
+          {renderInputs(workflowInfo.inputs.filter((o: ApiField) => !o.dataSource))}
           {tabIndex === TAB_TYPE.API_V2 && !isWebhook && (
             <Fragment>
               <div className="Font17 bold mTop30">{_l('响应参数')}</div>
@@ -1075,7 +1114,7 @@ class WorksheetApi extends Component<any, any> {
                 <div className="w32">{_l('参数')}</div>
                 <div className="mLeft30 w36">{_l('说明')}</div>
               </div>
-              {renderOutputs(workflowInfo.outputs.filter(o => !o.dataSource))}
+              {renderOutputs(workflowInfo.outputs.filter((o: ApiField) => !o.dataSource))}
             </Fragment>
           )}
         </div>
@@ -1167,7 +1206,7 @@ class WorksheetApi extends Component<any, any> {
     return { URL: curUrl };
   }
 
-  onCopy(text) {
+  onCopy(text: string) {
     copy(text, { format: 'text/plain' });
     alert(_l('已复制'));
   }
@@ -1175,14 +1214,14 @@ class WorksheetApi extends Component<any, any> {
   /**
    * 渲染附录内容
    */
-  renderAppendixContent(list?) {
+  renderAppendixContent(list?: ApiField[]) {
     const { tabIndex } = this.state;
-    const getWidth = (headerData, key: string) => _.get(_.find(headerData, headerObj => headerObj.key === key) || {}, 'width');
+    const getWidth = (headerData: ApiDocNode[], key: string) => _.get(_.find(headerData, headerObj => headerObj.key === key) || {}, 'width');
     const data = list || MENU_LIST_APPENDIX;
 
     return (
       <Fragment>
-        {data.map((o, i) => {
+        {data.map((o: ApiDocNode, i: number) => {
           const headerData = MENU_LIST_APPENDIX_HEADER[o.id] || [];
           const isFirst = !list && i === 0;
 
@@ -1195,7 +1234,7 @@ class WorksheetApi extends Component<any, any> {
 
                 {!!headerData.length && (
                   <div className="flexRow worksheetApiLine flexRowHeight bold mTop25">
-                    {headerData.map((header, headerIdx) => (
+                    {headerData.map((header: ApiDocNode, headerIdx: number) => (
                       <div className={cx(`w${header.width}`, { mLeft30: headerIdx > 0 })}>{header.title}</div>
                     ))}
                   </div>
@@ -1866,7 +1905,7 @@ class WorksheetApi extends Component<any, any> {
     });
     heightArr
       .filter(item => item.height > 0)
-      .forEach(item => {
+      .forEach((item: ApiField) => {
         totalHeight += item.h;
         if (!isExist && totalHeight - item.h * 0.3 > scrollTop) {
           isExist = true;

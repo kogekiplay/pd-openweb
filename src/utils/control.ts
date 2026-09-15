@@ -28,7 +28,7 @@ import {
   handleAdvancedSettingChange,
   isSheetDisplay,
 } from 'src/utils/controlCommon';
-import type { ControlAdvancedSetting, ControlValue, FormControl, RecordRow } from 'src/utils/controlTypes';
+import type { ControlAdvancedSetting, ControlOption, ControlValue, FormControl, RecordRow } from 'src/utils/controlTypes';
 import copy from 'src/utils/copyToClipboard';
 import RegExpValidator from 'src/utils/expression';
 import { dateConvertToUserZone, dateServerZoneToAppZone, getTimeZone } from 'src/utils/project';
@@ -84,15 +84,6 @@ const isCustomOptionKey = (key: string) => key.indexOf('other') > -1 || key.inde
 
 /** 获取选项 */
 /** 选项控件的一个选项 */
-interface ControlOption {
-  key: string;
-  value?: string;
-  color?: string;
-  isDeleted?: boolean;
-  index?: number;
-  score?: number;
-}
-
 export function getSelectedOptions(options: ControlOption[] = [], value?: string, control?: FormControl) {
   if (!value || value === '[]') {
     return [];
