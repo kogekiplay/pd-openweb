@@ -136,6 +136,7 @@
   "devDependencies": {
     "@babel/core": "^8.0.5",
     "@babel/eslint-parser": "^8.0.5",
+    "@babel/parser": "^8.0.5",
     "@babel/plugin-transform-runtime": "^8.0.1",
     "@babel/preset-env": "^8.0.5",
     "@babel/preset-react": "^8.0.1",
@@ -183,7 +184,7 @@
     "source-map-loader": "^5.0.0",
     "style-loader": "^4.0.0",
     "thread-loader": "^4.0.4",
-    "typescript": "~5.9.3",
+    "typescript": "^7.0.2",
     "uglify-js": "3.19.3",
     "webpack": "5.110.3",
     "webpack-merge": "^6.0.1",

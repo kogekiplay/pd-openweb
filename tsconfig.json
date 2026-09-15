@@ -33,7 +33,11 @@
     "forceConsistentCasingInFileNames": false,
     "experimentalDecorators": true,
 
-    "baseUrl": ".",
+    // TS 7 不再像 5.x 那样自动把 node_modules/@types/* 全都纳入全局。
+    // 不写这一条，全仓 require() 会报 TS2591、NodeJS.Timeout 会报 TS2694。
+    // 只列 node：其余 @types 包（d3 / color-convert / ...）都是【按模块导入】
+    // 使用的，不提供全局声明，不需要出现在这里。
+    "types": ["node"],
     "paths": {
       // 保留 jsconfig.json 原有的 4 条 alias（5 个 key）。
       // 注意 webpack 侧 resolve.alias（CI/webpack.config.js:419-423）只有

@@ -59,10 +59,14 @@ function notify(title, message, isError, extra = {}) {
     message: text,
   };
 
+  // 桌面通知失败不该污染构建日志：node-notifier 自带的 terminal-notifier 二进制
+  // 是 x86_64 的，在 arm64 mac 上 spawn 直接 EBADARCH，于是每次 webpack 编译完
+  // 都会打出一整坨栈 —— 那坨栈是【这里自己打的】，catch 一直是有效的。
+  // 通知本来就是锦上添花，降成一行提示。
   try {
     notifier.notify(options);
   } catch (err) {
-    console.error('Notifier failed:', err);
+    console.error(`Notifier failed: ${err && err.message ? err.message : err}`);
   }
 
   if (isError) {
