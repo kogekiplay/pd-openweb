@@ -402,6 +402,15 @@
     "src/pages/widgetConfig/widgetSetting/components/CustomWidget/index.ts",
     "src/pages/widgetConfig/widgetSetting/components/DevelopWithAI/ChatBot/MarkdownWithCSS.ts",
     "src/pages/widgetConfig/widgetSetting/components/DevelopWithAI/ChatBot/enum.ts",
+    "src/pages/widgetConfig/widgetSetting/components/DevelopWithAI/examples/default_date.tsx",
+    "src/pages/widgetConfig/widgetSetting/components/DevelopWithAI/examples/default_multipleSelect.tsx",
+    "src/pages/widgetConfig/widgetSetting/components/DevelopWithAI/examples/default_number.tsx",
+    "src/pages/widgetConfig/widgetSetting/components/DevelopWithAI/examples/default_relateRecord.tsx",
+    "src/pages/widgetConfig/widgetSetting/components/DevelopWithAI/examples/default_singleSelect.tsx",
+    "src/pages/widgetConfig/widgetSetting/components/DevelopWithAI/examples/default_text.tsx",
+    "src/pages/widgetConfig/widgetSetting/components/DevelopWithAI/examples/default_time.tsx",
+    "src/pages/widgetConfig/widgetSetting/components/DevelopWithAI/examples/gen.tsx",
+    "src/pages/widgetConfig/widgetSetting/components/DevelopWithAI/examples/index.tsx",
     "src/pages/widgetConfig/widgetSetting/components/DevelopWithAI/styled.ts",
     "src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/components/index.ts",
     "src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/inputTypes/index.ts",
@@ -462,6 +471,7 @@
     "src/pages/widgetConfig/widgetSetting/components/FunctionEditorDialog/Func/local/vi/language.ts",
     "src/pages/widgetConfig/widgetSetting/components/FunctionEditorDialog/Func/local/zh_hans/language.ts",
     "src/pages/widgetConfig/widgetSetting/components/FunctionEditorDialog/Func/local/zh_hant/language.ts",
+    "src/pages/widgetConfig/widgetSetting/components/FunctionEditorDialog/Func/test/index.ts",
     "src/pages/widgetConfig/widgetSetting/components/PortalSettingDialog/configs.ts",
     "src/pages/widgetConfig/widgetSetting/components/SplitLineConfig/style.ts",
     "src/pages/widgetConfig/widgetSetting/components/WidgetSecurity/util.ts",
@@ -604,6 +614,7 @@
     "src/utils/uuid.ts",
     "types/global.d.ts",
     "types/ming-ui.d.ts",
+    "types/spec-globals.d.ts",
     "types/styled-components.d.ts"
   ]
 }

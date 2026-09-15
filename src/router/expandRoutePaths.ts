@@ -16,7 +16,7 @@
  * 路由配置在迁移第①步已经全部改写成 v7 原生语法了。真混进来的话下面会直接抛，
  * 而不是静默生成一条永远匹配不上的路径。
  *
- * tools/verify-router-matching.cjs 直接 import 本函数做差分，
+ * tools/verify-router-matching.ts 直接 import 本函数做差分，
  * 所以这里的行为就是被 1292 个用例验证过的那个行为 —— 不要在别处再抄一份。
  */
 export function expandRoutePaths(route: { path: string | string[]; exact?: boolean }): string[] {

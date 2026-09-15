@@ -35,5 +35,15 @@
   // 【两个后缀都要写】2026-09-15 把 69 个 spec 从 .js 改成 .ts 时，这里还只排了
   // .spec.js，结果它们整批进了差分门禁，一次多出 448 条诊断 / 155 个新 key，
   // 看着像代码写坏了，其实一条都不是。
-  "exclude": ["node_modules", "src/library", "**/*.spec.js", "**/*.spec.ts"]
+  "exclude": [
+    "node_modules",
+    "src/library",
+    "**/*.spec.js",
+    "**/*.spec.ts",
+    // 理由同 tsconfig.json：示例素材，不是模块
+    "src/**/DevelopWithAI/examples/default_*",
+    // 理由同 tsconfig.json：跑在 Node 里的工具脚本，归 tsconfig.tools.json
+    "src/**/DevelopWithAI/examples/gen.tsx",
+    "src/**/FunctionEditorDialog/Func/test/index.ts"
+  ]
 }

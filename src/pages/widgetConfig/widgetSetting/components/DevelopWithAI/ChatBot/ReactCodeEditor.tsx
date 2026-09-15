@@ -318,6 +318,6 @@ const CodeEditor = ({ value = '', onChange = () => {} }) => {
 
 export default CodeEditor;
 
-// 供 tools/verify-cm6-reactcodeeditor.cjs 单测。它是这次迁移里唯一自写的逻辑
+// 供 tools/verify-cm6-reactcodeeditor.ts 单测。它是这次迁移里唯一自写的逻辑
 // （CM5 那边是改写 CodeMirror.hint.javascript / hint.html 两个全局），值得单独钉住。
 export const __test_reactCompletionSource = reactCompletionSource;

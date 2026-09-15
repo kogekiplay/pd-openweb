@@ -92,7 +92,7 @@ export default function MdModal(props) {
   // antd 6 的边界翻译。本壳对外仍保留 v5 的名字（消费方传的是 bodyStyle / maskClosable），
   // 但交给 antd 时必须转成 styles.* 和 mask.closable。
   //
-  // 【为什么 codemod 没覆盖到这里】tools/codemod-antd6.cjs 改的是 JSX 属性，而这里是先拼
+  // 【为什么 codemod 没覆盖到这里】tools/codemod-antd6.ts 改的是 JSX 属性，而这里是先拼
   // 一个 modalProps 对象、最后 {...modalProps} 铺给 <Modal>。对象属性它看不见 ——
   // 表现就是控制台一直刷 `[antd: Modal] bodyStyle is deprecated`，但全仓 grep JSX 属性
   // 一个都搜不到，很容易以为是别人的代码。ming-ui 的 Tooltip 壳是同一类情况。

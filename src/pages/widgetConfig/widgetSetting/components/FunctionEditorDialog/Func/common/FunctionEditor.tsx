@@ -20,7 +20,7 @@ import type { FormControl } from 'src/utils/controlTypes';
  * 装了就会顶掉 CM5，而 ming-ui/components/TagTextarea 还没迁。等它迁完才可以考虑换元包。
  *
  * 标记与校验规则全部搬到了 ./formulaMarks（纯函数），并用真实 CM5 做过差分验证
- * （见 tools/verify-cm6-formulamarks.cjs，58 项断言）。本文件只负责把那份结果翻译成
+ * （见 tools/verify-cm6-formulamarks.ts，58 项断言）。本文件只负责把那份结果翻译成
  * CM6 的 Decoration，以及补全、事件、主题这些编辑器层面的事。
  *
  * 两种 type 走不同的高亮路径：
@@ -65,7 +65,7 @@ if (!window.emitter) {
   window.emitter = emitter;
 }
 
-// 补全的配置单独拎出来，好被 tools/verify-cm6-functioneditor.cjs 钉住。
+// 补全的配置单独拎出来，好被 tools/verify-cm6-functioneditor.ts 钉住。
 // 【不要】加 selectOnOpen: false。我一开始把 CM5 的 completeSingle: false 映射成了它，
 // 那是错的：CM5 那个选项的意思是「只有一个候选时不要自动替换」，弹层仍然高亮第一项、
 // Enter 采纳它；而 CM6 本来就没有单候选自动替换的行为。

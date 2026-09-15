@@ -8,7 +8,7 @@
  * v7 的通配段 `/*` 在 path-to-regexp 6 里是个孤立的 MODIFIER，
  * compile('structure/*') 当场抛 "Unexpected MODIFIER at 10, expected END"。
  * 这个异常是渲染期抛的、被 ErrorBoundary 接住，线上整个组织管理后台变成
- * 「程序错误，请刷新页面重试」—— 而路由匹配差分（tools/verify-router-matching.cjs）
+ * 「程序错误，请刷新页面重试」—— 而路由匹配差分（tools/verify-router-matching.ts）
  * 只验「哪条路由被选中」，根本不碰菜单这一层，所以一点都没拦住。
  *
  * 断言分三层，最关键的是第三层【往返】：

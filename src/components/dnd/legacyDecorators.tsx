@@ -10,7 +10,7 @@ import hoistStatics from 'hoist-non-react-statics';
  * 里，而这两处一拖就会写真实业务数据 —— 生产环境上不允许试拖，等于最需要验证的
  * 改动恰好没法在线上验。把 5 个类组件逐个改写成函数组件，等于在没有验证手段的前提下
  * 重写 5 份交互逻辑。相比之下，兼容层只需正确一次，且能用 react-dnd-test-backend
- * 在离线环境里针对【一份代码】做差分（见 tools/verify-dnd-legacy-decorators.cjs）。
+ * 在离线环境里针对【一份代码】做差分（见 tools/verify-dnd-legacy-decorators.ts）。
  *
  * 语义按 react-dnd v11 的实现逐条对齐，几个容易错的点：
  *

@@ -70,5 +70,18 @@
   // 与 jsconfig.json 原有 exclude 保持一致。
   // src/library 是预打包的压缩产物（applibrary_v2.js 等单行数 MB）。
   // *.spec.ts 交给 tsconfig.tools.json 的零容忍门禁管，理由见那边的注释。
-  "exclude": ["node_modules", "src/library", "src/**/*.spec.ts"]
+  "exclude": [
+    "node_modules",
+    "src/library",
+    "src/**/*.spec.ts",
+    // DevelopWithAI 的 default_* 是【示例源码素材】不是模块：从不被 import，
+    // 由同目录的 gen 读成字符串喂给 AI。它们故意不写 import（只展示组件本体），
+    // 当代码检查必然报「找不到 useState」——那是素材的本意，不是缺陷。
+    "src/**/DevelopWithAI/examples/default_*",
+    // 这两个是【跑在 Node 里的工具脚本】，只是和数据放在一起：gen 生成示例字符串、
+    // Func/test 载入构建产物跑函数测试。它们用 CJS require，顶层 const 在 src 的
+    // ESM 口径下会变成全局声明并与别处撞名（TS2451）。交给 tsconfig.tools.json。
+    "src/**/DevelopWithAI/examples/gen.tsx",
+    "src/**/FunctionEditorDialog/Func/test/index.ts"
+  ]
 }

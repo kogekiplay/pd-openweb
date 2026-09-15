@@ -54,6 +54,9 @@
     // 不需要 src 那套 DOM lib / webpack alias。根 tsconfig 里对应地把它们排除掉，
     // 否则 69 个 spec 的诊断会一次性挤进差分门禁的基线，之后再也分不清来源。
     "src/**/*.spec.ts",
+    // src 里少数「跑在 Node 里的工具脚本」，口径和 spec 一样归这边
+    "src/**/DevelopWithAI/examples/gen.tsx",
+    "src/**/FunctionEditorDialog/Func/test/index.ts",
     // spec 模拟浏览器环境用的全局（window / location / document / md），
     // 有界放宽，理由见该文件头
     "types/spec-globals.d.ts"

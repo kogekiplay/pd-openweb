@@ -396,7 +396,7 @@ const withoutChatPathList = [
  *   - 【i 标志】：v4 的 matchPath 默认 sensitive: false，所以是大小写不敏感的。
  *     列表里有 'workflowEdit' 这种驼峰片段，真实 URL 是全小写的 /workflowedit，
  *     少了 i 就漏判。这条正是差分跑出来才发现的。
- * tools/verify-without-url-predicates.cjs 拿真的 react-router 4 对着 1292 条
+ * tools/verify-without-url-predicates.ts 拿真的 react-router 4 对着 1292 条
  * 真实 URL 语料 + 一批边界用例逐条比过，两个谓词都是 0 差异。改这里之前先跑它。
  */
 const buildWithoutUrlRegExp = list =>

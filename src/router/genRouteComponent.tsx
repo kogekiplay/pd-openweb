@@ -43,7 +43,7 @@ export default () => {
       // 而且它【不抛错、不刷 CPU、不发网络请求】（webpack 的 import 有缓存），
       // 导航还是 startTransition + fallback={null}，所以线上表现是
       // 「地址栏变了、页面纹丝不动」，一条日志都没有。三条带 guard 的路由全中。
-      // 回归测试见 tools/verify-router-client-render.cjs —— 它专门盯工厂调用次数。
+      // 回归测试见 tools/verify-router-client-render.ts —— 它专门盯工厂调用次数。
       const LazyComponent = getComponent(component);
       const Wrapped = guardProps
         ? props => <SegmentPrefixGuard {...props} {...guardProps} component={LazyComponent} />

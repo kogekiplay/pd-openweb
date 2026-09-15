@@ -4,7 +4,7 @@ import type reducer from './reducer';
  * ChildTable 的【局部】 store 状态类型。
  *
  * 本仓不止一个 store —— 给局部 store 套全局 RootState 会凭空造出错误
- * （见 tools/codemod-thunk-params.cjs 的头部警告）。做法与 src/redux/types.ts 一致：
+ * （见 tools/codemod-thunk-params.ts 的头部警告）。做法与 src/redux/types.ts 一致：
  * 从这棵 reducer 自己推，reducer 增删 slice 时这里自动跟着走，不会静默失配。
  *
  * 精度就是 reducer 自己的精度：各 slice 由它的 initialState 字面量推出来，
