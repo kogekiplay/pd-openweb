@@ -336,7 +336,6 @@ function NewRecord(props) {
         <div className="title">{newTitle}</div>
       </HeaderComp>
     ),
-    closeStyle: { marginTop: 5 },
     className: cx('workSheetNewRecord', className, modalClassName),
     wrapClassName: 'workSheetNewRecordWrap withSaveShortcut' + ` createTimestamp-${didMountTimestamp.current}`,
     type: 'fixed',

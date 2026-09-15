@@ -15,12 +15,24 @@
     top: 0;
     inset-inline-end: 0;
     background: transparent !important;
+    /* 让按钮由内容撑开。v6 把它钉成 32×32，而叉的尺寸来自 MdModal 传的 closeSize
+       （默认 40），按钮比图标小一圈。平时看不出来，但 v6 新增了
+       `.ant-modal-close:focus-visible { outline: 3px solid 主色 }` —— 描边画在
+       32×32 的按钮上，和肉眼看到的 40×40 叉对不齐，就成了一个歪掉的方框。
+       v4 没有这条 focus 描边，所以这个问题是 4→6 才出现的。 */
+    width: auto;
+    height: auto;
   }
   .ant-modal-close-x {
     color: var(--color-text-tertiary);
+    /* 用 flex 居中而不是靠 line-height 对齐：叉自带的 line-height 会给这一层
+       撑出额外行距，按钮跟着变高，描边就不是正方形了 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: auto;
     height: auto;
-    line-height: 1em;
+    line-height: 0;
     &:hover {
       .icon {
         color: var(--color-primary) !important;
