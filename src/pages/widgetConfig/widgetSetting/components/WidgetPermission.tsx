@@ -18,7 +18,7 @@ export default ({ from, data, onChange }) => {
             className="customWidgetCheckbox"
             size="small"
             checked={editable === '0'}
-            onClick={checked =>
+            onClick={(checked: boolean) =>
               onChange({
                 fieldPermission: updateConfig({
                   config: fieldPermission,
@@ -47,7 +47,7 @@ export default ({ from, data, onChange }) => {
           className="customWidgetCheckbox"
           size="small"
           checked={visible === '0'}
-          onClick={checked =>
+          onClick={(checked: boolean) =>
             onChange({
               fieldPermission: updateConfig({
                 config: fieldPermission,
@@ -73,7 +73,7 @@ export default ({ from, data, onChange }) => {
             className="customWidgetCheckbox"
             size="small"
             checked={canAdd === '0'}
-            onClick={checked =>
+            onClick={(checked: boolean) =>
               onChange({
                 fieldPermission: updateConfig({
                   config: fieldPermission,

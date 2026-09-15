@@ -16,7 +16,7 @@ import { getAllSourceList, getNodeInfo, getSourceIndex, isHasChange } from '../u
 import emptyImg from './img/empty.png';
 import Table from './Table';
 
-const getNumFetch = async worksheetId => {
+const getNumFetch = async (worksheetId: string) => {
   return sheetAjax.getFilterRowsTotalNum({
     worksheetId,
     status: 1,
@@ -247,7 +247,7 @@ function Preview(props) {
   }, [previewRunning, syncTaskStatus]);
 
   //轮询获取计数，计数>0则获取数据
-  const getRunFetch = async worksheetId => {
+  const getRunFetch = async (worksheetId: string) => {
     if (!worksheetId || cache.current.syncTaskStatus === 'STOP') return;
     if (ajaxPromise.current) ajaxPromise.current.abort();
     // console.log('轮询', moment().format('YYYY/MM/DD HH:mm:ss'));
@@ -492,7 +492,7 @@ function Preview(props) {
     });
   };
 
-  const changePageIndex = index => {
+  const changePageIndex = (index: number) => {
     if (loading) {
       return;
     }

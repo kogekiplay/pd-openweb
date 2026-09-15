@@ -492,7 +492,7 @@ class EditBox extends React.Component<any, any> {
               </span>
             }
             checked={hintType === 0}
-            onClick={checked => {
+            onClick={(checked: boolean) => {
               updateSelectRule('hintType', checked ? 1 : 0);
             }}
           />
@@ -524,7 +524,7 @@ class EditBox extends React.Component<any, any> {
                 </span>
               }
               checked={checkType === 1}
-              onClick={checked => {
+              onClick={(checked: boolean) => {
                 updateSelectRule('checkType', checked ? 0 : 1);
               }}
             />

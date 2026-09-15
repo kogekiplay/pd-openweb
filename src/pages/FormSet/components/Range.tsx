@@ -193,7 +193,7 @@ let Range = class Range extends React.Component<any, any> {
                         className="mTop15 mLeft25 Normal"
                         text={it.name}
                         checked={viewIds.includes(it.viewId)}
-                        onClick={checked => {
+                        onClick={(checked: boolean) => {
                           this.props.changeViewRange({
                             viewIds: checked ? _.pull(viewIds, it.viewId) : (viewIds || []).concat(it.viewId),
                             diaRang: false,

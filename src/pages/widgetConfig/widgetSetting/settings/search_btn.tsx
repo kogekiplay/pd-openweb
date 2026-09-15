@@ -124,7 +124,7 @@ export default function SearchBtn(props) {
             <Checkbox
               size="small"
               checked={searchfirst === '1'}
-              onClick={checked => onChange(handleAdvancedSettingChange(data, { searchfirst: String(+!checked) }))}
+              onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { searchfirst: String(+!checked) }))}
             >
               <span>{_l('在搜索前先进行一次请求')}</span>
             </Checkbox>

@@ -510,7 +510,7 @@ export default class extends Component<any, any> {
           ? {
               autoRotate: displaySetup.fontStyle ? true : false,
               autoHide: true,
-              formatter: name => {
+              formatter: (name: string) => {
                 return xaxes.particleSizeType === 6 && xaxes.showFormat === '0' ? _l('%0时', name) : name;
               },
               style: {

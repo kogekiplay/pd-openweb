@@ -192,7 +192,7 @@ export default class SubProcess extends Component<any, any> {
                         className="InlineFlex TxtTop"
                         text={_l('获取工作表所有记录')}
                         checked={data.executeAll}
-                        onClick={checked => this.updateSource({ executeAll: !checked })}
+                        onClick={(checked: boolean) => this.updateSource({ executeAll: !checked })}
                       />
                     </div>
                     <div style={{ marginLeft: 26 }}>
@@ -288,7 +288,7 @@ export default class SubProcess extends Component<any, any> {
                 className="InlineFlex TxtTop"
                 text={_l('子流程执行完毕后，再开始下一个节点')}
                 checked={data.nextExecute}
-                onClick={checked => this.updateSource({ nextExecute: !checked })}
+                onClick={(checked: boolean) => this.updateSource({ nextExecute: !checked })}
               />
             </div>
             <div className="Font13 textSecondary" style={{ marginLeft: 26 }}>

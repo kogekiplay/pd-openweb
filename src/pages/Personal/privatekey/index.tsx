@@ -101,7 +101,7 @@ export default class PersonalEntrypoint extends Component<any, any> {
     this.reloadLicenseList({ activeProduct, licenseCount: 0, pageIndex: 1 });
   };
 
-  handleChangePage = pageIndex => {
+  handleChangePage = (pageIndex: number) => {
     if (pageIndex === this.state.pageIndex) return;
 
     this.reloadLicenseList({ pageIndex });

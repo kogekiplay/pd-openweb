@@ -688,7 +688,7 @@ export default class PBC extends Component<any, any> {
                 className="bold"
                 text={_l('业务流程执行完毕后，再开始下一个节点')}
                 checked={data.nextExecute}
-                onClick={checked => this.updateSource({ nextExecute: !checked })}
+                onClick={(checked: boolean) => this.updateSource({ nextExecute: !checked })}
               />
             </div>
             <div className="mLeft25 mTop5 textSecondary">
@@ -780,7 +780,7 @@ export default class PBC extends Component<any, any> {
         border
         openSearch
         noData={_l('暂无业务流程，请先在应用里创建')}
-        onChange={appId => {
+        onChange={(appId: string) => {
           if (appId === 'other') {
             selectPBPDialog({
               appId: this.props.relationId,

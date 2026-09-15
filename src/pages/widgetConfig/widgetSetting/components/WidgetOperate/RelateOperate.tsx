@@ -72,7 +72,7 @@ function OperateDialog(props) {
                 size="small"
                 {...(item.disabledKey ? { disabled: getAdvanceSetting(data, [item.disabledKey]) === 0 } : {})}
                 checked={(batchInfo[item.key] || defaultValue) === '1'}
-                onClick={checked => setBatchInfo({ [item.key]: String(+!checked) })}
+                onClick={(checked: boolean) => setBatchInfo({ [item.key]: String(+!checked) })}
               >
                 <span className="textPrimary">{item.text}</span>
               </Checkbox>
@@ -86,7 +86,7 @@ function OperateDialog(props) {
                 size="small"
                 disabled={!isRelateView}
                 checked={batchInfo[item.key] === '1'}
-                onClick={checked => setBatchInfo({ [item.key]: String(+!checked) })}
+                onClick={(checked: boolean) => setBatchInfo({ [item.key]: String(+!checked) })}
               >
                 <span className="textPrimary">{item.text}</span>
               </Checkbox>
@@ -140,7 +140,7 @@ export default function RelateOperate(props) {
           disabled={_.includes([0, 1], enumDefault2) && showtype === '3'} // 下拉框不能取消勾选
           text={_l('允许选择已有记录')}
           checked={_.includes([0, 1], enumDefault2)}
-          onClick={checked => {
+          onClick={(checked: boolean) => {
             // enumDefault2使用两位数代表两个字段的布尔值 所以此处有恶心判断
             if (checked) {
               onChange({
@@ -194,7 +194,7 @@ export default function RelateOperate(props) {
           size="small"
           text={_l('允许新增记录')}
           checked={_.includes([0, 10], enumDefault2)}
-          onClick={checked => {
+          onClick={(checked: boolean) => {
             // enumDefault2使用两位数代表两个字段的布尔值 所以此处有恶心判断
             if (checked) {
               onChange({
@@ -216,7 +216,7 @@ export default function RelateOperate(props) {
             text={_l('允许导入新增')}
             checked={allowimport === '1'}
             disabled={!excelImportSwitch && allowimport !== '1'}
-            onClick={checked => {
+            onClick={(checked: boolean) => {
               onChange(handleAdvancedSettingChange(data, { allowimport: checked ? '0' : '1' }));
             }}
           />
@@ -228,7 +228,7 @@ export default function RelateOperate(props) {
             size="small"
             text={_l('允许取消关联')}
             checked={allowcancel !== '0'}
-            onClick={checked =>
+            onClick={(checked: boolean) =>
               onChange(
                 handleAdvancedSettingChange(data, {
                   allowcancel: checked ? '0' : '1',
@@ -245,7 +245,7 @@ export default function RelateOperate(props) {
             size="small"
             text={_l('允许删除记录')}
             checked={allowdelete !== '0'}
-            onClick={checked =>
+            onClick={(checked: boolean) =>
               onChange(
                 handleAdvancedSettingChange(data, {
                   allowdelete: String(+!checked),
@@ -261,7 +261,7 @@ export default function RelateOperate(props) {
           size="small"
           text={_l('允许打开记录')}
           checked={+allowlink}
-          onClick={checked =>
+          onClick={(checked: boolean) =>
             onChange(handleAdvancedSettingChange(data, { allowlink: +!checked, openview: checked ? '' : openview }))
           }
         />
@@ -299,7 +299,7 @@ export default function RelateOperate(props) {
             <Checkbox
               size="small"
               checked={allowexport === '1'}
-              onClick={checked =>
+              onClick={(checked: boolean) =>
                 onChange(
                   handleAdvancedSettingChange(data, {
                     allowexport: String(+!checked),
@@ -319,7 +319,7 @@ export default function RelateOperate(props) {
               size="small"
               text={_l('允许批量操作')}
               checked={allowbatch === '1'}
-              onClick={checked => {
+              onClick={(checked: boolean) => {
                 if (checked) {
                   onChange(
                     handleAdvancedSettingChange(data, {
@@ -357,7 +357,7 @@ export default function RelateOperate(props) {
             <Checkbox
               size="small"
               checked={showquick === '1'}
-              onClick={checked => onChange(handleAdvancedSettingChange(data, { showquick: String(+!checked) }))}
+              onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { showquick: String(+!checked) }))}
             >
               <span style={{ marginRight: '4px' }}>{_l('显示记录快捷方式')}</span>
               <Tooltip placement="bottom" title={_l('点击后可以在下拉菜单中进行记录的其他操作')}>

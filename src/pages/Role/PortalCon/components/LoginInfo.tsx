@@ -220,7 +220,7 @@ function LoginInfo(props) {
           loading={loading}
           pageIndex={info.pageIndex}
           total={count}
-          changePage={pageIndex => {
+          changePage={(pageIndex: number) => {
             getList({ pageIndex });
           }}
         />

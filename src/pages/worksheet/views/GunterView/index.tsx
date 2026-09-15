@@ -149,7 +149,7 @@ let Gunter = class Gunter extends Component<any, any> {
     }
   }
 
-  handleInitGroupingVisible = viewId => {
+  handleInitGroupingVisible = (viewId: string) => {
     const gunterGroupingVisible = localStorage.getItem(`gunterGroupingVisible-${viewId}`) === 'false' ? false : true;
     this.props.updateGroupingVisible(isGunterExport ? true : gunterGroupingVisible);
   };

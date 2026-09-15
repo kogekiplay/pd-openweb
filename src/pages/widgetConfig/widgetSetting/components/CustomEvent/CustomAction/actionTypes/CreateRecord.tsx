@@ -50,7 +50,7 @@ export default function CreateRecord(props) {
     });
   }, [advancedSetting.sheetId]);
 
-  const getDetail = controlId => {
+  const getDetail = (controlId: string) => {
     const currentControl = _.find(controls, s => s.controlId === controlId) || {};
     const enumType = enumWidgetType[currentControl.type];
     const { icon } = DEFAULT_CONFIG[enumType] || {};

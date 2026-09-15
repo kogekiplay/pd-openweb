@@ -413,7 +413,7 @@ export default ({ processId, nodeId, codeType = 1, onSave = () => {}, onClose = 
                                   className="InlineBlock"
                                   text={_l('使用时清空现有input参数与代码块')}
                                   checked={clearParams}
-                                  onClick={checked => setClearParams(!checked)}
+                                  onClick={(checked: boolean) => setClearParams(!checked)}
                                 />
                                 <div className="flex" />
                                 <UseBtn

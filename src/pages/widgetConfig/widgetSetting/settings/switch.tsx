@@ -41,7 +41,7 @@ export default function Switch({ data, onChange }) {
                 <Checkbox
                   size="small"
                   checked={itemnames.length > 0}
-                  onClick={checked => {
+                  onClick={(checked: boolean) => {
                     onChange(
                       handleAdvancedSettingChange(data, {
                         itemnames: checked ? '' : JSON.stringify(DEFAULT_TEXT[showtype]),

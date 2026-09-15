@@ -28,7 +28,7 @@ const getGroupName = (newName, oldName, groupControl = {}) => {
   return newName;
 };
 
-export const fetch = index => {
+export const fetch = (index: number) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { base, filters, galleryview, quickFilter, navGroupFilters, controls, views = [] } = getState().sheet;
     const { appId, viewId, worksheetId, chartId, maxCount } = base;
@@ -149,7 +149,7 @@ export const fetchMoreByGroup = (index: number, kanbanKey) => {
   };
 };
 
-export const changeIndex = index => {
+export const changeIndex = (index: number) => {
   return dispatch => {
     dispatch({ type: 'CHANGE_GALLERY_VIEW_INDEX', pageIndex: index });
   };

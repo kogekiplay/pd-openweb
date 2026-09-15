@@ -91,7 +91,7 @@ export const getDefaultIsUnfold = (value = true, widgetStyle = {}, sheetSectionI
 
 function FormSection(props, ref) {
   const { tabControls = [], widgetStyle = {}, onClick, onUpdateFormSectionWidth = () => {}, from } = props;
-  const [activeControlId, setActiveId] = useState();
+  const [activeControlId, setActiveId] = useState<string | undefined>();
   const localValue = getSheetSectionIsUnfold();
   const showIcon = widgetStyle.showicon || '1';
 
@@ -125,7 +125,7 @@ function FormSection(props, ref) {
     widgetStyle,
     isFixedLeft: widgetStyle.tabposition === '3',
     showTip: !isUnfold,
-    onClick: controlId => {
+    onClick: (controlId: string) => {
       onClick(controlId);
       setActiveId(controlId);
     },

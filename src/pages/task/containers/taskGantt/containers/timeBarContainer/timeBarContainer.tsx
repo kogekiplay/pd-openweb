@@ -248,7 +248,7 @@ class TimeBarContainer extends Component<any, any> {
   /**
    * 打开任务详情
    */
-  openTaskDetail = taskId => {
+  openTaskDetail = (taskId: string) => {
     this.setState({ openTaskDetail: true, taskId });
   };
 

@@ -126,7 +126,7 @@ function ManageOftenUserDialog(props) {
     });
   };
 
-  const onRemove = accountId => setList(list.filter(l => l.accountId !== accountId));
+  const onRemove = (accountId: string) => setList(list.filter(l => l.accountId !== accountId));
 
   const onSave = () => {
     Promise.all([

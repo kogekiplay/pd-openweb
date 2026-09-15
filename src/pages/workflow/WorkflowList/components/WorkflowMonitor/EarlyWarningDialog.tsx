@@ -93,7 +93,7 @@ class EarlyWarningDialog extends Component<any, any> {
       },
     });
   };
-  deleteNotifier = accountId => {
+  deleteNotifier = (accountId: string) => {
     const { notifiers } = this.state;
     this.setState({ notifiers: notifiers.filter(v => v.accountId !== accountId) });
   };

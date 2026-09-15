@@ -24,7 +24,7 @@ export default function useButtonStatusOfRows(worksheetId: string, rowIds = [], 
       .then(data => {
         const newStatus = {};
         data.forEach(item => {
-          item.rowIds.forEach(rowId => {
+          item.rowIds.forEach((rowId: string) => {
             newStatus[`${rowId}-${item.btnId}`] = true;
           });
         });

@@ -100,7 +100,7 @@ export const SUBLIST_PERMISSION_DISPLAY = [
 ];
 
 //获取规则名字段长度
-export const getNameWidth = name => {
+export const getNameWidth = (name: string) => {
   let nameNode = $('<span />')
     .text(name || '')
     .css({

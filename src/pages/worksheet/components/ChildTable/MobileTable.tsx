@@ -142,7 +142,7 @@ export default function MobileTable(props) {
   let timer: NodeJS.Timeout | null = null;
 
   // 删除记录
-  const deleteRecord = rowid => {
+  const deleteRecord = (rowid: string) => {
     deleteConformAction = ActionSheet.show({
       popupClassName: 'md-adm-actionSheet',
       actions: [],

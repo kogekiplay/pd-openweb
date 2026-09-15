@@ -103,7 +103,7 @@ const Calendar = memo(
       setState({ showTodayBtn });
     };
 
-    const setCalendarTitle = title => {
+    const setCalendarTitle = (title: string) => {
       setState({ calendarTitle: title });
     };
 
@@ -191,7 +191,7 @@ const Calendar = memo(
       refreshCalendarViewData();
     };
 
-    const recordDeleteCallback = rowid => {
+    const recordDeleteCallback = (rowid: string) => {
       if (isNotScheduled) {
         deleteCalendarNotScheduled(rowid);
         return;

@@ -5,7 +5,7 @@ import type { StructureDispatch, StructureGetState } from '../types';
  * 搜索
  * @param keywords
  */
-export const fetchSearchResult = keywords => (dispatch: StructureDispatch, getState: StructureGetState) => {
+export const fetchSearchResult = (keywords: string) => (dispatch: StructureDispatch, getState: StructureGetState) => {
   const { showDisabledDepartment } = getState().entities;
   const { projectId } = getState().current;
   dispatch({ type: 'UPDATE_IS_SEARCHING', isSearching: true });

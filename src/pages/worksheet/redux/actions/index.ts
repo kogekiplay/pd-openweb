@@ -205,10 +205,10 @@ export const updateWorksheetSomeControls = controls => ({
   controls,
 });
 
-export const updateIsCharge = isCharge => ({ type: 'WORKSHEET_UPDATE_IS_CHARGE', isCharge });
+export const updateIsCharge = (isCharge: boolean) => ({ type: 'WORKSHEET_UPDATE_IS_CHARGE', isCharge });
 export const updateAppPkgData = appPkgData => ({ type: 'WORKSHEET_UPDATE_APPPKGDATA', appPkgData });
 
-export const updateWorksheetLoading = loading => ({ type: 'WORKSHEET_UPDATE_LOADING', loading });
+export const updateWorksheetLoading = (loading: boolean) => ({ type: 'WORKSHEET_UPDATE_LOADING', loading });
 
 let worksheetRequest: ApiResult | null = null;
 

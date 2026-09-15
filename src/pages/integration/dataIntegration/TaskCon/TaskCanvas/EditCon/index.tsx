@@ -567,7 +567,7 @@ export default class EditorCon extends Component<any, any> {
                           <EditFeildsName
                             title={showMDCell ? o.controlName : o}
                             // canEdit
-                            onChangeName={name => {
+                            onChangeName={(name: string) => {
                               this.setState({
                                 fieldNames: fieldNames.map(it => {
                                   if (it === o) {

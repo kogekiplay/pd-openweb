@@ -44,7 +44,7 @@ export default function SubListOperate(props) {
           size="small"
           text={_l('允许新增明细')}
           checked={allowadd === '1'}
-          onClick={checked => {
+          onClick={(checked: boolean) => {
             if (checked) {
               onChange(
                 handleAdvancedSettingChange(data, {
@@ -70,7 +70,7 @@ export default function SubListOperate(props) {
               size="small"
               checked={allowsingle === '1'}
               text={_l('单行新增')}
-              onClick={checked => {
+              onClick={(checked: boolean) => {
                 onChange(
                   handleAdvancedSettingChange(data, {
                     allowsingle: checked ? '0' : '1',
@@ -84,7 +84,7 @@ export default function SubListOperate(props) {
               size="small"
               checked={visible}
               text={_l('选择关联记录字段新增')}
-              onClick={checked => {
+              onClick={(checked: boolean) => {
                 setVisible(!checked);
                 if (checked) {
                   onChange(
@@ -128,7 +128,7 @@ export default function SubListOperate(props) {
               size="small"
               checked={allowimport === '1'}
               text={_l('导入新增')}
-              onClick={checked => onChange(handleAdvancedSettingChange(data, { allowimport: checked ? '0' : '1' }))}
+              onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { allowimport: checked ? '0' : '1' }))}
             />
           </div>
           <div className="labelWrap">
@@ -136,7 +136,7 @@ export default function SubListOperate(props) {
               size="small"
               checked={allowcopy === '1'}
               text={_l('复制')}
-              onClick={checked => onChange(handleAdvancedSettingChange(data, { allowcopy: checked ? '0' : '1' }))}
+              onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { allowcopy: checked ? '0' : '1' }))}
             />
           </div>
         </div>
@@ -146,7 +146,7 @@ export default function SubListOperate(props) {
           size="small"
           text={_l('可编辑已有明细')}
           checked={allowedit === '1'}
-          onClick={checked => onChange(handleAdvancedSettingChange(data, { allowedit: checked ? '0' : '1' }))}
+          onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { allowedit: checked ? '0' : '1' }))}
         />
       </div>
       <div className="labelWrap">
@@ -154,7 +154,7 @@ export default function SubListOperate(props) {
           size="small"
           text={_l('可删除已有明细')}
           checked={allowcancel === '1'}
-          onClick={checked => onChange(handleAdvancedSettingChange(data, { allowcancel: checked ? '0' : '1' }))}
+          onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { allowcancel: checked ? '0' : '1' }))}
         />
       </div>
       <SettingItem>
@@ -164,7 +164,7 @@ export default function SubListOperate(props) {
             size="small"
             checked={allowlink === '1'}
             text={_l('允许弹层打开')}
-            onClick={checked => onChange(handleAdvancedSettingChange(data, { allowlink: checked ? '0' : '1' }))}
+            onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { allowlink: checked ? '0' : '1' }))}
           />
         </div>
         <div className="labelWrap">
@@ -172,7 +172,7 @@ export default function SubListOperate(props) {
             size="small"
             checked={allowbatch === '1'}
             text={_l('允许批量操作')}
-            onClick={checked => onChange(handleAdvancedSettingChange(data, { allowbatch: checked ? '0' : '1' }))}
+            onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { allowbatch: checked ? '0' : '1' }))}
           />
         </div>
         <div className="labelWrap">
@@ -180,7 +180,7 @@ export default function SubListOperate(props) {
             size="small"
             checked={allowexport === '1'}
             text={_l('允许导出')}
-            onClick={checked => onChange(handleAdvancedSettingChange(data, { allowexport: checked ? '0' : '1' }))}
+            onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { allowexport: checked ? '0' : '1' }))}
           />
         </div>
       </SettingItem>

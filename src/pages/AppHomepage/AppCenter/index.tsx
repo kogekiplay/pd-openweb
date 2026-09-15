@@ -129,7 +129,7 @@ function AppCenter(props) {
       getMyPermissions(project.projectId, false).then(permissionIds => setMyPermissions(permissionIds));
   }
 
-  const loadPlatformSetting = projectId => {
+  const loadPlatformSetting = (projectId: string) => {
     if (projectId === 'external') {
       setPlatformSetting({});
       setIsLoading(false);

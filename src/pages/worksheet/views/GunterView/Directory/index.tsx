@@ -93,7 +93,7 @@ let GunterDirectory = class GunterDirectory extends Component<any, any> {
       dragValue: startDragValue,
     });
 
-    const setColumnWidth = width => {
+    const setColumnWidth = (width: number) => {
       const { widthConfig } = this.state;
       const data = { ...widthConfig, [index]: width };
       this.setState(

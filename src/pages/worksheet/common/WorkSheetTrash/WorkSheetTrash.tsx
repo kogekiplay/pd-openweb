@@ -290,7 +290,7 @@ export default function WorkSheetTrash(props) {
                       <Checkbox
                         defaultChecked={!!needRestoreRelation.current}
                         text={_l('恢复记录同时恢复关联关系')}
-                        onClick={checked => {
+                        onClick={(checked: boolean) => {
                           needRestoreRelation.current = checked;
                         }}
                       />
@@ -381,7 +381,7 @@ export default function WorkSheetTrash(props) {
             onCancel={onCancel}
             loadRows={loadRows}
             onClear={() => actions.clear({ worksheetId, appId })}
-            onSearch={keywords => loadRows({ pageIndex: 1, searchText: keywords })}
+            onSearch={(keywords: string) => loadRows({ pageIndex: 1, searchText: keywords })}
             onReload={() => loadRows({ pageIndex: 1, searchText: '' })}
             changePageSize={newPageSize => loadRows({ pageSize: newPageSize, pageIndex: 1 })}
             changePageIndex={newPageIndex => loadRows({ pageIndex: newPageIndex })}
@@ -467,7 +467,7 @@ export default function WorkSheetTrash(props) {
                         });
                         setIsAll(false);
                       } else {
-                        newSelected.forEach(rowId => {
+                        newSelected.forEach((rowId: string) => {
                           const row = _.find(records, trashRow => trashRow.rowid === rowId);
 
                           if (row && (row.allowedit || row.allowEdit)) {

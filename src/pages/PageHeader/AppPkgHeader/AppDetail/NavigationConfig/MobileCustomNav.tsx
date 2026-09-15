@@ -75,7 +75,7 @@ export default function MobileCustomNav(props) {
           disabled={disabled}
           size="small"
           checked={checked}
-          onClick={checked => {
+          onClick={(checked: boolean) => {
             const selectIds = checked
               ? _.filter(appNavItemIds, v => v !== item.workSheetId)
               : appNavItemIds.concat(item.workSheetId);

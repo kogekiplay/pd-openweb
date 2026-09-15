@@ -191,7 +191,7 @@ export default function ChartColorSetting(props) {
           size="small"
           text={null}
           checked={selected}
-          onClick={checked => handleSelect(!checked)}
+          onClick={(checked: boolean) => handleSelect(!checked)}
         />
       )}
       <div className="titleWrap" onClick={openDialog}>

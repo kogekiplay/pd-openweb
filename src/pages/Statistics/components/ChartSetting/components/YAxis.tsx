@@ -278,10 +278,10 @@ export default class YAxis extends Component<any, any> {
       yaxisList: newYaxisList,
     });
   };
-  handleChangeControlId = controlId => {
+  handleChangeControlId = (controlId: string) => {
     this.setState({ currentControlId: controlId });
   };
-  handleChangeRename = name => {
+  handleChangeRename = (name: string) => {
     const { currentControlId } = this.state;
     const { yaxisList, onChangeCurrentReport } = this.props;
     const newYaxisList = yaxisList.map(item => {

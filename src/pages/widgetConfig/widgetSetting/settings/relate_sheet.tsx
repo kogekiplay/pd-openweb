@@ -665,7 +665,7 @@ export default function RelateSheet(props) {
                 <Switch
                   size="small"
                   checked={allowdrag === '1'}
-                  onClick={checked => onChange(handleAdvancedSettingChange(data, { allowdrag: String(+!checked) }))}
+                  onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { allowdrag: String(+!checked) }))}
                 />
               </span>
             )}

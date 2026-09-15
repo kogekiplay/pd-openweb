@@ -634,7 +634,7 @@ function PluginConfig(props) {
                       value={detailData.name}
                       placeholder={_l('添加插件名称')}
                       maxLength={20}
-                      onChange={name => setDetailData({ ...detailData, name })}
+                      onChange={(name: string) => setDetailData({ ...detailData, name })}
                       onBlur={e => {
                         const updateObj = { name: !e.target.value.trim() ? _l('未命名插件') : e.target.value.trim() };
 

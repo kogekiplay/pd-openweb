@@ -221,7 +221,7 @@ export const addRow = (row, insertRowId) => (dispatch: ChildTableDispatch, getSt
   dispatch(updatePagination({ count: _.get(getState(), 'pagination.count') + 1 }));
 };
 
-export const deleteRow = rowid => (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
+export const deleteRow = (rowid: string) => (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
   const { cellErrors } = getState();
   dispatch({ type: 'UPDATE_CELL_ERRORS', value: _.omitBy(cellErrors, (value, key) => key.startsWith(`${rowid}-`)) });
   // 先减 realCount，再 DELETE_ROW（见 addRow 注释）
@@ -235,7 +235,7 @@ export const deleteRows =
   (rowIds, { useUserPermission } = {}) =>
   (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
     const { rows, cellErrors } = getState();
-    const filteredRowIds = rowIds.filter(rowId => {
+    const filteredRowIds = rowIds.filter((rowId: string) => {
       const row = find(rows, r => r.rowid === rowId);
       return row && (useUserPermission ? row.allowdelete : true);
     });
@@ -246,7 +246,7 @@ export const deleteRows =
 
     dispatch({
       type: 'UPDATE_CELL_ERRORS',
-      value: _.omitBy(cellErrors, (value, key) => filteredRowIds.some(rowId => key.startsWith(`${rowId}-`))),
+      value: _.omitBy(cellErrors, (value, key) => filteredRowIds.some((rowId: string) => key.startsWith(`${rowId}-`))),
     });
     // 先减 realCount，再 DELETE_ROWS（见 addRow 注释）：否则批量删空筛选态时，
     // DELETE_ROWS 同步触发的实时校验读到的还是旧 realCount，必填判为非空、保存不拦。

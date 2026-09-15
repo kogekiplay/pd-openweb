@@ -33,7 +33,7 @@ export default ({ projectId, processId, relationId, selectNodeId, data, text, mi
         data={UNIT_List}
         value={data.unit}
         border
-        onChange={unit => {
+        onChange={(unit: string) => {
           onChange(Object.assign({}, data, { unit }));
         }}
       />

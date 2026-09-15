@@ -100,7 +100,7 @@ export default function WeChatServiceAccount(props) {
       projectId,
       weChatServiceAccounts,
       appId: selectedServiceAppId,
-      onOk: appId => {
+      onOk: (appId: string) => {
         setSelectedServiceAppId(appId);
         updateWeChatServiceInfo({
           weChatServiceAccounts,

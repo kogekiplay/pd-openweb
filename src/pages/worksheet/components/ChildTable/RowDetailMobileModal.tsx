@@ -47,7 +47,7 @@ export default function RowDetailModal(props) {
   };
 
   // 删除记录
-  const deleteRecord = rowid => {
+  const deleteRecord = (rowid: string) => {
     deleteConformAction = ActionSheet.show({
       popupClassName: 'md-adm-actionSheet',
       actions: [],

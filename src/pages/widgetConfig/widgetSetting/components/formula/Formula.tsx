@@ -368,7 +368,7 @@ export default class Formula extends React.Component<any, any> {
             size={fromAggregation ? 'default' : 'small'}
             checked={nullzero === '1'}
             text={_l('参与计算的字段值为空时，视为 0')}
-            onClick={checked => {
+            onClick={(checked: boolean) => {
               onChange(
                 handleAdvancedSettingChange(data, {
                   nullzero: checked ? '0' : '1',

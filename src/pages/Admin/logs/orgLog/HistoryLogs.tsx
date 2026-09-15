@@ -56,7 +56,7 @@ export default class HistoryLogs extends React.Component<any, any> {
             total={allCount}
             pageIndex={pageIndex}
             pageSize={pageSize}
-            onChange={pageIndex =>
+            onChange={(pageIndex: number) =>
               this.setState({ pageIndex }, () => this.props.fetchHistoryLogs({ pageIndex, pageSize }))
             }
           />

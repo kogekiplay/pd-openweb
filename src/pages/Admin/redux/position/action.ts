@@ -4,7 +4,7 @@ import type { AppDispatch, GetState } from 'src/redux/types';
 
 const PAGE_SIZE = 50;
 
-export const updateProjectId = projectId => dispatch => {
+export const updateProjectId = (projectId: string) => dispatch => {
   dispatch({ type: 'CHANGE_PROJECT_ID', projectId });
 };
 
@@ -35,7 +35,7 @@ export const getPositionList = () => (dispatch: AppDispatch, getState: GetState)
     });
 };
 
-export const updateIsLoading = loading => dispatch => {
+export const updateIsLoading = (loading: boolean) => dispatch => {
   dispatch({
     type: 'UPDATE_IS_LOADING',
     isLoading: loading,

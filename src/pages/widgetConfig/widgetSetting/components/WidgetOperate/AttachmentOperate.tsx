@@ -23,7 +23,7 @@ export default function AttachmentOperate(props) {
           size="small"
           text={_l('允许上传')}
           checked={allowupload === '1'}
-          onClick={checked => onChange(handleAdvancedSettingChange(data, { allowupload: String(+!checked) }))}
+          onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { allowupload: String(+!checked) }))}
         />
       </div>
       {allowupload === '1' && (
@@ -32,7 +32,7 @@ export default function AttachmentOperate(props) {
             size="small"
             text={_l('PC端拍摄照片')}
             checked={allowcamera === '1'}
-            onClick={checked => onChange(handleAdvancedSettingChange(data, { allowcamera: String(+!checked) }))}
+            onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { allowcamera: String(+!checked) }))}
           />
         </div>
       )}
@@ -41,7 +41,7 @@ export default function AttachmentOperate(props) {
           size="small"
           text={_l('允许从移动设备扫码上传')}
           checked={allowappupload !== '0'}
-          onClick={checked => onChange(handleAdvancedSettingChange(data, { allowappupload: String(+!checked) }))}
+          onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { allowappupload: String(+!checked) }))}
         />
       </div>
       <div className="labelWrap">
@@ -49,7 +49,7 @@ export default function AttachmentOperate(props) {
           size="small"
           text={_l('允许删除')}
           checked={allowdelete === '1'}
-          onClick={checked => onChange(handleAdvancedSettingChange(data, { allowdelete: String(+!checked) }))}
+          onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { allowdelete: String(+!checked) }))}
         />
       </div>
       <div className="labelWrap">
@@ -57,7 +57,7 @@ export default function AttachmentOperate(props) {
           size="small"
           text={_l('允许下载')}
           checked={isDownload}
-          onClick={checked =>
+          onClick={(checked: boolean) =>
             onChange(
               handleAdvancedSettingChange(data, { allowdownload: String(+!checked), alldownload: String(+!checked) }),
             )
@@ -72,7 +72,7 @@ export default function AttachmentOperate(props) {
               size="small"
               text={_l('单个文件')}
               checked={allowdownload === '1'}
-              onClick={checked => onChange(handleAdvancedSettingChange(data, { allowdownload: String(+!checked) }))}
+              onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { allowdownload: String(+!checked) }))}
             />
           </div>
           <div className="labelWrap">
@@ -80,7 +80,7 @@ export default function AttachmentOperate(props) {
               size="small"
               text={_l('全部下载')}
               checked={alldownload === '1'}
-              onClick={checked => onChange(handleAdvancedSettingChange(data, { alldownload: String(+!checked) }))}
+              onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { alldownload: String(+!checked) }))}
             />
           </div>
         </div>

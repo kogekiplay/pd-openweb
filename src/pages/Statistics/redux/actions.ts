@@ -487,7 +487,7 @@ export const requestOriginalData = data => {
 let worksheetInfoRequest: ApiResult | null = null;
 let worksheetFilterByIdRequest = null;
 
-export const getWorksheetInfo = worksheetId => {
+export const getWorksheetInfo = (worksheetId: string) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { currentReport } = getState().statistics;
     const { filter } = currentReport;
@@ -1163,7 +1163,7 @@ export const addTargetValueAxis = (index: number, control) => {
   };
 };
 
-export const removeTargetValueAxis = index => {
+export const removeTargetValueAxis = (index: number) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { currentReport } = getState().statistics;
     const { targetList = [] } = currentReport.config || {};

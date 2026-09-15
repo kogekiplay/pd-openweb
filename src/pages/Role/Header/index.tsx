@@ -196,7 +196,7 @@ export default function RoleHeader(props) {
                 <RoleDebugSwitch
                   checked={roleDebug}
                   size="small"
-                  onClick={checked => {
+                  onClick={(checked: boolean) => {
                     AppManagementAjax.updateAppDebugModel({
                       appId,
                       isDebug: !checked,

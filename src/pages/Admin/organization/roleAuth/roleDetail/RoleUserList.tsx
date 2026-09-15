@@ -242,7 +242,7 @@ export default function RoleUserList(props) {
                 total={fetchState.totalCount}
                 pageIndex={fetchState.pageIndex}
                 pageSize={50}
-                onChange={pageIndex => setFetchState({ loading: true, pageIndex })}
+                onChange={(pageIndex: number) => setFetchState({ loading: true, pageIndex })}
               />
             )}
           </React.Fragment>

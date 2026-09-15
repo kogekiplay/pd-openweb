@@ -246,7 +246,7 @@ export default class WriteFields extends Component<any, any> {
                   data.filter(item => item.property === 4).length
                 }
                 checked={!data.filter(item => item.property === 4).length}
-                onClick={checked => this.updateAllSettings({ key: 'LOOK', checked: !checked })}
+                onClick={(checked: boolean) => this.updateAllSettings({ key: 'LOOK', checked: !checked })}
               />
             )}
           </div>
@@ -266,7 +266,7 @@ export default class WriteFields extends Component<any, any> {
                   data.filter(item => item.property === 2 || item.property === 3).length ===
                   data.filter(item => !this.isDisabled(item)).length
                 }
-                onClick={checked => this.updateAllSettings({ key: 'EDIT', checked: !checked })}
+                onClick={(checked: boolean) => this.updateAllSettings({ key: 'EDIT', checked: !checked })}
               />
             )}
           </div>
@@ -286,7 +286,7 @@ export default class WriteFields extends Component<any, any> {
                   data.filter(item => item.property === 3).length ===
                   data.filter(item => !this.isDisabled(item, 'REQUIRED')).length
                 }
-                onClick={checked => this.updateAllSettings({ key: 'REQUIRED', checked: !checked })}
+                onClick={(checked: boolean) => this.updateAllSettings({ key: 'REQUIRED', checked: !checked })}
               />
             )}
           </div>
@@ -301,7 +301,7 @@ export default class WriteFields extends Component<any, any> {
                     data.filter(item => item.datamask === '1').length
                 }
                 checked={data.filter(item => item.datamask === '1' && item.isdecrypt === '1').length}
-                onClick={checked =>
+                onClick={(checked: boolean) =>
                   this.updateAllSettings({
                     key: 'DECRYPT',
                     checked:
@@ -401,7 +401,7 @@ export default class WriteFields extends Component<any, any> {
                         data.filter(o => o.sectionId === item.id && o.property !== 4).length
                     }
                     checked={item.property !== 4}
-                    onClick={checked =>
+                    onClick={(checked: boolean) =>
                       this.onChange(
                         item,
                         checked &&
@@ -421,7 +421,7 @@ export default class WriteFields extends Component<any, any> {
                 {!this.isDisabled(item) && (!isChildTable || !item.detailTable) && !_.includes(hideTypes, 2) && (
                   <Checkbox
                     checked={item.property === 2 || item.property === 3}
-                    onClick={checked => this.onChange(item, checked ? 1 : 2)}
+                    onClick={(checked: boolean) => this.onChange(item, checked ? 1 : 2)}
                   />
                 )}
               </div>
@@ -429,7 +429,7 @@ export default class WriteFields extends Component<any, any> {
                 {!this.isDisabled(item, 'REQUIRED') &&
                   (!isChildTable || !item.detailTable) &&
                   !_.includes(hideTypes, 3) && (
-                    <Checkbox checked={item.property === 3} onClick={checked => this.onChange(item, checked ? 2 : 3)} />
+                    <Checkbox checked={item.property === 3} onClick={(checked: boolean) => this.onChange(item, checked ? 2 : 3)} />
                   )}
               </div>
               <div className="mLeft16">
@@ -437,7 +437,7 @@ export default class WriteFields extends Component<any, any> {
                   <Checkbox
                     checked={item.isdecrypt === '1'}
                     disabled={_.includes([2, 3], item.property)}
-                    onClick={checked => this.onChange(item, checked ? '0' : '1', 'isdecrypt')}
+                    onClick={(checked: boolean) => this.onChange(item, checked ? '0' : '1', 'isdecrypt')}
                   />
                 )}
               </div>
@@ -446,7 +446,7 @@ export default class WriteFields extends Component<any, any> {
                   {!_.includes([14, 21, 22, 40, 41, 42, 43, 45, 47, 49, 51, 52, 54, 10010], item.type) && (
                     <Checkbox
                       checked={item.showCard}
-                      onClick={checked => this.onChangeCard(item.id, checked ? 0 : 1)}
+                      onClick={(checked: boolean) => this.onChangeCard(item.id, checked ? 0 : 1)}
                     />
                   )}
                 </div>
@@ -491,7 +491,7 @@ export default class WriteFields extends Component<any, any> {
                   className="InlineBlock Font12 TxtMiddle"
                   text={_l('新增字段默认可查看')}
                   checked={!addNotAllowView}
-                  onClick={checked => updateSource({ addNotAllowView: checked })}
+                  onClick={(checked: boolean) => updateSource({ addNotAllowView: checked })}
                 />
               </div>
             </Tooltip>
@@ -551,7 +551,7 @@ export default class WriteFields extends Component<any, any> {
                             className="mTop10 flex"
                             text={item.text}
                             checked={selectItem[item.key] === '1'}
-                            onClick={checked =>
+                            onClick={(checked: boolean) =>
                               this.setState({
                                 selectItem: Object.assign({}, selectItem, { [item.key]: !checked ? '1' : '0' }),
                               })

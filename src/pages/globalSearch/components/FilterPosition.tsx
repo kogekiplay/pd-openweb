@@ -170,7 +170,7 @@ export default function FilterPosition(props) {
           <OrgSelect
             currentProjectId={dialogProjectId || getCurrentProjectId()}
             needAll={false}
-            onChange={projectId => setDialogProjectId(projectId)}
+            onChange={(projectId: string) => setDialogProjectId(projectId)}
             filterFucntion={l =>
               getFeatureStatus(l.projectId, VersionProductType.globalSearch) === '1' && l.licenseType !== 2
             }

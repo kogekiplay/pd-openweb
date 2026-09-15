@@ -122,7 +122,7 @@ export default function DebugEnv(props) {
                 onGetAppList();
               }
             }}
-            onChange={appId => onChangeApp({ ...item, appId, worksheetId: null }, index)}
+            onChange={(appId: string) => onChangeApp({ ...item, appId, worksheetId: null }, index)}
           />
         ) : (
           <Tooltip placement="topLeft" title={item.appName || item.appId}>
@@ -143,7 +143,7 @@ export default function DebugEnv(props) {
             placeholder={_l('请选择工作表')}
             data={worksheetList[item.appId] || []}
             value={item.worksheetId}
-            onChange={worksheetId => updateDebugEnv({ ...item, worksheetId }, index)}
+            onChange={(worksheetId: string) => updateDebugEnv({ ...item, worksheetId }, index)}
           />
         ) : (
           <div className={cx('overflow_ellipsis', { isDel: !item.worksheetName })} title={item.worksheetName}>

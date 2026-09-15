@@ -32,7 +32,7 @@ export default function SetValue(props) {
     return _.includes(HAS_DYNAMIC_TYPE, i.type) && !_.find(actionItems, a => a.controlId === i.controlId);
   });
 
-  const getDetail = controlId => {
+  const getDetail = (controlId: string) => {
     const currentControl = _.find(allControls, s => s.controlId === controlId) || {};
     const enumType = enumWidgetType[currentControl.type];
     const { icon } = DEFAULT_CONFIG[enumType] || {};

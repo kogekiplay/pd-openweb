@@ -102,7 +102,7 @@ function FormatWrap(props) {
             <Checkbox
               size="small"
               checked={_.get(items[num], 'controlSetting.advancedSetting.thousandth') !== '1'}
-              onClick={checked => {
+              onClick={(checked: boolean) => {
                 setState({
                   items: items.map((it, i) => {
                     if (i === num) {
@@ -125,7 +125,7 @@ function FormatWrap(props) {
             <Checkbox
               size="small"
               checked={_.get(items[num], 'controlSetting.advancedSetting.numshow') === '1'}
-              onClick={checked => {
+              onClick={(checked: boolean) => {
                 setState({
                   items: items.map((it, i) => {
                     if (i === num) {
@@ -191,7 +191,7 @@ function FormatWrap(props) {
                 size="small"
                 className="mTop8"
                 checked={_.get(items[num], 'controlSetting.advancedSetting.dotformat') === '1'}
-                onClick={checked => {
+                onClick={(checked: boolean) => {
                   onChangeItems(
                     handleAdvancedSettingChange(_.get(items[num], 'controlSetting'), {
                       dotformat: checked ? '0' : '1',
@@ -493,7 +493,7 @@ export default function AggregationCon(props) {
                 showChangeName: false,
               });
             }}
-            onChange={name => {
+            onChange={(name: string) => {
               if (item.alias === name) {
                 return;
               }

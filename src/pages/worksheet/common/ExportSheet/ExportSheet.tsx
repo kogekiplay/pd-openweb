@@ -365,7 +365,7 @@ export default class ExportSheet extends Component<any, any> {
             className="mTop20 textPrimary"
             text={_l('不允许用户修改默认配置')}
             defaultChecked={this.state.initEdited}
-            onClick={checked => this.setState({ initEdited: checked })}
+            onClick={(checked: boolean) => this.setState({ initEdited: checked })}
           />
         </div>
       ),

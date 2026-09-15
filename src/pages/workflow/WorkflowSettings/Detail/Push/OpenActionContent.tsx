@@ -103,7 +103,7 @@ export default class OpenActionContent extends Component<any, any> {
           }
           border
           openSearch
-          onChange={appId => {
+          onChange={(appId: string) => {
             if (appId === 'other') {
               this.setState({ showOtherWorksheet: true });
             } else {
@@ -160,7 +160,7 @@ export default class OpenActionContent extends Component<any, any> {
                 : () => <span>{selectView.text}</span>
           }
           border
-          onChange={viewId => updateSource({ viewId })}
+          onChange={(viewId: string) => updateSource({ viewId })}
         />
       </Fragment>
     );
@@ -299,7 +299,7 @@ export default class OpenActionContent extends Component<any, any> {
   /**
    * 切换工作表
    */
-  switchWorksheet = appId => {
+  switchWorksheet = (appId: string) => {
     const { switchWorksheet } = this.props;
 
     this.getWorksheetInfo(appId);

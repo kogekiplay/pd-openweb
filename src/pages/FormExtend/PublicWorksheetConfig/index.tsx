@@ -46,7 +46,7 @@ function PublicWorksheetConfig(props) {
       : updateWorksheetVisibleType(newVisibleType);
   }
 
-  const onHideControl = controlId => {
+  const onHideControl = (controlId: string) => {
     const disabledControlIds = getDisabledControls(originalControls, worksheetSettings);
     const needHidedControlIds = hidedControlIds.concat(disabledControlIds);
     const curControl = originalControls.filter(item => item.controlId === controlId)[0] || {};

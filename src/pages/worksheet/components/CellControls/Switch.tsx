@@ -50,7 +50,7 @@ export default class Switch extends React.Component<any, any> {
     }
   };
 
-  handleChange = checked => {
+  handleChange = (checked: boolean) => {
     const { cell, updateCell, onValidate } = this.props;
 
     if (cell.required && checked) {

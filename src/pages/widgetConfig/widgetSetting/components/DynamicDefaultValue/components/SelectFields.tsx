@@ -266,7 +266,7 @@ let SelectFields = class SelectFields extends Component<any, any> {
                               dynamicValue,
                               item => item.cid === ids.fieldId && item.rcid === ids.relateSheetControlId,
                             )}
-                            onClick={checked => {
+                            onClick={(checked: boolean) => {
                               this.handleMultiUserClick({
                                 checked: !checked,
                                 ...ids,

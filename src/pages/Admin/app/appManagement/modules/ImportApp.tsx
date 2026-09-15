@@ -297,7 +297,7 @@ export default class ImportApp extends React.Component<any, any> {
               <Checkbox
                 className="TxtMiddle mRight6"
                 checked={matchOffice}
-                onClick={checked => this.setState({ matchOffice: !checked })}
+                onClick={(checked: boolean) => this.setState({ matchOffice: !checked })}
               >
                 {_l('导入时匹配人员部门职位')}
               </Checkbox>

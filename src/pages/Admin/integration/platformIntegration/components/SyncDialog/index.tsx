@@ -174,7 +174,7 @@ export default class SyncDialog extends Component<any, any> {
     });
   }, 200);
 
-  renderSelectUsers = accountId => {
+  renderSelectUsers = (accountId: string) => {
     const { qwUserList = [], searchLoading } = this.state;
 
     return (
@@ -254,7 +254,7 @@ export default class SyncDialog extends Component<any, any> {
     });
   };
   // 移除
-  removeWXUser = accountId => {
+  removeWXUser = (accountId: string) => {
     const { mingDaoUserInfos = [] } = this.state;
     let tempList = mingDaoUserInfos.map(item => {
       if (item.accountId === accountId) {

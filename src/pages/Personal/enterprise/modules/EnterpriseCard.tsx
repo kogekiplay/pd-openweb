@@ -148,7 +148,7 @@ export default class EnterpriseCard extends Component<any, any> {
     });
   }
 
-  checkIsLastSuperAdmin = async projectId => {
+  checkIsLastSuperAdmin = async (projectId: string) => {
     const res = await roleAjax.isLastSuperAdmin({ projectId });
 
     return res;

@@ -15,7 +15,7 @@ import { checkIsProject, errorMessage, formatStatus, formatTaskTime, taskStatusD
 const loading = renderToString(<LoadDiv />);
 
 // 加载loading
-export const listLoadingContent = pageIndex => {
+export const listLoadingContent = (pageIndex: number) => {
   if (pageIndex == 1) {
     if ($('#taskList').find('#taskFilterLoading').length === 0) {
       $('#taskList').append('<div id="taskFilterLoading"><div class="loadingCenter"> ' + loading + ' </div></div>');
@@ -56,7 +56,7 @@ export const afterUpdateTaskStatus = (data, status, isAll, $el?) => {
   const $selectTask = $el || $('#taskList .selectTask');
 
   if (isAll) {
-    $.map(taskIdArray, taskId => {
+    $.map(taskIdArray, (taskId: string) => {
       $completedNum = $('tr[data-taskid=' + taskId + '] .completedNum').length
         ? $('tr[data-taskid=' + taskId + '] .completedNum')
         : $('li[data-taskid=' + taskId + '] .completedNum');

@@ -401,7 +401,7 @@ function AccountList(props) {
               data: {},
             });
           }}
-          onChange={name => {
+          onChange={(name: string) => {
             onEdit({ ...data, name });
           }}
         />

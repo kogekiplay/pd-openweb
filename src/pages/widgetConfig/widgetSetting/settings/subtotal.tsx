@@ -62,7 +62,7 @@ const NUMBER_TYPE = [
 
 const DATE_TYPE = [...COMMON_TYPE, ...UNIQUE_TYPE, { text: _l('最晚'), value: 2 }, { text: _l('最早'), value: 3 }];
 
-const getOutputType = enumDefault2 => {
+const getOutputType = (enumDefault2: number) => {
   if (enumDefault2 === 15) {
     return [
       { text: _l('年'), value: '5' },
@@ -356,7 +356,7 @@ export default function Subtotal(props) {
                     checked={reportempty === '1'}
                     size="small"
                     text={_l('包含空值')}
-                    onClick={checked => {
+                    onClick={(checked: boolean) => {
                       onChange(handleAdvancedSettingChange(data, { reportempty: String(+!checked) }));
                     }}
                   />
@@ -371,7 +371,7 @@ export default function Subtotal(props) {
                 checked={!isEmpty(filters)}
                 size="small"
                 text={_l('设置筛选条件')}
-                onClick={checked => {
+                onClick={(checked: boolean) => {
                   if (checked) {
                     onChange(handleAdvancedSettingChange(data, { filters: '' }));
                     return;

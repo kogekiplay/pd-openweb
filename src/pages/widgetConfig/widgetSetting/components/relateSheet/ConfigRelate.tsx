@@ -120,7 +120,7 @@ export default function ConfigRelate(props) {
                 <Switch
                   checked={open}
                   text={''}
-                  onClick={checked => handleSetSource({ open: checked ? false : undefined })}
+                  onClick={(checked: boolean) => handleSetSource({ open: checked ? false : undefined })}
                 />
               </div>
               {open ? (

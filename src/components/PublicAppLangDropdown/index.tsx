@@ -83,7 +83,7 @@ const updateAppLang = value => {
   location.href = url.href;
 };
 
-const getCachedAppLangs = appId =>
+const getCachedAppLangs = (appId: string) =>
   _.uniqBy(window[`appLangs-${appId}`] || [], 'langCode').filter(item => item.langCode);
 
 export default function PublicAppLangDropdown(props) {

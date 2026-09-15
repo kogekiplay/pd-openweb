@@ -639,7 +639,7 @@ export default class UpgradeProcess extends Component<any, any> {
                   <Checkbox
                     disabled={modelType === 1 || isAllNew}
                     checked={isAllNew ? true : this.state[v.key]}
-                    onClick={checked => this.setState({ [v.key]: !checked })}
+                    onClick={(checked: boolean) => this.setState({ [v.key]: !checked })}
                   />
                   <span className="">{modelType === 1 && v.coverName ? v.coverName : v.name}</span>
 
@@ -826,7 +826,7 @@ export default class UpgradeProcess extends Component<any, any> {
                     <Checkbox
                       disabled={modelType === 1 && !isAllNew}
                       checked={this.state[l.key]}
-                      onClick={checked => {
+                      onClick={(checked: boolean) => {
                         this.setState({ [l.key]: !checked });
                       }}
                     />

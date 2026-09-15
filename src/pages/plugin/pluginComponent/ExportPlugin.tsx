@@ -128,7 +128,7 @@ function ExportPlugin(props) {
         <Checkbox
           text={_l('导入时校验授权密钥')}
           checked={checkSecretKey}
-          onClick={checked => setCheckSecretKey(!checked)}
+          onClick={(checked: boolean) => setCheckSecretKey(!checked)}
         />
       </FormItem>
       {checkSecretKey && (

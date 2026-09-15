@@ -142,7 +142,7 @@ function CopyCustomEvent(props) {
         className="mTop16"
         checked={copyAction}
         text={_l('包含执行动作')}
-        onClick={checked => setData({ copyAction: !checked })}
+        onClick={(checked: boolean) => setData({ copyAction: !checked })}
       />
     </Dialog>
   );

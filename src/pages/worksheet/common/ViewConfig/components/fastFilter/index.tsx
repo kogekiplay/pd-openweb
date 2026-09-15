@@ -108,7 +108,7 @@ export default function FastFilter(params) {
     setShowAddCondition(false);
   };
 
-  const onDelete = controlId => {
+  const onDelete = (controlId: string) => {
     const ids = safeParse(requiredcids, 'array');
     const data = fastFilters.filter(o => o.controlId !== controlId);
 

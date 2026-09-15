@@ -116,7 +116,7 @@ export default class SelectDeptUser extends Component<any, any> {
                     <div className="userItem">
                       <Checkbox
                         checked={_.includes(selectedUsersIds, accountId)}
-                        onClick={checked => this.checkedCurrentUser(checked, item)}
+                        onClick={(checked: boolean) => this.checkedCurrentUser(checked, item)}
                       />
                       <img className="circle userAvatar InlineBlock" src={avatar} alt={fullname} />
                       <span className="userName overflow_ellipsis">{fullname}</span>

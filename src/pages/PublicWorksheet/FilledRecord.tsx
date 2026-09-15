@@ -156,7 +156,7 @@ export default function FilledRecord(props) {
     return false;
   };
 
-  const onDeleteRow = rowId => {
+  const onDeleteRow = (rowId: string) => {
     publicWorksheetAjax
       .deleteWorksheetRows({
         appId,
@@ -176,7 +176,7 @@ export default function FilledRecord(props) {
       });
   };
 
-  const onDeleteRecord = rowId => {
+  const onDeleteRecord = (rowId: string) => {
     isMobile
       ? MobileDialog.confirm({
           content: _l('确认删除该填写记录吗?'),

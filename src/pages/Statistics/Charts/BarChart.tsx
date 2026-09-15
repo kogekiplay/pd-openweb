@@ -717,7 +717,7 @@ export default class extends Component<any, any> {
             autoRotate: fontStyle ? true : false,
             autoHide: true,
             autoEllipsis: true,
-            formatter: name => {
+            formatter: (name: string) => {
               return particleSizeType === 6 && showFormat === '0' ? _l('%0时', name) : name;
             },
             style: {

@@ -155,7 +155,7 @@ export default function FillSettings(props) {
             <div>
               <CommonSwitch
                 checked={preFillDesc.enable === true}
-                onClick={checked =>
+                onClick={(checked: boolean) =>
                   setState({
                     extendDatas: {
                       ...extendDatas,
@@ -181,7 +181,7 @@ export default function FillSettings(props) {
             <div>
               <CommonSwitch
                 checked={smsVerification}
-                onClick={checked => setState({ smsVerification: !checked })}
+                onClick={(checked: boolean) => setState({ smsVerification: !checked })}
                 name={_l('对填写手机号进行短信验证')}
                 tip={
                   <Fragment>
@@ -229,7 +229,7 @@ export default function FillSettings(props) {
           <div className="mBottom24">
             <CommonSwitch
               checked={needCaptcha}
-              onClick={checked => setState({ needCaptcha: !checked })}
+              onClick={(checked: boolean) => setState({ needCaptcha: !checked })}
               name={_l('提交时进行图形验证')}
               tip={_l('打开后，填写者在提交数据前需要输入验证码，用于防止恶意或重复数据提交。')}
             />
@@ -237,7 +237,7 @@ export default function FillSettings(props) {
           <div className="mBottom24">
             <CommonSwitch
               checked={cacheDraft}
-              onClick={checked => setState({ cacheDraft: !checked })}
+              onClick={(checked: boolean) => setState({ cacheDraft: !checked })}
               name={_l('缓存未提交内容, 下次自动填充')}
               tip={_l('打开后，可以获取到填写者之前未提交的内容（不支持关联字段），填写者可继续填写表单。')}
             />
@@ -245,7 +245,7 @@ export default function FillSettings(props) {
           <div>
             <CommonSwitch
               checked={cacheFieldData.isEnable}
-              onClick={checked => setState({ cacheFieldData: { isEnable: !checked, cacheField: [] } })}
+              onClick={(checked: boolean) => setState({ cacheFieldData: { isEnable: !checked, cacheField: [] } })}
               name={_l('缓存本次填写数据，下次自动填充')}
               tip={_l('打开后，可以获取到填写者之前已提交的内容（具体到字段），填写者可只填写剩余字段。')}
             />

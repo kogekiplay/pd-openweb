@@ -135,7 +135,7 @@ export default function TelConfig({ data, onChange, globalSheetInfo = {} }) {
         <Checkbox
           size="small"
           checked={enumDefault === 0}
-          onClick={checked => {
+          onClick={(checked: boolean) => {
             onChange({ enumDefault: checked ? 1 : 0 });
           }}
         >

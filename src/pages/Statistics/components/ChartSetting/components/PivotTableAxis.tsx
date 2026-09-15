@@ -604,7 +604,7 @@ let PivotTableAxis = class PivotTableAxis extends Component<any, any> {
       currentControl: { ...currentControl, relationControls: column.relationControls },
     });
   };
-  handleChangeRename = name => {
+  handleChangeRename = (name: string) => {
     const { list } = this.props;
     const { currentControl } = this.state;
     const newList = list.map(item => {

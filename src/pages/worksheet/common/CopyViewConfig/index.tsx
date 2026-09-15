@@ -183,7 +183,7 @@ export default function CopyViewConfig(props) {
     );
   };
 
-  const getDefaultConfig = viewId => {
+  const getDefaultConfig = (viewId: string) => {
     return getConfigs(viewId)
       .filter(l => DEFAULT_KEYS.includes(l.key))
       .map(l => l.key);

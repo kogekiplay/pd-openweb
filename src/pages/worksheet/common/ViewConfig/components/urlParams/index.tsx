@@ -92,7 +92,7 @@ export default function UrlParams(props) {
     });
   };
 
-  const onValidate = index => {
+  const onValidate = (index: number) => {
     const currentValue = params[index];
 
     if (!currentValue.trim()) {

@@ -57,7 +57,7 @@ class Canvas {
   }
 }
 
-const printGunter = name => {
+const printGunter = (name: string) => {
   return new Promise(resolve => {
     const directoryHeader = document.querySelector('.gunterDirectoryHeader');
     const groupingScroller = document.querySelector('.gunterGroupingScroller');

@@ -60,7 +60,7 @@ export default function WidgetConfig(props) {
             <Checkbox
               size="small"
               checked={analysislink === '1'}
-              onClick={checked => onChange(handleAdvancedSettingChange(data, { analysislink: checked ? '0' : '1' }))}
+              onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { analysislink: checked ? '0' : '1' }))}
             >
               <span>{_l('解析链接')}</span>
             </Checkbox>
@@ -71,7 +71,7 @@ export default function WidgetConfig(props) {
             <Checkbox
               size="small"
               checked={sorttype === 'zh'}
-              onClick={checked => onChange(handleAdvancedSettingChange(data, { sorttype: checked ? 'en' : 'zh' }))}
+              onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { sorttype: checked ? 'en' : 'zh' }))}
             >
               <span>{_l('支持拼音排序')}</span>
               <Tooltip
@@ -91,7 +91,7 @@ export default function WidgetConfig(props) {
             <Checkbox
               size="small"
               checked={usetimezone === '1'}
-              onClick={checked => onChange(handleAdvancedSettingChange(data, { usetimezone: checked ? '0' : '1' }))}
+              onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { usetimezone: checked ? '0' : '1' }))}
             >
               <span>{_l('按应用时区拼接')}</span>
               <Tooltip
@@ -121,7 +121,7 @@ export default function WidgetConfig(props) {
             checked={Boolean(enumDefault)}
             size={'small'}
             text={_l('显示地图')}
-            onClick={checked => onChange({ enumDefault: +!checked })}
+            onClick={(checked: boolean) => onChange({ enumDefault: +!checked })}
           />
         </div>
         {(strDefault || '00')[0] !== '1' && (
@@ -131,7 +131,7 @@ export default function WidgetConfig(props) {
                 checked={showxy === '1'}
                 size={'small'}
                 text={_l('显示经纬度')}
-                onClick={checked => {
+                onClick={(checked: boolean) => {
                   onChange(handleAdvancedSettingChange(data, { showxy: checked ? '0' : '1' }));
                 }}
               />
@@ -141,7 +141,7 @@ export default function WidgetConfig(props) {
                 checked={allowcustom === '1'}
                 size={'small'}
                 text={_l('允许输入自定义位置')}
-                onClick={checked => {
+                onClick={(checked: boolean) => {
                   onChange(handleAdvancedSettingChange(data, { allowcustom: checked ? '0' : '1' }));
                 }}
               />
@@ -159,7 +159,7 @@ export default function WidgetConfig(props) {
         <Checkbox
           size="small"
           checked={anylevel === '1'}
-          onClick={checked => onChange(handleAdvancedSettingChange(data, { anylevel: checked ? '0' : '1' }))}
+          onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { anylevel: checked ? '0' : '1' }))}
         >
           <span>{_l('必须选择到最后一级')}</span>
         </Checkbox>
@@ -174,7 +174,7 @@ export default function WidgetConfig(props) {
         <Checkbox
           size="small"
           checked={uselast === '1'}
-          onClick={checked => onChange(handleAdvancedSettingChange(data, { uselast: String(+!checked) }))}
+          onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { uselast: String(+!checked) }))}
         >
           <span>{_l('允许使用上次的签名')}</span>
         </Checkbox>
@@ -189,7 +189,7 @@ export default function WidgetConfig(props) {
           <div className="labelWrap">
             <Checkbox
               className="checkboxWrap"
-              onClick={checked => {
+              onClick={(checked: boolean) => {
                 onChange({ noticeItem: Number(!checked) });
               }}
               checked={noticeItem === 1}
@@ -202,7 +202,7 @@ export default function WidgetConfig(props) {
           <div className="labelWrap">
             <Checkbox
               className="checkboxWrap"
-              onClick={checked => {
+              onClick={(checked: boolean) => {
                 onChange(handleAdvancedSettingChange(data, { checkusertype: String(+!checked) }));
               }}
               text={_l('仅按成员类型赋值')}
@@ -234,7 +234,7 @@ export default function WidgetConfig(props) {
           <Checkbox
             size="small"
             checked={allpath === '1'}
-            onClick={checked => onChange(handleAdvancedSettingChange(data, { allpath: String(+!checked) }))}
+            onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { allpath: String(+!checked) }))}
           >
             <span>{_l('显示部门路径')}</span>
           </Checkbox>
@@ -243,7 +243,7 @@ export default function WidgetConfig(props) {
           <Checkbox
             size="small"
             checked={showdelete === '1'}
-            onClick={checked => onChange(handleAdvancedSettingChange(data, { showdelete: String(+!checked) }))}
+            onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { showdelete: String(+!checked) }))}
           >
             <span>{_l('显示已删除')}</span>
             <Tooltip placement="bottom" title={_l('勾选时，组织中被删除的部门显示为“已删除”，否则不显示')}>

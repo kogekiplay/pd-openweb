@@ -124,7 +124,7 @@ export default class CreateIndex extends Component<any, any> {
     );
   };
   // 创建唯一索引
-  changeIndexOnly = checked => {
+  changeIndexOnly = (checked: boolean) => {
     this.setState({ uniqueIndex: !checked });
   };
   saveIndex = () => {
@@ -293,7 +293,7 @@ export default class CreateIndex extends Component<any, any> {
     });
     this.setState({ selectedIndexList: copySelectedIndexList });
   };
-  removeCurrentField = index => {
+  removeCurrentField = (index: number) => {
     let { selectedIndexList = [] } = this.state;
     if (selectedIndexList.length <= 1) return;
     let copySelectedIndexList = [...selectedIndexList];

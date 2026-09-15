@@ -251,7 +251,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
     emitter.removeListener('REFRESH_APP_DETAIL', this.getData);
   }
 
-  checkIsFull = worksheetId => {
+  checkIsFull = (worksheetId: string) => {
     const wrapper = document.querySelector('#wrapper');
     if (!wrapper) return;
 

@@ -194,7 +194,7 @@ export default function SubListStyle(props) {
             size="small"
             checked={hidenumber !== '1'}
             text={_l('显示序号')}
-            onClick={checked => {
+            onClick={(checked: boolean) => {
               onChange(
                 handleAdvancedSettingChange(data, {
                   hidenumber: checked ? '1' : '0',
@@ -210,7 +210,7 @@ export default function SubListStyle(props) {
                 size="small"
                 checked={titlewrap === '1'}
                 text={_l('标题行文字换行')}
-                onClick={checked => onChange(handleAdvancedSettingChange(data, { titlewrap: String(+!checked) }))}
+                onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { titlewrap: String(+!checked) }))}
               />
             </div>
             {titlewrap === '1' && (

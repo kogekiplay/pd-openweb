@@ -112,7 +112,7 @@ export default class MobileCityPicker extends Component<any, any> {
   }
 
   renderSearch() {
-    return <MobileSearch onSearch={keywords => this.handleSearch(keywords)} />;
+    return <MobileSearch onSearch={(keywords: string) => this.handleSearch(keywords)} />;
   }
 
   render() {

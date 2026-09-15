@@ -281,7 +281,7 @@ export default class WebProxySetting extends Component<any, any> {
                     <Switch
                       size="small"
                       checked={openIdentityValidate}
-                      onClick={checked => {
+                      onClick={(checked: boolean) => {
                         this.changeValue(checked, 'openIdentityValidate', 'switch');
                       }}
                     />

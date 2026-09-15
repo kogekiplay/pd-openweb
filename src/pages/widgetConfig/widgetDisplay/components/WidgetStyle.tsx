@@ -219,7 +219,7 @@ export function WidgetStyleSetting(props) {
                 size="small"
                 disabled={titlestorage === '0' && relateSearchUnSupport()}
                 checked={titlestorage !== '0'}
-                onClick={checked => handleChange({ titlestorage: checked ? '0' : '1' })}
+                onClick={(checked: boolean) => handleChange({ titlestorage: checked ? '0' : '1' })}
               >
                 <span style={{ marginRight: '4px', paddingTop: '2px' }} className="textPrimary">
                   {_l('在关联表中可以被搜索')}
@@ -361,7 +361,7 @@ export function WidgetStyleSetting(props) {
                   size="small"
                   checked={showthumbnail === '1'}
                   text={_l('显示缩略图')}
-                  onClick={checked => handleChange({ showthumbnail: checked ? '0' : '1' })}
+                  onClick={(checked: boolean) => handleChange({ showthumbnail: checked ? '0' : '1' })}
                 />
               </SettingItem>
             </Fragment>
@@ -478,7 +478,7 @@ export function WidgetStyleSetting(props) {
               <Checkbox
                 size="small"
                 checked={showicon !== '1'}
-                onClick={checked => handleChange({ showicon: checked ? '1' : '0' })}
+                onClick={(checked: boolean) => handleChange({ showicon: checked ? '1' : '0' })}
               >
                 <span>{_l('隐藏标签页图标')}</span>
               </Checkbox>
@@ -487,7 +487,7 @@ export function WidgetStyleSetting(props) {
               <Checkbox
                 size="small"
                 checked={hidetab === '1'}
-                onClick={checked => handleChange({ hidetab: checked ? '0' : '1' })}
+                onClick={(checked: boolean) => handleChange({ hidetab: checked ? '0' : '1' })}
               >
                 <span style={{ marginRight: '4px' }}>{_l('当只有一个标签页时隐藏')}</span>
                 <Tooltip placement="bottom" title={_l('勾选后，当只有一个标签页时隐藏此标签页标题。直接显示内部内容')}>

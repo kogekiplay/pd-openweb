@@ -465,7 +465,7 @@ export default class CalendarDetail extends Component<any, any> {
       });
     };
 
-    const removeMember = accountId => {
+    const removeMember = (accountId: string) => {
       const { members, id, recurTime, isChildCalendar, originRecur } = this.state;
       const argsProps = { id, recurTime, isChildCalendar, originRecur };
       Common.removeMember(accountId, argsProps).then(({ isAllCalendar }) => {
@@ -495,7 +495,7 @@ export default class CalendarDetail extends Component<any, any> {
       });
     };
 
-    const reInvite = accountId => {
+    const reInvite = (accountId: string) => {
       const { members, id, recurTime, isChildCalendar, originRecur } = this.state;
       const argsProps = { id, recurTime, isChildCalendar, originRecur };
       Common.reInvite(accountId, argsProps).then(({ isAllCalendar }) => {

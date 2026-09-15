@@ -55,7 +55,7 @@ export default ({ from, data, onChange, globalSheetInfo, allControls = [] }) => 
                 size="small"
                 checked={_.includes([1, 3], enumDefault2)}
                 text={_l('拍摄照片')}
-                onClick={checked => {
+                onClick={(checked: boolean) => {
                   const value = checked ? (enumDefault2 === 3 ? 2 : 0) : enumDefault2 === 2 ? 3 : 1;
                   onChange({ enumDefault2: value });
                 }}
@@ -67,7 +67,7 @@ export default ({ from, data, onChange, globalSheetInfo, allControls = [] }) => 
                   size="small"
                   checked={_.includes([2, 3], enumDefault2)}
                   text={_l('拍摄视频')}
-                  onClick={checked => {
+                  onClick={(checked: boolean) => {
                     const value = checked ? (enumDefault2 === 3 ? 1 : 0) : enumDefault2 === 1 ? 3 : 2;
                     onChange({ enumDefault2: value });
                   }}
@@ -81,7 +81,7 @@ export default ({ from, data, onChange, globalSheetInfo, allControls = [] }) => 
                   <Checkbox
                     size="small"
                     checked={onlyAllowMobileInput === '1'}
-                    onClick={checked =>
+                    onClick={(checked: boolean) =>
                       onChange({ strDefault: updateConfig({ config: strDefault || '00', value: +!checked, index: 1 }) })
                     }
                     text={_l('禁止从桌面端输入')}
@@ -91,7 +91,7 @@ export default ({ from, data, onChange, globalSheetInfo, allControls = [] }) => 
                   <Checkbox
                     size="small"
                     checked={disableAlbum === '1'}
-                    onClick={checked =>
+                    onClick={(checked: boolean) =>
                       onChange({ strDefault: updateConfig({ config: strDefault || '00', value: +!checked, index: 0 }) })
                     }
                     text={_l('禁用相册')}
@@ -102,7 +102,7 @@ export default ({ from, data, onChange, globalSheetInfo, allControls = [] }) => 
                     <Checkbox
                       size="small"
                       checked={currentWaterMark}
-                      onClick={checked => {
+                      onClick={(checked: boolean) => {
                         if (checked) {
                           setVisible(false);
                           setWatermark('');
@@ -150,7 +150,7 @@ export default ({ from, data, onChange, globalSheetInfo, allControls = [] }) => 
                 <Checkbox
                   size="small"
                   checked={advancedSetting.compress === '1'}
-                  onClick={checked => onChange(handleAdvancedSettingChange(data, { compress: checked ? '0' : '1' }))}
+                  onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { compress: checked ? '0' : '1' }))}
                 >
                   <span style={{ marginRight: '4px' }}>{_l('手机App')}</span>
                   <Tooltip
@@ -169,7 +169,7 @@ export default ({ from, data, onChange, globalSheetInfo, allControls = [] }) => 
                 <Checkbox
                   size="small"
                   checked={webcompress === '1'}
-                  onClick={checked => onChange(handleAdvancedSettingChange(data, { webcompress: checked ? '0' : '1' }))}
+                  onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { webcompress: checked ? '0' : '1' }))}
                 >
                   <span style={{ marginRight: '4px' }}>{_l('Web移动端（H5）')}</span>
                   <Tooltip

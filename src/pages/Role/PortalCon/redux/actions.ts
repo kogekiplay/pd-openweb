@@ -17,7 +17,7 @@ export const getControls = (appId: string, projectId: string) => {
   };
 };
 
-export const getCount = appId => {
+export const getCount = (appId: string) => {
   return dispatch => {
     externalPortalAjax.getExAccountCategoryCount({ appId }).then(res => {
       const { commonCount = 0, unApproveCount = 0, roleMemberStatistics } = res;
@@ -180,7 +180,7 @@ export const updateListByStatus = ({ newState, rowIds, cb }) => {
   };
 };
 
-export const changePageIndex = index => {
+export const changePageIndex = (index: number) => {
   return dispatch => {
     dispatch({ type: 'UPDATE_INDEX', data: index });
     if (index === 1) {
@@ -190,7 +190,7 @@ export const changePageIndex = index => {
   };
 };
 
-export const getPortalRoleList = appId => {
+export const getPortalRoleList = (appId: string) => {
   return dispatch => {
     dispatch({ type: 'UPDATE_LOADING', data: true });
     externalPortalAjax

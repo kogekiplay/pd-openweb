@@ -934,7 +934,7 @@ class AppWorkflowList extends Component<any, any> {
   /**
    * 创建封装业务流程
    */
-  createFlow = appId => {
+  createFlow = (appId: string) => {
     this.requestPending = true;
 
     processAjax
@@ -1140,7 +1140,7 @@ class AppWorkflowList extends Component<any, any> {
         <div className="flex" />
         <Search
           placeholder={_l('搜索流程名称')}
-          handleChange={keywords => this.setState({ keywords: keywords.trim() })}
+          handleChange={(keywords: string) => this.setState({ keywords: keywords.trim() })}
         />
       </div>
     );

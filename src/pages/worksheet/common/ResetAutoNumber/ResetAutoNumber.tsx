@@ -54,7 +54,7 @@ export default function ResetAutoNumber(props) {
   const [initNum, setNum] = useState(1);
   const [startNum, setStartNum] = useState(1);
 
-  const handleReset = controlId => {
+  const handleReset = (controlId: string) => {
     setIndex(-1);
     worksheetAjax
       .resetControlIncrease({

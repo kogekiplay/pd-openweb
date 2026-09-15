@@ -48,7 +48,7 @@ export default function EnableScanLogin(props) {
   } = props;
   const [scanEnabled, setScanEnabled] = useState(props.scanEnabled || false);
 
-  const handleChangeScanEnabled = checked => {
+  const handleChangeScanEnabled = (checked: boolean) => {
     workWeiXinAjax
       .editThirdPartyIntergrationScanEnabled({
         projectId: projectId,

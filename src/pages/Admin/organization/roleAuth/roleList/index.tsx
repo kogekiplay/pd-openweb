@@ -203,7 +203,7 @@ class RoleList extends React.Component<any, any> {
             total={totalCount}
             pageIndex={pageIndex}
             pageSize={pageSize}
-            onChange={pageIndex => this.setState({ pageIndex }, this.getMyRoles)}
+            onChange={(pageIndex: number) => this.setState({ pageIndex }, this.getMyRoles)}
           />
         )}
       </div>

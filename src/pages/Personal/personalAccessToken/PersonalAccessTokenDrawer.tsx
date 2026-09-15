@@ -150,7 +150,7 @@ export default function PersonalAccessTokenDrawer(props) {
     });
   };
 
-  const onRemoveApp = appId => {
+  const onRemoveApp = (appId: string) => {
     const nextApps = selectedApps.filter(item => item.appId !== appId);
     setSelectedApps(nextApps);
     setFormData({ appIds: nextApps.map(item => item.appId) });
@@ -203,7 +203,7 @@ export default function PersonalAccessTokenDrawer(props) {
     return true;
   };
 
-  const getSubmitData = name => ({
+  const getSubmitData = (name: string) => ({
     name,
     scopeCodes: formData.scopeCodes,
     appScopeType: canSelectSpecifiedApps ? formData.appScopeType : 1,
@@ -216,15 +216,15 @@ export default function PersonalAccessTokenDrawer(props) {
   const getProjectNames = projectIds => {
     return (projectIds || '')
       .split(',')
-      .map(projectId => _.trim(projectId))
+      .map((projectId: string) => _.trim(projectId))
       .filter(_.identity)
-      .map(projectId => {
+      .map((projectId: string) => {
         const project = projectOptions.find(item => item.value === projectId);
         return project?.label || projectId;
       });
   };
 
-  const onSubmit = name => {
+  const onSubmit = (name: string) => {
     const request = isEdit ? openAuthorAjax.updatePAT : openAuthorAjax.createPAT;
     const data = isEdit
       ? { id: tokenId, ...getSubmitData(name) }

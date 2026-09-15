@@ -296,7 +296,7 @@ export default function VarAddOrEditModal(props) {
             disabled={isEdit}
             manualRef={inputRef}
             value={formData.name}
-            onChange={name => setFormData({ name })}
+            onChange={(name: string) => setFormData({ name })}
           />
         </FormItem>
         <FormItem>

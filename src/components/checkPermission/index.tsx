@@ -16,7 +16,7 @@ const setCacheData = (projectId: string, data, version: string) => {
 };
 
 //获取权限版本
-const syncGetVersion = projectId => {
+const syncGetVersion = (projectId: string) => {
   try {
     const data = versionApi.getVersion(
       { moduleType: 50, sourceId: projectId },

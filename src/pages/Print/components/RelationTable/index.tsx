@@ -306,7 +306,7 @@ export default class RelationTable extends React.Component<any, any> {
     return data;
   };
 
-  isIn = controlId => {
+  isIn = (controlId: string) => {
     const { printData, id } = this.props;
     const { controlStyles = [] } = printData;
     let list = controlStyles.map(o => o.controlId);
@@ -314,7 +314,7 @@ export default class RelationTable extends React.Component<any, any> {
     return list.includes(`${controlId}-${id}`) || list.includes(controlId);
   };
 
-  curStylesW = controlId => {
+  curStylesW = (controlId: string) => {
     const { printData, id } = this.props;
     const { controlStyles = [] } = printData;
     let o = controlStyles.find(s => s.controlId === `${controlId}-${id}`);

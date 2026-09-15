@@ -287,7 +287,7 @@ export default class SetInfoDialog extends Component<any, any> {
             showItemTitle
             isAppendToBody
             renderTitle={() => <span title={currentCountry.text}>{currentCountry.text}</span>}
-            onSearch={keywords => this.setState({ keywords }, this.onSearch)}
+            onSearch={(keywords: string) => this.setState({ keywords }, this.onSearch)}
             onChange={this.onChangRegionCode}
             noData={!!keywords && _.isEmpty(searchResultCountry) ? _l('暂无搜索结果') : _l('无数据')}
           />

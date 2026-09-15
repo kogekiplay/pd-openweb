@@ -85,7 +85,7 @@ function SettingDialog(props) {
               {_l('操作设置')}
               <Switch
                 checked={parentConfig.isCustom}
-                onClick={checked => {
+                onClick={(checked: boolean) => {
                   setParentConfig({ ...parentConfig, isCustom: !checked, ...(checked ? { permission: [] } : {}) });
                 }}
               />
@@ -101,7 +101,7 @@ function SettingDialog(props) {
                       className="mBottom8"
                       text={i.text}
                       checked={_.includes(permission, i.value)}
-                      onClick={checked => {
+                      onClick={(checked: boolean) => {
                         setParentConfig({
                           ...parentConfig,
                           permission: checked ? permission.filter(p => p !== i.value) : permission.concat(i.value),
@@ -127,7 +127,7 @@ function SettingDialog(props) {
                 !!childControlIds.length && childControlIds.length !== (parentItem.relationControls || []).length
               }
               checked={childControlIds.length === (parentItem.relationControls || []).length}
-              onClick={checked => {
+              onClick={(checked: boolean) => {
                 setChildConfig(
                   checked
                     ? {}
@@ -146,7 +146,7 @@ function SettingDialog(props) {
                 <Checkbox
                   className="flex"
                   checked={_.includes(childControlIds, i.controlId)}
-                  onClick={checked => {
+                  onClick={(checked: boolean) => {
                     setChildConfig({
                       controlId: parentItem.controlId,
                       childControlIds: checked

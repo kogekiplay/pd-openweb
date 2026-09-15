@@ -408,7 +408,7 @@ export default class GlobalSearchAllContent extends Component<any, any> {
                       style={{ marginLeft: '18px' }}
                       currentProjectId={appProjectId}
                       needAll={false}
-                      onChange={projectId =>
+                      onChange={(projectId: string) =>
                         this.setState({ appProjectId: projectId, loadAppData: true }, () =>
                           this.getAppData({ type: 7 }),
                         )
@@ -443,7 +443,7 @@ export default class GlobalSearchAllContent extends Component<any, any> {
                       style={{ marginLeft: '18px' }}
                       currentProjectId={recordProjectId}
                       needAll={false}
-                      onChange={projectId =>
+                      onChange={(projectId: string) =>
                         this.setState({ recordProjectId: projectId, loadAppData: true }, () => {
                           this.getAppData({ type: 8 });
                           this.getFilterCount();

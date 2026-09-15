@@ -360,7 +360,7 @@ export default class extends Component<any, any> {
                 {
                   field: 'name',
                   formatField: () => _l('地区'),
-                  formatValue: name => {
+                  formatValue: (name: string) => {
                     if (xaxes.controlType === 40 && name) {
                       const data = JSON.parse(name);
                       return data.title || data.address || `x: ${data.x}, y: ${data.y}`;

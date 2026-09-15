@@ -167,7 +167,7 @@ export default class MsgTemplate extends Component<any, any> {
                       <Checkbox
                         disabled={template.status === 0}
                         checked={_.includes(messageTemplateIds, template.id)}
-                        onClick={checked => {
+                        onClick={(checked: boolean) => {
                           let copyCheckedIds = [...messageTemplateIds];
 
                           if (!checked) {

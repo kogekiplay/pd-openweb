@@ -259,7 +259,7 @@ export default class extends PureComponent<any, any> {
                         <Checkbox
                           checked={view.canRead}
                           className="InlineBlock"
-                          onClick={checked => {
+                          onClick={(checked: boolean) => {
                             const payload = checked
                               ? {
                                   canEdit: false,
@@ -277,7 +277,7 @@ export default class extends PureComponent<any, any> {
                         <Checkbox
                           checked={view.canEdit}
                           className="InlineBlock"
-                          onClick={checked => {
+                          onClick={(checked: boolean) => {
                             const payload = checked
                               ? {
                                   canEdit: false,
@@ -295,7 +295,7 @@ export default class extends PureComponent<any, any> {
                         <Checkbox
                           checked={view.canRemove}
                           className="InlineBlock"
-                          onClick={checked => {
+                          onClick={(checked: boolean) => {
                             const payload = checked
                               ? {
                                   canRemove: false,

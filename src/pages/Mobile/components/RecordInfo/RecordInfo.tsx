@@ -1197,7 +1197,7 @@ let RecordInfo = class RecordInfo extends Component<any, any> {
       },
     );
   };
-  handleDeleteSuccess = rowid => {
+  handleDeleteSuccess = (rowid: string) => {
     const { isModal, onClose = () => {}, deleteRow, deleteCallback = () => {} } = this.props;
 
     if (isModal) {

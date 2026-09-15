@@ -742,7 +742,7 @@ const GroupFilterList = props => {
     );
   };
 
-  const getSearchRecordResult = keywords => {
+  const getSearchRecordResult = (keywords: string) => {
     let param = keywords
       ? {}
       : source.type === 35

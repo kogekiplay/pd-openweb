@@ -120,7 +120,7 @@ export const showOrHideTask = (index: number, id, arrowStatus) => (dispatch: App
 };
 
 // 开始拖拽
-export const ganttDragRecordId = taskId => {
+export const ganttDragRecordId = (taskId: string) => {
   return {
     type: 'GANTT_DRAG_RECORD_ID',
     taskId,
@@ -128,7 +128,7 @@ export const ganttDragRecordId = taskId => {
 };
 
 // 记录经过的人员下标
-export const ganttDragRecordIndex = index => {
+export const ganttDragRecordIndex = (index: number) => {
   return {
     type: 'GANTT_DRAG_RECORD_INDEX',
     index,
@@ -437,7 +437,7 @@ export const addFollowMembers = data => (dispatch: AppDispatch, getState: GetSta
 };
 
 // 移除关注的同事
-export const removeFollowMembers = accountId => (dispatch: AppDispatch, getState: GetState) => {
+export const removeFollowMembers = (accountId: string) => (dispatch: AppDispatch, getState: GetState) => {
   let { accountTasksKV } = getState().task;
   accountTasksKV = _.cloneDeep(accountTasksKV);
 

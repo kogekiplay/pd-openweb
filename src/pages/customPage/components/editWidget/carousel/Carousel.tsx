@@ -457,7 +457,7 @@ export default function CarouselPreview(props) {
           }
           effect={config.effect}
           autoplaySpeed={config.autoplaySpeed * 1000}
-          afterChange={index => {
+          afterChange={(index: number) => {
             setCurrentIndex(index);
           }}
         >

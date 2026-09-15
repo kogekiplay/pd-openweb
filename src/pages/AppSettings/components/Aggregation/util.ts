@@ -939,7 +939,7 @@ export const getSourceIndex = (flowData, o) => {
 };
 
 //根据版本返回数据源数量上限
-export const getSourceMaxCountByVersion = projectId => {
+export const getSourceMaxCountByVersion = (projectId: string) => {
   if (window.platformENV.isOverseas || window.platformENV.isLocal) return 10; //私有部署10个
   const { version = { versionIdV2: '-1' } } = getSyncLicenseInfo(projectId);
   const { versionIdV2 } = version;
@@ -956,7 +956,7 @@ export const getSourceMaxCountByVersion = projectId => {
 };
 
 //数据源达到上限提示
-export const sourceIsMax = projectId => {
+export const sourceIsMax = (projectId: string) => {
   const project = getSyncLicenseInfo(projectId);
 
   if (

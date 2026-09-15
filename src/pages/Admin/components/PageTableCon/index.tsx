@@ -64,7 +64,7 @@ export default class PageTableCon extends Component<any, any> {
           <Checkbox
             clearselected={checkedCols.length && checkedCols.length !== columns.length}
             checked={_.every(columns, item => _.includes(checkedCols, item.dataIndex))}
-            onClick={checked => {
+            onClick={(checked: boolean) => {
               let checkedCols = [];
 
               if (checked) {
@@ -86,7 +86,7 @@ export default class PageTableCon extends Component<any, any> {
                 <Checkbox
                   checked={_.includes(checkedCols, item.dataIndex)}
                   disabled={item.disabled}
-                  onClick={checked => {
+                  onClick={(checked: boolean) => {
                     let copyCheckedCols = [...checkedCols];
 
                     if (checked) {

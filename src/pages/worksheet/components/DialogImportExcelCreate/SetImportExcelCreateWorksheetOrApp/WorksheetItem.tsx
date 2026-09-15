@@ -189,7 +189,7 @@ export default class WorksheetItem extends Component<any, any> {
                         <Checkbox
                           checked={_.includes(selectedImportSheetIds, item.sheetId)}
                           disabled={item.disabled}
-                          onClick={checked => {
+                          onClick={(checked: boolean) => {
                             let copySelectedSheetIds = [...selectedImportSheetIds];
                             let copySheetList = [];
 

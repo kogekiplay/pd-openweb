@@ -454,7 +454,7 @@ export default class PayConfig extends Component<any, any> {
                         className="mTop2 mRight8"
                         checked={isEnable}
                         disabled={true}
-                        onClick={checked => this.setState({ [key]: { ...this.state[key], isEnable: !checked } })}
+                        onClick={(checked: boolean) => this.setState({ [key]: { ...this.state[key], isEnable: !checked } })}
                       />
                     </span>
                   </Tooltip>
@@ -463,7 +463,7 @@ export default class PayConfig extends Component<any, any> {
                     size="small"
                     className="mTop2 mRight8"
                     checked={isEnable}
-                    onClick={checked => this.setState({ [key]: { ...this.state[key], isEnable: !checked } })}
+                    onClick={(checked: boolean) => this.setState({ [key]: { ...this.state[key], isEnable: !checked } })}
                   />
                 )}
 
@@ -634,7 +634,7 @@ export default class PayConfig extends Component<any, any> {
                                 size="small"
                                 checked={scenes[item.key]}
                                 disabled={true}
-                                onClick={checked => this.changeScenes(checked, item.key)}
+                                onClick={(checked: boolean) => this.changeScenes(checked, item.key)}
                               />
                             </span>
                           </Tooltip>
@@ -643,7 +643,7 @@ export default class PayConfig extends Component<any, any> {
                         <Switch
                           size="small"
                           checked={scenes[item.key]}
-                          onClick={checked => this.changeScenes(checked, item.key)}
+                          onClick={(checked: boolean) => this.changeScenes(checked, item.key)}
                         />
                       )}
                     </div>
@@ -773,7 +773,7 @@ export default class PayConfig extends Component<any, any> {
                     className="mRight12"
                     size="small"
                     checked={expireTime}
-                    onClick={checked =>
+                    onClick={(checked: boolean) =>
                       this.setState({
                         expireTime: checked ? 0 : initExpireTime || 15,
                         isPaySuccessAddRecord: checked ? false : isPaySuccessAddRecord,
@@ -813,7 +813,7 @@ export default class PayConfig extends Component<any, any> {
                       className="mRight8"
                       size="small"
                       checked={isAtOncePayment}
-                      onClick={checked => this.setState({ isAtOncePayment: !checked })}
+                      onClick={(checked: boolean) => this.setState({ isAtOncePayment: !checked })}
                     />
                     <span className="bold Font14">{_l('立即支付')}</span>
                   </div>
@@ -833,7 +833,7 @@ export default class PayConfig extends Component<any, any> {
                           !expireTime
                         }
                         checked={isPaySuccessAddRecord}
-                        onClick={checked => this.setState({ isPaySuccessAddRecord: !checked })}
+                        onClick={(checked: boolean) => this.setState({ isPaySuccessAddRecord: !checked })}
                       />
                       <span className="bold Font14">{_l('支付成功后提交表单')}</span>
                     </div>
@@ -852,7 +852,7 @@ export default class PayConfig extends Component<any, any> {
                         className="mRight8"
                         size="small"
                         checked={isRefundAllowed}
-                        onClick={checked => this.setState({ isRefundAllowed: !checked })}
+                        onClick={(checked: boolean) => this.setState({ isRefundAllowed: !checked })}
                       />
                       <span className="bold Font14">{_l('允许退款')}</span>
                     </div>
@@ -866,7 +866,7 @@ export default class PayConfig extends Component<any, any> {
                     className="mRight8"
                     size="small"
                     checked={enableOrderVisible}
-                    onClick={checked => this.setState({ enableOrderVisible: !checked })}
+                    onClick={(checked: boolean) => this.setState({ enableOrderVisible: !checked })}
                   />
                   <span className="bold Font14">{_l('在记录详情侧边栏显示支付订单信息')}</span>
                 </div>
@@ -884,7 +884,7 @@ export default class PayConfig extends Component<any, any> {
                     className="mRight8"
                     size="small"
                     checked={isAllowedAddOption}
-                    onClick={checked => {
+                    onClick={(checked: boolean) => {
                       this.setState({
                         isAllowedAddOption: !checked,
                         fieldMaps: checked ? filterDeleteFields(fieldMaps, controls) : initSettings.fieldMaps,

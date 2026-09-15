@@ -10,7 +10,7 @@ import { equalToLocalPushUniqueId, pathCompletion } from 'src/utils/common';
 import { PUSH_TYPE } from '../WorkflowSettings/enum';
 import { playPromptSound } from './promptSound';
 
-const getWorksheetInfo = worksheetId => {
+const getWorksheetInfo = (worksheetId: string) => {
   return new Promise(resolve => {
     sheetAjax.getWorksheetInfo({ worksheetId }).then(result => {
       if (result.resultCode === 1) {

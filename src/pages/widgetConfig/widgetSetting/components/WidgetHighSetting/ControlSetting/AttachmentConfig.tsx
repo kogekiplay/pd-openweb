@@ -497,7 +497,7 @@ export default function AttachmentVerify(props) {
           <Checkbox
             size="small"
             checked={showwatermark === '1'}
-            onClick={checked => {
+            onClick={(checked: boolean) => {
               if (featureType === '2') {
                 buriedUpgradeVersionDialog(globalSheetInfo.projectId, VersionProductType.waterMark);
                 return;
@@ -557,7 +557,7 @@ export default function AttachmentVerify(props) {
             <Checkbox
               size="small"
               checked={allowedit === '1'}
-              onClick={checked => {
+              onClick={(checked: boolean) => {
                 if (editFeatureType === '2') {
                   buriedUpgradeVersionDialog(globalSheetInfo.projectId, VersionProductType.editAttachment);
                   return;
@@ -594,7 +594,7 @@ export default function AttachmentVerify(props) {
             <Checkbox
               size="small"
               checked={allowedit === '1'}
-              onClick={checked => {
+              onClick={(checked: boolean) => {
                 if (editFeatureType === '2') {
                   buriedUpgradeVersionDialog(globalSheetInfo.projectId, VersionProductType.editAttachment);
                   return;
@@ -628,7 +628,7 @@ export default function AttachmentVerify(props) {
                 <Checkbox
                   size="small"
                   checked={onlyeditself === '1'}
-                  onClick={checked => onChange(handleAdvancedSettingChange(data, { onlyeditself: String(+!checked) }))}
+                  onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { onlyeditself: String(+!checked) }))}
                 >
                   <span style={{ marginRight: '4px' }}>{_l('只能编辑自己上传的附件')}</span>
                   <Tooltip

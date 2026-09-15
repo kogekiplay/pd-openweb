@@ -127,7 +127,7 @@ let SortableAppItem = class SortableAppItem extends Component<any, any> {
       return firstAppItem.workSheetId;
     }
   };
-  getNavigateUrl = appSectionId => {
+  getNavigateUrl = (appSectionId: string) => {
     const { appPkg } = this.props;
     let { appId } = getIds(this.props);
 

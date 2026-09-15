@@ -213,7 +213,7 @@ export default function BulletinSetting(props) {
     });
   };
 
-  const onSwitchItem = index => {
+  const onSwitchItem = (index: number) => {
     if (index === activeIndex) return;
     if (editStatus.editing) {
       alert(_l('请先保存正在编辑的内容'), 3);

@@ -50,7 +50,7 @@ class Root extends Component<any, any> {
     this.isUnmounted = true;
   }
 
-  changeSubordinate = checked => {
+  changeSubordinate = (checked: boolean) => {
     setStructureSelfEdit({
       isAllowStructureSelfEdit: !checked,
     }).then(() => {
@@ -60,7 +60,7 @@ class Root extends Component<any, any> {
     });
   };
 
-  changeReporting = checked => {
+  changeReporting = (checked: boolean) => {
     setStructureForAll({
       forAll: !checked,
     }).then(() => {

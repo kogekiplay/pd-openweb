@@ -623,12 +623,12 @@ const LeftAppGroup = props => {
   );
 };
 
-export const getAppSectionRef = appSectionId => {
+export const getAppSectionRef = (appSectionId: string) => {
   const ref = appSectionRefs[`AppSectionRef-${appSectionId}`] || {};
   return ref.current;
 };
 
-export const getAppSectionData = appSectionId => {
+export const getAppSectionData = (appSectionId: string) => {
   const ref = getAppSectionRef(appSectionId);
   return ref ? ref.getState().sheetList.data : [];
 };

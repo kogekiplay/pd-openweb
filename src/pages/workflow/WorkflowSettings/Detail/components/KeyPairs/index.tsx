@@ -325,7 +325,7 @@ export default ({
               className="mLeft20"
               text={_l('忽略空值')}
               checked={ignoreValueEmpty === 1}
-              onClick={checked => updateSource({ ignoreValueEmpty: checked ? 0 : 1 })}
+              onClick={(checked: boolean) => updateSource({ ignoreValueEmpty: checked ? 0 : 1 })}
             />
           )}
         </div>

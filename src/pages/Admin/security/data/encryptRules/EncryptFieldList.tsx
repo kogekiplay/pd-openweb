@@ -126,7 +126,7 @@ export default class EncryptFieldList extends Component<any, any> {
         this.setState({ loadingApp: false });
       });
   };
-  getWorksheetList = appId => {
+  getWorksheetList = (appId: string) => {
     if (!appId) {
       this.setState({ worksheetList: [] });
       return;

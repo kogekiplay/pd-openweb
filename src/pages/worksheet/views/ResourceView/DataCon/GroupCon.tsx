@@ -218,7 +218,7 @@ export default function GroupCon(props) {
     setState({
       dragValue: startDragValue,
     });
-    const setColumnWidth = width => {
+    const setColumnWidth = (width: number) => {
       const data = {
         ...widthConfig,
         [index]: width,
@@ -257,7 +257,7 @@ export default function GroupCon(props) {
     };
   };
 
-  const renderDrag = index => {
+  const renderDrag = (index: number) => {
     return (
       <div
         onMouseDown={event => {
@@ -465,7 +465,7 @@ export default function GroupCon(props) {
             const height = o.height + lineBottomHeight + 1; //底部有lineBottomHeight间距,
             const viewControlData = controls.find((o: FormControl) => o.controlId === _.get(view, 'viewControl')) || {};
 
-            const renderAccount = name => {
+            const renderAccount = (name: string) => {
               const data = safeParse(name);
               return (
                 <div className="flexRow alignItemsCenter">

@@ -162,7 +162,7 @@ export default class CreateRecordAndTask extends Component<any, any> {
             }
             border
             openSearch
-            onChange={appId => {
+            onChange={(appId: string) => {
               if (appId === 'other') {
                 this.setState({ showOtherWorksheet: true });
               } else {

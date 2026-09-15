@@ -401,7 +401,7 @@ class Header extends Component<any, any> {
           </Description>
         ),
         footerLeftElement: () => (
-          <Checkbox text={_l('下次不再提示')} onClick={checked => (this.closeTestDialog = checked)} />
+          <Checkbox text={_l('下次不再提示')} onClick={(checked: boolean) => (this.closeTestDialog = checked)} />
         ),
         okText: _l('继续'),
         removeCancelBtn: true,
@@ -709,7 +709,7 @@ class Header extends Component<any, any> {
                   className="mRight5"
                   checked={showApprovalFields}
                   text={_l('在视图上显示审批系统字段')}
-                  onClick={checked => this.setState({ showApprovalFields: !checked })}
+                  onClick={(checked: boolean) => this.setState({ showApprovalFields: !checked })}
                 />
 
                 <Support
@@ -722,7 +722,7 @@ class Header extends Component<any, any> {
                   className="mRight5"
                   checked={showApprovalDetail}
                   text={_l('打开记录时显示审批流转详情')}
-                  onClick={checked => this.setState({ showApprovalDetail: !checked })}
+                  onClick={(checked: boolean) => this.setState({ showApprovalDetail: !checked })}
                 />
 
                 <Support

@@ -40,9 +40,9 @@ const getValidZoom = value => {
   return _.isFinite(zoom) ? zoom : undefined;
 };
 
-const getMapZoomStorageKey = viewId => `mapViewZoom-${viewId}`;
+const getMapZoomStorageKey = (viewId: string) => `mapViewZoom-${viewId}`;
 
-const getLocalMapZoom = viewId => {
+const getLocalMapZoom = (viewId: string) => {
   if (!viewId) return undefined;
 
   return getValidZoom(localStorage.getItem(getMapZoomStorageKey(viewId)));

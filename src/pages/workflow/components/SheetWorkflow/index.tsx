@@ -893,7 +893,7 @@ export default function SheetWorkflow(props) {
             currentWork={currentWork}
             currentType={_.get(currentWork, 'flowNode.type')}
             currents={stepsCurrents.map(n => n.workId)}
-            onChangeCurrentWork={workId => {
+            onChangeCurrentWork={(workId: string) => {
               if (allowTaskRevokeWorks.length) {
                 const work =
                   _.find(works, {

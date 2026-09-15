@@ -588,7 +588,7 @@ export default class BaseFormInfo extends Component<any, any> {
             suffixIcon={<Icon icon="arrow-down-border Font14" />}
             filterOption={() => true}
             notFoundContent={<span className="textTertiary">{_l('可直接输入创建新的职位')}</span>}
-            onSearch={keywords =>
+            onSearch={(keywords: string) =>
               this.setState({ keywords, jobIds: jobIds.filter(item => item.indexOf('add_') === -1) })
             }
             onDropdownVisibleChange={open => {

@@ -315,7 +315,7 @@ export default class Start extends Component<any, any> {
   /**
    * 切换工作表
    */
-  switchWorksheet = appId => {
+  switchWorksheet = (appId: string) => {
     const refreshSource = () => this.getNodeDetail({ appId });
 
     if (this.state.data.appId) {

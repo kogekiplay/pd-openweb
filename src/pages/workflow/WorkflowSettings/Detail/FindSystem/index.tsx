@@ -314,7 +314,7 @@ export default class FindSystem extends Component<any, any> {
               className="InlineFlex"
               text={_l('在筛选条件的基础上，随机获取一个')}
               checked={data.random}
-              onClick={checked => this.updateSource({ random: !checked })}
+              onClick={(checked: boolean) => this.updateSource({ random: !checked })}
             />
           </div>
         )}
@@ -327,7 +327,7 @@ export default class FindSystem extends Component<any, any> {
                 className="InlineFlex"
                 text={_l('同时获取人员的汇报关系信息')}
                 checked={data.relation}
-                onClick={checked => this.updateSource({ relation: !checked })}
+                onClick={(checked: boolean) => this.updateSource({ relation: !checked })}
               />
             </div>
             <div className="mLeft25 textSecondary">

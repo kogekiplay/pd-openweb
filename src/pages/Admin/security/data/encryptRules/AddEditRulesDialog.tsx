@@ -342,7 +342,7 @@ export default class AddEditRulesDialog extends Component<any, any> {
                 className="w72"
                 checked={status === 1}
                 text={status ? _l('启用') : _l('停用')}
-                onClick={checked => this.changeForm('status', checked ? 2 : 1)}
+                onClick={(checked: boolean) => this.changeForm('status', checked ? 2 : 1)}
               />
             </FormItem>
           )}

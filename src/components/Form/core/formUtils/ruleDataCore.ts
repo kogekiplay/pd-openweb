@@ -160,7 +160,7 @@ export const updateRulesDataByRule = (
             );
 
             if (isAvailable) {
-              availableControlIds.forEach(controlId => {
+              availableControlIds.forEach((controlId: string) => {
                 if (!relateRuleType.errorMsg[controlId]) {
                   const pushError = (id, msg) => {
                     pushType('errorMsg', id, msg);

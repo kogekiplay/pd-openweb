@@ -52,7 +52,7 @@ export default function (props) {
     }
   };
 
-  const onAdd = index => {
+  const onAdd = (index: number) => {
     setting.splice(index + 1, 0, 'add');
     onChange(setting);
   };
@@ -71,7 +71,7 @@ export default function (props) {
               {...props}
               item={o}
               onUpdate={onUpdateSetting}
-              onAdd={index => onAdd(index)}
+              onAdd={(index: number) => onAdd(index)}
               DragHandle={({ children }) => <span>{children}</span>}
             />
           );
@@ -100,7 +100,7 @@ export default function (props) {
                 {...props}
                 {...options}
                 setting={setting}
-                onAdd={index => onAdd(index)}
+                onAdd={(index: number) => onAdd(index)}
                 onUpdate={(data, index: number) => onUpdateSetting(data, index)}
                 onDelete={data =>
                   onChange(

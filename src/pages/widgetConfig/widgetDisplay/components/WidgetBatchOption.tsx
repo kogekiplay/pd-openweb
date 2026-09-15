@@ -81,7 +81,7 @@ function WidgetBatch(props) {
   const isRequiredAll = batchActive.every(i => i.required);
   const isRequiredNotAll = !isRequiredAll && batchActive.some(i => i.required);
 
-  const getAllSelect = index => {
+  const getAllSelect = (index: number) => {
     const indexKey = index.toString();
     const isAll = batchActive.every(i => _.get(i.fieldPermission || '111', indexKey) === '0');
     const isNotAll = !isAll && batchActive.some(i => _.get(i.fieldPermission || '111', indexKey) === '0');
@@ -160,7 +160,7 @@ function WidgetBatch(props) {
               checked={isRequiredAll}
               clearselected={isRequiredNotAll}
               text={_l('必填')}
-              onClick={checked => handleChange({ required: !checked })}
+              onClick={(checked: boolean) => handleChange({ required: !checked })}
             />
           </div>
         </SettingItem>
@@ -177,7 +177,7 @@ function WidgetBatch(props) {
                   disabled={getDisabledStatus(mode)}
                   checked={_.get(getAllSelect(index), 'isAll')}
                   clearselected={_.get(getAllSelect(index), 'isNotAll')}
-                  onClick={checked => handleChange({ value: +checked, index }, 'fieldPermission')}
+                  onClick={(checked: boolean) => handleChange({ value: +checked, index }, 'fieldPermission')}
                 >
                   <span style={{ marginRight: '4px' }}>{text}</span>
                   <Tooltip placement="bottom" title={tips}>

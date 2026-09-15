@@ -993,7 +993,7 @@ function CellAttachments(props, sourceRef) {
         onOk={() => {
           handleChange();
         }}
-        checkValueByFilterRegex={name => {
+        checkValueByFilterRegex={(name: string) => {
           const formData = isFunction(props.rowFormData) ? props.rowFormData() : props.rowFormData;
           return checkValueByFilterRegex(
             { advancedSetting },

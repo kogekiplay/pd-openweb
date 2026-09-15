@@ -146,7 +146,7 @@ export default class WorkflowMonitor extends Component<any, any> {
     });
   };
 
-  changePage = pageIndex => {
+  changePage = (pageIndex: number) => {
     this.setState({ pageIndex }, this.getFlowList);
   };
 

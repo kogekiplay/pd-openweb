@@ -15,7 +15,7 @@ function getControlWidth(visibleColumns, i, sheetColumnWidths = {}) {
 export default function useVerticalTableWidth({ visibleColumns = [], sheetColumnWidths = {} }) {
   const controlColumnWidth = getMaxControlNameWidthOfControls(visibleColumns);
   const getWidth = useCallback(
-    index => (index === 0 ? controlColumnWidth : getControlWidth(visibleColumns, index, sheetColumnWidths)),
+    (index: number) => (index === 0 ? controlColumnWidth : getControlWidth(visibleColumns, index, sheetColumnWidths)),
     [sheetColumnWidths],
   );
   return getWidth;

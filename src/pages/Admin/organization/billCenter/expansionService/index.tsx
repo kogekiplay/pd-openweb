@@ -1369,7 +1369,7 @@ let ExpansionService = class ExpansionService extends Component<any, any> {
             checked={
               showWorkflowExtPack ? this.state.autoPurchaseWorkflowExtPack : this.state.autoPurchaseDataPipelineExtPack
             }
-            onClick={checked => {
+            onClick={(checked: boolean) => {
               if (showWorkflowExtPack) {
                 projectSetting
                   .setAutoPurchaseWorkflowExtPack({

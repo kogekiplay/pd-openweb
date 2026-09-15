@@ -87,7 +87,7 @@ const Cascader = props => {
   /**
    * 获取目前层级
    */
-  const getLayer = rowId => {
+  const getLayer = (rowId: string) => {
     if (getKeywords()) {
       let currentSearch = { currentItem: {}, currentLayer: 0 };
       (options || []).forEach(item => {
@@ -318,7 +318,7 @@ const Cascader = props => {
     loadData(item.value);
   };
 
-  const handleBreadcrumbClick = index => {
+  const handleBreadcrumbClick = (index: number) => {
     setOperatePath(index ? operatePath.slice(0, index) : []);
     loadData(index ? operatePath[index - 1] : '');
   };

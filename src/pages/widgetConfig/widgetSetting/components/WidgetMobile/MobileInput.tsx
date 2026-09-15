@@ -52,7 +52,7 @@ export default ({ data, onChange }) => {
               <Checkbox
                 size="small"
                 checked={_.includes(['0', i.value], scantype)}
-                onClick={checked => {
+                onClick={(checked: boolean) => {
                   let newScanType;
                   const filterValue = _.get(
                     _.find(SCAN_CODE_CONFIG, o => o.value !== i.value),
@@ -85,7 +85,7 @@ export default ({ data, onChange }) => {
             <Checkbox
               size="small"
               checked={dismanual === '1'}
-              onClick={checked => onChange(handleAdvancedSettingChange(data, { dismanual: String(+!checked) }))}
+              onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { dismanual: String(+!checked) }))}
               text={_l('禁止手动输入')}
             />
           </div>
@@ -93,7 +93,7 @@ export default ({ data, onChange }) => {
             <Checkbox
               size="small"
               checked={disableAlbum === '1'}
-              onClick={checked =>
+              onClick={(checked: boolean) =>
                 onChange({ strDefault: updateConfig({ config: strDefault, value: +!checked, index: 0 }) })
               }
               text={_l('禁用相册')}

@@ -249,7 +249,7 @@ export default class HistoryList extends Component<any, any> {
                 <Checkbox
                   checked={!!res.batchIds.length}
                   clearselected={!!res.batchIds.length && res.batchIds.length !== (data || []).length}
-                  onClick={checked => {
+                  onClick={(checked: boolean) => {
                     res.onUpdateBatchIds(
                       !checked || (checked && res.batchIds.length !== (data || []).length)
                         ? (data || []).map(o => {

@@ -145,7 +145,7 @@ export default class ExportApp extends React.Component<any, any> {
           <div className={cx('flexRow TxtMiddle alignItemsCenter', { mTop50: index === 0, mTop20: index !== 0 })}>
             <Checkbox
               checked={this.state[checkFiled]}
-              onClick={checked => {
+              onClick={(checked: boolean) => {
                 this.setState({
                   [checkFiled]: !checked,
                   [`${key}Edit`]: true,

@@ -41,7 +41,7 @@ export const getAppId = params => {
   return appId;
 };
 
-export const toApp = appId => {
+export const toApp = (appId: string) => {
   //手机端来源
   if (browserIsMobile()) {
     window.location.replace(pathCompletion(`/mobile/app/${appId}`));

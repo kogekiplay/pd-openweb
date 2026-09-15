@@ -44,7 +44,7 @@ export default ({ isSingle = false, controls, fields, updateSource }) => {
 
     updateSource({
       fields: checked
-        ? _.uniqBy(fields.concat(ids.map(controlId => ({ fieldId: controlId, isClear: true }))), 'fieldId')
+        ? _.uniqBy(fields.concat(ids.map((controlId: string) => ({ fieldId: controlId, isClear: true }))), 'fieldId')
         : fields.filter(o => !_.includes(ids, o.fieldId)),
     });
   };
@@ -67,7 +67,7 @@ export default ({ isSingle = false, controls, fields, updateSource }) => {
           </span>
         }
         checked={!!(_.find(fields, o => o.fieldId === c.controlId) || {}).isClear}
-        onClick={checked => {
+        onClick={(checked: boolean) => {
           updateSource({
             fields: checked
               ? fields.filter(o => o.fieldId !== c.controlId)

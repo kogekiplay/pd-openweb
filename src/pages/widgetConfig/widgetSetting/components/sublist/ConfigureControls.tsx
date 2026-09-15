@@ -376,12 +376,12 @@ export default function ConfigureControl(props) {
     </AllWidgetsWrap>
   );
 
-  const handleDeleteWidget = index => {
+  const handleDeleteWidget = (index: number) => {
     const newRelationControls = update(controls, { $splice: [[index, 1]] });
     onChange(updateControlsWithSorts(newRelationControls));
   };
 
-  const handleCopyWidget = index => {
+  const handleCopyWidget = (index: number) => {
     const curControl = controls[index];
     const newRelationControls = controls.concat([dealCopyWidgetId(curControl)]);
     onChange(updateControlsWithSorts(newRelationControls));

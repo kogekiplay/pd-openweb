@@ -300,7 +300,7 @@ export default function MingoGeneratedWidgetsSelector({
         onFill={(controlId: string, value) => {
           emitFillValueByAi(controlId, value);
         }}
-        onClear={controlId => {
+        onClear={(controlId: string) => {
           emitFillValueByAi(controlId, undefined);
         }}
       />

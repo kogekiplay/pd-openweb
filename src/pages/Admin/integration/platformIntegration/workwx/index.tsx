@@ -350,7 +350,7 @@ export default class Workwx extends React.Component<any, any> {
                 <span className="mLeft10 switchBtn">
                   <Switch
                     checked={!isCloseDing}
-                    onClick={checked => {
+                    onClick={(checked: boolean) => {
                       this.editDingStatus(checked ? 2 : 1);
                     }}
                   />
@@ -427,7 +427,7 @@ export default class Workwx extends React.Component<any, any> {
       this.getInitialPassword();
     }
   };
-  handleChangeCustomMappingFieldEnabled = checked => {
+  handleChangeCustomMappingFieldEnabled = (checked: boolean) => {
     Ajax.editWXProjectMappingFieldEnabled({
       projectId: this.props.projectId,
       status: checked ? 0 : 1,
@@ -451,7 +451,7 @@ export default class Workwx extends React.Component<any, any> {
       }
     });
   };
-  syncWXLabel = checked => {
+  syncWXLabel = (checked: boolean) => {
     Ajax.editWXProjectTagMappingField({
       projectId: this.props.projectId,
       fieldName: checked ? '' : this.state.syncWXLabel,
@@ -463,7 +463,7 @@ export default class Workwx extends React.Component<any, any> {
       }
     });
   };
-  handleChangeOpenQuickApproval = checked => {
+  handleChangeOpenQuickApproval = (checked: boolean) => {
     const { qwQuickAprData = {} } = this.state;
     Ajax.editWXIsEnableQuickApprove({
       projectId: this.props.projectId,
@@ -797,7 +797,7 @@ export default class Workwx extends React.Component<any, any> {
                 {intergrationType === 1 && (
                   <EnabledWebProxy
                     isProxy={isProxy}
-                    handleChangeProxy={checked =>
+                    handleChangeProxy={(checked: boolean) =>
                       this.editWXProjectSettingStatus(
                         this.state.status,
                         () => {

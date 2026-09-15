@@ -148,7 +148,7 @@ export default ({ title, description, keys, opinionTemplate, onSave, onClose }) 
           className="InlineFlex"
           checked={inputType === 1}
           text={_l('用户自由输入')}
-          onClick={checked => setType(!checked ? 1 : 2)}
+          onClick={(checked: boolean) => setType(!checked ? 1 : 2)}
         />
       </div>
 

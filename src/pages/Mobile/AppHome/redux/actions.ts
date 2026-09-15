@@ -81,7 +81,7 @@ export const markedGroup =
     });
   };
 
-export const getHomePlatformSetting = projectId => dispatch => {
+export const getHomePlatformSetting = (projectId: string) => dispatch => {
   homeAppAjax.getHomePlatformSetting({ projectId }).then(res => {
     dispatch({
       type: 'PLATE_FORM_SETTING',
@@ -130,7 +130,7 @@ export const myPlatform = (projectId: string, isPullRefresh) => dispatch => {
   });
 };
 
-export const getAllFavorites = projectId => dispatch => {
+export const getAllFavorites = (projectId: string) => dispatch => {
   favoriteAjax.getAllFavorites({ projectId, isRefresh: 1 }).then(res => {
     dispatch({
       type: 'COLLECT_RECORDS',
@@ -139,7 +139,7 @@ export const getAllFavorites = projectId => dispatch => {
   });
 };
 
-export const getAllCollectCharts = projectId => dispatch => {
+export const getAllCollectCharts = (projectId: string) => dispatch => {
   favoriteAjax.getAllFavorites({ projectId, type: 2, isRefresh: 1 }).then(res => {
     dispatch({
       type: 'COLLECT_CHARTS',

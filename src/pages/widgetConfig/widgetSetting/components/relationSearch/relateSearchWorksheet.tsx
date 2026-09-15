@@ -265,7 +265,7 @@ export function RelateSearchWorksheet(props) {
                 <span className="overflow_ellipsis flex">
                   {_l('检测到已有关联，是否查询关联当前 %0 的 %1 ？', name, sheetName)}
                 </span>
-                <Switch checked={open} text={''} onClick={checked => handleSetSource({ open: !checked })} />
+                <Switch checked={open} text={''} onClick={(checked: boolean) => handleSetSource({ open: !checked })} />
               </div>
               {open ? (
                 <Fragment>

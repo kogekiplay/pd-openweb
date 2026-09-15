@@ -390,7 +390,7 @@ function ExplanDetail(props) {
           total={workflowData.count}
           pageIndex={filters.pageIndex}
           pageSize={PAGE_SIZE}
-          onChange={index => {
+          onChange={(index: number) => {
             setFilters({
               ...filters,
               pageIndex: index,

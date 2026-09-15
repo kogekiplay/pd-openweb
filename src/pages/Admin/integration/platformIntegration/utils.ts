@@ -13,7 +13,7 @@ const INTERGRATION_FAILED_INFO = {
 };
 
 // 开启|关闭集成状态失败时action
-export const integrationFailed = projectId => {
+export const integrationFailed = (projectId: string) => {
   roleAjax
     .getProjectPermissionsByUser({
       projectId,

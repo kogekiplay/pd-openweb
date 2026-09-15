@@ -3,16 +3,16 @@
   "key": "code",
   "tsVersion": "7.0.2",
   "tsconfig": "tsconfig.gate.json",
-  "generatedAt": "2026-09-15T06:25:31.038Z",
-  "rawCount": 16784,
+  "generatedAt": "2026-09-15T06:37:11.173Z",
+  "rawCount": 16782,
   "droppedNoise": {
     "library": 1650,
     "probe": 0,
     "commentTS1xxx": 0,
     "commentOther": 0
   },
-  "keptCount": 15134,
-  "uniqueKeys": 3447,
+  "keptCount": 15132,
+  "uniqueKeys": 3446,
   "entries": {
     "src/common/GlobalStore.tsx|TS2554": 1,
     "src/common/cookies.ts|TS2551": 2,
@@ -1459,7 +1459,6 @@
     "src/pages/Role/PortalCon/setting/BaseSet/BasicSet.tsx|TS2353": 3,
     "src/pages/Role/PortalCon/setting/BaseSet/LoginSet.tsx|TS2353": 4,
     "src/pages/Role/PortalCon/setting/BaseSet/index.tsx|TS2339": 4,
-    "src/pages/Role/PortalCon/setting/InfoSet/index.tsx|TS2345": 2,
     "src/pages/Role/PortalCon/setting/LoginSet/index.tsx|TS2339": 28,
     "src/pages/Role/PortalCon/setting/LoginSet/index.tsx|TS2353": 2,
     "src/pages/Role/PortalCon/setting/TextMessage.tsx|TS2339": 2,

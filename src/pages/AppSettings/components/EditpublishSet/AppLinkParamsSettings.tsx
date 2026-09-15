@@ -96,7 +96,7 @@ export default function AppLinkParamsSettings(props) {
                       key={value}
                       checked={params[value]}
                       text={text}
-                      onClick={checked => setParams({ ...params, [value]: !checked })}
+                      onClick={(checked: boolean) => setParams({ ...params, [value]: !checked })}
                     />
                   </div>
                 );

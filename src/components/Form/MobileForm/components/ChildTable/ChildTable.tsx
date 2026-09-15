@@ -1022,7 +1022,7 @@ class ChildTable extends React.Component<any, any> {
     this.openDetail(newRowIndex);
   };
 
-  openDetail = index => {
+  openDetail = (index: number) => {
     this.setState({
       previewRowIndex: index,
       recordVisible: true,

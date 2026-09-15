@@ -96,7 +96,7 @@ const SheetSelector = () => {
     setSelectedWorksheetList(dispatch, scheme.worksheetList || []);
   };
 
-  const handleRemoveSelectedWorksheet = worksheetId => {
+  const handleRemoveSelectedWorksheet = (worksheetId: string) => {
     removeSelectedWorksheet(dispatch, worksheetId);
   };
 

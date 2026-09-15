@@ -194,7 +194,7 @@ export const colorGroup = {
 /**
  * 获取组织管理主题色
  */
-export const getPorjectChartColors = projectId => {
+export const getPorjectChartColors = (projectId: string) => {
   const { chartColor } = getProjectColor(projectId);
   const systemColorList = (chartColor.system || []).filter(item => item.enable !== false && !_.isEmpty(item.colors));
   const customColorList = (chartColor.custom || []).filter(item => item.enable !== false && !_.isEmpty(item.colors));

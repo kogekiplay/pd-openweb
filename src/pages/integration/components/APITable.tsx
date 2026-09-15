@@ -152,7 +152,7 @@ function APITable(props) {
                     checked={
                       ((selectedList.length >= props.count && props.count > 0) || props.isCheckAll) && list.length > 0
                     }
-                    onClick={checked => props.onCheck(!checked)}
+                    onClick={(checked: boolean) => props.onCheck(!checked)}
                   />
                 ) : (
                   o.name

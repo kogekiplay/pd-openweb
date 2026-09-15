@@ -216,7 +216,7 @@ export default class GetMoreRecord extends Component<any, any> {
   /**
    * 获取工作表的自定义字段
    */
-  getWorksheetFields = appId => {
+  getWorksheetFields = (appId: string) => {
     const { data } = this.state;
 
     flowNode
@@ -604,7 +604,7 @@ export default class GetMoreRecord extends Component<any, any> {
           }
           border
           openSearch
-          onChange={appId => {
+          onChange={(appId: string) => {
             if (appId === 'other') {
               this.setState({ showOtherWorksheet: true });
             } else {
@@ -889,7 +889,7 @@ export default class GetMoreRecord extends Component<any, any> {
             className="InlineFlex"
             text={_l('彻底删除记录，不放入回收站')}
             checked={data.destroy}
-            onClick={checked => this.updateSource({ destroy: !checked })}
+            onClick={(checked: boolean) => this.updateSource({ destroy: !checked })}
           />
         </div>
         <div className="Font13 textSecondary mTop5 mLeft26">{_l('彻底删除后数据不可恢复，请谨慎操作')}</div>

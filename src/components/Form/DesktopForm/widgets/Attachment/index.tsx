@@ -275,7 +275,7 @@ export default class Widgets extends Component<any, any> {
       });
   };
 
-  checkValueByFilterRegex = name => {
+  checkValueByFilterRegex = (name: string) => {
     const { advancedSetting, formData, recordId } = this.props;
     return checkValueByFilterRegex({ advancedSetting }, RegExpValidator.getNameOfFileName(name), formData, recordId);
   };

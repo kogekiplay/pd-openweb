@@ -370,7 +370,7 @@ export default ({
                         className="InlineBlock"
                         text={_l('重复提醒')}
                         checked={_.get(item, 'repeat.repeatType') === 6}
-                        onClick={checked => {
+                        onClick={(checked: boolean) => {
                           const repeat = {
                             repeatType: checked ? 0 : 6,
                             ...resetRepeatParameter(item.unit),

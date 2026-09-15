@@ -345,7 +345,7 @@ class ProcessConfig extends Component<any, any> {
           <Switch
             checked={data.textShowType === 1}
             text={data.textShowType === 1 ? _l('开启') : _l('关闭%03087')}
-            onClick={checked => this.updateSource({ textShowType: checked ? 0 : 1 })}
+            onClick={(checked: boolean) => this.updateSource({ textShowType: checked ? 0 : 1 })}
           />
         </div>
 
@@ -536,7 +536,7 @@ class ProcessConfig extends Component<any, any> {
             text={_l('允许触发者撤回')}
             checked={data.allowRevoke}
             disabled={!isSheetOrButton}
-            onClick={checked => this.updateSource({ allowRevoke: !checked })}
+            onClick={(checked: boolean) => this.updateSource({ allowRevoke: !checked })}
           />
           {data.allowRevoke && (
             <div className="mTop10 mLeft25 flexRow alignItemsCenter">
@@ -560,7 +560,7 @@ class ProcessConfig extends Component<any, any> {
             text={_l('允许触发者催办')}
             checked={data.allowUrge}
             disabled={!isSheetOrButton}
-            onClick={checked => this.updateSource({ allowUrge: !checked })}
+            onClick={(checked: boolean) => this.updateSource({ allowUrge: !checked })}
           />
         </div>
 
@@ -574,7 +574,7 @@ class ProcessConfig extends Component<any, any> {
                     <Checkbox
                       {...o}
                       className="InlineFlex TxtTop"
-                      onClick={checked => this.updateSource({ [o.key]: !checked })}
+                      onClick={(checked: boolean) => this.updateSource({ [o.key]: !checked })}
                     />
                     {o.tip && (
                       <Tooltip title={o.tip}>
@@ -930,7 +930,7 @@ class ProcessConfig extends Component<any, any> {
             text={_l('使用应用IP白名单')}
             checked={data.pbcConfig.authType !== 0}
             disabled={data.pbcConfig.authType === 1}
-            onClick={checked =>
+            onClick={(checked: boolean) =>
               this.updateSource({ pbcConfig: Object.assign({}, data.pbcConfig, { authType: checked ? 0 : 2 }) })
             }
           />

@@ -254,7 +254,7 @@ export default function CreateWechatOrAliMerchant(props) {
               projectId,
               weChatServiceAccounts,
               appId: formData?.appId,
-              onOk: appId => {
+              onOk: (appId: string) => {
                 setFormData({ ...formData, appId });
               },
             })
@@ -289,7 +289,7 @@ export default function CreateWechatOrAliMerchant(props) {
                 projectId,
                 weChatServiceAccounts,
                 appId: formData?.appId,
-                onOk: appId => {
+                onOk: (appId: string) => {
                   setFormData({ ...formData, appId });
                 },
               });

@@ -116,7 +116,7 @@ export default function ItemCard(props) {
     showReSync: false,
   });
 
-  const updateName = name => {
+  const updateName = (name: string) => {
     SyncTask.updateSyncTask(
       {
         projectId,
@@ -534,7 +534,7 @@ export default function ItemCard(props) {
               showChangeName: false,
             });
           }}
-          onChange={name => {
+          onChange={(name: string) => {
             updateName(name);
             setState({
               showChangeName: false,

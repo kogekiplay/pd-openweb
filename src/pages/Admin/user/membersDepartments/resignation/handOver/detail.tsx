@@ -563,7 +563,7 @@ export default class Detail extends React.Component<any, any> {
               <td width="10%">
                 <Checkbox
                   checked={!!(selectItems && selectItems[item.sourceId])}
-                  onClick={checked => {
+                  onClick={(checked: boolean) => {
                     this.setState(prevState => {
                       if (checked) {
                         const { [item.sourceId]: others } = prevState.selectItems;
@@ -661,7 +661,7 @@ export default class Detail extends React.Component<any, any> {
               <th width="10%">
                 <Checkbox
                   checked={isAllChecked}
-                  onClick={checked => {
+                  onClick={(checked: boolean) => {
                     _.isArray(list) &&
                       _.each(list, item => {
                         this.setState(prevState => {
@@ -712,7 +712,7 @@ export default class Detail extends React.Component<any, any> {
             total={allCount}
             pageSize={pageSize}
             pageIndex={pageIndex}
-            onChange={pageIndex => this.setState({ pageIndex }, this.fetchList)}
+            onChange={(pageIndex: number) => this.setState({ pageIndex }, this.fetchList)}
           />
         ) : null}
       </React.Fragment>

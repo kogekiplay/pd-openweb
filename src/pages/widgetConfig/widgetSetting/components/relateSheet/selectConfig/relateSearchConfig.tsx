@@ -187,7 +187,7 @@ export default function RelateSearchConfig(props) {
           <Checkbox
             checked={clicksearch === '1'}
             text={_l('在搜索后显示可选记录')}
-            onClick={checked => {
+            onClick={(checked: boolean) => {
               handleChange(handleAdvancedSettingChange(data, { clicksearch: checked ? '0' : '1' }));
             }}
           />

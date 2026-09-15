@@ -359,7 +359,7 @@ class SearchWorksheetActionDialog extends Component<any, any> {
             }
             value={isSubCidDelete ? undefined : subCid || undefined}
             data={this.getDropData(subCidControls, cidControl, pid)}
-            onChange={controlId => {
+            onChange={(controlId: string) => {
               let newConfigs = configs.map((i, idx) => (idx === index ? { ...i, subCid: controlId } : i));
 
               if (curIsSubList) {

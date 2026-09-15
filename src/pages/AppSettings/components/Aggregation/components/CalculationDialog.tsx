@@ -168,7 +168,7 @@ export default function CalculationDialog(props) {
               <Checkbox
                 className="InlineBlock"
                 checked={_.get(calculation, 'advancedSetting.thousandth') !== '1'}
-                onClick={checked => {
+                onClick={(checked: boolean) => {
                   setState({
                     calculation: handleAdvancedSettingChange(calculation, {
                       thousandth: checked ? '1' : '0',
@@ -180,7 +180,7 @@ export default function CalculationDialog(props) {
               <Checkbox
                 className="InlineBlock mLeft60"
                 checked={_.get(calculation, 'advancedSetting.numshow') === '1'}
-                onClick={checked => {
+                onClick={(checked: boolean) => {
                   setState({
                     calculation: handleAdvancedSettingChange(calculation, {
                       suffix: checked ? '' : '%',

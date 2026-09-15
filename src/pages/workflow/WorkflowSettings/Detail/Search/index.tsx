@@ -397,7 +397,7 @@ export default class Search extends Component<any, any> {
                 className="InlineFlex"
                 text={_l('获取记录数据')}
                 checked={data.returnNew === false}
-                onClick={checked => this.updateSource({ returnNew: !checked ? false : null })}
+                onClick={(checked: boolean) => this.updateSource({ returnNew: !checked ? false : null })}
               />
             </div>
             <div className="Font13 textSecondary mTop5 mLeft26">{_l('删除前保留记录数据，供之后的流程节点使用')}</div>
@@ -407,7 +407,7 @@ export default class Search extends Component<any, any> {
                 className="InlineFlex"
                 text={_l('彻底删除记录，不放入回收站')}
                 checked={data.destroy}
-                onClick={checked => this.updateSource({ destroy: !checked })}
+                onClick={(checked: boolean) => this.updateSource({ destroy: !checked })}
               />
             </div>
             <div className="Font13 textSecondary mTop5 mLeft26">{_l('彻底删除后数据不可恢复，请谨慎操作')}</div>
@@ -505,7 +505,7 @@ export default class Search extends Component<any, any> {
         border
         openSearch
         noData={isAggregationSheet ? _l('暂无聚合表，请先在应用里创建') : _l('暂无工作表，请先在应用里创建')}
-        onChange={appId => {
+        onChange={(appId: string) => {
           if (appId === 'other') {
             this.setState({ showOtherWorksheet: true });
           } else {

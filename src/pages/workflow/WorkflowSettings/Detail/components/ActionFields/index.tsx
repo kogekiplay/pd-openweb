@@ -81,7 +81,7 @@ export default class ActionFields extends Component<any, any> {
   /**
    * 点击切换
    */
-  handleClick = index => {
+  handleClick = (index: number) => {
     if (this.state.activeIndex === index) index = -1;
     this.setState({ activeIndex: index });
     this.search && this.search.focus();

@@ -196,7 +196,7 @@ function CodeEdit(props, ref) {
           readOnly: mode === 'read' ? 'nocursor' : undefined,
           placeholder: !readOnly && _l('编辑时支持空格、缩进、换行'),
         },
-        getControlName: controlId => (_.find(controls, { controlId }) || {}).controlName,
+        getControlName: (controlId: string) => (_.find(controls, { controlId }) || {}).controlName,
         controls,
         renderTag,
         type,

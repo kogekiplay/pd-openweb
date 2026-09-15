@@ -300,7 +300,7 @@ const Search = props => {
   // 下拉框
   if (enumDefault === 1) {
     selectProps = {
-      onSearch: keywords => updateKeywords(keywords),
+      onSearch: (keywords: string) => updateKeywords(keywords),
       filterOption: (inputValue, option) => {
         return `${option.label}`.indexOf(inputValue) > -1;
       },
@@ -315,7 +315,7 @@ const Search = props => {
   // 搜索下拉框
   if (enumDefault === 2) {
     selectProps = {
-      onSearch: keywords => {
+      onSearch: (keywords: string) => {
         updateKeywords(keywords);
         // 实时搜索
         if (clicksearch === '1') {

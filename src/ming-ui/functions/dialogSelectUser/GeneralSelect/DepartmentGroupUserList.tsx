@@ -29,7 +29,7 @@ export default class DepartmentGroupUserList extends Component<any, any> {
     return _.includes(this.props.selectedAccountIds || [], user.accountId);
   }
 
-  onlyShowJoinGroup = checked => {
+  onlyShowJoinGroup = (checked: boolean) => {
     this.setState({ onlyJoinGroupChecked: !checked });
     safeLocalStorageSetItem('isCheckedGroupOnlyMyJoin', !checked);
     if (_.isFunction(this.props.userAction)) {

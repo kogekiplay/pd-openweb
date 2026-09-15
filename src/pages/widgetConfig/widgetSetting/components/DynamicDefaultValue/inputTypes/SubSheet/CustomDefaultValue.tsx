@@ -98,7 +98,7 @@ export default class CustomDefaultValue extends Component<any, any> {
                 let itemValue = {};
                 (data.showControls || [])
                   .concat(['pid', 'rowid', 'childrenids'])
-                  .map(controlId => (itemValue[controlId] = row[controlId] || ''));
+                  .map((controlId: string) => (itemValue[controlId] = row[controlId] || ''));
                 return itemValue;
               });
               this.setState({ filterRows });

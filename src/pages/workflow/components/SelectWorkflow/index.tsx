@@ -110,7 +110,7 @@ export default class SelectWorkflow extends Component<any, any> {
               className="mTop15 flexRow"
               checked={!!_.find(selectItems, o => o.id === obj.id)}
               text={obj.name}
-              onClick={checked => this.onSelect(item.apkName, obj, !checked)}
+              onClick={(checked: boolean) => this.onSelect(item.apkName, obj, !checked)}
             />
           );
         })}

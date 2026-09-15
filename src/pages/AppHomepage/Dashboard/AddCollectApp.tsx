@@ -128,7 +128,7 @@ function AddCollectApp(props) {
     );
   }, []);
 
-  const fetchItemList = appId => {
+  const fetchItemList = (appId: string) => {
     homeAppAjax.getAppItems({ appId }).then(res => {
       if (res) {
         const markedItems = res.filter(item => item.isMarked);

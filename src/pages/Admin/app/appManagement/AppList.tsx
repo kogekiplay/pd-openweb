@@ -307,7 +307,7 @@ export default class AppManagement extends Component<any, any> {
             <Switch
               checked={!!item.status}
               text={item.status ? _l('开启') : _l('关闭')}
-              onClick={checked => this.editAppStatus(item.appId, checked ? 0 : 1)}
+              onClick={(checked: boolean) => this.editAppStatus(item.appId, checked ? 0 : 1)}
             />
           ) : (
             '-'
@@ -767,7 +767,7 @@ export default class AppManagement extends Component<any, any> {
             total={total}
             pageIndex={pageIndex}
             pageSize={50}
-            onChange={pageIndex => this.setState({ pageIndex }, this.getAppList)}
+            onChange={(pageIndex: number) => this.setState({ pageIndex }, this.getAppList)}
           />
         </div>
 

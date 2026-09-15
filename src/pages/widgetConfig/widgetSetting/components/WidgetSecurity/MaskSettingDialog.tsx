@@ -335,7 +335,7 @@ export default function MaskSettingDialog(props) {
               className="mRight12"
               size="small"
               checked={testInfo.visible}
-              onClick={checked => {
+              onClick={(checked: boolean) => {
                 setDetail({ masklen: checked ? '' : '3' });
                 setTestInfo({ visible: !checked });
                 if (checked) {

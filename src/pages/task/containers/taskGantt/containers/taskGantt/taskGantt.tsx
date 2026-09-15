@@ -142,7 +142,7 @@ class TaskGantt extends Component<any, any> {
    * @param {array} members
    */
   subordinateSocketSubscribe(members) {
-    members.forEach(accountId => {
+    members.forEach((accountId: string) => {
       IM.socket.emit('subscribe', {
         type: 'subordinate',
         sourceId: `${config.projectId}|${md.global.Account.accountId}|${accountId}`,

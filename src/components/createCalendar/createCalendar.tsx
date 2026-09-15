@@ -155,7 +155,7 @@ $.extend(CreateCalendar.prototype, {
       <Checkbox
         className="InlineBlock"
         text={_l('全天日程')}
-        onClick={checked => {
+        onClick={(checked: boolean) => {
           if (checked) {
             $('.timezone').hide();
             $('.timezoneWrap').hide();
@@ -394,7 +394,7 @@ $.extend(CreateCalendar.prototype, {
         className="InlineBlock"
         text={_l('电话提醒')}
         size="small"
-        onClick={checked => {
+        onClick={(checked: boolean) => {
           _this.settings.telRemind = checked;
         }}
       />,
@@ -433,7 +433,7 @@ $.extend(CreateCalendar.prototype, {
       <Checkbox
         className="InlineBlock"
         text={_l('私密日程')}
-        onClick={checked => {
+        onClick={(checked: boolean) => {
           _this.settings.calendarPrivate = checked;
         }}
       />,

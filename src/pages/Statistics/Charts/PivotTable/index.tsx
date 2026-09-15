@@ -660,7 +660,7 @@ class PivotTable extends Component<any, any> {
     const yaxisListLength = yaxisList.filter((n: AxisField) => !n.hide).length;
     const isHideHeaderLastTr = columns.length && !lines.length && yaxisListLength === 1;
     const contentColumnIndexOffset = lines.length || (isHideHeaderLastTr ? 1 : 0);
-    const getColumnWidthIndex = index => contentColumnIndexOffset + index;
+    const getColumnWidthIndex = (index: number) => contentColumnIndexOffset + index;
 
     const getTitle = (id, data) => {
       if (_.isNull(data)) return;
@@ -680,7 +680,7 @@ class PivotTable extends Component<any, any> {
       }
     };
 
-    const getYaxisList = index => {
+    const getYaxisList = (index: number) => {
       const yaxisColumn = yaxisList.map((item, i) => {
         const { rename, controlName, showNumber = true, percent = {} } = item;
         const name = rename || controlName;

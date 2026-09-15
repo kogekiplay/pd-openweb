@@ -968,7 +968,7 @@ export default class GeneraSelect extends Component<any, any> {
   };
 
   /** 搜索 */
-  search = keywords => {
+  search = (keywords: string) => {
     const { showTabs = [] } = this.userSettings;
 
     if (!keywords) {
@@ -1440,7 +1440,7 @@ export default class GeneraSelect extends Component<any, any> {
           avatar = <img src={(item.data || {}).avatar} alt="头像" className="GSelect-result-subItem__avatar" />;
           id = (item.data || {}).accountId;
           name = (item.data || {}).fullname;
-          deleteFn = accountId => {
+          deleteFn = (accountId: string) => {
             this.deleteData(item.type, accountId, 'accountId');
           };
 

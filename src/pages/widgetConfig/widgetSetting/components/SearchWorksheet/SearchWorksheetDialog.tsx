@@ -337,7 +337,7 @@ export default class SearchWorksheetDialog extends Component<any, any> {
                 }
                 value={isDelete ? undefined : item.subCid || undefined}
                 data={subControls}
-                onChange={controlId => {
+                onChange={(controlId: string) => {
                   const currentItem = _.find(subControls, subControl => subControl.value === controlId) || {};
                   this.setState({
                     configs: configs.map((i, idx) =>
@@ -638,7 +638,7 @@ export default class SearchWorksheetDialog extends Component<any, any> {
                             </span>
                           );
                         }}
-                        onChange={controlId => this.setState({ configs: [{ cid: data.controlId, subCid: controlId }] })}
+                        onChange={(controlId: string) => this.setState({ configs: [{ cid: data.controlId, subCid: controlId }] })}
                       />
                       {_l('的值写入当前字段')}
                     </div>

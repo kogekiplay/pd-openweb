@@ -476,7 +476,7 @@ export default class Push extends Component<any, any> {
               <Checkbox
                 text={_l('创建草稿记录')}
                 checked={data.actionId === ACTION_ID.CREATE_RECORD}
-                onClick={checked => {
+                onClick={(checked: boolean) => {
                   if (!checked) {
                     this.getNodeDetail(this.props, { appId: data.appId, actionId: ACTION_ID.CREATE_RECORD });
                   } else {

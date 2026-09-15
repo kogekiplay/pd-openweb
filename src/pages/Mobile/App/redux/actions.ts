@@ -89,7 +89,7 @@ const getApp = (appId: string, cb) => dispatch => {
     });
 };
 
-const getTodoCount = appId => dispatch => {
+const getTodoCount = (appId: string) => dispatch => {
   if (window.isPublicApp) return;
   instanceVersion.getTodoListFilter({ type: -1 }).then(processTodoList => {
     const processData = _.find(processTodoList, { app: { id: appId } });

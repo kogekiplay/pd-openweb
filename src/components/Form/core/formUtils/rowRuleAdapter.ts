@@ -151,7 +151,7 @@ const updateDataPermission = ({ attrs = [], it, checkRuleValidator, item = {} })
   if (_.includes(types, 2) || eventPermissions[0] === '0') {
     fieldPermission = replaceStr(fieldPermission, 0, '0');
     if (isSubList && _.includes(item.showControls || [], it.controlId)) {
-      item.showControls = (item.showControls || []).filter(controlId => controlId !== it.controlId);
+      item.showControls = (item.showControls || []).filter((controlId: string) => controlId !== it.controlId);
     }
   } else if (_.includes(types, 1) || eventPermissions[0] === '1') {
     fieldPermission = replaceStr(fieldPermission, 0, '1');

@@ -379,7 +379,7 @@ export default class Agent extends Component<any, any> {
                   size="small"
                   text={_l('所有字段')}
                   checked={data.switchDetail}
-                  onClick={checked => this.updateSource({ switchDetail: !checked })}
+                  onClick={(checked: boolean) => this.updateSource({ switchDetail: !checked })}
                 />
               </div>
             </Tooltip>
@@ -389,7 +389,7 @@ export default class Agent extends Component<any, any> {
                   size="small"
                   text={_l('讨论信息')}
                   checked={data.switchDiscussion}
-                  onClick={checked => this.updateSource({ switchDiscussion: !checked })}
+                  onClick={(checked: boolean) => this.updateSource({ switchDiscussion: !checked })}
                 />
               </div>
             </Tooltip>
@@ -602,7 +602,7 @@ export default class Agent extends Component<any, any> {
                 className="InlineFlex"
                 text={_l('按用户权限')}
                 checked={data.checkUserPermission}
-                onClick={checked => this.updateSource({ checkUserPermission: !checked })}
+                onClick={(checked: boolean) => this.updateSource({ checkUserPermission: !checked })}
               />
               <Tooltip
                 placement="topRight"
@@ -881,7 +881,7 @@ export default class Agent extends Component<any, any> {
                 className="textSecondary"
                 text={_l('调用前需用户确认')}
                 checked={item.requireUserConfirmation}
-                onClick={checked => this.updateTool(item.toolId, { requireUserConfirmation: !checked })}
+                onClick={(checked: boolean) => this.updateTool(item.toolId, { requireUserConfirmation: !checked })}
               />
             </div>
           )}

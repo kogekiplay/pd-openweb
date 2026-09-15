@@ -103,7 +103,7 @@ export default function SearchConfig(props) {
           className="mTop8"
           checked={clicksearch === '1'}
           text={_l('在搜索后显示可选记录')}
-          onClick={checked => {
+          onClick={(checked: boolean) => {
             onChange({ clicksearch: checked ? '0' : '1' });
           }}
         />

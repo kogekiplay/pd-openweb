@@ -62,7 +62,7 @@ class Task extends Component<any, any> {
     );
   }
 
-  validatePermission = projectId => {
+  validatePermission = (projectId: string) => {
     const hasTaskAuth =
       projectId && checkPermission(projectId, [PERMISSION_ENUM.CREATE_SYNC_TASK, PERMISSION_ENUM.MANAGE_SYNC_TASKS]);
 

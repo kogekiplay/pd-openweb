@@ -373,7 +373,7 @@ export class CountryLayer extends Component<any, any> {
         }
       });
   };
-  handleDrillUpTriggleData = index => {
+  handleDrillUpTriggleData = (index: number) => {
     const { path } = this.state;
     const { isThumbnail, reportData, base = {} } = this.props;
     const { country } = reportData;

@@ -432,7 +432,7 @@ let ViewItems = class ViewItems extends Component<any, any> {
     this.setState({
       expandRecycle: !this.state.expandRecycle,
     });
-  restoreWorksheetView = viewId => {
+  restoreWorksheetView = (viewId: string) => {
     const { recycleData } = this.state;
     const { worksheetId, appId } = this.props;
     sheetAjax
@@ -452,7 +452,7 @@ let ViewItems = class ViewItems extends Component<any, any> {
         }
       });
   };
-  hasSearchWords = name => _.toLower(name).includes(_.toLower(_.trim(this.state.searchWorksheetListValue)));
+  hasSearchWords = (name: string) => _.toLower(name).includes(_.toLower(_.trim(this.state.searchWorksheetListValue)));
   renderSortList = (type: string, items) => {
     const { searchWorksheetListValue } = this.state;
     const {

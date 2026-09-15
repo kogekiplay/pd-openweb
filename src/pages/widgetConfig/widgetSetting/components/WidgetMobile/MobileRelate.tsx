@@ -35,7 +35,7 @@ export default function WidgetRelate(props) {
         <Checkbox
           size="small"
           checked={!!+onlyRelateByScanCode}
-          onClick={checked =>
+          onClick={(checked: boolean) =>
             onChange({
               ...handleAdvancedSettingChange(data, { scancontrolid: checked ? '' : scancontrolid }),
               strDefault: updateConfig({
@@ -58,7 +58,7 @@ export default function WidgetRelate(props) {
               <Checkbox
                 size="small"
                 checked={scanlink === '1'}
-                onClick={checked => onChange(handleAdvancedSettingChange(data, { scanlink: String(+!checked) }))}
+                onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { scanlink: String(+!checked) }))}
                 text={_l('记录链接')}
               />
             </div>
@@ -66,7 +66,7 @@ export default function WidgetRelate(props) {
               <Checkbox
                 size="small"
                 checked={scancontrol === '1'}
-                onClick={checked =>
+                onClick={(checked: boolean) =>
                   onChange(
                     handleAdvancedSettingChange(data, {
                       scancontrol: String(+!checked),
@@ -99,7 +99,7 @@ export default function WidgetRelate(props) {
               <Checkbox
                 size="small"
                 checked={dismanual === '1'}
-                onClick={checked => onChange(handleAdvancedSettingChange(data, { dismanual: String(+!checked) }))}
+                onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { dismanual: String(+!checked) }))}
                 text={_l('禁止手动输入')}
               />
               <Tooltip placement="bottom" title={_l('勾选后禁止PC端和移动端手动添加关联记录')}>
@@ -110,7 +110,7 @@ export default function WidgetRelate(props) {
               <Checkbox
                 size="small"
                 checked={!!+disableAlbum}
-                onClick={checked =>
+                onClick={(checked: boolean) =>
                   onChange({
                     strDefault: updateConfig({
                       config: strDefault,

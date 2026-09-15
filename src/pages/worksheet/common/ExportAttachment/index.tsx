@@ -150,7 +150,7 @@ class ExportAttachment extends Component<any, any> {
                   </Fragment>
                 }
                 checked={_.includes(selectControlIds, item.controlId)}
-                onClick={checked => {
+                onClick={(checked: boolean) => {
                   let copyIds = [...selectControlIds];
                   copyIds = checked ? copyIds.filter(v => v !== item.controlId) : copyIds.concat(item.controlId);
                   this.setState({ selectControlIds: copyIds });
@@ -167,7 +167,7 @@ class ExportAttachment extends Component<any, any> {
                     size="small"
                     text={it.name}
                     checked={_.includes(nameMethodValues, it.value)}
-                    onClick={checked => {
+                    onClick={(checked: boolean) => {
                       if (nameMethodValues.length <= 1 && checked) {
                         return alert(_l('至少选择一种命名方式'), 3);
                       }
@@ -224,7 +224,7 @@ class ExportAttachment extends Component<any, any> {
             size="small"
             text={_l('为每行记录生成一个文件夹')}
             checked={generateFolder}
-            onClick={checked => this.setState({ generateFolder: !checked })}
+            onClick={(checked: boolean) => this.setState({ generateFolder: !checked })}
           />
           <div className="textTertiary Font13">
             {_l('文件夹名和附件名的最大长度为90个汉字。超限的文件不会被导出。')}

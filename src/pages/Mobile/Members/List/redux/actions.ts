@@ -4,7 +4,7 @@ import ajaxRequest from 'src/api/appManagement';
 import homeAppAjax from 'src/api/homeApp';
 import { getTranslateInfo } from 'src/utils/app';
 
-export const getMembersList = appId => dispatch => {
+export const getMembersList = (appId: string) => dispatch => {
   dispatch({ type: 'MOBILE_LIST_FETCH_START' });
   Promise.all([
     homeAppAjax.getApp({ appId }).then(),

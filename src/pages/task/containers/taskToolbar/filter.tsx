@@ -624,7 +624,7 @@ class Filter extends Component<any, any> {
   /**
    * 清除自定义字段
    */
-  clearAllCustoms = controlId => {
+  clearAllCustoms = (controlId: string) => {
     const customFilter = _.cloneDeep(this.props.taskConfig.filterSettings.customFilter);
     delete customFilter[controlId];
     this.props.dispatch(updateCustomFilter(customFilter));
@@ -719,7 +719,7 @@ class Filter extends Component<any, any> {
               <div className="filterFolderSearch">
                 <Checkbox
                   checked={folderSearchRange === 7}
-                  onClick={checked => this.switchFolderRange(checked ? 6 : 7)}
+                  onClick={(checked: boolean) => this.switchFolderRange(checked ? 6 : 7)}
                 >
                   {_l('仅看与我有关的任务')}
                 </Checkbox>

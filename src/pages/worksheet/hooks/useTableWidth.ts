@@ -41,7 +41,7 @@ export default function useTableWidth(props) {
     [width, summedWidth],
   );
   const getWidth = useCallback(
-    index => {
+    (index: number) => {
       const control = visibleControls[index] || {};
       return (
         (control.width ||

@@ -74,7 +74,7 @@ export default function VerifyPasswordInput(props) {
           className="InlineBlock TxtTop textPrimary"
           text={_l('一小时内免验证')}
           checked={isNoneVerification}
-          onClick={checked => {
+          onClick={(checked: boolean) => {
             setIsNoneVerification(!checked);
             onChange({ isNoneVerification: !checked, password: passWordRef.current.input.value });
           }}

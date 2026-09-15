@@ -598,7 +598,7 @@ export default class Approval extends Component<any, any> {
               className="InlineFlex"
               text={_l('仅主部门负责人需要审批')}
               checked={_.includes([2, 4], data.multipleLevelType)}
-              onClick={checked => {
+              onClick={(checked: boolean) => {
                 let multipleLevelType = data.multipleLevelType;
 
                 if (checked) {
@@ -742,14 +742,14 @@ export default class Approval extends Component<any, any> {
           className="mTop15 flexRow"
           text={_l('暂存')}
           checked={_.includes(data.operationTypeList, 13)}
-          onClick={checked => this.switchApprovalSettings(!checked, 13)}
+          onClick={(checked: boolean) => this.switchApprovalSettings(!checked, 13)}
         />
 
         <Checkbox
           className="mTop15 flexRow"
           text={_l('拒绝')}
           checked={!_.includes(data.operationTypeList, -5)}
-          onClick={checked => this.switchApprovalSettings(checked, -5)}
+          onClick={(checked: boolean) => this.switchApprovalSettings(checked, -5)}
         />
 
         {data.countersignType !== 2 && (
@@ -760,7 +760,7 @@ export default class Approval extends Component<any, any> {
                 text={_l('退回')}
                 disabled={data.countersignType === 2}
                 checked={data.isCallBack}
-                onClick={checked => {
+                onClick={(checked: boolean) => {
                   this.updateSource({ isCallBack: !checked, callBackType: 0, callBackMultipleLevel: -1 }, () => {
                     // 允许审批人退回时默认勾选退回意见
                     if (!checked) {
@@ -819,7 +819,7 @@ export default class Approval extends Component<any, any> {
                 className="InlineFlex"
                 text={_l('转审')}
                 checked={_.includes(data.operationTypeList, 6)}
-                onClick={checked => this.switchApprovalSettings(!checked, 6)}
+                onClick={(checked: boolean) => this.switchApprovalSettings(!checked, 6)}
               />
             </div>
             {_.includes(data.operationTypeList, 6) && (
@@ -849,7 +849,7 @@ export default class Approval extends Component<any, any> {
                 className="InlineFlex"
                 text={_l('加签')}
                 checked={_.includes(data.operationTypeList, 7)}
-                onClick={checked => this.switchApprovalSettings(!checked, 7)}
+                onClick={(checked: boolean) => this.switchApprovalSettings(!checked, 7)}
               />
             </div>
             {_.includes(data.operationTypeList, 7) && (
@@ -893,7 +893,7 @@ export default class Approval extends Component<any, any> {
                 className="InlineFlex"
                 text={_l('添加审批人')}
                 checked={_.includes(data.operationTypeList, 16)}
-                onClick={checked => this.switchApprovalSettings(!checked, 16)}
+                onClick={(checked: boolean) => this.switchApprovalSettings(!checked, 16)}
               />
             </div>
             {_.includes(data.operationTypeList, 16) && (
@@ -1048,7 +1048,7 @@ export default class Approval extends Component<any, any> {
                   <Checkbox
                     text={item.text}
                     checked={data[item.key]}
-                    onClick={checked => this.updateSource({ [item.key]: !checked })}
+                    onClick={(checked: boolean) => this.updateSource({ [item.key]: !checked })}
                   />
                   {data[item.key] && (
                     <CustomMessageBox className="flex mLeft10 flexRow">
@@ -1112,7 +1112,7 @@ export default class Approval extends Component<any, any> {
               </span>
             }
             checked={data[o.key]}
-            onClick={checked => this.updateSource({ [o.key]: !checked })}
+            onClick={(checked: boolean) => this.updateSource({ [o.key]: !checked })}
           />
         ))}
 
@@ -1130,7 +1130,7 @@ export default class Approval extends Component<any, any> {
               className="mTop15 flexRow"
               text={_l('开启限时处理')}
               checked={(data.schedule || {}).enable}
-              onClick={checked =>
+              onClick={(checked: boolean) =>
                 this.updateSource({ schedule: Object.assign({}, data.schedule, { enable: !checked }) })
               }
             />
@@ -1147,7 +1147,7 @@ export default class Approval extends Component<any, any> {
           className="mTop15 flexRow"
           text={_l('允许审批时上传附件')}
           checked={data.allowUploadAttachment}
-          onClick={checked => this.updateSource({ allowUploadAttachment: !checked })}
+          onClick={(checked: boolean) => this.updateSource({ allowUploadAttachment: !checked })}
         />
       </Fragment>
     );
@@ -1256,13 +1256,13 @@ export default class Approval extends Component<any, any> {
                         className="InlineFlex"
                         text={_l('通过时填写')}
                         checked={!_.includes(data.auth.passTypeList, 101)}
-                        onClick={checked => this.opinionRequiredChange(!checked, 'passTypeList')}
+                        onClick={(checked: boolean) => this.opinionRequiredChange(!checked, 'passTypeList')}
                       />
                       <Checkbox
                         className="InlineFlex mLeft25"
                         text={_l('必填')}
                         checked={_.includes(data.auth.passTypeList, 100)}
-                        onClick={checked => this.opinionRequiredChange(!checked, 'passTypeList', 100)}
+                        onClick={(checked: boolean) => this.opinionRequiredChange(!checked, 'passTypeList', 100)}
                       />
                     </div>
                     <div className="flex flexRow">
@@ -1270,13 +1270,13 @@ export default class Approval extends Component<any, any> {
                         className="InlineFlex"
                         text={_l('否决/退回时填写')}
                         checked={!_.includes(data.auth.overruleTypeList, 101)}
-                        onClick={checked => this.opinionRequiredChange(!checked, 'overruleTypeList')}
+                        onClick={(checked: boolean) => this.opinionRequiredChange(!checked, 'overruleTypeList')}
                       />
                       <Checkbox
                         className="InlineFlex mLeft25"
                         text={_l('必填')}
                         checked={_.includes(data.auth.overruleTypeList, 100)}
-                        onClick={checked => this.opinionRequiredChange(!checked, 'overruleTypeList', 100)}
+                        onClick={(checked: boolean) => this.opinionRequiredChange(!checked, 'overruleTypeList', 100)}
                       />
                     </div>
                   </div>
@@ -1332,13 +1332,13 @@ export default class Approval extends Component<any, any> {
                       className="InlineFlex flex"
                       text={_l('通过时必须认证')}
                       checked={!!data.auth.passTypeList.filter(i => !this.checkHasOpinion(i)).length}
-                      onClick={checked => this.authRequiredChange(!checked, 'passTypeList')}
+                      onClick={(checked: boolean) => this.authRequiredChange(!checked, 'passTypeList')}
                     />
                     <Checkbox
                       className="InlineFlex flex"
                       text={_l('否决/退回时必须认证')}
                       checked={!!data.auth.overruleTypeList.filter(i => !this.checkHasOpinion(i)).length}
-                      onClick={checked => this.authRequiredChange(!checked, 'overruleTypeList')}
+                      onClick={(checked: boolean) => this.authRequiredChange(!checked, 'overruleTypeList')}
                     />
                   </div>
 
@@ -1380,7 +1380,7 @@ export default class Approval extends Component<any, any> {
                       </span>
                     }
                     checked={data.encrypt}
-                    onClick={checked =>
+                    onClick={(checked: boolean) =>
                       this.updateSource({ encrypt: !checked }, () => {
                         this.updateFlowMapSource(OPERATION_TYPE.EMAIL, { batch: false });
                       })

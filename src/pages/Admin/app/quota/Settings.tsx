@@ -882,7 +882,7 @@ export default class LimitAttachmentUpload extends Component<any, any> {
                 total={total}
                 pageIndex={pageIndex}
                 pageSize={50}
-                onChange={pageIndex => this.setState({ pageIndex }, this.getLimits)}
+                onChange={(pageIndex: number) => this.setState({ pageIndex }, this.getLimits)}
               />
             )}
           </div>

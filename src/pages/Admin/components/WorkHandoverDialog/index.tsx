@@ -222,7 +222,7 @@ export default class WorkHandoverDialog extends Component<any, any> {
   };
 
   // 全选
-  checkedAllApps = checked => {
+  checkedAllApps = (checked: boolean) => {
     const { activeTab, todoList, workflowList } = this.state;
 
     if (activeTab === 1) {
@@ -533,7 +533,7 @@ export default class WorkHandoverDialog extends Component<any, any> {
                       checked={_.has(checkedInfo, id)}
                       clearSelected={_.has(checkedInfo, id) && !_.get(checkedInfo, `[${id}].checkedAll`)}
                       onClick={() => this.setState({ currentAppId: id })}
-                      handleChecked={checked => this.checkedAppItem({ checked, appId: id, checkType: 'app' })}
+                      handleChecked={(checked: boolean) => this.checkedAppItem({ checked, appId: id, checkType: 'app' })}
                     />
                   );
                 })}
@@ -555,7 +555,7 @@ export default class WorkHandoverDialog extends Component<any, any> {
                                 ? true
                                 : false
                             }
-                            onClick={checked =>
+                            onClick={(checked: boolean) =>
                               this.checkedAppItem({ checked, appId: apkId, itemId: id, checkType: 'item' })
                             }
                           />

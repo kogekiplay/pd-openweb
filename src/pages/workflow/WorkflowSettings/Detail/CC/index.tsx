@@ -277,7 +277,7 @@ export default class CC extends Component<any, any> {
                     : () => <span>{selectView.text}</span>
               }
               border
-              onChange={viewId => this.updateSource({ viewId })}
+              onChange={(viewId: string) => this.updateSource({ viewId })}
             />
           </Fragment>
         )}
@@ -341,7 +341,7 @@ export default class CC extends Component<any, any> {
                     disabled={!data.sendContent}
                     text={_l('显示待办/记录标题')}
                     checked={data.showTitle || !data.sendContent}
-                    onClick={checked => this.updateSource({ showTitle: !checked })}
+                    onClick={(checked: boolean) => this.updateSource({ showTitle: !checked })}
                   />
                 </div>
 

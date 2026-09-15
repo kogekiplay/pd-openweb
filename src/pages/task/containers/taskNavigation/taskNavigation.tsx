@@ -465,7 +465,7 @@ class TaskNavigation extends Component<any, any> {
     }
 
     // 多个网络获取项目数据
-    $.map(networks, projectId => {
+    $.map(networks, (projectId: string) => {
       if (projectId) {
         $('.networkFolderList[data-projectid=' + projectId + ']')
           .find('.clipLoader')

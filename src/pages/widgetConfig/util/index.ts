@@ -349,7 +349,7 @@ export const getAdvanceSetting = (data, key?) => {
   }
 };
 
-export const getRelationText = enumDefault => {
+export const getRelationText = (enumDefault: number) => {
   return (
     _.get(
       _.find(RELATION_OPTIONS, i => i.value === enumDefault && enumDefault),

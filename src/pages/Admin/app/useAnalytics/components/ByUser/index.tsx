@@ -337,7 +337,7 @@ export default class ByUser extends Component<any, any> {
           }
           total={total}
           pageIndex={pageIndex}
-          changePage={pageIndex => this.setState({ pageIndex }, this.getList)}
+          changePage={(pageIndex: number) => this.setState({ pageIndex }, this.getList)}
         />
       </ByUserWrap>
     );

@@ -431,7 +431,7 @@ export default class SelectUser extends Component<any, any> {
     );
   }
 
-  onlyShowJoinDepartment = checked => {
+  onlyShowJoinDepartment = (checked: boolean) => {
     this.setState(
       {
         onlyJoinDepartmentChecked: !checked,

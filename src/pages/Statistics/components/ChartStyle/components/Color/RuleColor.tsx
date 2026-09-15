@@ -413,7 +413,7 @@ class ColorScope extends Component<any, any> {
       }),
     });
   };
-  handleDeleteRule = index => {
+  handleDeleteRule = (index: number) => {
     const { scopeRules } = this.state;
     this.setState({
       scopeRules: scopeRules.filter((_, i) => i !== index),

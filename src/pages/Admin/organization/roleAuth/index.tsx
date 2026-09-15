@@ -42,14 +42,14 @@ export default class RoleAuth extends React.Component<any, any> {
     });
   }
 
-  getAllowApplyManageRole = projectId => {
+  getAllowApplyManageRole = (projectId: string) => {
     projectSettingAjax.getAllowApplyManageRole({ projectId }).then(res => {
       this.setState({ allowApplyManage: res });
     });
   };
 
   // 允许申请管理员
-  allowApplyAdmin = checked => {
+  allowApplyAdmin = (checked: boolean) => {
     this.setState({ allowApplyManage: !checked }, () => {
       projectSettingAjax
         .setAllowApplyManageRole({

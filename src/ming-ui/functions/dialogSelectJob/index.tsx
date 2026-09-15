@@ -95,7 +95,7 @@ class DialogSelectJob extends Component<any, any> {
               className="GSelect-department-row pointer"
               style={{ padding: '9px 5px' }}
               checked={!!_.find(selectData, o => o.jobId === item.jobId)}
-              onClick={checked => this.toggle(item, !checked)}
+              onClick={(checked: boolean) => this.toggle(item, !checked)}
               text={item.jobName}
             />
           );

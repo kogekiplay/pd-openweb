@@ -328,7 +328,7 @@ export default function GroupCon(props) {
                 showChangeName: false,
               });
             }}
-            onChange={name => {
+            onChange={(name: string) => {
               if (_.get(item, 'resultField.alias') === name) {
                 return;
               }

@@ -35,7 +35,7 @@ const ScheduleModal = props => {
     setState({ pageIndex: pageIndex + 1 });
   };
 
-  const handleSearch = keywords => {
+  const handleSearch = (keywords: string) => {
     setState({ keyWords: keywords, pageIndex: 1 });
   };
 

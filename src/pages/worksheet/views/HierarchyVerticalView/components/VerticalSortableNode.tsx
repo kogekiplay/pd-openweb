@@ -80,7 +80,7 @@ export default class VerticalSortableRecordItem extends Component<any, any> {
     return this.getNode(data[cur].children, path);
   };
 
-  handleRecordVisible = rowId => {
+  handleRecordVisible = (rowId: string) => {
     if (window.isMingDaoApp && (!window.shareState.shareId || window.APP_OPEN_NEW_PAGE)) {
       const { appId, treeData } = this.props;
       const curInfo = treeData[rowId];

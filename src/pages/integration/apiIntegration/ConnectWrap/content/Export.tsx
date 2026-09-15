@@ -149,7 +149,7 @@ function ExportDialog(props) {
             }}
             keys={keys}
             isCheckAll={isCheckAll}
-            onCheck={checked => {
+            onCheck={(checked: boolean) => {
               setState({
                 selectedList: checked ? list.filter(o => (notCheck ? o.enabled : true)).map(o => o.id) : [],
                 isCheckAll: checked,

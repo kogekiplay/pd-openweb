@@ -55,7 +55,7 @@ const ArrowWrap = styled.div`
   }
 `;
 
-const getShowAppsCount = height => {
+const getShowAppsCount = (height: number) => {
   const appHeight = 26;
   const marginBottom = 10;
   const moreHeight = 8;

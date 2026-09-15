@@ -28,7 +28,7 @@ export default function SheetDealDataType({ data, onChange }) {
         <Checkbox
           size="small"
           checked={getinput === '1'}
-          onClick={checked => onChange(handleAdvancedSettingChange(data, { getinput: String(+!checked) }))}
+          onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { getinput: String(+!checked) }))}
         >
           <span style={{ marginRight: '4px' }}>{_l('在显示表单前先获取输入')}</span>
           <Tooltip placement="bottom" title={tip[0]}>
@@ -40,7 +40,7 @@ export default function SheetDealDataType({ data, onChange }) {
         <Checkbox
           size="small"
           checked={getsave === '1'}
-          onClick={checked => onChange(handleAdvancedSettingChange(data, { getsave: String(+!checked) }))}
+          onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { getsave: String(+!checked) }))}
         >
           <span style={{ marginRight: '4px' }}>{_l('获取后直接提交表单')}</span>
           <Tooltip placement="bottom" title={tip[1]}>
@@ -53,7 +53,7 @@ export default function SheetDealDataType({ data, onChange }) {
           <Checkbox
             size="small"
             checked={createnext !== '0'}
-            onClick={checked => onChange(handleAdvancedSettingChange(data, { createnext: String(+!checked) }))}
+            onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { createnext: String(+!checked) }))}
           >
             <span style={{ marginRight: '4px' }}>{_l('提交后继续创建下一条')}</span>
           </Checkbox>

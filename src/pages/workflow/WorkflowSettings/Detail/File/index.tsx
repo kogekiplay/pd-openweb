@@ -164,7 +164,7 @@ export default class File extends Component<any, any> {
           border
           openSearch
           noData={_l('暂无打印模板')}
-          onChange={appId => this.updateSource({ appId })}
+          onChange={(appId: string) => this.updateSource({ appId })}
         />
 
         <div className="mTop20 bold">{_l('文件名')}</div>
@@ -196,7 +196,7 @@ export default class File extends Component<any, any> {
             text={_l('同时生成PDF文件')}
             checked={data.pdf}
             disabled={!data.wpsConfig}
-            onClick={checked => this.updateSource({ pdf: !checked })}
+            onClick={(checked: boolean) => this.updateSource({ pdf: !checked })}
           />
         </div>
         {!data.wpsConfig && <div className="mTop5 textSecondary">{_l('未配置 PDF 转换服务')}</div>}

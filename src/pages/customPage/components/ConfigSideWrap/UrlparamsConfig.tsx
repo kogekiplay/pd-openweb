@@ -17,7 +17,7 @@ export default props => {
     }, 0);
   };
 
-  const onValidate = index => {
+  const onValidate = (index: number) => {
     const currentValue = urlParams[index];
 
     if (!currentValue.trim()) {

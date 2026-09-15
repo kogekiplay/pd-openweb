@@ -21,9 +21,12 @@
  * 【两个会毁文件的位置陷阱，都是前几批踩出来的】
  *   · 插入点必须在 questionToken 【之后】。写成 `foo: boolean?` 是 TS17019，
  *     会把整个签名毁掉，然后在所有调用点吐出莫名其妙的 "Expected N arguments"。
- *   · 无括号单参箭头 `x => ...` 加标注就是语法错。本版【直接跳过】不处理 ——
- *     补括号需要精确定位箭头自身的起点（往回找 `(` 会找到外层的 `useCallback(`），
- *     那是另一件事，不值得混在这一批里冒险。
+ *   · 无括号单参箭头 `x => ...` 加标注就是语法错，要连括号一起补成 `(x: T) => ...`。
+ *     前几批是靠「从形参往回扫找 `(`」判断的，结果撞上外层的 `useCallback(`。
+ *     【其实根本不用扫】：诊断的 d.pos 就是标识符自身的起点，在那里插 `(`、
+ *     在 name.end 插 `: T)` 就完了。判定有没有括号用 arrow.pos 到形参名之间的
+ *     文本——arrow.pos 是上一个 token 的结尾，对 `useCallback(x => …)` 来说
+ *     正好在 `(` 之后，这一段只会是空白，不会把外层括号算进来。
  *
  * 用法：
  *   node tools/codemod-name-consensus-types.ts --list   # 只看共识表和覆盖量
@@ -78,8 +81,54 @@ const EXCLUDE = new Set([
   'dataSource',
   'visible',
   'hint',
+  //   unit       共识 string，但 Schedule 里是和 TIME_TYPE.MINUTE 这类【数字常量】
+  //              比较。逐点用法校验只看成员访问和展开，看不到比较操作，挡不住它。
   'direction',
+  'unit',
 ]);
+
+/**
+ * 【逐点用法校验】名字共识只能说明「这个名字通常是什么」，说明不了「这一处是什么」。
+ * 前两批靠差分门禁事后归因、再手工把名字塞进 EXCLUDE，已经攒了 5 个反例，
+ * 而且每加一个新证据来源就会冒出新的一批。换个做法：在【这一处】上直接验一遍。
+ *
+ * 判据很简单也很硬：原始类型的形参不可能被访问不属于它的成员。
+ * 只要函数体里出现 `p.fileName`、`p.advancedSetting`、`...p` 这类用法，
+ * 就说明这一处的 p 是个对象，共识给的 string/number/boolean 在这里是错的，跳过。
+ *
+ * 这条规则把之前手工排除的 field / dataSource / visible / hint / icon / rowId
+ * 全部自动挡住了，而且是【按点】挡，不会因为一处用错就丢掉这个名字的其余几百处。
+ */
+const MEMBERS: Record<string, Set<string>> = {
+  string: new Set([
+    'length','charAt','charCodeAt','codePointAt','concat','endsWith','includes','indexOf','lastIndexOf',
+    'localeCompare','match','matchAll','normalize','padEnd','padStart','repeat','replace','replaceAll',
+    'search','slice','split','startsWith','substr','substring','at','toLowerCase','toUpperCase',
+    'toLocaleLowerCase','toLocaleUpperCase','trim','trimEnd','trimStart','toString','valueOf',
+  ]),
+  number: new Set(['toFixed','toPrecision','toExponential','toString','valueOf','toLocaleString']),
+  boolean: new Set(['toString','valueOf']),
+};
+
+/** 这一处的用法与 type 相容吗？不相容就别标。 */
+function usageFits(fnNode: any, paramName: string, type: string): boolean {
+  const allowed = MEMBERS[type];
+  if (!allowed) return true; // 数组类型不做这个检查
+  let ok = true;
+  (function walk(n: any) {
+    if (!ok) return;
+    // ...p —— 只有对象/数组才能展开
+    if ((is.isSpreadAssignment(n) || is.isSpreadElement(n)) && n.expression && is.isIdentifier(n.expression)) {
+      if (n.expression.text === paramName) ok = false;
+    }
+    // p.foo —— foo 不是该原始类型的成员就说明 p 是对象
+    if (is.isPropertyAccessExpression(n) && n.expression && is.isIdentifier(n.expression) && n.name) {
+      if (n.expression.text === paramName && !allowed.has(n.name.text)) ok = false;
+    }
+    n.forEachChild(walk);
+  })(fnNode);
+  return ok;
+}
 
 const project = openProject('tsconfig.strictprobe.json');
 
@@ -165,9 +214,9 @@ for (const [name, counts] of evidence) {
 }
 
 // ── 第二遍：按 TS7006 诊断定位待标注的形参 ────────────────────────────────
-type Target = { fileName: string; text: string; pos: number; name: string; type: string };
+type Target = { fileName: string; text: string; pos: number; name: string; type: string; openParenAt?: number };
 const targets: Target[] = [];
-const skip = { noConsensus: 0, parenlessArrow: 0, rest: 0, notFound: 0 };
+const skip = { noConsensus: 0, usageMismatch: 0, rest: 0, notFound: 0 };
 
 const diags = project.program
   .getSemanticDiagnostics()
@@ -212,19 +261,36 @@ for (const [fileName, ds] of byFile) {
       skip.rest += 1;
       continue;
     }
-    // 无括号单参箭头：只在【箭头自身的起点到形参之间】找左括号，
-    // 往回多找一个字符都会撞上外层的 useCallback( 之类
-    const parent = p.parent;
-    if (parent && is.isArrowFunction(parent) && parent.parameters && parent.parameters.length === 1) {
-      const between = text.slice(parent.pos, p.name.pos);
-      if (!between.includes('(')) {
-        skip.parenlessArrow += 1;
-        continue;
-      }
+    // 这一处的用法和共识类型对不上就跳过（见 usageFits 的说明）
+    if (p.parent && !usageFits(p.parent, name, c.type)) {
+      skip.usageMismatch += 1;
+      continue;
     }
+
     // 插入点：questionToken 之后（写在它之前就是 TS17019）
     const pos = p.questionToken ? p.questionToken.end : p.name.end;
-    targets.push({ fileName, text, pos, name, type: c.type });
+
+    // 无括号单参箭头 `x => ...`：直接标注就是语法错，得连括号一起补成 `(x: T) => ...`。
+    //
+    // 【别再往回扫找左括号了】前几批栽在这上面：从形参往前找 `(` 会撞上外层的
+    // `useCallback(`。其实根本不需要扫 —— 诊断的 d.pos 【就是】标识符自身的起点
+    //（pos..end 正好圈住 `x`），在那里插 `(`、在 name.end 插 `: T)` 即可。
+    // 判定「有没有括号」用 arrow.pos 到形参名之间的文本：arrow.pos 是上一个 token
+    // 的结尾，对 `useCallback(x => …)` 来说就是 `(` 之后，这一段只会是空白，
+    // 不会把外层的括号算进来。
+    const parent = p.parent;
+    const isParenless =
+      parent &&
+      is.isArrowFunction(parent) &&
+      parent.parameters &&
+      parent.parameters.length === 1 &&
+      !text.slice(parent.pos, p.name.pos).includes('(');
+
+    if (isParenless) {
+      targets.push({ fileName, text, pos, name, type: c.type, openParenAt: d.pos });
+    } else {
+      targets.push({ fileName, text, pos, name, type: c.type });
+    }
   }
 }
 
@@ -245,14 +311,22 @@ for (const [name, n] of [...used].sort((a, b) => b[1] - a[1])) {
 const fileCount = new Set(targets.map(t => t.fileName)).size;
 console.log(
   `\n${APPLY ? '已标' : '可标'} ${targets.length} 处，涉及 ${fileCount} 个文件；` +
-    `跳过：名字无共识 ${skip.noConsensus} / 无括号单参箭头 ${skip.parenlessArrow} / rest 形参 ${skip.rest} / 定位不到 ${skip.notFound}`,
+    `其中补括号的单参箭头 ${targets.filter(t => t.openParenAt !== undefined).length} 处；` +
+    `跳过：名字无共识 ${skip.noConsensus} / 本处用法与类型不符 ${skip.usageMismatch} / rest 形参 ${skip.rest} / 定位不到 ${skip.notFound}`,
 );
 
 if (APPLY && targets.length) {
   const edits = new Map<string, { text: string; list: { pos: number; text: string }[] }>();
   for (const t of targets) {
     if (!edits.has(t.fileName)) edits.set(t.fileName, { text: t.text, list: [] });
-    edits.get(t.fileName)!.list.push({ pos: t.pos, text: `: ${t.type}` });
+    const list = edits.get(t.fileName)!.list;
+    if (t.openParenAt !== undefined) {
+      // `x => …` 补成 `(x: T) => …`：左括号在标识符起点，右括号紧跟类型
+      list.push({ pos: t.openParenAt, text: '(' });
+      list.push({ pos: t.pos, text: `: ${t.type})` });
+    } else {
+      list.push({ pos: t.pos, text: `: ${t.type}` });
+    }
   }
   for (const [fileName, bucket] of edits) writeSource(fileName, bucket.text, bucket.list);
   console.log(`已写入 ${edits.size} 个文件。`);

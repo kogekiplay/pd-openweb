@@ -211,7 +211,7 @@ export default function Login() {
   };
 
   //网络名称多语言
-  const getProjectLang = projectId => {
+  const getProjectLang = (projectId: string) => {
     appManagementController.getProjectLang({ projectId }).then(res => {
       setState({
         loading: false,

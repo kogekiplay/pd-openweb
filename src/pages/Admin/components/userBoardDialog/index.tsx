@@ -90,7 +90,7 @@ class UserBoardDialog extends Component<any, any> {
                   <th className="checkBox">
                     <Checkbox
                       checked={isChecked}
-                      onClick={checked => {
+                      onClick={(checked: boolean) => {
                         this.setState({ selected: checked ? [] : userList.map(it => it.accountId) });
                       }}
                     />
@@ -111,7 +111,7 @@ class UserBoardDialog extends Component<any, any> {
                       <td className="checkBox">
                         <Checkbox
                           checked={checked}
-                          onClick={checked => {
+                          onClick={(checked: boolean) => {
                             this.setState({
                               selected: checked ? selected.filter(it => it !== accountId) : selected.concat(accountId),
                             });

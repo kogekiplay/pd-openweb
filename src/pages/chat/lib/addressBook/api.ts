@@ -169,7 +169,7 @@ export default {
   /**
    * Users
    */
-  fetchUserDetail: accountId => {
+  fetchUserDetail: (accountId: string) => {
     return new Promise((resolve, reject) => {
       UserController.getAccountDetail({
         accountId,
@@ -195,19 +195,19 @@ export default {
   },
 };
 
-export const editAgreeFriend = accountId => {
+export const editAgreeFriend = (accountId: string) => {
   return AddressListController.editAgreeFriend({
     accountId,
   });
 };
 
-export const editRefuseFriend = accountId => {
+export const editRefuseFriend = (accountId: string) => {
   return AddressListController.editRefuseFriend({
     accountId,
   });
 };
 
-export const editIgnoreFriend = accountId => {
+export const editIgnoreFriend = (accountId: string) => {
   return AddressListController.editIgnoreFriend({
     accountId,
   });
@@ -219,13 +219,13 @@ export const editIgnoreRecommends = recomendId => {
   });
 };
 
-export const removeFriend = accountId => {
+export const removeFriend = (accountId: string) => {
   return AddressListController.removeFriend({
     accountId,
   });
 };
 
-export const openGroup = groupId => {
+export const openGroup = (groupId: string) => {
   return GroupController.openGroup({
     groupIds: [groupId],
   }).then(result => {
@@ -237,7 +237,7 @@ export const openGroup = groupId => {
   });
 };
 
-export const closeGroup = groupId => {
+export const closeGroup = (groupId: string) => {
   return GroupController.closeGroup({
     groupIds: [groupId],
   }).then(result => {
@@ -249,7 +249,7 @@ export const closeGroup = groupId => {
   });
 };
 
-export const joinGroup = groupId => {
+export const joinGroup = (groupId: string) => {
   return GroupController.applyJoinGroup({
     groupId,
   }).then(result => {

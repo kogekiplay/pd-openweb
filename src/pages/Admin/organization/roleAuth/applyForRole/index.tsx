@@ -180,7 +180,7 @@ export default class ApplyForRole extends React.Component<any, any> {
                   total={totalCount}
                   pageSize={pageSize}
                   pageIndex={this.state.pageIndex}
-                  onChange={pageIndex => this.setState({ pageIndex }, this.fetchData)}
+                  onChange={(pageIndex: number) => this.setState({ pageIndex }, this.fetchData)}
                 />
               ) : null}
             </div>

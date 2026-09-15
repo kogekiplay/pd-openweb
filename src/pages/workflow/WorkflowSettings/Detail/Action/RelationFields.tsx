@@ -8,7 +8,7 @@ export default class RelationFields extends Component<any, any> {
   /**
    * 获取工作表的自定义字段
    */
-  getWorksheetFields = appId => {
+  getWorksheetFields = (appId: string) => {
     const { data, updateSource } = this.props;
 
     flowNode
@@ -61,7 +61,7 @@ export default class RelationFields extends Component<any, any> {
         }
         border
         noData={_l('指定的节点对象中，没有关联他表字段')}
-        onChange={controlId => {
+        onChange={(controlId: string) => {
           this.getWorksheetFields(data.controls.find(item => item.controlId === controlId).dataSource);
           updateSource({ fields: [{ fieldId: controlId }] });
         }}

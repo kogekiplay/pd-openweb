@@ -51,7 +51,7 @@ export default function RowDetailModal(props) {
     }
   };
 
-  const handleClose = rowid => {
+  const handleClose = (rowid: string) => {
     if (!mobileIsEdit || disabled) {
       onClose();
       return;

@@ -217,7 +217,7 @@ const OtherDefault = props => {
               size="small"
               text={text}
               checked={!!color}
-              onClick={checked =>
+              onClick={(checked: boolean) =>
                 onChange(
                   handleAdvancedSettingChange(data, {
                     [editKey]: JSON.stringify({

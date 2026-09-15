@@ -14,7 +14,7 @@ import { emitter } from 'src/utils/common';
 import EditDest from './EditDest';
 import Tables from './Tables';
 
-export const isValidName = name => {
+export const isValidName = (name: string) => {
   return name.indexOf('\\') < 0;
 };
 

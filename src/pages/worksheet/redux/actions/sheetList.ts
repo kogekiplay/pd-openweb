@@ -758,4 +758,4 @@ export function copyChatBot(para) {
   };
 }
 
-export const updateSheetListLoading = loading => ({ type: 'SHEET_LIST_UPDATE_LOADING', loading });
+export const updateSheetListLoading = (loading: boolean) => ({ type: 'SHEET_LIST_UPDATE_LOADING', loading });

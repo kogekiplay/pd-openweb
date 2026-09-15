@@ -260,7 +260,7 @@ export default class OtherTool extends Component<any, any> {
     });
   }
 
-  handleUpdateItemCheck = checked => {
+  handleUpdateItemCheck = (checked: boolean) => {
     this.setState({
       enableSSL: !checked,
       port: !checked ? 636 : 389,
@@ -482,7 +482,7 @@ export default class OtherTool extends Component<any, any> {
                     <Checkbox
                       checked={this.state[checkedField]}
                       text={label}
-                      onClick={checked =>
+                      onClick={(checked: boolean) =>
                         this.setState({
                           [checkedField]: !checked,
                           [key]: checked ? initSyncInfo[key] : this.state[key],
@@ -545,7 +545,7 @@ export default class OtherTool extends Component<any, any> {
           <Checkbox
             text={_l('当无法通过以上字段匹配到系统账号时，新建一个账号')}
             checked={createIfNotExists}
-            onClick={checked => this.setState({ createIfNotExists: !checked })}
+            onClick={(checked: boolean) => this.setState({ createIfNotExists: !checked })}
           />
         </div>
         <div className="formModuleTitle mBottom15">{_l('同步信息')}</div>

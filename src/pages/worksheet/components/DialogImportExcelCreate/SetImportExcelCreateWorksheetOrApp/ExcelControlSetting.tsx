@@ -81,7 +81,7 @@ export default class ExcelControlSetting extends Component<any, any> {
     }
   }
 
-  getControls = worksheetId => {
+  getControls = (worksheetId: string) => {
     this.setState({ loading: true });
     worksheetAjax
       .getWorksheetInfo({ worksheetId, getTemplate: true, getViews: false })

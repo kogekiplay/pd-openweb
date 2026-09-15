@@ -4,7 +4,7 @@ import { Dropdown } from 'ming-ui';
 import { getControlTypeName } from '../../../utils';
 
 export default ({ controls, sorts, updateSource }) => {
-  const renderTitle = controlId => {
+  const renderTitle = (controlId: string) => {
     return <span>{_.find(controls, item => item.controlId === controlId).controlName}</span>;
   };
 
@@ -85,7 +85,7 @@ export default ({ controls, sorts, updateSource }) => {
         openSearch
         renderTitle={() => !!sorts.length && sorts[0].controlId && renderTitle(sorts[0].controlId)}
         placeholder={_l('选择字段')}
-        onChange={controlId =>
+        onChange={(controlId: string) =>
           updateSource({
             sorts: controlId
               ? [{ controlId, isAsc: false, controlType: controls.find(item => item.controlId === controlId).type }]

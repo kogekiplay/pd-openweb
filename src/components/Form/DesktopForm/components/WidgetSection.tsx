@@ -224,7 +224,7 @@ export default function WidgetSection(props) {
             setSplit={setSplit}
             activeControlId={activeControl.controlId}
             controls={tabControls}
-            onClick={controlId => {
+            onClick={(controlId: string) => {
               setActiveTabControlId(controlId);
               if (_.isFunction(scrollToTable)) {
                 scrollToTable();

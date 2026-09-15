@@ -40,7 +40,7 @@ export default function AppOfflineSubmit(props) {
   };
 
   // 添加离线应用项
-  const addOfflineItem = worksheetId => {
+  const addOfflineItem = (worksheetId: string) => {
     if (_.includes(offlineItemIds, worksheetId)) {
       return;
     }

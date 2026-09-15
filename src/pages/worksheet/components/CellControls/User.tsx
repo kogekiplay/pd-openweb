@@ -323,7 +323,7 @@ export default class User extends React.Component<any, any> {
     this.pickUser(event);
   };
 
-  deleteUser = accountId => {
+  deleteUser = (accountId: string) => {
     const { value } = this.state;
     this.setState(
       {

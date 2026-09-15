@@ -167,6 +167,7 @@
     "src/ming-ui/components/TagTextarea/index.ts",
     "src/ming-ui/components/TimePicker/index.ts",
     "src/ming-ui/components/UserCard/placements.ts",
+    "src/ming-ui/components/UserHead.tsx",
     "src/ming-ui/components/UserName.tsx",
     "src/ming-ui/components/mdAntPickers.ts",
     "src/ming-ui/functions/dialogSelectUser/GeneralSelect/constant.ts",

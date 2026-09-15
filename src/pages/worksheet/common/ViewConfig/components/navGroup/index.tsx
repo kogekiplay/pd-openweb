@@ -339,7 +339,7 @@ export default function NavGroup(params) {
     data.type === 29 && data.dataSource && getRelate(data.dataSource);
   };
 
-  const getRelate = worksheetId => {
+  const getRelate = (worksheetId: string) => {
     ajaxInfoFn && ajaxInfoFn.abort();
     ajaxInfoFn = sheetAjax.getWorksheetInfo({
       worksheetId,

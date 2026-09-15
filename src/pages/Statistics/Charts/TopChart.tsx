@@ -25,7 +25,7 @@ const formatTopChartData = map => {
   const data = _.get(map[0], 'value') || [];
   const result = [];
 
-  const getValues = index => {
+  const getValues = (index: number) => {
     const obj = {};
     map.forEach(data => {
       if (data && Array.isArray(data.value) && data.value[index] !== undefined) {

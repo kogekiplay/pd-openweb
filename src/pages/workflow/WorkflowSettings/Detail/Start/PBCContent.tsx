@@ -338,7 +338,7 @@ export default ({ data, updateSource, isIntegration, isPlugin }) => {
         text={showText ? _l('必填') : ''}
         disabled={item.type === 22}
         checked={item.required}
-        onClick={checked => updateControls('required', !checked, item)}
+        onClick={(checked: boolean) => updateControls('required', !checked, item)}
       />
     );
   };

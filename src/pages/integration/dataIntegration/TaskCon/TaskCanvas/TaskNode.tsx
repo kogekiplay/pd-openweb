@@ -501,7 +501,7 @@ class TaskNode extends Component<any, any> {
                 showChangeName: false,
               });
             }}
-            onChange={name => {
+            onChange={(name: string) => {
               onUpdate({ ...nodeData, name }, true);
               this.setState({
                 showChangeName: false,

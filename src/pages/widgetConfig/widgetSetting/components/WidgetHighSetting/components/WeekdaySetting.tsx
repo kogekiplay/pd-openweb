@@ -111,7 +111,7 @@ export default function WeekdaySetting({ data, onChange }) {
           <Checkbox
             size="small"
             checked={hideneg === '1'}
-            onClick={checked => {
+            onClick={(checked: boolean) => {
               onChange(handleAdvancedSettingChange(data, { hideneg: checked ? '0' : '1' }));
             }}
           >
@@ -128,7 +128,7 @@ export default function WeekdaySetting({ data, onChange }) {
             text={_l('仅计算工作日')}
             size="small"
             checked={!!weekday}
-            onClick={checked => handleChange(!checked ? '12345' : '')}
+            onClick={(checked: boolean) => handleChange(!checked ? '12345' : '')}
           />
           {!!weekday && (
             <div className="Relative">

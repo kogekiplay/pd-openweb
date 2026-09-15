@@ -318,7 +318,7 @@ export default function Embed(props) {
             <Checkbox
               size="small"
               checked={filters.length > 0}
-              onClick={checked => {
+              onClick={(checked: boolean) => {
                 if (checked) {
                   onChange(
                     handleAdvancedSettingChange(data, {
@@ -349,7 +349,7 @@ export default function Embed(props) {
             size="small"
             checked={allowlink === '1'}
             text={_l('允许新页面打开链接')}
-            onClick={checked => {
+            onClick={(checked: boolean) => {
               onChange(
                 handleAdvancedSettingChange(data, {
                   allowlink: checked ? '0' : '1',

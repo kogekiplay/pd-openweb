@@ -182,7 +182,7 @@ export default class AddAppItem extends Component<any, any> {
         dbInstanceId: createAppDbInstanceId,
         ...data,
       },
-      appId => {
+      (appId: string) => {
         navigateTo('/app/' + appId);
       },
     );

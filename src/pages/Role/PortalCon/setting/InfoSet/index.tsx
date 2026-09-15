@@ -20,7 +20,7 @@ export default function InfoSet(props) {
   let { portalSet = {}, onChangePortalSet } = props;
   let { controlTemplate = {} } = portalSet;
   const { groupId, name, projectId, worksheetId } = portal.baseInfo || {};
-  const [showId, setShowId] = useState(false);
+  const [showId, setShowId] = useState<boolean | string>(false);
   const [controls, setControls] = useState([]);
   const [controlsFilter, setControlsFilter] = useState([]);
   const [allControl, setAllControl] = useState([]);
@@ -195,10 +195,10 @@ export default function InfoSet(props) {
                     }),
                   );
                 }}
-                showEditDialog={controlId => {
+                showEditDialog={(controlId: string) => {
                   setShowId(controlId);
                 }}
-                deleteBtn={controlId => {
+                deleteBtn={(controlId: string) => {
                   setHs(true);
                   setControls(controls.filter(o => o.controlId !== controlId));
                 }}

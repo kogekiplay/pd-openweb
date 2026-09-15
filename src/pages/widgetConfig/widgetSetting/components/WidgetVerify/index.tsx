@@ -93,7 +93,7 @@ export default function WidgetVerify(props) {
           <Checkbox
             size="small"
             checked={required}
-            onClick={checked =>
+            onClick={(checked: boolean) =>
               onChange({
                 ...handleAdvancedSettingChange(data, { required: checked ? '0' : forceReCheck }),
                 required: !checked,
@@ -108,7 +108,7 @@ export default function WidgetVerify(props) {
             <Checkbox
               size="small"
               checked={forceReCheck === '1'}
-              onClick={checked => onChange(handleAdvancedSettingChange(data, { required: checked ? '0' : '1' }))}
+              onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { required: checked ? '0' : '1' }))}
             >
               <span>
                 {_l('写入时强制校验必填')}
@@ -127,7 +127,7 @@ export default function WidgetVerify(props) {
         {/**不允许重复输入 */}
         {!fromPortal && !isSubList && canAsUniqueWidget(data) && !_.includes([9, 10, 11], data.type) && (
           <div className="labelWrap">
-            <Checkbox size="small" checked={unique} onClick={checked => onChange({ unique: !checked })}>
+            <Checkbox size="small" checked={unique} onClick={(checked: boolean) => onChange({ unique: !checked })}>
               <span>
                 {_l('不允许重复输入')}
                 {!isSubList && (
@@ -167,7 +167,7 @@ export default function WidgetVerify(props) {
             <Checkbox
               size="small"
               checked={checkrange === '1'}
-              onClick={checked => {
+              onClick={(checked: boolean) => {
                 let tempData = { checkrange: checked ? '0' : '1' };
 
                 if (type === 6 && checked) {
@@ -232,7 +232,7 @@ export default function WidgetVerify(props) {
             <Checkbox
               size="small"
               checked={otherrequired === '1'}
-              onClick={checked => onChange(handleAdvancedSettingChange(data, { otherrequired: checked ? '0' : '1' }))}
+              onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { otherrequired: checked ? '0' : '1' }))}
             >
               <span>{_l('选择“%0”时，补充信息必填', otherText)}</span>
               <Tooltip placement="bottom" title={_l('勾选后，当用户选中“其他”时，必须在后面的文本框中填写内容。')}>
@@ -246,7 +246,7 @@ export default function WidgetVerify(props) {
           <Checkbox
             size="small"
             checked={chooseothertype === '1'}
-            onClick={checked => onChange(handleAdvancedSettingChange(data, { chooseothertype: checked ? '0' : '1' }))}
+            onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { chooseothertype: checked ? '0' : '1' }))}
           >
             <span>{_l('选择“%0”时，不能选择常规选项', otherText)}</span>
             <Tooltip placement="bottom" title={_l('勾选后，选择“其他”时清空常规选项，选择常规选项时清空“其他”。')}>

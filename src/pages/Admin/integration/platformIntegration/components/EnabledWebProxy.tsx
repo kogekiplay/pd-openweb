@@ -13,7 +13,7 @@ export default function EnabledWebProxy(props) {
     <Fragment>
       <div className="flex"></div>
       <div className="flexRow alignItemsCenter">
-        <Checkbox checked={isProxy} onClick={checked => handleChangeProxy(checked)} />
+        <Checkbox checked={isProxy} onClick={(checked: boolean) => handleChangeProxy(checked)} />
         <span className="Font13 Normal">{_l('开启网络代理')}</span>
         <Tooltip title={_l('需在平台管理-安全中配置网络代理信息')}>
           <i className="icon-info_outline Font18 textTertiary mLeft10 mRight20" />

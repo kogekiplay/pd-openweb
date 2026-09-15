@@ -357,7 +357,7 @@ class DialogSelectOrgRole extends Component<any, any> {
                   className="GSelect-department--checkbox mRight0"
                   checked={this.getCurrentUserOrgRoleChecked()}
                   text={_l('当前用户所在的组织角色')}
-                  onClick={checked =>
+                  onClick={(checked: boolean) =>
                     this.toggle(
                       {
                         organizeId: 'user-role',
@@ -372,7 +372,7 @@ class DialogSelectOrgRole extends Component<any, any> {
                   className="GSelect-department--checkbox"
                   checked={this.getCurrentUserOrgRoleChecked()}
                   text={_l('当前用户所在的组织角色')}
-                  onClick={checked =>
+                  onClick={(checked: boolean) =>
                     this.toggle(
                       {
                         organizeId: 'user-role',

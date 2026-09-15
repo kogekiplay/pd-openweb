@@ -40,7 +40,7 @@ export default ({
           </span>
         }
         checked={!!flowNodeMap.accounts.length}
-        onClick={checked =>
+        onClick={(checked: boolean) =>
           updateSource({
             accounts: !checked
               ? [
@@ -90,7 +90,7 @@ export default ({
                   className="flexRow mTop15"
                   text={_l('邮件内快速审批')}
                   checked={flowNodeMap.batch}
-                  onClick={checked => updateSource({ batch: !checked })}
+                  onClick={(checked: boolean) => updateSource({ batch: !checked })}
                 />
                 <div className="Font13 textSecondary mTop5 mLeft26">
                   {_l(

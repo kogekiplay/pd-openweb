@@ -5,7 +5,7 @@ import type { AppDispatch, GetState } from 'src/redux/types';
 const PAGE_SIZE = 50;
 let ajaxRequest: ApiResult | null = null;
 
-export const updateProjectId = projectId => dispatch => {
+export const updateProjectId = (projectId: string) => dispatch => {
   dispatch({ type: 'CHANGE_PROJECT_ID', projectId });
 };
 

@@ -787,7 +787,7 @@ export const setHighLightOfRows = (rowIds, tableId?) => {
     const { sheetview } = getState().sheet;
     const { rows } = sheetview.sheetViewData;
     dispatch(clearHighLight(tableId));
-    rowIds.forEach(rowId => {
+    rowIds.forEach((rowId: string) => {
       let rowIndex = _.findIndex(rows, row => row.rowid === rowId);
 
       if (_.isUndefined(rowIndex)) {
@@ -813,13 +813,13 @@ export function hideRows(rowIds) {
     const { sheetview, views, base = {} } = getState().sheet;
     const view = _.find(views, v => v.viewId === base.viewId);
     const { rows } = sheetview.sheetViewData;
-    rowIds = rowIds.filter(rowId => _.find(rows, r => rowId === r.rowid));
+    rowIds = rowIds.filter((rowId: string) => _.find(rows, r => rowId === r.rowid));
     if (rowIds.length) {
       dispatch(clearSelect());
       if (getGroupControlId(view)) {
         const newRows: RecordRow[] = rows.map((groupRow: RecordRow) => {
           if (groupRow.rowid === 'groupTitle') {
-            const deletedRowsLengthOfGroup = rowIds.filter(rowId => {
+            const deletedRowsLengthOfGroup = rowIds.filter((rowId: string) => {
               const row = rows.find((r: RecordRow) => r.rowid === rowId);
               return row && row.groupKey === groupRow.key;
             }).length;
@@ -839,7 +839,7 @@ export function hideRows(rowIds) {
         rowIds,
       });
       if (checkIsTreeTableView(getState())) {
-        rowIds.forEach(rowId => {
+        rowIds.forEach((rowId: string) => {
           rows.forEach((row: RecordRow) => {
             if (row.pid === rowId || includes(row.childrenids, rowId)) {
               const changes = {};
@@ -894,7 +894,7 @@ export const updateSheetColumnWidths = (controlId: string, value, changes) => ({
   changes,
 });
 
-export const hideColumn = controlId => ({
+export const hideColumn = (controlId: string) => ({
   type: 'WORKSHEET_SHEETVIEW_HIDE_COLUMN',
   controlId,
 });

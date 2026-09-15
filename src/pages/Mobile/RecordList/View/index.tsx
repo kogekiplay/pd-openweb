@@ -166,7 +166,7 @@ class View extends Component<any, any> {
 
       const buttonsCheckStatus = {};
       data.forEach(item => {
-        item.rowIds.forEach(rowId => {
+        item.rowIds.forEach((rowId: string) => {
           buttonsCheckStatus[`${rowId}-${item.btnId}`] = true;
         });
       });

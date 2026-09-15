@@ -195,7 +195,7 @@ export default function RegularBackup(props) {
           <Checkbox className="mRight16" text={_l('备份应用')} disabled={true} checked={true} />
           {((!window.platformENV.isOverseas && !window.platformENV.isLocal) ||
             md.global.SysSettings.enableBackupWorksheetData) && (
-            <Checkbox text={_l('备份数据')} checked={datum} onClick={checked => updateData({ datum: !checked })} />
+            <Checkbox text={_l('备份数据')} checked={datum} onClick={(checked: boolean) => updateData({ datum: !checked })} />
           )}
         </div>
       </div>

@@ -395,7 +395,7 @@ class UserTable extends React.Component<any, any> {
       </div>
     );
   }
-  handleClickStastics = checked => {
+  handleClickStastics = (checked: boolean) => {
     const columnsInfo = this.getColumnsInfo();
     let copyColumnsInfo = [];
 
@@ -447,7 +447,7 @@ class UserTable extends React.Component<any, any> {
             <li key={item.value}>
               <Checkbox
                 checked={item.checked}
-                onClick={checked => this.handleSingleColumn(checked, item.value)}
+                onClick={(checked: boolean) => this.handleSingleColumn(checked, item.value)}
                 disabled={item.value === 'name'}
               >
                 <span className="verticalAlign">{item.label}</span>

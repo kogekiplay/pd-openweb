@@ -304,11 +304,11 @@ function ChartComponent(props) {
               data={zoomData}
               widget={widget}
               {...chartProps}
-              onLoadBeforeData={index => {
+              onLoadBeforeData={(index: number) => {
                 const data = pageComponents[index];
                 handleNextReportRequest(data.value);
               }}
-              onLoadNextData={index => {
+              onLoadNextData={(index: number) => {
                 const data = pageComponents[index];
                 handleNextReportRequest(data.value);
               }}

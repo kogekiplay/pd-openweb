@@ -235,7 +235,7 @@ export default class Code extends Component<any, any> {
           <Checkbox
             text={_l('代码块整体运行失败时自动重试')}
             checked={data.maxRetries > 0}
-            onClick={checked => this.updateSource({ maxRetries: !checked ? 1 : 0 })}
+            onClick={(checked: boolean) => this.updateSource({ maxRetries: !checked ? 1 : 0 })}
           />
         </div>
 

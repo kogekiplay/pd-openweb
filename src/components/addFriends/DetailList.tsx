@@ -136,7 +136,7 @@ export default class DetailList extends Component<any, any> {
     );
   };
 
-  reInvite = accountId => {
+  reInvite = (accountId: string) => {
     if (!accountId || this.state.subLoading) return;
 
     this.setState({ subLoading: true });

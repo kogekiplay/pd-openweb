@@ -254,7 +254,7 @@ export function confirm(header: string, content: string, showClose: boolean, ckT
     if (yesText === false) {
       container.removeOkBtn = true;
     } else {
-      container.onOk = checked => resolve(checked);
+      container.onOk = (checked: boolean) => resolve(checked);
       container.okText = yesText;
     }
 

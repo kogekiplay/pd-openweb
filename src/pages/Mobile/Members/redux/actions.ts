@@ -5,7 +5,7 @@ import type { AppDispatch, GetState } from 'src/redux/types';
 import { getTranslateInfo } from 'src/utils/app';
 
 // 申请状况
-const getAppApplyInfo = appId => (dispatch: AppDispatch, getState: GetState) => {
+const getAppApplyInfo = (appId: string) => (dispatch: AppDispatch, getState: GetState) => {
   const { memberData } = getState().mobile;
   ajaxRequest.getAppApplyInfo({ appId }).then(res => {
     dispatch({
@@ -19,7 +19,7 @@ const getAppApplyInfo = appId => (dispatch: AppDispatch, getState: GetState) => 
   });
 };
 
-export const getMembers = appId => dispatch => {
+export const getMembers = (appId: string) => dispatch => {
   dispatch({ type: 'MOBILE_FETCH_MEMBER_START' });
   Promise.all([
     homeAppAjax.getApp({ appId }).then(),

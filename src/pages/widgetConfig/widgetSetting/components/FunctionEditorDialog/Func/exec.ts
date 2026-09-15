@@ -271,7 +271,7 @@ export default function (
   let existDeletedControl, existUndefinedFunction;
 
   if (fnType !== 'javascript') {
-    expression = expression.replace(/([A-Z_]+)(?=\()/g, name => {
+    expression = expression.replace(/([A-Z_]+)(?=\()/g, (name: string) => {
       if (run[name]) {
         return 'run.' + name;
       } else {

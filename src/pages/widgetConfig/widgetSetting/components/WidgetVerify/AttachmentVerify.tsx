@@ -24,7 +24,7 @@ export default function AttachmentVerify(props) {
         <Checkbox
           size="small"
           checked={!!maxcount}
-          onClick={checked => onChange(handleAdvancedSettingChange(data, { maxcount: checked ? '' : 1 }))}
+          onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { maxcount: checked ? '' : 1 }))}
         >
           <span>{_l('限制文件数量')}</span>
         </Checkbox>
@@ -35,7 +35,7 @@ export default function AttachmentVerify(props) {
         <Checkbox
           size="small"
           checked={visible}
-          onClick={checked => {
+          onClick={(checked: boolean) => {
             setVisible(!checked);
             onChange(handleAdvancedSettingChange(data, { max: checked ? '' : 1 }));
           }}

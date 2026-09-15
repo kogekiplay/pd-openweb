@@ -214,7 +214,7 @@ export default function ExternalLinkDialog(props) {
               className="w100"
               placeholder={_l('请输入')}
               value={appInfo.name}
-              onChange={name => setAppInfo({ name })}
+              onChange={(name: string) => setAppInfo({ name })}
             />
           </div>
         </div>

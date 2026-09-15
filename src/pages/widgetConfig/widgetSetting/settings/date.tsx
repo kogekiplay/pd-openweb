@@ -129,7 +129,7 @@ export default function Text(props) {
               size="small"
               checked={showtimezone === '1'}
               text={_l('显示时区标识%0', timeZoneText)}
-              onClick={checked => onChange(handleAdvancedSettingChange(data, { showtimezone: checked ? '0' : '1' }))}
+              onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { showtimezone: checked ? '0' : '1' }))}
             />
           </div>
         </Fragment>

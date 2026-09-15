@@ -108,7 +108,7 @@ const WORKSHEET_ROLE_CONTROL_TYPES = [
 const PERMISSION_WORKSHEET_ROLE_TYPES = [2, 4, 6];
 const MAX_REFERENCE_DEPTH = 3;
 
-export const hasCreateOrganizationTemplatePermission = projectId => {
+export const hasCreateOrganizationTemplatePermission = (projectId: string) => {
   if (!projectId) return false;
 
   const currentProject = getCurrentProject(projectId);

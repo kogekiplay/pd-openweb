@@ -628,7 +628,7 @@ export default class Authentication extends Component<any, any> {
             className="InlineBlock bold"
             text={_l('配置 Access Token 刷新条件')}
             checked={!!refreshType}
-            onClick={checked =>
+            onClick={(checked: boolean) =>
               this.updateAjaxParameter(
                 checked ? { retryControls: [] } : { retryControls: [{ type: 10001, name: '', value: '' }] },
                 this.testIndex,

@@ -479,7 +479,7 @@ function PasteEdit(props) {
               </div>
             )
           }
-          onCellClick={index => {
+          onCellClick={(index: number) => {
             if (index === activeIndex) {
               setIsEditing(true);
             } else {

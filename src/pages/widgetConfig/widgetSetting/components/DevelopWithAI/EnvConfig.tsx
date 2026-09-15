@@ -386,7 +386,7 @@ export default function EnvConfig(props) {
           <Switch
             size="small"
             checked={item.value === true}
-            onClick={checked => {
+            onClick={(checked: boolean) => {
               if (item.key === 'mobile') {
                 setEnvIsMobile(!checked);
               } else if (item.key === 'disabled') {

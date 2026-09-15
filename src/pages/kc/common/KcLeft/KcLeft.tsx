@@ -418,7 +418,7 @@ class KcLeft extends Component<any, any> {
     });
   };
 
-  toggleFoldProject = projectId => {
+  toggleFoldProject = (projectId: string) => {
     if (this.state.foldedProjects.includes(projectId)) {
       this.fetchRootsByProjectId(projectId, true);
     } else {

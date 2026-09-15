@@ -179,7 +179,7 @@ class StructureContent extends Component<any, any> {
                 className="InlineBlock textTertiary Font12 TxtMiddle LineHeight24 noDepartment"
                 defaultChecked={typeCursor === 1}
                 checked={noDepartmentUsers}
-                onClick={checked => {
+                onClick={(checked: boolean) => {
                   this.props.updateNoDepartmentUsers(!checked);
                   this.props.updateCursor('');
                   if (checked) {

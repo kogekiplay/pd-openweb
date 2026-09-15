@@ -389,7 +389,7 @@ export default class PortalList extends Component<any, any> {
               isAppendToBody
               openSearch
               cancelAble
-              onChange={appId => this.updateState({ appId })}
+              onChange={(appId: string) => this.updateState({ appId })}
             />
             {DATE_TYPE.map(item => {
               const [startDateKey, endDateKey] = item.key;
@@ -467,7 +467,7 @@ export default class PortalList extends Component<any, any> {
             <Search
               className="w200"
               placeholder={_l('姓名 / 手机号 / 邮箱')}
-              handleChange={keywords => this.updateState({ keywords: keywords.trim() })}
+              handleChange={(keywords: string) => this.updateState({ keywords: keywords.trim() })}
             />
           </div>
         )}
@@ -477,7 +477,7 @@ export default class PortalList extends Component<any, any> {
             <Checkbox
               size="small"
               checked={totalCount > 0 && selectedColumnIds.length === totalCount}
-              onClick={checked =>
+              onClick={(checked: boolean) =>
                 this.setState({
                   selectedColumnIds: checked ? [] : (list || []).map(i => i.accountId),
                 })

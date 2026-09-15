@@ -126,7 +126,7 @@ export default function Twilio(props) {
       .then(() => onRemoveSuccess?.())
       .catch(() => alert(_l('删除失败'), 2));
 
-  const handleSwitchChange = checked =>
+  const handleSwitchChange = (checked: boolean) =>
     checked &&
     Dialog.confirm({
       title: _l('确认关闭服务?'),

@@ -100,7 +100,7 @@ class SearchBox extends Component<any, any> {
         showResult={this.state.showResult}
         data={result}
         keywords={keywords}
-        onUserClick={accountId => {
+        onUserClick={(accountId: string) => {
           this.setState(
             {
               showResult: false,
