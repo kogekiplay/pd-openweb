@@ -56,7 +56,7 @@ export const getRowById = (widgets, controlId: string) => {
   return { row: widgets[rowIndex], rowIndex };
 };
 
-export const changeWidgetSize = (widgets, { controlId, size }) => {
+export const changeWidgetSize = (widgets, { controlId, size }: { controlId?: string; [key: string]: any }) => {
   const { rowIndex, row } = getRowById(widgets, controlId);
 
   switch (row.length) {

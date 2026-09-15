@@ -288,7 +288,7 @@ export default class SelectUserDropDown extends Component<any, any> {
   /**
    * 选择应用包下的角色返回值
    */
-  selectAppUsers = ({ appId, appName, roles }) => {
+  selectAppUsers = ({ appId, appName, roles }: { appId?: string; [key: string]: any }) => {
     const accounts = _.cloneDeep(this.props.accounts) || [];
     const { unique, updateSource, onClose } = this.props;
     const members = [];

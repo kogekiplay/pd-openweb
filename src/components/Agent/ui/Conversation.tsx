@@ -287,7 +287,7 @@ export function Conversation({
   );
 }
 
-export function ConversationContent({ children, className }) {
+export function ConversationContent({ children, className }: { className?: string; [key: string]: any }) {
   return <Content className={className}>{children}</Content>;
 }
 

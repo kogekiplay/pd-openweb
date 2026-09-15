@@ -218,7 +218,7 @@ export default class MyProcess extends Component<any, any> {
       });
     });
   };
-  handleChangeTab = tab => {
+  handleChangeTab = (tab: number) => {
     const { filter, archivedItem } = this.state;
     const isSame = tab === this.state.stateTab;
     this.setState(
@@ -331,7 +331,7 @@ export default class MyProcess extends Component<any, any> {
     const { approveCards } = this.state;
     const rejectCards = approveCards.filter(c => '5' in _.get(c, 'flowNode.btnMap'));
     const cards = approveType === 5 ? rejectCards : approveCards;
-    const selects = cards.map(({ id, workId, flowNode }) => {
+    const selects = cards.map(({ id, workId, flowNode }: { workId?: string; [key: string]: any }) => {
       const data = {
         id,
         workId,

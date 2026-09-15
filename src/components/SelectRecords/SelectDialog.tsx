@@ -326,7 +326,7 @@ export default function SelectDialog({ ...args }) {
   const [fixedColumnCount, setFixedColumnCount] = useState(tableConfig.fixedColumnCount || 2);
   const summaryConfig = safeParse(get(control, 'advancedSetting.reportsetting'), 'array');
   const summaryControls = summaryConfig
-    .map(({ controlId, type }) => {
+    .map(({ controlId, type }: { controlId?: string; [key: string]: any }) => {
       if (type === 0) return null;
       const matchedControl = find(controlsForShow, { controlId });
       return (
@@ -775,7 +775,7 @@ export default function SelectDialog({ ...args }) {
                           />
                         );
                       }}
-                      renderRowHead={({ className, style, rowIndex, row }) => (
+                      renderRowHead={({ className, style, rowIndex, row }: { className?: string; [key: string]: any }) => (
                         <RowHead
                           className={className}
                           style={style}

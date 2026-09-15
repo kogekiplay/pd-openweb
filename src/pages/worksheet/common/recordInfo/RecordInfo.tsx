@@ -434,7 +434,7 @@ export default class RecordInfo extends Component<any, any> {
     closeWhenNotViewData,
     needUpdateControlIds,
     cb = _.noop,
-  }) {
+  }: { recordId?: string; [key: string]: any }) {
     const {
       from,
       view = {},
@@ -1165,7 +1165,7 @@ export default class RecordInfo extends Component<any, any> {
     );
   };
 
-  refreshEvent = ({ worksheetId, recordId, closeWhenNotViewData }) => {
+  refreshEvent = ({ worksheetId, recordId, closeWhenNotViewData }: { worksheetId?: string; recordId?: string; [key: string]: any }) => {
     const { iseditting } = this.state;
 
     if (!iseditting && worksheetId === this.state.worksheetId && recordId === this.state.recordId) {

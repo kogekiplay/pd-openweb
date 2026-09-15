@@ -316,7 +316,7 @@ function BtnSetting(props) {
         const { views = [], template = {} } = res;
         const controls = replaceControlsTranslateInfo(appId, value, template.controls);
         setDataSource({
-          views: getShowViews(views).map(({ viewId, name, viewType }) => ({
+          views: getShowViews(views).map(({ viewId, name, viewType }: { viewId?: string; name?: string; [key: string]: any }) => ({
             text: getTranslateInfo(appId, null, viewId).name || name,
             value: viewId,
             type: viewType,

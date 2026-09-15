@@ -51,7 +51,7 @@ export default function SimplePagination(props) {
   const prevDisabled = tempPageIndex <= 1;
   const nextDisabled = tempPageIndex >= pageNumber;
 
-  function changePageIndex(newPageIndex) {
+  function changePageIndex(newPageIndex: number) {
     if (isNaN(newPageIndex)) {
       return;
     }

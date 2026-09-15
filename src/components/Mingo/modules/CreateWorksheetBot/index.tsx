@@ -173,7 +173,7 @@ function MingoContent(props, ref) {
       MINGO_TASK_STATUS.CREATE_WORKSHEET_ASSIGNMENT_PREPARING_WORKSHEET_DESCRIPTION,
   );
   const [taskStep, setTaskStep] = useState<number | undefined>();
-  const handleSetTaskStatus = useCallback(status => {
+  const handleSetTaskStatus = useCallback((status: number) => {
     setTaskStatus(status);
     cache.current.taskStatus = status;
   }, []);
@@ -431,7 +431,7 @@ function MingoContent(props, ref) {
                 appName={appName}
                 appDescription={appDescription}
                 worksheets={worksheets}
-                onSelect={({ name }) => handleSend(name)}
+                onSelect={({ name }: { name?: string; [key: string]: any }) => handleSend(name)}
               />
             </Fragment>
           )

@@ -190,7 +190,7 @@ export function Message({ role = 'assistant', children, ...props }) {
   );
 }
 
-export function MessageHeader({ name, avatarLabel, avatarSrc, strong = false }) {
+export function MessageHeader({ name, avatarLabel, avatarSrc, strong = false }: { name?: string; [key: string]: any }) {
   return (
     <Header>
       <Avatar $size={strong ? 'large' : 'default'}>
@@ -201,7 +201,7 @@ export function MessageHeader({ name, avatarLabel, avatarSrc, strong = false }) 
   );
 }
 
-export function MessageContent({ role = 'assistant', children, className }) {
+export function MessageContent({ role = 'assistant', children, className }: { className?: string; [key: string]: any }) {
   return (
     <Content className={className} $role={role}>
       {children}
@@ -209,7 +209,7 @@ export function MessageContent({ role = 'assistant', children, className }) {
   );
 }
 
-export function MessageActions({ children, className }) {
+export function MessageActions({ children, className }: { className?: string; [key: string]: any }) {
   return <Actions className={className}>{children}</Actions>;
 }
 
@@ -248,7 +248,7 @@ export function MessageMeta({ time, credits, pending = false, always = false, on
   );
 }
 
-export function MessageResponse({ children, className, role, streaming }) {
+export function MessageResponse({ children, className, role, streaming }: { className?: string; [key: string]: any }) {
   return (
     <Response className={className} $role={role}>
       {typeof children === 'string' ? <MarkdownText streaming={streaming}>{children}</MarkdownText> : children}

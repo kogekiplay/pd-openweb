@@ -107,7 +107,7 @@ const Content = styled.div`
   }
 `;
 
-function formatDuration(ms) {
+function formatDuration(ms: number) {
   if (!ms || ms < 0) return '';
   // 有测得耗时但不足 1 秒时按 1 秒计，避免出现无意义的「0秒」
   const sec = Math.max(1, Math.floor(ms / 1000));
@@ -121,7 +121,7 @@ function formatDuration(ms) {
 // 思考时长根据组件挂载时间与 streaming 状态自行计时，结束后停在最终时长不再跳动。
 // 折叠进「已工作」的思考块（非流式）改用传入的 startedAt / finishedAt 取真实时长，
 // 避免重新挂载后时长归零。内容区统一限高 220px，长推理不会撑爆容器。
-export function Reasoning({ children, streaming = false, defaultOpen = false, className, startedAt, finishedAt }) {
+export function Reasoning({ children, streaming = false, defaultOpen = false, className, startedAt, finishedAt }: { className?: string; [key: string]: any }) {
   const startRef = useRef(Date.now());
   const [now, setNow] = useState(() => Date.now());
   const [endTs, setEndTs] = useState(null);

@@ -549,7 +549,7 @@ export default class extends Component<any, any> {
 
     return null;
   };
-  renderContrast({ value, contrastValue, name, controlId, isContrastValue }) {
+  renderContrast({ value, contrastValue, name, controlId, isContrastValue }: { name?: string; controlId?: string; [key: string]: any }) {
     const { filter, displaySetup = {}, style, yaxisList } = this.props.reportData;
     const { ignoreToday } = filter;
     const percentage = ((value - contrastValue) / contrastValue) * 100;

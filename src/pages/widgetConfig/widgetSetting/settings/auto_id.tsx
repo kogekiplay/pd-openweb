@@ -350,7 +350,7 @@ function SortableRules({ rules, data, deleteRule, updateRule, addRule, onSortEnd
           itemKey="key"
           useDragHandle
           onSortEnd={onSortEnd}
-          renderItem={({ item, index, DragHandle }) => (
+          renderItem={({ item, index, DragHandle }: { index?: number; [key: string]: any }) => (
             <SortableItem
               index={index}
               rule={item}

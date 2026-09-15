@@ -110,7 +110,7 @@ export default class CreateEditDeptDialog extends Component<any, any> {
             departmentId: departmentInfo.departmentId,
             departmentName: departmentInfo.departmentName,
             parentId: parentDepartment.departmentId,
-            chargeAccountIds: chargeUsers.map(({ accountId }) => accountId),
+            chargeAccountIds: chargeUsers.map(({ accountId }: { accountId?: string; [key: string]: any }) => accountId),
           })
           .then(data => {
             const { departmentInfo = {} } = data;
@@ -176,7 +176,7 @@ export default class CreateEditDeptDialog extends Component<any, any> {
     dialogSelectDeptUser({
       projectId,
       departmentId: departmentInfo.departmentId,
-      selectedUsersIds: chargeUsers.map(({ accountId }) => accountId),
+      selectedUsersIds: chargeUsers.map(({ accountId }: { accountId?: string; [key: string]: any }) => accountId),
       isUnique: false,
       maxCount: 5,
       callback: accounts => this.setState({ chargeUsers: accounts }),

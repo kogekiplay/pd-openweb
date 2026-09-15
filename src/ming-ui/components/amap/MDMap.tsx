@@ -106,7 +106,7 @@ class GDMap extends Component<any, any> {
     }
   };
 
-  getCurrentLocation = ({ x, y, title, address }) => {
+  getCurrentLocation = ({ x, y, title, address }: { title?: string; [key: string]: any }) => {
     return {
       addressComponent: { building: title },
       formattedAddress: address,

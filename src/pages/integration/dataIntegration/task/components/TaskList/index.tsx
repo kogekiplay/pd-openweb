@@ -310,7 +310,7 @@ const SelectedWrapper = styled.div`
 
 const sortTypes = [null, SORT_TYPE.ASC, SORT_TYPE.DESC];
 
-export default function TaskList({ projectId, onRefreshComponents }) {
+export default function TaskList({ projectId, onRefreshComponents }: { projectId?: string; [key: string]: any }) {
   const ajaxPromise = useRef(null);
   const statusAjaxPromise = useRef(null);
   const batchAjaxPromise = useRef(null);

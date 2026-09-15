@@ -62,7 +62,7 @@ export const removeUserFromRole =
  * 退出角色
  */
 export const exitRole =
-  ({ roleId, appId, callback }) =>
+  ({ roleId, appId, callback }: { appId?: string; [key: string]: any }) =>
   dispatch => {
     dispatch({ type: 'MOBILE_UPDATELIST_FETCH_START' });
     ajaxRequest
@@ -132,7 +132,7 @@ export const addRoleMembers =
  * 转交他人
  */
 export const transferApp =
-  ({ appId, memberId }) =>
+  ({ appId, memberId }: { appId?: string; [key: string]: any }) =>
   dispatch => {
     dispatch({ type: 'MOBILE_UPDATELIST_FETCH_START' });
     ajaxRequest

@@ -88,7 +88,7 @@ export default function TriggerButtons({
   buttons = [],
   onChat = () => {},
   onReloadButtons = () => {},
-}) {
+}: { isCharge?: boolean; [key: string]: any }) {
   const [createAIActionDialogVisible, setCreateAIActionDialogVisible] = useState(false);
 
   const handleCreateAction = () => {
@@ -173,7 +173,7 @@ export default function TriggerButtons({
           {renderCreateActionButton()}
         </div>
       ) : (
-        sortedButtons.map((item, index) => (
+        sortedButtons.map((item, index: number) => (
           <div className="mTop10" key={item.btnId || index}>
             <Tooltip title={item.desc || item.name}>
               <div className="triggerButton" onClick={() => onChat(item)}>

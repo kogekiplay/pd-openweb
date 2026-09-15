@@ -63,7 +63,7 @@ class NetState extends Component<any, any> {
     this.props.onClose();
   };
 
-  handleClick = (type: string, { projectId, versionType, serviceType }) => {
+  handleClick = (type: string, { projectId, versionType, serviceType }: { projectId?: string; [key: string]: any }) => {
     const { onClose } = this.props;
 
     // 按钮点击

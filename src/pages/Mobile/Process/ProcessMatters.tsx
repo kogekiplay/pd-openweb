@@ -280,7 +280,7 @@ export default class ProcessMatters extends Component<any, any> {
   handleScrollEnd = () => {
     this.getTodoList();
   };
-  handleApproveDone = ({ workId }) => {
+  handleApproveDone = ({ workId }: { workId?: string; [key: string]: any }) => {
     const { list, countData, appCount, topTab = {} } = this.state;
     const { appId } = getRequest();
 
@@ -378,7 +378,7 @@ export default class ProcessMatters extends Component<any, any> {
     const { approveCards, batchLoadingType } = this.state;
     const rejectCards = approveCards.filter(c => '5' in _.get(c, 'flowNode.btnMap'));
     const cards = approveType === 5 ? rejectCards : approveCards;
-    const selects = cards.map(({ id, workId, flowNode }) => {
+    const selects = cards.map(({ id, workId, flowNode }: { workId?: string; [key: string]: any }) => {
       const data = { id, workId, opinion: '', opinionType: 3 };
 
       if ((_.get(flowNode, batchType) || []).includes(1)) {

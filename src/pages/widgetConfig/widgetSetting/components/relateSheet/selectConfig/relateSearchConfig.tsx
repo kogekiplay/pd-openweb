@@ -256,7 +256,7 @@ export default function RelateSearchConfig(props) {
                         popup={
                           <SelectControl
                             list={filterOnlyShowField(controls).filter(({ type, sourceControlType, controlId }) => {
-                              const ids = searchfilters.map(({ controlId }) => controlId);
+                              const ids = searchfilters.map(({ controlId }: { controlId?: string; [key: string]: any }) => controlId);
                               return (
                                 _.includes(FASTFILTER_CONDITION_TYPE, type === 30 ? sourceControlType : type) &&
                                 !ids.includes(controlId)

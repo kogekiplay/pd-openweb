@@ -660,7 +660,7 @@ let RowBlock = class RowBlock extends Component<any, any> {
         sheetSwitchPermit={this.props.sheetSwitchPermit}
         onUpdate={() => {}}
         updateTitleData={() => {}}
-        onDelete={({ recordId }) => {
+        onDelete={({ recordId }: { recordId?: string; [key: string]: any }) => {
           removeRecord(recordId);
         }}
         onCopySuccess={data => {

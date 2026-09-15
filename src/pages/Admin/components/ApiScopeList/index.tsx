@@ -90,7 +90,7 @@ export default function ApiScopeList(props) {
       selectedCodes.includes(code) ? selectedCodes.filter(item => item !== code) : selectedCodes.concat(code),
     );
 
-  const renderLabel = ({ code, checked, indeterminate, onClick }) =>
+  const renderLabel = ({ code, checked, indeterminate, onClick }: { checked?: boolean; [key: string]: any }) =>
     showCheckbox ? (
       <Checkbox
         className="permissionCheckbox"

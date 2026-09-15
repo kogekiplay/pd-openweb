@@ -66,7 +66,7 @@ export default {
   /**
    * Contacts
    */
-  fetchAllContacts: ({ pageIndex, pageSize, keywords, isFilterOther }) => {
+  fetchAllContacts: ({ pageIndex, pageSize, keywords, isFilterOther }: { pageIndex?: number; keywords?: string; [key: string]: any }) => {
     const params = {
       pageIndex,
       pageSize,
@@ -77,7 +77,7 @@ export default {
     return fetchContacts(params);
   },
 
-  fetchFriends: ({ keywords, pageIndex, pageSize }) => {
+  fetchFriends: ({ keywords, pageIndex, pageSize }: { keywords?: string; pageIndex?: number; [key: string]: any }) => {
     const params = {
       pageIndex,
       pageSize,
@@ -87,7 +87,7 @@ export default {
     return fetchContacts(params);
   },
 
-  fetchOthers: ({ keywords, pageIndex, pageSize }) => {
+  fetchOthers: ({ keywords, pageIndex, pageSize }: { keywords?: string; pageIndex?: number; [key: string]: any }) => {
     const params = {
       pageIndex,
       pageSize,
@@ -97,7 +97,7 @@ export default {
     return fetchContacts(params);
   },
 
-  fetchProjectContacts: ({ keywords, pageIndex, pageSize, projectId }) => {
+  fetchProjectContacts: ({ keywords, pageIndex, pageSize, projectId }: { keywords?: string; pageIndex?: number; projectId?: string; [key: string]: any }) => {
     const params = {
       pageIndex,
       pageSize,
@@ -108,7 +108,7 @@ export default {
     return fetchContacts(params);
   },
 
-  fetchDepartments: ({ projectId, pageIndex, pageSize }) => {
+  fetchDepartments: ({ projectId, pageIndex, pageSize }: { projectId?: string; pageIndex?: number; [key: string]: any }) => {
     const params = {
       projectId,
       pageIndex,
@@ -117,7 +117,7 @@ export default {
     return DepartmentController.getProjectDepartmentByPage(params);
   },
 
-  fetchDepartmentUsers: ({ projectId, departmentId }) => {
+  fetchDepartmentUsers: ({ projectId, departmentId }: { projectId?: string; [key: string]: any }) => {
     const params = {
       projectId,
       departmentId,
@@ -125,7 +125,7 @@ export default {
     return DepartmentController.getDepartmentUsers(params);
   },
 
-  fetchNewFriends: ({ pageIndex, pageSize = 10 }) => {
+  fetchNewFriends: ({ pageIndex, pageSize = 10 }: { pageIndex?: number; [key: string]: any }) => {
     const params = {
       pageIndex,
       pageSize,
@@ -133,7 +133,7 @@ export default {
     return AddressListController.getNewFriends(params);
   },
 
-  fetchRecommends: ({ pageIndex, pageSize = 5 }) => {
+  fetchRecommends: ({ pageIndex, pageSize = 5 }: { pageIndex?: number; [key: string]: any }) => {
     const params = {
       pageIndex,
       pageSize,
@@ -183,7 +183,7 @@ export default {
     });
   },
 
-  searchAddressbookAndDepartment: ({ projectId, keywords, range, pageIndex, pageSize, isFilterOther }) => {
+  searchAddressbookAndDepartment: ({ projectId, keywords, range, pageIndex, pageSize, isFilterOther }: { projectId?: string; keywords?: string; pageIndex?: number; [key: string]: any }) => {
     return AddressListController.searchAddressbookAndDepartment({
       projectId,
       keywords,

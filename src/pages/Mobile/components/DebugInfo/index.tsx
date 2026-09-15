@@ -19,7 +19,7 @@ const Wrap = styled.div`
   background-color: var(--color-background-inverse);
 `;
 
-export default function DebugInfo({ appId, debugRoles = [] }) {
+export default function DebugInfo({ appId, debugRoles = [] }: { appId?: string; [key: string]: any }) {
   const setDebugRoles = () => {
     appManagementApi.setDebugRoles({ appId, roleIds: [] }).then(res => {
       if (res) {
@@ -34,7 +34,7 @@ export default function DebugInfo({ appId, debugRoles = [] }) {
     <Wrap>
       <div className="flex ellipsis">
         {_l('角色调试：')}
-        {debugRoles.map((r, index) => (
+        {debugRoles.map((r, index: number) => (
           <Fragment key={r.roleId || r.id || r.name}>
             {r.name}
             {index < debugRoles.length - 1 ? '、' : ''}

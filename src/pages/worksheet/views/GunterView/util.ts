@@ -471,7 +471,7 @@ export const isWeekEndDay = (date, type, viewConfig) => {
  */
 export const getRowsTime = rows => {
   const f = t => (t ? moment(t).valueOf() : 0);
-  const d = t => moment(t).format('YYYY-MM-DD');
+  const d = (t: number) => moment(t).format('YYYY-MM-DD');
   const data = rows.filter(
     (item: RecordRow) => (item.dragBeforeStartTime || item.startTime) && (item.dragBeforeEndTime || item.endTime),
   );
@@ -703,7 +703,7 @@ export const timeToPercentage = (time, width: number) => {
 /**
  * 把一个百分比转成小时时间
  */
-export const percentageToTime = percentage => {
+export const percentageToTime = (percentage: number) => {
   return (((23.99 * 60) / 100) * percentage) / 60;
 };
 

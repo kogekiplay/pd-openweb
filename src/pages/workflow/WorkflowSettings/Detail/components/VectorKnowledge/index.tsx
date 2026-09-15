@@ -95,7 +95,7 @@ export default props => {
     const isError = data.knowledgeIds.length !== data.appList.filter(o => _.includes(data.knowledgeIds, o.id)).length;
     const vectorList = data.appList
       .filter(item => !item.otherApkId)
-      .map(({ name, id }) => ({ text: name, value: id, disabled: _.includes(data.knowledgeIds, id) }));
+      .map(({ name, id }: { name?: string; [key: string]: any }) => ({ text: name, value: id, disabled: _.includes(data.knowledgeIds, id) }));
 
     return (
       <Dropdown
@@ -140,7 +140,7 @@ export default props => {
             selectKnowledge({
               companyId: props.companyId,
               appId: props.relationId,
-              onOk: ({ appId, appName, knowledgeList }) => {
+              onOk: ({ appId, appName, knowledgeList }: { appId?: string; [key: string]: any }) => {
                 const appList = _.cloneDeep(data.appList);
 
                 if (appId !== props.relationId) {

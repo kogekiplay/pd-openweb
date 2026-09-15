@@ -50,7 +50,7 @@ const Icon = styled.i`
   margin-right: 5px;
 `;
 
-export default function MingoCreateWorksheet({ taskStatus, content, disabled, onClick, isStreaming }) {
+export default function MingoCreateWorksheet({ taskStatus, content, disabled, onClick, isStreaming }: { disabled?: boolean; [key: string]: any }) {
   let className = cx('create-worksheet', {
     disabled,
     'create-worksheet-begin': taskStatus === MINGO_TASK_STATUS.CREATE_WORKSHEET_ASSIGNMENT_BEGIN_CREATE_WORKSHEET,

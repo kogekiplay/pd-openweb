@@ -454,7 +454,7 @@ export function accAdd(arg1: number, arg2) {
  * 调用：accSub(arg1,arg2)
  * 返回值：arg1减上arg2的精确结果
  */
-export function accSub(arg1: number, arg2) {
+export function accSub(arg1: number, arg2: number) {
   return accAdd(arg1, -arg2);
 }
 

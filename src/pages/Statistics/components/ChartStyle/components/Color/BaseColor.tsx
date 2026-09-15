@@ -135,7 +135,7 @@ export default class BaseColor extends Component<any, any> {
       </div>
     );
   }
-  renderColorGroup({ name, id, colors }, index: number) {
+  renderColorGroup({ name, id, colors }: { name?: string; [key: string]: any }, index: number) {
     const { colorGroupId } = this.state;
     return (
       <div

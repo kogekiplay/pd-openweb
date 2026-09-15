@@ -104,7 +104,7 @@ function genKanbanKeyByData(data) {
 }
 
 // 递归获取多级关联的层级视图数据
-function getHierarchyDataRecursion({ worksheet, records, kanbanKey, index, para }) {
+function getHierarchyDataRecursion({ worksheet, records, kanbanKey, index, para }: { index?: number; [key: string]: any }) {
   const { dispatch, getState, viewControls, level, filters, ...rest } = para;
   // 筛选条件异步加载，重新获取数据时暂停上一次递归请求
   const { sheet } = getState();
@@ -615,7 +615,7 @@ export const addTopLevelStateFromTemp = data => {
 };
 
 // 更新层级记录数据
-export function updateHierarchyData({ recordId, value, path, pathId, relateSheet }) {
+export function updateHierarchyData({ recordId, value, path, pathId, relateSheet }: { recordId?: string; [key: string]: any }) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { sheet } = getState();
     const { hierarchyView } = sheet;
@@ -707,7 +707,7 @@ export function getHierarchyRecord(args, cb) {
 }
 
 // 更新标题控件数据
-export function updateTitleData({ data, rowId }) {
+export function updateTitleData({ data, rowId }: { rowId?: string; [key: string]: any }) {
   return function (dispatch: AppDispatch, getState: GetState) {
     const { sheet } = getState();
     const originData = get(sheet, ['hierarchyView', 'hierarchyViewData', rowId]);

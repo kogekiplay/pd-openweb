@@ -223,7 +223,7 @@ export default class UploadTemplateSheet extends React.Component<any, any> {
     alert(_l('复制成功'));
   };
 
-  renderIcon = text => {
+  renderIcon = (text: string) => {
     return (
       <span title={_l('复制')}>
         <Icon icon="content-copy" className="copy" onClick={() => this.onCopy(text)} />

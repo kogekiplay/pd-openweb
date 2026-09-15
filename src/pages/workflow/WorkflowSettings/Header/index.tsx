@@ -836,7 +836,7 @@ class Header extends Component<any, any> {
             worksheetInfo={worksheetInfo}
             recordData={recordInfo}
             onClose={() => this.setState({ showChatbotDialog: false })}
-            onOpenMessageLog={({ instanceId }) => {
+            onOpenMessageLog={({ instanceId }: { instanceId?: string; [key: string]: any }) => {
               logDialog({
                 processId: flowInfo.id,
                 nodeId: workflowDetail.flowNodeMap[flowInfo.startNodeId].nextId,
@@ -858,7 +858,7 @@ class Header extends Component<any, any> {
           worksheetInfo={worksheetInfo}
           recordInfo={recordInfo}
           onClose={() => this.setState({ showChatbotDialog: false })}
-          onOpenMessageLog={({ instanceId }) => {
+          onOpenMessageLog={({ instanceId }: { instanceId?: string; [key: string]: any }) => {
             logDialog({
               processId: flowInfo.id,
               nodeId: workflowDetail.flowNodeMap[flowInfo.startNodeId].nextId,

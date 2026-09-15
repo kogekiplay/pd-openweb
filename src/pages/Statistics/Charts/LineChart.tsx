@@ -572,7 +572,7 @@ export default class extends Component<any, any> {
                 ? { type: 'limit-in-plot' }
                 : null,
             ],
-            content: ({ value, controlId }) => {
+            content: ({ value, controlId }: { controlId?: string; [key: string]: any }) => {
               const render = () => {
                 if (accumulatePerPile) {
                   return `${value}%`;

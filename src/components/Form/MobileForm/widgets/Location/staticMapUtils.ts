@@ -3,7 +3,7 @@ const MAX_STATIC_MAP_SIZE = 1024;
 
 const isValidNumber = value => value !== '' && value !== null && value !== undefined && Number.isFinite(Number(value));
 
-export function getStaticMapUrl({ x, y, width, height }) {
+export function getStaticMapUrl({ x, y, width, height }: { height?: number; [key: string]: any }) {
   if (![x, y, width, height].every(isValidNumber) || Number(width) <= 0 || Number(height) <= 0) {
     return '';
   }

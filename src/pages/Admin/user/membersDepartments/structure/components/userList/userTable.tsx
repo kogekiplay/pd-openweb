@@ -334,7 +334,7 @@ class UserTable extends React.Component<any, any> {
     }
   };
 
-  syncTableScrollLeft = scrollLeft => {
+  syncTableScrollLeft = (scrollLeft: number) => {
     if (this.tbodyContainer && this.tbodyContainer.scrollLeft !== scrollLeft) {
       this.tbodyContainer.scrollLeft = scrollLeft;
     }

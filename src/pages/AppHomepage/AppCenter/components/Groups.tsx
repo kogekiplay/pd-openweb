@@ -310,7 +310,7 @@ export default function Groups(props) {
           type={addGroupVisible ? 'add' : 'edit'}
           projectGroupsLan={projectGroupsLang}
           editingGroupId={editingGroupId}
-          onChange={({ name, icon, groupType, langData = [] }) => {
+          onChange={({ name, icon, groupType, langData = [] }: { name?: string; icon?: string; [key: string]: any }) => {
             if (addGroupVisible) {
               actions.addGroup({
                 projectId,

@@ -157,7 +157,7 @@ export default class ReportRelation extends Component<any, any> {
     });
   }
 
-  handleDelBtn({ accountId, fullname }) {
+  handleDelBtn({ accountId, fullname }: { accountId?: string; fullname?: string; [key: string]: any }) {
     const { projectId } = this.state;
     const _this = this;
 

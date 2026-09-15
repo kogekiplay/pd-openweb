@@ -51,7 +51,7 @@ const StatisticContent = styled.div`
 
 let ajaxPromise;
 
-export default ({ projectId, flag }) => {
+export default ({ projectId, flag }: { projectId?: string; [key: string]: any }) => {
   const [statisticData, setStatisticData] = useState({});
 
   useEffect(() => {

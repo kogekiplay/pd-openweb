@@ -360,7 +360,7 @@ export default class StepItem extends Component<any, any> {
                 placement="bottom"
                 title={
                   <ul>
-                    {fields.map(({ name, toValue }, index: number) => (
+                    {fields.map(({ name, toValue }: { name?: string; [key: string]: any }, index: number) => (
                       <li key={index} className="writeFields">
                         <span className="field">{`${name}: `}</span>
                         <span className="val">{toValue}</span>
@@ -713,7 +713,7 @@ export default class StepItem extends Component<any, any> {
 
                       {this.renderOperatorSubtitle(flowNode.type, key, debugEventDump)}
                     </div>
-                    {debugEventDump[key].map(({ avatar, accountId, fullName }) => (
+                    {debugEventDump[key].map(({ avatar, accountId, fullName }: { accountId?: string; [key: string]: any }) => (
                       <div className="flexRow alignItemsCenter mTop8" key={accountId}>
                         <UserHead size={24} user={{ userHead: avatar, accountId }} projectId={projectId} />
                         <span className="flex ellipsis mLeft12">{fullName}</span>

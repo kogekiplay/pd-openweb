@@ -63,7 +63,7 @@ export default function EnableScanLogin(props) {
       });
   };
 
-  const saveCustomName = ({ name, icon, iconUrl, success = () => { } }) => {
+  const saveCustomName = ({ name, icon, iconUrl, success = () => { } }: { name?: string; icon?: string; [key: string]: any }) => {
     workWeiXinAjax
       .editThirdPartyCustomNameIcon({
         projectId,

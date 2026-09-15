@@ -101,7 +101,7 @@ export default function SelectControlWithRelate({
                   <span>{relationName}</span>
                 </div>
                 <ul className="fieldList">
-                  {fieldList.map(({ type, controlName, controlId }) => {
+                  {fieldList.map(({ type, controlName, controlId }: { controlId?: string; [key: string]: any }) => {
                     const obj =
                       recordId === 'current'
                         ? {

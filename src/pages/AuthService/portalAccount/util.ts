@@ -17,7 +17,7 @@ export const urlList = [
 ];
 
 //获取当前自定义域名后缀：theportal.cn 取根路径后第一段，否则取 /portal/ 后第一段
-export const getSuffix = url => {
+export const getSuffix = (url: string) => {
   const urlObj = new URL(decodeURIComponent(url));
   const pathname = urlObj.pathname;
   const hostname = urlObj.hostname;

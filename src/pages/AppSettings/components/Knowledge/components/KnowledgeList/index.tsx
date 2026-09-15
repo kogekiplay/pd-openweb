@@ -41,7 +41,7 @@ const KnowledgeList = props => {
 
   useAutoFocus(inputRef, dialogState.type === DIALOG_TYPE_MAP.UPDATE);
 
-  const openDialog = type => {
+  const openDialog = (type: string) => {
     setDialogState({
       type,
       isChecked: false,

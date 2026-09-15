@@ -95,7 +95,7 @@ export default class LineChart extends React.Component<any, any> {
     let arr = data.map(item => item.value);
     return _.isArray(arr) && !_.isEmpty(arr) ? Math.max(...arr) : 0;
   };
-  getCeil = max => {
+  getCeil = (max: number) => {
     let bite = 0;
 
     if (max < 10) {

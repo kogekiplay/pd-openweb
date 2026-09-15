@@ -45,7 +45,7 @@ const Empty = styled.div`
   }
 `;
 
-export default function DeleteOptionList({ collectionId, name, title, type, ...rest }) {
+export default function DeleteOptionList({ collectionId, name, title, type, ...rest }: { name?: string; [key: string]: any }) {
   const [loading, setLoading] = useState(true);
   const [controls, setControls] = useState(rest.controls || []);
   const [dataInfo, setDataInfo] = useState(rest.dataInfo || {});

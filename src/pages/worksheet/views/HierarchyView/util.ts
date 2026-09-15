@@ -105,7 +105,7 @@ export const getRelateDefaultValue = (item, { worksheetControls, currentView }) 
   return JSON.stringify([{ sid: item.rowid, sourcevalue: JSON.stringify(recordData.item) }]);
 };
 
-export const hierarchyViewCanSelectFields = ({ controls, worksheetId }) => {
+export const hierarchyViewCanSelectFields = ({ controls, worksheetId }: { worksheetId?: string; [key: string]: any }) => {
   const getRelationName = parent => {
     const { controlName, sourceControlId } = parent;
     const { controlName: subName } = _.find(controls, item => item.controlId === sourceControlId) || {};

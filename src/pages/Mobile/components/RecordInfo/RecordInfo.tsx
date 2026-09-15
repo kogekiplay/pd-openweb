@@ -159,7 +159,7 @@ let RecordInfo = class RecordInfo extends Component<any, any> {
       rowEditLock.isopen === '1'
     );
   };
-  refreshEvent = ({ worksheetId, recordId }) => {
+  refreshEvent = ({ worksheetId, recordId }: { worksheetId?: string; recordId?: string; [key: string]: any }) => {
     if (worksheetId === this.props.worksheetId && recordId === this.props.recordId) {
       this.refreshRecord();
     }

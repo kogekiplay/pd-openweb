@@ -981,7 +981,7 @@ export default class Con extends React.Component<any, any> {
                                   </span>
                                   {workItemLog &&
                                     workItemLog.fields &&
-                                    workItemLog.fields.map(({ name, toValue }) => (
+                                    workItemLog.fields.map(({ name, toValue }: { name?: string; [key: string]: any }) => (
                                       <span>
                                         {name}：{toValue}
                                       </span>

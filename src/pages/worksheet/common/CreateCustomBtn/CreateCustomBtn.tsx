@@ -942,7 +942,7 @@ class CreateCustomBtnCon extends React.Component<any, any> {
                       projectId: this.props.projectId,
                       icon: icon.replace(/_svg$/, ''),
                       iconColor: 'var(--color-primary)',
-                      onModify: ({ icon, iconUrl }) => {
+                      onModify: ({ icon, iconUrl }: { icon?: string; [key: string]: any }) => {
                         this.setState({ icon: `${icon}_svg`, iconUrl });
                       },
                     });

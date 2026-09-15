@@ -17,7 +17,7 @@ import { ReactSVG } from 'react-svg';
 // color 与自定义属性都会继承下去。
 const SVG_SIZE_VAR = '--svg-icon-size';
 
-export default ({ url = '', size = 24, fill = '#1677ff', className, addClassName = '' }) => {
+export default ({ url = '', size = 24, fill = '#1677ff', className, addClassName = '' }: { className?: string; [key: string]: any }) => {
   return (
     <ReactSVG
       className={className}

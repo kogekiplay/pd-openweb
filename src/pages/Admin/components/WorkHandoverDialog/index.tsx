@@ -233,7 +233,7 @@ export default class WorkHandoverDialog extends Component<any, any> {
   };
 
   // 选中某个应用
-  checkedAppItem = ({ checked, appId, itemId, checkType }) => {
+  checkedAppItem = ({ checked, appId, itemId, checkType }: { checked?: boolean; appId?: string; [key: string]: any }) => {
     const { activeTab, todoList, workflowList, todoCheckedInfo, workflowCheckedInfo } = this.state;
     const dataList = activeTab === 1 ? todoList : workflowList;
     const checkedInfo = activeTab === 1 ? _.clone(todoCheckedInfo) : _.clone(workflowCheckedInfo);

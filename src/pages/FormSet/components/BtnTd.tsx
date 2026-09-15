@@ -65,7 +65,7 @@ export default function BtnTd(props) {
     optionType,
     successText = _l('删除成功'),
     failText = _l('删除失败'),
-  }) => {
+  }: { appId?: string; viewId?: string; [key: string]: any }) => {
     sheetAjax
       .optionWorksheetBtn({
         appId,

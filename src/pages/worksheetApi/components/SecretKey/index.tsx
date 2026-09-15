@@ -104,7 +104,7 @@ export default props => {
     });
   };
 
-  const onChangeAuth = ({ sheetId, viewId, type, checkedValue }) => {
+  const onChangeAuth = ({ sheetId, viewId, type, checkedValue }: { viewId?: string; [key: string]: any }) => {
     const newSheets = worksheets.map(sheet => {
       if (type === 'canRead') {
         const newViews = sheet.views.map(view =>

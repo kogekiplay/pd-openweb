@@ -68,7 +68,7 @@ export default class extends Component<any, any> {
           this.setState({
             worksheetsOfSelectedApp: data.content
               .filter(o => o.aggTableTaskStatus !== 0)
-              .map(({ name, worksheetId }) => ({ text: name, value: worksheetId })),
+              .map(({ name, worksheetId }: { name?: string; worksheetId?: string; [key: string]: any }) => ({ text: name, value: worksheetId })),
           });
         });
     } else {

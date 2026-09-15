@@ -38,7 +38,7 @@ export default class Widgets extends Component<any, any> {
     });
   };
 
-  getRowById = ({ appId, worksheetId, rowId }) => {
+  getRowById = ({ appId, worksheetId, rowId }: { appId?: string; worksheetId?: string; rowId?: string; [key: string]: any }) => {
     const { filterControls = [], parentWorksheetId, control = {}, relateRecordIds = [] } = this.props;
     const { controlId, controlName, enumDefault } = control;
 

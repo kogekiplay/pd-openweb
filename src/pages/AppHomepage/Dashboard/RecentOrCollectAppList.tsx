@@ -119,7 +119,7 @@ const ListItemSkeleton = styled.div`
   }
 `;
 
-const getToUrl = ({ item, projectId }) => {
+const getToUrl = ({ item, projectId }: { projectId?: string; [key: string]: any }) => {
   const { id: appId, sectionId: appSectionId, itemId: worksheetId } = item;
 
   if (item.createType === 1) {

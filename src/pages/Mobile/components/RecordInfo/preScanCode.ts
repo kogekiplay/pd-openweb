@@ -357,7 +357,7 @@ const getRelateData = (control = {}, content, extra = {}, worksheetInfo = {}, up
 };
 
 // 关联记录关联成功将当前关联数据通过js sdk返回给APP
-const handleScanRelationLoaded = ({ controlId, controlName, title, rowId, type, msg }) => {
+const handleScanRelationLoaded = ({ controlId, controlName, title, rowId, type, msg }: { controlId?: string; rowId?: string; [key: string]: any }) => {
   compatibleMDJS('scanRelationLoaded', {
     cid: controlId,
     cname: controlName,

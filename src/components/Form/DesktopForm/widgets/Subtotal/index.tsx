@@ -38,7 +38,7 @@ const Box = styled.div`
   }
 `;
 
-const Subtotal = ({ value, dot, unit, advancedSetting = {}, enumDefault2, enumDefault }) => {
+const Subtotal = ({ value, dot, unit, advancedSetting = {}, enumDefault2, enumDefault }: { dot?: number; enumDefault2?: number; enumDefault?: number; [key: string]: any }) => {
   let content = value;
 
   if (content === 'max') {

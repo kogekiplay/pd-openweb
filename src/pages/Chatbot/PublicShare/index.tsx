@@ -104,7 +104,7 @@ const Entry = () => {
     return <RestrictAccessStatus />;
   }
 
-  const renderContent = ({ title, updateTime, chatbotId, conversationId }) => {
+  const renderContent = ({ title, updateTime, chatbotId, conversationId }: { title?: string; [key: string]: any }) => {
     if (share.resultCode === 1) {
       return <Content title={title} updateTime={updateTime} chatbotId={chatbotId} conversationId={conversationId} />;
     }

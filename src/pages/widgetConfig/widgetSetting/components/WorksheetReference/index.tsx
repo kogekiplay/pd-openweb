@@ -189,7 +189,7 @@ function WorksheetReferenceDialog(props) {
   };
 
   // 单条刷新
-  const refreshItemWorkflowReference = ({ appId }) => {
+  const refreshItemWorkflowReference = ({ appId }: { appId?: string; [key: string]: any }) => {
     if (workflowLoadings[appId]) return;
 
     setState({ workflowLoadings: { ...workflowLoadings, [appId]: true } });

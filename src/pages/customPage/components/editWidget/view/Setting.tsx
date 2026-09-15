@@ -76,7 +76,7 @@ function Setting(props) {
         .then(res => {
           const { views = [] } = res;
           setDataSource({
-            views: getShowViews(views).map(({ viewId, name, viewType, advancedSetting }) => ({
+            views: getShowViews(views).map(({ viewId, name, viewType, advancedSetting }: { viewId?: string; name?: string; [key: string]: any }) => ({
               text: getTranslateInfo(appId, null, viewId).name || name,
               value: viewId,
               viewType: String(viewType),

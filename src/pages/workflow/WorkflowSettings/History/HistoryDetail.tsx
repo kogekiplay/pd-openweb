@@ -179,7 +179,7 @@ export default class HistoryDetail extends Component<any, any> {
                   <div>
                     <span>{_l('提醒人：')}</span>
                     {scheduleActions.map((item, i) =>
-                      item.accounts.map((obj, j) => (
+                      item.accounts.map((obj, j: number) => (
                         <Fragment key={`${i}-${j}`}>
                           <span>{obj.fullName}</span>
                           <span className="textSecondary">({moment(item.executeTime).format('MM-DD HH:mm')})</span>

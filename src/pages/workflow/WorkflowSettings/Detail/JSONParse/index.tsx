@@ -584,7 +584,7 @@ export default class JSONParse extends Component<any, any> {
   /**
    * 生成普通数组的对象
    */
-  generationOrdinaryArrayObject(dataSource) {
+  generationOrdinaryArrayObject(dataSource: string) {
     return {
       controlId: uuidv4(),
       type: 2,

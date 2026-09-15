@@ -253,7 +253,7 @@ export default class EncryptRules extends Component<any, any> {
                                     projectId: this.props.projectId,
                                     encryptRuleId: item.encryptRuleId,
                                     ruleDetail: item,
-                                    updateCurrentRow: ({ name, remark, ...rest }) => {
+                                    updateCurrentRow: ({ name, remark, ...rest }: { name?: string; [key: string]: any }) => {
                                       console.log(rest, 'rest', name, remark);
                                       const tempData = dataSource.map(it => {
                                         if (it.encryptRuleId === item.encryptRuleId) {

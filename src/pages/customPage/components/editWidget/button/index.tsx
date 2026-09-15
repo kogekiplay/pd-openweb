@@ -208,7 +208,7 @@ export default function Btn(props) {
               customPageConfig={props.config}
               errorBtns={errorBtns}
               activeIndex={activeIndex}
-              onClick={({ index }) => setIndex(index)}
+              onClick={({ index }: { index?: number; [key: string]: any }) => setIndex(index)}
             />
           </div>
           <BtnSetting

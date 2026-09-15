@@ -33,7 +33,7 @@ const TableCommon = ({ list = [], dataSource = [], id, tableProps, placeholderMo
                 style={{ width: item.width, padding: '5px' }}
                 control={item.control}
                 columnIndex={index}
-                updateSheetColumnWidths={({ controlId, value }) => {
+                updateSheetColumnWidths={({ controlId, value }: { controlId?: string; [key: string]: any }) => {
                   console.log('controlId', controlId, value);
                   resizeWidth(controlId, value);
                 }}

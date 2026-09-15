@@ -72,7 +72,7 @@ export default class Number extends Component<any, any> {
     }
   };
 
-  setValue = (key: string, value) => {
+  setValue = (key: string, value: string) => {
     const newValues = {
       value: this.state.value,
       minValue: this.state.minValue,

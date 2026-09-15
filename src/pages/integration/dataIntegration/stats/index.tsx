@@ -254,7 +254,7 @@ export default function (props) {
     [],
   );
 
-  const getNumStr = num => {
+  const getNumStr = (num: number) => {
     return Number.isInteger(num / 10000) ? num / 10000 : (num / 10000).toFixed(4);
   };
 

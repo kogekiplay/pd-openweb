@@ -268,19 +268,19 @@ export const filterControlsFromAll = (allControls: FormControl[] = [], filter = 
 };
 
 export const formatViewToDropdown = views =>
-  views.filter(l => l.viewId !== l.worksheetId).map(({ viewId, name }) => ({ text: name, value: viewId }));
+  views.filter(l => l.viewId !== l.worksheetId).map(({ viewId, name }: { viewId?: string; name?: string; [key: string]: any }) => ({ text: name, value: viewId }));
 
 export const formatAppsToDropdown = (apps, currentAppId) =>
-  apps.map(({ appId, appName }) => ({
+  apps.map(({ appId, appName }: { appId?: string; [key: string]: any }) => ({
     text: appId === currentAppId ? `${appName}（ ${_l('本应用')} ）` : `${appName}`,
     value: appId,
   }));
 
 export const formatSheetsToDropdown = sheets =>
-  sheets.map(({ worksheetId, name }) => ({ text: name, value: worksheetId }));
+  sheets.map(({ worksheetId, name }: { worksheetId?: string; name?: string; [key: string]: any }) => ({ text: name, value: worksheetId }));
 
 export const formatControlsToDropdown = controls =>
-  controls.map(({ controlId, controlName }) => ({ text: controlName, value: controlId }));
+  controls.map(({ controlId, controlName }: { controlId?: string; [key: string]: any }) => ({ text: controlName, value: controlId }));
 
 export const getControlByControlId = (controls, controlId: string, key?) => {
   const control = _.find(controls, item => item.controlId === controlId) || {};

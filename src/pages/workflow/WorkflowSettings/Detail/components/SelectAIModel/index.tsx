@@ -13,7 +13,7 @@ export default ({
   showAutoModel = false,
   showModelSettings = false,
   updateSource = () => {},
-}) => {
+}: { appId?: string; projectId?: string; [key: string]: any }) => {
   const [modelDetail, setModelDetail] = useState({});
   const [modelParameterDialog, setModelParameterDialog] = useState(false);
   const [modelParameter, setModelParameter] = useState({});

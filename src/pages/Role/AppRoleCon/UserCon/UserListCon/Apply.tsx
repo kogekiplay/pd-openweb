@@ -155,7 +155,7 @@ function Apply(props) {
     });
   };
 
-  const renderAction = ({ id, appId }) => {
+  const renderAction = ({ id, appId }: { appId?: string; [key: string]: any }) => {
     const { appDetail = {} } = props;
     return (
       <div className={'applyAction'}>
@@ -186,7 +186,7 @@ function Apply(props) {
     );
   };
 
-  const dialogRefuse = ({ appId, ids }) => {
+  const dialogRefuse = ({ appId, ids }: { appId?: string; [key: string]: any }) => {
     Dialog.confirm({
       title: _l('拒绝'),
       closable: false,

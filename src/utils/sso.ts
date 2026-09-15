@@ -122,7 +122,7 @@ export const replenishRet = (ret, pc_slide) => {
   const isHash = url.includes('#');
   const isPcSlide = pc_slide.includes('true');
 
-  const add = url => {
+  const add = (url: string) => {
     return url.includes('?') ? `${url}&pc_slide=true` : `${url}?pc_slide=true`;
   };
 

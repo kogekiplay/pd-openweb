@@ -257,7 +257,7 @@ export default class ProjectContacts extends React.Component<any, any> {
     });
   }
 
-  itemClickHandler({ accountId, isFriend }) {
+  itemClickHandler({ accountId, isFriend }: { accountId?: string; [key: string]: any }) {
     this.setState({
       selectedAccountId: accountId,
       isFriend,

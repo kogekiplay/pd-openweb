@@ -48,7 +48,7 @@ export default class SelectUsersFromApp extends Component<any, any> {
     const { selectAppId } = this.state;
 
     ajaxRequest.getManagerApps({ projectId: this.props.companyId }).then(result => {
-      result = result.map(({ appId, appName }) => {
+      result = result.map(({ appId, appName }: { appId?: string; [key: string]: any }) => {
         return {
           value: appId,
           text: selectAppId === appId ? appName + _l('（本应用）') : appName,
@@ -70,7 +70,7 @@ export default class SelectUsersFromApp extends Component<any, any> {
    */
   getRolesByApp(appId: string) {
     ajaxRequest.getRolesWithUsers({ appId }).then(res => {
-      res = res.map(({ roleId, name, users, departmentsInfos }) => {
+      res = res.map(({ roleId, name, users, departmentsInfos }: { name?: string; [key: string]: any }) => {
         return {
           value: roleId,
           label: getTranslateInfo(appId, null, roleId).name || name,

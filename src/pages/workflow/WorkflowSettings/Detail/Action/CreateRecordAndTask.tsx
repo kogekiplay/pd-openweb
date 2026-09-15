@@ -12,7 +12,7 @@ import { AddOptions, SelectNodeObject, SingleControlValue } from '../components'
 const getAppList = data =>
   data.appList
     .filter(item => !item.otherApkId)
-    .map(({ name, id }) => ({
+    .map(({ name, id }: { name?: string; [key: string]: any }) => ({
       text: name,
       value: id,
     }));

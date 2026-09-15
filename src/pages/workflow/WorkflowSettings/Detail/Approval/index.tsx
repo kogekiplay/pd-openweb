@@ -1350,7 +1350,7 @@ export default class Approval extends Component<any, any> {
                       <div className="Font13 bold mTop25">{_l('认证等级')}</div>
                       <Dropdown
                         className="flowDropdown mTop10"
-                        data={data.authTypeList.map(({ value, disabled }) => {
+                        data={data.authTypeList.map(({ value, disabled }: { disabled?: boolean; [key: string]: any }) => {
                           return { value, text: authTypeListText[value], disabled };
                         })}
                         value={

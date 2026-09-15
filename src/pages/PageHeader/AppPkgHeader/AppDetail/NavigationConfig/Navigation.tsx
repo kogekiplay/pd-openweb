@@ -210,7 +210,7 @@ const Group = props => {
       name: data.name,
       icon: data.icon,
       hideColor: true,
-      onChange: ({ name, icon }) => {
+      onChange: ({ name, icon }: { name?: string; icon?: string; [key: string]: any }) => {
         if ((name && name !== data.name) || icon) {
           onUpdateAppItem(data, { name, icon: icon || data.icon });
         }

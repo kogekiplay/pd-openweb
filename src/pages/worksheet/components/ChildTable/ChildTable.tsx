@@ -2263,7 +2263,7 @@ class ChildTable extends React.Component<any, any> {
                   renderVerticalAddLine:
                     !(isExceed || disabledNew) &&
                     allowAddByLine &&
-                    (({ className, style }) => (
+                    (({ className, style }: { className?: string; [key: string]: any }) => (
                       <div
                         className={cx(className, 'addRowBtnOfVertical Hand')}
                         style={style}
@@ -2534,7 +2534,7 @@ class ChildTable extends React.Component<any, any> {
                     />
                   );
                 }}
-                renderFooterCell={({ columnIndex, className, style }) => {
+                renderFooterCell={({ columnIndex, className, style }: { className?: string; [key: string]: any }) => {
                   let childtableControl = [{ type: 'summaryhead' }].concat(columns)[columnIndex];
                   return (
                     <ChildTableSummaryCell

@@ -38,13 +38,13 @@ const CustomBtnBox = styled.div`
 `;
 const LoadableRecordAction = lazy(() => import('mobile/components/RecordInfo/RecordAction'));
 
-export const getRecordUrl = ({ appId, worksheetId, recordId, viewId }) => {
+export const getRecordUrl = ({ appId, worksheetId, recordId, viewId }: { appId?: string; worksheetId?: string; recordId?: string; viewId?: string; [key: string]: any }) => {
   const shareUrl = pathCompletion(`/mobile/record/${appId}/${worksheetId}/${viewId}/${recordId}`);
   copy(shareUrl);
   alert(_l('复制成功'));
 };
 
-const updateWorksheetRowShareRange = ({ appId, worksheetId, rowId, viewId }) => {
+const updateWorksheetRowShareRange = ({ appId, worksheetId, rowId, viewId }: { appId?: string; worksheetId?: string; rowId?: string; viewId?: string; [key: string]: any }) => {
   worksheetApi.updateWorksheetRowShareRange({
     appId,
     worksheetId,
@@ -55,7 +55,7 @@ const updateWorksheetRowShareRange = ({ appId, worksheetId, rowId, viewId }) => 
   });
 };
 
-export const getWorksheetShareUrl = ({ appId, worksheetId, recordId, viewId }) => {
+export const getWorksheetShareUrl = ({ appId, worksheetId, recordId, viewId }: { appId?: string; worksheetId?: string; recordId?: string; viewId?: string; [key: string]: any }) => {
   return worksheetApi
     .getWorksheetShareUrl({
       appId,

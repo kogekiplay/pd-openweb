@@ -30,7 +30,7 @@ const ResultConfirmButton = styled.div`
   }
 `;
 
-export default function ResultConfirm({ disabled, isStreaming, content, onUse = () => {} }) {
+export default function ResultConfirm({ disabled, isStreaming, content, onUse = () => {} }: { disabled?: boolean; [key: string]: any }) {
   let className = cx('result-confirm-button', {
     disabled,
   });

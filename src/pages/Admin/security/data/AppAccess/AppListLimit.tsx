@@ -16,7 +16,7 @@ const AppListLimitContainer = styled.div`
   }
 `;
 
-export default function AppListLimit({ projectId, appList = [], onChange = () => {} }) {
+export default function AppListLimit({ projectId, appList = [], onChange = () => {} }: { projectId?: string; [key: string]: any }) {
   const [authApps, setAuthApps] = useState(appList || []);
 
   useEffect(() => {

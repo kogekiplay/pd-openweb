@@ -149,7 +149,7 @@ function SortableComponent(props) {
     });
   }, []);
 
-  const renderDraggableItem = ({ item, index }) => {
+  const renderDraggableItem = ({ item, index }: { index?: number; [key: string]: any }) => {
     return (
       <DragItem
         {...props}

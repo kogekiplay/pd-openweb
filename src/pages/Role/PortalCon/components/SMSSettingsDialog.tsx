@@ -65,7 +65,7 @@ function getIsMingdaoSaas() {
   return !window.platformENV.isOverseas && !window.platformENV.isLocal;
 }
 
-const getStrip = n => {
+const getStrip = (n: number) => {
   if (n > 70) {
     return Math.ceil(n / 67);
   }

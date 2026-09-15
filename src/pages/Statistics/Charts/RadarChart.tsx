@@ -434,7 +434,7 @@ export default class extends Component<any, any> {
         : false,
       label: showNumber
         ? {
-            content: ({ originalValue, controlId }) => {
+            content: ({ originalValue, controlId }: { controlId?: string; [key: string]: any }) => {
               const id = split.controlId ? newYaxisList[0].controlId : controlId;
               return formatrChartValue(originalValue, false, newYaxisList, originalValue ? undefined : id);
             },

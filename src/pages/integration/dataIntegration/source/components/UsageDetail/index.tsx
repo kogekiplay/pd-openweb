@@ -120,7 +120,7 @@ const TaskIcon = styled.div`
   }
 `;
 
-export default function UsageDetail({ projectId, sourceId }) {
+export default function UsageDetail({ projectId, sourceId }: { projectId?: string; [key: string]: any }) {
   const [detailTaskList, setDetailTaskList] = useState([]);
   const [loadingState, setLoadingState] = useSetState({ loading: false, pageNo: 0, noMore: false });
 

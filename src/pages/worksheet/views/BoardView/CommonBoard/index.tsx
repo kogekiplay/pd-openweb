@@ -162,7 +162,7 @@ function CommonBoard(props) {
     }
   };
 
-  const refresh = useCallback(({ worksheetId }) => {
+  const refresh = useCallback(({ worksheetId }: { worksheetId?: string; [key: string]: any }) => {
     if (worksheetId === props.worksheetId && !document.querySelector('.workSheetRecordInfo')) {
       refreshSheet(view);
     }

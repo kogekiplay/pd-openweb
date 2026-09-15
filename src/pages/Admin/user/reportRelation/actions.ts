@@ -76,7 +76,7 @@ export const addSubordinates =
         if (failedAccountIds && failedAccountIds.length) {
           successAccounts = _.filter(
             accounts,
-            account => failedAccountIds.findIndex(({ accountId }) => accountId === account.accountId) === -1,
+            account => failedAccountIds.findIndex(({ accountId }: { accountId?: string; [key: string]: any }) => accountId === account.accountId) === -1,
           );
 
           alert(
@@ -84,7 +84,7 @@ export const addSubordinates =
               '添加失败：%0',
               failedAccountIds
                 .map(
-                  ({ accountId, failMessage }) =>
+                  ({ accountId, failMessage }: { accountId?: string; [key: string]: any }) =>
                     _.find(accounts, account => account.accountId === accountId).fullname + failMessage,
                 )
                 .join(','),
@@ -202,7 +202,7 @@ export const replaceStructure =
  * 移除节点
  */
 export const removeStructure =
-  ({ parentId, accountId, callback }) =>
+  ({ parentId, accountId, callback }: { accountId?: string; [key: string]: any }) =>
   dispatch => {
     StructureController.removeParentID({
       projectId: Config.projectId,

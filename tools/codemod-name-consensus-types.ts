@@ -28,6 +28,17 @@
  *     文本——arrow.pos 是上一个 token 的结尾，对 `useCallback(x => …)` 来说
  *     正好在 `(` 之后，这一段只会是空白，不会把外层括号算进来。
  *
+ * ── 解构形参（TS7031）────────────────────────────────────────────────────
+ * TS7031 是 `function f({ a, b })` 这种解构形参里的绑定元素隐式 any，全仓 4840 条，
+ * 绑定名与上面的共识表高度重叠（appId / worksheetId / projectId / controlId …）。
+ *
+ * 【全部标成可选，而且必须带索引签名】给解构形参加标注最大的坑是
+ * 「属性会变必填」—— 所有不传它的调用点齐刷刷 TS2741
+ *（tools/codemod-domain-destructure-types.ts 的头注释里记过，那次就是为此整个跳过了
+ *  解构形参）。这里生成的形状是：
+ *     { projectId?: string; appId?: string; [key: string]: any }
+ * 可选 => 调用点一个都不会破；索引签名 => 没共识的其余绑定名照旧是 any，不新增诊断。
+ *
  * 用法：
  *   node tools/codemod-name-consensus-types.ts --list   # 只看共识表和覆盖量
  *   node tools/codemod-name-consensus-types.ts          # 应用
@@ -36,13 +47,24 @@
 
 const path = require('path');
 const is = require('typescript/unstable/ast/is');
-const { ROOT, openProject, writeSource } = require('./ts7.ts');
+const { SyntaxKind: SK } = require('typescript/unstable/ast');
+const {
+  ROOT,
+  callSiteFits,
+  callSiteKey,
+  collectCallSiteEvidence,
+  openProject,
+  usageFits,
+  writeSource,
+} = require('./ts7.ts');
 
 const APPLY = !process.argv.includes('--list');
 const onlyArg = process.argv.find((a: string) => a.startsWith('--only='));
 const ONLY: Set<string> | null = onlyArg ? new Set(onlyArg.slice(7).split(',')) : null;
 
 const MIN_EVIDENCE = 10;
+/** 解构形参最多几个绑定元素才处理，理由见第三遍那里的注释 */
+const MAX_BINDINGS = 6;
 const CONSENSUS = 0.9;
 
 /** 只有这些类型可以跨文件照抄——不依赖任何 import */
@@ -85,6 +107,10 @@ const EXCLUDE = new Set([
   //              比较。逐点用法校验只看成员访问和展开，看不到比较操作，挡不住它。
   'direction',
   'unit',
+  // 【title 和 width 已经从这里【撤掉】】它们当初进名单是因为"信号在调用点不在函数体"
+  // （DeleteConfirm({ title: <span/> })、renderDropdownOverlay({ width: '100%' })）。
+  // 现在 callSiteFits 能看调用点了，这两个交给它【按点】否决，
+  // 而不是把整个名字丢掉 —— 那会连同其余几十处正确的一起丢。
 ]);
 
 /**
@@ -99,38 +125,13 @@ const EXCLUDE = new Set([
  * 这条规则把之前手工排除的 field / dataSource / visible / hint / icon / rowId
  * 全部自动挡住了，而且是【按点】挡，不会因为一处用错就丢掉这个名字的其余几百处。
  */
-const MEMBERS: Record<string, Set<string>> = {
-  string: new Set([
-    'length','charAt','charCodeAt','codePointAt','concat','endsWith','includes','indexOf','lastIndexOf',
-    'localeCompare','match','matchAll','normalize','padEnd','padStart','repeat','replace','replaceAll',
-    'search','slice','split','startsWith','substr','substring','at','toLowerCase','toUpperCase',
-    'toLocaleLowerCase','toLocaleUpperCase','trim','trimEnd','trimStart','toString','valueOf',
-  ]),
-  number: new Set(['toFixed','toPrecision','toExponential','toString','valueOf','toLocaleString']),
-  boolean: new Set(['toString','valueOf']),
-};
-
-/** 这一处的用法与 type 相容吗？不相容就别标。 */
-function usageFits(fnNode: any, paramName: string, type: string): boolean {
-  const allowed = MEMBERS[type];
-  if (!allowed) return true; // 数组类型不做这个检查
-  let ok = true;
-  (function walk(n: any) {
-    if (!ok) return;
-    // ...p —— 只有对象/数组才能展开
-    if ((is.isSpreadAssignment(n) || is.isSpreadElement(n)) && n.expression && is.isIdentifier(n.expression)) {
-      if (n.expression.text === paramName) ok = false;
-    }
-    // p.foo —— foo 不是该原始类型的成员就说明 p 是对象
-    if (is.isPropertyAccessExpression(n) && n.expression && is.isIdentifier(n.expression) && n.name) {
-      if (n.expression.text === paramName && !allowed.has(n.name.text)) ok = false;
-    }
-    n.forEachChild(walk);
-  })(fnNode);
-  return ok;
-}
+// MEMBERS / literalPrimitive / usageFits 已收进 tools/ts7.ts，两个 codemod 共用。
 
 const project = openProject('tsconfig.strictprobe.json');
+
+// 调用点证据：用来【否决】那些「名字共识对、但这一处调用方传的根本不是那个类型」的标注。
+// 这是 title / width 那类误判唯一的信号源 —— 函数体里看不出任何问题。
+const callSites = collectCallSiteEvidence(project);
 
 // ── 第一遍：收集全仓已有的「名字 -> 类型」证据 ──────────────────────────
 // 两个来源，等权计数：
@@ -216,7 +217,7 @@ for (const [name, counts] of evidence) {
 // ── 第二遍：按 TS7006 诊断定位待标注的形参 ────────────────────────────────
 type Target = { fileName: string; text: string; pos: number; name: string; type: string; openParenAt?: number };
 const targets: Target[] = [];
-const skip = { noConsensus: 0, usageMismatch: 0, rest: 0, notFound: 0 };
+const skip = { noConsensus: 0, usageMismatch: 0, callSiteMismatch: 0, rest: 0, notFound: 0 };
 
 const diags = project.program
   .getSemanticDiagnostics()
@@ -266,6 +267,11 @@ for (const [fileName, ds] of byFile) {
       skip.usageMismatch += 1;
       continue;
     }
+    // 调用点传进来的和共识类型对不上也跳过（函数体看不到的那一类）
+    if (p.index !== undefined && !callSiteFits(callSites, callSiteKey(fileName, p.index), c.type)) {
+      skip.callSiteMismatch += 1;
+      continue;
+    }
 
     // 插入点：questionToken 之后（写在它之前就是 TS17019）
     const pos = p.questionToken ? p.questionToken.end : p.name.end;
@@ -294,6 +300,88 @@ for (const [fileName, ds] of byFile) {
   }
 }
 
+// ── 第三遍：解构形参（TS7031）──────────────────────────────────────────────
+type DestructureTarget = { fileName: string; text: string; pos: number; names: string[]; type: string };
+const destructures: DestructureTarget[] = [];
+const dskip = { annotated: 0, noConsensus: 0, usageMismatch: 0, callSiteMismatch: 0, tooManyBindings: 0 };
+
+const d7031 = project.program
+  .getSemanticDiagnostics()
+  .filter((d: any) => d.code === 7031 && d.fileName && d.fileName.startsWith(path.join(ROOT, 'src') + path.sep));
+
+const byFile7031 = new Map<string, Set<number>>();
+for (const d of d7031) {
+  if (!byFile7031.has(d.fileName)) byFile7031.set(d.fileName, new Set());
+  byFile7031.get(d.fileName)!.add(d.end);
+}
+
+for (const [fileName, ends] of byFile7031) {
+  const sf = project.program.getSourceFile(fileName);
+  if (!sf) continue;
+  const text: string = sf.text;
+
+  (function walk(n: any) {
+    if (
+      is.isParameterDeclaration(n) &&
+      n.name &&
+      is.isObjectBindingPattern(n.name) &&
+      !n.type // 已经有标注的不碰
+    ) {
+      // 【只处理小解构】绑定元素超过 MAX_BINDINGS 的基本都是 React 组件的 props 大包。
+      // 给它们加「可选 + 索引签名」的形状，会和下游的泛型推断互相影响 ——
+      // 实测 ButtonDisplay（12+ 个绑定）里 `_.chunk(buttonList, …)` 的结果从 any[][]
+      // 退化成 {}[][]，下游解构当场 TS2339，而 buttonList 自己明明还是 any。
+      // 小解构（配置对象、事件参数那种）没有这个问题，收益也集中在那里。
+      const elements = (n.name.elements || []).filter((be: any) => is.isBindingElement(be));
+      if (elements.length > MAX_BINDINGS) {
+        dskip.tooManyBindings += 1;
+        n.forEachChild(walk);
+        return;
+      }
+
+      const props: string[] = [];
+      const picked: string[] = [];
+      let touched = false;
+      for (const be of n.name.elements || []) {
+        if (!is.isBindingElement(be) || !be.name || !is.isIdentifier(be.name)) continue;
+        if (!ends.has(be.name.end)) continue; // 不是报了 TS7031 的那个绑定元素
+        touched = true;
+        const bname: string = be.name.text;
+        const c = consensus.get(bname);
+        if (!c) {
+          dskip.noConsensus += 1;
+          continue;
+        }
+        // 逐点用法校验同样适用：函数体里把它当对象用就别标
+        if (n.parent && !usageFits(n.parent, bname, c.type)) {
+          dskip.usageMismatch += 1;
+          continue;
+        }
+        // 调用点按属性名否决：DeleteConfirm({ title: <span/> }) 这种，
+        // 函数体里 title 只是被渲染，看不出任何问题，唯一的信号在调用点。
+        if (n.index !== undefined && !callSiteFits(callSites, callSiteKey(fileName, n.index, bname), c.type)) {
+          dskip.callSiteMismatch += 1;
+          continue;
+        }
+        props.push(`${bname}?: ${c.type}`);
+        picked.push(bname);
+      }
+      if (touched && props.length) {
+        destructures.push({
+          fileName,
+          text,
+          pos: n.name.end,
+          names: picked,
+          // 【可选 + 索引签名】理由见文件头：必填会打爆所有不传的调用点，
+          // 索引签名让没共识的绑定名保持 any，不新增诊断。
+          type: `: { ${props.join('; ')}; [key: string]: any }`,
+        });
+      }
+    }
+    n.forEachChild(walk);
+  })(sf);
+}
+
 // ── 报告 ──────────────────────────────────────────────────────────────────
 const used = new Map<string, number>();
 for (const t of targets) used.set(t.name, (used.get(t.name) || 0) + 1);
@@ -308,15 +396,29 @@ for (const [name, n] of [...used].sort((a, b) => b[1] - a[1])) {
   );
 }
 
+const dNames = new Map<string, number>();
+for (const t of destructures) for (const n of t.names) dNames.set(n, (dNames.get(n) || 0) + 1);
+if (destructures.length) {
+  console.log('\n解构形参（TS7031）：');
+  for (const [name, n] of [...dNames].sort((a, b) => b[1] - a[1]).slice(0, 15)) {
+    console.log(`  ${name.padEnd(18)} -> ${consensus.get(name)!.type.padEnd(10)} 本次可标 ${n}`);
+  }
+}
+
 const fileCount = new Set(targets.map(t => t.fileName)).size;
 console.log(
   `\n${APPLY ? '已标' : '可标'} ${targets.length} 处，涉及 ${fileCount} 个文件；` +
-    `其中补括号的单参箭头 ${targets.filter(t => t.openParenAt !== undefined).length} 处；` +
-    `跳过：名字无共识 ${skip.noConsensus} / 本处用法与类型不符 ${skip.usageMismatch} / rest 形参 ${skip.rest} / 定位不到 ${skip.notFound}`,
+    `其中补括号的单参箭头 ${targets.filter(t => t.openParenAt !== undefined).length} 处；\n` +
+    `另标解构形参 ${destructures.length} 处（覆盖 ${[...dNames.values()].reduce((a, b) => a + b, 0)} 个绑定名）；` +
+    `跳过：名字无共识 ${skip.noConsensus} / 本处用法与类型不符 ${skip.usageMismatch} / 调用点与类型不符 ${skip.callSiteMismatch + dskip.callSiteMismatch} / rest 形参 ${skip.rest} / 定位不到 ${skip.notFound}`,
 );
 
-if (APPLY && targets.length) {
+if (APPLY && (targets.length || destructures.length)) {
   const edits = new Map<string, { text: string; list: { pos: number; text: string }[] }>();
+  for (const d of destructures) {
+    if (!edits.has(d.fileName)) edits.set(d.fileName, { text: d.text, list: [] });
+    edits.get(d.fileName)!.list.push({ pos: d.pos, text: d.type });
+  }
   for (const t of targets) {
     if (!edits.has(t.fileName)) edits.set(t.fileName, { text: t.text, list: [] });
     const list = edits.get(t.fileName)!.list;

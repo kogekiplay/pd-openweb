@@ -36,7 +36,7 @@ export function parseBuildSuggestions(raw) {
 }
 
 // 拉取并解析推荐：累积 text-delta，completed 兜底取整段，结束后解析一次。
-async function fetchSuggestions({ projectId, forceRefresh, signal }) {
+async function fetchSuggestions({ projectId, forceRefresh, signal }: { projectId?: string; [key: string]: any }) {
   let acc = '';
 
   await requestAgentStream(

@@ -202,7 +202,7 @@ export default class ExecutionDetails extends Component<any, any> {
     });
   };
 
-  renderTableSorterHeader = ({ type, tableHeaderName, name }) => {
+  renderTableSorterHeader = ({ type, tableHeaderName, name }: { name?: string; [key: string]: any }) => {
     let { sorter = {}, showHistoryDetail } = this.props;
     const { fields, isDesc } = sorter;
     return (

@@ -66,7 +66,7 @@ function Location(props, ref) {
             allowCustom={advancedSetting.allowcustom === '1'}
             distance={enumDefault2 ? parseInt(advancedSetting.distance, 10) : 0}
             defaultAddress={locationData || null}
-            onAddressChange={({ lng, lat, address, name }) => {
+            onAddressChange={({ lng, lat, address, name }: { name?: string; [key: string]: any }) => {
               const newValue = JSON.stringify({ x: lng, y: lat, address, title: name });
               updateCell({
                 value: newValue,

@@ -72,7 +72,7 @@ const BannerWrapper = styled.div`
   }
 `;
 
-const Banner = ({ icon, type = 'primary', text, action, className }) => {
+const Banner = ({ icon, type = 'primary', text, action, className }: { icon?: string; className?: string; [key: string]: any }) => {
   return (
     <BannerWrapper className={className} type={type}>
       {icon && <Icon icon={icon} />}

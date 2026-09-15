@@ -224,7 +224,7 @@ export default function MingoGeneratedWidgetsSelector({
   content,
   worksheetId,
   controls = [],
-}) {
+}: { worksheetId?: string; [key: string]: any }) {
   const disabled = !isLastAssistantMessage;
   // 使用 useMemo 缓存解析结果，避免重复解析
   const cache = useRef({});

@@ -658,7 +658,7 @@ export default function Container({ isDialog, ...props }) {
     cache.current.handleSave();
   }, []);
 
-  const updateWorksheetName = ({ worksheetId, worksheetName }) => {
+  const updateWorksheetName = ({ worksheetId, worksheetName }: { worksheetId?: string; [key: string]: any }) => {
     if (worksheetId === sourceId) {
       setWorksheetName(worksheetName);
     }

@@ -6,7 +6,7 @@ import { navigateTo } from 'src/router/navigateTo';
 import { SUB_PERMISSION_NAME, VIEW_DISPLAY_TYPE } from './enum';
 
 // 进入配置控件页面参数处理
-export const getCustomWidgetUri = function ({ sourceName, templateId, sourceId, projectId, appconfig = {} }) {
+export const getCustomWidgetUri = function ({ sourceName, templateId, sourceId, projectId, appconfig = {} }: { projectId?: string; [key: string]: any }) {
   const fromURL = sId => {
     if (location.href.indexOf('application') > -1) {
       return encodeURIComponent(location.href);

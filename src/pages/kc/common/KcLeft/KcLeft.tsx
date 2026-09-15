@@ -198,7 +198,7 @@ class KcLeft extends Component<any, any> {
     this.setState({ selectOptions: !this.state.selectOptions });
   };
 
-  filterRoots = filterType => {
+  filterRoots = (filterType: number) => {
     if (filterType === this.state.filterType && filterType !== ROOT_FILTER_TYPE.ALL) {
       return;
     }

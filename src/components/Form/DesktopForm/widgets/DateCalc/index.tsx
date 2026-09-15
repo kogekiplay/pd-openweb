@@ -8,7 +8,7 @@ import { formatFormulaDate, formatStrZero, toFixed } from 'src/utils/control';
 import { getDateToEn, getShowFormat } from 'src/utils/controlCommon';
 import { dateConvertToUserZone } from 'src/utils/project';
 
-const DateCalc = ({ value, enumDefault, unit, advancedSetting, dot }) => {
+const DateCalc = ({ value, enumDefault, unit, advancedSetting, dot }: { enumDefault?: number; dot?: number; [key: string]: any }) => {
   let content;
 
   if (!value || (enumDefault === 3 && advancedSetting.hideneg === '1' && parseInt(value, 10) < 0)) {

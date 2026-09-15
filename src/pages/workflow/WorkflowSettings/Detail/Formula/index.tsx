@@ -822,7 +822,7 @@ export default class Formula extends Component<any, any> {
     const selectAppItem = data.appList.find(({ id }) => id === data.appId);
     const list = data.appList
       .filter(item => !item.otherApkId)
-      .map(({ name, id }) => ({
+      .map(({ name, id }: { name?: string; [key: string]: any }) => ({
         text: name,
         value: id,
         className: id === data.appId ? 'colorPrimary' : '',

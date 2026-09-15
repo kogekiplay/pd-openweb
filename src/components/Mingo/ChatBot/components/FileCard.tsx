@@ -164,7 +164,7 @@ function getClassNameByExt(ext) {
   return `fileIcon-${getIconNameByExt(getExt(ext))}`;
 }
 
-async function previewFile({ source, id, name, url }) {
+async function previewFile({ source, id, name, url }: { name?: string; [key: string]: any }) {
   const previewAttachments = (await import('src/components/previewAttachments/previewAttachments')).default;
 
   previewAttachments({

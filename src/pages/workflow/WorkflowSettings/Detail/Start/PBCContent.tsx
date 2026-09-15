@@ -210,7 +210,7 @@ export default ({ data, updateSource, isIntegration, isPlugin }) => {
     updateSource({ controls });
   };
 
-  const updateOptions = (action: string, value, { controlId, options }, index: number, isBlur?: boolean) => {
+  const updateOptions = (action: string, value: string, { controlId, options }: { controlId?: string; [key: string]: any }, index: number, isBlur?: boolean) => {
     if (isBlur && !!options.find((o, i) => o[action] === value && i !== index)) {
       value =
         value +
@@ -228,7 +228,7 @@ export default ({ data, updateSource, isIntegration, isPlugin }) => {
     updateControls('options', options, { controlId });
   };
 
-  const addParameters = ({ type, dataSource, controlId }) => {
+  const addParameters = ({ type, dataSource, controlId }: { controlId?: string; [key: string]: any }) => {
     const controls = _.cloneDeep(data.controls);
     let defaultParameters = getDefaultParameters();
     let index = 0;

@@ -43,7 +43,7 @@ const Wrap = styled.button`
   }
 `;
 
-export default function ScrollToBottom({ bottom, className, onClick }) {
+export default function ScrollToBottom({ bottom, className, onClick }: { className?: string; [key: string]: any }) {
   return (
     <Wrap type="button" aria-label={_l('滚动到底部')} $bottom={bottom} className={className} onClick={onClick}>
       <IconArrowDown />

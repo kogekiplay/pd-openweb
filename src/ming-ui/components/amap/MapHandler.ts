@@ -18,7 +18,7 @@ export default class MapHandler {
   destroyMap() {
     if (!this.map) return;
 
-    this.eventHandlers.forEach(({ map, name, callback }) => {
+    this.eventHandlers.forEach(({ map, name, callback }: { name?: string; [key: string]: any }) => {
       if (map && map.off) {
         map.off(name, callback);
       }

@@ -263,7 +263,7 @@ export default class DataCom extends Component<any, any> {
     });
   };
 
-  renderPolicyItem = ({ checked, onChange, title, description }) => {
+  renderPolicyItem = ({ checked, onChange, title, description }: { checked?: boolean; [key: string]: any }) => {
     return (
       <div className="flexRow mBottom24">
         <Switch className="mRight16 mTop3" checked={checked} onClick={value => onChange(!value)} />

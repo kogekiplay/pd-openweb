@@ -942,7 +942,7 @@ function WorksheetTable(props, ref) {
           // functions
           clearCellError,
           inView,
-          updateSheetColumnWidths: ({ controlId, value, changes }) => {
+          updateSheetColumnWidths: ({ controlId, value, changes }: { controlId?: string; [key: string]: any }) => {
             onColumnWidthChange(controlId, value, changes);
             if (changes) {
               setState({

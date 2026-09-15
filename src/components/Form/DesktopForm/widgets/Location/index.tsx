@@ -233,7 +233,7 @@ const Widgets = props => {
           allowCustom={advancedSetting.allowcustom === '1'}
           distance={enumDefault2 ? parseInt(advancedSetting.distance) : 0}
           defaultAddress={location || null}
-          onAddressChange={({ lng, lat, address, name }) => {
+          onAddressChange={({ lng, lat, address, name }: { name?: string; [key: string]: any }) => {
             onChange(JSON.stringify({ x: lng, y: lat, address, title: name, coordinate: isGoogle ? 'wgs84' : null }));
             setVisible(false);
           }}

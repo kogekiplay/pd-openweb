@@ -98,7 +98,7 @@ const getTodoCount = (appId: string) => dispatch => {
 };
 
 export const addAppApply =
-  ({ appId }) =>
+  ({ appId }: { appId?: string; [key: string]: any }) =>
   dispatch => {
     dispatch({
       type: 'MOBILE_ACTION_ING',

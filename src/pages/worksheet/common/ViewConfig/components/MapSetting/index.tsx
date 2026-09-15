@@ -314,7 +314,7 @@ export default function MapSetting(props) {
         {mdMapVisible && (
           <MDMap
             defaultAddress={null}
-            onAddressChange={({ lng, lat, address, name }) => {
+            onAddressChange={({ lng, lat, address, name }: { name?: string; [key: string]: any }) => {
               console.log(lng, lat, address, name);
               const value = JSON.stringify({
                 x: lng,

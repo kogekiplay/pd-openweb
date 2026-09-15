@@ -146,7 +146,7 @@ class CalculateControl extends Component<any, any> {
 
     this.setState({ dot: count });
   };
-  renderControlTypeOverlay({ controlId, type, enumDefault }, norm) {
+  renderControlTypeOverlay({ controlId, type, enumDefault }: { controlId?: string; enumDefault?: number; [key: string]: any }, norm) {
     const isNumber = isNumberControl(type) || enumDefault === 1;
     return (
       <Menu className="chartMenu" style={{ width: 140 }}>

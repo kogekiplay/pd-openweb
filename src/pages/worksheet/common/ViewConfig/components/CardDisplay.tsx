@@ -22,7 +22,7 @@ const excludeTitleControls = controls => controls.filter((item: FormControl) => 
 
 // 默认取标题控件 和 前三个控件
 const getDefaultShowControls = controls => {
-  return controls.slice(0, 2).map(({ controlId }) => controlId);
+  return controls.slice(0, 2).map(({ controlId }: { controlId?: string; [key: string]: any }) => controlId);
 };
 
 export default function CardDisplay(props) {
@@ -44,7 +44,7 @@ export default function CardDisplay(props) {
         controls,
         availableControls: excludedTitle,
         showControls: defaultShowControls,
-        controlsSorts: excludedTitle.map(({ controlId }) => controlId),
+        controlsSorts: excludedTitle.map(({ controlId }: { controlId?: string; [key: string]: any }) => controlId),
         coverColumns: coverColumns,
       });
     });

@@ -35,7 +35,7 @@ const getLazyComponent = factory => {
   return lazyCache.get(factory);
 };
 
-function UpgradeCom({ projectId, featureId }) {
+function UpgradeCom({ projectId, featureId }: { projectId?: string; [key: string]: any }) {
   return (
     <Fragment>
       {buriedUpgradeVersionDialog(projectId, featureId, {

@@ -118,7 +118,7 @@ export const getMsgByCode = ({
 export function handleExtremeValue(data: FormControl) {
   const { advancedSetting = {} } = data;
   const { checkrange = '0', min = '', max = '' } = advancedSetting;
-  const transferValue = value => (value ? value.toString() : '').replace(/,/g, '');
+  const transferValue = (value: string) => (value ? value.toString() : '').replace(/,/g, '');
   const formateMin = parseFloat(transferValue(min));
   const formateMax = parseFloat(transferValue(max));
 

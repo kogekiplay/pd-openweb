@@ -279,7 +279,7 @@ function HierarchyMix(props) {
     saveView(viewId, { ...view, ...obj });
   };
 
-  const toggleChildren = ({ rowId, visible, ...rest }) => {
+  const toggleChildren = ({ rowId, visible, ...rest }: { rowId?: string; [key: string]: any }) => {
     if (level) {
       setState({ level: '' });
     }

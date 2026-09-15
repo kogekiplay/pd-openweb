@@ -9,7 +9,7 @@ import { permitList } from 'src/pages/FormSet/config';
 import { isOpenPermit } from 'src/pages/FormSet/util';
 import { getTitleTextFromControls } from 'src/utils/control';
 
-export const handleDeleteRecord = ({ worksheetId, recordId, onDeleteSuccess }) => {
+export const handleDeleteRecord = ({ worksheetId, recordId, onDeleteSuccess }: { worksheetId?: string; recordId?: string; [key: string]: any }) => {
   const deleteRow = async () => {
     try {
       await deleteRecord({ worksheetId, recordId });

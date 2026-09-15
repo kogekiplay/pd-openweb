@@ -182,7 +182,7 @@ function EntityRelationship(props) {
       });
   };
 
-  const updateSource = ({ worksheetId, list, allControls }) => {
+  const updateSource = ({ worksheetId, list, allControls }: { worksheetId?: string; [key: string]: any }) => {
     const index = _.findIndex(list, l => l.worksheetId === worksheetId);
     list[index].controls = allControls;
 
@@ -226,7 +226,7 @@ function EntityRelationship(props) {
       });
   };
 
-  const onFilter = ({ worksheetId }) => {
+  const onFilter = ({ worksheetId }: { worksheetId?: string; [key: string]: any }) => {
     const selected = allData.current.find(l => l.worksheetId === worksheetId);
     const filterList = allData.current.filter(
       l =>

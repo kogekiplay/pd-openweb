@@ -5,7 +5,7 @@ import PurchaseExpandPack from 'src/pages/Admin/components/PurchaseExpandPack';
 import { getCurrentProject } from 'src/utils/project';
 import { pathCompletion } from 'src/utils/common';
 
-export default function UserCountLimitLink({ projectId }) {
+export default function UserCountLimitLink({ projectId }: { projectId?: string; [key: string]: any }) {
   const { licenseType, version } = getCurrentProject(projectId, true);
   const isDevelopment = parseInt(version?.versionIdV2) === 0;
 

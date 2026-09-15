@@ -26,7 +26,7 @@ export default ({ list, isIntegration = false, json }) => {
     });
   };
 
-  const renderParameters = ({ type, controlId, dataSource, jsonPath }) => {
+  const renderParameters = ({ type, controlId, dataSource, jsonPath }: { controlId?: string; [key: string]: any }) => {
     if (!jsonPath) return '';
 
     // 处理@.的问题

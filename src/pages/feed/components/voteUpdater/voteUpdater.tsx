@@ -270,7 +270,7 @@ const VoteUpdater = {
     this.renderUploadBtn(`${idPrefix}VotePicUpload${index}`, { index: index, idPrefix: idPrefix }, $divVoteUpload);
     this.renderUploadBtn(`re_${idPrefix}VotePicUpload${index}`, { index: index, idPrefix: idPrefix }, $divVoteUpload);
   },
-  renderUploadBtn: function (id, options, $divVoteUpload) {
+  renderUploadBtn: function (id: string, options, $divVoteUpload) {
     const { index, idPrefix } = options;
     const ele = document.getElementById(id);
 

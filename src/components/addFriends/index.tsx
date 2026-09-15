@@ -72,7 +72,7 @@ class AddFriends extends Component<any, any> {
     return false;
   }
 
-  setDetailMode = value => {
+  setDetailMode = (value: number) => {
     this.setState({ detailMode: value });
   };
 

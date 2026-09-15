@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 
 // 导出文件名时间戳后缀：yyMMddHHmmss（年月日时分秒，各 2 位）
-const pad2 = n => String(n).padStart(2, '0');
+const pad2 = (n: number) => String(n).padStart(2, '0');
 
 function fileStamp(d = new Date()) {
   return `${pad2(d.getFullYear() % 100)}${pad2(d.getMonth() + 1)}${pad2(d.getDate())}${pad2(d.getHours())}${pad2(d.getMinutes())}${pad2(d.getSeconds())}`;

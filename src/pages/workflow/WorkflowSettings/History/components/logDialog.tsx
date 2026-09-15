@@ -228,7 +228,7 @@ const LogDialog = props => {
   };
 
   const diffTime = (item, list, index: number, showDesc = false) => {
-    const formatTime = diff => {
+    const formatTime = (diff: number) => {
       let min = 0;
       let sec = 0;
 

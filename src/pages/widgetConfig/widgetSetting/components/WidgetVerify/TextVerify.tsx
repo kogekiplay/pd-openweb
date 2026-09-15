@@ -242,7 +242,7 @@ export default function TextVerify(props) {
           onSortEnd={newItems => {
             onChange(handleAdvancedSettingChange(data, { filterregex: JSON.stringify(getSortItems(newItems, false)) }));
           }}
-          renderItem={({ item, index }) => (
+          renderItem={({ item, index }: { index?: number; [key: string]: any }) => (
             <SortableItem
               {..._.pick(props, ['globalSheetInfo', 'allControls', 'fromPortal'])}
               setIndex={setIndex}

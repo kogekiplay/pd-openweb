@@ -77,7 +77,7 @@ const TableWrap = styled.div`
   }
 `;
 
-const EditableTable = ({ children, className }) => {
+const EditableTable = ({ children, className }: { className?: string; [key: string]: any }) => {
   return <TableWrap className={className}>{children}</TableWrap>;
 };
 

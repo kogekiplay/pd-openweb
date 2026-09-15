@@ -124,7 +124,7 @@ function MapItem(props) {
   const isHaveSelectableControls = selectableControls.some(item => item.controls.length > 0);
   const info = getControlInfo(value);
 
-  const renderControlItem = ({ id, name, controls }) => {
+  const renderControlItem = ({ id, name, controls }: { name?: string; [key: string]: any }) => {
     if (!isHaveSelectableControls) {
       return id === 'current' ? <div className="emptyText textTertiary">{_l('无可选控件')}</div> : null;
     }
@@ -138,7 +138,7 @@ function MapItem(props) {
             </div>
           )}
           <ul className="fieldList">
-            {controls.map(({ type, controlId, controlName }) => {
+            {controls.map(({ type, controlId, controlName }: { controlId?: string; [key: string]: any }) => {
               let para = {
                 type: value,
                 name: text,
@@ -228,7 +228,7 @@ export default function OcrMap({ data, onChange, onClose, ...rest }) {
 
   const [ocrMap, setMap] = useState(getAdvanceSetting(data, 'ocrmap') || []);
 
-  const renderItem = ({ items, title, withSubList }) => {
+  const renderItem = ({ items, title, withSubList }: { title?: string; [key: string]: any }) => {
     // 批量：增值税不支持发票明细映射
     if (enumDefault === 3 && getAdvanceSetting(data, 'ocrmaptype') === 2 && withSubList) return null;
     return (

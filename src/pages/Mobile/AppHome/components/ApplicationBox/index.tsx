@@ -107,7 +107,7 @@ export default class ApplicationList extends Component<any, any> {
     this.actionSheetHandler = showAddAppActionSheet();
   };
 
-  forTitle = ({ type, name, icon, iconUrl, showExpandIcon = true }) => {
+  forTitle = ({ type, name, icon, iconUrl, showExpandIcon = true }: { name?: string; icon?: string; [key: string]: any }) => {
     const { dashboardHideGroup = [] } = this.state;
 
     if (_.includes(['apps', 'externalApps'], type)) {

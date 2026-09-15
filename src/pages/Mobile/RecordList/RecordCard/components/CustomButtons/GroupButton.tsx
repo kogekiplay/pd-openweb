@@ -98,7 +98,7 @@ function GroupIcon({ group = {}, isInCard, showType }) {
   return null;
 }
 
-function GroupButton({ button, disabled, isInCard, showType, children }) {
+function GroupButton({ button, disabled, isInCard, showType, children }: { disabled?: boolean; [key: string]: any }) {
   const [visible, setVisible] = useState(false);
   const TriggerButton = isInCard ? GroupButtonInCard : GroupButtonInPopup;
   const hasButtons = !!(button.buttons || []).length;

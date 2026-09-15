@@ -170,7 +170,7 @@ export default class UpgradeStatus extends Component<any, any> {
       </div>
     );
   };
-  renderAppDetailWrap = ({ themeType, iconUrl, pcNaviStyle, name, description, iconColor }) => {
+  renderAppDetailWrap = ({ themeType, iconUrl, pcNaviStyle, name, description, iconColor }: { name?: string; [key: string]: any }) => {
     return (
       <Fragment>
         <div className={cx('appDetailWrap pointer overflowHidden')}>

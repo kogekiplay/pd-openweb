@@ -155,7 +155,7 @@ class View extends Component<any, any> {
     }
   };
 
-  checkWorksheetRowsBtn = ({ worksheetId, rowIds, btnIds, updateButtonsCheckStatus = () => {} }) => {
+  checkWorksheetRowsBtn = ({ worksheetId, rowIds, btnIds, updateButtonsCheckStatus = () => {} }: { worksheetId?: string; [key: string]: any }) => {
     const requestKey = [worksheetId, rowIds.join(','), btnIds.join(',')].join('|');
     this.buttonsCheckRequestKey = requestKey;
 
@@ -174,7 +174,7 @@ class View extends Component<any, any> {
     });
   };
 
-  refreshList = ({ worksheetId, recordId }) => {
+  refreshList = ({ worksheetId, recordId }: { worksheetId?: string; recordId?: string; [key: string]: any }) => {
     const { view, base = {}, currentSheetRows = [], updateRow } = this.props;
 
     if (worksheetId === base.worksheetId && _.find(currentSheetRows, r => r.rowid === recordId)) {

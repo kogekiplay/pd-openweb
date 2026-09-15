@@ -92,7 +92,7 @@ export default ({ visible, refreshPosition, refreshThumbnail }) => {
     }
   };
 
-  const setFlowViewPosition = (newLeft, newTop) => {
+  const setFlowViewPosition = (newLeft: number, newTop: number) => {
     const width = dragElement.current.offsetWidth;
     const height = dragElement.current.offsetHeight;
     const { workflowContainer, boxWidth, boxHeight, containerWidth, containerHeight } = getThumbnailWidthMessage();

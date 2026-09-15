@@ -193,7 +193,7 @@ const sanitizeExportFileNameSegment = text =>
 const buildAppRoleExportFileName = appDetail => {
   const appName = sanitizeExportFileNameSegment(appDetail.name || appDetail.appName || '');
   const d = new Date();
-  const pad = n => String(n).padStart(2, '0');
+  const pad = (n: number) => String(n).padStart(2, '0');
   const timeStr = `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}_${pad(d.getHours())}${pad(
     d.getMinutes(),
   )}${pad(d.getSeconds())}`;

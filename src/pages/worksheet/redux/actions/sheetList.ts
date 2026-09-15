@@ -381,7 +381,7 @@ export function moveSheet(ages) {
   };
 }
 
-export function deleteSheet({ appId, groupId, worksheetId, projectId, type, parentGroupId }) {
+export function deleteSheet({ appId, groupId, worksheetId, projectId, type, parentGroupId }: { appId?: string; groupId?: string; worksheetId?: string; projectId?: string; [key: string]: any }) {
   return function (dispatch: AppDispatch, getState: GetState) {
     const { data: sheetList } = getState().sheetList;
 

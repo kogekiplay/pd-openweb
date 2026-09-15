@@ -93,7 +93,7 @@ const NoDataWrapper = styled.div`
   justify-content: center;
 `;
 
-export default function SourceSelectModal({ projectId, isCreateConnector, onChange, onClose, roleType }) {
+export default function SourceSelectModal({ projectId, isCreateConnector, onChange, onClose, roleType }: { projectId?: string; [key: string]: any }) {
   const [currentTab, setCurrentTab] = useState(SOURCE_FROM_TYPE.COMMON);
   const [searchKeyWords, setSearchKeyWords] = useState('');
   const [dataSourceList, setDataSourceList] = useState([]);
@@ -198,7 +198,7 @@ export default function SourceSelectModal({ projectId, isCreateConnector, onChan
                     >
                       {item.text}
                     </p>
-                    {item.list.map((sourceType, j) => {
+                    {item.list.map((sourceType, j: number) => {
                       return (
                         <DataSourceCard key={`${i}-${j}`} onClick={() => onChange(sourceType)}>
                           <div className="content">

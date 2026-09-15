@@ -48,7 +48,7 @@ export default function () {
     login();
   }, []);
 
-  const goPortalLogin = subUrl => {
+  const goPortalLogin = (subUrl: string) => {
     location.href = pathCompletion(`/login?${subUrl}`); // 跳转到登录
   };
 

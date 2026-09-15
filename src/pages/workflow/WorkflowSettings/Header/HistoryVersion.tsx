@@ -153,7 +153,7 @@ export default ({ flowInfo, isPlugin, customBtn, wrapClassName, isIntegration = 
     });
   }, 200);
 
-  const updateVersionName = ({ id, date, index, versionName }) => {
+  const updateVersionName = ({ id, date, index, versionName }: { index?: number; [key: string]: any }) => {
     setSelectId('');
 
     Dialog.confirm({

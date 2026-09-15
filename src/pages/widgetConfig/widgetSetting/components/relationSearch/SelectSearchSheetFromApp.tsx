@@ -265,7 +265,7 @@ export default function SelectSheetFromApp(props) {
           setData({
             aggregationSheets: content
               .filter(n => n.aggTableTaskStatus !== 0 && n.taskStatus !== 'ERROR')
-              .map(({ name, worksheetId }) => ({ text: name, value: worksheetId })),
+              .map(({ name, worksheetId }: { name?: string; worksheetId?: string; [key: string]: any }) => ({ text: name, value: worksheetId })),
             loading: false,
           });
         });

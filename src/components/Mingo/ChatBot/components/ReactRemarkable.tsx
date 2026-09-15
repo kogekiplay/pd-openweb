@@ -51,7 +51,7 @@ function sanitizeMdTagChunk(chunk) {
   return chunk;
 }
 
-export default function ({ className, isStreaming, style = {}, markdown, renderCustomBlock }) {
+export default function ({ className, isStreaming, style = {}, markdown, renderCustomBlock }: { className?: string; [key: string]: any }) {
   markdown = typeof markdown === 'string' ? markdown : mergeContent(markdown);
   const [{ recordId, worksheetId }, setMobileRowInfo] = useState({});
   markdown = markdown.replace('<FINAL_ANSWER>', '').replace('</FINAL_ANSWER>', '');

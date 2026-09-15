@@ -18,7 +18,7 @@ const getAction = status => {
   }
 };
 
-const getCommon = ({ id, title, msg, status }) => {
+const getCommon = ({ id, title, msg, status }: { title?: string; [key: string]: any }) => {
   return {
     key: id,
     className: 'customNotification',

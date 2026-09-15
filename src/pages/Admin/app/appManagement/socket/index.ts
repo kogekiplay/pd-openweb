@@ -13,7 +13,7 @@ const TYPES = {
 
 export default () => {
   if (!window.IM) return;
-  IM.socket.on('mdy_export', ({ state, type, apps = [], id, index, totalIndex }) => {
+  IM.socket.on('mdy_export', ({ state, type, apps = [], id, index, totalIndex }: { index?: number; [key: string]: any }) => {
     let message = '';
     let description = '';
     let action = '';
@@ -54,7 +54,7 @@ export default () => {
     });
   });
 
-  IM.socket.on('mdy_import', ({ state, type, apps = [], id, index, totalIndex }) => {
+  IM.socket.on('mdy_import', ({ state, type, apps = [], id, index, totalIndex }: { index?: number; [key: string]: any }) => {
     let message = '';
     let description = '';
     let action = '';

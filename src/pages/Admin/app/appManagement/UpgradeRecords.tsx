@@ -25,7 +25,7 @@ const SearchWrap = styled.div`
   }
 `;
 
-export default function UpgradeRecords({ projectId, type }) {
+export default function UpgradeRecords({ projectId, type }: { projectId?: string; [key: string]: any }) {
   const [{ pageIndex, pageSize, loading, list, total, userInfo, appId, status }, setState] = useSetState({
     pageIndex: 1,
     pageSize: 50,

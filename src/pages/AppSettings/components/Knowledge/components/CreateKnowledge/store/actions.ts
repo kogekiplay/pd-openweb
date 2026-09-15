@@ -14,7 +14,7 @@ export const updateActiveSchemeId = (dispatch, scheme) => {
   dispatch({ type: 'UPDATE_ACTIVE_SCHEME', scheme });
 };
 
-export const setBasicInfo = (dispatch, { appId, projectId }) => {
+export const setBasicInfo = (dispatch, { appId, projectId }: { appId?: string; projectId?: string; [key: string]: any }) => {
   dispatch({ type: 'SET_BASIC_INFO', appId, projectId });
 };
 
@@ -94,7 +94,7 @@ export const goToPrevStep = (dispatch, state) => {
   dispatch({ type: 'UPDATE_ACTIVE_STEP', step: prevStep });
 };
 
-export const addSelectedField = (dispatch, { worksheetId, control }) => {
+export const addSelectedField = (dispatch, { worksheetId, control }: { worksheetId?: string; [key: string]: any }) => {
   if (!worksheetId || !control?.controlId) return;
 
   dispatch({
@@ -104,7 +104,7 @@ export const addSelectedField = (dispatch, { worksheetId, control }) => {
   });
 };
 
-export const removeSelectedField = (dispatch, { worksheetId, control }) => {
+export const removeSelectedField = (dispatch, { worksheetId, control }: { worksheetId?: string; [key: string]: any }) => {
   if (!worksheetId || !control?.controlId) return;
 
   dispatch({
@@ -114,7 +114,7 @@ export const removeSelectedField = (dispatch, { worksheetId, control }) => {
   });
 };
 
-export const setFilterConditions = (dispatch, { worksheetId, filterConditions }) => {
+export const setFilterConditions = (dispatch, { worksheetId, filterConditions }: { worksheetId?: string; [key: string]: any }) => {
   if (!worksheetId) return;
 
   dispatch({
@@ -124,7 +124,7 @@ export const setFilterConditions = (dispatch, { worksheetId, filterConditions })
   });
 };
 
-export const setWorksheetEnhance = (dispatch, { worksheetId }) => {
+export const setWorksheetEnhance = (dispatch, { worksheetId }: { worksheetId?: string; [key: string]: any }) => {
   if (!worksheetId) return;
 
   dispatch({
@@ -133,7 +133,7 @@ export const setWorksheetEnhance = (dispatch, { worksheetId }) => {
   });
 };
 
-export const setAttachmentParseEnhanced = (dispatch, { worksheetId }) => {
+export const setAttachmentParseEnhanced = (dispatch, { worksheetId }: { worksheetId?: string; [key: string]: any }) => {
   if (!worksheetId) return;
 
   dispatch({
@@ -142,7 +142,7 @@ export const setAttachmentParseEnhanced = (dispatch, { worksheetId }) => {
   });
 };
 
-export const setWorksheetDiscuss = (dispatch, { worksheetId }) => {
+export const setWorksheetDiscuss = (dispatch, { worksheetId }: { worksheetId?: string; [key: string]: any }) => {
   if (!worksheetId) return;
 
   dispatch({
@@ -151,7 +151,7 @@ export const setWorksheetDiscuss = (dispatch, { worksheetId }) => {
   });
 };
 
-export const setKnowledgeName = (dispatch, { name }) => {
+export const setKnowledgeName = (dispatch, { name }: { name?: string; [key: string]: any }) => {
   dispatch({
     type: 'SET_KNOWLEDGE_NAME',
     name,
@@ -165,7 +165,7 @@ export const setKnowledgeDesc = (dispatch, { desc }) => {
   });
 };
 
-export const generateKnowledgeBasePlan = async (dispatch, { appId, allWorksheetList }) => {
+export const generateKnowledgeBasePlan = async (dispatch, { appId, allWorksheetList }: { appId?: string; [key: string]: any }) => {
   if (md.global.SysSettings.hideAIBasicFun) {
     dispatch({ type: 'SET_AI_LOADING', loading: false });
     dispatch({ type: 'SET_KNOWLEDGE_RECOMMEND_SCHEMES', list: [] });
@@ -225,7 +225,7 @@ export const generateKnowledgeBasePlan = async (dispatch, { appId, allWorksheetL
   }
 };
 
-export const refreshKnowledgeBasePlan = async (dispatch, { appId, allWorksheetList }) => {
+export const refreshKnowledgeBasePlan = async (dispatch, { appId, allWorksheetList }: { appId?: string; [key: string]: any }) => {
   try {
     generateKnowledgeBasePlan(dispatch, { appId, allWorksheetList, isreload: true });
   } catch (error) {
@@ -233,7 +233,7 @@ export const refreshKnowledgeBasePlan = async (dispatch, { appId, allWorksheetLi
   }
 };
 
-export const improveKnowledgeBasePlan = async (dispatch, { itemRecommend, appId }) => {
+export const improveKnowledgeBasePlan = async (dispatch, { itemRecommend, appId }: { appId?: string; [key: string]: any }) => {
   try {
     const { worksheetList } = itemRecommend;
     let targetRecommend = _.cloneDeep(itemRecommend);

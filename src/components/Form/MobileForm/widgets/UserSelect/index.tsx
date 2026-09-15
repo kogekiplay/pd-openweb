@@ -140,7 +140,7 @@ function UserSelect(props) {
     onChange(JSON.stringify(newValue));
   };
 
-  const viewPersonalInfo = ({ accountId }) => {
+  const viewPersonalInfo = ({ accountId }: { accountId?: string; [key: string]: any }) => {
     if (!formDisabled) return;
 
     if (window.isMingDaoApp) {

@@ -313,7 +313,12 @@ export function submitNewRecord(props) {
     });
 }
 
-export function copyRow({ worksheetId, viewId, rowIds, relateRecordControlId }, done = () => {}) {
+export function copyRow({ worksheetId, viewId, rowIds, relateRecordControlId }: { worksheetId?: string; viewId?: string; [key: string]: any },
+  // 【声明写漏了】函数体里是 `done(res.data)`，带参调用；而 `done = () => {}`
+  // 这个默认值让 TS 把它推成 () => void，调用方传 `newRows => {…}` 就报
+  // 「Target signature provides too few arguments」。调用方没错，是声明欠精确。
+  done: (rows?: any) => void = () => {},
+) {
   worksheetAjax
     .copyRow({
       worksheetId,
@@ -409,7 +414,7 @@ export async function openControlAttachmentInNewTab({
   }
 }
 
-export function updateRelateRecordSorts({ appId, viewId, worksheetId, recordId, changes = [] }) {
+export function updateRelateRecordSorts({ appId, viewId, worksheetId, recordId, changes = [] }: { appId?: string; viewId?: string; worksheetId?: string; recordId?: string; [key: string]: any }) {
   updateRecord(
     {
       appId,

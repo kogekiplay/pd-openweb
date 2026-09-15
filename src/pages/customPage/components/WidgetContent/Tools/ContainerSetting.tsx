@@ -57,7 +57,7 @@ export default props => {
     });
   };
 
-  const renderSortableTab = ({ item, DragHandle, index }) => {
+  const renderSortableTab = ({ item, DragHandle, index }: { index?: number; [key: string]: any }) => {
     const handleChangeName = (name: string) => {
       handleChangeConfig({
         tabs: tabs.map(n => {

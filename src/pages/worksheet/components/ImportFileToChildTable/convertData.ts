@@ -63,7 +63,7 @@ function getDateStringValue(dateString) {
   return;
 }
 
-async function convert({ projectId, worksheetId, controlId, mapConfig = [], controls = [], data = [] }) {
+async function convert({ projectId, worksheetId, controlId, mapConfig = [], controls = [], data = [] }: { projectId?: string; worksheetId?: string; controlId?: string; [key: string]: any }) {
   const rows: RecordRow[] = [];
   const serverHandleControls = [];
   data.forEach((item, rowIndex) => {

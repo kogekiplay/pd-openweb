@@ -56,7 +56,7 @@ export default function (props) {
   const updateWarn = data => onChange({ warnList: data });
 
   // 获取验证码
-  const handleSendVerifyCode = async codeType => {
+  const handleSendVerifyCode = async (codeType: number) => {
     let validationData = await validation({
       isForSendCode: true,
       keys,

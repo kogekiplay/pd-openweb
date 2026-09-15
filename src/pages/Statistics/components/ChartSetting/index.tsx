@@ -252,7 +252,7 @@ let ChartSetting = class ChartSetting extends Component<any, any> {
             changeCurrentReport(data, true);
           }}
           onAdd={this.props.addYaxisList}
-          onRemove={({ controlId }) => {
+          onRemove={({ controlId }: { controlId?: string; [key: string]: any }) => {
             this.props.removeYaxisList(controlId);
           }}
         />

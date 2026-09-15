@@ -10,7 +10,7 @@ const ViewMoreLink = styled.div`
   line-height: 40px;
 `;
 
-const ViewMore = ({ onClick, disabled }) => (
+const ViewMore = ({ onClick, disabled }: { disabled?: boolean; [key: string]: any }) => (
   <ViewMoreLink
     className={cx('w100 textSecondary TxtCenter Bold Font13 ', { 'hoverColorPrimary Hand': !disabled })}
     onClick={onClick}

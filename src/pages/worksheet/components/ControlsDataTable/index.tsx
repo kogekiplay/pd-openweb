@@ -113,7 +113,7 @@ export default function ControlsDataTable(props) {
       data={data}
       showEmptyForResize={showEmptyForResize}
       chatButton={chatButton}
-      renderColumnHead={({ control, style, className }) => (
+      renderColumnHead={({ control, style, className }: { className?: string; [key: string]: any }) => (
         <ColumnHead
           style={style}
           className={cx(className + ' columnHead flexRow alignItemsCenter', {
@@ -158,7 +158,7 @@ export default function ControlsDataTable(props) {
           )}
         </ColumnHead>
       )}
-      renderRowHead={({ className, style, rowIndex }) => (
+      renderRowHead={({ className, style, rowIndex }: { className?: string; [key: string]: any }) => (
         <RowHead style={style} className={className}>
           {rowIndex >= 0 && <span className="ellipsis"> {lineNumberBegin + rowIndex + 1}</span>}
         </RowHead>

@@ -68,7 +68,7 @@ function FormErrorMessage({
   inBody,
   targetRef,
   updateErrorState = () => {},
-}) {
+}: { controlId?: string; [key: string]: any }) {
   const [portalStyle, setPortalStyle] = useState(null);
 
   const updatePortalPosition = useCallback(() => {

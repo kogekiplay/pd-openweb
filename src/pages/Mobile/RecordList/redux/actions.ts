@@ -895,7 +895,7 @@ export const updatePreviewRecordId = data => (dispatch: AppDispatch) => {
 };
 
 export const updateRow =
-  ({ recordId, rowData, isViewData }) =>
+  ({ recordId, rowData, isViewData }: { recordId?: string; [key: string]: any }) =>
   (dispatch: AppDispatch) => {
     dispatch({
       type: 'MOBILE_UPDATE_SHEET_ROW_BY_ROWID',
@@ -1323,7 +1323,7 @@ export const updateCalendarNotScheduled = (rowid: string, rowData = {}) => {
   };
 };
 
-export function loadCustomButtons({ appId, worksheetId }, cb = () => {}) {
+export function loadCustomButtons({ appId, worksheetId }: { appId?: string; worksheetId?: string; [key: string]: any }, cb = () => {}) {
   return dispatch => {
     if (!worksheetId || _.get(window, 'shareState.isPublicView') || _.get(window, 'shareState.isPublicPage')) {
       return;
@@ -1383,7 +1383,7 @@ export function handleLoadOperateButtons({ worksheetInfo }) {
   };
 }
 
-export function onDeleteSuccess({ rowId }) {
+export function onDeleteSuccess({ rowId }: { rowId?: string; [key: string]: any }) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { currentSheetRows } = getState().mobile;
     dispatch(changeMobileSheetRows(currentSheetRows.filter(r => r.rowid !== rowId)));

@@ -87,7 +87,7 @@ const InstallDialog = styled.div`
   }
 `;
 
-export default ({ projectId, type, onClose }) => {
+export default ({ projectId, type, onClose }: { projectId?: string; [key: string]: any }) => {
   const { title, explain, text } = TYPE_CONFIG[type] || {};
   const { AjaxApiUrl } = _.get(md, ['global', 'Config']);
   const isDesktop = type === 'desktop';

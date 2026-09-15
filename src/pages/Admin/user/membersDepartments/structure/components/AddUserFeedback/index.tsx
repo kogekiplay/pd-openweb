@@ -24,7 +24,7 @@ const FeedbackDialog = styled(Dialog)`
 `;
 
 // 恢复权限
-const recovery = ({ accountId, fullname, projectId, callback = () => {} }) => {
+const recovery = ({ accountId, fullname, projectId, callback = () => {} }: { accountId?: string; fullname?: string; projectId?: string; [key: string]: any }) => {
   Confirm({
     title: _l('确定恢复 %0 权限吗？', fullname),
     onOk: () => {

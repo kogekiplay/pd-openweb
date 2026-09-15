@@ -17,7 +17,7 @@ const CountTip = styled(FlexCenter)`
   background: ${props => (props.visible ? 'var(--color-text-tertiary)' : 'var(--color-primary)')};
   box-shadow: ${props => (props.visible ? 'none' : 'var(--shadow-md)')};
 `;
-export default ({ count, rowId, visible, onClick }) => (
+export default ({ count, rowId, visible, onClick }: { rowId?: string; [key: string]: any }) => (
   <CountTip
     className="countTip"
     visible={visible && count}

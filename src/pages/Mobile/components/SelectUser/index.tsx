@@ -516,7 +516,7 @@ export default class SelectUser extends Component<any, any> {
     });
   };
 
-  openPersonalInfoPopup = ({ accountId }) => {
+  openPersonalInfoPopup = ({ accountId }: { accountId?: string; [key: string]: any }) => {
     this.setState({
       personalInfoVisible: true,
       accountId,

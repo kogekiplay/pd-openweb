@@ -129,7 +129,7 @@ const Resolved = styled.div`
 // part：{ options: string[], status: 'pending' | 'resolved', chosenAction?: string }
 // disabled：流式进行中或本卡片已被其它操作占用时禁用按钮
 // onConfirm(action)：用户点选后回传选择的 action
-export default function RebuildConfirmCard({ part, disabled, onConfirm }) {
+export default function RebuildConfirmCard({ part, disabled, onConfirm }: { disabled?: boolean; [key: string]: any }) {
   // 兜底不含 resume：后端 V5.19 起 options 按 build 状态动态下发（已建完时刻意不给"继续生成"），
   // 漏发时兜底渲染出"继续生成"会引导用户点进无效分支，rebuild 是任何状态下都合法的最小集。
   const options = Array.isArray(part.options) && part.options.length ? part.options : ['rebuild'];

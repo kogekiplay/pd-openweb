@@ -142,7 +142,7 @@ const CopySheetConfirmDescription = props => {
   );
 };
 
-const handleDeleteWorkSheet = ({ projectId, appId, groupId, appItem, sheetListActions }) => {
+const handleDeleteWorkSheet = ({ projectId, appId, groupId, appItem, sheetListActions }: { projectId?: string; appId?: string; groupId?: string; [key: string]: any }) => {
   const { workSheetName: name, type } = appItem;
   const nameMap = {
     0: _l('工作表'),
@@ -205,7 +205,7 @@ const handleDeleteWorkSheet = ({ projectId, appId, groupId, appItem, sheetListAc
   });
 };
 
-const handleDeleteGroup = ({ projectId, appId, groupId, appItem, sheetListActions }) => {
+const handleDeleteGroup = ({ projectId, appId, groupId, appItem, sheetListActions }: { projectId?: string; appId?: string; groupId?: string; [key: string]: any }) => {
   const { type, workSheetId } = appItem;
   Dialog.confirm({
     buttonType: 'danger',

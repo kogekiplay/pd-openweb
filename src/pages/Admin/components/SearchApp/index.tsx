@@ -6,7 +6,7 @@ import appManagementAjax from 'src/api/appManagement';
 
 const PAGE_SIZE = 50;
 
-export default function SearchApp({ projectId, className, mode, onChange = () => {} }) {
+export default function SearchApp({ projectId, className, mode, onChange = () => {} }: { projectId?: string; className?: string; [key: string]: any }) {
   const [state, setState] = useSetState({
     appList: [],
     pageIndex: 1,
