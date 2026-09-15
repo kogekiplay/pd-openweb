@@ -19,7 +19,43 @@ import NoData from './NoData';
 import Result from './Result';
 import './style.less';
 
-const DefaultUserTabs = isNetwork => {
+/** 这里的 ajax promise 带 abort（不是原生 Promise） */
+type AbortablePromise = Promise<any> & { abort?: () => void };
+
+/** 可选的人 */
+interface SelectUser {
+  accountId?: string;
+  fullname?: string;
+  avatar?: string;
+  [key: string]: any;
+}
+
+/** 可选的部门 */
+interface SelectDepartment {
+  departmentId?: string;
+  departmentName?: string;
+  subDepartments?: SelectDepartment[];
+  [key: string]: any;
+}
+
+/** 已选列表里的一项：靠 type 区分是人还是部门，data 是原始对象 */
+interface SelectedEntity {
+  /** ChooseType 的值是字符串，不是数字 */
+  type: string;
+  data: SelectUser | SelectDepartment;
+  [key: string]: any;
+}
+
+/** 顶部的分类页签 */
+interface UserTab {
+  id: string;
+  name?: string;
+  type?: number;
+  page?: boolean;
+  [key: string]: any;
+}
+
+const DefaultUserTabs = (isNetwork: boolean) => {
   return [
     {
       id: UserTabsId.CONACT_USER,
@@ -114,7 +150,7 @@ export default class GeneraSelect extends Component<any, any> {
        * })
        */
       selectedData: [
-        ...props.departmentSettings.departments.map(department => ({ type: ChooseType.DEPARTMENT, data: department })),
+        ...props.departmentSettings.departments.map((department: SelectDepartment) => ({ type: ChooseType.DEPARTMENT, data: department })),
       ],
     });
 
@@ -123,25 +159,26 @@ export default class GeneraSelect extends Component<any, any> {
 
   /** 已经选中的联系人 */
   get selectedUsers() {
-    let users = this.state.selectedData.filter(item => item.type === ChooseType.USER).map(item => item.data);
+    let users = this.state.selectedData.filter((item: SelectedEntity) => item.type === ChooseType.USER).map(item => item.data);
     return users;
   }
 
   /** 已经选中的部门 */
   get selectedDepartment() {
     let departments = this.state.selectedData
-      .filter(item => item.type === ChooseType.DEPARTMENT)
-      .map(item => item.data);
+      .filter((item: SelectedEntity) => item.type === ChooseType.DEPARTMENT)
+      .map((item: SelectedEntity) => item.data);
     return departments;
   }
 
-  promiseObj = null; // 请求promise
+  // 挂的是带 abort 的 ajax promise；写死 null 会被推成 never，下游 .abort() 全报
+  promiseObj: AbortablePromise | null | '' = null; // 请求promise
   _scrollView = null; // ScrollView 的 ref
-  _searchInput = null; // 搜索input
+  _searchInput: HTMLInputElement | null = null; // 搜索input
   userSettings = null;
   departmentSettings = null;
 
-  handlePromise(promise) {
+  handlePromise(promise: AbortablePromise) {
     if (this.promiseObj) {
       this.promiseObj.abort();
       this.promiseObj = '';
@@ -224,7 +261,7 @@ export default class GeneraSelect extends Component<any, any> {
   }
 
   /**人员搜索结果上下键切换 */
-  handleKeyDown = event => {
+  handleKeyDown = (event: KeyboardEvent) => {
     if (this.promiseObj) {
       return false;
     }
@@ -265,11 +302,11 @@ export default class GeneraSelect extends Component<any, any> {
     }
   };
 
-  adjustViewport(direction: string, flattenResult) {
+  adjustViewport(direction: string, flattenResult: (SelectUser & SelectDepartment)[]) {
     const { currentIndex } = this.state;
     const scrollViewEl = this.boxRef.current.querySelector('.GSelect-container');
     const $scrollViewEl = $(scrollViewEl);
-    const current = flattenResult[currentIndex] || {};
+    const current = flattenResult[currentIndex] || ({} as SelectUser & SelectDepartment);
     const $currentEl = $(`#GSelect-User-${current.accountId}`);
 
     if (!scrollViewEl && currentIndex === -1) {
@@ -292,7 +329,7 @@ export default class GeneraSelect extends Component<any, any> {
   }
 
   getTabItem() {
-    return this.userSettings.defaultTabs.filter(tab => tab.id === this.state.selectedUserTabId)[0];
+    return this.userSettings.defaultTabs.filter((tab: UserTab) => tab.id === this.state.selectedUserTabId)[0];
   }
 
   /** 处理props */
@@ -340,15 +377,15 @@ export default class GeneraSelect extends Component<any, any> {
 
     // 新添加的tab
     if (userSettings.extraTabs && userSettings.extraTabs.length) {
-      userSettings.extraTabs.forEach(item => {
+      userSettings.extraTabs.forEach((item: UserTab) => {
         userSettings.defaultTabs.push(item);
       });
     }
 
     let tabs = [];
     let { showTabs = [] } = userSettings;
-    showTabs.forEach(id => {
-      tabs = tabs.concat(userSettings.defaultTabs.filter(item => item.id === id));
+    showTabs.forEach((id: string) => {
+      tabs = tabs.concat(userSettings.defaultTabs.filter((item: UserTab) => item.id === id));
     });
     userSettings.defaultTabs =
       !userSettings.filterResigned && !userSettings.hideResignedTab ? tabs.concat(ResignedTab) : tabs;
@@ -398,7 +435,7 @@ export default class GeneraSelect extends Component<any, any> {
   userAction = () => {
     const userSettings = this.userSettings;
     const commonSettings = this.commonSettings;
-    let tabItem = userSettings.defaultTabs.filter(tab => tab.id === this.state.selectedUserTabId)[0];
+    let tabItem = userSettings.defaultTabs.filter((tab: UserTab) => tab.id === this.state.selectedUserTabId)[0];
 
     // 组建请求数据
     if (tabItem) {
@@ -489,7 +526,7 @@ export default class GeneraSelect extends Component<any, any> {
           }
         }
 
-        userSettings.filterSystemAccountId.forEach(id => {
+        userSettings.filterSystemAccountId.forEach((id: string) => {
           if (data.oftenUsers) {
             _.remove(data.oftenUsers.list, item => item.accountId === id);
           }
@@ -642,8 +679,8 @@ export default class GeneraSelect extends Component<any, any> {
     });
   }
 
-  getOriginDepartment(list) {
-    return list.map(group => ({
+  getOriginDepartment(list: SelectDepartment[]) {
+    return list.map((group: SelectDepartment) => ({
       departmentId: group.departmentId,
       departmentName: group.departmentName,
       haveSubDepartment: group.haveSubDepartment,
@@ -651,8 +688,8 @@ export default class GeneraSelect extends Component<any, any> {
     }));
   }
 
-  getDepartmentTree(data) {
-    return data.map(item => {
+  getDepartmentTree(data: SelectDepartment[]) {
+    return data.map((item: SelectDepartment) => {
       const { departmentId, departmentName, userCount, haveSubDepartment } = item;
       let disabled = false;
 
@@ -672,8 +709,8 @@ export default class GeneraSelect extends Component<any, any> {
     });
   }
 
-  getSearchDepartmentTree(data) {
-    return data.map(item => {
+  getSearchDepartmentTree(data: SelectDepartment[]) {
+    return data.map((item: SelectDepartment) => {
       let { departmentId, departmentName, userCount, haveSubDepartment, subDepartments = [] } = item;
 
       if (subDepartments.length) {
@@ -699,7 +736,7 @@ export default class GeneraSelect extends Component<any, any> {
   }
 
   /** 获取部门和群组的key值 */
-  getKeys = tabId => {
+  getKeys = (tabId: string) => {
     let ID = null;
     let NAME = null;
     let COUNT = null;
@@ -725,7 +762,7 @@ export default class GeneraSelect extends Component<any, any> {
   };
 
   /** tabId换成renderType */
-  getRenderTypeByTabId(tabId) {
+  getRenderTypeByTabId(tabId: string) {
     let renderType;
 
     if (tabId === UserTabsId.CONACT_USER) {
@@ -749,7 +786,7 @@ export default class GeneraSelect extends Component<any, any> {
    * @param {*部门id} id
    * @return {*部门} department
    */
-  getDepartmentById(departmentTree, id) {
+  getDepartmentById(departmentTree: SelectDepartment[], id: string) {
     for (let i = 0; i < departmentTree.length; i++) {
       let department = departmentTree[i];
 
@@ -769,7 +806,7 @@ export default class GeneraSelect extends Component<any, any> {
     ---------------------------------------------------------------------------------------------------- */
 
   /** 成员修改筛选 */
-  onChangeUserFilter = id => {
+  onChangeUserFilter = (id: string) => {
     this.setState(
       {
         selectedUserTabId: id,
@@ -785,7 +822,7 @@ export default class GeneraSelect extends Component<any, any> {
     );
   };
 
-  changeSelect(chooseType: string, data, idKey: string) {
+  changeSelect(chooseType: string, data: SelectUser | SelectDepartment, idKey: string) {
     let selectedArr;
 
     switch (chooseType) {
@@ -797,7 +834,7 @@ export default class GeneraSelect extends Component<any, any> {
         break;
     }
 
-    if (selectedArr.filter(item => item[idKey] === data[idKey]).length) {
+    if (selectedArr.filter((item: SelectUser & SelectDepartment) => item[idKey] === data[idKey]).length) {
       // 如果user里面有就反选
       this.deleteData(chooseType, data[idKey], idKey);
     } else {
@@ -810,7 +847,7 @@ export default class GeneraSelect extends Component<any, any> {
    * 改变联系人的选择状态
    * @param {*联系人实体} group
    */
-  toogleUserSelect = user => {
+  toogleUserSelect = (user: SelectUser) => {
     this.changeSelect(ChooseType.USER, user, 'accountId');
   };
 
@@ -818,7 +855,7 @@ export default class GeneraSelect extends Component<any, any> {
    * 改变部门的选择状态
    * @param {*部门实体} department
    */
-  toogleDepargmentSelect = department => {
+  toogleDepargmentSelect = (department: SelectDepartment) => {
     this.changeSelect(ChooseType.DEPARTMENT, department, 'departmentId');
   };
 
@@ -999,7 +1036,7 @@ export default class GeneraSelect extends Component<any, any> {
 
   /** 打开部门或群组联系人中的部门 */
   toggleUserItem = id => {
-    let tabItem = this.userSettings.defaultTabs.filter(tab => tab.id === this.state.selectedUserTabId)[0];
+    let tabItem = this.userSettings.defaultTabs.filter((tab: UserTab) => tab.id === this.state.selectedUserTabId)[0];
     let { ID, COUNT } = this.getKeys(this.state.selectedUserTabId);
     let data = this.state.mainData.data;
     let group = null;
@@ -1076,7 +1113,7 @@ export default class GeneraSelect extends Component<any, any> {
 
   /** 全选部门或群组联系人 */
   allSelectUserItem = (id, checked) => {
-    let tabItem = this.userSettings.defaultTabs.filter(tab => tab.id === this.state.selectedUserTabId)[0];
+    let tabItem = this.userSettings.defaultTabs.filter((tab: UserTab) => tab.id === this.state.selectedUserTabId)[0];
     let { ID, COUNT } = this.getKeys(this.state.selectedUserTabId);
     let data = this.state.mainData.data;
     let selectedData = this.state.selectedData;
