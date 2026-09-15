@@ -319,7 +319,7 @@ class RecordCalendarBase extends Component<any, any> {
     });
   };
 
-  showTip = (event, flag) => {
+  showTip = (event, flag: boolean) => {
     setShowTip(event, flag, this.state.canNew);
   };
 

@@ -172,7 +172,7 @@ class PostOperateList extends React.Component<any, any> {
     });
   };
 
-  handleCreateNewTask(param) {
+  handleCreateNewTask(param: number) {
     const postItem = _.clone(this.props.postItem);
     this.componentClickAway();
     const message = createLinksForMessage({

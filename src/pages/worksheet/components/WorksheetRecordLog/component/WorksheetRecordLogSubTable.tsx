@@ -286,7 +286,7 @@ function WorksheetRecordLogSubTable(props) {
     }
   };
 
-  const renderUpdataList = (list, control, type) => {
+  const renderUpdataList = (list, control, type: string) => {
     return list.map((item, index) => {
       let cell = {
         ...control,

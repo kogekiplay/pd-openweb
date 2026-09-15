@@ -49,7 +49,7 @@ const StyledRangePicker = styled(RangePicker)`
   }
 `;
 
-const range = (start, end) => {
+const range = (start: number, end: number) => {
   const result = [];
 
   for (let i = start; i < end; i++) {

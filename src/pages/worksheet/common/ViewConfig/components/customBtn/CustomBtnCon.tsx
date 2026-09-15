@@ -56,7 +56,7 @@ function CustomBtnCon(props) {
     setBtnList(prev => (_.isEqual(btnListFromProps, prev) ? prev : btnListFromProps));
   }, [btnDataFromProps, btnListFromProps]);
 
-  const optionWorksheetBtn = (btnId, optionType, callback) => {
+  const optionWorksheetBtn = (btnId, optionType: number, callback) => {
     sheetAjax
       .optionWorksheetBtn({
         appId,
@@ -70,7 +70,7 @@ function CustomBtnCon(props) {
       });
   };
 
-  const onShowCustomBtn = (value, isEdit, btnId = '') => {
+  const onShowCustomBtn = (value: boolean, isEdit: boolean, btnId = '') => {
     onShowCreateCustomBtn(value, isEdit, btnId, isListOption);
   };
 

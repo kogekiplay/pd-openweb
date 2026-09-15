@@ -120,7 +120,7 @@ export default function AppEmailService(props) {
     setServices(list => list.map(item => (item.id === serviceId ? updater(item) : item)));
   };
 
-  const setServiceOperateLoading = (serviceId, value) => {
+  const setServiceOperateLoading = (serviceId, value: boolean) => {
     setServiceLoading(data => ({ ...data, [serviceId]: value }));
   };
 

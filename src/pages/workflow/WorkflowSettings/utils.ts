@@ -673,7 +673,7 @@ export const handleExecReturnValue = item => {
 /**
  * 格式化测试参数
  */
-export const formatTestParameters = (source, testMap, isArray?) => {
+export const formatTestParameters = (source, testMap, isArray?: boolean) => {
   if (isArray) {
     source = _.cloneDeep(source);
     source.map(item => {

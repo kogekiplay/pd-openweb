@@ -114,7 +114,7 @@ export default class Announce extends Component<any, any> {
     });
   };
 
-  handleRemove = (list, idName, id) => {
+  handleRemove = (list: string, idName: string, id) => {
     this.setState({
       [list]: this.state[list].filter(x => x[idName] !== id),
     });
@@ -142,7 +142,7 @@ export default class Announce extends Component<any, any> {
     });
   };
 
-  handleCheck = (value, key) => {
+  handleCheck = (value, key: string) => {
     this.setState({
       [key]: !value,
     });

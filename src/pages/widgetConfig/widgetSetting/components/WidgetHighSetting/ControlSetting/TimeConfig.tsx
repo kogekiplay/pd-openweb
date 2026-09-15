@@ -24,7 +24,7 @@ function StartEndTime(props) {
   const min = getAdvanceSetting(data, 'min');
   const max = getAdvanceSetting(data, 'max');
 
-  const handleValueChange = (value, mode) => {
+  const handleValueChange = (value, mode: string) => {
     onChange(handleAdvancedSettingChange(data, { [mode]: JSON.stringify(value) }));
   };
 

@@ -510,7 +510,7 @@ export const isSheetDisplay = (data = {}) => {
 };
 
 // 基础设置各控件分别支持哪些模块
-export const supportSettingCollapse = (props, key) => {
+export const supportSettingCollapse = (props, key: string) => {
   const { data = {}, allControls = [], isRecycle, from }: { allControls: FormControl[]; [key: string]: any } = props;
   const {
     dataSource,
@@ -620,7 +620,7 @@ export const filterSysControls = (controls: FormControl[] = []) => {
 };
 
 // 拖拽补key,完成去key
-export const getSortItems = (items = [], addKey, controlId = '') => {
+export const getSortItems = (items = [], addKey: boolean, controlId = '') => {
   return items.map((i, index) => {
     return addKey ? { ...i, key: `${controlId}item_${index}` } : { ..._.omit(i, ['key']) };
   });

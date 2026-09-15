@@ -411,7 +411,7 @@ export default class OrderPay extends Component<any, any> {
     );
   };
 
-  renderOrderQrCode = (orderId, type) => {
+  renderOrderQrCode = (orderId, type: number) => {
     const isMobile = browserIsMobile();
     const params = getOrderPayParams();
 

@@ -348,7 +348,7 @@ function getControlByDefault(allControls, control, queryConfigs) {
 }
 
 // 解析filters获取控件
-function getControlByFilters(allControls, advancedSetting, filterkey) {
+function getControlByFilters(allControls, advancedSetting, filterkey: string) {
   advancedSetting = advancedSetting || {};
   const filters = safeParse(advancedSetting[filterkey] || '[]');
   let referencedControls = [];

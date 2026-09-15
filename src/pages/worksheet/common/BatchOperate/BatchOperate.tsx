@@ -502,7 +502,7 @@ class BatchOperate extends React.Component<any, any> {
       </div>
     );
 
-    function handleLock(isLock) {
+    function handleLock(isLock: boolean) {
       const hasAuthRowIds = selectedRows
         .filter((item: RecordRow) => (item.allowdelete || item.allowDelete) && !(isLock ? item.sys_lock : false))
         .map(item => item.rowid);

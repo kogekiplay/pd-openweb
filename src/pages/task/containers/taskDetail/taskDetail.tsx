@@ -387,7 +387,7 @@ class TaskDetail extends Component<any, any> {
   /**
    * 切换tab
    */
-  switchTabs(tabIndex) {
+  switchTabs(tabIndex: number) {
     this.setState({ tabIndex });
   }
 

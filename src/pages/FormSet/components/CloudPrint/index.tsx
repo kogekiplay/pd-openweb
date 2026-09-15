@@ -56,7 +56,7 @@ const getAnalysisResult = (renderData, templateType) => {
   return result;
 };
 
-const getControls = (controls, isMaster) => {
+const getControls = (controls, isMaster: boolean) => {
   let result = [];
 
   if (isMaster) {
@@ -86,7 +86,7 @@ const getControls = (controls, isMaster) => {
   }));
 };
 
-const currentFieldValue = (data, fieldKey) => {
+const currentFieldValue = (data, fieldKey: string) => {
   const value = _.find(data, { fieldKey })?.value;
 
   if (fieldKey === 'renderData') {

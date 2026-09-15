@@ -132,7 +132,7 @@ const KnowledgeWorksheet = props => {
     return allWorksheetList.filter(item => !selectedWorksheetIdSet.has(item.worksheetId));
   }, [allWorksheetList, selectedWorksheetIdSet]);
 
-  const openDialog = (type, updateType = 'edit') =>
+  const openDialog = (type: string, updateType = 'edit') =>
     setDialogState({ type, isChecked: false, loading: false, updateType });
 
   const closeDialog = () => setDialogState(prev => ({ ...prev, type: null }));

@@ -124,7 +124,7 @@ export default class Welink extends React.Component<any, any> {
     });
   };
 
-  inputRender = (strId, key) => {
+  inputRender = (strId: string, key: string) => {
     return (
       <React.Fragment>
         <div className="inputTitleBox">

@@ -278,7 +278,7 @@ class TaskTime extends Component<any, any> {
   /**
    * 修改计划开始时间或计划结束时间
    */
-  updatePlanTime(time, isUpdateStartTime?) {
+  updatePlanTime(time, isUpdateStartTime?: boolean) {
     const { taskId, openType } = this.props;
     const { data } = this.props.taskDetails[taskId];
 

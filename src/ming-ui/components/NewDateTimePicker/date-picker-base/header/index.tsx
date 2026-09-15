@@ -4,7 +4,7 @@ import Icon from 'ming-ui/components/Icon';
 import './style.less';
 
 class Header extends Component<any, any> {
-  buttonOnClick = (event, action) => {
+  buttonOnClick = (event, action: string) => {
     if (this.props.buttonOnClick) {
       this.props.buttonOnClick(event, action);
     }

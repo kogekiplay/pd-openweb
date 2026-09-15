@@ -52,7 +52,7 @@ function ConnectAiDialog({ visible, projectId, initialPersonalTokens = null, onC
   const ajaxRef = useRef({});
   const refreshFromCreateRef = useRef(null);
 
-  const request = useCallback((key, promise) => {
+  const request = useCallback((key: string, promise) => {
     ajaxRef.current[key]?.abort?.();
     ajaxRef.current[key] = promise;
     return promise;

@@ -309,7 +309,7 @@ class Print extends React.Component<any, any> {
     });
   };
 
-  renderPrintItem = (data, type) => {
+  renderPrintItem = (data, type: number) => {
     const { worksheetInfo = {}, worksheetControls } = this.props;
 
     return (

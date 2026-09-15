@@ -59,7 +59,7 @@ function useDecoratedHandle(forwardedRef) {
 
 const resolveType = (type, props) => (typeof type === 'function' ? type(props) : type);
 
-export function DragSource(type, spec, collect) {
+export function DragSource(type: string, spec, collect) {
   return function wrapDragSource(Decorated) {
     const DragSourceWrapper = forwardRef((props: any, ref) => {
       const instance = useDecoratedHandle(ref);
@@ -109,7 +109,7 @@ export function DragSource(type, spec, collect) {
   };
 }
 
-export function DropTarget(type, spec, collect) {
+export function DropTarget(type: string, spec, collect) {
   return function wrapDropTarget(Decorated) {
     const DropTargetWrapper = forwardRef((props: any, ref) => {
       const instance = useDecoratedHandle(ref);

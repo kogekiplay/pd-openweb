@@ -96,7 +96,7 @@ class RoleList extends React.Component<any, any> {
     res && this.setState({ applyList: res.roles });
   };
 
-  renderList(isApply?) {
+  renderList(isApply?: boolean) {
     const { list, applyList, drawer, hasChanged } = this.state;
     const { projectId } = this.props;
 

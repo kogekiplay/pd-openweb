@@ -223,7 +223,7 @@ export default function RecordBlock(props) {
     updateRecordTime(row, startTime, end, keyForGroup);
   };
 
-  const handleUpdateRecordTime = (start, end, newKey?) => {
+  const handleUpdateRecordTime = (start: string, end: string, newKey?) => {
     updateRecordTime(row, start, end, keyForGroup, newKey);
   };
 

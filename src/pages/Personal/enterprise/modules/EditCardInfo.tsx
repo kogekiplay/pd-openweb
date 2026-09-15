@@ -33,7 +33,7 @@ export default class EditCardInfo extends Component<any, any> {
     }
   }
 
-  getItems(list, key) {
+  getItems(list, key: string) {
     const listInfo = list.map(item => item[key]);
     return listInfo.join(' ; ');
   }

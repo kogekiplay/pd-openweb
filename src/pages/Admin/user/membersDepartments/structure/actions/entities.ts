@@ -14,7 +14,7 @@ import type { StructureDispatch, StructureGetState } from '../types';
  * @returns
  */
 
-export const loadDepartments = (departmentId, pageIndex, afterRequest?) => (dispatch: StructureDispatch, getState: StructureGetState) => {
+export const loadDepartments = (departmentId: string, pageIndex: number, afterRequest?) => (dispatch: StructureDispatch, getState: StructureGetState) => {
   const { showDisabledDepartment } = getState().entities;
   const params = {
     projectId: Config.projectId,

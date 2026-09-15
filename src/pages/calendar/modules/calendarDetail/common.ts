@@ -168,7 +168,7 @@ export const formatShowTime = function (calendar) {
    * @desc 同一年的时间格式: MM月DD日 非同一年显示年份 全天日程不显示 HH:mm
    * @returns { String } formatString
    */
-  const timeFormat = (time, isEndTime?) => {
+  const timeFormat = (time, isEndTime?: boolean) => {
     const isCurrYear = moment(time).isSame(moment(), 'year');
     let TIMEFORMAT = isCurrYear ? _l('MM月DD日 (ddd)') : _l('YYYY年MM月DD日 (ddd)');
 

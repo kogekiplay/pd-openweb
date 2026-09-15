@@ -543,7 +543,7 @@ export const removeTaskMember = (taskId: string, accountId: string) => (dispatch
 
 // 更改任务名称
 export const updateTaskName =
-  (taskId, taskName, subTaskId, callback = () => {}) =>
+  (taskId, taskName: string, subTaskId, callback = () => {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
     _.debounce(() => {
       ajaxRequest.updateTaskName({ taskID: subTaskId || taskId, name: taskName }).then((result: TaskApiResult) => {

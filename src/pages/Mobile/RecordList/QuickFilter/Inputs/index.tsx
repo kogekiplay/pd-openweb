@@ -18,7 +18,7 @@ import Users from './Users';
 
 const Comps = {};
 
-function mapToComp(keys, Comp) {
+function mapToComp(keys: number[], Comp) {
   keys.forEach(key => (Comps[key] = Comp));
 }
 

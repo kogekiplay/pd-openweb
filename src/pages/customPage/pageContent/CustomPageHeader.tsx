@@ -238,7 +238,7 @@ export default function CustomPageHeader(props) {
     }
   };
 
-  const handleVisibleChange = (value, type) => {
+  const handleVisibleChange = (value: boolean, type: string) => {
     updateVisible(update(visible, { [type]: { $set: value } }));
   };
 

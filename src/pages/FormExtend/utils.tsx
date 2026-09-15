@@ -92,7 +92,7 @@ export function overridePos(controls: FormControl[] = [], newPosControls = []) {
   return newControls;
 }
 
-export function getLimitWriteTimeDisplayText(type, limitWriteTime) {
+export function getLimitWriteTimeDisplayText(type: string, limitWriteTime) {
   const setting = limitWriteTime[`${type}Setting`];
 
   if (type === TIME_TYPE.MONTH) {

@@ -16,7 +16,7 @@ export class ParentBridge {
     return `${Date.now()}-${this._messageIdCounter++}-${Math.random().toString(36).slice(2)}`;
   }
 
-  async call(methodName, params) {
+  async call(methodName: string, params) {
     const messageId = this.generateMessageId();
 
     return new Promise((resolve, reject) => {
@@ -95,7 +95,7 @@ export class MessageHandler {
     window.addEventListener('message', this.handleMessage.bind(this));
   }
 
-  register(methodName, handler) {
+  register(methodName: string, handler) {
     this.handlers.set(methodName, handler);
   }
 

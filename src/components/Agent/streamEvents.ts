@@ -29,7 +29,7 @@ const ARTIFACT_EVENTS = new Set([
   'artifact-version-committed',
 ]);
 
-function mergeText(parts, kind, text, extras = {}) {
+function mergeText(parts, kind: string, text, extras = {}) {
   const last = parts[parts.length - 1];
 
   if (last && last.kind === kind) {
@@ -41,7 +41,7 @@ function mergeText(parts, kind, text, extras = {}) {
   return [...parts, { kind, text, ts: Date.now(), ...extras }];
 }
 
-function appendDelta(parts, kind, delta) {
+function appendDelta(parts, kind: string, delta) {
   const last = parts[parts.length - 1];
 
   if (last && last.kind === kind) {

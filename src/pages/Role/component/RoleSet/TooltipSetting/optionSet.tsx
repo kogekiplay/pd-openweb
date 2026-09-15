@@ -173,7 +173,7 @@ export default function Set(props) {
     );
   };
 
-  const renderAcitionList = (title, actionList = [], list = [], key, noline?) => {
+  const renderAcitionList = (title, actionList = [], list = [], key: string, noline?) => {
     let isAll = list.length <= 0;
     let s = 'unableCustomButtons' === key ? 'buttonId' : 'templateId';
     let unableList = list.map(o => o[s]);

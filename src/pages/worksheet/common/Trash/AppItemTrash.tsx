@@ -140,7 +140,7 @@ export default function AppItemTrash(props) {
     <span className="textTertiary">{createTimeSpan(dateConvertToUserZone(appItem.deleteTime))}</span>,
   ]);
 
-  function setPendingCache(key, value) {
+  function setPendingCache(key, value: boolean) {
     cache.current['pending_' + key] = value;
   }
 

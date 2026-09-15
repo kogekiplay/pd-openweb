@@ -98,7 +98,7 @@ export default function ActionSet(props) {
     return currentActionColumn.filter(o => !(o.type === 'btn' && groupBtnIds.includes(o.id)));
   };
 
-  const saveBtnLayout = (key, source, layoutItems) => {
+  const saveBtnLayout = (key: string, source: string, layoutItems) => {
     const nextData = { [key]: JSON.stringify(layoutItems) };
     const currentActionColumn = safeParse(actioncolumn, 'array');
     const nextActionColumn = getActionColumnWithGroupPriority(layoutItems, source);

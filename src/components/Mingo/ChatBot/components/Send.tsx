@@ -88,7 +88,7 @@ function Send(
   const [files, setFiles] = useState([]);
   const [focused, updateFocused] = useState(false);
 
-  function setFocused(v) {
+  function setFocused(v: boolean) {
     updateFocused(v);
   }
 

@@ -260,7 +260,7 @@ export default function (props) {
     return isRight;
   };
 
-  const renderClassName = (key, value) => {
+  const renderClassName = (key: string, value) => {
     const warn = warnList.find(o => o.tipDom === key);
     return {
       hasValue: !!value || focusDiv === key,

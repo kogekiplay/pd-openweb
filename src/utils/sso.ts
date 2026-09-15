@@ -149,7 +149,7 @@ export const formatOtherParam = param => {
   return result;
 };
 
-export const addOtherParam = (url, param) => {
+export const addOtherParam = (url, param: string) => {
   if (url) {
     return url.includes('?') ? `${url}&${param}` : `${url}?${param}`;
   } else {

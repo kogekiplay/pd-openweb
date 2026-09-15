@@ -79,7 +79,7 @@ class InboxHeader extends React.Component<any, any> {
     }
   };
 
-  handleTriggerChange(visible) {
+  handleTriggerChange(visible: boolean) {
     this.setState({
       settingVisible: visible,
     });

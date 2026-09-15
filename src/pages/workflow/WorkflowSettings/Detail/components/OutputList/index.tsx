@@ -219,7 +219,7 @@ export default class OutputList extends Component<any, any> {
   /**
    * 修改输出参数
    */
-  updateOutputParameters(action, value, { controlId, type, dataSource }, isBlur?) {
+  updateOutputParameters(action: string, value, { controlId, type, dataSource }, isBlur?) {
     const { outputType, data, updateSource } = this.props;
     const { outputs } = data;
 

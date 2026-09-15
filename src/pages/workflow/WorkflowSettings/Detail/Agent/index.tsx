@@ -488,7 +488,7 @@ export default class Agent extends Component<any, any> {
   }
 
   // 渲染智能体信息
-  renderMessage(key) {
+  renderMessage(key: string) {
     const { flowInfo, workflowDetail, selectNodeId, isAIActions } = this.props;
     const { data } = this.state;
     const isFirstAgent =

@@ -70,7 +70,7 @@ export const getCanDisplayControls = (worksheetControls, disableTypes?) => {
   );
 };
 
-export const isSameType = (list, control) => {
+export const isSameType = (list: number[], control) => {
   return list.includes(control.type) || (list.includes(control.sourceControlType) && control.type === 30);
 };
 

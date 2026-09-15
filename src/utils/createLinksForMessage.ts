@@ -38,7 +38,7 @@ export default args => {
   let replaceStr = '';
   let j;
 
-  const replaceMessageCustomTag = function (message, tagName, replaceHtmlFunc, filterCustom?) {
+  const replaceMessageCustomTag = function (message, tagName: string | string[], replaceHtmlFunc, filterCustom?) {
     let startTag, endTag;
 
     if (!message) return message;

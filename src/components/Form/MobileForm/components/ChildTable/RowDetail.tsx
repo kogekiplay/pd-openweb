@@ -57,7 +57,7 @@ export default class RowDetail extends React.Component<any, any> {
     return this.handleSave(false, false, false, true);
   };
 
-  handleSave = (nextContinue, isSwitchSave, ignoreAlert, isCopy = false, extraParams = {}) => {
+  handleSave = (nextContinue, isSwitchSave: boolean, ignoreAlert: boolean, isCopy = false, extraParams = {}) => {
     if (!this.customwidget.current) {
       return;
     }

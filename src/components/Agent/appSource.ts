@@ -31,7 +31,7 @@ const APP_CACHE_TTL = 5 * 60 * 1000;
 const APP_CACHE_MAX = 100;
 const appListCache = new Map();
 
-export function readAppCache(key) {
+export function readAppCache(key: string) {
   const hit = appListCache.get(key);
 
   if (!hit) return null;
@@ -44,7 +44,7 @@ export function readAppCache(key) {
   return hit.apps;
 }
 
-export function writeAppCache(key, apps) {
+export function writeAppCache(key: string, apps) {
   // 超出容量上限时淘汰最早写入的一条（Map 保持插入顺序）
   if (appListCache.size >= APP_CACHE_MAX) {
     appListCache.delete(appListCache.keys().next().value);
@@ -65,7 +65,7 @@ export async function fetchFavoriteApps(projectId, { abortController } = {}) {
 }
 
 // 按关键字搜索应用（SearchMyApps，后端排序）。
-export async function searchApps(projectId, keywords, { abortController } = {}) {
+export async function searchApps(projectId, keywords: string, { abortController } = {}) {
   const res = await homeAppAjax.searchMyApps({ projectId, keywords }, { silent: true, abortController });
 
   return normalizeApps(res);

@@ -52,7 +52,7 @@ export default class TimeInput extends Component<any, any> {
     this.updateValue();
   };
 
-  handleTimeChange = (date, formatMode) => {
+  handleTimeChange = (date, formatMode: string) => {
     if (_.isNull(date)) {
       this.setState({ defValue: '', isDynamic: false });
       this.props.onDynamicValueChange([]);

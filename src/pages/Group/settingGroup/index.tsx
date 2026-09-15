@@ -370,7 +370,7 @@ function SettingGroup(props) {
       });
   };
 
-  const updateGroup = (params, type, keys?, close?) => {
+  const updateGroup = (params, type: number, keys?: string[], close?: boolean) => {
     const ajaxFun = groupAjax[USER_ACTION_AJAX[type]];
     const isGroups = [8, 9].includes(type);
 
@@ -651,7 +651,7 @@ function SettingGroup(props) {
     );
   };
 
-  const renderUsers = (users, editable) => {
+  const renderUsers = (users, editable: boolean) => {
     if (!users) return;
 
     return (

@@ -193,7 +193,7 @@ export function SelectGroup(props) {
     getGroup(item);
   };
 
-  const renderList = (data, key) => {
+  const renderList = (data, key: string) => {
     return (
       <ul>
         {data.map(l => {

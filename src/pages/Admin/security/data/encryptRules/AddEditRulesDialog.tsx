@@ -83,7 +83,7 @@ export default class AddEditRulesDialog extends Component<any, any> {
     this.handleDefaultRuleName();
   }
 
-  changeForm = (form, value) => {
+  changeForm = (form: string, value) => {
     const { projectId } = this.props;
 
     if (form === 'encryptWay') {

@@ -287,7 +287,7 @@ export const getContactInfo = key => {
  * h5callBack h5处理方法
  * appCallBack app处理方法
  */
-export const compatibleMDJS = (jsFuncName, jsParams = {}, h5callBack = () => {}, appCallBack = () => {}) => {
+export const compatibleMDJS = (jsFuncName: string, jsParams = {}, h5callBack = () => {}, appCallBack = () => {}) => {
   if (window.isMingDaoApp && window.MDJS && window.MDJS[jsFuncName]) {
     window.MDJS[jsFuncName](jsParams);
     appCallBack();

@@ -915,7 +915,7 @@ export const updateVerify = (groupId, isVerified) => (dispatch: AppDispatch, get
  * @param {*} groupId
  * @param {*} isAdmin
  */
-export const updateAdmin = (groupId, isAdmin) => (dispatch: AppDispatch, getState: GetState) => {
+export const updateAdmin = (groupId, isAdmin: boolean) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSessionList } = getState().chat;
   const newCurrentSessionList = currentSessionList.map(item => {
     if (item.id === groupId) {

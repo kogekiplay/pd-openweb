@@ -121,7 +121,7 @@ class TimeMenu extends Component<any, any> {
     return list;
   };
 
-  onPick = (event, type, value) => {
+  onPick = (event, type: string, value) => {
     if (this.props.onPick) {
       let time = {
         hour: this.props.value.hour,

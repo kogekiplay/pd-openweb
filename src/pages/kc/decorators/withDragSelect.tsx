@@ -40,7 +40,7 @@ function coordsCollide(aTop, aLeft, bTop, bLeft, aWidth, aHeight, bWidth, bHeigh
  * @param  {HTMLElement} node
  * @return {Object}
  */
-function getBoundsForNode(node) {
+function getBoundsForNode(node: HTMLElement) {
   const rect = node.getBoundingClientRect();
 
   return {

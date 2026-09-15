@@ -116,7 +116,7 @@ export default class ExportApp extends React.Component<any, any> {
   }
 
   // 密码校验
-  checkedPassword = (checkFiled, password) => {
+  checkedPassword = (checkFiled: string, password) => {
     let reason;
     let copyErrors = { ...this.state.errors };
 

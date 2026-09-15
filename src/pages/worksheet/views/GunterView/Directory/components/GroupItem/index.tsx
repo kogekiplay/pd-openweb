@@ -53,7 +53,7 @@ let GroupItem = class GroupItem extends Component<any, any> {
     };
   }
 
-  handleChangeSubVisible = (id, visible?) => {
+  handleChangeSubVisible = (id, visible?: boolean) => {
     this.props.updateGroupSubVisible(id);
     setTimeout(() => {
       if (visible) {

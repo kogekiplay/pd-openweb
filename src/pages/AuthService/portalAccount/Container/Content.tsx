@@ -113,7 +113,7 @@ export default function (props) {
     }
   };
 
-  const footer = (keys, findPassword?) => {
+  const footer = (keys: string[], findPassword?) => {
     return (
       <React.Fragment>
         {!paramForPcWx && (

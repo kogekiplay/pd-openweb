@@ -114,7 +114,7 @@ class DateTimeRangeDoublePicker extends Component<any, any> {
     };
   };
 
-  onPick = (event, value, i) => {
+  onPick = (event, value, i: number) => {
     const range = [this.state.value[0], this.state.value[1]];
     range[i] = value;
 
@@ -216,7 +216,7 @@ class DateTimeRangeDoublePicker extends Component<any, any> {
     );
   };
 
-  timeOnChange = (event, value, index, halfData?) => {
+  timeOnChange = (event, value, index: number, halfData?) => {
     const newValue = new Date(this.state.value[index]);
 
     newValue.setHours(value.hour);
@@ -266,7 +266,7 @@ class DateTimeRangeDoublePicker extends Component<any, any> {
     );
   };
 
-  buttonOnClick = (event, action) => {
+  buttonOnClick = (event, action: string) => {
     if (this.props.onChange) {
       const value = this.state.value || null;
 
@@ -356,7 +356,7 @@ class DateTimeRangeDoublePicker extends Component<any, any> {
   };
 
   // 半天选择
-  halfOnChange = (value, target) => {
+  halfOnChange = (value, target: string) => {
     const halfData = this.state.halfData;
     let time = {
       hour: 0,

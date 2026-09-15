@@ -686,7 +686,7 @@ export default class Search extends Component<any, any> {
   /**
    * 渲染新增记录
    */
-  renderAddRecord(data, key, updateSource) {
+  renderAddRecord(data, key: string, updateSource) {
     const { cacheKey } = this.state;
 
     return (

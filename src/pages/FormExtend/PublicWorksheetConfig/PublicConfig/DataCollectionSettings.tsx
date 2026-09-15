@@ -196,7 +196,7 @@ const timePeriodList = [
   { type: TIME_TYPE.HOUR, text: _l('时%02069') },
 ];
 const locales = { 'zh-Hans': localeZhCn, 'zh-Hant': localeZhTw, en: localeEn, ja: localeJaJp };
-const getDisabledTime = (from, itemData) => {
+const getDisabledTime = (from: string, itemData) => {
   let disabledHours = () => [];
   let disabledMinutes = () => [];
 
@@ -239,7 +239,7 @@ export default function DataCollectionSettings(props) {
   const [daySelectPopupVisible, setDaySelectPopupVisible] = useState(false);
   const locale = locales[md.global.Account.lang] || localeEn;
 
-  const onRangeInputChange = (value, type, from) => {
+  const onRangeInputChange = (value, type, from: string) => {
     if (parseInt(value) || parseInt(value) === 0 || value === '') {
       const newTimeRange = _.cloneDeep(timeRange);
       const maxValue = type === TIME_TYPE.MONTH ? 12 : 31;
@@ -279,7 +279,7 @@ export default function DataCollectionSettings(props) {
     }
   };
 
-  const onTimeChange = (timeString, index, from) => {
+  const onTimeChange = (timeString, index, from: string) => {
     const newTimeRange = _.cloneDeep(timeRange);
     newTimeRange[TIME_TYPE.HOUR][index][from] = timeString;
     setState({ timeRange: newTimeRange });

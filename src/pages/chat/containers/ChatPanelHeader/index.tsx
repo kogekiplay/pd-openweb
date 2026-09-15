@@ -106,7 +106,7 @@ class ChatPanelHeader extends Component<any, any> {
       }
     }
   }
-  handleTriggerChange(triggerVisible) {
+  handleTriggerChange(triggerVisible: boolean) {
     this.setState({
       triggerVisible,
     });

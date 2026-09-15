@@ -249,7 +249,7 @@ function PluginConfig(props) {
     });
   };
 
-  const fetchList = (pageIndex, keywords?) => {
+  const fetchList = (pageIndex: number, keywords?) => {
     if (!_.includes([pluginConfigType.debugEnv, pluginConfigType.paramSetting], currentTab)) {
       setFetchListState({ loading: true, pageIndex, keywords });
     }

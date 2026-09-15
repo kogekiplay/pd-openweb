@@ -15,7 +15,7 @@ import { A4_OPTS, A4_SIZE } from './printConfig';
 import type { LabelRecord, PrintLabelConfig, QrPdfOptions } from './types';
 import { createBarLabeObjectFromConfig, createQrLabeObjectFromConfig } from './util';
 
-function cutString(text, maxWidth, fontSize, maxLine = 3) {
+function cutString(text, maxWidth: number, fontSize: number, maxLine = 3) {
   text = text.slice(0, 300);
   let result;
   let width = 0;

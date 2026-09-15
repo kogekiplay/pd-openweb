@@ -62,7 +62,7 @@ const ChatPane = styled.div`
   }
 `;
 
-function getQueryValue(key) {
+function getQueryValue(key: string) {
   const value = getRequest()[key];
 
   return Array.isArray(value) ? value[0] : value || '';
@@ -70,7 +70,7 @@ function getQueryValue(key) {
 
 const hideHeader = window.hideHeader || getQueryValue('header') === '0';
 
-function normalizePath(path) {
+function normalizePath(path: string) {
   return (path || '').replace(/\/+$/, '') || '/';
 }
 

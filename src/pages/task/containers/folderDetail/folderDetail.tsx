@@ -311,7 +311,7 @@ class FolderDetail extends Component<any, any> {
   renderFolderMember() {
     const { data } = this.state;
 
-    const getOpHtml = (item, isApply) => {
+    const getOpHtml = (item, isApply: boolean) => {
       const { accountID, avatar, fullName } = item;
 
       if (isApply && data.isAdmin) {
@@ -468,7 +468,7 @@ class FolderDetail extends Component<any, any> {
     });
   }
 
-  clickEvents(type, accountId, avatar, fullname) {
+  clickEvents(type: string, accountId, avatar, fullname) {
     switch (type) {
       // 设为负责人
       case 'updateFolderChargeFix':
@@ -686,7 +686,7 @@ class FolderDetail extends Component<any, any> {
   /**
    * 申请用户设为管理员和成员
    */
-  updateFolderMemberStatusAndAuth(accountId, avatar, fullname, isAdmin) {
+  updateFolderMemberStatusAndAuth(accountId, avatar, fullname, isAdmin: boolean) {
     ajaxRequest
       .updateFolderMemberStatusAndAuth({
         folderID: this.props.taskConfig.folderId,
@@ -824,7 +824,7 @@ class FolderDetail extends Component<any, any> {
   /**
    * 切换tabs
    */
-  switchTabs(tabIndex) {
+  switchTabs(tabIndex: number) {
     const isForceUpdate = tabIndex === this.state.tabIndex;
 
     // 强制更新

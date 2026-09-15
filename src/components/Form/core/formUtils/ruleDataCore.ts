@@ -67,7 +67,7 @@ export const updateRulesDataByRule = (
     style: {},
   };
 
-  function pushType(key, id, obj) {
+  function pushType(key: string, id, obj) {
     relateRuleType[key][id] ? relateRuleType[key][id].push(obj) : (relateRuleType[key][id] = [obj]);
   }
 

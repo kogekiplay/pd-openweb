@@ -43,7 +43,7 @@ export default class MapHandler {
     this.map.addControl(new AMap.Scale());
   }
   // 事件绑定
-  _bindListener(map, name, callback) {
+  _bindListener(map, name: string, callback) {
     map.on(name, callback);
     // 保存事件处理器引用，用于销毁时清理
     this.eventHandlers.push({ map, name, callback });

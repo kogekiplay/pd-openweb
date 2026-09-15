@@ -107,7 +107,7 @@ const actionFeedback = (msg, { onCancel, refreshPage }) => {
   });
 };
 
-const handleRequest = (requestName, requestParams, props) => {
+const handleRequest = (requestName: string, requestParams, props) => {
   appManagementAjax[requestName](requestParams).then(res => {
     if (res === 1) {
       actionFeedback(ACTION_TEXT[requestName], props);

@@ -485,7 +485,7 @@ class TaskBasic extends Component<any, any> {
   /**
    * 成员 op操作
    */
-  clickMemberFn = (clickOp, account) => {
+  clickMemberFn = (clickOp: string, account) => {
     const { taskId, removeTaskMember } = this.props;
     const user = {
       accountId: account.accountID,

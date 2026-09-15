@@ -197,7 +197,7 @@ let TimeBars: any = class TimeBars extends Component<any, any> {
    * @param  {number} direction
    */
 
-  dragMouseMove(direction) {
+  dragMouseMove(direction: number) {
     const that = this;
     $(document).on({
       'mousemove.ganttDragSingle': function (evt) {

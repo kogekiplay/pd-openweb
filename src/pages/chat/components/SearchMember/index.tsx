@@ -82,7 +82,7 @@ class SearchMember extends Component<any, any> {
       });
     });
   };
-  adjustViewport(direction) {
+  adjustViewport(direction: string) {
     const { flattenResult, currentIndex } = this.state;
     const { viewport } = (this.scrollView && this.scrollView.getScrollInfo()) || {};
     const $scrollViewEl = $(viewport);

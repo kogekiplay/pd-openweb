@@ -61,7 +61,7 @@ const Splitter = styled.div`
 export default function Number(props) {
   const { value, minValue = '', maxValue = '', filterType, onChange = () => {}, onEnterDown = () => {} } = props;
 
-  function update(changes, type) {
+  function update(changes, type: number) {
     if (_.isUndefined(filterType)) {
       changes.filterType = type;
     }

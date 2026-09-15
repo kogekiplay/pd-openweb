@@ -266,7 +266,7 @@ export function diffSelectTagsValue(param) {
   return { _oldValue, _newValue, _defaultValue };
 }
 
-export function getExtendParams(extendParams = [], name) {
+export function getExtendParams(extendParams = [], name: string) {
   let info = extendParams.find(l => _.startsWith(l, `${name}:`));
 
   return info ? info.replace(`${name}:`, '') : '';

@@ -53,7 +53,7 @@ const DEFAULT_SETTING = {
   patEnabled: false,
 };
 
-function getBooleanValue(data, keys, defaultValue) {
+function getBooleanValue(data, keys: string[], defaultValue) {
   const targetKey = keys.find(key => typeof data[key] === 'boolean');
   return targetKey ? data[targetKey] : defaultValue;
 }

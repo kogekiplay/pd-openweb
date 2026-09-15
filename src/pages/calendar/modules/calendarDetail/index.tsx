@@ -57,7 +57,7 @@ class Container extends Component<any, any> {
     }
   }
 
-  fetchData(isShowLoading, props?) {
+  fetchData(isShowLoading: boolean, props?) {
     const { calendarId, recurTime } = props || this.props;
 
     if (isShowLoading) {

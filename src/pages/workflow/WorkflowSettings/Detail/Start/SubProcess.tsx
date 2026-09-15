@@ -29,7 +29,7 @@ const List = styled.div`
 `;
 
 export default ({ data, updateSource }) => {
-  const updateItem = (controlId, key, value) => {
+  const updateItem = (controlId, key: string, value: string) => {
     updateSource({
       controls: data.controls.map(o => {
         if (o.controlId === controlId) {

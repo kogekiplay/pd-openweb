@@ -122,7 +122,7 @@ let SetImportExcelCreateWorksheetOrApp = class SetImportExcelCreateWorksheetOrAp
       </div>
     );
   };
-  updateTriggerVisible = (it, action, visible) => {
+  updateTriggerVisible = (it, action: string, visible: boolean) => {
     const { currentSheetInfo = {} } = this.props;
     let temp = {
       ...currentSheetInfo,

@@ -115,7 +115,7 @@ const PLOT_BUILDERS = {
     const axes = Array.isArray(spec.axes) ? spec.axes : [];
 
     if (axes.length !== 2 || !axes[0] || !axes[1]) return null;
-    const pick = (seriesName, key) =>
+    const pick = (seriesName, key: string) =>
       spec.data.filter(d => d && d.series === seriesName).map(d => ({ category: d.category, [key]: d.value }));
     const left = pick(axes[0].series, 'v0');
     const right = pick(axes[1].series, 'v1');
@@ -141,7 +141,7 @@ const PLOT_BUILDERS = {
 //   'isGroupStack'（柱/条）：有 series → seriesField + isStack(stack:true) / isGroup(默认分组)
 //   'stack'（面积）：有 series → seriesField + isStack(stack:true)
 //   'series'（折线/雷达）：有 series → seriesField
-function withSeries(spec, base, mode) {
+function withSeries(spec, base, mode: string) {
   const hasSeries = Array.isArray(spec.data) && spec.data.some(d => d && d.series != null);
 
   if (!hasSeries) return base;
@@ -360,7 +360,7 @@ function IconClose() {
 
 // 导出 PNG：g2plot 默认 canvas renderer，直接抓容器里的 <canvas> 合成到铺底色的画布再 toBlob 下载，
 // 避免透明背景；底色取卡片实际背景（亮/暗主题自动适配），取不到时回退白色。
-function downloadChartPng(canvasContainer, bgSource, filename) {
+function downloadChartPng(canvasContainer, bgSource, filename: string) {
   const canvas = canvasContainer && canvasContainer.querySelector('canvas');
 
   if (!canvas) return;

@@ -697,7 +697,7 @@ export default class Formula extends Component<any, any> {
   /**
    * 渲染日期格式
    */
-  renderDateType(key, isString = false) {
+  renderDateType(key: string, isString = false) {
     const { data } = this.state;
 
     return (

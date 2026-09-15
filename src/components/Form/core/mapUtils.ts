@@ -27,7 +27,7 @@ function destroyMapHandler() {
   }
 }
 
-function isCurrentLifecycle(version) {
+function isCurrentLifecycle(version: number) {
   return version === lifecycleVersion && formRefCount > 0;
 }
 

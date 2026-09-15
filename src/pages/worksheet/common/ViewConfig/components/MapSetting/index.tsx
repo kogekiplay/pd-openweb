@@ -135,7 +135,7 @@ export default function MapSetting(props) {
     });
   };
 
-  const updateViewLocation = (key, value) => {
+  const updateViewLocation = (key: string, value: number | string) => {
     updateCurrentView({
       ...view,
       appId,

@@ -16,7 +16,7 @@ import { functions } from '../enum';
 
 // CM5 版的 groupMatch 是【逐行】跑正则、给出行内偏移。这里保持同样的分行语义
 // （正则里的 . 不跨行，逐行跑与整体跑在这些规则上等价），但换算成绝对偏移量。
-function eachLineMatch(text, regexp, fn) {
+function eachLineMatch(text, regexp: RegExp, fn) {
   const lines = text.split('\n');
   let lineStart = 0;
 

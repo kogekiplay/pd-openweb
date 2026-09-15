@@ -242,7 +242,7 @@ function updateRootStar(rootId, isStar) {
  * @param  {String} path 节点路径
  * @return {Node}      节点信息，如果是文件夹包含子节点
  */
-function getNodeByPath(path) {
+function getNodeByPath(path: string) {
   return kc.getNodeDetail({ path }).then(assignHashFunc);
 }
 

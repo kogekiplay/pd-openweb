@@ -125,7 +125,7 @@ export default class CommonInfo extends Component<any, any> {
   }
 
   //切换二级组件
-  toggleComp(level) {
+  toggleComp(level: number) {
     this.props.setLevel(level);
   }
 

@@ -193,7 +193,7 @@ class ImageViewer extends React.Component<any, any> {
     }
   };
 
-  move(deltaX, deltaY) {
+  move(deltaX: number, deltaY: number) {
     let { left, top } = this.state;
     const rad = (this.state.rotate * Math.PI) / 180;
     const deltaLeft = deltaY * Math.sin(rad) + deltaX * Math.cos(rad);
@@ -222,7 +222,7 @@ class ImageViewer extends React.Component<any, any> {
    * [updateScale 放大缩小]
    * @param  {Boolean} isBoost [是否放大]
    */
-  updateScale(isBoost) {
+  updateScale(isBoost: boolean) {
     const scale = this.state.scale + (isBoost ? this.props.quotiety : -this.props.quotiety);
 
     if (scale < 0.1 || scale > 10) {

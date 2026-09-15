@@ -28,7 +28,7 @@ class AppGroupList extends Component<any, any> {
     this.setState({ projectId: currentProject.projectId });
     this.props.dispatch(actions.getMyApp(currentProject.projectId));
   }
-  renderlist = (data = [], type) => {
+  renderlist = (data = [], type: string) => {
     return (
       <div key={type} className="groupItem">
         {!_.isEmpty(data) && <div className="textSecondary Font13 groupTitle">{groupTitleList[type]}</div>}

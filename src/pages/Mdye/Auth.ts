@@ -37,7 +37,7 @@ function goLogin() {
 
 // text 在函数体里本来就是 `if (text)` 可选处理的，签名漏了 ? —— 上游是 .js 不报，
 // 到本仓过 tsc 就是 3 处 TS2554。补上问号即可，与实际用法一致。
-function createElement(tag, className, text?) {
+function createElement(tag: string, className, text?) {
   const element = document.createElement(tag);
 
   if (className) {

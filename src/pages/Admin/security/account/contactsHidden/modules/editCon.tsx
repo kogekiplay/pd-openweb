@@ -82,7 +82,7 @@ class EditCon extends React.Component<any, any> {
     });
   };
 
-  addDataFn = (datas, type, tTData) => {
+  addDataFn = (datas, type, tTData: number) => {
     const { dataByRuleId } = this.props;
     let ids = [];
     _.map(datas, user => {
@@ -259,7 +259,7 @@ class EditCon extends React.Component<any, any> {
     );
   };
 
-  listCon = (data, type) => {
+  listCon = (data, type: number) => {
     return <div className="listCon">{this.rulesCon(data, type)}</div>;
   };
 

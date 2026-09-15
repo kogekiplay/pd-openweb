@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-export const getFunction = function (keyName) {
+export const getFunction = function (keyName: string) {
   return function (fields) {
     const isAll = _.every(fields, ({ [keyName]: value }) => !value);
     const isPart = !isAll && _.some(fields, ({ [keyName]: value }) => !value);

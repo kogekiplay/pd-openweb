@@ -18,7 +18,7 @@ let RelateBox = class RelateBox extends Component<any, any> {
   static defaultProps = {
     values: [],
   };
-  renderLi = (item, i, onChangeFn) => {
+  renderLi = (item, i: number, onChangeFn) => {
     return (
       <React.Fragment>
         {item.isNavGroup && i !== 0 && <div className="BorderTopGrayC"></div>}

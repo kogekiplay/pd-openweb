@@ -410,7 +410,7 @@ export default class UploadTemplateSheet extends React.Component<any, any> {
   /**
    * 关联表字段
    */
-  renderRelaItem = (it, o, isRela) => {
+  renderRelaItem = (it, o, isRela: boolean) => {
     if (o.type === 47 && o.enumDefault2 === 1) {
       return null;
     }

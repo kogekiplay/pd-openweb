@@ -68,7 +68,7 @@ export const getHighAuthSheetSwitchPermit = (sheetSwitchPermit, worksheetId) => 
 };
 
 // 本地存储当前选中菜单
-export const saveSelectExtensionNavType = (worksheetId, navType, navValue) => {
+export const saveSelectExtensionNavType = (worksheetId, navType: string, navValue) => {
   const sheetConfigNavInfo = safeParse(localStorage.getItem('sheetConfigNavInfo') || '{}');
 
   if (!sheetConfigNavInfo[worksheetId]) {

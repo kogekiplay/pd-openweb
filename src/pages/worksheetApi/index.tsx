@@ -1177,7 +1177,7 @@ class WorksheetApi extends Component<any, any> {
    */
   renderAppendixContent(list?) {
     const { tabIndex } = this.state;
-    const getWidth = (headerData, key) => _.get(_.find(headerData, headerObj => headerObj.key === key) || {}, 'width');
+    const getWidth = (headerData, key: string) => _.get(_.find(headerData, headerObj => headerObj.key === key) || {}, 'width');
     const data = list || MENU_LIST_APPENDIX;
 
     return (
@@ -1415,7 +1415,7 @@ class WorksheetApi extends Component<any, any> {
   renderAuthorizationManagement = () => {
     const { authorizes = [], addSecretKey, visibleAppKeys, visibleSigns, tabIndex } = this.state;
 
-    const renderIconRow = (visibleState, text) => {
+    const renderIconRow = (visibleState: string, text) => {
       const visible = this.state[visibleState].includes(text);
 
       return (

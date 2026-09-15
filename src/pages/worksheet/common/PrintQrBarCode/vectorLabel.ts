@@ -220,7 +220,7 @@ export default class Label {
     );
     // this.isDebug = true;
   }
-  async loadScript(src) {
+  async loadScript(src: string) {
     return new Promise(resolve => {
       loadScript(src, {}, resolve);
     });
@@ -297,7 +297,7 @@ export default class Label {
     const { onProgress = () => {} } = this.options;
     const { doc } = this;
 
-    async function load(fontKey, fontName, fontUrl) {
+    async function load(fontKey: string, fontName: string, fontUrl: string) {
       const savedFont = await localForage.getItem<ArrayBuffer>(fontKey);
 
       if (savedFont) {
@@ -315,7 +315,7 @@ export default class Label {
     await load('bold_font', 'alibabaBold', '/staticfiles/fonts/bold.ttf');
     onProgress(undefined);
   }
-  drawLine(top, width, color = 'red') {
+  drawLine(top: number, width: number, color = 'red') {
     if (!this.isDebug) return;
     this.doc.strokeColor(color).lineWidth(0.1).moveTo(0, top).lineTo(width, top).stroke();
   }
@@ -514,7 +514,7 @@ export default class Label {
     doc.fillColor(color);
     let textTop = top;
 
-    function applyFont(isBold, size) {
+    function applyFont(isBold, size: number) {
       doc.font(isBold ? 'alibabaBold' : 'alibaba').fontSize(size);
     }
 

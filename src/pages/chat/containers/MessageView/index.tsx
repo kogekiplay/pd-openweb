@@ -167,7 +167,7 @@ class MessageView extends Component<any, any> {
     const { session } = this.props;
     utils.scrollEnd(session.id, true);
   }
-  getMessage(param, direction) {
+  getMessage(param, direction: string) {
     this.setState({
       loading: true,
       errorParam: false,
@@ -474,7 +474,7 @@ class MessageView extends Component<any, any> {
       </div>
     );
   }
-  renderLoading(direction) {
+  renderLoading(direction: string) {
     const { loading, errorParam } = this.state;
     return (
       <div

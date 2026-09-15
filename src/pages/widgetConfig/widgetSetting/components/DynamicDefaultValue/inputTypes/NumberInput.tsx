@@ -64,7 +64,7 @@ export default function NumberInput(props) {
     defaultType && $wrap.current.triggerClick();
   };
 
-  const getMaxOrMin = (isMax?) => {
+  const getMaxOrMin = (isMax?: boolean) => {
     return isMax
       ? (value || '').substring((value || '').indexOf('~') + 1)
       : (value || '').substring(0, (value || '').indexOf('~'));

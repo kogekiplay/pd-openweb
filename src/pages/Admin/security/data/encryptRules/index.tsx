@@ -64,7 +64,7 @@ export default class EncryptRules extends Component<any, any> {
         this.setState({ loading: false });
       });
   };
-  changeSearchParams = (field, val) => {
+  changeSearchParams = (field: string, val) => {
     const { searchValues } = this.state;
     this.setState({ searchValues: { ...searchValues, [field]: val }, pageIndex: 1 }, _.debounce(this.getDataList, 500));
   };

@@ -216,7 +216,7 @@ function ConnectParam(props) {
   // 安装连接且未开放结构编辑时：仅可填参数值、设置隐藏，不可改名称/说明/必填或增删参数
   const isParamSchemaLocked = props.connectType === 2 && !props.allowEdit;
 
-  const inputRender = (o, key) => {
+  const inputRender = (o, key: string) => {
     if (isEdit) {
       return (
         <input

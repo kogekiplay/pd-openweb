@@ -33,7 +33,7 @@ export function isAskReplyAllSkipped(suffix, data) {
 }
 
 // 该 embed 段是否应整段静默（不进消息 parts）：系统触发类后缀，或全部跳过的 ask_reply。
-export function isSilentEmbedSegment(suffix, data) {
+export function isSilentEmbedSegment(suffix: string, data) {
   return SILENT_EMBED_SUFFIXES.includes(suffix) || isAskReplyAllSkipped(suffix, data);
 }
 

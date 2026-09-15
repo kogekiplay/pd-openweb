@@ -3,7 +3,7 @@ import { Empty, Select } from 'antd';
 import JsonView from '@mingdaocom/json-view';
 import { Support } from 'ming-ui';
 
-const maskString = (str, startW, endW, middleW) => {
+const maskString = (str, startW: number, endW, middleW: number) => {
   if (typeof str !== 'string') return '';
   const start = str.slice(0, startW); // 前面保留
   const end = str.slice(-endW); // 后面保留

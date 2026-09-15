@@ -164,7 +164,7 @@ export const checkCellIsEmpty = value => {
   return typeof value === 'undefined' || value === '' || value === '[]' || value === '["",""]' || value === null;
 };
 
-function parseCardStyle(control, value, type) {
+function parseCardStyle(control, value, type: string) {
   try {
     const parsedValue = safeParse(value) || {};
     return {

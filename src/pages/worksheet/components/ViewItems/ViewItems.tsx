@@ -114,7 +114,7 @@ let ViewItems = class ViewItems extends Component<any, any> {
     }
   };
 
-  getWorksheetViews(worksheetId, status?) {
+  getWorksheetViews(worksheetId, status?: number) {
     const { appId } = this.props;
     sheetAjax
       .getWorksheetViews({
@@ -453,7 +453,7 @@ let ViewItems = class ViewItems extends Component<any, any> {
       });
   };
   hasSearchWords = name => _.toLower(name).includes(_.toLower(_.trim(this.state.searchWorksheetListValue)));
-  renderSortList = (type, items) => {
+  renderSortList = (type: string, items) => {
     const { searchWorksheetListValue } = this.state;
     const {
       viewList,

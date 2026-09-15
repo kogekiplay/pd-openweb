@@ -106,7 +106,7 @@ export default class AddUser extends Component<any, any> {
     });
   };
 
-  changeFormInfo = (e, field) => {
+  changeFormInfo = (e, field: string) => {
     const isMobile = field === 'autonomously' && e.length > 3 && !isNaN(Number(e));
 
     if (isMobile && !this.itiAutonomously) {

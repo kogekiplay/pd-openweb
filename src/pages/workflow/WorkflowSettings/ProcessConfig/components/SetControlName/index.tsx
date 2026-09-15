@@ -90,7 +90,7 @@ const ErrorTips = styled.div`
 `;
 
 export default ({ data = [], list = [], errorItems, setErrorItems, updateSource }) => {
-  const updateReferenceValue = ({ controlId, dataSource }, value) => {
+  const updateReferenceValue = ({ controlId, dataSource }, value: string) => {
     return data.map(o => {
       if (o.controlId === controlId) {
         o.value = value;

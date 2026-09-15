@@ -427,7 +427,7 @@ export default class Overview extends Component<any, any> {
     return Promise.all([promise1, promise2]);
   };
 
-  renderChart = (data = [], isDualAxes, chartInfo) => {
+  renderChart = (data = [], isDualAxes: boolean, chartInfo) => {
     const { selectedDate, currentDimension, loading, totalTxtWidthMap } = this.state;
     const { total, type } = chartInfo;
     let isEmpty = _.isArray(data[0]) ? _.isEmpty(data[0]) && _.isEmpty(data[1]) : _.isEmpty(data);

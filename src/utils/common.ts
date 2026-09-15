@@ -17,7 +17,7 @@ export const emitter = new EventEmitter();
 window.onresize = () => emitter.emit('WINDOW_RESIZE');
 
 /** LRU 存储 */
-export function saveLRUWorksheetConfig(key, id, value) {
+export function saveLRUWorksheetConfig(key: string, id, value) {
   if (_.isObject(value)) {
     throw new Error('只支持存储字符串');
   }
@@ -43,7 +43,7 @@ export function saveLRUWorksheetConfig(key, id, value) {
 }
 
 /** LRU 存储 */
-export function clearLRUWorksheetConfig(key, id) {
+export function clearLRUWorksheetConfig(key: string, id) {
   let data = {};
 
   if (localStorage.getItem(key)) {
@@ -59,7 +59,7 @@ export function clearLRUWorksheetConfig(key, id) {
 }
 
 /** LRU 读取 */
-export function getLRUWorksheetConfig(key, id) {
+export function getLRUWorksheetConfig(key: string, id) {
   let data = [];
 
   if (localStorage.getItem(key)) {
@@ -94,7 +94,7 @@ export const debouncedKVSet = _.debounce(KVSet, 1000);
  * 取
  */
 
-export function KVGet(key) {
+export function KVGet(key: string) {
   return webCache.get({ key, moduleType: 2 }).then(res => get(res, 'data') || '');
 }
 
@@ -107,7 +107,7 @@ export function KVClear(key) {
   return webCache.clear({ key, moduleType: 2 }, { silent: true });
 }
 
-export function saveTempRecordValueToLocal(key, id, value, max = 5) {
+export function saveTempRecordValueToLocal(key: string, id, value: string, max = 5) {
   if (window.isWxWork) {
     debouncedKVSet(`${md.global.Account.accountId}${id}-${key}`, value);
     return debouncedKVSet;
@@ -143,7 +143,7 @@ export function saveTempRecordValueToLocal(key, id, value, max = 5) {
   }
 }
 
-export function removeTempRecordValueFromLocal(key, id) {
+export function removeTempRecordValueFromLocal(key: string, id) {
   if (window.isWxWork) {
     KVClear(`${md.global.Account.accountId}${id}-${key}`);
     return;
@@ -225,7 +225,7 @@ export function getRowGetType(from, { discussId } = {}) {
   }
 }
 
-export async function postWithToken(url, tokenArgs = {}, body = {}, axiosConfig = {}) {
+export async function postWithToken(url: string, tokenArgs = {}, body = {}, axiosConfig = {}) {
   let token;
 
   if (!_.get(window, 'shareState.shareId')) {
@@ -254,7 +254,7 @@ export async function postWithToken(url, tokenArgs = {}, body = {}, axiosConfig 
   );
 }
 
-export async function getWithToken(url, tokenArgs = {}, body = {}) {
+export async function getWithToken(url: string, tokenArgs = {}, body = {}) {
   let token;
 
   if (!_.get(window, 'shareState.shareId')) {
@@ -394,7 +394,7 @@ export function accMul(arg1, arg2) {
  * 调用：accDiv(arg1,arg2)
  * 返回值：arg1除以arg2的精确结果
  */
-export function accDiv(arg1, arg2) {
+export function accDiv(arg1, arg2: number) {
   let t1 = 0,
     t2 = 0,
     r1,
@@ -454,7 +454,7 @@ export function accAdd(arg1, arg2) {
  * 调用：accSub(arg1,arg2)
  * 返回值：arg1减上arg2的精确结果
  */
-export function accSub(arg1, arg2) {
+export function accSub(arg1: number, arg2) {
   return accAdd(arg1, -arg2);
 }
 
@@ -487,7 +487,7 @@ export const getStringBytes = self => {
   return strLength;
 };
 
-export const cutStringWithHtml = (self, len, rows) => {
+export const cutStringWithHtml = (self, len: number, rows: number) => {
   let str = '';
   let strLength = 0;
   let isA = false;

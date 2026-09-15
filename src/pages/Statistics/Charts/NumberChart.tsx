@@ -608,7 +608,7 @@ export default class extends Component<any, any> {
       </div>
     );
   }
-  renderMapItem(data, controlMinAndMax, span) {
+  renderMapItem(data, controlMinAndMax, span: number) {
     const { isLinkageMatch } = this.state;
     const {
       linkageMatch,

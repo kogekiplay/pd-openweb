@@ -189,7 +189,7 @@ function formatByStep(num, step, min = 0) {
   return (Math.floor(num / step) * step + min).toFixed(((String(step).match(/\.(\d+)/) || '')[1] || '').length);
 }
 
-function fixedByStep(num, step) {
+function fixedByStep(num: number, step) {
   return num.toFixed(((String(step).match(/\.(\d+)/) || '')[1] || '').length);
 }
 
@@ -300,7 +300,7 @@ export default function Slider(props) {
     valuePercent = 0;
   }
 
-  function updateValue(v, update, updateInput?) {
+  function updateValue(v, update, updateInput?: boolean) {
     v = formatByMinMax(v, min, max);
 
     setValue(v);

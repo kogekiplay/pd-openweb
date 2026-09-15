@@ -606,7 +606,7 @@ export const changeFilterItem = data => {
   };
 };
 
-export const changeCurrentReport = (data, isRequest) => {
+export const changeCurrentReport = (data, isRequest: boolean) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { currentReport } = getState().statistics;
     dispatch({

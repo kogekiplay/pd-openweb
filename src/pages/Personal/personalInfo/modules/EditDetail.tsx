@@ -17,7 +17,7 @@ export default class EditDetail extends React.Component<any, any> {
     };
   }
 
-  updateValue(key, value) {
+  updateValue(key: string, value) {
     this.setState(preState => ({
       baseInfo: {
         ...preState.baseInfo,
@@ -61,7 +61,7 @@ export default class EditDetail extends React.Component<any, any> {
     );
   };
 
-  setTxterr = (e, domStr) => {
+  setTxterr = (e, domStr: string) => {
     const { errTxtInfo } = this.state;
     fixedDataAjax.checkSensitive({ content: e.target.value }).then(res => {
       if (res) {

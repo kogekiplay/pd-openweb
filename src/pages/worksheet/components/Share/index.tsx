@@ -96,7 +96,7 @@ export default function Share(props) {
     }
   };
 
-  async function updatePublicShare(active, defaultTitle?) {
+  async function updatePublicShare(active: boolean, defaultTitle?) {
     const result = await updatePublicShareStatus({
       from,
       isPublic: active,

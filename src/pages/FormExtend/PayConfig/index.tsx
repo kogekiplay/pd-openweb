@@ -58,7 +58,7 @@ const isCNY = (control = {}) => {
   return type === 8 && (!currency || currencycode === 'CNY');
 };
 
-const getMapControls = (controls, fieldMapIds, field) => {
+const getMapControls = (controls, fieldMapIds, field: string) => {
   return controls
     .filter(v => {
       let relationControls: FormControl[] = [];
@@ -222,7 +222,7 @@ export default class PayConfig extends Component<any, any> {
     }
   };
 
-  changeScenes = (checked, key) => {
+  changeScenes = (checked, key: string) => {
     const { scenes = {}, merchantList = [], mchId = [], initSettings = {}, isPaySuccessAddRecord } = this.state;
     const selectedMerchants = merchantList.filter(v => !v.disabled);
 

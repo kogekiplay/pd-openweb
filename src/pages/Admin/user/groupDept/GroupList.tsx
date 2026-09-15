@@ -243,7 +243,7 @@ export default class GroupsList extends Component<any, any> {
     });
   }
 
-  optionAlert = (title, type?) => {
+  optionAlert = (title, type?: number) => {
     alert({
       msg: title,
       type: type,
@@ -252,7 +252,7 @@ export default class GroupsList extends Component<any, any> {
   };
 
   //更新关联部门
-  updateDeptMappingGroup = (groupId, isVerified, departmentId) => {
+  updateDeptMappingGroup = (groupId, isVerified: boolean, departmentId) => {
     let reqData = {
       groupId: groupId,
       isVerified: isVerified,
@@ -366,7 +366,7 @@ export default class GroupsList extends Component<any, any> {
   }
 
   //下拉筛选
-  handleSelectChange(value, key) {
+  handleSelectChange(value, key: string) {
     this.setState(
       {
         [key]: value,

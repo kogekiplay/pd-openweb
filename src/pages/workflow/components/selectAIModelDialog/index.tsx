@@ -219,7 +219,7 @@ const getModelTokenDisplayItems = (model = {}) =>
     }),
   );
 
-const getModelPriceValue = (model, field) => {
+const getModelPriceValue = (model, field: string) => {
   const value = _.get(model, ['price', field]);
 
   return _.isNil(value) ? '0' : value;

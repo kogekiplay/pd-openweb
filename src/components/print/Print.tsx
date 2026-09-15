@@ -929,7 +929,7 @@ export default class Print extends Component<any, any> {
       return this.beforeControlIsDetail(Number(key) - 1);
     }
   }.bind(this);
-  renderTaskItem(name, value, key, classname?) {
+  renderTaskItem(name, value, key, classname?: string) {
     return (
       <tr className="row clearfix Relative notDetails" key={key}>
         <td className="noHalf rowItem BorderRight0 taskRowItem" colSpan={1}>

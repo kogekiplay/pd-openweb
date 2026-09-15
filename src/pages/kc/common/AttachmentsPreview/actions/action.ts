@@ -536,7 +536,7 @@ function changeIndexThunk(dispatch, getState, index, flag, extra = {}) {
     });
 }
 
-export function changeIndex(index, flag, extra) {
+export function changeIndex(index: number, flag: string, extra) {
   return (dispatch: AttachmentsPreviewDispatch, getState: AttachmentsPreviewGetState) => {
     setTimeout(() => {
       changeIndexThunk(dispatch, getState, index, flag, extra);

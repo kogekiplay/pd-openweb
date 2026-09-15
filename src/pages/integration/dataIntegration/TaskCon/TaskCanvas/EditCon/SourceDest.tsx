@@ -97,7 +97,7 @@ export default class SourceDest extends Component<any, any> {
     }
   }
 
-  initData = async (nextProps, isNext) => {
+  initData = async (nextProps, isNext: boolean) => {
     const { currentProjectId: projectId, node = {} } = nextProps || this.props;
 
     if (schemaTypes.length <= 0) {

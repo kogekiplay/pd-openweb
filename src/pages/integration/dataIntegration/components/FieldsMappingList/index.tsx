@@ -320,7 +320,7 @@ export default function FieldMappingList(props) {
     );
   };
 
-  const renderCheckbox = (data, key) => {
+  const renderCheckbox = (data, key: string) => {
     const destField = data.destField || {};
     const sourceField = data.sourceField || {};
     if (!matchedTypes) return;

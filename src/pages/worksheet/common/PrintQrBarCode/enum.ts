@@ -261,7 +261,7 @@ export const BAR_HEIGHT = {
 };
 export const BAR_HEIGHT_LIST = getList(BAR_HEIGHT);
 
-function getTextByValue(obj, value) {
+function getTextByValue(obj, value: number) {
   let keys = Object.keys(obj).filter(k => k !== 'texts');
   const matchedKey = _.find(keys, k => obj[k] === value);
   return _.get(obj, 'texts.' + matchedKey);

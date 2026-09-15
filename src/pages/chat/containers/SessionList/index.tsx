@@ -60,7 +60,7 @@ class ContextMenu extends Component<any, any> {
   }
 }
 
-const getOffsetData = function (rootW, rootH, nativeEvent) {
+const getOffsetData = function (rootW: number, rootH: number, nativeEvent) {
   const { clientX, clientY } = nativeEvent;
   const screenW = window.innerWidth;
   const screenH = window.innerHeight;

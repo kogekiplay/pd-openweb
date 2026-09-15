@@ -143,7 +143,7 @@ function RoleSelect(props) {
       });
   };
 
-  const changeValue = (roleId, operate) => {
+  const changeValue = (roleId, operate: boolean) => {
     if (type === 0) {
       setDebugRoles([roleId]);
     } else {

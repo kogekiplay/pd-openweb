@@ -44,7 +44,7 @@ function containsURL(content) {
 }
 
 /** 含链接：【明道云】（自定义签名）；自定义签名为明道云时不再重复括号段。不含链接：【自定义签名】 */
-function smsSignaturePrefix(smsContainsLink, sign) {
+function smsSignaturePrefix(smsContainsLink: boolean, sign) {
   const core = smsSignCore(sign);
   const platform = _l('明道云');
   const isPlatformCore = !core || core === _l('明道云') || core === platform;

@@ -96,7 +96,7 @@ export default function HomeSetting(props) {
   const { setting = {}, onUpdate = _.noop } = props;
   const [customDrawerVisible, setCustomDrawerVisible] = useState(false);
 
-  function handleUpdate(key, value) {
+  function handleUpdate(key: string, value: boolean | number) {
     onUpdate({ ...setting, [key]: value });
   }
 

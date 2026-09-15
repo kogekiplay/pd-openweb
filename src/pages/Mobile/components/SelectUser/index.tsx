@@ -562,7 +562,7 @@ export default class SelectUser extends Component<any, any> {
   }
 
   // 人员选择行
-  renderSelectUserItem(item, key?) {
+  renderSelectUserItem(item, key?: string) {
     const { onlyOne, filterAccountIds = [] } = this.props;
     const { selectedUsers } = this.state;
 

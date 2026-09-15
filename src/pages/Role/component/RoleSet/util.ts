@@ -6,7 +6,7 @@ const translateObjectName = (appId, obj, idKey, nameKey) => {
   obj[nameKey] = getTranslatedName(appId, obj[idKey], obj[nameKey]);
 };
 
-const translateArrayNames = (appId, array, idKey, nameKey) => {
+const translateArrayNames = (appId, array, idKey: string, nameKey: string) => {
   (array || []).forEach(item => translateObjectName(appId, item, idKey, nameKey));
 };
 

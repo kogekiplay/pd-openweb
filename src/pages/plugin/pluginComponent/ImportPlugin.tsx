@@ -159,7 +159,7 @@ function ImportPlugin(props) {
 
   const pluginApi = pluginApiConfig[pluginType];
 
-  const onCheckFile = async (url, alertError?) => {
+  const onCheckFile = async (url: string, alertError?) => {
     setFileChecking(true);
     let checkSuccess = false;
     await fileApi

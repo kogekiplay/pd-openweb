@@ -146,9 +146,9 @@ function Filters(props, ref) {
     _.isEmpty(editingFilter.conditions) &&
     !_.some(editingFilter.conditionsGroups.map(g => g.conditions.length));
 
-  function updateActiveTab(newType) {
+  function updateActiveTab(newType: number) {
     setActiveTab(newType);
-    localStorage.setItem('worksheetFilters_activeTab', newType);
+    localStorage.setItem('worksheetFilters_activeTab', String(newType));
   }
 
   function filterAddConditionControls(controls) {

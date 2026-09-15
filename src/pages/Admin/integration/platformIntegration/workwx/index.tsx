@@ -218,7 +218,7 @@ export default class Workwx extends React.Component<any, any> {
     });
   };
 
-  inputRender = (strId, w, img1, img2?) => {
+  inputRender = (strId: string, w: number, img1: number, img2?) => {
     return (
       <React.Fragment>
         <div className="inputTitleBox">

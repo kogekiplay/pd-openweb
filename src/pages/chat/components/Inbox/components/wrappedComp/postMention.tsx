@@ -42,7 +42,7 @@ export default class PostMention extends React.Component<any, any> {
    * @returns
    * @memberof PostMention
    */
-  mergeTopicState(fromPost) {
+  mergeTopicState(fromPost: boolean) {
     const inboxItem = this.props;
     const createTime = inboxItem.createTime;
     let item = null,
@@ -100,7 +100,7 @@ export default class PostMention extends React.Component<any, any> {
     }
   }
 
-  mergeFromSourceState(fromPost?) {
+  mergeFromSourceState(fromPost?: boolean) {
     const inboxItem = this.props;
     const {
       Post: { postID, message, rUserList, rGroupList, categories },

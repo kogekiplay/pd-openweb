@@ -25,7 +25,7 @@ export const initialState = {
   appLang: [], // 应用多语言
 };
 
-function updateAppOfState(state, appId, update = data => data) {
+function updateAppOfState(state, appId: string, update = data => data) {
   ['apps', 'markedApps', 'externalApps', 'aloneApps', 'activeGroupApps', 'recentApps', 'ownedApps'].forEach(key => {
     if (state[key]) {
       state[key] = state[key].map(app => (app.id === appId ? update(app) : app));
@@ -64,7 +64,7 @@ function deleteAppOfState(state, appId) {
   return state;
 }
 
-function updateGroupOfState(state, groupId, update = data => data) {
+function updateGroupOfState(state, groupId: string, update = data => data) {
   ['groups', 'markedGroup'].forEach(key => {
     if (state[key]) {
       state[key] = state[key].map(group => (group.id === groupId ? update(group) : group));
@@ -446,7 +446,7 @@ export class CreateActions {
     this.state = props.state;
     this.updateAppBelongGroups = this.updateAppBelongGroups.bind(this);
   }
-  updateKeywords(keywords) {
+  updateKeywords(keywords: string) {
     this.dispatch({
       type: 'UPDATE_KEYWORDS',
       value: keywords,

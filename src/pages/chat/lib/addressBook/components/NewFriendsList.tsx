@@ -67,7 +67,7 @@ export default class NewFriendsList extends React.Component<any, any> {
     });
   }
 
-  updateListData(accountId, isAdd) {
+  updateListData(accountId, isAdd: boolean) {
     const { listData } = this.state;
     this.setState({
       listData: _.map(listData, item => {

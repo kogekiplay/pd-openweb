@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
@@ -438,7 +438,7 @@ class Detail extends React.Component<any, any> {
     }
   };
 
-  genPreviewLink = (name, versionId, nodeId) => {
+  genPreviewLink = (name: string, versionId, nodeId) => {
     let isOldest;
 
     if (versionId === 'oldest') {

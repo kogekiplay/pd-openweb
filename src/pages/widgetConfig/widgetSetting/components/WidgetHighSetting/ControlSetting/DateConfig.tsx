@@ -231,7 +231,7 @@ function StartEndTime(props) {
   const max = getAdvanceSetting(data, 'max');
   const locationbegin = getAdvanceSetting(data, 'locationbegin');
 
-  const handleValueChange = (value, mode) => {
+  const handleValueChange = (value, mode: string) => {
     onChange(handleAdvancedSettingChange(data, { [mode]: JSON.stringify(value) }));
   };
 

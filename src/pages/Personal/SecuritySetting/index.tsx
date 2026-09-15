@@ -76,7 +76,7 @@ export default class SecuritySetting extends Component<any, any> {
     });
   };
 
-  sureSettings(settingNum, value, successCallback) {
+  sureSettings(settingNum: string, value: number, successCallback) {
     accountSetting
       .editAccountSetting({
         settingType: common.settingOptions[settingNum],

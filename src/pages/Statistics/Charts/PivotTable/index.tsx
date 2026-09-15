@@ -146,7 +146,7 @@ class PivotTable extends Component<any, any> {
       }
     }
   }
-  getCacheValue = (key, deps, getValue) => {
+  getCacheValue = (key: string, deps, getValue) => {
     const cache = this.cache[key];
 
     if (cache && cache.deps.length === deps.length && cache.deps.every((dep, index) => dep === deps[index])) {
@@ -1119,7 +1119,7 @@ class PivotTable extends Component<any, any> {
       return <div style={{ width: px }}>{'--'}</div>;
     }
   }
-  renderRelevanceContent(relevanceData, parentControl, index, diffWidth, linesData = []) {
+  renderRelevanceContent(relevanceData, parentControl, index: number, diffWidth, linesData = []) {
     const { fields } = parentControl;
     const control = fields[index];
     const { style } = this.props.reportData;

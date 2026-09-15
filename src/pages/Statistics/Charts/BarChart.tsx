@@ -27,7 +27,7 @@ import {
 } from './common';
 import loadG2Plot from './loadG2Plot';
 
-export const formatDataCount = (data, isVertical, newYaxisList) => {
+export const formatDataCount = (data, isVertical: boolean, newYaxisList) => {
   const result = _.toArray(_.groupBy(data, 'originalId'));
   const emptyShow = newYaxisList.length === newYaxisList.map(data => data.emptyShowType).filter(n => n === 2).length;
   return result.map(item => {

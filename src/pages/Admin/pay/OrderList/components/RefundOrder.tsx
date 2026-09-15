@@ -624,7 +624,7 @@ export default class RefundOrder extends Component<any, any> {
   };
 
   // 操作退款订单（同意/拒绝）
-  handleRefund = (record, status) => {
+  handleRefund = (record, status: number) => {
     // status: 4->拒绝 6:同意
     const { projectId, featureType } = this.props;
     const { refundOrderId, amount } = record;

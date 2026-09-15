@@ -333,7 +333,7 @@ const handleCopyWorkSheet = props => {
   });
 };
 
-const handleUpdateWorksheetStatus = (status, props) => {
+const handleUpdateWorksheetStatus = (status: number, props) => {
   const { appId, appItem, sheetListActions } = props;
   homeAppApi
     .setWorksheetStatus({

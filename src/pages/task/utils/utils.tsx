@@ -30,7 +30,7 @@ export const getTaskStorage = key => {
 };
 
 // 写入storage
-export const setTaskStorage = (key, data) => {
+export const setTaskStorage = (key: string, data) => {
   safeLocalStorageSetItem(md.global.Account.accountId + key, JSON.stringify(data));
 };
 
@@ -147,7 +147,7 @@ export const formatTimeInfo = (time, isCompleteAppear) => {
 };
 
 // 获取开始时间和截止时间的文字
-const getTimeInfo = (start, end, isCompleteAppear) => {
+const getTimeInfo = (start, end, isCompleteAppear: boolean) => {
   const startTime = moment(start);
   const endTime = moment(end);
   let el = '';
@@ -200,7 +200,7 @@ const getTimeInfo = (start, end, isCompleteAppear) => {
  */
 export const formatTaskTime = (status, startTime, endTime, actualStartTime, completeTime, isCreate = false) => {
   const currentTime = getCurrentTime();
-  const render = (text, color, className = '') => `<span style="color:${color};" class="${className}">${text}</span>`;
+  const render = (text, color: string, className = '') => `<span style="color:${color};" class="${className}">${text}</span>`;
   const COLORS = {
     gray: 'var(--color-text-secondary)',
     blue: '#1677ff',

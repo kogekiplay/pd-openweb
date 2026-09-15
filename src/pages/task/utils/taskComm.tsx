@@ -897,7 +897,7 @@ const updateTaskParentDeep = $li => {
 };
 
 // 更新任务名称后处理
-export const afterUpdateTaskName = (taskId, taskName) => {
+export const afterUpdateTaskName = (taskId, taskName: string) => {
   const { viewType, folderId } = Store.getState().task.taskConfig;
 
   if (!folderId) {
@@ -1054,7 +1054,7 @@ export const updateFolderTop = (folderId, isTop, callback) => {
 };
 
 // 退出与删除 项目callback
-const exitAndDeleteCallback = (folderId, isDelete, hideNavigation) => {
+const exitAndDeleteCallback = (folderId, isDelete: boolean, hideNavigation) => {
   alert(isDelete ? _l('删除成功') : _l('退出成功'));
 
   if (hideNavigation) {
@@ -1134,7 +1134,7 @@ export const exitFolder = (folderId, hideNavigation?) => {
 };
 
 // 项目归档
-export const updateFolderArchived = (projectId, folderId, pigeonhole, callback?) => {
+export const updateFolderArchived = (projectId, folderId, pigeonhole: boolean, callback?) => {
   ajaxRequest
     .updateFolderArchived({
       folderID: folderId,

@@ -369,7 +369,7 @@ export function updateSelectRule(attr, value) {
 }
 
 // 校验配置错误
-export function updateError(attr, value, index?) {
+export function updateError(attr: string, value, index?) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const stateList = getState().formSet;
     const { ruleError = {} } = stateList;

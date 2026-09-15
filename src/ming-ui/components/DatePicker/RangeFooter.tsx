@@ -43,7 +43,7 @@ class RangeFooter extends Component<any, any> {
   };
 
   // 半天选择
-  halfOnChange = (value, target) => {
+  halfOnChange = (value, target: string) => {
     if (this.props.halfOnChange) {
       this.props.halfOnChange(value, target);
     }

@@ -54,7 +54,7 @@ const DPI_MM = 8;
 
 export function createQrLabeObjectFromConfig(
   config: PrintLabelConfig = {},
-  url,
+  url: string,
   texts = [],
   options: QrLabelOptions = {},
 ) {
@@ -195,7 +195,7 @@ export function getCodeContent({
 
 export function createBarLabeObjectFromConfig(
   config: PrintLabelConfig = {},
-  value,
+  value: string,
   texts = [],
   // 调用点除了 isPreview 还会传 pixelRadio（print.ts 的条码分支传 1.5），
   // 这一项直接并进 BarLabel 的配置里，所以类型取 BarLabelOptions 的子集。
@@ -516,7 +516,7 @@ export class BarLabel {
     this.drawTexts();
   }
   // 处理文字换行
-  cutTextByWidth(fontSize, context, maxWidth) {
+  cutTextByWidth(fontSize: number, context: string, maxWidth: number) {
     let result = [];
     this.ctx.font = fontSize + 'px sans-serif';
     if (this.ctx.measureText(context).width < maxWidth) {
@@ -894,7 +894,7 @@ export class QrLabel {
       textTop += fontSize;
     });
   }
-  drawImageUrl(url, { x, y, width, height } = {}) {
+  drawImageUrl(url: string, { x, y, width, height } = {}) {
     return new Promise(resolve => {
       const image = new Image();
 

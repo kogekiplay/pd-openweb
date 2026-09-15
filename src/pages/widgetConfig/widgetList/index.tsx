@@ -728,7 +728,7 @@ export default function List(props) {
     };
   }, []);
 
-  const handleTemplateDropdownVisibleChange = (templateKey, visible) => {
+  const handleTemplateDropdownVisibleChange = (templateKey: string, visible) => {
     setActiveDropdownKey(currentKey => {
       if (visible) return templateKey;
 

@@ -17,7 +17,7 @@ import { getTitleTextFromRelateControl } from 'src/utils/control';
 import { addBehaviorLog } from 'src/utils/project';
 import type { RecordRow } from 'src/utils/controlTypes';
 
-function getCellHeight(texts = [], width) {
+function getCellHeight(texts = [], width: number) {
   let result;
   const div = document.createElement('div');
   div.style.position = 'absolute';

@@ -217,7 +217,7 @@ export const getDefaultData = (
   destFields,
   isSourceAppType,
   isDestAppType,
-  notCanvas?,
+  notCanvas?: boolean,
 ) => {
   let hasSetFields = {};
   let isSetTitle = false; //是否已经设置过标题默认值

@@ -691,7 +691,7 @@ export default class Authentication extends Component<any, any> {
   /**
    * 更新token刷新值
    */
-  updateTokenRefreshValue = (evt, key, isBlur = false) => {
+  updateTokenRefreshValue = (evt, key: string, isBlur = false) => {
     const { data } = this.state;
     let value = evt.target.value;
 

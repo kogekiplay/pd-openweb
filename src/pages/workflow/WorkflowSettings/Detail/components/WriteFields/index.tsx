@@ -69,7 +69,7 @@ export default class WriteFields extends Component<any, any> {
   /**
    * 是否禁用
    */
-  isDisabled(item, type?) {
+  isDisabled(item, type?: string) {
     const { readonlyControlTypes, selectNodeType } = this.props;
 
     if (
@@ -150,7 +150,7 @@ export default class WriteFields extends Component<any, any> {
     }
   }
 
-  onChange(item, value, key = 'property') {
+  onChange(item, value: number | string, key = 'property') {
     const { data, updateSource } = this.props;
     const { showTableControls, selectItem } = this.state;
     const formProperties = _.cloneDeep(showTableControls ? selectItem.subFormProperties : data);

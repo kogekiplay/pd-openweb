@@ -45,7 +45,7 @@ export default class MobileSet extends React.Component<any, any> {
       }
     }
   }
-  updateView = (view, isUpdate?) => {
+  updateView = (view, isUpdate?: boolean) => {
     this.props.updateCurrentView(
       Object.assign(view, {
         filters: formatValuesOfOriginConditions(view.filters),

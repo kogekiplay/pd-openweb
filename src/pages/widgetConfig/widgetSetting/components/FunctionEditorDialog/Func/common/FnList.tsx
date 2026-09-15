@@ -66,7 +66,7 @@ const Con = styled.div`
 `;
 
 // 控件不支持的函数计算类型
-const fnFilterByControl = (fnName, control) => {
+const fnFilterByControl = (fnName: string, control) => {
   // 公式函数不支持当前时间
   if (fnName === 'DATENOW' && _.get(control, 'type') === 53) return false;
   return true;

@@ -263,7 +263,7 @@ export default class GeneraSelect extends Component<any, any> {
     }
   };
 
-  adjustViewport(direction, flattenResult) {
+  adjustViewport(direction: string, flattenResult) {
     const { currentIndex } = this.state;
     const scrollViewEl = this.boxRef.current.querySelector('.GSelect-container');
     const $scrollViewEl = $(scrollViewEl);
@@ -783,7 +783,7 @@ export default class GeneraSelect extends Component<any, any> {
     );
   };
 
-  changeSelect(chooseType, data, idKey) {
+  changeSelect(chooseType: string, data, idKey: string) {
     let selectedArr;
 
     switch (chooseType) {

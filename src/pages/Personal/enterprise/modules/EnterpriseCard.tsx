@@ -278,7 +278,7 @@ export default class EnterpriseCard extends Component<any, any> {
   }
 
   //获取部门，工作
-  getItems(list, key) {
+  getItems(list, key: string) {
     const listInfo = list.map(item => item[key]);
     return listInfo.join(' ; ');
   }

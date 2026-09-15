@@ -11,7 +11,7 @@ const Con = styled.div`
   }
 `;
 
-export function getStepStatusText(stepStatus) {
+export function getStepStatusText(stepStatus: number) {
   switch (stepStatus) {
     case STEP_STATUS.GET_WORKSHEET_NAME_AND_ICON:
       return _l('获取工作表图标');

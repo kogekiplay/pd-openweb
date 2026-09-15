@@ -84,7 +84,7 @@ export const AGENT_HEADER_EVENT = {
 };
 
 // 后端返回列表的字段名 Pascal / camel 混用，且外层可能套 data / messages / items：统一兜底取数组
-function pickList(body, keys) {
+function pickList(body, keys: string[]) {
   if (Array.isArray(body)) return body;
   if (!isRecord(body)) return [];
   for (const key of keys) {
@@ -96,7 +96,7 @@ function pickList(body, keys) {
   return [];
 }
 
-function readFirstField(source, keys) {
+function readFirstField(source, keys: string[]) {
   for (const key of keys) {
     const value = stringValue(readField(source, key));
 

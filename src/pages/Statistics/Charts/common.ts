@@ -663,7 +663,7 @@ export const formatrChartValue = (value, isPerPile, yaxisList, id?, isHideEmptyV
 /**
  * 处理图表 axis value
  */
-export const formatrChartAxisValue = (value, isPerPile, yaxisList) => {
+export const formatrChartAxisValue = (value: number, isPerPile, yaxisList) => {
   if (isPerPile) {
     return `${toFixed(value * 100, 0)}%`;
   } else {

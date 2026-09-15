@@ -368,7 +368,7 @@ async function fillRowRelationRows(control, rowId, worksheetId) {
   return filledControl;
 }
 
-export async function getFormData(data, status) {
+export async function getFormData(data, status: string) {
   const {
     shareId,
     appId,

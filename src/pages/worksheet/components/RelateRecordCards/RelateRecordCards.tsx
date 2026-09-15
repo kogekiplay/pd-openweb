@@ -512,7 +512,7 @@ class RelateRecordCards extends Component<any, any> {
       });
   };
 
-  handleChange(searchByChange, { needFullUpdate } = {}) {
+  handleChange(searchByChange: boolean, { needFullUpdate } = {}) {
     const { recordId, onChange } = this.props;
     const { count, records, isLoadingMore, showLoadMore, pageIndex, deletedIds = [], addedIds = [] } = this.state;
     onChange({

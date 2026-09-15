@@ -492,7 +492,7 @@ export default class RecordCardListDialog extends Component<any, any> {
     );
   };
 
-  handleSelect = (record, selected) => {
+  handleSelect = (record, selected: boolean) => {
     const { multiple, onOk, onClose, maxCount, selectedCount, handleReplaceHistoryState = () => {} } = this.props;
     const { selectedRecords } = this.state;
 

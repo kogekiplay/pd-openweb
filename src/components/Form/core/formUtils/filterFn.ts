@@ -45,7 +45,7 @@ const timeModeByDateRangeType = dateRangeType => {
 };
 
 // 时间格式化数值
-const formatFnTimeValue = (value, mode) => {
+const formatFnTimeValue = (value, mode: string) => {
   return moment(value).year()
     ? moment(moment(value).format(mode), mode).format(`YYYY-MM-DD ${mode}`)
     : moment(value, mode).format(`YYYY-MM-DD ${mode}`);
@@ -85,7 +85,7 @@ const getValueByDateRange = dateRange => {
   return value;
 };
 
-const dateFn = (filterData, value, isEQ, appTimeZone) => {
+const dateFn = (filterData, value, isEQ: boolean, appTimeZone) => {
   const { dateRange, dataType } = filterData;
   let result = true;
   let date = '';

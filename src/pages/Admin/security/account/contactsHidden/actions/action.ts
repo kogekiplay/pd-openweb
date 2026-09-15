@@ -2,7 +2,7 @@ import projectUserRule from 'src/api/projectUserRule.js';
 import type { ContactsHiddenDispatch, ContactsHiddenGetState } from '../types';
 
 export const showEditFn =
-  (showEdit, editType = '', ruleId = '') =>
+  (showEdit: boolean, editType = '', ruleId = '') =>
   dispatch => {
     dispatch({
       type: 'UPDATE_EDITTYPW',

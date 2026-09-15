@@ -172,7 +172,7 @@ export default class Approval extends Component<any, any> {
   /**
    * 更新节点对象数据
    */
-  updateFlowMapSource = (key, obj, callback?) => {
+  updateFlowMapSource = (key: number, obj, callback?) => {
     const { data } = this.state;
 
     this.updateSource(
@@ -930,7 +930,7 @@ export default class Approval extends Component<any, any> {
   /**
    * 切换审批设置
    */
-  switchApprovalSettings(checked, value) {
+  switchApprovalSettings(checked, value: number) {
     const { data } = this.state;
     const operationTypeList = _.cloneDeep(data.operationTypeList);
 
@@ -965,7 +965,7 @@ export default class Approval extends Component<any, any> {
   /**
    * 意见必填修改
    */
-  opinionRequiredChange(checked, key, value?) {
+  opinionRequiredChange(checked: boolean, key: string, value?) {
     const { data } = this.state;
     const currentAuth = [].concat(data.auth[key]);
 
@@ -983,7 +983,7 @@ export default class Approval extends Component<any, any> {
   /**
    * 认证必填修改
    */
-  authRequiredChange(checked, key) {
+  authRequiredChange(checked: boolean, key: string) {
     const { data } = this.state;
     const currentAuth = [].concat(data.auth[key]).filter(item => this.checkHasOpinion(item));
     const value =

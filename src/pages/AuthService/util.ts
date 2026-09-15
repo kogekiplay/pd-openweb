@@ -198,7 +198,7 @@ export const getDefaultCountry = () => {
   return window.localStorage.getItem('DefaultCountry') || _.get(md, 'global.Config.DefaultRegion') || 'cn';
 };
 
-export const getAccountTypes = (isLogin?) => {
+export const getAccountTypes = (isLogin?: boolean) => {
   const { enableMobilePhoneRegister, enableEmailRegister, hideRegister } = _.get(md, 'global.SysSettings');
 
   //登录 ｜ 关闭了注册

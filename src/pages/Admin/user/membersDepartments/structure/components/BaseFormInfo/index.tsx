@@ -237,7 +237,7 @@ export default class BaseFormInfo extends Component<any, any> {
     });
   };
 
-  getDepartmentFullName = (ids = [], field?, departments = []) => {
+  getDepartmentFullName = (ids = [], field?: string, departments = []) => {
     let { projectId } = this.props;
     let { fullDepartmentInfo = {} } = this.state;
     const validIds = ids.filter(it => !!it);
@@ -290,7 +290,7 @@ export default class BaseFormInfo extends Component<any, any> {
   };
 
   // 更新表单数据
-  changeFormInfo = (e, field) => {
+  changeFormInfo = (e, field: string) => {
     const fieldValue = field === 'mobile' ? this.iti.getNumber() : field === 'email' ? e : e.target.value;
     this.setState({ [field]: fieldValue, isClickSubmit: false });
   };

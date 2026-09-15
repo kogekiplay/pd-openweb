@@ -54,7 +54,7 @@ class CalendarShare extends Component<any, any> {
    * [获取详情]
    * @param  type 0：pc打开 | 1：微信打开 | -1：移动设备打开
    */
-  getShareDetail(type) {
+  getShareDetail(type: number) {
     ajaxRequest
       .getCalendarShareDetail({ token: this.settings.token, thirdID: this.settings.thirdID || '' })
       .then(source => {
@@ -465,7 +465,7 @@ class CalendarShare extends Component<any, any> {
   /**
    * 获取url参数
    */
-  getUrlParam(name) {
+  getUrlParam(name: string) {
     var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
     var r = window.location.href.slice(window.location.href.search(/\?/) + 1).match(reg);
     if (r != null) return unescape(r[2]);

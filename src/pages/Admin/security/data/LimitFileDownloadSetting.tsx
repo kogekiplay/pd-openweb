@@ -211,7 +211,7 @@ export default class LimitFileDownloadSetting extends Component<any, any> {
     });
   };
 
-  addDataFn = (data, type) => {
+  addDataFn = (data, type: number) => {
     const { attachmentSettingInfo } = this.state;
     const { whiteList = [] } = attachmentSettingInfo;
     const selectedIds = whiteList.filter(item => item.sourceType === type).map(v => v.id);

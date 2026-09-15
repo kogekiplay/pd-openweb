@@ -53,7 +53,7 @@ function InviteFailedDialog(props) {
     forbidAccountInfos.length +
     failedAccountInfos.length;
 
-  const renderReason = (accountInfos, failedType) => {
+  const renderReason = (accountInfos, failedType: string) => {
     if (!accountInfos.length) return null;
 
     return (

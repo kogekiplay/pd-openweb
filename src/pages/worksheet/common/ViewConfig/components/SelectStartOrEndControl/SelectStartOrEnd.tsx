@@ -167,7 +167,7 @@ export default function SelectStartOrEnd(props) {
     handleChange({ begindate, enddate: value });
   };
 
-  const showAddDialog = (name, key) => {
+  const showAddDialog = (name, key: string) => {
     setAddName(name);
     setAddKey(key);
     setVisible(true);

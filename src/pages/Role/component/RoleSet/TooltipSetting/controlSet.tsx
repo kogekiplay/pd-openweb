@@ -66,7 +66,7 @@ export default class extends React.PureComponent<any, any> {
     }
   }
 
-  changeFields = (checked, fieldId, key) => {
+  changeFields = (checked, fieldId, key: string) => {
     const { onChange } = this.props;
     const fields = formatFields(checked, fieldId, key, this.state.fields);
     this.setState(

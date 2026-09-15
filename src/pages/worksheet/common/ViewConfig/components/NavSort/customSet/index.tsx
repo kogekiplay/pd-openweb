@@ -159,7 +159,7 @@ export default function (props) {
     }
   };
 
-  const onChangeSettingUser = (isMultiple, users) => {
+  const onChangeSettingUser = (isMultiple: boolean, users) => {
     const list = isMultiple ? _.uniqBy([...valueRef.current, ...users], 'accountId') : users;
     setState({
       setting: maxCount ? list.slice(0, maxCount) : list,

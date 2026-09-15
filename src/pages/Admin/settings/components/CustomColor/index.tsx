@@ -115,7 +115,7 @@ export default class CustomColor extends Component<any, any> {
     });
   };
 
-  setColorSetting = (key, value, group) => {
+  setColorSetting = (key, value, group: string) => {
     const { projectId } = this.props;
     const { mdProjectColorIndex } = this.state;
     projectAjax
@@ -184,7 +184,7 @@ export default class CustomColor extends Component<any, any> {
     );
   };
 
-  renderColorList = (list, key = 'system_color', editable) => {
+  renderColorList = (list, key = 'system_color', editable: boolean) => {
     const { system_color, custom_color } = this.state;
 
     return (

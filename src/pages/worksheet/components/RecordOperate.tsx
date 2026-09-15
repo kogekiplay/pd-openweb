@@ -365,7 +365,7 @@ export default function RecordOperate(props) {
     _.includes(shows, 'fav') &&
     !isManageView;
 
-  function changePopupVisible(value) {
+  function changePopupVisible(value: boolean) {
     onPopupVisibleChange(value);
     if (customButtonActive.current) {
       return;

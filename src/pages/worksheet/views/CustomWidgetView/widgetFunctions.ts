@@ -112,7 +112,7 @@ export const mainWebApi = getMainWebApi();
 
 const isMobile = browserIsMobile();
 
-function emitWidgetAction(action, value) {
+function emitWidgetAction(action: string, value) {
   emitter.emit('POST_MESSAGE_TO_CUSTOM_WIDGET', {
     action,
     value,

@@ -1,4 +1,4 @@
-﻿import React, { Fragment } from 'react';
+import React, { Fragment } from 'react';
 import cx from 'classnames';
 import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
@@ -91,7 +91,7 @@ export default class PersonalInfo extends React.Component<any, any> {
     });
   }
 
-  detailItem = (item, valueType) => {
+  detailItem = (item, valueType: string) => {
     const detail = this.state[valueType] || {};
     return (
       <div className="mBottom10" key={item.key}>
@@ -252,7 +252,7 @@ export default class PersonalInfo extends React.Component<any, any> {
     );
   }
 
-  getEduOrWorkItem(type, item) {
+  getEduOrWorkItem(type: number, item) {
     const endTime = moment().format('YYYY-MM-DD') === item.endDate ? _l('至今') : item.endDate;
 
     return (

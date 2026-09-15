@@ -471,7 +471,7 @@ export default class LoopContent extends Component<any, any> {
   /**
    * 渲染范围内容
    */
-  renderRangeContent(key) {
+  renderRangeContent(key: string) {
     const { data } = this.props;
     const KEYS_ENUM = {
       minute: {
@@ -567,7 +567,7 @@ export default class LoopContent extends Component<any, any> {
   /**
    * 渲染固定值
    */
-  renderFixedContent(key) {
+  renderFixedContent(key: string) {
     const { data } = this.props;
     const values = data.config[key].values;
     const KEYS_ENUM = {
@@ -663,7 +663,7 @@ export default class LoopContent extends Component<any, any> {
   /**
    * 渲染增量内容
    */
-  renderIncrementContent(key) {
+  renderIncrementContent(key: string) {
     const { data } = this.props;
     const KEYS_ENUM = {
       minute: {

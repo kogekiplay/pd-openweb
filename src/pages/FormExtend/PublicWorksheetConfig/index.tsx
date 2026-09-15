@@ -31,7 +31,7 @@ function PublicWorksheetConfig(props) {
   const [formVisible, setFormVisible] = useState(/detail/.test(location.hash));
   const enabled = worksheetInfo.visibleType === VISIBLE_TYPE.PUBLIC;
 
-  function updateFormVisible(value) {
+  function updateFormVisible(value: boolean) {
     setFormVisible(value);
   }
 

@@ -121,7 +121,7 @@ function getTopHeight() {
   return height;
 }
 
-function mergeTabData(tabData: FormControl[] = [], eventData = [], dealFrom) {
+function mergeTabData(tabData: FormControl[] = [], eventData = [], dealFrom: number) {
   const filterFn = (data = []) => {
     // 标签页下无可见字段，隐藏标签页
     return data

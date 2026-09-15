@@ -797,7 +797,7 @@ export function handleDotAndRound(currentItem: FormControl, value: number | stri
 
 // 处理日期公式
 export const parseDateFormula = (data, currentItem, recordCreateTime) => {
-  const getTime = (str, pos) => {
+  const getTime = (str, pos: string) => {
     if (str === '$ctime$') {
       return recordCreateTime || new Date();
     } else if (str === '$utime$') {

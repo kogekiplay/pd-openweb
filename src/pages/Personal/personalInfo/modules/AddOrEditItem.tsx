@@ -33,7 +33,7 @@ export default class AddOrEditItem extends React.Component<any, any> {
     };
   }
 
-  updateValue(key, value) {
+  updateValue(key: string, value: boolean | string) {
     this.setState(preState => ({
       baseInfo: {
         ...preState.baseInfo,
@@ -75,7 +75,7 @@ export default class AddOrEditItem extends React.Component<any, any> {
     }
   }
 
-  getRangeTime(type) {
+  getRangeTime(type: string) {
     const day1 = new Date(
       type === 'max'
         ? new Date().getTime() - 24 * 60 * 60 * 1000

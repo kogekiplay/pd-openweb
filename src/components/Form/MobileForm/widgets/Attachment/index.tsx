@@ -164,7 +164,7 @@ export default class Widgets extends Component<any, any> {
 
   id = uuidv4();
 
-  filesChanged = (files, key) => {
+  filesChanged = (files, key: string) => {
     const enumDefault = this.props.enumDefault || 3;
     const value = JSON.parse(this.state.value || '[]');
     const isArray = _.isArray(value);

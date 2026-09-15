@@ -205,7 +205,7 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
       isAppItemOverflow: offsetWidth < scrollWidth,
     });
   };
-  scrollEle = ($ele, distance) => {
+  scrollEle = ($ele, distance: number) => {
     if (!$ele) return;
     $ele.scrollLeft = distance;
   }; // 滚动指示器点击

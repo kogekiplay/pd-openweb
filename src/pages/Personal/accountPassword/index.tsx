@@ -211,7 +211,7 @@ export default class AccountChart extends React.Component<any, any> {
       .catch();
   }
 
-  showNewWindow(url, width, height, left, top) {
+  showNewWindow(url: string, width: number, height: number, left: number, top: number) {
     window.open(
       url,
       'newWindow',
@@ -227,7 +227,7 @@ export default class AccountChart extends React.Component<any, any> {
     );
   }
 
-  getWindowPosition(width, height) {
+  getWindowPosition(width: number, height: number) {
     return {
       top: ($(window).height() - height) / 2,
       left: ($(window).width() - width) / 2,
@@ -235,7 +235,7 @@ export default class AccountChart extends React.Component<any, any> {
   }
 
   // 绑定账号（邮箱和手机）
-  handleBindAccount(type) {
+  handleBindAccount(type: string) {
     validateFunc({
       title: type === 'email' ? _l('绑定邮箱') : _l('绑定手机号码'),
       type,
@@ -248,7 +248,7 @@ export default class AccountChart extends React.Component<any, any> {
   }
 
   // 解绑账号（邮箱和手机）
-  handleUnBindAccount(type) {
+  handleUnBindAccount(type: string) {
     const { email, mobilePhone, isVerify } = this.state;
 
     if (!(mobilePhone && email && isVerify)) {
@@ -274,7 +274,7 @@ export default class AccountChart extends React.Component<any, any> {
   }
 
   // 修改账号
-  handleChangeAccount(type) {
+  handleChangeAccount(type: string) {
     validateFunc({
       title: type === 'email' ? _l('修改邮箱') : _l('修改手机号码'),
       type,
@@ -286,7 +286,7 @@ export default class AccountChart extends React.Component<any, any> {
   }
 
   // common修改
-  sureSettings(settingNum, value, successCallback) {
+  sureSettings(settingNum: string, value, successCallback) {
     accountSetting
       .editAccountSetting({
         settingType: common.settingOptions[settingNum],
@@ -420,7 +420,7 @@ export default class AccountChart extends React.Component<any, any> {
     );
   };
 
-  renderRedDot = (isShow, key) => {
+  renderRedDot = (isShow, key: string) => {
     return (
       <span
         className={cx('Right textTertiary hoverColorPrimaryLight Hand redDot', { Hidden: !isShow })}

@@ -1040,7 +1040,7 @@ export default class Condition extends Component<any, any> {
   /**
    * 清除不是数字的字符
    */
-  clearNoNum = (evt, isBlur?, i?, j?, second = false) => {
+  clearNoNum = (evt, isBlur?: boolean, i?, j?, second = false) => {
     let num = evt.target.value
       .replace(/[^-\d.]/g, '')
       .replace(/^\./g, '')
@@ -1272,7 +1272,7 @@ export default class Condition extends Component<any, any> {
   /**
    * 切换过滤为空条件
    */
-  switchFilterCondition = (key, value, i, j) => {
+  switchFilterCondition = (key: string, value: number, i, j) => {
     const data = _.cloneDeep(this.props.data);
     const { updateSource } = this.props;
 
@@ -1380,7 +1380,7 @@ export default class Condition extends Component<any, any> {
   /**
    * 渲染选中的单个值
    */
-  renderSelectFieldsValue(item, i, j, second?) {
+  renderSelectFieldsValue(item, i, j, second?: boolean) {
     const { data } = this.props;
 
     return (

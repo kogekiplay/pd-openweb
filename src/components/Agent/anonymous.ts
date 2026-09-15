@@ -21,7 +21,7 @@ function isRecord(value) {
   return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
 }
 
-function readField(source, key) {
+function readField(source, key: string) {
   if (!isRecord(source)) return undefined;
   if (key in source) return source[key];
   const target = key.toLowerCase();
@@ -44,7 +44,7 @@ function agentRequest(args, options) {
   });
 }
 
-function webCacheRequest(actionName, args, options?) {
+function webCacheRequest(actionName: string, args, options?) {
   return window.mdyAPI('WebCache', actionName, { ...args, moduleType: WEB_CACHE_MODULE_TYPE }, options);
 }
 

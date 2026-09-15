@@ -441,7 +441,7 @@ export default class AppManagement extends Component<any, any> {
   /**
    * 列表操作项点击后关闭操作项弹框
    */
-  handleChangeVisible(key, value) {
+  handleChangeVisible(key: string, value) {
     this.setState({
       [key]: this.state[key] ? false : value,
     });

@@ -202,7 +202,7 @@ class App extends Component<any, any> {
     }
   };
 
-  navigateTo(url) {
+  navigateTo(url: string) {
     window.mobileNavigateTo(url);
   }
 

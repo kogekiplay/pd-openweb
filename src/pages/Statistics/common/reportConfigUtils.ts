@@ -1045,7 +1045,7 @@ const hexToRgb = hex => {
 /**
  * 根据开始颜色和结束颜色获取渐变颜色
  */
-export const getGradientColors = (startColor, endColor, step) => {
+export const getGradientColors = (startColor, endColor, step: number) => {
   let sColor = hexToRgb(startColor);
   let eColor = hexToRgb(endColor);
 

@@ -18,7 +18,7 @@ import { getSyncLicenseInfo } from 'src/utils/project';
 import { DATE_TIME_DATA_PARTICLE, GROUPLIMITTYPES } from './config';
 import type { FormControl } from 'src/utils/controlTypes';
 
-export const getNodeInfo = (flowData, type) => {
+export const getNodeInfo = (flowData, type: string) => {
   return _.values(_.get(flowData, 'aggTableNodes') || {}).find(o => _.get(o, 'nodeType') === type) || {};
 };
 
@@ -289,7 +289,7 @@ export const extractBetweenDollars = str => {
   return matches ? matches.map(match => match.slice(1, -1)) : [];
 };
 
-export const getRuleAlias = (alias, flowData, isRule?, getLen?) => {
+export const getRuleAlias = (alias, flowData, isRule?: boolean, getLen?) => {
   const groupDt = getNodeInfo(flowData, 'GROUP');
   const aggregateDt = getNodeInfo(flowData, 'AGGREGATE');
   const groupFields = _.get(groupDt, 'nodeConfig.config.groupFields') || [];

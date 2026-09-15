@@ -273,7 +273,7 @@ export default class HistoryDetail extends Component<any, any> {
     );
   }
 
-  renderRetryBtn(retryPosition) {
+  renderRetryBtn(retryPosition: string) {
     const { data, isRetry } = this.state;
     const { instanceLog, logs } = data;
     const { cause } = instanceLog;

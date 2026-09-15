@@ -74,11 +74,11 @@ const changeViewModel = (sheet, viewId, payload) => {
   };
 };
 
-const isExist = (views, keyName) => {
+const isExist = (views, keyName: string) => {
   return _.some(views, view => view[keyName]);
 };
 
-const getViewSize = (views, keyName) => {
+const getViewSize = (views, keyName: string) => {
   return _.filter(views, view => view[keyName]).length;
 };
 

@@ -1112,7 +1112,7 @@ CreateCalendar.methods = {
     var end = selectedDate.end;
     var accountId = $elem.attr('data-id');
     var $imgMemberMessage = $('.imgMemberMessage_' + accountId);
-    const getFormatText = (date, format) => {
+    const getFormatText = (date, format: string) => {
       var currentYear = moment(new Date()).years();
       let formatString = moment(date).years() === currentYear ? format.replace('YYYY-', '') : format;
       return formatString;

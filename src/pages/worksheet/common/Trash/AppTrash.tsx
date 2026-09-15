@@ -26,7 +26,7 @@ export default function AppTrash(props) {
   const [apps, setApps] = useState([]);
   const [keyword, setKeyword] = useState();
 
-  function setPendingCache(key, value) {
+  function setPendingCache(key, value: boolean) {
     cache.current['pending_' + key] = value;
   }
 

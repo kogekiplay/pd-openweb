@@ -6,7 +6,7 @@ import { emitter } from 'src/utils/common';
 import postEnum from '../constants/postEnum';
 import type { AppDispatch, GetState } from 'src/redux/types';
 
-function handleMdAjaxFail(dispatch, actionType, payload = {}) {
+function handleMdAjaxFail(dispatch, actionType: string, payload = {}) {
   return result => {
     if (result && result.status === 0) {
       dispatch(Object.assign({ type: actionType + '_ABORTED' }, payload));

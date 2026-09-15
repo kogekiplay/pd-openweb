@@ -17,7 +17,7 @@ export default class DropDownItem extends Component<any, any> {
       value: this.props.value,
     };
   }
-  getTextByValue(key, value) {
+  getTextByValue(key: string, value) {
     const { dropDownData } = this.props;
     let result;
     dropDownData.forEach(item => {

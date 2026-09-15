@@ -531,7 +531,7 @@ const singleTaskArrow = (tasks, task, level) => {
  * @param  {number} level  当前层级
  * @return {[]}  数据源
  */
-const updateTasksDataSource = (source, status, viewType, filterWeekend, level) => {
+const updateTasksDataSource = (source, status: number, viewType: number, filterWeekend: boolean, level: number) => {
   source.forEach(data => {
     // 循环处理任务箭头的问题
     data.tasks.forEach(task => {
@@ -986,7 +986,7 @@ const offsetStartPositiveHour = (currentTime, hour) => {
  * @param  {string} hour 偏移的小时
  * @return {object}
  */
-const offsetStartNegativeHour = (currentTime, hour) => {
+const offsetStartNegativeHour = (currentTime, hour: number) => {
   let day = 0;
 
   for (let i = 0; i < hour; i++) {
@@ -1020,7 +1020,7 @@ const offsetStartNegativeHour = (currentTime, hour) => {
  * @param  {string} hour 偏移的小时
  * @return {object}
  */
-const offsetEndPositiveHour = (currentTime, hour) => {
+const offsetEndPositiveHour = (currentTime, hour: number) => {
   let day = 0;
 
   for (let i = 0; i < hour; i++) {
@@ -1095,7 +1095,7 @@ const offsetEndNegativeHour = (currentTime, hour) => {
  * @param  {number} viewType 当前视图
  * @return {object}
  */
-const offsetTime = (start, end, filterWeekend, offsetTime, minStartTime, maxEndTime, viewType) => {
+const offsetTime = (start, end, filterWeekend, offsetTime: number, minStartTime, maxEndTime, viewType) => {
   const startOffset = getDays(offsetTime);
   const endOffset = getDays(offsetTime);
 

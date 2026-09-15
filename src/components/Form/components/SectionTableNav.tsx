@@ -180,7 +180,7 @@ export default function SectionTableNav(props) {
   const [scrollBtnVisible, setScrollBtnVisible] = useState<boolean | undefined>();
   const [scrollLeft, setScrollLeft] = useState(0);
 
-  function scroll(type) {
+  function scroll(type: string) {
     let newScrollLeft;
     const stepWidth = clientWidth / 2;
 

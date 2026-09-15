@@ -22,7 +22,7 @@ import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const isMobile = browserIsMobile();
 
-const getAssignWorkDays = (value, time, dayOff) => {
+const getAssignWorkDays = (value: number, time: string, dayOff) => {
   const result = [];
   const target = Math.abs(value);
   let count = value >= 0 ? 1 : -1;

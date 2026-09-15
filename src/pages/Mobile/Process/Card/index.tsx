@@ -23,7 +23,7 @@ export default class Card extends Component<any, any> {
     };
   }
   processInformTabs = processInformTabs.map(item => item.id);
-  handleApprove = (event, action) => {
+  handleApprove = (event, action: string) => {
     const { item } = this.props;
     event.stopPropagation();
     instanceVersion

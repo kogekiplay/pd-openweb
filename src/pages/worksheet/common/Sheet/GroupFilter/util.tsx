@@ -83,7 +83,7 @@ export const renderTxt = (source, keywords, item, control, viewId, navGroup) => 
   return control ? renderCellText(Object.assign({}, control, { value: item[control.controlId] })) : _l('未命名');
 };
 
-export const getListByNavlayer = (data, level, info) => {
+export const getListByNavlayer = (data, level: number, info) => {
   const treeData = dealData(data);
   return expandedHierarchy({ treeData, data: data, level, info });
 };

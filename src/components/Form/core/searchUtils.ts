@@ -104,7 +104,7 @@ const getValue = (control = {}, type) => {
   }
 };
 
-const getApiDynamicValue = (item, formData, keywords, recordId = '') => {
+const getApiDynamicValue = (item, formData, keywords: string, recordId = '') => {
   const tempValues = safeParse(item.defsource || '[]').map(source => {
     // 动态值
     if (source.cid) {

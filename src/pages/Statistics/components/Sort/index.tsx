@@ -520,7 +520,7 @@ export default class Sort extends Component<any, any> {
   handleSortEnd = newSortList => {
     this.setState({ sortList: newSortList, customSortValue: null });
   };
-  renderItem(item, fn, index) {
+  renderItem(item, fn, index: number) {
     const sorts = this.getSorts();
     const sortData = isCustomSort(item) && index !== 3 ? [...getSortData(item), customSort] : getSortData(item);
     const sortsItem = _.find(sorts, sort => _.has(sort, item.controlId));

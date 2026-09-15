@@ -122,7 +122,7 @@ export default props => {
     });
   };
 
-  const renderQiniuUpload = (className, content) => {
+  const renderQiniuUpload = (className: string, content) => {
     return (
       <QiniuUpload
         className={className}

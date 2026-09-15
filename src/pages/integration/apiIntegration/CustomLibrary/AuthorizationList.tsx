@@ -132,7 +132,7 @@ export default function AuthorizationList(props) {
       });
   };
 
-  const onUpdateStatus = (id, status) => {
+  const onUpdateStatus = (id, status: number) => {
     packageVersionAjax.updateAuthorizeStatus({ id, status }, { isIntegration: true }).then(res => {
       if (res) {
         alert(status === 3 ? _l('同意使用') : _l('拒绝使用'));
