@@ -398,7 +398,7 @@ export default function (options) {
 
           $mdUpdaterTextareaUpdater.removeClass('textTertiary');
         })
-        .blur(function () {
+        .blur(function (this: HTMLElement) {
           if (_.isFunction(mdUpdaterTextareaUpdaterEl.store)) {
             mdUpdaterTextareaUpdaterEl.store();
           }
@@ -460,7 +460,7 @@ export default function (options) {
       if (_.includes(MDUpdater.options.showType, 'video'))
         $("[targetdiv='#MDUpdater_Video_updater']").removeAttr('style');
 
-      $('#isToFeed').on('change', function () {
+      $('#isToFeed').on('change', function (this: HTMLElement) {
         if ($(this).prop('checked')) {
           $('#divIsToFeedToggle').removeClass('textPlaceholder').addClass('colorPrimary');
           $('.Updater_Textpanel').find('.groupSelect').show();
@@ -470,7 +470,7 @@ export default function (options) {
         }
       });
 
-      $('div.MDUpdater a[targetDiv]').on('click', function () {
+      $('div.MDUpdater a[targetDiv]').on('click', function (this: HTMLElement) {
         var targetDivID = $(this).attr('targetDiv');
         if (targetDivID == '#MDUpdater_Attachment_updater') {
           if (
@@ -595,7 +595,7 @@ export default function (options) {
       });
 
       // 链接预览
-      $('#MDUpdater_Link_updater .linkBtn').on('click', function () {
+      $('#MDUpdater_Link_updater .linkBtn').on('click', function (this: HTMLElement) {
         var linkUrl = $('#MDUpdater_text_LinkUrl').val().trim();
         if (!linkUrl || linkUrl == 'http://') {
           alert(_l('请输入链接'), 3);

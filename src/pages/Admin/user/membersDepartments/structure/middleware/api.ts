@@ -1,4 +1,4 @@
-﻿// ajax controllers
+// ajax controllers
 import _ from 'lodash';
 import departmentController from 'src/api/department';
 import importUserController from 'src/api/importUser';
@@ -7,7 +7,7 @@ import userController from 'src/api/user';
 import Config from '../../../../config';
 import { ACTIONS } from '../constant';
 
-let promise = null;
+let promise: ApiResult | null = null;
 let prePromiseType = null;
 const promiseList = [
   ACTIONS.ALL_USER_REQUEST,

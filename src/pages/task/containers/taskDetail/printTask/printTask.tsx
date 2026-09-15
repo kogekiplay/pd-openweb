@@ -1,4 +1,4 @@
-﻿import React, { Component } from 'react';
+import React, { Component } from 'react';
 import cx from 'classnames';
 import { Dialog } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -29,7 +29,7 @@ export default class PrintTask extends Component<any, any> {
   }
 
   componentDidMount() {
-    $('#printTask_container').on('click', '.printOperation .checkOperation', function () {
+    $('#printTask_container').on('click', '.printOperation .checkOperation', function (this: HTMLElement) {
       $(this).toggleClass('checked');
     });
   }
@@ -38,11 +38,11 @@ export default class PrintTask extends Component<any, any> {
     const printList = [];
     const cids = [];
 
-    $('.printTaskBaseMsg .checkOperation.checked').each(function () {
+    $('.printTaskBaseMsg .checkOperation.checked').each(function (this: HTMLElement) {
       printList.push($(this).attr('name'));
     });
 
-    $('.printTaskCustomMsg .checkOperation.checked').each(function () {
+    $('.printTaskCustomMsg .checkOperation.checked').each(function (this: HTMLElement) {
       cids.push($(this).attr('name'));
     });
 

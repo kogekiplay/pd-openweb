@@ -127,7 +127,7 @@ class Checkbox extends React.Component<any, any> {
       styleType = '',
       textPosition = 'left',
     } = this.props;
-    let icon = null;
+    let icon: React.JSX.Element | null = null;
 
     if (!indeterminate && this.state.checked) {
       icon = <Icon icon="ok" />;

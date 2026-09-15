@@ -171,7 +171,7 @@ export default class FileComponent extends Component<any, any> {
 
     const { data } = this.props;
     let nodeType = 0;
-    let sourceData = {};
+    let sourceData: Record<string, any> = {};
 
     if (data.refId) {
       nodeType = 2;

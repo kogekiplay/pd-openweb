@@ -32,7 +32,7 @@ const SideBarIcon = styled(IconBtn)`
     margin-left: 2px;
   }
 `;
-let favCom = null;
+let favCom: ApiResult | null = null;
 const LoadableAiActionChatBot = lazy(() => import('src/components/Mingo/modules/AiActionChatBot'));
 
 export default function InfoHeader(props) {

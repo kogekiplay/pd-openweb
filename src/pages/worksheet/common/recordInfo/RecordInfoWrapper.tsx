@@ -108,7 +108,7 @@ export default class RecordInfoWrapper extends Component<any, any> {
   render() {
     const { notDialog, width, visible, from, instanceId, workId, allowAiAction = true } = this.props;
     const { loading, error, errorMsg, worksheetId, recordId, viewId, modalRightComp } = this.state;
-    const extendsProps = {};
+    const extendsProps: Record<string, any> = {};
     let dialogWidth = width || (window.innerWidth - 32 * 2 > 1600 ? 1600 : window.innerWidth - 32 * 2);
 
     if (from === RECORD_INFO_FROM.WORKFLOW) {

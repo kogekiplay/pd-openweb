@@ -1,4 +1,4 @@
-﻿import React, { Component, lazy, Suspense } from 'react';
+import React, { Component, lazy, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -15,7 +15,7 @@ import './index.less';
 const ChartDialog = lazy(() => import('./ChartDialog'));
 const ClickAwayable = ClickAway;
 let globalStatisticsRoot = null;
-let globalStatisticsContainer = null;
+let globalStatisticsContainer: HTMLElement | null = null;
 let globalStatisticsResize = null;
 
 const exceptions = [

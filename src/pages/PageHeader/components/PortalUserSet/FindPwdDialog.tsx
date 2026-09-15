@@ -95,7 +95,7 @@ const AccountWrap = styled.div`
   }
 `;
 const AccountDialogWrap = styled.div``;
-let sendVerifyCodeTimer = null;
+let sendVerifyCodeTimer: NodeJS.Timeout | null = null;
 
 const isPasswordRule = str => {
   return RegExpValidator.isPasswordValid(str);

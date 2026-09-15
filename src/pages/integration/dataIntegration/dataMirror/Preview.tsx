@@ -34,7 +34,7 @@ const Wrap = styled.div`
   }
 `;
 
-let ajaxPromise = null;
+let ajaxPromise: ApiResult | null = null;
 
 export default function Preview(props) {
   const { match = {} } = props;

@@ -43,9 +43,13 @@ const HEAD = /^(\S[^(]*)\((\d+),(\d+)\): (error|warning) (TS\d+): (.*)$/;
 
 function runStrictTsc() {
   const started = Date.now();
+  // 【不能用 npx】npx 找的是 registry / 全局，不是工作区里的那个 tsc。
+  // 2026-09-15 换 nodeLinker 时就是它静默失败、输出为空，而下面把「0 条诊断」
+  // 读成了「全仓 strict 干净」—— 棘轮直接失明。
+  const tsc = path.join(path.dirname(require.resolve('typescript/package.json')), 'bin/tsc');
   const res = spawnSync(
-    'npx',
-    ['tsc', '--noEmit', '--pretty', 'false', '--strict', '--noImplicitAny'],
+    process.execPath,
+    [tsc, '--noEmit', '--pretty', 'false', '--strict', '--noImplicitAny'],
     { cwd: ROOT, encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 },
   );
   const out = `${res.stdout || ''}${res.stderr || ''}`;
@@ -84,6 +88,26 @@ const { out, ms } = runStrictTsc();
 const byFile = parse(out);
 const compiled = allCompiledFiles();
 const clean = compiled.filter(f => !byFile.has(f));
+
+// ── 安全网：诊断数异常地少 = 编译器塌了，不是全仓变干净了 ──────────────────
+// 差分门禁早就有这道网（"剔噪后不足预期 50% 就拒绝执行"），这边一直没有。
+// 2026-09-15 换 nodeLinker 时 npx 静默失败、输出为空，这个脚本把「0 条诊断」
+// 读成了「4252/4252 全部 strict-clean」并【通过】—— 棘轮彻底失明，
+// 而且 --widen 会把全仓写进名单，之后再也报不出回退。
+// 阈值取 1000：本仓 strict 全量长期在 6 万条以上，跌到四位数以下一定是出事了。
+const totalDiagnostics = [...byFile.values()].reduce((a, l) => a + l.length, 0);
+const FLOOR = 1000;
+if (totalDiagnostics < FLOOR) {
+  console.error(
+    chalk.red(
+      `\n拒绝执行：strict 全量诊断只有 ${totalDiagnostics} 条（下限 ${FLOOR}），` +
+        '这几乎一定是 tsc 没跑起来，而不是代码变干净了。',
+    ),
+  );
+  console.error(chalk.gray('  tsc 的原始输出（前 400 字）：'));
+  console.error(chalk.gray(`  ${(out || '(空)').slice(0, 400)}`));
+  process.exit(2);
+}
 
 if (STATS) {
   const totalDiag = [...byFile.values()].reduce((a, l) => a + l.length, 0);

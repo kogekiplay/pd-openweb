@@ -7,7 +7,7 @@ import instance from 'src/pages/workflow/api/instanceVersion';
 import store from 'src/redux/configureStore';
 import './index.less';
 
-let request = null;
+let request: ApiResult | null = null;
 
 export const getTodoCount = (params = {}) => {
   return new Promise(resolve => {

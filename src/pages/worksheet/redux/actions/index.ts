@@ -210,7 +210,7 @@ export const updateAppPkgData = appPkgData => ({ type: 'WORKSHEET_UPDATE_APPPKGD
 
 export const updateWorksheetLoading = loading => ({ type: 'WORKSHEET_UPDATE_LOADING', loading });
 
-let worksheetRequest = null;
+let worksheetRequest: ApiResult | null = null;
 
 export function loadWorksheet(worksheetId, setRequest) {
   return (dispatch: AppDispatch, getState: GetState) => {

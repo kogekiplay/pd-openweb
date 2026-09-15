@@ -137,7 +137,7 @@ $.extend(CreateCalendar.prototype, {
     /**
      * 点击时区,出现时区选择框
      */
-    $('.timezone').click(function () {
+    $('.timezone').click(function (this: HTMLElement) {
       if ($('.timezoneWrap').length) {
         $('.timezoneWrap').show();
       } else {
@@ -182,7 +182,7 @@ $.extend(CreateCalendar.prototype, {
     _this.initAttachmentEvent();
 
     // tabs click
-    $('#calendarTabs span').on('click', function (event) {
+    $('#calendarTabs span').on('click', function (this: HTMLElement, event) {
       var $this = $(this);
       var type = $this.attr('data-type');
 
@@ -203,7 +203,7 @@ $.extend(CreateCalendar.prototype, {
     });
 
     // 重复前面复选框勾选
-    $('#repeatContent .createCalendarLabel').on('click', function () {
+    $('#repeatContent .createCalendarLabel').on('click', function (this: HTMLElement) {
       $(this).find('.chekboxIcon').toggleClass('checked');
       $('#noRepeatContent,#existRepeatContent').toggleClass('Hidden');
     });
@@ -229,7 +229,7 @@ $.extend(CreateCalendar.prototype, {
     });
 
     // 创建
-    $('#calendarSubmitBtn').on('click', function () {
+    $('#calendarSubmitBtn').on('click', function (this: HTMLElement) {
       if ($(this).attr('disabled')) {
         return false;
       }
@@ -240,10 +240,10 @@ $.extend(CreateCalendar.prototype, {
 
     // 创建hover变色
     $('#calendarSubmitBtn').hover(
-      function () {
+      function (this: HTMLElement) {
         $(this).removeClass('bgColorPrimary').addClass('bgColorPrimaryDark');
       },
-      function () {
+      function (this: HTMLElement) {
         $(this).removeClass('bgColorPrimaryDark').addClass('bgColorPrimary');
       },
     );
@@ -271,7 +271,7 @@ $.extend(CreateCalendar.prototype, {
     });
 
     // 日程分类列表点击
-    $('#calendarColorMain').on('click', 'li', function () {
+    $('#calendarColorMain').on('click', 'li', function (this: HTMLElement) {
       // 取到当前分类
       var catid = $(this).attr('data-catid');
       var className = $(this).find('i').attr('class');
@@ -401,12 +401,12 @@ $.extend(CreateCalendar.prototype, {
     );
 
     // 增加字体hover色
-    $('.calendarRemind').on('mouseover', '.customSelect', function () {
+    $('.calendarRemind').on('mouseover', '.customSelect', function (this: HTMLElement) {
       $(this).find('span').addClass('colorPrimary');
     });
 
     // 提醒失去焦点
-    $('#remindTextCreate').blur(function () {
+    $('#remindTextCreate').blur(function (this: HTMLElement) {
       var remindText = parseInt($(this).val(), 10) || 1;
       $(this).val(remindText); // 可能有字母
 
@@ -488,7 +488,7 @@ $.extend(CreateCalendar.prototype, {
 
     // 重复次数
     $('.repeatDialogConfirm #repetitionFrequency')
-      .keyup(function () {
+      .keyup(function (this: HTMLElement) {
         if (!_.isNumber(parseInt($(this).val())) || _.isNaN($(this).val())) {
           if (!$(this).val().trim()) {
             return;
@@ -512,7 +512,7 @@ $.extend(CreateCalendar.prototype, {
 
         $(this).attr({ defaultValue: value, value: value });
       })
-      .blur(function () {
+      .blur(function (this: HTMLElement) {
         if (!_.isNumber(parseInt($(this).val())) || _.isNaN($(this).val())) {
           $(this).attr('value', $(this).attr('defaultValue'));
         }
@@ -525,7 +525,7 @@ $.extend(CreateCalendar.prototype, {
       });
 
     // 点击按钮
-    $('.repeatDialogConfirm #repeatTypeGroup .repeatTypeGroupBtn').on('click', function () {
+    $('.repeatDialogConfirm #repeatTypeGroup .repeatTypeGroupBtn').on('click', function (this: HTMLElement) {
       $(this).toggleClass('bgColorPrimary');
       CreateCalendar.methods.repeatResult();
     });
@@ -568,7 +568,7 @@ $.extend(CreateCalendar.prototype, {
 
     // 重复结束次数
     $('.repeatDialogConfirm #txtOverCount')
-      .keyup(function () {
+      .keyup(function (this: HTMLElement) {
         if (!$(this).val().trim()) {
           return;
         }
@@ -592,7 +592,7 @@ $.extend(CreateCalendar.prototype, {
 
         $(this).attr({ defaultValue: value, value: value });
       })
-      .blur(function () {
+      .blur(function (this: HTMLElement) {
         if (!_.isNumber(parseInt($(this).val(), 10)) || _.isNaN(parseInt($(this).val(), 10))) {
           $(this).attr('value', $(this).attr('defaultValue'));
         }
@@ -650,7 +650,7 @@ $.extend(CreateCalendar.prototype, {
     var memberArr = settings.MemberArray;
 
     // hover移除成员
-    $('#addCalendarMembers').on('click', '.imgMemberBox .removeMember', function (event) {
+    $('#addCalendarMembers').on('click', '.imgMemberBox .removeMember', function (this: HTMLElement, event) {
       const parentEle = $(this).parents('.imgMemberBox');
       let removeAccountId = parentEle.attr('data-id');
       $('.imgMemberMessage_' + removeAccountId) &&
@@ -691,7 +691,7 @@ $.extend(CreateCalendar.prototype, {
         };
 
         // 页面上已经存在的成员
-        $('.createAddMemberBox .createMember').each(function () {
+        $('.createAddMemberBox .createMember').each(function (this: HTMLElement) {
           if ($(this).data('id')) {
             existsIds.push($(this).data('id'));
           }
@@ -772,7 +772,7 @@ CreateCalendar.methods = {
     var newUsers = [];
 
     // 页面上已经存在的成员
-    $('.createAddMemberBox .createMember').each(function () {
+    $('.createAddMemberBox .createMember').each(function (this: HTMLElement) {
       if ($(this).data('id')) {
         existsIds.push($(this).data('id'));
       } else {
@@ -951,7 +951,7 @@ CreateCalendar.methods = {
       time = '00:00';
     }
 
-    var dateTime = null;
+    var dateTime: Date | null = null;
 
     if (date) {
       dateTime = new Date(date + ' ' + time);
@@ -1093,7 +1093,7 @@ CreateCalendar.methods = {
 
   // 日程成员忙碌状态
   checkAllUserBusy: function () {
-    $('.createAddMemberBox .imgMemberBox').each(function () {
+    $('.createAddMemberBox .imgMemberBox').each(function (this: HTMLElement) {
       CreateCalendar.methods.checkUserBusyState($(this));
     });
   },

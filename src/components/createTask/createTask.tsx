@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { createRoot } from 'react-dom/client';
 import doT from 'dot';
 import _ from 'lodash';
@@ -166,7 +166,7 @@ $.extend(CreateTask.prototype, {
     }
 
     // tabs click
-    $('#taskTabs span').on('click', function (event) {
+    $('#taskTabs span').on('click', function (this: HTMLElement, event) {
       var $this = $(this);
       var type = $this.attr('data-type');
 
@@ -290,7 +290,7 @@ $.extend(CreateTask.prototype, {
     });
 
     // 更改网络
-    $createTaskNetworkList.on('click', 'li', function () {
+    $createTaskNetworkList.on('click', 'li', function (this: HTMLElement) {
       var $this = $(this);
       var projectId = $this.attr('data-id');
       if (projectId !== settings.ProjectID) {
@@ -416,7 +416,7 @@ $.extend(CreateTask.prototype, {
       },
     });
 
-    $('.linkageFolder ul').on('scroll', function () {
+    $('.linkageFolder ul').on('scroll', function (this: HTMLElement) {
       if (!settings.isMore) {
         return;
       }
@@ -480,7 +480,7 @@ $.extend(CreateTask.prototype, {
           $taskUserBox.attr('data-id', uid).data('bind', false).off().find('img').attr('src', userImg);
 
           // 如果是成员移除
-          $('.createTaskAddMemberBox .createTaskMember').each(function () {
+          $('.createTaskAddMemberBox .createTaskMember').each(function (this: HTMLElement) {
             var $this = $(this);
             if ($this.attr('data-id') === uid) {
               $this.parents('.imgMemberBox').remove();
@@ -581,7 +581,7 @@ $.extend(CreateTask.prototype, {
     }
 
     // hover移除成员
-    $('#taskMembersBox').on('click', '.imgMemberBox .removeTaskMember', function () {
+    $('#taskMembersBox').on('click', '.imgMemberBox .removeTaskMember', function (this: HTMLElement) {
       $(this).parents('.imgMemberBox').remove();
     });
 
@@ -591,7 +591,7 @@ $.extend(CreateTask.prototype, {
         var _this = $(this);
         var existsIds = [];
         // 页面上已经存在的成员
-        $('.createTaskAddMemberBox .createTaskMember').each(function () {
+        $('.createTaskAddMemberBox .createTaskMember').each(function (this: HTMLElement) {
           existsIds.push($(this).attr('data-id'));
         });
 
@@ -904,7 +904,7 @@ CreateTask.Motheds = {
     var specialAccounts = {};
 
     // 成员
-    $('.createTaskAddMemberBox .createTaskMember').each(function () {
+    $('.createTaskAddMemberBox .createTaskMember').each(function (this: HTMLElement) {
       var accountId = $(this).attr('data-id');
       if (!accountId) return;
       if (accountId.indexOf('MD_SpecialAccounts') >= 0) {

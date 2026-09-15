@@ -1,4 +1,4 @@
-﻿import _ from 'lodash';
+import _ from 'lodash';
 import defaultOptions from './defaultOptions';
 import type { ReduxAction } from 'src/redux/types';
 
@@ -12,7 +12,7 @@ function getPostIdsFromPostList(postList, isIReply = false) {
 
 function normalizePost(postItem) {
   if (!postItem) return postItem;
-  const properties = {};
+  const properties: Record<string, any> = {};
 
   if (typeof postItem.commentCount !== 'number') {
     properties.commentCount = parseInt(postItem.commentCount, 10);

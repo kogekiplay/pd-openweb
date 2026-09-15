@@ -245,7 +245,7 @@ const ProcessDefaultConfig = {
   sureName: _l('确认'),
 };
 
-let sheetRequest = null;
+let sheetRequest: ApiResult | null = null;
 
 const initConfigData = { action: '', viewId: '', openMode: 1, value: '' };
 

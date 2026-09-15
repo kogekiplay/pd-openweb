@@ -157,7 +157,7 @@ export const stateInit = function () {
     IM.socket.on('reconnect_failed', reconnectFailedFn);
   };
 
-  let reconnectTime = null;
+  let reconnectTime: NodeJS.Timeout | null = null;
 
   window.addEventListener('online', () => {
     if (!IM.socket.connected) {

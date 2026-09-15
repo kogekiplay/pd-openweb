@@ -136,7 +136,7 @@ export default class RoleSet extends PureComponent<any, any> {
         name: params.name.trim() || this.defaultRoleName,
         sheets: params.permissionWay === PERMISSION_WAYS.CUSTOM ? params.sheets : undefined,
       };
-      let promiseAjax = null;
+      let promiseAjax: ApiResult | null = null;
       this.setState({
         saveLoading: true,
       });
@@ -171,7 +171,7 @@ export default class RoleSet extends PureComponent<any, any> {
       this.setState({
         saveLoading: true,
       });
-      let promiseAjax = null;
+      let promiseAjax: ApiResult | null = null;
       let param = {
         projectId: roleDetail.projectId,
         appId,

@@ -146,7 +146,7 @@ $.extend(FolderSelect.prototype, {
         var getNodeAjax = false;
         settings.rootFolder = $('.shareRoot, .myRoot').data() ? $('.shareRoot, .myRoot').data().root : '';
         //有选择当前目录下的文件夹
-        $nodeItem.each(function () {
+        $nodeItem.each(function (this: HTMLElement) {
           var $this = $(this);
           if ($this.hasClass('bgColorPrimaryTransparent')) {
             if ($this.data('rootType')) {
@@ -632,7 +632,7 @@ $.extend(FolderSelect.prototype, {
       if ((type && (type == PICK_TYPE.ROOT || type == PICK_TYPE.MYFILE)) || (extra && extra.forceRenderNet)) {
         var _rootNode = extra && extra.forceRenderNet ? extra.rootFolder : rootNode;
         var _type = extra && extra.forceRenderNet ? (extra.rootFolder.id ? PICK_TYPE.ROOT : PICK_TYPE.MYFILE) : type;
-        var currentRoot = {};
+        var currentRoot: Record<string, any> = {};
         var project;
         if (settings.appointRoot && settings.appointRoot.id) {
           project = settings.appointRoot.project;
@@ -950,7 +950,7 @@ $.extend(FolderSelect.prototype, {
     var $radioItem = $folderContent.find('.selectedHint .radioItem');
     var $nodeVisibleType = $folderContent.find('.nodeVisibleType');
 
-    $arrowTips.on('click', function () {
+    $arrowTips.on('click', function (this: HTMLElement) {
       var $this = $(this);
       $this.toggleClass('initFlop');
       $this.next('ul').animate({ height: 'toggle' });
@@ -1007,7 +1007,7 @@ $.extend(FolderSelect.prototype, {
                   $selectedItem.fadeOut();
                 }
               } else {
-                $nodeItem.each(function () {
+                $nodeItem.each(function (this: HTMLElement) {
                   $(this)
                     .removeClass('bgColorPrimaryTransparent')
                     .find('.sharePer > i.icon-shareLink')
@@ -1028,7 +1028,7 @@ $.extend(FolderSelect.prototype, {
                 }
               }
             } else if (settings.isFolderNode === SELECT_TYPE.FOLDER) {
-              $nodeItem.each(function () {
+              $nodeItem.each(function (this: HTMLElement) {
                 $(this).removeClass('bgColorPrimaryTransparent').find('.sharePer > i').addClass('colorPrimary');
               });
               $this.addClass('bgColorPrimaryTransparent');
@@ -1210,7 +1210,7 @@ $.extend(FolderSelect.prototype, {
     $folderPath
       .find('.startTag')
       .off()
-      .on('click', function () {
+      .on('click', function (this: HTMLElement) {
         if (!$(this).hasClass('colorPrimary')) {
           return;
         }
@@ -1222,7 +1222,7 @@ $.extend(FolderSelect.prototype, {
     $folderPath
       .find('.myRoot')
       .off()
-      .on('click', function () {
+      .on('click', function (this: HTMLElement) {
         folderSelect.removeSearch();
         folderSelect.getNodeList(PICK_TYPE.MYFILE, { id: null, parendId: null, name: _l('我的文件') }, true);
         $(this).nextAll('span').remove();
@@ -1231,7 +1231,7 @@ $.extend(FolderSelect.prototype, {
     $folderPath
       .find('.shareRoot')
       .off()
-      .on('click', function () {
+      .on('click', function (this: HTMLElement) {
         var rootData = $(this).data('root');
         folderSelect.removeSearch();
         folderSelect.getNodeList(PICK_TYPE.ROOT, rootData, true);
@@ -1241,7 +1241,7 @@ $.extend(FolderSelect.prototype, {
     $folderPath
       .find('.childNode')
       .off()
-      .on('click', function () {
+      .on('click', function (this: HTMLElement) {
         var $this = $(this),
           nodeHref = $(this).data('path');
         ajax.getNodeDetail({ path: nodeHref }).then(function (nodeData) {

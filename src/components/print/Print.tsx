@@ -18,7 +18,14 @@ import RegExpValidator from 'src/utils/expression';
 import model from './model';
 import PrintOptDialog from './PrintOptDialog';
 import './index.less';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import type { ControlOption, FormControl, RecordRow } from 'src/utils/controlTypes';
+
+/** 打印里用到的附件形状 */
+interface PrintAttachment {
+  originalFilename: string;
+  ext: string;
+  [key: string]: any;
+}
 
 const nzhCn = nzh.cn;
 const { task } = model;
@@ -46,7 +53,7 @@ const systemControl = [
   },
 ];
 
-const allocationTask = result => {
+const allocationTask = (result: { data?: any; [key: string]: any }) => {
   return task.map(item => {
     if (item.key === 'startTime') {
       item.value = `${result.startTime} - ${result.deadline}`;
@@ -132,14 +139,14 @@ export default class Print extends Component<any, any> {
         : Promise.resolve({ logo: md.global.Config.Logo });
     Promise.all([sheetAjax.getWorksheetInfo(sheetArgs), sheetAjax.getRowByID(rowInfoArgs), logoAjax]).then(
       ([sheetInfo, rowInfo, logo]) => {
-        const signatureControls = rowInfo.receiveControls.filter(item => item.type === 42);
-        rowInfo.receiveControls = rowInfo.receiveControls.filter(item => item.type !== 42);
+        const signatureControls = rowInfo.receiveControls.filter((item: FormControl) => item.type === 42);
+        rowInfo.receiveControls = rowInfo.receiveControls.filter((item: FormControl) => item.type !== 42);
         const controlData = _.groupBy(rowInfo.receiveControls, item => item.row);
         const titleControl = _.find(rowInfo.receiveControls, control => control.attribute === 1);
         const relateRecordControls = rowInfo.receiveControls.filter(
-          control => control.type === 29 && control.enumDefault === 2,
+          (control: FormControl) => control.type === 29 && control.enumDefault === 2,
         );
-        relateRecordControls.forEach(control =>
+        relateRecordControls.forEach((control: FormControl) =>
           this.loadRowRelationRows({
             appId: this.state.appId,
             worksheetId: this.state.worksheetId,
@@ -168,7 +175,7 @@ export default class Print extends Component<any, any> {
     );
   }
 
-  loadRowRelationRows = args => {
+  loadRowRelationRows = (args: { controlId?: string; [key: string]: any }) => {
     const { appId, worksheetId, rowId, control } = args;
     sheetAjax
       .getRowRelationRows({
@@ -191,7 +198,7 @@ export default class Print extends Component<any, any> {
         console.log(err);
       });
   };
-  loadWorksheetShortUrl(appId, worksheetId, viewId, rowId) {
+  loadWorksheetShortUrl(appId: string, worksheetId: string, viewId: string, rowId: string) {
     sheetAjax
       .getWorksheetShareUrl({
         worksheetId,
@@ -231,7 +238,7 @@ export default class Print extends Component<any, any> {
         });
       });
   }
-  componentDidUpdate = function () {
+  componentDidUpdate = function (this: Print) {
     $('#container, .AppHr form').addClass('hrApprovalBox');
     $('html.AppHr').addClass('hrApprovalAppHr');
   };
@@ -241,7 +248,13 @@ export default class Print extends Component<any, any> {
   valueItem: 他表字段valueItem；[valueItem, valueItem]
   relationItemKey: 他表字段选择关联控件，循环key
   */
-  getShowContent = function (item, sourceControlType?, valueItem?, relationItemKey?) {
+  getShowContent = function (
+    this: Print,
+    item: FormControl,
+    sourceControlType?: number,
+    valueItem?: RecordRow,
+    relationItemKey?: string,
+  ) {
     const value = sourceControlType ? valueItem : item.value;
     const type = sourceControlType || item.type;
 
@@ -296,7 +309,7 @@ export default class Print extends Component<any, any> {
               : _value.toString().replace(/(\d)(?=(\d{3})+$)/g, '$1,')) + (item.unit ? item.unit : '')
           : '';
       case 9: {
-        const selectItem = item.options.filter(optionItem => optionItem.key == value);
+        const selectItem = item.options.filter((optionItem: ControlOption) => optionItem.key == value);
         return selectItem.length > 0 ? selectItem[0].value : '';
       }
 
@@ -310,7 +323,7 @@ export default class Print extends Component<any, any> {
           }
         }
 
-        const selectItem = item.options.filter(optionItem => optionItem.key == value);
+        const selectItem = item.options.filter((optionItem: ControlOption) => optionItem.key == value);
         return selectItem.length > 0 ? selectItem[0].value : '';
       }
 
@@ -327,8 +340,8 @@ export default class Print extends Component<any, any> {
           }
 
           text = item.options
-            .filter(option => keys.indexOf(option.key) > -1)
-            .map(option => option.value)
+            .filter((option: ControlOption) => keys.indexOf(option.key) > -1)
+            .map((option: ControlOption) => option.value)
             .join(',');
         }
 
@@ -342,7 +355,7 @@ export default class Print extends Component<any, any> {
 
         return value
           ? JSON.parse(value)
-              .map(item => item.originalFilename)
+              .map((item: PrintAttachment) => item.originalFilename)
               .join(',')
           : ' ';
       case 17: {
@@ -354,8 +367,8 @@ export default class Print extends Component<any, any> {
           if (this.state.type === 'worksheet' || this.state.type === 'workflow') {
             try {
               newValue =
-                JSON.parse(value).filter(item => item).length > 0
-                  ? JSON.parse(value).map(item => {
+                JSON.parse(value).filter((item: any) => item).length > 0
+                  ? JSON.parse(value).map((item: string) => {
                       return item ? moment(item).format('x') : '';
                     })
                   : '';
@@ -394,8 +407,8 @@ export default class Print extends Component<any, any> {
           if (this.state.type === 'worksheet' || this.state.type === 'workflow') {
             try {
               newValue =
-                JSON.parse(value).filter(item => item).length > 0
-                  ? JSON.parse(value).map(item => {
+                JSON.parse(value).filter((item: any) => item).length > 0
+                  ? JSON.parse(value).map((item: string) => {
                       return item ? moment(item).format('x') : '';
                     })
                   : '';
@@ -447,7 +460,7 @@ export default class Print extends Component<any, any> {
 
       case 21: {
         if (value) {
-          const getTypeName = type => {
+          const getTypeName = (type: number) => {
             switch (type) {
               case 1:
                 return _l('任务') + '：';
@@ -464,7 +477,7 @@ export default class Print extends Component<any, any> {
             }
           };
 
-          const relationshipItem = (relationValueItem, index) => {
+          const relationshipItem = (relationValueItem: RecordRow, index: number) => {
             return (
               <div className="relationshipItem" key={item.controlId + '-relationValueItem-' + index}>
                 <span className="typeName">{getTypeName(relationValueItem.type)}</span>
@@ -477,7 +490,7 @@ export default class Print extends Component<any, any> {
           const newValue = JSON.parse(value);
           const content = (
             <div key={relationItemKey || item.controlId} className="relationshipBox">
-              {newValue.map((relationValueItem, index) => relationshipItem(relationValueItem, index))}
+              {newValue.map((relationValueItem: RecordRow, index: number) => relationshipItem(relationValueItem, index))}
             </div>
           );
           return content;
@@ -490,7 +503,7 @@ export default class Print extends Component<any, any> {
         return value
           ? this.state.type === 'worksheet' || this.state.type === 'workflow'
             ? JSON.parse(value)
-                .map(item => item.fullname)
+                .map((item: { fullname: string; [key: string]: any }) => item.fullname)
                 .join(',')
             : JSON.parse(value).fullname
           : '';
@@ -581,7 +594,7 @@ export default class Print extends Component<any, any> {
         break;
     }
   };
-  renderRecordAttachments(value, isRelateMultipleSheet) {
+  renderRecordAttachments(value: string, isRelateMultipleSheet?: boolean) {
     let attachments;
 
     try {
@@ -591,8 +604,8 @@ export default class Print extends Component<any, any> {
       return <span className="mBottom5 InlineBlock" dangerouslySetInnerHTML={{ __html: '&nbsp;' }}></span>;
     }
 
-    const pictureAttachments = attachments.filter(attachment => RegExpValidator.fileIsPicture(attachment.ext));
-    const otherAttachments = attachments.filter(attachment => !RegExpValidator.fileIsPicture(attachment.ext));
+    const pictureAttachments = attachments.filter((attachment: PrintAttachment) => RegExpValidator.fileIsPicture(attachment.ext));
+    const otherAttachments = attachments.filter((attachment: PrintAttachment) => !RegExpValidator.fileIsPicture(attachment.ext));
     return (
       <div className={cx('recordAttachments', { isMultiple: isRelateMultipleSheet })}>
         {!!pictureAttachments.length && (
@@ -622,7 +635,7 @@ export default class Print extends Component<any, any> {
         )}
         {isRelateMultipleSheet ? (
           <div className="recordAttachmentPictures">
-            {otherAttachments.map(item => (
+            {otherAttachments.map((item: PrintAttachment) => (
               <div className="pictureAttachment onlyText">
                 <p className="imageAttachmentName ellipsis"> {item.originalFilename + item.ext} </p>
               </div>
@@ -631,18 +644,18 @@ export default class Print extends Component<any, any> {
         ) : (
           <div className="otherAttachments mTop4">
             <div className="pictureAttachment">
-              {otherAttachments.map(item => item.originalFilename + item.ext).join(', ')}
+              {otherAttachments.map((item: PrintAttachment) => item.originalFilename + item.ext).join(', ')}
             </div>
           </div>
         )}
       </div>
     );
   }
-  renderTable(relateRecord, control) {
+  renderTable(relateRecord: { template?: { controls: FormControl[] }; data?: RecordRow[]; [key: string]: any }, control: FormControl) {
     const { detailsType } = this.state;
     const controls: FormControl[] = control.showControls
-      .map(controlId => _.find(relateRecord.template.controls.concat(systemControl), c => c.controlId === controlId))
-      .filter(c => c && !((c.type === 29 && c.enumDefault === 2) || c.type === 41));
+      .map((controlId: string) => _.find(relateRecord.template.controls.concat(systemControl), c => c.controlId === controlId))
+      .filter((c?: FormControl) => c && !((c.type === 29 && c.enumDefault === 2) || c.type === 41));
     return detailsType === 2 ? (
       <table className="detailsTable" style={{ tableLayout: 'fixed' }} cellpadding="0" cellspacing="0">
         <tr>
@@ -650,7 +663,7 @@ export default class Print extends Component<any, any> {
             controls.map(c => <th style={c.type === 14 ? { width: 200 } : {}}>{c.controlName || ''}</th>),
           )}
         </tr>
-        {relateRecord.data.map((item, i) => (
+        {relateRecord.data.map((item: RecordRow, i: number) => (
           <tr>
             {[<td> {i + 1} </td>].concat(
               controls.map(c => (
@@ -664,7 +677,7 @@ export default class Print extends Component<any, any> {
       </table>
     ) : (
       <div className="verticalLayout">
-        {relateRecord.data.map((item, i) => (
+        {relateRecord.data.map((item: RecordRow, i: number) => (
           <table className="detailItem" cellpadding="0" cellspacing="0" style={{ tableLayout: 'fixed' }}>
             {_.chunk(controls, 4).map((rowData, rowIndex) => (
               <tr className="detailItemControlRow">
@@ -700,7 +713,8 @@ export default class Print extends Component<any, any> {
       </div>
     );
   }
-  getEvaluateValue = function (controls, mapControl) {
+  // controls 是【按行分好的控件二维数组】，不是一维控件列表 —— 下面 item.filter 就是证据
+  getEvaluateValue = function (this: Print, controls: FormControl[][], mapControl: FormControl) {
     const controlId = mapControl.controlId;
     const evaluateType = mapControl.enumDefault2;
     const showMoney = mapControl.enumDefault;
@@ -765,19 +779,19 @@ export default class Print extends Component<any, any> {
       </span>
     );
   };
-  showPrintDialog = function () {
+  showPrintDialog = function (this: Print) {
     const controlOption = this.state.controlOption || [];
 
     if (controlOption.length === 0) {
       this.state.reqInfo.controls
-        .filter(item => !item.printHide)
-        .forEach(item => {
+        .filter((item: FormControl) => !item.printHide)
+        .forEach((item: FormControl) => {
           if (item && item.controlId) {
             controlOption.push(item.controlId);
           }
         });
-      this.state.reqInfo.formControls.forEach(formControlItem => {
-        if (formControlItem.tempControls.filter(item => item.needEvaluate).length > 0) {
+      this.state.reqInfo.formControls.forEach((formControlItem: { tempControls: FormControl[]; formId: string; [key: string]: any }) => {
+        if (formControlItem.tempControls.filter((item: FormControl) => item.needEvaluate).length > 0) {
           controlOption.push('formDetailEvaluate-' + formControlItem.formId);
         }
       });
@@ -785,7 +799,16 @@ export default class Print extends Component<any, any> {
 
     this.setState({ showPrintDialog: true, printCheckAll: this.state.printCheckAll, controlOption });
   }.bind(this);
-  changePrintVisible = function (processOption, printCheckAll, controlOption, options) {
+  changePrintVisible = function (
+    this: Print,
+    // 同上：processOption 也是「有时是数组、有时是 'some'/'no' 字符串」，先不标
+    processOption,
+    printCheckAll: boolean,
+    // 不标类型：这个参数既被当数组 .filter，又跟字符串 'all' 比 ——
+    // 那个比较恒为真（到那儿一定是数组），是死代码。标成任何一种都会把它翻出来。
+    controlOption,
+    options?: Record<string, any>,
+  ) {
     let controls: FormControl[] = [];
 
     if (this.state.type === 'worksheet') {
@@ -898,7 +921,7 @@ export default class Print extends Component<any, any> {
       });
     }
   }.bind(this);
-  getEvaluateType = function (detailsEvaluateItem) {
+  getEvaluateType = function (this: Print, detailsEvaluateItem: FormControl) {
     switch (detailsEvaluateItem.enumDefault2) {
       case 2:
         return _l('求和');
@@ -912,7 +935,7 @@ export default class Print extends Component<any, any> {
         return _l('乘积');
     }
   };
-  beforeControlIsDetail = function (key) {
+  beforeControlIsDetail = function (this: Print, key: string) {
     const { type } = this.state;
 
     if (type !== 'hr') {
@@ -1161,7 +1184,7 @@ export default class Print extends Component<any, any> {
                                 ))}
                             {this.state.formControls
                               .filter(item => item.formId === controlItem[0].formId)[0]
-                              .tempControls.filter(item => item.needEvaluate).length > 0 &&
+                              .tempControls.filter((item: FormControl) => item.needEvaluate).length > 0 &&
                               (controlItem[0].printDetailType === 1 || controlItem[0].printDetailType === 3) && (
                                 <tr key={key + 'evaluateTr'} className="evaluateTr">
                                   <td className="titleTd">=</td>
@@ -1315,13 +1338,13 @@ export default class Print extends Component<any, any> {
                       })()}
                       {this.state.formControls
                         .filter(item => item.formId === controlItem[0].formId)[0]
-                        .tempControls.filter(item => item.needEvaluate).length > 0 &&
+                        .tempControls.filter((item: FormControl) => item.needEvaluate).length > 0 &&
                         (controlItem[0].printDetailType === 1 || controlItem[0].printDetailType === 3) && (
                           <div className="evaluateItemBox">
                             {(() => {
                               const tempControls = this.state.formControls
                                 .filter(item => item.formId === controlItem[0].formId)[0]
-                                .tempControls.filter(item => item.needEvaluate);
+                                .tempControls.filter((item: FormControl) => item.needEvaluate);
                               const newTempControls = [];
                               tempControls
                                 .sort((a, b) => a.innerRow - b.innerRow)
@@ -1554,9 +1577,9 @@ export default class Print extends Component<any, any> {
             }
 
             return (
-              controlItem.filter(item => !item.printHide).length > 0 && (
+              controlItem.filter((item: FormControl) => !item.printHide).length > 0 && (
                 <tr key={key} className="row clearfix Relative notDetails">
-                  {/* {controlItem.filter(item => !item.printHide).length === 2 && <i className="firstLine" />}*/}
+                  {/* {controlItem.filter((item: FormControl) => !item.printHide).length === 2 && <i className="firstLine" />}*/}
                   {!controlItem.filter(rowChildren => rowChildren.col === 0)[0].printHide && (
                     <td
                       style={{

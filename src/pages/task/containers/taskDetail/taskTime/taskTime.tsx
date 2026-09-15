@@ -41,7 +41,7 @@ class TaskTime extends Component<any, any> {
    */
   getTaskStatus(status, startTime, endTime, actualStartTime, completeTime) {
     const currentTime = getCurrentTime();
-    const taskStatusOpts = {};
+    const taskStatusOpts: Record<string, any> = {};
     let diff;
 
     // 已完成

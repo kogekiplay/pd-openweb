@@ -72,7 +72,7 @@ const SelectedFilter = styled(FlexCenter)`
   }
 `;
 
-let ajaxPromise = null;
+let ajaxPromise: ApiResult | null = null;
 
 export default function PreviewData(props) {
   const { match = {} } = props;

@@ -95,7 +95,7 @@ const ACTION_TEXT = {
   closeLock: _l('应用已关闭锁定'),
 };
 
-let timeout = null;
+let timeout: NodeJS.Timeout | null = null;
 
 const actionFeedback = (msg, { onCancel, refreshPage }) => {
   onCancel();

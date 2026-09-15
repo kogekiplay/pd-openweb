@@ -1,6 +1,6 @@
 import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter } from 'react-router';
+
 import { useClickAway } from 'react-use';
 import Trigger from '@rc-component/trigger';
 import _ from 'lodash';
@@ -8,6 +8,7 @@ import { arrayOf, bool, func, number, shape, string } from 'prop-types';
 import { LoadDiv } from 'ming-ui';
 import { Con, Content, Search, Tabs, UserList } from './Comps';
 import { getAccounts, getUsers } from './util';
+import OptionalRouter from 'src/router/OptionalRouter';
 
 export function UserSelector(props) {
   const {
@@ -417,7 +418,7 @@ export default function quickSelectUser(target, props = {}) {
   }
 
   root.render(
-    <BrowserRouter>
+    <OptionalRouter>
       <UserSelector
         {...props}
         onClose={force => {
@@ -433,7 +434,7 @@ export default function quickSelectUser(target, props = {}) {
           destory();
         }}
       />
-    </BrowserRouter>,
+    </OptionalRouter>,
   );
 
   return {

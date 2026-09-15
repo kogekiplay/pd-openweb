@@ -39,7 +39,7 @@ module.exports = {
         path.resolve(ROOT_PATH, 'CI/webpackCache.js'),
         path.resolve(ROOT_PATH, '.babelrc'),
         path.resolve(ROOT_PATH, 'package.json'),
-        path.resolve(ROOT_PATH, 'yarn.lock'),
+        path.resolve(ROOT_PATH, 'bun.lock'),
       ],
     },
   },

@@ -5,7 +5,7 @@
 ## 怎么跑
 
 ```bash
-yarn test                                  # 全部，并发，约 4 秒
+bun run test                                  # 全部，并发，约 4 秒
 node scripts/run-specs.js --filter router  # 只跑路径含 router 的
 node scripts/run-specs.js --concurrency 1  # 串行，输出不交错，约 16 秒
 node scripts/run-specs.js --timeout 60000  # 调单个 spec 的墙钟上限（默认 30s）
@@ -78,7 +78,7 @@ node scripts/run-specs.js --timeout 60000  # 调单个 spec 的墙钟上限（�
 
 | 位置 | 何时跑 | 逃生口 |
 |---|---|---|
-| `yarn test` | 手动 | —— |
+| `bun run test` | 手动 | —— |
 | `.githooks/pre-push` | 本机 push 前 | `SKIP_TESTS=1`；`git push --no-verify` 完全绕过 |
 | `scripts/build.js` release 前置 | 每次 release 构建 | `SKIP_TESTS=1` |
 
@@ -88,7 +88,7 @@ node scripts/run-specs.js --timeout 60000  # 调单个 spec 的墙钟上限（�
 pre-push hook **不随 clone 分发**，每个 clone / worktree 要各跑一次：
 
 ```bash
-yarn hooks:install
+bun run hooks:install
 ```
 
 所以真正不可绕过的只有 release 前置。**这个仓库没有 CI**，别人机器上推上来的回归拦不住。

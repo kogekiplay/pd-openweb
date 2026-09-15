@@ -54,6 +54,8 @@ export interface FormControl {
   advancedSetting?: ControlAdvancedSetting;
   /** 控件上挂的自定义事件权限配置 */
   eventPermissions?: any;
+  /** 打印里标记这个关联控件是「关联多条·列表」形态 */
+  isRelateMultipleSheet?: boolean;
   /** 关联记录控件指定的关联视图 */
   viewId?: string;
   /** 关联记录控件指向的应用 */
@@ -72,6 +74,8 @@ export interface FormControl {
   originalType?: number;
   /** 关联表控件上挂的被关联表控件列表（另有同义的 relationControls） */
   relateControls?: FormControl[];
+  /** 打印明细时这个控件是否参与统计计算 */
+  needEvaluate?: boolean;
   /** 打印模块给控件挂的：明细表打印形态 */
   printDetailType?: number;
   /** 打印配置/字段选择器里给控件挂的勾选态 */
@@ -159,7 +163,7 @@ export interface FormControl {
   id?: string;
   editType?: number;
   size?: number;
-  options?: ControlValue[];
+  options?: ControlOption[];
   isSubList?: boolean;
   dot?: number;
   unit?: string;
@@ -200,10 +204,40 @@ export interface FormControl {
  * `[9, 10, 11].includes(control.type)` 这类数值判断就全部 TS2345，
  * 为了一格表头污染所有真控件的取值不划算。要它的地方用这个联合。
  */
+/**
+ * 选项类控件（单选/多选/等级/…）的一个选项。
+ * key 是存库的值，value 是显示文案 —— 记录里存的是 key，别拿 value 去比。
+ */
+export interface ControlOption {
+  key: string;
+  value?: string;
+  index?: number;
+  isDeleted?: boolean;
+  color?: string;
+  score?: number;
+  [key: string]: any;
+}
+
 export interface SummaryHeadControl {
   type: 'summaryhead';
 }
 export type MaybeSummaryHeadControl = FormControl | SummaryHeadControl;
+
+/**
+ * 表格里有两格不是真控件：统计行最左侧那格（'summaryhead'）和操作列（'operates'），
+ * 都是靠 type 上的哨兵字符串认出来的。
+ *
+ * 【为什么不直接比 control.type === 'operates'】FormControl['type'] 是 number，
+ * 拿它跟字符串比 TS 直接判 TS2367「两边没有交集」。而把这两个字符串并进
+ * FormControl['type'] 的代价上一轮量过：全仓 `[9, 10, 11].includes(control.type)`
+ * 这类数值判断会一起变成 TS2345。所以哨兵判定单独走这个函数。
+ */
+export function isPseudoControl(
+  control: { type?: unknown } | undefined | null,
+  kind: 'summaryhead' | 'operates',
+): boolean {
+  return (control?.type as unknown) === kind;
+}
 
 export interface RecordRow {
   rowid?: string;

@@ -48,7 +48,7 @@ class Attachment extends Component<any, any> {
     $taskList.on(
       'click',
       '.taskAttachmentListBox .attachmentListOperation, .taskThumbnail .taskThumbnailOperation',
-      function (event) {
+      function (this: HTMLElement, event) {
         const $this = $(this);
 
         if ($this.hasClass('operationActive')) {
@@ -80,7 +80,7 @@ class Attachment extends Component<any, any> {
     );
 
     // 绑定操作
-    $('body').on('click.taskAttchment', '#attachmentOperation li', function () {
+    $('body').on('click.taskAttchment', '#attachmentOperation li', function (this: HTMLElement) {
       if ($(this).attr('data-type') === 'download') {
         if (attachmentSettings.itemData.allowDown === 'ok' && attachmentSettings.itemData.downloadUrl) {
           window.open(downloadFile(attachmentSettings.itemData.downloadUrl));
@@ -154,7 +154,7 @@ class Attachment extends Component<any, any> {
 
     $('#taskList')
       .find('.taskAttachmentScroll')
-      .on('scroll', function () {
+      .on('scroll', function (this: HTMLElement) {
         // 项目文件滚动
         if (!attachmentSettings.ajaxPost && that.state.isMore) {
           const $this = $(this);

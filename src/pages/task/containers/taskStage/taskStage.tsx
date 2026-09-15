@@ -225,7 +225,7 @@ class TaskStage extends Component<any, any> {
     const $taskList = $('#taskList');
 
     // 阶段负责人头像点击
-    $taskList.on('click', '.singleStage .stageChargeAvatar', function () {
+    $taskList.on('click', '.singleStage .stageChargeAvatar', function (this: HTMLElement) {
       const $this = $(this);
       const isEdit = $this.closest('.singleStage').data('edit');
 
@@ -235,7 +235,7 @@ class TaskStage extends Component<any, any> {
     });
 
     // 滚轮滚动
-    $taskList.on('wheel', function (event) {
+    $taskList.on('wheel', function (this: HTMLElement, event) {
       // 非列表滚动
       if (!$(event.target).closest('.listStageContent').length) {
         const $ul = $(this).children('ul');
@@ -261,7 +261,7 @@ class TaskStage extends Component<any, any> {
     });
 
     // 阶段下拉
-    $taskList.on('click', '.singleStage .icon-arrow-down-border', function (event) {
+    $taskList.on('click', '.singleStage .icon-arrow-down-border', function (this: HTMLElement, event) {
       // 阶段下拉操作
       const $listStageDownOperator = $('#taskList .listStageDownOperator');
       let left = -15;
@@ -381,7 +381,7 @@ class TaskStage extends Component<any, any> {
     );
 
     // 修改阶段名称
-    $taskList.on('click', '.listStageDownOperator li.updateStageName', function () {
+    $taskList.on('click', '.listStageDownOperator li.updateStageName', function (this: HTMLElement) {
       const $li = $(this).closest('ul').closest('li');
       $li.find('.listStageTaskCount').hide();
 
@@ -403,14 +403,14 @@ class TaskStage extends Component<any, any> {
     });
 
     // 在此后添加新阶段
-    $taskList.on('click', '.listStageDownOperator li.addNewStageToNext', function (event) {
+    $taskList.on('click', '.listStageDownOperator li.addNewStageToNext', function (this: HTMLElement, event) {
       // 在此后添加新阶段
       that.addStageToNext($(this));
       event.stopPropagation();
     });
 
     // 添加负责人和删除负责人
-    $taskList.on('click', '.listStageDownOperator li.stageCharge', function (event) {
+    $taskList.on('click', '.listStageDownOperator li.stageCharge', function (this: HTMLElement, event) {
       const $li = $(this).closest('li.singleStage');
 
       if ($li.data('chargeid')) {
@@ -424,7 +424,7 @@ class TaskStage extends Component<any, any> {
     });
 
     // 添加新阶段
-    $taskList.on('click', '.listStageDownOperator li.delStage', function (event) {
+    $taskList.on('click', '.listStageDownOperator li.delStage', function (this: HTMLElement, event) {
       const $li = $(this).closest('li.singleStage');
       $('#taskList .listStage').append($('.listStageDownOperator').hide());
       // 删除阶段
@@ -590,7 +590,7 @@ class TaskStage extends Component<any, any> {
     );
 
     // 阶段创建任务
-    $taskList.on('click', '.singleStage .bottomNewBox', function (event) {
+    $taskList.on('click', '.singleStage .bottomNewBox', function (this: HTMLElement, event) {
       const $this = $(this);
       // 去除窗体上 创建没有输入值的
       $('li.addNewTask').each(() => {
@@ -607,7 +607,7 @@ class TaskStage extends Component<any, any> {
     });
 
     // 创建任务确定
-    $taskList.on('click', '.addNewTask .btnStagCreateTask', function () {
+    $taskList.on('click', '.addNewTask .btnStagCreateTask', function (this: HTMLElement) {
       const _this = $(this);
 
       if (_this.data('create')) {
@@ -619,7 +619,7 @@ class TaskStage extends Component<any, any> {
     });
 
     // 创建任务改负责人
-    $taskList.on('click', '.addNewTask .chargeHeaderAvatar', function () {
+    $taskList.on('click', '.addNewTask .chargeHeaderAvatar', function (this: HTMLElement) {
       const _this = $(this);
 
       const callback = function (users) {
@@ -644,12 +644,12 @@ class TaskStage extends Component<any, any> {
     });
 
     // 创建任务标星
-    $taskList.on('click', '.addNewTask .taskStar', function () {
+    $taskList.on('click', '.addNewTask .taskStar', function (this: HTMLElement) {
       $(this).toggleClass('icon-task-star icon-star-hollow');
     });
 
     // 创建任务回车
-    $taskList.on('keydown', '.addNewTask .teaStageName', function (event) {
+    $taskList.on('keydown', '.addNewTask .teaStageName', function (this: HTMLElement, event) {
       if (event.keyCode == 13) {
         if ($(this).val().trim()) {
           that.addNewTaskEnter($(this).closest('li').find('.btnStagCreateTask'), true);
@@ -662,7 +662,7 @@ class TaskStage extends Component<any, any> {
     });
 
     // 创建新阶段
-    $taskList.on('click', '.addNewStage', function () {
+    $taskList.on('click', '.addNewStage', function (this: HTMLElement) {
       $(this).addClass('Hidden');
       that.addStageToNext($('.listStage .singleStage:last'));
     });
@@ -766,7 +766,7 @@ class TaskStage extends Component<any, any> {
   scrollFun() {
     const that = this;
 
-    $('#taskList .bottomNullAdd').on('scroll', function () {
+    $('#taskList .bottomNullAdd').on('scroll', function (this: HTMLElement) {
       if (taskStageSettings.ajaxPost) {
         return;
       }
@@ -859,7 +859,7 @@ class TaskStage extends Component<any, any> {
 
     $el.closest('li.singleStage').after(doT.template(addNewStage)({}));
 
-    $('.singleStage.taskStageAnimation').on('webkitAnimationEnd animationend', function () {
+    $('.singleStage.taskStageAnimation').on('webkitAnimationEnd animationend', function (this: HTMLElement) {
       $(this).removeClass('taskStageAnimation');
       // 默认获得焦点
       $('.singleStage .txtAddNew').focus();
@@ -897,7 +897,7 @@ class TaskStage extends Component<any, any> {
 
               const $newLi = $li.prev().length > 0 ? $li.prev() : $li.next();
               $newLi.find('.listStageContent ul').append($li.find('.listStageContent li'));
-              $li.fadeOut(function () {
+              $li.fadeOut(function (this: HTMLElement) {
                 $(this).remove();
               });
             } else {
@@ -1038,7 +1038,7 @@ class TaskStage extends Component<any, any> {
     // 在阶段内
     if (eventY > listStageOffset.top && eventX > listStageOffset.left) {
       // 可能是最后 一个 也有可能没有元素
-      $singleStages.each(function () {
+      $singleStages.each(function (this: HTMLElement) {
         _this = $(this);
         Offset = _this.offset();
         $stageContentBox = _this.find('.stageContentBox ');
@@ -1398,7 +1398,7 @@ class TaskStage extends Component<any, any> {
     // 头部大于阶段头部
     if (eventY > singleStageTop) {
       // 可能是最后 一个 也有可能没有元素
-      $singleStages.each(function () {
+      $singleStages.each(function (this: HTMLElement) {
         _this = $(this);
         Offset = _this.offset();
 
@@ -1419,7 +1419,7 @@ class TaskStage extends Component<any, any> {
           that.moveTaskScroll($stageContentBox);
           // 进入一个阶段后 不在遍历其后的阶段
           isBreak = true;
-          _this.find('.stageContentBox li').each(function () {
+          _this.find('.stageContentBox li').each(function (this: HTMLElement) {
             $singleTask = $(this);
 
             // 放置任务

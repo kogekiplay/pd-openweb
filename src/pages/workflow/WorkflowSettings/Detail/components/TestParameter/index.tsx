@@ -35,7 +35,7 @@ export default ({
   const [cacheTestMap, setTestMap] = useState(testMap);
   const [isUploadingIndex, setUploadingIndex] = useState('');
   const [auth2Id, setAuth2Id] = useState(authId);
-  let pollingTimer = null;
+  let pollingTimer: NodeJS.Timeout | null = null;
 
   const parseId = key => {
     return key

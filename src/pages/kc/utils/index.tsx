@@ -21,7 +21,7 @@ function hashString(string) {
 }
 
 export function getRootByPath(path) {
-  let result = {};
+  let result: Record<string, any> = {};
 
   if (/^my([/?].*)?$/.test(path)) {
     result = {
@@ -249,7 +249,7 @@ export function getDefaultSortType(sortBy) {
  */
 export function confirm(header: string, content: string, showClose: boolean, ckText: string, minorContent: string, yesText = undefined, noText = undefined) {
   return new Promise((resolve, reject) => {
-    const container = {};
+    const container: Record<string, any> = {};
 
     if (yesText === false) {
       container.removeOkBtn = true;

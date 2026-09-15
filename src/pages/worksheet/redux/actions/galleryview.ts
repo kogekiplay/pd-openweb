@@ -8,7 +8,7 @@ import { sortDataByGroupItems } from './util';
 import type { RecordRow } from 'src/utils/controlTypes';
 import type { AppDispatch, GetState } from 'src/redux/types';
 
-let getGalleryRequest = null;
+let getGalleryRequest: ApiResult | null = null;
 let preWorksheetIds = [];
 const pageSizeForGroup = 20;
 const pageSizeForGroupKan = 50;

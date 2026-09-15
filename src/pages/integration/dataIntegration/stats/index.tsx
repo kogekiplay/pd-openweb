@@ -16,7 +16,7 @@ import Sort from './Sort';
 import { Wrap } from './style';
 
 let lineChart = null;
-let ajaxFetch = null;
+let ajaxFetch: ApiResult | null = null;
 
 export default function (props) {
   const chantRef = useRef<any>(undefined);

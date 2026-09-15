@@ -378,11 +378,11 @@ class MultipleDropdownMenu extends Component<any, any> {
     /**
      * 清空按钮
      */
-    let clearBtn = null;
+    let clearBtn: React.JSX.Element | null = null;
     /**
      * 已选中的项目列表
      */
-    let pills = null;
+    let pills: React.JSX.Element | null = null;
 
     if (this.props.multipleLevel && this.props.multipleSelect) {
       const pillItems = [];
@@ -425,8 +425,8 @@ class MultipleDropdownMenu extends Component<any, any> {
     /**
      * 标题区域
      */
-    let menuNav = null;
-    let filterBox = null;
+    let menuNav: React.JSX.Element | null = null;
+    let filterBox: React.JSX.Element | null = null;
 
     if (this.props.filter) {
       filterBox = (
@@ -461,7 +461,7 @@ class MultipleDropdownMenu extends Component<any, any> {
     /**
      * 标题下方的分隔线
      */
-    let divider = null;
+    let divider: React.JSX.Element | null = null;
 
     if (this.props.multipleLevel || this.props.multipleSelect) {
       divider = <div className="li divider" key="divider-0" />;
@@ -525,7 +525,7 @@ class MultipleDropdownMenu extends Component<any, any> {
         const classNames = classList.join(' ');
 
         // 多选选项的 checkbox
-        let checkIcon = null;
+        let checkIcon: React.JSX.Element | null = null;
 
         if (this.props.multipleSelect) {
           const checked = !!this.state.checkedItems[item.value];
@@ -548,7 +548,7 @@ class MultipleDropdownMenu extends Component<any, any> {
         }
 
         // 多级数据子选项箭头
-        let arrowIcon = null;
+        let arrowIcon: React.JSX.Element | null = null;
         let className = '';
 
         if (this.props.multipleLevel && item.items && item.items.length) {

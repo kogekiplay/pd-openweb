@@ -1,7 +1,7 @@
 import sheetAjax from 'src/api/worksheet';
 import { WORKSHEET_TABLE_PAGESIZE } from 'src/pages/worksheet/constants/enum';
 
-let request = null;
+let request: ApiResult | null = null;
 
 export const changeSearchSheetRows =
   ({ worksheetId, appId, viewId, keyWords, pageIndex }, callback) =>

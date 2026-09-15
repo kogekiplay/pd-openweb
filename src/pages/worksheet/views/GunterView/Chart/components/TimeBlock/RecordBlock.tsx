@@ -429,7 +429,7 @@ let RowBlock = class RowBlock extends Component<any, any> {
     const { startType, endType, periodType, milepost, minDayWidth } = viewConfig;
     const isHours = startType === 16 && endType === 16 && periodType === PERIOD_TYPE.day;
     const isMilepost = row[milepost] === '1';
-    let changValue = null;
+    let changValue: null | number = null;
     let { left } = $(this.$ref.current).position();
     let x = event.clientX - left;
 
@@ -479,7 +479,7 @@ let RowBlock = class RowBlock extends Component<any, any> {
     const { left, width } = this.props.style;
     const isHours = startType === 16 && periodType === PERIOD_TYPE.day;
     const x = event.clientX;
-    let changValue = null;
+    let changValue: null | number = null;
 
     const handleMouseMove = event => {
       const originalLeft = event.clientX - (x - left);
@@ -527,7 +527,7 @@ let RowBlock = class RowBlock extends Component<any, any> {
     const x = event.clientX;
     const isHours = endType === 16 && periodType === PERIOD_TYPE.day;
     const { width } = this.props.style;
-    let changValue = null;
+    let changValue: null | number = null;
 
     const handleMouseMove = event => {
       const originalLeft = event.clientX - x + width;

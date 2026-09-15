@@ -27,7 +27,7 @@ const configs = [
     placeholder: _l('应用锁密码'),
   },
 ];
-let timeout = null;
+let timeout: NodeJS.Timeout | null = null;
 export default class ExportApp extends React.Component<any, any> {
   constructor(props) {
     super(props);

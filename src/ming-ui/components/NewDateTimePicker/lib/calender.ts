@@ -40,13 +40,13 @@ const Calender = {
    */
   dateInRange: (date: Date, min, max) => {
     const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-    let n = null;
+    let n: Date | null = null;
 
     if (min && min.getFullYear) {
       n = new Date(min.getFullYear(), min.getMonth(), min.getDate());
     }
 
-    let x = null;
+    let x: Date | null = null;
 
     if (max && max.getFullYear) {
       x = new Date(max.getFullYear(), max.getMonth(), max.getDate());
@@ -65,13 +65,13 @@ const Calender = {
    */
   monthInRange: (month: Date, min, max) => {
     const d = new Date(month.getFullYear(), month.getMonth());
-    let n = null;
+    let n: Date | null = null;
 
     if (min && min.getFullYear) {
       n = new Date(min.getFullYear(), min.getMonth());
     }
 
-    let x = null;
+    let x: Date | null = null;
 
     if (max && max.getFullYear) {
       x = new Date(max.getFullYear(), max.getMonth());

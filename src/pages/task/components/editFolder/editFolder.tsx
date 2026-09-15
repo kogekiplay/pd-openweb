@@ -93,7 +93,7 @@ $.extend(EditFolder.prototype, {
     }
 
     // radio切换
-    $('.editFolder .folderAuth').on('click', function () {
+    $('.editFolder .folderAuth').on('click', function (this: HTMLElement) {
       $(this).find(':radio').prop('checked', true);
     });
   },
@@ -157,7 +157,7 @@ $.extend(EditFolder.prototype, {
       $('.editFolderSelectGroup')
         .next()
         .find('.select.item')
-        .each(function () {
+        .each(function (this: HTMLElement) {
           folderObj.groupInfo.push({
             groupID: $(this).attr('data-groupid'),
             groupName: $(this).attr('data-name'),

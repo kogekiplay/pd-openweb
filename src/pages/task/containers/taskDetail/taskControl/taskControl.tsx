@@ -209,7 +209,7 @@ class TaskControl extends Component<any, any> {
   updateRelationValue(id, values) {
     const controls: FormControl[] = this.props.taskControls[this.props.taskId];
     const relations = JSON.parse(_.find(controls, item => item.controlId === id).value);
-    const diffItem = {};
+    const diffItem: Record<string, any> = {};
     let singleItem;
     let index;
 

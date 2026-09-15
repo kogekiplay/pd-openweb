@@ -1,4 +1,4 @@
-﻿import React, { Component } from 'react';
+import React, { Component } from 'react';
 import { Dialog } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { dialogSelectUser } from 'ming-ui/functions';
@@ -18,7 +18,7 @@ export default class CopyTask extends Component<any, any> {
 
   componentDidMount() {
     const that = this;
-    $('.copyTask').on('click', '.checkOperation:not(.noClick)', function () {
+    $('.copyTask').on('click', '.checkOperation:not(.noClick)', function (this: HTMLElement) {
       $(this).toggleClass('checked');
       if ($(this).is($('#copyChargeUser'))) {
         $('#copyOperation .chargeUserBox').toggleClass('Hidden');

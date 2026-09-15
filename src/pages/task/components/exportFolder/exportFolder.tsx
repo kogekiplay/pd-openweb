@@ -1,4 +1,4 @@
-﻿import React, { Component } from 'react';
+import React, { Component } from 'react';
 import cx from 'classnames';
 import { Dialog } from 'ming-ui';
 import { addToken } from 'src/utils/common';
@@ -38,7 +38,7 @@ export default class ExportFolder extends Component<any, any> {
   }
 
   componentDidMount() {
-    $('.exportFolder').on('click', '.printOperation .checkOperation', function () {
+    $('.exportFolder').on('click', '.printOperation .checkOperation', function (this: HTMLElement) {
       $(this).toggleClass('checked');
     });
   }
@@ -46,7 +46,7 @@ export default class ExportFolder extends Component<any, any> {
   submit() {
     this.props.onClose();
     let obj = `folderId=${this.props.folderId}&timestamp=${new Date().getTime()}`;
-    $('.printOperation .checkOperation:not(.checkOperationDisabled)').each(function () {
+    $('.printOperation .checkOperation:not(.checkOperationDisabled)').each(function (this: HTMLElement) {
       obj += `&${$(this).attr('name')}=${$(this).hasClass('checked')}`;
     });
 

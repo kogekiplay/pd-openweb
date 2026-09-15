@@ -406,7 +406,7 @@ const fillDealMaskValueMap = result => {
 export const mergeReportData = (currentReport, result, id) => {
   const isBarChart = result.reportType === reportTypes.BarChart;
   const isPivotTable = result.reportType === reportTypes.PivotTable;
-  const param = {};
+  const param: Record<string, any> = {};
 
   if (result.status > 0) {
     if (isPivotTable) {

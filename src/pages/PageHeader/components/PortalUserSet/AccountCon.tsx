@@ -118,7 +118,7 @@ const AccountWrap = styled.div`
     }
   }
 `;
-let sendVerifyCodeTimer = null;
+let sendVerifyCodeTimer: NodeJS.Timeout | null = null;
 class TelCon extends React.Component<any, any> {
   constructor(props) {
     super(props);

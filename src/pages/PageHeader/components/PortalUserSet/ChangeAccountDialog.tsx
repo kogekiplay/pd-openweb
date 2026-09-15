@@ -57,7 +57,7 @@ export default function TelDialog(props) {
     if (!code) {
       return alert(_l('请输入验证码'), 3);
     } else {
-      let Ajax = null;
+      let Ajax: ApiResult | null = null;
       const account = type === 'phone' && newAccount.indexOf('+') === -1 ? country + newAccount : newAccount;
 
       if (isBind) {

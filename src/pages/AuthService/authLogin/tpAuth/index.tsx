@@ -37,7 +37,7 @@ function Container() {
   );
 
   const login = useCallback(() => {
-    let loginAjax = null;
+    let loginAjax: ApiResult | null = null;
 
     if (account && password) {
       loginAjax = loginController.tPMDAccountLogin({

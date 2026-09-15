@@ -82,7 +82,7 @@ function SearchFolder() {
   const { projectId } = Store.getState().task.taskConfig;
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<TaskFolder[]>([]);
   const [flag, setFlag] = useState(false);
 
   const handleSearch = (value = '') => {
@@ -160,7 +160,57 @@ function SearchFolder() {
   );
 }
 
-const BatchTask = {};
+/** 本仓没装 @types/jquery，$ 是 any；这里只写出回调实际用到的那几个成员 */
+interface JQueryEventLike {
+  target: HTMLElement;
+  currentTarget: HTMLElement;
+  stopPropagation: () => void;
+  preventDefault: () => void;
+  [key: string]: any;
+}
+
+/** 任务的参与人 / 负责人 */
+interface TaskMember {
+  accountId?: string;
+  accountID?: string;
+  fullname?: string;
+  avatar?: string;
+  [key: string]: any;
+}
+
+/** 批量操作里被勾中的一条任务（authTask 的元素） */
+interface BatchAuthTask {
+  TaskID: string;
+  status: boolean;
+  TaskName?: string;
+  avatar?: string;
+  [key: string]: any;
+}
+
+/** 任务项目（批量改项目时的候选） */
+interface TaskFolder {
+  folderID: string;
+  folderName?: string;
+  [key: string]: any;
+}
+
+/**
+ * 这个模块是「先建空对象、再一条条往上挂方法」的老写法，所以 TS 只能推出 {}，
+ * 下面每一处 BatchTask.xxx 都会报「属性不存在」（单这一条就 94 处）。
+ * 把形状显式写出来，方法用索引签名兜住 —— 挂上去的二十来个方法签名各不相同，
+ * 逐个列出来收益不大。
+ */
+interface BatchTaskModule {
+  Settings: {
+    TaskIds: string[];
+    authTask: BatchAuthTask[];
+    [key: string]: any;
+  };
+  [key: string]: any;
+}
+
+// 下面紧接着就把 Settings 挂上了，所以这里的断言不是空头支票
+const BatchTask = {} as BatchTaskModule;
 
 // 设置
 BatchTask.Settings = {
@@ -172,7 +222,7 @@ BatchTask.initEvent = function () {
   const $batchTask = $('#batchTask');
 
   // 批量标签
-  $batchTask.on('click', '.iconTaskLabel', event => {
+  $batchTask.on('click', '.iconTaskLabel', (event: JQueryEventLike) => {
     $('#batchTask .categorys').show();
     $batchTask.find('.batchOperator').addClass('Hidden');
     event.stopPropagation();
@@ -249,7 +299,7 @@ BatchTask.initEvent = function () {
   });
 
   // 标记完成 未完成
-  $batchTask.on('click', '.taskDetailStatusBtn', function () {
+  $batchTask.on('click', '.taskDetailStatusBtn', function (this: HTMLElement) {
     // 任务权限
     BatchTask.loadBatchData(2);
     // 是否完成
@@ -263,7 +313,7 @@ BatchTask.initEvent = function () {
   $batchTask.on('click', '.batchCharge', function () {
     let size = 0;
     let projectId = $('.selectTask:first').attr('data-projectid');
-    $.map($('.selectTask'), _this => {
+    $.map($('.selectTask'), (_this: HTMLElement) => {
       if ($(_this).attr('data-projectid') === projectId) {
         size++;
       }
@@ -276,7 +326,7 @@ BatchTask.initEvent = function () {
       SelectUserSettings: {
         projectId: checkIsProject(projectId) ? projectId : '',
         unique: true,
-        callback(users) {
+        callback(users: TaskMember[]) {
           // 成员权限
           BatchTask.loadBatchData(2);
           // 修改
@@ -287,10 +337,10 @@ BatchTask.initEvent = function () {
   });
 
   // 批量添加任务成员
-  $batchTask.on('click', '#batchAddTask', function () {
+  $batchTask.on('click', '#batchAddTask', function (this: HTMLElement) {
     const $this = $(this);
 
-    const callback = function (users) {
+    const callback = function (users: TaskMember[]) {
       // 成员权限
       BatchTask.loadBatchData();
       // 修改
@@ -300,13 +350,13 @@ BatchTask.initEvent = function () {
     let size = 0;
     const existsIds = [];
     let projectId = $('.selectTask:first').attr('data-projectid');
-    $.map($('.selectTask'), _this => {
+    $.map($('.selectTask'), (_this: HTMLElement) => {
       if ($(_this).attr('data-projectid') === projectId) {
         size++;
       }
     });
     projectId = size === $('.selectTask').length ? projectId : '';
-    $('.barchTaskContent .members .singleuser').each(function () {
+    $('.barchTaskContent .members .singleuser').each(function (this: HTMLElement) {
       existsIds.push($(this).attr('data-accountid'));
     });
     quickSelectUser($this[0], {
@@ -329,7 +379,7 @@ BatchTask.initEvent = function () {
   });
 
   // 任务星星
-  $batchTask.on('click', '#batchFavorite', function () {
+  $batchTask.on('click', '#batchFavorite', function (this: HTMLElement) {
     const isStar = !$(this).hasClass('icon-task-star');
     // 加载数据
     BatchTask.loadBatchData();
@@ -338,7 +388,7 @@ BatchTask.initEvent = function () {
   });
 
   // 文档点击
-  $(document).on('click', event => {
+  $(document).on('click', (event: JQueryEventLike) => {
     const $target = $(event.target);
 
     // 头部更多
@@ -370,7 +420,7 @@ BatchTask.loadTask = function () {
 };
 
 // 根据权限加载数据   1 负责人 2  成员
-BatchTask.loadBatchData = function (auth) {
+BatchTask.loadBatchData = function (auth: number) {
   const { folderId, viewType } = Store.getState().task.taskConfig;
   const $tasks = $('#taskList .selectTask');
   let $item;
@@ -383,7 +433,7 @@ BatchTask.loadBatchData = function (auth) {
 
   // 列表
   if (!folderId) {
-    $.each($tasks, (i, item) => {
+    $.each($tasks, (i: number, item: HTMLElement) => {
       $item = $(item);
       BatchTask.Settings.TaskIds.push($item.data('taskid'));
       itemAuth = $item.data('auth');
@@ -405,7 +455,7 @@ BatchTask.loadBatchData = function (auth) {
       }
     });
   } else if (viewType === config.folderViewType.treeView) {
-    $.each($tasks, (i, item) => {
+    $.each($tasks, (i: number, item: HTMLElement) => {
       $item = $(item);
       $itemParent = $item.parent();
       BatchTask.Settings.TaskIds.push($itemParent.data('taskid'));
@@ -424,7 +474,7 @@ BatchTask.loadBatchData = function (auth) {
       }
     });
   } else {
-    $.each($tasks, (i, item) => {
+    $.each($tasks, (i: number, item: HTMLElement) => {
       $item = $(item);
       BatchTask.Settings.TaskIds.push($item.data('taskid'));
       itemAuth = $item.data('auth');
@@ -452,7 +502,7 @@ BatchTask.bindDialog = function () {
     .html(renderToString(<LoadDiv />));
 
   let lockedSize = 0;
-  $.map($('.selectTask'), _this => {
+  $.map($('.selectTask'), (_this: HTMLElement) => {
     if ($(_this).find('.lockToOtherTask').length) {
       lockedSize++;
     }
@@ -485,14 +535,14 @@ BatchTask.renderSelectTags = () => {
         taskID={BatchTask.getAllTaskIds()}
         batchTask={true}
         autoFocus={true}
-        getPopupContainer={triggerNode => triggerNode.parentElement}
+        getPopupContainer={(triggerNode: HTMLElement) => triggerNode.parentElement}
       />,
     );
 };
 
 BatchTask.getAllTaskIds = function () {
   const allTaskIds = [];
-  $.map($('.selectTask'), _this => {
+  $.map($('.selectTask'), (_this: HTMLElement) => {
     allTaskIds.push($(_this).data('taskid'));
   });
 
@@ -525,7 +575,7 @@ BatchTask.updateUserNotice = function () {
 };
 
 // 批量锁定任务 isAuth 是否验证过权限
-BatchTask.updateTaskLocked = function (lock) {
+BatchTask.updateTaskLocked = function (lock: boolean) {
   ajaxRequest
     .batchUpdateTaskLocked({
       taskIDstr: BatchTask.Settings.TaskIds.join(','),
@@ -590,7 +640,7 @@ BatchTask.DelTask = function () {
         const allTask = source.DeleteTaskID;
 
         if (allTask) {
-          $.each(allTask, (i, taskId) => {
+          $.each(allTask, (i: number, taskId: string) => {
             afterDeleteTask([taskId]);
           });
         }
@@ -606,7 +656,7 @@ BatchTask.DelTask = function () {
             alert(_l('删除失败'), 3);
           } else {
             if (source.data.success.length) {
-              $.each(source.data.success, (i, taskId) => {
+              $.each(source.data.success, (i: number, taskId: string) => {
                 afterDeleteTask([taskId]);
               });
               alert(_l('删除成功'));
@@ -649,7 +699,7 @@ BatchTask.updateTasksActualStartTime = function () {
         }
 
         const successIds = [];
-        BatchTask.Settings.TaskIds.forEach(id => {
+        BatchTask.Settings.TaskIds.forEach((id: string) => {
           if (!_.includes(noAuth, id)) {
             successIds.push({ taskId: id });
           }
@@ -668,7 +718,7 @@ BatchTask.updateTasksActualStartTime = function () {
 };
 
 // 更新项目
-BatchTask.updateFolder = function (folderId) {
+BatchTask.updateFolder = function (folderId: string) {
   ajaxRequest
     .batchUpdateTaskFolderID({
       taskIDstr: BatchTask.Settings.TaskIds.join(','),
@@ -684,9 +734,9 @@ BatchTask.updateFolder = function (folderId) {
 };
 
 // 批量修改任务状态
-BatchTask.updateTaskStatus = function (status) {
+BatchTask.updateTaskStatus = function (status: number) {
   taskStatusDialog(status, () => {
-    const taskStatusFun = function (isAllSubTask) {
+    const taskStatusFun = function (isAllSubTask: boolean) {
       ajaxRequest
         .batchUpdateTaskStatus({
           taskIDstr: BatchTask.Settings.TaskIds.join(','),
@@ -754,7 +804,7 @@ BatchTask.updateTaskStatus = function (status) {
 };
 
 // 修改任务负责人
-BatchTask.updateCharge = function (account) {
+BatchTask.updateCharge = function (account: TaskMember) {
   ajaxRequest
     .batchUpdateTaskCharge({
       taskIDstr: BatchTask.Settings.TaskIds.join(','),
@@ -785,17 +835,17 @@ BatchTask.updateCharge = function (account) {
 };
 
 // 批量添加任务成员
-BatchTask.addMembers = function (users, callbackInviteResult) {
+BatchTask.addMembers = function (users: TaskMember[], callbackInviteResult?: (res: any) => void) {
   const userIdArr = [];
   const specialAccounts = {};
 
   // 外部用户
   if (_.isFunction(callbackInviteResult)) {
-    $.each(users, (i, item) => {
+    $.each(users, (i: number, item: TaskMember) => {
       specialAccounts[item.account] = item.fullname;
     });
   } else {
-    $.each(users, (i, item) => {
+    $.each(users, (i: number, item: TaskMember) => {
       userIdArr.push(item.accountId);
     });
   }
@@ -814,7 +864,7 @@ BatchTask.addMembers = function (users, callbackInviteResult) {
       if (source.status) {
         if (source.data) {
           let memberHtml = '';
-          $.map(source.data.successMember || [], user => {
+          $.map(source.data.successMember || [], (user: TaskMember) => {
             memberHtml +=
               '<span class="singleuser circle" data-accountid="' +
               user.accountID +
@@ -838,7 +888,7 @@ BatchTask.addMembers = function (users, callbackInviteResult) {
 };
 
 // 批量修改任务星星
-BatchTask.updateTaskFavorite = function (isStar) {
+BatchTask.updateTaskFavorite = function (isStar: boolean) {
   ajaxRequest
     .batchUpdateTaskMemberStar({
       taskIDstr: BatchTask.Settings.TaskIds.join(','),
@@ -868,7 +918,7 @@ BatchTask.updateTaskFavorite = function (isStar) {
 };
 
 // 批量删除任务成员
-BatchTask.deleteTasksMember = function (accountID) {
+BatchTask.deleteTasksMember = function (accountID: string) {
   ajaxRequest
     .batchDeleteTaskMember({
       taskIDstr: BatchTask.Settings.TaskIds.join(','),
@@ -886,7 +936,7 @@ BatchTask.deleteTasksMember = function (accountID) {
 };
 
 // 任务权限
-BatchTask.taskAuth = function (type, title, args, minorContent) {
+BatchTask.taskAuth = function (type: string, title: string, args?: any, minorContent?: string) {
   const taskCount = BatchTask.Settings.authTask.length;
 
   if (taskCount > 0) {
@@ -924,7 +974,7 @@ BatchTask.taskAuth = function (type, title, args, minorContent) {
         <React.Fragment>
           <div className="tipTitle">{_l('有%0条任务被锁定且你不具有负责人权限，无法被修改', taskCount)}</div>
           <div className="authTaskBox">
-            {BatchTask.Settings.authTask.map(item => (
+            {BatchTask.Settings.authTask.map((item: BatchAuthTask) => (
               <div className="authTask">
                 <span className="markTask lockTask"></span>
                 <img className="circle batchAvatar" src={item.avatar} />

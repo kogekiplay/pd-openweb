@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { createRoot } from 'react-dom/client';
 import doT from 'dot';
 import _ from 'lodash';
@@ -263,7 +263,7 @@ $.extend(RootSettings.prototype, {
     $folderMemberBox
       .find('.addMember')
       .off()
-      .on('click', 'span.addFriends', function () {
+      .on('click', 'span.addFriends', function (this: HTMLElement) {
         var $this = $(this);
         var selectProjectId = isEdit
           ? root.project && root.project.projectId
@@ -465,7 +465,7 @@ $.extend(RootSettings.prototype, {
       );
 
     //审批邀请账户
-    $checkInviter.find('li').on('click', function () {
+    $checkInviter.find('li').on('click', function (this: HTMLElement) {
       var $this = $(this);
       var memberId = $this.closest('#checkInviter').data('accountId');
       var $checkMemberLi = $folderMemberBox.find('li.memberItem[data-account-id="' + memberId + '"]');
@@ -509,7 +509,7 @@ $.extend(RootSettings.prototype, {
               .removeRootMember({ id: rootId, memberId: memberId })
               .then(function (data) {
                 if (data && data.result) {
-                  $checkMemberLi.slideUp(function () {
+                  $checkMemberLi.slideUp(function (this: HTMLElement) {
                     $(this).remove();
                   });
                   var newMembers = root.members.filter(function (m) {
@@ -534,7 +534,7 @@ $.extend(RootSettings.prototype, {
 
     //标星
     $createFolderBox
-      .on('click', '.addFolderStar', function () {
+      .on('click', '.addFolderStar', function (this: HTMLElement) {
         var $this = $(this),
           star = $this.hasClass('icon-task-star') ? false : true;
         if (isEdit) {
@@ -650,7 +650,7 @@ $.extend(RootSettings.prototype, {
           }
         },
       });
-      $attributeList.on('click', '.projectItem', function () {
+      $attributeList.on('click', '.projectItem', function (this: HTMLElement) {
         var $this = $(this),
           selectId = $this.data('projectId'),
           selectName = $this.html().trim();
@@ -659,7 +659,7 @@ $.extend(RootSettings.prototype, {
           .then(function () {
             $createFolderBox.find('.folderContent .dropBox .seleted').html(selectName).data('projectId', selectId);
             $attributeList.fadeOut();
-            var membersLi = $createFolderBox.find('.folderMembers .memberList .memberItem').filter(function () {
+            var membersLi = $createFolderBox.find('.folderMembers .memberList .memberItem').filter(function (this: HTMLElement) {
               return ($(this).data('accountId') || $(this).data('account')) !== md.global.Account.accountId;
             });
 
@@ -669,7 +669,7 @@ $.extend(RootSettings.prototype, {
                 children: <div class="Font14">{_l('您变更了文件夹的归属,要清空成员列表吗?')}</div>,
                 okText: _l('清空成员'),
                 onOk: () => {
-                  membersLi.slideUp(function () {
+                  membersLi.slideUp(function (this: HTMLElement) {
                     $(this).remove();
                   });
                 },
@@ -720,7 +720,7 @@ $.extend(RootSettings.prototype, {
         },
         '.memberItem',
       )
-      .on('click', '.memberItem .remove', function () {
+      .on('click', '.memberItem .remove', function (this: HTMLElement) {
         var $this = $(this),
           isExit = $this.hasClass('exit'),
           removeMemberId = $this.closest('.memberItem').data('accountId'),
@@ -744,7 +744,7 @@ $.extend(RootSettings.prototype, {
                       _this.settings.resolve(null);
                       $('.createFolderBox').parent().remove();
                     } else {
-                      $this.closest('.memberItem').slideUp(function () {
+                      $this.closest('.memberItem').slideUp(function (this: HTMLElement) {
                         $(this).remove();
                       });
 
@@ -764,7 +764,7 @@ $.extend(RootSettings.prototype, {
             },
           });
         } else {
-          $this.closest('.memberItem').slideUp(function () {
+          $this.closest('.memberItem').slideUp(function (this: HTMLElement) {
             $(this).remove();
           });
         }
@@ -833,7 +833,7 @@ $.extend(RootSettings.prototype, {
           },
         });
       })
-      .on('click', '.memberItem .toInvite', function () {
+      .on('click', '.memberItem .toInvite', function (this: HTMLElement) {
         var $this = $(this);
         var inviterId = $this.closest('.memberItem').data('accountId');
         kcAjax

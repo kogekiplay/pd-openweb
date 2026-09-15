@@ -99,10 +99,15 @@ for (const sf of program.getSourceFiles()) {
   if (sf.isDeclarationFile || !sf.fileName.startsWith(SRC) || !/\.tsx?$/.test(sf.fileName)) continue;
   if (EXCLUDE.some(e => path.relative(ROOT, sf.fileName).startsWith(e))) continue;
   (function visit(n) {
+    // 默认值是 null 的也收：strictNullChecks 下 `f(out = null)` 把 out 推成 null，
+    // 真假判断后收窄成 never，下游 out.xxx 全报「属性不存在于 never」。
+    // 实测这一类占 TS2339 on 'never' 的 2452 条，是最大的一簇。
+    const nullDefault =
+      n.initializer && n.initializer.kind === ts.SyntaxKind.NullKeyword;
     if (
       ts.isParameter(n) &&
       !n.type &&
-      !n.initializer &&
+      (!n.initializer || nullDefault) &&
       !n.dotDotDotToken &&
       ts.isIdentifier(n.name) &&
       n.name.text !== 'this'
@@ -123,7 +128,7 @@ for (const sf of program.getSourceFiles()) {
         n.forEachChild(visit);
         return;
       }
-      params.set(n, { sf, name: n.name.text, types: new Set(), kinds: new Set(), dirty: false, hits: 0 });
+      params.set(n, { sf, name: n.name.text, types: new Set(), kinds: new Set(), dirty: false, hits: 0, nullDefault });
     }
     n.forEachChild(visit);
   })(sf);
@@ -204,7 +209,8 @@ for (const [node, rec] of params) {
     stat.dirty += 1;
     continue;
   }
-  const u = [...rec.types].sort().join(' | ');
+  // 默认值是 null，类型里就得留着 null
+  const u = [...rec.types, ...(rec.nullDefault ? ['null'] : [])].sort().join(' | ');
   if (u.length > MAX_LEN) {
     stat.tooWide += 1;
     continue;

@@ -39,7 +39,7 @@ export default class EditDes extends Component<any, any> {
       summary: this.props.summary,
     });
     // a 链接点击
-    $('body').on('click.editor', '.mdEditorContent a', function (e) {
+    $('body').on('click.editor', '.mdEditorContent a', function (this: HTMLElement, e) {
       e.stopPropagation();
       e.preventDefault();
 

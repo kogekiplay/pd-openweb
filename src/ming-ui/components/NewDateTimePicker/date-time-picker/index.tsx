@@ -184,7 +184,7 @@ class DateTimePicker extends Component<any, any> {
   render() {
     const dateType = this.props.type === 'datetime' ? 'date' : this.props.type;
 
-    let timePicker = null;
+    let timePicker: React.JSX.Element | null = null;
 
     if (this.props.type === 'datetime') {
       timePicker = (
@@ -200,7 +200,7 @@ class DateTimePicker extends Component<any, any> {
       );
     }
 
-    let clearBtn = null;
+    let clearBtn: React.JSX.Element | null = null;
 
     if (this.props.allowClear) {
       clearBtn = (

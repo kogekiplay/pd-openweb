@@ -169,7 +169,7 @@ export default class Card extends Component<any, any> {
     const { currentTab, item } = this.props;
     const { flowNode } = item;
 
-    let RenderState = null;
+    let RenderState: React.JSX.Element | null = null;
     let RenderTime = this.renderPropsTime();
 
     if (currentTab == 'completeMySponsor') {

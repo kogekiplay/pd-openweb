@@ -1,5 +1,5 @@
 import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { BrowserRouter } from 'react-router';
+
 import { useKey } from 'react-use';
 import cx from 'classnames';
 import _, { get } from 'lodash';
@@ -15,6 +15,7 @@ import { getLatestCreateTimestampOfWithSaveShortcut, removeTempRecordValueFromLo
 import { emitter } from 'src/utils/common';
 import AdvancedSettingHandler from './AdvancedSettingHandler';
 import NewRecordContent from './NewRecordContent';
+import OptionalRouter from 'src/router/OptionalRouter';
 
 const HeaderComp = styled.div`
   position: absolute;
@@ -335,7 +336,6 @@ function NewRecord(props) {
         <div className="title">{newTitle}</div>
       </HeaderComp>
     ),
-    closeStyle: { marginTop: 5 },
     className: cx('workSheetNewRecord', className, modalClassName),
     wrapClassName: 'workSheetNewRecordWrap withSaveShortcut' + ` createTimestamp-${didMountTimestamp.current}`,
     type: 'fixed',
@@ -441,7 +441,7 @@ function NewRecord(props) {
           {footer}
         </div>
       ) : (
-        <BrowserRouter>
+        <OptionalRouter>
           <Modal
             {...dialogProps}
             allowScale
@@ -451,7 +451,7 @@ function NewRecord(props) {
           >
             {content}
           </Modal>
-        </BrowserRouter>
+        </OptionalRouter>
       )}
     </Fragment>
   );

@@ -183,7 +183,7 @@ export default function Log(props) {
     }
 
     setState({ loading: true });
-    let obj = {};
+    let obj: Record<string, any> = {};
 
     if (time[0]) {
       obj.startDate = time[0].format('YYYY/MM/DD HH:mm');

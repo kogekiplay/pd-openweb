@@ -163,7 +163,7 @@ class FolderChart extends Component<any, any> {
     );
 
     // 日期切换
-    $('body').on('click.folderChart', '.folderChartTime li:not(.activeClass):not([data-type=custom])', function () {
+    $('body').on('click.folderChart', '.folderChartTime li:not(.activeClass):not([data-type=custom])', function (this: HTMLElement) {
       const date = $(this).data('type');
       const isDialog = $(this).closest('.folderChartMaxView').length;
 
@@ -182,7 +182,7 @@ class FolderChart extends Component<any, any> {
     });
 
     // sort 排序修改
-    $('body').on('click.folderChart', '.folderChartChargeSort', function () {
+    $('body').on('click.folderChart', '.folderChartChargeSort', function (this: HTMLElement) {
       $(this).toggleClass('icon-descending-order icon-ascending-order');
       const isDialog = $(this).closest('.folderChartMaxView').length;
       // 刷新图表
@@ -190,7 +190,7 @@ class FolderChart extends Component<any, any> {
     });
 
     // 负责人切换
-    $('body').on('click.folderChart', '.folderChartChargeBtn', function () {
+    $('body').on('click.folderChart', '.folderChartChargeBtn', function (this: HTMLElement) {
       const $folderChartChargeList = $(this).siblings('.folderChartChargeList');
 
       if (!$folderChartChargeList.length) {
@@ -204,7 +204,7 @@ class FolderChart extends Component<any, any> {
     });
 
     // 负责人全选
-    $('body').on('click.folderChart', '.folderChartSelectAll', function () {
+    $('body').on('click.folderChart', '.folderChartSelectAll', function (this: HTMLElement) {
       $(this).toggleClass('borderColorPrimary bgColorPrimary');
       if ($(this).hasClass('bgColorPrimary')) {
         $(this)
@@ -220,7 +220,7 @@ class FolderChart extends Component<any, any> {
     });
 
     // 负责人选中和取消选中
-    $('body').on('click.folderChart', '.folderChartChargeLists .folderChartSelectBtn', function () {
+    $('body').on('click.folderChart', '.folderChartChargeLists .folderChartSelectBtn', function (this: HTMLElement) {
       $(this).toggleClass('borderColorPrimary bgColorPrimary');
       const $List = $(this).closest('.folderChartChargeList');
 
@@ -239,7 +239,7 @@ class FolderChart extends Component<any, any> {
     });
 
     // 负责人确定按钮
-    $('body').on('click.folderChart', '.folderChartChargeYes', function () {
+    $('body').on('click.folderChart', '.folderChartChargeYes', function (this: HTMLElement) {
       const $folderChartChargeList = $(this).closest('.folderChartChargeList');
       let isAuto = false;
       const chargeAccountIDs = [];
@@ -274,7 +274,7 @@ class FolderChart extends Component<any, any> {
     });
 
     // 点击放大chart
-    $('#taskList').on('click', '.folderChartModel', function () {
+    $('#taskList').on('click', '.folderChartModel', function (this: HTMLElement) {
       const $folderChartBoxTitle = $(this).siblings('.folderChartBoxTitle');
       const title = $folderChartBoxTitle.text();
       const tipTitle = $folderChartBoxTitle.find('span:last').attr('title');

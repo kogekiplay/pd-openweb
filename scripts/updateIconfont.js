@@ -94,7 +94,7 @@ async function main() {
       [
         '未找到 EGG_SESS_ICONFONT 缓存。',
         '首次使用请传入 EGG_SESS_ICONFONT 的 value:',
-        'yarn iconfont:update "Hu68kBY7XO7C6Udp3T99..."',
+        'bun run iconfont:update "Hu68kBY7XO7C6Udp3T99..."',
       ].join('\n'),
     );
   }
@@ -117,7 +117,7 @@ async function main() {
           '下载结果不是 zip 文件，iconfont 可能返回了登录页或错误页。',
           preview ? `响应摘要: ${preview}` : '',
           '如果缓存已过期，请重新传入 EGG_SESS_ICONFONT 的 value:',
-          'yarn iconfont:update "新的 EGG_SESS_ICONFONT value"',
+          'bun run iconfont:update "新的 EGG_SESS_ICONFONT value"',
         ]
           .filter(Boolean)
           .join('\n'),
@@ -143,7 +143,7 @@ async function main() {
 
     if (inputEggSession) {
       cacheEggSession(inputEggSession);
-      print.success('已缓存 EGG_SESS_ICONFONT，后续可直接运行 yarn iconfont:update');
+      print.success('已缓存 EGG_SESS_ICONFONT，后续可直接运行 bun run iconfont:update');
     }
 
     print.success('iconfont 更新完成');

@@ -6,7 +6,7 @@ import { controlState } from 'src/utils/control';
 import RegExpValidator from 'src/utils/expression';
 import { compatibleMDJS } from 'src/utils/project';
 
-let timer = null;
+let timer: NodeJS.Timeout | null = null;
 
 /**
  * 对接APP前置扫码

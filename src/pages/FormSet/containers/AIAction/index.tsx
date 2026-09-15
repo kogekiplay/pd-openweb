@@ -111,7 +111,7 @@ export default function AIAction(props) {
     saveLoading: false,
     canDrag: true,
   });
-  let ajaxFn = null;
+  let ajaxFn: ApiResult | null = null;
 
   const getAIActionList = ({ isCreate, btnId } = {}) => {
     if (ajaxFn) {

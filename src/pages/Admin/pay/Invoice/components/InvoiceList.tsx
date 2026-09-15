@@ -35,7 +35,7 @@ const Wrapper = styled.div`
   }
 `;
 
-let appPromise = null;
+let appPromise: ApiResult | null = null;
 
 const InvoiceList = forwardRef((props, ref) => {
   const { projectId, updateDisabledExportBtn, taxList } = props;

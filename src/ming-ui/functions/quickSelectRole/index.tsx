@@ -108,7 +108,7 @@ export function RoleSelect(props) {
   const [searchList, setSearchList] = useState([]);
   const [selectData, setSelectData] = useState(value);
 
-  let promise = null;
+  let promise: ApiResult | null = null;
   const isShowRole =
     !md.global.Account.isPortal && (md.global.Account.projects || []).some(it => it.projectId === projectId);
 

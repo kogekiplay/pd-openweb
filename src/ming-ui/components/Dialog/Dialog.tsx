@@ -261,7 +261,7 @@ let Dialog = class Dialog extends Component<any, any> {
       anim: props.anim,
     }; // 右上角关闭按钮
 
-    let dialogCloseX = null;
+    let dialogCloseX: React.JSX.Element | null = null;
 
     if (this.props.closable) {
       dialogCloseX = (
@@ -271,13 +271,13 @@ let Dialog = class Dialog extends Component<any, any> {
       );
     } // 描述
 
-    let desc = null;
+    let desc: React.JSX.Element | null = null;
 
     if (this.props.description) {
       desc = <div className="mui-dialog-desc">{this.props.description}</div>;
     }
 
-    let content = null;
+    let content: React.JSX.Element | null = null;
 
     if (this.props.visible) {
       content = (

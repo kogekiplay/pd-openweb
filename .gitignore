@@ -26,20 +26,15 @@ node_modules
 .vscode/*
 !.vscode/settings.json
 
-# Use yarn
+# 本仓用 bun。别的包管理器的锁文件一律不要 —— 两份锁文件并存时，
+# 谁装出来的树是哪一份根本说不清，而本仓是全公司 OA 的部署源。
 package-lock.json
+yarn.lock
+pnpm-lock.yaml
 
-# Yarn 4 (Berry)。白名单式：默认忽略 .yarn/ 下全部内容，只放行需要版本化的几个。
-# 本仓用 nodeLinker: node-modules + 全局 cache，所以 .yarn/ 下实际只会出现
-# install-state.gz（安装状态缓存，机器相关，不提交）。patches/ 一旦用上必须提交，
-# 否则别人装出来的依赖跟你不是一份代码 —— 先写在这里，免得将来打补丁时踩。
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
-.pnp.*
+# bun.lock 是【要提交】的（文本格式，可 review、可 diff）。
+# .bun-patches/ 一旦用上也必须提交，否则别人装出来的依赖跟你不是一份代码。
+.bun/
 
 # Tool output
 .codegraph/

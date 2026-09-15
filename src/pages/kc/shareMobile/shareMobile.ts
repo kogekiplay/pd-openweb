@@ -130,7 +130,7 @@ MobileSharePreview.prototype = {
   formatToFile: function () {
     let MSP = this;
     let sourceData = MSP.sourceData;
-    let file = {};
+    let file: Record<string, any> = {};
 
     switch (MSP.attachmentType) {
       case ATTACHMENT_TYPE.COMMON:
@@ -342,7 +342,7 @@ MobileSharePreview.prototype = {
   },
   saveToKnowledge: function () {
     let MSP = this;
-    let sourceData = {};
+    let sourceData: Record<string, any> = {};
     let kcPath = {
       type: 1,
       node: {

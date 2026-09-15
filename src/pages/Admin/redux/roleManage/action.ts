@@ -3,7 +3,7 @@ import organizeAjax from 'src/api/organize.js';
 import type { AppDispatch, GetState } from 'src/redux/types';
 
 const PAGE_SIZE = 50;
-let ajaxRequest = null;
+let ajaxRequest: ApiResult | null = null;
 
 export const updateProjectId = projectId => dispatch => {
   dispatch({ type: 'CHANGE_PROJECT_ID', projectId });

@@ -184,7 +184,7 @@ export const doCreateAccount = ({ accountInfo, callback, onChange }) => {
 export const registerAction = ({ res = {}, info = {}, onChange = () => {}, callback }) => {
   const { password, emailOrTel, confirmation, isLink, loginForAdd, dialCode, nextAction } = info;
   let { ticket, randstr, captchaType } = res;
-  let params = {};
+  let params: Record<string, any> = {};
 
   if (ticket || randstr || captchaType) {
     params.ticket = ticket;

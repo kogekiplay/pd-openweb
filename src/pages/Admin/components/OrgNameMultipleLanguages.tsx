@@ -62,7 +62,7 @@ class SetOrgNameMultipleLanguages extends Component<any, any> {
   onOk = () => {
     const { projectId, type, correlationId, onCancel = () => {}, updateName = () => {} } = this.props;
     const { settingLanguageData = [] } = this.state;
-    let AjaxFetch = null;
+    let AjaxFetch: ApiResult | null = null;
 
     if ((window.platformENV.isLocal || window.platformENV.isOverseas) && type === 30) {
       // 密码提示支持多语言

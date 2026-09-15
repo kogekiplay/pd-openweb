@@ -60,7 +60,7 @@ const Wrap = styled.div`
   }
 `;
 
-let ajaxFn = null;
+let ajaxFn: ApiResult | null = null;
 
 function LoginInfo(props) {
   const { appId } = props;

@@ -17,7 +17,7 @@ export default () => {
     let message = '';
     let description = '';
     let action = '';
-    let duration = null;
+    let duration: 5 | null = null;
 
     if (state === 1) {
       description = _l('这可能需要一段时间，现在您可以进行其他操作，导出完成后通知您');
@@ -58,7 +58,7 @@ export default () => {
     let message = '';
     let description = '';
     let action = '';
-    let duration = null;
+    let duration: 5 | null = null;
 
     if (state === 4) {
       description = _l('这可能需要一段时间，现在您可以进行其他操作，导入完成后通知您');

@@ -193,7 +193,7 @@ export default function RecordBlock(props) {
     event.stopPropagation();
     const { left, width } = props.row;
     const x = event.clientX;
-    let changValue = null;
+    let changValue: null | number = null;
 
     document.onmousemove = event => {
       const newLeft = Math.round((event.clientX - (x - left)) / oneWidth) * oneWidth;
@@ -235,7 +235,7 @@ export default function RecordBlock(props) {
     event.stopPropagation();
     const { left, width } = props.row;
     const x = event.clientX;
-    let changValue = null;
+    let changValue: null | number = null;
 
     document.onmousemove = event => {
       let move = Math.round((event.clientX - x) / oneWidth) * oneWidth;

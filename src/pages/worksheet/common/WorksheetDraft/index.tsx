@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { BrowserRouter } from 'react-router';
+
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Icon, Menu, MenuItem, Modal } from 'ming-ui';
@@ -20,6 +20,7 @@ import { controlState } from 'src/utils/control';
 import { updateDraftTotalInfo } from './utils';
 import WorksheetDraftOperate from './WorksheetDraftOperate';
 import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import OptionalRouter from 'src/router/OptionalRouter';
 
 const Con = styled.div`
   width: 100%;
@@ -208,7 +209,7 @@ function DraftModal(props) {
   };
 
   return (
-    <BrowserRouter>
+    <OptionalRouter>
       <Modal
         visible
         closable={false}
@@ -362,7 +363,7 @@ function DraftModal(props) {
           />
         )}
       </Modal>
-    </BrowserRouter>
+    </OptionalRouter>
   );
 }
 

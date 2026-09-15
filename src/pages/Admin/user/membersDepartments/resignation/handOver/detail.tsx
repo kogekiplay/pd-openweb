@@ -146,7 +146,7 @@ export default class Detail extends React.Component<any, any> {
     }
 
     return callDialogSelectUser(projectId, users => {
-      let promise = null;
+      let promise: ApiResult | null = null;
 
       if (currentType !== TYPES.OA) {
         promise = TransferController.transferByType({
@@ -186,7 +186,7 @@ export default class Detail extends React.Component<any, any> {
     const { projectId } = this.props;
     const { currentType, pageIndex } = this.state;
     callDialogSelectUser(projectId, users => {
-      let promise = null;
+      let promise: ApiResult | null = null;
 
       // oa 交接
       if (currentType === TYPES.OA) {
@@ -243,7 +243,7 @@ export default class Detail extends React.Component<any, any> {
     }
 
     callDialogSelectUser(projectId, users => {
-      let promise = null;
+      let promise: ApiResult | null = null;
 
       if (currentType === TYPES.OA) {
         promise = TransferController.oATransferToAccountId({

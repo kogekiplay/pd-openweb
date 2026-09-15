@@ -381,7 +381,13 @@ export const Tabs = props => {
             layout={layout}
             isDraggable={editable}
             isResizable={editable}
-            draggableCancel=".childrenDisableDrag,.chartWrapper .drag,.mui-dialog-container"
+            // 【必须同时收 .disableDrag】容器里的组件工具栏（widgetContentTools disableDrag）
+            // 只带 disableDrag —— 外层网格的 draggableCancel 认这个类，内层只认
+            // childrenDisableDrag，两边对不上。结果是卡片/标签页里的组件，mousedown
+            // 被内层网格当成拖拽起手，click 被吞掉，设置齿轮怎么点都没反应。
+            // 类名不一致是上游 7.4.0 就有的，react-grid-layout 0.17 -> 2.2.4 之后才暴露。
+            // 只放宽 cancel 不会让任何原来不能拖的变成能拖，方向是安全的。
+            draggableCancel=".childrenDisableDrag,.disableDrag,.chartWrapper .drag,.mui-dialog-container"
             onResizeStart={() => {
               elementRef.current.classList.add('cardNoSelect');
             }}

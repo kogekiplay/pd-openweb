@@ -40,7 +40,7 @@ export default function MobileMyStatus() {
     updatedDateOption: false,
   });
   const unsetStatus = _.isEmpty(onStatusOption);
-  let promise = null;
+  let promise: ApiResult | null = null;
 
   // 获取状态
   const getStatus = () => {

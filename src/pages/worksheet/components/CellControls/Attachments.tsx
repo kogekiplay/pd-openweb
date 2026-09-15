@@ -882,7 +882,7 @@ function CellAttachments(props, sourceRef) {
   });
   function handleChange(_attachments?) {
     const attachmentList = _attachments || attachments;
-    const submitData = {};
+    const submitData: Record<string, any> = {};
     const tempSavedAttachments = attachmentList.filter(c => /^o_/.test(c.fileID) && !c.refId).map(c => c.origin);
     const tempSavedKcAttachments = attachmentList.filter(c => /^o_/.test(c.fileID) && c.refId).map(c => c.origin);
     submitData.attachmentData = attachmentList.filter(c => !/^o_/.test(c.fileID)).map(c => c.origin);

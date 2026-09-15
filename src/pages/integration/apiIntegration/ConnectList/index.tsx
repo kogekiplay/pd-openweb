@@ -91,7 +91,7 @@ const WrapListHeader = styled.div`
     height: 36px;
   }
 `;
-let ajaxPromise = null;
+let ajaxPromise: ApiResult | null = null;
 
 function Con(props) {
   const cache = useRef({ pgIndex: 1 });

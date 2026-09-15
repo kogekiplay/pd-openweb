@@ -8,7 +8,40 @@ import Comm from '../comm/comm';
 import listHtml from './tpl/list.html';
 import './calendar.less';
 
-var Calendar = {};
+/** fullcalendar v3 的事件对象 */
+interface FcEvent {
+  id?: string;
+  title?: string;
+  start?: any;
+  end?: any;
+  [key: string]: any;
+}
+
+/** v3 回调里的 element 是 jQuery 包装对象；本仓没装 @types/jquery，写出用到的那几个方法 */
+interface JQueryLike {
+  find(selector: string): JQueryLike;
+  addClass(cls: string): JQueryLike;
+  removeClass(cls: string): JQueryLike;
+  attr(...args: any[]): any;
+  [key: string]: any;
+}
+
+/**
+ * 「先建空对象、再一条条往上挂」的老写法，TS 只能推出 {}，
+ * 于是每一处 Calendar.xxx 都报属性不存在（单这一条 95 处）。
+ * 挂上去的几块各自形状差别很大，用索引签名兜住。
+ */
+interface CalendarModule {
+  Comm: any;
+  Event: any;
+  Export: any;
+  Method: any;
+  settings: Record<string, any>;
+  [key: string]: any;
+}
+
+// 紧接着下面就把各块挂上了，断言不是空头支票
+var Calendar = {} as CalendarModule;
 
 Calendar.Comm = Comm;
 
@@ -47,7 +80,7 @@ Calendar.settings = {
 };
 
 Calendar.Method = {
-  loadFullCalendar: function (parameter) {
+  loadFullCalendar: function (parameter: Record<string, any>) {
     $('#calendar').fullCalendar({
       header: {
         left: 'today prev,next,title',
@@ -93,7 +126,7 @@ Calendar.Method = {
         },
       },
       timeFormat: 'H:mm', // 事件日期格式
-      eventClick: function (events, jsEvent) {
+      eventClick: function (events: FcEvent, jsEvent: MouseEvent) {
         // 点击 日程时 事件
         if (events.isTask) {
           $('.calendarEdit,.showActiveTitleMessage').remove();
@@ -130,7 +163,7 @@ Calendar.Method = {
           $(this).addClass('hoverContentColor');
         }
       },
-      eventAfterRender: function (event, element) {
+      eventAfterRender: function (event: FcEvent, element: JQueryLike) {
         // 事件呈现后触发,可用来做头像显示
         var $fcTitle = $(element).find('.fc-title');
         if (!event.isTask) {
@@ -154,7 +187,7 @@ Calendar.Method = {
           $(element).find('.fc-resizer').remove();
         }
       },
-      loading: function (isLoading) {
+      loading: function (isLoading: boolean) {
         if (isLoading) {
           $('#calendarLoading').show();
           $('#calInvite').removeClass('bgColorPrimary');
@@ -166,7 +199,7 @@ Calendar.Method = {
           Calendar.Method.editViewStyle();
         }
       },
-      select: function (start, end) {
+      select: function (start: any, end: any) {
         // 执行 添加
         var multiSelect = '';
         var multiSelectDay = '';
@@ -205,19 +238,19 @@ Calendar.Method = {
           createCalendar(settings);
         }
       },
-      eventMouseover: function (event, jsEvent) {
+      eventMouseover: function (event: FcEvent, jsEvent: MouseEvent) {
         Calendar.Method.changeEventColor(event, jsEvent, 0);
       },
-      eventMouseout: function (event, jsEvent) {
+      eventMouseout: function (event: FcEvent, jsEvent: MouseEvent) {
         Calendar.Method.changeEventColor(event, jsEvent, 1);
       },
       // 新方法  需要修改参数
-      eventDrop: function (event, delta, revertFunc, jsEvent, ui, view) {
+      eventDrop: function (event: FcEvent, delta: any, revertFunc: () => void, jsEvent: MouseEvent, ui: any, view: any) {
         Calendar.settings.isResize = false;
         Calendar.Method.dropResize(event, delta, revertFunc, jsEvent, ui, view);
       },
       // 新方法  需要修改参数
-      eventResize: function (event, delta, revertFunc, jsEvent, ui, view) {
+      eventResize: function (event: FcEvent, delta: any, revertFunc: () => void, jsEvent: MouseEvent, ui: any, view: any) {
         Calendar.settings.isResize = true;
         Calendar.Method.dropResize(event, delta, revertFunc, jsEvent, ui, view);
       },
@@ -299,7 +332,7 @@ Calendar.Method = {
     $('.fc-center')
       .find('button')
       .off()
-      .on('click', function () {
+      .on('click', function (this: HTMLElement) {
         $('.hoverTitleMessage').remove();
 
         if ($(this).hasClass('fc-list-button')) {
@@ -395,7 +428,7 @@ Calendar.Method = {
     );
 
     // 鼠标经过title显示title内容
-    $container.on('mousemove', '.showActiveTitle', function (event) {
+    $container.on('mousemove', '.showActiveTitle', function (this: HTMLElement, event) {
       var $this = $(this);
       var pointX = event.clientX;
       var pointY = event.clientY;
@@ -469,14 +502,14 @@ Calendar.Method = {
 
     $('.fc-button-group button').addClass('colorPrimary borderColorPrimary');
     $('.fc-prev-button,.fc-next-button,.fc-today-button').hover(
-      function () {
+      function (this: HTMLElement) {
         $(this).addClass('bgColorPrimary');
       },
-      function () {
+      function (this: HTMLElement) {
         $(this).removeClass('bgColorPrimary');
       },
     );
-    $('.fc-today-button').on('click', function () {
+    $('.fc-today-button').on('click', function (this: HTMLElement) {
       $(this).removeClass('bgColorPrimary');
     });
   },
@@ -561,7 +594,7 @@ Calendar.Method = {
       }
 
       if (viewName == 'agendaWeek') {
-        $('.fc-day-header').each(function () {
+        $('.fc-day-header').each(function (this: HTMLElement) {
           if ($(this).css('border-bottom-color').indexOf('rgb(255, 153, 153)') >= 0) {
             isToday = true;
           }
@@ -584,7 +617,7 @@ Calendar.Method = {
       // 时间轴位置调整
       $('.fc-slats')
         .find('.fc-axis')
-        .each(function () {
+        .each(function (this: HTMLElement) {
           var timeVal = ($(this).text() || '').trim();
           if (timeVal != '') {
             var top = timeVal == '00:00' ? '-5px' : '-10px';
@@ -615,7 +648,7 @@ Calendar.Method = {
     }
 
     // 日周视图滚动条处理
-    $('.fc-scroller').on('scroll', function (event) {
+    $('.fc-scroller').on('scroll', function (this: HTMLElement, event) {
       var height = $(this).height();
       var scrollTop = $(this)[0].scrollTop;
       var scrollHeight = $(this)[0].scrollHeight;
@@ -973,7 +1006,7 @@ Calendar.Event = function () {
     .on('click', '.calendarNoListBtn', function () {
       createCalendar();
     })
-    .on('click', '.calendarListModel li', function (event) {
+    .on('click', '.calendarListModel li', function (this: HTMLElement, event) {
       var $el = $(this);
       var pageX = event.clientX;
       var gapRight = $(window).width() - pageX; // 离右边距离
@@ -1002,7 +1035,7 @@ Calendar.Event = function () {
         },
       });
     })
-    .on('click', '#calendarListMore', function () {
+    .on('click', '#calendarListMore', function (this: HTMLElement) {
       var startDate2 = $(this).attr('queryend');
       var restCalCount = $(this).attr('restCalCount');
 

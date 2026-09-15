@@ -348,7 +348,7 @@ const getFilterTels = telFilters => {
   return Array.from(new Set(code));
 };
 
-let ajaxFn = null;
+let ajaxFn: ApiResult | null = null;
 
 export const getList = (PotralStatus = 0, cb?) => {
   return (dispatch: AppDispatch, getState: GetState) => {

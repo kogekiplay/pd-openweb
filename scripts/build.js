@@ -335,10 +335,11 @@ function typecheckGate() {
 
   for (const [label, args] of steps) {
     console.log(chalk.cyan(`typecheck: ${label} ...`));
-    const r = spawnSync(process.execPath, args, {
+    // 【不要用 NODE_OPTIONS 传内存上限】它是整条命令链共享的环境变量，
+    // 在这里覆盖会把调用方设的内容整个抹掉。直接传 node 的命令行参数，只影响这个子进程。
+    const r = spawnSync(process.execPath, ['--max-old-space-size=8192', ...args], {
       cwd: ROOT_PATH,
       stdio: 'inherit',
-      env: { ...process.env, NODE_OPTIONS: '--max_old_space_size=8192' },
     });
     if (r.status !== 0) {
       console.log(chalk.red(`typecheck 失败（${label}），release 中止。`));

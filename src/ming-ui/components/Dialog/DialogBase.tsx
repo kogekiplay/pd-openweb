@@ -325,10 +325,10 @@ class DialogBase extends Component<any, any> {
     };
 
     // container
-    let container = null;
+    let container: React.JSX.Element | null = null;
 
     if (this.props.visible) {
-      let mask = null;
+      let mask: React.JSX.Element | null = null;
 
       if (this.props.overlay) {
         mask = <div className="mui-dialog-mask" />;

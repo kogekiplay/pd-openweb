@@ -895,7 +895,7 @@ export default class CellControl extends React.Component<any, any> {
         ? { masterAppId: _.get(this.context, 'appId') }
         : {}),
     };
-    let cellContent = null;
+    let cellContent: React.JSX.Element | null = null;
 
     if (isTextControl) {
       if (cell.type === 41 || cell.type === 32 || cell.type === 10010 || (cell.type === 2 && cell.enumDefault === 1)) {

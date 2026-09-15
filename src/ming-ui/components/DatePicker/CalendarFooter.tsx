@@ -24,7 +24,7 @@ class CalendarFooter extends Component<any, any> {
     const { locale, prefixCls, timePicker } = props;
 
     let footerBtns = [];
-    let clearBtn = null;
+    let clearBtn: React.JSX.Element | null = null;
 
     if (this.props.allowClear) {
       clearBtn = (

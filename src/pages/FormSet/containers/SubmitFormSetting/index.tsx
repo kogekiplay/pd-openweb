@@ -7,7 +7,7 @@ import OtherSettings from './OtherSettings';
 import { Con } from './style';
 import SubmitButtonSettings from './SubmitButtonSettings';
 
-let ajaxPromise = null;
+let ajaxPromise: ApiResult | null = null;
 
 function SubmitFormSetting(props) {
   const { worksheetId } = props;

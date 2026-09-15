@@ -65,7 +65,7 @@ const StepLine = styled.div`
   }
 `;
 
-let timer = null;
+let timer: NodeJS.Timeout | null = null;
 
 export default class ValidateInfoCon extends Component<any, any> {
   constructor(props) {

@@ -18,7 +18,7 @@ export default function (confirmCallback, closeCallback?) {
 
   setTimeout(() => {
     var $dialog = $('.' + dialogId);
-    $dialog.on('click', '.Button', function (event) {
+    $dialog.on('click', '.Button', function (this: HTMLElement, event) {
       var btnType = $(this).data('type');
       $('.calendarReInviteDialog').parent().remove();
       if (btnType === 'save') {

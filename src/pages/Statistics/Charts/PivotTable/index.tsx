@@ -28,12 +28,46 @@ import {
   mergeLinesCell,
   renderValue,
 } from './util';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const isMobile = browserIsMobile();
 const isPrintPivotTable = location.href.includes('printPivotTable');
 const textStyle = { wordWrap: 'break-word', wordBreak: 'break-word' };
 
-export const replaceColor = ({ pivotTableStyle, customPageConfig, themeColor, sourceType }) => {
+/** 统计图的维度 / 数值字段（yaxisList、xaxes、fields 里的元素） */
+interface AxisField {
+  controlId: string;
+  controlName?: string;
+  hide?: boolean;
+  [key: string]: any;
+}
+
+/** 透视表的列定义（表头是多层的，children 往下套） */
+interface PivotColumn {
+  key?: string;
+  fixed?: boolean | string;
+  // 【必须是可选的】linesChildren 里的叶子列就没有 children，写成必填会让
+  // linesChildren.filter(...) 整个不兼容
+  children?: PivotColumn[];
+  [key: string]: any;
+}
+
+/** 透视表的一行数据 */
+interface PivotRecord {
+  [key: string]: any;
+}
+
+export const replaceColor = ({
+  pivotTableStyle,
+  customPageConfig,
+  themeColor,
+  sourceType,
+}: {
+  pivotTableStyle: Record<string, any>;
+  customPageConfig?: Record<string, any>;
+  themeColor?: string;
+  sourceType?: number;
+}) => {
   const data = _.clone(pivotTableStyle);
   const { columnBgColor, lineBgColor } = data;
   const {
@@ -117,6 +151,11 @@ export const replaceColor = ({ pivotTableStyle, customPageConfig, themeColor, so
 };
 
 class PivotTable extends Component<any, any> {
+  // 纯类型声明，babel 的 TS preset 会整条抹掉；【不能】写成有初值的类字段，
+  // 那会覆盖构造函数里赋的值
+  declare $ref: React.RefObject<any>;
+  declare cache: Record<string, { deps: unknown[]; value: any }>;
+
   constructor(props) {
     super(props);
     const { style } = props.reportData;
@@ -146,10 +185,10 @@ class PivotTable extends Component<any, any> {
       }
     }
   }
-  getCacheValue = (key: string, deps, getValue) => {
+  getCacheValue = <T,>(key: string, deps: unknown[], getValue: () => T) => {
     const cache = this.cache[key];
 
-    if (cache && cache.deps.length === deps.length && cache.deps.every((dep, index) => dep === deps[index])) {
+    if (cache && cache.deps.length === deps.length && cache.deps.every((dep: unknown, index: number) => dep === deps[index])) {
       return cache.value;
     }
 
@@ -215,7 +254,7 @@ class PivotTable extends Component<any, any> {
         controlIdMap[id] = true;
       });
       return getControlMinAndMax(
-        yaxisList.filter(item => controlIdMap[item.controlId]),
+        yaxisList.filter((item: AxisField) => controlIdMap[item.controlId]),
         data.data,
       );
     });
@@ -242,7 +281,7 @@ class PivotTable extends Component<any, any> {
 
     return null;
   }
-  handleMouseDown = (event, index) => {
+  handleMouseDown = (event: React.MouseEvent, index: number) => {
     const { target } = event;
     const { scrollTableBody } = this;
     const scrollLeft = scrollTableBody ? scrollTableBody.scrollLeft : 0;
@@ -286,7 +325,7 @@ class PivotTable extends Component<any, any> {
       return pivotTableColumnWidthConfig;
     }
   };
-  setColumnWidth = (index, width) => {
+  setColumnWidth = (index: number, width: number) => {
     const { settingVisible, reportData, onChangeCurrentReport } = this.props;
     const { reportId } = reportData;
     const style = reportData.style || {};
@@ -308,7 +347,7 @@ class PivotTable extends Component<any, any> {
 
     sessionStorage.setItem(key, JSON.stringify(config));
   };
-  getColumnWidth = index => {
+  getColumnWidth = (index: number) => {
     const { data, lines, style } = this.props.reportData;
     const config = this.getColumnWidthConfig();
     const width = config[index];
@@ -347,7 +386,7 @@ class PivotTable extends Component<any, any> {
       }
     }
   };
-  handleClick = ({ event, index, record }) => {
+  handleClick = ({ event, index, record }: { event: React.MouseEvent; index: number; record: PivotRecord }) => {
     const { columns, lines, data, appId, reportId, name, reportType, displaySetup, style, valueMap } =
       this.props.reportData;
     const param = {};
@@ -364,7 +403,7 @@ class PivotTable extends Component<any, any> {
       !(_.isArray(style.autoLinkageChartObjectIds) && style.autoLinkageChartObjectIds.length === 0) &&
       !isPrintPivotTable &&
       (columns.length || lines.length);
-    data.x.forEach(item => {
+    data.x.forEach((item: AxisField) => {
       const key = _.findKey(item);
       const control = _.find(lines, { cid: key }) || {};
       const { controlId, controlType, controlName } = control;
@@ -382,7 +421,7 @@ class PivotTable extends Component<any, any> {
         control,
       });
     });
-    columns.forEach((item, i) => {
+    columns.forEach((item: PivotColumn, i: number) => {
       const isNumber = isFormatNumber(item.controlType);
       const value = data.data[index].y[i];
       const controlValue = valueMap[item.cid] ? valueMap[item.cid][value] : value;
@@ -443,7 +482,7 @@ class PivotTable extends Component<any, any> {
       this.props.requestOriginalData(data);
     }
   };
-  handleFilePreview = (control, res, file) => {
+  handleFilePreview = (control: FormControl, res: any, file: any) => {
     if (_.get(window.shareState, 'isPublicChart') && ['.docx', '.xlsx'].includes(file.ext)) {
       alert(_l('暂不支持预览'), 3);
       return;
@@ -459,7 +498,7 @@ class PivotTable extends Component<any, any> {
       hideFunctions,
     });
   };
-  getColumnsHeader(linesData) {
+  getColumnsHeader(linesData: PivotColumn[]) {
     let { lines, columns, style, yaxisList } = this.props.reportData;
     const {
       pivotTableUnilineShow,
@@ -471,7 +510,7 @@ class PivotTable extends Component<any, any> {
     const freeze = isMobile ? mobilePivotTableLineFreeze : pivotTableLineFreeze;
     const freezeIndex = isMobile ? mobilePivotTableLineFreezeIndex : pivotTableLineFreezeIndex;
     const fIndex = freezeIndex + 1;
-    const yaxisListLength = yaxisList.filter(n => !n.hide).length;
+    const yaxisListLength = yaxisList.filter((n: AxisField) => !n.hide).length;
     const isHideHeaderLastTr = columns.length && !lines.length && yaxisListLength === 1;
 
     columns = _.cloneDeep(columns);
@@ -480,7 +519,7 @@ class PivotTable extends Component<any, any> {
       columns.pop();
     }
 
-    const get = column => {
+    const get = (column: PivotColumn) => {
       return {
         title: () => {
           return (
@@ -497,7 +536,7 @@ class PivotTable extends Component<any, any> {
       };
     };
 
-    const linesChildren = linesData.map((item, index) => {
+    const linesChildren = linesData.map((item: PivotColumn, index: number) => {
       const control = _.find(lines, { controlId: item.key }) || {};
       const { controlType, fields = [] } = control;
       const showControl = controlType === 29 && !_.isEmpty(fields);
@@ -511,7 +550,7 @@ class PivotTable extends Component<any, any> {
             return (
               <Fragment>
                 <div className="flexRow valignWrapper">
-                  {fields.map((item, index) => (
+                  {fields.map((item: AxisField, index: number) => (
                     <div
                       key={item.controlId}
                       className={cx(item.controlType === 14 ? 'fileContent' : 'otherContent')}
@@ -567,10 +606,10 @@ class PivotTable extends Component<any, any> {
     if (columns.length) {
       if (freeze && _.isNumber(freezeIndex) && fIndex <= linesData.length) {
         const data = get(columns[0]);
-        const freezeChildren = linesChildren.filter(n => n.fixed);
-        const noFreezeChildren = linesChildren.filter(n => !n.fixed);
+        const freezeChildren = linesChildren.filter((n: PivotColumn) => n.fixed);
+        const noFreezeChildren = linesChildren.filter((n: PivotColumn) => !n.fixed);
 
-        const getFreeze = data => {
+        const getFreeze = (data: PivotColumn) => {
           if (data.children.length === linesChildren.length) {
             return {
               ...data,
@@ -586,7 +625,7 @@ class PivotTable extends Component<any, any> {
           }
         };
 
-        const getNoFreeze = data => {
+        const getNoFreeze = (data: PivotColumn) => {
           if (data.children.length === linesChildren.length) {
             return {
               title: '',
@@ -612,13 +651,13 @@ class PivotTable extends Component<any, any> {
       return linesChildren;
     }
   }
-  getColumnsContent(result, controlMinAndMax, colorRuleConfig) {
+  getColumnsContent(result: PivotRecord[], controlMinAndMax: Record<string, any>, colorRuleConfig?: Record<string, any>) {
     const { reportData, isViewOriginalData } = this.props;
     const { columns, lines, valueMap, yvalueMap, pivotTable, displaySetup } = reportData;
-    const yaxisList = reportData.yaxisList.filter(item => !item.hide);
+    const yaxisList = reportData.yaxisList.filter((item: AxisField) => !item.hide);
     const { columnSummary = {} } = pivotTable || reportData;
     const dataList = [];
-    const yaxisListLength = yaxisList.filter(n => !n.hide).length;
+    const yaxisListLength = yaxisList.filter((n: AxisField) => !n.hide).length;
     const isHideHeaderLastTr = columns.length && !lines.length && yaxisListLength === 1;
     const contentColumnIndexOffset = lines.length || (isHideHeaderLastTr ? 1 : 0);
     const getColumnWidthIndex = index => contentColumnIndexOffset + index;
@@ -772,7 +811,12 @@ class PivotTable extends Component<any, any> {
 
     return dataList;
   }
-  getColumnTotal(result, controlMinAndMax, getColumnWidthIndex = _.identity, colorRuleConfig) {
+  getColumnTotal(
+    result: PivotRecord[],
+    controlMinAndMax: Record<string, any>,
+    getColumnWidthIndex: (index: number) => any = _.identity,
+    colorRuleConfig?: Record<string, any>,
+  ) {
     const { reportData } = this.props;
     const { yaxisList, columns, pivotTable, valueMap } = reportData;
     const { showColumnTotal, columnSummary } = pivotTable || reportData;
@@ -1035,7 +1079,7 @@ class PivotTable extends Component<any, any> {
     const columnFreeze = isMobile ? mobilePivotTableColumnFreeze : pivotTableColumnFreeze;
     const lineFreeze = isMobile ? mobilePivotTableLineFreeze : pivotTableLineFreeze;
     const parent = this.getParentNode();
-    const config = {};
+    const config: Record<string, any> = {};
 
     if (isPrintPivotTable) {
       return config;
@@ -1549,7 +1593,7 @@ class PivotTable extends Component<any, any> {
             contentYAuto: _.isUndefined(scrollConfig.y),
             contentAutoHeight: scrollConfig.x && _.isUndefined(scrollConfig.y),
             contentScroll: scrollConfig.y,
-            hideHeaderLastTr: columns.length && yaxisList.filter(n => !n.hide).length === 1,
+            hideHeaderLastTr: columns.length && yaxisList.filter((n: AxisField) => !n.hide).length === 1,
             hideBody: _.isEmpty(lines) && _.isEmpty(yaxisList),
             hideDrag: widthModel === 3,
             noSelect: dragValue,

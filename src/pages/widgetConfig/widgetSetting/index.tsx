@@ -160,7 +160,7 @@ function WidgetSetting(props) {
   const renderHeader = () => {
     if (!_.isEmpty(batchActive)) return null;
 
-    let content = null;
+    let content: React.JSX.Element | null = null;
 
     if (styleInfo.activeStatus && !isRecycle) {
       content = (

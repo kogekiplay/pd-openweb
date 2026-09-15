@@ -25,9 +25,9 @@ export default class Card extends Component<any, any> {
   renderHeader() {
     const { stateTab, item, showApproveChecked = true } = this.props;
     const { flowNode, workItem, flowNodeType, currentWorkFlowNodes, completeDate, instanceLog, status } = item;
-    let RenderState = null;
-    let RenderRightHander = null;
-    let RenderResultState = null;
+    let RenderState: React.JSX.Element | null = null;
+    let RenderRightHander: React.JSX.Element | null = null;
+    let RenderResultState: React.JSX.Element | null = null;
 
     if ([TABS.WAITING_APPROVE, TABS.WAITING_FILL, TABS.WAITING_EXAMINE].includes(stateTab)) {
       RenderState = (

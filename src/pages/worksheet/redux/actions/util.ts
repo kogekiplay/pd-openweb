@@ -41,7 +41,7 @@ export const isHaveCharge = (type, isLock?) => {
 
 //获取当前用户对应角色
 export const getUserRole = (type, isLock?) => {
-  let data = {};
+  let data: Record<string, any> = {};
 
   if (type === APP_ROLE_TYPE.POSSESS_ROLE) {
     data.isOwner = !isLock;

@@ -15,7 +15,7 @@ export default class CalendarComments extends Component<any, any> {
     const $tab = $(this.tab);
     const $bottomLine = $tab.find('.bottomLine');
     $tab.find('li').hover(
-      function () {
+      function (this: HTMLElement) {
         $bottomLine.css('left', $(this).index() * 90 + 25);
       },
       function () {

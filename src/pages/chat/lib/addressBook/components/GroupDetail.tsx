@@ -36,7 +36,7 @@ export default class GroupDetail extends React.Component<any, any> {
         )
           return;
 
-        let newInfo = {};
+        let newInfo: Record<string, any> = {};
 
         switch (type) {
           case 'UPDATE_AVATAR':

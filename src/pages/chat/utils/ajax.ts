@@ -63,7 +63,7 @@ export const chatSessionItem = param => {
  * @param {*} conf
  */
 export const getMessage = conf => {
-  const param = {};
+  const param: Record<string, any> = {};
   param.sincetime = conf.sincetime || '';
   param.page = conf.page || 1;
   // param.num = (conf.num ? conf.num : ) || chatConfig.MSG_LENGTH_MORE;
@@ -100,7 +100,7 @@ export const getMessage = conf => {
  * @param {*} conf
  */
 export const getMessageById = conf => {
-  const param = {};
+  const param: Record<string, any> = {};
   let url = '';
 
   if (conf.type === Constant.SESSIONTYPE_GROUP) {
@@ -127,7 +127,7 @@ export const getMessageById = conf => {
  * @param {*} conf
  */
 export const getImageContext = conf => {
-  const param = {};
+  const param: Record<string, any> = {};
   let url = '';
 
   if (conf.isGroup) {
