@@ -83,9 +83,16 @@ function wrapFile(native: File, source: 'browse' | 'drop' | 'paste'): UploaderFi
     loaded: 0,
     status: FileStatus.QUEUED,
     getNative: () => native,
+    getSource: () => wrapped,
   };
   if (source === 'paste') wrapped.isFromClipBoard = true;
-  if ((native as any).webkitRelativePath) wrapped.webkitRelativePath = (native as any).webkitRelativePath;
+  const rel = (native as any).webkitRelativePath;
+  if (rel) {
+    wrapped.webkitRelativePath = rel;
+    // 目录上传：下游读的是带前导斜杠的 relativePath（原来由调用方包 moxie File 时写上去），
+    // 格式与老代码一致。
+    wrapped.relativePath = '/' + String(rel).replace(/^\//, '');
+  }
   return wrapped;
 }
 
@@ -389,6 +396,10 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
             .catch(failResult => {
               forEach(accepted, file => triggerUploadError(file, failResult || _l('上传前检查失败')));
             });
+        } else {
+          // auto_start: false —— 由调用方自己挑时机 start()。那个时机可能【早于】
+          // 这里，所以凭证刚到位就得把已经在等的文件接上，否则它们会永远停在队列里。
+          resumePendingStart();
         }
       });
     };
@@ -408,15 +419,38 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
   }
 
   // ── 上传 ────────────────────────────────────────────────────────────────
+  /**
+   * 是否已经请求过开始上传。
+   *
+   * 【为什么需要这个标记】凭证是异步取的，而 auto_start: false 的调用方会【自己】
+   * 挑时机调 start()。如果那个时机早于凭证返回，下面的循环会因为 file.token 为空
+   * 把文件跳过 —— 然后【再也没人来传它】，表现是点了发送却毫无反应、也没有报错。
+   * 记下"已请求开始"，等凭证到位时补跑一次，时序就不再影响结果。
+   *
+   * 这不是为某个调用方开的口子：任何手动 start() 的用法都会撞上。
+   * 聊天面板（SendToolbar）是第一个触发它的 —— 它的流程是「逐个弹确认框、
+   * 全部确认后才 start()」，只有一个文件时会【同步】走到 start()，必然早于凭证。
+   */
+  let startRequested = false;
+
   function startQueue() {
     if (destroyed) return;
+    startRequested = true;
     uploader.state = UploaderState.STARTED;
     trigger('StateChanged', uploader);
 
     for (const file of files.slice()) {
       if (file.status !== FileStatus.QUEUED) continue;
-      if (!file.token) continue; // 凭证还没回来；取到之后 start 会被再调一次
+      if (!file.token) continue; // 凭证还没到；到了之后由 resumePendingStart 补上
       uploadOne(file);
+    }
+  }
+
+  /** 凭证到位后调用：如果此前已经请求过开始，就把等着的文件接上 */
+  function resumePendingStart() {
+    if (!startRequested || destroyed) return;
+    for (const file of files.slice()) {
+      if (file.status === FileStatus.QUEUED && file.token) uploadOne(file);
     }
   }
 

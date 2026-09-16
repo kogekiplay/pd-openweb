@@ -79,8 +79,6 @@ module.exports = [
         AMap: false,
         destroyAlert: false,
         blobStream: false,
-        moxie: false,
-        plupload: false,
         ActiveXObject: false,
         HWH5: false,
         WeixinJSBridge: false,

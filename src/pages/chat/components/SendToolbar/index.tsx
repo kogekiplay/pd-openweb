@@ -7,7 +7,8 @@ import chatAjax from 'src/api/chat';
 import { SOURCE_TYPE } from 'src/components/comment/config';
 import Emotion from 'src/components/emotion/emotion';
 import MentionsInput from 'src/components/MentionsInput';
-import { getToken, setCaretPosition } from 'src/utils/common';
+import createUploader from 'src/utils/createUploader';
+import { setCaretPosition } from 'src/utils/common';
 import RegExpValidator from 'src/utils/expression';
 import * as utils from '../../utils';
 import config from '../../utils/config';
@@ -119,16 +120,25 @@ export default class SendToolbar extends Component<any, any> {
     const _this = this;
     const { fileUploadLimitSize } = _.get(md, 'global.SysSettings') || {};
 
-    const config = {
+    // 【原来这里是直接 new plupload.Uploader】改走 createUploader（内部是 qiniu-js）。
+    //
+    // 【为什么能原样保留"逐个确认完再上传"的交互】createUploader 的 start() 现在
+    // 支持在凭证返回【之前】被调用：它记下"已请求开始"，凭证到位时把等着的文件接上。
+    // 本组件只有一个文件时，recurShowFileConfirm 会同步走到 up.start()，
+    // 正是撞这个时序的场景，所以既不用改交互、也不用给门面加专用钩子。
+    //
+    // 取凭证也交给 createUploader 了（bucket: 1 与原来手写的一致，type 用默认 0，
+    // 与原来的 getToken(tokenFiles) 相同），所以下面的 FilesAdded 里不再自己取。
+    const uploader = createUploader({
       browse_button: this.uploadFile,
-      url: md.global.FileStoreConfig.uploadHost,
-      file_data_name: 'file',
       multi_selection: true,
       drop_element: `ChatPanel-${session.id}`,
       paste_element: `ChatPanel-${session.id}`,
       max_file_size: fileUploadLimitSize ? `${fileUploadLimitSize}m` : undefined,
-      autoUpload: false,
-      method: {
+      auto_start: false,
+      bucket: 1, // chat 上传都用 bucket: 1
+      x_vars: {},
+      init: {
         FilesAdded(uploader, files) {
           let count = 0;
           const emptyFile = 0;
@@ -175,15 +185,10 @@ export default class SendToolbar extends Component<any, any> {
             return false;
           }
 
-          getToken(tokenFiles).then(res => {
-            files.forEach((item, i) => {
-              item.token = res[i].uptoken;
-              item.key = res[i].key;
-              item.serverName = res[i].serverName;
-              item.fileName = res[i].fileName;
-            });
-            recurShowFileConfirm(uploader, files, 0, files.length, _this.props.onPrepareUpload.bind(this));
-          });
+          // 【不再自己取凭证】createUploader 会在本回调返回后去取，
+          // 并把 token/key/serverName/fileName 挂到同一批文件对象上。
+          // 确认流程本身不需要凭证，最后那次 up.start() 也不怕早于凭证（见上面的说明）。
+          recurShowFileConfirm(uploader, files, 0, files.length, _this.props.onPrepareUpload.bind(this));
         },
         BeforeUpload(uploader, file) {
           const fileExt = `.${RegExpValidator.getExtOfFileName(file.name)}`;
@@ -205,7 +210,9 @@ export default class SendToolbar extends Component<any, any> {
           cb && cb(uploadPercent);
         },
         FileUploaded(uploader, file, response) {
-          const uploadFile = JSON.parse(response.response);
+          // 【不再 JSON.parse】plupload 给的是原始响应字符串，createUploader 给的是
+          // 已解析并补好 fileExt/fileName/filePath/serverName 的对象。
+          const uploadFile = response.response;
           const ext = uploadFile.fileExt;
           const isPicture = RegExpValidator.fileIsPicture(ext);
           const isVideoFile = RegExpValidator.isVideo(ext);
@@ -229,37 +236,8 @@ export default class SendToolbar extends Component<any, any> {
           }
         },
       },
-    };
-
-    const uploader = new plupload.Uploader(config);
-
-    uploader.bind('FilesAdded', config.method.FilesAdded);
-    uploader.bind('BeforeUpload', config.method.BeforeUpload);
-    uploader.bind('UploadProgress', config.method.UploadProgress);
-    uploader.bind('FileUploaded', config.method.FileUploaded);
-    uploader.bind('Error', config.method.Error);
-    uploader.bind('PostInit', function bindPluploadPaste(up) {
-      var paste = document.getElementById(config.paste_element);
-      if (paste) {
-        const onPaste = _.throttle(e => {
-          var items = e.originalEvent.clipboardData && e.originalEvent.clipboardData.items;
-          var data = { files: [] };
-          if (items && items.length) {
-            $.each(items, function (index: number, item) {
-              var file = item.getAsFile && item.getAsFile();
-              if (file) {
-                file.isFromClipBoard = true;
-                data.files.push(file);
-              }
-            });
-            if (data.files.length > 0) {
-              up.addFile(data.files);
-            }
-          }
-        }, 500);
-        $(paste).on('paste', onPaste);
-      }
     });
+
     uploader.init();
 
     this.setState(

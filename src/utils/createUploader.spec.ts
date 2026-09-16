@@ -314,6 +314,29 @@ test('removeFile 中断在途上传并发 FilesRemoved', async () => {
   void aborted;
 });
 
+// ── 13. 【时序】auto_start:false 时，start() 早于凭证返回也必须能传 ────────
+test('auto_start:false 时 start() 早于凭证返回，凭证到位后仍会上传', async () => {
+  const calls: QiniuCall[] = [];
+  const { uploader } = makeUploader({ auto_start: false }, calls);
+  uploader.addFile([fakeFile('pic.png')]);
+  // 【同步就调 start】模拟 SendToolbar 只有一个文件时的情形：
+  // recurShowFileConfirm 会同步走到 up.start()，此时 getToken 还没 resolve。
+  uploader.start();
+  assert.strictEqual(calls.length, 0, '凭证还没到，这时不该已经发起上传');
+  await tick();
+  assert.strictEqual(calls.length, 1, '凭证到位后应当把等着的文件接上');
+  assert.strictEqual(calls[0].params.token, 'token-0');
+});
+
+// ── 14. auto_start:false 且【没有】调 start() 时，不该自己传 ──────────────
+test('auto_start:false 且未调用 start() 时不会自动上传', async () => {
+  const calls: QiniuCall[] = [];
+  const { uploader } = makeUploader({ auto_start: false }, calls);
+  uploader.addFile([fakeFile('pic.png')]);
+  await tick();
+  assert.strictEqual(calls.length, 0, '没请求过开始，就不该上传');
+});
+
 (async () => {
   let failed = 0;
   for (const [name, fn] of cases) {

@@ -159,17 +159,11 @@ class UploadAssistant extends React.Component<any, any> {
               return;
             }
 
-            comp.uploader.addFile(
-              Array.prototype.map.call(evt.target.files, file => {
-                const mFile = new moxie.file.File(null, file);
-
-                if (file.webkitRelativePath) {
-                  mFile.relativePath = '/' + file.webkitRelativePath.replace(/^\//, '');
-                }
-
-                return mFile;
-              }),
-            );
+            // 【不再包 moxie.file.File】那是 plupload 的文件抽象，包一层是为了让
+            // plupload 收下并挂上 relativePath。createUploader 直接收原生 File，
+            // 并在入队时自己从 webkitRelativePath 推出 relativePath（格式不变，
+            // 仍是带前导斜杠），下游 file.getSource().relativePath 照旧能读到。
+            comp.uploader.addFile(Array.prototype.slice.call(evt.target.files));
             evt.target.value = null;
           });
         },
