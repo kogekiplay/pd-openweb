@@ -27,6 +27,11 @@ export interface UploaderFile {
   status: FileStatusValue;
   /** 拿到原生 File —— 老代码里有 `file.getNative()` 的用法 */
   getNative(): File;
+  /**
+   * plupload 里 getSource() 返回底层的 moxie File。本仓只用它取 relativePath
+   *（UploadAssistant 与 ImportExcel 的目录上传各一处），所以这里返回本对象即可。
+   */
+  getSource(): UploaderFile;
 
   // ---- 以下是本仓挂上去的，不是 plupload 的 ----
   /** 七牛上传凭证 */
@@ -43,8 +48,15 @@ export interface UploaderFile {
   mdUploadErrorType?: number;
   /** 选中后文件已被移动/删除（size 读得到但原生 size 为 0） */
   notExists?: boolean;
-  /** 目录上传时的相对路径 */
+  /** 目录上传时的相对路径（原生 File 上的字段） */
   webkitRelativePath?: string;
+  /**
+   * 目录上传时的相对路径，带前导斜杠。
+   * 【为什么与 webkitRelativePath 并存】老代码是自己包一层 moxie File 时写上去的
+   *（`mFile.relativePath = '/' + file.webkitRelativePath.replace(/^\//, '')`），
+   * 下游按这个名字和这个格式读，所以保留原样。
+   */
+  relativePath?: string;
   [key: string]: any;
 }
 
