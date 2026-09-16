@@ -106,7 +106,6 @@
     "pdfobject": "2.3.1",
     "prismjs": "1.30.0",
     "prop-types": "15.8.1",
-    "qiniu-js": "^3.4.4",
     "query-string": "9.5.1",
     "rc-trigger": "^5.3.4",
     "react": "19.3.0",

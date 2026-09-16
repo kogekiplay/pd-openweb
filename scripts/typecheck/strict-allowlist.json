@@ -647,6 +647,7 @@
     "src/utils/uploader/constants.ts",
     "src/utils/uploader/fileSelect.ts",
     "src/utils/uploader/qiniuUpload.ts",
+    "src/utils/uploader/qiniuV1.ts",
     "src/utils/uploader/types.ts",
     "src/utils/uuid.ts",
     "types/global.d.ts",

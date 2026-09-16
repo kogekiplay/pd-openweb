@@ -3,17 +3,19 @@
  *
  * 【为什么这个 spec 值得存在】上传路径是全公司 OA 的核心（表单、任务、知识中心、
  * 动态的附件都走它），而真实上传要七牛凭证与后端、本地验不了。
- * 能验的是【队列 / 校验 / 事件 / 参数映射】这一层 —— 也正是这次从 plupload
- * 换到 qiniu-js 时自己重写的那一层。真正的上传协议交给了官方 SDK。
+ * 能验的是【队列 / 校验 / 事件 / 参数映射】这一层 —— 也正是换掉 plupload 时
+ * 自己重写的那一层。
  *
- * 【qiniu-js 被替身掉】不是为了图省事：这个 spec 要验的是「我们喂给 SDK 的
- * 参数对不对、SDK 回调之后我们组装的结果对不对」，替身能把这两头都看清楚。
+ * 【uploader/qiniuV1 被替身掉】不是为了图省事：这一份要验的是「我们喂给上传层的
+ * 参数对不对、它回调之后我们组装的结果对不对」，替身能把这两头都看清楚。
+ * 上传层【自己发到网络上的东西】由 src/utils/uploader/qiniuV1.spec.ts 守，
+ * 那一份加载真实实现、只替身 XHR，期望值抄自生产实测报文。两份合起来才完整。
  */
 const assert = require('assert');
 const path = require('path');
 const { transformFileSync } = require('../../scripts/spec-harness.ts');
 
-/** 记录每次调用 qiniu-js 的入参，以及拿到的回调句柄 */
+/** 记录每次调用上传层（uploader/qiniuV1）的入参，以及拿到的回调句柄 */
 type QiniuCall = { params: any; handlers: any };
 
 function loadCreateUploader(qiniuCalls: QiniuCall[]) {
@@ -43,10 +45,9 @@ function loadCreateUploader(qiniuCalls: QiniuCall[]) {
     return function localRequire(request: string) {
       // 被测代码自己的模块：真的编译加载
       if (request.startsWith('./uploader/') || request.startsWith('./')) {
-        if (request === './uploader/qiniuUpload') {
+        if (request === './uploader/qiniuV1') {
           // 【替身】不发网络请求，把入参与回调句柄记下来给断言用
           return {
-            normalizeUpHost: (u: string) => (u || '').replace(/\/+$/, ''),
             uploadToQiniu(params: any, handlers: any) {
               qiniuCalls.push({ params, handlers });
               return { abort() {} };

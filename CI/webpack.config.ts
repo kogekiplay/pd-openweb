@@ -143,7 +143,7 @@ const getModuleRules = () => {
 const ENTRIES = {
   cookies: ['src/common/cookies'],
   globals: ['src/common/global'],
-  // plupload 已移除：上传改用 qiniu-js（见 src/utils/createUploader.ts），
+  // plupload 已移除：上传改成自己实现的七牛 v1 分片（见 src/utils/uploader/qiniuV1.ts），
   // 这里只剩 jQuery 的全局注入。
   vendors: ['src/library/jquery/global'],
   // antd 5 的产物里不再有 css，原来靠 babel-plugin-import 的 style:'css' 逐组件引入，

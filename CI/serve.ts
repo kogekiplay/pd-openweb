@@ -238,7 +238,29 @@ const proxyConfigs: { name: string; path: string; replace: string; server: any; 
 //   Config.HDPUrl (/hdp)         —— 该服务在本部署压根没起，生产端直接 502
 //   Config.OpenApiDocUrl (/apidoc/) —— 只用于 href / iframe 看文档，跳生产无害
 //   Config.AccountUrl (/account/)   —— 登录链路，动它风险大
-const REWRITE_PREFIXES = ['/file/', '/chatmq', '/excelapi', '/pm/'];
+//
+// 【/file/ 必须按仓（bucket）拆开，mdoc 一定不能改写】原先这里写的是整个 '/file/'，
+// 结果把 dev 下的【所有文件上传】都改坏了，且现象与 CORS 完全无关，极难定位：
+//   documentHost 生产是 https://host:8880/file/mdoc，改写后变成 /file/mdoc；
+//   取凭证接口返回的 serverName 同理。而这两个值前端【不是拿来发请求的，
+//   是拼好之后当参数回传给后端的】——
+//     KC：  filePath: getUrlByBucketName(bucket) + key  -> Kc/AddNode
+//     工作表：serverName + filePath + ...               -> formatResponseData
+//   后端只认绝对地址，收到相对路径时【不报错】，而是回 {"state":1} 且不带 data，
+//   前端 `if (res) 成功 else 失败` 就判成「上传失败」。文件其实已经传上去了
+//   （实测 etag 与生产逐字节一致），失败的只是建节点这一步。
+// 所以只改写【纯展示用】的那几个仓，mdoc（文档/附件本体）保持绝对地址，
+// 让 dev 跟生产的语义完全一致。
+// 尾斜杠仍按配置值本身的形态写：FileStoreConfig 给的是 .../file/xxx，没有尾斜杠。
+const REWRITE_PREFIXES = [
+  '/file/mdpub', // 应用图标 customIcon/*.svg —— 走 XHR，就是它当初逼出这套改写
+  '/file/mdpic', // 头像等图片
+  '/file/mdmedia',
+  '/file/mingdao', // 上传入口 uploadHost，本来就只用于发请求，不回传
+  '/chatmq',
+  '/excelapi',
+  '/pm/',
+];
 
 function rewriteAbsoluteHosts(buffer, server, prefixes = REWRITE_PREFIXES) {
   let origin;

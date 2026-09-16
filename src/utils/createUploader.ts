@@ -1,10 +1,12 @@
 /**
- * 文件上传器 —— 对外保持 plupload 的用法，内部改用 qiniu-js。
+ * 文件上传器 —— 对外保持 plupload 的用法，内部换成自己实现的七牛 v1 分片上传。
  *
- * 【为什么换】原实现是【手工在 plupload 的通用分片之上实现七牛的 mkblk/mkfile
- * 断点续传协议】（约 150 行协议代码 + 自己维护的 localStorage 续传缓存），
- * 而 plupload 3.1.5 里还带着 Flash/Silverlight 运行时与 IE8/9 分支。
- * qiniu-js 是七牛官方的浏览器 SDK、TypeScript 写的，分片与续传是它的本职。
+ * 【为什么换】原实现把七牛的 mkblk/mkfile 协议手工挂在 plupload 的通用分片上，
+ * 而 plupload 3.1.5 是 212KB 的压缩 JS、带着 Flash/Silverlight 运行时与 IE8/9 分支。
+ * 协议本身就一百来行，与其为它扛一个上古依赖，不如自己写清楚。
+ *
+ * 【为什么不是官方 SDK】试过 qiniu-js，在生产上实测走不通 ——
+ * 原因写在 uploader/qiniuV1.ts 的文件头，不要再走一遍。
  *
  * 【为什么保留 plupload 的对外形状】全仓 10 个调用方按 plupload 的事件与
  * 文件对象写法在用（`up.settings.multipart_params = …`、`file.getNative()`、
@@ -13,7 +15,7 @@
  *
  * 【职责划分】
  *   uploader/fileSelect.ts   点按钮 / 拖放 / 粘贴（qiniu-js 不管这块）
- *   uploader/qiniuUpload.ts  单个文件传到七牛（qiniu-js 包一层，含错误码翻译）
+ *   uploader/qiniuV1.ts      七牛 v1 分片协议（mkblk/mkfile）+ 断点续传
  *   本文件                    队列、校验、取凭证、事件分发
  *
  * 【没有实测的部分】真实的七牛上传要凭证与后端，本地验不了。
@@ -26,8 +28,8 @@ import { getToken } from 'src/utils/common';
 import RegExpValidator from 'src/utils/expression';
 import { FileStatus, UPLOAD_ERROR, UploadError, UploaderState } from './uploader/constants';
 import { createFileSelect } from './uploader/fileSelect';
-import { normalizeUpHost, uploadToQiniu } from './uploader/qiniuUpload';
-import type { QiniuUploadTask } from './uploader/qiniuUpload';
+import { uploadToQiniu } from './uploader/qiniuV1';
+import type { QiniuUploadTask } from './uploader/qiniuV1';
 import type { Uploader, UploaderEvent, UploaderFile, UploaderOption, UploadErrorInfo } from './uploader/types';
 
 export { FileStatus, UPLOAD_ERROR, UploadError, UploaderState } from './uploader/constants';
@@ -511,7 +513,9 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
         file: file.getNative(),
         key: option.save_key ? null : params.key || file.key || null,
         token,
-        uphost: normalizeUpHost(option.url),
+        // 【原样传 url，不解析主机】私有化部署里它是同源相对路径（实测 /file/mingdao/upload），
+        // 解析主机正是 qiniu-js 走不通的原因，见 uploader/qiniuV1.ts 的文件头。
+        url: option.url as string,
         chunkSize: option.chunk_size as number,
         customVars,
         fname: file.name,
