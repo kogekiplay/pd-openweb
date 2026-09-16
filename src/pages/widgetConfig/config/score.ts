@@ -64,7 +64,7 @@ export const getDynamicColors = (colors, max) => {
 };
 
 // 获取展示颜色
-export const getColor = (data = {}) => {
+export const getColor = (data: Record<string, any> = {}) => {
   const { itemicon, itemcolor } = data.advancedSetting || {};
   const selectColor = JSON.parse(itemcolor || '{}');
   return selectColor.type === 1

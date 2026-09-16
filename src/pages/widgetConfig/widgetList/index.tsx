@@ -411,7 +411,7 @@ const cloneSearchWorksheetQueries = async ({ controls, idMap, updateQueryConfigs
   return queryIdMap;
 };
 
-const isBlankSubListControl = (control = {}) => {
+const isBlankSubListControl = (control: Record<string, any> = {}) => {
   if (control.type !== 34) return false;
 
   return _.includes(control.dataSource, '-') || _.get(control, 'advancedSetting.detailworksheettype') === '2';
@@ -472,7 +472,7 @@ function TemplatePanelHeader(props) {
   const firstControl = controls[0] || {};
   const { icon: firstControlIcon } = getWidgetInfo(firstControl.type);
   const enumType = enumWidgetType[firstControl.type];
-  const moreBtnRef = useRef(null);
+  const moreBtnRef = useRef<HTMLElement | null>(null);
   const [dropdownPlacement, setDropdownPlacement] = useState('bottomRight');
 
   const handleDropdownVisibleChange = visible => {
@@ -612,7 +612,7 @@ export default function List(props) {
   const [activeDropdownKey, setActiveDropdownKey] = useState('');
   const [hasCreateTemplatePermission, setHasCreateTemplatePermission] = useState(false);
 
-  const handleAdd = (data, para = {}, callback) => {
+  const handleAdd = (data, para: Record<string, any> = {}, callback) => {
     let sectionId = '';
 
     if (para.type === 'click') {
@@ -660,7 +660,7 @@ export default function List(props) {
     }, 100);
   };
 
-  const handleAddWidgetsFromEmitter = (data, para = {}, callback) => {
+  const handleAddWidgetsFromEmitter = (data, para: Record<string, any> = {}, callback) => {
     window.lastAddWidgetsTriggerByMingo = true;
     handleAddWidgets(
       data.map(item => ({ ...item, isMingo: true })),
@@ -693,7 +693,7 @@ export default function List(props) {
     handleUpdateWidgetsAttribute(data, cache.current.props, callback);
   };
 
-  const handleDeleteWidgetsForMingoFromEmitter = (data, para = {}, callback) => {
+  const handleDeleteWidgetsForMingoFromEmitter = (data, para: Record<string, any> = {}, callback) => {
     handleDeleteWidgetsForMingo(data, cache.current.props, ({ newWidgets = [] } = []) => {
       batchUpdateWidgetsLayout(
         para.layoutOfAllWidgets,

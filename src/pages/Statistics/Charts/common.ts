@@ -720,7 +720,7 @@ const isApplyStyle = (applyValue, recordKey) => {
   }
 };
 
-export const getScopeRuleColor = (value, controlMinAndMax = {}, scopeRules, emptyShowType) => {
+export const getScopeRuleColor = (value, controlMinAndMax: Record<string, any> = {}, scopeRules, emptyShowType) => {
   let result = null;
 
   scopeRules.forEach(rule => {

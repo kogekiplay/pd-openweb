@@ -111,7 +111,7 @@ const SelectDropdown = ({
   children,
 }) => {
   const triggerRef = useRef(null);
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const [visible, setVisible] = useState(false);
   const [searchText, setSearchText] = useState('');

@@ -170,7 +170,7 @@ export const getViewTimesByDay = (view, date = moment()) => {
   };
 };
 
-export const getViewTimesList = (view = {}, time) => {
+export const getViewTimesList = (view: Record<string, any> = {}, time) => {
   const type =
     localStorage.getItem(`${view.viewId}_resource_type`) || types[_.get(view, 'advancedSetting.calendarType') || 0];
 

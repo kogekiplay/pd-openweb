@@ -43,7 +43,7 @@ const NumberComp = props => {
   const [isEditing, setIsEditing] = useState(false);
   const [originValue, setOriginValue] = useState('');
 
-  const numberRef = useRef(null);
+  const numberRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (_.isFunction(registerCell)) {

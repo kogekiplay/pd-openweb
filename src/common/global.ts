@@ -364,7 +364,7 @@ window.addEventListener('beforeunload', () => {
  * 获取错误信息
  * @returns {Object}
  */
-const getErrorMessage = (jqXHR = {}, textStatus: string, exception, silent = false) => {
+const getErrorMessage = (jqXHR: Record<string, any> = {}, textStatus: string, exception, silent = false) => {
   let errorMessage;
 
   switch (jqXHR.status) {
@@ -537,7 +537,7 @@ const disposeRequestParams = (controllerName, actionName, data, ajaxOptions) => 
 /**
  * 生成本地化存储参数
  */
-const generateLocalizationParams = (requestData = {}) => {
+const generateLocalizationParams = (requestData: Record<string, any> = {}) => {
   const lang = _.get(md, 'global.Account.lang');
   const worksheetInfoParams = {
     sourceId: `${requestData.worksheetId}_${lang}`,
@@ -721,7 +721,7 @@ const throttledCheckLogin = _.throttle(() => loginApi.checkLogin({}, { silent: t
  * @param  {Boolean} options.silent 发生错误时不弹出提示
  * @return {Promise}               返回结果的 promise
  */
-window.mdyAPI = (controllerName, actionName, requestData, options = {}) => {
+window.mdyAPI = (controllerName, actionName, requestData, options: Record<string, any> = {}) => {
   const controller = options.abortController || new AbortController();
   const ajaxOptions = options.ajaxOptions || {};
   const method = ajaxOptions.type || 'POST';
@@ -936,7 +936,7 @@ window.mdyAPI = (controllerName, actionName, requestData, options = {}) => {
  * @param  {AbortController} options.abortController
  * @return {Promise}                     非流式 resolve 后端响应体（axios response.data）
  */
-window.agentAPI = (args = {}, options = {}) => {
+window.agentAPI = (args: Record<string, any> = {}, options = {}) => {
   const { url, method = 'POST', isStream, silent, header, abortController } = options;
 
   const agentHost = (_.get(md, 'global.Config.AgentUrl') || '').replace(/\/$/, '');

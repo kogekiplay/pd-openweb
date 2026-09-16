@@ -62,7 +62,7 @@ const CheckboxWidgets = props => {
   const [isFocus, setIsFocus] = useState(initialIsFocus);
   const [keywords, setKeywords] = useState('');
   const selectRef = useRef(null);
-  const checkRef = useRef(null);
+  const checkRef = useRef<HTMLDivElement | null>(null);
 
   const {
     direction = '2',

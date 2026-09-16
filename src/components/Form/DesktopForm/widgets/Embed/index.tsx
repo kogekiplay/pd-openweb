@@ -73,7 +73,7 @@ const Embed = props => {
   const [resultData, setResultData] = useState('');
   const [needUpdate, setNeedUpdate] = useState(Math.random());
   const [viewType, setViewType] = useState('');
-  const iframeRef = useRef(null);
+  const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const embedWatchRef = useRef(null);
   const viewControlsRef = useRef([]);
   const currentTimeRef = useRef(new Date());

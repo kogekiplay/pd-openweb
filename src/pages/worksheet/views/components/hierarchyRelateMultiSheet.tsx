@@ -122,7 +122,7 @@ export default function HierarchyRelateMultiSheet({ worksheetInfo, viewControls,
 
   const [delIndex, setIndex] = useState(-1);
   const [searchValue, setValue] = useState('');
-  const addRelateRef = useRef(null);
+  const addRelateRef = useRef<HTMLDivElement | null>(null);
 
   const getPlacement = () => {
     if (addRelateRef.current) {

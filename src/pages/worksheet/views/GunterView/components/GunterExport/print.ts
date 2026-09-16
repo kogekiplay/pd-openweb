@@ -22,7 +22,7 @@ const printImage = el => {
 };
 
 class Canvas {
-  constructor(config = {}) {
+  constructor(config: Record<string, any> = {}) {
     this.canvas = document.createElement('canvas');
     this.canvas.width = config.bgWidth;
     this.canvas.height = config.bgHeight;

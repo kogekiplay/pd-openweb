@@ -126,7 +126,7 @@ export default class Text extends React.Component<any, any> {
     if (!shallowEqual(prevProps, this.props)) {
       const valueChanged = this.props.cell.value !== prevProps.cell.value;
       const rowChanged = !isEqual(get(this.props, 'row.rowid'), get(prevProps, 'row.rowid'));
-      const nextState = {}; // 子表场景：失焦后 ChildTable 的 300ms debounce + DataFormat 清洗会让 cell.value 异步回灌；
+      const nextState: Record<string, any> = {}; // 子表场景：失焦后 ChildTable 的 300ms debounce + DataFormat 清洗会让 cell.value 异步回灌；
       // 这段窗口内阻断 props → state 同步，避免脏值/清洗后空值覆盖用户输入。
       // 窗口结束后恢复正常同步，确保外部 row 恢复（如取消保存）能反向覆盖到本地。
       // 子表场景：失焦后 ChildTable 的 300ms debounce + DataFormat 清洗会让 cell.value 异步回灌；

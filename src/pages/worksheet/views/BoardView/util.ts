@@ -101,7 +101,7 @@ export const dealBoardViewData = props => {
   }
 };
 
-export const getTargetName = (value, controls = {}, { type }) => {
+export const getTargetName = (value, controls: Record<string, any> = {}, { type }) => {
   if (_.includes([26, 27, 48], type)) {
     return value;
   } else if ([9, 11].includes(type)) {

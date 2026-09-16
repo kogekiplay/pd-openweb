@@ -37,7 +37,7 @@ export default function SortableColumn(props) {
     );
   }
 
-  const listRef = useRef(null);
+  const listRef = useRef<HTMLDivElement | null>(null);
   const scrollTopRef = useRef(null);
 
   useEffect(() => {

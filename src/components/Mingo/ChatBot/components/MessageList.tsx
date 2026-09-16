@@ -740,7 +740,7 @@ function MessageList(
 ) {
   const cache = useRef({});
   const scrollViewRef = useRef(null);
-  const messagesEndRef = useRef(null);
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const scrollToBottomRef = useRef(null);
   const handleSelectMessage = useCallback((ids = []) => {
     setSelectedMessageIds(prev => [...prev, ...ids]);

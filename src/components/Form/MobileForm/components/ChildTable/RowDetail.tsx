@@ -57,7 +57,7 @@ export default class RowDetail extends React.Component<any, any> {
     return this.handleSave(false, false, false, true);
   };
 
-  handleSave = (nextContinue, isSwitchSave: boolean, ignoreAlert: boolean, isCopy = false, extraParams = {}) => {
+  handleSave = (nextContinue, isSwitchSave: boolean, ignoreAlert: boolean, isCopy = false, extraParams: Record<string, any> = {}) => {
     if (!this.customwidget.current) {
       return;
     }
@@ -139,7 +139,7 @@ export default class RowDetail extends React.Component<any, any> {
     return _.uniq([...affectedIds].concat(this.customwidget.current.dataFormat.getUpdateControlIds()));
   };
 
-  handleChange = (formData, updatedControlIds, options = {}) => {
+  handleChange = (formData, updatedControlIds, options: Record<string, any> = {}) => {
     if (!options.isAsyncChange || this.props.disabled) {
       return;
     }

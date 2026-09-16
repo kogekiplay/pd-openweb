@@ -112,7 +112,7 @@ const SelectedControlCon = styled.div`
   }
 `;
 
-function typesInclude(types: number[] = [], control = {}) {
+function typesInclude(types: number[] = [], control: Record<string, any> = {}) {
   return _.includes(types, control.type) || (control.type === 30 && _.includes(types, control.sourceControlType));
 }
 

@@ -398,7 +398,7 @@ export function getSheetStylesOfRelateRecordTable({ control, viewId, worksheetIn
   }
 
   const worksheetSheetStyles = getSheetStylesOfObject(worksheetInfo);
-  let result = {};
+  let result: Record<string, any> = {};
 
   if (!viewId) {
     result = worksheetSheetStyles;

@@ -25,7 +25,7 @@ const TelPhone = props => {
     return value.replace(/ /g, '');
   };
 
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [originValue, setOriginValue] = useState('');
   const [currentValue, setCurrentValue] = useState(getEditValue());

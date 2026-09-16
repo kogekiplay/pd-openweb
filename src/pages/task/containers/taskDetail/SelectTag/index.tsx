@@ -119,7 +119,7 @@ function SelectTag(props) {
     !item.tagID && setSearchValue(undefined);
   };
 
-  const handleChange = (item = {}, type = 'add') => {
+  const handleChange = (item: Record<string, any> = {}, type = 'add') => {
     const isAdd = type === 'add';
 
     if (isAdd) {

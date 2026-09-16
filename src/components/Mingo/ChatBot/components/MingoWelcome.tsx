@@ -332,7 +332,7 @@ export default function MingoWelcome({ onStartTask = () => {}, landing = false, 
   const promptInputRef = useRef(null);
   // 欢迎动图重播：Mingo 抽屉 destroyOnClose=false，关闭不销毁、重开不会重渲染，play-once gif 会停在末帧。
   // 用 IntersectionObserver 观察稳定容器，每次重新可见就给 <img> 换 key（重建元素）→ 从头再播一次。
-  const welcomeBlockRef = useRef(null);
+  const welcomeBlockRef = useRef<HTMLDivElement | null>(null);
   const [gifNonce, setGifNonce] = useState(0);
   // 打开 Mingo 首页（MingoWelcome 挂载）时自动 focus 最外层输入框，省去用户再点一次
   useEffect(() => {

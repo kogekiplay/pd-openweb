@@ -6,7 +6,7 @@ import type { FormControl } from 'src/utils/controlTypes';
 
 const GUNTER_GROUP_CONTROL_TYPES = [9, 11, 26, 27, 28, 48];
 
-export function isGunterGroupControl(item = {}) {
+export function isGunterGroupControl(item: Record<string, any> = {}) {
   return (
     GUNTER_GROUP_CONTROL_TYPES.includes(item.type) ||
     (item.type === 29 && item.enumDefault === 1) ||

@@ -109,7 +109,7 @@ export default function DialCodePanel({
   hideIndexBar = false,
 }) {
   const [searchValue, setSearchValue] = useState('');
-  const listRef = useRef(null);
+  const listRef = useRef<HTMLDivElement | null>(null);
   const sectionRefs = useRef({});
 
   const preferredSet = useMemo(() => {

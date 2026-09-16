@@ -25,7 +25,7 @@ const SmallCard = props => {
   const [isPicture, setIsPicture] = useState(props.isPicture);
   const [fileSizeVisible, setFileSizeVisible] = useState(true);
   const wrapRef = useRef(null);
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement | null>(null);
   const allowReset = allowEditName && !isKc;
   const allowNewPage = recordId && onOpenControlAttachmentInNewTab && _.isEmpty(window.shareState);
   const canDeleteMDFile = isDeleteFile && _.isFunction(onDeleteMDFile);
@@ -163,7 +163,8 @@ const SmallCard = props => {
         const current = _.get(wrapRef, 'current.parentNode.parentNode');
 
         if (current) {
-          const diffWidth = current.clientWidth - 300;
+          // _.get 拿到的是 ParentNode，clientWidth 在 Element 上
+        const diffWidth = (current as unknown as Element).clientWidth - 300;
 
           if (diffWidth < 0) {
             setDiffWidth(diffWidth - 10);
@@ -297,7 +298,7 @@ const NotSaveSmallCard = props => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [diffWidth, setDiffWidth] = useState(0);
   const [showResetOfDeleteBtn, setShowResetOfDeleteBtn] = useState(true);
-  const wrapRef = useRef(null);
+  const wrapRef = useRef<HTMLDivElement | null>(null);
 
   const handleDelete = () => {
     isKc ? onDeleteKCFile(data) : onDeleteFile(data);
@@ -347,7 +348,8 @@ const NotSaveSmallCard = props => {
       onMouseEnter={() => {
         const current = _.get(wrapRef, 'current.parentNode.parentNode');
 
-        const diffWidth = current.clientWidth - 300;
+        // _.get 拿到的是 ParentNode，clientWidth 在 Element 上
+        const diffWidth = (current as unknown as Element).clientWidth - 300;
 
         if (diffWidth < 0) {
           setDiffWidth(diffWidth - 10);

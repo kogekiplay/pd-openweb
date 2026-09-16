@@ -49,7 +49,7 @@ const getDealWidgets = (widgets, data) => {
 
 // 从原有位置删除拖拽元素,批量操作
 const removeSrcItems = (widgets, dealWidgets = []) => {
-  const ids = dealWidgets.map((i = {}) => i.controlId);
+  const ids = dealWidgets.map((i: Record<string, any> = {}) => i.controlId);
   const removeItems = widgets.map(row => row.filter(i => !includes(ids, i.controlId)));
   return removeItems;
 };

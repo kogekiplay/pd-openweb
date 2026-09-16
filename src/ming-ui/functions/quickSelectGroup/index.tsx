@@ -443,7 +443,7 @@ SelectGroup.propTypes = {
   onClose: func, //关闭
 };
 
-export default function quickSelectGroup(target, props = {}) {
+export default function quickSelectGroup(target, props: Record<string, any> = {}) {
   const panelWidth = 360;
   const panelHeight = 41 + (props.minHeight || 400);
   let targetLeft;

@@ -5,7 +5,7 @@ import { browserIsMobile } from 'src/utils/common';
 import { supportTabKeyDown } from '../core/utils';
 
 // rememberText 该文本控制是否能作为tab标记开始控件
-const isTextInput = (data = {}, rememberText = false) => {
+const isTextInput = (data: Record<string, any> = {}, rememberText = false) => {
   let textTypes = [2, 3, 4, 5, 6, 7, 8, 11, 15, 16, 24, 41, 46];
 
   if (!rememberText) {

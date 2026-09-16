@@ -172,7 +172,7 @@ export function registerNodeItemEvent(element, args) {
         };
 
         if (newName && newName !== originName) {
-          const validateOut = {};
+          const validateOut: Record<string, any> = {};
 
           if (!validateFileName(newName, true, validateOut, { extLength: item.ext.length })) {
             setTimeout(() => {

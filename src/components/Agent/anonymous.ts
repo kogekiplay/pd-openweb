@@ -395,7 +395,7 @@ function decodeHtmlEntities(str) {
 
 // —— 官网输入框 → HAP 页面 交接（一次性 handoff）——
 // 默认以 sessionId_<随机串> 为 key 存入 webCache；已登录直进 /mingo/chat 时可指定 key=sessionId。
-export async function setAnonHandoff(data, options = {}) {
+export async function setAnonHandoff(data, options: Record<string, any> = {}) {
   const key = options.key || (data.sessionId || '') + '_' + Math.random().toString(36).substring(2);
 
   await webCacheRequest('Add', { key, value: JSON.stringify(data) });

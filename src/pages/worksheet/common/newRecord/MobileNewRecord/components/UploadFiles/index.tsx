@@ -1,7 +1,7 @@
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from 'react';
 import { QiniuUpload } from 'ming-ui';
 
-const formatUploadFile = (file = {}, status = 'added') => ({
+const formatUploadFile = (file: Record<string, any> = {}, status = 'added') => ({
   id: file.id,
   size: file.size,
   type: file.type,
@@ -43,7 +43,7 @@ function UploadFiles(
   }, [getUploader]);
 
   const removeUploadFile = useCallback(
-    (file, options = {}) => {
+    (file, options: Record<string, any> = {}) => {
       const uploader = getUploader();
 
       if (!uploader || !file?.id) return;

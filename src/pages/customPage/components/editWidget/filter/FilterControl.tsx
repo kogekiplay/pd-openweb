@@ -125,7 +125,7 @@ export default function FilterControl(props) {
               return data;
             });
             const param = { objectControls: newControls };
-            const otherFilter = {};
+            const otherFilter: Record<string, any> = {};
 
             if (!index) {
               const firstSheet = _.find(sheetList, { worksheetId: _.get(filterObjectControls[0], 'worksheetId') });

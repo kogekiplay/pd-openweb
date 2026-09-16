@@ -281,7 +281,7 @@ class TaskTree extends Component<any, any> {
     });
   }
 
-  renderUserCard(ele, update = false, data = {}) {
+  renderUserCard(ele, update = false, data: Record<string, any> = {}) {
     if (ele.innerHtml && !update) return;
     const item = $(ele);
     const accountId = update ? data.accountId : item.attr('data-sourceid');

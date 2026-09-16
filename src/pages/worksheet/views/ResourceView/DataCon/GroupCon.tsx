@@ -165,7 +165,7 @@ const TbWrap = styled.div`
 `;
 
 export default function GroupCon(props) {
-  const headContainer = useRef(null);
+  const headContainer = useRef<HTMLDivElement | null>(null);
   const tbodyContainer = useRef(null);
   const { resourceview, view, controls, viewId, appId, worksheetInfo, base = {} }: { controls: FormControl[]; [key: string]: any } = props;
   const { resourceDataByKey, keywords } = resourceview;
@@ -273,7 +273,14 @@ export default function GroupCon(props) {
 
     if (headContainer.current) {
       headContainer.current.scrollLeft = scrollLeftNum;
-      headContainer.current.style.marginRight = 10;
+      // ⚠ 【这一句本来就没生效，此处刻意保持原样】
+      // CSSOM 会把 10 转成字符串 '10'，而 CSS 里【非零长度必须带单位】，
+      // `margin-right: 10` 是无效值、浏览器直接忽略（这点和上面 height = '0' 不同，
+      // 零值不需要单位所以那个是生效的）。
+      // 改成 '10px' 会让一句一直没生效的代码开始生效 —— 那是改渲染，不是改类型，
+      // 不该混在类型批次里悄悄做。这里只把字面量写成字符串以满足 DOM 类型，
+      // 运行时与之前【一字不差】。要不要真的加 px 是另一个决定。
+      headContainer.current.style.marginRight = '10';
     }
 
     const scrollTop = tbodyContainer.current && tbodyContainer.current.scrollTop;

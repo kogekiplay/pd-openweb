@@ -237,7 +237,7 @@ class SearchWorksheetActionDialog extends Component<any, any> {
   }, 300);
 
   // 获取查询表映射数据
-  getDropData = (controls: FormControl[] = [], control = {}, hasRowId) => {
+  getDropData = (controls: FormControl[] = [], control: Record<string, any> = {}, hasRowId) => {
     const { configs = [] } = this.state;
     controls = controls.filter(
       a =>

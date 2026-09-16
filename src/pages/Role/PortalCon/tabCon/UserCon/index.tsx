@@ -80,11 +80,11 @@ const list = [
   },
 ];
 
-const getTranslatedRoleInfo = (appId: string, role = {}) => getTranslateInfo(appId, null, role.roleId);
+const getTranslatedRoleInfo = (appId: string, role: Record<string, any> = {}) => getTranslateInfo(appId, null, role.roleId);
 
-const getTranslatedRoleName = (appId: string, role = {}) => getTranslatedRoleInfo(appId, role).name || role.name;
+const getTranslatedRoleName = (appId: string, role: Record<string, any> = {}) => getTranslatedRoleInfo(appId, role).name || role.name;
 
-const getTranslatedRoleDescription = (appId: string, role = {}) =>
+const getTranslatedRoleDescription = (appId: string, role: Record<string, any> = {}) =>
   getTranslatedRoleInfo(appId, role).description || role.description;
 
 class Con extends React.Component<any, any> {

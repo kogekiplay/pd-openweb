@@ -70,7 +70,7 @@ let Ajax: ApiResult | null = null;
 
 export default function (props) {
   const trigger = useRef(null);
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const { controlInfo, onChange, currentList = [] } = props;
   const [{ list, pageIndex, keyWords, controls, count, loading, showMenu }, setState] = useSetState({
     list: [],

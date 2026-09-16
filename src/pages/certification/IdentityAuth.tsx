@@ -98,7 +98,7 @@ function IdentityAuth() {
     };
   }, []);
 
-  const onGetFaceCertUrl = (captchaData = {}) => {
+  const onGetFaceCertUrl = (captchaData: Record<string, any> = {}) => {
     if (!_.isEmpty(captchaData) && captchaData.ret !== 0) {
       setSubmitLoading(false);
       return;

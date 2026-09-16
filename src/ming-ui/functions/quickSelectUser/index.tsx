@@ -361,7 +361,7 @@ SelectWrapper.propTypes = {
   popupOffset: arrayOf(number),
 };
 
-export default function quickSelectUser(target, props = {}) {
+export default function quickSelectUser(target, props: Record<string, any> = {}) {
   const panelWidth = 360;
   const panelHeight = 48 + (props.minHeight || 328);
   let targetLeft;

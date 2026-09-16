@@ -202,7 +202,7 @@ export default class PrePayOrder extends Component<any, any> {
   };
 
   // 轮询订单状态
-  pollOrderStatus = (orderInfo = {}) => {
+  pollOrderStatus = (orderInfo: Record<string, any> = {}) => {
     const { onUpdateSuccess = () => {}, payFinished = () => {}, paySuccessReturnUrl, onCancel, notDialog } = this.props;
     const { orderId } = orderInfo;
 

@@ -697,7 +697,7 @@ export const functions = {
 
     return String(value).indexOf(matchStr) > -1;
   },
-  GETPOSITION: function (value = {}, key) {
+  GETPOSITION: function (value: Record<string, any> = {}, key) {
     if (key === 'x,y') {
       return value.x && value.y ? `${value.x},${value.y}` : '';
     }

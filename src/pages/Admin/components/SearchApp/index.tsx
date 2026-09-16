@@ -20,7 +20,7 @@ export default function SearchApp({ projectId, className, mode, onChange = () =>
   let extra = {};
 
   const getAppList = useCallback(
-    (params = {}) => {
+    (params: Record<string, any> = {}) => {
       if (appPromiseRef.current && appPromiseRef.current.abort) {
         appPromiseRef.current.abort();
       }

@@ -1,7 +1,7 @@
 import { isRelateRecordTableControl } from 'src/utils/control.js';
 import { VIEWCONTROL_CONDITION_MULTI_TYPE, VIEWCONTROL_CONDITION_TYPE } from './config';
 
-export const canSetGroup = (control = {}, worksheetId = '', view = {}) => {
+export const canSetGroup = (control: Record<string, any> = {}, worksheetId = '', view: Record<string, any> = {}) => {
   if (view.viewType === 1) {
     //看板 不支持多选类型的字段作为分组字段
     const dataType = control?.type === 30 ? control?.sourceControlType : control?.type;

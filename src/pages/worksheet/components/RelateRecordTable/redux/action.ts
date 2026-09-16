@@ -190,7 +190,7 @@ export function loadRecords({
       type: 'UPDATE_TABLE_STATE',
       value: { tableLoading: true },
     });
-    let args = {};
+    let args: Record<string, any> = {};
     args.discussId = control.discussId;
     const res = await worksheetAjax.getRowRelationRows({
       worksheetId,
@@ -401,7 +401,7 @@ export function init() {
         return;
       }
     } else {
-      let args = {};
+      let args: Record<string, any> = {};
       args.discussId = control.discussId;
       const res = await worksheetAjax
         .getRowRelationRows({
@@ -635,7 +635,7 @@ export function deleteRecords(recordIds = []) {
 }
 
 // 更新单元格控件
-export function updateCell({ cell, row }, options = {}) {
+export function updateCell({ cell, row }, options: Record<string, any> = {}) {
   return (dispatch: RelateRecordTableDispatch, getState: RelateRecordTableGetState) => {
     const state = getState();
     const { base, controls } = state;
@@ -820,7 +820,7 @@ export function getRelateRecordSummary({ reset = false } = {}) {
 }
 
 // 全屏 Dialog ↔ 内联 表格共用的统计方式缓存 key（按记录 + 关联控件唯一）
-function getSummaryCacheKey(base = {}) {
+function getSummaryCacheKey(base: Record<string, any> = {}) {
   return `${base.recordId}_${get(base, 'control.controlId')}`;
 }
 

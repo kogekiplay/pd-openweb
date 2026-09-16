@@ -120,7 +120,7 @@ export function addWorksheetControl(controlName, cb = () => {}) {
   };
 }
 
-const getDispatchData = (data = {}) => {
+const getDispatchData = (data: Record<string, any> = {}) => {
   const extendDatas = data.extendDatas || {};
   const shareConfig = safeParse(extendDatas.shareConfig) || {};
   shareConfig.title = shareConfig.title || `${data.name} - ${_l('公开填写')}`;

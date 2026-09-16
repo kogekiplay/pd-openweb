@@ -452,7 +452,7 @@ class MemberList extends Component<any, any> {
     );
   };
 
-  renderNull = (data = {}) => {
+  renderNull = (data: Record<string, any> = {}) => {
     const { detail } = this.props.memberList;
     let { isOwner, isAdmin } = getUserRole(detail.permissionType);
     isAdmin = isAdmin || isOwner;

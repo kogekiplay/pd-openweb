@@ -7,7 +7,7 @@ import type { AppDispatch, GetState } from 'src/redux/types';
 
 const mapViewRequest = {};
 
-const getMapViewPara = (sheet = {}, view) => {
+const getMapViewPara = (sheet: Record<string, any> = {}, view) => {
   const { base, navGroupFilters = [], quickFilter = [] } = sheet;
   const { appId } = base;
   view = view || getCurrentView(sheet);

@@ -22,7 +22,7 @@ const InputWrapper = styled.div`
 
 function TestSms(props) {
   const { onCancel, signId, signName, projectId } = props || {};
-  const mobileRef = useRef(null);
+  const mobileRef = useRef<HTMLInputElement | null>(null);
   const itiRef = useRef(null);
   const [sendLoading, setSendLoading] = useState(false);
 
@@ -59,7 +59,7 @@ function TestSms(props) {
       return;
     }
 
-    const onSend = (captchaData = {}) => {
+    const onSend = (captchaData: Record<string, any> = {}) => {
       if (!_.isEmpty(captchaData) && captchaData.ret !== 0) {
         return;
       }

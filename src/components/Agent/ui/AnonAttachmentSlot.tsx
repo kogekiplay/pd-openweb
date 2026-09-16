@@ -37,7 +37,7 @@ export default function AnonAttachmentSlot({
   onSessionChange,
   createSession,
 }) {
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   async function handlePick(e) {
     const picked = Array.from(e.target.files || []);

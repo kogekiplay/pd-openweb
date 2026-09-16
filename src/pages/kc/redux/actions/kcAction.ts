@@ -405,7 +405,7 @@ export function addNewFolder(folderName, cb = () => {}) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const kcState = getState().kc;
     const { currentRoot, currentFolder } = kcState;
-    const validateOut = {};
+    const validateOut: Record<string, any> = {};
 
     if (validateFileName(folderName, true, validateOut)) {
       kcService

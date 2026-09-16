@@ -238,7 +238,7 @@ const PublicThirdPartyApp = forwardRef((props, ref) => {
     });
   };
 
-  const getDataSource = (params = {}) => {
+  const getDataSource = (params: Record<string, any> = {}) => {
     if (ajaxRef.current && ajaxRef.current.abort) {
       ajaxRef.current.abort();
     }
@@ -262,7 +262,7 @@ const PublicThirdPartyApp = forwardRef((props, ref) => {
     getDataSource({ keywords: val });
   }, 500);
 
-  const editAppConfigs = (params = {}, callback) => {
+  const editAppConfigs = (params: Record<string, any> = {}, callback) => {
     openAuthorAjax
       .editAppConfigs({ projectId, ...params })
       .then(res => {

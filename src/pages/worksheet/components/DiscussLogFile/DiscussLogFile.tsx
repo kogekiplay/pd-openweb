@@ -65,7 +65,7 @@ class DiscussLogFile extends Component<any, any> {
     emitter.removeListener('RELOAD_RECORD_INFO_LOG', this.reloadLog);
   }
 
-  getActive(props = {}) {
+  getActive(props: Record<string, any> = {}) {
     const { sideactive } = getRequest();
 
     if (sideactive === 'pay' && !!this.showTabs.find(o => o.name === 'pay')) {

@@ -143,7 +143,7 @@ class FeedLeftNav extends React.Component<any, any> {
       this.setState({ loadingProjects, foldedProjects });
     }
 
-    const query = {};
+    const query: Record<string, any> = {};
 
     if (projectId) {
       query.projectId = projectId;

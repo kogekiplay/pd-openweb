@@ -8,11 +8,11 @@ import { FILL_COLOR } from 'src/pages/widgetConfig/widgetDisplay/components/Widg
 import { addBehaviorLog } from 'src/utils/project';
 import { browserIsMobile } from 'src/utils/sso';
 
-const videoReg = (data = {}) => {
+const videoReg = (data: Record<string, any> = {}) => {
   return /(swf|avi|flv|mpg|rm|mov|wav|asf|3gp|mkv|rmvb|mp4)/i.test(data.ext || '');
 };
 
-const imgReg = (data = {}) => {
+const imgReg = (data: Record<string, any> = {}) => {
   return /(gif|png|jpg|jpeg|webp|svg|psd|bmp|tif|tiff)/i.test(data.ext || '');
 };
 

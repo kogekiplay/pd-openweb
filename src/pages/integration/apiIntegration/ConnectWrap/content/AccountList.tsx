@@ -180,7 +180,7 @@ function AccountList(props) {
   useEffect(() => {
     if (!window.IM) return;
 
-    IM.socket.on('channel workflow_integration', (data = {}) => {
+    IM.socket.on('channel workflow_integration', (data: Record<string, any> = {}) => {
       setState({
         keywords: '',
         refreshLoading: true,

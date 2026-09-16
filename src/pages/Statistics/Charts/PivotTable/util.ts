@@ -320,7 +320,7 @@ const isApplyStyle = (applyValue, recordKey) => {
   }
 };
 
-const getCompiledScopeRuleColor = (value, controlMinAndMax = {}, scopeRules = [], emptyShowType) => {
+const getCompiledScopeRuleColor = (value, controlMinAndMax: Record<string, any> = {}, scopeRules = [], emptyShowType) => {
   let result = null;
 
   scopeRules.forEach(rule => {

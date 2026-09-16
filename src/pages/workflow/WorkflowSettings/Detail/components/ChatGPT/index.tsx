@@ -275,7 +275,7 @@ export default ({ processId, nodeId, codeType = 1, onSave = () => {}, onClose = 
           return;
         }
 
-        let source = {};
+        let source: Record<string, any> = {};
 
         try {
           source = JSON.parse(event.data);

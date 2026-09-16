@@ -70,7 +70,7 @@ const pushTarget = (groups, target, data) => {
 const Drag = props => {
   const { appPkg, isCharge, appItem, className, children, onHover = _.noop, onDragEnd = _.noop } = props;
   const { iconColor, currentPcNaviStyle, themeType } = appPkg;
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement | null>(null);
   const [activeGroup, setActiveGroup] = useState(false);
   const [activeFirst, setActiveFirst] = useState(false);
   const [active, setActive] = useState(false);

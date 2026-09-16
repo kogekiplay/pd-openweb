@@ -413,7 +413,7 @@ let RecordInfo = class RecordInfo extends Component<any, any> {
     const { recordInfo, recordBase } = this.state;
     const { viewId } = recordBase;
     const { switchPermit } = recordInfo;
-    let portalConfigSet = {};
+    let portalConfigSet: Record<string, any> = {};
     const { id: windowAppId, portalConfig = {} } = window?.appInfo || {};
     const isSameApp = appId === windowAppId;
 

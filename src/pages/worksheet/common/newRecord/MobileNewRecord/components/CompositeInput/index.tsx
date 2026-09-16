@@ -49,7 +49,7 @@ const Footer = styled.div`
   }
 `;
 
-const formatAppFile = (file = {}) => ({
+const formatAppFile = (file: Record<string, any> = {}) => ({
   id: file.id || file.fileID,
   fileID: file.fileID,
   name: file.name || file.originalFileName || file.originalFilename || file.fileName,
@@ -63,7 +63,7 @@ const CompositeInput = forwardRef((props, ref) => {
   const { step, text, loading, error, onStart, onReset, onGenerateRecord } = useVoice();
 
   const uploadFileRef = useRef(null);
-  const attachmentBoxRef = useRef(null);
+  const attachmentBoxRef = useRef<HTMLDivElement | null>(null);
   const [visible, setVisible] = useState(false);
   const [value, setValue] = useState('');
   const [existingFiles, setExistingFiles] = useState([]);

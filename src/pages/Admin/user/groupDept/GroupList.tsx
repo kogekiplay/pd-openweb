@@ -102,7 +102,7 @@ export default class GroupsList extends Component<any, any> {
       {
         title: _l('创建人'),
         dataIndex: 'createAccount',
-        render: (text = {}) => {
+        render: (text: Record<string, any> = {}) => {
           return (
             <div className="overflow_ellipsis" style={{ maxWidth: 150 }}>
               {text.fullname}

@@ -15,7 +15,7 @@ export function getAppUploadFormats(allowMimeTypes = []) {
   return formats.length ? [...new Set(formats)] : DEFAULT_APP_UPLOAD_FORMATS;
 }
 
-function getAppFileType(file = {}) {
+function getAppFileType(file: Record<string, any> = {}) {
   const extension = String(file.fileExt || '')
     .replace(/^\./, '')
     .toLowerCase();
@@ -23,7 +23,7 @@ function getAppFileType(file = {}) {
   return APP_IMAGE_EXTENSIONS.includes(extension) ? 'image' : file.type;
 }
 
-function normalizeAppFile(file = {}) {
+function normalizeAppFile(file: Record<string, any> = {}) {
   const normalizedFile = {
     ...file,
     id: file.fileID,

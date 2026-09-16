@@ -404,7 +404,7 @@ function filterControlsByFormFieldPermissions(controls, { from, includeUsers = f
   });
 }
 
-function buildFormFieldControlObject(control, options = {}) {
+function buildFormFieldControlObject(control, options: Record<string, any> = {}) {
   const type = control.type;
   const base = {
     controlId: control.controlId || '',

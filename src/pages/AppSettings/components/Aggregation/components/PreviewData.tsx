@@ -146,7 +146,7 @@ export default function PreviewData(props) {
         setState({
           aggName: res.name || _l('未命名聚合表'),
         });
-        let data = {};
+        let data: Record<string, any> = {};
 
         try {
           data = await getAppInfo(res.appId);

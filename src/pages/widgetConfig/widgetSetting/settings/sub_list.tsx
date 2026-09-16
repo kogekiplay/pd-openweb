@@ -166,7 +166,7 @@ export default function SubListSetting(props) {
     }
   };
 
-  const updateSubQueryConfigs = (value = {}, mode) => {
+  const updateSubQueryConfigs = (value: Record<string, any> = {}, mode) => {
     const index = findIndex(subQueryConfigs, item => item.controlId === value.controlId);
     let newQueryConfigs = subQueryConfigs.slice();
 

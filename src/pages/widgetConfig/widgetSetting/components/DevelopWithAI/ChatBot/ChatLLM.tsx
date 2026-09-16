@@ -300,7 +300,7 @@ function ChatLLM(
   });
   const [inputIsFocused, setInputIsFocused] = useState(false);
   const [scrollToBottomVisible, setScrollToBottomVisible] = useState(false);
-  const messagesEndRef = useRef(null);
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef(null);
   const [dropElementId] = useState(v4());
   const messagesContainerRef = useRef(null);

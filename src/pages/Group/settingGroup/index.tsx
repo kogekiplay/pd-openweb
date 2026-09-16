@@ -247,7 +247,7 @@ function SettingGroup(props) {
     getGroupUsers();
   }, [groupID]);
 
-  const getGroupUsers = (params = {}) => {
+  const getGroupUsers = (params: Record<string, any> = {}) => {
     setState({ userLoading: true, ...params });
     const pageIndex = params.pageIndex || groupInfo.pageIndex;
 

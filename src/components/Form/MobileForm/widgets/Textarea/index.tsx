@@ -91,8 +91,8 @@ const Textarea = props => {
     return enumDefault === 2 ? value.replace(/\r\n|\n/g, ' ') : value;
   };
 
-  const textareaRef = useRef(null);
-  const textareaViewRef = useRef(null);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const textareaViewRef = useRef<HTMLDivElement | null>(null);
   const isOnComposition = useRef(false);
   const [isEditing, setIsEditing] = useState(false);
   const [originValue, setOriginValue] = useState('');
@@ -197,7 +197,8 @@ const Textarea = props => {
   useEffect(() => {
     // 动态设置高度
     if (textareaRef.current) {
-      textareaRef.current.style.height = 0;
+      // '0' 而不是 0：CSSOM 本来就会 ToString，运行时完全一致，只是 DOM 类型要求 string
+      textareaRef.current.style.height = '0';
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight + 3}px`;
     }
   }, [isEditing, currentValue, disabled, formDisabled]);

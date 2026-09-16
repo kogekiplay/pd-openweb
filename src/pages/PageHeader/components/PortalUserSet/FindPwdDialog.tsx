@@ -303,7 +303,7 @@ export default function TelDialog(props) {
   };
 
   const doCaptchaFn = () => {
-    let callback = (res = {}) => {
+    let callback = (res: Record<string, any> = {}) => {
       if (res.ret !== 0) {
         return;
       }

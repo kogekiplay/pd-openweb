@@ -202,8 +202,8 @@ function PcUpload(props) {
   const [cameraStatus, setCameraStatus] = useState(null);
   const [photoList, setPhotoList] = useState([]);
   const [previewIndex, setPreviewIndex] = useState(0);
-  const videoRef = useRef(null);
-  const canvasRef = useRef(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasContextRef = useRef(null);
   const streamRef = useRef(null);
 
@@ -251,7 +251,9 @@ function PcUpload(props) {
     const video = videoRef.current;
 
     video.srcObject = streamRef.current;
-    video.setAttribute('playsinline', true);
+    // setAttribute 的第二参是 string；传 true 时 DOM 本来就会 ToString 成 'true'，
+    // 写成 'true' 运行时一字不差，只是满足类型
+    video.setAttribute('playsinline', 'true');
     video.disablePictureInPicture = true;
     video.play().catch(error => {
       console.log('播放视频失败:', error);

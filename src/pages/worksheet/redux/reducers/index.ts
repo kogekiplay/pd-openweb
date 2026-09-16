@@ -16,7 +16,7 @@ import * as sheetview from './sheetview';
 import * as worksheet from './worksheet';
 import type { ReduxAction } from 'src/redux/types';
 
-function base(state = {}, action: ReduxAction) {
+function base(state: Record<string, any> = {}, action: ReduxAction) {
   switch (action.type) {
     case 'WORKSHEET_UPDATE_BASE':
       return { ...state, ...action.base };

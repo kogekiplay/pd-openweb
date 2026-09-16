@@ -23,7 +23,7 @@ export default class Users extends Component<any, any> {
     this.state = {
       users: (props.fullValues || [])
         .map(value => {
-          let user = {};
+          let user: Record<string, any> = {};
 
           try {
             user = JSON.parse(value);

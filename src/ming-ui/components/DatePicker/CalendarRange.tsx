@@ -97,7 +97,7 @@ class CalendarRange extends Component<any, any> {
 
   componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
-      const newState = {};
+      const newState: Record<string, any> = {};
 
       if ('selectedValue' in this.props) {
         newState.selectedValue = this.props.selectedValue;

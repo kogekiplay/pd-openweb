@@ -8,7 +8,7 @@ import type { FormControl } from 'src/utils/controlTypes';
 
 export default function SelectControl({ className, list, searchable = true, onClick, onClickAway = _.noop }: { className?: string; [key: string]: any }) {
   const ref = useRef(null);
-  const inputEl = useRef(null);
+  const inputEl = useRef<HTMLInputElement | null>(null);
   const [keyword, setKeyWord] = useState('');
   const controls: FormControl[] = (
     keyword ? list.filter(c => c.controlName.toLowerCase().indexOf(keyword.toLowerCase()) > -1) : list

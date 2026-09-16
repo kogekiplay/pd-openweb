@@ -100,7 +100,7 @@ export default function (props) {
       return;
     }
 
-    let callback = (res = {}) => {
+    let callback = (res: Record<string, any> = {}) => {
       if (res.ret !== 0) {
         // 图形验证失败，重置发送状态，允许重新发送
         otpInputRef.current?.resetSending();

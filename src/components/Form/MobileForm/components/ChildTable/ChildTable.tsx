@@ -972,7 +972,7 @@ class ChildTable extends React.Component<any, any> {
     }
   };
 
-  handleRowDetailSave = (row, updatedControlIds?, saveOptions = {}) => {
+  handleRowDetailSave = (row, updatedControlIds?, saveOptions: Record<string, any> = {}) => {
     const { updateRow, addRow } = this.props;
     const { previewRowIndex, controls } = this.state;
     const newControls = updateOptionsOfControls(

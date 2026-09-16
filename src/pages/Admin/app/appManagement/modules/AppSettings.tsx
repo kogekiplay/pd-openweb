@@ -40,7 +40,7 @@ export default class AppSettings extends React.Component<any, any> {
     }
   }
 
-  renderContent(item = {}) {
+  renderContent(item: Record<string, any> = {}) {
     const entities = item.entities || [];
 
     if (entities.length > 0) {

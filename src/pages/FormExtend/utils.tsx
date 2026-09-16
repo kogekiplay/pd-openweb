@@ -42,7 +42,7 @@ export function getNotSupportControlIds(controls) {
   return notSupportIds;
 }
 
-export function getDisabledControls(controls, systemRelatedIds = {}) {
+export function getDisabledControls(controls, systemRelatedIds: Record<string, any> = {}) {
   const defaultHided = getNotSupportControlIds(controls);
   const hidedWhenNew = controls
     .filter(control => (control.controlPermissions || '000')[2] === '0')

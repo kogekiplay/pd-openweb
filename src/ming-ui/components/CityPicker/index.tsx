@@ -130,9 +130,9 @@ export default function CityPicker(props) {
   const countrySortData = _.isUndefined(commcountries) ? COMMON_DEFAULT_COUNTRY : safeParse(commcountries || '[]');
 
   const isMobile = browserIsMobile();
-  const cityPickerRef = useRef(null);
-  const triggerRef = useRef(null);
-  const popupRef = useRef(null);
+  const cityPickerRef = useRef<HTMLInputElement | null>(null);
+  const triggerRef = useRef<HTMLSpanElement | null>(null);
+  const popupRef = useRef<HTMLDivElement | null>(null);
 
   const [visible, setVisible] = useState(popupVisible);
   const [data, setData] = useState([]);

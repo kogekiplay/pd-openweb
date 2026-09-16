@@ -241,7 +241,7 @@ export default class DropDownItem extends Component<any, any> {
     );
   }
 
-  renderChecked(item, parentControl = {}) {
+  renderChecked(item, parentControl: Record<string, any> = {}) {
     const { values = [], actionType } = this.props;
     const findChildItem = id => _.find(values, v => v.controlId === id && _.isEmpty(v.childControlIds));
 
@@ -298,7 +298,7 @@ export default class DropDownItem extends Component<any, any> {
     onChange('controls', newControls);
   }
 
-  renderItem(item = {}, parentControl = {}, deepIndex) {
+  renderItem(item: Record<string, any> = {}, parentControl: Record<string, any> = {}, deepIndex) {
     const { values = [], actionType, from } = this.props;
     const { extendId = [] } = this.state;
     // 子表、关联表格可编辑不显示下拉

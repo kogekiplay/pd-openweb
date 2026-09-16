@@ -92,7 +92,7 @@ export default function (props) {
 
   const doCaptchaFn = isFrequentLoginError => {
     if (createAccountLoading && !isFrequentLoginError) return;
-    const callback = (res = {}) => {
+    const callback = (res: Record<string, any> = {}) => {
       if (isFrequentLoginError && res.ret !== 0) return;
 
       onChange({ createAccountLoading: true });

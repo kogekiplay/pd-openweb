@@ -94,7 +94,7 @@ export function handlePasteUpdateCell(cell, pasteData, update = () => {}) {
   // SIGNATURE
 }
 
-function mergeControlAdvancedSetting(control = {}, advancedSetting = {}) {
+function mergeControlAdvancedSetting(control: Record<string, any> = {}, advancedSetting = {}) {
   return {
     ...control,
     advancedSetting: {
@@ -531,7 +531,7 @@ export default class CellControl extends React.Component<any, any> {
     });
   };
 
-  handleUpdateEditing = (isediting: boolean, cb = () => {}, options = {}) => {
+  handleUpdateEditing = (isediting: boolean, cb = () => {}, options: Record<string, any> = {}) => {
     if (isediting && !this.editable) {
       return;
     }
@@ -600,7 +600,7 @@ export default class CellControl extends React.Component<any, any> {
     }
 
     if (isediting && !cellFullVisible.fullvisible) {
-      let newPos = {};
+      let newPos: Record<string, any> = {};
 
       if (_.isNumber(cellFullVisible.newLeft)) {
         newPos.left = cellFullVisible.newLeft;

@@ -170,7 +170,7 @@ export default class AccountChart extends React.Component<any, any> {
                 data={this.state.timeZones}
                 openSearch
                 showItemTitle
-                renderTitle={(selectedData = {}) => <span title={selectedData.text}>{selectedData.text}</span>}
+                renderTitle={(selectedData: Record<string, any> = {}) => <span title={selectedData.text}>{selectedData.text}</span>}
                 onChange={value => {
                   this.sureSettings('timeZone', value, () => {
                     this.setState({ currentTimeZone: value });

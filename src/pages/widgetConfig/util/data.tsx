@@ -557,9 +557,9 @@ export const dealCusTomEventActions = (actionItems: any[] = [], controls: FormCo
 const WORKSHEET_OBJECT_ID_REG = /^[a-f0-9]{24}$/i;
 const RELATE_WORKSHEET_CONTROL_TYPES = [29, 35, 51];
 
-const isUnsavedControl = (control = {}) => control.controlId && control.controlId.includes('-');
+const isUnsavedControl = (control: Record<string, any> = {}) => control.controlId && control.controlId.includes('-');
 
-const isBlankSubList = (control = {}) => {
+const isBlankSubList = (control: Record<string, any> = {}) => {
   if (control.type !== 34) return false;
 
   const { dataSource, controlId } = control;
@@ -713,7 +713,7 @@ export const checkWidgetBeforeSave = (
   });
 };
 
-const checkAutoIdReset = (data = {}, originControls: FormControl[] = [], globalInfo = {}) => {
+const checkAutoIdReset = (data: Record<string, any> = {}, originControls: FormControl[] = [], globalInfo = {}) => {
   const increase = getAdvanceSetting(data, 'increase') || [];
   const originAutoId = _.find(originControls, o => o.controlId === data.controlId);
   const originIncrease = getAdvanceSetting(originAutoId, 'increase') || [];
@@ -1358,7 +1358,7 @@ export const handleMoveWidgets = (data, widgetProps) => {
   });
 };
 
-export const dealCopyWidgetId = (data = {}) => {
+export const dealCopyWidgetId = (data: Record<string, any> = {}) => {
   const newData = {
     ...data,
     attribute: 0,

@@ -46,7 +46,7 @@ export const isIn = (flowData, control, parentControl, workSheetId, isGroup) => 
   }
 
   const aggHs = (_.get(aggregateDt, 'nodeConfig.config.aggregateFields') || []).find(
-    (a = {}) => !a.isCalculateField && isEqualControl(parentControl, control, a, workSheetId),
+    (a: Record<string, any> = {}) => !a.isCalculateField && isEqualControl(parentControl, control, a, workSheetId),
   );
 
   if (aggHs) {
@@ -696,7 +696,7 @@ export const getDefaultOperationForGroup = item => {
 
 //计数归组字段的alias和aggFuncType
 export const getGroupInfo = (data, flowData) => {
-  let newDt = {};
+  let newDt: Record<string, any> = {};
 
   if (
     isDateTimeGroup(data) //|| isTimeGroup(data)
@@ -776,7 +776,7 @@ export const isDelStatus = (item, source) => {
 //更新最新的字段配置到聚合表归组设置
 export const setGroupFields = (groupDt, sourceInfos, flowData) => {
   return (_.get(groupDt, 'nodeConfig.config.groupFields') || []).map(o => {
-    let fields = o.fields.map((it = {}, i) => {
+    let fields = o.fields.map((it: Record<string, any> = {}, i) => {
       let controlSetting = {};
       let parentFieldInfo = it.parentFieldInfo || {};
 

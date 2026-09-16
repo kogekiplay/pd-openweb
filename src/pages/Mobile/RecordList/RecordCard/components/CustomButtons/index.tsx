@@ -99,7 +99,7 @@ const CustomButtons = props => {
     return translateInfo.name || button.name;
   };
 
-  const getButtonIcon = (button = {}, buttonColor = {}) => {
+  const getButtonIcon = (button: Record<string, any> = {}, buttonColor: Record<string, any> = {}) => {
     const { icon, iconUrl } = button;
     const disabled = btnDisable[button.btnId] || button.disabled;
 

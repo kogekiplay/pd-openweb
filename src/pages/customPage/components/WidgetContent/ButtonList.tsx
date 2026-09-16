@@ -95,7 +95,7 @@ const getStaticIdValues = input => {
     .filter(value => !_.isNil(value) && value !== '');
 };
 
-let currentBtn = {};
+let currentBtn: Record<string, any> = {};
 
 const refreshComponent = () => {
   const { refreshObjects = [] } = currentBtn.config;
@@ -447,7 +447,7 @@ export function ButtonList({
     // 链接
     if (hrefReg.test(result)) {
       if (config.recordLink) {
-        const run = (shareData = {}) => {
+        const run = (shareData: Record<string, any> = {}) => {
           if (shareData.rowId) {
             if (window.isMingDaoApp) {
               window.location.href = pathCompletion(

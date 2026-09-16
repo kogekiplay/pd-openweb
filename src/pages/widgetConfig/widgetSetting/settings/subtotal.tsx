@@ -153,7 +153,7 @@ export default function Subtotal(props) {
       ),
   );
   const filterColumns = ((sheetData.info || {}).worksheetId ? sheetData.controls || [] : relationControls || []).filter(
-    (i = {}) => {
+    (i: Record<string, any> = {}) => {
       if (i.type === 38 && i.enumDefault === 3) return false;
       return true;
     },

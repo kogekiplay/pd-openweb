@@ -21,8 +21,8 @@ const SheetSelector = () => {
   const { appId, recommendSchemes, activeScheme, selectedWorksheetList, aiLoading, allWorksheetList } = state;
   const aiEnabled = !md.global.SysSettings.hideAIBasicFun;
 
-  const viewportRef = useRef(null);
-  const trackRef = useRef(null);
+  const viewportRef = useRef<HTMLDivElement | null>(null);
+  const trackRef = useRef<HTMLDivElement | null>(null);
 
   const [offset, setOffset] = useState(0);
   const [showLeft, setShowLeft] = useState(false);

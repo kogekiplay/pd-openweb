@@ -14,7 +14,7 @@ const pageSizeForGroup = 20;
 const pageSizeForGroupKan = 50;
 const pageSize = 100;
 
-const getGroupName = (newName, oldName, groupControl = {}) => {
+const getGroupName = (newName, oldName, groupControl: Record<string, any> = {}) => {
   if (!newName) {
     return oldName;
   }

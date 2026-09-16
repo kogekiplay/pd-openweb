@@ -57,7 +57,7 @@ class Marker extends React.Component<any, any> {
 
   // 在创建实例时根据传入配置，设置初始化选项
   buildCreateOptions(props) {
-    let opts = {};
+    let opts: Record<string, any> = {};
     MarkerAllProps.forEach(key => {
       if (key in props) {
         opts[key] = this.getSetterParam(key, props[key]);

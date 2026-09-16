@@ -57,7 +57,7 @@ const SideBar = props => {
       return;
     }
 
-    const filter = {};
+    const filter: Record<string, any> = {};
 
     if (worksheetIds?.length) {
       filter.worksheetIds = worksheetIds;

@@ -30,7 +30,7 @@ export default function AppTrash(props) {
     cache.current['pending_' + key] = value;
   }
 
-  function load(args = {}) {
+  function load(args: Record<string, any> = {}) {
     setLoading(true);
     if (!_.isUndefined(args.keyword)) {
       setApps([]);

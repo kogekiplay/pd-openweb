@@ -13,7 +13,7 @@ import { HAS_DYNAMIC_TYPE } from '../../config';
 import { CustomActionWrap } from '../../style';
 import AddFields from '../AddFields';
 
-const getDefaultInfo = (globalSheetInfo = {}) => {
+const getDefaultInfo = (globalSheetInfo: Record<string, any> = {}) => {
   return {
     appId: globalSheetInfo.appId,
     sheetId: globalSheetInfo.worksheetId,

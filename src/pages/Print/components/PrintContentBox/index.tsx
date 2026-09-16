@@ -26,8 +26,8 @@ const PrintContentBox = props => {
   const emptyPlaceholderMode = advanceMap.emptyPlaceholderMode?.value;
 
   const scrollViewRef = useRef(null);
-  const viewportRef = useRef(null);
-  const printItemsRef = useRef(null);
+  const viewportRef = useRef<HTMLDivElement | null>(null);
+  const printItemsRef = useRef<HTMLDivElement | null>(null);
   const lastPageRef = useRef(0);
   const rowsValuesMapRef = useRef({});
   const relationRowsValuesMapRef = useRef({});

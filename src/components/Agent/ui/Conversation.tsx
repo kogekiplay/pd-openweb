@@ -131,7 +131,7 @@ export function Conversation({
   const stickToBottomRef = useRef(true);
   // 流式期间「预留占位」：内容高度回缩（典型如推理块流式结束收起）时，在底部补等高占位撑住滚动总高度，
   // 避免 scrollTop 被 clamp 导致整列内容下移；随后流式新增内容把占位逐步吃掉，本轮结束清零。
-  const contentRef = useRef(null); // children 包裹层（不含占位），ResizeObserver 只观察它，避免反馈环
+  const contentRef = useRef<HTMLDivElement | null>(null); // children 包裹层（不含占位），ResizeObserver 只观察它，避免反馈环
   const reserveRef = useRef(0);
   const [reserve, setReserve] = useState(0);
   const peakRef = useRef(0); // 本轮见过的最大「真实内容」高度（不含占位）

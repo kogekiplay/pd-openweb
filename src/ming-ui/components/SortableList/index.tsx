@@ -25,7 +25,7 @@ const DragItem = props => {
     setDragging,
     renderItem,
   } = props;
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (!ref.current) return;

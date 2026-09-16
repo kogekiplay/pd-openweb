@@ -435,7 +435,7 @@ ShareFolder.prototype = {
   },
   saveToKnowledge: function () {
     var SF = this;
-    var sourceData = {};
+    var sourceData: Record<string, any> = {};
     var kcPath = {
       type: 1,
       node: {

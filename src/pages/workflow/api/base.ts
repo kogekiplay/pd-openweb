@@ -1,7 +1,7 @@
 export const controllerName = 'Workflow';
 
 export default {
-  server: (options = {}) => {
+  server: (options: Record<string, any> = {}) => {
     const isPlugin = location.href.indexOf('workflowplugin') > -1;
 
     if (options.isIntegration) {

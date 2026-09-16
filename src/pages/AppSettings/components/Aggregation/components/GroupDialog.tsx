@@ -206,7 +206,7 @@ export default function GroupDialog(props) {
           <React.Fragment>
             {sourceInfos.map((o, i) => {
               const fields = _.get(item, `fields`);
-              const data = (fields || []).find((o = {}, n) => !!o.oid && n !== i);
+              const data = (fields || []).find((o: Record<string, any> = {}, n) => !!o.oid && n !== i);
               const list = items.map(a => (_.get(a, `fields[${i}].oid`) || '').split('_')[1]);
               const oidList = items.map(a => _.get(a, `fields[${i}].oid`) || '');
               let sourceInfo = o;

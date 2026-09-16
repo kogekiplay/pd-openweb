@@ -80,7 +80,7 @@ const HeaderWrap = styled.div`
   }
 `;
 
-function updateWorkflowMingoStore(appDetail = {}) {
+function updateWorkflowMingoStore(appDetail: Record<string, any> = {}) {
   updateGlobalStoreForMingo({
     activeModule: 'workflow',
     appId: appDetail.id,

@@ -84,7 +84,7 @@ const Cascader = React.forwardRef(
     const [isFocus, setFocus] = useState(false);
     const containerRef = useRef(null);
     const searchInputRef = useRef(null);
-    const measureRef = useRef(null);
+    const measureRef = useRef<HTMLSpanElement | null>(null);
     const [inputWidth, setInputWidth] = useState(3);
 
     const isFocused = useMemo(() => popupVisible || isFocus, [popupVisible, isFocus]);

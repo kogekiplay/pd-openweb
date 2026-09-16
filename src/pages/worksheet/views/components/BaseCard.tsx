@@ -567,7 +567,7 @@ const BaseCard = props => {
         disabled={cell.type === 26 && String(viewType) === '8'}
       />
     );
-    let style = {};
+    let style: Record<string, any> = {};
 
     if (item.type === 6) {
       style.width = '100%';

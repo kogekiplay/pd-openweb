@@ -74,7 +74,7 @@ export default class DateInput extends Component<any, any> {
     };
 
     if (tabType === 2 || from === DYNAMIC_FROM_MODE.FAST_FILTER) {
-      let param = {};
+      let param: Record<string, any> = {};
 
       if (from === DYNAMIC_FROM_MODE.FAST_FILTER && _.get(data, 'advancedSetting.shownullitem') === '1') {
         param.staticAccounts = [

@@ -179,7 +179,7 @@ export default class Footer extends Component<any, any> {
       });
     }
   };
-  request = (action, restPara = {}, noSave = false) => {
+  request = (action, restPara: Record<string, any> = {}, noSave = false) => {
     const { instanceId, workId, onSave = _.noop, onClose = _.noop, onSubmit } = this.props;
     const { isRequest } = this.state;
     const isStash = restPara.operationType === 13;

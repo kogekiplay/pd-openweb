@@ -205,7 +205,7 @@ function SearchFolder(props) {
         return;
       case 38: //up
       case 40: //down
-        let item = {};
+        let item: Record<string, any> = {};
 
         if (highlight.id === 0) {
           if (e.keyCode === 38 || (!data.folders[0] && !data.labels[0])) return;

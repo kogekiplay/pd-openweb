@@ -133,7 +133,7 @@ function MentionInput(
   },
   ref,
 ) {
-  const editorRef = useRef(null);
+  const editorRef = useRef<HTMLDivElement | null>(null);
   const isComposingRef = useRef(false);
   // 失焦延迟关闭浮层的定时器；重新聚焦时需取消，避免点 @ 按钮后浮层被旧定时器关掉
   const blurTimerRef = useRef(null);

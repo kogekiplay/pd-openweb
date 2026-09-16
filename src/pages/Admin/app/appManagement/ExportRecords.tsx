@@ -42,7 +42,7 @@ export default function ExportRecords({ projectId, type }: { projectId?: string;
   const promiseRef = useRef(null);
 
   const getDataList = useCallback(
-    (params = {}) => {
+    (params: Record<string, any> = {}) => {
       if (promiseRef.current && promiseRef.current.abort) {
         promiseRef.current.abort();
       }

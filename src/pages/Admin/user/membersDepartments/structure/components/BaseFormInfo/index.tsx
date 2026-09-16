@@ -462,7 +462,7 @@ export default class BaseFormInfo extends Component<any, any> {
     );
   };
 
-  renderDepartmentJob = (type = 'single', departmentItem = {}, index?) => {
+  renderDepartmentJob = (type = 'single', departmentItem: Record<string, any> = {}, index?) => {
     const { typeCursor, projectId, authority = [] } = this.props;
     const {
       departmentInfos = [],

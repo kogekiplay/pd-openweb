@@ -427,7 +427,7 @@ export function compareControlType(widget, type) {
   return false;
 }
 
-export function getFilterTypes(control = {}, conditionType?, from?) {
+export function getFilterTypes(control: Record<string, any> = {}, conditionType?, from?) {
   let typeEnums = [];
   const { type, advancedSetting = {} } = control;
   const typeKey = getTypeKey(type);

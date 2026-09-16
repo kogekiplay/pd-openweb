@@ -567,7 +567,7 @@ function TableComp(props) {
           highlightRows: {},
         });
       }}
-      updateCell={(args, options = {}) => {
+      updateCell={(args, options: Record<string, any> = {}) => {
         updateCell(args, {
           ...options,
           updateSuccessCb: (...cbArgs) => {

@@ -513,7 +513,7 @@ export function updateViewPermission(param) {
   };
 }
 
-export function updateControlOfRow({ cell = {}, cells = [], recordId, rules }: { recordId?: string; [key: string]: any }, options = {}) {
+export function updateControlOfRow({ cell = {}, cells = [], recordId, rules }: { recordId?: string; [key: string]: any }, options: Record<string, any> = {}) {
   return (dispatch: AppDispatch, getState: GetState) => {
     if (!_.isEmpty(cell) && _.isEmpty(cells)) {
       cells = [cell];
@@ -842,7 +842,7 @@ export function hideRows(rowIds) {
         rowIds.forEach((rowId: string) => {
           rows.forEach((row: RecordRow) => {
             if (row.pid === rowId || includes(row.childrenids, rowId)) {
-              const changes = {};
+              const changes: Record<string, any> = {};
 
               if (row.pid === rowId) {
                 changes.pid = undefined;

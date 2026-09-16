@@ -595,7 +595,7 @@ export const fillRecordsTimeBlockColor = (grouping, colorControl) => {
   }));
 };
 
-export const fillRecordTimeBlockColor = (record, colorControl = {}) => {
+export const fillRecordTimeBlockColor = (record, colorControl: Record<string, any> = {}) => {
   const { controlId, options } = colorControl;
   const defaultColor = '#1677ff';
 
@@ -725,7 +725,7 @@ export const getControlsForGunter = worksheetControls => {
 /**
  * 甘特图分组不支持多选字段。
  */
-export const isGunterGroupMultiSelectControl = (control = {}) => {
+export const isGunterGroupMultiSelectControl = (control: Record<string, any> = {}) => {
   const type = control.type === 30 ? control.sourceControlType : control.type;
 
   return (

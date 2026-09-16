@@ -108,7 +108,7 @@ export default class TwofactorContainer extends React.Component<any, any> {
   };
 
   //获取验证码ajaxFn
-  sendTwofactorVerifyCode = (data, callbacks = {}) => {
+  sendTwofactorVerifyCode = (data, callbacks: Record<string, any> = {}) => {
     this.setState({ isFail: false });
     const { ticket, randstr, captchaType } = data || {};
     const { state, type, hasSendTel } = this.state;
@@ -212,7 +212,7 @@ export default class TwofactorContainer extends React.Component<any, any> {
     // TOTP方式验证不需要图形验证码
     const shouldUseCaptcha = needTicket && type !== TwofactorType.totp;
 
-    let callback = (res = {}) => {
+    let callback = (res: Record<string, any> = {}) => {
       if (shouldUseCaptcha && res.ret !== 0) {
         callbacks?.onError?.();
         // 图形验证失败，重置发送状态，允许重新发送

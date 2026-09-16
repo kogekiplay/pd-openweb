@@ -17,7 +17,7 @@ function FreeFieldSandbox() {
   const sendMessageToMain = useCallback(data => {
     messageBridge.emitter.emit('send-message-to-main', data);
   }, []);
-  const handleEmitterEvent = useCallback((payload = {}) => {
+  const handleEmitterEvent = useCallback((payload: Record<string, any> = {}) => {
     const { event } = payload;
 
     if (event === 'set-code') {

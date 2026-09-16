@@ -141,7 +141,7 @@ const originErr = {
   meErr: false,
   mlErr: false,
 };
-const renderShowValue = (item = {}) => {
+const renderShowValue = (item: Record<string, any> = {}) => {
   const selectValue = _.find(DISPLAY_MASK, i => i.value === item.value) || {};
   return (
     <span>
@@ -221,7 +221,7 @@ export default function MaskSettingDialog(props) {
           className="w100"
           maxHeight={385}
           value={masktype}
-          renderTitle={(i = {}) => i.text}
+          renderTitle={(i: Record<string, any> = {}) => i.text}
           data={[DISPLAY_MASK.map(item => ({ text: renderShowValue(item), value: item.value }))].concat(CUSTOM_DISPLAY)}
           onChange={value => {
             setDetail({ masktype: value });

@@ -307,7 +307,7 @@ export default function customPage(state = initialState, action: ReduxAction) {
       };
     case UPDATE_WIDGET:
       const { widget, layoutType, ...rest } = payload;
-      let result = {};
+      let result: Record<string, any> = {};
 
       // 更新对应布局里的标题或者统一的value
       if (layoutType) {

@@ -22,8 +22,8 @@ export default function (props) {
     focusDiv: '',
   });
 
-  const InputRef = useRef(null);
-  const InputEmail = useRef(null);
+  const InputRef = useRef<HTMLInputElement | null>(null);
+  const InputEmail = useRef<HTMLInputElement | null>(null);
 
   const doSetAccountInfo = callback => {
     validateCompanyInfoRequiredField().then(res => {

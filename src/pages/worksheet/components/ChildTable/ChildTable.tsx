@@ -2364,7 +2364,7 @@ class ChildTable extends React.Component<any, any> {
                       this.copyRow(args.row);
                     }}
                     saveSheetLayout={({ closePopup }) => {
-                      const changes = {};
+                      const changes: Record<string, any> = {};
 
                       if (!_.isEmpty(tempSheetColumnWidths)) {
                         changes.widths = JSON.stringify(

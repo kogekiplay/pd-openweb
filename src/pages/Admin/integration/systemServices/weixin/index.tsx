@@ -85,7 +85,7 @@ export default class WeiXin extends Component<any, any> {
     });
   }
 
-  handleClick(clickKey, data = {}) {
+  handleClick(clickKey, data: Record<string, any> = {}) {
     const { weiXinInfo } = this.state;
 
     if (clickKey === 'view') {
@@ -169,7 +169,7 @@ export default class WeiXin extends Component<any, any> {
 
     return (
       <Fragment>
-        {currentWeiXinInfo.map((item = {}) => {
+        {currentWeiXinInfo.map((item: Record<string, any> = {}) => {
           return (
             <Fragment key={item.appId}>
               {CONFIGS.map(i => {

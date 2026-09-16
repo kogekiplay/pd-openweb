@@ -116,7 +116,7 @@ export default function DialogMapping(props) {
     );
   };
 
-  const getDropData = (item = {}, showValue) => {
+  const getDropData = (item: Record<string, any> = {}, showValue) => {
     const parentMappingItem = _.find(mappingData, i => i.id === item.dataSource);
     const filterSYS = SYS.concat(SYS_CONTROLS);
     const filterSelf = allControls.filter(i => i.controlId !== data.controlId || !_.includes(filterSYS, i.controlId));
@@ -177,7 +177,7 @@ export default function DialogMapping(props) {
   };
 
   const handleChange = (value, item, parentId) => {
-    let newItem = {};
+    let newItem: Record<string, any> = {};
 
     if (item.dataSource) {
       const parentMappingItem = _.find(mappingData, i => i.id === item.dataSource);

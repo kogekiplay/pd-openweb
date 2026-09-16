@@ -1856,7 +1856,7 @@ class WorksheetApi extends Component<any, any> {
 
   renderWorksheetCommon(item, i, type) {
     const specification = this.MENU_LIST[i];
-    const rightOptions = {};
+    const rightOptions: Record<string, any> = {};
     const needFilter = type === 'dataPipeline' && DATA_PIPELINE_FILTERS[specification.id];
     const otherOptions =
       _.omit(specification.requestData, needFilter ? DATA_PIPELINE_FILTERS[specification.id] : []) || {};

@@ -47,7 +47,7 @@ import {
 import { isHaveCharge } from './util';
 import type { AppDispatch, GetState } from 'src/redux/types';
 
-export function fireWhenViewLoaded(view = {}, { forceUpdate, controls } = {}) {
+export function fireWhenViewLoaded(view: Record<string, any> = {}, { forceUpdate, controls } = {}) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { base, quickFilter } = getState().sheet;
     const { chartId } = base || {};
@@ -514,7 +514,7 @@ const SAVE_WORKSHEET_VIEW_NON_EDITABLE_ATTRS = [
   'editAdKeys',
 ];
 
-function getSaveViewEditAttrs(saveParams = {}) {
+function getSaveViewEditAttrs(saveParams: Record<string, any> = {}) {
   const attrs = Array.isArray(saveParams.editAttrs) ? saveParams.editAttrs : Object.keys(saveParams);
 
   return attrs.filter(
@@ -960,7 +960,7 @@ export function copyCustomPage(para) {
 }
 
 // 更新viewControl搜索
-export function updateSearchRecord(view = {}, record) {
+export function updateSearchRecord(view: Record<string, any> = {}, record) {
   return function (dispatch) {
     if (String(view.viewType) === VIEW_DISPLAY_TYPE.structure) {
       dispatch(updateHierarchySearchRecord(record));

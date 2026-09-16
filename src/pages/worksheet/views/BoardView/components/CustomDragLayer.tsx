@@ -26,7 +26,7 @@ const LayerContainer = styled.div`
 `;
 
 const CustomDragLayer = () => {
-  const dragPreviewRef = useRef(null);
+  const dragPreviewRef = useRef<HTMLDivElement | null>(null);
   const { item, isDragging, currentOffset } = useDragLayer(monitor => ({
     item: monitor.getItem(),
     isDragging: monitor.isDragging(),
