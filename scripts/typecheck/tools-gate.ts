@@ -21,7 +21,14 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 
 const ROOT: string = path.resolve(__dirname, '../..');
-const CONFIG = 'tsconfig.tools.json';
+/**
+ * 两份配置都要过，因为工具链里其实有【两种运行环境】：
+ *   · tsconfig.tools.json          —— Node 脚本（lib 不带 DOM），外加 src 下的 spec
+ *   · tsconfig.tools.browser.json  —— 跑在浏览器里的预览/验证页（要 DOM lib）
+ * 混成一份的代价实测过：给前者开 DOM，19 个 spec 立刻报假错误
+ *（它们用部分对象模拟 window/location，理由见 types/spec-globals.d.ts）。
+ */
+const CONFIGS = ['tsconfig.tools.json', 'tsconfig.tools.browser.json'];
 
 // TS 7 只导出 '.'、'./package.json' 和 './unstable/*'，
 // require.resolve('typescript/bin/tsc') 会 ERR_PACKAGE_PATH_NOT_EXPORTED。
@@ -29,22 +36,27 @@ const CONFIG = 'tsconfig.tools.json';
 const tsc: string = path.join(path.dirname(require.resolve('typescript/package.json')), 'bin/tsc');
 
 const t0 = Date.now();
-const r = spawnSync(process.execPath, [tsc, '--noEmit', '-p', CONFIG], {
-  cwd: ROOT,
-  encoding: 'utf8',
-});
-const secs = ((Date.now() - t0) / 1000).toFixed(1);
+const errors: string[] = [];
 
-const out: string = `${r.stdout || ''}${r.stderr || ''}`;
-const errors: string[] = out.split('\n').filter((l: string) => /error TS\d+/.test(l));
+for (const config of CONFIGS) {
+  const r = spawnSync(process.execPath, [tsc, '--noEmit', '-p', config], {
+    cwd: ROOT,
+    encoding: 'utf8',
+  });
 
-if (r.error) {
-  console.error(`工具链类型门禁：tsc 起不来 —— ${r.error.message}`);
-  process.exit(2);
+  if (r.error) {
+    console.error(`工具链类型门禁：tsc 起不来（${config}）—— ${r.error.message}`);
+    process.exit(2);
+  }
+
+  const out: string = `${r.stdout || ''}${r.stderr || ''}`;
+  errors.push(...out.split('\n').filter((l: string) => /error TS\d+/.test(l)));
 }
 
+const secs = ((Date.now() - t0) / 1000).toFixed(1);
+
 if (!errors.length) {
-  console.log(`工具链类型门禁通过：${CONFIG} 下 0 条诊断（${secs}s）`);
+  console.log(`工具链类型门禁通过：${CONFIGS.join(' + ')} 下 0 条诊断（${secs}s）`);
   process.exit(0);
 }
 

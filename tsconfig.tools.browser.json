@@ -1,0 +1,48 @@
+// 工具链里【跑在浏览器里】那几个页面的类型检查。
+//
+// 【为什么要跟 tsconfig.tools.json 分开】那一份的 lib 只有 ES2022、故意不带 DOM，
+// 因为 tools/ 下绝大多数是 Node 脚本；而且 src 下的 spec 也归它管，那些 spec
+// 靠往 global 上挂【部分对象】来模拟浏览器（理由见 types/spec-globals.d.ts）。
+// 一旦给那份配置开 DOM，19 个 spec 立刻报「window.origin 是只读」「location 缺 300 个属性」
+// 之类 —— 实测过，就是 spec-globals.d.ts 文件头记的那个坑。
+//
+// 所以浏览器侧的页面单独收在这里：它们要 DOM，且【不碰 spec】。
+//
+// 【这也补上了一个漏网】tools/fc7-preview/entry.tsx 是同类文件，
+// 但 tsconfig.tools.json 的 include 写的是 `tools/**/*.ts`，匹配不到 .tsx，
+// 于是它从建立门禁那天起就没被任何配置检查过。现在一并收进来。
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    // 这几个文件就是浏览器页面：document / HTMLElement / window 都要用
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+
+    // 它们由 esbuild 打包成 iife，写的是 ESM
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+
+    "jsx": "react-jsx",
+    "noEmit": true,
+
+    // 与其它两份配置同口径：宽松基线，目的是「标注写错了要报错」
+    "strict": false,
+    "noImplicitAny": false,
+    "skipLibCheck": true,
+
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true
+    // 不写 types 限制：这些页面要引 @types/jquery 之类的浏览器侧类型。
+    // 也不写 baseUrl —— TS 7 已移除该选项（TS5102）。
+  },
+
+  "include": [
+    "tools/fc7-preview/entry.tsx",
+    "tools/verify-jquery-bugfixes/entry.ts",
+    // 这几个页面跟 src 一样会 `import './x.css'`（纯副作用），
+    // 也一样用 $ / md 这类运行期全局 —— 那些 ambient 声明都在这个文件里。
+    // 不带它的话 fc7-preview 的三条 CSS 导入会报 TS2882（这道门禁刚抓到）。
+    "types/global.d.ts"
+  ],
+  "exclude": ["node_modules"]
+}

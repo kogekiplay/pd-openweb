@@ -61,5 +61,9 @@
     // 有界放宽，理由见该文件头
     "types/spec-globals.d.ts"
   ],
-  "exclude": ["node_modules"]
+  // tools/ 下有几个【跑在浏览器里】的预览/验证页，它们要 DOM lib，
+  // 而这份配置故意不带 DOM（见上）。硬塞进来会把 DOM 全局带给上面那批 spec，
+  // 导致 19 条「window.origin 只读」之类的假错误 —— 实测过。
+  // 它们收在 tsconfig.tools.browser.json，同样受第 6 道门禁检查，不是豁免。
+  "exclude": ["node_modules", "tools/fc7-preview/entry.tsx", "tools/verify-jquery-bugfixes/entry.ts"]
 }

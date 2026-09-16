@@ -332,17 +332,18 @@ class TaskList extends Component<any, any> {
       if (nScrollTop + nDivHight + 100 >= nScrollHight) {
         $('.listStageTaskContent')
           .filter(':visible')
-          // ⚠【这一段一直不生效，本次【刻意不修】，只把类型说清楚】
-          // jQuery 的 .each 回调签名是 (index, element)，这里却按 (value, index) 命名，
-          // 所以 `i` 拿到的是 DOM 元素而不是下标。myTaskIsMore 是按 classify 编号
-          // （0-3，见本文件 35 行和 133 行的初始化）存的，用元素当键取到的恒为
-          // undefined —— 局部的 myTaskIsMore 因此永远是 false，第 340 行的条件
-          // 实际只由 taskListSettings.isMore 决定。
-          // 【为什么不直接换成下标 v】前面有 .filter(':visible')，一旦有分类被隐藏，
-          // 下标就不再等于 classify 编号，换成 v 未必是对的。要修得先确定
-          // DOM 块与 classify 的对应关系，而这个页面我没法实测。留作单独一批。
-          .each((v, i: any) => {
-            if (taskListSettings.myTaskIsMore[i]) {
+          // 【原来是 `.each((v, i) => … myTaskIsMore[i])`】jQuery 的 .each 回调签名是
+          // (index, element)，这里按 (value, index) 命名弄反了，`i` 拿到的是 DOM 元素。
+          // myTaskIsMore 是按 classify 编号（0-3）存的，拿元素当键恒取到 undefined，
+          // 于是这个局部量永远是 false，下面的条件实际只由 taskListSettings.isMore 决定。
+          //
+          // 【也不能改用下标】前面有 .filter(':visible')，折叠起来的分类会被滤掉，
+          // 下标就跟 classify 编号对不上了。可靠的键是模板写在表格上的 data-type
+          //（见 tpl/taskClassify.html：`<table … data-type="{{=key}}">`，key 就是
+          // classify 编号，与 updateMyTaskIsMore 写入时用的是同一套）。
+          .each((index, el) => {
+            const classifyType = $(el).find('table').attr('data-type');
+            if (classifyType !== undefined && taskListSettings.myTaskIsMore[classifyType]) {
               myTaskIsMore = true;
             }
           });
