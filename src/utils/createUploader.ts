@@ -1,5 +1,4 @@
 import { assign, endsWith, find, forEach, throttle, trim } from 'lodash';
-import qiniuAjax from 'src/api/qiniu';
 import { getToken } from 'src/utils/common';
 import RegExpValidator from 'src/utils/expression';
 
@@ -18,6 +17,15 @@ const validateFileName = str => {
 
   return true;
 
+  // ⚠【下面这段永远执行不到，本次刻意不动它】
+  // 上面那句 `return true` 把非法字符校验整段挡在后面了，也就是说
+  // 含 \ / : * ? " < > | 的文件名【现在一直是放行的】，那句 alert 从来没弹出过。
+  // eslint 的 no-unreachable 是这次把文件从 src/library/（eslint 与类型检查都 ignore
+  // 的目录）挪到 src/utils/ 之后才第一次报出来的。
+  //
+  // 【为什么不顺手让它生效】那会开始拒绝当前能传上去的文件，是用户可见的行为变更，
+  // 而附件上传是全公司 OA 的核心路径、我没法实测。要开得单独一批、并确认产品预期。
+  // eslint-disable-next-line no-unreachable
   const illegalChars = /[\/\\:\*\?"<>\|]/g;
   const valid = !illegalChars.test(str);
 
@@ -43,8 +51,6 @@ export default option => {
       url: md.global.FileStoreConfig.uploadHost,
       multipart_params: { token: '' },
       max_retries: 3,
-      swf_url: '/staticfiles/plupload/Moxie.swf',
-      xap_url: '/staticfiles/plupload/Moxie.xap',
       dragdrop: true,
       chunk_size: '4mb',
       max_file_size: md.global.SysSettings.fileUploadLimitSize + 'mb',
@@ -73,45 +79,23 @@ export default option => {
   }
 
   (function resetChunkSize() {
-    const ie = (function detectIEVersion() {
-      let v = 4;
-      const div = document.createElement('div');
-      const all = div.getElementsByTagName('i');
-      while (((div.innerHTML = '<!--[if gt IE ' + v + ']><i></i><![endif]-->'), all[0])) {
-        v++;
-      }
-      return v > 4 ? v : false;
-    })();
-    let BLOCK_BITS, MAX_CHUNK_SIZE, chunkSize;
-    const isSpecialSafari =
-      (mOxie.Env.browser === 'Safari' &&
-        mOxie.Env.version <= 5 &&
-        mOxie.Env.os === 'Windows' &&
-        mOxie.Env.osVersion === '7') ||
-      (mOxie.Env.browser === 'Safari' && mOxie.Env.os === 'iOS' && mOxie.Env.osVersion === '7');
-    if (ie && ie <= 9 && option.chunk_size && option.runtimes.indexOf('flash') >= 0) {
-      //  link: http://www.plupload.com/docs/Frequently-Asked-Questions#when-to-use-chunking-and-when-not
-      //  when plupload chunk_size setting is't null ,it cause bug in ie8/9  which runs  flash runtimes (not support html5) .
-      option.chunk_size = 0;
-    } else if (isSpecialSafari) {
-      // win7 safari / iOS7 safari have bug when in chunk upload mode
-      // reset chunk_size to 0
-      // disable chunk in special version safari
-      option.chunk_size = 0;
-    } else {
-      BLOCK_BITS = 20;
-      MAX_CHUNK_SIZE = 4 << BLOCK_BITS; // 4M
+    // 七牛的分片上限是 4M，超过就把分片关掉（保持原有语义，没有改成截断）。
+    //
+    // 【这里删掉了两条永远走不到的分支】
+    // 1. `if (ie && ie <= 9 && option.runtimes.indexOf('flash') >= 0)` ——
+    //    ie 来自一个用 IE 条件注释（<!--[if gt IE n]>）探测版本的函数，
+    //    非 IE 浏览器里恒为 false。而且这条分支还藏着个隐患：runtimes【不在默认值里】，
+    //    真走到就是 `undefined.indexOf` —— 只是靠 ie 恒假短路才没抛。
+    //    另外全部 8 个调用方都显式传了 runtimes: 'html5'，flash 从来没被启用过。
+    // 2. isSpecialSafari —— 判的是 Windows 7 上的 Safari ≤ 5 和 iOS 7 的 Safari，
+    //    分别是 2010 / 2013 年的东西；而本仓生成的 HTML 已经把 Chrome 50 以下
+    //    重定向到升级页（CI/generate.ts）。
+    //    它也是 createUploader 里唯一用到 mOxie 的地方。
+    const BLOCK_BITS = 20;
+    const MAX_CHUNK_SIZE = 4 << BLOCK_BITS; // 4M
+    const chunkSize = plupload.parseSize(option.chunk_size);
 
-      chunkSize = plupload.parseSize(option.chunk_size);
-      if (chunkSize > MAX_CHUNK_SIZE) {
-        option.chunk_size = 0;
-      } else {
-        option.chunk_size = MAX_CHUNK_SIZE;
-      }
-
-      // qiniu service  max_chunk_size is 4m
-      // reset chunk_size to max_chunk_size(4m) when chunk_size > 4m
-    }
+    option.chunk_size = chunkSize > MAX_CHUNK_SIZE ? 0 : MAX_CHUNK_SIZE;
   })();
 
   const initFunc = assign({}, option.init);
@@ -446,7 +430,7 @@ export default option => {
     if (initFunc.Error) {
       initFunc.Error(up, err, errTip);
     }
-    up.refresh(); // Reposition Flash/Silverlight
+    up.refresh(); // 让 plupload 重新测量 browse_button 的位置（原注释写的是 Reposition Flash/Silverlight，已无 Flash 运行时）
   });
 
   uploader.bind('FileUploaded', function (up, file, info) {
