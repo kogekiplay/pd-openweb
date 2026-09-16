@@ -1,4 +1,31 @@
-var staticLanguages = {
+/**
+ * 登录页等【SPA 之前】的引导脚本：按语言替换页面里的占位文本。
+ *
+ * 【为什么它不是普通模块】这段代码由 6 个静态页用 <script src> 直接加载
+ *（CI/generate.ts 与 staticfiles/html/*.html），跑在主包之前；
+ * 那些页面的 <body> 初始是 display:none，靠它最后一行放出来。
+ * 所以【交付物必须是 /staticfiles/staticLanguages.js】—— 改后缀浏览器就不认了。
+ *
+ * 【那为什么源码放在这里】原先仓里直接躺着那份 .js：432 行我们自己写的代码，
+ * 六道门禁一道都看不到它（staticfiles/ 整个目录在 JS 白名单里）。
+ * 现在源码是这份 .ts，受类型检查；交付的 .js 由 scripts/build.ts 的
+ * copyStatic() 用 esbuild 生成，不入库。做法与 vditor 的运行期资源一致。
+ *
+ * 【类型收紧的收益】LangMap 要求四种语言【一个都不能少】。
+ * 原来漏一个语言不会有任何提示，运行时静默回落到英文。
+ */
+
+/** 与 i18n_langtag cookie 的取值一致 */
+type LangTag = 'en' | 'ja' | 'zh-Hans' | 'zh-Hant';
+
+/** 一条文案的四种语言。【刻意不用 Partial】漏翻译要在编译期就报出来。 */
+type LangMap = Record<LangTag, string>;
+
+/**
+ * 键是页面里写的中文原文，值是各语言译文。
+ * 页面里的写法：<transformLang>登录</transformLang>，或 <title>登录</title>。
+ */
+const staticLanguages: Record<string, LangMap> = {
   登录: {
     en: 'Login',
     ja: 'ログイン',
@@ -28,12 +55,6 @@ var staticLanguages = {
     ja: 'ログアウト',
     'zh-Hans': '注销',
     'zh-Hant': '註銷',
-  },
-  统计图: {
-    en: 'Statistics Chart',
-    ja: '統計図',
-    'zh-Hans': '统计图',
-    'zh-Hant': '統計圖',
   },
   登录成功: {
     en: 'Login Successful',
@@ -101,6 +122,10 @@ var staticLanguages = {
     'zh-Hans': '登出',
     'zh-Hant': '登出',
   },
+  // 【这条原先定义了两次】迁成 .ts 时 esbuild 才报出来（原来那份 .js 在 JS 白名单里，
+  // 没有任何工具看过它）。两处只差日语：前一处是 '統計図'，这一处是 '統計チャート'。
+  // 对象字面量里后者覆盖前者，所以线上一直生效的是这一条 —— 保留它、删掉前一条，
+  // 行为不变。
   统计图: {
     en: 'Statistics Chart',
     ja: '統計チャート',
@@ -385,48 +410,58 @@ var staticLanguages = {
   },
 };
 
-var cookieMatch = document.cookie.match(new RegExp('(^| )i18n_langtag=([^;]*)(;|$)'));
-var lang;
+// 【仍然挂到全局】原先是经典脚本里的 `var staticLanguages`，等于一个全局。
+// 打包成 IIFE 后作用域是闭合的，这里显式挂回去，免得将来有页面直接读它。
+(window as any).staticLanguages = staticLanguages;
 
-if (cookieMatch) {
-  lang = decodeURIComponent(cookieMatch[2]);
-} else {
+/** 选语言：cookie 优先，其次按浏览器语言归一，最后兜底英文 */
+function detectLang(): LangTag {
+  const cookieMatch = document.cookie.match(new RegExp('(^| )i18n_langtag=([^;]*)(;|$)'));
+
+  if (cookieMatch) {
+    // cookie 里可以是任何值；取不到译文时下面会自己回落到 en，所以这里断言是安全的
+    return decodeURIComponent(cookieMatch[2]) as LangTag;
+  }
+
   switch (navigator.language) {
     case 'zh-CN':
     case 'zh_cn':
     case 'zh-SG':
     case 'zh_sg':
-      lang = 'zh-Hans';
-      break;
+      return 'zh-Hans';
     case 'zh-TW':
     case 'zh-HK':
     case 'zh-Hant':
-      lang = 'zh-Hant';
-      break;
+      return 'zh-Hant';
     case 'ja':
-      lang = 'ja';
-      break;
+      return 'ja';
     default:
-      lang = 'en';
+      return 'en';
   }
 }
 
-var transformFunc = function (elements) {
-  // 遍历每个元素
-  for (var i = 0; i < elements.length; i++) {
-    var element = elements[i];
+const lang = detectLang();
 
-    // 替换文本内容中的 [[[]]] 部分
-    var content = element.getAttribute('content') || element.innerHTML;
-    var langMap = staticLanguages[content];
+/**
+ * 把元素里的中文原文换成当前语言。
+ * 【取值顺序照搬原实现】content 属性优先于 innerHTML（<meta content> 这类要用前者）；
+ * 查不到译文时【原样保留中文】，而不是留空。
+ */
+function transformFunc(elements: ArrayLike<Element>): void {
+  for (let i = 0; i < elements.length; i++) {
+    const element = elements[i];
+    const content = element.getAttribute('content') || element.innerHTML;
+    const langMap = staticLanguages[content];
+
     element.innerHTML = langMap ? langMap[lang] || langMap.en || content : content;
   }
-};
+}
 
+// 【title 要同步换】它在 <head> 里；等到 DOMContentLoaded 再换，标签页标题会先闪一下中文。
 transformFunc(document.querySelectorAll('title'));
 
 document.addEventListener('DOMContentLoaded', function () {
   transformFunc(document.querySelectorAll('transformLang'));
-  // 显示 <body> 元素
+  // 页面 <body> 初始是 display:none，换完文案才放出来，避免闪原文
   document.body.style.display = 'block';
 });

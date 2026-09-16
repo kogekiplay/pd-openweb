@@ -106,6 +106,7 @@
     "src/api/workWeiXin.ts",
     "src/api/worksheet.ts",
     "src/api/worksheetSetting.ts",
+    "src/common/staticLanguages.ts",
     "src/components/Agent/AppBuilder/SkeletonPanel.tsx",
     "src/components/Agent/AppBuilder/panels/OtherPanel.tsx",
     "src/components/Agent/AppBuilder/panels/index.ts",

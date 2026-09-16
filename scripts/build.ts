@@ -224,6 +224,35 @@ function copyLocaleFiles() {
   });
 }
 
+/**
+ * 由 src/common/staticLanguages.ts 生成 /staticfiles/staticLanguages.js。
+ *
+ * 【为什么要生成而不是直接放一个 .js】它被 6 个静态页用 <script src> 直接加载，
+ * 交付物只能是 .js；但源码是我们自己写的 400 多行，放在 staticfiles/ 下
+ * 会落进 JS 白名单，六道门禁一道都看不到（原先就是这样）。
+ * 源码留在 src/ 受检查，产物在这里生成，两头都满足。
+ *
+ * 【必须是 IIFE + 不能有 export】它作为经典脚本执行，不进 webpack、没有模块系统。
+ * 打成 esm 的话浏览器会在 `export` 那行直接抛 SyntaxError，而且是在主包之前，
+ * 整个登录页白屏。
+ */
+function buildStaticLanguages() {
+  const esbuild = require('esbuild');
+
+  esbuild.buildSync({
+    entryPoints: [resolvePath('src/common/staticLanguages.ts')],
+    outfile: resolvePath('build/files/staticfiles/staticLanguages.js'),
+    bundle: true,
+    format: 'iife',
+    // 【别往上调】这是登录页在主包之前跑的引导脚本，面向的浏览器范围比主站宽
+    target: 'es2015',
+    // 【必须显式给 utf8】默认会把中文全转义成 \uXXXX，同一份内容从 11KB 涨到 16KB，
+    // 而且产物完全没法读。页面本身是 <meta charset="utf-8">，不需要转义。
+    charset: 'utf8',
+    logLevel: 'warning',
+  });
+}
+
 // 复制构建后页面运行需要的字体、图片、静态页面和语言资源。
 function copyStatic() {
   console.log('Copying static files');
@@ -245,6 +274,7 @@ function copyStatic() {
   );
   copyDir(resolvePath('staticfiles/html'), resolvePath('build/files'));
   copyLocaleFiles();
+  buildStaticLanguages();
   console.log('Static files copied');
 }
 

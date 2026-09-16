@@ -49,12 +49,19 @@ const JS_ALLOWLIST = [
   // 每次重新生成都会覆盖，手改没有意义。
   'locale/',
 
-  // 浏览器直接 <script src> 加载的静态资源：pdfkit / blob-stream / tailwindcss，
-  // 以及 staticLanguages.js（SPA 之前跑的引导脚本，见 CI/generate.ts:187）。
+  // 浏览器直接 <script src> 加载的第三方静态资源：pdfkit / blob-stream / tailwindcss。
   // 【这些位置只能是 .js】它们由 HTTP 服务直接吐给浏览器，不进 webpack，
   // 改后缀会让 MIME 类型不对、浏览器拒绝执行。
-  // 注：vditor 的运行期资源曾经也在这里（74 个 .js / 525 个文件），现已改为
-  // 构建时从 node_modules/@mdfe/vditor 复制，见 scripts/build.ts 的 copyStatic()。
+  //
+  // 【这个前缀曾经藏过我们自己的源码，两次】
+  //   · vditor 的运行期资源（74 个 .js / 525 个文件）—— 现改为构建时从
+  //     node_modules/@mdfe/vditor 复制，见 scripts/build.ts 的 copyStatic()。
+  //   · staticLanguages.js（432 行，登录页在主包之前跑的引导脚本）——
+  //     源码现在是 src/common/staticLanguages.ts，受类型检查与行为 spec，
+  //     交付的 .js 由 copyStatic() 里的 buildStaticLanguages() 用 esbuild 生成。
+  //     迁过去的当场就报出一个重复键（统计图定义了两次，日语不同），
+  //     它在白名单里躺了多久就没人看见多久。
+  // 所以往这个前缀下放东西之前先问：这是第三方发行物，还是我们自己写的？
   'staticfiles/',
 ];
 
