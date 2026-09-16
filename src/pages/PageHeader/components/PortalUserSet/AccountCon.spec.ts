@@ -115,7 +115,12 @@ function loadModule() {
 const AccountCon = loadModule();
 const accountCon = new AccountCon({ inputType: 'phone' });
 accountCon.mobile = { tagName: 'INPUT' };
-global.$ = () => ({ on: () => null });
+// 【为什么这里要 as any，而不是往 types/spec-globals.d.ts 加一条】
+// 那个文件收的是「除此之外没人声明过」的测试替身全局。$ 不属于这类：
+// @types/jquery 已经把它声明成 `declare const $`（misc.d.ts:7325），
+// const 形态的全局在 TS 里不会成为 globalThis 的属性，也不允许被赋值，
+// 再加一条 declare var 会直接冲突。这里就是要塞一个假的 $，只能局部放宽。
+(global as any).$ = () => ({ on: () => null });
 global._l = text => text;
 
 accountCon.itiFn();

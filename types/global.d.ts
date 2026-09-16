@@ -113,8 +113,14 @@ declare var translations: any; // src/pages/embed/mingoEntry/widgetEntry.js:162 
  * 定义，且实测本仓用的全是标准 API（$.extend 643 / $.each 29 / $.map 14 /
  * $.proxy 3 / $.contains 1），自定义插件只有一个，见下面的 JQuery 接口合并。
  */
-declare var $: JQueryStatic;
-declare var jQuery: JQueryStatic;
+// 【这里【不要】再写 declare var $ / jQuery】@types/jquery 自己就声明了全局：
+// node_modules/@types/jquery/misc.d.ts:7324-7325 的
+//   declare const jQuery: JQueryStatic;
+//   declare const $: JQueryStatic;
+// 上面那条 /// <reference types="jquery" /> 已经把它们带进来了。
+// 本文件原先另写了一份 `declare var $: JQueryStatic`，与之【重复且冲突】
+//（var 与 const 同名会报"无法重新声明块范围变量"），只是因为 skipLibCheck
+// 把 .d.ts 内部的报错吞掉了才没暴露出来。实测删掉后差分门禁依旧全绿。
 
 /**
  * 本仓唯一的 jQuery 插件：src/components/autoTextarea/autoTextarea.ts:10

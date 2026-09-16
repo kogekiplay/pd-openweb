@@ -1,0 +1,4 @@
+# esbuild 的打包产物（含 jQuery + lodash，约 440KB），由 build.ts 生成，不入库。
+# 与 tools/fc7-preview/.gitignore 同一做法。
+# dist/index.html 是 build.ts 写出来的骨架，保留在库里方便直接看页面结构。
+dist/bundle.js

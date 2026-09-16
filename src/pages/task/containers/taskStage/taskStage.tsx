@@ -1393,15 +1393,15 @@ class TaskStage extends Component<any, any> {
     // 所有阶段
     const $singleStages = $('#taskList .singleStage');
     // 阶段离顶部距离
-    // ⚠【这一行一直取不到值，且本次【刻意不修】】
-    // .first() 返回的是 jQuery 对象，恒为真，所以 `|| {}` 永远不会生效；
-    // 而 jQuery 对象上【没有 .top】（TS2551 提示 "Did you mean 'stop'?"），
-    // 于是整个表达式恒为 undefined || 0 === 0。作者本意应是 .offset().top
-    // 或 .position().top。
-    // 【为什么不顺手改对】这个值参与拖拽时的插入位置计算，改了就是改拖拽行为，
-    // 而拖拽会写真实数据、不能实测验证。留作单独一批、能验证时再动。
-    // 这里只把"它就是 0"如实写出来，运行期逐字节不变。
-    const singleStageTop: number = ($singleStages.first() as any).top || 0;
+    // 【原来是 `($singleStages.first() || {}).top || 0`】两处都不成立：
+    // .first() 返回的是 jQuery 对象、恒为真，`|| {}` 永远走不到；jQuery 对象上也没有
+    // .top（TS2551 提示 "Did you mean 'stop'?"）。于是它恒等于 0，
+    // 下面那句 `if (eventY > singleStageTop)` 就成了恒真，等于没有这道判断。
+    //
+    // 取 .offset().top 是跟本函数下面的循环对齐的 —— 那里也是拿 `_this.offset()`
+    // 跟 eventY 比（`eventY < Offset.top + singleHeight`），用同一套坐标才自洽。
+    // 空集合时 .offset() 返回 undefined，兜回 0，等价于原来的恒真行为。
+    const singleStageTop: number = $singleStages.first().offset()?.top ?? 0;
     let Offset;
     let _this;
     let $singleTask;
