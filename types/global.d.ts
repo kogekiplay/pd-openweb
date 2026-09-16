@@ -141,18 +141,18 @@ declare var dd: any; // 外链 script //g.alicdn.com/dingding/dingtalk-jsapi/2.6
 declare var AMap: any; // 动态注入 script，见 src/ming-ui/components/amap/MapLoader.js:43
 declare var plupload: any; // 上传库，未登记在 package.json，运行期全局（eslint.config.js 登记）
 /**
- * plupload 的运行时伴生库 Moxie。【两个全局都真实存在，而且不是一回事】——
- * 实测（jsdom 里加载 src/library/plupload/plupload.full.min.js 后看 window）：
- *   moxie  -> 分层命名空间：core / runtime / file / xhr / image
- *             例：new moxie.file.File(null, f)（UploadAssistant 就是这么用的）
- *   mOxie  -> 扁平命名空间：Env / File / Blob / Image / utils…
- *             例：mOxie.Env.browser（createUploader 就是这么用的）
- * 注意 mOxie.file.File 是 undefined、moxie.Env 也不存在，两边不能互换。
- * 原先这里只声明了小写那个，于是 createUploader 迁进类型检查后报了 7 条 TS2552
- *（"Cannot find name 'mOxie'. Did you mean 'moxie'?" —— 这次编译器猜错了）。
+ * plupload 的运行时伴生库 Moxie，唯一使用点是
+ * src/pages/kc/common/UploadAssistant/UploadAssistant.tsx 的 `new moxie.file.File(null, f)`。
+ *
+ * 【小心：运行期其实有两个全局，而且不是一回事】实测（在 jsdom 里加载
+ * src/library/plupload/plupload.full.min.js 后看 window）：
+ *   moxie  -> 分层命名空间：core / runtime / file / xhr / image   （moxie.file.File 是函数）
+ *   mOxie  -> 扁平命名空间：Env / File / Blob / Image / utils…     （mOxie.file.File 是 undefined）
+ * 两边不能互换。这里【只声明用到的那个】——mOxie 原先被 createUploader 用于
+ * 判断 Safari 5 / iOS 7，那段已随 Flash/IE 死代码一起删除。真要用再加回来，
+ * 别想当然地把两个名字当同一个东西。
  */
 declare var moxie: any;
-declare var mOxie: any;
 declare var blobStream: any; // 未登记在 package.json，运行期全局（eslint.config.js 登记）
 declare var VConsole: any; // 移动端调试面板，未登记在 package.json（eslint.config.js 登记）
 declare var IM: any; // 站内即时通讯 SDK，宿主提供（eslint.config.js 登记）

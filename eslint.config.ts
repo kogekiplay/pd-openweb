@@ -80,7 +80,6 @@ module.exports = [
         destroyAlert: false,
         blobStream: false,
         moxie: false,
-        mOxie: false,
         plupload: false,
         ActiveXObject: false,
         HWH5: false,
