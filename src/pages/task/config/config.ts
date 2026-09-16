@@ -91,7 +91,12 @@ const config = {
 
   isDrop: false, // 是否拖拽
   $prevNode: null,
-  pageSize: Math.ceil(($(window).height() - 140) / 48) + 5 > 20 ? Math.ceil(($(window).height() - 140) / 48) + 5 : 20,
+  // .height() 的类型是 number | undefined（空集合时才是 undefined）；$(window) 不可能为空，
+  // 所以 ?? 0 这一支实际走不到，只是把类型上的可空性补齐。
+  pageSize:
+    Math.ceil((($(window).height() ?? 0) - 140) / 48) + 5 > 20
+      ? Math.ceil((($(window).height() ?? 0) - 140) / 48) + 5
+      : 20,
   selectize: '',
   isMyTask: true, // 是否是`我的任务`
   FilterMeTaskClassify: [3], // 排除的`我的任务`分类 默认

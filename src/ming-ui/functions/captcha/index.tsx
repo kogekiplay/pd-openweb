@@ -76,7 +76,7 @@ export default function captcha(callback = () => {}, onCancel = () => {}) {
       ),
       onOk: () => {
         return new Promise(function (reslove, reject) {
-          const value = $('.captchaInput').val().trim();
+          const value = String($('.captchaInput').val() ?? '').trim();
 
           if (!value) {
             alert(_l('请输入验证码'), 3);

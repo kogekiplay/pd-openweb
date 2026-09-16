@@ -367,7 +367,7 @@ class QuickCreateTask {
     const _this = this;
     const settings = _this.settings;
     // 任务名称
-    const taskName = $('.createNewSingle .txtSingleName').val().trim();
+    const taskName = String($('.createNewSingle .txtSingleName').val() ?? '').trim();
 
     if (taskName) {
       const start = $('.createNewSingle .createSingleDate').data('start');

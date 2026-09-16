@@ -4,6 +4,7 @@ import 'src/components/autoTextarea/autoTextarea';
 import MentionsInput from 'src/components/MentionsInput';
 import LinkView from '../../linkView/linkView';
 import VoteUpdater from '../../voteUpdater/voteUpdater';
+import type { MentionsInputElement } from 'src/components/MentionsInput';
 
 let langUploadFiles = _l('上传附件') + '...';
 let langShareLink = _l('分享网站') + '...';
@@ -52,7 +53,7 @@ const MyUpdater = {
         // 链接
         if (targetDivID == '#Link_updater') {
           if (
-            ($('#text_LinkUrl').val().trim() == 'http://' || $('#text_LinkUrl').val().trim() == '') &&
+            (String($('#text_LinkUrl').val() ?? '').trim() == 'http://' || String($('#text_LinkUrl').val() ?? '').trim() == '') &&
             $('#Link_updater').is(':visible')
           ) {
             MyUpdater.ResetUpdaterDiv();
@@ -83,8 +84,8 @@ const MyUpdater = {
           $(this).removeClass('textPlaceholder').addClass('colorPrimary');
           if (
             $('#textarea_Updater') &&
-            ($('#textarea_Updater').val().trim() == '' ||
-              $('#textarea_Updater').val().trim() == _l('知会工作是一种美德') + '...')
+            (String($('#textarea_Updater').val() ?? '').trim() == '' ||
+              String($('#textarea_Updater').val() ?? '').trim() == _l('知会工作是一种美德') + '...')
           ) {
             $('#textarea_Updater').val(langUploadFiles).addClass('textTertiary');
           }
@@ -93,8 +94,8 @@ const MyUpdater = {
           $(this).removeClass('textPlaceholder').addClass('colorPrimary');
           if (
             $('#textarea_Updater') &&
-            ($('#textarea_Updater').val().trim() == '' ||
-              $('#textarea_Updater').val().trim() == _l('知会工作是一种美德') + '...')
+            (String($('#textarea_Updater').val() ?? '').trim() == '' ||
+              String($('#textarea_Updater').val() ?? '').trim() == _l('知会工作是一种美德') + '...')
           ) {
             $('#textarea_Updater').val(langShareLink).addClass('textTertiary');
           }
@@ -115,8 +116,8 @@ const MyUpdater = {
           $('#Vote_updaterOperator').show();
           if (
             $('#textarea_Updater') &&
-            ($('#textarea_Updater').val().trim() == '' ||
-              $('#textarea_Updater').val().trim() == _l('知会工作是一种美德') + '...')
+            (String($('#textarea_Updater').val() ?? '').trim() == '' ||
+              String($('#textarea_Updater').val() ?? '').trim() == _l('知会工作是一种美德') + '...')
           ) {
             $('#textarea_Updater').val(langVoteQuestion).addClass('textTertiary');
           }
@@ -128,7 +129,7 @@ const MyUpdater = {
           $('#hidden_FileName').val('');
           $('#hidden_FileExt').val('');
           if ($('#textarea_Updater')) {
-            if (!$('#textarea_Updater').val().trim()) {
+            if (!String($('#textarea_Updater').val() ?? '').trim()) {
               $('#textarea_Updater').val(_l('知会工作是一种美德') + '...');
               $('#textarea_Updater').addClass('textTertiary');
             }
@@ -157,7 +158,7 @@ const MyUpdater = {
       .off()
       .on('click', function () {
         MyUpdater.ResetUpdaterDiv();
-        if (!$('#textarea_Updater').val().trim()) {
+        if (!String($('#textarea_Updater').val() ?? '').trim()) {
           $('#textarea_Updater')
             .val(_l('知会工作是一种美德') + '...')
             .addClass('TextArea textTertiary');
@@ -166,7 +167,7 @@ const MyUpdater = {
 
     $('#Link_updater .linkTextBox').on({
       blur: function () {
-        if (!$(this).val().trim()) {
+        if (!String($(this).val() ?? '').trim()) {
           $(this).val('http://').addClass('textPlaceholder');
         }
       },
@@ -175,7 +176,7 @@ const MyUpdater = {
       },
     });
     let $textareaUpdater = $('#textarea_Updater');
-    let textareaUpdaterEl = $textareaUpdater.get(0);
+    let textareaUpdaterEl = $textareaUpdater.get(0) as MentionsInputElement;
 
     const updateTextareaHeight = minHeight => {
       if (typeof $textareaUpdater.autoTextarea === 'function') {
@@ -192,7 +193,7 @@ const MyUpdater = {
     updateTextareaHeight(24);
     $textareaUpdater
       .focus(function () {
-        let msg = $textareaUpdater.val().trim();
+        let msg = String($textareaUpdater.val() ?? '').trim();
 
         if (
           msg == _l('知会工作是一种美德') + '...' ||
@@ -220,7 +221,7 @@ const MyUpdater = {
       })
       .blur(function (this: HTMLElement) {
         textareaUpdaterEl.store();
-        if (!$(this).val().trim()) {
+        if (!String($(this).val() ?? '').trim()) {
           $textareaUpdater.val(_l('知会工作是一种美德') + '...').addClass('textTertiary');
         }
       });
@@ -254,7 +255,7 @@ const MyUpdater = {
           /* 非引导点击*/
           !$(event.target).hasClass('guideTry') &&
           /*! $(event.target).hasClass("guidePoshytipQuit") &&*/
-          ((text = $('#textarea_Updater').val().trim()) == '' ||
+          ((text = String($('#textarea_Updater').val() ?? '').trim()) == '' ||
             text == _l('知会工作是一种美德') + '...' ||
             text == langUploadFiles ||
             text == langShareLink ||
@@ -281,7 +282,7 @@ const MyUpdater = {
   // 重置参数
   ResetUpdaterDiv: function () {
     if ($('#textarea_Updater')) {
-      let msg = $('#textarea_Updater').val().trim();
+      let msg = String($('#textarea_Updater').val() ?? '').trim();
 
       if (
         msg == '' ||
@@ -320,12 +321,12 @@ const MyUpdater = {
       .data('node', null)
       .html('<span>' + _l('本地文件存入知识中心') + '</span>');
 
-    $('#button_Share').attr('disabled', false).removeClass('Disabled');
+    $('#button_Share').prop('disabled', false).removeClass('Disabled');
     // 链接
     let $mdLinkUpdater = $('#Link_updater');
     $mdLinkUpdater.find('.updaterLinkView').empty();
     $mdLinkUpdater.find('.linkTextBox').val('http://').addClass('textPlaceholder');
-    $mdLinkUpdater.find('.linkBtn').val(_l('预览')).attr('disabled', false).removeClass('Disabled');
+    $mdLinkUpdater.find('.linkBtn').val(_l('预览')).prop('disabled', false).removeClass('Disabled');
     MyUpdater.options.linkViewData = null;
 
     MyUpdater.options.attachmentData = [];
@@ -343,7 +344,7 @@ const MyUpdater = {
     }
 
     if ($('#voteAvailableNumber').length > 0) {
-      $('#voteAvailableNumber').get(0).selectedIndex = 0;
+      $<HTMLSelectElement>('#voteAvailableNumber').get(0).selectedIndex = 0;
     }
 
     if ($('#voteAnonymous').length > 0) {
@@ -354,17 +355,19 @@ const MyUpdater = {
       $('#voteVisble').attr('checked', 'checked');
     }
 
-    if ($('#Vote_updater .voteOptions li').length > 0) {
-      let oplength = $('#Vote_updater .voteOptions li').lenght;
-
-      if (oplength > 0) {
-        for (let i = 0; i < oplength; i++) {
-          if (i > 1) {
-            $('#Vote_updater .voteOptions li').eq(i).remove();
-          }
-        }
-      }
-    }
+    // 重置投票选项：只保留默认的前两个。
+    //
+    // ⚠ 【这里原来是坏的，本次是行为变更，不是纯类型改动】原文是
+    //     let oplength = $('#Vote_updater .voteOptions li').lenght;   // 拼错：lenght
+    // 取到 undefined，紧接着的 `if (oplength > 0)` 恒假 —— 这个清理【从来没执行过】，
+    // 发过一次 5 个选项的投票后再重置，编辑器里仍然留着 5 个。
+    // 是给 `$` 标上真实类型之后 TS2551 "Did you mean 'length'?" 报出来的。
+    //
+    // 【为什么不是只把 lenght 改成 length】原来的循环本身还有第二个 bug：
+    // 它每轮重新查询、再 .eq(i).remove()，而集合会随着删除缩短，下标跟着错位 ——
+    // 5 个选项只会删掉 2 个（i=2 删原[2]，i=3 删的已是原[4]，i=4 越界）。
+    // 光修拼写等于把一个坏循环放出来跑，所以直接写成它本来要表达的意思。
+    $('#Vote_updater .voteOptions li').slice(2).remove();
 
     // 关闭按钮
     $('#updateCloseContainer').hide();
@@ -375,7 +378,7 @@ const MyUpdater = {
   },
   // 预览分享链接
   ViewLink: function (obj) {
-    let linkUrl = $('#text_LinkUrl').val().trim();
+    let linkUrl = String($('#text_LinkUrl').val() ?? '').trim();
 
     if (!linkUrl || linkUrl == 'http://') {
       alert(_l('请输入链接'), 3);
@@ -383,10 +386,10 @@ const MyUpdater = {
     }
 
     let $el = $(obj);
-    $el.val(_l('提取中...')).attr('disabled', true).addClass('Disabled');
+    $el.val(_l('提取中...')).prop('disabled', true).addClass('Disabled');
 
     let $btnShare = $('#button_Share');
-    $btnShare.attr('disabled', true).addClass('Disabled');
+    $btnShare.prop('disabled', true).addClass('Disabled');
 
     LinkView($('#Link_updater .updaterLinkView'), {
       viewUrl: linkUrl,
@@ -397,8 +400,8 @@ const MyUpdater = {
         }
 
         MyUpdater.options.linkViewData = data;
-        $el.val(_l('预览')).attr('disabled', false).removeClass('Disabled');
-        $btnShare.attr('disabled', false).removeClass('Disabled');
+        $el.val(_l('预览')).prop('disabled', false).removeClass('Disabled');
+        $btnShare.prop('disabled', false).removeClass('Disabled');
       },
     });
   },
@@ -437,7 +440,7 @@ const MyUpdater = {
         }
       }
 
-      let rData = { postType: postType, postMsg: postMsg };
+      let rData: Record<string, any> = { postType: postType, postMsg: postMsg };
 
       let voteData;
 
@@ -564,8 +567,9 @@ const MyUpdater = {
               alert(_l('发布成功'));
 
               $('#textarea_Updater').val('');
-              $('#textarea_Updater').get(0).reset();
-              $('#textarea_Updater').get(0).clearStore();
+              const updaterEl = $('#textarea_Updater').get(0) as MentionsInputElement;
+              updaterEl.reset();
+              updaterEl.clearStore();
 
               if (typeof MyUpdater !== 'undefined') MyUpdater.ResetUpdaterDiv();
 

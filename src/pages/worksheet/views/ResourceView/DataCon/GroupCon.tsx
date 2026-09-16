@@ -446,7 +446,12 @@ export default function GroupCon(props) {
               <div className="h100 tb forScroll" style={{ minWidth: 11, width: 11, marginLeft: -1 }}></div>
             )}
             {dragValue - scrollLeftNum > 0 && (
-              <div style={{ left: dragValue - scrollLeftNum, height: $('.tableCon').height }} className="dragLine" />
+              // ⚠【height 这里少了一对括号，本次刻意不修】$('.tableCon').height 取到的是
+              // jQuery 的【方法本身】而不是调用结果。React 会把它字符串化成一段函数源码塞给
+              // style.height，是无效 CSS，浏览器直接忽略 —— 也就是这条拖拽线【从来没有高度】。
+              // 补上 () 会让它突然有高度，那是改渲染不是改类型，而这个视图涉及拖拽、
+              // 按约定不能实测。as any 只是如实承认「这里现在就是个函数」，运行期一字不变。
+              <div style={{ left: dragValue - scrollLeftNum, height: $('.tableCon').height as any }} className="dragLine" />
             )}
           </div>
         </div>

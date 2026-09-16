@@ -24,7 +24,7 @@ class Header extends React.Component<any, any> {
 
     if (richTextImgList.length > 0 && !$(richTextImgList[0]).attr('data-handleflag')) {
       richTextImgList.forEach((e, index) => {
-        index === 0 && $(e).attr('data-handleflag', true);
+        index === 0 && $(e).attr('data-handleflag', 'true');
 
         if (e.clientWidth < 450) return;
 

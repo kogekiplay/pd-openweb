@@ -388,7 +388,9 @@ BatchTask.initEvent = function () {
   });
 
   // 文档点击
-  $(document).on('click', (event: JQueryEventLike) => {
+  // 不再手写 JQueryEventLike：两参的 .on(events, handler) 会严格匹配 handler 签名，
+  // 交给 jQuery 自己的事件类型推断即可。
+  $(document).on('click', event => {
     const $target = $(event.target);
 
     // 头部更多
@@ -900,7 +902,7 @@ BatchTask.updateTaskFavorite = function (isStar: boolean) {
         $('#batchFavorite').toggleClass('icon-task-star icon-star-hollow');
         const starSize = $('#taskList .selectTask .taskStar.icon-task-star').length;
         const $allCountTask = $('.aboutMeStar .allCountTask');
-        let count = parseInt($allCountTask.text() || 0, 10);
+        let count = parseInt($allCountTask.text() || '0', 10);
 
         if (isStar) {
           $('#taskList .selectTask .taskStar').addClass('icon-task-star').removeClass('icon-star-hollow');

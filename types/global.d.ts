@@ -9,7 +9,14 @@
  * 全部用 `any`：这是有意的下限。给出更精确的签名（例如把 _l 写成
  * (key: string, ...args: any[]) => string）会在测量阶段引入本轮无法验证的
  * 新错误，属于污染，故推迟到试点阶段再做。
+ *
+ * 【例外：$ / jQuery 已经收窄到真实类型】见下方 jQuery 一节。挑它先做的依据是
+ * tools/analyze-any-origins.ts 的爆炸半径排名：`$: any` 一个声明喂出 184 条 TS7006，
+ * 是全仓最大的单点。而且它和这里其余的 any 有本质区别 —— jQuery 是有官方类型的
+ * 真实库，把它标成 JQueryStatic 是【如实描述运行期真相】，不是猜。
  */
+
+/// <reference types="jquery" />
 
 // ---- 由 src/common/global.js 在启动时挂到 window 上 ----
 declare var _l: any; // src/common/global.js:108 `window._l = function (key, ...args) {`（i18n）
@@ -75,8 +82,52 @@ declare var safeLocalStorageSetItem: any; // src/common/cookies.js:8
 // ---- 由构建期/宿主页注入，不是模块 ----
 declare var __api_server__: any; // CI/generate.js:123 生成 `var __api_server__ = ...` 内联进 HTML；消费点 src/common/global.js:433
 declare var translations: any; // src/pages/embed/mingoEntry/widgetEntry.js:162 `window.translations = hostTranslations`（宿主页注入的语言包）
-declare var $: any; // CI/webpack.config.js:454 `externals: { jquery: 'jQuery' }` —— jquery 不打包，运行期取全局
-declare var jQuery: any; // 同上；jquery 不在 package.json 里，纯运行期全局
+/**
+ * ---- jQuery ----
+ *
+ * jquery 是 package.json 里的真依赖（^4.0.0），由 src/library/jquery/global.ts
+ * 挂成 window.$ / window.jQuery。原先那份 vendored 的 jquery.min.js（3.7.1）已删除，
+ * 版本改由 package.json + bun.lock 追踪。
+ * @types/jquery 是【纯类型包】（devDependency，零运行时产物）。
+ *
+ * 【两者的大版本必须对齐】@types/jquery 的大版本对应它所描述的 jQuery 大版本：
+ * 运行期是 jQuery 4，类型就得是 @types/jquery 4.x。类型包是【对某个运行期版本的描述】，
+ * 装新的不等于装对的 —— 拿 v4 的说明书去描述跑 v3 的程序，v4 删掉的 API 会被误报，
+ * v4 改过签名的地方会按错的签名放行。升级时两边要一起动。
+ *
+ * 【3 -> 4 实测过的行为差异】只有一处落在本仓关心的范围：
+ *   .attr('disabled', true) 读回来，3.x 是 "disabled"，4.x 是 "true"。
+ * 本仓没有把布尔属性读回来跟字符串比较的地方（读取点全是真值判断），故不受影响；
+ * 设值点也都已改用 .prop()。自闭合写法 $('<span />')、$.extend、$.proxy、
+ * .bind/.unbind 在 4.0.0 实测与 3.7.1 一致。
+ *
+ * 【为什么值得单独收窄，而不是跟本文件其余全局一样留 any】
+ * tools/analyze-any-origins.ts 按"一个声明喂出多少条下游诊断"排过序，
+ * `declare var $: any` 是全仓第一名：184 条 TS7006。原因是 jQuery 的 API 几乎
+ * 全是回调式的 —— `$(el).on('click', function (e) {…})`、`$.each(list, (i, item) => …)`，
+ * 接收者是 any 的话每个回调形参都成了隐式 any。标成 JQueryStatic 之后这些形参
+ * 由上下文推出类型，【一个调用点都不用改】。
+ *
+ * 【为什么这不是"猜"】本文件其余 any（IM / HWH5 / wx …）是宿主注入的私有 SDK，
+ * 没有权威签名，写出来的只能是编的。jQuery 相反：类型来自 DefinitelyTyped 的官方
+ * 定义，且实测本仓用的全是标准 API（$.extend 643 / $.each 29 / $.map 14 /
+ * $.proxy 3 / $.contains 1），自定义插件只有一个，见下面的 JQuery 接口合并。
+ */
+declare var $: JQueryStatic;
+declare var jQuery: JQueryStatic;
+
+/**
+ * 本仓唯一的 jQuery 插件：src/components/autoTextarea/autoTextarea.ts:10
+ * `$.fn.autoTextarea = function (options) {`（随输入内容自动调整 textarea 高度）
+ *
+ * 插件是运行期往 $.fn 上挂的，官方类型当然不知道它，必须靠接口合并补声明 ——
+ * 不补的话那个文件自己的赋值和所有调用点都会报 TS2339。
+ * options 标 any 是【如实】：插件实现里对 options 只做 $.extend 合并后读取，
+ * 没有约束过形状，编一个精确形状反而是假的确定性。
+ */
+interface JQuery {
+  autoTextarea(options?: any): JQuery;
+}
 
 // ---- 第三方 SDK：由外链 <script> 或宿主容器提供，均非 npm 依赖 ----
 declare var wx: any; // 外链 script https://res.wx.qq.com/open/js/jweixin-1.2.0.js（src/**/*.html）
@@ -110,8 +161,9 @@ interface Window {
   destroyAlert: any;
   translations: any;
   __api_server__: any;
-  $: any;
-  jQuery: any;
+  // 与上面的全局声明保持同一个类型，否则 window.$ 和裸 $ 会是两种东西
+  $: JQueryStatic;
+  jQuery: JQueryStatic;
 
   // !! 测量污染开关 !!
   // 全仓有 4076 处 window.X 访问、276 个不同属性名，其中最热的

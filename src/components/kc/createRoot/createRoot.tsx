@@ -128,7 +128,7 @@ $.extend(RootSettings.prototype, {
         onOk: () => {
           var $createFolderBox = $('.createFolderBox'),
             $txtFolderName = $createFolderBox.find('.txtFolderName'),
-            name = $txtFolderName.val().trim();
+            name = String($txtFolderName.val() ?? '').trim();
           if (!isEdit) {
             if (!_this.verifyName(name, root.name)) {
               return false;
@@ -576,7 +576,7 @@ $.extend(RootSettings.prototype, {
       $createFolderBox.find('.folderName .txtFolderName').on({
         blur: function () {
           var $this = $(this),
-            name = $this.val().trim();
+            name = String($this.val() ?? '').trim();
           if (name == root.name) {
             return;
           }

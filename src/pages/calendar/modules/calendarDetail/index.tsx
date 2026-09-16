@@ -7,6 +7,10 @@ import { Dialog, LoadDiv } from 'ming-ui';
 import ErrorState from 'src/components/errorPage/errorState';
 import { htmlDecodeReg, pathCompletion } from 'src/utils/common';
 import { Config, getCalendarDetail, getParamsFromUrl } from './common';
+// v2 时代这里是 `$('#calendar').fullCalendar('refetchEvents')`。FullCalendar 7 不再是
+// jQuery 插件，那个调用会直接抛 TypeError —— 迁移时漏改了这两处，靠给 `$` 标上真实
+// 类型（types/global.d.ts）才暴露出来。refetchEvents() 在没有日历实例时安全空转。
+import { refetchEvents } from '../calendar/fcInstance';
 import CalendarDetail from './root';
 
 class Container extends Component<any, any> {
@@ -163,7 +167,7 @@ export default function (options) {
       // 日程首页的一些操作
       if (location.href.indexOf('/apps/calendar/home') !== -1) {
         $('.showActiveTitleMessage').remove();
-        $('#calendar').fullCalendar('refetchEvents');
+        refetchEvents();
         if (window.localStorage.getItem === 'list' && _.isFunction(saveCallback)) {
           saveCallback();
         }
@@ -176,7 +180,7 @@ export default function (options) {
       // 日程首页的一些操作
       if (location.href.indexOf('/apps/calendar/home') !== -1) {
         $('.showActiveTitleMessage').remove();
-        $('#calendar').fullCalendar('refetchEvents');
+        refetchEvents();
         if (window.localStorage.getItem === 'list' && _.isFunction(saveCallback)) {
           saveCallback();
         }

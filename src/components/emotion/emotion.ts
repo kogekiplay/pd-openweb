@@ -160,7 +160,7 @@ Emotion.prototype.emotion = function emotion() {
     tab += `
       <span class="tabItem tab${index + 1} ${index === _this.options.defaultTab ? 'active' : ''}" data-emotion-index="${index}" title="${item.tab.name}">
         <img src="/staticfiles/emotionimages/${item.tab.imageName}.png" class="tabItem-images" />
-        ${item.tab.text || ''}
+        ${(item.tab as { text?: string }).text || ''}
       </span>`;
 
     content += `<div class="mdEmotionPanel panel${index + 1} ${index === _this.options.defaultTab ? 'active' : ''}"></div>`;
@@ -426,7 +426,12 @@ Emotion.prototype.show = function show(left, top) {
   $(document).on('click.mdEmotion', function (e) {
     if (
       !$(e.target).closest('.mdEmotion').length &&
-      !($.contains(_this.$el[0], e.target) || _this.$el[0] === e.target)
+      // $.contains 的形参是 Element；这里两侧在类型上都可能是 Document
+      //（jQuery 把 document 上的 handler target 标成 Document），运行期传进来的是真实节点。
+      !(
+        $.contains(_this.$el[0] as unknown as Element, e.target as unknown as Element) ||
+        _this.$el[0] === e.target
+      )
     ) {
       _this.hide();
     }

@@ -133,7 +133,10 @@ class Updater extends React.Component<any, any> {
       mdBear: false,
       relatedLeftSpace: 22,
       onSelect: () => {
-        const textBox = $('#textarea_Updater')[0];
+        // $() 默认给 JQuery<HTMLElement>，[0] 就只有 HTMLElement，没有 .value。
+        // 这个 id 指向的是 <textarea>（tpl 里就是），把元素类型显式写出来即可 ——
+        // 不是断言，是把选择器已经确定的事实告诉类型系统。
+        const textBox = $<HTMLTextAreaElement>('#textarea_Updater')[0];
 
         if (
           textBox.value === _l('知会工作是一种美德') + '...' ||

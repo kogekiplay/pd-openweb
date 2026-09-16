@@ -136,7 +136,7 @@ export default class CreateFolder extends Component<any, any> {
    */
   create() {
     const { scope } = this.state;
-    const folderName = $('#folderName').val().trim();
+    const folderName = String($('#folderName').val() ?? '').trim();
     let visibility;
     let groupIds = [];
 

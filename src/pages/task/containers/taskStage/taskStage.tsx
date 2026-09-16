@@ -39,6 +39,9 @@ const taskStageSettings = {
 };
 
 class TaskStage extends Component<any, any> {
+  /** 组件是否仍挂载；异步回调里用来避免对已卸载组件 setState */
+  mounted = false;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -246,7 +249,7 @@ class TaskStage extends Component<any, any> {
 
         event.preventDefault();
 
-        const delta = event.originalEvent.deltaY;
+        const delta = (event.originalEvent as WheelEvent).deltaY;
 
         // up
         if (delta < 0) {
@@ -594,7 +597,7 @@ class TaskStage extends Component<any, any> {
       const $this = $(this);
       // 去除窗体上 创建没有输入值的
       $('li.addNewTask').each(() => {
-        if (!$this.find('.teaStageName')?.val()?.trim()) {
+        if (!String($this.find('.teaStageName')?.val() ?? '')?.trim()) {
           that.canelCreateStageTask($this.closest('li.singleStage'));
         }
       });
@@ -651,7 +654,7 @@ class TaskStage extends Component<any, any> {
     // 创建任务回车
     $taskList.on('keydown', '.addNewTask .teaStageName', function (this: HTMLElement, event) {
       if (event.keyCode == 13) {
-        if ($(this).val().trim()) {
+        if (String($(this).val() ?? '').trim()) {
           that.addNewTaskEnter($(this).closest('li').find('.btnStagCreateTask'), true);
         }
 
@@ -1372,7 +1375,11 @@ class TaskStage extends Component<any, any> {
         that.draggableTaskMouseUp();
       },
     });
-    $(document).on('mousemove.draggableTask').on();
+    // 【删掉一行死代码】原来这里还有一句
+    //     $(document).on('mousemove.draggableTask').on();
+    // 两个调用都不带 handler。jQuery 的 on() 在 fn 为空时直接 `return elem`，
+    // 什么都不绑 —— 而且 mousemove.draggableTask 上面那个 on({...}) 里已经绑过了。
+    // 是给 `$` 标上真实类型后由 TS2554「Expected 1-4 arguments, but got 0」报出来的。
   }
 
   /**
@@ -1386,7 +1393,15 @@ class TaskStage extends Component<any, any> {
     // 所有阶段
     const $singleStages = $('#taskList .singleStage');
     // 阶段离顶部距离
-    const singleStageTop = ($singleStages.first() || {}).top || 0;
+    // ⚠【这一行一直取不到值，且本次【刻意不修】】
+    // .first() 返回的是 jQuery 对象，恒为真，所以 `|| {}` 永远不会生效；
+    // 而 jQuery 对象上【没有 .top】（TS2551 提示 "Did you mean 'stop'?"），
+    // 于是整个表达式恒为 undefined || 0 === 0。作者本意应是 .offset().top
+    // 或 .position().top。
+    // 【为什么不顺手改对】这个值参与拖拽时的插入位置计算，改了就是改拖拽行为，
+    // 而拖拽会写真实数据、不能实测验证。留作单独一批、能验证时再动。
+    // 这里只把"它就是 0"如实写出来，运行期逐字节不变。
+    const singleStageTop: number = ($singleStages.first() as any).top || 0;
     let Offset;
     let _this;
     let $singleTask;
@@ -1722,7 +1737,7 @@ class TaskStage extends Component<any, any> {
     const $taskCount = $li.find('.stageHeader .taskCount');
 
     if ($taskCount.length) {
-      $taskCount.html(parseInt($taskCount.html(), 10) + 1);
+      $taskCount.html(String(parseInt($taskCount.html(), 10) + 1));
     } else {
       $li.find('.stageHeader .listStageTaskCount').html('(<span class="taskCount">1</span>)');
     }
@@ -1738,7 +1753,7 @@ class TaskStage extends Component<any, any> {
     // 计算加一
     if (!this.props.taskConfig.filterUserId) {
       const $allCountTask = $('.myTask .allCountTask:first');
-      $allCountTask.text(parseInt($allCountTask.text() || 0, 10) + 1);
+      $allCountTask.text(parseInt($allCountTask.text() || '0', 10) + 1);
     }
   };
 

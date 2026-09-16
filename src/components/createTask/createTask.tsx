@@ -345,7 +345,7 @@ $.extend(CreateTask.prototype, {
       },
       focus: function () {
         $(this).addClass('isFocus');
-        if ($(this).val().trim() && $('.linkageFolder li').length > 0) {
+        if (String($(this).val() ?? '').trim() && $('.linkageFolder li').length > 0) {
           $('.linkageFolder .nullFolder').removeClass('Hidden');
           $('.linkageFolder').removeClass('Hidden');
         } else {
@@ -406,7 +406,7 @@ $.extend(CreateTask.prototype, {
       },
       blur: function () {
         $(this).removeClass('isFocus').mouseout();
-        var folderName = $(this).val().trim();
+        var folderName = String($(this).val() ?? '').trim();
         if (!folderName) {
           $('#folderStage').val('');
           $('#createTaskStage').addClass('Hidden');
@@ -762,7 +762,7 @@ $.extend(CreateTask.prototype, {
 CreateTask.Motheds = {
   // 获取项目列表
   searchTaskFolder: function () {
-    var keyWords = $('#txtTaskFolder').val().trim();
+    var keyWords = String($('#txtTaskFolder').val() ?? '').trim();
     ajaxRequest
       .getFolderListForCreateTask({
         projectId: CreateTask.settings.ProjectID,
@@ -883,7 +883,7 @@ CreateTask.Motheds = {
       return false;
     }
 
-    var taskName = $('#txtTaskName').val().trim();
+    var taskName = String($('#txtTaskName').val() ?? '').trim();
 
     // 名称是否为空
     if (taskName === '') {
@@ -895,11 +895,11 @@ CreateTask.Motheds = {
 
     var startTime = $('#txtLastDate').data('start');
     var deadline = $('#txtLastDate').data('end');
-    var description = filterXss($('#txtDescriptionbox').val().replace(/\n/g, '<br/>'));
+    var description = filterXss(String($('#txtDescriptionbox').val() ?? '').replace(/\n/g, '<br/>'));
     var folderID = settings.FolderID === 1 ? '' : settings.FolderID;
-    var folderName = $('#txtTaskFolder').val().trim();
+    var folderName = String($('#txtTaskFolder').val() ?? '').trim();
     var toUserID = $('#taskUserBox').attr('data-id');
-    var stageId = $('#folderStage').val().trim();
+    var stageId = String($('#folderStage').val() ?? '').trim();
     var members = [];
     var specialAccounts = {};
 
@@ -908,8 +908,10 @@ CreateTask.Motheds = {
       var accountId = $(this).attr('data-id');
       if (!accountId) return;
       if (accountId.indexOf('MD_SpecialAccounts') >= 0) {
-        accountId = accountId.split('MD_SpecialAccounts');
-        specialAccounts[accountId[0]] = accountId[1];
+        // 原来是把 split 的结果（string[]）赋回 accountId 这个 string 变量再按下标取。
+        // 换成独立变量，运行期完全一致。
+        const parts = accountId.split('MD_SpecialAccounts');
+        specialAccounts[parts[0]] = parts[1];
       } else {
         members.push(accountId);
       }

@@ -215,7 +215,7 @@ var LinkView = function (el, param) {
       $linkView.find('.nextPic').removeClass('Visibility');
     }
 
-    $linkView.find('.thumbCurrentNum').html(curNum);
+    $linkView.find('.thumbCurrentNum').html(String(curNum));
 
     $linkView.find('.linkThumb').attr('src', options.linkViewData.imgArr[curNum - 1]);
 
@@ -265,13 +265,13 @@ var LinkView = function (el, param) {
     var $linkView = $(el).find('.linkView');
     $linkView.find('.nullPrompt').hide();
 
-    var title = $linkView.find('.txtLinkTitle').val();
+    var title = String($linkView.find('.txtLinkTitle').val() ?? '');
     if (title) {
       $linkView.find('.linkTitle').html(title);
       $linkView.find('.nullPrompt').hide();
     }
 
-    var desc = $linkView.find('.txtLinkDesc').val();
+    var desc = String($linkView.find('.txtLinkDesc').val() ?? '');
     if (desc) {
       if (desc.length > 85) {
         $linkView.find('.linkDesc').html(desc.substring(0, 85) + '...');

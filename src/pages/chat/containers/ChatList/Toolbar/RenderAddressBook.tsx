@@ -24,7 +24,7 @@ const RenderAddressBook = props => {
     const callDialog = _.debounce(which => {
       switch (which) {
         case 119:
-          document.querySelector('.toolbarWrap .sessionList')?.click();
+          document.querySelector<HTMLElement>('.toolbarWrap .sessionList')?.click();
           break;
         case 113:
           createDiscussion(undefined, (result, isGroup) => {
@@ -45,7 +45,7 @@ const RenderAddressBook = props => {
           break;
         case 109:
         case 77:
-          document.querySelector('.ChatList-wrapper .mingo')?.click();
+          document.querySelector<HTMLElement>('.ChatList-wrapper .mingo')?.click();
           break;
         case 70:
         case 102:
@@ -77,8 +77,11 @@ const RenderAddressBook = props => {
     }, 200);
 
     $(document).on('keypress', function (e) {
-      if (e.ctrlKey || e.shiftKey || e.altKey || e.cmdKey || e.metaKey) return;
-      var tag = e.target.tagName && e.target.tagName.toLowerCase();
+      // 原来这里还有一项 e.cmdKey —— DOM 键盘事件上【没有这个属性】，Mac 的 Command
+      // 键就是紧跟着判的 metaKey。它恒为 undefined，从来没起过作用，删掉行为不变。
+      if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) return;
+      const target = e.target as unknown as HTMLElement;
+      var tag = target.tagName && target.tagName.toLowerCase();
       if (tag === 'input' || tag === 'textarea' || $(e.target).is('[contenteditable]')) return;
       callDialog(e.which);
     });

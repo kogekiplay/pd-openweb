@@ -151,5 +151,8 @@ export default {
   isSingleDrag: false,
 
   // 滚动元素
-  scrollSelector: '',
+  // 初值是空串，运行期会被赋成 jQuery 集合（见 timeBarContainer / members /
+  // subordinateMembers 里的 config.scrollSelector = $(this)）。联合类型如实表达两种形态，
+  // 调用点都是先 `if (config.scrollSelector && ...)` 判真再 .is()，那时已收窄到 JQuery。
+  scrollSelector: '' as '' | JQuery,
 };

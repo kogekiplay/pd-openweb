@@ -326,7 +326,7 @@ const VoteUpdater = {
       }
 
       if ($el.find('.voteAvailableNumber').length > 0) {
-        $el.find('.voteAvailableNumber').get(0).selectedIndex = 0;
+        ($el.find('.voteAvailableNumber').get(0) as HTMLSelectElement).selectedIndex = 0;
       }
 
       if ($el.find('.voteAnonymous').length > 0) {
@@ -382,7 +382,7 @@ const VoteUpdater = {
     return {
       invalid: _.filter($voteItems, function (voteItem) {
         var $voteItemInput = $(voteItem).find('input[type = "text"]');
-        $voteItemInput.val(_.trim($voteItemInput.val()));
+        $voteItemInput.val(_.trim(String($voteItemInput.val() ?? '')));
         return $voteItemInput.val() === '' || $voteItemInput.val() === _l('请输入投票项');
       }).length,
       voteOptions: voteOptions,

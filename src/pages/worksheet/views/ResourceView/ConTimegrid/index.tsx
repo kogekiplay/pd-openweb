@@ -194,7 +194,9 @@ const GridOne = styled.div`
 
 const goTodayLine = () => {
   let lineLeft = $('.todayLine').attr('leftData');
-  $('.conForCanvasTime').scrollLeft(lineLeft - 100);
+  // attr() 返回 string|undefined，减法本来靠 JS 隐式转换。显式写出来，运行期等价
+  //（Number(undefined) 是 NaN，与 undefined - 100 得 NaN 一致）。
+  $('.conForCanvasTime').scrollLeft(Number(lineLeft) - 100);
 };
 
 export default function Timegrid(props) {

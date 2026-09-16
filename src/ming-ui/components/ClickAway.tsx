@@ -54,7 +54,12 @@ function shouldTriggerClickAway({ el, target, exceptions, specialFilter }) {
   return (
     target !== el &&
     !window.jQuery(target).closest(window.jQuery(el)).length &&
-    every(flatten(exceptions), item => target !== item && !window.jQuery(target).closest(window.jQuery(item)).length) &&
+    // exceptions 是异构的：字符串选择器、DOM 节点、jQuery 集合都可能进来
+    //（见上面 normalize 里的分支），所以 item 只能是 any。
+    every(
+      flatten(exceptions),
+      (item: any) => target !== item && !window.jQuery(target).closest(window.jQuery(item)).length,
+    ) &&
     document.documentElement.contains(target) &&
     !(specialFilter && specialFilter(target))
   );

@@ -407,7 +407,7 @@ $.extend(CreateCalendar.prototype, {
 
     // 提醒失去焦点
     $('#remindTextCreate').blur(function (this: HTMLElement) {
-      var remindText = parseInt($(this).val(), 10) || 1;
+      var remindText = parseInt(String($(this).val() ?? ''), 10) || 1;
       $(this).val(remindText); // 可能有字母
 
       if (remindText > 99) {
@@ -489,8 +489,8 @@ $.extend(CreateCalendar.prototype, {
     // 重复次数
     $('.repeatDialogConfirm #repetitionFrequency')
       .keyup(function (this: HTMLElement) {
-        if (!_.isNumber(parseInt($(this).val())) || _.isNaN($(this).val())) {
-          if (!$(this).val().trim()) {
+        if (!_.isNumber(parseInt(String($(this).val() ?? ''))) || _.isNaN($(this).val())) {
+          if (!String($(this).val() ?? '').trim()) {
             return;
           }
 
@@ -498,7 +498,8 @@ $.extend(CreateCalendar.prototype, {
           return false;
         }
 
-        var value = $(this).val();
+        // .val() 真实返回 string|number|string[]|undefined，下面按字符串用（.length/.substring）
+        var value = String($(this).val() ?? '');
         var len = value.length;
         if (len > 2) {
           $(this).attr('value', value.substring(0, 2));
@@ -506,18 +507,18 @@ $.extend(CreateCalendar.prototype, {
         }
 
         if (parseInt(value, 10) > 30) {
-          $(this).attr('value', 30);
+          $(this).attr('value', '30');
           return;
         }
 
         $(this).attr({ defaultValue: value, value: value });
       })
       .blur(function (this: HTMLElement) {
-        if (!_.isNumber(parseInt($(this).val())) || _.isNaN($(this).val())) {
+        if (!_.isNumber(parseInt(String($(this).val() ?? ''))) || _.isNaN($(this).val())) {
           $(this).attr('value', $(this).attr('defaultValue'));
         }
 
-        if (parseInt($(this).val(), 10) === 0) {
+        if (parseInt(String($(this).val() ?? ''), 10) === 0) {
           $(this).attr('value', 1);
         }
 
@@ -569,16 +570,17 @@ $.extend(CreateCalendar.prototype, {
     // 重复结束次数
     $('.repeatDialogConfirm #txtOverCount')
       .keyup(function (this: HTMLElement) {
-        if (!$(this).val().trim()) {
+        if (!String($(this).val() ?? '').trim()) {
           return;
         }
 
-        if (!_.isNumber(parseInt($(this).val(), 10)) || _.isNaN(parseInt($(this).val(), 10))) {
+        if (!_.isNumber(parseInt(String($(this).val() ?? ''), 10)) || _.isNaN(parseInt(String($(this).val() ?? ''), 10))) {
           $(this).attr('value', $(this).attr('defaultValue'));
           return false;
         }
 
-        var value = $(this).val();
+        // .val() 真实返回 string|number|string[]|undefined，下面按字符串用（.length/.substring）
+        var value = String($(this).val() ?? '');
         var len = value.length;
         if (len > 2) {
           $(this).attr('value', value.substring(0, 2));
@@ -586,18 +588,18 @@ $.extend(CreateCalendar.prototype, {
         }
 
         if (parseInt(value, 10) > 30) {
-          $(this).attr('value', 30);
+          $(this).attr('value', '30');
           return;
         }
 
         $(this).attr({ defaultValue: value, value: value });
       })
       .blur(function (this: HTMLElement) {
-        if (!_.isNumber(parseInt($(this).val(), 10)) || _.isNaN(parseInt($(this).val(), 10))) {
+        if (!_.isNumber(parseInt(String($(this).val() ?? ''), 10)) || _.isNaN(parseInt(String($(this).val() ?? ''), 10))) {
           $(this).attr('value', $(this).attr('defaultValue'));
         }
 
-        if (parseInt($(this).val(), 10) === 0) {
+        if (parseInt(String($(this).val() ?? ''), 10) === 0) {
           $(this).attr('value', 1);
         }
 
@@ -997,8 +999,8 @@ CreateCalendar.methods = {
   repeatResult: function () {
     var settings = CreateCalendar.settings;
     // 重复日程
-    var type = parseInt($('.repeatDialogConfirm #tab_repeatType').val(), 10);
-    var recurType = parseInt($('.repeatDialogConfirm #tab_repeatTime').val(), 10);
+    var type = parseInt(String($('.repeatDialogConfirm #tab_repeatType').val() ?? ''), 10);
+    var recurType = parseInt(String($('.repeatDialogConfirm #tab_repeatTime').val() ?? ''), 10);
     var day = $('.repeatDialogConfirm #repetitionFrequency').val();
     var count = $('.repeatDialogConfirm #txtOverCount').val();
     var messages = '';
@@ -1254,7 +1256,7 @@ CreateCalendar.methods = {
       return false;
     }
 
-    var eventName = $('#txtCalendarName').val().trim();
+    var eventName = String($('#txtCalendarName').val() ?? '').trim();
 
     // 日程名称是否为空
     if (eventName === '') {
@@ -1264,8 +1266,8 @@ CreateCalendar.methods = {
       return false;
     }
 
-    var address = $('#txtAddress').val().trim();
-    var desc = $('#txtDesc').val().trim();
+    var address = String($('#txtAddress').val() ?? '').trim();
+    var desc = String($('#txtDesc').val() ?? '').trim();
     var startDate = settings.Start;
     var endDate = settings.End;
     var isAll = settings.allDay;
@@ -1292,7 +1294,7 @@ CreateCalendar.methods = {
 
     // 重复日程
     if (isRecur) {
-      frequency = parseInt($('#tab_repeatType').val(), 10) + 1; // 类型
+      frequency = parseInt(String($('#tab_repeatType').val() ?? ''), 10) + 1; // 类型
       weekDay = 0;
 
       // 重复为周
@@ -1339,10 +1341,10 @@ CreateCalendar.methods = {
         }
       }
 
-      interval = $('#repetitionFrequency').val(); // 频率
+      interval = String($('#repetitionFrequency').val() ?? ''); // 频率
 
       var time = $('#tab_repeatTime').val();
-      recurCount = time == 1 ? parseInt($('#txtOverCount').val(), 10) : 0; // 次数
+      recurCount = time == 1 ? parseInt(String($('#txtOverCount').val() ?? ''), 10) : 0; // 次数
       untilDate = time == 2 ? moment(settings.overTime).toISOString() : ''; // 截至日期
     }
 
@@ -1387,12 +1389,20 @@ CreateCalendar.methods = {
 
           if (window.location.href.indexOf('calendar') >= 0 && $('#calendar').length > 0) {
             // 日程列表刷新
-            var viewName = $('#calendar').fullCalendar('getView').name;
-            if (viewName === 'list') {
-              $('.fc-list-button').trigger('refreshList');
-            } else {
-              $('#calendar').fullCalendar('refetchEvents');
-            }
+            //
+            // 【原来为什么要分两支】v2 时代"列表"是个假视图：往工具栏注入一个
+            // .fc-list-button，点它就 destroy 掉日历、另发一次 getCalendarList2。
+            // 所以刷新它得去 trigger 自定义的 refreshList 事件，走不了 refetchEvents。
+            // v7 的 listMonth 是【内置真视图】，refetchEvents 一并刷新，分支没有了。
+            //
+            // 【为什么用动态 import】createCalendar 这个弹层被 feed / task / kc 等多个
+            // 页面用到，静态引 fcInstance 会把整个 FullCalendar 打进那些页面的包。
+            // 能走到这里说明 #calendar 已在文档里、日历页早就加载过该 chunk，
+            // import() 直接命中缓存，不会有额外请求。
+            //
+            // 迁移时这里漏改了，`$(...).fullCalendar(...)` 在 v7 下会直接抛
+            // TypeError；是给 `$` 标上真实类型（types/global.d.ts）之后才暴露出来的。
+            import('src/pages/calendar/modules/calendar/fcInstance').then(({ refetchEvents }) => refetchEvents());
           }
 
           source.data.address = address;

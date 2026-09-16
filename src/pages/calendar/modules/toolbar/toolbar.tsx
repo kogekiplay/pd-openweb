@@ -484,15 +484,15 @@ Toolbar.Method = {
             $(this).addClass('Select bgColorPrimaryTransparent');
             var type = $(this).attr('type');
             var $iCalContent_two = $('#iCalContent_two');
-            if (type == 1) {
+            if (Number(type) === 1) {
               $iCalContent_two.html(
                 '2.' + _l('"打开Outlook，在工具>账户设置>Internet日历中新建，并粘贴刚才获得的ICAL格式日历地址"'),
               );
-            } else if (type == 2) {
+            } else if (Number(type) === 2) {
               $iCalContent_two.html(
                 '2.' + _l('"打开Mac日历，在文件>新建日历订阅，粘贴刚才获得的Internet格式日历地址"'),
               );
-            } else if (type == 3) {
+            } else if (Number(type) === 3) {
               $iCalContent_two.html(
                 '2.' + _l('"登录Google Calendar，在其他日历>通过网址添加中，粘贴刚才获得的ICAL格式日历地址"'),
               );
@@ -849,7 +849,7 @@ Toolbar.inviteCalendarMethod = {
     // 如果是全天
     if (isAllDay) {
       // 今天 明天
-      if (type == 0) {
+      if (Number(type) === 0) {
         if (flag == 1) {
           // 今天 当天
           calendarTime = starTime.format('MM月DD日 (ddd)') + ' (' + _l('全天') + ')';
@@ -861,7 +861,7 @@ Toolbar.inviteCalendarMethod = {
         }
       }
     } else {
-      if (type == 0) {
+      if (Number(type) === 0) {
         if (flag == 1) {
           // 今 非全天 当天
           start = starTime.format('MM月DD日 (ddd) HH:mm');
