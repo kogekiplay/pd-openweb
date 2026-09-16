@@ -38,10 +38,6 @@ const JS_ALLOWLIST = [
   // src/library/plupload/ 下，于是从来没被任何门禁看过。它已移到 src/utils/。
   'src/library/',
 
-  // iconfont.cn 生成的 SVG symbol 注入脚本，由 scripts/updateIconfont.ts 更新。
-  // 改成 .ts 会在下次重新生成时被覆盖回去。
-  'src/pages/integration/svgIcon.js',
-
   // 压缩过的第三方录音库，被 export default function init() 包了一层。
   'src/components/Mingo/ChatBot/components/Recorder/lib.js',
 
@@ -53,9 +49,12 @@ const JS_ALLOWLIST = [
   // 每次重新生成都会覆盖，手改没有意义。
   'locale/',
 
-  // 浏览器直接 <script src> 加载的静态资源，全是第三方发行版
-  //（vditor / pdfkit / tailwindcss / mathjax / katex / echarts …）。
-  // 这些位置只能是 .js，而且它们不进 webpack 编译。
+  // 浏览器直接 <script src> 加载的静态资源：pdfkit / blob-stream / tailwindcss，
+  // 以及 staticLanguages.js（SPA 之前跑的引导脚本，见 CI/generate.ts:187）。
+  // 【这些位置只能是 .js】它们由 HTTP 服务直接吐给浏览器，不进 webpack，
+  // 改后缀会让 MIME 类型不对、浏览器拒绝执行。
+  // 注：vditor 的运行期资源曾经也在这里（74 个 .js / 525 个文件），现已改为
+  // 构建时从 node_modules/@mdfe/vditor 复制，见 scripts/build.ts 的 copyStatic()。
   'staticfiles/',
 ];
 
