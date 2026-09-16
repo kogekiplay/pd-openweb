@@ -263,17 +263,22 @@ export const Tabs = props => {
     const newComponents = components.map(c => {
       const idKey = widget.id ? 'id' : 'uuid';
 
+      let next = c;
+
       if (c[idKey] === widget[idKey] && [9, 10, 'tabs', 'card'].includes(c.type) && maxH) {
+        // 【必须不可变更新】这里原先是直接 `c.web.layout.h = maxH` 改写对象，
+        // 而 components 来自 redux store。redux-toolkit 的 immutableStateInvariant
+        // 中间件会检测到并【抛异常】：
+        //   A state mutation was detected between dispatches, in the path
+        //   'customPage.components.N.web.layout.h'
+        // 异常冒到 ErrorBoundary，<GridLayout> / <Tabs> 整棵子树被销毁重建 ——
+        // 表现是自定义页面在拖动/缩放组件之后整块闪一下重新加载。
         if (layoutType === 'web' && c.web && c.web.layout) {
-          c.web.layout.h = maxH;
-          c.web.layout.minH = maxH;
-          c.web.layout.maxH = maxH;
+          next = { ...c, web: { ...c.web, layout: { ...c.web.layout, h: maxH, minH: maxH, maxH } } };
         }
 
         if (layoutType === 'mobile' && c.mobile && c.mobile.layout) {
-          c.mobile.layout.h = maxH;
-          c.mobile.layout.minH = maxH;
-          c.mobile.layout.maxH = maxH;
+          next = { ...c, mobile: { ...c.mobile, layout: { ...c.mobile.layout, h: maxH, minH: maxH, maxH } } };
         }
       }
 
@@ -281,7 +286,7 @@ export const Tabs = props => {
         _.find(
           res,
           n => (isTabs ? n.tabId === c.tabId : n.sectionId === c.sectionId) && (n.id || n.uuid) === (c.id || c.uuid),
-        ) || c
+        ) || next
       );
     });
     props.updateComponents(newComponents);

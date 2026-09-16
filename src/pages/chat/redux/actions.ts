@@ -1,10 +1,10 @@
 import _ from 'lodash';
+import type { AppDispatch, GetState } from 'src/redux/types';
 import { dateConvertToUserZone } from 'src/utils/project';
 import * as utils from '../utils';
 import * as ajax from '../utils/ajax';
 import Constant from '../utils/constant';
 import * as socket from '../utils/socket';
-import type { AppDispatch, GetState } from 'src/redux/types';
 
 /**
  * 设置会话列表
@@ -575,7 +575,10 @@ export const clearNotification = message => (dispatch: AppDispatch, getState: Ge
   if (currentSession.id === type && currentSession.count) {
     dispatch({
       type: 'SET_CURRENT_SESSION',
-      result: Object.assign(currentSession, { count: 0 }),
+      // 【不能用 Object.assign(currentSession, ...)】第一个参数是 store 里的对象，
+      // 那样是原地改写，redux-toolkit 的 immutableStateInvariant 会抛
+      //   A state mutation was detected between dispatches, in the path 'chat.currentSession.count'
+      result: { ...currentSession, count: 0 },
     });
   }
 };
@@ -640,7 +643,8 @@ export const setCurrentSessionId =
     socket.Contact.setCurrentChat(session);
     dispatch({
       type: 'SET_CURRENT_SESSION',
-      result: Object.assign(session, message),
+      // 同上：session 取自 sessionList（store 里的对象），不能原地 assign
+      result: { ...session, ...message },
     });
   };
 
@@ -650,6 +654,10 @@ export const setCurrentSessionId =
  */
 export const addCurrentSession = result => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSessionList, sessionList } = getState().chat;
+  // 【先拷一份再改】调用方经常直接把 sessionList 里的那个对象传进来，
+  // 在它身上写 isGroup / id / isTop 就是在改 store，会被 immutableStateInvariant 抓到：
+  //   A state mutation was detected between dispatches, in the path 'chat.sessionList.N.id'
+  result = { ...result };
   result.isGroup = !!result.groupId;
   result.id = result.isGroup ? result.groupId : result.accountId;
   if (currentSessionList.length >= 2) {
@@ -1019,7 +1027,25 @@ export const pushPageMessage = (id, result) => {
  */
 export const addMessage = (newMessage, prevMessage) => (dispatch: AppDispatch) => {
   const { Account: account } = md.global;
-  const message = {
+  // sysType / refer / card / isPrepare 是按消息种类【后面才补上】的
+  //（系统消息 / 引用 / 卡片 / 预发送），所以要在这里写出形状。
+  // 原先 md.global 是 any，这个字面量的推断类型跟着变宽，事后加属性不报错。
+  const message: {
+    waitingId: any;
+    from: string;
+    fromAccount: { email: string; id: string; logo: string; name: string };
+    msg: { con: any };
+    to: any;
+    type: any;
+    time: any;
+    iswd: boolean;
+    sendMsg: any;
+    isMineMessage: boolean;
+    sysType?: any;
+    refer?: any;
+    card?: any;
+    isPrepare?: boolean;
+  } = {
     waitingId: newMessage.waitingid,
     // id: newMessage.waitingid,
     from: account.accountId,

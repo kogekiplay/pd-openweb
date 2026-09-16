@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { createPortal } from 'react-dom';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import './index.less';
 
 export default class FullScreenCurtain extends Component<any, any> {

@@ -2,7 +2,6 @@ import React, { Component, Fragment, useCallback, useEffect, useState } from 're
 import { createRoot } from 'react-dom/client';
 import JsonView from '@mingdaocom/json-view';
 import cx from 'classnames';
-import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import { Avatar, Dialog, Icon, LoadDiv, ScrollView, Textarea } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -19,6 +18,8 @@ import { FIELD_TYPE_LIST } from 'src/pages/workflow/WorkflowSettings/enum';
 import { VIEW_DISPLAY_TYPE, VIEW_TYPE_ICON } from 'src/pages/worksheet/constants/enum';
 import { getTranslateInfo, setFavicon, shareGetAppLangDetail } from 'src/utils/app';
 import { browserIsMobile } from 'src/utils/common';
+import type { FormControl } from 'src/utils/controlTypes';
+import copy from 'src/utils/copyToClipboard';
 import FiltersGenerate from './components/FiltersGenerate';
 import Header from './components/Header';
 import Mcp from './components/Mcp';
@@ -48,7 +49,6 @@ import {
 import { MENU_LIST_MAP, SIDEBAR_LIST_MAP, TAB_TYPE } from './core/enum';
 import { convertControl } from './core/utils';
 import './index.less';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const FIELD_TYPE = FIELD_TYPE_LIST.concat([
   { text: _l('对象'), value: 10000006, en: 'object' },
@@ -135,7 +135,14 @@ class WorksheetApi extends Component<any, any> {
     this.getAppInfo();
   }
 
-  get MENU_LIST() {
+  /**
+   * 【返回类型要显式写】这几张菜单表的条目形状按接口各不相同：
+   * 有的带 isGet / fields / requestData / outputData，有的不带。
+   * 不写的话 TS 会把数组推成这些形状的联合，读任何非公共字段都报"属性不存在"。
+   * 共有的只有 id / title，其余如实写成开放的索引签名 ——
+   * 【不要试图把字段列全】那是按 4 条样本猜形状，实测会漏掉一大半、反而制造新错误。
+   */
+  get MENU_LIST(): Array<{ id: string; title: string; [key: string]: any }> {
     const { tabIndex } = this.state;
 
     return MENU_LIST_MAP[tabIndex] || [];
@@ -1216,7 +1223,8 @@ class WorksheetApi extends Component<any, any> {
    */
   renderAppendixContent(list?: ApiField[]) {
     const { tabIndex } = this.state;
-    const getWidth = (headerData: ApiDocNode[], key: string) => _.get(_.find(headerData, headerObj => headerObj.key === key) || {}, 'width');
+    const getWidth = (headerData: ApiDocNode[], key: string) =>
+      _.get(_.find(headerData, headerObj => headerObj.key === key) || {}, 'width');
     const data = list || MENU_LIST_APPENDIX;
 
     return (
@@ -1745,7 +1753,25 @@ class WorksheetApi extends Component<any, any> {
   /**
    * 渲染通用的右内容
    */
-  renderRightContent({ data, successData, errorData, outputData }) {
+  /**
+   * 【四个字段都要标成可选】解构形参不写注解时，TS 会把它们全当成必填，
+   * 于是只传 data 的那 4 处调用点报"缺少 outputData"。
+   * 但函数体自己就写着 `successData ? ...` 和 `!!outputData &&` 的守卫 ——
+   * 可选是如实描述，不是放水。
+   */
+  renderRightContent({
+    data,
+    successData,
+    errorData,
+    outputData,
+  }: {
+    data?: any;
+    successData?: any;
+    errorData?: any;
+    outputData?: any;
+    /** 有一处调用点传了它，但函数体并不读 —— 如实列出，不动调用方的意图 */
+    enableClipboard?: boolean;
+  }) {
     return (
       <div className="worksheetApiContent2">
         <div className="mBottom16 Font14 textDisabled">{_l('提交数据提示')}</div>

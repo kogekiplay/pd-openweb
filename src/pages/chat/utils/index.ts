@@ -453,9 +453,12 @@ export const formatFileSize = (size = 0) => {
  */
 export const shake = id => {
   const el = $(`#ChatPanel-${id}`).find('.ChatPanel-sessionList');
-  el.addClass('ChatPanel-shake').on('webkitAnimationEnd oAnimationEnd MSAnimationEnd animationend', function (this: HTMLElement) {
-    $(this).removeClass('ChatPanel-shake');
-  });
+  el.addClass('ChatPanel-shake').on(
+    'webkitAnimationEnd oAnimationEnd MSAnimationEnd animationend',
+    function (this: HTMLElement) {
+      $(this).removeClass('ChatPanel-shake');
+    },
+  );
 };
 
 /**
@@ -484,9 +487,12 @@ export const highlightMessage = id => {
  */
 const highlight = el => {
   const className = 'highlight';
-  el.addClass(className).on('webkitAnimationEnd oAnimationEnd MSAnimationEnd animationend', function (this: HTMLElement) {
-    $(this).removeClass(className);
-  });
+  el.addClass(className).on(
+    'webkitAnimationEnd oAnimationEnd MSAnimationEnd animationend',
+    function (this: HTMLElement) {
+      $(this).removeClass(className);
+    },
+  );
 };
 
 /**
@@ -550,20 +556,39 @@ export const removeFlashTitle = (value, sessionList) => {
 };
 
 /**
+ * 播放提示音。
+ *
+ * 【必须接住这个 Promise】浏览器的自动播放策略要求页面先有过用户交互，
+ * 否则 play() 返回的 Promise 会以 NotAllowedError 拒绝：
+ *   Uncaught (in promise) NotAllowedError: play() failed because the user
+ *   didn't interact with the document first.
+ * 用户一打开页面就收到消息时必然触发（本来也就是放不出声，不是故障），
+ * 不接住就变成一条红色的未捕获拒绝，还会污染错误上报。
+ */
+function playPromptAudio(elementId: string): void {
+  if (!window.isOpenMessageSound || !window.isNewTab()) return;
+
+  const audio = document.getElementById(elementId) as HTMLAudioElement | null;
+  if (!audio) return;
+
+  // play() 在老浏览器里可能不返回 Promise，所以要判一下再挂 catch
+  const played = audio.play();
+  if (played && typeof played.catch === 'function') {
+    played.catch(() => {
+      /* 没有用户交互，放不了就算了 */
+    });
+  }
+}
+
+/**
  * 聊天新消息的语音提示
  */
-export const playSessionNewMsgAudio = () => {
-  if (!window.isOpenMessageSound || !window.isNewTab()) return;
-  document.getElementById('sessionNewMsgAudio').play();
-};
+export const playSessionNewMsgAudio = () => playPromptAudio('sessionNewMsgAudio');
 
 /**
  * 系统新消息的语音提示
  */
-export const playSystemNewMsgAudio = () => {
-  if (!window.isOpenMessageSound || !window.isNewTab()) return;
-  document.getElementById('systemNewMsgAudio').play();
-};
+export const playSystemNewMsgAudio = () => playPromptAudio('systemNewMsgAudio');
 
 /**
  * 新聊天页

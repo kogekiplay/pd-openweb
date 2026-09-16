@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import DocumentTitle from 'react-document-title';
 import _ from 'lodash';
 import moment from 'moment';
 import styled from 'styled-components';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import orderController from 'src/api/order';
 import preall from 'src/common/preall';
 import { getRequest, pathCompletion } from 'src/utils/common';

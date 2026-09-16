@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import DocumentTitle from 'react-document-title';
 import { useSetState } from 'react-use';
 import _ from 'lodash';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import { initIntlTelInput } from 'ming-ui/components/PhoneNumberInput/util';
 import appManagementController from 'src/api/appManagement';
 import loginController from 'src/api/login';
@@ -169,7 +169,6 @@ export default function Login() {
         projectId: request.projectId || request.projectid || '', //'167046ff-fe94-4d7d-8a5e-b9148be9c13f', //
       })
       .then(async (res = {}) => {
-
         //request.loginMode === 'systemLogin' 指定平台账号登录方式
         if (request.loginMode === 'systemLogin') {
           res.openLDAP = false;

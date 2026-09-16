@@ -36,11 +36,30 @@ class List extends Component<any, any> {
     const footer = this.props.footer
       ? cloneElement(this.props.footer, { className: cx(this.props.footer.props.className, 'List-footer') })
       : undefined;
+    // 【自己的 prop 不能进 ...rest】原先是 `<div {...this.props}>`，于是 setRef /
+    // header / footer / bodyMaxHeight 全都落到真实 DOM 上；更糟的是 ClickAway.wrap
+    // 会把 onClickAway / onClickAwayExceptions / specialFilter 一路透传进来，
+    // React 逐个报 "Unknown event handler property" 和 "does not recognize the prop"。
+    const {
+      setRef,
+      header: _header,
+      footer: _footer,
+      bodyMaxHeight,
+      className,
+      children: _children,
+      // 这三个不是 List 的 prop，是 ClickAway.wrap(Menu) 透传下来的
+      //（它的 shouldForwardClickAwayProps 会把它们塞回给被包组件）。
+      // Menu 不消费、原样传给 List，最后就落到 <div> 上了。
+      onClickAway: _onClickAway,
+      onClickAwayExceptions: _onClickAwayExceptions,
+      specialFilter: _specialFilter,
+      ...rest
+    } = this.props as any;
     return (
       <div
-        {...this.props}
-        ref={this.props.setRef}
-        className={cx(this.props.className, 'ming List', {
+        {...rest}
+        ref={setRef}
+        className={cx(className, 'ming List', {
           'List--withIconFront': iconAtFront,
           'List--withIconEnd': iconAtEnd,
         })}

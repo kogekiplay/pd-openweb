@@ -1,11 +1,11 @@
 import React, { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
-import DocumentTitle from 'react-document-title';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Icon, LoadDiv, SvgIcon } from 'ming-ui';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import appManagementApi from 'src/api/appManagement';
 import { SHARE_STATE, ShareState, VerificationPass } from 'worksheet/components/ShareState';
 import preall from 'src/common/preall';

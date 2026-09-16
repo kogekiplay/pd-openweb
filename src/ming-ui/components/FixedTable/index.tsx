@@ -222,7 +222,9 @@ function FixedTable(props, ref) {
   const tables = tableConfigs
     .filter(item => item.visible && (!loading || includes(item.id, 'top')))
     .map(t => (
+      // key 用 tableConfigs 里那个稳定的 id（top-left / bottom-right …）
       <Grid
+        key={t.id}
         {...Object.assign(t, {
           isGroupTableView,
           width: YIsScroll ? width - barWidth : width,

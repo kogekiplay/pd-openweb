@@ -127,7 +127,28 @@ window._l = function (key, ...args) {
 };
 
 /**
- * 加载多语言文件
+ * 加载多语言文件。
+ *
+ * 【这里必须是同步的，不要改成 fetch / 异步 script】
+ * `_l` 是【调用时】读全局 translations 的，但全仓有大量 `_l()` 在【模块顶层】就执行
+ *（`const TITLE = _l('xxx')`、配置数组里的文案…），它们在业务 bundle 求值那一刻就
+ * 把字符串定死了。2026-09-16 实测：把这里改成异步 <script src> 之后，
+ * 【仅工作台一页】就有 3055 次 _l() 发生在翻译到达之前，涉及 2102 个不同的 key，
+ * 连页面标题都变成了「【　　　】工作台」。
+ * 靠"取不到就回落到 key"也救不了：zh-Hans 有 98.4% 的条目是键=值所以看着没事，
+ * 但 en / ja / th 这些只有 0.2%~1.6%，等于整页不翻译。
+ *
+ * 【那为什么不用同步 XHR】原先写的是 `xhrObj.open(..., false)` + `script.text = 响应体`：
+ *   · 同步 XHR 在主线程上已被废弃，控制台每次加载都报
+ *     "Synchronous XMLHttpRequest on the main thread is deprecated"；
+ *   · 它会把主线程整个卡在这 1.5~2.6MB 的下载上（不是"阻塞解析"，是真的冻住）；
+ *   · `script.text = ...` 这种注入方式拿不到 V8 的 code cache，每次都要重新编译整包。
+ * 换成解析器插入的 <script src> 之后，语义完全一样（同步、有序、早于后面所有 bundle），
+ * 但下载由浏览器的资源加载器负责、可被预扫描器提前发现、且能吃到 HTTP 缓存与 code cache。
+ *
+ * 【document.write 在这里是合法用法】它只在文档解析期间可用，而 globals.js 正是被
+ * HTML 里的 <script src> 解析器插入的（见 CI/generate.ts）。Chrome 只对
+ * 【跨源】的 parser-blocking 脚本做干预并打印提示，本部署的语言包是同源的。
  */
 (function () {
   const pages = [
@@ -148,19 +169,27 @@ window._l = function (key, ...args) {
   const currentLang = langConfig.find(item => item.key === getCurrentLang());
 
   if (currentLang) {
-    const xhrObj = new XMLHttpRequest();
-    const script = document.createElement('script');
     const path =
       (!location.href.match(/mingdao\.com|share\.mingdao\.net|theportal\.cn/)
         ? currentLang.path
         : currentLang.path.replace('/staticfiles/lang', 'https://alifile.mingdaocloud.com/lang/HAP')) +
       `?${moment().format('YYYY_MM_DD_') + Math.floor(moment().hour() / 6)}`;
 
-    xhrObj.open('GET', path, false);
-    xhrObj.send('');
-    script.type = 'text/javascript';
-    script.text = xhrObj.responseText;
-    document.head.appendChild(script);
+    if (document.readyState === 'loading') {
+      // 解析器插入的 <script src>：同步、按顺序，且【不冻结主线程】。
+      document.write(`<script src="${path}"><\/script>`);
+    } else {
+      // 兜底：globals.js 被动态加载时（正常启动流程走不到这里）document.write 会清空文档，
+      // 只能退回同步 XHR。留着是为了不改变任何既有路径的行为。
+      const xhrObj = new XMLHttpRequest();
+      const script = document.createElement('script');
+
+      xhrObj.open('GET', path, false);
+      xhrObj.send('');
+      script.type = 'text/javascript';
+      script.text = xhrObj.responseText;
+      document.head.appendChild(script);
+    }
   }
 })();
 

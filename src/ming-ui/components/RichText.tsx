@@ -548,7 +548,7 @@ const RichText = forwardRef((props, ref) => {
             lang="zh-cn"
             dir="ltr"
             role="textbox"
-            contenteditable="false"
+            contentEditable={false}
             dangerouslySetInnerHTML={{
               __html: filterXSS(data || placeholder, {
                 whiteList: newWhiteList,

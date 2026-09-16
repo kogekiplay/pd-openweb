@@ -6,7 +6,13 @@ import { Icon } from 'ming-ui';
 import { ITEM_TYPE, ITEM_TYPE_GROUP } from './constants';
 import { renderCustomBtnStyleIcon } from './icon';
 
-function getGroupedDragLayerPointStyle({ initialClientOffset, currentOffset, initialSourceClientOffset }) {
+// 【要标 CSSProperties】不标的话 position: 'fixed' / pointerEvents: 'none'
+// 会被推成 string 而不是字面量类型，喂给 style 属性时报不兼容。
+function getGroupedDragLayerPointStyle({
+  initialClientOffset,
+  currentOffset,
+  initialSourceClientOffset,
+}): React.CSSProperties {
   if (!initialClientOffset || !currentOffset || !initialSourceClientOffset) {
     return { display: 'none' };
   }

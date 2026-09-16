@@ -93,7 +93,10 @@ export default function SideContent(props) {
       if (group.length) {
         ['markedApps', 'externalApps', 'aloneApps'].includes(type)
           ? keys.push(`${type}/@INIT`)
-          : group.forEach(({ projectId, projectApps }: { projectId?: string; [key: string]: any }) => !!projectApps.length && keys.push(`${type}/${projectId}`));
+          : group.forEach(
+              ({ projectId, projectApps }: { projectId?: string; [key: string]: any }) =>
+                !!projectApps.length && keys.push(`${type}/${projectId}`),
+            );
       }
     });
 
@@ -153,17 +156,21 @@ export default function SideContent(props) {
           const group = _.get(getFilterData(), type);
           return _.includes(['validProject', 'expireProject'], type)
             ? group &&
-                group.map(({ projectId, projectApps, projectName }: { projectId?: string; [key: string]: any }, index: number) =>
-                  projectApps.length > 0 ? (
-                    <SideAppGroup
-                      key={`${projectId}-${index}`}
-                      type={type}
-                      projectId={projectId}
-                      projectName={projectName}
-                      items={projectApps}
-                      {...propsAndMethods}
-                    />
-                  ) : null,
+                group.map(
+                  (
+                    { projectId, projectApps, projectName }: { projectId?: string; [key: string]: any },
+                    index: number,
+                  ) =>
+                    projectApps.length > 0 ? (
+                      <SideAppGroup
+                        key={`${projectId}-${index}`}
+                        type={type}
+                        projectId={projectId}
+                        projectName={projectName}
+                        items={projectApps}
+                        {...propsAndMethods}
+                      />
+                    ) : null,
                 )
             : group && group.length > 0 && <SideAppGroup key={index} type={type} items={group} {...propsAndMethods} />;
         })}
@@ -196,10 +203,11 @@ export default function SideContent(props) {
           item =>
             !(
               (item.id === 'hr' && !md.global.Account.hrVisible) ||
-              md.global.SysSettings.forbidSuites.indexOf(item.key) > -1
+              md.global.SysSettings.forbidSuites.indexOf(String(item.key)) > -1
             ),
         ).map(item => (
           <div
+            key={item.id}
             className="cooperateItem flex"
             onClick={() => {
               item.id === 'hr' ? window.open(item.href) : navigateTo(item.href);

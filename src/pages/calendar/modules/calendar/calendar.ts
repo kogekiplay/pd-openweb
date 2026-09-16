@@ -5,19 +5,19 @@ import calendarEdit from '../calendarDetail';
 import afterRefreshOp from '../calendarDetail/lib/afterRefreshOp';
 import recurCalendarUpdate from '../calendarDetail/lib/recurCalendarUpdateDialog';
 import Comm from '../comm/comm';
-import listHtml from './tpl/list.html';
 import {
-  changeView as fcChangeView,
   createCalendarInstance,
   destroyCalendar,
-  getCalendar,
+  changeView as fcChangeView,
   getDate as fcGetDate,
   getViewName as fcGetViewName,
   refetchEvents as fcRefetchEvents,
   renderCalendar as fcRender,
+  getCalendar,
   toV2View,
   toV7View,
 } from './fcInstance';
+import listHtml from './tpl/list.html';
 import './calendar.less';
 
 /**
@@ -126,12 +126,23 @@ Calendar.Method = {
       initialView: toV7View(parameter.currentView),
       slotDuration: '00:30:00',
       scrollTime: parameter.scrollTime,
-      height: $(window).height() - $('.fc-day-grid').height() - $('#topBarContainer').height() - 15,
+      // 【删掉了 height 与 handleWindowResize 两个选项】两者都是死配置，删掉与现状等价：
+      //
+      // height 原来写的是
+      //   $(window).height() - $('.fc-day-grid').height() - $('#topBarContainer').height() - 15
+      // 但 .fc-day-grid 在【构造日历的这一刻还没渲染出来】，jQuery 取不到元素，
+      // .height() 返回 undefined，整个表达式恒为 NaN。浏览器丢弃非法的 inline height，
+      // 所以 FullCalendar 一直在用它自己的默认高度 —— 这行从来没生效过
+      //（迁移前后逐字相同，不是 v7 引入的）。留着只会每次渲染刷一条
+      //   `NaN` is an invalid value for the `height` css style property
+      //
+      // handleWindowResize 是 v2/v3 的选项，v7 已移除；传进去只会得到
+      //   FullCalendar: Unknown option `handleWindowResize`
+      // v7 自己用 ResizeObserver 处理尺寸变化，没有关掉它的开关。
       selectable: true,
       selectMirror: true,
       editable: true,
       dayMaxEventRows: eventLimitNum(),
-      handleWindowResize: false,
       moreLinkClick: 'popover',
       // v7 内置的当前时间红线 —— 取代原来往 .fc-time-grid 手工塞 .rect div 的那段
       nowIndicator: true,
@@ -163,13 +174,23 @@ Calendar.Method = {
             categoryIDs: Calendar.Method.getCategoryIDsFun(),
             memberIDs: Calendar.Comm.settings.otherUsers.join(','),
           })
-          .then((list: any[]) =>
+          .then((res: any) => {
+            // 【接口返回的是信封，不是数组】2026-09-16 在生产上抓到的原始响应：
+            //   {"data":{"code":1,"msg":"操作成功","data":{"restCalCount":0,"calendars":[]}},"state":1}
+            // mdyAPI 会剥掉最外层，所以这里拿到的是 { code, msg, data: { restCalCount, calendars } }。
+            // 【这里曾经直接 (list || []).map(...)】—— 对着一个对象调 map，
+            // 事件源当场抛 "(list || []).map is not a function"，FullCalendar 把整个
+            // 事件源标记为失败，于是【日程页一条事件都渲染不出来】。
+            // 页面本身照常显示（网格、视图切换都在），所以只看界面看不出坏了。
+            // 兼容数组是为了以后接口万一改回来也不会再炸一次。
+            const list: any[] = Array.isArray(res) ? res : (res && res.data && res.data.calendars) || [];
+
             success(
               // 任务不允许拉伸时长。v2 是渲染完把 .fc-resizer 这个 DOM 删掉，
               // v7 有正经的逐事件开关，在数据侧标注更稳，也不依赖库的 DOM 结构。
-              (list || []).map((e: any) => (e.isTask ? { ...e, durationEditable: false } : e)),
-            ),
-          )
+              list.map((e: any) => (e.isTask ? { ...e, durationEditable: false } : e)),
+            );
+          })
           .catch(failure);
       },
       eventClick: function (info: any) {

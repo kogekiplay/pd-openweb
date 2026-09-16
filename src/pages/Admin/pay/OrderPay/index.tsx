@@ -1,10 +1,10 @@
 import React, { Component, Fragment } from 'react';
 import { createRoot } from 'react-dom/client';
-import DocumentTitle from 'react-document-title';
 import cx from 'classnames';
 import _ from 'lodash';
 import { match } from 'path-to-regexp';
 import { Button, Dialog, LoadDiv, Qr } from 'ming-ui';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import paymentAjax from 'src/api/payment';
 import preall from 'src/common/preall';
 import ApplyInvoiceBtn from 'src/pages/invoice/ApplyInvoiceBtn';

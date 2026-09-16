@@ -73,7 +73,7 @@ export default class Avatar extends React.Component<any, any> {
           className={cx('colorPrimaryDark msgIcon', { calendar: applicationType === 'calendar ' })}
           data-date={date || (date = new Date().getDate())}
         >
-          <span class={cx(APPLICATION_ICON[applicationType], 'circle small')}></span>
+          <span className={cx(APPLICATION_ICON[applicationType], 'circle small')}></span>
         </span>
       );
     } else {

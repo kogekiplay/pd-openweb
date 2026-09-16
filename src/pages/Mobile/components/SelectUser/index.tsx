@@ -763,7 +763,9 @@ export default class SelectUser extends Component<any, any> {
       );
     }
 
-    let currentAccount = md.global.Account || {};
+    // 【Partial 是如实描述】`|| {}` 说明作者认为 Account 可能取不到；
+    // 真取不到时 accountId / avatar 就是 undefined，类型要能表达这一点。
+    let currentAccount: Partial<typeof md.global.Account> = md.global.Account || {};
     return (
       <Fragment>
         {enumDefault2 === 0 && (

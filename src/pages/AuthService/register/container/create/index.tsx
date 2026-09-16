@@ -117,7 +117,10 @@ export default function (props) {
 
   // 企业网络基本信息 字段验证
   const validateCompanyInfoRequiredField = async () => {
-    setState({ warnTxt: '', tipDom: null });
+    // 【删掉了 setState({ warnTxt: '', tipDom: null })】这两个键不在 state 里，
+    // 全文也没有任何地方从 state 读它们（只作为 warnList 元素的字段出现），
+    // 是旧的"单条警告"状态形状留下的死代码。函数末尾的 setState({ warnList })
+    // 才是真正清空/重设警告的地方，行为不受影响。
     const { company = {} } = props;
     const { companyName, extraDatas = {} } = company;
     // 企业网络名称

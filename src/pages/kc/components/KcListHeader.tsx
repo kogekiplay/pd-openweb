@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import DocumentTitle from 'react-document-title';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import { Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import Menu from 'ming-ui/components/Menu';
 import MenuItem from 'ming-ui/components/MenuItem';
 import { expireDialogAsync } from 'src/components/upgradeVersion';

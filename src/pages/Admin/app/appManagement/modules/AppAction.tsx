@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react';
 import { useSetState } from 'react-use';
 import { Drawer } from 'antd';
-import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
+import _ from 'lodash';
 import { Dialog, Icon, UpgradeIcon } from 'ming-ui';
 import { buriedUpgradeVersionDialog } from 'src/components/upgradeVersion';
 import UpgradeProcess from 'src/pages/AppSettings/components/ImportUpgrade/components/UpgradeProcess';
@@ -36,7 +36,17 @@ export default function BatchImportApp(props) {
     appTrashVisible,
   } = data;
 
-  const handleClick = ({ action, featureId, featureType }) => {
+  // featureId 只有部分菜单项有；不标可选的话解构形参会把三个都当成必填，
+  // 传 `{ ...item, featureType }` 时那些没有 featureId 的项就报缺字段。
+  const handleClick = ({
+    action,
+    featureId,
+    featureType,
+  }: {
+    action?: string;
+    featureId?: number;
+    featureType?: any;
+  }) => {
     if (featureType === '2') {
       setData({ moreVisible: false });
       buriedUpgradeVersionDialog(projectId, featureId);
@@ -67,7 +77,7 @@ export default function BatchImportApp(props) {
   };
 
   return (
-    (<Fragment>
+    <Fragment>
       <Trigger
         popupVisible={moreVisible}
         onPopupVisibleChange={visible => setData({ moreVisible: visible })}
@@ -211,6 +221,6 @@ export default function BatchImportApp(props) {
       {appTrashVisible && (
         <AppTrash projectId={projectId} onCancel={() => setData({ appTrashVisible: false })} onRestore={updateList} />
       )}
-    </Fragment>)
+    </Fragment>
   );
 }

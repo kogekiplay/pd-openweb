@@ -27,7 +27,7 @@ const Wrap = styled.div`
     width: 4px;
     border-radius: 3px;
     transform: translateY(-50%);
-    background-color: ${props => props.aiColor};
+    background-color: ${props => props.$aiColor};
   }
   .logo {
     width: 100%;
@@ -115,7 +115,7 @@ const Mingo = props => {
       className={cx('mingo flexColumn alignItemsCenter justifyContentCenter pointer pTop6 Relative', {
         active: mingoVisible,
       })}
-      aiColor={aiBrandThemeColor || 'var(--color-mingo)'}
+      $aiColor={aiBrandThemeColor || 'var(--color-mingo)'}
       onClick={handleOpenMingo}
       onMouseEnter={() => {
         setClickNow(null);

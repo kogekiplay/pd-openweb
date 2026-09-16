@@ -5,9 +5,9 @@ import { Icon, LoadDiv, ScrollView } from 'ming-ui';
 import { permitList } from 'src/pages/FormSet/config';
 import { isOpenPermit } from 'src/pages/FormSet/util';
 import { getAdvanceSetting } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import { AREA, TYPES } from './constants.js';
 import { isSourceTree, sortDataByCustomNavs } from './util';
-import type { FormControl } from 'src/utils/controlTypes';
 
 export default function NavGroup(props) {
   const {
@@ -127,7 +127,7 @@ export default function NavGroup(props) {
       const showCount = count > 0 && view.viewType !== 2;
       const txtName = !d?.txt ? _l('未命名') : _.isString(d.txt) && d.txt.startsWith('{') && type === 27 ? '' : d.txt;
       return (
-        <React.Fragment>
+        <React.Fragment key={d.value}>
           <li
             className={cx('gList Hand', {
               current: rowIdForFilter === d.value,
@@ -220,6 +220,7 @@ export default function NavGroup(props) {
                   : o.txt || _l('未命名');
               return (
                 <li
+                  key={o.value}
                   className={cx('gList Hand', {
                     current: rowIdForFilter === o.value,
                     WordBreak: !isSourceTree(source, navGroup, view),

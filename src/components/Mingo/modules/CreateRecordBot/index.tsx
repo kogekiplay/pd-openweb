@@ -156,7 +156,10 @@ function MingoContent(props, ref) {
       aiCompletionApi: async (messages, { abortController, agentParams }) => {
         const agentName = cache.current.isSmartFill ? 'record-smart-filler' : 'record-precise-filler';
         const formFieldsControls = buildFormFieldsControls(worksheetInfo, { from: 'generate-record' });
-        const currentAccount = get(md, 'global.Account', {});
+        // get(..., {}) 的兜底让类型变成 `{} | Account` 的联合，读字段就报错。
+        // md.global.Account 在运行时一直都有（见 types/global.d.ts 的说明），
+        // 这里断言回来，兜底只是防御性写法。
+        const currentAccount = get(md, 'global.Account', {}) as typeof md.global.Account;
         const systemInfo = JSON.stringify({
           id: currentAccount.accountId,
           name: currentAccount.fullname,

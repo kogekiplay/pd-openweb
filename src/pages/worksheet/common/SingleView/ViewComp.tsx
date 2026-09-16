@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import DocumentTitle from 'react-document-title';
 import _, { get } from 'lodash';
 import styled from 'styled-components';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import ErrorBoundary from 'ming-ui/components/ErrorBoundary';
 import Sheet from 'worksheet/common/Sheet/Sheet';
 import { loadWorksheet, openNewRecord, refreshSheet, updateFilters, updateSearchRecord } from 'worksheet/redux/actions';

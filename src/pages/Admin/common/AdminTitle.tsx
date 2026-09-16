@@ -1,6 +1,6 @@
 import React from 'react';
-import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import Config from '../config';
 
 function AdminTitle({ prefix = '' }) {

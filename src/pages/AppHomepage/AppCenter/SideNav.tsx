@@ -277,7 +277,7 @@ export default function SideNav(props) {
   const { projectId } = currentProject;
   const cooperationItems = NATIVE_APP_ITEM.filter(
     item =>
-      md.global.SysSettings.forbidSuites.indexOf(item.key) === -1 &&
+      md.global.SysSettings.forbidSuites.indexOf(String(item.key)) === -1 &&
       (item.id !== 'hr' || _.get(currentProject, 'isHrVisible')),
   );
   const count = countData ? (countData.waitingDispose > 99 ? '99+' : countData.waitingDispose) : 0;
@@ -387,7 +387,7 @@ export default function SideNav(props) {
               <PopupLinks
                 items={NATIVE_APP_ITEM.filter(
                   item =>
-                    md.global.SysSettings.forbidSuites.indexOf(item.key) === -1 &&
+                    md.global.SysSettings.forbidSuites.indexOf(String(item.key)) === -1 &&
                     (item.id !== 'hr' || _.get(currentProject, 'isHrVisible')),
                 )}
               />

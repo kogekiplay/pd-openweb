@@ -1,9 +1,9 @@
 import React, { lazy, Suspense } from 'react';
-import DocumentTitle from 'react-document-title';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { LoadDiv } from 'ming-ui';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import { captcha } from 'ming-ui/functions';
 import CreateByMingDaoYun from 'src/components/CreateByMingDaoYun';
 import PublicAppLangDropdown from 'src/components/PublicAppLangDropdown';
@@ -148,7 +148,9 @@ class Publicquery extends React.Component<any, any> {
               <LoadableForm
                 disableRules
                 recordId="00000"
-                ref={customWidget => { this.customWidget = customWidget; }}
+                ref={customWidget => {
+                  this.customWidget = customWidget;
+                }}
                 data={controls.map(c => ({
                   ...c,
                   size: 12,

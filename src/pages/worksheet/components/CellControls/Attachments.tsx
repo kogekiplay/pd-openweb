@@ -1,9 +1,9 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _, { get, isFunction } from 'lodash';
 import { bool, func, number, shape, string } from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Tooltip } from 'ming-ui/antd-components';
 import { deleteAttachmentOfControl } from 'worksheet/api';
@@ -545,7 +545,10 @@ function HoverPreviewPanel(props) {
 const getMasterData = masterData => (isFunction(masterData) ? masterData() : masterData);
 
 function AttachmentImage(props) {
-  const { showShape, style = {} } = props;
+  // 【showShape 要单独摘出来】下面是 `<img {...props}>`，不摘就会落到真实 <img> 上，
+  // React 报 "does not recognize the showShape prop on a DOM element"。
+  // 它只给这里选形状用（circle / rect），不是 img 的属性。
+  const { showShape, style = {}, ...imgProps } = props;
   let { width, height, objectFit } = style;
 
   if (showShape === 'circle' || showShape === 'rect') {
@@ -564,7 +567,7 @@ function AttachmentImage(props) {
     <AttachmentImageCon className={showShape}>
       <ImageHoverMask className="hoverMask" />
       <ShadowInset className="shadowInset" />
-      <img {...props} style={{ width, height, objectFit }} ref={imgRef} />
+      <img {...imgProps} style={{ width, height, objectFit }} ref={imgRef} />
     </AttachmentImageCon>
   );
 }
@@ -918,6 +921,8 @@ function CellAttachments(props, sourceRef) {
 
   const attachmentsComp = attachments.map((attachment, index: number) => (
     <Attachment
+      // 附件的 fileID / 上传中的 id 都可能缺，兜底用下标
+      key={attachment.fileID || attachment.fileId || attachment.id || index}
       showShape={showShape}
       objectFit={objectFit}
       showFileName={showFileName}

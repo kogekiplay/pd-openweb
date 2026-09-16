@@ -549,7 +549,17 @@ export default class extends Component<any, any> {
 
     return null;
   };
-  renderContrast({ value, contrastValue, name, controlId, isContrastValue }: { name?: string; controlId?: string; [key: string]: any }) {
+  renderContrast({
+    value,
+    contrastValue,
+    name,
+    controlId,
+    isContrastValue,
+  }: {
+    name?: string;
+    controlId?: string;
+    [key: string]: any;
+  }) {
     const { filter, displaySetup = {}, style, yaxisList } = this.props.reportData;
     const { ignoreToday } = filter;
     const percentage = ((value - contrastValue) / contrastValue) * 100;
@@ -608,7 +618,14 @@ export default class extends Component<any, any> {
       </div>
     );
   }
-  renderMapItem(data, controlMinAndMax, span: number) {
+  /**
+   * 【第四个形参 itemKey】这个方法返回的是一个 <Col>，两个调用点都是
+   * list.map(...) 直接铺开，没有 key，React 报
+   *   Each child in a list should have a unique "key" prop.
+   *   Check the render method of `div`.
+   * key 只能由调用方给（它才知道自己在列表里的位置），所以从外面传进来。
+   */
+  renderMapItem(data, controlMinAndMax, span: number, itemKey?: string | number) {
     const { isLinkageMatch } = this.state;
     const {
       linkageMatch,
@@ -674,7 +691,7 @@ export default class extends Component<any, any> {
     })();
     const isOpacity = !_.isEmpty(linkageMatch) && isLinkageMatch ? linkageMatch.value !== data.originalId : false;
     return (
-      <Col span={span} onClick={event => (!oneNumber ? this.handleClick(event, data) : _.noop())}>
+      <Col key={itemKey} span={span} onClick={event => (!oneNumber ? this.handleClick(event, data) : _.noop())}>
         <div
           style={{ opacity: isOpacity ? 0.3 : undefined }}
           className={cx(`wrap-${textAlign}`, {
@@ -791,7 +808,7 @@ export default class extends Component<any, any> {
     const span = Math.ceil(24 / newColumnCount);
     const controlMinAndMax = getControlMinAndMax(map);
     return (
-      (<Wrap
+      <Wrap
         className={cx(
           'numberChart flexRow h100 Relative',
           `verticalAlign-${numberChartStyle.allowScroll ? 'top' : 'center'}`,
@@ -818,9 +835,10 @@ export default class extends Component<any, any> {
               },
               controlMinAndMax,
               span,
+              'total',
             )}
           {xaxes.controlId
-            ? list.map(data => this.renderMapItem(data, controlMinAndMax, span))
+            ? list.map((data, index: number) => this.renderMapItem(data, controlMinAndMax, span, data.c_id || index))
             : list.map((data, index: number) =>
                 this.renderMapItem(
                   {
@@ -839,6 +857,7 @@ export default class extends Component<any, any> {
                   },
                   controlMinAndMax,
                   span,
+                  data.c_id || index,
                 ),
               )}
           {!list.length &&
@@ -865,7 +884,7 @@ export default class extends Component<any, any> {
         >
           <div className="Absolute" style={{ left: offset.x, top: offset.y }}></div>
         </Dropdown>
-      </Wrap>)
+      </Wrap>
     );
   }
 }

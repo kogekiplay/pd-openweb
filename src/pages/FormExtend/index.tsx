@@ -1,8 +1,8 @@
 import React, { createRef, Fragment, useEffect, useRef, useState } from 'react';
-import DocumentTitle from 'react-document-title';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { CardNav, ScrollView } from 'ming-ui';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import ErrorBoundary from 'ming-ui/components/ErrorBoundary';
 import worksheetAjax from 'src/api/worksheet';
 import ErrorState from 'src/components/errorPage/errorState';

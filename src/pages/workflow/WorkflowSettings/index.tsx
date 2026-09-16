@@ -1,8 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import DocumentTitle from 'react-document-title';
 import _ from 'lodash';
 import { Tooltip } from 'ming-ui/antd-components';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import LoadDiv from 'ming-ui/components/LoadDiv';
 import processVersion from '../api/processVersion';
 import type { RootState } from 'src/redux/types';

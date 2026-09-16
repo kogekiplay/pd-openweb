@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import DocumentTitle from 'react-document-title';
 import cx from 'classnames';
 import { navigateTo } from 'router/navigateTo';
 import { Icon, LoadDiv } from 'ming-ui';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import externalPortalAjax from 'src/api/externalPortal';
 import preall from 'src/common/preall';
 import 'src/pages/AuthService/components/form.less';

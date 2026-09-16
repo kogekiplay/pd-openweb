@@ -141,7 +141,25 @@ class Textarea extends Component<any, any> {
   }
 
   render() {
-    const { minHeight, maxHeight, className, style, value, defaultValue, manualRef, ...rest } = this.props;
+    // 【isSelect / isFocus / resizeAfterBlur / chat 也要解构掉】它们都在上面的 propTypes 里，
+    // 是本组件自己消费的（见 componentDidMount / onBlur / 样式分支），
+    // 漏掉就会随 ...rest 落到真实 <textarea> 上，React 逐个报
+    //   Received `true` for a non-boolean attribute `chat`.
+    //   React does not recognize the `isFocus` prop on a DOM element
+    const {
+      minHeight,
+      maxHeight,
+      className,
+      style,
+      value,
+      defaultValue,
+      manualRef,
+      isSelect,
+      isFocus,
+      resizeAfterBlur,
+      chat,
+      ...rest
+    } = this.props;
     const obj = value !== undefined ? { value } : { defaultValue };
 
     return (

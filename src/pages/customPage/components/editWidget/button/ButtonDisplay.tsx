@@ -100,6 +100,26 @@ export default function ButtonDisplay({
   config,
   customPageConfig = {},
   onClick,
+}: {
+  // 【全部可选】调用点是 `<ButtonDisplay displayMode="" {...item} />` 这种整体展开，
+  // item 里有哪些字段随按钮配置而变。不标的话解构形参会把没有默认值的那几个
+  // 当成必填，展开传参就报"缺字段"。
+  themeColor?: any;
+  widget?: any;
+  appId?: any;
+  buttonList?: any[];
+  layoutType?: string;
+  displayMode?: string;
+  title?: any;
+  explain?: any;
+  activeIndex?: any;
+  count?: number;
+  mobileCount?: number;
+  width?: number;
+  style?: any;
+  config?: any;
+  customPageConfig?: any;
+  onClick?: (...args: any[]) => void;
 }) {
   const { btnType, direction = 1, titleStyles = { ...defaultTitleStyles, textAlign: 'center' } } = config || {};
   const pageTitleStyles = customPageConfig.titleStyles || {};

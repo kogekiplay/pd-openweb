@@ -15,17 +15,40 @@ const setCacheData = (projectId: string, data, version: string) => {
   };
 };
 
-//获取权限版本
-const syncGetVersion = (projectId: string) => {
-  try {
-    const data = versionApi.getVersion(
-      { moduleType: 50, sourceId: projectId },
-      { ajaxOptions: { sync: true }, silent: true },
-    );
-    return data ? data.version : '';
-  } catch {
-    return '';
-  }
+/**
+ * 取权限版本（用于判断缓存是否还有效）。
+ *
+ * 【原先是同步 XHR】`{ ajaxOptions: { sync: true } }` —— 主线程同步请求已被废弃，
+ * 控制台每次都报 "Synchronous XMLHttpRequest on the main thread is deprecated"。
+ * 现在只在【后台刷新】里用它，拿不到就当版本变了、重新取权限，不影响调用方。
+ */
+const fetchVersion = (projectId: string): Promise<string> =>
+  versionApi
+    .getVersion({ moduleType: 50, sourceId: projectId }, { silent: true })
+    .then(data => (data ? data.version : ''))
+    .catch(() => '');
+
+/** 后台刷新一个项目的权限，填回缓存。同一个项目并发调用只跑一次。 */
+const refreshing: Record<string, Promise<any[]>> = {};
+
+export const prefetchMyPermissions = (projectId: string): Promise<any[]> => {
+  if (!projectId) return Promise.resolve([]);
+  if (refreshing[projectId]) return refreshing[projectId];
+
+  refreshing[projectId] = fetchVersion(projectId)
+    .then(version =>
+      roleApi.getMyPermissions({ projectId }, { silent: true }).then(res => {
+        const ids = (res && res.permissionIds) || [];
+        setCacheData(projectId, ids, version);
+        return ids;
+      }),
+    )
+    .catch(() => [])
+    .finally(() => {
+      delete refreshing[projectId];
+    });
+
+  return refreshing[projectId];
 };
 
 //校验权限--已有用户权限
@@ -42,61 +65,36 @@ export const hasPermission = (userPermissionIds, needPermission) => {
   return checkResult;
 };
 
+/**
+ * 取当前账号在某个项目下的权限 id 列表。
+ *
+ * 【isSync 的含义没变】调用方（20 处，多数在 render 里当条件用）仍然直接拿到数组。
+ * 变的是拿不到缓存时的行为：
+ *   · 缓存新鲜        -> 直接返回（和以前一样）
+ *   · 缓存超过 5 分钟 -> 【先把旧值返回去】，同时在后台刷新（stale-while-revalidate）。
+ *                        以前是同步请求版本号再决定，那正是废弃的同步 XHR 之一。
+ *   · 完全没有缓存    -> 返回 []，并在后台取。以前是两次同步 XHR 把主线程卡住。
+ *
+ * 【为什么"没有缓存返回 []"是可接受的】preall 在启动时会 await 预取
+ * md.global.Account.projects 里每个项目的权限（见 prefetchMyPermissions 的调用点），
+ * 所以正常渲染时缓存一定是热的。会走到这一分支的只有【不属于本账号的项目】——
+ * 那种情况下权限本来就该当成空。
+ */
 export const getMyPermissions = (projectId: string, isSync = true) => {
   const cache = cachePermission[projectId];
-  let version = '';
 
   if (cache) {
-    const cacheSource = () => {
-      return isSync ? cache.data || [] : Promise.resolve(cache.data || []);
-    };
-
+    // 超过 5 分钟就顺手在后台刷一次，但本次调用仍然用旧值
     if (moment().diff(moment(cache.time), 'm') > 5) {
-      if (isSync) {
-        version = syncGetVersion(projectId);
-
-        if (version === cache.version) {
-          setCacheData(projectId, cache.data, version);
-          return cacheSource();
-        }
-      }
-    } else {
-      return cacheSource();
+      prefetchMyPermissions(projectId);
     }
+
+    return isSync ? cache.data || [] : Promise.resolve(cache.data || []);
   }
 
-  if (isSync && !version) {
-    version = syncGetVersion(projectId);
-  }
+  const pending = prefetchMyPermissions(projectId);
 
-  if (!isSync) {
-    return new Promise((resolve, reject) => {
-      roleApi
-        .getMyPermissions({ projectId })
-        .then(res => {
-          if (res) {
-            setCacheData(projectId, res.permissionIds, version);
-            resolve(res.permissionIds || []);
-          } else {
-            reject();
-          }
-        })
-        .catch(reject);
-    });
-  }
-
-  try {
-    const res = roleApi.getMyPermissions({ projectId }, { ajaxOptions: { sync: true }, silent: true });
-
-    if (res) {
-      setCacheData(projectId, res.permissionIds, version);
-      return res.permissionIds || [];
-    }
-  } catch (e) {
-    // 同步 XHR 网络异常时返回空权限，避免抛出 NetworkError 触发 ErrorBoundary
-  }
-
-  return [];
+  return isSync ? [] : pending;
 };
 
 //校验权限--需要获取权限
@@ -114,7 +112,13 @@ export const canPurchase = ({ projectId, myPermissions = [] }: { projectId?: str
     : hasPermission(myPermissions, permissionsExceptHr);
 };
 
-export const hasBackStageAdminAuth = ({ projectId, myPermissions = [] }: { projectId?: string; [key: string]: any }) => {
+export const hasBackStageAdminAuth = ({
+  projectId,
+  myPermissions = [],
+}: {
+  projectId?: string;
+  [key: string]: any;
+}) => {
   const permissionArr = Object.keys(ROUTE_CONFIG)
     .map(item => parseInt(item))
     .filter(item => item);
@@ -127,34 +131,20 @@ export default function PermissionContainer(props) {
 
   useEffect(() => {
     const cache = cachePermission[projectId];
-    let version = '';
 
+    // 有缓存就先按旧值渲染（超过 5 分钟时下面的 prefetch 会顺带刷新）
     if (cache) {
-      if (moment().diff(moment(cache.time), 'm') > 5) {
-        version = syncGetVersion(projectId);
+      setHasAuth(hasPermission(cache.data || [], needPermission));
 
-        if (version === cache.version) {
-          setCacheData(projectId, cache.data, version);
-          setHasAuth(hasPermission(cache.data || [], needPermission));
-        }
-      } else {
-        setHasAuth(hasPermission(cache.data || [], needPermission));
+      if (moment().diff(moment(cache.time), 'm') <= 5) {
+        return;
       }
-    } else {
-      if (!version) {
-        version = syncGetVersion(projectId);
-      }
-
-      roleApi
-        .getMyPermissions({ projectId })
-        .then(res => {
-          if (res && res.permissionIds) {
-            setCacheData(projectId, res.permissionIds, version);
-            setHasAuth(hasPermission(res.permissionIds, needPermission));
-          }
-        })
-        .catch(_.noop);
     }
+
+    // 这里统一走异步取数（原先是先同步请求版本号再取，那是废弃的同步 XHR）
+    prefetchMyPermissions(projectId)
+      .then(ids => setHasAuth(hasPermission(ids, needPermission)))
+      .catch(_.noop);
   }, []);
 
   return hasAuth ? <React.Fragment>{children}</React.Fragment> : null;

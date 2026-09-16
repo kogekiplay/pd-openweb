@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
-import DocumentTitle from 'react-document-title';
 import qs from 'query-string';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import ConnectChatWindow from 'src/pages/chat/containers/ChatWindow';
 import store from 'src/redux/configureStore';
 
@@ -14,7 +14,7 @@ export default class ChatWindowEntrypoint extends Component<any, any> {
   render() {
     const data = qs.parse(location.search.slice(1));
     return (
-      <DocumentTitle title={data.name}>
+      <DocumentTitle title={String(data.name || '')}>
         {
           <Provider store={store}>
             <ConnectChatWindow session={data} />

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import DocumentTitle from 'react-document-title';
 import _ from 'lodash';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import ErrorBoundary from 'ming-ui/components/ErrorBoundary';
 import LoadDiv from 'ming-ui/components/LoadDiv';
 import sheetAjax from 'src/api/worksheet';
@@ -8,6 +8,7 @@ import ErrorState from 'src/components/errorPage/errorState';
 import Header from 'src/components/worksheetConfigHeader';
 import { navigateToApp } from 'src/pages/widgetConfig/util/data';
 import { getTranslateInfo } from 'src/utils/app';
+import type { FormControl } from 'src/utils/controlTypes';
 import { replaceControlsTranslateInfo } from 'src/utils/translate';
 import { MODULE_TYPE_TO_NAME } from './config';
 import AIAction from './containers/AIAction';
@@ -22,7 +23,6 @@ import Share from './containers/Share';
 import Sidenav from './containers/Sidenav';
 import SubmitFormSetting from './containers/SubmitFormSetting/index';
 import './index.less';
-import type { FormControl } from 'src/utils/controlTypes';
 
 export default function FormSet(props) {
   const { match = { params: {} } } = props;

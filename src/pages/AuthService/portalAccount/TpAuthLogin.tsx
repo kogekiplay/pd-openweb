@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import DocumentTitle from 'react-document-title';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import styled from 'styled-components';
 import { Icon, LoadDiv } from 'ming-ui';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import externalPortalAjax from 'src/api/externalPortal';
 import { getRequest, pathCompletion } from 'src/utils/common';
 import { accountResultAction } from './util';

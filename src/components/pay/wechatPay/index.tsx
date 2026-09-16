@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import DocumentTitle from 'react-document-title';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { LoadDiv } from 'ming-ui';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import payAjax from 'src/api/pay';
 import { canPurchase } from 'src/components/checkPermission';
 import genQrDataurl, { QRErrorCorrectLevel } from 'src/pages/worksheet/common/PrintQrBarCode/genQrDataurl';

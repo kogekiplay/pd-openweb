@@ -118,7 +118,8 @@ class DragSelect extends React.Component<any, any> {
     this.dragSelectItemNodes[i] = node;
   };
   getRootNode = () => this.rootNode;
-  getChildNode = (i: number) => getDomNode((this.dragSelectItemNodes || {})[i]) || getDomNode(this['dragSelectItem$' + i]);
+  getChildNode = (i: number) =>
+    getDomNode((this.dragSelectItemNodes || {})[i]) || getDomNode(this['dragSelectItem$' + i]);
   componentDidMount() {
     const fn = this.handleMouseDown.bind(this);
     const container = this.getContainer();
@@ -295,7 +296,27 @@ class DragSelect extends React.Component<any, any> {
     execFunc(this.props.onMouseDown, ...args);
   }
   render() {
-    const { children, component: Component = 'div', ...rest } = this.props;
+    // 【自己的 prop 必须解构掉，不能进 ...rest】默认渲染成 <div>，
+    // 而 ...rest 会原样落到真实 DOM 上，于是 React 逐个报
+    //   Unknown event handler property `onDragSelectStart`. It will be ignored.
+    //   React does not recognize the `clickOnlyDistance` prop on a DOM element
+    // 下面这些都是本组件自己消费的（见 propTypes），不该传给底层元素。
+    const {
+      children,
+      component: Component = 'div',
+      selectionStyle,
+      manuallyStart,
+      onDragSelectStart,
+      onDragSelect,
+      onClickOnly,
+      onDragSelectEnd,
+      clickOnlyDistance,
+      tolerance,
+      containerSelector,
+      ...rest
+    } = this.props;
+    // onMouseDown 【故意留在 rest 里】：它本来就是合法的 React DOM 属性，
+    // 不会触发警告，且原先就是这么传的 —— 摘出来反而会改变行为。
     return (
       <Component {...rest} ref={this.setRootNode}>
         {React.Children.map(children, (child, i) => {

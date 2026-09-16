@@ -1,9 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import { createRoot } from 'react-dom/client';
-import DocumentTitle from 'react-document-title';
 import cx from 'classnames';
 import moment from 'moment';
 import { Button, Checkbox, LoadDiv, RichText, VerifyPasswordInput } from 'ming-ui';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import accountAjax from 'src/api/account';
 import preall from 'src/common/preall';
 import verifyPassword from 'src/components/verifyPassword';

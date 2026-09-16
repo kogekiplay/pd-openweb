@@ -1,13 +1,13 @@
 import React, { Fragment, lazy, Suspense, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import DocumentTitle from 'react-document-title';
 import { useFullscreen, useToggle } from 'react-use';
 import cx from 'classnames';
 import { pick } from 'lodash';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { LoadDiv } from 'ming-ui';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import customApi from 'statistics/api/custom.js';
 import { getEmbedValue } from 'src/components/Form/core/formUtils/helper';
 import { defaultConfig } from 'src/pages/customPage/components/ConfigSideWrap/defaultConfig';

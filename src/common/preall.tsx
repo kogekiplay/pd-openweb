@@ -1,4 +1,5 @@
 import React from 'react';
+import isPropValid from '@emotion/is-prop-valid';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ja';
 import 'dayjs/locale/ms';
@@ -7,14 +8,38 @@ import 'dayjs/locale/zh-cn';
 import 'dayjs/locale/zh-tw';
 import _ from 'lodash';
 import moment from 'moment';
+import { StyleSheetManager } from 'styled-components';
 import { LoadDiv } from 'ming-ui';
 import accountSetting from 'src/api/accountSetting';
 import global from 'src/api/global';
+import { prefetchMyPermissions } from 'src/components/checkPermission';
 import { resetPortalUrl } from 'src/pages/AuthService/portalAccount/util.js';
 import { initThemeMode } from 'src/router/globalEvents';
 import { navigateTo, navigateToLogin, navigateToLogout, redirect } from 'src/router/navigateTo';
 import { browserIsMobile, getPathWithoutSubPath, pathCompletion } from 'src/utils/common';
 import { getPssId, setPssId } from 'src/utils/pssId';
+
+/**
+ * 决定一个 prop 要不要继续往下传。
+ *
+ * 【解决什么】styled-components 6 默认把所有 prop 透传给底层元素。
+ * 写 `styled.div` 时那些只给样式用的自定义 prop（themeBgColor / activeColor /
+ * isExpanded / forCard …）就会落到真实 DOM 上，React 逐个报
+ *   React does not recognize the `themeBgColor` prop on a DOM element
+ * 而 styled-components 自己也会再警告一次。全站扫下来有十几个，且还在增加。
+ *
+ * 【为什么不逐个改成瞬态 prop（$ 前缀）】全仓在 styled 模板里解构的自定义 prop
+ * 有上百个，逐个改要动几百处调用点，且新写的代码随时会再引入一个。
+ * 这里用的是 styled-components 告警文案里推荐的那个官方方案，一次覆盖全部。
+ *
+ * 【为什么是安全的】只在 target 是【原生标签】时过滤；styled(SomeComponent)
+ * 一律放行，组件自己的 prop 不受影响。而被过滤掉的那些本来就没进 DOM ——
+ * React 对驼峰命名的未知 prop 是丢弃 + 警告，不是渲染成属性。
+ * 也就是说这个改动只消掉警告，不改变任何实际渲染结果。
+ */
+function shouldForwardProp(propName: string, target: unknown): boolean {
+  return typeof target === 'string' ? isPropValid(propName) : true;
+}
 
 /** 存储分发类入口 状态 和 分享id */
 const parseShareId = () => {
@@ -119,7 +144,7 @@ const normalizeUrls = obj => {
   return obj;
 };
 
-const getGlobalMeta = ({ allowNotLogin, requestParams } = {}) => {
+const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false }: any = {}) => {
   // 处理location.href方法异步的问题
   window.isWaiting = false;
 
@@ -141,175 +166,200 @@ const getGlobalMeta = ({ allowNotLogin, requestParams } = {}) => {
   args.lang = getCurrentLangCode();
 
   // 获取global数据
-  const data = global.getGlobalMeta(args, { ajaxOptions: { sync: true } });
+  /**
+   * 拿到 meta 之后的全部处理。抽出来只是为了让取数那一步能异步。
+   * 里面的 return 原本是从 getGlobalMeta 返回，现在是从 finish 返回 —— 语义一样，
+   * 都是「到此为止，后面的处理不做了」。
+   */
+  const finish = data => {
+    window.config = data.config || {};
+    const formatUrlEnum = ['Config', 'FileStoreConfig'];
+    const globalData = _.merge(defaultGlobal, data['md.global']);
+    const formatGlobalData = {
+      ...globalData,
+      ...formatUrlEnum.reduce((acc, key) => {
+        const config = globalData[key];
+        acc[key] = normalizeUrls(config);
+        return acc;
+      }, {}),
+    };
+    window.md.global = formatGlobalData;
 
-  window.config = data.config || {};
-  const formatUrlEnum = ['Config', 'FileStoreConfig'];
-  const globalData = _.merge(defaultGlobal, data['md.global']);
-  const formatGlobalData = {
-    ...globalData,
-    ...formatUrlEnum.reduce((acc, key) => {
-      const config = globalData[key];
-      acc[key] = normalizeUrls(config);
-      return acc;
-    }, {}),
-  };
-  window.md.global = formatGlobalData;
+    window.platformENV.isOverseas = /^nocoly/.test(md.global.Config.ProductCode);
+    window.platformENV.isLocal = /(server|server-platform)$/.test(md.global.Config.ProductCode);
+    window.platformENV.isPlatform = /(saas|platform)$/.test(md.global.Config.ProductCode);
 
-  window.platformENV.isOverseas = /^nocoly/.test(md.global.Config.ProductCode);
-  window.platformENV.isLocal = /(server|server-platform)$/.test(md.global.Config.ProductCode);
-  window.platformENV.isPlatform = /(saas|platform)$/.test(md.global.Config.ProductCode);
-
-  // 海外用户默认语言为英文，默认国家为香港
-  if (window.platformENV.isOverseas) {
-    window.md.global.Config.DefaultLang = 'en';
-    window.md.global.Config.DefaultConfig.initialCountry = 'hk';
-    window.md.global.Config.DefaultConfig.preferredCountries = ['hk'];
-  }
-
-  const lang = getCurrentLang();
-
-  // 设置默认语言
-  if (!lang) {
-    window.isWaiting = true;
-    const sysDefaultLang = window.getDefaultLangKey();
-
-    if (
-      (location.pathname.includes('/public/') && !isPublicMingoPlan()) ||
-      location.pathname.includes('/recordfileupload')
-    ) {
-      const url = new URL(location.href);
-      url.searchParams.set('sys_lang', sysDefaultLang);
-      location.href = pathCompletion(`${url.pathname}${url.search}`);
-    } else {
-      setCookie('i18n_langtag', sysDefaultLang);
-      window.location.reload();
+    // 海外用户默认语言为英文，默认国家为香港
+    if (window.platformENV.isOverseas) {
+      window.md.global.Config.DefaultLang = 'en';
+      window.md.global.Config.DefaultConfig.initialCountry = 'hk';
+      window.md.global.Config.DefaultConfig.preferredCountries = ['hk'];
     }
 
-    return;
-  }
+    const lang = getCurrentLang();
 
-  // 设置日期库语言。moment 和 dayjs 的 locale id 完全一致，所以共用一个取值。
-  //
-  // 【为什么 dayjs 也要设，而且语言包必须在文件顶部显式 import】
-  // dayjs 的语言包【不会】随 antd 的 locale 一起生效：antd 的 zh_CN 只管
-  //「今天」「YYYY年」这些它自己的文案，月份缩写和星期缩写取自底层日期库的
-  // localeData（generateConfig 的 getShortMonths / getShortWeekDays）。
-  // 语言包没 import 进来时 dayjs【静默】退回 en，日历头会是「2026年 Sep」、
-  // 星期是 Su Mo Tu —— 中英混杂，且不报任何错。
-  //
-  // moment 这边的语言包由 webpack 的 MomentLocalesPlugin 保留（localesToKeep），
-  // dayjs 没有对应机制，只能静态 import（各 1~2KB；动态 import 会和首屏渲染抢时序）。
-  // 两边保留的语言集保持一致。
-  //
-  // 注：ming-ui 的 MdAnt* 系列已改用 moment 底层（见 ming-ui/components/mdAntPickers.ts），
-  // 不依赖 dayjs 这一支；但仍有一批文件直接 `import { DatePicker } from 'antd'`，
-  // 用的是 antd 默认的 dayjs 版本，对它们这行是实打实生效的。
-  const dateLocale = _.includes(['en', 'ja', 'th', 'ms'], lang) ? lang : lang === 'zh-Hant' ? 'zh-tw' : 'zh-cn';
+    // 设置默认语言
+    if (!lang) {
+      window.isWaiting = true;
+      const sysDefaultLang = window.getDefaultLangKey();
 
-  moment.locale(dateLocale);
-  dayjs.locale(dateLocale);
-
-  // 设置语言
-  $('body').attr('id', lang);
-
-  if (window.shareState.shareId) {
-    initThemeMode();
-  }
-
-  // H5系统打印
-  const isMobilePrintForm = /^\/printForm(?:\/|$)/.test(getPathWithoutSubPath(location.pathname)) && browserIsMobile();
-
-  if (allowNotLogin) window.allowNotLogin = true;
-
-  if (allowNotLogin || window.isPublicApp || (isMobilePrintForm && !md.global.Account.accountId)) return;
-
-  if (!md.global.Account.accountId) {
-    navigateToLogin();
-    return;
-  }
-
-  initThemeMode();
-
-  if (
-    ((location.href.includes('/portal/') || location.href.indexOf('theportal.cn') > -1) &&
-      !md.global.Account.isPortal) ||
-    (!location.href.includes('/portal/') && location.href.indexOf('theportal.cn') === -1 && md.global.Account.isPortal)
-  ) {
-    window.isWaiting = true;
-    if (window.isWeiXin) {
-      navigateToLogout();
-    } else {
       if (
-        md.global.Account.isPortal &&
-        !location.href.includes('theportal.cn') &&
-        !location.href.includes('/portal/') &&
-        md.global.Account.appId
+        (location.pathname.includes('/public/') && !isPublicMingoPlan()) ||
+        location.pathname.includes('/recordfileupload')
       ) {
-        location.href = pathCompletion(`/portal/${md.global.Account.appId}`);
-        return;
+        const url = new URL(location.href);
+        url.searchParams.set('sys_lang', sysDefaultLang);
+        location.href = pathCompletion(`${url.pathname}${url.search}`);
+      } else {
+        setCookie('i18n_langtag', sysDefaultLang);
+        window.location.reload();
       }
 
-      location.href = pathCompletion('/dashboard');
+      return;
     }
 
-    return;
-  }
+    // 设置日期库语言。moment 和 dayjs 的 locale id 完全一致，所以共用一个取值。
+    //
+    // 【为什么 dayjs 也要设，而且语言包必须在文件顶部显式 import】
+    // dayjs 的语言包【不会】随 antd 的 locale 一起生效：antd 的 zh_CN 只管
+    //「今天」「YYYY年」这些它自己的文案，月份缩写和星期缩写取自底层日期库的
+    // localeData（generateConfig 的 getShortMonths / getShortWeekDays）。
+    // 语言包没 import 进来时 dayjs【静默】退回 en，日历头会是「2026年 Sep」、
+    // 星期是 Su Mo Tu —— 中英混杂，且不报任何错。
+    //
+    // moment 这边的语言包由 webpack 的 MomentLocalesPlugin 保留（localesToKeep），
+    // dayjs 没有对应机制，只能静态 import（各 1~2KB；动态 import 会和首屏渲染抢时序）。
+    // 两边保留的语言集保持一致。
+    //
+    // 注：ming-ui 的 MdAnt* 系列已改用 moment 底层（见 ming-ui/components/mdAntPickers.ts），
+    // 不依赖 dayjs 这一支；但仍有一批文件直接 `import { DatePicker } from 'antd'`，
+    // 用的是 antd 默认的 dayjs 版本，对它们这行是实打实生效的。
+    const dateLocale = _.includes(['en', 'ja', 'th', 'ms'], lang) ? lang : lang === 'zh-Hant' ? 'zh-tw' : 'zh-cn';
 
-  // 第一次进入
-  if (!md.global.Account.langModified) {
-    accountSetting.autoEditAccountLangSetting({ langType: getCurrentLangCode(lang) });
+    moment.locale(dateLocale);
+    dayjs.locale(dateLocale);
 
-    if (!md.global.Account.isPortal && !urlObj.href.includes('oauth/authorize') && !isMingoCreateAppRoute()) {
-      navigateTo('/app/my');
+    // 设置语言
+    $('body').attr('id', lang);
+
+    if (window.shareState.shareId) {
+      initThemeMode();
     }
-  } else if (
-    md.global.Account.lang !== lang &&
-    !window.shareState.isPublicFormPreview &&
-    !urlObj.hash.includes('i18n_reload') &&
-    !localStorage.getItem('i18n_reload')
-  ) {
-    setCookie('i18n_langtag', md.global.Account.lang);
 
-    if (window.top !== window.self) {
-      localStorage.setItem('i18n_reload', true);
-    } else {
-      urlObj.hash = 'i18n_reload';
+    // H5系统打印
+    const isMobilePrintForm =
+      /^\/printForm(?:\/|$)/.test(getPathWithoutSubPath(location.pathname)) && browserIsMobile();
+
+    if (allowNotLogin) window.allowNotLogin = true;
+
+    if (allowNotLogin || window.isPublicApp || (isMobilePrintForm && !md.global.Account.accountId)) return;
+
+    if (!md.global.Account.accountId) {
+      navigateToLogin();
+      return;
     }
 
-    window.location.reload();
-    window.isWaiting = true;
-    return;
+    initThemeMode();
+
+    if (
+      ((location.href.includes('/portal/') || location.href.indexOf('theportal.cn') > -1) &&
+        !md.global.Account.isPortal) ||
+      (!location.href.includes('/portal/') &&
+        location.href.indexOf('theportal.cn') === -1 &&
+        md.global.Account.isPortal)
+    ) {
+      window.isWaiting = true;
+      if (window.isWeiXin) {
+        navigateToLogout();
+      } else {
+        if (
+          md.global.Account.isPortal &&
+          !location.href.includes('theportal.cn') &&
+          !location.href.includes('/portal/') &&
+          md.global.Account.appId
+        ) {
+          location.href = pathCompletion(`/portal/${md.global.Account.appId}`);
+          return;
+        }
+
+        location.href = pathCompletion('/dashboard');
+      }
+
+      return;
+    }
+
+    // 第一次进入
+    if (!md.global.Account.langModified) {
+      accountSetting.autoEditAccountLangSetting({ langType: getCurrentLangCode(lang) });
+
+      if (!md.global.Account.isPortal && !urlObj.href.includes('oauth/authorize') && !isMingoCreateAppRoute()) {
+        navigateTo('/app/my');
+      }
+    } else if (
+      md.global.Account.lang !== lang &&
+      !window.shareState.isPublicFormPreview &&
+      !urlObj.hash.includes('i18n_reload') &&
+      !localStorage.getItem('i18n_reload')
+    ) {
+      setCookie('i18n_langtag', md.global.Account.lang);
+
+      if (window.top !== window.self) {
+        localStorage.setItem('i18n_reload', true);
+      } else {
+        urlObj.hash = 'i18n_reload';
+      }
+
+      window.location.reload();
+      window.isWaiting = true;
+      return;
+    }
+
+    // 设置网络多语言
+    if (md.global.ProjectLangs && md.global.ProjectLangs.length) {
+      const projectLangs = md.global.ProjectLangs.filter(o => o.langType === getCurrentLangCode(lang)).map(o => ({
+        projectId: o.projectId,
+        companyName: o.data[0].value || (_.find(v => v.projectId === o.projectId) || {}).companyName,
+      }));
+      const mergedProjects = _.merge(
+        _.keyBy(md.global.Account.projects, 'projectId'),
+        _.keyBy(projectLangs, 'projectId'),
+      );
+
+      md.global.Account.projects = _.values(mergedProjects);
+    }
+
+    // HAP显示人事
+    if (!window.platformENV.isOverseas && !window.platformENV.isLocal) {
+      md.global.SysSettings.forbidSuites = (md.global.SysSettings.forbidSuites || '').replace('5', '');
+    }
+
+    // 加载云客服
+    !md.global.Account.isPortal && window.mdCustomerService && window.mdCustomerService();
+
+    // 设置md_pss_id
+    setPssId(getPssId());
+
+    md.global.Account.isPortal && resetPortalUrl();
+
+    redirect(location.pathname);
+
+    // 【启动时预热权限缓存】checkPermission 的 getMyPermissions 是同步取值的
+    //（20 个调用点多数在 render 里当条件用）。它以前在缓存未命中时发两次【同步 XHR】，
+    // 那是主线程上被废弃的用法。现在改成：这里先异步取好填进缓存，渲染时一定命中。
+    // 返回这个 promise，外面的 Pre 组件会等它完成后才收起 loading。
+    return Promise.all((_.get(md, 'global.Account.projects') || []).map(p => prefetchMyPermissions(p.projectId)));
+  };
+
+  // 【只有 4 个 share 页走 sync】它们用 preall({ type: 'function' }) 这个哨兵值，
+  // 调完紧接着就 new 出页面对象读 md.global，没法改成异步（见本文件末尾那个分支）。
+  // 其余 47 个入口一律走异步：Pre 组件本来就有 loading 态，正好用上，
+  // 从此不再有 "Synchronous XMLHttpRequest on the main thread is deprecated"。
+  if (sync) {
+    finish(global.getGlobalMeta(args, { ajaxOptions: { sync: true } }));
+    return Promise.resolve();
   }
 
-  // 设置网络多语言
-  if (md.global.ProjectLangs && md.global.ProjectLangs.length) {
-    const projectLangs = md.global.ProjectLangs.filter(o => o.langType === getCurrentLangCode(lang)).map(o => ({
-      projectId: o.projectId,
-      companyName: o.data[0].value || (_.find(v => v.projectId === o.projectId) || {}).companyName,
-    }));
-    const mergedProjects = _.merge(
-      _.keyBy(md.global.Account.projects, 'projectId'),
-      _.keyBy(projectLangs, 'projectId'),
-    );
-
-    md.global.Account.projects = _.values(mergedProjects);
-  }
-
-  // HAP显示人事
-  if (!window.platformENV.isOverseas && !window.platformENV.isLocal) {
-    md.global.SysSettings.forbidSuites = (md.global.SysSettings.forbidSuites || '').replace('5', '');
-  }
-
-  // 加载云客服
-  !md.global.Account.isPortal && window.mdCustomerService && window.mdCustomerService();
-
-  // 设置md_pss_id
-  setPssId(getPssId());
-
-  md.global.Account.isPortal && resetPortalUrl();
-
-  redirect(location.pathname);
+  return global.getGlobalMeta(args).then(finish);
 };
 
 const wrapComponent = function (Comp, { allowNotLogin, requestParams } = {}) {
@@ -321,8 +371,12 @@ const wrapComponent = function (Comp, { allowNotLogin, requestParams } = {}) {
       };
     }
     componentDidMount() {
-      getGlobalMeta({ allowNotLogin, requestParams });
-      this.setState({ loading: false });
+      // 【等取完再放行】getGlobalMeta 以前是同步 XHR，所以下面这句 setState 紧跟着写也没事；
+      // 现在改成异步，正好用上这个组件本来就有的 loading 态 —— 期间显示 <LoadDiv>，
+      // 被包的 Comp 在 md.global 填好之前不会渲染。
+      getGlobalMeta({ allowNotLogin, requestParams }).finally(() => {
+        this.setState({ loading: false });
+      });
     }
 
     render() {
@@ -332,7 +386,11 @@ const wrapComponent = function (Comp, { allowNotLogin, requestParams } = {}) {
         document.title = _l('应用');
       }
 
-      return loading || window.isWaiting ? <LoadDiv size="big" className="pre" /> : <Comp {...this.props} />;
+      return (
+        <StyleSheetManager shouldForwardProp={shouldForwardProp}>
+          {loading || window.isWaiting ? <LoadDiv size="big" className="pre" /> : <Comp {...this.props} />}
+        </StyleSheetManager>
+      );
     }
   }
 
@@ -341,7 +399,11 @@ const wrapComponent = function (Comp, { allowNotLogin, requestParams } = {}) {
 
 export default function (Comp, { allowNotLogin, requestParams } = {}) {
   if (_.isObject(Comp) && Comp.type === 'function') {
-    getGlobalMeta({ allowNotLogin, requestParams });
+    // 【这条分支只能同步】4 个 share 页用 preall({ type: 'function' }) 当哨兵，
+    // 调完紧接着就 new 出页面对象去读 md.global（见 kc/folderShare、kc/shareMobile、
+    // Statistics/PublicShare、Chatbot/PublicShare），改异步要连它们一起动。
+    // 这 4 个页面需要真实分享链接才能验证，单独一批做。
+    getGlobalMeta({ allowNotLogin, requestParams, sync: true });
   } else {
     return wrapComponent(Comp, { allowNotLogin, requestParams });
   }

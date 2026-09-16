@@ -1,5 +1,5 @@
 import React, { Fragment, Suspense } from 'react';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import ErrorBoundary from 'ming-ui/components/ErrorBoundary';
 import { useRouteProps } from './routeProps';
 

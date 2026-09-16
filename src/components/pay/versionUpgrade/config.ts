@@ -33,7 +33,32 @@ export const versionIntroduction = [
   },
 ];
 
-const featureData = [
+/**
+ * 版本对比表里的一行。分两种：只有 subTitle 的分组标题行，和有 name/value* 的功能行，
+ * 所以除 className 外全是可选。
+ *
+ * 【isNew 目前没有任何一行用】index.tsx 里有 `item.isNew && <span className="newTag">NEW</span>`，
+ * 而这份数据里一个 isNew 都没有 —— 那个 NEW 角标从来没渲染过。
+ * 这里如实把它列成可选字段：既让调用点能通过类型检查，也保留这个能力，
+ * 将来要给某一行打 NEW 时直接加字段即可。
+ */
+interface FeatureRow {
+  className: string;
+  /** 分组标题行用 */
+  subTitle?: string;
+  /** 功能行用 */
+  name?: string;
+  dataTip?: string;
+  value0?: any;
+  value1?: any;
+  value2?: any;
+  value3?: any;
+  /** 打「NEW」角标 */
+  isNew?: boolean;
+  [key: string]: any;
+}
+
+const featureData: FeatureRow[] = [
   { className: 'subTitle', subTitle: _l('基础能力') },
   {
     className: 'worksheetCount',

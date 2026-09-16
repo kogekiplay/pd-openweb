@@ -1,8 +1,13 @@
-.makeRandomPercent() {
-  @randomNum: `Math.min(0.8, Math.max(0.2, Math.random())) `;
-  @randomPercent: percentage(@randomNum);
-}
-
+// 【原先这里是 Less 的内联 JavaScript】
+//   @randomNum: `Math.min(0.8, Math.max(0.2, Math.random()))`;
+// 它是 less-loader 唯一的告警来源（每个入口报一次，共 30 条），
+// Less 5.x 会移除这种写法。
+//
+// 而且那个"随机"本来就没生效：Less 在【构建期】求值，一次构建只算一个数，
+// 所有偶数行拿到的是同一个写死的宽度。副作用是每次构建这段 CSS 都不一样，
+// 白白让产物哈希变动、破坏浏览器缓存。
+//
+// 现在改成确定性的宽度轮换：既去掉了告警，又真正做到了作者想要的"长短不一"。
 :root {
   --skeleton-start: rgba(245, 245, 245, 0.8) 25%;
   --skeleton-middle: rgba(245, 245, 245, 0.4) 37%;
@@ -28,9 +33,18 @@
     border-radius: 16px;
     background-color: var(--color-background-secondary);
     margin: 13px 0;
-    &:nth-child(2n) {
-      .makeRandomPercent();
-      width: @randomPercent;
+    // 偶数行做短一些，四个一轮，视觉上长短交错（取值落在原来那个 20%~80% 区间内）
+    &:nth-child(8n + 2) {
+      width: 72%;
+    }
+    &:nth-child(8n + 4) {
+      width: 45%;
+    }
+    &:nth-child(8n + 6) {
+      width: 63%;
+    }
+    &:nth-child(8n + 8) {
+      width: 38%;
     }
   }
   &.active {

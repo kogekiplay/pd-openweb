@@ -16,6 +16,7 @@ import {
 import { browserIsMobile, pathCompletion } from 'src/utils/common';
 import { getDefaultCount } from 'src/utils/control';
 import { isSheetDisplay } from 'src/utils/controlCommon';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import { FORM_ERROR_TYPE } from './config.js';
 import {
   calcDefaultValueFunction,
@@ -27,7 +28,6 @@ import {
 import { replaceStr } from './formUtils/helper';
 import { dealAuthAccount, getParamsByConfigs, handleUpdateApi } from './searchUtils';
 import { formatControlToServer } from './utils';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 // 显隐、只读编辑等处理
 const dealDataPermission = props => {
@@ -483,6 +483,9 @@ const handleSearchApi = async props => {
   const paramsData = getParamsByConfigs(recordId, requestMap, apiFormData);
 
   let params = {
+    // 【原先是字面量之后 params.formId = ... 补上去的】搬进来是为了让形状完整：
+    // 条件不成立时这个键同样不会出现，发出去的负载逐字节一致。
+    ...(window.isPublicWorksheet ? { formId: window.publicWorksheetShareId } : {}),
     data: !requestMap.length || _.isEmpty(paramsData) ? '' : paramsData,
     projectId,
     controlId,
@@ -494,10 +497,6 @@ const handleSearchApi = async props => {
     pushUniqueId: md.global.Config.pushUniqueId,
     actionType,
   };
-
-  if (window.isPublicWorksheet) {
-    params.formId = window.publicWorksheetShareId;
-  }
 
   const apiData = await sheetAjax.excuteApiQuery(params);
 

@@ -1,16 +1,16 @@
 import React, { Fragment, lazy, Suspense } from 'react';
-import DocumentTitle from 'react-document-title';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Tooltip } from 'ming-ui/antd-components';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import { permitList } from 'src/pages/FormSet/config.js';
 import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import { WORKFLOW_SYSTEM_CONTROL } from 'src/pages/widgetConfig/config/widget';
 import { SYS } from 'src/pages/widgetConfig/config/widget.js';
 import { browserIsMobile } from 'src/utils/common';
 import { controlState } from 'src/utils/control';
-import './worksheetListShare.less';
 import type { FormControl } from 'src/utils/controlTypes';
+import './worksheetListShare.less';
 
 const hiddenIds = WORKFLOW_SYSTEM_CONTROL.map(c => c.controlId);
 const FILTER_CONTROLS_TYPE = [43, 51, 52, 49, 22, 47];

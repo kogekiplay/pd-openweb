@@ -6,8 +6,8 @@ import ajax from 'src/api/worksheet';
 import { upgradeVersionDialog } from 'src/components/upgradeVersion';
 import { formatResponseData } from 'src/components/UploadFiles/utils.js';
 import { pathCompletion } from 'src/utils/common';
-import { dealAuthAccount, getParamsByConfigs, handleUpdateApi } from '../../../core/searchUtils';
 import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import { dealAuthAccount, getParamsByConfigs, handleUpdateApi } from '../../../core/searchUtils';
 
 const OCR = props => {
   const {
@@ -201,6 +201,9 @@ const OCR = props => {
     const paramsData = getParamsByConfigs(recordId, requestMap, formData, file);
 
     let params = {
+      // 【原先是字面量之后 params.formId = ... 补上去的】搬进来是为了让形状完整：
+      // 条件不成立时这个键同样不会出现，发出去的负载逐字节一致。
+      ...(window.isPublicWorksheet ? { formId: window.publicWorksheetShareId } : {}),
       data: !requestMap.length || _.isEmpty(paramsData) ? '' : paramsData,
       projectId,
       workSheetId: worksheetId,
@@ -210,10 +213,6 @@ const OCR = props => {
       authId: dealAuthAccount(authaccount, formData),
       pushUniqueId: md.global.Config.pushUniqueId,
     };
-
-    if (window.isPublicWorksheet) {
-      params.formId = window.publicWorksheetShareId;
-    }
 
     const currentPost = ajax.excuteApiQuery(params);
     postListRef.current = currentPost;
