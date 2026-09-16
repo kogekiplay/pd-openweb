@@ -164,6 +164,7 @@
     "src/ming-ui/components/DatePicker/locale/zh_CN.ts",
     "src/ming-ui/components/Dialog/DialogFooter.tsx",
     "src/ming-ui/components/Dialog/DialogHeader.tsx",
+    "src/ming-ui/components/DocumentTitle.tsx",
     "src/ming-ui/components/MultipleDropdown/index.ts",
     "src/ming-ui/components/NewDateTimePicker/index.ts",
     "src/ming-ui/components/Popup/index.ts",

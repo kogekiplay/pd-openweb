@@ -575,7 +575,10 @@ export const clearNotification = message => (dispatch: AppDispatch, getState: Ge
   if (currentSession.id === type && currentSession.count) {
     dispatch({
       type: 'SET_CURRENT_SESSION',
-      result: Object.assign(currentSession, { count: 0 }),
+      // 【不能用 Object.assign(currentSession, ...)】第一个参数是 store 里的对象，
+      // 那样是原地改写，redux-toolkit 的 immutableStateInvariant 会抛
+      //   A state mutation was detected between dispatches, in the path 'chat.currentSession.count'
+      result: { ...currentSession, count: 0 },
     });
   }
 };
@@ -640,7 +643,8 @@ export const setCurrentSessionId =
     socket.Contact.setCurrentChat(session);
     dispatch({
       type: 'SET_CURRENT_SESSION',
-      result: Object.assign(session, message),
+      // 同上：session 取自 sessionList（store 里的对象），不能原地 assign
+      result: { ...session, ...message },
     });
   };
 
