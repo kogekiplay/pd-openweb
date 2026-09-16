@@ -15,6 +15,7 @@ import Constant from '../../utils/constant';
 import fileConfirm from '../fileConfirm/fileConfirm';
 import './index.less';
 import type { MentionsInputElement } from 'src/components/MentionsInput';
+import { UploadError } from 'src/utils/uploader/constants';
 
 const recurShowFileConfirm = (up, files, i, length, cb) => {
   if (i >= length) {
@@ -221,7 +222,7 @@ export default class SendToolbar extends Component<any, any> {
           _this.props.onSendFileMsg({ file: uploadFile, type }, msg);
         },
         Error(uploader, error) {
-          if (error.code === window.plupload.FILE_SIZE_ERROR) {
+          if (error.code === UploadError.FILE_SIZE_ERROR) {
             alert(_l('单个文件大小超过%0MB，无法支持上传', fileUploadLimitSize), 2);
           } else {
             alert(_l('上传失败，请稍后再试。'), 2);

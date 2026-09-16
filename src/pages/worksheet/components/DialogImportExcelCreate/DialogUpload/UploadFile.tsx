@@ -5,6 +5,7 @@ import { Icon } from 'ming-ui';
 import createUploader from 'src/utils/createUploader';
 import { formatFileSize } from 'src/utils/common';
 import RegExpValidator from 'src/utils/expression';
+import { UploadError } from 'src/utils/uploader/constants';
 
 const UploadWrap = styled.div`
   height: 340px;
@@ -70,7 +71,7 @@ export default class UploadFile extends Component<any, any> {
             return;
           }
 
-          if (code === window.plupload.FILE_SIZE_ERROR) {
+          if (code === UploadError.FILE_SIZE_ERROR) {
             alert(_l('文件过大，仅支持 20MB 以内的文件'), 3);
             return;
           }

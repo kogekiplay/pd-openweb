@@ -16,6 +16,7 @@ import { getClassNameByExt } from 'src/utils/common';
 import RegExpValidator from 'src/utils/expression';
 import { processImageFile } from './imageProcessor';
 import './index.less';
+import { UploadError } from 'src/utils/uploader/constants';
 
 export class UploadFileWrapper extends Component<any, any> {
   constructor(props) {
@@ -272,7 +273,7 @@ export class UploadFileWrapper extends Component<any, any> {
         self.setUploadLock(self.currentFile, false);
       },
       onError(uploader, error) {
-        if (error.code === window.plupload.FILE_SIZE_ERROR) {
+        if (error.code === UploadError.FILE_SIZE_ERROR) {
           alert(_l('单个文件大小超过%0MB，无法支持上传', 1024 * 4), 3);
         } else {
           alert(_l('上传失败，请稍后再试。'), 3);
