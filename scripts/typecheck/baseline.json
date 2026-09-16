@@ -3,16 +3,16 @@
   "key": "code",
   "tsVersion": "7.0.2",
   "tsconfig": "tsconfig.gate.json",
-  "generatedAt": "2026-09-16T07:38:55.233Z",
-  "rawCount": 13282,
+  "generatedAt": "2026-09-16T07:41:33.753Z",
+  "rawCount": 13281,
   "droppedNoise": {
     "library": 0,
     "probe": 0,
     "commentTS1xxx": 0,
     "commentOther": 0
   },
-  "keptCount": 13282,
-  "uniqueKeys": 3081,
+  "keptCount": 13281,
+  "uniqueKeys": 3080,
   "entries": {
     "src/common/GlobalStore.tsx|TS2554": 1,
     "src/common/cookies.ts|TS2556": 1,
@@ -1506,7 +1506,6 @@
     "src/pages/chat/components/CardToolbar/index.tsx|TS2554": 2,
     "src/pages/chat/components/Files/Panel.tsx|TS2339": 3,
     "src/pages/chat/components/Inbox/components/baseComponent/appFilter.tsx|TS2339": 1,
-    "src/pages/chat/components/Inbox/components/baseComponent/avatar.tsx|TS2322": 1,
     "src/pages/chat/components/Inbox/components/baseComponent/avatar.tsx|TS2339": 1,
     "src/pages/chat/components/Inbox/components/baseComponent/inboxFilter.tsx|TS2345": 1,
     "src/pages/chat/components/Inbox/components/baseComponent/replyTo.tsx|TS2339": 7,

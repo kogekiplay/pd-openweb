@@ -654,6 +654,10 @@ export const setCurrentSessionId =
  */
 export const addCurrentSession = result => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSessionList, sessionList } = getState().chat;
+  // 【先拷一份再改】调用方经常直接把 sessionList 里的那个对象传进来，
+  // 在它身上写 isGroup / id / isTop 就是在改 store，会被 immutableStateInvariant 抓到：
+  //   A state mutation was detected between dispatches, in the path 'chat.sessionList.N.id'
+  result = { ...result };
   result.isGroup = !!result.groupId;
   result.id = result.isGroup ? result.groupId : result.accountId;
   if (currentSessionList.length >= 2) {
