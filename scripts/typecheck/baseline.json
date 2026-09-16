@@ -3,19 +3,18 @@
   "key": "code",
   "tsVersion": "7.0.2",
   "tsconfig": "tsconfig.gate.json",
-  "generatedAt": "2026-09-16T02:54:01.772Z",
-  "rawCount": 13497,
+  "generatedAt": "2026-09-16T06:31:27.032Z",
+  "rawCount": 13494,
   "droppedNoise": {
     "library": 0,
     "probe": 0,
     "commentTS1xxx": 0,
     "commentOther": 0
   },
-  "keptCount": 13497,
-  "uniqueKeys": 3177,
+  "keptCount": 13494,
+  "uniqueKeys": 3175,
   "entries": {
     "src/common/GlobalStore.tsx|TS2554": 1,
-    "src/common/cookies.ts|TS2551": 2,
     "src/common/cookies.ts|TS2556": 1,
     "src/common/global.ts|TS2339": 20,
     "src/common/global.ts|TS2353": 1,
@@ -3187,7 +3186,6 @@
     "src/utils/sse.ts|TS2339": 10,
     "src/utils/sso.ts|TS2322": 1,
     "src/utils/sso.ts|TS2367": 8,
-    "src/utils/sso.ts|TS2551": 1,
     "src/utils/sso.ts|TS2794": 1,
     "src/utils/translate.ts|TS2339": 11,
     "src/utils/worksheet.ts|TS2339": 7

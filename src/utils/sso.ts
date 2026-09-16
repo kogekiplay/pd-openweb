@@ -250,9 +250,9 @@ export const setCookie = (name: string, value, expire) => {
   if (!expire) {
     let nextyear = new Date();
     nextyear.setFullYear(nextyear.getFullYear() + 10);
-    expireDate = nextyear.toGMTString();
+    expireDate = nextyear.toUTCString();
   } else {
-    expireDate = expire.toGMTString();
+    expireDate = expire.toUTCString();
   }
 
   if (document.domain.indexOf('mingdao.com') == -1) {
