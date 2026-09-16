@@ -193,7 +193,7 @@ class TaskCenter extends Component<any, any> {
           }
 
           $('li.addNewTask').each(function (this: HTMLElement) {
-            if (!$(this).find('.teaStageName').val().trim()) {
+            if (!String($(this).find('.teaStageName').val() ?? '').trim()) {
               const $li = $(this).closest('li.singleStage');
               // 隐藏创建层层
               $li.find('li.addNewTask:last').hide();

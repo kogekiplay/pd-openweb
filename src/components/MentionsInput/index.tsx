@@ -15,6 +15,41 @@ import { getCaretPosition, setCaretPosition } from 'src/utils/common';
 import { htmlEncodeReg } from 'src/utils/common';
 import './index.less';
 
+/**
+ * 被 MentionsInput 增强过的输入框元素。
+ *
+ * initMentionsInput 会把一组方法【直接挂到传进来的 DOM 元素上】（见下面 useEffect 里
+ * 的 `input.val = …`、`input.store = …` 等），调用方之后就靠这些方法驱动它：
+ *   src/pages/feed/components/createFeed/index.tsx        reset / clearStore / store / restore / val
+ *   src/pages/feed/components/common/myupdater/myupdater.ts  store / restore
+ *   src/pages/chat/components/SendToolbar/index.tsx       destroy
+ *
+ * 【为什么要单独声明出来】这些方法不在 HTMLElement 上，调用方拿到的又是
+ * $(...).get(0) 这种原生元素，类型上就只有 HTMLElement，于是每个调用点都报 TS2339。
+ * 把这份运行期契约如实写下来，比在每个调用点写 as any 诚实得多 ——
+ * 以后改了这里的方法集，所有调用点会跟着报错。
+ *
+ * 【为什么方法都是可选的】调用方普遍写成 `if (_.isFunction(el.reset))` 再调，
+ * 因为元素不一定经过 initMentionsInput 增强（比如组件还没挂载）。可选如实反映了这点。
+ */
+export interface MentionsInputElement extends HTMLTextAreaElement {
+  /** 取值；回调式，拿到 (text, messageText, mentionsCollection) */
+  val?: (callback: (...args: any[]) => void) => void;
+  setValue?: (text: string, messageText?: string, mentionsCollection?: any[]) => void;
+  reset?: () => void;
+  /** 把当前草稿写进 localStorage */
+  store?: () => void;
+  /** 从 localStorage 恢复草稿；回调参数为 false 表示没有可恢复的内容 */
+  restore?: (callback: (restored: any) => void) => void;
+  clearStore?: () => void;
+  getMentions?: (callback: (...args: any[]) => void) => void;
+  addMention?: (user: any) => void;
+  destroy?: () => void;
+  updateValue?: (...args: any[]) => void;
+  /** 带 @ 语法标记的原文，与 value（纯文本）并存 */
+  messageText?: string;
+}
+
 // 全角和半角
 const categoryLetterArr = ['#', '＃'];
 const atLetterArr = ['@', '＠'];

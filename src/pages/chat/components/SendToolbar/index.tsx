@@ -14,6 +14,7 @@ import config from '../../utils/config';
 import Constant from '../../utils/constant';
 import fileConfirm from '../fileConfirm/fileConfirm';
 import './index.less';
+import type { MentionsInputElement } from 'src/components/MentionsInput';
 
 const recurShowFileConfirm = (up, files, i, length, cb) => {
   if (i >= length) {
@@ -74,7 +75,7 @@ export default class SendToolbar extends Component<any, any> {
   }
   componentWillUnmount() {
     const { session } = this.props;
-    const textarea = $(`#ChatPanel-${session.id}`).find('.ChatPanel-textarea textarea').get(0);
+    const textarea = $(`#ChatPanel-${session.id}`).find('.ChatPanel-textarea textarea').get(0) as MentionsInputElement;
     textarea && textarea.destroy && textarea.destroy();
   }
   initEmotion() {
@@ -299,7 +300,7 @@ export default class SendToolbar extends Component<any, any> {
     if (!$target.data('open') || !$container.is(':visible')) {
       onChangeValue($textarea.val() + '@');
       setTimeout(() => {
-        setCaretPosition($textarea.get(0), $textarea.val().length);
+        setCaretPosition($textarea.get(0), String($textarea.val() ?? '').length);
       }, 0);
       $target.data('open', true);
     } else {

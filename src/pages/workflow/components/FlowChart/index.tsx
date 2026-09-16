@@ -131,7 +131,9 @@ export class FlowChart extends Component<any, any> {
   }
 
   setViewCenter() {
-    const box = $('.flowChartModal .workflowEdit')[0] || {};
+    // `|| {}` 是元素不存在时的兜底，于是类型成了 HTMLElement | {}。
+    // 用 Partial<HTMLElement> 如实表达：字段可能没有（取到 undefined，下面的比较自然为假）。
+    const box = ($('.flowChartModal .workflowEdit')[0] || {}) as Partial<HTMLElement>;
     const scrollWidth = box.scrollWidth;
     const width = box.clientWidth;
 

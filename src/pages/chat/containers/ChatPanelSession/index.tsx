@@ -20,6 +20,7 @@ import * as socket from '../../utils/socket';
 import ChatPanelHeader from '../ChatPanelHeader';
 import ChatPanelSessionInfo from '../ChatPanelSessionInfo';
 import MessageView from '../MessageView';
+import type { MentionsInputElement } from 'src/components/MentionsInput';
 
 const WarnBox = styled.div`
   height: 40px;
@@ -208,7 +209,9 @@ class ChatPanelSession extends Component<any, any> {
     });
     if (!value || value === '@') {
       const { currentSession } = this.props;
-      const textarea = document.querySelector(`#ChatPanel-${currentSession.value} .ChatPanel-textarea textarea`);
+      const textarea = document.querySelector<MentionsInputElement>(
+        `#ChatPanel-${currentSession.value} .ChatPanel-textarea textarea`,
+      );
       textarea && textarea.reset && textarea.reset();
     }
 
@@ -418,7 +421,7 @@ class ChatPanelSession extends Component<any, any> {
   }
   getAtParam(id) {
     const textarea = $(`#ChatPanel-${id}`).find('.ChatPanel-textarea textarea');
-    const textareaEl = textarea.get(0);
+    const textareaEl = textarea.get(0) as MentionsInputElement;
     let atList = [];
 
     if (textareaEl?.getMentions) {

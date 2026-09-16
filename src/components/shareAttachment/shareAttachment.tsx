@@ -88,7 +88,7 @@ SelectSendTo.prototype = {
     ST.elements.$searchInput.on(
       'keyup',
       _.debounce(function (this: HTMLElement, e) {
-        var keywords = _.trim($(this).val());
+        var keywords = _.trim(String($(this).val() ?? ''));
         const $list = ST.elements.$searchList.find('.listItem');
         const index = $list.index($('.listItem.active'));
 
@@ -804,10 +804,10 @@ ShareAttachment.prototype = {
     }
 
     // 将允许下载switch设为可更改
-    SA.dialogEle.$canDownloadSwitch.attr('disabled', false);
+    SA.dialogEle.$canDownloadSwitch.prop('disabled', false);
     switch (type) {
       case SEND_TO_TYPE.CHAT: {
-        SA.dialogEle.$canDownloadSwitch.attr('disabled', true);
+        SA.dialogEle.$canDownloadSwitch.prop('disabled', true);
         if (SA.dialogEle.$canDownloadSwitch.prop('checked') === false) {
           alert(_l('分享到消息文件不可设为不允许下载，已更改为允许下载'), 4);
           SA.dialogEle.$canDownloadSwitch.prop('checked', true);

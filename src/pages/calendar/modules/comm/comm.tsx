@@ -56,7 +56,7 @@ Comm.inviteCalendar = {
       onOk: () => {
         // 其他
         var $selectRadio = $('#refuserstd input:radio:checked');
-        var reason = $selectRadio.attr('id') == 'radOther' ? $('#txtrefuseReason').val().trim() : $selectRadio.val();
+        var reason = $selectRadio.attr('id') == 'radOther' ? String($('#txtrefuseReason').val() ?? '').trim() : $selectRadio.val();
 
         if (reason === '' || reason == _l('输入您拒绝邀请的理由')) {
           alert(_l('请输入不能参加的理由'), 3);
@@ -71,7 +71,7 @@ Comm.inviteCalendar = {
     setTimeout(() => {
       // 不能参加的理由
       $('#refuserstd').on('change', 'input:radio', function () {
-        if ($('#radOther')[0].checked) {
+        if ($<HTMLInputElement>('#radOther')[0].checked) {
           $('#txtrefuseReason').show();
         } else {
           $('#txtrefuseReason').hide();
@@ -103,7 +103,7 @@ Comm.confirmOrUnconfirmInviteMe = function (calendarId, status, remark, recurTim
         } else {
           var $calendarNumber = $('#calendarNumber');
           var count = parseInt($calendarNumber.text(), 10) - 1;
-          $calendarNumber.html(count);
+          $calendarNumber.html(String(count));
           if (count === 0) {
             $calendarNumber.hide();
           }

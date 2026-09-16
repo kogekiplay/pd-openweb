@@ -377,34 +377,19 @@ Calendar.Method = {
       },
     });
 
-    // 添加列表按钮
-    var $fcHeaderCenter = $('.fc-center'); // 重复的fc-header-right对象提取
-    $fcHeaderCenter.find('.fc-month-button').removeClass('fc-corner-right'); // 移除月按钮的右侧圆角
-
-    // 插入“列表”按钮
-    if ($fcHeaderCenter.find('.fc-list-button').length == 0) {
-      // “列表”按钮不存在
-      $fcHeaderCenter
-        .find('.fc-button-group')
-        .append(
-          '<button type="button" class="fc-button fc-list-button fc-state-default fc-corner-right" unselectable="on">' +
-            _l('列表') +
-            '</button>',
-        );
-    }
-
     // 【按钮劫持整段删除】v2 时代这里把 FullCalendar 自己的头部按钮 .off() 掉，
     // 再手工 changeView、手工加 fc-state-active。v7 里那些是真的视图按钮，
     // 点击原生切换视图，选中态由类名兼容层的 buttonClass 负责。
     // 需要跟着视图切换做的两件事（记住视图、调整样式）挪到了 datesSet 回调里。
-    // 列表视图数据刷新 ； 用户 创建日程层
-    $('.fc-list-button').bind('refreshList', function () {
-      Calendar.Method.calendarList(
-        moment().format('YYYY-MM-DD HH:mm:ss'),
-        moment().add('2', 'months').format('YYYY-MM-01'),
-        true,
-      ); // 刷新列表视图数据
-    });
+    //
+    // 【"列表"按钮的注入也一并删除】v2 时代这里往 .fc-center .fc-button-group 里
+    // append 一个 .fc-list-button，再给它 bind('refreshList') 去调 calendarList()
+    // 重新拉一遍数据 —— 因为那时的"列表"是假视图。v7 的 listMonth 是内置真视图，
+    // 按钮由 headerToolbar 的 center 直接给出（见 loadFullCalendar 的配置）。
+    //
+    // 这段在 v7 下【已经完全不生效】：选择器 .fc-center 是 v2/v3 的工具栏类名，
+    // v7 用的是 .fc-toolbar-chunk，$('.fc-center') 是空集合，按钮从来没被插进去过。
+    // 留着只会让人以为列表按钮是这里来的。
 
     // 添加新建日程按钮
     var fcToolbar = $('.fc-toolbar');
@@ -674,9 +659,11 @@ Calendar.Method = {
       });
     }
 
-    if (viewName == 'list') {
-      $('.fc-list-button').addClass('fc-state-active').siblings().removeClass('fc-state-active'); // 当前添加样式，移除同级下面的样式
-    }
+    // 【删掉的是手工维护"列表"按钮选中态】原来：viewName == 'list' 时给注入的
+    // .fc-list-button 加 v2 的 .fc-state-active、并清掉兄弟节点的。
+    // v7 里"列表"是内置视图按钮，选中态由类名兼容层的 buttonClass 按 info.isSelected
+    // 输出 fc-button-active，不需要也不该手工维护。
+    // （那个按钮本身也早就不存在了，见 loadFullCalendar 里删注入时的说明。）
 
     // 日周视图滚动条处理
     $('.fc-scroller').on('scroll', function (this: HTMLElement, event) {
@@ -923,15 +910,15 @@ Calendar.Method = {
   rememberClick: function () {
     var $calendar = $('#calendar');
     if ($calendar.length > 0) {
-      if (Calendar.Method.getViewName() == 'agendaDay') {
-        fcRefetchEvents();
-      } else if (Calendar.Method.getViewName() == 'agendaWeek') {
-        fcRefetchEvents();
-      } else if (Calendar.Method.getViewName() == 'month') {
-        fcRefetchEvents();
-      } else if (Calendar.Method.getViewName() == 'list') {
-        $('.fc-list-button').trigger('refreshList');
-      }
+      // 原来按视图名分四支：日/周/月都是 fcRefetchEvents()，只有"列表"因为是【假视图】
+      //（destroy 掉日历、另发 getCalendarList2、套 tpl/list.html）才要去 trigger
+      // 自定义的 refreshList 事件。v7 的 listMonth 是内置真视图，refetchEvents 一并刷新，
+      // 四支合成一支。
+      //
+      // 而且那一支现在【本来就失效了】：refreshList 绑在 .fc-list-button 上，那个按钮
+      // 是往 v2 的 .fc-center 里注入的，v7 的工具栏没有 .fc-center，按钮从来没被插进去，
+      // trigger 落在空集合上静默无事 —— 结果是列表视图下这次刷新根本不发生。
+      fcRefetchEvents();
     }
   },
 

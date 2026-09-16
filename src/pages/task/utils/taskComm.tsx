@@ -324,7 +324,7 @@ export const afterDeleteTask = (taskIdArray, parentTaskId?) => {
     $tr = getTrOrLi(parentTaskId);
     const $sumCount = $tr.find('.subCount');
     $sumCount.text(parseInt($sumCount.text(), 10) - 1);
-    if ($sumCount.text() <= 0) {
+    if (Number($sumCount.text()) <= 0) {
       $tr.find('.subCounts').closest('.taskTagsBG').remove();
     }
   }
@@ -635,7 +635,7 @@ const afterUpdateTaskParentList = (taskId: string, parentId, oldParentId) => {
   if ($tr.length > 0) {
     const $sumCount = $tr.find('.subCount');
     $sumCount.text(parseInt($sumCount.text(), 10) - 1);
-    if ($sumCount.text() <= 0) {
+    if (Number($sumCount.text()) <= 0) {
       $tr.find('.deteLine').prevAll().remove();
     }
   }
@@ -737,7 +737,11 @@ const afterUpdateTaskParentComm = (taskId: string, parentId, oldParentId, $dyLi?
     }
 
     $singleFolderTask.prepend($li);
-    $.map($li.find('.singleTreeTask'), (item, i) => {
+    // 原来写的是 $.map(集合, (item, i) => …)，但返回的数组【根本没被用】——
+    // 这里只是逐个改样式，是 .each() 的活。$.map 的入参类型是数组/普通对象，
+    // 传 jQuery 集合靠的是"类数组能凑合"，类型上推不出元素是 Element。
+    // 【注意两者回调的参数顺序是反的】：$.map 是 (元素, 下标)，.each 是 (下标, 元素)。
+    $li.find('.singleTreeTask').each((i, item) => {
       $(item).css('paddingLeft', i * 20);
       $(item)
         .find('.joinLine')
@@ -934,7 +938,7 @@ export const afterUpdateTaskStar = (taskId: string, hasStar) => {
   // 已完成的任务标星不更新星标计数
   if (!getTrOrLi(taskId).find('.markTask.completeHook').length) {
     const $allCountTask = $('.aboutMeStar .allCountTask');
-    let count = parseInt($allCountTask.text() || 0, 10);
+    let count = parseInt($allCountTask.text() || '0', 10);
 
     if (hasStar) {
       count = count + 1;
@@ -1040,7 +1044,10 @@ export const updateFolderTop = (folderId, isTop: boolean, callback) => {
               _l('置顶项目') +
               '</div><ul class="folderList"></ul></div>';
             $('.navContent').prepend(topList);
-            $('.topFolderList .folderList').html($newLi);
+            // ⚠ 原来是 .html($newLi)。$newLi 是 jQuery 集合，.html() 会把它字符串化成
+            // "[object Object]" 塞进去 —— 置顶项目列表会显示成那串文本。
+            // 上面 1040 行同样意图写的是 .prepend($newLi)，这一支漏成了 .html()。
+            $('.topFolderList .folderList').append($newLi);
           }
         }
 

@@ -869,11 +869,15 @@ class TaskNavigation extends Component<any, any> {
           if (
             _.toArray($dividerLine.nextAll())
               .map(el => {
-                return $(el).is(':visible');
+                // 原来直接返回布尔再 reduce 相加，靠的是 true+false 的隐式转换。
+                // 映射成 1/0，运行期结果完全一致。
+                return $(el).is(':visible') ? 1 : 0;
               })
-              .reduce((pre, cur) => {
+              // 补上初值 0：nextAll() 可能是空集合，空数组 .reduce() 不带初值会抛
+              // TypeError。非空时结果与原来完全一致。
+              .reduce((pre: number, cur: number) => {
                 return pre + cur;
-              })
+              }, 0)
           ) {
             $folderSettingBox.find('.dividerLine').show();
           } else {
@@ -1283,7 +1287,7 @@ class TaskNavigation extends Component<any, any> {
           .removeClass('bgColorPrimaryTransparent')
           .eq(0)
           .addClass('bgColorPrimaryTransparent')
-      : [];
+      : $();
     this.renderFolderAvatar();
     if ($el.length) {
       $('.navContent').scrollTop($el.offset().top - 300);

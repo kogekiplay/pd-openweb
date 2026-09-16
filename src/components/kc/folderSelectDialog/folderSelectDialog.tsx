@@ -1015,7 +1015,7 @@ $.extend(FolderSelect.prototype, {
                 });
                 $this.addClass('bgColorPrimaryTransparent');
                 $selectedItem.fadeOut();
-                if ($this.attr('nodetype') == NODE_TYPE.FILE) {
+                if (Number($this.attr('nodetype')) === NODE_TYPE.FILE) {
                   $radioItem.html(nodeName).fadeIn();
                   $nodeVisibleType.html(folderSelect.renderNodeVisibleType(nodeData, $this)).fadeIn();
                   //$selectedNum.html('1');

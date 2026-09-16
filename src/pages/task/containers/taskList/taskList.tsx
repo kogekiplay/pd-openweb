@@ -43,6 +43,9 @@ const taskListSettings = {
 };
 
 class TaskList extends Component<any, any> {
+  /** 组件是否仍挂载；异步回调里用来避免对已卸载组件 setState */
+  mounted = false;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -329,7 +332,16 @@ class TaskList extends Component<any, any> {
       if (nScrollTop + nDivHight + 100 >= nScrollHight) {
         $('.listStageTaskContent')
           .filter(':visible')
-          .each((v, i) => {
+          // ⚠【这一段一直不生效，本次【刻意不修】，只把类型说清楚】
+          // jQuery 的 .each 回调签名是 (index, element)，这里却按 (value, index) 命名，
+          // 所以 `i` 拿到的是 DOM 元素而不是下标。myTaskIsMore 是按 classify 编号
+          // （0-3，见本文件 35 行和 133 行的初始化）存的，用元素当键取到的恒为
+          // undefined —— 局部的 myTaskIsMore 因此永远是 false，第 340 行的条件
+          // 实际只由 taskListSettings.isMore 决定。
+          // 【为什么不直接换成下标 v】前面有 .filter(':visible')，一旦有分类被隐藏，
+          // 下标就不再等于 classify 编号，换成 v 未必是对的。要修得先确定
+          // DOM 块与 classify 的对应关系，而这个页面我没法实测。留作单独一批。
+          .each((v, i: any) => {
             if (taskListSettings.myTaskIsMore[i]) {
               myTaskIsMore = true;
             }
@@ -355,7 +367,7 @@ class TaskList extends Component<any, any> {
       const type = $(this).closest('table').data('type');
       const $list = $('.myTaskSettingList').data('taskid', taskId).data('projectid', projectId);
       const offset = $(this).offset();
-      const winHeight = parseInt(window.innerHeight, 10);
+      const winHeight = Math.trunc(window.innerHeight);
 
       that.hideTaskSetting();
 
@@ -794,8 +806,8 @@ class TaskList extends Component<any, any> {
     if (config.FilterMeTaskClassify.length === 4) return;
     $.each(data.data, (key, val) => {
       // typeNum 计数
-      if (/^num_\d$/.test(key) && !taskListSettings.typeNum[key]) {
-        const type = key.slice(-1);
+      if (/^num_\d$/.test(String(key)) && !taskListSettings.typeNum[key]) {
+        const type = String(key).slice(-1);
         const $box = $('#taskList .taskListFolderName')
           .filter('[data-type=' + type + ']')
           .find('.stageTaskCount');
@@ -991,7 +1003,7 @@ class TaskList extends Component<any, any> {
       const $oldCount = $oldTitle.find('.stageTaskCount');
       const newCount = parseInt($oldCount.html(), 10) - 1 || 0;
 
-      $oldCount.html(newCount <= 0 ? 0 : newCount);
+      $oldCount.html(String(newCount <= 0 ? 0 : newCount));
       $tr.find('.myTaskTag').html(buildMyTaskIcon(type));
       $tr.prependTo($new);
     });
@@ -1091,7 +1103,7 @@ class TaskList extends Component<any, any> {
     // 计算加一
     if (!filterUserId) {
       const $allCountTask = $('.myTask .allCountTask:first');
-      $allCountTask.text(parseInt($allCountTask.text() || 0, 10) + 1);
+      $allCountTask.text(parseInt($allCountTask.text() || '0', 10) + 1);
     }
 
     this.renderChargeHeaderAvatar();

@@ -71,7 +71,7 @@ export default class BaseMessageComponent extends React.Component<any, any> {
       .find('[data-accountid],[data-groupid]')
       .each((i, ele) => {
         if ($(ele).attr('bindUserCard')) return;
-        $(ele).attr('bindUserCard', true);
+        $(ele).attr('bindUserCard', 'true');
         let accountId = $(ele).attr('data-accountid');
         let groupId = $(ele).attr('data-groupid');
         const root = createRoot(ele);

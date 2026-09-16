@@ -31,7 +31,9 @@ export default class ShareFolderOrTask extends Component<any, any> {
           <span
             data-clipboard-text={shareUrl}
             onClick={() => {
-              copy($('.createShareCopy span').attr('data-clipboard-text'));
+              // .attr() 的真实返回是 string | undefined；这个属性就在上一行由 shareUrl 写上去的，
+              // 实际不会缺，?? '' 只是把兜底写出来。
+              copy($('.createShareCopy span').attr('data-clipboard-text') ?? '');
               alert(_l('已经复制到粘贴板，你可以使用Ctrl+V 贴到需要的地方去了哦'));
             }}
           >

@@ -11,6 +11,7 @@ import { getCurrentTime } from '../../../utils';
 import * as ajax from '../../../utils/ajax';
 import Constant from '../../../utils/constant';
 import './index.less';
+import type { MentionsInputElement } from 'src/components/MentionsInput';
 
 const confirm = Dialog.confirm;
 
@@ -300,7 +301,7 @@ export default class MessageToolbar extends Component<any, any> {
     };
     setTimeout(() => {
       textarea.focus();
-      textarea.get(0).addMention(at);
+      (textarea.get(0) as MentionsInputElement).addMention(at);
     }, 0);
   };
   handleCopyText() {

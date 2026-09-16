@@ -7,6 +7,9 @@ import { addToken, htmlEncodeReg, pathCompletion } from 'src/utils/common';
 import './style.css';
 
 class CalendarShare extends Component<any, any> {
+  /** 本页的运行期配置，构造函数里整体赋值，之后逐条挂字段 */
+  settings: Record<string, any> = {};
+
   constructor(props) {
     super(props);
 
@@ -331,7 +334,11 @@ class CalendarShare extends Component<any, any> {
     // 加入日程
     $('#joinBtn')
       .off()
-      .on('click', function () {
+      // 【this 是被点的按钮，不是组件】jQuery 事件处理器里的 this 由 jQuery 绑成 DOM 元素，
+      // 所以 this.requesting 是挂在 #joinBtn 这个元素上的临时标记，跟本类里那个
+      // `requesting = false` 字段【不是同一个东西】（那个字段其实没被用到）。
+      // 下面 .then 里是箭头函数，捕获的仍是这个 this，所以读写的是同一个标记，防重入是生效的。
+      .on('click', function (this: HTMLElement & { requesting?: boolean }) {
         if (this.requesting) return;
 
         this.requesting = true;

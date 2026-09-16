@@ -36,6 +36,13 @@ const flatten = res => {
 };
 
 class SearchMember extends Component<any, any> {
+  /**
+   * 正在飞的搜索请求；换关键字时先 abort 掉上一条。
+   * 类型是 any：它是 src/api 的返回（ApiResult），.abort() 来自底层 XHR，
+   * 本仓没有该形状的权威类型，写死一个形状反而是假的确定性。
+   */
+  ajax: any = null;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -94,7 +101,9 @@ class SearchMember extends Component<any, any> {
       return;
     }
 
-    const position = $currentEl.position() || {};
+    // .position() 在空集合上返回 undefined，`|| {}` 是兜底；断言只是让类型跟着走，
+    // 运行期不变（那种情况下 position.top 仍是 undefined）。
+    const position = $currentEl.position() || ({} as JQuery.Coordinates);
 
     if (direction === 'up') {
       if (position.top < 0 || position.top + $currentEl.height() >= $scrollViewEl.height()) {

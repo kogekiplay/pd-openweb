@@ -21,7 +21,7 @@ export default (function ($) {
 
       var initTextArea = function () {
         $this.css('height', 0);
-        var origHeight = $this.val().trim() === '' ? opts.minHeight : $this.get(0).scrollHeight - opts.gap;
+        var origHeight = String($this.val() ?? '').trim() === '' ? opts.minHeight : $this.get(0).scrollHeight - opts.gap;
 
         if (origHeight > opts.maxHeight) {
           origHeight = opts.maxHeight;

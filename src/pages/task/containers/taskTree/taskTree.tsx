@@ -310,7 +310,7 @@ class TaskTree extends Component<any, any> {
         }}
         size={26}
         operation={
-          item.attr('data-auth') == config.auth.Charger ? (
+          Number(item.attr('data-auth')) === config.auth.Charger ? (
             <span
               className="updateChargeBtn colorPrimary"
               onClick={() => this.updateCharge(accountId, taskId, projectId, ele)}
@@ -346,7 +346,7 @@ class TaskTree extends Component<any, any> {
     taskTreeSettings.isLoading = true;
     listLoadingContent(taskTreeSettings.pageIndex);
 
-    let stageId = '';
+    let stageId: string | number = '';
 
     if (listStatus == 1) {
       stageId = 1;
@@ -822,7 +822,7 @@ class TaskTree extends Component<any, any> {
         }
 
         const $allCountTask = $('.myTask .allCountTask:first');
-        $allCountTask.text(parseInt($allCountTask.text() || 0, 10) + 1);
+        $allCountTask.text(parseInt($allCountTask.text() || '0', 10) + 1);
       }
     }
   };

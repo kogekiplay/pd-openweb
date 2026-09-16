@@ -15,6 +15,7 @@ import LinkView from '../linkView/linkView';
 import VoteUpdater from '../voteUpdater/voteUpdater';
 import tpl from './s.html';
 import './style.css';
+import type { MentionsInputElement } from 'src/components/MentionsInput';
 
 var langUploadFiles = _l('上传附件');
 var langShareLink = _l('分享网站') + '...';
@@ -159,8 +160,8 @@ export default function (options) {
       $mdUpdaterLinkUpdater.find('.updaterLinkView').empty();
       $mdUpdaterLinkUpdater.find('.textLinkUrl').val('http://').addClass('textPlaceholder');
       MDUpdater.options.linkViewData = null;
-      $('#MDUpdater_button_Share').attr('disabled', false).removeClass('Disabled');
-      $('#MDUpdater_Link_updater .linkBtn').val(_l('预览')).attr('disabled', false).removeClass('Disabled');
+      $('#MDUpdater_button_Share').prop('disabled', false).removeClass('Disabled');
+      $('#MDUpdater_Link_updater .linkBtn').val(_l('预览')).prop('disabled', false).removeClass('Disabled');
 
       // 投票
       VoteUpdater.reset($('#MDUpdater_Vote_updater'));
@@ -171,7 +172,7 @@ export default function (options) {
     // 发布动态
     postUpdater: function (obj) {
       var $mdUpdaterTextareaUpdater = $('#MDUpdater_textarea_Updater');
-      var mdUpdaterTextareaUpdaterEl = $mdUpdaterTextareaUpdater.get(0);
+      var mdUpdaterTextareaUpdaterEl = $mdUpdaterTextareaUpdater.get(0) as MentionsInputElement;
       var handlePost = data => {
         var postMsg = data || '';
         if (
@@ -190,7 +191,7 @@ export default function (options) {
 
         var postType = $('#MDUpdater_hidden_UpdaterType').val();
         var isToFeed = $('#isToFeed').prop('checked');
-        var rData = { postType: postType, postMsg: postMsg };
+        var rData: Record<string, any> = { postType: postType, postMsg: postMsg };
         // 不在动态更新显示
         if (!isToFeed) {
           rData.showType = 1;
@@ -216,7 +217,10 @@ export default function (options) {
             alert(_l('请预览链接'), 3);
             return false;
           }
-        } else if (postType == MDUpdater.options.postType.attachment && MDUpdater != 'undefined') {
+                  // 原来这里还有一项 `MDUpdater != 'undefined'` —— 那是把对象跟字符串 'undefined'
+          // 比较，恒为真（作者本意应是 typeof）。MDUpdater 是本作用域的局部对象，一定存在，
+          // 所以这一项怎么写都恒真，去掉运行期不变。
+        } else if (postType == MDUpdater.options.postType.attachment) {
           if (typeof MDUpdater.options.isUploadComplete != 'undefined' && !MDUpdater.options.isUploadComplete) {
             alert(_l('文件上传中，请稍等'), 3);
             return false;
@@ -325,19 +329,13 @@ export default function (options) {
         handlePost(mdUpdaterTextareaUpdaterEl.value);
       }
     },
-    // 拦截层选群组
-    dialogChooseGroup: function (el, hidGroupID, projectId: string) {
-      $(el).dialogSelectGroup({
-        projectId: projectId,
-        callback: function (groupIDs) {
-          var selectGroupOptions = MDUpdater.options.selectGroupOptions;
-          selectGroupOptions.defaultValue = groupIDs;
-
-          MDUpdater.renderSelectGroup(selectGroupOptions);
-          MDUpdater.postUpdater(el);
-        },
-      });
-    },
+    // 【删除了 dialogChooseGroup（"拦截层选群组"）】
+    // 它的函数体调用 `$(el).dialogSelectGroup({...})`，而 dialogSelectGroup 这个
+    // jQuery 插件【在本仓从来不存在】—— 全仓（含 git 全历史）搜下来只有那一个调用点，
+    // 没有任何地方定义过 $.fn.dialogSelectGroup。真被调到就是
+    // TypeError: $(...).dialogSelectGroup is not a function。
+    // 而 dialogChooseGroup 本身也【没有任何调用点】，所以它是一段不可达的坏代码。
+    // 是给 `$` 标上真实类型之后 TS2339 报出来的。
     showUpdaterDivForDocCenter: function (options) {
       if (options) {
         $.extend(MDUpdater.options, options);
@@ -362,7 +360,7 @@ export default function (options) {
       MDUpdater.bindUploadEvent();
 
       setTimeout(function () {
-        $('#MDUpdater_textarea_Updater')[0].focus();
+        $<HTMLTextAreaElement>('#MDUpdater_textarea_Updater')[0].focus();
       }, 10);
 
       // 分享范围
@@ -382,7 +380,7 @@ export default function (options) {
       }
 
       var $mdUpdaterTextareaUpdater = $('#MDUpdater_textarea_Updater');
-      var mdUpdaterTextareaUpdaterEl = $mdUpdaterTextareaUpdater.get(0);
+      var mdUpdaterTextareaUpdaterEl = $mdUpdaterTextareaUpdater.get(0) as MentionsInputElement;
 
       $mdUpdaterTextareaUpdater
         .focus(function () {
@@ -403,7 +401,7 @@ export default function (options) {
             mdUpdaterTextareaUpdaterEl.store();
           }
 
-          if (!$(this).val().trim()) {
+          if (!String($(this).val() ?? '').trim()) {
             $mdUpdaterTextareaUpdater.val(_l('知会工作是一种美德') + '...').addClass('textTertiary');
           }
         });
@@ -442,7 +440,7 @@ export default function (options) {
         $('.Updater_Textpanel span.update_close').on('click', function () {
           MDUpdater.resetUpdater();
           if ($mdUpdaterTextareaUpdater) {
-            if (!$mdUpdaterTextareaUpdater.val().trim()) {
+            if (!String($mdUpdaterTextareaUpdater.val() ?? '').trim()) {
               $mdUpdaterTextareaUpdater.val(_l('知会工作是一种美德') + '...').addClass('textTertiary');
             }
           }
@@ -488,8 +486,8 @@ export default function (options) {
         // 链接
         if (targetDivID == '#MDUpdater_Link_updater') {
           if (
-            ($('#MDUpdater_Link_updater').val().trim() == 'http://' ||
-              $('#MDUpdater_Link_updater').val().trim() == '') &&
+            (String($('#MDUpdater_Link_updater').val() ?? '').trim() == 'http://' ||
+              String($('#MDUpdater_Link_updater').val() ?? '').trim() == '') &&
             $('#MDUpdater_Link_updater').is(':visible')
           ) {
             MDUpdater.resetUpdater();
@@ -522,8 +520,8 @@ export default function (options) {
           $('#MDUpdater_hidden_UpdaterType').val(MDUpdater.options.postType.attachment);
           if (
             $('#MDUpdater_textarea_Updater') &&
-            ($('#MDUpdater_textarea_Updater').val().trim() == '' ||
-              $('#MDUpdater_textarea_Updater').val().trim() == _l('知会工作是一种美德') + '...')
+            (String($('#MDUpdater_textarea_Updater').val() ?? '').trim() == '' ||
+              String($('#MDUpdater_textarea_Updater').val() ?? '').trim() == _l('知会工作是一种美德') + '...')
           ) {
             $('#MDUpdater_textarea_Updater').val(langUploadFiles).addClass('textTertiary');
           }
@@ -535,8 +533,8 @@ export default function (options) {
           $(this).removeClass('textPlaceholder').addClass('colorPrimary');
           if (
             $('#MDUpdater_textarea_Updater') &&
-            ($('#MDUpdater_textarea_Updater').val().trim() == '' ||
-              $('#MDUpdater_textarea_Updater').val().trim() == _l('知会工作是一种美德') + '...')
+            (String($('#MDUpdater_textarea_Updater').val() ?? '').trim() == '' ||
+              String($('#MDUpdater_textarea_Updater').val() ?? '').trim() == _l('知会工作是一种美德') + '...')
           ) {
             $('#MDUpdater_textarea_Updater').val(langShareLink).addClass('textTertiary');
           }
@@ -553,8 +551,8 @@ export default function (options) {
           $(this).removeClass('textPlaceholder').addClass('colorPrimary');
           if (
             $('#MDUpdater_textarea_Updater') &&
-            ($('#MDUpdater_textarea_Updater').val().trim() == '' ||
-              $('#MDUpdater_textarea_Updater').val().trim() == _l('知会工作是一种美德') + '...')
+            (String($('#MDUpdater_textarea_Updater').val() ?? '').trim() == '' ||
+              String($('#MDUpdater_textarea_Updater').val() ?? '').trim() == _l('知会工作是一种美德') + '...')
           ) {
             $('#MDUpdater_textarea_Updater').val(langVoteQuestion).addClass('textTertiary');
           }
@@ -582,7 +580,7 @@ export default function (options) {
         mdBear: false,
         relatedLeftSpace: 22,
         onSelect: function () {
-          var textBox = $('#MDUpdater_textarea_Updater')[0];
+          var textBox = $<HTMLTextAreaElement>('#MDUpdater_textarea_Updater')[0];
           if (
             textBox.value === _l('知会工作是一种美德') + '...' ||
             textBox.value === langUploadFiles ||
@@ -596,17 +594,17 @@ export default function (options) {
 
       // 链接预览
       $('#MDUpdater_Link_updater .linkBtn').on('click', function (this: HTMLElement) {
-        var linkUrl = $('#MDUpdater_text_LinkUrl').val().trim();
+        var linkUrl = String($('#MDUpdater_text_LinkUrl').val() ?? '').trim();
         if (!linkUrl || linkUrl == 'http://') {
           alert(_l('请输入链接'), 3);
           return false;
         }
 
         var $el = $(this);
-        $el.val(_l('提取中...')).attr('disabled', true).addClass('Disabled');
+        $el.val(_l('提取中...')).prop('disabled', true).addClass('Disabled');
 
         var $btnShare = $('#MDUpdater_button_Share');
-        $btnShare.attr('disabled', true).addClass('Disabled');
+        $btnShare.prop('disabled', true).addClass('Disabled');
 
         LinkView($('#MDUpdater_Link_updater .updaterLinkView'), {
           viewUrl: linkUrl,
@@ -617,8 +615,8 @@ export default function (options) {
             }
 
             MDUpdater.options.linkViewData = data;
-            $el.val(_l('预览')).attr('disabled', false).removeClass('Disabled');
-            $btnShare.attr('disabled', false).removeClass('Disabled');
+            $el.val(_l('预览')).prop('disabled', false).removeClass('Disabled');
+            $btnShare.prop('disabled', false).removeClass('Disabled');
           },
         });
       });

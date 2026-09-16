@@ -161,7 +161,7 @@ class Detail extends React.Component<any, any> {
       service
         .getNodesTotalFolderCountAndFileSize({
           rootType: this.props.rootType,
-          keywords: $('#smartSearchFile').val().trim(),
+          keywords: String($('#smartSearchFile').val() ?? '').trim(),
           parentId: this.props.parentId || this.props.rootId,
           status: this.props.status,
         })
