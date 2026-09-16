@@ -7,7 +7,7 @@ import { Icon, LoadDiv, Menu, MenuItem } from 'ming-ui';
 import appManagementAjax from 'src/api/appManagement';
 import attachmentAjax from 'src/api/attachment';
 import sheetAjax from 'src/api/worksheet';
-import createUploader from 'src/library/plupload/createUploader';
+import createUploader from 'src/utils/createUploader';
 import { createEditFileLink } from 'src/pages/UploadTemplateSheet/utils';
 import { pathCompletion } from 'src/utils/common';
 import { VersionProductType } from 'src/utils/enum';

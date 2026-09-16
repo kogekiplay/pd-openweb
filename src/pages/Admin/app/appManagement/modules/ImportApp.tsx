@@ -3,7 +3,7 @@ import { Progress } from 'antd';
 import cx from 'classnames';
 import { Checkbox, Icon, Support, SvgIcon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
-import createUploader from 'src/library/plupload/createUploader';
+import createUploader from 'src/utils/createUploader';
 import { formatFileSize } from 'src/utils/common';
 import RegExpValidator from 'src/utils/expression';
 import Config from '../../../config';

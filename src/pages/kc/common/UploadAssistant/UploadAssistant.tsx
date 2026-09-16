@@ -8,7 +8,7 @@ import Icon from 'ming-ui/components/Icon';
 import { mdNotification } from 'ming-ui/functions';
 import service from '../../api/service';
 import folderDg from 'src/components/kc/folderSelectDialog/folderSelectDialog';
-import createUploader from 'src/library/plupload/createUploader';
+import createUploader from 'src/utils/createUploader';
 import { getClassNameByExt } from 'src/utils/common';
 import { MAX_FILE_COUNT, PICK_TYPE, UPLOAD_ERROR, UPLOAD_STATUS } from '../../constant/enum';
 import HoverState from '../../decorators/withHoverState';

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Progress } from 'antd';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
-import createUploader from 'src/library/plupload/createUploader';
+import createUploader from 'src/utils/createUploader';
 import { formatFileSize } from 'src/utils/common';
 import RegExpValidator from 'src/utils/expression';
 
