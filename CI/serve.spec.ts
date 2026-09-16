@@ -118,10 +118,15 @@ assert.ok(proxyPaths.length > 0, '没解析到 proxyConfigs 的 path，解析逻
 
 // 【匹配规则要和 serve.js 的实际判定一致】
 // 转发的判定是 req.url.startsWith(config.path)。改写后的地址形如
-// `<prefix>/Xxx`（调用点自己拼下一段），所以 prefix 带不带尾斜杠都要能对上：
-//   '/file/'     ↔ path '/file/'
-//   '/chatmq'    ↔ path '/chatmq/'
-//   '/excelapi'  ↔ path '/excelapi/'
+// `<prefix>/Xxx`（调用点自己拼下一段），所以只要有【某条 path 是它的前缀】就成立：
+//   '/file/'      ↔ path '/file/'
+//   '/chatmq'     ↔ path '/chatmq/'
+//   '/excelapi'   ↔ path '/excelapi/'
+//   '/file/mdpub' ↔ path '/file/'    ← 按仓拆分后的子前缀，由 '/file/' 一条覆盖
+// 【原先写的是精确相等】那会把上面最后一类误判成「没有转发条目」。
+// 改写前缀按仓拆开是必须的：整个 '/file/' 一起改写会把 documentHost 也改成
+// 相对地址，而那个值前端是要【回传给后端】的（见 REWRITE_PREFIXES 处的说明），
+// 于是 dev 下所有文件上传都建不了节点。
 for (const [listName, prefixes] of [
   ['REWRITE_PREFIXES', rewritePrefixes],
   ['PLATFORM_REWRITE_PREFIXES', platformPrefixes],
@@ -131,7 +136,9 @@ for (const [listName, prefixes] of [
     // 不需要也不该有转发条目。见 PLATFORM_REWRITE_PREFIXES 的注释。
     if (prefix === '/') continue;
 
-    const covered = proxyPaths.some(p => p === prefix || p === `${prefix}/`);
+    // 与运行时同口径：改写后的请求是 `<prefix>/Xxx`，只要有一条 path 是它的前缀就会被转发
+    const sample = prefix.endsWith('/') ? prefix : `${prefix}/`;
+    const covered = proxyPaths.some(p => sample.startsWith(p));
     assert.ok(
       covered,
       `${listName} 里的 '${prefix}' 在 proxyConfigs 里没有对应的转发条目。\n` +

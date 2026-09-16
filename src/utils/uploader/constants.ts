@@ -7,8 +7,9 @@
  * 这些比较必须改成引本文件的常量；数值保持一致，是为了让【改漏的地方
  * 也不会静默变错】—— 万一还有别处从别的路径拿到 code，语义仍然成立。
  *
- * 数值来自实测：在 jsdom 里加载 src/library/plupload/plupload.full.min.js
- * 之后逐个读 window.plupload 上的常量，不是照文档抄的。
+ * 数值来自实测，不是照文档抄的：在 jsdom 里加载当时仓里的
+ * src/library/plupload/plupload.full.min.js（随本次替换一并删除了），
+ * 之后逐个读 window.plupload 上的常量记下来。
  */
 
 /** 单个文件的状态（plupload: QUEUED/UPLOADING/FAILED/DONE） */
