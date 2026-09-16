@@ -1,366 +1,243 @@
-import { assign, endsWith, find, forEach, throttle, trim } from 'lodash';
+/**
+ * 文件上传器 —— 对外保持 plupload 的用法，内部改用 qiniu-js。
+ *
+ * 【为什么换】原实现是【手工在 plupload 的通用分片之上实现七牛的 mkblk/mkfile
+ * 断点续传协议】（约 150 行协议代码 + 自己维护的 localStorage 续传缓存），
+ * 而 plupload 3.1.5 里还带着 Flash/Silverlight 运行时与 IE8/9 分支。
+ * qiniu-js 是七牛官方的浏览器 SDK、TypeScript 写的，分片与续传是它的本职。
+ *
+ * 【为什么保留 plupload 的对外形状】全仓 10 个调用方按 plupload 的事件与
+ * 文件对象写法在用（`up.settings.multipart_params = …`、`file.getNative()`、
+ * `uploader.disableBrowse(true)` 等），换实现时把这层形状原样保住，
+ * 调用方就不用一起改 —— 这是这次改造的主要风险控制手段。
+ *
+ * 【职责划分】
+ *   uploader/fileSelect.ts   点按钮 / 拖放 / 粘贴（qiniu-js 不管这块）
+ *   uploader/qiniuUpload.ts  单个文件传到七牛（qiniu-js 包一层，含错误码翻译）
+ *   本文件                    队列、校验、取凭证、事件分发
+ *
+ * 【没有实测的部分】真实的七牛上传要凭证与后端，本地验不了。
+ * 能验的是队列 / 校验 / 事件 / 参数映射这一层 —— 见 createUploader.spec.ts
+ *（12 个用例，做过负对照：故意改错断言与打破 customVars 契约都会让门禁变红）。
+ * 上传协议本身交给了官方 SDK，那比本仓手写的 mkblk/mkfile 更经得起考验。
+ */
+import { assign, endsWith, find, forEach } from 'lodash';
 import { getToken } from 'src/utils/common';
 import RegExpValidator from 'src/utils/expression';
+import { FileStatus, UPLOAD_ERROR, UploadError, UploaderState } from './uploader/constants';
+import { createFileSelect } from './uploader/fileSelect';
+import { normalizeUpHost, uploadToQiniu } from './uploader/qiniuUpload';
+import type { QiniuUploadTask } from './uploader/qiniuUpload';
+import type { Uploader, UploaderEvent, UploaderFile, UploaderOption, UploadErrorInfo } from './uploader/types';
 
-const validateFileName = str => {
-  str = trim(str);
+export { FileStatus, UPLOAD_ERROR, UploadError, UploaderState } from './uploader/constants';
+export type { Uploader, UploaderFile, UploaderOption } from './uploader/types';
 
-  if (!str) {
+/** 文件名里不允许出现的字符（与老实现一致，加入队列时统一替换成 _） */
+const ILLEGAL_NAME_CHARS = /[\/\\:\*\?"<>\|]/g;
+
+const validateFileName = (str: string): boolean => {
+  const name = (str || '').trim();
+
+  if (!name) {
     alert(_l('名称不能为空'), 3);
     return false;
   }
 
-  if (str.length > 255) {
+  if (name.length > 255) {
     alert(_l('文件名过长'), 3);
     return false;
   }
 
   return true;
-
-  // ⚠【下面这段永远执行不到，本次刻意不动它】
-  // 上面那句 `return true` 把非法字符校验整段挡在后面了，也就是说
-  // 含 \ / : * ? " < > | 的文件名【现在一直是放行的】，那句 alert 从来没弹出过。
-  // eslint 的 no-unreachable 是这次把文件从 src/library/（eslint 与类型检查都 ignore
-  // 的目录）挪到 src/utils/ 之后才第一次报出来的。
-  //
-  // 【为什么不顺手让它生效】那会开始拒绝当前能传上去的文件，是用户可见的行为变更，
-  // 而附件上传是全公司 OA 的核心路径、我没法实测。要开得单独一批、并确认产品预期。
-  // eslint-disable-next-line no-unreachable
-  const illegalChars = /[\/\\:\*\?"<>\|]/g;
-  const valid = !illegalChars.test(str);
-
-  if (!valid) {
-    alert(_l('名称不能包含以下字符：') + '\\ / : * ? " < > |', 3);
-  }
-
-  return valid;
 };
 
-// 上传错误类型
-const UPLOAD_ERROR = {
-  INVALID_FILES: 1,
-  TOO_MANY_FILES: 2,
-};
+/** '4mb' / 4194304 -> 字节数 */
+function parseSize(size: string | number | undefined): number {
+  if (typeof size === 'number') return size;
+  if (!size) return 0;
+  const m = /^(\d+(?:\.\d+)?)\s*([kmg]?)b?$/i.exec(String(size).trim());
+  if (!m) return 0;
+  const n = parseFloat(m[1]);
+  const unit = m[2].toLowerCase();
+  const factor = unit === 'g' ? 1024 ** 3 : unit === 'm' ? 1024 ** 2 : unit === 'k' ? 1024 : 1;
+  return Math.round(n * factor);
+}
 
-export default option => {
-  option = assign(
+let seq = 0;
+function nextId(): string {
+  seq += 1;
+  return `mdfile_${Date.now().toString(36)}_${seq}`;
+}
+
+/** 把原生 File 包成队列里的文件对象 */
+function wrapFile(native: File, source: 'browse' | 'drop' | 'paste'): UploaderFile {
+  const wrapped: UploaderFile = {
+    id: nextId(),
+    // 【替换非法字符】老实现在 FilesAdded 里做同样的事；放在这里是因为后面的
+    // 校验、取凭证都依赖最终的 name。
+    name: (native.name || '').replace(ILLEGAL_NAME_CHARS, '_'),
+    size: native.size,
+    type: native.type,
+    percent: 0,
+    loaded: 0,
+    status: FileStatus.QUEUED,
+    getNative: () => native,
+  };
+  if (source === 'paste') wrapped.isFromClipBoard = true;
+  if ((native as any).webkitRelativePath) wrapped.webkitRelativePath = (native as any).webkitRelativePath;
+  return wrapped;
+}
+
+export default function createUploader(inputOption: UploaderOption): Uploader {
+  const option: UploaderOption = assign(
     {
       ext_blacklist: ['exe', 'bat', 'vbs', 'cmd', 'com', 'url'],
       max_file_count: 100,
       auto_start: true,
       url: md.global.FileStoreConfig.uploadHost,
       multipart_params: { token: '' },
-      max_retries: 3,
       dragdrop: true,
       chunk_size: '4mb',
       max_file_size: md.global.SysSettings.fileUploadLimitSize + 'mb',
       bucket: 0,
       type: 0,
     },
-    option,
+    inputOption,
   );
 
-  // 验证文件有效性
-  function validateFile(file) {
-    if (!validateFileName(file.name)) {
-      return false;
-    }
-    return !find(option.ext_blacklist, ext => endsWith(file.name.toLowerCase(), ext.toLowerCase()));
+  // 七牛单次分片上限 4M：超过就不分片（保持老实现的语义，没有改成截断）
+  const MAX_CHUNK_SIZE = 4 * 1024 * 1024;
+  const requestedChunk = parseSize(option.chunk_size);
+  option.chunk_size = requestedChunk > MAX_CHUNK_SIZE ? 0 : MAX_CHUNK_SIZE;
+
+  const maxFileSize = parseSize(option.max_file_size);
+
+  // 调用方传进来的事件处理器。【要先拷出来】—— 内部逻辑（取凭证、拼参数）
+  // 必须先于调用方的回调执行，所以这几个不走 bind，由下面显式转发。
+  const initFunc = assign({}, option.init) as Record<string, (...args: any[]) => any>;
+
+  const handlers = new Map<UploaderEvent, Array<(...args: any[]) => any>>();
+  const files: UploaderFile[] = [];
+  /** 正在飞的上传任务，用于 stop / removeFile 时中断 */
+  const tasks = new Map<string, QiniuUploadTask>();
+  let destroyed = false;
+
+  function trigger(event: UploaderEvent, ...args: any[]) {
+    for (const fn of (handlers.get(event) || []).slice()) fn(...args);
   }
 
-  function triggerUploadError(up, file, message) {
-    file.status = window.plupload.FAILED;
-    up.trigger('Error', {
-      file,
-      code: undefined,
-      message,
-    });
-    up.removeFile(file);
+  const uploader: Uploader = {
+    settings: option as any,
+    files,
+    state: UploaderState.STOPPED,
+
+    init() {
+      trigger('Init', uploader);
+      if (initFunc.Init) initFunc.Init(uploader);
+      trigger('PostInit', uploader);
+      if (initFunc.PostInit) initFunc.PostInit(uploader);
+    },
+    destroy() {
+      destroyed = true;
+      uploader.stop();
+      select.destroy();
+      handlers.clear();
+    },
+    start() {
+      startQueue();
+    },
+    stop() {
+      uploader.state = UploaderState.STOPPED;
+      for (const task of tasks.values()) task.abort();
+      tasks.clear();
+      trigger('StateChanged', uploader);
+    },
+    addFile(input) {
+      // 【不要写 `input instanceof FileList`】FileList 只在浏览器里有，
+      // 在 Node（spec）里引用它是 ReferenceError。用「像数组」来判就够了。
+      const isArrayLike =
+        input && typeof (input as any).length === 'number' && typeof (input as any).name !== 'string';
+      const list: File[] = Array.isArray(input)
+        ? input
+        : isArrayLike
+          ? Array.prototype.slice.call(input)
+          : [input as File];
+      handleFiles(
+        list.filter(Boolean),
+        list.some(f => (f as any).isFromClipBoard) ? 'paste' : 'browse',
+      );
+    },
+    removeFile(target) {
+      const id = typeof target === 'string' ? target : target && target.id;
+      const idx = files.findIndex(f => f.id === id);
+      if (idx < 0) return;
+      const [removed] = files.splice(idx, 1);
+      const task = tasks.get(id);
+      if (task) {
+        task.abort();
+        tasks.delete(id);
+      }
+      trigger('FilesRemoved', uploader, [removed]);
+      if (initFunc.FilesRemoved) initFunc.FilesRemoved(uploader, [removed]);
+    },
+    refresh() {
+      // 有意为空：plupload 里这是重新测量透明 input 相对按钮的位置；
+      // 本实现点按钮时直接转发 input.click()，没有需要测量的东西。
+      // 保留是为了调用点不用改。
+    },
+    disableBrowse(disable = true) {
+      select.disable(disable);
+    },
+    getOption(key) {
+      return (option as any)[key];
+    },
+    setOption(key, value) {
+      if (typeof key === 'object') assign(option, key);
+      else (option as any)[key] = value;
+    },
+    bind(event, handler) {
+      if (!handlers.has(event)) handlers.set(event, []);
+      handlers.get(event)!.push(handler);
+    },
+    unbind(event, handler) {
+      if (!handler) {
+        handlers.delete(event);
+        return;
+      }
+      const list = handlers.get(event);
+      if (!list) return;
+      const i = list.indexOf(handler);
+      if (i >= 0) list.splice(i, 1);
+    },
+    trigger(event, ...args) {
+      trigger(event, ...args);
+    },
+  };
+
+  function triggerUploadError(file: UploaderFile | undefined, message: string, code?: number) {
+    if (file) file.status = FileStatus.FAILED;
+    emitError({ file, code, message });
+    if (file) uploader.removeFile(file);
   }
 
-  (function resetChunkSize() {
-    // 七牛的分片上限是 4M，超过就把分片关掉（保持原有语义，没有改成截断）。
-    //
-    // 【这里删掉了两条永远走不到的分支】
-    // 1. `if (ie && ie <= 9 && option.runtimes.indexOf('flash') >= 0)` ——
-    //    ie 来自一个用 IE 条件注释（<!--[if gt IE n]>）探测版本的函数，
-    //    非 IE 浏览器里恒为 false。而且这条分支还藏着个隐患：runtimes【不在默认值里】，
-    //    真走到就是 `undefined.indexOf` —— 只是靠 ie 恒假短路才没抛。
-    //    另外全部 8 个调用方都显式传了 runtimes: 'html5'，flash 从来没被启用过。
-    // 2. isSpecialSafari —— 判的是 Windows 7 上的 Safari ≤ 5 和 iOS 7 的 Safari，
-    //    分别是 2010 / 2013 年的东西；而本仓生成的 HTML 已经把 Chrome 50 以下
-    //    重定向到升级页（CI/generate.ts）。
-    //    它也是 createUploader 里唯一用到 mOxie 的地方。
-    const BLOCK_BITS = 20;
-    const MAX_CHUNK_SIZE = 4 << BLOCK_BITS; // 4M
-    const chunkSize = plupload.parseSize(option.chunk_size);
-
-    option.chunk_size = chunkSize > MAX_CHUNK_SIZE ? 0 : MAX_CHUNK_SIZE;
-  })();
-
-  const initFunc = assign({}, option.init);
-  delete option.init.Error;
-  delete option.init.FileUploaded;
-  delete option.init.FilesAdded;
-  const uploader = new plupload.Uploader(option);
-
-  uploader.init();
-
-  uploader.bind('FilesAdded', function FilesAdded(up, files) {
-    const validFiles = [];
-    const invalidFiles = [];
-    const tokenFiles = [];
-    forEach(files, file => {
-      file.name = file.name.replace(/[\/\\:\*\?"<>\|]/g, '_');
-      if (validateFile(file)) {
-        validFiles.push(file);
-      } else {
-        invalidFiles.push(file);
-      }
-      let fileExt = `.${RegExpValidator.getExtOfFileName(file.name)}`;
-      let isPic = RegExpValidator.fileIsPicture(fileExt);
-      tokenFiles.push({ bucket: option.bucket || (isPic ? 4 : 3), ext: fileExt });
-    });
-
-    if (validFiles.length > option.max_file_count) {
-      // 先清理超限文件，避免错误回调异常导致未获取 token 的文件残留在队列中。
-      forEach(files, file => up.removeFile(file));
-      if (typeof option.error_callback === 'function') {
-        option.error_callback(UPLOAD_ERROR.TOO_MANY_FILES, files);
-      }
-
-      return;
-    }
-
-    if (invalidFiles.length) {
-      forEach(invalidFiles, invalidFile => (invalidFile.mdUploadErrorType = UPLOAD_ERROR.INVALID_FILES));
-      option.error_callback(UPLOAD_ERROR.INVALID_FILES, invalidFiles);
-      forEach(invalidFiles, file => up.removeFile(file));
-    }
-    if (!validFiles.length) {
-      return;
-    }
-
-    const start = () => {
-      let autoStart = up.getOption && up.getOption('auto_start');
-      autoStart = autoStart || (up.settings && up.settings.auto_start);
-      let beforeUploadCheck;
-      if (option.before_upload_check) {
-        beforeUploadCheck = option.before_upload_check(up, validFiles);
-        if (beforeUploadCheck === false) {
-          beforeUploadCheck = Promise.reject(false);
-        }
-      }
-
-      (option.getToken || getToken)(tokenFiles, option.type, option.getTokenParam).then(res => {
-        const exceedFiles = [];
-        files.forEach((item, i) => {
-          if (!res[i]) {
-            up.removeFile(item);
-            return;
-          }
-          if (res[i].size && item.size > res[i].size * 1024 * 1024) {
-            exceedFiles.push(item);
-            up.removeFile(item);
-          } else {
-            item.token = res[i].uptoken;
-            item.key = res[i].key;
-            item.serverName = res[i].serverName;
-            item.fileName = res[i].fileName;
-            item.url = res[i].url;
-          }
-        });
-
-        if (exceedFiles.length) {
-          if (initFunc.FilesAdded) {
-            initFunc.FilesAdded(up, []);
-          }
-          option.remove_files_callback && option.remove_files_callback(up, exceedFiles);
-          alert(_l('%0个文件无法上传：单个文件大小超过%1MB', exceedFiles.length, res[0].size), 2);
-        }
-
-        if (autoStart) {
-          plupload.each(validFiles, file => {
-            Promise.all([beforeUploadCheck])
-              .then(() => up.start())
-              .catch(failResult => {
-                file.status = window.plupload.FAILED;
-                up.trigger('Error', {
-                  file,
-                  code: undefined,
-                  message: failResult || '上传前检查失败',
-                });
-                up.removeFile(file);
-              });
-          });
-        }
-      });
-      up.refresh();
-    };
-
-    if (initFunc.FilesAdded) {
-      if (up.settings.source === 'h5') {
-        // h5 有压缩、添加水印等异步操作，等 FilesAdded 处理完再执行 start
-        initFunc.FilesAdded(up, validFiles, start);
-      } else {
-        initFunc.FilesAdded(up, validFiles);
-        start();
-      }
-    } else {
-      start();
-    }
-  });
-
-  uploader.bind('Retry', function ClearStoredProgress(up, file: Record<string, any> = {}) {
-    up.stop();
-    localStorage.removeItem(file.name);
-    file.loaded = 0;
-    file.status = window.plupload.UPLOADING;
-    up.state = window.plupload.STARTED;
-    up.trigger('StateChanged');
-    up.trigger('BeforeUpload', file);
-    up.trigger('UploadFile', file);
-  });
-
-  uploader.bind('BeforeUpload', function BeforeUpload(up, file: Record<string, any> = {}) {
-    try {
-      const native = file.getNative();
-      if (file.size && !native.size) {
-        file.notExists = true;
-      }
-    } catch (e) {}
-
-    const fileExt = `.${RegExpValidator.getExtOfFileName(file.name)}`;
-
-    const token = file.token;
-
-    const directUpload = function (up, file) {
-      /* eslint no-shadow:0*/
-      let multipartParamsObj;
-      if (option.save_key) {
-        multipartParamsObj = { token };
-      } else {
-        multipartParamsObj = {
-          token,
-          key: file.key,
-        };
-      }
-
-      const xVars = option.x_vars;
-      if (xVars !== undefined && typeof xVars === 'object') {
-        multipartParamsObj['x:serverName'] = file.serverName;
-        multipartParamsObj['x:filePath'] = file.key.replace(file.fileName, '');
-        multipartParamsObj['x:fileName'] = file.fileName.replace(/\.[^\.]*$/, '');
-        multipartParamsObj['x:originalFileName'] = encodeURIComponent(
-          file.name.indexOf('.') > -1 ? file.name.split('.').slice(0, -1).join('.') : file.name,
-        );
-        multipartParamsObj['x:fileExt'] = fileExt;
-      }
-
-      up.setOption({
-        url: option.url,
-        multipart: true,
-        chunk_size: undefined,
-        multipart_params: multipartParamsObj,
-      });
-    };
-
-    let chunkSize = up.getOption && up.getOption('chunk_size');
-    chunkSize = chunkSize || (up.settings && up.settings.chunk_size);
-    if (uploader.runtime === 'html5' && chunkSize) {
-      if (file.size <= chunkSize) {
-        directUpload(up, file);
-      } else {
-        const rawFileInfo = localStorage.getItem(file.name);
-        let blockSize = chunkSize;
-        if (rawFileInfo) {
-          const localFileInfo = JSON.parse(rawFileInfo);
-          const now = new Date().getTime();
-          const before = localFileInfo.time || 0;
-          const aDay = 24 * 60 * 60 * 1000; //  milliseconds
-          if (now - before < aDay) {
-            if (localFileInfo.percent !== 100) {
-              if (file.size === localFileInfo.total) {
-                // 通过文件名和文件大小匹配，找到对应的 localstorage 信息，恢复进度
-                file.percent = localFileInfo.percent;
-                file.loaded = localFileInfo.offset;
-                file.ctx = localFileInfo.ctx;
-                if (localFileInfo.offset + blockSize > file.size) {
-                  blockSize = file.size - localFileInfo.offset;
-                }
-              } else {
-                localStorage.removeItem(file.name);
-              }
-            } else {
-              // 进度100%时，删除对应的localStorage，避免 499 bug
-              localStorage.removeItem(file.name);
-            }
-          } else {
-            localStorage.removeItem(file.name);
-          }
-        }
-        up.setOption({
-          url: option.url.replace(/(\/)$/, '') + '/mkblk/' + blockSize,
-          multipart: false,
-          chunk_size: chunkSize,
-          required_features: 'chunks',
-          headers: {
-            Authorization: 'UpToken ' + token,
-          },
-          multipart_params: {},
-        });
-      }
-    } else {
-      directUpload(up, file);
-    }
-  });
-
-  uploader.bind('ChunkUploaded', function ChunkUploaded(up, file, info) {
-    const res = safeParse(info.response, 'object');
-    if (!res.ctx) {
-      triggerUploadError(up, file, _l('上传失败，请稍后再试。'));
-      return;
-    }
-
-    file.ctx = file.ctx ? file.ctx + ',' + res.ctx : res.ctx;
-    const leftSize = info.total - info.offset;
-    let chunkSize = up.getOption && up.getOption('chunk_size');
-    chunkSize = chunkSize || (up.settings && up.settings.chunk_size);
-    if (leftSize < chunkSize) {
-      up.setOption({
-        url: option.url.replace(/(\/)$/, '') + '/mkblk/' + leftSize,
-      });
-    }
-    safeLocalStorageSetItem(
-      file.name,
-      JSON.stringify({
-        ctx: file.ctx,
-        percent: file.percent,
-        total: info.total,
-        offset: info.offset,
-        time: new Date().getTime(),
-      }),
-    );
-  });
-
-  uploader.bind('Error', function Error(up, err) {
+  /**
+   * Error 事件。错误提示文案的映射【逐条沿用老实现】，
+   * 这样调用方拿到的 errTip 不变。
+   */
+  function emitError(err: UploadErrorInfo) {
     let errTip = '';
-    let maxFileSize, errorObj, errorText;
+    let errorText = '';
+
     switch (err.code) {
-      case plupload.FAILED:
-        errTip = _l('上传失败。请稍后再试。');
+      case UploadError.FILE_SIZE_ERROR:
+        errTip = _l('单个文件大小超过%0，无法支持上传', String(option.max_file_size).toUpperCase());
         break;
-      case plupload.FILE_SIZE_ERROR:
-        maxFileSize = up.getOption && up.getOption('max_file_size');
-        maxFileSize = maxFileSize || (up.settings && up.settings.max_file_size);
-        errTip = _l('单个文件大小超过%0，无法支持上传', maxFileSize.toUpperCase());
-        break;
-      case plupload.FILE_EXTENSION_ERROR:
+      case UploadError.FILE_EXTENSION_ERROR:
         errTip = _l('无法上传，不支持该格式的文件');
         break;
-      case plupload.HTTP_ERROR:
-        errorObj = JSON.stringify(err.response);
-        errorText = errorObj.error;
+      case UploadError.HTTP_ERROR:
+        errorText = (err.response && err.response.error) || '';
         switch (err.status) {
           case 400:
             errTip = _l('上传文件发生错误，请稍后再试。');
@@ -379,12 +256,6 @@ export default option => {
             break;
           case 614:
             errTip = _l('文件服务器已存在同名文件，请重新上传。');
-            try {
-              errorObj = JSON.parse(errorObj.error);
-              errorText = errorObj.error || '';
-            } catch (e) {
-              errorText = errorObj.error || '';
-            }
             break;
           case 631:
             errTip = _l('指定空间不存在。');
@@ -407,150 +278,311 @@ export default option => {
           errTip = errTip + '(' + err.status + (errorText ? '：' + errorText : '') + ')';
         }
         break;
-      case plupload.SECURITY_ERROR:
+      case UploadError.SECURITY_ERROR:
         errTip = _l('安全配置错误。请联系客服。');
         break;
-      case plupload.GENERIC_ERROR:
-        errTip = _l('上传失败。请稍后再试。');
-        break;
-      case plupload.IO_ERROR:
-        errTip = _l('上传失败。请稍后再试。');
-        break;
-      case plupload.INIT_ERROR:
+      case UploadError.INIT_ERROR:
         errTip = _l('网站配置错误。请联系客服。');
         uploader.destroy();
         break;
-      case plupload.FILE_DUPLICATE_ERROR:
+      case UploadError.FILE_DUPLICATE_ERROR:
         errTip = _l('文件重复。');
+        break;
+      case UploadError.GENERIC_ERROR:
+      case UploadError.IO_ERROR:
+        errTip = _l('上传失败。请稍后再试。');
         break;
       default:
         errTip = (err.message || '') + (err.details || '');
         break;
     }
-    if (initFunc.Error) {
-      initFunc.Error(up, err, errTip);
-    }
-    up.refresh(); // 让 plupload 重新测量 browse_button 的位置（原注释写的是 Reposition Flash/Silverlight，已无 Flash 运行时）
-  });
 
-  uploader.bind('FileUploaded', function (up, file, info) {
-    info.response = safeParse(info.response, 'object');
-    if (!info.response.ctx && !info.response.key) {
-      triggerUploadError(up, file, _l('上传失败，请稍后再试。'));
+    trigger('Error', uploader, err, errTip);
+    if (initFunc.Error) initFunc.Error(uploader, err, errTip);
+  }
+
+  // ── 加入队列 ────────────────────────────────────────────────────────────
+  function validateFile(file: UploaderFile): boolean {
+    if (!validateFileName(file.name)) return false;
+    return !find(option.ext_blacklist, (ext: string) => endsWith(file.name.toLowerCase(), ext.toLowerCase()));
+  }
+
+  function handleFiles(natives: File[], source: 'browse' | 'drop' | 'paste') {
+    if (destroyed || !natives.length) return;
+
+    const wrapped = natives.map(f => wrapFile(f, source));
+    const validFiles: UploaderFile[] = [];
+    const invalidFiles: UploaderFile[] = [];
+    const tokenFiles: Array<{ bucket: number; ext: string }> = [];
+
+    forEach(wrapped, file => {
+      if (validateFile(file)) validFiles.push(file);
+      else invalidFiles.push(file);
+
+      const fileExt = `.${RegExpValidator.getExtOfFileName(file.name)}`;
+      const isPic = RegExpValidator.fileIsPicture(fileExt);
+      tokenFiles.push({ bucket: option.bucket || (isPic ? 4 : 3), ext: fileExt });
+    });
+
+    if (validFiles.length > (option.max_file_count as number)) {
+      if (typeof option.error_callback === 'function') {
+        option.error_callback(UPLOAD_ERROR.TOO_MANY_FILES, wrapped);
+      }
       return;
     }
 
-    if (!info.response.ctx) {
-      if (initFunc.FileUploaded) {
-        info.originalFileName = decodeURIComponent(info.originalFileName);
-        initFunc.FileUploaded(up, file, info);
-      }
-    } else {
-      let fileExt = `.${RegExpValidator.getExtOfFileName(file.name)}`;
-      let isPic = RegExpValidator.fileIsPicture(fileExt);
+    if (invalidFiles.length) {
+      forEach(invalidFiles, f => (f.mdUploadErrorType = UPLOAD_ERROR.INVALID_FILES));
+      option.error_callback && option.error_callback(UPLOAD_ERROR.INVALID_FILES, invalidFiles);
+    }
+    if (!validFiles.length) return;
 
-      let tokenInfo =
-        file.key && file.token
-          ? {
-              key: file.key,
-              uptoken: file.token,
-              fileName: file.fileName,
-              serverName: file.serverName,
-              url: file.url,
-            }
-          : null;
-
-      if (!tokenInfo) {
-        try {
-          tokenInfo = ((option.getToken || getToken)(
-            [{ bucket: option.bucket || (isPic ? 4 : 3), ext: fileExt }],
-            option.type,
-            option.getTokenParam,
-            { ajaxOptions: { sync: true } },
-          ) || [])[0];
-        } catch (err) {
-          console.error(err);
-          triggerUploadError(up, file, _l('获取上传凭证失败，请稍后重试。'));
-          return;
-        }
-      }
-
-      if (!tokenInfo || !tokenInfo.key || !tokenInfo.uptoken) {
-        triggerUploadError(up, file, _l('获取上传凭证失败，请稍后重试。'));
-        return;
-      }
-
-      file.key = file.key || tokenInfo.key;
-      file.token = file.token || tokenInfo.uptoken;
-      file.fileName = file.fileName || tokenInfo.fileName;
-      file.serverName = file.serverName || tokenInfo.serverName;
-      file.url = file.url || tokenInfo.url;
-
-      $.ajax({
-        url: option.url.replace(/(\/)$/, '') + '/mkfile/' + (file.size ? file.size : 0) + '/key/' + btoa(tokenInfo.key),
-        type: 'POST',
-        beforeSend: request => {
-          request.setRequestHeader('Content-Type', 'text/plain;charset=UTF-8');
-          request.setRequestHeader('Authorization', 'UpToken ' + tokenInfo.uptoken);
-        },
-        data: file.ctx,
-        processData: false,
-        async: false,
-      }).then(response => {
-        if (typeof response === 'string') {
-          response = safeParse(response, 'object');
-        }
-
-        if (!response.key) {
-          triggerUploadError(up, file, _l('上传失败，请稍后再试。'));
-          return;
-        }
-
-        const serverFileName = file.fileName || tokenInfo.fileName || '';
-        const fileKey = file.key || tokenInfo.key;
-        const oldKeyDir = fileKey.replace(serverFileName, '');
-        const newKey = response.key || fileKey;
-        const newKeyDir = newKey.replace(serverFileName, '');
-        const url = file.url || tokenInfo.url || '';
-
-        response.fileExt = fileExt;
-        response.fileName = RegExpValidator.getNameOfFileName(serverFileName || file.name);
-        response.filePath = newKeyDir;
-        response.originalFileName = encodeURIComponent(RegExpValidator.getNameOfFileName(file.name));
-        response.serverName = file.serverName;
-
-        file.key = response.key;
-        file.url = url.replace(oldKeyDir, newKeyDir) || response.url;
-
-        if (initFunc.FileUploaded) {
-          initFunc.FileUploaded(up, file, { response });
-        }
+    // 【单文件大小在本地先拦一道】老实现是交给 plupload 的 max_file_size，
+    // 由它发 FILE_SIZE_ERROR；qiniu-js 不管这件事，所以在这里判，
+    // 错误码与文案保持一致。
+    const oversized = validFiles.filter(f => maxFileSize > 0 && f.size > maxFileSize);
+    if (oversized.length) {
+      forEach(oversized, f => {
+        f.status = FileStatus.FAILED;
+        emitError({ file: f, code: UploadError.FILE_SIZE_ERROR });
       });
     }
+    const accepted = validFiles.filter(f => oversized.indexOf(f) < 0);
+    if (!accepted.length) return;
+
+    files.push(...accepted);
+
+    const start = () => {
+      const beforeCheck = option.before_upload_check ? option.before_upload_check(uploader, accepted) : undefined;
+
+      (option.getToken || getToken)(tokenFiles, option.type, option.getTokenParam).then((res: any[]) => {
+        const exceedFiles: UploaderFile[] = [];
+
+        accepted.forEach((item, i) => {
+          const info = res && res[i];
+          if (!info) {
+            uploader.removeFile(item);
+            return;
+          }
+          // 服务端也会给一个大小上限（单位 MB），超了就移出队列
+          if (info.size && item.size > info.size * 1024 * 1024) {
+            exceedFiles.push(item);
+            uploader.removeFile(item);
+            return;
+          }
+          item.token = info.uptoken;
+          item.key = info.key;
+          item.serverName = info.serverName;
+          item.fileName = info.fileName;
+          item.url = info.url;
+        });
+
+        if (exceedFiles.length) {
+          if (initFunc.FilesAdded) initFunc.FilesAdded(uploader, []);
+          option.remove_files_callback && option.remove_files_callback(uploader, exceedFiles);
+          alert(_l('%0个文件无法上传：单个文件大小超过%1MB', exceedFiles.length, res[0].size), 2);
+        }
+
+        if (option.auto_start) {
+          Promise.resolve(beforeCheck === false ? Promise.reject(false) : beforeCheck)
+            .then(() => startQueue())
+            .catch(failResult => {
+              forEach(accepted, file => triggerUploadError(file, failResult || _l('上传前检查失败')));
+            });
+        }
+      });
+    };
+
+    trigger('FilesAdded', uploader, accepted);
+    if (initFunc.FilesAdded) {
+      // 【第三个参数 start 是个约定】h5 那边有压缩、加水印这些异步处理，
+      // 处理完才让开始上传；老实现按 up.settings.source === 'h5' 区分。
+      if (option.source === 'h5') initFunc.FilesAdded(uploader, accepted, start);
+      else {
+        initFunc.FilesAdded(uploader, accepted);
+        start();
+      }
+    } else {
+      start();
+    }
+  }
+
+  // ── 上传 ────────────────────────────────────────────────────────────────
+  function startQueue() {
+    if (destroyed) return;
+    uploader.state = UploaderState.STARTED;
+    trigger('StateChanged', uploader);
+
+    for (const file of files.slice()) {
+      if (file.status !== FileStatus.QUEUED) continue;
+      if (!file.token) continue; // 凭证还没回来；取到之后 start 会被再调一次
+      uploadOne(file);
+    }
+  }
+
+  function buildCustomVars(file: UploaderFile): Record<string, string> {
+    const vars: Record<string, string> = {};
+    // 老实现只有在 option.x_vars 是对象时才带这些自定义变量，沿用
+    if (option.x_vars === undefined || typeof option.x_vars !== 'object') return vars;
+
+    const fileExt = `.${RegExpValidator.getExtOfFileName(file.name)}`;
+    vars['x:serverName'] = file.serverName || '';
+    vars['x:filePath'] = (file.key || '').replace(file.fileName || '', '');
+    vars['x:fileName'] = (file.fileName || '').replace(/\.[^.]*$/, '');
+    vars['x:originalFileName'] = encodeURIComponent(
+      file.name.indexOf('.') > -1 ? file.name.split('.').slice(0, -1).join('.') : file.name,
+    );
+    vars['x:fileExt'] = fileExt;
+    return vars;
+  }
+
+  function uploadOne(file: UploaderFile) {
+    file.status = FileStatus.UPLOADING;
+
+    // 选中之后文件被移动/删除：记录里有 size 而原生 size 为 0
+    try {
+      const native = file.getNative();
+      if (file.size && native && !native.size) file.notExists = true;
+    } catch {
+      /* 取不到原生文件就不判，交给上传本身去失败 */
+    }
+
+    // 【先填默认参数，再让调用方改，最后读回来】调用方普遍在自己的 BeforeUpload
+    // 里写 `up.settings.multipart_params = { token, key, 'x:...': ... }`，
+    // 这是原来就有的契约。这里保住它：默认值我们给，调用方可覆盖，之后按它来传。
+    option.multipart_params = assign(
+      {},
+      { token: file.token },
+      option.save_key ? {} : { key: file.key },
+      buildCustomVars(file),
+    );
+
+    trigger('BeforeUpload', uploader, file);
+    if (initFunc.BeforeUpload) initFunc.BeforeUpload(uploader, file);
+
+    const params = (option.multipart_params || {}) as Record<string, any>;
+    const token = params.token || file.token;
+    const customVars: Record<string, string> = {};
+    for (const k of Object.keys(params)) {
+      if (k.indexOf('x:') === 0 && params[k] !== undefined) customVars[k] = String(params[k]);
+    }
+
+    if (!token) {
+      triggerUploadError(file, _l('获取上传凭证失败，请稍后重试。'), UploadError.SECURITY_ERROR);
+      return;
+    }
+
+    const task = uploadToQiniu(
+      {
+        file: file.getNative(),
+        key: option.save_key ? null : params.key || file.key || null,
+        token,
+        uphost: normalizeUpHost(option.url),
+        chunkSize: option.chunk_size as number,
+        customVars,
+        fname: file.name,
+      },
+      {
+        onProgress(loaded, total, percent) {
+          file.loaded = loaded;
+          file.percent = Math.round(percent);
+          trigger('UploadProgress', uploader, file);
+          if (initFunc.UploadProgress) initFunc.UploadProgress(uploader, file);
+        },
+        onComplete(res) {
+          tasks.delete(file.id);
+          file.status = FileStatus.DONE;
+          file.percent = 100;
+          finishFile(file, res);
+          maybeComplete();
+        },
+        onError(err) {
+          tasks.delete(file.id);
+          file.status = FileStatus.FAILED;
+          emitError({ ...err, file });
+          maybeComplete();
+        },
+      },
+    );
+
+    tasks.set(file.id, task);
+  }
+
+  /**
+   * 把七牛返回的结果补成下游要的形状。
+   *
+   * 【这几个字段是硬契约】src/components/UploadFiles/utils.tsx 的 formatResponseData
+   * 逐个读 serverName / filePath / fileName / fileExt / originalFileName / key。
+   * 补法逐条沿用老实现（原来在 mkfile 回调里做）。
+   */
+  function finishFile(file: UploaderFile, rawResponse: any) {
+    const response: Record<string, any> = assign({}, rawResponse);
+
+    if (!response.key && !file.key) {
+      triggerUploadError(file, _l('上传失败，请稍后再试。'));
+      return;
+    }
+
+    const fileExt = `.${RegExpValidator.getExtOfFileName(file.name)}`;
+    const serverFileName = file.fileName || '';
+    const fileKey = file.key || '';
+    const oldKeyDir = fileKey.replace(serverFileName, '');
+    const newKey = response.key || fileKey;
+    const newKeyDir = newKey.replace(serverFileName, '');
+    const url = file.url || '';
+
+    response.fileExt = fileExt;
+    response.fileName = RegExpValidator.getNameOfFileName(serverFileName || file.name);
+    response.filePath = newKeyDir;
+    response.originalFileName = encodeURIComponent(RegExpValidator.getNameOfFileName(file.name));
+    response.serverName = file.serverName;
+
+    file.key = newKey;
+    file.url = url.replace(oldKeyDir, newKeyDir) || response.url;
+
+    trigger('FileUploaded', uploader, file, { response });
+    if (initFunc.FileUploaded) initFunc.FileUploaded(uploader, file, { response });
+  }
+
+  function maybeComplete() {
+    const pending = files.some(f => f.status === FileStatus.QUEUED || f.status === FileStatus.UPLOADING);
+    if (pending) return;
+    uploader.state = UploaderState.STOPPED;
+    trigger('UploadComplete', uploader, files.slice());
+    if (initFunc.UploadComplete) initFunc.UploadComplete(uploader, files.slice());
+  }
+
+  // ── 选择来源 ────────────────────────────────────────────────────────────
+  const select = createFileSelect({
+    browseButton: option.browse_button,
+    dropElement: option.drop_element || (option.dragdrop ? option.browse_button : undefined),
+    pasteElement: option.paste_element,
+    multiple: option.multi_selection,
+    accept: option.accept,
+    onFiles: handleFiles,
+    onBrowse: () => {
+      trigger('Browse', uploader);
+      if (initFunc.Browse) initFunc.Browse(uploader);
+    },
   });
 
-  uploader.bind('PostInit', function bindPluploadPaste(up) {
-    var paste = document.getElementById(option.paste_element);
-    if (paste) {
-      const onPaste = throttle(e => {
-        var items = e.originalEvent.clipboardData && e.originalEvent.clipboardData.items;
-        var data = { files: [] };
-        if (items && items.length) {
-          $.each(items, function (index, item) {
-            var file = item.getAsFile && item.getAsFile();
-            if (file) {
-              file.isFromClipBoard = true;
-              data.files.push(file);
-            }
-          });
-          if (data.files.length > 0) {
-            up.addFile(data.files);
-          }
-        }
-      }, 500);
-      $(paste).on('paste', onPaste);
-    }
-  });
+  // 上面显式转发过的事件不再重复绑定（否则调用方的回调会被调两次）；
+  // 其余的直接绑上去。
+  const FORWARDED = new Set([
+    'Init',
+    'PostInit',
+    'Browse',
+    'FilesAdded',
+    'FilesRemoved',
+    'BeforeUpload',
+    'UploadProgress',
+    'FileUploaded',
+    'UploadComplete',
+    'Error',
+  ]);
+  for (const name of Object.keys(initFunc)) {
+    if (!FORWARDED.has(name)) uploader.bind(name as UploaderEvent, initFunc[name]);
+  }
 
   return uploader;
-};
+}

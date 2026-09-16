@@ -9,6 +9,7 @@ import application from 'src/api/application';
 import PageTableCon from 'src/pages/Admin/components/PageTableCon';
 import { handleMask } from 'src/pages/Admin/util';
 import { getToken } from 'src/utils/common';
+import createUploader from 'src/utils/createUploader';
 import RegExpValidator from 'src/utils/expression';
 
 const UploadContent = styled.div`
@@ -126,55 +127,27 @@ class Upload extends Component<any, any> {
   uploadFile() {
     const _this = this;
 
-    const config = {
+    // 【原来这里是直接 new plupload.Uploader】自己取凭证、自己拼 multipart_params，
+    // 做的正是 createUploader 已经封好的那两件事。换成统一实现之后：
+    //   · 取凭证交给 createUploader（bucket: 2 / type: 6 与原来的 getToken 调用一致）
+    //   · x: 自定义变量由 x_vars 开关打开，内容与原来手拼的完全一样
+    //   · filters.mime_types 换成原生 accept
+    const uploader = createUploader({
       browse_button: this.uploadFileEl,
-      url: md.global.FileStoreConfig.uploadHost,
-      file_data_name: 'file',
       multi_selection: false,
       max_file_size: '10mb',
-      filters: {
-        mime_types: [{ title: _l('图片'), extensions: 'gif,png,jpg,jpeg,bmp' }],
-        prevent_duplicates: false,
-        max_file_size: 0,
-      },
-      autoUpload: false,
-      method: {
-        FilesAdded(up, files) {
+      accept: '.gif,.png,.jpg,.jpeg,.bmp',
+      bucket: 2,
+      type: 6,
+      x_vars: {},
+      init: {
+        FilesAdded() {
           _this.setState({ loading: true });
-          const tokenFiles = [];
-
-          // 渲染图片列表
-          files.forEach(item => {
-            let fileExt = `.${RegExpValidator.getExtOfFileName(item.name)}`;
-            tokenFiles.push({ bucket: 2, ext: fileExt });
-          });
-
-          getToken(tokenFiles, 6).then(res => {
-            files.forEach((item, i) => {
-              item.token = res[i].uptoken;
-              item.key = res[i].key;
-              item.serverName = res[i].serverName;
-              item.fileName = res[i].fileName;
-            });
-
-            up.start();
-          });
-        },
-        BeforeUpload(up, file) {
-          const fileExt = `.${RegExpValidator.getExtOfFileName(file.name)}`;
-
-          up.settings.multipart_params = { token: file.token };
-          up.settings.multipart_params.key = file.key;
-          up.settings.multipart_params['x:serverName'] = file.serverName;
-          up.settings.multipart_params['x:filePath'] = file.key.replace(file.fileName, '');
-          up.settings.multipart_params['x:fileName'] = file.fileName.replace(/\.[^.]*$/, '');
-          up.settings.multipart_params['x:originalFileName'] = encodeURIComponent(
-            file.name.indexOf('.') > -1 ? file.name.split('.').slice(0, -1).join('.') : file.name,
-          );
-          up.settings.multipart_params['x:fileExt'] = fileExt;
         },
         FileUploaded(up, file, res) {
-          const data = JSON.parse(res.response);
+          // 【这里不再 JSON.parse】plupload 给的是原始响应字符串，
+          // createUploader 给的是已经解析并补好字段的对象。
+          const data = res.response;
           _this.setState({
             uploadAvatar: `${data.fileName}${data.fileExt}`,
             uploadAvatarUrl: `${data.serverName}${data.key}`,
@@ -186,13 +159,7 @@ class Upload extends Component<any, any> {
           _this.props.update({ uploadAvatar, uploadAvatarUrl });
         },
       },
-    };
-
-    const uploader = new window.plupload.Uploader(config);
-    uploader.bind('FilesAdded', config.method.FilesAdded);
-    uploader.bind('BeforeUpload', config.method.BeforeUpload);
-    uploader.bind('FileUploaded', config.method.FileUploaded);
-    uploader.bind('UploadComplete', config.method.UploadComplete);
+    });
     uploader.init();
   }
   render() {
