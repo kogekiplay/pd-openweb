@@ -140,6 +140,7 @@
     "src/components/Mingo/ChatBot/components/ChatList.ts",
     "src/components/Mingo/ChatBot/components/MingoInput.tsx",
     "src/components/Mingo/ChatBot/components/Recorder/VolumeBar.tsx",
+    "src/components/Mingo/ChatBot/components/Recorder/lib.d.ts",
     "src/components/Mingo/ChatBot/components/tryTryList.ts",
     "src/components/Mingo/ChatBot/enum.ts",
     "src/components/Mingo/ChatBot/service/index.ts",

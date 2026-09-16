@@ -25,7 +25,9 @@
       }
       (c = function () {
         var a,
-          l = document.createElement('div');
+          // 这个变量先持有 div，下一句又被重新赋成 <svg>，本来就是两种类型；
+          // 标 any 是如实描述 iconfont.cn 这段生成样板的写法，不改逻辑。
+          l: any = document.createElement('div');
         (l.innerHTML = h._iconfont_svg_string_3909252),
           (l = l.getElementsByTagName('svg')[0]) &&
             (l.setAttribute('aria-hidden', 'true'),
@@ -43,7 +45,8 @@
                 document.removeEventListener('DOMContentLoaded', t, !1), c();
               }),
               document.addEventListener('DOMContentLoaded', t, !1))
-          : document.attachEvent &&
+          : // attachEvent 是旧 IE 的 API，现代 DOM 类型里没有；这是 vendor 的降级分支
+            (document as any).attachEvent &&
             ((v = c),
             (z = h.document),
             (i = !1),

@@ -229,6 +229,20 @@ function copyStatic() {
   console.log('Copying static files');
   copyDir(resolvePath('src/common/mdcss/iconfont'), resolvePath('build/files/staticfiles/iconfont'));
   copyDir(resolvePath('staticfiles'), resolvePath('build/files/staticfiles'));
+  // vditor 的运行期资源（lute / mathjax / katex / i18n …）不放在仓里，从 npm 包复制。
+  //
+  // 【为什么必须复制到 staticfiles 下】@mdfe/vditor 在运行期自己 addScript 去取这些文件，
+  // 路径是它编译产物里写死的 `${cdn}/vditordist/js/...`，而 cdn 由
+  // src/ming-ui/components/MdMarkdown/index.tsx 设成 `${__customSubPath__}/staticfiles`。
+  // 所以它们【只能】以 .js 出现在 /staticfiles/vditordist/ 下 —— 改后缀或挪位置都会 404。
+  //
+  // 【为什么不再在仓里存一份】那 525 个文件与 node_modules/@mdfe/vditor/vditordist 逐字对应，
+  // 留在仓里只会带来两个问题：版本会和 package.json 里的 ^1.0.0 悄悄脱节；
+  // 而且没有 .prettierignore，格式化会去重排第三方发行版（实测已经改过两个文件）。
+  copyDir(
+    resolvePath('node_modules/@mdfe/vditor/vditordist'),
+    resolvePath('build/files/staticfiles/vditordist'),
+  );
   copyDir(resolvePath('staticfiles/html'), resolvePath('build/files'));
   copyLocaleFiles();
   console.log('Static files copied');

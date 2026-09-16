@@ -9,7 +9,7 @@ let vditorPromise;
 
 function loadVditor() {
   if (!vditorPromise) {
-    vditorPromise = Promise.all([import('@mdfe/vditor'), import('/staticfiles/vditordist/index.css')]).then(
+    vditorPromise = Promise.all([import('@mdfe/vditor'), import('@mdfe/vditor/vditordist/index.css')]).then(
       ([module]) => module.default || module,
     );
   }
