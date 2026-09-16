@@ -12,7 +12,7 @@ import { DATABASE_TYPE } from 'src/pages/integration/dataIntegration/constant.js
 import Des from 'src/pages/integration/dataIntegration/TaskCon/TaskCanvas/components/Des';
 import EditFeildsName from 'src/pages/integration/dataIntegration/TaskCon/TaskCanvas/components/EditFeildsName';
 import { formatControls, getNodeName } from 'src/pages/integration/dataIntegration/TaskCon/TaskCanvas/util.js';
-import 'src/pages/integration/svgIcon.js';
+import 'src/pages/integration/svgIcon';
 import 'src/pages/worksheet/components/CellControls/CellControls.less';
 import AddSourceOrDest from '../components/AddSourceOrDest';
 import { ACTION_LIST, JOIN_TYPE, NODE_TYPE_LIST, UNION_TYPE_LIST } from '../config';

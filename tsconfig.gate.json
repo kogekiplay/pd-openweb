@@ -1,33 +1,28 @@
 // 门禁专用档。与 tsconfig.json（测量用宽松基线）的区别只有两点：
 //
-// 1. checkJs: true —— 这是门禁有意义的前提。收益兑现的硬前提 (b) 是
-//    「调用点进入被检查集合」，而调用点绝大多数还是 .js。checkJs:false 时
-//    全仓只有 159 条诊断（且全在 src/api 的 .ts 里），门禁形同虚设。
-//    实测：checkJs:false -> 159 条；checkJs:true -> 21373 条。
-//
-// 2. incremental + tsBuildInfoFile —— noEmit 下 tsc 不会自己选 buildinfo 路径，
+// 1. incremental + tsBuildInfoFile —— noEmit 下 tsc 不会自己选 buildinfo 路径，
 //    必须显式给。放在 node_modules/.cache 下，天然被 .gitignore 覆盖。
 //
-// 注意 exclude 里的 src/library 是【拦不住】的：exclude 只裁剪 include 的 glob
-// 展开结果，不影响被 import 拖进 program 的文件。实测 src/pages/Admin/components/
-// UploadFile/index.js:2 import 了 src/library/plupload/createUploader，
-// src/pages/AppHomepage/AppLib/index.jsx:56 动态 import 了 applibrary_v2，
-// src/components/Agent/anonymous.js:53 动态 import 了 library/jquery/global，
-// 于是 3 个压缩产物照样贡献 1281 条诊断。只能在门禁脚本里按路径后过滤。
-//
-// 3. exclude 追加 **/*.spec.js —— 行为测试是测试脚手架，不是产品代码，不该计入
+// 2. exclude 追加 **/*.spec.ts —— 行为测试是测试脚手架，不是产品代码，不该计入
 //    产品类型健康度的基线。它们大量给 global.window / location 赋部分对象桩
-//    （`global.location = { origin, href }`），在 checkJs:true 下必然报
-//    TS2322/TS2740「缺少 Location 的其余属性」——这是桩的本意，不是缺陷。
-//    实测：不排除会新增 65 条诊断 / 37 个新 key，直接把门禁打红。
-//    注意这【不是】为了让测试落地而给门禁放水：基线仍是 5164，一条没动；
-//    改的是「哪些文件属于被测量的产品代码」这个范围问题。
-//    spec 文件不被任何产品代码 import，所以 exclude 对它们是真的有效
-//    （不同于下面 src/library 那个「拦不住」的情况）。
+//    （`global.location = { origin, href }`），真检查必然报 TS2322/TS2740
+//    「缺少 Location 的其余属性」——这是桩的本意，不是缺陷。
+//    spec 由 tsconfig.tools.json 的零容忍门禁管，不是没人管。
+//
+// 【checkJs 已移除（原来是 true）】它当初存在的理由写的是「调用点绝大多数还是 .js」，
+// 那是全量 TS 化之前的事实。现在 src 下【没有一个我们自己写的 .js】：
+// 唯一剩下的两个（Recorder/lib.js、integration/svgIcon.js）是压缩的第三方库和
+// iconfont.cn 的生成物，各自配了同名 .d.ts 供模块解析。
+// 实测 checkJs 开/关的差值是 59 条，其中 59 条全部来自那两个 vendor 文件
+// （含 3 条由它们外溢到调用点的），没有一条指向我们自己的代码 —— 纯噪声。
+//
+// 注意历史上这里还有一段「exclude 拦不住 src/library」的说明：那是因为
+// src/library 下的压缩产物会被 import 拖进 program。现在 applibrary_v2 走 .d.ts，
+// 而原先躺在那里的 createUploader 已经转成 .ts 并移到 src/utils/ —— 它是我们
+// 自己的源码，却因为 src/library/ 被门禁整目录剔噪，一直没被任何检查看过。
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "checkJs": true,
     "incremental": true,
     "tsBuildInfoFile": "node_modules/.cache/tsc-gate/gate.tsbuildinfo"
   },

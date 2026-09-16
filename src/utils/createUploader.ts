@@ -1,4 +1,4 @@
-import { assign, endsWith, find, forEach, trim } from 'lodash';
+import { assign, endsWith, find, forEach, throttle, trim } from 'lodash';
 import qiniuAjax from 'src/api/qiniu';
 import { getToken } from 'src/utils/common';
 import RegExpValidator from 'src/utils/expression';
@@ -227,7 +227,7 @@ export default option => {
     }
   });
 
-  uploader.bind('Retry', function ClearStoredProgress(up, file = {}) {
+  uploader.bind('Retry', function ClearStoredProgress(up, file: Record<string, any> = {}) {
     up.stop();
     localStorage.removeItem(file.name);
     file.loaded = 0;
@@ -238,7 +238,7 @@ export default option => {
     up.trigger('UploadFile', file);
   });
 
-  uploader.bind('BeforeUpload', function BeforeUpload(up, file = {}) {
+  uploader.bind('BeforeUpload', function BeforeUpload(up, file: Record<string, any> = {}) {
     try {
       const native = file.getNative();
       if (file.size && !native.size) {
@@ -287,10 +287,10 @@ export default option => {
       if (file.size <= chunkSize) {
         directUpload(up, file);
       } else {
-        let localFileInfo = localStorage.getItem(file.name);
+        const rawFileInfo = localStorage.getItem(file.name);
         let blockSize = chunkSize;
-        if (localFileInfo) {
-          localFileInfo = JSON.parse(localFileInfo);
+        if (rawFileInfo) {
+          const localFileInfo = JSON.parse(rawFileInfo);
           const now = new Date().getTime();
           const before = localFileInfo.time || 0;
           const aDay = 24 * 60 * 60 * 1000; //  milliseconds
@@ -548,7 +548,7 @@ export default option => {
   uploader.bind('PostInit', function bindPluploadPaste(up) {
     var paste = document.getElementById(option.paste_element);
     if (paste) {
-      const onPaste = _.throttle(e => {
+      const onPaste = throttle(e => {
         var items = e.originalEvent.clipboardData && e.originalEvent.clipboardData.items;
         var data = { files: [] };
         if (items && items.length) {

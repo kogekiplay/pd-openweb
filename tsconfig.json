@@ -14,8 +14,11 @@
     // 选 "react-jsx" 会与真实构建产物不一致。
     "jsx": "react",
 
-    "allowJs": true,
-    "checkJs": false,
+    // 【allowJs 已移除】全仓被 tsc 解析到的 .js 只剩 3 个，全是 vendor/生成物，
+    // 各自配了同名 .d.ts（applibrary_v2 / svgIcon / Recorder/lib），
+    // 模块解析走声明文件，不需要 tsc 去读那三个 .js 本身。
+    // 我们自己写的那一个（原 src/library/plupload/createUploader.js）已转成 .ts
+    // 并移到 src/utils/ —— 它原先躺在被门禁整目录剔噪的 src/library/ 下，一直没被检查过。
     "noEmit": true,
 
     "strict": false,
@@ -39,7 +42,7 @@
     // 使用的，不提供全局声明，不需要出现在这里。
     "types": ["node"],
     "paths": {
-      // 保留 jsconfig.json 原有的 4 条 alias（5 个 key）。
+      // 这 4 条 alias（5 个 key）沿自迁移前的 jsconfig.json（该文件已随迁移完成删除）。
       // 注意 webpack 侧 resolve.alias（CI/webpack.config.js:419-423）只有
       // worksheet / mobile / statistics 三条，ming-ui 是靠 resolve.modules 的
       // PATHS.src 解析的；这里显式写出，效果等价。
@@ -66,8 +69,7 @@
   // types/ 在 src 之外，必须显式列出（改成整目录纳入，新增 .d.ts 无需再动这里）。
   "include": ["src", "types"],
 
-  // src/library 是预打包的压缩产物（applibrary_v2.js 等单行数 MB），
-  // 与 jsconfig.json 原有 exclude 保持一致。
+  // src/library 是预打包的压缩产物（applibrary_v2.js 等单行数 MB）。
   // src/library 是预打包的压缩产物（applibrary_v2.js 等单行数 MB）。
   // *.spec.ts 交给 tsconfig.tools.json 的零容忍门禁管，理由见那边的注释。
   "exclude": [

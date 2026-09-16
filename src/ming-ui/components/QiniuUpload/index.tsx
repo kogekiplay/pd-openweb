@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import createUploader from 'src/library/plupload/createUploader';
+import createUploader from 'src/utils/createUploader';
 import RegExpValidator from 'src/utils/expression';
 
 export default class QiniuUpload extends React.Component<any, any> {

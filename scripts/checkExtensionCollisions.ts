@@ -31,8 +31,11 @@ const MODULE_EXT = new Set(['.js', '.jsx', '.ts', '.tsx']);
  * 往这里加条目之前先问：这真的是外部代码或生成物吗？是我们自己写的就该写 .ts。
  */
 const JS_ALLOWLIST = [
-  // 预打包的压缩产物（applibrary_v2.js 等单行数 MB），不是可读源码。
-  // 门禁的噪声剔除、tsconfig 的 exclude 一直把这里当外部代码处理。
+  // 预打包的压缩产物（applibrary_v2.js 单行 1.1MB）与 vendored 的 plupload
+  //（含 47 个语言包），不是可读源码。门禁的噪声剔除、tsconfig 的 exclude
+  // 都把这里当外部代码处理 —— 正因如此，【放我们自己的源码进来是危险的】：
+  // createUploader.ts（572 行、import 了 src/api 与 src/utils）曾经就躺在
+  // src/library/plupload/ 下，于是从来没被任何门禁看过。它已移到 src/utils/。
   'src/library/',
 
   // iconfont.cn 生成的 SVG symbol 注入脚本，由 scripts/updateIconfont.ts 更新。

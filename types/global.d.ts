@@ -140,7 +140,19 @@ declare var wx: any; // 外链 script https://res.wx.qq.com/open/js/jweixin-1.2.
 declare var dd: any; // 外链 script //g.alicdn.com/dingding/dingtalk-jsapi/2.6.41/dingtalk.open.js
 declare var AMap: any; // 动态注入 script，见 src/ming-ui/components/amap/MapLoader.js:43
 declare var plupload: any; // 上传库，未登记在 package.json，运行期全局（eslint.config.js 登记）
-declare var moxie: any; // plupload 的运行时伴生库，同上
+/**
+ * plupload 的运行时伴生库 Moxie。【两个全局都真实存在，而且不是一回事】——
+ * 实测（jsdom 里加载 src/library/plupload/plupload.full.min.js 后看 window）：
+ *   moxie  -> 分层命名空间：core / runtime / file / xhr / image
+ *             例：new moxie.file.File(null, f)（UploadAssistant 就是这么用的）
+ *   mOxie  -> 扁平命名空间：Env / File / Blob / Image / utils…
+ *             例：mOxie.Env.browser（createUploader 就是这么用的）
+ * 注意 mOxie.file.File 是 undefined、moxie.Env 也不存在，两边不能互换。
+ * 原先这里只声明了小写那个，于是 createUploader 迁进类型检查后报了 7 条 TS2552
+ *（"Cannot find name 'mOxie'. Did you mean 'moxie'?" —— 这次编译器猜错了）。
+ */
+declare var moxie: any;
+declare var mOxie: any;
 declare var blobStream: any; // 未登记在 package.json，运行期全局（eslint.config.js 登记）
 declare var VConsole: any; // 移动端调试面板，未登记在 package.json（eslint.config.js 登记）
 declare var IM: any; // 站内即时通讯 SDK，宿主提供（eslint.config.js 登记）

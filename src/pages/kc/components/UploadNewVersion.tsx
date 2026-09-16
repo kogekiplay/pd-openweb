@@ -1,6 +1,6 @@
 ﻿import React from 'react';
 import service from '../api/service';
-import createUploader from 'src/library/plupload/createUploader';
+import createUploader from 'src/utils/createUploader';
 import RegExpValidator from 'src/utils/expression';
 import { UPLOAD_ERROR } from '../constant/enum';
 import uploadNewVersionDailog from './kcUploadNewVersion/kcUploadNewVersion';

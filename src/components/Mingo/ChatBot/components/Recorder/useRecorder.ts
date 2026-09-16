@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import init from './lib.js';
+import init from './lib';
 
 init();
 

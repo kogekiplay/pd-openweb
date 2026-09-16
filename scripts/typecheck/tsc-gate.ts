@@ -26,8 +26,10 @@ const TSCONFIG = 'tsconfig.gate.json';
 // ---------------------------------------------------------------- 噪声定义
 // 三类噪声，每类都必须能公示剔除前后的数字（见 --stats）。
 const NOISE = {
-  // (1) src/library：4 个预打包压缩产物。eslint 已 ignore，tsc 的 exclude 拦不住
-  //     （被 import 拖进 program）。applibrary_v2.js 单行 800KB+，诊断全是噪声。
+  // (1) src/library：预打包压缩产物（applibrary_v2.js 单行 1.1MB）与 vendored 的
+  //     plupload。eslint 已 ignore，tsc 的 exclude 拦不住（被 import 拖进 program）。
+  //     ⚠ 这条规则是【整目录】剔除，所以往 src/library/ 放我们自己的源码 = 让它
+  //     对所有门禁隐身。createUploader 就这么隐身了很久，现已移到 src/utils/。
   library: rel => rel.startsWith('src/library/'),
 
   // (2) __ 前缀探针文件：R14 的教训 —— 别人建的未跟踪探针曾污染测量文件集。

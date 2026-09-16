@@ -3,7 +3,7 @@ import cx from 'classnames';
 import * as Immutable from 'immutable';
 import _ from 'lodash';
 import { Button, Dialog, Support } from 'ming-ui';
-import createUploader from 'src/library/plupload/createUploader';
+import createUploader from 'src/utils/createUploader';
 import { UPLOAD_ERROR, UPLOAD_STATUS } from 'src/pages/kc/constant/enum';
 import * as utils from 'src/pages/kc/utils';
 import UploadAction from './UploadAction';
