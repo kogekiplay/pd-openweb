@@ -20,7 +20,259 @@
 
 // ---- 由 src/common/global.js 在启动时挂到 window 上 ----
 declare var _l: any; // src/common/global.js:108 `window._l = function (key, ...args) {`（i18n）
-declare var md: any; // src/common/global.js:190 `window.md = {`（全局配置树 md.global.*）
+/**
+ * 全局配置树。【形状取自生产运行时，不是照文档抄的】——
+ * 2026-09-16 在 oa.tlytelec.com 上把 md.global 逐层 dump 下来生成。
+ *
+ * 【为什么值得从 any 改成真实形状】全仓读 md.global.* 约 1700 次
+ *（Account 999、SysSettings 260、Config 250、FileStoreConfig 123），
+ * 是被引用最多的一个对象。标成 any 时属性名写错【不会有任何提示】，
+ * 拿到 undefined 只会在运行时表现成功能悄悄不生效。
+ *
+ * 【可选键是如实描述，不是放水】带 ? 的那些在本套私有化部署的采样里确实没有，
+ * 但代码会读，且都是合理的：外部门户登录才有的 Account.appId、
+ * SaaS 才有的 Config.MdNoticeServer / disableKf5 等。
+ * 这批键是【由编译器指出来的】：先按采样写死，再把报错的键逐个改成可选。
+ *
+ * 【采样的局限】只是一套部署、一个账号。将来若在别处见到新键，按同样办法补，
+ * 不要图省事改回 any —— 那等于把 1700 个调用点的保护一次性丢掉。
+ */
+declare var md: {
+  /**
+   * 【运行时默认没有这个键】它是从浏览器控制台手动设的调试开关，
+   * 调用点一律写成 md.cheat && md.cheat.xxx。标成可选是如实描述，不是放水。
+   */
+  cheat?: Record<string, any>;
+  global: {
+    Account: {
+      accountId: string;
+      hrVisible: boolean;
+      guideSettings: Record<string, any>;
+      lang: string;
+      appLang: string;
+      langModified: boolean;
+      map: number;
+      timeZone: number;
+      fullname: string;
+      email: string;
+      mobilePhone: string;
+      avatarMiddle: string;
+      avatar: string;
+      createTime: string;
+      numLogin: number;
+      companyName: string;
+      profession: string;
+      isOpenMessageSound: boolean;
+      isOpenMessageTwinkle: boolean;
+      backHomepageWay: number;
+      isOpenMingoAI: boolean;
+      isOpenMessage: boolean;
+      isOpenSearch: boolean;
+      isOpenFavorite: boolean;
+      isShowToolName: boolean;
+      isOpenMessageList: boolean;
+      isOpenCommonApp: boolean;
+      commonAppShowType: number;
+      commonAppOpenType: number;
+      messageListShowType: number;
+      projects: any[];
+      isPortal: boolean;
+      isSSO: boolean;
+      superAdmin: boolean;
+      appId?: any;
+      cheat?: any;
+      watermark?: any;
+      watermarkTxt?: any;
+      addressSuffix?: any;
+      externalProjects?: any;
+    };
+    Config: {
+      DefaultLang: string;
+      ServiceTel: string;
+      DefaultConfig: Record<string, any>;
+      AjaxApiUrl: string;
+      WorkFlowUrl: string;
+      WsReportUrl: string;
+      FormOAUrl: string | null;
+      HrCheckUrl: string | null;
+      HrDossierUrl: string | null;
+      WebUrl: string;
+      PlatformUrl: string;
+      AccountUrl: string;
+      AppFileServer: string;
+      WorksheetDownUrl: string;
+      DataPipelineUrl: string;
+      AggregationUrl: string;
+      HDPUrl: string;
+      HDPApiUrl: string;
+      PlatformApiUrl: string;
+      KnowledgeApiUrl: string;
+      PluginRuntimeUrl: string | null;
+      WorkflowPluginUrl: string;
+      PublicFormWebUrl: string | null;
+      IntegrationAPIUrl: string;
+      DocviewStartUrl: string;
+      WpsDocEditUrl: string;
+      WpsDocPreviewUrl: string;
+      OpenApiDocUrl: string;
+      CloudApiUrl: string | null;
+      Logo: string;
+      IsLocal: boolean;
+      CaptchaType: number;
+      CaptchaAppId: number;
+      DefaultRegion: string;
+      DefaultOftenRegions: any[];
+      DefaultMap: number;
+      DefaultTimeZone: number;
+      ServerTime: string;
+      MarketUrl: string | null;
+      MCPUrl: string;
+      AgentUrl: string;
+      DefaultSmsProvider: any[];
+      EnableWpsDocPreview: boolean;
+      ProductCode: string;
+      ApiUrl: string;
+      MapUrl: string;
+      HelpUrl: string;
+      PdocUrl: string;
+      Version: string;
+      IsCluster: boolean;
+      IsMultiMds2: boolean;
+      IsPlatformLocal: boolean;
+      IsCobranding: boolean;
+      EnableDataPipeline: boolean;
+      EnableHDP: boolean;
+      EnableRAG: boolean;
+      SessionCookieExpireMinutes: number;
+      HttpOnly: boolean;
+      ShowLicense: boolean;
+      EnableBot: boolean;
+      EnableDocEdit: boolean;
+      DisableModules: any[];
+      pushUniqueId: string;
+      MdNoticeServer?: any;
+      disableKf5?: any;
+    };
+    PriceConfig: {
+      SmsPrice: string;
+      EmailPrice: string;
+      PdfPrice: string;
+      DataPipelinePrice: string;
+    };
+    getCaptchaType: Function;
+    SysSettings: {
+      passwordRegex: string;
+      passwordRegexTip: string;
+      hideHelpTip: boolean;
+      enableMobilePhoneRegister: boolean;
+      enableEmailRegister: boolean;
+      hideRegister: boolean;
+      hideBrandLogo: boolean;
+      brandLogoHeight: number;
+      brandLogoUrl: string;
+      hideBrandName: boolean;
+      forbidSuites: string;
+      enableFooterInfo: boolean;
+      footerThemeColor: number;
+      onlyAdminCreateApp: boolean;
+      createAppDict: Record<string, any>;
+      hideDownloadApp: boolean;
+      downloadAppRedirectUrl: string;
+      hideTemplateLibrary: boolean;
+      templateLibraryTypes: string;
+      templateLibraryAuditProjectId: string;
+      hideIntegration: boolean;
+      hideIntegrationLibrary: boolean;
+      hidePlugin: boolean;
+      hideDataPipeline: boolean;
+      hideHDPAI: boolean;
+      hideAIBasicFun: boolean;
+      hideAIGCNode: boolean;
+      hideRagEmbedFun: boolean;
+      hideOCR: boolean;
+      hideWorkWeixin: boolean;
+      hideDingding: boolean;
+      hideFeishu: boolean;
+      hideLark: boolean;
+      hideWelink: boolean;
+      hideWeixin: boolean;
+      workflowBatchGetDataLimitCount: number;
+      worktableBatchOperateDataLimitCount: number;
+      fileUploadLimitSize: number;
+      installCaptainUrl: string;
+      serviceStatusWebhookUrl: string;
+      workWxSelfBuildNoticUrl: string;
+      enableAIErrorPush: boolean;
+      refreshReportInterval: number;
+      allowBindAccountNoVerify: boolean;
+      workflowSubProcessDataLimitCount: number;
+      worksheetExcelImportDataLimitCount: number;
+      exportAppWorksheetLimitCount: number;
+      appRecycleDays: number;
+      appItemRecycleDays: number;
+      worksheetRowRecycleDays: number;
+      appBackupRecycleDays: number;
+      enableTwoFactorAuthentication: boolean;
+      twoFactorAuthenticationSwitchType: number;
+      twoFactorAuthenticationPriorityType: number;
+      firstLoginResetPassword: boolean;
+      passwordOverdueDays: number;
+      passwordOverdueDaysUpdateTimestamp: number;
+      brandName: string;
+      brandLogo: string;
+      brandHomeImage: string;
+      brandHomeImageUrl: string;
+      enableDeclareConfirm: boolean;
+      enableDeclareRegisterConfirm: boolean;
+      enableCreateProject: boolean;
+      enableEditAccountInfo: boolean;
+      enableVerificationCodeLogin: boolean;
+      enableSmsCustomContent: boolean;
+      enableBackupWorksheetData: boolean;
+      enableMultipleDevicesUse: boolean;
+      multipleDevicesUseSwitchType: number;
+      enableRequiredStrictVerification: boolean;
+      enableMap: boolean;
+      enableSso: boolean;
+      ssoIconUrl: string;
+      enablePromptNewVersion: boolean;
+      sessionExpireRedirectType: number;
+      enableVoiceToText: boolean;
+      enableOnlinSearch: boolean;
+      enableAIConnector: boolean;
+      aiBrandName: string;
+      aiBrandThemeColor: string;
+      aiBrandLogoUrl: string;
+      allowSmsSignatureAutoApprove: boolean;
+      hideMicrosoftEntra: boolean;
+      defaultLang: number;
+      initialized: boolean;
+      hideWorksheetControl?: any;
+      brandLogoRedirectUrl?: any;
+      loginGotoUrl?: any;
+      loginGotoAppId?: any;
+    };
+    APPInfo: {
+      taskAppID: string;
+      taskFolderAppID: string;
+      calendarAppID: string;
+      kcAppID: string;
+      worksheetAppID: string;
+      worksheetRowAppID: string;
+    };
+    FileStoreConfig: {
+      uploadHost: string;
+      uploadHostV2: string;
+      documentHost: string;
+      pictureHost: string;
+      mediaHost: string;
+      pubHost: string;
+    };
+    Versions: Record<string, any>[];
+    ProjectLangs?: any;
+    PorjectColor: Record<string, any>[];
+  };
+};
 /**
  * src/common/global.js:721 `window.mdyAPI = (controllerName, actionName, requestData, options = {}) =>`
  *

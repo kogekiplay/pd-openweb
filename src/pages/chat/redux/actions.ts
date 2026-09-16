@@ -1,10 +1,10 @@
 import _ from 'lodash';
+import type { AppDispatch, GetState } from 'src/redux/types';
 import { dateConvertToUserZone } from 'src/utils/project';
 import * as utils from '../utils';
 import * as ajax from '../utils/ajax';
 import Constant from '../utils/constant';
 import * as socket from '../utils/socket';
-import type { AppDispatch, GetState } from 'src/redux/types';
 
 /**
  * 设置会话列表
@@ -1019,7 +1019,25 @@ export const pushPageMessage = (id, result) => {
  */
 export const addMessage = (newMessage, prevMessage) => (dispatch: AppDispatch) => {
   const { Account: account } = md.global;
-  const message = {
+  // sysType / refer / card / isPrepare 是按消息种类【后面才补上】的
+  //（系统消息 / 引用 / 卡片 / 预发送），所以要在这里写出形状。
+  // 原先 md.global 是 any，这个字面量的推断类型跟着变宽，事后加属性不报错。
+  const message: {
+    waitingId: any;
+    from: string;
+    fromAccount: { email: string; id: string; logo: string; name: string };
+    msg: { con: any };
+    to: any;
+    type: any;
+    time: any;
+    iswd: boolean;
+    sendMsg: any;
+    isMineMessage: boolean;
+    sysType?: any;
+    refer?: any;
+    card?: any;
+    isPrepare?: boolean;
+  } = {
     waitingId: newMessage.waitingid,
     // id: newMessage.waitingid,
     from: account.accountId,

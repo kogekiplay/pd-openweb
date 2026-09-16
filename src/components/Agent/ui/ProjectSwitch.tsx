@@ -75,7 +75,9 @@ export default function ProjectSwitch({ value, onChange = () => {}, placement = 
 
   const rowH = 40;
   const maxRows = Math.ceil((window.innerHeight - 160) / rowH);
-  let list = projects.map(p => (
+  // 【要标成 ReactNode】下面超过 maxRows 时会把整个数组换成单个 <ScrollCon>，
+  // 不标的话推断成 Element[]，那一行赋值就报类型不符。
+  let list: React.ReactNode = projects.map(p => (
     <ProjectItem
       key={p.projectId}
       className={cx('ellipsis', { active: p.projectId === value })}

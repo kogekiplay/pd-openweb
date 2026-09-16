@@ -27,7 +27,28 @@ const CONNECT_EXPLAIN_MAX_LENGTH = 1000;
 const PUBLISH_FIELD_MAX_LENGTH = 200;
 
 // 默认表单数据
-const getDefaultInfo = () => ({
+/**
+ * 发布信息。带 ? 的几个不在默认值里，是 fetchDetail 拿到详情后
+ *（`{ ...detailInfo, allowEdit }`）才补上的，但表单与展示都会读。
+ * 【原先没写形状】那时 md.global 是 any，getDefaultInfo 的返回类型跟着变宽，
+ * 读这些字段不报错；现在 md.global 有了真实类型，就得如实写出来。
+ */
+interface PublishInfo {
+  name: string;
+  explain: string;
+  accountId: string;
+  companyId: string;
+  /** 是否允许编辑 */
+  allowEdit: boolean;
+  // ---- 以下由详情接口补上 ----
+  docUrl?: string;
+  company?: string;
+  apiCount?: number;
+  installCount?: number;
+  time?: string;
+}
+
+const getDefaultInfo = (): PublishInfo => ({
   name: '',
   explain: '',
   accountId: md.global.Account.accountId,
@@ -322,7 +343,9 @@ function PublishDialog(props) {
               selectedList={selectedList}
               onChange={selectedList => setState({ selectedList, isCheckAll: selectedList.length >= list.length })}
               isCheckAll={isCheckAll}
-              onCheck={(checked: boolean) => setState({ selectedList: checked ? list.map(o => o.id) : [], isCheckAll: checked })}
+              onCheck={(checked: boolean) =>
+                setState({ selectedList: checked ? list.map(o => o.id) : [], isCheckAll: checked })
+              }
             />
           </div>
         </Wrap>

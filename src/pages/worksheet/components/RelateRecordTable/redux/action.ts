@@ -26,10 +26,10 @@ import { formatValuesOfCondition, getFilter } from 'src/pages/worksheet/common/W
 import { getTranslateInfo } from 'src/utils/app';
 import { getFilledRequestParams } from 'src/utils/common';
 import { controlState, replaceByIndex } from 'src/utils/control';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import { handleRowData } from 'src/utils/record';
 import { replaceAdvancedSettingTranslateInfo, replaceControlsTranslateInfo } from 'src/utils/translate';
 import { getVisibleControls } from '../utils';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import type { RelateRecordTableDispatch, RelateRecordTableGetState } from './types';
 
 /**
@@ -56,7 +56,9 @@ function getTreeRootRows(records: RecordRow[] = [], { requireDefinedPid = false 
   records.forEach((r: RecordRow) => {
     safeParse(r.childrenids, 'array').forEach(id => id && childIds.add(id));
   });
-  return records.filter((r: RecordRow) => !r.pid && !childIds.has(r.rowid) && (!requireDefinedPid || typeof r.pid !== 'undefined'));
+  return records.filter(
+    (r: RecordRow) => !r.pid && !childIds.has(r.rowid) && (!requireDefinedPid || typeof r.pid !== 'undefined'),
+  );
 }
 
 export function updateTreeNodeExpansion(
@@ -957,7 +959,9 @@ export function handleSaveSheetLayout({ updateWorksheetControls, columns, column
     }
 
     if (!isEmpty(sheetHiddenColumnIds)) {
-      newControl.showControls = newControl.showControls.filter((id: FormControl) => !includes(sheetHiddenColumnIds, id));
+      newControl.showControls = newControl.showControls.filter(
+        (id: FormControl) => !includes(sheetHiddenColumnIds, id),
+      );
     }
 
     // 筛选条件保存时values处理一下;
@@ -1131,7 +1135,13 @@ export function updateFilter() {
   };
 }
 
-export function batchUpdateRecords({ selectedRowIds = [], records = [], activeControl } = {}) {
+// 【activeControl 没有默认值，所以要写出形状】只给 `= {}` 兜底时，
+// 参数类型由带默认值的那两个推出来，activeControl 根本不在里面，读它就报错。
+export function batchUpdateRecords({
+  selectedRowIds = [],
+  records = [],
+  activeControl,
+}: { selectedRowIds?: any[]; records?: any[]; activeControl?: any } = {}) {
   return (dispatch: RelateRecordTableDispatch, getState: RelateRecordTableGetState) => {
     const state = getState();
     const { isCharge, base, controls } = state;

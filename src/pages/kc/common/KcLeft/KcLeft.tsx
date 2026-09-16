@@ -160,7 +160,10 @@ class KcLeft extends Component<any, any> {
       this.setState({ loadingProjects, foldedProjects });
     }
 
-    const query = { accountId: md.global.Account.accountId };
+    // 两个分支各自补一个字段，所以要把形状写出来（原先靠 md.global 是 any 才没报错）
+    const query: { accountId: string; projectId?: string; excludeProjectIds?: string[] } = {
+      accountId: md.global.Account.accountId,
+    };
 
     if (projectId) {
       query.projectId = projectId;

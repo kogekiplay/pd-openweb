@@ -57,6 +57,9 @@ const SearchBox = props => {
     const paramsData = getParamsByConfigs(recordId, requestMap, formData, keywords);
 
     let params = {
+      // 【原先是字面量之后 params.formId = ... 补上去的】搬进来是为了让形状完整：
+      // 条件不成立时这个键同样不会出现，发出去的负载逐字节一致。
+      ...(window.isPublicWorksheet ? { formId: window.publicWorksheetShareId } : {}),
       data: !requestMap.length || _.isEmpty(paramsData) ? '' : paramsData,
       projectId,
       workSheetId: worksheetId,
@@ -67,10 +70,6 @@ const SearchBox = props => {
       actionType: enumDefault2 === 1 ? 13 : 8,
       pushUniqueId: md.global.Config.pushUniqueId,
     };
-
-    if (window.isPublicWorksheet) {
-      params.formId = window.publicWorksheetShareId;
-    }
 
     postList.current = worksheetAjax.excuteApiQuery(params);
 
