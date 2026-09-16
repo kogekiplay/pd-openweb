@@ -242,6 +242,7 @@
     "src/pages/AuthService/login/style.ts",
     "src/pages/AuthService/oauthConsent/style.ts",
     "src/pages/AuthService/portalAccount/FindPassWord/style.ts",
+    "src/pages/AuthService/portalAccount/TpAuthLogin.tsx",
     "src/pages/AuthService/portalAccount/style.ts",
     "src/pages/AuthService/register/container/create/style.ts",
     "src/pages/AuthService/register/container/index.ts",

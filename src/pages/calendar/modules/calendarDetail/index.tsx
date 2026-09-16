@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import { createRoot } from 'react-dom/client';
 import { shallowEqual } from 'react-redux';
-import DocumentTitle from 'react-document-title';
 import _ from 'lodash';
 import { Dialog, LoadDiv } from 'ming-ui';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import ErrorState from 'src/components/errorPage/errorState';
 import { htmlDecodeReg, pathCompletion } from 'src/utils/common';
-import { Config, getCalendarDetail, getParamsFromUrl } from './common';
 // v2 时代这里是 `$('#calendar').fullCalendar('refetchEvents')`。FullCalendar 7 不再是
 // jQuery 插件，那个调用会直接抛 TypeError —— 迁移时漏改了这两处，靠给 `$` 标上真实
 // 类型（types/global.d.ts）才暴露出来。refetchEvents() 在没有日历实例时安全空转。
 import { refetchEvents } from '../calendar/fcInstance';
+import { Config, getCalendarDetail, getParamsFromUrl } from './common';
 import CalendarDetail from './root';
 
 class Container extends Component<any, any> {

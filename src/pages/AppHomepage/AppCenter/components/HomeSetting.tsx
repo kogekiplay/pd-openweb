@@ -107,9 +107,10 @@ export default function HomeSetting(props) {
           <i className="icon-tune Font20 textSecondary"></i>
         </BaseBtnCon>
       </Tooltip>
+      {/* antd 里 maskStyle 已改成 styles.mask、width 已改成 size，旧写法只会打弃用告警 */}
       <CustomDrawer
-        maskStyle={{ backgroundColor: 'transparent' }}
-        width={360}
+        styles={{ mask: { backgroundColor: 'transparent' } }}
+        size={360}
         title={_l('自定义')}
         placement="right"
         open={customDrawerVisible}

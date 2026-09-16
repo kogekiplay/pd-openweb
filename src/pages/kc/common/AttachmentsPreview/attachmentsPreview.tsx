@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import DocumentTitle from 'react-document-title';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import Button from 'ming-ui/components/Button';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import LoadDiv from 'ming-ui/components/LoadDiv';
 import { addToken, browserIsMobile, formatFileSize, getClassNameByExt } from 'src/utils/common';
 import RegExpValidator from 'src/utils/expression';

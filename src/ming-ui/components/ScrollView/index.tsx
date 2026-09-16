@@ -43,7 +43,37 @@ const defaultOptions = {
   },
 };
 
-const ScrollView = forwardRef((props, ref) => {
+/**
+ * ScrollView 的 props，字段与下面的 propTypes 对应。
+ *
+ * 【索引签名是如实描述】未列出的 prop 会随 ...rest 透传给 OverlayScrollbarsComponent，
+ * 调用点确实会传 id / data-* / 事件处理器之类。
+ * 没有这份类型时 forwardRef 把 props 推成 {}，解构任何字段都报"属性不存在"。
+ */
+interface ScrollViewProps {
+  children?: React.ReactNode;
+  className?: string;
+  theme?: string;
+  disableParentScroll?: boolean;
+  enableSwipeBack?: boolean;
+  enableWheelDirectionControl?: boolean;
+  springBackMode?: '' | 'disableSpringBack' | 'disableSpringBackX' | 'disableSpringBackY';
+  allowance?: number;
+  style?: React.CSSProperties;
+  onScrollEnd?: (...args: any[]) => void;
+  onReachVerticalEdge?: (...args: any[]) => void;
+  onReachHorizontalEdge?: (...args: any[]) => void;
+  onScroll?: (...args: any[]) => void;
+  customScroll?: (...args: any[]) => void;
+  setViewPortRef?: (el: any) => void;
+  /** 打到真正的滚动内容元素上的 className（见下面那段 useEffect 的说明） */
+  scrollContentClassName?: string;
+  /** OverlayScrollbars 的配置，形状由库自己定义，这里不复述 */
+  options?: any;
+  [key: string]: any;
+}
+
+const ScrollView = forwardRef((props: ScrollViewProps, ref) => {
   const {
     children,
     className = '',
@@ -61,6 +91,7 @@ const ScrollView = forwardRef((props, ref) => {
     onScroll,
     customScroll,
     setViewPortRef,
+    scrollContentClassName,
     ...rest
   } = props;
   const isMobile = browserIsMobile();
@@ -75,6 +106,27 @@ const ScrollView = forwardRef((props, ref) => {
   }, [options, disableParentScroll, enableWheelDirectionControl, theme, enableSwipeBack]);
   const osRef = useRef<any>(undefined);
   const lastScroll = useRef({ top: 0, left: 0 });
+
+  /**
+   * 把 scrollContentClassName 打到真正的内容元素上。
+   *
+   * 【为什么需要这段】这个 prop 原先没有被消费，只是随 ...rest 落到 DOM 上，
+   * React 报 "does not recognize the scrollContentClassName prop"。
+   * 但它【不是死属性】：src/pages/feed/.../postFilter.tsx 用
+   * `document.querySelector('.feedAppScrollContent')` 取弹层容器 ——
+   * 类名不存在时那句恒为 null，弹层只能回落到默认容器。
+   * 应该是从 perfect-scrollbar 换到 OverlayScrollbars 时漏掉的。
+   * OverlayScrollbars 没有直接给内容元素加类的选项，只能拿实例后自己挂。
+   */
+  useEffect(() => {
+    if (!scrollContentClassName || !osRef.current) return;
+
+    const content = osRef.current.osInstance()?.elements()?.content;
+    if (!content) return;
+
+    content.classList.add(scrollContentClassName);
+    return () => content.classList.remove(scrollContentClassName);
+  }, [scrollContentClassName]);
 
   // 设置滚动位置
   const scrollTo = (scrollOptions = { top: 0, left: 0 }, behavior = 'auto') => {

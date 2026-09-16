@@ -1,8 +1,8 @@
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
-import DocumentTitle from 'react-document-title';
 import { Popup } from 'antd-mobile';
 import { match } from 'path-to-regexp';
 import { Dialog, FunctionWrap, LoadDiv } from 'ming-ui';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import merchantInvoiceApi from 'src/api/merchantInvoice';
 import paymentApi from 'src/api/payment';
 import userApi from 'src/api/user';

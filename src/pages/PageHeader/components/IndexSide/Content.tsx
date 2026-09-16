@@ -207,6 +207,7 @@ export default function SideContent(props) {
             ),
         ).map(item => (
           <div
+            key={item.id}
             className="cooperateItem flex"
             onClick={() => {
               item.id === 'hr' ? window.open(item.href) : navigateTo(item.href);

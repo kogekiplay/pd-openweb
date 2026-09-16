@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
-import DocumentTitle from 'react-document-title';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
@@ -23,6 +22,7 @@ import {
   WaterMark,
 } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import ErrorBoundary from 'ming-ui/components/ErrorBoundary';
 import DateRangePicker from 'ming-ui/components/NewDateTimePicker/date-time-range';
 import processVersion from '../api/processVersion';

@@ -1,16 +1,16 @@
 import React, { Fragment } from 'react';
-import DocumentTitle from 'react-document-title';
-import copy from 'src/utils/copyToClipboard';
-import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
+import _ from 'lodash';
 import { Dialog, Icon, Menu, MenuItem, Support } from 'ming-ui';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import sheetAjax from 'src/api/worksheet';
 import processVersionAjax from 'src/pages/workflow/api/processVersion';
 import { APPROVAL_SYS } from 'src/pages/Print/core/config';
 import { ALL_SYS } from 'src/pages/widgetConfig/config/widget';
+import type { FormControl } from 'src/utils/controlTypes';
+import copy from 'src/utils/copyToClipboard';
 import { createEditFileLink } from './utils';
 import './index.less';
-import type { FormControl } from 'src/utils/controlTypes';
 
 let controlNo = [22, 10010, 43, 45, 21]; //分割线、备注、OCR、嵌入字段、自由链接/
 const qrcodeField = ['sharelink', 'privatelink', 'recordid'];

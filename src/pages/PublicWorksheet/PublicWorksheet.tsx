@@ -1,11 +1,11 @@
 import React from 'react';
-import DocumentTitle from 'react-document-title';
 import { generate } from '@ant-design/colors';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button, Dialog, RichText, ScrollView, Skeleton } from 'ming-ui';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import { Absolute, FormTopImgCon } from 'worksheet/components/Basics';
 import { VerificationPass } from 'worksheet/components/ShareState';
 import PublicAppLangDropdown from 'src/components/PublicAppLangDropdown';

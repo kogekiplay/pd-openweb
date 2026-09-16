@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Provider } from 'react-redux';
 import cx from 'classnames';
 import functionWrap from 'ming-ui/components/FunctionWrap';
@@ -39,7 +39,12 @@ const RecordInfoPage = props => {
 
 export default RecordInfoPage;
 
-export const RecordInfoModal = forwardRef(props => {
+// 【原先包了 forwardRef 但渲染函数只有一个形参】React 会报
+//   forwardRef render functions accept exactly two parameters: props and ref.
+//   Did you forget to use the ref parameter?
+// 实测三个调用点（MobileForm 的 RelateRecordCards / RelationSearch、
+// worksheet 的 RelateRecordCards）都没有传 ref，包这一层没有任何作用，直接去掉。
+export const RecordInfoModal = (props: any) => {
   const {
     rowId,
     appId,
@@ -111,6 +116,6 @@ export const RecordInfoModal = forwardRef(props => {
       )}
     </MobilePopup>
   );
-});
+};
 
 export const openMobileRecordInfo = props => functionWrap(RecordInfoModal, { ...props });

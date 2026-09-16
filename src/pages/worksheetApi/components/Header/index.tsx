@@ -1,10 +1,10 @@
 ﻿import React, { Fragment, memo, useState } from 'react';
-import DocumentTitle from 'react-document-title';
 import { generate } from '@ant-design/colors';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Icon, SvgIcon } from 'ming-ui';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import Share from 'worksheet/components/Share';
 import CreateByMingDaoYun from 'src/components/CreateByMingDaoYun';
 import PublicAppLangDropdown from 'src/components/PublicAppLangDropdown';

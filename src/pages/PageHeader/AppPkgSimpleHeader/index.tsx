@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import DocumentTitle from 'react-document-title';
 import _ from 'lodash';
 import { navigateTo } from 'router/navigateTo';
 import styled from 'styled-components';
 import { SvgIcon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import appManagementApi from 'src/api/appManagement';
 import homeApp from 'src/api/homeApp';
 import { routerConfigs } from 'src/pages/AppSettings/routerConfig.js';

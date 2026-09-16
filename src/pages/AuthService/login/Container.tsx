@@ -1,8 +1,8 @@
 import React, { useRef } from 'react';
-import DocumentTitle from 'react-document-title';
 import { useKey } from 'react-use';
 import _ from 'lodash';
 import { Checkbox, LoadDiv } from 'ming-ui';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import { captcha } from 'ming-ui/functions';
 import loginController from 'src/api/login';
 import { maskValue } from 'src/pages/Admin/security/account/utils';

@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from 'react';
-import DocumentTitle from 'react-document-title';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Dialog, Icon, LoadDiv, Support } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import CheckBox from 'ming-ui/components/Checkbox';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import sheetAjax from 'src/api/worksheet';
 import AggTableAjax from 'src/pages/integration/api/aggTable.js';
 import SyncTask from 'src/pages/integration/api/syncTask.js';

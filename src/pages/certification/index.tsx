@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import DocumentTitle from 'react-document-title';
 import { useSetState } from 'react-use';
 import { Form, Popover } from 'antd';
+import Trigger from '@rc-component/trigger';
 import { createParser } from 'eventsource-parser';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Avatar, Button, Icon, LoadDiv, Qr } from 'ming-ui';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import certificationApi from 'src/api/certification';
 import sseAjax from 'src/api/sse';
 import Empty from 'src/pages/Admin/common/TableEmpty';

@@ -1,5 +1,4 @@
 import React, { Fragment, useContext, useEffect, useRef, useState } from 'react';
-import DocumentTitle from 'react-document-title';
 import { useMeasure } from 'react-use';
 import cx from 'classnames';
 import _, { get } from 'lodash';
@@ -7,6 +6,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Icon, ScrollView, Skeleton } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import DragMask from 'worksheet/common/DragMask';
 import { RECORD_INFO_FROM } from 'worksheet/constants/enum';
 import ViewContext from 'worksheet/views/ViewContext';
@@ -17,11 +17,11 @@ import { getControlsByTab, isPublicLink } from 'src/components/Form/core/utils';
 import RecordPay from 'src/components/RecordPay';
 import { browserIsMobile } from 'src/utils/common';
 import { controlState } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import Abnormal from './Abnormal';
 import FormCover from './FormCover';
 import FormHeader from './FormHeader';
 import FormSection, { getDefaultIsUnfold } from './FormSection';
-import type { FormControl } from 'src/utils/controlTypes';
 
 export const RecordFormContext = React.createContext();
 

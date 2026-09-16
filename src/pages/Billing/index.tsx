@@ -1,7 +1,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import DocumentTitle from 'react-document-title';
 import styled from 'styled-components';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import preall from 'src/common/preall';
 import AI from './components/AI';
 import Base from './components/Base';

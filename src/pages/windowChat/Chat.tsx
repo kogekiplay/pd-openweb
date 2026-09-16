@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import DocumentTitle from 'react-document-title';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import DragMask from 'worksheet/common/DragMask';
 import 'src/pages/chat/containers/ChatList/index.less';
 import ChatPanel from 'src/pages/chat/containers/ChatPanel';

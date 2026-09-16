@@ -1,13 +1,23 @@
 ﻿import React from 'react';
-import DocumentTitle from 'react-document-title';
 import styled from 'styled-components';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import { pathCompletion } from 'src/utils/common';
 
 const WrapCon = styled.div`
   min-height: 400px;
 `;
 
-export default function ({ isNetwork, account, companyName, projectId, integrationAccountType, appscheme }: { projectId?: string; [key: string]: any }) {
+export default function ({
+  isNetwork,
+  account,
+  companyName,
+  projectId,
+  integrationAccountType,
+  appscheme,
+}: {
+  projectId?: string;
+  [key: string]: any;
+}) {
   const handleMicrosoftLogin = () => {
     const authPathMap = { 1: 'dingding', 6: 'feishu', 7: 'microsoft' };
     location.href = pathCompletion(

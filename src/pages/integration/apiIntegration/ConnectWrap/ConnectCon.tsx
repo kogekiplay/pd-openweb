@@ -1,9 +1,9 @@
 ﻿import React, { useEffect, useRef } from 'react';
-import DocumentTitle from 'react-document-title';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Icon, LoadDiv, ScrollView, UserHead } from 'ming-ui';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import flowNodeAjax from 'src/pages/workflow/api/flowNode';
 import packageVersionAjax from 'src/pages/workflow/api/packageVersion';
 import processAjax from 'src/pages/workflow/api/process';

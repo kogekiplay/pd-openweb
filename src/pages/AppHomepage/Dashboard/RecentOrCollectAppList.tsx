@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import collectAppEmptyPng from 'staticfiles/images/collect_app.png';
@@ -142,7 +142,10 @@ const renderListSkeleton = () => {
   });
 };
 
-const RecentOrCollectAppList = forwardRef(props => {
+// 【原先包了 forwardRef 但渲染函数只有一个形参】React 会报
+//   forwardRef render functions accept exactly two parameters: props and ref.
+// 两个调用点（RecentApps / CollectionApps）都没有传 ref，这层包装没有作用，去掉。
+const RecentOrCollectAppList = (props: any) => {
   const {
     apps = [],
     loading,
@@ -310,6 +313,6 @@ const RecentOrCollectAppList = forwardRef(props => {
         ))}
     </Wrapper>
   );
-});
+};
 
 export default autoSize(RecentOrCollectAppList);

@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import DocumentTitle from 'react-document-title';
 import cx from 'classnames';
 import _, { get, isEqual, isUndefined } from 'lodash';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Skeleton } from 'ming-ui';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import ErrorBoundary from 'ming-ui/components/ErrorBoundary';
 import DragMask from 'worksheet/common/DragMask';
 import { getSheetFilterIdFromUrl } from 'worksheet/common/WorkSheetFilter/util';
@@ -20,6 +20,7 @@ import type { RootState } from 'src/redux/types';
 import { navigateTo } from 'src/router/navigateTo';
 import { getTranslateInfo } from 'src/utils/app';
 import { emitter as globalEmitter } from 'src/utils/common';
+import type { FormControl } from 'src/utils/controlTypes';
 import { needHideViewFilters } from 'src/utils/filter';
 import GroupFilter from './GroupFilter';
 import QuickFilter from './QuickFilter';
@@ -27,7 +28,6 @@ import SheetContext from './SheetContext';
 import SheetHeader from './SheetHeader';
 import ViewControl from './ViewControl';
 import './style.less';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const { sheet, gallery, board, calendar, gunter, detail, customize, map, resource, structure } = VIEW_DISPLAY_TYPE;
 

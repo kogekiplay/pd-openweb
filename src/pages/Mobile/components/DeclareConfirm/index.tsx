@@ -1,9 +1,9 @@
 import React, { Fragment } from 'react';
-import DocumentTitle from 'react-document-title';
 import { Button, CenterPopup, Popup, SpinLoading } from 'antd-mobile';
 import cx from 'classnames';
 import styled from 'styled-components';
 import DialogBase from 'ming-ui/components/Dialog/DialogBase';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import privateLegalApi from 'src/api/privateLegal';
 import { browserIsMobile } from 'src/utils/common';
 

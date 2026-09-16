@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
-import DocumentTitle from 'react-document-title';
 import { Dropdown, Menu } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Icon, LoadDiv } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import homeAppApi from 'src/api/homeApp';
 import processApi from 'src/pages/workflow/api/process';
 import { canEditApp } from 'worksheet/redux/actions/util.js';

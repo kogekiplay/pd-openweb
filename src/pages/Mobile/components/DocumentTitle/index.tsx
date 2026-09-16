@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import ReactDocumentTitle from 'react-document-title';
 import _ from 'lodash';
 import { string } from 'prop-types';
+import ReactDocumentTitle from 'ming-ui/components/DocumentTitle';
 
 const MAX_RETRY_TIMES = 20;
 const RETRY_INTERVAL = 300;

@@ -1,8 +1,8 @@
 import React, { Component, Fragment, lazy, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
-import DocumentTitle from 'react-document-title';
 import _ from 'lodash';
 import { LoadDiv, ScrollView } from 'ming-ui';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import worksheetAjax from 'src/api/worksheet';
 import 'mobile/index.less';
 import { SHARE_STATE, VerificationPass } from 'worksheet/components/ShareState';

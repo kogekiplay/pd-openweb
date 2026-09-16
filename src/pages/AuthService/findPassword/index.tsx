@@ -1,7 +1,7 @@
 import React from 'react';
-import DocumentTitle from 'react-document-title';
 import _ from 'lodash';
 import { LoadDiv } from 'ming-ui';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import { captcha } from 'ming-ui/functions';
 import RegisterController from 'src/api/register';
 import ChangeLang from 'src/components/ChangeLang';

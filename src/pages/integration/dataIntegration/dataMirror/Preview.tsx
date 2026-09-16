@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import DocumentTitle from 'react-document-title';
 import { useSetState } from 'react-use';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { LoadDiv } from 'ming-ui';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import dataMirrorAjax from 'src/pages/integration/api/dw.js';
 import ControlsDataTable from 'src/pages/worksheet/components/ControlsDataTable';
 

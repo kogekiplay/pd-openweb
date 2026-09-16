@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import DocumentTitle from 'react-document-title';
 import { useSetState } from 'react-use';
 import _ from 'lodash';
 import { LoadDiv } from 'ming-ui';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import accountApi from 'src/api/account';
 import registerApi from 'src/api/register';
 import ChangeLang from 'src/components/ChangeLang';

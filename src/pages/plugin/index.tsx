@@ -1,7 +1,7 @@
 import React from 'react';
-import DocumentTitle from 'react-document-title';
 import { Route, Routes } from 'react-router';
 import _ from 'lodash';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import ErrorBoundary from 'ming-ui/components/ErrorBoundary';
 import { getMyPermissions } from 'src/components/checkPermission';
 import { hasPermission } from 'src/components/checkPermission';

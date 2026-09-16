@@ -1,7 +1,7 @@
 import React from 'react';
-import DocumentTitle from 'react-document-title';
 import styled from 'styled-components';
 import { Dialog, Icon } from 'ming-ui';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import packageVersionAjax from 'src/pages/workflow/api/packageVersion';
 import APIWrap from 'src/pages/integration/apiIntegration/APIWrap/index.jsx';
 import { navigateTo } from 'src/router/navigateTo';

@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
-import DocumentTitle from 'react-document-title';
 import { useSetState } from 'react-use';
 import homeAppApi from 'api/homeApp';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Icon, LoadDiv } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import sheetAjax from 'src/api/worksheet';
 import { FlexCenter } from 'worksheet/components/Basics';
 import Pagination from 'worksheet/components/Pagination';

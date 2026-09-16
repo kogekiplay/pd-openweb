@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
-import DocumentTitle from 'react-document-title';
 import { generate } from '@ant-design/colors';
 import { Drawer, Modal } from 'antd';
 import api from 'api/homeApp';
@@ -11,6 +10,7 @@ import { func, oneOf } from 'prop-types';
 import styled from 'styled-components';
 import { Icon, Menu, MenuItem, Skeleton, SvgIcon, UpgradeIcon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
+import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import { dialogSelectIcon } from 'ming-ui/functions';
 import appManagementApi from 'src/api/appManagement';
 import DragMask from 'worksheet/common/DragMask';

@@ -76,7 +76,7 @@ const Header = props => {
 };
 
 const ResetPassword = requireEsm('index.jsx', {
-  'react-document-title': {
+  'ming-ui/components/DocumentTitle': {
     __esModule: true,
     default: component('div'),
   },
