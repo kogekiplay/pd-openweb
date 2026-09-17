@@ -25,22 +25,35 @@ export default ({ projectId }: { projectId?: string; [key: string]: any }) => {
     ajaxPromise.getAutoPurchaseDataPipelineExtPack = projectSettingAjax.getAutoPurchaseDataPipelineExtPack({
       projectId,
     });
-    ajaxPromise.getAutoPurchaseDataPipelineExtPack.then(res => {
-      const { autoPurchaseDataPipelineExtPack = false, balance } = res;
-      setAutoOrder(autoPurchaseDataPipelineExtPack);
-      setBalance(balance);
-    });
+    ajaxPromise.getAutoPurchaseDataPipelineExtPack
+      .then(res => {
+        const { autoPurchaseDataPipelineExtPack = false, balance } = res;
+        setAutoOrder(autoPurchaseDataPipelineExtPack);
+        setBalance(balance);
+      })
+      // 见下面 getArithmetic 的说明：被 abort 的 promise 要静默掉，否则刷控制台。
+      .catch(err => {
+        if (_.get(err, 'errorCode') !== 1) throw err;
+      });
   };
 
   const getArithmetic = () => {
     ajaxPromise.getArithmetic = monitorAjax.getArithmetic({ projectId });
-    ajaxPromise.getArithmetic.then(res => {
-      if (res) {
-        const { arithmetic = {} } = res;
-        setArithmetic(arithmetic);
-        setArithmeticLoading(false);
-      }
-    });
+    ajaxPromise.getArithmetic
+      .then(res => {
+        if (res) {
+          const { arithmetic = {} } = res;
+          setArithmetic(arithmetic);
+          setArithmeticLoading(false);
+        }
+      })
+      /* 必须兜 catch：useEffect 里会把 ajaxPromise 上挂着的请求逐个 abort，
+         被 abort 的 promise 以 { errorCode: 1, errorMessage: '请求被取消' } 拒绝
+         （见 src/common/global.ts 的 textStatus === 'abort'），没人接就是
+         "Uncaught (in promise)" 刷控制台。取消是预期行为，静默；其余照旧抛出。 */
+      .catch(err => {
+        if (_.get(err, 'errorCode') !== 1) throw err;
+      });
   };
 
   const setAutoPurchaseDataPipelineExtPack = (checked: boolean) => {
@@ -81,7 +94,12 @@ export default ({ projectId }: { projectId?: string; [key: string]: any }) => {
     getAutoPurchaseDataPipelineExtPack();
     getArithmetic();
     (window.platformENV.isOverseas || window.platformENV.isLocal) &&
-      monitorAjax.getTaskCount({ projectId }).then(res => res && setTaskNum(res));
+      monitorAjax
+        .getTaskCount({ projectId })
+        .then(res => res && setTaskNum(res))
+        .catch(err => {
+          if (_.get(err, 'errorCode') !== 1) throw err;
+        });
   }, []);
 
   return (

@@ -992,7 +992,7 @@ export default class Con extends React.Component<any, any> {
                                       className="infoSignature infoSignature1"
                                     >
                                       {signature.server && (
-                                        <img src={`${signature.server}`} alt="" srcset="" onLoad={this.signLoadSet} />
+                                        <img src={`${signature.server}`} alt="" onLoad={this.signLoadSet} />
                                       )}
                                     </div>
                                   ) : null}
@@ -1042,7 +1042,7 @@ export default class Con extends React.Component<any, any> {
                                 style={STYLE_PRINT.worksTable_workPersons_infoSignature}
                                 className="infoSignature infoSignature2"
                               >
-                                <img src={`${tdList[tdItem].server}`} alt="" srcset="" onLoad={this.signLoadSet} />
+                                <img src={`${tdList[tdItem].server}`} alt="" onLoad={this.signLoadSet} />
                               </div>
                             ) : null}
                           </td>

@@ -348,7 +348,7 @@ export default function FastFilter(params) {
       ) : (
         <div className="noData">
           <div className="cover">
-            <img src={bgFastFilters} alt="" srcset="" />
+            <img src={bgFastFilters} alt="" />
           </div>
           <h6 className="">{_l('快速筛选')}</h6>
           <p className="text textSecondary">{_l('将字段作为快速筛选器显示在视图顶部，以帮助用户快速查找记录。')}</p>

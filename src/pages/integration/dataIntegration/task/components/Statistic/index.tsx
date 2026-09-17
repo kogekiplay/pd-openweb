@@ -57,12 +57,21 @@ export default ({ projectId, flag }: { projectId?: string; [key: string]: any })
   useEffect(() => {
     if (ajaxPromise) ajaxPromise.abort();
     ajaxPromise = syncTaskApi.getStatistics({ projectId: projectId });
-    ajaxPromise.then(res => {
-      if (res) {
-        setStatisticData(res);
-        ajaxPromise = null;
-      }
-    });
+    ajaxPromise
+      .then(res => {
+        if (res) {
+          setStatisticData(res);
+          ajaxPromise = null;
+        }
+      })
+      /* 必须兜 catch：上一行刚 abort 掉上一个请求，被 abort 的 promise 会以
+         { errorCode: 1, errorMessage: '请求被取消' } 拒绝（见 src/common/global.ts
+         里 textStatus === 'abort' 那段）。没有 catch 就是
+         "Uncaught (in promise) {errorCode: 1, …}" 刷控制台。
+         errorCode 1 = 主动取消，是预期行为，静默即可；其余错误照旧抛给全局处理。 */
+      .catch(err => {
+        if (!err || err.errorCode !== 1) throw err;
+      });
   }, [flag]);
 
   return (

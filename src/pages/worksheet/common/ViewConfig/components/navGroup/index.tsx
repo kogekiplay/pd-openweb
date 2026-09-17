@@ -727,7 +727,7 @@ export default function NavGroup(params) {
       ) : (
         <div className="noData">
           <div className="cover">
-            <img src={bgNavGroups} alt="" srcset="" />
+            <img src={bgNavGroups} alt="" />
           </div>
           <h6 className="">{_l('筛选列表')}</h6>
           <p className="text textSecondary">{_l('将所选字段选项以列表的形式显示在视图左侧，帮助用户快速查看记录。')}</p>

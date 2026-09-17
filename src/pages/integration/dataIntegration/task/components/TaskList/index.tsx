@@ -382,12 +382,24 @@ export default function TaskList({ projectId, onRefreshComponents }: { projectId
     //获取同步任务列表;
     const request = syncTaskApi.list(fetchListParams);
     ajaxPromise.current = request;
-    request.then(result => {
-      if (result) {
-        setTaskList(fetchState.pageNo > 0 ? taskList.concat(result.content) : result.content);
-        setFetchState({ loading: false, noMore: result.content.length < 50 });
-      }
-    });
+    request
+      .then(result => {
+        if (result) {
+          setTaskList(fetchState.pageNo > 0 ? taskList.concat(result.content) : result.content);
+          setFetchState({ loading: false, noMore: result.content.length < 50 });
+        }
+      })
+      /* 必须兜 catch：上面刚 abort 掉上一个 list 请求（筛选条件一变就会走到），
+         被 abort 的 promise 以 { errorCode: 1, errorMessage: '请求被取消' } 拒绝
+         （见 src/common/global.ts 的 textStatus === 'abort'），没人接就是
+         "Uncaught (in promise)" 刷控制台。取消是预期行为，静默即可；
+         其余错误要把 loading 关掉，否则列表永远停在加载态。 */
+      .catch(err => {
+        if (_.get(err, 'errorCode') !== 1) {
+          setFetchState({ loading: false, noMore: true });
+          throw err;
+        }
+      });
   }, [
     fetchState.taskStatus,
     fetchState.sourceType,
