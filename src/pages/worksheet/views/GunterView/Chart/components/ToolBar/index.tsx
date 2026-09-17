@@ -91,9 +91,12 @@ let ToolBar = class ToolBar extends Component<any, any> {
         suffixIcon={<Icon className="Font12 textTertiary" icon="arrow-down" />}
         defaultActiveFirstOption={false}
         defaultOpen={false}
-        dropdownClassName="gunterToolBarSelectWrapper"
+        /* antd 6 两条弃用：
+           dropdownClassName -> classNames.popup.root，bordered={false} -> variant="borderless"
+           （报错原文就是 "Please use `classNames.popup.root` instead" / "Please use `variant` instead"） */
+        classNames={{ popup: { root: 'gunterToolBarSelectWrapper' } }}
         value={periodType}
-        bordered={false}
+        variant="borderless"
         virtual={false}
         onChange={changeViewType}
       >

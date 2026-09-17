@@ -22,6 +22,17 @@ const IGNORED_PATHS = [
   // 存的是带 on() 等方法的滚动控制器对象，serializableCheck 每次 dispatch 报一次，
   // 实测单次浏览就刷出 372 条，把控制台里真正的报错淹掉。
   'sheet.gunterView.chartScroll',
+  // 【和 chartScroll 是同一个东西，漏了一个】甘特图的分组栏也存了一个滚动控制器
+  // （CHANGE_GUNTER_GROUPING_SCROLL，见 GunterView 里 groupingScroll.refresh() 等用法）。
+  // 它同样持有 DOM（host: div.gunterGroupingWrapper、viewport: div），于是撞上面注释里
+  // 说的那个 RTK 循环防护死代码：trackProperties 深度优先递归遇到 DOM 的
+  // parentNode ↔ childNodes 环就栈溢出。
+  // 后果比 chartScroll 那条严重得多 —— 不是刷屏而是【整个甘特图视图在 dev 下打不开】：
+  //   RangeError: Maximum call stack size exceeded
+  //   The above error occurred in the <Sheet> / <WorkSheet> / <WorkSheetLeft> component
+  // 页面直接被 ErrorBoundary 接管、显示「程序错误，请刷新」。
+  // 生产不受影响（这两个检查只在非 production 跑），所以一直没被发现。
+  'sheet.gunterView.groupingScroll',
 ];
 
 export function configureStore() {
@@ -61,7 +72,13 @@ export function configureStore() {
         // ignoredActions 也要给：ignoredPaths 只管 state 树，派发时 action 本身
         // 还会被单独检查一遍，否则 KC_UPDATE_LIST_ELEMENT 每次仍刷一条
         // 「A non-serializable value was detected in an action, in the path: `value`」。
-        serializableCheck: { ignoredPaths: IGNORED_PATHS, ignoredActions: ['KC_UPDATE_LIST_ELEMENT'] },
+        // 甘特图那两个滚动控制器同理：state 侧已在 IGNORED_PATHS 里豁免，但派发那一下
+        // 还会被单独查一遍，不列进来就每次都刷
+        // 「A non-serializable value was detected in an action, in the path: `data`」。
+        serializableCheck: {
+          ignoredPaths: IGNORED_PATHS,
+          ignoredActions: ['KC_UPDATE_LIST_ELEMENT', 'CHANGE_GUNTER_CHART_SCROLL', 'CHANGE_GUNTER_GROUPING_SCROLL'],
+        },
         immutableCheck: { ignoredPaths: IGNORED_PATHS },
       }),
   });
