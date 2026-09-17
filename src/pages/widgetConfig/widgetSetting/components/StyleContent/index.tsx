@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { CaretRightOutlined } from '@ant-design/icons';
-import { Collapse } from 'antd';
 import _ from 'lodash';
 import WidgetConfigRuleItem from '../../../../FormSet/components/columnRules/WidgetConfigRuleItem';
 import { supportSettingCollapse } from '../../../util';
@@ -9,7 +8,6 @@ import { SettingCollapseWrap } from '../../content/styled';
 import WidgetStyle from '../WidgetStyle';
 import { CardItem, WidgetItem } from './StyleContentItems';
 
-const { Panel } = Collapse;
 
 const getItems = props => {
   const { data = {}, status = {}, from } = props;
@@ -97,14 +95,6 @@ export default function StyleCardContent(props) {
       expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
       items={items}
       onChange={value => setExpandKeys(value)}
-    >
-      {items.map(item => {
-        return (
-          <Panel header={item.label} key={item.key}>
-            {item.children}
-          </Panel>
-        );
-      })}
-    </SettingCollapseWrap>
+    />
   );
 }

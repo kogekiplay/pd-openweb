@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { CaretRightOutlined } from '@ant-design/icons';
-import { Collapse, Input } from 'antd';
+import { Input } from 'antd';
 import cx from 'classnames';
 import copy from 'src/utils/copyToClipboard';
 import { Icon } from 'ming-ui';
@@ -14,7 +14,6 @@ import WidgetDes from '../components/WidgetDes';
 import WidgetExplain from '../components/WidgetExplain';
 import { SettingCollapseWrap } from './styled';
 
-const { Panel } = Collapse;
 
 const DISPLAY_TYPES = [
   {
@@ -176,20 +175,16 @@ export default function ExplainContent(props) {
   const [expandKeys, setExpandKeys] = useState(items.map(i => i.key));
 
   return (
+    /* 这里原先【同时】给了 items 和 Panel children —— children 那套是 antd 6 已废弃的写法
+       （"[rc-collapse] `children` will be removed in next major version. Please use `items` instead."），
+       而 getItems 返回的本来就是 items 要的 {key,label,children} 形状，删掉 children 即可。
+       顺带把重复调用的 getItems(props) 换成上面已经算好的 items。 */
     <SettingCollapseWrap
       bordered={false}
       activeKey={expandKeys}
       expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
-      items={getItems(props)}
+      items={items}
       onChange={value => setExpandKeys(value)}
-    >
-      {items.map(item => {
-        return (
-          <Panel header={item.label} key={item.key}>
-            {item.children}
-          </Panel>
-        );
-      })}
-    </SettingCollapseWrap>
+    />
   );
 }

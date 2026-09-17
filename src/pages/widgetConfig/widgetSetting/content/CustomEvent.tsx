@@ -596,15 +596,14 @@ export default function CustomEvent(props) {
           activeKey={expandKeys}
           expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
           onChange={value => setExpandKeys(value)}
-        >
-          {customEvent.map(item => {
-            return (
-              <Panel header={renderHeader(item)} key={item.eventType}>
-                {renderContent(item)}
-              </Panel>
-            );
-          })}
-        </SettingCollapseWrap>
+          /* antd 6 已废弃 Panel children 写法，改用 items。header -> label，
+             key 沿用原来的 item.eventType（activeKey/expandKeys 都按它匹配，不能改）。 */
+          items={customEvent.map(item => ({
+            key: item.eventType,
+            label: renderHeader(item),
+            children: renderContent(item),
+          }))}
+        />
       ) : (
         <WidgetWarning type="event" />
       )}

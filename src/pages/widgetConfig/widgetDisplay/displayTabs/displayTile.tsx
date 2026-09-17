@@ -23,8 +23,10 @@ export default function DisplayTab(props) {
       {tabWidgets.map(data => {
         const row = _.head(getPathById(widgets, data.controlId));
         return (
-          <DisplayTabWrap className="displayRow tabItemWrap">
-            <DisplayItem {...props} key={data.controlId} data={data} displayItemType="tab" path={[row, 0]} />
+          // key 原先挂在里面的 DisplayItem 上 —— 它不在数组里，挂了没用；
+          // 需要 key 的是 map 直接返回的 DisplayTabWrap。
+          <DisplayTabWrap key={data.controlId} className="displayRow tabItemWrap">
+            <DisplayItem {...props} data={data} displayItemType="tab" path={[row, 0]} />
           </DisplayTabWrap>
         );
       })}
