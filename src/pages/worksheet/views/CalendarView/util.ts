@@ -330,6 +330,26 @@ export const getCurrentView = props => {
   return { ...currentView, appId: base.appId };
 };
 
+/* 侧边「排期」面板当前选中的页签。原先这是 redux/actions/calendarview 里的一个
+   thunk（getInitType），组件通过 props.getInitType() 调用 —— 但它只读 localStorage，
+   既不读 state 也不 dispatch 任何 action，走 redux 纯属白费。
+
+   代价一点都不小：每调一次就是一次 dispatch，而 RTK 的 immutableCheck /
+   serializableCheck 中间件会把【整棵 state 树】深走一遍。考勤日历这种 1000 条事件
+   的表，实测单次 78~126ms（对照：localStorage.getItem 本身 0ms）。
+   CalendarView.render 里有一处、External 里有五处，全在渲染路径上，
+   于是每次渲染就白扔 80ms —— 刷新一次渲染 4 遍就是 320ms。
+   （这层开销只在 dev 有，生产会被剥掉；但渲染期 dispatch 本身就不对。）*/
+export const readInitType = () => {
+  const type = window.localStorage.getItem('CalendarShowExternalTypeEvent');
+
+  if (!type) {
+    safeLocalStorageSetItem('CalendarShowExternalTypeEvent', 'eventNoScheduled');
+  }
+
+  return type || 'eventNoScheduled';
+};
+
 export const renderLine = (random, view) => {
   $(`.boxCalendar_${random} .fc-timegrid-body .linBox`).remove();
   if (!$('.fc-day-today').length) return;

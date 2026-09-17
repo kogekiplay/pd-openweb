@@ -51,6 +51,7 @@ import {
   getCanCreateRecord,
   getCurrentView,
   getTimeControls,
+  readInitType,
   renderLine,
   resetFcEventDraggingPoint,
   setShowTip,
@@ -60,6 +61,386 @@ import type { FormControl } from 'src/utils/controlTypes';
 
 let time;
 let clickData = null;
+
+/* 【为什么要这一层 memo】考勤日历这种表一屏 3000 条事件，实测点一次刷新
+   CalendarView 会 render 5 次、主线程被切成三段秒级长任务（dev 下 4128/2342/1287ms，
+   生产 685ms），而这期间【events 的内容根本没变】—— getFormatData 一次都没跑、
+   isEqual 只花 6ms。也就是说 FullCalendar 拿着完全相同的 3000 条事件白渲染了三遍。
+
+   根因：refresh() 会 fan-out 成三次取数（主数据 + 两次 getEventScheduledData），
+   后两次只喂侧边「排期」面板，但它们和日历事件同在 calendarview 这个 slice 里，
+   一更新就把整个 CalendarView 连同 FullCalendar 带着重渲染。
+
+   这里把 FullCalendar 单独关进 memo，依赖只列【真正影响日历渲染】的值；
+   侧边面板的数据（calenderEventList）不在其中，那两次外部取数便不再触发重渲。
+
+   【为什么回调可以原样留在里面】它们读的是 owner.props / owner.state / owner.xxx()，
+   都是通过实例在【调用时】取值，不是闭包快照，不会陈旧。
+   唯独两处原先闭包了 render 作用域高频变量的，改成调用时实时算：
+     - eventData（侧边面板数据，每次外部取数都变）-> getLiveEventData(owner)
+     - eventClick（闭包了 currentView / calendarview / worksheetId）-> liveEventClick(owner, info) */
+const getLiveEventData = owner => {
+  const { calendarview = {} } = owner.props;
+  const { calenderEventList = {} } = calendarview;
+  return calenderEventList[`${readInitType()}Dt`] || [];
+};
+
+const liveEventClick = (owner, eventInfo) => {
+  const { calendarview = {}, base = {} } = owner.props;
+  const currentView = getCurrentView(owner.props);
+  const { extendedProps } = eventInfo.event._def;
+  handleRecordClick(currentView, extendedProps, () => {
+    owner.setState({
+      recordId: extendedProps.rowid,
+      recordInfoVisible: true,
+      rows: getRows(eventInfo.event.start, eventInfo.event.start, calendarview),
+      showPrevNext: true,
+    });
+    addBehaviorLog('worksheetRecord', base.worksheetId, { rowId: extendedProps.rowid }); // 埋点
+  });
+};
+
+const MemoFullCalendar = React.memo(function MemoFullCalendar({
+  owner,
+  fullCalendarKey,
+  height,
+  initialView,
+  btnList,
+  calendarFormatData,
+  weekbegin,
+  showall,
+  unweekday,
+  others,
+  currentView,
+  appId,
+  unselectAuto,
+  hour24,
+}: any) {
+  return (
+    <FullCalendar
+      key={fullCalendarKey}
+      dragScroll={true}
+      // v7 移除了 themeSystem：主题改成插件了，见文件头的 themePlugin
+      // 把 v6 的语义类名挂回来，放在最前面展开，后面的 props 仍可覆盖
+      {...FC_CLASS_COMPAT}
+      height={height}
+      ref={owner.calendarComponentRef}
+      initialView={initialView} // 选中的日历模式
+      headerToolbar={{
+        right: btnList,
+        center: 'title',
+        left: '',
+      }}
+      eventDragStart={() => {
+        owner.setState({ isMove: true });
+        resetFcEventDraggingPoint();
+      }}
+      eventDragStop={() => owner.setState({ isMove: false })}
+      views={CALENDAR_VIEW_FORMATS}
+      // v7 把 dayCellContent 拆细了，日号所在的顶部区叫 dayCellTopContent
+      dayCellTopContent={item => {
+        return (
+          <React.Fragment>
+            {item.view.type === 'dayGridMonth' && owner.getLunar(item)}
+            <WrapNum className={cx('num Hand', { canAdd: owner.state.canNew })}>
+              <span className="txt">{item.dayNumberText.replace('日', '')}</span>
+              {!['timeGridDay', 'timeGridWeek'].includes(item.view.type) && owner.renderCalendarItem(item)}
+            </WrapNum>
+          </React.Fragment>
+        );
+      }}
+      dayCellDidMount={item => {
+        if (!owner.state.canNew) {
+          return;
+        }
+
+        $(item.el).on({
+          mousemove: event => {
+            if ($('.fc-more-popover').length > 0) return;
+            owner.showTip(event, true);
+          },
+          mouseout: () => {
+            owner.showTip(null, false);
+          },
+        });
+        $(item.el)
+          .find('.fc-daygrid-day-events')
+          .on({
+            mousemove: event => {
+              owner.showTip(event, false);
+              event.stopPropagation();
+            },
+          });
+      }}
+      dayHeaderContent={item => {
+        const date = new Date(item.date);
+        const day = date.getDate();
+        const weekday =
+          item.view.type === 'dayGridMonth'
+            ? item.text
+            : date.toLocaleDateString(window.getCurrentLang() || 'zh-cn', { weekday: 'short' });
+        return (
+          <React.Fragment>
+            {item.view.type !== 'dayGridMonth' && owner.getLunar(item)}
+            <div className="num">
+              {item.view.type !== 'dayGridMonth' ? `${day} ${weekday}` : weekday}
+              {['timeGridDay', 'timeGridWeek'].includes(item.view.type) && owner.renderCalendarItem(item)}
+            </div>
+          </React.Fragment>
+        );
+      }}
+      dayHeaderDidMount={() => {
+        $('.fc-col-header-cell').on('click', () => {
+          clickData = null;
+        });
+      }}
+      plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, themePlugin]}
+      locale={window.getCurrentLang() || 'zh-cn'}
+      buttons={CALENDAR_BUTTONS}
+      allDayText={_l('全天')}
+      hiddenDays={
+        unweekday.length >= 7
+          ? ''
+          : unweekday
+              .replace('7', '0')
+              .split('')
+              .map(o => {
+                return +o;
+              })
+      } // 隐藏周几
+      editable={true}
+      firstDay={weekbegin ? Number(weekbegin) % 7 : 1} // 周一至周六为1～6，周日为0
+      slotHeaderFormat={{
+        hour: '2-digit',
+        minute: '2-digit',
+        meridiem: false,
+        hour12: false,
+      }}
+      timeZone="local"
+      defaultTimedEventDuration={'00:00:01'}
+      events={calendarFormatData}
+      viewDidMount={() => {
+        owner.calendarActionFn();
+        owner.getEventsFn();
+      }}
+      viewWillUnmount={owner.calendarActionOff}
+      // 合成而不是覆盖：FC_CLASS_COMPAT.viewClass 负责还原 fc-view / fc-{type}-view
+      viewClass={info => `${FC_CLASS_COMPAT.viewClass(info)} worksheetFullCalendar`}
+      eventTimeFormat={{
+        hour: 'numeric',
+        minute: '2-digit',
+        meridiem: 'short',
+        omitZeroMinute: true,
+        hour12: hour24 === '0',
+      }} // 任务的时间
+      eventOrder={'start'} //String / Array / Function, default: "start,-duration,allDay,title"
+      displayEventEnd={false} // 让月视图的任务既显示开始时间又显示结束时间
+      eventClick={info => liveEventClick(owner, info)}
+      eventDidMount={info =>
+        eventDidMount(
+          info,
+          currentView,
+          owner.props.controls,
+          owner.props.worksheetInfo,
+          owner.props.base,
+          owner.props.sheetSwitchPermit,
+          owner.props.isCharge,
+          owner.props,
+          () => liveEventClick(owner, info),
+          owner.state.isMove,
+          () => owner.props.buttonsCheckStatus,
+        )
+      }
+      eventDrop={info => {
+        let endData = _.get(info, ['event', 'extendedProps', 'endData']) || {};
+        let startData = _.get(info, ['event', 'extendedProps', 'startData']) || {};
+        // 日历上 记录的拖拽
+        let control = [
+          {
+            controlId: startData.controlId,
+            controlName: startData.controlName,
+            type: startData.type,
+            value: formatTimeForSave(info.event.start, startData, appId),
+          },
+        ];
+        //日历视图推拽bugfix，结束时间不从组件返回内容取，需要根据开始时间+时间差来处理
+        const item = (info?.event?.extendedProps?.timeList || [])?.[0];
+        const rowStart = item?.row?.[startData?.controlId];
+        const rowEnd = item?.row?.[endData?.controlId];
+        const needEnd =
+          !!endData?.controlId && !!rowStart && !!rowEnd && !moment(rowEnd).isBefore(moment(rowStart));
+
+        if (item && needEnd) {
+          const endTime = moment(info.event.start)
+            .add(moment(rowEnd).diff(moment(rowStart)), 'ms')
+            .toDate();
+          control.push({
+            controlId: endData.controlId,
+            controlName: endData.controlName,
+            type: endData.type,
+            value: formatTimeForSave(endTime, endData, appId),
+          });
+        }
+
+        owner.updateData(control, info.event.extendedProps.rowid, data => {
+          owner.props.updateEventData(info.event._def.extendedProps.rowid, data, info.event.start);
+        });
+      }}
+      eventResize={info => {
+        let endData = _.get(info, ['event', 'extendedProps', 'endData']) || {};
+
+        if (!endData.controlId) {
+          alert(_l('请配置结束控件'), 3);
+          owner.getEventsFn();
+          return;
+        }
+
+        owner.updateData(
+          [
+            {
+              controlId: endData.controlId,
+              controlName: endData.controlName,
+              type: endData.type,
+              value: formatTimeForSave(
+                new Date(changeEndStr(info.event.end, info.event.allDay, owner.props.calendarview)),
+                endData,
+                appId,
+              ),
+            },
+          ],
+          info.event.extendedProps.rowid,
+        );
+      }}
+      dayMaxEventRows={showall === '0'}
+      moreLinkContent={info => {
+        return <div className="w100" title={_l('查看其他%0个', info.num)}>{`+${info.num}`}</div>;
+      }}
+      moreLinkClick={() => {
+        const setMorePoper = () => {
+          if ($('.fc-more-popover').length > 0) {
+            let h = $('.fc-more-popover').height();
+            let top = $('.fc-more-popover').position().top;
+            let mH = $('.fc-scroller-harness-liquid').height();
+
+            if (h + top > mH) {
+              $('.fc-more-popover').css({ bottom: 10, top: 'initial' });
+            }
+
+            $('.fc-more-popover').addClass('show');
+          }
+        };
+
+        if ($('.fc-more-popover').length > 0) {
+          setMorePoper();
+        } else {
+          setTimeout(() => {
+            setMorePoper();
+          }, 500);
+        }
+      }}
+      unselectAuto={owner.state.unselectAuto}
+      selectable={true}
+      // selectHelper={true}
+      select={info => {
+        if (!owner.state.canNew) {
+          return;
+        }
+
+        // isSafari 且 双击
+        if (window.isSafari && owner.dbClickFn()) {
+          owner.selectFn({ ...info });
+          return;
+        }
+
+        clickData = info;
+        // 全天事件
+        if (info.allDay) {
+          // 且 多天 即非一格
+          if (moment(info.end).diff(moment(info.start), 'day') > 1) {
+            // 全天事件 框选多天
+            owner.selectFn(info);
+          }
+        } else {
+          // 30分钟以上 即非一格
+          if (moment(info.end).diff(moment(info.start), 'minute') > 30) {
+            owner.selectFn(info);
+          }
+        }
+      }}
+      // droppable={true} //true 会造成所有的拖动都走drop
+      drop={info => {
+        // 排期列表 =>拖拽到日历
+        let rowId = $(info.draggedEl).attr('rowid');
+
+        if (!rowId) {
+          return;
+        }
+
+        let keyId = $(info.draggedEl).attr('keyId');
+        // 侧边面板数据，每次外部取数都会变；必须在【调用时】取，不能闭包也不能做依赖
+        const eventScheduled = _.get(owner.props, 'calendarview.calenderEventList.eventScheduled') || [];
+        let data = eventScheduled.filter(o => o.keyIds === keyId);
+
+        if (data.length && data.length === 1) {
+          const hasEnd = !!data[0].end;
+          const calendarEnd = !hasEnd
+            ? ''
+            : !data[0].allDay
+              ? data[0].end
+              : `${moment(data[0].end).subtract(1, 'day').format('YYYY-MM-DD')} 23:59:59`;
+          owner.changeEventFn({
+            ...info,
+            calendar: {
+              start: data[0].start,
+              end: calendarEnd,
+            },
+            data: {
+              ...data[0],
+            },
+            rowId,
+          });
+        } else {
+          owner.setState(
+            {
+              selectTimeInfo: info,
+              changeData: getLiveEventData(owner).find(o => o.rowid === rowId) || {},
+            },
+            () => {
+              owner.showChooseTrigger(info.dateStr, info.view.type);
+            },
+          );
+        }
+      }}
+      eventMouseEnter={() => {
+        owner.showTip(null, false);
+      }}
+      {...others}
+    />
+  );
+},
+/* 默认的浅比较在这里不够用：实测每次刷新有两个 prop 的【引用】必变，而【值】没变 ——
+     others      : render 里是 `let others = {}` 再按需塞 slotMinTime/slotMaxTime，每次都是新字面量
+     currentView : 来自 find(views, …)，而 redux 每次更新会重建 views 里的视图对象
+   只要这两个参与浅比较，memo 就永远命中不了（实测：4 次比较全部报
+   "others,currentView" 变化，三段秒级重渲一次没省掉）。
+   所以这两项按【值】比：others 只有两个字段直接比；currentView 是单个视图对象，
+   _.isEqual 实测只要几毫秒，相对一次 1~3 秒的重渲完全值得。 */
+(prev, next) => {
+  const keys = Object.keys(next);
+
+  for (const k of keys) {
+    if (k === 'others' || k === 'currentView') continue;
+
+    if (prev[k] !== next[k]) return false;
+  }
+
+  const po = prev.others || {};
+  const no = next.others || {};
+
+  if (po.slotMinTime !== no.slotMinTime || po.slotMaxTime !== no.slotMaxTime) return false;
+
+  return _.isEqual(prev.currentView, next.currentView);
+});
 
 class RecordCalendarBase extends Component<any, any> {
   constructor(props) {
@@ -131,9 +512,31 @@ class RecordCalendarBase extends Component<any, any> {
 
         this.props.fetchExternal();
         this.getEventsFn();
-        this.setState({
-          fullCalendarKey: JSON.stringify(Math.random()),
-        });
+
+        /* 【换 key 只留给「切到另一个视图」，不再给「改设置」用】
+           换 key = 让 React 把整个 FullCalendar 卸载重挂，1000 条事件从零渲染一遍。
+           原先它挂在整个分支上，而分支条件是 !isEqual(currentView, preView) ——
+           【改任何一项视图设置】都会命中。生产实测改一次设置约 890ms 卡顿
+           （579/220/94ms 三段），其中光重挂载就占 ~700ms（三次采样 737/716/692），
+           占了八成。用户报的「随便改啥设置都会卡」就是这个。
+
+           同一个视图改设置根本不需要重挂：这些选项 FullCalendar 支持运行时更新，
+           而且现在全部作为 props 走 MemoFullCalendar 的比较器，变了自然会重渲染 ——
+             firstDay(weekbegin)、hiddenDays(unweekday)、dayMaxEventRows(showall)、
+             eventTimeFormat.hour12(hour24)、slotMinTime/slotMaxTime(showtime)。
+           唯一“只在挂载时读一次”的 initialView，上面那行 changeView() 已经在管。
+           颜色/标题/开始结束字段只影响事件内容，走 getEventsFn() -> calendarFormatData。
+           以上每一项都逐个实测过（改完再还原，观测值都回到原样，全程 key 不变）。
+
+           切到【另一个】日历视图的情况保留重挂：views/index.tsx 渲染
+           <Component {...viewProps} /> 时没有 key，两个日历视图之间切换会复用同一个
+           实例，而那条路径这个表里没有第二个日历视图、验不了。它本来就要重新取数、
+           很少发生，留着这层保险不亏。 */
+        if (viewId !== prevProps.base.viewId) {
+          this.setState({
+            fullCalendarKey: JSON.stringify(Math.random()),
+          });
+        }
       }
 
       if (
@@ -467,8 +870,7 @@ class RecordCalendarBase extends Component<any, any> {
     }
 
     const { recordInfoVisible, recordId, isLoading, rows = [], showPrevNext = false, random } = this.state;
-    const typeEvent = this.props.getInitType();
-    const eventData = calenderEventList[`${typeEvent}Dt`] || [];
+    const typeEvent = readInitType();
     const { calendarInfo = [], unweekday = '', btnList, initialView } = calendarData;
     const { height, calendarFormatData } = this.state;
     let isDelete =
@@ -531,20 +933,6 @@ class RecordCalendarBase extends Component<any, any> {
       others.slotMinTime = times[0];
       others.slotMaxTime = times[1];
     }
-
-    const eventClick = eventInfo => {
-      // 点击任务 获得任务id或其他相关内容
-      const { extendedProps } = eventInfo.event._def;
-      handleRecordClick(currentView, extendedProps, () => {
-        this.setState({
-          recordId: extendedProps.rowid,
-          recordInfoVisible: true,
-          rows: getRows(eventInfo.event.start, eventInfo.event.start, calendarview),
-          showPrevNext: true,
-        });
-        addBehaviorLog('worksheetRecord', worksheetId, { rowId: extendedProps.rowid }); // 埋点
-      });
-    };
 
     return (
       <div className={`boxCalendar boxCalendar_${random}`}>
@@ -614,302 +1002,21 @@ class RecordCalendarBase extends Component<any, any> {
             {this.state.showExternal && <Icon className="Font16 mLeft7 Hand" icon="close" />}
           </div>
           {!isLoading ? (
-            <FullCalendar
-              key={this.state.fullCalendarKey}
-              dragScroll={true}
-              // v7 移除了 themeSystem：主题改成插件了，见文件头的 themePlugin
-              // 把 v6 的语义类名挂回来，放在最前面展开，后面的 props 仍可覆盖
-              {...FC_CLASS_COMPAT}
+            <MemoFullCalendar
+              owner={this}
+              fullCalendarKey={this.state.fullCalendarKey}
               height={height}
-              ref={this.calendarComponentRef}
-              initialView={initialView} // 选中的日历模式
-              headerToolbar={{
-                right: btnList,
-                center: 'title',
-                left: '',
-              }}
-              eventDragStart={() => {
-                this.setState({ isMove: true });
-                resetFcEventDraggingPoint();
-              }}
-              eventDragStop={() => this.setState({ isMove: false })}
-              views={CALENDAR_VIEW_FORMATS}
-              // v7 把 dayCellContent 拆细了，日号所在的顶部区叫 dayCellTopContent
-              dayCellTopContent={item => {
-                return (
-                  <React.Fragment>
-                    {item.view.type === 'dayGridMonth' && this.getLunar(item)}
-                    <WrapNum className={cx('num Hand', { canAdd: this.state.canNew })}>
-                      <span className="txt">{item.dayNumberText.replace('日', '')}</span>
-                      {!['timeGridDay', 'timeGridWeek'].includes(item.view.type) && this.renderCalendarItem(item)}
-                    </WrapNum>
-                  </React.Fragment>
-                );
-              }}
-              dayCellDidMount={item => {
-                if (!this.state.canNew) {
-                  return;
-                }
-
-                $(item.el).on({
-                  mousemove: event => {
-                    if ($('.fc-more-popover').length > 0) return;
-                    this.showTip(event, true);
-                  },
-                  mouseout: () => {
-                    this.showTip(null, false);
-                  },
-                });
-                $(item.el)
-                  .find('.fc-daygrid-day-events')
-                  .on({
-                    mousemove: event => {
-                      this.showTip(event, false);
-                      event.stopPropagation();
-                    },
-                  });
-              }}
-              dayHeaderContent={item => {
-                const date = new Date(item.date);
-                const day = date.getDate();
-                const weekday =
-                  item.view.type === 'dayGridMonth'
-                    ? item.text
-                    : date.toLocaleDateString(window.getCurrentLang() || 'zh-cn', { weekday: 'short' });
-                return (
-                  <React.Fragment>
-                    {item.view.type !== 'dayGridMonth' && this.getLunar(item)}
-                    <div className="num">
-                      {item.view.type !== 'dayGridMonth' ? `${day} ${weekday}` : weekday}
-                      {['timeGridDay', 'timeGridWeek'].includes(item.view.type) && this.renderCalendarItem(item)}
-                    </div>
-                  </React.Fragment>
-                );
-              }}
-              dayHeaderDidMount={() => {
-                $('.fc-col-header-cell').on('click', () => {
-                  clickData = null;
-                });
-              }}
-              plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, themePlugin]}
-              locale={window.getCurrentLang() || 'zh-cn'}
-              buttons={CALENDAR_BUTTONS}
-              allDayText={_l('全天')}
-              hiddenDays={
-                unweekday.length >= 7
-                  ? ''
-                  : unweekday
-                      .replace('7', '0')
-                      .split('')
-                      .map(o => {
-                        return +o;
-                      })
-              } // 隐藏周几
-              editable={true}
-              firstDay={weekbegin ? Number(weekbegin) % 7 : 1} // 周一至周六为1～6，周日为0
-              slotHeaderFormat={{
-                hour: '2-digit',
-                minute: '2-digit',
-                meridiem: false,
-                hour12: false,
-              }}
-              timeZone="local"
-              defaultTimedEventDuration={'00:00:01'}
-              events={calendarFormatData}
-              viewDidMount={() => {
-                this.calendarActionFn();
-                this.getEventsFn();
-              }}
-              viewWillUnmount={this.calendarActionOff}
-              // 合成而不是覆盖：FC_CLASS_COMPAT.viewClass 负责还原 fc-view / fc-{type}-view
-              viewClass={info => `${FC_CLASS_COMPAT.viewClass(info)} worksheetFullCalendar`}
-              eventTimeFormat={{
-                hour: 'numeric',
-                minute: '2-digit',
-                meridiem: 'short',
-                omitZeroMinute: true,
-                hour12: hour24 === '0',
-              }} // 任务的时间
-              eventOrder={'start'} //String / Array / Function, default: "start,-duration,allDay,title"
-              displayEventEnd={false} // 让月视图的任务既显示开始时间又显示结束时间
-              eventClick={eventClick}
-              eventDidMount={info =>
-                eventDidMount(
-                  info,
-                  currentView,
-                  controls,
-                  worksheetInfo,
-                  base,
-                  sheetSwitchPermit,
-                  isCharge,
-                  this.props,
-                  () => eventClick(info),
-                  this.state.isMove,
-                  () => this.props.buttonsCheckStatus,
-                )
-              }
-              eventDrop={info => {
-                let endData = _.get(info, ['event', 'extendedProps', 'endData']) || {};
-                let startData = _.get(info, ['event', 'extendedProps', 'startData']) || {};
-                // 日历上 记录的拖拽
-                let control = [
-                  {
-                    controlId: startData.controlId,
-                    controlName: startData.controlName,
-                    type: startData.type,
-                    value: formatTimeForSave(info.event.start, startData, appId),
-                  },
-                ];
-                //日历视图推拽bugfix，结束时间不从组件返回内容取，需要根据开始时间+时间差来处理
-                const item = (info?.event?.extendedProps?.timeList || [])?.[0];
-                const rowStart = item?.row?.[startData?.controlId];
-                const rowEnd = item?.row?.[endData?.controlId];
-                const needEnd =
-                  !!endData?.controlId && !!rowStart && !!rowEnd && !moment(rowEnd).isBefore(moment(rowStart));
-
-                if (item && needEnd) {
-                  const endTime = moment(info.event.start)
-                    .add(moment(rowEnd).diff(moment(rowStart)), 'ms')
-                    .toDate();
-                  control.push({
-                    controlId: endData.controlId,
-                    controlName: endData.controlName,
-                    type: endData.type,
-                    value: formatTimeForSave(endTime, endData, appId),
-                  });
-                }
-
-                this.updateData(control, info.event.extendedProps.rowid, data => {
-                  this.props.updateEventData(info.event._def.extendedProps.rowid, data, info.event.start);
-                });
-              }}
-              eventResize={info => {
-                let endData = _.get(info, ['event', 'extendedProps', 'endData']) || {};
-
-                if (!endData.controlId) {
-                  alert(_l('请配置结束控件'), 3);
-                  this.getEventsFn();
-                  return;
-                }
-
-                this.updateData(
-                  [
-                    {
-                      controlId: endData.controlId,
-                      controlName: endData.controlName,
-                      type: endData.type,
-                      value: formatTimeForSave(
-                        new Date(changeEndStr(info.event.end, info.event.allDay, calendarview)),
-                        endData,
-                        appId,
-                      ),
-                    },
-                  ],
-                  info.event.extendedProps.rowid,
-                );
-              }}
-              dayMaxEventRows={showall === '0'}
-              moreLinkContent={info => {
-                return <div className="w100" title={_l('查看其他%0个', info.num)}>{`+${info.num}`}</div>;
-              }}
-              moreLinkClick={() => {
-                const setMorePoper = () => {
-                  if ($('.fc-more-popover').length > 0) {
-                    let h = $('.fc-more-popover').height();
-                    let top = $('.fc-more-popover').position().top;
-                    let mH = $('.fc-scroller-harness-liquid').height();
-
-                    if (h + top > mH) {
-                      $('.fc-more-popover').css({ bottom: 10, top: 'initial' });
-                    }
-
-                    $('.fc-more-popover').addClass('show');
-                  }
-                };
-
-                if ($('.fc-more-popover').length > 0) {
-                  setMorePoper();
-                } else {
-                  setTimeout(() => {
-                    setMorePoper();
-                  }, 500);
-                }
-              }}
+              initialView={initialView}
+              btnList={btnList}
+              calendarFormatData={calendarFormatData}
+              weekbegin={weekbegin}
+              showall={showall}
+              unweekday={unweekday}
+              others={others}
+              currentView={currentView}
+              appId={appId}
               unselectAuto={this.state.unselectAuto}
-              selectable={true}
-              // selectHelper={true}
-              select={info => {
-                if (!this.state.canNew) {
-                  return;
-                }
-
-                // isSafari 且 双击
-                if (window.isSafari && this.dbClickFn()) {
-                  this.selectFn({ ...info });
-                  return;
-                }
-
-                clickData = info;
-                // 全天事件
-                if (info.allDay) {
-                  // 且 多天 即非一格
-                  if (moment(info.end).diff(moment(info.start), 'day') > 1) {
-                    // 全天事件 框选多天
-                    this.selectFn(info);
-                  }
-                } else {
-                  // 30分钟以上 即非一格
-                  if (moment(info.end).diff(moment(info.start), 'minute') > 30) {
-                    this.selectFn(info);
-                  }
-                }
-              }}
-              // droppable={true} //true 会造成所有的拖动都走drop
-              drop={info => {
-                // 排期列表 =>拖拽到日历
-                let rowId = $(info.draggedEl).attr('rowid');
-
-                if (!rowId) {
-                  return;
-                }
-
-                let keyId = $(info.draggedEl).attr('keyId');
-                let data = eventScheduled.filter(o => o.keyIds === keyId);
-
-                if (data.length && data.length === 1) {
-                  const hasEnd = !!data[0].end;
-                  const calendarEnd = !hasEnd
-                    ? ''
-                    : !data[0].allDay
-                      ? data[0].end
-                      : `${moment(data[0].end).subtract(1, 'day').format('YYYY-MM-DD')} 23:59:59`;
-                  this.changeEventFn({
-                    ...info,
-                    calendar: {
-                      start: data[0].start,
-                      end: calendarEnd,
-                    },
-                    data: {
-                      ...data[0],
-                    },
-                    rowId,
-                  });
-                } else {
-                  this.setState(
-                    {
-                      selectTimeInfo: info,
-                      changeData: eventData.find(o => o.rowid === rowId) || {},
-                    },
-                    () => {
-                      this.showChooseTrigger(info.dateStr, info.view.type);
-                    },
-                  );
-                }
-              }}
-              eventMouseEnter={() => {
-                this.showTip(null, false);
-              }}
-              {...others}
+              hour24={hour24}
             />
           ) : (
             <LoadDiv />

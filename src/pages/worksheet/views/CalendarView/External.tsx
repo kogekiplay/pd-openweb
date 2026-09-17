@@ -11,6 +11,7 @@ import * as Actions from 'src/pages/worksheet/redux/actions/calendarview';
 import type { RootState } from 'src/redux/types';
 import { renderText } from 'src/utils/control';
 import { EVENT_TAB_KEY_BY_INDEX } from './constants';
+import { readInitType } from './util';
 
 let External = class External extends Component<any, any> {
   constructor(props) {
@@ -33,7 +34,7 @@ let External = class External extends Component<any, any> {
 
   componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
-      const { calendarview = {}, getInitType, fetchExternal, refreshEventList, updateCalendarEventIsAdd } = this.props;
+      const { calendarview = {}, fetchExternal, refreshEventList, updateCalendarEventIsAdd } = this.props;
       const { calendarEventIsAdd, calendarData = {} } = calendarview;
       const { calendarInfo } = calendarData;
 
@@ -43,7 +44,7 @@ let External = class External extends Component<any, any> {
         });
       }
 
-      const typeEvent = getInitType();
+      const typeEvent = readInitType();
 
       if (calendarEventIsAdd) {
         refreshEventList(); //有新增数据
@@ -74,8 +75,7 @@ let External = class External extends Component<any, any> {
     }
   };
   renderSearchData = searchData => {
-    const { getInitType } = this.props;
-    const typeEvent = getInitType();
+    const typeEvent = readInitType();
 
     if (searchData.length <= 0) {
       return <div className="noData">{_l('没有搜索结果')}</div>;
@@ -91,9 +91,9 @@ let External = class External extends Component<any, any> {
     );
   };
   renderListEvent = () => {
-    const { calendarview, getInitType } = this.props;
+    const { calendarview } = this.props;
     const { calenderEventList } = calendarview;
-    const typeEvent = getInitType();
+    const typeEvent = readInitType();
     const eventData =
       (typeEvent === EVENT_TAB_KEY_BY_INDEX[1]
         ? calenderEventList[`${typeEvent}DtResort`]
@@ -221,10 +221,10 @@ let External = class External extends Component<any, any> {
     );
   };
   handleScroll = ({ direction }) => {
-    const { calendarview, getInitType } = this.props;
+    const { calendarview } = this.props;
     const { calenderEventList } = calendarview;
     const { keyWords } = calenderEventList;
-    const typeEvent = getInitType();
+    const typeEvent = readInitType();
 
     if (direction === 'down' && !calenderEventList[`${typeEvent}IsAll`]) {
       this.setState({
@@ -262,10 +262,10 @@ let External = class External extends Component<any, any> {
   };
 
   render() {
-    const { calendarview, getInitType } = this.props;
+    const { calendarview } = this.props;
     const { calenderEventList = {}, calendarLoading = false } = calendarview;
     const { keyWords, searchData = [] } = calenderEventList;
-    const typeEvent = getInitType();
+    const typeEvent = readInitType();
     const eventData = calenderEventList[typeEvent];
     return (
       <div id={`externalEvents-${this.state.random}`} className="externalEvents flexColumn">
