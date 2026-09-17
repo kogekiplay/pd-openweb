@@ -288,33 +288,56 @@ const REWRITE_PREFIXES = [
   '/pm/',
 ];
 
+/* 【这几个仓要不限 origin 地剥】上面那轮只认「配置里的 apiServer 那个 origin」，
+   但同一套部署里【不同服务各报各的地址】：
+     主 API   /api/HomeApp/GetApp        -> "iconUrl":"/file/mdpub/customIcon/x.svg"（相对）
+     工作流   /workflow_api/.../listAll  -> "iconUrl":"http://<裸IP>:8880/file/mdpub/customIcon/x.svg"
+   同一个文件、同一个仓，两种形态。工作流服务报的那个 host 跟 apiServer 不是一个串，
+   于是老逻辑一个都替不掉 —— dev 下打开应用的「工作流」页，10 个分组图标全走 XHR
+   跨源，控制台成片 CORS + net::ERR_FAILED。
+
+   这几个仓的语义是明确的：`/file/mdpub|mdpic|mdmedia|mingdao` 开头的地址一定属于
+   本部署的文件服务，后端把 host 写成域名还是裸 IP 都不改变这一点，所以按仓名剥掉
+   前面的 origin 是安全的。仍然【不包含 mdoc】—— 原因见上面那段长注释（那个值是
+   拼好回传给后端的，改成相对会让上传静默失败）。 */
+const ANY_ORIGIN_FILE_PREFIXES = ['/file/mdpub', '/file/mdpic', '/file/mdmedia', '/file/mingdao'];
+
+// host 段不含 / " ' 和空白，所以这样只会吃掉 scheme + host[:port]，路径原样留下。
+const anyOriginRe = prefix =>
+  new RegExp(`https?://[^"'\\s/]+(?=${prefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[/"])`, 'g');
+
 function rewriteAbsoluteHosts(buffer, server, prefixes = REWRITE_PREFIXES) {
-  let origin;
+  let origin: string | null = null;
 
   try {
     origin = new URL(server).origin;
   } catch {
-    // 上游默认值是 '/wwwapi/' 这种相对路径，不是合法 URL —— 此时无事可做
-    return buffer;
+    // 上游默认值是 '/wwwapi/' 这种相对路径，不是合法 URL —— 这一轮跳过，下面那轮仍要跑
   }
 
   const text = buffer.toString('utf8');
-
-  if (!text.includes(origin)) return buffer;
-
   let out = text;
 
-  for (const prefix of prefixes) {
-    // '/' 是特例：它对应的值（如平台管理配置里的 hapWebUrl）【整个就等于 origin + '/'】。
-    // 按普通前缀处理会把 origin + '/wwwapi/'、origin + '/apidoc/' 这些也一并改成
-    // 相对地址，而它们在 dev 侧都【没有】转发条目，换来的只是 SPA 兜底（200 + HTML）。
-    // 所以把左右引号一起纳入匹配，只替换「整个值就是 origin + '/'」的那一类。
-    if (prefix === '/') {
-      out = out.split(`"${origin}/"`).join('"/"');
-      continue;
-    }
+  // 【这里原先是 `if (!text.includes(origin)) return buffer;`】只以 apiServer 的 origin
+  // 作早退条件，会把「只含别的 host」的响应整个放过去 —— 工作流那份响应正是如此。
+  if (origin && text.includes(origin)) {
+    for (const prefix of prefixes) {
+      // '/' 是特例：它对应的值（如平台管理配置里的 hapWebUrl）【整个就等于 origin + '/'】。
+      // 按普通前缀处理会把 origin + '/wwwapi/'、origin + '/apidoc/' 这些也一并改成
+      // 相对地址，而它们在 dev 侧都【没有】转发条目，换来的只是 SPA 兜底（200 + HTML）。
+      // 所以把左右引号一起纳入匹配，只替换「整个值就是 origin + '/'」的那一类。
+      if (prefix === '/') {
+        out = out.split(`"${origin}/"`).join('"/"');
+        continue;
+      }
 
-    out = out.split(origin + prefix).join(prefix);
+      out = out.split(origin + prefix).join(prefix);
+    }
+  }
+
+  for (const prefix of prefixes) {
+    if (!ANY_ORIGIN_FILE_PREFIXES.includes(prefix)) continue;
+    out = out.replace(anyOriginRe(prefix), '');
   }
 
   return out === text ? buffer : out;
