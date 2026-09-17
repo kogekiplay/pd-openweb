@@ -65,15 +65,29 @@ class AddRecord extends Component<any, any> {
               worksheetId: params.worksheetId || worksheetId,
               btnId,
             })
-            .then(({ writeControls }) => {
-              this.setState({ loading: false, worksheetInfo: data, writeControls });
+            // 同理：解构 undefined 会抛，一样会把上面那个失败分支挡住
+            .then(res => {
+              this.setState({ loading: false, worksheetInfo: data, writeControls: _.get(res, 'writeControls') || [] });
             });
         } else {
-          data.template.controls = replaceControlsTranslateInfo(
-            params.appId || appId,
-            params.worksheetId || worksheetId,
-            data.template.controls,
-          );
+          /* 【取不到模板时不能直接往下写】getWorksheetInfo 失败时（无权限、表被删、
+             入口上下文不对等）返回的响应里【没有 template】，只有 resultCode。
+             原先这里直接 `data.template.controls = ...`，当场抛
+             "Cannot read properties of undefined (reading 'controls')"，
+             setState 永远执行不到 —— loading 一直是 true，用户看到的是【白屏】。
+
+             而下面 render 里本来就写了 `worksheetInfo.resultCode !== 1` 的失败分支
+             （显示「该表已删除或没有权限」），是这次崩溃把它挡在了外面。
+             实测：直接访问 /mobile/addRecord/<appId>/<worksheetId>/<viewId>，
+             接口返回 resultCode: 4 且无 template，页面标题有、内容 0 字。 */
+          if (_.get(data, 'template.controls')) {
+            data.template.controls = replaceControlsTranslateInfo(
+              params.appId || appId,
+              params.worksheetId || worksheetId,
+              data.template.controls,
+            );
+          }
+
           this.setState({ loading: false, worksheetInfo: data });
         }
       });
