@@ -144,7 +144,11 @@ export default function EditPortalUrlDialog(props) {
               }
             }}
           >
-            {loading ? <Load class="loading"></Load> : _l('确认')}
+            {/* 原先是 <Load class="loading">：Load 是本文件里的 styled.div，
+                styled-components 6 会把 class 透传到真实 div 上，React 不认、直接丢掉，
+                只留一条 "Invalid DOM property `class`" 告警。转圈样式本来就写在
+                Load 自己的定义里，"loading" 这个类名全仓没有对应规则，纯属多余，删掉。 */}
+            {loading ? <Load /> : _l('确认')}
           </Button>
         </React.Fragment>
       }

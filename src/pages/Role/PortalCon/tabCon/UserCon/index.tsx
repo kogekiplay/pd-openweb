@@ -6,7 +6,7 @@ import cx from 'classnames';
 import _ from 'lodash';
 import { navigateTo } from 'router/navigateTo';
 import styled from 'styled-components';
-import { Dialog } from 'ming-ui';
+import { Dialog, Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import externalPortalAjax from 'src/api/externalPortal';
 import SearchInput from 'src/pages/AppHomepage/AppCenter/components/SearchInput';
@@ -329,7 +329,8 @@ class Con extends React.Component<any, any> {
                   }, 0);
                 }}
               >
-                <i class="ming Icon icon-add icon icon-undefined"></i>
+                {/* 同 AppRoleCon/UserCon/RoleNav：class 在 JSX 里会被丢掉，加号一直没出来。 */}
+                <Icon icon="add" />
                 {_l('创建角色')}
               </AddWrap>
             )}

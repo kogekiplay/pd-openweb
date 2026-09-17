@@ -75,6 +75,7 @@ export default class Con extends React.Component<any, any> {
                 {navList.map(o => {
                   return (
                     <li
+                      key={o.roleId}
                       className={cx('flexRow alignItemsCenter', { cur: roleId === o.roleId })}
                       onClick={() => {
                         this.props.onChange({
@@ -126,14 +127,14 @@ export default class Con extends React.Component<any, any> {
             <ul>
               {sysList.length > 0 && <Wrap>{_l('系统')}</Wrap>}
               {sysList.map(o => {
-                return <ItemCon {...this.props} data={o} selectDebugRole={selectDebugRole} />;
+                return <ItemCon key={o.roleId} {...this.props} data={o} selectDebugRole={selectDebugRole} />;
               })}
               {sysList.length > 0 && <div style={{ paddingTop: 6 }}></div>}
               {otherList.length > 0 && (
                 <React.Fragment>
                   <Wrap>{_l('自定义')}</Wrap>
                   {otherList.map(o => {
-                    return <ItemCon {...this.props} data={o} />;
+                    return <ItemCon key={o.roleId} {...this.props} data={o} />;
                   })}
                 </React.Fragment>
               )}
@@ -147,7 +148,10 @@ export default class Con extends React.Component<any, any> {
                     }, 0);
                   }}
                 >
-                  <i class="ming Icon icon-add icon icon-undefined"></i>
+                  {/* 原先是手抄的 <i class="ming Icon icon-add icon icon-undefined">：
+                      class 在 JSX 里会被 React 丢掉，所以「创建角色」前面的加号【一直没渲染出来】。
+                      本文件已经引了 ming-ui 的 Icon，直接用组件，别再抄它的产物。 */}
+                  <Icon icon="add" />
                   {_l('创建角色')}
                 </AddWrap>
               )}

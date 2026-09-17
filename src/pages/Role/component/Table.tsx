@@ -259,10 +259,13 @@ export default function PorTalTable(props) {
             ></Checkbox>
           </div>
         )}
-        {columnsCell.map(o => {
+        {columnsCell.map((o, i: number) => {
           let isSort = o.sorter && props.handleChangeSortHeader;
           return (
+            /* key 原先挂在里面那个 SortToll 上 —— 它不在数组里，挂了没用；
+               需要 key 的是 map 直接返回的这个 div。 */
             <div
+              key={o.id || i}
               className={cx('wrapTr overflow_ellipsis WordBreak textTertiary Bold', o.className, {
                 isSort: isSort,
                 Hand: isSort,
@@ -270,7 +273,6 @@ export default function PorTalTable(props) {
             >
               {isSort ? (
                 <SortToll
-                  key={o.id}
                   item={o}
                   name={o.renderHeader ? o.renderHeader(o) : o.name}
                   handleChangeSortHeader={props.handleChangeSortHeader}
@@ -292,6 +294,7 @@ export default function PorTalTable(props) {
             let isChecked = props.selectedIds.includes(itemId) || !!props.selectedAll;
             return (
               <WrapLi
+                key={itemId}
                 className={cx('flexRow alignItemsCenter Font14', {
                   checkLi: isChecked && !(props.ownerNoOption && item.isOwner),
                   Hand: !!clickRow,
@@ -338,7 +341,7 @@ export default function PorTalTable(props) {
                     ></Checkbox>
                   </div>
                 )}
-                {columnsCell.map(o => {
+                {columnsCell.map((o, i: number) => {
                   const pram =
                     showTips && !['option'].includes(o.id) && !o.render
                       ? {
@@ -347,7 +350,7 @@ export default function PorTalTable(props) {
                       : null;
 
                   return (
-                    <div className={cx('wrapTr', o.className)} {...pram}>
+                    <div key={o.id || i} className={cx('wrapTr', o.className)} {...pram}>
                       {o.render ? o.render('', item) : item[o.id]}
                     </div>
                   );
