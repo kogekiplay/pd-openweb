@@ -207,6 +207,7 @@ class Con extends React.Component<any, any> {
                 .map(o => {
                   return (
                     <span
+                      key={o.key}
                       className={cx('tab Hand Font14 Bold', { cur: this.state.tab === o.key })}
                       id={`tab_${o.key}`}
                       onClick={() => {
@@ -229,7 +230,10 @@ class Con extends React.Component<any, any> {
                   );
                 })}
             </div>
-            <div className="flexRow alignItemsCenter" style={{ 'justify-content': 'flex-end' }}>
+            {/* style 对象里必须写驼峰。原先是 'justify-content'，React 不认、整条丢掉
+                （"Unsupported style property justify-content. Did you mean justifyContent?"），
+                所以这一行其实一直没有右对齐。 */}
+            <div className="flexRow alignItemsCenter" style={{ justifyContent: 'flex-end' }}>
               {(canEditApp || canEditUser) && (
                 <div className="flexRow pRight20 actCheckCon">
                   <Tooltip

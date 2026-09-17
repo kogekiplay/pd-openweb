@@ -112,8 +112,11 @@ const Wrap = styled.div`
 const customizeRenderEmpty = () => (
   <div className="emptyCon">
     <div className="TxtCenter">
-      <i class="iconBox mBottom12"></i>
-      <span class="textTertiary Block mBottom20 TxtCenter Font17 textTertiary">{_l('暂无数据')}</span>
+      {/* 原先写的是 class=，JSX 里 React 不认，会整个丢掉并报
+          "Invalid DOM property `class`. Did you mean `className`?" ——
+          结果这两个元素【一个类名都没有】，空状态图标和文字样式全丢。 */}
+      <i className="iconBox mBottom12"></i>
+      <span className="textTertiary Block mBottom20 TxtCenter Font17">{_l('暂无数据')}</span>
     </div>
   </div>
 );
