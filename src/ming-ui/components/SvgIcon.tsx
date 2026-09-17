@@ -1,5 +1,6 @@
 import React from 'react';
 import { ReactSVG } from 'react-svg';
+import { normalizeFileUrl } from 'src/utils/fileUrl';
 
 // react-svg 19 把 beforeInjection / afterInjection 存进内部的 callbacksRef，而注入 effect 的
 // 依赖数组是固定的 [desc, evalScripts, httpRequestWithCredentials, renumerateIRIElements,
@@ -21,7 +22,9 @@ export default ({ url = '', size = 24, fill = '#1677ff', className, addClassName
   return (
     <ReactSVG
       className={className}
-      src={url}
+      /* 图标是走 XHR 取回来再内联的，所以地址必须同源。工作流接口给的是指向本部署的
+         绝对 http 地址，生产（https）下会被当混合内容整个拦掉 —— 见 normalizeFileUrl。 */
+      src={normalizeFileUrl(url)}
       // 这里必须再兜一次底，不能只靠上面的默认参数：JS 默认参数只对 undefined 生效，
       // 实参是 null 或 '' 时会原样传进来，React 会把 style.color 当作「删除该声明」处理，
       // wrapper 就没有 inline color 了，svg 的 currentColor 会一路继承到祖先的文字色。
