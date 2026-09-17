@@ -66,11 +66,14 @@ export default function CertificationDisplay(props) {
   } = props; // fromType: 1-个人认证 2-企业认证 3-认证信息页面
   const [detail, setDetail] = useState({ visible: false, id: '' });
 
-  const onVerify = ({ isUpgrade }) => {
-    const isCert = certificationApi.checkIsCert(
-      { certSource: projectId ? 1 : 0, projectId, authType: isUpgrade ? 2 : 1 },
-      { ajaxOptions: { sync: true } },
-    );
+  /* 【原先是同步 XHR】`{ ajaxOptions: { sync: true } }` —— 主线程同步请求已被废弃
+     （提示只出现在 DevTools 的 Issues 面板，Console 里搜不到，很容易漏掉）。
+     这里是点击「去认证」的事件回调，没人用它的返回值，直接改异步即可。
+     取不到结果时按「未认证」继续往下走，和以前 isCert 为假值时一致。 */
+  const onVerify = async ({ isUpgrade }) => {
+    const isCert = await certificationApi
+      .checkIsCert({ certSource: projectId ? 1 : 0, projectId, authType: isUpgrade ? 2 : 1 })
+      .catch(() => false);
 
     if (isCert) {
       alert(_l('已认证，请刷新页面'), 3);

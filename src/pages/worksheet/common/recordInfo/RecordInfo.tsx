@@ -180,6 +180,14 @@ export default class RecordInfo extends Component<any, any> {
       submitLoading: false,
       isSettingTempData: false,
       sideWidth: this.getSideWidth(),
+      /* 【必须在这里初始化】它在 render 里参与算宽度
+         （EditingBar 的 style、formWidth、拖拽条的 left/max），
+         但原先只在 loadRecord 成功后的 setState 里才第一次赋值（本文件 formSectionWidth: 0 那处）。
+         于是数据回来之前的几次渲染它是 undefined，`width - formSectionWidth - sideWidth` 得到 NaN，
+         React 报 "`NaN` is an invalid value for the `width` css style property" 并丢弃该样式 ——
+         正在编辑那条提示条这几帧是没有宽度的。
+         这条告警只出现在 DevTools 的 Issues 面板里，Console 搜不到，很容易漏掉。 */
+      formSectionWidth: 0,
       recordinfo: {},
       tempFormData: [],
       updateControlIds: [],

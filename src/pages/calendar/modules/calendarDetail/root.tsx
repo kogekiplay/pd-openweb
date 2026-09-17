@@ -587,7 +587,6 @@ export default class CalendarDetail extends Component<any, any> {
           <ScrollView
             className="Absolute"
             onScrollEnd={this.handleScroll.bind(this)}
-            preserveScrollTop={true}
             ref={el => {
               this.scrollView = el;
             }}

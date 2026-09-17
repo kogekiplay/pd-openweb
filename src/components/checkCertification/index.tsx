@@ -43,12 +43,20 @@ export const checkCertification = props => {
   );
 
   if (isPersonal ? !paidProjects.length : [0, 2].includes(getCurrentProject(projectId).licenseType) || forceCheck) {
-    const isCert = certificationApi.checkIsCert(
-      isPersonal ? { certSource: 0, authType: 1 } : { certSource: 1, projectId, authType },
-      { ajaxOptions: { sync: true } },
-    );
+    /* 【原先是同步 XHR】`{ ajaxOptions: { sync: true } }` —— 主线程同步请求已被废弃，
+       控制台每次都报 "Synchronous XMLHttpRequest on the main thread is deprecated"，
+       而且这一下会把主线程卡到请求回来为止。
 
-    !isCert ? identityInterception(projectId, isPersonal) : checkSuccess();
+       【为什么可以直接改异步】这个函数本来就是回调式的：全部 20 多个调用方都写成
+       `checkCertification({ ..., checkSuccess })`，没有一处用它的返回值
+       （它以前也只返回 undefined）。所以把分支挪进 then 里，对调用方完全透明。
+       取不到结果时按「未认证」处理，和以前 isCert 为假值时一致。 */
+    certificationApi
+      .checkIsCert(isPersonal ? { certSource: 0, authType: 1 } : { certSource: 1, projectId, authType })
+      .then(isCert => {
+        isCert ? checkSuccess() : identityInterception(projectId, isPersonal);
+      })
+      .catch(() => identityInterception(projectId, isPersonal));
   } else {
     checkSuccess();
   }

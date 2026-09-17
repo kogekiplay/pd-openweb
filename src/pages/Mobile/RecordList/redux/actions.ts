@@ -199,14 +199,10 @@ export const loadWorksheet = noNeedGetApp => (dispatch: AppDispatch, getState: G
       }
 
       if (appNaviStyle === 2) {
-        let navSheetList = _.flatten(
-          appSection.map(item => {
-            item.workSheetInfo.forEach(sheet => {
-              sheet.appSectionId = item.appSectionId;
-            });
-            return item.workSheetInfo;
-          }),
-        )
+        /* 同 Mobile/CustomPage：原先这里 `sheet.appSectionId = item.appSectionId` 是在改
+           store 里的对象（appSection 取自 getState().mobile.appDetail），
+           而下面只用 workSheetId 做匹配，盖上去的字段没人读。直接删。 */
+        let navSheetList = _.flatten(appSection.map(item => item.workSheetInfo))
           .filter(item => [1, 3].includes(item.status) && !item.navigateHide) //左侧列表状态为1 且 角色权限没有设置隐藏
           .slice(0, 4);
         navSheetList.forEach(item => {

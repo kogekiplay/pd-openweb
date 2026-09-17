@@ -120,27 +120,27 @@ export default function QuickOperate(props) {
     return filterOptions;
   };
 
-  const getBaseInfo = () => {
+  /* 【原先是同步 XHR】`{ ajaxOptions: { sync: true } }` —— 主线程同步请求已被废弃
+     （提示只在 DevTools 的 Issues 面板，Console 搜不到）。
+     唯一调用点在下面 handleClick 的 chat / email 分支里，是点击事件，可以等。 */
+  const getBaseInfo = async () => {
     if (_.get(window, 'quickOperateInfo.accountId') === item.accountId) {
       return window.quickOperateInfo;
     }
 
-    const res = UserController.getAccountBaseInfo(
-      {
-        accountId: item.accountId,
-        appId: appId.includes('#') ? this.state.appId : undefined,
-        refresh: false,
-        onProjectId: projectId.includes('#') ? undefined : projectId,
-      },
-      { ajaxOptions: { sync: true } },
-    );
+    const res = await UserController.getAccountBaseInfo({
+      accountId: item.accountId,
+      appId: appId.includes('#') ? this.state.appId : undefined,
+      refresh: false,
+      onProjectId: projectId.includes('#') ? undefined : projectId,
+    }).catch(() => ({}));
 
     window.quickOperateInfo = { ..._.pick(res, ['accountId', 'accountStatus', 'isContact', 'email']) };
 
     return window.quickOperateInfo;
   };
 
-  const handleClick = option => {
+  const handleClick = async option => {
     switch (option.value) {
       case 'del':
         props.handleRemove();
@@ -173,7 +173,7 @@ export default function QuickOperate(props) {
         break;
       case 'chat':
       case 'email':
-        const res = getBaseInfo();
+        const res = await getBaseInfo();
 
         if (option.value === 'chat' && res.accountStatus === 1 && res.isContact) {
           window.open(pathCompletion(`/windowChat?id=${item.accountId}`));

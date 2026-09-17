@@ -54,9 +54,15 @@ export default function Area(props) {
   const filterCommonData = commonData.filter(i => _.find(originData, o => o.id === i));
 
   useEffect(() => {
-    const list = getCityList();
-    setData(list);
-    setSearchData(list);
+    let alive = true;
+    getCityList().then(list => {
+      if (!alive) return;
+      setData(list);
+      setSearchData(list);
+    });
+    return () => {
+      alive = false;
+    };
   }, []);
 
   useEffect(() => {
@@ -72,16 +78,20 @@ export default function Area(props) {
   };
 
   // 获取地区/国家列表
-  const getCityList = (keywords = '') => {
-    const { citys = [] } = fixedDataController.getCitysByParentID(
-      {
-        keywords,
-        layer: 0,
-        projectId: globalSheetInfo.projectId,
-        langType: getCurrentLangCode(),
-      },
-      { ajaxOptions: { sync: true } },
-    );
+  /* 【原先是同步 XHR】`{ ajaxOptions: { sync: true } }` —— 主线程同步请求已被废弃
+     （提示只在 DevTools 的 Issues 面板，Console 搜不到）。
+     两个调用点都是把结果塞进 state（初始化的 useEffect、以及搜索的 debounce 回调），
+     本来就不要求同步拿到，改 await 即可。 */
+  const getCityList = async (keywords = '') => {
+    const { citys = [] } =
+      (await fixedDataController
+        .getCitysByParentID({
+          keywords,
+          layer: 0,
+          projectId: globalSheetInfo.projectId,
+          langType: getCurrentLangCode(),
+        })
+        .catch(() => ({}))) || {};
     let list = citys.map(i => ({ ...i, text: i.name, value: i.id }));
 
     if (!enumDefault) {
@@ -93,8 +103,7 @@ export default function Area(props) {
 
   const handleSearch = _.debounce(value => {
     if (_.isUndefined(value)) return;
-    const newList = getCityList(value);
-    setSearchData(newList);
+    getCityList(value).then(setSearchData);
   }, 500);
 
   // 获取层级类型

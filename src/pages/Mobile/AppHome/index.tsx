@@ -502,23 +502,31 @@ class AppHome extends React.Component<any, any> {
           <div className="spaceBottom"></div>
 
           <Fragment>
+            {/* 这几块是按用户配置的顺序渲染的，是一个数组，所以每项都要 key ——
+                原先直接 return renderXxx() 的结果，控制台常驻
+                「Each child in a list should have a unique "key" prop. Check the render method of `AppHome`」。
+                moduleType 本身就是这份排序配置里的唯一标识，拿它当 key 即可。 */}
             {sortModuleTypes.map(moduleType => {
-              switch (moduleType) {
-                case MODULE_TYPES.APP_COLLECTION:
-                  // 应用收藏
-                  return displayMark && !isExternal ? this.renderCollectAppList() : '';
-                case MODULE_TYPES.RECENT:
-                  // 最近使用
-                  return displayCommonApp && !isExternal ? this.renderRecent() : '';
-                case MODULE_TYPES.ROW_COLLECTION:
-                  // 记录收藏
-                  return rowCollect && !isExternal ? this.renderCollectRecords() : '';
-                case MODULE_TYPES.CHART_COLLECTION:
-                  // 图表收藏
-                  return this.renderCollectCharts(currentProject.projectId, reportAutoRefreshTimer);
-                default:
-                  return null;
-              }
+              const moduleContent = (() => {
+                switch (moduleType) {
+                  case MODULE_TYPES.APP_COLLECTION:
+                    // 应用收藏
+                    return displayMark && !isExternal ? this.renderCollectAppList() : null;
+                  case MODULE_TYPES.RECENT:
+                    // 最近使用
+                    return displayCommonApp && !isExternal ? this.renderRecent() : null;
+                  case MODULE_TYPES.ROW_COLLECTION:
+                    // 记录收藏
+                    return rowCollect && !isExternal ? this.renderCollectRecords() : null;
+                  case MODULE_TYPES.CHART_COLLECTION:
+                    // 图表收藏
+                    return this.renderCollectCharts(currentProject.projectId, reportAutoRefreshTimer);
+                  default:
+                    return null;
+                }
+              })();
+
+              return moduleContent ? <Fragment key={moduleType}>{moduleContent}</Fragment> : null;
             })}
           </Fragment>
 
