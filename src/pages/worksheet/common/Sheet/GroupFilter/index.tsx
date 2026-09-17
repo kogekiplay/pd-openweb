@@ -104,14 +104,54 @@ function GroupFilter(props) {
     }
   }, [navGroupFilters]);
 
-  useEffect(() => {
-    if (isOpenGroup) {
-      if ([29, 26, 27, 48].includes(source.type) && getAdvanceSetting(view).navshow === '1') {
-        getNavGroupCount();
-      }
+  /* 【isOpenGroup 只能当「闸门」，不能当「触发条件」】
+     下面这两个 effect 原先把 isOpenGroup 写进依赖里，于是【每次展开都会重新拉一次】
+     GetNavGroup 和分组计数 —— 哪怕分组配置、筛选条件一个字都没改。
+     生产和 dev 的 Performance trace 都拍到了：点开面板必发一次 /Worksheet/GetNavGroup，
+     光响应处理就占主线程 48~67ms，还额外带出一次渲染。
 
-      source.controlId && fetch();
+     但 isOpenGroup 当初写进依赖是有道理的：面板关着的时候这些 effect 全被 if 挡住，
+     配置或筛选在关闭期间变了就没人去取，所以必须在展开那一刻补上。
+     改法是把「该刷新」这件事记下来，而不是靠 isOpenGroup 变化去撞：
+       · 关闭时：不发请求，只把 needRefresh 置位；
+       · 展开时：只有 needRefresh 为真才补一次。
+     行为与原来等价，少掉的正是「什么都没变、单纯开合」这一类重复请求。 */
+  const needRefresh = useRef({ nav: true, count: true });
+
+  /* 【标记必须写在取数之前】同一次提交里 effect 按声明顺序执行。
+     如果先跑取数、后跑标记，那么「配置变了」这一轮取数 effect 看到的还是上一轮清掉的 false，
+     会直接 return，等标记置位时已经晚了一拍 —— 表现为改了分组配置却不刷新。 */
+  useEffect(() => {
+    needRefresh.current.nav = true;
+  }, [
+    source.controlId,
+    navGroup.viewId,
+    navGroup.isAsc,
+    getAdvanceSetting(view).navfilters,
+    getAdvanceSetting(view).navsorts,
+    getAdvanceSetting(view).customnavs,
+    getAdvanceSetting(view).navshow,
+    getAdvanceSetting(view).showallitem,
+    getAdvanceSetting(view).allitemname,
+    getAdvanceSetting(view).shownullitem,
+    getAdvanceSetting(view).nullitemname,
+    getAdvanceSetting(view).navlayer,
+  ]);
+
+  useEffect(() => {
+    // 关着就什么都不做。注意【不要在这里置位 needRefresh】——
+    // 那等于「每次折叠都标记为脏」，下次展开必然再拉一次，和没改一样（踩过）。
+    // 置位只由上面那个「配置真的变了」的 effect 负责，它开着关着都会跑。
+    if (!isOpenGroup) return;
+
+    if (!needRefresh.current.nav) return;
+    needRefresh.current.nav = false;
+
+    if ([29, 26, 27, 48].includes(source.type) && getAdvanceSetting(view).navshow === '1') {
+      getNavGroupCount();
     }
+
+    source.controlId && fetch();
   }, [
     source.controlId,
     navGroup.viewId,
@@ -128,8 +168,17 @@ function GroupFilter(props) {
     getAdvanceSetting(view).navlayer,
   ]);
 
+  // 同理：标记在前，取数在后
   useEffect(() => {
-    isOpenGroup && getNavGroupCount();
+    needRefresh.current.count = true;
+  }, [filters, quickFilter]);
+
+  useEffect(() => {
+    if (!isOpenGroup) return;
+
+    if (!needRefresh.current.count) return;
+    needRefresh.current.count = false;
+    getNavGroupCount();
   }, [filters, quickFilter, isOpenGroup]);
 
   useEffect(() => {
@@ -478,8 +527,14 @@ function GroupFilter(props) {
   return (
     <Con
       className={cx('groupFilterWrap h100 flexColumn', { groupFilterWrapForSingle: isSingle })}
-      width={width}
-      style={{ borderRight: !isOpenGroup ? '1px solid var(--color-border-secondary)' : '0' }}
+      // 宽度以 CSS 变量的形式走行内样式：改一个变量就够了，不会像原来那样
+      // 每换一个宽度值就让 styled-components 新生成一个类 + 一整套规则（见 style.ts 的说明）。
+      // width 可能是 undefined（首屏还没定宽）或 localStorage 取回来的字符串，
+      // 所以这里显式判一下，别拼出 "undefinedpx" 这种无效值。
+      style={{
+        ...(_.isNil(width) || width === '' ? null : { ['--group-filter-width' as any]: `${width}px` }),
+        borderRight: !isOpenGroup ? '1px solid var(--color-border-secondary)' : '0',
+      }}
     >
       <NavSearch
         {...props}
