@@ -24,16 +24,33 @@ export default function (Comp, props: Record<string, any> = {}) {
 
   const handlePopState = () => !browserIsMobile() && destroy();
 
+  /* 【unmount 必须挪出 React 的渲染/提交阶段】
+     React 18 起，在 React 正在渲染时同步调 root.unmount() 会报
+     "Attempted to synchronously unmount a root while React was already rendering.
+      React cannot finish unmounting the root until the current render has completed,
+      which may lead to a race condition."
+
+     这条路径真实存在且不止一处：关闭记录详情时
+       Commenter.componentWillUnmount → MentionsInput 的 input.destroy()
+       → 这里的 onClose → destroy() → root.unmount()
+     也就是【在另一棵树的卸载提交过程中】去拆自己这棵树。
+
+     destroyed 标记仍然同步置位（防重复调用、后续的 onClose 立刻短路），
+     只把真正的 unmount + 摘节点推到微任务里 —— 那时当前这轮渲染已经结束。
+     用 queueMicrotask 而不是 setTimeout：同一帧内完成，弹窗关闭不会慢一拍。 */
   function destroy() {
     if (destroyed) return;
     destroyed = true;
 
     window.removeEventListener('popstate', handlePopState);
-    root.unmount();
 
-    if (div && div.parentNode) {
-      div.parentNode.removeChild(div);
-    }
+    queueMicrotask(() => {
+      root.unmount();
+
+      if (div && div.parentNode) {
+        div.parentNode.removeChild(div);
+      }
+    });
   }
 
   window.addEventListener('popstate', handlePopState);
