@@ -70,7 +70,17 @@ export const fetch = searchArgs => {
       dispatch({ type: 'WORKSHEET_VIEW_UPDATE_ROWS_LOADING', value: false });
       dispatch(updataEditable(true));
       dispatch(updateFormatData());
-    });
+    })
+      /* 必须兜 catch：上面切视图/翻月份时会 abort 掉上一个请求，被 abort 的 promise
+         以 { errorCode: 1, errorMessage: '请求被取消' } 拒绝（见 src/common/global.ts
+         的 textStatus === 'abort'），没人接就是 "Uncaught (in promise)" 刷控制台。
+         取消是预期行为，静默；其余错误关掉 loading 再抛，别让日历停在加载态。 */
+      .catch(err => {
+        if (_.get(err, 'errorCode') !== 1) {
+          dispatch({ type: 'WORKSHEET_VIEW_UPDATE_ROWS_LOADING', value: false });
+          throw err;
+        }
+      });
   };
 };
 
@@ -563,7 +573,14 @@ export function getEventList({
         dispatch({ type: 'CHANGE_CALENDAR_LOADING', data: true });
         cb();
       }
-    });
+    })
+      // 同上：切换/翻页会 abort 上一个请求，errorCode 1 是主动取消，静默即可。
+      .catch(err => {
+        if (_.get(err, 'errorCode') !== 1) {
+          dispatch({ type: 'CHANGE_CALENDAR_IS_OVER', data: false });
+          throw err;
+        }
+      });
   };
 }
 
