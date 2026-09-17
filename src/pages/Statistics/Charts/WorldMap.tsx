@@ -295,7 +295,9 @@ export default class extends Component<any, any> {
       dropdownVisible: false,
     });
   };
-  renderWorldMap(props) {
+  // getMapKey 已改异步（原先是同步 XHR，见 MapLoader.ts）。
+  // 两个调用点（componentDidMount 与 componentDidUpdate 那条）都不取返回值，改 async 是安全的。
+  async renderWorldMap(props) {
     const { themeColor, projectId, customPageConfig = {}, reportData, isThumbnail } = props;
     const { chartColor, chartColorIndex = 1, pageStyleType = 'light' } = customPageConfig;
     const styleConfig = reportData.style || {};
@@ -313,7 +315,7 @@ export default class extends Component<any, any> {
       (xaxes.controlId || split.controlId) &&
       xaxes.controlType !== 40;
 
-    const { key } = getMapKey('amap') || {};
+    const { key } = (await getMapKey('amap')) || {};
 
     this.scene = new this.Scene({
       id: this.chartEl,

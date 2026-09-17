@@ -132,7 +132,15 @@ export function Gmap(props) {
   const [gMapKey, setKey] = useState('');
 
   useEffect(() => {
-    setKey(_.get(getMapKey('gmap'), 'key') || '');
+    // getMapKey 已改异步（原先是同步 XHR，见 MapLoader.ts）。
+    // 这里本来就有「key 没拿到先显示 loading」的分支，正好接得上。
+    let alive = true;
+    getMapKey('gmap').then(mapInfo => {
+      if (alive) setKey(_.get(mapInfo, 'key') || '');
+    });
+    return () => {
+      alive = false;
+    };
   }, []);
 
   if (!gMapKey) {

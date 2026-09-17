@@ -17,6 +17,7 @@ import { resetPortalUrl } from 'src/pages/AuthService/portalAccount/util.js';
 import { initThemeMode } from 'src/router/globalEvents';
 import { navigateTo, navigateToLogin, navigateToLogout, redirect } from 'src/router/navigateTo';
 import { browserIsMobile, getPathWithoutSubPath, pathCompletion } from 'src/utils/common';
+import { prefetchContactInfo } from 'src/utils/project';
 import { getPssId, setPssId } from 'src/utils/pssId';
 
 /** 存储分发类入口 状态 和 分享id */
@@ -321,11 +322,17 @@ const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false }: any = {})
 
     redirect(location.pathname);
 
-    // 【启动时预热权限缓存】checkPermission 的 getMyPermissions 是同步取值的
-    //（20 个调用点多数在 render 里当条件用）。它以前在缓存未命中时发两次【同步 XHR】，
-    // 那是主线程上被废弃的用法。现在改成：这里先异步取好填进缓存，渲染时一定命中。
-    // 返回这个 promise，外面的 Pre 组件会等它完成后才收起 loading。
-    return Promise.all((_.get(md, 'global.Account.projects') || []).map(p => prefetchMyPermissions(p.projectId)));
+    /* 【启动时把几个「同步取值」的缓存一次焐热】
+       这些取值函数的签名是同步的（调用方在 render 里或算默认值时直接要结果），
+       所以它们以前在缓存未命中时发【同步 XHR】—— 主线程同步请求是被废弃的用法。
+       改法统一是：签名不动，这里先异步取好填进缓存，真正用到时一定命中。
+       返回这个 promise，外面的 Pre 组件会等它完成后才收起 loading。
+         · getMyPermissions：20 个调用点，多数在 render 里当条件用
+         · getContactInfo：表单默认值要的手机号/邮箱（formUtils 4 处） */
+    return Promise.all([
+      ...(_.get(md, 'global.Account.projects') || []).map(p => prefetchMyPermissions(p.projectId)),
+      prefetchContactInfo(),
+    ]);
   };
 
   // 【只有 4 个 share 页走 sync】它们用 preall({ type: 'function' }) 这个哨兵值，

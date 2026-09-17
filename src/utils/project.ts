@@ -262,23 +262,66 @@ export const dateServerZoneToAppZone = (date, appTimeZone) => {
     .format('YYYY-MM-DD HH:mm:ss');
 };
 
+/** 缓存是否还能用（用户没换、掩码过的值和缓存对得上） */
+function contactInfoIsFresh(contactInfo, key?: string) {
+  if (_.isEmpty(contactInfo)) return false;
+  if (contactInfo.accountId !== md.global.Account.accountId) return false;
+
+  // 掩码校验：Account 里存的是 138****5678 这种打码值，拿缓存里的明文按位填回去应当相等。
+  // 不相等说明用户在别处改了手机号/邮箱，缓存过期了。只有传了 key 才有得比。
+  if (key && contactInfo[key] && md.global.Account[key]) {
+    const restored = md.global.Account[key].replace(/\*/g, (a, b) => contactInfo[key][b]);
+    if (restored !== contactInfo[key]) return false;
+  }
+
+  return true;
+}
+
+/** 后台取一次联系方式并写回 localStorage。并发调用只跑一次。 */
+let contactInfoRequest: Promise<any> | null = null;
+
+export const prefetchContactInfo = (): Promise<any> => {
+  if (!md.global.Account.accountId) return Promise.resolve({});
+  if (contactInfoRequest) return contactInfoRequest;
+
+  contactInfoRequest = accountAjax
+    .getMyContactInfo({}, { silent: true })
+    .then(data => {
+      if (data) safeLocalStorageSetItem('contactInfo', JSON.stringify(data));
+      return data || {};
+    })
+    .catch(() => ({}))
+    .finally(() => {
+      contactInfoRequest = null;
+    });
+
+  return contactInfoRequest;
+};
+
+/**
+ * 取当前账号的联系方式（手机号 / 邮箱），给表单算默认值用。
+ *
+ * 【原先是同步 XHR】缓存没命中就 `{ ajaxOptions: { sync: true } }` 现拉一次，
+ * 主线程同步请求已被废弃，控制台每次都报
+ * "Synchronous XMLHttpRequest on the main thread is deprecated"。
+ *
+ * 【为什么可以去掉而不改调用方】4 个调用方（formUtils 里算表单默认值）都要求同步拿到字符串，
+ * 签名不能动。但这个值是【每个账号一份、基本不变】的，所以改成：
+ *   · 缓存新鲜 -> 直接返回（和以前一样，绝大多数情况都走这条）
+ *   · 缓存过期 -> 【先把旧值返回去】，同时后台刷新
+ *   · 完全没有缓存 -> 返回 ''，并在后台取
+ * 而 preall 启动时会 await prefetchContactInfo()（见那边的调用点），
+ * 所以正常进入任何表单之前缓存一定是热的，第三条分支实际走不到。
+ */
 export const getContactInfo = key => {
   const contactInfo = safeParse(window.localStorage.getItem('contactInfo') || '{}');
 
   if (!md.global.Account.accountId) return '';
 
-  // 用户不匹配、用户信息更改重新获取数据
-  if (
-    _.isEmpty(contactInfo) ||
-    contactInfo.accountId !== md.global.Account.accountId ||
-    (contactInfo[key] &&
-      md.global.Account[key].replace(/\*/g, (a, b) => {
-        return contactInfo[key][b];
-      }) !== contactInfo[key])
-  ) {
-    const data = accountAjax.getMyContactInfo({}, { ajaxOptions: { sync: true } });
-    safeLocalStorageSetItem('contactInfo', JSON.stringify(data));
-    return data[key];
+  if (!contactInfoIsFresh(contactInfo, key)) {
+    // 过期或没有：后台补，本次调用用手头的值（没有就是 ''）
+    prefetchContactInfo();
+    return contactInfo[key] || '';
   }
 
   return contactInfo[key];
