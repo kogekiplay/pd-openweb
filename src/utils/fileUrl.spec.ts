@@ -15,13 +15,17 @@ const { ROOT } = require('../../scripts/spec-harness.ts');
 
 // 这个模块只依赖 window.md.global.FileStoreConfig，直接造一个再 require。
 global.window = global.window || {};
+(global.window as any).location = { origin: 'https://oa.example.com:8880' };
+
+/* 【必须按生产的形态来测】FileStoreConfig 在 dev 下是【相对地址】，因为 CI/serve.ts 会改写它；
+   生产上是【绝对地址】。第一版实现只认相对形态，本地怎么测都过，发到生产完全不生效
+   —— 就是拿 dev 代理的产物当了生产的前提条件。所以这里主用例照抄生产形态。 */
 (global.window as any).md = {
   global: {
     FileStoreConfig: {
-      pubHost: '/file/mdpub/',
-      pictureHost: '/file/mdpic/',
-      mediaHost: '/file/mdmedia/',
-      // 注意：mdoc 生产是绝对地址，这里照抄真实形态
+      pubHost: 'https://oa.example.com:8880/file/mdpub',
+      pictureHost: 'https://oa.example.com:8880/file/mdpic',
+      mediaHost: 'https://oa.example.com:8880/file/mdmedia',
       documentHost: 'https://oa.example.com:8880/file/mdoc',
     },
   },
@@ -64,18 +68,29 @@ assert.strictEqual(
   assert.strictEqual(normalizeFileUrl(v), v, `非字符串/空值要原样返回（${String(v)}）`);
 });
 
-/* ---------- 2. 前置条件：部署声明文件不在同源时，不许剥 ---------- */
+/* ---------- 2. dev 的相对形态也要认 ---------- */
 
-(global.window as any).md.global.FileStoreConfig.pubHost = 'https://cdn.somewhere.com/file/mdpub/';
-delete require.cache[require.resolve(path.join(ROOT, 'src/utils/fileUrl.ts'))];
-const reloaded = require(path.join(ROOT, 'src/utils/fileUrl.ts'));
+(global.window as any).md.global.FileStoreConfig.pubHost = '/file/mdpub/';
 
 assert.strictEqual(
-  reloaded.normalizeFileUrl('https://cdn.somewhere.com/file/mdpub/customIcon/x.svg'),
-  'https://cdn.somewhere.com/file/mdpub/customIcon/x.svg',
-  '若这套部署的 pubHost 本身是绝对地址（文件仓挂在独立 CDN），说明文件【不在同源】，' +
-    '此时剥掉 origin 会把好地址改坏。判据就是 FileStoreConfig 里对应仓的配置值形态。',
+  normalizeFileUrl('http://220.179.193.129:8880/file/mdpub/customIcon/x.svg'),
+  '/file/mdpub/customIcon/x.svg',
+  'dev 下 CI/serve.ts 会把 pubHost 改写成相对地址，这种形态同样意味着同源，要照剥。',
 );
+
+/* ---------- 3. 前置条件：文件仓真在别的 origin 时，不许剥 ---------- */
+
+(global.window as any).md.global.FileStoreConfig.pubHost = 'https://cdn.somewhere.com/file/mdpub/';
+
+assert.strictEqual(
+  normalizeFileUrl('https://cdn.somewhere.com/file/mdpub/customIcon/x.svg'),
+  'https://cdn.somewhere.com/file/mdpub/customIcon/x.svg',
+  '若 pubHost 的 origin 与当前页面不一致（文件仓挂在独立 CDN），说明文件【不在同源】，' +
+    '剥掉 origin 会把好地址改坏。注意判据是 origin 比对，不是「是不是相对路径」—— ' +
+    '生产的 FileStoreConfig 本来就是绝对地址，只看相对会导致线上完全不生效。',
+);
+
+(global.window as any).md.global.FileStoreConfig.pubHost = 'https://oa.example.com:8880/file/mdpub';
 
 /* ---------- 3. 两个调用点不能被悄悄摘掉 ---------- */
 

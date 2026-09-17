@@ -36,11 +36,28 @@ const BUCKET_CONFIG_KEY = {
 
 const ABSOLUTE_FILE_URL = /^https?:\/\/[^/]+(\/file\/(mdpub|mdpic|mdmedia)\/)/i;
 
+/* 【判据不能只看"是不是相对路径"】第一版就是这么写的，结果发到生产完全不生效。
+   原因：dev server 会把 FileStoreConfig 里的 /file/mdpub|mdpic|mdmedia 改写成【相对地址】
+   （见 CI/serve.ts 的 REWRITE_PREFIXES），所以本地看到的是 pictureHost='/file/mdpic/'；
+   而生产上它是【绝对地址】 pictureHost='https://oa.tlytelec.com:8880/file/mdpic'。
+   拿本地观察到的形态当生产的前提条件，等于把 dev 代理的产物写进了产品逻辑。
+
+   真正要判断的是「文件服务是不是就在当前页面这个 origin 上」，两种形态都算： */
 function bucketServedFromSameOrigin(bucket: string) {
   const configured = _.get(window, ['md', 'global', 'FileStoreConfig', BUCKET_CONFIG_KEY[bucket]]);
 
-  // 配置值是相对路径（以 / 开头）才说明文件服务与页面同源。
-  return typeof configured === 'string' && configured.startsWith('/');
+  if (!_.isString(configured) || !configured) return false;
+
+  // 形态一：相对地址（dev 下被改写成这样）—— 本身就意味着同源。
+  if (configured.startsWith('/')) return true;
+
+  // 形态二：绝对地址（生产的形态）—— origin 与当前页面一致才算同源。
+  // 若哪天文件仓真挂到独立 CDN，这里 origin 对不上，自动不动手。
+  try {
+    return new URL(configured).origin === window.location.origin;
+  } catch {
+    return false;
+  }
 }
 
 export function normalizeFileUrl(url) {
