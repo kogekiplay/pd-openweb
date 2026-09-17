@@ -173,14 +173,12 @@ let CustomPage = class CustomPage extends Component<any, any> {
           });
 
           if (appNaviStyle === 2) {
-            let navSheetList = _.flatten(
-              appSection.map(item => {
-                item.workSheetInfo.forEach(sheet => {
-                  sheet.appSectionId = item.appSectionId;
-                });
-                return item.workSheetInfo;
-              }),
-            )
+            /* 这里原先也有一句 `sheet.appSectionId = item.appSectionId`：appSection 是
+               store 里的对象，那是渲染外的原地写，一样会触发 RTK 的
+               "A state mutation was detected between dispatches"。
+               而且这份 navSheetList 底下只比了 workSheetId，压根没读 appSectionId ——
+               盖上去的字段是【死的】，直接删掉，不需要改成拷贝。 */
+            let navSheetList = _.flatten(appSection.map(item => item.workSheetInfo))
               .filter(item => [1, 3].includes(item.status) && !item.navigateHide) //左侧列表状态为1 且 角色权限没有设置隐藏
               .slice(0, 4);
 

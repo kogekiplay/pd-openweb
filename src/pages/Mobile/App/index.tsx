@@ -31,21 +31,36 @@ import './index.less';
 
 let modal = null;
 
+/* 【不能往 store 里的对象上盖字段】传进来的 appSection 就是 mobile.appDetail.appSection，
+   而它和 mobile.appDetail.detail.sections 是【同一批对象】（见 App/redux/actions.ts 的
+   UPDATE_APP_DETAIL：detail: detail, appSection: detail.sections）。
+
+   原先这里直接 `sheet.appSectionId = item.appSectionId` 往每个 workSheetInfo 项上盖字段，
+   而这个函数 render 期就会走到（renderTabBar → getBottomTabSheetList → 这里），
+   等于【在渲染过程中改 redux state】。RTK 的 immutableCheck 当场抛：
+     A state mutation was detected between dispatches, in the path
+     'mobile.appDetail.detail.sections.0.workSheetInfo.0.appSectionId'
+   从工作台点进任意应用必现。这条报错的堆栈指向 Mobile/App/redux/actions.ts，
+   很容易误判成 action 的锅 —— 中间件是在【下一次 dispatch 时】才发现上一次之后
+   state 变过，报的是发现点不是改动点；actions.ts / reducers.ts 里其实一处原地写都没有。
+   又因为那次 dispatch 在 .then 里，错误被 promise 吞成 "Uncaught (in promise)"。
+
+   这个函数返回的本来就是新数组，下游（bottomNavSheetId、syncSelectedTab 的 firstSheet、
+   handleSwitchSheet 的 item）全都只读返回值里的 appSectionId、不认对象身份，
+   所以【拷贝后再盖】即可，行为不变。 */
 const getWorksheetList = (appSection = [], viewHideNavi, isAuthorityApp) => {
   let worksheetList = _.flatten(
     appSection.map(item => {
       let childData = [];
       item.workSheetInfo.forEach(sheet => {
-        sheet.appSectionId = item.appSectionId;
         if (sheet.type === 2) {
           let temp = (_.find(item.childSections, v => v.appSectionId === sheet.workSheetId) || {}).workSheetInfo;
           (temp || []).forEach(it => {
-            it.appSectionId = item.appSectionId;
-            childData.push(it);
+            childData.push({ ...it, appSectionId: item.appSectionId });
           });
         }
 
-        childData.push(sheet);
+        childData.push({ ...sheet, appSectionId: item.appSectionId });
       });
       return childData;
     }),
@@ -377,7 +392,10 @@ class App extends Component<any, any> {
           );
         }
 
-        const groupItem = _.assign(item, _.find(childSections, v => v.appSectionId === item.workSheetId) || {});
+        /* _.assign 的第一个参数是【会被改写的那个】，而这里的 item 来自 store
+           （data.workSheetInfo），同样属于渲染期改 state。补一个 {} 当目标即可，
+           groupItem 只在本次渲染里当只读数据用（key / renderHeader / renderList）。 */
+        const groupItem = _.assign({}, item, _.find(childSections, v => v.appSectionId === item.workSheetId) || {});
 
         return (
           <Collapse
@@ -422,7 +440,8 @@ class App extends Component<any, any> {
         noGroupData.length &&
           groupData.push({ name: '', workSheetId: noGroupData[0].workSheetId, workSheetInfo: noGroupData });
         noGroupData = [];
-        groupData.push({ ..._.assign(item, _.find(childSections, v => v.appSectionId === item.workSheetId) || {}) });
+        // 外面那层 {...} 说明本意就是要新对象，但 _.assign(item, …) 已经先把 item（store 里的）改了。
+        groupData.push(_.assign({}, item, _.find(childSections, v => v.appSectionId === item.workSheetId) || {}));
       } else {
         noGroupData = noGroupData.concat(item);
       }
