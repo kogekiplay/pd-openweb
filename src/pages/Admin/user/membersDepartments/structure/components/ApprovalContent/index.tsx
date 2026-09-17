@@ -101,6 +101,7 @@ export default function ApprovalContent(props) {
       <TabWrap>
         {tabs.map(item => (
           <div
+            key={item.type}
             className={cx('item Hand', { active: item.type === userStatus })}
             onClick={() => {
               updateApplyDateOrderBy(11);

@@ -76,13 +76,20 @@ export default class AccountChart extends React.Component<any, any> {
   // 已配置地图列表
   getAvailableMapList = () => {
     if (!md.global.SysSettings.enableMap) return;
-    privateMapAjax.getAvailableMapList({}).then(res => {
-      const list = (res || []).map(item => ({
-        text: item.type === 0 ? _l('高德地图') : _l('Google地图'),
-        value: item.type,
-      }));
-      this.setState({ mapList: list });
-    });
+    privateMapAjax
+      .getAvailableMapList({})
+      .then(res => {
+        const list = (res || []).map(item => ({
+          text: item.type === 0 ? _l('高德地图') : _l('Google地图'),
+          value: item.type,
+        }));
+        this.setState({ mapList: list });
+      })
+      /* 这个接口依赖单独的地图服务，服务没起时网关直接回 502
+         （本部署实测 POST /api/PrivateMap/GetAvailableMapList -> 502 Bad Gateway）。
+         没有 catch 就是 "Uncaught (in promise) {errorCode: 502, …}" 刷控制台。
+         取不到就当没有可选地图，保持 mapList 为空即可 —— 页面其余设置项不受影响。 */
+      .catch(() => this.setState({ mapList: [] }));
   };
 
   // common修改

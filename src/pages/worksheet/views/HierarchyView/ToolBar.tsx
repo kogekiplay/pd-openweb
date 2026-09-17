@@ -203,9 +203,11 @@ export default class ToolBar extends Component<any, any> {
             suffixIcon={<Icon className="Font12 textTertiary" icon="arrow-down" />}
             defaultActiveFirstOption={false}
             defaultOpen={false}
-            dropdownClassName="gunterToolBarSelectWrapper"
+            /* 与甘特图工具栏同样的两条 antd 6 弃用：
+               dropdownClassName -> classNames.popup.root，bordered={false} -> variant="borderless" */
+            classNames={{ popup: { root: 'gunterToolBarSelectWrapper' } }}
             value={level || _l('展开')}
-            bordered={false}
+            variant="borderless"
             virtual={false}
             onChange={this.changeDisplayLevel}
           >

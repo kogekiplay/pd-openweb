@@ -262,7 +262,7 @@ export default function (props) {
       ) : (
         <div className="noData">
           <div className="cover">
-            <img src={bg} alt="" srcset="" />
+            <img src={bg} alt="" />
           </div>
           <h6 className="">{_l('分组')}</h6>
           <p className="text textSecondary">{tipTxt}</p>

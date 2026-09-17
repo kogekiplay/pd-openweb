@@ -98,7 +98,20 @@ export const fetch = (index: number) => {
       dispatch({ type: 'GALLERY_VIEW_RECORD_COUNT', count: res.count });
       dispatch({ type: 'CHANGE_GALLERY_VIEW_LOADING', loading: false });
       dispatch({ type: 'CHANGE_GALLERY_LOADING', loading: false });
-    });
+    })
+      /* 必须兜 catch：上面几行刚 abort 掉上一个 getFilterRows，被 abort 的 promise
+         会以 { errorCode: 1, errorMessage: '请求被取消' } 拒绝
+         （见 src/common/global.ts 里 textStatus === 'abort' 那段），
+         没人接就是 "Uncaught (in promise)" 刷控制台。
+         取消是预期行为，静默即可；其余错误要把两个 loading 关掉，
+         否则画廊会永远停在加载态。 */
+      .catch(err => {
+        if (_.get(err, 'errorCode') !== 1) {
+          dispatch({ type: 'CHANGE_GALLERY_VIEW_LOADING', loading: false });
+          dispatch({ type: 'CHANGE_GALLERY_LOADING', loading: false });
+          throw err;
+        }
+      });
   };
 };
 

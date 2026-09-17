@@ -27,7 +27,7 @@ export default function ConnectAvator(props) {
   return (
     <Wrap className={props.className} width={props.width} height={props.width} size={props.size}>
       {props.iconName ? (
-        <img src={props.iconName} alt="" width={props.width} height={props.width} srcset="" className="logo" />
+        <img src={props.iconName} alt="" width={props.width} height={props.width} className="logo" />
       ) : (
         <span className="logo iconLogo mRight12 InlineBlock TxtCenter">
           <Icon icon="connect" className={'textTertiary TxtMiddle'} onClick={() => {}} />

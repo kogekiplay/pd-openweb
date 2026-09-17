@@ -237,7 +237,7 @@ function List(props) {
             <div className="headTr">
               {keys.map(o => {
                 return (
-                  <div className={`${o.key}`}>
+                  <div key={o.key} className={`${o.key}`}>
                     {o.renderHead
                       ? o.renderHead({
                           [o.sortKey]: props[o.sortKey],
@@ -255,18 +255,22 @@ function List(props) {
 
               if (!isCharge && !item.hasAuth) {
                 return (
-                  <div className="conTr Hand">
+                  <div key={item.id} className="conTr Hand">
                     {keys.map(o => {
-                      return <div className={`${o.key}`}>{o.render ? o.render(item, props) : item[o.key]}</div>;
+                      return (
+                        <div key={o.key} className={`${o.key}`}>
+                          {o.render ? o.render(item, props) : item[o.key]}
+                        </div>
+                      );
                     })}
                   </div>
                 );
               } else {
                 return (
-                  <MdLink className="conTr Hand stopPropagation" to={`/integrationConnect/${item.id}`}>
+                  <MdLink key={item.id} className="conTr Hand stopPropagation" to={`/integrationConnect/${item.id}`}>
                     {keys.map(o => {
                       return (
-                        <div className={`${o.key}`} onClick={e => e.stopPropagation()}>
+                        <div key={o.key} className={`${o.key}`} onClick={e => e.stopPropagation()}>
                           {o.render ? o.render(item, props) : item[o.key]}
                         </div>
                       );

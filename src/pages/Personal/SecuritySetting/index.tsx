@@ -197,7 +197,9 @@ export default class SecuritySetting extends Component<any, any> {
         : formatFormulaDate({ value: diff, unit: '1', hideUnitStr: false });
 
     return (
-      <div className="equipmentItem textTertiary">
+      /* 这个 div 是三处 map（serviceListWeb/App/Other）直接返回的根节点，必须有 key。
+         sessionId 是设备会话的唯一标识。 */
+      <div key={sessionId} className="equipmentItem textTertiary">
         <div className="flex4">
           <div className="Bold textPrimary">
             {systemInfo}
@@ -205,15 +207,18 @@ export default class SecuritySetting extends Component<any, any> {
           </div>
           <div>{browserName}</div>
         </div>
-        <div class="flex2">{current ? _l('现在') : `${_l('%0前使用', passTime)}`}</div>
-        <div class="flex3 pLeft24">
+        {/* 原先这两个（以及下面的 iconWrap）写的是 class=，JSX 里 React 不认、整个属性丢掉。
+            旁边一列用的是 className="flex4"，所以这两列【一直没有 flex:2 / flex:3】，
+            设备列表的列宽是错的。 */}
+        <div className="flex2">{current ? _l('现在') : `${_l('%0前使用', passTime)}`}</div>
+        <div className="flex3 pLeft24">
           {ip}
           {!!geoCity && `（${geoCity}）`}
         </div>
         {!current ? (
           <Tooltip placement="right" title={_l('退出账号')}>
             <div
-              class="iconWrap Hand"
+              className="iconWrap Hand"
               onClick={() => {
                 if (current) return;
                 accountController

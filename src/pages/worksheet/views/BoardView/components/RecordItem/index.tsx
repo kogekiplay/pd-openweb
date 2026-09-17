@@ -87,11 +87,17 @@ function SortableRecordItem(props) {
   const [skeletonRows, setSkeletonRows] = useState(Math.floor(skeletonHeight / 40));
   const [{ isDragging }, drag, preview] = useDrag<any, any, any>({
     type: ITEM_TYPE.RECORD,
-    item: { type: ITEM_TYPE.RECORD, rowId },
-    canDrag() {
-      return canDrag(props);
-    },
-    begin() {
+    /* 【react-dnd 14 起 spec.begin 被移除，留着会直接抛】
+       报错原文：Invariant Violation: useDrag::spec.begin was deprecated in v14.
+       这不是告警而是【抛出】，整个看板视图会被 ErrorBoundary 接管、显示「程序错误」。
+       本仓 react-dnd 是 16.0.1，所以这个视图一直是打不开的。
+
+       迁移方式就是把 begin() 原样变成【函数形式的 item】——拖拽开始时才求值，
+       语义与 begin 完全一致。原来那个静态 item 里的 type 可以去掉：v14 起 type
+       是 spec 的顶层字段（上面一行已经给了），下游也没有人读 item.type
+       （BoardView 的两个 useDrop 读的是 keyType / secondGroupKey，
+       CustomDragLayer 读 clonedNode / width / height，都在返回值里）。 */
+    item: () => {
       const dragEl = $ref.current;
       const rect = dragEl?.getBoundingClientRect() || {};
       const clonedNode = dragEl?.cloneNode(true);
@@ -103,6 +109,9 @@ function SortableRecordItem(props) {
         height: rect.height,
         clonedNode,
       };
+    },
+    canDrag() {
+      return canDrag(props);
     },
     end(item, monitor) {
       const dropRes = monitor.getDropResult();

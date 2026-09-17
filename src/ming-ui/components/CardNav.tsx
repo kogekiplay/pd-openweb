@@ -66,6 +66,7 @@ export default function CardNav(props) {
 
         return (
           <li
+            key={url}
             className={cx({ current: currentNav === routerKey })}
             onClick={() => (onClick ? onClick() : navigateTo(url))}
           >

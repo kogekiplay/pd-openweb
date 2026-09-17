@@ -37,13 +37,17 @@ export default props => {
       setLoading(false);
     });
     if (md.global.SysSettings.enableMap) {
-      privateMapApi.getAvailableMapList({}).then(res => {
-        const list = (res || []).map(item => ({
-          text: item.type === 0 ? _l('高德地图') : _l('Google地图'),
-          value: item.type,
-        }));
-        setMapList(list);
-      });
+      privateMapApi
+        .getAvailableMapList({})
+        .then(res => {
+          const list = (res || []).map(item => ({
+            text: item.type === 0 ? _l('高德地图') : _l('Google地图'),
+            value: item.type,
+          }));
+          setMapList(list);
+        })
+        // 同 Personal/systemSettings：地图服务没起时网关回 502，取不到就按「无可选地图」处理。
+        .catch(() => setMapList([]));
     }
   }, []);
 

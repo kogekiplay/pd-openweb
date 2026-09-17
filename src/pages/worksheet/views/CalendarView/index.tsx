@@ -176,12 +176,28 @@ class RecordCalendarBase extends Component<any, any> {
     }
   };
 
+  /* 【FullCalendar 7 把类名哈希化了，.fc-view-harness-active 根本不存在】
+     实测 v7 渲染出来的是 fc-classic-yth / fc-O6 这种哈希名，整页 348 个 fc- 元素里
+     一个 fc-view-harness 都没有；只有 fc-toolbar / fc-toolbar-chunk / fc-header-toolbar
+     这几个保持了原名（所以下面那段 toolbar 的 jQuery 仍然有效）。
+
+     后果有两层：
+     1）calendarActionFn 里那句 querySelector(...) 返回 null，紧接着 .addEventListener
+        直接抛 "Cannot read properties of null (reading 'addEventListener')"，
+        <ContentContainer> 被 ErrorBoundary 接管 —— 整个日历视图打不开。
+     2）就算不抛，双击日期新建记录这个功能也早就失效了（监听器压根没挂上）。
+
+     改挂到 .boxCalendar_${random} 这个【我们自己的】容器类上：它不受 FC 哈希影响。
+     dbClickDay 只读模块级的 clickData（由 FC 的 select 回调写入）、不看事件目标，
+     所以挂在容器上与挂在视图区语义一致。 */
+  getCalendarBox = () => document.querySelector(`.boxCalendar_${this.state.random}`);
+
   calendarActionOff = () => {
     const { random } = this.state;
-    const $el = document.querySelector(`.boxCalendar_${random} .fc-view-harness-active`);
+    const $el = this.getCalendarBox();
 
     if ($el) {
-      $el.removeEventListener('dblclick', this.dbClickDay);
+      $el.removeEventListener('dblclick', this.dbClickDay, true);
     }
 
     $(`.boxCalendar_${random} .fc-toolbar-chunk`).off('click');
@@ -191,9 +207,11 @@ class RecordCalendarBase extends Component<any, any> {
     const { random } = this.state;
 
     if (!window.isSafari) {
-      document
-        .querySelector(`.boxCalendar_${random} .fc-view-harness-active`)
-        .addEventListener('dblclick', this.dbClickDay, true);
+      const $el = this.getCalendarBox();
+
+      if ($el) {
+        $el.addEventListener('dblclick', this.dbClickDay, true);
+      }
     }
 
     $(`.boxCalendar_${random} .fc-toolbar-chunk`)

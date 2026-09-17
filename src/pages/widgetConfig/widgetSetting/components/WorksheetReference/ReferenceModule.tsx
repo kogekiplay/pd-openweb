@@ -1,6 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { CaretRightOutlined } from '@ant-design/icons';
-import { Collapse } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Icon, SvgIcon } from 'ming-ui';
@@ -13,7 +12,6 @@ import { REFERENCE_TYPE } from './config';
 import { ExtraTime } from './styled';
 import type { FormControl } from 'src/utils/controlTypes';
 
-const { Panel } = Collapse;
 
 const renderHeader = l => {
   return (
@@ -133,15 +131,9 @@ export const WorksheetField = props => {
         onChange={value => {
           setExpandKeys(value);
         }}
-      >
-        {groupList.map(l => {
-          return (
-            <Panel header={renderHeader(l)} key={l.appId}>
-              {renderItem(l)}
-            </Panel>
-          );
-        })}
-      </SettingCollapseWrap>
+        /* antd 6 已废弃 Panel children，改用 items；header -> label，key 原样沿用。 */
+        items={groupList.map(l => ({ key: l.appId, label: renderHeader(l), children: renderItem(l) }))}
+      />
     );
   }
 
@@ -219,15 +211,14 @@ export const WorksheetWorkflow = props => {
         onChange={value => {
           setExpandKeys(value);
         }}
-      >
-        {list.map(l => {
-          return (
-            <Panel header={renderHeader(l)} key={l.appId} extra={renderExtra(l)}>
-              {renderWorkflowItem(l)}
-            </Panel>
-          );
-        })}
-      </SettingCollapseWrap>
+        /* extra 在 ItemType 里同名，直接搬过来即可。 */
+        items={list.map(l => ({
+          key: l.appId,
+          label: renderHeader(l),
+          extra: renderExtra(l),
+          children: renderWorkflowItem(l),
+        }))}
+      />
     );
   }
 
@@ -259,7 +250,8 @@ export const WorksheetRules = props => {
   const [expandKeys, setExpandKeys] = useState([]);
 
   useEffect(() => {
-    setExpandKeys(list.map(i => i.disabled));
+    // key 已统一成字符串（见下面 items 里的 String(l.disabled)），这里同步转换才能对上
+    setExpandKeys(list.map(i => String(i.disabled)));
   }, [loading]);
 
   return (
@@ -272,15 +264,14 @@ export const WorksheetRules = props => {
       onChange={value => {
         setExpandKeys(value);
       }}
-    >
-      {list.map(l => {
-        return (
-          <Panel header={l.disabled ? _l('关闭') : _l('开启')} key={l.disabled}>
-            {renderRuleItem(l)}
-          </Panel>
-        );
-      })}
-    </SettingCollapseWrap>
+      /* 这里的 key 是布尔 l.disabled（上面 setExpandKeys(list.map(i => i.disabled)) 也按它来），
+         ItemType 的 key 只接受 string | number，所以两边一起转成字符串，保持能对上。 */
+      items={list.map(l => ({
+        key: String(l.disabled),
+        label: l.disabled ? _l('关闭') : _l('开启'),
+        children: renderRuleItem(l),
+      }))}
+    />
   );
 };
 
@@ -333,15 +324,8 @@ export const WorksheetView = props => {
         onChange={value => {
           setExpandKeys(value);
         }}
-      >
-        {list.map(l => {
-          return (
-            <Panel header={renderHeader(l)} key={l.appId}>
-              {renderItem(l)}
-            </Panel>
-          );
-        })}
-      </SettingCollapseWrap>
+        items={list.map(l => ({ key: l.appId, label: renderHeader(l), children: renderItem(l) }))}
+      />
     );
   }
 

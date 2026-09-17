@@ -39,7 +39,8 @@ export default function SubmitButtonSettings(props) {
     const btnStr = _.get(advancedSetting, data[1]) || (i === 0 ? _l('提交') : _l('继续创建'));
 
     return (
-      <React.Fragment>
+      // 这个 Fragment 是 btnList.map 直接返回的根节点，要有 key（btnList 是固定两项，用下标即可）
+      <React.Fragment key={i}>
         <div
           className={cx('con', {
             nextBtn: i === 1,

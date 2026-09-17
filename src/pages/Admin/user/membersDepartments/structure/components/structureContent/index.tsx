@@ -167,7 +167,10 @@ class StructureContent extends Component<any, any> {
       <Fragment>
         {!isSearch ? (
           <div className="Font17 departmentTitle">
-            <span className="departmentNameValue" title={!!departmentId && departmentName}>
+            {/* 原先是 title={!!departmentId && departmentName}：没有部门时整个表达式是 false，
+                React 报 "Received `false` for a non-boolean attribute `title`" 并把属性丢掉。
+                用 undefined 表示「不要这个属性」才是 React 的写法（报错信息里也是这么建议的）。 */}
+            <span className="departmentNameValue" title={departmentId ? departmentName : undefined}>
               {!!departmentId && departmentName}
             </span>
             {(typeCursor === 0 || typeCursor === 1) && !departmentId && _l('全组织')}

@@ -47,7 +47,7 @@ export default function PublicQuery(props) {
 
   if (_.isEmpty(queryInfo)) {
     return (
-      <div class="publicWorksheetEnablePanel">
+      <div className="publicWorksheetEnablePanel">
         <div style={{ padding: 10 }}>
           <Skeleton
             style={{ flex: 1 }}
@@ -62,7 +62,7 @@ export default function PublicQuery(props) {
   }
 
   return (
-    <div class="publicWorksheetEnablePanel">
+    <div className="publicWorksheetEnablePanel">
       <div className="flexRow alignItemsCenter">
         <h1 className="flex">{_l('公开查询')}</h1>
         <Switch className="publishSwitch" checked={enabled} onClick={onSwitchChange} />

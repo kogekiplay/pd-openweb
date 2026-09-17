@@ -179,6 +179,7 @@ export default function orgQuota(props) {
 
                     return (
                       <li
+                        key={key}
                         className="Hand"
                         onClick={() => {
                           if (
@@ -228,7 +229,10 @@ export default function orgQuota(props) {
                                 ? { from: '#f44336', to: '#FF5779' }
                                 : { from: '#1677ff ', to: '#4bb2ff' }
                           }
-                          strokeWidth={4}
+                          /* antd 6：strokeWidth 已废弃（"[antd: Progress] `strokeWidth` is deprecated.
+                             Please use `size` instead."）。line 型的 size 是 [宽, 高]，宽可以给字符串，
+                             所以用 '100%' 保持原来的撑满容器，高仍是 4 —— 实测替换前后都是 高4 / 宽300。 */
+                          size={['100%', 4]}
                           percent={percentValue}
                         />
                         {getCountText(key, limit)}

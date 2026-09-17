@@ -18,7 +18,18 @@ export const dealBoardViewData = props => {
   const { view, controls }: { controls: FormControl[]; [key: string]: any } = props;
   let { data } = props;
   if (!data || isEmpty(data)) return [];
-  data = data.sort((a, b) => a.sort - b.sort);
+  /* 【不能原地 sort】传进来的 data 就是 store 里的 sheet.boardView.boardData
+     （见 GroupBoard/index.tsx 与 CommonBoard/index.tsx 的调用点），而
+     Array.prototype.sort 是【原地】排序，这里又是在 render 期调用的，
+     等于在渲染过程中改 redux state。RTK 的 immutableCheck 会当场【抛出】：
+       A state mutation was detected between dispatches, in the path
+       'sheet.boardView.boardData.0'
+     整个看板视图被 ErrorBoundary 接管、显示「程序错误，请刷新」。
+
+     这个 bug 是【间歇性】的，很容易误判成偶发：只有当 boardData 本来就不是按
+     sort 升序排列时，原地 sort 才真的挪动元素、才会被检测到。接口返回顺序一变
+     （比如拖动卡片改了分组之后）就会触发。复制一份再排即可。 */
+  data = [...data].sort((a, b) => a.sort - b.sort);
   const { displayControls, viewControl, coverCid } = view;
   if (!controls || !controls.length) return [];
   const selectControl = filterAndFormatterControls({

@@ -294,7 +294,8 @@ export default function RelationSearch(props) {
                   </span>
                   {sourceControlId && (
                     <span>
-                      （{_l('关联当前')} <span class="Bold"> {globalSheetInfo.name} </span>）
+                      {/* 原先写的是 class="Bold"，JSX 里 React 不认、直接丢掉，表名一直没加粗 */}
+                      （{_l('关联当前')} <span className="Bold"> {globalSheetInfo.name} </span>）
                     </span>
                   )}
                 </div>

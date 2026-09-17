@@ -210,7 +210,9 @@ export default class ImportApp extends React.Component<any, any> {
                   style={{ width: 250 }}
                   railColor="var(--color-border-secondary)"
                   strokeColor="#1677ff"
-                  strokeWidth={8}
+                  /* 同 orgQuota：antd 6 的 strokeWidth 已废弃，改用 size=[宽, 高]。
+                     宽用 '100%' 而不是写死 250，外层 style 的 width 仍是唯一来源。 */
+                  size={['100%', 8]}
                   percent={Math.floor((file.loaded / (file.size || 0)) * 100)}
                 />
                 <span

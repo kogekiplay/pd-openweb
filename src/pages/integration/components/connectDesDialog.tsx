@@ -124,7 +124,7 @@ function ConnectDesDia(props) {
       <h5 className="textPrimary Font17 Bold">{_l('基础信息设置')}</h5>
       <p className="title pTop3">Logo</p>
       {iconName ? (
-        <img src={iconName} alt="" srcset="" className="logo InlineBlock mTop8" onClick={handleUploadImg} />
+        <img src={iconName} alt="" className="logo InlineBlock mTop8" onClick={handleUploadImg} />
       ) : (
         <span className="upload" onClick={handleUploadImg}>
           <Icon icon="add" className="textSecondary Font28 TxtMiddle" />

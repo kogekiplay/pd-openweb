@@ -367,32 +367,41 @@ class UserTable extends React.Component<any, any> {
       .toggleClass('fixedRight', scrollContainer.scrollWidth - scrollLeft !== scrollContainer.clientWidth);
   };
 
+  /* 【这段是 <tbody> 的 children，只能放 <tr>】原先直接返回一个 <div>：
+     React 是用 createElement/appendChild 建 DOM 的，不走 HTML 解析器，
+     所以它确实渲染得出来，但这个 div 是【游离在所有行之外】的非法嵌套，
+     布局上不受表格约束。包一层 <tr><td colSpan> 才是这个空状态本来的意思。
+     colSpan 取 getVisibleColumns()，和表头同一个来源，不会各算各的。 */
   renderNullState() {
     const { typeCursor } = this.props;
     return (
-      <div className="TxtCenter listPhContent">
-        <div>
-          <div className="nullState InlineBlock">
-            <Icon className="" icon={'Empty_data'} />
+      <tr>
+        <td colSpan={this.getVisibleColumns().length || 1}>
+          <div className="TxtCenter listPhContent">
+            <div>
+              <div className="nullState InlineBlock">
+                <Icon className="" icon={'Empty_data'} />
+              </div>
+              <h6 className="Bold Font15 txtCenter mTop20 mBottom0">
+                {typeCursor === 2 ? _l(`无未激活成员`) : typeCursor === 3 ? _l(`无待审核成员`) : ''}
+              </h6>
+              <p
+                className="textSecondary"
+                style={{
+                  maxWidth: '270px',
+                  margin: '10px auto',
+                }}
+              >
+                {typeCursor === 2
+                  ? _l(`管理员通过手机和邮箱添加的成员未激活时会显示在这里`)
+                  : typeCursor === 3
+                    ? _l(`通过链接、搜索企业账号、非管理员通过邮箱或手机号邀请的成员会显示在这里`)
+                    : _l('暂无成员，您可以点击顶部操作添加成员')}
+              </p>
+            </div>
           </div>
-          <h6 className="Bold Font15 txtCenter mTop20 mBottom0">
-            {typeCursor === 2 ? _l(`无未激活成员`) : typeCursor === 3 ? _l(`无待审核成员`) : ''}
-          </h6>
-          <p
-            className="textSecondary"
-            style={{
-              maxWidth: '270px',
-              margin: '10px auto',
-            }}
-          >
-            {typeCursor === 2
-              ? _l(`管理员通过手机和邮箱添加的成员未激活时会显示在这里`)
-              : typeCursor === 3
-                ? _l(`通过链接、搜索企业账号、非管理员通过邮箱或手机号邀请的成员会显示在这里`)
-                : _l('暂无成员，您可以点击顶部操作添加成员')}
-          </p>
-        </div>
-      </div>
+        </td>
+      </tr>
     );
   }
   handleClickStastics = (checked: boolean) => {
@@ -463,12 +472,33 @@ class UserTable extends React.Component<any, any> {
     let obj = _.find(columnsInfo, item => item.value === fields) || {};
     return obj.checked;
   };
+
+  /* 【表头和空状态必须共用这一份过滤逻辑】空状态那一格要 colSpan 满整行，
+     列数只要和表头对不上就会错位。以前这段过滤只写在 renderThead 的 map 里，
+     没法复用，所以这里抽出来，两边都走它。
+
+     注意 isHideCurrentColumn 这个名字是反的：它返回的是 columnsInfo 里那项的
+     checked，含义其实是「该列是否显示」—— 下面保持原来的判断方向，不要照名字理解。 */
+  getVisibleColumns = (columnsInfo = this.getColumnsInfo()) => {
+    const { typeCursor } = this.props;
+
+    return this.columns.filter(({ dataIndex }) => {
+      if (!this.isHideCurrentColumn(dataIndex, columnsInfo) && !_.includes(['checkBox', 'action'], dataIndex)) {
+        return false;
+      }
+
+      if (typeCursor !== 0 && dataIndex === 'joinDate') return false;
+
+      if (typeCursor !== 3 && _.includes(['applyDate', 'operator'], dataIndex)) return false;
+
+      return true;
+    });
+  };
   handleVisibleChange = flag => {
     this.setState({ dropDownVisible: flag });
   };
 
   renderThead = () => {
-    const { typeCursor } = this.props;
     const { scrollbarWidth } = this.state;
     const columnsInfo = this.getColumnsInfo();
     const currentTypeColumnsInfo = this.getCurrentTypeColumnsInfo(columnsInfo);
@@ -478,20 +508,11 @@ class UserTable extends React.Component<any, any> {
     return (
       <thead>
         <tr>
-          {this.columns.map(({ dataIndex, className, label, width, style, renderHeader }) => {
-            if (!this.isHideCurrentColumn(dataIndex, columnsInfo) && !_.includes(['checkBox', 'action'], dataIndex))
-              return;
-
-            if (typeCursor !== 0 && dataIndex === 'joinDate') return;
-
-            if (typeCursor !== 3 && _.includes(['applyDate', 'operator'], dataIndex)) return;
-
-            return (
-              <th key={dataIndex} className={className} style={style ? style : { width }}>
-                {_.isFunction(renderHeader) ? renderHeader() : label}
-              </th>
-            );
-          })}
+          {this.getVisibleColumns(columnsInfo).map(({ dataIndex, className, label, width, style, renderHeader }) => (
+            <th key={dataIndex} className={className} style={style ? style : { width }}>
+              {_.isFunction(renderHeader) ? renderHeader() : label}
+            </th>
+          ))}
           {showScrollbarPlaceholder && (
             <th
               key="scrollbarPlaceholder"
@@ -519,7 +540,10 @@ class UserTable extends React.Component<any, any> {
       usersCurrentPage = searchAccountIds.filter(user => user.accountId === searchId[0]);
     }
 
-    if (_.isEmpty(usersCurrentPage)) return '';
+    /* 【不能返回空字符串】这个返回值是 <tbody> 的 children，'' 会被 React 渲染成一个
+       【文本节点】，报 "In HTML, whitespace text nodes cannot be a child of <tbody>"。
+       返回 null 才是「什么都不渲染」。 */
+    if (_.isEmpty(usersCurrentPage)) return null;
 
     const currentTypeColumnsInfo = this.getCurrentTypeColumnsInfo(columnsInfo);
     const hasHorizontalScroll = this.hasHorizontalScroll(
