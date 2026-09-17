@@ -33,7 +33,7 @@ const loop = (data, key, callback) => {
   });
 };
 
-const { TreeNode, DirectoryTree } = Tree;
+const { DirectoryTree } = Tree;
 class DepartmentTree extends React.Component<any, any> {
   constructor(props) {
     super(props);
@@ -136,9 +136,17 @@ class DepartmentTree extends React.Component<any, any> {
   onDrop = info => {
     let sortedDepartmentIds = []; //拖拽后排序
     let moveToParentId = '';
-    const dropKey = info.node.props.eventKey; //拖dao ID
-    const dragKey = info.dragNode.props.eventKey; //拖动的ID
-    const dropPos = info.node.props.pos.split('-');
+    /* 【treeData 下 info.node 就是数据节点，key / pos / expanded 直接挂在上面】
+       实测（在 loadData 里打过节点）顶层字段包含 key、pos、expanded、以及 {...item}
+       摊进去的部门字段。
+
+       要说清楚的是：antd 同时还留了一个【非枚举的 .props 兼容层】（Object.keys 列不出来，
+       但 node.props.eventKey 取得到），所以原来的 info.node.props.eventKey 写法
+       【并没有坏】—— 这次改成直接取顶层字段是跟着 treeData 一起做的现代化，
+       不是在修一个已存在的 bug，别把它当成修复记。 */
+    const dropKey = info.node.key; //拖dao ID
+    const dragKey = info.dragNode.key; //拖动的ID
+    const dropPos = info.node.pos.split('-');
     const dropPosition = info.dropPosition - Number(dropPos[dropPos.length - 1]);
     let data = [..._.cloneDeep(this.state.newDepartments)];
 
@@ -162,8 +170,8 @@ class DepartmentTree extends React.Component<any, any> {
       });
       moveToParentId = dropKey;
     } else if (
-      (info.node.props.subDepartments || []).length > 0 && // Has children subDepartments
-      info.node.props.expanded && // Is expanded
+      (info.node.subDepartments || []).length > 0 && // Has children subDepartments
+      info.node.expanded && // Is expanded
       dropPosition === 1 // On the bottom gap
     ) {
       sortedDepartmentIds = [];
@@ -198,9 +206,16 @@ class DepartmentTree extends React.Component<any, any> {
     );
   };
 
-  loadDataFn = (treeNode = {}, isMore) => {
+  /* 【treeData 下这里收到的是数据对象，不是 React 元素】原先写的是
+     `const { props = {} } = treeNode`，靠 <TreeNode {...item}> 把部门字段摊在 props 上。
+     现在 antd 传进来的就是 treeData 里那个节点本身，直接用即可；
+     「更多」按钮手工调用时传的也是同一形状（根级传 undefined，走下面的默认值）。 */
+  /* node 标 any：treeData 里的节点是「antd 的 DataNode + 我们摊进去的部门字段」，
+     没有现成类型可用；isMore 必须是可选参数，否则这个两参函数无法赋给 antd
+     单参的 loadData 签名（TS2322）。 */
+  loadDataFn = (node: any = {}, isMore?: boolean) => {
     const { projectId } = this.props;
-    const { props = {} } = treeNode;
+    const props = node || {};
     return new Promise(resolve => {
       if (props.subDepartments && !isMore) {
         resolve();
@@ -249,8 +264,9 @@ class DepartmentTree extends React.Component<any, any> {
             });
           }
 
-          const { dataRef = {} } = props;
-          let { subDepartments = [] } = dataRef;
+          // 原先是 props.dataRef.subDepartments —— dataRef 和 {...item} 摊进来的是同一个对象，
+          // treeData 下直接从节点上取。
+          let { subDepartments = [] } = props;
           subDepartments = isMore ? subDepartments.concat(data) : data;
           let list = [..._.cloneDeep(this.state.newDepartments)];
 
@@ -280,25 +296,38 @@ class DepartmentTree extends React.Component<any, any> {
     this.props.loadUsers(id);
   };
 
-  renderTreeNodes = (data, hasMore?, parentData?) => {
+  /* 【从 TreeNode children 迁到 treeData】antd 6 起 <Tree> 的 children 写法已废弃
+     （"`children` of Tree is deprecated. Please use `treeData` instead."）。
+
+     这次不是纯机械替换：原先 <TreeNode {...item} dataRef={item}> 把整个部门对象摊在
+     节点上，而下游是从【React 元素的 props】上读回来的 ——
+       onDrop      读 info.node.props.eventKey / pos / subDepartments / expanded
+       loadDataFn  读 treeNode.props.departmentId / subDepartments / dataRef
+       DiaActionTree 收的是 parentData.props
+     换成 treeData 之后这些回调拿到的是【数据对象本身】，没有 .props 这一层，
+     所以上面三处的取值口径同步改了（各自就地有注释）。
+     dataRef 这个字段可以一并去掉：它和 {...item} 摊进来的是同一个对象。 */
+  getTreeData = (data, hasMore?, parentItem?) => {
     const { expandedKeys, showDisabledDepartment, hasDepartmentAuth } = this.props;
     const { showAction } = this.state;
 
     let htmlDiv = () => {
-      return data.map(item => {
-        const subDepartments = item.subDepartments || [];
+      // 原先是在 map 里 return null，靠 React 忽略空子元素；treeData 是纯数据，
+      // 必须先过滤掉，否则数组里会混进 null。
+      return data
+        .filter(item => !(item.disabled && !showDisabledDepartment))
+        .map(item => {
+          const subDepartments = item.subDepartments || [];
 
-        if (item.disabled && !showDisabledDepartment) {
-          return null;
-        }
-
-        return (
-          <TreeNode
-            {...item}
-            disabled={false}
-            disabledDepartment={item.disabled}
-            key={item.departmentId}
-            title={
+          return {
+            ...item,
+            // item.disabled 的含义是「部门被停用」，不是 antd 的「节点不可选」。
+            // 原实现就是 disabled={false} + 另起一个 disabledDepartment，这里保持，
+            // draggable / allowDrop 两个回调读的正是 disabledDepartment。
+            disabled: false,
+            disabledDepartment: item.disabled,
+            key: item.departmentId,
+            title: (
               <React.Fragment>
                 <span className="departmentName WordBreak">
                   <Tooltip title={item.departmentName}>
@@ -312,7 +341,10 @@ class DepartmentTree extends React.Component<any, any> {
                     popup={
                       <DiaActionTree
                         item={item}
-                        parentData={parentData?.props}
+                        /* 原先传的是 parentData.props（父节点那个 React 元素的 props）。
+                           treeData 下父级就是数据对象本身，直接传。
+                           DiaActionTree 只读它的 departmentId，形状对得上。 */
+                        parentData={parentItem}
                         onClickAwayExceptions={[]}
                         closeAction={() => this.setState({ showAction: false })}
                         hasDepartmentAuth={hasDepartmentAuth}
@@ -334,60 +366,60 @@ class DepartmentTree extends React.Component<any, any> {
                   </Trigger>
                 </span>
               </React.Fragment>
-            }
-            icon={
+            ),
+            icon: (
               <Icon
                 icon={item.disabled ? 'folder_off' : 'folder'}
                 className={`Font16 textTertiary treeNodeIcon ${item.disabled ? 'disabledDepartmentIcon' : ''}`}
               />
-            }
-            dataRef={item}
-            isLeaf={
-              _.includes(expandedKeys, item.departmentId)
-                ? !subDepartments.length
-                : !item.haveSubDepartment && !subDepartments.length
-            }
-          >
-            {item.subDepartments && item.subDepartments.length
-              ? this.renderTreeNodes(
+            ),
+            isLeaf: _.includes(expandedKeys, item.departmentId)
+              ? !subDepartments.length
+              : !item.haveSubDepartment && !subDepartments.length,
+            // 没有子部门时【不能给 children: []】—— 空数组会让 antd 当成「已展开且为空」，
+            // 与原来「不渲染子元素」的语义不同。保持 undefined。
+            children: subDepartments.length
+              ? this.getTreeData(
                   item.subDepartments,
                   this.state.moreIds.map(o => o.departmentId).includes(item.departmentId),
-                  { props: { ...item, dataRef: item } },
+                  item,
                 )
-              : ''}
-          </TreeNode>
-        );
-      });
+              : undefined,
+          };
+        });
     };
 
-    return (
-      <React.Fragment>
-        {htmlDiv()}
-        {((!this.props.searchValue && hasMore) ||
-          (!parentData && data.length >= this.state.pageSize && !this.state.rootIsAll)) && (
-          <TreeNode
-            key={`more_${_.get(parentData, ['props', 'departmentId']) || 'all'}`}
-            isLeaf={true}
-            icon={
-              <div className="mTop5 moreListIcon">
-                {this.state.moreIdLoading && _.get(parentData, ['props', 'departmentId']) && <LoadDiv size="small" />}
-              </div>
-            }
-            title={
-              <div
-                className="moreList Hand mLeft10"
-                onClick={e => {
-                  e.stopPropagation();
-                  this.loadDataFn(parentData, true);
-                }}
-              >
-                {this.state.moreIdLoading === _.get(parentData, ['props', 'departmentId']) ? _l('加载中') : _l('更多')}
-              </div>
-            }
-          ></TreeNode>
-        )}
-      </React.Fragment>
-    );
+    const nodes = htmlDiv();
+
+    /* 「更多 / 加载中」是混在同一层里的合成节点，key 仍沿用 more_<departmentId>，
+       onSelect 里那句 id.indexOf('more_') 的短路判断才继续有效。 */
+    if (
+      (!this.props.searchValue && hasMore) ||
+      (!parentItem && data.length >= this.state.pageSize && !this.state.rootIsAll)
+    ) {
+      nodes.push({
+        key: `more_${_.get(parentItem, 'departmentId') || 'all'}`,
+        isLeaf: true,
+        icon: (
+          <div className="mTop5 moreListIcon">
+            {this.state.moreIdLoading && _.get(parentItem, 'departmentId') && <LoadDiv size="small" />}
+          </div>
+        ),
+        title: (
+          <div
+            className="moreList Hand mLeft10"
+            onClick={e => {
+              e.stopPropagation();
+              this.loadDataFn(parentItem, true);
+            }}
+          >
+            {this.state.moreIdLoading === _.get(parentItem, 'departmentId') ? _l('加载中') : _l('更多')}
+          </div>
+        ),
+      });
+    }
+
+    return nodes;
   };
 
   onExpand = expandedKeys => {
@@ -437,16 +469,17 @@ class DepartmentTree extends React.Component<any, any> {
           expandedKeys={expandedKeys} //（受控）展开指定的树节点
           loadedKeys={expandedKeys} //已经加载的节点，需要配合 loadData 使用
           autoExpandParent={autoExpandParent} //是否自动展开父节点
-          draggable={node => !node.disabledDepartment && hasDepartmentAuth}
+          /* 这两个回调拿到的是 treeData 的节点；disabledDepartment 是我们自己加的字段，
+             不在 antd 的 DataNode 类型里，所以标 any。 */
+          draggable={(node: any) => !node.disabledDepartment && hasDepartmentAuth}
           blockNode
           onDragEnter={this.onDragEnter}
-          allowDrop={({ dropNode }) => !dropNode.disabledDepartment}
+          allowDrop={({ dropNode }: any) => !dropNode.disabledDepartment}
           onDrop={this.onDrop}
           loadData={this.loadDataFn}
           height={height}
-        >
-          {this.renderTreeNodes(newDepartments)}
-        </DirectoryTree>
+          treeData={this.getTreeData(newDepartments)}
+        />
       </div>
     );
   }
