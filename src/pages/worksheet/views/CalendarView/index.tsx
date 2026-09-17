@@ -512,9 +512,31 @@ class RecordCalendarBase extends Component<any, any> {
 
         this.props.fetchExternal();
         this.getEventsFn();
-        this.setState({
-          fullCalendarKey: JSON.stringify(Math.random()),
-        });
+
+        /* 【换 key 只留给「切到另一个视图」，不再给「改设置」用】
+           换 key = 让 React 把整个 FullCalendar 卸载重挂，1000 条事件从零渲染一遍。
+           原先它挂在整个分支上，而分支条件是 !isEqual(currentView, preView) ——
+           【改任何一项视图设置】都会命中。生产实测改一次设置约 890ms 卡顿
+           （579/220/94ms 三段），其中光重挂载就占 ~700ms（三次采样 737/716/692），
+           占了八成。用户报的「随便改啥设置都会卡」就是这个。
+
+           同一个视图改设置根本不需要重挂：这些选项 FullCalendar 支持运行时更新，
+           而且现在全部作为 props 走 MemoFullCalendar 的比较器，变了自然会重渲染 ——
+             firstDay(weekbegin)、hiddenDays(unweekday)、dayMaxEventRows(showall)、
+             eventTimeFormat.hour12(hour24)、slotMinTime/slotMaxTime(showtime)。
+           唯一“只在挂载时读一次”的 initialView，上面那行 changeView() 已经在管。
+           颜色/标题/开始结束字段只影响事件内容，走 getEventsFn() -> calendarFormatData。
+           以上每一项都逐个实测过（改完再还原，观测值都回到原样，全程 key 不变）。
+
+           切到【另一个】日历视图的情况保留重挂：views/index.tsx 渲染
+           <Component {...viewProps} /> 时没有 key，两个日历视图之间切换会复用同一个
+           实例，而那条路径这个表里没有第二个日历视图、验不了。它本来就要重新取数、
+           很少发生，留着这层保险不亏。 */
+        if (viewId !== prevProps.base.viewId) {
+          this.setState({
+            fullCalendarKey: JSON.stringify(Math.random()),
+          });
+        }
       }
 
       if (
