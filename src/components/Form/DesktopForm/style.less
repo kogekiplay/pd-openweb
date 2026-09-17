@@ -117,7 +117,29 @@
       }
     }
 
+    /* 【只读的选项字段要跟同表单其它只读字段长得一样】
+       这张表单里所有只读控件都是 .customFormControlBox —— 背景和边框都是透明的 36px 盒子。
+       选项字段是唯一的例外：它渲染成 antd Select，而 antd 6 的禁用态变体会把
+       --ant-select-background-color 改成自己的 colorBgContainerDisabled（rgba(0,0,0,.04)），
+       边框色却仍是我们在 .ant-select.customAntSelect 里给的 --color-background-secondary（近白），
+       两者合起来就是「一条没有边框的灰带」，夹在一排透明的只读字段中间格外扎眼。
+
+       v5 时这层灰画在内层 .ant-select-selector 上、且带 antd 自己的灰边，是个完整的灰盒，
+       还算一个说得通的「禁用」样式；v6 把边框/底色整体上移到根节点 .ant-select 之后，
+       灰色就摊成了整行的带子 —— 同一份 CSS，换了 DOM 结构就换了观感。
+
+       【边框和底色要分两种写法，这点很容易踩】
+         · 边框：antd 只在 .ant-select 上写 `border-color: var(--ant-select-border-color)`，
+           所以改变量就够；
+         · 底色：禁用态那条是 `:where(.css-xxx).ant-select-disabled { background-color:
+           var(--ant-color-bg-container-disabled) }` —— 它【直接写 background-color】，
+           取的还是全局 token，根本不经过 --ant-select-background-color。
+           只设 Select 自己那个变量的话，边框会变、底色纹丝不动（实测如此）。
+       特异性：:where() 不计权重，那条实际只有 .ant-select-disabled (0,1,0)；
+       这条编译出来是 .customFormItemControl .optionDisabled.ant-select-disabled (0,3,0)，压得住。 */
     .optionDisabled.ant-select-disabled {
+      --ant-select-border-color: transparent;
+      background-color: transparent;
       cursor: text;
       .ant-select-content {
         pointer-events: none;
@@ -1302,13 +1324,19 @@ input.customFormControlBox:disabled {
 .customAntDropdownTitleWithBG {
   height: 24px;
   line-height: 24px;
-  border-radius: 12px;
   display: inline-block;
   vertical-align: top;
   max-width: 95%;
 }
 
+/* 【圆角只给带底色的那种】两个类的区别只在有没有填充：WithBG 才会拿选项颜色当背景
+   （dropdown.tsx / Checkbox 里按 enumDefault2 === 1 分流），是个真胶囊，圆角必须有；
+   不带底色的 .customAntDropdownTitle 是纯文字，圆角【看不见】——
+   但 Chrome 会把文字选区的高亮按元素圆角裁掉，于是用户一选中这段文字，
+   蓝色高亮两头是圆的，像个奇怪的胶囊。这种字段（只读的选项）恰好还带
+   user-select: all，一点就整段选中，所以特别显眼。圆角挪到 WithBG 即可。 */
 .customAntDropdownTitleWithBG {
+  border-radius: 12px;
   padding: 0 12px;
   box-sizing: border-box;
 }

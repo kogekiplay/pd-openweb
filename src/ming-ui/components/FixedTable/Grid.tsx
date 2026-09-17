@@ -123,6 +123,40 @@ export default function Grid(props) {
     [Cell],
   );
 
+  /* 【cellProps 必须是稳定对象，而且 grid 里只放真正被用到的字段】
+     react-window 2 对单元格是做了 memo 的：cellProps 走 useMemo(() => e, Object.values(e))，
+     单元格外面套 memo + 浅比较。所以只要这里每次渲染都给一个新对象，那层 memo 就必然落空 ——
+     左侧分组面板一折叠，全部单元格重渲一遍（实测 210 个格子 → 198~220 次渲染）。
+
+     要断的只是【随宽度变】的那部分，也就是 ...config（left / top / width / height /
+     columnCount / rowCount）—— 留着它就等于「一改宽 → grid 变 → data 变 → 全表重渲」，
+     上面的稳定化做了也白做。
+
+     【下面这七个字段一个都不能少】Cell 里是 `getIndex({ columnIndex, rowIndex, ...grid })`，
+     靠它们把「分区内的局部列号」换算成全局列号。我第一版只留了 id 和 leftFixedCount
+     （grep `grid\.\w+` 得出的结论），结果左固定区丢了 leftFixed:true，掉进
+     `columnIndex = leftFixedCount + columnIndex` 那条分支 —— 左固定列显示成了中间区的第一列，
+     肉眼就是「同一列渲染了两次」。
+     教训：grep 属性访问查不出【整个对象被 ...spread 下去】的用法。 */
+  const cellProps = useMemo(
+    () => ({
+      data: {
+        ...tableData,
+        grid: {
+          id,
+          tableColumnCount: columnCount,
+          leftFixed,
+          rightFixed,
+          topFixed,
+          bottomFixed,
+          rightFixedCount,
+          leftFixedCount,
+        },
+      },
+    }),
+    [tableData, id, columnCount, leftFixed, rightFixed, topFixed, bottomFixed, rightFixedCount, leftFixedCount],
+  );
+
   if (!config.width || !config.height) {
     return;
   }
@@ -132,7 +166,17 @@ export default function Grid(props) {
       <WindowGrid
         gridRef={handleGridRef}
         className={id + ' ' + cx({ leftFixed, rightFixed, topFixed, bottomFixed }) + '' + id}
-        key={`${id}-${config.width}`}
+        /* 【key 里不能带宽度】曾经写成 `${id}-${config.width}`，本意是「宽度变了让 grid 整体重挂，
+           好让 react-window 重新测量」。代价是：左侧分组面板一折叠、窗口一改宽，整个 grid 连同
+           【所有单元格】全部重新挂载，上面那套 cellProps 稳定化、以及 react-window 自带的
+           单元格 memo，统统作废。实测就是它把单元格渲染次数按在 200 上下下不来的。
+
+           v2 其实不需要这一手：它自己测量容器（没有 width/height prop，尺寸只走 style），
+           宽度改了它会自行重新布局；尺寸缓存也另有失效途径（columnWidth 这个尺寸函数每次渲染
+           都是新的箭头函数，标识一变缓存就失效）。
+           重挂带来的横向错位问题也随之消失 —— 不重挂就不会回到 scrollLeft 0，
+           下面 initialScrollLeft 那套兜底只在真正首次挂载时才会用到。 */
+        key={id}
         // v2 没有 width / height prop——它自测量容器，尺寸只能通过 style 给。
         // overflow: hidden 是刻意的：这套表格用的是自绘的覆盖式滚动条（见同目录 ScrollBar.tsx），
         // 滚动完全由 FixedTable/index.tsx 命令式驱动，不依赖原生滚动条。
@@ -170,22 +214,7 @@ export default function Grid(props) {
         // { ariaAttributes, columnIndex, rowIndex, style, ...cellProps }），
         // 所以这里把整包数据放在 `data` 键下——Cell 组件里 `const { data } = props` 的写法
         // 与 v1 的 itemData 完全一致，一行都不用改。
-        cellProps={{
-          data: {
-            ...tableData,
-            grid: {
-              id,
-              tableColumnCount: columnCount,
-              leftFixed,
-              rightFixed,
-              topFixed,
-              bottomFixed,
-              rightFixedCount,
-              leftFixedCount,
-              ...config,
-            },
-          },
-        }}
+        cellProps={cellProps}
       />
       {isFunction(renderCustomComp) && (
         <div style={{ left: 0, top: 0, display: 'inline-block' }}>{renderCustomComp()}</div>

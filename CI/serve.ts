@@ -113,7 +113,18 @@ const proxyConfigs: { name: string; path: string; replace: string; server: any; 
     server: publishConfig.apiServer,
     rewriteHosts: true,
   },
-  { name: 'workflow_api', path: '/workflow_api/', replace: '', server: publishConfig.apiServer },
+  // 【这些服务 API 也必须开 rewriteHosts】它们和上面的 /api/ 是各自独立的代理条目，
+  // 但返回的 JSON 里同样带指向真实部署的【绝对地址】。最典型的是流程待办：
+  // /workflow_api/v1/instance/getTodoList 返回的每条待办都带 app.iconUrl =
+  // https://<部署>/file/mdpub/customIcon/xxx.svg，SvgIcon → react-svg 拿它发 XHR，
+  // 从 localhost 跨到部署 origin，被 CORS 挡死 —— 症状就是下面那段注释写的
+  // 「图标位置只剩一个纯色方块」，而且 react-svg 会把这个错吞掉（占位节点先被 effect
+  // 清理掉，回调再进来时 parentNode 已是 null，hasError 都不会置位），
+  // 控制台除了一条 CORS 之外没有任何线索，页面其余部分完全正常。
+  //
+  // 当初只在 /api/ 上开，是因为那会儿只验到应用图标来自主 API；凡是走【自己那套服务】
+  // 拿应用信息的入口（待办、报表、集成……）都会重新踩一次。这里按服务一次配齐。
+  { name: 'workflow_api', path: '/workflow_api/', replace: '', server: publishConfig.apiServer, rewriteHosts: true },
   // 下面五条都是【原样透传】的静态/服务前缀，存在的意义是让 rewriteAbsoluteHosts
   // 改写出来的相对地址能落到本地 dev server 上，再由这里转发到真实部署。
   // 不加的话请求会被 serve-handler 兜底成 SPA 的 index.html，返回 200 但内容是 HTML——
@@ -172,26 +183,41 @@ const proxyConfigs: { name: string; path: string; replace: string; server: any; 
     server: publishConfig.apiServer,
   },
   { name: 'excelapi', path: '/excelapi/', replace: '/excelapi/', server: publishConfig.apiServer },
-  { name: 'report_api', path: '/report_api/', replace: '', server: publishConfig.apiServer },
-  { name: 'integration_api', path: '/integration_api/', replace: '', server: publishConfig.apiServer },
-  { name: 'data_pipeline_api', path: '/data_pipeline_api/', replace: '', server: publishConfig.apiServer },
+  { name: 'report_api', path: '/report_api/', replace: '', server: publishConfig.apiServer, rewriteHosts: true },
+  {
+    name: 'integration_api',
+    path: '/integration_api/',
+    replace: '',
+    server: publishConfig.apiServer,
+    rewriteHosts: true,
+  },
+  {
+    name: 'data_pipeline_api',
+    path: '/data_pipeline_api/',
+    replace: '',
+    server: publishConfig.apiServer,
+    rewriteHosts: true,
+  },
   {
     name: 'workflow_plugin_api',
     path: '/workflow_plugin_api/',
     replace: '/workflowplugin/',
     server: publishConfig.apiServer,
+    rewriteHosts: true,
   },
   {
     name: 'knowledge_api',
     path: '/knowledge_api/',
     replace: '',
     server: publishConfig.apiServer,
+    rewriteHosts: true,
   },
   {
     name: 'cloudapi_api',
     path: '/cloudapi_api/',
     replace: '',
     server: publishConfig.apiServer,
+    rewriteHosts: true,
   },
 ];
 
@@ -324,7 +350,30 @@ function makeProxy({
     ...(rewrite ? { selfHandleResponse: true } : null),
     on: {
       ...(rewrite
-        ? { proxyRes: responseInterceptor(async buffer => rewriteAbsoluteHosts(buffer, server, prefixes)) }
+        ? {
+            // 【为什么要按 Content-Type 分流】responseInterceptor 会把响应整个缓冲下来再回放，
+            // 这对 JSON 无所谓，但对 SSE（text/event-stream）是致命的：事件全被憋到连接结束
+            // 才一次吐出，页面表现为「一直转圈、最后突然全部出现」，且不报任何错。
+            // 开着 rewriteHosts 的前缀里确实混着流式接口（如主 API 下的
+            // sse/Certification/CheckFaceCertSSE），所以这里对非文本/流式响应直接对穿，
+            // 只有真正需要改地址的文本响应才走缓冲改写。
+            proxyRes: (proxyRes, req, res) => {
+              const contentType = String(proxyRes.headers['content-type'] || '');
+              const rewritable = /\b(json|xml)\b/i.test(contentType) || /^text\//i.test(contentType);
+
+              if (!rewritable || /event-stream/i.test(contentType)) {
+                res.writeHead(proxyRes.statusCode || 502, proxyRes.headers);
+                proxyRes.pipe(res);
+                return;
+              }
+
+              return responseInterceptor(async buffer => rewriteAbsoluteHosts(buffer, server, prefixes))(
+                proxyRes,
+                req,
+                res,
+              );
+            },
+          }
         : null),
       error(err, req, res) {
         console.error(`[proxy ${name}] ${req.url} -> ${server} failed:`, err.message);

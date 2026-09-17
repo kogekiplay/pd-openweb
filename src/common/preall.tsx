@@ -1,5 +1,4 @@
 import React from 'react';
-import isPropValid from '@emotion/is-prop-valid';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ja';
 import 'dayjs/locale/ms';
@@ -12,34 +11,13 @@ import { StyleSheetManager } from 'styled-components';
 import { LoadDiv } from 'ming-ui';
 import accountSetting from 'src/api/accountSetting';
 import global from 'src/api/global';
+import shouldForwardProp from 'src/common/shouldForwardProp';
 import { prefetchMyPermissions } from 'src/components/checkPermission';
 import { resetPortalUrl } from 'src/pages/AuthService/portalAccount/util.js';
 import { initThemeMode } from 'src/router/globalEvents';
 import { navigateTo, navigateToLogin, navigateToLogout, redirect } from 'src/router/navigateTo';
 import { browserIsMobile, getPathWithoutSubPath, pathCompletion } from 'src/utils/common';
 import { getPssId, setPssId } from 'src/utils/pssId';
-
-/**
- * 决定一个 prop 要不要继续往下传。
- *
- * 【解决什么】styled-components 6 默认把所有 prop 透传给底层元素。
- * 写 `styled.div` 时那些只给样式用的自定义 prop（themeBgColor / activeColor /
- * isExpanded / forCard …）就会落到真实 DOM 上，React 逐个报
- *   React does not recognize the `themeBgColor` prop on a DOM element
- * 而 styled-components 自己也会再警告一次。全站扫下来有十几个，且还在增加。
- *
- * 【为什么不逐个改成瞬态 prop（$ 前缀）】全仓在 styled 模板里解构的自定义 prop
- * 有上百个，逐个改要动几百处调用点，且新写的代码随时会再引入一个。
- * 这里用的是 styled-components 告警文案里推荐的那个官方方案，一次覆盖全部。
- *
- * 【为什么是安全的】只在 target 是【原生标签】时过滤；styled(SomeComponent)
- * 一律放行，组件自己的 prop 不受影响。而被过滤掉的那些本来就没进 DOM ——
- * React 对驼峰命名的未知 prop 是丢弃 + 警告，不是渲染成属性。
- * 也就是说这个改动只消掉警告，不改变任何实际渲染结果。
- */
-function shouldForwardProp(propName: string, target: unknown): boolean {
-  return typeof target === 'string' ? isPropValid(propName) : true;
-}
 
 /** 存储分发类入口 状态 和 分享id */
 const parseShareId = () => {

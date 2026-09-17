@@ -9,6 +9,7 @@ import worksheetApi from 'src/api/worksheet';
 import DragMask from 'worksheet/common/DragMask';
 import { SHEET_VIEW_HIDDEN_TYPES, WORKSHEETTABLE_FROM_MODULE } from 'worksheet/constants/enum';
 import { useRefStore } from 'worksheet/hooks';
+import useStablePropsObject from 'worksheet/hooks/useStablePropsObject';
 import useVerticalTableWidth from 'worksheet/hooks/userVerticalTableWidth';
 import useTableWidth from 'worksheet/hooks/useTableWidth';
 import { emitter } from 'src/utils/common';
@@ -17,6 +18,7 @@ import { getControlStyles } from 'src/utils/control';
 import { filterEmptyChildTableRows, getRecordControlStyles } from 'src/utils/record';
 import { checkRulesErrorOfRowControl } from 'src/utils/rule';
 import { Cell, NoRecords, NoSearch } from './components';
+import useRenderSlots from './renderSlots';
 import { checkCellFullVisible, getRulePermissions, getTableHeadHeight, handleLifeEffect } from './util';
 import './style.less';
 import type { FormControl } from 'src/utils/controlTypes';
@@ -158,6 +160,11 @@ const StyledFixedTable = styled(FixedTable)`
   }
 `;
 
+/* 默认值不写成 `= {}`：那样每次渲染都是一个新对象，白白让下游的比较失效。
+   （曾经配合 tableData 整包稳定化用，那套因为会造成静默陈旧界面已回退，
+   见 ming-ui/components/FixedTable/cellMemo.spec.ts；这几个常量本身无害，留着。） */
+const EMPTY_OBJECT = Object.freeze({});
+
 /**
  * 取消选择页面中选中的文字
  */
@@ -223,8 +230,8 @@ function WorksheetTable(props, ref) {
     showEmptyForResize = true,
     disablePanVertical,
     defaultScrollLeft,
-    sheetViewHighlightRows = {},
-    cellErrors = {},
+    sheetViewHighlightRows = EMPTY_OBJECT,
+    cellErrors = EMPTY_OBJECT,
     clearCellError = () => {},
     expandCellAppendWidth,
     treeLayerControlId,
@@ -242,14 +249,14 @@ function WorksheetTable(props, ref) {
     cellUniqueValidate,
     onUpdateRules = () => {},
     tableFooter,
-    actions = {},
+    actions = EMPTY_OBJECT,
     chatButton,
     onColumnHeadHeightUpdate = () => {},
     isDraft,
     getRowHeight = () => props.rowHeight || 34,
     inView,
     onScroll = () => {},
-    cellProps = {},
+    cellProps = EMPTY_OBJECT,
     // onHoverColumnChange = () => {},
     renderCompInMainCenter,
   }: { controls: FormControl[]; [key: string]: any } = props;
@@ -430,21 +437,36 @@ function WorksheetTable(props, ref) {
       tableHeight -= rowHeight - 26;
     }
   }
+  /* 【masterFormData() 跟行无关，别放在 data.map 里面】它取的是「子表所在的那条主记录」的表单数据，
+     每一行拿到的都是同一份。原先写在 map 内部，等于有多少行就调多少次、filter 多少次；
+     主表场景它还是默认值 () => []，纯白费。 */
+  const masterExtraControls = masterFormData().filter(c => c.controlId.length === 24);
+  const rowControls = controls || columns;
 
-  const tableDataWithRowFormData = data.map(row => {
-    return (controls || columns)
-      .map(c => {
-        const k = `${row.rowid}-${c.controlId}`;
-        const adv = ruleControlAdvancedSettings[k];
-        return {
-          ...c,
-          value: row[c.controlId],
-          fieldPermission: rulePermissions[k] || c.fieldPermission,
-          ...(adv ? { advancedSetting: adv } : {}),
-        };
-      })
-      .concat(masterFormData().filter(c => c.controlId.length === 24));
-  });
+  /* 【这份数据必须 useMemo】它是「行 × 控件」的全量展开，每次渲染重算一遍既费时间，
+     更要命的是产出【新数组】—— tableData 的稳定化按标识比值，这里一变，整包就变，
+     react-window 对单元格的 memo 全部落空，全表重渲。
+     依赖里带上 masterExtraControls 的内容签名：子表场景主记录的值变了要跟着重算，
+     主表场景它恒为空数组、签名恒为 ''，不会造成额外重算。 */
+  const masterExtraKey = masterExtraControls.map(c => c.controlId + '=' + String(c.value)).join('|');
+  const tableDataWithRowFormData = useMemo(
+    () =>
+      data.map(row => {
+        const list = rowControls.map(c => {
+          const k = `${row.rowid}-${c.controlId}`;
+          const adv = ruleControlAdvancedSettings[k];
+          return {
+            ...c,
+            value: row[c.controlId],
+            fieldPermission: rulePermissions[k] || c.fieldPermission,
+            ...(adv ? { advancedSetting: adv } : {}),
+          };
+        });
+
+        return masterExtraControls.length ? list.concat(masterExtraControls) : list;
+      }),
+    [data, rowControls, ruleControlAdvancedSettings, rulePermissions, masterExtraKey],
+  );
 
   function showColumnWidthChangeMask({ columnWidth, defaultLeft, maskMinLeft, callback }) {
     setState({
@@ -691,19 +713,36 @@ function WorksheetTable(props, ref) {
   useEffect(() => {
     setState({ sheetColumnWidths: props.sheetColumnWidths || {} });
   }, [props.sheetColumnWidths]);
+  /* 【按「列宽真的变了」触发重新测量，而不是按「容器宽度变了」】
+     forceUpdate 会让 FixedTable 把所有可见网格整体重渲一遍（react-window 2 去掉了
+     resetAfterColumnIndex，只能靠重渲让它重新测量）。原先依赖里放的是 width 和
+     getColumnWidth —— 这两个只要容器一改宽就变，于是左侧分组面板折叠这种【列宽根本没动】
+     的场景也会白白整渲一遍。
+
+     实测（AGV测试问题清单，50 行 14 列）：一次改宽，FixedTable 渲染两次，两次的输入
+     【完全一致】（width / tableSize / 行列数 / getColumnWidth / Cell 全都相同），
+     第二次纯属浪费，却要 40~50ms —— 占这次交互总开销的三分之一。
+
+     改成按列宽的实际取值做签名：横向有滚动条时列宽是固定的，容器变宽变窄它们纹丝不动 →
+     不再触发；而列宽真的变化（拖拽调列宽、显示列增减、表格有富余空间要拉伸）时签名会变 →
+     行为和原来一致。列数只有十几个，算这个签名的成本可以忽略。 */
+  const columnWidthsKey = new Array(columnsCount)
+    .fill(0)
+    .map((a, i) => getColumnWidth(i))
+    .join(',');
+
   useEffect(() => {
     // 显示列变更，列宽变更
     tableRef.current.forceUpdate();
   }, [
     tableType,
-    width,
     rowHeight,
     rowHeadWidth,
     expandCellAppendWidth,
     fixedColumnCount,
     columns.map(c => c.controlId).join(','),
     JSON.stringify(sheetColumnWidths),
-    getColumnWidth,
+    columnWidthsKey,
   ]);
   useEffect(() => {
     setCache('data', data);
@@ -848,47 +887,29 @@ function WorksheetTable(props, ref) {
   }, []);
   const controlStyles = showControlStyle && getControlStyles(visibleColumns);
   const recordControlStyles = showControlStyle && getRecordControlStyles(ruleControlAdvancedSettings);
-  return (
-    <React.Fragment>
-      {maskVisible && <DragMask value={maskLeft} min={maskMinLeft} max={maskMaxLeft} onChange={maskOnChange} />}
-      <StyledFixedTable
-        isGroupTableView={isGroupTableView}
-        isSubList={isSubList}
-        controlStyles={controlStyles}
-        recordControlStyles={recordControlStyles}
-        disablePanVertical={disablePanVertical}
-        noRenderEmpty={noRenderEmpty}
-        loading={loading}
-        showLoadingMask={showLoadingMask}
-        loadingMaskChildren={loadingMaskChildren}
-        ref={tableRef}
-        className={cx(`worksheetTableComp sheetViewTable id-${tableId}-id`, className, tableType, {
-          scrollBarHoverShow,
-          hideVerticalLine: !showVerticalLine,
-          showAsZebra,
-          isChangeColumnWidth,
-          xIsScroll,
-          direction,
-        })}
-        width={width}
-        height={tableHeight}
-        hasSubListFooter={isSubList && (_.last(data) || {}).isSubListFooter}
-        columnHeadHeight={columnHeadHeight} // 列头高度
-        setHeightAsRowCount={setHeightAsRowCount}
-        sheetColumnWidths={sheetColumnWidths}
-        rowHeight={rowHeight}
-        defaultScrollLeft={defaultScrollLeft}
-        onScroll={onScroll}
-        getColumnWidth={getColumnWidth}
-        getRowHeight={getRowHeight}
-        rowCount={tableRowCount}
-        columnCount={columnsCount}
-        leftFixedCount={fixedColumnCount >= cellColumnCount ? 1 : fixedColumnCount + 1}
-        rightFixedCount={rightFixedCount}
-        Cell={Cell}
-        showHead={showHead && direction === 'horizontal'}
-        showFoot={showSummary}
-        tableData={{
+
+  /* 【这包东西要保持「值没变就同一个对象」】它通过 react-window 的 cellProps 发给每个单元格，
+     标识一变，react-window 自带的单元格 memo 就全部落空 —— 一次折叠就是全表重渲
+     （实测 210 个格子 → 198~220 次渲染）。
+     useStablePropsObject 只处理【调用型回调】（包装转调最新实现，不产生过期闭包）；
+     render prop 另走 renderSlots.tsx 的订阅式插槽，别混为一谈。 */
+  /* 【render prop 走订阅式插槽，不能当普通函数稳定化】
+     它们的输出依赖没经过 tableData 的外部状态（SheetView 的 layoutChangeVisible 就是一例）。
+     直接换成标识固定的包装会让那类状态变化不再触发重渲染 —— 界面停在旧的一帧、不报错
+     （实测：调完列宽点保存，服务端已存好，但保存入口不消失，得再点一次）。
+     useRenderSlots 给的是标识固定、但【内部订阅最新实现】的插槽：
+     tableData 因此能保持同一个标识（数据格子整批跳过），而真正用到 render prop 的
+     那几十个格子会各自更新。详见 renderSlots.tsx。 */
+  const renderFunctions = useRenderSlots({
+    head: renderColumnHead,
+    foot: renderFooterCell,
+    rowHead: renderRowHead,
+    operates: renderOperates,
+    groupTitle: renderGroupTitle,
+    groupMore: renderGroupMore,
+  });
+
+  const rawTableData = {
           isCharge,
           tableDataWithRowFormData,
           columnStyles,
@@ -1032,17 +1053,53 @@ function WorksheetTable(props, ref) {
           registerRef: (cellRef, cellIndex) => {
             setCellRefs(cellIndex, cellRef);
           },
-          renderFunctions: {
-            head: renderColumnHead,
-            foot: renderFooterCell,
-            rowHead: renderRowHead,
-            operates: renderOperates,
-            groupTitle: renderGroupTitle,
-            groupMore: renderGroupMore,
-          },
+          renderFunctions,
           getColumnWidth,
           actions,
-        }}
+  };
+  const tableData = useStablePropsObject(rawTableData);
+
+  return (
+    <React.Fragment>
+      {maskVisible && <DragMask value={maskLeft} min={maskMinLeft} max={maskMaxLeft} onChange={maskOnChange} />}
+      <StyledFixedTable
+        isGroupTableView={isGroupTableView}
+        isSubList={isSubList}
+        controlStyles={controlStyles}
+        recordControlStyles={recordControlStyles}
+        disablePanVertical={disablePanVertical}
+        noRenderEmpty={noRenderEmpty}
+        loading={loading}
+        showLoadingMask={showLoadingMask}
+        loadingMaskChildren={loadingMaskChildren}
+        ref={tableRef}
+        className={cx(`worksheetTableComp sheetViewTable id-${tableId}-id`, className, tableType, {
+          scrollBarHoverShow,
+          hideVerticalLine: !showVerticalLine,
+          showAsZebra,
+          isChangeColumnWidth,
+          xIsScroll,
+          direction,
+        })}
+        width={width}
+        height={tableHeight}
+        hasSubListFooter={isSubList && (_.last(data) || {}).isSubListFooter}
+        columnHeadHeight={columnHeadHeight} // 列头高度
+        setHeightAsRowCount={setHeightAsRowCount}
+        sheetColumnWidths={sheetColumnWidths}
+        rowHeight={rowHeight}
+        defaultScrollLeft={defaultScrollLeft}
+        onScroll={onScroll}
+        getColumnWidth={getColumnWidth}
+        getRowHeight={getRowHeight}
+        rowCount={tableRowCount}
+        columnCount={columnsCount}
+        leftFixedCount={fixedColumnCount >= cellColumnCount ? 1 : fixedColumnCount + 1}
+        rightFixedCount={rightFixedCount}
+        Cell={Cell}
+        showHead={showHead && direction === 'horizontal'}
+        showFoot={showSummary}
+        tableData={tableData}
         // 空状态
         renderEmpty={({ style }) => {
           if (keyWords && showSearchEmpty) {

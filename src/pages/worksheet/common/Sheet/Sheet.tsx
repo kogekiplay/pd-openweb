@@ -455,6 +455,11 @@ function Sheet(props) {
                     changeGroupStatus={isOpen => {
                       setIsOpenGroup(isOpen);
                       safeLocalStorageSetItem('navGroupIsOpen', isOpen);
+
+                      /* 【这两个 set 必须留在同一个事件里，别用 rAF 推迟宽度】
+                         看起来「让宽度晚一帧改、动画就不会和这次提交抢线程」很合理，实测是反的：
+                         React 会把同一个事件里的 set 批成【一次】提交（实测 33ms），
+                         推到 rAF 里就变成两次独立提交（实测 25ms + 42ms = 67ms），开头反而更顿。 */
                       if (isOpen) {
                         setOpenNavW();
                       } else {
