@@ -92,7 +92,8 @@ export default class InvitationList extends Component<any, any> {
               })}
             </Fragment>
           ) : (
-            <li class="Left LineHeight25 w100">{_l('暂无邀请记录！')}</li>
+            // class= 在 JSX 里会被 React 丢掉，这行空态一直没有对应样式
+            <li className="Left LineHeight25 w100">{_l('暂无邀请记录！')}</li>
           )}
         </ul>
       </div>
