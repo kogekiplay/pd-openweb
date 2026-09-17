@@ -88,13 +88,18 @@ export function updateFormatData() {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { controls, calendarview } = getState().sheet;
     const { calendar = [], calendarData } = calendarview;
+    /* 【这一句原先写在 forEach 里面】getCurrentView 是 find(views, …)，
+       再套一层 getState()。放在循环体内 = 每条记录都重新 getState + 遍历一遍视图数组。
+       考勤日历这种表实测一屏 3000 条事件，等于白跑 3000 次；而它在整个循环里是常量。
+       提到循环外，语义完全不变。 */
+    const currentView = getCurrentView(getState().sheet);
     let list = [];
     calendar.forEach(item => {
       let data = setDataFormat({
         ...item,
         // allowNoBegin: true, //允许开始时间为空的数据
         worksheetControls: controls,
-        currentView: getCurrentView(getState().sheet),
+        currentView,
         calendarData,
       });
       list.push({ ...data[0], row: item });
