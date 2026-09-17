@@ -3,7 +3,7 @@ import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Button, Icon, SvgIcon } from 'ming-ui';
-import { generateRandomPassword, pathCompletion } from 'src/utils/common';
+import { pathCompletion } from 'src/utils/common';
 import { getCurrentProject } from 'src/utils/project';
 import showAddAppActionSheet from '../AddAppActionSheet';
 import ApplicationItem from '../ApplicationItem';
@@ -154,7 +154,11 @@ export default class ApplicationList extends Component<any, any> {
     const { dashboardHideGroup = [] } = this.state;
 
     return (
-      <div className="groupDetail" key={`${type}-${generateRandomPassword(16)}`}>
+      /* 原先这里是 key={`${type}-${generateRandomPassword(16)}`} —— 每次 render 都是个新 key，
+         React 会把整组应用【卸载再重挂】，而不是复用。renderGroupDetail 的四个调用点全是
+         单独调用（分组那两处外面已经套了 <Fragment key={item.id}>），根本不在数组里，
+         所以这个 key 唯一需要区分的就是「全部应用」和「外协应用」这对兄弟，type 足够了。 */
+      <div className="groupDetail" key={type}>
         <div
           className={cx('flexRow pTop16', {
             pBottom16: type === 'apps' && _.includes(dashboardHideGroup, 'apps'),
@@ -170,7 +174,9 @@ export default class ApplicationList extends Component<any, any> {
         ) : _.includes(dashboardHideGroup, type) ? null : (
           <div className="appCon flexRow alignItemsCenter">
             {_.map(appList, item => {
-              return <ApplicationItem data={item} myPlatformLang={myPlatformLang} />;
+              // 缺 key：控制台常驻「Each child in a list should have a unique "key" prop.
+              // Check the render method of `div`. It was passed a child from ApplicationList」。
+              return <ApplicationItem key={item.id} data={item} myPlatformLang={myPlatformLang} />;
             })}
             {canCreateApp && (
               <ApplicationItem
