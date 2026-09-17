@@ -7,12 +7,30 @@ import { BgIconButton, Button } from 'ming-ui';
 import ErrorBoundary from './ErrorBoundary';
 import './less/Modal.less';
 
+/* 这排图标（AI 填写 / 草稿 / 分享 / 放大）和右上角那个关闭叉是【两套各自定位的东西】，
+   谁也不知道谁有多大，于是对不齐：
+     · 叉是 antd 的 .ant-modal-close，贴容器右上角 (0,0)，尺寸来自 MdModal 传给
+       closeIcon 的 closeSize（默认 40）→ 中心线 y = closeSize/2 = 20，距右 20；
+     · 这排原先写死 top:0 + margin-top:10px，而 BgIconButton 实高只有 28
+       （padding 4×2 + 图标 20）→ 中心线 y = 24，比叉低 4px；
+       且 right:42 让「叉心 ↔ 末个图标心」= 38px，而图标彼此之间是 40px
+       （32 宽 + 8 间距），右边那一档又窄 2px。
+
+   改成跟着 closeSize 算：撑一条 closeSize 高的带子做垂直居中，中心线必然落在叉上；
+   水平上让叉心到末个图标心也是 40px，和图标彼此之间同一个节奏。
+   带子比图标高，多出来的上下各 6px 用 pointer-events 让开，免得这块 z-index:2 的
+   透明区域吃掉底下的点击。$ 前缀是 styled-components 6 的 transient prop，不会落到 DOM 上。 */
 const ModalButtonCon = styled(BgIconButton.Group)`
   z-index: 2;
   position: absolute;
-  right: 42px;
-  margin-top: 10px;
   top: 0;
+  right: ${({ $closeSize }) => $closeSize / 2 + 24}px;
+  height: ${({ $closeSize }) => $closeSize}px;
+  align-items: center;
+  pointer-events: none;
+  > * {
+    pointer-events: auto;
+  }
 `;
 
 const ConfirmCon = styled.div`
@@ -205,13 +223,20 @@ export default function MdModal(props) {
     >
       <div ref={locateRef}></div>
       {headerComp}
-      <ModalButtonCon gap={8}>
-        {iconButtons.map(
-          (btn, i) =>
-            btn.ele || (
-              <BgIconButton style={{ width: 32 }} key={i} icon={btn.icon} tooltip={btn.tip} onClick={btn.onClick} />
-            ),
-        )}
+      <ModalButtonCon gap={8} $closeSize={closeSize}>
+        {/* key 要给到【数组的每一项】。原先只有 BgIconButton 那条分支带了 key，走 btn.ele 的
+            自定义节点（NewRecord 的「AI 填写」和「草稿」就是这种）是消费方现场 new 出来的，
+            身上没有 key —— 控制台那条 `Each child in a list should have a unique "key" prop.
+            Check the render method of \`div\`. It was passed a child from NewRecord.` 就是它。
+            这里统一包一层 Fragment 挂 key：Fragment 不生成 DOM 节点，上面 `> *` 的
+            pointer-events 和 flex gap 都照旧作用在真正的图标节点上。 */}
+        {iconButtons.map((btn, i) => (
+          <React.Fragment key={btn.type || i}>
+            {btn.ele || (
+              <BgIconButton style={{ width: 32 }} icon={btn.icon} tooltip={btn.tip} onClick={btn.onClick} />
+            )}
+          </React.Fragment>
+        ))}
         {allowScale && (
           <BgIconButton
             style={{ width: 32 }}
