@@ -258,7 +258,6 @@ export default class WorkSheetComment extends React.Component<any, any> {
               const { updatePageIndex } = this.commentList;
               updatePageIndex();
             }}
-            preserveScrollTop
           >
             {renderWorkSheetCommentList()}
           </ScrollView>
