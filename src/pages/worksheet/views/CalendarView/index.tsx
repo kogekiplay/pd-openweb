@@ -51,6 +51,7 @@ import {
   getCanCreateRecord,
   getCurrentView,
   getTimeControls,
+  readInitType,
   renderLine,
   resetFcEventDraggingPoint,
   setShowTip,
@@ -81,7 +82,7 @@ let clickData = null;
 const getLiveEventData = owner => {
   const { calendarview = {} } = owner.props;
   const { calenderEventList = {} } = calendarview;
-  return calenderEventList[`${owner.props.getInitType()}Dt`] || [];
+  return calenderEventList[`${readInitType()}Dt`] || [];
 };
 
 const liveEventClick = (owner, eventInfo) => {
@@ -847,7 +848,7 @@ class RecordCalendarBase extends Component<any, any> {
     }
 
     const { recordInfoVisible, recordId, isLoading, rows = [], showPrevNext = false, random } = this.state;
-    const typeEvent = this.props.getInitType();
+    const typeEvent = readInitType();
     const { calendarInfo = [], unweekday = '', btnList, initialView } = calendarData;
     const { height, calendarFormatData } = this.state;
     let isDelete =

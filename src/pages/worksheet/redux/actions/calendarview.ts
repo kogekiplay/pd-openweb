@@ -7,6 +7,7 @@ import {
   getCurrentView,
   getShowExternalData,
   getTimeControls,
+  readInitType,
   setDataFormat,
 } from 'src/pages/worksheet/views/CalendarView/util';
 import { getFilledRequestParams } from 'src/utils/common';
@@ -127,7 +128,7 @@ export const fetchExternal = () => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { base = {} } = getState().sheet;
     const { worksheetId, viewId } = base;
-    const initType = dispatch(getInitType());
+    const initType = readInitType();
 
     if (!(getShowExternalData() || []).includes(`${worksheetId}-${viewId}`) && 'eventNoScheduled' !== initType) {
       dispatch(getEventScheduledData('eventNoScheduled'));
@@ -315,17 +316,10 @@ export function getCalendarData() {
   };
 }
 
-export const getInitType = () => {
-  return () => {
-    let type = window.localStorage.getItem('CalendarShowExternalTypeEvent');
-
-    if (!type) {
-      safeLocalStorageSetItem('CalendarShowExternalTypeEvent', 'eventNoScheduled');
-    }
-
-    return type || 'eventNoScheduled';
-  };
-};
+/* getInitType 原本是这里的一个 thunk，但它只读 localStorage，不碰 state、不发 action。
+   走 redux 的唯一效果是每次调用都触发一遍 dispatch，而 dev 下 RTK 的
+   immutableCheck/serializableCheck 会把整棵 state 树深走一遍（实测单次 78~126ms）。
+   已改成纯函数 readInitType，见 views/CalendarView/util.ts。 */
 
 // 获取已排期
 export const getEventScheduledData = type => {
@@ -605,7 +599,7 @@ export function searchKeys(keyWords) {
 
 export function searchEventArgs(keyWords, pageIndex: number) {
   return dispatch => {
-    const typeEvent = dispatch(getInitType());
+    const typeEvent = readInitType();
     dispatch({ type: 'CHANGE_CALENDAR_LOADING', data: true });
     dispatch(getEventList({ pageIndex, typeEvent, keyWords }));
   };
@@ -616,7 +610,7 @@ export function updateEventList(pageIndex: number, isUp) {
     const { calendarview } = getState().sheet;
     const { calenderEventList = {} } = calendarview;
     const { keyWords } = calenderEventList;
-    const typeEvent = dispatch(getInitType());
+    const typeEvent = readInitType();
     dispatch(getEventList({ pageIndex, typeEvent, keyWords, isAdd: true, isUp }));
   };
 }
@@ -625,7 +619,7 @@ export function deleteEventList(rowid: string) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { calendarview } = getState().sheet;
     const { calenderEventList = {} } = calendarview;
-    const typeEvent = dispatch(getInitType());
+    const typeEvent = readInitType();
     let l = calenderEventList[`${typeEvent}Dt`].filter(o => o.rowid !== rowid);
     let data = calenderEventList[typeEvent].filter(o => o.extendedProps.rowid !== rowid);
     dispatch({
@@ -644,7 +638,7 @@ export function deleteEventList(rowid: string) {
 
 export function refreshEventList() {
   return dispatch => {
-    const typeEvent = dispatch(getInitType());
+    const typeEvent = readInitType();
     dispatch({
       type: 'CHANGE_CALENDAR_CLEAR',
       data: {
@@ -672,7 +666,7 @@ export function updateEventData(rowId: string, data, time) {
     const { calendarData, calenderEventList = {} } = calendarview;
     const currentView = getCurrentView(getState().sheet);
     let { keyWords, searchData, eventScheduledDtResort = [], updataRowIds = [] } = calenderEventList;
-    const typeEvent = dispatch(getInitType());
+    const typeEvent = readInitType();
 
     if (keyWords) {
       // 搜索状态 直接更新卡片数据
