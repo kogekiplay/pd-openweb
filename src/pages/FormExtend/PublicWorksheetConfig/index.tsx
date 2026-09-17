@@ -90,7 +90,7 @@ function PublicWorksheetConfig(props) {
   }, []);
   if (_.isEmpty(worksheetInfo)) {
     return (
-      <div class="publicWorksheetEnablePanel">
+      <div className="publicWorksheetEnablePanel">
         <div style={{ padding: 10 }}>
           <Skeleton
             style={{ flex: 1 }}
@@ -120,7 +120,9 @@ function PublicWorksheetConfig(props) {
   }
 
   return (
-    <div class="publicWorksheetEnablePanel">
+    /* 原先是 class=，React 不认、整个丢掉，这个面板一直没有 index.less 里那套
+       padding/背景/圆角，连嵌套在它下面的 h1/.description/.status 规则也一并失效。 */
+    <div className="publicWorksheetEnablePanel">
       <div className="flexRow alignCenter">
         <h1 className="flex">{_l('公开表单')}</h1>
         <Switch className="publishSwitch" checked={enabled} onClick={onSwitchChange} />

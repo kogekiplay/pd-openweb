@@ -519,7 +519,10 @@ class UserTable extends React.Component<any, any> {
       usersCurrentPage = searchAccountIds.filter(user => user.accountId === searchId[0]);
     }
 
-    if (_.isEmpty(usersCurrentPage)) return '';
+    /* 【不能返回空字符串】这个返回值是 <tbody> 的 children，'' 会被 React 渲染成一个
+       【文本节点】，报 "In HTML, whitespace text nodes cannot be a child of <tbody>"。
+       返回 null 才是「什么都不渲染」。 */
+    if (_.isEmpty(usersCurrentPage)) return null;
 
     const currentTypeColumnsInfo = this.getCurrentTypeColumnsInfo(columnsInfo);
     const hasHorizontalScroll = this.hasHorizontalScroll(

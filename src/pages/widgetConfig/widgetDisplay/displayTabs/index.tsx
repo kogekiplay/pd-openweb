@@ -44,6 +44,7 @@ export default function DisplayTab(props) {
         >
           {TAB_DISPLAY_TYPE.map(item => (
             <div
+              key={item.value}
               className={cx('animaItem', { active: selectTab === item.value })}
               onClick={() => {
                 setStyleInfo({ info: Object.assign({}, styleInfo.info, { sectionshow: item.value }) });

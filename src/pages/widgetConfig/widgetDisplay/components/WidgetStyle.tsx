@@ -335,6 +335,7 @@ export function WidgetStyleSetting(props) {
                     <AnimationWrap>
                       {ANIMATION_TYPE.map(item => (
                         <div
+                          key={item.value}
                           className={cx('animaItem', { active: animation === item.value })}
                           onClick={() => {
                             handleChange({ animation: item.value });
@@ -373,14 +374,17 @@ export function WidgetStyleSetting(props) {
             <div className="settingItemTitle">{_l('字段名称位置')}</div>
             {WIDGET_TITLE.map(item => {
               return (
-                <SettingItem>
+                <SettingItem key={item.displayKey}>
                   <div className="settingItemTitle Normal">{item.title}</div>
                   <DisplayMode>
                     {TITLE_TYPE.map(i => {
                       const active =
                         (i.key === 'title' ? info[item.displayKey] || '1' : info[item.alignKey]) === i.value;
                       return (
+                        /* 不能用 i.value 当 key：TITLE_TYPE 里「垂直」和「水平」的 value 都是 '1'，
+                           会撞。img 在这三项里是唯一的。 */
                         <div
+                          key={i.img}
                           className={cx('displayItem', { active: active })}
                           onClick={() => {
                             if (i.key === 'title') {
@@ -441,6 +445,7 @@ export function WidgetStyleSetting(props) {
             <DisplayMode>
               {TAB_POSITION_TYPE.map(item => (
                 <div
+                  key={item.value}
                   className={cx('displayItem', { active: tabposition === item.value })}
                   onClick={() => {
                     handleChange({ tabposition: item.value });

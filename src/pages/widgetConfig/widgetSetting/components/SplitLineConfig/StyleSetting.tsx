@@ -56,7 +56,11 @@ const getDropData = () => {
 export default function StyleSetting({ sectionstyle, onChange }) {
   return (
     <DropComponentWrap
-      overlayClassName="sectionStyleDrop"
+      /* 这个 props 会被 widgetConfig/components/Dropdown 原样透传给 antd 的 Dropdown，
+         而 antd 6 已废弃 overlayClassName（"Please use `classNames.root` instead"）。
+         全仓只有这一处是直达 antd Dropdown 的，其余几处走的是自家 Tooltip / SearchRecord，
+         那两个包装器内部本来就已经转成 classNames.root 了。 */
+      classNames={{ root: 'sectionStyleDrop' }}
       value={sectionstyle}
       data={getDropData()}
       renderDisplay={() => renderItem(sectionstyle)}
