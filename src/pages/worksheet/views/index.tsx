@@ -125,7 +125,7 @@ function View(props) {
     'showControlIds',
     'openNewRecord',
     'setViewConfigVisible',
-    'groupFilterWidth',
+    // groupFilterWidth 【不在这里】给，见下面 viewType 确定之后那段
     'sheetSwitchPermit',
     'noLoadAtDidMount',
     'printCharge',
@@ -162,6 +162,18 @@ function View(props) {
       }
     }
   }
+
+  /* 【groupFilterWidth 只给真正读它的视图】
+     全仓只有画廊视图用它（GalleryView/hooks/useGalleryFetchEffect.ts：宽度变了要重算每行放几张卡）。
+     但它原先躺在上面那份 _.pick 里，于是【每个视图】都会收到它 ——
+     左侧分组面板一折叠，这个 prop 就变，把下游的 memo 全部打穿，
+     表格视图（autoSize(WorksheetTable) 是 memo 过的）会为一个自己根本不读的值做一次全量重渲染。
+
+     这次重渲染的输出和上一次完全一样，所以【DOM 一条变更都没有】，靠 MutationObserver 是看不见的；
+     但 JS 时间照付 —— 实测折叠一次主线程被占住 65ms（4013 行的表），正好卡在动画最开头，
+     60 帧的预算是 16.7ms/帧，这一下就吞掉 4 帧。
+     对照组（什么都不点）阻塞为 0，所以这 65ms 确实是这次交互带来的。 */
+  const galleryOnlyProps = String(viewType) === String(gallery) ? { groupFilterWidth: props.groupFilterWidth } : null;
 
   const Component = TYPE_TO_COMP[viewType];
 
@@ -209,7 +221,7 @@ function View(props) {
           <UnNormal resultCode={error ? -999999 : activeViewStatus} />
         ) : (
           <Suspense fallback={<ViewLoadingContent />}>
-            <Component {...viewProps} />
+            <Component {...viewProps} {...galleryOnlyProps} />
           </Suspense>
         )}
       </Con>
