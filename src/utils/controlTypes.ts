@@ -297,3 +297,18 @@ export interface RelationValue {
   name?: string;
   link?: string;
 }
+
+/**
+ * 关联记录（29 RELATESHEET）的值元素。
+ *
+ * 同一条关联记录在不同来源里给法不一样：有的直接带 name，有的把整行塞在 row 里，
+ * 有的把整行【序列化成字符串】放进 sourcevalue（所以它是 string 不是对象）。
+ * 取标题时三者要依次兜底，见 utils/record.ts 里 `r.name ? r : r.row || safeParse(r.sourcevalue)`。
+ */
+export interface RelateRecordValue {
+  type?: number;
+  sid?: string;
+  name?: string;
+  row?: RecordRow;
+  sourcevalue?: string;
+}
