@@ -616,7 +616,9 @@ export const formatControlValueDot = (value, data) => {
     return formatThousandth(newValue);
   } else if (magnitude === 1) {
     // 无
-    let newValue = 0;
+    // 【声明成 '' 而不是 0】两个分支都会赋 formatThousandth(...) 的返回值（字符串），
+    // 初始的 0 从来读不到；之前 formatNumberThousand 的返回推断是 any，遮住了这处不一致。
+    let newValue = '';
 
     if (data.ydot === '') {
       newValue = formatThousandth(formatValue(value, dot));

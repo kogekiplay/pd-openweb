@@ -218,7 +218,7 @@ export function formatFormulaDate({
  * 验证字段值是否为空
  * @param value
  */
-export function checkCellIsEmpty(value?: any) {
+export function checkCellIsEmpty(value?: unknown) {
   return typeof value === 'undefined' || value === '' || value === '[]' || value === '["",""]' || value === null;
 }
 
@@ -1471,15 +1471,17 @@ export const formatNumberFromInput = (value?: string | number, pointReturnEmpty 
 /**
  * 是否是空值
  */
-export const isEmptyValue = (value?: any) => {
+export const isEmptyValue = (value?: unknown) => {
   return _.isUndefined(value) || _.isNull(value) || String(value).trim() === '';
 };
 
 /**
  * 数值千分位显示
  */
-export const formatNumberThousand = (value?: any) => {
-  const content = (value || _.isNumber(value) ? value : '').toString();
+export const formatNumberThousand = (value?: unknown) => {
+  // 【String() 而不是 .toString()】三元的两个分支都不会是 null/undefined
+  //（value 为 0 时靠 _.isNumber 兜住），所以两者等价，但 String 对 unknown 成立。
+  const content = String(value || _.isNumber(value) ? value : '');
   const reg = content.indexOf('.') > -1 ? /(\d{1,3})(?=(?:\d{3})+\.)/g : /(\d{1,3})(?=(?:\d{3})+$)/g;
   return content.replace(reg, '$1,');
 };
@@ -1547,13 +1549,13 @@ export function formatStrZero(str = '') {
 export { controlState, getAdvanceSetting, getControlStateAndCheckSectionControl, handleAdvancedSettingChange };
 
 export function formatAttachmentValue(value?: string, isRecreate = false, isRelation = false) {
-  const attachmentArr = safeParse(value || '[]', 'array');
+  const attachmentArr: AttachmentValue[] = safeParse(value || '[]', 'array');
   let attachmentValue = attachmentArr;
 
   if (attachmentArr.length) {
     attachmentValue = attachmentArr
-      .filter((item: any) => !item.refId)
-      .map((item: any, index: number) => {
+      .filter(item => !item.refId)
+      .map((item, index) => {
         let fileUrl = item.fileUrl || item.fileRealPath;
         const isLinkFile = item.ext === '.url';
 
@@ -1561,11 +1563,19 @@ export function formatAttachmentValue(value?: string, isRecreate = false, isRela
           fileUrl = `${item.filepath}${item.filename}`;
         }
 
-        // 链接类附件没有真实 URL，用空壳顶住后面的 url.pathname / url.origin 读取
-        const url: Partial<URL> = isLinkFile ? {} : new URL(fileUrl);
+        // 链接类附件没有真实 URL，用空壳顶住后面的 url.pathname / url.origin 读取。
+        // fileUrl 带 ! 是如实照搬：三个来源都缺时它就是 undefined，new URL 当场抛，
+        // 由调用方接住 —— 原先 item 是 any，这个抛法一直存在，只是类型上看不见。
+        const url: Partial<URL> = isLinkFile ? {} : new URL(fileUrl!);
         const urlPathNameArr = (url.pathname || '').split('/');
         const fileName = isLinkFile ? item.filename : (urlPathNameArr[urlPathNameArr.length - 1] || '').split('.')[0];
-        let filePath = isLinkFile ? fileUrl : (url.pathname || '').slice(1).replace(fileName + item.ext, '');
+        // 【(item.ext || '') 是真修了一个 bug】ext 缺失时原先拼出的是 "报表undefined"，
+        // 在 pathname 里永远匹配不上，filePath 就会把文件名原样留着 —— 和本文件上面
+        // 那处「undefinedundefined」是同一类。fileName 这边补 || '' 不改行为：
+        // 走到这个分支时它一定是 split 出来的字符串，只是 TS 看不出分支相关性。
+        let filePath = isLinkFile
+          ? fileUrl
+          : (url.pathname || '').slice(1).replace((fileName || '') + (item.ext || ''), '');
         const IsLocal = window.platformENV.isOverseas || window.platformENV.isLocal;
         const host = RegExpValidator.fileIsPicture(item.ext)
           ? md.global.FileStoreConfig.pictureHost + '/'
@@ -1575,8 +1585,11 @@ export function formatAttachmentValue(value?: string, isRecreate = false, isRela
 
         if (IsLocal && isRecreate && (item.viewUrl || item.previewUrl)) {
           const filelink = new URL(host);
-          filePath = filePath.replace(filelink.pathname.slice(1), '');
-          searchParams = ((item.viewUrl || item.previewUrl).match(/\?.*/) || [''])[0];
+          // filePath 带 ! 是照搬既有行为：链接类附件三个来源都缺时它是 undefined，
+          // 这里当场抛。不补 || '' 是因为 filePath 会原样进返回对象，而 JSON.stringify
+          // 对 undefined 是【整个键都不输出】，补成空串会多出一个字段，那才是行为改变。
+          filePath = filePath!.replace(filelink.pathname.slice(1), '');
+          searchParams = ((item.viewUrl || item.previewUrl)!.match(/\?.*/) || [''])[0];
           isRelation && (extAttr = { ext: item.ext, previewUrl: item.previewUrl });
         }
 

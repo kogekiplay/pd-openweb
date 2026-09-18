@@ -202,6 +202,23 @@ assert.doesNotThrow(() => {
   assert.strictEqual(result.attachments[0].url, 'https://files.example.com/storage/docs/readme.txt');
 });
 
+// 【ext 缺失时 filePath 必须仍然被剥掉】2026-09-18 修的一个静默 bug：
+// 原先拼的是 fileName + item.ext，ext 是 undefined 时得到 "readme undefined" 这种串，
+// 在 pathname 里永远匹配不上，于是 filePath 把文件名整个留着（应当只剩目录）。
+assert.doesNotThrow(() => {
+  const value = JSON.stringify([
+    {
+      fileID: 'file-2',
+      fileUrl: 'https://files.example.com/storage/docs/readme',
+      filesize: 12,
+      originalFilename: 'readme',
+    },
+  ]);
+  const result = JSON.parse(formatAttachmentValue(value));
+  assert.strictEqual(result.attachments[0].filePath, 'storage/docs/', '缺 ext 时 filePath 应当只剩目录');
+  assert.strictEqual(result.attachments[0].fileName, 'readme');
+});
+
 assert.doesNotThrow(() => {
   const control = updateOptionsOfControl({ options: [] }, '["add_custom"]', '{bad json');
   assert.deepStrictEqual(control.options, [
