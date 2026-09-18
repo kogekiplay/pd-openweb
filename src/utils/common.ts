@@ -225,7 +225,14 @@ export function getRowGetType(from, { discussId } = {}) {
   }
 }
 
-export async function postWithToken(url: string, tokenArgs = {}, body = {}, axiosConfig: Record<string, any> = {}) {
+// axiosConfig 只有 responseType 被读到（全仓三个调用点里只有导出 Excel 传 'blob'），
+// 所以按这一个键标，别用 Record<string, any> 假装它能收任何配置。
+export async function postWithToken(
+  url: string,
+  tokenArgs = {},
+  body = {},
+  axiosConfig: { responseType?: XMLHttpRequestResponseType } = {},
+) {
   let token;
 
   if (!_.get(window, 'shareState.shareId')) {

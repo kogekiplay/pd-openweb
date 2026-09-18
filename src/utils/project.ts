@@ -98,7 +98,7 @@ export function getFeatureStatus(projectId: string | undefined, featureId) {
  * @param {Object} params - 额外的参数，用于记录日志的详细信息。
  * @param {boolean} isLinkVisited - 是否通过链接访问
  */
-export const addBehaviorLog = (type, entityId, params: Record<string, any> = {}, isLinkVisited?) => {
+export const addBehaviorLog = (type, entityId, params: Record<string, unknown> = {}, isLinkVisited?) => {
   if (!get(md, 'global.Account.accountId')) return;
 
   const typeObj = {
@@ -278,9 +278,10 @@ function contactInfoIsFresh(contactInfo, key?: string) {
 }
 
 /** 后台取一次联系方式并写回 localStorage。并发调用只跑一次。 */
-let contactInfoRequest: Promise<any> | null = null;
+let contactInfoRequest: Promise<Record<string, unknown>> | null = null;
 
-export const prefetchContactInfo = (): Promise<any> => {
+// 返回的是后端给的联系方式对象，本仓只把它整个塞进 localStorage，不读具体字段
+export const prefetchContactInfo = (): Promise<Record<string, unknown>> => {
   if (!md.global.Account.accountId) return Promise.resolve({});
   if (contactInfoRequest) return contactInfoRequest;
 

@@ -13,7 +13,8 @@ export function checkRulesErrorOfRow({ from, rules, controls, control, row }) {
     data: controls.map(c => ({ ...c, value: row[c.controlId] })),
     updateControlIds: control ? [control.controlId] : [],
     checkAllUpdate: !control,
-    checkRuleValidator: (controlId: string, errorType, errorMessage, rule: Record<string, any> = {}) => {
+    // rule 只有 checkType 被读到（3 = 这条错误不弹提示，只标红）
+    checkRuleValidator: (controlId: string, errorType, errorMessage, rule: { checkType?: number } = {}) => {
       if (errorMessage) {
         errors.push({ controlId, errorType, errorMessage, ignoreErrorMessage: rule.checkType === 3 });
       }

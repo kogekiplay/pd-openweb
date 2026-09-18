@@ -166,7 +166,7 @@ export const getControlStateAndCheckSectionControl = (
 /**
  * 是否是空值
  */
-export const isEmptyValue = (value?: any) => {
+export const isEmptyValue = (value?: unknown) => {
   return _.isUndefined(value) || _.isNull(value) || String(value).trim() === '';
 };
 
@@ -257,7 +257,8 @@ export const getShowFormat = (data: FormControl) => {
 };
 
 // 日期控件自定义格式语言环境处理
-export const getDateToEn = (showformat = '', value?: any, originShowFormat = '') => {
+// value 直接喂给 moment()，所以就按 moment 自己的入参类型标
+export const getDateToEn = (showformat = '', value?: moment.MomentInput, originShowFormat = '') => {
   const dealFormat = showformat.replace(/#EN#$/g, '');
   const customLang = showformat.indexOf('EN') > -1;
   const oldLocale = moment.locale();
