@@ -82,7 +82,10 @@ const Wrap = styled.div`
   }
 `;
 
-export function useMingoAppBuilderVisible(containerRef: React.RefObject<any>, { disabled = false, onVisibleChange } = {}) {
+export function useMingoAppBuilderVisible(
+  containerRef: React.RefObject<HTMLElement | null>,
+  { disabled = false, onVisibleChange } = {},
+) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {

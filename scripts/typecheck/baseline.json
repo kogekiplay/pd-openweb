@@ -3,15 +3,15 @@
   "key": "code",
   "tsVersion": "7.0.2",
   "tsconfig": "tsconfig.gate.json",
-  "generatedAt": "2026-09-18T07:33:03.333Z",
-  "rawCount": 13205,
+  "generatedAt": "2026-09-18T09:00:40.100Z",
+  "rawCount": 13204,
   "droppedNoise": {
     "library": 0,
     "probe": 0,
     "commentTS1xxx": 0,
     "commentOther": 0
   },
-  "keptCount": 13205,
+  "keptCount": 13204,
   "uniqueKeys": 3062,
   "entries": {
     "src/common/GlobalStore.tsx|TS2554": 1,
@@ -1952,7 +1952,7 @@
     "src/pages/widgetConfig/content/index.tsx|TS2339": 1,
     "src/pages/widgetConfig/index.tsx|TS2339": 16,
     "src/pages/widgetConfig/index.tsx|TS2769": 1,
-    "src/pages/widgetConfig/util/data.tsx|TS2339": 22,
+    "src/pages/widgetConfig/util/data.tsx|TS2339": 21,
     "src/pages/widgetConfig/util/data.tsx|TS2698": 1,
     "src/pages/widgetConfig/util/data.tsx|TS2741": 1,
     "src/pages/widgetConfig/util/drag.ts|TS2739": 1,

@@ -1400,7 +1400,7 @@ export const handleMoveWidgets = (data, widgetProps) => {
   });
 };
 
-export const dealCopyWidgetId = (data: Record<string, any> = {}) => {
+export const dealCopyWidgetId = (data: FormControl = {}) => {
   const newData = {
     ...data,
     attribute: 0,

@@ -48,7 +48,8 @@ export const useLinkTargetBlank = ({ selector, onlyExternal = false } = {}) => {
 };
 
 // 自动聚焦
-export const useAutoFocus = (ref: React.RefObject<any>, active = true) => {
+// 只用到 .focus()，收窄到 HTMLElement 就够（input / textarea / contenteditable 都满足）
+export const useAutoFocus = (ref: React.RefObject<HTMLElement | null>, active = true) => {
   useEffect(() => {
     if (!active) return;
 

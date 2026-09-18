@@ -295,7 +295,11 @@ export function getNewDropDownData(controls: FormControl[] = [], actionType) {
 }
 
 // 过滤不符合条件的已选字段
-export const filterUnAvailable = (controlConfig: Record<string, any> = {}, worksheetControls: FormControl[] = [], type) => {
+export const filterUnAvailable = (
+  controlConfig: Record<string, any> = {},
+  worksheetControls: FormControl[] = [],
+  type,
+) => {
   const { controls = [] } = controlConfig;
   const dropDownData = getNewDropDownData(worksheetControls, controlConfig.type);
   let newControls: FormControl[] = [];
@@ -636,7 +640,13 @@ export const filterDataRelationText = (dynamicSource = [], columns) => {
   return data;
 };
 
-export const filterData = (columns = [], filterItem = [], isSetting?, relationControls: FormControl[] = [], sourceControlId = '') => {
+export const filterData = (
+  columns = [],
+  filterItem = [],
+  isSetting?,
+  relationControls: FormControl[] = [],
+  sourceControlId = '',
+) => {
   columns = columns.concat(DEFAULT_COLUMNS);
   let dataList = [];
   filterItem.forEach(item => {
@@ -745,7 +755,8 @@ export function getActionError(value = {}) {
 }
 
 // 对比是否有变更
-export function hasRuleChanged(data = [], selectRule: Record<string, any> = {}, passAlert?) {
+// 只按 ruleId 比对：带 '-' 的是还没保存过的新规则，一律当作有改动
+export function hasRuleChanged(data = [], selectRule: { ruleId?: string } = {}, passAlert?) {
   const originData = _.find(data, i => i.ruleId === selectRule.ruleId);
   const { ruleId = '' } = selectRule;
 
