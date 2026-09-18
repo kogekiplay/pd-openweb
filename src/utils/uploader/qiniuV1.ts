@@ -47,12 +47,27 @@ export interface QiniuUploadParams {
 
 export interface QiniuUploadHandlers {
   onProgress: (loaded: number, total: number, percent: number) => void;
-  onComplete: (res: any) => void;
+  onComplete: (res: QiniuResponse) => void;
   onError: (err: UploadErrorInfo) => void;
 }
 
 export interface QiniuUploadTask {
   abort(): void;
+}
+
+/**
+ * 七牛接口的返回体。直传 / mkfile 回的是「业务字段」（key/hash/…，具体键由 returnBody 决定），
+ * mkblk 回的是续传上下文（ctx/crc32/…）。这里只列本模块真正读的那几个，
+ * 其余交给调用方从 FileUploaded 的 response 里自取 —— 加字段就往这里补一行。
+ */
+export interface QiniuResponse {
+  /** 对象 key（直传/合并成功后返回） */
+  key?: string;
+  /** 分片上下文，mkblk/bput 返回，下一片要带上 */
+  ctx?: string;
+  /** 七牛的错误文案 */
+  error?: string;
+  [field: string]: unknown;
 }
 
 /** 续传缓存的形状，与换掉之前的实现逐字段一致 */
@@ -64,9 +79,19 @@ interface ResumeCache {
   time: number;
 }
 
+/** abort 时用来 reject 的内部标记，不是给调用方看的 */
+interface AbortSignalError {
+  __aborted: true;
+}
+
 const ONE_DAY = 24 * 60 * 60 * 1000;
 
-function parseJson(text: string): any {
+/**
+ * 解析一段 JSON，失败返回 null。
+ * 【泛型默认是 QiniuResponse】—— 绝大多数调用点在解析七牛的返回；
+ * 续传缓存那处解的是 localStorage 里我们自己写的东西，显式传 ResumeCache。
+ */
+function parseJson<T = QiniuResponse>(text: string): T | null {
   try {
     return JSON.parse(text);
   } catch {
@@ -80,7 +105,8 @@ function httpError(xhr: XMLHttpRequest): UploadErrorInfo {
     code: UploadError.HTTP_ERROR,
     status: xhr.status,
     message: xhr.statusText || 'request failed',
-    response: parseJson(xhr.responseText || ''),
+    // 解析失败给 undefined 而不是 null：UploadErrorInfo.response 是可选字段
+    response: parseJson(xhr.responseText || '') || undefined,
   };
 }
 
@@ -93,7 +119,12 @@ type XhrOptions = {
 };
 
 /** 发一个 POST，返回解析后的 JSON。失败时 reject 一个 UploadErrorInfo。 */
-function post(url: string, body: any, opts: XhrOptions, register: (x: XMLHttpRequest) => void): Promise<any> {
+function post(
+  url: string,
+  body: XMLHttpRequestBodyInit,
+  opts: XhrOptions,
+  register: (x: XMLHttpRequest) => void,
+): Promise<QiniuResponse | null> {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     register(xhr);
@@ -118,7 +149,8 @@ function post(url: string, body: any, opts: XhrOptions, register: (x: XMLHttpReq
     // 【status 为 0 的两种情况要分开】abort 是我们自己叫停的，不该报错给用户；
     // 其余的 0 是真的没连上（跨域被拦、断网、证书问题…）。
     xhr.onerror = () => reject({ code: UploadError.HTTP_ERROR, status: xhr.status, message: 'network error' });
-    xhr.onabort = () => reject({ __aborted: true } as any);
+    // 自己叫停的：用一个只有本模块认识的标记 reject，下面 fail() 见到它就静默
+    xhr.onabort = () => reject({ __aborted: true } as AbortSignalError);
 
     xhr.send(body);
   });
@@ -138,9 +170,13 @@ export function uploadToQiniu(params: QiniuUploadParams, handlers: QiniuUploadHa
     if (aborted) x.abort();
   };
 
-  const fail = (err: any) => {
-    if (aborted || (err && err.__aborted)) return; // 自己叫停的，不报错
-    handlers.onError(err && err.code ? err : { code: UploadError.GENERIC_ERROR, message: String(err) });
+  // 这个函数挂在各处 .catch 上，收到的既可能是我们自己 reject 的 UploadErrorInfo，
+  // 也可能是 abort 标记，还可能是运行时抛的任意异常，所以两边都标成可选。
+  const fail = (err?: Partial<UploadErrorInfo> & Partial<AbortSignalError>) => {
+    if (aborted || err?.__aborted) return; // 自己叫停的，不报错
+    handlers.onError(
+      err && err.code ? (err as UploadErrorInfo) : { code: UploadError.GENERIC_ERROR, message: String(err) },
+    );
   };
 
   // ── 直传：一次 multipart POST ────────────────────────────────────────────
@@ -152,20 +188,17 @@ export function uploadToQiniu(params: QiniuUploadParams, handlers: QiniuUploadHa
     // 字段名 file 与换掉之前的配置一致（plupload 的 file_data_name）
     form.append('file', file, fname || file.name);
 
-    const res = await post(
-      base,
-      form,
-      { total: file.size, onProgress: handlers.onProgress },
-      register,
-    );
-    handlers.onComplete(res);
+    const res = await post(base, form, { total: file.size, onProgress: handlers.onProgress }, register);
+    // 直传成功时七牛必定回一段 JSON；解析不出来就当作没返回内容，交空对象给回调，
+    // 由上层的「没有 key」分支去报错（原先 res 是 any，这里本来就可能是 null）。
+    handlers.onComplete(res || {});
   }
 
   // ── 分片：mkblk 逐片 + mkfile 收尾 ──────────────────────────────────────
   function readCache(): ResumeCache | null {
     const raw = localStorage.getItem(file.name);
     if (!raw) return null;
-    const cached = parseJson(raw) as ResumeCache | null;
+    const cached = parseJson<ResumeCache>(raw);
     if (!cached) return null;
 
     // 逐条照搬换掉之前的判据
@@ -227,7 +260,8 @@ export function uploadToQiniu(params: QiniuUploadParams, handlers: QiniuUploadHa
 
     // 传完就把续传点清掉，避免下次命中一个已完成的缓存
     localStorage.removeItem(file.name);
-    handlers.onComplete(res);
+    // 同 direct()：mkfile 解析不出 JSON 时交空对象，由上层按「没有 key」报错
+    handlers.onComplete(res || {});
   }
 
   const useChunk = chunkSize > 0 && file.size > chunkSize;
