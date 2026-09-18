@@ -4,6 +4,7 @@ import cx from 'classnames';
 import update from 'immutability-helper';
 import _, { find, flatten, get, head, includes, last, pick, some } from 'lodash';
 import styled from 'styled-components';
+import type { FormControl } from 'src/utils/controlTypes';
 import { SUPPORT_RELATE_SEARCH } from '../config';
 import { DRAG_ACCEPT, DRAG_DISTANCE, DRAG_ITEMS, DRAG_MODE, WHOLE_SIZE } from '../config/Drag';
 import {
@@ -21,7 +22,6 @@ import { getVerifyInfo, handleAdvancedSettingChange } from '../util/setting';
 import { changeWidgetSize, getPathById, isFullLineControl } from '../util/widgets';
 import WidgetOperation from './components/WidgetOperation';
 import WidgetDisplay from './widgetDisplay';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const DisplayItemWrap = styled.div`
   align-self: stretch;
@@ -379,8 +379,28 @@ export default function DisplayItem(props) {
     return { width: dragLineWidth, left: -(itemLeft - left - 20) };
   };
 
-  const handleOperate = (mode, option: Record<string, any> = {}) => {
-    const deleteWidgetById = ({ widgets, controlId, path }: { controlId?: string; [key: string]: any }) => {
+  // 各 mode 用到的键不同：删除用 widgets/controlId/path，复制看 shiftKey，改宽度给 size
+  const handleOperate = (
+    mode,
+    option: {
+      widgets?: FormControl[][];
+      controlId?: string;
+      path?: number[];
+      /** 按住 shift 复制时走另一条分支 */
+      shiftKey?: boolean;
+      /** 控件宽度（1-12 栅格） */
+      size?: number;
+    } = {},
+  ) => {
+    const deleteWidgetById = ({
+      widgets,
+      controlId,
+      path,
+    }: {
+      widgets?: FormControl[][];
+      controlId?: string;
+      path?: number[];
+    }) => {
       const [row, col] = path;
 
       if (activeWidget.controlId === controlId) {

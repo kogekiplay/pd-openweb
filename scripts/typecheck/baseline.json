@@ -3,16 +3,16 @@
   "key": "code",
   "tsVersion": "7.0.2",
   "tsconfig": "tsconfig.gate.json",
-  "generatedAt": "2026-09-18T06:57:43.520Z",
-  "rawCount": 13210,
+  "generatedAt": "2026-09-18T06:59:27.789Z",
+  "rawCount": 13207,
   "droppedNoise": {
     "library": 0,
     "probe": 0,
     "commentTS1xxx": 0,
     "commentOther": 0
   },
-  "keptCount": 13210,
-  "uniqueKeys": 3064,
+  "keptCount": 13207,
+  "uniqueKeys": 3063,
   "entries": {
     "src/common/GlobalStore.tsx|TS2554": 1,
     "src/common/cookies.ts|TS2556": 1,
@@ -1952,7 +1952,6 @@
     "src/pages/widgetConfig/content/index.tsx|TS2339": 1,
     "src/pages/widgetConfig/index.tsx|TS2339": 16,
     "src/pages/widgetConfig/index.tsx|TS2769": 1,
-    "src/pages/widgetConfig/util/createTemplate.tsx|TS2339": 3,
     "src/pages/widgetConfig/util/data.tsx|TS2339": 22,
     "src/pages/widgetConfig/util/data.tsx|TS2698": 1,
     "src/pages/widgetConfig/util/data.tsx|TS2741": 1,

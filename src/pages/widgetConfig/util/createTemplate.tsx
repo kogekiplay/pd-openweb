@@ -8,12 +8,12 @@ import functionWrap from 'ming-ui/components/FunctionWrap';
 import worksheetAjax from 'src/api/worksheet';
 import { getMyPermissions, hasPermission } from 'src/components/checkPermission';
 import { PERMISSION_ENUM } from 'src/pages/Admin/enum';
+import type { FormControl } from 'src/utils/controlTypes';
 import { getCurrentProject } from 'src/utils/project';
 import { ALL_SYS, DEFAULT_CONFIG, WIDGETS_TO_API_TYPE_ENUM } from '../config/widget';
 import { SettingItem } from '../styled';
 import { enumWidgetType } from '../util';
 import { formatControlsData } from './data';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const TemplateRelationNotice = styled.div`
   margin-top: 10px;
@@ -157,11 +157,11 @@ function templateControlsHasRelationField(controls) {
   return _.some(controls, c => isValidControl(c) && _.includes(TEMPLATE_RELATION_CONTROL_TYPES, c.type));
 }
 
-function isWorksheetRoleControl(control: Record<string, any> = {}) {
+function isWorksheetRoleControl(control: FormControl = {}) {
   return _.includes(WORKSHEET_ROLE_CONTROL_TYPES, control.type);
 }
 
-function getWorksheetIdByControl(allControls, control: Record<string, any> = {}) {
+function getWorksheetIdByControl(allControls, control: FormControl = {}) {
   const parsedDataSource = parseDataSource(control.dataSource);
 
   if (_.includes([WIDGETS_TO_API_TYPE_ENUM.SHEET_FIELD, WIDGETS_TO_API_TYPE_ENUM.SUBTOTAL], control.type)) {
@@ -174,7 +174,7 @@ function getWorksheetIdByControl(allControls, control: Record<string, any> = {})
   return parsedDataSource;
 }
 
-function getSourceControl(allControls, control: Record<string, any> = {}) {
+function getSourceControl(allControls, control: FormControl = {}) {
   const parsedDataSource = parseDataSource(control.dataSource);
 
   if (!parsedDataSource) return;
@@ -182,7 +182,7 @@ function getSourceControl(allControls, control: Record<string, any> = {}) {
   return _.find(allControls, item => item.controlId === parsedDataSource);
 }
 
-function isBlankSubListControl(control: Record<string, any> = {}) {
+function isBlankSubListControl(control: FormControl = {}) {
   if (control.type !== WIDGETS_TO_API_TYPE_ENUM.SUB_LIST) return false;
 
   return (
@@ -192,7 +192,7 @@ function isBlankSubListControl(control: Record<string, any> = {}) {
   );
 }
 
-function isBlankSubListRoleControl(allControls, control: Record<string, any> = {}) {
+function isBlankSubListRoleControl(allControls, control: FormControl = {}) {
   if (isBlankSubListControl(control)) return true;
 
   return (
@@ -204,7 +204,7 @@ function supportReferencedTemplateControl(control = {}) {
   return !isBlankSubListControl(control);
 }
 
-function normalizeTemplateControl(allControls, control: Record<string, any> = {}) {
+function normalizeTemplateControl(allControls, control: FormControl = {}) {
   if (control.type === WIDGETS_TO_API_TYPE_ENUM.SUBTOTAL && isBlankSubListRoleControl(allControls, control)) {
     return {
       ...control,
@@ -230,7 +230,7 @@ function normalizeTemplateControl(allControls, control: Record<string, any> = {}
   return control;
 }
 
-function isDirectReferencedWorksheetRoleControl(allControls, control: Record<string, any> = {}, worksheetId: string) {
+function isDirectReferencedWorksheetRoleControl(allControls, control: FormControl = {}, worksheetId: string) {
   return (
     isBlankSubListRoleControl(allControls, control) ||
     (_.includes([WIDGETS_TO_API_TYPE_ENUM.SHEET_FIELD, WIDGETS_TO_API_TYPE_ENUM.SUBTOTAL], control.type) &&
@@ -425,7 +425,8 @@ function getAllReferencedControlInfo(allControls, templateControls, queryConfigs
     });
   };
 
-  const getControlsWithPermission = controls => {
+  // 不标的话 _.uniqBy 在 any 上推不出元素类型，下面几处会被当成字符串
+  const getControlsWithPermission = (controls: FormControl[]) => {
     const validWorksheetRoleControls = _.uniqBy(
       controls.filter(control => isValidControl(control) && supportReferencedTemplateControl(control)),
       'controlId',
@@ -1021,7 +1022,12 @@ function CreateTemplateDialog(props) {
 }
 
 export const createTemplateDialog = props => {
-  const { allControls = [], templateInfo = {}, templateControls = [], queryConfigs = [] }: { allControls: FormControl[]; templateControls: FormControl[]; [key: string]: any } = props || {};
+  const {
+    allControls = [],
+    templateInfo = {},
+    templateControls = [],
+    queryConfigs = [],
+  }: { allControls: FormControl[]; templateControls: FormControl[]; [key: string]: any } = props || {};
 
   if (!templateInfo.templateId) {
     const supportedTemplateControls = templateControls.filter(

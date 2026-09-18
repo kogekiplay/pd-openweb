@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { SYS } from 'src/pages/widgetConfig/config/widget';
 import { isSheetDisplay } from 'src/pages/widgetConfig/util';
 import { getConcatenateControls } from 'src/pages/widgetConfig/util/data';
+import type { FormControl } from 'src/utils/controlTypes';
 import {
   CAN_AS_AREA_DYNAMIC_FIELD,
   CAN_AS_ARRAY_DYNAMIC_FIELD,
@@ -29,7 +30,6 @@ import {
   EMEBD_FIELDS,
   TIME_TYPES,
 } from './config';
-import type { FormControl } from 'src/utils/controlTypes';
 
 // 新建子表并配置成员、部门等默认值，后端relationControls不处理，没有补全配置返回
 export const dealIds = (type, dynamicValue) => {
@@ -69,7 +69,7 @@ export const getDateType = data => {
   return data.type === 16 ? TIME_TYPES : DATE_TYPES;
 };
 
-export const showClear = (data: Record<string, any> = {}, dynamicValue) => {
+export const showClear = (data: FormControl = {}, dynamicValue) => {
   const { staticValue } = dynamicValue[0] || {};
   if (_.includes(CAN_SHOW_CLEAR_FIELD, data.type) && staticValue) return true;
   if (_.includes([3, 4, 5], data.type)) {
@@ -88,53 +88,53 @@ const isRelateMore = control => control.type === 29 && control.enumDefault === 2
 const isResultAsRelateMore = control => control.type === 29 && !isSheetDisplay(control);
 
 // 汇总计算为数值的
-export const isFormulaResultAsSubtotal = (item: Record<string, any> = {}) => {
+export const isFormulaResultAsSubtotal = (item: FormControl = {}) => {
   return item.type === 37 && _.includes([0, 6, 8], item.enumDefault2);
 };
 
 // 汇总计算为日期时间的
-export const isFormulaResultAsSubtotalDateTime = (item: Record<string, any> = {}) => {
+export const isFormulaResultAsSubtotalDateTime = (item: FormControl = {}) => {
   return item.type === 37 && _.includes([15, 16], item.enumDefault2);
 };
 
 // 汇总计算为时间的
-export const isFormulaResultAsSubtotalTime = (item: Record<string, any> = {}) => {
+export const isFormulaResultAsSubtotalTime = (item: FormControl = {}) => {
   return item.type === 37 && _.includes([46], item.enumDefault2);
 };
 
 // 公式控件计算为文本的
-export const isFormulaResultAsText = (item: Record<string, any> = {}) => {
+export const isFormulaResultAsText = (item: FormControl = {}) => {
   return item.type === 53 && item.enumDefault2 === 2;
 };
 
 // 公式控件计算为数值的
-export const isFormulaResultAsNumber = (item: Record<string, any> = {}) => {
+export const isFormulaResultAsNumber = (item: FormControl = {}) => {
   return (
     item.type === 31 || (item.type === 38 && item.enumDefault === 1) || (item.type === 53 && item.enumDefault2 === 6)
   );
 };
 
 // 他表字段值为数值的
-const relateSheetFiledIsNumber = (item: Record<string, any> = {}) => {
+const relateSheetFiledIsNumber = (item: FormControl = {}) => {
   return item.type === 30 && _.includes(CAN_AS_NUMBER_DYNAMIC_FIELD, _.get(item, ['sourceControl', 'type']));
 };
 
 // 公式控件计算为日期时间的
-export const isFormulaResultAsDateTime = (item: Record<string, any> = {}) => {
+export const isFormulaResultAsDateTime = (item: FormControl = {}) => {
   return (
     (item.type === 38 && item.enumDefault === 2 && item.unit === '1') || (item.type === 53 && item.enumDefault2 === 16)
   );
 };
 
 // 公式控件计算为日期的
-export const isFormulaResultAsDate = (item: Record<string, any> = {}) => {
+export const isFormulaResultAsDate = (item: FormControl = {}) => {
   return (
     (item.type === 38 && item.enumDefault === 2 && item.unit === '3') || (item.type === 53 && item.enumDefault2 === 15)
   );
 };
 
 // 公式控件计算为时间的
-export const isFormulaResultAsTime = (item: Record<string, any> = {}) => {
+export const isFormulaResultAsTime = (item: FormControl = {}) => {
   return (
     (item.type === 38 && item.enumDefault === 2 && _.includes(['8', '9'], item.unit)) ||
     (item.type === 53 && item.enumDefault2 === 46)
@@ -142,17 +142,17 @@ export const isFormulaResultAsTime = (item: Record<string, any> = {}) => {
 };
 
 // 赋分值的选项
-export const isEnableScoreOption = (item: Record<string, any> = {}) => {
+export const isEnableScoreOption = (item: FormControl = {}) => {
   return _.includes([9, 10, 11], item.type) && item.enumDefault === 1;
 };
 
 //自定义选项
-export const isCustomOptions = (item: Record<string, any> = {}) => {
+export const isCustomOptions = (item: FormControl = {}) => {
   return _.includes([9, 10, 11], item.type) && !item.dataSource;
 };
 
 // 同类型成员
-const isSameUser = (item: Record<string, any> = {}, usertype) => {
+const isSameUser = (item: FormControl = {}, usertype) => {
   return usertype === '2'
     ? (item.advancedSetting || {}).usertype === '2'
     : (item.advancedSetting || {}).usertype !== '2';

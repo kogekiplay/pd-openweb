@@ -420,6 +420,7 @@
     "src/pages/widgetConfig/config/widget.ts",
     "src/pages/widgetConfig/styled/common.ts",
     "src/pages/widgetConfig/styled/index.ts",
+    "src/pages/widgetConfig/util/deleteTarget.ts",
     "src/pages/widgetConfig/widgetDisplay/displayTypes/area_county.ts",
     "src/pages/widgetConfig/widgetDisplay/displayTypes/area_province.ts",
     "src/pages/widgetConfig/widgetDisplay/displayTypes/bar_code.tsx",
