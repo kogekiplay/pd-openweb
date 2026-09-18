@@ -3,6 +3,7 @@ import update from 'immutability-helper';
 import _, { findIndex, flatten, get, includes, isArray, isEmpty, isObject, keys, omit, sortBy } from 'lodash';
 import { navigateTo } from 'src/router/navigateTo';
 import { browserIsMobile, pathCompletion } from 'src/utils/common';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import {
   HAVE_HIGH_SETTING_WIDGET,
   HAVE_MASK_WIDGET,
@@ -15,7 +16,6 @@ import {
 import { WHOLE_SIZE } from '../config/Drag';
 import { RELATION_OPTIONS } from '../config/setting';
 import { ALL_SYS, DEFAULT_CONFIG, DEFAULT_DATA, SYS_CONTROLS, WIDGETS_TO_API_TYPE_ENUM } from '../config/widget';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const FORMULA_FN_LIST = [
   'SUM',
@@ -268,19 +268,24 @@ export const filterControlsFromAll = (allControls: FormControl[] = [], filter = 
 };
 
 export const formatViewToDropdown = views =>
-  views.filter(l => l.viewId !== l.worksheetId).map(({ viewId, name }: { viewId?: string; name?: string; [key: string]: any }) => ({ text: name, value: viewId }));
+  views
+    .filter(l => l.viewId !== l.worksheetId)
+    .map(({ viewId, name }: { viewId?: string; name?: string }) => ({ text: name, value: viewId }));
 
 export const formatAppsToDropdown = (apps, currentAppId) =>
-  apps.map(({ appId, appName }: { appId?: string; [key: string]: any }) => ({
+  apps.map(({ appId, appName }: { appId?: string; appName?: string }) => ({
     text: appId === currentAppId ? `${appName}（ ${_l('本应用')} ）` : `${appName}`,
     value: appId,
   }));
 
 export const formatSheetsToDropdown = sheets =>
-  sheets.map(({ worksheetId, name }: { worksheetId?: string; name?: string; [key: string]: any }) => ({ text: name, value: worksheetId }));
+  sheets.map(({ worksheetId, name }: { worksheetId?: string; name?: string }) => ({ text: name, value: worksheetId }));
 
 export const formatControlsToDropdown = controls =>
-  controls.map(({ controlId, controlName }: { controlId?: string; [key: string]: any }) => ({ text: controlName, value: controlId }));
+  controls.map(({ controlId, controlName }: { controlId?: string; controlName?: string }) => ({
+    text: controlName,
+    value: controlId,
+  }));
 
 export const getControlByControlId = (controls, controlId: string, key?) => {
   const control = _.find(controls, item => item.controlId === controlId) || {};
@@ -372,11 +377,25 @@ export const levelSafeParse = value => {
   return levelValue;
 };
 
-export const isOtherShowFeild = (control: Record<string, any> = {}) => {
+export const isOtherShowFeild = (control: FormControl = {}) => {
   return (control.type === 30 || control.originType === 30) && (control.strDefault || '')[0] === '1';
 };
 
-export const formatSearchConfigs = (res: Record<string, any> = {}) => {
+/**
+ * 一条查询配置。字段很多（后端返回的远不止这些），这里【只列消费方真正读到的】，
+ * 其余走索引签名原样带过去 —— 这个函数本身就是把 templates 拼回每条查询上，不碰别的字段。
+ */
+export interface SearchConfigQuery {
+  sourceId?: string;
+  /** 2 = 事件查询，columnRules 按它过滤 */
+  eventType?: number;
+  [key: string]: unknown;
+}
+
+// 查询配置接口的返回：queries 是查询列表，templates 按 sourceId 存对应的控件模板
+export const formatSearchConfigs = (
+  res: { queries?: SearchConfigQuery[]; templates?: Record<string, FormControl[]> } = {},
+) => {
   if (!(res.queries || []).length) return [];
   return res.queries.map(item => {
     return { ...item, templates: [{ controls: (res.templates || {})[item.sourceId] || [] }] };
@@ -419,21 +438,21 @@ export const getFilterRelateControls = ({ controls = [], showControls = [], data
 };
 
 // 标签页内不支持的控件
-export const notInsetSectionTab = (data: Record<string, any> = {}) => {
+export const notInsetSectionTab = (data: FormControl = {}) => {
   return (
     (includes([29, 51], data.type) && _.includes(['2', '6'], get(data, 'advancedSetting.showtype'))) || data.type === 52
   );
 };
 
 // 不支持字段说明----显示方式的控件
-export const notExplainDisplay = (data: Record<string, any> = {}) => {
+export const notExplainDisplay = (data: FormControl = {}) => {
   return (
     (includes([29, 51], data.type) && _.includes(['2', '5', '6'], get(data, 'advancedSetting.showtype'))) ||
     _.includes([22, 52], data.type)
   );
 };
 
-export const notWidgetDes = (data: Record<string, any> = {}) => {
+export const notWidgetDes = (data: FormControl = {}) => {
   return fixedBottomWidgets(data) || _.includes(NO_DES_WIDGET, data.type);
 };
 
@@ -492,7 +511,7 @@ export function SearchFn(keywords = '', value = '') {
 }
 
 // 汇总是否显示单位及小数点配置
-export const isShowUnitConfig = (data = {}, selectedControl: Record<string, any> = {}) => {
+export const isShowUnitConfig = (data: FormControl = {}, selectedControl: FormControl = {}) => {
   const { enumDefault, enumDefault2 } = data;
   // 如果是日期格式汇总 不显示
   if ([2, 3].includes(enumDefault) && [15, 16, 46].includes(enumDefault2)) return false;
@@ -505,7 +524,7 @@ export const isShowUnitConfig = (data = {}, selectedControl: Record<string, any>
 };
 
 // 关联多条列表显示的控件
-export const isSheetDisplay = (data: Record<string, any> = {}) => {
+export const isSheetDisplay = (data: FormControl = {}) => {
   return includes([29, 51], data.type) && _.includes(['2', '5', '6'], get(data, 'advancedSetting.showtype'));
 };
 
@@ -558,7 +577,8 @@ export const supportSettingCollapse = (props, key: string) => {
           return mode === 'relate' ? true : !advancedSetting.layercontrolid;
         case 37:
           const parsedDataSource = parseDataSource(dataSource);
-          const { relationControls = [] }: { relationControls: FormControl[]; [key: string]: any } = getControlByControlId(allControls, parsedDataSource);
+          const { relationControls = [] }: { relationControls: FormControl[]; [key: string]: any } =
+            getControlByControlId(allControls, parsedDataSource);
           const selectedControl = getControlByControlId(relationControls, sourceControlId);
           return isShowUnitConfig(data, selectedControl);
         case 51:
@@ -575,7 +595,8 @@ export const supportSettingCollapse = (props, key: string) => {
 
       if (currentControl.type === 30) {
         const parsedDataSource = parseDataSource(dataSource);
-        const { relationControls = [] }: { relationControls: FormControl[]; [key: string]: any } = getControlByControlId(allControls, parsedDataSource);
+        const { relationControls = [] }: { relationControls: FormControl[]; [key: string]: any } =
+          getControlByControlId(allControls, parsedDataSource);
         const parsedControl = getControlByControlId(relationControls, sourceControlId);
         currentControl = parsedControl;
       }
@@ -603,7 +624,7 @@ export const supportSettingCollapse = (props, key: string) => {
 
 // 各控件分别支持哪些配置
 // 设置、样式、说明、事件
-export const supportWidgetIntroOptions = (data: Record<string, any> = {}, introType, from?, isRecycle = false) => {
+export const supportWidgetIntroOptions = (data: FormControl = {}, introType, from?, isRecycle = false) => {
   // 回收站不显示样式、说明
   if (isRecycle) return false;
   // 分段、他表、标签页

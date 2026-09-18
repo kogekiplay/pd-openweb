@@ -3,15 +3,15 @@
   "key": "code",
   "tsVersion": "7.0.2",
   "tsconfig": "tsconfig.gate.json",
-  "generatedAt": "2026-09-18T06:10:21.876Z",
-  "rawCount": 13212,
+  "generatedAt": "2026-09-18T06:57:43.520Z",
+  "rawCount": 13210,
   "droppedNoise": {
     "library": 0,
     "probe": 0,
     "commentTS1xxx": 0,
     "commentOther": 0
   },
-  "keptCount": 13212,
+  "keptCount": 13210,
   "uniqueKeys": 3064,
   "entries": {
     "src/common/GlobalStore.tsx|TS2554": 1,
@@ -1957,7 +1957,7 @@
     "src/pages/widgetConfig/util/data.tsx|TS2698": 1,
     "src/pages/widgetConfig/util/data.tsx|TS2741": 1,
     "src/pages/widgetConfig/util/drag.ts|TS2739": 1,
-    "src/pages/widgetConfig/util/index.ts|TS2339": 3,
+    "src/pages/widgetConfig/util/index.ts|TS2339": 1,
     "src/pages/widgetConfig/util/index.ts|TS2554": 1,
     "src/pages/widgetConfig/util/setting.ts|TS2339": 8,
     "src/pages/widgetConfig/widgetDisplay/components/BottomDragPointer.tsx|TS2339": 4,
