@@ -43,6 +43,7 @@ export default function TableSet(props) {
             { text: _l('超高'), value: 3 }, // 100
           ].map(item => (
             <div
+              key={item.value}
               className={cx('animaItem overflow_ellipsis', { active: (_.get(view, 'rowHeight') || 0) === item.value })}
               onClick={() => handleChange({ rowHeight: item.value }, ['rowHeight'])}
             >
@@ -61,7 +62,7 @@ export default function TableSet(props) {
             ? _.get(view, `advancedSetting.${o.key}`) === '1'
             : _.get(view, `advancedSetting.${o.key}`) !== '0';
           return (
-            <div className="flexRow">
+            <div className="flexRow" key={o.key}>
               <SwitchStyle className="flex">
                 <Icon
                   icon={show ? 'ic_toggle_on' : 'ic_toggle_off'}
@@ -84,7 +85,7 @@ export default function TableSet(props) {
                     { value: 1, tips: _l('垂直居中对齐'), icon: 'align_vertical_center' },
                   ].map(item => {
                     return (
-                      <Tooltip title={item.tips}>
+                      <Tooltip title={item.tips} key={item.value}>
                         <div
                           className={cx('animaItem overflow_ellipsis pLeft16 pRight16', {
                             active: (_.get(view, 'advancedSetting.rctitlestyle') || '0') === item.value + '',

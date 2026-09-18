@@ -1465,7 +1465,19 @@ export default class RecordInfo extends Component<any, any> {
               visible={!!restoreVisible}
               defaultTop={-50}
               visibleTop={8}
-              title={_l('已恢复到上次中断内容（%0）', window.createTimeSpan(new Date(restoreVisible)))}
+              /* restoreVisible 身兼两职：没有草稿时是 false，有草稿时直接存的是那份草稿的
+                 创建时间（Date 对象，见 handleFillValue 里 `restoreVisible: tempRecordCreateTime`）。
+                 所以没草稿的时候这里是 new Date(false) === 纪元 0，标题会算成
+                 「已恢复到上次中断内容（1970年1月1日 08:00）」。
+                 EditingBar 是【常驻渲染】的（靠 defaultTop:-50 停在视口外），
+                 标题即使不显示也照样算，DOM 里就一直躺着这句 1970 —— 现在用户看不见，
+                 但只要这条 bar 的显示方式改一次（或者读屏、自动化测试扫文本）就会露出来。
+                 这里只在拿到真正的时间时才带时间。 */
+              title={
+                restoreVisible
+                  ? _l('已恢复到上次中断内容（%0）', window.createTimeSpan(new Date(restoreVisible)))
+                  : _l('已恢复到上次中断内容')
+              }
               onUpdate={() => {
                 if (!this.recordEditLock || this.recordEditLock?.checkAndLock()) {
                   this.setState({ restoreVisible: false, iseditting: true });
