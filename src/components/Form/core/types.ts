@@ -1,5 +1,5 @@
 // 再导出不会把名字带进本地作用域，下面 FormRule 用到 ControlValue 所以还要 import 一次。
-import type { ControlValue } from 'src/utils/controlTypes';
+import type { ControlValue, FormControl } from 'src/utils/controlTypes';
 
 /**
  * 表单引擎专有的类型。
@@ -34,12 +34,46 @@ export interface FormError {
   errorItems?: FormError[];
 }
 
+/**
+ * 子表/关联表在填写时带着的【主表上下文】。
+ * 动态默认值里 `item.rcid === masterData.worksheetId` 时，就从 masterData.formData 里取值
+ *（见 formUtils/index.ts 的 getDynamicValue）。
+ */
+export interface MasterData {
+  worksheetId?: string;
+  formData?: FormControl[];
+}
+
+/**
+ * 业务规则里的一个筛选条件。
+ * 【只列规则遍历逻辑真正读到的字段】—— 条件本身还有 dataType / filterType / values
+ * 等一大堆，那些只有 filterFn 在看；这里不写索引签名兜底，是为了拼错字段名当场报错。
+ */
+export interface RuleFilterItem {
+  controlId?: string;
+  /** 与前一条的连接方式：1 且、2 或 */
+  spliceType?: number;
+  /** 非空表示「跟另一个字段比」，cid 是那个字段的 controlId */
+  dynamicSource?: { cid?: string }[];
+}
+
+/**
+ * 一组筛选条件。组内按 spliceType 连接，组与组之间是「或」。
+ *
+ * 【故意继承 RuleFilterItem】实际数据里「组」自己也可能直接带 controlId ——
+ * recordInfo/crtl.ts 收集受影响字段时就是 `(it.groupFilters || []).map(v => v.controlId)`
+ * 之后再 `.concat(it.controlId)`，两层都取。以前 filters 是 any[]，这件事看不出来。
+ */
+export interface RuleFilterGroup extends RuleFilterItem {
+  groupFilters?: RuleFilterItem[];
+}
+
 /** 业务规则（显示/必填/只读等），data 之外单独一份。 */
 export interface FormRule {
   ruleId?: string;
   type?: number;
   disabled?: boolean;
-  filters?: ControlValue[];
+  filters?: RuleFilterGroup[];
   ruleItems?: ControlValue[];
   [key: string]: ControlValue;
 }

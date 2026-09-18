@@ -4,11 +4,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { SYSTEM_CONTROL, WORKFLOW_SYSTEM_CONTROL } from 'src/pages/widgetConfig/config/widget';
 import { transferValue } from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/util';
 import { getDatePickerConfigs, isEmptyValue } from 'src/utils/controlCommon';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import { getDynamicValue } from './formUtils';
 import { getAttachmentData } from './formUtils/helper';
-import type { RecordRow } from 'src/utils/controlTypes';
 
-const getRelateValue = (control: Record<string, any> = {}, controlState, recordId: string) => {
+const getRelateValue = (control: FormControl = {}, controlState, recordId: string) => {
   if (!_.isEmpty(controlState)) {
     const records: RecordRow[] = _.get(controlState, 'records') || [];
 
@@ -26,7 +26,7 @@ const getRelateValue = (control: Record<string, any> = {}, controlState, recordI
   });
 };
 
-const getValue = (control: Record<string, any> = {}, type) => {
+const getValue = (control: FormControl = {}, type) => {
   if (!control.value) return '';
   const effectiveType = control.type === 30 ? control.sourceControlType : control.type;
 

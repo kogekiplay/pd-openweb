@@ -1,20 +1,21 @@
 import _ from 'lodash';
 import { controlState, isSheetDisplay } from 'src/utils/controlCommon';
 import { FORM_ERROR_TYPE, FORM_ERROR_TYPE_TEXT } from '../config';
+import type { FormRule, RuleFilterGroup, RuleFilterItem } from '../types';
 import filterFn from './filterFn';
 import { updateRulesDataByRule } from './ruleDataCore';
 import { flattenArr, getAvailableFilters, getResult, isRelateMoreList, replaceStr } from './ruleUtils';
 
-const getFieldIds = (filter: Record<string, any> = {}) => {
+const getFieldIds = (filter: RuleFilterItem = {}) => {
   const isDynamic = filter.dynamicSource && filter.dynamicSource.length > 0;
   return isDynamic ? [filter.controlId, ...(filter.dynamicSource || []).map(dy => dy.cid)] : [filter.controlId];
 };
 
-const getIds = (filterGroup: Record<string, any> = {}) => {
+const getIds = (filterGroup: RuleFilterGroup = {}) => {
   return (filterGroup.groupFilters || []).reduce((total, filter) => total.concat(getFieldIds(filter)), []);
 };
 
-const getItemGroupFilters = (filterGroup: Record<string, any> = {}, data = [], recordId: string, from) => {
+const getItemGroupFilters = (filterGroup: RuleFilterGroup = {}, data = [], recordId: string, from) => {
   const isOrCondition = (filterGroup.groupFilters || []).findIndex(filter => filter.spliceType === 2) > -1;
   let groupFilters = [filterGroup.groupFilters || []];
 
@@ -37,7 +38,7 @@ const getItemGroupFilters = (filterGroup: Record<string, any> = {}, data = [], r
   return { ...filterGroup, groupFilters: _.flatten(groupFilters) };
 };
 
-const checkValueAvailable = (rule: Record<string, any> = {}, data = [], recordId: string, from) => {
+const checkValueAvailable = (rule: FormRule = {}, data = [], recordId: string, from) => {
   let isAvailable = false;
   let filterControlIds = {};
   let availableControlIds = {};
