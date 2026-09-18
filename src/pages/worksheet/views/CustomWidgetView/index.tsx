@@ -9,9 +9,9 @@ import * as actions from 'src/pages/worksheet/redux/actions/customWidgetView';
 import type { RootState } from 'src/redux/types';
 import { browserIsMobile } from 'src/utils/common';
 import { emitter } from 'src/utils/common';
+import type { FormControl } from 'src/utils/controlTypes';
 import Abnormal from './Abnormal';
 import WidgetContainer from './WidgetContainer';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   height: 100%;
@@ -83,7 +83,7 @@ function CustomWidgetViewContent(props) {
   const pluginIsPublished = _.get(view, 'pluginInfo.source') === 1;
   const showDebugButton = isCharge && !browserIsMobile() && !pluginIsPublished;
   const [status, setStatus] = useState(getViewStatus({ scriptUrl, view }));
-  const conRef = useRef<any>(undefined);
+  const conRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     setStatus(getViewStatus({ scriptUrl, view }));
   }, [flag, scriptUrl, viewId]);

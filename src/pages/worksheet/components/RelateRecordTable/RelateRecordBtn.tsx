@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useRef, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import { get, isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Menu, MenuItem } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -142,7 +142,7 @@ export default function RelateRecordBtn(props) {
   // rc-trigger 5 给回调补上准确类型之后才暴露出来。
   const [menuVisible, setMenuVisible] = useState(false);
   const [selectedRecords, setSelectedRecords] = useState([]);
-  const conRef = useRef<any>(undefined);
+  const conRef = useRef<HTMLDivElement>(null);
   const btnText = addVisible ? btnName || entityName : _l('选择%0', entityName);
   const iconName = addVisible ? 'icon-plus' : 'icon-link_record';
   const btnClick = addVisible ? onNew : onSelect;

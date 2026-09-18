@@ -144,7 +144,7 @@ function MapView(props) {
   const conRef = useRef<HTMLDivElement>(null);
   const aMapRef = useRef<any>(undefined);
   const gMapRef = useRef<any>(undefined);
-  const newRecordBtnRef = useRef<any>(undefined);
+  const newRecordBtnRef = useRef<HTMLDivElement>(null);
   const rippleRef = useRef(null);
   // 记住"这次 zoom 变化是我们自己触发的"，下一次回调据此跳过
   const ignoreNextZoomChangeRef = useRef<number | undefined>(undefined);

@@ -471,7 +471,7 @@ const RichText = forwardRef((props, ref) => {
   const [ckeditor, setCkeditor] = useState(null);
   const MDEditor = ckeditor && ckeditor.editorModule;
   const CKEditor = ckeditor && ckeditor.CKEditor;
-  const editorDiv = useRef<any>(undefined);
+  const editorDiv = useRef<HTMLDivElement>(null);
   let editorDom = useRef<any>(undefined);
   const lastSavedContentRef = useRef(data ?? '');
 

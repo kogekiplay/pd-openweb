@@ -5,8 +5,8 @@ import { arrayOf, bool, func, number, shape, string } from 'prop-types';
 import styled from 'styled-components';
 import { Tooltip } from 'ming-ui/antd-components';
 import { validateFnExpression } from 'src/utils/common';
-import FunctionEditor from './FunctionEditor';
 import type { FormControl } from 'src/utils/controlTypes';
+import FunctionEditor from './FunctionEditor';
 
 const Con = styled.div`
   padding: ${({ readOnly }) => (readOnly ? '4px 6px;' : '20px 0 0;')};
@@ -174,7 +174,7 @@ function CodeEdit(props, ref) {
 
   // const [error, setError] = useState(undefined);
   const readOnly = mode === 'read';
-  const editorDomRef = useRef<any>(undefined);
+  const editorDomRef = useRef<HTMLDivElement>(null);
   const editorRef = useRef<any>(undefined);
   const description = getControlDescription(control.type);
   useEffect(() => {

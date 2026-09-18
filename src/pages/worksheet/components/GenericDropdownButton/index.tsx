@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Menu, MenuItem } from 'ming-ui';
 
@@ -81,9 +81,21 @@ const DropIcon = styled.span`
  * @param {boolean} disabled - 是否禁用按钮
  * @param {string} className - 附加的CSS类名
  */
-const GenericDropdownButton = ({ buttonText, icon, dropdownItems, onClick, disabled, className }: { icon?: string; disabled?: boolean; className?: string; [key: string]: any }) => {
+const GenericDropdownButton = ({
+  buttonText,
+  icon,
+  dropdownItems,
+  onClick,
+  disabled,
+  className,
+}: {
+  icon?: string;
+  disabled?: boolean;
+  className?: string;
+  [key: string]: any;
+}) => {
   const [menuVisible, setMenuVisible] = useState(false);
-  const conRef = useRef<any>(undefined);
+  const conRef = useRef<HTMLDivElement>(null);
 
   const hasDropdown = dropdownItems && dropdownItems.length > 0;
 

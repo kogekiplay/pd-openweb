@@ -186,7 +186,7 @@ export default function PorTalTable(props) {
   const { clickRow, showTips } = props;
   const [listCell, setList] = useState(props.list || []);
   const [columnsCell, setColumns] = useState(props.columns || []);
-  const scorllRef = useRef<any>(undefined);
+  const scorllRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     () => {

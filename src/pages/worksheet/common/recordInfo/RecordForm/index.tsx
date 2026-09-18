@@ -285,7 +285,7 @@ function RecordForm(props) {
   const scrollRef = useRef<any>(undefined);
   const customwidget = useRef<any>(undefined);
   const recordForm = useRef<HTMLDivElement>(null);
-  const nav = useRef<any>(undefined);
+  const nav = useRef<HTMLDivElement>(null);
   const sectionTab = useRef<any>(undefined);
   const [sizeRef, { width }] = useMeasure();
   const [isSplit, setIsSplit] = useState(
@@ -376,7 +376,8 @@ function RecordForm(props) {
     const visible =
       scrollContentElement.scrollTop + scrollConElement.clientHeight <
       formElement.clientHeight + formElement.offsetTop + 58 + 26 + 1;
-    nav.current.style.zIndex = visible ? 3 : -1;
+    // style.zIndex 是字符串属性；以前 nav 是 any，赋数字靠 DOM 自己转，这里写明
+    nav.current.style.zIndex = visible ? '3' : '-1';
   }
 
   function setStickyBarVisible({ isSplit }: { isSplit?: boolean } = {}) {

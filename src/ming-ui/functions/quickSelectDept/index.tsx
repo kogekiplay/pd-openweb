@@ -109,7 +109,7 @@ export function DeptSelect(props) {
   } = props;
 
   const inputRef = useRef<HTMLInputElement>(null);
-  const conRef = useRef<any>(undefined);
+  const conRef = useRef<HTMLDivElement>(null);
   const [
     {
       loading,

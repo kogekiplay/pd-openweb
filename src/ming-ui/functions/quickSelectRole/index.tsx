@@ -98,7 +98,7 @@ export function RoleSelect(props) {
     onClose = () => {},
   } = props;
   const inputRef = useRef<HTMLInputElement>(null);
-  const conRef = useRef<any>(undefined);
+  const conRef = useRef<HTMLDivElement>(null);
   const [keywords, setKeywords] = useState(undefined);
   const [loading, setLoading] = useState(true);
   const [pageIndex, setPageIndex] = useState(1);
