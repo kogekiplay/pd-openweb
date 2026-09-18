@@ -28,7 +28,16 @@ import {
   handleAdvancedSettingChange,
   isSheetDisplay,
 } from 'src/utils/controlCommon';
-import type { ControlAdvancedSetting, ControlOption, ControlValue, FormControl, RecordRow } from 'src/utils/controlTypes';
+import type {
+  AttachmentValue,
+  ControlAdvancedSetting,
+  ControlOption,
+  ControlValue,
+  FormControl,
+  RecordRow,
+  RelationValue,
+  SelectedEntityValue,
+} from 'src/utils/controlTypes';
 import copy from 'src/utils/copyToClipboard';
 import RegExpValidator from 'src/utils/expression';
 import { dateConvertToUserZone, dateServerZoneToAppZone, getTimeZone } from 'src/utils/project';
@@ -629,9 +638,11 @@ export function formatControlValue(cell?: FormControl & { sourceControl?: FormCo
           parsedData = [parsedData];
         }
 
-        return parsedData.filter((user: any) => !!user).map((user: any) => (typeof user === 'string' ? user : user.fullname));
+        return parsedData
+          .filter((user: SelectedEntityValue | string) => !!user)
+          .map((user: SelectedEntityValue | string) => (typeof user === 'string' ? user : user.fullname));
       case 27: // GROUP_PICKER 部门
-        return JSON.parse(cell.value).map((department: any) => {
+        return JSON.parse(cell.value).map((department: SelectedEntityValue | string) => {
           if (typeof department === 'string') {
             return department;
           }
@@ -639,7 +650,7 @@ export function formatControlValue(cell?: FormControl & { sourceControl?: FormCo
           return department.departmentName ? department.departmentName : _l('该部门已删除');
         });
       case 48: // ORG_ROLE 组织角色
-        return JSON.parse(cell.value).map((organization: any) => {
+        return JSON.parse(cell.value).map((organization: SelectedEntityValue | string) => {
           if (typeof organization === 'string') {
             return organization;
           }
@@ -649,7 +660,12 @@ export function formatControlValue(cell?: FormControl & { sourceControl?: FormCo
       case 36: // SWITCH 检查框
         return value === '1' || value === 1;
       case 14: // ATTACHMENT 附件
-        return JSON.parse(value).map((attachment: any) => `${attachment.originalFilename + attachment.ext}`);
+        /* 两个字段都是可选的（同一份附件数据在不同接口里给得并不齐），
+           原先是 any，`undefined + undefined` 会渲染成 "undefinedundefined"。
+           补 || '' 之后缺字段就是空串。 */
+        return JSON.parse(value).map(
+          (attachment: AttachmentValue) => `${(attachment.originalFilename || '') + (attachment.ext || '')}`,
+        );
       case 35: // CASCADER 级联
         parsedData = JSON.parse(value);
         return _.isArray(parsedData) && parsedData.length ? parsedData[0].name : undefined;
@@ -661,7 +677,7 @@ export function formatControlValue(cell?: FormControl & { sourceControl?: FormCo
           parsedData =
             _.isArray(parsedData) &&
             parsedData
-              .map((record: any) =>
+              .map((record: SelectedEntityValue) =>
                 formatControlValue(_.assign({}, cell, { type: cell.sourceControlType || 2, value: record.name })),
               )
               .filter(_.identity);
@@ -1178,8 +1194,8 @@ export function renderText(cell: FormControl, options: Record<string, ControlVal
         }
 
         value = parsedData
-          .filter((user: any) => !!user)
-          .map((user: any) => user.fullname)
+          .filter((user: SelectedEntityValue) => !!user)
+          .map((user: SelectedEntityValue) => user.fullname)
           .join('、');
         break;
       case 27: // GROUP_PICKER 部门
@@ -1191,7 +1207,9 @@ export function renderText(cell: FormControl, options: Record<string, ControlVal
         }
 
         value = parsedData
-          .map((department: any) => (department.departmentName ? department.departmentName : _l('该部门已删除')))
+          .map((department: SelectedEntityValue) =>
+            department.departmentName ? department.departmentName : _l('该部门已删除'),
+          )
           .join('、');
         break;
       case 36: // SWITCH 检查框
@@ -1210,7 +1228,9 @@ export function renderText(cell: FormControl, options: Record<string, ControlVal
           value = '';
         }
 
-        value = parsedData.map((attachment: any) => `${attachment.originalFilename + attachment.ext}`).join('、');
+        value = parsedData
+          .map((attachment: AttachmentValue) => `${(attachment.originalFilename || '') + (attachment.ext || '')}`)
+          .join('、');
         break;
       case 35: // CASCADER 级联
         try {
@@ -1291,7 +1311,10 @@ export function renderText(cell: FormControl, options: Record<string, ControlVal
         }
 
         value = parsedData
-          .map((relation: any) => `[${RELATION_TYPE_NAME[relation.type as keyof typeof RELATION_TYPE_NAME]}]${relation.name}`)
+          .map(
+            (relation: RelationValue) =>
+              `[${RELATION_TYPE_NAME[relation.type as keyof typeof RELATION_TYPE_NAME]}]${relation.name}`,
+          )
           .join('、');
         break;
       case 28: // SCORE 等级
@@ -1320,7 +1343,9 @@ export function renderText(cell: FormControl, options: Record<string, ControlVal
         }
 
         value = parsedData
-          .map((organize: any) => (organize.organizeName ? organize.organizeName : _l('该组织角色已删除')))
+          .map((organize: SelectedEntityValue) =>
+            organize.organizeName ? organize.organizeName : _l('该组织角色已删除'),
+          )
           .join('、');
         break;
       default:
@@ -1688,7 +1713,7 @@ export function getCopyControlText(control: FormControl) {
       content = control.value;
     } else if (control.type === WIDGETS_TO_API_TYPE_ENUM.ATTACHMENT) {
       content = safeParse(control.value)
-        .map((c: any) => `${c.originalFilename}${c.ext}(${c.previewUrl})`)
+        .map((c: AttachmentValue) => `${c.originalFilename}${c.ext}(${c.previewUrl})`)
         .join(',');
     } else if (control.type === WIDGETS_TO_API_TYPE_ENUM.RELATION) {
       const RELATION_TEXT: { [type: number]: string } = {
@@ -1701,7 +1726,7 @@ export function getCopyControlText(control: FormControl) {
         7: _l('日程'),
       };
       content = safeParse(control.value)
-        .map((c: any) => `[${RELATION_TEXT[c.type]}]${c.name}(${c.link})`)
+        .map((c: RelationValue) => `[${RELATION_TEXT[c.type as number]}]${c.name}(${c.link})`)
         .join(',');
     } else if (_.includes([WIDGETS_TO_API_TYPE_ENUM.SCORE], control.type)) {
       content = control.value;
