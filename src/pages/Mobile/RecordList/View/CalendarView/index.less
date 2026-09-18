@@ -57,24 +57,26 @@
   .externalEvents {
     display: none;
   }
-  .fc,
-  .fc-col-header,
-  .fc-daygrid-body,
-  .fc-daygrid-body > table {
+  /* .fc 和 .fc-daygrid-body 在 FullCalendar 7 里都不存在了（类名哈希化，整页 0 命中），
+     只有 .fc-col-header 还活着（dayHeaderRowClass 钩子）。v7 重写了布局引擎，
+     这几层强制 100% 宽本来就是绕 v6 表格布局的补丁。 */
+  .fc-col-header {
     width: 100%;
   }
   .fc-header-toolbar {
     display: none;
   }
-  .fc-theme-standard th {
+  /* fc-theme-standard 是 v6 的内置主题标记，v7 主题改成插件后没有这个类了（0 命中）。
+     去掉这层前缀，落到有钩子的 .fc-scrollgrid 上。 */
+  .fc-scrollgrid th {
     font-weight: normal !important;
   }
-  .fc-theme-standard td,
-  .fc-theme-standard th {
+  .fc-scrollgrid td,
+  .fc-scrollgrid th {
     border-color: rgba(0, 0, 0, 0.05) !important;
     border-right: none;
   }
-  .fc-theme-standard .fc-scrollgrid {
+  .fc-scrollgrid {
     border-top: none !important;
     border-left: none !important;
     border-right: none !important;
@@ -133,13 +135,17 @@
       }
     }
   }
-  .fc-daygrid-dot-event {
+  /* v6 的 fc-daygrid-dot-event 在 v7 里 0 命中；月视图根 .fc-dayGridMonth-view 还活着，
+     用它限定范围，效果等价。（后一条把 background 又设回 unset，等于前一条的 background
+     根本不起作用——原样保留这个行为，只换选择器。fc-event-mirror 是拖拽镜像，
+     兼容层用 EventDisplayInfo.isMirror 挂着，拖起来才有。） */
+  .fc-dayGridMonth-view .fc-event {
     border: 1px solid var(--color-border-primary);
     background: var(--color-background-primary);
     padding: 0;
   }
-  .fc-daygrid-dot-event,
-  .fc-daygrid-dot-event.fc-event-mirror {
+  .fc-dayGridMonth-view .fc-event,
+  .fc-dayGridMonth-view .fc-event.fc-event-mirror {
     background: unset;
   }
 

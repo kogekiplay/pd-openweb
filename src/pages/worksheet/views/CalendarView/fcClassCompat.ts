@@ -83,6 +83,8 @@ export const FC_CLASS_COMPAT = {
   buttonClass: (info: ButtonInfo) =>
     [
       'fc-button',
+      // 【isPrimary 实测永远是 false】生产上整页找不到一个 fc-button-primary，
+      // 所以按钮的基础样式不要写在 .fc-button-primary 上，写 .fc-button。
       info.isPrimary && 'fc-button-primary',
       `fc-${info.name}-button`,
       // v6 叫 fc-button-active，v7 的渲染参数里是 isSelected
@@ -137,6 +139,13 @@ export const FC_CLASS_COMPAT = {
   eventInnerClass: 'fc-event-main',
   eventTimeClass: 'fc-event-time',
   eventTitleClass: 'fc-event-title',
+  /* 【rowEventClass 实测挂不上，别指望它】2026-09-18 在生产上把它 setOption 成探针字符串，
+     月视图和周视图【都是 0 个元素带上它】—— 带自定义 eventContent 的事件不走 v7 的
+     row-event 渲染分支。blockEventClass（周视图全天行）和 columnEventClass（周/日视图
+     时间格）是能挂上的，验过。
+     所以凡是依赖 fc-daygrid-event / fc-h-event 的样式都不能靠这一行救活，
+     要改用「.fc-dayGridMonth-view + .fc-event」这种组合（月视图根类是活的）。
+     这一行留着不删：它本身无副作用，将来 v7 的渲染分支变了也许就生效了。 */
   rowEventClass: 'fc-daygrid-event fc-h-event',
   blockEventClass: 'fc-daygrid-block-event',
   columnEventClass: 'fc-timegrid-event fc-v-event',
