@@ -6,6 +6,10 @@ import { UPLOAD_ERROR } from '../constant/enum';
 import uploadNewVersionDailog from './kcUploadNewVersion/kcUploadNewVersion';
 
 class UploadNewVersion extends React.Component<any, any> {
+  // 这些原来都是隐式挂上去的，TS 下不声明就是 TS2339
+  uploader;
+  con;
+
   static propTypes() {
     return {
       item: React.propTypes.object,

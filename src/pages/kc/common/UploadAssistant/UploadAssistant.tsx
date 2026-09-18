@@ -8,8 +8,8 @@ import Icon from 'ming-ui/components/Icon';
 import { mdNotification } from 'ming-ui/functions';
 import service from '../../api/service';
 import folderDg from 'src/components/kc/folderSelectDialog/folderSelectDialog';
-import createUploader from 'src/utils/createUploader';
 import { getClassNameByExt } from 'src/utils/common';
+import createUploader from 'src/utils/createUploader';
 import { MAX_FILE_COUNT, PICK_TYPE, UPLOAD_ERROR, UPLOAD_STATUS } from '../../constant/enum';
 import HoverState from '../../decorators/withHoverState';
 import { getUrlByBucketName, humanFileSize } from '../../utils';
@@ -113,6 +113,10 @@ class UploadAssistant extends React.Component<any, any> {
     fileList: Immutable.OrderedMap(),
     supportDirectory: false,
   };
+
+  // 这些原来都是隐式挂上去的，TS 下不声明就是 TS2339
+  uploader;
+  root;
 
   _isMounted = false;
 
@@ -451,7 +455,9 @@ class UploadAssistant extends React.Component<any, any> {
     return (
       <div
         id="uploadAssistant"
-        ref={root => { this.root = root; }}
+        ref={root => {
+          this.root = root;
+        }}
         className="uploadAssistant flexColumn"
         onDragOver={() => this.setState({ dragOver: true })}
         onDragLeave={() => this.setState({ dragOver: false })}
@@ -560,7 +566,7 @@ class UploadAssistant extends React.Component<any, any> {
                   </li>
                 ))
                 .valueSeq()
-                  .toArray()}
+                .toArray()}
             </ul>
           </div>
         )}

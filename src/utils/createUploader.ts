@@ -30,7 +30,16 @@ import { FileStatus, UPLOAD_ERROR, UploadError, UploaderState } from './uploader
 import { createFileSelect } from './uploader/fileSelect';
 import { uploadToQiniu } from './uploader/qiniuV1';
 import type { QiniuUploadTask } from './uploader/qiniuV1';
-import type { Uploader, UploaderEvent, UploaderFile, UploaderOption, UploadErrorInfo } from './uploader/types';
+import type {
+  UploadedFileResponse,
+  Uploader,
+  UploaderEvent,
+  UploaderEventArgs,
+  UploaderEventHandler,
+  UploaderFile,
+  UploaderOption,
+  UploadErrorInfo,
+} from './uploader/types';
 
 export { FileStatus, UPLOAD_ERROR, UploadError, UploaderState } from './uploader/constants';
 export type { Uploader, UploaderFile, UploaderOption } from './uploader/types';
@@ -88,7 +97,7 @@ function wrapFile(native: File, source: 'browse' | 'drop' | 'paste'): UploaderFi
     getSource: () => wrapped,
   };
   if (source === 'paste') wrapped.isFromClipBoard = true;
-  const rel = (native as any).webkitRelativePath;
+  const rel = (native as File & { webkitRelativePath?: string }).webkitRelativePath;
   if (rel) {
     wrapped.webkitRelativePath = rel;
     // 目录上传：下游读的是带前导斜杠的 relativePath（原来由调用方包 moxie File 时写上去），
@@ -124,20 +133,22 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
 
   // 调用方传进来的事件处理器。【要先拷出来】—— 内部逻辑（取凭证、拼参数）
   // 必须先于调用方的回调执行，所以这几个不走 bind，由下面显式转发。
-  const initFunc = assign({}, option.init) as Record<string, (...args: any[]) => any>;
+  const initFunc = assign({}, option.init) as { [E in UploaderEvent]?: UploaderEventHandler<E> };
 
-  const handlers = new Map<UploaderEvent, Array<(...args: any[]) => any>>();
+  const handlers = new Map<UploaderEvent, UploaderEventHandler[]>();
   const files: UploaderFile[] = [];
   /** 正在飞的上传任务，用于 stop / removeFile 时中断 */
   const tasks = new Map<string, QiniuUploadTask>();
   let destroyed = false;
 
-  function trigger(event: UploaderEvent, ...args: any[]) {
-    for (const fn of (handlers.get(event) || []).slice()) fn(...args);
+  function trigger<E extends UploaderEvent>(event: E, ...args: UploaderEventArgs[E]) {
+    // handlers 里按事件名分桶存，取出来时 TS 只知道是 UploaderEventHandler（参数是各事件的联合），
+    // 这里的 E 已经把桶和实参对上了，转一下让它别在每个 fn(...args) 上纠结。
+    for (const fn of (handlers.get(event) || []).slice()) (fn as UploaderEventHandler<E>)(...args);
   }
 
   const uploader: Uploader = {
-    settings: option as any,
+    settings: option as Uploader['settings'],
     files,
     state: UploaderState.STOPPED,
 
@@ -166,7 +177,9 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
       // 【不要写 `input instanceof FileList`】FileList 只在浏览器里有，
       // 在 Node（spec）里引用它是 ReferenceError。用「像数组」来判就够了。
       const isArrayLike =
-        input && typeof (input as any).length === 'number' && typeof (input as any).name !== 'string';
+        input &&
+        typeof (input as { length?: unknown }).length === 'number' &&
+        typeof (input as { name?: unknown }).name !== 'string';
       const list: File[] = Array.isArray(input)
         ? input
         : isArrayLike
@@ -174,7 +187,7 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
           : [input as File];
       handleFiles(
         list.filter(Boolean),
-        list.some(f => (f as any).isFromClipBoard) ? 'paste' : 'browse',
+        list.some(f => (f as File & { isFromClipBoard?: boolean }).isFromClipBoard) ? 'paste' : 'browse',
       );
     },
     removeFile(target) {
@@ -199,15 +212,17 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
       select.disable(disable);
     },
     getOption(key) {
-      return (option as any)[key];
+      return (option as Record<string, unknown>)[key];
     },
     setOption(key, value) {
       if (typeof key === 'object') assign(option, key);
-      else (option as any)[key] = value;
+      else (option as Record<string, unknown>)[key] = value;
     },
     bind(event, handler) {
       if (!handlers.has(event)) handlers.set(event, []);
-      handlers.get(event)!.push(handler);
+      // 桶是按事件名分的，存进去的处理器一定和这个事件的实参对得上；
+      // 但 Map 的值类型只能写成「所有事件的处理器」，这里转一下。
+      handlers.get(event)!.push(handler as UploaderEventHandler);
     },
     unbind(event, handler) {
       if (!handler) {
@@ -216,11 +231,14 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
       }
       const list = handlers.get(event);
       if (!list) return;
-      const i = list.indexOf(handler);
+      const i = list.indexOf(handler as UploaderEventHandler);
       if (i >= 0) list.splice(i, 1);
     },
     trigger(event, ...args) {
-      trigger(event, ...args);
+      // 对外那层把实参标成了可选（有调用方只传事件名，见 types.ts 的说明），
+      // 内部这层是严格的；这里如实转发，缺的实参就让处理器自己拿到 undefined ——
+      // 和改造前 plupload 的行为一致。
+      trigger(event, ...(args as UploaderEventArgs[typeof event]));
     },
   };
 
@@ -364,7 +382,7 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
     const start = () => {
       const beforeCheck = option.before_upload_check ? option.before_upload_check(uploader, accepted) : undefined;
 
-      (option.getToken || getToken)(tokenFiles, option.type, option.getTokenParam).then((res: any[]) => {
+      (option.getToken || getToken)(tokenFiles, option.type, option.getTokenParam).then(res => {
         const exceedFiles: UploaderFile[] = [];
 
         accepted.forEach((item, i) => {
@@ -553,8 +571,8 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
    * 逐个读 serverName / filePath / fileName / fileExt / originalFileName / key。
    * 补法逐条沿用老实现（原来在 mkfile 回调里做）。
    */
-  function finishFile(file: UploaderFile, rawResponse: any) {
-    const response: Record<string, any> = assign({}, rawResponse);
+  function finishFile(file: UploaderFile, rawResponse: UploadedFileResponse) {
+    const response: UploadedFileResponse = assign({}, rawResponse);
 
     if (!response.key && !file.key) {
       triggerUploadError(file, _l('上传失败，请稍后再试。'));
@@ -618,8 +636,11 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
     'UploadComplete',
     'Error',
   ]);
-  for (const name of Object.keys(initFunc)) {
-    if (!FORWARDED.has(name)) uploader.bind(name as UploaderEvent, initFunc[name]);
+  // 没被显式转发的事件，原样接到 bind 上。Object.keys 给的是 string，
+  // 先转成事件名再取，才不至于拿 string 去索引事件处理器表。
+  for (const name of Object.keys(initFunc) as UploaderEvent[]) {
+    const handler = initFunc[name];
+    if (!FORWARDED.has(name) && handler) uploader.bind(name, handler as UploaderEventHandler<typeof name>);
   }
 
   return uploader;

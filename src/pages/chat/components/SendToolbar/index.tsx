@@ -1,22 +1,22 @@
 import React, { Component } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import { Tooltip } from 'ming-ui/antd-components';
 import chatAjax from 'src/api/chat';
 import { SOURCE_TYPE } from 'src/components/comment/config';
 import Emotion from 'src/components/emotion/emotion';
 import MentionsInput from 'src/components/MentionsInput';
-import createUploader from 'src/utils/createUploader';
+import type { MentionsInputElement } from 'src/components/MentionsInput';
 import { setCaretPosition } from 'src/utils/common';
+import createUploader from 'src/utils/createUploader';
 import RegExpValidator from 'src/utils/expression';
+import { UploadError } from 'src/utils/uploader/constants';
 import * as utils from '../../utils';
 import config from '../../utils/config';
 import Constant from '../../utils/constant';
 import fileConfirm from '../fileConfirm/fileConfirm';
 import './index.less';
-import type { MentionsInputElement } from 'src/components/MentionsInput';
-import { UploadError } from 'src/utils/uploader/constants';
 
 const recurShowFileConfirm = (up, files, i, length, cb) => {
   if (i >= length) {
@@ -57,6 +57,10 @@ const recurShowFileConfirm = (up, files, i, length, cb) => {
 };
 
 export default class SendToolbar extends Component<any, any> {
+  // 这些原来都是隐式挂上去的，TS 下不声明就是 TS2339
+  emotion;
+  uploadFile;
+
   constructor(props) {
     super(props);
     this.state = {

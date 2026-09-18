@@ -3,8 +3,8 @@ import { Progress } from 'antd';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
-import createUploader from 'src/utils/createUploader';
 import { formatFileSize } from 'src/utils/common';
+import createUploader from 'src/utils/createUploader';
 import RegExpValidator from 'src/utils/expression';
 import { UploadError } from 'src/utils/uploader/constants';
 
@@ -93,6 +93,12 @@ export default class UploadFile extends Component<any, any> {
     this.deleteFileKey = [];
     this.cacheFile = [];
   }
+
+  // 这些原来都是隐式挂上去的，TS 下不声明就是 TS2339
+  deleteFileKey;
+  cacheFile;
+  uploader;
+  uploadMp3;
 
   componentDidMount() {
     this.initUpload();
@@ -208,7 +214,12 @@ export default class UploadFile extends Component<any, any> {
             })}
           </div>
           <div className="uploadFooter">
-            <div className="footerBtn uploadBtn" ref={node => { this.uploadMp3 = node; }}>
+            <div
+              className="footerBtn uploadBtn"
+              ref={node => {
+                this.uploadMp3 = node;
+              }}
+            >
               {_l('继续上传')}
             </div>
             <div
@@ -230,7 +241,9 @@ export default class UploadFile extends Component<any, any> {
           id="uploadMp3"
           onDragOver={() => this.setState({ dragOver: true })}
           onDragLeave={() => this.setState({ dragOver: false })}
-          ref={node => { this.uploadMp3 = node; }}
+          ref={node => {
+            this.uploadMp3 = node;
+          }}
           className="h100 flexColumn justifyContentCenter alignItemsCenter Hand"
         >
           <Icon icon="upload_file" className="Font56 mBottom18" />
