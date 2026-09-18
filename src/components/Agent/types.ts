@@ -34,6 +34,63 @@ export type ChatPartKind =
  * 渲染契约定下来，是一件独立工程。在那之前用一个具名的开放形状，
  * 至少它可被 grep、可逐步收窄，收窄时只改这一处。
  */
+/**
+ * 上传区里的一个附件。状态机：uploading -> done / error，发送前是 pending。
+ * 字段按 ui/Attachments.tsx 的渲染点列（见该文件的 getStatusLabel 与卡片）。
+ */
+export interface ChatAttachment {
+  id: string;
+  name?: string;
+  /** 'image' 时渲染 previewUrl 缩略图，其余画文件图标 */
+  kind?: string;
+  status?: string;
+  /** 0-100，仅 uploading 时有 */
+  progress?: number;
+  /** 已格式化好的大小文案，直接显示 */
+  sizeLabel?: string;
+  errorMessage?: string;
+  previewUrl?: string;
+  url?: string;
+  size?: number;
+}
+
+/**
+ * 发给后端时的附件形状 —— 和上面的 ChatAttachment【不是一回事】：
+ * 那个是上传区的 UI 状态（带 progress / status / previewUrl），
+ * 这个是 mapAttachmentForRequest 挑出来的四个字段。
+ */
+export interface ChatAttachmentRequest {
+  type?: string;
+  url?: string;
+  name?: string;
+  size?: number;
+}
+
+/** 输入框里 @ 出来的一项（应用 / 工作表…）。type 缺省按 'app' 处理。 */
+export interface ChatMention {
+  id?: string;
+  type?: string;
+  name?: string;
+}
+
+/**
+ * SSE 流里的一个事件。
+ *
+ * eventName 是【开放集合】—— 后端会继续加新事件，写成封闭联合的话每加一个都要改类型。
+ * payload 的形状随 eventName 变，与 ChatMessagePart 同理：先给一个具名的开放形状，
+ * 真要按 eventName 做判别联合，得先把每类事件的契约定下来，是一件独立工程。
+ */
+export interface AgentStreamEvent {
+  eventName?: string;
+  payload?: {
+    /** text-delta / reasoning-delta 的增量文本 */
+    delta?: string;
+    data?: any;
+    [key: string]: any;
+  };
+  [key: string]: any;
+}
+
 export interface ChatMessagePart {
   kind: ChatPartKind;
   /** 片段产生时刻，用于排序与 meta 行展示 */
