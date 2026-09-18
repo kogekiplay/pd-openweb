@@ -36,18 +36,24 @@ const shouldLoadDepartments = props => {
 class TabList extends React.Component<any, any> {
   constructor(props) {
     super(props);
-    const { projectId, fetchInActive = () => {}, fetchApproval = () => {} } = props;
     this.state = {
       showPositionDialog: false,
       isNew: true,
       hasDepartmentAuth: false,
     };
-    fetchInActive(projectId);
-    fetchApproval(projectId);
   }
 
   componentDidMount() {
-    const myPermissions = getMyPermissions(this.props.projectId);
+    // 【这两个请求原先写在 constructor 里】在生产上实测会各发两次：
+    // constructor 属于 render 阶段，React 可以构造一个实例又把它丢掉（Suspense
+    // 挂起、渲染被打断都会），重来时再构造一次 —— 实测两次相隔 250ms，
+    // 而同一棵树里写在 componentDidMount 的请求只发了一次。
+    // 副作用挪到 componentDidMount，保证「挂载成功才发请求」。
+    const { projectId, fetchInActive = () => {}, fetchApproval = () => {} } = this.props;
+    fetchInActive(projectId);
+    fetchApproval(projectId);
+
+    const myPermissions = getMyPermissions(projectId);
     const hasDepartmentAuth = hasPermission(myPermissions, PERMISSION_ENUM.DEPARTMENT);
     this.setState({ hasDepartmentAuth });
   }
