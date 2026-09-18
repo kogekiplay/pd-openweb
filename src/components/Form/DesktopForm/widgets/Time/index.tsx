@@ -161,7 +161,9 @@ const Time = props => {
           },
         };
       }}
-      dropdownClassName={`customAntPicker_${controlId} ${dropdownClassName || ''}`}
+      /* antd 6：dropdownClassName 已废弃 -> classNames.popup.root
+         （下面 onOpenChange 还要靠这个类名找弹层滚时间列，不能只删） */
+      classNames={{ popup: { root: `customAntPicker_${controlId} ${dropdownClassName || ''}` } }}
       onOpenChange={open => {
         setOpen(open);
         if (open && parseInt(timeArr[0]) === 0 && parseInt(timeArr[1]) === 24) {
