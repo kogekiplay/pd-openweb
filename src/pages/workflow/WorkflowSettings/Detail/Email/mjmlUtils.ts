@@ -28,7 +28,10 @@ export function getDefaultMjml(theme = getMjmlPreviewTheme()) {
 </mjml>`;
 }
 
-export function getEmailContentType(data: Record<string, any> = {}) {
+// 没显式指定 emailContentType 时，回退看 content 字段是不是富文本
+export function getEmailContentType(
+  data: { emailContentType?: number; fields?: { fieldId?: string; isRichText?: boolean }[] } = {},
+) {
   const { emailContentType } = data;
 
   if ([CONTENT_TYPE.TEXT, CONTENT_TYPE.RICH_TEXT, CONTENT_TYPE.MJML].includes(emailContentType)) {

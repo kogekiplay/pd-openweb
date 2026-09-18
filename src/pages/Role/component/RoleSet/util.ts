@@ -11,7 +11,14 @@ const translateArrayNames = (appId: string, array, idKey: string, nameKey: strin
 };
 
 // 翻译工作表相关信息
-export const fillTranslateInfo = (appId: string, roleDetail: Record<string, any> = {}) => {
+/** 角色详情里需要按应用语言包替换名称的那几块 */
+interface RoleDetailForTranslate {
+  sheets?: { views?: unknown[]; fields?: unknown[] }[];
+  pages?: unknown[];
+  chatbots?: unknown[];
+}
+
+export const fillTranslateInfo = (appId: string, roleDetail: RoleDetailForTranslate = {}) => {
   (roleDetail.sheets || []).forEach(sheet => {
     translateObjectName(appId, sheet, 'sheetId', 'sheetName');
     translateArrayNames(appId, sheet.views, 'viewId', 'viewName');

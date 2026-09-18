@@ -2,6 +2,7 @@ import React from 'react';
 import { CheckCircleFilled, CloseCircleFilled, ExclamationCircleFilled, InfoCircleFilled } from '@ant-design/icons';
 import _ from 'lodash';
 import { isUnTextWidget } from 'src/components/Form/core/utils';
+import type { FormControl } from 'src/utils/controlTypes';
 import { isCustomWidget } from '../../../util';
 
 // 事件
@@ -114,7 +115,7 @@ const SUPPORT_VALUE_CHANGE_WIDGET = [
 const SUPPORT_FOCUS_WIDGET = [2, 8, 5, 3, 4, 41, 7];
 
 // 根据字段类型筛选支持的事件
-export const getEventDisplay = (data: Record<string, any> = {}) => {
+export const getEventDisplay = (data: FormControl = {}) => {
   const filterEventEnum = [ADD_EVENT_ENUM.SHOW, ADD_EVENT_ENUM.HIDE];
 
   if (_.includes(SUPPORT_VALUE_CHANGE_WIDGET, data.type)) {
