@@ -263,6 +263,19 @@ export interface SelectedEntityValue {
   avatar?: string;
   departmentName?: string;
   organizeName?: string;
+  /** 已删除的成员/部门/角色仍会留在值里，渲染时按这个标记显示「已删除」并计数 */
+  isDelete?: boolean;
+  /** 「显示已删除」开关下，把所有已删除项折成一条时挂的条数 */
+  deleteCount?: number;
+  /** 部门控件开「显示完整层级」时带的路径，按 depth 从深到浅排 */
+  departmentPath?: DepartmentPathItem[];
+}
+
+/** 部门层级路径上的一节。 */
+export interface DepartmentPathItem {
+  depth?: number;
+  departmentId?: string;
+  departmentName?: string;
 }
 
 /**
@@ -285,7 +298,13 @@ export interface AttachmentValue {
   previewUrl?: string;
   viewUrl?: string;
   ext?: string;
+  /** 提交给后端时用的扩展名字段名（由 ext 复制过来） */
+  fileExt?: string;
   filesize?: number;
+  /** 知识库引用类附件才有 */
+  refType?: number;
+  /** 本次提交里这条是不是新编辑的 */
+  isEdit?: boolean;
 }
 
 /**

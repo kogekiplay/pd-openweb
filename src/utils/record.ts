@@ -16,8 +16,6 @@ import {
   getTitleTextFromRelateControl,
   getValueStyle,
 } from 'src/utils/control';
-import { VersionProductType } from 'src/utils/enum';
-import { getFeatureStatus } from 'src/utils/project';
 import type {
   ControlAdvancedSetting,
   ControlOption,
@@ -27,6 +25,8 @@ import type {
   RelateRecordValue,
   SubListStore,
 } from 'src/utils/controlTypes';
+import { VersionProductType } from 'src/utils/enum';
+import { getFeatureStatus } from 'src/utils/project';
 
 export function filterEmptyChildTableRows<T extends { rowid?: string }>(rows: T[] = []): T[] {
   try {
@@ -80,18 +80,20 @@ export function getRelateRecordCountFromValue(value?: ControlValue, propsCount?:
   return count;
 }
 
-export function handleUpdateDefsourceOfControl({
-  recordId,
-  relateRecordControl,
-  masterData,
-  controls = [],
-}: {
-  recordId?: string;
-  /** 主记录侧的关联字段，用来找出本表里与之配对的那个关联控件 */
-  relateRecordControl: FormControl & { worksheetId?: string };
-  masterData?: { formData?: FormControl[] };
-  controls?: FormControl[];
-} = { relateRecordControl: {} }) {
+export function handleUpdateDefsourceOfControl(
+  {
+    recordId,
+    relateRecordControl,
+    masterData,
+    controls = [],
+  }: {
+    recordId?: string;
+    /** 主记录侧的关联字段，用来找出本表里与之配对的那个关联控件 */
+    relateRecordControl: FormControl & { worksheetId?: string };
+    masterData?: { formData?: FormControl[] };
+    controls?: FormControl[];
+  } = { relateRecordControl: {} },
+) {
   return controls.map(control => {
     if (
       control.type === 29 &&
@@ -106,23 +108,23 @@ export function handleUpdateDefsourceOfControl({
                 JSON.stringify({
                   rowid: recordId,
                   ...[{}, ...(get(masterData, 'formData') || []).filter((c: FormControl) => c.type !== 34)].reduce(
-                (a: Record<string, ControlValue> = {}, b: FormControl = {}) => {
-                  // 子表使用双向关联字段作为默认值 RELATERECORD_OBJECT：
-                  // 这时关联字段的值是 { records: [...] } 这种对象，其余情况是标量或字符串。
-                  // 走 _.get 取，既兜住了「不是对象」的情况（原先那句 _.isObject 判断），
-                  // 又不用把 b 退回 any —— FormControl['value'] 是 ControlValue，
-                  // 被 _.isObject 收窄成 object 之后反而读不到 records。
-                  const relateRecords: RecordRow[] | undefined = _.get(b, 'value.records');
-                  return Object.assign(a, {
-                    [b.controlId as string]:
-                      b.type === 29 && relateRecords
-                        ? JSON.stringify(
-                            relateRecords.map((r: RecordRow) => ({ sid: r.rowid, sourcevalue: JSON.stringify(r) })),
-                          )
-                        : b.value,
-                  });
-                },
-              ),
+                    (a: Record<string, ControlValue> = {}, b: FormControl = {}) => {
+                      // 子表使用双向关联字段作为默认值 RELATERECORD_OBJECT：
+                      // 这时关联字段的值是 { records: [...] } 这种对象，其余情况是标量或字符串。
+                      // 走 _.get 取，既兜住了「不是对象」的情况（原先那句 _.isObject 判断），
+                      // 又不用把 b 退回 any —— FormControl['value'] 是 ControlValue，
+                      // 被 _.isObject 收窄成 object 之后反而读不到 records。
+                      const relateRecords: RecordRow[] | undefined = _.get(b, 'value.records');
+                      return Object.assign(a, {
+                        [b.controlId as string]:
+                          b.type === 29 && relateRecords
+                            ? JSON.stringify(
+                                relateRecords.map((r: RecordRow) => ({ sid: r.rowid, sourcevalue: JSON.stringify(r) })),
+                              )
+                            : b.value,
+                      });
+                    },
+                  ),
                 }),
               ]),
             },
@@ -276,9 +278,7 @@ const sumNumbers = (values: number[]) => {
 };
 
 const getNumberValues = (rows: RecordRow[], control: FormControl) =>
-  rows
-    .map(row => Number(row[control.controlId as string]))
-    .filter(value => _.isNumber(value) && !_.isNaN(value));
+  rows.map(row => Number(row[control.controlId as string])).filter(value => _.isNumber(value) && !_.isNaN(value));
 
 export const getSummaryResult = (rows: RecordRow[], control: FormControl, summaryType?: number) => {
   let result;
