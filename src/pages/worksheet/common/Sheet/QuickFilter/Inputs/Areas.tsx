@@ -55,7 +55,8 @@ export default function Areas(props) {
   const [search, setSearch] = useState(undefined);
   const [keywords, setKeywords] = useState('');
   const [defaultValue, setDefaultValue] = useState(null);
-  const tempArea = useRef<any>(undefined);
+  // 搜索命中后暂存的那一项，确认时才并进 values
+  const tempArea = useRef<{ name?: string; id?: string } | undefined>(undefined);
   const { enumDefault2, advancedSetting: { chooserange = 'CN', commcountries } = {} } = control;
 
   const onFetchData = _.debounce(value => {

@@ -532,7 +532,7 @@ export default function ChatPanel({
   const latestRuntimeRef = useRef<Record<string, any>>({});
   // 镜像最新 sessionId：卸载清理在闭包里拿不到最新 state，用 ref 取当前会话调取消接口
   const sessionIdRef = useRef('');
-  const promptInputRef = useRef<any>(null);
+  const promptInputRef = useRef<HTMLInputElement>(null);
   // 从首页分组内「AI 创建应用」交接来的分组 id：拼进 stream context.groupId，让新建应用归入该分组
   const groupIdRef = useRef('');
   // 已开过流的 path 集合：用于决定首次 delta 时是否触发 file:begin + file:focus

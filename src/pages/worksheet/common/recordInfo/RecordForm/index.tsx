@@ -282,7 +282,7 @@ function RecordForm(props) {
   const isFixedRight = _.get(widgetStyle, 'tabposition') === '4';
   const isFixed = _.includes(['2', '3', '4'], _.get(recordinfo, 'advancedSetting.tabposition'));
 
-  const scrollRef = useRef<any>(undefined);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const customwidget = useRef<any>(undefined);
   const recordForm = useRef<HTMLDivElement>(null);
   const nav = useRef<HTMLDivElement>(null);

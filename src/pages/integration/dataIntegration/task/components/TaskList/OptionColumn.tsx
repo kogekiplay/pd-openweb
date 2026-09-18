@@ -51,10 +51,19 @@ const EditTaskNameWrapper = styled.div`
   background: var(--color-background-card);
 `;
 
-export default function OptionColumn({ projectId, record, taskList, setTaskList, onRefreshComponents }: { projectId?: string; [key: string]: any }) {
+export default function OptionColumn({
+  projectId,
+  record,
+  taskList,
+  setTaskList,
+  onRefreshComponents,
+}: {
+  projectId?: string;
+  [key: string]: any;
+}) {
   const [visible, setVisible] = useState(false);
   const [editPopupVisible, setEditPopupVisible] = useState(false);
-  const inputRef = useRef<any>(undefined);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const onEditTaskName = () => {
     setEditPopupVisible(true);

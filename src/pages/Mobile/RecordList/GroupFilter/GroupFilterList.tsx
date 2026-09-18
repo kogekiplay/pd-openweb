@@ -77,8 +77,11 @@ const GroupFilterList = props => {
 
   let isOption = [9, 10, 11].includes(source.type) || [9, 10, 11].includes(source.sourceControlType); //是否选项
   const breadNavBar = useRef<HTMLDivElement>(null);
-  const ajaxRequestRef = useRef<any>(undefined);
-  const apiRequestRef = useRef<any>(undefined);
+  // 在飞的请求句柄，卸载时 abort 掉。
+  // 【类型是 ApiResult | null】接口层回的是 `Promise<any> & { abort }`（见 types/global.d.ts），
+  // 只写 { abort?: () => void } 收不住那个 Promise 交集。
+  const ajaxRequestRef = useRef<ApiResult | null>(null);
+  const apiRequestRef = useRef<ApiResult | null>(null);
   const debouncedSetKeywords = useRef(_.debounce(value => setKeywords(value), 300));
 
   useEffect(() => {

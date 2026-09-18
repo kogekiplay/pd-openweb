@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { useSetState } from 'react-use';
 import { generate } from '@ant-design/colors';
-import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
+import _ from 'lodash';
 import styled from 'styled-components';
 import { Checkbox, Icon, Input, TagTextarea } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -150,7 +150,7 @@ export default function ExternalLinkDialog(props) {
     isEdit ? _.omit(record, ['id']) : { pcDisplay: false, webMobileDisplay: true, appDisplay: true },
   );
   const tagTextAreaRef = useRef<any>(undefined);
-  const inputRef = useRef<any>(undefined);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (record && record.urlTemplate) {

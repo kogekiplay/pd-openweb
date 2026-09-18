@@ -52,7 +52,8 @@ const Empty = styled.span`
 export default function Departments(props) {
   const { values = [], projectId, isMultiple, onChange = () => {} } = props;
   const [active, setActive] = useState<boolean | undefined>();
-  const valueRef = useRef<any>(undefined);
+  // 跟着 props.values 走的镜像，供异步回调里读到最新值
+  const valueRef = useRef<{ organizeId?: string }[]>([]);
 
   useEffect(() => {
     valueRef.current = values;

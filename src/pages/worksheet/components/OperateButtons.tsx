@@ -8,12 +8,12 @@ import CustomButtonsWithAutoWidth from 'worksheet/common/recordInfo/RecordForm/C
 import { handleSystemPrintRecord, handleTemplateRecordPrint } from 'worksheet/common/recordInfo/RecordForm/PrintList';
 import SheetContext from 'worksheet/common/Sheet/SheetContext';
 import { handleCopyRecord, handleDeleteRecord, handleShareRecord } from 'worksheet/components/RecordOperate';
+import type { FormControl } from 'src/utils/controlTypes';
 import {
   filterButtonBySheetSwitchPermit,
   getSheetOperatesButtons,
   getSheetOperatesButtonsStyle,
 } from 'src/utils/worksheet';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const CardWrapper = styled.div`
   height: 48px;
@@ -100,7 +100,7 @@ export default function OperateButtons({
   const { isCharge, appId, projectId, worksheetId, view, sheetButtons, printList, sheetSwitchPermit, controls } =
     context || {};
   const [btnDisable, setBtnDisable] = useState({});
-  const conRef = useRef<any>(undefined);
+  const conRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
   const [loading, setLoading] = useState(isInCard);
   const viewId = view?.viewId;

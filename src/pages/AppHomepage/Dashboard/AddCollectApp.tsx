@@ -112,7 +112,7 @@ const Item = styled.div`
 
 function AddCollectApp(props) {
   const { onClose, apps = [], markedApps = [], onMarkApps, appLang, projectId } = props;
-  const searchRef = useRef<any>(undefined);
+  const searchRef = useRef<HTMLInputElement>(null);
   const [keywords, setKeywords] = useState('');
   const [expandIds, setExpandIds] = useState([]);
   const [items, setItems] = useSetState({});
