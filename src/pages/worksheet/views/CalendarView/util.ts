@@ -10,10 +10,10 @@ import { controlState } from 'src/utils/control';
 import { getAdvanceSetting } from 'src/utils/control';
 import { renderText as renderCellText } from 'src/utils/control';
 import { isTimeStyle } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import { dateAppZoneToServerZone, dateConvertToServerZone } from 'src/utils/project';
 import { getRecordColor, getRecordColorConfig } from 'src/utils/record';
 import { DEFAULT_BORDER_COLOR_DARK, DEFAULT_BORDER_COLOR_LIGHT, DEFAULT_COLOR, DEFAULT_TEXT_COLOR } from './constants';
-import type { FormControl } from 'src/utils/controlTypes';
 
 export const getHoverColor = color => {
   return OPTION_COLORS_LIST_HOVER[OPTION_COLORS_LIST.indexOf(color.toUpperCase())];
@@ -185,7 +185,13 @@ const splitCalendarEventColors = recordColor => {
 // type === 16 ? 'YYYY-MM-DD HH:mm' : 'YYYY-MM-DD';
 //格式events数据//根据多组时间拆分出多条数据
 export const setDataFormat = pram => {
-  const { worksheetControls = [], currentView = {}, calendarData = {}, byRowId, ...data }: { worksheetControls: FormControl[]; [key: string]: any } = pram;
+  const {
+    worksheetControls = [],
+    currentView = {},
+    calendarData = {},
+    byRowId,
+    ...data
+  }: { worksheetControls: FormControl[]; [key: string]: any } = pram;
 
   if (byRowId) {
     return setDataFormatByRowId(pram);
@@ -247,7 +253,12 @@ const renderTitleTxt = (worksheetControls: FormControl[], currentView, dataInfo)
 
 //格式events数据//未排期 以及全部 一条数据卡片显示多个时间信息
 export const setDataFormatByRowId = pram => {
-  const { worksheetControls = [], currentView = {}, calendarData = {}, ...data }: { worksheetControls: FormControl[]; [key: string]: any } = pram;
+  const {
+    worksheetControls = [],
+    currentView = {},
+    calendarData = {},
+    ...data
+  }: { worksheetControls: FormControl[]; [key: string]: any } = pram;
   const { calendarInfo = [] } = calendarData;
   const { stringColor, recordColor } = getColorData(calendarData, data, currentView, worksheetControls);
   const colortype = getAdvanceSetting(currentView).colortype || RECORD_COLOR_SHOW_TYPE.BG;
@@ -318,7 +329,11 @@ export const isIllegalFormat = (calendarInfo = []) => {
   return calendarInfo.some(o => [o.endData, o.startData].some(item => isIllegal(item)));
 };
 
-export const setSysWorkflowTimeControlFormat = (controls: FormControl[] = [], sheetSwitchPermit = [], key = 'controlId') => {
+export const setSysWorkflowTimeControlFormat = (
+  controls: FormControl[] = [],
+  sheetSwitchPermit = [],
+  key = 'controlId',
+) => {
   const isPermitted = isOpenPermit(permitList.sysControlSwitch, sheetSwitchPermit);
   return controls.filter((o: FormControl) => isPermitted || !SYS_CONTROLS_WORKFLOW.includes(o[key]));
 };
@@ -384,7 +399,7 @@ export const renderLine = (random, view) => {
 };
 
 //格式化时间用于保存
-export const formatTimeForSave = (value: Date, data: Record<string, any> = {}, appId: string) => {
+export const formatTimeForSave = (value: Date, data: FormControl = {}, appId: string) => {
   if (data.type === 16) {
     return data?.advancedSetting?.timezonetype === '1'
       ? dateAppZoneToServerZone(value, window[`timeZone_${appId}`])

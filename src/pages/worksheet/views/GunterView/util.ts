@@ -595,7 +595,7 @@ export const fillRecordsTimeBlockColor = (grouping, colorControl) => {
   }));
 };
 
-export const fillRecordTimeBlockColor = (record, colorControl: Record<string, any> = {}) => {
+export const fillRecordTimeBlockColor = (record, colorControl: FormControl = {}) => {
   const { controlId, options } = colorControl;
   const defaultColor = '#1677ff';
 

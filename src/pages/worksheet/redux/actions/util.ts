@@ -1,6 +1,7 @@
 import { find } from 'lodash';
 import _ from 'lodash';
 import { APP_ROLE_TYPE } from 'src/pages/worksheet/constants/enum';
+import type { WorksheetView } from 'src/pages/worksheet/types';
 import type { FormControl } from 'src/utils/controlTypes';
 
 export const dealData = data => {
@@ -115,7 +116,12 @@ export function getItemByRowId(rowId = null, data = []) {
   }
 }
 
-export function sortDataByCustomItems(data, view: Record<string, any> = {}, controls: FormControl[] = [], firstNotSpecified = true) {
+export function sortDataByCustomItems(
+  data,
+  view: WorksheetView = {},
+  controls: FormControl[] = [],
+  firstNotSpecified = true,
+) {
   let customItems = safeParse(_.get(view, 'advancedSetting.customitems'), 'array');
 
   if (_.get(view, 'advancedSetting.navshow') === '2') {
@@ -155,7 +161,7 @@ export function sortDataByCustomItems(data, view: Record<string, any> = {}, cont
 }
 
 //根据视图下的分组配置，处理视图呈现数据的顺序，以及是否呈现未分组数据
-export function sortDataByGroupItems(list = [], currentView: Record<string, any> = {}, controls: FormControl[] = []) {
+export function sortDataByGroupItems(list = [], currentView: WorksheetView = {}, controls: FormControl[] = []) {
   const sortedData = sortDataByCustomItems(
     list.sort((a, b) => {
       if (a.sort === -1) return 1;

@@ -3,6 +3,7 @@ import _ from 'lodash';
 import { canSetGroup } from 'worksheet/common/ViewConfig/components/GroupSet/util';
 import { getIconByType } from 'src/pages/widgetConfig/util';
 import { getTitleControlForCard } from 'src/pages/worksheet/views/util.js';
+import type { FormControl } from 'src/utils/controlTypes';
 import { getRecordColorConfig } from 'src/utils/record';
 import {
   filterAndFormatterControls,
@@ -11,7 +12,6 @@ import {
   RENDER_RECORD_NECESSARY_ATTR,
 } from '../util';
 import { CAN_AS_BOARD_OPTION } from './config';
-import type { FormControl } from 'src/utils/controlTypes';
 
 // 处理从后端获取的看板数据
 export const dealBoardViewData = props => {
@@ -87,7 +87,10 @@ export const dealBoardViewData = props => {
             allowEdit,
             allowDelete,
             ...getRecordAttachments(parsedRow[coverCid]),
-            coverData: { ...(controls.find((it: FormControl) => it.controlId === coverCid) || {}), value: item[coverCid] },
+            coverData: {
+              ...(controls.find((it: FormControl) => it.controlId === coverCid) || {}),
+              value: item[coverCid],
+            },
             formData: controls.map((o: FormControl) => {
               return { ...o, value: parsedRow[o.controlId] };
             }),
@@ -112,7 +115,7 @@ export const dealBoardViewData = props => {
   }
 };
 
-export const getTargetName = (value, controls: Record<string, any> = {}, { type }) => {
+export const getTargetName = (value, controls: FormControl = {}, { type }) => {
   if (_.includes([26, 27, 48], type)) {
     return value;
   } else if ([9, 11].includes(type)) {

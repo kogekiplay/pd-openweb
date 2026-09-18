@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import agentApi from 'src/api/agent';
 import { buildFormFieldsControls } from 'src/components/Mingo/ChatBot/utils';
+import type { MobileFileLike } from 'src/pages/worksheet/types';
 import { genBotSessionId } from 'src/utils/agentSession';
 import { emitter } from 'src/utils/common';
 import { formatAiGenControlValue } from 'src/utils/control';
@@ -13,7 +14,7 @@ const normalizeFileExt = fileExt => {
   return String(fileExt).startsWith('.') ? String(fileExt).toLowerCase() : `.${String(fileExt).toLowerCase()}`;
 };
 
-const isImageAttachment = (file: Record<string, any> = {}) => {
+const isImageAttachment = (file: MobileFileLike = {}) => {
   const type = String(file.type || '').toLowerCase();
   return (
     type === 'image' || /^image\//.test(type) || IMAGE_FILE_EXTS.includes(normalizeFileExt(file.fileExt || file.ext))
