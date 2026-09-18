@@ -64,3 +64,50 @@ export interface MobileFileLike {
   fileExt?: string;
   status?: string;
 }
+
+/**
+ * 一张工作表的基本信息（redux 的 sheet.worksheetInfo 切片，也是 GetWorksheetInfo 的返回）。
+ *
+ * 字段是把 src/pages/worksheet 下 worksheetInfo.xxx 的读取点统计出来补的，
+ * 不是照接口文档抄的 —— 后端返回的远不止这些。碰到没列的往这里加一行，不要退回 any。
+ */
+export interface WorksheetInfo {
+  worksheetId?: string;
+  projectId?: string;
+  appId?: string;
+  name?: string;
+  /** 记录的称呼，如「客户」「订单」，用在「新建%0」这类文案里 */
+  entityName?: string;
+  allowAdd?: boolean;
+  advancedSetting?: ControlAdvancedSetting;
+  template?: { controls?: FormControl[] };
+  rules?: unknown[];
+  views?: WorksheetView[];
+  /** 0 表示当前用户在这张表上没有角色 */
+  roleType?: number;
+  /** 功能开关列表，判定见 isOpenPermit */
+  switches?: unknown[];
+  enablePayment?: boolean;
+  isAllowImmediatePayment?: boolean;
+  isWorksheetQuery?: boolean;
+  workflowChildTableSwitch?: boolean;
+  worksheetOperationLogPermission?: boolean;
+  downLoadUrl?: string;
+  /** 关联控件的 relationControls 还在请求中；请求期间部分 UI 要等 */
+  isRequestingRelationControls?: boolean;
+}
+
+/**
+ * 当前打开的这张表 / 这个视图的定位信息（redux 的 sheet.base 切片）。
+ */
+export interface WorksheetBase {
+  appId?: string;
+  groupId?: string;
+  worksheetId?: string;
+  viewId?: string;
+  /** 从统计图钻取过来时带的图表 id；有它时视图相关的初始化要跳过 */
+  chartId?: string;
+  /** 关联记录等场景下限制最多取多少条 */
+  maxCount?: number;
+  forcePageSize?: number;
+}

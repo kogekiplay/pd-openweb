@@ -256,9 +256,20 @@ export function dealCascaderId(data: FormControl) {
 /**
  * 处理 成员 部门 地区 他表字段 级联 组织角色 这几个类型的字段 values 处理成 [id, id]
  */
-// 注意：它会被直接当 filters.map(handleCondition) 的回调传，第二参那时收到的是 index，
-// 所以不能标成 boolean
-export function handleCondition(condition: any, isRelate?: any) {
+/**
+ * 一条筛选条件里跟本函数有关的部分。
+ * dataType 是被筛字段的控件类型，values 是选中的值（成员/部门/地区这些存的是 JSON 串）。
+ */
+interface FilterCondition {
+  dataType?: number;
+  values?: string[];
+  dynamicSource?: { rcid?: string }[];
+  [key: string]: unknown;
+}
+
+// 【isRelate 的类型是 boolean | number，不是笔误】它会被直接当 filters.map(handleCondition)
+// 的回调传，那时第二个实参收到的是下标，所以函数体里先用 _.isBoolean 把下标挡掉。
+export function handleCondition(condition: FilterCondition, isRelate?: boolean | number) {
   // 关联记录(动态值只能选择当前记录字段)特殊处理 rcid置空
   if (_.isBoolean(isRelate) && isRelate && !isEmpty(condition.dynamicSource)) {
     condition.dynamicSource.forEach(item => (item.rcid = ''));

@@ -1,6 +1,8 @@
 import { combineReducers } from 'redux';
 import { isEmpty } from 'lodash';
 import _ from 'lodash';
+import type { WorksheetBase } from 'src/pages/worksheet/types';
+import type { ReduxAction } from 'src/redux/types';
 import { browserIsMobile } from 'src/utils/common';
 import boardView from './boardView';
 import * as calendarview from './calendarview';
@@ -14,9 +16,8 @@ import mapView from './mapView';
 import * as resourceView from './resourceview';
 import * as sheetview from './sheetview';
 import * as worksheet from './worksheet';
-import type { ReduxAction } from 'src/redux/types';
 
-function base(state: Record<string, any> = {}, action: ReduxAction) {
+function base(state: WorksheetBase = {}, action: ReduxAction) {
   switch (action.type) {
     case 'WORKSHEET_UPDATE_BASE':
       return { ...state, ...action.base };
