@@ -209,11 +209,18 @@ export default function CalendarSet(props) {
                   className={cx('animaItem overflow_ellipsis pLeft18 pRight18', { active: String(i) === rowHeight })}
                   style={{ padding: '0 18px' }}
                   onClick={() => {
-                    handleChange({ rowHeight: String(i), showall: '1' });
-                    // let type = getCalendarViewType(String(i), startData);
-                    // let data = getCalendartypeData();
-                    // data[`${worksheetId}-${viewId}`] = type;
-                    // safeLocalStorageSetItem('CalendarViewType', JSON.stringify(data));
+                    /* 【原先这里还顺手写了 showall: '1'】改「月视图高度」会【强制把「显示所有日程」打开】，
+                       而 showall === '1' 会让 FullCalendar 的 dayMaxEventRows 变成 false（见
+                       views/CalendarView/index.tsx 的 `dayMaxEventRows={showall === '0'}`），
+                       也就是【不再限制每格行数】—— 于是选了「紧凑」反而把整格撑满，
+                       考勤这种一天上百条的表会溢出到下一周的格子上，日期数字都被盖住。
+                       用户报的「紧凑的时候不应该显示那么多行」就是这个。
+
+                       而且它跟下面「显示所有日程」那个勾选框是打架的：那边只管 showall，
+                       这边却反过来偷偷把它勾上（那边原本也有一句反向联动 rowHeight 的，
+                       早就被注释掉了，只剩这一半，明显是遗留）。
+                       这里只改 rowHeight，显示所有日程交给它自己的勾选框。 */
+                    handleChange({ rowHeight: String(i) });
                   }}
                 >
                   {it}
