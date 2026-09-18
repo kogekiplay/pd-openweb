@@ -3,16 +3,16 @@
   "key": "code",
   "tsVersion": "7.0.2",
   "tsconfig": "tsconfig.gate.json",
-  "generatedAt": "2026-09-18T09:21:52.850Z",
-  "rawCount": 13196,
+  "generatedAt": "2026-09-18T09:24:46.197Z",
+  "rawCount": 13194,
   "droppedNoise": {
     "library": 0,
     "probe": 0,
     "commentTS1xxx": 0,
     "commentOther": 0
   },
-  "keptCount": 13196,
-  "uniqueKeys": 3062,
+  "keptCount": 13194,
+  "uniqueKeys": 3061,
   "entries": {
     "src/common/GlobalStore.tsx|TS2554": 1,
     "src/common/cookies.ts|TS2556": 1,
@@ -390,7 +390,6 @@
     "src/ming-ui/components/Input.tsx|TS2339": 1,
     "src/ming-ui/components/List.tsx|TS2339": 2,
     "src/ming-ui/components/Markdown.tsx|TS2339": 11,
-    "src/ming-ui/components/Menu.tsx|TS2339": 2,
     "src/ming-ui/components/MobileDatePicker/index.tsx|TS2769": 4,
     "src/ming-ui/components/MobilePersonalInfo/index.tsx|TS2339": 12,
     "src/ming-ui/components/MobileSearch/index.tsx|TS2339": 2,

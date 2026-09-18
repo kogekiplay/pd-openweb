@@ -7,6 +7,9 @@ import List from './List';
 import './less/Menu.less';
 
 let Menu = class Menu extends Component<any, any> {
+  /** 菜单根节点，由 ref 回填；定位时量它的 rect */
+  menuNode?: HTMLElement | null;
+
   static propTypes = {
     fixedHeader: PropTypes.any,
     parentMenuItem: PropTypes.any,
@@ -61,7 +64,14 @@ let Menu = class Menu extends Component<any, any> {
 
   calcPos() {
     let { isAppendToBody, renderToTop } = this.props;
-    const pos: Record<string, any> = {};
+    // 值是 CSS 长度：多数时候是 '100%' / 'inherit' 这类字符串，也有直接给 0 / px 数的
+    // 值是 CSS 长度：多数时候是 '100%' / 'inherit' 这类字符串，也有直接给 0 / px 数的
+    const pos: {
+      left?: string | number;
+      right?: string | number;
+      top?: string | number;
+      bottom?: string | number;
+    } = {};
 
     if (this.props.isSubMenu) {
       const parentMenuItem =
