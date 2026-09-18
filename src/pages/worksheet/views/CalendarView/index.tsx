@@ -320,7 +320,13 @@ const MemoFullCalendar = React.memo(function MemoFullCalendar({
           if ($('.fc-more-popover').length > 0) {
             let h = $('.fc-more-popover').height();
             let top = $('.fc-more-popover').position().top;
-            let mH = $('.fc-scroller-harness-liquid').height();
+            /* 【原先量的是 .fc-scroller-harness-liquid】那是 v6 的滚动容器类名，
+               v7 哈希化之后【整页 0 个元素】，jQuery 拿到的是 undefined，
+               于是下面 `h + top > undefined` 恒为 false（NaN 比较），
+               「+N 更多」弹层超出下边界时【永远不会】翻到上方去 —— 静默失效。
+               这里改量我们自己的 .calendarCon（就是日历的可视区容器），
+               语义一致且不依赖库的内部类名。 */
+            let mH = $(owner.getCalendarBox()).find('.calendarCon').height() || $('.calendarCon').height();
 
             if (h + top > mH) {
               $('.fc-more-popover').css({ bottom: 10, top: 'initial' });
@@ -496,7 +502,13 @@ class RecordCalendarBase extends Component<any, any> {
       const { initialView } = calendarData;
 
       if (this.props.height !== prevProps.height) {
-        $('.boxCalendar,.calendarCon,.fc-daygrid-body,.fc-scrollgrid-sync-table,.fc-col-header ').width('100%');
+        /* 【去掉了 .fc-daygrid-body 和 .fc-scrollgrid-sync-table】v7 把类名哈希化之后
+           这两个名字在页面上【一个元素都没有】（生产月视图逐个点名，命中数 0），
+           而 fcClassCompat 里也没有对应的钩子可挂：v7 重写了布局引擎，
+           这两层是 v6 的产物，本来就是为了绕 v6 表格布局怪癖才强制 100% 宽的。
+           留着只是让人误以为这行还管着它们。.fc-col-header 有钩子（dayHeaderRowClass），
+           是活的，保留。 */
+        $('.boxCalendar,.calendarCon,.fc-col-header').width('100%');
         this.setState({
           height,
         });
