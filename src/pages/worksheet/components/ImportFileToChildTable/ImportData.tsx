@@ -10,8 +10,8 @@ import UploadFile from 'worksheet/components/DialogImportExcelCreate/DialogUploa
 import { usePasteText } from 'worksheet/hooks';
 import { getWithToken } from 'src/utils/common';
 import { isKeyBoardInputChar } from 'src/utils/common';
-import PreviewTable from './PreviewTable';
 import type { RecordRow } from 'src/utils/controlTypes';
+import PreviewTable from './PreviewTable';
 
 // ctrl Z 撤销最多支持次数
 const CACHE_STACK_LENGTH = 20;
@@ -213,7 +213,7 @@ function overrideData({ oldData, columnsCount, startRowIndex, startColumnIndex, 
 
 function Input(props) {
   const { className, defaultValue, onChange = () => {}, onBlur = () => {}, onKeyDown = () => {} } = props;
-  const inputRef = useRef<any>(undefined);
+  const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();

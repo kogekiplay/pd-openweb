@@ -16,6 +16,7 @@ import {
   getCopyControlText,
   handleCopyControlText,
 } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import SheetContext from '../../common/Sheet/SheetContext';
 import Area from './Area';
 import Attachments from './Attachments';
@@ -94,7 +95,7 @@ export function handlePasteUpdateCell(cell, pasteData, update = () => {}) {
   // SIGNATURE
 }
 
-function mergeControlAdvancedSetting(control: Record<string, any> = {}, advancedSetting = {}) {
+function mergeControlAdvancedSetting(control: FormControl = {}, advancedSetting = {}) {
   return {
     ...control,
     advancedSetting: {

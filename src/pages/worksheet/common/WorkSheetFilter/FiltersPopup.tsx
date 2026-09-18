@@ -64,7 +64,7 @@ export default function FiltersPopup(props) {
     persistFilterToUrl = false,
   } = rest;
   const filtersRef = useRef<any>(undefined);
-  const btnRef = useRef<any>(undefined);
+  const btnRef = useRef<HTMLDivElement>(null);
   const didMountRef = useRef(false);
   const [popupVisible, setPopupVisible] = useState<boolean | undefined>();
   const { needSave, editingFilter, activeFilter } = state;

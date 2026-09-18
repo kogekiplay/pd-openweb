@@ -1,12 +1,12 @@
 import React from 'react';
 import { updateViewAdvancedSetting } from 'src/pages/worksheet/common/ViewConfig/util.js';
 import { setSysWorkflowTimeControlFormat } from 'src/pages/worksheet/views/CalendarView/util.js';
-import DropDownSet from './DropDownSet';
 import type { FormControl } from 'src/utils/controlTypes';
+import DropDownSet from './DropDownSet';
 
 const GUNTER_GROUP_CONTROL_TYPES = [9, 11, 26, 27, 28, 48];
 
-export function isGunterGroupControl(item: Record<string, any> = {}) {
+export function isGunterGroupControl(item: FormControl = {}) {
   return (
     GUNTER_GROUP_CONTROL_TYPES.includes(item.type) ||
     (item.type === 29 && item.enumDefault === 1) ||
@@ -16,16 +16,28 @@ export function isGunterGroupControl(item: Record<string, any> = {}) {
   );
 }
 
-export function getGunterGroupControlInvalidText(viewControl = '', worksheetControls: FormControl[] = [], controlList: FormControl[] = []) {
+export function getGunterGroupControlInvalidText(
+  viewControl = '',
+  worksheetControls: FormControl[] = [],
+  controlList: FormControl[] = [],
+) {
   if (!viewControl || controlList.find(item => item.controlId === viewControl)) {
     return '';
   }
 
-  return worksheetControls.find((item: FormControl) => item.controlId === viewControl) ? _l('该字段不支持') : _l('该字段已删除');
+  return worksheetControls.find((item: FormControl) => item.controlId === viewControl)
+    ? _l('该字段不支持')
+    : _l('该字段已删除');
 }
 
 export default function Group(props) {
-  const { appId, view, updateCurrentView, worksheetControls = [], currentSheetInfo }: { worksheetControls: FormControl[]; [key: string]: any } = props;
+  const {
+    appId,
+    view,
+    updateCurrentView,
+    worksheetControls = [],
+    currentSheetInfo,
+  }: { worksheetControls: FormControl[]; [key: string]: any } = props;
   const { viewControl = '' } = view;
   const controlList = setSysWorkflowTimeControlFormat(
     worksheetControls.filter(isGunterGroupControl),

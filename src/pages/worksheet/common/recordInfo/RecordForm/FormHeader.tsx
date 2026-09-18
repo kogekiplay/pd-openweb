@@ -8,10 +8,10 @@ import { RECORD_INFO_FROM } from 'worksheet/constants/enum';
 import { permitList } from 'src/pages/FormSet/config.js';
 import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import { getTranslateInfo } from 'src/utils/app';
+import { pathCompletion } from 'src/utils/common';
 import { controlState } from 'src/utils/control';
 import { dateConvertToUserZone } from 'src/utils/project';
 import { handleChangeOwner, updateRecordOwner } from '../crtl';
-import { pathCompletion } from 'src/utils/common';
 
 export default function FormHeader(props) {
   const {
@@ -46,7 +46,7 @@ export default function FormHeader(props) {
     _.get(window, 'shareState.isPublicView') ||
     _.get(window, 'shareState.isPublicPage');
   const { maskPermissions, handleUnMask } = maskinfo;
-  const ownerRef = useRef<any>(undefined);
+  const ownerRef = useRef<HTMLSpanElement>(null);
   const ownerControl = _.find(formData, c => c.controlId === 'ownerid');
   const showOwner =
     ownerControl &&
@@ -78,7 +78,11 @@ export default function FormHeader(props) {
       {!isPublicShare && !hideFormHeader && (
         <div className="worksheetNameCon mTop12">
           {!(window.isPublicApp || md.global.Account.isPortal) ? (
-            <a className="worksheetName textTertiary InlineBlock" target="_blank" href={pathCompletion(`/worksheet/${worksheetId}`)}>
+            <a
+              className="worksheetName textTertiary InlineBlock"
+              target="_blank"
+              href={pathCompletion(`/worksheet/${worksheetId}`)}
+            >
               {getTranslateInfo(appId, null, worksheetId).name || worksheetName}
             </a>
           ) : (
@@ -148,7 +152,7 @@ export default function FormHeader(props) {
                       }}
                       appId={appId}
                       projectId={projectId}
-                      headClick={() => { }}
+                      headClick={() => {}}
                     />
                   </span>
                   <span className="textPrimary mLeft4">{ownerAccount.fullname}</span>

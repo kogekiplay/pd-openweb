@@ -555,7 +555,7 @@ function AttachmentImage(props) {
     width = height;
   }
 
-  const imgRef = useRef<any>(undefined);
+  const imgRef = useRef<HTMLImageElement>(null);
   useEffect(() => {
     const image = imgRef.current;
 

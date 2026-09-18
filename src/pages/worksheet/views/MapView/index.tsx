@@ -18,6 +18,7 @@ import { setSysWorkflowTimeControlFormat } from 'src/pages/worksheet/views/Calen
 import type { RootState } from 'src/redux/types';
 import { browserIsMobile } from 'src/utils/common';
 import { getMapConfig } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import {
   filterButtonBySheetSwitchPermit,
   getSheetOperateButtonIds,
@@ -31,7 +32,6 @@ import PinMarker from './components/PinMarker';
 import ToolBar from './components/ToolBar';
 import GMap from './GMap/GMap';
 import { calculatePoleCenter, calculateZoomLevel, parseRecord } from './utils';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const DEFAULT_MAP_ZOOM = 5;
 
@@ -141,12 +141,13 @@ function MapView(props) {
   const isMobile = browserIsMobile();
   const isGoogle = !!getMapConfig();
 
-  const conRef = useRef<any>(undefined);
+  const conRef = useRef<HTMLDivElement>(null);
   const aMapRef = useRef<any>(undefined);
   const gMapRef = useRef<any>(undefined);
   const newRecordBtnRef = useRef<any>(undefined);
   const rippleRef = useRef(null);
-  const ignoreNextZoomChangeRef = useRef<any>(undefined);
+  // 记住"这次 zoom 变化是我们自己触发的"，下一次回调据此跳过
+  const ignoreNextZoomChangeRef = useRef<number | undefined>(undefined);
   const [zoom, setZoom] = useState(getLocalMapZoom(viewId) ?? getValidZoom(mapLocation.zoom) ?? DEFAULT_MAP_ZOOM);
   const [center, setCenter] = useState([116.4, 39.9]);
   const [originalCenter, setOriginalCenter] = useState([116.4, 39.9]);

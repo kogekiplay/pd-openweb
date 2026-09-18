@@ -39,8 +39,9 @@ export const useGalleryFetchEffect = (props, options) => {
   const { clicksearch, setClicksearch, setOpKeys, getFetch } = options;
   const latestPropsRef = useRef(props);
   const prevPropsRef = useRef<any>(undefined);
-  const fetchTimerRef = useRef<any>(undefined);
-  const openKeysTimerRef = useRef<any>(undefined);
+  // 装 setTimeout 句柄：浏览器里是 number，@types/node 在场时是 Timeout，跟着返回类型走
+  const fetchTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const openKeysTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   latestPropsRef.current = props;
 

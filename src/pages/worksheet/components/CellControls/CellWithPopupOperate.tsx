@@ -1,6 +1,6 @@
 ﻿import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { isFunction } from 'lodash';
 import Trigger from '@rc-component/trigger';
+import { isFunction } from 'lodash';
 import styled from 'styled-components';
 import { emitter } from 'src/utils/common';
 
@@ -90,7 +90,7 @@ export default function CellWithPopupOperate({
     renderColumnPopupContent,
   } = cellProps;
   const [popupVisible, setPopupVisible] = useState(false);
-  const dragRef = useRef<any>(undefined);
+  const dragRef = useRef<HTMLSpanElement>(null);
   const allowDelete = useUserPermission && !!recordId ? row?.allowdelete : true;
   const customPopupContent = isFunction(renderColumnPopupContent)
     ? renderColumnPopupContent({ className, style, rowIndex, row })

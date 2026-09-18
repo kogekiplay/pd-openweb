@@ -1,7 +1,7 @@
 import _, { difference, find, get, intersection, isUndefined, pickBy, sortBy } from 'lodash';
+import type { ReduxAction } from 'src/redux/types';
 import { parseAdvancedSetting } from 'src/utils/control';
 import type { RecordRow } from 'src/utils/controlTypes';
-import type { ReduxAction } from 'src/redux/types';
 
 function getSortedValue(list) {
   return _.map(list, function (num) {
@@ -214,7 +214,7 @@ export function treeTableViewData(state = initialTreeViewParams, action: ReduxAc
  */
 export const handleUpdateTreeNodeExpansion =
   (
-    row: Record<string, any> = {},
+    row: RecordRow = {},
     {
       runTimes,
       expandAll,
@@ -254,7 +254,9 @@ export const handleUpdateTreeNodeExpansion =
         loading: true,
       });
       const childRows = await getNewRows();
-      const newRows: RecordRow[] = rows.filter((r: RecordRow) => !find(childRows, { rowid: r.rowid })).concat(childRows);
+      const newRows: RecordRow[] = rows
+        .filter((r: RecordRow) => !find(childRows, { rowid: r.rowid }))
+        .concat(childRows);
       dispatch({
         type: 'WORKSHEET_SHEETVIEW_APPEND_ROWS',
         rows: childRows,

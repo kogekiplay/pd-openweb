@@ -2,6 +2,7 @@ import JsBarcode from 'jsbarcode';
 import _ from 'lodash';
 import genQrDataURL from 'src/pages/worksheet/common/PrintQrBarCode/genQrDataurl';
 import { renderText as renderCellText } from 'src/utils/control';
+import type { RecordRow } from 'src/utils/controlTypes';
 import {
   BAR_LABEL_SIZE,
   BAR_LABEL_SIZES,
@@ -167,7 +168,7 @@ export function getCodeContent({
   index,
   controls,
 }: PrintLabelConfig & {
-  row?: Record<string, any>;
+  row?: RecordRow;
   urls?: CodeUrlSource;
   index?: number;
   controls?: any[];
