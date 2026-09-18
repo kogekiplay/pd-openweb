@@ -33,7 +33,7 @@ export default {
       groupId?: string;
       groupType?: unknown;
       urlTemplate?: string;
-      configuratiuon?: Record<string, any>;
+      configuratiuon?: Record<string, unknown>;
       createType?: unknown;
       pcDisplay?: boolean;
       webMobileDisplay?: boolean;
@@ -239,7 +239,7 @@ export default {
       gridDisplayMode?: number;
       appNaviDisplayType?: number;
       urlTemplate?: string;
-      configuration?: Record<string, any>;
+      configuration?: Record<string, unknown>;
       pcDisplay?: boolean;
       webMobileDisplay?: boolean;
       appDisplay?: boolean;
@@ -248,7 +248,7 @@ export default {
       displayIcon?: string;
       expandType?: number;
       hideFirstSection?: boolean;
-      appNavItemIds?: any[];
+      appNavItemIds?: string[];
       shortDesc?: string;
     },
     options: ApiOptions = {},
@@ -269,7 +269,7 @@ export default {
   updateAppSort: function (
     args?: {
       sortType?: number;
-      appIds?: any[];
+      appIds?: string[];
       projectId?: string;
       groupId?: string;
     },
@@ -337,7 +337,7 @@ export default {
    **/
   editWhiteList: function (
     args?: {
-      whiteIps?: any[];
+      whiteIps?: string[];
       appId?: string;
       projectId?: string;
     },
@@ -441,7 +441,7 @@ export default {
       attachementControlId?: string;
       imageLimitCount?: number;
       displayMode?: number;
-      filedIds?: any[];
+      filedIds?: string[];
     },
     options: ApiOptions = {},
   ) {
@@ -472,7 +472,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAppItemDetail: function (args?: Record<string, any>, options: ApiOptions = {}) {
+  // 【这个接口的 args 是个 id 数组，不是对象】唯一调用点
+  // （integration/.../SourceDest.tsx）传的是 [workSheetId]，返回也按下标取。
+  // JSDoc 上写着 {Object} 是套模板套出来的，与实际不符。
+  getAppItemDetail: function (args?: string[], options: ApiOptions = {}) {
     return mdyAPI('HomeApp', 'GetAppItemDetail', args, options);
   },
   /**
@@ -487,7 +490,7 @@ export default {
   getItemDetailByAppId: function (
     args?: {
       appId?: string;
-      itemIds?: any[];
+      itemIds?: string[];
     },
     options: ApiOptions = {},
   ) {
@@ -739,7 +742,7 @@ export default {
   updateAppSectionSort: function (
     args?: {
       appId?: string;
-      appSectionIds?: any[];
+      appSectionIds?: string[];
     },
     options: ApiOptions = {},
   ) {
@@ -759,7 +762,7 @@ export default {
     args?: {
       appId?: string;
       appSectionId?: string;
-      workSheetIds?: any[];
+      workSheetIds?: string[];
     },
     options: ApiOptions = {},
   ) {
@@ -860,8 +863,8 @@ export default {
   addToGroup: function (
     args?: {
       appId?: string;
-      personalGroups?: any[];
-      projectGroups?: any[];
+      personalGroups?: string[];
+      projectGroups?: string[];
     },
     options: ApiOptions = {},
   ) {
@@ -880,8 +883,8 @@ export default {
   removeToGroup: function (
     args?: {
       appId?: string;
-      personalGroups?: any[];
-      projectGroups?: any[];
+      personalGroups?: string[];
+      projectGroups?: string[];
     },
     options: ApiOptions = {},
   ) {
@@ -990,7 +993,7 @@ export default {
   editGroupSort: function (
     args?: {
       projectId?: string;
-      ids?: any[];
+      ids?: string[];
       sortType?: number;
     },
     options: ApiOptions = {},
@@ -1029,7 +1032,7 @@ export default {
       rowCollect?: boolean;
       displayApp?: boolean;
       displayChart?: boolean;
-      sortItems?: any[];
+      sortItems?: unknown[];
     },
     options: ApiOptions = {},
   ) {
@@ -1046,7 +1049,7 @@ export default {
    **/
   markApps: function (
     args?: {
-      items?: any[];
+      items?: unknown[];
       projectId?: string;
     },
     options: ApiOptions = {},
@@ -1072,14 +1075,14 @@ export default {
   editPlatformSetting: function (
     args?: {
       projectId?: string;
-      bulletinBoards?: any[];
+      bulletinBoards?: unknown[];
       color?: string;
       slogan?: string;
       logo?: string;
       logoSwitch?: boolean;
       boardSwitch?: boolean;
       logoHeight?: number;
-      advancedSetting?: Record<string, any>;
+      advancedSetting?: Record<string, string>;
     },
     options: ApiOptions = {},
   ) {
@@ -1164,7 +1167,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAppIdsAndItemIdsTest: function (args?: Record<string, any>, options: ApiOptions = {}) {
+  getAppIdsAndItemIdsTest: function (args?: Record<string, unknown>, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('HomeApp', 'GetAppIdsAndItemIdsTest', args, options);
   },
