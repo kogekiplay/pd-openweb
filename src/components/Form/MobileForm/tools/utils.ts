@@ -1,9 +1,9 @@
 import _, { get, includes, isArray, isObject, isString } from 'lodash';
 import { controlState, isEmptyValue } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import RegExpValidator from 'src/utils/expression';
 import { allSwitchKeys, HAVE_VALUE_STYLE_WIDGET } from '../../core/enum';
 import { FIELD_SIZE_OPTIONS, TITLE_SIZE_OPTIONS } from './config';
-import type { FormControl } from 'src/utils/controlTypes';
 
 export const fixWeixinInputBlurScroll = () => {
   if (!window.isWeiXin) return;
@@ -152,7 +152,7 @@ export const getExpandWidgetIds = (controls: FormControl[] = [], data = {}, from
 };
 
 // 关联多条列表显示的控件
-export const isSheetDisplay = (data: Record<string, any> = {}) => {
+export const isSheetDisplay = (data: FormControl = {}) => {
   return includes([29, 51], data.type) && _.includes(['2', '5', '6'], get(data, 'advancedSetting.showtype'));
 };
 

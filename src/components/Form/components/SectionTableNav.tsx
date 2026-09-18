@@ -7,8 +7,8 @@ import styled from 'styled-components';
 import { Icon, SvgIcon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { getTitleStyle } from 'src/utils/controlCommon';
-import { SPRING_DEFAULT } from 'src/utils/spring';
 import type { FormControl } from 'src/utils/controlTypes';
+import { SPRING_DEFAULT } from 'src/utils/spring';
 
 const Con = styled.div`
   display: flex;
@@ -93,7 +93,14 @@ const IconCon = styled.span`
 `;
 
 export function renderTabs(props) {
-  const { widgetStyle = {}, controls = [], activeControlId, onClick, showTip = false, isFixedLeft }: { controls: FormControl[]; [key: string]: any } = props;
+  const {
+    widgetStyle = {},
+    controls = [],
+    activeControlId,
+    onClick,
+    showTip = false,
+    isFixedLeft,
+  }: { controls: FormControl[]; [key: string]: any } = props;
 
   function renderIcon(control) {
     let iconUrl = control.iconUrl;
@@ -174,7 +181,7 @@ export function renderTabs(props) {
 
 export default function SectionTableNav(props) {
   const { style = {}, sideVisible, formWidth, showSplitIcon, isSplit, setSplit } = props;
-  const tabConRef = useRef<any>(undefined);
+  const tabConRef = useRef<HTMLDivElement>(null);
   const [clientWidth = 0, setClientWidth] = useState<number | undefined>();
   const [scrollWidth = 0, setScrollWidth] = useState<number | undefined>();
   const [scrollBtnVisible, setScrollBtnVisible] = useState<boolean | undefined>();
@@ -196,7 +203,8 @@ export default function SectionTableNav(props) {
 
   useEffect(() => {
     // setScrollWidth(tabConRef.current.scrollWidth);
-    const newScrollWidth = _.sum([...tabConRef.current.children].map(a => a.offsetWidth));
+    // children 的静态类型是 Element（没有 offsetWidth）；这里装的都是真实 HTML 元素
+    const newScrollWidth = _.sum([...tabConRef.current.children].map(a => (a as HTMLElement).offsetWidth));
 
     if (newScrollWidth) {
       setScrollWidth(newScrollWidth);

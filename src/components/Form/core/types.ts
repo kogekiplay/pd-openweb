@@ -32,6 +32,8 @@ export interface FormError {
   ruleId?: string;
   /** 子表内部的逐行错误 */
   errorItems?: FormError[];
+  /** 这条错误来自子表（错误气泡的样式要换一套） */
+  isChildTable?: boolean;
 }
 
 /**

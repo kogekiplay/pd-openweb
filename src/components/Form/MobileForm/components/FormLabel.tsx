@@ -10,6 +10,7 @@ import RelationSearchCount from '../../components/RelationSearchCount';
 import WidgetsDesc from '../../components/WidgetsDesc';
 import { FORM_ERROR_TYPE, FORM_ERROR_TYPE_TEXT, FROM } from '../../core/config';
 import { HAVE_VALUE_STYLE_WIDGET } from '../../core/enum';
+import type { FormError } from '../../core/types';
 import { renderCount } from '../../core/utils';
 import { TITLE_SIZE_OPTIONS } from '../tools/config';
 import { getTitleStyle, isSheetDisplay } from '../tools/utils';
@@ -61,6 +62,19 @@ const ControlLabel = styled.div`
   }
 `;
 
+/** 错误气泡的 props。挂在控件旁边，用 targetRef 量出目标位置再 portal 出去。 */
+interface FormErrorMessageProps {
+  controlId?: string;
+  /** 子表里当前出错的那一行/那一格 */
+  currentErrorItem?: FormError;
+  errorMessage?: string;
+  /** true = 气泡画在控件内部，false = portal 到 body 上 */
+  inBody?: boolean;
+  targetRef: React.RefObject<HTMLElement | null>;
+  /** 关掉错误气泡：(isShow, controlId) */
+  updateErrorState?: (isShow: boolean, controlId?: string) => void;
+}
+
 function FormErrorMessage({
   controlId,
   currentErrorItem,
@@ -68,7 +82,7 @@ function FormErrorMessage({
   inBody,
   targetRef,
   updateErrorState = () => {},
-}: { controlId?: string; [key: string]: any }) {
+}: FormErrorMessageProps) {
   const [portalStyle, setPortalStyle] = useState(null);
 
   const updatePortalPosition = useCallback(() => {

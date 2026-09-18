@@ -18,10 +18,10 @@ import { RECORD_INFO_FROM, RELATION_SEARCH_SHOW_TYPE } from 'worksheet/constants
 import { useWidgetEvent } from 'src/components/Form/core/useFormEventManager';
 import { getFilter } from 'src/pages/worksheet/common/WorkSheetFilter/util';
 import { controlState, getTitleTextFromRelateControl, getValueStyle } from 'src/utils/control';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import RegExpValidator from 'src/utils/expression';
 import { addBehaviorLog } from 'src/utils/project';
 import { replaceControlsTranslateInfo } from 'src/utils/translate';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const PAGE_SIZE = 50;
 
@@ -167,7 +167,9 @@ function Cards(props) {
               containerWidth={width}
               key={i}
               cover={getCoverUrl(control.coverCid, record, controls)}
-              controls={control.showControls.map((cid: FormControl) => _.find(controls, { controlId: cid })).filter(identity)}
+              controls={control.showControls
+                .map((cid: FormControl) => _.find(controls, { controlId: cid }))
+                .filter(identity)}
               data={record}
               allowlink={allowOpenRecord ? '1' : '0'}
               parentControl={{ ...control, relationControls: controls }}
@@ -213,9 +215,19 @@ function Cards(props) {
 }
 
 function Texts(props) {
-  const { control, entityName, allowOpenRecord, allowNewRecord, records = [], onAdd, onOpen }: { records: RecordRow[]; [key: string]: any } = props;
+  const {
+    control,
+    entityName,
+    allowOpenRecord,
+    allowNewRecord,
+    records = [],
+    onAdd,
+    onOpen,
+  }: { records: RecordRow[]; [key: string]: any } = props;
 
-  let valueStyle: Record<string, any> = {};
+  // 不是 CSSProperties —— getValueStyle 回的是自定义描述（带 type / size 等），跟着它走。
+  // 套 Partial 是因为初值就是空对象，而它的返回类型是两个分支的联合、都带必填键。
+  let valueStyle: Partial<ReturnType<typeof getValueStyle>> = {};
   let style = {};
 
   if (control.type === 51) {

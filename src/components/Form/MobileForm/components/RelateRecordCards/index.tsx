@@ -17,6 +17,7 @@ import MobileNewRecord from 'src/pages/worksheet/common/newRecord/MobileNewRecor
 import { getFilter } from 'src/pages/worksheet/common/WorkSheetFilter/util';
 import { getTranslateInfo } from 'src/utils/app';
 import { completeControls, controlState, getTitleTextFromRelateControl } from 'src/utils/control';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import { addBehaviorLog } from 'src/utils/project';
 import { replaceControlsTranslateInfo } from 'src/utils/translate';
 import { getCoverUrl } from '../../tools/utils';
@@ -24,7 +25,6 @@ import SearchInput from '../ChildTable/SearchInput';
 import RelateScanQRCode from '../RelateScanQRCode';
 import RecordCoverCard from './RecordCoverCard';
 import RecordTag from './RecordTag';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const MAX_COUNT = 200;
 
@@ -524,7 +524,7 @@ class RelateRecordCards extends Component<any, any> {
     if (!targetRowId) return;
 
     const valueObj = {};
-    cells.forEach(({ controlId, value }: { controlId?: string; [key: string]: any }) => {
+    cells.forEach(({ controlId, value }: FormControl) => {
       if (controlId !== 'rowid') {
         valueObj[controlId] = value;
       }

@@ -15,7 +15,16 @@ export const handleShare = (data, isDownload) => {
     return;
   }
 
-  let attachment: Record<string, any> = {};
+  // 分享弹层要的形状，和 AttachmentValue 不是一回事（字段名都不同：id/name/path/size）
+  let attachment: {
+    id?: string;
+    name?: string;
+    ext?: string;
+    size?: number;
+    path?: string;
+    previewUrl?: string;
+    viewUrl?: string;
+  } = {};
   let attachmentType = 1;
 
   if (data.refId) {
@@ -74,7 +83,8 @@ export const handleSaveKcCloud = (data, isDownload) => {
   }
 
   let nodeType = 0;
-  let sourceData: Record<string, any> = {};
+  // 存到知识中心时交给 saveToKnowledge 的来源：知识文件给 nodeId，普通附件给 fileID
+  let sourceData: { nodeId?: string; isShareFolder?: boolean; fileID?: string } = {};
 
   if (data.refId) {
     nodeType = 2;

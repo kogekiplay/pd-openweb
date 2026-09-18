@@ -17,13 +17,14 @@ import { permitList } from 'src/pages/FormSet/config.js';
 import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import { getRowGetType } from 'src/utils/common';
 import { controlState } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
+import type { AttachmentValue } from 'src/utils/controlTypes';
 import RegExpValidator from 'src/utils/expression';
 import { compatibleMDJS } from 'src/utils/project';
 import Files from '../../../components/Files';
 import FileEditModal from '../../../components/Files/FileEditModal';
 import { WidgetEventHelper } from '../../../core/useFormEventManager';
 import './index.less';
-import type { FormControl } from 'src/utils/controlTypes';
 
 export default class Widgets extends Component<any, any> {
   static propTypes = {
@@ -234,7 +235,11 @@ export default class Widgets extends Component<any, any> {
 
   filesChangedAll = files => {
     const { attachments, knowledgeAtts, attachmentData } = files;
-    const newValue: Record<string, any> = {};
+    const newValue: {
+      attachments: AttachmentValue[];
+      knowledgeAtts: AttachmentValue[];
+      attachmentData: AttachmentValue[];
+    } = { attachments: [], knowledgeAtts: [], attachmentData: [] };
 
     newValue.attachments = attachments;
     newValue.knowledgeAtts = knowledgeAtts;

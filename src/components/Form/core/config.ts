@@ -59,7 +59,7 @@ export const FORM_ERROR_TYPE_TEXT = {
   TW_PASSPORT: _l('不是有效的台湾通行证号码'),
   OTHER_REQUIRED: ({ options = [] }: FormControl) => {
     const value = _.get(
-      _.find(options, (i: any) => i.key === 'other' && !i.isDeleted),
+      _.find(options, i => i.key === 'other' && !i.isDeleted),
       'value',
     );
     return _l('请填写%0', value || '其他');

@@ -44,10 +44,12 @@ const SplitLine = props => {
     () => getExpandWidgetIds(renderData, { controlId, sectionId }, from),
     [renderData, controlId, sectionId, from],
   );
-  const $ref = useRef<any>(undefined);
+  const $ref = useRef<HTMLDivElement>(null);
   let $originIds = useRef([]);
-  const expandTimerRef = useRef<any>(undefined);
-  const navTimerRef = useRef<any>(undefined);
+  // 存的是 setTimeout 的句柄（浏览器里是 number，@types/node 在场时是 Timeout，
+  // 所以跟着 setTimeout 的返回类型走，不要写死 number）
+  const expandTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const navTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const handleExpand = (tempVisible?) => {
     // 不折叠不能点击

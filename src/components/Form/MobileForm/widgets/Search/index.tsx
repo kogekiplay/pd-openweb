@@ -159,7 +159,7 @@ const SearchBox = props => {
 
   if (type === 49) {
     const { bordercolor, background } = JSON.parse(advancedSetting.cardstyle || '{}');
-    const style: Record<string, any> = {};
+    const style: React.CSSProperties = {};
     if (bordercolor) style.borderColor = bordercolor;
     if (background) style.background = background;
 

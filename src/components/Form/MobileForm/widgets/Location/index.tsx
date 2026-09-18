@@ -510,7 +510,17 @@ export default class Widgets extends Component<any, any> {
             allowCustom={advancedSetting.allowcustom === '1'}
             distance={enumDefault2 ? parseInt(advancedSetting.distance) : 0}
             defaultAddress={location || null}
-            onAddressChange={({ lng, lat, address, name }: { name?: string; [key: string]: any }) => {
+            onAddressChange={({
+              lng,
+              lat,
+              address,
+              name,
+            }: {
+              lng?: number;
+              lat?: number;
+              address?: string;
+              name?: string;
+            }) => {
               onChange(JSON.stringify({ x: lng, y: lat, address, title: name, coordinate: isGoogle ? 'wgs84' : null }));
               this.setState({ visible: false });
             }}
@@ -520,7 +530,14 @@ export default class Widgets extends Component<any, any> {
           />
         )}
 
-        {this.props.default === '1' && <div className="hidden" ref={container => { this._mapContainer = container; }} />}
+        {this.props.default === '1' && (
+          <div
+            className="hidden"
+            ref={container => {
+              this._mapContainer = container;
+            }}
+          />
+        )}
       </Fragment>
     );
   }
