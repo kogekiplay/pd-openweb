@@ -311,6 +311,57 @@ export interface AttachmentValue {
  * 关系控件（关联任务/项目/日程/文件…）的值元素。
  * type 是关系种类（见各处的 RELATION_TYPE_NAME / RELATION_TEXT 表）。
  */
+/**
+ * AI 推荐建表时，模型返回的【一个字段描述】。
+ *
+ * 【字段名是模型侧的口径，和 FormControl 不是一回事】这里是 name / code / isRequired，
+ * 落到控件上才变成 controlName / alias / required，转换在
+ * control.ts 的 convertAiRecommendControlToControlData 里。
+ * type 也是字符串（'text' / 'longText' / 'related' …）而不是 FormControl 的数字 type。
+ */
+export interface AiRecommendControl {
+  id?: string;
+  type?: string;
+  name?: string;
+  isRequired?: boolean;
+  /** 是不是标题字段（落到控件上是 attribute: 1） */
+  isHeading?: boolean;
+  col?: number;
+  row?: number;
+  size?: number;
+  description?: string;
+  /** 字段别名。公式表达式里用它引用别的字段，转换时会被替换成 $controlId$ */
+  code?: string;
+  formulaExpression?: string;
+  optionColor?: boolean;
+  options?: AiRecommendOption[];
+  isMultiple?: boolean;
+  /** 关联记录要显示哪些字段 */
+  displayField?: { fieldID?: string }[];
+  /** 'self' 表示关联本表；否则给被关联表的 id */
+  relatedWorksheet?: 'self' | { id?: string };
+  /** 子表的下级字段，形状与自身相同 */
+  subFields?: AiRecommendControl[];
+}
+
+/** AI 推荐字段里的一个选项 */
+export interface AiRecommendOption {
+  label?: string;
+  isDefault?: boolean;
+  color?: string;
+}
+
+/**
+ * AI 生成记录值时，指向一个人 / 部门 / 组织角色 / 关联记录的条目。
+ * 四种控件回来的形状是同一套（id + name，成员多一个 avatar，关联记录的 id 也可能叫 sid）。
+ */
+export interface AiGenEntityRef {
+  id?: string;
+  sid?: string;
+  name?: string;
+  avatar?: string;
+}
+
 export interface RelationValue {
   type?: number;
   name?: string;

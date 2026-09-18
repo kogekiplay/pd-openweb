@@ -29,6 +29,8 @@ import {
   isSheetDisplay,
 } from 'src/utils/controlCommon';
 import type {
+  AiGenEntityRef,
+  AiRecommendControl,
   AttachmentValue,
   ControlAdvancedSetting,
   ControlOption,
@@ -1810,8 +1812,9 @@ export function checkTypeSupportForFunction(control: FormControl) {
 }
 
 export function convertAiRecommendControlToControlData(
-  recommendControl: any,
-  { worksheetId, allWidgets = [] }: { worksheetId?: string; allWidgets?: any[] } = {},
+  recommendControl: AiRecommendControl,
+  // allWidgets 只用来把公式里的 $别名$ 换成 $controlId$，所以只需要这两个键
+  { worksheetId, allWidgets = [] }: { worksheetId?: string; allWidgets?: { id?: string; code?: string }[] } = {},
 ) {
   const {
     id,
@@ -1918,7 +1921,9 @@ export function convertAiRecommendControlToControlData(
 
   if (includes(['related', 'multiRelated', 'relatedTable'], type)) {
     control.dataSource = relatedWorksheet === 'self' ? worksheetId : relatedWorksheet?.id;
-    control.showControls = (displayField || []).map((item: any) => item.fieldID);
+    // showControls 是 string[]；模型漏给 fieldID 时这里会是 undefined，
+    // 与原先（item 是 any）完全一致，没有额外过滤。
+    control.showControls = (displayField || []).map(item => item.fieldID as string);
     if (type === 'related') {
       control.advancedSetting.showtype = String(RELATE_RECORD_SHOW_TYPE.DROPDOWN);
     } else if (type === 'multiRelated') {
@@ -1932,7 +1937,7 @@ export function convertAiRecommendControlToControlData(
 
   if (control.type === WIDGETS_TO_API_TYPE_ENUM.FORMULA_NUMBER && formulaExpression) {
     let expression = formulaExpression;
-    allWidgets.forEach((widget: any) => {
+    allWidgets.forEach(widget => {
       if (widget.code) {
         expression = expression.replace(new RegExp(widget.code, 'g'), `\$${widget.id}\$`);
       }
@@ -1941,8 +1946,11 @@ export function convertAiRecommendControlToControlData(
   }
 
   if (control.type === WIDGETS_TO_API_TYPE_ENUM.SUB_LIST) {
-    const relationControls: FormControl[] = (recommendControl.subFields || []).map(
-      convertAiRecommendControlToControlData,
+    // 【不要直接把函数交给 map】map 会把下标当第二个实参传进去，
+    // 于是 { worksheetId, allWidgets } 是从一个数字上解构出来的。
+    // 运行结果碰巧一样（两个键都得到 undefined，走默认值），但这是巧合不是设计。
+    const relationControls: FormControl[] = (recommendControl.subFields || []).map(field =>
+      convertAiRecommendControlToControlData(field),
     );
     control.dataSource = uuidv4();
     control.relationControls = relationControls;
@@ -1962,7 +1970,7 @@ export function convertAiRecommendControlToControlData(
     )
   ) {
     if (options.length) {
-      control.options = (options || []).map((item: any, index: number) => ({
+      control.options = (options || []).map((item, index) => ({
         key: uuidv4(),
         value: item.label,
         isDeleted: false,
@@ -2151,7 +2159,7 @@ export function formatAiGenControlValue(control: FormControl, value: any = ''): 
       result = matchedOptions.map((item: ControlOption) => item.key);
     } else if (type === WIDGETS_TO_API_TYPE_ENUM.USER_PICKER) {
       result = isArray(value)
-        ? value.slice(0, control.enumDefault === 0 ? 1 : undefined).map((item: any) => {
+        ? value.slice(0, control.enumDefault === 0 ? 1 : undefined).map((item: AiGenEntityRef) => {
             return {
               fullname: item.name,
               accountId: item.id,
@@ -2161,7 +2169,7 @@ export function formatAiGenControlValue(control: FormControl, value: any = ''): 
         : [];
     } else if (type === WIDGETS_TO_API_TYPE_ENUM.ORG_ROLE) {
       result = isArray(value)
-        ? value.slice(0, control.enumDefault === 0 ? 1 : undefined).map((item: any) => {
+        ? value.slice(0, control.enumDefault === 0 ? 1 : undefined).map((item: AiGenEntityRef) => {
             return {
               organizeName: item.name,
               organizeId: item.id,
@@ -2170,7 +2178,7 @@ export function formatAiGenControlValue(control: FormControl, value: any = ''): 
         : [];
     } else if (type === WIDGETS_TO_API_TYPE_ENUM.DEPARTMENT) {
       result = isArray(value)
-        ? value.slice(0, control.enumDefault === 0 ? 1 : undefined).map((item: any) => {
+        ? value.slice(0, control.enumDefault === 0 ? 1 : undefined).map((item: AiGenEntityRef) => {
             return {
               departmentName: item.name,
               departmentId: item.id,
@@ -2179,7 +2187,7 @@ export function formatAiGenControlValue(control: FormControl, value: any = ''): 
         : [];
     } else if (type === WIDGETS_TO_API_TYPE_ENUM.RELATE_SHEET || type === WIDGETS_TO_API_TYPE_ENUM.CASCADER) {
       result = isArray(value)
-        ? value.map((item: any) => {
+        ? value.map((item: AiGenEntityRef) => {
             return {
               name: item.name,
               sid: item.id || item.sid,

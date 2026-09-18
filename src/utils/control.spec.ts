@@ -263,6 +263,44 @@ assert.strictEqual(
 assert.strictEqual(convertControlTypeToAiRecommendControlType({ type: 99 }), null);
 assert.strictEqual(convertControlTypeToAiRecommendControlType(), null);
 
+// 子表：subFields 递归转换。
+// 【这条钉的是「不要把函数直接交给 map」】map 会把下标当第二个实参传进去，
+// 于是 { worksheetId, allWidgets } 是从一个数字上解构出来的 —— 碰巧不出错，但是巧合。
+assert.doesNotThrow(() => {
+  const sub = convertAiRecommendControlToControlData({
+    type: 'subform',
+    name: '明细',
+    subFields: [
+      { type: 'text', name: '品名', id: 'f1' },
+      { type: 'text', name: '数量', id: 'f2' },
+    ],
+  });
+  assert.strictEqual(sub.relationControls.length, 2);
+  assert.deepStrictEqual(
+    sub.relationControls.map(c => c.controlName),
+    ['品名', '数量'],
+  );
+  // showControls 取的是内层控件的 controlId，不是下标
+  assert.deepStrictEqual(sub.showControls, ['f1', 'f2']);
+});
+
+// 关联记录：displayField 取 fieldID
+assert.deepStrictEqual(
+  convertAiRecommendControlToControlData({
+    type: 'related',
+    name: '关联客户',
+    relatedWorksheet: { id: 'ws-1' },
+    displayField: [{ fieldID: 'c1' }, { fieldID: 'c2' }],
+  }).showControls,
+  ['c1', 'c2'],
+);
+// relatedWorksheet 为 'self' 时用传进来的 worksheetId
+assert.strictEqual(
+  convertAiRecommendControlToControlData({ type: 'related', relatedWorksheet: 'self' }, { worksheetId: 'ws-self' })
+    .dataSource,
+  'ws-self',
+);
+
 // 反向：长文本必须建成 TEXT + enumDefault 2，而不是单行文本
 assert.strictEqual(convertAiRecommendControlToControlData({ type: 'text' }).enumDefault, undefined);
 assert.strictEqual(convertAiRecommendControlToControlData({ type: 'longText' }).type, 2);
