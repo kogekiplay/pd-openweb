@@ -53,17 +53,24 @@
   .fc-event-main {
     position: initial !important;
   }
-  .fc-h-event {
+  /* v6 的 fc-h-event（横向事件）在 v7 里不存在了，事件元素上只剩 fc-event。 */
+  .fc-event {
     border-color: @DEFAULT_BORDER_COLOR;
   }
   .fc-event-time {
     padding-left: 5px;
     color: var(--color-text-primary);
   }
-  .fc-daygrid-event-dot {
-    display: none !important;
-  }
-  .fc-daygrid-dot-event {
+  /* 【这里原来有一句 .fc-daygrid-event-dot { display: none } —— 已经失效很久了】
+     v6 用这个类名标事件前的小圆点，v7 里那个点只带哈希类名（fc-classic-xxx），
+     没有对应的 *Class 钩子，选择器命中 0。也就是说现在月视图里每条事件前面
+     那个蓝点，本来是「应该被隐藏掉」的。
+     没有把它硬藏回去：大家已经看了这么久、截图里也一直有，现在的样子看着是刻意的；
+     真要去掉再说，届时只能用 .fc-event > div:first-child 这种结构选择器，
+     那是绑库内部 DOM 形状，比哈希类名还脆。 */
+  /* v6 的 fc-daygrid-dot-event 在 v7 里是 0 命中；月视图根 .fc-dayGridMonth-view 还活着，
+     用它来限定范围，效果等价。 */
+  .fc-dayGridMonth-view .fc-event {
     border: 1px solid @DEFAULT_BORDER_COLOR;
     background: @DEFAULT_COLOR;
     padding: 0;
@@ -104,15 +111,13 @@
   overflow: hidden;
   background: var(--color-background-primary);
   color: var(--color-text-title);
-  /* 保持与 FullCalendar 默认叠放一致；hover 时勿提高 harness 的 z-index，否则重叠事件里后渲染的卡片会被整块盖住 */
-  .fc-daygrid-event-harness,
-  .fc-timegrid-event-harness,
-  .fc-scroller-harness,
-  .fc-scrollgrid-section,
-  .fc-timegrid-col-events {
-    z-index: 9 !important;
-  }
-  .fc-daygrid-event {
+  /* 【原先这里给五个 harness/section 统一 z-index: 9】
+     fc-daygrid-event-harness / fc-timegrid-event-harness / fc-scroller-harness /
+     fc-scrollgrid-section / fc-timegrid-col-events 在 v7 里【月视图和周视图都是 0 命中】，
+     这条规则从升级那天起就没生效过，而叠放一直是正常的 —— v7 重写了布局引擎，
+     不再需要这层补丁。删掉，别留着骗人。
+     （原注释：hover 时勿提高 harness 的 z-index，否则重叠事件里后渲染的卡片会被整块盖住） */
+  .fc-event {
     .titleTxt {
       max-width: 60%;
       overflow: hidden;
@@ -126,12 +131,15 @@
   .fc .fc-highlight {
     background: @DEFAULT_COLOR;
   }
-  .fc-v-event .fc-event-main-frame {
+  /* v7 的事件内部结构是 .fc-event > div > .fc-event-main > .fc-event-title，
+     v6 的 fc-event-main-frame / fc-event-title-container 两层都没有了（0 命中）。
+     原本挂在 main-frame 上的 block+overflow 移到 .fc-event-main；
+     title-container 的 inline 由下面 .fc-v-event .fc-event-title 的 display:inline 承担。 */
+  .fc-v-event .fc-event-main {
     display: block;
     overflow: hidden;
   }
-  .fc-timegrid-event .fc-event-time,
-  .fc-v-event .fc-event-title-container {
+  .fc-timegrid-event .fc-event-time {
     display: inline;
   }
   .fc-timegrid-event .fc-event-time {
@@ -145,17 +153,16 @@
     word-break: break-word;
     font-size: 12px;
   }
-  .fc-timegrid-event-condensed .fc-event-time:after {
-    display: none;
-  }
+  /* 原先这里靠 .fc-timegrid-event-condensed 去掉短事件时间后面的连接符，
+     v7 没有这个类（0 命中），规则一直没生效，删掉。 */
   .fc-daygrid-block-event .fc-event-time,
   .fc-daygrid-block-event .fc-event-title {
     padding-left: 6px;
     line-height: 14px;
     font-size: 12px;
   }
-  .fc-daygrid-dot-event .fc-event-time,
-  .fc-daygrid-dot-event .fc-event-title {
+  .fc-dayGridMonth-view .fc-event .fc-event-time,
+  .fc-dayGridMonth-view .fc-event .fc-event-title {
     line-height: 14px;
     font-size: 12px;
   }
@@ -167,7 +174,9 @@
   .fc-toolbar-chunk:last-child {
     padding-right: 12px;
   }
-  .fc-theme-standard .fc-scrollgrid {
+  /* fc-theme-standard 是 v6 的内置主题标记，v7 把主题改成插件后就没有这个类了（0 命中）。
+     下面三处去掉这层前缀，直接落到 .fc-scrollgrid（它有 tableClass 钩子，是活的）。 */
+  .fc-scrollgrid {
     border-left: 0;
     border-right: 0;
     border-color: var(--color-border-primary);
@@ -181,17 +190,19 @@
       border-radius: 3px;
     }
   }
-  .fc-theme-standard td,
-  .fc-theme-standard th {
+  .fc-scrollgrid td,
+  .fc-scrollgrid th {
     border-color: var(--view-border-color) !important;
     border-right: 0;
   }
-  .fc-theme-standard th {
+  .fc-scrollgrid th {
     border-bottom: none !important;
     font-weight: normal !important;
     padding-top: 2px;
   }
-  .fc-button-primary {
+  /* 兼容层里 fc-button-primary 是按 ButtonInfo.isPrimary 挂的，而 v7 实测从不给这个标记
+     （整页 0 命中）。工具栏按钮的基础样式本来就该覆盖所有按钮，直接落到 .fc-button。 */
+  .fc-button {
     background-color: var(--color-background-primary) !important;
     color: var(--color-text-tertiary) !important;
     border: 0px !important;
@@ -235,13 +246,8 @@
       }
     }
   }
-  .fc-timegrid-body {
-    .fc-daygrid-day-bg,
-    .fc-timegrid-col-bg {
-      position: relative;
-      z-index: -1;
-    }
-  }
+  /* 原先这里把 .fc-timegrid-body 下的 .fc-daygrid-day-bg / .fc-timegrid-col-bg 压到 z-index:-1，
+     三个类名在 v7 里都是 0 命中，规则从来没生效过，删掉。 */
   .fc-prev-button,
   .fc-next-button {
     padding: 0 4px;
@@ -280,7 +286,8 @@
       padding: 0 12px 12px;
       max-height: 400px;
       overflow: auto;
-      .fc-daygrid-event-harness {
+      /* v6 是 .fc-daygrid-event-harness（事件外层包装），v7 没有这层，直接落到事件本身。 */
+      .fc-event {
         margin-top: 10px;
       }
     }
@@ -306,7 +313,9 @@
   .fc-timegrid-col.fc-day-today {
     background-color: transparent;
   }
-  .fc-daygrid.fc-dayGridMonth-view {
+  /* 原先写的是 .fc-daygrid.fc-dayGridMonth-view —— fc-daygrid 在 v7 里 0 命中，
+     复合选择器整条作废（月视图的行高/字号一直没生效）。去掉那一半。 */
+  .fc-dayGridMonth-view {
     line-height: 1 !important;
     font-size: 12px;
     .fc-daygrid-day-top {
@@ -329,7 +338,9 @@
   .fc-dayGridWeek-view,
   .fc-dayGridDay-view,
   .fc-timeGridDay-view {
-    .fc-scrollgrid-sync-inner {
+    /* v6 的 fc-scrollgrid-sync-inner 在 v7 里 0 命中，周/日视图表头里的农历一直没被定位。
+       换成表头单元格的内层 .fc-col-header-cell-cushion（dayHeaderInnerClass 钩子，是活的）。 */
+    .fc-col-header-cell-cushion {
       position: relative;
       .lunar {
         position: absolute;
@@ -338,9 +349,7 @@
       }
     }
   }
-  .fc .fc-daygrid-bg-harness {
-    z-index: -1;
-  }
+  /* .fc-daygrid-bg-harness 在 v7 里 0 命中（连 .fc 这个根类也没有），规则作废，删掉。 */
   .fc-dayGridMonth-view .fc-daygrid-day.fc-day-today {
     .fc-daygrid-day-number {
       .num {

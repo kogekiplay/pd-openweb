@@ -16,11 +16,27 @@ const LANG_LOADERS = {
   xml: () => import('@codemirror/lang-xml').then(m => m.xml()),
 };
 
+/* 【失败的 promise 一定不能留在缓存里】这里的 corePromise / langPromises 是「只算一次」
+   的缓存，原先无论成败都留着。可 webpack 的 chunk 加载是会失败的（发布时那一下原子换目录、
+   网络抖一下、chunk 请求被中断都算），而它失败之后【自己会把 installedChunks 里的记录删掉】，
+   就是为了让下次重试还能成。我们这层却把那个已拒绝的 promise 永久缓存了下来 ——
+   于是这个页面在【剩下的整个生命周期里】，每次挂 TagTextarea 都是 await 同一个死 promise：
+   编辑器永远不出现，框是空的，控制台一条错误都没有（上层是 .then(...)，没人接 reject）。
+
+   实测就是这个形态：「日历视图 -> 标题 -> 指定显示在时间块上的内容」是个空框，
+   TagTextarea 实例里 cmcon 正常、unmounted 为 false，但 cm / view 始终是 undefined；
+   在同一页面先手工 __webpack_require__.e(7032) 把 chunk 预热上，再打开面板就正常了。
+   刷新页面能好，也是因为模块作用域重建、缓存跟着没了 —— 所以它表现为「时好时坏」。
+
+   改法：失败就把缓存清掉并把错误抛出去，下一次挂载重新试。 */
 function loadLang(mode) {
   if (!mode || !LANG_LOADERS[mode]) return Promise.resolve(null);
 
   if (!langPromises[mode]) {
-    langPromises[mode] = LANG_LOADERS[mode]();
+    langPromises[mode] = LANG_LOADERS[mode]().catch(err => {
+      langPromises[mode] = undefined;
+      throw err;
+    });
   }
 
   return langPromises[mode];
@@ -36,7 +52,12 @@ function loadCore() {
       import('@codemirror/view'),
       import('@codemirror/language'),
       import('@codemirror/commands'),
-    ]).then(([state, view, language, commands]) => ({ state, view, language, commands }));
+    ])
+      .then(([state, view, language, commands]) => ({ state, view, language, commands }))
+      .catch(err => {
+        corePromise = undefined;
+        throw err;
+      });
   }
 
   return corePromise;

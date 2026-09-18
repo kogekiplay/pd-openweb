@@ -156,6 +156,7 @@ export default class TagTextarea extends React.Component<any, any> {
   cmcon;
   view;
   cm;
+  cmRetried;
   unmounted;
   pendingValue;
   tempValue;
@@ -300,7 +301,22 @@ export default class TagTextarea extends React.Component<any, any> {
       }
 
       this.scheduleHeightSync();
-    });
+    })
+    /* 【必须兜住】原先这里是个光秃秃的 .then：chunk 没加载成功时整条链静默断掉，
+       用户看到的是一个空白输入框，控制台连一句话都没有（我们自己排查时是靠翻
+       React 实例上的 cm/view 才发现的）。loadCodeMirror 那边已经改成失败不缓存，
+       所以这里重试一次通常就能好；仍然失败就把错误留在控制台，别再吞掉。 */
+      .catch(err => {
+        if (this.unmounted || !this.cmcon) return;
+
+        if (this.cmRetried) {
+          console.error('[TagTextarea] CodeMirror 加载失败，编辑器无法初始化', err);
+          return;
+        }
+
+        this.cmRetried = true;
+        setTimeout(this.initCodeMirror, 300);
+      });
   };
 
   /**
