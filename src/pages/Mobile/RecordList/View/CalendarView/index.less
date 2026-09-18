@@ -57,12 +57,12 @@
   .externalEvents {
     display: none;
   }
-  /* .fc 和 .fc-daygrid-body 在 FullCalendar 7 里都不存在了（类名哈希化，整页 0 命中），
-     只有 .fc-col-header 还活着（dayHeaderRowClass 钩子）。v7 重写了布局引擎，
-     这几层强制 100% 宽本来就是绕 v6 表格布局的补丁。 */
-  .fc-col-header {
-    width: 100%;
-  }
+  /* 【整块删掉，原文是 .fc, .fc-col-header, .fc-daygrid-body, .fc-daygrid-body > table { width: 100% }】
+     .fc 和 .fc-daygrid-body 在 FullCalendar 7 里都不存在（类名哈希化，整页 0 命中）；
+     .fc-col-header 还活着，但给它写死 width:100% 【有害】—— v7 的表头是 flex 布局，
+     它是 flex 子项，100% 会让它塌成 0 宽，日期表头整排文字消失（桌面端同款问题，
+     生产上量过：.fc-col-header 宽 1011 -> 0，表头格 138 -> 0~1）。
+     v7 自己管布局，这几行都不需要了。 */
   .fc-header-toolbar {
     display: none;
   }
