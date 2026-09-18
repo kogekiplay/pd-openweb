@@ -276,6 +276,7 @@ function Filters(props, ref) {
         <SwitchTab>
           {tabs.map(tab => (
             <span
+              key={tab.type}
               className={activeTab === tab.type ? 'active' : ''}
               onClick={() => {
                 updateActiveTab(tab.type);

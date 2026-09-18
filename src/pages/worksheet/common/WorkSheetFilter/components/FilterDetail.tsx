@@ -229,7 +229,9 @@ export default function FilterDetail(props) {
         )}
         {canEdit &&
           conditionsGroups.map((conditionsGroup, groupIndex) => (
-            <Fragment>
+            // 这个 Fragment 是 map 直接返回的根节点，要有 key。筛选条件组没有稳定 id，
+            // 组的顺序就是它的身份（增删都会整体重排），用 groupIndex 即可。
+            <Fragment key={groupIndex}>
               <ConditionsGroup
                 from={from}
                 isRules={isRules}

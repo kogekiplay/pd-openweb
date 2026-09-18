@@ -184,6 +184,7 @@ export default function CalendarSet(props) {
             {obj.map((it, i) => {
               return (
                 <div
+                  key={it}
                   className={cx('animaItem overflow_ellipsis', { active: String(i) === calendarType })}
                   style={{ padding: '0 18px' }}
                   onClick={() => {
@@ -206,6 +207,7 @@ export default function CalendarSet(props) {
             {[_l('紧凑'), _l('宽松')].map((it, i) => {
               return (
                 <li
+                  key={it}
                   className={cx('animaItem overflow_ellipsis pLeft18 pRight18', { active: String(i) === rowHeight })}
                   style={{ padding: '0 18px' }}
                   onClick={() => {
@@ -287,6 +289,7 @@ export default function CalendarSet(props) {
               let n = i + 1;
               return (
                 <div
+                  key={it}
                   className={cx('animaItem overflow_ellipsis', { active: unweekday.indexOf(n) < 0 })}
                   onClick={() => {
                     let str = unweekday;
