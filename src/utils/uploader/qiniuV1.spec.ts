@@ -22,6 +22,69 @@ const assert = require('assert');
 const path = require('path');
 const { transformFileSync } = require('../../../scripts/spec-harness.ts');
 
+// ── 被测模块的契约，【在本文件里重新声明一遍】────────────────────────────
+//
+// 【为什么不 `import('./qiniuV1')` 把真类型引过来】试过，撞在门禁的分工上：
+// src 下的 spec 由 tsconfig.tools.json 检查，那份配置【故意不带 DOM lib】、
+// 也不认 src/* 的 webpack alias（理由写在它自己的注释里：一旦给它开 DOM，
+// spec-globals.d.ts 那套部分浏览器全局会立刻炸出 19 条假错误）。
+// 而 qiniuV1.ts 满是 XMLHttpRequest / File / localStorage / btoa，
+// 一引进来整条依赖链都要 DOM。
+//
+// 更要紧的是：**这本来就该重写一遍**。spec 的职责是从外部钉住契约，
+// 期望值一律抄自 2026-09-16 生产实测报文。若直接复用实现的类型，
+// 实现哪天改了形状，spec 会跟着一起改 —— 那就不是「守」，是「跟」。
+// 下面每个类型只列本 spec 真正读到的字段。
+
+/** 传给 uploadToQiniu 的参数（对应 QiniuUploadParams） */
+type QiniuUploadParams = {
+  file: { name: string; size: number; slice(a: number, b: number): unknown };
+  /** save_key 场景传 null，此时不该自己带 key 字段 */
+  key: string | null;
+  token: string;
+  /** 【原样使用】可能是同源相对路径，也可能是完整域名 */
+  url: string;
+  chunkSize?: number;
+  customVars?: Record<string, string>;
+  fname?: string;
+};
+
+/** 七牛回的东西：本 spec 只读 key / bucket，其余按字典看 */
+type QiniuResponse = { key?: string; ctx?: string; [field: string]: unknown };
+
+/** onError 拿到的错误信息 */
+type UploadErrorInfo = { code?: number; status?: number; message?: string; response?: { error?: string } };
+
+type QiniuUploadHandlers = {
+  onProgress: (loaded: number, total: number, percent: number) => void;
+  onComplete: (res: QiniuResponse) => void;
+  onError: (err: UploadErrorInfo) => void;
+};
+
+type QiniuModule = {
+  uploadToQiniu(params: QiniuUploadParams, handlers: QiniuUploadHandlers): { abort(): void };
+};
+
+/** 手工 CommonJS 加载时的模块对象 —— 装什么由被编译的代码决定，只能按字典看 */
+type ModuleExports = Record<string, unknown>;
+
+/** FormData.append 带了第三个参数时记下的形状（本仓只有 file 字段这样） */
+type FormFileValue = { file: unknown; filename: string };
+type FormValue = string | FormFileValue;
+
+/** 假 File.slice() 切出来的片：记下区间，供断言「切的是哪一段」 */
+type FakeBlob = { __slice: [number, number]; size: number };
+
+/** 发出去的 body：直传是表单，分片是切片，收尾是 ctx 列表字符串 */
+type SentBody = { keys: string[]; values: Record<string, FormValue> } | FakeBlob | string | undefined;
+
+/**
+ * 续传点存进 localStorage 的形状。
+ * 【故意在 spec 里重写一遍而不是从实现里导出】用例 7 就是在钉「字段名恰好是这五个」，
+ * 从实现导出的话实现改了字段名 spec 会跟着改，那条断言就白写了。
+ */
+type ResumeCache = { ctx: string; percent: number; total: number; offset: number; time: number };
+
 // ── 记录一次 XHR ─────────────────────────────────────────────────────────
 type Sent = {
   method: string;
@@ -29,9 +92,21 @@ type Sent = {
   headers: Record<string, string>;
   /** FormData 替身记下的字段名（按 append 顺序）；非表单请求为 undefined */
   formKeys?: string[];
-  formValues?: Record<string, any>;
-  body: any;
+  formValues?: Record<string, FormValue>;
+  body: SentBody;
 };
+
+/** 断言某个表单字段是「带文件名的文件字段」，并把它按那个形状取出来 */
+function asFormFile(v: FormValue | undefined): FormFileValue {
+  assert.ok(v && typeof v === 'object' && 'filename' in v, '这个字段应当是带文件名的文件字段');
+  return v as FormFileValue;
+}
+
+/** 断言某次请求的 body 是分片，并取出它记下的 [start, end] */
+function sliceOf(body: SentBody): [number, number] {
+  assert.ok(body && typeof body === 'object' && '__slice' in body, '分片请求的 body 应当是一段切片');
+  return (body as FakeBlob).__slice;
+}
 
 /** 按 URL 决定回什么。返回 null 表示「这条 URL 没安排响应」，spec 会当失败处理。 */
 type Responder = (sent: Sent) => { status: number; text: string } | null;
@@ -42,10 +117,10 @@ function makeEnv(responder: Responder) {
 
   class FakeFormData {
     keys: string[] = [];
-    values: Record<string, any> = {};
-    append(k: string, v: any, filename?: string) {
+    values: Record<string, FormValue> = {};
+    append(k: string, v: unknown, filename?: string) {
       this.keys.push(k);
-      this.values[k] = filename === undefined ? v : { file: v, filename };
+      this.values[k] = filename === undefined ? String(v) : { file: v, filename };
     }
   }
 
@@ -53,13 +128,18 @@ function makeEnv(responder: Responder) {
     method = '';
     url = '';
     headers: Record<string, string> = {};
-    upload: any = {};
+    /**
+     * 被测代码只往上面挂 onprogress，且只读事件的 lengthComputable / loaded
+     *（见 qiniuV1 的 post()）。这里按那两个字段声明，不引 DOM 的 ProgressEvent ——
+     * 这份 spec 由 tsconfig.tools.json 检查，那份配置故意不带 DOM lib。
+     */
+    upload: { onprogress?: (e: { lengthComputable: boolean; loaded: number }) => void } = {};
     status = 0;
     statusText = '';
     responseText = '';
-    onload: any = null;
-    onerror: any = null;
-    onabort: any = null;
+    onload: (() => void) | null = null;
+    onerror: (() => void) | null = null;
+    onabort: (() => void) | null = null;
     private done = false;
 
     open(method: string, url: string) {
@@ -69,7 +149,7 @@ function makeEnv(responder: Responder) {
     setRequestHeader(k: string, v: string) {
       this.headers[k] = v;
     }
-    send(body: any) {
+    send(body: SentBody) {
       const rec: Sent = { method: this.method, url: this.url, headers: this.headers, body };
       if (body instanceof FakeFormData) {
         rec.formKeys = body.keys;
@@ -96,7 +176,9 @@ function makeEnv(responder: Responder) {
     }
   }
 
-  const g = globalThis as any;
+  // 【这里是有意打全局补丁】把 XHR / FormData / localStorage 换成能记录的替身，
+  // 用字典视角（而不是 any）看 globalThis，赋值与还原都还是类型安全的。
+  const g = globalThis as unknown as Record<string, unknown>;
   const saved = {
     XMLHttpRequest: g.XMLHttpRequest,
     FormData: g.FormData,
@@ -122,12 +204,12 @@ function makeEnv(responder: Responder) {
 }
 
 /** 加载真实的 qiniuV1（只把它自己的相对依赖按真文件编译进来） */
-function loadQiniuV1(): any {
-  const compiled = new Map<string, any>();
+function loadQiniuV1(): QiniuModule {
+  const compiled = new Map<string, ModuleExports>();
 
-  function load(absPath: string): any {
-    if (compiled.has(absPath)) return compiled.get(absPath);
-    const mod: { exports: Record<string, any> } = { exports: {} };
+  function load(absPath: string): ModuleExports {
+    if (compiled.has(absPath)) return compiled.get(absPath)!;
+    const mod: { exports: ModuleExports } = { exports: {} };
     compiled.set(absPath, mod.exports);
     const { code } = transformFileSync(absPath, {
       babelrc: false,
@@ -145,30 +227,37 @@ function loadQiniuV1(): any {
     return mod.exports;
   }
 
-  return load(path.join(__dirname, 'qiniuV1.ts'));
+  // 手工加载出来的 exports 类型上只是个字典，这里断言成真实模块形状 —— 仅此一处。
+  return load(path.join(__dirname, 'qiniuV1.ts')) as unknown as QiniuModule;
 }
 
 /** 造一个不依赖 Blob/File 的假文件：只要 size / name / slice */
-function fakeFile(name: string, size: number) {
+function fakeFile(name: string, size: number): QiniuUploadParams['file'] {
   return {
     name,
     size,
-    slice(a: number, b: number) {
+    slice(a: number, b: number): FakeBlob {
       return { __slice: [a, b], size: b - a };
     },
-  } as any;
+  };
 }
 
-function run(qiniu: any, params: any, env: { sent: Sent[] }) {
-  return new Promise<{ ok: boolean; res?: any; err?: any; progress: number[] }>(resolve => {
+/** 一次上传的结果：成功给 res，失败给 err，外加逐次进度百分比 */
+type RunResult = { ok: boolean; res?: QiniuResponse; err?: UploadErrorInfo; progress: number[] };
+
+/**
+ * 跑一次上传，等它以成功或失败收尾。
+ * 【不收 env】原先有个第三形参 env，函数体里只有一句 `void env;` —— 从来没用过。
+ * 要看发了什么请求，调用点直接读自己手上的 env.sent。
+ */
+function run(qiniu: QiniuModule, params: QiniuUploadParams): Promise<RunResult> {
+  return new Promise<RunResult>(resolve => {
     const progress: number[] = [];
-    const task = qiniu.uploadToQiniu(params, {
-      onProgress: (_l: number, _t: number, p: number) => progress.push(p),
-      onComplete: (res: any) => resolve({ ok: true, res, progress }),
-      onError: (err: any) => resolve({ ok: false, err, progress }),
+    qiniu.uploadToQiniu(params, {
+      onProgress: (_loaded, _total, p) => progress.push(p),
+      onComplete: res => resolve({ ok: true, res, progress }),
+      onError: err => resolve({ ok: false, err, progress }),
     });
-    (resolve as any).__task = task;
-    void env;
   });
 }
 
@@ -197,14 +286,14 @@ test('直传把 base 原样当 URL 用（相对路径不被拼成 https:///…�
   const qiniu = loadQiniuV1();
   const env = makeEnv(s => (s.url === BASE ? { status: 200, text: DIRECT_RES } : null));
   try {
-    const out = await run(qiniu, { file: fakeFile('a.bin', 46080), key: KEY, token: TOKEN, url: BASE }, env);
+    const out = await run(qiniu, { file: fakeFile('a.bin', 46080), key: KEY, token: TOKEN, url: BASE });
     assert.ok(out.ok, '直传应当成功');
     assert.strictEqual(env.sent.length, 1, '直传只该发一个请求');
     assert.strictEqual(env.sent[0].method, 'POST');
     // 【这一条就是 qiniu-js 走不通的原因】它的 Host.getUrl() 只会拼 protocol://host
     assert.strictEqual(env.sent[0].url, BASE);
-    assert.strictEqual(out.res.bucket, 'mdoc');
-    assert.strictEqual(out.res.key, KEY);
+    assert.strictEqual(out.res!.bucket, 'mdoc');
+    assert.strictEqual(out.res!.key, KEY);
   } finally {
     env.restore();
   }
@@ -215,13 +304,13 @@ test('直传表单字段是 token / key / file，顺序与生产一致', async (
   const qiniu = loadQiniuV1();
   const env = makeEnv(() => ({ status: 200, text: DIRECT_RES }));
   try {
-    await run(qiniu, { file: fakeFile('a.bin', 46080), key: KEY, token: TOKEN, url: BASE }, env);
+    await run(qiniu, { file: fakeFile('a.bin', 46080), key: KEY, token: TOKEN, url: BASE });
     // 生产抓包：FormData{token,key,file}
     assert.deepStrictEqual(env.sent[0].formKeys, ['token', 'key', 'file']);
     assert.strictEqual(env.sent[0].formValues!.token, TOKEN);
     assert.strictEqual(env.sent[0].formValues!.key, KEY);
     // 文件字段带上文件名
-    assert.strictEqual(env.sent[0].formValues!.file.filename, 'a.bin');
+    assert.strictEqual(asFormFile(env.sent[0].formValues!.file).filename, 'a.bin');
   } finally {
     env.restore();
   }
@@ -232,17 +321,13 @@ test('customVars 随直传表单发出；key 为 null 时（save_key）不带 ke
   const qiniu = loadQiniuV1();
   const env = makeEnv(() => ({ status: 200, text: DIRECT_RES }));
   try {
-    await run(
-      qiniu,
-      {
-        file: fakeFile('a.bin', 1024),
-        key: null,
-        token: TOKEN,
-        url: BASE,
-        customVars: { 'x:fileName': 'a', 'x:fileExt': '.bin' },
-      },
-      env,
-    );
+    await run(qiniu, {
+      file: fakeFile('a.bin', 1024),
+      key: null,
+      token: TOKEN,
+      url: BASE,
+      customVars: { 'x:fileName': 'a', 'x:fileExt': '.bin' },
+    });
     assert.deepStrictEqual(env.sent[0].formKeys, ['token', 'x:fileName', 'x:fileExt', 'file']);
     assert.ok(!env.sent[0].formKeys!.includes('key'), 'save_key 场景不该自己带 key');
   } finally {
@@ -264,11 +349,13 @@ test('分片走 {base}/mkblk/{blockSize}，带 Authorization: UpToken，body 是
     return { status: 200, text: JSON.stringify({ bucket: 'mdoc', key: KEY, fsize: String(size) }) };
   });
   try {
-    const out = await run(
-      qiniu,
-      { file: fakeFile('big.bin', size), key: KEY, token: TOKEN, url: BASE, chunkSize: chunk },
-      env,
-    );
+    const out = await run(qiniu, {
+      file: fakeFile('big.bin', size),
+      key: KEY,
+      token: TOKEN,
+      url: BASE,
+      chunkSize: chunk,
+    });
     assert.ok(out.ok, '分片上传应当成功');
     const blks = env.sent.filter(s => s.url.includes('/mkblk/'));
     assert.strictEqual(blks.length, 2, '6MB 按 4MB 切应当是 2 片');
@@ -276,8 +363,8 @@ test('分片走 {base}/mkblk/{blockSize}，带 Authorization: UpToken，body 是
     assert.strictEqual(blks[0].url, `${BASE}/mkblk/4194304`);
     assert.strictEqual(blks[1].url, `${BASE}/mkblk/2097152`);
     for (const b of blks) assert.strictEqual(b.headers.Authorization, `UpToken ${TOKEN}`);
-    assert.deepStrictEqual(blks[0].body.__slice, [0, chunk]);
-    assert.deepStrictEqual(blks[1].body.__slice, [chunk, size]);
+    assert.deepStrictEqual(sliceOf(blks[0].body), [0, chunk]);
+    assert.deepStrictEqual(sliceOf(blks[1].body), [chunk, size]);
   } finally {
     env.restore();
   }
@@ -294,11 +381,13 @@ test('收尾走 {base}/mkfile/{size}/key/{btoa(key)}，Content-Type 是 text/pla
       : { status: 200, text: JSON.stringify({ bucket: 'mdoc', key: KEY, fsize: String(size) }) },
   );
   try {
-    await run(
-      qiniu,
-      { file: fakeFile('big.bin', size), key: KEY, token: TOKEN, url: BASE, chunkSize: 4 * 1024 * 1024 },
-      env,
-    );
+    await run(qiniu, {
+      file: fakeFile('big.bin', size),
+      key: KEY,
+      token: TOKEN,
+      url: BASE,
+      chunkSize: 4 * 1024 * 1024,
+    });
     const done = env.sent[env.sent.length - 1];
     // 【btoa 而不是 url-safe base64】与换掉之前的实现保持一致
     assert.strictEqual(done.url, `${BASE}/mkfile/${size}/key/${btoa(KEY)}`);
@@ -315,11 +404,13 @@ test('文件不大于 chunk_size 时走直传，不发 mkblk', async () => {
   const qiniu = loadQiniuV1();
   const env = makeEnv(() => ({ status: 200, text: DIRECT_RES }));
   try {
-    await run(
-      qiniu,
-      { file: fakeFile('a.bin', 45 * 1024), key: KEY, token: TOKEN, url: BASE, chunkSize: 4 * 1024 * 1024 },
-      env,
-    );
+    await run(qiniu, {
+      file: fakeFile('a.bin', 45 * 1024),
+      key: KEY,
+      token: TOKEN,
+      url: BASE,
+      chunkSize: 4 * 1024 * 1024,
+    });
     assert.strictEqual(env.sent.length, 1);
     assert.ok(!env.sent[0].url.includes('/mkblk/'), '45KB 不该分片');
   } finally {
@@ -332,7 +423,7 @@ test('每片成功后按【文件名】写续传点，字段是 ctx/percent/tota
   const qiniu = loadQiniuV1();
   const size = 6 * 1024 * 1024;
   let n = 0;
-  let afterFirst: any = null;
+  let afterFirst: string | undefined;
   const env = makeEnv(s => {
     if (s.url.includes('/mkblk/')) {
       const r = { status: 200, text: JSON.stringify({ ctx: `ctx-${n++}` }) };
@@ -342,12 +433,15 @@ test('每片成功后按【文件名】写续传点，字段是 ctx/percent/tota
     return { status: 200, text: JSON.stringify({ key: KEY }) };
   });
   try {
-    await run(
-      qiniu,
-      { file: fakeFile('big.bin', size), key: KEY, token: TOKEN, url: BASE, chunkSize: 4 * 1024 * 1024 },
-      env,
-    );
-    const cache = JSON.parse(afterFirst);
+    await run(qiniu, {
+      file: fakeFile('big.bin', size),
+      key: KEY,
+      token: TOKEN,
+      url: BASE,
+      chunkSize: 4 * 1024 * 1024,
+    });
+    assert.ok(afterFirst, '收尾请求发出前应当已经写下续传点');
+    const cache: ResumeCache = JSON.parse(afterFirst!);
     assert.deepStrictEqual(Object.keys(cache).sort(), ['ctx', 'offset', 'percent', 'time', 'total']);
     assert.strictEqual(cache.total, size);
     assert.strictEqual(cache.offset, size);
@@ -374,11 +468,11 @@ test('缓存有效时从 offset 续传，且把已有 ctx 接上', async () => {
     JSON.stringify({ ctx: 'ctx-old', percent: 66, total: size, offset: chunk, time: Date.now() }),
   );
   try {
-    await run(qiniu, { file: fakeFile('big.bin', size), key: KEY, token: TOKEN, url: BASE, chunkSize: chunk }, env);
+    await run(qiniu, { file: fakeFile('big.bin', size), key: KEY, token: TOKEN, url: BASE, chunkSize: chunk });
     const blks = env.sent.filter(s => s.url.includes('/mkblk/'));
     assert.strictEqual(blks.length, 1, '已传 4MB，只该再传剩下的 2MB');
     assert.strictEqual(blks[0].url, `${BASE}/mkblk/2097152`);
-    assert.deepStrictEqual(blks[0].body.__slice, [chunk, size]);
+    assert.deepStrictEqual(sliceOf(blks[0].body), [chunk, size]);
     assert.strictEqual(env.sent[env.sent.length - 1].body, 'ctx-old,ctx-new');
   } finally {
     env.restore();
@@ -403,10 +497,10 @@ test('续传点在【过期 / 大小不符 / percent 为 100】时一律作废�
     );
     env.store.set('big.bin', JSON.stringify(cache));
     try {
-      await run(qiniu, { file: fakeFile('big.bin', size), key: KEY, token: TOKEN, url: BASE, chunkSize: chunk }, env);
+      await run(qiniu, { file: fakeFile('big.bin', size), key: KEY, token: TOKEN, url: BASE, chunkSize: chunk });
       const blks = env.sent.filter(s => s.url.includes('/mkblk/'));
       assert.strictEqual(blks.length, 2, `${why}：应当作废缓存、从头传 2 片`);
-      assert.deepStrictEqual(blks[0].body.__slice, [0, chunk]);
+      assert.deepStrictEqual(sliceOf(blks[0].body), [0, chunk]);
     } finally {
       env.restore();
     }
@@ -418,10 +512,10 @@ test('非 2xx 时 onError 带上 status 与解析后的响应体', async () => {
   const qiniu = loadQiniuV1();
   const env = makeEnv(() => ({ status: 401, text: JSON.stringify({ error: 'bad token' }) }));
   try {
-    const out = await run(qiniu, { file: fakeFile('a.bin', 1024), key: KEY, token: TOKEN, url: BASE }, env);
+    const out = await run(qiniu, { file: fakeFile('a.bin', 1024), key: KEY, token: TOKEN, url: BASE });
     assert.ok(!out.ok, '401 应当走 onError');
-    assert.strictEqual(out.err.status, 401);
-    assert.strictEqual(out.err.response.error, 'bad token');
+    assert.strictEqual(out.err!.status, 401);
+    assert.strictEqual(out.err!.response!.error, 'bad token');
   } finally {
     env.restore();
   }
@@ -437,11 +531,13 @@ test('base 带末尾斜杠时不会拼出 //mkblk', async () => {
       : { status: 200, text: JSON.stringify({ key: KEY }) },
   );
   try {
-    await run(
-      qiniu,
-      { file: fakeFile('big.bin', size), key: KEY, token: TOKEN, url: BASE + '/', chunkSize: 4 * 1024 * 1024 },
-      env,
-    );
+    await run(qiniu, {
+      file: fakeFile('big.bin', size),
+      key: KEY,
+      token: TOKEN,
+      url: BASE + '/',
+      chunkSize: 4 * 1024 * 1024,
+    });
     for (const s of env.sent) assert.ok(!s.url.includes('//'), `不该出现双斜杠：${s.url}`);
   } finally {
     env.restore();
@@ -456,7 +552,7 @@ test('base 带末尾斜杠时不会拼出 //mkblk', async () => {
     } catch (err) {
       failed += 1;
       console.error(`  ✗ ${name}`);
-      console.error(`    ${(err && (err as any).message) || err}`);
+      console.error(`    ${err instanceof Error ? err.message : String(err)}`);
     }
   }
   if (failed) {
