@@ -405,7 +405,8 @@ export const getList = (PotralStatus = 0, cb?) => {
   };
 };
 
-export const setQuickTag = (data: Record<string, any> = {}) => {
+// 快捷标签只用来切当前角色；不传 roleId 时落到 'all'
+export const setQuickTag = (data: { roleId?: string } = {}) => {
   return dispatch => {
     dispatch({ type: 'UPDATE_QUICKTAG', data });
     dispatch(setRoleId(data.roleId || 'all'));

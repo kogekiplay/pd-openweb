@@ -7,7 +7,33 @@ import { FREQUENCY, RECURLAYERS, RECURTYPE, REMINDTYPE, WEEKDAYS } from './const
 import afterRefreshOp from './lib/afterRefreshOp';
 import recurCalendarUpdate from './lib/recurCalendarUpdateDialog';
 
-export const Config: Record<string, any> = {};
+/**
+ * 日程详情弹层的运行期配置。【是个模块级可变单例】——
+ * 打开弹层时由外部往上面挂，弹层内部各处再读回去。
+ * 字段按本目录实际读到的点列；加新键就往这里补一行。
+ */
+export const Config: {
+  container?: HTMLElement;
+  /** 【是个函数不是布尔】外部挂进来，root 渲染完调它把弹层摆到中间 */
+  dialogCenter?: () => void;
+  /** 当前是不是独立详情页（不是弹层） */
+  isDetailPage?: boolean;
+  AjaxApiUrl?: string;
+  calendarId?: string;
+  /** 重复日程的这一次的时间 */
+  recurTime?: string;
+  closeDialog?: () => void;
+  cancelCallback?: () => void;
+  exitCallback?: () => void;
+  /**
+   * 保存后回调。
+   * 日历那条路不带参数（就是刷新一下）；日程列表那条路会带上重新拉取列表需要的上下文
+   *（起止时间 + 是不是第一页 + 当前滚动位置）。
+   */
+  saveCallback?: (listContext?: { start?: string; end?: string; isFirst?: boolean; scrollTop?: number }) => void;
+  deleteCallback?: () => void;
+  handleClose?: () => void;
+} = {};
 
 export function getParamsFromUrl() {
   const result = /detail_([^_?]+)_?([^_?]+)?/.exec(location.href);

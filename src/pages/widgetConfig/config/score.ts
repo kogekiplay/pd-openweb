@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const NUM_5 = 5;
 const COLOR_FED156 = '#FED156';
@@ -64,7 +65,7 @@ export const getDynamicColors = (colors, max) => {
 };
 
 // 获取展示颜色
-export const getColor = (data: Record<string, any> = {}) => {
+export const getColor = (data: FormControl = {}) => {
   const { itemicon, itemcolor } = data.advancedSetting || {};
   const selectColor = JSON.parse(itemcolor || '{}');
   return selectColor.type === 1
