@@ -324,7 +324,10 @@ const DateWidgets = props => {
                 },
               };
             }}
-            dropdownClassName={`customAntPicker_${controlId} ${dropdownClassName || ''}`}
+            /* antd 6：dropdownClassName 已废弃 -> classNames.popup.root
+               （这个类名下面 onOpenChange 里还要靠 $(`.customAntPicker_${controlId}`) 找弹层滚时间列，
+                 所以不能只是删掉，必须换到新位置上） */
+            classNames={{ popup: { root: `customAntPicker_${controlId} ${dropdownClassName || ''}` } }}
             onOpenChange={open => {
               if (open && parseInt(timeArr[0]) === 0 && parseInt(timeArr[1]) === 24) {
                 setTimeout(() => {
@@ -343,7 +346,9 @@ const DateWidgets = props => {
             onBlur={() => {
               onBlur(originValue);
             }}
-            onSelect={value => (tempDateValueRef.current = value)}
+            /* antd 6：onSelect 已废弃 -> onCalendarChange。单选 DatePicker 下第一个参数
+               仍然是选中的日期（见 @rc-component/picker 的 SinglePicker.d.ts），语义一致。 */
+            onCalendarChange={value => (tempDateValueRef.current = value)}
             onChange={handleChange}
             {...compProps}
           />
