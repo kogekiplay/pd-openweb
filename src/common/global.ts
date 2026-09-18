@@ -393,7 +393,13 @@ window.addEventListener('beforeunload', () => {
  * 获取错误信息
  * @returns {Object}
  */
-const getErrorMessage = (jqXHR: Record<string, any> = {}, textStatus: string, exception, silent = false) => {
+// jqXHR 只用到 status 和 responseJSON（名字是 jQuery 时代留下的，现在底层是 axios）
+const getErrorMessage = (
+  jqXHR: { status?: number; responseJSON?: { exception?: string } } = {},
+  textStatus: string,
+  exception,
+  silent = false,
+) => {
   let errorMessage;
 
   switch (jqXHR.status) {
@@ -566,7 +572,10 @@ const disposeRequestParams = (controllerName, actionName, data, ajaxOptions) => 
 /**
  * 生成本地化存储参数
  */
-const generateLocalizationParams = (requestData: Record<string, any> = {}) => {
+// 按接口名给出「本地缓存的 key 与失效条件」；requestData 里这几个 id 参与拼 sourceId
+const generateLocalizationParams = (
+  requestData: { worksheetId?: string; appId?: string; appLangId?: string; projectId?: string } = {},
+) => {
   const lang = _.get(md, 'global.Account.lang');
   const worksheetInfoParams = {
     sourceId: `${requestData.worksheetId}_${lang}`,
@@ -750,7 +759,7 @@ const throttledCheckLogin = _.throttle(() => loginApi.checkLogin({}, { silent: t
  * @param  {Boolean} options.silent 发生错误时不弹出提示
  * @return {Promise}               返回结果的 promise
  */
-window.mdyAPI = (controllerName, actionName, requestData, options: Record<string, any> = {}) => {
+window.mdyAPI = (controllerName, actionName, requestData, options: ApiOptions = {}) => {
   const controller = options.abortController || new AbortController();
   const ajaxOptions = options.ajaxOptions || {};
   const method = ajaxOptions.type || 'POST';
@@ -965,7 +974,7 @@ window.mdyAPI = (controllerName, actionName, requestData, options: Record<string
  * @param  {AbortController} options.abortController
  * @return {Promise}                     非流式 resolve 后端响应体（axios response.data）
  */
-window.agentAPI = (args: Record<string, any> = {}, options = {}) => {
+window.agentAPI = (args: Record<string, unknown> = {}, options: AgentApiOptions = {}) => {
   const { url, method = 'POST', isStream, silent, header, abortController } = options;
 
   const agentHost = (_.get(md, 'global.Config.AgentUrl') || '').replace(/\/$/, '');
