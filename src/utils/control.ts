@@ -35,6 +35,7 @@ import type {
   ControlValue,
   FormControl,
   RecordRow,
+  RelateRecordValue,
   RelationValue,
   SelectedEntityValue,
 } from 'src/utils/controlTypes';
@@ -569,9 +570,9 @@ export function formatControlValue(cell?: FormControl & { sourceControl?: FormCo
 
     let newPos: number[] = [];
     let { type, value } = cell;
-    let parsedData: any;
     let selectedOptions: ControlOption[];
-    let locationValue: LocationValue;
+    // 只在各自的 case 里赋值，带 ! 是如实描述「走到那个 case 才有值」
+    let locationValue!: LocationValue;
 
     if (type === 37) {
       if (cell.advancedSetting && cell.advancedSetting.summaryresult === '1') {
@@ -600,15 +601,13 @@ export function formatControlValue(cell?: FormControl & { sourceControl?: FormCo
 
         return JSON.parse(value);
       case 40: // LOCATION 定位
-        parsedData = JSON.parse(value) || {};
-        if (!_.isObject(parsedData)) {
+        locationValue = JSON.parse(value) || {};
+        if (!_.isObject(locationValue)) {
           return undefined;
         }
 
-        // _.isObject 把 parsedData 收窄成 object（没有任何属性），下面读 .x/.y 就报错；
-        // 这里换一个有形状的别名，运行时是同一个对象。
-        locationValue = parsedData as LocationValue;
-
+        // 【原先这里要多一个中转变量】parsedData 是 any 时，_.isObject 会把它收窄成
+        // 无属性的 object，读 .x/.y 就报错。现在 locationValue 本身有形状，收窄后属性还在。
         if ((locationValue.coordinate || '').toLowerCase() === 'wgs84') {
           newPos = wgs84togcj02(locationValue.x || 0, locationValue.y || 0);
           return {
@@ -633,14 +632,12 @@ export function formatControlValue(cell?: FormControl & { sourceControl?: FormCo
           return option.value;
         });
       case 26: // USER_PICKER 成员
-        parsedData = JSON.parse(value);
-        if (!_.isArray(parsedData)) {
-          parsedData = [parsedData];
-        }
+        // 【单个和数组都收】有接口给的是单个对象而不是数组
+        const parsedUsers: SelectedEntityValue | string | (SelectedEntityValue | string)[] = JSON.parse(value);
 
-        return parsedData
-          .filter((user: SelectedEntityValue | string) => !!user)
-          .map((user: SelectedEntityValue | string) => (typeof user === 'string' ? user : user.fullname));
+        return (_.isArray(parsedUsers) ? parsedUsers : [parsedUsers])
+          .filter(user => !!user)
+          .map(user => (typeof user === 'string' ? user : user.fullname));
       case 27: // GROUP_PICKER 部门
         return JSON.parse(cell.value).map((department: SelectedEntityValue | string) => {
           if (typeof department === 'string') {
@@ -667,23 +664,26 @@ export function formatControlValue(cell?: FormControl & { sourceControl?: FormCo
           (attachment: AttachmentValue) => `${(attachment.originalFilename || '') + (attachment.ext || '')}`,
         );
       case 35: // CASCADER 级联
-        parsedData = JSON.parse(value);
-        return _.isArray(parsedData) && parsedData.length ? parsedData[0].name : undefined;
+        const cascaderItems: { name?: string }[] = JSON.parse(value);
+        return _.isArray(cascaderItems) && cascaderItems.length ? cascaderItems[0].name : undefined;
       case 29: // RELATESHEET 关联表
+        // 【这里的类型故意是 unknown[] | false】非数组时那个 && 会算出 false，
+        // 接着 .slice 抛 TypeError 由外层 catch 接住 —— 是既有行为，照搬。
+        let relateItems: unknown[] | false;
         if (_.isNumber(+value) && !_.isNaN(+value)) {
-          parsedData = new Array(+value).fill(undefined);
+          relateItems = new Array(+value).fill(undefined);
         } else {
-          parsedData = JSON.parse(value);
-          parsedData =
-            _.isArray(parsedData) &&
-            parsedData
-              .map((record: SelectedEntityValue) =>
+          const parsedRelates: RelateRecordValue[] = JSON.parse(value);
+          relateItems =
+            _.isArray(parsedRelates) &&
+            parsedRelates
+              .map(record =>
                 formatControlValue(_.assign({}, cell, { type: cell.sourceControlType || 2, value: record.name })),
               )
               .filter(_.identity);
         }
 
-        return cell.enumDefault === 1 ? parsedData.slice(0, 1) : parsedData;
+        return cell.enumDefault === 1 ? (relateItems as unknown[]).slice(0, 1) : relateItems;
       case 34: // SUBLIST 子表
         return _.isObject(value) ? _.get(value, 'rows') : [...new Array(value ? Number(value) : 0)];
       case 30: // SHEETFIELD 他表字段
@@ -962,9 +962,10 @@ export function renderText(cell: FormControl, options: Record<string, ControlVal
     let { type, value = '', unit, advancedSetting = {} } = cell;
     let { suffix = '', prefix = '', thousandth } = advancedSetting;
     let selectedOptions: ControlOption[] = [];
-    let parsedData: any;
-    // 不要叫 location：不声明局部变量时它会静默落到全局 window.location 的类型上
-    let locationValue: LocationValue;
+    // 不要叫 location：不声明局部变量时它会静默落到全局 window.location 的类型上。
+    // 带 ! 是因为它只在下面的 try 里赋值：解析失败时它确实是 undefined，
+    // 那时 _.isObject 判 false、落到空串 —— 与原先一致。
+    let locationValue!: LocationValue;
 
     // 公式函数
     if (type === 53) {
@@ -1032,14 +1033,18 @@ export function renderText(cell: FormControl, options: Record<string, ControlVal
       case 19: // AREA_INPUT 地区
       case 23: // AREA_INPUT 地区
       case 24: // AREA_INPUT 地区
+        // 【解析失败照旧往下抛，这是既有行为】area 会是 undefined，下一行读 .name 抛
+        // TypeError，由 renderText 最外层的 catch 接住返回 ''。内层这句 value = ''
+        // 其实到不了返回点，保留只是为了不改行为。下面几个分支同理，不再重复。
+        let area!: { name?: string };
         try {
-          parsedData = JSON.parse(value);
+          area = JSON.parse(value);
         } catch (err) {
           console.log(err);
           value = '';
         }
 
-        value = parsedData.name;
+        value = area.name;
         break;
       /**
        * 文本 + 单位
@@ -1135,15 +1140,16 @@ export function renderText(cell: FormControl, options: Record<string, ControlVal
           value = '';
         }
 
+        let timeRange!: string[];
         try {
-          parsedData = JSON.parse(value);
+          timeRange = JSON.parse(value);
         } catch (err) {
           console.log(err);
           value = '';
         }
 
-        value = parsedData
-          .map((time: string) => (time ? moment(time).format(cell.type === 17 ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm') : ''))
+        value = timeRange
+          .map(time => (time ? moment(time).format(cell.type === 17 ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm') : ''))
           .join(' - ');
         break;
       case 10010: // REMARK 备注
@@ -1152,16 +1158,17 @@ export function renderText(cell: FormControl, options: Record<string, ControlVal
         break;
       case 40: // LOCATION 定位
         try {
-          parsedData = JSON.parse(value) || {};
+          locationValue = JSON.parse(value) || {};
         } catch (err) {
           console.log(err);
           value = '';
         }
 
-        // 同 formatControlValue 的定位分支：_.isObject 会把 parsedData 收窄成无属性的 object
-        locationValue = parsedData as LocationValue;
+        // 【这里不再需要中转变量】原先 parsedData 是 any，_.isObject 会把它收窄成
+        // 无属性的 object，读 .title/.address 就报错，所以当时另起了一个有形状的别名。
+        // 现在 locationValue 本身就是 LocationValue，收窄后属性还在。
         value =
-          _.isObject(parsedData) && (locationValue.title || locationValue.address)
+          _.isObject(locationValue) && (locationValue.title || locationValue.address)
             ? `${locationValue.title || ''} ${locationValue.address || ''}`
             : '';
         break;
@@ -1182,34 +1189,31 @@ export function renderText(cell: FormControl, options: Record<string, ControlVal
           .join(', ');
         break;
       case 26: // USER_PICKER 成员
+        // 【单个和数组都收】有接口给的是单个对象而不是数组，原先靠 [parsedData] 兜住
+        let parsedUsers!: SelectedEntityValue | SelectedEntityValue[];
         try {
-          parsedData = JSON.parse(value);
+          parsedUsers = JSON.parse(value);
         } catch (err) {
           console.log(err);
           value = '';
         }
 
-        if (!_.isArray(parsedData)) {
-          parsedData = [parsedData];
-        }
-
-        value = parsedData
-          .filter((user: SelectedEntityValue) => !!user)
-          .map((user: SelectedEntityValue) => user.fullname)
+        value = (_.isArray(parsedUsers) ? parsedUsers : [parsedUsers])
+          .filter(user => !!user)
+          .map(user => user.fullname)
           .join('、');
         break;
       case 27: // GROUP_PICKER 部门
+        let departments!: SelectedEntityValue[];
         try {
-          parsedData = JSON.parse(cell.value);
+          departments = JSON.parse(cell.value);
         } catch (err) {
           console.log(err);
           value = '';
         }
 
-        value = parsedData
-          .map((department: SelectedEntityValue) =>
-            department.departmentName ? department.departmentName : _l('该部门已删除'),
-          )
+        value = departments
+          .map(department => (department.departmentName ? department.departmentName : _l('该部门已删除')))
           .join('、');
         break;
       case 36: // SWITCH 检查框
@@ -1221,47 +1225,51 @@ export function renderText(cell: FormControl, options: Record<string, ControlVal
         value = value === '1' || value === 1 ? text || _l('已选中') : '';
         break;
       case 14: // ATTACHMENT 附件
+        let attachments!: AttachmentValue[];
         try {
-          parsedData = JSON.parse(value);
+          attachments = JSON.parse(value);
         } catch (err) {
           console.log(err);
           value = '';
         }
 
-        value = parsedData
-          .map((attachment: AttachmentValue) => `${(attachment.originalFilename || '') + (attachment.ext || '')}`)
+        value = attachments
+          .map(attachment => `${(attachment.originalFilename || '') + (attachment.ext || '')}`)
           .join('、');
         break;
       case 35: // CASCADER 级联
+        // 【这个分支是兜底成空数组，不像上面几个会抛】照旧
+        let cascaderItems: { name?: string }[] = [];
         try {
-          parsedData = JSON.parse(value);
+          cascaderItems = JSON.parse(value);
         } catch (err) {
           console.log(err);
-          parsedData = [];
+          cascaderItems = [];
         }
 
-        if (!_.isArray(parsedData)) {
-          parsedData = [];
+        if (!_.isArray(cascaderItems)) {
+          cascaderItems = [];
         }
 
-        value = parsedData.length ? parsedData.map((item: any) => item.name || _l('未命名')).join(',') : '';
+        value = cascaderItems.length ? cascaderItems.map(item => item.name || _l('未命名')).join(',') : '';
         break;
       case 29: // RELATESHEET 关联表
+        let relateRecords: RelateRecordValue[] = [];
         try {
-          parsedData = JSON.parse(value);
+          relateRecords = JSON.parse(value);
         } catch (err) {
           console.log(err);
-          parsedData = [];
+          relateRecords = [];
         }
 
-        if (!_.isArray(parsedData)) {
-          parsedData = [];
+        if (!_.isArray(relateRecords)) {
+          relateRecords = [];
         }
 
         if (cell.enumDefault === 1 || _.get(cell, 'sourceControl.controlId')) {
-          value = parsedData
+          value = relateRecords
             .map(
-              (record: any) =>
+              record =>
                 renderText(_.assign({}, cell, { type: cell.sourceControlType || 2, value: record.name }), options) ||
                 _l('未命名'),
             )
@@ -1278,9 +1286,9 @@ export function renderText(cell: FormControl, options: Record<string, ControlVal
             _.find(cell.relationControls, { controlId: cell.sourceTitleControlId }) ||
             _.find(cell.relationControls, { attribute: 1 });
 
-          value = parsedData
+          value = relateRecords
             .map(
-              (record: any) =>
+              record =>
                 renderText(
                   _.assign({}, cell, {
                     type: (titleControl && titleControl.sourceControlType) || 2,
@@ -1303,18 +1311,16 @@ export function renderText(cell: FormControl, options: Record<string, ControlVal
         );
         break;
       case 21: // RELATION 自由连接
+        let relations!: RelationValue[];
         try {
-          parsedData = JSON.parse(value);
+          relations = JSON.parse(value);
         } catch (err) {
           console.log(err);
           value = '';
         }
 
-        value = parsedData
-          .map(
-            (relation: RelationValue) =>
-              `[${RELATION_TYPE_NAME[relation.type as keyof typeof RELATION_TYPE_NAME]}]${relation.name}`,
-          )
+        value = relations
+          .map(relation => `[${RELATION_TYPE_NAME[relation.type as keyof typeof RELATION_TYPE_NAME]}]${relation.name}`)
           .join('、');
         break;
       case 28: // SCORE 等级
@@ -1335,17 +1341,16 @@ export function renderText(cell: FormControl, options: Record<string, ControlVal
         value = cell.value;
         break;
       case 48: // ORGROLE_PICKER 组织角色
+        let organizes!: SelectedEntityValue[];
         try {
-          parsedData = JSON.parse(cell.value);
+          organizes = JSON.parse(cell.value);
         } catch (err) {
           console.log(err);
           value = '';
         }
 
-        value = parsedData
-          .map((organize: SelectedEntityValue) =>
-            organize.organizeName ? organize.organizeName : _l('该组织角色已删除'),
-          )
+        value = organizes
+          .map(organize => (organize.organizeName ? organize.organizeName : _l('该组织角色已删除')))
           .join('、');
         break;
       default:
@@ -1923,7 +1928,9 @@ export function convertAiRecommendControlToControlData(
   }
 
   if (control.type === WIDGETS_TO_API_TYPE_ENUM.SUB_LIST) {
-    const relationControls: FormControl[] = (recommendControl.subFields || []).map(convertAiRecommendControlToControlData);
+    const relationControls: FormControl[] = (recommendControl.subFields || []).map(
+      convertAiRecommendControlToControlData,
+    );
     control.dataSource = uuidv4();
     control.relationControls = relationControls;
     control.showControls = relationControls.map((item: FormControl) => item.controlId as string);

@@ -92,7 +92,9 @@ const {
   convertAiRecommendControlToControlData,
   convertControlTypeToAiRecommendControlType,
   formatAttachmentValue,
+  formatControlValue,
   getControlsSorts,
+  renderText,
   toFixed,
   updateOptionsOfControl,
 } = requireEsm('./control.js', {
@@ -250,3 +252,71 @@ assert.strictEqual(convertAiRecommendControlToControlData({ type: 'longText' }).
 assert.strictEqual(convertAiRecommendControlToControlData({ type: 'longText' }).enumDefault, 2);
 
 console.log('control utils tests passed');
+
+// ── renderText / formatControlValue 的分支 ────────────────────────────────
+//
+// 【为什么补这一组】renderText 是全站每个单元格都要过的函数，此前【一条断言都没有】。
+// 2026-09-18 把它那十几个 case 里共用的 `let parsedData: any` 拆成逐分支的具名类型时，
+// 才发现没有任何东西能证明改动没走样 —— 所以先把行为钉下来。
+//
+// 【解析失败一律得到空串，但路径有两种】有的分支在 catch 里把 parsedData 兜成 []，
+// 有的只写了 value = '' 却仍然往下走、在下一行抛 TypeError，由 renderText 最外层的
+// catch 接住返回 ''。两种都得覆盖：它们结果相同但机制不同，改写时最容易碰坏后者。
+
+// 地区：JSON 里取 name
+assert.strictEqual(renderText({ type: 19, value: '{"name":"安徽省"}' }), '安徽省');
+assert.strictEqual(renderText({ type: 23, value: '{"name":"铜陵市"}' }), '铜陵市');
+assert.strictEqual(renderText({ type: 19, value: '{坏 JSON' }), '');
+
+// 时间段：两端各自格式化后用 ' - ' 连接；17 只到日，18 带时分
+assert.strictEqual(renderText({ type: 17, value: '["2026-01-02","2026-03-04"]' }), '2026-01-02 - 2026-03-04');
+assert.strictEqual(renderText({ type: 17, value: '["2026-01-02",""]' }), '2026-01-02 - ');
+assert.strictEqual(renderText({ type: 17, value: '{坏 JSON' }), '');
+
+// 定位：title + 空格 + address；不是对象就空串
+assert.strictEqual(renderText({ type: 40, value: '{"title":"公司","address":"铜陵"}' }), '公司 铜陵');
+assert.strictEqual(renderText({ type: 40, value: '{"title":"公司"}' }), '公司 ');
+assert.strictEqual(renderText({ type: 40, value: '"就是个字符串"' }), '');
+assert.strictEqual(renderText({ type: 40, value: '{坏 JSON' }), '');
+
+// 成员：数组和【单个对象】都要收（有接口给的不是数组）
+assert.strictEqual(renderText({ type: 26, value: '[{"fullname":"张三"},{"fullname":"李四"}]' }), '张三、李四');
+assert.strictEqual(renderText({ type: 26, value: '{"fullname":"张三"}' }), '张三');
+assert.strictEqual(renderText({ type: 26, value: '{坏 JSON' }), '');
+
+// 部门：缺 departmentName 时落到「该部门已删除」
+assert.strictEqual(renderText({ type: 27, value: '[{"departmentName":"数字化部"}]' }), '数字化部');
+assert.strictEqual(renderText({ type: 27, value: '[{}]' }), '该部门已删除');
+assert.strictEqual(renderText({ type: 27, value: '{坏 JSON' }), '');
+
+// 附件：originalFilename + ext；两个都缺时是空串而不是 "undefinedundefined"
+assert.strictEqual(renderText({ type: 14, value: '[{"originalFilename":"报表","ext":".xlsx"}]' }), '报表.xlsx');
+assert.strictEqual(renderText({ type: 14, value: '[{}]' }), '');
+assert.strictEqual(renderText({ type: 14, value: '{坏 JSON' }), '');
+
+// 级联：逗号连接，缺 name 落「未命名」；坏 JSON 兜成 [] 而不是抛
+assert.strictEqual(renderText({ type: 35, value: '[{"name":"一级"},{"name":"二级"}]' }), '一级,二级');
+assert.strictEqual(renderText({ type: 35, value: '[{}]' }), '未命名');
+assert.strictEqual(renderText({ type: 35, value: '{坏 JSON' }), '');
+
+// 组织角色：缺 organizeName 时落到「该组织角色已删除」
+assert.strictEqual(renderText({ type: 48, value: '[{"organizeName":"超级管理员"}]' }), '超级管理员');
+assert.strictEqual(renderText({ type: 48, value: '[{}]' }), '该组织角色已删除');
+assert.strictEqual(renderText({ type: 48, value: '{坏 JSON' }), '');
+
+// formatControlValue：同样的值，返回的是【结构】而不是展示文本
+assert.strictEqual(formatControlValue({ type: 19, value: '{"name":"安徽省"}' }), '安徽省');
+assert.deepStrictEqual(formatControlValue({ type: 26, value: '[{"fullname":"张三"}]' }), ['张三']);
+assert.deepStrictEqual(formatControlValue({ type: 26, value: '{"fullname":"张三"}' }), ['张三']);
+assert.deepStrictEqual(formatControlValue({ type: 26, value: '["已经是字符串"]' }), ['已经是字符串']);
+assert.strictEqual(formatControlValue({ type: 35, value: '[{"name":"一级"}]' }), '一级');
+assert.strictEqual(formatControlValue({ type: 35, value: '[]' }), undefined);
+assert.deepStrictEqual(formatControlValue({ type: 40, value: '{"title":"公司","address":"铜陵"}' }), {
+  title: '公司',
+  address: '铜陵',
+});
+assert.strictEqual(formatControlValue({ type: 40, value: '"就是个字符串"' }), undefined);
+// 解析失败走最外层 catch，返回 undefined（不是空串）
+assert.strictEqual(formatControlValue({ type: 19, value: '{坏 JSON' }), undefined);
+
+console.log('renderText / formatControlValue 分支断言通过');
