@@ -14,11 +14,32 @@ export const getWidgetTypeName = type => {
   return { controlTypeName: _.get(DEFAULT_CONFIG, `${widgetType}.widgetName`), controlType: String(widgetType) };
 };
 
-export const getExistWorksheet = (data: Record<string, any> = {}) => {
-  const existWorksheet = [];
-  const sections = Array.isArray(data) ? data : data.sections || [];
+/**
+ * 应用导航里的一节。只列 getExistWorksheet 真正读到的字段。
+ * type === 2 的项是「分组」，要顺着 childSections 往下钻；其余按工作表/自定义页面处理。
+ */
+interface AppSectionItem {
+  workSheetId?: string;
+  workSheetName?: string;
+  name?: string;
+  remark?: string;
+  /** 1 = 自定义页面，2 = 分组（下钻），其余当工作表 */
+  type?: number;
+}
 
-  const pushWorksheet = item => {
+interface AppSection {
+  appSectionId?: string;
+  item?: AppSectionItem[];
+  workSheetInfo?: AppSectionItem[];
+  childSections?: AppSection[];
+}
+
+/** 入参既可能直接是分组数组，也可能是带 sections 的应用详情对象 —— 两种都收 */
+export const getExistWorksheet = (data: AppSection[] | { sections?: AppSection[] } = {}) => {
+  const existWorksheet: { name?: string; description?: string; type: 'page' | 'table' }[] = [];
+  const sections: AppSection[] = Array.isArray(data) ? data : data.sections || [];
+
+  const pushWorksheet = (item: AppSectionItem) => {
     existWorksheet.push({
       name: item.workSheetName || item.name,
       description: item.remark,
@@ -26,7 +47,7 @@ export const getExistWorksheet = (data: Record<string, any> = {}) => {
     });
   };
 
-  const walkSections = sectionList => {
+  const walkSections = (sectionList: AppSection[]) => {
     (sectionList || []).forEach(section => {
       (section.item || []).forEach(pushWorksheet);
 

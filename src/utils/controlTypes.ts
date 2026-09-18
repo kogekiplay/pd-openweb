@@ -52,8 +52,12 @@ export interface FormControl {
   controlName?: string;
   value?: ControlValue;
   advancedSetting?: ControlAdvancedSetting;
-  /** 控件上挂的自定义事件权限配置 */
-  eventPermissions?: any;
+  /**
+   * 自定义事件算出来的权限位，【是个三字符串】而不是对象：
+   * 第 0 位可编辑、第 1 位可见，'x' 表示"该位没被事件动过"，默认 'xxx'。
+   * 拼装在 Form/core/customEvent.tsx 的 replaceStr 那几行。
+   */
+  eventPermissions?: string;
   /** 打印里标记这个关联控件是「关联多条·列表」形态 */
   isRelateMultipleSheet?: boolean;
   /** 关联记录控件指定的关联视图 */
@@ -65,7 +69,7 @@ export interface FormControl {
   /** 卡片/详情里给控件挂的可编辑标记 */
   canEdit?: boolean;
   /** 卡片单元格自带的写回函数 */
-  updateCell?: (data: any) => void;
+  updateCell?: (data: UpdateCellData) => void;
   /** 打印时是否隐藏这个控件 */
   printHide?: boolean;
   /** 该控件在当前视图是否可见（自定义动作/打印模板按它过滤） */
@@ -208,6 +212,32 @@ export interface FormControl {
  * 选项类控件（单选/多选/等级/…）的一个选项。
  * key 是存库的值，value 是显示文案 —— 记录里存的是 key，别拿 value 去比。
  */
+/**
+ * 卡片单元格写回时提交的内容。
+ * 单元格自己只给 value；MobileCardCellControls / SummaryCom 会再把整行并进来。
+ */
+export interface UpdateCellData {
+  value?: ControlValue;
+  row?: RecordRow;
+}
+
+/**
+ * 工作表的自定义按钮。【只列本仓真正读到的字段】—— 后端返回的远不止这些，
+ * 用到新字段就往这里补一行，不要退回 any[]。
+ */
+export interface WorksheetCustomBtn {
+  btnId?: string;
+  name?: string;
+  desc?: string;
+  /** 已停用的按钮 status 为 0 */
+  status?: number;
+  disabled?: boolean;
+  /** 点击行为：立即执行 / 二次确认 / 填写字段，见 CUSTOM_BUTTOM_CLICK_TYPE */
+  clickType?: number;
+  writeObject?: number;
+  writeType?: number;
+}
+
 export interface ControlOption {
   key: string;
   value?: string;

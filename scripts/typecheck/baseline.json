@@ -3,15 +3,15 @@
   "key": "code",
   "tsVersion": "7.0.2",
   "tsconfig": "tsconfig.gate.json",
-  "generatedAt": "2026-09-18T06:06:16.283Z",
-  "rawCount": 13218,
+  "generatedAt": "2026-09-18T06:10:21.876Z",
+  "rawCount": 13212,
   "droppedNoise": {
     "library": 0,
     "probe": 0,
     "commentTS1xxx": 0,
     "commentOther": 0
   },
-  "keptCount": 13218,
+  "keptCount": 13212,
   "uniqueKeys": 3064,
   "entries": {
     "src/common/GlobalStore.tsx|TS2554": 1,
@@ -1180,7 +1180,7 @@
     "src/pages/Mobile/components/RecordInfo/RecordAction/index.tsx|TS2551": 7,
     "src/pages/Mobile/components/RecordInfo/RecordAction/index.tsx|TS2554": 1,
     "src/pages/Mobile/components/RecordInfo/RecordFooter.tsx|TS2322": 1,
-    "src/pages/Mobile/components/RecordInfo/RecordFooter.tsx|TS2339": 25,
+    "src/pages/Mobile/components/RecordInfo/RecordFooter.tsx|TS2339": 19,
     "src/pages/Mobile/components/RecordInfo/RecordForm.tsx|TS2322": 3,
     "src/pages/Mobile/components/RecordInfo/RecordForm.tsx|TS2339": 10,
     "src/pages/Mobile/components/RecordInfo/RecordForm.tsx|TS2741": 1,

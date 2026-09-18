@@ -1,7 +1,6 @@
 import React, { Component, Fragment, lazy, Suspense } from 'react';
 import { ActionSheet, Button } from 'antd-mobile';
 import cx from 'classnames';
-import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
@@ -15,6 +14,7 @@ import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import { pathCompletion } from 'src/utils/common';
 import { getTitleTextFromControls } from 'src/utils/control';
 import { renderText } from 'src/utils/control';
+import copy from 'src/utils/copyToClipboard';
 import { compatibleMDJS } from 'src/utils/project';
 import { replaceBtnsTranslateInfo } from 'src/utils/translate';
 import AiActionButtons from './RecordAction/AiActionButtons';
@@ -38,13 +38,35 @@ const CustomBtnBox = styled.div`
 `;
 const LoadableRecordAction = lazy(() => import('mobile/components/RecordInfo/RecordAction'));
 
-export const getRecordUrl = ({ appId, worksheetId, recordId, viewId }: { appId?: string; worksheetId?: string; recordId?: string; viewId?: string; [key: string]: any }) => {
+export const getRecordUrl = ({
+  appId,
+  worksheetId,
+  recordId,
+  viewId,
+}: {
+  appId?: string;
+  worksheetId?: string;
+  recordId?: string;
+  viewId?: string;
+  [key: string]: any;
+}) => {
   const shareUrl = pathCompletion(`/mobile/record/${appId}/${worksheetId}/${viewId}/${recordId}`);
   copy(shareUrl);
   alert(_l('复制成功'));
 };
 
-const updateWorksheetRowShareRange = ({ appId, worksheetId, rowId, viewId }: { appId?: string; worksheetId?: string; rowId?: string; viewId?: string; [key: string]: any }) => {
+const updateWorksheetRowShareRange = ({
+  appId,
+  worksheetId,
+  rowId,
+  viewId,
+}: {
+  appId?: string;
+  worksheetId?: string;
+  rowId?: string;
+  viewId?: string;
+  [key: string]: any;
+}) => {
   worksheetApi.updateWorksheetRowShareRange({
     appId,
     worksheetId,
@@ -55,7 +77,18 @@ const updateWorksheetRowShareRange = ({ appId, worksheetId, rowId, viewId }: { a
   });
 };
 
-export const getWorksheetShareUrl = ({ appId, worksheetId, recordId, viewId }: { appId?: string; worksheetId?: string; recordId?: string; viewId?: string; [key: string]: any }) => {
+export const getWorksheetShareUrl = ({
+  appId,
+  worksheetId,
+  recordId,
+  viewId,
+}: {
+  appId?: string;
+  worksheetId?: string;
+  recordId?: string;
+  viewId?: string;
+  [key: string]: any;
+}) => {
   return worksheetApi
     .getWorksheetShareUrl({
       appId,
@@ -100,6 +133,14 @@ export default class RecordFooter extends Component<any, any> {
   }
 
   recordRef = React.createRef();
+
+  /** ActionSheet.show 返回的句柄，卸载时用来关掉浮层 */
+  shareSheetHandler?: { close: () => void };
+  /**
+   * 【全文没有任何赋值点】componentWillUnmount 里那句判空因此永远是假，
+   * 等于什么都没做。这里只补声明、不动那行 —— 删它是行为清理，不是类型修复。
+   */
+  actionSheetHandler?: { close: () => void };
 
   componentDidMount() {
     if (

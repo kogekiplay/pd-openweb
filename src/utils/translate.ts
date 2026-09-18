@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { getTranslateInfo } from 'src/utils/app';
-import type { FormControl } from 'src/utils/controlTypes';
+import type { ControlAdvancedSetting, FormControl, WorksheetCustomBtn } from 'src/utils/controlTypes';
 
 const replaceOptionControlTranslateInfo = (data, { translateInfo, optionTranslateInfo }) => {
   data.options = data.options.map(item => {
@@ -95,7 +95,11 @@ export const replaceControlsTranslateInfo = (appId: string, worksheetId: string,
   });
 };
 
-export const replaceAdvancedSettingTranslateInfo = (appId: string, worksheetId: string, advancedSetting: Record<string, any> = {}) => {
+export const replaceAdvancedSettingTranslateInfo = (
+  appId: string,
+  worksheetId: string,
+  advancedSetting: ControlAdvancedSetting = {},
+) => {
   const translateInfo = getTranslateInfo(appId, null, worksheetId);
   const data = {
     ...advancedSetting,
@@ -124,7 +128,15 @@ export const replaceAdvancedSettingTranslateInfo = (appId: string, worksheetId: 
   return data;
 };
 
-export const replaceRulesTranslateInfo = (appId: string, worksheetId: string, rules: any[]) => {
+/** 规则里被翻译的是 ruleItems[0].message（只有 type === 1 的校验规则有） */
+type TranslatableRule = { ruleId?: string; type?: number; ruleItems?: { message?: string }[] };
+
+// 【泛型而不是 any[]】函数原地改 message 再把同一批对象还回去，用 T 能保住调用方的规则类型
+export const replaceRulesTranslateInfo = <T extends TranslatableRule>(
+  appId: string,
+  worksheetId: string,
+  rules: T[],
+) => {
   return rules.map(rule => {
     const translateInfo = getTranslateInfo(appId, worksheetId, rule.ruleId);
 
@@ -136,8 +148,10 @@ export const replaceRulesTranslateInfo = (appId: string, worksheetId: string, ru
   });
 };
 
-// 不标类型的话 `= []` 会被推成 never[]，调用方传任何真实数组都报 TS2345
-export const replaceBtnsTranslateInfo = (appId: string, btns: any[] = []) => {
+// 【不用泛型】按钮的消费方（RecordOperate / BatchOperate / recordInfo）读的是同一组
+// 固定字段，直接标成 WorksheetCustomBtn 更准；泛型反而会在推不出 T 时退回约束本身，
+// 把 disabled / clickType 这些字段挡掉。
+export const replaceBtnsTranslateInfo = (appId: string, btns: WorksheetCustomBtn[] = []) => {
   if (!window[`langData-${appId}`]) return btns;
   return btns.map(btn => {
     const translateInfo = getTranslateInfo(appId, null, btn.btnId);
