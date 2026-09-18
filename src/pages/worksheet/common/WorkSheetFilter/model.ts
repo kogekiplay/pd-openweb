@@ -323,7 +323,25 @@ export function createActions(dispatch) {
   return new Actions(dispatch);
 }
 
-export function createReducer(state: Record<string, any> = {}, action: ReduxAction) {
+/**
+ * 筛选面板的 reducer state。
+ * lastAction 不是数据，是个变更戳（action.type + 时间），用来强制下游 effect 重跑。
+ */
+export interface FilterState {
+  /** 已保存的筛选列表 */
+  filters?: unknown[];
+  /** 当前正在编辑的那条 */
+  editingFilter?: unknown;
+  /** 编辑版本号，effect 靠它判断"内容真的变了" */
+  editingFilterVersion?: number;
+  conditionsGroups?: unknown[];
+  loading?: boolean;
+  nameIsUpdated?: boolean;
+  needSave?: boolean;
+  lastAction?: string;
+}
+
+export function createReducer(state: FilterState = {}, action: ReduxAction) {
   function updateWithLastAction(oldState, updates) {
     if (_.isEmpty(updates)) return oldState;
     return update(oldState || {}, { ...updates, lastAction: { $set: action.type + Date.now() } });

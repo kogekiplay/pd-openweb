@@ -722,7 +722,13 @@ const isApplyStyle = (applyValue, recordKey) => {
   }
 };
 
-export const getScopeRuleColor = (value, controlMinAndMax: Record<string, any> = {}, scopeRules, emptyShowType) => {
+// 规则没给 min/max 时回落到这个字段在整批数据里的实际最小/最大值
+export const getScopeRuleColor = (
+  value,
+  controlMinAndMax: { min?: number; max?: number } = {},
+  scopeRules,
+  emptyShowType,
+) => {
   let result = null;
 
   scopeRules.forEach(rule => {
@@ -762,7 +768,17 @@ export const getScopeRuleColor = (value, controlMinAndMax: Record<string, any> =
   return result;
 };
 
-export const getStyleColor = ({ value = 0, controlMinAndMax, rule, controlId, record = {}, emptyShowType }: { controlId?: string; [key: string]: any }) => {
+export const getStyleColor = ({
+  value = 0,
+  controlMinAndMax,
+  rule,
+  controlId,
+  record = {},
+  emptyShowType,
+}: {
+  controlId?: string;
+  [key: string]: any;
+}) => {
   const { model, applyValue } = rule;
 
   if (model === 1 && isApplyStyle(applyValue, record.key)) {
