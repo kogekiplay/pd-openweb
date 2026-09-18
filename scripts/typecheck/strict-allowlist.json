@@ -322,6 +322,7 @@
     "src/pages/Statistics/enum.ts",
     "src/pages/UserProfile/components/Info/UserInfo.tsx",
     "src/pages/UserProfile/components/Profile/index.tsx",
+    "src/pages/calendar/modules/calendar/delta.ts",
     "src/pages/calendar/modules/calendar/fcInstance.ts",
     "src/pages/calendar/modules/calendarDetail/components/index.ts",
     "src/pages/calendar/modules/calendarDetail/constant.ts",

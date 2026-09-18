@@ -15,6 +15,14 @@ import { batchRemoveItems, insertNewLine } from '../../util/drag';
 import { getAdvanceSetting, getTitleStyle } from '../../util/setting';
 import WidgetStatus from '../components/WidgetStatus';
 
+/** 拖标签页时携带的 item；落点回的是 { rowIndex }（插到第几行） */
+interface TabDragItem {
+  type?: string;
+  widgetType?: number;
+  /** 被拖标签页的 controlId */
+  id?: string;
+}
+
 const TabHeaderItemWrap = styled.div`
   max-width: 100%;
   display: inline-flex;
@@ -102,7 +110,7 @@ export function TabHeaderItem(props) {
   };
 
   return (
-    (<TabHeaderItemWrap titleStyle={titleStyle} titleColor={titlecolor}>
+    <TabHeaderItemWrap titleStyle={titleStyle} titleColor={titlecolor}>
       {renderIcon()}
       <span className="Font15 Bold ellipsis tabHeaderTitle">{data.controlName}</span>
       <WidgetStatus data={data} style={{ lineHeight: '16px' }} />
@@ -111,7 +119,8 @@ export function TabHeaderItem(props) {
           trigger={['click']}
           open={visible}
           onOpenChange={visible => setVisible(visible)}
-          popupRender={() => <DropdownOverlay>
+          popupRender={() => (
+            <DropdownOverlay>
               <div
                 className="dropdownContent"
                 onClick={e => {
@@ -164,7 +173,8 @@ export function TabHeaderItem(props) {
                   {_l('删除')}
                 </div>
               </div>
-            </DropdownOverlay>}
+            </DropdownOverlay>
+          )}
           placement="bottom"
         >
           <div className="tabDeleteIcon">
@@ -172,7 +182,7 @@ export function TabHeaderItem(props) {
           </div>
         </Dropdown>
       )}
-    </TabHeaderItemWrap>)
+    </TabHeaderItemWrap>
   );
 }
 
@@ -182,7 +192,7 @@ export function DragHeaderItem(props) {
   const $ref = useRef(null);
   const [pointerDir, setPointerDir] = useState('');
 
-  const [, drag] = useDrag<any, any, any>({
+  const [, drag] = useDrag<TabDragItem, { rowIndex?: number }, unknown>({
     type: data.type === 52 ? DRAG_ITEMS.DISPLAY_TAB : DRAG_ITEMS.DISPLAY_LIST_TAB,
     item: {
       type: data.type === 52 ? DRAG_ITEMS.DISPLAY_TAB : DRAG_ITEMS.DISPLAY_LIST_TAB,
@@ -199,7 +209,7 @@ export function DragHeaderItem(props) {
     },
   });
 
-  const [{ isOver }, drop] = useDrop<any, any, any>({
+  const [{ isOver }, drop] = useDrop<TabDragItem, { rowIndex?: number }, { isOver: boolean }>({
     accept: DRAG_ACCEPT.tab,
     hover(item, monitor) {
       if (item.id === data.controlId || !$ref.current) return;

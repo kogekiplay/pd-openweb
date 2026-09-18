@@ -1,7 +1,7 @@
 import React, { useCallback, useRef } from 'react';
 import { useDragLayer, useDrop } from 'react-dnd';
 import cx from 'classnames';
-import { ITEM_TYPE, ITEM_TYPE_GROUP } from './constants';
+import { type CustomBtnDragItem, ITEM_TYPE, ITEM_TYPE_GROUP } from './constants';
 
 function getActiveDropPlacement(activeDropPlacementRef, item) {
   const placement = activeDropPlacementRef.current;
@@ -59,7 +59,7 @@ export function SegmentBoundaryGap({
   isAfterGroup = false,
 }) {
   const active = activeGroupInsert === insertBefore || activeButtonInsert === insertBefore;
-  const [, drop] = useDrop<any, any, any>({
+  const [, drop] = useDrop<CustomBtnDragItem, void, unknown>({
     accept: [ITEM_TYPE_GROUP, ITEM_TYPE],
     hover: (item, monitor) => {
       if (item.layoutId !== layoutId || !monitor.isOver({ shallow: true })) {
@@ -88,7 +88,14 @@ export function SegmentBoundaryGap({
     },
   });
 
-  return <div ref={el => { drop(el); }} className={cx('customBtnGroupedSegmentReorderGap', { isActive: active, isAfterGroup })} />;
+  return (
+    <div
+      ref={el => {
+        drop(el);
+      }}
+      className={cx('customBtnGroupedSegmentReorderGap', { isActive: active, isAfterGroup })}
+    />
+  );
 }
 
 export function DropGap({ segmentIndex, gapIndex, activeGap }) {
@@ -135,7 +142,7 @@ export function EmptyGroupDropTarget({
     return clientOffset.y - rect.top > Math.min(6, rect.height / 3) ? 'after' : 'inside';
   };
 
-  const [{ isOver }, drop] = useDrop<any, any, any>({
+  const [{ isOver }, drop] = useDrop<CustomBtnDragItem, void, { isOver: boolean }>({
     accept: ITEM_TYPE,
     hover: (item, monitor) => {
       if (item.layoutId !== layoutId || !monitor.isOver({ shallow: true })) {
@@ -264,7 +271,7 @@ export function SegmentBlockDropTarget({
     },
     [segment, segmentIndex, isGroupCollapsed],
   );
-  const [{ isOver }, drop] = useDrop<any, any, any>({
+  const [{ isOver }, drop] = useDrop<CustomBtnDragItem, void, { isOver: boolean }>({
     accept: [ITEM_TYPE_GROUP, ITEM_TYPE],
     hover: (item, monitor) => {
       if (item.layoutId !== layoutId || !ref.current || !monitor.isOver({ shallow: true })) {
