@@ -280,8 +280,19 @@
     .ant-picker-cell-inner::after {
     background: var(--color-primary-dark) !important;
   }
+  /* 【别给箭头元素【本身】上背景】原先这里还有一句
+       background: linear-gradient(135deg, transparent 40%, var(--color-background-card) 40%) !important;
+     那是给 antd 4/5 写的：那时箭头就是一个旋转 45° 的小方块，元素自己就是可见的三角。
+     antd 6 改了：.ant-picker-range-arrow 是个【带 padding-inline 的 49×16 定位盒】
+     （box-sizing: content-box，width 只有 --ant-size-popup-arrow），真正的小三角是
+     ::before 用 clip-path 裁出来的，元素本身背景是透明的。
+     于是那句渐变把【整个 49×16 的盒子】刷成了白块，而这个盒子正好压在聚焦输入框的
+     .ant-picker-active-bar 上 —— 生产实测箭头 y167.7~183.7、活动条 y168.7~170.7，
+     两者 x 都从 673 起，箭头 49px 宽盖掉了 87px 蓝条的 56%。
+     表现就是用户报的「蓝色条被挡住了」：聚焦某一半时下面那条蓝线缺一截。
+     ::before 这条要留着 —— 暗色主题下 antd 默认用的 --ant-color-bg-elevated 不跟我们的
+     主题变量走，得换成 --color-background-card。 */
   .ant-picker-range-arrow {
-    background: linear-gradient(135deg, transparent 40%, var(--color-background-card) 40%) !important;
     &::before {
       background: linear-gradient(to left, var(--color-background-card) 50%, var(--color-background-card) 50%)
         no-repeat -5px -5px !important;

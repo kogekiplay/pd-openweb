@@ -20,6 +20,7 @@ export default function Concatenate({
   placeholder,
 }) {
   const $tagtextarea = useRef(null);
+  const $settingContent = useRef<HTMLDivElement>(null);
   const { controlId, dataSource } = data;
   const [visible, setVisible] = useState(false);
   // SYSTEM_CONTROL / ROW_ID_CONTROL 是只带 controlId/type/controlName 的字面量，
@@ -34,7 +35,7 @@ export default function Concatenate({
     <Fragment>
       <SettingItem className={classNames}>
         {!hideTitle && <div className="settingItemTitle">{_l('选择字段')}</div>}
-        <div className="settingContent">
+        <div className="settingContent" ref={$settingContent}>
           <TagTextarea
             defaultValue={dataSource}
             maxHeight={140}
@@ -70,7 +71,24 @@ export default function Concatenate({
             <SelectControl
               className={'isolate'}
               list={filterOnlyShowField(availableControls)}
-              onClickAway={() => setVisible(false)}
+              /* 【原先是 onClickAway={() => setVisible(false)}，结果字段选择器「点不开」】
+                 SelectControl 用 react-use 的 useClickAway 关自己，它监听的是
+                 【document 上的 mousedown】。而这个弹层是在 TagTextarea(CodeMirror 6)
+                 拿到焦点时开的 —— 焦点是 mousedown 的默认动作，触发时这次 mousedown
+                 【还在往 document 冒泡】。弹层一挂载，useClickAway 的监听器立刻装上，
+                 正好吃到同一次 mousedown，判定为「点到外面了」，于是开完马上关。
+                 生产实测的事件轨迹（一次点击之内）：
+                   t=67 mousedown(capture@document) → t=69 focusin .cm-content
+                   → t=75 弹层挂载 → t=83 弹层卸载 → t=85 mouseup/click
+                 用 JS 直接 .focus() 反而正常，因为那时没有 mousedown 在冒泡。
+
+                 所以不能把「点在输入框自己身上」算成 click away —— 那恰恰是打开它的
+                 那一下。弹层内部的点击 useClickAway 本来就排除了（el.contains），
+                 这里补上外层容器（同时包住输入框和弹层）。 */
+              onClickAway={e => {
+                if ($settingContent.current && $settingContent.current.contains(e.target as Node)) return;
+                setVisible(false);
+              }}
               onClick={item => {
                 $tagtextarea.current.insertColumnTag(item.controlId);
               }}

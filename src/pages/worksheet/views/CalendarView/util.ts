@@ -416,7 +416,12 @@ export const getRows = (start, end, calendarview) => {
 export const resetFcEventDraggingPoint = () => {
   if (document.querySelector('.CustomPageContentWrap')) {
     setTimeout(() => {
-      const draggingElement = document.querySelector('.fc-event-dragging');
+      /* 【原先查的是 .fc-event-dragging】那是 v6 给正在拖的那张卡片挂的类，
+         v7 哈希化之后【整页 0 个元素】，这个函数等于空跑 —— 自定义页面里拖日历事件
+         的定位偏移一直没被修正过，而且不报错。
+         v7 拖动时渲染的是「镜像」事件，fcClassCompat 里用 EventDisplayInfo.isMirror
+         把 fc-event-mirror 挂了回去，查它即可。 */
+      const draggingElement: HTMLElement | null = document.querySelector('.fc-event-mirror');
 
       if (draggingElement) {
         const worksheetBox = draggingElement.closest('#worksheetRightContentBox');
