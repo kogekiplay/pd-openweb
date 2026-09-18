@@ -6,9 +6,18 @@ import { ALL_SYS } from 'src/pages/widgetConfig/config/widget';
 import { isCustomWidget, isOldSheetList, isTabSheetList, supportDisplayRow } from 'src/pages/widgetConfig/util';
 import { browserIsMobile, getStringBytes, pathCompletion } from 'src/utils/common';
 import { checkCellIsEmpty, controlState } from 'src/utils/control';
+import type {
+  AttachmentValue,
+  ControlAdvancedSetting,
+  ControlValue,
+  DepartmentPathItem,
+  FormControl,
+  RecordRow,
+  SelectedEntityValue,
+  SubListStore,
+} from 'src/utils/controlTypes';
 import { filterEmptyChildTableRows, getNewRecordPageUrl, getRelateRecordCountFromValue } from 'src/utils/record';
 import { FORM_ERROR_TYPE, FORM_ERROR_TYPE_TEXT, FROM, WIDGET_VALUE_ID } from './config';
-import type { ControlAdvancedSetting, FormControl, RecordRow } from 'src/utils/controlTypes';
 
 export function validate(id = '') {
   return !/^(temp|default|public-temp|deleterowids)/.test(id.toLowerCase());
@@ -190,7 +199,7 @@ function formatRowToServer(
 export interface ServerControl {
   controlId?: string;
   type?: FormControl['type'];
-  value?: any;
+  value?: ControlValue;
   controlName?: string;
   dot?: number;
   /** 增量更新方式：0 覆盖、2 删除、9 增删差异；不走增量时不下发 */
@@ -246,11 +255,11 @@ export function formatControlToServer(
   }
 
   // state 是子表/关联表 store 的快照（形状由 ChildTableStore 决定），其余几个都是按控件类型临时解出来的值
-  let parsedValue: any;
+  let parsedValue: ControlValue;
   let childTableControls: FormControl[];
   let isFromDefault: boolean;
-  let state: any;
-  let rows: any[];
+  let state: SubListStore;
+  let rows: RecordRow[];
   const isRelateRecordDropdown =
     control.type === 29 &&
     String(_.get(control, 'advancedSetting.showtype')) === String(RELATE_RECORD_SHOW_TYPE.DROPDOWN);
@@ -275,15 +284,15 @@ export function formatControlToServer(
       break;
     case 14: // 附件
       const parsed = safeParse(control.value);
-      const oldAttachments: any[] = [];
-      const oldKnowledgeAtts: any[] = [];
+      const oldAttachments: AttachmentValue[] = [];
+      const oldKnowledgeAtts: AttachmentValue[] = [];
 
       if ((isSubListCopy || isDraft) && _.isArray(parsed) && !_.isEmpty(parsed)) {
         result.value = JSON.stringify(parsed.map(a => a.fileID || a.fileId));
         break;
       }
 
-      (parsed.attachmentData || []).forEach((item: any) => {
+      (parsed.attachmentData || []).forEach((item: AttachmentValue) => {
         item = Object.assign({}, item, { fileExt: item.ext }, { isEdit: true });
         if (item.fileId && !item.fileID) {
           item.fileID = item.fileId;
@@ -299,10 +308,10 @@ export function formatControlToServer(
       result.value = JSON.stringify({
         attachmentData: [],
         attachments: (parsed.attachments || [])
-          .map((item: any) => Object.assign({}, item, { isEdit: false }))
+          .map((item: AttachmentValue) => Object.assign({}, item, { isEdit: false }))
           .concat(oldAttachments),
         knowledgeAtts: (parsed.knowledgeAtts || [])
-          .map((item: any) => Object.assign({}, item, { isEdit: false }))
+          .map((item: AttachmentValue) => Object.assign({}, item, { isEdit: false }))
           .concat(oldKnowledgeAtts),
       });
       break;
@@ -494,7 +503,7 @@ export function formatControlToServer(
         }
       } else {
         result.editType = 9;
-        let resultvalue: any[] = [];
+        let resultvalue: RecordRow[] = [];
 
         if (!_.isEmpty(result.value.deleted)) {
           resultvalue = resultvalue.concat(
@@ -793,51 +802,58 @@ export const dealUserRange = (
     return curKey;
   }
 
-  JSON.parse(_.get(control, 'advancedSetting.chooserange') || '[]').map((item: any) => {
-    if (item.type === 4) {
-      if (item.rcid && item.rcid !== masterData.worksheetId) {
-        const parentControl = _.find(data, i => i.controlId === item.rcid) || {};
-        const control = safeParse(parentControl.value || '[]', 'array')[0];
-        const sourcevalue = control && JSON.parse(control.sourcevalue)[item.cid];
-        const curItem = _.find(parentControl.relationControls || [], re => re.controlId === item.cid);
-        const sourceVal = sourcevalue && safeParse(sourcevalue);
+  // chooserange 的一项：type 4 表示「取某个控件的值做范围」，此时带 rcid（关联控件）/ cid（目标控件）
+  JSON.parse(_.get(control, 'advancedSetting.chooserange') || '[]').map(
+    (item: { type?: number; rcid?: string; cid?: string; [key: string]: ControlValue }) => {
+      if (item.type === 4) {
+        if (item.rcid && item.rcid !== masterData.worksheetId) {
+          const parentControl = _.find(data, i => i.controlId === item.rcid) || {};
+          const control = safeParse(parentControl.value || '[]', 'array')[0];
+          const sourcevalue = control && JSON.parse(control.sourcevalue)[item.cid as string];
+          const curItem = _.find(parentControl.relationControls || [], re => re.controlId === item.cid);
+          const sourceVal = sourcevalue && safeParse(sourcevalue);
 
-        if (curItem && _.isArray(sourceVal)) {
-          const currentItem = {
-            ...curItem,
-            type: curItem.type === 30 ? curItem.sourceControlType : curItem.type,
-          };
-          const arrKey = getArrKey(currentItem);
-          ranges[arrKey] = _.uniq(
-            (ranges[arrKey] || []).concat(sourceVal.map((s: any) => s[WIDGET_VALUE_ID[currentItem.type as number]])),
-          );
+          if (curItem && _.isArray(sourceVal)) {
+            const currentItem = {
+              ...curItem,
+              type: curItem.type === 30 ? curItem.sourceControlType : curItem.type,
+            };
+            const arrKey = getArrKey(currentItem);
+            ranges[arrKey] = _.uniq(
+              (ranges[arrKey] || []).concat(
+                sourceVal.map((s: Record<string, ControlValue>) => s[WIDGET_VALUE_ID[currentItem.type as number]]),
+              ),
+            );
+          }
+        } else {
+          const cidItem =
+            _.find(data || [], d => d.controlId === item.cid) ||
+            _.find(masterData.formData || [], d => d.controlId === item.cid);
+
+          if (cidItem) {
+            const currentItem = { ...cidItem, type: cidItem.type === 30 ? cidItem.sourceControlType : cidItem.type };
+            const arrKey = getArrKey(currentItem);
+            ranges[arrKey] = _.uniq(
+              (ranges[arrKey] || []).concat(
+                JSON.parse(currentItem.value || '[]').map(
+                  (i: Record<string, ControlValue>) => i[WIDGET_VALUE_ID[currentItem.type as number]],
+                ),
+              ),
+            );
+          }
         }
       } else {
-        const cidItem =
-          _.find(data || [], d => d.controlId === item.cid) ||
-          _.find(masterData.formData || [], d => d.controlId === item.cid);
+        const arrKey = getArrKey(item);
+        const userInfo = safeParse(item.staticValue || '{}');
+        const chooseId = item.type === 1 ? 26 : item.type === 2 ? 27 : 48;
+        const chooseValue = _.get(userInfo, [WIDGET_VALUE_ID[chooseId]]);
 
-        if (cidItem) {
-          const currentItem = { ...cidItem, type: cidItem.type === 30 ? cidItem.sourceControlType : cidItem.type };
-          const arrKey = getArrKey(currentItem);
-          ranges[arrKey] = _.uniq(
-            (ranges[arrKey] || []).concat(
-              JSON.parse(currentItem.value || '[]').map((i: any) => i[WIDGET_VALUE_ID[currentItem.type as number]]),
-            ),
-          );
+        if (chooseValue) {
+          ranges[arrKey] = _.uniq((ranges[arrKey] || []).concat(chooseValue));
         }
       }
-    } else {
-      const arrKey = getArrKey(item);
-      const userInfo = safeParse(item.staticValue || '{}');
-      const chooseId = item.type === 1 ? 26 : item.type === 2 ? 27 : 48;
-      const chooseValue = _.get(userInfo, [WIDGET_VALUE_ID[chooseId]]);
-
-      if (chooseValue) {
-        ranges[arrKey] = _.uniq((ranges[arrKey] || []).concat(chooseValue));
-      }
-    }
-  });
+    },
+  );
   return ranges;
 };
 
@@ -1003,19 +1019,21 @@ export const getControlsByTab = (
 };
 
 // 部门控件渲染数据处理，后期可能有组织角色
-export const dealRenderValue = (value: any, advancedSetting: ControlAdvancedSetting = {}) => {
+export const dealRenderValue = (value?: ControlValue, advancedSetting: ControlAdvancedSetting = {}) => {
   const { showdelete, allpath } = advancedSetting;
   const tempValue = _.isArray(value) ? value : safeParse(value || '[]');
   let deleteCount = 0;
-  const result: any[] = [];
+  const result: SelectedEntityValue[] = [];
 
-  tempValue.map((item: any) => {
+  tempValue.map((item: SelectedEntityValue) => {
     if (item.isDelete) {
       deleteCount += 1;
     } else {
       const pathValue = (
         allpath === '1'
-          ? (item.departmentPath || []).sort((a: any, b: any) => b.depth - a.depth).map((i: any) => i.departmentName)
+          ? (item.departmentPath || [])
+              .sort((a: DepartmentPathItem, b: DepartmentPathItem) => (b.depth || 0) - (a.depth || 0))
+              .map((i: DepartmentPathItem) => i.departmentName)
           : []
       ).concat([item.departmentName]);
 
@@ -1067,7 +1085,7 @@ export const getWidgetDisplayRow = ({
 export const getArrBySpliceType = (filters: { spliceType?: number }[] = []) => {
   let num = 0;
   return Object.values(
-    filters.reduce((res: { [group: number]: any[] }, item) => {
+    filters.reduce((res: { [group: number]: { spliceType?: number }[] }, item) => {
       res[num] ? res[num].push(item) : (res[num] = [item]);
       if (item.spliceType === 2) {
         num++;
@@ -1082,7 +1100,7 @@ export const getArrBySpliceType = (filters: { spliceType?: number }[] = []) => {
 export const formatControlValue = (value: string, type?: number) => {
   if (_.includes([26, 27, 29, 48], type)) {
     return safeParse(value.startsWith('deleteRowIds') ? '[]' : value || '[]')
-      .map((ac: any) => ac[WIDGET_VALUE_ID[type as number]])
+      .map((ac: Record<string, ControlValue>) => ac[WIDGET_VALUE_ID[type as number]])
       .join('');
   }
 
@@ -1124,7 +1142,7 @@ export const isPublicLink = () => {
 
 // 后端接口报错
 export const getServiceError = (badData: string[] = [], data?: FormControl[], from?: number) => {
-  const serviceError: any[] = [];
+  const serviceError: { controlId: string; errorText: string; errorType: string; showError: boolean }[] = [];
   const hideControlErrors: string[] = [];
   badData.forEach(controlId => {
     const control = _.find(data, d => d.controlId === controlId);
@@ -1145,7 +1163,11 @@ export const getServiceError = (badData: string[] = [], data?: FormControl[], fr
 };
 
 // 计算汇总去重、单个去重计数
-export function calcSubTotalCount(values: any[] = [], control: FormControl = {}, currentItem: FormControl = {}) {
+export function calcSubTotalCount(
+  values: ControlValue[] = [],
+  control: FormControl = {},
+  currentItem: FormControl = {},
+) {
   const unique = currentItem.enumDefault === 21;
   const filterValues = values.filter(c => {
     if (control.type === 36) {
@@ -1166,7 +1188,7 @@ export function calcSubTotalCount(values: any[] = [], control: FormControl = {},
         return safeValue.map((i: string) => (i.indexOf('other') > -1 ? 'other' : i));
       }
 
-      const value = safeValue.map((i: any) => i[WIDGET_VALUE_ID[control.type as number]]);
+      const value = safeValue.map((i: Record<string, ControlValue>) => i[WIDGET_VALUE_ID[control.type as number]]);
       return unique ? value.sort() : value;
     }
 
@@ -1180,11 +1202,11 @@ export function calcSubTotalCount(values: any[] = [], control: FormControl = {},
 
   const totalValues = _.reduce(
     formatValues,
-    (total: any[], v) => {
+    (total: ControlValue[], v) => {
       const itemValues = _.isArray(v) ? v : [v];
       return total.concat(itemValues);
     },
-    [] as any[],
+    [] as ControlValue[],
   );
 
   return _.uniq(totalValues).length + containsEmptyValues;
@@ -1273,7 +1295,7 @@ export const supportTabKeyDown = (
 };
 
 // 获取人员字段值
-export const getUserValue = (value?: any) => {
+export const getUserValue = (value?: ControlValue) => {
   if (!value) return [];
   if (_.isArray(value)) return value.filter(Boolean);
   if (value && typeof value === 'string') {

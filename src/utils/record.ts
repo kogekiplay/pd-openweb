@@ -16,9 +16,17 @@ import {
   getTitleTextFromRelateControl,
   getValueStyle,
 } from 'src/utils/control';
+import type {
+  ControlAdvancedSetting,
+  ControlOption,
+  ControlValue,
+  FormControl,
+  RecordRow,
+  RelateRecordValue,
+  SubListStore,
+} from 'src/utils/controlTypes';
 import { VersionProductType } from 'src/utils/enum';
 import { getFeatureStatus } from 'src/utils/project';
-import type { ControlAdvancedSetting, FormControl, RecordRow } from 'src/utils/controlTypes';
 
 export function filterEmptyChildTableRows<T extends { rowid?: string }>(rows: T[] = []): T[] {
   try {
@@ -41,7 +49,7 @@ export function getNewRecordPageUrl({
   return pathCompletion(`/app/${appId}/newrecord/${worksheetId}/${viewId}/`);
 }
 
-export function getRelateRecordCountFromValue(value?: any, propsCount?: number) {
+export function getRelateRecordCountFromValue(value?: ControlValue, propsCount?: number) {
   let count = 0;
 
   try {
@@ -72,18 +80,20 @@ export function getRelateRecordCountFromValue(value?: any, propsCount?: number) 
   return count;
 }
 
-export function handleUpdateDefsourceOfControl({
-  recordId,
-  relateRecordControl,
-  masterData,
-  controls = [],
-}: {
-  recordId?: string;
-  /** 主记录侧的关联字段，用来找出本表里与之配对的那个关联控件 */
-  relateRecordControl: FormControl & { worksheetId?: string };
-  masterData?: { formData?: FormControl[] };
-  controls?: FormControl[];
-} = { relateRecordControl: {} }) {
+export function handleUpdateDefsourceOfControl(
+  {
+    recordId,
+    relateRecordControl,
+    masterData,
+    controls = [],
+  }: {
+    recordId?: string;
+    /** 主记录侧的关联字段，用来找出本表里与之配对的那个关联控件 */
+    relateRecordControl: FormControl & { worksheetId?: string };
+    masterData?: { formData?: FormControl[] };
+    controls?: FormControl[];
+  } = { relateRecordControl: {} },
+) {
   return controls.map(control => {
     if (
       control.type === 29 &&
@@ -98,17 +108,23 @@ export function handleUpdateDefsourceOfControl({
                 JSON.stringify({
                   rowid: recordId,
                   ...[{}, ...(get(masterData, 'formData') || []).filter((c: FormControl) => c.type !== 34)].reduce(
-                (a: any = {}, b: any = {}) =>
-                  Object.assign(a, {
-                    [b.controlId]:
-                      b.type === 29 && _.isObject(b.value) && b.value.records
-                        ? JSON.stringify(
-                            // 子表使用双向关联字段作为默认值 RELATERECORD_OBJECT
-                            b.value.records.map((r: RecordRow) => ({ sid: r.rowid, sourcevalue: JSON.stringify(r) })),
-                          )
-                        : b.value,
-                  }),
-              ),
+                    (a: Record<string, ControlValue> = {}, b: FormControl = {}) => {
+                      // 子表使用双向关联字段作为默认值 RELATERECORD_OBJECT：
+                      // 这时关联字段的值是 { records: [...] } 这种对象，其余情况是标量或字符串。
+                      // 走 _.get 取，既兜住了「不是对象」的情况（原先那句 _.isObject 判断），
+                      // 又不用把 b 退回 any —— FormControl['value'] 是 ControlValue，
+                      // 被 _.isObject 收窄成 object 之后反而读不到 records。
+                      const relateRecords: RecordRow[] | undefined = _.get(b, 'value.records');
+                      return Object.assign(a, {
+                        [b.controlId as string]:
+                          b.type === 29 && relateRecords
+                            ? JSON.stringify(
+                                relateRecords.map((r: RecordRow) => ({ sid: r.rowid, sourcevalue: JSON.stringify(r) })),
+                              )
+                            : b.value,
+                      });
+                    },
+                  ),
                 }),
               ]),
             },
@@ -237,7 +253,7 @@ export function formatRecordToRelateRecord(
   return value;
 }
 
-function checkCellIsFilled(control: FormControl, value: any) {
+function checkCellIsFilled(control: FormControl, value: ControlValue) {
   if (control.type === 36) {
     return value === true || String(value) === '1';
   }
@@ -262,9 +278,7 @@ const sumNumbers = (values: number[]) => {
 };
 
 const getNumberValues = (rows: RecordRow[], control: FormControl) =>
-  rows
-    .map(row => Number(row[control.controlId as string]))
-    .filter(value => _.isNumber(value) && !_.isNaN(value));
+  rows.map(row => Number(row[control.controlId as string])).filter(value => _.isNumber(value) && !_.isNaN(value));
 
 export const getSummaryResult = (rows: RecordRow[], control: FormControl, summaryType?: number) => {
   let result;
@@ -297,7 +311,7 @@ export const getSummaryResult = (rows: RecordRow[], control: FormControl, summar
   return result;
 };
 
-export function copySublistControlValue(control: FormControl, value: any) {
+export function copySublistControlValue(control: FormControl, value: ControlValue) {
   if (checkCellIsEmpty(value)) {
     return value;
   }
@@ -355,7 +369,7 @@ export function getRecordTempValue(
   relateRecordMultipleData: { [controlId: string]: FormControl } = {},
   { updateControlIds }: { updateControlIds?: string[] } = {},
 ) {
-  const results: { [controlId: string]: any } = {};
+  const results: { [controlId: string]: ControlValue } = {};
   data
     .filter(
       c =>
@@ -373,11 +387,14 @@ export function getRecordTempValue(
               try {
                 const parsed = JSON.parse(String(newRow[key]));
                 newRow[key] = JSON.stringify(
-                  parsed.map((relateRecord: any) => ({
+                  parsed.map((relateRecord: RelateRecordValue) => ({
                     ...relateRecord,
                     sourcevalue: JSON.stringify(
                       _.pickBy(
-                        JSON.parse(relateRecord.sourcevalue),
+                        // sourcevalue 是可选的；这里刻意用 String() 而不是 `|| '{}'` ——
+                        // 取不到时要让 JSON.parse 照旧抛出，由外层 catch 把这个 key 整个删掉
+                        // （用 '{}' 兜底会变成「保留一个空对象」，和原来的行为不一样）。
+                        JSON.parse(String(relateRecord.sourcevalue)),
                         v => !checkCellIsEmpty(v) && (typeof v !== 'string' || v.indexOf('sourcevalue') < 0),
                       ),
                     ),
@@ -395,7 +412,7 @@ export function getRecordTempValue(
         try {
           if (get(control, 'value', '')[0] === '[') {
             results[control.controlId as string] = JSON.stringify(
-              JSON.parse(control.value).map((r: any) => ({
+              JSON.parse(control.value).map((r: RelateRecordValue) => ({
                 type: r.type,
                 sid: r.sid,
                 name: getTitleTextFromRelateControl(control, r.name ? r : r.row || safeParse(r.sourcevalue)),
@@ -423,12 +440,12 @@ export function getRecordTempValue(
 }
 
 export function parseRecordTempValue(
-  data: { [controlId: string]: any } = {},
+  data: { [controlId: string]: ControlValue } = {},
   originFormData: FormControl[] = [],
-  defaultRelatedSheet: { relateSheetControlId?: string; value?: any } = {},
+  defaultRelatedSheet: { relateSheetControlId?: string; value?: ControlValue } = {},
 ) {
   let formdata: FormControl[] = [];
-  const relateRecordData: { [controlId: string]: any } = {};
+  const relateRecordData: { [controlId: string]: ControlValue } = {};
 
   try {
     formdata = originFormData.map(c => {
@@ -525,7 +542,7 @@ export function getRecordColor({
   }
 
   const activeOption = (colorControl.options || []).find(
-    (c: any) => c.key === activeKey && (colorItems === '' || _.includes(colorItems, c.key)),
+    (c: ControlOption) => c.key === activeKey && (colorItems === '' || _.includes(colorItems, c.key)),
   );
   const lightColor = activeOption && activeOption.color && generate(activeOption.color)[5];
   return (
@@ -589,7 +606,13 @@ export const openLinkFromRecord = (linkControlId?: string, record: RecordRow = {
   }
 };
 
-export const handleRecordClick = (view: any, row: RecordRow, openRecord: () => void = () => {}) => {
+/* view 在这里只用来读 advancedSetting.clicktype / clickcid，没必要（也还没有）一个完整的视图类型，
+   标成「有 advancedSetting 就行」——调用点传整个视图对象照样满足。 */
+export const handleRecordClick = (
+  view: { advancedSetting?: ControlAdvancedSetting },
+  row: RecordRow,
+  openRecord: () => void = () => {},
+) => {
   const clickType = _.get(view, 'advancedSetting.clicktype') || VIEW_CONFIG_RECORD_CLICK_ACTION.OPEN_RECORD;
 
   if (clickType === VIEW_CONFIG_RECORD_CLICK_ACTION.OPEN_RECORD) {
@@ -623,7 +646,7 @@ export function getSubListUniqueError({
   badData = [],
 }: {
   /** 子表的 ChildTableStore */
-  store: any;
+  store: SubListStore;
   control: FormControl;
   /** 形如 ['子表controlId:控件controlId:重复值'] */
   badData?: string[];
@@ -805,7 +828,7 @@ export async function handleRowData(props: { rowId?: string; worksheetId?: strin
 
     const subTablePromise: Promise<FormControl>[] = [];
     const defcontrols = _.cloneDeep(columns);
-    _.forIn(defaultData, (value: any, key: string) => {
+    _.forIn(defaultData, (value: ControlValue, key: string) => {
       const control = columns.find(l => l.controlId === key);
 
       if (!control) return;

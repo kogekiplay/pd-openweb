@@ -263,6 +263,19 @@ export interface SelectedEntityValue {
   avatar?: string;
   departmentName?: string;
   organizeName?: string;
+  /** 已删除的成员/部门/角色仍会留在值里，渲染时按这个标记显示「已删除」并计数 */
+  isDelete?: boolean;
+  /** 「显示已删除」开关下，把所有已删除项折成一条时挂的条数 */
+  deleteCount?: number;
+  /** 部门控件开「显示完整层级」时带的路径，按 depth 从深到浅排 */
+  departmentPath?: DepartmentPathItem[];
+}
+
+/** 部门层级路径上的一节。 */
+export interface DepartmentPathItem {
+  depth?: number;
+  departmentId?: string;
+  departmentName?: string;
 }
 
 /**
@@ -285,7 +298,13 @@ export interface AttachmentValue {
   previewUrl?: string;
   viewUrl?: string;
   ext?: string;
+  /** 提交给后端时用的扩展名字段名（由 ext 复制过来） */
+  fileExt?: string;
   filesize?: number;
+  /** 知识库引用类附件才有 */
+  refType?: number;
+  /** 本次提交里这条是不是新编辑的 */
+  isEdit?: boolean;
 }
 
 /**
@@ -296,4 +315,19 @@ export interface RelationValue {
   type?: number;
   name?: string;
   link?: string;
+}
+
+/**
+ * 关联记录（29 RELATESHEET）的值元素。
+ *
+ * 同一条关联记录在不同来源里给法不一样：有的直接带 name，有的把整行塞在 row 里，
+ * 有的把整行【序列化成字符串】放进 sourcevalue（所以它是 string 不是对象）。
+ * 取标题时三者要依次兜底，见 utils/record.ts 里 `r.name ? r : r.row || safeParse(r.sourcevalue)`。
+ */
+export interface RelateRecordValue {
+  type?: number;
+  sid?: string;
+  name?: string;
+  row?: RecordRow;
+  sourcevalue?: string;
 }
