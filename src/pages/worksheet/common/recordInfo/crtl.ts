@@ -6,13 +6,13 @@ import worksheetAjax from 'src/api/worksheet';
 import { getRowDetail, type RecordDetail } from 'worksheet/api';
 import { exportSheet } from 'worksheet/components/ChildTable/redux/actions';
 import { getRuleErrorInfo } from 'src/components/Form/core/formUtils';
+import type { FormRule, RuleFilterItem } from 'src/components/Form/core/types';
 import { formatControlToServer } from 'src/components/Form/core/utils';
 import { getCustomWidgetUri } from 'src/pages/worksheet/constants/common';
 import { postWithToken } from 'src/utils/common';
+import type { FormControl, RecordRow, WorksheetCustomBtn } from 'src/utils/controlTypes';
 import { getRecordLandUrl, handleRecordError } from 'src/utils/record';
 import { replaceBtnsTranslateInfo, replaceRulesTranslateInfo } from 'src/utils/translate';
-import type { FormRule } from 'src/components/Form/core/types';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 /**
  * 提交失败时后端回传的「坏数据」。形状随 resultCode 变（11 唯一值冲突 / 22 子表唯一值 /
@@ -357,12 +357,12 @@ export function handleSubmitDraft(
 
     if (!_.isEmpty(filters)) {
       filters.forEach(it => {
-        controlIds = controlIds.concat((it.groupFilters || []).map((v: any) => v.controlId)).concat(it.controlId);
+        controlIds = controlIds.concat((it.groupFilters || []).map(v => v.controlId)).concat(it.controlId);
         if (it.groupFilters && it.groupFilters.length > 0) {
-          it.groupFilters.forEach((v: any) => {
+          it.groupFilters.forEach(v => {
             controlIds = controlIds.concat(v.controlId);
             if (v.dynamicSource && v.dynamicSource.length > 0) {
-              const cids = v.dynamicSource.reduce((ids: string[], s: any) => ids.concat(s.cid), []);
+              const cids = v.dynamicSource.reduce((ids: string[], s) => ids.concat(s.cid), []);
               controlIds = controlIds.concat(cids);
             }
           });
@@ -372,7 +372,7 @@ export function handleSubmitDraft(
 
     if (!_.isEmpty(ruleItems)) {
       ruleItems.forEach(it => {
-        controlIds = controlIds.concat(it.controls.map((it: any) => it.controlId));
+        controlIds = controlIds.concat(it.controls.map((it: FormControl) => it.controlId));
       });
     }
 
@@ -380,7 +380,9 @@ export function handleSubmitDraft(
   }, []);
 
   const receiveControls = formData
-    .filter((item: FormControl) => !_.includes([30, 31, 32, 51], item.type) && _.includes(receiveControlsIds, item.controlId))
+    .filter(
+      (item: FormControl) => !_.includes([30, 31, 32, 51], item.type) && _.includes(receiveControlsIds, item.controlId),
+    )
     .map(c => formatControlToServer(c, { isNewRecord: true, isDraft: true }));
 
   const args = {
@@ -540,10 +542,10 @@ export class RecordApi {
   }
 
   getWorksheetBtns(options?: ApiArgs) {
-    return new Promise<any[]>((resolve, reject) => {
+    return new Promise<WorksheetCustomBtn[]>((resolve, reject) => {
       worksheetAjax
         .getWorksheetBtns(_.assign({}, this.baseArgs, options))
-        .then((data: any[]) => {
+        .then((data: WorksheetCustomBtn[]) => {
           resolve(replaceBtnsTranslateInfo(this.baseArgs.appId, data));
         })
         .catch((err: unknown) => {
@@ -780,8 +782,10 @@ interface ExportRelateRecordOptions {
   rowId?: string;
   controlId?: string;
   fileName?: string;
-  filterControls?: any[];
-  onDownload?: (...args: any[]) => void;
+  /** 导出时带上的筛选条件，形状与视图筛选一致 */
+  filterControls?: RuleFilterItem[];
+  /** 导出结束时回调；失败时把错误对象传进来 */
+  onDownload?: (error?: unknown) => void;
 }
 
 export async function exportRelateRecordRecords({

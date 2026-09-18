@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import worksheetAjax from 'src/api/worksheet';
 import { createRequestPool } from 'worksheet/api/standard';
 import { getTreeExpandSize, handleUpdateTreeNodeExpansion, treeDataUpdater } from 'worksheet/common/TreeTableHelper';
+import type { RuleFilterItem } from 'src/components/Form/core/types';
 import { postWithToken } from 'src/utils/common';
 import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import { filterEmptyChildTableRows } from 'src/utils/record';
@@ -461,8 +462,10 @@ interface ExportSheetOptions {
   controlId?: string;
   clientId?: string;
   fileName?: string;
-  filterControls?: any[];
-  onDownload?: (...args: any[]) => void;
+  /** 导出时带上的筛选条件，形状与视图筛选一致 */
+  filterControls?: RuleFilterItem[];
+  /** 导出结束时回调；失败时把错误对象传进来（见下面 catch 分支） */
+  onDownload?: (error?: unknown) => void;
 }
 
 export const exportSheet = ({

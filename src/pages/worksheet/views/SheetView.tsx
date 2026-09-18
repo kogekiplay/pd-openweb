@@ -29,6 +29,7 @@ import * as sheetviewActions from 'worksheet/redux/actions/sheetview';
 import { isHaveCharge } from 'worksheet/redux/actions/util';
 import DataFormat from 'src/components/Form/core/DataFormat';
 import { WIDGETS_TO_API_TYPE_ENUM } from 'src/components/Form/core/enum';
+import type { FormRule } from 'src/components/Form/core/types';
 import { openMingoCreateRecord } from 'src/components/Mingo/modules/CreateRecordBot';
 import { permitList } from 'src/pages/FormSet/config.js';
 import { isOpenPermit } from 'src/pages/FormSet/util.js';
@@ -792,8 +793,12 @@ class TableViewBase extends React.Component<any, any> {
       !_.isEqual(prevProps.foldedMap, this.props.foldedMap) ||
       (!!getGroupControlId(view) &&
         !_.isEqual(
-          prevProps.sheetViewData.rows.filter((r: RecordRow) => r.rowid === 'groupTitle').map((r: RecordRow) => r.count),
-          this.props.sheetViewData.rows.filter((r: RecordRow) => r.rowid === 'groupTitle').map((r: RecordRow) => r.count),
+          prevProps.sheetViewData.rows
+            .filter((r: RecordRow) => r.rowid === 'groupTitle')
+            .map((r: RecordRow) => r.count),
+          this.props.sheetViewData.rows
+            .filter((r: RecordRow) => r.rowid === 'groupTitle')
+            .map((r: RecordRow) => r.count),
         )) ||
       // 操作列「快捷按钮」集合变化（如启用/停用分组内按钮导致空分组显隐）会改变 operatesButtonsWidth，
       // 但 react-window 列宽是缓存的，仅 re-render 传入新宽度不会重测量，需显式 forceUpdate 让其按新宽度重算。
@@ -1231,7 +1236,9 @@ class TableViewBase extends React.Component<any, any> {
       const showControls = _.cloneDeep(columns) || [];
       const controlsSorts = personalSetting?.controlsSorts || [];
       columns = [
-        ...controlsSorts.map((id: string) => showControls.find((c: FormControl) => c.controlId === id)).filter((o?: FormControl) => !!o),
+        ...controlsSorts
+          .map((id: string) => showControls.find((c: FormControl) => c.controlId === id))
+          .filter((o?: FormControl) => !!o),
         ...showControls.filter((c: FormControl) => !controlsSorts.includes(c.controlId)),
       ];
     }
@@ -1302,7 +1309,9 @@ class TableViewBase extends React.Component<any, any> {
       return [
         {},
         ...(allWorksheetIsSelected
-          ? rows.filter((row: RecordRow) => !_.find(sheetSelectedRows, r => r.rowid === row.rowid)).map(row => row.rowid)
+          ? rows
+              .filter((row: RecordRow) => !_.find(sheetSelectedRows, r => r.rowid === row.rowid))
+              .map(row => row.rowid)
           : sheetSelectedRows.map((row: RecordRow) => row.rowid)),
       ].reduce((a, b) => ({ ...a, [b]: true }));
     } catch (err) {
@@ -1367,7 +1376,11 @@ class TableViewBase extends React.Component<any, any> {
     const { sheetSwitchPermit } = this.props;
 
     if (this.isManageView) {
-      return sheetSwitchPermit.map((l: { type: number; state: boolean; viewIds: string[] }) => ({ ...l, state: true, viewIds: [] }));
+      return sheetSwitchPermit.map((l: { type: number; state: boolean; viewIds: string[] }) => ({
+        ...l,
+        state: true,
+        viewIds: [],
+      }));
     }
 
     return sheetSwitchPermit;
@@ -1532,7 +1545,10 @@ class TableViewBase extends React.Component<any, any> {
             },
             updateWorksheetInfo,
             onStyleChange: (newStyles: { cid: string; [key: string]: any }[]) => {
-              const changes = newStyles.reduce((a, b) => Object.assign(a, { [b.cid]: _.omit(b, 'cid') }), {} as Record<string, any>);
+              const changes = newStyles.reduce(
+                (a, b) => Object.assign(a, { [b.cid]: _.omit(b, 'cid') }),
+                {} as Record<string, any>,
+              );
 
               if (!get(window, 'shareState.shareId')) {
                 saveColumnStylesToLocal(changes);
@@ -1663,7 +1679,9 @@ class TableViewBase extends React.Component<any, any> {
         } else {
           this.shiftActiveRowIndex = selectIndex;
           selectRows({
-            rows: newSelected.map((rowid: string) => _.find(data, (row: RecordRow) => row.rowid === rowid)).filter(_.identity),
+            rows: newSelected
+              .map((rowid: string) => _.find(data, (row: RecordRow) => row.rowid === rowid))
+              .filter(_.identity),
           });
         }
       }
@@ -1900,7 +1918,9 @@ class TableViewBase extends React.Component<any, any> {
   // 真正的成员按钮 id 在 b.buttons 内，校验执行状态时必须展开成员真实 btnId。
   getOperateButtonCheckIds = (operatesButtons: SheetOperateButton[]) =>
     _.flatMap(operatesButtons, (b: SheetOperateButton) =>
-      b.type === 'group_ref' && _.isArray(b.buttons) ? b.buttons.map((member: SheetOperateButton) => member.btnId) : [b.btnId],
+      b.type === 'group_ref' && _.isArray(b.buttons)
+        ? b.buttons.map((member: SheetOperateButton) => member.btnId)
+        : [b.btnId],
     );
 
   checkSingleRowBtns = (rowId: string) => {
@@ -1950,7 +1970,7 @@ class TableViewBase extends React.Component<any, any> {
     }: {
       recordId: string;
       cell: { controlId: string; value: ControlValue };
-      rules?: any[];
+      rules?: FormRule[];
     }) {
       const key = [recordId, cid, newValue].join('-');
 
@@ -1984,7 +2004,9 @@ class TableViewBase extends React.Component<any, any> {
     };
 
     const dataFormat = new DataFormat({
-      data: controls.filter((c: FormControl) => c.advancedSetting).map((c: FormControl) => ({ ...c, value: (row || {})[c.controlId] || c.value })),
+      data: controls
+        .filter((c: FormControl) => c.advancedSetting)
+        .map((c: FormControl) => ({ ...c, value: (row || {})[c.controlId] || c.value })),
       projectId,
       rules,
       // masterData,
