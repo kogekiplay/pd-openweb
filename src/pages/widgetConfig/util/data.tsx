@@ -546,8 +546,17 @@ export const dealControlPos = (controls: FormControl[]) => {
   return _.flatten(sortableControls.map((item, row) => item.map((control, col) => ({ ...control, row, col }))));
 };
 
+/** 自定义事件里的一条执行动作。type: '1' 函数、'2' 查询，其余是给字段设默认值 */
+export interface CustomEventAction {
+  type?: string;
+  controlId?: string;
+  /** 设默认值时的取值配置（JSON 串，与控件 advancedSetting.defsource 同格式） */
+  value?: string;
+  [key: string]: unknown;
+}
+
 // 自定义事件保存时处理执行动作内默认值
-export const dealCusTomEventActions = (actionItems: any[] = [], controls: FormControl[] = []) => {
+export const dealCusTomEventActions = (actionItems: CustomEventAction[] = [], controls: FormControl[] = []) => {
   return (actionItems || []).map(item => {
     // 函数、查询不处理，动态值处理
     if (_.includes(['1', '2'], item.type)) return item;

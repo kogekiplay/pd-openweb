@@ -141,7 +141,12 @@ export function getMjmlPreviewTheme() {
   };
 }
 
-export function getMjmlPreviewHtml(value = '', formulaMap = {}, previewTheme: Record<string, any> = {}) {
+// previewTheme 是预览时要替换成的主题色对；命中默认色对时整篇替换掉
+export function getMjmlPreviewHtml(
+  value = '',
+  formulaMap = {},
+  previewTheme: { backgroundColor?: string; textColor?: string } = {},
+) {
   let html = replaceMjmlFormulaForPreview(value, formulaMap).replace(/max-width\s*:\s*600px;?/gi, '');
   const defaultThemeColorPair = DEFAULT_MJML_THEME_COLOR_PAIRS.find(
     item =>

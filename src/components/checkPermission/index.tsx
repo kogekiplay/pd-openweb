@@ -29,9 +29,10 @@ const fetchVersion = (projectId: string): Promise<string> =>
     .catch(() => '');
 
 /** 后台刷新一个项目的权限，填回缓存。同一个项目并发调用只跑一次。 */
-const refreshing: Record<string, Promise<any[]>> = {};
+// 里面装的是 permissionIds（权限枚举值，见 Admin/enum 的 PERMISSION_ENUM）
+const refreshing: Record<string, Promise<number[]>> = {};
 
-export const prefetchMyPermissions = (projectId: string): Promise<any[]> => {
+export const prefetchMyPermissions = (projectId: string): Promise<number[]> => {
   if (!projectId) return Promise.resolve([]);
   if (refreshing[projectId]) return refreshing[projectId];
 
