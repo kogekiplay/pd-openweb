@@ -502,13 +502,18 @@ class RecordCalendarBase extends Component<any, any> {
       const { initialView } = calendarData;
 
       if (this.props.height !== prevProps.height) {
-        /* 【去掉了 .fc-daygrid-body 和 .fc-scrollgrid-sync-table】v7 把类名哈希化之后
-           这两个名字在页面上【一个元素都没有】（生产月视图逐个点名，命中数 0），
-           而 fcClassCompat 里也没有对应的钩子可挂：v7 重写了布局引擎，
-           这两层是 v6 的产物，本来就是为了绕 v6 表格布局怪癖才强制 100% 宽的。
-           留着只是让人误以为这行还管着它们。.fc-col-header 有钩子（dayHeaderRowClass），
-           是活的，保留。 */
-        $('.boxCalendar,.calendarCon,.fc-col-header').width('100%');
+        /* 【这里原先有一句强制 100% 宽，已整行删掉】原文是
+             $('.boxCalendar,.calendarCon,.fc-daygrid-body,.fc-scrollgrid-sync-table,.fc-col-header ').width('100%')
+           那是绕 v6 表格布局怪癖的补丁。v7 把类名哈希化之后 .fc-daygrid-body 和
+           .fc-scrollgrid-sync-table 在页面上一个元素都没有，只剩 .fc-col-header 还活着
+           （dayHeaderRowClass 钩子）—— 而恰恰是它有害：v7 的表头是 flex 布局，
+           .fc-col-header 是 flex 子项，给它写死 width:100% 会让它【塌成 0 宽】，
+           七个日期表头格跟着变成 0~1px，周/日视图的「14 周一 15 周二 …」整排文字消失。
+           这一句在 height 变化时才跑，所以表现为「窗口一缩放表头就没了」。
+
+           生产上一行一行验过：跑这句之后 .fc-col-header 宽 1011 -> 0、表头格 138 -> 0~1；
+           把行内 width 清掉，表头立刻恢复成 137~138px。
+           v7 自己管布局，这一整句不需要了。 */
         this.setState({
           height,
         });
