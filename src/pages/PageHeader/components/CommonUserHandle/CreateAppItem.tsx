@@ -32,12 +32,20 @@ function CreateAppItem(props) {
   const [dialogImportExcel, setDialogImportExcel] = useState(false);
   const singleRef = getAppSectionRef(groupId);
   const appItem = findSheet(worksheetId, appSectionDetail);
+  /* 【原先这里是个三元，五处都写成 `appItem ? appItem.parentGroupId || appItem.parentId : groupId`】
+     只要在某张表里点「+ 新建」，appItem 就找得到，于是走三元的【真】分支；
+     可 findSheet 是直接从 sheetList.appSectionDetail 里原样捞出来的后端对象，
+     一级分组下的表【既没有 parentGroupId 也没有 parentId】（实测 keys 里压根没这两项，
+     全仓也没有任何地方给 appSectionDetail 的条目补过 parentId），
+     结果 groupId 变成 undefined -> AddWorkSheet 少了必填的 appSectionId ->
+     后端回 {"state":2,"exception":"参数错误"}，前端建不了表。
+     （parentGroupId 只有二级分组下的表才有，那条路径原来就是对的，要保住。）
+     改成一路兜底：有父级信息就用父级，没有就退回地址栏里的当前分组。 */
+  const targetGroupId = (appItem && (appItem.parentGroupId || appItem.parentId)) || groupId;
 
   useEffect(() => {
     window.__worksheetLeftReLoad = () => {
-      singleRef.dispatch(
-        getSheetList({ appId, appSectionId: appItem ? appItem.parentGroupId || appItem.parentId : groupId }),
-      );
+      singleRef.dispatch(getSheetList({ appId, appSectionId: targetGroupId }));
     };
 
     return () => {
@@ -50,7 +58,7 @@ function CreateAppItem(props) {
       singleRef.dispatch(
         createAppItem({
           appId,
-          groupId: appItem ? appItem.parentGroupId || appItem.parentId : groupId,
+          groupId: targetGroupId,
           firstGroupId: appItem && appItem.parentGroupId ? groupId : undefined,
           type,
           ...args,
@@ -156,13 +164,11 @@ function CreateAppItem(props) {
           <LoadableDialogImportExcelCreate
             projectId={projectId}
             appId={appId}
-            groupId={appItem ? appItem.parentGroupId || appItem.parentId : groupId}
+            groupId={targetGroupId}
             onCancel={() => setDialogImportExcel(false)}
             createType="worksheet"
             refreshPage={() => {
-              singleRef.dispatch(
-                getSheetList({ appId, appSectionId: appItem ? appItem.parentGroupId || appItem.parentId : groupId }),
-              );
+              singleRef.dispatch(getSheetList({ appId, appSectionId: targetGroupId }));
             }}
           />
         </Suspense>

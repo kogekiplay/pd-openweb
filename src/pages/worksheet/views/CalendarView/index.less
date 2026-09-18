@@ -7,6 +7,48 @@
   @DEFAULT_BORDER_COLOR: rgba(255, 255, 255, 0.12);
 }
 
+/* 「月视图高度 = 宽松」时事件卡片的样子：两行、40px 高。
+   【原先这段整个是死的】选择器写的是 v6 的复合类名：
+     .fc-daygrid-event.fc-daygrid-dot-event.fc-event
+     .fc-daygrid-event.fc-daygrid-block-event.fc-h-event.fc-event
+   FullCalendar 7 把类名哈希化之后，事件元素上【只剩 fc-event】——
+   fc-daygrid-event / fc-daygrid-dot-event / fc-daygrid-block-event / fc-h-event
+   实测整页命中数都是 0，两条复合选择器一条都匹配不上。
+   内层的 fc-event-main-frame / fc-event-title-container 同样是 0，
+   v7 的事件内部结构是 .fc-event > div > .fc-event-main > .fc-event-title，
+   没有这两层，所以「垂直居中」那条也一起失效了（改挂到 .fc-event-main 上）。
+
+   fcClassCompat.ts 里确实映射了 rowEventClass / blockEventClass，
+   但实测把它们换成探针字符串，页面上一个元素都不带 —— 月视图这种带自定义
+   eventContent 的事件根本不走 v7 的 row/block 事件渲染分支，那几个钩子挂不上。
+   所以这里改用【确实存在】的 fc-event / fc-event-main / fc-event-title。
+
+   后果是：改「紧凑/宽松」时只有日期格 min-height 50px→70px 生效（差 9px，
+   肉眼基本看不出来），事件卡片永远是 18px —— 用户报的「紧凑和宽松设置没用」。 */
+.boldEventCard() {
+  height: 40px !important; /* 强制覆盖默认样式 */
+  .fc-event-main {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+  .fc-event-title {
+    width: 100%;
+    height: auto;
+    max-height: 40px;
+    line-height: 18px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: break-spaces;
+    word-break: break-all;
+    display: -webkit-box;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical;
+  }
+}
+
 .boxCalendar {
   .fc-event-main {
     position: initial !important;
@@ -39,34 +81,7 @@
     }
     .fc-more-popover {
       .fc-event {
-        .fc-event-main,
-        .fc-event-main-frame,
-        .fc-event-title-container,
-        .fc-event-title {
-          width: 100%;
-          height: 100%;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-
-        height: 40px !important; /* 强制覆盖默认样式 */
-        .fc-event-title-container {
-          display: flex;
-          align-items: center;
-        }
-        .fc-event-title {
-          height: auto;
-          max-height: 40px;
-          line-height: 18px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: break-spaces;
-          word-break: break-all;
-          display: -webkit-box;
-          -webkit-line-clamp: 2 !important;
-          -webkit-box-orient: vertical;
-        }
+        .boldEventCard();
       }
     }
     .fc-dayGridMonth-view {
@@ -76,36 +91,8 @@
         width: 100%;
       }
       /* 全局设置所有事件的高度 */
-      .fc-daygrid-event.fc-daygrid-dot-event.fc-event,
-      .fc-daygrid-event.fc-daygrid-block-event.fc-h-event.fc-event {
-        .fc-event-main,
-        .fc-event-main-frame,
-        .fc-event-title-container,
-        .fc-event-title {
-          width: 100%;
-          height: 100%;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-
-        height: 40px !important; /* 强制覆盖默认样式 */
-        .fc-event-title-container {
-          display: flex;
-          align-items: center;
-        }
-        .fc-event-title {
-          height: auto;
-          max-height: 40px;
-          line-height: 18px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: break-spaces;
-          word-break: break-all;
-          display: -webkit-box;
-          -webkit-line-clamp: 2 !important;
-          -webkit-box-orient: vertical;
-        }
+      .fc-event {
+        .boldEventCard();
       }
     }
   }
