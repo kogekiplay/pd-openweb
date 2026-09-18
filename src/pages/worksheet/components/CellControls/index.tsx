@@ -601,7 +601,7 @@ export default class CellControl extends React.Component<any, any> {
     }
 
     if (isediting && !cellFullVisible.fullvisible) {
-      let newPos: Record<string, any> = {};
+      let newPos: { left?: number; top?: number } = {};
 
       if (_.isNumber(cellFullVisible.newLeft)) {
         newPos.left = cellFullVisible.newLeft;

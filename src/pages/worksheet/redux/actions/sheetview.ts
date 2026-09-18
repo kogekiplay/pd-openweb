@@ -24,8 +24,10 @@ import {
   WIDGETS_TO_API_TYPE_ENUM,
   WORKFLOW_SYSTEM_CONTROL,
 } from 'src/pages/widgetConfig/config/widget';
+import type { AppDispatch, GetState, RootState } from 'src/redux/types';
 import { getFilledRequestParams } from 'src/utils/common';
 import { clearLRUWorksheetConfig, getLRUWorksheetConfig, saveLRUWorksheetConfig } from 'src/utils/common';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import { formatQuickFilter } from 'src/utils/filter';
 import { handleRecordError } from 'src/utils/record';
 import { replaceControlsTranslateInfo } from 'src/utils/translate';
@@ -37,8 +39,6 @@ import {
 } from 'src/utils/worksheet';
 import { updateNavGroup } from './navFilter.js';
 import { sortDataByGroupItems } from './util.js';
-import type { AppDispatch, GetState, RootState } from 'src/redux/types';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const DEFAULT_PAGESIZE = 50;
 const DEFAULT_GROUP_PAGESIZE = 20;
@@ -513,7 +513,10 @@ export function updateViewPermission(param) {
   };
 }
 
-export function updateControlOfRow({ cell = {}, cells = [], recordId, rules }: { recordId?: string; [key: string]: any }, options: Record<string, any> = {}) {
+export function updateControlOfRow(
+  { cell = {}, cells = [], recordId, rules }: { recordId?: string; [key: string]: any },
+  options: Record<string, any> = {},
+) {
   return (dispatch: AppDispatch, getState: GetState) => {
     if (!_.isEmpty(cell) && _.isEmpty(cells)) {
       cells = [cell];
@@ -842,7 +845,8 @@ export function hideRows(rowIds) {
         rowIds.forEach((rowId: string) => {
           rows.forEach((row: RecordRow) => {
             if (row.pid === rowId || includes(row.childrenids, rowId)) {
-              const changes: Record<string, any> = {};
+              // pid 置 undefined = 把这行从父节点下摘出来；childrenids 是 JSON 串
+              const changes: { pid?: string; childrenids?: string } = {};
 
               if (row.pid === rowId) {
                 changes.pid = undefined;
@@ -883,7 +887,9 @@ export function changeToSelectCurrentPageFromSelectAll() {
     const { sheetview } = getState().sheet;
     const { rows = [] } = sheetview.sheetViewData;
     dispatch(clearSelect());
-    dispatch(selectRows({ rows: rows.filter((r: RecordRow) => r.rowid !== 'groupTitle' && r.rowid !== 'loadGroupMore') }));
+    dispatch(
+      selectRows({ rows: rows.filter((r: RecordRow) => r.rowid !== 'groupTitle' && r.rowid !== 'loadGroupMore') }),
+    );
   };
 }
 
@@ -944,7 +950,9 @@ export function saveSheetLayout({ isApplyAll, closePopup = () => {} }) {
     if (sheetHiddenColumns.length) {
       updates.editAttrs = updates.editAttrs.concat('ShowControls');
       if (view.advancedSetting.customdisplay === '1' && view.showControls.length) {
-        updates.showControls = view.showControls.filter((cid: FormControl) => !_.find(sheetHiddenColumns, hcid => hcid === cid));
+        updates.showControls = view.showControls.filter(
+          (cid: FormControl) => !_.find(sheetHiddenColumns, hcid => hcid === cid),
+        );
       } else {
         updates.advancedSetting.customdisplay = '1';
         updates.showControls = controls
@@ -1380,7 +1388,14 @@ export function getWorksheetSheetViewSummary({ reset = false, groupArgs = {} } =
   };
 }
 
-export function changeWorksheetSheetViewSummaryType({ controlId, value, groupArgs = {} }: { controlId?: string; [key: string]: any }) {
+export function changeWorksheetSheetViewSummaryType({
+  controlId,
+  value,
+  groupArgs = {},
+}: {
+  controlId?: string;
+  [key: string]: any;
+}) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { sheetview, base } = getState().sheet;
     const { rows = [], rowsSummary, groupRowsSummary } = sheetview.sheetViewData;

@@ -138,7 +138,7 @@ export default class ChangeColumn extends Component<any, any> {
 
   handleSortEnd = (newItems, newIndex) => {
     const { selected, sortAutoChange } = this.props;
-    const param: Record<string, any> = {};
+    const param: { selected?: boolean } = {};
     let newList = newItems;
 
     if (sortAutoChange) {

@@ -617,6 +617,7 @@
     "src/pages/worksheet/redux/reducers/mapView.ts",
     "src/pages/worksheet/redux/reducers/resourceview.ts",
     "src/pages/worksheet/styled/index.ts",
+    "src/pages/worksheet/types.ts",
     "src/pages/worksheet/views/BoardView/GroupBoard/core/autoScroll.ts",
     "src/pages/worksheet/views/BoardView/components/BoardTitle.tsx",
     "src/pages/worksheet/views/BoardView/components/CustomDragLayer.tsx",

@@ -1472,7 +1472,9 @@ class TableViewBase extends React.Component<any, any> {
 
     const isShowWorkflowSys = isOpenPermit(permitList.sysControlSwitch, this.sheetSwitchPermit);
 
-    let param: Record<string, any> = {};
+    // 列显隐：sheetHiddenColumns 是已隐藏的 controlId 列表，另外两个是操作入口
+    let param: { sheetHiddenColumns?: string[]; hideColumn?: (id: string) => void; clearHiddenColumn?: () => void } =
+      {};
 
     if (this.showColumnControl) {
       const { personal_setting } = getAdvanceSetting(view);

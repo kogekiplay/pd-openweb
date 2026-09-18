@@ -42,7 +42,8 @@ export const isHaveCharge = (type, isLock?) => {
 
 //获取当前用户对应角色
 export const getUserRole = (type, isLock?) => {
-  let data: Record<string, any> = {};
+  // 这条记录对当前用户开放哪些身份能力；isLock 为真时一律关掉
+  let data: { isOwner?: boolean; isAdmin?: boolean; isDeveloper?: boolean; isRunner?: boolean } = {};
 
   if (type === APP_ROLE_TYPE.POSSESS_ROLE) {
     data.isOwner = !isLock;
