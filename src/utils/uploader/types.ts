@@ -184,6 +184,13 @@ export interface UploaderOption {
   save_key?: boolean;
   /** 需要带 x: 自定义变量时传一个对象（值本身不读，只当开关用，沿用原有语义） */
   x_vars?: unknown;
+  /**
+   * 上传时随表单发出的参数。createUploader 在每次 uploadOne 开头把它重填成
+   * `{ token, key?, x:* }`，然后【调用方在 BeforeUpload 里改】，改完再读回来传给上传层
+   *（10 个调用点都在用这条契约，见 createUploader.ts 的 uploadOne）。
+   * 值一律是字符串：token/key 来自 UploaderFile，x: 那几个是 buildCustomVars 拼的。
+   */
+  multipart_params?: Record<string, string | undefined>;
   /** 开始上传前的检查，返回 false 或 reject 即中止 */
   before_upload_check?: (up: Uploader, files: UploaderFile[]) => unknown;
   /** 校验失败 / 超数量时回调 */
@@ -196,8 +203,12 @@ export interface UploaderOption {
 }
 
 export interface Uploader {
-  /** 当前配置。【调用方会直接改它】，例如在 BeforeUpload 里写 up.settings.multipart_params */
-  settings: UploaderOption & Record<string, any>;
+  /**
+    * 当前配置。【调用方会直接改它】，例如在 BeforeUpload 里写 up.settings.multipart_params。
+    * 【不再 & Record<string, any>】UploaderOption 自己就带 [key: string]: any，
+    * 那个交集一个字段都没多加，纯属重复。
+    */
+  settings: UploaderOption;
   /** 队列 */
   files: UploaderFile[];
   /** UploaderState */
@@ -212,8 +223,9 @@ export interface Uploader {
   /** plupload 里是重新测量按钮位置；这里是空操作，保留是为了调用点不用改 */
   refresh(): void;
   disableBrowse(disable?: boolean): void;
-  getOption(key: string): any;
-  setOption(key: string | Record<string, any>, value?: any): void;
+  /** 【返回 unknown 而不是 any】取出来是什么由 key 决定，调用方该自己收窄 */
+  getOption(key: string): unknown;
+  setOption(key: string | Record<string, unknown>, value?: unknown): void;
   bind<E extends UploaderEvent>(event: E, handler: UploaderEventHandler<E>): void;
   unbind<E extends UploaderEvent>(event: E, handler?: UploaderEventHandler<E>): void;
   /**

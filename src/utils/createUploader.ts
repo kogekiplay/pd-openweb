@@ -514,7 +514,7 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
     trigger('BeforeUpload', uploader, file);
     if (initFunc.BeforeUpload) initFunc.BeforeUpload(uploader, file);
 
-    const params = (option.multipart_params || {}) as Record<string, any>;
+    const params = option.multipart_params || {};
     const token = params.token || file.token;
     const customVars: Record<string, string> = {};
     for (const k of Object.keys(params)) {
