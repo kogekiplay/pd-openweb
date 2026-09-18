@@ -1,3 +1,16 @@
+import type {
+  DateClickInfo,
+  DateSelectInfo,
+  DatesSetInfo,
+  EventClickInfo,
+  EventDisplayInfo,
+  EventDropInfo,
+  EventHoveringInfo,
+  EventInput,
+  EventResizeDoneInfo,
+  EventSourceFuncInfo,
+  MountInfo,
+} from '@fullcalendar/react';
 import moment from 'moment';
 import calendarAjax from 'src/api/calendar';
 import createCalendar from 'src/components/createCalendar/load';
@@ -5,6 +18,7 @@ import calendarEdit from '../calendarDetail';
 import afterRefreshOp from '../calendarDetail/lib/afterRefreshOp';
 import recurCalendarUpdate from '../calendarDetail/lib/recurCalendarUpdateDialog';
 import Comm from '../comm/comm';
+import { toTimeDelta } from './delta';
 import {
   createCalendarInstance,
   destroyCalendar,
@@ -163,7 +177,11 @@ Calendar.Method = {
       },
       // v2 是 events: { url, data }，由库自己发请求并按 startParam/endParam 传时间范围。
       // v7 用函数式事件源：范围由 info.start / info.end 给出，我们自己发请求。
-      events: function (info: any, success: (events: any[]) => void, failure: (err: any) => void) {
+      events: function (
+        info: EventSourceFuncInfo,
+        success: (events: EventInput[]) => void,
+        failure: (err: Error) => void,
+      ) {
         calendarAjax
           .getCalendars({
             startDate: moment(info.start).format('YYYY-MM-DD HH:mm:ss'),
@@ -174,7 +192,7 @@ Calendar.Method = {
             categoryIDs: Calendar.Method.getCategoryIDsFun(),
             memberIDs: Calendar.Comm.settings.otherUsers.join(','),
           })
-          .then((res: any) => {
+          .then((res: { data?: { calendars?: EventInput[] } } | EventInput[]) => {
             // 【接口返回的是信封，不是数组】2026-09-16 在生产上抓到的原始响应：
             //   {"data":{"code":1,"msg":"操作成功","data":{"restCalCount":0,"calendars":[]}},"state":1}
             // mdyAPI 会剥掉最外层，所以这里拿到的是 { code, msg, data: { restCalCount, calendars } }。
@@ -183,17 +201,19 @@ Calendar.Method = {
             // 事件源标记为失败，于是【日程页一条事件都渲染不出来】。
             // 页面本身照常显示（网格、视图切换都在），所以只看界面看不出坏了。
             // 兼容数组是为了以后接口万一改回来也不会再炸一次。
-            const list: any[] = Array.isArray(res) ? res : (res && res.data && res.data.calendars) || [];
+            const list: (EventInput & { isTask?: boolean })[] = Array.isArray(res)
+              ? res
+              : (res && res.data && res.data.calendars) || [];
 
             success(
               // 任务不允许拉伸时长。v2 是渲染完把 .fc-resizer 这个 DOM 删掉，
               // v7 有正经的逐事件开关，在数据侧标注更稳，也不依赖库的 DOM 结构。
-              list.map((e: any) => (e.isTask ? { ...e, durationEditable: false } : e)),
+              list.map(e => (e.isTask ? { ...e, durationEditable: false } : e)),
             );
           })
           .catch(failure);
       },
-      eventClick: function (info: any) {
+      eventClick: function (info: EventClickInfo) {
         // v7：事件对象是 EventApi，自定义字段在 extendedProps 里；jsEvent 在 info 上
         const events = v2Event(info.event);
         const jsEvent = info.jsEvent;
@@ -236,7 +256,7 @@ Calendar.Method = {
         }
       },
       // v2 的 eventAfterRender
-      eventDidMount: function (info: any) {
+      eventDidMount: function (info: MountInfo<EventDisplayInfo>) {
         const event = v2Event(info.event);
         // 事件呈现后触发,可用来做头像显示。类名用 v6 那套（兼容层挂的就是这套）
         var $fcTitle = $(info.el).find('.fc-event-title');
@@ -266,7 +286,7 @@ Calendar.Method = {
       // 视图/日期范围变化后触发。取代了原来挂在头部按钮上的那段点击劫持：
       // 记住当前视图（仍按 v2 的名字写回 localStorage，与旧版本互相兼容），
       // 再做一次视图相关的样式调整。
-      datesSet: function (info: any) {
+      datesSet: function (info: DatesSetInfo) {
         safeLocalStorageSetItem('lastView', toV2View(info.view.type));
         Calendar.Method.editViewStyle();
       },
@@ -282,7 +302,7 @@ Calendar.Method = {
           Calendar.Method.editViewStyle();
         }
       },
-      select: function (info: any) {
+      select: function (info: DateSelectInfo) {
         // 【多选判定改成算时间跨度，不再嗅探 DOM】
         // v2 靠 $('.fc-highlight').attr('colspan') 猜是不是多选，那是拿库的内部 DOM 当 API。
         // v7 直接给了 allDay 和 start/end，按跨度算既更准也不会随库的 DOM 变化而失效。
@@ -316,22 +336,31 @@ Calendar.Method = {
         }
       },
       // v2 的 eventMouseover / eventMouseout
-      eventMouseEnter: function (info: any) {
+      eventMouseEnter: function (info: EventHoveringInfo) {
         Calendar.Method.changeEventColor(v2Event(info.event), info.jsEvent, 0);
       },
-      eventMouseLeave: function (info: any) {
+      eventMouseLeave: function (info: EventHoveringInfo) {
         Calendar.Method.changeEventColor(v2Event(info.event), info.jsEvent, 1);
       },
-      eventDrop: function (info: any) {
+      eventDrop: function (info: EventDropInfo) {
         Calendar.settings.isResize = false;
         Calendar.Method.dropResize(v2Event(info.event), info.delta, info.revert, info.jsEvent, null, info.view);
       },
-      eventResize: function (info: any) {
+      eventResize: function (info: EventResizeDoneInfo) {
         Calendar.settings.isResize = true;
-        Calendar.Method.dropResize(v2Event(info.event), info.delta, info.revert, info.jsEvent, null, info.view);
+        // 【v7 的 EventResizeDoneInfo 没有 delta】只有 startDelta / endDelta。
+        // 拉伸改的是结束时间，所以取 endDelta；从顶部拉时 startDelta 非零，一并算进去。
+        Calendar.Method.dropResize(
+          v2Event(info.event),
+          info.endDelta || info.startDelta,
+          info.revert,
+          info.jsEvent,
+          null,
+          info.view,
+        );
       },
       // v2 的 dayClick
-      dateClick: function (info: any) {
+      dateClick: function (info: DateClickInfo) {
         // 【全天判定改用 info.allDay】v2 靠 `date.format().length <= 10`——
         // 即"格式化后没有时间部分"——来判全天。v7 给的是原生 Date，
         // moment(date).format() 永远带时间，那个判据【恒为假】，必须换成 info.allDay。
@@ -738,8 +767,9 @@ Calendar.Method = {
       var starDate = moment(event.start).format('YYYY-MM-DD HH:mm');
       var endDate = moment(event.end).format('YYYY-MM-DD HH:mm');
       var isAllDay = event.isAllDay;
-      var dayDelta = delta._days; // 偏移天数
-      var minuteDelta = delta._milliseconds / 60000; // 偏移时间
+      // 【不要写 delta._days / ._milliseconds】那是 moment.Duration 的内部字段，
+      // FullCalendar v7 换成了自己的 { years, months, days, milliseconds }，见 ./delta.ts
+      const { dayDelta, minuteDelta } = toTimeDelta(delta);
 
       if (isAllCalendar) {
         starDate = event.oldStartTime;
