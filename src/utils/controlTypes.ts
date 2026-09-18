@@ -257,4 +257,43 @@ export interface SelectedEntityValue {
   organizeId?: string;
   name?: string;
   value?: ControlValue;
+  /* 展示名按控件类型各叫各的：成员是 fullname、部门是 departmentName、组织角色是 organizeName。
+     渲染时都要判「取不到就显示『已删除』」，所以都在这里列出来。 */
+  fullname?: string;
+  avatar?: string;
+  departmentName?: string;
+  organizeName?: string;
+}
+
+/**
+ * 附件（14 ATTACHMENT）的值元素。
+ *
+ * 字段是把 src/utils/control.ts 里对附件对象的读取点统计出来补齐的，不是照后端文档抄的
+ * —— 同一份数据在不同接口里字段名并不统一（fileID / fileId 两种拼法都出现过，
+ * 地址有 fileUrl、fileRealPath、filepath+filename 三种给法），所以都留着且都可选。
+ */
+export interface AttachmentValue {
+  fileID?: string;
+  fileId?: string;
+  /** 有 refId 的是「引用的附件」，渲染时会被过滤掉 */
+  refId?: string;
+  originalFilename?: string;
+  filename?: string;
+  filepath?: string;
+  fileUrl?: string;
+  fileRealPath?: string;
+  previewUrl?: string;
+  viewUrl?: string;
+  ext?: string;
+  filesize?: number;
+}
+
+/**
+ * 关系控件（关联任务/项目/日程/文件…）的值元素。
+ * type 是关系种类（见各处的 RELATION_TYPE_NAME / RELATION_TEXT 表）。
+ */
+export interface RelationValue {
+  type?: number;
+  name?: string;
+  link?: string;
 }
