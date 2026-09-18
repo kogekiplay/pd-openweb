@@ -19,7 +19,7 @@ let lineChart = null;
 let ajaxFetch: ApiResult | null = null;
 
 export default function (props) {
-  const chantRef = useRef<any>(undefined);
+  const chantRef = useRef<HTMLDivElement>(null);
   const g2plotComponent = useRef({});
   const cache = useRef({});
   const { currentProjectId: projectId } = props;

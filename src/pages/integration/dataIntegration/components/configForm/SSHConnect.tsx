@@ -2,12 +2,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useSetState } from 'react-use';
 import { Select } from 'antd';
 import cx from 'classnames';
-import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Button, Checkbox, Dialog, Icon, Input, Textarea } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import sshConfigApi from 'src/pages/integration/api/sshConfig';
+import copy from 'src/utils/copyToClipboard';
 
 const SSHCheckbox = styled(Checkbox)`
   margin-top: 12px;
@@ -160,8 +160,8 @@ const DialogWrapper = styled.div`
 export default function SSHConnect(props) {
   const { data = {}, onChange, projectId, setSubmitDisabled, disabled } = props;
   const [sshOptions, setSshOptions] = useState([]);
-  const sshSelectRef = useRef<any>(undefined);
-  const authTypeRef = useRef<any>(undefined);
+  const sshSelectRef = useRef<HTMLDivElement>(null);
+  const authTypeRef = useRef<HTMLDivElement>(null);
   const [addDialogVisible, setAddDialogVisible] = useState(false);
   const [errorInfo, setErrorInfo] = useState([]);
   const [sshFormData, setSshFormData] = useSetState({ authType: 0 });

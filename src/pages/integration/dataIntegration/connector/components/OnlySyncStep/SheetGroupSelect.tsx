@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Select } from 'antd';
-import cx from 'classnames';
 import Trigger from '@rc-component/trigger';
+import cx from 'classnames';
 import styled from 'styled-components';
 import { Icon, ScrollView } from 'ming-ui';
 import homeApp from 'src/api/homeApp';
@@ -42,7 +42,7 @@ export default function SheetGroupSelect(props) {
   const [groupPopupVisible, setGroupPopupVisible] = useState(false);
   const [searchKeyWords, setSearchKeyWords] = useState('');
   const [groups, setGroups] = useState([]);
-  const groupRef = useRef<any>(undefined);
+  const groupRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     !!appId &&

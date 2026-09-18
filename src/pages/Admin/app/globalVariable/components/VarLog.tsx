@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSetState } from 'react-use';
 import { Drawer } from 'antd';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import moment from 'moment';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import filterXSS from 'xss';
 import { Icon, LoadDiv, ScrollView, UserHead } from 'ming-ui';
@@ -131,7 +131,7 @@ const LogItem = styled.div`
 
 export default function VarLog(props) {
   const { onClose, variableId, projectId = '' } = props;
-  const selectUserRef = useRef<any>(undefined);
+  const selectUserRef = useRef<HTMLSpanElement>(null);
   const [{ selectUser, selectDate }, setFilter] = useSetState({
     selectUser: undefined,
     selectDate: {

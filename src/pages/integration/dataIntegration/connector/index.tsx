@@ -100,7 +100,6 @@ const FormCard = styled.div`
     .ant-select-content {
       min-height: 48px;
       padding: 8px 11px !important;
-
     }
 
     &.ant-select-focused {
@@ -202,7 +201,7 @@ function Connector(props) {
   const [addVisible, setAddVisible] = useState(false);
   const [connectorList, setConnectorList] = useState([]);
   const [sourceOptionsData, setSourceOptionsData] = useState([]);
-  const selectOptionListRef = useRef<any>(undefined);
+  const selectOptionListRef = useRef<HTMLDivElement>(null);
   const TYPES = [
     { title: _l('数据源类型'), key: 'source' },
     { title: _l('目的地类型'), key: 'dest' },
@@ -284,9 +283,11 @@ function Connector(props) {
                         placeholder={_l('请选择')}
                         notFoundContent={_l('暂无数据')}
                         getPopupContainer={() => selectOptionListRef.current}
-                        showSearch={{ filterOption: (inputValue, option) => {
-                          return option.name.toLowerCase().includes(inputValue.toLowerCase());
-                        } }}
+                        showSearch={{
+                          filterOption: (inputValue, option) => {
+                            return option.name.toLowerCase().includes(inputValue.toLowerCase());
+                          },
+                        }}
                         options={sourceOptionsData
                           .filter(t => _.includes([ROLE_TYPE.ALL, item.key.toUpperCase()], t.roleType))
                           .map(item => {

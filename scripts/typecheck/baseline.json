@@ -3,15 +3,15 @@
   "key": "code",
   "tsVersion": "7.0.2",
   "tsconfig": "tsconfig.gate.json",
-  "generatedAt": "2026-09-18T09:13:51.175Z",
-  "rawCount": 13201,
+  "generatedAt": "2026-09-18T09:15:35.599Z",
+  "rawCount": 13199,
   "droppedNoise": {
     "library": 0,
     "probe": 0,
     "commentTS1xxx": 0,
     "commentOther": 0
   },
-  "keptCount": 13201,
+  "keptCount": 13199,
   "uniqueKeys": 3062,
   "entries": {
     "src/common/GlobalStore.tsx|TS2554": 1,
@@ -1623,7 +1623,7 @@
     "src/pages/customPage/components/editWidget/button/btnSetting.tsx|TS2339": 6,
     "src/pages/customPage/components/editWidget/button/index.tsx|TS2339": 2,
     "src/pages/customPage/components/editWidget/carousel/Carousel.tsx|TS2322": 1,
-    "src/pages/customPage/components/editWidget/carousel/Carousel.tsx|TS2339": 10,
+    "src/pages/customPage/components/editWidget/carousel/Carousel.tsx|TS2339": 8,
     "src/pages/customPage/components/editWidget/carousel/Setting.tsx|TS2339": 1,
     "src/pages/customPage/components/editWidget/filter/FilterControl.tsx|TS2339": 12,
     "src/pages/customPage/components/editWidget/filter/FilterObject.tsx|TS2339": 10,

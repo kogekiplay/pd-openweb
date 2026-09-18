@@ -58,7 +58,7 @@ export default function MdModal(props) {
     needRenderRight,
     renderModalRightComp,
   } = props;
-  const locateRef = useRef<any>(undefined);
+  const locateRef = useRef<HTMLDivElement>(null);
   let { width } = props;
   const showConfirm = props.onOk || props.okText || props.cancelText;
   const [left, setLeft] = useState(0);
@@ -232,9 +232,7 @@ export default function MdModal(props) {
             pointer-events 和 flex gap 都照旧作用在真正的图标节点上。 */}
         {iconButtons.map((btn, i) => (
           <React.Fragment key={btn.type || i}>
-            {btn.ele || (
-              <BgIconButton style={{ width: 32 }} icon={btn.icon} tooltip={btn.tip} onClick={btn.onClick} />
-            )}
+            {btn.ele || <BgIconButton style={{ width: 32 }} icon={btn.icon} tooltip={btn.tip} onClick={btn.onClick} />}
           </React.Fragment>
         ))}
         {allowScale && (

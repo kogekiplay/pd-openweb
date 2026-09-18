@@ -13,7 +13,7 @@ const handleClose = () => {
 function AddFriendConfirm(props) {
   const { accountId, callback } = props;
   const [data, setData] = useState(null);
-  const contentRef = useRef<any>(undefined);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     userController

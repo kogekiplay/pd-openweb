@@ -1,8 +1,8 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
 import { arrayOf, bool, shape, string } from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, ScrollView, SvgIcon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -579,11 +579,11 @@ export default function AppGrid(props) {
   );
   const [morePopupVisible, setMorePopupVisible] = useState(false);
   const [moreGroups, setMoreGroups] = useState([]);
-  const groupListRef = useRef<any>(undefined);
+  const groupListRef = useRef<HTMLUListElement>(null);
   const [activeMoreGroup, setActiveMoreGroup] = useState('');
   const projectGroups = groups.filter(g => g.groupType === 1);
   const [hasMore, setHasMore] = useState(false);
-  const moreTabRef = useRef<any>(undefined);
+  const moreTabRef = useRef<HTMLDivElement>(null);
 
   const noProjects = !md.global.Account.projects.length;
   const allowCreate =
@@ -605,7 +605,8 @@ export default function AppGrid(props) {
   }
 
   const getDisplayGroupCount = () => {
-    const liWidthArr = [...groupListRef.current.children].map(item => item.offsetWidth);
+    // children 的静态类型是 Element（没有 offsetWidth）；这里装的都是真实 li
+    const liWidthArr = [...groupListRef.current.children].map(item => (item as HTMLElement).offsetWidth);
     let displayWidth = 0;
     let count = 0;
     liWidthArr.forEach(item => {
