@@ -50,7 +50,7 @@ const SuccessWrap = styled.div`
 
 const ExplainWrap = styled.div`
   background: var(--color-primary-transparent);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   padding: 12px;
   margin-bottom: 24px;

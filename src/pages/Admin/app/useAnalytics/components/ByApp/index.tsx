@@ -28,7 +28,7 @@ const ByAppWrap = styled.div`
       line-height: 36px;
       margin-left: 24px;
       background-color: var(--color-background-secondary);
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       .tabItem {
         padding: 0 20px;
         height: 32px;
@@ -36,7 +36,7 @@ const ByAppWrap = styled.div`
         line-height: 32px;
         margin: 2px;
         font-size: 14px;
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
       }
       .currentTab {
         color: var(--color-primary);
@@ -70,7 +70,7 @@ const ByAppWrap = styled.div`
     .iconWrap {
       width: 22px;
       height: 22px;
-      border-radius: 5px;
+      border-radius: var(--radius-sm);
       margin-right: 10px;
       text-align: center;
       padding-top: 3px;

@@ -26,7 +26,7 @@ const UserList = styled.div`
   max-height: 400px;
   overflow-y: auto;
   border: 1px solid var(--color-border-secondary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   padding: 8px 0;
   box-sizing: border-box;
 `;

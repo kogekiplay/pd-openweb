@@ -13,7 +13,7 @@ import AddAndEditAppAccess from './AddAndEditAppAccess';
 
 const Description = styled.div`
   background: color-mix(in srgb, var(--color-primary) 10%, transparent);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   padding: 10px 12px;
   margin-bottom: 20px;
 `;

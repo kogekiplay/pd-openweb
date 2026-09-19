@@ -86,7 +86,7 @@ const Wrap = styled.div`
     width: 180px;
     background: var(--color-background-primary);
     box-shadow: var(--shadow-lg);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     padding: 10px 0;
     box-sizing: border-box;
 

@@ -1,8 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import withRouter from '../../../../../router/withRouter';
+import Trigger from '@rc-component/trigger';
 import _ from 'lodash';
 import moment from 'moment';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Dropdown, Icon, UserHead } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -10,6 +9,7 @@ import { dialogSelectApp } from 'ming-ui/functions';
 import appManagement from 'src/api/appManagement';
 import PageTableCon from 'src/pages/Admin/components/PageTableCon';
 import SearchInput from 'src/pages/AppHomepage/AppCenter/components/SearchInput';
+import withRouter from '../../../../../router/withRouter';
 import IsAppAdmin from '../../../components/IsAppAdmin';
 import ConfirmMoveDialog from '../component/ConfirmMoveDialog';
 import MoveDataBaseDialog from '../component/MoveDataBaseDialog';
@@ -18,7 +18,7 @@ import './ManageDataBase.less';
 const ActionOpWrap = styled.ul`
   background: var(--color-background-card);
   box-shadow: var(--shadow-sm);
-  border-radius: 3px 3px 3px 3px;
+  border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
   width: 160px;
   font-size: 13px;
   color: var(--color-text-title);

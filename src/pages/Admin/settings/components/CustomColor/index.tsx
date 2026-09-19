@@ -21,7 +21,7 @@ const ColorBox = styled.div(
   background: var(--color-background-primary);
   border: 1px solid;
   border-color: ${select ? 'var(--color-border-primary)' : 'transparent'};
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   padding: 3px;
   position: relative;
   cursor: pointer;
@@ -34,7 +34,7 @@ const ColorBox = styled.div(
   .colorBg {
     width: 100%;
     height: 100%;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     background: ${color};
 
     display: flex;

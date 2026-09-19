@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import cx from 'classnames';
 import Trigger from '@rc-component/trigger';
+import cx from 'classnames';
 import styled from 'styled-components';
 import { Checkbox, Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -11,7 +11,7 @@ const ChartColorSettingBox = styled.div(
   height: 110px;
   background: var(--color-background-primary);
   border: 1px solid var(--color-border-primary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   display: flex;
   justify-content: space-between;
   flex-direction: column;
@@ -87,7 +87,7 @@ const Menu = styled.div`
   background: var(--color-background-card);
   box-shadow: var(--shadow-lg);
   opacity: 1;
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   font-size: 13px;
   line-height: 1;
   .item {

@@ -1,10 +1,9 @@
 import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import { useSetState } from 'react-use';
 import { Drawer } from 'antd';
-import cx from 'classnames';
-import copy from 'src/utils/copyToClipboard';
-import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
+import cx from 'classnames';
+import _ from 'lodash';
 import styled from 'styled-components';
 import { Dropdown, Icon, LoadDiv, ScrollView, UserHead } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -20,6 +19,7 @@ import PurchaseExpandPack from 'src/pages/Admin/components/PurchaseExpandPack';
 import { navigateTo } from 'src/router/navigateTo';
 import { pathCompletion } from 'src/utils/common';
 import { formatNumberThousand } from 'src/utils/control';
+import copy from 'src/utils/copyToClipboard';
 import { getCurrentProject } from 'src/utils/project';
 import PaginationWrap from '../../../components/PaginationWrap';
 import Common from '../common';
@@ -48,7 +48,7 @@ const AgentBillingDetailWrap = styled.div`
   min-height: 120px;
   .agentBillingDetailTable {
     border: 1px solid var(--color-border-primary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     overflow: hidden;
   }
   .agentBillingDetailRow {

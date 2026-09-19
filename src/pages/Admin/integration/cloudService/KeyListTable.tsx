@@ -11,7 +11,7 @@ const SearchInputWrap = styled.div`
   height: 36px;
   position: relative;
   border: 1px solid ${props => (props.isFocus ? 'var(--color-primary)' : 'var(--color-border-primary)')};
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   background: var(--color-bg-primary);
 
   .searchInput.ming.Input {

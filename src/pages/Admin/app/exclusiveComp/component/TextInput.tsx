@@ -13,7 +13,7 @@ const FormGroup = styled.div`
     width: 100%;
     height: 36px;
     border: 1px solid var(--color-border-tertiary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     box-sizing: border-box;
     display: inline-block;
     padding: 0 12px;

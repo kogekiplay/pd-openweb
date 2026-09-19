@@ -1,7 +1,7 @@
 import React from 'react';
-import copy from 'src/utils/copyToClipboard';
 import styled from 'styled-components';
 import { Button, Dialog, Icon } from 'ming-ui';
+import copy from 'src/utils/copyToClipboard';
 
 const SuccessDialogContent = styled.div`
   padding: 8px 0 4px;
@@ -46,7 +46,7 @@ const SuccessDialogContent = styled.div`
     width: 100%;
     height: 42px;
     border: 1px solid var(--color-border-primary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     background: var(--color-bg-primary);
     line-height: 40px;
     font-size: 14px;

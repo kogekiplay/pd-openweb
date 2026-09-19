@@ -11,7 +11,7 @@ const PrintItem = styled.div`
   display: flex;
   align-items: center;
   height: 90px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-primary);
   padding: 0 20px;
   margin-bottom: 10px;

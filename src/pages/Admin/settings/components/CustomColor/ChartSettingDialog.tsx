@@ -28,7 +28,7 @@ const CustomChartContentWrap = styled.div`
     overflow-y: scroll;
     min-height: 200px;
     border: 1px solid var(--color-border-primary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     max-height: 285px;
     overflow-y: scroll;
     .colorSelectItem {
@@ -43,7 +43,7 @@ const CustomChartContentWrap = styled.div`
         margin-right: 7px;
         width: 40px;
         display: inline-block;
-        border-radius: 2px;
+        border-radius: var(--radius-sm);
         &.border {
           border: 1px solid var(--color-border-secondary);
         }
@@ -76,7 +76,7 @@ const CustomChartContentWrap = styled.div`
     height: 36px;
     background: var(--color-background-primary);
     border: 1px solid var(--color-border-secondary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -84,7 +84,7 @@ const CustomChartContentWrap = styled.div`
     .colorBg {
       width: 24px;
       height: 24px;
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       border: 1px solid var(--color-border-secondary);
       box-sizing: content-box;
     }
@@ -101,7 +101,7 @@ const CustomChartContentWrap = styled.div`
       height: 36px;
       background: var(--color-background-input);
       border: 1px solid var(--color-border-secondary);
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       padding: 5px;
       display: flex;
       align-items: center;
@@ -110,7 +110,7 @@ const CustomChartContentWrap = styled.div`
       .colorBg {
         width: 100%;
         height: 100%;
-        border-radius: 4px;
+        border-radius: var(--radius-sm);
       }
       &.disable {
         background: var(--color-background-secondary);
@@ -153,7 +153,7 @@ const CustomColorsWrap = styled.div`
   background: var(--color-background-card);
   box-shadow: var(--shadow-lg);
   opacity: 1;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   padding: 24px;
   .customColors {
     display: flex;
@@ -165,14 +165,14 @@ const CustomColorsWrap = styled.div`
       height: 34px;
       background: var(--color-background-primary);
       border: 1px solid var(--color-border-secondary);
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       padding: 2px;
       cursor: pointer;
       position: relative;
       .bgColor {
         width: 100%;
         height: 100%;
-        border-radius: 4px;
+        border-radius: var(--radius-sm);
         display: flex;
         align-items: center;
         justify-content: center;

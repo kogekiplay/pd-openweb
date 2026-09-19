@@ -20,7 +20,7 @@ const ContentWrap = styled.div`
     height: 40px;
     line-height: 40px;
     background: var(--color-primary-transparent);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     padding-left: 12px;
     margin-bottom: 24px;
   }
@@ -36,7 +36,7 @@ const ContentWrap = styled.div`
   .appIcon {
     width: 24px;
     height: 24px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     margin-right: 8px;
     text-align: center;
   }
@@ -62,7 +62,7 @@ const ContentWrap = styled.div`
     height: 36px;
     line-height: 36px;
     padding: 0 30px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     font-size: 14px;
     cursor: pointer;
     transition:
@@ -109,7 +109,7 @@ const ContentWrap = styled.div`
       line-height: 34px;
       cursor: pointer;
       padding: 0 20px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       &:hover {
         color: var(--color-white);
         border: 1px solid var(--color-link-hover);
@@ -737,14 +737,17 @@ export default class LimitAttachmentUpload extends Component<any, any> {
                 <Select
                   className="mdAntSelect w200 mRight20"
                   placeholder={_l('所属应用')}
-                  showSearch={{ filterOption: (inputValue, option) => {
-                    return (
-                      appList
-                        .find(item => item.value === option.value)
-                        .label.toLowerCase()
-                        .indexOf(inputValue.toLowerCase()) > -1
-                    );
-                  }, onSearch: _.debounce(val => this.setState({ keyword: val, appPageIndex: 1 }, this.getAppList), 500) }}
+                  showSearch={{
+                    filterOption: (inputValue, option) => {
+                      return (
+                        appList
+                          .find(item => item.value === option.value)
+                          .label.toLowerCase()
+                          .indexOf(inputValue.toLowerCase()) > -1
+                      );
+                    },
+                    onSearch: _.debounce(val => this.setState({ keyword: val, appPageIndex: 1 }, this.getAppList), 500),
+                  }}
                   allowClear
                   options={appList}
                   value={appIds}
@@ -786,14 +789,16 @@ export default class LimitAttachmentUpload extends Component<any, any> {
                   <Select
                     className="mdAntSelect w200"
                     placeholder={_l('请选择')}
-                    showSearch={{ filterOption: (inputValue, option) => {
-                      return (
-                        worksheetList
-                          .find(item => item.value === option.value)
-                          .label.toLowerCase()
-                          .indexOf(inputValue.toLowerCase()) > -1
-                      );
-                    } }}
+                    showSearch={{
+                      filterOption: (inputValue, option) => {
+                        return (
+                          worksheetList
+                            .find(item => item.value === option.value)
+                            .label.toLowerCase()
+                            .indexOf(inputValue.toLowerCase()) > -1
+                        );
+                      },
+                    }}
                     allowClear
                     value={worksheetIds}
                     mode="multiple"

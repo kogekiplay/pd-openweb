@@ -36,7 +36,7 @@ const FormItem = styled.div`
   .ming.Input {
     height: 34px;
     border: 1px solid var(--color-border-secondary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
   }
   .ming.Textarea {
     padding: 16px 15px;

@@ -1,11 +1,11 @@
 import React, { Component, createRef, Fragment, useEffect, useState } from 'react';
-import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Dialog, Icon, Input, Textarea } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import projectEncryptAjax from 'src/api/projectEncrypt';
 import { handleMask } from 'src/pages/Admin/util';
+import copy from 'src/utils/copyToClipboard';
 import AddEditRulesDialog from './AddEditRulesDialog';
 import { encryptList } from './constant';
 
@@ -14,7 +14,7 @@ const BaseInfoWrap = styled(Dialog)`
     height: 34px;
     border: 1px solid var(--color-border-secondary);
     background: var(--color-background-primary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
   }
   .ming.Textarea {
     border: 1px solid var(--color-border-secondary);

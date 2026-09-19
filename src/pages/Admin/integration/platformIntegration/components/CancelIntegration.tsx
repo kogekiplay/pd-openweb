@@ -10,7 +10,7 @@ const Wrap = styled.div`
   padding-left: 20px;
   background-color: var(--color-background-card);
   box-shadow: var(--shadow-sm);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
 `;
 

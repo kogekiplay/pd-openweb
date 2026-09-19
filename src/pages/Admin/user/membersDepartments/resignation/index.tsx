@@ -46,7 +46,7 @@ const Wrap = styled.div`
   justify-content: space-between;
   .actionWrap {
     border: 1px solid var(--color-border-primary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
   }
   .keywordsTypeOptions.ming.Dropdown {
     border-right: 1px solid var(--color-border-primary);

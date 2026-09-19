@@ -1,10 +1,9 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import withRouter from '../../../../../router/withRouter';
 import { ConfigProvider, Empty, Select, Table } from 'antd';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Button, Icon, UserHead } from 'ming-ui';
 import Confirm from 'ming-ui/components/Dialog/Confirm';
@@ -14,6 +13,7 @@ import resourceApi from 'src/pages/workflow/api/resource';
 import Search from 'src/pages/workflow/components/Search';
 import { START_APP_TYPE } from 'src/pages/workflow/WorkflowList/utils';
 import { navigateTo } from 'src/router/navigateTo';
+import withRouter from '../../../../../router/withRouter';
 import IsAppAdmin from '../../../components/IsAppAdmin';
 import PaginationWrap from '../../../components/PaginationWrap';
 import AddWorkflowDialog from '../component/AddWorkflowDialog';
@@ -24,7 +24,7 @@ import '../index.less';
 const ActionOpWrap = styled.ul`
   background: var(--color-background-card);
   box-shadow: var(--shadow-sm);
-  border-radius: 3px 3px 3px 3px;
+  border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
   width: 160px;
   font-size: 13px;
   color: var(--color-text-title);
@@ -281,11 +281,14 @@ function ExplanDetail(props) {
         <div className="actionCon flexRow">
           <Select
             className="selectItem"
-            showSearch={{ filterOption: (inputValue, option) =>
-              appList
-                .find(item => item.value === option.value)
-                .label.toLowerCase()
-                .indexOf(inputValue.toLowerCase()) > -1, onSearch: _.debounce(val => this.setState({ keyword: val }, () => getAppList()), 500) }}
+            showSearch={{
+              filterOption: (inputValue, option) =>
+                appList
+                  .find(item => item.value === option.value)
+                  .label.toLowerCase()
+                  .indexOf(inputValue.toLowerCase()) > -1,
+              onSearch: _.debounce(val => this.setState({ keyword: val }, () => getAppList()), 500),
+            }}
             defaultValue={filters.apkId}
             options={appList}
             onFocus={() => appList.length === 1 && getAppList()}

@@ -15,7 +15,7 @@ const WhiteListDialogContent = styled.div`
     width: 100%;
     height: 380px;
     border: 1px solid var(--color-border-primary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     padding: 10px 12px;
     font-size: 14px;
     line-height: 22px;

@@ -27,10 +27,10 @@ const DialogContent = styled.div`
     width: 100%;
     padding: 10px 16px;
     background: color-mix(in srgb, var(--color-primary) 5%, transparent);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     font-weight: 600;
     margin: 20px 0;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
   }
   .minWidth120 {
     min-width: 200px;

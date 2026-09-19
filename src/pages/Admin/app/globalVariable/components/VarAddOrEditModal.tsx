@@ -84,7 +84,7 @@ const FormItem = styled.div`
     & .ant-select {
       --ant-select-border-size: 1px !important;
       --ant-select-border-color: var(--color-border-tertiary) !important;
-      --ant-select-border-radius: 3px !important;
+      --ant-select-border-radius: var(--radius-sm) !important;
       box-shadow: none !important;
     }
     .ant-select-content {
@@ -114,7 +114,7 @@ const VarNumberContainer = styled.div`
   display: flex;
   input {
     flex: 1;
-    border-radius: 3px 0px 0px 3px !important;
+    border-radius: var(--radius-sm) 0px 0px var(--radius-sm) !important;
   }
   .numberOption {
     display: flex;
@@ -123,7 +123,7 @@ const VarNumberContainer = styled.div`
     height: 36px;
     border: 1px solid var(--color-border-tertiary);
     border-left: none;
-    border-radius: 0px 3px 3px 0px;
+    border-radius: 0px var(--radius-sm) var(--radius-sm) 0px;
     .iconWrap {
       height: 18px;
       line-height: 17px;

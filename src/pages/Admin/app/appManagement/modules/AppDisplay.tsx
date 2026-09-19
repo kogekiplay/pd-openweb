@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import cx from 'classnames';
 import Trigger from '@rc-component/trigger';
+import cx from 'classnames';
 import styled from 'styled-components';
 import { Icon, Menu, MenuItem, SvgIcon } from 'ming-ui';
 import { checkIsAppAdmin } from 'ming-ui/functions';
@@ -10,7 +10,7 @@ const AppDisplayWrap = styled.div`
   .iconWrap {
     width: 36px;
     height: 36px;
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     margin-right: 10px;
     display: flex;
     align-items: center;
@@ -27,7 +27,7 @@ const MenuWrap = styled(Menu)`
     width: 24px;
     height: 24px;
     line-height: 24px;
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     margin-right: 10px;
     display: flex;
     align-items: center;
