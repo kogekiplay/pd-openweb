@@ -24,7 +24,7 @@ const Con = styled.div`
     &:hover {
       &::after {
         width: 2px;
-        background-color: #1677ff !important;
+        background-color: var(--color-primary) !important;
       }
     }
   }
