@@ -184,6 +184,19 @@ export function buildThemeVars(seed: string, mode: ThemeMode = 'light'): ThemeVa
     // ——— 带主题倾向的中性色阶 ———
     // 图标、次要文字、分隔线、浅底都走这一套；不含页面底/卡片底/输入框底/正文主文字。
     ...tintedNeutrals(primary, mode),
+
+    // ——— 主题色【之上】的前景色 ———
+    // 应用顶栏/左侧导航的底色就是应用色（或它的淡底），上面的文字和图标是
+    // 「盖在主题色之上的可读前景」，不是该跟随主题的色 —— 直接换成主色会看不见。
+    // 所以只把基色从纯黑/纯白往主色偏一点点，透明度层级由调用点用
+    // color-mix(..., transparent) 原样保留。
+    //
+    // 【强度只有 8%，是被对比度逼出来的】任何色相混进纯黑/纯白都会削弱极值。
+    // 实测 rgba(墨,0.4) 落在淡底上：纯黑 2.82，混 8% 是 2.65-2.74，混 18% 掉到 2.47。
+    // 8% 是「看得出色相倾向」与「几乎不掉对比度」的折中。
+    // 真正让顶栏有主题感的是背景和边框那一侧（它们改用主色，见 AppPkgHeader/index.less）。
+    '--color-on-app-ink': new TinyColor('#000000').mix(primary, 8).toHexString(),
+    '--color-on-app-paper': new TinyColor('#ffffff').mix(primary, 8).toHexString(),
   };
 }
 
