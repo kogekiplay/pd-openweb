@@ -41,6 +41,29 @@ let Application = class Application extends Component<any, any> {
     if (worksheetId) {
       this.compatibleWorksheetRoute(worksheetId);
     }
+
+    this.syncAppScopeClass();
+  }
+
+  componentWillUnmount() {
+    document.body.classList.remove('inAppScope');
+  }
+
+  /**
+   * 应用区域的内容面板样式靠 body 上这个类挂（样式在 src/router/index.less）。
+   *
+   * 【为什么不能无条件加】本组件还挂在 /worksheet/:worksheetId 这条老路由上，
+   * 那时没有 appId、render 返回 null —— 页面其实是别的东西，不该套应用面板。
+   * 判断口径和 renderContent 里那段保持一致（含 isPortal 的特殊取法）。
+   */
+  syncAppScopeClass() {
+    let { appId } = getIds(this.props);
+
+    if (md.global.Account.isPortal) {
+      appId = md.global.Account.appId;
+    }
+
+    document.body.classList.toggle('inAppScope', !!appId);
   }
 
   /**
@@ -48,6 +71,8 @@ let Application = class Application extends Component<any, any> {
    */
 
   componentDidUpdate(prevProps) {
+    this.syncAppScopeClass();
+
     if (!shallowEqual(prevProps, this.props)) {
       if (
         this.props.match.params.appId !== prevProps.match.params.appId ||

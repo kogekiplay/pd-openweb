@@ -45,6 +45,76 @@
   position: relative;
 }
 
+/* ================= 应用区域的内容面板 =================
+  【改的是什么】原来 #container 是贴边铺满的：左边紧挨应用导航、右边直接撞上
+  右侧图标栏，没有任何过渡；而自定义页的 header 上挂着一个
+  `border-radius: 3px 3px 0 0`（customPage/pageContent/index.tsx），
+  3px 在 44px 高的条上读不出「圆角容器」，只在跟导航交界处露出一小段游离的弧。
+  于是一边像是个圆角容器、另一边是硬切边，两头不一致。
+
+  【改成什么】内容区做成一块浮在「应用色浅底」上的白色圆角卡：
+  四边统一 8px 间隙、12px 圆角、柔和投影。
+
+  【四边都要留，不能只留右边】先只给了右下间隙，左边仍贴着导航 ——
+  结果是圆角直接怼在导航上，比原来的直角更怪。间隙必须是一圈。
+
+  【投影不是装饰，是必需的】底是 --color-primary-bg（主色最淡那一档）、
+  卡是白，两者对比太弱，光有间隙读不出边界。这层投影负责把卡的边缘定义出来。
+
+  【为什么只在应用里生效】#container 装的是全部路由，包含打印页、分享页、
+  chat_window 这些需要满幅的页面。类由 src/router/Application/index.tsx
+  按 appId 有无来挂，老路由 /worksheet/:worksheetId 那条挂载点不会挂。
+*/
+body.inAppScope {
+  #containerWrapper {
+    background: var(--color-primary-bg);
+  }
+  #container {
+    margin: 8px;
+    border-radius: 12px;
+    /* 不加这个的话子元素的底色会盖住圆角，看起来还是直角 */
+    overflow: hidden;
+    background: var(--color-background-card);
+    box-shadow:
+      0 1px 2px color-mix(in srgb, var(--color-overlay-ink) 6%, transparent),
+      0 6px 16px color-mix(in srgb, var(--color-overlay-ink) 5%, transparent);
+  }
+
+  /* 【把导航手画的那半个圆角容器收掉】
+     themeType==='light' 时，左侧导航在自己右边缘画了
+     「SVG 圆弧 + 1px 竖线 + SVG 圆弧」三件套
+     （PageHeader/AppPkgHeader/AppDetail/index.tsx:1164-1181），
+     用来暗示内容区是个圆角面板 —— 但它只画左边那半边，右边什么都没有，
+     所以看起来是「一边圆角、一边硬切」。
+
+     现在内容区是一块真正四边完整的卡，这三件套既多余又碍眼：
+     那条 1px 竖线用 --color-border-tertiary，被主题染色后是暖调的，
+     孤零零立在间隙里就成了一条突兀的彩色细线。 */
+  .borderLine,
+  .topBorderRadius,
+  .bottomBorderRadius {
+    display: none;
+  }
+
+  /* 【选中/hover 的色带要收在导航里面】
+     上面那条 borderLine 原本盖在导航右边缘的最上层（z-index 1），
+     顺带把「选中项色带一直铺到边缘」这件事遮住了。线一撤，色带就在
+     边缘露出一小段异色 —— 看起来像导航的边被切断了。
+
+     不把线加回去，而是让色带本来就不该顶到边：右侧内收 8px + 圆角，
+     选中项成为一块收在导航内部的圆角块。只收右边不收左边是有意的：
+     左缩进由 padding-left 表达层级（树形分组 46px / 62px），
+     给左边加 margin 会让分组标题和条目错位。 */
+  .appPkgHeaderWrap {
+    .workSheetItem,
+    .appGroup {
+      margin-right: 8px;
+      border-top-right-radius: 8px;
+      border-bottom-right-radius: 8px;
+    }
+  }
+}
+
 .hapAiDialog {
   position: unset !important;
   .mui-dialog-mask {

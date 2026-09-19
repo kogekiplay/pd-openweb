@@ -45,7 +45,11 @@ const CustomPageContentWrap = styled.div`
     width: 100%;
     height: 44px;
     padding: 0 24px 0 10px;
-    border-radius: 3px 3px 0 0;
+    /* 原来这里是 border-radius: 3px 3px 0 0。
+       3px 在 44px 高的条上读不出「圆角容器」，而它的底色又被 CustomPageHeader
+       用页面配置的 pageBgColor 覆盖掉（常常正好等于应用导航的色），
+       于是整条边界本来就看不见，只在跟导航交界处留下一小段游离的弧。
+       圆角现在由 #container 那块面板统一给（src/router/index.less），这里不再自己画。 */
     background-color: var(--color-background-card);
     box-shadow: var(--shadow-md);
     z-index: 1;
