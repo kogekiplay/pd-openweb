@@ -8,11 +8,11 @@ import Confirm from 'ming-ui/components/Dialog/Confirm';
 import { dialogSelectDept } from 'ming-ui/functions';
 import groupController from 'src/api/group';
 import createGroup from 'src/pages/Group/createGroup/load';
+import { pathCompletion } from 'src/utils/common';
 import Empty from '../../common/TableEmpty';
 import PaginationWrap from '../../components/PaginationWrap';
 import Config from '../../config';
 import './index.less';
-import { pathCompletion } from 'src/utils/common';
 
 const { Search } = Input;
 
@@ -49,7 +49,11 @@ export default class GroupsList extends Component<any, any> {
           return (
             <div className="nameBox">
               <img src={record.avatar} alt="avatar" />
-              <a className="overflow_ellipsis" href={pathCompletion(`/group/groupValidate?gID=${record.groupId}`)} target="_blank">
+              <a
+                className="overflow_ellipsis"
+                href={pathCompletion(`/group/groupValidate?gID=${record.groupId}`)}
+                target="_blank"
+              >
                 {text}
               </a>
             </div>
@@ -102,7 +106,8 @@ export default class GroupsList extends Component<any, any> {
       {
         title: _l('创建人'),
         dataIndex: 'createAccount',
-        render: (text: Record<string, any> = {}) => {
+        // 这一列的值是「创建人」对象，不是字符串（antd Table 的 render 形参名就叫 text）
+        render: (text: { fullname?: string } = {}) => {
           return (
             <div className="overflow_ellipsis" style={{ maxWidth: 150 }}>
               {text.fullname}

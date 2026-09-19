@@ -303,7 +303,9 @@ export default class SetInfoDialog extends Component<any, any> {
             openSearch
             showItemTitle
             isAppendToBody
-            renderTitle={(selectedData: Record<string, any> = {}) => <span title={selectedData.text}>{selectedData.text}</span>}
+            renderTitle={(selectedData: { text?: string } = {}) => (
+              <span title={selectedData.text}>{selectedData.text}</span>
+            )}
             onChange={value => this.setState({ timeZone: value })}
           />
         </div>
