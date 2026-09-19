@@ -26,6 +26,7 @@ import GroupFilter from './GroupFilter';
 import QuickFilter from './QuickFilter';
 import SheetContext from './SheetContext';
 import SheetHeader from './SheetHeader';
+import SheetFooter from './SheetFooter';
 import ViewControl from './ViewControl';
 import './style.less';
 
@@ -474,6 +475,9 @@ function Sheet(props) {
               ) : (
                 viewComp
               )}
+              {/* 分页条从顶栏右端挪到这里。顶栏那份已按 viewType 0 关掉
+                  （见 ViewControl.tsx），不会重复。 */}
+              {type === 'common' && <SheetFooter view={view} />}
             </Con>
           </React.Fragment>
         )}

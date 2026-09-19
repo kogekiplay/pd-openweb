@@ -74,6 +74,11 @@ body.inAppScope {
   }
   #container {
     margin: 12px;
+    /* 【必须把 height:100% 覆盖掉】基础规则里是 height:100%，
+       加上 12px 上下外边距之后卡片总高 = 100% + 24px，底部那条间隙会被挤出视口
+       （实测外壳下边界 768、卡片下边界 780）。
+       改成 auto 之后由 flex:1 分配剩余空间，外边距才真正生效。 */
+    height: auto;
     border-radius: 12px;
     /* 不加这个的话子元素的底色会盖住圆角，看起来还是直角 */
     overflow: hidden;
@@ -87,6 +92,7 @@ body.inAppScope {
      themeType==='light' 时，左侧导航在自己右边缘画了
      「SVG 圆弧 + 1px 竖线 + SVG 圆弧」三件套
      （PageHeader/AppPkgHeader/AppDetail/index.tsx:1164-1181），
+     外加 .topRadius / .bottomRadius 两个 radial-gradient 画的内凹填角，
      用来暗示内容区是个圆角面板 —— 但它只画左边那半边，右边什么都没有，
      所以看起来是「一边圆角、一边硬切」。
 
@@ -95,7 +101,9 @@ body.inAppScope {
      孤零零立在间隙里就成了一条突兀的彩色细线。 */
   .borderLine,
   .topBorderRadius,
-  .bottomBorderRadius {
+  .bottomBorderRadius,
+  .topRadius,
+  .bottomRadius {
     display: none;
   }
 
