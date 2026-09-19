@@ -109,13 +109,13 @@ const {
 
 // 1. 写入：键值原样落到 inline style
 const el = fakeEl();
-applyThemeVars(el, { '--color-primary': '#e91e63', '--color-app': '#e91e63' });
-assert.deepStrictEqual(el.props, { '--color-primary': '#e91e63', '--color-app': '#e91e63' });
+applyThemeVars(el, { '--color-primary': '#e91e63', '--color-primary-dark': '#e91e63' });
+assert.deepStrictEqual(el.props, { '--color-primary': '#e91e63', '--color-primary-dark': '#e91e63' });
 
 // 2. 【核心】清除是逐键删，不碰别人写的 inline 样式。
 //    改成 cssText = '' 这一组会红。
 (el.style as { setProperty: (k: string, v: string) => void }).setProperty('zoom', '1.2');
-clearThemeVars(el, { '--color-primary': '', '--color-app': '' });
+clearThemeVars(el, { '--color-primary': '', '--color-primary-dark': '' });
 assert.deepStrictEqual(el.props, { zoom: '1.2' });
 
 // 3. 重复 apply 是覆盖而不是叠加

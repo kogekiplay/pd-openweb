@@ -37,9 +37,27 @@ const ALPHA: Record<ThemeMode, { focusOuter: number; transparent: number; transp
   dark: { focusOuter: 0.5, transparent: 0.2, transparentLight: 0.12 },
 };
 
-/** --app-highlight-color 原本就是 setAlpha(0.2)，明暗一致，见 utils/common.ts 里的旧实现。 */
-const HIGHLIGHT_ALPHA = 0.2;
-
+/**
+ * 【这里【不】产出 --app-primary-color 系列，也不产出 --color-app 系列】
+ *
+ * · --app-primary-color / --app-primary-hover-color：
+ *   src/common/mdcss/basic.css:3-5 已经把它们【别名】到语义变量上：
+ *     --app-primary-color: var(--color-primary);
+ *     --app-primary-hover-color: var(--color-link-hover);
+ *   所以它们本来就跟着主色走，这里再定义一遍等于造第二个真相源；
+ *   而且 hover 那个会被悄悄从 --color-link-hover 改成 colorPrimaryHover。
+ *
+ *   运行期还有两个注入器会临时覆盖它们，表达「此刻用某个应用的颜色」：
+ *     · src/pages/worksheet/WorkSheet.tsx 的 changeAppThemeColor（卸载时 remove，写得对）
+ *     · src/utils/common.ts 的 setAppThemeColor（Chatbot 用）
+ *   这两条路和本模块并存不冲突：它们改的是别名变量，本模块改的是 --color-primary。
+ *
+ * · --app-highlight-color：全局【没有】定义，只由上面两个注入器临时产生。
+ *   所以 `var(--app-highlight-color, var(--color-mingo-transparent))` 那处兜底
+ *   是真的会生效的，在这里定义它会把那处的 Mingo 紫覆盖掉。
+ *
+ * · --color-app 系列：真·死变量（全仓无赋值），已在同批改指 --color-primary 后删除。
+ */
 function alpha(color: string, a: number): string {
   return new TinyColor(color).setAlpha(a).toRgbString();
 }
@@ -67,21 +85,6 @@ export function buildThemeVars(seed: string, mode: ThemeMode = 'light'): ThemeVa
     '--color-primary-focus-outer': alpha(primary, a.focusOuter),
     '--color-primary-transparent': alpha(primary, a.transparent),
     '--color-primary-transparent-light': alpha(primary, a.transparentLight),
-
-    // ——— 应用色（theme-default.less 的 4 个）———
-    // 原注释写「由各个模块定义，未传入时和主色一致」，但全仓没有一处赋值，
-    // 是死变量。归一之后它和主色永远同源，Task 6 会把这 3 处引用改掉再删。
-    '--color-app': primary,
-    '--color-app-light': token.colorPrimaryHover,
-    '--color-app-dark': token.colorPrimaryActive,
-    '--color-app-transparent': alpha(primary, a.transparent),
-
-    // ——— 旧的 setAppThemeColor 三兄弟 ———
-    // 29 处引用还在，Task 6 才改指 --color-primary。过渡期由这里一并产出，
-    // 保证「两条路并存时结果一致」。
-    '--app-primary-color': primary,
-    '--app-primary-hover-color': token.colorPrimaryHover,
-    '--app-highlight-color': alpha(primary, HIGHLIGHT_ALPHA),
   };
 }
 

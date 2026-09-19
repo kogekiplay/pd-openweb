@@ -80,17 +80,22 @@ assert.strictEqual(dark['--color-primary-transparent-light'], `rgba(${rgbOf(antd
 // 5. 聚焦环主色与主色同值（theme-default.less 原本就是这么写的）
 assert.strictEqual(light['--color-primary-focus'], light['--color-primary']);
 
-// 6. 应用色三兄弟跟主色同源（spec 要求 --color-app 系列并入主色）
-assert.strictEqual(light['--color-app'], light['--color-primary']);
-assert.strictEqual(light['--color-app-light'], light['--color-primary-light']);
-assert.strictEqual(light['--color-app-dark'], light['--color-primary-dark']);
-assert.strictEqual(light['--color-app-transparent'], light['--color-primary-transparent']);
+// 6. 【反向断言】这里【不】产出 --app-primary-color 系列。
+//    前两个已经由 src/common/mdcss/basic.css:3-5 别名到语义变量上
+//    （--color-primary / --color-link-hover），本来就跟着主色走；
+//    在调色板里再定义一遍等于造第二个真相源，还会把 hover 那个从
+//    --color-link-hover 悄悄改成 colorPrimaryHover。
+//    --app-highlight-color 则全局没有定义，只由两个运行期注入器临时产生，
+//    在这里定义它会把 MessageList 那处 var(..., var(--color-mingo-transparent))
+//    的兜底覆盖掉。这组断言防止它们被「顺手补回来」。
+for (const key of ['--app-primary-color', '--app-primary-hover-color', '--app-highlight-color']) {
+  assert.ok(!(key in light), `${key} 不该由全局调色板产出 —— 见 palette.ts 里的说明`);
+}
 
-// 7. 旧的 --app-primary-color 三兄弟也由同一套产出。
-//    Task 6 才删它们；过渡期必须「两条路并存且结果一致」，这组就是那句话的判据。
-assert.strictEqual(light['--app-primary-color'], light['--color-primary']);
-assert.strictEqual(light['--app-primary-hover-color'], light['--color-primary-light']);
-assert.strictEqual(light['--app-highlight-color'], `rgba(${rgbOf(SEED)}, 0.2)`);
+// 7. --color-app 系列同样不产出：它是真·死变量，引用点已改指 --color-primary
+for (const key of ['--color-app', '--color-app-light', '--color-app-dark', '--color-app-transparent']) {
+  assert.ok(!(key in light), `${key} 已退役，不该再出现`);
+}
 
 // 8. mode 缺省 = light
 assert.deepStrictEqual(buildThemeVars(SEED), light);

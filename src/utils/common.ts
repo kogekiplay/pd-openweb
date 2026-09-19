@@ -1417,12 +1417,38 @@ export const getMimeTypeByExt = ext => {
   }
 };
 
+/**
+ * 临时把 --app-primary-color 系列覆盖成某个应用的颜色。
+ *
+ * 【它和 src/common/theme 的关系】（2026-09-19 查清，别再当成遗留物直接删）
+ * 这三个变量的常态值来自 src/common/mdcss/basic.css:3-5 的别名：
+ *     --app-primary-color: var(--color-primary);
+ *     --app-primary-hover-color: var(--color-link-hover);
+ * 也就是说它们【本来就跟着主题引擎走】，不需要这个函数也能有正确的颜色。
+ * 本函数做的是「此刻改用某个具体应用的颜色」这件额外的事。
+ * （--app-highlight-color 是例外：全局没有定义，只由本函数和
+ *  WorkSheet.tsx 的 changeAppThemeColor 产生。）
+ *
+ * 【已知未修】唯一调用点是 Chatbot（src/pages/Chatbot/index.tsx），注入之后
+ * 整个 SPA 会话都不会清掉 —— 进过一次 Chatbot，其余页面也会跟着用那个颜色。
+ * 对照组是 WorkSheet.tsx 的 changeAppThemeColor，它在卸载和重注入前都会 remove，
+ * 写法是对的。要不要照着改是产品决策（影响 AI 助手的品牌色），需要肉眼确认，
+ * 没在这一批里动。
+ */
 export function setAppThemeColor(color) {
-  const style = document.createElement('style');
-  style.innerHTML = `:root { --app-primary-color: ${color}; --app-primary-hover-color: ${new TinyColor(color)
+  // 【复用同一个 <style>】原实现每调一次就 createElement + appendChild 一个新的，
+  // 是实打实的泄漏：切换应用几次，head 里就攒下几个同名规则互相覆盖。
+  const STYLE_ID = 'md-app-theme-color';
+  const style = (document.getElementById(STYLE_ID) as HTMLStyleElement) || document.createElement('style');
+
+  if (!style.id) {
+    style.id = STYLE_ID;
+    document.head.appendChild(style);
+  }
+
+  style.textContent = `:root { --app-primary-color: ${color}; --app-primary-hover-color: ${new TinyColor(color)
     .darken(5)
     .toString()};  --app-highlight-color: ${new TinyColor(color).setAlpha(0.2).toRgbString()}}`;
-  document.head.appendChild(style);
 }
 
 export const setBodyThemeMode = value => {
