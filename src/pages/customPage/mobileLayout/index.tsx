@@ -69,7 +69,7 @@ const MobileConfig = styled.div`
     padding: 15px;
     border-radius: 30px;
     background-color: var(--color-background-primary);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.16);
+    box-shadow: var(--shadow-md);
   }
   .mobileBox {
     width: 100%;

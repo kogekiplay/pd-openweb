@@ -14,7 +14,7 @@ const Popup = styled.div`
   background: var(--color-background-card);
   width: 300px;
   border-radius: 4px;
-  box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.16);
+  box-shadow: var(--shadow-lg);
   .addFilterCondition {
     padding: 5px 20px 20px;
   }

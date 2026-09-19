@@ -199,7 +199,7 @@ export const HomePageWrap = styled.div`
       background-color: var(--color-background-primary);
       box-sizing: border-box;
       padding: 24px;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+      box-shadow: var(--shadow-sm);
       border-radius: 3px;
       .count {
         font-size: 28px;
@@ -251,7 +251,7 @@ export const HomePageWrap = styled.div`
     align-items: center;
     padding: 32px 24px 50px 24px;
     position: relative;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow-sm);
     border-radius: 6px;
     .computeMethod {
       position: absolute;
@@ -372,7 +372,7 @@ export const HomePageWrap = styled.div`
       justify-content: space-between;
       padding: 20px 24px;
       border-radius: 3px;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+      box-shadow: var(--shadow-sm);
     }
     .licenseInfoWrap {
       display: flex;
@@ -572,7 +572,7 @@ export const HomePageWrap = styled.div`
     .content {
       padding: 16px;
       background-color: var(--color-background-primary);
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+      box-shadow: var(--shadow-sm);
       border-radius: 6px;
     }
     ul {

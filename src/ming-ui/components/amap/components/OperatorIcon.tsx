@@ -11,7 +11,7 @@ const ToolbarIconWrap = styled.div`
   padding: 6px;
   border-radius: ${icon => (icon === 'gpsFixed' ? ' 50%' : 'unset')};
   background: var(--color-background-primary);
-  box-shadow: 0 3px 6px 0px rgba(0, 0, 0, 0.16);
+  box-shadow: var(--shadow-md);
 `;
 
 export default class OperatorIcon extends Component<any, any> {

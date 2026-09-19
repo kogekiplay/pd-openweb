@@ -18,7 +18,7 @@ export const TopBar = styled.div`
   justify-content: space-between;
   height: 50px;
   padding-right: 24px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.16);
+  box-shadow: var(--shadow-sm);
   background-color: var(--color-background-primary);
   z-index: 1;
   .simpleHeaderBackIcon {

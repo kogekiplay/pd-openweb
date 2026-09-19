@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
+import _ from 'lodash';
 import styled from 'styled-components';
 import { Icon, MenuItem } from 'ming-ui';
 import webCacheAjax from 'src/api/webCache';
@@ -16,9 +16,7 @@ const MenuBox = styled.div`
   padding: 5px 0;
   border-radius: 3px;
   background: var(--color-background-primary);
-  box-shadow:
-    0 4px 20px rgba(0, 0, 0, 0.13),
-    0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-lg);
   max-height: 500px;
   overflow-y: scroll;
   .icon-new_word {

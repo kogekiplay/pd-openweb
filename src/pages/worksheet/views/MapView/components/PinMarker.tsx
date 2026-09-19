@@ -11,12 +11,12 @@ import SheetContext from 'worksheet/common/Sheet/SheetContext';
 import { getCardTitleFieldForView } from 'src/pages/worksheet/views/util.js';
 import { pathCompletion } from 'src/utils/common';
 import { renderText as renderCellText, sortControlByIds } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import { addBehaviorLog } from 'src/utils/project';
 import { handleRecordClick } from 'src/utils/record';
 import { getRecordColor, getRecordColorConfig } from 'src/utils/record';
 import EditableCard from '../../components/EditableCard';
 import Marker from '../amap/Maker';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const wrapStyles = `
 .iconCon {
@@ -59,7 +59,7 @@ const wrapStyles = `
     max-width: 200px;
     padding: 6px 10px;
     border-radius: 4px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow-sm);
   }
   .ellipsis {
     overflow: hidden;

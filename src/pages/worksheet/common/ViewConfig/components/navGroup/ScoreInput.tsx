@@ -10,9 +10,7 @@ const DropWrap = styled.div`
   width: 360px;
   z-index: 1000;
   background: var(--color-background-primary);
-  box-shadow:
-    0 4px 20px rgba(0, 0, 0, 0.13),
-    0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-lg);
   .dropLi {
     line-height: 32px;
     padding: 0 12px;

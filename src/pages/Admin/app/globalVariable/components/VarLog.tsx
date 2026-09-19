@@ -71,10 +71,10 @@ const LogDrawer = styled(Drawer)`
         width: fit-content;
         cursor: pointer;
         border-radius: 3px;
-        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        box-shadow: var(--shadow-sm);
         border: 1px solid var(--color-background-secondary);
         &:hover {
-          box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2);
+          box-shadow: var(--shadow-sm);
           .icon-cancel {
             display: inline-block;
           }

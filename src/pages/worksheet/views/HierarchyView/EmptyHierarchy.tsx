@@ -35,9 +35,9 @@ const EmptyHierarchyWrap = styled.div`
     background-color: var(--color-background-primary);
     color: var(--color-text-tertiary);
     font-weight: bold;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.16);
+    box-shadow: var(--shadow-sm);
     &:hover {
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.16);
+      box-shadow: var(--shadow-md);
     }
     &.allowAdd {
       cursor: pointer;

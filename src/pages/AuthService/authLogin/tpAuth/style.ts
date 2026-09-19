@@ -23,10 +23,10 @@ export const Wrap = styled.div`
       -webkit-border-radius: 2px;
       border-radius: 2px;
       background-color: var(--color-background-primary);
-      box-shadow: 0 2px 6px 0px rgba(0, 0, 0, 0.15);
-      -weblit-box-shadow: 0 2px 6px 0px rgba(0, 0, 0, 0.15);
-      -moz-box-shadow: 0 2px 6px 0px rgba(0, 0, 0, 0.15);
-      -ms-box-shadow: 0 2px 6px 0px rgba(0, 0, 0, 0.15);
+      box-shadow: var(--shadow-md);
+      -weblit-box-shadow: var(--shadow-md);
+      -moz-box-shadow: var(--shadow-md);
+      -ms-box-shadow: var(--shadow-md);
     }
     .main .container {
       width: 392px;

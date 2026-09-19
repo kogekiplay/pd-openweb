@@ -1,8 +1,8 @@
 import React from 'react';
 import { useSetState } from 'react-use';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Checkbox, Icon, MenuItem, SortableList } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -20,7 +20,7 @@ import { WrapS } from './style';
 const WrapItem = styled.div`
   height: 36px;
   background: var(--color-background-primary);
-  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.16);
+  box-shadow: var(--shadow-sm);
   border-radius: 4px;
   z-index: 1000;
   .dragIcon {

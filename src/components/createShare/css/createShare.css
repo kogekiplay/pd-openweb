@@ -102,15 +102,9 @@
   background-color: var(--color-background-primary);
   border-top-width: 8px;
   border-top-style: solid;
-  -moz-box-shadow:
-    0 6px 30px color-mix(in srgb, var(--color-overlay-ink) 20%, transparent),
-    0 2px 12px color-mix(in srgb, var(--color-overlay-ink) 20%, transparent);
-  box-shadow:
-    0 6px 30px color-mix(in srgb, var(--color-overlay-ink) 20%, transparent),
-    0 2px 12px color-mix(in srgb, var(--color-overlay-ink) 20%, transparent);
-  -webkit-box-shadow:
-    0 6px 30px color-mix(in srgb, var(--color-overlay-ink) 20%, transparent),
-    0 2px 12px color-mix(in srgb, var(--color-overlay-ink) 20%, transparent);
+  -moz-box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-lg);
+  -webkit-box-shadow: var(--shadow-lg);
 }
 .createShareAlertTitle {
   font-size: 16px;

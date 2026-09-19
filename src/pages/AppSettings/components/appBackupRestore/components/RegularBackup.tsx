@@ -1,8 +1,8 @@
 // 定期备份
 import React, { useEffect, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Button, Checkbox, Dialog, Dropdown } from 'ming-ui';
 import { Days, RegularBackupTabs } from '../enum';
@@ -11,7 +11,7 @@ const RegularBackupWrap = styled.div`
   width: 350px;
   padding: 14px 20px 20px;
   background: var(--color-background-primary);
-  box-shadow: 0 2px 6px 0px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-md);
   .icon-close {
     position: absolute;
     right: 10px;
@@ -50,7 +50,7 @@ const DaySelectWrap = styled.div`
   flex-wrap: wrap;
   display: flex;
   background-color: var(--color-background-primary);
-  box-shadow: 0 2px 6px 0px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-md);
   padding: 15px;
   font-weight: 500;
   .dayItem {
@@ -195,7 +195,11 @@ export default function RegularBackup(props) {
           <Checkbox className="mRight16" text={_l('备份应用')} disabled={true} checked={true} />
           {((!window.platformENV.isOverseas && !window.platformENV.isLocal) ||
             md.global.SysSettings.enableBackupWorksheetData) && (
-            <Checkbox text={_l('备份数据')} checked={datum} onClick={(checked: boolean) => updateData({ datum: !checked })} />
+            <Checkbox
+              text={_l('备份数据')}
+              checked={datum}
+              onClick={(checked: boolean) => updateData({ datum: !checked })}
+            />
           )}
         </div>
       </div>

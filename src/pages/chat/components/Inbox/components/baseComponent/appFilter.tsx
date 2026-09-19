@@ -14,9 +14,7 @@ const AppFilterWrap = styled.div`
   background-color: var(--color-background-primary);
   max-height: 360px;
   overflow-y: auto;
-  box-shadow:
-    0 4px 20px rgba(0, 0, 0, 0.13),
-    0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-lg);
 
   .appListWrapper {
     border-bottom: 1px solid var(--color-border-primary);
@@ -175,7 +173,7 @@ export default class AppFilter extends Component<any, any> {
     const { app, menuVisible } = this.state;
     const { apkId } = this.props;
     return (
-      (<Fragment>
+      <Fragment>
         <Dropdown
           popupRender={() => this.renderProjectList()}
           trigger={['click']}
@@ -210,7 +208,7 @@ export default class AppFilter extends Component<any, any> {
             )}
           </SelectAppTrigger>
         </Dropdown>
-      </Fragment>)
+      </Fragment>
     );
   }
 }

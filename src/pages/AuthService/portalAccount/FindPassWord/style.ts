@@ -89,7 +89,7 @@ export const WrapCon = styled.div`
     width: 480px;
     background: var(--color-background-primary);
     height: auto;
-    box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.16);
+    box-shadow: var(--shadow-lg);
     position: absolute;
     left: 50%;
     top: 50%;

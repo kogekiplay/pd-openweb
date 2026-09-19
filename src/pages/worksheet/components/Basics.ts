@@ -212,7 +212,7 @@ export const CardButton = styled.span`
   border-radius: 22px;
   background: var(--color-background-primary);
   color: var(--color-text-secondary);
-  box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.16);
+  box-shadow: var(--shadow-sm);
   display: flex;
   align-items: center;
   justify-content: center;

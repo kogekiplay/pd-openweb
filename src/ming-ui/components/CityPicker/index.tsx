@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useRef, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, LoadDiv } from 'ming-ui';
 import fixedDataController from 'src/api/fixedData';
@@ -55,9 +55,7 @@ const CascaderSearchSelectWrap = styled.ul`
   padding: 6px 0;
   background: var(--color-background-primary);
   border-radius: 3px;
-  box-shadow:
-    0 4px 20px rgba(0, 0, 0, 0.13),
-    0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-lg);
   z-index: 11;
   li {
     min-height: 32px;

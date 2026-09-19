@@ -14,7 +14,6 @@ import { UPGRADE_ERRORMSG } from 'src/pages/AppSettings/config.js';
 import { formatFileSize } from 'src/utils/common';
 import UpgradeItemWrap from './UpgradeItemWrap';
 
-
 const Wrap = styled.div`
   width: 100%;
   height: 100%;
@@ -23,7 +22,7 @@ const Wrap = styled.div`
     width: 100%;
     height: 50px;
     background: var(--color-background-primary);
-    box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.16);
+    box-shadow: var(--shadow-sm);
     border-radius: 0px 0px 0px 0px;
     position: sticky;
     top: 0;

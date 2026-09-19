@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Dialog, LoadDiv } from 'ming-ui';
 import ajaxRequest from 'src/api/taskCenter';
@@ -12,9 +12,7 @@ const SearchTaskCon = styled.ul`
   background: var(--color-background-primary);
   display: block;
   padding: 6px 0;
-  -webkit-box-shadow:
-    0 4px 20px rgba(0, 0, 0, 0.13),
-    0 2px 6px rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: var(--shadow-lg);
   max-height: 300px;
   overflow-y: scroll;
   li {

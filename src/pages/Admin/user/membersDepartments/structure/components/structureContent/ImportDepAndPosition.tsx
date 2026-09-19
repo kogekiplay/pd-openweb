@@ -77,7 +77,7 @@ const ImportWrap = styled.div`
         height: 56px;
         padding: 0 25px;
         border: 1px solid var(--color-border-primary);
-        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.12);
+        box-shadow: var(--shadow-sm);
         border-radius: 3px;
         box-sizing: border-box;
         .importUploadText {

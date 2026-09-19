@@ -11,7 +11,7 @@ const ToolBarWrap = styled.div`
   flex-direction: column;
   align-items: center;
   .boxShadow {
-    box-shadow: 0 3px 6px 0px rgba(0, 0, 0, 0.16);
+    box-shadow: var(--shadow-md);
   }
   .zoomBox {
     display: flex;

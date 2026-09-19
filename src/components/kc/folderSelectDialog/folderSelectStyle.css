@@ -356,9 +356,9 @@
     0 -2px 6px color-mix(in srgb, var(--color-overlay-ink) 10%, transparent);
 }
 .folderSelectDialog .contraryShareShadow {
-  -webkit-box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.1);
-  -moz-box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.1);
-  box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: var(--shadow-lg);
+  -moz-box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-lg);
 }
 .folderSelectDialog .sharePermision .shareList {
   padding: 8px 0;

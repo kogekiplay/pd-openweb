@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const SelectColorWrap = styled.div(
   ({ inputCoverStyle = true }) => `
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.16);
+    box-shadow: var(--shadow-md);
     border-radius: 3px;
     position: relative;
     box-sizing: border-box;

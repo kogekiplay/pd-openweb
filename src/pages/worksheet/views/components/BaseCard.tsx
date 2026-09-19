@@ -191,7 +191,7 @@ const RecordFieldsWrap = styled(FlexCenter)`
   padding: 0 14px;
   border-radius: 4px;
   /* &:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.16);
+    box-shadow: var(--shadow-md);
   } */
   .contentWrap {
     flex: 1;

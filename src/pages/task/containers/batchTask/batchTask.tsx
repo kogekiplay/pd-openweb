@@ -23,12 +23,8 @@ const SearchFolderCon = styled.ul`
   max-height: 400px;
   padding: 6px 0;
   overflow-y: auto;
-  box-shadow:
-    0 4px 20px rgba(0, 0, 0, 0.13),
-    0 2px 6px rgba(0, 0, 0, 0.1);
-  -webkit-box-shadow:
-    0 4px 20px rgba(0, 0, 0, 0.13),
-    0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-lg);
+  -webkit-box-shadow: var(--shadow-lg);
   background: var(--color-background-primary);
   padding: 6px 0;
   z-index: 9999;

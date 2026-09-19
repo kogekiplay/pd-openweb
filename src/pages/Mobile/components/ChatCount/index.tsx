@@ -15,7 +15,7 @@ const ChartCountWrap = styled.div`
   line-height: 32px;
   border-radius: 16px;
   background-color: var(--color-background-primary);
-  box-shadow: 0 3px 6px 0px rgba(0, 0, 0, 0.16);
+  box-shadow: var(--shadow-md);
   position: fixed;
   bottom: 60px;
   right: 20px;

@@ -32,7 +32,7 @@ const Wrapper = styled.div`
     align-items: center;
     height: 56px;
     padding: 0 24px;
-    box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.16);
+    box-shadow: var(--shadow-sm);
     .backBtn {
       width: fit-content;
       font-size: 17px;

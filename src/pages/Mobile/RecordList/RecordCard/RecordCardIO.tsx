@@ -31,7 +31,7 @@ const SkeletonWrap = styled.div`
   border: 1px solid var(--color-background-card);
   background-color: var(--color-background-primary);
   border-radius: 3px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.16);
+  box-shadow: var(--shadow-sm);
   height: ${props => props.realCardHeight}px;
 `;
 

@@ -1,15 +1,15 @@
 import React, { useEffect, useRef } from 'react';
 import { useSetState } from 'react-use';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, LoadDiv, ScrollView } from 'ming-ui';
 import sheetAjax from 'src/api/worksheet';
 import { isSameType } from 'src/pages/worksheet/common/ViewConfig/util.js';
 import { renderText as renderCellText } from 'src/utils/control';
-import Option from './Options';
 import type { FormControl } from 'src/utils/controlTypes';
+import Option from './Options';
 
 const Wrap = styled.div`
   .customInput {
@@ -40,9 +40,7 @@ const WrapS = styled.div`
     border-radius: 3px;
     background: var(--color-background-primary);
     z-index: 11;
-    box-shadow:
-      0 4px 20px rgba(0, 0, 0, 0.13),
-      0 2px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-lg);
     .recordItem {
       cursor: pointer;
       height: 36px;

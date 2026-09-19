@@ -6,9 +6,9 @@ import { LoadDiv } from 'ming-ui';
 import externalPortalAjax from 'src/api/externalPortal';
 import { formatControlToServer } from 'src/components/Form/core/utils';
 import { browserIsMobile } from 'src/utils/common';
+import type { FormControl } from 'src/utils/controlTypes';
 import { getPssId } from 'src/utils/pssId';
 import { accountResultAction, setAutoLoginKey, statusList } from './util';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrap = styled.div`
   .Hide {
@@ -52,7 +52,7 @@ const Wrap = styled.div`
     min-width: 800px;
     background: var(--color-background-primary);
     height: auto;
-    box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.16);
+    box-shadow: var(--shadow-lg);
     overflow: auto;
     .messageConBox {
       // max-width: 600px;

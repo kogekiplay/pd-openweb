@@ -177,7 +177,7 @@ export const Wrap = styled.div`
         -moz-osx-font-smoothing: grayscale;
       }
       &:hover {
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+        box-shadow: var(--shadow-sm);
         background-color: var(--color-background-tertiary);
       }
       span.txt {

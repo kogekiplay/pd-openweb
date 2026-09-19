@@ -11,7 +11,7 @@ const Wrap = styled.div`
   .searchWorksheet {
     width: 180px;
     height: 36px;
-    box-shadow: 0px 2px 6px 1px rgba(0, 0, 0, 0.16);
+    box-shadow: var(--shadow-md);
     border-radius: 22px;
     border: none;
   }

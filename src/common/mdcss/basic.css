@@ -2281,34 +2281,24 @@ nav,
 }
 
 .z-depth-1-half {
-  box-shadow:
-    0 5px 11px 0 color-mix(in srgb, var(--color-overlay-ink) 12%, transparent),
-    0 4px 15px 0 color-mix(in srgb, var(--color-overlay-ink) 10%, transparent);
+  box-shadow: var(--shadow-lg);
 }
 
 .z-depth-2 {
-  box-shadow:
-    0 8px 17px 0 color-mix(in srgb, var(--color-overlay-ink) 18%, transparent),
-    0 6px 20px 0 color-mix(in srgb, var(--color-overlay-ink) 12%, transparent);
+  box-shadow: var(--shadow-lg);
 }
 
 .z-depth-3 {
-  box-shadow:
-    0 12px 15px 0 color-mix(in srgb, var(--color-overlay-ink) 20%, transparent),
-    0 17px 50px 0 color-mix(in srgb, var(--color-overlay-ink) 12%, transparent);
+  box-shadow: var(--shadow-xl);
 }
 
 .z-depth-4,
 .modal {
-  box-shadow:
-    0 16px 28px 0 color-mix(in srgb, var(--color-overlay-ink) 19%, transparent),
-    0 25px 55px 0 color-mix(in srgb, var(--color-overlay-ink) 14%, transparent);
+  box-shadow: var(--shadow-xl);
 }
 
 .z-depth-5 {
-  box-shadow:
-    0 27px 24px 0 color-mix(in srgb, var(--color-overlay-ink) 18%, transparent),
-    0 40px 77px 0 color-mix(in srgb, var(--color-overlay-ink) 15%, transparent);
+  box-shadow: var(--shadow-xl);
 }
 
 .z-depth-6 {
@@ -2316,15 +2306,11 @@ nav,
 }
 
 .tipBoxShadow {
-  box-shadow:
-    0 3px 10px 2px color-mix(in srgb, var(--color-overlay-ink) 16%, transparent),
-    0 5px 20px 4px color-mix(in srgb, var(--color-overlay-ink) 10%, transparent);
+  box-shadow: var(--shadow-lg);
 }
 
 .taskBoxShadow {
-  box-shadow:
-    0 4px 20px color-mix(in srgb, var(--color-overlay-ink) 13%, transparent),
-    0 2px 6px color-mix(in srgb, var(--color-overlay-ink) 10%, transparent);
+  box-shadow: var(--shadow-lg);
 }
 
 .card {

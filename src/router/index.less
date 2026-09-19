@@ -83,9 +83,7 @@ body.inAppScope {
     /* 不加这个的话子元素的底色会盖住圆角，看起来还是直角 */
     overflow: hidden;
     background: var(--color-background-card);
-    box-shadow:
-      0 1px 2px color-mix(in srgb, var(--color-overlay-ink) 6%, transparent),
-      0 6px 16px color-mix(in srgb, var(--color-overlay-ink) 5%, transparent);
+    box-shadow: var(--shadow-md);
   }
 
   /* 【把导航手画的那半个圆角容器收掉】

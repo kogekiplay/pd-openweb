@@ -1,8 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, Input, LoadDiv, Menu, MenuItem, UserHead } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -25,9 +25,7 @@ const WrapFocusCon = styled.div`
   border-radius: 3px;
   background: var(--color-background-primary);
   z-index: 11;
-  box-shadow:
-    0 4px 20px rgba(0, 0, 0, 0.13),
-    0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-lg);
   .focusUserCon {
     border-top: 1px solid var(--color-background-secondary);
     margin-top: 3px;

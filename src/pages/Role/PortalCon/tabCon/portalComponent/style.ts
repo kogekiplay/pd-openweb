@@ -80,7 +80,7 @@ export const Popup = styled.div`
   width: 240px;
   padding: 5px 0;
   border-radius: 4px;
-  box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.16);
+  box-shadow: var(--shadow-lg);
   .searchWrapper {
     border-bottom: 1px solid var(--color-border-secondary);
     margin: 8px 16px 0;

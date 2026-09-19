@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
-import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
+import _ from 'lodash';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import { conditionAdapter, formatQuickFilter, validate } from 'mobile/RecordList/QuickFilter/utils';
@@ -8,7 +8,7 @@ import { conditionAdapter, formatQuickFilter, validate } from 'mobile/RecordList
 const SearchRowsWrapper = styled.div`
   background-color: var(--color-background-primary);
   border-radius: 3px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.16);
+  box-shadow: var(--shadow-sm);
   padding: 0 10px;
   height: 100%;
   .cuttingLine {

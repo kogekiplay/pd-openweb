@@ -26,7 +26,7 @@ const ContentWrapper = styled.div`
       }
       &:focus {
         background-color: var(--color-background-primary);
-        box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2);
+        box-shadow: var(--shadow-sm);
       }
     }
     .searchIcon {

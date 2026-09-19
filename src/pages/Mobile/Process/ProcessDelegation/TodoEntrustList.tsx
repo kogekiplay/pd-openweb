@@ -28,7 +28,7 @@ const CardWrapper = styled.div`
   box-sizing: border-box;
   background-color: var(--color-background-primary);
   border-radius: 4px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-sm);
   &:hover {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
   }
