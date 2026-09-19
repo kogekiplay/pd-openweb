@@ -70,11 +70,21 @@
         border-bottom-color: transparent !important;
       }
     }
+    /* 【这个「已修改」胶囊在亮色下是白底白字，整个看不见】
+       上游 7.3.0（aa5338bdc）把底色从 --color-text-primary 改成了
+       --color-background-card，但字色还留着 --color-text-inverse ——
+       亮色主题里这两个都是 #ffffff。全仓就这一处这么撞，是上游的孤立笔误。
+
+       底色改回 --color-text-primary 只能修好亮色：暗色下它是 #e6e6e6，
+       配 --color-text-inverse 的 #ffffff 一样看不见（上游 7.2.0 的写法就有这个毛病，
+       只是没人在暗色下看过）。字色必须跟着换成 --color-background-card，
+       让这一对在两个主题里互为反色：
+         亮：#151515 底 / #ffffff 字   暗：#e6e6e6 底 / #222222 字 */
     .workflowSettingsHeaderUpdateBtn {
       height: 22px;
-      background: var(--color-background-card);
-      border-radius: 11px;
-      color: var(--color-text-inverse);
+      background: var(--color-text-primary);
+      border-radius: var(--radius-pill);
+      color: var(--color-background-card);
       display: inline-flex;
       align-items: center;
       justify-content: center;
