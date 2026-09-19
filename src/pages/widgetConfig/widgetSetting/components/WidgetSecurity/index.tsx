@@ -15,7 +15,7 @@ import MaskSettingDialog from './MaskSettingDialog';
 
 const ViewWrap = styled.div`
   display: flex;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-primary);
   margin-top: 8px;
   .viewCon {

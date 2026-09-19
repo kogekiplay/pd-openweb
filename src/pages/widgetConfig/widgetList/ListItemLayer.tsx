@@ -21,7 +21,7 @@ const ItemLayer = styled.div`
     padding-left: 10px;
     padding-right: 4px;
     background: var(--color-background-secondary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-primary);
     box-shadow: 0 4px 16px 0px rgba(0, 0, 0, 0.24);
     opacity: 0;

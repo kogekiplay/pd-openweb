@@ -7,7 +7,7 @@ export const AddEventWrap = styled.div`
   ${props =>
     props.type === 'action'
       ? 'width: fit-content;'
-      : 'width: 100%; height: 36px;justify-content: center; border: 1px dashed var(--color-border-primary);margin-top: 20px;border-radius: 4px;'}
+      : 'width: 100%; height: 36px;justify-content: center; border: 1px dashed var(--color-border-primary);margin-top: 20px;border-radius: var(--radius-sm);'}
   cursor: pointer;
   color: var(--color-primary);
   ${props =>
@@ -103,7 +103,7 @@ export const CustomActionWrap = styled.div`
   }
   .alertContent {
     padding: 0 20px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     line-height: 36px;
     display: flex;
     align-items: center;
@@ -166,12 +166,12 @@ export const CustomActionWrap = styled.div`
         line-height: 36px;
         align-items: center;
         background: var(--color-background-secondary);
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
       }
       .errorBorder {
         border: 1px solid var(--color-error);
         height: 36px;
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         cursor: not-allowed;
       }
     }
@@ -189,7 +189,7 @@ export const DynamicBtn = styled.div`
   align-items: center;
   justify-content: center;
   background: var(--color-background-secondary);
-  border-radius: 4px;
+  border-radius: var(--radius-lg);
   color: var(--color-primary);
   cursor: pointer;
   font-weight: 600;
@@ -216,7 +216,7 @@ export const ActionWrap = styled.div`
   padding: 8px 12px;
   background: var(--color-background-secondary);
   border: 1px solid var(--color-border-secondary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   margin-top: 10px;
   cursor: pointer;
   .title {

@@ -83,7 +83,7 @@ export const WrapFooter = styled.div`
     background: var(--color-primary);
     color: var(--color-white);
     line-height: 36px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     &:hover {
       background: var(--color-link-hover);
     }
@@ -151,7 +151,7 @@ export const WrapBtn = styled.div`
   }
   &.btnToAccount {
     background: var(--color-background-primary);
-    border-radius: 4px 4px 4px 4px;
+    border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     border: 1px solid var(--color-primary);
     color: var(--color-primary);
     &.disable {
@@ -165,7 +165,7 @@ export const WrapBtn = styled.div`
 export const MoreOperate = styled.span`
   cursor: pointer;
   text-align: center;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   line-height: 24px;
   display: inline-block;
   width: 24px;

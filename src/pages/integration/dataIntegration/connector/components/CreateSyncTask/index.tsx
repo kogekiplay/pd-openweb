@@ -34,7 +34,7 @@ const SyncTaskWrapper = styled.div`
     & .ant-select {
       --ant-select-border-size: 1px !important;
       --ant-select-border-color: var(--color-border-tertiary) !important;
-      --ant-select-border-radius: 3px !important;
+      --ant-select-border-radius: var(--radius-sm) !important;
       box-shadow: none !important;
     }
     .ant-select-content {

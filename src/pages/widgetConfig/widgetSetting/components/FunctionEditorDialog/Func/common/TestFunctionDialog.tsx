@@ -11,8 +11,8 @@ import { selectRecords } from 'src/components/SelectRecords';
 import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget.js';
 import execValueFunction from 'src/pages/widgetConfig/widgetSetting/components/FunctionEditorDialog/Func/exec';
 import { isRelateRecordTableControl } from 'src/utils/control';
-import CodeEdit from './CodeEdit';
 import type { FormControl } from 'src/utils/controlTypes';
+import CodeEdit from './CodeEdit';
 
 const Header = styled.div`
   height: 50px;
@@ -37,7 +37,7 @@ const EditorCon = styled.div`
   height: 100%;
   padding: 0 20px;
   background: var(--color-background-secondary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   /* CM6：.CodeMirror → .cm-editor */
   .cm-editor,
   .cm-gutters {
@@ -65,7 +65,7 @@ const TestCon = styled.div`
       width: 72px;
       height: 24px;
       line-height: 22px;
-      border-radius: 2px;
+      border-radius: var(--radius-sm);
       border: 1px solid var(--color-text-disabled);
       color: var(--color-text-disabled);
       cursor: pointer;

@@ -36,7 +36,7 @@ const ColumnListWrap = styled.div`
       overflow-x: hidden;
       max-height: 300px;
       width: 100%;
-      border-radius: 0 0 3px 3px;
+      border-radius: 0 0 var(--radius-sm) var(--radius-sm);
       &.ming.Menu {
         box-shadow: none;
         position: relative;

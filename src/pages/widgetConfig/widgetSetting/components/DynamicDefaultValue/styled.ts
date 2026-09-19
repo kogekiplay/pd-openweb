@@ -33,7 +33,7 @@ export const DynamicValueInputWrap = styled(FlexCenter)`
   .datePicker,
   .richInputText {
     width: calc(100% - 36px);
-    border-radius: 3px 0 0 3px !important;
+    border-radius: var(--radius-sm) 0 0 var(--radius-sm) !important;
     border: 1px solid var(--color-border-tertiary);
     &.editorNull {
       padding: 0px !important;
@@ -44,7 +44,7 @@ export const DynamicValueInputWrap = styled(FlexCenter)`
   }
   .datePicker {
     width: calc(100% - 36px);
-    border-radius: 3px 0 0 3px !important;
+    border-radius: var(--radius-sm) 0 0 var(--radius-sm) !important;
     border: 1px solid var(--color-border-tertiary) !important;
     padding: 0;
     .ant-picker-input {
@@ -58,7 +58,7 @@ export const DynamicValueInputWrap = styled(FlexCenter)`
   }
   .tagInputarea {
     .tagInputareaIuput {
-      border-radius: 3px 0 0 3px;
+      border-radius: var(--radius-sm) 0 0 var(--radius-sm);
       min-height: 36px;
       .cm-editor {
         .cm-content {
@@ -77,7 +77,7 @@ export const DynamicValueInputWrap = styled(FlexCenter)`
     font-size: 14px;
     word-break: break-all;
     border: 1px solid var(--color-border-tertiary);
-    border-radius: 3px 0 0 3px;
+    border-radius: var(--radius-sm) 0 0 var(--radius-sm);
   }
   .dynamicCityContainer {
     width: calc(100% - 36px);
@@ -110,7 +110,7 @@ export const DynamicValueInputWrap = styled(FlexCenter)`
       line-height: 34px;
       padding: 0 12px;
       border: 1px solid var(--color-border-tertiary) !important;
-      border-radius: 3px 0 0 3px;
+      border-radius: var(--radius-sm) 0 0 var(--radius-sm);
       box-sizing: border-box;
       cursor: pointer;
     }
@@ -183,7 +183,7 @@ export const SelectOtherFieldWrap = styled(FlexCenter)`
   height: 36px;
   border: 1px solid var(--color-border-tertiary);
   border-left: none;
-  border-radius: 0 3px 3px 0;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   cursor: pointer;
   justify-content: center;
   transition: all 0.25s;
@@ -252,7 +252,7 @@ export const OtherFieldList = styled(FlexCenter)`
   font-size: 14px;
   word-break: break-all;
   border: 1px solid var(--color-border-primary);
-  border-radius: 3px 0 0 3px;
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
   cursor: pointer;
   background: ${props => (props.isHaveUniqueField ? 'var(--color-background-secondary)' : 'transparent')};
   position: relative;
@@ -312,7 +312,7 @@ export const DynamicInputStyle = styled(FlexCenter)`
   justify-content: space-between;
   cursor: pointer;
   border: 1px solid var(--color-border-tertiary);
-  border-radius: 3px 0 0 3px;
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
   width: calc(100% - 36px);
   padding: 0 12px;
   height: 36px;
@@ -382,7 +382,7 @@ export const SearchWorksheetWrap = styled.div`
       min-width: 0;
       line-height: 36px;
       background: var(--color-background-disabled);
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       padding: 0 14px;
     }
     .mappingTitle {
@@ -406,7 +406,7 @@ export const SearchWorksheetWrap = styled.div`
   }
   .settingWorksheetInput {
     border: 1px solid var(--color-border-primary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     color: var(--color-text-disabled);
     line-height: 34px;
     padding: 0 12px;
@@ -438,7 +438,7 @@ export const SearchWorksheetWrap = styled.div`
     &:hover {
       color: var(--color-link-hover);
       background: var(--color-background-secondary);
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
     }
   }
   .searchWorksheetFilter {
@@ -479,7 +479,7 @@ export const SearchWorksheetWrap = styled.div`
         width: 130px;
         border-color: var(--color-border-secondary);
         height: 36px;
-        border-radius: 4px;
+        border-radius: var(--radius-sm);
         box-shadow: none !important;
         font-size: 13px;
         margin-right: 12px;
@@ -489,7 +489,7 @@ export const SearchWorksheetWrap = styled.div`
         &.ant-select,
         & .ant-select {
           --ant-select-border-color: var(--color-border-secondary);
-          --ant-select-border-radius: 4px;
+          --ant-select-border-radius: var(--radius-sm);
           box-shadow: none !important;
         }
         .ant-select-content {
@@ -553,7 +553,7 @@ export const SearchWorksheetWrap = styled.div`
 `;
 
 export const WorksheetListWrap = styled.div`
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   box-shadow: var(--shadow-lg);
   width: 100%;
   border: 1px solid var(--color-border-primary);
@@ -608,7 +608,7 @@ export const DynamicTextWrap = styled.div`
 
 export const WrapMaxOrMin = styled.div`
   border: 1px solid var(--color-border-primary);
-  border-radius: 3px 0 0 3px;
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
   width: calc(100% - 36px);
   .ant-input:focus,
   .ant-input-focused {

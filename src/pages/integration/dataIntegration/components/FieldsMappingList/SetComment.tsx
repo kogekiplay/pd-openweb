@@ -8,7 +8,7 @@ const Wrapper = styled.div`
   padding: 20px 24px;
   background: var(--color-background-primary);
   box-shadow: 0px 4px 16px 1px rgba(0, 0, 0, 0.16);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
 `;
 
 export default function SetComment(props) {

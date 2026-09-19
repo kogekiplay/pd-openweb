@@ -11,6 +11,7 @@ import { getAdvanceSetting, handleAdvancedSettingChange } from 'src/pages/widget
 import SelectAuthAccount from 'src/pages/workflow/WorkflowSettings/Detail/components/SelectAuthAccount';
 import { pathCompletion } from 'src/utils/common';
 import { getRgbaByColor } from 'src/utils/controlCommon';
+import type { FormControl } from 'src/utils/controlTypes';
 import DropdownSelectFields from '../../../components/DropdownSelectFields';
 import { SettingItem } from '../../../styled';
 import { dealRequestControls } from '../../../util/data';
@@ -18,14 +19,13 @@ import { transferValue } from '../DynamicDefaultValue/util';
 import SearchMapping from './SearchMapping';
 import SearchMappingFilter from './SearchMappingFilter';
 import SearchParams from './SearchParams';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const SearchMode = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 8px 12px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-primary);
   cursor: pointer;
   ${({ isDelete }) =>
@@ -95,7 +95,7 @@ const AuthWrap = styled.div`
     height: 36px;
     border: 1px solid var(--color-border-tertiary);
     border-left: none;
-    border-radius: 0 3px 3px 0;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     color: var(--color-text-secondary);
     font-size: 22px;
     cursor: pointer;

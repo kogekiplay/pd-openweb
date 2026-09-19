@@ -11,7 +11,7 @@ const PopupWrapper = styled.div`
   width: 400px;
   background: var(--color-background-card);
   box-shadow: var(--shadow-lg);
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   padding: 10px;
 
   .searchInput {

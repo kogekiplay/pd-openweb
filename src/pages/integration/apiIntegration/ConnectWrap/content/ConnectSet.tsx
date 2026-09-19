@@ -125,7 +125,7 @@ const Wrap = styled.div`
           font-size: 13px;
           cursor: pointer;
           color: var(--color-white);
-          border-radius: 3px;
+          border-radius: var(--radius-sm);
           margin-left: 32px;
           height: 32px;
           line-height: 32px;

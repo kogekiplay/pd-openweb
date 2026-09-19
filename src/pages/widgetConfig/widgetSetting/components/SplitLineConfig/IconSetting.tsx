@@ -9,7 +9,7 @@ const ColorBox = styled.div`
   height: 32px;
   background: var(--color-background-primary);
   border: 1px solid var(--color-border-primary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   padding: 4px;
   display: flex;
@@ -20,7 +20,7 @@ const ColorBox = styled.div`
     line-height: 15px;
     color: rgb(177, 177, 177);
     font-size: 14px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     &:hover {
       background: var(--color-background-hover);
     }

@@ -28,13 +28,13 @@ const ItemName = styled.div`
     box-sizing: border-box;
     background: var(--color-background-secondary);
     border: 1px solid var(--color-border-primary);
-    border-radius: 3px;
+    border-radius: var(--radius-xs);
   }
   .scoreText {
     flex: 1;
     height: 36px;
     border: 1px solid var(--color-border-primary);
-    border-radius: 3px;
+    border-radius: var(--radius-xs);
     padding: 0 12px;
   }
 `;
@@ -88,7 +88,9 @@ export default function ScoreConfig({ data, onChange }) {
           size="small"
           checked={showvalue === '1'}
           text={_l('显示选中结果')}
-          onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { showvalue: checked ? '0' : '1' }))}
+          onClick={(checked: boolean) =>
+            onChange(handleAdvancedSettingChange(data, { showvalue: checked ? '0' : '1' }))
+          }
         />
       </div>
       <div className="labelWrap">

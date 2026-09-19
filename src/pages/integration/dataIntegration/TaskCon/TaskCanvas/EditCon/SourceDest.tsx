@@ -26,7 +26,7 @@ const Wrap = styled.div`
     display: none;
   }
   .ant-select:not(.ant-select-customize-input) {
-    --ant-select-border-radius: 4px;
+    --ant-select-border-radius: var(--radius-sm);
   }
   .ant-select-single:not(.ant-select-customize-input) .ant-select-content {
     height: 36px;
@@ -37,7 +37,7 @@ const WrapTopic = styled.div`
     width: 100%;
     height: 40px;
     background: var(--color-background-secondary);
-    border-radius: 4px 4px 4px 4px;
+    border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     line-height: 40px;
     border: 1px solid var(--color-border-primary);
   }

@@ -20,7 +20,7 @@ const ConfigWrap = styled.div`
   line-height: 36px;
   padding: 0 12px;
   border: 1px solid var(--color-border-primary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   &:hover {
     border-color: var(--color-primary);

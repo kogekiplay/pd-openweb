@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSetState } from 'react-use';
-import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
+import _ from 'lodash';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import autoSize from 'ming-ui/components/AutoSize';
@@ -14,7 +14,7 @@ const Wrap = styled.div`
   .addSource {
     background: var(--color-background-primary);
     border: 1px dashed var(--color-border-primary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     color: var(--color-primary);
     &:hover {
       border: 1px dashed var(--color-primary);
@@ -24,7 +24,7 @@ const Wrap = styled.div`
     padding: 12px 20px;
     background: var(--color-background-primary);
     border: 1px solid var(--color-border-secondary);
-    border-radius: 4px;
+    border-radius: var(--radius-md);
     .imgCon {
       width: 32px;
       height: 32px;
@@ -42,7 +42,7 @@ const PopupWrap = styled.div(
   box-shadow: var(--shadow-lg);
   opacity: 1;
   background: var(--color-background-primary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   width:${width}px;
   .item {
     padding: 12px 20px;

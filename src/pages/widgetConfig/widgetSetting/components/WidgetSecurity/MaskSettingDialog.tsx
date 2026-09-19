@@ -88,7 +88,7 @@ const SelectItem = styled.div`
     width: 70px;
     height: 36px;
     background: var(--color-background-primary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-primary);
     line-height: 34px;
     text-align: center;
@@ -102,7 +102,7 @@ const SelectItem = styled.div`
   .inputBox {
     border: 1px solid var(--color-border-primary) !important;
     height: 36px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     padding: 0px 12px;
     &::placeholder {
       color: var(--color-text-disabled);

@@ -1,9 +1,9 @@
 import React, { Fragment, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import update from 'immutability-helper';
 import { get, head } from 'lodash';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Checkbox, Dropdown, Icon, RadioGroup } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -11,13 +11,13 @@ import { FASTFILTER_CONDITION_TYPE } from 'worksheet/common/ViewConfig/component
 import { filterOnlyShowField } from 'src/pages/widgetConfig/util';
 import FastFilter from 'src/pages/worksheet/common/ViewConfig/components/fastFilter/fastFilterCon';
 import { VIEW_DISPLAY_TYPE, VIEW_TYPE_ICON } from 'src/pages/worksheet/constants/enum.js';
+import type { FormControl } from 'src/utils/controlTypes';
 import { SettingItem } from '../../../../styled';
 import { formatControlsToDropdown, getAdvanceSetting } from '../../../../util';
 import { handleAdvancedSettingChange } from '../../../../util/setting';
 import SelectControl from '../../SelectControl';
 import { SectionItem } from '../../SplitLineConfig/style';
 import 'rc-trigger/assets/index.css';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const TEXT_TYPE_CONTROL = [2, 3, 4, 5, 7, 32, 33];
 
@@ -37,7 +37,7 @@ const ConfigWrap = styled.div`
   }
   .addFilterControl {
     width: 100%;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     line-height: 44px;
     color: var(--color-primary);
     background: var(--color-background-secondary);
@@ -256,7 +256,9 @@ export default function RelateSearchConfig(props) {
                         popup={
                           <SelectControl
                             list={filterOnlyShowField(controls).filter(({ type, sourceControlType, controlId }) => {
-                              const ids = searchfilters.map(({ controlId }: { controlId?: string; [key: string]: any }) => controlId);
+                              const ids = searchfilters.map(
+                                ({ controlId }: { controlId?: string; [key: string]: any }) => controlId,
+                              );
                               return (
                                 _.includes(FASTFILTER_CONDITION_TYPE, type === 30 ? sourceControlType : type) &&
                                 !ids.includes(controlId)

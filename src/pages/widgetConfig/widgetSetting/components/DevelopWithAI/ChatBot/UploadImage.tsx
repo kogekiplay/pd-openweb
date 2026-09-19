@@ -52,7 +52,7 @@ const ImagePreview = styled.div`
   left: 22px;
   bottom: 22px;
   background: var(--color-background-primary);
-  border-radius: 4px 4px 4px 4px;
+  border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
   border: 2px solid var(--color-border-secondary);
   display: flex;
   justify-content: center;

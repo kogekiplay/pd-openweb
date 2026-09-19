@@ -17,7 +17,7 @@ const Wrap = styled.div`
   background: var(--color-background-primary);
   border: 1px solid var(--color-border-primary);
   box-shadow: 0px 4px 8px rgb(0, 0, 0, 0.16);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   position: absolute;
   z-index: 10;
   left: 60px;
@@ -43,7 +43,7 @@ const Wrap = styled.div`
   textarea {
     border: 1px solid var(--color-border-primary);
     padding: 8px 58px 8px 15px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     width: 100%;
     &:focus {
       border: 1px solid var(--color-primary);
@@ -59,7 +59,7 @@ const Wrap = styled.div`
     background: var(--color-primary);
     color: var(--color-white);
     line-height: 1em;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     &:hover {
       background: var(--color-link-hover);
     }

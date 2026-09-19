@@ -12,7 +12,7 @@ const WeekdayWrap = styled.ul`
   z-index: 1;
   width: 170px;
   padding: 7px 0;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   background-color: var(--color-background-primary);
   cursor: pointer;
   box-shadow: 0 3px 12px rgb(0, 0, 0, 0.16);

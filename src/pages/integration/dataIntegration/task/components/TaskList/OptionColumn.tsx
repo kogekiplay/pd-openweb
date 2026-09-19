@@ -28,7 +28,7 @@ const OptionMenu = styled.div`
   width: 220px !important;
   padding: 6px 0 !important;
   box-shadow: var(--shadow-sm);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   background: var(--color-background-card);
 `;
 const MenuItem = styled.div`
@@ -47,7 +47,7 @@ const EditTaskNameWrapper = styled.div`
   width: 310px;
   padding: 20px 24px;
   box-shadow: var(--shadow-lg);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   background: var(--color-background-card);
 `;
 

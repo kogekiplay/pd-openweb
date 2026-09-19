@@ -9,7 +9,7 @@ const Wrap = styled.div`
   .addSource {
     background: var(--color-background-primary);
     border: 1px dashed var(--color-border-primary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     color: var(--color-primary);
     &:hover {
       border: 1px dashed var(--color-primary);
@@ -19,7 +19,7 @@ const Wrap = styled.div`
     padding: 12px 20px;
     background: var(--color-background-primary);
     border: 1px solid var(--color-border-secondary);
-    border-radius: 4px;
+    border-radius: var(--radius-md);
     .imgCon {
       width: 32px;
       height: 32px;

@@ -19,7 +19,7 @@ const TemplateRelationNotice = styled.div`
   margin-top: 10px;
   margin-left: 28px;
   padding: 10px 12px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   background: var(--color-warning-bg);
   border: 1px solid var(--color-warning);
   display: flex;

@@ -107,7 +107,7 @@ const InputWrapper = styled.div`
   margin: 0 17px;
   font-size: 0px;
   padding: 4px 0;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-primary);
   &.focused {
     border-color: var(--color-primary);
@@ -118,7 +118,7 @@ const Input = styled(AutoHeightInput)`
   width: 100%;
   padding: 8px 12px;
   border: none;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   &::-webkit-scrollbar {
     width: 6px;

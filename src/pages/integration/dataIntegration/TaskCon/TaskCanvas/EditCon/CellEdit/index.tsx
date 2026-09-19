@@ -74,7 +74,7 @@ const Wrap = styled.div`
         height: 36px;
         line-height: 36px;
         border: 1px solid var(--color-primary);
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         padding: 0 36px;
         &.cancleBtn {
           background: var(--color-background-primary);

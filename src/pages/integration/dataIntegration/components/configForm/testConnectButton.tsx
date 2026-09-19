@@ -7,7 +7,7 @@ const TestButton = styled.div`
   display: inline-block;
   vertical-align: middle;
   border: 1px solid var(--color-primary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   color: var(--color-primary);
   background-color: var(--color-background-primary);
   font-size: 14px;

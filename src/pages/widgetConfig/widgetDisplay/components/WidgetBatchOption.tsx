@@ -4,6 +4,7 @@ import _, { find, flatten } from 'lodash';
 import styled from 'styled-components';
 import { Checkbox, Dialog, Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
+import type { FormControl } from 'src/utils/controlTypes';
 import AutoIcon from '../../components/Icon';
 import { UN_REQUIRED_WIDGET } from '../../config';
 import { DropdownOverlay, SettingItem } from '../../styled';
@@ -13,7 +14,6 @@ import { batchCopyWidgets, batchResetWidgets, handleMoveWidgets } from '../../ut
 import { batchRemoveItems } from '../../util/drag';
 import { updateConfig } from '../../util/setting';
 import WidgetWarning from '../../widgetSetting/components/WidgetBase/WidgetWarning';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const WidgetBatchWrap = styled.div`
   position: absolute;
@@ -41,7 +41,7 @@ const WidgetBatchWrap = styled.div`
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       margin-right: 6px;
       font-size: 20px;
       &:hover {
@@ -76,7 +76,13 @@ const PERMISSION_OPTIONS = [
 ];
 
 function WidgetBatch(props) {
-  const { allControls = [], batchActive, handleChange, handleOperate, handleCancel }: { allControls: FormControl[]; [key: string]: any } = props;
+  const {
+    allControls = [],
+    batchActive,
+    handleChange,
+    handleOperate,
+    handleCancel,
+  }: { allControls: FormControl[]; [key: string]: any } = props;
   const sectionData = allControls.filter(i => i.type === 52);
   const isRequiredAll = batchActive.every(i => i.required);
   const isRequiredNotAll = !isRequiredAll && batchActive.some(i => i.required);
@@ -114,7 +120,8 @@ function WidgetBatch(props) {
           {sectionData.length > 0 && (
             <Dropdown
               trigger={['click']}
-              popupRender={() => <DropdownOverlay>
+              popupRender={() => (
+                <DropdownOverlay>
                   <div className="dropdownContent Width250">
                     {sectionData.length > 0 ? (
                       sectionData.map(item => {
@@ -128,7 +135,8 @@ function WidgetBatch(props) {
                       <div className="emptyText">{_l('暂无分段字段')}</div>
                     )}
                   </div>
-                </DropdownOverlay>}
+                </DropdownOverlay>
+              )}
               placement="bottom"
             >
               <Tooltip placement="bottom" title={_l('移动到标签页')}>
@@ -194,7 +202,14 @@ function WidgetBatch(props) {
 }
 
 export default function WidgetBatchOption(props) {
-  const { allControls = [], widgets = [], globalSheetInfo = {}, batchActive, setBatchActive, setWidgets }: { allControls: FormControl[]; [key: string]: any } = props;
+  const {
+    allControls = [],
+    widgets = [],
+    globalSheetInfo = {},
+    batchActive,
+    setBatchActive,
+    setWidgets,
+  }: { allControls: FormControl[]; [key: string]: any } = props;
   const { worksheetId } = globalSheetInfo;
 
   const handleOperate = (mode, id) => {

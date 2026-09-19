@@ -1,9 +1,9 @@
 import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import { useSetState } from 'react-use';
 import { Switch } from 'antd';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Checkbox, Icon, LoadDiv, MdLink, ScrollView } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -198,7 +198,7 @@ const ErrorInfoWrapper = styled.div`
   width: 220px;
   background: var(--color-background-primary);
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.24);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
 
   .errorText {
     color: var(--color-error);
@@ -299,7 +299,7 @@ const SelectedWrapper = styled.div`
     line-height: 36px;
     padding: 0 12px;
     border: 1px solid var(--color-border-primary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     &:hover {
       border-color: var(--color-primary);

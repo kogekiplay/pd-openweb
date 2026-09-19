@@ -65,7 +65,7 @@ const Wrap = styled.div`
     line-height: 34px;
     border-width: 1px;
     border-style: solid;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     min-width: 100px;
     box-sizing: initial;
     font-size: 13px;

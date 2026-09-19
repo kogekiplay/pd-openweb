@@ -74,7 +74,7 @@ const TestButton = styled.div`
   height: 24px;
   line-height: 22px;
   background: var(--color-background-primary);
-  border-radius: 2px 2px 2px 2px;
+  border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
   border: 1px solid var(--color-primary);
   font-size: 12px;
   color: var(--color-primary);

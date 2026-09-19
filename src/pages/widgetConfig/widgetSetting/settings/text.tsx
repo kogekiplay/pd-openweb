@@ -37,7 +37,7 @@ const MarkdownTipsWrap = styled.div`
     height: 164px;
     padding: 14px;
     background: var(--color-background-primary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
   }
 `;
 
@@ -70,7 +70,7 @@ export default function Text(props) {
             return (
               <Popover
                 color="black"
-                classNames={{ root: "textMarkdownTipsContainer" }}
+                classNames={{ root: 'textMarkdownTipsContainer' }}
                 content={item.value === 3 ? <MarkdownTips /> : ''}
                 placement="bottomRight"
               >

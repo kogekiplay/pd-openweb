@@ -15,7 +15,7 @@ const Wrapper = styled.div`
   padding: 20px;
   background: var(--color-background-primary);
   box-shadow: var(--shadow-lg);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   position: relative;
 
   .selectItem {
@@ -25,7 +25,7 @@ const Wrapper = styled.div`
     & .ant-select {
       --ant-select-border-size: 1px !important;
       --ant-select-border-color: var(--color-border-tertiary) !important;
-      --ant-select-border-radius: 3px !important;
+      --ant-select-border-radius: var(--radius-sm) !important;
       box-shadow: none !important;
     }
     .ant-select-content {

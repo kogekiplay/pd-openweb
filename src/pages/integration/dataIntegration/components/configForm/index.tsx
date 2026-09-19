@@ -22,7 +22,7 @@ const Wrapper = styled.div`
     font-size: 13px;
     &.ant-select,
     & .ant-select {
-      --ant-select-border-radius: 3px !important;
+      --ant-select-border-radius: var(--radius-sm) !important;
     }
     .ant-select-content {
       height: 36px !important;
@@ -75,7 +75,7 @@ const FormFooter = styled.div`
 
   .info {
     background-color: var(--color-error-bg);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     padding: 8px 16px;
   }
 `;
@@ -101,7 +101,7 @@ const SourceSelectFormWrapper = styled.div`
     .Input {
       background: var(--color-background-secondary);
       border: 1px solid var(--color-background-secondary) !important;
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       padding: 8px 12px 6px;
       font-size: 13px;
 
@@ -345,9 +345,11 @@ export default function ConfigForm(props) {
               className="selectItem"
               labelInValue={true}
               allowClear={true}
-              showSearch={{ filterOption: (inputValue, option) => {
-                return option.label.toLowerCase().includes(inputValue.toLowerCase());
-              } }}
+              showSearch={{
+                filterOption: (inputValue, option) => {
+                  return option.label.toLowerCase().includes(inputValue.toLowerCase());
+                },
+              }}
               placeholder={_l('请选择')}
               notFoundContent={appOptionList.fetching ? <LoadDiv size="small" /> : _l('暂无应用')}
               options={appOptionList.list}

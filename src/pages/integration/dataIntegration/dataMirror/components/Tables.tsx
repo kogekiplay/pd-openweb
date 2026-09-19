@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { useSetState } from 'react-use';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Dropdown, Icon, Input, LoadDiv } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -14,7 +14,7 @@ const WrapPopup = styled.div`
   width: 620px;
   background: var(--color-background-primary);
   box-shadow: 0px 2px 9px 1px rgba(0, 0, 0, 0.25);
-  border-radius: 5px 5px 5px 5px;
+  border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
   padding: 18px;
   .controlCon {
     max-height: 200px;

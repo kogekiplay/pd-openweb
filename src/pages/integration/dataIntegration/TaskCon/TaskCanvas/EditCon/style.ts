@@ -33,7 +33,7 @@ export const WrapL = styled.div`
     line-height: 32px;
     background: var(--color-background-secondary);
     border: 1px solid var(--color-border-primary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     display: inline-block;
     padding: 0 18px;
   }
@@ -43,7 +43,7 @@ export const WrapL = styled.div`
       height: 36px;
       background: var(--color-background-primary);
       opacity: 1;
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       .value {
         width: 168px;
       }
@@ -69,7 +69,7 @@ export const WrapL = styled.div`
     height: 58px;
     background: var(--color-background-primary);
     border: 1px dashed var(--color-border-primary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     color: var(--color-primary);
     line-height: 58px;
     &:hover {
@@ -88,7 +88,7 @@ export const WrapL = styled.div`
       }
       .ant-select-single:not(.ant-select-customize-input).ant-select,
       .ant-select-single:not(.ant-select-customize-input) .ant-select {
-        --ant-select-border-radius: 4px !important;
+        --ant-select-border-radius: var(--radius-sm) !important;
       }
       .ant-select-single:not(.ant-select-customize-input) .ant-select-content {
         height: 36px !important;
@@ -111,7 +111,7 @@ export const WrapL = styled.div`
       width: 164px;
       border: 1px solid var(--color-border-primary);
       background: var(--color-background-primary);
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       color: var(--color-text-secondary);
       padding: 9px 0;
       .er {

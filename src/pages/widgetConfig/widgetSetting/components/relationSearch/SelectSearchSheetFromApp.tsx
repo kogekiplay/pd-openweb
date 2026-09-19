@@ -1,10 +1,10 @@
 import React, { Fragment, useEffect, useRef } from 'react';
 import { useSetState } from 'react-use';
 import { Button, ConfigProvider } from 'antd';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import update from 'immutability-helper';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, LoadDiv, Dropdown as MDDropdown, SvgIcon } from 'ming-ui';
 import appManagementAjax from 'src/api/appManagement';
@@ -23,7 +23,7 @@ const SelectItem = styled.div`
 
 const SelectSheetWrap = styled.div`
   background: var(--color-background-primary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   box-shadow: var(--shadow-lg);
   .tabNav {
     display: flex;
@@ -265,7 +265,10 @@ export default function SelectSheetFromApp(props) {
           setData({
             aggregationSheets: content
               .filter(n => n.aggTableTaskStatus !== 0 && n.taskStatus !== 'ERROR')
-              .map(({ name, worksheetId }: { name?: string; worksheetId?: string; [key: string]: any }) => ({ text: name, value: worksheetId })),
+              .map(({ name, worksheetId }: { name?: string; worksheetId?: string; [key: string]: any }) => ({
+                text: name,
+                value: worksheetId,
+              })),
             loading: false,
           });
         });

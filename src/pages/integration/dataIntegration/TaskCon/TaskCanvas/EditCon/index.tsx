@@ -110,7 +110,7 @@ const WrapR = styled.div`
   .editControl {
     padding: 6px 16px;
     background: var(--color-primary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     color: var(--color-white);
     font-weight: 400;
     border: 1px solid var(--color-primary);
@@ -131,7 +131,7 @@ const WrapR = styled.div`
   .previewData {
     padding: 6px 16px;
     background: var(--color-background-primary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--color-primary);
     color: var(--color-primary);
     font-weight: 400;

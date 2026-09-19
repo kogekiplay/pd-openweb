@@ -31,7 +31,7 @@ export const DefaultOptionSetting = styled(SettingItem)`
     flex-wrap: wrap;
     padding: 0 12px 5px 12px;
     border: 1px solid var(--color-border-primary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     min-height: 36px;
     flex: 1;
     margin-right: 36px;
@@ -188,7 +188,7 @@ export default function DefaultOptions(props) {
   };
 
   return (
-    (<DefaultOptionSetting className="mTop0">
+    <DefaultOptionSetting className="mTop0">
       {defaultType ? (
         <DynamicInput {...props} onTriggerClick={onTriggerClick} />
       ) : (
@@ -198,7 +198,8 @@ export default function DefaultOptions(props) {
             open={visible}
             onOpenChange={setVisible}
             getPopupContainer={() => document.querySelector('.defaultOptionsWrap') || document.body}
-            popupRender={() => <DefaultOptionsMenu onClick={e => e.stopPropagation()}>
+            popupRender={() => (
+              <DefaultOptionsMenu onClick={e => e.stopPropagation()}>
                 <div
                   className="clearDefault hoverText"
                   onClick={() => {
@@ -224,7 +225,8 @@ export default function DefaultOptions(props) {
                     </>
                   );
                 })}
-              </DefaultOptionsMenu>}
+              </DefaultOptionsMenu>
+            )}
           >
             <div className="defaultOptionsWrap">
               {dynamicValue.map(({ cid, rcid, staticValue }) => {
@@ -264,6 +266,6 @@ export default function DefaultOptions(props) {
         </div>
       )}
       <SelectOtherField {...props} onDynamicValueChange={handleFieldClick} ref={$wrap} />
-    </DefaultOptionSetting>)
+    </DefaultOptionSetting>
   );
 }

@@ -58,8 +58,8 @@ export const Wrap = styled.div`
       border-width: 1px 1px 1px 0;
       border-style: solid;
       box-sizing: border-box;
-      border-top-right-radius: 4px;
-      border-bottom-right-radius: 4px;
+      border-top-right-radius: var(--radius-sm);
+      border-bottom-right-radius: var(--radius-sm);
       border-color: var(--color-border-primary);
       font-size: 20px;
       cursor: pointer;
@@ -72,7 +72,7 @@ export const Wrap = styled.div`
     }
   }
   .urlForCopy {
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     height: 36px;
     line-height: 36px;
     background: var(--color-background-disabled);
@@ -87,7 +87,7 @@ export const Wrap = styled.div`
     line-height: 36px;
     padding: 0 25px;
     background: var(--color-background-disabled);
-    border-radius: 4px 4px 4px 4px;
+    border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     border: 1px solid var(--color-border-secondary);
     &:hover {
       color: var(--color-primary);

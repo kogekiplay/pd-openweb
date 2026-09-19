@@ -50,7 +50,7 @@ const SettingWrapper = styled.div`
     .timePicker {
       width: 100px;
       height: 36px;
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       border-color: var(--color-border-primary);
       margin-right: 8px;
       transition: unset;
@@ -69,7 +69,7 @@ const SettingWrapper = styled.div`
       height: 36px;
       line-height: 36px;
       padding: 0 12px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       background: var(--color-background-secondary);
       margin-bottom: 16px;
     }

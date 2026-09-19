@@ -20,7 +20,7 @@ const Wrap = styled.div`
     .importBtn {
       width: 107px;
       height: 36px;
-      border-radius: 2px;
+      border-radius: var(--radius-sm);
     }
   }
 `;

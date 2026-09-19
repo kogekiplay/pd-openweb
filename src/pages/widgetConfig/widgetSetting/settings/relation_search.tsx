@@ -1,9 +1,9 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { useSetState } from 'react-use';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import { isEmpty } from 'lodash';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Dropdown, Icon, RadioGroup } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -14,6 +14,7 @@ import InputValue from 'src/pages/widgetConfig/widgetSetting/components/WidgetVe
 import SortColumns from 'src/pages/worksheet/components/SortColumns/SortColumns';
 import { pathCompletion } from 'src/utils/common';
 import { getSortData } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import { SUPPORT_RELATE_SEARCH } from '../../config';
 import { WHOLE_SIZE } from '../../config/Drag';
 import { RELATION_SEARCH_DISPLAY } from '../../config/setting';
@@ -22,7 +23,6 @@ import { AnimationWrap, EditInfo, SettingItem } from '../../styled';
 import { filterSysControls, formatControlsToDropdown, getFilterRelateControls, toEditWidgetPage } from '../../util';
 import { getAdvanceSetting, getControlsSorts, handleAdvancedSettingChange } from '../../util/setting';
 import { RelateSearchWorksheet, relateSearchWorksheet } from '../components/relationSearch/relateSearchWorksheet';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const FILL_TYPES = [
   { text: _l('填满'), value: '0' },
@@ -48,14 +48,14 @@ const RelateSheetCover = styled.div`
   .sortColumnWrap {
     flex: 1;
     .Dropdown--input {
-      ${props => (props.hideCover ? 'border-radius: 3px;' : 'border-right: none;border-radius: 3px 0px 0px 3px;')};
+      ${props => (props.hideCover ? 'border-radius: var(--radius-sm);' : 'border-right: none;border-radius: var(--radius-sm) 0px 0px var(--radius-sm);')};
     }
   }
   .relateCoverSetting {
     ${props => (props.hideCover ? 'display: none;' : '')}
     width: 36px;
     height: 36px;
-    border-radius: 0px 3px 3px 0px;
+    border-radius: 0px var(--radius-sm) var(--radius-sm) 0px;
     border: 1px solid var(--color-border-tertiary);
     text-align: center;
     &:hover {
@@ -85,7 +85,7 @@ const CoverWrap = styled.div`
   }
   .coverType {
     display: Inline-block;
-    border-radius: 3px 0px 0px 3px;
+    border-radius: var(--radius-sm) 0px 0px var(--radius-sm);
     border: 1px solid var(--color-border-primary);
     padding: 6px 18px;
     color: var(--color-text-secondary);
@@ -94,13 +94,20 @@ const CoverWrap = styled.div`
       border-color: var(--color-primary);
     }
     &:last-child {
-      border-radius: 0px 3px 3px 0px;
+      border-radius: 0px var(--radius-sm) var(--radius-sm) 0px;
     }
   }
 `;
 
 export default function RelationSearch(props) {
-  let { data, onChange, allControls, globalSheetInfo, deleteWidget, status: { saveIndex } = {} }: { allControls: FormControl[]; [key: string]: any } = props;
+  let {
+    data,
+    onChange,
+    allControls,
+    globalSheetInfo,
+    deleteWidget,
+    status: { saveIndex } = {},
+  }: { allControls: FormControl[]; [key: string]: any } = props;
   const {
     controlId,
     enumDefault = 1,
@@ -294,8 +301,8 @@ export default function RelationSearch(props) {
                   </span>
                   {sourceControlId && (
                     <span>
-                      {/* 原先写的是 class="Bold"，JSX 里 React 不认、直接丢掉，表名一直没加粗 */}
-                      （{_l('关联当前')} <span className="Bold"> {globalSheetInfo.name} </span>）
+                      {/* 原先写的是 class="Bold"，JSX 里 React 不认、直接丢掉，表名一直没加粗 */}（{_l('关联当前')}{' '}
+                      <span className="Bold"> {globalSheetInfo.name} </span>）
                     </span>
                   )}
                 </div>

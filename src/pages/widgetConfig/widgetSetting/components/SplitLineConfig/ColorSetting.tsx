@@ -7,14 +7,14 @@ const ColorBox = styled.div`
   height: 32px;
   background: var(--color-background-primary);
   border: 1px solid var(--color-border-primary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   padding: 4px;
   box-sizing: border-box;
   display: flex;
   .boxBg {
     flex: 1;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     background: ${props => props.background};
   }
   .iconBox {
@@ -23,7 +23,7 @@ const ColorBox = styled.div`
     color: rgb(177, 177, 177);
     font-size: 14px;
     margin-left: 5px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     &:hover {
       background: var(--color-background-hover);
     }

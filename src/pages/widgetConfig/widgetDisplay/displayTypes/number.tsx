@@ -10,7 +10,7 @@ const NumberControlWrap = styled.div`
   align-items: center;
   .numberContent {
     flex: 1;
-    ${props => (props.isStep ? 'border-radius: 3px 0 0 3px;' : '')}
+    ${props => (props.isStep ? 'border-radius: var(--radius-sm) 0 0 var(--radius-sm);' : '')}
   }
   .numberControl {
     display: flex;

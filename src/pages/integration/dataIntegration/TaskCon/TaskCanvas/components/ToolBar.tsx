@@ -24,12 +24,12 @@ const ToolBarWrap = styled.div`
     height: 32px;
     text-align: center;
     border: 1px solid var(--color-border-primary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     .icon {
       background: var(--color-background-primary);
       width: 32px;
       line-height: 30px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       &.bL {
         border-left: 1px solid var(--color-border-primary);
       }

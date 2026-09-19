@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Button } from 'antd';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _, { get, includes } from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Menu, MenuItem } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -29,7 +29,7 @@ const OperationWrap = styled.div`
 
   .operationWrap {
     display: flex;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     z-index: 1;
     align-items: center;
     visibility: hidden;

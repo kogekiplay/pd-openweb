@@ -78,7 +78,7 @@ const FormatInfo = styled.div`
   width: 100%;
   height: auto;
   margin-top: 10px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   border: 1px solid var(--color-border-primary);
   z-index: 9;

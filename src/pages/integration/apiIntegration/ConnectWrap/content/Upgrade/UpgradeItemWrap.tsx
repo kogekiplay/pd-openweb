@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 const UpgradeContentItem = styled.div`
   padding: 0 12px;
-  border-radius: 3px 3px 3px 3px;
+  border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
   border: 1px solid var(--color-border-primary);
   margin-bottom: 30px;
   .itemTitle {

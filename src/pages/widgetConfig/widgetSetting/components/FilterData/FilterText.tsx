@@ -8,7 +8,7 @@ const FilterTextWrap = styled.div`
   margin-top: 10px;
   background: var(--color-background-secondary);
   border: 1px solid var(--color-border-tertiary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   padding: 5px 10px;
   position: relative;
   .editIcon {

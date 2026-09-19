@@ -10,14 +10,14 @@ const PreSuffixWrap = styled.div`
   display: flex;
   align-items: center;
   .selectDropdown {
-    border-radius: 4px 0 0 4px;
+    border-radius: var(--radius-sm) 0 0 var(--radius-sm);
     width: 120px;
     margin-top: 0;
   }
   input {
     height: 36px;
     border-left: 0;
-    border-radius: 0 4px 4px 0;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   }
 `;
 

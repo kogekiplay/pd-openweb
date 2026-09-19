@@ -9,6 +9,7 @@ import worksheetAjax from 'src/api/worksheet';
 import { SYSTEM_CONTROLS } from 'worksheet/constants/enum';
 import SortColumns from 'src/pages/worksheet/components/SortColumns/SortColumns';
 import { getSortData } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import { ALL_SYS } from '../../config/widget';
 import { EditInfo, SettingItem } from '../../styled';
 import {
@@ -30,7 +31,6 @@ import AddSubList from '../components/sublist/AddSubList';
 import ConfigureControls from '../components/sublist/ConfigureControls';
 import Sort from '../components/sublist/Sort';
 import WidgetVerify from '../components/WidgetVerify';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const SettingModelWrap = styled.div`
   .transferToRelate {
@@ -45,7 +45,7 @@ const SettingModelWrap = styled.div`
     border: 1px solid var(--color-border-tertiary);
     line-height: 34px;
     padding: 0 12px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
   }
   .globalDetail {
     width: 100%;
@@ -57,8 +57,20 @@ const SettingModelWrap = styled.div`
 `;
 
 export default function SubListSetting(props) {
-  const { status, allControls, data, globalSheetInfo = {}, onChange }: { allControls: FormControl[]; [key: string]: any } = props;
-  const { controlId, dataSource, relationControls = [], showControls = [], needUpdate }: { relationControls: FormControl[]; [key: string]: any } = data;
+  const {
+    status,
+    allControls,
+    data,
+    globalSheetInfo = {},
+    onChange,
+  }: { allControls: FormControl[]; [key: string]: any } = props;
+  const {
+    controlId,
+    dataSource,
+    relationControls = [],
+    showControls = [],
+    needUpdate,
+  }: { relationControls: FormControl[]; [key: string]: any } = data;
   const [sheetInfo, setInfo] = useState({});
   const [subQueryConfigs, setSubQueryConfigs] = useState([]);
   const [subListMode, setMode] = useState('new');

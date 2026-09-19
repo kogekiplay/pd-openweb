@@ -113,7 +113,7 @@ const Wrapper = styled.div`
     }
   }
   .ant-select:not(.ant-select-customize-input) {
-    --ant-select-border-radius: 3px;
+    --ant-select-border-radius: var(--radius-sm);
   }
   .ant-select:not(.ant-select-customize-input) .ant-select-content {
     /* border: 1px solid var(--color-border-tertiary) !important; */
@@ -406,7 +406,11 @@ export default function FieldMappingList(props) {
     };
 
     return (
-      <SelectWrapper ref={select => { selectNameRef.current[sourceField.id] = select; }}>
+      <SelectWrapper
+        ref={select => {
+          selectNameRef.current[sourceField.id] = select;
+        }}
+      >
         <Select
           disabled={!isValidField || isNotSupport}
           className={cx('selectItem flex', { isNoMatchOption })}
@@ -800,7 +804,9 @@ export default function FieldMappingList(props) {
     const columns = [
       {
         dataIndex: 'checkColumn',
-        renderTitle: () => <Checkbox size="small" checked={isCheckAll()} onClick={(checked: boolean) => onCheckAll(checked)} />,
+        renderTitle: () => (
+          <Checkbox size="small" checked={isCheckAll()} onClick={(checked: boolean) => onCheckAll(checked)} />
+        ),
         render: data => renderCheckbox(data, 'isCheck'),
       },
       ...leftColumns.filter(item => sourceData.dsType !== DATABASE_TYPE.KAFKA || item.dataIndex !== 'isNotNull'),
@@ -845,7 +851,11 @@ export default function FieldMappingList(props) {
         {isSystemFields && !sourceData.isDbType && destData.isDbType && (
           <div className="systemFieldsHeader">
             {isCreate && (
-              <Checkbox size="small" checked={isCheckAll(true)} onClick={(checked: boolean) => onCheckAll(checked, true)} />
+              <Checkbox
+                size="small"
+                checked={isCheckAll(true)}
+                onClick={(checked: boolean) => onCheckAll(checked, true)}
+              />
             )}
             <div className="content" onClick={() => setSystemFieldsExpand(!systemFieldsExpand)}>
               <span>{_l('系统字段')}</span>

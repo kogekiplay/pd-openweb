@@ -61,7 +61,7 @@ const Wrap = styled.div`
     border: 1px solid var(--color-primary);
     color: var(--color-primary);
     cursor: pointer;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     text-align: center;
     font-weight: 600;
     &:hover {

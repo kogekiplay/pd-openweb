@@ -70,7 +70,7 @@ const DisplayItemWrap = styled.div`
   &:hover {
     box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary) 15%, transparent);
     background-color: var(--color-background-primary);
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     & > div:nth-child(1) > .operationWrap {
       visibility: visible;
     }

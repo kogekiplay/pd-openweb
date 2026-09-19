@@ -12,8 +12,8 @@ import packageVersionAjax from 'src/pages/workflow/api/packageVersion';
 import { TableWrap } from 'src/pages/integration/apiIntegration/style';
 import Search from 'src/pages/workflow/components/Search/index.jsx';
 import { FLOW_STATUS } from 'src/pages/workflow/WorkflowSettings/History/config.js';
-import LogDialog from '../../components/LogDialog';
 import { pathCompletion } from 'src/utils/common';
+import LogDialog from '../../components/LogDialog';
 
 const Wrap = styled.div`
   background: var(--color-background-primary);
@@ -102,7 +102,7 @@ const Wrap = styled.div`
     height: 36px;
     width: 100px;
     box-sizing: border-box;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -151,7 +151,7 @@ const Wrap = styled.div`
     min-width: 170px;
     padding: 5px 8px;
     border: 1px solid var(--color-border-primary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     &:hover {
       border: 1px solid var(--color-primary);
     }
@@ -326,13 +326,11 @@ export default function Log(props) {
       render: (text, record) => {
         // 非超级管理员和拥有者
         // 只能查看触发者是自己的日志详情
-        if (
-          !(
-            props.hasManageAuth ||
-            props.connectInfo.isOwner ||
-            [record.createBy.accountId].includes(md.global.Account.accountId)
-          )
-        ) {
+        if (!(
+          props.hasManageAuth ||
+          props.connectInfo.isOwner ||
+          [record.createBy.accountId].includes(md.global.Account.accountId)
+        )) {
           return '';
         }
 

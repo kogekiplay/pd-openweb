@@ -15,7 +15,7 @@ const Wrapper = styled.div`
     font-size: 13px;
     &.ant-select,
     & .ant-select {
-      --ant-select-border-radius: 3px !important;
+      --ant-select-border-radius: var(--radius-sm) !important;
     }
     .ant-select-content {
       min-height: 36px;

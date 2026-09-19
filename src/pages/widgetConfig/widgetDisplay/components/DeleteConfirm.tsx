@@ -9,7 +9,7 @@ const DeleteConfirmWrap = styled.div`
   width: 320px;
   padding: 22px 24px;
   background: var(--color-background-primary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.24);
   .title {
     font-size: 15px;

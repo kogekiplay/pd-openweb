@@ -72,7 +72,7 @@ const OnlySyncWrapper = styled.div`
   .multiplePkTips {
     padding: 10px 16px;
     background: var(--color-background-secondary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-secondary);
     margin-bottom: 20px;
     width: fit-content;
@@ -107,7 +107,7 @@ const NoDataContent = styled.div`
   min-height: 200px;
   margin-top: 24px;
   border: 2px solid var(--color-border-secondary);
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
 
   .noContentIcon {
     display: inline-flex;
