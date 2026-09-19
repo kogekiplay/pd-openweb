@@ -1159,7 +1159,37 @@ Chatbot 里同步挂上 —— 它不在 Application 子树里，不挂就丢应
 
 ---
 
-## Task 7: ming-ui `Button` 内部换 antd
+---
+
+## ⚠️ Task 7 / 8 / 9 已移出子项目 A（2026-09-19，实测后的决定）
+
+**实施 Task 1-6 之后量出来的两条事实，推翻了这三个任务在 A 里的必要性：**
+
+| 量的什么 | 结果 |
+| --- | --- |
+| `src/ming-ui` 里 `var(--color-primary*)` 的用量 | **138 处** |
+| ming-ui 主按钮的底色 | `var(--app-primary-color)` → `basic.css:3-5` 别名到 `var(--color-primary)` |
+| `antd-color.less` 138 条声明里用 `var(--color-*)` 的 | **132 条**（写死色只有 2 处，在一条 box-shadow 里） |
+
+也就是说 **ming-ui 和 antd-color.less 本来就走我们的 CSS 变量，Task 4 接上之后它们已经自动跟随主题色了**。
+spec 里那句「99% 的 CSS 指向一个永不改变的蓝色常量」是准确的 ——
+缺的从来不是 CSS 写法，而是**没有任何地方去设那个常量**。Task 1-6 补上了这件事。
+
+所以：
+
+- **Task 7 / 8（ming-ui 内部换 antd）** 的真实价值是**排版/间距/圆角/密度的现代化**，不是主题色。
+  → 移到**子项目 B**，验收标准按 B 定。
+- **Task 9（退役 antd-color.less）** 是清理欠债，不是修复；而且删 `!important` 覆盖有实打实的
+  视觉风险，收益只是少 522 行。
+  → 同样移到 **B**，在那里连同组件现代化一起做才划算。
+
+A 剩下的真实工作只有 **Task 10（硬编码色映射）** 与 **Task 11（逐页目视 + 发布）**。
+
+下面三节保留原文，供子项目 B 直接取用。
+
+---
+
+## Task 7（已移出 A → 子项目 B）: ming-ui `Button` 内部换 antd
 
 **为什么从 Button 开始：** 252 个引用点，是「主题色跟随」最可见的载体，而且 API 面最小。跑通之后 Checkbox(281) / Radio(100) / RadioGroup(93) / Menu(111) / Dropdown(256) / Dialog(553) 按同一套流程做。
 
@@ -1252,7 +1282,7 @@ className 透传必须保住，大量调用点靠外部 class 定制。"
 
 ---
 
-## Task 8: 按同一流程换掉其余 5 个主题相关组件
+## Task 8（已移出 A → 子项目 B）: 按同一流程换掉其余 5 个主题相关组件
 
 对 `Checkbox`(281) / `Radio`(100) / `RadioGroup`(93) / `Menu`(111) / `Dropdown`(256) **各自重复 Task 7 的 8 个步骤**，一个组件一次提交。
 
@@ -1284,7 +1314,7 @@ antd info Checkbox --version 6.6.4 --format json
 
 ---
 
-## Task 9: `antd-color.less` 逐条退役
+## Task 9（已移出 A → 子项目 B）: `antd-color.less` 逐条退役
 
 **Files:**
 - Modify: `src/common/mdcss/themes/antd-color.less`（522 行）
