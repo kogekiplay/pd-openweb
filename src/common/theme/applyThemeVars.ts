@@ -63,23 +63,63 @@ function ensurePlatformStyle(): HTMLStyleElement {
   return style;
 }
 
-function platformVars(): ThemeVars {
-  return buildThemeVars(PLATFORM_PRIMARY, currentThemeMode());
+/**
+ * 当前生效的应用色；null = 平台色。
+ *
+ * 【为什么用模块级状态】它建模的本来就是一件全局的事 ——「此刻 document 上
+ * 挂的是哪一套调色板」。把它收成唯一真相之后，明暗切换只需要一个观察者、
+ * 重算时自己知道该用哪个种子，不存在「平台那一刷把应用色冲掉」的竞态。
+ *
+ * 【原方案为什么不行】最初是让 setBodyThemeMode 调 installPlatformTheme()、
+ * 再让 AppThemeScope 各挂一个观察者把应用色盖回去。两个问题：
+ *   1. setBodyThemeMode 在 src/utils/common.ts 里，而那个文件被 788 个文件引用。
+ *      往它里面 import 主题引擎 = 把 antd 的 theme 模块拽进每一个入口，
+ *      包括完全不用 antd 的分享页和打印页。
+ *   2. 两个观察者写同一个属性，谁赢取决于注册顺序 —— 能用，但脆。
+ */
+let activeSeed: string | null = null;
+
+/** 按当前的 activeSeed + 明暗模式重刷两处：documentElement 与平台岛规则。 */
+function repaint(): void {
+  const mode = currentThemeMode();
+
+  applyThemeVars(document.documentElement, buildThemeVars(activeSeed || PLATFORM_PRIMARY, mode));
+
+  // 平台岛【永远】是平台色，不跟 activeSeed 走 —— 顶栏、聊天在应用里也保持平台色。
+  ensurePlatformStyle().textContent =
+    `.${PLATFORM_SCOPE_CLASS}{${themeVarsToCssText(buildThemeVars(PLATFORM_PRIMARY, mode))}}`;
 }
 
-/** 启动时调一次；切换明暗时再调一次。 */
+let modeObserverInstalled = false;
+
+/**
+ * 启动时调一次（preall 模块级）。幂等。
+ *
+ * 【为什么自己盯 data-theme，而不是让切主题的人来通知】主题切换没有统一事件：
+ * setBodyThemeMode 有 5 个调用点（chat 的 ThemeMode 抽屉、门户用户抽屉、
+ * 移动端我的页，以及 globalEvents.ts 里两处跟随系统配色的）。
+ * documentElement 上的 data-theme 属性本身才是那条唯一可靠的信号。
+ */
 export function installPlatformTheme(): void {
-  const vars = platformVars();
-  applyThemeVars(document.documentElement, vars);
-  ensurePlatformStyle().textContent = `.${PLATFORM_SCOPE_CLASS}{${themeVarsToCssText(vars)}}`;
+  repaint();
+
+  if (modeObserverInstalled || typeof MutationObserver === 'undefined') return;
+  modeObserverInstalled = true;
+
+  new MutationObserver(repaint).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['data-theme'],
+  });
 }
 
 /** 进入某个应用时调。 */
 export function applyAppTheme(seed: string): void {
-  applyThemeVars(document.documentElement, buildThemeVars(seed, currentThemeMode()));
+  activeSeed = seed;
+  repaint();
 }
 
 /** 离开应用时调 —— 不是「清空」，是「还原成平台色」。 */
 export function resetToPlatformTheme(): void {
-  applyThemeVars(document.documentElement, platformVars());
+  activeSeed = null;
+  repaint();
 }

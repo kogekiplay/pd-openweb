@@ -24,6 +24,8 @@ export default function AppThemeScope({ seed }: Props) {
   useEffect(() => {
     if (!seed) return;
     applyAppTheme(seed);
+    // 明暗切换【不】在这里处理：主题引擎自己盯着 documentElement 的 data-theme，
+    // 重算时会用当前记住的应用色。见 applyThemeVars.ts 的 activeSeed。
   }, [seed]);
 
   // 卸载时还原。单独一个 effect 且依赖为空，是因为它要在【组件消失时】跑，

@@ -1,6 +1,16 @@
 :root {
   /* ================= 主色 =================
-    一般为蓝色。用于：主按钮/高亮控件、选中态、可点击元素的聚焦与强调。可由平台级进行定义
+    一般为蓝色。用于：主按钮/高亮控件、选中态、可点击元素的聚焦与强调。
+
+    【运行期这一段由 JS 覆盖，改这里不会有任何效果】
+    src/common/theme 会把 antd token 算出的调色板写成 documentElement 的
+    inline style，优先级恒高于这里（inline > 任何样式表规则）。
+    下面的字面值现在只是【JS 执行前那一帧的兜底】。
+
+    要改颜色请改：
+      · 应用的主题色  -> 应用设置里的图标色（state.appPkg.iconColor）
+      · 平台色        -> src/common/theme/palette.ts 的 PLATFORM_PRIMARY
+    【不要删这些字面值】删了首屏那一帧会没有主色。
   */
   --color-primary: #1677ff; /* 主色：按钮、填充、图标、文字强调、聚焦、关键图标 */
   --color-primary-light: #4096ff; /* 稍浅：hover */

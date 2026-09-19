@@ -50,6 +50,31 @@ function fakeEl(): FakeEl {
 const docEl = fakeEl();
 const headChildren: Array<{ id: string; textContent: string }> = [];
 const g = globalThis as unknown as Record<string, unknown>;
+
+/**
+ * 假 MutationObserver：只记下回调，由 setThemeAttr() 手动触发。
+ * 真实现里它是异步微任务，这里同步触发是【有意】的 —— spec 要断言的是
+ * 「属性变了会重刷成什么」，不是 DOM 规范的调度时机。
+ */
+const modeCallbacks: Array<() => void> = [];
+g.MutationObserver = class {
+  cb: () => void;
+  constructor(cb: () => void) {
+    this.cb = cb;
+  }
+  observe() {
+    modeCallbacks.push(this.cb);
+  }
+  disconnect() {}
+};
+
+/** 改 data-theme 并触发观察者，模拟 setBodyThemeMode 干的事。 */
+function setThemeAttr(value: string | null) {
+  if (value === null) delete docEl.attrs['data-theme'];
+  else docEl.attrs['data-theme'] = value;
+  modeCallbacks.forEach(cb => cb());
+}
+
 g.document = {
   documentElement: docEl,
   head: {
@@ -141,9 +166,42 @@ assert.ok('--color-primary-transparent' in docEl.props, 'reset 是换回平台�
 // 10. 暗色下 installPlatformTheme 产出的是暗色档，且注入的规则也跟着变
 docEl.attrs['data-theme'] = 'dark';
 installPlatformTheme();
-assert.notStrictEqual(docEl.props['--color-primary'], '#1677ff');
-assert.ok(headChildren[0].textContent.includes(docEl.props['--color-primary']));
+const platformDark = docEl.props['--color-primary'];
+assert.notStrictEqual(platformDark, '#1677ff');
+assert.ok(headChildren[0].textContent.includes(platformDark));
 assert.strictEqual(headChildren.length, 1);
-delete docEl.attrs['data-theme'];
+setThemeAttr(null);
 
-console.log('applyThemeVars.spec: 10 组断言全部通过');
+// 11. 【核心】切换明暗时自动重刷 —— 主题引擎自己盯 data-theme，
+//     不依赖 setBodyThemeMode 来通知（那个函数在 utils/common.ts 里，
+//     被 788 个文件引用，往它里面 import 主题引擎会把 antd 拽进每一个入口）。
+assert.strictEqual(docEl.props['--color-primary'], '#1677ff');
+setThemeAttr('dark');
+assert.strictEqual(docEl.props['--color-primary'], platformDark, '切暗色没有自动重刷');
+setThemeAttr('light');
+assert.strictEqual(docEl.props['--color-primary'], '#1677ff', '切回亮色没有自动重刷');
+
+// 12. 【核心】应用里切明暗，重刷出来的是【应用色的暗色档】，不是平台色。
+//     这条是把 activeSeed 收成模块状态的全部理由 —— 原方案靠两个观察者的
+//     注册顺序来决定谁赢，能用但脆。
+applyAppTheme('#e91e63');
+const appLight = docEl.props['--color-primary'];
+setThemeAttr('dark');
+const appDark = docEl.props['--color-primary'];
+assert.notStrictEqual(appDark, appLight, '切暗色后应用色没变');
+assert.notStrictEqual(appDark, platformDark, '切暗色后被平台色冲掉了');
+setThemeAttr('light');
+assert.strictEqual(docEl.props['--color-primary'], appLight, '切回亮色后应用色没恢复');
+
+// 13. 平台岛规则【永远】是平台色，不跟应用色走 —— 顶栏和聊天在应用里也保持平台色
+assert.ok(headChildren[0].textContent.includes('--color-primary:#1677ff;'));
+assert.strictEqual(docEl.props['--color-primary'], '#e91e63');
+
+// 14. 离开应用后回到平台色，且明暗切换继续跟随平台
+resetToPlatformTheme();
+assert.strictEqual(docEl.props['--color-primary'], '#1677ff');
+setThemeAttr('dark');
+assert.strictEqual(docEl.props['--color-primary'], platformDark);
+setThemeAttr(null);
+
+console.log('applyThemeVars.spec: 14 组断言全部通过');

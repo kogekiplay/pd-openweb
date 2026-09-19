@@ -1,7 +1,11 @@
 [data-theme='dark'] {
   /* ================= Dark Theme (强化卡片/弹窗可见性) ================= */
 
-  /* 主题色 */
+  /* 主题色
+     【运行期由 JS 覆盖，改这里不会有任何效果】—— 同 theme-default.less 里那段说明。
+     暗色下 src/common/theme 走 antd 的 darkAlgorithm，并用另一套 alpha
+     （.5/.2/.12，就是下面这三行的取值，原样搬进了 palette.ts 的 ALPHA.dark）。
+     下面的字面值只是 JS 执行前那一帧的兜底，【不要删】。 */
   --color-primary: #2a82ff; /* 稍亮 */
   --color-primary-light: #52a0ff; /* 稍亮 */
   --color-primary-dark: #1862d9; /* 稍亮 */
