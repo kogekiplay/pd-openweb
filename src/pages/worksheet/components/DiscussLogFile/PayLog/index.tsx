@@ -1,11 +1,10 @@
 import React, { Fragment, useEffect } from 'react';
 import { useSetState } from 'react-use';
 import { Popup } from 'antd-mobile';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
-import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import moment from 'moment';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Button, Dialog, LoadDiv, MenuItem } from 'ming-ui';
 import paymentAjax from 'src/api/payment.js';
@@ -15,6 +14,7 @@ import reimburseDialogFunc from 'src/pages/Admin/pay/Merchant/components/Withdra
 import ApplyInvoiceBtn from 'src/pages/invoice/ApplyInvoiceBtn';
 import { INVOICE_STATUS } from 'src/pages/invoice/constant';
 import { browserIsMobile } from 'src/utils/common';
+import copy from 'src/utils/copyToClipboard';
 import { infoKeys, refundInfoKeys, refundStatusList, selectPayStatusList, sourceTypeInfo, statusList } from './config';
 
 const WrapCon = styled.div`
@@ -83,9 +83,9 @@ const Wrap = styled.div`
       }
     }
     &.cancelRefundBtn {
-      background: rgba(33, 150, 243, 0.13);
+      background: color-mix(in srgb, var(--color-primary) 13%, transparent);
       &:hover {
-        background: rgba(33, 150, 243, 0.23);
+        background: color-mix(in srgb, var(--color-primary) 23%, transparent);
       }
     }
     &.okBtn {

@@ -1,7 +1,7 @@
 import React from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 
 const DropWrap = styled.div`
@@ -20,7 +20,7 @@ const DropWrap = styled.div`
       background: var(--color-background-hover);
     }
     &.cur {
-      background: rgba(33, 150, 243, 0.2);
+      background: color-mix(in srgb, var(--color-primary) 20%, transparent);
       .icon {
         color: var(--color-primary);
         display: inline-block;

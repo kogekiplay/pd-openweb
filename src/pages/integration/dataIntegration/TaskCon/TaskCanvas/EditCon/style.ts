@@ -119,7 +119,7 @@ export const WrapL = styled.div`
         font-weight: 400;
       }
       &.isCur {
-        background: rgba(33, 150, 243, 0.1);
+        background: color-mix(in srgb, var(--color-primary) 10%, transparent);
         border: 1px solid var(--color-primary);
         color: var(--color-primary);
       }

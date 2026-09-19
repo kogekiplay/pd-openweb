@@ -130,7 +130,7 @@ export const WrapNav = styled.div`
         .tag {
           padding: 0 6px;
           color: var(--color-primary);
-          background: rgba(33, 150, 243, 0.1);
+          background: color-mix(in srgb, var(--color-primary) 10%, transparent);
           border-radius: 11px;
           line-height: 22px;
           height: 22px;

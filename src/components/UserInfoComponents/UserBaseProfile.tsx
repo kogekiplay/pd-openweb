@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { useSetState } from 'react-use';
 import { Divider } from 'antd';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _, { get } from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { getFieldsData, maskValue } from 'src/pages/Admin/security/account/utils';
 import DepartmentFullName from './DepartmentFullName';
@@ -92,7 +92,7 @@ const ProjectsMenuCon = styled.div`
     line-height: 40px;
     &.active {
       color: var(--color-primary);
-      background: rgb(33, 150, 243, 0.08);
+      background: color-mix(in srgb, var(--color-primary) 8%, transparent);
     }
     &:not(.active):hover {
       background: var(--color-background-hover);

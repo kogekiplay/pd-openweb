@@ -111,7 +111,7 @@ export default function AppItemTrash(props) {
             ? appItem.iconUrl
             : `${md.global.FileStoreConfig.pubHost}/customIcon/${appItem.iconUrl}.svg`
         }
-        fill="#1677ff"
+        fill="var(--color-primary)"
         size={34}
         className="InlineBlock"
       />,

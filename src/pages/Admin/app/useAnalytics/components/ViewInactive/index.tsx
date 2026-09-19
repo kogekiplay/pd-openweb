@@ -26,7 +26,7 @@ const DialogContent = styled.div`
   .description {
     width: 100%;
     padding: 10px 16px;
-    background: rgba(33, 150, 243, 0.05);
+    background: color-mix(in srgb, var(--color-primary) 5%, transparent);
     border-radius: 4px;
     font-weight: 600;
     margin: 20px 0;

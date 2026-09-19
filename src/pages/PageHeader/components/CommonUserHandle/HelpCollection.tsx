@@ -85,7 +85,7 @@ const CollectionWrap = styled.div`
     padding: 10px 15px;
     box-sizing: border-box;
     &:hover {
-      background: rgba(33, 150, 243, 0.05);
+      background: color-mix(in srgb, var(--color-primary) 5%, transparent);
     }
     .hapAI {
       height: 32px;

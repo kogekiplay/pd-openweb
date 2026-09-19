@@ -138,7 +138,7 @@ export default function MobileLayout(props) {
             '--widget-color': pageConfig.widgetBgColor,
             '--widget-title-color': widgetIsDark ? '#ffffffcc' : '#333',
             '--widget-icon-color': widgetIsDark ? '#ffffffcc' : '#9e9e9e',
-            '--widget-icon-hover-color': widgetIsDark ? '#ffffff' : '#1677ff',
+            '--widget-icon-hover-color': widgetIsDark ? '#ffffff' : 'var(--color-primary)',
           }}
         >
           <div className="mobileBox Relative">

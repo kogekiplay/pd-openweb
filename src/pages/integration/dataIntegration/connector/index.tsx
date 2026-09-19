@@ -22,7 +22,7 @@ const ConnectorWrapper = styled.div`
 
   .headerWrapper {
     height: 400px;
-    background-color: rgba(33, 150, 243, 0.04);
+    background-color: color-mix(in srgb, var(--color-primary) 4%, transparent);
     box-sizing: border-box;
 
     .headerContent {

@@ -42,7 +42,7 @@ const DialogWrap = styled(Dialog)`
       cursor: pointer;
       text-align: center;
       &.isActive {
-        color: #2196f3;
+        color: var(--color-primary);
         background: #fff;
         box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.08);
       }
@@ -81,7 +81,7 @@ const DialogWrap = styled(Dialog)`
         text-align: center;
         border-radius: 28px;
         color: #fff;
-        background: #2196f3;
+        background: var(--color-primary);
         cursor: pointer;
         margin-bottom: 25px;
         font-size: 16px;

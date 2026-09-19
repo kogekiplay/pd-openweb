@@ -70,10 +70,10 @@ const ImportError = styled.div`
   .uploadBtnStyle {
     width: 108px;
     height: 36px;
-    border: 1px solid rgba(33, 150, 243, 1);
+    border: 1px solid var(--color-primary);
     border-radius: 32px;
     background-color: var(--color-background-primary);
-    color: rgba(33, 150, 243, 1);
+    color: var(--color-primary);
     &:hover {
       color: var(--color-primary-light) !important;
       border-color: var(--color-primary-light) !important;

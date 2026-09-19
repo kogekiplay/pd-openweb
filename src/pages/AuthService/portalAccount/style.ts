@@ -321,7 +321,7 @@ export const WrapUl = styled.div`
         word-break: break-all;
         &.isCur {
           color: var(--color-primary);
-          border-bottom: 3px solid rgba(33, 150, 243);
+          border-bottom: 3px solid var(--color-primary);
         }
       }
     }

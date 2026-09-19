@@ -104,7 +104,7 @@ const Content = styled.div`
       padding: 0px 12px;
       background: var(--color-primary-transparent);
       border-radius: 15px;
-      color: rgb(33, 150, 243);
+      color: var(--color-primary);
       line-height: 30px;
       cursor: pointer;
     }

@@ -59,7 +59,7 @@ const FlattenContent = styled.div`
     padding-left: 10px;
     border-radius: 3px;
     &.expandHeader {
-      background-color: rgba(33, 150, 243, 0.1);
+      background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
     }
     .delete,
     .edit {
@@ -266,7 +266,9 @@ export default function MobileTable(props) {
                 disabledFunctions={isEdit ? ['controlRefresh'] : []}
                 ignoreLock={ignoreLock}
                 isDraft={isDraft}
-                ref={el => { customWidgetRefs.current[index] = el; }}
+                ref={el => {
+                  customWidgetRefs.current[index] = el;
+                }}
                 recordId={rowid}
                 data={(expandRowIndex === index ? controls : showControls).map(c => ({
                   ...c,
@@ -388,7 +390,9 @@ export default function MobileTable(props) {
                     from={4}
                     mode="mobileSub"
                     masterData={masterData}
-                    rowFormData={() => controls.map((c: FormControl) => Object.assign({}, c, { value: row[c.controlId] }))}
+                    rowFormData={() =>
+                      controls.map((c: FormControl) => Object.assign({}, c, { value: row[c.controlId] }))
+                    }
                     projectId={projectId}
                     worksheetId={worksheetId}
                     canedit={c.type === 36 && controlPermission.editable}

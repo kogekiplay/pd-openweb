@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Drawer } from 'antd';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, LoadDiv, Support } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -163,7 +163,7 @@ const ArrowUp = styled.span`
   cursor: pointer;
   &:hover,
   &.active {
-    border-color: transparent transparent #1677ff transparent;
+    border-color: transparent transparent var(--color-primary) transparent;
   }
 `;
 
@@ -270,7 +270,7 @@ function FormIndexSetting(props) {
   }
 
   return (
-    (<Fragment>
+    <Fragment>
       <Con className="Relative">
         <div className="setIndexList">
           <div className="flexRow">
@@ -540,7 +540,7 @@ function FormIndexSetting(props) {
           placement="right"
           onClose={() => setShowCreateIndex(false)}
           open={showCreateIndex}
-         
+
           getContainer={false}
           mask={false}
           closable={false}
@@ -564,7 +564,7 @@ function FormIndexSetting(props) {
           )}
         </Drawer>
       </Con>
-    </Fragment>)
+    </Fragment>
   );
 }
 

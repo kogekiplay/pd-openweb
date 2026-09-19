@@ -14,8 +14,8 @@ import { searchRecordInDialog } from 'src/pages/worksheet/components/SearchRelat
 import ViewHoverRelateRecordCard from 'src/pages/worksheet/views/components/ViewHoverRelateRecordCard.jsx';
 import { browserIsMobile, htmlEncodeReg } from 'src/utils/common';
 import { getTitleTextFromRelateControl } from 'src/utils/control';
-import { addBehaviorLog } from 'src/utils/project';
 import type { RecordRow } from 'src/utils/controlTypes';
+import { addBehaviorLog } from 'src/utils/project';
 
 function getCellHeight(texts = [], width: number) {
   let result;
@@ -89,7 +89,7 @@ const Tag = styled.div`
   }
   &.allowOpenRecord:hover {
     color: var(--color-primary);
-    background-color: rgba(33, 150, 243, 0.16);
+    background-color: color-mix(in srgb, var(--color-primary) 16%, transparent);
     cursor: pointer;
   }
   .icon-close {
@@ -112,7 +112,7 @@ const Tag = styled.div`
     justify-content: center;
     align-items: center;
     &:hover {
-      background: rgb(33, 150, 243, 0.1);
+      background: color-mix(in srgb, var(--color-primary) 10%, transparent);
     }
   }
 `;
@@ -213,7 +213,18 @@ export default forwardRef(function RelateRecordTags(props, ref) {
       props.records.map((r: RecordRow) => pick(r, ['rowid'].concat(getTitleControlIdFromRelateControl(control) || []))),
     ),
   ]);
-  function handleOpenRecord({ appId, worksheetId, recordId, viewId }: { appId?: string; worksheetId?: string; recordId?: string; viewId?: string; [key: string]: any }) {
+  function handleOpenRecord({
+    appId,
+    worksheetId,
+    recordId,
+    viewId,
+  }: {
+    appId?: string;
+    worksheetId?: string;
+    recordId?: string;
+    viewId?: string;
+    [key: string]: any;
+  }) {
     openDialogCallback();
     openRecordInfo({
       appId: appId,

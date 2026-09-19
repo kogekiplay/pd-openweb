@@ -22,7 +22,7 @@ export const LoginTitle = styled.div`
 `;
 
 export const ReturnButton = styled.button`
-  background-color: #2196f3;
+  background-color: var(--color-primary);
   border: none;
   border-radius: 8px;
   padding: 14px 40px;

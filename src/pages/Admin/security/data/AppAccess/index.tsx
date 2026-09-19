@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import { useSetState } from 'react-use';
-import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
+import _ from 'lodash';
 import styled from 'styled-components';
 import { Button, Dialog, Icon, Menu, MenuItem, Switch } from 'ming-ui';
 import dataLimitAjax from 'src/api/dataLimit';
@@ -12,7 +12,7 @@ import { arrayToObject, objectToArray } from '../utils';
 import AddAndEditAppAccess from './AddAndEditAppAccess';
 
 const Description = styled.div`
-  background: rgba(33, 150, 243, 0.1);
+  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
   border-radius: 4px;
   padding: 10px 12px;
   margin-bottom: 20px;
@@ -125,8 +125,12 @@ export default function AppAccess(props) {
                     accessType: record.accessType,
                     accessPass: record.accessPass,
                     limitAction: record.limitAction,
-                    whiteApps: (record.whiteApps || []).map(({ appId }: { appId?: string; [key: string]: any }) => ({ appId })),
-                    blackApps: (record.blackApps || []).map(({ appId }: { appId?: string; [key: string]: any }) => ({ appId })),
+                    whiteApps: (record.whiteApps || []).map(({ appId }: { appId?: string; [key: string]: any }) => ({
+                      appId,
+                    })),
+                    blackApps: (record.blackApps || []).map(({ appId }: { appId?: string; [key: string]: any }) => ({
+                      appId,
+                    })),
                     isAllowPublicAccess: record.isAllowPublicAccess,
                     isAllowCrossApp: record.isAllowCrossApp,
                     ipRule: record.ipRule,
@@ -205,7 +209,9 @@ export default function AppAccess(props) {
               ...item,
               limitId: item.id,
               hearderRule: objectToArray(item.hearderRule),
-              appList: (item.limitAction === 1 ? item.whiteApps : item.blackApps).map(({ appId }: { appId?: string; [key: string]: any }) => ({ appId })),
+              appList: (item.limitAction === 1 ? item.whiteApps : item.blackApps).map(
+                ({ appId }: { appId?: string; [key: string]: any }) => ({ appId }),
+              ),
             })),
             loading: false,
           });

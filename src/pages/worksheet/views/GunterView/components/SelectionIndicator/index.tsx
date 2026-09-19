@@ -131,7 +131,9 @@ let SelectionIndicator = class SelectionIndicator extends React.Component<any, a
         )}
         {editIndex !== null && (
           <SelectionIndicatorWrapper
-            color={searchRecordId ? 'rgba(255, 147, 0, .09);' : 'rgba(33, 150, 243, .06)'}
+            color={
+              searchRecordId ? 'rgba(255, 147, 0, .09);' : 'color-mix(in srgb, var(--color-primary) 6%, transparent)'
+            }
             style={{
               top: editIndex * rowHeight + headerHeight + chartScroll.y,
               height: rowHeight,

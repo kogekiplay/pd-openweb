@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { Progress } from 'antd';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
-import createUploader from 'src/utils/createUploader';
 import { formatFileSize } from 'src/utils/common';
+import createUploader from 'src/utils/createUploader';
 import RegExpValidator from 'src/utils/expression';
 import { UploadError } from 'src/utils/uploader/constants';
 
@@ -100,7 +100,7 @@ export default class UploadFile extends Component<any, any> {
         <Progress
           style={{ width: 196, marginLeft: '36px' }}
           railColor="var(--color-border-secondary)"
-          strokeColor="#1677ff"
+          strokeColor="var(--color-primary)"
           strokeWidth={8}
           percent={Math.floor((file.loaded / (file.size || 0)) * 100)}
         />
@@ -110,7 +110,9 @@ export default class UploadFile extends Component<any, any> {
       <UploadWrap style={style}>
         <div
           id="uploadExcel"
-          ref={node => { this.uplaodaExcel = node; }}
+          ref={node => {
+            this.uplaodaExcel = node;
+          }}
           className="h100 flexColumn justifyContentCenter alignItemsCenter Hand"
         >
           <Icon icon="upload_file" className="Font48 mBottom18" />

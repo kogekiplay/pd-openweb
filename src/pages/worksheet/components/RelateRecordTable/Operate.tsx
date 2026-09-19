@@ -1,12 +1,12 @@
 import React, { Fragment, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _, { find, get, isEmpty, isUndefined } from 'lodash';
 import moment from 'moment';
 import { bool, func, shape, string } from 'prop-types';
 import { arrayOf } from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Dialog, Input } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -20,11 +20,11 @@ import { selectRecords } from 'src/components/SelectRecords';
 import { exportRelateRecordRecords } from 'src/pages/worksheet/common/recordInfo/crtl';
 import { getTranslateInfo } from 'src/utils/app';
 import { emitter } from 'src/utils/common';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import * as actions from './redux/action';
 import { initialChanges } from './redux/reducer';
 import RelateRecordBtn from './RelateRecordBtn';
 import { getVisibleControls } from './utils';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   display: flex;
@@ -103,7 +103,7 @@ const IconBtn = styled.span`
   padding: 0 4px;
   border-radius: 5px;
   &.active {
-    background: rgba(33, 150, 243, 0.12);
+    background: color-mix(in srgb, var(--color-primary) 12%, transparent);
   }
   &:hover {
     background: var(--color-background-hover);
