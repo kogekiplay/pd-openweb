@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { Routes } from 'react-router';
+import { ConfigProvider } from 'antd';
 import _ from 'lodash';
+import { AppThemeScope } from 'src/common/theme';
 import { navigateTo } from 'router/navigateTo';
 import { LoadDiv } from 'ming-ui';
 import ajaxRequest from 'src/api/homeApp';
@@ -123,6 +125,25 @@ let Application = class Application extends Component<any, any> {
   }
 
   render() {
+    // 【应用主题色的唯一注入点】一处输入，两路输出：
+    //   · ConfigProvider -> antd 组件自己的 token 系统
+    //   · AppThemeScope  -> 我们那套 CSS 变量（渲染 null，只有副作用）
+    // 两者喂的是【同一个 iconColor】、经【同一套 antd 算法】算出来的，
+    // 所以 antd 组件和我们的 Less 不会分叉成两种颜色 —— 那正是这次要修的病。
+    //
+    // 包在最外层（而不是只包 Routes 那一支）是有意的：升级提示、异常页、
+    // 未发布占位也都属于这个应用，应当同色。
+    const { iconColor } = this.props.appPkg;
+
+    return (
+      <ConfigProvider theme={{ token: { colorPrimary: iconColor } }}>
+        <AppThemeScope seed={iconColor} />
+        {this.renderContent()}
+      </ConfigProvider>
+    );
+  }
+
+  renderContent() {
     let { status } = this.state;
     const {
       location: { pathname },

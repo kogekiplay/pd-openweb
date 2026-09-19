@@ -18,3 +18,4 @@ export {
   PLATFORM_SCOPE_CLASS,
 } from './applyThemeVars';
 export type { ElementLike } from './applyThemeVars';
+export { default as AppThemeScope } from './AppThemeScope';

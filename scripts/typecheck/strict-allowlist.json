@@ -108,6 +108,7 @@
     "src/api/worksheetSetting.ts",
     "src/common/shouldForwardProp.ts",
     "src/common/staticLanguages.ts",
+    "src/common/theme/AppThemeScope.tsx",
     "src/common/theme/applyThemeVars.ts",
     "src/common/theme/index.ts",
     "src/common/theme/palette.ts",
