@@ -27,7 +27,7 @@ const CardWrapper = styled.div`
   margin-bottom: 15px;
   box-sizing: border-box;
   background-color: var(--color-background-primary);
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   box-shadow: var(--shadow-sm);
   &:hover {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
@@ -65,7 +65,7 @@ const EntrustButton = styled.button`
   font-size: 13px;
   height: 32px;
   line-height: 32px;
-  border-radius: 5px;
+  border-radius: var(--radius-md);
   color: var(--color-white);
   background-color: var(--color-primary);
   &.overEntrust {

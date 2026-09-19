@@ -37,7 +37,7 @@
     }
     .timeBar {
       height: 16px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       display: inline-block;
       vertical-align: top;
       text-align: right;
@@ -82,7 +82,7 @@
           background: #000;
           width: 66px;
           text-align: center;
-          border-radius: 3px;
+          border-radius: var(--radius-sm);
           z-index: 10;
         }
         .dragPreviewTipsLeft {
@@ -147,8 +147,8 @@
       vertical-align: top;
       margin-left: -1px;
       padding-right: 1px;
-      border-top-right-radius: 3px;
-      border-bottom-right-radius: 3px;
+      border-top-right-radius: var(--radius-sm);
+      border-bottom-right-radius: var(--radius-sm);
       &:not(.Hidden) {
         display: inline-block;
       }

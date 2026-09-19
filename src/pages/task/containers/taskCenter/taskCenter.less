@@ -74,9 +74,9 @@
     height: 32px;
     padding-left: 10px;
     border: 1px solid var(--color-border-secondary);
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
+    -webkit-border-radius: var(--radius-sm);
+    -moz-border-radius: var(--radius-sm);
+    border-radius: var(--radius-sm);
   }
   .disableUser {
     -webkit-filter: grayscale(100%);
@@ -106,16 +106,16 @@
     display: flex;
   }
   .borderTopRadius_3 {
-    border-radius: 3px 3px 0 0;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
   }
   .borderBottomRadius_3 {
-    border-radius: 0 0 3px 3px;
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
   }
   .borderLeftRadius_3 {
-    border-radius: 3px 0 0 3px;
+    border-radius: var(--radius-sm) 0 0 var(--radius-sm);
   }
   .borderRightRadius_3 {
-    border-radius: 0 3px 3px 0;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   }
   .opacity7 {
     opacity: 0.7;
@@ -288,7 +288,7 @@
   margin-top: 15px;
   padding: 3px 5px;
   resize: none;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   background-color: transparent;
   border-style: solid;
   border-width: 1px;

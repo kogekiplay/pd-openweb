@@ -11,7 +11,7 @@ const GroupButtonInCard = styled.div`
   gap: 5px;
   padding: 0 8px;
   height: 32px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   color: var(--color-text-primary);
   ${props => props.disabled && 'opacity: 0.5;'}
   &.operates-standard {

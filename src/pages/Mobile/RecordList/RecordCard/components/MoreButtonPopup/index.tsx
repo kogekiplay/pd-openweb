@@ -19,7 +19,7 @@ const MoreButtonWrapper = styled.div`
       : `
           width: 32px;
           height: 32px;
-          border-radius: 3px;
+          border-radius: var(--radius-sm);
           ${props.showType === 'standard' && 'border: 1px solid var(--color-border-primary);'}
         `}
 `;

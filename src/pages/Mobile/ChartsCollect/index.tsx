@@ -21,7 +21,7 @@ const Wrap = styled.div`
     height: 300px;
     background: var(--color-background-primary);
     box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
-    border-radius: 2px;
+    border-radius: var(--radius-sm);
     margin-bottom: 10px;
     padding: 16px 15px 15px;
     box-sizing: content-box;

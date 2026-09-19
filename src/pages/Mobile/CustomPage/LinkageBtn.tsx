@@ -29,7 +29,7 @@ const AutoLinkagePopover = styled.div`
   }
   .linkageFilter {
     padding: 5px 8px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     &:hover {
       background-color: var(--color-background-hover);
     }

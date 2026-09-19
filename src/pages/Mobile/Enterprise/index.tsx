@@ -25,7 +25,7 @@ const EmptyProject = styled.div`
     height: 36px;
     line-height: 36px;
     box-sizing: border-box;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     border: none;
     cursor: pointer;
     color: var(--color-white);

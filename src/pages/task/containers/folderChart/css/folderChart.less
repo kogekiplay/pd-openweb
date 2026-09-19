@@ -107,10 +107,10 @@
     }
     li:nth-child(2) {
       border-width: 1px;
-      border-radius: 5px 0 0 5px;
+      border-radius: var(--radius-sm) 0 0 var(--radius-sm);
     }
     li:last-child {
-      border-radius: 0 5px 5px 0;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     }
     li.activeClass {
       color: var(--color-white);
@@ -192,7 +192,7 @@
     }
     .folderChartChargeBtn {
       font-size: 12px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       border: 1px solid var(--color-text-disabled);
       height: 28px;
       line-height: 28px;

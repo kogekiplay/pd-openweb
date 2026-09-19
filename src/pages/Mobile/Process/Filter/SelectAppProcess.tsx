@@ -11,7 +11,7 @@ const Wrap = styled.div`
     width: 28px;
     height: 28px;
     justify-content: center;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
   }
 `;
 

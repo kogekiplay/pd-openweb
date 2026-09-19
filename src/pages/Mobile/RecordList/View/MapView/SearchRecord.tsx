@@ -18,7 +18,7 @@ import { htmlDecodeReg, htmlEncodeReg } from 'src/utils/common';
 import { renderText as renderCellText } from 'src/utils/control';
 
 const Wrapper = styled.div`
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   margin-right: -33px;
   width: 100%;
   position: absolute;
@@ -34,7 +34,7 @@ const Wrapper = styled.div`
       0 9px 28px 8px rgb(0 0 0 / 5%);
   }
   .ant-select-open .ant-select-input {
-    border-radius: 4px 4px 0 0;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
   }
   .ant-select-dropdown {
     z-index: 1;
@@ -52,7 +52,7 @@ const InputWrapper = styled.div`
   padding: 10px 15px;
   background-color: var(--color-background-primary);
   border-bottom: 1px solid var(--color-background-disabled);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   input {
     border: 0;
     padding: 0 0 0 5px;

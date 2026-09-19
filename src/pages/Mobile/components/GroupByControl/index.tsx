@@ -57,7 +57,7 @@ const Con = styled.div`
 const IconWrap = styled.div`
   width: 24px;
   height: 24px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;

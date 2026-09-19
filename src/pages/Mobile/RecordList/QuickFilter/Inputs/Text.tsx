@@ -10,7 +10,7 @@ const InputCon = styled.input`
   border: none;
   background-color: var(--color-background-secondary);
   height: 36px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   padding: 0 12px;
   font-size: 14px;
 `;

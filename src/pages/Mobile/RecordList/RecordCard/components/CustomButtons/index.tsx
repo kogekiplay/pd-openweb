@@ -18,7 +18,7 @@ const CustomButtonInCard = styled.div`
   gap: 5px;
   padding: 0 8px;
   height: 32px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   ${props => props.disabled && 'opacity: 0.5;'}
   &.operates-text,
   &.operates-icon {
