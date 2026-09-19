@@ -128,8 +128,8 @@ function useClickAwayElement(props, ref: React.ForwardedRef<unknown>, shouldForw
  * 一律报"属性不存在于 IntrinsicAttributes"——本仓有两处就是这么报的。
  */
 interface ClickAwayProps {
-  /** 渲染成什么，默认 'div'；可以是标签名或组件 */
-  component?: any;
+  /** 渲染成什么，默认 'div'。ElementType 正好就是「标签名或组件」这个意思 */
+  component?: React.ElementType;
   children?: React.ReactNode;
   /** 点击外部区域时触发 */
   onClickAway?: (target: EventTarget | null) => void;
@@ -145,10 +145,10 @@ interface ClickAwayProps {
   [key: string]: any;
 }
 
-const ClickAwayComponentBoundary = forwardRef(function ClickAwayComponentBoundary(
-  props: { component: any; componentProps: any },
-  ref,
-) {
+const ClickAwayComponentBoundary = forwardRef<
+  HTMLSpanElement,
+  { component: React.ElementType; componentProps: Record<string, unknown> }
+>(function ClickAwayComponentBoundary(props, ref) {
   const { component: Component, componentProps } = props;
   return (
     <span ref={ref} style={BOUNDARY_STYLE}>
@@ -165,6 +165,19 @@ const ClickAwayComponentBoundary = forwardRef(function ClickAwayComponentBoundar
 const ClickAway = forwardRef(function ClickAway(props: ClickAwayProps, ref) {
   return useClickAwayElement(props, ref, false);
 }) as React.ForwardRefExoticComponent<ClickAwayProps & React.RefAttributes<unknown>> & {
+  /**
+   * 把任意组件包一层 ClickAway。
+   *
+   * 【这里的 any 是量过的，两种精确签名都不成立，别再改】
+   * 包出来的组件 = 原组件的 props + ClickAway 自己注入的
+   * （onClickAway / onClickAwayExceptions / specialFilter）。两种写法各撞一堵墙：
+   *   · `<P>(c: ComponentType<P>) => ComponentType<P & Injected>`（准确）
+   *     → 全仓 10 处 `Xxx = ClickAway.wrap(Xxx)` 是回赋给同一个绑定，
+   *       全部报「ComponentType<any> 不能赋给 typeof Xxx」。
+   *   · `<T>(c: T) => T`（恒等，能过回赋）
+   *     → 丢掉注入的那几个 prop，CustomBtnCon 传 onClickAway 立刻报「不存在」。
+   * 要真解决，得先把那 10 处回赋改成不同名导出，那是独立的一件事。
+   */
   wrap: (Component: any) => any;
 };
 
