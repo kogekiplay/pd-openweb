@@ -47,14 +47,24 @@ const ALPHA: Record<ThemeMode, { focusOuter: number; transparent: number; transp
  *   所以它们本来就跟着主色走，这里再定义一遍等于造第二个真相源；
  *   而且 hover 那个会被悄悄从 --color-link-hover 改成 colorPrimaryHover。
  *
- *   运行期还有两个注入器会临时覆盖它们，表达「此刻用某个应用的颜色」：
- *     · src/pages/worksheet/WorkSheet.tsx 的 changeAppThemeColor（卸载时 remove，写得对）
- *     · src/utils/common.ts 的 setAppThemeColor（Chatbot 用）
- *   这两条路和本模块并存不冲突：它们改的是别名变量，本模块改的是 --color-primary。
+ *   运行期原本还有两个注入器临时覆盖它们（WorkSheet 的 changeAppThemeColor、
+ *   utils/common 的 setAppThemeColor）。2026-09-19 两个都已退役 ——
+ *   它们注入的是 `:root` 规则，而本模块写的是 documentElement 的 inline style，
+ *   后者恒压过前者，所以自打主题引擎上线，那两处注入其实已经是死代码了。
  *
- * · --app-highlight-color：全局【没有】定义，只由上面两个注入器临时产生。
- *   所以 `var(--app-highlight-color, var(--color-mingo-transparent))` 那处兜底
- *   是真的会生效的，在这里定义它会把那处的 Mingo 紫覆盖掉。
+ * 【--app-highlight-color 是例外：这里【要】产出】
+ *   它全局本来没有定义，只由那两个注入器临时产生。原先的判断是「别定义，
+ *   留着 var(--app-highlight-color, var(--color-mingo-transparent)) 那处兜底」。
+ *   2026-09-19 张奇拍板：AI 助手跟随主题色。注入器退役后，不在这里产出它，
+ *   应用的 Chatbot 就会掉回 Mingo 紫 —— 那是把决定反过来做了。
+ *
+ *   【为什么不会波及 Mingo 全局助手的紫】读取点只有一个
+ *   （components/Mingo/ChatBot/components/MessageList.tsx），而且挂在
+ *   `&.useAppThemeColor` 类下面 —— 这个类是按实例挂的：应用的 Chatbot 挂，
+ *   Mingo 全局助手不挂。不挂的那条分支读的是 --color-mingo-transparent，
+ *   跟本变量无关。所以「Mingo 必须保持紫」和「AI 助手跟随主题色」并不冲突。
+ *
+ *   alpha 取 0.2，跟退役掉的注入器逐字一致，观感不变。
  *
  * · --color-app 系列：真·死变量（全仓无赋值），已在同批改指 --color-primary 后删除。
  */
@@ -169,6 +179,8 @@ export function buildThemeVars(seed: string, mode: ThemeMode = 'light'): ThemeVa
     '--color-primary-dark': token.colorPrimaryActive,
     '--color-primary-focus': primary,
     '--color-primary-focus-outer': alpha(primary, a.focusOuter),
+    // 应用 Chatbot 的消息底色。Mingo 全局助手不挂 .useAppThemeColor，读不到这个值。
+    '--app-highlight-color': alpha(primary, 0.2),
     '--color-primary-transparent': alpha(primary, a.transparent),
     '--color-primary-transparent-light': alpha(primary, a.transparentLight),
 

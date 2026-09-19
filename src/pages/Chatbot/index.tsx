@@ -11,12 +11,13 @@ import homeAppApi from 'src/api/homeApp';
 import processApi from 'src/pages/workflow/api/process';
 import { canEditApp } from 'worksheet/redux/actions/util.js';
 import UnNormal from 'worksheet/views/components/UnNormal';
+import { applyAppTheme } from 'src/common/theme';
 import WorkflowChatBot from 'src/components/Mingo/modules/WorkflowChatBot';
 import ConversationList from 'src/components/Mingo/modules/WorkflowChatBot/ConversationList';
 import type { RootState } from 'src/redux/types';
 import { navigateTo } from 'src/router/navigateTo';
 import { getTranslateInfo } from 'src/utils/app';
-import { browserIsMobile, pathCompletion, setAppThemeColor } from 'src/utils/common';
+import { browserIsMobile, pathCompletion } from 'src/utils/common';
 import defaultProfile from './assets/profile.png';
 import Edit from './Edit';
 import MoreMenu from './MoreMenu';
@@ -116,8 +117,11 @@ const Chatbot = props => {
           return;
         }
 
+        // 【原来是 setAppThemeColor 注入一条 :root 规则】那个注入器 2026-09-19 退役了：
+        // 主题引擎写的是 documentElement 的 inline style，恒压过 :root，
+        // 所以自打引擎上线，那条注入其实已经不起作用了。直接调引擎。
         if (appItem[0].iconColor) {
-          setAppThemeColor(appItem[0].iconColor);
+          applyAppTheme(appItem[0].iconColor);
         }
 
         setChatbotAppItem(appItem[0]);
