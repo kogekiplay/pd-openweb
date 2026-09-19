@@ -29,6 +29,12 @@ const BASELINE: string = path.join(__dirname, 'audit-colors.baseline.json');
 const EXTS: Set<string> = new Set(['.less', '.css', '.ts', '.tsx', '.js', '.jsx']);
 
 /**
+ * spec 不渲染任何东西，里面的颜色是【测试夹具】，不是界面上的写死色。
+ * 算进来只会让棘轮在「给主题相关代码补测试」时误报 —— 而那恰恰是我们要鼓励的事。
+ */
+const SPEC_RE = /\.spec\.[jt]sx?$/;
+
+/**
  * 这些目录是第三方产物或压缩包，不是我们写的。
  * src/library 尤其重要：applibrary_v2.js 是自带 styled-components 5.3.8 的
  * 预打包文件，一个文件就有上千个颜色，算进来会淹掉真实信号。
@@ -74,7 +80,7 @@ function walk(dir: string, out: string[]): string[] {
     if (entry.isDirectory()) {
       if (SKIP_DIRS.has(entry.name)) continue;
       walk(path.join(dir, entry.name), out);
-    } else if (EXTS.has(path.extname(entry.name))) {
+    } else if (EXTS.has(path.extname(entry.name)) && !SPEC_RE.test(entry.name)) {
       out.push(path.join(dir, entry.name));
     }
   }
