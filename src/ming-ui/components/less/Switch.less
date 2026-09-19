@@ -41,8 +41,18 @@
     padding-left: 8px;
     box-sizing: initial;
   }
+  /* 【为什么开启态从绿色改成主色】--color-task 是【任务模块】的品牌绿
+     （theme-default.less:132），开关借用它纯属历史误借 —— 开关的开启态
+     表达的是「这个设置生效了」，属于主要状态，跟任务模块没关系。
+     借着它，开关就永远绿着不跟应用主题，而同一个页面上的按钮、单选、
+     页签都已经是应用色了，一排绿开关格外跳。
+     换成 --color-primary 之后跟 antd 的 Switch（用 colorPrimary）也对齐了。
+     --color-task 本身不动，任务模块该绿还绿。 */
   &--on {
-    background: var(--color-task);
+    background: var(--color-primary);
+    &:hover {
+      background: var(--color-primary-light);
+    }
     .dot {
       left: 26px;
     }
@@ -59,6 +69,9 @@
   }
   &--off {
     background: var(--color-text-placeholder);
+    &:hover {
+      background: var(--color-border-hover);
+    }
     .dot {
       left: 2px;
     }

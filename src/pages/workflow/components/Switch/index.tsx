@@ -91,7 +91,8 @@ export default class Switch extends Component<any, any> {
                 <div>{STATUS2TEXT[status]}</div>
               </div>
               <div className={cx('iconWrap', `iconWrap-${status}`)}>
-                <Icon icon="hr_ok" className={cx('Font20 textDisabled', `workflowSwitchIcon-${status}`)} />
+                {/* 旋钮从 34px 方块收成 28px 圆形，20px 的勾会顶满，跟着缩到 16 */}
+                <Icon icon="hr_ok" className={cx('Font16 textDisabled', `workflowSwitchIcon-${status}`)} />
               </div>
             </div>
           </Fragment>

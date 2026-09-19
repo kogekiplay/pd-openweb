@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Routes } from 'react-router';
 import { ConfigProvider } from 'antd';
 import _ from 'lodash';
-import { AppThemeScope } from 'src/common/theme';
+import { AppThemeScope, getCachedAppColor } from 'src/common/theme';
 import { navigateTo } from 'router/navigateTo';
 import { LoadDiv } from 'ming-ui';
 import ajaxRequest from 'src/api/homeApp';
@@ -50,37 +50,6 @@ let Application = class Application extends Component<any, any> {
   }
 
   /**
-   * 从 localStorage 的 appCache-{appId} 里取应用色。
-   *
-   * 【为什么需要兜底】取应用详情的是应用顶栏组件（AppPkgHeader/AppDetail），
-   * 而工作流页 / 用户页【不渲染顶栏】。直接刷新这两个页面时 appPkg 一直是
-   * defaultState，整站就停在平台蓝 —— 张奇实测到的「刷新主题就消失」。
-   *
-   * 这份缓存是产品自己维护的（AppDetail 读它做首屏预填），不是我们新造的存储。
-   * 它可能过期，但只在「真详情拿不到」时才用；下次经过带顶栏的页面就会刷新。
-   *
-   * 按 appId 记一次，避免每次 render 都读 localStorage。
-   */
-  cachedIconColorCache: { appId?: string; color?: string } = {};
-
-  cachedIconColor(): string | undefined {
-    let { appId } = getIds(this.props);
-
-    if (md.global.Account.isPortal) {
-      appId = md.global.Account.appId;
-    }
-
-    if (!appId) return undefined;
-
-    if (this.cachedIconColorCache.appId !== appId) {
-      const cached = window.safeParse(localStorage.getItem(`appCache-${appId}`));
-      this.cachedIconColorCache = { appId, color: _.get(cached, 'iconColor') };
-    }
-
-    return this.cachedIconColorCache.color;
-  }
-
-  /**
    * 应用区域的内容面板样式靠 body 上这个类挂（样式在 src/router/index.less）。
    *
    * 【为什么不能无条件加】本组件还挂在 /worksheet/:worksheetId 这条老路由上，
@@ -88,13 +57,13 @@ let Application = class Application extends Component<any, any> {
    * 判断口径和 renderContent 里那段保持一致（含 isPortal 的特殊取法）。
    */
   syncAppScopeClass() {
-    let { appId } = getIds(this.props);
+    document.body.classList.toggle('inAppScope', !!this.currentAppId());
+  }
 
-    if (md.global.Account.isPortal) {
-      appId = md.global.Account.appId;
-    }
-
-    document.body.classList.toggle('inAppScope', !!appId);
+  /** 当前应用 id。门户账号走 Account.appId，和 renderContent 里的取法一致。 */
+  currentAppId(): string | undefined {
+    const { appId } = getIds(this.props);
+    return md.global.Account.isPortal ? md.global.Account.appId : appId;
   }
 
   /**
@@ -192,11 +161,12 @@ let Application = class Application extends Component<any, any> {
     // id 有无 = 应用详情还在不在 store 里。清空后 iconColor 会回落成平台蓝，
     // 那时不能拿它去覆盖已经刷上去的应用色，详见 AppThemeScope 里的说明。
     const { iconColor, id: loadedAppId } = this.props.appPkg;
-    const seed = loadedAppId ? iconColor : this.cachedIconColor();
+    const appId = this.currentAppId();
+    const seed = loadedAppId ? iconColor : getCachedAppColor(appId);
 
     return (
       <ConfigProvider theme={{ token: { colorPrimary: seed || iconColor } }}>
-        <AppThemeScope seed={seed} loaded={!!seed} />
+        <AppThemeScope seed={iconColor} loaded={!!loadedAppId} appId={appId} />
         {this.renderContent()}
       </ConfigProvider>
     );

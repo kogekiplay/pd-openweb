@@ -9,9 +9,11 @@ import externalPortalAjax from 'src/api/externalPortal';
 import projectEncryptAjax from 'src/api/projectEncrypt';
 import worksheetAjax from 'src/api/worksheet';
 import { useGlobalStore } from 'src/common/GlobalStore';
+import { AppThemeScope } from 'src/common/theme';
 import ErrorState from 'src/components/errorPage/errorState';
 import { navigateTo } from 'src/router/navigateTo';
 import { emitter, updateGlobalStoreForMingo } from 'src/utils/common';
+import type { FormControl } from 'src/utils/controlTypes';
 import { dateConvertToUserZone } from 'src/utils/project';
 import { WHOLE_SIZE } from './config/Drag';
 import { ALL_SYS } from './config/widget';
@@ -44,7 +46,6 @@ import NoTitleControlDialog from './widgetSetting/components/NoTitleControlDialo
 import VerifyModifyDialog from './widgetSetting/components/VerifyModifyDialog';
 import { verifyModifyDialog } from './widgetSetting/components/VerifyModifyDialog';
 import './index.less';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const WidgetConfig = styled.div`
   height: 100%;
@@ -692,6 +693,9 @@ export default function Container({ isDialog, ...props }) {
         </div>
       ) : (
         <WidgetConfig>
+          {/* 冷启动兜底：URL 不带 fromURL、tab 记忆也空的时候，
+              globalInfo 是唯一说得出应用身份的地方。 */}
+          <AppThemeScope appId={globalInfo.appId} />
           {!mingoIsCreatingWorksheetStatus && (
             <Header
               {...globalInfo}

@@ -1,15 +1,21 @@
+/* 【为什么头部要带一层主色】这条头栏被编辑字段 / 表单设置 / 扩展功能
+   三个页面共用（FormSet、widgetConfig、FormExtend），都是【顶层路由但属于某个应用】
+   的页面。原来是纯白，配上已经跟随主题的页签下划线，就成了「一条彩色的线浮在白板上」。
+   改成主色 12% 的淡底：一眼看得出色相，亮度还在 0.9 以上，深色正文照样清楚。
+   先试过 6%（AppPkgHeader 那几处悬停底的量级），铺满整条头栏时几乎跟白的没区别 —— 
+   小面积悬停块的强度不能直接搬到大色块上。 */
 .worksheetConfigHeader {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   font-size: 13px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--color-overlay-ink) 8%, transparent);
   padding-right: 15px;
   z-index: 10;
   height: 50px;
   line-height: 50px;
-  background-color: var(--color-background-primary);
+  background-color: color-mix(in srgb, var(--color-primary) 12%, var(--color-background-primary));
 
   .tabs {
     position: absolute;

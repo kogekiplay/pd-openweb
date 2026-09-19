@@ -4,9 +4,11 @@ import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import ErrorBoundary from 'ming-ui/components/ErrorBoundary';
 import LoadDiv from 'ming-ui/components/LoadDiv';
 import sheetAjax from 'src/api/worksheet';
+import { AppThemeScope } from 'src/common/theme';
 import ErrorState from 'src/components/errorPage/errorState';
 import Header from 'src/components/worksheetConfigHeader';
 import { navigateToApp } from 'src/pages/widgetConfig/util/data';
+import type { WorksheetInfo } from 'src/pages/worksheet/types';
 import { getTranslateInfo } from 'src/utils/app';
 import type { FormControl } from 'src/utils/controlTypes';
 import { replaceControlsTranslateInfo } from 'src/utils/translate';
@@ -32,7 +34,7 @@ export default function FormSet(props) {
   const [loading, setLoading] = useState(true);
   const [worksheetControls, setWorksheetControls] = useState([]);
   const [worksheetRuleControls, setWorksheetRuleControls] = useState([]);
-  const [worksheetInfo, setWorksheetInfo] = useState({});
+  const [worksheetInfo, setWorksheetInfo] = useState<WorksheetInfo>({});
   const [noRight, setNoRight] = useState(false);
   const mountedRef = useRef(false);
   const requestIdRef = useRef(0);
@@ -138,6 +140,9 @@ export default function FormSet(props) {
 
   return (
     <div className="columnRulesWrap">
+      {/* 冷启动兜底：直接把 /worksheet/formSet/edit/:worksheetId 贴进新标签页时，
+          URL 和 tab 记忆里都没有应用身份，只有这里的 worksheetInfo 说得出。 */}
+      <AppThemeScope appId={worksheetInfo.appId} />
       <Header
         worksheetId={worksheetId}
         worksheetName={worksheetName}

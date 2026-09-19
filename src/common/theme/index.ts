@@ -17,4 +17,9 @@ export {
   resetToPlatformTheme,
 } from './applyThemeVars';
 export type { ElementLike } from './applyThemeVars';
-export { default as AppThemeScope } from './AppThemeScope';
+export {
+  default as AppThemeScope,
+  getAppIdFromLocation,
+  getCachedAppColor,
+  syncThemeFromLocation,
+} from './AppThemeScope';
