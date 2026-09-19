@@ -24,8 +24,8 @@ const Con = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  height: 44px;
-  padding: 0 12px;
+  height: 48px;
+  padding: 0 16px;
   box-sizing: border-box;
   border-top: 1px solid var(--color-border-secondary);
   background: var(--color-background-card);
@@ -48,6 +48,7 @@ function SheetFooter(props) {
   return (
     <Con className="sheetFooter">
       <Pagination
+        layout="bar"
         disabled={!!get(base, 'forcePageSize')}
         abnormalMode={pageCountAbnormal}
         onlyShowCount={getGroupControlId(view)}
