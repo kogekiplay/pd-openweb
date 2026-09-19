@@ -30,7 +30,7 @@ import OpinionTemplate from './OpinionTemplate';
 
 const GraduallyMemberBox = styled.div`
   padding: 5px 10px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   height: 36px;
   display: flex;
   align-items: center;
@@ -47,7 +47,7 @@ const GraduallyMemberBox = styled.div`
 const CustomMessageBox = styled.div`
   height: 36px;
   background: var(--color-background-secondary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   align-items: center;
   padding: 0 12px;
   .icon-trash:hover {
@@ -1350,9 +1350,11 @@ export default class Approval extends Component<any, any> {
                       <div className="Font13 bold mTop25">{_l('认证等级')}</div>
                       <Dropdown
                         className="flowDropdown mTop10"
-                        data={data.authTypeList.map(({ value, disabled }: { disabled?: boolean; [key: string]: any }) => {
-                          return { value, text: authTypeListText[value], disabled };
-                        })}
+                        data={data.authTypeList.map(
+                          ({ value, disabled }: { disabled?: boolean; [key: string]: any }) => {
+                            return { value, text: authTypeListText[value], disabled };
+                          },
+                        )}
                         value={
                           data.auth.passTypeList
                             .concat(data.auth.overruleTypeList)

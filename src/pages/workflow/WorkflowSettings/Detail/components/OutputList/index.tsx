@@ -31,7 +31,7 @@ const OutputListItem = styled.div(
     line-height: 36px;
     border-width: 1px;
     border-style: solid;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     border-color: var(--color-border-primary);
     padding: 0 10px;
     &:focus {
@@ -219,7 +219,12 @@ export default class OutputList extends Component<any, any> {
   /**
    * 修改输出参数
    */
-  updateOutputParameters(action: string, value, { controlId, type, dataSource }: { controlId?: string; [key: string]: any }, isBlur?) {
+  updateOutputParameters(
+    action: string,
+    value,
+    { controlId, type, dataSource }: { controlId?: string; [key: string]: any },
+    isBlur?,
+  ) {
     const { outputType, data, updateSource } = this.props;
     const { outputs } = data;
 

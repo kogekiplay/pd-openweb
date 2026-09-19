@@ -13,7 +13,7 @@ const PreviewBox = styled.div`
   padding: 10px;
   background: var(--color-background-secondary);
   border: 1px solid var(--color-border-primary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
 `;
 
 export default ({

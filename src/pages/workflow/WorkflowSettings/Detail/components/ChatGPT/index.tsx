@@ -172,7 +172,7 @@ const ListContent = styled.div`
 const UseBtn = styled.span`
   cursor: pointer;
   padding: 0 16px;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   display: inline-flex;
   height: 32px;
   align-items: center;

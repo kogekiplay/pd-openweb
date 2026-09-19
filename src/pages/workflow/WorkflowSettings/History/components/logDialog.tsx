@@ -1,7 +1,6 @@
 import React, { Fragment, useEffect, useMemo, useState } from 'react';
 import JsonView from '@mingdaocom/json-view';
 import cx from 'classnames';
-import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import moment from 'moment';
 import styled from 'styled-components';
@@ -9,6 +8,7 @@ import { Dialog, FunctionWrap, LoadDiv, ScrollView } from 'ming-ui';
 import flowNode from '../../../api/flowNode';
 import GetHelp from 'src/components/GetHelp';
 import { formatNumberThousand } from 'src/utils/control';
+import copy from 'src/utils/copyToClipboard';
 import { ACTION_ID, AGENT_TOOLS, APP_TYPE } from '../../enum';
 import { getToolName } from '../../utils';
 
@@ -50,7 +50,7 @@ const Content = styled.div`
   .scrollViewContainer {
     padding: 20px 24px 20px 21px;
     background: var(--color-background-secondary);
-    border-radius: 0 0 4px 0;
+    border-radius: 0 0 var(--radius-sm) 0;
   }
   .contentMessage {
     border-radius: 6px;

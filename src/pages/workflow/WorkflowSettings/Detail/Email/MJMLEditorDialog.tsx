@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import copy from 'src/utils/copyToClipboard';
 import styled from 'styled-components';
 import { Dialog, LoadDiv, TagTextarea } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { emitter } from 'src/utils/common';
+import copy from 'src/utils/copyToClipboard';
 import { getDefaultMjml, getMjmlPreviewHtml, getMjmlPreviewTheme } from './mjmlUtils';
 
 const DialogContent = styled.div`
@@ -25,7 +25,7 @@ const DialogContent = styled.div`
   display: flex;
   overflow: hidden;
   border: 1px solid var(--color-border-primary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   .mjmlEditorPane,
   .mjmlPreviewPane {
     width: 50%;

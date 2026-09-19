@@ -13,7 +13,7 @@ import './index.less';
 const PluginIcon = styled.div`
   width: 36px;
   height: 36px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   color: var(--color-white);
   font-size: 22px;
   display: inline-flex;

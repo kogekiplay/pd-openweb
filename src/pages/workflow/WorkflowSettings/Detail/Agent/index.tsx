@@ -1,8 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import { Checkbox, Dialog, Icon, LoadDiv, PriceTip, ScrollView, Support, SvgIcon, Switch } from 'ming-ui';
@@ -63,7 +63,7 @@ const TOOLS_ITEM = styled.div`
   display: flex;
   align-items: center;
   padding: 12px 16px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-primary);
   margin-top: 12px;
   &:hover {
@@ -101,7 +101,7 @@ const TOOLS_ITEM = styled.div`
 const MORE_TOOLS_LIST = styled.div`
   background: var(--color-background-primary);
   box-shadow: 0 3px 6px 1px rgba(0, 0, 0, 0.16);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   width: 752px;
   padding: 6px 0;
   .desc {
@@ -143,7 +143,7 @@ const SHEET_LIST = styled.div`
   padding: 0 15px 0 12px;
   min-height: 48px;
   background: var(--color-background-secondary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   font-size: 0;
   &.red {
     color: var(--color-error);
@@ -164,7 +164,7 @@ const AI_ACTIONS_BOX = styled.div`
   height: 40px;
   border: 1px solid var(--color-border-primary);
   border-top-width: 0;
-  border-radius: 0 0 4px 4px;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
   margin-right: 36px;
   .ai_actions_checkbox {
     margin-left: 10px;

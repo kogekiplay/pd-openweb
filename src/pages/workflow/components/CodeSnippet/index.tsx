@@ -19,7 +19,7 @@ const EditDialogBox = styled(Dialog)`
     padding: 9px 12px;
     height: 36px;
     line-height: 18px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     &:focus {
       border-color: var(--color-primary);
     }
@@ -112,7 +112,7 @@ const DialogBox = styled(Dialog)`
           width: 3px;
           height: 18px;
           background: var(--color-primary);
-          border-radius: 4px;
+          border-radius: var(--radius-sm);
           position: absolute;
           content: '';
           position: absolute;
@@ -133,7 +133,7 @@ const DialogBox = styled(Dialog)`
       .codeSnippetOperator {
         width: 28px;
         height: 28px;
-        border-radius: 4px;
+        border-radius: var(--radius-sm);
         color: var(--color-text-secondary);
         margin-right: 4px;
         display: none;

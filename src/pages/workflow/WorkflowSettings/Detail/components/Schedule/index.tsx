@@ -27,7 +27,7 @@ const Box = styled.div`
   background: var(--color-background-tertiary);
   padding: 10px 12px;
   margin-top: 10px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   position: relative;
   .icon {
     position: absolute;
@@ -38,7 +38,7 @@ const Box = styled.div`
 
 const EndBox = styled.div`
   padding: 16px;
-  border-radius: 3px 3px 3px 3px;
+  border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
   border: 1px solid var(--color-border-secondary);
 `;
 

@@ -22,7 +22,7 @@ const List = styled.div`
   }
   .fieldName {
     padding: 5px 12px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-tertiary);
     height: 36px;
     line-height: 36px;

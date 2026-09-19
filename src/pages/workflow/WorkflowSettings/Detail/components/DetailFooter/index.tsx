@@ -22,7 +22,7 @@ const Footer = styled.div`
     line-height: 36px;
     display: inline-block;
     padding: 0 32px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     font-size: 14px;
     box-sizing: border-box;

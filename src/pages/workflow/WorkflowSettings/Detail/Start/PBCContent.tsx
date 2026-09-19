@@ -8,13 +8,13 @@ import { Tooltip } from 'ming-ui/antd-components';
 import flowNode from '../../../api/flowNode';
 import homeAppAjax from 'src/api/homeApp';
 import { pathCompletion } from 'src/utils/common';
+import type { FormControl } from 'src/utils/controlTypes';
 import { FIELD_TYPE_LIST } from '../../enum';
 import { checkJSON } from '../../utils';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const GenerateJSONBox = styled.textarea`
   padding: 12px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   height: 340px;
   overflow: auto;
   width: 100%;
@@ -170,7 +170,12 @@ let cacheItem = {};
 export default ({ data, updateSource, isIntegration, isPlugin }) => {
   const [selectControlId, setControlId] = useState('');
 
-  const updateControls = (action: string, value, { controlId, type, dataSource }: Partial<FormControl>, isBlur?: boolean) => {
+  const updateControls = (
+    action: string,
+    value,
+    { controlId, type, dataSource }: Partial<FormControl>,
+    isBlur?: boolean,
+  ) => {
     const controls = _.cloneDeep(data.controls);
 
     controls.forEach(item => {
@@ -210,7 +215,13 @@ export default ({ data, updateSource, isIntegration, isPlugin }) => {
     updateSource({ controls });
   };
 
-  const updateOptions = (action: string, value: string, { controlId, options }: { controlId?: string; [key: string]: any }, index: number, isBlur?: boolean) => {
+  const updateOptions = (
+    action: string,
+    value: string,
+    { controlId, options }: { controlId?: string; [key: string]: any },
+    index: number,
+    isBlur?: boolean,
+  ) => {
     if (isBlur && !!options.find((o, i) => o[action] === value && i !== index)) {
       value =
         value +

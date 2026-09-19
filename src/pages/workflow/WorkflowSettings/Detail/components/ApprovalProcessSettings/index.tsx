@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Checkbox, Dropdown, Icon, Menu, MenuItem, Radio, SortableList } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -47,7 +47,7 @@ const SortableItemBox = styled.div`
     height: 36px;
     padding: 0 10px;
     border: 1px solid var(--color-border-tertiary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
   }
   .icon-trash {
     &:hover {

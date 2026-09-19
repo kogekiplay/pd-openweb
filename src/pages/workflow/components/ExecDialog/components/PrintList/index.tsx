@@ -14,7 +14,7 @@ import { getFeatureStatus } from 'src/utils/project';
 const MenuBox = styled.div`
   max-width: 280px;
   padding: 5px 0;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   background: var(--color-background-primary);
   box-shadow: var(--shadow-lg);
   max-height: 500px;

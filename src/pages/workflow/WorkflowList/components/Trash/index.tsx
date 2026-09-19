@@ -37,7 +37,7 @@ const Wrap = styled.div`
       width: 36px;
       min-width: 36px;
       height: 36px;
-      border-radius: 5px;
+      border-radius: var(--radius-sm);
       display: flex;
       align-items: center;
       justify-content: center;
