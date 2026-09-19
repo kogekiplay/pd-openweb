@@ -1,5 +1,6 @@
 import agentAjax from 'src/api/agent';
 import { withCaptcha as withAnonymousCaptcha } from './anonymous';
+import type { AgentStreamEvent, ChatAttachmentRequest } from './types';
 import { extractEmbedSegments, isSilentEmbedSegment } from './ui/embed/protocol';
 import { splitWorkPartsFromText } from './workParts';
 
@@ -141,7 +142,11 @@ function pickArtifactReferenceFrom(source, { allowId = false, fallback = {} } = 
   };
 }
 
-function pickArtifactReferenceFromText(text, fallback: Record<string, any> = {}) {
+// fallback 里只取 name / appName / versionLabel 补进结果
+function pickArtifactReferenceFromText(
+  text,
+  fallback: { name?: string; appName?: string; versionLabel?: string } = {},
+) {
   if (!text) return null;
   const artifactId = text.match(/art-[a-z0-9-]+/i)?.[0];
   const versionId = text.match(/ver-[a-z0-9-]+/i)?.[0];
@@ -423,7 +428,7 @@ export async function fetchAgentSessionMessages(
     includeUsage?: boolean;
     includeAnonymousPlanArtifact?: boolean;
     /** 已经拉过的原始消息，传了就不再请求（官网 plan 页历史门控复用） */
-    rawItems?: any[];
+    rawItems?: Record<string, unknown>[];
   } = {},
 ) {
   const rawList = Array.isArray(rawItems)
@@ -727,14 +732,14 @@ export interface AgentStreamRequest {
   /** 是否强制重新路由 agent；钉住 agent 时为 false */
   forceReroute?: boolean;
   forceRefresh?: boolean;
-  attachments?: any[];
-  /** 搭建上下文（plan 派生字段 + 对话上下文） */
-  context?: any;
+  attachments?: ChatAttachmentRequest[];
+  /** 搭建上下文（plan 派生字段 + 对话上下文）。键随场景变，交给后端原样使用 */
+  context?: Record<string, unknown>;
   artifactId?: string;
   /** 基于哪个版本继续改 */
   basedOnVersionId?: string;
-  /** 计划漂移 / 重建确认弹层的回执 */
-  confirmation?: any;
+  /** 计划漂移 / 重建确认弹层的回执：哪一步、选了什么 */
+  confirmation?: { stepId?: string; action?: string };
   captchaTicket?: string;
   captchaRandstr?: string;
 }
@@ -755,7 +760,7 @@ export async function requestAgentStream(
     captchaTicket,
     captchaRandstr,
   }: AgentStreamRequest,
-  { onEvent, enableCaptcha = false }: { onEvent?: (event: any) => void; enableCaptcha?: boolean } = {},
+  { onEvent, enableCaptcha = false }: { onEvent?: (event: AgentStreamEvent) => void; enableCaptcha?: boolean } = {},
   externalSignal?: AbortSignal,
 ) {
   const abortController = new AbortController();

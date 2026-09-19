@@ -82,13 +82,23 @@ export interface ChatMention {
  */
 export interface AgentStreamEvent {
   eventName?: string;
+  /** 后端路由到的 agent 名；ChatPanel 据此判断本轮走的是哪条链 */
+  agentName?: string;
   payload?: {
     /** text-delta / reasoning-delta 的增量文本 */
     delta?: string;
+    /**
+     * 形状随 eventName 变。【这里保持 any 而不是 unknown，量过】——
+     * 消费点直接读 data.skipped / data.path / data.stepId 等十几个不同字段，
+     * 换成 unknown 要在 ChatPanel 里加一圈收窄，收益不抵改动量。
+     * 真要收得按 eventName 做判别联合，那是本文件开头说的那件独立工程。
+     */
     data?: any;
-    [key: string]: any;
+    /** error 事件带的两项，ChatPanel 直接拿去渲染贴底拦截卡 */
+    errorCode?: string;
+    errorMessage?: string;
+    [key: string]: unknown;
   };
-  [key: string]: any;
 }
 
 export interface ChatMessagePart {
@@ -98,21 +108,24 @@ export interface ChatMessagePart {
   text?: string;
   /** kind = 'embed' 时的后缀标识与解析后的数据 */
   suffix?: string;
-  data?: any;
+  data?: unknown;
 
   id?: string;
   name?: string;
   title?: string;
   status?: string;
-  error?: any;
-  /** 工具调用的入参与结果 */
-  input?: any;
-  output?: any;
-  items?: any[];
+  error?: { message?: string; code?: string | number; [key: string]: unknown };
+  /** 工具调用的入参与结果（已被 summarizeArgs / summarizeResult 压成可读形式） */
+  input?: string;
+  output?: string;
+  /** kind = 'attachment' 时是附件列表，其余 kind 各有各的条目形状 */
+  items?: unknown[];
   children?: ChatMessagePart[];
-  steps?: any[];
+  /** kind = 'step' / 'work' 的子步骤 */
+  steps?: unknown[];
   stepId?: string;
-  options?: any[];
+  /** 提问卡的候选项 */
+  options?: unknown[];
   open?: boolean;
   /** 本段是否被用户中断 */
   aborted?: boolean;
