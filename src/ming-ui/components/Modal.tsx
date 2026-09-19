@@ -178,17 +178,20 @@ export default function MdModal(props) {
     };
   }, []);
   if (props.type === 'fixed') {
+    // 【32 是单边留白，不是总留白】上下各要一个，所以一律减两次。
+    // 原来非 middle 的两个分支只减了一次 —— 实测 861 高的视口里弹层高 829，
+    // 上面留 32、下面贴死到 0，看起来就是「上面留空了底下没留空」。
     modalProps.style.height = window.innerHeight - 32 * 2;
     modalProps.className = modalProps.className + ' fixed';
+
     if (verticalAlign) {
       modalProps.style.verticalAlign = verticalAlign;
+      // 【高度对了还不够，位置也得摆对】verticalAlign:'bottom' 会把弹层压到
+      // 行盒底部：高 797 的弹层在 861 的视口里落成「上 64、下 0」。
+      // 给它一个下外边距，参与行盒高度计算之后就是上下各 32。
       if (verticalAlign !== 'middle') {
-        modalProps.style.height = window.innerHeight - 32;
+        modalProps.style.marginBottom = 32;
       }
-    }
-
-    if (allowScale && isLarge) {
-      modalProps.style.height = window.innerHeight - 32;
     }
   }
 

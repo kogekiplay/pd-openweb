@@ -1,3 +1,30 @@
+/* ================= 键盘聚焦环 =================
+  【为什么这里要接管】antd 的 :focus-visible 轮廓颜色是它自己 CSS-in-JS
+  按 ConfigProvider 的 token 算出来的。而本仓有一批弹层是【命令式挂载】的
+  （ming-ui/functions/* 那些 dialogXxx），它们不在 ConfigProvider 的 React 树里，
+  拿到的是 antd 默认蓝 —— 实测「创建记录」弹层打开时自动聚焦到关闭按钮，
+  轮廓是 antd 默认调色板的 blue-3，而同一个弹层里的提交按钮是橙的：
+  CSS 变量那条路走得通，antd 自己算的那条走不通。
+  （这里【不写那个十六进制值】—— check:colors 的口径连注释都算。）
+
+  改用 --color-primary-focus-outer（主题引擎写在 documentElement 上，
+  跟挂载位置无关）。顺带把 3px 硬环收成 2px、圆角跟随控件本身 ——
+  聚焦环是无障碍必需品，不能删，但没必要长成一个方框。
+
+  !important 是本文件的既定手段：antd 的运行时样式在我们之后进 <head>。
+*/
+:focus-visible,
+.ant-btn:focus-visible,
+.ant-modal-close:focus-visible,
+.ant-input:focus-visible,
+.ant-select-selector:focus-visible,
+.ant-switch:focus-visible,
+.ant-checkbox-input:focus-visible + .ant-checkbox-inner {
+  outline: 2px solid var(--color-primary-focus-outer) !important;
+  outline-offset: 2px !important;
+  border-radius: var(--radius-sm);
+}
+
 .ant-drawer {
   /* antd 6 把 .ant-drawer-content 换成了 .ant-drawer-section
      （v5: .ant-drawer-content-wrapper > .ant-drawer-content > [header, body]
