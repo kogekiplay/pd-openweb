@@ -41,7 +41,7 @@ const Con = styled.div`
     display: inline-block;
     text-align: center;
     order: 1;
-    margin-left: 6px !important;
+    margin-left: 12px !important;
   }
   .moreOperate {
     order: 2;
@@ -69,9 +69,9 @@ const Con = styled.div`
     text-align: center;
     /* 【绝对定位不吃 flex 的 order，得显式给 left】
        表头这个全选框要和数据行的序号对齐到同一个中心：
-       序号是 left:6 宽 16（中心 14），所以这里也给 left:6、宽 16。
+       序号是 left:12 宽 16（中心 20），所以这里也给 left:12、宽 16。
        不给的话它落在静态位置上，中心会偏右 8px。 */
-    left: 6px;
+    left: 12px;
     width: 16px;
     .checkboxCon {
       position: relative;

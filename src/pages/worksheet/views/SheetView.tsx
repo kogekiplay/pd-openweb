@@ -1356,7 +1356,7 @@ class TableViewBase extends React.Component<any, any> {
     // classic 下渲染，非 classic 的数据行最后 30px 全是空的（实测 88px 里空 35px）。
     // 现在逐项加：有什么才占什么。配合 RowHead 里把 ⋯ 排到序号右边，
     // 序号与表头复选框对齐到同一个左起点。
-    let rowHeadWidth = 6; // 左内边距
+    let rowHeadWidth = 12; // 左内边距：6px 时序号贴着卡片左边缘太紧
 
     if (showNumber || this.hasBatch) {
       rowHeadWidth += numberWidth + 4;
