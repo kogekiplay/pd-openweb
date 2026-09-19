@@ -1302,6 +1302,28 @@ class TableViewBase extends React.Component<any, any> {
     return !get(window, 'shareState.shareId') && md.global.Account.accountId && !this.chartId;
   }
 
+  /**
+   * 表头那个「你变更了表格样式，是否保存？」的保存图标要不要显示。
+   *
+   * 【为什么从 render 里抽出来】rowHeadWidth 也得知道它：这个图标是【额外一格】，
+   * 只在改过列宽/列显隐之后才出现。行首宽度按「渲染了什么就占多少」算之后
+   * （见 rowHeadWidth），平时只够放下全选框和它的下拉箭头，
+   * 图标一出来就压在全选框上 —— 张奇拖完列宽实测到的重叠。
+   */
+  get layoutChangeVisible() {
+    const { isCharge, view, viewId, sheetViewConfig } = this.props;
+    const sheetHiddenColumns = get(sheetViewConfig, 'sheetHiddenColumns') || [];
+    const localLayoutUpdateTime = getLRUWorksheetConfig('SHEET_LAYOUT_UPDATE_TIME', viewId);
+
+    return !!(
+      isCharge &&
+      ((!this.showColumnControl ? !!sheetHiddenColumns.length : false) ||
+        Number(localLayoutUpdateTime) >
+          Number(get(view, 'advancedSetting.layoutupdatetime') || get(view, 'advancedSetting.layoutUpdateTime') || 0) ||
+        !!getLRUWorksheetConfig('WORKSHEET_VIEW_COLUMN_STYLES', viewId))
+    );
+  }
+
   get highLightRows() {
     try {
       const rows: RecordRow[] = get(this.props, 'sheetViewData.rows');
@@ -1368,6 +1390,11 @@ class TableViewBase extends React.Component<any, any> {
 
     if (this.tableType === 'classic') {
       rowHeadWidth += 24 + 4; // 展开记录
+    }
+
+    // 保存列样式的图标只在表头那一格，但列宽是整列共用的，所以这里也要算上
+    if (this.layoutChangeVisible) {
+      rowHeadWidth += 16 + 6;
     }
 
     return rowHeadWidth + 6; // 右内边距
@@ -1645,7 +1672,6 @@ class TableViewBase extends React.Component<any, any> {
       printCharge,
     } = this.props;
     const { allWorksheetIsSelected, sheetSelectedRows, sheetHiddenColumns } = sheetViewConfig;
-    const localLayoutUpdateTime = getLRUWorksheetConfig('SHEET_LAYOUT_UPDATE_TIME', viewId);
     const showNumber = (get(view, 'advancedSetting.showno') || '1') === '1' && !isTreeTableView;
     const showOperate = (get(view, 'advancedSetting.showquick') || '1') === '1';
 
@@ -1766,13 +1792,7 @@ class TableViewBase extends React.Component<any, any> {
         columns={this.columns}
         isDraft={isDraft}
         printCharge={printCharge}
-        layoutChangeVisible={
-          isCharge &&
-          ((!this.showColumnControl ? !!sheetHiddenColumns.length : false) ||
-            Number(localLayoutUpdateTime) >
-              Number(view.advancedSetting.layoutupdatetime || view.advancedSetting.layoutUpdateTime || 0) ||
-            !!getLRUWorksheetConfig('WORKSHEET_VIEW_COLUMN_STYLES', viewId))
-        }
+        layoutChangeVisible={this.layoutChangeVisible}
       />
     );
   };

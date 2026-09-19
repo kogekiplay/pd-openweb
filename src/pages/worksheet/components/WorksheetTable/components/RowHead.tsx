@@ -469,14 +469,21 @@ export default function RowHead(props) {
       {!readonly && rowIndex === -1 && (
         <Fragment>
           {layoutChangeVisible && (
+            /* 【排到行首最右，不能用它自带的 left:12】那个位置现在是全选框的
+               —— 全选框要和数据行的序号对齐到同一个左起点（见 Con 里的 .topCheckbox）。
+               两个都 absolute 到 left:12 就是纯重叠，张奇拖完列宽实测到的现象。
+               行首宽度由 SheetView 的 rowHeadWidth 为它多留了 16+6。 */
             <ChangeSheetLayout
               isSheetView
+              style={{ left: 'auto', right: 6 }}
               onSave={saveSheetLayout}
               onCancel={resetSheetLayout}
               applyToAllChecked={getApplyToAllChecked(worksheetInfo, viewId)}
             />
           )}
-          <div className="topCheckbox" style={{ right: tableType === 'classic' ? 46 : 30, width: numberWidth }}>
+          {/* 不再传 right：Con 里给了 left:12，同时给 left 和 right 属于过约束，
+              浏览器会丢掉 right，留着只会让人以为它还在起作用。 */}
+          <div className="topCheckbox" style={{ width: numberWidth }}>
             {hasBatch && (
               <div className="checkboxCon mTop3">
                 <Checkbox

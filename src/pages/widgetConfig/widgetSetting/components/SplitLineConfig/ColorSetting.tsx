@@ -31,10 +31,11 @@ const ColorBox = styled.div`
 `;
 
 export default function ColorSetting(props) {
-  const { defaultValue, value, onChange } = props;
+  const { defaultValue, value, onChange, themeFollow } = props;
 
   return (
     <ColorPicker
+      themeFollow={themeFollow}
       dynamicColor
       popupAlign={{
         points: ['tl', 'bl'],

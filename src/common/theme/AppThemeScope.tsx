@@ -19,12 +19,18 @@ import { applyAppTheme, resetToPlatformTheme } from './applyThemeVars';
  * 拿不到 appPkg，主题就停在平台蓝。它们的共同点是 appId【就写在 URL 里】，
  * 只是位置不同：
  *   · /app/{appId}/...                                 路径段
+ *   · /worksheetapi/{appId}、/printForm/{appId}/...     别的前缀 + 同样的路径段
  *   · /worksheet/field/edit?fromURL=/app/{appId}/...    查询串里的回跳地址
  *   · ?appId={appId}                                    查询串直给
  * 按 URL 认领比「记住上次进过哪个应用」可靠：后者在同一标签页里刷新
  * 平台页（比如 /admin）时会把应用色错误地带过去。
+ *
+ * 【为什么要把前缀一个个列出来，不直接认「路径里的任意 36 位 uuid」】
+ * 同样长相的 uuid 在别的路由里是【别的东西】—— 后台管理那批路由的第一段是
+ * projectId（组织 id），拿它去读 appCache 要么读不到、要么读到同 id 的别的东西。
+ * 加新路由时在这里补前缀即可，比放宽正则安全。
  */
-const APP_ID_IN_PATH = /\/app\/([0-9a-f-]{36})(?:\/|$)/i;
+const APP_ID_IN_PATH = /\/(?:app|worksheetapi|printForm)\/([0-9a-f-]{36})(?:\/|$)/i;
 
 export function getAppIdFromLocation(): string | undefined {
   const inPath = APP_ID_IN_PATH.exec(location.pathname);

@@ -3,10 +3,10 @@ import { HexAlphaColorPicker, HexColorInput, RgbaColorPicker } from 'react-color
 import { generate } from '@ant-design/colors';
 import { InputNumber } from 'antd';
 import { TinyColor } from '@ctrl/tinycolor';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Dropdown } from 'ming-ui';
 import { getColorValue } from 'src/utils/controlCommon';
@@ -123,6 +123,7 @@ class ColorPicker extends Component<any, any> {
     isPopupBody: PropTypes.bool, // true 挂载在body false 挂载在当前元素
     handleClose: PropTypes.func, // 弹层关闭回调函数
     sysColor: PropTypes.bool, // 左侧系统预设 默认false
+    themeFollow: PropTypes.bool, // 左侧多一组「跟随主题色」，选中后存的是 var(--color-primary)
     themeColor: PropTypes.string, // 主题色
     lightBefore: false, // 是否浅色在前
     disabled: false, //是否禁用
@@ -272,6 +273,7 @@ class ColorPicker extends Component<any, any> {
       className,
       notTrigger,
       sysColor,
+      themeFollow,
       themeColor,
       fromWidget,
       popupAlign = {},
@@ -294,6 +296,19 @@ class ColorPicker extends Component<any, any> {
       <div className="colorPickerCon">
         {sysColor && (
           <div className="commonColorPickerWrap">
+            {/* 【跟它下面的「主题」分组不是一回事】那一组给的是把当前主题色
+                【拍扁成十六进制】存下来，主题色再变就跟不上了（它存的是
+                DARK_COLOR/LIGHT_COLOR 这类符号值，含义由各调用点自己解释）。
+                这一组存的是 var(--color-primary) 字面串，渲染时才解析 ——
+                以后应用换色，用了它的地方会一起变。 */}
+            {themeFollow && (
+              <React.Fragment>
+                <div className="title">
+                  <span className="mLeft4">{_l('跟随主题色')}</span>
+                </div>
+                {this.renderSysColors(true, ['var(--color-primary)'])}
+              </React.Fragment>
+            )}
             {themeColor && (
               <React.Fragment>
                 <div className="title" onClick={() => this.setState({ themeExpand: !themeExpand })}>
@@ -435,7 +450,12 @@ class ColorPicker extends Component<any, any> {
           getPopupContainer={this.getPopupContainer}
           popup={popup}
         >
-          <span className="ColorPicker-input-container" ref={trigger => { this.trigger = trigger; }}>
+          <span
+            className="ColorPicker-input-container"
+            ref={trigger => {
+              this.trigger = trigger;
+            }}
+          >
             {cloneElement(
               children ? (
                 children
