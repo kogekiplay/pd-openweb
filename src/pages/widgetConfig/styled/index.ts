@@ -252,9 +252,7 @@ export const SelectFieldsWrap = styled.div`
   }
   padding: 6px 0;
   border-radius: 3px;
-  box-shadow:
-    0 4px 20px rgba(0, 0, 0, 0.13),
-    0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-lg);
   width: 100%;
   border: 1px solid var(--color-border-primary);
   background-color: var(--color-background-primary);

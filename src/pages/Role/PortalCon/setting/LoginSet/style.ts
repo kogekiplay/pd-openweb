@@ -66,7 +66,7 @@ export const Wrap = styled.div`
       }
     }
     &:hover {
-      background: rgba(33, 150, 243, 0.1);
+      background: color-mix(in srgb, var(--color-primary) 10%, transparent);
       border: 2px dashed var(--color-primary);
       .delete {
         display: block;

@@ -6,6 +6,7 @@ import { Dialog, Icon } from 'ming-ui';
 import ErrorBoundary from 'ming-ui/components/ErrorBoundary';
 import privateGuide from 'src/api/privateGuide';
 import preall from 'src/common/preall';
+import { syncThemeFromLocation } from 'src/common/theme';
 import ChatList from 'src/pages/chat/containers/ChatList';
 import ChatPanel from 'src/pages/chat/containers/ChatPanel';
 import { ROUTE_CONFIG_PORTAL } from 'src/pages/Portal/config';
@@ -33,6 +34,18 @@ class App extends Component<any, any> {
     window.reactRouterHistory = props.history;
     this.genRouteComponent = genRouteComponent();
     !window.isPublicApp && socketInit();
+  }
+
+  componentDidUpdate(prevProps) {
+    // 【主题由路由驱动】App 外层套了 withRouter，导航时会拿到新的 location。
+    // 在这里按 URL 重算，跳到「属于应用但不在 Application 路由树里」的页面
+    // （字段编辑、表单设计…）时主题才不会掉回平台色。
+    if (
+      prevProps.location.pathname !== this.props.location.pathname ||
+      prevProps.location.search !== this.props.location.search
+    ) {
+      syncThemeFromLocation();
+    }
   }
 
   componentDidMount() {

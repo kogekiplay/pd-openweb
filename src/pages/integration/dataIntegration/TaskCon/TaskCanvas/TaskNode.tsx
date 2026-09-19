@@ -1,8 +1,8 @@
 import React, { Component, createRef } from 'react';
 import { shallowEqual } from 'react-redux';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import SVG from 'svg.js';
 import { Icon, Menu, MenuItem, UpgradeIcon } from 'ming-ui';
@@ -43,8 +43,8 @@ const Wrap = styled.div`
     padding: 0 12px 0 0;
     &.isCurrent {
       box-shadow:
-        0 1px 2px rgba(33, 150, 243, 0.16),
-        0 2px 6px rgba(33, 150, 243, 0.5);
+        0 1px 2px color-mix(in srgb, var(--color-primary) 16%, transparent),
+        0 2px 6px color-mix(in srgb, var(--color-primary) 50%, transparent);
     }
     &.isErr {
       border: 1px solid var(--color-error);

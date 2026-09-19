@@ -31,13 +31,28 @@ const Con = styled.div`
   > * {
     flex: 0 0 auto;
   }
+  /* 【序号/复选框排在最左，⋯ 排到它右边】
+     原来顺序是 [⋯][序号]，于是序号被 ⋯ 那 24px 顶到 42px 处浮在列中间，
+     而表头那行是 [占位24][复选框][下拉]，数据行是 [⋯][序号]，
+     两者从不共存、宽度却按叠加算 —— 88px 里有 35px 是空的。
+     改成 ⋯ 排在序号右边之后，序号与表头复选框对齐到同一个左起点，
+     列宽由「序号 + ⋯」决定，宽度见 SheetView 的 rowHeadWidth。 */
   .numberCon {
     display: inline-block;
     text-align: center;
+    order: 1;
+    margin-left: 12px !important;
   }
   .moreOperate {
-    margin-left: 8px;
+    order: 2;
+    margin-left: 4px;
     visibility: hidden;
+  }
+  .topCheckbox {
+    order: 1;
+  }
+  .openRecord {
+    order: 3;
   }
   .checkbox {
     margin-top: 5px;
@@ -52,6 +67,12 @@ const Con = styled.div`
   .topCheckbox {
     position: absolute;
     text-align: center;
+    /* 【绝对定位不吃 flex 的 order，得显式给 left】
+       表头这个全选框要和数据行的序号对齐到同一个中心：
+       序号是 left:12 宽 16（中心 20），所以这里也给 left:12、宽 16。
+       不给的话它落在静态位置上，中心会偏右 8px。 */
+    left: 12px;
+    width: 16px;
     .checkboxCon {
       position: relative;
       display: inline-block;
@@ -448,14 +469,21 @@ export default function RowHead(props) {
       {!readonly && rowIndex === -1 && (
         <Fragment>
           {layoutChangeVisible && (
+            /* 【排到行首最右，不能用它自带的 left:12】那个位置现在是全选框的
+               —— 全选框要和数据行的序号对齐到同一个左起点（见 Con 里的 .topCheckbox）。
+               两个都 absolute 到 left:12 就是纯重叠，张奇拖完列宽实测到的现象。
+               行首宽度由 SheetView 的 rowHeadWidth 为它多留了 16+6。 */
             <ChangeSheetLayout
               isSheetView
+              style={{ left: 'auto', right: 6 }}
               onSave={saveSheetLayout}
               onCancel={resetSheetLayout}
               applyToAllChecked={getApplyToAllChecked(worksheetInfo, viewId)}
             />
           )}
-          <div className="topCheckbox" style={{ right: tableType === 'classic' ? 46 : 30, width: numberWidth }}>
+          {/* 不再传 right：Con 里给了 left:12，同时给 left 和 right 属于过约束，
+              浏览器会丢掉 right，留着只会让人以为它还在起作用。 */}
+          <div className="topCheckbox" style={{ width: numberWidth }}>
             {hasBatch && (
               <div className="checkboxCon mTop3">
                 <Checkbox

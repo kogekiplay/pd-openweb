@@ -13,6 +13,11 @@
   --color-primary-focus-outer: rgba(42, 130, 255, 0.5); /* 暗底上提高到 ~50% 更可见 */
   --color-primary-transparent: rgba(42, 130, 255, 0.2); /* 暗底上提高到 ~20% 更可见 */
   --color-primary-transparent-light: rgba(42, 130, 255, 0.12); /* 暗底上提高到 ~12% 更可见 */
+  /* 淡底 / 淡边框：暗色下是深蓝而非浅蓝。
+     两个值相同不是手滑 —— antd 的 darkAlgorithm 对 #1677ff 算出来
+     colorPrimaryBg 与 colorPrimaryBorder 都是 #15325b（实测）。 */
+  --color-primary-bg: #15325b;
+  --color-primary-border: #15325b;
 
   /* 应用色已退役（2026-09-19）—— 见 theme-default.less 里的说明 */
 
@@ -51,6 +56,11 @@
   --color-border-tertiary: #484848; /* 强分割 */
   --color-border-hover: #525252; /* 悬停边框（输入/按钮 hover） */
   --color-border-strong: #606060; /* 强强调（拖拽/高对比轮廓） */
+
+  /* 中性覆层：暗色下【反过来】—— 压暗覆层改用浅色基色才看得见，
+     提亮覆层改用深色基色。见 theme-default.less 里的说明。 */
+  --color-overlay-ink: #e6e6e6;
+  --color-overlay-paper: #161616;
 
   /* 阴影：暗色里阴影存在感更弱，靠“更亮表面 + 细描边”表达层级 */
   --shadow-sm: 0 0 1px 1px rgba(42, 42, 42, 1), 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.32);

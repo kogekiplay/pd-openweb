@@ -1,4 +1,3 @@
-@trail-stroke: #e0e0e0;
 .ming {
   &.Progress {
     svg {
@@ -8,7 +7,7 @@
     // 主题
     &--primary {
       .Progress--circle-trail {
-        stroke: @trail-stroke;
+        stroke: var(--color-border-secondary);
       }
       .Progress--circle-path {
         stroke: var(--color-primary);
@@ -22,7 +21,7 @@
     }
     &--success {
       .Progress--circle-trail {
-        stroke: @trail-stroke;
+        stroke: var(--color-border-secondary);
       }
       .Progress--circle-path {
         stroke: var(--color-success);
@@ -36,7 +35,7 @@
     }
     &--warning {
       .Progress--circle-trail {
-        stroke: @trail-stroke;
+        stroke: var(--color-border-secondary);
       }
       .Progress--circle-path {
         stroke: var(--color-warning-border);
@@ -50,7 +49,7 @@
     }
     &--danger {
       .Progress--circle-trail {
-        stroke: @trail-stroke;
+        stroke: var(--color-border-secondary);
       }
       .Progress--circle-path {
         stroke: var(--color-error);

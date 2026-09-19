@@ -629,7 +629,6 @@ export default function Sider(props) {
           <div className="flex"></div>
           <Switch
             size="small"
-            primaryColor="#1677ff"
             checked={showBarValue}
             onClick={() => onUpdate({ showBarValue: !showBarValue })}
           />
@@ -658,7 +657,6 @@ export default function Sider(props) {
         <div className="flex"></div>
         <Switch
           size="small"
-          primaryColor="#1677ff"
           checked={showControlName}
           onClick={() => onUpdate({ showControlName: !showControlName })}
         />

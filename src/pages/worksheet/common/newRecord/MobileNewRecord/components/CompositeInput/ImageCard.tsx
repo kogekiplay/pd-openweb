@@ -44,7 +44,7 @@ const Con = styled.div`
     font-size: 12px;
     color: var(--color-text-secondary);
     background-color: var(--color-background-primary);
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12);
+    box-shadow: var(--shadow-sm);
   }
   .uploading {
     color: var(--color-text-secondary) !important;

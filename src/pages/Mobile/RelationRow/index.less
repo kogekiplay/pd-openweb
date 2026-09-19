@@ -34,14 +34,14 @@
   background-color: var(--color-background-secondary);
   &.editRowWrapper {
     .worksheetRecordCard {
-      border-color: rgba(0, 0, 0, 0.2);
+      border-color: color-mix(in srgb, var(--color-overlay-ink) 20%, transparent);
     }
     .selectedIcon {
       display: block !important;
     }
     .selectedIcon.hide {
-      border-top-color: rgba(0, 0, 0, 0.2);
-      border-right-color: rgba(0, 0, 0, 0.2);
+      border-top-color: color-mix(in srgb, var(--color-overlay-ink) 20%, transparent);
+      border-right-color: color-mix(in srgb, var(--color-overlay-ink) 20%, transparent);
     }
   }
   .worksheetRecordCard {

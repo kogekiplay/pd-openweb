@@ -63,9 +63,7 @@
 .postDateRangePicker {
   margin-top: 15px !important;
   margin-right: -75px !important;
-  box-shadow:
-    0 4px 20px rgba(0, 0, 0, 0.13),
-    0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-lg);
   font-size: 12px;
   z-index: 999 !important;
   display: none;
@@ -78,7 +76,7 @@
   border-right: 10px solid transparent !important;
   border-bottom: 10px solid var(--color-border-tertiary) !important;
   border-left: 10px solid transparent !important;
-  border-bottom-color: rgba(0, 0, 0, 0.2);
+  border-bottom-color: color-mix(in srgb, var(--color-overlay-ink) 20%, transparent);
   content: '';
 }
 

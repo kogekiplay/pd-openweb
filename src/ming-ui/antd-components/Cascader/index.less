@@ -38,8 +38,8 @@
       .cascader-selected-tag {
         cursor: not-allowed;
         color: var(--color-text-primary) !important;
-        background-color: #efefef !important;
-        border-color: #d9d9d9 !important;
+        background-color: var(--color-background-disabled) !important;
+        border-color: var(--color-border-primary) !important;
       }
     }
 
@@ -128,9 +128,9 @@
 
       .cascader-tag {
         margin: 0;
-        background: #f0f7ff;
-        border-color: #91caff;
-        color: #1677ff;
+        background: var(--color-primary-bg);
+        border-color: var(--color-primary-border);
+        color: var(--color-primary);
         display: inline-flex;
         align-items: center;
         max-width: 100%;
@@ -261,7 +261,7 @@
         .cascader-option-icons {
           i,
           .ant-spin {
-            color: #9e9e9e;
+            color: var(--color-text-tertiary);
           }
           .ant-spin-dot {
             font-size: 12px;

@@ -18,7 +18,16 @@ import { normalizeFileUrl } from 'src/utils/fileUrl';
 // color 与自定义属性都会继承下去。
 const SVG_SIZE_VAR = '--svg-icon-size';
 
-export default ({ url = '', size = 24, fill = '#1677ff', className, addClassName = '' }: { className?: string; [key: string]: any }) => {
+export default ({
+  url = '',
+  size = 24,
+  fill = 'var(--color-primary)',
+  className,
+  addClassName = '',
+}: {
+  className?: string;
+  [key: string]: any;
+}) => {
   return (
     <ReactSVG
       className={className}
@@ -31,7 +40,7 @@ export default ({ url = '', size = 24, fill = '#1677ff', className, addClassName
       // 旧实现是把这些值直接写进 svg 的 fill 属性（fill="null" / fill=""），属无效值、退化成黑色。
       // 全仓有 40 处 fill 是取服务端数据的动态表达式（如 _.get(item, 'appIconColor')）会踩到。
       // as any：React 的 CSSProperties 不认 CSS 自定义属性（TS2353），断言是这个场景的常规写法。
-      style={{ color: fill || '#1677ff', [SVG_SIZE_VAR]: `${size}px` } as any}
+      style={{ color: fill || 'var(--color-primary)', [SVG_SIZE_VAR]: `${size}px` } as any}
       beforeInjection={svg => {
         if (addClassName) {
           svg.classList.add(...addClassName.split(' '));

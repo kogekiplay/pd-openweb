@@ -12,7 +12,7 @@ const AddBtnWrap = styled.div`
   width: 100%;
   height: 36px;
   background-color: var(--color-background-primary);
-  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.16);
+  box-shadow: var(--shadow-sm);
   border-radius: 3px;
 
   .icon {

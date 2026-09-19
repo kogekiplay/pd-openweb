@@ -41,7 +41,7 @@ const LayoutSettingWrap = styled.div`
     &.current {
       border-color: var(--color-primary);
       box-shadow: inset 0 0 0 1px var(--color-primary);
-      background: rgba(33, 150, 243, 0.04);
+      background: color-mix(in srgb, var(--color-primary) 4%, transparent);
 
       .Icon {
         color: var(--color-primary) !important;

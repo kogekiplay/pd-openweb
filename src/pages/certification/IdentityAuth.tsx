@@ -18,7 +18,7 @@ const Wrapper = styled.div`
   .tips {
     width: 100%;
     padding: 16px 24px;
-    background: rgba(33, 150, 243, 0.03);
+    background: color-mix(in srgb, var(--color-primary) 3%, transparent);
   }
   .paddingInline24 {
     padding: 0 24px;

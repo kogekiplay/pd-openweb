@@ -1,11 +1,10 @@
 import React, { Fragment, useEffect } from 'react';
 import { useSetState } from 'react-use';
 import { Popup } from 'antd-mobile';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
-import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import moment from 'moment';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Button, Dialog, LoadDiv, MenuItem } from 'ming-ui';
 import paymentAjax from 'src/api/payment.js';
@@ -15,6 +14,7 @@ import reimburseDialogFunc from 'src/pages/Admin/pay/Merchant/components/Withdra
 import ApplyInvoiceBtn from 'src/pages/invoice/ApplyInvoiceBtn';
 import { INVOICE_STATUS } from 'src/pages/invoice/constant';
 import { browserIsMobile } from 'src/utils/common';
+import copy from 'src/utils/copyToClipboard';
 import { infoKeys, refundInfoKeys, refundStatusList, selectPayStatusList, sourceTypeInfo, statusList } from './config';
 
 const WrapCon = styled.div`
@@ -83,9 +83,9 @@ const Wrap = styled.div`
       }
     }
     &.cancelRefundBtn {
-      background: rgba(33, 150, 243, 0.13);
+      background: color-mix(in srgb, var(--color-primary) 13%, transparent);
       &:hover {
-        background: rgba(33, 150, 243, 0.23);
+        background: color-mix(in srgb, var(--color-primary) 23%, transparent);
       }
     }
     &.okBtn {
@@ -132,7 +132,7 @@ const SelectPayStatusWrap = styled.span`
   display: flex;
   align-items: center;
   background: var(--color-background-primary);
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  box-shadow: var(--shadow-sm);
   width: fit-content;
   padding: 8px 12px;
   margin-bottom: 16px;
@@ -147,14 +147,14 @@ const SelectPayStatusWrap = styled.span`
   }
   &:hover {
     color: var(--color-primary);
-    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow-sm);
   }
 `;
 const PopupWrap = styled.div`
   width: 220px;
   padding: 6px 0;
   background: var(--color-background-primary);
-  box-shadow: 0 4px 16px 1px rgba(0, 0, 0, 0.24);
+  box-shadow: var(--shadow-lg);
   .popupItem {
     height: 40px;
     line-height: 40px;

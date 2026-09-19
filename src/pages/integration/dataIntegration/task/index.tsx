@@ -45,7 +45,7 @@ const SyncTaskWrapper = styled.div`
       }
       &.isActive {
         color: var(--color-primary);
-        background: rgba(33, 150, 243, 0.07);
+        background: color-mix(in srgb, var(--color-primary) 7%, transparent);
       }
     }
     .addTaskButton {

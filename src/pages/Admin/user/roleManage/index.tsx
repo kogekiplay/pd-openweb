@@ -66,7 +66,7 @@ const TreeWrap = styled(Tree)`
       color: var(--color-warning) !important;
     }
     &-selected {
-      background-color: rgba(33, 150, 243, 0.11) !important;
+      background-color: color-mix(in srgb, var(--color-primary) 11%, transparent) !important;
       &::before {
         content: '';
         width: 2px;

@@ -20,8 +20,8 @@
       }
       .detailCardItem {
         border: 1px solid transparent;
-        border-top-color: rgba(0, 0, 0, 0.06);
-        border-bottom-color: rgba(0, 0, 0, 0.06);
+        border-top-color: color-mix(in srgb, var(--color-overlay-ink) 6%, transparent);
+        border-bottom-color: color-mix(in srgb, var(--color-overlay-ink) 6%, transparent);
       }
       &:hover {
         .detailCardItem {
@@ -31,7 +31,7 @@
       &.isActive {
         .detailCardItem {
           border: 1px solid var(--color-border-primary);
-          box-shadow: inset 0px 0px 0px 1000px rgba(33, 150, 243, 0.1);
+          box-shadow: inset 0px 0px 0px 1000px color-mix(in srgb, var(--color-primary) 10%, transparent);
         }
         &.hasBgColor {
           .detailCardItem {

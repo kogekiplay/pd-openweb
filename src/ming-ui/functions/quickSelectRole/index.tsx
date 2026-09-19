@@ -43,7 +43,7 @@ const RoleSelectWrap = styled.div`
       background: var(--color-background-hover);
     }
     &.current {
-      background: rgba(33, 150, 243, 0.1) !important;
+      background: color-mix(in srgb, var(--color-primary) 10%, transparent) !important;
     }
   }
   .emptyWrap {
@@ -61,7 +61,7 @@ const RoleSelectWrap = styled.div`
       background: var(--color-background-hover);
     }
     &.current {
-      background: rgba(33, 150, 243, 0.1) !important;
+      background: color-mix(in srgb, var(--color-primary) 10%, transparent) !important;
     }
     .iconBox {
       width: 28px;

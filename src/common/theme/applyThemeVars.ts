@@ -91,14 +91,18 @@ export function installPlatformTheme(): void {
   });
 }
 
-/** 进入某个应用时调。 */
+/** 进入某个应用时调。同色重复调用是空操作，省掉无谓的重绘。 */
 export function applyAppTheme(seed: string): void {
+  if (activeSeed === seed) return;
+
   activeSeed = seed;
   repaint();
 }
 
 /** 离开应用时调 —— 不是「清空」，是「还原成平台色」。 */
 export function resetToPlatformTheme(): void {
+  if (activeSeed === null) return;
+
   activeSeed = null;
   repaint();
 }

@@ -21,7 +21,7 @@ const ContentWrap = styled.ul`
   }
   > li.active,
   > li:hover {
-    background: rgba(33, 150, 243, 0.11);
+    background: color-mix(in srgb, var(--color-primary) 11%, transparent);
     border: 1px solid var(--color-primary);
   }
   .emptyWrap {

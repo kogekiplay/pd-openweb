@@ -91,7 +91,7 @@ const ModelList = styled.ul`
       background-color: var(--color-background-hover);
     }
     &.active {
-      background-color: rgba(33, 150, 243, 0.06);
+      background-color: color-mix(in srgb, var(--color-primary) 6%, transparent);
     }
     .dot {
       width: 6px;
@@ -115,7 +115,7 @@ const ModelList = styled.ul`
 const ContentBox = styled.div`
   min-width: 0;
   &.blue {
-    background: rgba(33, 150, 243, 0.04);
+    background: color-mix(in srgb, var(--color-primary) 4%, transparent);
   }
   .number {
     margin-right: 3px;

@@ -32,7 +32,7 @@ export const Wrap = styled.div`
   }
   .hoverBoxShadow {
     &:hover {
-      box-shadow: 0px 1px 2px rgba(33, 150, 243, 0.3);
+      box-shadow: 0px 1px 2px color-mix(in srgb, var(--color-primary) 30%, transparent);
     }
   }
   .colorByWorksheet {

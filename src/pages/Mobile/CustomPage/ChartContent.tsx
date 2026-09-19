@@ -35,8 +35,8 @@ const ModalContent = styled.div`
       background-color: var(--color-background-secondary);
     }
     .active {
-      color: rgba(33, 150, 243, 1) !important;
-      background-color: rgba(33, 150, 243, 0.1);
+      color: var(--color-primary) !important;
+      background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
     }
   }
   .scrollView {

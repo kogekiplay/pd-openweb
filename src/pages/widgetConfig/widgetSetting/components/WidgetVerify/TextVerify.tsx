@@ -110,7 +110,7 @@ const FormatInfo = styled.div`
       margin: 0;
       background: var(--color-background-secondary);
       &:hover {
-        background: rgba(33, 150, 243, 0.05);
+        background: color-mix(in srgb, var(--color-primary) 5%, transparent);
       }
       .editFilter {
         display: none;

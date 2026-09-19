@@ -1,11 +1,11 @@
 import React, { Fragment, lazy, Suspense, useEffect, useState } from 'react';
 import { Popover } from 'antd';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import update from 'immutability-helper';
 import { pick } from 'lodash';
 import _ from 'lodash';
 import moment from 'moment';
-import Trigger from '@rc-component/trigger';
 import { Icon, LoadDiv, RichText, SvgIcon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import DeleteConfirm from 'ming-ui/components/DeleteReconfirm';
@@ -343,7 +343,7 @@ export default function CustomPageHeader(props) {
           zIndex: pageConfig.pageBgImage ? 0 : 2,
           '--title-color': isDarkTheme ? '#ffffffcc' : '#333',
           '--icon-color': isDarkTheme ? '#ffffffcc' : '#757575a1',
-          '--icon-hover-color': isDarkTheme ? '#ffffff' : '#1677ff',
+          '--icon-hover-color': isDarkTheme ? '#ffffff' : 'var(--color-primary)',
           backgroundColor: backgroundColor,
         }}
       >
@@ -410,7 +410,7 @@ export default function CustomPageHeader(props) {
               title={null}
               zIndex={2000}
               placement="bottomLeft"
-              classNames={{ root: "sheetDescPopoverOverlay" }}
+              classNames={{ root: 'sheetDescPopoverOverlay' }}
               content={
                 <div className="popoverContent" style={{ maxHeight: document.body.clientHeight / 2 }}>
                   <RichText
@@ -461,7 +461,7 @@ export default function CustomPageHeader(props) {
                 open={undefined}
                 trigger="click"
                 placement="bottom"
-                classNames={{ root: "customPageAutoLinkagePopoverWrap" }}
+                classNames={{ root: 'customPageAutoLinkagePopoverWrap' }}
                 content={renderLinkageFiltersPopover()}
               >
                 <Tooltip title={_l('联动筛选')} placement="bottom">

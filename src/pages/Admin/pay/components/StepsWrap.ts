@@ -65,7 +65,7 @@ export const StepsWrap = styled(Steps)`
   }
   .ant-steps-item-finish {
     .ant-steps-item-icon {
-      background-color: rgba(33, 150, 243, 0.15);
+      background-color: color-mix(in srgb, var(--color-primary) 15%, transparent);
       border-color: transparent;
     }
     .ant-steps-item-title {

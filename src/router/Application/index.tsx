@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Routes } from 'react-router';
 import { ConfigProvider } from 'antd';
 import _ from 'lodash';
-import { AppThemeScope } from 'src/common/theme';
+import { AppThemeScope, getCachedAppColor } from 'src/common/theme';
 import { navigateTo } from 'router/navigateTo';
 import { LoadDiv } from 'ming-ui';
 import ajaxRequest from 'src/api/homeApp';
@@ -41,6 +41,29 @@ let Application = class Application extends Component<any, any> {
     if (worksheetId) {
       this.compatibleWorksheetRoute(worksheetId);
     }
+
+    this.syncAppScopeClass();
+  }
+
+  componentWillUnmount() {
+    document.body.classList.remove('inAppScope');
+  }
+
+  /**
+   * 应用区域的内容面板样式靠 body 上这个类挂（样式在 src/router/index.less）。
+   *
+   * 【为什么不能无条件加】本组件还挂在 /worksheet/:worksheetId 这条老路由上，
+   * 那时没有 appId、render 返回 null —— 页面其实是别的东西，不该套应用面板。
+   * 判断口径和 renderContent 里那段保持一致（含 isPortal 的特殊取法）。
+   */
+  syncAppScopeClass() {
+    document.body.classList.toggle('inAppScope', !!this.currentAppId());
+  }
+
+  /** 当前应用 id。门户账号走 Account.appId，和 renderContent 里的取法一致。 */
+  currentAppId(): string | undefined {
+    const { appId } = getIds(this.props);
+    return md.global.Account.isPortal ? md.global.Account.appId : appId;
   }
 
   /**
@@ -48,6 +71,8 @@ let Application = class Application extends Component<any, any> {
    */
 
   componentDidUpdate(prevProps) {
+    this.syncAppScopeClass();
+
     if (!shallowEqual(prevProps, this.props)) {
       if (
         this.props.match.params.appId !== prevProps.match.params.appId ||
@@ -133,11 +158,15 @@ let Application = class Application extends Component<any, any> {
     //
     // 包在最外层（而不是只包 Routes 那一支）是有意的：升级提示、异常页、
     // 未发布占位也都属于这个应用，应当同色。
-    const { iconColor } = this.props.appPkg;
+    // id 有无 = 应用详情还在不在 store 里。清空后 iconColor 会回落成平台蓝，
+    // 那时不能拿它去覆盖已经刷上去的应用色，详见 AppThemeScope 里的说明。
+    const { iconColor, id: loadedAppId } = this.props.appPkg;
+    const appId = this.currentAppId();
+    const seed = loadedAppId ? iconColor : getCachedAppColor(appId);
 
     return (
-      <ConfigProvider theme={{ token: { colorPrimary: iconColor } }}>
-        <AppThemeScope seed={iconColor} />
+      <ConfigProvider theme={{ token: { colorPrimary: seed || iconColor } }}>
+        <AppThemeScope seed={iconColor} loaded={!!loadedAppId} appId={appId} />
         {this.renderContent()}
       </ConfigProvider>
     );

@@ -1,94 +1,126 @@
-@activeColor: #01ca83;
-@activeHoverColor: #01bf7c;
-@disabledColor: #bdbdbd;
-@iconWrapActiveColor: #fff;
-@iconWrapDisabledColor: #f5f5f5;
+/* 工作流的「运行中 / 已关闭」开关，以及它旁边的发布按钮。
+   只被 WorkflowSettings/Header 用（全仓唯一调用点）。
+
+   【原来什么样】轨道是 100×38 的直角块，主色写死 #01ca83 亮绿，
+   旋钮是 34×34 的方块，压着 rgba(0,0,0,.3) 的双层重投影。
+   绿色既不跟应用主题，饱和度也比页面上任何东西都高，整块按钮在顶栏里最扎眼。
+
+   【改成什么】做成一个胶囊开关：圆形旋钮、999px 圆角轨道、投影收到 1px/18%。
+   「运行中」改用 --color-primary，于是它跟着应用色走；
+   「已关闭」用中性的 --color-text-disabled，不再是一坨彩色。
+   旁边两个按钮圆角从 3px 提到 8px，跟胶囊对得上。 */
 
 .workflowStatusWrap {
   display: flex;
+  align-items: center;
   justify-content: flex-end;
+
   .publishFlowWrap {
     .publishFlow {
-      padding: 0 22px;
-      height: 38px;
-      line-height: 38px;
-      border-radius: 3px;
+      box-sizing: border-box;
+      padding: 0 20px;
+      height: 36px;
+      line-height: 36px;
+      border-radius: 8px;
       cursor: pointer;
+      font-weight: 500;
       background-color: var(--color-primary);
       color: var(--color-white);
       text-align: center;
-    }
-  }
-  .refreshFlowWrap {
-    .refreshFlow {
-      box-sizing: border-box;
-      padding: 0 22px;
-      line-height: 36px;
-      margin-right: 16px;
-      border: 1px solid var(--color-primary);
-      color: var(--color-primary);
-      cursor: pointer;
-      border-radius: 3px;
-      text-align: center;
-      font-weight: 600;
+      transition: background-color 0.2s;
       &:hover {
-        color: var(--color-white);
-        background-color: var(--color-primary);
+        background-color: var(--color-primary-light);
       }
     }
   }
 
+  .refreshFlowWrap {
+    .refreshFlow {
+      box-sizing: border-box;
+      padding: 0 20px;
+      height: 36px;
+      line-height: 34px;
+      margin-right: 12px;
+      border: 1px solid var(--color-primary-border);
+      color: var(--color-primary);
+      cursor: pointer;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 500;
+      transition: all 0.2s;
+      &:hover {
+        color: var(--color-white);
+        background-color: var(--color-primary);
+        border-color: var(--color-primary);
+      }
+    }
+  }
+
+  /* 轨道 100px = 文字 64 + 旋钮(28 + 两侧 4 外边距)36，两段正好铺满，
+     所以下面两个 translate 的距离直接由这个划分得出，不是试出来的数：
+       文字 0→36（让开左边的旋钮位）、旋钮 64→0。 */
   .switchWrap {
     display: flex;
     justify-content: space-between;
     align-items: center;
     box-sizing: border-box;
     width: 100px;
-    height: 38px;
+    height: 36px;
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 999px;
+    font-size: 13px;
     color: var(--color-white);
-    background-color: @disabledColor;
-    &.switchWrap-pending {
+    background-color: var(--color-text-disabled);
+    transition: background-color 0.25s;
+    /* 【原来这条是死规则】组件写的是 cx(..., { pending })，类名就叫 pending；
+       而 status 只会是 active / close，`switchWrap-pending` 永远拼不出来，
+       于是发布中那半秒没有任何视觉反馈。 */
+    &.pending {
       opacity: 0.6;
     }
     &.switchWrap-active {
-      background-color: @activeColor;
+      background-color: var(--color-primary);
       &:hover {
-        background-color: @activeHoverColor;
+        background-color: var(--color-primary-light);
       }
     }
+    &.switchWrap-close:hover {
+      background-color: var(--color-border-strong);
+    }
     .contentWrap {
-      line-height: 38px;
-      width: 62px;
+      line-height: 36px;
+      width: 64px;
       text-align: center;
-      transition: all 0.5s;
-      font-weight: 600;
+      font-weight: 500;
+      transition: transform 0.28s cubic-bezier(0.2, 0, 0, 1);
       &.contentWrap-close {
-        transform: translateX(40px);
+        transform: translateX(36px);
       }
     }
     .iconWrap {
-      width: 34px;
-      height: 34px;
+      width: 28px;
+      height: 28px;
       display: flex;
       justify-content: center;
       align-items: center;
-      margin: 2px;
-      background-color: @iconWrapDisabledColor;
-      box-shadow:
-        0 2px 8px rgba(0, 0, 0, 0.3),
-        0 0px 2px rgba(0, 0, 0, 0.3);
-      border-radius: 3px;
-      transition: all 0.5s;
+      margin: 4px;
+      flex: 0 0 auto;
+      background-color: var(--color-white);
+      box-shadow: var(--shadow-sm);
+      border-radius: 50%;
+      transition:
+        transform 0.28s cubic-bezier(0.2, 0, 0, 1),
+        background-color 0.25s;
       .workflowSwitchIcon-active {
-        color: @activeColor !important;
+        color: var(--color-primary) !important;
       }
+      /* 旋钮不用纯白：--color-on-app-paper 是掺了 8% 主色的白，
+         压在主色轨道上时边缘不会显得发灰。 */
       &.iconWrap-active {
-        background-color: @iconWrapActiveColor;
+        background-color: var(--color-on-app-paper);
       }
       &.iconWrap-close {
-        transform: translateX(-62px);
+        transform: translateX(-64px);
       }
     }
   }

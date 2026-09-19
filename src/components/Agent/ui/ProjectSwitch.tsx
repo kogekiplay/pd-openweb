@@ -38,7 +38,7 @@ const ProjectItem = styled.div`
   line-height: 40px;
   &.active {
     color: var(--color-primary);
-    background: rgb(33, 150, 243, 0.08);
+    background: color-mix(in srgb, var(--color-primary) 8%, transparent);
   }
   &:not(.active):hover {
     background: var(--color-background-hover);

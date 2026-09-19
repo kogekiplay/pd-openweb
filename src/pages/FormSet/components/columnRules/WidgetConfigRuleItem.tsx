@@ -13,13 +13,13 @@ import { redefineComplexControl } from 'worksheet/common/WorkSheetFilter/util';
 import { isRelateMoreList } from 'src/components/Form/core/formUtils/helper';
 import type { RootState } from 'src/redux/types';
 import { getValueStyle } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import DrawerFooter from '../DrawerFooter';
 import { checkRuleEnableLimit, filterData, hasRuleChanged, TAB_TYPES } from './config';
 import EditBox from './EditBox';
 import * as actions from './redux/actions/columnRules';
 import * as columnRules from './redux/actions/columnRules';
 import '../../index.less';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const StyleDivWrap = styled.div`
   border-radius: 3px;
@@ -89,7 +89,7 @@ const RuleStyleWrapper = styled.div`
         line-height: 46px;
         text-align: center;
         &:hover {
-          background-color: rgba(22, 119, 255, 0.06);
+          background-color: color-mix(in srgb, var(--color-primary) 6%, transparent);
         }
 
         &:nth-child(1) {

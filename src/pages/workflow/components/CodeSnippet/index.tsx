@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
 import { func, number, string } from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Button, Checkbox, Dialog, LoadDiv, Menu, MenuItem, Radio, ScrollView, TagTextarea } from 'ming-ui';
 import flowNodeAjax from '../../api/flowNode';
@@ -94,7 +94,7 @@ const DialogBox = styled(Dialog)`
       .active {
         height: 32px;
         background: var(--color-background-primary);
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.16);
+        box-shadow: var(--shadow-sm);
         border-radius: 7px;
         color: var(--color-primary);
       }
@@ -269,7 +269,15 @@ const TYPES = [
   { text: _l('个人'), value: 3 },
 ];
 
-const CodeSnippet = ({ projectId, type = 0, onSave = () => {}, onClose = () => {} }: { projectId?: string; [key: string]: any }) => {
+const CodeSnippet = ({
+  projectId,
+  type = 0,
+  onSave = () => {},
+  onClose = () => {},
+}: {
+  projectId?: string;
+  [key: string]: any;
+}) => {
   const [tabIndex, setTabIndex] = useState(window.platformENV.isOverseas || window.platformENV.isLocal ? 2 : 1);
   const [keywords, setKeywords] = useState('');
   const [langType, setLangType] = useState(type === 2 ? '103' : '102');

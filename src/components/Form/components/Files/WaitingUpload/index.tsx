@@ -28,7 +28,7 @@ const CardPlaceholder = styled.div`
     color: var(--color-white);
     border-radius: 50%;
     background-color: var(--color-border-hover);
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12);
+    box-shadow: var(--shadow-sm);
   }
   .fileName {
     position: absolute;

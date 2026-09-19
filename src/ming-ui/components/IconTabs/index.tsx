@@ -403,7 +403,6 @@ function IconTabs(props) {
               />
               <div className="switchCon">
                 <Switch
-                  primaryColor="#1677ff"
                   checked={setting.isLine}
                   onClick={handleSwitch}
                   text={setting.isLine ? _l('线框') : _l('填充')}

@@ -1,10 +1,10 @@
 @import 'src/pages/worksheet/views/ResourceView/index.less';
 
 @DEFAULT_COLOR: var(--color-primary-transparent);
-@DEFAULT_BORDER_COLOR: rgba(0, 0, 0, 0.12);
+@DEFAULT_BORDER_COLOR: color-mix(in srgb, var(--color-overlay-ink) 12%, transparent);
 
 [data-theme='dark'] {
-  @DEFAULT_BORDER_COLOR: rgba(255, 255, 255, 0.12);
+  @DEFAULT_BORDER_COLOR: color-mix(in srgb, var(--color-overlay-paper) 12%, transparent);
 }
 
 /* 「月视图高度 = 宽松」时事件卡片的样子：两行、40px 高。
@@ -186,7 +186,7 @@
     display: inline-block;
     padding: 2px;
     &:hover {
-      background: rgba(0, 0, 0, 0.1);
+      background: color-mix(in srgb, var(--color-overlay-ink) 10%, transparent);
       border-radius: 3px;
     }
   }
@@ -280,7 +280,7 @@
       z-index: 11;
     }
     border-radius: 3px;
-    box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.24);
+    box-shadow: var(--shadow-lg);
     max-width: 240px;
     .fc-popover-body {
       padding: 0 12px 12px;
@@ -564,7 +564,7 @@
       background: var(--color-background-hover);
     }
     &.show {
-      background: rgba(33, 150, 243, 0.12) !important;
+      background: color-mix(in srgb, var(--color-primary) 12%, transparent) !important;
     }
   }
   .rect {

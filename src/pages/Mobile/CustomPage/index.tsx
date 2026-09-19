@@ -61,7 +61,7 @@ const LayoutContent = styled.div`
     background-color: var(--color-background-primary);
     border-radius: 3px;
     overflow: auto;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.16);
+    box-shadow: var(--shadow-sm);
     &.haveTitle {
       height: calc(100% - 40px);
     }

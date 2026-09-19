@@ -168,7 +168,7 @@
   .taskInfo {
     align-items: center;
     &.hoverLayer {
-      background-color: rgba(0, 0, 0, 0.06);
+      background-color: color-mix(in srgb, var(--color-overlay-ink) 6%, transparent);
     }
     .name {
       display: inline-block;
@@ -237,7 +237,7 @@
         box-sizing: initial;
       }
       .isToday {
-        background: rgba(33, 150, 243, 0.15);
+        background: color-mix(in srgb, var(--color-primary) 15%, transparent);
         position: absolute;
         top: 0;
         height: inherit;
@@ -264,7 +264,7 @@
       height: 54px;
       align-items: center;
       &.hoverLayer {
-        background-color: rgba(0, 0, 0, 0.06);
+        background-color: color-mix(in srgb, var(--color-overlay-ink) 6%, transparent);
       }
     }
   }

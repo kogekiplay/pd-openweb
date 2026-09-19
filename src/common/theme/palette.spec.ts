@@ -80,17 +80,35 @@ assert.strictEqual(dark['--color-primary-transparent-light'], `rgba(${rgbOf(antd
 // 5. 聚焦环主色与主色同值（theme-default.less 原本就是这么写的）
 assert.strictEqual(light['--color-primary-focus'], light['--color-primary']);
 
-// 6. 【反向断言】这里【不】产出 --app-primary-color 系列。
-//    前两个已经由 src/common/mdcss/basic.css:3-5 别名到语义变量上
+// 5b. 淡色档同样直接取自 antd token（不是我们自己调的近似值）——
+//     它们服务于「选中态淡底 / 淡边框」那一类，用透明档代替会明显变虚。
+assert.strictEqual(light['--color-primary-bg'], antdLight.colorPrimaryBg);
+assert.strictEqual(light['--color-primary-border'], antdLight.colorPrimaryBorder);
+assert.strictEqual(dark['--color-primary-bg'], antdDark.colorPrimaryBg);
+assert.strictEqual(dark['--color-primary-border'], antdDark.colorPrimaryBorder);
+
+// 6. 【反向断言】这里【不】产出 --app-primary-color / --app-primary-hover-color。
+//    它们已经由 src/common/mdcss/basic.css:3-5 别名到语义变量上
 //    （--color-primary / --color-link-hover），本来就跟着主色走；
 //    在调色板里再定义一遍等于造第二个真相源，还会把 hover 那个从
-//    --color-link-hover 悄悄改成 colorPrimaryHover。
-//    --app-highlight-color 则全局没有定义，只由两个运行期注入器临时产生，
-//    在这里定义它会把 MessageList 那处 var(..., var(--color-mingo-transparent))
-//    的兜底覆盖掉。这组断言防止它们被「顺手补回来」。
-for (const key of ['--app-primary-color', '--app-primary-hover-color', '--app-highlight-color']) {
+//    --color-link-hover 悄悄改成 colorPrimaryHover。这条断言防止它们被「顺手补回来」。
+for (const key of ['--app-primary-color', '--app-primary-hover-color']) {
   assert.ok(!(key in light), `${key} 不该由全局调色板产出 —— 见 palette.ts 里的说明`);
 }
+
+// 6b. 【这条断言 2026-09-19 反过来了】--app-highlight-color 现在【必须】产出。
+//     原先不产出，是为了留住 MessageList 那处
+//     var(--app-highlight-color, var(--color-mingo-transparent)) 的 Mingo 紫兜底。
+//     张奇拍板「AI 助手跟随主题色」后，两个运行期注入器一并退役 ——
+//     此时若不在这里产出，应用的 Chatbot 会掉回 Mingo 紫，等于把决定做反。
+//     Mingo 全局助手不受影响：那处样式挂在 &.useAppThemeColor 类下，
+//     只有应用的 Chatbot 挂这个类。
+assert.ok('--app-highlight-color' in light, '--app-highlight-color 必须产出，否则应用 Chatbot 掉回 Mingo 紫');
+assert.strictEqual(
+  light['--app-highlight-color'],
+  new TinyColor(SEED).setAlpha(0.2).toRgbString(),
+  'alpha 必须是 0.2，跟退役掉的 setAppThemeColor 逐字一致，否则观感会变',
+);
 
 // 7. --color-app 系列同样不产出：它是真·死变量，引用点已改指 --color-primary
 for (const key of ['--color-app', '--color-app-light', '--color-app-dark', '--color-app-transparent']) {
@@ -118,4 +136,35 @@ assert.strictEqual(themeVarsToCssText({}), '');
 //     明暗两套键不一致的话，从暗切回亮会残留几个删不掉的变量。
 assert.deepStrictEqual(Object.keys(light).sort(), Object.keys(dark).sort());
 
-console.log('palette.spec: 12 组断言全部通过');
+// 13. 中性色阶带主题倾向：不是纯灰，但也不是主色。
+const { readability } = require('@ctrl/tinycolor');
+assert.notStrictEqual(light['--color-text-secondary'], '#757575', '中性色没染上主题倾向');
+assert.notStrictEqual(light['--color-text-secondary'], light['--color-primary'], '中性色被整个换成主色了');
+
+// 14. 【核心 · 可读性】染色不能把次要文字压到 WCAG AA 以下。
+//     #757575 对白底本来就只有 4.61，暖色方向是瓶颈 —— 这条挡的就是
+//     「把 TINT_TEXT 调大一点」这种看起来无害的改动。
+// 染色保明度，所以对比度应当与【原始纯灰】几乎一致，而不只是「够用」。
+// 这条比「>= 4.3」严得多：它挡住的是「把 TINT 调大」和「去掉保明度那一步」两种改动。
+const BASE_CONTRAST = readability('#757575', '#ffffff'); // 4.61
+for (const seed of ['#e91e63', '#d98936', '#ff9800', '#1677ff', '#00b96b', '#722ed1']) {
+  const v = buildThemeVars(seed, 'light');
+  const r = readability(v['--color-text-secondary'], '#ffffff');
+  assert.ok(
+    r >= BASE_CONTRAST * 0.97,
+    `次要文字对白底对比度 ${r.toFixed(2)}（种子 ${seed}），低于原始纯灰的 ${BASE_CONTRAST.toFixed(2)} 太多 —— ` +
+      '多半是保明度那一步被去掉了',
+  );
+}
+
+// 15. 主体表面与正文主文字【不】参与染色 —— 它们是「纸和墨」，染了整站会发闷
+for (const key of [
+  '--color-background-primary',
+  '--color-background-card',
+  '--color-background-input',
+  '--color-text-primary',
+]) {
+  assert.ok(!(key in light), `${key} 不该由调色板产出（保持 Less 里的中性值）`);
+}
+
+console.log('palette.spec: 15 组断言全部通过');

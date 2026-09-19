@@ -38,7 +38,7 @@ export default function SplitLineSection(props) {
     worksheetId,
   } = props;
   const { enumDefault2 = 0, controlName, controlId, sectionId } = data;
-  const { theme = '#1677ff', color = '#151515', icon = '', hidetitle } = getAdvanceSetting(data);
+  const { theme = 'var(--color-primary)', color = '#151515', icon = '', hidetitle } = getAdvanceSetting(data);
   const isMobile = browserIsMobile();
   const [visible, setVisible] = useState(enumDefault2 !== 2);
   const expandWidgetIds = useMemo(() => {

@@ -132,10 +132,13 @@ function DraftModal(props) {
       .then(res => {
         setRecords(res.data);
         setLoading(false);
-        updateDraftTotal(res.data.length);
+        // 用接口给的 count，不是这一页的长度 —— pageSize 是 10，
+        // 草稿超过 10 条时 res.data.length 会把徽标钉死在 10。
+        const total = Number(_.get(res, 'count')) || res.data.length;
+        updateDraftTotal(total);
         emitter.emit('UPDATE_DRAFT_TOTAL', {
           worksheetId,
-          total: res.data.length,
+          total,
         });
       })
       .catch(err => {
@@ -395,14 +398,24 @@ function WorksheetDraft(props) {
       request.abort();
     }
 
-    request = worksheetAjax.getFilterRowsTotalNum;
+    // 【为什么不用 getFilterRowsTotalNum】服务端那个接口【不认 getType】，
+    // 不管传不传都返回整张表的记录数。张奇看到「草稿 482、点开是空」就是这么来的
+    // —— 482 是那张表的记录总数。2026-09-19 在生产上对同一张表实测：
+    //   GetFilterRowsTotalNum({getType:21}) -> 27
+    //   GetFilterRows({getType:21})         -> 0 条，自带的 count 字段也是 0
+    //   GetFilterRows({})                   -> 总数 27
+    // getFilterRows 是认的，它返回的 count 才是真草稿数。
+    // pageSize 取 1：只要 count，不要行数据，省掉一整页的传输。
+    request = worksheetAjax.getFilterRows;
 
     request({
       appId,
       worksheetId,
       getType: 21,
+      pageIndex: 1,
+      pageSize: 1,
     }).then(res => {
-      const total = Number(res) || 0;
+      const total = Number(_.get(res, 'count')) || 0;
 
       if (isNewRecord && !total) {
         $(draftEntryRef.current).parent().remove();

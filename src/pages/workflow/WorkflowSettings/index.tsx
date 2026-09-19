@@ -5,6 +5,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import LoadDiv from 'ming-ui/components/LoadDiv';
 import processVersion from '../api/processVersion';
+import { AppThemeScope } from 'src/common/theme';
 import type { RootState } from 'src/redux/types';
 import { pathCompletion } from 'src/utils/common';
 import { clearSource, getFlowInfo, getProcessById } from '../redux/actions';
@@ -128,6 +129,10 @@ class WorkflowSettings extends Component<any, any> {
 
     return (
       <div className="workflowSettings flexColumn h100">
+        {/* 【为什么这里要单独上主题】/workflowedit/:flowId 是顶层路由，URL 里只有
+            流程 id，没有 appId —— 按 URL 认领那条路走不通。flowInfo.relationId
+            就是所属应用的 id（Header/index.tsx:280 的返回链接用的也是它）。 */}
+        <AppThemeScope appId={flowInfo.relationId} />
         <DocumentTitle title={`${flowInfo.name} - ${isPlugin ? _l('工作流插件') : _l('工作流')}`} />
         <Header
           tabIndex={tabIndex}

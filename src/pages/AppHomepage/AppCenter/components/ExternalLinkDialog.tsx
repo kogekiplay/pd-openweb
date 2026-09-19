@@ -104,9 +104,7 @@ const PopupWrapper = styled.div`
   background: var(--color-background-primary);
   overflow: auto;
   border-radius: 3px;
-  box-shadow:
-    0 4px 20px rgba(0, 0, 0, 0.13),
-    0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-lg);
   border: 1px solid var(--color-border-secondary);
   font-size: 14px;
   div {

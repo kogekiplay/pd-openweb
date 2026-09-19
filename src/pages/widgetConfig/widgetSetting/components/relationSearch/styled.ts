@@ -86,7 +86,7 @@ export const AddRelate = styled.div`
         background-color: var(--color-background-hover);
       }
       &.active {
-        background-color: rgba(33, 150, 243, 0.1);
+        background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
       }
 
       .Width18 {

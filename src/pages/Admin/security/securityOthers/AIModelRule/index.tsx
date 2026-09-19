@@ -9,7 +9,7 @@ import Search from 'src/pages/workflow/components/Search';
 import EditRuleDrawer from './EditRuleDrawer';
 
 const Description = styled.div`
-  background: rgba(33, 150, 243, 0.1);
+  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
   border-radius: 4px;
   padding: 12px 16px;
   margin-bottom: 20px;

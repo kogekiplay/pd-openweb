@@ -86,7 +86,7 @@ const BulletinDialog = styled(Dialog)`
         position: relative;
         cursor: pointer;
         &.isActive {
-          box-shadow: rgba(33, 150, 243) 0px 0px 0px 2px;
+          box-shadow: var(--color-primary) 0px 0px 0px 2px;
         }
         .activeMaskWrapper {
           position: absolute;
@@ -361,7 +361,7 @@ export default function BulletinSetting(props) {
             {_l('支持 jpg、jpeg、png、gif格式，2MB以内')} <span></span>
           </span>
           <Popover
-            classNames={{ root: "suggestWrapper" }}
+            classNames={{ root: 'suggestWrapper' }}
             placement="bottom"
             align={{
               overflow: { adjustX: true, adjustY: true },

@@ -69,7 +69,7 @@ const MobileConfig = styled.div`
     padding: 15px;
     border-radius: 30px;
     background-color: var(--color-background-primary);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.16);
+    box-shadow: var(--shadow-md);
   }
   .mobileBox {
     width: 100%;
@@ -138,7 +138,7 @@ export default function MobileLayout(props) {
             '--widget-color': pageConfig.widgetBgColor,
             '--widget-title-color': widgetIsDark ? '#ffffffcc' : '#333',
             '--widget-icon-color': widgetIsDark ? '#ffffffcc' : '#9e9e9e',
-            '--widget-icon-hover-color': widgetIsDark ? '#ffffff' : '#1677ff',
+            '--widget-icon-hover-color': widgetIsDark ? '#ffffff' : 'var(--color-primary)',
           }}
         >
           <div className="mobileBox Relative">

@@ -11,7 +11,7 @@ const PayFailedWrap = styled.div`
       width: 800px;
       margin: 0 auto;
       padding: 40px 20px;
-      box-shadow: 0 2px 6px 0px rgba(0, 0, 0, 0.15);
+      box-shadow: var(--shadow-md);
     }
     .failIcon {
       border: 2px solid var(--color-error);

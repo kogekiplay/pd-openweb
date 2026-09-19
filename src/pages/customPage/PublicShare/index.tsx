@@ -24,7 +24,7 @@ const Wrap = styled.div`
     height: 44px;
     flex-shrink: 0;
     padding: 0 24px;
-    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.16);
+    box-shadow: var(--shadow-sm);
     justify-content: space-between;
     background-color: var(--color-background-primary);
     z-index: 1;

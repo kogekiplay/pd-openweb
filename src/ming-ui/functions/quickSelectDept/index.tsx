@@ -43,7 +43,7 @@ const DeptSelectWrap = styled.div`
       border-radius: 3px;
       &.active {
         .quick-department_content {
-          background: rgba(33, 150, 243, 0.1) !important;
+          background: color-mix(in srgb, var(--color-primary) 10%, transparent) !important;
         }
       }
       .rotateDept {

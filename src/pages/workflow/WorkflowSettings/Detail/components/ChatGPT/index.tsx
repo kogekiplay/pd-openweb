@@ -43,7 +43,7 @@ const Null = styled.div`
 
 const Footer = styled.div`
   textarea {
-    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow-sm);
     border-radius: 24px !important;
     border-width: 0 48px 0 8px !important;
     border-color: transparent !important;

@@ -55,9 +55,9 @@ const Wrapper = styled.div`
     font-weight: 600;
     cursor: pointer;
     color: var(--color-primary);
-    background: rgba(22, 119, 255, 0.1);
+    background: color-mix(in srgb, var(--color-primary) 10%, transparent);
     &:hover {
-      background: rgba(22, 119, 255, 0.2);
+      background: color-mix(in srgb, var(--color-primary) 20%, transparent);
     }
 
     &.delCert {

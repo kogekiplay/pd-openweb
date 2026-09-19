@@ -189,24 +189,28 @@ export const Wrap = styled.div`
       background: #e8e8e8;
     }
   }
+  /* 【整块淡底按钮，原来是写死的 antd v4 蓝】#e6f7ff / #1890ff / #bae7ff 分别是
+     v4 的 colorPrimaryBg / colorPrimary / colorPrimaryBorder。门户用户抽屉是
+     应用内的页面，这三个值让「退出」按钮永远蓝着不跟应用色。
+     悬停底用 primary 12%，跟 --color-primary-bg（约 6%）拉开一档。 */
   .logout {
     height: 36px;
     margin: 0;
     border: none;
-    background: #e6f7ff;
-    color: #1890ff;
+    background: var(--color-primary-bg);
+    color: var(--color-primary);
     border-radius: 6px;
     .icon {
-      color: #1890ff;
+      color: var(--color-primary);
     }
     .icon:before {
       vertical-align: middle;
     }
     &:hover {
-      background: #bae7ff;
-      color: #1890ff;
+      background: color-mix(in srgb, var(--color-primary) 12%, transparent);
+      color: var(--color-primary);
       .icon {
-        color: #1890ff;
+        color: var(--color-primary);
       }
     }
   }

@@ -3,8 +3,8 @@ import { Progress } from 'antd';
 import cx from 'classnames';
 import { Checkbox, Icon, Support, SvgIcon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
-import createUploader from 'src/utils/createUploader';
 import { formatFileSize } from 'src/utils/common';
+import createUploader from 'src/utils/createUploader';
 import RegExpValidator from 'src/utils/expression';
 import Config from '../../../config';
 import './index.less';
@@ -209,7 +209,7 @@ export default class ImportApp extends React.Component<any, any> {
                 <Progress
                   style={{ width: 250 }}
                   railColor="var(--color-border-secondary)"
-                  strokeColor="#1677ff"
+                  strokeColor="var(--color-primary)"
                   /* 同 orgQuota：antd 6 的 strokeWidth 已废弃，改用 size=[宽, 高]。
                      宽用 '100%' 而不是写死 250，外层 style 的 width 仍是唯一来源。 */
                   size={['100%', 8]}

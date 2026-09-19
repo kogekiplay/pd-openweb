@@ -71,7 +71,7 @@ const WecharPayWrap = styled.div`
       margin: 80px auto 0;
       width: 800px;
       border-radius: 4px;
-      box-shadow: 0 2px 6px 0px rgba(0, 0, 0, 0.15);
+      box-shadow: var(--shadow-md);
     }
   }
 `;

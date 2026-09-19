@@ -29,7 +29,7 @@ const SelectDialog = styled(Dialog)`
       border-color: var(--color-background-secondary);
     }
     &.isActive {
-      background: rgba(33, 150, 243, 0.05);
+      background: color-mix(in srgb, var(--color-primary) 5%, transparent);
       border-color: var(--color-primary);
     }
   }

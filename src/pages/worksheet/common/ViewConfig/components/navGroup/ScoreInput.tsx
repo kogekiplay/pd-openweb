@@ -1,7 +1,7 @@
 import React from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 
 const DropWrap = styled.div`
@@ -10,9 +10,7 @@ const DropWrap = styled.div`
   width: 360px;
   z-index: 1000;
   background: var(--color-background-primary);
-  box-shadow:
-    0 4px 20px rgba(0, 0, 0, 0.13),
-    0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-lg);
   .dropLi {
     line-height: 32px;
     padding: 0 12px;
@@ -20,7 +18,7 @@ const DropWrap = styled.div`
       background: var(--color-background-hover);
     }
     &.cur {
-      background: rgba(33, 150, 243, 0.2);
+      background: color-mix(in srgb, var(--color-primary) 20%, transparent);
       .icon {
         color: var(--color-primary);
         display: inline-block;

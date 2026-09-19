@@ -1,8 +1,8 @@
 import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import { has } from 'lodash';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Dialog, Dropdown, Menu, MenuItem } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -151,7 +151,7 @@ const OptionListItem = styled.div`
       cursor: pointer;
       font-weight: 600;
       &:hover {
-        color: rgba(33, 150, 243, 0.8);
+        color: color-mix(in srgb, var(--color-primary) 80%, transparent);
       }
     }
   }

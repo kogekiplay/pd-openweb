@@ -23,7 +23,7 @@ const AllWidgetsWrap = styled.div`
   overflow: auto;
   background-color: var(--color-background-primary);
   max-height: 400px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.24);
+  box-shadow: var(--shadow-lg);
 
   .searchWrap {
     display: flex;
@@ -212,7 +212,9 @@ export default function ConfigureControl(props) {
   // 子表字段增删改序后，controlssorts 必须跟着 showControls 一起更新，否则渲染时列顺序会错乱
   const updateControlsWithSorts = nextControls => ({
     ...handleAdvancedSettingChange(data, {
-      controlssorts: JSON.stringify(nextControls.map(({ controlId }: { controlId?: string; [key: string]: any }) => controlId)),
+      controlssorts: JSON.stringify(
+        nextControls.map(({ controlId }: { controlId?: string; [key: string]: any }) => controlId),
+      ),
     }),
     relationControls: nextControls,
     showControls: nextControls.map(({ controlId }: { controlId?: string; [key: string]: any }) => controlId),
@@ -400,7 +402,7 @@ export default function ConfigureControl(props) {
   };
 
   return (
-    (<Fragment>
+    <Fragment>
       {selectCascadeDataSourceVisible && (
         <SelectDataSource
           editType={0}
@@ -485,6 +487,6 @@ export default function ConfigureControl(props) {
           />,
           document.getElementById('widgetConfigSettingWrap'),
         )}
-    </Fragment>)
+    </Fragment>
   );
 }

@@ -16,7 +16,7 @@ const EditPanelCon = styled.div`
   width: 240px;
   background: var(--color-background-primary);
   border-radius: 3px;
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.24);
+  box-shadow: var(--shadow-lg);
   padding-top: 2px;
   .title {
     font-weight: bold;

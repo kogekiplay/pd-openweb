@@ -325,12 +325,11 @@ class WorkSheet extends Component<any, any> {
       }
 
       this.setCache(this.props.match.params);
-      if (
-        _.get(prevProps, 'appPkg.iconColor') !== _.get(this.props, 'appPkg.iconColor') ||
-        (!this.appThemeColorStyle && _.get(this.props, 'appPkg.iconColor'))
-      ) {
-        this.changeAppThemeColor(_.get(this.props, 'appPkg.iconColor'));
-      }
+      // 【这里原来注入一条 :root 规则表达「此刻用这个应用的颜色」】
+      // 2026-09-19 退役：主题引擎（src/common/theme）已经在 documentElement 的
+      // inline style 上写同一套值，而 inline 恒压过 :root —— 这段注入自打引擎
+      // 上线就不起作用了，留着只会让人以为还有第二个真相源。
+      // 应用色现在由 AppThemeScope 按路由统一给。
     }
   }
   shouldComponentUpdate(nextProps) {
@@ -347,7 +346,6 @@ class WorkSheet extends Component<any, any> {
       body.style.overscrollBehaviorX = null;
     }
 
-    this.removeAppThemeColor();
     updateWorksheetLoading(true);
     emitter.off('MINGO_CREATE_RECORD', this.handleMingoCreateRecord);
     window.isWorksheet = false;
@@ -355,27 +353,7 @@ class WorkSheet extends Component<any, any> {
   handleMingoCreateRecord(base) {
     this.setState({ createRecordSideMaskVisible: true, createRecordSideMaskBase: base });
   }
-  changeAppThemeColor(themeColor) {
-    if (themeColor) {
-      this.removeAppThemeColor();
-      const style = document.createElement('style');
-      style.innerHTML = `:root { --app-primary-color: ${themeColor}; --app-primary-hover-color: ${new TinyColor(
-        themeColor,
-      )
-        .darken(5)
-        .toString()};  --app-highlight-color: ${new TinyColor(themeColor).setAlpha(0.2).toRgbString()}}`;
-      document.head.appendChild(style);
-      this.appThemeColorStyle = style;
-    } else if (!themeColor && this.appThemeColorStyle) {
-      this.removeAppThemeColor();
-    }
-  }
-  removeAppThemeColor() {
-    if (this.appThemeColorStyle) {
-      this.appThemeColorStyle.remove();
-      this.appThemeColorStyle = null;
-    }
-  }
+
   /**
    * 设置缓存
    */

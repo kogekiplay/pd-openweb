@@ -37,7 +37,7 @@
   // 与 antd 5 自己的做法一致，::before 完全还给 antd。
   .ant-tree.ant-tree-directory .ant-tree-treenode-selected,
   .ant-tree.ant-tree-directory .ant-tree-treenode:hover {
-    background: rgba(33, 150, 243, 0.11);
+    background: color-mix(in srgb, var(--color-primary) 11%, transparent);
     border-radius: 3px;
   }
 
@@ -68,7 +68,7 @@
       }
     }
     &:hover {
-      background: rgba(0, 0, 0, 0.04) 0% 0% no-repeat padding-box;
+      background: color-mix(in srgb, var(--color-overlay-ink) 4%, transparent) 0% 0% no-repeat padding-box;
 
       .ant-tree-title {
         .departmentName {
@@ -89,7 +89,7 @@
 
   .ant-tree-switcher_close:hover,
   .ant-tree-switcher_open:hover {
-    background: rgba(0, 0, 0, 0.04) 0% 0% no-repeat padding-box;
+    background: color-mix(in srgb, var(--color-overlay-ink) 4%, transparent) 0% 0% no-repeat padding-box;
   }
 
   .hoverParentStyle {
@@ -127,7 +127,7 @@
       background: var(--color-primary-transparent) 0 0 no-repeat padding-box !important;
     }
     &.ant-tree-treenode {
-      background: rgba(0, 0, 0, 0.04) !important;
+      background: color-mix(in srgb, var(--color-overlay-ink) 4%, transparent) !important;
     }
   }
 

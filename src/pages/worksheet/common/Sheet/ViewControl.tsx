@@ -381,7 +381,10 @@ function ViewControl(props) {
         <div className="detailAllCount">{_l('共') + detailView.detailViewRowsCount + _l('条')}</div>
       )}
 
-      {Number(view && view.viewType) === 0 && (
+      {/* 【表格视图的分页已移到底部】见 ./SheetFooter.tsx。
+          这里保留分支只是为了「非 common 类型」——single 视图没有底部条，
+          仍在顶栏显示。判据用 props.type，与 Sheet.tsx 里渲染 SheetFooter 的条件互补。 */}
+      {Number(view && view.viewType) === 0 && props.type === 'exportSheetButton' && (
         <Pagination
           disabled={!!get(base, 'forcePageSize')}
           abnormalMode={pageCountAbnormal}

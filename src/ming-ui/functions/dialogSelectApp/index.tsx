@@ -13,7 +13,7 @@ const AppDialog = styled(Dialog)`
   }
   .mui-dialog-footer {
     .Button--disabled {
-      background: rgba(33, 150, 243, 0.5);
+      background: color-mix(in srgb, var(--color-primary) 50%, transparent);
     }
   }
   .addAppWrapper {

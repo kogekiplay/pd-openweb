@@ -597,7 +597,10 @@ export const fillRecordsTimeBlockColor = (grouping, colorControl) => {
 
 export const fillRecordTimeBlockColor = (record, colorControl: FormControl = {}) => {
   const { controlId, options } = colorControl;
-  const defaultColor = '#1677ff';
+  // 甘特条没配颜色字段时的默认色。跟随主题 —— 它只流向 backgroundColor /
+  // borderColor / style.fill 这三种 CSS 值位（全仓查过，没有任何地方对它做
+  // TinyColor 计算），所以 var() 能活下来。
+  const defaultColor = 'var(--color-primary)';
 
   if (record[controlId] && colorControl.enumDefault2 === 1) {
     const value = safeParse(record[controlId], 'array');

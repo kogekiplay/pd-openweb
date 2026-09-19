@@ -1,7 +1,7 @@
 .createCustomBtnConDraw {
   position: absolute !important;
   .ant-drawer-mask {
-    background: rgba(0, 0, 0, 0.2);
+    background: color-mix(in srgb, var(--color-overlay-ink) 20%, transparent);
     position: fixed;
   }
 }
@@ -9,7 +9,7 @@
   width: 640px;
   height: 100%;
   background-color: var(--color-background-card);
-  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-xl);
   z-index: 12;
   .mTop14 {
     margin-top: 14px;
@@ -252,7 +252,7 @@
   }
 
   .appointFiltersList {
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-top: 1px solid color-mix(in srgb, var(--color-overlay-ink) 10%, transparent);
     width: 100%;
     margin-top: 25px;
     padding-top: 15px;
@@ -443,7 +443,7 @@
     color: var(--color-text-tertiary);
     &:hover {
       color: var(--color-primary);
-      background: rgba(33, 150, 243, 0.1);
+      background: color-mix(in srgb, var(--color-primary) 10%, transparent);
     }
   }
 }

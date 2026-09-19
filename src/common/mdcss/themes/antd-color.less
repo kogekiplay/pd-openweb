@@ -386,7 +386,7 @@
 
     /* antd 5 新增了 switcher 的 hover 高亮，画在它的 ::before 上：
        .ant-tree .ant-tree-switcher:not(.ant-tree-switcher-noop):hover:before
-         background-color rgba(0,0,0,0.06)
+         background-color color-mix(in srgb, var(--color-overlay-ink) 6%, transparent)
        实测 antd 4.24 完全没有这条规则，所以压掉是还原 v4 原样，不是自创样式。
        必须打在 ::before 上：只压元素本身的 background 对 v5 无效。 */
     &::before {
@@ -510,7 +510,7 @@
     /* antd 6: .ant-tooltip-content > .ant-tooltip-inner 两层合并成 .ant-tooltip-container */
     .ant-tooltip-container {
       box-shadow:
-        0 0 0 1px rgba(255, 255, 255, 0.04),
+        0 0 0 1px color-mix(in srgb, var(--color-overlay-paper) 4%, transparent),
         0 8px 24px rgba(0, 0, 0, 0.45);
     }
   }

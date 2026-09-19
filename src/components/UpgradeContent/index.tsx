@@ -19,7 +19,7 @@ const UpgradeContentWrap = styled.div`
     flex: 1;
     margin: 15px;
     background-color: var(--color-background-primary);
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.16);
+    box-shadow: var(--shadow-sm);
     .imgWrap {
       display: flex;
       align-items: center;

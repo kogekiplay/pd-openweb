@@ -9,7 +9,9 @@
     padding: 0 20px;
     height: 55px;
     align-items: center;
-    background: var(--color-background-primary);
+    /* 跟 worksheetConfigHeader 用同一档主色淡底 —— 两者都是
+       「顶层路由 + 属于某个应用」的编辑页头栏，视觉上应当是一类东西。 */
+    background: color-mix(in srgb, var(--color-primary) 12%, var(--color-background-primary));
     z-index: 2;
     box-shadow: var(--shadow-sm);
     &.workflowReleaseHeader {
@@ -27,7 +29,7 @@
       .workflowReturn {
         color: var(--color-white);
         &:hover {
-          background: rgba(0, 0, 0, 0.24);
+          background: color-mix(in srgb, var(--color-overlay-ink) 24%, transparent);
         }
       }
     }
@@ -78,7 +80,12 @@
       justify-content: center;
       padding: 0 9px;
     }
-    .iconWrap {
+    /* 【必须限定直接子元素】.iconWrap 是个太泛的类名，右端开关内部的旋钮
+       也叫这个。两边的选择器特异性都是 (0,3,0)，谁赢只看加载顺序 ——
+       实测是这条赢，于是 28px 的圆旋钮被撑回 36px 方块、顶破了胶囊轨道。
+       头栏自己的流程图标是 .workflowSettingsHeader 的直接子元素，
+       开关里的旋钮不是，一个 > 就分开了。 */
+    & > .iconWrap {
       width: 36px;
       height: 36px;
       border-radius: 5px;

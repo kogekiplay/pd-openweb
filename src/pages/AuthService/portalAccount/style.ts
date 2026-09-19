@@ -194,7 +194,7 @@ export const WrapContainer = styled.div`
     width: 480px;
     background: var(--color-background-primary);
     height: auto;
-    box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.16);
+    box-shadow: var(--shadow-lg);
     position: relative;
     margin: 100px auto;
     .messageConBox {
@@ -321,7 +321,7 @@ export const WrapUl = styled.div`
         word-break: break-all;
         &.isCur {
           color: var(--color-primary);
-          border-bottom: 3px solid rgba(33, 150, 243);
+          border-bottom: 3px solid var(--color-primary);
         }
       }
     }

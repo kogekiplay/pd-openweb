@@ -13,7 +13,7 @@
       height: 18px;
       border-radius: 50%;
       background-color: var(--color-background-primary);
-      box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12);
+      box-shadow: var(--shadow-sm);
       z-index: 1;
     }
   }
@@ -37,7 +37,7 @@
     position: absolute;
     left: 0;
     top: 0;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: color-mix(in srgb, var(--color-overlay-ink) 20%, transparent);
   }
   .attachmentFile {
     height: 100%;

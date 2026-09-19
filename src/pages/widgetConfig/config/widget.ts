@@ -478,7 +478,10 @@ export const DEFAULT_DATA = {
     enumDefault2: 1,
     enumDefault: 0,
     advancedSetting: {
-      theme: '#1677ff',
+      // 新建的分段默认跟随应用主题色。存 var() 字面串是本仓既有的写法 ——
+      // 同一块里的 color 早就是 var(--color-text-title) 了，渲染侧
+      // （SplitLineSection 的 styled 与 SvgIcon 的 style.color）都吃 CSS 变量。
+      theme: 'var(--color-primary)',
       color: 'var(--color-text-title)',
     },
   },

@@ -1,8 +1,7 @@
 .RelateRecordDropdown {
-  --selected-item-bg: rgba(0, 100, 240, 0.08);
-  [data-theme='dark'] & {
-    --selected-item-bg: rgba(22, 119, 255, 0.08);
-  }
+  /* 选中底 = 主色 8%。原来明暗两套各写死一个蓝（亮 rgba(0,100,240,.08)、
+     暗 rgba(22,119,255,.08)），归到主色之后明暗自动分流，那条 dark 分支是多余的。 */
+  --selected-item-bg: color-mix(in srgb, var(--color-primary) 8%, transparent);
   &-selected {
     position: relative;
     cursor: pointer;
@@ -170,7 +169,7 @@
           cursor: pointer;
           &:hover {
             color: var(--color-primary);
-            background-color: rgba(33, 150, 243, 0.16);
+            background-color: color-mix(in srgb, var(--color-primary) 16%, transparent);
           }
         }
       }
@@ -279,7 +278,7 @@
     }
   }
   &.big {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-overlay-ink) 6%, transparent);
   }
   &.selected {
     background-color: var(--color-primary-transparent);

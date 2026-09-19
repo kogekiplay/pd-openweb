@@ -19,7 +19,7 @@ const UnNormalWrap = styled.div`
     background: var(--color-background-primary);
     justify-content: center;
     align-items: center;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.16);
+    box-shadow: var(--shadow-sm);
   }
   .unNormalText {
     margin: 15px 0 20px;
