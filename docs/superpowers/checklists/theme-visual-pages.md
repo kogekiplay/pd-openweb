@@ -49,6 +49,28 @@
 **不要列进来的两条**（已知 404，不是回归）：`/kc/my`、`/calendar`。
 日历的正确路径是 `/apps/calendar/home`。
 
+## 【验暗色的陷阱】不要直接改 data-theme 属性
+
+暗色由**两个信号**驱动，正常情况下由 `setBodyThemeMode` 一起设置：
+
+| 信号 | 谁在认 |
+| --- | --- |
+| `documentElement` 的 `data-theme` | 主题引擎（`src/common/theme`）、全部 `[data-theme='dark']` 的 Less |
+| `window.themeMode` | 应用顶栏/左侧导航 —— 它据此把 `navColor` 强制成 `#1b2025`、`themeType` 置为 `black`（`AppPkgHeader/AppDetail/index.tsx:136,370`） |
+
+手动只设 `data-theme="dark"` 会让两者脱节：正文变深、**左侧导航仍是浅色**，
+看起来像 bug，其实是测法错了（2026-09-19 踩过一次）。
+
+正确的验法是改 `localStorage.themeMode` 再刷新：
+
+```js
+localStorage.setItem('themeMode', 'dark'); location.reload();
+// 验完记得还原
+localStorage.setItem('themeMode', 'light'); location.reload();
+```
+
+判据：顶栏 class 应为 `appPkgHeaderWrap black`、底色 `rgb(27, 32, 37)`。
+
 ## 浏览器里的快速自检
 
 进一个应用页面，控制台跑：
