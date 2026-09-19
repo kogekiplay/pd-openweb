@@ -85,6 +85,15 @@ export function buildThemeVars(seed: string, mode: ThemeMode = 'light'): ThemeVa
     '--color-primary-focus-outer': alpha(primary, a.focusOuter),
     '--color-primary-transparent': alpha(primary, a.transparent),
     '--color-primary-transparent-light': alpha(primary, a.transparentLight),
+
+    // ——— 淡色档（2026-09-19 补）———
+    // theme-default.less 原本只有上面 7 档，缺「淡底 / 淡边框」这两级，
+    // 于是选中态那类淡蓝只能写死（Cascader、TagTextarea 都是）。
+    // 用透明档代替不行：主色 12% 透明在白底上混出来的那个色，
+    // 比 antd 的 colorPrimaryBorder 淡得多，换上去边框会明显变虚。
+    // 直接从 antd token 读回这两级，和上面几档同源，不会分叉。
+    '--color-primary-bg': token.colorPrimaryBg,
+    '--color-primary-border': token.colorPrimaryBorder,
   };
 }
 

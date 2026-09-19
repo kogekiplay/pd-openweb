@@ -13,6 +13,11 @@
   --color-primary-focus-outer: rgba(42, 130, 255, 0.5); /* 暗底上提高到 ~50% 更可见 */
   --color-primary-transparent: rgba(42, 130, 255, 0.2); /* 暗底上提高到 ~20% 更可见 */
   --color-primary-transparent-light: rgba(42, 130, 255, 0.12); /* 暗底上提高到 ~12% 更可见 */
+  /* 淡底 / 淡边框：暗色下是深蓝而非浅蓝。
+     两个值相同不是手滑 —— antd 的 darkAlgorithm 对 #1677ff 算出来
+     colorPrimaryBg 与 colorPrimaryBorder 都是 #15325b（实测）。 */
+  --color-primary-bg: #15325b;
+  --color-primary-border: #15325b;
 
   /* 应用色已退役（2026-09-19）—— 见 theme-default.less 里的说明 */
 

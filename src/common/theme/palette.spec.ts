@@ -80,6 +80,13 @@ assert.strictEqual(dark['--color-primary-transparent-light'], `rgba(${rgbOf(antd
 // 5. 聚焦环主色与主色同值（theme-default.less 原本就是这么写的）
 assert.strictEqual(light['--color-primary-focus'], light['--color-primary']);
 
+// 5b. 淡色档同样直接取自 antd token（不是我们自己调的近似值）——
+//     它们服务于「选中态淡底 / 淡边框」那一类，用透明档代替会明显变虚。
+assert.strictEqual(light['--color-primary-bg'], antdLight.colorPrimaryBg);
+assert.strictEqual(light['--color-primary-border'], antdLight.colorPrimaryBorder);
+assert.strictEqual(dark['--color-primary-bg'], antdDark.colorPrimaryBg);
+assert.strictEqual(dark['--color-primary-border'], antdDark.colorPrimaryBorder);
+
 // 6. 【反向断言】这里【不】产出 --app-primary-color 系列。
 //    前两个已经由 src/common/mdcss/basic.css:3-5 别名到语义变量上
 //    （--color-primary / --color-link-hover），本来就跟着主色走；
