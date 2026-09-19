@@ -76,8 +76,27 @@ export function getCachedAppColor(appId?: string): string | undefined {
  * 地址变成 /worksheet/formSet/edit/:worksheetId —— fromURL 没带过去，
  * 于是按 URL 认不出应用，主题当场掉回平台蓝；刷新同理。
  */
-const APP_OWNED_TOPLEVEL =
-  /^\/(workflowedit|workflowplugin|printForm|worksheet\/(field\/edit|form\/edit|formSet\/edit|uploadTemplateSheet))/i;
+const APP_OWNED_TOPLEVEL = new RegExp(
+  '^/(' +
+    [
+      'workflowedit',
+      'workflowplugin',
+      'workflow/checksheet',
+      'printForm',
+      'aggregation',
+      'dataMirrorPreview',
+      'stats',
+      // worksheet 下只收这几条：public/ 是免登分享页，不属于任何登录态应用
+      'worksheet/(field/edit|form/edit|form/preview|formSet/edit|uploadTemplateSheet)',
+      // 老路由 /worksheet/:worksheetId 与 /worksheet/:worksheetId/row/:rowId。
+      // 【这条不只是防闪】它走的是 Application 路由树，本来有 AppThemeScope，
+      // 但那个 effect 的依赖是颜色、颜色没变就不会重跑 —— 一旦被这里重置成
+      // 平台色，就【再也补不回来】，不是闪一下的问题。
+      'worksheet/[0-9a-f]{24}',
+    ].join('|') +
+    ')',
+  'i',
+);
 
 /**
  * 【为什么要在 sessionStorage 里记一份「当前在哪个应用里」】
