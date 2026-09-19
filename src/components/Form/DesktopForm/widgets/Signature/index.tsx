@@ -15,6 +15,7 @@ import previewAttachments from 'src/components/previewAttachments/previewAttachm
 import { CardButton } from 'src/pages/worksheet/components/Basics.jsx';
 import { getToken } from 'src/utils/common';
 import { compatibleMDJS } from 'src/utils/project';
+import { ensurePngSignatureUrl, stripFileUrlSignature } from 'src/utils/signature';
 import { useWidgetEvent } from '../../../core/useFormEventManager';
 import 'rc-trigger/assets/index.css';
 
@@ -295,7 +296,11 @@ const Signature = props => {
 
     if (lastInfo) {
       setPopupVisible(false);
-      onChange(lastInfo.url);
+      /* 【「使用上次签名」是坏 URL 的繁殖路径】lastInfo.url 来自 accountSettingAjax.getSign()，
+         即该账号上一次签名。如果那次是在安卓 App 上签的（后缀 .JPEG，字节却是 PNG），
+         原样透传就会把它复制进每一条新记录 —— 一个坏签名无限繁殖。
+         这里把它归一成 .png 再写字段：字节本来就是 PNG，只换名字重传，不转码。 */
+      ensurePngSignatureUrl(lastInfo.url, { projectId, appId, worksheetId }).then(onChange);
       return;
     }
 
@@ -320,13 +325,18 @@ const Signature = props => {
           .then(() => {
             setPopupVisible(false);
 
+            /* getToken 回包的 url 带读时签名（?e=…&token=…），而库里存的是裸 URL ——
+               带签名存下去，签名一过期图就打不开。editSign 那一路尤其要剥：
+               它存的就是下次「使用上次签名」读到的东西。 */
+            const signUrl = stripFileUrlSignature(res[0].url);
+
             if (window.isPublicWorksheet || _.get(window, 'shareState.isPublicWorkflowRecord')) {
-              onChange(res[0].url);
+              onChange(signUrl);
             } else {
               if (!get(window, 'md.global.Account.accountId')) return;
-              accountSettingAjax.editSign({ url: res[0].url }).then(result => {
+              accountSettingAjax.editSign({ url: signUrl }).then(result => {
                 if (result) {
-                  onChange(res[0].url);
+                  onChange(signUrl);
                 }
               });
             }

@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import accountSettingAjax from 'src/api/accountSetting';
 import GenScanUploadQr from 'worksheet/components/GenScanUploadQr';
 import { getToken } from 'src/utils/common';
+import { stripFileUrlSignature } from 'src/utils/signature';
 import Icon from './Icon';
 
 const SignatureBox = styled.div`
@@ -125,8 +126,12 @@ export default class Signature extends Component<any, any> {
           .then(({ data }) => {
             const { key = '' } = data || {};
 
+            /* 【只剥 editSign 这一路，callback 不动】editSign 存的是「上次签名」，
+               下次「使用上次签名」读的就是它 —— 带读时签名存进去，过期就打不开。
+               callback 那一路是给调用方即时展示/继续上传用的（扫码签名用的是 key
+               不是 url），不属于持久化，保持原样不冒险。 */
             if (get(window, 'md.global.Account.accountId')) {
-              accountSettingAjax.editSign({ url: res[0].url });
+              accountSettingAjax.editSign({ url: stripFileUrlSignature(res[0].url) });
             }
 
             callback({ bucket: 4, key, url: res[0].url });
