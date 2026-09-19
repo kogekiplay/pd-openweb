@@ -6,7 +6,6 @@ import { Dialog, Icon } from 'ming-ui';
 import ErrorBoundary from 'ming-ui/components/ErrorBoundary';
 import privateGuide from 'src/api/privateGuide';
 import preall from 'src/common/preall';
-import { PLATFORM_SCOPE_CLASS } from 'src/common/theme';
 import ChatList from 'src/pages/chat/containers/ChatList';
 import ChatPanel from 'src/pages/chat/containers/ChatPanel';
 import { ROUTE_CONFIG_PORTAL } from 'src/pages/Portal/config';
@@ -142,16 +141,12 @@ class App extends Component<any, any> {
             </Routes>
           </section>
         </div>
-        {/* 聊天属于平台外壳，在应用里也保持平台色。只加 className，不加 DOM 节点 ——
-            #containerWrapper 是 flex 容器，往里塞包裹 div 会改变布局。 */}
-        <section id="chatPanel" className={PLATFORM_SCOPE_CLASS}>
-          {rp && <ChatPanel />}
-        </section>
+        <section id="chatPanel">{rp && <ChatPanel />}</section>
 
         {this.checkUpgrade()}
 
         {ch && (
-          <section id="chat" className={PLATFORM_SCOPE_CLASS}>
+          <section id="chat">
             {/* 原来这里用一条 path={withoutChatUrl} 的空路由把「不显示聊天」的
                 URL 占掉、其余落到 path="*" 上。withoutChatUrl 现在是谓词函数
                 （见 config.ts 里的说明），直接判断即可。 */}

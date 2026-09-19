@@ -1,6 +1,5 @@
 import React from 'react';
 import { Routes, useLocation } from 'react-router';
-import { PLATFORM_SCOPE_CLASS } from 'src/common/theme';
 import { withoutHeaderUrl } from '../config';
 import genRouteComponent from '../genRouteComponent';
 import { PAGE_HEADER_ROUTE_CONFIG } from './config';
@@ -16,10 +15,7 @@ export default () => {
   if (withoutHeaderUrl(pathname)) return null;
 
   return (
-    // 顶栏属于平台外壳：即使当前在某个应用里（此时 documentElement 上挂的是
-    // 应用色），这个类会把平台调色板重新声明回来。元素【自身匹配到】的规则
-    // 压过从 documentElement【继承】下来的值。只加 className，不加 DOM 节点。
-    <header className={PLATFORM_SCOPE_CLASS}>
+    <header>
       <Routes>{genHeaderRouteComponent(PAGE_HEADER_ROUTE_CONFIG)}</Routes>
     </header>
   );

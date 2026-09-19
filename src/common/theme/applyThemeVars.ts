@@ -12,11 +12,12 @@
  * `:root {}` 和 `[data-theme='dark'] {}`（两者特异性都是 0,1,0，
  * 谁后加载谁赢，靠加载顺序很脆）。
  *
- * 平台外壳则用 .platformThemeScope 类把平台调色板重新声明回去：
- * 元素【自身匹配到】的规则压过从 documentElement【继承】下来的值，
- * 继承弱于任何直接声明。
+ * 【没有「平台外壳保持平台色」这回事】最初设计给顶栏 / 聊天挂过一个
+ * .platformThemeScope 类，把平台调色板重新声明回去。2026-09-19 看过真实效果后
+ * 决定【整站一起跟随应用色】，那套作用域机制随即删除 —— 不在应用里的时候
+ * activeSeed 本来就是 null、本来就得到平台色，不需要额外的岛。
  */
-import { buildThemeVars, PLATFORM_PRIMARY, themeVarsToCssText } from './palette';
+import { buildThemeVars, PLATFORM_PRIMARY } from './palette';
 import type { ThemeMode, ThemeVars } from './palette';
 
 /**
@@ -26,10 +27,6 @@ import type { ThemeMode, ThemeVars } from './palette';
 export interface ElementLike {
   style: { setProperty(key: string, value: string): void; removeProperty(key: string): void };
 }
-
-export const PLATFORM_SCOPE_CLASS = 'platformThemeScope';
-
-const PLATFORM_STYLE_ID = 'md-platform-theme';
 
 /** 暗色的唯一真相是 setBodyThemeMode 设在 documentElement 上的 data-theme。 */
 export function currentThemeMode(): ThemeMode {
@@ -49,21 +46,6 @@ export function clearThemeVars(el: ElementLike, vars: ThemeVars): void {
 }
 
 /**
- * 拿到平台岛的 <style>，【只注入一次】——
- * 旧的 setAppThemeColor 每调一次就往 head 追加一个 <style>，
- * 那是个泄漏，不要重蹈。
- */
-function ensurePlatformStyle(): HTMLStyleElement {
-  const existing = document.getElementById(PLATFORM_STYLE_ID);
-  if (existing) return existing as HTMLStyleElement;
-
-  const style = document.createElement('style');
-  style.id = PLATFORM_STYLE_ID;
-  document.head.appendChild(style);
-  return style;
-}
-
-/**
  * 当前生效的应用色；null = 平台色。
  *
  * 【为什么用模块级状态】它建模的本来就是一件全局的事 ——「此刻 document 上
@@ -79,15 +61,12 @@ function ensurePlatformStyle(): HTMLStyleElement {
  */
 let activeSeed: string | null = null;
 
-/** 按当前的 activeSeed + 明暗模式重刷两处：documentElement 与平台岛规则。 */
+/**
+ * 按当前的 activeSeed + 明暗模式重刷 documentElement 上的调色板。
+ * 整站【只有这一处】写主题变量，顶栏和聊天也跟着一起变。
+ */
 function repaint(): void {
-  const mode = currentThemeMode();
-
-  applyThemeVars(document.documentElement, buildThemeVars(activeSeed || PLATFORM_PRIMARY, mode));
-
-  // 平台岛【永远】是平台色，不跟 activeSeed 走 —— 顶栏、聊天在应用里也保持平台色。
-  ensurePlatformStyle().textContent =
-    `.${PLATFORM_SCOPE_CLASS}{${themeVarsToCssText(buildThemeVars(PLATFORM_PRIMARY, mode))}}`;
+  applyThemeVars(document.documentElement, buildThemeVars(activeSeed || PLATFORM_PRIMARY, currentThemeMode()));
 }
 
 let modeObserverInstalled = false;
