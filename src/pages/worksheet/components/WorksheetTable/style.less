@@ -1,9 +1,9 @@
 :root {
-  --worksheet-table-border-color: rgba(0, 0, 0, 0.09);
+  --worksheet-table-border-color: color-mix(in srgb, var(--color-overlay-ink) 9%, transparent);
 }
 
 [data-theme='dark'] {
-  --worksheet-table-border-color: rgba(255, 255, 255, 0.09);
+  --worksheet-table-border-color: color-mix(in srgb, var(--color-overlay-paper) 9%, transparent);
 }
 .worksheetTableComp {
   &.scrollBarHoverShow {

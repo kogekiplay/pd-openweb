@@ -279,7 +279,7 @@
     }
     &:hover {
       border: 1px solid var(--color-border-primary);
-      background: rgba(0, 0, 0, 0.04);
+      background: color-mix(in srgb, var(--color-overlay-ink) 4%, transparent);
       .manageSettingIcon {
         display: block;
       }
@@ -366,7 +366,7 @@
     opacity: 0;
   }
   &:hover {
-    background: rgba(0, 0, 0, 0.04) !important;
+    background: color-mix(in srgb, var(--color-overlay-ink) 4%, transparent) !important;
     .icon-drag {
       opacity: 1;
       &:hover {
@@ -385,7 +385,7 @@
     .recycleWrap {
       width: 24px;
       &:hover {
-        background: rgba(0, 0, 0, 0.04);
+        background: color-mix(in srgb, var(--color-overlay-ink) 4%, transparent);
       }
 
       .recycleIcon {

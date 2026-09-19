@@ -36,9 +36,9 @@
         }
         .originImage {
           color: rgba(0, 0, 0, 0.4) !important;
-          background-color: rgba(0, 0, 0, 0.08) !important;
+          background-color: color-mix(in srgb, var(--color-overlay-ink) 8%, transparent) !important;
           &:hover {
-            background-color: rgba(0, 0, 0, 0.12) !important;
+            background-color: color-mix(in srgb, var(--color-overlay-ink) 12%, transparent) !important;
           }
         }
       }
@@ -238,9 +238,9 @@
           border-radius: 2px;
           padding: 3px 10px;
           border-radius: 3px;
-          background: rgba(255, 255, 255, 0.1);
+          background: color-mix(in srgb, var(--color-overlay-paper) 10%, transparent);
           &:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: color-mix(in srgb, var(--color-overlay-paper) 20%, transparent);
           }
         }
       }
@@ -318,7 +318,7 @@
           top: 0;
           width: 100%;
           height: 100%;
-          background-color: rgba(0, 0, 0, 0.2);
+          background-color: color-mix(in srgb, var(--color-overlay-ink) 20%, transparent);
           transition: opacity 0.3s ease;
         }
         &:hover {

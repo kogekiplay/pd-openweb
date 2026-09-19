@@ -1,9 +1,9 @@
 :root {
-  --tag-bg: rgba(0, 0, 0, 0.04);
+  --tag-bg: color-mix(in srgb, var(--color-overlay-ink) 4%, transparent);
   --batch-active-border: #3c3c3c;
 }
 
 [data-theme='dark'] {
-  --tag-bg: rgba(255, 255, 255, 0.1);
+  --tag-bg: color-mix(in srgb, var(--color-overlay-paper) 10%, transparent);
   --batch-active-border: #ffffff;
 }

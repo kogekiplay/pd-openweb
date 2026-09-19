@@ -6,10 +6,10 @@
 
 .nativeHeaderWrap {
   .flexCenterHeight();
-  --dot-wrap-bg: rgba(0, 0, 0, 0.04);
+  --dot-wrap-bg: color-mix(in srgb, var(--color-overlay-ink) 4%, transparent);
   --dot-bg: rgba(0, 0, 0, 0.6);
   [data-theme='dark'] & {
-    --dot-wrap-bg: rgba(255, 255, 255, 0.04);
+    --dot-wrap-bg: color-mix(in srgb, var(--color-overlay-paper) 4%, transparent);
     --dot-bg: rgba(255, 255, 255, 0.6);
   }
   height: 50px;
@@ -27,7 +27,7 @@
       border-radius: 8px;
       box-sizing: content-box;
       &:hover {
-        background-color: rgba(0, 0, 0, 0.08);
+        background-color: color-mix(in srgb, var(--color-overlay-ink) 8%, transparent);
         .icon {
           color: var(--color-primary) !important;
         }

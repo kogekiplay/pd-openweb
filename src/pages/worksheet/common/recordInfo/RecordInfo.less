@@ -266,7 +266,7 @@
                   top: 18px;
                   width: 1px;
                   height: 16px;
-                  background-color: rgba(0, 0, 0, 0.12);
+                  background-color: color-mix(in srgb, var(--color-overlay-ink) 12%, transparent);
                 }
               }
               &.tabsNum1 {
@@ -302,7 +302,7 @@
       }
     }
     .relateRecordTable .worksheetTable {
-      border-top: 1px solid rgba(0, 0, 0, 0.09);
+      border-top: 1px solid color-mix(in srgb, var(--color-overlay-ink) 9%, transparent);
     }
   }
 
@@ -360,10 +360,10 @@
     right: 0;
     top: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: color-mix(in srgb, var(--color-overlay-ink) 5%, transparent);
   }
   &.transparentButton:not(:disabled):hover::before {
-    background-color: rgba(0, 0, 0, 0.02);
+    background-color: color-mix(in srgb, var(--color-overlay-ink) 2%, transparent);
   }
   &.Button--disabled {
     color: rgba(117, 117, 117, 0.5) !important;

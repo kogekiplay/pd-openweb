@@ -148,7 +148,7 @@
     &.errorShadow {
       box-shadow:
         0 0 1px 1px var(--color-error),
-        0 1px 4px rgba(0, 0, 0, 0.16);
+        0 1px 4px color-mix(in srgb, var(--color-overlay-ink) 16%, transparent);
     }
     &.errorShadow.active {
       box-shadow:
@@ -283,7 +283,7 @@
         display: inline-block;
         max-width: 100%;
         &:hover {
-          background: rgba(255, 255, 255, 0.08);
+          background: color-mix(in srgb, var(--color-overlay-paper) 8%, transparent);
         }
       }
       .workflowNodeName {
@@ -519,7 +519,7 @@
     cursor: pointer;
     font-size: 16px;
     color: var(--color-text-secondary);
-    background: rgba(255, 255, 255, 0.1);
+    background: color-mix(in srgb, var(--color-overlay-paper) 10%, transparent);
     border-radius: 3px;
     margin-right: 8px;
     &:not(.disabled):hover {

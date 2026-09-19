@@ -2179,11 +2179,11 @@ input[type='text']::-ms-clear {
   border-radius: 2em;
   background: var(--color-background-secondary);
   -webkit-box-shadow:
-    0 0 0 1px rgba(0, 0, 0, 0.1),
-    0 4px 0 rgba(0, 0, 0, 0.08);
+    0 0 0 1px color-mix(in srgb, var(--color-overlay-ink) 10%, transparent),
+    0 4px 0 color-mix(in srgb, var(--color-overlay-ink) 8%, transparent);
   box-shadow:
-    0 0 0 1px rgba(0, 0, 0, 0.1),
-    0 4px 0 rgba(0, 0, 0, 0.08);
+    0 0 0 1px color-mix(in srgb, var(--color-overlay-ink) 10%, transparent),
+    0 4px 0 color-mix(in srgb, var(--color-overlay-ink) 8%, transparent);
 }
 
 .tgl-ios + .tgl-btn:active {
@@ -2282,33 +2282,33 @@ nav,
 
 .z-depth-1-half {
   box-shadow:
-    0 5px 11px 0 rgba(0, 0, 0, 0.12),
-    0 4px 15px 0 rgba(0, 0, 0, 0.1);
+    0 5px 11px 0 color-mix(in srgb, var(--color-overlay-ink) 12%, transparent),
+    0 4px 15px 0 color-mix(in srgb, var(--color-overlay-ink) 10%, transparent);
 }
 
 .z-depth-2 {
   box-shadow:
-    0 8px 17px 0 rgba(0, 0, 0, 0.18),
-    0 6px 20px 0 rgba(0, 0, 0, 0.12);
+    0 8px 17px 0 color-mix(in srgb, var(--color-overlay-ink) 18%, transparent),
+    0 6px 20px 0 color-mix(in srgb, var(--color-overlay-ink) 12%, transparent);
 }
 
 .z-depth-3 {
   box-shadow:
-    0 12px 15px 0 rgba(0, 0, 0, 0.2),
-    0 17px 50px 0 rgba(0, 0, 0, 0.12);
+    0 12px 15px 0 color-mix(in srgb, var(--color-overlay-ink) 20%, transparent),
+    0 17px 50px 0 color-mix(in srgb, var(--color-overlay-ink) 12%, transparent);
 }
 
 .z-depth-4,
 .modal {
   box-shadow:
-    0 16px 28px 0 rgba(0, 0, 0, 0.19),
-    0 25px 55px 0 rgba(0, 0, 0, 0.14);
+    0 16px 28px 0 color-mix(in srgb, var(--color-overlay-ink) 19%, transparent),
+    0 25px 55px 0 color-mix(in srgb, var(--color-overlay-ink) 14%, transparent);
 }
 
 .z-depth-5 {
   box-shadow:
-    0 27px 24px 0 rgba(0, 0, 0, 0.18),
-    0 40px 77px 0 rgba(0, 0, 0, 0.15);
+    0 27px 24px 0 color-mix(in srgb, var(--color-overlay-ink) 18%, transparent),
+    0 40px 77px 0 color-mix(in srgb, var(--color-overlay-ink) 15%, transparent);
 }
 
 .z-depth-6 {
@@ -2317,14 +2317,14 @@ nav,
 
 .tipBoxShadow {
   box-shadow:
-    0 3px 10px 2px rgba(0, 0, 0, 0.16),
-    0 5px 20px 4px rgba(0, 0, 0, 0.1);
+    0 3px 10px 2px color-mix(in srgb, var(--color-overlay-ink) 16%, transparent),
+    0 5px 20px 4px color-mix(in srgb, var(--color-overlay-ink) 10%, transparent);
 }
 
 .taskBoxShadow {
   box-shadow:
-    0 4px 20px rgba(0, 0, 0, 0.13),
-    0 2px 6px rgba(0, 0, 0, 0.1);
+    0 4px 20px color-mix(in srgb, var(--color-overlay-ink) 13%, transparent),
+    0 2px 6px color-mix(in srgb, var(--color-overlay-ink) 10%, transparent);
 }
 
 .card {

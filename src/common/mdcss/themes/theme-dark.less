@@ -57,6 +57,11 @@
   --color-border-hover: #525252; /* 悬停边框（输入/按钮 hover） */
   --color-border-strong: #606060; /* 强强调（拖拽/高对比轮廓） */
 
+  /* 中性覆层：暗色下【反过来】—— 压暗覆层改用浅色基色才看得见，
+     提亮覆层改用深色基色。见 theme-default.less 里的说明。 */
+  --color-overlay-ink: #e6e6e6;
+  --color-overlay-paper: #161616;
+
   /* 阴影：暗色里阴影存在感更弱，靠“更亮表面 + 细描边”表达层级 */
   --shadow-sm: 0 0 1px 1px rgba(42, 42, 42, 1), 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.32);
   --shadow-md: 0 0 1px 1px rgba(42, 42, 42, 1), 0 2px 6px rgba(0, 0, 0, 0.38), 0 2px 4px rgba(0, 0, 0, 0.28);

@@ -133,7 +133,7 @@
         width: 18px;
         height: 18px;
         box-shadow: inset 0 0 1px 0 rgba(0, 0, 0, 0.25);
-        border: 1px solid rgba(0, 0, 0, 0.06);
+        border: 1px solid color-mix(in srgb, var(--color-overlay-ink) 6%, transparent);
         cursor: pointer;
         border-radius: 4px;
         display: flex;
@@ -141,7 +141,7 @@
         align-items: center;
         position: relative;
         &:hover::before {
-          border-color: rgba(0, 0, 0, 0.15);
+          border-color: color-mix(in srgb, var(--color-overlay-ink) 15%, transparent);
         }
         &::before {
           content: '';

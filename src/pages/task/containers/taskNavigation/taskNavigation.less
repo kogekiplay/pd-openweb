@@ -247,7 +247,7 @@
       font-size: 12px;
     }
     .popTop + .topLine {
-      border-top: 1px rgba(255, 255, 255, 0.15) solid;
+      border-top: 1px color-mix(in srgb, var(--color-overlay-paper) 15%, transparent) solid;
       margin-top: 0px;
     }
     .folderList .folderIcon {
@@ -311,7 +311,7 @@
     }
     .folderList .pigeonholeFolder.lightBlueBg {
       color: #afb3b9;
-      background-color: rgba(255, 255, 255, 0.06);
+      background-color: color-mix(in srgb, var(--color-overlay-paper) 6%, transparent);
     }
     .folderList .pigeonholeFolder .Right,
     .folderList .slideFolders .Right {
@@ -507,7 +507,7 @@
   }
   .folderList li.projectFolder {
     height: auto;
-    border-bottom: 0px solid rgba(255, 255, 255, 0.15);
+    border-bottom: 0px solid color-mix(in srgb, var(--color-overlay-paper) 15%, transparent);
   }
   .folderList .projectFolder .folderTitle {
     height: 40px;
@@ -589,14 +589,14 @@
     width: 180px;
   }
   .addFileBox .fileFoldersBox .newFile {
-    border-top: 1px rgba(0, 0, 0, 0.15) solid;
+    border-top: 1px color-mix(in srgb, var(--color-overlay-ink) 15%, transparent) solid;
   }
   .addFileBox .fileFoldersBox .fileFolders .moveToFile {
     color: var(--color-text-placeholder);
     background-color: var(--color-background-primary) !important;
   }
   .fileFoldersBox .fileFolders .exitFile {
-    border-bottom: 1px rgba(0, 0, 0, 0.15) solid;
+    border-bottom: 1px color-mix(in srgb, var(--color-overlay-ink) 15%, transparent) solid;
   }
   .fileFoldersBox .fileFolders .exitFile + .newFile {
     border-top: 0;

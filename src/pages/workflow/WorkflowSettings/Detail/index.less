@@ -36,8 +36,8 @@
     width: 800px;
     background: var(--color-background-card);
     box-shadow:
-      0 10px 23px 2px rgba(0, 0, 0, 0.2),
-      0 3px 6px rgba(0, 0, 0, 0.15);
+      0 10px 23px 2px color-mix(in srgb, var(--color-overlay-ink) 20%, transparent),
+      0 3px 6px color-mix(in srgb, var(--color-overlay-ink) 15%, transparent);
     ::-webkit-input-placeholder {
       color: var(--color-text-disabled);
     }
@@ -130,7 +130,7 @@
         font-size: 17px;
         font-weight: bold;
         &:not(:disabled):hover {
-          background: rgba(255, 255, 255, 0.12);
+          background: color-mix(in srgb, var(--color-overlay-paper) 12%, transparent);
         }
         &:focus {
           background: var(--color-white) !important;
