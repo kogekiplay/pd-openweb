@@ -97,6 +97,34 @@ const BarCon = styled.div`
 const BarTotal = styled.span`
   white-space: nowrap;
 `;
+/* 【两个输入型控件必须长一样】实测差了四处：
+     圆角 4px vs 3px、边框色（border-secondary vs border-primary）、
+     字号 13px vs 14px、内边距 8px vs 12px。
+   ming-ui 的 Dropdown 和 Input 各有各的默认皮肤，放在一条分页栏里就露馅了。
+   这里统一成一套，并和页码按钮的 6px 圆角对齐。 */
+const barField = `
+  height: 26px !important;
+  padding: 0 8px !important;
+  border-radius: 6px !important;
+  border: 1px solid var(--color-border-primary) !important;
+  font-size: 13px !important;
+  box-sizing: border-box !important;
+  /* 【文字色也要统一】Dropdown 的值是次级灰、Input 是主文字黑，并排就很刺眼。
+     .value 那条是给 Dropdown 内层的 span 用的，只写在外层盖不住。 */
+  color: var(--color-text-primary) !important;
+  .value {
+    color: var(--color-text-primary) !important;
+  }
+  /* 【悬停/聚焦统一成主题色】Dropdown 本来就有主题色的 hover 边框，
+     Input 没有 —— 一个有反馈一个没有。统一的方向是【把 Input 补上】，
+     不是把 Dropdown 的去掉（那等于为了一致把好的那个拉平）。 */
+  &:hover,
+  &:focus,
+  &:focus-within {
+    border-color: var(--color-primary) !important;
+  }
+`;
+
 const BarPageSize = styled.div`
   display: flex;
   align-items: center;
@@ -108,8 +136,7 @@ const BarPageSize = styled.div`
     width: 68px;
   }
   .Dropdown--input {
-    height: 26px !important;
-    padding: 0 8px !important;
+    ${barField}
   }
 `;
 const BarPages = styled.div`
@@ -141,6 +168,18 @@ const BarPage = styled.span`
   &.disabled {
     color: var(--color-text-disabled);
     cursor: default;
+  }
+`;
+
+const BarJump = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  .Input {
+    width: 56px;
+    text-align: center;
+    ${barField}
   }
 `;
 
@@ -198,6 +237,27 @@ export default class Pagination extends React.Component<any, any> {
   // 于是 `() => this.xxx.current` 成了 TS2740。2.6.5 那边这个 prop 无类型，看不出来。
   conRef = React.createRef<HTMLElement>();
   jumpInputRef = React.createRef();
+  /** bar 形态自己的跳页输入框 ref。【不复用 jumpInputRef】：
+      两种形态虽然不会同时渲染（bar 走 early return、根本不产出 popup），
+      但共用一个 ref 是个等着被踩的雷 —— 哪天有人让两者共存就会互相覆盖。 */
+  barJumpRef = React.createRef<{ value?: string }>();
+
+  /** 跳到指定页。越界或非数字时提示，不静默吞掉。 */
+  jumpTo(raw?: string) {
+    const { abnormalMode, changePageIndex } = this.props;
+
+    if (!raw) return;
+
+    const page = parseInt(raw, 10);
+
+    if (_.isNaN(page)) return;
+
+    if ((page > 0 && page <= this.pageNum) || abnormalMode) {
+      changePageIndex(page);
+    } else {
+      alert(_l('请输入正确的页数'), 3);
+    }
+  }
 
   get displayCount() {
     const { allCount, countForShow } = this.props;
@@ -286,6 +346,24 @@ export default class Pagination extends React.Component<any, any> {
             <i className="icon icon-arrow-right-border" />
           </BarPage>
         </BarPages>
+
+        {/* 【页数多到窗口装不下时才给跳页】总页数 <= 7 时页码全部列出来了，
+            再放一个输入框是多余的。161 页那种情况下窗口只能给到 1 / 2 / ... / 161，
+            没有这个框就够不到中间任何一页。 */}
+        {!abnormalMode && total > 7 && (
+          <BarJump>
+            <span>{_l('跳至')}</span>
+            <Input
+              manualRef={this.barJumpRef}
+              valueFilter={v => v.replace(/[^0-9]/g, '')}
+              defaultValue={pageIndex}
+              onKeyDown={e => {
+                if (e.keyCode === 13) this.jumpTo(get(this, 'barJumpRef.current.value'));
+              }}
+            />
+            <span>{_l('页')}</span>
+          </BarJump>
+        )}
       </BarCon>
     );
   }
@@ -373,17 +451,8 @@ export default class Pagination extends React.Component<any, any> {
             valueFilter={v => v.replace(/[^0-9]/g, '')}
             defaultValue={pageIndex}
             onKeyDown={e => {
-              if (e.keyCode === 13 && this.jumpInputRef.current && this.jumpInputRef.current.value) {
-                const jumpPage = parseInt(this.jumpInputRef.current.value, 10);
-
-                if (!_.isNaN(jumpPage)) {
-                  if ((jumpPage > 0 && jumpPage <= this.pageNum) || abnormalMode) {
-                    changePageIndex(jumpPage);
-                  } else {
-                    alert(_l('请输入正确的页数'), 3);
-                  }
-                }
-              }
+              // 和 bar 形态共用 jumpTo，避免两份越界判断各自漂移
+              if (e.keyCode === 13) this.jumpTo(get(this, 'jumpInputRef.current.value'));
             }}
           />
           {_l('页')}
