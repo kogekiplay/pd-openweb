@@ -16,7 +16,7 @@ export const Wrap = styled.div`
     box-sizing: border-box;
     height: 36px;
     line-height: 36px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     padding: 0 12px;
     font-size: 14px;
     cursor: no-drop;
@@ -55,7 +55,7 @@ export const Wrap = styled.div`
     min-height: 36px;
     .itemT {
       background: var(--color-background-secondary);
-      border-radius: 4px 4px 4px 4px;
+      border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
       padding: 3px 8px 3px 10px;
       border: 1px solid var(--color-border-secondary);
       i {

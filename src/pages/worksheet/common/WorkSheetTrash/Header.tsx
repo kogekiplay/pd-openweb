@@ -20,7 +20,7 @@ const Con = styled.div`
   .pagination {
     line-height: 1em;
     margin-right: 8px;
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     &:hover {
       background: var(--color-background-hover);
     }
@@ -64,7 +64,7 @@ const Operate = styled.span`
     display: inline-flex;
     height: 28px;
     align-items: center;
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     padding: 0 5px;
     &:hover {
       background: var(--color-background-hover);

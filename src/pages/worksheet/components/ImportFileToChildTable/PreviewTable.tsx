@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useRef } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _, { includes } from 'lodash';
 import { arrayOf, bool, func, number, shape, string } from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { FixedTable } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -10,11 +10,11 @@ import autoSize from 'ming-ui/components/AutoSize';
 import SelectControls from 'worksheet/common/WorkSheetFilter/components/SelectControls';
 import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget';
 import { getIconByType } from 'src/pages/widgetConfig/util';
-import { getIndex } from '../WorksheetTable/components/Cell';
 import type { FormControl } from 'src/utils/controlTypes';
+import { getIndex } from '../WorksheetTable/components/Cell';
 
 const StyledFixedTable = styled(FixedTable)`
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-secondary);
   overflow: hidden;
   .cell {

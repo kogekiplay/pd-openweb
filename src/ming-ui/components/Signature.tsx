@@ -14,7 +14,7 @@ const SignatureBox = styled.div`
   .signatureCanvas {
     width: 100%;
     height: 200px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     background: var(--color-background-tertiary);
     vertical-align: top;
     display: flex;

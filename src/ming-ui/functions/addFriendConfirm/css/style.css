@@ -6,7 +6,7 @@
   padding: 6px 10px;
   outline: none;
   border: 1px solid transparent;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   box-sizing: border-box;
 }
 

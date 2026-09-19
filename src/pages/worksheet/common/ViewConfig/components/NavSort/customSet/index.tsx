@@ -21,7 +21,7 @@ const Wrap = styled.div`
   .reset,
   .clearBtn {
     padding: 6px 12px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     display: inline-block;
     color: var(--color-text-secondary);
     &:hover {
@@ -36,7 +36,7 @@ const Wrap = styled.div`
   .add {
     padding: 6px 16px;
     background: var(--color-background-secondary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     min-width: 100px;
     &:hover {
       background: var(--color-background-hover);

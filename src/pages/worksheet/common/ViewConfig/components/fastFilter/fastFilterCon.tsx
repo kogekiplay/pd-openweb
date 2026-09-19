@@ -6,9 +6,9 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { getIconByType } from 'src/pages/widgetConfig/util';
 import { filterOnlyShowField, isOtherShowFeild } from 'src/pages/widgetConfig/util';
 import AddCondition from 'src/pages/worksheet/common/WorkSheetFilter/components/AddCondition';
+import type { FormControl } from 'src/utils/controlTypes';
 import { FASTFILTER_CONDITION_TYPE } from './util';
 import './index.less';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrap = styled.div`
   .hasData {
@@ -29,7 +29,7 @@ const Wrap = styled.div`
         position: relative;
         background: var(--color-background-secondary);
         color: var(--color-primary);
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         display: block;
         padding: 12px 0;
         cursor: pointer;
@@ -77,7 +77,7 @@ const Wrap = styled.div`
       span.addIcon {
         position: relative;
         background: var(--color-primary);
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         color: var(--color-white);
         display: inline-block;
         padding: 12px 32px;

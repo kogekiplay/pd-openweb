@@ -15,16 +15,16 @@ import { permitList } from 'src/pages/FormSet/config.js';
 import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import { SYSTEM_CONTROL } from 'src/pages/widgetConfig/config/widget';
 import { emitter } from 'src/utils/common';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import { addBehaviorLog } from 'src/utils/project';
 import { getRecordColorConfig } from 'src/utils/record';
 import * as actions from './redux/action';
 import ColumnHead from './RelateRecordTableColumnHead';
 import RowHead from './RelateRecordTableRowHead';
 import { getVisibleControls } from './utils';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const ColumnPopupOperateCon = styled.div`
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-primary);
   background-color: #fff;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
@@ -65,7 +65,9 @@ function getCellWidths(control, controls) {
   if (isArray(widths)) {
     const result = {};
     control.showControls
-      .map((scid: FormControl) => find((controls || control.relationControls || []).concat(SYSTEM_CONTROL), c => c.controlId === scid))
+      .map((scid: FormControl) =>
+        find((controls || control.relationControls || []).concat(SYSTEM_CONTROL), c => c.controlId === scid),
+      )
       .filter(c => c)
       .forEach((c, i) => {
         result[c.controlId] = widths[i];
@@ -262,7 +264,16 @@ function TableComp(props) {
     rowCount = pageSize;
   }
 
-  const renderRowHead = ({ className, style, rowIndex, row, isColumnPopup = false }: { className?: string; [key: string]: any }) => {
+  const renderRowHead = ({
+    className,
+    style,
+    rowIndex,
+    row,
+    isColumnPopup = false,
+  }: {
+    className?: string;
+    [key: string]: any;
+  }) => {
     const isSavedRecord = !!find(originalRecords, { rowid: row.rowid });
     const canRemoveRelation = allowRemoveRelation || !isSavedRecord;
     return (

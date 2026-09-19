@@ -9,7 +9,7 @@ const Con = styled.div`
   .relationSearchTag {
     display: inline-block;
     background-color: rgba(0, 100, 240, 0.08);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     height: 21px;
     line-height: 21px;
     padding: 0 6px;

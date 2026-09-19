@@ -74,7 +74,7 @@ export const Wrap = styled.div`
         opacity: 1;
         background: var(--color-background-primary);
         border: 1px solid var(--color-border-primary);
-        border-radius: 4px;
+        border-radius: var(--radius-sm);
         padding: 0 12px 0 12px;
         .icon {
           line-height: 35px;
@@ -121,7 +121,7 @@ export const Wrap = styled.div`
         height: 36px;
         opacity: 1;
         background: var(--color-background-primary);
-        border-radius: 4px;
+        border-radius: var(--radius-sm);
         margin-top: 8px;
         box-sizing: border-box;
         & > div {
@@ -132,7 +132,7 @@ export const Wrap = styled.div`
           width: 100%;
           display: flex;
           border: 1px solid var(--color-border-primary);
-          border-radius: 4px;
+          border-radius: var(--radius-sm);
           height: 36px;
           &.active {
             border: 1px solid var(--color-primary);

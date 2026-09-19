@@ -9,7 +9,7 @@ const Wrap = styled.div`
   &.hideDynamic {
     & > div > div > div {
       width: 100%;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
     }
     .selectOtherFieldContainer {
       display: none;

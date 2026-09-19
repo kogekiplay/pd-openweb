@@ -20,7 +20,7 @@ const MobileConfigWrap = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     transition:
       color 0.2s,
       background-color 0.2s;

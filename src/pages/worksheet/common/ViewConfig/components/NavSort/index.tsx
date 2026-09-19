@@ -18,7 +18,7 @@ const Wrap = styled.div`
     height: 36px;
     line-height: 36px;
     background: var(--color-background-primary);
-    border-radius: 3px 3px 3px 3px;
+    border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     border: 1px solid var(--color-border-primary);
     i {
       color: var(--color-text-tertiary);

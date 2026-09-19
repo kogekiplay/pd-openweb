@@ -24,7 +24,7 @@ const ChooseWidgetWrap = styled.div`
   box-shadow:
     0 4px 20px rgba(0, 0, 0, 0.2),
     0 2px 6px rgba(0, 0, 0, 0.15);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   max-height: ${window.innerHeight - 24}px;
   .searchWrapper {
     border-bottom: 1px solid var(--color-border-secondary);
@@ -50,7 +50,7 @@ const ChooseWidgetWrap = styled.div`
   .selectAll,
   .clearAll {
     background: var(--color-background-secondary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
   }
   .listBox {
     overflow: auto;
@@ -72,7 +72,7 @@ const ChooseWidgetWrap = styled.div`
           height: calc(100% - 30px);
           border-left: 1px solid var(--color-border-secondary);
           border-bottom: 1px solid var(--color-border-secondary);
-          border-radius: 2px;
+          border-radius: var(--radius-sm);
         }
       }
       .widgetIcon {
@@ -163,7 +163,11 @@ let ChooseWidget = class ChooseWidget extends React.Component<any, any> {
     });
   };
   getData = props => {
-    const { writeObject, relationControls = [], widgetList = [] }: { relationControls: FormControl[]; [key: string]: any } = props;
+    const {
+      writeObject,
+      relationControls = [],
+      widgetList = [],
+    }: { relationControls: FormControl[]; [key: string]: any } = props;
     return (writeObject !== 1 ? relationControls : widgetList).filter(o => !canNotForCustomWrite(o));
   };
   handSet = (item, isAdd) => {

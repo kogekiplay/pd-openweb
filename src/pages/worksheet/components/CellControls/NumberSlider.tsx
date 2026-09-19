@@ -1,9 +1,9 @@
 import React from 'react';
 import { shallowEqual } from 'react-redux';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Slider } from 'ming-ui';
 import ClickAway from 'ming-ui/components/ClickAway';
@@ -35,7 +35,7 @@ const OperateIcon = styled.div`
   margin-top: -2px;
   width: 24px;
   height: 24px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   background: var(--color-background-primary);
   text-align: center;
   color: var(--color-text-tertiary);

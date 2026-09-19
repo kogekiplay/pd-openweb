@@ -1,8 +1,8 @@
 import React, { useCallback, useMemo, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _, { get } from 'lodash';
 import { arrayOf, bool, func, number, shape, string } from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Button, Menu, SvgIcon } from 'ming-ui';
 import autoSize from 'ming-ui/components/AutoSize';
@@ -25,7 +25,7 @@ const MoreBtn = styled.span`
   height: 28px;
   padding: 0 11px;
   line-height: 30px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   color: var(--color-text-secondary);
   cursor: pointer;
@@ -200,7 +200,7 @@ const GroupedIconTextCon = styled.div`
   padding: 0 12px;
   height: 28px;
   line-height: 28px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   white-space: nowrap;
   &:hover,
   &.active {

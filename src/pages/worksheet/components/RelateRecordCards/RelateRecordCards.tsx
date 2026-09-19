@@ -25,12 +25,12 @@ import { updateRelateRecordSorts } from 'src/pages/worksheet/controllers/record'
 import { getTranslateInfo } from 'src/utils/app';
 import { browserIsMobile } from 'src/utils/common';
 import { completeControls, controlState, getTitleTextFromRelateControl } from 'src/utils/control';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import RegExpValidator from 'src/utils/expression';
 import { addBehaviorLog } from 'src/utils/project';
 import { replaceControlsTranslateInfo } from 'src/utils/translate';
 import RecordCoverCard from './RecordCoverCard';
 import RecordTag from './RecordTag';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const MAX_COUNT = 200;
 
@@ -52,7 +52,7 @@ export const Button = styled.div`
   align-items: center;
   color: var(--color-text-title);
   border: 1px solid var(--color-border-primary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   max-width: 150px;
   > .icon {
     color: var(--color-text-tertiary);
@@ -70,7 +70,7 @@ export const LoadingButton = styled.div`
   line-height: 29px;
   padding: 0 12px;
   color: var(--color-primary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   .loading {
     margin-right: 6px;
@@ -127,7 +127,7 @@ const RelateScanQRCodeWrap = styled(RelateScanQRCode)`
     justify-content: center;
     border: 1px solid var(--color-border-secondary);
     margin-left: 10px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
   }
 `;
 
@@ -802,7 +802,9 @@ class RelateRecordCards extends Component<any, any> {
               helperClass="draggingItem"
               direction="vertical"
               onSortEnd={newItems => {
-                const newRecords = newItems.concat(records.filter((r: RecordRow) => !find(newItems, n => n.rowid === r.rowid)));
+                const newRecords = newItems.concat(
+                  records.filter((r: RecordRow) => !find(newItems, n => n.rowid === r.rowid)),
+                );
 
                 if (formIsEditing || !recordId || control.isSubList) {
                   this.setState({ records: newRecords }, () => {
@@ -1137,14 +1139,18 @@ class RelateRecordCards extends Component<any, any> {
                     }}
                     updateRows={(rowIds = [], updatedRow = {}) => {
                       this.setState({
-                        records: records.map((r: RecordRow) => (includes(rowIds, r.rowid) ? { ...r, ...updatedRow } : r)),
+                        records: records.map((r: RecordRow) =>
+                          includes(rowIds, r.rowid) ? { ...r, ...updatedRow } : r,
+                        ),
                       });
                     }}
                     updateWorksheetControls={this.handleUpdateNewOptionControls}
                     projectId={projectId}
                     updateRows={(rowIds = [], updatedRow = {}) => {
                       this.setState({
-                        records: records.map((r: RecordRow) => (includes(rowIds, r.rowid) ? { ...r, ...updatedRow } : r)),
+                        records: records.map((r: RecordRow) =>
+                          includes(rowIds, r.rowid) ? { ...r, ...updatedRow } : r,
+                        ),
                       });
                     }}
                     recordId={previewRecord && previewRecord.recordId}

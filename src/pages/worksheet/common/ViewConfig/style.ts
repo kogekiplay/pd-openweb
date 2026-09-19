@@ -30,7 +30,7 @@ export const TimeDropdownChoose = styled.div`
     width: 100%;
     &.ant-select,
     & .ant-select {
-      --ant-select-border-radius: 3px;
+      --ant-select-border-radius: var(--radius-sm);
     }
     .ant-select-content {
       line-height: 36px;
@@ -61,11 +61,11 @@ export const ShowChoose = styled.div`
       margin-right: -1px;
       position: relative;
       &:last-child {
-        border-radius: 0 3px 3px 0;
+        border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
         overflow: hidden;
       }
       &:first-child {
-        border-radius: 3px 0px 0px 3px;
+        border-radius: var(--radius-sm) 0px 0px var(--radius-sm);
         overflow: hidden;
       }
       &.checked {
@@ -137,10 +137,10 @@ export const AnimationWrap = styled.div`
   display: flex;
   padding: 2px;
   background: var(--color-background-tertiary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   .animaItem {
     height: 32px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
     justify-content: center;

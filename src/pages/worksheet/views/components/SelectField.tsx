@@ -56,7 +56,7 @@ const SelectFieldWrap = styled.div`
   width: 640px;
   margin: 10px auto;
   background-color: var(--color-background-primary);
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   box-shadow: 0 1px 4px rgb(0 0 0 / 16%);
   overflow: auto;
   max-height: 100%;

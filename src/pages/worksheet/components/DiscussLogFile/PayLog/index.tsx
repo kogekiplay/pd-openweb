@@ -39,7 +39,7 @@ const Wrap = styled.div`
   }
   .status {
     padding: 6px 10px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     background: var(--color-background-secondary);
   }
   .success {
@@ -64,7 +64,7 @@ const Wrap = styled.div`
   .okBtn,
   .refuseBtn {
     padding: 10px 0;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     text-align: center;
     font-weight: bold;
     cursor: pointer;
@@ -117,7 +117,7 @@ const EmptyWrap = styled.div`
 const Btn = styled.div`
   flex: 1;
   height: 36px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-secondary);
   font-weight: bold;
   text-align: center;
@@ -136,7 +136,7 @@ const SelectPayStatusWrap = styled.span`
   width: fit-content;
   padding: 8px 12px;
   margin-bottom: 16px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   color: var(--color-text-secondary);
   .icon.icon-arrow-down {
@@ -171,7 +171,7 @@ const More = styled.div`
   line-height: 36px;
   text-align: center;
   margin-left: 6px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   color: var(--color-text-tertiary);
   border: 1px solid var(--color-border-secondary);
   &:hover {

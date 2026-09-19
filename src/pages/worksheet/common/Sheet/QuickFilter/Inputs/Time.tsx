@@ -17,12 +17,12 @@ const Con = styled.div`
   height: 32px;
   line-height: 32px;
   border: 1px solid var(--border-color);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   .ant-picker {
     width: 100%;
     box-shadow: none;
     border: none;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     .ant-picker-clear {
       display: none;
     }

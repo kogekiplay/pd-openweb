@@ -7,11 +7,11 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { getIconByType } from 'src/pages/widgetConfig/util';
 import { formatObjWithNavfilters } from 'src/pages/worksheet/common/ViewConfig/util';
 import { setSysWorkflowTimeControlFormat } from 'src/pages/worksheet/views/CalendarView/util.js';
+import type { FormControl } from 'src/utils/controlTypes';
 import FastFilterCon from './fastFilterCon';
 import bgFastFilters from './img/bgFastFilters.png';
 import { formatFastFilterData, getSetDefault } from './util';
 import './index.less';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrap = styled.div`
   .hasData {
@@ -59,7 +59,7 @@ const Wrap = styled.div`
     min-height: 36px;
     .itemT {
       background: var(--color-background-secondary);
-      border-radius: 4px 4px 4px 4px;
+      border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
       padding: 3px 8px 3px 10px;
       border: 1px solid var(--color-border-secondary);
       i {
@@ -87,7 +87,13 @@ const Wrap = styled.div`
 `;
 
 export default function FastFilter(params) {
-  const { worksheetControls = [], setFastFilter, view = {}, updateCurrentView, currentSheetInfo }: { worksheetControls: FormControl[]; [key: string]: any } = params;
+  const {
+    worksheetControls = [],
+    setFastFilter,
+    view = {},
+    updateCurrentView,
+    currentSheetInfo,
+  }: { worksheetControls: FormControl[]; [key: string]: any } = params;
   const { advancedSetting = {} } = view;
   let { enablebtn, clicksearch, fastrequired, requiredcids } = advancedSetting;
   let [fastFilters, setData] = useState(view.fastFilters || []);

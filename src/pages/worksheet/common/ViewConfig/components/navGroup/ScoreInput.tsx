@@ -6,7 +6,7 @@ import styled from 'styled-components';
 
 const DropWrap = styled.div`
   padding: 5px 0;
-  border-radius: 3px;
+  border-radius: var(--radius-xs);
   width: 360px;
   z-index: 1000;
   background: var(--color-background-primary);
@@ -31,7 +31,7 @@ const Wrap = styled.div`
   align-items: center;
   height: 32px;
   line-height: 32px;
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   border: 1px solid var(--color-border-primary);
   line-height: 32px;
   padding: 0 0 0 12px;

@@ -6,7 +6,7 @@ const Con = styled.div`
   margin: 5px 10px 5px 0;
   position: relative;
   background: var(--color-background-disabled);
-  border-radius: 5px;
+  border-radius: var(--radius-xs);
   max-width: 97%;
   padding: 0 12px;
   box-sizing: border-box;

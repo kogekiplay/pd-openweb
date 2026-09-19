@@ -18,7 +18,7 @@ const LayerContainer = styled.div`
     pointer-events: none;
     background-color: var(--color-background-primary);
     box-shadow: var(--shadow-sm);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     display: block;
     box-sizing: border-box;
     overflow: hidden;

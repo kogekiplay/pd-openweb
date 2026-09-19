@@ -82,7 +82,7 @@ const Empty = styled.div`
 const MoreOperate = styled.span`
   cursor: pointer;
   text-align: center;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   line-height: 24px;
   display: inline-block;
   width: 24px;
@@ -200,7 +200,21 @@ export function handleCopyRecord({
   }
 }
 
-export function handleShareRecord({ isCharge, appId, worksheetId, viewId, recordId, sheetSwitchPermit }: { isCharge?: boolean; appId?: string; worksheetId?: string; viewId?: string; recordId?: string; [key: string]: any }) {
+export function handleShareRecord({
+  isCharge,
+  appId,
+  worksheetId,
+  viewId,
+  recordId,
+  sheetSwitchPermit,
+}: {
+  isCharge?: boolean;
+  appId?: string;
+  worksheetId?: string;
+  viewId?: string;
+  recordId?: string;
+  [key: string]: any;
+}) {
   handleShare({
     isCharge,
     appId,

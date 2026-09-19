@@ -19,7 +19,7 @@ const Wrap = styled.div`
     line-height: 32px;
     min-height: 32px;
     padding: 0 16px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     min-width: 0;
   }
   .cancelBtn {

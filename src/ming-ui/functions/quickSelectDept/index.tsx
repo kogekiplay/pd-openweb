@@ -18,7 +18,7 @@ const DeptSelectWrap = styled.div`
   overflow: hidden;
   width: 360px;
   background-color: var(--color-background-card);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   box-shadow: var(--shadow-lg);
   .searchRoleWrap {
     padding: 0 16px;
@@ -40,7 +40,7 @@ const DeptSelectWrap = styled.div`
       align-items: center;
       padding: 0 4px;
       box-sizing: border-box;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       &.active {
         .quick-department_content {
           background: color-mix(in srgb, var(--color-primary) 10%, transparent) !important;
@@ -56,7 +56,7 @@ const DeptSelectWrap = styled.div`
         align-items: center;
         justify-content: center;
         margin-right: 2px;
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         &:hover {
           background: var(--color-background-hover);
         }
@@ -66,7 +66,7 @@ const DeptSelectWrap = styled.div`
       }
       .quick-department_content {
         height: 100%;
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         &:hover {
           background: var(--color-background-hover);
         }

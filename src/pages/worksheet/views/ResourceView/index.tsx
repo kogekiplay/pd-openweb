@@ -16,8 +16,8 @@ import SelectField from 'src/pages/worksheet/views/components/SelectField.jsx';
 import 'src/pages/worksheet/views/ResourceView/index.less';
 import type { RootState } from 'src/redux/types';
 import { isRelateRecordTableControl } from 'src/utils/control';
-import Resource from './Resource.jsx';
 import type { FormControl } from 'src/utils/controlTypes';
+import Resource from './Resource.jsx';
 
 const Wrap = styled.div`
   width: 100%;
@@ -40,7 +40,7 @@ const BtnForSure = styled.div`
   height: 36px;
   color: var(--color-white);
   background-color: var(--color-primary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   outline: none;
   cursor: pointer;
   border: 1px solid transparent;
@@ -54,7 +54,15 @@ const BtnForSure = styled.div`
 `;
 
 function ResourceView(props) {
-  const { view, saveView, controls = [], isCharge, sheetSwitchPermit, viewId, initData }: { controls: FormControl[]; [key: string]: any } = props;
+  const {
+    view,
+    saveView,
+    controls = [],
+    isCharge,
+    sheetSwitchPermit,
+    viewId,
+    initData,
+  }: { controls: FormControl[]; [key: string]: any } = props;
 
   const [{ viewControlInfo, viewControl }, setState] = useSetState({
     viewControlInfo: {},

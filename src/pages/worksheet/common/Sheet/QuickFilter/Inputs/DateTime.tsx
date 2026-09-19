@@ -25,7 +25,7 @@ const Con = styled.div`
   height: 32px;
   line-height: 32px;
   border: 1px solid var(--border-color);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   .backIcon {
     display: none;
     position: absolute;
@@ -36,7 +36,7 @@ const Con = styled.div`
   .customAntPicker {
     box-shadow: none;
     border: none !important;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     padding: 4px 11px 4px !important;
     font-size: 14px !important;
     background: var(--color-background-primary) !important;

@@ -8,9 +8,9 @@ import { getStrBytesLength } from 'src/pages/Role/PortalCon/tabCon/util-pure.js'
 import { getIconByType } from 'src/pages/widgetConfig/util';
 import { setSysWorkflowTimeControlFormat } from 'src/pages/worksheet/views/CalendarView/util.js';
 import { getStringBytes } from 'src/utils/common';
+import type { FormControl } from 'src/utils/controlTypes';
 import AddControlDiaLog from './AddControlDiaLog';
 import SelectStartOrEnd from './SelectStartOrEnd';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const WrapFragment = styled.div`
   .addMarkInput,
@@ -25,7 +25,7 @@ const WrapFragment = styled.div`
     background: var(--color-background-primary);
     border: 1px solid var(--color-border-secondary);
     opacity: 1;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     padding: 0 12px;
     &:focus {
       border: 1px solid var(--color-primary);
@@ -79,7 +79,7 @@ const Wrap = styled.div`
   background: var(--color-background-primary);
   padding: 6px 0;
   box-shadow: var(--shadow-lg);
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   div {
     height: 36px;
     padding: 0 16px;

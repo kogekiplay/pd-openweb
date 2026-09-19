@@ -46,7 +46,7 @@ const Empty = styled.span`
   width: 22px;
   height: 6px;
   background: var(--color-border-secondary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
 `;
 
 const Control = styled.div`

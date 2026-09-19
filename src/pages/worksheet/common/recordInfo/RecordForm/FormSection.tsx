@@ -65,7 +65,7 @@ const FormSectionWrap = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     &:hover {
       background: var(--color-background-hover);
     }

@@ -1,9 +1,9 @@
 import React from 'react';
 import { shallowEqual } from 'react-redux';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _, { find, get, uniq } from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { ClickAway, SortableList } from 'ming-ui';
 import { RecordFormContext } from 'worksheet/common/recordInfo/RecordForm';
@@ -17,16 +17,16 @@ import ViewHoverRelateRecordCard from 'src/pages/worksheet/views/components/View
 import { getTranslateInfo } from 'src/utils/app';
 import { getTitleTextFromRelateControl } from 'src/utils/control';
 import { checkIsTextControl } from 'src/utils/control';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import AutoWidthInput from './AutoWidthInput';
 import RelateRecordList from './RelateRecordList';
 import './style.less';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const OnlyScanTip = styled.div`
   width: 310px;
   padding: 10px 16px;
   color: var(--color-text-tertiary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   background-color: var(--color-background-primary);
   box-shadow: var(--shadow-lg);
   .clearBtn {

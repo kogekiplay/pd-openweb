@@ -9,13 +9,13 @@ import CustomFields from 'src/components/Form';
 import DataFormat from 'src/components/Form/core/DataFormat';
 import { formatControlToServer } from 'src/components/Form/core/utils';
 import { isRelateRecordTableControl } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import withWorksheetRowProvider from '../WorksheetRecordProvider';
 import './FillRecordControls.less';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const LoadMask = styled.div`
   margin: -58px -24px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   position: absolute;
   width: 100%;
   height: 100%;
@@ -125,7 +125,9 @@ let FillRecordControls = class FillRecordControls extends React.Component<any, a
                     setTimeout(() => {
                       this.setState(oldState => ({
                         formFlag: Math.random(),
-                        formData: oldState.formData.map((c: FormControl) => (c.controlId === controlId ? { ...c, value } : c)),
+                        formData: oldState.formData.map((c: FormControl) =>
+                          c.controlId === controlId ? { ...c, value } : c,
+                        ),
                       }));
                     }, 500);
                   }

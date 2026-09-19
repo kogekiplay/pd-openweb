@@ -29,7 +29,7 @@ const Wrap = styled.div`
   }
   .remarkWrap {
     background: var(--color-background-secondary);
-    border-radius: 3px 3px 3px 3px;
+    border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     border: 1px solid var(--color-border-primary);
     line-height: 36px;
     padding: 0 12px;

@@ -76,7 +76,7 @@ export const Con = styled.div`
         }
       }
       .gListDiv{
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         padding-left: 6px;
         position:relative;
         height: 32px;
@@ -93,7 +93,7 @@ export const Con = styled.div`
         top: 1px;
         height: 30px;
         width: 3px;
-        border-radius: 3px 0 0 3px;
+        border-radius: var(--radius-sm) 0 0 var(--radius-sm);
         position: absolute;
       }
       .optionTxt {
@@ -130,7 +130,7 @@ export const Con = styled.div`
         line-height: 18px;
         color: var(--color-text-tertiary);
         text-align: center;
-        border-radius: 4px;
+        border-radius: var(--radius-sm);
         &:hover{
             background: rgba(0,0,0,0.06);
             color: var(--color-text-secondary);

@@ -22,7 +22,7 @@ const Wrap = styled.div`
         ? '1px solid var(--color-primary) !important'
         : '1px solid var(--color-border-primary)'};
   background-color: ${props => (props.isEditing ? 'var(--color-background-primary)' : 'var(--color-background-input)')};
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   cursor: ${props => (props.disabled ? 'not-allowed' : 'pointer')};
   box-sizing: border-box;
   &:hover {

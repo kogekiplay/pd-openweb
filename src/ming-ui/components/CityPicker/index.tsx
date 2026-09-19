@@ -16,7 +16,7 @@ const particularlyCity = ['110000', '120000', '310000', '500000', '810000', '820
 
 const CascaderSelectWrap = styled.div`
   background: var(--color-background-card);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   box-shadow: var(--shadow-xl);
   padding: 6px 0;
   z-index: 11;
@@ -54,7 +54,7 @@ const CascaderSearchSelectWrap = styled.ul`
   overflow-y: scroll;
   padding: 6px 0;
   background: var(--color-background-primary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   box-shadow: var(--shadow-lg);
   z-index: 11;
   li {

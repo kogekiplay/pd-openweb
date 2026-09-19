@@ -26,7 +26,7 @@ const CreateNewContent = styled.div`
   .withdraw,
   .active {
     padding: 2px 5px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
   }
   .withdraw:hover {
     background: var(--color-background-secondary);
@@ -49,7 +49,7 @@ const CreateNewContent = styled.div`
   .aiCreate,
   .importExcelCreate {
     border: 1px solid var(--color-border-tertiary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     padding: 10px;
     cursor: pointer;
     &:hover {

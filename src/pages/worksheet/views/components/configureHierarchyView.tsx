@@ -52,7 +52,7 @@ const HierarchyViewConfigWrap = styled.div`
         position: relative;
         background-color: var(--color-background-secondary);
         margin-left: 10px;
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
       }
 
       .deleteWrap {
@@ -73,7 +73,7 @@ const HierarchyViewConfigWrap = styled.div`
       margin-left: 12px;
     }
     .emptyHint {
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       color: var(--color-text-secondary);
       line-height: 34px;
       padding: 0 12px;

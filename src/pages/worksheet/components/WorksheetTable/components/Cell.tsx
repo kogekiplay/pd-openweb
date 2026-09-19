@@ -9,10 +9,10 @@ import { ROW_HEIGHT, WORKSHEET_ALLOW_SET_ALIGN_CONTROLS } from 'worksheet/consta
 import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget';
 import { controlState } from 'src/utils/control';
 import { checkCellIsEmpty, controlIsNumber, isRelateRecordTableControl } from 'src/utils/control';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import { getRecordColor } from 'src/utils/record';
 import CollapseExpandButton from './CollapseExpandButton';
 import DataCell from './DataCell';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 // rows[i] 取空时的占位行；标成 RecordRow 是为了让下游 row.rowid 这类读取仍然按行来算
 const EMPTY_ROW: RecordRow = {};
@@ -91,7 +91,7 @@ const TreeExpandIcon = styled.div`
   cursor: pointer;
   width: 24px;
   height: 24px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   display: flex;
   flex-shrink: 0;
   justify-content: center;
@@ -117,7 +117,7 @@ const TreeExpandIcon = styled.div`
 const TreeLoadingIcon = styled.div`
   width: 24px;
   height: 24px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   display: flex;
   flex-shrink: 0;
   justify-content: center;
@@ -140,7 +140,7 @@ const AddChildBtn = styled.div`
   width: 24px;
   height: 24px;
   color: var(--color-text-tertiary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   background: var(--color-background-primary);
   .icon {
     font-size: 20px;

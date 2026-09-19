@@ -14,7 +14,7 @@ const TodayWrapper = styled.div`
   bottom: 5px;
   color: var(--color-white);
   padding: 1px 5px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   background-color: var(--color-primary);
   &.left {
     left: 5px;

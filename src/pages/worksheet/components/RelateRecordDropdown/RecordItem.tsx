@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { getTitleTextFromRelateControl } from 'src/utils/control';
 import { renderText as renderCellText } from 'src/utils/control';
-import RegExpValidator from 'src/utils/expression';
 import type { FormControl } from 'src/utils/controlTypes';
+import RegExpValidator from 'src/utils/expression';
 
 function getCoverControlData(data) {
   return _.find(data, file => RegExpValidator.fileIsPicture(file.ext) || file.previewUrl);
@@ -28,7 +28,7 @@ const Cover = styled.div(
     width: ${size}px;
     height: ${size}px;
     border: 1px solid rgba(0, 0, 0, 0.06);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
   }
 `,
 );

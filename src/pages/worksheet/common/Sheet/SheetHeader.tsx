@@ -38,12 +38,12 @@ import type { RootState } from 'src/redux/types';
 import { navigateTo } from 'src/router/navigateTo';
 import { getTranslateInfo } from 'src/utils/app';
 import { getAppFeaturesVisible } from 'src/utils/common';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import { needHideViewFilters } from 'src/utils/filter';
 import { getHighAuthSheetSwitchPermit } from 'src/utils/worksheet';
 import { findSheet } from 'src/utils/worksheet';
 import ImportMenu from './ImportMenu';
 import SheetMoreOperate from './SheetMoreOperate';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   display: flex;
@@ -60,7 +60,7 @@ const VerticalCenter = styled.div`
   align-items: center;
   .actionWrap {
     display: flex;
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     padding: 5px 5px;
     margin-right: 8px;
     cursor: pointer;
@@ -83,7 +83,7 @@ const VerticalCenter = styled.div`
   }
   .actionIcon {
     color: var(--color-text-tertiary) !important;
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
 
     &:hover {
       background: var(--color-background-secondary) !important;
@@ -95,7 +95,13 @@ const VerticalCenter = styled.div`
 `;
 
 function SheetHeader(props) {
-  const { appPkg, worksheetInfo, controls, sheetSwitchPermit, isSingleView = false }: { controls: FormControl[]; [key: string]: any } = props;
+  const {
+    appPkg,
+    worksheetInfo,
+    controls,
+    sheetSwitchPermit,
+    isSingleView = false,
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const { type, appId, groupId, view, viewId, isCharge, views } = props;
   // functions
   const {
@@ -167,7 +173,8 @@ function SheetHeader(props) {
   const showPublic = isOpenPermit(permitList.statisticsSwitch, lastSheetSwitchPermit);
   const showSelf = isOpenPermit(permitList.statisticsSelfSwitch, lastSheetSwitchPermit);
   const canImportSwitch = isOpenPermit(permitList.importSwitch, lastSheetSwitchPermit) && !window.isPublicApp;
-  const { rows, count, permission, rowsSummary, pageCountAbnormal }: { rows: RecordRow[]; [key: string]: any } = sheetViewData;
+  const { rows, count, permission, rowsSummary, pageCountAbnormal }: { rows: RecordRow[]; [key: string]: any } =
+    sheetViewData;
   const { allWorksheetIsSelected, sheetSelectedRows = [] } = sheetViewConfig;
 
   const selectIcon = () => {

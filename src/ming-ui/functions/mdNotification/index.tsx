@@ -5,7 +5,7 @@ import antNotification from '../../components/antNotification';
 
 const Btn = styled.div`
   display: inline-block;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   font-size: 14px;
   color: var(--color-primary);
   padding: 0 11px;

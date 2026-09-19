@@ -12,14 +12,14 @@ import { handleRecordError } from 'src/utils/record';
 const MoveRecordToOtherGroupWrap = styled.div`
   width: 360px;
   background: var(--color-background-primary);
-  border-radius: 3px 3px 3px 3px;
+  border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
   display: flex;
   flex-direction: column;
 `;
 
 const Header = styled.div`
   height: 38px;
-  border-radius: 3px 3px 0 0;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
   border-bottom: 1px solid var(--color-border-primary);
   padding: 0 12px;
   display: flex;

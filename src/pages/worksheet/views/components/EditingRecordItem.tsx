@@ -10,7 +10,7 @@ import EditText from './EditText';
 const EditingCardWrap = styled.div`
   position: absolute;
   width: ${porps => `${porps.width ? porps.width : 280}px`};
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   background-color: var(--color-background-primary);
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 3px;
   .editTitleTextInput {

@@ -11,7 +11,7 @@ const Con = styled.div`
   min-height: 32px;
   line-height: 32px;
   border: 1px solid var(--color-border-primary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   border: 1px solid ${({ active }) => (active ? 'var(--color-primary)' : 'var(--border-color)')} !important;
   .clearIcon {
     display: none;

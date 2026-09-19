@@ -6,18 +6,18 @@ import styled from 'styled-components';
 const PointerConfigWrap = styled.div`
   display: flex;
   position: relative;
-  border-bottom-left-radius: 3px;
-  border-top-left-radius: 3px;
+  border-bottom-left-radius: var(--radius-sm);
+  border-top-left-radius: var(--radius-sm);
   border-bottom-right-radius: 0;
   border-top-right-radius: 0;
   input {
     width: 100%;
   }
   .addIcon {
-    border-top-right-radius: 3px;
+    border-top-right-radius: var(--radius-sm);
   }
   .subIcon {
-    border-bottom-right-radius: 3px;
+    border-bottom-right-radius: var(--radius-sm);
   }
   .numberControlBox {
     display: flex;

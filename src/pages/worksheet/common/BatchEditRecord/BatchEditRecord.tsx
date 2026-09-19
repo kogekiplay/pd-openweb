@@ -9,11 +9,11 @@ import useApi from 'worksheet/hooks/useApi';
 import { formatControlToServer } from 'src/components/Form/core/utils';
 import { controlBatchCanEdit } from 'src/utils/control';
 import { checkCellIsEmpty } from 'src/utils/control';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import { replaceControlsTranslateInfo } from 'src/utils/translate';
 import { getGroupControlId } from 'src/utils/worksheet';
 import { getEditType, handleBatchUpdateRecords } from './controller';
 import EditControlItem from './EditControlItem';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   padding: 16px 23px;
@@ -46,7 +46,7 @@ const SelectControlButton = styled.div`
   cursor: pointer;
   align-items: center;
   justify-content: center;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   background-color: var(--color-background-secondary);
   padding: 0 16px;
   font-size: 13px;

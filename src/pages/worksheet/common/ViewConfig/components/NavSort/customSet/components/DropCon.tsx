@@ -17,7 +17,7 @@ const Wrap = styled.div`
     height: 36px;
     line-height: 36px;
     background: rgba(255, 255, 255, 0.04);
-    border-radius: 3px 3px 3px 3px;
+    border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     opacity: 1;
     border: 1px solid var(--color-primary);
     padding: 0 12px;
@@ -37,7 +37,7 @@ const WrapS = styled.div`
     min-height: 100px;
     max-height: 300px;
     padding: 5px 0;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     background: var(--color-background-primary);
     z-index: 11;
     box-shadow: var(--shadow-lg);

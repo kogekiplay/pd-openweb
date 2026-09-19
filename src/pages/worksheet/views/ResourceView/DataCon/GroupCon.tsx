@@ -15,11 +15,11 @@ import { isSameType } from 'src/pages/worksheet/common/ViewConfig/util.js';
 import CellControl from 'src/pages/worksheet/components/CellControls/index.jsx';
 import { browserIsMobile, getClassNameByExt, getIconNameByExt } from 'src/utils/common';
 import { sortControlByIds } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import RegExpValidator from 'src/utils/expression';
 import { addBehaviorLog } from 'src/utils/project';
 import { lineBottomHeight, minControlWidth, types } from '../config';
 import { getResourceRowHoverHandlers } from '../util';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrap = styled.div`
   .flexShrink0 {
@@ -152,7 +152,7 @@ const TbWrap = styled.div`
     border: 1px solid var(--view-border-color-left-dark);
     width: 44px;
     height: 44px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     background-repeat: no-repeat;
     background-position: center;
     background-color: var(--color-background-primary);
@@ -167,7 +167,15 @@ const TbWrap = styled.div`
 export default function GroupCon(props) {
   const headContainer = useRef<HTMLDivElement | null>(null);
   const tbodyContainer = useRef(null);
-  const { resourceview, view, controls, viewId, appId, worksheetInfo, base = {} }: { controls: FormControl[]; [key: string]: any } = props;
+  const {
+    resourceview,
+    view,
+    controls,
+    viewId,
+    appId,
+    worksheetInfo,
+    base = {},
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const { resourceDataByKey, keywords } = resourceview;
   const viewControlInfo = controls.find((o: FormControl) => o.controlId === _.get(view, 'viewControl')) || {};
   const { dataSource } = viewControlInfo;
@@ -632,7 +640,8 @@ export default function GroupCon(props) {
                 })}
 
                 {worksheetInfo.allowAdd &&
-                  ((controls.find((o: FormControl) => o.controlId === view.viewControl) || {}).fieldPermission || '111')[1] === '1' &&
+                  ((controls.find((o: FormControl) => o.controlId === view.viewControl) || {}).fieldPermission ||
+                    '111')[1] === '1' &&
                   isOpenPermit(permitList.createButtonSwitch, worksheetInfo.switches, viewId) && //功能开关，是否允许创建
                   !(_.get(window, 'shareState.isPublicView') || _.get(window, 'shareState.isPublicPage') || isM) && (
                     <div

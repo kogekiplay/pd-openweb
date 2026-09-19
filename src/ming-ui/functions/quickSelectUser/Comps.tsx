@@ -12,7 +12,7 @@ export const Con = styled.div`
   overflow: hidden;
   width: 360px;
   background-color: var(--color-background-card);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   box-shadow: var(--shadow-lg);
   .moduleName {
     color: var(--color-text-tertiary);

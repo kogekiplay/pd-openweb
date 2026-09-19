@@ -37,7 +37,7 @@ const HierarchyViewConfigWrap = styled.div`
         position: relative;
         background-color: var(--color-background-secondary);
         margin-left: 20px;
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
       }
       .addRelate {
         width: 280px;

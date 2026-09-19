@@ -38,7 +38,7 @@ const OtherOptionTextInputCon = styled.div`
   z-index: 2;
   padding: 8px 12px;
   box-shadow: 0px 4px 16px 1px rgba(0, 0, 0, 0.16);
-  border-radius: 3px 3px 3px 3px;
+  border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
   .header {
     margin-bottom: 8px;
     display: flex;

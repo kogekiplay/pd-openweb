@@ -32,7 +32,7 @@ const USER_STATUS = {
 const CardContentBoxWrap = styled.div`
   position: relative;
   box-shadow: var(--shadow-lg);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   background: var(--color-background-card);
 
   .arrowBoxUserCard {
@@ -106,7 +106,7 @@ const BusinessCardWrap = styled.div`
     height: 19px;
     line-height: 19px;
     background: var(--color-background-disabled);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     margin-bottom: 8px;
   }
 

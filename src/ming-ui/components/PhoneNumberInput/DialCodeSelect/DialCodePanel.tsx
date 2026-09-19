@@ -11,7 +11,7 @@ const PanelWrap = styled.div`
   max-height: ${props => (props.$maxPanelHeight ? `${props.$maxPanelHeight}px` : 'none')};
   box-sizing: border-box;
   background: var(--color-background-primary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-primary);
   box-shadow: var(--shadow-lg);
   overflow: hidden;

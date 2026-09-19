@@ -12,7 +12,7 @@ export const WrapChoose = styled.div`
   background: var(--color-background-primary);
   box-shadow: var(--shadow-lg);
   opacity: 1;
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   padding: 6px 0;
   .setLi {
     height: 36px;

@@ -78,7 +78,7 @@ const AppDialog = styled(Dialog)`
           min-width: 38px;
           height: 38px;
           line-height: 24px;
-          border-radius: 4px;
+          border-radius: var(--radius-sm);
           margin-right: 8px;
         }
       }

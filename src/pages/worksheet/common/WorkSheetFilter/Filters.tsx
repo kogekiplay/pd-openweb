@@ -16,7 +16,7 @@ import { filterUnavailableConditions, getDefaultCondition, redefineComplexContro
 
 const Con = styled.div`
   width: 480px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   background: var(--color-background-card);
   box-shadow: var(--shadow-lg);
   padding: 16px 0 0;

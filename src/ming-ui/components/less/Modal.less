@@ -43,7 +43,7 @@
     line-height: 1em;
     padding: 20px 24px 0;
     border: none;
-    border-radius: 3px 3px 0 0;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
     .ant-modal-title {
       color: var(--color-text-title);
       font-weight: 400;
@@ -51,7 +51,10 @@
     }
   }
   .ant-modal-container {
-    border-radius: 3px;
+    /* 【弹层按 lg 档，不是 sm】批量映射时我按「原值 2-5px 一律 sm」刷的，
+       对大容器太粗：900x829 的记录详情弹层套 6px 读起来还是方的。
+       档位是按【语义】分的（控件 sm / 卡片 md / 面板 lg），不是按原值分的。 */
+    border-radius: var(--radius-lg);
     overflow: hidden;
   }
   .ant-modal-footer {

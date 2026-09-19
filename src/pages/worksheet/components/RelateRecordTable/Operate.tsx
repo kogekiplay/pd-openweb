@@ -56,7 +56,7 @@ const Con = styled.div`
     font-size: 20px;
     line-height: 28px;
     padding: 0 4px;
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     &:hover {
       background: var(--color-background-hover);
     }
@@ -101,7 +101,7 @@ const IconBtn = styled.span`
   font-size: 20px;
   line-height: 28px;
   padding: 0 4px;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   &.active {
     background: color-mix(in srgb, var(--color-primary) 12%, transparent);
   }
@@ -115,7 +115,7 @@ const SearchInputCon = styled.div`
   height: 44px;
   background: var(--color-background-primary);
   box-shadow: 0px 2px 8px 1px rgba(0, 0, 0, 0.24);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   padding-right: 10px;

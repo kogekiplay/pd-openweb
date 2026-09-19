@@ -9,19 +9,19 @@ import worksheetApi from 'src/api/worksheet';
 import DragMask from 'worksheet/common/DragMask';
 import { SHEET_VIEW_HIDDEN_TYPES, WORKSHEETTABLE_FROM_MODULE } from 'worksheet/constants/enum';
 import { useRefStore } from 'worksheet/hooks';
-import useStablePropsObject from 'worksheet/hooks/useStablePropsObject';
 import useVerticalTableWidth from 'worksheet/hooks/userVerticalTableWidth';
+import useStablePropsObject from 'worksheet/hooks/useStablePropsObject';
 import useTableWidth from 'worksheet/hooks/useTableWidth';
 import { emitter } from 'src/utils/common';
 import { getScrollBarWidth } from 'src/utils/common';
 import { getControlStyles } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import { filterEmptyChildTableRows, getRecordControlStyles } from 'src/utils/record';
 import { checkRulesErrorOfRowControl } from 'src/utils/rule';
 import { Cell, NoRecords, NoSearch } from './components';
 import useRenderSlots from './renderSlots';
 import { checkCellFullVisible, getRulePermissions, getTableHeadHeight, handleLifeEffect } from './util';
 import './style.less';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const StyledFixedTable = styled(FixedTable)`
   font-size: 13px;
@@ -29,7 +29,7 @@ const StyledFixedTable = styled(FixedTable)`
   .colorTag {
     position: absolute;
     width: 4px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     display: inline-block;
   }
   .top-right,
@@ -910,152 +910,152 @@ function WorksheetTable(props, ref) {
   });
 
   const rawTableData = {
-          isCharge,
-          tableDataWithRowFormData,
-          columnStyles,
-          direction,
-          triggerClickImmediate,
-          chatButton,
-          masterRecord,
-          isTreeTableView,
-          treeTableViewData,
-          expandCellAppendWidth,
-          treeLayerControlId,
-          tableId,
-          isTrash,
-          from,
-          isDraft,
-          view,
-          readonly,
-          allowAdd,
-          allowlink,
-          isSubList,
-          disableValidate,
-          isRelateRecordList,
-          fromModule,
-          appId,
-          worksheetId,
-          viewId,
-          projectId,
-          tableType,
-          controls,
-          visibleColumns,
-          columns,
-          cellColumnCount,
-          rowHeight,
-          rowHeightEnum,
-          fixedColumnCount,
-          columnHeadHeight,
-          recordColorConfig,
-          cellErrors,
-          lineEditable: !readonly && lineEditable,
-          disableQuickEdit,
-          rulePermissions,
-          showControlStyle,
-          masterData,
-          masterFormData,
-          sheetViewHighlightRows,
-          sheetSwitchPermit,
-          cache,
-          rows: data,
-          headTitleCenter, // 列头垂直居中
-          cellProps,
-          // functions
-          clearCellError,
-          inView,
-          updateSheetColumnWidths: ({ controlId, value, changes }: { controlId?: string; [key: string]: any }) => {
-            onColumnWidthChange(controlId, value, changes);
-            if (changes) {
-              setState({
-                sheetColumnWidths: Object.assign({}, sheetColumnWidths, changes),
-              });
-            } else {
-              setState({
-                sheetColumnWidths: Object.assign({}, sheetColumnWidths, { [controlId]: value }),
-              });
-            }
-          },
-          // 获取浮层插入位置
-          getPopupContainer: isFixed => {
-            if (cellPopupContainer) {
-              return cellPopupContainer;
-            }
+    isCharge,
+    tableDataWithRowFormData,
+    columnStyles,
+    direction,
+    triggerClickImmediate,
+    chatButton,
+    masterRecord,
+    isTreeTableView,
+    treeTableViewData,
+    expandCellAppendWidth,
+    treeLayerControlId,
+    tableId,
+    isTrash,
+    from,
+    isDraft,
+    view,
+    readonly,
+    allowAdd,
+    allowlink,
+    isSubList,
+    disableValidate,
+    isRelateRecordList,
+    fromModule,
+    appId,
+    worksheetId,
+    viewId,
+    projectId,
+    tableType,
+    controls,
+    visibleColumns,
+    columns,
+    cellColumnCount,
+    rowHeight,
+    rowHeightEnum,
+    fixedColumnCount,
+    columnHeadHeight,
+    recordColorConfig,
+    cellErrors,
+    lineEditable: !readonly && lineEditable,
+    disableQuickEdit,
+    rulePermissions,
+    showControlStyle,
+    masterData,
+    masterFormData,
+    sheetViewHighlightRows,
+    sheetSwitchPermit,
+    cache,
+    rows: data,
+    headTitleCenter, // 列头垂直居中
+    cellProps,
+    // functions
+    clearCellError,
+    inView,
+    updateSheetColumnWidths: ({ controlId, value, changes }: { controlId?: string; [key: string]: any }) => {
+      onColumnWidthChange(controlId, value, changes);
+      if (changes) {
+        setState({
+          sheetColumnWidths: Object.assign({}, sheetColumnWidths, changes),
+        });
+      } else {
+        setState({
+          sheetColumnWidths: Object.assign({}, sheetColumnWidths, { [controlId]: value }),
+        });
+      }
+    },
+    // 获取浮层插入位置
+    getPopupContainer: isFixed => {
+      if (cellPopupContainer) {
+        return cellPopupContainer;
+      }
 
-            return (
-              document.querySelector(`.sheetViewTable.id-${tableId}-id ${isFixed ? '.main-left' : '.main-center'}`) ||
-              document.body
+      return (
+        document.querySelector(`.sheetViewTable.id-${tableId}-id ${isFixed ? '.main-left' : '.main-center'}`) ||
+        document.body
+      );
+    },
+    enterEditing: (cellIndex, rowIndex) => {
+      if (tableType === 'classic') {
+        if (cache.focusIndex !== cellIndex) {
+          focusCell(cellIndex);
+        }
+      } else {
+        // simple 表格进入编辑不接管 focusIndex；但拖动 slider 等会主动 setFocus 残留 focusIndex，
+        // 编辑其它单元格时需清掉这份旧焦点，否则上一个 slider 的 focus 框不消失。
+        if (!_.isUndefined(cache.focusIndex) && cache.focusIndex !== cellIndex) {
+          focusCell(-10000);
+        }
+        removeHighlightClassOfRow();
+        addHighlightClassOfRow(rowIndex);
+      }
+    },
+    onCellClick: (...args) => {
+      onCellClick(...args);
+      if (tableType !== 'classic') {
+        const [, , rowIndex = -10000] = args;
+        removeHighlightClassOfRow();
+        addHighlightClassOfRow(rowIndex);
+      }
+    },
+    onFocusCell: ({ row, cellIndex, rowIndex }) => {
+      onFocusCell(row, cellIndex, rowIndex);
+      focusCell(cellIndex, { noTriggerHandFocusCell: true });
+    },
+    // 校验
+    checkRulesErrorOfControl: ({ control, row, validateRealtime } = {}) => {
+      return checkRulesErrorOfRowControl({
+        from: 3,
+        rules: rules.filter(rule => !validateRealtime || rule.hintType !== 1),
+        controls,
+        control,
+        row,
+      });
+    },
+    cellUniqueValidate,
+    scrollTo: ({ left, top } = {}) => {
+      tableRef.current.setScroll(left, top);
+    },
+    // 更新数据
+    updateCell: ({ row, args, options } = {}) => {
+      const { cell } = args;
+      updateCell(args, {
+        ...options,
+        debounceTime: 0,
+        updateSuccessCb: async newRow => {
+          if (rules.length && !_.isEqual(row[cell.controlId] || '', newRow[cell.controlId] || '')) {
+            handleUpdateRuleState(
+              getRulePermissions({
+                data: [newRow],
+                controls: (isSubList ? columns : controls).map(c => ({
+                  ...c,
+                  fieldPermission: c.fieldPermission,
+                })),
+                rules,
+              }),
             );
-          },
-          enterEditing: (cellIndex, rowIndex) => {
-            if (tableType === 'classic') {
-              if (cache.focusIndex !== cellIndex) {
-                focusCell(cellIndex);
-              }
-            } else {
-              // simple 表格进入编辑不接管 focusIndex；但拖动 slider 等会主动 setFocus 残留 focusIndex，
-              // 编辑其它单元格时需清掉这份旧焦点，否则上一个 slider 的 focus 框不消失。
-              if (!_.isUndefined(cache.focusIndex) && cache.focusIndex !== cellIndex) {
-                focusCell(-10000);
-              }
-              removeHighlightClassOfRow();
-              addHighlightClassOfRow(rowIndex);
-            }
-          },
-          onCellClick: (...args) => {
-            onCellClick(...args);
-            if (tableType !== 'classic') {
-              const [, , rowIndex = -10000] = args;
-              removeHighlightClassOfRow();
-              addHighlightClassOfRow(rowIndex);
-            }
-          },
-          onFocusCell: ({ row, cellIndex, rowIndex }) => {
-            onFocusCell(row, cellIndex, rowIndex);
-            focusCell(cellIndex, { noTriggerHandFocusCell: true });
-          },
-          // 校验
-          checkRulesErrorOfControl: ({ control, row, validateRealtime } = {}) => {
-            return checkRulesErrorOfRowControl({
-              from: 3,
-              rules: rules.filter(rule => !validateRealtime || rule.hintType !== 1),
-              controls,
-              control,
-              row,
-            });
-          },
-          cellUniqueValidate,
-          scrollTo: ({ left, top } = {}) => {
-            tableRef.current.setScroll(left, top);
-          },
-          // 更新数据
-          updateCell: ({ row, args, options } = {}) => {
-            const { cell } = args;
-            updateCell(args, {
-              ...options,
-              debounceTime: 0,
-              updateSuccessCb: async newRow => {
-                if (rules.length && !_.isEqual(row[cell.controlId] || '', newRow[cell.controlId] || '')) {
-                  handleUpdateRuleState(
-                    getRulePermissions({
-                      data: [newRow],
-                      controls: (isSubList ? columns : controls).map(c => ({
-                        ...c,
-                        fieldPermission: c.fieldPermission,
-                      })),
-                      rules,
-                    }),
-                  );
-                }
-              },
-            });
-          },
-          // 挂载 ref
-          registerRef: (cellRef, cellIndex) => {
-            setCellRefs(cellIndex, cellRef);
-          },
-          renderFunctions,
-          getColumnWidth,
-          actions,
+          }
+        },
+      });
+    },
+    // 挂载 ref
+    registerRef: (cellRef, cellIndex) => {
+      setCellRefs(cellIndex, cellRef);
+    },
+    renderFunctions,
+    getColumnWidth,
+    actions,
   };
   const tableData = useStablePropsObject(rawTableData);
 

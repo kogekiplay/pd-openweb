@@ -22,7 +22,7 @@ const Con = styled.div`
   align-items: center;
   height: 32px;
   border: 1px solid ${({ active }) => (active ? 'var(--color-primary)' : 'var(--border-color)')} !important;
-  border-radius: 4px 0 0 4px;
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
   &:hover {
     border-color: var(--color-primary) !important;
     .icon-cancel {
@@ -67,7 +67,7 @@ const AdvancePasteIcon = styled.span`
   cursor: pointer;
   border: 1px solid var(--border-color);
   border-left: none;
-  border-radius: 0 4px 4px 0;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   font-size: 20px;
   color: var(--color-text-tertiary);
   line-height: 30px;
@@ -84,7 +84,7 @@ const IconBtn = styled.span`
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   color: var(--color-text-tertiary);
   font-size: 18px;
   font-weight: bold;

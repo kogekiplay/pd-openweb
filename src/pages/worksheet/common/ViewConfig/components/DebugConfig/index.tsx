@@ -1,13 +1,13 @@
 import React, { Fragment, useEffect, useRef } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
-import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Dropdown, Icon, Support, TagTextarea } from 'ming-ui';
 import Input from 'ming-ui/components/Input';
 import { devTapList } from 'src/pages/worksheet/common/ViewConfig/components/DebugConfig/config.js';
 import { emitter } from 'src/utils/common';
+import copy from 'src/utils/copyToClipboard';
 import tailwindIcon from './tailwind.svg';
 import vueIcon from './vue.svg';
 
@@ -64,7 +64,7 @@ const Wrap = styled.div`
     padding: 0 20px;
     height: 36px;
     line-height: 36px;
-    border-radius: 3px 3px 3px 3px;
+    border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     background: var(--color-primary);
     color: var(--color-white);
     &.canClear {

@@ -38,7 +38,7 @@ const Description = styled(Textarea)`
 const ChatList = styled.div`
   width: 280px;
   background: var(--color-background-primary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   ${commonShadow}
   .header {
     display: flex;

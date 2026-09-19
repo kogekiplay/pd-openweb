@@ -8,14 +8,14 @@ import { getTitleControlId } from 'src/components/Form/core/utils';
 import previewAttachments, { transformQiniuUrl } from 'src/components/previewAttachments/previewAttachments';
 import { browserIsMobile } from 'src/utils/common';
 import { getRecordCardStyle, getTitleTextFromRelateControl } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import { CardButton } from '../Basics';
 import CardCellControls from './CardCellControls';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   ${({ isMobile }) => (isMobile ? 'margin-bottom:10px' : 'display: inline-flex;')}
   position: relative;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   background-color: var(--color-background-primary);
   border: 1px solid var(--color-border-secondary);
   width: 100%;
@@ -87,7 +87,7 @@ const ControlCon = styled.div`
     width: 80px;
     height: 80px;
     box-sizing: content-box;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     object-fit: contain;
     border: 1px solid var(--color-border-secondary);
     ${({ small }) => (small ? 'margin-bottom: 15px' : 'margin-right: 15px')};

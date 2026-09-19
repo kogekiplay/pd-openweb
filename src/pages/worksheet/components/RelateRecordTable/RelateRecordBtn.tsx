@@ -33,7 +33,7 @@ export const Button = styled.div`
   overflow: hidden;
   display: inline-flex;
   font-weight: 500;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   height: 36px;
   line-height: 36px;

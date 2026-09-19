@@ -56,7 +56,7 @@ const AttachmentCon = styled.div`
   align-items: center;
   margin-right: 4px;
   vertical-align: middle;
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   overflow: hidden;
   cursor: pointer;
   margin-bottom: 5px;
@@ -71,7 +71,7 @@ const AttachmentCon = styled.div`
 const AttachmentImageCon = styled.div`
   position: relative;
   img {
-    border-radius: 2px;
+    border-radius: var(--radius-sm);
     vertical-align: middle;
     min-width: 21px;
     object-fit: cover;
@@ -107,7 +107,7 @@ const AttachmentDocFileName = styled.span`
 
 const ShadowInset = styled.span`
   position: absolute;
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   width: 100%;
   height: 100%;
   box-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.05);
@@ -115,7 +115,7 @@ const ShadowInset = styled.span`
 
 const ImageHoverMask = styled.span`
   position: absolute;
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.05);
@@ -129,7 +129,7 @@ const OperateIcon = styled.div`
   top: 4px;
   width: 24px;
   height: 24px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   background: var(--color-background-primary);
   text-align: center;
   color: var(--color-text-tertiary);
@@ -206,7 +206,7 @@ const Add = styled.div`
   position: relative;
   margin-right: 4px;
   margin-bottom: 5px;
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   overflow: hidden;
   border: 1px solid var(--color-border-primary);
   background-color: var(--color-background-tertiary);

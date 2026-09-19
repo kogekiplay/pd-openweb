@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import moment from 'moment';
 import Trigger from '@rc-component/trigger';
+import moment from 'moment';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import DownloadAjax from 'src/api/download';
@@ -25,7 +25,7 @@ const Wrap = styled.div`
   width: 220px;
   padding: 4px 0;
   background: var(--color-background-primary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   box-shadow: var(--shadow-lg);
   overflow: hidden;
   .exportItem {
