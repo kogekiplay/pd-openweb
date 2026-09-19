@@ -695,7 +695,8 @@ export default function Container({ isDialog, ...props }) {
         <WidgetConfig>
           {/* 冷启动兜底：URL 不带 fromURL、tab 记忆也空的时候，
               globalInfo 是唯一说得出应用身份的地方。 */}
-          <AppThemeScope appId={globalInfo.appId} />
+          {/* globalInfo 取数前是 undefined（同文件 243 行也是这么防的），必须用 get */}
+          <AppThemeScope appId={_.get(globalInfo, 'appId')} />
           {!mingoIsCreatingWorksheetStatus && (
             <Header
               {...globalInfo}

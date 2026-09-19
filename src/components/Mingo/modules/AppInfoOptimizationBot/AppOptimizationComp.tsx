@@ -369,7 +369,6 @@ function AppInfoOptimizationPopup({ appInfo, optimizedMap, config, isStreaming, 
             <div className="switchCon">
               <div className="switchLabel">{_l('图标样式')}</div>
               <Switch
-                primaryColor="#1677ff"
                 checked={isLine}
                 disabled={disabledAll}
                 onClick={() => {

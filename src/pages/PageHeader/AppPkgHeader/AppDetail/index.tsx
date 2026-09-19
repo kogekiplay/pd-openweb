@@ -1162,7 +1162,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
               {themeType === 'light' && (
                 <Fragment>
                   <svg className="topBorderRadius" width="14px" height="22px" viewBox="0 0 14 22" version="1.1">
-                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                    <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                       <path
                         d="M0.5,22 L0.5,13.9851088 C0.503434088,13.8199063 0.5,13.6531791 0.5,13.4856816 C0.5,6.59003004 6.32029825,1 13.5,1"
                         stroke="var(--color-border-tertiary)"
@@ -1171,7 +1171,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
                   </svg>
                   <div className="borderLine" />
                   <svg className="bottomBorderRadius" width="14px" height="22px" viewBox="0 0 14 22" version="1.1">
-                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                    <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                       <path
                         d="M0.5,21 L0.5,12.9851088 C0.503434088,12.8199063 0.5,12.6531791 0.5,12.4856816 C0.5,5.59003004 6.32029825,0 13.5,0"
                         stroke="var(--color-border-tertiary)"
