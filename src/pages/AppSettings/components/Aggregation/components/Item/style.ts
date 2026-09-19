@@ -13,7 +13,7 @@ export const Wrap = styled.div`
   .iconCon {
     width: 36px;
     height: 36px;
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     flex-shrink: 0;
     min-width: 0;
     background: var(--color-text-disabled);
@@ -61,7 +61,7 @@ export const WrapDialog = styled.div`
   .ic {
     span {
       padding: 4px 6px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       margin-left: -6px;
       &:hover {
         background: var(--color-background-hover);

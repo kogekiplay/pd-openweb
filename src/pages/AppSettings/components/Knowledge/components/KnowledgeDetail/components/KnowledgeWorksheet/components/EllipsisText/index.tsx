@@ -9,7 +9,7 @@ export const Wrapper = styled.div`
   padding: 3px 6px;
   max-width: 250px;
   height: 24px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   color: var(--color-text-secondary);
   background-color: var(--color-background-tertiary);

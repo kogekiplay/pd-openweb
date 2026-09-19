@@ -34,7 +34,7 @@ const Wrap = styled.div`
   }
   &.ant-select,
   & .ant-select {
-    --ant-select-border-radius: 4px !important;
+    --ant-select-border-radius: var(--radius-sm) !important;
     box-shadow: none !important;
   }
 `;
@@ -142,10 +142,12 @@ export default function LingualList(props) {
       <Select
         className="mTop10 mBottom10"
         style={{ width: 'max-content', minWidth: 300 }}
-        showSearch={{ filterOption: (searchValue, option) => {
-          const name = renderLangName(_.find(allLangList, { langCode: option.value }));
-          return searchValue && name ? name.toLowerCase().includes(searchValue.toLowerCase()) : true;
-        } }}
+        showSearch={{
+          filterOption: (searchValue, option) => {
+            const name = renderLangName(_.find(allLangList, { langCode: option.value }));
+            return searchValue && name ? name.toLowerCase().includes(searchValue.toLowerCase()) : true;
+          },
+        }}
         allowClear={true}
         notFoundContent={<div className="valignWrapper">{_l('暂无数据')}</div>}
         value={originalLang || app.originalLang || null}
@@ -183,14 +185,16 @@ export default function LingualList(props) {
                 <div className="operate">
                   <Dropdown
                     trigger={['click']}
-                    popupRender={() => <Menu style={{ width: 100 }}>
+                    popupRender={() => (
+                      <Menu style={{ width: 100 }}>
                         <Menu.Item key="edit" onClick={() => onChangeLangInfo(data)}>
                           {_l('编辑')}
                         </Menu.Item>
                         <Menu.Item key="delete" danger onClick={() => handleDelete(data)}>
                           {_l('删除')}
                         </Menu.Item>
-                      </Menu>}
+                      </Menu>
+                    )}
                   >
                     <Icon className="textSecondary Font20" icon="more_horiz" />
                   </Dropdown>

@@ -98,7 +98,7 @@ const WrapList = styled.div`
   }
 `;
 const WrapLi = styled.div`
-  border-radius: 5px 5px 5px 5px;
+  border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
   .optionWrapTr {
     min-width: 70px !important;
     max-width: 70px !important;

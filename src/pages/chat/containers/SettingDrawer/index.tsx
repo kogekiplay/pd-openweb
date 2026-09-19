@@ -34,7 +34,7 @@ const Wrap = styled.div`
         top: 50%;
         height: 16px;
         width: 3px;
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         transform: translateY(-50%);
         background: currentColor;
       }

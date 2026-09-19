@@ -17,7 +17,7 @@ const PublicqueryHeader = styled.div`
     height: 36px;
     opacity: 1;
     background: var(--color-primary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     font-size: 13px;
     font-weight: 700;
     color: var(--color-white);

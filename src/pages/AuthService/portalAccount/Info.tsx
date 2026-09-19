@@ -32,7 +32,7 @@ const Wrap = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     div {
       height: 28px;
     }
@@ -47,7 +47,7 @@ const Wrap = styled.div`
   }
   &.isCenterCon {
     padding: 24px 32px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     margin: 32px auto;
     min-width: 800px;
     background: var(--color-background-primary);
@@ -64,7 +64,7 @@ const Wrap = styled.div`
   &.isM {
     position: relative;
     margin: 10px auto;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     width: 95%;
     min-width: 95%;
     padding: 48px 24px 23px;

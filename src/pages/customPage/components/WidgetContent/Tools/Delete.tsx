@@ -1,7 +1,7 @@
 import React from 'react';
 import { useToggle } from 'react-use';
-import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
+import _ from 'lodash';
 import styled from 'styled-components';
 import DeleteConfirm from 'ming-ui/components/DeleteReconfirm';
 
@@ -10,7 +10,7 @@ const DelVerify = styled.div`
   width: 240px;
   background-color: var(--color-background-primary);
   padding: 16px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
   p {
     margin: 0;
@@ -37,7 +37,7 @@ const DelVerify = styled.div`
       background-color: var(--color-error);
       color: var(--color-white);
       padding: 6px 12px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       text-align: center;
       line-height: 36px;
       &:hover {

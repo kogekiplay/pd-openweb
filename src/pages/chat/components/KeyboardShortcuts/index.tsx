@@ -58,7 +58,7 @@ const DialogWrap = styled(Dialog)`
     line-height: 24px;
     padding: 0px 5px;
     text-align: center;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     background-color: var(--color-background-secondary);
     border: 1px solid var(--color-border-primary);
     margin-left: 6px;

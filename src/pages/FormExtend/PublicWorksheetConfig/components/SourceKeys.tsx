@@ -31,7 +31,7 @@ const No = styled.span`
 `;
 
 const ThemeBox = styled.div`
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   height: 36px;
   width: 36px;
   line-height: 36px;

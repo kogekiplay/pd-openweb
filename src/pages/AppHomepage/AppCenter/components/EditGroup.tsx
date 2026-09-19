@@ -17,7 +17,7 @@ const IconInputCon = styled.div`
   height: 36px;
   align-items: center;
   border: 1px solid var(--color-border-tertiary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   &.focus {
     border-color: var(--color-primary);
   }

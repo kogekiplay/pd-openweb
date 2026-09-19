@@ -4,7 +4,7 @@ import { Switch } from 'ming-ui';
 export const IconWrap = styled.div`
   width: 28px;
   height: 28px;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -74,7 +74,7 @@ export const WrapPop = styled.div`
   width: 640px;
   background: var(--color-background-primary);
   box-shadow: 0px 5px 24px rgba(0, 0, 0, 0.24);
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   overflow: hidden;
   img {
     width: 100%;
@@ -107,7 +107,7 @@ export const WrapPop = styled.div`
       margin-top: 16px;
       line-height: 36px;
       background: var(--color-primary);
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       padding: 0 24px;
       color: var(--color-white);
       font-weight: 600;

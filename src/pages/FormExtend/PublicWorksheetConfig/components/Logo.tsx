@@ -9,7 +9,7 @@ const Con = styled.div`
   height: 60px;
   background: var(--color-background-secondary);
   border: 2px dashed var(--color-border-secondary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   color: var(--color-text-disabled);
   font-size: 20px;
   text-align: center;

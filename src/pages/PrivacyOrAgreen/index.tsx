@@ -15,7 +15,7 @@ const Wrap = styled.div`
     width: 800px;
     background: var(--color-background-primary);
     box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     margin: 40px auto;
     padding: 24px;
     .headCon {
@@ -41,7 +41,7 @@ const Wrap = styled.div`
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 5px;
+        border-radius: var(--radius-sm);
         div {
           height: 28px;
         }

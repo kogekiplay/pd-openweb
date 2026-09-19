@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
+import _ from 'lodash';
 import styled from 'styled-components';
 import { Dialog, Icon, VerifyPasswordInput } from 'ming-ui';
 import ProductLicenseInfo from 'src/components/productLicenseInfo';
@@ -12,7 +12,7 @@ const OperateMenu = styled.div`
   width: 220px !important;
   padding: 6px 0 !important;
   box-shadow: var(--shadow-sm);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   background: var(--color-background-card);
 `;
 const MenuItem = styled.div`
@@ -35,7 +35,7 @@ const ConfirmDialog = styled(Dialog)`
   .passwordInput {
     box-shadow: none !important;
     line-height: 28px !important;
-    border-radius: 3px !important;
+    border-radius: var(--radius-sm) !important;
     border: 1px solid var(--color-border-tertiary) !important;
     padding: 3px 10px !important;
     &.ant-input-affix-wrapper-focused {

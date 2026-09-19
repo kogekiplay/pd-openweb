@@ -10,7 +10,7 @@ const Wrap = styled.div`
   .aggCon {
     padding: 2px 5px;
     background: var(--color-background-secondary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
   }
 `;
 

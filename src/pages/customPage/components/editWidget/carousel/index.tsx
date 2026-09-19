@@ -13,7 +13,7 @@ const Wrap = styled.div`
 
   .btnStyle {
     display: flex;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     padding: 3px;
     background-color: var(--color-background-disabled);
     .item {
@@ -33,7 +33,7 @@ const Wrap = styled.div`
       }
       &.active {
         color: var(--color-primary);
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         background-color: var(--color-background-card);
       }
     }
@@ -68,7 +68,7 @@ export default function Carousel(props) {
   };
 
   return (
-    (<Modal
+    <Modal
       styles={{ mask: { zIndex: 999 } }}
       wrapClassName="customPageCarouselWrap"
       className="editWidgetDialogWrap"
@@ -125,6 +125,6 @@ export default function Carousel(props) {
           />
         </Wrap>
       </EditWidgetContent>
-    </Modal>)
+    </Modal>
   );
 }

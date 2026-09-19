@@ -11,7 +11,7 @@ const BetaWrapper = styled.div`
   line-height: 12px;
   font-size: 12px;
   background: var(--color-success);
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   span {
     display: inline-block;
     padding: 0 2px;

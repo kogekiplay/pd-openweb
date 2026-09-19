@@ -84,7 +84,7 @@ export const WrapNav = styled.div`
       &.cur {
         color: var(--color-primary);
         background: var(--color-primary-transparent) !important;
-        border-radius: 3px 3px 3px 3px;
+        border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
         font-weight: bold !important;
         position: relative;
         .Icon {
@@ -183,7 +183,7 @@ export const WrapTableCon = styled.div`
       height: 37px;
       background: var(--color-primary-transparent);
       padding: 0 20px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       &:hover {
         background: var(--color-primary-transparent);
       }
@@ -197,7 +197,7 @@ export const WrapFooter = styled.div`
     padding: 0 30px;
     color: var(--color-white);
     line-height: 36px;
-    border-radius: 4px 4px 4px 4px;
+    border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     font-size: 14px;
     font-weight: 400;
     transition:
@@ -217,7 +217,7 @@ export const WrapFooter = styled.div`
     height: 36px;
     padding: 0 30px;
     line-height: 36px;
-    border-radius: 4px 4px 4px 4px;
+    border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     font-size: 14px;
     opacity: 1;
     border: 1px solid var(--color-border-secondary);
@@ -240,7 +240,7 @@ export const WrapFooter = styled.div`
     height: 36px;
     padding: 0 30px;
     line-height: 36px;
-    border-radius: 4px 4px 4px 4px;
+    border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     font-size: 14px;
     opacity: 1;
     border: 1px solid var(--color-border-secondary);
@@ -267,7 +267,7 @@ export const AddWrap = styled.div`
   color: var(--color-text-tertiary);
   padding: 0 12px;
   line-height: 36px;
-  border-radius: 3px 3px 3px 3px;
+  border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
   &:hover {
     background: var(--color-background-hover);
   }

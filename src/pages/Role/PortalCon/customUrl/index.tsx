@@ -25,7 +25,7 @@ const Wrap = styled.div`
   .setBtn {
     padding: 5px 20px;
     background: var(--color-primary);
-    border-radius: 3px 3px 3px 3px;
+    border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     color: var(--color-white) !important;
   }
   .customUrlCon {
@@ -38,7 +38,7 @@ const Wrap = styled.div`
     line-height: 36px;
     padding: 0 12px;
     background-color: var(--color-background-disabled);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
   }
   .numCon {
     width: 20px;
@@ -89,7 +89,7 @@ const WrapDetail = styled.div`
   .nameInput {
     height: 36px;
     line-height: 36px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-primary);
     padding: 0 12px;
     &:focus {
@@ -102,7 +102,7 @@ const WrapDetail = styled.div`
 `;
 
 const CustomUrlSet = styled.div`
-  border-radius: 3px;
+  border-radius: var(--radius-xs);
   height: 36px;
   line-height: 36px;
   background-color: var(--color-background-disabled);
@@ -171,7 +171,7 @@ function Setting(props) {
   };
 
   return (
-    (<Drawer
+    <Drawer
       size={640}
       onClose={() => closeSet()}
       zIndex={999}
@@ -179,7 +179,7 @@ function Setting(props) {
       rootClassName=""
       placement="right"
       open={show}
-     
+
       closable={false}
       styles={{ body: { padding: 0 } }}
     >
@@ -381,7 +381,7 @@ function Setting(props) {
           </WrapDetail>
         </Dialog>
       )}
-    </Drawer>)
+    </Drawer>
   );
 }
 

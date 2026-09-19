@@ -34,7 +34,7 @@ export const Wrap = styled.div`
   }
   .myAccount {
     padding: 3px 8px;
-    border-radius: 2px;
+    border-radius: var(--radius-sm);
     &:hover {
       background-color: var(--color-border-secondary);
     }
@@ -56,7 +56,7 @@ export const Wrap = styled.div`
     padding: 0px 5px;
     margin-right: -5px;
     text-align: center;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     background-color: var(--color-background-secondary);
     border: 1px solid var(--color-border-primary);
     font-family: -apple-system、Segoe UI Variable Display、Segoe UI-MONOSPACE;

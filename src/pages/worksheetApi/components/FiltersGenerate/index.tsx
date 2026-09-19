@@ -5,8 +5,8 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import { Dialog, Icon } from 'ming-ui';
 import FilterConfig from 'worksheet/common/WorkSheetFilter/common/FilterConfig';
-import { formatFilters } from '../../core/utils';
 import type { FormControl } from 'src/utils/controlTypes';
+import { formatFilters } from '../../core/utils';
 
 const Wrapper = styled.div`
   display: flex;
@@ -15,7 +15,7 @@ const Wrapper = styled.div`
     flex: 1 1 0;
     min-width: 0;
     border: 1px solid var(--color-border-secondary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     height: 500px;
     padding: 16px;
     overflow: auto;
@@ -28,7 +28,7 @@ const Wrapper = styled.div`
       padding: 6px 16px;
       margin-bottom: 10px;
       border-bottom: 1px solid var(--color-background-disabled);
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
     }
     .jsonViewWrapper {
       padding: 12px 16px 16px;
@@ -89,7 +89,12 @@ const formatFiltersValue = (filters = []) => {
 };
 
 export default function FiltersGenerate(props) {
-  const { controls = [], projectId, appId, sheetSwitchPermit = [] }: { controls: FormControl[]; [key: string]: any } = props;
+  const {
+    controls = [],
+    projectId,
+    appId,
+    sheetSwitchPermit = [],
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const [visible, setVisible] = useState(false);
   const [filters, setFilters] = useState([]);
   const [apiVersion, setApiVersion] = useState('apiV2');

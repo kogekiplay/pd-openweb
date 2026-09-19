@@ -13,7 +13,7 @@ const Wrap = styled.div`
   background-color: var(--color-background-tertiary);
 
   .body {
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     box-shadow: var(--shadow-sm);
     overflow: auto;
     background-color: var(--color-background-card);

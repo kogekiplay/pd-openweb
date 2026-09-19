@@ -8,14 +8,14 @@ import { emitter, getDefaultThemeMode, setBodyThemeMode } from 'src/utils/common
 const Wrap = styled.div`
   background: var(--color-background-secondary);
   padding: 0px 5px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   height: 36px;
   position: absolute;
   right: 10px;
   .item {
     color: var(--color-text-disabled);
     padding: 4px 12px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
   }
   .active {
     color: var(--color-text-secondary);

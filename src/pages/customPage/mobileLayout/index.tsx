@@ -11,7 +11,7 @@ const MobileList = styled.div`
   .emptyHint {
     margin-top: 14px;
     padding: 12px 14px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-secondary);
     color: var(--color-text-tertiary);
     font-size: 12px;
@@ -33,7 +33,7 @@ const MobileList = styled.div`
       padding: 0 10px;
       background-color: var(--color-background-secondary);
       transition: background-color 0.25s;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       margin-top: 8px;
       cursor: pointer;
       i {

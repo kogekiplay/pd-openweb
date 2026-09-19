@@ -35,7 +35,7 @@ const Con = styled.div`
     align-items: center;
     height: 36px;
     padding: 0 16px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     background-color: var(--color-background-secondary);
     cursor: pointer;
     &:hover {

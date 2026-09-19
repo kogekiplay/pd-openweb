@@ -23,7 +23,7 @@ const Wrap = styled.div`
       flex: 1;
       height: 36px;
       background: var(--color-background-secondary);
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
     }
     .iconBox {
       padding: 0;
@@ -40,7 +40,7 @@ const Wrap = styled.div`
       padding: 0 10px !important;
       background: var(--color-background-primary);
       border: 1px solid var(--color-border-secondary);
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       .value,
       .Dropdown--placeholder {
         flex: 1;

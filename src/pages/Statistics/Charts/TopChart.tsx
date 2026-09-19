@@ -67,7 +67,7 @@ const getProgressWidth = (value, maxValue) => {
 const TopChartContent = styled.div`
   .item {
     padding: 6px 12px 6px 0;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
   }
   .index {
     width: 50px;
@@ -84,7 +84,7 @@ const TopChartContent = styled.div`
     flex: ${props => (props.yaxisListLength === 1 ? 2 : 1)}
     height: 12px;
     background-color: ${props => (props.isDark ? '#ffffff99' : '#efedee')}
-    border-radius: 2px;
+    border-radius: var(--radius-sm);
     overflow: hidden;
     .progress {
       width: 0;

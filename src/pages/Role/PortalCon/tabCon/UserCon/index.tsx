@@ -28,7 +28,7 @@ const Wrap = styled.div`
     width: 20px;
     height: 20px;
     background: transparent;
-    border-radius: 3px 3px 3px 3px;
+    border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     .moreop,
     .num {
       width: 20px;
@@ -80,9 +80,11 @@ const list = [
   },
 ];
 
-const getTranslatedRoleInfo = (appId: string, role: Record<string, any> = {}) => getTranslateInfo(appId, null, role.roleId);
+const getTranslatedRoleInfo = (appId: string, role: Record<string, any> = {}) =>
+  getTranslateInfo(appId, null, role.roleId);
 
-const getTranslatedRoleName = (appId: string, role: Record<string, any> = {}) => getTranslatedRoleInfo(appId, role).name || role.name;
+const getTranslatedRoleName = (appId: string, role: Record<string, any> = {}) =>
+  getTranslatedRoleInfo(appId, role).name || role.name;
 
 const getTranslatedRoleDescription = (appId: string, role: Record<string, any> = {}) =>
   getTranslatedRoleInfo(appId, role).description || role.description;

@@ -7,7 +7,7 @@ import groupAjax from 'src/api/group';
 
 const PopupWrap = styled.div`
   background: var(--color-background-primary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   text-align: left;
   width: 400px;
   box-shadow:

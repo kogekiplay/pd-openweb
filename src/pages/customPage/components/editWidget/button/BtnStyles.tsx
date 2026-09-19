@@ -15,7 +15,7 @@ const Wrap = styled.div`
     margin-right: 10px;
     width: 28px;
     height: 28px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-tertiary);
     display: flex;
     align-items: center;
@@ -35,7 +35,7 @@ const Wrap = styled.div`
     &.ant-input-affix-wrapper,
     &.ant-input-affix-wrapper-focused,
     & {
-      border-radius: 4px !important;
+      border-radius: var(--radius-sm) !important;
       box-shadow: none !important;
     }
     .ant-input-suffix {
@@ -43,7 +43,7 @@ const Wrap = styled.div`
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 0 4px 4px 0;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
       border-left: 1px solid var(--color-border-primary);
       background-color: var(--color-background-input);
     }

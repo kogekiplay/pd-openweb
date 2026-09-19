@@ -78,7 +78,7 @@ const ExplainCon = styled.div`
     border: none;
     color: var(--color-white);
     font-size: 14px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     font-weight: 600;
   }
   .explain-button:hover {

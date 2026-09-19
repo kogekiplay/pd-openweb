@@ -18,7 +18,7 @@ export const Con = styled.div`
     width: 100%;
     padding: 0px 9px;
     line-height: 36px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-primary);
     box-sizing: border-box;
     &:-ms-input-placeholder {
@@ -68,7 +68,7 @@ export const Con = styled.div`
         min-height: 32px;
         padding: 0 20px;
         background: var(--color-primary);
-        border-radius: 4px;
+        border-radius: var(--radius-sm);
         max-width: 155px;
         box-sizing: border-box;
       }
@@ -136,7 +136,7 @@ export const Con = styled.div`
     width: 200px;
   }
   .ant-select:not(.ant-select-customize-input) {
-    --ant-select-border-radius: 3px;
+    --ant-select-border-radius: var(--radius-sm);
   }
   .act {
     flex-shrink: 0;
@@ -149,7 +149,7 @@ export const Con = styled.div`
     min-height: 36px;
     .itemT {
       background: var(--color-background-secondary);
-      border-radius: 4px 4px 4px 4px;
+      border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
       padding: 2px 8px 2px 10px;
       line-height: 18px;
       border: 1px solid var(--color-border-secondary);
@@ -185,7 +185,7 @@ export const Wrap = styled.div`
   width: 340px;
   background: var(--color-background-primary);
   box-shadow: 0px 3px 12px 1px rgba(0, 0, 0, 0.1607843137254902);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   padding: 16px;
   p {
     margin: 0;
@@ -193,7 +193,7 @@ export const Wrap = styled.div`
   .btnName {
     width: 100%;
     line-height: 36px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-primary);
     padding: 0 12px;
     &:focus {
@@ -205,7 +205,7 @@ export const WrapTxt = styled.div`
   width: 100%;
   background: var(--color-background-secondary);
   border: 1px solid var(--color-border-primary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   padding: 16px;
   box-sizing: border-box;
   color: var(--color-text-title);

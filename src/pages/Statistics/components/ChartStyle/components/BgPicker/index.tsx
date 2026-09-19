@@ -42,7 +42,7 @@ const Wrap = styled.div`
 const ClearWrap = styled.div`
   width: 28px;
   height: 28px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-primary);
   background-color: var(--color-background-primary);
   position: relative;

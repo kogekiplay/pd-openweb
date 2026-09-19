@@ -17,7 +17,7 @@ const Wrapper = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     padding: 18px 24px 24px;
     background-color: var(--color-background-secondary);
     margin-bottom: 24px;

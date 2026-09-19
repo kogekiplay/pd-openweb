@@ -13,7 +13,7 @@ const Row = styled.div`
   .fieldText {
     height: 36px;
     background: var(--color-background-secondary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
     font-weight: 500;
@@ -109,7 +109,10 @@ export default class MapField extends Component<any, any> {
       .concat(filterIds);
 
     const columns = controls
-      .filter(({ controlId }: { controlId?: string; [key: string]: any }) => !_.includes([...NORMAL_SYSTEM_FIELDS_SORT, ...WORKFLOW_SYSTEM_FIELDS_SORT], controlId))
+      .filter(
+        ({ controlId }: { controlId?: string; [key: string]: any }) =>
+          !_.includes([...NORMAL_SYSTEM_FIELDS_SORT, ...WORKFLOW_SYSTEM_FIELDS_SORT], controlId),
+      )
       .map(({ controlName, controlId, type }: { controlId?: string; [key: string]: any }) => ({
         iconName: getIconByType(type),
         text: controlName,

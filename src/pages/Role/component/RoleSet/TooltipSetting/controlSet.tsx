@@ -35,7 +35,7 @@ const Wrap = styled.div`
     .isDecrypt {
       padding: 3px 5px;
       background: var(--color-warning-border);
-      border-radius: 3px 3px 3px 3px;
+      border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     }
     &.isChild {
       margin-left: 24px;

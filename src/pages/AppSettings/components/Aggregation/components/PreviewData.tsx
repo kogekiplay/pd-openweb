@@ -48,7 +48,7 @@ const Wrap = styled.div`
 `;
 const SelectedFilter = styled(FlexCenter)`
   display: inline-flex;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   font-size: 13px;
   line-height: 29px;

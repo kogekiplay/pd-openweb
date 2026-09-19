@@ -46,7 +46,7 @@ const WrapCon = styled.div`
   .fixedCon {
     line-height: 36px;
     background: rgba(230, 162, 60, 0.17);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     margin-top: 10px;
     padding: 0 12px;
   }
@@ -161,7 +161,7 @@ class EditPublishSetDialog extends React.Component<any, any> {
     if (integratedWechat) {
       // 已集成
       return (
-        (<Modal
+        <Modal
           wrapClassName="addwechatModal"
           open={integratedWechat}
           width={608}
@@ -182,12 +182,12 @@ class EditPublishSetDialog extends React.Component<any, any> {
               {_l('提交后，顾问会电话联系您完成应用集成,也可主动联系顾问 联系电话：400-665-6655')}
             </div>
           </div>
-        </Modal>)
+        </Modal>
       );
     } else if (noIntegratedWechat) {
       // 未集成
       return (
-        (<Modal
+        <Modal
           wrapClassName="addwechatModal"
           width={608}
           open={noIntegratedWechat}
@@ -202,7 +202,7 @@ class EditPublishSetDialog extends React.Component<any, any> {
               {_l('前往设置')}
             </div>
           </div>
-        </Modal>)
+        </Modal>
       );
     }
   };
@@ -377,7 +377,9 @@ class EditPublishSetDialog extends React.Component<any, any> {
               <React.Fragment>
                 <div className="Font13 mBottom5 mTop24">{_l('维护公告')}</div>
                 <TextareaWrapper
-                  ref={ele => { this.appFixTextarea = ele; }}
+                  ref={ele => {
+                    this.appFixTextarea = ele;
+                  }}
                   id="appFixTextarea"
                   value={fixRemark}
                   className="Font13"

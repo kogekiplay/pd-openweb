@@ -46,7 +46,7 @@ const Wrap = styled.div`
     width: 20px;
     height: 20px;
     background: transparent;
-    border-radius: 3px 3px 3px 3px;
+    border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     .moreop,
     .num {
       width: 20px;

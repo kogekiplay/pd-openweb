@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, SvgIcon } from 'ming-ui';
 import smartSearchAjax from 'src/api/smartSearch';
@@ -34,7 +34,7 @@ const Box = styled.div`
   }
   .list .listItem {
     width: 100%;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     height: 56px;
     cursor: pointer;
     position: relative;
@@ -45,7 +45,7 @@ const Box = styled.div`
       width: 200px;
       height: 100%;
       background: linear-gradient(271deg, var(--color-background-card) 0%, rgba(255, 255, 255, 0) 100%);
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       align-items: center;
       justify-content: end;
       display: none;
@@ -54,7 +54,7 @@ const Box = styled.div`
         height: 28px;
         background: var(--color-background-primary);
         box-shadow: 0px 2px 4px 1px rgba(0, 0, 0, 0.06);
-        border-radius: 5px 5px 5px 5px;
+        border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
         border: 1px solid var(--color-border-secondary);
         display: flex;
         align-items: center;
@@ -145,7 +145,7 @@ const Box = styled.div`
 const MoreOperateMenu = styled.ul`
   background: var(--color-background-card);
   box-shadow: var(--shadow-sm);
-  border-radius: 3px 3px 3px 3px;
+  border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
   width: 160px;
   font-size: 13px;
   color: var(--color-text-title);
@@ -183,9 +183,9 @@ export default function AppList(props) {
     appId,
     viewName = true,
     loadMore = false,
-    getNextPage = () => { },
+    getNextPage = () => {},
     currentProjectId,
-    update = () => { },
+    update = () => {},
   } = props;
 
   const settingInfo = GLOBAL_SEARCH_LIST_SETTING[dataKey];
@@ -224,9 +224,9 @@ export default function AppList(props) {
         ...l,
         value: l.value
           ? l.value
-            .split('|')
-            .filter(text => text.includes(searchKeyword))
-            .join(' ')
+              .split('|')
+              .filter(text => text.includes(searchKeyword))
+              .join(' ')
           : '',
       };
     });
@@ -393,8 +393,9 @@ export default function AppList(props) {
     }
 
     return (
-      <div className="noData">{`${dataKey === 'app' ? _l('没有搜索到相关应用和应用项') : _l('没有搜索到相关记录')
-        }，${_l('可尝试更换关键字搜索')}`}</div>
+      <div className="noData">{`${
+        dataKey === 'app' ? _l('没有搜索到相关应用和应用项') : _l('没有搜索到相关记录')
+      }，${_l('可尝试更换关键字搜索')}`}</div>
     );
   };
 
@@ -424,9 +425,9 @@ export default function AppList(props) {
                     background:
                       dataKey === 'record'
                         ? `rgba(${parseInt(item.color.slice(1, 3), 16)}, ${parseInt(
-                          item.color.slice(3, 5),
-                          16,
-                        )}, ${parseInt(item.color.slice(5), 16)}, 0.06)`
+                            item.color.slice(3, 5),
+                            16,
+                          )}, ${parseInt(item.color.slice(5), 16)}, 0.06)`
                         : item.itemType === 3
                           ? item.color
                           : 'rgba(178, 178, 178, 0.14)',

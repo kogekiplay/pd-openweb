@@ -68,7 +68,7 @@ const GroupTitleContent = styled(VerticalMiddle)`
   max-width: 300px;
   font-size: 17px;
   font-weight: bolder;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   .mRight4 {
     margin-right: 4px;
   }
@@ -120,7 +120,7 @@ const GroupTabClickPopup = styled.div`
   height: 46px;
   padding: 0 16px;
   background: var(--color-background-primary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   box-shadow: var(--shadow-lg);
   &:hover {
     color: var(--color-primary);
@@ -295,7 +295,7 @@ const GroupTabList = styled.div`
 const MorePopupContainer = styled.div`
   width: 220px;
   background: var(--color-background-card);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   padding: 6px 0;
   box-shadow: var(--shadow-lg);
   .groupItem {

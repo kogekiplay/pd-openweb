@@ -103,7 +103,7 @@ const SettingWrap = styled.div`
     .btnStyle,
     .btnWidth {
       display: flex;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       padding: 3px;
       background-color: var(--color-background-disabled);
       li {
@@ -123,7 +123,7 @@ const SettingWrap = styled.div`
         }
         &.active {
           color: var(--color-primary);
-          border-radius: 3px;
+          border-radius: var(--radius-sm);
           background-color: var(--color-background-card);
         }
       }

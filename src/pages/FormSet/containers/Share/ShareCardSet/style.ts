@@ -6,7 +6,7 @@ export const Con = styled.div`
     position: relative;
     width: 320px;
     min-height: 110px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     .card {
       width: 100%;
       min-height: 110px;
@@ -71,7 +71,7 @@ export const Con = styled.div`
         margin: auto;
         content: '';
         pointer-events: auto;
-        border-radius: 0 0 2px;
+        border-radius: 0 0 var(--radius-sm);
         pointer-events: none;
         &::before {
           position: absolute;
@@ -99,7 +99,7 @@ export const Con = styled.div`
     li {
       width: 60px;
       height: 60px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       border: 1px solid var(--color-border-secondary);
       text-align: center;
       position: relative;
@@ -120,7 +120,7 @@ export const Con = styled.div`
         height: 100%;
         line-height: 60px;
         background: rgba(0, 0, 0, 0.2);
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         opacity: 0;
         &.visible {
           opacity: 1;
@@ -161,7 +161,7 @@ export const Con = styled.div`
         width: 32px;
         height: 24px;
         background: var(--color-background-primary);
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         display: flex;
         align-items: center;
         justify-content: center;

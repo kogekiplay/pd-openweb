@@ -14,7 +14,7 @@ import { pathCompletion } from 'src/utils/common';
 const Wrap = styled.div`
   .warnTxt {
     background: var(--color-yellow-black);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     padding: 12px;
     margin-bottom: 24px;
   }
@@ -30,7 +30,7 @@ const Wrap = styled.div`
       height: 36px;
       background: var(--color-background-primary);
       border: 1px solid var(--color-border-secondary);
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       padding: 0 14px;
       &:hover {
         border: 1px solid var(--color-text-disabled);
@@ -46,7 +46,7 @@ const Wrap = styled.div`
     background: var(--color-background-primary);
     border: 1px solid var(--color-border-secondary);
     padding: 12px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     height: 90px;
     resize: none;
   }
@@ -58,7 +58,7 @@ const Wrap = styled.div`
   .sysBtn {
     line-height: 34px;
     background: var(--color-background-secondary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     color: var(--color-primary);
     padding: 0 12px;
     display: inline-block;
@@ -82,7 +82,7 @@ const Wrap = styled.div`
   .smsServiceCard {
     background: var(--color-background-tertiary);
     padding: 8px 12px;
-    border-radius: 3px;
+    border-radius: var(--radius-md);
     margin-top: 12px;
   }
 `;

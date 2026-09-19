@@ -6,7 +6,7 @@ import ajaxRequest from 'src/api/worksheet';
 const Wrap = styled.div`
   input {
     border: 1px solid var(--color-border-primary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     height: 36px;
     line-height: 36px;
     padding: 0 6px;

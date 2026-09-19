@@ -15,7 +15,7 @@ const ChangeRoleDialogWrap = styled.div`
     min-width: 0;
   }
   .Dropdown--input {
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     background: var(--color-background-primary);
     border: 1px solid var(--color-border-secondary);
     display: flex;

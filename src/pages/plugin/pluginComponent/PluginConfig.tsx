@@ -64,7 +64,7 @@ const ConfigWrapper = styled.div`
         width: 220px;
         input {
           width: 100%;
-          border-radius: 3px;
+          border-radius: var(--radius-sm);
         }
       }
     }
@@ -159,7 +159,7 @@ const ConfigWrapper = styled.div`
       display: inline-block;
       height: 36px;
       line-height: 36px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       padding: 0 30px;
       cursor: pointer;
 

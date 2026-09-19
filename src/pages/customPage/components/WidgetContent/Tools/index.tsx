@@ -97,7 +97,7 @@ const ToolsWrap = styled.ul`
     width: 250px;
     .ant-input {
       width: 60px;
-      border-radius: 4px !important;
+      border-radius: var(--radius-sm) !important;
       box-shadow: none !important;
     }
   }
@@ -397,7 +397,7 @@ export default function Tools(props) {
   const widgetTools = TOOLS.filter(n => n.type !== 'setting').map(item => renderTool({ ...item, renderType: 'menu' }));
 
   return (
-    (<ToolsWrap
+    <ToolsWrap
       ref={ref}
       titleVisible={titleVisible}
       layoutType={layoutType}
@@ -416,9 +416,11 @@ export default function Tools(props) {
               placement={placement}
               open={dropdownVisible}
               onOpenChange={handleUpdateDropdownVisible}
-              popupRender={() => <Menu className="chartMenu widgetToolMenu" style={{ width: 180 }}>
+              popupRender={() => (
+                <Menu className="chartMenu widgetToolMenu" style={{ width: 180 }}>
                   {widgetTools}
-                </Menu>}
+                </Menu>
+              )}
             >
               <li className="more">
                 <Icon icon="more_horiz" className="Font18 current" />
@@ -431,6 +433,6 @@ export default function Tools(props) {
       ) : (
         TOOLS.map(item => renderTool({ ...item, renderType: 'li' }))
       )}
-    </ToolsWrap>)
+    </ToolsWrap>
   );
 }

@@ -44,7 +44,7 @@
   .publicWorksheetEnablePanel {
     width: 100%;
     background-color: var(--color-background-primary);
-    border-radius: 4px;
+    border-radius: var(--radius-lg);
     padding: 32px;
     h1 {
       margin: 0;
@@ -120,7 +120,7 @@
       overflow: hidden;
       width: 1100px;
       margin: 200px auto 50px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       padding: 0 2px;
 
       .formContentHeader {
@@ -140,7 +140,7 @@
         margin: 32px 0 0 20px;
         width: 60px;
         height: 60px;
-        border-radius: 4px;
+        border-radius: var(--radius-sm);
         border: 2px dashed var(--color-border-secondary);
         background: var(--color-background-primary);
         cursor: pointer;
@@ -164,7 +164,7 @@
         padding: 6px;
         border: 1px solid transparent;
         cursor: pointer;
-        border-radius: 5px;
+        border-radius: var(--radius-sm);
         position: relative;
         &:hover {
           border-color: #72ccfd;
@@ -226,7 +226,7 @@
           line-height: 21px;
           box-sizing: border-box;
           font-size: 13px;
-          border-radius: 4px;
+          border-radius: var(--radius-sm);
           width: 100%;
           outline: none;
           -webkit-appearance: none;
@@ -266,7 +266,7 @@
 
   .rowsWrap {
     box-shadow: none !important;
-    border-radius: 0 0 3px 3px;
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
     background: var(--color-background-card);
   }
   .tabItemWrap {
@@ -338,7 +338,7 @@
         line-height: 21px;
         box-sizing: border-box;
         font-size: 13px;
-        border-radius: 4px;
+        border-radius: var(--radius-sm);
         width: 100%;
         outline: none;
         -webkit-appearance: none;
@@ -414,7 +414,7 @@
       .ant-picker {
         width: 380px;
         height: 36px;
-        border-radius: 4px !important;
+        border-radius: var(--radius-sm) !important;
         border-color: var(--color-border-primary);
         box-shadow: none;
         &:hover,
@@ -431,7 +431,7 @@
       .btnPositionSwitch {
         display: flex;
         background: var(--color-background-secondary);
-        border-radius: 5px;
+        border-radius: var(--radius-sm);
         padding: 4px;
         .positionItem {
           min-width: 45px;
@@ -497,6 +497,6 @@
     background: var(--color-background-tertiary);
     padding: 0 12px;
     font-weight: 500;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
   }
 }

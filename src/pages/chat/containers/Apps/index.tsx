@@ -30,7 +30,7 @@ const AppWrap = styled.div`
     top: 50%;
     height: 12px;
     width: 4px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     -webkit-transform: translateY(-50%);
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);
@@ -43,7 +43,7 @@ const AppWrap = styled.div`
 
 const ArrowWrap = styled.div`
   width: 26px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   .icon {
     transition: 0.2s;
   }

@@ -53,7 +53,7 @@ const Wrapper = styled.div`
 const CustomTagTextarea = styled(TagTextarea)`
   &.tagInputarea {
     .tagInputareaIuput {
-      border-radius: 3px 0 0 3px;
+      border-radius: var(--radius-sm) 0 0 var(--radius-sm);
       height: 120px;
       /* CM6 把 CM5 的 -sizer / -lines / -code 三层并成了一个 .cm-content，
          三条规则合成一条；-scroll 对应 .cm-scroller。 */
@@ -85,7 +85,7 @@ const LinkIcon = styled.div`
   height: 36px;
   border: 1px solid var(--color-border-tertiary);
   border-left: none;
-  border-radius: 0 3px 3px 0;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   cursor: pointer;
   i {
     font-size: 22px;
@@ -103,7 +103,7 @@ const PopupWrapper = styled.div`
   padding: 6px 0;
   background: var(--color-background-primary);
   overflow: auto;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   box-shadow: var(--shadow-lg);
   border: 1px solid var(--color-border-secondary);
   font-size: 14px;

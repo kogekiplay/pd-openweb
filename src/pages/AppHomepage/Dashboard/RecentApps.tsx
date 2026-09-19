@@ -18,7 +18,7 @@ const Wrapper = styled.div`
       padding: 8px 16px;
       position: relative;
       cursor: pointer;
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       font-size: 14px;
       font-weight: bold;
       &::after {

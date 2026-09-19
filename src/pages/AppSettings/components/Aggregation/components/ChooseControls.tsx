@@ -39,7 +39,7 @@ const Wrap = styled.div`
       padding-left: 30px;
       border: 1px solid var(--color-border-primary);
       opacity: 1;
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       &::placeholder {
         color: var(--color-text-placeholder);
       }

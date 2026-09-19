@@ -16,7 +16,7 @@ import RegExpValidator from 'src/utils/expression';
 const PasswordInputBox = styled.div`
   line-height: 34px;
   box-sizing: border-box;
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   .mLeft70 {
     margin-left: 70px;
   }

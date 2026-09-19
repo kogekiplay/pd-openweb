@@ -21,7 +21,7 @@ const Wrap = styled.div`
   .colorWrap {
     width: 32px;
     height: 32px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     padding: 4px;
     border: 1px solid var(--color-border-primary);
     background-color: var(--color-background-primary);

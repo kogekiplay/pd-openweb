@@ -129,7 +129,7 @@ const QrCode = styled.div`
   width: 180px;
   height: 180px;
   background-color: var(--color-background-primary);
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   padding: 16px;
   background-color: var(--color-background-primary);
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);

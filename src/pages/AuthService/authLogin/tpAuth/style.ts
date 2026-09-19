@@ -19,9 +19,9 @@ export const Wrap = styled.div`
       color: var(--color-link-hover);
     }
     .contianerBGStyle {
-      -moz-border-radius: 2px;
-      -webkit-border-radius: 2px;
-      border-radius: 2px;
+      -moz-border-radius: var(--radius-sm);
+      -webkit-border-radius: var(--radius-sm);
+      border-radius: var(--radius-sm);
       background-color: var(--color-background-primary);
       box-shadow: var(--shadow-md);
       -weblit-box-shadow: var(--shadow-md);

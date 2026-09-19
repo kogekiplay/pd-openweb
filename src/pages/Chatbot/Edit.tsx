@@ -71,7 +71,7 @@ const Wrap = styled.div`
   .settingFlow {
     color: var(--color-white);
     min-height: 40px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     justify-content: center;
     background-color: var(--app-primary-color);
     &:hover {

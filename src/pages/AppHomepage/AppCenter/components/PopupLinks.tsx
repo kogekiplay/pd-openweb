@@ -8,7 +8,7 @@ const Con = styled.div`
   padding: 8px 0;
   background: var(--color-background-card);
   box-shadow: var(--shadow-lg);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
 `;
 const Title = styled.div`
   padding: 0 26px;

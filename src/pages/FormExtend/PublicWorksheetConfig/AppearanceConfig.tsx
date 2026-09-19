@@ -43,7 +43,7 @@ const Con = styled.div`
         width: 32px;
         height: 24px;
         background: var(--color-background-primary);
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -149,7 +149,7 @@ const LayoutSettingWrap = styled.div`
     width: 120px;
     height: auto;
     margin-bottom: 16px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     &:hover {
       box-shadow: var(--shadow-sm);
     }

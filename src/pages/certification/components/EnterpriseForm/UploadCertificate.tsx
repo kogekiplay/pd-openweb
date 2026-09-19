@@ -61,7 +61,7 @@ const Wrapper = styled.div`
         width: 32px;
         height: 24px;
         background: var(--color-background-primary);
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         display: flex;
         align-items: center;
         justify-content: center;

@@ -51,18 +51,18 @@
           cursor: pointer;
         }
         &:first-child {
-          border-radius: 5px 5px 0 0;
+          border-radius: var(--radius-sm) var(--radius-sm) 0 0;
           border-top: 1px solid var(--color-border-secondary);
         }
         &:last-child {
-          border-radius: 0 0 5px 5px;
+          border-radius: 0 0 var(--radius-sm) var(--radius-sm);
           border-bottom: 1px solid var(--color-border-secondary);
           .con {
             border-bottom: 0px;
           }
         }
         &.autoId {
-          border-radius: 5px;
+          border-radius: var(--radius-sm);
           > div {
             padding-left: 44px;
             flex: 1;

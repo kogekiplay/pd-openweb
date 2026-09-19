@@ -23,7 +23,7 @@ import DateTimeDataRange from 'src/pages/worksheet/common/ViewConfig/components/
 import { FILTER_CONDITION_TYPE } from 'src/pages/worksheet/common/WorkSheetFilter/enum';
 
 const RadioWrap = styled.div`
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   padding: 3px;
   background-color: var(--color-background-disabled);
   > div {
@@ -36,7 +36,7 @@ const RadioWrap = styled.div`
     &.active {
       color: var(--color-primary);
       font-weight: bold;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       background-color: var(--color-background-primary);
     }
   }

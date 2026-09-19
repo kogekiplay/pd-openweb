@@ -17,7 +17,7 @@ const AddLine = styled.div`
 
 const EntranceWrapper = styled.div`
   border: 1px solid var(--color-border-primary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   height: 30px;
   background-color: var(--color-background-primary);
   position: relative;
@@ -156,7 +156,8 @@ export default class PivotTableFieldColor extends Component<any, any> {
         <Dropdown
           placement="topLeft"
           trigger={['click']}
-          popupRender={() => <Menu className="chartMenu">
+          popupRender={() => (
+            <Menu className="chartMenu">
               {data.map(data => (
                 <Menu.Item
                   key={data.controlId}
@@ -171,7 +172,8 @@ export default class PivotTableFieldColor extends Component<any, any> {
                   {data.controlName}
                 </Menu.Item>
               ))}
-            </Menu>}
+            </Menu>
+          )}
         >
           <AddLine className="Font13 valignWrapper pointer" onClick={e => e.preventDefault()}>
             <Icon icon="add" />

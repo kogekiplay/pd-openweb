@@ -13,7 +13,7 @@ const Wrapper = styled.div`
     font-size: 13px;
     padding: 8px 10px;
     color: var(--color-text-secondary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     &:hover {
       background-color: var(--color-background-hover);

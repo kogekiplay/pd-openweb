@@ -10,7 +10,7 @@ const DropdownWrap = styled.div`
   overflow-y: scroll;
   font-size: 13px;
   color: var(--color-text-title);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   .item {
     height: 36px;
     line-height: 36px;
@@ -61,7 +61,7 @@ function SelectDBInstance(props) {
         open={open}
         value={dbInstance.label}
         optionLabelProp="label"
-        classNames={{ popup: { root: "dbInstanceSelect" } }}
+        classNames={{ popup: { root: 'dbInstanceSelect' } }}
         placeholder={_l('请选择应用的存储数据库')}
         className="w100 mdAntSelect mTop28"
         suffixIcon={<Icon icon="arrow-down-border Font14" />}

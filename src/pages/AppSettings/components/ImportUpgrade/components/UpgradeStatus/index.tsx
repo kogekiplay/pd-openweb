@@ -43,7 +43,7 @@ const Wrap = styled.div`
   .appIconWrap {
     idth: 30px;
     height: 30px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     flex-shrink: 0;
     display: flex;
     justify-content: center;
@@ -170,7 +170,17 @@ export default class UpgradeStatus extends Component<any, any> {
       </div>
     );
   };
-  renderAppDetailWrap = ({ themeType, iconUrl, pcNaviStyle, name, description, iconColor }: { name?: string; [key: string]: any }) => {
+  renderAppDetailWrap = ({
+    themeType,
+    iconUrl,
+    pcNaviStyle,
+    name,
+    description,
+    iconColor,
+  }: {
+    name?: string;
+    [key: string]: any;
+  }) => {
     return (
       <Fragment>
         <div className={cx('appDetailWrap pointer overflowHidden')}>

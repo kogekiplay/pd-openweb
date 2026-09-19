@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -11,10 +11,10 @@ import { DEFAULT_CONFIG, WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig
 import { renderDialog } from 'src/pages/widgetConfig/widgetSetting/components/WorksheetReference/index';
 import { getTranslateInfo } from 'src/utils/app';
 import { controlState } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import { iconSvg } from '../../config';
 import { HIDE_FIELDS, LINE_HEIGHT, NODE_WIDTH } from '../../utils';
 import './index.less';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const TIPS = [_l('焦点'), _l('编辑表单')];
 
@@ -22,7 +22,7 @@ const Menu = styled.ul`
   width: 160px;
   background: var(--color-background-primary);
   box-shadow: 0px 4px 20px 1px rgba(0, 0, 0, 0.16);
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   padding: 6px 0;
   li {
     height: 36px;

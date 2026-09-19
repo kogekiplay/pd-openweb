@@ -27,7 +27,7 @@ const ALLOW_SYS_IDS = ['ownerid', 'caid', 'uaid'];
 const DefaultName = styled.div`
   height: 36px;
   background: var(--color-background-secondary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-primary);
   width: 100%;
   padding: 0 9px;

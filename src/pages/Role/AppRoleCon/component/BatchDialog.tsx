@@ -32,7 +32,7 @@ const Wrap = styled.div`
     padding: 0 6px;
   }
   .ant-select:not(.ant-select-customize-input) {
-    --ant-select-border-radius: 3px;
+    --ant-select-border-radius: var(--radius-sm);
     --ant-select-border-size: 1px;
     --ant-select-border-color: var(--color-border-primary);
   }

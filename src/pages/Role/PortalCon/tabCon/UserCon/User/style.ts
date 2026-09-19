@@ -34,7 +34,7 @@ export const Wrap = styled.div(
         height: 36px;
         background: var(--color-background-primary);
         border: 1px solid var(--color-border-secondary);
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         .Dropdown--input {
           display: flex;
           line-height: 36px;
@@ -51,7 +51,7 @@ export const Wrap = styled.div(
       }
     }
     .toRole {
-      border-radius: 3px 3px 3px 3px;
+      border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
       padding: 0 12px;
       border: 1px solid var(--color-border-primary);
       line-height: 32px;
@@ -66,7 +66,7 @@ export const Wrap = styled.div(
       overflow: hidden;
       vertical-align: top;
       line-height: 32px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       color: var(--color-white);
       background: var(--color-primary);
       i::before {
@@ -76,10 +76,10 @@ export const Wrap = styled.div(
       .lAdd {
         padding-left: 12px;
         padding-right: 10px;
-        border-radius: 3px 0 0 3px;
+        border-radius: var(--radius-sm) 0 0 var(--radius-sm);
       }
       .rAdd {
-        border-radius: 0 3px 3px 0;
+        border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
         padding-right: 6px;
       }
       .rAdd,
@@ -98,7 +98,7 @@ export const Wrap = styled.div(
     .download {
       padding: 0 16px;
       height: 32px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       line-height: 32px;
       text-align: center;
       background: var(--color-primary-transparent);
@@ -144,7 +144,7 @@ export const WrapPop = styled.div`
     background: var(--color-background-primary);
     box-shadow: var(--shadow-lg);
     opacity: 1;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     .Item {
       .Item-content {
         padding-left: 32px;

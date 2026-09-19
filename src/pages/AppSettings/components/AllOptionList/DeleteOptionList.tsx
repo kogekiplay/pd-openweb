@@ -12,7 +12,7 @@ const OptionQuoteWrap = styled.div`
     cursor: pointer;
     width: fit-content;
     padding: 0 4px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     &:hover {
       background-color: var(--color-background-hover);
       color: var(--color-primary);
@@ -45,7 +45,16 @@ const Empty = styled.div`
   }
 `;
 
-export default function DeleteOptionList({ collectionId, name, title, type, ...rest }: { name?: string; [key: string]: any }) {
+export default function DeleteOptionList({
+  collectionId,
+  name,
+  title,
+  type,
+  ...rest
+}: {
+  name?: string;
+  [key: string]: any;
+}) {
   const [loading, setLoading] = useState(true);
   const [controls, setControls] = useState(rest.controls || []);
   const [dataInfo, setDataInfo] = useState(rest.dataInfo || {});

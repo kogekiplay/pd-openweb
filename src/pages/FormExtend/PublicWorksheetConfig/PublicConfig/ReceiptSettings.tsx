@@ -1,17 +1,17 @@
 import React, { Fragment, useState } from 'react';
-import copy from 'src/utils/copyToClipboard';
-import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
+import _ from 'lodash';
 import styled from 'styled-components';
 import { Icon, Input, Radio, RichText } from 'ming-ui';
 import { getIconByType } from 'src/pages/widgetConfig/util';
+import copy from 'src/utils/copyToClipboard';
 import { SUBMIT_AFTER_OPTIONS } from '../../enum';
 import SectionTitle from './SectionTitle';
 
 const SelectControlWrap = styled.div`
   width: 36px;
   height: 36px;
-  border-radius: 0px 3px 3px 0px;
+  border-radius: 0px var(--radius-sm) var(--radius-sm) 0px;
   border: 1px solid var(--color-border-secondary);
   border-left: none;
 `;
@@ -28,14 +28,14 @@ const ContentWrap = styled.div`
         width: 521px;
       }
       .ck .ck-content {
-        border-radius: 3px 0 3px 3px !important;
+        border-radius: var(--radius-sm) 0 var(--radius-sm) var(--radius-sm) !important;
       }
     }
   }
   .submitLinkWrap {
     .inputCon {
       height: 36px;
-      border-radius: 3px 0px 0px 3px;
+      border-radius: var(--radius-sm) 0px 0px var(--radius-sm);
       border: 1px solid var(--color-border-primary);
       input {
         height: 100% !important;
@@ -62,7 +62,7 @@ const ContentWrap = styled.div`
 
 const PopupWrap = styled.div`
   background: var(--color-background-primary);
-  border-radius: 3px;
+  border-radius: var(--radius-xs);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.26);
   overflow: hidden;
   padding: 6px 0;

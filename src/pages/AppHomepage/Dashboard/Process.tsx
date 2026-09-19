@@ -14,7 +14,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   .finishedCon {
     padding: 8px 10px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     color: var(--color-text-tertiary);
     font-size: 14px;
     cursor: pointer;
@@ -60,7 +60,7 @@ const TodoTabList = styled.div`
     align-items: center;
     position: relative;
     padding: 8px 12px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
 
     .itemText {
       font-size: 14px;
@@ -107,7 +107,7 @@ const TodoTabList = styled.div`
     display: flex;
     align-items: center;
     padding: 6px 4px 6px 10px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     color: var(--color-text-tertiary);
     cursor: pointer;
     &:hover {
@@ -130,7 +130,7 @@ const DataListWrapper = styled.div`
     width: 100%;
     height: 36px;
     padding: 0 6px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     &:hover {
       background: var(--color-background-hover);
@@ -165,7 +165,7 @@ const DataListWrapper = styled.div`
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 4px;
+        border-radius: var(--radius-sm);
         margin-left: 12px;
         cursor: pointer;
         &:hover {
@@ -179,7 +179,7 @@ const DataListWrapper = styled.div`
     height: 32px;
     line-height: 32px;
     padding: 0 20px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     margin-top: 16px;
     cursor: pointer;
     color: ${({ themeColor }) => themeColor};

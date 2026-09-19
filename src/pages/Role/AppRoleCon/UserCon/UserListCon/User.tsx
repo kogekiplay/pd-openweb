@@ -77,7 +77,7 @@ const Wrap = styled.div`
 `;
 const WrapBar = styled.div`
   .toRole {
-    border-radius: 3px 3px 3px 3px;
+    border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     padding: 0 12px;
     border: 1px solid var(--color-border-primary);
     line-height: 34px;
@@ -90,7 +90,7 @@ const WrapBar = styled.div`
   .addUser {
     line-height: 36px;
     background: var(--color-primary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     color: var(--color-white);
     padding: 0 12px;
     display: inline-block;
@@ -102,14 +102,14 @@ const WrapBar = styled.div`
     width: 244px;
     height: 37px;
     background: var(--color-background-primary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-secondary);
   }
   .exportAppRolesBtn {
     height: 37px;
     padding: 0 16px;
     box-sizing: border-box;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-secondary);
     background: var(--color-background-primary);
     color: var(--color-text-primary);

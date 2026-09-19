@@ -41,7 +41,7 @@ const TagCon = styled.ul`
     align-items: center;
     box-sizing: border-box;
     margin: 3px 6px 3px 0;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     height: 24px;
     padding: 6px 5px 6px 10px;
     background-color: var(--color-background-secondary);

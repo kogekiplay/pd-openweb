@@ -28,7 +28,7 @@ const WidgetWrap = styled.div`
       display: flex;
       align-items: center;
       padding: 0 10px;
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       line-height: 44px;
       cursor: pointer;
       span {

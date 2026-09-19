@@ -23,7 +23,7 @@ const UploadWrapper = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     border: 1px dashed var(--color-border-secondary);
     box-sizing: border-box;
     .uploadImg {
@@ -51,7 +51,7 @@ const PluginInfoItem = styled.div`
     & .ant-select {
       --ant-select-border-size: 1px !important;
       --ant-select-border-color: var(--color-border-tertiary) !important;
-      --ant-select-border-radius: 3px !important;
+      --ant-select-border-radius: var(--radius-sm) !important;
       box-shadow: none !important;
     }
     .ant-select-content {

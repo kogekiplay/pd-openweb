@@ -77,7 +77,7 @@ const Wrapper = styled.div`
   .agentIconWrap {
     width: 44px;
     height: 44px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-primary);
     text-align: center;
     line-height: 44px;

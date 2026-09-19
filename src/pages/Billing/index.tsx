@@ -15,7 +15,7 @@ const PageWrap = styled.div`
   .cardWrap {
     width: auto;
     padding: 30px;
-    border-radius: 4px;
+    border-radius: var(--radius-md);
     background-color: var(--color-background-primary);
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px 1px;
     min-width: 840px;

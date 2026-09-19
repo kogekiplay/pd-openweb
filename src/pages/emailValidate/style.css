@@ -24,7 +24,7 @@ body {
   height: 44px;
   line-height: 44px;
   text-align: center;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   font-size: 14px;
   border: 0px;
   width: 60%;

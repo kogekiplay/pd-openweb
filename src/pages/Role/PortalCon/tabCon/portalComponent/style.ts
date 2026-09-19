@@ -17,7 +17,7 @@ export const PortalBarWrap = styled.div`
     cursor: pointer;
     border: 1px solid var(--color-border-primary);
     border-left: none;
-    border-radius: 0 4px 4px 0;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     font-size: 20px;
     color: var(--color-text-tertiary);
     line-height: 30px;
@@ -33,14 +33,14 @@ export const PortalBarWrap = styled.div`
     height: 36px;
     overflow: hidden;
     display: inline-block;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     background-color: var(--color-background-primary);
     .inputCon {
       display: flex;
       .inputConLeft {
         line-height: 32px;
         border: 1px solid var(--color-border-primary) !important;
-        border-radius: 4px 0 0 4px;
+        border-radius: var(--radius-sm) 0 0 var(--radius-sm);
         flex: 1;
         padding-right: 10px;
         position: relative;
@@ -54,7 +54,7 @@ export const PortalBarWrap = styled.div`
           box-sizing: border-box;
           vertical-align: top;
           padding: 0 12px;
-          border-radius: 3px;
+          border-radius: var(--radius-sm);
           &:-ms-input-placeholder {
             color: var(--color-text-placeholder) !important;
           }
@@ -79,7 +79,7 @@ export const Popup = styled.div`
   background: var(--color-background-card);
   width: 240px;
   padding: 5px 0;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   box-shadow: var(--shadow-lg);
   .searchWrapper {
     border-bottom: 1px solid var(--color-border-secondary);
@@ -112,7 +112,7 @@ export const Popup = styled.div`
       padding: 8px 16px;
       &:hover {
         background: var(--color-background-hover);
-        border-radius: 4px;
+        border-radius: var(--radius-sm);
       }
       .ant-switch-small {
         min-width: 18px;

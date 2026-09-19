@@ -7,7 +7,7 @@ const Com = styled.span`
   padding: 0 3px;
   color: var(--color-white);
   background: var(--color-success);
-  border-radius: 2px 2px 2px 2px;
+  border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
   height: 16px;
   line-height: 14px;
   margin-left: 5px;

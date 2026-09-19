@@ -7,7 +7,7 @@ import SortColumns from 'src/pages/worksheet/components/SortColumns';
 import { VIEW_DISPLAY_TYPE } from 'src/pages/worksheet/constants/enum';
 
 const ShowControlIdWrapper = styled.div`
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   padding: 5px 9px;
   border: 1px solid var(--color-border-primary);
   background-color: var(--color-border-secondary);
@@ -106,7 +106,7 @@ export default class OriginalData extends Component<any, any> {
     const { displaySetup } = this.props;
     const { columnsSorts } = this;
     return (
-      (<Fragment>
+      <Fragment>
         <div className="mBottom10 Font13">{_l('显示数据')}</div>
         <div className="mBottom16">
           <Radio.Group onChange={this.handleChange} value={displaySetup.showControlIds.length ? 2 : 1}>
@@ -159,7 +159,7 @@ export default class OriginalData extends Component<any, any> {
             onChange={this.handleChangeColumn}
           />
         </Modal>
-      </Fragment>)
+      </Fragment>
     );
   }
   render() {

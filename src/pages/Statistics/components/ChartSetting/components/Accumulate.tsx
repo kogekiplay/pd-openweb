@@ -7,7 +7,7 @@ import { isOptionControl } from 'statistics/common/controlUtils';
 import SortColumns from 'src/pages/worksheet/components/SortColumns';
 
 const ShowControlIdWrapper = styled.div`
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   padding: 5px 9px;
   border: 1px solid var(--color-border-primary);
   background-color: var(--color-border-secondary);
@@ -106,7 +106,7 @@ export default class Accumulate extends Component<any, any> {
         };
       });
     return (
-      (<div className="mBottom20">
+      <div className="mBottom20">
         <div className="mBottom8 Font13">{_l('累计')}</div>
         <div className="flexRow valignWrapper">
           <Checkbox
@@ -176,7 +176,7 @@ export default class Accumulate extends Component<any, any> {
             onChange={this.handleChangeColumn}
           />
         </Modal>
-      </div>)
+      </div>
     );
   }
 }

@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { useSetState } from 'react-use';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _, { isUndefined } from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Dialog, Icon, SortableList } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -121,7 +121,7 @@ const WrapItem = styled.div(
     line-height: 35px;
     background: var(--color-background-primary);
     border: 1px solid var(--color-border-primary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     padding: 0 8px 0 12px;
     &.hasField {
       position: relative;
@@ -156,7 +156,7 @@ const WrapItem = styled.div(
 const WrapDrop = styled.div`
   background: var(--color-background-primary);
   box-shadow: var(--shadow-lg);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   padding: 5px 0;
   max-height: 360px;
 `;

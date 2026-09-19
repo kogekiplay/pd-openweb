@@ -50,7 +50,7 @@ const Wrap = styled.div`
     width: 100px;
     > div {
       border: 1px solid var(--color-border-primary);
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
     }
     .countWrap {
       width: 100%;
@@ -68,7 +68,7 @@ const Wrap = styled.div`
 const FillColor = styled.div`
   width: 18px;
   height: 18px;
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   box-shadow: var(--shadow-lg);
   background-color: ${props => props.color};
 `;

@@ -36,7 +36,7 @@ const WrapBar = styled.div`
     width: 244px;
     height: 37px;
     background: var(--color-background-primary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-secondary);
   }
 `;

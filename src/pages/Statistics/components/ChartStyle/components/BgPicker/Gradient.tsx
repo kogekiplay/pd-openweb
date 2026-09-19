@@ -16,7 +16,7 @@ const Wrap = styled.div`
   .item {
     width: 106px;
     height: 54px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     margin: 2px 0 10px 2px;
     position: relative;
   }
@@ -29,7 +29,7 @@ const Wrap = styled.div`
       width: calc(100% + 4px);
       height: calc(100% + 4px);
       border: 1px solid var(--color-primary);
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
     }
   }
 `;

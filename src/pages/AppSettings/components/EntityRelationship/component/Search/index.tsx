@@ -26,7 +26,7 @@ const Wrap = styled.div`
     max-height: 189px;
     overflow-y: scroll;
     box-shadow: var(--shadow-lg);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     li {
       height: 36px;
       line-height: 36px;

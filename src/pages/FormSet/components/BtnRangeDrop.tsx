@@ -8,7 +8,7 @@ const Wrap = styled.div`
   width: 320px;
   background: var(--color-background-card);
   box-shadow: var(--shadow-lg);
-  border-radius: 3px 3px 3px 3px;
+  border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
   .viewList {
     border-top: 1px solid var(--color-background-secondary);
     max-height: 300px;

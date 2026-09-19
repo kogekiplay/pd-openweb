@@ -13,7 +13,7 @@ export const Con = styled.div`
       left: 0;
       right: 0;
       bottom: 0;
-      border-radius: 3px 3px 0px 0px;
+      border-radius: var(--radius-sm) var(--radius-sm) 0px 0px;
       border-top: 1px solid #000;
       border-left: 1px solid #000;
       border-right: 1px solid #000;

@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import 'rc-trigger/assets/index.css';
 
@@ -15,7 +15,7 @@ const SelectCountWrap = styled.div`
     line-height: 30px;
     padding: 0 25px 0 10px;
     background: var(--color-background-input);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
   }
   .operateWrap {
     position: absolute;
@@ -52,7 +52,7 @@ const CountList = styled.ul`
   min-width: 60px;
   max-height: 300px;
   overflow-y: auto;
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   background-color: var(--color-background-card);
   box-shadow: var(--shadow-lg);
   li {

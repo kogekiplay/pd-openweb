@@ -19,7 +19,7 @@ const Wrap = styled.div`
   min-width: 0;
 
   .SingleViewWrap {
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     background-color: var(--color-background-card);

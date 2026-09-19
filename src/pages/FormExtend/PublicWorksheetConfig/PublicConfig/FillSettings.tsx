@@ -13,7 +13,7 @@ const PreFillWrap = styled.div`
   padding: 0 16px 0 13px;
   height: 36px;
   background: var(--color-background-secondary);
-  border-radius: 3px 3px 3px 3px;
+  border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
   border: 1px solid var(--color-border-primary);
   margin-left: 44px;
   &:hover {

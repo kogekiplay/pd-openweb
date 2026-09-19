@@ -27,7 +27,7 @@ const EditUserExtendInfoCon = styled.div`
     padding: 0 30px;
     color: var(--color-white);
     line-height: 36px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     font-size: 14px;
     font-weight: 400;
     -webkit-transition:
@@ -167,7 +167,10 @@ export default function EditUserExtendInfo(props) {
       </div>
       <div className="selectTitle Bold valignWrapper mTop30">{_l('选择应用')}</div>
       <Select
-        showSearch={{ filterOption: (input, option) => (option.children || '').toLowerCase().includes(input.toLowerCase()), optionFilterProp: "workSheetName" }}
+        showSearch={{
+          filterOption: (input, option) => (option.children || '').toLowerCase().includes(input.toLowerCase()),
+          optionFilterProp: 'workSheetName',
+        }}
         className="selectWorksheet mTop8"
         loading={loading}
         placeholder={_l('选择应用')}
@@ -196,7 +199,10 @@ export default function EditUserExtendInfo(props) {
         </Tooltip>
       </div>
       <Select
-        showSearch={{ filterOption: (input, option) => (option.children || '').toLowerCase().includes(input.toLowerCase()), optionFilterProp: "workSheetName" }}
+        showSearch={{
+          filterOption: (input, option) => (option.children || '').toLowerCase().includes(input.toLowerCase()),
+          optionFilterProp: 'workSheetName',
+        }}
         className="selectWorksheet mTop8"
         loading={loading}
         placeholder={_l('选择工作表')}
@@ -225,7 +231,10 @@ export default function EditUserExtendInfo(props) {
         </Tooltip>
       </div>
       <Select
-        showSearch={{ filterOption: (input, option) => (option.children || '').toLowerCase().includes(input.toLowerCase()), optionFilterProp: "controlName" }}
+        showSearch={{
+          filterOption: (input, option) => (option.children || '').toLowerCase().includes(input.toLowerCase()),
+          optionFilterProp: 'controlName',
+        }}
         className="selectControl mTop8"
         loading={loading}
         placeholder={_l('选择用户映射')}

@@ -14,7 +14,7 @@ import { formatrChartValue, getChartColors } from './common';
 const ZoomWrapper = styled.div`
   width: 40px;
   height: 90px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   background-color: var(--color-background-primary);
   position: absolute;
   bottom: 25px;

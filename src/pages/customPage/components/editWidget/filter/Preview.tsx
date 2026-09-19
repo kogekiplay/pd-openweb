@@ -34,7 +34,7 @@ const Wrap = styled.div`
     justify-content: space-between;
   }
   .body {
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     box-shadow: 0px 1px 4px #00000029;
     padding: 10px;
     overflow: auto;

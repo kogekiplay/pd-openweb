@@ -12,7 +12,7 @@ import { formatSorts, getSortData, isCustomSort } from '../../common/reportConfi
 import { timeParticleSizeDropdownData } from '../../common/timeUtils';
 
 const SortContent = styled.div`
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   background-color: var(--color-background-card);
   box-shadow: var(--shadow-lg);
   width: auto !important;
@@ -26,7 +26,7 @@ const SortContent = styled.div`
     }
   }
   .sortSelect {
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     margin-top: 8px;
     .item {
       width: 80px;
@@ -39,10 +39,10 @@ const SortContent = styled.div`
       border: 1px solid var(--color-border-tertiary);
       border-right: none;
       &:first-child {
-        border-radius: 5px 0 0 5px;
+        border-radius: var(--radius-sm) 0 0 var(--radius-sm);
       }
       &:last-child {
-        border-radius: 0 5px 5px 0;
+        border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
         border-right: 1px solid var(--color-border-tertiary);
       }
       &.active {
@@ -58,7 +58,7 @@ const SortContent = styled.div`
 `;
 
 const CustomSortItemContent = styled.div`
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   padding: 8px 5px;
   &:hover {
     background-color: var(--color-background-hover);

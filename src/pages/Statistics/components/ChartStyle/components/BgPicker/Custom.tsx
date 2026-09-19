@@ -10,7 +10,7 @@ const Wrap = styled.div`
     height: 160px;
     color: var(--color-text-secondary);
     border: 1.5px dashed var(--color-text-disabled);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     &:hover {
       color: var(--color-primary);
       border-color: var(--color-primary);
@@ -18,7 +18,7 @@ const Wrap = styled.div`
   }
   .imageView {
     height: 160px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     overflow: hidden;
     z-index: 1;
     &:hover .mask {
@@ -39,7 +39,7 @@ const Wrap = styled.div`
     }
     .resetBtn {
       padding: 10px;
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       background-color: var(--color-background-primary);
       &:hover {
         color: var(--color-primary);
