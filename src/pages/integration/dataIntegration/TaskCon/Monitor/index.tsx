@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
-import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import moment from 'moment';
 import styled from 'styled-components';
@@ -9,6 +8,7 @@ import { Dialog, Dropdown, Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import LogAjax from 'src/pages/integration/api/log.js';
 import MonitorAjax from 'src/pages/integration/api/monitor.js';
+import copy from 'src/utils/copyToClipboard';
 
 const Wrap = styled.div`
   flex: 1;
@@ -149,7 +149,7 @@ function Monitor(props) {
     showErr: false,
     g2plotLoaded: false,
   });
-  const chantRef = useRef<any>(undefined);
+  const chantRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     mounted.current = true;

@@ -114,7 +114,7 @@ const DropdownBtn = styled(FlexCenter)`
 
 function StaticInput(props) {
   const { value, isEditing, onChange, onBlur } = props;
-  const inputRef = useRef<any>(undefined);
+  const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     if (isEditing && inputRef.current) {
       inputRef.current.focus();

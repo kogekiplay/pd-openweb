@@ -372,7 +372,16 @@ const dayFn = (
   }
 };
 
-export default function filterFn({ filterData, originControl, data = [], recordId, appTimeZone }: { recordId?: string; [key: string]: any }) {
+export default function filterFn({
+  filterData,
+  originControl,
+  data = [],
+  recordId,
+  appTimeZone,
+}: {
+  recordId?: string;
+  [key: string]: any;
+}) {
   try {
     let { filterType = '', dataType = '', dynamicSource = [], dateRange, dateRangeType } = filterData;
     const control = redefineComplexControl(originControl);
@@ -875,7 +884,8 @@ export default function filterFn({ filterData, originControl, data = [], recordI
           case CONTROL_FILTER_WHITELIST.CASCADER.value:
             let isInV = true;
             _.map(compareValues, it => {
-              let itValue: Record<string, any> = {};
+              // 这里只用得到这两个 id：动态值那一路给的是 sid，静态 JSON 那一路给的是 id
+              let itValue: { sid?: string; id?: string } = {};
               itValue = dynamicSource.length > 0 ? it || {} : safeParse(it || '{}');
               let valueN = _.isArray(value) ? value : safeParse(value || '[]', 'array');
               _.map(valueN, item => {
@@ -1380,7 +1390,8 @@ export default function filterFn({ filterData, originControl, data = [], recordI
           case CONTROL_FILTER_WHITELIST.CASCADER.value:
             let isInValue = true;
             _.map(compareValues, it => {
-              let itValue: Record<string, any> = {};
+              // 这里只用得到这两个 id：动态值那一路给的是 sid，静态 JSON 那一路给的是 id
+              let itValue: { sid?: string; id?: string } = {};
               itValue = dynamicSource.length > 0 ? it || {} : safeParse(it || '{}');
               let valueN = _.isArray(value) ? value : safeParse(value || '[]', 'array');
               _.map(valueN, item => {

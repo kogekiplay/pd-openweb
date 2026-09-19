@@ -8,11 +8,11 @@ import { Button } from 'ming-ui';
 import { formatQuickFilterValueToControlValue } from 'worksheet/common/WorkSheetFilter/util';
 import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget';
 import { FILTER_CONDITION_TYPE } from 'src/pages/worksheet/common/WorkSheetFilter/enum';
+import type { FormControl } from 'src/utils/controlTypes';
 import { SPRING_DEFAULT } from 'src/utils/spring';
 import FilterInput, { NumberTypes, TextTypes } from './Inputs';
 import { validate } from './utils';
 import { formatFilterValuesToServer } from './utils';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   display: flex;
@@ -257,7 +257,7 @@ export default function Conditions(props) {
   const [values, setValues] = useState({});
   const [isQuerying, setIsQuerying] = useState(false);
   const [requiredErrorVisible, setRequiredErrorVisible] = useState(false);
-  const didMount = useRef<any>(undefined);
+  const didMount = useRef<boolean>(undefined);
   const showQueryBtn = _.isUndefined(props.showQueryBtn)
     ? _.get(view, 'advancedSetting.enablebtn') === '1'
     : props.showQueryBtn;
@@ -285,7 +285,9 @@ export default function Conditions(props) {
     [
       JSON.stringify(filters),
       JSON.stringify(controls.map((c: FormControl) => _.pick(c, ['controlName', 'options']))),
-      JSON.stringify(controls.filter((c: FormControl) => c.relationControls).map(c => _.map(c.relationControls, rc => rc.controlId))),
+      JSON.stringify(
+        controls.filter((c: FormControl) => c.relationControls).map(c => _.map(c.relationControls, rc => rc.controlId)),
+      ),
       _.get(view, 'advancedSetting.fastrequired'),
       _.get(view, 'advancedSetting.requiredcids'),
     ],

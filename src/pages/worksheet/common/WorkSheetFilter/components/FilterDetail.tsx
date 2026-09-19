@@ -8,6 +8,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { FlexCenter, VerticalMiddle } from 'worksheet/components/Basics';
 import { buriedUpgradeVersionDialog } from 'src/components/upgradeVersion';
 import FilterItemTexts from 'src/pages/widgetConfig/widgetSetting/components/FilterData/FilterItemTexts';
+import type { FormControl } from 'src/utils/controlTypes';
 import { VersionProductType } from 'src/utils/enum';
 import { getFeatureStatus } from 'src/utils/project';
 import { saveWorksheetFilter } from '../../SaveWorksheetFilter';
@@ -19,7 +20,6 @@ import FilterDetailName from './FilterDetailName';
 import QueryButton from './QueryButton';
 import SaveButton from './SaveButton';
 import SplitDropdown from './SplitDropdown';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   display: flex;
@@ -119,7 +119,7 @@ export default function FilterDetail(props) {
   const isNew = filter.id.startsWith('new');
   const saveButtonDisabled = !(isNew || needSave) || !canSave;
   const { conditionsGroups = [] } = filter;
-  const scrollRef = useRef<any>(undefined);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const [foldedMap, setFoldedMap] = useState({});
   const { projectId, appId, worksheetId, isCharge } = base;
   const featureType = supportGroup ? getFeatureStatus(projectId, VersionProductType.filterGroup) : '';

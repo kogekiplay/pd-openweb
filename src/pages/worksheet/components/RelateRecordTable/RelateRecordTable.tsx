@@ -12,10 +12,10 @@ import { openRecordInfo } from 'worksheet/common/recordInfo';
 import { RecordFormContext } from 'worksheet/common/recordInfo/RecordForm';
 import { RELATE_RECORD_SHOW_TYPE } from 'worksheet/constants/enum';
 import type { RootState } from 'src/redux/types';
+import type { RecordRow } from 'src/utils/controlTypes';
 import Operate from './Operate';
 import * as actions from './redux/action';
 import TableComp from './TableComp';
-import type { RecordRow } from 'src/utils/controlTypes';
 
 const TableCon = styled.div`
   &.userSelectNone {
@@ -59,7 +59,7 @@ function RelateRecordTable(props) {
     get(control, 'advancedSetting.showtype'),
   );
   const tableCache = useRef({});
-  const tableConRef = useRef<any>(undefined);
+  const tableConRef = useRef<HTMLDivElement>(null);
   const [tableId] = useState(v4());
   const { width, recordbase = {}, iseditting, isMingoCreate } = useContext(RecordFormContext) || {};
   const { recordTitle } = recordbase;

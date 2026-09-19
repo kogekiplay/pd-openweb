@@ -637,7 +637,8 @@ export function deleteRecords(recordIds = []) {
 }
 
 // 更新单元格控件
-export function updateCell({ cell, row }, options: Record<string, any> = {}) {
+// options 只有 updateSuccessCb 一个键：保存成功后把更新过的整行交回去
+export function updateCell({ cell, row }, options: { updateSuccessCb?: (row: RecordRow) => void } = {}) {
   return (dispatch: RelateRecordTableDispatch, getState: RelateRecordTableGetState) => {
     const state = getState();
     const { base, controls } = state;

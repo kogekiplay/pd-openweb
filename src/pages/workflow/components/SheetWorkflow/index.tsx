@@ -1,10 +1,10 @@
 import React, { Fragment, lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { Drawer } from 'antd';
 import { ActionSheet } from 'antd-mobile';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
-import Trigger from '@rc-component/trigger';
 import { Icon, LoadDiv, Menu, MenuItem, ScrollView, UserHead } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import instance from 'src/pages/workflow/api/instance';
@@ -16,11 +16,11 @@ import Steps from 'src/pages/workflow/components/ExecDialog/Steps';
 import { covertTime, INSTANCELOG_STATUS } from 'src/pages/workflow/MyProcess/config';
 import { getTranslateInfo } from 'src/utils/app';
 import { browserIsMobile } from 'src/utils/common';
+import type { FormControl } from 'src/utils/controlTypes';
 import { dateConvertToUserZone } from 'src/utils/project';
 import StepHeader from '../ExecDialog/StepHeader';
 import WorkflowAction, { TaskRevokeAction } from './Action';
 import './index.less';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const isMobile = browserIsMobile();
 const LoadableMobileProcessRecord = lazy(() => import('src/pages/Mobile/ProcessRecord'));
@@ -137,7 +137,7 @@ function CurrentWorkItems(props) {
   const { type } = data.flowNode || {};
   const allCurrentWorkItems = (data.currentWorkItems || []).filter(c => c.operationType !== 5);
   const [currentWorkItems, setCurrentWorkItems] = useState(allCurrentWorkItems);
-  const wrapRef = useRef<any>(undefined);
+  const wrapRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (currentWorkItems.length && wrapRef.current) {
       const { clientWidth } = wrapRef.current;
@@ -837,7 +837,9 @@ export default function SheetWorkflow(props) {
   const renderStepItem = () => {
     const { processId, cardData = {}, processName, works = [], status } = currentWorkflow;
     const { id, workId, completed, parentCurrents = [] } = cardData;
-    const allowTaskRevokeWorks = works.filter((_, index: number) => index).filter(n => n.allowTaskRevokeBackNodeId && isCharge);
+    const allowTaskRevokeWorks = works
+      .filter((_, index: number) => index)
+      .filter(n => n.allowTaskRevokeBackNodeId && isCharge);
 
     const currentWork = (function () {
       if (allowTaskRevokeBackNodeId) {
@@ -1049,7 +1051,7 @@ export default function SheetWorkflow(props) {
 
   const Wrap = isMobile ? Fragment : ScrollView;
   return (
-    (<div className="h100 w100 sheetWorkflowWrapper Relative">
+    <div className="h100 w100 sheetWorkflowWrapper Relative">
       {renderFilter()}
       {loading ? (
         <LoadDiv className="pTop20" />
@@ -1160,6 +1162,6 @@ export default function SheetWorkflow(props) {
             }}
           />
         ))}
-    </div>)
+    </div>
   );
 }

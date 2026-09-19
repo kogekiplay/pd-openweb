@@ -19,6 +19,14 @@ import { navigateTo, navigateToLogin, navigateToLogout, redirect } from 'src/rou
 import { browserIsMobile, getPathWithoutSubPath, pathCompletion } from 'src/utils/common';
 import { prefetchContactInfo } from 'src/utils/project';
 import { getPssId, setPssId } from 'src/utils/pssId';
+import { installPlatformTheme } from 'src/common/theme';
+
+// 装平台调色板。放在模块级是因为【72 个入口全都 import 这个文件】，
+// 这里是唯一一处「必经、且早于任何渲染」的位置。
+//
+// 装完之后 theme-default.less / theme-dark.less 里那些主色字面值就只剩
+// 「JS 还没执行时那一帧的兜底」这一个作用了 —— inline style 恒压过它们。
+installPlatformTheme();
 
 /** 存储分发类入口 状态 和 分享id */
 const parseShareId = () => {

@@ -36,10 +36,10 @@ const ListItemCon = styled.div`
     background: var(--color-background-hover);
   }
   &.selected {
-    background: var(--color-app-transparent);
+    background: var(--color-primary-transparent);
     .listItemCheck {
       font-size: 18px;
-      color: var(--color-app);
+      color: var(--color-primary);
     }
   }
   .listItemCover {

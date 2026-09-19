@@ -22,7 +22,7 @@ const PullToRefreshWrapper = ({
   disabled = false,
   children,
 }) => {
-  const timerRef = useRef<any>(undefined);
+  const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const handleRefresh = async () => {
     switch (mode) {

@@ -72,11 +72,13 @@ export default function UrlParams(props) {
   const { view = {}, updateCurrentView, appId, worksheetId, currentSheetInfo, sheetSwitchPermit, hasCharge } = props;
   const [params, setParams] = useState(safeParse(view?.advancedSetting?.urlparams, 'array'));
   const [flag, setFlag] = useState(false);
-  const paramsRef = useRef<any>(undefined);
+  const paramsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (paramsRef && paramsRef.current && paramsRef.current.lastChild && paramsRef.current.lastChild.firstChild) {
-      paramsRef.current.lastChild.firstChild.focus();
+    // lastChild/firstChild 的静态类型是 ChildNode（没有 focus）；这里是最后一行参数里的输入框
+    const lastInput = paramsRef.current?.lastChild?.firstChild as HTMLElement | undefined;
+    if (lastInput) {
+      lastInput.focus();
     }
   }, [flag]);
 

@@ -4,9 +4,9 @@ import { func, string } from 'prop-types';
 import styled from 'styled-components';
 import { Icon, Input, Modal, Skeleton } from 'ming-ui';
 import sheetAjax from 'src/api/worksheet';
+import type { FormControl } from 'src/utils/controlTypes';
 import emptyImg from './empty.png';
 import RecordCoverCardList from './RecordCoverCardList';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const Title = styled.div`
   font-size: 16px;
@@ -129,7 +129,7 @@ export default function SearchRelateRecords(props) {
     onNewRecord = () => {},
     ...rest
   }: { controls: FormControl[]; [key: string]: any } = props;
-  const conRef = useRef<any>(undefined);
+  const conRef = useRef<HTMLDivElement>(null);
   const [keyWords, setKeyWords] = useState('');
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(!onlySearchLoad);

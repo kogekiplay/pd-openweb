@@ -1,11 +1,12 @@
 import dayjs from 'dayjs';
 import _ from 'lodash';
 import moment from 'moment';
+import type { WorksheetView } from 'src/pages/worksheet/types';
 import { renderTitleByViewtitle } from 'src/pages/worksheet/views/util.js';
 import { isTimeStyle, renderText as renderCellText } from 'src/utils/control';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import { dateConvertToUserZone } from 'src/utils/project';
 import { lineBottomHeight, lineHeight, minHeightObj, timeWidth, timeWidthHalf, types } from './config';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 //获取年的时间数组
 export const getTimesByYear = dateData => {
@@ -170,7 +171,7 @@ export const getViewTimesByDay = (view, date = moment()) => {
   };
 };
 
-export const getViewTimesList = (view: Record<string, any> = {}, time) => {
+export const getViewTimesList = (view: WorksheetView = {}, time) => {
   const type =
     localStorage.getItem(`${view.viewId}_resource_type`) || types[_.get(view, 'advancedSetting.calendarType') || 0];
 
@@ -257,8 +258,10 @@ export const formatRecordPoint = (row, view, list = [], controls, currentTime) =
   let left = 0;
   let width = 0;
 
-  const isDateStart = (controls.find((o: FormControl) => o.controlId === _.get(view, 'advancedSetting.begindate')) || {}).type === 15;
-  const isDateEnd = (controls.find((o: FormControl) => o.controlId === _.get(view, 'advancedSetting.enddate')) || {}).type === 15;
+  const isDateStart =
+    (controls.find((o: FormControl) => o.controlId === _.get(view, 'advancedSetting.begindate')) || {}).type === 15;
+  const isDateEnd =
+    (controls.find((o: FormControl) => o.controlId === _.get(view, 'advancedSetting.enddate')) || {}).type === 15;
 
   // 日期字段 格式化开始时间为 00:00:00
   if (isDateStart || ['Month', 'Year'].includes(type)) {

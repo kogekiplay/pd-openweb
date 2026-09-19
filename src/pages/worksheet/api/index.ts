@@ -1,13 +1,14 @@
 import _ from 'lodash';
 import publicWorksheetApi from 'src/api/publicWorksheet';
 import worksheetAjax from 'src/api/worksheet';
+import type { FormRule } from 'src/components/Form/core/types';
 import { SYSTEM_CONTROL } from 'src/pages/widgetConfig/config/widget';
 import { FORM_HIDDEN_CONTROL_IDS } from 'src/pages/widgetConfig/config/widget';
 import { isSheetDisplay } from 'src/pages/widgetConfig/util';
 import { ensureAppLangData } from 'src/utils/app';
 import { browserIsMobile } from 'src/utils/common';
-import { replaceAdvancedSettingTranslateInfo, replaceControlsTranslateInfo } from 'src/utils/translate';
 import type { FormControl } from 'src/utils/controlTypes';
+import { replaceAdvancedSettingTranslateInfo, replaceControlsTranslateInfo } from 'src/utils/translate';
 
 function getTableAdvancedSettingOfControl(control) {
   let { advancedSetting = {} } = control;
@@ -48,7 +49,7 @@ export interface RecordDetail {
   /** 由 templateControls + 行数据拼出来的表单字段 */
   formData?: FormControl[];
   /** 字段显隐规则；由 loadRecord 在 getRules 为真时合并进来 */
-  rules?: any[];
+  rules?: FormRule[];
   allowEdit?: boolean;
   allowDelete?: boolean;
   /** 记录是否落在当前视图的数据范围内 */
@@ -128,7 +129,21 @@ export function getRowDetail(params, controls?, options = {}) {
 }
 
 export function deleteAttachmentOfControl(
-  { appId, viewId, worksheetId, recordId, controlId, attachment }: { appId?: string; viewId?: string; worksheetId?: string; recordId?: string; controlId?: string; [key: string]: any },
+  {
+    appId,
+    viewId,
+    worksheetId,
+    recordId,
+    controlId,
+    attachment,
+  }: {
+    appId?: string;
+    viewId?: string;
+    worksheetId?: string;
+    recordId?: string;
+    controlId?: string;
+    [key: string]: any;
+  },
   cb = () => {},
 ) {
   const deleteObj = [

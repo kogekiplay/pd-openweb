@@ -15,6 +15,7 @@ import { permitList } from 'src/pages/FormSet/config.js';
 import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import { browserIsMobile, formatFileSize, getClassNameByExt } from 'src/utils/common';
 import { controlState } from 'src/utils/control';
+import type { AttachmentValue } from 'src/utils/controlTypes';
 import RegExpValidator from 'src/utils/expression';
 import { addBehaviorLog, compatibleMDJS } from 'src/utils/project';
 import { FROM } from './enum';
@@ -555,7 +556,7 @@ function AttachmentImage(props) {
     width = height;
   }
 
-  const imgRef = useRef<any>(undefined);
+  const imgRef = useRef<HTMLImageElement>(null);
   useEffect(() => {
     const image = imgRef.current;
 
@@ -885,7 +886,12 @@ function CellAttachments(props, sourceRef) {
   });
   function handleChange(_attachments?) {
     const attachmentList = _attachments || attachments;
-    const submitData: Record<string, any> = {};
+    // 附件控件的存值形状：三个桶（已存的 / 本次新传的 / 知识中心引用的）
+    const submitData: {
+      attachmentData?: AttachmentValue[];
+      attachments?: AttachmentValue[];
+      knowledgeAtts?: AttachmentValue[];
+    } = {};
     const tempSavedAttachments = attachmentList.filter(c => /^o_/.test(c.fileID) && !c.refId).map(c => c.origin);
     const tempSavedKcAttachments = attachmentList.filter(c => /^o_/.test(c.fileID) && c.refId).map(c => c.origin);
     submitData.attachmentData = attachmentList.filter(c => !/^o_/.test(c.fileID)).map(c => c.origin);

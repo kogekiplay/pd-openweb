@@ -1,11 +1,10 @@
 import React, { forwardRef, Fragment, useEffect, useImperativeHandle, useState } from 'react';
 import { useSetState } from 'react-use';
 import { Divider } from 'antd';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
-import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import moment from 'moment';
-import Trigger from '@rc-component/trigger';
 import filterXSS from 'xss';
 import { Icon, LoadDiv, PreferenceTime, PullToRefreshWrapper, ScrollView, UserHead } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -13,6 +12,8 @@ import sheetAjax from 'src/api/worksheet';
 import ArchivedList from 'src/components/ArchivedList';
 import { filterOnlyShowField } from 'src/pages/widgetConfig/util';
 import { browserIsMobile } from 'src/utils/common';
+import type { FormControl } from 'src/utils/controlTypes';
+import copy from 'src/utils/copyToClipboard';
 import createLinksForMessage from 'src/utils/createLinksForMessage';
 import { VersionProductType } from 'src/utils/enum';
 import { getFeatureStatus } from 'src/utils/project';
@@ -36,7 +37,6 @@ import {
   renderTitleText,
 } from './util';
 import './WorksheetRocordLog.less';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const reg = new RegExp('<[^<>]+>', 'g');
 const PAGE_SIZE = 20;
@@ -340,7 +340,7 @@ function WorksheetRecordLog(props, ref) {
     )
       return;
 
-    const param: Record<string, any> = {};
+    const param: { newLogIndex?: number; oldLogIndex?: number; requestType?: number } = {};
 
     if (!sign.newDataEnd) {
       param.newLogIndex = pageIndexs.newLogIndex + 1;
@@ -737,7 +737,9 @@ function WorksheetRecordLog(props, ref) {
                     const editType = _.get(childData, 'operatContent.logData[0].editType');
                     const editTypeText = editType ? EDIT_TYPE_TEXT[editType] : undefined;
                     const control = SUBLIST_FILE_EDIT_TYPE.includes(editType)
-                      ? controls.find((l: FormControl) => l.controlId === _.get(childData, 'operatContent.logData[0].id'))
+                      ? controls.find(
+                          (l: FormControl) => l.controlId === _.get(childData, 'operatContent.logData[0].id'),
+                        )
                       : undefined;
 
                     return (

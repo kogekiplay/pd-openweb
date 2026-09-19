@@ -20,8 +20,10 @@ const pickDefined = (source = {}, fields: string[] = []) =>
     return result;
   }, {});
 
-export const getPrintCacheAppDetail = (appDetail: Record<string, any> = {}) =>
-  pickDefined(appDetail?.detail || appDetail || {}, APP_DETAIL_CACHE_FIELDS);
+// 两种形态都收：接口直接返回的应用详情，或外面包了一层 { detail } 的
+export const getPrintCacheAppDetail = (
+  appDetail: { detail?: Record<string, unknown> } & Record<string, unknown> = {},
+) => pickDefined(appDetail?.detail || appDetail || {}, APP_DETAIL_CACHE_FIELDS);
 
 export const getPrintCacheWorksheetInfo = (worksheetInfo = {}, viewId: string) => {
   const source = worksheetInfo || {};

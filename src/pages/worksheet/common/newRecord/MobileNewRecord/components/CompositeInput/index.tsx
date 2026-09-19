@@ -3,6 +3,7 @@ import cx from 'classnames';
 import { get } from 'lodash';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
+import type { MobileFileLike } from 'src/pages/worksheet/types';
 import { compatibleMDJS } from 'src/utils/project';
 import { COMPOSITE_INPUT_TYPE, VOICE_STEP } from '../../core/config';
 import UploadFiles from '../UploadFiles';
@@ -49,7 +50,7 @@ const Footer = styled.div`
   }
 `;
 
-const formatAppFile = (file: Record<string, any> = {}) => ({
+const formatAppFile = (file: MobileFileLike = {}) => ({
   id: file.id || file.fileID,
   fileID: file.fileID,
   name: file.name || file.originalFileName || file.originalFilename || file.fileName,

@@ -41,7 +41,6 @@
  * 类名兼容层复用 worksheet 那份（FC_CLASS_COMPAT）：v7 把内部类名全哈希化了，
  * 而这个页面的 fullcalendar.less 和若干 JS 查询都按语义类名写的。
  */
-
 // 【为什么这里也走 @fullcalendar/react 而不是 vanilla 的 fullcalendar 包】
 // 两个包各自带一份【结构相同但名义不同】的类型（各自的 chunk 模块），同一个程序里
 // 混用会报出这种没法调和的错：
@@ -54,19 +53,22 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import type { Root } from 'react-dom/client';
 import FullCalendar from '@fullcalendar/react';
+// 【从 @fullcalendar/react 引，不是 @fullcalendar/core】v7 的 core/index.d.ts 不是模块（TS2306），
+// 类型统一从 react 包再导出，见它的 index.d.ts
+import type { CalendarOptions } from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/react/daygrid';
-import timeGridPlugin from '@fullcalendar/react/timegrid';
-import listPlugin from '@fullcalendar/react/list';
 import interactionPlugin from '@fullcalendar/react/interaction';
-import themePlugin from '@fullcalendar/react/themes/classic';
+import listPlugin from '@fullcalendar/react/list';
+import jaLocale from '@fullcalendar/react/locales/ja';
+import msLocale from '@fullcalendar/react/locales/ms';
+import thLocale from '@fullcalendar/react/locales/th';
 import zhCnLocale from '@fullcalendar/react/locales/zh-cn';
 import zhTwLocale from '@fullcalendar/react/locales/zh-tw';
-import jaLocale from '@fullcalendar/react/locales/ja';
-import thLocale from '@fullcalendar/react/locales/th';
-import msLocale from '@fullcalendar/react/locales/ms';
 import '@fullcalendar/react/skeleton.css';
-import '@fullcalendar/react/themes/classic/theme.css';
+import themePlugin from '@fullcalendar/react/themes/classic';
 import '@fullcalendar/react/themes/classic/palette.css';
+import '@fullcalendar/react/themes/classic/theme.css';
+import timeGridPlugin from '@fullcalendar/react/timegrid';
 import { FC_CLASS_COMPAT } from 'src/pages/worksheet/views/CalendarView/fcClassCompat';
 
 /** 老代码里到处在用的三个视图名，与 v7 的对应关系 */
@@ -118,7 +120,8 @@ export function getViewName(): string {
   return api ? toV2View(api.view.type) : '';
 }
 
-export function createCalendarInstance(el: HTMLElement, options: Record<string, any>): void {
+// options 原样展开给 FullCalendar，直接用它自己的 CalendarOptions
+export function createCalendarInstance(el: HTMLElement, options: CalendarOptions): void {
   destroyCalendar();
   const ref = React.createRef<any>();
   root = createRoot(el);

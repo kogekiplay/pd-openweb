@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { getEmptyImage } from 'react-dnd-html5-backend';
 import { useDrag, useDrop } from 'react-dnd';
+import { getEmptyImage } from 'react-dnd-html5-backend';
 import { useInView } from 'react-intersection-observer';
 import { Skeleton } from 'antd';
 import cx from 'classnames';
@@ -9,6 +9,7 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import { FlexCenter } from 'worksheet/styled';
 import { browserIsMobile } from 'src/utils/common';
+import type { FormControl } from 'src/utils/controlTypes';
 import { getRecordColorConfig } from 'src/utils/record';
 import EditableCard from '../../components/EditableCard';
 import EditingRecordItem from '../../components/EditingRecordItem';
@@ -18,7 +19,18 @@ import CountTip from '../../HierarchyView/components/CountTip';
 import { ITEM_TYPE } from '../../HierarchyView/config';
 import { dealHierarchyData, getRelateDefaultValue } from '../../HierarchyView/util';
 import { isDisabledCreate, isTextTitle } from '../../util';
-import type { FormControl } from 'src/utils/controlTypes';
+
+/**
+ * 层级视图拖拽时携带的 item —— 就是被拖那条记录本身（见下面 item() 的 return data）。
+ * drop 回的 DropResult 是 { data }（落点那条记录）。
+ * 字段只列拖放逻辑真正读到的：path/pathId 判父子关系，rowId 判自己拖自己。
+ */
+interface HierarchyDragItem {
+  rowId?: string;
+  path?: string[];
+  pathId?: string[];
+  [key: string]: unknown;
+}
 
 const OperationWrap = styled(FlexCenter)`
   position: absolute;
@@ -92,7 +104,11 @@ export default function DraggableRecord(props) {
   const $ref = useRef(null);
   const $dragDropRef = useRef<HTMLDivElement | null>(null);
 
-  const [{ isOver, canDrop }, drop] = useDrop<any, any, any>({
+  const [{ isOver, canDrop }, drop] = useDrop<
+    HierarchyDragItem,
+    { data: HierarchyDragItem },
+    { isOver: boolean; canDrop: boolean }
+  >({
     accept: ITEM_TYPE.ITEM,
     canDrop() {
       const draggingItem = safeParse(localStorage.getItem('draggingHierarchyItem'));
@@ -110,7 +126,7 @@ export default function DraggableRecord(props) {
       return { isOver: monitor.isOver(), canDrop: monitor.canDrop() };
     },
   });
-  const [, drag, connectDragPreview] = useDrag<any, any, any>({
+  const [, drag, connectDragPreview] = useDrag<HierarchyDragItem, { data: HierarchyDragItem }, unknown>({
     type: ITEM_TYPE.ITEM,
     canDrag() {
       const { allowedit } = treeData[data.rowId];

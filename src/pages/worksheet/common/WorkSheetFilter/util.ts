@@ -6,6 +6,7 @@ import { browserIsMobile } from 'src/utils/common';
 import { renderText as renderCellText } from 'src/utils/control';
 import { isRelateRecordTableControl } from 'src/utils/control';
 import { checkCellIsEmpty, getSelectedOptions } from 'src/utils/control';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import { dateServerZoneToAppZone } from 'src/utils/project';
 import {
   API_ENUM_TO_TYPE,
@@ -18,7 +19,6 @@ import {
   getDateCompareRangeValues,
   getFilterTypeLabel,
 } from './enum';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 export function getConditionType(condition) {
   return (condition.controlType === 28 || condition.dataType === 28) &&
@@ -427,7 +427,7 @@ export function compareControlType(widget, type) {
   return false;
 }
 
-export function getFilterTypes(control: Record<string, any> = {}, conditionType?, from?) {
+export function getFilterTypes(control: FormControl = {}, conditionType?, from?) {
   let typeEnums = [];
   const { type, advancedSetting = {} } = control;
   const typeKey = getTypeKey(type);

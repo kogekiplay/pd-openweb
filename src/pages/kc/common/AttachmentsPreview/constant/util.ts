@@ -144,7 +144,27 @@ export function canPreviewHtml() {
   return !(_.get(window, 'platformENV.isLocal') || _.get(window, 'platformENV.isOverseas'));
 }
 
-export function getHtmlPreviewUrl(attachment: Record<string, any> = {}) {
+/**
+ * 取 html 预览地址。三种来源：知识中心节点（KC）、七牛（QINIU）、以及直接给了 viewUrl 的。
+ * sourceNode 是知识中心那条路上的原始节点。
+ */
+export function getHtmlPreviewUrl(
+  attachment: {
+    viewUrl?: string;
+    previewAttachmentType?: string;
+    sourceNode?: {
+      filepath?: string;
+      filename?: string;
+      /** 有的来源给的是拼好的 path，不是 filepath + filename */
+      path?: string;
+      viewUrl?: string;
+      previewUrl?: string;
+      downloadUrl?: string;
+      privateDownloadUrl?: string;
+    };
+    [key: string]: unknown;
+  } = {},
+) {
   const sourceNode = attachment.sourceNode || {};
   const urlFromFilePath = sourceNode.filepath && sourceNode.filename ? sourceNode.filepath + sourceNode.filename : '';
 

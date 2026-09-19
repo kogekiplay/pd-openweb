@@ -19,9 +19,11 @@ import {
 } from 'src/utils/control';
 import { checkCellIsEmpty } from 'src/utils/control';
 import { getShowFormat, isSheetDisplay } from 'src/utils/controlCommon';
+import type { ControlValue, FormControl } from 'src/utils/controlTypes';
 import { dateConvertToServerZone, dateServerZoneToAppZone, getContactInfo } from 'src/utils/project';
 import { filterEmptyChildTableRows } from 'src/utils/record';
 import { FORM_ERROR_TYPE, FORM_ERROR_TYPE_TEXT, TIME_UNIT } from '../config';
+import type { FormRule, MasterData, RuleFilterGroup, RuleFilterItem } from '../types';
 import filterFn from './filterFn';
 import {
   checkChildTableIsEmpty,
@@ -38,8 +40,6 @@ import {
   replaceStr,
   validateIdCardBirthDate,
 } from './helper';
-import type { FormRule } from '../types';
-import type { ControlValue, FormControl } from 'src/utils/controlTypes';
 
 export const checkValueByFilterRegex = (
   data: FormControl = {},
@@ -1069,7 +1069,7 @@ export const onValidator = ({
 }: {
   item: FormControl;
   data?: FormControl[];
-  masterData?: any;
+  masterData?: MasterData;
   ignoreRequired?: boolean;
   verifyAllControls?: boolean;
   appId?: string;
@@ -1275,19 +1275,19 @@ export const onValidator = ({
  */
 
 //获取字段值
-const getFieldIds = (its: Record<string, any> = {}) => {
+const getFieldIds = (its: RuleFilterItem = {}) => {
   const isDynamic = its.dynamicSource && its.dynamicSource.length > 0;
   return isDynamic ? [its.controlId, ...(its.dynamicSource || []).map(dy => dy.cid)] : [its.controlId];
 };
 
-const getIds = (arr: Record<string, any> = {}) => {
+const getIds = (arr: RuleFilterGroup = {}) => {
   return (arr.groupFilters || []).reduce((total, its) => {
     return total.concat(getFieldIds(its));
   }, []);
 };
 
 // 提示错误：单个条件组字段、条件值隐藏过滤(补充条件为或的情况)
-const getItemGroupFilters = (arrItem: Record<string, any> = {}, data = [], recordId: string, from) => {
+const getItemGroupFilters = (arrItem: RuleFilterGroup = {}, data = [], recordId: string, from) => {
   const isOrCondition = (arrItem.groupFilters || []).findIndex(its => its.spliceType === 2) > -1;
   let newArr = [arrItem.groupFilters || []];
 
@@ -1312,7 +1312,7 @@ const getItemGroupFilters = (arrItem: Record<string, any> = {}, data = [], recor
 };
 
 //判断业务规则配置条件是否满足
-export const checkValueAvailable = (rule: Record<string, any> = {}, data = [], recordId: string, from?) => {
+export const checkValueAvailable = (rule: FormRule = {}, data = [], recordId: string, from?) => {
   let isAvailable = false;
   //不满足条件的id,过滤错误
   let filterControlIds = {};
@@ -1405,9 +1405,9 @@ export const checkAllValueAvailable = (rules = [], data = [], recordId: string, 
   return errors;
 };
 
-// 业务规则后端校验
-// 两个 `= []` 不标类型会被推成 never[]，调用方传真实数组一律报 TS2345
-export const getRuleErrorInfo = (rules: any[] = [], badData: any[] = []) => {
+// 业务规则后端校验。
+// badData 的每一项是后端拼的字符串，形如 "…:controlId:ruleId:rowId"，在下面 split(':') 拆开。
+export const getRuleErrorInfo = (rules: FormRule[] = [], badData: string[] = []) => {
   return badData
     .map(itemBadData => {
       const errorInfo = [];

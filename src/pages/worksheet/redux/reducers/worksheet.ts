@@ -1,6 +1,7 @@
 import _ from 'lodash';
-import type { FormControl } from 'src/utils/controlTypes';
+import type { WorksheetInfo } from 'src/pages/worksheet/types';
 import type { ReduxAction } from 'src/redux/types';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export function loading(state = true, action: ReduxAction) {
   switch (action.type) {
@@ -38,7 +39,7 @@ export function error(state = false, action: ReduxAction) {
   }
 }
 
-export function worksheetInfo(state: Record<string, any> = {}, action: ReduxAction) {
+export function worksheetInfo(state: WorksheetInfo = {}, action: ReduxAction) {
   let newState;
 
   switch (action.type) {

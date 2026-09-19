@@ -22,15 +22,16 @@ import { buriedUpgradeVersionDialog } from 'src/components/upgradeVersion';
 import { navigateTo } from 'src/router/navigateTo';
 import { pathCompletion } from 'src/utils/common';
 import { renderText as renderCellText } from 'src/utils/control';
+import type { ControlAdvancedSetting, FormControl, RecordRow } from 'src/utils/controlTypes';
 import { getFeatureStatus } from 'src/utils/project';
 import { CAN_NOT_AS_TEXT_GROUP } from '../config';
 import { DRAG_MODE, WHOLE_SIZE } from '../config/Drag';
 import { ALL_SYS } from '../config/widget';
 import { ControlTag } from '../styled';
+import { type DeleteTarget, isDeleteTarget } from './deleteTarget';
 import { batchRemoveItems, insertControlInSameLine } from './drag';
 import { canAsUniqueWidget, getAdvanceSetting, handleAdvancedSettingChange, isExceedMaxControlLimit } from './setting';
 import { getPathById, isHaveGap } from './widgets';
-import type { ControlAdvancedSetting, FormControl, RecordRow } from 'src/utils/controlTypes';
 
 /**
  * 表单配置页透传的上下文（由 widgetConfig 的容器组件组装）。
@@ -44,7 +45,6 @@ interface WidgetProps {
   globalSheetInfo?: Record<string, any>;
   [key: string]: any;
 }
-
 
 // 获取动态默认值
 export const getDynamicDefaultValue = (data: FormControl) => {
@@ -256,9 +256,20 @@ export function dealCascaderId(data: FormControl) {
 /**
  * 处理 成员 部门 地区 他表字段 级联 组织角色 这几个类型的字段 values 处理成 [id, id]
  */
-// 注意：它会被直接当 filters.map(handleCondition) 的回调传，第二参那时收到的是 index，
-// 所以不能标成 boolean
-export function handleCondition(condition: any, isRelate?: any) {
+/**
+ * 一条筛选条件里跟本函数有关的部分。
+ * dataType 是被筛字段的控件类型，values 是选中的值（成员/部门/地区这些存的是 JSON 串）。
+ */
+interface FilterCondition {
+  dataType?: number;
+  values?: string[];
+  dynamicSource?: { rcid?: string }[];
+  [key: string]: unknown;
+}
+
+// 【isRelate 的类型是 boolean | number，不是笔误】它会被直接当 filters.map(handleCondition)
+// 的回调传，那时第二个实参收到的是下标，所以函数体里先用 _.isBoolean 把下标挡掉。
+export function handleCondition(condition: FilterCondition, isRelate?: boolean | number) {
   // 关联记录(动态值只能选择当前记录字段)特殊处理 rcid置空
   if (_.isBoolean(isRelate) && isRelate && !isEmpty(condition.dynamicSource)) {
     condition.dynamicSource.forEach(item => (item.rcid = ''));
@@ -401,7 +412,8 @@ export function formatColumnToText(
   column: FormControl,
   numberOnly?: boolean,
   noMask?: boolean,
-  options: Record<string, any> = {},
+  // 这里只读 doNotHandleTimeZone 一个键
+  options: { doNotHandleTimeZone?: boolean } = {},
 ) {
   return renderCellText(column, {
     noUnit: numberOnly,
@@ -455,7 +467,17 @@ export function getControlTextValue(
  * @param  {object} options 配置
  * @return {element} 返回一个dom元素
  */
-export function createWorksheetColumnTag(id: string, options?: Record<string, any>) {
+export function createWorksheetColumnTag(
+  id: string,
+  options?: {
+    allControls?: FormControl[];
+    /** 字段已删除时回调，实参是错误类别（目前只传 1） */
+    errorCallback?: (errorType: number) => void;
+    /** 3 时给非末尾的 tag 加 onlytag 类 */
+    mode?: number;
+    isLast?: boolean;
+  },
+) {
   const { allControls, errorCallback, mode, isLast } = options;
   const control = getControlByControlId(allControls, id);
   const node = document.createElement('div');
@@ -524,8 +546,17 @@ export const dealControlPos = (controls: FormControl[]) => {
   return _.flatten(sortableControls.map((item, row) => item.map((control, col) => ({ ...control, row, col }))));
 };
 
+/** 自定义事件里的一条执行动作。type: '1' 函数、'2' 查询，其余是给字段设默认值 */
+export interface CustomEventAction {
+  type?: string;
+  controlId?: string;
+  /** 设默认值时的取值配置（JSON 串，与控件 advancedSetting.defsource 同格式） */
+  value?: string;
+  [key: string]: unknown;
+}
+
 // 自定义事件保存时处理执行动作内默认值
-export const dealCusTomEventActions = (actionItems: any[] = [], controls: FormControl[] = []) => {
+export const dealCusTomEventActions = (actionItems: CustomEventAction[] = [], controls: FormControl[] = []) => {
   return (actionItems || []).map(item => {
     // 函数、查询不处理，动态值处理
     if (_.includes(['1', '2'], item.type)) return item;
@@ -557,9 +588,9 @@ export const dealCusTomEventActions = (actionItems: any[] = [], controls: FormCo
 const WORKSHEET_OBJECT_ID_REG = /^[a-f0-9]{24}$/i;
 const RELATE_WORKSHEET_CONTROL_TYPES = [29, 35, 51];
 
-const isUnsavedControl = (control: Record<string, any> = {}) => control.controlId && control.controlId.includes('-');
+const isUnsavedControl = (control: FormControl = {}) => control.controlId && control.controlId.includes('-');
 
-const isBlankSubList = (control: Record<string, any> = {}) => {
+const isBlankSubList = (control: FormControl = {}) => {
   if (control.type !== 34) return false;
 
   const { dataSource, controlId } = control;
@@ -713,7 +744,7 @@ export const checkWidgetBeforeSave = (
   });
 };
 
-const checkAutoIdReset = (data: Record<string, any> = {}, originControls: FormControl[] = [], globalInfo = {}) => {
+const checkAutoIdReset = (data: FormControl = {}, originControls: FormControl[] = [], globalInfo = {}) => {
   const increase = getAdvanceSetting(data, 'increase') || [];
   const originAutoId = _.find(originControls, o => o.controlId === data.controlId);
   const originIncrease = getAdvanceSetting(originAutoId, 'increase') || [];
@@ -1055,12 +1086,19 @@ export const scrollToVisibleRange = (data: FormControl, widgetProps: WidgetProps
   }
 };
 
+/**
+ * 这几个批量改控件的函数收的回调。
+ * 调用点要么 callback()、要么 callback({ newWidgets })，所以实参可选。
+ */
+type WidgetsChangedCallback = (result?: { newWidgets?: FormControl[][] }) => void;
+
 // 清除所有原有控件，全部换成新的
 export const clearAndSetWidgets = (
   data: FormControl[],
-  para: any,
+  // 【这个形参没有被用到】函数体里一次都没读，保留是为了不动 3 个调用点的实参位置
+  para: unknown,
   widgetProps: WidgetProps,
-  callback?: (...args: any[]) => void,
+  callback?: WidgetsChangedCallback,
 ) => {
   const { setWidgets, globalSheetInfo = {} } = widgetProps;
 
@@ -1095,15 +1133,13 @@ export const clearAndSetWidgets = (
 };
 
 export const handleDeleteWidgetsForMingo = (
-  { needDeleteWidgets }: { needDeleteWidgets?: any[] } = {},
+  { needDeleteWidgets }: { needDeleteWidgets?: DeleteTarget[] } = {},
   widgetProps: WidgetProps,
-  callback?: (...args: any[]) => void,
+  callback?: WidgetsChangedCallback,
 ) => {
   const { widgets, setWidgets } = widgetProps;
-  // 根据alias删除控件, alias === needDeleteWidget.alias immutable update
   const newWidgets = update(widgets, {
-    $apply: arr =>
-      arr.map(inner => inner.filter(w => !needDeleteWidgets.some(d => d.alias === w.alias || d === w.controlId))),
+    $apply: arr => arr.map(inner => inner.filter(w => !needDeleteWidgets.some(d => isDeleteTarget(d, w)))),
   });
   setWidgets(newWidgets);
   if (_.isFunction(callback)) {
@@ -1113,9 +1149,10 @@ export const handleDeleteWidgetsForMingo = (
 
 // 更新某个属性
 export const handleUpdateWidgetsAttribute = (
-  { needUpdateWidgets }: { needUpdateWidgets?: any[] } = {},
+  // 按 alias 匹配后整体并进控件，所以是「控件的部分字段 + alias」
+  { needUpdateWidgets }: { needUpdateWidgets?: FormControl[] } = {},
   widgetProps: WidgetProps,
-  callback?: (...args: any[]) => void,
+  callback?: WidgetsChangedCallback,
 ) => {
   const { widgets, setWidgets } = widgetProps;
   const newWidgets = update(widgets, {
@@ -1141,9 +1178,10 @@ export const handleUpdateWidgetsAttribute = (
 };
 
 export function batchUpdateWidgetsLayout(
-  layoutOfAllWidgets: Record<string, any> = {},
+  // { [controlId]: { row, col, size } }
+  layoutOfAllWidgets: Record<string, { row?: number; col?: number; size?: number }> = {},
   widgetProps: WidgetProps,
-  callback?: (...args: any[]) => void,
+  callback?: WidgetsChangedCallback,
 ) {
   const { widgets, setWidgets } = widgetProps;
   // widgets 是原控件，是二维数组，根据row来划分二维数组，同一个row表示同一行
@@ -1188,7 +1226,14 @@ export function batchUpdateWidgetsLayout(
 
 // 批量添加
 export const handleAddWidgets = (data, para = {}, widgetProps, callback?) => {
-  const { widgets, activeWidget, allControls, setWidgets, setActiveWidget, globalSheetInfo = {} }: { allControls: FormControl[]; [key: string]: any } = widgetProps;
+  const {
+    widgets,
+    activeWidget,
+    allControls,
+    setWidgets,
+    setActiveWidget,
+    globalSheetInfo = {},
+  }: { allControls: FormControl[]; [key: string]: any } = widgetProps;
   const { mode, path, location, displayItemType, rowIndex, activePath, isMingo } = para;
   const tempData = head(data);
   const featureType = getFeatureStatus(globalSheetInfo.projectId, tempData.featureId);
@@ -1321,7 +1366,13 @@ export const handleAddWidgets = (data, para = {}, widgetProps, callback?) => {
 
 // 批量移动
 export const handleMoveWidgets = (data, widgetProps) => {
-  const { widgets, activeWidget, allControls, setWidgets, setActiveWidget }: { allControls: FormControl[]; [key: string]: any } = widgetProps;
+  const {
+    widgets,
+    activeWidget,
+    allControls,
+    setWidgets,
+    setActiveWidget,
+  }: { allControls: FormControl[]; [key: string]: any } = widgetProps;
 
   if (isExceedMaxControlLimit(allControls, data.length)) {
     alert(_l('当前表存在的控件已达到最大值，无法添加继续添加新控件!'), 3);
@@ -1358,7 +1409,7 @@ export const handleMoveWidgets = (data, widgetProps) => {
   });
 };
 
-export const dealCopyWidgetId = (data: Record<string, any> = {}) => {
+export const dealCopyWidgetId = (data: FormControl = {}) => {
   const newData = {
     ...data,
     attribute: 0,
@@ -1416,7 +1467,13 @@ export const getChildWidgetsBySection = (controls: FormControl[] = [], id) => {
 
 // 批量复制控件数据处理
 export const batchCopyWidgets = (props, selectWidgets = []) => {
-  const { widgets, allControls, queryConfigs, setActiveWidget, setWidgets }: { allControls: FormControl[]; [key: string]: any } = props;
+  const {
+    widgets,
+    allControls,
+    queryConfigs,
+    setActiveWidget,
+    setWidgets,
+  }: { allControls: FormControl[]; [key: string]: any } = props;
 
   for (var i = 0; i < selectWidgets.length; i++) {
     const err = checkWidgetMaxNumErr(selectWidgets[i], [...allControls, ...selectWidgets.slice(0, i)]);

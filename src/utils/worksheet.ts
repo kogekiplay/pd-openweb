@@ -321,9 +321,22 @@ export function getOperatesButtonsWidth({ buttons, style, visibleNum, showIcon }
   return sumWidth + cellPadding + cellBorderWidth;
 }
 
-export function filterButtonBySheetSwitchPermit(
-  buttons: any[] = [],
-  sheetSwitchPermit?: any,
+/**
+ * 工作表的功能开关项（sheetSwitchPermit 的元素）。
+ * 判定在 pages/FormSet/util.ts 的 isOpenPermit：按 type 找到项，再看 state 和 viewIds
+ *（viewIds 为空表示对所有视图生效）。
+ */
+export interface SheetSwitchPermitItem {
+  type?: number;
+  state?: boolean;
+  viewIds?: string[];
+}
+
+// 【按钮用泛型而不是 any[]】函数只读 button.type，其余字段原样带出去，
+// 用 T 能把调用方自己的按钮类型保住，不会在这里被抹平。
+export function filterButtonBySheetSwitchPermit<T extends { type?: string }>(
+  buttons: T[] = [],
+  sheetSwitchPermit?: SheetSwitchPermitItem[],
   viewId?: string,
   // 调用点传进来的是整行记录，不是只有这两个开关的字面量 —— 按调用点标类型
   row: RecordRow = {
@@ -398,7 +411,7 @@ export function getSheetStylesOfRelateRecordTable({ control, viewId, worksheetIn
   }
 
   const worksheetSheetStyles = getSheetStylesOfObject(worksheetInfo);
-  let result: Record<string, any> = {};
+  let result: Record<string, unknown> = {};
 
   if (!viewId) {
     result = worksheetSheetStyles;

@@ -1,8 +1,7 @@
 ﻿import React, { Fragment, useEffect, useRef, useState } from 'react';
-import withRouter from '../../../router/withRouter';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, Menu, MenuItem, ScrollView } from 'ming-ui';
 import { VerticalMiddle } from 'worksheet/components/Basics';
@@ -10,6 +9,7 @@ import { purchaseMethodFunc } from 'src/components/pay/versionUpgrade/PurchaseMe
 import { versionUpgradeModal } from 'src/components/pay/versionUpgrade/VersionUpgradeModal';
 import { emitter, pathCompletion } from 'src/utils/common';
 import { getCurrentProject } from 'src/utils/project';
+import withRouter from '../../../router/withRouter';
 import CommonUserHandle from '../components/CommonUserHandle';
 import GlobalSearch from '../components/GlobalSearch';
 
@@ -161,7 +161,7 @@ const UpgradeWrap = styled.div`
 function AppCenterHeader(props) {
   const projectId = _.get(props, 'match.params.projectId');
   const projects = md.global.Account.projects;
-  const createRef = useRef<any>(undefined);
+  const createRef = useRef<HTMLDivElement>(null);
   const [currentProject, setCurrentProject] = useState(
     getCurrentProject(projectId || localStorage.getItem('currentProjectId')),
   );

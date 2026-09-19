@@ -112,7 +112,7 @@ const SelectedControlCon = styled.div`
   }
 `;
 
-function typesInclude(types: number[] = [], control: Record<string, any> = {}) {
+function typesInclude(types: number[] = [], control: FormControl = {}) {
   return _.includes(types, control.type) || (control.type === 30 && _.includes(types, control.sourceControlType));
 }
 
@@ -234,7 +234,11 @@ SelectColorShowType.propTypes = {
 };
 
 function RecordColor(params) {
-  const { worksheetControls = [], view = {}, onChange }: { worksheetControls: FormControl[]; [key: string]: any } = params;
+  const {
+    worksheetControls = [],
+    view = {},
+    onChange,
+  }: { worksheetControls: FormControl[]; [key: string]: any } = params;
   const { advancedSetting = {} } = view;
   const { colorid, coloritems, colortype } = advancedSetting;
 
@@ -259,7 +263,9 @@ function RecordColor(params) {
           </div>
           <SelectControl
             value={colorid}
-            controls={worksheetControls.filter((c: FormControl) => typesInclude([9, 10, 11], c) && c.controlId.length === 24)}
+            controls={worksheetControls.filter(
+              (c: FormControl) => typesInclude([9, 10, 11], c) && c.controlId.length === 24,
+            )}
             onChange={newSelectedControl => {
               updateAdvancedSetting({
                 colorid: newSelectedControl.controlId,

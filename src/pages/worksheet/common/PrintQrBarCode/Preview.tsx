@@ -89,7 +89,7 @@ export default function Preview(props) {
   const { printType } = config;
   const { width, height } = labelObject.options || {};
   let error;
-  const con = useRef<any>(undefined);
+  const con = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (labelObject && con.current) {
       con.current.innerHTML = '';

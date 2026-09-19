@@ -108,8 +108,8 @@ export function DeptSelect(props) {
     selectFn = () => {},
   } = props;
 
-  const inputRef = useRef<any>(undefined);
-  const conRef = useRef<any>(undefined);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const conRef = useRef<HTMLDivElement>(null);
   const [
     {
       loading,

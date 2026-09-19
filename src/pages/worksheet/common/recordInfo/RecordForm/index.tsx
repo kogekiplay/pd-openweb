@@ -282,10 +282,10 @@ function RecordForm(props) {
   const isFixedRight = _.get(widgetStyle, 'tabposition') === '4';
   const isFixed = _.includes(['2', '3', '4'], _.get(recordinfo, 'advancedSetting.tabposition'));
 
-  const scrollRef = useRef<any>(undefined);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const customwidget = useRef<any>(undefined);
-  const recordForm = useRef<any>(undefined);
-  const nav = useRef<any>(undefined);
+  const recordForm = useRef<HTMLDivElement>(null);
+  const nav = useRef<HTMLDivElement>(null);
   const sectionTab = useRef<any>(undefined);
   const [sizeRef, { width }] = useMeasure();
   const [isSplit, setIsSplit] = useState(
@@ -312,7 +312,7 @@ function RecordForm(props) {
       sectionTab && sectionTab.current && sectionTab.current.setActiveId(tempId);
       setTabHeaderControl(getActiveTabControl(tempId));
 
-      const stickyBar = recordForm.current && recordForm.current.querySelector('.topCon .stickyBar');
+      const stickyBar = recordForm.current && recordForm.current.querySelector<HTMLElement>('.topCon .stickyBar');
 
       if (stickyBar) {
         stickyBar.id = tempId === 'detail' ? '' : 'stickyBarActive';
@@ -365,9 +365,9 @@ function RecordForm(props) {
       return;
     }
 
-    const scrollConElement = recordForm.current.querySelector('.recordInfoFormScroll');
-    const formElement = recordForm.current.querySelector('.recordInfoFormContent .customFieldsContainer');
-    const scrollContentElement = recordForm.current.querySelector('.recordInfoFormScroll > div');
+    const scrollConElement = recordForm.current.querySelector<HTMLElement>('.recordInfoFormScroll');
+    const formElement = recordForm.current.querySelector<HTMLElement>('.recordInfoFormContent .customFieldsContainer');
+    const scrollContentElement = recordForm.current.querySelector<HTMLElement>('.recordInfoFormScroll > div');
 
     if (!scrollConElement || !formElement || !scrollContentElement) {
       return;
@@ -376,19 +376,24 @@ function RecordForm(props) {
     const visible =
       scrollContentElement.scrollTop + scrollConElement.clientHeight <
       formElement.clientHeight + formElement.offsetTop + 58 + 26 + 1;
-    nav.current.style.zIndex = visible ? 3 : -1;
+    // style.zIndex 是字符串属性；以前 nav 是 any，赋数字靠 DOM 自己转，这里写明
+    nav.current.style.zIndex = visible ? '3' : '-1';
   }
 
-  function setStickyBarVisible({ isSplit } = {}) {
+  function setStickyBarVisible({ isSplit }: { isSplit?: boolean } = {}) {
     if (!recordForm.current) return;
 
-    const scrollContentElement = recordForm.current.querySelector(isSplit ? '.topCon' : '.recordInfoFormScroll > div');
-    const stickyBar = recordForm.current.querySelector('.topCon .stickyBar');
-    const recordTitle = recordForm.current.querySelector('.topCon .recordTitle');
+    const scrollContentElement = recordForm.current.querySelector<HTMLElement>(
+      isSplit ? '.topCon' : '.recordInfoFormScroll > div',
+    );
+    const stickyBar = recordForm.current.querySelector<HTMLElement>('.topCon .stickyBar');
+    const recordTitle = recordForm.current.querySelector<HTMLElement>('.topCon .recordTitle');
 
     if (!scrollContentElement || !stickyBar) return;
 
-    const visible = scrollContentElement.scrollTop > (recordTitle || {}).offsetTop + (recordTitle || {}).offsetHeight;
+    // 【保持 NaN 语义】recordTitle 取不到时原先是 (undefined + undefined) = NaN，
+    // 比较恒为 false。换成 ?. 结果一样；写成 || 0 会变成「> 0」，那才是行为改变。
+    const visible = scrollContentElement.scrollTop > recordTitle?.offsetTop + recordTitle?.offsetHeight;
     stickyBar.id = visible || tabHeaderControl ? 'stickyBarActive' : '';
   }
 
@@ -418,9 +423,11 @@ function RecordForm(props) {
     if (isSplit || isFixedLeft || isFixedRight) return;
     if (!recordForm.current) return;
 
-    const scrollContentElement = recordForm.current.querySelector('.recordInfoFormScroll > div');
-    const sectionTabBarElement = recordForm.current.querySelector('.relateRecordBlock #widgetSectionTabBar');
-    const headerElement = recordForm.current.querySelector('.recordInfoFormHeader');
+    const scrollContentElement = recordForm.current.querySelector<HTMLElement>('.recordInfoFormScroll > div');
+    const sectionTabBarElement = recordForm.current.querySelector<HTMLElement>(
+      '.relateRecordBlock #widgetSectionTabBar',
+    );
+    const headerElement = recordForm.current.querySelector<HTMLElement>('.recordInfoFormHeader');
 
     if (scrollContentElement && sectionTabBarElement) {
       const isHideHeader = _.get(view, 'advancedSetting.showtitle') === '0';
@@ -592,7 +599,7 @@ function RecordForm(props) {
                   <StickyBar
                     className="stickyBar"
                     onClick={() => {
-                      const scrollEl = recordForm.current.querySelector('.recordInfoFormScroll > div');
+                      const scrollEl = recordForm.current.querySelector<HTMLElement>('.recordInfoFormScroll > div');
                       if (scrollEl) scrollEl.scrollTop = 0;
                       // 左右布局时，回到顶部同时，跳转第一个标签页
                       if (tabHeaderControl) {
@@ -701,7 +708,8 @@ function RecordForm(props) {
                       // 新建记录更新
                       relateRecordData,
                       setNavVisible,
-                      splitTabDom: recordForm.current && recordForm.current.querySelector('#newCustomTabSectionWrap'),
+                      splitTabDom:
+                        recordForm.current && recordForm.current.querySelector<HTMLElement>('#newCustomTabSectionWrap'),
                       onRelateRecordsChange,
                       updateWorksheetControls,
                       handleSectionClick,

@@ -3,8 +3,8 @@ import moment from 'moment';
 import { SYS } from 'src/pages/widgetConfig/config/widget';
 import { sortDataByCustomItems } from 'src/pages/worksheet/redux/actions/util.js';
 import { browserIsMobile } from 'src/utils/common';
-import { PERIOD_TYPE, PERIODS } from './config';
 import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import { PERIOD_TYPE, PERIODS } from './config';
 
 /**
  * 修改当前视图配置
@@ -595,7 +595,7 @@ export const fillRecordsTimeBlockColor = (grouping, colorControl) => {
   }));
 };
 
-export const fillRecordTimeBlockColor = (record, colorControl: Record<string, any> = {}) => {
+export const fillRecordTimeBlockColor = (record, colorControl: FormControl = {}) => {
   const { controlId, options } = colorControl;
   const defaultColor = '#1677ff';
 
@@ -658,7 +658,9 @@ export const getRecordIndex = (id, grouping, withoutArrangementVisible) => {
 
   for (let i = 0; i < grouping.length; i++) {
     let { groupingIndex } = grouping[i];
-    let rows: RecordRow[] = grouping[i].rows.filter((item: RecordRow) => (withoutArrangementVisible ? true : item.diff > 0));
+    let rows: RecordRow[] = grouping[i].rows.filter((item: RecordRow) =>
+      withoutArrangementVisible ? true : item.diff > 0,
+    );
 
     for (let j = 0; j < rows.length; j++) {
       if (id === rows[j].rowid) {
@@ -725,7 +727,7 @@ export const getControlsForGunter = worksheetControls => {
 /**
  * 甘特图分组不支持多选字段。
  */
-export const isGunterGroupMultiSelectControl = (control: Record<string, any> = {}) => {
+export const isGunterGroupMultiSelectControl = (control: FormControl = {}) => {
   const type = control.type === 30 ? control.sourceControlType : control.type;
 
   return (

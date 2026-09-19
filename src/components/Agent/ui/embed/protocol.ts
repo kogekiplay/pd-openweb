@@ -92,7 +92,8 @@ export function extractEmbedSegments(text?: string): EmbedSegment[] {
 }
 
 // 构造嵌入 fence 文本（发送给后端的消息体即此字符串，保持 ```包裹数据 不变）。
-export function buildEmbedFence(suffix: string, data: any) {
+// data 只是被 JSON.stringify 一次，不读任何字段
+export function buildEmbedFence(suffix: string, data: unknown) {
   return `\`\`\`${EMBED_LANGUAGE_PREFIX}${suffix}\n${JSON.stringify(data)}\n\`\`\``;
 }
 

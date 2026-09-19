@@ -16,6 +16,8 @@ import { refreshBtnData } from 'src/pages/FormSet/util';
 import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import { formatSearchConfigs } from 'src/pages/widgetConfig/util';
 import { AREA } from 'src/pages/worksheet/common/Sheet/GroupFilter/constants.js';
+import type { WorksheetView } from 'src/pages/worksheet/types';
+import type { AppDispatch, GetState } from 'src/redux/types';
 import { getTranslateInfo } from 'src/utils/app';
 import { getHighAuthControls } from 'src/utils/control';
 import { needHideViewFilters } from 'src/utils/filter';
@@ -45,9 +47,8 @@ import {
   refresh as sheetViewRefresh,
 } from './sheetview';
 import { isHaveCharge } from './util';
-import type { AppDispatch, GetState } from 'src/redux/types';
 
-export function fireWhenViewLoaded(view: Record<string, any> = {}, { forceUpdate, controls } = {}) {
+export function fireWhenViewLoaded(view: WorksheetView = {}, { forceUpdate, controls } = {}) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { base, quickFilter } = getState().sheet;
     const { chartId } = base || {};
@@ -426,7 +427,15 @@ export const updateWorksheetInfo = info => ({
   info,
 });
 
-export function loadCustomButtons({ appId, viewId, rowId, worksheetId }: { appId?: string; viewId?: string; rowId?: string; worksheetId?: string; [key: string]: any }, cb = () => {}) {
+export function loadCustomButtons(
+  {
+    appId,
+    viewId,
+    rowId,
+    worksheetId,
+  }: { appId?: string; viewId?: string; rowId?: string; worksheetId?: string; [key: string]: any },
+  cb = () => {},
+) {
   return dispatch => {
     if (!worksheetId || _.get(window, 'shareState.isPublicView') || _.get(window, 'shareState.isPublicPage')) {
       return;
@@ -960,7 +969,7 @@ export function copyCustomPage(para) {
 }
 
 // 更新viewControl搜索
-export function updateSearchRecord(view: Record<string, any> = {}, record) {
+export function updateSearchRecord(view: WorksheetView = {}, record) {
   return function (dispatch) {
     if (String(view.viewType) === VIEW_DISPLAY_TYPE.structure) {
       dispatch(updateHierarchySearchRecord(record));
@@ -976,7 +985,16 @@ export function updateSearchRecord(view: Record<string, any> = {}, record) {
 }
 
 // 初始化移动端甘特图所需要的数据
-export function initMobileGunter({ appId, worksheetId, viewId }: { appId?: string; worksheetId?: string; viewId?: string; [key: string]: any }) {
+export function initMobileGunter({
+  appId,
+  worksheetId,
+  viewId,
+}: {
+  appId?: string;
+  worksheetId?: string;
+  viewId?: string;
+  [key: string]: any;
+}) {
   return function (dispatch) {
     const base = {
       appId,

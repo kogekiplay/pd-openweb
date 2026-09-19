@@ -52,8 +52,12 @@ export interface FormControl {
   controlName?: string;
   value?: ControlValue;
   advancedSetting?: ControlAdvancedSetting;
-  /** 控件上挂的自定义事件权限配置 */
-  eventPermissions?: any;
+  /**
+   * 自定义事件算出来的权限位，【是个三字符串】而不是对象：
+   * 第 0 位可编辑、第 1 位可见，'x' 表示"该位没被事件动过"，默认 'xxx'。
+   * 拼装在 Form/core/customEvent.tsx 的 replaceStr 那几行。
+   */
+  eventPermissions?: string;
   /** 打印里标记这个关联控件是「关联多条·列表」形态 */
   isRelateMultipleSheet?: boolean;
   /** 关联记录控件指定的关联视图 */
@@ -65,7 +69,7 @@ export interface FormControl {
   /** 卡片/详情里给控件挂的可编辑标记 */
   canEdit?: boolean;
   /** 卡片单元格自带的写回函数 */
-  updateCell?: (data: any) => void;
+  updateCell?: (data: UpdateCellData) => void;
   /** 打印时是否隐藏这个控件 */
   printHide?: boolean;
   /** 该控件在当前视图是否可见（自定义动作/打印模板按它过滤） */
@@ -208,6 +212,32 @@ export interface FormControl {
  * 选项类控件（单选/多选/等级/…）的一个选项。
  * key 是存库的值，value 是显示文案 —— 记录里存的是 key，别拿 value 去比。
  */
+/**
+ * 卡片单元格写回时提交的内容。
+ * 单元格自己只给 value；MobileCardCellControls / SummaryCom 会再把整行并进来。
+ */
+export interface UpdateCellData {
+  value?: ControlValue;
+  row?: RecordRow;
+}
+
+/**
+ * 工作表的自定义按钮。【只列本仓真正读到的字段】—— 后端返回的远不止这些，
+ * 用到新字段就往这里补一行，不要退回 any[]。
+ */
+export interface WorksheetCustomBtn {
+  btnId?: string;
+  name?: string;
+  desc?: string;
+  /** 已停用的按钮 status 为 0 */
+  status?: number;
+  disabled?: boolean;
+  /** 点击行为：立即执行 / 二次确认 / 填写字段，见 CUSTOM_BUTTOM_CLICK_TYPE */
+  clickType?: number;
+  writeObject?: number;
+  writeType?: number;
+}
+
 export interface ControlOption {
   key: string;
   value?: string;
@@ -311,6 +341,57 @@ export interface AttachmentValue {
  * 关系控件（关联任务/项目/日程/文件…）的值元素。
  * type 是关系种类（见各处的 RELATION_TYPE_NAME / RELATION_TEXT 表）。
  */
+/**
+ * AI 推荐建表时，模型返回的【一个字段描述】。
+ *
+ * 【字段名是模型侧的口径，和 FormControl 不是一回事】这里是 name / code / isRequired，
+ * 落到控件上才变成 controlName / alias / required，转换在
+ * control.ts 的 convertAiRecommendControlToControlData 里。
+ * type 也是字符串（'text' / 'longText' / 'related' …）而不是 FormControl 的数字 type。
+ */
+export interface AiRecommendControl {
+  id?: string;
+  type?: string;
+  name?: string;
+  isRequired?: boolean;
+  /** 是不是标题字段（落到控件上是 attribute: 1） */
+  isHeading?: boolean;
+  col?: number;
+  row?: number;
+  size?: number;
+  description?: string;
+  /** 字段别名。公式表达式里用它引用别的字段，转换时会被替换成 $controlId$ */
+  code?: string;
+  formulaExpression?: string;
+  optionColor?: boolean;
+  options?: AiRecommendOption[];
+  isMultiple?: boolean;
+  /** 关联记录要显示哪些字段 */
+  displayField?: { fieldID?: string }[];
+  /** 'self' 表示关联本表；否则给被关联表的 id */
+  relatedWorksheet?: 'self' | { id?: string };
+  /** 子表的下级字段，形状与自身相同 */
+  subFields?: AiRecommendControl[];
+}
+
+/** AI 推荐字段里的一个选项 */
+export interface AiRecommendOption {
+  label?: string;
+  isDefault?: boolean;
+  color?: string;
+}
+
+/**
+ * AI 生成记录值时，指向一个人 / 部门 / 组织角色 / 关联记录的条目。
+ * 四种控件回来的形状是同一套（id + name，成员多一个 avatar，关联记录的 id 也可能叫 sid）。
+ */
+export interface AiGenEntityRef {
+  id?: string;
+  sid?: string;
+  name?: string;
+  avatar?: string;
+}
+
 export interface RelationValue {
   type?: number;
   name?: string;

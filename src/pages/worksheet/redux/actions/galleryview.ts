@@ -1,12 +1,13 @@
 import _ from 'lodash';
 import worksheetAjax from 'src/api/worksheet';
+import type { AppDispatch, GetState } from 'src/redux/types';
 import { getFilledRequestParams } from 'src/utils/common';
+import type { RecordRow } from 'src/utils/controlTypes';
+import type { FormControl } from 'src/utils/controlTypes';
 import { formatQuickFilter } from 'src/utils/filter';
 import { getGroupControlId } from 'src/utils/worksheet';
 import { getNavGroupCount } from './navFilter';
 import { sortDataByGroupItems } from './util';
-import type { RecordRow } from 'src/utils/controlTypes';
-import type { AppDispatch, GetState } from 'src/redux/types';
 
 let getGalleryRequest: ApiResult | null = null;
 let preWorksheetIds = [];
@@ -14,7 +15,7 @@ const pageSizeForGroup = 20;
 const pageSizeForGroupKan = 50;
 const pageSize = 100;
 
-const getGroupName = (newName, oldName, groupControl: Record<string, any> = {}) => {
+const getGroupName = (newName, oldName, groupControl: FormControl = {}) => {
   if (!newName) {
     return oldName;
   }
@@ -78,27 +79,28 @@ export const fetch = (index: number) => {
 
     preWorksheetIds.push(`${base.worksheetId}-${base.viewId}`);
     getGalleryRequest = worksheetAjax.getFilterRows(getFilledRequestParams(args));
-    getGalleryRequest.then(res => {
-      getGalleryRequest = null;
-      preWorksheetIds = (preWorksheetIds || []).filter(o => o !== `${base.worksheetId}-${base.viewId}`);
-      res.data.forEach(item => {
-        if (_.get(groupControl, 'options.length')) {
-          item.name = _.get(_.find(groupControl.options, { key: item.key }), 'value') || item.name;
-        }
-      });
-      const list = index > 1 ? gallery.concat(res.data) : res.data;
-      dispatch({
-        type: 'CHANGE_GALLERY_VIEW_DATA',
-        list: _.get(currentView, 'advancedSetting.groupsetting')
-          ? sortDataByGroupItems(list, currentView, controls)
-          : list,
-        resultCode: res.resultCode,
-      });
-      dispatch({ type: 'CHANGE_GALLERY_VIEW_INDEX', pageIndex: index });
-      dispatch({ type: 'GALLERY_VIEW_RECORD_COUNT', count: res.count });
-      dispatch({ type: 'CHANGE_GALLERY_VIEW_LOADING', loading: false });
-      dispatch({ type: 'CHANGE_GALLERY_LOADING', loading: false });
-    })
+    getGalleryRequest
+      .then(res => {
+        getGalleryRequest = null;
+        preWorksheetIds = (preWorksheetIds || []).filter(o => o !== `${base.worksheetId}-${base.viewId}`);
+        res.data.forEach(item => {
+          if (_.get(groupControl, 'options.length')) {
+            item.name = _.get(_.find(groupControl.options, { key: item.key }), 'value') || item.name;
+          }
+        });
+        const list = index > 1 ? gallery.concat(res.data) : res.data;
+        dispatch({
+          type: 'CHANGE_GALLERY_VIEW_DATA',
+          list: _.get(currentView, 'advancedSetting.groupsetting')
+            ? sortDataByGroupItems(list, currentView, controls)
+            : list,
+          resultCode: res.resultCode,
+        });
+        dispatch({ type: 'CHANGE_GALLERY_VIEW_INDEX', pageIndex: index });
+        dispatch({ type: 'GALLERY_VIEW_RECORD_COUNT', count: res.count });
+        dispatch({ type: 'CHANGE_GALLERY_VIEW_LOADING', loading: false });
+        dispatch({ type: 'CHANGE_GALLERY_LOADING', loading: false });
+      })
       /* 必须兜 catch：上面几行刚 abort 掉上一个 getFilterRows，被 abort 的 promise
          会以 { errorCode: 1, errorMessage: '请求被取消' } 拒绝
          （见 src/common/global.ts 里 textStatus === 'abort' 那段），
@@ -251,7 +253,11 @@ export const deleteRow = (id, groupId: string) => {
         type: 'CHANGE_GALLERY_VIEW_DATA',
         list: gallery.map(o => {
           if (o.key === groupId) {
-            return { ...o, rows: o.rows.filter((a: RecordRow) => safeParse(a)?.rowid !== id), totalNum: o.totalNum - 1 };
+            return {
+              ...o,
+              rows: o.rows.filter((a: RecordRow) => safeParse(a)?.rowid !== id),
+              totalNum: o.totalNum - 1,
+            };
           } else {
             return o;
           }

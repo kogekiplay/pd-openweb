@@ -38,7 +38,17 @@ export default class Widgets extends Component<any, any> {
     });
   };
 
-  getRowById = ({ appId, worksheetId, rowId }: { appId?: string; worksheetId?: string; rowId?: string; [key: string]: any }) => {
+  getRowById = ({
+    appId,
+    worksheetId,
+    rowId,
+  }: {
+    appId?: string;
+    worksheetId?: string;
+    rowId?: string;
+    /** 调用点会带上，但这个函数本身用不到 */
+    viewId?: string;
+  }) => {
     const { filterControls = [], parentWorksheetId, control = {}, relateRecordIds = [] } = this.props;
     const { controlId, controlName, enumDefault } = control;
 

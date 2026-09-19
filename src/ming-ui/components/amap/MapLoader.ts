@@ -4,7 +4,8 @@ import _ from 'lodash';
 import global from 'src/api/global';
 
 let mapConfig;
-let mapConfigRequest: Promise<any> | null = null;
+// 并发调用只发一次；resolve 出来的是地图配置（key / 安全码等），调用点自己收窄
+let mapConfigRequest: Promise<Record<string, unknown>> | null = null;
 
 /**
  * 取地图配置（高德/谷歌的 key 与安全域）。

@@ -38,7 +38,7 @@ const Con = styled.div`
 
 export default function FilterDetailName(props) {
   const { withStar, editable, name, onChange = () => {} } = props;
-  const ref = useRef<any>(undefined);
+  const ref = useRef<HTMLInputElement>(null);
   const [value, setValue] = useState(name);
   const [active, setActive] = useState<boolean | undefined>();
 

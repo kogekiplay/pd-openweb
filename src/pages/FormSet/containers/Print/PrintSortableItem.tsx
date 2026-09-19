@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
+import _ from 'lodash';
 import { Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import sheetAjax from 'src/api/worksheet';
@@ -11,18 +11,26 @@ import { filterData } from 'src/pages/FormSet/components/columnRules/config.js';
 import { PRINT_TYPE, PRINT_TYPE_STYLE } from 'src/pages/Print/core/config';
 import ShowBtnFilterDialog from 'src/pages/worksheet/common/CreateCustomBtn/components/ShowBtnFilterDialog.jsx';
 import { getPrintCardInfoOfTemplate } from 'src/pages/worksheet/common/PrintQrBarCode/enum';
+import type { FormControl } from 'src/utils/controlTypes';
 import { sendCloudPrint } from 'src/utils/record';
 import MoreOption from '../../components/MoreOption';
 import RangeDrop from '../../components/RangeDrop';
-import type { FormControl } from 'src/utils/controlTypes';
 
 export default function PrintSortableItem(props) {
-  const { item, worksheetInfo = {}, worksheetControls = [], updatePrint, changeState, loadPrint, DragHandle }: { worksheetControls: FormControl[]; [key: string]: any } = props;
+  const {
+    item,
+    worksheetInfo = {},
+    worksheetControls = [],
+    updatePrint,
+    changeState,
+    loadPrint,
+    DragHandle,
+  }: { worksheetControls: FormControl[]; [key: string]: any } = props;
   const { views = [], worksheetId } = worksheetInfo;
   const printInfo = getPrintCardInfoOfTemplate(item);
   const isCustom = [PRINT_TYPE.WORD_PRINT, PRINT_TYPE.EXCEL_PRINT].includes(item.type);
   const isCloudPrint = item.type === PRINT_TYPE.CLOUD_PRINT;
-  const inputRef = useRef<any>(undefined);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const [inputName, setInputName] = useState(item.name);
   const [isRename, setIsRename] = useState(false);

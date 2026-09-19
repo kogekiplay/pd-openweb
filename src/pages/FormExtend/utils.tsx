@@ -2,9 +2,9 @@ import React from 'react';
 import _ from 'lodash';
 import moment from 'moment';
 import { RELATION_SEARCH_SHOW_TYPE } from 'worksheet/constants/enum';
+import type { FormControl } from 'src/utils/controlTypes';
 import { TIME_PERIOD_TYPE, TIME_TYPE, WEEKS } from './enum';
 import CountDown from './PublicWorksheetConfig/CountDown';
-import type { FormControl } from 'src/utils/controlTypes';
 
 export function getNewControlColRow(controls: FormControl[], halfOfNewControl = true) {
   if (!controls.length) {
@@ -42,7 +42,21 @@ export function getNotSupportControlIds(controls) {
   return notSupportIds;
 }
 
-export function getDisabledControls(controls, systemRelatedIds: Record<string, any> = {}) {
+/**
+ * 公开表单里要禁用的控件。systemRelatedIds 是「这张表把哪些系统信息写进了哪个字段」的对照表
+ *（IP / 浏览器 / 设备 / 系统 / 来源，以及微信授权拿到的三项），这些字段不允许用户自己填。
+ */
+export function getDisabledControls(
+  controls,
+  systemRelatedIds: {
+    ipControlId?: string;
+    browserControlId?: string;
+    deviceControlId?: string;
+    systemControlId?: string;
+    extendSourceId?: string;
+    weChatSetting?: { fieldMaps?: { openId?: string; nickName?: string; headImgUrl?: string } };
+  } = {},
+) {
   const defaultHided = getNotSupportControlIds(controls);
   const hidedWhenNew = controls
     .filter(control => (control.controlPermissions || '000')[2] === '0')

@@ -7,7 +7,11 @@ import Config from '../config';
 import { PERMISSION_ENUM } from '../enum';
 import './common.less';
 
-const AdminCommon: Record<string, any> = {};
+// 模块级命名空间：下面逐个往上面挂方法，先把形状写出来
+const AdminCommon: {
+  getAuthority?: () => Promise<unknown>;
+  freeUpdateDialog?: () => void;
+} = {};
 
 AdminCommon.getAuthority = async () => {
   Config.getParams();

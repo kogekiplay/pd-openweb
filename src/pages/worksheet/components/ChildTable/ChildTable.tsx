@@ -3,6 +3,7 @@ import { flushSync } from 'react-dom';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _, {
   debounce,
@@ -21,14 +22,12 @@ import _, {
 } from 'lodash';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import { Menu, MenuItem, Skeleton } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import worksheetAjax from 'src/api/worksheet';
 import { createRequestPool } from 'worksheet/api/standard';
-import type { ControlValue, FormControl, RecordRow } from 'src/utils/controlTypes';
 import { mobileSelectRecord } from 'mobile/components/RecordCardListDialog';
 import { batchEditRecord } from 'worksheet/common/BatchEditRecord';
 import RecordInfoContext from 'worksheet/common/recordInfo/RecordInfoContext';
@@ -52,6 +51,7 @@ import { checkCellIsEmpty, controlState, getTitleTextFromControls } from 'src/ut
 import { controlBatchCanEdit } from 'src/utils/control';
 import { isRelateRecordTableControl, parseAdvancedSetting, replaceByIndex } from 'src/utils/control';
 import { sortControlByIds, updateOptionsOfControls } from 'src/utils/control';
+import type { ControlValue, FormControl, RecordRow } from 'src/utils/controlTypes';
 import { addBehaviorLog } from 'src/utils/project';
 import {
   copySublistRow,
@@ -540,7 +540,11 @@ class ChildTable extends React.Component<any, any> {
     const isWorkflow =
       ((instanceId && workId) || window.shareState.isPublicWorkflowRecord) &&
       worksheetInfo.workflowChildTableSwitch !== false;
-    const { showControls = [], advancedSetting = {}, relationControls = [] }: { relationControls: FormControl[]; [key: string]: any } = control;
+    const {
+      showControls = [],
+      advancedSetting = {},
+      relationControls = [],
+    }: { relationControls: FormControl[]; [key: string]: any } = control;
 
     if (baseLoading) {
       return [];
@@ -696,7 +700,13 @@ class ChildTable extends React.Component<any, any> {
 
   loadRows(nextProps?, { needResetControls, isRefresh } = {}) {
     const { control, recordId, masterData, loadRows, from, base = {} } = nextProps || this.props;
-    const { isTreeTableView, instanceId, workId, worksheetInfo, originControls }: { originControls: FormControl[]; [key: string]: any } = base;
+    const {
+      isTreeTableView,
+      instanceId,
+      workId,
+      worksheetInfo,
+      originControls,
+    }: { originControls: FormControl[]; [key: string]: any } = base;
     const isWorkflow =
       ((instanceId && workId) || window?.shareState?.isPublicWorkflowRecord) &&
       worksheetInfo?.workflowChildTableSwitch !== false;
@@ -729,9 +739,9 @@ class ChildTable extends React.Component<any, any> {
         const state = { loading: false };
 
         if (needResetControls) {
-          let newControls: FormControl[] = (_.get(res, 'worksheet.template.controls') || _.get(res, 'template.controls')).concat(
-            systemControls,
-          );
+          let newControls: FormControl[] = (
+            _.get(res, 'worksheet.template.controls') || _.get(res, 'template.controls')
+          ).concat(systemControls);
           // 这里要和 getControls 一起统一到 action 内处理
           const { uniqueControlIds } = parseAdvancedSetting(control.advancedSetting);
           newControls = newControls.map((c: FormControl) => ({
@@ -1183,7 +1193,9 @@ class ChildTable extends React.Component<any, any> {
               .map((r: RecordRow) => _.get(safeParse(r[relateRecordControl.controlId], 'array'), '0.sid'))
               .filter(_.identity)
           : [],
-      formData: controls.map((c: FormControl) => ({ ...c, value: tempRow[c.controlId] })).concat(this.props.masterData.formData),
+      formData: controls
+        .map((c: FormControl) => ({ ...c, value: tempRow[c.controlId] }))
+        .concat(this.props.masterData.formData),
       onOk: (selectedRecords: RecordRow[]) => {
         const rowsLength = filterEmptyChildTableRows(rows).length;
 
@@ -1321,7 +1333,9 @@ class ChildTable extends React.Component<any, any> {
           : _.uniqBy(row.updatedControlIds.concat(updatedControlIds));
         row.updatedControlIds = row.updatedControlIds.concat(
           controls
-            .filter((c: FormControl) => _.find(updatedControlIds, cid => ((c.advancedSetting || {}).defsource || '').includes(cid)))
+            .filter((c: FormControl) =>
+              _.find(updatedControlIds, cid => ((c.advancedSetting || {}).defsource || '').includes(cid)),
+            )
             .map((c: FormControl) => c.controlId),
         );
         if (previewRowIndex > -1) {
@@ -1528,14 +1542,11 @@ class ChildTable extends React.Component<any, any> {
         const relateClearCids = needUpdateControls
           .filter((c: BatchUpdateControl) => c.type === 29 && c.editType === 'clear')
           .map((c: BatchUpdateControl) => c.controlId);
-        const baseChanges = needUpdateControls.reduce(
-          (acc: Record<string, any>, c: BatchUpdateControl) => {
-            if (c.type === 29 && c.editType === 'clear') return acc;
-            acc[c.controlId] = c.sourceValue || c.value;
-            return acc;
-          },
-          {},
-        );
+        const baseChanges = needUpdateControls.reduce((acc: Record<string, any>, c: BatchUpdateControl) => {
+          if (c.type === 29 && c.editType === 'clear') return acc;
+          acc[c.controlId] = c.sourceValue || c.value;
+          return acc;
+        }, {});
 
         if (relateClearCids.length) {
           const selectedIdSet = new Set(selectedRows.map((r: RecordRow) => r.rowid));
@@ -1692,7 +1703,8 @@ class ChildTable extends React.Component<any, any> {
     this.disabledNew = disabledNew;
     this.isExceed = isExceed;
     const allowBatch = !_.includes([FROM.DEFAULT], from) && this.settings.allowBatch;
-    const allowBatchDelete = allowcancel || (allowadd && !!originRows.filter((r: RecordRow) => /^temp/.test(r.rowid)).length);
+    const allowBatchDelete =
+      allowcancel || (allowadd && !!originRows.filter((r: RecordRow) => /^temp/.test(r.rowid)).length);
     const allowImport = this.settings.allowImport && !_.includes([FROM.DEFAULT], from);
     const showBatchEdit =
       !isMobile &&
@@ -1740,9 +1752,10 @@ class ChildTable extends React.Component<any, any> {
 
     if (treeLayerControlId) {
       const emptyRows = _.filter(tableRows, (r: RecordRow) => /^empty-/.test(r.rowid));
-      tableData = getSheetViewRows({ rows: _.filter(tableRows, (r: RecordRow) => !/^empty-/.test(r.rowid)) }, { treeMap }).concat(
-        emptyRows,
-      );
+      tableData = getSheetViewRows(
+        { rows: _.filter(tableRows, (r: RecordRow) => !/^empty-/.test(r.rowid)) },
+        { treeMap },
+      ).concat(emptyRows);
     }
 
     const rowCount = layoutDirection === 'horizontal' ? tableData.length : columns.length;
@@ -2340,12 +2353,16 @@ class ChildTable extends React.Component<any, any> {
                       if (isAdd) {
                         this.setState({ selectedRowIds: _.uniq(selectedRowIds.concat(selectedRowId)) });
                       } else {
-                        this.setState({ selectedRowIds: selectedRowIds.filter((rowId: string) => rowId !== selectedRowId) });
+                        this.setState({
+                          selectedRowIds: selectedRowIds.filter((rowId: string) => rowId !== selectedRowId),
+                        });
                       }
                     }}
                     onSelectAll={selectAll => {
                       if (selectAll) {
-                        this.setState({ selectedRowIds: filterEmptyChildTableRows(tableRows).map((row: RecordRow) => row.rowid) });
+                        this.setState({
+                          selectedRowIds: filterEmptyChildTableRows(tableRows).map((row: RecordRow) => row.rowid),
+                        });
                       } else {
                         this.setState({ selectedRowIds: [] });
                       }
@@ -2364,7 +2381,8 @@ class ChildTable extends React.Component<any, any> {
                       this.copyRow(args.row);
                     }}
                     saveSheetLayout={({ closePopup }) => {
-                      const changes: Record<string, any> = {};
+                      // 两个值都是 JSON 串（后端按字符串存）
+                      const changes: { widths?: string; freezeids?: string } = {};
 
                       if (!_.isEmpty(tempSheetColumnWidths)) {
                         changes.widths = JSON.stringify(
@@ -2807,7 +2825,8 @@ class ChildTable extends React.Component<any, any> {
               switchDisabled={{
                 prev: previewRowIndex === 0,
                 next:
-                  previewRowIndex === filterEmptyChildTableRows(tableData.filter((r: RecordRow) => !r.isSubListFooter)).length - 1,
+                  previewRowIndex ===
+                  filterEmptyChildTableRows(tableData.filter((r: RecordRow) => !r.isSubListFooter)).length - 1,
               }}
               getMasterFormData={() => this.props.masterData.formData}
               handleUniqueValidate={this.handleUniqueValidate}

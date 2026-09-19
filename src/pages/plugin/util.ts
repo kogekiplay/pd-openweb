@@ -28,7 +28,10 @@ export const getMarkdownContent = text => {
   return filterXss(md.render(text));
 };
 
-export const getPluginOperateText = (recentOperation: Record<string, any> = {}) => {
+// type: 1 提交 / 2 发布 / 3 导入 / …；文案表见函数体
+export const getPluginOperateText = (
+  recentOperation: { type?: number; time?: string; account?: { fullname?: string } } = {},
+) => {
   let operateText = '';
 
   switch (recentOperation.type) {

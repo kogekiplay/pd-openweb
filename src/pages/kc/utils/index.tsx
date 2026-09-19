@@ -144,7 +144,18 @@ export function getRootNameAndLink(baseUrl, root) {
  * 移除文件名中的非法字符
  * @param  {String} str 传入的字符串
  */
-export function validateFileName(str, shouldAlert = true, out = null, options: Record<string, any> = {}) {
+/**
+ * 校验文件/文件夹名。
+ * 【out 是个出参】校验不通过时把「修正后可用的名字」写回 out.validName，
+ * 完全没救时写 null —— 调用点靠它决定是回退还是取消。
+ * options.extLength 是扩展名长度，从 255 的上限里先扣掉。
+ */
+export function validateFileName(
+  str,
+  shouldAlert = true,
+  out: { validName?: string | null } | null = null,
+  options: { extLength?: number } = {},
+) {
   str = trim(str);
   if (!str) {
     if (shouldAlert) {
@@ -247,7 +258,15 @@ export function getDefaultSortType(sortBy) {
  * @param  {Boolean|String} noText    取消按钮的内容，如果为 false 不显示取消按钮
  * @return {Promise}                  [description]
  */
-export function confirm(header: string, content: string, showClose: boolean, ckText: string, minorContent: string, yesText = undefined, noText = undefined) {
+export function confirm(
+  header: string,
+  content: string,
+  showClose: boolean,
+  ckText: string,
+  minorContent: string,
+  yesText = undefined,
+  noText = undefined,
+) {
   return new Promise((resolve, reject) => {
     const container: Record<string, any> = {};
 

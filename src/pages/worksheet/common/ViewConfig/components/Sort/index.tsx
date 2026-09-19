@@ -116,7 +116,8 @@ export default function (props) {
             canClear
             onChange={value => {
               const first = value[0] || {};
-              let param: Record<string, any> = {};
+              // 展开进保存请求；editAttrs / editAdKeys 告诉后端这次改了哪些字段
+              let param: { advancedSetting?: Record<string, string>; editAttrs?: string[]; editAdKeys?: string[] } = {};
 
               if (!first.controlId) {
                 param.advancedSetting = { closedefsort: '0' };

@@ -1,7 +1,8 @@
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from 'react';
 import { QiniuUpload } from 'ming-ui';
+import type { MobileFileLike } from 'src/pages/worksheet/types';
 
-const formatUploadFile = (file: Record<string, any> = {}, status = 'added') => ({
+const formatUploadFile = (file: MobileFileLike = {}, status = 'added') => ({
   id: file.id,
   size: file.size,
   type: file.type,

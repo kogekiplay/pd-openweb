@@ -307,7 +307,7 @@ declare var md: {
 declare type ApiResult = Promise<any> & { [key: string]: any };
 
 declare var mdyAPI: (...args: any[]) => ApiResult;
-declare var agentAPI: any; // src/common/global.js:936 `window.agentAPI = (args = {}, options = {}) =>`
+declare var agentAPI: (args?: Record<string, unknown>, options?: AgentApiOptions) => ApiResult;
 /**
  * src/common/global.js:265 `window.safeParse = (str, type) => {`
  *
@@ -493,11 +493,47 @@ declare function alert(content?: any, alertType?: number): void;
 // src/api/* 方法第二个参数 options 的类型。
 // 依据 src/common/global.js:721 `window.mdyAPI = (controllerName, actionName, requestData, options = {}) =>`
 // 以及 src/api 里对 options 的实际写入（如 src/api/download.ts 的 options.ajaxOptions）。
-// 刻意带索引签名：options 不是本批的观测对象，不希望它产生诊断噪声。
+// 【索引签名保留】options 会被各处塞自定义键，收紧会产生大量噪声诊断；
+// 但下面这些是 window.mdyAPI 自己真正读到的，列出来至少拼错常用键时能报错。
 declare interface ApiOptions {
+  /** 出错时不弹提示 */
   silent?: boolean;
-  ajaxOptions?: any;
+  /** 透传给底层请求的选项 */
+  ajaxOptions?: {
+    /** HTTP 方法，缺省 POST。用字面量联合而不是 string —— 它直接交给 axios，
+        axios 的 method 就是这么定义的，写 string 会撞 TS2769 无匹配重载 */
+    type?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS';
+    url?: string;
+    /** 缺省 'json'；同样是 axios 的字面量联合 */
+    responseType?: 'json' | 'text' | 'blob' | 'arraybuffer' | 'document' | 'stream';
+    /** 同步请求 */
+    sync?: boolean;
+    timeout?: number;
+    header?: Record<string, string>;
+    agent?: boolean;
+    noAccountIdHeader?: boolean;
+  };
+  /** 外部传进来的中断器；不传则内部自建一个 */
+  abortController?: AbortController;
+  /** 自己解析返回体（导出 blob 等场景） */
+  customParseResponse?: boolean;
+  /** 流式响应 */
+  isReadableStream?: boolean;
+  /** Agent 服务：不走 {state,data,exception} 契约 */
+  agent?: boolean;
   [key: string]: any;
+}
+
+/** window.agentAPI 的第二个参数。Agent 服务自己一套，与 ApiOptions 不通用。 */
+declare interface AgentApiOptions {
+  url?: string;
+  /** 缺省 POST */
+  method?: string;
+  /** 走 execute-stream */
+  isStream?: boolean;
+  silent?: boolean;
+  header?: Record<string, string>;
+  abortController?: AbortController;
 }
 
 // src/api/agent.ts 里带路径参数的方法，第一个参数 args 的类型。

@@ -4,15 +4,16 @@ import { v4 as uuidv4 } from 'uuid';
 import worksheetAjax from 'src/api/worksheet';
 import { createRequestPool } from 'worksheet/api/standard';
 import { getTreeExpandSize, handleUpdateTreeNodeExpansion, treeDataUpdater } from 'worksheet/common/TreeTableHelper';
+import type { RuleFilterItem } from 'src/components/Form/core/types';
 import { postWithToken } from 'src/utils/common';
-import { filterEmptyChildTableRows } from 'src/utils/record';
 import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import { filterEmptyChildTableRows } from 'src/utils/record';
 import type { ChildTableDispatch, ChildTableGetState } from './types';
 
 const PAGE_SIZE = 200;
 
 export function updateTreeNodeExpansion(
-  row: Record<string, any> = {},
+  row: RecordRow = {},
   { expandAll, forceUpdate, getNewRows, updateRows, worksheetId, recordId } = {},
 ) {
   return (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
@@ -255,7 +256,10 @@ export const deleteRows =
     dispatch(updateTreeTableViewData());
   };
 
-export const updateRow = ({ rowid, value }: { rowid?: string; [key: string]: any }, { asyncUpdate, noRealUpdate } = {}) => {
+export const updateRow = (
+  { rowid, value }: { rowid?: string; [key: string]: any },
+  { asyncUpdate, noRealUpdate } = {},
+) => {
   return dispatch => {
     dispatch({
       type: 'UPDATE_ROW',
@@ -388,7 +392,19 @@ export const loadRows = ({
 
 // 分页加载数据
 export const loadPageRows =
-  ({ worksheetId, recordId, controlId, getWorksheet, from, callback = () => {} }: { worksheetId?: string; recordId?: string; controlId?: string; [key: string]: any }) =>
+  ({
+    worksheetId,
+    recordId,
+    controlId,
+    getWorksheet,
+    from,
+    callback = () => {},
+  }: {
+    worksheetId?: string;
+    recordId?: string;
+    controlId?: string;
+    [key: string]: any;
+  }) =>
   (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
     const { base, pagination, filterControls = [] } = getState();
     const { instanceId, workId } = base;
@@ -446,8 +462,10 @@ interface ExportSheetOptions {
   controlId?: string;
   clientId?: string;
   fileName?: string;
-  filterControls?: any[];
-  onDownload?: (...args: any[]) => void;
+  /** 导出时带上的筛选条件，形状与视图筛选一致 */
+  filterControls?: RuleFilterItem[];
+  /** 导出结束时回调；失败时把错误对象传进来（见下面 catch 分支） */
+  onDownload?: (error?: unknown) => void;
 }
 
 export const exportSheet = ({
@@ -599,7 +617,8 @@ export function setRowsFromStaticRows({
 } = {}) {
   return (getState, dispatch, DataFormat) => {
     const { base } = getState();
-    const { controls, projectId, searchConfig, initRowIsCreate, max }: { controls: FormControl[]; [key: string]: any } = base;
+    const { controls, projectId, searchConfig, initRowIsCreate, max }: { controls: FormControl[]; [key: string]: any } =
+      base;
     // 树形子表：value 序列化可能不带 pid/childrenids，按 value 重建会丢父子关系、展开 icon 消失。
     // 用同 rowid 的现有行（如服务端已加载行）的树字段做兜底，仅当 value 未给该字段时回退。
     const existingRows: RecordRow[] = getState().rows || [];

@@ -11,11 +11,11 @@ import * as baseAction from 'src/pages/worksheet/redux/actions';
 import * as detailActions from 'src/pages/worksheet/redux/actions/detailView';
 import type { RootState } from 'src/redux/types';
 import { getAdvanceSetting } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import { getCardWidth } from 'src/utils/worksheet';
 import ViewEmpty from '../components/ViewEmpty';
 import DetailItem from './DetaiIItem';
 import './index.less';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const LeftListWrapper = styled.div(
   ({ width }) => `
@@ -102,7 +102,7 @@ function DetailView(props) {
   const currentView = views.find(o => o.viewId === viewId) || {};
   const coverCid = currentView.coverCid || _.get(worksheetInfo, ['advancedSetting', 'coverid']);
   const { showtoolbar, showtitle } = getAdvanceSetting(currentView);
-  const inputRef = useRef<any>(undefined);
+  const inputRef = useRef<HTMLInputElement>(null);
   const cardWidth = getCardWidth(currentView);
 
   const [currentRecord, setCurrentRecord] = useState({});

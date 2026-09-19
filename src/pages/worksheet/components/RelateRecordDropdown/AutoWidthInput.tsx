@@ -31,7 +31,7 @@ function getWidth(value) {
 export default function AutoWidthInput(props) {
   const { value, height, placeholder = '', mountRef = () => {}, onChange = () => {}, ...rest } = props;
   const [width, setWidth] = useState(4);
-  const ref = useRef<any>(undefined);
+  const ref = useRef<HTMLInputElement>(null);
   useEffect(() => {
     setWidth(getWidth(value));
   }, [value]);

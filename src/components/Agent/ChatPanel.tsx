@@ -9,7 +9,6 @@ import { upgradeVersionDialog } from 'src/components/upgradeVersion';
 import { browserIsMobile, emitter, pathCompletion } from 'src/utils/common';
 import { useAgentBus, useAgentEvent } from './agentBus';
 import type { AgentBus } from './agentBus';
-import type { ChatMessage, ChatMessagePart } from './types';
 import {
   AGENT_ATTACHMENT_MIME_TYPES,
   AGENT_HEADER_EVENT,
@@ -53,6 +52,14 @@ import {
   restorePendingConfirmation,
   upsertRebuildConfirm,
 } from './streamEvents';
+import type {
+  AgentStreamEvent,
+  ChatAttachment,
+  ChatAttachmentRequest,
+  ChatMention,
+  ChatMessage,
+  ChatMessagePart,
+} from './types';
 import {
   AnonAttachmentSlot,
   AttachmentTooltip,
@@ -210,7 +217,10 @@ function buildExtractHint({ doc, image }: { doc?: number; image?: number } = {})
   return segs.length ? _l('正在解析%0…', segs.join('、')) : '';
 }
 
-function userMessageFrom(text?: string, attachments: any[] = []): ChatMessage {
+// 【收的是请求形状不是上传区形状】这两者字段不同（上传区带 status/progress/previewUrl，
+// 请求只有 type/url/name/size）。调用点传进来的是 mapAttachmentForRequest 的产物，
+// 标成 ChatAttachment 会对不上 —— 是加类型之后才看出来的。
+function userMessageFrom(text?: string, attachments: ChatAttachmentRequest[] = []): ChatMessage {
   const parts: ChatMessagePart[] = [];
 
   if (attachments.length) parts.push({ kind: 'attachment', items: attachments, ts: Date.now() });
@@ -319,8 +329,16 @@ function normalizeArtifactRef(artifact: any) {
   };
 }
 
-function getSingleMingoPlanAnonSessionError(error: any) {
-  const body = safeParse((error && error.message) || '', 'object');
+/**
+ * 请求/流失败时拿到的东西：可能是 Error，也可能是后端 reject 的普通对象。
+ * catch 变量在 TS 里只能标 any 或 unknown（TS1196），所以统一过这里收窄，只取这两个字段。
+ */
+function asFailure(error: unknown): { name?: string; message?: string } {
+  return error && typeof error === 'object' ? (error as { name?: string; message?: string }) : {};
+}
+
+function getSingleMingoPlanAnonSessionError(error: unknown) {
+  const body = safeParse(asFailure(error).message || '', 'object');
   const errorCode = stringValue(readField(body, 'errorCode')) || '';
   const message = stringValue(readField(body, 'errorMessage'));
 
@@ -329,14 +347,14 @@ function getSingleMingoPlanAnonSessionError(error: any) {
   return { errorCode, message };
 }
 
-function getStreamFailureError(error: any, shouldPickSingleMingoPlanError?: boolean) {
+function getStreamFailureError(error: unknown, shouldPickSingleMingoPlanError?: boolean) {
   if (shouldPickSingleMingoPlanError) {
     const singleMingoPlanError = getSingleMingoPlanAnonSessionError(error);
 
     if (singleMingoPlanError) return singleMingoPlanError;
   }
 
-  return { errorCode: '', message: (error && error.message) || _l('Agent 请求失败') };
+  return { errorCode: '', message: asFailure(error).message || _l('Agent 请求失败') };
 }
 
 /**
@@ -471,7 +489,7 @@ export default function ChatPanel({
   const [sessionId, setSessionId] = useState(() => initialSessionId || createAgentSessionId());
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [draft, setDraft] = useState('');
-  const [draftAttachments, setDraftAttachments] = useState<any[]>([]);
+  const [draftAttachments, setDraftAttachments] = useState<ChatAttachment[]>([]);
   // 卡片「修改」聚合的待提交修改：1 条→填入输入框纯文本；≥2 条→输入框上方聚合成「修改搭建计划」chip
   const [pendingEdits, setPendingEdits] = useState<any[]>([]);
   const [submitting, setSubmitting] = useState(false);
@@ -488,9 +506,7 @@ export default function ChatPanel({
   const [activeVersionLabel, setActiveVersionLabel] = useState('');
   // 执行中断 / 拦截提示：贴在输入框上方的浮动卡（信用点不足、服务异常等）。{ errorCode, message }，null 时不展示。
   // { errorCode, message }，null 时不展示
-  const [interceptError, setInterceptError] = useState<{ errorCode?: number | string; message?: string } | null>(
-    null,
-  );
+  const [interceptError, setInterceptError] = useState<{ errorCode?: number | string; message?: string } | null>(null);
   // 附件解析过渡态：route-selected 后、text-delta 前，后端同步「下载+解析」doc/图片附件（vision），
   // 这段窗口原本黑屏。记 doc/image 各自待解析数量（0=未在解析），给 loading 三点补「正在解析文档/图片…」步骤文案。
   // doc 与 image 可同时出现（一条消息既带文档又带图），分开记，避免一方先完成把另一方文案误清。
@@ -516,7 +532,7 @@ export default function ChatPanel({
   const latestRuntimeRef = useRef<Record<string, any>>({});
   // 镜像最新 sessionId：卸载清理在闭包里拿不到最新 state，用 ref 取当前会话调取消接口
   const sessionIdRef = useRef('');
-  const promptInputRef = useRef<any>(null);
+  const promptInputRef = useRef<HTMLInputElement>(null);
   // 从首页分组内「AI 创建应用」交接来的分组 id：拼进 stream context.groupId，让新建应用归入该分组
   const groupIdRef = useRef('');
   // 已开过流的 path 集合：用于决定首次 delta 时是否触发 file:begin + file:focus
@@ -910,7 +926,7 @@ export default function ChatPanel({
   // 输入框文字保留作为补充说明，发送时与多条修改一并打包，避免漏带（旧版 1 条回填依赖 PromptInput 回写非空
   // value，但其只处理清空，导致填充不可见且发送禁用）。
 
-  function applyAgentEvent(assistantId: string, event: any) {
+  function applyAgentEvent(assistantId: string, event: AgentStreamEvent) {
     const data = (event.payload && event.payload.data) || {};
 
     logSseEvent(event);
@@ -1283,15 +1299,18 @@ export default function ChatPanel({
   // 在 build context 之外，按设计稿补充对话上下文：
   // mentions（@ 的应用）、currentApp（应用内默认当前应用）、commonApps（非应用内且未 @ 时的常用应用兜底）。
   // currentOrganization 暂不处理。
-  async function composeChatContext(mentions?: any[], { omitPlanContext = false }: { omitPlanContext?: boolean } = {}) {
+  async function composeChatContext(
+    mentions?: ChatMention[],
+    { omitPlanContext = false }: { omitPlanContext?: boolean } = {},
+  ) {
     // 续建态省略 plan 派生字段（worksheets/groupNames…），只保留对话上下文（默认应用 / @ / 常用应用），
     // 后端据 __original_inputs__ 续建，不触发 plan 漂移判定。
     const base = omitPlanContext ? composeDefaultContext() : composeCurrentContext() || {};
     const extra: Record<string, any> = {};
 
     const normalizedMentions = (Array.isArray(mentions) ? mentions : [])
-      .filter((m: any) => m && m.id)
-      .map((m: any) => ({ type: m.type || 'app', name: m.name, id: m.id }));
+      .filter(m => m && m.id)
+      .map(m => ({ type: m.type || 'app', name: m.name, id: m.id }));
 
     if (normalizedMentions.length) extra.mentions = normalizedMentions;
 
@@ -1342,7 +1361,7 @@ export default function ChatPanel({
           projectId: getContextProjectId(),
         },
         {
-          onEvent: (event: any) => {
+          onEvent: (event: AgentStreamEvent) => {
             if (event && event.eventName === 'error') return;
             applyAgentEvent(assistant.id, event);
           },
@@ -1398,8 +1417,8 @@ export default function ChatPanel({
   async function streamAgentResponse(
     assistantId: string,
     promptText?: string,
-    attachments?: any[],
-    mentions?: any[],
+    attachments?: ChatAttachmentRequest[],
+    mentions?: ChatMention[],
     options: SubmitOptions = {},
   ) {
     setSubmitting(true);
@@ -1446,7 +1465,7 @@ export default function ChatPanel({
           basedOnVersionId: baseOnOldVersion ? sel.versionId : undefined,
         },
         {
-          onEvent: (event: any) => {
+          onEvent: (event: AgentStreamEvent) => {
             applyAgentEvent(assistantId, event);
           },
           enableCaptcha: anonymous && isSingleMingoPlan,
@@ -1469,10 +1488,10 @@ export default function ChatPanel({
       if (!anonymous && !controller.signal.aborted && !shouldHideUsage(roundAgentRef.current)) {
         startUsagePoll(assistantId, roundTraceId, projectId);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       // 用户主动点"停止"/关闭会话会 abort fetch（浏览器抛英文 BodyStreamBuffer was aborted），属正常终止非错误：
       // 不弹拦截卡，静默收尾即可；仅真实请求失败才走贴底拦截卡（无 errorCode → 可重试态）。
-      const aborted = controller.signal.aborted || (error && error.name === 'AbortError');
+      const aborted = controller.signal.aborted || asFailure(error).name === 'AbortError';
 
       if (!aborted) {
         const failureError = getStreamFailureError(error, anonymous && isSingleMingoPlan);
@@ -1490,7 +1509,12 @@ export default function ChatPanel({
     }
   }
 
-  async function submitPrompt(text?: string, presetAttachments?: any[], mentions?: any[], options: SubmitOptions = {}) {
+  async function submitPrompt(
+    text?: string,
+    presetAttachments?: ChatAttachmentRequest[],
+    mentions?: ChatMention[],
+    options: SubmitOptions = {},
+  ) {
     const promptText = (text || '').trim();
     const attachments =
       presetAttachments || draftAttachments.filter(f => f.status === 'uploaded').map(mapAttachmentForRequest);
@@ -1602,10 +1626,10 @@ export default function ChatPanel({
         pendingBuildSummaryRef.current = false;
         await streamBuildSummary();
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       // 用户主动点"停止"/关闭会话会 abort fetch（浏览器抛英文 BodyStreamBuffer was aborted），属正常终止非错误：
       // 不弹拦截卡，静默收尾即可；仅真实请求失败才走贴底拦截卡（无 errorCode → 可重试态）。
-      const aborted = controller.signal.aborted || (error && error.name === 'AbortError');
+      const aborted = controller.signal.aborted || asFailure(error).name === 'AbortError';
 
       if (!aborted) {
         setInterceptError(getStreamFailureError(error, anonymous && isSingleMingoPlan));
@@ -1659,11 +1683,11 @@ export default function ChatPanel({
         pendingBuildSummaryRef.current = false;
         await streamBuildSummary();
       }
-    } catch (error: any) {
-      const aborted = controller.signal.aborted || (error && error.name === 'AbortError');
+    } catch (error: unknown) {
+      const aborted = controller.signal.aborted || asFailure(error).name === 'AbortError';
 
       if (!aborted) {
-        setInterceptError({ errorCode: '', message: (error && error.message) || _l('Agent 请求失败') });
+        setInterceptError({ errorCode: '', message: asFailure(error).message || _l('Agent 请求失败') });
       }
 
       setMessages(current => current.map(m => (m.id === assistant.id ? markBuildProgressAborted(m) : m)));

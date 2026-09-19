@@ -24,12 +24,12 @@ import { browserIsMobile, emitter, getRequest } from 'src/utils/common';
 import { removeTempRecordValueFromLocal, saveTempRecordValueToLocal } from 'src/utils/common';
 import { KVGet } from 'src/utils/common';
 import { isRelateRecordTableControl } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import { compatibleMDJS } from 'src/utils/project';
 import { formatRecordToRelateRecord, getRecordTempValue, parseRecordTempValue } from 'src/utils/record';
 import RecordInfoContext from '../recordInfo/RecordInfoContext';
 import MobileRecordRecoverConfirm from './MobileNewRecord/components/RecordRecoverConfirm';
 import './NewRecord.less';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   height: 100%;
@@ -153,7 +153,7 @@ function NewRecordForm(props) {
   // 提交锁必须用 ref：requesting 是 state，连点提交时 onSave 闭包里读到的仍是旧值，拦不住第二次提交
   const submitLock = useRef(false);
   const customwidget = useRef<any>(undefined);
-  const formcon = useRef<any>(undefined);
+  const formcon = useRef<HTMLDivElement>(null);
   const formdataRef = useRef([]);
   const propsWorksheetInfo = useMemo(() => _.cloneDeep(props.worksheetInfo || {}), []);
   const [formLoading, setFormLoading] = useState(true);

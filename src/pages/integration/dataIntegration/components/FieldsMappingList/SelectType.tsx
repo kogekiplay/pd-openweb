@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSetState } from 'react-use';
 import { Select } from 'antd';
-import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
+import _ from 'lodash';
 import styled from 'styled-components';
 import { Icon, Input } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -57,8 +57,8 @@ export default function SelectType(props) {
   const sourceField = itemData.sourceField || {};
   const destField = itemData.destField || {};
   const [settingComponent, setSettingComponent] = useSetState({ component: null, data: {} });
-  const selectRef = useRef<any>(undefined);
-  const selectOptionListRef = useRef<any>(undefined);
+  const selectRef = useRef<HTMLDivElement>(null);
+  const selectOptionListRef = useRef<HTMLDivElement>(null);
 
   const currentOption = options.filter(item => item.value === destField.dataType)[0] || {};
 

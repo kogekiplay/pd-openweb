@@ -1,10 +1,10 @@
 import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { useClickAway } from 'react-use';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
 import { bool, func, number, string } from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, LoadDiv, ScrollView } from 'ming-ui';
 import groupAjax from 'src/api/group';
@@ -74,7 +74,7 @@ export function SelectGroup(props) {
     onClose = () => {},
   } = props;
   const projects = (_.get(md, 'global.Account.projects') || []).filter(l => l.licenseType);
-  const conRef = useRef<any>(undefined);
+  const conRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
   const [commonList, setCommonList] = useState([]);
   const [groupData, setGroupData] = useState({});

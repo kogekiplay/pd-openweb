@@ -86,6 +86,9 @@ interface ApiField {
 }
 
 class WorksheetApi extends Component<any, any> {
+  /** IP 白名单输入框（Textarea），由 manualRef 回填 */
+  whiteList?: { value: string };
+
   constructor(props) {
     super(props);
     this.state = {

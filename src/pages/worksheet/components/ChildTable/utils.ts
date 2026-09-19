@@ -5,9 +5,9 @@ import { checkRequired, checkRuleLocked, checkValueByFilterRegex } from 'src/com
 import { browserIsMobile } from 'src/utils/common';
 import { controlState } from 'src/utils/control';
 import { checkCellIsEmpty } from 'src/utils/control';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import { filterEmptyChildTableRows } from 'src/utils/record';
 import { checkRulesErrorOfRow } from 'src/utils/rule';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 function getControlCompareValue(c: FormControl, value) {
   if (c.type === 26) {
@@ -65,11 +65,14 @@ export function getSubListError(
       });
       const rulesErrors = rulesResult.errors;
       const controldata = rulesResult.formData.filter(
-        (c: FormControl) => _.find(showControls, id => id === c.controlId) && controlState(c).visible && controlState(c).editable,
+        (c: FormControl) =>
+          _.find(showControls, id => id === c.controlId) && controlState(c).visible && controlState(c).editable,
       );
       const isLock = checkRuleLocked(
         rules,
-        rulesResult.formData.filter((c: FormControl) => _.find(showControls, id => id === c.controlId) && controlState(c).visible),
+        rulesResult.formData.filter(
+          (c: FormControl) => _.find(showControls, id => id === c.controlId) && controlState(c).visible,
+        ),
         row.rowid,
       );
 
@@ -175,7 +178,7 @@ function filterPendingCellErrors(errors = {}, rows: RecordRow[] = [], showContro
   });
 }
 
-function mergeRequiredState(controls: FormControl[] = [], control: Record<string, any> = {}) {
+function mergeRequiredState(controls: FormControl[] = [], control: FormControl = {}) {
   const resetControls = control.relationControls || [];
 
   if (_.isEmpty(resetControls)) return controls;
@@ -194,7 +197,11 @@ function mergeRequiredState(controls: FormControl[] = [], control: Record<string
 
 export function getSubListErrorOfStore(store, currentControl?) {
   const state = store.getState();
-  const { rows, base = {}, persistedCellErrors: pendingCellErrors = {} }: { rows: RecordRow[]; [key: string]: any } = state;
+  const {
+    rows,
+    base = {},
+    persistedCellErrors: pendingCellErrors = {},
+  }: { rows: RecordRow[]; [key: string]: any } = state;
   const { recordId, control = {} } = base;
   const isWorkflow =
     ((base.instanceId && base.workId) || _.get(window, 'shareState.isPublicWorkflowRecord')) &&

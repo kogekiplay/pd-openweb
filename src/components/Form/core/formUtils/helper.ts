@@ -1,10 +1,10 @@
 import _ from 'lodash';
 import moment from 'moment';
 import { toFixed } from 'src/utils/controlCommon';
+import type { FormControl } from 'src/utils/controlTypes';
 import { getContactInfo } from 'src/utils/project';
 import { filterEmptyChildTableRows } from 'src/utils/record';
 import { FORM_ERROR_TYPE } from '../config';
-import type { FormControl } from 'src/utils/controlTypes';
 
 export { flattenArr, getAvailableFilters, getResult, isRelateMoreList, replaceStr } from './ruleUtils';
 
@@ -115,7 +115,7 @@ export const getItemFilters = items => {
 };
 
 // 时间字段处理
-export const formatTimeValue = (control: Record<string, any> = {}, isCurrent = false, value?) => {
+export const formatTimeValue = (control: FormControl = {}, isCurrent = false, value?) => {
   // 汇总输出格式unit为9
   const mode = control.unit === '6' || control.unit === '9' ? 'HH:mm:ss' : 'HH:mm';
   if (isCurrent) return moment(moment().format(mode), mode).format('HH:mm:ss');
@@ -229,7 +229,7 @@ export const getControlValue = (data, currentItem, controlId: string, objValue?)
   return _.isUndefined(value) ? '' : value;
 };
 
-export const checkChildTableIsEmpty = (control: Record<string, any> = {}) => {
+export const checkChildTableIsEmpty = (control: FormControl = {}) => {
   const store = control.store;
   const state = store && store.getState();
 
@@ -248,7 +248,7 @@ export const checkChildTableIsEmpty = (control: Record<string, any> = {}) => {
   }
 };
 
-export const getAttachmentData = (control: Record<string, any> = {}) => {
+export const getAttachmentData = (control: FormControl = {}) => {
   let fileData;
 
   if (control.value && _.isArray(JSON.parse(control.value))) {

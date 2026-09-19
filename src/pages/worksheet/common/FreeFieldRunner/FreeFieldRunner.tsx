@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { v4 } from 'uuid';
 import { getTitleTextFromControls } from 'src/utils/control';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import { MessageHandler } from 'src/utils/iframeCommunicate';
 import { getRowsRelation } from './functions';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   position: relative;
@@ -26,7 +26,7 @@ const Con = styled.div`
   }
 `;
 
-function pickControl(control: Record<string, any> = {}) {
+function pickControl(control: FormControl = {}) {
   const result = pick(control, ['controlId', 'controlName', 'value', 'type', 'options']);
 
   if (control.type === 34 && isFunction(get(control, 'store.getState'))) {
@@ -62,7 +62,7 @@ export default function FreeFieldRunner({
 }) {
   const [iframeId] = useState(v4());
   const { currentControlId, value, env, recordId, worksheetId, refreshRecord, setControlHeight, appId } = widgetParams;
-  const iframeRef = useRef<any>(undefined);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
   const cache = useRef({});
   cache.current.formData = widgetParams.formData;
   cache.current.onChange = widgetParams.onChange;

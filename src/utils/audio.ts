@@ -1,5 +1,15 @@
-﻿export class SpeechSynthesizer {
-  constructor(options: Record<string, any> = {}) {
+﻿/** SpeechSynthesizer 的构造参数。bufferDelay 单独读，其余原样并进朗读参数。 */
+export interface SpeechSynthesizerOptions {
+  /** 缓冲延迟（毫秒），默认 200 */
+  bufferDelay?: number;
+  lang?: string;
+  pitch?: number;
+  rate?: number;
+  volume?: number;
+}
+
+export class SpeechSynthesizer {
+  constructor(options: SpeechSynthesizerOptions = {}) {
     this.synth = window.speechSynthesis;
     this.hasUtteranceSupport = typeof window.SpeechSynthesisUtterance === 'function';
     this.voice = null;

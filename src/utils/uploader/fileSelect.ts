@@ -84,7 +84,7 @@ export function createFileSelect(option: FileSelectOption): FileSelectHandle {
       // 那是合成事件、不带用户激活，Chrome 会拒绝打开文件选择框并在控制台报错。
       // plupload 时代这行本来就打不开——它的 input 是盖在按钮上的兄弟节点，
       // 合成 click 根本到不了按钮以外——所以这里保持同样的行为，只是不再刷错误。
-      const activation = (navigator as any).userActivation;
+      const activation = navigator.userActivation;
       if (activation ? !activation.isActive : !e.isTrusted) return;
 
       option.onBrowse && option.onBrowse();

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { TinyColor } from '@ctrl/tinycolor';
-import cx from 'classnames';
 import Trigger from '@rc-component/trigger';
+import cx from 'classnames';
 import styled from 'styled-components';
 import { ColorPicker, Dialog, Icon, Input } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -222,7 +222,7 @@ export default function ChartSettingDialog(props) {
   const [customThemeVisible, setCustomThemeVisible] = useState(false);
   const [otherThemeColors, setOtherThemeColors] = useState([]);
   const [lastColor, setLastColor] = useState('');
-  const inputRef = useRef<any>(undefined);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (inputRef.current) {

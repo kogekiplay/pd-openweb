@@ -1,9 +1,9 @@
 import React, { Fragment, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import { find, get, isEmpty } from 'lodash';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Checkbox, Menu, MenuItem } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -13,9 +13,11 @@ import { FlexCenter } from 'worksheet/components/Basics';
 import ChangeSheetLayout from 'worksheet/components/ChangeSheetLayout';
 import RecordOperate from 'worksheet/components/RecordOperate';
 import { VIEW_CONFIG_RECORD_CLICK_ACTION } from 'worksheet/constants/enum';
+import type { WorksheetView } from 'src/pages/worksheet/types';
 import { getHighAuthControls } from 'src/utils/control';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import { handleRowData } from 'src/utils/record';
-import type { FormControl } from 'src/utils/controlTypes';
+import type { SheetSwitchPermitItem } from 'src/utils/worksheet';
 
 const Con = styled.div`
   user-select: none;
@@ -132,6 +134,72 @@ function getApplyToAllChecked(worksheetInfo, viewId: string) {
 }
 
 export default function RowHead(props) {
+  /**
+   * 行头（每行最左边那一格：序号 / 勾选框 / 操作入口）的 props。
+   *
+   * 【把 `[key: string]: any` 兜底拆开的实验】字段类型是按本文件里的实际用法定的：
+   * tableType 只和 'classic' 比、data 是当页的行、selectedIds 是选中的 rowid…
+   * 拆开之后写错字段名或用错类型会当场报错，而不是被索引签名默默吃掉。
+   */
+  interface RowHeadProps {
+    /** 'classic' 时行头更宽（46 vs 30） */
+    tableType?: string;
+    hasBatch?: boolean;
+    showNumber?: boolean;
+    showOperate?: boolean;
+    numberWidth?: number;
+    readonly?: boolean;
+    isTrash?: boolean;
+    isDraft?: boolean;
+    isDraftTable?: boolean;
+    /** 只显示序号，不显示勾选框和操作 */
+    rowHeadOnlyNum?: boolean;
+    isCharge?: boolean;
+    isDevAndOps?: boolean;
+    tableId?: string;
+    layoutChangeVisible?: boolean;
+    style?: React.CSSProperties;
+    /** 已勾选的 rowid */
+    selectedIds?: string[];
+    canSelectAll?: boolean;
+    allWorksheetIsSelected?: boolean;
+    allowAdd?: boolean;
+    appId?: string;
+    viewId?: string;
+    worksheetId?: string;
+    view?: WorksheetView;
+    projectId?: string;
+    controls: FormControl[];
+    /** 当页的行数据 */
+    data?: RecordRow[];
+    lineNumberBegin?: number;
+    rowIndex?: number;
+    updateRows?: (rowIds: string[], changes: Record<string, unknown>) => void;
+    sheetSwitchPermit?: SheetSwitchPermitItem[];
+    hideRows?: (rowIds: string[], options?: unknown) => void;
+    /** (勾选后的全部 rowid, 本次点的那一行) */
+    onSelect?: (rowIds: string[], rowId?: string) => void;
+    onSelectAllWorksheet?: (selected: boolean) => void;
+    handleAddSheetRow?: (...args: unknown[]) => void;
+    onReverseSelect?: () => void;
+    saveSheetLayout?: (options: { closePopup?: () => void }) => void;
+    resetSheetLayout?: () => void;
+    worksheetInfo?: {
+      views?: WorksheetView[];
+      roleType?: number;
+      entityName?: string;
+      template?: { controls?: FormControl[] };
+      rules?: unknown[];
+    };
+    /** (tableId, 第几行) —— 行号从 1 开始 */
+    /** (tableId, 第几行) —— 行号从 1 开始；个别调用点只传行号 */
+    setHighLight?: (tableId?: string, rowIndex?: number) => void;
+    refreshWorksheetControls?: () => void;
+    onOpenRecord?: (...args: unknown[]) => void;
+    printCharge?: boolean;
+    className?: string;
+  }
+
   const {
     tableType,
     hasBatch = true,
@@ -175,7 +243,7 @@ export default function RowHead(props) {
     refreshWorksheetControls = () => {},
     onOpenRecord = () => {},
     printCharge,
-  }: { controls: FormControl[]; [key: string]: any } = props;
+  }: RowHeadProps = props;
   let { className } = props;
   // 必须给初值 false：不给的话状态类型被推成 undefined，三处 setSelectAllPanelVisible(true/false) 全是 TS2345。
   // 运行时等价（undefined 本来也是假值），rc-trigger 5 给 onPopupVisibleChange
@@ -316,7 +384,7 @@ export default function RowHead(props) {
                   setHighLight(tableId, rowIndex);
                 }
               }}
-              onRecreate={({ group } = {}) => {
+              onRecreate={({ group }: { group?: string } = {}) => {
                 handleRowData({
                   rowId: row.rowid,
                   worksheetId: worksheetId,

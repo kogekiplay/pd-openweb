@@ -6,13 +6,13 @@ import { permitList } from 'src/pages/FormSet/config.js';
 import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import { WORKFLOW_SYSTEM_CONTROL } from 'src/pages/widgetConfig/config/widget';
 import { filterOnlyShowField } from 'src/pages/widgetConfig/util';
+import type { FormControl } from 'src/utils/controlTypes';
 import Empty from './components/Empty';
 import FilterDetail from './components/FilterDetail';
 import SavedFilters from './components/SavedFilters';
 import { CONTROL_FILTER_WHITELIST } from './enum';
 import { formatForSave } from './model';
 import { filterUnavailableConditions, getDefaultCondition, redefineComplexControl } from './util';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   width: 480px;
@@ -104,7 +104,7 @@ function Filters(props, ref) {
     onChange = () => {},
     filterResigned = true,
   } = props;
-  const conRef = useRef<any>(undefined);
+  const conRef = useRef<HTMLDivElement>(null);
   const cache = useRef({});
   const base = { projectId, appId, worksheetId, isCharge };
   const filterWhiteKeys = _.flatten(
@@ -190,7 +190,7 @@ function Filters(props, ref) {
     addFilter();
     setTimeout(() => {
       if (conRef.current) {
-        conRef.current.querySelector('.addFilterCondition > span').click();
+        conRef.current.querySelector<HTMLElement>('.addFilterCondition > span').click();
       }
     }, 80);
   }

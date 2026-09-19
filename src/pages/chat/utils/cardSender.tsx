@@ -48,7 +48,20 @@ const _initPost = function (acceptor, options, callback) {
  * @param {*} acceptor
  * @param {*} options
  */
-export const newTask = (acceptor, options: Record<string, any> = {}) => {
+/** 从聊天里发起「新建任务 / 新建日程」卡片时的可选参数 */
+interface CardSenderOptions {
+  /** 发完弹一下成功提示 */
+  showSuccessTip?: boolean;
+  /** 一起发出去的附言 */
+  postMsg?: string;
+  description?: string;
+  defaultType?: number;
+  showType?: number;
+  /** 从动态发起时为 true，受理人默认填成会话对象 */
+  isPost?: boolean;
+}
+
+export const newTask = (acceptor, options: CardSenderOptions = {}) => {
   return new Promise((resolve, reject) => {
     let members = {};
 
@@ -123,7 +136,7 @@ export const selectTask = () => {
  * @param {*} acceptor
  * @param {*} options
  */
-export const newSchedule = (acceptor, options: Record<string, any> = {}) => {
+export const newSchedule = (acceptor, options: CardSenderOptions = {}) => {
   return new Promise((resolve, reject) => {
     let members = [];
 

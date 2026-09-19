@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import { Dialog, Icon, Menu, MenuItem } from 'ming-ui';
 import { dialogSelectUser } from 'ming-ui/functions';
 import roleApi from 'src/api/role';
@@ -14,8 +14,8 @@ export default function RoleItem(props) {
   const [isMembersOverflow, setIsMembersOverflow] = useState(false);
   const [isAuthOverflow, setIsAuthOverflow] = useState(false);
   const { isHrVisible, isSuperAdmin, projectStatus } = getCurrentProject(projectId, true);
-  const membersRef = useRef<any>(undefined);
-  const authRef = useRef<any>(undefined);
+  const membersRef = useRef<HTMLSpanElement>(null);
+  const authRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     setIsMembersOverflow(membersRef.current && membersRef.current.scrollHeight > 40);

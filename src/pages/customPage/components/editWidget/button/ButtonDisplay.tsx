@@ -104,26 +104,49 @@ export default function ButtonDisplay({
   // 【全部可选】调用点是 `<ButtonDisplay displayMode="" {...item} />` 这种整体展开，
   // item 里有哪些字段随按钮配置而变。不标的话解构形参会把没有默认值的那几个
   // 当成必填，展开传参就报"缺字段"。
-  themeColor?: any;
-  widget?: any;
-  appId?: any;
-  buttonList?: any[];
+  /** 应用主题色，按钮默认色跟着它走 */
+  themeColor?: string;
+  widget?: { id?: string; [key: string]: unknown };
+  appId?: string;
+  buttonList?: {
+    id?: string;
+    name?: string;
+    color?: string;
+    icon?: string;
+    /** 按钮点击后的动作配置 */
+    action?: unknown;
+    [key: string]: unknown;
+  }[];
   layoutType?: string;
   displayMode?: string;
-  title?: any;
-  explain?: any;
-  activeIndex?: any;
+  title?: string;
+  explain?: string;
+  /** 编辑态里当前选中的是第几个按钮 */
+  activeIndex?: number;
   count?: number;
   mobileCount?: number;
   width?: number;
-  style?: any;
-  config?: any;
-  customPageConfig?: any;
-  onClick?: (...args: any[]) => void;
+  /** 【是样式档位不是 CSS】1 圆角 / 3 文字色跟随按钮色…，见下面 `style === 1 / === 3` 的分支 */
+  style?: number;
+  /** 本组件自己的配置：btnType / direction / titleStyles… */
+  /** 本组件自己的配置：btnType / direction / titleStyles… */
+  config?: {
+    btnType?: number;
+    direction?: number;
+    titleStyles?: { index?: number; [key: string]: unknown };
+    [key: string]: unknown;
+  };
+  /** 整个自定义页的配置；标题样式按 index 与本组件的比大小，谁大用谁 */
+  customPageConfig?: { titleStyles?: { index?: number; [key: string]: unknown }; [key: string]: unknown };
+  /** 收的是【整个按钮对象 + 它的下标】，不是 id */
+  onClick?: (btn: { index: number; [key: string]: unknown }) => void;
 }) {
   const { btnType, direction = 1, titleStyles = { ...defaultTitleStyles, textAlign: 'center' } } = config || {};
   const pageTitleStyles = customPageConfig.titleStyles || {};
-  const newTitleStyles = pageTitleStyles.index >= titleStyles.index ? pageTitleStyles : titleStyles;
+  // 【必须保住 NaN 语义】自定义页没配标题样式时 pageTitleStyles 是 {}，index 为 undefined。
+  // 原式 `undefined >= 0` 是 false，走按钮自己的样式；若写成 `|| 0` 就变成 `0 >= 0` 为 true，
+  // 标题样式会被换成那个空对象。Number(undefined) 是 NaN，比较仍恒为 false，与原式一致。
+  const newTitleStyles = Number(pageTitleStyles.index) >= Number(titleStyles.index) ? pageTitleStyles : titleStyles;
   const isFullWidth = btnType === 2 ? true : width === 1;
   const isMobile = layoutType === 'mobile';
   const newList = _.chunk(buttonList, layoutType === 'web' ? count : mobileCount);

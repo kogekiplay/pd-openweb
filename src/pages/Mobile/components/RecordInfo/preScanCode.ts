@@ -3,6 +3,7 @@ import publicWorksheetAjax from 'src/api/publicWorksheet';
 import sheetAjax from 'src/api/worksheet.js';
 import { getCurrentValue } from 'src/components/Form/core/formUtils';
 import { controlState } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import RegExpValidator from 'src/utils/expression';
 import { compatibleMDJS } from 'src/utils/project';
 
@@ -154,7 +155,7 @@ export const handleAPPScanCode = ({
  * @param {*} updateData - 更新数据
  * @returns
  */
-export const handleRelateRow = (control: Record<string, any> = {}, content, worksheetInfo, updateData) => {
+export const handleRelateRow = (control: FormControl = {}, content, worksheetInfo, updateData) => {
   const currentWorksheetId = control.dataSource;
 
   if (content.includes('worksheetshare') || content.includes('public/record')) {
@@ -357,7 +358,18 @@ const getRelateData = (control: Record<string, any> = {}, content, extra = {}, w
 };
 
 // 关联记录关联成功将当前关联数据通过js sdk返回给APP
-const handleScanRelationLoaded = ({ controlId, controlName, title, rowId, type, msg }: { controlId?: string; rowId?: string; [key: string]: any }) => {
+const handleScanRelationLoaded = ({
+  controlId,
+  controlName,
+  title,
+  rowId,
+  type,
+  msg,
+}: {
+  controlId?: string;
+  rowId?: string;
+  [key: string]: any;
+}) => {
   compatibleMDJS('scanRelationLoaded', {
     cid: controlId,
     cname: controlName,

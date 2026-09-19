@@ -6,6 +6,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { renderTabs } from 'src/components/Form/components/SectionTableNav';
 import { FROM } from 'src/components/Form/core/config';
 import { browserIsMobile } from 'src/utils/common';
+import type { ControlAdvancedSetting } from 'src/utils/controlTypes';
 
 const FormSectionWrap = styled.div`
   width: ${props => (props.isUnfold ? '220px' : '55px')};
@@ -73,7 +74,8 @@ const FormSectionWrap = styled.div`
 
 const getSheetSectionIsUnfold = () => safeParse(localStorage.getItem('sheetSectionIsUnfold') || '{}') || {};
 
-export const getDefaultIsUnfold = (value = true, widgetStyle: Record<string, any> = {}, sheetSectionIsUnfold?) => {
+// widgetStyle 是分段控件的样式配置，值都是字符串（后端就这么存）
+export const getDefaultIsUnfold = (value = true, widgetStyle: ControlAdvancedSetting = {}, sheetSectionIsUnfold?) => {
   let tempIsUnfold = value;
   const localValue = sheetSectionIsUnfold || getSheetSectionIsUnfold();
   const showIcon = widgetStyle.showicon || '1';

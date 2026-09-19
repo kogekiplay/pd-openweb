@@ -142,7 +142,7 @@ function FixedTable(props, ref) {
 
   const bottomFixedCount = showFoot ? 1 : 0;
   const topFixedCount = showHead ? 1 : 0;
-  const conRef = useRef<any>(undefined);
+  const conRef = useRef<HTMLDivElement>(null);
   const tablehammer = useRef<any>(undefined);
   const [hammerCache, setHammer] = useRefStore();
   const [cache, set] = useRefStore({
@@ -324,7 +324,7 @@ function FixedTable(props, ref) {
     }
 
     ['x', 'y'].forEach(type => {
-      const host = conRef.current.querySelector(`.scroll-${type}`);
+      const host = conRef.current.querySelector<HTMLElement>(`.scroll-${type}`);
       const osInstance = host && OverlayScrollbars(host);
 
       if (osInstance && _.isFunction(osInstance.update)) {

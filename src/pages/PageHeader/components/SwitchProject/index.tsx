@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Menu, MenuItem, ScrollView } from 'ming-ui';
 import { VerticalMiddle } from 'worksheet/components/Basics';
@@ -81,7 +81,7 @@ function SwitchProject() {
   const request = getRequest();
   const projectId = request.projectId;
   const projects = md.global.Account.projects;
-  const createRef = useRef<any>(undefined);
+  const createRef = useRef<HTMLDivElement>(null);
   const [currentProject, setCurrentProject] = useState({});
   // 必须给初值 false：不给的话状态类型被推成 undefined，setX(true/false) 全是 TS2345。
   // 运行时等价——每个传 popupVisible 的站点都把 onPopupVisibleChange 接回了 state

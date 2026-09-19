@@ -16,6 +16,7 @@ import {
   getCopyControlText,
   handleCopyControlText,
 } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import SheetContext from '../../common/Sheet/SheetContext';
 import Area from './Area';
 import Attachments from './Attachments';
@@ -94,7 +95,7 @@ export function handlePasteUpdateCell(cell, pasteData, update = () => {}) {
   // SIGNATURE
 }
 
-function mergeControlAdvancedSetting(control: Record<string, any> = {}, advancedSetting = {}) {
+function mergeControlAdvancedSetting(control: FormControl = {}, advancedSetting = {}) {
   return {
     ...control,
     advancedSetting: {
@@ -600,7 +601,7 @@ export default class CellControl extends React.Component<any, any> {
     }
 
     if (isediting && !cellFullVisible.fullvisible) {
-      let newPos: Record<string, any> = {};
+      let newPos: { left?: number; top?: number } = {};
 
       if (_.isNumber(cellFullVisible.newLeft)) {
         newPos.left = cellFullVisible.newLeft;

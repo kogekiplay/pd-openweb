@@ -4,6 +4,7 @@ import publicWorksheetAjax from 'src/api/publicWorksheet';
 import sheetAjax from 'src/api/worksheet';
 import { getFilter } from 'src/pages/worksheet/common/WorkSheetFilter/util';
 import { getTranslateInfo } from 'src/utils/app';
+import type { FormControl } from 'src/utils/controlTypes';
 import { replaceAdvancedSettingTranslateInfo, replaceControlsTranslateInfo } from 'src/utils/translate';
 
 export const ERROR_STATUS = {
@@ -46,6 +47,21 @@ function getSearchConfig(control) {
   }
 }
 
+/**
+ * 选择记录弹层用到的工作表信息。【只列本目录真正读到的字段】——
+ * 后端返回的对象远不止这些，缺的按需往这里补，不要退回 any。
+ */
+export interface SelectRecordsWorksheetInfo {
+  worksheetId?: string;
+  appId?: string;
+  projectId?: string;
+  entityName?: string;
+  allowAdd?: boolean;
+  views?: { viewId?: string; name?: string; viewType?: number }[];
+  template?: { controls?: FormControl[] };
+  advancedSetting?: Record<string, string>;
+}
+
 const LIST_MODE_PAGE_SIZE = 1000;
 
 export default function useRecords(props) {
@@ -70,7 +86,10 @@ export default function useRecords(props) {
   const loadMoreInProgressRef = useRef(false); // 同步锁，防止同一页 loadMore 触发两次
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [worksheetInfo, setWorksheetInfo] = useState({});
+  // 【别写成 useState({})】那样推出来是 {}，读 worksheetInfo.allowAdd 一律 TS2339。
+  // 此前没报是因为它被 getSheetStylesOfRelateRecordTable 的 Record<string, any> 顺带污染成
+  // any 了；那个 any 一去掉，这处缺类型就露出来。字段按 SelectRecords 下真正读到的列。
+  const [worksheetInfo, setWorksheetInfo] = useState<SelectRecordsWorksheetInfo>({});
   const [recordsLoading, setRecordsLoading] = useState(true);
   const [keyWords, setKeyWords] = useState('');
   const [sortControl, setSortControl] = useState();

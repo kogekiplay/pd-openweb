@@ -12,9 +12,9 @@ import { getBarCodeValue } from 'src/components/Form/core/utils';
 import previewAttachments, { transformQiniuUrl } from 'src/components/previewAttachments/previewAttachments';
 import { dealMaskValue } from 'src/pages/widgetConfig/widgetSetting/components/WidgetSecurity/util';
 import { browserIsMobile, pathCompletion } from 'src/utils/common';
+import type { FormControl } from 'src/utils/controlTypes';
 import { addBehaviorLog } from 'src/utils/project';
 import { getUrlList } from './util';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const CarouselComponent = styled(Carousel)`
   &.slick-slider .slick-dots li {
@@ -163,7 +163,8 @@ function Explain(props) {
     <div
       className="explain textWhite"
       onClick={e => {
-        const { target } = e;
+        // e.target 的静态类型是 EventTarget，没有 classList
+        const target = e.target as HTMLElement;
 
         if (target.classList.contains('explain') || target.classList.contains('content')) {
           onClick();
@@ -197,7 +198,7 @@ export default function CarouselPreview(props) {
   const [previewRecord, setPreviewRecord] = useState({});
   const [currentIndex, setCurrentIndex] = useState(0);
   const [code, setCode] = useState(0);
-  const contentRef = useRef<any>(undefined);
+  const contentRef = useRef<HTMLDivElement>(null);
   const isMobile = browserIsMobile();
 
   const { worksheetId, viewId, image, count, title, subTitle, url } = componentConfig;
@@ -216,7 +217,13 @@ export default function CarouselPreview(props) {
           displayMode: config.displayMode,
         })
         .then(data => {
-          const { appId, code, imageData = [], rowData = [], controls = [] }: { controls: FormControl[]; [key: string]: any } = data;
+          const {
+            appId,
+            code,
+            imageData = [],
+            rowData = [],
+            controls = [],
+          }: { controls: FormControl[]; [key: string]: any } = data;
           const imageControl = _.find(controls, { controlId: image }) || {};
 
           if (imageControl.type === 14) {
@@ -349,7 +356,7 @@ export default function CarouselPreview(props) {
       }
 
       if (imageControl.type === 47) {
-        const img = contentRef.current.querySelector('.slick-list .slick-active img');
+        const img = contentRef.current.querySelector<HTMLImageElement>('.slick-list .slick-active img');
         previewAttachments(
           transformQiniuUrl(img.src, { disableDownload: true, ext: 'png', name: 'code.png', theme: 'light' }),
         );

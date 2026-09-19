@@ -3,13 +3,14 @@ import cx from 'classnames';
 import * as Immutable from 'immutable';
 import _ from 'lodash';
 import { Button, Dialog, Support } from 'ming-ui';
-import createUploader from 'src/utils/createUploader';
 import { UPLOAD_ERROR, UPLOAD_STATUS } from 'src/pages/kc/constant/enum';
 import * as utils from 'src/pages/kc/utils';
+import createUploader from 'src/utils/createUploader';
+import { UploadError } from 'src/utils/uploader/constants';
+import type { UploaderFile } from 'src/utils/uploader/types';
 import UploadAction from './UploadAction';
 import UploadProgress from './UploadProgress';
 import './index.less';
-import { UploadError } from 'src/utils/uploader/constants';
 
 export default class ImportExcel extends React.Component<any, any> {
   constructor(props) {
@@ -81,7 +82,7 @@ export default class ImportExcel extends React.Component<any, any> {
           });
           comp.setState({ fileList });
         },
-        UploadProgress(up, file: Record<string, any> = {}) {
+        UploadProgress(up, file: UploaderFile) {
           const fileList = comp.state.fileList.update(file.id, fileItem => {
             if (!fileItem) return fileItem;
             fileItem.loaded = file?.loaded;

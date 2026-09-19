@@ -1,10 +1,10 @@
 import React, { Fragment, useRef } from 'react';
 import { useEffect } from 'react';
 import { useSetState } from 'react-use';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, ScrollView } from 'ming-ui';
 import { quickSelectUser } from 'ming-ui/functions';
@@ -132,7 +132,7 @@ const PAGESIZE = 10;
 
 export default function ActionLogs(props) {
   const { appId, projectId, onClose = () => {} } = props;
-  const selectUserRef = useRef<any>(undefined);
+  const selectUserRef = useRef<HTMLSpanElement>(null);
   const [{ selectUser, selectDate, isLoading, pageIndex, actLogList, startTime, endTime, total }, setPara] =
     useSetState({
       selectUser: undefined,

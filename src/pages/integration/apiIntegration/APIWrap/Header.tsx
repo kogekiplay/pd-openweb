@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, Menu, SvgIcon, UserHead } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -54,9 +54,9 @@ function Header({ data, apkInfo, isConnectOwner, forPage, listId, onCancel, onDe
   const [showMenu, setShowMenu] = useState(false);
 
   // 内部 refs
-  const TipRef = useRef<any>(undefined);
-  const InputRef = useRef<any>(undefined);
-  const InputDesRef = useRef<any>(undefined);
+  const TipRef = useRef<HTMLDivElement>(null);
+  const InputRef = useRef<HTMLInputElement>(null);
+  const InputDesRef = useRef<HTMLTextAreaElement>(null);
 
   // 编辑描述时自动聚焦
   useEffect(() => {

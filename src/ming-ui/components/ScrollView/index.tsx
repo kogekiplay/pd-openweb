@@ -60,12 +60,16 @@ interface ScrollViewProps {
   springBackMode?: '' | 'disableSpringBack' | 'disableSpringBackX' | 'disableSpringBackY';
   allowance?: number;
   style?: React.CSSProperties;
-  onScrollEnd?: (...args: any[]) => void;
-  onReachVerticalEdge?: (...args: any[]) => void;
-  onReachHorizontalEdge?: (...args: any[]) => void;
-  onScroll?: (...args: any[]) => void;
-  customScroll?: (...args: any[]) => void;
-  setViewPortRef?: (el: any) => void;
+  /** 滚动停止后回调（内部 debounce 过） */
+  onScrollEnd?: (info: { scrollTop: number; scrollLeft: number; clientHeight: number }) => void;
+  /** 触达上下边界 */
+  onReachVerticalEdge?: (info: { direction: 'up' | 'down' }) => void;
+  /** 触达左右边界 */
+  onReachHorizontalEdge?: (info: { direction: 'left' | 'right' }) => void;
+  onScroll?: (info: { scrollTop: number; scrollLeft: number }) => void;
+  /** 拿到 OverlayScrollbars 实例，自己接管滚动 */
+  customScroll?: (instance: unknown) => void;
+  setViewPortRef?: (el: HTMLElement | null) => void;
   /** 打到真正的滚动内容元素上的 className（见下面那段 useEffect 的说明） */
   scrollContentClassName?: string;
   /** OverlayScrollbars 的配置，形状由库自己定义，这里不复述 */

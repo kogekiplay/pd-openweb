@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { FILTER_CONDITION_TYPE } from 'src/pages/worksheet/common/WorkSheetFilter/enum';
 import { DATE_RANGE_TYPE } from 'src/pages/worksheet/common/WorkSheetFilter/enum.js';
 import { redefineComplexControl } from 'src/pages/worksheet/common/WorkSheetFilter/util';
+import type { FormControl } from 'src/utils/controlTypes';
 import { DATE_SHOW_TYPE, DATE_TYPE, DATE_TYPE_ALL, DATE_TYPE_D, DATE_TYPE_H, DATE_TYPE_M, DATE_TYPE_Y } from './config';
 
 // 文本筛选方式
@@ -415,7 +416,7 @@ export const getDateRangeTypeListByShowtype = showtype => {
   }
 };
 
-export const getSetDefault = (control: Record<string, any> = {}) => {
+export const getSetDefault = (control: FormControl = {}) => {
   let type = getControlFormatType(control);
   let fastFilterSet = {
     controlId: control.controlId,

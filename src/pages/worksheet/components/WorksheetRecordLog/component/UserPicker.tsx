@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Avatar, Checkbox, Icon } from 'ming-ui';
 import { quickSelectUser } from 'ming-ui/functions';
@@ -51,7 +51,7 @@ const SYSTEM_FIELDS = [
 
 export default function UserPicker(props) {
   const { projectId, appId, selectUsers = [], changeSelect, showRequestTypeFilter = true } = props;
-  const selectUserRef = useRef<any>(undefined);
+  const selectUserRef = useRef<HTMLSpanElement>(null);
 
   const [visible, setVisible] = useState(false);
   const isPortal = _.get(md, 'global.Account.isPortal');

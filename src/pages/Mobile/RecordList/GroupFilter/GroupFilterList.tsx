@@ -31,8 +31,8 @@ import type { RootState } from 'src/redux/types';
 import { getFilledRequestParams } from 'src/utils/common';
 import { getTitleTextFromControls } from 'src/utils/control';
 import { getAdvanceSetting } from 'src/utils/control';
-import './index.less';
 import type { FormControl } from 'src/utils/controlTypes';
+import './index.less';
 
 const GroupFilterList = props => {
   const {
@@ -66,7 +66,9 @@ const GroupFilterList = props => {
     appnavtype === '3' && showallitem !== '1' ? { txt: _l('全部'), value: '', isLeaf: true } : {},
   );
   const [currentNodeId, setCurrentNodeId] = useState();
-  const [breadNavHeight, setBreadMavHeight] = useState();
+  // 【保留 undefined 初值】useState() 不给初值时推成 undefined，以前靠 clientHeight 是 any 混过去；
+  // 写成 useState(0) 会把初值从 undefined 变成 0，那是行为改变
+  const [breadNavHeight, setBreadMavHeight] = useState<number | undefined>();
   const [loading, setLoading] = useState(true);
   const [searchRecordList, setSearchRecordList] = useState([]);
   const [nextData, setNextData] = useState([]);
@@ -74,9 +76,12 @@ const GroupFilterList = props => {
   const keyStr = _.includes([26, 27, 48], source.type) ? TYPES[source.type].name : '';
 
   let isOption = [9, 10, 11].includes(source.type) || [9, 10, 11].includes(source.sourceControlType); //是否选项
-  const breadNavBar = useRef<any>(undefined);
-  const ajaxRequestRef = useRef<any>(undefined);
-  const apiRequestRef = useRef<any>(undefined);
+  const breadNavBar = useRef<HTMLDivElement>(null);
+  // 在飞的请求句柄，卸载时 abort 掉。
+  // 【类型是 ApiResult | null】接口层回的是 `Promise<any> & { abort }`（见 types/global.d.ts），
+  // 只写 { abort?: () => void } 收不住那个 Promise 交集。
+  const ajaxRequestRef = useRef<ApiResult | null>(null);
+  const apiRequestRef = useRef<ApiResult | null>(null);
   const debouncedSetKeywords = useRef(_.debounce(value => setKeywords(value), 300));
 
   useEffect(() => {
@@ -262,7 +267,18 @@ const GroupFilterList = props => {
     }
   };
 
-  const fetchData = ({ worksheetId, viewId, rowId, cb, isNext }: { worksheetId?: string; viewId?: string; rowId?: string; [key: string]: any }) => {
+  const fetchData = ({
+    worksheetId,
+    viewId,
+    rowId,
+    cb,
+    isNext,
+  }: {
+    worksheetId?: string;
+    viewId?: string;
+    rowId?: string;
+    [key: string]: any;
+  }) => {
     const requestParams = prepareRequestParams({ worksheetId, viewId, rowId, appId }, view, source, controls, keywords);
     apiRequestRef.current?.abort?.();
 
@@ -333,7 +349,19 @@ const GroupFilterList = props => {
   };
 
   //处理API响应
-  const processApiResponse = ({ result, worksheetId, viewId, rowId, cb, isNext }: { worksheetId?: string; viewId?: string; rowId?: string; [key: string]: any }) => {
+  const processApiResponse = ({
+    result,
+    worksheetId,
+    viewId,
+    rowId,
+    cb,
+    isNext,
+  }: {
+    worksheetId?: string;
+    viewId?: string;
+    rowId?: string;
+    [key: string]: any;
+  }) => {
     const isArea = AREA.includes(source.type);
     const { navshow, navlayer } = getAdvanceSetting(view);
     const { navfilters = '[]' } = getAdvanceSetting(view);

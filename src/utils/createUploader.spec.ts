@@ -15,16 +15,122 @@ const assert = require('assert');
 const path = require('path');
 const { transformFileSync } = require('../../scripts/spec-harness.ts');
 
-/** 记录每次调用上传层（uploader/qiniuV1）的入参，以及拿到的回调句柄 */
-type QiniuCall = { params: any; handlers: any };
+// ── 被测模块的契约，【在本文件里重新声明一遍】────────────────────────────
+//
+// 【为什么不 `import('./createUploader')` 把真类型引过来】试过，撞在门禁的分工上：
+// src 下的 spec 由 tsconfig.tools.json 检查，那份配置【故意不带 DOM lib】、
+// 也不认 src/* 的 webpack alias（理由写在它自己的注释里：一旦开 DOM，
+// spec-globals.d.ts 那套部分浏览器全局会炸出 19 条假错误）。createUploader.ts
+// 引 src/utils/common、用 alert / _l / File，整条依赖链都要那套环境。
+//
+// 更要紧的是：**这本来就该重写一遍**。spec 的职责是从外部钉住契约 ——
+// 直接复用实现的类型，实现改了形状 spec 就跟着改，那不是「守」是「跟」。
+// 下面每个类型只列本 spec 真正读到的字段，字段名与 uploader/types.ts 逐字对齐。
 
-function loadCreateUploader(qiniuCalls: QiniuCall[]) {
-  const moduleLike: { exports: Record<string, any> } = { exports: {} };
-  const compiled = new Map<string, any>();
+/** 喂给 addFile 的东西。真实签名收的是原生 File，这里造一个只带必要字段的替身。 */
+type FakeFile = { name: string; size: number; type: string; __native: boolean };
 
-  function loadLocal(absPath: string): any {
-    if (compiled.has(absPath)) return compiled.get(absPath);
-    const mod: { exports: Record<string, any> } = { exports: {} };
+/** 队列里的一个文件 */
+type UploaderFile = {
+  id: string;
+  name: string;
+  size: number;
+  percent: number;
+  loaded: number;
+  status: number;
+  token?: string;
+  key?: string;
+  serverName?: string;
+  fileName?: string;
+  /** 校验不通过的原因分类 */
+  mdUploadErrorType?: number;
+};
+
+/** 取凭证时提交的一项：【不传文件本身】，只按 bucket + 扩展名要一份凭证 */
+type UploadTokenRequest = { bucket: number; ext: string };
+/** 取凭证接口为每个文件返回的一项 */
+type UploadTokenInfo = { uptoken?: string; key?: string; url?: string; serverName?: string; fileName?: string };
+
+/** FileUploaded 里带的上传结果 */
+type UploadedFileResponse = {
+  key?: string;
+  fileExt?: string;
+  fileName?: string;
+  filePath?: string;
+  originalFileName?: string;
+  serverName?: string;
+};
+
+type UploadErrorInfo = { code?: number; status?: number; message?: string };
+
+type Uploader = {
+  /** 【调用方会直接改它】，用例 6 钉的就是「在 BeforeUpload 里写它能生效」这条契约 */
+  settings: { multipart_params: Record<string, string>; [key: string]: unknown };
+  files: UploaderFile[];
+  start(): void;
+  addFile(files: FakeFile[]): void;
+  removeFile(file: UploaderFile | string): void;
+  bind<E extends UploaderEvent>(event: E, handler: (...args: UploaderEventArgs[E]) => void): void;
+};
+
+/** 事件名 -> 该事件回调的参数列表。与 uploader/types.ts 的 UploaderEventArgs 对齐。 */
+type UploaderEventArgs = {
+  FilesAdded: [up: Uploader, files: UploaderFile[], start?: () => void];
+  FilesRemoved: [up: Uploader, files: UploaderFile[]];
+  BeforeUpload: [up: Uploader, file: UploaderFile];
+  UploadProgress: [up: Uploader, file: UploaderFile];
+  FileUploaded: [up: Uploader, file: UploaderFile, info: { response: UploadedFileResponse }];
+  UploadComplete: [up: Uploader, files: UploaderFile[]];
+  /** errTip 是已经本地化好的提示串 */
+  Error: [up: Uploader, err: UploadErrorInfo, errTip: string];
+};
+type UploaderEvent = keyof UploaderEventArgs;
+
+/**
+ * createUploader 的入参。【只列本 spec 真正传过的开关】——
+ * 不写 `[key: string]: any` 兜底，是为了「用例里传了个拼错的选项名」当场报错，
+ * 而不是被索引签名默默吃掉。要加新开关就往这里补一行。
+ */
+type UploaderOption = {
+  getToken?: (files: UploadTokenRequest[]) => Promise<UploadTokenInfo[]>;
+  auto_start?: boolean;
+  max_file_count?: number;
+  max_file_size?: string | number;
+  x_vars?: unknown;
+  error_callback?: (type: number, files: UploaderFile[]) => void;
+  init?: { [E in UploaderEvent]?: (...args: UploaderEventArgs[E]) => void };
+};
+
+/** 传给下层上传模块的参数（uploader/qiniuV1 的 QiniuUploadParams） */
+type QiniuUploadParams = { token: string; key: string | null; url: string; customVars: Record<string, string> };
+type QiniuUploadHandlers = {
+  onProgress: (loaded: number, total: number, percent: number) => void;
+  onComplete: (res: { key?: string }) => void;
+  onError: (err: UploadErrorInfo) => void;
+};
+type QiniuUploadTask = { abort(): void };
+
+/** 被测模块的对外形状（default + FileStatus / UPLOAD_ERROR / UploadError） */
+type CreateUploaderModule = {
+  default: (option: UploaderOption) => Uploader;
+  FileStatus: Record<string, number>;
+  UploadError: Record<string, number>;
+  UPLOAD_ERROR: Record<string, number>;
+};
+
+/** 手工 CommonJS 加载时的模块对象 —— 里面装什么由被编译的代码决定，只能按字典看 */
+type ModuleExports = Record<string, unknown>;
+
+/** 记录每次调用上传层（uploader/qiniuV1）的入参、回调句柄，以及有没有被 abort 掉 */
+type QiniuCall = { params: QiniuUploadParams; handlers: QiniuUploadHandlers; aborted: boolean };
+
+function loadCreateUploader(qiniuCalls: QiniuCall[]): CreateUploaderModule {
+  const moduleLike: { exports: ModuleExports } = { exports: {} };
+  const compiled = new Map<string, ModuleExports>();
+
+  function loadLocal(absPath: string): ModuleExports {
+    if (compiled.has(absPath)) return compiled.get(absPath)!;
+    const mod: { exports: ModuleExports } = { exports: {} };
     compiled.set(absPath, mod.exports);
     const { code } = transformFileSync(absPath, {
       babelrc: false,
@@ -42,15 +148,21 @@ function loadCreateUploader(qiniuCalls: QiniuCall[]) {
   }
 
   function makeRequire(dir: string) {
-    return function localRequire(request: string) {
+    return function localRequire(request: string): unknown {
       // 被测代码自己的模块：真的编译加载
       if (request.startsWith('./uploader/') || request.startsWith('./')) {
         if (request === './uploader/qiniuV1') {
-          // 【替身】不发网络请求，把入参与回调句柄记下来给断言用
+          // 【替身】不发网络请求，把入参与回调句柄记下来给断言用；
+          // abort 也记下来，用例 12 靠它验「removeFile 真的中断了在途任务」。
           return {
-            uploadToQiniu(params: any, handlers: any) {
-              qiniuCalls.push({ params, handlers });
-              return { abort() {} };
+            uploadToQiniu(params: QiniuUploadParams, handlers: QiniuUploadHandlers): QiniuUploadTask {
+              const call: QiniuCall = { params, handlers, aborted: false };
+              qiniuCalls.push(call);
+              return {
+                abort() {
+                  call.aborted = true;
+                },
+              };
             },
           };
         }
@@ -88,22 +200,26 @@ function loadCreateUploader(qiniuCalls: QiniuCall[]) {
     makeRequire(__dirname),
     __dirname,
   );
-  return moduleLike.exports;
+  // 手工加载出来的 exports 在类型上只是个字典，这里断言成被测模块的真实形状 ——
+  // 断言仅此一处，之后的用例读 mod.UploadError / mod.default 都是有类型的。
+  return moduleLike.exports as unknown as CreateUploaderModule;
 }
 
 // ── 环境替身 ──────────────────────────────────────────────────────────────
 const alerts: Array<[string, number]> = [];
-global.md = { global: { FileStoreConfig: { uploadHost: 'https://up.example.com/' }, SysSettings: { fileUploadLimitSize: 100 } } };
-global._l = (s: string, ...args: any[]) => args.reduce((acc, v, i) => acc.replace(`%${i}`, String(v)), s);
+global.md = {
+  global: { FileStoreConfig: { uploadHost: 'https://up.example.com/' }, SysSettings: { fileUploadLimitSize: 100 } },
+};
+global._l = (s: string, ...args: unknown[]) => args.reduce<string>((acc, v, i) => acc.replace(`%${i}`, String(v)), s);
 global.alert = (msg: string, type: number) => alerts.push([msg, type]);
 
 /** 造一个假的 File —— 只要 name/size/type 就够，被测代码不读内容 */
-function fakeFile(name: string, size = 10): any {
+function fakeFile(name: string, size = 10): FakeFile {
   return { name, size, type: '', __native: true };
 }
 
 /** 默认的取凭证替身：按顺序回一组可用凭证 */
-function tokenStub(files: any[]) {
+function tokenStub(files: UploadTokenRequest[]): Promise<UploadTokenInfo[]> {
   return Promise.resolve(
     files.map((_f, i) => ({
       uptoken: `token-${i}`,
@@ -115,20 +231,32 @@ function tokenStub(files: any[]) {
   );
 }
 
-function makeUploader(extra: any = {}, qiniuCalls: QiniuCall[] = []) {
+/**
+ * 录下来的一次事件：事件名 + 该事件【自己那一套】实参。
+ * 写成映射类型而不是 [string, any[]]，是为了 findEvent 能按事件名把实参对上号。
+ */
+type RecordedEvent = { [E in UploaderEvent]: [name: E, args: UploaderEventArgs[E]] }[UploaderEvent];
+
+/** 按事件名取出最早的一次实参。找不到返回 undefined（调用点用 assert.ok 把关）。 */
+function findEvent<E extends UploaderEvent>(events: RecordedEvent[], name: E): UploaderEventArgs[E] | undefined {
+  const hit = events.find(e => e[0] === name);
+  return hit ? (hit[1] as UploaderEventArgs[E]) : undefined;
+}
+
+function makeUploader(extra: Partial<UploaderOption> = {}, qiniuCalls: QiniuCall[] = []) {
   const mod = loadCreateUploader(qiniuCalls);
-  const createUploader = mod.default || mod;
-  const events: Array<[string, any[]]> = [];
+  const createUploader = mod.default;
+  const events: RecordedEvent[] = [];
   const uploader = createUploader({
     getToken: tokenStub,
     auto_start: true,
     init: {
-      FilesAdded: (...a: any[]) => events.push(['FilesAdded', a]),
-      BeforeUpload: (...a: any[]) => events.push(['BeforeUpload', a]),
-      UploadProgress: (...a: any[]) => events.push(['UploadProgress', a]),
-      FileUploaded: (...a: any[]) => events.push(['FileUploaded', a]),
-      UploadComplete: (...a: any[]) => events.push(['UploadComplete', a]),
-      Error: (...a: any[]) => events.push(['Error', a]),
+      FilesAdded: (...a) => events.push(['FilesAdded', a]),
+      BeforeUpload: (...a) => events.push(['BeforeUpload', a]),
+      UploadProgress: (...a) => events.push(['UploadProgress', a]),
+      FileUploaded: (...a) => events.push(['FileUploaded', a]),
+      UploadComplete: (...a) => events.push(['UploadComplete', a]),
+      Error: (...a) => events.push(['Error', a]),
     },
     ...extra,
   });
@@ -146,7 +274,6 @@ function test(name: string, fn: () => Promise<void>) {
   cases.push([name, fn]);
 }
 
-
 // ── 1. 文件名里的非法字符会被替换 ────────────────────────────────────────
 test('文件名非法字符替换成下划线', async () => {
   const { uploader } = makeUploader();
@@ -156,9 +283,9 @@ test('文件名非法字符替换成下划线', async () => {
 
 // ── 2. 后缀黑名单 ────────────────────────────────────────────────────────
 test('黑名单后缀被拒，并带上 INVALID_FILES 分类', async () => {
-  const rejected: any[] = [];
+  const rejected: Array<[number, UploaderFile[]]> = [];
   const { uploader, mod } = makeUploader({
-    error_callback: (type: number, files: any[]) => rejected.push([type, files]),
+    error_callback: (type, files) => rejected.push([type, files]),
   });
   uploader.addFile([fakeFile('virus.exe'), fakeFile('ok.txt')]);
   assert.strictEqual(rejected.length, 1);
@@ -166,15 +293,18 @@ test('黑名单后缀被拒，并带上 INVALID_FILES 分类', async () => {
   assert.strictEqual(rejected[0][1][0].name, 'virus.exe');
   assert.strictEqual(rejected[0][1][0].mdUploadErrorType, mod.UPLOAD_ERROR.INVALID_FILES);
   // 合法的那个仍进队列
-  assert.deepStrictEqual(uploader.files.map((f: any) => f.name), ['ok.txt']);
+  assert.deepStrictEqual(
+    uploader.files.map(f => f.name),
+    ['ok.txt'],
+  );
 });
 
 // ── 3. 数量上限 ──────────────────────────────────────────────────────────
 test('超过 max_file_count 时整批拒绝，队列不变', async () => {
-  const rejected: any[] = [];
+  const rejected: Array<[number, UploaderFile[]]> = [];
   const { uploader, mod } = makeUploader({
     max_file_count: 2,
-    error_callback: (type: number, files: any[]) => rejected.push([type, files]),
+    error_callback: (type, files) => rejected.push([type, files]),
   });
   uploader.addFile([fakeFile('a.txt'), fakeFile('b.txt'), fakeFile('c.txt')]);
   assert.strictEqual(rejected[0][0], mod.UPLOAD_ERROR.TOO_MANY_FILES);
@@ -185,9 +315,9 @@ test('超过 max_file_count 时整批拒绝，队列不变', async () => {
 test('超过 max_file_size 发 FILE_SIZE_ERROR（-600，与 plupload 同值）', async () => {
   const { uploader, events, mod } = makeUploader({ max_file_size: '1kb' });
   uploader.addFile([fakeFile('big.txt', 2048)]);
-  const err = events.find(e => e[0] === 'Error');
+  const err = findEvent(events, 'Error');
   assert.ok(err, '应当发出 Error 事件');
-  assert.strictEqual(err![1][1].code, mod.UploadError.FILE_SIZE_ERROR);
+  assert.strictEqual(err![1].code, mod.UploadError.FILE_SIZE_ERROR);
   assert.strictEqual(mod.UploadError.FILE_SIZE_ERROR, -600);
 });
 
@@ -210,7 +340,7 @@ test('BeforeUpload 里改 multipart_params 会被带进上传参数', async () =
     {
       x_vars: {},
       init: {
-        BeforeUpload: (up: any) => {
+        BeforeUpload: (up: Uploader) => {
           // 这是 10 个调用方普遍在用的写法
           up.settings.multipart_params['x:fileName'] = '被调用方改过';
           up.settings.multipart_params['x:extra'] = 'added';
@@ -243,7 +373,7 @@ test('进度回调写回 percent / loaded 并发 UploadProgress', async () => {
   uploader.addFile([fakeFile('pic.png', 1000)]);
   await tick();
   calls[0].handlers.onProgress(500, 1000, 50);
-  const p = events.find(e => e[0] === 'UploadProgress');
+  const p = findEvent(events, 'UploadProgress');
   assert.ok(p, '应当发出 UploadProgress');
   assert.strictEqual(uploader.files[0].percent, 50);
   assert.strictEqual(uploader.files[0].loaded, 500);
@@ -257,9 +387,9 @@ test('完成后组装出下游要的 response 字段', async () => {
   await tick();
   calls[0].handlers.onComplete({ key: 'dir/serverfile-0.png' });
 
-  const done = events.find(e => e[0] === 'FileUploaded');
+  const done = findEvent(events, 'FileUploaded');
   assert.ok(done, '应当发出 FileUploaded');
-  const res = done![1][2].response;
+  const res = done![2].response;
   assert.strictEqual(res.key, 'dir/serverfile-0.png');
   assert.strictEqual(res.fileExt, '.png');
   assert.strictEqual(res.fileName, 'serverfile-0');
@@ -277,9 +407,9 @@ test('队列跑完发 UploadComplete', async () => {
   await tick();
   assert.strictEqual(calls.length, 2);
   calls[0].handlers.onComplete({ key: 'dir/serverfile-0.png' });
-  assert.ok(!events.find(e => e[0] === 'UploadComplete'), '还有一个在传，不该完成');
+  assert.ok(!findEvent(events, 'UploadComplete'), '还有一个在传，不该完成');
   calls[1].handlers.onComplete({ key: 'dir/serverfile-1.png' });
-  assert.ok(events.find(e => e[0] === 'UploadComplete'), '两个都完成后应当发 UploadComplete');
+  assert.ok(findEvent(events, 'UploadComplete'), '两个都完成后应当发 UploadComplete');
 });
 
 // ── 11. 错误码翻译 ──────────────────────────────────────────────────────
@@ -289,30 +419,30 @@ test('HTTP 614 翻成同名文件的提示', async () => {
   uploader.addFile([fakeFile('pic.png')]);
   await tick();
   calls[0].handlers.onError({ code: mod.UploadError.HTTP_ERROR, status: 614, message: 'dup' });
-  const err = events.find(e => e[0] === 'Error');
+  const err = findEvent(events, 'Error');
   assert.ok(err, '应当发出 Error');
-  assert.ok(String(err![1][2]).indexOf('已存在同名文件') > -1, `实际提示: ${err![1][2]}`);
+  assert.ok(String(err![2]).indexOf('已存在同名文件') > -1, `实际提示: ${err![2]}`);
   assert.strictEqual(uploader.files[0].status, mod.FileStatus.FAILED);
 });
 
 // ── 12. removeFile 会中断在途任务 ───────────────────────────────────────
 test('removeFile 中断在途上传并发 FilesRemoved', async () => {
   const calls: QiniuCall[] = [];
-  let aborted = false;
   const { uploader } = makeUploader({}, calls);
-  const removed: any[] = [];
-  uploader.bind('FilesRemoved', (_up: any, fs: any[]) => removed.push(...fs));
+  const removed: UploaderFile[] = [];
+  uploader.bind('FilesRemoved', (_up, fs) => removed.push(...fs));
   uploader.addFile([fakeFile('pic.png')]);
   await tick();
-  // 替身返回的 abort 是空的，这里换成能观测的
-  (uploader as any).__noop = 0;
   calls[0].handlers.onProgress(1, 10, 10);
   const target = uploader.files[0];
   uploader.removeFile(target);
   assert.strictEqual(uploader.files.length, 0);
   assert.strictEqual(removed.length, 1);
   assert.strictEqual(removed[0].name, 'pic.png');
-  void aborted;
+  // 【补上原先没验的那半】原来这里留了个 `let aborted = false` 和 `void aborted`，
+  // 注释写着「替身返回的 abort 是空的，这里换成能观测的」但没真换，
+  // 于是用例名里的「中断在途上传」其实一直没被验证。替身现在会记 abort。
+  assert.strictEqual(calls[0].aborted, true, 'removeFile 应当中断在途的上传任务');
 });
 
 // ── 13. 【时序】auto_start:false 时，start() 早于凭证返回也必须能传 ────────
@@ -346,7 +476,7 @@ test('auto_start:false 且未调用 start() 时不会自动上传', async () => 
     } catch (err) {
       failed += 1;
       console.error(`  ✗ ${name}`);
-      console.error(`    ${(err && (err as any).message) || err}`);
+      console.error(`    ${err instanceof Error ? err.message : String(err)}`);
     }
   }
   if (failed) {

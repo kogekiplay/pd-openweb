@@ -4,6 +4,7 @@ import cx from 'classnames';
 import update from 'immutability-helper';
 import _, { find, flatten, get, head, includes, last, pick, some } from 'lodash';
 import styled from 'styled-components';
+import type { FormControl } from 'src/utils/controlTypes';
 import { SUPPORT_RELATE_SEARCH } from '../config';
 import { DRAG_ACCEPT, DRAG_DISTANCE, DRAG_ITEMS, DRAG_MODE, WHOLE_SIZE } from '../config/Drag';
 import {
@@ -21,7 +22,34 @@ import { getVerifyInfo, handleAdvancedSettingChange } from '../util/setting';
 import { changeWidgetSize, getPathById, isFullLineControl } from '../util/widgets';
 import WidgetOperation from './components/WidgetOperation';
 import WidgetDisplay from './widgetDisplay';
-import type { FormControl } from 'src/utils/controlTypes';
+
+/**
+ * 表单设计器里拖拽控件/标签页时携带的 item。
+ * 构造点见下面的 useDrag；canDrop / hover 里读 id、enumType、data。
+ */
+interface WidgetDragItem {
+  type?: string;
+  /** 被拖控件的 controlId */
+  id?: string;
+  /** 在布局二维数组里的位置 */
+  path?: number[];
+  data?: FormControl;
+  widgetType?: number;
+  /** 分段/标签页等结构件用它区分 */
+  enumType?: string;
+}
+
+/** 放下后 drop target 回的结果，end() 里据此决定怎么落位 */
+interface WidgetDropResult {
+  mode?: string;
+  rowIndex?: number;
+  path?: number[];
+  location?: string;
+  sectionId?: string;
+  activePath?: number[];
+  /** 落点是哪一类容器（决定 DRAG_ACCEPT 走哪一档） */
+  displayItemType?: string;
+}
 
 const DisplayItemWrap = styled.div`
   align-self: stretch;
@@ -146,7 +174,7 @@ export default function DisplayItem(props) {
     return true;
   };
 
-  const [dragCollectProps, drag] = useDrag<any, any, any>({
+  const [dragCollectProps, drag] = useDrag<WidgetDragItem, WidgetDropResult, { isDragging: boolean }>({
     type: isTab ? (data.type === 52 ? DRAG_ITEMS.DISPLAY_TAB : DRAG_ITEMS.DISPLAY_LIST_TAB) : DRAG_ITEMS.DISPLAY_ITEM,
     item: {
       type: isTab ? (data.type === 52 ? DRAG_ITEMS.DISPLAY_TAB : DRAG_ITEMS.DISPLAY_LIST_TAB) : DRAG_ITEMS.DISPLAY_ITEM,
@@ -241,7 +269,7 @@ export default function DisplayItem(props) {
       return { isDragging: monitor.isDragging() };
     },
   });
-  const [{ isOver }, drop] = useDrop<any, any, any>({
+  const [{ isOver }, drop] = useDrop<WidgetDragItem, WidgetDropResult, { isOver: boolean }>({
     accept: DRAG_ACCEPT[displayItemType],
     canDrop(item) {
       // 标签页内不允许标签页、多条列表(旧)、标签页表格等拖拽
@@ -379,8 +407,28 @@ export default function DisplayItem(props) {
     return { width: dragLineWidth, left: -(itemLeft - left - 20) };
   };
 
-  const handleOperate = (mode, option: Record<string, any> = {}) => {
-    const deleteWidgetById = ({ widgets, controlId, path }: { controlId?: string; [key: string]: any }) => {
+  // 各 mode 用到的键不同：删除用 widgets/controlId/path，复制看 shiftKey，改宽度给 size
+  const handleOperate = (
+    mode,
+    option: {
+      widgets?: FormControl[][];
+      controlId?: string;
+      path?: number[];
+      /** 按住 shift 复制时走另一条分支 */
+      shiftKey?: boolean;
+      /** 控件宽度（1-12 栅格） */
+      size?: number;
+    } = {},
+  ) => {
+    const deleteWidgetById = ({
+      widgets,
+      controlId,
+      path,
+    }: {
+      widgets?: FormControl[][];
+      controlId?: string;
+      path?: number[];
+    }) => {
       const [row, col] = path;
 
       if (activeWidget.controlId === controlId) {

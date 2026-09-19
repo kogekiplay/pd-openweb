@@ -17,6 +17,7 @@ import {
   handleUpdateWidgetsAttribute,
 } from 'src/pages/widgetConfig/util/data';
 import { emitter, updateGlobalStoreForMingo } from 'src/utils/common';
+import type { FormControl } from 'src/utils/controlTypes';
 import { getFeatureStatus } from 'src/utils/project';
 import { DRAG_ITEMS } from '../config/Drag';
 import { WIDGET_GROUP_TYPE } from '../config/widget';
@@ -27,7 +28,6 @@ import { FixedIcon } from '../widgetDisplay/components/WidgetStyle';
 import { SettingCollapseWrap } from '../widgetSetting/content/styled';
 import DraggableItem from './draggableItem';
 import ListItemLayer from './ListItemLayer';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const { Panel } = Collapse;
 
@@ -694,7 +694,9 @@ export default function List(props) {
   };
 
   const handleDeleteWidgetsForMingoFromEmitter = (data, para: Record<string, any> = {}, callback) => {
-    handleDeleteWidgetsForMingo(data, cache.current.props, ({ newWidgets = [] } = []) => {
+    // 默认值是 {} 不是 []：回调实参是 { newWidgets }，从 [] 上解构同样得到 undefined，
+    // 两者行为一致，但写成 [] 与实参形状对不上（加类型后当场报出来）。
+    handleDeleteWidgetsForMingo(data, cache.current.props, ({ newWidgets = [] } = {}) => {
       batchUpdateWidgetsLayout(
         para.layoutOfAllWidgets,
         {

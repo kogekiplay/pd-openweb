@@ -1,6 +1,7 @@
 import { find } from 'lodash';
 import _ from 'lodash';
 import { APP_ROLE_TYPE } from 'src/pages/worksheet/constants/enum';
+import type { WorksheetView } from 'src/pages/worksheet/types';
 import type { FormControl } from 'src/utils/controlTypes';
 
 export const dealData = data => {
@@ -41,7 +42,8 @@ export const isHaveCharge = (type, isLock?) => {
 
 //获取当前用户对应角色
 export const getUserRole = (type, isLock?) => {
-  let data: Record<string, any> = {};
+  // 这条记录对当前用户开放哪些身份能力；isLock 为真时一律关掉
+  let data: { isOwner?: boolean; isAdmin?: boolean; isDeveloper?: boolean; isRunner?: boolean } = {};
 
   if (type === APP_ROLE_TYPE.POSSESS_ROLE) {
     data.isOwner = !isLock;
@@ -115,7 +117,12 @@ export function getItemByRowId(rowId = null, data = []) {
   }
 }
 
-export function sortDataByCustomItems(data, view: Record<string, any> = {}, controls: FormControl[] = [], firstNotSpecified = true) {
+export function sortDataByCustomItems(
+  data,
+  view: WorksheetView = {},
+  controls: FormControl[] = [],
+  firstNotSpecified = true,
+) {
   let customItems = safeParse(_.get(view, 'advancedSetting.customitems'), 'array');
 
   if (_.get(view, 'advancedSetting.navshow') === '2') {
@@ -155,7 +162,7 @@ export function sortDataByCustomItems(data, view: Record<string, any> = {}, cont
 }
 
 //根据视图下的分组配置，处理视图呈现数据的顺序，以及是否呈现未分组数据
-export function sortDataByGroupItems(list = [], currentView: Record<string, any> = {}, controls: FormControl[] = []) {
+export function sortDataByGroupItems(list = [], currentView: WorksheetView = {}, controls: FormControl[] = []) {
   const sortedData = sortDataByCustomItems(
     list.sort((a, b) => {
       if (a.sort === -1) return 1;

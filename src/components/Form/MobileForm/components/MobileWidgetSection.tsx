@@ -234,7 +234,7 @@ function MobileWidgetSection(props) {
           const count = getCount(tab);
           const titleStyle = getTitleStyle(tab.advancedSetting?.titlestyle);
           const titleColor = tab.advancedSetting?.titlecolor;
-          const style: Record<string, any> = {};
+          const style: React.CSSProperties = {};
 
           if (titleStyle) {
             Object.assign(style, parseStyleString(titleStyle));

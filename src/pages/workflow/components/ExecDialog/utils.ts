@@ -4,7 +4,11 @@ const APPROVE_ACTION_BUTTON_DESC_KEYS = {
   return: 17,
 };
 
-export function getApproveActionTypeList(action, auth: Record<string, any> = {}) {
+// auth 是这一步审批允许的操作方式：通过 / 否决各一张列表
+export function getApproveActionTypeList(
+  action,
+  auth: { passTypeList?: unknown[]; overruleTypeList?: unknown[] } = {},
+) {
   return action === 'pass' ? auth.passTypeList || [] : auth.overruleTypeList || [];
 }
 

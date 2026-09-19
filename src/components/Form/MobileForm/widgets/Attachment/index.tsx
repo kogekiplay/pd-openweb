@@ -11,6 +11,8 @@ import { UploadFileWrapper } from 'mobile/components/AttachmentFiles';
 import { checkFileAvailable } from 'src/components/UploadFiles/utils';
 import { getRowGetType } from 'src/utils/common';
 import { controlState } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
+import type { AttachmentValue } from 'src/utils/controlTypes';
 import RegExpValidator from 'src/utils/expression';
 import { compatibleMDJS } from 'src/utils/project';
 import Files from '../../../components/Files';
@@ -19,7 +21,6 @@ import { checkValueByFilterRegex } from '../../../core/formUtils';
 import { getCurrentPos } from '../../../core/mapUtils';
 import { isOpenPermit } from '../../tools/utils';
 import './index.less';
-import type { FormControl } from 'src/utils/controlTypes';
 
 export default class Widgets extends Component<any, any> {
   static propTypes = {
@@ -211,7 +212,11 @@ export default class Widgets extends Component<any, any> {
 
   filesChangedAll = files => {
     const { attachments, knowledgeAtts, attachmentData } = files;
-    const newValue: Record<string, any> = {};
+    const newValue: {
+      attachments: AttachmentValue[];
+      knowledgeAtts: AttachmentValue[];
+      attachmentData: AttachmentValue[];
+    } = { attachments: [], knowledgeAtts: [], attachmentData: [] };
 
     newValue.attachments = attachments;
     newValue.knowledgeAtts = knowledgeAtts;
