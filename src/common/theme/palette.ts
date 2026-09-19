@@ -62,6 +62,92 @@ function alpha(color: string, a: number): string {
   return new TinyColor(color).setAlpha(a).toRgbString();
 }
 
+/**
+ * 中性色阶往主色色相偏一点，让整个界面「带上主题感」，而不是只有主按钮变色。
+ *
+ * 【为什么不是把这些直接换成主色】它们是图标、次要文字、分隔线、浅底 ——
+ * 换成主色会毁掉可读性和层级。正确的做法是保留明度、只偏色相。
+ *
+ * 【为什么文字和背景两档强度】实测对比度：次要文字 #757575 对白底本来就只有
+ * 4.61（WCAG AA 正文门槛是 4.5），混 15% 暖色会掉到 4.30、低于 AA。
+ * 所以文字取 10%、背景与边框取 32% —— 后者不承担文字对比度，可以偏得明显得多。
+ * 冷色（平台蓝）方向反而会把对比度略微推高（4.61 -> 4.68），所以瓶颈是暖色。
+ *
+ * 【不参与染色的三类】主体表面（页面底、卡片底、输入框底）与正文主文字：
+ * 它们是「纸和墨」，染了会让整站发闷、长文阅读变累。
+ */
+const TINT_TEXT = 10;
+const TINT_SURFACE = 32;
+
+/** 中性色阶的基准值，逐字抄自 theme-default.less / theme-dark.less。 */
+const NEUTRALS: Record<ThemeMode, Record<string, [string, number]>> = {
+  light: {
+    '--color-text-secondary': ['#757575', TINT_TEXT],
+    '--color-text-tertiary': ['#9e9e9e', TINT_TEXT],
+    '--color-text-title': ['#515151', TINT_TEXT],
+    '--color-text-placeholder': ['#cccccc', TINT_TEXT],
+    '--color-text-disabled': ['#bdbdbd', TINT_TEXT],
+    '--color-border-primary': ['#dddddd', TINT_SURFACE],
+    '--color-border-secondary': ['#eaeaea', TINT_SURFACE],
+    '--color-border-tertiary': ['#cccccc', TINT_SURFACE],
+    '--color-border-hover': ['#bdbdbd', TINT_SURFACE],
+    '--color-border-strong': ['#9e9e9e', TINT_SURFACE],
+    '--color-background-secondary': ['#fafafa', TINT_SURFACE],
+    '--color-background-tertiary': ['#f5f5f5', TINT_SURFACE],
+    '--color-background-hover': ['#f5f5f5', TINT_SURFACE],
+    '--color-background-disabled': ['#f0f0f0', TINT_SURFACE],
+  },
+  dark: {
+    '--color-text-secondary': ['#b3b3b3', TINT_TEXT],
+    '--color-text-tertiary': ['#8c8c8c', TINT_TEXT],
+    '--color-text-title': ['#f2f2f2', TINT_TEXT],
+    '--color-text-placeholder': ['#6f6f6f', TINT_TEXT],
+    '--color-text-disabled': ['#5e5e5e', TINT_TEXT],
+    '--color-border-primary': ['#3c3c3c', TINT_SURFACE],
+    '--color-border-secondary': ['#2a2a2a', TINT_SURFACE],
+    '--color-border-tertiary': ['#484848', TINT_SURFACE],
+    '--color-border-hover': ['#525252', TINT_SURFACE],
+    '--color-border-strong': ['#606060', TINT_SURFACE],
+    '--color-background-secondary': ['#090909', TINT_SURFACE],
+    '--color-background-tertiary': ['#1f1f1f', TINT_SURFACE],
+    '--color-background-hover': ['#393939', TINT_SURFACE],
+    '--color-background-disabled': ['#141414', TINT_SURFACE],
+  },
+};
+
+/**
+ * 偏色相但【保住明度】。
+ *
+ * 只 mix 是不够的：mix 会把明度一起拉向主色，于是暖色主题下次要文字会变亮、
+ * 对白底的对比度掉到 WCAG AA 以下（实测纯橙 #ff9800 下掉到 4.28）。
+ * 所以 mix 之后再把 HSL 的 L 调回去，直到相对亮度与原值一致 ——
+ * 二分 12 轮足够收敛到肉眼无差。
+ */
+function tintPreservingLuminance(base: string, primary: string, strength: number): string {
+  const target = new TinyColor(base).getLuminance();
+  const mixed = new TinyColor(base).mix(primary, strength).toHsl();
+
+  let lo = 0;
+  let hi = 1;
+  let best = mixed.l;
+  for (let i = 0; i < 12; i++) {
+    const mid = (lo + hi) / 2;
+    const lum = new TinyColor({ ...mixed, l: mid }).getLuminance();
+    best = mid;
+    if (lum > target) hi = mid;
+    else lo = mid;
+  }
+  return new TinyColor({ ...mixed, l: best }).toHexString();
+}
+
+function tintedNeutrals(primary: string, mode: ThemeMode): ThemeVars {
+  const out: ThemeVars = {};
+  for (const [name, [base, strength]] of Object.entries(NEUTRALS[mode])) {
+    out[name] = tintPreservingLuminance(base, primary, strength);
+  }
+  return out;
+}
+
 export function buildThemeVars(seed: string, mode: ThemeMode = 'light'): ThemeVars {
   // 非法色不能让整站没主题色。TinyColor 对乱字符串返回 isValid=false 而不是抛，
   // 但 antd 的算法拿到它会产出一串 NaN 颜色，界面会变成透明/黑块 —— 比抛错更难查。
@@ -94,6 +180,10 @@ export function buildThemeVars(seed: string, mode: ThemeMode = 'light'): ThemeVa
     // 直接从 antd token 读回这两级，和上面几档同源，不会分叉。
     '--color-primary-bg': token.colorPrimaryBg,
     '--color-primary-border': token.colorPrimaryBorder,
+
+    // ——— 带主题倾向的中性色阶 ———
+    // 图标、次要文字、分隔线、浅底都走这一套；不含页面底/卡片底/输入框底/正文主文字。
+    ...tintedNeutrals(primary, mode),
   };
 }
 

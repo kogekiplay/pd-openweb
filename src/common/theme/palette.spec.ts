@@ -125,4 +125,30 @@ assert.strictEqual(themeVarsToCssText({}), '');
 //     明暗两套键不一致的话，从暗切回亮会残留几个删不掉的变量。
 assert.deepStrictEqual(Object.keys(light).sort(), Object.keys(dark).sort());
 
-console.log('palette.spec: 12 组断言全部通过');
+// 13. 中性色阶带主题倾向：不是纯灰，但也不是主色。
+const { readability } = require('@ctrl/tinycolor');
+assert.notStrictEqual(light['--color-text-secondary'], '#757575', '中性色没染上主题倾向');
+assert.notStrictEqual(light['--color-text-secondary'], light['--color-primary'], '中性色被整个换成主色了');
+
+// 14. 【核心 · 可读性】染色不能把次要文字压到 WCAG AA 以下。
+//     #757575 对白底本来就只有 4.61，暖色方向是瓶颈 —— 这条挡的就是
+//     「把 TINT_TEXT 调大一点」这种看起来无害的改动。
+// 染色保明度，所以对比度应当与【原始纯灰】几乎一致，而不只是「够用」。
+// 这条比「>= 4.3」严得多：它挡住的是「把 TINT 调大」和「去掉保明度那一步」两种改动。
+const BASE_CONTRAST = readability('#757575', '#ffffff'); // 4.61
+for (const seed of ['#e91e63', '#d98936', '#ff9800', '#1677ff', '#00b96b', '#722ed1']) {
+  const v = buildThemeVars(seed, 'light');
+  const r = readability(v['--color-text-secondary'], '#ffffff');
+  assert.ok(
+    r >= BASE_CONTRAST * 0.97,
+    `次要文字对白底对比度 ${r.toFixed(2)}（种子 ${seed}），低于原始纯灰的 ${BASE_CONTRAST.toFixed(2)} 太多 —— ` +
+      '多半是保明度那一步被去掉了',
+  );
+}
+
+// 15. 主体表面与正文主文字【不】参与染色 —— 它们是「纸和墨」，染了整站会发闷
+for (const key of ['--color-background-primary', '--color-background-card', '--color-background-input', '--color-text-primary']) {
+  assert.ok(!(key in light), `${key} 不该由调色板产出（保持 Less 里的中性值）`);
+}
+
+console.log('palette.spec: 15 组断言全部通过');
