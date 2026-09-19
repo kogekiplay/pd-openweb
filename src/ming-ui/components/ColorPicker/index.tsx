@@ -240,6 +240,8 @@ class ColorPicker extends Component<any, any> {
         {list.map((colorItem, index: number) => (
           <div
             className="commonColorItem"
+            /* 第四行是变量色，光看色块分不出它会随主题变 —— 悬停说一声 */
+            title={colorItem.includes('var(') ? _l('跟随主题：应用主题色变了，这个颜色也会跟着变') : undefined}
             style={{ background: colorItem }}
             onClick={() => {
               if (colorItem.includes('-')) {
@@ -284,10 +286,17 @@ class ColorPicker extends Component<any, any> {
     } = this.props;
     const { color, visible, type, defaultExpand, recentExpand, recentColors, themeExpand } = this.state;
     const themeColors = [themeColor, generate(themeColor)[0]];
-    const CURRENT_COLORS_ROW_1 = dynamicColor ? DEFAULT_DYNAMIC_COLORS_ROW_1 : DEFAULT_COLORS_ROW_1;
-    const DEFAULT_COLORS = lightBefore
-      ? DEFAULT_COLORS_ROW_3.concat(DEFAULT_COLORS_ROW_2, CURRENT_COLORS_ROW_1)
-      : CURRENT_COLORS_ROW_1.concat(DEFAULT_COLORS_ROW_2, DEFAULT_COLORS_ROW_3);
+    // 【字面灰和变量灰分成两行，不是二选一】
+    // 原来 dynamicColor 开着时，那行中性灰【整体被换成】CSS 变量，点下去
+    // 存进业务数据的是变量名（见 setDynamicColor）。主题引擎把中性色按应用色
+    // 掺了色相之后，存过变量的数据会跟着应用主题漂移 —— 张奇在 MOM运维 实测：
+    // 选项「铁木盘」存的是 var(--color-border-hover)，引擎之前解析成 #bdbdbd 中性灰，
+    // 现在是 #abbfde 蓝灰，看起来就是「我设的颜色自己变了」。
+    // 现在两行并存：想要固定颜色点第三行，想要跟随主题点第四行（永远排在最后）。
+    const BASE_COLORS = lightBefore
+      ? DEFAULT_COLORS_ROW_3.concat(DEFAULT_COLORS_ROW_2, DEFAULT_COLORS_ROW_1)
+      : DEFAULT_COLORS_ROW_1.concat(DEFAULT_COLORS_ROW_2, DEFAULT_COLORS_ROW_3);
+    const DEFAULT_COLORS = dynamicColor ? BASE_COLORS.concat(DEFAULT_DYNAMIC_COLORS_ROW_1) : BASE_COLORS;
 
     const Comp = TYPE_COMP[type];
     const triggerClass = sysColor ? 'ColorPickerPanelTriggerMax' : 'ColorPickerPanelTriggerMin';
