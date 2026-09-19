@@ -141,7 +141,7 @@
     display: inline-block;
     vertical-align: top;
     margin-top: 9px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
   }
   .calendarTime {
     margin-top: 25px;
@@ -296,7 +296,7 @@
     display: block;
     width: 14px;
     height: 14px;
-    border-radius: 2px;
+    border-radius: var(--radius-sm);
     -webkit-transition: 240ms;
     -o-transition: 240ms;
     -ms-transform: 240ms;
@@ -496,10 +496,10 @@
   }
   .repeatTypeGroupBtn:first-child {
     border-left: 1px solid var(--color-border-primary);
-    border-radius: 3px 0 0 3px;
+    border-radius: var(--radius-sm) 0 0 var(--radius-sm);
   }
   .repeatTypeGroupBtn:last-child {
-    border-radius: 0 3px 3px 0;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   }
   #overCount,
   #overTime,

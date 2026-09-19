@@ -17,7 +17,7 @@ const EmbedWrap = styled.div`
   .embedContainer {
     width: 100%;
     border: 1px solid var(--color-border-primary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     ${props => (props.viewType === VIEW_DISPLAY_TYPE.sheet && !isPublicLink() ? '' : `height: ${props.height}px;`)}
     ${props =>
       props.isMobileView ? `height: ${props.height}px;position: absolute; transform: translate(0px, 0px);` : ''}

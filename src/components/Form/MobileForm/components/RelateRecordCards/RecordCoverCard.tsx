@@ -5,15 +5,15 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import previewAttachments, { transformQiniuUrl } from 'src/components/previewAttachments/previewAttachments';
 import { getTitleTextFromRelateControl } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import { getTitleControlId } from '../../../core/utils';
 import { getRecordCardStyle } from '../../tools/utils';
 import CardCellControls from './CardCellControls';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   position: relative;
   width: 100%;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   background-color: ${({ backgroundColor }) => backgroundColor || 'var(--color-background-card)'};
   border: 1px solid
     ${({ borderColor, canSelect, selected }) => {
@@ -94,7 +94,7 @@ const ControlCon = styled.div`
     width: 80px;
     height: 80px;
     box-sizing: content-box;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     object-fit: contain;
     border: 1px solid var(--color-border-secondary);
     ${({ small }) => (small ? 'margin-bottom: 15px' : 'margin-right: 15px')};

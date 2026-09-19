@@ -35,7 +35,7 @@ export const LoadingButton = styled.div`
   line-height: 29px;
   padding: 0 12px;
   color: var(--color-primary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
 
   .loading {
@@ -68,7 +68,7 @@ const RelateScanQRCodeWrap = styled(RelateScanQRCode)`
     justify-content: center;
     border: 1px solid var(--color-border-secondary);
     margin-left: 10px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
   }
 `;
 

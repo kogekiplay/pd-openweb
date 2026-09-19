@@ -28,7 +28,7 @@ const Wrap = styled.div`
     .withdraw,
     .active {
       padding: 2px 5px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
     }
     .withdraw:hover {
       background: var(--color-background-secondary);

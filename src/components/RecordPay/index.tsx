@@ -21,7 +21,7 @@ const PayWrap = styled.div`
 const PayButton = styled.div`
   padding: 0 25px;
   line-height: 32px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   color: var(--color-white);
   background: rgba(76, 175, 80, 0.9);
   &:hover {
@@ -37,7 +37,7 @@ const PayShare = styled.div`
   color: var(--color-success);
   text-align: center;
   margin-left: 6px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   &:hover {
     background: var(--color-success-bg);
   }

@@ -39,7 +39,7 @@ const Wrap = styled.div`
     width: 28px;
     height: 28px;
     background: #9d27b0;
-    border-radius: 5px 5px 5px 5px;
+    border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     border-radius: 6px;
     color: var(--color-white);
     line-height: 30px;

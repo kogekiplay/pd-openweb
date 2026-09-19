@@ -18,7 +18,7 @@ const { RangePicker } = DatePicker;
 const Menu = styled.div`
   width: 180px;
   padding: 10px 0;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
 
   .item {
     padding: 5px 10px;

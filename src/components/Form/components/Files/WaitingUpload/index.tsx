@@ -10,7 +10,7 @@ const CardPlaceholder = styled.div`
   flex: 1;
   min-width: 130px;
   height: 130px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-secondary);
   color: var(--color-text-primary);
   font-size: 12px;
@@ -49,7 +49,7 @@ const ListPlaceholder = styled.div`
   margin-bottom: 6px;
   min-width: 300px;
   height: 56px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   background-color: var(--color-background-secondary);
   overflow: hidden;
   .placeholder {

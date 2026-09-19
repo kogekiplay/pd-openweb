@@ -275,7 +275,7 @@
 
 #updatePermission {
   width: 176px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   padding: 10px;
   box-sizing: border-box;
   position: fixed;
@@ -316,11 +316,11 @@
 }
 
 #updatePermission .itemLi:first-child {
-  border-radius: 3px 3px 0 0;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
 }
 
 #updatePermission .itemLi:last-child {
-  border-radius: 0 0 3px 3px;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
 }
 
 #updatePermission .itemLi .describe {
@@ -364,7 +364,7 @@
   background-color: #f0efef;
   text-align: center;
   line-height: 32px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   color: var(--color-text-secondary);
 }
@@ -390,7 +390,7 @@
 .createFolderBox .folderContent .attribute .dropBox {
   display: inline-block;
   border: 1px solid var(--color-border-tertiary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   position: relative;
   vertical-align: middle;
   height: 35px;
@@ -454,7 +454,7 @@
 /*���˱�������*/
 #checkInviter {
   width: 100px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   box-sizing: border-box;
   position: fixed;
   background-color: var(--color-background-primary);

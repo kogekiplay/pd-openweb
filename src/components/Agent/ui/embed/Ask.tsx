@@ -105,7 +105,7 @@ const Option = styled.div`
   gap: 8px;
   padding: 8px 12px;
   border: 1px solid ${({ $active }) => ($active ? 'var(--color-mingo)' : 'var(--color-border-secondary)')};
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   background: ${({ $active }) => ($active ? 'var(--color-mingo-transparent-light)' : 'var(--color-background-card)')};
   cursor: pointer;
   transition:
@@ -133,7 +133,7 @@ const Option = styled.div`
     align-self: center;
     height: 20px;
     padding: 0 6px;
-    border-radius: 5px;
+    border-radius: var(--radius-xs);
     font-size: 12px;
     line-height: 20px;
     color: var(--color-text-secondary);
@@ -151,7 +151,7 @@ const Custom = styled.textarea`
   max-height: 100px;
   padding: 6px 12px;
   border: 1px solid ${({ $active }) => ($active ? 'var(--color-mingo)' : 'var(--color-border-secondary)')};
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   background: var(--color-background-card);
   color: var(--color-text-primary);
   font-size: 14px;

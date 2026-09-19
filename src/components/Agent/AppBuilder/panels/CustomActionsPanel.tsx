@@ -121,7 +121,7 @@ const StepChip = styled.div`
   gap: 6px;
   height: 28px;
   padding: 0 12px;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-primary);
   /* 卡片内标签统一：12px + 灰底 */
   background: var(--color-background-secondary);

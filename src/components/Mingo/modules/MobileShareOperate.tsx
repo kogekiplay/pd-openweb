@@ -1,10 +1,10 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import copy from 'src/utils/copyToClipboard';
 import { isEmpty, isEqual } from 'lodash';
 import styled from 'styled-components';
 import { Checkbox, MobileConfirmPopup } from 'ming-ui';
 import chatbotAjax from 'src/pages/workflow/apiV2/chatbot';
 import { getPublicShare, updatePublicShareStatus } from 'src/pages/worksheet/components/Share/controller';
+import copy from 'src/utils/copyToClipboard';
 import { compatibleMDJS } from 'src/utils/project';
 
 const MobileShareOperateWrap = styled.div`
@@ -45,7 +45,7 @@ const RightSection = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     &.cancel {
       color: var(--color-text-primary);
     }

@@ -1,14 +1,14 @@
 import React, { Fragment, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
-import cx from 'classnames';
-import copy from 'src/utils/copyToClipboard';
 import Trigger from '@rc-component/trigger';
+import cx from 'classnames';
 import styled from 'styled-components';
 import { Dialog, Icon, Input, Menu, MenuItem, MobileConfirmPopup, PopupWrapper, Skeleton } from 'ming-ui';
 import ScrollView from 'ming-ui/components/ScrollView';
 import appManagementApi from 'src/api/appManagement';
 import { getPublicShare, updatePublicShareStatus } from 'src/pages/worksheet/components/Share/controller';
 import { browserIsMobile, pathCompletion } from 'src/utils/common';
+import copy from 'src/utils/copyToClipboard';
 import { compatibleMDJS } from 'src/utils/project';
 import 'rc-trigger/assets/index.css';
 
@@ -34,7 +34,7 @@ const Con = styled(ScrollView)`
     padding: 0 10px;
     .chatHistoryItem {
       cursor: pointer;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       padding: 0 10px;
       height: 45px;
       font-size: 14px;
@@ -47,7 +47,7 @@ const Con = styled(ScrollView)`
       .operateIcon {
         width: 24px;
         height: 24px;
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         background: var(--color-background-card);
         font-size: 14px;
         color: var(--color-text-secondary);

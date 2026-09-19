@@ -92,7 +92,7 @@
   color: var(--color-error) !important;
 }
 #createShareAlert {
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   z-index: 9999;
   position: fixed;
   bottom: 20px;

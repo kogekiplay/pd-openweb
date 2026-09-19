@@ -12,7 +12,7 @@ const Con = styled.div`
   color: var(--color-error);
   padding: 0 12px;
   background: rgba(244, 67, 54, 0.04);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   display: inline-flex;
   align-items: center;
   justify-content: center;

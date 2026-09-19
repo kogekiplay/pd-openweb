@@ -37,6 +37,7 @@ import RestrictAccessStatus from 'src/components/restrictAccessStatus';
 import emptyPng from 'src/pages/worksheet/assets/record.png';
 import 'src/pages/worksheet/components/WorksheetTable/components/ColumnHead/ColumnHead.less';
 import { checkIsTextControl, isRelateRecordTableControl } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import { addBehaviorLog } from 'src/utils/project';
 import { replaceControlsTranslateInfo } from 'src/utils/translate';
 import { getSheetStylesOfRelateRecordTable } from 'src/utils/worksheet';
@@ -53,7 +54,6 @@ import {
   getTableConfig,
   getTitleControl,
 } from './util';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   padding: 0 24px;
@@ -84,7 +84,7 @@ const Table = styled.div`
   margin: 17px 0;
   position: relative;
   border: 1px solid var(--color-border-secondary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   overflow: hidden;
   min-height: 90px;
   .worksheetTableComp,
@@ -775,7 +775,15 @@ export default function SelectDialog({ ...args }) {
                           />
                         );
                       }}
-                      renderRowHead={({ className, style, rowIndex, row }: { className?: string; [key: string]: any }) => (
+                      renderRowHead={({
+                        className,
+                        style,
+                        rowIndex,
+                        row,
+                      }: {
+                        className?: string;
+                        [key: string]: any;
+                      }) => (
                         <RowHead
                           className={className}
                           style={style}

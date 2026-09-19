@@ -18,7 +18,7 @@ import { SOURCE_TYPE } from './config';
 const Menu = styled.ul`
   width: 140px;
   padding: 5px 0;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   background: var(--color-background-primary);
   box-shadow: var(--shadow-lg);
   li {

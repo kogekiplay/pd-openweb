@@ -11,7 +11,7 @@ import { useWidgetEvent } from '../core/useFormEventManager';
 
 const TextMarkdownWrap = styled.div`
   position: relative;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   min-height: ${props => `${props.minHeight}px`};
   height: auto;
   ${props => (props.maxHeight ? `max-height: ${props.maxHeight}px` : '')};

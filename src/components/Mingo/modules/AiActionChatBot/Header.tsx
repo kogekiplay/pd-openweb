@@ -22,7 +22,7 @@ const Con = styled.div`
     .settingIcon {
       width: 28px;
       height: 28px;
-      border-radius: 5px;
+      border-radius: var(--radius-sm);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -42,7 +42,7 @@ const Con = styled.div`
     align-items: center;
     padding: 0 9px;
     background-color: var(--color-border-secondary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     color: var(--color-text-secondary);
     .icon {
       color: var(--color-text-tertiary);

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, Menu, MenuItem } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -13,7 +13,7 @@ const Box = styled.div`
   width: 100%;
   height: 36px;
   background: var(--color-yellow-black);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-warning-border);
   padding: 0 12px;
 `;

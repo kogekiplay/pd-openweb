@@ -486,7 +486,7 @@ const SkeletonTitle = styled.div`
   width: 120px;
   height: 14px;
   margin-bottom: ${spacing.xl};
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   ${shimmerBg}
 `;
 

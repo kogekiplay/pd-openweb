@@ -3,7 +3,7 @@
   margin: 0 !important;
   padding-left: 24px;
   background-color: var(--color-background-secondary);
-  border-radius: 3px 3px 0 0;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
 }
 .shareAttachmentDialogContainer {
   padding: 0 0 10px;
@@ -52,7 +52,7 @@
       right: 3px;
       bottom: 3px;
       padding: 3px 4px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       background: rgba(255, 255, 255, 0.4);
       display: block;
       color: var(--color-white);
@@ -332,7 +332,7 @@
     display: inline-block;
     width: 80px;
     border: 1px solid var(--color-border-primary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     line-height: 34px;
     height: 36px;
     vertical-align: middle;
@@ -388,7 +388,7 @@
       cursor: pointer;
       width: 100px;
       height: 34px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       text-align: center;
       line-height: 34px;
       border: 1px solid @shareBoderColor;
@@ -405,7 +405,7 @@
       padding: 15px;
       background-color: var(--color-background-primary);
       box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       &:before,
       &:after {
         content: '';
@@ -434,7 +434,7 @@
         height: 34px;
         line-height: 34px;
         color: var(--color-white);
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         white-space: nowrap;
         padding: 0 8px;
       }
@@ -475,7 +475,7 @@
       line-height: 34px;
       padding: 0 10px;
       border: 1px solid @shareBoderColor;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       cursor: pointer;
       img {
         width: 24px;
@@ -497,7 +497,7 @@
       margin-top: 10px;
       border: 1px solid var(--color-border-tertiary);
       box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
-      border-radius: 3px;
+      border-radius: var(--radius-lg);
       background-color: var(--color-background-primary);
       z-index: 2;
     }
@@ -568,7 +568,7 @@
         height: 100%;
         background-color: color-mix(in srgb, var(--color-overlay-ink) 18%, transparent);
         left: 0;
-        border-radius: 4px;
+        border-radius: var(--radius-sm);
       }
     }
     .no {

@@ -40,7 +40,7 @@ const Con = styled.div`
 const ProjectSwitch = styled(VerticalMiddle)`
   cursor: pointer;
   padding: 3px 5px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   display: inline-flex;
   max-width: calc(100% - 172px);
   .companyName {
@@ -65,7 +65,7 @@ const Flex = styled.div`
 const ProjectsMenuCon = styled.div`
   width: 400px;
   background: var(--color-background-card);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   padding-bottom: 5px;
   box-shadow: var(--shadow-lg);
 `;

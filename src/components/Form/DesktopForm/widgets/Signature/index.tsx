@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import axios from 'axios';
 import cx from 'classnames';
 import _, { get } from 'lodash';
-import Trigger from '@rc-component/trigger';
 // signature_pad 5 的 exports 映射只有 '.'，深子路径 dist/signature_pad 已被封死。
 import SignaturePad from 'signature_pad';
 import styled from 'styled-components';
@@ -35,7 +35,7 @@ const SignaturePopup = styled.div`
   width: 480px;
   min-width: 200px;
   background-color: var(--color-background-card);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   box-shadow: var(--shadow-xl);
   touch-action: none;
   .header {
@@ -68,7 +68,7 @@ const SignatureWrap = styled.div`
   background-size: contain;
   background-position: center;
   border: 1px solid var(--color-border-secondary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   &:hover {
     box-shadow:
       0 4px 12px rgba(0, 0, 0, 0.12),
@@ -129,7 +129,7 @@ const GrayButton = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   font-weight: bold;
   &:hover {
     background-color: var(--color-background-hover);

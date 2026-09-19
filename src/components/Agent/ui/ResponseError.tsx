@@ -16,7 +16,7 @@ const Card = styled.div`
   padding: 16px;
   background: var(--color-background-secondary);
   border: 1px solid var(--color-border-tertiary);
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   .interceptMsg {
     font-size: 13px;
     line-height: 1.6;
@@ -33,7 +33,7 @@ const Card = styled.div`
     height: 26px;
     min-width: 50px;
     padding: 0 12px;
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     font-size: 13px;
     font-weight: 700;
     cursor: pointer;

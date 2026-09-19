@@ -301,7 +301,7 @@
       height: 6px;
       background: var(--color-border-secondary);
       margin: 15px 0;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
     }
 
     .customFormControlVerify {
@@ -351,7 +351,7 @@
       border: 1px solid var(--color-border-primary);
       font-size: 13px;
       background: var(--color-background-secondary);
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       padding: 0 12px;
       width: 100%;
       outline: none;
@@ -379,7 +379,7 @@
       border: 1px solid var(--color-background-secondary);
       font-size: 13px;
       background: var(--color-background-secondary);
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       padding: 0 12px;
       width: 100%;
       outline: none;
@@ -700,7 +700,7 @@
       width: max-content;
       padding: 0 16px;
       border: 1px solid var(--color-border-primary);
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       font-weight: 500;
       font-size: 13px;
       &:hover {
@@ -916,7 +916,7 @@
       border: 1px solid var(--color-background-secondary);
       font-size: 13px;
       background: var(--color-background-secondary);
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       transition: none;
       &.ant-picker-focused {
         box-shadow: none;
@@ -1169,7 +1169,7 @@ input.customFormControlBox:disabled {
 // 补一个 .ant-select 凑成 (0,2,0) 打平即可：我们的样式表在 antd 之后（antd 走 rc-util
 // prependQueue 插到 <head> 最前），平手时后者胜。
 .ant-select.customAntSelect {
-  --ant-select-border-radius: 4px;
+  --ant-select-border-radius: var(--radius-sm);
   --ant-select-padding-horizontal: 12px;
   --ant-select-font-size: 13px;
   // 直接给定上下内边距，不走 antd 由 --ant-select-height 推导的那条 calc。

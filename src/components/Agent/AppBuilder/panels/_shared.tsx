@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import cx from 'classnames';
 import Trigger from '@rc-component/trigger';
+import cx from 'classnames';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import { useAgentBus } from '../../agentBus';
@@ -94,7 +94,7 @@ export const Tag = styled.div`
   gap: 5px;
   height: 28px;
   padding: 0 10px;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   background: var(--color-background-tertiary);
   font-size: 12px;
   color: var(--color-text-secondary);
@@ -172,7 +172,7 @@ export const Chip = styled.div`
   gap: 4px;
   height: 26px;
   padding: 0 10px;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   background: var(--color-background-tertiary);
   border: 1px solid var(--color-border-secondary);
   font-size: 12px;

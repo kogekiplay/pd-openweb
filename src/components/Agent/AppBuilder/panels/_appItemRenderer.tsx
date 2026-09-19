@@ -239,7 +239,7 @@ const FieldChip = styled.div`
   gap: 6px;
   height: 28px;
   padding: 0 12px;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   border: 1px solid ${FIELD_BORDER};
   /* 卡片内标签统一：12px + 灰底 */
   background: var(--color-background-secondary);

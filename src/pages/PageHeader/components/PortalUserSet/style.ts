@@ -262,11 +262,11 @@ export const Wrap = styled.div`
   .themeSwitcher {
     background: var(--color-background-tertiary);
     padding: 0 5px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     height: 36px;
     .themeSwitcherItem {
       padding: 4px 12px;
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       &.active {
         background: var(--color-background-card);
       }

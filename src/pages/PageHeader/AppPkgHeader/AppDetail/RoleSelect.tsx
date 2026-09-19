@@ -48,7 +48,7 @@ const RoleSelectWrap = styled.div`
     overflow: scroll;
     .item {
       padding: 14px 12px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       height: 42px;
       .icon {
         color: var(--color-text-tertiary);
@@ -83,7 +83,7 @@ const RoleSelectWrap = styled.div`
       li {
         padding: 6px;
         background: var(--color-border-secondary);
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         max-width: 100px;
         .icon:hover {
           color: var(--color-text-secondary) !important;
