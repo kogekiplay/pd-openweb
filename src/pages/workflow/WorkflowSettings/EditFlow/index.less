@@ -147,14 +147,14 @@
     }
     &.errorShadow {
       box-shadow:
-        0 0 1px 1px rgba(244, 67, 54, 1),
+        0 0 1px 1px var(--color-error),
         0 1px 4px rgba(0, 0, 0, 0.16);
     }
     &.errorShadow.active {
       box-shadow:
-        0 0 1px 1px rgba(244, 67, 54, 1),
-        0 2px 6px rgba(244, 67, 54, 0.4),
-        0 6px 24px rgba(33, 150, 243, 0.4);
+        0 0 1px 1px var(--color-error),
+        0 2px 6px color-mix(in srgb, var(--color-error) 40%, transparent),
+        0 6px 24px color-mix(in srgb, var(--color-primary) 40%, transparent);
     }
     &.workflowItemDisabled {
       .workflowName,
