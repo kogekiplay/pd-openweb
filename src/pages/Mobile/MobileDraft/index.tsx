@@ -119,14 +119,18 @@ export default function MobileDraft(props) {
   const loadDraftDataCount = () => {
     if (window.draftTotalNumInfo && window.draftTotalNumInfo[worksheetId]) return;
 
+    // 【不能用 getFilterRowsTotalNum】服务端那个接口不认 getType，
+    // 返回的是整张表的记录数 —— 详见 WorksheetDraft/index.tsx 同一处的实测记录。
     worksheetAjax
-      .getFilterRowsTotalNum({
+      .getFilterRows({
         appId,
         worksheetId,
         getType: 21,
+        pageIndex: 1,
+        pageSize: 1,
       })
       .then(res => {
-        const total = Number(res) || 0;
+        const total = Number(_.get(res, 'count')) || 0;
         updateDraftTotalInfo({ worksheetId, total });
         setTotal(total);
       });
