@@ -19,7 +19,7 @@
   }
 
   .autoOrderCon {
-    background-color: rgba(24, 144, 255, 0.05);
+    background-color: color-mix(in srgb, var(--color-primary) 5%, transparent);
     max-width: 930px;
     box-sizing: border-box;
   }
@@ -274,7 +274,7 @@
       position: absolute;
       width: 0;
       height: 8px;
-      background-color: rgba(33, 150, 243, 1);
+      background-color: var(--color-primary);
       border-radius: 4px;
       margin-left: -3px;
     }
@@ -285,12 +285,12 @@
       background: transparent;
       display: flex;
       align-items: center;
-      background-color: rgba(33, 150, 243, 0.1);
+      background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
       .portal-ant-slider-dot {
         position: absolute;
         width: 6px;
         height: 6px;
-        background-color: rgba(33, 150, 243, 0.48);
+        background-color: color-mix(in srgb, var(--color-primary) 48%, transparent);
         border-radius: 50%;
         cursor: pointer;
         transform: translateX(-50%);

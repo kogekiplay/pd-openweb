@@ -101,7 +101,7 @@
       margin-left: 5px;
       border-radius: 50%;
       &:hover {
-        background: rgba(221, 221, 221, 0.31);
+        background: color-mix(in srgb, var(--color-border-primary) 31%, transparent);
       }
     }
   }
@@ -132,7 +132,7 @@
 
 .disabledAction {
   cursor: not-allowed;
-  color: rgba(33, 150, 243, 0.52) !important;
+  color: color-mix(in srgb, var(--color-primary) 52%, transparent) !important;
 }
 .addFields {
   color: var(--color-primary);

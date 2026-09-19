@@ -16,19 +16,19 @@
   }
   .stepDesc {
     font-size: 14px;
-    color: #757575;
+    color: var(--color-text-secondary);
   }
 
   .enableBtn {
-    background: #4caf50;
+    background: var(--color-success);
     &:hover {
       background: #45a049;
     }
 
     &.Button--disabled {
-      background: rgba(76, 175, 80, 0.6);
+      background: color-mix(in srgb, var(--color-success) 60%, transparent);
       &:hover {
-        background: rgba(76, 175, 80, 0.6);
+        background: color-mix(in srgb, var(--color-success) 60%, transparent);
       }
     }
   }
