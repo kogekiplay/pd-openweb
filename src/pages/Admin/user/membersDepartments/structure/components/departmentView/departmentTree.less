@@ -38,7 +38,7 @@
   .ant-tree.ant-tree-directory .ant-tree-treenode-selected,
   .ant-tree.ant-tree-directory .ant-tree-treenode:hover {
     background: color-mix(in srgb, var(--color-primary) 11%, transparent);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
   }
 
   .departmentAction {
@@ -263,7 +263,7 @@
     .ant-tree-child-tree
     > .ant-tree-treenode.ant-tree-treenode-selected
     > span.ant-tree-node-content-wrapper::before {
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     height: 36px;
     width: 256px;
     position: absolute;
@@ -310,7 +310,7 @@
     > .ant-tree-treenode
     span.ant-tree-node-content-wrapper:hover::before {
     background: var(--color-background-secondary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     height: 36px;
     width: 256px;
     position: absolute;

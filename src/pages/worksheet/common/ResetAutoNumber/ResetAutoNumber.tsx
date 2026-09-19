@@ -33,7 +33,7 @@ const ResetWrap = styled.div`
     padding: 0 24px 0 10px;
     line-height: 36px;
     background: var(--color-background-secondary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
   }
   .info {
     span {

@@ -30,7 +30,7 @@ const CoverImageWrap = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 3px 3px 0 0;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
     background: var(--color-background-primary);
     background-size: cover;
     background-position: center;

@@ -46,7 +46,7 @@ const Wrap = styled.div`
     margin-right: 10px;
     width: 28px;
     height: 28px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-tertiary);
     display: flex;
     align-items: center;
@@ -62,7 +62,7 @@ const Wrap = styled.div`
       width: 32px;
       height: 32px;
       border: 1px solid var(--color-border-tertiary);
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
     }
   }
   .themeColorWrap::before {
@@ -73,7 +73,7 @@ const Wrap = styled.div`
     border-style: solid;
     border-width: 12px 12px 0 0;
     border-color: var(--color-white) transparent transparent transparent;
-    border-radius: 2px 0 0 0;
+    border-radius: var(--radius-sm) 0 0 0;
     top: 1px;
     left: 1px;
   }
@@ -109,7 +109,7 @@ const Wrap = styled.div`
   }
   .selectChartColor {
     padding: 8px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-primary);
     .colorBlock {
       width: 24px;
@@ -130,7 +130,7 @@ const Wrap = styled.div`
   }
   .typeSelect {
     font-size: 13px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     width: max-content;
     padding: 3px;
     background-color: var(--color-background-secondary);
@@ -144,7 +144,7 @@ const Wrap = styled.div`
     }
     .active {
       color: var(--color-primary) !important;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       font-weight: bold;
       background-color: var(--color-background-card);
     }
@@ -157,7 +157,7 @@ const Wrap = styled.div`
     }
     &.ant-select,
     & .ant-select {
-      --ant-select-border-radius: 4px !important;
+      --ant-select-border-radius: var(--radius-sm) !important;
       box-shadow: none !important;
     }
     &.selectTitleSelect {
@@ -205,7 +205,7 @@ const Wrap = styled.div`
     &.ant-input-affix-wrapper,
     &.ant-input-affix-wrapper-focused,
     & {
-      border-radius: 4px !important;
+      border-radius: var(--radius-sm) !important;
       box-shadow: none !important;
     }
     .ant-input-suffix {
@@ -213,7 +213,7 @@ const Wrap = styled.div`
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 0 4px 4px 0;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
       border-left: 1px solid var(--color-border-primary);
     }
     .icon-expand_less,

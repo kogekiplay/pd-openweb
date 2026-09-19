@@ -5,7 +5,7 @@
   padding-right: 92px;
   background-color: var(--color-background-primary);
   border: 1px solid --color-background-disabled;
-  border-radius: 3px;
+  border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
   height: 80px;
   margin-bottom: 10px;
@@ -89,7 +89,7 @@
         white-space: nowrap;
         .emptyTag {
           position: relative;
-          border-radius: 3px;
+          border-radius: var(--radius-sm);
           top: -3px;
           display: inline-block;
           width: 12px;
@@ -109,7 +109,7 @@
     top: 0;
     width: 78px;
     height: 78px;
-    border-radius: 0 2px 2px 0;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     object-fit: contain;
   }
   &:hover {

@@ -229,7 +229,7 @@ const Wrapper = styled.div(
       border: 1px solid var(--color-background-secondary) !important;
       font-size: 13px !important;
       background: var(--color-background-secondary) !important;
-      border-radius: 3px !important;
+      border-radius: var(--radius-sm) !important;
       box-shadow: none !important;
       padding: 0 7.8px;
       > :first-child {
@@ -297,7 +297,7 @@ const Wrapper = styled.div(
   &.editorNull{
     min-height: ${minHeight || 90}px ;
     background: var(--color-background-primary);
-    border-radius: 2px;
+    border-radius: var(--radius-sm);
     padding: 10px;
     color: var(--color-text-disabled);
     border: 1px solid var(--color-border-primary);

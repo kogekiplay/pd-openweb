@@ -59,7 +59,7 @@ const LayoutContent = styled.div`
     width: 100%;
     height: 100%;
     background-color: var(--color-background-primary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     overflow: auto;
     box-shadow: var(--shadow-sm);
     &.haveTitle {

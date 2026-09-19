@@ -53,7 +53,7 @@ const CellWrap = styled.div`
     width: 22px;
     height: 6px;
     background: var(--color-border-primary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
   }
   .cell:not(.cellRelateRecord),
   .cell .ellipsis,
@@ -111,7 +111,7 @@ const MultipleValueWrap = styled.div`
   max-width: 100%;
   height: 20px;
   padding: 5px 9px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   background: var(--color-primary-transparent-light);
   color: var(--color-text-primary);
   line-height: 20px;

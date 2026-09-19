@@ -29,11 +29,11 @@ const Wrap = styled.div`
     border: 1px solid var(--color-border-primary);
     line-height: 34px;
     padding: 0 10px;
-    border-radius: 3px 0 0 3px;
+    border-radius: var(--radius-sm) 0 0 var(--radius-sm);
     // width: 197px;
   }
   input {
-    border-radius: 0 3px 3px 0;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     border: 1px solid var(--color-border-primary);
     line-height: 34px;
     padding: 0 5px;

@@ -5,14 +5,14 @@ import localeEn from 'antd/es/date-picker/locale/en_US';
 import localeJaJp from 'antd/es/date-picker/locale/ja_JP';
 import localeZhCn from 'antd/es/date-picker/locale/zh_CN';
 import localeZhTw from 'antd/es/date-picker/locale/zh_TW';
-import copy from 'src/utils/copyToClipboard';
-import moment from 'moment';
 import dayjs from 'dayjs';
+import moment from 'moment';
 import styled from 'styled-components';
 import { Checkbox, Dialog, Icon, Input, Textarea } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import functionWrap from 'ming-ui/components/FunctionWrap';
 import { generateRandomPassword } from 'src/utils/common';
+import copy from 'src/utils/copyToClipboard';
 import { API_EXTENDS, pluginApiConfig } from '../config';
 
 const FormItem = styled.div`
@@ -54,7 +54,7 @@ const FormItem = styled.div`
     height: 36px;
     transition: none;
     border-color: var(--color-border-tertiary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     box-shadow: none;
     .ant-picker-input {
       input {

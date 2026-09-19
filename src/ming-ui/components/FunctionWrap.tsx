@@ -1,5 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+import { ConfigProvider } from 'antd';
 import _ from 'lodash';
 import { StyleSheetManager } from 'styled-components';
 import shouldForwardProp from 'src/common/shouldForwardProp';
@@ -62,34 +63,49 @@ export default function (Comp, props: Record<string, any> = {}) {
      （记录新建/详情弹窗里的 showTitle / titleColor / isEditing / hasContent … 就是这么漏的）。
      主应用树里同一批组件不报，因为那边被 preall 罩着 —— 这也是为什么按组件名全仓搜
      搜不出所以然：区别不在组件，在它挂在哪棵树上。 */
+  /* 【同理，ConfigProvider 也不继承】上面那段说的是 styled-components，
+     antd 有一模一样的问题：createRoot 起的树不在 Application 那层
+     <ConfigProvider theme={{ token: { colorPrimary } }}> 下面，
+     于是 antd 自己 CSS-in-JS 算出来的 token 全是【默认蓝】。
+
+     表现极具迷惑性：同一个弹窗里，走我们 CSS 变量的部分（主按钮底色）是应用色，
+     走 antd token 的部分（:focus-visible 轮廓、Select 的选中底、Picker 的今天）
+     是蓝的。2026-09-19 查「创建记录弹层关闭叉的聚焦环为什么是蓝的」就是这条。
+
+     主色从 documentElement 的 inline style 上读 —— 主题引擎写在那儿，
+     与当前在哪个应用、走哪条路由无关。弹窗是短命的，挂载时读一次即可。 */
+  const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim();
+
   root.render(
-    <StyleSheetManager shouldForwardProp={shouldForwardProp}>
-      <Comp
-        {...(props.visibleName ? { [props.visibleName]: true } : { visible: true })}
-        {...props}
-        onClose={(...args) => {
-          destroy();
-          if (_.isFunction(props.onClose)) {
-            props.onClose(...args);
-          }
-        }}
-        onCancel={() => {
-          destroy();
-          if (_.isFunction(props.onCancel)) {
-            props.onCancel();
-          }
-        }}
-        {...(props.closeFnName
-          ? {
-              [props.closeFnName]: () => {
-                destroy();
-                if (_.isFunction(props[props.closeFnName])) {
-                  props[props.closeFnName]();
-                }
-              },
+    <ConfigProvider theme={primaryColor ? { token: { colorPrimary: primaryColor } } : undefined}>
+      <StyleSheetManager shouldForwardProp={shouldForwardProp}>
+        <Comp
+          {...(props.visibleName ? { [props.visibleName]: true } : { visible: true })}
+          {...props}
+          onClose={(...args) => {
+            destroy();
+            if (_.isFunction(props.onClose)) {
+              props.onClose(...args);
             }
-          : {})}
-      />
-    </StyleSheetManager>,
+          }}
+          onCancel={() => {
+            destroy();
+            if (_.isFunction(props.onCancel)) {
+              props.onCancel();
+            }
+          }}
+          {...(props.closeFnName
+            ? {
+                [props.closeFnName]: () => {
+                  destroy();
+                  if (_.isFunction(props[props.closeFnName])) {
+                    props[props.closeFnName]();
+                  }
+                },
+              }
+            : {})}
+        />
+      </StyleSheetManager>
+    </ConfigProvider>,
   );
 }

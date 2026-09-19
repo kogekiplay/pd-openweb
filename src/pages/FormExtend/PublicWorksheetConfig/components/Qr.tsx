@@ -5,7 +5,7 @@ import { Qr as QrComp } from 'ming-ui';
 
 const Con = styled.div(
   ({ width }) =>
-    `position: relative; z-index: 1; width: ${width}px; border-radius: 4px; background-color: var(--color-background-primary); padding: 10px; box-sizing: border-box; box-shadow: 0px 3px 8px #0000004D;`,
+    `position: relative; z-index: 1; width: ${width}px; border-radius: var(--radius-sm); background-color: var(--color-background-primary); padding: 10px; box-sizing: border-box; box-shadow: 0px 3px 8px #0000004D;`,
 );
 const Tip = styled.div`
   text-align: center;

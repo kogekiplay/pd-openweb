@@ -39,12 +39,12 @@ const Wrap = styled.div`
     .isText {
       &.ming.Dropdown.disabled,
       .dropdownTrigger.disabled {
-        border-radius: 4px;
+        border-radius: var(--radius-sm);
       }
       &.ming.Dropdown .Dropdown--border,
       .dropdownTrigger .Dropdown--border {
         border-color: var(--color-background-secondary);
-        border-radius: 4px;
+        border-radius: var(--radius-sm);
         overflow: hidden;
       }
       .icon-arrow-down-border {
@@ -373,7 +373,7 @@ export default function BatchSetDialog(props) {
   };
 
   return (
-    (<Modal
+    <Modal
       title={_l('编辑列样式')}
       open={visible}
       onCancel={onClose}
@@ -470,7 +470,7 @@ export default function BatchSetDialog(props) {
           {renderList('Hide')}
         </WrapCon>
       </div>
-    </Modal>)
+    </Modal>
   );
 }
 

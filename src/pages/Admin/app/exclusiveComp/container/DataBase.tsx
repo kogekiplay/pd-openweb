@@ -1,11 +1,11 @@
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
-import withRouter from '../../../../../router/withRouter';
 import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Button, Dialog, Icon, LoadDiv } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import projectAjax from 'src/api/project';
 import { pathCompletion } from 'src/utils/common';
+import withRouter from '../../../../../router/withRouter';
 import ConnectDataBase from '../component/ConnectDataBase';
 import DataBaseImg from '../images/database.png';
 import './DataBase.less';
@@ -13,7 +13,7 @@ import './DataBase.less';
 const MoreOperateMenu = styled.ul`
   background: var(--color-background-card);
   box-shadow: var(--shadow-sm);
-  border-radius: 3px 3px 3px 3px;
+  border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
   width: 160px;
   font-size: 13px;
   color: var(--color-text-title);

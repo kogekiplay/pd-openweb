@@ -22,7 +22,7 @@ import * as columnRules from './redux/actions/columnRules';
 import '../../index.less';
 
 const StyleDivWrap = styled.div`
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   text-align: center;
   color: var(--color-text-primary);
   border: 1px solid var(--color-border-primary);
@@ -38,7 +38,7 @@ const AddRule = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   color: var(--color-primary);
   cursor: pointer;
   border: 1px solid var(--color-border-primary);
@@ -64,7 +64,7 @@ const RuleStyleWrapper = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-primary);
     box-sizing: border-box;
     margin-bottom: 10px;

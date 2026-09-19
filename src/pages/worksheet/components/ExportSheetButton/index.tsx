@@ -11,7 +11,7 @@ const IconBtn = styled.span`
   text-align: center;
   font-size: 20px;
   line-height: 28px;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   &:hover {
     background: var(--color-background-hover);
   }

@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import { useSetState } from 'react-use';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import update from 'immutability-helper';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Dropdown, RadioGroup, Switch } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -11,6 +11,7 @@ import { SYSTEM_CONTROLS } from 'worksheet/constants/enum';
 import Sort from 'src/pages/widgetConfig/widgetSetting/components/sublist/Sort';
 import SortColumns from 'src/pages/worksheet/components/SortColumns/SortColumns';
 import { getSortData } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import { SUPPORT_RELATE_SEARCH } from '../../config';
 import { WHOLE_SIZE } from '../../config/Drag';
 import { COVER_FILL_TYPES, RELATE_SORT_DISPLAY } from '../../config/setting';
@@ -30,7 +31,6 @@ import RelateDetailInfo from '../components/RelateDetailInfo';
 import ConfigRelate from '../components/relateSheet/ConfigRelate';
 import openSelectConfig from '../components/relateSheet/selectConfig';
 import WidgetVerify from '../components/WidgetVerify';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const DISPLAY_COUNT = [
   { text: _l('单条'), value: 1 },
@@ -53,7 +53,7 @@ const RelateSheetWrap = styled.div`
     width: 100%;
     height: 36px;
     background: var(--color-background-secondary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     line-height: 36px;
     padding: 0 12px;
     margin-top: 12px;
@@ -66,13 +66,13 @@ const RelateSheetCover = styled.div`
   .sortColumnWrap {
     flex: 1;
     .Dropdown--input {
-      ${props => (props.hideCover ? 'border-radius: 3px;' : 'border-right: none;border-radius: 3px 0px 0px 3px;')};
+      ${props => (props.hideCover ? 'border-radius: var(--radius-sm);' : 'border-right: none;border-radius: var(--radius-sm) 0px 0px var(--radius-sm);')};
     }
   }
   .relateCoverSetting {
     width: 36px;
     height: 36px;
-    border-radius: 0px 3px 3px 0px;
+    border-radius: 0px var(--radius-sm) var(--radius-sm) 0px;
     border: 1px solid var(--color-border-tertiary);
     text-align: center;
     &:hover {
@@ -95,7 +95,7 @@ const SettingConfigWrap = styled.div`
   width: 100%;
   height: 36px;
   background: var(--color-background-secondary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   margin-top: 20px;
   cursor: pointer;
   &:hover {
@@ -665,7 +665,9 @@ export default function RelateSheet(props) {
                 <Switch
                   size="small"
                   checked={allowdrag === '1'}
-                  onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { allowdrag: String(+!checked) }))}
+                  onClick={(checked: boolean) =>
+                    onChange(handleAdvancedSettingChange(data, { allowdrag: String(+!checked) }))
+                  }
                 />
               </span>
             )}

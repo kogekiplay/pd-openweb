@@ -27,7 +27,7 @@ const SettingDrawer = styled(Drawer)`
       right: 8px;
       width: 44px;
       height: 44px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       color: var(--color-text-secondary);
       &:hover {
         background: var(--color-background-hover);
@@ -120,7 +120,7 @@ const SettingItem = styled.div`
       align-items: center;
       width: 28px;
       height: 28px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       cursor: pointer;
       .insideBlock {
         display: flex;
@@ -128,7 +128,7 @@ const SettingItem = styled.div`
         justify-content: center;
         width: 8px;
         height: 20px;
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         margin-left: 4px;
         transition: width 0.2s ease;
         .icon-done {
@@ -181,7 +181,7 @@ const SortItem = styled.div`
   font-size: 14px;
   font-weight: bold;
   border: 1px solid var(--color-border-tertiary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   padding: 0 12px;
   cursor: pointer;
   &:hover {
@@ -202,7 +202,7 @@ const AdvancedThemeItem = styled.div`
     right: 0;
     top: 0;
     bottom: 0;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     background: rgba(0, 0, 0, 0.3);
     display: flex;
     justify-content: center;

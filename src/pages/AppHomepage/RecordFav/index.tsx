@@ -107,12 +107,12 @@ const NavCon = styled.div`
     &.isCur,
     &:hover {
       background: var(--color-primary-transparent);
-      border-radius: 5px 5px 5px 5px;
+      border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     }
     .itemIcon {
       width: 24px;
       height: 24px;
-      border-radius: 5px 5px 5px 5px;
+      border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
       svg {
         display: block;
       }

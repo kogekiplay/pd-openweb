@@ -46,7 +46,7 @@
     padding: 13px 15px 13px;
     cursor: -webkit-grab;
     cursor: grab;
-    border-radius: 3px 3px 0 0;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
     background-color: var(--color-background-secondary);
     box-sizing: initial;
   }
@@ -152,7 +152,7 @@
     height: 44px;
     margin-left: 1px;
     background-color: var(--color-background-secondary);
-    border-radius: 0 0 3px 3px;
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
   }
   .bottomNewBox:hover {
     text-decoration: none;
@@ -204,7 +204,7 @@
   li.addNewTask .topBox {
     border: 1px var(--color-primary) solid;
     background-color: var(--color-background-primary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
   }
   .listStageContent .addNewTask .taskStar {
     font-size: 20px;
@@ -226,7 +226,7 @@
     padding-left: 5px;
     resize: none;
     border: 0;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
   }
   .addNewTask .btnStagCreateTask {
     display: inline-block;
@@ -337,7 +337,7 @@
     user-select: none;
     text-decoration: none;
     color: var(--color-text-secondary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     background-color: var(--color-background-primary);
     -webkit-box-flex: 0;
     -webkit-flex: 0 0 auto;
@@ -366,7 +366,7 @@
   /* 拖拽   */
   #insertVirtual {
     height: 30px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     background-color: rgba(153, 153, 153, 0.4) !important;
   }
   .draggableElement {
@@ -490,7 +490,7 @@
     width: 300px;
     height: 52px;
     line-height: 52px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     background: rgba(77, 77, 77, 0.5);
     color: var(--color-white);
     font-size: 14px;
@@ -507,7 +507,7 @@
       vertical-align: top;
       margin: 10px 10px 0 10px;
       background: transparent;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
     }
     &:hover {
       background: rgba(77, 77, 77, 0.75);

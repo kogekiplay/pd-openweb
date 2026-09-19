@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react';
-import copy from 'src/utils/copyToClipboard';
-import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
+import _ from 'lodash';
 import styled from 'styled-components';
 import { Button, Dialog, Icon, Input, LoadDiv } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -9,6 +8,7 @@ import application from 'src/api/application';
 import PageTableCon from 'src/pages/Admin/components/PageTableCon';
 import { handleMask } from 'src/pages/Admin/util';
 import { getToken } from 'src/utils/common';
+import copy from 'src/utils/copyToClipboard';
 import createUploader from 'src/utils/createUploader';
 import RegExpValidator from 'src/utils/expression';
 
@@ -22,7 +22,7 @@ const UploadContent = styled.div`
     justify-content: center;
     flex-direction: column;
     border: 1px dashed var(--color-border-primary);
-    border-radius: 2px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     margin-right: 10px;
   }
@@ -31,17 +31,17 @@ const UploadContent = styled.div`
   }
   .avatarUrl {
     width: 88%;
-    border-radius: 4px;
+    border-radius: var(--radius-xs);
   }
 `;
 
 const ThirdPartyAppWrapper = styled.div`
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   background-color: var(--color-background-primary);
   .avatarUrl {
     width: 20px;
     margin-right: 10px;
-    border-radius: 2px;
+    border-radius: var(--radius-xs);
   }
 
   .width80 {
@@ -167,7 +167,12 @@ class Upload extends Component<any, any> {
     const { uploadAvatarUrl } = this.state;
     return (
       <UploadContent className="flexRow">
-        <div id="uploadAppIcon" ref={el => { this.uploadFileEl = el; }}>
+        <div
+          id="uploadAppIcon"
+          ref={el => {
+            this.uploadFileEl = el;
+          }}
+        >
           {this.state.loading ? (
             <LoadDiv size="small" />
           ) : uploadAvatarUrl || avatarUrl ? (

@@ -7,7 +7,7 @@ import { FIELD_TYPE_LIST } from '../../../enum';
 const Box = styled.div`
   margin-top: 10px;
   border: 1px solid var(--color-border-primary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   box-sizing: border-box;
   overflow: hidden;
   .header {
@@ -70,7 +70,7 @@ const ErrorTips = styled.div`
   transform: translateY(-7px);
   z-index: 1;
   left: 130px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   color: var(--color-white);
   padding: 5px 12px;
   white-space: nowrap;
@@ -90,7 +90,10 @@ const ErrorTips = styled.div`
 `;
 
 export default ({ data = [], list = [], errorItems, setErrorItems, updateSource }) => {
-  const updateReferenceValue = ({ controlId, dataSource }: { controlId?: string; [key: string]: any }, value: string) => {
+  const updateReferenceValue = (
+    { controlId, dataSource }: { controlId?: string; [key: string]: any },
+    value: string,
+  ) => {
     return data.map(o => {
       if (o.controlId === controlId) {
         o.value = value;

@@ -72,7 +72,7 @@ const AllWidgetsWrap = styled.div`
 
 const WidgetInfo = styled.div`
   border: 1px solid var(--color-border-primary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   background-color: var(--color-background-primary);
   display: flex;
   align-items: center;

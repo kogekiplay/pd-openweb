@@ -26,7 +26,7 @@ const MsgTypeBtn = styled.div`
   height: 36px;
   border: 1px solid var(--color-border-primary);
   opacity: 1;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   padding: 0 20px 0 15px;
   margin-right: 10px;
   cursor: pointer;
@@ -53,7 +53,7 @@ const MsgTypeBtn = styled.div`
 const BtnContent = styled.div`
   margin-top: 30px;
   border: 1px solid var(--color-border-primary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   padding: 20px;
   position: relative;
   .workflowMessageTitle {
@@ -171,7 +171,18 @@ export default class Push extends Component<any, any> {
   /**
    * 检查是否报错
    */
-  checkHasError({ pushType, content, appId, selectNodeId, title, viewId }: { appId?: string; viewId?: string; [key: string]: any }) {
+  checkHasError({
+    pushType,
+    content,
+    appId,
+    selectNodeId,
+    title,
+    viewId,
+  }: {
+    appId?: string;
+    viewId?: string;
+    [key: string]: any;
+  }) {
     if (_.includes([PUSH_TYPE.ALERT, PUSH_TYPE.LINK], pushType) && !content.trim()) {
       alert(pushType === PUSH_TYPE.ALERT ? _l('提示内容不允许为空') : _l('链接不允许为空'), 2);
       return true;

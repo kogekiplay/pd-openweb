@@ -48,7 +48,7 @@ const HeaderWrap = styled.header`
 
   .appIconWrapIcon {
     display: inline-block;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     color: #fff;
     margin-right: 10px;
     width: 30px;

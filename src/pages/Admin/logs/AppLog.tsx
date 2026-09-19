@@ -11,7 +11,7 @@ const AppLogWrap = styled.div`
   background-color: var(--color-background-primary);
   display: flex;
   flex-direction: column;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   .tipInfo {
     font-size: 13px;
     line-height: 36px;

@@ -24,6 +24,7 @@ import useChat from 'src/pages/worksheet/hooks/useChat';
 import { genBotSessionId } from 'src/utils/agentSession';
 import { emitter } from 'src/utils/common';
 import { controlState, formatAiGenControlValue } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import { AI_FEATURE_TYPE } from 'src/utils/enum';
 import { parseStreamingJsonlData } from 'src/utils/sse';
 import mingoTemplateFiles from '../../../../../staticfiles/choroplethData/mingo/MingoTemplateFiles.json';
@@ -36,7 +37,6 @@ import CreateWorksheetDataMask from './CreateWorksheetDataMask';
 import Recommend from './Recommend';
 import { ConfigPanel } from './Recommend';
 import WorksheetDataGenerator from './WorksheetDataGenerator';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const MessageListWrap = styled.div`
   position: relative;
@@ -70,7 +70,7 @@ const ConfigIconWrap = styled.div`
 const ConfigPanelWrap = styled.div`
   padding: 12px 16px;
   background: var(--color-background-primary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   box-shadow: var(--shadow-sm);
   width: 200px;
   .ming.Checkbox {

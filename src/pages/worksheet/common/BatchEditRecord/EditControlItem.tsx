@@ -9,14 +9,14 @@ const TabContainer = styled.div`
   display: flex;
   flex-shrink: 0;
   padding: 2px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   background: var(--color-background-secondary);
 `;
 
 const Tab = styled.div`
   padding: 6px 12px;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   color: ${props => (props.active ? 'var(--color-text-title)' : 'var(--color-text-secondary)')};
   background: ${props => (props.active ? 'var(--color-background-card)' : 'transparent')};
@@ -93,7 +93,7 @@ const EmptyTag = styled.div`
   height: 6px;
   width: 22px;
   background: var(--color-border-secondary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
 `;
 
 export default function EditControlItem(props) {

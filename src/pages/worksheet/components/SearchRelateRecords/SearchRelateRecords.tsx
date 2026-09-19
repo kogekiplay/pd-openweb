@@ -19,7 +19,7 @@ const SearchCon = styled.div`
   display: flex;
   margin: 16px 24px 0px;
   align-items: center;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-primary);
   padding: 0 10px;
   .ming.Input {

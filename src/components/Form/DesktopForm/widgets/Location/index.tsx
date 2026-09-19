@@ -14,7 +14,7 @@ import { useWidgetEvent } from '../../../core/useFormEventManager';
 const LocationWrap = styled.div`
   .location {
     border: 1px solid var(--color-border-secondary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     position: relative;
     &:hover {
       box-shadow:

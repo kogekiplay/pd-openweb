@@ -5,7 +5,7 @@ export const Button = styled.div`
   text-align: center;
   background-color: var(--color-background-primary);
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-primary);
   transition: all 0.25s;
   i {
@@ -27,7 +27,7 @@ export const DropdownOverlay = styled.div`
   background-color: var(--color-background-card);
   min-height: 36px;
   overflow: auto;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   box-shadow: var(--shadow-lg);
   padding: 6px 0;
   max-width: 310px;

@@ -10,7 +10,7 @@ import RealTimeData from './RealTimeData';
 import './index.less';
 
 const MonitorWrap = styled.div`
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   background: var(--color-background-primary);
   padding: 20px 16px 16px;
   box-sizing: border-box;
@@ -159,14 +159,26 @@ export default class WorkflowMonitor extends Component<any, any> {
     const { projectId } = this.props.match.params;
 
     return (
-      <MonitorWrap className="monitorContainer flex Relative" ref={node => { this.monitorContainer = node; }}>
+      <MonitorWrap
+        className="monitorContainer flex Relative"
+        ref={node => {
+          this.monitorContainer = node;
+        }}
+      >
         {/* 实时 */}
-        <RealTimeData projectId={projectId} ref={ele => { this.realTimeDataRef = ele; }} />
+        <RealTimeData
+          projectId={projectId}
+          ref={ele => {
+            this.realTimeDataRef = ele;
+          }}
+        />
         {/* 历史 */}
         <HistoryChart
           projectId={projectId}
           updateHistoryDetail={this.updateHistoryDetail}
-          ref={ele => { this.historyChartRef = ele; }}
+          ref={ele => {
+            this.historyChartRef = ele;
+          }}
         />
         {/* 执行详情 */}
         <ExecutionDetails

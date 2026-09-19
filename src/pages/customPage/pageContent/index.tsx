@@ -82,7 +82,7 @@ const CustomPageContentWrap = styled.div`
     .svgWrap {
       width: 26px;
       height: 26px;
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       justify-content: center;
       line-height: initial;
     }
@@ -96,7 +96,7 @@ const CustomPageContentWrap = styled.div`
       display: inline-block;
       text-align: center;
       line-height: 24px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
     }
     .hoverGray:hover {
       // background: var(--color-background-secondary);

@@ -30,7 +30,7 @@ const Wrap = styled.div`
 const WrapCon = styled.div`
   box-shadow: var(--shadow-lg);
   padding: 5px 0;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   background: var(--color-background-primary);
   height: 320px;
   overflow-y: auto;

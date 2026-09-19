@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import { includes } from 'lodash';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Menu, MenuItem } from 'ming-ui';
 import { UserHead } from 'ming-ui';
@@ -77,7 +77,7 @@ const Icon = styled.div`
   flex-shrink: 0;
   width: 24px;
   height: 24px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;

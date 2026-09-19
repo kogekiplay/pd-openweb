@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Dropdown, Icon } from 'ming-ui';
 import { filterOnlyShowField } from 'src/pages/widgetConfig/util';
+import type { FormControl } from 'src/utils/controlTypes';
 import { getSummaryInfo } from 'src/utils/record';
 import { getAdvanceSetting, handleAdvancedSettingChange } from '../../../../util/setting';
 import SelectControl from '../../SelectControl';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const TotalConfigWrap = styled.div`
   .addTotalControl {
@@ -36,7 +36,7 @@ const TotalConfigWrap = styled.div`
       margin-right: 12px;
       height: 36px;
       line-height: 36px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       border: 1px solid var(--color-border-primary);
     }
     .ming.Dropdown {

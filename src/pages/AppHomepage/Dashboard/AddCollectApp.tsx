@@ -71,7 +71,7 @@ const Item = styled.div`
   display: flex;
   align-items: center;
   padding: 8px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   .expandIcon {
     font-size: 10px;

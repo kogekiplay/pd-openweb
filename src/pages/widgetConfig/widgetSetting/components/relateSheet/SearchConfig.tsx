@@ -1,20 +1,20 @@
 import React, { Fragment, useState } from 'react';
 import { useSetState } from 'react-use';
+import Trigger from '@rc-component/trigger';
 import update from 'immutability-helper';
 import { get, head } from 'lodash';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Checkbox, Dialog, Dropdown, RadioGroup } from 'ming-ui';
 import { FASTFILTER_CONDITION_TYPE } from 'worksheet/common/ViewConfig/components/fastFilter/util.js';
 import { filterOnlyShowField } from 'src/pages/widgetConfig/util';
 import FastFilter from 'src/pages/worksheet/common/ViewConfig/components/fastFilter/fastFilterCon';
+import type { FormControl } from 'src/utils/controlTypes';
 import { SettingItem } from '../../../styled';
 import { formatControlsToDropdown, getAdvanceSetting } from '../../../util';
 import { handleAdvancedSettingChange } from '../../../util/setting';
 import SelectControl from '../SelectControl';
 import 'rc-trigger/assets/index.css';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const TEXT_TYPE_CONTROL = [2, 3, 4, 5, 7, 32, 33];
 
@@ -26,7 +26,7 @@ const ConfigWrap = styled.div`
   }
   .addFilterControl {
     width: 120px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     padding: 0 12px;
     line-height: 32px;
     color: var(--color-primary);
@@ -178,7 +178,9 @@ export default function ApiSearchConfig(props) {
                         popup={
                           <SelectControl
                             list={filterOnlyShowField(controls).filter(({ type, sourceControlType, controlId }) => {
-                              const ids = searchfilters.map(({ controlId }: { controlId?: string; [key: string]: any }) => controlId);
+                              const ids = searchfilters.map(
+                                ({ controlId }: { controlId?: string; [key: string]: any }) => controlId,
+                              );
                               return (
                                 _.includes(FASTFILTER_CONDITION_TYPE, type === 30 ? sourceControlType : type) &&
                                 !ids.includes(controlId)

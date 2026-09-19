@@ -34,7 +34,7 @@ const CardWrapper = styled.div`
   margin-bottom: 12px;
   box-sizing: border-box;
   background-color: var(--color-background-primary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-secondary);
 
   &.active {
@@ -313,7 +313,8 @@ function TodoEntrustList(props) {
                       <Dropdown
                         trigger={['click']}
                         placement="bottomRight"
-                        popupRender={() => <Menu
+                        popupRender={() => (
+                          <Menu
                             expandIcon={<Icon icon="arrow-right-tip" />}
                             style={{
                               width: 180,
@@ -354,7 +355,8 @@ function TodoEntrustList(props) {
                                 <div className="flex">{isStartDate ? _l('取消委托') : _l('结束委托')}</div>
                               </div>
                             </Menu.Item>
-                          </Menu>}
+                          </Menu>
+                        )}
                       >
                         <Icon
                           icon="more_horiz"

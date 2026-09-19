@@ -16,7 +16,7 @@ const PageWrap = styled.div`
   }
   .serviceCard {
     border: 1px solid var(--color-border-primary);
-    border-radius: 4px;
+    border-radius: var(--radius-md);
     margin-top: 16px;
     background: var(--color-background-card);
   }

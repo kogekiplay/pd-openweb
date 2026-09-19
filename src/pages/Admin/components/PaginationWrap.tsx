@@ -26,7 +26,7 @@ const Wrap = styled.div`
         vertical-align: middle;
         border: 1px solid transparent;
         font-size: 13px;
-        border-radius: 5px;
+        border-radius: var(--radius-sm);
       }
       a:hover {
         background-color: var(--color-background-hover);

@@ -44,7 +44,7 @@ const FileItemWrap = styled.div`
       height: 40px;
       display: inline-block;
       background: var(--color-background-primary);
-      border-radius: 4px 4px 4px 4px;
+      border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
       color: var(--color-white);
       text-align: center;
       line-height: 40px;
@@ -69,7 +69,7 @@ const FileItemWrap = styled.div`
     width: 248px;
     line-height: 40px;
     border: 1px solid var(--color-border-secondary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     padding: 0 12px;
     box-sizing: border-box;
     &.focus {

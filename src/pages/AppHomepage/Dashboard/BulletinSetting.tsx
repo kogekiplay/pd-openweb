@@ -47,7 +47,7 @@ const BulletinDialog = styled(Dialog)`
     .image {
       width: 100%;
       height: 140px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -63,7 +63,7 @@ const BulletinDialog = styled(Dialog)`
         .uploadBtn {
           background-color: rgba(0, 0, 0, 0.5);
           padding: 6px 8px;
-          border-radius: 4px;
+          border-radius: var(--radius-sm);
           color: var(--color-white);
           font-size: 14px;
           cursor: pointer;
@@ -81,7 +81,7 @@ const BulletinDialog = styled(Dialog)`
       .picItem {
         flex: 1;
         height: 40px;
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         background-size: cover !important;
         position: relative;
         cursor: pointer;
@@ -136,7 +136,7 @@ const ItemWrapper = styled.div`
       width: 90px;
       min-width: 90px;
       height: 56px;
-      border-radius: 5px;
+      border-radius: var(--radius-sm);
       background-size: cover !important;
     }
     .delIcon {
@@ -168,7 +168,7 @@ const TitleInput = styled(AntdInput)`
   &.ant-input-affix-wrapper {
     transition: none !important;
     border-color: var(--color-border-tertiary) !important;
-    border-radius: 3px !important;
+    border-radius: var(--radius-sm) !important;
     padding: 6px 12px !important;
     &:hover {
       border-color: var(--color-primary) !important;

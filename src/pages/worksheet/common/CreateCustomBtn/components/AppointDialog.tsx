@@ -14,9 +14,9 @@ import {
   isOnlyRead,
 } from 'src/pages/worksheet/common/CreateCustomBtn/utils.js';
 import { isRelateRecordTableControl } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import Input from '../components/Inputs';
 import ChooseWidget from './ChooseWidget';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrap = styled.div`
   .controlname {
@@ -34,7 +34,7 @@ const Wrap = styled.div`
     .inputDef {
       width: 100%;
       .optionsCon {
-        border-radius: 4px;
+        border-radius: var(--radius-sm);
         padding: 0 10px;
         border: 1px solid var(--color-border-tertiary);
         background: var(--color-background-primary);

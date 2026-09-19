@@ -1,9 +1,9 @@
 import React, { createRef } from 'react';
 import { shallowEqual } from 'react-redux';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _, { find, includes } from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import SheetContext from 'worksheet/common/Sheet/SheetContext';
 import RelateRecordDropdown from 'worksheet/components/RelateRecordDropdown';
@@ -17,12 +17,12 @@ import {
   getTitleTextFromRelateControl,
   renderText as renderCellText,
 } from 'src/utils/control';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import { formatRecordToRelateRecord } from 'src/utils/record';
 import { openChildTable } from '../ChildTableDialog';
 import EditableCellCon from '../EditableCellCon';
 import { openRelateRelateRecordTable } from '../RelateRecordTableDialog';
 import RelateRecordTags from './comps/RelateRecordTags';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const RecordCardCellRelateRecord = styled.div`
   display: inline-block;
@@ -30,7 +30,7 @@ const RecordCardCellRelateRecord = styled.div`
   font-size: 13px;
   background-color: rgba(0, 100, 240, 0.08);
   padding: 0 10px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   margin-right: 6px;
 `;
 export default class RelateRecord extends React.Component<any, any> {

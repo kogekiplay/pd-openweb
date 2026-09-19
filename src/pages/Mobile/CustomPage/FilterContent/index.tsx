@@ -29,7 +29,7 @@ const Wrap = styled.div`
 
 const FilterEntry = styled.div`
   background-color: transparent;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   box-shadow: var(--shadow-sm);
   padding: 0 7px 0 10px;
   height: 100%;

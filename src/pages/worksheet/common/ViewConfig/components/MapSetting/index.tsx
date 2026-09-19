@@ -30,7 +30,7 @@ const MapSettingWrap = styled.div`
   }
   .allColorSelectFields {
     font-weight: 500;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     .Item-content {
       padding-left: 32px !important;
     }
@@ -80,7 +80,7 @@ const DefaultLocationWrap = styled.div`
   height: 36px;
   color: var(--color-text-primary);
   border: 1px solid var(--color-border-primary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   display: flex;
   justify-content: space-between;
   align-items: center;

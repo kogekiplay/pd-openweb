@@ -8,7 +8,7 @@ import ClickAway from 'ming-ui/components/ClickAway';
 const RangeBox = styled.div`
   z-index: 100;
   width: 320px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   background: var(--color-background-card) 0% 0% no-repeat padding-box;
   box-shadow: var(--shadow-lg);
   box-sizing: border-box;

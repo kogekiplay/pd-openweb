@@ -5,8 +5,8 @@ import styled from 'styled-components';
 import CellControl from 'worksheet/components/CellControls';
 import { checkCellIsEmpty } from 'src/utils/control';
 import { checkControlCanSetStyle } from 'src/utils/control';
-import { getRecordCardStyle } from '../../tools/utils';
 import type { FormControl } from 'src/utils/controlTypes';
+import { getRecordCardStyle } from '../../tools/utils';
 
 const Control = styled.div`
   display: flex;
@@ -102,7 +102,7 @@ const Control = styled.div`
       width: 22px;
       height: 6px;
       background: var(--color-border-primary);
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
     }
     ${({ contentStyle }) => contentStyle}
   }

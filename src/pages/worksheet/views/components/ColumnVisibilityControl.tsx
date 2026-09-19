@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -21,7 +21,7 @@ const IconWrapper = styled.div`
   align-items: ${props => (props.headTitleCenter || props.height === 34 ? 'center' : 'flex-start')};
   justify-content: center;
   padding-top: ${props => (props.headTitleCenter || props.height === 34 ? '0' : '7px')};
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   &:hover {
     background: var(--color-background-hover);
@@ -33,7 +33,7 @@ const PopupWrapper = styled.div`
   max-width: 320px;
   background: var(--color-background-primary);
   box-shadow: var(--shadow-lg);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   overflow: hidden;
 `;
 

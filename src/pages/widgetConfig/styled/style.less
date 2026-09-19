@@ -68,11 +68,11 @@
       .tabPositionWrap {
         display: flex;
         background: var(--color-background-disabled);
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         padding: 2px;
         .tabPositionItem {
           height: 36px;
-          border-radius: 3px;
+          border-radius: var(--radius-sm);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -148,7 +148,7 @@
        （实测 v4 设在 arrow-content 上、v5 设在 .ant-popover 上，两版都是 antd 自己管）。
        所以这条在 v5 下既匹配不到元素、也不再需要 —— 直接删，不用找替代写法。 */
     .ant-popover-container {
-      border-radius: 3px;
+      border-radius: var(--radius-md);
     }
   }
 }
@@ -165,9 +165,6 @@
   .mui-dialog-body {
     padding: 0 !important;
     overflow: hidden;
-  }
-  > .mui-dialog-close-btn {
-    top: 12px !important;
   }
 }
 

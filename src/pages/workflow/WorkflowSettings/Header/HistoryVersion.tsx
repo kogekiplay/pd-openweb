@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Dialog, Icon, LoadDiv, MenuItem, ScrollView, UserHead } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -19,7 +19,7 @@ const HistoryListBox = styled.div`
   width: 440px;
   display: flex;
   background: var(--color-background-card);
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   box-shadow: var(--shadow-xl);
   left: 12px;
   top: 67px;
@@ -96,7 +96,7 @@ const ListItem = styled.div`
 const MenuBox = styled.div`
   min-width: 180px;
   padding: 5px 0;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   background: var(--color-background-card);
   box-shadow: var(--shadow-lg);
 `;

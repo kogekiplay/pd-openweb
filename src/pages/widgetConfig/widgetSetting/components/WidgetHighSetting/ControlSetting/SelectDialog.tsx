@@ -17,7 +17,7 @@ const SelectInfoWrap = styled.div`
     padding-bottom: 6px;
     line-height: 36px;
     border: 1px solid var(--color-border-primary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     &:hover {
       border-color: var(--color-primary);
     }
@@ -33,7 +33,7 @@ const SelectInfoWrap = styled.div`
     line-height: 22px;
     margin: 6px 6px 0 6px;
     background-color: var(--color-border-secondary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     padding: 0 8px;
     .countryName {
       margin: 0 6px;
@@ -202,7 +202,9 @@ export function SelectAreaCountryDialog(props) {
     <Dialog title={title} visible onOk={() => onOk(selectableData)} onCancel={onCancel}>
       <Dropdown
         trigger={['click']}
-        popupRender={() => <SelectAreaCountryDropdown data={data} setData={setSelectData} selectableData={selectableData} />}
+        popupRender={() => (
+          <SelectAreaCountryDropdown data={data} setData={setSelectData} selectableData={selectableData} />
+        )}
       >
         <SelectInfoWrap>
           <div className="countryList">

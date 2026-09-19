@@ -15,7 +15,7 @@ export const Wrap = styled.div`
     width: 99px;
     height: 36px;
     background: var(--color-background-secondary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     color: var(--color-primary);
     line-height: 34px;
     text-align: center;
@@ -31,7 +31,7 @@ export const WrapSortControls = styled.div`
   }
   &.title {
     margin-left: 0px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     overflow: hidden;
     background: var(--color-background-secondary);
     padding-left: 16px;

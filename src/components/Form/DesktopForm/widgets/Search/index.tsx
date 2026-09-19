@@ -26,7 +26,7 @@ const SearchBtn = styled.div`
   width: 100%;
   height: 36px;
   border: 1px solid ${props => props?.buttonStyle?.bordercolor || 'var(--color-border-primary)'};
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   padding: 0 16px;
   background: ${props => props?.buttonStyle?.background || 'var(--color-background-primary)'};
   color: var(--color-text-primary);

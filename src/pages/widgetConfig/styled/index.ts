@@ -9,7 +9,7 @@ export const SettingItem = styled.div`
     font-size: 13px;
     color: var(--color-text-title);
     line-height: 26px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     background-color: transparent !important;
     &.inputError {
       border-color: var(--color-error);
@@ -146,7 +146,7 @@ export const RelateInfo = styled.div`
 `;
 export const InfoWrap = styled.div`
   border: 1px solid var(--color-border-primary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   color: var(--color-text-secondary);
   line-height: 34px;
   padding: 0 12px;
@@ -198,7 +198,7 @@ export const DropdownPlaceholder = styled.div`
   min-height: 36px;
   border: 1px solid var(--color-border-primary);
   margin-top: 12px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   padding: 0 5px 0 12px;
   cursor: pointer;
   &.active,
@@ -251,7 +251,7 @@ export const SelectFieldsWrap = styled.div`
     z-index: 3;
   }
   padding: 6px 0;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   box-shadow: var(--shadow-lg);
   width: 100%;
   border: 1px solid var(--color-border-primary);
@@ -355,7 +355,7 @@ export const CommonDisplay = styled.div`
   height: ${props => props.height || 34}px;
   line-height: 34px;
   color: var(--color-text-tertiary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   background-color: var(--color-background-primary);
   overflow: hidden;
   .intro {
@@ -569,7 +569,7 @@ export const WidgetIntroWrap = styled.div`
     .switchType {
       padding: 2px 6px;
       background: var(--color-background-primary);
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -627,7 +627,7 @@ export const DropdownContent = styled.div`
   min-height: 36px;
   overflow: auto;
   background: var(--color-background-card);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   box-shadow: var(--shadow-lg);
   padding: 6px 0;
   .empty {
@@ -720,7 +720,7 @@ export const DialogFooter = styled.div`
 
 export const TitleContentWrap = styled.div`
   position: relative;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   display: flex;
   flex-direction: ${props => (props.displayRow ? 'row' : 'column')};
   ${props => (props.readOnly ? 'opacity: 0.6;' : '')}
@@ -780,7 +780,7 @@ export const TitleContentWrap = styled.div`
     border-radius: 8px 8px 0 0;
     & > div {
       &:first-child {
-        border-radius: 5px 0 0 0;
+        border-radius: var(--radius-sm) 0 0 0;
       }
     }
     .tabHeaderTitle {
@@ -824,10 +824,10 @@ export const AnimationWrap = styled.div`
   display: flex;
   padding: 2px;
   background: var(--color-background-disabled);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   .animaItem {
     height: 32px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -869,7 +869,7 @@ export const AnimationWrap = styled.div`
 
 export const SheetViewWrap = styled.div`
   display: flex;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-primary);
   margin-top: 8px;
   .Dropdown--input {
@@ -919,7 +919,7 @@ export const NumberRange = styled.div`
 
 export const BothRelateInfo = styled.div`
   border: 1px solid var(--color-border-primary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   padding: 10px 12px;
   background-color: var(--color-background-primary);
   .displayType {
@@ -977,7 +977,7 @@ export const DisplayMode = styled.div`
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 3px 3px 3px 3px;
+      border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
       border: 1px solid var(--color-border-primary);
       i {
         color: var(--color-text-secondary);
@@ -1035,7 +1035,7 @@ export const SetConfig = styled.div`
   height: 36px;
   line-height: 34px;
   text-align: center;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   border: ${props =>
     props.hasSet ? '1px solid var(--color-border-primary)' : '1px dashed var(--color-border-primary)'};
@@ -1063,7 +1063,7 @@ export const CoverWrap = styled.div`
   }
   .coverType {
     display: Inline-block;
-    border-radius: 3px 0px 0px 3px;
+    border-radius: var(--radius-sm) 0px 0px var(--radius-sm);
     border: 1px solid var(--color-border-primary);
     padding: 6px 18px;
     color: var(--color-text-secondary);
@@ -1072,7 +1072,7 @@ export const CoverWrap = styled.div`
       border-color: var(--color-primary);
     }
     &:last-child {
-      border-radius: 0px 3px 3px 0px;
+      border-radius: 0px var(--radius-sm) var(--radius-sm) 0px;
     }
   }
 `;

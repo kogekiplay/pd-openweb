@@ -7,7 +7,7 @@ import { conditionAdapter, formatQuickFilter, validate } from 'mobile/RecordList
 
 const SearchRowsWrapper = styled.div`
   background-color: var(--color-background-primary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   box-shadow: var(--shadow-sm);
   padding: 0 10px;
   height: 100%;

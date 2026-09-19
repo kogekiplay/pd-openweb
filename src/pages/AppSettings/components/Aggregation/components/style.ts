@@ -41,13 +41,13 @@ export const Wrap = styled.div`
     position: absolute;
     left: 0;
     top: 9px;
-    border-radius: 2px;
+    border-radius: var(--radius-sm);
   }
 `;
 
 export const WrapDropW = styled.div`
   width: 100%;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   box-shadow: var(--shadow-lg);
   padding: 6px 0;
   background-color: var(--color-background-card);
@@ -89,7 +89,7 @@ export const WrapWorksheet = styled.div`
     background: var(--color-background-secondary);
   }
   background: var(--color-background-primary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   box-shadow: 0px 1px 2px rgba(51, 51, 51, 0.16);
   &.isAdd {
     background: initial;
@@ -111,7 +111,7 @@ export const WrapWorksheet = styled.div`
   .filterConByWorksheet {
     background: var(--color-background-primary);
     border: 1px solid var(--color-border-secondary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     margin: 0 12px 0;
     box-sizing: border-box;
     width: calc(100% - 24px);
@@ -168,7 +168,7 @@ export const Header = styled.div`
     line-height: 34px;
     color: var(--color-white);
     cursor: not-allowed;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     text-align: center;
     font-weight: 600;
     border: 1px solid var(--color-text-tertiary);
@@ -185,7 +185,7 @@ export const Header = styled.div`
     line-height: 36px;
     color: var(--color-white);
     cursor: pointer;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     text-align: center;
     font-weight: 600;
     background: var(--color-primary);
@@ -240,7 +240,7 @@ export const WrapPreview = styled.div`
     opacity: 0.5;
   }
   .warnCon {
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     padding: 8px 14px;
     margin: 20px 24px 0;
     &.isERR {
@@ -266,7 +266,7 @@ export const WrapPreview = styled.div`
       height: 32px;
       line-height: 32px;
       background: var(--color-background-primary);
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       border: 1px solid var(--color-text-disabled);
       &:hover {
         color: var(--color-primary);

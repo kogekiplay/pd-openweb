@@ -16,7 +16,7 @@ const LinkParaWrap = styled.div`
   input {
     font-size: 13px;
     height: 32px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
   }
   .valueWrap {
     flex: 1;
@@ -25,7 +25,7 @@ const LinkParaWrap = styled.div`
       color: var(--color-text-tertiary) !important;
     }
     input {
-      border-radius: 3px 0 0 3px !important;
+      border-radius: var(--radius-sm) 0 0 var(--radius-sm) !important;
     }
   }
   .paraItem {
@@ -81,7 +81,7 @@ function ParaItem({ deleteItem, item, updateItem }) {
   const { type, data } = value;
   const [visible, setVisible] = useState(false);
   return (
-    (<div className="paraItem flexCenter">
+    <div className="paraItem flexCenter">
       <Input
         style={{ width: '100px' }}
         value={key}
@@ -107,7 +107,8 @@ function ParaItem({ deleteItem, item, updateItem }) {
           trigger={'click'}
           placement="bottomRight"
           onOpenChange={setVisible}
-          popupRender={() => <DropdownContent style={{ width: '180px' }}>
+          popupRender={() => (
+            <DropdownContent style={{ width: '180px' }}>
               {LINK_PARA_FIELDS.map(({ type, title, fields }) => {
                 return (
                   <Fragment key={type}>
@@ -127,7 +128,8 @@ function ParaItem({ deleteItem, item, updateItem }) {
                   </Fragment>
                 );
               })}
-            </DropdownContent>}
+            </DropdownContent>
+          )}
         >
           <Tooltip title={_l('使用动态参数')}>
             <div className={cx('selectField pointer', { active: visible })}>
@@ -141,7 +143,7 @@ function ParaItem({ deleteItem, item, updateItem }) {
           <i className="icon-delete_12"></i>
         </div>
       </Tooltip>
-    </div>)
+    </div>
   );
 }
 

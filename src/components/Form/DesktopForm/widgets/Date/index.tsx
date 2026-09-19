@@ -21,14 +21,14 @@ const DateZoneWrap = styled.div`
   .customAntPicker {
     flex: 1;
     min-width: 0;
-    ${props => (props.showTimeZone ? 'border-radius: 4px 0 0 4px !important;' : '')}
+    ${props => (props.showTimeZone ? 'border-radius: var(--radius-sm) 0 0 var(--radius-sm) !important;' : '')}
   }
   .timeZoneTag {
     display: flex;
     align-items: center;
     padding: 0 5px;
     border: 1px solid var(--color-border-tertiary);
-    border-radius: 0 4px 4px 0;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     border-left: none;
     background: var(--color-background-primary);
     ${props => (props.isCell ? 'border: none;' : '')}

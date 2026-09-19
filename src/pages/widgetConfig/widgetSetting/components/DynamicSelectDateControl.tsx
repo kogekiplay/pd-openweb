@@ -8,15 +8,15 @@ import 'moment/locale/zh-cn';
 import styled from 'styled-components';
 import { DatePicker } from 'ming-ui';
 import { filterOnlyShowField } from 'src/pages/widgetConfig/util';
+import type { FormControl } from 'src/utils/controlTypes';
 import { SYSTEM_DATE_CONTROL } from '../../config/widget';
 import { ControlTag } from '../../styled';
 import SelectControl from './SelectControl';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const DateInfoWrap = styled.div`
   display: flex;
   border: 1px solid var(--color-border-tertiary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   .contentWrap {
     display: flex;
     align-items: center;

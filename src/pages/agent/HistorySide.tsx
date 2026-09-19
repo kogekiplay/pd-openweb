@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Dialog, Icon, Input, LoadDiv, Menu, MenuItem, Skeleton } from 'ming-ui';
 import ScrollView from 'ming-ui/components/ScrollView';
@@ -94,7 +94,7 @@ const Con = styled.div`
         width: 24px;
         height: 24px;
         flex-shrink: 0;
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         color: var(--color-text-secondary);
         cursor: pointer;
         display: none;
@@ -127,7 +127,7 @@ const Con = styled.div`
 export const ExpandIcon = styled.span`
   width: 32px;
   height: 32px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   transition: background 0.2s ease;
   &:hover {

@@ -58,25 +58,25 @@ const Bar = styled.div`
   position: relative;
   height: 6px;
   padding: 0 4px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   background: var(--color-border-secondary);
 `;
 const PortraitBar = styled.div`
   position: relative;
   width: 6px;
   height: 100%;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   margin-right: 20px;
   background: var(--color-border-secondary);
 `;
 
 const Content = styled.div`
   height: 6px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
 `;
 const PortraitContent = styled.div`
   width: 6px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
 `;
 
 const Drag = styled.span`

@@ -101,7 +101,7 @@ const WrapCon = styled.div`
     color: var(--color-text-secondary) !important;
   }
   .iconWrap {
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     width: 36px;
     height: 36px;
   }

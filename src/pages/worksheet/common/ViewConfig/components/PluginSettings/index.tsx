@@ -1,22 +1,22 @@
 import React, { useEffect } from 'react';
 import { useSetState } from 'react-use';
 import { Drawer } from 'antd';
+import Trigger from '@rc-component/trigger';
 import { saveAs } from 'file-saver';
 import _ from 'lodash';
 import moment from 'moment';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, Input, SvgIcon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import ErrorBoundary from 'ming-ui/components/ErrorBoundary';
 import { dialogSelectIcon } from 'ming-ui/functions';
 import { SwitchStyle } from 'src/pages/worksheet/common/ViewConfig/style.jsx';
+import type { FormControl } from 'src/utils/controlTypes';
 import AddDialog from './AddDialog';
 import { controlTypeList, defaultData, PARAM_TYPES } from './config';
 import Edit from './Edit';
 import SettingList from './SettingList';
 import './index.less';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrap = styled.div`
   .tit {
@@ -26,7 +26,7 @@ const Wrap = styled.div`
     width: 440px;
     height: 36px;
     background: var(--color-background-primary);
-    border-radius: 3px 3px 3px 3px;
+    border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     border: 1px solid var(--color-border-primary);
     &:hover {
       border: 1px solid var(--color-border-tertiary);
@@ -37,7 +37,7 @@ const Wrap = styled.div`
       border: 1px solid var(--color-border-primary);
       margin: -1px;
       z-index: 0;
-      border-radius: 3px 0 0 3px;
+      border-radius: var(--radius-sm) 0 0 var(--radius-sm);
       &:hover {
         border: 1px solid var(--color-border-tertiary);
         z-index: 1;
@@ -49,7 +49,7 @@ const Wrap = styled.div`
     .Input {
       margin: -1px -1px -1px 0;
       border: 1px solid var(--color-border-primary);
-      border-radius: 0 3px 3px 0;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
       &:focus,
       &:hover {
         z-index: 1;
@@ -72,7 +72,7 @@ const WrapPopup = styled.div`
   background: var(--color-background-card);
   box-shadow: var(--shadow-sm);
   padding: 6px 0;
-  border-radius: 3px 3px 3px 3px;
+  border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
   width: 160px;
   & > div {
     line-height: 36px;
@@ -86,7 +86,8 @@ const WrapPopup = styled.div`
 `;
 
 function PluginSettings(params) {
-  const { projectId, worksheetControls, onChangeView, view }: { worksheetControls: FormControl[]; [key: string]: any } = params;
+  const { projectId, worksheetControls, onChangeView, view }: { worksheetControls: FormControl[]; [key: string]: any } =
+    params;
   const [
     { switchSettings, paramSettings, name, icon, iconUrl, iconColor, editInfo, showEdit, addVisible, key },
     setState,
@@ -172,7 +173,7 @@ function PluginSettings(params) {
   };
 
   return (
-    (<Wrap className="mTop24">
+    <Wrap className="mTop24">
       {/* <div className="title Bold mTop24">{_l('提交设置')}</div> */}
       <div className="tit mTop16 Bold">{_l('插件名称')}</div>
       <div className="pluginSet flexRow alignItemsCenter mTop8">
@@ -405,7 +406,7 @@ function PluginSettings(params) {
         onClose={() => setState({ editInfo: null, showEdit: false })}
         placement="right"
         open={showEdit}
-       
+
         closable={false}
         getContainer={false}
         mask={false}
@@ -508,7 +509,7 @@ function PluginSettings(params) {
           }
         />
       )}
-    </Wrap>)
+    </Wrap>
   );
 }
 

@@ -200,7 +200,7 @@ export const HomePageWrap = styled.div`
       box-sizing: border-box;
       padding: 24px;
       box-shadow: var(--shadow-sm);
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       .count {
         font-size: 28px;
       }
@@ -371,7 +371,7 @@ export const HomePageWrap = styled.div`
       flex-direction: column;
       justify-content: space-between;
       padding: 20px 24px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       box-shadow: var(--shadow-sm);
     }
     .licenseInfoWrap {
@@ -426,7 +426,7 @@ export const HomePageWrap = styled.div`
       line-height: 26px;
       padding: 0 12px;
       color: var(--color-white);
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       background: linear-gradient(281deg, var(--color-warning) 0%, #ffad12 100%);
       z-index: 2;
       i {
@@ -528,7 +528,7 @@ export const HomePageWrap = styled.div`
       display: flex;
       align-items: center;
       padding: 24px 0;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       ul {
         display: flex;
         justify-content: space-between;
@@ -588,7 +588,7 @@ export const HomePageWrap = styled.div`
           display: flex;
           align-items: center;
           border: 1px solid var(--color-background-disabled);
-          border-radius: 4px;
+          border-radius: var(--radius-sm);
           padding: 24px 16px;
           height: 100%;
           box-sizing: border-box;
@@ -718,7 +718,7 @@ export const TitleWrap = styled.div`
     font-weight: bold;
     font-size: 14px;
     line-height: 32px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     border: 1px solid var(--color-border-primary);
     &:hover {

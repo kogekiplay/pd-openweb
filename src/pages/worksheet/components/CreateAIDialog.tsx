@@ -100,7 +100,7 @@ const AIActionDialogWrap = styled(Dialog)`
       align-items: center;
       justify-content: center;
       width: 100% !important;
-      border-radius: 3px !important;
+      border-radius: var(--radius-sm) !important;
       line-height: 36px;
       min-height: 36px;
     }

@@ -36,7 +36,7 @@ const BannerWrapper = styled.div`
   padding: 0 12px;
   width: 100%;
   height: 42px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 700;
   color: var(--color-text-primary);
@@ -72,7 +72,17 @@ const BannerWrapper = styled.div`
   }
 `;
 
-const Banner = ({ icon, type = 'primary', text, action, className }: { icon?: string; className?: string; [key: string]: any }) => {
+const Banner = ({
+  icon,
+  type = 'primary',
+  text,
+  action,
+  className,
+}: {
+  icon?: string;
+  className?: string;
+  [key: string]: any;
+}) => {
   return (
     <BannerWrapper className={className} type={type}>
       {icon && <Icon icon={icon} />}

@@ -57,7 +57,7 @@ const Wrap = styled.div`
           width: 100%;
           height: 3px;
           background: var(--color-primary);
-          border-radius: 2px;
+          border-radius: var(--radius-sm);
           display: inline-block;
           position: absolute;
           left: 0;
@@ -80,7 +80,7 @@ const WrapCon = styled.div`
     display: inline-block;
     height: 36px;
     padding: 0 24px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     box-sizing: border-box;
     line-height: 36px;
     cursor: pointer;
@@ -96,7 +96,7 @@ const WrapCon = styled.div`
   .cancelBtn {
     display: inline-block;
     height: 36px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     box-sizing: border-box;
     line-height: 36px;
     cursor: pointer;

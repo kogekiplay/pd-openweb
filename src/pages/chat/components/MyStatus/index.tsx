@@ -20,7 +20,7 @@ const DialogWrap = styled(Dialog)`
   }
   .statusItem {
     padding: 12px 16px 12px 7px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     .icon-delete1 {
       display: none;
     }
@@ -30,7 +30,7 @@ const DialogWrap = styled(Dialog)`
       height: 40px;
       margin-right: 8px;
       overflow: hidden;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       padding-left: 8px;
       &:hover {
         background: rgba(0, 0, 0, 0.04);

@@ -27,7 +27,7 @@ const Summary = styled.div`
     flex-direction: column;
     display: flex;
     background: var(--color-background-secondary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     justify-content: center;
     align-items: center;
     min-width: 220px;
@@ -63,12 +63,12 @@ const ChartWrap = styled.div`
       }
       .ant-select {
         height: 36px;
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         &.ant-select,
         & .ant-select {
           --ant-select-border-size: 1px;
           --ant-select-border-color: var(--color-border-secondary);
-          --ant-select-border-radius: 3px;
+          --ant-select-border-radius: var(--radius-sm);
         }
         .ant-select-content {
           height: 36px;
@@ -91,7 +91,7 @@ const ChartWrap = styled.div`
     .dateDimension {
       background-color: var(--color-background-secondary);
       height: 36px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       .dimensionItem {
         width: 50px;
         height: 32px;
@@ -103,7 +103,7 @@ const ChartWrap = styled.div`
         &.currentDimension {
           color: var(--color-primary);
           background-color: var(--color-background-primary);
-          border-radius: 3px;
+          border-radius: var(--radius-sm);
         }
       }
     }
@@ -157,7 +157,7 @@ const ChartWrap = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
   }
 `;
 
@@ -650,14 +650,17 @@ export default class Overview extends Component<any, any> {
               {!this.props.appId && (
                 <Select
                   className="width200 mRight15 mdAntSelect"
-                  showSearch={{ filterOption: (inputValue, option) =>
-                    appList
-                      .find(item => item.value === option.value)
-                      .label.toLowerCase()
-                      .indexOf(inputValue.toLowerCase()) > -1, onSearch: _.debounce(
-                    val => this.setState({ keyword: val, appPageIndex: 1 }, () => this.getAppList(projectId)),
-                    500,
-                  ) }}
+                  showSearch={{
+                    filterOption: (inputValue, option) =>
+                      appList
+                        .find(item => item.value === option.value)
+                        .label.toLowerCase()
+                        .indexOf(inputValue.toLowerCase()) > -1,
+                    onSearch: _.debounce(
+                      val => this.setState({ keyword: val, appPageIndex: 1 }, () => this.getAppList(projectId)),
+                      500,
+                    ),
+                  }}
                   defaultValue={appId}
                   options={appList}
                   onFocus={() => appList.length === 1 && this.getAppList(projectId)}

@@ -168,7 +168,7 @@ const Root = styled.div`
     border-left: 3px solid var(--color-border-primary);
     color: var(--color-text-secondary);
     background: var(--color-background-tertiary);
-    border-radius: 0 4px 4px 0;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   }
   blockquote blockquote {
     background: transparent;

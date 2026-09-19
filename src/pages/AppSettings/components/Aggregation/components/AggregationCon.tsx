@@ -21,7 +21,7 @@ const WrapItem = styled.div`
   height: 36px;
   background: var(--color-background-primary);
   box-shadow: var(--shadow-sm);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   z-index: 1000;
   .dragIcon {
     opacity: 0;
@@ -39,7 +39,7 @@ const ActWrap = styled.div`
   width: 180px;
   background: var(--color-background-card);
   box-shadow: var(--shadow-lg);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   padding: 6px 0;
   .labelWrap {
     &.H36 {

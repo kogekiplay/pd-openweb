@@ -11,7 +11,7 @@ import { getCurrentProject } from 'src/utils/project';
 const ProjectSwitch = styled(VerticalMiddle)`
   cursor: pointer;
   padding: 3px 5px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   .companyName {
     display: inline-block;
     max-width: 500px;
@@ -32,7 +32,7 @@ const ProjectSwitch = styled(VerticalMiddle)`
 const ProjectsMenuCon = styled.div`
   width: 300px;
   background: var(--color-background-card);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   padding-bottom: 5px;
   box-shadow: var(--shadow-lg);
 `;

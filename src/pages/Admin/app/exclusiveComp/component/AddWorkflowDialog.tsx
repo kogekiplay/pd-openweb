@@ -122,7 +122,7 @@ const SelectAppOption = styled.div`
     width: 20px;
     height: 20px;
     display: inline-block;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     margin-right: 8px;
     text-align: center;
     svg {
@@ -189,7 +189,7 @@ const CheckedWorkflowWrap = styled.div`
     }
     .iconWrap {
       align-items: center;
-      border-radius: 5px;
+      border-radius: var(--radius-sm);
       display: flex;
       height: 36px;
       justify-content: center;

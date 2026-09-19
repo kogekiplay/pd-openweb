@@ -27,7 +27,7 @@ const Wrap = styled.div`
   .colorWrap {
     width: 32px;
     height: 32px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     padding: 4px;
     border: 1px solid var(--color-border-primary);
     background-color: var(--color-background-primary);
@@ -43,7 +43,7 @@ const Wrap = styled.div`
     background-color: var(--color-text-tertiary);
   }
   .square {
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
   }
   .circle {
     border-radius: 50%;
@@ -52,7 +52,7 @@ const Wrap = styled.div`
 
 const EntranceWrapper = styled.div`
   border: 1px solid var(--color-border-primary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   height: 30px;
   background-color: var(--color-background-primary);
   &.ruleIcon {

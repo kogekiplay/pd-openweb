@@ -12,7 +12,7 @@ const Con = styled.div`
     margin: 0 auto;
     width: 100%;
     height: 100%;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     box-shadow: var(--shadow-sm);
     background-color: var(--color-background-primary);
   }

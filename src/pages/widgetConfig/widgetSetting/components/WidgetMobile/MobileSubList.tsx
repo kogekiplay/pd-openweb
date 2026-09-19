@@ -7,9 +7,9 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { ALL_SYS } from 'src/pages/widgetConfig/config/widget';
 import { canSetAsTitle, formatControlsToDropdown } from 'src/pages/widgetConfig/util';
 import SortColumns from 'src/pages/worksheet/components/SortColumns/SortColumns';
+import type { FormControl } from 'src/utils/controlTypes';
 import { DisplayMode, SettingItem } from '../../../styled';
 import { getAdvanceSetting, getControlsSorts, handleAdvancedSettingChange } from '../../../util/setting';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const MobileSubListWrap = styled.div`
   .targetEle .Dropdown--input {
@@ -19,7 +19,7 @@ const MobileSubListWrap = styled.div`
     border: 1px solid var(--color-border-tertiary);
     line-height: 34px;
     padding: 0 12px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
   }
 `;
 

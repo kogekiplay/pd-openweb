@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSetState } from 'react-use';
-import cx from 'classnames';
 import Trigger from '@rc-component/trigger';
+import cx from 'classnames';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import { getIconByType } from 'src/pages/widgetConfig/util';
@@ -11,7 +11,7 @@ const WrapChoose = styled.div`
   max-height: 300px;
   background: var(--color-background-primary);
   box-shadow: var(--shadow-lg);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   .search {
     border-bottom: 1px solid var(--color-border-secondary);
     min-height: 35px;

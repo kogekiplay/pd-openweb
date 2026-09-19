@@ -26,7 +26,7 @@ const DivideLine = styled.div`
 
 const Description = styled.div`
   background: color-mix(in srgb, var(--color-primary) 5%, transparent);
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   padding: 8px 10px;
   color: var(--color-text-tertiary);
   margin-bottom: 32px;
@@ -61,7 +61,7 @@ const StepContentWrap = styled.div`
   .certLink {
     height: 36px;
     line-height: 36px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     background: var(--color-background-secondary);
     border: 1px solid var(--color-border-secondary);
     color: var(--color-primary);
@@ -74,7 +74,7 @@ const StepContentWrap = styled.div`
   .taxNoInput {
     height: 36px;
     background: var(--color-background-disabled);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     line-height: 36px;
     padding: 0 10px;
   }
@@ -86,7 +86,7 @@ const StepContentWrap = styled.div`
   .secretWrap {
     width: 50%;
     background: var(--color-background-secondary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-secondary);
     padding: 14px 16px 4px 20px;
     align-items: center;

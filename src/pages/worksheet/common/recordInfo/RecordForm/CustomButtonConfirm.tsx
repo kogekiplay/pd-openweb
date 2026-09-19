@@ -40,7 +40,7 @@ const SelectBox = styled(Select)`
   &.ant-select,
   & .ant-select {
     --ant-select-border-color: var(--color-border-tertiary) !important;
-    --ant-select-border-radius: 4px !important;
+    --ant-select-border-radius: var(--radius-sm) !important;
   }
   .ant-select-content {
     height: 36px !important;

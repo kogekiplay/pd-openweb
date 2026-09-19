@@ -134,7 +134,7 @@ const Con = styled.div`
   /* 提示框样式 */
   .cm-tooltip-autocomplete {
     z-index: 10;
-    border-radius: 3px;
+    border-radius: var(--radius-md);
     font-size: 90%;
     background: var(--color-background-primary);
     border: 1px solid var(--color-border-primary);
@@ -151,7 +151,7 @@ const Con = styled.div`
       & > li {
         margin: 0;
         padding: 4px 8px;
-        border-radius: 2px;
+        border-radius: var(--radius-sm);
         white-space: pre;
         color: var(--color-text-title);
         cursor: pointer;

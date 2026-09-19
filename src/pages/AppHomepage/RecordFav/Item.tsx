@@ -8,7 +8,7 @@ import { addBehaviorLog } from 'src/utils/project';
 
 const RecordItem = styled.div`
   margin-top: 12px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-secondary);
   position: relative;
   &:hover {
@@ -73,7 +73,7 @@ const RecordItem = styled.div`
       width: 24px;
       min-width: 24px;
       height: 24px;
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       svg {
         margin-top: 3px;
       }
@@ -95,7 +95,7 @@ const RecordItem = styled.div`
       height: 40px;
       line-height: 40px;
       text-align: center;
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       &:hover {
         background: var(--color-background-hover);
       }

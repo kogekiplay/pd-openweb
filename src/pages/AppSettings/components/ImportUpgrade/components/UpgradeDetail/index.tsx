@@ -4,21 +4,21 @@ import { Drawer } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
+import type { FormControl } from 'src/utils/controlTypes';
 import { UPGRADE_DETAIL_TYPE_LIST } from '../../../../config';
 import UpgradeItemWrap from '../UpgradeItemWrap';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const TabWrap = styled.div`
   background: var(--color-background-disabled);
   padding: 3px 2px;
   width: max-content;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   margin-bottom: 10px;
   .tabItem {
     padding: 2px 15px;
     font-size: 15px;
     font-weight: bold;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     color: var(--color-text-secondary);
     &.active {
       color: var(--color-link-hover);

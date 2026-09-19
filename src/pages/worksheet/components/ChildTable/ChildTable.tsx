@@ -83,7 +83,7 @@ const IconBtn = styled.span`
   font-size: 20px;
   line-height: 28px;
   padding: 0 4px;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   &:hover {
     background: var(--color-background-hover);
   }
@@ -121,7 +121,7 @@ const BatchAddOfAddRowComp = styled.div`
   align-items: center;
   justify-content: center;
   border: 1px solid var(--color-border-secondary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   padding: 0 8px;
   background: var(--color-background-primary);
   &:hover {
@@ -138,7 +138,7 @@ const DropIcon = styled.span`
   color: var(--color-text-title);
   height: 34px;
   line-height: 34px;
-  border-radius: 0 4px 4px 0;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   &:hover {
     background-color: var(--color-background-hover);
   }

@@ -70,7 +70,7 @@ const WecharPayWrap = styled.div`
     .successCon {
       margin: 80px auto 0;
       width: 800px;
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       box-shadow: var(--shadow-md);
     }
   }

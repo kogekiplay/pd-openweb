@@ -8,7 +8,7 @@ import { RichText as RichTextComponent } from 'ming-ui';
 import { updateWidget } from 'src/pages/customPage/redux/action';
 
 const ContentWrap = styled.div`
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   border: 1px dashed transparent !important;
   .ck.ck-editor__top {
     width: 100%;

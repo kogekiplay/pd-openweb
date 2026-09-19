@@ -18,7 +18,7 @@ const Chip = styled.div`
   width: 100%;
   height: 40px;
   padding: 0 10px;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   background: var(--color-background-disabled);
   color: var(--color-text-primary);
   cursor: pointer;
@@ -38,7 +38,7 @@ const Chip = styled.div`
   .dot {
     width: 3px;
     height: 3px;
-    border-radius: 3px;
+    border-radius: var(--radius-xs);
     margin: 0 8px;
     background-color: var(--color-text-tertiary);
   }
@@ -75,7 +75,7 @@ const Body = styled.div`
     margin-bottom: 10px;
     padding: 10px 12px;
     border: 1px solid var(--color-border-primary);
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     ${({ $editable }) => $editable && 'padding-right: 44px;'}
     .context {
       font-size: 13px;
@@ -112,7 +112,7 @@ const Body = styled.div`
     height: 36px;
     padding: 0 24px;
     border: 0;
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     background: var(--color-mingo);
     color: var(--color-text-inverse);
     font-size: 14px;

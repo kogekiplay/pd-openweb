@@ -25,7 +25,7 @@ export const ReferenceWrap = styled.div`
     .sidebarItem {
       width: 100%;
       line-height: 32px;
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       cursor: pointer;
       padding: 0 8px;
       display: flex;
@@ -94,7 +94,7 @@ export const ReferenceWrap = styled.div`
         padding: 12px 16px;
         box-sizing: border-box;
         background: var(--color-background-primary);
-        border-radius: 4px;
+        border-radius: var(--radius-sm);
         border: 1px solid rgba(0, 0, 0, 0.08);
 
         .controlName {

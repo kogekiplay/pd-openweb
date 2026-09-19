@@ -53,7 +53,7 @@ const Wrap = styled.div`
     line-height: 32px;
     padding: 0 20px;
     background: var(--color-primary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     text-align: center;
     color: var(--color-white);
     font-weight: 700;

@@ -204,7 +204,7 @@ const MingoWelcomeWrap = styled.div`
       right: 0;
       bottom: 0;
       height: 3px;
-      border-radius: 2px;
+      border-radius: var(--radius-sm);
       background: var(--color-mingo);
     }
   }

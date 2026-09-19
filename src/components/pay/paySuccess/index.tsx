@@ -37,7 +37,7 @@ const PaySuccessWrap = styled.div`
       transition: all 0.35s ease-in;
       color: var(--color-white);
       margin: 0 auto 50px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       &:hover {
         background-color: var(--color-link-hover);
       }

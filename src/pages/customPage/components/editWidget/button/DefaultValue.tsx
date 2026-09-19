@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -31,14 +31,14 @@ const SortColumnsWrap = styled.div`
   width: 300px;
   box-shadow: var(--shadow-sm);
   background: var(--color-background-card);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   .searchBar {
     padding: 0 10px;
   }
   .sortColumnWrap {
     margin-top: 2px !important;
     padding: 6px 0;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
   }
   .quickOperate {
     display: none !important;
@@ -51,7 +51,7 @@ const SortColumnsWrap = styled.div`
 const DefaultValueInputWrap = styled.div`
   width: 100%;
   .optionsCon {
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     padding: 0 10px;
     border: 1px solid var(--color-border-tertiary);
     background: var(--color-background-primary);
@@ -77,17 +77,17 @@ const DefaultValueInputWrap = styled.div`
       & > div {
         & > div:nth-child(1) {
           width: calc(100%) !important;
-          border-radius: 4px !important;
+          border-radius: var(--radius-sm) !important;
         }
       }
     }
     .tagInputarea .tagInputareaIuput,
     .CityPicker-input-container input {
-      border-radius: 4px !important;
+      border-radius: var(--radius-sm) !important;
     }
     .ant-input {
       width: calc(100%) !important;
-      border-radius: 4px !important;
+      border-radius: var(--radius-sm) !important;
       &:hover {
         border-color: var(--color-border-tertiary) !important;
       }
@@ -109,7 +109,15 @@ const DefaultValueInputWrap = styled.div`
 const FILTER_TYPES = DEF_TYPES.concat(DEF_R_TYPES);
 
 function DefaultValue(props) {
-  const { projectId, appId, btnId, worksheetId, controls, config, onChangeConfig }: { controls: FormControl[]; [key: string]: any } = props;
+  const {
+    projectId,
+    appId,
+    btnId,
+    worksheetId,
+    controls,
+    config,
+    onChangeConfig,
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const { temporaryWriteControls = [], isEmptyWriteControls } = config || {};
   const [showControls, setShowControls] = useState(temporaryWriteControls.map(c => c.controlId));
 

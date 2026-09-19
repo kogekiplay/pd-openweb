@@ -149,7 +149,7 @@ export const Wrap = styled.div`
       line-height: 48px;
       height: 48px;
       background: var(--color-background-primary);
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       border: 1px solid var(--color-border-primary);
       display: block;
       text-decoration: none;

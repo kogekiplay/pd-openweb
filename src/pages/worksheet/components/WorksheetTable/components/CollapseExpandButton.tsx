@@ -6,7 +6,7 @@ const Con = styled.div`
   position: relative;
   width: 16px;
   height: 16px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-primary);
   background: var(--color-background-primary);
   .line {

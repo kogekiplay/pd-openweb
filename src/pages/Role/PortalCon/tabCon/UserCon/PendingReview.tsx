@@ -14,10 +14,10 @@ import UserInfoWrap from 'src/pages/Role/PortalCon/components/UserInfoWrap';
 import { pageSizeForPortal } from 'src/pages/Role/PortalCon/tabCon/config';
 import type { RootState } from 'src/redux/types';
 import { renderText as renderCellText } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import * as actions from '../../redux/actions';
 import PortalBar from '../portalComponent/PortalBar';
 import { formatDataForPortalControl, formatPortalData, renderText } from '../util';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrap = styled.div`
   .wrapTr:not(.checkBoxTr):not(.optionWrapTr) {
@@ -39,7 +39,7 @@ const Wrap = styled.div`
       width: 61px;
       height: 32px;
       background: var(--color-background-secondary);
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       color: var(--color-text-disabled);
       line-height: 32px;
       text-align: center;
@@ -69,7 +69,7 @@ const Wrap = styled.div`
       line-height: 32px;
       padding: 0 12px;
       background: var(--color-background-secondary);
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       &:hover {
         color: var(--color-primary);
       }
@@ -102,7 +102,15 @@ function PendingReview(props) {
     handleChangeSort,
     setTelFilters,
   } = props;
-  const { roleList = [], controls = [], unApproveCount, pageIndex, keyWords, filters = [], telFilters }: { controls: FormControl[]; [key: string]: any } = portal;
+  const {
+    roleList = [],
+    controls = [],
+    unApproveCount,
+    pageIndex,
+    keyWords,
+    filters = [],
+    telFilters,
+  }: { controls: FormControl[]; [key: string]: any } = portal;
   const [show, setShow] = useState(false);
   const [showPassDrop, setShowPassDrop] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);

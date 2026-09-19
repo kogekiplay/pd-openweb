@@ -18,7 +18,7 @@ export const Wrap = styled.div`
     height: 36px;
     background: var(--color-background-primary);
     border: 1px solid var(--color-border-secondary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     padding: 0 14px;
     &:hover {
       border: 1px solid var(--color-text-disabled);
@@ -32,7 +32,7 @@ export const Wrap = styled.div`
     height: 80px;
     background: var(--color-background-primary);
     border: 2px dashed var(--color-border-secondary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     line-height: 80px;
     position: relative;
     color: var(--color-primary);
@@ -101,7 +101,7 @@ export const Wrap = styled.div`
       line-height: 36px;
       padding: 0 8px;
       border: 1px solid transparent;
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       background: var(--color-background-secondary);
       color: var(--color-text-primary);
       font-size: 13px;
@@ -170,12 +170,12 @@ export const Wrap = styled.div`
       padding: 0 20px;
       background: var(--color-background-primary);
       border: 1px solid var(--color-background-secondary);
-      border-radius: 0px 3px 3px 0px;
+      border-radius: 0px var(--radius-sm) var(--radius-sm) 0px;
       line-height: 34px;
       text-align: center;
       margin-right: -1px;
       &:nth-child(1) {
-        border-radius: 3px 0px 0px 3px;
+        border-radius: var(--radius-sm) 0px 0px var(--radius-sm);
       }
       &.current {
         background: var(--color-primary);
@@ -275,7 +275,7 @@ export const WrapCon = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     div {
       height: 28px;
     }
@@ -284,7 +284,7 @@ export const WrapCon = styled.div`
     padding: 32px 32px 40px;
     width: 320px;
     box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     position: absolute;
     left: 50%;
     top: 50%;
@@ -299,7 +299,7 @@ export const WrapCon = styled.div`
     max-width: 360px;
     height: 32px;
     background: var(--color-background-secondary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     max-width: 100%;
   }
   .loginBtn {
@@ -308,7 +308,7 @@ export const WrapCon = styled.div`
     height: 32px;
     background: var(--color-primary-transparent);
     opacity: 1;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
   }
   &.isR {
     .btnCon {

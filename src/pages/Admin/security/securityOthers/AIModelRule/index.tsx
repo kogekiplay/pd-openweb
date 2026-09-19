@@ -10,7 +10,7 @@ import EditRuleDrawer from './EditRuleDrawer';
 
 const Description = styled.div`
   background: color-mix(in srgb, var(--color-primary) 10%, transparent);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   padding: 12px 16px;
   margin-bottom: 20px;
   font-size: 13px;

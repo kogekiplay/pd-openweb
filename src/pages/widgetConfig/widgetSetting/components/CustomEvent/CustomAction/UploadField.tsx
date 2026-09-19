@@ -11,7 +11,7 @@ import { UploadError } from 'src/utils/uploader/constants';
 const UploadWrap = styled.div`
   height: 390px;
   border: 1px dashed var(--color-border-primary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   .icon {
     color: var(--color-text-disabled);
   }
@@ -61,7 +61,7 @@ const UploadListWrap = styled.div`
     .footerBtn {
       padding: 8px 24px;
       cursor: pointer;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
     }
     .uploadBtn {
       border: 1px solid var(--color-primary);

@@ -11,7 +11,7 @@ const TextWrap = styled.div`
   padding: 10px 16px;
   color: var(--color-text-tertiary);
   background: var(--color-background-secondary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   word-break: break-all;
   &.flexRow {
     display: flex;

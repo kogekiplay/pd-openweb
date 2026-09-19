@@ -45,7 +45,7 @@ const ListItemCon = styled.div`
   .listItemCover {
     width: 32px;
     height: 32px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     object-fit: cover;
     margin-right: 12px;
     flex-shrink: 0;

@@ -29,7 +29,7 @@ const ModalWrapper = styled(Popup)`
       min-height: 54px;
       background: var(--color-background-primary);
       box-shadow: var(--shadow-sm);
-      border-radius: 3px 3px 0px 0px;
+      border-radius: var(--radius-sm) var(--radius-sm) 0px 0px;
 
       .arrowIcon {
         font-size: 20px;
@@ -52,7 +52,7 @@ const MyWriteButton = styled.div(
     height: 32px;
     padding: 0 12px;
     margin-bottom: 20px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     text-align: center;
     cursor: pointer;
     span {

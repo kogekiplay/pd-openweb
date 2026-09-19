@@ -142,7 +142,7 @@ const LLM = styled(Card)`
 const ExitButton = styled.div`
   cursor: pointer;
   font-weight: bold;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   padding: 0 20px;
   background: var(--color-background-secondary);
   height: 34px;

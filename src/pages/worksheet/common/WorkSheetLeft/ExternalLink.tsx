@@ -29,7 +29,7 @@ const ControlTag = styled.div`
 
 const TagTextareaWrap = styled.div`
   .tagInputareaIuput {
-    border-radius: 3px 0 3px 3px !important;
+    border-radius: var(--radius-sm) 0 var(--radius-sm) var(--radius-sm) !important;
   }
   .cm-placeholder {
     color: var(--color-text-tertiary) !important;
@@ -39,7 +39,7 @@ const TagTextareaWrap = styled.div`
   .iconWrap {
     border: 1px solid var(--color-border-tertiary);
     padding: 5px;
-    border-radius: 0 3px 3px 0;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     width: 28px;
     height: 30px;
     border-left: none;
@@ -182,7 +182,8 @@ const ExternalLink = props => {
               <Dropdown
                 trigger="click"
                 placement="bottomRight"
-                popupRender={() => <DropdownContent style={{ width: '180px' }}>
+                popupRender={() => (
+                  <DropdownContent style={{ width: '180px' }}>
                     {LINK_PARA_FIELDS.map(({ type, title, fields }) => {
                       return (
                         <Fragment key={type}>
@@ -201,7 +202,8 @@ const ExternalLink = props => {
                         </Fragment>
                       );
                     })}
-                  </DropdownContent>}
+                  </DropdownContent>
+                )}
               >
                 <Tooltip title={_l('使用动态参数')} placement="bottom">
                   <div className="iconWrap Font17 pointer">

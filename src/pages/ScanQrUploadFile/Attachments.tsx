@@ -46,7 +46,7 @@ const AttachmentsList = styled.div`
       right: 0;
       bottom: 0;
       display: flex;
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       border: 1px solid rgba(0, 0, 0, 0.12);
       align-items: center;
       justify-content: center;
@@ -108,7 +108,15 @@ const AttachmentItem = function AttachmentItem({ attachment = {} }) {
   );
 };
 
-const Attachments = ({ disabled, scanId, scanInfo, defaultAttachments }: { disabled?: boolean; [key: string]: any }) => {
+const Attachments = ({
+  disabled,
+  scanId,
+  scanInfo,
+  defaultAttachments,
+}: {
+  disabled?: boolean;
+  [key: string]: any;
+}) => {
   const cache = useRef({});
   const [attachments, setAttachments] = useState(defaultAttachments);
   const control = get(scanInfo, ['control']);

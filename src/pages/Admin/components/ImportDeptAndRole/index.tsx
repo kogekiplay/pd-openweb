@@ -13,7 +13,7 @@ import UploadFile from '../UploadFile';
 
 const ImportWrap = styled.div`
   background: var(--color-background-primary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   width: 100%;
   height: 100%;
   min-width: 750px;
@@ -76,7 +76,7 @@ const ImportWrap = styled.div`
         padding: 0 25px;
         border: 1px solid var(--color-border-primary);
         box-shadow: var(--shadow-sm);
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         box-sizing: border-box;
         .importUploadText {
           display: flex;
@@ -98,7 +98,7 @@ const ImportWrap = styled.div`
       .importExcelBox {
         height: 271px;
         border: 3px dashed var(--color-border-secondary);
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         display: flex;
         flex-direction: column;
         align-items: center;

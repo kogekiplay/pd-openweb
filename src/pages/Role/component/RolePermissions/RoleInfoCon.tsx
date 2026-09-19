@@ -13,21 +13,21 @@ const WrapSys = styled.div`
     width: 300px;
     line-height: 36px;
     background: var(--color-background-secondary);
-    border-radius: 3px 3px 3px 3px;
+    border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     padding: 0 13px;
     font-weight: 400;
   }
   .desC {
     line-height: 36px;
     background: var(--color-background-secondary);
-    border-radius: 3px 3px 3px 3px;
+    border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     padding: 0 13px;
     font-weight: 400;
   }
   .desRole {
     line-height: 25px;
     background: var(--color-yellow-black);
-    border-radius: 3px 3px 3px 3px;
+    border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     padding: 6px 13px;
     font-weight: 400;
   }

@@ -62,7 +62,7 @@ const NavBox = styled.div`
   .appIcon {
     width: 24px;
     height: 24px;
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     overflow: hidden;
     display: inline-flex;
     justify-content: center;
@@ -106,7 +106,7 @@ const ContentBox = styled.div`
       justify-content: center;
       width: 36px;
       height: 36px;
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       background-color: #4c7d9e;
       margin-right: 15px;
       i {

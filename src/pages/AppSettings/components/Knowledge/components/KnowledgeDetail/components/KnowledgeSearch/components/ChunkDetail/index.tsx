@@ -15,7 +15,7 @@ import Pagination from '../Pagination';
 const Container = styled.div`
   display: flex;
   padding: 5px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   font-size: 16px;
   cursor: pointer;
   color: var(--color-text-secondary);
@@ -44,7 +44,7 @@ const ChunkDetailContent = styled.div`
       position: relative;
       padding: 0 10px;
       margin: 0 10px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       &.active {
         background-color: var(--color-primary-transparent) !important;
       }
@@ -59,7 +59,7 @@ const ChunkDetailContent = styled.div`
         top: 10px;
         padding: 5px 10px;
         background-color: var(--color-background-card);
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         box-shadow: var(--shadow-sm);
         font-size: 13px;
         visibility: hidden;
@@ -78,7 +78,7 @@ const LaunchIcon = styled(Icon)`
   font-size: 16px;
   color: var(--color-text-secondary);
   cursor: pointer;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   &:hover {
     background-color: var(--color-background-tertiary);
     color: var(--color-primary);

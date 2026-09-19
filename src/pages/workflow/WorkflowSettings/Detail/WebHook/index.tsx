@@ -22,7 +22,7 @@ import {
 
 const GenerateJSONBox = styled.textarea`
   padding: 12px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   height: 340px;
   overflow: auto;
   width: 100%;

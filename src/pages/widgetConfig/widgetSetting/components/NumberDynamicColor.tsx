@@ -12,7 +12,7 @@ const DynamicColorWrap = styled.div`
   input {
     width: 140px;
     height: 36px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     padding: 0 12px;
     box-sizing: border-box;
     border: 1px solid var(--color-border-primary);

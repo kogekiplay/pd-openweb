@@ -28,7 +28,7 @@ const SearchBox = styled.div`
     box-sizing: border-box;
     height: 36px;
     padding: 0px 28px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-primary);
     width: 300px;
   }
@@ -43,7 +43,7 @@ const DecryptBox = styled.span`
   color: var(--color-black);
   padding: 3px 5px;
   background: var(--color-warning-border);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   font-size: 12px;
   min-width: max-content;
 `;
@@ -429,7 +429,10 @@ export default class WriteFields extends Component<any, any> {
                 {!this.isDisabled(item, 'REQUIRED') &&
                   (!isChildTable || !item.detailTable) &&
                   !_.includes(hideTypes, 3) && (
-                    <Checkbox checked={item.property === 3} onClick={(checked: boolean) => this.onChange(item, checked ? 2 : 3)} />
+                    <Checkbox
+                      checked={item.property === 3}
+                      onClick={(checked: boolean) => this.onChange(item, checked ? 2 : 3)}
+                    />
                   )}
               </div>
               <div className="mLeft16">

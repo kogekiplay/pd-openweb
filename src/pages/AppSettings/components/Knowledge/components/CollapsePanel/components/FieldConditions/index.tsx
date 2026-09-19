@@ -14,7 +14,7 @@ const FilterData = styled.div`
   font-size: 14px;
   color: var(--color-text-secondary);
   border: 1px solid transparent;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   white-space: nowrap;
   cursor: pointer;
   .icon {

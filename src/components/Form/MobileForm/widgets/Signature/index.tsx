@@ -10,6 +10,7 @@ import accountSettingAjax from 'src/api/accountSetting';
 import previewAttachments from 'src/components/previewAttachments/previewAttachments';
 import { getToken } from 'src/utils/common';
 import { compatibleMDJS } from 'src/utils/project';
+import { ensurePngSignatureUrl, stripFileUrlSignature } from 'src/utils/signature';
 import 'rc-trigger/assets/index.css';
 
 const Footer = styled.div`
@@ -373,7 +374,8 @@ const Signature = props => {
     if (lastInfo) {
       setPopupVisible(false);
       resetSignaturePopupState();
-      props.onChange(lastInfo.url);
+      // 同 Desktop：不要原样透传上次签名，先归一成 .png。见 utils/signature.ts 的说明。
+      ensurePngSignatureUrl(lastInfo.url, { projectId, appId, worksheetId }).then(props.onChange);
       return;
     }
 
@@ -407,12 +409,15 @@ const Signature = props => {
             setPopupVisible(false);
             resetSignaturePopupState();
 
+            // 同 Desktop：存进字段和 editSign 的都必须是裸 URL，不能带读时签名。
+            const signUrl = stripFileUrlSignature(res[0].url);
+
             if (window.isPublicWorksheet || _.get(window, 'shareState.isPublicWorkflowRecord')) {
-              props.onChange(res[0].url);
+              props.onChange(signUrl);
             } else {
-              accountSettingAjax.editSign({ url: res[0].url }).then(result => {
+              accountSettingAjax.editSign({ url: signUrl }).then(result => {
                 if (result) {
-                  props.onChange(res[0].url);
+                  props.onChange(signUrl);
                 }
               });
             }

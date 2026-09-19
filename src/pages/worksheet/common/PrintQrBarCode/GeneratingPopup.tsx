@@ -52,7 +52,7 @@ const Pagination = styled.div`
     width: 24px;
     height: 24px;
     font-size: 16px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     margin-right: 8px;
     &:not(.disabled):hover {
@@ -73,7 +73,7 @@ const PrintButton = styled.div`
   background: var(--color-background-overlay);
   color: var(--color-background-disabled);
   font-size: 20px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   padding: 5px 10px;
   cursor: pointer;
   &:hover {

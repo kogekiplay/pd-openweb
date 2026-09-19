@@ -92,7 +92,14 @@ const STEP_TO_SIDEBAR_KEY = {
 // iframe 嵌入应用必须带 ?rp=no，避免主应用层的页头/侧栏在 iframe 内重复渲染
 function buildPreviewUrl(
   activeKey,
-  { appId, sectionIdByName, latestWorksheet, latestCustomPage, previewNonce, appLanguage }: { appId?: string; [key: string]: any },
+  {
+    appId,
+    sectionIdByName,
+    latestWorksheet,
+    latestCustomPage,
+    previewNonce,
+    appLanguage,
+  }: { appId?: string; [key: string]: any },
 ) {
   if (!appId) return '';
 
@@ -150,7 +157,7 @@ const DebugToggle = styled.button`
   height: 26px;
   padding: 0 10px;
   border: 1px solid var(--color-border-secondary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   background: var(--color-background-card);
   color: var(--color-text-secondary);
   font-size: 12px;
@@ -449,7 +456,15 @@ export default function AppBuilder({
   // 跳到指定 worksheet：worksheetId 已知，sectionId 优先复用建表阶段缓存，缺失时 getAppSimpleInfo 反查。
   // 解析到 sectionId 后存为 latestWorksheet，触发 iframe 跳到 /app/:appId/:sectionId/:worksheetId；
   // 工作表 loadWorksheet 不走缓存，worksheetId 变化会重新拉取并呈现最新视图。switchTab=true 时顺带把侧栏切到工作表 tab。
-  function focusWorksheet({ worksheetId, name, switchTab }: { worksheetId?: string; name?: string; [key: string]: any }) {
+  function focusWorksheet({
+    worksheetId,
+    name,
+    switchTab,
+  }: {
+    worksheetId?: string;
+    name?: string;
+    [key: string]: any;
+  }) {
     if (!worksheetId) return;
 
     const apply = sectionId => {

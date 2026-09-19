@@ -50,7 +50,7 @@ const SectionTitle = styled.div`
 
 const ModelTable = styled.div`
   border: 1px solid var(--color-border-secondary);
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   margin-top: 10px;
   .tableHeader {
     display: flex;
@@ -62,7 +62,7 @@ const ModelTable = styled.div`
     font-size: 13px;
     color: var(--color-text-secondary);
     font-weight: 600;
-    border-radius: 4px 4px 0 0;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
   }
   .tableRow {
     display: flex;
@@ -101,7 +101,7 @@ const ModelTable = styled.div`
 
 const AppTable = styled.div`
   border: 1px solid var(--color-border-secondary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   margin-top: 10px;
   .tableHeader {
     display: flex;
@@ -113,7 +113,7 @@ const AppTable = styled.div`
     font-size: 13px;
     color: var(--color-text-secondary);
     font-weight: 600;
-    border-radius: 4px 4px 0 0;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
   }
   .tableRow {
     display: flex;
@@ -135,7 +135,7 @@ const AppTable = styled.div`
     .appIcon {
       width: 32px;
       height: 32px;
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       display: flex;
       align-items: center;
       justify-content: center;

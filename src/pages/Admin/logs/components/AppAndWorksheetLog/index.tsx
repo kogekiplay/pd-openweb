@@ -21,6 +21,7 @@ import WorksheetRecordLogDialog from 'src/pages/worksheet/components/WorksheetRe
 import { navigateTo } from 'src/router/navigateTo';
 import { getTranslateInfo } from 'src/utils/app';
 import { getRequest } from 'src/utils/common';
+import type { FormControl } from 'src/utils/controlTypes';
 import createLinksForMessage from 'src/utils/createLinksForMessage';
 import { VersionProductType } from 'src/utils/enum';
 import { dateConvertToUserZone, getFeatureStatus } from 'src/utils/project';
@@ -35,7 +36,6 @@ import {
 } from '../../enum';
 import { completeAdminLogLinks } from '../../utils';
 import WorksheetLogDrawer from '../WorksheetLogDrawer';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const FlexWrap = styled.div`
   flex: 1;
@@ -110,7 +110,7 @@ const Box = styled.div`
   width: 100%;
   height: 36px;
   background: var(--color-yellow-black);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-warning-border);
   padding: 0 12px;
 `;
@@ -925,7 +925,11 @@ export default class AppAndWorksheetLog extends Component<any, any> {
                 />
               </Box>
             )}
-            <div ref={ele => { this.seatchWrap = ele; }}>
+            <div
+              ref={ele => {
+                this.seatchWrap = ele;
+              }}
+            >
               <SearchWrap
                 projectId={projectId}
                 searchList={this.getConditions()}
@@ -987,7 +991,9 @@ export default class AppAndWorksheetLog extends Component<any, any> {
               <PageTableCon
                 className="logsTable"
                 paginationInfo={{ pageIndex, pageSize: PAGE_SIZE }}
-                ref={node => { this.tableWrap = node; }}
+                ref={node => {
+                  this.tableWrap = node;
+                }}
                 loading={loading}
                 columns={this.columns}
                 dataSource={dataSource}

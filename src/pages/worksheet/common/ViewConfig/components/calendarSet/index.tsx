@@ -14,8 +14,8 @@ import { TimeDropdownChoose } from 'src/pages/worksheet/common/ViewConfig/style.
 import { AnimationWrap } from 'src/pages/worksheet/common/ViewConfig/style.jsx';
 import { getCalendartypeData, getCalendarViewType, getTimeControls } from 'src/pages/worksheet/views/CalendarView/util';
 import { getAdvanceSetting, isTimeStyle } from 'src/utils/control';
-import SelectStartOrEndGroups from '../SelectStartOrEndControl/SelectStartOrEndGroups';
 import type { FormControl } from 'src/utils/controlTypes';
+import SelectStartOrEndGroups from '../SelectStartOrEndControl/SelectStartOrEndGroups';
 
 let obj = [_l('月'), _l('周'), _l('日')];
 let weekObj = [_l('周一'), _l('周二'), _l('周三'), _l('周四'), _l('周五'), _l('周六'), _l('周日')];
@@ -25,7 +25,7 @@ const locale = locales[md.global.Account.lang] || localeEn;
 const ShowChoose = styled.div`
   .showtimeCon {
     border: 1px solid var(--color-border-primary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     color: var(--color-text-secondary);
     padding: 6px 12px;
     background: var(--color-background-primary);
@@ -52,11 +52,11 @@ const ShowChoose = styled.div`
       margin-right: -1px;
       position: relative;
       &:last-child {
-        border-radius: 0 3px 3px 0;
+        border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
         overflow: hidden;
       }
       &:first-child {
-        border-radius: 3px 0px 0px 3px;
+        border-radius: var(--radius-sm) 0px 0px var(--radius-sm);
         overflow: hidden;
       }
       &.checked {
@@ -93,7 +93,12 @@ const changePickerContainerLeft = () => {
 };
 
 export default function CalendarSet(props) {
-  const { appId, view, updateCurrentView, worksheetControls }: { worksheetControls: FormControl[]; [key: string]: any } = props;
+  const {
+    appId,
+    view,
+    updateCurrentView,
+    worksheetControls,
+  }: { worksheetControls: FormControl[]; [key: string]: any } = props;
   const { advancedSetting = {}, worksheetId, viewId } = view;
   const {
     calendarType = '0',
@@ -139,10 +144,12 @@ export default function CalendarSet(props) {
         ];
   }
 
-  const startData = calendarcids[0] ? worksheetControls.filter((item: FormControl) => item.controlId === calendarcids[0].begin) : [];
+  const startData = calendarcids[0]
+    ? worksheetControls.filter((item: FormControl) => item.controlId === calendarcids[0].begin)
+    : [];
   const isDelete = calendarcids[0] && calendarcids[0].begin && (!startData || startData.length <= 0);
   return (
-    (<React.Fragment>
+    <React.Fragment>
       <div className="title Font13 bold">{_l('日期')}</div>
       <SelectStartOrEndGroups
         {...props}
@@ -240,7 +247,7 @@ export default function CalendarSet(props) {
           optionLabelProp="label"
           placeholder={_l('请选择')}
           suffixIcon={<Icon icon="arrow-down-border Font14" />}
-          classNames={{ popup: { root: "dropConOption" } }}
+          classNames={{ popup: { root: 'dropConOption' } }}
           onChange={value => {
             if (value === weekbegin) {
               return;
@@ -343,11 +350,11 @@ export default function CalendarSet(props) {
               }
               hourStep={1}
               minuteStep={
-                  /* antd 5 把类型收紧到 1..59，但 60 是刻意的：rc-picker 内部是
+                /* antd 5 把类型收紧到 1..59，但 60 是刻意的：rc-picker 内部是
                      for (i = 0; i <= 59; i += step)，step=60 只产出 0，即「分钟只给整点」。
                      改成 59 或 30 都不等价，所以保留数值、只放宽类型。 */
-                  60 as any
-                }
+                60 as any
+              }
               popupClassName={`filterDateRangeInputPopup`}
               onClick={() => {
                 const $arrow = $(`.filterDateRangeInputPopup .ant-picker-range-arrow`);
@@ -410,6 +417,6 @@ export default function CalendarSet(props) {
           text={_l('显示所有日程')}
         />
       </ShowChoose>
-    </React.Fragment>)
+    </React.Fragment>
   );
 }

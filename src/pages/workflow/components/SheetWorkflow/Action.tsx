@@ -38,7 +38,7 @@ const WrapCon = styled.div`
     min-width: 0;
     padding: 0 10px;
     background: var(--color-background-secondary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -95,7 +95,7 @@ const UpdateUserWrap = styled.div`
   .accountWrap {
     padding: 5px;
     margin-bottom: 5px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     &:hover {
       background-color: var(--color-background-hover);
     }

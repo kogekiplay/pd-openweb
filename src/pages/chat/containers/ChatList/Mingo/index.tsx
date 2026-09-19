@@ -25,7 +25,7 @@ const Wrap = styled.div`
     top: 50%;
     height: 12px;
     width: 4px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     transform: translateY(-50%);
     background-color: ${props => props.$aiColor};
   }

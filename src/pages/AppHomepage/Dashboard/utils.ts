@@ -169,7 +169,7 @@ export const CardItem = styled.div`
       align-items: center;
       padding: 6px 4px 6px 10px;
       margin-top: -4px;
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       color: var(--color-text-tertiary);
       cursor: pointer;
       &:hover {

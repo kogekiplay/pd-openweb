@@ -12,7 +12,7 @@ const GlobalSearchSideCon = styled.ul`
   .sideItem {
     width: 150px;
     padding: 13px 0;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     display: flex;
     align-items: center;

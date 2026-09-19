@@ -13,7 +13,7 @@ const Con = styled.div`
   align-items: center;
   line-height: 0px;
   .ant-select {
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--border-color);
     ${({ isMultiple }) => (isMultiple ? '' : 'height: 32px;')}
     line-height: 32px;
@@ -67,7 +67,7 @@ const Con = styled.div`
         line-height: 28px !important;
       }
       .ant-select-selection-item > span,
-      .ant-select-content-value > span{
+      .ant-select-content-value > span {
         margin: 3px 0 !important;
       }
       .customAntDropdownTitleWithBG {

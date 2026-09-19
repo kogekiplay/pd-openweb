@@ -77,7 +77,7 @@ const PermTag = styled.div`
   gap: 5px;
   height: 28px;
   padding: 0 10px 0 7px;
-  border-radius: 5px;
+  border-radius: var(--radius-xs);
   border: 1px solid ${TAG_BORDER};
   /* 卡片内标签统一：12px + 灰底（保留彩色图标作类型识别） */
   background: var(--color-background-secondary);

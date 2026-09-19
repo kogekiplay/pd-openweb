@@ -41,7 +41,7 @@ const Wrapper = styled.div`
     img {
       width: 140px;
       height: 90px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       border: 1px solid var(--color-border-secondary);
       filter: blur(1px);
       display: block;
@@ -51,7 +51,7 @@ const Wrapper = styled.div`
 
   .footerBtn {
     padding: 10px 12px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     font-weight: 600;
     cursor: pointer;
     color: var(--color-primary);

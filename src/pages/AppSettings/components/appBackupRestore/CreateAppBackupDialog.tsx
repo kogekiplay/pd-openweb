@@ -51,7 +51,7 @@ const Footer = styled.div`
     text-shadow: none;
     border: none;
     outline: none;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     color: var(--color-white);
     vertical-align: middle;
     cursor: pointer;

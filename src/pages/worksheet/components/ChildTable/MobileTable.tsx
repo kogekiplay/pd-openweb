@@ -57,7 +57,7 @@ const FlattenContent = styled.div`
     line-height: 40px;
     background-color: var(--color-background-secondary);
     padding-left: 10px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     &.expandHeader {
       background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
     }

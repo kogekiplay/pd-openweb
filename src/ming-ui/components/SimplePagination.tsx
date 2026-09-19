@@ -17,7 +17,7 @@ const Con = styled.div`
     align-items: center;
     font-size: 14px;
     color: var(--color-text-disabled);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     &:hover:not(.disabled) {
       color: var(--color-text-secondary);

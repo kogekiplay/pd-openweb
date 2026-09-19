@@ -68,7 +68,7 @@ const ConfigHeader = styled(FlexCenter)`
       transition: all 0.25s;
       font-size: 22px;
       color: var(--color-text-tertiary);
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       margin-right: 4px;
       &.highlight {
         background-color: var(--color-background-hover);

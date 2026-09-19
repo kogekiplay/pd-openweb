@@ -32,7 +32,7 @@ const Con = styled.div`
 
 const PopupOperateCon = styled.div`
   .box {
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-primary);
     background-color: #fff;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);

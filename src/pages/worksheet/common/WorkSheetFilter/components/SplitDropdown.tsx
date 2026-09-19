@@ -49,7 +49,7 @@ const DropdownCon = styled.div`
   background: var(--color-background-card);
   .Dropdown--input {
     padding: 2px 6px !important;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     .icon {
       margin-left: 4px !important;
       vertical-align: middle;

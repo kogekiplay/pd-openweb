@@ -1,6 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Trigger from '@rc-component/trigger';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button } from 'ming-ui';
 
@@ -27,7 +27,7 @@ border-bottom-color: var(--color-background-primary);
 );
 const Popup = styled.div`
   width: 280px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   padding: 20px;
   box-shadow: var(--shadow-lg);
   background-color: var(--color-background-primary);

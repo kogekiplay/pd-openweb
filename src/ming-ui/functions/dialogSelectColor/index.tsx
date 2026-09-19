@@ -12,10 +12,10 @@ const WrapCon = styled(Dialog)`
     width: 84px;
     height: 34px;
     padding: 5px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-secondary);
     > div {
-      border-radius: 2px;
+      border-radius: var(--radius-sm);
     }
   }
   .colorInput {

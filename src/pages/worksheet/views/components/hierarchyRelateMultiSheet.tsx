@@ -6,9 +6,9 @@ import styled from 'styled-components';
 import { LoadDiv } from 'ming-ui';
 import worksheetAjax from 'src/api/worksheet';
 import { filterAndFormatterControls } from 'src/pages/worksheet/views/util';
+import type { FormControl } from 'src/utils/controlTypes';
 import { replaceControlsTranslateInfo } from 'src/utils/translate';
 import VerifyDel from './VerifyDel';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const ControlsWrap = styled.div`
   .grade {
@@ -35,7 +35,7 @@ const ControlsWrap = styled.div`
       padding-left: 12px;
       position: relative;
       background-color: var(--color-background-secondary);
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       .controlName {
         max-width: 90px;
       }
@@ -69,7 +69,7 @@ const ControlsWrap = styled.div`
 const EmptyHint = styled.div`
   padding: 12px;
   background: var(--color-background-primary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.24);
   width: 280px;
   color: var(--color-text-tertiary);
@@ -242,61 +242,66 @@ export default function HierarchyRelateMultiSheet({ worksheetInfo, viewControls,
   return (
     <ControlsWrap>
       <ul>
-        {viewControls.map(({ controlName, worksheetId, worksheetName }: { worksheetId?: string; [key: string]: any }, index: number) => {
-          return worksheetId === worksheetInfo.worksheetId ? (
-            <li className="relateItem">
-              <span className="grade textTertiary">{_l('第1级')}</span>
-              <i className="icon-1_worksheet textTertiary Font18 mLeft4"></i>
-              <span className="controlName">{worksheetInfo.name}</span>
-              <span className="textTertiary">{_l('( 本表 )')}</span>
-            </li>
-          ) : (
-            <li className="relateItem">
-              <span className="gradeName textTertiary">{_l('第%0级', index + 1)}</span>
-              <div className="controlInfo">
-                <i className="icon-link2 textTertiary Font18"></i>
-                <div className="controlName overflow_ellipsis">{controlName}</div>
-                <div className="sheetName overflow_ellipsis textTertiary">{_l('( 工作表: %0 )', worksheetName)}</div>
+        {viewControls.map(
+          (
+            { controlName, worksheetId, worksheetName }: { worksheetId?: string; [key: string]: any },
+            index: number,
+          ) => {
+            return worksheetId === worksheetInfo.worksheetId ? (
+              <li className="relateItem">
+                <span className="grade textTertiary">{_l('第1级')}</span>
+                <i className="icon-1_worksheet textTertiary Font18 mLeft4"></i>
+                <span className="controlName">{worksheetInfo.name}</span>
+                <span className="textTertiary">{_l('( 本表 )')}</span>
+              </li>
+            ) : (
+              <li className="relateItem">
+                <span className="gradeName textTertiary">{_l('第%0级', index + 1)}</span>
+                <div className="controlInfo">
+                  <i className="icon-link2 textTertiary Font18"></i>
+                  <div className="controlName overflow_ellipsis">{controlName}</div>
+                  <div className="sheetName overflow_ellipsis textTertiary">{_l('( 工作表: %0 )', worksheetName)}</div>
 
-                <VerifyDel
-                  visible={delIndex === index}
-                  title={_l('删除本级和之后的所有层级')}
-                  onVisibleChange={visible => !visible && setIndex(-1)}
-                  onCancel={() => {
-                    setIndex(-1);
-                  }}
-                  popupAlign={{
-                    offset: [70, 0],
-                  }}
-                  onDel={() => {
-                    if (index <= 1) {
-                      updateViewControls([
-                        {
-                          worksheetId: worksheetInfo.worksheetId,
-                          worksheetName: worksheetInfo.name,
-                        },
-                      ]);
-                      setControls({
-                        availableControls: getSelectableControls(worksheetInfo),
-                      });
-                    } else {
-                      updateViewControls(viewControls.slice(0, index));
-                    }
+                  <VerifyDel
+                    visible={delIndex === index}
+                    title={_l('删除本级和之后的所有层级')}
+                    onVisibleChange={visible => !visible && setIndex(-1)}
+                    onCancel={() => {
+                      setIndex(-1);
+                    }}
+                    popupAlign={{
+                      offset: [70, 0],
+                    }}
+                    onDel={() => {
+                      if (index <= 1) {
+                        updateViewControls([
+                          {
+                            worksheetId: worksheetInfo.worksheetId,
+                            worksheetName: worksheetInfo.name,
+                          },
+                        ]);
+                        setControls({
+                          availableControls: getSelectableControls(worksheetInfo),
+                        });
+                      } else {
+                        updateViewControls(viewControls.slice(0, index));
+                      }
 
-                    setIndex(-1);
-                  }}
-                >
-                  <div className="deleteWrap" onClick={() => setIndex(index)}>
-                    <i className="icon-delete_12"></i>
-                  </div>
-                </VerifyDel>
-              </div>
-            </li>
-          );
-        })}
+                      setIndex(-1);
+                    }}
+                  >
+                    <div className="deleteWrap" onClick={() => setIndex(index)}>
+                      <i className="icon-delete_12"></i>
+                    </div>
+                  </VerifyDel>
+                </div>
+              </li>
+            );
+          },
+        )}
       </ul>
       <Dropdown
-        classNames={{ root: "addHierarchyRelate" }}
+        classNames={{ root: 'addHierarchyRelate' }}
         trigger={['click']}
         popupRender={() => renderRelate()}
         placement={getPlacement()}

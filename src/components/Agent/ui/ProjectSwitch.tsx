@@ -23,7 +23,7 @@ const Pop = styled.div`
   width: 300px;
   max-width: 80vw;
   background: var(--color-background-card);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   padding: 5px 0;
   box-shadow: var(--shadow-lg);
   ${p => (p.$placement === 'top' ? 'bottom: calc(100% + 6px);' : 'top: calc(100% + 6px);')}

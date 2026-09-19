@@ -27,7 +27,7 @@ const Wrap = styled.div`
     .svgWrap {
       width: 26px;
       height: 26px;
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
     }
   }
   .SingleViewHeader {

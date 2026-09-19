@@ -1,9 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Divider, Select } from 'antd';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import { Dialog, Icon } from 'ming-ui';
@@ -47,7 +47,7 @@ const DelIconWrap = styled.div`
   justify-content: center;
   width: 20px;
   height: 20px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   margin-left: 8px;
   &:hover {

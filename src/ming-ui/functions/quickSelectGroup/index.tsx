@@ -14,7 +14,7 @@ const SelectGroupWrap = styled.div(
     overflow: hidden;
     width: ${showType === 1 ? '360px' : '100%'};
     background-color: var(--color-background-card);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     box-shadow: ${showType === 1 ? 'var(--shadow-lg)' : 'none'};
     padding-top: 16px;
     text-align: left;

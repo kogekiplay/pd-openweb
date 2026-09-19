@@ -7,11 +7,12 @@ import type { FormControl } from 'src/utils/controlTypes';
 
 const { Option } = Select;
 
-const StyledSelectContainer = styled.div` .ant-select:not(.ant-select-customize-input) {
-  --ant-select-border-radius: 3px;
-  --ant-select-border-size: 1px;
-  --ant-select-border-color: var(--color-border-secondary);
-}
+const StyledSelectContainer = styled.div`
+  .ant-select:not(.ant-select-customize-input) {
+    --ant-select-border-radius: var(--radius-sm);
+    --ant-select-border-size: 1px;
+    --ant-select-border-color: var(--color-border-secondary);
+  }
   .ant-select:not(.ant-select-customize-input) .ant-select-content {
     padding-right: 24px;
   }
@@ -44,7 +45,7 @@ const StyledDropdown = styled.div`
 const StyledTag = styled.span`
   &.ant-select-selection-item {
     background: var(--color-background-disabled);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     margin-right: 4px;
     padding: 0 8px;
   }

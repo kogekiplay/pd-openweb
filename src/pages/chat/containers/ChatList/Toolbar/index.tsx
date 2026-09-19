@@ -21,7 +21,7 @@ const Wrap = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     position: relative;
     &:hover {
       background-color: var(--color-background-hover);
@@ -52,7 +52,7 @@ const Wrap = styled.div`
     position: absolute;
     right: -2px;
     bottom: -6px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     transform: scale(0.5);
     background: var(--color-background-card);
   }

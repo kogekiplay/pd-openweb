@@ -8,12 +8,12 @@ const Container = styled.div`
   .percentSlider {
     width: 100px;
     height: 4px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     background-color: var(--color-border-secondary);
     .percentBar {
       width: ${({ percent }) => `${Math.min(percent, 100)}%`};
       height: 100%;
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       background-color: var(--color-primary);
     }
   }

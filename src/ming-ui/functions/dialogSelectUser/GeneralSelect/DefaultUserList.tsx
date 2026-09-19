@@ -12,7 +12,7 @@ const TitleWrapper = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 2px 2px 2px 6px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   .icon {
     margin-top: 1px;

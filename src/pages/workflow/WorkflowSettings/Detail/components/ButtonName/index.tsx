@@ -7,7 +7,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 const MessageBox = styled.div`
   height: 36px;
   background: var(--color-background-secondary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   align-items: center;
   padding: 0 12px;
   .icon-trash:hover {

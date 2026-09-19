@@ -42,13 +42,13 @@ export const ConfigHeader = ({ text }) => (
 const AddWrap = styled(FlexCenter)`
   justify-content: center;
   background-color: var(--color-background-tertiary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   width: ${props => `${props.width ? props.width : 280}px`};
   height: 36px;
   min-height: 36px;
   margin: ${props => (props.noItem ? '0 auto' : ' 0 auto 8px auto')};
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   text-align: center;
   transition: all 0.25s;
   color: var(--color-text-tertiary);

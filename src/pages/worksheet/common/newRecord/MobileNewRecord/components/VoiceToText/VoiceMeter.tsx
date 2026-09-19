@@ -18,7 +18,7 @@ const Bar = styled.div`
   width: 2px;
   height: 12px;
   background: var(--color-background-primary);
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   transform-origin: center center;
 
   animation: ${bounce} ${({ speed }) => speed}ms ease-in-out infinite;

@@ -14,7 +14,7 @@ import { getCodeForSave, shouldSyncCodeMirrorContent } from './utils';
 const CodeSnippetButton = styled.div`
   padding: 0 8px;
   height: 36px;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   color: var(--color-text-secondary);
   cursor: pointer;
   &:hover {

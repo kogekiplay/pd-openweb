@@ -28,7 +28,7 @@ const Con = styled.div`
       opacity: 1;
       background: var(--color-background-primary);
       border: 1px solid var(--color-border-primary);
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       font-size: 13px;
       font-weight: 400;
       text-align: center;
@@ -52,7 +52,7 @@ const Con = styled.div`
       height: 36px;
       opacity: 1;
       background: var(--color-primary);
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       font-size: 13px;
       font-weight: 700;
       color: var(--color-white);

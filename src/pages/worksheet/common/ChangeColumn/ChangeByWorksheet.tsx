@@ -6,7 +6,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 
 const PopupCon = styled.div`
   width: 360px;
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   padding: 20px;
   box-shadow: var(--shadow-lg);
   background-color: var(--color-background-card);

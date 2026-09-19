@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const List = styled.div`
   padding: 8px 0;
   overflow-y: auto;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-secondary);
   .sortItem {
     display: flex;

@@ -11,13 +11,13 @@ import { buriedUpgradeVersionDialog } from 'src/components/upgradeVersion';
 import { AnimationWrap, SettingItem } from 'src/pages/widgetConfig/styled';
 import 'src/pages/widgetConfig/styled/style.less';
 import { getAdvanceSetting, handleAdvancedSettingChange } from 'src/pages/widgetConfig/util/setting';
+import type { FormControl } from 'src/utils/controlTypes';
 import { VersionProductType } from 'src/utils/enum';
 import { getFeatureStatus } from 'src/utils/project';
 import Dropdown from '../../../../components/Dropdown';
 import DynamicDefaultValue from '../../DynamicDefaultValue';
 import { transferValue } from '../../DynamicDefaultValue/util';
 import { SectionItem } from '../../SplitLineConfig/style';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const defaultImg = `https://fp1.mingdaoyun.cn/resources/preview_background.png`;
 
@@ -37,14 +37,14 @@ const WaterMarkSettingWrap = styled.div`
       align-items: center;
       background: var(--color-background-primary);
       border: 1px solid var(--color-border-primary);
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       padding: 4px;
       .colorCon {
         flex: 1;
         min-width: 0;
         height: 28px;
         border: 1px solid var(--color-text-placeholder);
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
       }
       i {
         margin: 0 10px;
@@ -53,7 +53,7 @@ const WaterMarkSettingWrap = styled.div`
     .positionBox {
       border-right: 1px solid var(--color-background-secondary);
       border-bottom: 1px solid var(--color-background-secondary);
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       tr {
         display: flex;
       }
@@ -87,7 +87,7 @@ const WaterMarkSettingWrap = styled.div`
     .previewWrap {
       width: 100%;
       height: 210px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       border: 1px solid var(--color-border-primary);
       display: flex;
       align-items: center;
@@ -126,7 +126,7 @@ const WaterMarkSettingWrap = styled.div`
         height: 92px;
         background: var(--color-background-primary);
         border: 1px solid var(--color-border-primary);
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         margin-bottom: 6px;
         cursor: pointer;
         &:hover {
@@ -139,13 +139,13 @@ const WaterMarkSettingWrap = styled.div`
     }
     .ant-pro-layout-watermark {
       background: var(--color-background-primary);
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
     }
   }
   .colorBox {
     width: 32px;
     height: 32px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -236,7 +236,13 @@ const getMarkStyle = value => {
 };
 
 function WaterMarkDialog(props) {
-  const { data, onChange, allControls = [], globalSheetInfo = {}, onClose }: { allControls: FormControl[]; [key: string]: any } = props;
+  const {
+    data,
+    onChange,
+    allControls = [],
+    globalSheetInfo = {},
+    onClose,
+  }: { allControls: FormControl[]; [key: string]: any } = props;
   const {
     watermarkstyle = '2',
     watermarkinfo,
@@ -628,7 +634,9 @@ export default function AttachmentVerify(props) {
                 <Checkbox
                   size="small"
                   checked={onlyeditself === '1'}
-                  onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { onlyeditself: String(+!checked) }))}
+                  onClick={(checked: boolean) =>
+                    onChange(handleAdvancedSettingChange(data, { onlyeditself: String(+!checked) }))
+                  }
                 >
                   <span style={{ marginRight: '4px' }}>{_l('只能编辑自己上传的附件')}</span>
                   <Tooltip

@@ -21,7 +21,7 @@ import './index.less';
 const MenuIcon = styled.i`
   width: 32px;
   height: 32px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-primary);
   background-color: var(--color-background-primary);
   display: flex;
@@ -35,7 +35,7 @@ const DrawerBox = styled.div`
   .listItem {
     padding: 0 10px;
     height: 40px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
     cursor: pointer;

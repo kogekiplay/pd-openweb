@@ -8,7 +8,7 @@ const TableWrap = styled.div`
   .editableTable {
     width: 100%;
     border-collapse: collapse;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-secondary);
     table-layout: fixed;
     border-bottom: none;

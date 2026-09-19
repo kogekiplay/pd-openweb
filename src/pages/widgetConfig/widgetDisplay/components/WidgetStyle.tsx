@@ -22,7 +22,6 @@ import WidgetWarning from '../../widgetSetting/components/WidgetBase/WidgetWarni
 import QuickArrange from './QuickArrange';
 import './FieldRecycleBin.less';
 
-
 const FILL_TYPE = [
   { value: '0', text: _l('填满') },
   { value: '1', text: _l('完整显示') },
@@ -76,7 +75,7 @@ const DropItemWrap = styled.div`
     box-shadow: var(--shadow-lg);
     ${props => (props.backgroundColor ? `background: ${props.backgroundColor}` : '')}
     opacity: 1;
-    border-radius: 2px;
+    border-radius: var(--radius-sm);
     margin-right: 10px;
   }
 `;
@@ -87,7 +86,7 @@ const IconWrap = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   color: ${props => (props.isActive ? 'var(--color-text-secondary)' : 'var(--color-text-disabled)')};
   &:hover {

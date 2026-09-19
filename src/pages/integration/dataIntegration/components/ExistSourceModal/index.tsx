@@ -49,7 +49,7 @@ const LeftListWrapper = styled.div`
       align-items: center;
       height: 36px;
       width: 100%;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       cursor: pointer;
       .liIcon {
         display: inline-flex;
@@ -108,7 +108,7 @@ const RightListWrapper = styled.div`
     align-items: center;
     height: 72px;
     width: 100%;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     font-size: 13px;
     cursor: pointer;
 

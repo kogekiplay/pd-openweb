@@ -25,7 +25,7 @@ const Wrap = styled.div`
   }
   .ant-tabs-body {
     border: 1px solid var(--color-border-primary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
   }
   .searchWrap {
     padding: 12px 10px;
@@ -471,7 +471,7 @@ export default class SheetModal extends Component<any, any> {
   render() {
     const { dialogVisible } = this.props;
     return (
-      (<Modal
+      <Modal
         title={_l('数据源')}
         width={640}
         className="chartModal chartSheetModal"
@@ -485,7 +485,7 @@ export default class SheetModal extends Component<any, any> {
         }}
       >
         {this.renderContent()}
-      </Modal>)
+      </Modal>
     );
   }
 }

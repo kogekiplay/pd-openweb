@@ -24,10 +24,10 @@ const Wrap = styled.div`
     color: var(--color-text-tertiary);
   }
   .ant-input {
-    border-radius: 3px 0 0 3px;
+    border-radius: var(--radius-sm) 0 0 var(--radius-sm);
   }
   .numberControlBox .iconWrap {
-    border-radius: 0 0 3px 0;
+    border-radius: 0 0 var(--radius-sm) 0;
     &:hover {
       i {
         color: var(--color-primary);
@@ -35,7 +35,7 @@ const Wrap = styled.div`
     }
   }
   .numberControlBox .iconWrap:first-child {
-    border-radius: 0 3px 0 0;
+    border-radius: 0 var(--radius-sm) 0 0;
   }
   .flexCenter {
     display: inline-flex !important;

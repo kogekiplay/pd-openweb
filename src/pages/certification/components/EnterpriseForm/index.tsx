@@ -18,7 +18,7 @@ const { RangePicker } = DatePicker;
 const CommonRangePicker = styled(RangePicker)`
   width: 50%;
   height: 36px;
-  border-radius: 4px !important;
+  border-radius: var(--radius-sm) !important;
   border-color: var(--color-border-tertiary);
   box-shadow: none !important;
   &:hover,

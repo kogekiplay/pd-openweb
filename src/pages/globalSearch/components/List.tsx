@@ -17,7 +17,7 @@ const Box = styled.div`
   }
   .list .listItem {
     width: 100%;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     height: 56px;
     cursor: pointer;
   }

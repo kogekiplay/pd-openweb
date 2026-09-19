@@ -22,7 +22,7 @@ const SchemeSkeletonWrapper = styled.div`
   border-radius: 6px;
 
   div {
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
 
     background: linear-gradient(
       90deg,

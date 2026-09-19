@@ -13,7 +13,7 @@ const Con = styled.div`
     top: 4px;
     width: 24px;
     height: 24px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     background: var(--color-background-primary);
     justify-content: center;
     align-items: center;

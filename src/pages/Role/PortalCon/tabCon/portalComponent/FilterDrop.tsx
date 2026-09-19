@@ -13,7 +13,7 @@ const ClickAwayable = ClickAway;
 const Popup = styled.div`
   background: var(--color-background-card);
   width: 300px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   box-shadow: var(--shadow-lg);
   .addFilterCondition {
     padding: 5px 20px 20px;

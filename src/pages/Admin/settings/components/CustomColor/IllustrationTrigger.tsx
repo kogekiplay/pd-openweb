@@ -7,7 +7,7 @@ const GuildWrap = styled.div`
   width: 280px;
   background: var(--color-background-card);
   box-shadow: var(--shadow-lg);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   left: 100%;
   justify-content: space-between;
   padding-top: 20px;

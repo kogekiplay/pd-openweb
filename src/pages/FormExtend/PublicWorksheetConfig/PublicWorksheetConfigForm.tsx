@@ -2,10 +2,10 @@ import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { generate } from '@ant-design/colors';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, Menu, MenuItem, RichText, ScrollView, Skeleton } from 'ming-ui';
 import { Absolute, BlackBtn, FormTopImgCon, Hr } from 'worksheet/components/Basics';
@@ -26,7 +26,7 @@ const TopBar = styled.div(
   ({ color }) => `
   height: 10px;
   background: var(--color-background-primary);
-  border-radius: 3px 3px 0 0;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
   .topBar{
     width: 100%;
     height: 100%;

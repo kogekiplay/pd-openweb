@@ -7,9 +7,9 @@
 }
 .myUpdateItem {
   border: 2px solid var(--color-text-placeholder);
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
+  -webkit-border-radius: var(--radius-sm);
+  -moz-border-radius: var(--radius-sm);
+  border-radius: var(--radius-sm);
   min-height: 50px;
 }
 .myUpdateItem_Tag {
@@ -64,7 +64,7 @@
   height: 12px;
   cursor: pointer;
   line-height: 1;
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
 }
 .myUpdateItem .update_close i {
   position: absolute;

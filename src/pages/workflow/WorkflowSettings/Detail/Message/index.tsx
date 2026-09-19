@@ -26,7 +26,7 @@ const TagBox = styled.div`
   padding: 0 7px;
   height: 22px;
   background: var(--color-background-secondary);
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   color: var(--color-text-secondary);
   display: flex;
   align-items: center;

@@ -20,7 +20,7 @@ const DropDownSetChoose = styled.div`
     width: 100%;
     &.ant-select,
     & .ant-select {
-      --ant-select-border-radius: 3px !important;
+      --ant-select-border-radius: var(--radius-sm) !important;
     }
     .ant-select-content {
       height: 36px !important;
@@ -84,7 +84,7 @@ export default class DropDownSet extends React.Component<any, any> {
     let controlData = controlList.find(it => it.controlId === setDataId);
     let isDelete = setDataId && !controlData;
     return (
-      (<div className={className}>
+      <div className={className}>
         <div className="title Font13 bold">{title}</div>
         <div className="settingContent">
           <p className="mTop6 mBottom8 textSecondary viewSetText">{txt}</p>
@@ -96,7 +96,7 @@ export default class DropDownSet extends React.Component<any, any> {
               value={[setDataId]}
               suffixIcon={<Icon icon="arrow-down-border Font14" />}
               allowClear={setDataId}
-              classNames={{ popup: { root: "dropConOption" } }}
+              classNames={{ popup: { root: 'dropConOption' } }}
               onChange={value => {
                 if (value === setDataId) {
                   return;
@@ -157,7 +157,7 @@ export default class DropDownSet extends React.Component<any, any> {
             worksheetId={worksheetId}
           />
         )}
-      </div>)
+      </div>
     );
   }
 }

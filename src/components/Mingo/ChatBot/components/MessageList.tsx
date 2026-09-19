@@ -9,7 +9,6 @@ import React, {
   useState,
 } from 'react';
 import cx from 'classnames';
-import copy from 'src/utils/copyToClipboard';
 import { findLast, findLastIndex, includes, isEmpty, isFunction, last } from 'lodash';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -21,6 +20,7 @@ import mingoHead from 'src/pages/chat/containers/ChatList/Mingo/images/mingo.png
 import LoadingDots from 'src/pages/widgetConfig/widgetSetting/components/DevelopWithAI/ChatBot/LoadingDots';
 import { SpeechSynthesizer } from 'src/utils/audio';
 import { browserIsMobile } from 'src/utils/common';
+import copy from 'src/utils/copyToClipboard';
 import { getTextContentFromMessage } from 'src/utils/sse';
 import FileCard from '../../ChatBot/components/FileCard';
 import { convertModelMessageToUIMessage, getContentFromMessage } from '../utils';
@@ -151,7 +151,7 @@ export const MessageItemWrap = styled.div`
     .messageContent {
       background: var(--color-mingo-transparent);
       padding: 8px 10px;
-      border-radius: 5px;
+      border-radius: var(--radius-sm);
     }
     &.useAppThemeColor {
       .messageContent {
@@ -197,7 +197,7 @@ export const MessageItemWrap = styled.div`
 
 const MessageEditTextarea = styled(AutoHeightTextArea)`
   border: 2px solid var(--color-mingo) !important;
-  border-radius: 5px !important;
+  border-radius: var(--radius-sm) !important;
   width: 100% !important;
   padding: 7px 12px !important;
   font-size: 14px !important;

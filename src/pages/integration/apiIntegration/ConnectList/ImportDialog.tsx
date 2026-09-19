@@ -22,7 +22,7 @@ const Wrap = styled.div`
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 5px;
+        border-radius: var(--radius-sm);
         div {
           height: 14px;
         }
@@ -44,7 +44,7 @@ const Wrap = styled.div`
     .importAppContent {
       width: 100%;
       height: 362px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       overflow-y: auto;
       box-sizing: border-box;
 
@@ -83,7 +83,7 @@ const Wrap = styled.div`
         width: 250px;
         line-height: 34px;
         border: 1px solid var(--color-primary);
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         padding: 0 12px;
         box-sizing: border-box;
       }
@@ -112,7 +112,7 @@ const Wrap = styled.div`
       .importBtn {
         width: 107px;
         height: 36px;
-        border-radius: 2px;
+        border-radius: var(--radius-sm);
         color: var(--color-white) !important;
       }
     }

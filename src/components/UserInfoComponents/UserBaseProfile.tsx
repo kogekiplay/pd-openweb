@@ -25,7 +25,7 @@ const UserProjectInfoWrap = styled.div`
     display: inline-block;
     max-width: 100%;
     padding: 3px 5px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     &:hover {
       background: var(--color-background-hover);
     }
@@ -75,7 +75,7 @@ const ProjectsMenuCon = styled.div`
   overflow-y: auto;
   overflow-x: hidden;
   background: var(--color-background-card);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   padding-bottom: 5px;
   box-shadow: var(--shadow-lg);
 

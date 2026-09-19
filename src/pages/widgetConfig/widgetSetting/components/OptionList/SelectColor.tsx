@@ -7,7 +7,7 @@ import { OPTION_COLORS_LIST } from '../../../config';
 
 const SelectColorWrap = styled.div`
   box-shadow: var(--shadow-md);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   position: relative;
   box-sizing: border-box;
   max-width: 350px;

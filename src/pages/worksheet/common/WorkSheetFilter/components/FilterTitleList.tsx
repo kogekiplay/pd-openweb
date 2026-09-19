@@ -1,13 +1,13 @@
 import React, { Fragment, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _, { get } from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, Menu, MenuItem, SortableList } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { VerticalMiddle } from 'worksheet/components/Basics';
-import { FILTER_TYPE } from '../enum';
 import type { FormControl } from 'src/utils/controlTypes';
+import { FILTER_TYPE } from '../enum';
 
 const Con = styled.div`
   .title {
@@ -42,7 +42,7 @@ const MenuCon = styled(Menu)`
 const FilterTitleItemCon = styled(VerticalMiddle)`
   cursor: pointer;
   height: 36px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   padding: 0 18px;
   justify-content: space-between;
   position: relative;

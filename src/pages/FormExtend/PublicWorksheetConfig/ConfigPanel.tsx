@@ -13,6 +13,7 @@ import ShareUrl from 'worksheet/components/ShareUrl';
 import { buriedUpgradeVersionDialog } from 'src/components/upgradeVersion';
 import type { RootState } from 'src/redux/configureStore';
 import { pathCompletion } from 'src/utils/common';
+import type { FormControl } from 'src/utils/controlTypes';
 import { VersionProductType } from 'src/utils/enum';
 import { getFeatureStatus } from 'src/utils/project';
 import { isFullLineControl } from '../../widgetConfig/util/widgets';
@@ -21,7 +22,6 @@ import * as actions from '../PublicWorksheetConfig/redux/actions';
 import { getDisabledControls, isDisplayPromptText, renderLimitInfo } from '../utils';
 import ControlList from './components/ControlList';
 import PublicConfig from './PublicConfig';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const WHOLE_SIZE = 12;
 
@@ -80,7 +80,7 @@ const PayButton = styled.div`
   margin-left: 10px;
   padding: 3px 8px;
   box-sizing: border-box;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   color: var(--color-primary);
   background: var(--color-primary-transparent);
   font-weight: 700;
@@ -114,10 +114,10 @@ const ColumnSettingWrap = styled.div`
     display: flex;
     padding: 2px;
     background: var(--color-background-disabled);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     .columnItem {
       height: 32px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       display: flex;
       align-items: center;
       justify-content: center;

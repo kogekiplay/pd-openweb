@@ -10,7 +10,7 @@ export const Header = styled(FlexCenter)`
   justify-content: space-between;
   background-color: var(--color-background-primary);
   box-shadow: var(--shadow-sm);
-  border-radius: 5px 5px 0 0;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
   font-size: 17px;
   z-index: 1;
   .typeName {

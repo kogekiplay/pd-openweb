@@ -8,7 +8,7 @@ import paymentAjax from 'src/api/payment';
 
 const InputWrap = styled.div`
   border: 1px solid var(--color-border-secondary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   &.focusWrap {
     border: 1px solid var(--color-primary);
   }

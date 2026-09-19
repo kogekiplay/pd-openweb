@@ -24,7 +24,7 @@ const ErrorDialogTitle = styled.div`
       font-weight: 700;
       color: var(--color-text-primary);
       border: 1px solid var(--color-border-primary);
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       cursor: pointer;
     }
   }

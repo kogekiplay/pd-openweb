@@ -16,7 +16,7 @@ const FooterWrap = styled.div`
     padding: 0 32px;
     color: var(--color-white);
     background-color: var(--color-primary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     line-height: 36px;
     &:hover {
       background-color: var(--color-link-hover);
@@ -32,7 +32,7 @@ const FooterWrap = styled.div`
     display: inline-block;
     padding: 0 32px;
     color: var(--color-primary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     line-height: 34px;
     border: 1px solid var(--color-primary);
     background-color: var(--color-background-primary);

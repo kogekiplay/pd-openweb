@@ -37,7 +37,7 @@ const BackBtn = styled.button`
   width: 28px;
   height: 28px;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   background: transparent;
   color: var(--color-text-secondary);
   cursor: pointer;
@@ -140,7 +140,7 @@ const GenerateBtn = styled.button`
   overflow: hidden;
   height: 36px;
   padding: 0 24px;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   border: none;
   background: var(--color-mingo);
   color: var(--color-text-inverse);
@@ -196,7 +196,7 @@ const CloseBtn = styled.button`
   width: 28px;
   height: 28px;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   background: transparent;
   color: var(--color-text-tertiary);
   cursor: pointer;

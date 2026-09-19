@@ -21,7 +21,7 @@ const ButtonWrap = styled.div`
     text-shadow: none;
     box-shadow: none;
     height: 36px;
-    border-radius: 0 3px 3px 0 !important;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0 !important;
   }
   .arrowWrap {
     opacity: 0;

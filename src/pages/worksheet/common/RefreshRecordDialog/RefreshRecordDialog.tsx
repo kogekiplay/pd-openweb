@@ -8,15 +8,15 @@ import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget';
 import { FORM_HIDDEN_CONTROL_IDS, WORKFLOW_SYSTEM_CONTROL } from 'src/pages/widgetConfig/config/widget';
 import { getIconByType } from 'src/pages/widgetConfig/util';
 import { FlexCenter } from 'src/pages/worksheet/components/Basics';
-import { refreshRecord } from './dal';
 import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import { refreshRecord } from './dal';
 
 const NewDialog = styled(Dialog)`
   .titleTag {
     height: 26px;
     line-height: 26px;
     padding: 0 8px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     color: var(--color-primary);
     background: var(--color-primary-transparent);
     font-size: 13px;
@@ -60,7 +60,7 @@ const Circle = styled(FlexCenter)`
 
 const Info = styled.div`
   background: var(--color-yellow-black);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-warning-border);
   padding: 8px;
   color: var(--color-text-title);
@@ -166,7 +166,8 @@ export default function RefreshRecordDialog(props) {
     onClose = () => {},
   }: { controls: FormControl[]; selectedRows: RecordRow[]; [key: string]: any } = props;
   const visibleControls: FormControl[] = controls.filter(
-    (c: FormControl) => !_.includes(FORM_HIDDEN_CONTROL_IDS.concat(WORKFLOW_SYSTEM_CONTROL.map(cc => cc.controlId)), c.controlId),
+    (c: FormControl) =>
+      !_.includes(FORM_HIDDEN_CONTROL_IDS.concat(WORKFLOW_SYSTEM_CONTROL.map(cc => cc.controlId)), c.controlId),
   );
   const refreshControls = getRefreshControls(visibleControls);
   const refreshSortControls = getRefreshSortControls(visibleControls);

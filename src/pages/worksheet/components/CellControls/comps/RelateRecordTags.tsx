@@ -81,7 +81,7 @@ const Tag = styled.div`
   display: inline-block;
   line-height: 21px;
   background-color: rgba(0, 100, 240, 0.08);
-  border-radius: 3px;
+  border-radius: var(--radius-xs);
   padding: 0 10px;
   margin: 6px 0 0 6px;
   &.isediting.allowRemove {

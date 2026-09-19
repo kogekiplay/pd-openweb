@@ -9,7 +9,7 @@ import type { FormControl } from 'src/utils/controlTypes';
 const Con = styled.div(
   ({ disabled }) => `
     display: flex;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     height: 36px;
     line-height: 34px;
     padding: 0 6px 0 10px;

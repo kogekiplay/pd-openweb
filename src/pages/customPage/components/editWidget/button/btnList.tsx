@@ -16,7 +16,7 @@ const ButtonDisplayWrap = styled.div`
   text-align: center;
   background-color: var(--color-background-card);
   overflow: auto;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   .title,
   .explain {
     text-align: center;
@@ -58,11 +58,11 @@ const BtnWrap = styled.div`
     }
     &:hover {
       border: 1px dashed var(--color-border-primary);
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
     }
     &.active {
       border: 1px solid var(--color-primary);
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
     }
     &.error {
       border: 1px solid red;

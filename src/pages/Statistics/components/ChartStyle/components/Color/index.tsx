@@ -10,7 +10,7 @@ import RuleColor from './RuleColor';
 
 const EntranceWrapper = styled.div`
   border: 1px solid var(--color-border-primary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   height: 30px;
   background-color: var(--color-background-primary);
   &.ruleIcon {

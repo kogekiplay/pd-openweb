@@ -51,7 +51,7 @@ const TreeWrap = styled(Tree)`
   .ant-tree-treenode {
     width: 233px;
     padding: 6px 0 !important;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     position: relative;
     &:hover {
       background-color: var(--color-background-hover);

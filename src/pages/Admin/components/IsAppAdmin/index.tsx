@@ -10,7 +10,7 @@ const Wrap = styled.div`
   .iconWrap {
     width: 22px;
     height: 22px;
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     margin-right: 10px;
     text-align: center;
     padding-top: 3px;

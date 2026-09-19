@@ -11,7 +11,7 @@ const Con = styled.div`
   align-items: center;
   height: 32px;
   line-height: 32px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
 `;
 
 const InputCon = styled(Input)`
@@ -35,7 +35,7 @@ const RangeInputCon = styled.div`
   display: flex;
   width: 100%;
   border: 1px solid var(--border-color);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   &:hover:not(:focus) {
     border-color: var(--color-border-tertiary) !important;
   }

@@ -6,8 +6,8 @@ import { Icon } from 'ming-ui';
 import { ALL_SYS, SYSTEM_CONTROL, WORKFLOW_SYSTEM_CONTROL } from 'src/pages/widgetConfig/config/widget';
 import { isCustomWidget } from 'src/pages/widgetConfig/util';
 import { getUnUniqName } from 'src/utils/common';
-import AddFields from '../CustomEvent/CustomAction/AddFields';
 import type { FormControl } from 'src/utils/controlTypes';
+import AddFields from '../CustomEvent/CustomAction/AddFields';
 
 const CustomReferenceWrap = styled.div`
   display: flex;
@@ -39,7 +39,7 @@ const CustomReferenceWrap = styled.div`
       flex: 1;
       min-width: 0;
       background: var(--color-background-primary);
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       border: 1px solid var(--color-border-primary);
       padding: 0 12px;
       &.isDel {

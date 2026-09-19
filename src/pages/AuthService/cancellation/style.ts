@@ -14,7 +14,7 @@ export const Wrap = styled.div`
       width: 80%;
       max-width: 1000px;
       height: 396px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       margin: 0 auto;
       background: var(--color-background-primary);
       &.mobileContainerWidth {
@@ -61,7 +61,7 @@ export const Wrap = styled.div`
       background: var(--color-background-primary);
       max-width: 900px;
       padding: 50px;
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       border: #dce2e4 1px solid;
       box-sizing: border-box;
     }

@@ -68,7 +68,7 @@ const FormItem = styled.div`
 
 const AppListContainer = styled.div`
   width: 100%;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-primary);
   margin-top: 16px;
   padding-top: 8px;
@@ -100,7 +100,7 @@ const AppListContainer = styled.div`
           min-width: 24px;
           height: 24px;
           line-height: 16px;
-          border-radius: 4px;
+          border-radius: var(--radius-sm);
           margin-right: 8px;
         }
       }

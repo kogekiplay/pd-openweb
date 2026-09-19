@@ -31,7 +31,7 @@ const Bar = styled.div`
   position: relative;
   height: 6px;
   margin: 7px 0;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   background: var(--color-border-secondary);
   cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
   &:hover {
@@ -41,7 +41,7 @@ const Bar = styled.div`
 
 const Content = styled.div`
   height: 6px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
 `;
 
 const Drag = styled.span`
@@ -126,7 +126,7 @@ const Input = styled.input`
   height: 36px;
   line-height: 36px;
   padding: 0 12px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   background: var(--color-background-secondary);
   ${({ showAsPercent }) => (showAsPercent ? 'padding-right: 28px;' : '')}
   &:active {

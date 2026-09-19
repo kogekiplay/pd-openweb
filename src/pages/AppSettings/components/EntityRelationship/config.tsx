@@ -14,7 +14,7 @@ export const stylesheet_er = `
 .customErNode {
   box-sizing: border-box;
   background: var(--color-background-primary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   color: var(--color-text-title);
   height: 100%;
   padding: 6px 0;

@@ -8,7 +8,7 @@ import RangeDialog from './RangeDialog';
 const Wrap = styled.div`
   margin-top: 10px;
   border: 1px solid var(--color-border-tertiary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   padding: 5px 10px;
   line-height: 24px;
   &:hover {

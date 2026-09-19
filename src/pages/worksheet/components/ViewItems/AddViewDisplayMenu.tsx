@@ -22,7 +22,7 @@ import Sheet from './lottie/table.json';
 
 const Wrap = styled.div`
   background-color: var(--color-background-primary);
-  border-radius: 3px 3px 3px 3px;
+  border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
   overflow: hidden;
   box-shadow: var(--shadow-lg);
   .title {
@@ -35,7 +35,7 @@ const Wrap = styled.div`
     padding: 16px 6px;
     .viewTypeItem {
       line-height: 36px;
-      border-radius: 3px 3px 3px 3px;
+      border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
       padding: 0 13px;
       position: relative;
       &:hover {
@@ -65,7 +65,7 @@ const Wrap = styled.div`
       width: 152px;
       max-width: 152px;
       height: 36px;
-      border-radius: 3px 3px 3px 3px;
+      border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
       padding: 0 6px;
       &:hover {
         background: rgba(0, 0, 0, 0.04);
@@ -107,12 +107,12 @@ const Wrap = styled.div`
     .Beta {
       padding: 4px 5px;
       background: var(--color-success);
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       color: var(--color-white);
     }
     .addCustomView {
       background: var(--color-background-primary);
-      border-radius: 4px 4px 4px 4px;
+      border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
       border: 1px solid var(--color-border-primary);
       padding: 11px 14px;
       margin: 32px auto 48px;
@@ -147,7 +147,7 @@ const GuildWrap = styled.div`
   width: 280px;
   background: var(--color-background-card);
   box-shadow: var(--shadow-lg);
-  border-radius: 3px 3px 3px 3px;
+  border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
   left: 100%;
   justify-content: space-between;
   padding: 20px 20px 16px 20px;

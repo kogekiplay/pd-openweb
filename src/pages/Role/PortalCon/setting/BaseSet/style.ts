@@ -20,7 +20,7 @@ export const Wrap = styled.div`
     height: 36px;
     background: var(--color-background-primary);
     border: 1px solid var(--color-border-secondary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     padding: 0 14px;
     &:hover {
       border: 1px solid var(--color-text-disabled);
@@ -34,16 +34,16 @@ export const Wrap = styled.div`
     padding: 0 20px;
     height: 36px;
     background: var(--color-background-secondary);
-    border-radius: 3px 0px 0px 3px;
+    border-radius: var(--radius-sm) 0px 0px var(--radius-sm);
     line-height: 36px;
     box-sizing: border-box;
     vertical-align: middle;
     &.url {
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
     }
   }
   .urlEnd {
-    border-radius: 0px 3px 3px 0px;
+    border-radius: 0px var(--radius-sm) var(--radius-sm) 0px;
   }
   input.domainName {
     width: 200px;
@@ -61,7 +61,7 @@ export const Wrap = styled.div`
   .exAccountSendCon {
     height: 36px;
     background: var(--color-background-secondary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-primary);
     padding: 0 16px;
     line-height: 36px;
@@ -73,7 +73,7 @@ export const Wrap = styled.div`
     width: 420px;
     margin-left: 44px;
     border: 1px solid var(--color-border-primary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
   }
   .cardSelect {
     font-size: 12px !important;

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
+import _ from 'lodash';
 import styled from 'styled-components';
 import { Dropdown, Icon, Menu, MenuItem, Support, SvgIcon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -20,7 +20,7 @@ const UserInfoCon = styled.div`
   .worksheetInfoBox {
     height: 71px;
     border: 1px solid var(--color-border-primary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
     padding: 0 26px;
@@ -45,7 +45,7 @@ const UserInfoCon = styled.div`
     height: 36px;
     line-height: 36px;
     border: 1px solid var(--color-border-secondary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     width: fit-content;
     &:hover {
       border-color: var(--color-primary);
@@ -61,7 +61,7 @@ const UserInfoCon = styled.div`
       .text {
         background: var(--color-background-secondary);
         border: 1px solid var(--color-border-primary);
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         padding: 0 15px;
       }
       .optionBox {
@@ -73,7 +73,7 @@ const UserInfoCon = styled.div`
         display: inline-block;
         text-align: center;
         line-height: 36px;
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         border: 1px solid var(--color-border-primary);
         &:hover {
           border-color: var(--color-primary);

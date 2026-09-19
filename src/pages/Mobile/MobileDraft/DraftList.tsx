@@ -15,7 +15,7 @@ const Wrap = styled.div`
     margin: 0 10px 10px;
     background-color: var(--color-background-primary);
     border: 1px solid var(--color-white);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     box-shadow: 0px 1px 3px rgb(0 0 0 / 16%);
     position: relative;
     overflow: hidden;
@@ -33,7 +33,7 @@ const Wrap = styled.div`
       bottom: 10px;
     }
     .emptyTag {
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       display: inline-block;
       width: 12px;
       height: 3px;

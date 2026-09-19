@@ -30,7 +30,7 @@ const Wrap = styled.div`
     .recordIconWrap {
       width: 28px;
       height: 28px;
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       text-align: center;
     }
     .recordTitle {

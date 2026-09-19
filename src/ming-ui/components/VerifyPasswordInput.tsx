@@ -8,7 +8,7 @@ import { browserIsMobile, pathCompletion } from 'src/utils/common';
 const Password = styled(Input.Password)`
   box-shadow: none !important;
   line-height: 28px !important;
-  border-radius: 3px !important;
+  border-radius: var(--radius-sm) !important;
   border: 1px solid var(--color-border-primary) !important;
   margin-bottom: 10px;
   transition: none !important;
@@ -20,7 +20,7 @@ const Password = styled(Input.Password)`
 const User = styled.div`
   height: 36px;
   background: var(--color-background-secondary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-primary);
   padding: 0 10px;
 `;

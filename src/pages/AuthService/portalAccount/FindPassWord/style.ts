@@ -53,7 +53,7 @@ export const WrapCon = styled.div`
     max-width: 100%;
     object-fit: contain;
   }
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   padding: 48px 48px 72px 48px;
   box-sizing: border-box;
   width: 50%;
@@ -67,7 +67,7 @@ export const WrapCon = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     div {
       height: 28px;
     }
@@ -85,7 +85,7 @@ export const WrapCon = styled.div`
     font-weight: 600;
   }
   &.isCenterCon {
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     width: 480px;
     background: var(--color-background-primary);
     height: auto;

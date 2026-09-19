@@ -71,7 +71,7 @@ const TemplateList = styled.div`
     margin-bottom: 4px;
     cursor: pointer;
     background: var(--color-background-secondary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     color: var(--color-text-secondary);
     position: relative;
     &:hover,
@@ -92,7 +92,7 @@ const AttachmentBtn = styled.span`
   align-items: center;
   justify-content: center;
   border: 1px solid var(--color-border-tertiary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   margin-left: 10px;
   cursor: pointer;
   width: 36px;

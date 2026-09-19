@@ -5,8 +5,8 @@
   top: 0;
   right: 0;
   background: var(--color-background-secondary);
-  border-bottom-right-radius: 3px;
-  border-top-right-radius: 3px;
+  border-bottom-right-radius: var(--radius-sm);
+  border-top-right-radius: var(--radius-sm);
   flex-direction: column;
   border-left: 1px solid var(--color-border-primary);
   box-sizing: border-box;
@@ -98,7 +98,7 @@
         }
         .comment {
           position: relative;
-          border-radius: 0 0 3px 0;
+          border-radius: 0 0 var(--radius-sm) 0;
           padding: 10px 20px 10px 51px;
           background: var(--color-background-secondary);
           .createHeadImg {
@@ -168,7 +168,7 @@
     align-items: center;
     width: fit-content;
     cursor: pointer;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     box-shadow: var(--shadow-sm);
     &:hover {
       box-shadow: var(--shadow-sm);

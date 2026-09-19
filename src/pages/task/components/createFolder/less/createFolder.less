@@ -2,7 +2,7 @@
   overflow: hidden;
   .folderBox {
     background: var(--color-border-secondary);
-    border-radius: 0 3px 3px 0;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     width: 300px;
     .folderBoxPadding {
       padding: 0 24px;
@@ -12,10 +12,10 @@
       width: 100%;
       height: 156px;
       background: var(--color-text-disabled);
-      border-radius: 0 3px 0 0;
+      border-radius: 0 var(--radius-sm) 0 0;
       img {
         width: 100%;
-        border-radius: 0 3px 0 0;
+        border-radius: 0 var(--radius-sm) 0 0;
       }
     }
     #folderName {
@@ -24,7 +24,7 @@
       line-height: 36px;
       padding-left: 10px;
       border: 1px solid var(--color-border-secondary);
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       margin-top: 16px;
       &:not(:focus) {
         border-color: var(--color-border-tertiary) !important;
@@ -92,12 +92,12 @@
         color: var(--color-white);
       }
       &:first-child {
-        border-top-left-radius: 3px;
-        border-top-right-radius: 3px;
+        border-top-left-radius: var(--radius-sm);
+        border-top-right-radius: var(--radius-sm);
       }
       &:last-child {
-        border-bottom-left-radius: 3px;
-        border-bottom-right-radius: 3px;
+        border-bottom-left-radius: var(--radius-sm);
+        border-bottom-right-radius: var(--radius-sm);
       }
     }
     .createFolderBtn {
@@ -118,7 +118,7 @@
           padding: 0 30px;
           color: var(--color-white);
           font-size: 14px;
-          border-radius: 3px;
+          border-radius: var(--radius-sm);
         }
       }
     }

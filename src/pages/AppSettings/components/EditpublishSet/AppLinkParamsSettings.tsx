@@ -1,11 +1,11 @@
 import React, { Fragment, useState } from 'react';
-import cx from 'classnames';
-import copy from 'src/utils/copyToClipboard';
-import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
+import cx from 'classnames';
+import _ from 'lodash';
 import styled from 'styled-components';
 import { Checkbox } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
+import copy from 'src/utils/copyToClipboard';
 
 const LinkParamSettings = styled.div`
   width: 324px;
@@ -28,7 +28,7 @@ const AppLinkWrap = styled.div`
     height: 36px;
     line-height: 36px;
     background-color: var(--color-background-secondary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     padding: 0 10px;
     border: 1px solid var(--color-border-primary);
   }
@@ -36,7 +36,7 @@ const AppLinkWrap = styled.div`
   .copy {
     height: 36px;
     line-height: 36px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     padding: 0 17px;
     border: 1px solid var(--color-border-primary);
     margin-left: 8px;

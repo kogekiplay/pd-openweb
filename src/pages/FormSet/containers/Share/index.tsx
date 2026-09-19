@@ -6,8 +6,8 @@ import { Tooltip } from 'ming-ui/antd-components';
 import sheetAjax from 'src/api/worksheet';
 import { SHARECARDTYPS } from 'src/components/ShareCardConfig/config';
 import SelectExDrop from 'src/pages/Role/PortalCon/components/SelectExDrop';
-import ShareCardSetting from './ShareCardSet';
 import type { FormControl } from 'src/utils/controlTypes';
+import ShareCardSetting from './ShareCardSet';
 
 const Container = styled.div`
   padding: 35px 40px 10px;
@@ -49,7 +49,7 @@ const SettingItem = styled.div``;
 const Description = styled.div`
   width: 100%;
   background: var(--color-primary-transparent);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   padding: 10px 12px;
   line-height: 1.5;
   font-size: 13px;
@@ -91,7 +91,12 @@ const TYPES = [
 ];
 
 const SharingSettings = props => {
-  const { worksheetId, worksheetInfo, onChange, worksheetControls }: { worksheetControls: FormControl[]; [key: string]: any } = props;
+  const {
+    worksheetId,
+    worksheetInfo,
+    onChange,
+    worksheetControls,
+  }: { worksheetControls: FormControl[]; [key: string]: any } = props;
   const { views = [], appId } = worksheetInfo;
   const [activeTab, setActiveTab] = useState('view');
   const [isView, setIsView] = useState(false);

@@ -67,7 +67,7 @@ const AddButton = styled.div`
   height: 44px;
   line-height: 44px;
   background: var(--color-background-secondary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   &:hover {
     background: var(--color-background-hover);
   }
@@ -76,7 +76,7 @@ const AddButton = styled.div`
 const SelectedControlCon = styled.div`
   width: 100%;
   border: 1px solid var(--color-border-secondary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   height: 36px;
@@ -159,7 +159,7 @@ const SelectColorShowTypeCon = styled.div`
   > span {
     position: relative;
     display: inline-flex;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     margin-right: 16px;
     width: 78px;
     height: 36px;
@@ -188,7 +188,7 @@ const SelectColorShowTypeCon = styled.div`
         top: 0px;
         bottom: 0px;
         background: #f52222;
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
       }
     }
     &.type-1 {
@@ -201,7 +201,7 @@ const SelectColorShowTypeCon = styled.div`
         top: 0px;
         bottom: 0px;
         background: #f52222;
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
       }
     }
     &.type-2 {

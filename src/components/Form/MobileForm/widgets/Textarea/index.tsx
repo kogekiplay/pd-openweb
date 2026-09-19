@@ -47,7 +47,7 @@ const TextareaWrap = styled.div`
   .customFormTextarea {
     box-sizing: border-box;
     border: 1px solid var(--color-border-primary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     padding: 6px 12px;
     width: 100%;
     line-height: 1.5;

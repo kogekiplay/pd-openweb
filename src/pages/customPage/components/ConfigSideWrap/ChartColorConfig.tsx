@@ -12,7 +12,7 @@ import { defaultTitleStyles, replaceTitleColor } from './util';
 
 const TemplateTitleWrap = styled.div`
   flex: 2;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   padding: 0 5px;
   height: 32px;
   display: flex;

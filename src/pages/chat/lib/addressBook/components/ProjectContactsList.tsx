@@ -30,7 +30,7 @@ const Department = styled.div`
   .iconArrow {
     display: flex;
     padding: 7px 0px 5px 2px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     &:hover {
       background-color: var(--color-background-hover);
     }

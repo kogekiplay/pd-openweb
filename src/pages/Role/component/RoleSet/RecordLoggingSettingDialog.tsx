@@ -79,7 +79,7 @@ const Wrap = styled.div`
   .hintBox {
     padding: 12px 13px;
     border: 1px solid var(--color-border-secondary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     background: var(--color-background-secondary);
     line-height: 24px;
     word-break: break-all;

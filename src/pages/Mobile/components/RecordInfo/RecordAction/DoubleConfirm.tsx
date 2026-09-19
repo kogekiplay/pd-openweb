@@ -14,7 +14,7 @@ const ConfirmDialogWrap = styled(Popup)`
   }
   .remarkButton {
     box-sizing: border-box;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     padding: 8px;
     font-size: 14px;
     width: 100%;
@@ -91,7 +91,7 @@ const RemarkModeModal = styled(Popup)`
   }
   .searchWrap {
     background-color: var(--color-background-primary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     padding: 0 10px;
     height: 36px;
     border-radius: 18px;

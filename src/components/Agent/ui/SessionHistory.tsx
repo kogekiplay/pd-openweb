@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Dialog, Icon, Input, LoadDiv, Menu, MenuItem, Skeleton } from 'ming-ui';
 import ScrollView from 'ming-ui/components/ScrollView';
@@ -20,7 +20,7 @@ const Body = styled.div`
     height: 36px;
     padding: 0 10px;
     border: 1px solid var(--color-border-primary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     transition: border-color 0.2s ease;
     &:focus-within {
       border-color: var(--color-border-hover);
@@ -54,7 +54,7 @@ const Body = styled.div`
     flex: 1;
     .sessionItem {
       cursor: pointer;
-      border-radius: 5px;
+      border-radius: var(--radius-sm);
       padding: 0 12px;
       height: 42px;
       font-size: 15px;
@@ -70,7 +70,7 @@ const Body = styled.div`
         width: 24px;
         height: 24px;
         flex-shrink: 0;
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         font-size: 14px;
         color: var(--color-text-secondary);
         cursor: pointer;

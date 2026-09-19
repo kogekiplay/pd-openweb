@@ -24,7 +24,7 @@
   font-size: 12px;
   text-align: left;
   background-color: var(--color-background-primary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   box-shadow: @datepicker-shadow;
   background-clip: padding-box;
   line-height: 1.5;
@@ -177,7 +177,7 @@
 
   .calender-task-header {
     background-color: var(--color-background-secondary);
-    border-radius: 3px 0 0 3px;
+    border-radius: var(--radius-sm) 0 0 var(--radius-sm);
     &:after {
       content: '';
       display: block;
@@ -334,7 +334,7 @@
     box-sizing: border-box;
     text-shadow: none;
     border: none;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     color: var(--color-white);
     cursor: pointer;
     user-select: none;

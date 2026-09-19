@@ -8,10 +8,10 @@ import { Dialog, Dropdown, Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { getIconByType } from 'src/pages/widgetConfig/util';
 import type { RootState } from 'src/redux/types';
+import type { FormControl } from 'src/utils/controlTypes';
 import FilterControl from './FilterControl';
 import FilterListSort from './FilterListSort';
 import FilterObject from './FilterObject';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const Tab = [
   { text: _l('配置'), type: 'setting' },
@@ -56,7 +56,7 @@ const Wrap = styled.div`
     min-height: 36px;
     .itemT {
       background: var(--color-background-secondary);
-      border-radius: 4px 4px 4px 4px;
+      border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
       padding: 3px 8px 3px 10px;
       border: 1px solid var(--color-border-secondary);
       margin-right: 5px;
@@ -75,7 +75,7 @@ const Wrap = styled.div`
   .ant-input {
     font-size: 13px;
     padding: 5px 11px;
-    border-radius: 3px !important;
+    border-radius: var(--radius-sm) !important;
     &:focus,
     &.ant-input-focused {
       box-shadow: none;

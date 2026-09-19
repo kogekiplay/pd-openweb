@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Checkbox } from 'antd';
-import moment from 'moment';
 import Trigger from '@rc-component/trigger';
+import moment from 'moment';
 import styled from 'styled-components';
 import { Dialog } from 'ming-ui';
 import DatePickerFilter from 'src/pages/Admin/common/datePickerFilter';
@@ -35,7 +35,7 @@ const Wrap = styled.div`
     width: 203px;
     height: 36px;
     border: 1px solid var(--color-border-primary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
     justify-content: space-between;

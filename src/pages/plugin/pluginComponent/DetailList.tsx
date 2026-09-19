@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import copy from 'src/utils/copyToClipboard';
 import moment from 'moment';
 import styled from 'styled-components';
 import { Dialog, Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { navigateToView } from 'src/pages/widgetConfig/util/data';
 import { downloadFile, pathCompletion } from 'src/utils/common';
+import copy from 'src/utils/copyToClipboard';
 import { API_EXTENDS, PLUGIN_TYPE, pluginApiConfig, pluginConfigType, pluginConstants } from '../config';
 import ExportPlugin from './ExportPlugin';
 import PublishVersion from './PublishVersion';
@@ -174,7 +174,7 @@ const SecretDetailItem = styled.div`
     height: 36px;
     line-height: 36px;
     padding: 0 12px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     background: var(--color-background-secondary);
   }
   .expired {

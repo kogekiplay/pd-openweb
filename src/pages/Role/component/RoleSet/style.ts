@@ -160,7 +160,7 @@ export const Wrap = styled.div`
               padding: 5px 10px;
               &:hover {
                 background-color: var(--color-background-hover);
-                border-radius: 5px;
+                border-radius: var(--radius-sm);
               }
             }
           }

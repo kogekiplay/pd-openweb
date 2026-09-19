@@ -34,7 +34,7 @@
   color: var(--color-white);
   background: blue;
   display: inline-block;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   height: 38px;
   line-height: 38px;

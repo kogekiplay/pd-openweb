@@ -37,7 +37,7 @@ const Wrap = styled.div`
 const WrapTip = styled.div`
   margin-top: 18px;
   background: var(--color-background-secondary);
-  border-radius: 3px 3px 3px 3px;
+  border-radius: var(--radius-xs) var(--radius-xs) var(--radius-xs) var(--radius-xs);
   padding: 18px;
   border: 1px solid var(--color-border-secondary);
   position: relative;

@@ -14,7 +14,7 @@ const FilterCountWrap = styled.span`
   padding: 0px 10px 0px 5px;
   color: var(--color-text-tertiary);
   background: var(--color-background-secondary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   font-weight: 600;
   font-size: 13px;
   font-family: FZLanTingHeiS-DemiBold, FZLanTingHeiS;
@@ -38,7 +38,7 @@ const FilterDialog = styled(Dialog)`
   }
   .scrollCon {
     height: 390px;
-    border-radius: 4px 4px 4px 4px;
+    border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     border: 1px solid var(--color-border-secondary);
     .empty {
       color: var(--color-text-disabled);

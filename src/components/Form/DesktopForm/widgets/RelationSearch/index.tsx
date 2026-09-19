@@ -68,7 +68,7 @@ const Splitter = styled.span`
 `;
 
 const RecordTextAdd = styled(FlexCenter)`
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   display: inline-flex;
   width: 20px;
@@ -88,7 +88,7 @@ const EmptyTag = styled.span`
     width: 22px;
     height: 6px;
     background: var(--color-border-secondary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
 }`;
 
 function getCoverUrl(coverId, record, controls) {

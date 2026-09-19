@@ -23,7 +23,7 @@ const LeftListWrapper = styled.div`
       display: inline-block;
       height: 36px;
       width: 100%;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       font-size: 14px;
       cursor: pointer;
       .listItem {
@@ -85,7 +85,7 @@ const AddDataObjButton = styled.div`
   margin-top: 20px;
   padding-left: 12px;
   border: 0;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   color: var(--color-primary);
   cursor: pointer;
 `;
@@ -96,7 +96,7 @@ const Wrapper = styled.div`
     font-size: 13px;
     &.ant-select,
     & .ant-select {
-      --ant-select-border-radius: 3px !important;
+      --ant-select-border-radius: var(--radius-sm) !important;
     }
     .ant-select-content {
       min-height: 36px;
@@ -351,9 +351,11 @@ export default function LeftTableList(props) {
                 className="selectItem"
                 mode="multiple"
                 allowClear={true}
-                showSearch={{ filterOption: (inputValue, option) => {
-                  return option.workSheetName.toLowerCase().includes(inputValue.toLowerCase());
-                } }}
+                showSearch={{
+                  filterOption: (inputValue, option) => {
+                    return option.workSheetName.toLowerCase().includes(inputValue.toLowerCase());
+                  },
+                }}
                 labelInValue={true}
                 placeholder={_l('请选择')}
                 notFoundContent={_l('暂无数据')}

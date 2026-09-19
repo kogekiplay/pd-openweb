@@ -11,10 +11,10 @@ import { getIconByType } from 'src/pages/widgetConfig/util';
 import { hierarchyViewCanSelectFields } from 'src/pages/worksheet/views/HierarchyView/util';
 import { filterAndFormatterControls } from 'src/pages/worksheet/views/util';
 import { getAdvanceSetting } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import { NavSet } from './components';
 import StructureSet from './components/StructureSet';
 import { ViewSettingWrap } from './style';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const DisplayControlOption = styled(FlexCenter)`
   .icon {
@@ -38,7 +38,7 @@ const WrapBoard = styled.div`
     margin-left: 13px;
     height: 36px;
     background: var(--color-background-primary);
-    border-radius: 3px 3px 3px 3px;
+    border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     line-height: 36px;
     border: 1px solid var(--color-border-primary);
     padding: 0 13px;
@@ -221,7 +221,9 @@ export default class CardAppearance extends Component<any, any> {
               <NavSet
                 {...this.props}
                 navGroupId={viewControl}
-                viewControlData={worksheetControls.find((o: FormControl) => o.controlId === _.get(view, 'viewControl')) || {}}
+                viewControlData={
+                  worksheetControls.find((o: FormControl) => o.controlId === _.get(view, 'viewControl')) || {}
+                }
               />
             )}
             {isBoardView && (

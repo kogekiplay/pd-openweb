@@ -27,7 +27,7 @@ const CalItem = styled.div`
     text-align: center;
     line-height: 26px;
     background: var(--color-background-primary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-primary);
     cursor: pointer;
     &:last-child {

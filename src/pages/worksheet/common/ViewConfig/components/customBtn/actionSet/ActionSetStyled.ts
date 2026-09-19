@@ -11,10 +11,10 @@ export const AnimationWrap = styled.div`
   display: flex;
   padding: 2px;
   background: var(--color-background-tertiary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   .animaItem {
     height: 32px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -68,7 +68,7 @@ export const WrapPopover = styled.div`
     padding: 0 16px;
     height: 36px;
     line-height: 36px;
-    border-radius: 3px 3px 3px 3px;
+    border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     border: 1px solid var(--color-border-secondary);
     color: var(--color-text-primary);
     &.first {

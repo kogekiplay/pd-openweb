@@ -16,7 +16,7 @@ const StatisticContent = styled.div`
       height: 88px;
       padding: 0 24px;
       background: var(--color-background-tertiary);
-      border-radius: 4px;
+      border-radius: var(--radius-md);
 
       .titleText {
         color: var(--color-text-secondary);

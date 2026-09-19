@@ -11,7 +11,7 @@ const UserPickerWrapper = styled.div`
   width: 220px;
   padding: 16px 0;
   background: var(--color-background-primary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   box-shadow: var(--shadow-lg);
   overflow: hidden;
   .divider {

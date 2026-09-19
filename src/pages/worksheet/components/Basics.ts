@@ -3,7 +3,7 @@ import styled, { keyframes } from 'styled-components';
 // common
 const commonInput = `
   border: 1px solid var(--color-border-primary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   background: var(--color-background-primary);
   resize: none;
   width: 100%;
@@ -109,7 +109,7 @@ export const TipBlock = styled.div(
 );
 
 export const TextBlock = styled.div`
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   height: 36px;
   line-height: 36px;
   background-color: var(--color-background-tertiary);
@@ -229,7 +229,7 @@ export const CardButton = styled.span`
 
 export const FormTopImgCon = styled.div`
   width: 100%;
-  border-radius: 3px 3px 0px 0px;
+  border-radius: var(--radius-sm) var(--radius-sm) 0px 0px;
   overflow: hidden;
   img {
     width: 100%;

@@ -152,7 +152,7 @@ const RecordItemWrap = styled.div`
     right: 8px;
     width: 24px;
     line-height: 24px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     background-color: var(--color-background-secondary);
     text-align: center;
     font-size: 18px;
@@ -189,7 +189,7 @@ const RecordFieldsWrap = styled(FlexCenter)`
   flex-direction: column;
   align-items: start;
   padding: 0 14px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   /* &:hover {
     box-shadow: var(--shadow-md);
   } */

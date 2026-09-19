@@ -43,7 +43,7 @@ const Content = styled(VerticalMiddle)`
   flex: 1;
   padding: 0 8px;
   border: 1px solid var(--color-border-primary);
-  border-radius: 3px 0 0 3px;
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
   input {
     width: 100%;
     border: none;
@@ -109,7 +109,7 @@ const DropdownBtn = styled(FlexCenter)`
   height: 100%;
   border: 1px solid var(--color-border-primary);
   border-left: none;
-  border-radius: 0 3px 3px 0;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 `;
 
 function StaticInput(props) {

@@ -38,7 +38,7 @@ export const AddRelate = styled.div`
     top: -18px;
     background: var(--color-background-primary);
     left: 50%;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     transform: translateX(-50%);
     overflow: hidden;
     width: max-content;
@@ -80,7 +80,7 @@ export const AddRelate = styled.div`
       display: flex;
       align-items: center;
       padding: 0px 8px;
-      border-radius: 5px;
+      border-radius: var(--radius-sm);
       cursor: pointer;
       &:hover {
         background-color: var(--color-background-hover);
@@ -116,7 +116,7 @@ export const FilterContent = styled.div`
         width: 130px;
         border-color: var(--color-border-secondary);
         height: 36px;
-        border-radius: 4px;
+        border-radius: var(--radius-sm);
         box-shadow: none !important;
         font-size: 13px;
         &.flexItem {
@@ -130,7 +130,7 @@ export const FilterContent = styled.div`
         &.ant-select,
         & .ant-select {
           --ant-select-border-color: var(--color-border-secondary);
-          --ant-select-border-radius: 4px;
+          --ant-select-border-radius: var(--radius-sm);
           box-shadow: none !important;
         }
         .ant-select-content {

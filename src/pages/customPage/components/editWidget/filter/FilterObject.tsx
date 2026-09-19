@@ -59,7 +59,7 @@ export const AddTagWrap = styled.div`
     }
   }
   width: 312px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   padding: 5px 0;
   border: 1px solid var(--color-border-secondary);
   background-color: var(--color-background-card);
@@ -259,7 +259,7 @@ export default function FilterObject(props) {
   }
 
   return (
-    (<Fragment>
+    <Fragment>
       <div className="valignWrapper mBottom8">
         <div className="flex Font13 bold">{_l('筛选对象')}</div>
         <div className="valignWrapper">
@@ -297,6 +297,6 @@ export default function FilterObject(props) {
       >
         <div className="Relative" style={{ top: '-15px' }}></div>
       </Dropdown>
-    </Fragment>)
+    </Fragment>
   );
 }

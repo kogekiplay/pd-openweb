@@ -25,7 +25,7 @@ const Wrapper = styled.div`
     color: var(--color-success);
     background: var(--color-success-bg);
     padding: 0 12px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     font-weight: bold;
     cursor: pointer;
     &:hover {

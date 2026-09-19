@@ -1,6 +1,9 @@
-@dialog-radius: 3px;
+// 对话框按 lg 档（12px）—— 它是「面板」那一类，不是控件
+@dialog-radius: var(--radius-lg);
 @dialog-overlay-bg: var(--color-background-overlay);
 @dialog-hr-padding: 24px;
+// 关闭叉的点击热区内边距：图标 22 + 6*2 = 34，比裸图标好点中
+@close-hit-padding: 6px;
 
 @dialog-base-font: 14px;
 @dialog-small-font: 12px;
@@ -80,13 +83,29 @@
       }
 
       // 关闭按钮
+      /* 【叉要和标题对齐，两个方向都要】原来是 right:0 / top:2px：
+         横向贴死在容器右边缘，而标题从 @dialog-hr-padding(24px) 起 —— 不对称，
+         圆角一加大就更明显（张奇原话「太靠近圆角了」）；
+         纵向叉心在 2+22/2=13px，标题心在 padding-top(20) + 字号(17)/2 = 28.5px，差 15.5px。
+
+         现在两个都按标题算：
+           right = @dialog-hr-padding，叉的右缘与正文右缘同一条竖线；
+           top   = 28.5 - 22/2 = 17.5 -> 取 18px（半像素会让图标渲染发虚）。 */
       & > .mui-dialog-close-btn {
         position: absolute;
         z-index: 9;
         border: 0;
         background: transparent;
-        right: 0;
-        top: 2px;
+        /* 【right/top 要减掉自身内边距】这个 <a> 从全局 anchor 样式继承了
+           padding: 1px 6px，于是图标的右缘比 <a> 的右缘再往里 6px ——
+           实测 <a> 右缘距容器 24（对的），图标右缘却是 30，跟标题左缘的 24 对不上。
+           这里把内边距显式定成 @close-hit-padding（同时把热区做成 34x34，
+           比图标本身的 22 好点），再从 right/top 里减回去：
+             right = 24 - 6 = 18  -> 图标右缘落在 24，与标题左缘同一个内缩
+             top   = 18 - 6 = 12  -> 图标中心落在 29，与标题中心重合 */
+        padding: @close-hit-padding;
+        right: @dialog-hr-padding - @close-hit-padding;
+        top: 12px;
         font-weight: 700;
         line-height: 1;
         outline: none;

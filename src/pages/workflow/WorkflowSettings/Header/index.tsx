@@ -37,7 +37,7 @@ const TABS_OPTS = [
 const MenuBox = styled.div`
   min-width: 180px;
   padding: 5px 0;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   background: var(--color-background-card);
   box-shadow: var(--shadow-lg);
   .Item-content {
@@ -112,7 +112,7 @@ const Footer = styled.div`
     line-height: 36px;
     display: inline-block;
     padding: 0 32px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     font-size: 14px;
     box-sizing: border-box;

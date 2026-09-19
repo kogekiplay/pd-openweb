@@ -119,7 +119,7 @@ const Wrap = styled.div`
       width: 250px;
       line-height: 34px;
       border: 1px solid var(--color-primary);
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       padding: 0 12px;
       box-sizing: border-box;
     }

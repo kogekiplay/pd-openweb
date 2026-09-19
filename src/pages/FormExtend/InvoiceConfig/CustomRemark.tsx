@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, Menu, MenuItem, TagTextarea } from 'ming-ui';
 import { getIconByType } from 'src/pages/widgetConfig/util';
@@ -43,7 +43,7 @@ const Wrapper = styled.div`
     justify-content: center;
     width: 36px;
     height: 36px;
-    border-radius: 0px 3px 3px 0px;
+    border-radius: 0px var(--radius-sm) var(--radius-sm) 0px;
     border: 1px solid var(--color-border-tertiary);
     border-left: none;
     cursor: pointer;

@@ -6,8 +6,8 @@ import { arrayOf, func, shape } from 'prop-types';
 import styled from 'styled-components';
 import RelateRecordDropdown from 'worksheet/components/RelateRecordDropdown/RelateRecordDropdownCopy';
 import { getTitleTextFromRelateControl, isRelateRecordTableControl } from 'src/utils/control';
-import RelateRecordOptions from './RelateRecordOptions';
 import type { FormControl } from 'src/utils/controlTypes';
+import RelateRecordOptions from './RelateRecordOptions';
 
 const Con = styled.div`
   display: flex;
@@ -70,7 +70,7 @@ const SelectedTags = styled.div`
     padding: 0 24px 0 10px;
     background-color: rgba(0, 100, 240, 0.08);
     color: var(--color-text-title);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     .name {
       max-width: 100%;
     }

@@ -7,8 +7,8 @@ import SelectStartOrEndGroups from 'src/pages/worksheet/common/ViewConfig/compon
 import { updateViewAdvancedSetting } from 'src/pages/worksheet/common/ViewConfig/util.js';
 import { isIllegal, isIllegalFormat } from 'src/pages/worksheet/views/CalendarView/util';
 import { getAdvanceSetting, isTimeStyle } from 'src/utils/control';
-import { getTimeControls } from '../CalendarView/util';
 import type { FormControl } from 'src/utils/controlTypes';
+import { getTimeControls } from '../CalendarView/util';
 
 const BtnForSure = styled.div`
   padding: 0 32px;
@@ -16,7 +16,7 @@ const BtnForSure = styled.div`
   height: 36px;
   color: var(--color-white);
   background-color: var(--color-primary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   outline: none;
   cursor: pointer;
   border: 1px solid transparent;
@@ -84,7 +84,8 @@ export default function SelectFieldForStartOrEnd(props) {
           : begindateOrFirst
             ? timeControls[0] || {}
             : {};
-      end = ids.length > 0 && ids[0].end ? props.controls.find((it: FormControl) => it.controlId === ids[0].end) || {} : {};
+      end =
+        ids.length > 0 && ids[0].end ? props.controls.find((it: FormControl) => it.controlId === ids[0].end) || {} : {};
     }
 
     let listData = ids.map(o => {

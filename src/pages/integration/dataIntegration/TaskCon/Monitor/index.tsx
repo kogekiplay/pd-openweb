@@ -19,7 +19,7 @@ const Con = styled.div`
   margin: 22px auto;
   background: var(--color-background-primary);
   padding: 32px 24px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
 `;
 const WrapCon = styled.div`
   .pTop80 {
@@ -39,7 +39,7 @@ const WrapCon = styled.div`
       width: 224px;
       height: 120px;
       background: var(--color-background-tertiary);
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       text-align: center;
       .des {
         font-weight: 600;

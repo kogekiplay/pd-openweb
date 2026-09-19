@@ -27,7 +27,7 @@ export const SettingCollapseWrap = styled(Collapse)`
         width: 20px;
         height: 20px;
         margin-right: 6px;
-        border-radius: 4px;
+        border-radius: var(--radius-sm);
         padding: 3px;
       }
     }

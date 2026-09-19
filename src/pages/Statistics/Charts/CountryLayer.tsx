@@ -24,7 +24,7 @@ const PathWrapper = styled.div`
   bottom: 30px;
   left: 45%;
   z-index: 2;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   background-color: var(--color-background-primary);
   .item {
     color: var(--color-primary);
@@ -39,7 +39,7 @@ const PathWrapper = styled.div`
 const ZoomWrapper = styled.div`
   width: 40px;
   height: 90px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   background-color: var(--color-background-primary);
   position: absolute;
   bottom: 10px;

@@ -14,7 +14,7 @@ const Wrap = styled.div`
     height: 360px;
     background: var(--color-background-primary);
     border: 1px solid var(--color-primary);
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
   }
 `;
 

@@ -6,7 +6,7 @@ import organizeAjax from 'src/api/organize.js';
 const Wrap = styled.div`
   .roleFolderName {
     border: 1px solid var(--color-border-tertiary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     padding: 0 5px;
     height: 36px;
     line-height: 36px;

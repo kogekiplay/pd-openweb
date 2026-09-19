@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import cx from 'classnames';
 import Trigger from '@rc-component/trigger';
+import cx from 'classnames';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 
@@ -33,7 +33,7 @@ const OptionWrap = styled.div`
   width: 220px;
   padding: 16px 0;
   background: var(--color-background-primary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   box-shadow: var(--shadow-lg);
   overflow: hidden;
   .optionItem {

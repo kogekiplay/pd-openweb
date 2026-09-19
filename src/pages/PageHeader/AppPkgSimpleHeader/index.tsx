@@ -22,7 +22,7 @@ const HeaderWrap = styled.div`
   .applicationIcon {
     width: 28px;
     height: 28px;
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     display: flex;
     justify-content: center;
     align-items: center;

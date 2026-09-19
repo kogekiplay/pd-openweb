@@ -31,7 +31,7 @@ const CreateFormItem = styled.div`
   .ming.Input {
     height: 38px;
     border: 1px solid var(--color-border-primary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     line-height: 36px;
     padding: 0 12px;
   }
@@ -40,7 +40,7 @@ const CreateFormItem = styled.div`
   & .ant-select {
     --ant-select-border-size: 1px !important;
     --ant-select-border-color: var(--color-border-primary) !important;
-    --ant-select-border-radius: 4px !important;
+    --ant-select-border-radius: var(--radius-sm) !important;
     box-shadow: none !important;
   }
   .ant-select-content {
@@ -60,7 +60,17 @@ const CreateFormItem = styled.div`
   }
 `;
 
-export default function CreateKeyDialog({ visible, projectId, mode = 'create', data = {}, onSuccess, onCancel }: { projectId?: string; [key: string]: any }) {
+export default function CreateKeyDialog({
+  visible,
+  projectId,
+  mode = 'create',
+  data = {},
+  onSuccess,
+  onCancel,
+}: {
+  projectId?: string;
+  [key: string]: any;
+}) {
   const isEdit = mode === 'edit';
   const inputKey = `${mode}-${visible ? 'open' : 'close'}-${data.id || 'new'}`;
   const { description = '' } = data;

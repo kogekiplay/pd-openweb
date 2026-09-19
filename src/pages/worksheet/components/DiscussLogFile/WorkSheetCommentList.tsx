@@ -22,7 +22,7 @@ const Wrap = styled.div`
 const WrapFocusCon = styled.div`
   width: 340px;
   padding: 5px 0;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   background: var(--color-background-primary);
   z-index: 11;
   box-shadow: var(--shadow-lg);

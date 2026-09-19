@@ -39,7 +39,7 @@ const FormGroup = styled.div`
   .formBox {
     background: var(--color-background-secondary);
     border: 1px solid var(--color-background-secondary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     input {
       background: transparent;
       border: 1px solid transparent;

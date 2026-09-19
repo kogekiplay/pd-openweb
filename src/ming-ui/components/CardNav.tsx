@@ -44,10 +44,10 @@ const Wrap = styled.ul`
     margin-top: -1px;
   }
   li:first-child {
-    border-radius: 3px 3px 0px 0px;
+    border-radius: var(--radius-sm) var(--radius-sm) 0px 0px;
   }
   li:last-child {
-    border-radius: 0px 0px 3px 3px;
+    border-radius: 0px 0px var(--radius-sm) var(--radius-sm);
   }
 
   .verticalTxtBottom {

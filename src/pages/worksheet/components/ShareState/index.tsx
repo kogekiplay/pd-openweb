@@ -12,7 +12,7 @@ const VerificationPassWrap = styled.div`
   .ant-input,
   .ant-btn {
     height: 36px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
   }
   .ant-input:focus,
   .ant-input-focused {

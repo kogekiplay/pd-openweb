@@ -27,7 +27,7 @@ const DropdownBox = styled(Dropdown)`
   min-width: 0;
   width: 100%;
   .Dropdown--border {
-    border-radius: 4px 0 0 4px !important;
+    border-radius: var(--radius-md) 0 0 var(--radius-md) !important;
   }
   .value {
     display: inline-flex;
@@ -43,7 +43,7 @@ const Message = styled.div`
   bottom: 1px;
   left: 1px;
   right: 37px;
-  border-radius: 4px 0 0 4px;
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
   background: var(--color-background-primary);
 `;
 

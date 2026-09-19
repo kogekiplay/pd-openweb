@@ -22,14 +22,14 @@ const Con = styled.div`
   background: var(--color-background-primary);
   padding: 32px 24px;
   // border: 1px solid var(--color-border-primary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   .saveBtn {
     background: var(--color-primary);
     color: var(--color-white);
     height: 36px;
     line-height: 36px;
     border: 1px solid var(--color-primary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     padding: 0 36px;
   }
 `;
@@ -83,7 +83,7 @@ const WrapCon = styled.div`
     color: var(--color-text-secondary) !important;
   }
   .iconWrap {
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     width: 36px;
     height: 36px;
   }

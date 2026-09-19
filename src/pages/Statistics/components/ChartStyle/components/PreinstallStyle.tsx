@@ -12,7 +12,7 @@ import { defaultPivotTableStyle } from '../../../enum';
 const ColorBlock = styled.div`
   width: 14px;
   height: 14px;
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   margin-right: 5px;
 `;
 

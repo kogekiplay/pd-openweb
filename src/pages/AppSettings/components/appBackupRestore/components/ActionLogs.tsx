@@ -56,7 +56,7 @@ const SelectCon = styled.div`
     align-items: center;
     width: fit-content;
     cursor: pointer;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     box-shadow: var(--shadow-sm);
     &:hover {
       box-shadow: var(--shadow-sm);

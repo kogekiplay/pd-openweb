@@ -23,7 +23,7 @@ const Wrap = styled.div`
       height: 32px;
       background: var(--color-background-primary);
       border: 1px solid var(--color-border-secondary);
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       vertical-align: middle;
       .cursorText {
         height: 30px;
@@ -53,7 +53,7 @@ const Wrap = styled.div`
         height: 32px;
         background: var(--color-background-primary);
         border: 1px solid var(--color-border-secondary);
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         padding: 0 15px;
       }
     }

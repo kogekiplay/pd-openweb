@@ -81,7 +81,7 @@ const Wrap = styled.div`
     height: 36px;
     width: 100px;
     box-sizing: border-box;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -130,7 +130,7 @@ const Wrap = styled.div`
     min-width: 170px;
     padding: 5px 8px;
     border: 1px solid var(--color-border-primary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     &:hover {
       border: 1px solid var(--color-primary);
     }
@@ -319,7 +319,7 @@ export default function (props) {
   };
 
   return (
-    (<Drawer
+    <Drawer
       onClose={onClose}
       open={showRefreshLog}
       placement="right"
@@ -385,6 +385,6 @@ export default function (props) {
         {renderCon()}
         {show && <LogDialog logInfo={list.find(o => o.id === id) || {}} onCancel={() => setState({ show: false })} />}
       </Wrap>
-    </Drawer>)
+    </Drawer>
   );
 }

@@ -16,7 +16,7 @@ export const Wrap = styled.div`
       margin-right: 16%;
       height: 120px;
       background: var(--color-background-tertiary);
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       text-align: left;
       padding: 0 20px;
       .des {
@@ -101,7 +101,7 @@ export const Wrap = styled.div`
     }
   }
   .searchCon {
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     background: var(--color-background-primary);
     border: 1px solid var(--color-text-disabled);
     font-size: 14px;

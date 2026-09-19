@@ -25,7 +25,7 @@ const WrapItem = styled.div`
   height: 36px;
   background: var(--color-background-primary);
   box-shadow: var(--shadow-sm);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   z-index: 1000;
   .dragIcon {
     opacity: 0;

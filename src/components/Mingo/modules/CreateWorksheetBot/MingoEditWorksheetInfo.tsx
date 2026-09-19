@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { useMeasure } from 'react-use';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import { isEmpty } from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Input, SvgIcon } from 'ming-ui';
 import appManagementAjax from 'src/api/appManagement';
@@ -75,7 +75,7 @@ const Con = styled.div`
 
 const IconSelector = styled.div`
   padding: 10px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   background: var(--color-background-card);
   box-shadow: var(--shadow-lg);
   .title {
@@ -87,7 +87,7 @@ const IconSelector = styled.div`
     .iconItem {
       width: 36px;
       height: 36px;
-      border-radius: 5px;
+      border-radius: var(--radius-sm);
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -118,7 +118,11 @@ export default function MingoEditWorksheetInfo({
   appId,
   worksheetId,
   ...rest
-}: { appId?: string; worksheetId?: string; [key: string]: any }) {
+}: {
+  appId?: string;
+  worksheetId?: string;
+  [key: string]: any;
+}) {
   const [worksheetName, setWorksheetName] = useState(rest.worksheetName);
   const [selectedIconName, setSelectedIconName] = useState(rest.iconName);
   const [isEditing, setIsEditing] = useState(checkIsEditing(taskStatus));

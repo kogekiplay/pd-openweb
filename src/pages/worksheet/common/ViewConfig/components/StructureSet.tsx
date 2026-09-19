@@ -16,9 +16,9 @@ import {
 import { AnimationWrap } from 'src/pages/worksheet/common/ViewConfig/style.jsx';
 import { VIEW_DISPLAY_TYPE } from 'src/pages/worksheet/constants/enum';
 import { filterHidedControls, handleAdvancedSettingChange } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import HierarchyViewSetting from './hierarchyViewSetting';
 import StructureType from './StructureType';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrap = styled.div`
   .topShowCon {
@@ -31,7 +31,7 @@ const Wrap = styled.div`
   }
   .topShowItemCon {
     & > div > div > div {
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
     }
   }
 `;

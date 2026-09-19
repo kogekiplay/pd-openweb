@@ -86,7 +86,7 @@ const OptionListItem = styled.div`
   padding: 0 12px;
   border: 1px solid var(--color-border-primary);
   background-color: var(--color-background-primary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   .title {
     display: flex;
     align-items: flex-start;

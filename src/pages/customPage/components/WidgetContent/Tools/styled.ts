@@ -5,12 +5,12 @@ export const TabsSettingPopover = styled.div`
   border-radius: 6px;
   .ant-input {
     height: 36px;
-    border-radius: 4px !important;
+    border-radius: var(--radius-sm) !important;
     box-shadow: none !important;
   }
   .typeSelect {
     font-size: 13px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     width: max-content;
     padding: 3px;
     background-color: var(--color-background-secondary);
@@ -24,7 +24,7 @@ export const TabsSettingPopover = styled.div`
     }
     .active {
       color: var(--color-primary) !important;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       font-weight: bold;
       background-color: var(--color-background-card);
     }

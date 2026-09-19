@@ -23,7 +23,7 @@ const SelectIcon = styled.div`
   align-items: center;
   justify-content: center;
   background: ${props => props.color};
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   position: relative;
   margin-right: 4px;
@@ -54,7 +54,7 @@ const SelectIcon = styled.div`
 const NormalIconStyle = styled.div`
   width: 36px;
   height: 36px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -67,7 +67,7 @@ const NormalIconStyle = styled.div`
     width: 24px;
     height: 24px;
     background: ${props => props.color};
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     border: 1px solid rgba(0, 0, 0, 0.15);
     .line {
       position: absolute;

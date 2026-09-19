@@ -31,7 +31,7 @@ export const DropdownPanel = styled.div`
   max-height: 320px;
   box-shadow: var(--shadow-lg);
   background-color: var(--color-background-primary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
 `;
 
 export const SearchInputWrapper = styled.div`
@@ -204,7 +204,7 @@ const SelectDropdown = ({
   );
 
   return (
-    (<Dropdown
+    <Dropdown
       popupRender={() => overlay}
       trigger={['click']}
       disabled={disabled}
@@ -232,7 +232,7 @@ const SelectDropdown = ({
           </Fragment>
         )}
       </Container>
-    </Dropdown>)
+    </Dropdown>
   );
 };
 

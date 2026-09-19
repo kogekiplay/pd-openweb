@@ -76,7 +76,7 @@ const CollectionWrap = styled.div`
   box-sizing: border-box;
   background: var(--color-background-primary);
   box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.25);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   .hapHelper {
     width: 316px;
     background: var(--color-background-primary);
@@ -98,7 +98,7 @@ const CollectionWrap = styled.div`
     align-items: center;
     color: var(--color-text-title);
     font-size: 14px;
-    border-radius: 3px 3px 3px 3px;
+    border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     &:hover {
       background: var(--color-background-hover);
     }

@@ -48,7 +48,7 @@ const BtnSettingWrap = styled.div`
     }
   }
   .selectActionBox {
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     padding: 5px 0;
     border: 1px solid var(--color-border-secondary);
     background-color: var(--color-background-card);
@@ -100,7 +100,7 @@ const BtnSettingWrap = styled.div`
     }
     .typeSelect {
       font-size: 13px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       padding: 3px;
       background-color: var(--color-background-tertiary);
       > div {
@@ -112,7 +112,7 @@ const BtnSettingWrap = styled.div`
       }
       .active {
         color: var(--color-primary) !important;
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         padding: 3px 0;
         font-weight: bold;
         background-color: var(--color-background-primary);
@@ -156,7 +156,7 @@ const BtnSettingWrap = styled.div`
         width: 36px;
         text-align: center;
         margin-right: 3px;
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         cursor: pointer;
         color: var(--color-text-tertiary);
         &.isCurrent {
@@ -176,7 +176,7 @@ const BtnSettingWrap = styled.div`
       font-size: 13px;
       box-shadow: none;
       padding: 7px 11px;
-      border-radius: 3px 0 0 3px !important;
+      border-radius: var(--radius-sm) 0 0 var(--radius-sm) !important;
       background: var(--color-background-input);
     }
   }
@@ -316,11 +316,13 @@ function BtnSetting(props) {
         const { views = [], template = {} } = res;
         const controls = replaceControlsTranslateInfo(appId, value, template.controls);
         setDataSource({
-          views: getShowViews(views).map(({ viewId, name, viewType }: { viewId?: string; name?: string; [key: string]: any }) => ({
-            text: getTranslateInfo(appId, null, viewId).name || name,
-            value: viewId,
-            type: viewType,
-          })),
+          views: getShowViews(views).map(
+            ({ viewId, name, viewType }: { viewId?: string; name?: string; [key: string]: any }) => ({
+              text: getTranslateInfo(appId, null, viewId).name || name,
+              value: viewId,
+              type: viewType,
+            }),
+          ),
           controls,
         });
         if (action === 1) {

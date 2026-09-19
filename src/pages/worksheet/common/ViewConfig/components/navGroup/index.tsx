@@ -13,6 +13,7 @@ import { defaultNavOpenW, MaxNavW, MinNavW } from 'src/pages/worksheet/common/Vi
 import { AnimationWrap } from 'src/pages/worksheet/common/ViewConfig/style.jsx';
 import AddCondition from 'src/pages/worksheet/common/WorkSheetFilter/components/AddCondition';
 import { setSysWorkflowTimeControlFormat } from 'src/pages/worksheet/views/CalendarView/util.js';
+import type { FormControl } from 'src/utils/controlTypes';
 import { replaceControlsTranslateInfo } from 'src/utils/translate';
 import NavSort from '../NavSort';
 import bgNavGroups from './img/bgNavGroups.png';
@@ -20,7 +21,6 @@ import MobileConfig from './MobileConfig';
 import NavShow from './NavShow';
 import SearchConfig from './SearchConfig';
 import { canNavGroup, getSetDefault, getSetHtmlData } from './util';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrap = styled.div`
   .hasData {
@@ -61,7 +61,7 @@ const Wrap = styled.div`
       height: 36px;
       opacity: 1;
       background: var(--color-background-primary);
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       margin: 8px 0;
       box-sizing: border-box;
       .actionIcon {
@@ -75,7 +75,7 @@ const Wrap = styled.div`
         width: 100%;
         display: flex;
         border: 1px solid var(--color-border-primary);
-        border-radius: 4px;
+        border-radius: var(--radius-sm);
         height: 36px;
         &.active {
           border: 1px solid var(--color-primary);
@@ -102,7 +102,7 @@ const Wrap = styled.div`
       opacity: 1;
       background: var(--color-background-primary);
       border: 1px solid var(--color-border-primary);
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       padding: 0 12px 0 12px;
       .icon {
         line-height: 35px;
@@ -135,7 +135,7 @@ const Wrap = styled.div`
         position: relative;
         background: var(--color-background-secondary);
         color: var(--color-primary);
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         display: block;
         padding: 12px 0;
         cursor: pointer;
@@ -212,7 +212,7 @@ const Wrap = styled.div`
       span.addIcon {
         position: relative;
         background: var(--color-primary);
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         color: var(--color-white);
         display: inline-block;
         padding: 12px 32px;
@@ -242,7 +242,14 @@ const WrapDrop = styled.div`
 
 export default function NavGroup(params) {
   let ajaxInfoFn = null;
-  const { worksheetControls = [], view = {}, updateCurrentView, worksheetId, columns, currentSheetInfo = {} }: { worksheetControls: FormControl[]; [key: string]: any } = params;
+  const {
+    worksheetControls = [],
+    view = {},
+    updateCurrentView,
+    worksheetId,
+    columns,
+    currentSheetInfo = {},
+  }: { worksheetControls: FormControl[]; [key: string]: any } = params;
   let [navGroup, setData] = useState({});
   let [filterData, setDatas] = useState();
   let [usenav, setUsenav] = useState<string | undefined>(); //空或者0：不使用筛选条件作为默认值 1：使用筛选条件作为默认值 ，老数据后端回兼容，新配置需要前端把这个值设为1
@@ -471,7 +478,8 @@ export default function NavGroup(params) {
               (worksheetControls.find((o: FormControl) => o.controlId === navGroup.controlId) || {}).type,
             ) ||
               [29, 26, 9, 10, 11, 28, 27, 48].includes(
-                (worksheetControls.find((o: FormControl) => o.controlId === navGroup.controlId) || {}).sourceControlType,
+                (worksheetControls.find((o: FormControl) => o.controlId === navGroup.controlId) || {})
+                  .sourceControlType,
               )) &&
               !['2'].includes(navshow) && (
                 <NavSort
@@ -493,7 +501,8 @@ export default function NavGroup(params) {
                         (worksheetControls.find((o: FormControl) => o.controlId === navGroup.controlId) || {}).type,
                       ) ||
                         [9, 10, 11, 28].includes(
-                          (worksheetControls.find((o: FormControl) => o.controlId === navGroup.controlId) || {}).sourceControlType,
+                          (worksheetControls.find((o: FormControl) => o.controlId === navGroup.controlId) || {})
+                            .sourceControlType,
                         ))
                     ) {
                       //  _l('升序') '0', _l('降序') '1',
@@ -584,8 +593,11 @@ export default function NavGroup(params) {
                   const iconName = filterData.isErr
                     ? 'error1'
                     : getIconByType(
-                        (worksheetControls.find((item: FormControl) => item.controlId === _.get(filterData, ['controlId'])) || {})
-                          .type,
+                        (
+                          worksheetControls.find(
+                            (item: FormControl) => item.controlId === _.get(filterData, ['controlId']),
+                          ) || {}
+                        ).type,
                         false,
                       );
                   return (
@@ -674,7 +686,10 @@ export default function NavGroup(params) {
           </React.Fragment>
           {_.get(filterData, 'type') === 29 && (
             <SearchConfig
-              controls={(worksheetControls.find((o: FormControl) => o.controlId === navGroup.controlId) || {}).relationControls || []}
+              controls={
+                (worksheetControls.find((o: FormControl) => o.controlId === navGroup.controlId) || {})
+                  .relationControls || []
+              }
               data={view.advancedSetting}
               onChange={newValue => {
                 updateAdvancedSetting({ ...newValue });

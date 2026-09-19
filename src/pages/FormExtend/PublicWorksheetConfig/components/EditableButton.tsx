@@ -8,7 +8,7 @@ const SubmitButton = styled(Button)`
   max-width: 756px;
   .submitContent {
     height: 40px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     padding: 0 32px;
     overflow: hidden;
     white-space: nowrap;

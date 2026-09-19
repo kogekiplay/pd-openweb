@@ -8,10 +8,10 @@ import { Dropdown, Switch } from 'ming-ui';
 import worksheetAjax from 'src/api/worksheet';
 import { selectRecords } from 'src/components/SelectRecords';
 import { getTitleTextFromControls } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import { WIDGETS_TO_API_TYPE_ENUM } from '../../../config/widget';
 import CustomReference from '../CustomWidget/CustomReference';
 import { getFormData } from './util';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   position: relative;
@@ -104,7 +104,7 @@ const DrawerContent = styled.div`
   .envValueArea {
     background-color: var(--color-background-secondary);
     padding: 12px 15px;
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     white-space: pre-wrap;
   }
   .envSecTitle {
@@ -211,7 +211,16 @@ function getValueToShow({ formData, reference, control, envIsMobile, envIsDisabl
   return result;
 }
 
-function EnvValueShow({ worksheetId, recordId, control, data }: { worksheetId?: string; recordId?: string; [key: string]: any }) {
+function EnvValueShow({
+  worksheetId,
+  recordId,
+  control,
+  data,
+}: {
+  worksheetId?: string;
+  recordId?: string;
+  [key: string]: any;
+}) {
   const [loading, setLoading] = useState(control.type === 34);
   const [rows, setRows] = useState([]);
   useEffect(() => {
@@ -318,7 +327,7 @@ export default function EnvConfig(props) {
   const valueToShow = getValueToShow({ formData, reference, control, envIsMobile, envIsDisabled });
   const [selectedEnv, setSelectedEnv] = useState(get(valueToShow, '0.value'));
   return (
-    (<Con className={className} ref={ref}>
+    <Con className={className} ref={ref}>
       <div className="title">{_l('引用其他字段')}</div>
       <div className="sectionTitle">
         {_l(
@@ -431,7 +440,7 @@ export default function EnvConfig(props) {
           <i className="icon icon-close close" onClick={() => setDrawerVisible(false)}></i>
         </DrawerContent>
       </Drawer>
-    </Con>)
+    </Con>
   );
 }
 

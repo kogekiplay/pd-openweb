@@ -13,7 +13,7 @@ const AudioBox = styled.span`
   margin: 10px 10px 0 0;
   display: inline-flex;
   padding: 0 18px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-tertiary);
   cursor: pointer;
   position: relative;

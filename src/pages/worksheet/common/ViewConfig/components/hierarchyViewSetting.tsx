@@ -1,26 +1,26 @@
 import React from 'react';
 import { useSetState } from 'react-use';
 import { Menu } from 'antd';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import update from 'immutability-helper';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { LoadDiv } from 'ming-ui';
 import worksheetAjax from 'src/api/worksheet';
 import VerifyDel from 'src/pages/worksheet/views/components/VerifyDel';
 import { filterAndFormatterControls } from 'src/pages/worksheet/views/util';
+import type { FormControl } from 'src/utils/controlTypes';
 import Abstract from './Abstract';
 import CardDisplay from './CardDisplay';
 import CoverSetting from './CoverSettingCon';
 import DisplayControl from './DisplayControl';
 import TitleControl from './TitleControl';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const EmptyHint = styled.div`
   margin: -6px 0 0 20px;
   padding: 18px 12px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   width: 280px;
   color: var(--color-text-tertiary);
   font-size: 13px;
@@ -159,7 +159,7 @@ const HierarchyViewSettingWrap = styled.div(
       position: relative;
       background-color: var(--color-background-secondary);
       margin-left: 10px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
     }
 
     .deleteWrap {

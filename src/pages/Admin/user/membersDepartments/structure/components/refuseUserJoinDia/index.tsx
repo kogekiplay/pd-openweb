@@ -10,7 +10,7 @@ const DialogWrap = styled(Dialog)`
     color: var(--color-text-title);
     box-sizing: border-box;
     width: 100%;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     outline: none;
     border: 1px solid var(--color-border-secondary);
     line-height: 18px;
@@ -86,7 +86,9 @@ class RefuseUserJoinDia extends React.Component<any, any> {
           type="textarea"
           className="test-textarea mTop10"
           value={refuseMessage || ''}
-          ref={area => { this.area = area; }}
+          ref={area => {
+            this.area = area;
+          }}
           onChange={e => {
             this.setState({
               refuseMessage: e.target.value,

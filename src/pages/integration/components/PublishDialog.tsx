@@ -82,13 +82,13 @@ const Wrap = styled.div`
     padding: 0 12px;
     background: var(--color-background-primary);
     border: 1px solid var(--color-border-primary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
   }
   .warnCon {
     padding: 5px 10px;
     color: var(--color-warning);
     background: rgba(243, 180, 84, 0.1);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
   }
 `;
 

@@ -12,7 +12,7 @@ const Wrap = styled.div`
     height: 33px;
     line-height: 33px;
     background: var(--color-warning-bg);
-    border-radius: 4px 4px 4px 4px;
+    border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     padding-left: 14px;
     margin-bottom: 16px;
   }

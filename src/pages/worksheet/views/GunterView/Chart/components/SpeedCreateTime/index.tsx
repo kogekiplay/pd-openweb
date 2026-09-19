@@ -24,7 +24,7 @@ const TimeWrapper = styled.div`
   margin-top: 9px;
   position: absolute;
   border: 2px solid var(--color-primary);
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   background-color: var(--color-background-primary);
   cursor: pointer;
 `;

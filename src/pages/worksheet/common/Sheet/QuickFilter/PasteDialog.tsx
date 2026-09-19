@@ -9,7 +9,7 @@ const KeywordInput = styled.textarea`
   height: 158px;
   overflow-y: auto;
   border: 1px solid var(--color-border-primary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   resize: none;
   &:focus {
     border-color: var(--color-primary);

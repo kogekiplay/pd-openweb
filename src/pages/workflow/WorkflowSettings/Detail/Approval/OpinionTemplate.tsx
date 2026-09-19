@@ -25,7 +25,7 @@ const Btn = styled.div`
   height: 32px;
   line-height: 32px;
   border: 1px solid var(--color-border-primary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   padding: 0 20px;
   background: var(--color-background-secondary);
   cursor: pointer;
@@ -35,7 +35,17 @@ const Btn = styled.div`
   }
 `;
 
-export default ({ title, description, keys, opinionTemplate, onSave, onClose }: { title?: string; [key: string]: any }) => {
+export default ({
+  title,
+  description,
+  keys,
+  opinionTemplate,
+  onSave,
+  onClose,
+}: {
+  title?: string;
+  [key: string]: any;
+}) => {
   const [inputType, setType] = useState(opinionTemplate.inputType);
   const [data, setData] = useState(opinionTemplate.opinions);
 
@@ -51,7 +61,17 @@ export default ({ title, description, keys, opinionTemplate, onSave, onClose }: 
     return inputType !== 1 && !hasTemplate;
   };
 
-  const renderItem = ({ items, item, index, DragHandle, dragging, sourceKey }: { index?: number; [key: string]: any }) => {
+  const renderItem = ({
+    items,
+    item,
+    index,
+    DragHandle,
+    dragging,
+    sourceKey,
+  }: {
+    index?: number;
+    [key: string]: any;
+  }) => {
     return (
       <SortableItemBox className="flexRow mTop10 alignItemsCenter">
         <DragHandle>

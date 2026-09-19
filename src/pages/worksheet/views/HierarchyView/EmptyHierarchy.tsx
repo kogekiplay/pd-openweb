@@ -31,7 +31,7 @@ const EmptyHierarchyWrap = styled.div`
     padding: 0 12px;
     line-height: 48px;
     transition: all 0.25s;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     background-color: var(--color-background-primary);
     color: var(--color-text-tertiary);
     font-weight: bold;

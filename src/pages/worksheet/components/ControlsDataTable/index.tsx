@@ -20,7 +20,7 @@ const ColumnHead = styled.div`
     height: 18px;
     position: absolute;
     left: 0;
-    border-radius: 2px;
+    border-radius: var(--radius-sm);
   }
   &.wrapControlName {
     align-items: flex-start;

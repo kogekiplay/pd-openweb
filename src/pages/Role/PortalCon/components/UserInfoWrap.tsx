@@ -32,7 +32,7 @@ const Wrap = styled.div(
     .btn {
       padding: 0 32px;
       line-height: 36px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       box-sizing: border-box;
       &.saveBtn {
         color: var(--color-white);
@@ -165,16 +165,16 @@ export default function UserInfoWrap(props) {
   }
 
   return (
-    (<Drawer
+    <Drawer
       size={640}
       onClose={() => setShow(false)}
       mask={true}
       placement="right"
       open={show}
-     
+
       closable={false}
     >
       {renderCon()}
-    </Drawer>)
+    </Drawer>
   );
 }

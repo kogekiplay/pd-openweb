@@ -59,7 +59,7 @@ const AccountWrap = styled.div`
       background: var(--color-background-primary);
       border: 1px solid var(--color-border-secondary);
       opacity: 1;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       padding: 0 12px;
       line-height: 36px;
       &.telBox {
@@ -96,7 +96,7 @@ const AccountWrap = styled.div`
       height: 36px;
       background: var(--color-primary);
       opacity: 1;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       border: 0;
       color: var(--color-white);
       &.btnEnabled {

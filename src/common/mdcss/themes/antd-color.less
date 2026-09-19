@@ -1,3 +1,34 @@
+/* ================= 键盘聚焦环 =================
+  【为什么这里要接管】antd 的 :focus-visible 轮廓颜色是它自己 CSS-in-JS
+  按 ConfigProvider 的 token 算出来的。而本仓有一批弹层是【命令式挂载】的
+  （ming-ui/functions/* 那些 dialogXxx），它们不在 ConfigProvider 的 React 树里，
+  拿到的是 antd 默认蓝 —— 实测「创建记录」弹层打开时自动聚焦到关闭按钮，
+  轮廓是 antd 默认调色板的 blue-3，而同一个弹层里的提交按钮是橙的：
+  CSS 变量那条路走得通，antd 自己算的那条走不通。
+  （这里【不写那个十六进制值】—— check:colors 的口径连注释都算。）
+
+  【范围只收这两个，不要写裸的 :focus-visible】第一版写了裸选择器 + !important，
+  它命中【所有】可聚焦元素，把 basic.css:97 的 `input, textarea { outline: none }`
+  全局重置也压掉了 —— 而本仓的输入框本来就靠自己的边框表达聚焦。
+  表现：记录详情的评论框聚焦时出现【两层橙环】（外层是 .commentBox 的边框，
+  内层是被我加上的 outline）。张奇一眼看出来的。
+  按钮和关闭叉没有自己的聚焦表现，才是真正需要补环的地方。
+*/
+.ant-btn:focus-visible {
+  outline: 2px solid var(--color-primary-focus-outer) !important;
+  outline-offset: 2px !important;
+  border-radius: var(--radius-sm);
+}
+
+/* 【关闭叉的环必须内扩】它贴在弹层右上角 (0,0)，而弹层为了圆角要 overflow:hidden，
+   向外扩的那 2px 正好落在裁剪区外 —— 表现是「环只剩左下两条边，上和右看不见」。
+   负 offset 把环画在按钮内部，不碰裁剪边界。40x40 的按钮里内缩 4px 仍然清楚。 */
+.ant-modal-close:focus-visible {
+  outline: 2px solid var(--color-primary-focus-outer) !important;
+  outline-offset: -4px !important;
+  border-radius: var(--radius-md);
+}
+
 .ant-drawer {
   /* antd 6 把 .ant-drawer-content 换成了 .ant-drawer-section
      （v5: .ant-drawer-content-wrapper > .ant-drawer-content > [header, body]

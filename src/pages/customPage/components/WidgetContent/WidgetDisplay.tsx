@@ -113,7 +113,7 @@ const WidgetContent = styled.div`
     position: absolute;
     right: 10px;
     bottom: 10px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     z-index: 10;
     display: none;
   }

@@ -110,7 +110,7 @@ const WidgetList = styled.div`
         .ant-collapse-item {
           margin-bottom: 14px;
           border: 1px solid var(--color-border-primary) !important;
-          border-radius: 4px;
+          border-radius: var(--radius-sm);
           background-color: var(--color-background-primary);
           overflow: hidden;
         }
@@ -126,7 +126,7 @@ const WidgetList = styled.div`
             width: 28px;
             height: 28px;
             text-align: center;
-            border-radius: 4px;
+            border-radius: var(--radius-sm);
             &:hover {
               background: var(--color-background-hover);
             }
@@ -146,7 +146,7 @@ const WidgetList = styled.div`
     .templateSingleItem {
       margin-bottom: 14px;
       border: 1px solid var(--color-border-primary);
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       background-color: var(--color-background-primary);
       overflow: hidden;
       .templateItemHeaderContent {
@@ -270,7 +270,7 @@ const WidgetList = styled.div`
     position: relative;
     background-color: var(--color-background-primary);
     border: 1px solid var(--color-border-primary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     &:hover:not(.widgetCustom),
     &.active {
       background: var(--color-background-secondary);

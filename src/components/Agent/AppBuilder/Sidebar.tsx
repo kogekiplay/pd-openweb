@@ -29,7 +29,7 @@ const StatusBox = styled.button`
   height: 36px;
   padding: 0 17px;
   border: 1px solid var(--color-border-secondary);
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   background: var(--color-background-card);
   display: flex;
   align-items: center;
@@ -89,7 +89,7 @@ const ExpandSidebarBtn = styled.button`
   height: 28px;
   margin-right: 2px;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   background: transparent;
   color: var(--color-text-secondary);
   cursor: pointer;
@@ -150,7 +150,7 @@ const NavItem = styled.div`
   align-items: center;
   gap: 12px;
   padding: 10px 8px;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   position: relative;
   transition: background ${transitions.hover};

@@ -22,7 +22,7 @@ const HISTORY_TITLE = [
 ];
 
 const Box = styled.div`
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   padding: 0 12px;
   height: 40px;
   display: flex;

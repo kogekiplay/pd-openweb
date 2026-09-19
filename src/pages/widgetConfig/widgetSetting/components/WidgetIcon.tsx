@@ -19,7 +19,7 @@ const WidgetIconStyle = styled.div`
     font-size: 22px;
     text-align: center;
     line-height: 34px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     color: var(--color-text-tertiary);
     &:nth-child(8) {
       margin-right: 0px;
@@ -44,7 +44,7 @@ const DropdownInput = styled.div`
   height: 36px;
   padding: 0 12px;
   box-sizing: border-box;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   display: flex;
   justify-content: space-between;
   align-items: center;

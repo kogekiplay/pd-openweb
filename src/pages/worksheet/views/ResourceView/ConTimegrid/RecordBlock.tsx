@@ -9,11 +9,11 @@ import { RecordInfoModal } from 'mobile/Record';
 import RecordInfoWrapper from 'src/pages/worksheet/common/recordInfo/RecordInfoWrapper.jsx';
 import { browserIsMobile, emitter, pathCompletion } from 'src/utils/common';
 import { controlState } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import { addBehaviorLog } from 'src/utils/project';
 import { handleRecordClick } from 'src/utils/record';
 import { lineHeight, timeWidth, timeWidthHalf, types } from '../config';
 import { getTops } from '../util';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const CLICK_MOVE_THRESHOLD = 3;
 
@@ -30,7 +30,7 @@ const Wrap = styled.div`
   min-height: ${props => props.minHeight}px;
   height: ${props => props.height}px;
   .conW {
-    border-radius: 2px;
+    border-radius: var(--radius-sm);
     padding: 4px;
     background: ${props => props.row.color};
     .rowInfo {

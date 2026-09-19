@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Input } from 'antd';
-import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
+import _ from 'lodash';
 import styled from 'styled-components';
 
 const ResetNameWrap = styled.div`
   width: 230px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   .btns {
     justify-content: flex-end;
   }

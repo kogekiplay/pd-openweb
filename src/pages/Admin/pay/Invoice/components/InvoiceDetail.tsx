@@ -29,7 +29,7 @@ const DetailDrawer = styled(Drawer)`
   .statusWrap {
     display: flex;
     padding: 12px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     background-color: var(--color-background-tertiary);
     font-size: 14px;
     .Warning {

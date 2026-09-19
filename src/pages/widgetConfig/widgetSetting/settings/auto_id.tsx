@@ -6,6 +6,7 @@ import { isEmpty } from 'lodash';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Menu, MenuItem, SortableList } from 'ming-ui';
+import type { FormControl } from 'src/utils/controlTypes';
 import AutoIcon from '../../components/Icon';
 import { DropdownPlaceholder, InfoWrap, SettingItem } from '../../styled';
 import { getControlByControlId, getIconByType, getSortItems } from '../../util';
@@ -14,7 +15,6 @@ import AutoNumberConfig from '../components/autoId/AutoNumberConfig';
 import StrInput from '../components/autoId/StrInput';
 import TimeFormatConfig from '../components/autoId/TimeFormatConfig';
 import SelectControlWithRelate from '../components/SelectControlWithRelate';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const RuleInfo = styled.li`
   display: flex;
@@ -55,7 +55,7 @@ const RuleInfo = styled.li`
     flex: 1;
     margin-left: 8px;
     line-height: 36px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     background-color: var(--color-background-primary);
 
     .deleteRuleIcon {
@@ -239,7 +239,8 @@ function SortableItem({
           trigger="click"
           className="mTop0"
           getPopupContainer={() => $addControl.current}
-          popupRender={() => <SelectControlWithRelate
+          popupRender={() => (
+            <SelectControlWithRelate
               {...rest}
               allControls={allControls}
               globalSheetControls={globalSheetControls}
@@ -252,7 +253,8 @@ function SortableItem({
                   ...rest,
                 })
               }
-            />}
+            />
+          )}
         >
           <DropdownPlaceholder ref={$addControl}>
             {getControlInfo()}
@@ -269,13 +271,15 @@ function SortableItem({
           trigger="click"
           className="mTop0"
           getPopupContainer={() => $addTime.current}
-          popupRender={() => <Menu width={'100%'}>
+          popupRender={() => (
+            <Menu width={'100%'}>
               {TIME_MODE.map(({ value, text }) => (
                 <MenuItem key={value} onClick={() => handleTimeSelect(value)}>
                   {text}
                 </MenuItem>
               ))}
-            </Menu>}
+            </Menu>
+          )}
         >
           <DropdownPlaceholder
             color={format ? 'var(--color-text-primary)' : 'var(--color-text-disabled)'}
@@ -370,13 +374,15 @@ function SortableRules({ rules, data, deleteRule, updateRule, addRule, onSortEnd
       <Dropdown
         trigger={['click']}
         getPopupContainer={() => $addRule.current}
-        popupRender={() => <Menu style={{ width: '100%' }}>
+        popupRender={() => (
+          <Menu style={{ width: '100%' }}>
             {typesData.map(({ value, text }) => (
               <MenuItem key={value} onClick={() => addRule(value)}>
                 {text}
               </MenuItem>
             ))}
-          </Menu>}
+          </Menu>
+        )}
       >
         <li className="addRule" ref={$addRule}>
           <i className="icon-add Font16"></i>

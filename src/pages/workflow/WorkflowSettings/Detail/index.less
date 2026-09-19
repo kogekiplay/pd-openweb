@@ -120,7 +120,7 @@
         line-height: 34px;
         border: none;
         background: transparent;
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         padding: 0 10px;
         box-sizing: border-box;
         color: var(--color-white);
@@ -280,7 +280,7 @@
         }
         .dropdown-btn {
           border: 1px solid var(--color-border-tertiary);
-          border-radius: 4px;
+          border-radius: var(--radius-sm);
           width: 100%;
           box-sizing: border-box;
           padding: 5px 30px 5px 10px;
@@ -305,7 +305,7 @@
             align-items: center;
             box-sizing: border-box;
             margin: 3px 6px 3px 0;
-            border-radius: 3px;
+            border-radius: var(--radius-sm);
             height: 24px;
             padding: 6px 5px 6px 10px;
             background-color: var(--color-background-tertiary);
@@ -397,7 +397,7 @@
           line-height: 32px;
           border-width: 1px;
           border-style: solid;
-          border-radius: 4px;
+          border-radius: var(--radius-sm);
           padding: 0 20px;
           background: var(--color-background-primary);
           cursor: pointer;
@@ -432,7 +432,7 @@
       line-height: 34px;
       border-width: 1px;
       border-style: solid;
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       min-width: 100px;
       box-sizing: initial;
       font-size: 13px;
@@ -553,7 +553,7 @@
     .workflowDetailDesc {
       padding: 21px 16px;
       background: var(--color-background-tertiary);
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       word-break: break-word;
       &.subProcessDesc {
         border: 1px solid var(--color-border-secondary);
@@ -565,7 +565,7 @@
       .numberControlBox {
         width: 36px;
         height: 36px;
-        border-radius: 0 5px 5px 0;
+        border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
         text-align: center;
         box-sizing: border-box;
         padding-top: 5px;
@@ -595,12 +595,12 @@
         cursor: pointer;
         &:first-child {
           border-left-width: 1px;
-          border-top-left-radius: 3px;
-          border-bottom-left-radius: 3px;
+          border-top-left-radius: var(--radius-sm);
+          border-bottom-left-radius: var(--radius-sm);
         }
         &:last-child {
-          border-top-right-radius: 3px;
-          border-bottom-right-radius: 3px;
+          border-top-right-radius: var(--radius-sm);
+          border-bottom-right-radius: var(--radius-sm);
         }
         &.bgColorPrimary {
           color: var(--color-white);
@@ -610,7 +610,7 @@
     .flowBackBox {
       background: var(--color-background-disabled);
       padding: 8px 26px 8px 12px;
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       position: relative;
       .icon-edit {
         position: absolute;
@@ -630,7 +630,7 @@
     .workflowMjmlPreview {
       min-height: 300px;
       border: 1px solid var(--color-border-primary);
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       background: var(--color-background-primary);
       overflow: hidden;
     }
@@ -720,7 +720,7 @@
     .typeList {
       li {
         padding: 12px;
-        border-radius: 2px;
+        border-radius: var(--radius-sm);
         cursor: pointer;
         &:hover {
           background: var(--color-background-hover);
@@ -731,7 +731,7 @@
       }
     }
     .flowSelectModel {
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       height: 36px;
       border: 1px solid var(--color-border-primary);
       padding: 0 10px;
@@ -789,7 +789,7 @@
     }
     .tagInputareaIuput {
       border-color: var(--color-border-primary) !important;
-      border-radius: 4px 0 0 4px;
+      border-radius: var(--radius-sm) 0 0 var(--radius-sm);
       box-sizing: border-box;
       min-height: 36px;
       &:not(.active) {
@@ -830,7 +830,7 @@
     max-height: 400px;
     overflow-x: hidden;
     overflow-y: auto;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     li {
       height: 56px;
       padding: 8px 16px;
@@ -860,7 +860,7 @@
     height: 32px;
     line-height: 32px;
     display: inline-block;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     text-align: center;
     font-size: 14px;
@@ -871,7 +871,7 @@
   .flowTplBox {
     box-sizing: border-box;
     border: 1px solid var(--color-border-primary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     .flowTplHeader {
       height: 40px;
       padding: 0 16px;
@@ -900,7 +900,7 @@
       line-height: 36px;
       display: inline-block;
       margin-right: 20px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       background: var(--color-background-secondary);
       padding: 0 24px;
       border-width: 1px;
@@ -914,7 +914,7 @@
   }
   .flowTplSettingContent {
     .tagInputareaIuput {
-      border-radius: 4px !important;
+      border-radius: var(--radius-sm) !important;
       background: var(--color-background-secondary);
       .cm-editor {
         color: var(--color-text-secondary);
@@ -932,7 +932,7 @@
     }
   }
   .webhookLink {
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-primary);
     background: var(--color-background-disabled);
     height: 40px;
@@ -945,7 +945,7 @@
     line-height: 40px;
     cursor: pointer;
     padding: 0 16px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-primary);
     background: var(--color-background-disabled);
   }
@@ -954,7 +954,7 @@
     line-height: 32px;
     cursor: pointer;
     padding: 0 21px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-primary);
     background: var(--color-background-tertiary);
     color: var(--color-text-secondary);
@@ -971,7 +971,7 @@
   }
   .webhookBox {
     border: 1px solid var(--color-border-primary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     box-sizing: border-box;
     overflow: hidden;
     .webhookHeader {
@@ -1097,7 +1097,7 @@
     line-height: 34px;
     border-width: 1px;
     border-style: solid;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     min-width: 100px;
     box-sizing: initial;
     &:not(:hover):not(:focus):not(.errorBorder):not(.actionClearBorder),
@@ -1179,7 +1179,7 @@
     }
     .tagInputareaIuput {
       border-color: var(--color-border-primary) !important;
-      border-radius: 4px 0 0 4px;
+      border-radius: var(--radius-sm) 0 0 var(--radius-sm);
       box-sizing: border-box;
       min-height: 36px;
       &:not(.active) {
@@ -1233,6 +1233,6 @@
     padding-top: 10px !important;
     padding-right: 0 !important;
     padding-bottom: 10px !important;
-    border-radius: 0 0 3px 3px;
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
   }
 }

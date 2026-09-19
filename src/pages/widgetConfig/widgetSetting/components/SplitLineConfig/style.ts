@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const SelectColorWrap = styled.div(
   ({ inputCoverStyle = true }) => `
     box-shadow: var(--shadow-md);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     position: relative;
     box-sizing: border-box;
     width: 350px;
@@ -92,10 +92,10 @@ export const SectionItem = styled.div`
     display: flex;
     padding: 2px;
     background: var(--color-background-secondary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     .animaItem {
       height: 32px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       line-height: 32px;
       text-align: center;
       cursor: pointer;
@@ -118,7 +118,7 @@ export const DefaultEmpty = styled.div`
   height: 8px;
   margin: 10px 0;
   background: var(--color-background-secondary);
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
 `;
 
 export const EmptyControl = styled.div`
@@ -129,7 +129,7 @@ export const EmptyControl = styled.div`
   justify-content: center;
   position: relative;
   border: 1px dashed var(--color-border-secondary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   padding-top: 8px;
   .emptyText {
     color: var(--color-text-tertiary);
@@ -192,7 +192,7 @@ export const SectionItemWrap = styled.div`
     line-height: 40px;
     text-align: center;
     margin-left: 8px;
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     cursor: ${props => (props.hidetitle ? 'default' : 'pointer')};
     .iconBox {
       ${props => (props.visible ? 'transform: rotate(180deg); transition: transform 0.2s ease-in-out;' : '')};

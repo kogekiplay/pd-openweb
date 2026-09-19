@@ -15,7 +15,7 @@ const Con = styled(MenuItem)`
 const EditPanelCon = styled.div`
   width: 240px;
   background: var(--color-background-primary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   box-shadow: var(--shadow-lg);
   padding-top: 2px;
   .title {

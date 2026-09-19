@@ -33,7 +33,7 @@ const CommonSelect = styled(Select)`
   font-size: 13px;
   &.ant-select,
   & .ant-select {
-    --ant-select-border-radius: 3px !important;
+    --ant-select-border-radius: var(--radius-sm) !important;
     --ant-select-border-color: var(--color-border-tertiary) !important;
     box-shadow: none !important;
     --ant-select-border-color: var(--color-primary) !important;
@@ -152,7 +152,7 @@ const DialogWrapper = styled.div`
 
   .errorInfo {
     background-color: var(--color-error-bg);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     padding: 8px 16px;
   }
 `;

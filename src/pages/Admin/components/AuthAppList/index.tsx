@@ -7,7 +7,7 @@ import { ScrollView, SvgIcon } from 'ming-ui';
 
 const AppListContainer = styled.div`
   width: 100%;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-primary);
 
   .headTr {
@@ -53,7 +53,7 @@ const AppListContainer = styled.div`
         min-width: 24px;
         height: 24px;
         line-height: 16px;
-        border-radius: 4px;
+        border-radius: var(--radius-sm);
         margin-right: 8px;
       }
       .userIcon {

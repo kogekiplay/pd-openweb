@@ -15,7 +15,7 @@ const UnNormalWrap = styled.div`
   .unNormalContent {
     flex: 1;
     margin: 15px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     background: var(--color-background-primary);
     justify-content: center;
     align-items: center;

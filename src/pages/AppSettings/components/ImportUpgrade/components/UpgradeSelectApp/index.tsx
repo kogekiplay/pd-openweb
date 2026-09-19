@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, SvgIcon } from 'ming-ui';
 import { dialogSelectApp } from 'ming-ui/functions';
@@ -41,7 +41,7 @@ const Wrap = styled.div`
         height: 40px;
         display: inline-block;
         background: var(--color-background-primary);
-        border-radius: 4px 4px 4px 4px;
+        border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
         color: var(--color-white);
         text-align: center;
         line-height: 40px;
@@ -74,7 +74,7 @@ const SelectWrap = styled.ul`
   padding: 7px 0;
   background: var(--color-background-card);
   box-shadow: var(--shadow-sm);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   color: var(--color-text-title);
   li {

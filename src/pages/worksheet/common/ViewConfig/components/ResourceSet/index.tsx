@@ -8,9 +8,9 @@ import { Checkbox, Dropdown, Icon } from 'ming-ui';
 import { ShowChoose, TimeDropdownChoose } from 'src/pages/worksheet/common/ViewConfig/style.jsx';
 import { AnimationWrap } from 'src/pages/worksheet/common/ViewConfig/style.jsx';
 import { resourceTypes, weekObj } from 'src/pages/worksheet/views/ResourceView/config.js';
+import type { FormControl } from 'src/utils/controlTypes';
 import BaseInfo from './BaseInfo';
 import EditTimes from './EditTimes';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const Wrap = styled.div`
   .ming.Dropdown.isDelete .Dropdown--input .value,
@@ -23,7 +23,7 @@ const Wrap = styled.div`
   }
   .showtimeCon {
     border: 1px solid var(--color-border-primary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     color: var(--color-text-secondary);
     padding: 6px 12px;
     background: var(--color-background-primary);
@@ -84,7 +84,7 @@ export default function ResourceSet(props) {
   }, []);
 
   return (
-    (<Wrap>
+    <Wrap>
       <BaseInfo {...props} />
       <div className="flexRow mTop24">
         <div className="flex">
@@ -213,7 +213,7 @@ export default function ResourceSet(props) {
           optionLabelProp="label"
           placeholder={_l('请选择')}
           suffixIcon={<Icon icon="arrow-down-border Font14" />}
-          classNames={{ popup: { root: "dropConOption" } }}
+          classNames={{ popup: { root: 'dropConOption' } }}
           onChange={value => {
             const weekbegin = !_.get(props, 'view.advancedSetting.weekbegin')
               ? '0'
@@ -355,6 +355,6 @@ export default function ResourceSet(props) {
           }}
         />
       )}
-    </Wrap>)
+    </Wrap>
   );
 }

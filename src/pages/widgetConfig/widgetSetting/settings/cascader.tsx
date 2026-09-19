@@ -39,7 +39,7 @@ const DataSourceWrap = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     span {
       color: var(--color-border-secondary);
     }

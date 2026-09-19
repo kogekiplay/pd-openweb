@@ -46,7 +46,7 @@ export const BillInfoWrap = styled.div`
       color: var(--color-white);
       font-size: 12px;
       padding: 0 16px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       &:hover {
         background-color: var(--color-link-hover);
       }
@@ -103,7 +103,7 @@ export const BillInfoWrap = styled.div`
         background: var(--color-primary-transparent);
         color: var(--color-primary);
         padding: 0 12px;
-        border-radius: 4px;
+        border-radius: var(--radius-sm);
         display: inline-block;
         line-height: 28px;
         cursor: pointer;
@@ -285,7 +285,7 @@ export const BillInfoWrap = styled.div`
 `;
 export const AccountIdOperation = styled.ul`
   padding: 6px 0;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   min-width: 120px;
   background-color: var(--color-background-primary);
   box-shadow: var(--shadow-lg);

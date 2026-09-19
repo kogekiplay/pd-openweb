@@ -3,10 +3,10 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import { Dialog, Dropdown, Icon } from 'ming-ui';
 import { filterOnlyShowField } from 'src/pages/widgetConfig/util';
+import type { FormControl } from 'src/utils/controlTypes';
 import { getSummaryInfo } from 'src/utils/record';
 import { getAdvanceSetting, handleAdvancedSettingChange } from '../../../../util/setting';
 import AddFields from '../../CustomEvent/CustomAction/AddFields';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const SubListSummaryDialog = styled(Dialog)`
   .summaryContent {
@@ -19,7 +19,7 @@ const SubListSummaryDialog = styled(Dialog)`
         margin-right: 12px;
         height: 36px;
         line-height: 36px;
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         background: var(--color-background-tertiary);
         border: 1px solid var(--color-border-primary);
       }

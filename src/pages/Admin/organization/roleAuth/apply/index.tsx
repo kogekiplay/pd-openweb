@@ -4,7 +4,7 @@ import Config from '../../../config';
 import RoleList from '../roleList';
 
 const Wrap = styled.div`
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   flex: 1;
   min-height: 0;
   background-color: var(--color-background-primary);

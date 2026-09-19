@@ -10,9 +10,9 @@ import MobileCardCellControl from 'src/components/MobileCardCellControls/MobileC
 import * as actions from 'src/pages/worksheet/components/ChildTable/redux/actions';
 import { getControlStyles } from 'src/utils/control';
 import { controlState, isRelateRecordTableControl } from 'src/utils/control';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import { updateRulesData } from '../../../core/formUtils/updateRulesData';
 import { addWidthToColumns } from './utils';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const TableWrap = styled(Table)`
   height: 100%;
@@ -144,7 +144,7 @@ const TableWrap = styled(Table)`
       height: 6px;
       background: var(--color-border-primary);
       margin: 15px 0;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
     }
   }
   .cellUsers {
@@ -183,7 +183,7 @@ const Pagination = styled.div`
     color: var(--color-white);
     padding: 0 12px;
     background: var(--color-primary);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     &.disabled {
       color: var(--color-text-disabled);
       background: var(--color-background-secondary);
@@ -489,7 +489,9 @@ function TableComponent(props) {
                       : {}
                   }
                   masterData={masterData}
-                  rowFormData={() => controls.map((c: FormControl) => Object.assign({}, c, { value: record[c.controlId] }))}
+                  rowFormData={() =>
+                    controls.map((c: FormControl) => Object.assign({}, c, { value: record[c.controlId] }))
+                  }
                   canedit={cellControl.type === 36 && controlPermission.editable && !control.mobileCheckRuleLocked}
                   updateCell={({ value }) => {
                     if (cellControl.type !== 36) return;

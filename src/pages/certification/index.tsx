@@ -64,7 +64,7 @@ const Wrapper = styled.div`
     .certifiedInfo {
       width: 250px;
       background: var(--color-background-secondary);
-      border-radius: 5px;
+      border-radius: var(--radius-sm);
       padding: 24px 0;
       text-align: center;
       margin-top: 30px;
@@ -75,7 +75,7 @@ const Wrapper = styled.div`
     width: 960px;
     margin: 0 auto;
     background: var(--color-primary-transparent);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     padding: 12px 20px;
     margin-top: 20px;
     font-size: 13px;

@@ -2,7 +2,7 @@
   margin-top: 16px;
   width: 100%;
   background: rgba(255, 147, 0, 0.1);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   display: flex;
   padding: 12px 20px;
   justify-content: center;
@@ -55,7 +55,7 @@
         max-width: 230px;
         height: 36px;
         background: var(--color-background-primary);
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
         &.isDelete {
           &.ant-select,
           & .ant-select {
@@ -71,7 +71,7 @@
         }
         &.ant-select,
         & .ant-select {
-          --ant-select-border-radius: 3px;
+          --ant-select-border-radius: var(--radius-sm);
         }
         .ant-select-content {
           height: 36px !important;

@@ -43,7 +43,7 @@ const Con = styled.div`
   .DialogButton {
     width: auto;
     height: 36px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     font-weight: 700 !important;
     font-size: 14px !important;
     padding: 0 32px !important;

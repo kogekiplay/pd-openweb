@@ -1,9 +1,9 @@
 import React, { Fragment } from 'react';
 import { Component } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, MenuItem } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -17,11 +17,11 @@ import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import { PRINT_TEMP, PRINT_TYPE, PRINT_TYPE_STYLE } from 'src/pages/Print/core/config';
 import { getDownLoadUrl } from 'src/pages/Print/core/util';
 import { browserIsMobile, emitter, pathCompletion } from 'src/utils/common';
+import type { FormControl } from 'src/utils/controlTypes';
 import { VersionProductType } from 'src/utils/enum';
 import { addBehaviorLog, getFeatureStatus } from 'src/utils/project';
 import { sendCloudPrint } from 'src/utils/record';
 import IconBtn from './IconBtn';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const MenuItemWrap = styled(MenuItem)`
   &.printItem.Item {
@@ -36,7 +36,7 @@ const MenuItemWrap = styled(MenuItem)`
         .downloadIcon {
           width: 28px;
           height: 28px;
-          border-radius: 3px;
+          border-radius: var(--radius-sm);
           display: inline-block;
           text-align: center;
           line-height: 28px;

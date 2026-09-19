@@ -9,7 +9,7 @@ const SortableBtnListWrap = styled.ul`
     align-items: center;
     color: var(--color-text-title);
     background-color: var(--color-background-disabled);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     padding: 10px;
     margin-bottom: 10px;
     .btnIcon {

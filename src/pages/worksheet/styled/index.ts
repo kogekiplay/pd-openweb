@@ -32,7 +32,7 @@ export const Button = styled.button`
   height: 36px;
   color: var(--color-white);
   background-color: ${props => props.bgColor || 'var(--color-primary)'};
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   outline: none;
   cursor: pointer;
   border: 1px solid transparent;

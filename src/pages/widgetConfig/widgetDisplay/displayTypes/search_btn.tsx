@@ -6,7 +6,7 @@ const Search_Btn_Wrap = styled.div`
   align-items: center;
   line-height: 36px;
   padding: 0 24px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-primary);
   text-align: center;
   background-color: var(--color-background-primary);

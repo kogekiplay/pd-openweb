@@ -84,7 +84,7 @@ export const Wrap = styled.div`
   }
   .conRadioGroupForBtn {
     .ant-radio-group {
-      border-radius: 4px;
+      border-radius: var(--radius-xs);
       overflow: hidden;
       .ant-radio-button-wrapper {
         background: var(--color-background-secondary) !important;

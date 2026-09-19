@@ -45,9 +45,9 @@ const TabWrap = styled.div`
     width: 100%;
     height: 40px;
     line-height: 40px;
-    border-radius: 4px 4px 4px 4px;
+    border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     padding-left: 20px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     &.active {
       background: var(--color-background-hover);

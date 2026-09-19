@@ -136,7 +136,7 @@ const OpenRecordBtn = styled(FlexCenter)`
   width: 24px;
   height: 24px;
   color: var(--color-primary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   &:hover {
     background: var(--color-background-hover);
   }

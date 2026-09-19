@@ -22,7 +22,7 @@ const TelConfigWrap = styled.div`
     line-height: 36px;
     padding: 0 12px;
     border: 1px solid var(--color-border-primary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     &:hover {
       border-color: var(--color-primary);
     }
@@ -102,14 +102,15 @@ export default function TelConfig({ data, onChange, globalSheetInfo = {} }) {
   };
 
   return (
-    (<Fragment>
+    <Fragment>
       <SettingItem>
         <div className="settingItemTitle">{_l('默认区号')}</div>
         <Dropdown
           trigger={['click']}
           open={defaultCountryVisible}
           onOpenChange={visible => setVisible({ defaultCountryVisible: visible })}
-          popupRender={() => <SelectCountryDropdown
+          popupRender={() => (
+            <SelectCountryDropdown
               style={{ width: '300px' }}
               unique
               selectableData={allData}
@@ -121,7 +122,8 @@ export default function TelConfig({ data, onChange, globalSheetInfo = {} }) {
                 );
                 setVisible({ defaultCountryVisible: false });
               }}
-            />}
+            />
+          )}
         >
           <DropdownPlaceholder>
             <div className={cx('text', { textDisabled: !defaultCountry.name })}>
@@ -192,6 +194,6 @@ export default function TelConfig({ data, onChange, globalSheetInfo = {} }) {
           onCancel={() => setVisible({ commonUseVisible: false })}
         />
       )}
-    </Fragment>)
+    </Fragment>
   );
 }

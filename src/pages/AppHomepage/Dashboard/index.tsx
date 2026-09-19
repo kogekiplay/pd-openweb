@@ -68,7 +68,7 @@ const Wrapper = styled.div`
         align-items: center;
         width: 32px;
         height: 32px;
-        border-radius: 4px;
+        border-radius: var(--radius-sm);
         cursor: pointer;
         i {
           color: var(--color-text-secondary);
@@ -105,7 +105,7 @@ const NewThemeSet = styled.div`
   justify-content: center;
   width: 32px;
   height: 32px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   margin-right: 16px;
   cursor: pointer;
 

@@ -85,7 +85,7 @@ export const WrapWx = styled.div`
     margin: 0 auto;
     display: block;
   }
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   box-sizing: border-box;
   height: 100%;
   background: var(--color-background-primary);
@@ -96,7 +96,7 @@ export const WrapWx = styled.div`
     align-items: center;
     justify-content: center;
     margin: 0 auto;
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     div {
       height: 28px;
     }
@@ -123,7 +123,7 @@ export const WrapWx = styled.div`
       text-align: center;
       height: 40px;
       width: 100%;
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       background: var(--color-background-secondary);
       color: var(--color-text-title);
       line-height: 40px;
@@ -157,7 +157,7 @@ export const WrapContainer = styled.div`
     max-width: 100%;
     object-fit: contain;
   }
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   position: relative;
   padding: 48px 48px 72px 48px;
   box-sizing: border-box;
@@ -172,7 +172,7 @@ export const WrapContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     div {
       height: 28px;
     }
@@ -190,7 +190,7 @@ export const WrapContainer = styled.div`
     font-weight: 600;
   }
   &.isCenterCon {
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     width: 480px;
     background: var(--color-background-primary);
     height: auto;

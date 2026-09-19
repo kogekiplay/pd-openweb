@@ -5,11 +5,11 @@ import update from 'immutability-helper';
 import { isEmpty } from 'lodash';
 import styled from 'styled-components';
 import { Dialog } from 'ming-ui';
+import type { FormControl } from 'src/utils/controlTypes';
 import { COMMON, TEMPLATE_TYPE } from '../../config/ocr';
 import { DropdownPlaceholder, SelectFieldsWrap } from '../../styled';
 import { getAdvanceSetting, getIconByType } from '../../util';
 import { handleAdvancedSettingChange } from '../../util/setting';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const ConfigRelation = styled.div`
   .title {
@@ -39,7 +39,7 @@ const ConfigRelation = styled.div`
       background-color: var(--color-background-secondary);
       line-height: 36px;
       padding: 0 12px;
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
     }
     .infoWrap {
       display: flex;
@@ -66,7 +66,15 @@ const getMapByType = type => {
 };
 
 function MapItem(props) {
-  const { allControls, ocrMap, value, text, match, withSubList, setMap }: { allControls: FormControl[]; [key: string]: any } = props;
+  const {
+    allControls,
+    ocrMap,
+    value,
+    text,
+    match,
+    withSubList,
+    setMap,
+  }: { allControls: FormControl[]; [key: string]: any } = props;
   const placeholderRef = useRef(null);
   const [isHover, setHover] = useState(false);
   const [placement, setPlacement] = useState('bottomLeft');
@@ -182,9 +190,11 @@ function MapItem(props) {
         <Dropdown
           trigger={['click']}
           placement={placement}
-          popupRender={() => <SelectFieldsWrap className="mapFieldsWrap">
+          popupRender={() => (
+            <SelectFieldsWrap className="mapFieldsWrap">
               <div className="fieldsWrap">{selectableControls.map(renderControlItem)}</div>
-            </SelectFieldsWrap>}
+            </SelectFieldsWrap>
+          )}
         >
           <DropdownPlaceholder
             ref={placeholderRef}

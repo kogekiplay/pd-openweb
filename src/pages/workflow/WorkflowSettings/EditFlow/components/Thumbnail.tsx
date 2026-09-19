@@ -27,7 +27,7 @@ const Box = styled.div`
 
 const Frame = styled.div`
   border: 1px solid var(--color-primary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   position: absolute;
 `;
 
@@ -185,7 +185,7 @@ export default ({ visible, refreshPosition, refreshThumbnail }) => {
   }, [refreshPosition]);
 
   return (
-    (<Drawer
+    <Drawer
       placement="left"
       rootClassName="workflowThumbnail"
       open={visible}
@@ -209,6 +209,6 @@ export default ({ visible, refreshPosition, refreshThumbnail }) => {
           />
         </Box>
       </Thumbnail>
-    </Drawer>)
+    </Drawer>
   );
 };

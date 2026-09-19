@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
-import PropTypes from 'prop-types';
 import Trigger from '@rc-component/trigger';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button, Checkbox, Dialog } from 'ming-ui';
 
@@ -21,7 +21,7 @@ const ChangeSheetLayout = styled.span`
 
 const PopupCon = styled.div`
   width: 360px;
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   padding: 20px;
   box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.16);
   background-color: var(--color-background-primary);

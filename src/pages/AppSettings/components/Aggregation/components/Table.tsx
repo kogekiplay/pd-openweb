@@ -56,7 +56,7 @@ const Wrap = styled.div(
       height: 18px;
       position: absolute;
       left: 0;
-      border-radius: 2px;
+      border-radius: var(--radius-sm);
     }
   }
 `,

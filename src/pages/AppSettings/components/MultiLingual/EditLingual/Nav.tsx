@@ -16,7 +16,7 @@ const Wrap = styled.div`
   }
 
   .appItem {
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     padding: 8px 6px;
     &.active {
       svg {
@@ -72,7 +72,7 @@ const Wrap = styled.div`
     .ant-tree-treenode,
     .ant-tree-node-content-wrapper {
       width: 100%;
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       overflow: hidden;
     }
     .ant-tree-switcher,

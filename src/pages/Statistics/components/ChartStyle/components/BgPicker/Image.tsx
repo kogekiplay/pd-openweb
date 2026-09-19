@@ -15,7 +15,7 @@ const Wrap = styled.div`
     position: relative;
   }
   .image {
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -29,7 +29,7 @@ const Wrap = styled.div`
       width: calc(100% + 4px);
       height: calc(100% + 4px);
       border: 1px solid var(--color-primary);
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
     }
   }
 `;

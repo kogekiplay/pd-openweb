@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { AILoading, Dialog, Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -26,7 +26,7 @@ const TestResultBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   font-size: 16px;
   position: absolute;
   right: 0;

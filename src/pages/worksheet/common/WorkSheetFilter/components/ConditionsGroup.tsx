@@ -5,11 +5,11 @@ import { arrayOf, bool, func, number, shape, string } from 'prop-types';
 import styled from 'styled-components';
 import { Dropdown, VCenterIconText } from 'ming-ui';
 import { isOtherShowFeild } from 'src/pages/widgetConfig/util';
+import type { FormControl } from 'src/utils/controlTypes';
 import { CONTROL_FILTER_WHITELIST, FILTER_RELATION_TYPE } from '../enum';
 import { getTypeKey } from '../util';
 import AddCondition from './AddCondition';
 import Condition from './ConditionV2';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   .conditionItem {
@@ -44,7 +44,7 @@ const Con = styled.div`
         margin-left: 14px;
         .Dropdown--input {
           padding: 2px 6px !important;
-          border-radius: 4px;
+          border-radius: var(--radius-sm);
           background: transparent;
           .icon {
             margin-left: 4px !important;
@@ -140,7 +140,7 @@ const ConditionHeader = styled.div`
   }
   .Dropdown .Dropdown--input {
     padding: 2px 6px !important;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     .icon {
       margin-left: 4px !important;
       vertical-align: middle;

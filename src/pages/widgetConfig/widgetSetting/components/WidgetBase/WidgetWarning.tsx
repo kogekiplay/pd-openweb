@@ -8,7 +8,7 @@ const WarningWrap = styled.div`
   font-size: 12px;
   padding: 10px;
   line-height: 21px;
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   ${props =>
     props.isBg
       ? 'margin-top: 10px;background: var(--color-yellow-black);'

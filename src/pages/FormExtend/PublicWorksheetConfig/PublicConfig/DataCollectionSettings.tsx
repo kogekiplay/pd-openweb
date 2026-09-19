@@ -4,11 +4,11 @@ import localeEn from 'antd/es/date-picker/locale/en_US';
 import localeJaJp from 'antd/es/date-picker/locale/ja_JP';
 import localeZhCn from 'antd/es/date-picker/locale/zh_CN';
 import localeZhTw from 'antd/es/date-picker/locale/zh_TW';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import dayjs from 'dayjs';
 import _ from 'lodash';
 import moment from 'moment';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Checkbox, Dropdown, Icon, Input } from 'ming-ui';
 import { generateRandomPassword } from 'src/utils/common';
@@ -25,8 +25,8 @@ const CustomPeriodDropdown = styled(Dropdown)`
   .dropdownTrigger .Dropdown--border {
     height: 32px;
     border-radius: 0;
-    border-top-right-radius: 4px;
-    border-bottom-right-radius: 4px;
+    border-top-right-radius: var(--radius-sm);
+    border-bottom-right-radius: var(--radius-sm);
   }
 `;
 
@@ -38,8 +38,8 @@ const TimePeriodType = styled.div`
   height: 32px;
   border: 1px solid var(--color-border-primary);
   border-right: 0;
-  border-top-left-radius: 4px;
-  border-bottom-left-radius: 4px;
+  border-top-left-radius: var(--radius-sm);
+  border-bottom-left-radius: var(--radius-sm);
 `;
 
 const RangeInputContainer = styled.div`
@@ -66,7 +66,7 @@ const RangeInputContainer = styled.div`
 const CustomTimePicker = styled(TimePicker)`
   width: 150px !important;
   height: 32px !important;
-  border-radius: 3px !important;
+  border-radius: var(--radius-sm) !important;
   &:hover {
     border-color: var(--color-border-primary) !important;
   }
@@ -104,7 +104,7 @@ const DaySelectContainer = styled.div`
     width: 26px;
     height: 26px;
     line-height: 26px;
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     margin: 0 8px 8px 8px;
     border: 1px solid transparent;
     cursor: pointer;
@@ -135,13 +135,13 @@ const WeekContainer = styled.div`
     cursor: pointer;
 
     &:first-child {
-      border-top-left-radius: 4px;
-      border-bottom-left-radius: 4px;
+      border-top-left-radius: var(--radius-sm);
+      border-bottom-left-radius: var(--radius-sm);
       border-left-width: 1px;
     }
     &:last-child {
-      border-top-right-radius: 4px;
-      border-bottom-right-radius: 4px;
+      border-top-right-radius: var(--radius-sm);
+      border-bottom-right-radius: var(--radius-sm);
       border-right-width: 1px;
     }
     :hover {
@@ -162,7 +162,7 @@ const NoExpandSelect = styled.div`
   height: 32px;
   padding: 5px 5px 5px 12px;
   border: 1px solid var(--color-border-primary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   box-sizing: border-box;
   cursor: pointer;
   i {
@@ -502,7 +502,9 @@ export default function DataCollectionSettings(props) {
           <div className="mBottom24">
             <CommonSwitch
               checked={linkSwitchTime.isEnable}
-              onClick={(checked: boolean) => setState({ linkSwitchTime: { isEnable: !checked, isShowCountDown: false } })}
+              onClick={(checked: boolean) =>
+                setState({ linkSwitchTime: { isEnable: !checked, isShowCountDown: false } })
+              }
               name={_l('设置链接开始/停止时间')}
               tip={_l('打开后，填写者只有在设置的时间范围内填写，方可正常提交表单。')}
             />

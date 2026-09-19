@@ -21,7 +21,7 @@ const Wrap = styled.div`
     height: 32px;
     border: 1px solid var(--color-border-secondary);
     border-left: none;
-    border-radius: 0 4px 4px 0;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     background-color: var(--color-background-primary);
     .icon {
       color: var(--color-text-tertiary);
@@ -56,7 +56,7 @@ const Wrap = styled.div`
       &:hover {
         color: var(--color-primary);
         background: var(--color-background-hover);
-        border-radius: 3px 3px 3px 3px;
+        border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
       }
     }
     .pre,
@@ -73,7 +73,7 @@ const Wrap = styled.div`
       &:hover {
         color: var(--color-primary);
         background: var(--color-background-hover);
-        border-radius: 3px 3px 3px 3px;
+        border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
       }
     }
   }

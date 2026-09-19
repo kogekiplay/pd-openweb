@@ -10,7 +10,7 @@ const isMobile = browserIsMobile();
 const Con = styled.div`
   cursor: pointer;
   padding: 4px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   display: flex;
   align-items: center;

@@ -87,7 +87,7 @@ const WrapAct = styled.div`
   min-width: 160px;
   background: var(--color-background-primary);
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.25);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   padding: 6px 0;
   li {
     padding: 0 16px;
@@ -108,7 +108,7 @@ const WrapAct = styled.div`
 const MoreOperate = styled.span`
   cursor: pointer;
   text-align: center;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   line-height: 24px;
   display: inline-block;
   width: 24px;
@@ -152,7 +152,7 @@ const DelNode = styled.div`
   z-index: 10;
   box-sizing: border-box;
   margin-left: -50px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   .trangle {
     position: absolute;
     left: 50%;
@@ -171,7 +171,7 @@ const DelNode = styled.div`
     margin-top: 20px;
     padding: 8px 20px;
     display: inline-block;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     &.onDel {
       background: var(--color-error);
       color: var(--color-white);

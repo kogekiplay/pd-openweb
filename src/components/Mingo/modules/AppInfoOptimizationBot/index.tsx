@@ -53,7 +53,7 @@ const ConfigIconWrap = styled.div`
 const ConfigPanelWrap = styled.div`
   padding: 12px 16px;
   background: var(--color-background-primary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   box-shadow: var(--shadow-sm);
   width: 200px;
   .ming.Checkbox {

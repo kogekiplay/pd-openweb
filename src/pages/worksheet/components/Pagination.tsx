@@ -1,8 +1,8 @@
 import React from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _, { get } from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Dropdown, Input } from 'ming-ui';
 
@@ -20,7 +20,7 @@ const NoData = styled.div`
 const PageNum = styled.span`
   padding: 6px 8px;
   margin: 0 8px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   &.abnormalMode {
     cursor: default;
@@ -42,7 +42,7 @@ const Btn = styled.span`
 `;
 
 const Popup = styled.div`
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   box-shadow: var(--shadow-lg);
   background: var(--color-background-primary);
   padding: 6px 0 10px;
@@ -297,7 +297,18 @@ export default class Pagination extends React.Component<any, any> {
   }
 
   renderBar() {
-    const { disabled, abnormalMode, className = '', pageIndex, pageSize, allowChangePageSize, changePageIndex, changePageSize, onPrev, onNext } = this.props;
+    const {
+      disabled,
+      abnormalMode,
+      className = '',
+      pageIndex,
+      pageSize,
+      allowChangePageSize,
+      changePageIndex,
+      changePageSize,
+      onPrev,
+      onNext,
+    } = this.props;
     const total = this.pageNum;
     const canPrev = pageIndex > 1;
     const canNext = abnormalMode ? true : pageIndex < total;

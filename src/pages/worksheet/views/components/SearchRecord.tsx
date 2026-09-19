@@ -14,13 +14,13 @@ const Wrapper = styled.div`
     0 3px 6px -4px rgb(0 0 0 / 12%),
     0 6px 16px 0 rgb(0 0 0 / 8%),
     0 9px 28px 8px rgb(0 0 0 / 5%);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   margin-right: -33px;
   .ant-select-auto-complete {
     z-index: 2;
   }
   .ant-select-open .ant-select-input {
-    border-radius: 4px 4px 0 0;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
   }
   .ant-select-dropdown {
     z-index: 1;
@@ -38,7 +38,7 @@ const InputWrapper = styled.div`
   padding: 10px 15px;
   background-color: var(--color-background-primary);
   border-bottom: 1px solid var(--color-background-disabled);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   input {
     border: 0;
     padding: 0 0 0 5px;
@@ -214,7 +214,7 @@ const SearchRecord = props => {
   };
 
   return (
-    (<Dropdown
+    <Dropdown
       classNames={{ root: overlayClassName }}
       trigger={['click']}
       popupRender={() => renderOverlay()}
@@ -232,7 +232,7 @@ const SearchRecord = props => {
       }}
     >
       {props.children}
-    </Dropdown>)
+    </Dropdown>
   );
 };
 

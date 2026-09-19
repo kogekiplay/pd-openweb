@@ -46,7 +46,7 @@ const wrapStyles = `
   margin-left: 6px;
   white-space: nowrap;
   background-color: transparent;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   color: var(--color-text-title);
   position: relative;
@@ -58,7 +58,7 @@ const wrapStyles = `
     white-space: nowrap;
     max-width: 200px;
     padding: 6px 10px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     box-shadow: var(--shadow-sm);
   }
   .ellipsis {
@@ -100,7 +100,7 @@ const PinCardCon = styled.div`
   bottom: 40px;
   flex-direction: row;
   width: 300px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   background-color: var(--color-background-primary);
   box-shadow:
     rgba(0, 0, 0, 0.12) 0px 1px 4px 0px,

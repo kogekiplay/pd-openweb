@@ -23,7 +23,7 @@ const SyncWithDealWrapper = styled.div`
     .Input {
       background: var(--color-background-secondary);
       border: 1px solid var(--color-background-secondary) !important;
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       padding: 8px 12px 6px;
       font-size: 13px;
 

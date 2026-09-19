@@ -16,7 +16,7 @@ import { EXCEL_CONTROLS, getList, HAS_RADIO_CONTROL, NO_OTHER_CONFIG } from './c
 const ExcelControlSettingWrap = styled.div`
   background: var(--color-background-primary);
   box-shadow: var(--shadow-lg);
-  border-radius: 3px 3px 3px 3px;
+  border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
   width: 350px;
   padding: 20px;
   max-height: 400px;

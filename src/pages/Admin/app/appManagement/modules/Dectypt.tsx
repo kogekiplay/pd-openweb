@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import cx from 'classnames';
-import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Button, Dialog, QiniuUpload } from 'ming-ui';
@@ -9,6 +8,7 @@ import FunctionWrap from 'ming-ui/components/FunctionWrap';
 import appManagementAjax from 'src/api/appManagement';
 import importActiveImg from 'src/pages/Admin/app/appManagement/img/import_active.png';
 import importDisabledImg from 'src/pages/Admin/app/appManagement/img/import_disabled.png';
+import copy from 'src/utils/copyToClipboard';
 
 const passwordData = [
   { title: _l('导入密码'), key: 'importPassword' },
@@ -52,7 +52,7 @@ const Wrap = styled.div`
       display: inline-block;
       line-height: 32px;
       background: var(--color-background-secondary);
-      border-radius: 3px 3px 3px 3px;
+      border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     }
   }
   .successTxt {
@@ -133,7 +133,9 @@ export default class Dectypt extends Component<any, any> {
           <img className="uploadImg" src={file.name ? importActiveImg : importDisabledImg}></img>
           <div className={cx('textDisabled', { hide: file.name })}>{_l('请选择.mdy格式的应用文件')}</div>
           <QiniuUpload
-            ref={ele => { this.uploaderWrap = ele; }}
+            ref={ele => {
+              this.uploaderWrap = ele;
+            }}
             className={cx('upgradeAppUpload mTop24', { hide: file.name })}
             options={{
               filters: {

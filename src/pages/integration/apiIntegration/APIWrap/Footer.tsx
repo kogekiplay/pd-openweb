@@ -12,7 +12,7 @@ const FooterCon = styled.div`
     max-width: 800px;
     .close {
       height: 38px;
-      border-radius: 3px;
+      border-radius: var(--radius-sm);
       line-height: 38px;
       color: var(--color-text-secondary);
       padding: 0 30px;
@@ -28,11 +28,11 @@ const FooterCon = styled.div`
     line-height: 36px;
     color: var(--color-white);
     padding: 0 32px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
   }
   .update {
     height: 38px;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     line-height: 38px;
     color: var(--color-primary);
     padding: 0 30px;

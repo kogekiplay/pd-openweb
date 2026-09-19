@@ -10,7 +10,7 @@ import 'rc-trigger/assets/index.css';
 
 const AppFilterWrap = styled.div`
   width: 315px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   background-color: var(--color-background-primary);
   max-height: 360px;
   overflow-y: auto;
@@ -37,7 +37,7 @@ const AppFilterWrap = styled.div`
     margin: 10px 10px 0;
     padding: 7px;
     border: 1px solid var(--color-border-primary);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     input {
       border: 0;
       padding: 0 0 0 5px;
@@ -48,7 +48,7 @@ const AppFilterWrap = styled.div`
     width: 23px;
     height: 23px;
     margin-right: 10px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     justify-content: center;
     > div {
       line-height: normal;
@@ -60,7 +60,7 @@ const SelectAppTrigger = styled.div`
   font-size: 13px;
   padding: 5px 10px;
   border: 1px solid var(--color-border-primary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
 `;
 
 export default class AppFilter extends Component<any, any> {

@@ -26,7 +26,7 @@ const Icon = styled.span`
 const QueryCon = styled.div`
   background: var(--color-background-input);
   border: 1px solid var(--color-border-secondary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   flex: 1;
   display: flex;
   .Input {
@@ -48,7 +48,7 @@ const FastFiltersExpandBtn = styled.div`
   cursor: pointer;
   background: var(--color-background-primary);
   border: 1px solid var(--color-border-secondary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   width: 36px;
   height: 36px;
   margin-left: 10px;

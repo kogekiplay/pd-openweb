@@ -33,7 +33,7 @@ const Content = styled.div`
     -webkit-overflow-scrolling: touch;
     .sessionItem {
       cursor: pointer;
-      border-radius: 5px;
+      border-radius: var(--radius-sm);
       padding: 0 15px;
       height: 42px;
       font-size: 15px;
