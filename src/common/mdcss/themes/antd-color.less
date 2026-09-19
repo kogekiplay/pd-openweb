@@ -7,18 +7,14 @@
   CSS 变量那条路走得通，antd 自己算的那条走不通。
   （这里【不写那个十六进制值】—— check:colors 的口径连注释都算。）
 
-  改用 --color-primary-focus-outer（主题引擎写在 documentElement 上，
-  跟挂载位置无关）。顺带把 3px 硬环收成 2px、圆角跟随控件本身 ——
-  聚焦环是无障碍必需品，不能删，但没必要长成一个方框。
-
-  !important 是本文件的既定手段：antd 的运行时样式在我们之后进 <head>。
+  【范围只收这两个，不要写裸的 :focus-visible】第一版写了裸选择器 + !important，
+  它命中【所有】可聚焦元素，把 basic.css:97 的 `input, textarea { outline: none }`
+  全局重置也压掉了 —— 而本仓的输入框本来就靠自己的边框表达聚焦。
+  表现：记录详情的评论框聚焦时出现【两层橙环】（外层是 .commentBox 的边框，
+  内层是被我加上的 outline）。张奇一眼看出来的。
+  按钮和关闭叉没有自己的聚焦表现，才是真正需要补环的地方。
 */
-:focus-visible,
-.ant-btn:focus-visible,
-.ant-input:focus-visible,
-.ant-select-selector:focus-visible,
-.ant-switch:focus-visible,
-.ant-checkbox-input:focus-visible + .ant-checkbox-inner {
+.ant-btn:focus-visible {
   outline: 2px solid var(--color-primary-focus-outer) !important;
   outline-offset: 2px !important;
   border-radius: var(--radius-sm);
