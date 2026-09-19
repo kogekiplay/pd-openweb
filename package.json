@@ -14,6 +14,7 @@
     "typecheck:syntax": "node --max-old-space-size=8192 scripts/typecheck/tsc-syntax-gate.ts",
     "test": "node scripts/run-specs.ts",
     "check:ext-collisions": "node scripts/checkExtensionCollisions.ts",
+    "check:colors": "node tools/audit-colors.ts --check",
     "typecheck:fast": "node --max-old-space-size=8192 scripts/typecheck/tsc-gate.ts",
     "typecheck:stats": "node --max-old-space-size=8192 scripts/typecheck/tsc-gate.ts --stats --no-incremental",
     "typecheck:baseline": "node --max-old-space-size=8192 scripts/typecheck/tsc-syntax-gate.ts && node --max-old-space-size=8192 scripts/typecheck/tsc-gate.ts --write-baseline --no-incremental",
