@@ -13,6 +13,7 @@ import previewAttachments from 'src/components/previewAttachments/previewAttachm
 import { isLightColor } from 'src/pages/customPage/util';
 import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget';
 import { browserIsMobile, getClassNameByExt } from 'src/utils/common';
+import type { FormControl } from 'src/utils/controlTypes';
 import RegExpValidator from 'src/utils/expression';
 import { formatNumberValue, formatrChartValue } from '../common';
 import PivotTableContent from './styled';
@@ -28,7 +29,6 @@ import {
   mergeLinesCell,
   renderValue,
 } from './util';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const isMobile = browserIsMobile();
 const isPrintPivotTable = location.href.includes('printPivotTable');
@@ -63,6 +63,14 @@ export const replaceColor = ({
   themeColor,
   sourceType,
 }: {
+  /**
+   * 【这两个保持 Record<string, any>，量过】
+   * pivotTableStyle 里混着颜色串、数字（行高/字号）和布尔开关；
+   * customPageConfig 更杂，还要原样透传给 TitleStyle 的 ColorPicker（它的 prop 是
+   * BackgroundColor 这种具体类型）。收成 unknown 会在 TitleStyle 和本文件里
+   * 一口气炸出 5 条，收成 Record<string,string> 又和数字字段冲突。
+   * 真要收得先把这两份配置各自建模，是独立的一件事。
+   */
   pivotTableStyle: Record<string, any>;
   customPageConfig?: Record<string, any>;
   themeColor?: string;
@@ -150,10 +158,21 @@ export const replaceColor = ({
   return data;
 };
 
+/** 每个字段在整批数据里的最小/最大值，按 controlId 索引；色阶规则没给范围时回落到它 */
+type ControlMinAndMax = Record<string, { min?: number; max?: number }>;
+
+/** 色阶/条件格式配置 */
+interface ColorRuleConfig {
+  /** 哪些字段启用了范围色阶 */
+  rangeControlIds?: string[];
+  yaxisMap?: Record<string, Record<string, unknown>>;
+  colorRuleMap?: Record<string, unknown>;
+}
+
 class PivotTable extends Component<any, any> {
   // 纯类型声明，babel 的 TS preset 会整条抹掉；【不能】写成有初值的类字段，
   // 那会覆盖构造函数里赋的值
-  declare $ref: React.RefObject<any>;
+  declare $ref: React.RefObject<HTMLDivElement | null>;
   declare cache: Record<string, { deps: unknown[]; value: any }>;
 
   constructor(props) {
@@ -188,7 +207,11 @@ class PivotTable extends Component<any, any> {
   getCacheValue = <T,>(key: string, deps: unknown[], getValue: () => T) => {
     const cache = this.cache[key];
 
-    if (cache && cache.deps.length === deps.length && cache.deps.every((dep: unknown, index: number) => dep === deps[index])) {
+    if (
+      cache &&
+      cache.deps.length === deps.length &&
+      cache.deps.every((dep: unknown, index: number) => dep === deps[index])
+    ) {
       return cache.value;
     }
 
@@ -651,7 +674,7 @@ class PivotTable extends Component<any, any> {
       return linesChildren;
     }
   }
-  getColumnsContent(result: PivotRecord[], controlMinAndMax: Record<string, any>, colorRuleConfig?: Record<string, any>) {
+  getColumnsContent(result: PivotRecord[], controlMinAndMax: ControlMinAndMax, colorRuleConfig?: ColorRuleConfig) {
     const { reportData, isViewOriginalData } = this.props;
     const { columns, lines, valueMap, yvalueMap, pivotTable, displaySetup } = reportData;
     const yaxisList = reportData.yaxisList.filter((item: AxisField) => !item.hide);
@@ -813,9 +836,10 @@ class PivotTable extends Component<any, any> {
   }
   getColumnTotal(
     result: PivotRecord[],
-    controlMinAndMax: Record<string, any>,
-    getColumnWidthIndex: (index: number) => any = _.identity,
-    colorRuleConfig?: Record<string, any>,
+    controlMinAndMax: ControlMinAndMax,
+    // 默认 _.identity：不做映射时下标原样返回
+    getColumnWidthIndex: (index: number) => number = _.identity,
+    colorRuleConfig?: ColorRuleConfig,
   ) {
     const { reportData } = this.props;
     const { yaxisList, columns, pivotTable, valueMap } = reportData;
@@ -1279,7 +1303,7 @@ class PivotTable extends Component<any, any> {
     }
 
     if (_.isObject(data) && 'value' in data) {
-      const props: Record<string, any> = {};
+      const props: { colSpan?: number; rowSpan?: number } = {};
 
       if (data.sum) {
         props.colSpan = data.length;
@@ -1369,8 +1393,9 @@ class PivotTable extends Component<any, any> {
   }) {
     const { yaxisList } = this.props.reportData;
     const { yaxisMap = {}, colorRuleMap = {} } = colorRuleConfig;
-    const style: Record<string, any> = {};
-    const barStyle: Record<string, any> = {};
+    const style: React.CSSProperties = {};
+    // 数据条（条形背景）的样式
+    const barStyle: React.CSSProperties = {};
     const { controlType, normType, emptyShowType, percent: percentConfig } = yaxisMap[controlId] || {};
     const isNumberValue = _.isNumber(value);
     const originalValue = value;
