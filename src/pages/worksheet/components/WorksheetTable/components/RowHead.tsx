@@ -31,13 +31,28 @@ const Con = styled.div`
   > * {
     flex: 0 0 auto;
   }
+  /* 【序号/复选框排在最左，⋯ 排到它右边】
+     原来顺序是 [⋯][序号]，于是序号被 ⋯ 那 24px 顶到 42px 处浮在列中间，
+     而表头那行是 [占位24][复选框][下拉]，数据行是 [⋯][序号]，
+     两者从不共存、宽度却按叠加算 —— 88px 里有 35px 是空的。
+     改成 ⋯ 排在序号右边之后，序号与表头复选框对齐到同一个左起点，
+     列宽由「序号 + ⋯」决定，宽度见 SheetView 的 rowHeadWidth。 */
   .numberCon {
     display: inline-block;
     text-align: center;
+    order: 1;
+    margin-left: 6px !important;
   }
   .moreOperate {
-    margin-left: 8px;
+    order: 2;
+    margin-left: 4px;
     visibility: hidden;
+  }
+  .topCheckbox {
+    order: 1;
+  }
+  .openRecord {
+    order: 3;
   }
   .checkbox {
     margin-top: 5px;
@@ -52,6 +67,12 @@ const Con = styled.div`
   .topCheckbox {
     position: absolute;
     text-align: center;
+    /* 【绝对定位不吃 flex 的 order，得显式给 left】
+       表头这个全选框要和数据行的序号对齐到同一个中心：
+       序号是 left:6 宽 16（中心 14），所以这里也给 left:6、宽 16。
+       不给的话它落在静态位置上，中心会偏右 8px。 */
+    left: 6px;
+    width: 16px;
     .checkboxCon {
       position: relative;
       display: inline-block;

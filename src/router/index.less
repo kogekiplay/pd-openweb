@@ -52,14 +52,17 @@
   3px 在 44px 高的条上读不出「圆角容器」，只在跟导航交界处露出一小段游离的弧。
   于是一边像是个圆角容器、另一边是硬切边，两头不一致。
 
-  【改成什么】内容区做成一块浮在「应用色浅底」上的白色圆角卡：
-  四边统一 8px 间隙、12px 圆角、柔和投影。
+  【改成什么】内容区做成一块浮在浅底上的白色圆角卡：
+  四边统一 12px 间隙、12px 圆角、柔和投影。
+  壳底用 --color-background-tertiary（比卡深约 4%，且带主题色相），
+  于是「壳 / 导航 / 卡」形成三个明确的层级。
 
   【四边都要留，不能只留右边】先只给了右下间隙，左边仍贴着导航 ——
   结果是圆角直接怼在导航上，比原来的直角更怪。间隙必须是一圈。
 
-  【投影不是装饰，是必需的】底是 --color-primary-bg（主色最淡那一档）、
-  卡是白，两者对比太弱，光有间隙读不出边界。这层投影负责把卡的边缘定义出来。
+  【壳底不能用 --color-primary-bg】那一档太淡（跟白只差一两个色阶），
+  光有间隙读不出边界，只能靠投影硬撑。换成 --color-background-tertiary
+  之后对比够了，投影退回辅助角色。
 
   【为什么只在应用里生效】#container 装的是全部路由，包含打印页、分享页、
   chat_window 这些需要满幅的页面。类由 src/router/Application/index.tsx
@@ -67,10 +70,10 @@
 */
 body.inAppScope {
   #containerWrapper {
-    background: var(--color-primary-bg);
+    background: var(--color-background-tertiary);
   }
   #container {
-    margin: 8px;
+    margin: 12px;
     border-radius: 12px;
     /* 不加这个的话子元素的底色会盖住圆角，看起来还是直角 */
     overflow: hidden;

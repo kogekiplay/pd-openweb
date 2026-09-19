@@ -1351,21 +1351,26 @@ class TableViewBase extends React.Component<any, any> {
       return numberWidth + 24;
     }
 
-    let rowHeadWidth = 24 + 24 + 8;
+    // 【按真正渲染出来的东西算宽，而不是按「所有可能的东西」叠加】
+    // 旧式是 24(⋯) + 24(展开) + 8 起步，再加序号 —— 但展开按钮只在
+    // classic 下渲染，非 classic 的数据行最后 30px 全是空的（实测 88px 里空 35px）。
+    // 现在逐项加：有什么才占什么。配合 RowHead 里把 ⋯ 排到序号右边，
+    // 序号与表头复选框对齐到同一个左起点。
+    let rowHeadWidth = 6; // 左内边距
 
     if (showNumber || this.hasBatch) {
-      rowHeadWidth += numberWidth + 8;
+      rowHeadWidth += numberWidth + 4;
+    }
+
+    if (showOperate) {
+      rowHeadWidth += 24 + 4; // ⋯
     }
 
     if (this.tableType === 'classic') {
-      rowHeadWidth += 24 - 8;
+      rowHeadWidth += 24 + 4; // 展开记录
     }
 
-    if (this.tableType !== 'classic' && showOperate && !showNumber && !this.hasBatch) {
-      rowHeadWidth -= 18;
-    }
-
-    return rowHeadWidth + 8;
+    return rowHeadWidth + 6; // 右内边距
   }
 
   get needClickToSearch() {
