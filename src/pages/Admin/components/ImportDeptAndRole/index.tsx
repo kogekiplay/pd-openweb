@@ -164,7 +164,7 @@ const ColErrorInfo = styled.div`
     background: var(--color-primary-dark);
     border-radius: 32px;
     margin-top: 50px;
-    color: var(--color-white);
+    color: var(--color-on-primary);
     font-size: var(--font-md);
     font-weight: 600;
   }
@@ -281,7 +281,7 @@ const SuccessInfo = styled.div`
     background: var(--color-primary-dark);
     border-radius: 32px;
     margin-top: 50px;
-    color: var(--color-white);
+    color: var(--color-on-primary);
     font-size: var(--font-md);
     font-weight: 600;
   }

@@ -183,7 +183,7 @@ export const Header = styled.div`
     box-sizing: border-box;
     padding: 0 var(--space-8);
     line-height: 36px;
-    color: var(--color-white);
+    color: var(--color-on-primary);
     cursor: pointer;
     border-radius: var(--radius-sm);
     text-align: center;

@@ -89,7 +89,7 @@ const SavedItem = styled.div`
   word-break: break-all;
   &.active {
     background-color: var(--color-primary);
-    color: var(--color-white);
+    color: var(--color-on-primary);
   }
 `;
 

@@ -28,7 +28,7 @@ const PauseTimeListCon = styled.div`
   }
   .runDateItem:hover {
     background-color: var(--color-primary);
-    color: var(--color-white);
+    color: var(--color-on-primary);
   }
 `;
 

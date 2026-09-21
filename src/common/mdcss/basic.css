@@ -1732,7 +1732,7 @@ body .Hidden {
    没有删除是因为删 CSS 的风险大于改色：万一还有运行期拼出来的 class 用到它，
    现在至少会跟随主题，而不是停在 2011 年的蓝。 */
 .btn-primary {
-  color: var(--color-white);
+  color: var(--color-on-primary);
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
   background-color: var(--color-primary);
   background-repeat: repeat-x;
@@ -1749,7 +1749,7 @@ body .Hidden {
 .btn-primary.active,
 .btn-primary.disabled,
 .btn-primary[disabled] {
-  color: var(--color-white);
+  color: var(--color-on-primary);
   background-color: var(--color-primary-dark);
 }
 
@@ -1833,7 +1833,7 @@ body .Hidden {
 }
 
 .btnBootstrap-primary {
-  color: var(--color-white);
+  color: var(--color-on-primary);
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.15);
   background-color: var(--color-primary);
 }
@@ -2940,11 +2940,11 @@ html:not(.appHomeMobile) .ant-message {
 
 .mdAntSelectOption.ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
   font-weight: unset;
-  color: var(--color-white);
+  color: var(--color-on-primary);
   background-color: var(--color-primary);
 
   .icon {
-    color: var(--color-white) !important;
+    color: var(--color-on-primary) !important;
   }
 }
 

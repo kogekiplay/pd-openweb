@@ -58,7 +58,7 @@ const ApprovalProcessBox = styled.div`
 
 const Box = styled.div`
   .foldNode {
-    color: var(--color-white);
+    color: var(--color-on-primary);
     background: var(--color-primary-dark);
     .approvalIcon {
       background: var(--color-background-primary);
@@ -67,7 +67,7 @@ const Box = styled.div`
     .workflowOperate {
       color: rgba(255, 255, 255, 0.8);
       &:hover {
-        color: var(--color-white);
+        color: var(--color-on-primary);
       }
     }
   }

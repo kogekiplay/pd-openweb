@@ -17,7 +17,7 @@ const Wrap = styled.div`
     opacity: 1;
     border-radius: 6px;
     display: block;
-    color: var(--color-text-inverse);
+    color: var(--color-on-primary);
     line-height: 48px;
     text-decoration: none;
 

@@ -66,7 +66,7 @@ const Wrap = styled.div`
     line-height: 36px;
     border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     background: var(--color-primary);
-    color: var(--color-white);
+    color: var(--color-on-primary);
     &.canClear {
       background: var(--color-background-primary);
       color: var(--color-text-secondary);

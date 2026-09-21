@@ -53,7 +53,7 @@ const Wrap = styled.div`
     height: 36px;
     background: var(--color-primary);
     border-radius: 18px;
-    color: var(--color-white);
+    color: var(--color-on-primary);
     display: inline-block;
     cursor: pointer;
 

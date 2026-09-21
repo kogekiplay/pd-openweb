@@ -80,7 +80,7 @@ const TestButton = styled.div`
   color: var(--color-primary);
   &:hover {
     background: var(--color-primary);
-    color: var(--color-white);
+    color: var(--color-on-primary);
   }
 `;
 

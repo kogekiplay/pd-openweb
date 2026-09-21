@@ -80,7 +80,7 @@ const BuildAppBox = styled.div`
     background: var(--color-primary);
     opacity: 1;
     border-radius: 18px;
-    color: var(--color-white);
+    color: var(--color-on-primary);
     font-size: var(--font-md);
     font-weight: 600;
     margin-top: 36px;

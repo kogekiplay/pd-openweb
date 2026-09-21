@@ -4,7 +4,7 @@ import { BrowserRouter as Router } from 'react-router';
 import { Provider } from 'react-redux';
 import { ConfigProvider } from 'antd';
 import { GlobalStoreProvider } from 'src/common/GlobalStore';
-import { PLATFORM_PRIMARY } from 'src/common/theme';
+import { onSolidPrimary, PLATFORM_PRIMARY } from 'src/common/theme';
 import store from 'src/redux/configureStore';
 import App from './App';
 
@@ -19,7 +19,14 @@ const root = createRoot(document.getElementById('app'));
 root.render(
   <Provider store={store}>
     <GlobalStoreProvider>
-      <ConfigProvider theme={{ token: { colorPrimary: PLATFORM_PRIMARY } }}>
+      {/* colorTextLightSolid = 压在实心主色上的文字。antd 默认恒为白，
+          而主色是用户可选的 —— 浅色主色配白字读不清。交给 onSolidPrimary 按
+          明度决定黑白（够读就还是白）。理由和阈值见 common/theme/palette.ts。 */}
+      <ConfigProvider
+        theme={{
+          token: { colorPrimary: PLATFORM_PRIMARY, colorTextLightSolid: onSolidPrimary(PLATFORM_PRIMARY) },
+        }}
+      >
         <Router>
           <App />
         </Router>

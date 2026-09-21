@@ -57,7 +57,7 @@ const Wrap = styled.div`
     margin-top: var(--space-8);
     padding: var(--space-2) var(--space-8);
     background: var(--color-primary);
-    color: var(--color-white);
+    color: var(--color-on-primary);
     line-height: 1em;
     border-radius: var(--radius-sm);
     &:hover {

@@ -16,7 +16,7 @@
  * palette.spec.ts 第 2 组断言专门钉这条，改成自算会当场红。
  */
 import { theme } from 'antd';
-import { TinyColor } from '@ctrl/tinycolor';
+import { readability, TinyColor } from '@ctrl/tinycolor';
 
 export type ThemeMode = 'light' | 'dark';
 export type ThemeVars = Record<string, string>;
@@ -207,9 +207,55 @@ export function buildThemeVars(seed: string, mode: ThemeMode = 'light'): ThemeVa
     // 实测 rgba(墨,0.4) 落在淡底上：纯黑 2.82，混 8% 是 2.65-2.74，混 18% 掉到 2.47。
     // 8% 是「看得出色相倾向」与「几乎不掉对比度」的折中。
     // 真正让顶栏有主题感的是背景和边框那一侧（它们改用主色，见 AppPkgHeader/index.less）。
-    '--color-on-app-ink': new TinyColor('#000000').mix(primary, 8).toHexString(),
-    '--color-on-app-paper': new TinyColor('#ffffff').mix(primary, 8).toHexString(),
+    '--color-on-app-ink': onInk(primary),
+    '--color-on-app-paper': onPaper(primary),
+
+    // ——— 直接压在主题色【实心底】上的文字（按钮、徽标、分页当前页）———
+    // 上面两个是给「主题色淡底」用的，浓度不够时白纸黑字都还读得清；
+    // 压在【实心主色】上就不一样了：主色够深才配得住白字。
+    // 见 onSolidPrimary 的说明——阈值 3，不达标才翻成墨色。
+    '--color-on-primary': onSolidPrimary(primary),
   };
+}
+
+const PURE_INK = '#000000';
+const PURE_PAPER = '#ffffff';
+
+/** 主题色【淡底】上的墨色/纸色：只把纯黑纯白往主色偏一点点（理由见上面那段注释）。 */
+function onInk(primary: string): string {
+  return new TinyColor(PURE_INK).mix(primary, 8).toHexString();
+}
+function onPaper(primary: string): string {
+  return new TinyColor(PURE_PAPER).mix(primary, 8).toHexString();
+}
+
+/**
+ * 压在【主题色实心底】上的前景色：白字够读就用白，不够才翻成墨色。
+ *
+ * 【为什么需要它】用户可以把应用主题色设成任意颜色，而全仓有一批地方
+ * 写死了白字（`.textWhite` 那一类）。主色一浅，白字就读不清 ——
+ * 2026-09-21 实测生产上 13 个应用主题色，**4 个连 3:1 都到不了**
+ * （青 2.28、灰 2.54、橙 2.77、绿 2.78），按钮上的字是糊的。
+ *
+ * 【阈值是 3 不是 4.5，而且【不能】写成「谁对比高用谁」】
+ * 这两处都是被实测逼出来的：
+ * · 用 4.5 或者「取更高的那个」，13 个色里会翻掉 6-12 个 ——
+ *   包括白字本来就够用的蓝色（3.12）。那是纯粹多余的改动，
+ *   而且「深蓝底黑字」才是真正看着怪的东西。
+ * · 用 3 且只在不达标时翻，**只动那 4 个本来就坏的**，其余 9 个一点不变。
+ *   3 这个数字也对得上实际用法：压在主色上的基本是按钮/徽标文字，
+ *   14px 加粗，正好落在 WCAG 的 large text 档。
+ *
+ * 【这里用纯黑纯白，【不】走 onInk/onPaper 那套 8% 偏色】
+ * 第一版用了带偏色的版本，实测多翻掉一个：生产上那个中蓝配纯白是 3.12（够），
+ * 但混了 8% 蓝的"纸色"压到 3 以下，就被判成不达标。
+ * （注释里不写字面色值 —— check:colors 棘轮连注释一起数。具体色值见 palette.spec.ts。）
+ * 这正是上面那段注释警告过的「任何色相混进纯黑/纯白都会削弱极值」。
+ * 淡底上牺牲一点对比换色相倾向是划算的；**压在实心主色上，对比度就是全部意义**，
+ * 为 8% 的色相倾向把字弄糊是本末倒置。
+ */
+export function onSolidPrimary(primary: string): string {
+  return readability(primary, PURE_PAPER) >= 3 ? PURE_PAPER : PURE_INK;
 }
 
 /** 拼成可直接塞进 <style> 的声明串。 */

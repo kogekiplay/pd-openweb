@@ -40,7 +40,7 @@ const Wrap = styled.div`
     background: var(--color-primary);
     border-radius: var(--radius-sm);
     line-height: 32px;
-    color: var(--color-white);
+    color: var(--color-on-primary);
     font-size: var(--font-sm);
     float: right;
     padding: 0 15px;

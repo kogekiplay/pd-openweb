@@ -3,6 +3,7 @@ import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { Routes } from 'react-router';
 import { ConfigProvider } from 'antd';
+import { onSolidPrimary } from 'src/common/theme';
 import _ from 'lodash';
 import { AppThemeScope, getCachedAppColor } from 'src/common/theme';
 import { navigateTo } from 'router/navigateTo';
@@ -164,8 +165,18 @@ let Application = class Application extends Component<any, any> {
     const appId = this.currentAppId();
     const seed = loadedAppId ? iconColor : getCachedAppColor(appId);
 
+    // colorTextLightSolid = 压在实心主色上的文字。antd 默认恒为白，而主色是用户可选的，
+    // 浅色主色配白字读不清。onSolidPrimary 按明度决定黑白，够读的一律不动。
+    // 阈值和实测数据见 common/theme/palette.ts。
     return (
-      <ConfigProvider theme={{ token: { colorPrimary: seed || iconColor } }}>
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: seed || iconColor,
+            colorTextLightSolid: onSolidPrimary(seed || iconColor),
+          },
+        }}
+      >
         <AppThemeScope seed={iconColor} loaded={!!loadedAppId} appId={appId} />
         {this.renderContent()}
       </ConfigProvider>

@@ -36,7 +36,7 @@ const PageWrap = styled.div`
     height: 22px;
     padding: 0 var(--space-2);
     border-radius: 11px;
-    color: var(--color-white);
+    color: var(--color-on-primary);
     background: var(--color-primary);
   }
   .serviceAppList {

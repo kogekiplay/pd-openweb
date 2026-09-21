@@ -60,7 +60,7 @@ export const Wrap = styled.div`
     background: var(--color-primary);
     border-radius: 6px;
     font-size: var(--font-lg);
-    color: var(--color-text-inverse);
+    color: var(--color-on-primary);
     margin-top: var(--space-8);
     text-align: center;
 

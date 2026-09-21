@@ -37,7 +37,7 @@ const TagBox = styled.div`
   }
   &.blue {
     background: var(--color-primary);
-    color: var(--color-white) !important;
+    color: var(--color-on-primary) !important;
   }
 `;
 

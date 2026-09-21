@@ -20,7 +20,7 @@ const PublicqueryHeader = styled.div`
     border-radius: var(--radius-sm);
     font-size: var(--font-sm);
     font-weight: 700;
-    color: var(--color-white);
+    color: var(--color-on-primary);
     line-height: 36px;
     width: 103px;
     &:hover {

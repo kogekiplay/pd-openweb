@@ -75,7 +75,7 @@ const WrapBtn = styled.div`
   .btnCon {
     padding: 11px 50px;
     background: var(--color-primary);
-    color: var(--color-white);
+    color: var(--color-on-primary);
     line-height: 1em;
     border-radius: 30px;
     &.disabled {

@@ -81,7 +81,7 @@ export const WrapFooter = styled.div`
   .btn {
     padding: 0 var(--space-8);
     background: var(--color-primary);
-    color: var(--color-white);
+    color: var(--color-on-primary);
     line-height: 36px;
     border-radius: var(--radius-sm);
     &:hover {

@@ -18,7 +18,7 @@ export const Option = styled.div`
   user-select: none;
   background-color: var(--color-background-secondary);
   &.checked {
-    color: var(--color-white);
+    color: var(--color-on-primary);
     border-color: var(--color-primary);
     background-color: var(--color-primary);
   }

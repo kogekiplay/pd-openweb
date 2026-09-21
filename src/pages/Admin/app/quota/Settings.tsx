@@ -74,12 +74,12 @@ const ContentWrap = styled.div`
   .saveBtn {
     margin-right: var(--space-5);
     background: var(--color-primary);
-    color: var(--color-white);
+    color: var(--color-on-primary);
     &:hover {
       background: var(--color-primary-dark);
     }
     &.disabled {
-      color: var(--color-white);
+      color: var(--color-on-primary);
       background: var(--color-primary-transparent);
       cursor: not-allowed;
       &:hover {

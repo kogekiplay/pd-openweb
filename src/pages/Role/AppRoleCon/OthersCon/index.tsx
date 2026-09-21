@@ -76,7 +76,7 @@ const ExplainCon = styled.div`
     padding: 15px 22px;
     background: var(--color-primary);
     border: none;
-    color: var(--color-white);
+    color: var(--color-on-primary);
     font-size: var(--font-md);
     border-radius: var(--radius-sm);
     font-weight: 600;

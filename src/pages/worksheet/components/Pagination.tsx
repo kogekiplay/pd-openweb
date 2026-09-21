@@ -159,7 +159,7 @@ const BarPage = styled.span`
   }
   &.current {
     background: var(--color-primary);
-    color: var(--color-text-inverse);
+    color: var(--color-on-primary);
     cursor: default;
   }
   &.dot {

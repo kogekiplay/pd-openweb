@@ -249,7 +249,7 @@ export const WrapContainer = styled.div`
     height: 48px;
     border-radius: 6px;
     line-height: 48px;
-    color: var(--color-text-inverse);
+    color: var(--color-on-primary);
     font-weight: bold;
     font-size: var(--font-lg);
     &:hover {

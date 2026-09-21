@@ -25,7 +25,7 @@ const Con = styled.div`
   border-radius: var(--radius-sm);
   .saveBtn {
     background: var(--color-primary);
-    color: var(--color-white);
+    color: var(--color-on-primary);
     height: 36px;
     line-height: 36px;
     border: 1px solid var(--color-primary);

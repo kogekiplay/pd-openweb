@@ -57,7 +57,7 @@ const Wrap = styled.div`
     height: 18px;
     background: var(--color-primary);
     border-radius: 9px 9px 9px 9px;
-    color: var(--color-white);
+    color: var(--color-on-primary);
     .tag {
       font-size: var(--font-xs);
       font-weight: 400;
@@ -91,7 +91,7 @@ const WrapBar = styled.div`
     line-height: 36px;
     background: var(--color-primary);
     border-radius: var(--radius-sm);
-    color: var(--color-white);
+    color: var(--color-on-primary);
     padding: 0 var(--space-3);
     display: inline-block;
     &:hover {

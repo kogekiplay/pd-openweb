@@ -580,8 +580,12 @@ function MapView(props) {
             clickLnglat={clickLnglat}
             onClick={addNewRecord}
           >
-            <span className="Icon icon icon-plus Font13 mRight5 textWhite" />
-            <span className="textWhite bold">{advancedSetting.btnname || entityName || _l('记录')}</span>
+            {/* 同 SheetHeader：底色是应用主题色，文字色要交给 --color-on-primary 算，
+                不能写死白。.textWhite 带 !important，必须摘掉才轮得到它。 */}
+            <span className="Icon icon icon-plus Font13 mRight5" style={{ color: 'var(--color-on-primary)' }} />
+            <span className="bold" style={{ color: 'var(--color-on-primary)' }}>
+              {advancedSetting.btnname || entityName || _l('记录')}
+            </span>
           </NewRecordBtn>
           <Ripple ref={rippleRef} />
         </Fragment>

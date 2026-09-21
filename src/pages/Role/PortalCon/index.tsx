@@ -55,7 +55,7 @@ const Wrap = styled.div`
     background: var(--color-primary);
     border-radius: var(--radius-sm);
     text-align: center;
-    color: var(--color-white);
+    color: var(--color-on-primary);
     font-weight: 700;
     overflow: hidden;
     &:hover {

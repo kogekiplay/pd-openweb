@@ -24,7 +24,7 @@ export const MenuOverlayWrapper = styled(Menu)`
   }
   .ant-dropdown-menu-item:hover,
   .ant-dropdown-menu-submenu-title:hover {
-    color: var(--color-white);
+    color: var(--color-on-primary);
     background-color: var(--color-primary);
   }
 `;

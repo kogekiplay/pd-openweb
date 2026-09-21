@@ -54,7 +54,7 @@ const Card = styled.div`
     /* 原来底色和 hover 都写死成固定的蓝。它本来就是「主按钮蓝」、不是品牌色，
        所以改成跟随主题；hover 那档换成 --color-primary-dark，深浅几乎一致。 */
     background: var(--color-primary);
-    color: var(--color-white);
+    color: var(--color-on-primary);
     &:hover {
       background: var(--color-primary-dark);
     }

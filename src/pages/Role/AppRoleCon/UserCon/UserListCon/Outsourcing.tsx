@@ -31,7 +31,7 @@ const WrapBar = styled.div`
     line-height: 37px;
     background: var(--color-primary);
     border-radius: var(--radius-sm);
-    color: var(--color-white);
+    color: var(--color-on-primary);
     padding: 0 var(--space-3);
     display: inline-block;
   }

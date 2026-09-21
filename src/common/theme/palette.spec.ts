@@ -23,6 +23,7 @@ type ThemeVars = Record<string, string>;
 type PaletteModule = {
   buildThemeVars: (seed: string, mode?: 'light' | 'dark') => ThemeVars;
   themeVarsToCssText: (vars: ThemeVars) => string;
+  onSolidPrimary: (primary: string) => string;
 };
 
 function loadPalette(): PaletteModule {
@@ -167,4 +168,33 @@ for (const key of [
   assert.ok(!(key in light), `${key} 不该由调色板产出（保持 Less 里的中性值）`);
 }
 
-console.log('palette.spec: 15 组断言全部通过');
+/* 16. 【实心主色底上的前景色】白字够读就用白，不够才翻墨色。
+   规则有两处是被实测逼出来的，写错了不会报错、只会让按钮上的字糊掉或者
+   白白翻掉一批本来没问题的应用：
+     · 阈值是 3（按钮文字基本是 14px 加粗，落在 WCAG large text 档），
+       不是 4.5，也【不是】「谁对比高用谁」；
+     · 判定和产出都用【纯黑白】，不能用 --color-on-app-* 那套混了 8% 主色的版本 ——
+       实测蓝色 #2296f3 配纯白 3.12（够），混完就掉到 3 以下被误判成不达标。 */
+{
+  // 走和上面同一个 loadPalette（本模块不能直接 require —— 它是 ESM，
+  // 要先经 babel 转 commonjs，见文件顶部那个 loader）
+  const { onSolidPrimary } = loadPalette() as unknown as { onSolidPrimary: (c: string) => string };
+
+  // 生产上实测到的 13 个真实应用主题色（2026-09-21 从工作台抓的）
+  const 该翻墨色 = ['#1fbcd5', '#9ca4a6', '#d98936', '#4caf50'];
+  const 该保持白 = ['#2296f3', '#e91e63', '#0b64f6', '#3054eb', '#4051b6', '#732ed1', '#455a65', '#2d46c4', '#3a16af'];
+
+  for (const c of 该翻墨色) {
+    assert.strictEqual(onSolidPrimary(c), '#000000', `${c} 配白字不足 3:1，必须翻成墨色`);
+    assert.ok(readability(c, '#000000') >= 4.5, `${c} 翻成墨色之后反而不够读，阈值或产出色选错了`);
+  }
+  for (const c of 该保持白) {
+    assert.strictEqual(onSolidPrimary(c), '#ffffff', `${c} 配白字已经够 3:1，不该翻 —— 多余的翻转正是「看着怪」的来源`);
+  }
+
+  // 产出到变量里
+  assert.strictEqual(buildThemeVars('#d98936', 'light')['--color-on-primary'], '#000000');
+  assert.strictEqual(buildThemeVars('#3a16af', 'light')['--color-on-primary'], '#ffffff');
+}
+
+console.log('palette.spec: 16 组断言全部通过');

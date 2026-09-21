@@ -14,7 +14,7 @@ const FooterWrap = styled.div`
   .saveBtn {
     display: inline-block;
     padding: 0 var(--space-8);
-    color: var(--color-white);
+    color: var(--color-on-primary);
     background-color: var(--color-primary);
     border-radius: var(--radius-sm);
     line-height: 36px;

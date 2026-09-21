@@ -77,7 +77,7 @@ const Wrap = styled.div`
     height: 40px;
     border-radius: 6px;
     line-height: 40px;
-    color: var(--color-text-inverse);
+    color: var(--color-on-primary);
     max-width: 120px;
     margin: 0 auto;
     &:hover {

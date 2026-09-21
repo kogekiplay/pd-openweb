@@ -24,7 +24,7 @@ const Wrap = styled.div`
     padding: 0 6px;
   }
   .ownerTag {
-    color: var(--color-white);
+    color: var(--color-on-primary);
     background: var(--color-primary);
     border-radius: 10px;
     display: inline-block;

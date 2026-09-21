@@ -60,7 +60,7 @@ const Footer = styled.div`
     justify-content: center;
     background: var(--color-primary);
     font-size: 26px;
-    color: var(--color-white);
+    color: var(--color-on-primary);
   }
   .sendBtn {
     position: absolute;

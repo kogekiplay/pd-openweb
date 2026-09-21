@@ -26,7 +26,7 @@ const Wrap = styled.div`
     padding: 5px var(--space-5);
     background: var(--color-primary);
     border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
-    color: var(--color-white) !important;
+    color: var(--color-on-primary) !important;
   }
   .customUrlCon {
     padding: 0 var(--space-6) 0;

@@ -195,7 +195,7 @@ export const WrapFooter = styled.div`
   .saveBtn {
     height: 36px;
     padding: 0 30px;
-    color: var(--color-white);
+    color: var(--color-on-primary);
     line-height: 36px;
     border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     font-size: var(--font-md);
