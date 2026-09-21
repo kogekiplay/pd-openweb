@@ -609,7 +609,12 @@ export const HomePageWrap = styled.div`
           }
           .explain {
             margin-top: var(--space-2);
-            color: var(--color-text-disabled);
+            /* 【用 secondary 不是 disabled】这里是「添加人员」「批量导入成员」这类
+               快捷入口的说明文字，不是禁用态。用 --color-text-disabled 实测对比度
+               只有 1.89:1（WCAG AA 要求 4.5），灰到读不清；
+               --color-text-secondary 是 5.6:1，而且档位注释写的就是「说明文案」。
+               禁用档故意很淡是对的 —— 但只该给真正禁用的东西用。 */
+            color: var(--color-text-secondary);
           }
         }
       }
