@@ -163,7 +163,13 @@
   .fc-timegrid-more-link {
     display: inline-flex !important;
     align-items: center;
-    /* 同上：库那条 `min-height: 0 !important` 也盖在这上面，不写 important 会被压成 2px */
+    /* 【为什么这三条都要 !important，而且 flex 那条不能少】
+       库给它挂了 `.fc-1Y { flex-grow:1 !important; flex-basis:0 !important; min-height:0 !important }`。
+       它在一个 column 方向的 flex 容器里 —— 主轴是竖的，于是 flex-basis **直接盖掉 height**：
+       写 `height:16px !important` 一样没用，实测被拉成 504px（生产上那条 "+81 更多"）。
+       顺带 display 也会被「flex 项目块级化」规则改成 flex，inline-flex 写了也白写。
+       所以先把 flex 关掉，height 才轮得到生效。 */
+    flex: 0 0 auto !important;
     height: 16px !important;
     min-height: 16px !important;
     padding: 0 5px;
@@ -459,6 +465,81 @@
         }
       }
     }
+  }
+
+  /* ── 列表视图 ──────────────────────────────────────────────────────────
+     2026-09 新加的第四种视图。月/周/日都是「按时间铺开」，一天几十条并发记录
+     就摊不开（考勤这类表一天 90 条长班次），列表按天分组平铺，多少条都能读完。
+     这里的 fc-list-* 语义类名是 fcClassCompat 里新挂的钩子给的 —— v7 自己
+     只输出哈希类名，不挂钩子就一条规则也写不了。 */
+  .fc-list {
+    border: 0;
+  }
+
+  /* 日期分组头：吸顶，和内容拉开层次 */
+  .fc-list-day-header {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: var(--color-background-secondary);
+    border-bottom: 1px solid var(--color-border-secondary);
+  }
+  .fc-list-day-cushion {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-5);
+    font-size: var(--font-md);
+    font-weight: 600;
+    color: var(--color-text-title);
+    background: transparent;
+  }
+
+  /* 事件行：整行可点，靠底色反馈，不再画一圈边框 */
+  /* 【别写 `border: 0` 的简写】它会连同下面那条分隔线一起抹掉（简写展开成四条长边，
+     后面再写 border-bottom 也盖不过带 !important 的简写）。逐边写。
+     左边框不碰 —— CalendarEvent.tsx 会把它设成记录颜色的色条。 */
+  .fc-list-event {
+    border-top: 0 !important;
+    border-right: 0 !important;
+    border-bottom: 1px solid var(--color-border-secondary) !important;
+    /* 库给行本身也留了一份 padding，再加内层那份，一行会胖到 53px ——
+       90 行的清单一屏就只剩十来行。内边距只留内层那一份。 */
+    padding: 0 !important;
+    cursor: pointer;
+    transition: background-color 0.15s;
+    &:hover {
+      background-color: var(--color-background-hover) !important;
+    }
+    /* 行首那个 10px 高的空槽是库留给「事件前缀」的（我们不用，颜色走左侧色条）。
+       它撑在 flex 行里会把行高再顶高一截。 */
+    > div:first-child:empty {
+      display: none;
+    }
+  }
+  .fc-list-event-main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-2) var(--space-5);
+  }
+  /* 时间列定宽，让标题左边缘对齐成一条线 —— 90 行长短不一的时间会把标题冲得参差 */
+  .fc-list-event-time {
+    flex: 0 0 96px;
+    font-size: var(--font-sm);
+    color: var(--color-text-secondary);
+    font-variant-numeric: tabular-nums;
+  }
+  .fc-list-event-title {
+    flex: 1;
+    min-width: 0;
+    font-size: var(--font-md);
+    color: var(--color-text-primary);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 }
 .externalEvents {

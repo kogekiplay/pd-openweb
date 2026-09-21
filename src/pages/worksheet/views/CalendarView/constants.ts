@@ -16,6 +16,11 @@ export const CALENDAR_BUTTONS = {
   dayGridWeek: { text: _l('周%05034') },
   timeGridDay: { text: _l('天') },
   dayGridDay: { text: _l('天') },
+  /* 【列表视图】月/周/日都是"按时间铺开"，一天几十条并发记录就摊不开
+     （考勤这类表一天 90 条长班次，时间轴上必然互相压）。列表按天分组平铺，
+     多少条都能完整读完。用 listMonth 而不是 listWeek —— 和月视图同一个
+     日期区间，来回切不用重新取数。 */
+  listMonth: { text: _l('列表') },
 };
 
 export const CALENDAR_VIEW_FORMATS = {
@@ -37,6 +42,9 @@ export const CALENDAR_VIEW_FORMATS = {
     titleFormat: { year: 'numeric', month: '2-digit', day: '2-digit' },
   },
   dayGridDay: {
+    titleFormat: { year: 'numeric', month: '2-digit', day: '2-digit' },
+  },
+  listMonth: {
     titleFormat: { year: 'numeric', month: '2-digit', day: '2-digit' },
   },
   // as const 不能少：不加的话 'numeric' 被拓宽成 string，对不上 v7 收紧后的

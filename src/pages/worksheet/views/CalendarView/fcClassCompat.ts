@@ -158,6 +158,20 @@ export const FC_CLASS_COMPAT = {
   // index.tsx:787 起靠 .fc-more-popover 测高定位，这一条挂不上就是弹层错位
   popoverClass: 'fc-popover fc-more-popover',
 
+  // ── 列表视图 ────────────────────────────────────────────────────────
+  // v6 的类名是 fc-list / fc-list-day / fc-list-day-cushion / fc-list-event/...，
+  // v7 改成一组 *Class 钩子。工作表的日历视图 2026-09 才加上列表视图，
+  // 这几行是新挂的（不是从 v6 搬的），样式写在 index.less 的「列表视图」那一段。
+  listDaysClass: 'fc-list',
+  listDayClass: 'fc-list-day',
+  listDayHeaderClass: 'fc-list-day-header',
+  listDayHeaderInnerClass: 'fc-list-day-cushion',
+  listDayBodyClass: 'fc-list-day-body',
+  listItemEventClass: 'fc-list-event',
+  listItemEventInnerClass: 'fc-list-event-main',
+  listItemEventTimeClass: 'fc-list-event-time',
+  listItemEventTitleClass: 'fc-list-event-title',
+
   // ── 选区高亮（CalendarIds.tsx:46 会 remove 它）──────────────────────
   highlightClass: 'fc-highlight',
 } as const;

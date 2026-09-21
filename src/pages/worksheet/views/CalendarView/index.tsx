@@ -7,6 +7,7 @@ import FullCalendar from '@fullcalendar/react';
 // 它们的 dist-tags.latest 永远停在 6.1.21，看 npm 会误判成「官方没发 stable 7」。
 import dayGridPlugin from '@fullcalendar/react/daygrid';
 import interactionPlugin from '@fullcalendar/react/interaction';
+import listPlugin from '@fullcalendar/react/list';
 import '@fullcalendar/react/skeleton.css';
 // v7 起样式必须显式引入：骨架 + 一个主题。classic 最接近 v6 外观。
 import themePlugin from '@fullcalendar/react/themes/classic';
@@ -42,8 +43,10 @@ import SelectFieldForStartOrEnd from '../components/SelectFieldForStartOrEnd';
 import { eventDidMount } from './CalendarEvent';
 import CalendarIds from './CalendarIds';
 import { CALENDAR_BUTTONS, CALENDAR_VIEW_FORMATS, TAB_LIST } from './constants';
+import { buildEventOrder } from './eventOrder';
 import External from './External';
 import { FC_CLASS_COMPAT } from './fcClassCompat';
+import { FC_LOCALES, toFcLocale } from './fcLocale';
 import { Wrap, WrapNum } from './styles';
 import { getCalendartypeData, getRows, getShowExternalData, isIllegalFormat } from './util';
 import {
@@ -117,6 +120,13 @@ const MemoFullCalendar = React.memo(
     unselectAuto,
     hour24,
   }: any) {
+    /* 【设置里的「排序」在这里才真正接上】此前 eventOrder 写死 'start'，抽屉里那一栏
+       配了等于没配。controls 从 owner 上取而不是加成 props —— 它只用来判断字段类型
+       （数值/日期/文本），一个会话里基本不变，加进 props 反而会让 memo 比较器多一项。 */
+    const eventOrder = React.useMemo(
+      () => buildEventOrder(currentView.moreSort, owner.props.controls),
+      [currentView.moreSort, owner.props.controls],
+    );
     return (
       <FullCalendar
         key={fullCalendarKey}
@@ -195,8 +205,9 @@ const MemoFullCalendar = React.memo(
             clickData = null;
           });
         }}
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, themePlugin]}
-        locale={window.getCurrentLang() || 'zh-cn'}
+        plugins={[dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin, themePlugin]}
+        locales={FC_LOCALES}
+        locale={toFcLocale(window.getCurrentLang())}
         buttons={CALENDAR_BUTTONS}
         allDayText={_l('全天')}
         hiddenDays={
@@ -234,7 +245,7 @@ const MemoFullCalendar = React.memo(
           omitZeroMinute: true,
           hour12: hour24 === '0',
         }} // 任务的时间
-        eventOrder={'start'} //String / Array / Function, default: "start,-duration,allDay,title"
+        eventOrder={eventOrder} // 由「视图设置 -> 排序」生成，没配排序时退回 ['start']
         displayEventEnd={false} // 让月视图的任务既显示开始时间又显示结束时间
         eventClick={info => liveEventClick(owner, info)}
         eventDidMount={info =>

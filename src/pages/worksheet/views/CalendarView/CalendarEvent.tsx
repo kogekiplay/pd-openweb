@@ -219,6 +219,25 @@ const EventCard = ({
       }
     }
 
+    /* 【列表视图不铺底、不描边】这里是行内 `!important`，CSS 那边盖不住，只能在源头分叉。
+       月/周/日里事件是一张张卡片，整块铺浅色底、四周描边是对的；
+       但列表是一行接一行的密集清单，每行都铺底会连成一大片色块，行与行的边界反而没了
+       （考勤这类表一天 90 行，实测就是一整屏浅蓝）。
+       列表按惯例（FullCalendar 自己的列表视图也是这么做的）把颜色收成左侧一根色条，
+       行背景交给 index.less 的斑马/hover。 */
+    const isListView = String(_.get(info, ['view', 'type'], '')).indexOf('list') === 0;
+
+    if (isListView) {
+      ['Top', 'Bottom', 'Right'].forEach(side => {
+        eventEl.style.removeProperty(`border-${side.toLowerCase()}`);
+      });
+      eventEl.style.removeProperty('background-image');
+      eventEl.style.removeProperty('background-color');
+      // 没配记录颜色时也留 3px 透明占位，否则有色/无色两种行的文字会差 3px，一列字看着是歪的
+      eventEl.style.borderLeft = recordColor ? `3px solid ${stringColor}` : '3px solid transparent';
+      return;
+    }
+
     ['Top', 'Bottom', 'Left', 'Right'].forEach(side => {
       eventEl.style[`border${side}`] = `1px solid ${borderColor}`;
     });
@@ -236,7 +255,7 @@ const EventCard = ({
     if ([RECORD_COLOR_SHOW_TYPE.LINE, RECORD_COLOR_SHOW_TYPE.LINE_BG].includes(colortype) && recordColor) {
       eventEl.style.borderLeft = `4px solid ${stringColor}`;
     }
-  }, [eventEl, event, currentView, info, stringColor, backgroundColor, borderColor, colortype]);
+  }, [eventEl, event, currentView, info, stringColor, backgroundColor, borderColor, colortype, recordColor]);
 
   const handleMouseMove = e => {
     if (!hoverRef.current) return;

@@ -17,7 +17,10 @@ import { getAdvanceSetting, isTimeStyle } from 'src/utils/control';
 import type { FormControl } from 'src/utils/controlTypes';
 import SelectStartOrEndGroups from '../SelectStartOrEndControl/SelectStartOrEndGroups';
 
-let obj = [_l('月'), _l('周'), _l('日')];
+/* 下标就是存进 advancedSetting.calendarType 的值（'0'/'1'/'2'/'3'），
+   对应关系在 CalendarView/util.ts 的 getCalendarViewType 里。
+   【列表只能加在最后】下标即存储值，插在中间会把已有视图的设置全部错位。 */
+let obj = [_l('月'), _l('周'), _l('日'), _l('列表')];
 let weekObj = [_l('周一'), _l('周二'), _l('周三'), _l('周四'), _l('周五'), _l('周六'), _l('周日')];
 const locales = { 'zh-Hans': localeZhCn, 'zh-Hant': localeZhTw, en: localeEn, ja: localeJaJp };
 const locale = locales[md.global.Account.lang] || localeEn;
