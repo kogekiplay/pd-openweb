@@ -78,14 +78,22 @@
   .fc-daygrid-day-bottom {
     line-height: 14px;
   }
+  /* 【v6 -> v7 这个类的含义变了】v6 里 .fc-daygrid-day-frame 是整格的内层容器
+     （日期数字 + 事件 + 「+N」链接都在里面），所以给它 min-height 就等于
+     「每天至少这么高」。v7 里它只剩**事件区**，「+N」那条链接是它的【兄弟】。
+
+     继续钉死 min-height:50 的后果：事件区吃满高度后，20px 的「+N」没位置，
+     被挤出格子外，盖到下一行的日期上 —— 就是张奇截图里那个跑到别人格子里的 +45。
+     （实测本页 12 个格子全部溢出。）
+
+     行高是 FullCalendar 自己算的，给格子加 min-height 它不理（实测格高纹丝不动），
+     所以这里不是"把格子撑高"，而是"让事件区弹性占满剩余空间"：有 +N 时自动
+     让出那 20px，没有时照样占满。 */
   .fc-daygrid-day-frame {
-    min-height: 50px !important;
-    height: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
   }
   .calendarCon.boldEvent {
-    .fc-daygrid-day-frame {
-      min-height: 70px !important;
-    }
     .fc-more-popover {
       .fc-event {
         .boldEventCard();
@@ -139,10 +147,17 @@
     display: block;
     overflow: hidden;
   }
-  .fc-timegrid-event .fc-event-time {
-    display: inline;
+  /* 【零时长事件得有个能看见的下限】打卡/提醒这类记录开始等于结束，按时长算高度就是 0，
+     实测只有 2px —— 既读不到字也点不中。FullCalendar 自己有 eventMinHeight（默认 15），
+     但它只在"量到了时间格高度"之后才生效（源码里 `isMeasured ? options.eventMinHeight : undefined`），
+     本页实测一直没进那条分支，传 prop 没有任何效果，所以在 CSS 里兜底。
+     代价：同一分钟的几条会在视觉上叠一点（FC 的碰撞计算仍按真实时长走）。
+     比一堵 2px 的竖线墙强。 */
+  .fc-timegrid-event {
+    min-height: 18px;
   }
   .fc-timegrid-event .fc-event-time {
+    display: inline;
     vertical-align: middle;
     font-size: var(--font-xs);
   }
@@ -181,13 +196,32 @@
     border-right: 0;
     border-color: var(--color-border-primary);
   }
-  .fc .fc-daygrid-more-link {
-    width: 100%;
-    display: inline-block;
-    padding: 2px;
+  /* 【去掉 .fc 前缀】v7 的根元素上没有 .fc 这个类（整页 0 命中），带前缀的规则一条也没生效过。
+     这条尤其要命：它是「+N」链接【唯一】的样式来源，所以那个链接一直是裸的纯文本 ——
+     没有底色、没有强调色、hover 也没反应，看着完全不像能点（张奇原话："不知道这里可以点击"）。
+     改成一个明确的胶囊：常态就有底色和边框，hover 变主题色底 + 白字。
+     文字用 secondary 档（4.61:1 达标）而不是主题色 —— 主题色是用户自选的，
+     13 个真实主题色里有 6 个对白底够不到 4.5。 */
+  .fc-daygrid-more-link {
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+    margin: 1px 2px 0;
+    padding: 0 6px;
+    height: 18px;
+    box-sizing: border-box;
+    border-radius: var(--radius-sm);
+    background: var(--color-background-hover);
+    color: var(--color-text-secondary);
+    font-size: var(--font-xs);
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: background-color 0.15s, color 0.15s;
     &:hover {
-      background: color-mix(in srgb, var(--color-overlay-ink) 10%, transparent);
-      border-radius: var(--radius-sm);
+      background: var(--color-primary-solid);
+      color: var(--color-on-primary);
     }
   }
   .fc-scrollgrid td,
@@ -203,45 +237,53 @@
   /* 兼容层里 fc-button-primary 是按 ButtonInfo.isPrimary 挂的，而 v7 实测从不给这个标记
      （整页 0 命中）。工具栏按钮的基础样式本来就该覆盖所有按钮，直接落到 .fc-button。 */
   .fc-button {
-    background-color: var(--color-background-primary) !important;
+    background-color: transparent !important;
     color: var(--color-text-tertiary) !important;
     border: 0px !important;
     font-weight: 700 !important;
+    /* 【几何量不参与状态】圆角和上下 padding 原先只写在 :hover 那条里，于是
+       选中的那个按钮平时是个直角方块，鼠标碰上去才变成圆角胶囊，而且因为
+       padding 从 0 变成 4px，整排按钮还会跳一下。形状留在基态，状态只改颜色。 */
+    padding-top: var(--space-1) !important;
+    padding-bottom: var(--space-1) !important;
+    border-radius: var(--radius-sm) !important;
+    position: relative !important;
+    transition: background-color 0.15s, color 0.15s !important;
     &:focus {
       box-shadow: none !important;
     }
     &:disabled {
-      background-color: var(--color-background-primary) !important;
+      background-color: transparent !important;
       color: transparent !important;
       opacity: 1 !important;
     }
+    /* hover/focus 只表达「可以点」，不表达「已选中」 */
     &:not(:disabled):focus,
     &:not(:disabled):hover,
-    &:not(:disabled):active,
-    &:not(:disabled).fc-button-active {
+    &:not(:disabled):active {
       background-color: var(--color-background-hover) !important;
-      color: var(--color-primary) !important;
+      color: var(--color-text-secondary) !important;
       box-shadow: none !important;
-      position: relative !important;
-      overflow: hidden !important;
       &:focus {
         box-shadow: none !important;
       }
     }
-    &:not(:disabled):hover {
-      background: var(--color-background-hover) !important;
-      padding-top: var(--space-1) !important;
-      padding-bottom: var(--space-1) !important;
-      border-radius: var(--radius-sm) !important;
-    }
+    /* 【选中态不拿主色当文字】主色是用户自选的，压在 hover 底色上最低只有 2.x:1，
+       选中的那个反而最难读。选中已经有「底色 + 下面那条主色横杠」两个标识，
+       文字走墨色即可 —— 也顺便和 hover 的次要灰拉开了层次。 */
     &:not(:disabled).fc-button-active {
+      background-color: var(--color-background-hover) !important;
+      color: var(--color-text-primary) !important;
+      box-shadow: none !important;
+      overflow: hidden !important;
       &::after {
         content: ' ' !important;
         width: 12px !important;
         border: 1px solid var(--color-primary) !important;
         position: absolute !important;
         bottom: 3px !important;
-        left: 30% !important;
+        left: 50% !important;
+        margin-left: -6px !important;
         border-radius: 1px !important;
       }
     }
@@ -252,9 +294,9 @@
   .fc-next-button {
     padding: 0 var(--space-1);
   }
-  .fc .fc-daygrid-day-bottom {
-    height: 100%;
-  }
+  /* 原先这里有一条 `.fc .fc-daygrid-day-bottom { height: 100% }`。
+     .fc 在 v7 里 0 命中，规则从来没生效；而且 day-bottom 在 v7 已经不装「+N」链接了
+     （链接是 day-frame 的兄弟），撑满高度反而会把格子顶坏。删掉。 */
   .fc-toolbar-title {
     font-size: 17px;
     color: var(--color-text-title);
@@ -321,6 +363,10 @@
     .fc-daygrid-day-top {
       font-size: var(--font-md);
       height: 24px;
+      /* 【今天那个圆底日号需要喘口气】日号行高 24px，而"今天"的日号是个 20px 的
+         实心圆，上下只剩 2px，紧接着就是事件条 —— 圆的下沿几乎贴在事件上。
+         给日号行留 4px 下边距，普通日号看不出差别，圆底那天就不挤了。 */
+      margin-bottom: var(--space-1);
     }
   }
   .fc-daygrid-day-top {

@@ -120,9 +120,25 @@ export function getViewName(): string {
   return api ? toV2View(api.view.type) : '';
 }
 
+/**
+ * 本仓的语言标签 -> FullCalendar 的 locale code。
+ *
+ * 【为什么需要这张表】本仓用的是 BCP-47 风格的 `zh-Hans` / `zh-Hant`（见
+ * src/common/langConfig.ts），FullCalendar 的 locale 文件里 code 写的是
+ * `zh-cn` / `zh-tw`。名字对不上时 v7 【不报错也不警告】，直接回落到内置英文 ——
+ * 于是「日程」页的全天行一直显示 "All-day"（按钮文案是我们自己用 buttons 覆盖的，
+ * 所以那几个是中文，更不容易发现这条回落）。
+ * ja / th / ms 两边同名，不需要映射。
+ */
+const LANG_TO_FC_LOCALE: Record<string, string> = {
+  'zh-Hans': 'zh-cn',
+  'zh-Hant': 'zh-tw',
+};
+
 // options 原样展开给 FullCalendar，直接用它自己的 CalendarOptions
 export function createCalendarInstance(el: HTMLElement, options: CalendarOptions): void {
   destroyCalendar();
+  const locale = typeof options.locale === 'string' ? LANG_TO_FC_LOCALE[options.locale] || options.locale : options.locale;
   const ref = React.createRef<any>();
   root = createRoot(el);
   root.render(
@@ -136,6 +152,7 @@ export function createCalendarInstance(el: HTMLElement, options: CalendarOptions
       // 库自身文案（"All-day"、"+N more"）仍是英文。
       locales: [zhCnLocale, zhTwLocale, jaLocale, thLocale, msLocale],
       ...options,
+      locale,
     }),
   );
   // React 19 的 root.render 是同步提交的，ref 在这之后就已经填好

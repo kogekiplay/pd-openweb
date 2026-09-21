@@ -312,8 +312,17 @@ const MemoFullCalendar = React.memo(
           );
         }}
         dayMaxEventRows={showall === '0'}
+        /* 【周/日视图里并发事件太多会退化成一堵竖线墙】考勤这类表一天能有几十条同一时刻
+           的打卡记录。FullCalendar 默认把同一时段的事件平分列宽，25 条并发 + 165px 的
+           列宽 = 每条 6px，标题一个字也看不见，签到时刻还都是零时长（高度只有 2px）。
+           默认的 eventMinWidth:30 在这种堆叠里不起作用（实测量到 2.4px）。
+           限定最多并排 3 条，其余收进「+N」链接（点开是弹层，能看全）；
+           少于 3 条并发的普通日历完全不受影响。 */
+        eventMaxStack={3}
         moreLinkContent={info => {
-          return <div className="w100" title={_l('查看其他%0个', info.num)}>{`+${info.num}`}</div>;
+          // 【带上「更多」两个字】光一个 "+38" 看不出是能点的；样式那边同时把它做成了胶囊。
+          // 去掉了原来的 w100 —— 撑满整格反而让它看起来像一行说明文字而不是一个控件。
+          return <div title={_l('查看其他%0个', info.num)}>{`+${info.num} ${_l('更多')}`}</div>;
         }}
         moreLinkClick={() => {
           const setMorePoper = () => {

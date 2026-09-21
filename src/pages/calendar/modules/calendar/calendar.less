@@ -1,240 +1,104 @@
-﻿.AppCalendar {
+/**
+ * 老「日程」页（/apps/calendar/home）的样式。
+ *
+ * 【2026-09 大扫除】这个文件原来 848 行、142 个顶层规则块，绝大部分是给
+ * FullCalendar v3/v4 的类名写的。v7 之后那批类名全部不存在了 ——
+ * 实测在 日/周/月/列表 四个视图上逐个 querySelectorAll 数过：
+ * 文件里用到的 60 个 fc-* 类名，**53 个整页 0 命中**，只剩 7 个还活着
+ * （fc-toolbar / fc-button / fc-button-group / fc-prev-button / fc-next-button /
+ *   fc-today-button / fc-view）。
+ *
+ * 后果就是张奇看到的那个页面：工具栏完全没有本仓样式，按钮是 FullCalendar
+ * classic 主题的出厂色（深靛底白字），跟整个系统格格不入。
+ *
+ * 这次删掉 97 个只含死类名的规则块，保留 45 个（自定义「列表」视图的
+ * calendarList*、以及 fc-event / fc-popover 这类要有数据才出现的），
+ * 并按本仓的设计变量重写了工具栏。
+ *
+ * 【类名说明】v7 把内部类名哈希化了，这里能用的语义类名是
+ * src/pages/worksheet/views/CalendarView/fcClassCompat.ts 通过 *Class 钩子挂回来的。
+ * 视图名也变了：agendaDay -> timeGridDay、agendaWeek -> timeGridWeek、month -> dayGridMonth。
+ * 想加新规则前，先在页面上 querySelectorAll 数一下命中数 —— 哈希化之后
+ * 写错类名【不会报错，只是静默不生效】。
+ */
+
+.AppCalendar {
   .pointer {
     cursor: pointer;
   }
 
+  /* ── 工具栏 ─────────────────────────────────────────────────────────────
+     「日 / 周 / 月 / 列表」做成分段控件：灰底轨道 + 选中的那格是抬起来的白片。
+     选中态【不】用主题色当文字色 —— 主题色是用户自选的，13 个真实主题色里
+     有 6 个对白底够不到 4.5:1，拿它标选中，选中的那个反而最难读。 */
   .fc-toolbar {
     background-color: var(--color-background-primary);
-    height: 45px;
-    padding: 0 var(--space-5);
+    min-height: 52px;
+    padding: var(--space-2) var(--space-5);
     position: relative;
-    box-shadow: var(--shadow-sm);
+    box-shadow: none;
+    border-bottom: 1px solid var(--color-border-secondary);
   }
 
-  .fc-toolbar .fc-center {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    margin-left: -102px;
-  }
-
-  .fc-toolbar .fc-left {
-    line-height: 45px;
-  }
-
-  .fc-toolbar .fc-left h2 {
-    display: inline-block;
-    margin-left: var(--space-5);
+  .fc-toolbar-title {
+    margin: 0 0 0 var(--space-3);
     font-size: var(--font-lg);
-    font-weight: normal;
-  }
-
-  .fc-toolbar .fc-center .fc-state-active {
-    color: var(--color-white);
-  }
-
-  .fc-toolbar .fc-button-group {
-    box-shadow: var(--shadow-sm);
-    -moz-box-shadow: var(--shadow-sm);
-    -webkit-box-shadow: var(--shadow-sm);
-  }
-
-  .fc-button-group .fc-agendaDay-button,
-  .fc-button-group .fc-agendaWeek-button,
-  .fc-button-group .fc-month-button,
-  .fc-button-group .fc-list-button {
-    height: 30px;
-    line-height: 30px;
-    width: 50px;
-    color: var(--color-text-secondary);
-    text-align: center;
-    background: var(--color-background-primary);
-    outline: none;
-    margin-right: 1px !important;
-    border: 0;
-    border-right: 1px solid var(--color-border-secondary);
-    box-shadow: none;
-  }
-
-  .fc-button-group .fc-list-button {
-    border-right: 0;
-  }
-
-  .fc-left .fc-today-button {
-    width: 46px;
-    height: 30px;
-    line-height: 30px;
-    background: var(--color-background-primary);
-    border: 0;
-    padding: 0;
-    margin-top: var(--space-2);
+    font-weight: 600;
     color: var(--color-text-title);
-    text-align: center;
-    box-shadow: var(--shadow-sm);
-    -moz-box-shadow: var(--shadow-sm);
-    -webkit-box-shadow: var(--shadow-sm);
-    border-radius: var(--radius-sm);
-    outline: none;
   }
 
-  .fc-left .fc-today-button:hover {
-    color: var(--color-white);
-  }
-
-  .fc-left .fc-state-disabled {
-    opacity: 1;
-    cursor: default;
-    background: var(--color-background-primary) !important;
-  }
-
-  .fc-left .fc-state-disabled:hover {
-    background: var(--color-background-primary);
-    color: var(--color-text-secondary);
-  }
-
-  .fc-toolbar .fc-left .fc-button {
-    border: 1px solid var(--color-border-primary);
+  /* 轨道用 hover 底而不是 secondary 底：secondary 是 #f7faff，压在白色工具栏上
+     几乎看不出来，白色的选中片也就没了依托。 */
+  .fc-button-group {
     box-shadow: none;
-    border-left: 0;
-  }
-  .fc-toolbar .fc-left .fc-button:first-child {
-    border-left: 1px solid var(--color-border-primary);
-  }
-
-  .fc-toolbar .fc-center .fc-button-group {
-    box-shadow: none;
+    background: var(--color-background-hover);
+    border-radius: var(--radius-md);
+    padding: 2px;
+    gap: 2px;
   }
 
-  .fc-toolbar .fc-center .fc-button-group button {
-    box-shadow: none;
-    border: 0;
-    border-bottom: 3px solid transparent;
-    line-height: 48px;
-    box-sizing: border-box;
-    height: 45px;
-    border-radius: 0;
-    padding: 0;
-    width: 34px;
-    margin: 0 15px;
-    transition: border-color 0.3s ease-in-out;
-  }
-
-  .fc-toolbar .fc-center .fc-button-group button:not(.fc-state-active):not(:hover) {
-    border-bottom: 3px solid transparent !important;
-    color: var(--color-text-secondary) !important;
-  }
-
-  .fc-left .fc-prev-button,
-  .fc-left .fc-next-button {
-    width: 30px;
-    height: 30px;
-    line-height: 30px;
-    background: var(--color-background-primary);
-    border: 0;
-    border-right: 1px solid var(--color-border-secondary);
-    padding: 0;
-    color: var(--color-text-secondary);
-    text-align: center;
-    box-shadow: none;
-    outline: none;
-    color: var(--color-text-disabled);
-    box-shadow: var(--shadow-sm);
-    -moz-box-shadow: var(--shadow-sm);
-    -webkit-box-shadow: var(--shadow-sm);
-  }
-
-  .fc-left .fc-prev-button {
-    border-radius: var(--radius-sm) 0 0 var(--radius-sm);
-  }
-
-  .fc-left .fc-next-button {
-    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-    border: 0;
-  }
-
-  .fc-left .fc-prev-button:hover,
-  .fc-left .fc-next-button:hover {
-    color: var(--color-white);
-  }
-
-  .fcOld button .fc-icon {
-    top: 5px !important;
-    vertical-align: top;
-  }
-
-  .fc-view-container-box {
-    padding: 0 var(--space-5);
-    margin-top: 13px;
-  }
-
-  .fc-view-container {
-    box-shadow: var(--shadow-md);
-    -moz-box-shadow: var(--shadow-md);
-    -webkit-box-shadow: var(--shadow-md);
-    -moz-border-radius: var(--radius-sm);
-    -webkit-border-radius: var(--radius-sm);
-    border-radius: var(--radius-sm);
-    .fc-view {
-      background: var(--color-background-primary);
-      &.fc-agendaDay-view > table > tbody > tr > td.fc-widget-content {
-        border-top: none;
-      }
-    }
-  }
-
-  .fc-view-container td.fc-widget-header {
-    border: 0;
-    box-shadow: 0px -2px 6px rgba(0, 0, 0, 0.1);
-    -moz-box-shadow: 0px -2px 6px rgba(0, 0, 0, 0.1);
-    -webkit-box-shadow: 0px -2px 6px rgba(0, 0, 0, 0.1);
-    .fc-widget-header {
-      border-right-width: 0 !important;
-    }
-  }
-
-  .fc-widget-header .fc-day-header {
-    border-top: 0;
+  .fc-button {
     height: 28px;
-    line-height: 28px;
-    border-width: 0;
+    padding: 0 var(--space-3);
+    border: 0 !important;
+    outline: none;
+    box-shadow: none !important;
+    background: transparent !important;
+    color: var(--color-text-secondary) !important;
+    font-size: var(--font-md) !important;
+    font-weight: 500 !important;
+    border-radius: var(--radius-sm) !important;
+    transition: background-color 0.15s, color 0.15s;
+
+    &:not(:disabled):hover {
+      background: color-mix(in srgb, var(--color-background-primary) 60%, transparent) !important;
+      color: var(--color-text-primary) !important;
+    }
+    &.fc-button-active {
+      background: var(--color-background-primary) !important;
+      color: var(--color-text-primary) !important;
+      box-shadow: var(--shadow-sm) !important;
+    }
+    &:disabled {
+      opacity: 0.45;
+      cursor: default;
+    }
   }
 
-  .fc-widget-header .fc-day-header:first-child {
-    border-left: 1px solid var(--color-border-primary);
+  /* 「今天」不在分段控件里，给个描边轮廓跟它区分开 */
+  .fc-today-button {
+    border: 1px solid var(--color-border-primary) !important;
+    background: var(--color-background-primary) !important;
+    color: var(--color-text-title) !important;
   }
 
-  .fc-ltr .fc-basic-view .fc-day-number {
-    color: var(--color-text-tertiary);
-    padding-right: 5px;
+  /* 上/下一个周期只有图标，窄一点 */
+  .fc-prev-button,
+  .fc-next-button {
+    padding: 0 var(--space-2);
   }
 
-  .fc-ltr .fc-day-grid-event.fc-not-end,
-  .fc-rtl .fc-day-grid-event.fc-not-start {
-    margin-left: 2px;
-    margin-right: 2px;
-  }
 
-  .fc-content-skeleton .fc-day-grid-event {
-    border: 0;
-  }
-
-  .fc-agendaDay-view .fc-day-grid-event.fc-not-end,
-  .fc-agendaDay-view .fc-day-grid-event.fc-not-start {
-    border-radius: var(--radius-sm);
-  }
-
-  .fc-day-grid-event > .fc-content {
-    text-overflow: ellipsis;
-    line-height: 20px;
-  }
-
-  .fc-event-container .fc-day-grid-event {
-    margin: 2px 2px 0;
-  }
-
-  .fc-day-grid-event .fc-time {
-    font-weight: normal;
-  }
 
   .fc-event {
     border: 0;
@@ -247,218 +111,8 @@
     color: var(--color-text-title);
   }
 
-  .fc-agendaDay-view .fc-event {
-    filter: alpha(opacity=75);
-    opacity: 0.75;
-  }
-
-  .fc-content-skeleton .fc-event {
-    border: 1px solid var(--color-border-primary);
-    border-color: var(--color-border-primary) !important;
-  }
-
-  .fc-agendaDay-view .fc-content-skeleton .fc-event {
-    border: 0;
-    margin-left: 0;
-    margin-right: 0;
-  }
-
-  .fc-more-popover .fc-widget-header {
-    display: none;
-  }
-
-  .fc-more-popover .fc-widget-content {
-    background: var(--color-background-primary);
-    border-radius: var(--radius-md);
-    -moz-border-radius: var(--radius-md);
-    -webkit-border-radius: var(--radius-md);
-  }
-
-  .fc-ltr .fc-time-grid .fc-event-container {
-    margin: 0 !important;
-  }
-
-  .fc-popover .fc-day-grid-event {
-    border: 0 !important;
-  }
-
-  .fc-more-popover .fc-event-container {
-    padding: 5px;
-  }
-
-  .fc-unthemed .fc-popover {
-    border-style: none;
-    box-shadow: 0 0 10px var(--color-border-tertiary);
-    -moz-box-shadow: 0 0 10px var(--color-border-tertiary);
-    -webkit-box-shadow: 0 0 10px var(--color-border-tertiary);
-  }
-
   .fc-popover {
     box-shadow: none;
-  }
-
-  .fc-title .fcTitleFont {
-    font-weight: normal;
-    display: none;
-  }
-
-  .fc-content .fc-time {
-    display: none;
-  }
-
-  .fc-time {
-    line-height: 20px;
-    font-size: var(--font-xs);
-  }
-
-  .fc-helper-skeleton .fc-time {
-    display: inline-block;
-  }
-
-  .fc-agendaDay-view .fc-time-grid tr,
-  .fc-agendaWeek-view .fc-time-grid tr {
-    height: 20px;
-  }
-
-  .fc-event-container .fc-day-grid-event .fc-content {
-    padding-left: 3px;
-    padding-right: 3px;
-    width: 97%;
-  }
-
-  #calendar .fc-month-view {
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-
-  #calendar .fc-month-view > table > thead {
-    top: 117px;
-    left: 270px;
-    right: 19px;
-    z-index: 11;
-    background: var(--color-background-primary);
-  }
-
-  #calendar .fc-month-view > table > tbody > tr > .fc-widget-content {
-    border-width: 1px 1px 0 1px;
-  }
-
-  .fc-event-container .fc-content {
-    font-size: var(--font-xs) !important;
-  }
-
-  /*滚动条样式*/
-
-  // .fc-scroller::-webkit-scrollbar-button {
-  //   height: 0;
-  //   width: 0
-  // }
-
-  // .fc-scroller::-webkit-scrollbar-track {
-  //   background-clip: padding-box;
-  //   border: solid transparent;
-  //   border-width: 0 0 0 7px
-  // }
-
-  // .fc-scroller::-webkit-scrollbar-track {
-  //   border-width: 0 5px 0 2px
-  // }
-
-  // .fc-scroller::-webkit-scrollbar-track:horizontal {
-  //   border-width: 7px 0 0
-  // }
-
-  // .fc-scroller::-webkit-scrollbar-track:hover {
-  //   background-color: rgba(0, 0, 0, 0.05);
-  //   box-shadow: inset 1px 1px 0 rgba(0, 0, 0, .1)
-  // }
-
-  // .fc-scroller::-webkit-scrollbar-track:active {
-  //   background-color: rgba(0, 0, 0, 0.05);
-  //   box-shadow: inset 1px -1px 0 rgba(0, 0, 0, .14), inset -1px 1px 0 rgba(0, 0, 0, .07)
-  // }
-
-  // .fc-scroller::-webkit-scrollbar-track:horizontal:hover {
-  //   box-shadow: inset -1px 1px 0 rgba(0, 0, 0, .14), inset 1px -1px 0 rgba(0, 0, 0, .07)
-  // }
-
-  // .fc-scroller::-webkit-scrollbar-track:vertical:hover {
-  //   box-shadow: inset 1px 1px 0 rgba(0, 0, 0, .14), inset -1px -1px 0 rgba(0, 0, 0, .07)
-  // }
-
-  // .fc-scroller::-webkit-scrollbar-thumb {
-  //   background-color: rgba(0, 0, 0, 0.2);
-  //   background-clip: padding-box;
-  //   min-height: 28px;
-  //   padding: 100px 0 0;
-  //   box-shadow: inset 1px 1px 0 rgba(0, 0, 0, .1), inset -1px -1px 0 rgba(0, 0, 0, .07)
-  // }
-
-  // .fc-scroller::-webkit-scrollbar-thumb {
-  //   border-width: 0 5px 0 2px
-  // }
-
-  // .fc-scroller::-webkit-scrollbar-thumb:hover {
-  //   background-color: rgba(0, 0, 0, .4);
-  //   box-shadow: inset 1px 1px 1px rgba(0, 0, 0, .25)
-  // }
-
-  // .fc-scroller::-webkit-scrollbar-thumb:horizontal {
-  //   border-width: 7px 0 0;
-  //   padding: 0 0 0 100px;
-  //   box-shadow: inset -1px 1px 0 rgba(0, 0, 0, .1), inset 1px -1px 0 rgba(0, 0, 0, .07)
-  // }
-
-  // .fc-scroller::-webkit-scrollbar-thumb:active {
-  //   background-color: rgba(0, 0, 0, 0.5);
-  //   box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.35)
-  // }
-
-  // .fc-scroller::-webkit-scrollbar-corner {
-  //   background: transparent
-  // }
-
-  .fc-widget-content .fc-widget-header,
-  .fc-widget-content {
-    border: 1px solid var(--color-border-primary);
-    padding: 0;
-  }
-
-  .fc-more-popover .fc-widget-header,
-  .fc-widget-content {
-    border: 0;
-  }
-
-  .fc-agendaDay-view .fc-state-highlight {
-    background: none !important;
-  }
-
-  .fcOld .fc-agendaDay-view td,
-  .fcOld .fc-agendaWeek-view .fc-widget-header {
-    border-left-width: 0;
-    border-right-width: 0;
-  }
-
-  .fc-agenda-divider-inner {
-    height: auto;
-  }
-
-  .fc-agenda-allday .fc-day-content {
-    border-bottom: 2px var(--color-border-primary) solid;
-  }
-
-  .fc-agenda-days tbody .fc-agenda-gutter {
-    border-width: 0 0 0 1px;
-    border-bottom: 0;
-  }
-
-  .fc-agenda-allday .fc-agenda-gutter {
-    border-width: 0;
-  }
-
-  .fc-agenda-days thead .fc-agenda-gutter {
-    border-width: 0 0 0 1px;
-    border-bottom: 0;
   }
 
   .rect {
@@ -476,115 +130,6 @@
     border-bottom: 1px red solid;
     padding-top: 3px;
     float: left;
-  }
-
-  .fc-slats .fc-axis {
-    color: var(--color-text-tertiary);
-  }
-
-  .fc-unthemed .fc-today {
-    background: none;
-  }
-
-  .fc-widget-content .fc-widget-header {
-    margin-left: 58px;
-  }
-
-  .fc-agendaWeek-view .fc-widget-content .fc-widget-header {
-    margin-left: 55px;
-  }
-
-  .fc-view > table > tbody,
-  .fc-row {
-    background-color: var(--color-background-primary);
-  }
-
-  .fcOld .fc-view-container .fc-axis {
-    padding: 0 18px 0 7px;
-  }
-
-  .fcOld .fc-widget-content .fc-slats .fc-minor .fc-widget-content {
-    border-top: 0;
-    border-left: 0;
-  }
-
-  .fcOld .fc-widget-content .fc-slats .fc-minor .fc-axis {
-    border: 0;
-  }
-
-  .fcOld td.fc-today {
-    border-style: none;
-  }
-
-  .fc-ltr .fc-axis {
-    border-color: var(--color-background-primary);
-    text-align: left;
-  }
-
-  .fc-view-container .fc-time-grid-event .fc-resizer:after {
-    content: '';
-  }
-
-  .fc-widget-content .fc-more-popover .fc-widget-header {
-    margin: 0;
-    width: auto;
-  }
-
-  .fc-title {
-    font-size: var(--font-xs);
-    font-weight: 500;
-  }
-
-  .fc-time-grid-event .fc-time {
-    font-size: var(--font-xs);
-  }
-
-  .fc-time img,
-  .fc-title img {
-    -moz-border-radius: 50%;
-    -webkit-border-radius: 50%;
-    border-radius: 50%;
-  }
-
-  .jsEventSelectmy .fc-time,
-  .jsEventSelectmy .fc-title {
-    color: var(--color-text-primary);
-  }
-
-  .fc-agendaDay-view thead {
-    display: none;
-  }
-
-  .fc-content-skeleton .fc-more {
-    color: var(--color-text-tertiary);
-    font-size: var(--font-xs);
-  }
-
-  .fc-agenda-view .fc-day-grid .fc-row .fc-content-skeleton {
-    padding: 6px 0;
-  }
-
-  .fc-day-grid > .fc-widget-content {
-    border-right-width: 0 !important;
-  }
-
-  .fc-month-view .fc-event {
-    border: 0 !important;
-  }
-
-  .fc-agendaDay-view .fc-title,
-  .fc-agendaWeek-view .fc-title {
-    line-height: 20px;
-    display: block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    width: 100%;
-  }
-
-  .fc-helper {
-    background: var(--color-cyan-blue);
-    color: var(--color-text-title) !important;
-    border: 0 !important;
   }
 
   .addNewCalendarBox {
