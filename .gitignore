@@ -55,3 +55,7 @@ pnpm-lock.yaml
 skills-lock.json
 
 tsconfig.strictprobe.json
+
+# 几何快照是【一次性工作文件】：改动前采一份、改动后采一份、比完就丢。
+# 每份 500KB 量级，不是 audit-*.baseline.json 那种几十字节的计数基线，别进仓。
+tools/geometry/*.json
