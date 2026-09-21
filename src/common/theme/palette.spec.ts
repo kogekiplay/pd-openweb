@@ -139,15 +139,15 @@ assert.deepStrictEqual(Object.keys(light).sort(), Object.keys(dark).sort());
 
 // 13. 中性色阶带主题倾向：不是纯灰，但也不是主色。
 const { readability } = require('@ctrl/tinycolor');
-assert.notStrictEqual(light['--color-text-secondary'], '#757575', '中性色没染上主题倾向');
+assert.notStrictEqual(light['--color-text-secondary'], '#5d5d5d', '中性色没染上主题倾向');
 assert.notStrictEqual(light['--color-text-secondary'], light['--color-primary'], '中性色被整个换成主色了');
 
 // 14. 【核心 · 可读性】染色不能把次要文字压到 WCAG AA 以下。
-//     #757575 对白底本来就只有 4.61，暖色方向是瓶颈 —— 这条挡的就是
+//     次要文字对白底本来就不宽裕，暖色方向是瓶颈 —— 这条挡的就是
 //     「把 TINT_TEXT 调大一点」这种看起来无害的改动。
 // 染色保明度，所以对比度应当与【原始纯灰】几乎一致，而不只是「够用」。
 // 这条比「>= 4.3」严得多：它挡住的是「把 TINT 调大」和「去掉保明度那一步」两种改动。
-const BASE_CONTRAST = readability('#757575', '#ffffff'); // 4.61
+const BASE_CONTRAST = readability('#5d5d5d', '#ffffff'); // 6.58
 for (const seed of ['#e91e63', '#d98936', '#ff9800', '#1677ff', '#00b96b', '#722ed1']) {
   const v = buildThemeVars(seed, 'light');
   const r = readability(v['--color-text-secondary'], '#ffffff');

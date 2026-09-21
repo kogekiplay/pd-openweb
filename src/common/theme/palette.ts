@@ -78,10 +78,14 @@ function alpha(color: string, a: number): string {
  * 【为什么不是把这些直接换成主色】它们是图标、次要文字、分隔线、浅底 ——
  * 换成主色会毁掉可读性和层级。正确的做法是保留明度、只偏色相。
  *
- * 【为什么文字和背景两档强度】实测对比度：次要文字 #757575 对白底本来就只有
- * 4.61（WCAG AA 正文门槛是 4.5），混 15% 暖色会掉到 4.30、低于 AA。
- * 所以文字取 10%、背景与边框取 32% —— 后者不承担文字对比度，可以偏得明显得多。
- * 冷色（平台蓝）方向反而会把对比度略微推高（4.61 -> 4.68），所以瓶颈是暖色。
+ * 【为什么文字和背景两档强度】文字要担对比度，背景和边框不担。
+ * 定这两个数时次要文字对白底只有 4.61（AA 正文门槛 4.5），混 15% 暖色就会掉破线，
+ * 所以文字取 10%、背景与边框取 32%。冷色方向反而会把对比度略微推高，瓶颈是暖色。
+ *
+ * 【2026-09-21 起亮色文字档位整体加深了，这里的裕量比当初宽】
+ * 次要文字从 4.61 提到 6.58（弱化说明那一档原本 2.68，任何字号都不达标，
+ * 提到 4.54）。但 TINT_TEXT 仍保持 10 —— 裕量变宽不等于该顺手调它，
+ * 那是另一个决定，要单独验。
  *
  * 【不参与染色的三类】主体表面（页面底、卡片底、输入框底）与正文主文字：
  * 它们是「纸和墨」，染了会让整站发闷、长文阅读变累。
@@ -92,9 +96,9 @@ const TINT_SURFACE = 32;
 /** 中性色阶的基准值，逐字抄自 theme-default.less / theme-dark.less。 */
 const NEUTRALS: Record<ThemeMode, Record<string, [string, number]>> = {
   light: {
-    '--color-text-secondary': ['#757575', TINT_TEXT],
-    '--color-text-tertiary': ['#9e9e9e', TINT_TEXT],
-    '--color-text-title': ['#515151', TINT_TEXT],
+    '--color-text-secondary': ['#5d5d5d', TINT_TEXT],
+    '--color-text-tertiary': ['#767676', TINT_TEXT],
+    '--color-text-title': ['#454545', TINT_TEXT],
     '--color-text-placeholder': ['#cccccc', TINT_TEXT],
     '--color-text-disabled': ['#bdbdbd', TINT_TEXT],
     '--color-border-primary': ['#dddddd', TINT_SURFACE],
