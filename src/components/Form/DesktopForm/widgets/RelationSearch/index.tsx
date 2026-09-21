@@ -46,7 +46,7 @@ const Con = styled.div`
 const RecordText = styled.div`
   display: inline-block;
   color: var(--color-text-primary);
-  font-size: 13px;
+  font-size: var(--font-sm);
   line-height: 20px;
   white-space: break-spaces;
   word-break: break-all;
@@ -74,7 +74,7 @@ const RecordTextAdd = styled(FlexCenter)`
   width: 20px;
   height: 20px;
   color: var(--color-text-primary);
-  font-size: 13px;
+  font-size: var(--font-sm);
   background: var(--color-background-secondary);
   color: var(--color-text-tertiary);
   &:hover {
@@ -533,7 +533,7 @@ const DialogCon = styled.div`
 
 const Header = styled.div`
   height: 57px;
-  padding: 0 24px;
+  padding: 0 var(--space-6);
   display: flex;
   align-items: center;
   .main {
@@ -542,17 +542,17 @@ const Header = styled.div`
     font-weight: bold;
   }
   .split {
-    font-size: 16px;
-    margin: 0 8px;
+    font-size: var(--font-lg);
+    margin: 0 var(--space-2);
     color: var(--color-text-tertiary);
   }
   .sec {
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-text-tertiary);
   }
 `;
 const Content = styled.div`
-  padding: 0 24px 36px;
+  padding: 0 var(--space-6) 36px;
   flex: 1;
   display: flex;
   flex-direction: column;

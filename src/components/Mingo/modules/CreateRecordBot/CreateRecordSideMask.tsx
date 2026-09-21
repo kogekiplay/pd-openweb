@@ -12,7 +12,7 @@ const SideMaskWrap = styled.div`
   width: 100%;
   height: 100%;
   z-index: 20;
-  padding: 12px 30px 0;
+  padding: var(--space-3) 30px 0;
   background: rgba(0, 0, 0, 0.7);
 `;
 

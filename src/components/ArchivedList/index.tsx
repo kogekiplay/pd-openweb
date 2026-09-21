@@ -15,7 +15,7 @@ const Box = styled.div`
   background: var(--color-yellow-black);
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-warning-border);
-  padding: 0 12px;
+  padding: 0 var(--space-3);
 `;
 
 const FROM_TYPE = {

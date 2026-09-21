@@ -36,7 +36,7 @@ const WidthWrap = styled.div`
 const LeftSection = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-3);
 `;
 
 const Divider = styled.div`
@@ -48,7 +48,7 @@ const Divider = styled.div`
 const RightSection = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-3);
   .Button {
     width: 108px;
     display: flex;

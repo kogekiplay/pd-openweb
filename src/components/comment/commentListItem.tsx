@@ -22,7 +22,7 @@ const Menu = styled.ul`
   background: var(--color-background-primary);
   box-shadow: var(--shadow-lg);
   li {
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     height: 36px;
     line-height: 36px;
     width: 100%;

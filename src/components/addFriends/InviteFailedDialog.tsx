@@ -12,7 +12,7 @@ const UserItemWrap = styled.div`
   display: inline-block;
   padding-right: 2px;
   margin-right: 10px;
-  margin-bottom: 8px;
+  margin-bottom: var(--space-2);
   .avatar {
     width: 28px;
     height: 28px;
@@ -23,7 +23,7 @@ const UserItemWrap = styled.div`
     display: inline-block;
     line-height: 28px;
     max-width: 95px;
-    margin: 0 10px 0 8px;
+    margin: 0 10px 0 var(--space-2);
   }
 `;
 

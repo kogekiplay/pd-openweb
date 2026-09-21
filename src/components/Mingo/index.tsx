@@ -31,7 +31,7 @@ const MingoWrap = styled.div`
       }
     }
     .brandWordmark {
-      margin-left: 8px;
+      margin-left: var(--space-2);
       height: 24px;
       width: auto;
       object-fit: contain;

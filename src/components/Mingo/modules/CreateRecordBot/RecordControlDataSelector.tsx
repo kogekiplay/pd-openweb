@@ -15,7 +15,7 @@ import type { FormControl } from 'src/utils/controlTypes';
 const Con = styled.div`
   border-radius: 8px;
   border: 1px solid var(--color-border-primary);
-  padding: 12px 0;
+  padding: var(--space-3) 0;
   background-color: var(--color-background-primary);
   .hr {
     height: 1px;
@@ -23,8 +23,8 @@ const Con = styled.div`
     margin: 10px;
   }
   .widget-item {
-    padding: 8px 17px;
-    font-size: 13px;
+    padding: var(--space-2) 17px;
+    font-size: var(--font-sm);
     color: var(--color-text-title);
     .widget-item-left {
       width: 120px;
@@ -41,7 +41,7 @@ const Con = styled.div`
       -webkit-box-orient: vertical;
     }
     .filledByAi.icon {
-      font-size: 12px;
+      font-size: var(--font-xs);
       margin-left: 1px;
       margin-top: -7px;
       color: var(--color-warning-border);
@@ -61,10 +61,10 @@ const Con = styled.div`
       opacity: 0.39;
     }
     .icon {
-      margin-right: 8px;
+      margin-right: var(--space-2);
     }
     .widget-name {
-      font-size: 13px;
+      font-size: var(--font-sm);
       color: var(--color-text-tertiary);
       display: none;
     }
@@ -73,7 +73,7 @@ const Con = styled.div`
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: var(--space-3);
       .option {
         .circle {
           width: 8px;
@@ -81,7 +81,7 @@ const Con = styled.div`
           border-radius: 50%;
           margin-right: 5px;
         }
-        font-size: 12px;
+        font-size: var(--font-xs);
         color: var(--color-text-secondary);
       }
     }
@@ -104,7 +104,7 @@ const Con = styled.div`
     }
   }
   .add-button-con {
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     gap: 10px;
   }
   .add-widget-btn {
@@ -115,7 +115,7 @@ const Con = styled.div`
     background: var(--color-background-primary);
     color: var(--color-text-title);
     border-radius: 32px;
-    font-size: 14px;
+    font-size: var(--font-md);
     font-weight: bold;
     cursor: pointer;
     border: 1px solid var(--color-border-primary);

@@ -20,7 +20,7 @@ const Card = styled.div`
   border: 1px solid var(--color-border-tertiary);
   border-radius: 12px;
   background: var(--color-background-secondary);
-  ${({ $docked }) => ($docked ? 'max-height: 100%;' : 'margin: 16px 0;')}
+  ${({ $docked }) => ($docked ? 'max-height: 100%;' : 'margin: var(--space-4) 0;')}
 `;
 
 const Header = styled.div`
@@ -29,11 +29,11 @@ const Header = styled.div`
   justify-content: space-between;
   flex-shrink: 0;
   min-height: 20px;
-  padding: 12px 12px 0;
+  padding: var(--space-3) var(--space-3) 0;
 `;
 
 const HelpIcon = styled.i`
-  font-size: 18px;
+  font-size: var(--font-xl);
   color: var(--color-mingo);
 `;
 
@@ -41,11 +41,11 @@ const Pager = styled.div`
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-size: 13px;
+  font-size: var(--font-sm);
   line-height: 18px;
   color: var(--color-text-secondary);
   i {
-    font-size: 18px;
+    font-size: var(--font-xl);
     color: var(--color-text-tertiary);
     cursor: pointer;
     transition: color 0.18s ease;
@@ -63,7 +63,7 @@ const Pager = styled.div`
 const Body = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   /* 切题滑入动画期间内容会短暂右移，禁掉横向滚动避免冒出横向滚动条 */
   overflow-x: hidden;
   /* docked：占满剩余高度，仅当题量过多撑破面板时才内部滚动（正常题量不出现滚动条） */
@@ -71,8 +71,8 @@ const Body = styled.div`
 `;
 
 const Title = styled.div`
-  margin-top: 8px;
-  font-size: 14px;
+  margin-top: var(--space-2);
+  font-size: var(--font-md);
   font-weight: 500;
   line-height: 22px;
   color: var(--color-text-primary);
@@ -94,16 +94,16 @@ const optionsIn = keyframes`
 const OptionList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-top: 8px;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
   animation: ${optionsIn} 0.24s ease-in;
 `;
 
 const Option = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
   border: 1px solid ${({ $active }) => ($active ? 'var(--color-mingo)' : 'var(--color-border-secondary)')};
   border-radius: var(--radius-sm);
   background: ${({ $active }) => ($active ? 'var(--color-mingo-transparent-light)' : 'var(--color-background-card)')};
@@ -116,14 +116,14 @@ const Option = styled.div`
   }
   .marker {
     flex-shrink: 0;
-    font-size: 14px;
+    font-size: var(--font-md);
     line-height: 22px;
     color: var(--color-text-tertiary);
   }
   .label {
     flex: 1;
     min-width: 0;
-    font-size: 14px;
+    font-size: var(--font-md);
     line-height: 22px;
     color: var(--color-text-title);
     word-break: break-word;
@@ -134,7 +134,7 @@ const Option = styled.div`
     height: 20px;
     padding: 0 6px;
     border-radius: var(--radius-xs);
-    font-size: 12px;
+    font-size: var(--font-xs);
     line-height: 20px;
     color: var(--color-text-secondary);
     background: var(--color-background-tertiary);
@@ -144,17 +144,17 @@ const Option = styled.div`
 const Custom = styled.textarea`
   box-sizing: border-box;
   display: block;
-  margin-top: 8px;
+  margin-top: var(--space-2);
   width: 100%;
   height: 36px;
   min-height: 36px;
   max-height: 100px;
-  padding: 6px 12px;
+  padding: 6px var(--space-3);
   border: 1px solid ${({ $active }) => ($active ? 'var(--color-mingo)' : 'var(--color-border-secondary)')};
   border-radius: var(--radius-sm);
   background: var(--color-background-card);
   color: var(--color-text-primary);
-  font-size: 14px;
+  font-size: var(--font-md);
   line-height: 22px;
   resize: none;
   outline: none;
@@ -173,13 +173,13 @@ const Footer = styled.div`
   align-items: center;
   /* 设计稿：跳过 + 主按钮右侧成组（非两端对齐），间距约 20px */
   justify-content: flex-end;
-  gap: 20px;
+  gap: var(--space-5);
   flex-shrink: 0;
-  padding: 14px 12px;
+  padding: 14px var(--space-3);
 `;
 
 const SkipLink = styled.span`
-  font-size: 14px;
+  font-size: var(--font-md);
   line-height: 20px;
   color: var(--color-text-secondary);
   cursor: pointer;
@@ -190,12 +190,12 @@ const SkipLink = styled.span`
 
 const PrimaryButton = styled.button`
   height: 32px;
-  padding: 0 20px;
+  padding: 0 var(--space-5);
   border: 0;
   border-radius: 999px;
   background: var(--color-mingo);
   color: var(--color-text-inverse);
-  font-size: 14px;
+  font-size: var(--font-md);
   font-weight: 700;
   cursor: pointer;
   transition: background 0.18s ease;
@@ -453,13 +453,13 @@ const SummaryCard = styled.div`
   background: var(--color-background-card);
   overflow: hidden;
   .qa {
-    padding: 12px;
+    padding: var(--space-3);
   }
   .qa + .qa {
     border-top: 1px solid var(--color-border-primary);
   }
   .qa .q {
-    font-size: 14px;
+    font-size: var(--font-md);
     font-weight: 500;
     line-height: 22px;
     color: var(--color-text-primary);
@@ -467,7 +467,7 @@ const SummaryCard = styled.div`
   }
   .qa .a {
     margin-top: 2px;
-    font-size: 14px;
+    font-size: var(--font-md);
     line-height: 22px;
     color: var(--color-text-secondary);
     word-break: break-word;

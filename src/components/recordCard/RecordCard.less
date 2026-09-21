@@ -22,7 +22,7 @@
     line-height: 1em;
     top: -12px;
     right: -10px;
-    font-size: 20px;
+    font-size: var(--font-2xl);
     color: var(--color-text-secondary);
     .icon {
       position: relative;
@@ -48,7 +48,7 @@
     top: 0;
     right: 0;
     color: var(--color-white);
-    font-size: 18px;
+    font-size: var(--font-xl);
     width: 0px;
     height: 0px;
     border: 17px solid var(--color-primary-focus);
@@ -61,8 +61,8 @@
     }
   }
   .titleText {
-    margin: 4px 0 2px 16px;
-    font-size: 14px;
+    margin: var(--space-1) 0 2px var(--space-4);
+    font-size: var(--font-md);
     font-weight: 500;
     color: var(--color-text-title);
     .maskHoverTheme {
@@ -78,10 +78,10 @@
   .visibleControls {
     margin-top: 2px;
     .visibleControl {
-      margin-left: 16px;
+      margin-left: var(--space-4);
       overflow: hidden;
       .controlName {
-        font-size: 12px;
+        font-size: var(--font-xs);
         color: var(--color-text-tertiary);
       }
       .controlContent {
@@ -98,7 +98,7 @@
         }
       }
       &:last-child {
-        margin-right: 16px;
+        margin-right: var(--space-4);
       }
     }
   }
@@ -139,7 +139,7 @@
   }
   &.select_record_dialog {
     .titleText {
-      margin: 10px 0 0 16px;
+      margin: 10px 0 0 var(--space-4);
     }
     .visibleControls {
       margin-top: 7px;

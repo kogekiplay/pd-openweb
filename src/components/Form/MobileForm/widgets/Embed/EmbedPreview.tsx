@@ -7,7 +7,7 @@ const Wrap = styled.div`
   align-items: center;
   justify-content: center;
   flex: 1;
-  padding: 24px;
+  padding: var(--space-6);
   min-width: 0;
 
   .SingleViewHeader {

@@ -12,8 +12,8 @@ const ConversationListCon = styled.div`
   height: 100%;
   background: var(--color-background-primary);
   .conversationListTitle {
-    padding: 0 20px;
-    font-size: 12px;
+    padding: 0 var(--space-5);
+    font-size: var(--font-xs);
     color: var(--color-text-secondary);
     margin-bottom: 6px;
   }
@@ -59,13 +59,13 @@ const NewConversationButton = styled.div`
   align-items: center;
   justify-content: center;
   color: var(--color-text-primary);
-  font-size: 13px;
+  font-size: var(--font-sm);
   border: 1px solid var(--color-border-primary);
   border-radius: 40px;
-  margin: 0 10px 20px;
+  margin: 0 10px var(--space-5);
   flex-shrink: 0;
   .icon {
-    font-size: 18px;
+    font-size: var(--font-xl);
     color: var(--app-primary-color);
     margin-right: 5px;
   }

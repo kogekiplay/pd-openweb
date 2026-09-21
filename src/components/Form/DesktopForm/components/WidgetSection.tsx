@@ -137,7 +137,7 @@ export default function WidgetSection(props) {
   const renderContent = () => {
     if (activeControl.type === 52) {
       return (
-        <div className="customFieldsContainer" style={isSplit ? { margin: 0, padding: '0 12px' } : {}}>
+        <div className="customFieldsContainer" style={isSplit ? { margin: 0, padding: '0 var(--space-3)' } : {}}>
           {activeControl.desc && (
             <div className="textTertiary WordBreak pLeft12 pRight12 mTop12">{activeControl.desc}</div>
           )}
@@ -208,7 +208,7 @@ export default function WidgetSection(props) {
             ...(isSplit && {
               borderTop: '3px solid var(--color-border-primary)',
               marginLeft: '0px',
-              padding: '0 24px',
+              padding: '0 var(--space-6)',
             }),
           }}
         >

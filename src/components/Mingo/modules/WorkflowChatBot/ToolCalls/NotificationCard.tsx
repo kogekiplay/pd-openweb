@@ -4,10 +4,10 @@ import { LoadDiv, UserHead } from 'ming-ui';
 import chatbotAjax from 'src/pages/workflow/apiV2/chatbot';
 
 const Con = styled.div`
-  padding: 16px;
+  padding: var(--space-4);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-3);
   .data-item {
     display: flex;
     flex-direction: row;
@@ -15,7 +15,7 @@ const Con = styled.div`
     gap: 5px;
     .data-item-label {
       width: 60px;
-      font-size: 13px;
+      font-size: var(--font-sm);
       color: var(--color-text-title);
       flex-shrink: 0;
       padding-top: 2px;
@@ -23,14 +23,14 @@ const Con = styled.div`
     .data-item-value {
       padding-top: 2px;
       flex: 1;
-      font-size: 13px;
+      font-size: var(--font-sm);
       color: var(--color-text-title);
     }
   }
   .users {
     display: flex;
     flex-direction: row;
-    gap: 12px;
+    gap: var(--space-3);
     flex-wrap: wrap;
     .user {
       display: flex;
@@ -39,7 +39,7 @@ const Con = styled.div`
       align-items: center;
     }
     .userName {
-      font-size: 13px;
+      font-size: var(--font-sm);
       color: var(--color-text-title);
     }
   }

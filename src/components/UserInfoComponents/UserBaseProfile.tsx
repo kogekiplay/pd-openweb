@@ -20,7 +20,7 @@ const UserProjectInfoWrap = styled.div`
   padding-bottom: 10px;
   border-bottom: 1px solid var(--color-border-secondary);
   color: var(--color-text-title);
-  font-size: 14px;
+  font-size: var(--font-md);
   .projectsWrap {
     display: inline-block;
     max-width: 100%;
@@ -59,7 +59,7 @@ const UserProjectInfoWrap = styled.div`
   }
   .multipleJobs {
     padding-bottom: 10px;
-    margin-bottom: 12px;
+    margin-bottom: var(--space-3);
     border-bottom: 1px solid var(--color-border-secondary);
     &.noBorder {
       border-bottom: none;
@@ -85,7 +85,7 @@ const ProjectsMenuCon = styled.div`
   }
   .projectItem {
     cursor: pointer;
-    padding: 0 20px;
+    padding: 0 var(--space-5);
     font-size: 15px;
     font-weight: 500;
     height: 40px;

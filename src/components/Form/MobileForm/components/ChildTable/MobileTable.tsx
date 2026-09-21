@@ -16,7 +16,7 @@ const MobileTableContent = styled.div`
     gap: 10px;
     align-items: center;
     margin-bottom: 0;
-    padding: 11px 12px;
+    padding: 11px var(--space-3);
     border-bottom: 1px solid var(--color-border-secondary);
     background: var(--color-background-tertiary);
     border-radius: 8px 8px 0 0;
@@ -24,7 +24,7 @@ const MobileTableContent = styled.div`
       height: auto;
       min-height: 22px !important;
       padding: 0;
-      font-size: 13px;
+      font-size: var(--font-sm);
       font-weight: 700;
       color: var(--color-text-tertiary);
     }
@@ -69,7 +69,7 @@ const MobileTableContent = styled.div`
   .listRow {
     width: 100%;
     min-height: 44px;
-    padding: 4px 12px;
+    padding: var(--space-1) var(--space-3);
     border-bottom: 1px solid var(--color-border-secondary);
     background: var(--color-background-primary);
     cursor: pointer;
@@ -85,7 +85,7 @@ const MobileTableContent = styled.div`
     background-color: var(--color-background-hover);
   }
   .listRow.withDelete {
-    padding-left: 12px;
+    padding-left: var(--space-3);
   }
   .listMainCell {
     min-width: 0;
@@ -95,7 +95,7 @@ const MobileTableContent = styled.div`
   .listSubCell {
     min-width: 0;
     color: var(--color-text-secondary);
-    font-size: 13px;
+    font-size: var(--font-sm);
   }
   .listArrow {
     color: var(--color-text-tertiary);

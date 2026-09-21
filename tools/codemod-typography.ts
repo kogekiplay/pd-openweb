@@ -92,9 +92,20 @@ function mapValue(value: string, table: Record<number, string>, prefix: string):
   return [next, n];
 }
 
-/** 注释行不动 —— 改注释里的示例值没有意义，只会让 diff 变脏。 */
-function isComment(head: string): boolean {
-  return /^\s*(\/\/|\*|\/\*)/.test(head);
+/**
+ * 这条声明是不是在注释行里 —— 改注释里的示例值没意义，只会让 diff 变脏。
+ *
+ * 【为什么要按 offset 回溯，而不是把行首写进正则】
+ * 原来是 `(^|\n)([^\n]*?…prop:\s*)(值)`，靠捕获"行首到属性名"这段来判断注释。
+ * 代价是 `g` 标志下 **一行里只有第一条声明会被匹配** ——
+ * `'padding-top: 4px !important; padding-bottom: 4px !important;'`
+ * 这种单行多声明，后面那条永远映射不到。
+ * 全仓实测漏 10 处；更糟的是棘轮用同一个正则，于是这 10 处它也看不见，
+ * **"归零"是个假的零**。
+ */
+function isCommentAt(source: string, offset: number): boolean {
+  const lineStart = source.lastIndexOf('\n', offset) + 1;
+  return /^\s*(\/\/|\*|\/\*)/.test(source.slice(lineStart, offset));
 }
 
 const root: string = process.argv[2];
@@ -117,19 +128,19 @@ for (const file of walk(root)) {
   let out = src;
 
   // lookbehind 挡住 `-` / `@` / `$` / 词字符：不碰 `@xxx-font-size:` 这类 LESS 变量声明（见文件头）
-  out = out.replace(/(^|\n)([^\n]*?(?<![-\w@$])font-size:\s*)([^;{}\n]+)/g, (m, lead, head, value) => {
-    if (isComment(head)) return m;
+  out = out.replace(/(?<![-\w@$])(font-size:\s*)([^;{}\n]+)/g, (m, head, value, offset, str) => {
+    if (isCommentAt(str, offset)) return m;
     const [nv, n] = mapValue(value, FONT, 'font');
     if (n) {
       f += n;
       if (samples.length < 5) samples.push(`${path.relative(root, file)}: font-size:${value.trim()} -> ${nv.trim()}`);
     }
-    return lead + head + nv;
+    return head + nv;
   });
 
-  const spaceRe = new RegExp(`(^|\\n)([^\\n]*?(?<![-\\w@$])(?:${SPACE_PROPS}):\\s*)([^;{}\\n]+)`, 'g');
-  out = out.replace(spaceRe, (m, lead, head, value) => {
-    if (isComment(head)) return m;
+  const spaceRe = new RegExp(`(?<![-\\w@$])((?:${SPACE_PROPS}):\\s*)([^;{}\\n]+)`, 'g');
+  out = out.replace(spaceRe, (m, head, value, offset, str) => {
+    if (isCommentAt(str, offset)) return m;
     const [nv, n] = mapValue(value, SPACE, 'space');
     if (n) {
       s += n;
@@ -137,7 +148,7 @@ for (const file of walk(root)) {
         samples.push(`${path.relative(root, file)}: ${head.trim()}${value.trim()} -> ${head.trim()}${nv.trim()}`);
       }
     }
-    return lead + head + nv;
+    return head + nv;
   });
 
   if (f || s) {

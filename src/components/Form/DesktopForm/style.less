@@ -14,7 +14,7 @@
     width: 100%;
     position: relative;
     flex-direction: column;
-    padding: 6px 12px;
+    padding: 6px var(--space-3);
     box-sizing: border-box;
 
     .formItemHoverShow {
@@ -61,7 +61,7 @@
     height: 1px;
     background: var(--color-background-secondary);
     clear: both;
-    margin: 0 12px;
+    margin: 0 var(--space-3);
   }
 
   .customFormItemLabel {
@@ -74,7 +74,7 @@
     line-height: 24px;
     min-height: 24px;
     padding-top: 0px;
-    padding-bottom: 4px;
+    padding-bottom: var(--space-1);
     transform: translate3d(0, 0, 0);
 
     .controlLabelName {
@@ -199,7 +199,7 @@
           border-top: none;
         }
         i {
-          font-size: 13px;
+          font-size: var(--font-sm);
           color: var(--color-text-secondary);
         }
       }
@@ -208,7 +208,7 @@
     .maskIcon {
       position: absolute;
       right: 12px;
-      font-size: 16px;
+      font-size: var(--font-lg);
       top: 50%;
       transform: translateY(-50%);
     }
@@ -228,7 +228,7 @@
     .maskHoverTheme {
       cursor: pointer;
       i {
-        font-size: 16px;
+        font-size: var(--font-lg);
         vertical-align: middle;
       }
       &:hover {
@@ -308,21 +308,21 @@
       width: 100%;
       display: flex;
       flex-wrap: wrap;
-      margin-top: 8px;
+      margin-top: var(--space-2);
       input {
         min-width: 110px;
         max-width: 180px;
-        margin-right: 8px;
+        margin-right: var(--space-2);
         &.verifyCodeStyle {
           max-width: 100%;
           margin-right: 0;
-          margin-bottom: 8px;
+          margin-bottom: var(--space-2);
         }
       }
       .Button {
         width: 110px;
         padding: 0;
-        font-size: 13px;
+        font-size: var(--font-sm);
       }
     }
 
@@ -349,10 +349,10 @@
       box-sizing: border-box;
       height: 36px;
       border: 1px solid var(--color-border-primary);
-      font-size: 13px;
+      font-size: var(--font-sm);
       background: var(--color-background-secondary);
       border-radius: var(--radius-sm);
-      padding: 0 12px;
+      padding: 0 var(--space-3);
       width: 100%;
       outline: none;
       -webkit-appearance: none;
@@ -377,10 +377,10 @@
       box-sizing: border-box;
       height: 36px;
       border: 1px solid var(--color-background-secondary);
-      font-size: 13px;
+      font-size: var(--font-sm);
       background: var(--color-background-secondary);
       border-radius: var(--radius-sm);
-      padding: 0 12px;
+      padding: 0 var(--space-3);
       width: 100%;
       outline: none;
       -webkit-appearance: none;
@@ -451,7 +451,7 @@
 
       &.customFormFileBox:not(.controlDisabled) {
         color: var(--color-text-secondary);
-        padding: 8px 10px 7px;
+        padding: var(--space-2) 10px 7px;
       }
 
       &.dateTimeIcon {
@@ -528,7 +528,7 @@
       }
 
       &.customFormControlOCR {
-        padding: 0 16px;
+        padding: 0 var(--space-4);
         display: inline-flex !important;
         align-items: center;
         cursor: pointer;
@@ -559,7 +559,7 @@
       &.customFormControlSwitch {
         height: auto !important;
         .Checkbox {
-          margin-top: 8px;
+          margin-top: var(--space-2);
         }
       }
       .mobileFormSwitchDisabled {
@@ -590,7 +590,7 @@
     }
 
     .customFormTextareaBox {
-      padding: 8px 12px 6px;
+      padding: var(--space-2) var(--space-3) 6px;
       height: auto;
       white-space: pre-wrap;
       min-height: 36px;
@@ -598,11 +598,11 @@
 
     .customFormTextarea {
       box-sizing: border-box;
-      padding: 6px 12px;
+      padding: 6px var(--space-3);
       vertical-align: top;
       border-color: var(--color-primary);
       background: var(--color-background-primary);
-      font-size: 13px;
+      font-size: var(--font-sm);
     }
 
     .smallInput {
@@ -655,7 +655,7 @@
         display: inline-block;
         max-width: 50%;
         margin-right: 0;
-        padding-right: 20px;
+        padding-right: var(--space-5);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -682,7 +682,7 @@
     .Score-wrapper {
       .StarScore-item {
         i {
-          font-size: 20px;
+          font-size: var(--font-2xl);
         }
       }
     }
@@ -698,11 +698,11 @@
       align-items: center;
       outline: none;
       width: max-content;
-      padding: 0 16px;
+      padding: 0 var(--space-4);
       border: 1px solid var(--color-border-primary);
       border-radius: var(--radius-sm);
       font-weight: 500;
-      font-size: 13px;
+      font-size: var(--font-sm);
       &:hover {
         background-color: var(--color-background-hover);
       }
@@ -792,13 +792,13 @@
       &.ming.CheckboxGroup {
         flex-direction: row !important;
         .Checkbox {
-          margin-right: 20px !important;
+          margin-right: var(--space-5) !important;
         }
       }
       .RadioGroupCon {
         flex-direction: row !important;
         .Radio {
-          margin-right: 20px !important;
+          margin-right: var(--space-5) !important;
         }
       }
     }
@@ -822,7 +822,7 @@
           }
 
           &-box {
-            margin-right: 8px;
+            margin-right: var(--space-2);
             vertical-align: top;
             margin-top: 3px;
           }
@@ -843,7 +843,7 @@
       .horizonArrangementRadio {
         flex-direction: row !important;
         .Radio {
-          margin-right: 20px !important;
+          margin-right: var(--space-5) !important;
         }
       }
     }
@@ -861,7 +861,7 @@
         display: flex;
         min-width: 0;
         margin-bottom: 10px;
-        margin-right: 20px;
+        margin-right: var(--space-5);
 
         &--disabled {
           color: var(--color-text-primary);
@@ -872,7 +872,7 @@
         }
 
         &-box {
-          margin-right: 8px;
+          margin-right: var(--space-2);
           vertical-align: top;
           margin-top: 3px;
           min-width: 18px;
@@ -894,7 +894,7 @@
       border-radius: 50%;
       display: inline-flex;
       vertical-align: top;
-      margin: 4px 0;
+      margin: var(--space-1) 0;
       align-items: center;
       justify-content: center;
     }
@@ -903,7 +903,7 @@
       height: 24px;
       line-height: 24px;
       border-radius: 12px;
-      padding: 0 12px;
+      padding: 0 var(--space-3);
       display: inline-block;
       vertical-align: top;
       max-width: 95%;
@@ -912,9 +912,9 @@
 
     .customAntPicker {
       height: 36px;
-      padding: 0 12px;
+      padding: 0 var(--space-3);
       border: 1px solid var(--color-background-secondary);
-      font-size: 13px;
+      font-size: var(--font-sm);
       background: var(--color-background-secondary);
       border-radius: var(--radius-sm);
       transition: none;
@@ -1105,11 +1105,11 @@
   z-index: 3;
   left: 0;
   color: var(--color-white);
-  padding: 3px 8px;
+  padding: 3px var(--space-2);
   white-space: nowrap;
   background: var(--color-error);
-  font-size: 12px;
-  margin: 0 12px;
+  font-size: var(--font-xs);
+  margin: 0 var(--space-3);
   width: max-content;
   max-width: 400px;
 
@@ -1146,7 +1146,7 @@
   box-sizing: border-box;
   display: inline-block;
   height: 24px;
-  font-size: 13px;
+  font-size: var(--font-sm);
   align-items: center;
   vertical-align: middle !important;
   max-width: 100%;
@@ -1208,7 +1208,7 @@ input.customFormControlBox:disabled {
   &.ant-select-multiple {
     .ant-select-selection-item {
       border-radius: 12px;
-      padding: 0 12px !important;
+      padding: 0 var(--space-3) !important;
       line-height: 24px !important;
       background-color: var(--color-border-secondary) !important;
       border-color: var(--color-border-secondary) !important;
@@ -1232,7 +1232,7 @@ input.customFormControlBox:disabled {
   .ant-select-selection-item,
   .ant-select-placeholder {
     line-height: 24px !important;
-    font-size: 13px !important;
+    font-size: var(--font-sm) !important;
   }
 
   // v5 的内层没有内边距，选中值那个 24px 高的胶囊靠自己的 mTop5/mBottom5 撑出
@@ -1304,8 +1304,8 @@ input.customFormControlBox:disabled {
     height: 20px;
     line-height: 20px;
     box-sizing: initial;
-    padding-top: 8px;
-    font-size: 13px;
+    padding-top: var(--space-2);
+    font-size: var(--font-sm);
   }
 
   .anticon {
@@ -1337,7 +1337,7 @@ input.customFormControlBox:disabled {
    user-select: all，一点就整段选中，所以特别显眼。圆角挪到 WithBG 即可。 */
 .customAntDropdownTitleWithBG {
   border-radius: 12px;
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   box-sizing: border-box;
 }
 
@@ -1347,7 +1347,7 @@ input.customFormControlBox:disabled {
   background: var(--color-border-secondary) !important;
   display: inline-flex;
   align-items: center;
-  margin: 3px 8px 3px 0;
+  margin: 3px var(--space-2) 3px 0;
   padding-right: 10px;
   vertical-align: top;
   position: relative;

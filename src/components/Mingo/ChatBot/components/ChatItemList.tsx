@@ -18,15 +18,15 @@ const Con = styled(ScrollView)`
   background: var(--color-background-primary);
   .header {
     height: 50px;
-    padding: 0 10px 0 16px;
+    padding: 0 10px 0 var(--space-4);
     .title {
-      font-size: 18px;
+      font-size: var(--font-xl);
       font-weight: bold;
     }
     .closeIcon {
       width: 30px;
       height: 30px;
-      font-size: 18px;
+      font-size: var(--font-xl);
       color: var(--color-text-secondary);
     }
   }
@@ -37,11 +37,11 @@ const Con = styled(ScrollView)`
       border-radius: var(--radius-sm);
       padding: 0 10px;
       height: 45px;
-      font-size: 14px;
+      font-size: var(--font-md);
       color: var(--color-text-primary);
       .updateTime {
         margin-left: 6px;
-        font-size: 12px;
+        font-size: var(--font-xs);
         color: var(--color-text-tertiary);
       }
       .operateIcon {
@@ -49,7 +49,7 @@ const Con = styled(ScrollView)`
         height: 24px;
         border-radius: var(--radius-sm);
         background: var(--color-background-card);
-        font-size: 14px;
+        font-size: var(--font-md);
         color: var(--color-text-secondary);
         cursor: pointer;
         display: none;
@@ -67,8 +67,8 @@ const Con = styled(ScrollView)`
       }
     }
     .emptyStatus {
-      padding: 12px 0;
-      font-size: 14px;
+      padding: var(--space-3) 0;
+      font-size: var(--font-md);
       color: var(--color-text-tertiary);
       text-align: center;
     }

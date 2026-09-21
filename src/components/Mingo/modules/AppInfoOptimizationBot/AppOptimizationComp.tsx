@@ -18,7 +18,7 @@ const PopupContainer = styled.div`
   bottom: 0;
   width: 400px;
   right: 0;
-  padding: 0 20px;
+  padding: 0 var(--space-5);
   background-color: var(--color-background-primary);
   display: flex;
   flex-direction: column;
@@ -31,7 +31,7 @@ const PopupContainer = styled.div`
     font-size: 17px;
     font-weight: bold;
     .closeIcon {
-      font-size: 20px;
+      font-size: var(--font-2xl);
       color: var(--color-text-secondary);
       cursor: pointer;
       &:hover {
@@ -60,15 +60,15 @@ const PopupContainer = styled.div`
           height: 30px;
           border-radius: 30px;
           cursor: pointer;
-          font-size: 13px;
+          font-size: var(--font-sm);
           display: flex;
           align-items: center;
           color: var(--color-text-primary);
           border: 1px solid var(--color-border-primary);
           .selectedIcon {
             color: var(--color-primary);
-            font-size: 14px;
-            margin-right: 4px;
+            font-size: var(--font-md);
+            margin-right: var(--space-1);
           }
           &:not(.selected):hover {
             background-color: var(--color-background-secondary);
@@ -83,9 +83,9 @@ const PopupContainer = styled.div`
         display: flex;
         align-items: center;
         .switchLabel {
-          font-size: 13px;
+          font-size: var(--font-sm);
           color: var(--color-text-secondary);
-          margin-right: 4px;
+          margin-right: var(--space-1);
         }
       }
     }
@@ -128,7 +128,7 @@ const PopupContainer = styled.div`
 const EntryWrap = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-3);
   user-select: none;
 `;
 
@@ -145,11 +145,11 @@ const EntryCard = styled.div`
     position: relative;
     z-index: 1;
     height: 100%;
-    padding: 12px 16px;
+    padding: var(--space-3) var(--space-4);
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 4px;
+    gap: var(--space-1);
   }
 
   .title {
@@ -158,7 +158,7 @@ const EntryCard = styled.div`
     color: var(--color-text-primary);
   }
   .desc {
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-secondary);
   }
 

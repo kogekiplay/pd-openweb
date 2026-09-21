@@ -76,7 +76,7 @@ const HorizontalChildTableContent = styled.div`
   .horizontalScrollContent {
     flex: 1;
     min-height: 0;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     -webkit-overflow-scrolling: touch;
     scrollbar-width: thin;
     scrollbar-color: var(--color-text-disabled) transparent;

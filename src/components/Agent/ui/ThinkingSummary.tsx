@@ -5,7 +5,7 @@ import { MarkdownText } from './MarkdownText';
 import { colors, spacing } from './tokens';
 
 const Root = styled.section`
-  margin: 12px 0 6px;
+  margin: var(--space-3) 0 6px;
 `;
 
 const Trigger = styled.button`
@@ -19,7 +19,7 @@ const Trigger = styled.button`
   background: transparent;
   padding: 0;
   color: ${colors.textMuted};
-  font-size: 13px;
+  font-size: var(--font-sm);
   font-weight: 400;
   line-height: 20px;
   cursor: pointer;
@@ -80,11 +80,11 @@ const Duration = styled.span`
 `;
 
 const Content = styled.div`
-  margin-top: 8px;
-  padding-left: 20px;
+  margin-top: var(--space-2);
+  padding-left: var(--space-5);
   border-left: 1px solid ${colors.border};
   color: ${colors.textMuted};
-  font-size: 13px;
+  font-size: var(--font-sm);
   line-height: 20px;
   /* 思考内容统一限高，超出滚动 */
   max-height: 220px;
@@ -98,7 +98,7 @@ const Content = styled.div`
   }
 
   p {
-    margin: 0 0 8px;
+    margin: 0 0 var(--space-2);
   }
 
   p:last-child {

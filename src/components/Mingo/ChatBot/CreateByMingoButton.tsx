@@ -12,10 +12,10 @@ const Con = styled.div`
   line-height: 34px;
   padding: 0 15px;
   color: var(--color-text-title);
-  font-size: 14px;
-  margin-top: 32px;
+  font-size: var(--font-md);
+  margin-top: var(--space-8);
   .icon {
-    font-size: 18px;
+    font-size: var(--font-xl);
     color: var(--color-mingo);
   }
   &:hover {

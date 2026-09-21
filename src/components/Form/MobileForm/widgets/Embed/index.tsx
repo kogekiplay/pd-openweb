@@ -22,7 +22,7 @@ const EmbedWrap = styled.div`
     ${props =>
       props.isMobileView ? `height: ${props.height}px;position: absolute; transform: translate(0px, 0px);` : ''}
     &.chartPadding {
-      padding: 8px 16px 16px;
+      padding: var(--space-2) var(--space-4) var(--space-4);
       position: relative;
       z-index: 1;
     }

@@ -25,7 +25,7 @@ const Wrap = styled.div`
     }
   }
   .resumeItem {
-    padding: 10px 8px;
+    padding: 10px var(--space-2);
     line-height: 30px;
     border-bottom: 1px dashed var(--color-border-primary);
     word-wrap: break-word;

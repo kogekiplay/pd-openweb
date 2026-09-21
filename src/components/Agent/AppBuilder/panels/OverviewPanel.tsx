@@ -8,7 +8,7 @@ const Wrap = styled.div`
   background: var(--color-background-card);
   border: 1px solid var(--color-border-secondary);
   border-radius: 12px;
-  padding: 28px 32px;
+  padding: 28px var(--space-8);
   box-shadow: var(--shadow-sm);
 `;
 

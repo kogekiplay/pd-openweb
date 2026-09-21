@@ -25,10 +25,10 @@ const MenuWrap = styled(Menu)`
 `;
 
 const IconWrap = styled(Icon)`
-  font-size: 20px;
+  font-size: var(--font-2xl);
   color: var(--color-text-tertiary);
   cursor: pointer;
-  padding: 4px;
+  padding: var(--space-1);
 
   &:hover {
     color: var(--color-primary);
@@ -42,12 +42,12 @@ const MobileLangContent = styled.div`
 
   .langList {
     flex: 1;
-    padding: 0 20px 20px;
+    padding: 0 var(--space-5) var(--space-5);
   }
 
   .langItem {
     height: 50px;
-    font-size: 16px;
+    font-size: var(--font-lg);
     font-weight: 600;
 
     .doneIcon {

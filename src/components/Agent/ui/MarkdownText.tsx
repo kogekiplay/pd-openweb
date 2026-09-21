@@ -54,7 +54,7 @@ md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
 
 const Root = styled.div`
   color: var(--color-text-primary);
-  font-size: 14px;
+  font-size: var(--font-md);
   line-height: 24px;
   word-break: break-word;
 
@@ -78,30 +78,30 @@ const Root = styled.div`
     line-height: 1.4;
   }
   h1 {
-    font-size: 20px;
-    margin: 24px 0 16px;
+    font-size: var(--font-2xl);
+    margin: var(--space-6) 0 var(--space-4);
   }
   h2 {
-    font-size: 18px;
-    margin: 24px 0 16px;
+    font-size: var(--font-xl);
+    margin: var(--space-6) 0 var(--space-4);
   }
   h3 {
-    font-size: 16px;
-    margin: 20px 0 12px;
+    font-size: var(--font-lg);
+    margin: var(--space-5) 0 var(--space-3);
   }
   h4,
   h5,
   h6 {
-    font-size: 14px;
-    margin: 16px 0 8px;
+    font-size: var(--font-md);
+    margin: var(--space-4) 0 var(--space-2);
   }
 
   p {
-    margin: 8px 0;
+    margin: var(--space-2) 0;
   }
 
   hr {
-    margin: 16px 0;
+    margin: var(--space-4) 0;
     border: none;
     border-top: 1px solid var(--color-border-secondary);
   }
@@ -121,10 +121,10 @@ const Root = styled.div`
 
   ul,
   ol {
-    margin: 8px 0;
-    padding-left: 24px;
+    margin: var(--space-2) 0;
+    padding-left: var(--space-6);
     /* 全局 basic.css 给 ul/ol 直接设了 font-size:13px / line-height:1.5，这里拉回与正文一致 */
-    font-size: 14px;
+    font-size: var(--font-md);
     line-height: 24px;
     color: var(--color-text-primary);
   }
@@ -138,7 +138,7 @@ const Root = styled.div`
     display: list-item;
     /* 全局 basic.css 把 li 重置为 list-style: none，这里继承父级 ul/ol 的 disc/decimal 找回 marker */
     list-style: inherit;
-    margin: 4px 0;
+    margin: var(--space-1) 0;
     line-height: 24px;
   }
   li > p {
@@ -146,7 +146,7 @@ const Root = styled.div`
   }
   li > ul,
   li > ol {
-    margin: 4px 0;
+    margin: var(--space-1) 0;
   }
 
   /* 任务列表项：去掉项目符号，checkbox 与文字基线对齐 */
@@ -163,8 +163,8 @@ const Root = styled.div`
   }
 
   blockquote {
-    margin: 12px 0;
-    padding: 4px 12px;
+    margin: var(--space-3) 0;
+    padding: var(--space-1) var(--space-3);
     border-left: 3px solid var(--color-border-primary);
     color: var(--color-text-secondary);
     background: var(--color-background-tertiary);
@@ -172,7 +172,7 @@ const Root = styled.div`
   }
   blockquote blockquote {
     background: transparent;
-    margin: 4px 0;
+    margin: var(--space-1) 0;
     border-left-color: var(--color-border-secondary);
   }
   blockquote blockquote blockquote {
@@ -200,13 +200,13 @@ const Root = styled.div`
 
   table {
     width: 100%;
-    margin: 12px 0;
+    margin: var(--space-3) 0;
     border-collapse: collapse;
-    font-size: 14px;
+    font-size: var(--font-md);
   }
   th,
   td {
-    padding: 8px 12px;
+    padding: var(--space-2) var(--space-3);
     border: 1px solid var(--color-border-secondary);
     text-align: left;
     color: var(--color-text-primary);
@@ -219,7 +219,7 @@ const Root = styled.div`
   img {
     max-width: 100%;
     border-radius: 6px;
-    margin: 8px 0;
+    margin: var(--space-2) 0;
   }
 `;
 

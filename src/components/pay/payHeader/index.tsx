@@ -9,7 +9,7 @@ const PayHeaderWrap = styled.div`
   top: 0;
   left: 0;
   width: 100%;
-  padding-left: 32px;
+  padding-left: var(--space-8);
   height: 60px;
   background-color: var(--color-background-primary);
   z-index: 10;
@@ -25,8 +25,8 @@ const PayHeaderWrap = styled.div`
     height: 32px;
     line-height: 32px;
     color: var(--color-text-title);
-    padding-left: 20px;
-    margin-left: 20px;
+    padding-left: var(--space-5);
+    margin-left: var(--space-5);
     font-size: 17px;
     border-left: 1px solid var(--color-border-primary);
   }

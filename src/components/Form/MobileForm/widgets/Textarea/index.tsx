@@ -48,7 +48,7 @@ const TextareaWrap = styled.div`
     box-sizing: border-box;
     border: 1px solid var(--color-border-primary);
     border-radius: var(--radius-sm);
-    padding: 6px 12px;
+    padding: 6px var(--space-3);
     width: 100%;
     line-height: 1.5;
     vertical-align: top;

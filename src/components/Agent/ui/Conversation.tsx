@@ -24,19 +24,19 @@ const Root = styled(ScrollView)`
   flex: 1;
   min-height: 0;
   overflow: hidden;
-  padding: 0 16px;
+  padding: 0 var(--space-4);
 
   @media (max-width: 768px) {
-    padding: 16px 20px 0;
+    padding: var(--space-4) var(--space-5) 0;
   }
 `;
 
 const Content = styled.div`
   width: 100%;
-  padding: 20px 0 30px;
+  padding: var(--space-5) 0 30px;
 
   @media (max-width: 768px) {
-    padding: 20px 0;
+    padding: var(--space-5) 0;
   }
 `;
 
@@ -46,14 +46,14 @@ const Empty = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 24px 16px;
+  padding: var(--space-6) var(--space-4);
   text-align: center;
 `;
 
 const EmptyTitle = styled.div`
   margin-bottom: ${spacing.sm};
   color: ${colors.text};
-  font-size: 18px;
+  font-size: var(--font-xl);
   font-weight: 600;
   line-height: 26px;
 `;
@@ -61,7 +61,7 @@ const EmptyTitle = styled.div`
 const EmptyDescription = styled.div`
   max-width: 480px;
   color: ${colors.textMuted};
-  font-size: 14px;
+  font-size: var(--font-md);
   line-height: 22px;
 `;
 

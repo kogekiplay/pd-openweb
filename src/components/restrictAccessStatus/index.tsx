@@ -11,7 +11,7 @@ const RestrictAccessStatusWrap = styled.div`
   align-items: center;
   justify-content: center;
   background-color: var(--color-background-primary);
-  padding: 0 24px;
+  padding: 0 var(--space-6);
   text-align: center;
   img {
     width: 100px;

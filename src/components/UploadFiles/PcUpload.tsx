@@ -9,11 +9,11 @@ import functionWrap from 'ming-ui/components/FunctionWrap';
 
 const PcUploadModalWrap = styled(Modal)`
   .bgCloseIcon {
-    font-size: 24px;
+    font-size: var(--font-3xl);
     color: #fff !important;
   }
   .closeIcon {
-    font-size: 24px;
+    font-size: var(--font-3xl);
     margin-right: 10px;
     margin-top: 10px;
     display: inline-block;
@@ -30,7 +30,7 @@ const PcUploadModalWrap = styled(Modal)`
       position: absolute;
       top: 10px;
       left: 24px;
-      font-size: 16px;
+      font-size: var(--font-lg);
       font-weight: 500;
       color: var(--color-text-primary);
     }
@@ -40,13 +40,13 @@ const PcUploadModalWrap = styled(Modal)`
       color: var(--color-text-secondary);
     }
     .emptyTitle {
-      font-size: 16px;
+      font-size: var(--font-lg);
       font-weight: 500;
       margin: 10px 0;
       color: var(--color-text-primary);
     }
     .emptyDesc {
-      font-size: 14px;
+      font-size: var(--font-md);
       color: var(--color-text-secondary);
     }
 
@@ -146,17 +146,17 @@ const PcUploadModalWrap = styled(Modal)`
         i {
           font-size: 26px;
           &:first-child {
-            margin-right: 12px;
+            margin-right: var(--space-3);
           }
           &:last-child {
-            margin-left: 12px;
+            margin-left: var(--space-3);
           }
         }
       }
     }
     .previewInfo {
       width: 100%;
-      margin-top: 12px;
+      margin-top: var(--space-3);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -168,7 +168,7 @@ const PcUploadModalWrap = styled(Modal)`
         }
       }
       .icon {
-        font-size: 18px;
+        font-size: var(--font-xl);
         color: var(--color-error);
         cursor: pointer;
         &:hover {
@@ -179,12 +179,12 @@ const PcUploadModalWrap = styled(Modal)`
 
     .previewFooter {
       width: 100%;
-      margin-top: 24px;
+      margin-top: var(--space-6);
       display: flex;
       align-items: center;
       justify-content: flex-end;
       button:first-child {
-        margin-right: 16px;
+        margin-right: var(--space-4);
       }
     }
   }

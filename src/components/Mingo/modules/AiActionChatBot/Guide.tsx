@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import chatBotDefaultIcon from 'src/pages/Chatbot/assets/profile.png';
 
 const GuideWrap = styled.div`
-  padding: 0 16px;
+  padding: 0 var(--space-4);
   height: 50px;
   background: var(--color-background-primary);
   box-shadow: 0px 4px 8px 1px rgba(0, 0, 0, 0.2);

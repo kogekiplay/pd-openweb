@@ -9,7 +9,7 @@
     align-items: center;
     border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-secondary);
-    padding: 0 8px 0 11px;
+    padding: 0 var(--space-2) 0 11px;
     margin: 10px 0;
     background: var(--color-background-primary);
     position: relative;
@@ -29,13 +29,13 @@
     & > .type-icon {
       width: 18px;
       height: 20px;
-      padding: 8px 9px 8px 0;
+      padding: var(--space-2) 9px var(--space-2) 0;
       box-sizing: initial;
       & > i {
         display: block;
         width: 18px;
         height: 20px;
-        font-size: 16px;
+        font-size: var(--font-lg);
         line-height: 20px;
         text-align: center;
         color: var(--color-text-tertiary);
@@ -47,9 +47,9 @@
       display: flex;
       box-sizing: border-box;
       height: 36px;
-      padding: 8px 11px;
+      padding: var(--space-2) 11px;
       padding-left: 0;
-      font-size: 14px;
+      font-size: var(--font-md);
       line-height: 20px;
       text-decoration: none;
       color: var(--color-text-primary);
@@ -66,7 +66,7 @@
         &.text-a,
         &.text-b {
           max-width: 40%;
-          padding-left: 16px;
+          padding-left: var(--space-4);
           box-sizing: border-box;
           color: var(--color-text-primary) !important;
         }
@@ -95,7 +95,7 @@
       line-height: 1em;
       top: -11px;
       right: -10px;
-      font-size: 20px;
+      font-size: var(--font-2xl);
       color: var(--color-text-secondary);
       &:hover {
         color: var(--color-text-title);

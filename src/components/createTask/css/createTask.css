@@ -33,7 +33,7 @@
 }
 .createTaskLabel {
   color: var(--color-text-tertiary);
-  font-size: 14px;
+  font-size: var(--font-md);
   text-align: right;
   position: absolute;
   top: 0;
@@ -62,7 +62,7 @@
 }
 .createTaskNetwork .icon-arrow-down-border {
   display: inline-block;
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: var(--color-text-tertiary);
   vertical-align: top;
   margin-left: 5px;
@@ -90,7 +90,7 @@
   cursor: pointer;
 }
 .createTaskNetworkList li i {
-  font-size: 14px;
+  font-size: var(--font-md);
   width: 20px;
   display: inline-block;
 }
@@ -141,7 +141,7 @@
 }
 .createTaskFolderName {
   width: 181px;
-  margin-left: 16px;
+  margin-left: var(--space-4);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -151,7 +151,7 @@
 }
 .txtTaskFolder {
   height: 37px;
-  padding: 8px 5px;
+  padding: var(--space-2) 5px;
   width: 207px;
   margin-left: 10px;
   border-width: 1px;
@@ -212,11 +212,11 @@
 
 .linkageFolder .icon-folder-private,
 .linkageFolder .icon-folder-public {
-  font-size: 16px;
+  font-size: var(--font-lg);
   margin-left: 5px;
   display: inline-block;
   vertical-align: top;
-  margin-top: 12px;
+  margin-top: var(--space-3);
 }
 
 .linkageFolder .folderMemberCount {
@@ -224,7 +224,7 @@
   right: 5px;
   top: 0;
   line-height: 40px;
-  font-size: 14px;
+  font-size: var(--font-md);
   color: var(--color-text-tertiary);
 }
 .linkageFolder li.hover .textTertiary {
@@ -254,7 +254,7 @@
 #txtTaskName {
   height: 38px;
   width: 100%;
-  padding: 8px;
+  padding: var(--space-2);
   border-width: 1px;
   border-style: solid;
 }
@@ -294,7 +294,7 @@
   color: var(--color-text-title) !important;
 }
 .taskTabs {
-  margin-top: 20px;
+  margin-top: var(--space-5);
 }
 .taskTabs span {
   border-bottom: 1px solid var(--color-text-tertiary);
@@ -306,7 +306,7 @@
   color: var(--color-text-tertiary) !important;
 }
 #createTaskDesc {
-  margin-top: 20px;
+  margin-top: var(--space-5);
 }
 #createTaskDesc .createTaskLabel {
   top: 10px;
@@ -325,7 +325,7 @@
 }
 #Attachment_updater_createTask {
   margin-top: 10px;
-  font-size: 13px;
+  font-size: var(--font-sm);
 }
 #Attachment_updater_createTask .uploadDocList,
 #Attachment_updater_createTask .uploadPicList {
@@ -345,8 +345,8 @@
 .createTaskAddMemberBox .imgMemberBox {
   display: inline-block;
   vertical-align: top;
-  margin-right: 8px;
-  margin-bottom: 8px;
+  margin-right: var(--space-2);
+  margin-bottom: var(--space-2);
 }
 .createTaskAddMemberBox .removeTaskMember {
   cursor: pointer;
@@ -359,7 +359,7 @@
   margin-right: -32px;
   text-align: center;
   color: var(--color-white);
-  font-size: 16px;
+  font-size: var(--font-lg);
   opacity: 0.7;
 }
 .createTaskAddMemberBox .imgMemberBox:hover .removeTaskMember {
@@ -405,7 +405,7 @@
   border-color: var(--color-text-tertiary) !important;
 }
 #createTaskStage {
-  margin-top: 16px;
+  margin-top: var(--space-4);
 }
 #createTaskStage .createTaskLabel {
   top: 10px;
@@ -432,7 +432,7 @@
   position: absolute;
   top: 4px;
   right: 10px;
-  font-size: 14px;
+  font-size: var(--font-md);
 }
 #createTaskStage .csList {
   width: 100%;
@@ -446,7 +446,7 @@
 }
 .createTaskOperator {
   margin-top: 40px;
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-tertiary);
   padding-top: 11px;
   height: 30px;

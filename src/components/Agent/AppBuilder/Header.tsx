@@ -16,7 +16,7 @@ const Wrap = styled.div`
   min-height: 58px;
   display: flex;
   align-items: center;
-  padding: 0 24px;
+  padding: 0 var(--space-6);
   /* 预览 overlay 的蒙层背景是半透明白（--color-background-overlay-white），头部需自带不透明底，
      否则会透出底层 AppBuilder 的 Sidebar logo / 主头部（标题、版本号），头部内容叠在一起。 */
   ${p => p.$inOverlay && 'background: var(--color-background-secondary);'}
@@ -44,7 +44,7 @@ const BackBtn = styled.button`
   transition: all ${transitions.hover};
 
   .icon {
-    font-size: 20px;
+    font-size: var(--font-2xl);
     line-height: 1;
   }
 
@@ -59,7 +59,7 @@ const Right = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 12px;
+  gap: var(--space-3);
 `;
 
 const Center = styled.div`
@@ -75,7 +75,7 @@ const Breadcrumb = styled.div`
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 14px;
+  font-size: var(--font-md);
   color: var(--color-text-tertiary);
   min-width: 0;
 `;
@@ -89,7 +89,7 @@ const BreadcrumbItem = styled.span`
 `;
 
 const TitleText = styled.span`
-  font-size: 14px;
+  font-size: var(--font-md);
   font-weight: 600;
   color: var(--color-text-primary);
   white-space: nowrap;
@@ -99,17 +99,17 @@ const TitleText = styled.span`
 `;
 
 const BreadcrumbSep = styled(Icon)`
-  font-size: 18px !important;
+  font-size: var(--font-xl) !important;
   color: var(--color-text-tertiary);
   flex-shrink: 0;
 `;
 
 // 「生成应用」左侧的 build 费用预估：13px / 次要色；未返回（加载中或取不到）时显示「计算中…」
 const EstimateText = styled.span`
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-secondary);
   white-space: nowrap;
-  margin-right: 16px;
+  margin-right: var(--space-4);
 `;
 
 const CHIP_THEME = {
@@ -125,9 +125,9 @@ const StatusChip = styled.span`
   justify-content: center;
   min-width: 60px;
   height: 22px;
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   border-radius: 999px;
-  font-size: 12px;
+  font-size: var(--font-xs);
   font-weight: 500;
   line-height: 20px;
   background: ${p => (CHIP_THEME[p.$variant] || CHIP_THEME.building).bg};
@@ -139,12 +139,12 @@ const GenerateBtn = styled.button`
   position: relative;
   overflow: hidden;
   height: 36px;
-  padding: 0 24px;
+  padding: 0 var(--space-6);
   border-radius: var(--radius-sm);
   border: none;
   background: var(--color-mingo);
   color: var(--color-text-inverse);
-  font-size: 14px;
+  font-size: var(--font-md);
   font-weight: 500;
   /* 文案在窄头部下不折行：英文「Create Application」较长，需保持单行并不被压缩 */
   white-space: nowrap;
@@ -203,7 +203,7 @@ const CloseBtn = styled.button`
   transition: all ${transitions.hover};
 
   .icon {
-    font-size: 18px;
+    font-size: var(--font-xl);
     line-height: 1;
   }
 

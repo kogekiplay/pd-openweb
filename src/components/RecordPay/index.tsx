@@ -11,7 +11,7 @@ import { formatNumberThousand } from 'src/utils/control';
 
 const PayWrap = styled.div`
   color: var(--color-text-primary);
-  padding: 12px 25px;
+  padding: var(--space-3) 25px;
   background: rgba(76, 175, 80, 0.1);
   z-index: 4;
   position: sticky;

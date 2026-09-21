@@ -12,7 +12,7 @@ const Con = styled.div`
   position: relative;
   border-radius: 8px;
   border: 1px solid var(--color-border-primary);
-  padding: 16px 14px 14px;
+  padding: var(--space-4) 14px 14px;
   background-color: var(--color-background-primary);
   &:not(.disabled) {
     .widget-item:hover {
@@ -23,12 +23,12 @@ const Con = styled.div`
     }
   }
   .generate-status {
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-text-secondary);
     margin: -3px 0px;
   }
   .generated-count {
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-text-title);
     .selectedIcon {
       margin-right: 6px;
@@ -45,7 +45,7 @@ const Con = styled.div`
       }
       .icon-ok {
         visibility: hidden;
-        font-size: 18px;
+        font-size: var(--font-xl);
         color: var(--color-white);
       }
       &.disabled {
@@ -106,7 +106,7 @@ export const AddButton = styled.div`
   text-align: center;
   background: var(--color-mingo);
   border-radius: 36px;
-  font-size: 14px;
+  font-size: var(--font-md);
   color: var(--color-white);
   cursor: pointer;
   font-weight: bold;

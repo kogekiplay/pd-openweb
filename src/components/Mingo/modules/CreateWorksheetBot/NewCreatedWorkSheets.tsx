@@ -17,14 +17,14 @@ const EditWorkSheetItem = styled.div`
   border: 1px solid var(--color-border-secondary);
   padding: 10px;
   cursor: pointer;
-  margin-bottom: 8px;
+  margin-bottom: var(--space-2);
   .name {
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-text-title);
     line-clamp: 1;
   }
   .description {
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-tertiary);
     line-clamp: 2;
   }

@@ -6,7 +6,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 const TreeWrap = styled.div`
   flex: 1;
   min-height: 0;
-  margin-top: 12px;
+  margin-top: var(--space-3);
   overflow-y: auto;
   .treeRow {
     display: flex;
@@ -14,7 +14,7 @@ const TreeWrap = styled.div`
     justify-content: space-between;
     padding: 0 10px;
     height: 40px;
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-title);
     cursor: pointer;
     &:not(.isAppRow):hover {
@@ -51,7 +51,7 @@ const TreeWrap = styled.div`
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-right: 8px;
+      margin-right: var(--space-2);
     }
     .arrowIcon {
       color: var(--color-text-tertiary);
@@ -67,7 +67,7 @@ const TreeWrap = styled.div`
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-right: 8px;
+      margin-right: var(--space-2);
       svg {
         width: 16px;
         height: 16px;
@@ -81,10 +81,10 @@ const TreeWrap = styled.div`
       text-overflow: ellipsis;
     }
     .rowRight {
-      margin-left: 12px;
+      margin-left: var(--space-3);
       flex-shrink: 0;
       .autoStarIcon.icon {
-        font-size: 16px;
+        font-size: var(--font-lg);
         color: var(--color-text-disabled);
         &:hover {
           color: var(--color-mingo);

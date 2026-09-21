@@ -133,14 +133,14 @@ const GroupHeader = styled.div`
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 16px;
+  font-size: var(--font-lg);
   font-weight: 600;
   color: var(--color-text-title);
   line-height: 24px;
-  margin-top: 4px;
+  margin-top: var(--space-1);
 
   .icon {
-    font-size: 20px !important;
+    font-size: var(--font-2xl) !important;
     color: var(--color-text-tertiary);
   }
 `;
@@ -150,7 +150,7 @@ const ItemCard = styled.div`
   background: var(--color-background-card);
   border: 1px solid var(--color-border-secondary);
   border-radius: 13px;
-  padding: 16px 20px;
+  padding: var(--space-4) var(--space-5);
   padding-right: 40px;
   box-shadow: var(--shadow-sm);
 
@@ -188,13 +188,13 @@ const ItemIcon = styled.div`
   }
 
   .icon {
-    font-size: 24px !important;
+    font-size: var(--font-3xl) !important;
     color: ${p => p.$color || 'var(--color-text-primary)'};
   }
 `;
 
 const ItemName = styled.div`
-  font-size: 16px;
+  font-size: var(--font-lg);
   font-weight: 600;
   color: var(--color-text-primary);
   line-height: 24px;
@@ -213,24 +213,24 @@ const TypeBadge = styled.span`
   border: 1px solid ${p => p.$border || 'var(--color-border-secondary)'};
   /* 同色淡底：用类型语义色的浅底变量，胶囊与文字/描边色系统一 */
   background: ${p => p.$bg || 'transparent'};
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: ${p => p.$color || 'var(--color-text-tertiary)'};
   white-space: nowrap;
   flex-shrink: 0;
 `;
 
 const Description = styled.div`
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-secondary);
   line-height: 20px;
-  margin-top: 8px;
+  margin-top: var(--space-2);
 `;
 
 const ChipsRow = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 12px;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
 `;
 
 const FieldChip = styled.div`
@@ -238,17 +238,17 @@ const FieldChip = styled.div`
   align-items: center;
   gap: 6px;
   height: 28px;
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   border-radius: var(--radius-sm);
   border: 1px solid ${FIELD_BORDER};
   /* 卡片内标签统一：12px + 灰底 */
   background: var(--color-background-secondary);
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: var(--color-text-primary);
   white-space: nowrap;
 
   .icon {
-    font-size: 14px !important;
+    font-size: var(--font-md) !important;
     color: var(--color-text-tertiary);
   }
 `;
@@ -258,11 +258,11 @@ const BottomRow = styled.div`
   align-items: center;
   flex-wrap: wrap;
   gap: 6px;
-  margin-top: 12px;
+  margin-top: var(--space-3);
 `;
 
 const RowLabel = styled.span`
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: #707070;
   white-space: nowrap;
 `;
@@ -271,10 +271,10 @@ const Pill = styled.div`
   display: inline-flex;
   align-items: center;
   height: 26px;
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   border-radius: 13px;
   background: var(--color-background-secondary);
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: var(--color-text-title);
   white-space: nowrap;
 `;

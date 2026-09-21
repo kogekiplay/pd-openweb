@@ -7,7 +7,7 @@
 }
 .mobileChildTableCon {
   line-height: 1.5715;
-  margin: 2px 0 12px;
+  margin: 2px 0 var(--space-3);
   min-height: 0 !important;
   .operates {
     width: 100%;
@@ -19,7 +19,7 @@
       display: flex;
       align-items: center;
       .icon {
-        font-size: 20px;
+        font-size: var(--font-2xl);
         color: var(--color-text-tertiary);
       }
     }
@@ -32,14 +32,14 @@
     font-weight: 500;
     color: var(--color-text-title);
     background-color: var(--color-background-primary);
-    font-size: 16px;
+    font-size: var(--font-lg);
     width: 100%;
     z-index: 2;
   }
   .errorTip {
     width: 100%;
     color: var(--color-error);
-    font-size: 13px;
+    font-size: var(--font-sm);
     position: absolute;
     top: -26px;
     background: var(--color-background-primary);
@@ -47,7 +47,7 @@
   }
   .childTableColumnHead {
     color: var(--color-text-tertiary) !important;
-    font-size: 13px;
+    font-size: var(--font-sm);
     line-height: 34px;
   }
   .sheetViewTable {
@@ -70,7 +70,7 @@
     }
   }
   .operate {
-    margin: 0 0 12px;
+    margin: 0 0 var(--space-3);
     display: flex;
     align-items: center;
     .operateButton,
@@ -79,11 +79,11 @@
     .addRowByDialog {
       font-weight: bold;
       border-radius: var(--radius-sm);
-      margin-right: 8px;
+      margin-right: var(--space-2);
       color: var(--color-text-primary);
       cursor: pointer;
-      padding: 0 16px;
-      font-size: 13px;
+      padding: 0 var(--space-4);
+      font-size: var(--font-sm);
       height: 40px;
       display: inline-flex;
       align-items: center;
@@ -98,7 +98,7 @@
       }
       &.h5,
       &.h5:not(.disabled):hover {
-        margin: 4px 0 0;
+        margin: var(--space-1) 0 0;
         background-color: transparent;
       }
     }
@@ -137,7 +137,7 @@
     padding: 5px 0px 0;
   }
   .header {
-    padding: 15px 20px 8px;
+    padding: 15px var(--space-5) var(--space-2);
   }
   .btnsWrapper {
     height: 50px;
@@ -162,12 +162,12 @@
 
 .settingRowHeightModal {
   .adm-popup-body {
-    padding: 0 16px;
+    padding: 0 var(--space-4);
   }
   .header {
     width: 100%;
     line-height: 24px;
-    padding: 16px 0px 10px;
+    padding: var(--space-4) 0px 10px;
     justify-content: space-between;
     color: var(--color-text-tertiary);
     .closeIcon {
@@ -182,13 +182,13 @@
     }
   }
   .rowHeightItem {
-    padding: 12px 0px;
+    padding: var(--space-3) 0px;
     font-weight: bold;
   }
 }
 
 .expandChildTable {
-  font-size: 16px;
+  font-size: var(--font-lg);
   .adm-popup-body {
     width: 100%;
   }
@@ -203,7 +203,7 @@
     }
   }
   .expandChildTableHeader {
-    padding: 16px 16px 0;
+    padding: var(--space-4) var(--space-4) 0;
     align-items: center;
     .mobileSearchInputComp.inputBlur {
       background-color: transparent !important;
@@ -220,7 +220,7 @@
       display: flex;
       align-items: center;
       .icon {
-        font-size: 20px;
+        font-size: var(--font-2xl);
         color: var(--color-text-tertiary);
       }
       .themeIcon {

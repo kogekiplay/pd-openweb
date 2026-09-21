@@ -25,20 +25,20 @@ const LocationWrap = styled.div`
       }
     }
     .title {
-      padding: 10px 12px 0;
-      font-size: 14px;
+      padding: 10px var(--space-3) 0;
+      font-size: var(--font-md);
       color: var(--color-text-primary);
       font-weight: 700;
     }
     .address {
       color: var(--color-text-primary);
-      font-size: 12px;
-      padding: 2px 12px 6px;
+      font-size: var(--font-xs);
+      padding: 2px var(--space-3) 6px;
     }
     .xy {
       color: var(--color-text-tertiary);
-      font-size: 12px;
-      padding: 0 12px 10px;
+      font-size: var(--font-xs);
+      padding: 0 var(--space-3) 10px;
       margin-top: -5px;
     }
     .deleteIcon {

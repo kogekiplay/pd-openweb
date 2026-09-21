@@ -32,7 +32,7 @@ const ControlLabel = styled.div`
     return `${valueHeight - 12}px !important`;
   }}
   ${({ item, showTitle }) =>
-    item.type === 34 && showTitle ? 'margin-bottom: 6px;margin-top:20px;' : 'min-height: 0px !important;'}
+    item.type === 34 && showTitle ? 'margin-bottom: 6px;margin-top:var(--space-5);' : 'min-height: 0px !important;'}
   ${({ withSearchInput, showTitle }) =>
     withSearchInput && showTitle ? 'margin-bottom: 6px;margin-top:10px;' : 'min-height: 0px !important;'}
   .controlLabelName {
@@ -57,7 +57,7 @@ const ControlLabel = styled.div`
   }
   .filledByAi {
     color: var(--color-mingo);
-    font-size: 18px;
+    font-size: var(--font-xl);
     margin-left: 3px;
   }
 `;

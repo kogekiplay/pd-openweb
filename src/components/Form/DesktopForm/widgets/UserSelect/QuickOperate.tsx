@@ -14,7 +14,7 @@ const QuickOperateWrap = styled.div`
     display: flex;
     align-items: center;
     cursor: pointer;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     line-height: 36px;
     &:hover {
       background: var(--color-background-hover);
@@ -23,7 +23,7 @@ const QuickOperateWrap = styled.div`
   .showLine {
     width: 100%;
     height: 1px;
-    margin: 4px 0;
+    margin: var(--space-1) 0;
     background: var(--color-border-secondary);
   }
 `;

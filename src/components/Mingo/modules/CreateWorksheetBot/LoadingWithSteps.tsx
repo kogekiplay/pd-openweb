@@ -4,7 +4,7 @@ import LoadingDots from 'src/pages/widgetConfig/widgetSetting/components/Develop
 import { STEP_STATUS } from './config';
 
 const Con = styled.div`
-  font-size: 14px;
+  font-size: var(--font-md);
   color: var(--color-text-secondary);
   .loading-step:not(:first-child) {
     margin-top: 6px;

@@ -40,7 +40,7 @@ const TextMarkdownWrap = styled.div`
 
   .iconFullScreen {
     position: absolute;
-    font-size: 20px;
+    font-size: var(--font-2xl);
     cursor: pointer;
     top: 7px;
     right: 7px;

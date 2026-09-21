@@ -21,9 +21,9 @@ const baseBorder = css`
 const Card = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
-  margin-top: 12px;
+  gap: var(--space-3);
+  padding: var(--space-3) 14px;
+  margin-top: var(--space-3);
   min-height: 66px;
 
   ${baseBorder}
@@ -71,7 +71,7 @@ const IconBox = styled.div`
   color: #fff;
 
   i {
-    font-size: 20px;
+    font-size: var(--font-2xl);
     color: #fff;
   }
 
@@ -93,11 +93,11 @@ const Body = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-1);
 `;
 
 const Title = styled.div`
-  font-size: 14px;
+  font-size: var(--font-md);
   font-weight: 600;
   color: ${colors.text};
   white-space: nowrap;
@@ -106,7 +106,7 @@ const Title = styled.div`
 `;
 
 const Status = styled.div`
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: ${colors.textSubtle};
   display: inline-flex;
   align-items: center;
@@ -114,7 +114,7 @@ const Status = styled.div`
 `;
 
 const VersionBadge = styled.span`
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: ${colors.textMuted};
 `;
 

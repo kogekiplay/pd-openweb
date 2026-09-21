@@ -14,9 +14,9 @@ import UploadFiles from './UploadFiles';
 
 const Con = styled.div`
   height: 48px;
-  padding: 0 8px;
+  padding: 0 var(--space-2);
   > div {
-    gap: 12px;
+    gap: var(--space-3);
   }
   .sendButton.disabled {
     opacity: 0.3;
@@ -39,7 +39,7 @@ const AbortButton = styled.div`
 const AppUploadWrap = styled.div`
   display: inline-block;
   padding: 1px 6px;
-  font-size: 20px;
+  font-size: var(--font-2xl);
   color: var(--color-text-secondary);
 `;
 

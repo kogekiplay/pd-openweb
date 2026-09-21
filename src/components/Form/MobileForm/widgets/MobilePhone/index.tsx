@@ -31,11 +31,11 @@ const PhoneNumberWrap = styled.div`
   }
 
   && .ant-input {
-    ${props => (props.showTelBtn ? 'padding-right: 32px !important;' : '')};
+    ${props => (props.showTelBtn ? 'padding-right: var(--space-8) !important;' : '')};
   }
 
   && .maskPhoneContent {
-    ${props => (props.showTelBtn ? 'padding-right: 32px;' : '')};
+    ${props => (props.showTelBtn ? 'padding-right: var(--space-8);' : '')};
   }
 
   &.${CLEAR_ICON_SAFE_CLASS} {

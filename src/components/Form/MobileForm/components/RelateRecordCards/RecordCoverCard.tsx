@@ -41,7 +41,7 @@ const Con = styled.div`
     position: absolute;
     top: 1px;
     right: 1px;
-    font-size: 18px;
+    font-size: var(--font-xl);
     color: var(--color-white);
   }
 
@@ -86,7 +86,7 @@ const Title = styled.div`
 const ControlCon = styled.div`
   display: flex;
   flex: 1;
-  padding: 12px 16px;
+  padding: var(--space-3) var(--space-4);
   overflow: hidden;
   flex-direction: column;
 

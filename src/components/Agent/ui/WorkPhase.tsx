@@ -17,7 +17,7 @@ const Trigger = styled.button`
   background: transparent;
   padding: 0;
   color: ${colors.textMuted};
-  font-size: 13px;
+  font-size: var(--font-sm);
   line-height: 20px;
   cursor: pointer;
 
@@ -39,8 +39,8 @@ const Duration = styled.span`
 
 // 展开内容：左竖线 + 一层缩进，与「已思考」交互保持一致
 const Content = styled.div`
-  margin-top: 8px;
-  padding-left: 20px;
+  margin-top: var(--space-2);
+  padding-left: var(--space-5);
   border-left: 1px solid ${colors.border};
   color: ${colors.text};
 `;

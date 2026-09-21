@@ -8,7 +8,7 @@ import { pathCompletion } from 'src/utils/common';
 const TextWrap = styled.div`
   display: inline-block;
   min-width: 300px;
-  padding: 10px 16px;
+  padding: 10px var(--space-4);
   color: var(--color-text-tertiary);
   background: var(--color-background-secondary);
   border-radius: var(--radius-sm);

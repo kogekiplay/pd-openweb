@@ -27,16 +27,16 @@ const SearchBtn = styled.div`
   height: 36px;
   border: 1px solid ${props => props?.buttonStyle?.bordercolor || 'var(--color-border-primary)'};
   border-radius: var(--radius-sm);
-  padding: 0 16px;
+  padding: 0 var(--space-4);
   background: ${props => props?.buttonStyle?.background || 'var(--color-background-primary)'};
   color: var(--color-text-primary);
-  font-size: 13px;
+  font-size: var(--font-sm);
   &:hover {
     background: ${props => props?.buttonStyle?.background || 'var(--color-background-hover)'};
   }
   .successIcon {
     color: var(--color-success);
-    font-size: 18px;
+    font-size: var(--font-xl);
     vertical-align: text-bottom;
   }
 `;

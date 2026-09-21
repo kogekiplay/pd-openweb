@@ -11,7 +11,7 @@ const Con = styled.div`
 `;
 
 const Title = styled.div`
-  font-size: 16px;
+  font-size: var(--font-lg);
   font-weight: bold;
   color: var(--color-text-primary);
   height: 50px;
@@ -19,9 +19,9 @@ const Title = styled.div`
 `;
 
 const Icon = styled.span`
-  font-size: 20px;
+  font-size: var(--font-2xl);
   color: var(--color-text-tertiary);
-  margin: 2px 0 0 8px;
+  margin: 2px 0 0 var(--space-2);
 `;
 const QueryCon = styled.div`
   background: var(--color-background-input);
@@ -38,7 +38,7 @@ const QueryCon = styled.div`
 `;
 
 const AddNewRecordBtn = styled(Button)`
-  padding: 0 16px 0 12px !important;
+  padding: 0 var(--space-4) 0 var(--space-3) !important;
   min-width: auto !important;
   display: inline-flex !important;
   align-items: center;
@@ -54,7 +54,7 @@ const FastFiltersExpandBtn = styled.div`
   margin-left: 10px;
   line-height: 36px;
   text-align: center;
-  font-size: 18px;
+  font-size: var(--font-xl);
   color: ${({ active }) => (active ? 'var(--color-primary)' : 'var(--color-text-tertiary)')};
   &.filtersVisible {
     color: var(--color-text-tertiary);

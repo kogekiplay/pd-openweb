@@ -76,7 +76,7 @@
   }
   &-info {
     color: var(--color-text-tertiary);
-    font-size: 12px;
+    font-size: var(--font-xs);
   }
   /* 上传按钮 end */
 
@@ -162,7 +162,7 @@
   }
   &-fileName {
     color: var(--color-text-primary);
-    font-size: 13px;
+    font-size: var(--font-sm);
     padding: 5px 10px;
     display: flex;
     align-items: center;
@@ -180,13 +180,13 @@
     }
   }
   &-forbidFileName {
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-tertiary);
     width: 100%;
     text-align: left;
   }
   &-kcIcon {
-    font-size: 12px;
+    font-size: var(--font-xs);
     color: var(--color-white);
     position: absolute;
     left: 0;
@@ -199,29 +199,29 @@
     justify-content: center;
   }
   &-video-kcIcon {
-    font-size: 12px;
+    font-size: var(--font-xs);
     color: var(--color-white);
     position: absolute;
     left: 4px;
     top: -1px;
   }
   &-video {
-    font-size: 12px;
+    font-size: var(--font-xs);
     position: absolute;
     left: 0;
     bottom: 0;
     color: var(--color-white);
-    padding: 1px 8px;
+    padding: 1px var(--space-2);
     width: 100%;
     box-sizing: border-box;
     background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(70, 70, 70, 0.3));
     i {
       padding-right: 5px;
-      font-size: 16px;
+      font-size: var(--font-lg);
     }
   }
   &-kcFileName {
-    font-size: 12px;
+    font-size: var(--font-xs);
     color: var(--color-text-disabled);
     position: relative;
     top: -2px;
@@ -245,7 +245,7 @@
     top: 0;
     width: 100%;
     height: 100%;
-    padding: 12px;
+    padding: var(--space-3);
     opacity: 0;
     transition: opacity 0.2s;
     cursor: pointer;
@@ -291,7 +291,7 @@
   }
   &-editInput {
     width: 100%;
-    font-size: 13px;
+    font-size: var(--font-sm);
     display: flex;
     height: 30px;
     border: 1px solid var(--color-border-tertiary);
@@ -301,7 +301,7 @@
   }
   &-panelTextName {
     color: var(--color-text-primary);
-    font-size: 12px;
+    font-size: var(--font-xs);
     flex-basis: 30px;
     display: flex;
     align-items: center;
@@ -405,7 +405,7 @@
     flex-direction: column;
     background-color: var(--color-background-secondary);
     .Progress--circle-content {
-      font-size: 12px !important;
+      font-size: var(--font-xs) !important;
     }
     > div:nth-child(1) {
       width: 100%;
@@ -440,16 +440,16 @@
       justify-content: center;
       align-items: center;
       color: var(--color-text-secondary);
-      font-size: 18px;
+      font-size: var(--font-xl);
     }
   }
   &-menuWrapper {
     .icon {
       color: var(--color-text-tertiary);
-      font-size: 16px;
+      font-size: var(--font-lg);
     }
     &-text {
-      margin-left: 20px;
+      margin-left: var(--space-5);
       color: var(--color-text-title);
     }
   }

@@ -51,13 +51,20 @@ const SPACE_STEPS = new Set([4, 8, 12, 16, 20, 24, 32]);
 
 // lookbehind 挡住 `-` / `@` / `$` / 词字符，跳过 `@xxx-padding:` 这类 LESS 变量声明。
 // 【`-` 和 `p` 之间是词边界】所以光靠 \b 拦不住 —— 这是实测踩出来的，见文件头。
-const FONT_RE = /(^|\n)([^\n]*?(?<![-\w@$])font-size:\s*)([^;{}\n]+)/g;
-const SPACE_RE =
-  /(^|\n)([^\n]*?(?<![-\w@$])(?:margin|padding|gap|row-gap|column-gap)(?:-(?:top|right|bottom|left))?:\s*)([^;{}\n]+)/g;
+//
+// 【不要把行首写进正则】曾经写成 `(^|\n)([^\n]*?…prop:)`，为的是能判断注释行。
+// 代价是 `g` 下**一行里只有第一条声明会被匹配**，
+// `padding-top: 4px !important; padding-bottom: 4px !important;` 后半条就看不见了。
+// 全仓 10 处，数目不大但性质恶劣：codemod 也用同一个正则，
+// 于是这 10 处它既不改、这里也不算 —— **"归零"是个假的零**。
+// 现在按 offset 回溯到行首判注释，和 codemod 完全同构。
+const FONT_RE = /(?<![-\w@$])font-size:\s*([^;{}\n]+)/g;
+const SPACE_RE = /(?<![-\w@$])(?:margin|padding|gap|row-gap|column-gap)(?:-(?:top|right|bottom|left))?:\s*([^;{}\n]+)/g;
 
-/** 注释行不算 —— codemod 不改它们，算进来就是个修不掉的底数（见文件头）。 */
-function isComment(head: string): boolean {
-  return /^\s*(\/\/|\*|\/\*)/.test(head);
+/** 这条声明是不是在注释行里。codemod 不改它们，算进来就是个修不掉的底数（见文件头）。 */
+function isCommentAt(source: string, offset: number): boolean {
+  const lineStart = source.lastIndexOf('\n', offset) + 1;
+  return /^\s*(\/\/|\*|\/\*)/.test(source.slice(lineStart, offset));
 }
 
 /**
@@ -127,15 +134,14 @@ function countInSource(source: string): number {
   let n = 0;
   let m: RegExpExecArray | null;
 
-  // 捕获组：1=行首/换行 2=声明头（含属性名） 3=值
   FONT_RE.lastIndex = 0;
   while ((m = FONT_RE.exec(source))) {
-    if (!isComment(m[2])) n += countMissed(m[3], FONT_STEPS);
+    if (!isCommentAt(source, m.index)) n += countMissed(m[1], FONT_STEPS);
   }
 
   SPACE_RE.lastIndex = 0;
   while ((m = SPACE_RE.exec(source))) {
-    if (!isComment(m[2])) n += countMissed(m[3], SPACE_STEPS);
+    if (!isCommentAt(source, m.index)) n += countMissed(m[1], SPACE_STEPS);
   }
 
   return n;

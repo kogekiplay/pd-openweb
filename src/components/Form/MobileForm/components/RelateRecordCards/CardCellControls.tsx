@@ -75,7 +75,7 @@ const Control = styled.div`
     .cellOption {
       margin: initial;
       line-height: initial;
-      padding: 2px 8px;
+      padding: 2px var(--space-2);
       border-radius: 12px;
       color: var(--secondary-color);
     }

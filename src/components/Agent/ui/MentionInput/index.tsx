@@ -37,7 +37,7 @@ const Wrap = styled.div`
     min-height: 48px;
     max-height: 200px;
     overflow-y: auto;
-    padding: 12px;
+    padding: var(--space-3);
     font-size: 15px;
     line-height: 24px;
     color: var(--color-text-primary);

@@ -43,7 +43,7 @@ const SignaturePopup = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
+    padding: var(--space-5);
     span {
       font-size: 15px;
     }
@@ -90,14 +90,14 @@ const Footer = styled.div`
   align-items: center;
   justify-content: flex-end;
   border-top: 1px solid var(--color-border-primary);
-  padding: 11px 20px;
+  padding: 11px var(--space-5);
   .clearSignature {
-    margin-right: 20px;
+    margin-right: var(--space-5);
     color: var(--color-text-tertiary);
     cursor: pointer;
   }
   .signatureFromMobile {
-    font-size: 12px;
+    font-size: var(--font-xs);
     color: var(--color-text-tertiary);
     cursor: pointer;
     display: flex;
@@ -111,7 +111,7 @@ const Footer = styled.div`
       color: var(--color-text-secondary);
     }
     .icon {
-      font-size: 16px;
+      font-size: var(--font-lg);
       margin-right: 6px;
     }
   }
@@ -125,7 +125,7 @@ const ButtonsCon = styled.div`
 
 const GrayButton = styled.div`
   height: 36px;
-  padding: 0 16px;
+  padding: 0 var(--space-4);
   border: 1px solid var(--color-border-primary);
   display: flex;
   align-items: center;

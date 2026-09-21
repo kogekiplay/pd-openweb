@@ -11,7 +11,7 @@ const RangeWrap = styled.div`
   min-height: 37px;
 
   .scoreIcon {
-    font-size: 24px !important;
+    font-size: var(--font-3xl) !important;
   }
 `;
 

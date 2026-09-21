@@ -28,12 +28,12 @@ const DialogWrap = styled(Dialog)`
 `;
 
 const FormGroup = styled.div`
-  margin-bottom: 20px;
+  margin-bottom: var(--space-5);
   width: 512px;
   .required {
     margin-right: 2px;
     color: var(--color-error);
-    font-size: 14px;
+    font-size: var(--font-md);
     vertical-align: text-top;
   }
   .formBox {

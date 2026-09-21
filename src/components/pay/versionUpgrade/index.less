@@ -13,10 +13,10 @@
     .priceTxt {
       font-size: 65px;
       font-weight: 600;
-      margin-bottom: 20px;
+      margin-bottom: var(--space-5);
     }
     .priceDescription {
-      font-size: 20px;
+      font-size: var(--font-2xl);
     }
   }
   .versionInfo {
@@ -40,13 +40,13 @@
       .versionName {
         font-size: 28px;
         font-weight: 600;
-        margin-bottom: 8px;
+        margin-bottom: var(--space-2);
         color: var(--color-text-title);
       }
       .versionDes {
-        font-size: 16px;
+        font-size: var(--font-lg);
         color: var(--color-text-tertiary);
-        margin-bottom: 32px;
+        margin-bottom: var(--space-8);
       }
       .priceDes {
         font-size: 15px;
@@ -56,7 +56,7 @@
         }
       }
       .average {
-        font-size: 20px;
+        font-size: var(--font-2xl);
         font-weight: 500;
         color: var(--color-text-secondary);
         line-height: 16px;
@@ -65,7 +65,7 @@
       .purchaseBtn {
         width: 144px;
         height: 46px;
-        font-size: 16px;
+        font-size: var(--font-lg);
       }
       &:hover {
         transform: translateY(-10px);
@@ -82,7 +82,7 @@
     padding: 0 6%;
     text-align: center;
     .colContent {
-      padding-bottom: 20px;
+      padding-bottom: var(--space-5);
     }
     .activeVersion {
       .colContent {
@@ -100,12 +100,12 @@
       text-align: center;
       line-height: 60px;
       font-weight: 600;
-      font-size: 18px;
+      font-size: var(--font-xl);
       border-radius: var(--radius-sm);
     }
     .item {
       min-height: 42px;
-      font-size: 14px;
+      font-size: var(--font-md);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -118,12 +118,12 @@
         align-items: center;
         background-color: var(--color-text-tertiary);
         color: var(--color-white);
-        margin-left: 4px;
-        font-size: 12px;
+        margin-left: var(--space-1);
+        font-size: var(--font-xs);
       }
 
       &.subTitle {
-        margin-top: 12px;
+        margin-top: var(--space-3);
       }
 
       &.basicPng {
@@ -166,7 +166,7 @@
       .item {
         padding-left: 50px;
         justify-content: left;
-        font-size: 13px;
+        font-size: var(--font-sm);
         color: var(--color-text-secondary);
       }
     }
@@ -180,7 +180,7 @@
     top: 60px;
     left: 6%;
     right: 6%;
-    font-size: 18px;
+    font-size: var(--font-xl);
     font-weight: 600;
     box-sizing: border-box;
     z-index: 9;
@@ -190,9 +190,9 @@
       padding: 0px 5px;
       background: var(--color-error);
       color: var(--color-white);
-      font-size: 12px;
+      font-size: var(--font-xs);
       border-radius: var(--radius-sm);
-      margin-left: 4px;
+      margin-left: var(--space-1);
     }
     &.fixedInfoFadeIn {
       animation-name: fadeIn;
@@ -215,7 +215,7 @@
       height: 42px;
       border-radius: var(--radius-sm);
       color: var(--color-primary);
-      font-size: 16px;
+      font-size: var(--font-lg);
       text-align: center;
       border: none;
       background: var(--color-primary-transparent);
@@ -289,13 +289,13 @@
     .companyInfo {
       border-radius: var(--radius-sm);
       border: 1px solid var(--color-border-primary);
-      padding: 16px 20px;
+      padding: var(--space-4) var(--space-5);
     }
     .hidePrice {
       width: 188px;
       height: 48px;
       line-height: 48px;
-      font-size: 16px;
+      font-size: var(--font-lg);
       font-weight: bold;
       margin-top: 15px;
     }
@@ -304,7 +304,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 24px 0 32px;
+    margin: var(--space-6) 0 var(--space-8);
     .itemBoxContent {
       align-items: center;
       border: 2px solid var(--color-border-secondary);
@@ -312,10 +312,10 @@
       color: var(--color-text-secondary);
       cursor: pointer;
       display: flex;
-      font-size: 13px;
+      font-size: var(--font-sm);
       height: 40px;
       justify-content: center;
-      margin-right: 16px;
+      margin-right: var(--space-4);
       width: 136px;
       .otherPayColor {
         color: var(--color-primary);
@@ -333,8 +333,8 @@
 
   .payOrder {
     width: 968px;
-    margin: 20px auto 0;
-    padding: 20px 30px 30px;
+    margin: var(--space-5) auto 0;
+    padding: var(--space-5) 30px 30px;
     background-color: var(--color-background-primary);
     border-radius: var(--radius-sm);
     display: block;

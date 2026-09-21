@@ -9,7 +9,7 @@ export const AddButton = styled.div`
   text-align: center;
   background: var(--color-mingo);
   border-radius: 36px;
-  font-size: 14px;
+  font-size: var(--font-md);
   color: var(--color-white);
   cursor: pointer;
   font-weight: bold;
@@ -33,16 +33,16 @@ export const AddButton = styled.div`
 
 const Con = styled.div`
   font-size: 15px;
-  margin-top: 8px;
+  margin-top: var(--space-2);
   .generate-card {
-    margin-top: 8px;
+    margin-top: var(--space-2);
     border-radius: 8px;
     border: 1px solid var(--color-border-primary);
-    padding: 16px 14px 14px;
+    padding: var(--space-4) 14px 14px;
     background-color: var(--color-background-primary);
   }
   .generate-data-btn {
-    margin-top: 16px;
+    margin-top: var(--space-4);
     color: var(--color-mingo);
   }
 `;

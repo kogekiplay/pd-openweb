@@ -8,7 +8,7 @@ import { getTitleTextFromControls } from 'src/utils/control';
 import type { RecordRow } from 'src/utils/controlTypes';
 
 const Con = styled.div`
-  padding: 16px;
+  padding: var(--space-4);
   .cardCellControls {
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   }

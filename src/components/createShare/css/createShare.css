@@ -1,5 +1,5 @@
 ﻿.createShareDialog .qrCode {
-  margin: 20px auto 0;
+  margin: var(--space-5) auto 0;
   text-align: center;
 }
 
@@ -11,7 +11,7 @@
 .createShareCopy {
   width: 100%;
   text-align: center;
-  margin-top: 20px;
+  margin-top: var(--space-5);
   position: relative;
 }
 .createShareCopy span {
@@ -53,12 +53,12 @@
 .createShareDialog .shareOperator {
   width: 100%;
   text-align: right;
-  margin-top: 20px;
-  padding-bottom: 20px;
+  margin-top: var(--space-5);
+  padding-bottom: var(--space-5);
 }
 .createShareDialog .shareBtn {
-  margin-right: 24px;
-  font-size: 13px;
+  margin-right: var(--space-6);
+  font-size: var(--font-sm);
   cursor: pointer;
 }
 .createShareDialog .shareBtn.cancelStyle {
@@ -80,7 +80,7 @@
 .noShareContent {
   width: 100%;
   text-align: center;
-  margin-top: 20px;
+  margin-top: var(--space-5);
   line-height: 30px;
   padding-bottom: 35px;
 }
@@ -97,7 +97,7 @@
   position: fixed;
   bottom: 20px;
   left: 20px;
-  padding: 12px 20px 10px;
+  padding: var(--space-3) var(--space-5) 10px;
   width: 290px;
   background-color: var(--color-background-primary);
   border-top-width: 8px;
@@ -107,7 +107,7 @@
   -webkit-box-shadow: var(--shadow-lg);
 }
 .createShareAlertTitle {
-  font-size: 16px;
+  font-size: var(--font-lg);
   margin-bottom: 7px;
 }
 .createShareAlertTitle .icon-check_circle {
@@ -126,7 +126,7 @@
   text-decoration: underline;
 }
 .createShareAlertClose {
-  font-size: 24px;
+  font-size: var(--font-3xl);
   position: absolute;
   right: 10px;
   top: 0;

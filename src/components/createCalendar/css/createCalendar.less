@@ -20,7 +20,7 @@
   }
   .createCalendarLabel {
     color: var(--color-text-secondary);
-    font-size: 14px;
+    font-size: var(--font-md);
     text-align: right;
     position: absolute;
     top: 0;
@@ -33,7 +33,7 @@
   #txtCalendarName {
     height: 38px;
     width: 100%;
-    padding: 8px;
+    padding: var(--space-2);
     border-width: 1px;
     border-style: solid;
   }
@@ -78,12 +78,12 @@
     background: var(--color-yellow);
   }
   .createCalendarTitle .icon-arrow-down-border {
-    font-size: 16px;
+    font-size: var(--font-lg);
     color: var(--color-white);
   }
   .createCalendarTitle .icon-arrow-down-border:before {
     display: inline-block;
-    margin-top: 4px;
+    margin-top: var(--space-1);
   }
   .createCalendarTitle .calendarColorMain {
     padding: 6px 0;
@@ -100,7 +100,7 @@
     line-height: 36px;
     width: 124px;
     padding-right: 14px;
-    padding-left: 24px;
+    padding-left: var(--space-6);
     display: block;
     white-space: nowrap;
     overflow: hidden;
@@ -112,7 +112,7 @@
     position: absolute;
     top: 0;
     left: 4px;
-    font-size: 16px;
+    font-size: var(--font-lg);
     border: none;
   }
   .createCalendarTitle .calendarColorMain li {
@@ -137,7 +137,7 @@
     width: 16px;
     height: 16px;
     border: 1px solid var(--color-border-primary);
-    margin-right: 12px;
+    margin-right: var(--space-3);
     display: inline-block;
     vertical-align: top;
     margin-top: 9px;
@@ -178,7 +178,7 @@
     padding: 0 2px;
     width: 36px;
     height: 16px;
-    margin-left: 4px;
+    margin-left: var(--space-1);
     border-width: 0 0 1px 0;
     border-style: solid;
     border-color: var(--color-text-title);
@@ -210,7 +210,7 @@
     position: absolute;
     right: -4px;
     top: -2px;
-    font-size: 24px !important;
+    font-size: var(--font-3xl) !important;
     color: var(--color-text-title);
   }
   .calendarRemind {
@@ -218,7 +218,7 @@
   }
   .calendarRemind .bgImageLink,
   .calendarRemind .bgImageClick {
-    font-size: 24px !important;
+    font-size: var(--font-3xl) !important;
   }
   .remindTextLable {
     vertical-align: top;
@@ -246,7 +246,7 @@
     padding-left: 0;
   }
   .calendarTabs {
-    margin-top: 20px;
+    margin-top: var(--space-5);
   }
   .calendarTabs span {
     border-bottom: 1px solid var(--color-border-primary);
@@ -266,7 +266,7 @@
     width: 16px;
     height: 14px;
     display: inline-block;
-    margin-right: 8px;
+    margin-right: var(--space-2);
   }
   .chekboxIcon input[type='checkbox'] {
     visibility: hidden;
@@ -324,7 +324,7 @@
   }
   #repeatContent .createCalendarLabel span {
     vertical-align: top;
-    margin-right: 12px;
+    margin-right: var(--space-3);
     cursor: pointer;
   }
   #repeatContent .repeatResultText {
@@ -344,8 +344,8 @@
   .createAddMemberBox .imgMemberBox {
     display: inline-block;
     vertical-align: top;
-    margin-right: 8px;
-    margin-bottom: 8px;
+    margin-right: var(--space-2);
+    margin-bottom: var(--space-2);
     position: relative;
   }
   .createAddMemberBox .removeMember {
@@ -359,7 +359,7 @@
     margin-right: -32px;
     text-align: center;
     color: var(--color-white);
-    font-size: 16px;
+    font-size: var(--font-lg);
     opacity: 0.7;
   }
   .createAddMemberBox .imgMemberBox:hover .removeMember {
@@ -369,7 +369,7 @@
     display: inline-block;
     vertical-align: top;
     height: 7px;
-    margin-top: 8px;
+    margin-top: var(--space-2);
   }
   .createAddMemberBox .busyIconWrap {
     position: absolute;
@@ -416,7 +416,7 @@
     height: 26px;
     vertical-align: top;
     cursor: pointer;
-    margin-bottom: 8px;
+    margin-bottom: var(--space-2);
   }
   .createAddMember:not(:hover) {
     color: var(--color-text-tertiary) !important;
@@ -426,7 +426,7 @@
   }
   #createCalendarDesc,
   #addressContent {
-    margin-top: 20px;
+    margin-top: var(--space-5);
   }
   #createCalendarDesc .createCalendarLabel,
   #addressContent .createCalendarLabel {
@@ -454,7 +454,7 @@
   }
   #createCalendarAttachment_updater {
     margin-top: 10px;
-    font-size: 13px;
+    font-size: var(--font-sm);
   }
   #createCalendarAttachment_updater .uploadDocList,
   #createCalendarAttachment_updater .uploadPicList {
@@ -552,7 +552,7 @@
 }
 .calendarRemind .customSelect .txtBox,
 .repeatDialogMain .customSelect .txtBox {
-  font-size: 14px;
+  font-size: var(--font-md);
 }
 
 .repeatDialogMain li {

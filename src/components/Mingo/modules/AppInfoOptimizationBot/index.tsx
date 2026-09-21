@@ -36,7 +36,7 @@ const ConfigIconWrap = styled.div`
   z-index: 1;
   > span {
     cursor: pointer;
-    font-size: 18px;
+    font-size: var(--font-xl);
     width: 28px;
     height: 28px;
     display: flex;
@@ -51,7 +51,7 @@ const ConfigIconWrap = styled.div`
 `;
 
 const ConfigPanelWrap = styled.div`
-  padding: 12px 16px;
+  padding: var(--space-3) var(--space-4);
   background: var(--color-background-primary);
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-sm);
@@ -63,7 +63,7 @@ const ConfigPanelWrap = styled.div`
 `;
 
 const MingoContentWrap = styled.div`
-  padding: 0 0 12px;
+  padding: 0 0 var(--space-3);
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -76,7 +76,7 @@ const MingoContentWrap = styled.div`
   }
   .sendCon {
     position: relative;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     margin: 0 auto;
     width: 100%;
     .abort-button {

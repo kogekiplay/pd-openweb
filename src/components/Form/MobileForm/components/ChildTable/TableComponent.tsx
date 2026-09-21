@@ -45,15 +45,15 @@ const TableWrap = styled(Table)`
   }
 
   .ant-table-tbody > tr > td {
-    padding: 10px 12px;
+    padding: 10px var(--space-3);
     border-bottom: 1px solid var(--color-border-secondary);
   }
 
   .ant-table-thead > tr > th {
-    padding: 12px;
+    padding: var(--space-3);
     color: var(--color-text-title);
     background: var(--color-background-tertiary);
-    font-size: 13px;
+    font-size: var(--font-sm);
     font-weight: 700;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -126,7 +126,7 @@ const TableWrap = styled(Table)`
   .adaptive {
     min-height: 44px;
     td {
-      padding: 8px 12px !important;
+      padding: var(--space-2) var(--space-3) !important;
     }
     .cell,
     .cell .ellipsis,
@@ -181,7 +181,7 @@ const Pagination = styled.div`
     height: 100%;
     line-height: 36px;
     color: var(--color-white);
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     background: var(--color-primary);
     border-radius: var(--radius-sm);
     &.disabled {

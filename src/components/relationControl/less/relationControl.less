@@ -1,9 +1,9 @@
 ﻿.relationControlBox {
   height: 100%;
   .relationControlTypeName {
-    font-size: 16px;
-    margin-left: 24px;
-    padding-top: 20px;
+    font-size: var(--font-lg);
+    margin-left: var(--space-6);
+    padding-top: var(--space-5);
   }
   .relationControlBar {
     width: 145px;
@@ -15,7 +15,7 @@
       li {
         height: 48px;
         line-height: 48px;
-        font-size: 14px;
+        font-size: var(--font-md);
         cursor: pointer;
         &:hover:not(.active) {
           background: var(--color-background-secondary);
@@ -28,8 +28,8 @@
           display: inline-block;
           color: var(--color-text-secondary);
           vertical-align: top;
-          margin: 16px 8px 0 20px;
-          font-size: 16px;
+          margin: var(--space-4) var(--space-2) 0 var(--space-5);
+          font-size: var(--font-lg);
           &.icon-task_custom_today {
             font-size: 17px;
             margin-top: 15px;
@@ -42,18 +42,18 @@
     position: absolute;
     top: 5px;
     right: 5px;
-    font-size: 18px;
+    font-size: var(--font-xl);
     cursor: pointer;
     &:not(:hover) {
       color: var(--color-text-tertiary) !important;
     }
   }
   .relationControlSearch {
-    margin: 0 24px 0 15px;
+    margin: 0 var(--space-6) 0 15px;
     position: relative;
-    padding-top: 12px;
+    padding-top: var(--space-3);
     i {
-      font-size: 18px;
+      font-size: var(--font-xl);
       position: absolute;
       top: 27px;
       left: 5px;
@@ -66,14 +66,14 @@
       padding: 0 10px 0 30px;
       box-sizing: border-box;
       border: none;
-      font-size: 13px;
+      font-size: var(--font-sm);
       border-bottom: 1px solid var(--color-background-disabled);
     }
   }
   .relationControlSort {
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-tertiary);
-    margin-left: 24px;
+    margin-left: var(--space-6);
     height: 47px;
     line-height: 47px;
   }
@@ -83,9 +83,9 @@
     li {
       height: 42px;
       line-height: 42px;
-      padding: 0 24px;
+      padding: 0 var(--space-6);
       box-sizing: border-box;
-      font-size: 13px;
+      font-size: var(--font-sm);
       cursor: pointer;
       color: var(--color-text-primary);
       &:hover:not(.bgColorPrimary) {
@@ -106,7 +106,7 @@
         align-items: center;
       }
       i {
-        font-size: 16px;
+        font-size: var(--font-lg);
         &.relationControlIcon {
           min-width: 18px;
           width: 18px;
@@ -117,7 +117,7 @@
         margin-left: 10px;
       }
       .userAvarar {
-        margin-left: 20px;
+        margin-left: var(--space-5);
         img {
           display: inline-block;
           vertical-align: top;
@@ -126,8 +126,8 @@
     }
   }
   .listMore {
-    font-size: 13px;
-    margin-left: 24px;
+    font-size: var(--font-sm);
+    margin-left: var(--space-6);
     cursor: pointer;
     display: inline-block;
     height: 42px;
@@ -138,7 +138,7 @@
   }
   .listDate {
     font-size: 15px;
-    margin-left: 24px;
+    margin-left: var(--space-6);
     padding: 15px 0 10px;
     .listDateGray {
       color: var(--color-text-tertiary);
@@ -147,7 +147,7 @@
   .relationControNull {
     margin-top: 106px;
     color: var(--color-text-tertiary);
-    font-size: 14px;
+    font-size: var(--font-md);
     text-align: center;
     .relationControNullIcon {
       width: 106px;
@@ -155,7 +155,7 @@
       border-radius: 50%;
       background: var(--color-background-secondary);
       text-align: center;
-      margin: 0 auto 16px;
+      margin: 0 auto var(--space-4);
       i {
         font-size: 50px;
         color: var(--color-text-tertiary);
@@ -169,7 +169,7 @@
       height: 106px;
       border-radius: 50%;
       background-color: var(--color-background-secondary);
-      margin: 0 auto 16px;
+      margin: 0 auto var(--space-4);
       background-image: url('../images/noList.png');
       background-size: 48px 56px;
       background-repeat: no-repeat;
@@ -181,10 +181,10 @@
     margin-top: 10px;
     height: 32px;
     line-height: 32px;
-    padding-bottom: 20px;
-    font-size: 14px;
+    padding-bottom: var(--space-5);
+    font-size: var(--font-md);
     text-align: right;
-    margin-right: 24px;
+    margin-right: var(--space-6);
     box-sizing: initial;
     .relationControlCreate {
       position: absolute;
@@ -195,8 +195,8 @@
       i {
         display: inline-block;
         vertical-align: top;
-        margin-top: 8px;
-        margin-right: 4px;
+        margin-top: var(--space-2);
+        margin-right: var(--space-1);
       }
     }
     .relationControlCancel {

@@ -236,7 +236,7 @@ const Wrap = styled.div`
 const Title = styled.div`
   margin-bottom: ${spacing.xl};
   color: ${colors.text};
-  font-size: 14px;
+  font-size: var(--font-md);
   font-weight: 600;
   line-height: 20px;
 `;
@@ -409,8 +409,8 @@ const StatWrap = styled.div`
   }
 
   .unit {
-    margin-left: 4px;
-    font-size: 16px;
+    margin-left: var(--space-1);
+    font-size: var(--font-lg);
     font-weight: 500;
     color: ${colors.textMuted};
   }
@@ -419,7 +419,7 @@ const StatWrap = styled.div`
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-size: 13px;
+    font-size: var(--font-sm);
     line-height: 20px;
     color: ${colors.textMuted};
   }
@@ -507,7 +507,7 @@ const SkeletonBar = styled.div`
 const SkeletonHint = styled.div`
   margin-top: ${spacing.md};
   color: ${colors.textMuted};
-  font-size: 12px;
+  font-size: var(--font-xs);
   line-height: 18px;
 `;
 

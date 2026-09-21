@@ -13,7 +13,7 @@ const PaySuccessWrap = styled.div`
   .successWrap {
     margin: 80px auto;
     width: 800px;
-    padding: 50px 20px;
+    padding: 50px var(--space-5);
     box-shadow: var(--shadow-md);
     .okIcon {
       border: 2px solid var(--color-success);

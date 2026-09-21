@@ -3,7 +3,7 @@ import styled from 'styled-components';
 // 通用普通胶囊
 export const CustomCommonCapsule = styled.span`
   display: inline-block;
-  padding: 2px 12px;
+  padding: 2px var(--space-3);
   border-radius: 16px;
   border: 1px solid var(--color-border-primary);
   word-break: break-all;
@@ -17,7 +17,7 @@ export const CustomOptionCapsule = styled.span`
   ${props =>
     props.inPopup
       ? 'padding: 2px 0 2px 18px;'
-      : 'padding: 2px 12px 2px 30px;border-radius: 16px;border: 1px solid var(--color-border-primary);'}
+      : 'padding: 2px var(--space-3) 2px 30px;border-radius: 16px;border: 1px solid var(--color-border-primary);'}
   word-break: break-all;
   white-space: pre-wrap;
 
