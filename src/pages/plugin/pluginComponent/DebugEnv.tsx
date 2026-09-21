@@ -32,7 +32,7 @@ const Wrapper = styled.div`
       .confirmBtn {
         background: var(--color-primary);
         :hover {
-          background: var(--color-link-hover);
+          background: var(--color-primary-dark);
         }
       }
       .viewCon {

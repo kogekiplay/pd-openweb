@@ -42,7 +42,7 @@ const Wrap = styled.div`
         opacity: 0.5;
       }
       &:hover {
-        background: var(--color-link-hover);
+        background: var(--color-primary-dark);
       }
     }
   }
@@ -82,7 +82,7 @@ const WrapBtn = styled.div`
       opacity: 0.5;
     }
     &:hover {
-      background: var(--color-link-hover);
+      background: var(--color-primary-dark);
     }
   }
 `;

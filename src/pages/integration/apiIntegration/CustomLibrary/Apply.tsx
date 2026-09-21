@@ -12,7 +12,7 @@ const ApplyBtn = styled.div`
   color: var(--color-white);
   cursor: pointer;
   &:hover {
-    background: var(--color-link-hover);
+    background: var(--color-primary-dark);
   }
 `;
 

@@ -39,7 +39,7 @@ const PaySuccessWrap = styled.div`
       margin: 0 auto 50px;
       border-radius: var(--radius-sm);
       &:hover {
-        background-color: var(--color-link-hover);
+        background-color: var(--color-primary-dark);
       }
     }
     .orderTitle {

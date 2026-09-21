@@ -87,7 +87,7 @@ const Wrap = styled.div`
           font-size: var(--font-2xl);
         }
         &:hover {
-          background: var(--color-link-hover);
+          background: var(--color-primary-dark);
         }
       }
     }

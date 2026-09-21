@@ -48,7 +48,7 @@ export const BillInfoWrap = styled.div`
       padding: 0 var(--space-4);
       border-radius: var(--radius-sm);
       &:hover {
-        background-color: var(--color-link-hover);
+        background-color: var(--color-primary-dark);
       }
     }
     .warningBtn {
@@ -58,7 +58,7 @@ export const BillInfoWrap = styled.div`
       color: var(--color-primary);
       &:hover {
         background-color: var(--color-background-primary);
-        border: 1px solid var(--color-link-hover);
+        border: 1px solid var(--color-primary-dark);
         color: var(--color-link-hover);
       }
     }

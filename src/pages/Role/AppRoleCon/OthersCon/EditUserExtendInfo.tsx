@@ -42,7 +42,7 @@ const EditUserExtendInfoCon = styled.div`
     cursor: pointer;
   }
   .saveBtn:hover {
-    background: var(--color-link-hover);
+    background: var(--color-primary-dark);
   }
   .clearBtn {
     background: var(--color-background-primary);

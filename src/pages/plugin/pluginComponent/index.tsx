@@ -100,7 +100,7 @@ const Wrapper = styled.div`
         cursor: pointer;
 
         &:hover {
-          background: var(--color-link-hover);
+          background: var(--color-primary-dark);
         }
       }
     }

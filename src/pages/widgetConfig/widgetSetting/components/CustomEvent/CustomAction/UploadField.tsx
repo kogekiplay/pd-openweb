@@ -77,7 +77,7 @@ const UploadListWrap = styled.div`
       background: var(--color-primary);
       color: var(--color-white);
       &:hover {
-        background: var(--color-link-hover);
+        background: var(--color-primary-dark);
       }
     }
   }

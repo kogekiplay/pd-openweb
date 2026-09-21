@@ -36,7 +36,7 @@ const DisplayRowListWrap = styled.div`
       text-align: center;
       padding-top: 2px;
       border-radius: 50%;
-      background: var(--color-link-hover);
+      background: var(--color-primary-dark);
       color: var(--color-white);
       &:hover {
         background: var(--color-primary);

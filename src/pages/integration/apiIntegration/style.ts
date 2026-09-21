@@ -60,7 +60,7 @@ export const ActWrap = styled.div`
 export const BtnWrap = styled.div`
   background: var(--color-primary);
   &:hover {
-    background: var(--color-link-hover);
+    background: var(--color-primary-dark);
   }
 `;
 export const MenuItemWrap = styled(MenuItem)`
@@ -85,7 +85,7 @@ export const WrapFooter = styled.div`
     line-height: 36px;
     border-radius: var(--radius-sm);
     &:hover {
-      background: var(--color-link-hover);
+      background: var(--color-primary-dark);
     }
     &.disable {
       opacity: 0.5;

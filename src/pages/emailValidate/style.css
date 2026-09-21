@@ -39,7 +39,7 @@ body {
 }
 
 .btnEnabled:hover {
-  background-color: var(--color-link-hover);
+  background-color: var(--color-primary-dark);
   transition: background-color 0.5s;
 }
 

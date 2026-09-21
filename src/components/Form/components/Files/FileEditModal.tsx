@@ -15,8 +15,8 @@ const Footer = styled.div`
   .ant-btn-primary {
     padding: 0 var(--space-4);
     &:hover {
-      border-color: var(--color-link-hover);
-      background-color: var(--color-link-hover);
+      border-color: var(--color-primary-dark);
+      background-color: var(--color-primary-dark);
     }
   }
 `;

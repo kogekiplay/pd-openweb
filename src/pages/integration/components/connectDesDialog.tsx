@@ -61,7 +61,7 @@ const Wrap = styled.div`
     line-height: 1em;
     border-radius: var(--radius-sm);
     &:hover {
-      background: var(--color-link-hover);
+      background: var(--color-primary-dark);
     }
   }
   .num {

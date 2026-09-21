@@ -97,7 +97,7 @@ const ModelList = styled.ul`
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background-color: var(--color-link-hover);
+      background-color: var(--color-primary-dark);
       margin-left: 2px;
     }
     img {
@@ -153,7 +153,7 @@ const ContentBox = styled.div`
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background-color: var(--color-link-hover);
+      background-color: var(--color-primary-dark);
       margin-left: 2px;
     }
   }

@@ -112,7 +112,7 @@ export const HomePageWrap = styled.div`
         }
         &:hover {
           color: var(--color-white);
-          background: var(--color-link-hover);
+          background: var(--color-primary-dark);
         }
       }
       .whiteBtn {
@@ -124,7 +124,7 @@ export const HomePageWrap = styled.div`
         cursor: pointer;
         &:hover {
           color: var(--color-link-hover);
-          border: 1px solid var(--color-link-hover);
+          border: 1px solid var(--color-primary-dark);
           cursor: pointer;
         }
       }
@@ -723,7 +723,7 @@ export const TitleWrap = styled.div`
     border: 1px solid var(--color-border-primary);
     &:hover {
       color: var(--color-link-hover);
-      border: 1px solid var(--color-link-hover);
+      border: 1px solid var(--color-primary-dark);
       cursor: pointer;
     }
   }

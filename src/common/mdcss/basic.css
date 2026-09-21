@@ -2,7 +2,15 @@
 
 :root {
   --app-primary-color: var(--color-primary);
-  --app-primary-hover-color: var(--color-link-hover);
+  /* 【必须指向按主题算出来的深色档，不能用 --color-link-hover】
+     后者是【链接】的悬停色，亮暗两套主题里都是写死的蓝，不跟应用主题走。
+     于是 ming-ui 主按钮常态是主题色、一悬停就跳回蓝 ——
+     橙色主题下尤其刺眼（张奇报的就是快速筛选那个「查询」按钮）。
+     --color-primary-dark 是调色板按当前主题算的 colorPrimaryActive：
+     平台色下它和 --color-link-hover 恰好同值，所以平台主题的观感【一点不变】，
+     换成应用主题色时才跟着走。
+     （注释里不要写字面色值 —— check:colors 棘轮连注释一起数。） */
+  --app-primary-hover-color: var(--color-primary-dark);
 }
 
 body,
@@ -1836,7 +1844,7 @@ body .Hidden {
 .btnBootstrap-primary.active,
 .btnBootstrap-primary.disabled,
 .btnBootstrap-primary[disabled] {
-  background-color: var(--color-link-hover);
+  background-color: var(--color-primary-dark);
 }
 
 .btnBootstrap-black {

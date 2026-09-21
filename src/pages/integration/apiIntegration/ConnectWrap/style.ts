@@ -135,7 +135,7 @@ export const ConnetWrap = styled.div`
           opacity: 0.5;
         }
         &:hover {
-          background: var(--color-link-hover);
+          background: var(--color-primary-dark);
         }
       }
     }

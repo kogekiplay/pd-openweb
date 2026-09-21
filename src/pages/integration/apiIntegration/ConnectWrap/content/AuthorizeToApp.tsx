@@ -42,7 +42,7 @@ const Wrap = styled.div`
     color: var(--color-white);
     display: inline-block;
     &:hover {
-      background: var(--color-link-hover);
+      background: var(--color-primary-dark);
     }
   }
 `;

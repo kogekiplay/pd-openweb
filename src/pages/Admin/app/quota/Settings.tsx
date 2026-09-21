@@ -76,7 +76,7 @@ const ContentWrap = styled.div`
     background: var(--color-primary);
     color: var(--color-white);
     &:hover {
-      background: var(--color-link-hover);
+      background: var(--color-primary-dark);
     }
     &.disabled {
       color: var(--color-white);
@@ -105,15 +105,15 @@ const ContentWrap = styled.div`
     height: 36px;
     .add {
       color: var(--color-link-hover);
-      border: 1px solid var(--color-link-hover);
+      border: 1px solid var(--color-primary-dark);
       line-height: 34px;
       cursor: pointer;
       padding: 0 var(--space-5);
       border-radius: var(--radius-sm);
       &:hover {
         color: var(--color-white);
-        border: 1px solid var(--color-link-hover);
-        background-color: var(--color-link-hover);
+        border: 1px solid var(--color-primary-dark);
+        background-color: var(--color-primary-dark);
       }
     }
     .w200 {

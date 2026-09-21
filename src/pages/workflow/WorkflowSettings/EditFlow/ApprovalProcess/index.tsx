@@ -59,7 +59,7 @@ const ApprovalProcessBox = styled.div`
 const Box = styled.div`
   .foldNode {
     color: var(--color-white);
-    background: var(--color-link-hover);
+    background: var(--color-primary-dark);
     .approvalIcon {
       background: var(--color-background-primary);
       color: var(--color-link-hover);

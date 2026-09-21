@@ -30,7 +30,7 @@ const AppFilterWrap = styled.div`
       background-color: var(--color-background-hover);
     }
     &.active {
-      background-color: var(--color-primary-focus) 1a;
+      background-color: color-mix(in srgb, var(--color-primary-focus) 10%, transparent);
     }
   }
   .searchWrapper {

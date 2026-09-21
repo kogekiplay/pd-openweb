@@ -82,7 +82,7 @@ const ExplainCon = styled.div`
     font-weight: 600;
   }
   .explain-button:hover {
-    background: var(--color-link-hover);
+    background: var(--color-primary-dark);
   }
 `;
 

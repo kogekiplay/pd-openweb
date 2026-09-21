@@ -123,7 +123,7 @@ const Wrap = styled.div`
         line-height: 1em;
         border-radius: 30px;
         &:hover {
-          background: var(--color-link-hover);
+          background: var(--color-primary-dark);
         }
       }
     }

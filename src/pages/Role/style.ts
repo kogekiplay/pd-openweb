@@ -206,7 +206,7 @@ export const WrapFooter = styled.div`
       background-color ease-in 0;
     background: var(--color-primary);
     &:not(.disabled):hover {
-      background: var(--color-link-hover);
+      background: var(--color-primary-dark);
     }
     &.disabled {
       opacity: 0.6;

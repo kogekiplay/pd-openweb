@@ -58,7 +58,7 @@ const Wrap = styled.div`
     cursor: pointer;
 
     &:hover {
-      background: var(--color-link-hover);
+      background: var(--color-primary-dark);
     }
   }
 `;

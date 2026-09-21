@@ -73,7 +73,7 @@ const Footer = styled.div`
     cursor: pointer;
   }
   .confirmBtn:hover {
-    background-color: var(--color-link-hover);
+    background-color: var(--color-primary-dark);
   }
   .disabledBtn {
     cursor: not-allowed;

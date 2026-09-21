@@ -48,9 +48,12 @@
     .Checkbox-box {
       background-color: var(--color-primary) !important;
       border-color: var(--color-primary) !important;
+      /* 同 basic.css 里 --app-primary-hover-color 那条：悬停色必须跟着主题算，
+         不能用 --color-link-hover（那是【链接】的悬停色，写死的蓝）。
+         否则常态是主题色、一悬停就跳回蓝。 */
       &:hover {
-        background-color: var(--color-link-hover) !important;
-        border-color: var(--color-link-hover) !important;
+        background-color: var(--color-primary-dark) !important;
+        border-color: var(--color-primary-dark) !important;
       }
       & > i.icon {
         display: inline-block;

@@ -166,7 +166,7 @@
       border-radius: 25px;
       &:hover {
         color: var(--color-primary);
-        background-color: var(--color-primary) 33;
+        background-color: color-mix(in srgb, var(--color-primary) 20%, transparent);
       }
     }
     .passApprove,
@@ -226,7 +226,7 @@
     .icon-close {
       color: var(--color-primary);
       &:hover {
-        color: var(--color-primary-focus) b3;
+        color: color-mix(in srgb, var(--color-primary-focus) 70%, transparent);
       }
     }
     &.active {

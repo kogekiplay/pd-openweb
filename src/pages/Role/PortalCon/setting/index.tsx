@@ -87,7 +87,7 @@ const WrapCon = styled.div`
     background: var(--color-primary);
     color: var(--color-white);
     &:hover {
-      background-color: var(--color-link-hover);
+      background-color: var(--color-primary-dark);
     }
     &.disable {
       opacity: 0.5;

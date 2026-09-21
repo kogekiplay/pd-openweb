@@ -17,7 +17,7 @@ import ImportResulFailtDetail from './ImportResulFailtDetail';
 import UploadFile from './UploadFile';
 
 const ImportBtn = styled.div`
-  background: var(--color-link-hover);
+  background: var(--color-primary-dark);
   border-radius: 32px;
   color: var(--color-white);
   height: 36px;

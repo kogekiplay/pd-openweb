@@ -24,7 +24,7 @@ const PublicqueryHeader = styled.div`
     line-height: 36px;
     width: 103px;
     &:hover {
-      background: var(--color-link-hover);
+      background: var(--color-primary-dark);
     }
   }
 `;

@@ -19,7 +19,7 @@ const PayDialogWrap = styled(Dialog)`
     color: var(--color-white);
     background-color: var(--color-primary);
     &:hover {
-      background-color: var(--color-link-hover);
+      background-color: var(--color-primary-dark);
     }
   }
 `;

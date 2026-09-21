@@ -19,7 +19,7 @@ const Con = styled.div`
     padding: 0 var(--space-4) !important;
     background-color: var(--color-primary);
     &:hover {
-      background-color: var(--color-link-hover);
+      background-color: var(--color-primary-dark);
     }
   }
 `;

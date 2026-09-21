@@ -65,7 +65,7 @@ const NewRecordButton = styled.div`
   align-items: center;
   cursor: pointer;
   &:hover {
-    background: var(--color-link-hover);
+    background: var(--color-primary-dark);
   }
 `;
 

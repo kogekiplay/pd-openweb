@@ -79,11 +79,11 @@ const OperationWrap = styled.div`
 
 const WidthMenuItem = styled(MenuItem)`
   &.isActive {
-    background: var(--color-link-hover);
+    background: var(--color-primary-dark);
     color: var(--color-white);
 
     &.ming.MenuItem .Item-content:not(.disabled):hover {
-      background: var(--color-link-hover) !important;
+      background: var(--color-primary-dark) !important;
     }
   }
   &.menuTitle {

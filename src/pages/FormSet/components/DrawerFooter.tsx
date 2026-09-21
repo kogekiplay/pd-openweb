@@ -19,7 +19,7 @@ const FooterWrap = styled.div`
     border-radius: var(--radius-sm);
     line-height: 36px;
     &:hover {
-      background-color: var(--color-link-hover);
+      background-color: var(--color-primary-dark);
     }
     &.disabled {
       background-color: rgba(73, 127, 251, 0.49);

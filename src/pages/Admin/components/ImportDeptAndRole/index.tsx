@@ -122,7 +122,7 @@ const ImportWrap = styled.div`
         margin: 44px auto 0;
         text-align: center;
         line-height: 34px;
-        background: var(--color-link-hover);
+        background: var(--color-primary-dark);
         border-radius: 32px;
         font-size: var(--font-md);
         font-family: FZLanTingHeiS;
@@ -161,7 +161,7 @@ const ColErrorInfo = styled.div`
     height: 34px;
     line-height: 34px;
     text-align: center;
-    background: var(--color-link-hover);
+    background: var(--color-primary-dark);
     border-radius: 32px;
     margin-top: 50px;
     color: var(--color-white);
@@ -278,7 +278,7 @@ const SuccessInfo = styled.div`
     height: 34px;
     line-height: 34px;
     text-align: center;
-    background: var(--color-link-hover);
+    background: var(--color-primary-dark);
     border-radius: 32px;
     margin-top: 50px;
     color: var(--color-white);

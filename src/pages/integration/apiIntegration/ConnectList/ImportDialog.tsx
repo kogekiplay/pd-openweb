@@ -75,7 +75,7 @@ const Wrap = styled.div`
         background: var(--color-primary);
         border-radius: 18px;
         &:hover {
-          background: var(--color-link-hover);
+          background: var(--color-primary-dark);
         }
       }
 
@@ -97,7 +97,7 @@ const Wrap = styled.div`
           background: var(--color-text-disabled) !important;
         }
         &:hover {
-          background: var(--color-link-hover);
+          background: var(--color-primary-dark);
         }
       }
     }

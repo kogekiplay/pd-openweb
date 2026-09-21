@@ -10,7 +10,7 @@ import { getIconByType } from 'src/pages/widgetConfig/util';
 
 const SearchControlWrapper = styled.div`
   padding: var(--space-2) 5px;
-  border-bottom: 1px solid var(--color-border-primary) ff;
+  border-bottom: 1px solid var(--color-border-primary);
   input {
     color: var(--color-white);
     border: none;

@@ -39,7 +39,7 @@ const FooterCon = styled.div`
     border: 1px solid var(--color-primary);
     &:hover {
       color: var(--color-link-hover);
-      border: 1px solid var(--color-link-hover);
+      border: 1px solid var(--color-primary-dark);
     }
   }
 `;

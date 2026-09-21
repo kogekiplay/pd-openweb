@@ -107,7 +107,7 @@ const AccountWrap = styled.div`
       }
 
       &.btnEnabled:hover {
-        background-color: var(--color-link-hover);
+        background-color: var(--color-primary-dark);
         -webkit-transition: background-color 0.5s;
         transition: background-color 0.5s;
       }

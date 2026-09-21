@@ -177,8 +177,8 @@ const ConfigWrapper = styled.div`
         background: var(--color-primary);
         border: 1px solid var(--color-primary);
         &:hover {
-          background: var(--color-link-hover);
-          border: 1px solid var(--color-link-hover);
+          background: var(--color-primary-dark);
+          border: 1px solid var(--color-primary-dark);
         }
       }
     }

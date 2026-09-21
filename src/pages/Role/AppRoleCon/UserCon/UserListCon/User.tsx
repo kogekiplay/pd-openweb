@@ -95,7 +95,7 @@ const WrapBar = styled.div`
     padding: 0 var(--space-3);
     display: inline-block;
     &:hover {
-      background: var(--color-link-hover);
+      background: var(--color-primary-dark);
     }
   }
   .search .roleSearch {
