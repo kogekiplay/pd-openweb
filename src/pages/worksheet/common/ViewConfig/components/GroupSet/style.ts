@@ -25,10 +25,10 @@ export const Wrap = styled.div`
       opacity: 1;
       background: var(--color-background-primary);
       border-radius: var(--radius-sm);
-      margin: 8px 0;
+      margin: var(--space-2) 0;
       box-sizing: border-box;
       &.mTop0 {
-        margin: 0 8px 0 0;
+        margin: 0 var(--space-2) 0 0;
       }
       .actionIcon {
         width: 13px;
@@ -37,7 +37,7 @@ export const Wrap = styled.div`
         flex: 1;
       }
       .Dropdown--input {
-        padding: 0 12px 0 12px;
+        padding: 0 var(--space-3) 0 var(--space-3);
         width: 100%;
         display: flex;
         border: 1px solid var(--color-border-primary);
@@ -69,7 +69,7 @@ export const Wrap = styled.div`
       background: var(--color-background-primary);
       border: 1px solid var(--color-border-primary);
       border-radius: var(--radius-sm);
-      padding: 0 12px 0 12px;
+      padding: 0 var(--space-3) 0 var(--space-3);
       .icon {
         line-height: 35px;
       }
@@ -90,7 +90,7 @@ export const Wrap = styled.div`
     .iconWrap {
       display: inline-block;
       vertical-align: middle;
-      margin-left: 8px;
+      margin-left: var(--space-2);
     }
   }
   .noData {
@@ -102,12 +102,12 @@ export const Wrap = styled.div`
       }
     }
     h6 {
-      font-size: 20px;
+      font-size: var(--font-2xl);
       font-weight: 500;
       color: var(--color-text-title);
       text-align: center;
       padding: 0;
-      padding-top: 32px;
+      padding-top: var(--space-8);
       margin: 0;
     }
     .text {
@@ -115,9 +115,9 @@ export const Wrap = styled.div`
       text-align: center;
       color: var(--color-text-tertiary);
       line-height: 20px;
-      font-size: 13px;
+      font-size: var(--font-sm);
       width: 80%;
-      margin: 24px auto 0;
+      margin: var(--space-6) auto 0;
     }
     .addFilterCondition {
       width: 100% !important;
@@ -128,7 +128,7 @@ export const Wrap = styled.div`
       line-height: 1 !important;
       text-align: center;
       &.nodata {
-        margin: 32px auto 0 !important;
+        margin: var(--space-8) auto 0 !important;
       }
       & > span {
         width: 100% !important;
@@ -141,11 +141,11 @@ export const Wrap = styled.div`
         border-radius: var(--radius-sm);
         color: var(--color-white);
         display: inline-block;
-        padding: 12px 32px;
+        padding: var(--space-3) var(--space-8);
         cursor: pointer;
         font-weight: bold;
         .icon {
-          font-size: 20px;
+          font-size: var(--font-2xl);
         }
         &:hover {
           background: var(--color-link-hover);
@@ -160,15 +160,15 @@ export const Wrap = styled.div`
 
 const DisplayControlOption = styled(FlexCenter)`
   .icon {
-    font-size: 16px;
+    font-size: var(--font-lg);
     color: var(--color-text-secondary);
-    margin-right: 4px;
+    margin-right: var(--space-1);
   }
   span {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    margin-left: 4px;
+    margin-left: var(--space-1);
   }
 `;
 

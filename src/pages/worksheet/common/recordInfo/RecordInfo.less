@@ -21,10 +21,10 @@
     overflow: hidden;
     background-color: var(--color-background-primary);
     border-radius: var(--radius-sm);
-    font-size: 13px;
+    font-size: var(--font-sm);
 
     .recordHeader {
-      padding: 0 16px 0 24px;
+      padding: 0 var(--space-4) 0 var(--space-6);
       box-sizing: border-box;
       position: relative;
       z-index: 3;
@@ -36,7 +36,7 @@
       .prevRecordBtn,
       .nextRecordBtn {
         cursor: pointer;
-        font-size: 18px;
+        font-size: var(--font-xl);
         color: var(--color-text-tertiary);
         margin-right: 6px;
 
@@ -60,7 +60,7 @@
       }
 
       .customButtons {
-        margin: 8px 0px 0px 20px;
+        margin: var(--space-2) 0px 0px var(--space-5);
       }
 
       .aiActionButtons {
@@ -86,7 +86,7 @@
       }
 
       .shareText {
-        font-size: 13px;
+        font-size: var(--font-sm);
         margin-left: 2px;
       }
     }
@@ -105,7 +105,7 @@
           .topCon {
             overflow-y: auto;
             overflow-x: hidden;
-            padding-bottom: 32px;
+            padding-bottom: var(--space-8);
           }
           #newCustomTabSectionWrap {
             overflow: hidden;
@@ -116,7 +116,7 @@
           }
         }
         .recordInfoFormHeader {
-          padding: 0 32px;
+          padding: 0 var(--space-8);
           .worksheetNameCon {
             display: flex;
             align-items: center;
@@ -128,7 +128,7 @@
           .worksheetName {
             cursor: pointer;
             text-decoration: none;
-            font-size: 13px;
+            font-size: var(--font-sm);
 
             &:hover {
               color: var(--color-primary);
@@ -137,7 +137,7 @@
 
           .lastLog {
             position: relative;
-            margin: 2px 20px;
+            margin: 2px var(--space-5);
             .userName {
               display: inline-block;
               max-width: 200px;
@@ -179,10 +179,10 @@
           .recordTitle,
           .recordTitleForSection {
             font-weight: bold !important;
-            margin: 16px 0;
+            margin: var(--space-4) 0;
             line-height: 1.3em;
             vertical-align: middle;
-            font-size: 24px;
+            font-size: var(--font-3xl);
             color: var(--color-text-primary);
             white-space: pre-wrap;
             .maskHoverTheme {
@@ -199,7 +199,7 @@
           .lockedUserInfo {
             display: flex;
             align-items: center;
-            margin-bottom: 16px;
+            margin-bottom: var(--space-4);
             .lineTag {
               width: 3px;
               background: var(--color-border-primary);
@@ -214,14 +214,14 @@
           }
         }
         .recordInfoFormContent {
-          padding: 0 32px;
+          padding: 0 var(--space-8);
         }
         .abnormalCon {
           width: 100%;
           height: 100%;
           align-items: center;
           justify-content: center;
-          font-size: 14px;
+          font-size: var(--font-md);
           color: var(--color-text-secondary);
           .statusIcon {
             font-size: 84px;
@@ -240,16 +240,16 @@
           position: relative;
           background: var(--color-background-secondary);
           border-color: var(--color-border-primary) !important;
-          font-size: 13px;
+          font-size: var(--font-sm);
           .header {
             height: 56px;
-            padding: 2px 24px;
+            padding: 2px var(--space-6);
             border-color: var(--color-border-secondary) !important;
             > .talk {
               position: relative;
               line-height: 50px;
               padding: 0 14px;
-              font-size: 14px !important;
+              font-size: var(--font-md) !important;
               font-weight: 500;
               max-width: 25%;
               &.maxWidthFitContent {
@@ -283,7 +283,7 @@
             background: var(--color-background-secondary);
             border-radius: var(--radius-sm);
             padding: 2px;
-            margin: 16px 16px 0;
+            margin: var(--space-4) var(--space-4) 0;
             & > div {
               height: 28px;
               line-height: 28px;
@@ -320,7 +320,7 @@
   position: relative;
   overflow: hidden;
   font-weight: bold;
-  padding: 0 16px !important;
+  padding: 0 var(--space-4) !important;
   height: 34px !important;
   min-width: 72px;
   line-height: 32px !important;
@@ -349,8 +349,8 @@
   }
 
   .icon:not(svg) {
-    font-size: 18px;
-    margin-right: 4px;
+    font-size: var(--font-xl);
+    margin-right: var(--space-1);
   }
 
   &:not(:disabled):hover::before {
@@ -415,7 +415,7 @@
       position: absolute;
       right: 16px;
       color: var(--color-text-tertiary);
-      font-size: 12px;
+      font-size: var(--font-xs);
       .downloadIcon {
         left: auto !important;
         right: 0;

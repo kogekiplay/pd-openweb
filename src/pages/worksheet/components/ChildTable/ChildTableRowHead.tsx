@@ -15,7 +15,7 @@ const Con = styled.span`
     width: 44px;
     text-align: center;
     .num {
-      font-size: 13px;
+      font-size: var(--font-sm);
       color: var(--color-text-tertiary);
     }
     .Checkbox-box {
@@ -23,7 +23,7 @@ const Con = styled.span`
     }
   }
   .moreOperate {
-    margin: 5px 8px 0 12px;
+    margin: 5px var(--space-2) 0 var(--space-3);
   }
   .open,
   .operateBtn,
@@ -36,7 +36,7 @@ const Con = styled.span`
   }
   .operateBtn,
   .open .icon {
-    font-size: 18px;
+    font-size: var(--font-xl);
     color: var(--color-text-tertiary);
     cursor: pointer;
     top: 2px;

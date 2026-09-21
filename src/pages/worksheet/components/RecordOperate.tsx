@@ -31,7 +31,7 @@ const Loading = styled.div`
   align-items: center;
   height: 36px;
   .icon {
-    font-size: 20px;
+    font-size: var(--font-2xl);
     color: var(--color-text-tertiary);
     height: 20px;
     animation: rotate 0.6s infinite linear;
@@ -73,7 +73,7 @@ const RedMenuItemWrap = styled(MenuItemWrap)`
 `;
 
 const Empty = styled.div`
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: var(--color-text-disabled);
   padding: 9px;
   text-align: center;
@@ -88,7 +88,7 @@ const MoreOperate = styled.span`
   width: 24px;
   height: 24px;
   color: var(--color-text-tertiary);
-  font-size: 18px;
+  font-size: var(--font-xl);
   &:hover {
     background-color: var(--color-background-secondary);
     color: var(--color-primary);

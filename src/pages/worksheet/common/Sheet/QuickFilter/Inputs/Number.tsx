@@ -16,7 +16,7 @@ const Con = styled.div`
 
 const InputCon = styled(Input)`
   width: 100%;
-  font-size: 13px !important;
+  font-size: var(--font-sm) !important;
   height: 32px !important;
   border: 1px solid var(--color-border-primary) !important;
   box-sizing: border-box !important;

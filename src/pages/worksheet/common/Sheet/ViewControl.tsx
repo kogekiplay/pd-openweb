@@ -55,12 +55,12 @@ const Con = styled.div`
   flex-direction: revert;
   flex-shrink: 0;
   height: 37px;
-  padding: 0 20px 0 20px;
+  padding: 0 var(--space-5) 0 var(--space-5);
   border-bottom: 1px solid var(--color-border-secondary);
 
   .detailAllCount {
-    padding-left: 16px;
-    font-size: 14px;
+    padding-left: var(--space-4);
+    font-size: var(--font-md);
     color: var(--color-text-secondary);
   }
 `;

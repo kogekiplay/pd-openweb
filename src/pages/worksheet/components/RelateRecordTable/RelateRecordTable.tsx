@@ -32,7 +32,7 @@ const ErrorStatus = styled.div`
   height: 120px;
   background-color: var(--color-background-secondary);
   color: var(--color-text-tertiary);
-  font-size: 13px;
+  font-size: var(--font-sm);
 `;
 
 function RelateRecordTable(props) {
@@ -157,7 +157,7 @@ function RelateRecordTable(props) {
     ) : (
       <Skeleton
         style={{
-          ...(isSplit && { overflow: 'auto', padding: '0 24px' }),
+          ...(isSplit && { overflow: 'auto', padding: '0 var(--space-6)' }),
         }}
       />
     );
@@ -178,7 +178,7 @@ function RelateRecordTable(props) {
           recordTitle={recordTitle}
           className={cx('mBottom10', { mTop10: !isSplit && isTab })}
           style={{
-            ...(isSplit && { padding: '10px 24px' }),
+            ...(isSplit && { padding: '10px var(--space-6)' }),
           }}
           cache={tableCache}
           handleOpenRecordInfo={handleOpenRecordInfo}
@@ -189,7 +189,7 @@ function RelateRecordTable(props) {
       <TableCon
         className={cx({ flex: isSplit || useHeight, mTop30: smallMode && isInForm })}
         style={{
-          ...(isSplit && { overflow: 'auto', padding: '0 24px' }),
+          ...(isSplit && { overflow: 'auto', padding: '0 var(--space-6)' }),
         }}
         ref={tableConRef}
       >

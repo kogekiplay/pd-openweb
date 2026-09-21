@@ -33,7 +33,7 @@ function getCellHeight(texts = [], width: number) {
   div.innerHTML = texts
     .map(
       text =>
-        `<div style="display:inline-block;font-size: 13px;margin: 6px 0 0 6px;padding: 0 10px;max-width: ${
+        `<div style="display:inline-block;font-size: var(--font-sm);margin: 6px 0 0 6px;padding: 0 10px;max-width: ${
           width - 46
         }px"><span class="name InlineBlock ellipsis" style="max-width: 100%;">${htmlEncodeReg(text)}</span></div>`,
     )
@@ -85,7 +85,7 @@ const Tag = styled.div`
   padding: 0 10px;
   margin: 6px 0 0 6px;
   &.isediting.allowRemove {
-    padding-right: 24px;
+    padding-right: var(--space-6);
   }
   &.allowOpenRecord:hover {
     color: var(--color-primary);
@@ -98,11 +98,11 @@ const Tag = styled.div`
     right: 4px;
     top: 2px;
     color: var(--color-text-tertiary);
-    font-size: 16px;
+    font-size: var(--font-lg);
     cursor: pointer;
   }
   &.icon {
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-text-secondary);
     cursor: pointer;
     padding: 0;

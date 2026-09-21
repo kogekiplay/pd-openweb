@@ -423,7 +423,7 @@ function Sheet(props) {
                 <QuickFilterCon>
                   {worksheetInfo.isRequestingRelationControls ? (
                     <div style={{ height: 50, overflow: 'hidden' }}>
-                      <Skeleton direction="row" widths={['140px']} active itemStyle={{ margin: '20px 0' }} />
+                      <Skeleton direction="row" widths={['140px']} active itemStyle={{ margin: 'var(--space-5) 0' }} />
                     </div>
                   ) : (
                     <QuickFilter

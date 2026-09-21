@@ -13,7 +13,7 @@ import SortConditions from '../SortConditions';
 
 const Wrap = styled.div`
   .custom {
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     height: 36px;
     line-height: 36px;
     background: var(--color-background-primary);

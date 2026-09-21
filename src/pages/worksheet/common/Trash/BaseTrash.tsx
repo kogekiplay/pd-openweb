@@ -11,7 +11,7 @@ const Header = styled.div`
   height: 52px;
   display: flex;
   align-items: center;
-  padding: 0 24px;
+  padding: 0 var(--space-6);
   border-bottom: 1px solid rgba(0, 0, 0, 0.09) !important;
 `;
 
@@ -24,7 +24,7 @@ const TableRow = styled.div`
   align-items: center;
   height: 60px;
   border-bottom: 1px solid var(--color-border-primary);
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   .operateIcon {
     opacity: 0;
   }
@@ -37,11 +37,11 @@ const TableRow = styled.div`
 `;
 
 const TableHeaderCon = styled.div`
-  padding: 0 20px;
+  padding: 0 var(--space-5);
 `;
 
 const TableHeader = styled(TableRow)`
-  padding: 0 142px 0 12px;
+  padding: 0 142px 0 var(--space-3);
   height: 40px;
   &:hover {
     background: inherit;
@@ -53,7 +53,7 @@ const TableBody = styled(ScrollView)`
   overflow-y: auto;
 `;
 const TableBodyPadding = styled.div`
-  padding: 0 20px;
+  padding: 0 var(--space-5);
   height: 100%;
 `;
 

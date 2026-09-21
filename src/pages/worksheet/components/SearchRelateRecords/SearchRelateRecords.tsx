@@ -9,15 +9,15 @@ import emptyImg from './empty.png';
 import RecordCoverCardList from './RecordCoverCardList';
 
 const Title = styled.div`
-  font-size: 16px;
+  font-size: var(--font-lg);
   font-weight: 600;
   color: var(--color-text-title);
-  margin-left: 24px;
+  margin-left: var(--space-6);
 `;
 
 const SearchCon = styled.div`
   display: flex;
-  margin: 16px 24px 0px;
+  margin: var(--space-4) var(--space-6) 0px;
   align-items: center;
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-primary);
@@ -35,13 +35,13 @@ const SearchCon = styled.div`
 `;
 
 const RecordsCon = styled.div`
-  padding: 10px 24px;
+  padding: 10px var(--space-6);
   flex: 1;
   overflow: auto;
 `;
 
 const Empty = styled.div`
-  font-size: 14px;
+  font-size: var(--font-md);
   color: var(--color-text-tertiary);
   height: 100%;
   display: flex;
@@ -55,11 +55,11 @@ const Empty = styled.div`
 `;
 
 const NewRecordButton = styled.div`
-  margin-top: 20px;
+  margin-top: var(--space-5);
   height: 38px;
   border-radius: 38px;
   background-color: var(--color-primary);
-  padding: 0 24px;
+  padding: 0 var(--space-6);
   color: var(--color-white);
   display: flex;
   align-items: center;

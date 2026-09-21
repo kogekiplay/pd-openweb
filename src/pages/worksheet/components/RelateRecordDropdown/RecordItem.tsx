@@ -143,11 +143,11 @@ export default class RecordItem extends React.PureComponent<any, any> {
       size === SIZE.BIG
         ? {
             lineHeight: height / 2 - 6 + 'px',
-            padding: '6px 40px 6px 12px',
+            padding: '6px 40px 6px var(--space-3)',
           }
         : {
             lineHeight: height - 12 + 'px',
-            padding: '6px 40px 6px 12px',
+            padding: '6px 40px 6px var(--space-3)',
           };
     let coverUrl;
 

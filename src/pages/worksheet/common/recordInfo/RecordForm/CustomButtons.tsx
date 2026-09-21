@@ -61,10 +61,10 @@ export const HoverButton = styled(Button)`
     height: ${props.operateHeight}px !important;
     line-height: ${props.operateHeight - 2}px !important;
     min-height: ${props.operateHeight}px !important;
-    padding: 0 8px 0 8px !important;
-    font-size: 12px !important;
+    padding: 0 var(--space-2) 0 var(--space-2) !important;
+    font-size: var(--font-xs) !important;
     &:not(.iconShowAsSvg).icon {
-      font-size: 16px !important;
+      font-size: var(--font-lg) !important;
       margin-right: 2px !important;
       margin-left: -2px !important;
     }

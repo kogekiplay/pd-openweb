@@ -11,17 +11,17 @@ const TEXT_TYPE_CONTROL = [2, 3, 4, 5, 7, 32, 33];
 const ConfigWrap = styled.div`
   .lineBox {
     border-top: 1px solid var(--color-border-primary);
-    margin: 32px 0;
+    margin: var(--space-8) 0;
   }
   .title {
     margin-top: 0 !important;
     font-weight: bold;
-    font-size: 13px;
+    font-size: var(--font-sm);
     padding-top: 0;
   }
   .configItem {
     align-items: center;
-    margin-top: 24px;
+    margin-top: var(--space-6);
     .title {
       width: 80px;
     }
@@ -31,8 +31,8 @@ const ConfigWrap = styled.div`
   }
   .settingTitle {
     font-weight: 400;
-    font-size: 13px;
-    margin-top: 24px;
+    font-size: var(--font-sm);
+    margin-top: var(--space-6);
   }
   .ming.Dropdown {
     background-color: transparent;

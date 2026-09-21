@@ -17,10 +17,10 @@ const Wrap = styled.div`
       height: 44px;
       min-height: 44px;
       width: 100%;
-      padding: 0 12px;
+      padding: 0 var(--space-3);
       .icon {
         line-height: 35px;
-        font-size: 20px;
+        font-size: var(--font-2xl);
         color: var(--color-text-disabled);
         &.icon-close {
           cursor: pointer;
@@ -39,7 +39,7 @@ const Wrap = styled.div`
         height: 36px;
         border: none;
         padding-left: 6px;
-        font-size: 13px;
+        font-size: var(--font-sm);
       }
     }
   }

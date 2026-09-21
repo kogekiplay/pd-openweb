@@ -11,7 +11,7 @@ import { controlState } from 'src/utils/control';
 import { useRecords } from './useRecords';
 
 const Title = styled.div`
-  font-size: 18px;
+  font-size: var(--font-xl);
   font-weight: 500;
   color: var(--color-text-title);
   line-height: 70px;
@@ -20,7 +20,7 @@ const Title = styled.div`
 
 const RecordsCon = styled.div`
   max-height: 500px;
-  padding: 0 16px;
+  padding: 0 var(--space-4);
   overflow-y: auto;
 `;
 

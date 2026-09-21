@@ -24,13 +24,13 @@ import './style.less';
 
 const OnlyScanTip = styled.div`
   width: 310px;
-  padding: 10px 16px;
+  padding: 10px var(--space-4);
   color: var(--color-text-tertiary);
   border-radius: var(--radius-sm);
   background-color: var(--color-background-primary);
   box-shadow: var(--shadow-lg);
   .clearBtn {
-    padding: 6px 16px;
+    padding: 6px var(--space-4);
     margin: 0 -16px 6px;
     cursor: pointer;
     color: var(--color-text-tertiary);

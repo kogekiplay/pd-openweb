@@ -47,7 +47,7 @@ const wrapStyles = `
   white-space: nowrap;
   background-color: transparent;
   border-radius: var(--radius-sm);
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-title);
   position: relative;
   .text {

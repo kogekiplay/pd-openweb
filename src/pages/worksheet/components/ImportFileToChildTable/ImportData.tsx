@@ -56,7 +56,7 @@ const Header = styled.div`
 
 const Content = styled.div`
   flex: 1;
-  padding: 24px;
+  padding: var(--space-6);
   .uploadExcel {
     height: 100%;
     > div {
@@ -65,14 +65,14 @@ const Content = styled.div`
   }
   .footer {
     text-align: right;
-    margin-top: 20px;
+    margin-top: var(--space-5);
   }
   .editingCellInput {
     border: none;
     padding: 0;
     outline: none;
     width: 100%;
-    font-size: 13px;
+    font-size: var(--font-sm);
   }
 `;
 

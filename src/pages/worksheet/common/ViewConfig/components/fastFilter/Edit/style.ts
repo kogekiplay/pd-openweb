@@ -31,12 +31,12 @@ export const Wrap = styled.div`
     .topHeader {
       height: 56px;
       min-height: 56px;
-      padding: 0 24px;
+      padding: 0 var(--space-6);
       display: flex;
       align-items: center;
       justify-content: start;
       border-bottom: 1px solid var(--color-border-secondary);
-      font-size: 16px;
+      font-size: var(--font-lg);
       font-weight: 500;
       span {
         flex: 1;
@@ -50,13 +50,13 @@ export const Wrap = styled.div`
     }
     .con {
       overflow: auto;
-      padding: 0 24px;
+      padding: 0 var(--space-6);
       .title {
-        padding-top: 24px;
+        padding-top: var(--space-6);
         margin-top: 0 !important;
         font-weight: bold;
-        font-size: 13px;
-        font-size: 13px;
+        font-size: var(--font-sm);
+        font-size: var(--font-sm);
       }
       .ant-radio-input {
         display: none !important;
@@ -75,12 +75,12 @@ export const Wrap = styled.div`
         background: var(--color-background-primary);
         border: 1px solid var(--color-border-primary);
         border-radius: var(--radius-sm);
-        padding: 0 12px 0 12px;
+        padding: 0 var(--space-3) 0 var(--space-3);
         .icon {
           line-height: 35px;
         }
         &.timeRange {
-          padding: 0 0 0 12px;
+          padding: 0 0 0 var(--space-3);
           .act {
             width: 18px;
             height: 18px;
@@ -122,13 +122,13 @@ export const Wrap = styled.div`
         opacity: 1;
         background: var(--color-background-primary);
         border-radius: var(--radius-sm);
-        margin-top: 8px;
+        margin-top: var(--space-2);
         box-sizing: border-box;
         & > div {
           flex: 1;
         }
         .Dropdown--input {
-          padding: 0 8px 0 12px;
+          padding: 0 var(--space-2) 0 var(--space-3);
           width: 100%;
           display: flex;
           border: 1px solid var(--color-border-primary);
@@ -144,10 +144,10 @@ export const Wrap = styled.div`
           }
           .Icon {
             line-height: 36px;
-            font-size: 18px;
+            font-size: var(--font-xl);
           }
           .icon-arrow-down-border {
-            font-size: 14px;
+            font-size: var(--font-md);
           }
           .List {
             width: 100%;
@@ -176,7 +176,7 @@ export const Wrap = styled.div`
         overflow: scroll;
         label {
           display: block;
-          padding: 8px 15px;
+          padding: var(--space-2) 15px;
         }
       }
       .Dropdown--hr {
@@ -201,7 +201,7 @@ export const Wrap = styled.div`
     }
   }
   .ming.Input {
-    font-size: 13px;
+    font-size: var(--font-sm);
   }
   .disabledBtn {
     cursor: not-allowed;

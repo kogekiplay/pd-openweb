@@ -35,7 +35,7 @@ const Header = styled.div`
   justify-content: space-between;
   align-items: center;
   margin: 0 -24px;
-  padding: 0 16px 0 24px;
+  padding: 0 var(--space-4) 0 var(--space-6);
   border-bottom: 1px solid rgba(0, 0, 0, 0.09) !important;
   .title {
     font-size: 17px;
@@ -219,7 +219,7 @@ function DraftModal(props) {
         width={document.body.clientWidth * 0.9}
         type="fixed"
         bodyStyle={{ paddingTop: 0, position: 'relative' }}
-        closeStyle={{ margin: '16px', width: '30px', height: '30px', lineHeight: '30px' }}
+        closeStyle={{ margin: 'var(--space-4)', width: '30px', height: '30px', lineHeight: '30px' }}
         onCancel={onCancel}
       >
         <Con>

@@ -10,7 +10,7 @@ import RecordOperate from 'worksheet/components/RecordOperate';
 import { emitter } from 'src/utils/common';
 
 const Con = styled.span`
-  padding: 0 16px !important;
+  padding: 0 var(--space-4) !important;
   text-align: center;
   line-height: 34px;
   color: var(--color-text-tertiary);
@@ -77,7 +77,7 @@ const ColumnPopupCon = styled.div`
     width: 24px;
     height: 24px;
     color: var(--color-text-tertiary);
-    font-size: 18px;
+    font-size: var(--font-xl);
     &:hover {
       background-color: var(--color-background-secondary);
       color: var(--color-primary);
@@ -87,8 +87,8 @@ const ColumnPopupCon = styled.div`
 
 const OpenRecordBtn = styled(FlexCenter)`
   display: inline-flex;
-  margin-left: 8px;
-  font-size: 16px;
+  margin-left: var(--space-2);
+  font-size: var(--font-lg);
   width: 24px;
   height: 24px;
   color: var(--color-primary);

@@ -22,9 +22,9 @@ const Wrap = styled.div`
 const ConditionsWrap = styled.div`
   .operateBtn {
     cursor: pointer;
-    font-size: 20px;
+    font-size: var(--font-2xl);
     color: var(--color-text-tertiary);
-    margin: 0 4px;
+    margin: 0 var(--space-1);
     line-height: 36px;
 
     &:hover {

@@ -18,7 +18,7 @@ const ExcelControlSettingWrap = styled.div`
   box-shadow: var(--shadow-lg);
   border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
   width: 350px;
-  padding: 20px;
+  padding: var(--space-5);
   max-height: 400px;
   overflow-x: hidden;
   .name {
@@ -27,7 +27,7 @@ const ExcelControlSettingWrap = styled.div`
   }
   .Item-content {
     .ming.Icon {
-      font-size: 16px;
+      font-size: var(--font-lg);
     }
     .itemText {
       padding-left: 15px;

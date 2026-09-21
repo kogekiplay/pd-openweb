@@ -19,7 +19,7 @@ const AIActionDialogWrap = styled(Dialog)`
     width: 180px;
     height: 130px;
     flex-shrink: 0;
-    padding: 10px 12px;
+    padding: 10px var(--space-3);
     border: 1px solid var(--color-border-primary);
     border-radius: 6px;
     &.firstItem {
@@ -87,7 +87,7 @@ const AIActionDialogWrap = styled(Dialog)`
   .line {
     height: 1px;
     background: var(--color-border-primary);
-    margin: 32px 0;
+    margin: var(--space-8) 0;
   }
 
   .textAreaDisabled {

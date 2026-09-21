@@ -51,7 +51,7 @@
     padding: 0 15px;
     font-weight: 500;
     .developIcon {
-      font-size: 14px;
+      font-size: var(--font-md);
       margin: 0 6px 0 -6px;
       color: var(--color-warning);
     }
@@ -88,9 +88,9 @@
     }
   }
   .icon-arrow-down {
-    padding: 0 8px;
+    padding: 0 var(--space-2);
     display: none;
-    font-size: 12px;
+    font-size: var(--font-xs);
     color: var(--color-text-disabled);
     &:hover {
       color: var(--color-text-tertiary);
@@ -134,7 +134,7 @@
       margin: 0 3px;
     }
     .text {
-      font-size: 13px;
+      font-size: var(--font-sm);
       margin-left: 0 !important;
     }
     &:hover {
@@ -181,7 +181,7 @@
     min-width: 180px;
     line-height: 36px;
     padding: 0;
-    padding-left: 12px;
+    padding-left: var(--space-3);
     cursor: pointer;
     margin: 0;
     &:hover {
@@ -190,7 +190,7 @@
     &.current {
       background-color: var(--color-primary-transparent) !important;
       .ming.Icon.icon.icon-done {
-        font-size: 18px;
+        font-size: var(--font-xl);
         left: unset;
         right: 13px;
         color: var(--color-primary) !important;
@@ -205,7 +205,7 @@
     }
 
     span.viewName {
-      margin-left: 12px;
+      margin-left: var(--space-3);
       color: var(--color-text-title);
     }
     .newIcon {
@@ -214,7 +214,7 @@
       align-items: center;
       width: 24px;
       height: 16px;
-      margin-right: 12px;
+      margin-right: var(--space-3);
       border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
       background: color-mix(in srgb, var(--color-primary) 12%, transparent);
     }
@@ -222,7 +222,7 @@
 }
 .drawerWorksheetHidden {
   .ant-drawer-body {
-    padding: 6px 8px;
+    padding: 6px var(--space-2);
   }
   .drawerWorksheetHiddenSearch {
     border: none;
@@ -231,7 +231,7 @@
     height: 36px;
     display: flex;
     align-items: center;
-    padding-left: 20px;
+    padding-left: var(--space-5);
     color: var(--color-text-title);
     margin-bottom: 6px;
     input {
@@ -244,17 +244,17 @@
   }
   .drawerWorksheetHiddenListTitle,
   .drawerWorksheetRecycleListTitle {
-    font-size: 12px;
+    font-size: var(--font-xs);
     height: 32px;
     line-height: 32px;
-    padding-left: 16px;
+    padding-left: var(--space-4);
     margin-bottom: 5px;
   }
   .drawerWorksheetHiddenHelper {
     background-color: var(--color-error);
   }
   .manageViewItem {
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     border-radius: var(--radius-sm);
     height: 36px;
     border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
@@ -310,7 +310,7 @@
     height: 36px;
     min-width: 180px;
     line-height: 36px;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     cursor: pointer;
     margin: 0;
     &:hover,
@@ -322,7 +322,7 @@
   .current.ant-menu-item {
     background-color: var(--color-primary-transparent) !important;
     .ming.Icon.icon.icon-done {
-      font-size: 18px;
+      font-size: var(--font-xl);
       left: unset;
       right: 13px;
       color: var(--color-primary) !important;
@@ -339,17 +339,17 @@
 }
 .drawerWorksheetShowListItem,
 .drawerWorksheetRecycleItem {
-  padding: 9px 32px 9px 0px;
+  padding: 9px var(--space-8) 9px 0px;
   display: flex;
   align-items: center;
-  font-size: 13px;
+  font-size: var(--font-sm);
   cursor: pointer;
   position: relative;
   border-radius: var(--radius-sm);
   .icon-drag {
     opacity: 0;
     color: var(--color-text-tertiary);
-    font-size: 20px;
+    font-size: var(--font-2xl);
   }
   .viewName {
     margin-left: 10px;
@@ -450,7 +450,7 @@
     .hiddenMenu {
       position: absolute;
       border-radius: var(--radius-sm);
-      font-size: 13px;
+      font-size: var(--font-sm);
     }
   }
 }

@@ -26,7 +26,7 @@ import IconBtn from './IconBtn';
 const MenuItemWrap = styled(MenuItem)`
   &.printItem.Item {
     .Item-content {
-      padding-left: 32px;
+      padding-left: var(--space-8);
     }
   }
   &.lightBg.ming.MenuItem {
@@ -55,8 +55,8 @@ const MenuItemWrap = styled(MenuItem)`
 
 const SecTitle = styled.div`
   color: var(--color-text-tertiary);
-  font-size: 12px;
-  margin: 12px 16px 4px;
+  font-size: var(--font-xs);
+  margin: var(--space-3) var(--space-4) var(--space-1);
 `;
 
 const PrintTemplateList = styled.div`

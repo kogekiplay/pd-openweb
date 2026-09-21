@@ -23,7 +23,7 @@ const ToolBarWrap = styled(FlexCenter)`
   background-color: var(--color-background-card);
   border-radius: 26px;
   height: 44px;
-  padding: 0 22px 0 16px;
+  padding: 0 22px 0 var(--space-4);
   z-index: 9;
   box-shadow: var(--shadow-md);
   ${props =>
@@ -31,7 +31,7 @@ const ToolBarWrap = styled(FlexCenter)`
     css`
       left: 0;
       bottom: 20px;
-      margin-left: 16px;
+      margin-left: var(--space-4);
       padding: 0 18px;
       right: auto;
       height: 40px;
@@ -53,7 +53,7 @@ const ToolBarWrap = styled(FlexCenter)`
     --ant-select-border-size: 0 !important;
   }
   .toOrigin {
-    margin: 0 12px;
+    margin: 0 var(--space-3);
   }
   .genScreenshot,
   .toOrigin {
@@ -64,17 +64,17 @@ const ToolBarWrap = styled(FlexCenter)`
     cursor: not-allowed;
   }
   .scale {
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-title);
   }
   .expand {
     .Dropdown--input {
       padding: 5px 7px 5px 18px;
       .value {
-        font-size: 13px;
+        font-size: var(--font-sm);
       }
       .icon {
-        margin-left: 4px !important;
+        margin-left: var(--space-1) !important;
       }
     }
   }

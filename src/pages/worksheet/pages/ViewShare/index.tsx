@@ -16,7 +16,7 @@ import ViewSahre from './ViewSahre';
 const Wrap = styled.div`
   .header {
     height: 44px;
-    padding: 0 24px;
+    padding: 0 var(--space-6);
     box-shadow: var(--shadow-sm);
     justify-content: space-between;
     background-color: var(--color-background-primary);
@@ -32,7 +32,7 @@ const Wrap = styled.div`
   }
   .SingleViewHeader {
     height: 44px;
-    padding: 0 24px;
+    padding: 0 var(--space-6);
     background-color: var(--color-background-primary);
     .icon-task-later,
     .addRecord {
@@ -46,7 +46,7 @@ const Wrap = styled.div`
       margin-right: 0;
     }
     .queryInput .inputCon > i {
-      font-size: 20px !important;
+      font-size: var(--font-2xl) !important;
       margin-top: 2px;
     }
   }

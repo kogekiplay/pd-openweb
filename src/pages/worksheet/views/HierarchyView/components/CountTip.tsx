@@ -7,7 +7,7 @@ const CountTip = styled(FlexCenter)`
   box-sizing: border-box;
   min-width: 24px;
   height: 24px;
-  margin-right: 4px;
+  margin-right: var(--space-1);
   line-height: 24px;
   border-radius: 12px;
   color: var(--color-white);

@@ -31,7 +31,7 @@ const Wrap = styled.div`
   height: ${props => props.height}px;
   .conW {
     border-radius: var(--radius-sm);
-    padding: 4px;
+    padding: var(--space-1);
     background: ${props => props.row.color};
     .rowInfo {
       display: -webkit-box;

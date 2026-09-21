@@ -7,7 +7,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 const PopupCon = styled.div`
   width: 360px;
   border-radius: var(--radius-sm);
-  padding: 20px;
+  padding: var(--space-5);
   box-shadow: var(--shadow-lg);
   background-color: var(--color-background-card);
   .title {
@@ -16,7 +16,7 @@ const PopupCon = styled.div`
     font-weight: 500;
   }
   .description {
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-secondary);
     line-height: 1.8em;
     margin: 10px 0 26px;
@@ -24,7 +24,7 @@ const PopupCon = styled.div`
   .buttons {
     text-align: right;
     .Button {
-      margin-left: 16px;
+      margin-left: var(--space-4);
     }
   }
 `;

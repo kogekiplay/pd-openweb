@@ -11,9 +11,9 @@ import { FILTER_TYPE } from '../enum';
 
 const Con = styled.div`
   .title {
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-text-tertiary);
-    padding: 8px 18px;
+    padding: var(--space-2) 18px;
   }
 `;
 
@@ -22,7 +22,7 @@ const MenuCon = styled(Menu)`
   position: relative !important;
   hr {
     border: none;
-    margin: 4px 0;
+    margin: var(--space-1) 0;
     border-top: 1px solid var(--color-border-secondary) !important;
   }
   .ming.Item .Item-content {
@@ -51,14 +51,14 @@ const FilterTitleItemCon = styled(VerticalMiddle)`
   }
   .icon.dragger {
     cursor: pointer;
-    font-size: 12px;
+    font-size: var(--font-xs);
     transform: translateX(-14px);
     position: absolute;
     top: 12px;
     left: 18px;
   }
   .icon {
-    font-size: 18px;
+    font-size: var(--font-xl);
     color: var(--color-text-tertiary);
   }
   .hoverShow {

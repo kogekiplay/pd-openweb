@@ -35,7 +35,7 @@ const SettingCon = styled.div`
       line-height: 34px;
     }
     .ming.Input {
-      font-size: 13px;
+      font-size: var(--font-sm);
       border: 1px solid var(--color-border-primary);
       &:hover {
         border-color: var(--color-primary);
@@ -55,7 +55,7 @@ const SettingCon = styled.div`
   }
 `;
 const CoverSettingCon = styled.div`
-  margin-top: 20px;
+  margin-top: var(--space-5);
   display: flex;
   flex-wrap: wrap;
 `;

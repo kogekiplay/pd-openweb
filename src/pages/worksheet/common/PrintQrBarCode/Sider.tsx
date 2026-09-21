@@ -43,11 +43,11 @@ const LABEL_MAX_WIDTH = 200;
 const LABEL_MAX_HEIGHT = 200;
 
 const Con = styled.div`
-  font-size: 13px;
+  font-size: var(--font-sm);
   height: 100%;
   width: 320px;
   background: var(--color-background-primary);
-  padding: 10px 20px 30px;
+  padding: 10px var(--space-5) 30px;
   overflow: auto;
   .RadioGroupCon {
     .ming.Radio {
@@ -58,12 +58,12 @@ const Con = styled.div`
   }
   .switchWH {
     color: var(--color-text-tertiary);
-    margin: 0 8px;
+    margin: 0 var(--space-2);
     line-height: 36px;
   }
   .customSizeUnit {
-    font-size: 13px;
-    margin-left: 8px;
+    font-size: var(--font-sm);
+    margin-left: var(--space-2);
     line-height: 36px;
   }
 `;
@@ -106,7 +106,7 @@ const ConfigItem = styled.div(
     background-color: var(--color-background-hover);
   }
   .ant-radio-button-wrapper {
-    font-size: 13px;
+    font-size: var(--font-sm);
     box-shadow: none !important;
     flex: 1;
     text-align: center;
@@ -133,7 +133,7 @@ const InputGroup = styled.div`
 `;
 
 const SetAsTitle = styled.i`
-  font-size: 18px;
+  font-size: var(--font-xl);
   color: var(--color-text-tertiary);
   cursor: pointer;
   &.on {

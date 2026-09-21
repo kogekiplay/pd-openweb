@@ -31,7 +31,7 @@
 
   .title {
     height: 50px;
-    padding: 0 24px;
+    padding: 0 var(--space-6);
     display: flex;
     align-items: center;
     justify-content: start;
@@ -48,10 +48,10 @@
   }
 
   .createBtnBox {
-    padding: 0 24px 32px;
+    padding: 0 var(--space-6) var(--space-8);
     .line {
       border-top: 1px solid var(--color-border-secondary);
-      margin: 32px 0;
+      margin: var(--space-8) 0;
     }
 
     h5 {
@@ -59,7 +59,7 @@
       padding: 0;
       // padding-top: 24px;
       font-weight: 500;
-      font-size: 13px;
+      font-size: var(--font-sm);
     }
 
     input::-webkit-input-placeholder {
@@ -80,7 +80,7 @@
       border: 1px solid var(--color-border-primary);
       border-radius: var(--radius-sm);
       color: var(--color-text-title);
-      padding: 0 12px;
+      padding: 0 var(--space-3);
       box-sizing: border-box;
       margin-top: 10px;
 
@@ -98,7 +98,7 @@
       padding: 0;
       margin: 0;
       line-height: 1;
-      font-size: 12px;
+      font-size: var(--font-xs);
     }
 
     label {
@@ -111,10 +111,10 @@
       background: var(--color-background-secondary);
       border: 1px solid var(--color-border-primary);
       border-radius: var(--radius-sm);
-      padding: 16px;
+      padding: var(--space-4);
       box-sizing: border-box;
       color: var(--color-text-title);
-      margin-top: 12px;
+      margin-top: var(--space-3);
       display: flex;
       &.createCon {
         background: var(--color-background-primary);
@@ -123,7 +123,7 @@
 
       .txtFilter {
         flex: 1;
-        font-size: 13px;
+        font-size: var(--font-sm);
         color: var(--color-text-title);
         line-height: 24px;
 
@@ -135,7 +135,7 @@
 
           .titleTxt {
             width: 100px;
-            font-size: 13px;
+            font-size: var(--font-sm);
             line-height: 22px;
             display: inline-block;
           }
@@ -143,7 +143,7 @@
           .txt {
             flex: 1;
             font-weight: 500;
-            font-size: 13px;
+            font-size: var(--font-sm);
           }
         }
       }
@@ -167,7 +167,7 @@
       min-height: 36px;
       border: 1px solid var(--color-border-primary);
       border-radius: var(--radius-sm);
-      padding: 8px 12px 10px;
+      padding: var(--space-2) var(--space-3) 10px;
       box-sizing: border-box;
       resize: none;
     }
@@ -180,7 +180,7 @@
     border: 1px solid var(--color-border-primary);
     opacity: 1;
     border-radius: var(--radius-sm);
-    padding: 4px;
+    padding: var(--space-1);
     .colorCon {
       width: 102px;
       height: 28px;
@@ -197,7 +197,7 @@
     padding: 0;
     margin: 0;
     line-height: 1;
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-title);
     font-weight: 500;
   }
@@ -210,14 +210,14 @@
     border-radius: var(--radius-sm);
     height: 36px;
     line-height: 36px;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
   }
 
   textarea {
     resize: none;
     height: 72px;
     line-height: 26px;
-    padding: 4px 12px;
+    padding: var(--space-1) var(--space-3);
   }
 }
 
@@ -259,7 +259,7 @@
 
     .headerCon {
       width: 100%;
-      font-size: 13px;
+      font-size: var(--font-sm);
 
       .editAppointFilters,
       .editAppointFiltersTxt {
@@ -281,7 +281,7 @@
         }
 
         .widget {
-          padding: 0 8px;
+          padding: 0 var(--space-2);
           background: var(--color-background-secondary);
           border-radius: var(--radius-sm);
           height: 36px;
@@ -349,7 +349,7 @@
 
     .titleLeft {
       width: 68px;
-      padding-right: 16px;
+      padding-right: var(--space-4);
       line-height: 36px;
     }
 
@@ -377,7 +377,7 @@
   box-shadow: var(--shadow-lg);
   opacity: 1;
   border-radius: var(--radius-sm);
-  padding: 16px;
+  padding: var(--space-4);
   .op {
     width: 20px;
   }
@@ -386,7 +386,7 @@
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    margin-right: 12px;
+    margin-right: var(--space-3);
     text-align: center;
     vertical-align: top;
     transition: all 0.4s ease;
@@ -399,7 +399,7 @@
     .check {
       color: var(--color-white);
       vertical-align: middle;
-      font-size: 18px;
+      font-size: var(--font-xl);
     }
     &.colorLi {
       &:hover,
@@ -415,7 +415,7 @@
       text-align: center;
       display: inline-block;
       color: var(--color-text-tertiary);
-      margin: 4px;
+      margin: var(--space-1);
       font-size: 22px;
       vertical-align: top;
       cursor: pointer;

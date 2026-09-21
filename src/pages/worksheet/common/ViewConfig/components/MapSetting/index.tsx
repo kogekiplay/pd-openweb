@@ -32,22 +32,22 @@ const MapSettingWrap = styled.div`
     font-weight: 500;
     border-radius: var(--radius-sm);
     .Item-content {
-      padding-left: 32px !important;
+      padding-left: var(--space-8) !important;
     }
   }
 `;
 
 const DisplayControlOption = styled(FlexCenter)`
   .icon {
-    font-size: 16px;
+    font-size: var(--font-lg);
     color: var(--color-text-secondary);
-    margin-right: 4px;
+    margin-right: var(--space-1);
   }
   span {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    margin-left: 4px;
+    margin-left: var(--space-1);
   }
 `;
 
@@ -74,8 +74,8 @@ const RadioBox = styled.div`
 
 const DefaultLocationWrap = styled.div`
   position: relative;
-  padding-left: 12px;
-  margin-top: 16px;
+  padding-left: var(--space-3);
+  margin-top: var(--space-4);
   width: 100%;
   height: 36px;
   color: var(--color-text-primary);
@@ -91,7 +91,7 @@ const DefaultLocationWrap = styled.div`
     right: 12px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 16px;
+    font-size: var(--font-lg);
     color: var(--color-text-tertiary);
   }
   &:hover {

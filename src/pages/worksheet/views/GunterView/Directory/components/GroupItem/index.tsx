@@ -18,7 +18,7 @@ import type { RecordRow } from 'src/utils/controlTypes';
 const GroupingItem = styled.div`
   width: 100%;
   height: 32px;
-  padding: 0 20px 0 12px;
+  padding: 0 var(--space-5) 0 var(--space-3);
   .addCoin {
     color: var(--color-primary);
     display: none;

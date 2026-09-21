@@ -15,13 +15,13 @@ const NewDialog = styled(Dialog)`
   .titleTag {
     height: 26px;
     line-height: 26px;
-    padding: 0 8px;
+    padding: 0 var(--space-2);
     border-radius: var(--radius-sm);
     color: var(--color-primary);
     background: var(--color-primary-transparent);
-    font-size: 13px;
+    font-size: var(--font-sm);
     font-weight: 400;
-    margin-left: 12px;
+    margin-left: var(--space-3);
   }
   .secTitle {
     cursor: pointer;
@@ -38,8 +38,8 @@ const NewDialog = styled(Dialog)`
   }
   .relationControls {
     display: flex;
-    gap: 0 20px;
-    margin-left: 24px;
+    gap: 0 var(--space-5);
+    margin-left: var(--space-6);
     flex-wrap: wrap;
   }
 `;
@@ -62,14 +62,14 @@ const Info = styled.div`
   background: var(--color-yellow-black);
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-warning-border);
-  padding: 8px;
+  padding: var(--space-2);
   color: var(--color-text-title);
-  font-size: 13px;
-  margin-top: 8px;
+  font-size: var(--font-sm);
+  margin-top: var(--space-2);
   .icon {
     color: var(--color-warning);
-    margin-right: 8px;
-    font-size: 18px;
+    margin-right: var(--space-2);
+    font-size: var(--font-xl);
   }
 `;
 

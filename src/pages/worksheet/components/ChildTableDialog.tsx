@@ -29,9 +29,9 @@ const IconBtn = styled.span`
   cursor: pointer;
   display: inline-block;
   height: 28px;
-  font-size: 20px;
+  font-size: var(--font-2xl);
   line-height: 28px;
-  padding: 0 4px;
+  padding: 0 var(--space-1);
   border-radius: var(--radius-sm);
   &:hover {
     background: var(--color-background-hover);
@@ -40,7 +40,7 @@ const IconBtn = styled.span`
 
 const Header = styled.div`
   height: 50px;
-  padding: 0 24px;
+  padding: 0 var(--space-6);
   display: flex;
   align-items: center;
   flex-shrink: 0;
@@ -53,8 +53,8 @@ const Header = styled.div`
     font-weight: bold;
   }
   .split {
-    font-size: 16px;
-    margin: 0 8px;
+    font-size: var(--font-lg);
+    margin: 0 var(--space-2);
     color: var(--color-text-tertiary);
   }
   .sec {
@@ -68,7 +68,7 @@ const Header = styled.div`
   .openInNewTab {
     cursor: pointer;
     color: var(--color-text-tertiary);
-    font-size: 14px;
+    font-size: var(--font-md);
     margin-left: 6px;
     line-height: 18px;
     height: 18px;
@@ -98,7 +98,7 @@ const Content = styled.div`
     display: none;
   }
   .selectedTip {
-    padding: 0 24px;
+    padding: 0 var(--space-6);
     line-height: 50px !important;
     top: -50px !important;
   }

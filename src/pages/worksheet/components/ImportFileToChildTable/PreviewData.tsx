@@ -13,7 +13,7 @@ const Header = styled.div`
   height: 52px;
   display: flex;
   align-items: center;
-  padding: 0 24px;
+  padding: 0 var(--space-6);
   position: relative;
   .title {
     font-weight: 500;
@@ -24,14 +24,14 @@ const Header = styled.div`
 
 const Content = styled.div`
   flex: 1;
-  padding: 0 24px 0;
+  padding: 0 var(--space-6) 0;
   .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     .headNumber {
       width: 180px;
-      margin-left: 8px;
+      margin-left: var(--space-2);
     }
     .sheetsDropDown {
       width: 180px;
@@ -46,7 +46,7 @@ const Content = styled.div`
 `;
 
 const Footer = styled.div`
-  padding: 0 24px 20px;
+  padding: 0 var(--space-6) var(--space-5);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -54,7 +54,7 @@ const Footer = styled.div`
 
 const CellText = styled.div`
   display: block;
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-title);
   line-height: 20px;
 `;

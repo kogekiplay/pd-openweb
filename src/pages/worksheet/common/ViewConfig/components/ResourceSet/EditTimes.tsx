@@ -16,7 +16,7 @@ const locale = locales[md.global.Account.lang] || localeEn;
 const Wrap = styled.div`
   .add {
     line-height: 36px;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     background: var(--color-background-secondary);
     border-radius: var(--radius-sm);
     color: var(--color-primary);

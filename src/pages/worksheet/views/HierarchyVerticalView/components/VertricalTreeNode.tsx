@@ -14,7 +14,7 @@ import type { FormControl } from 'src/utils/controlTypes';
 const ParentNodeWrap = styled.div`
   width: 100%;
   text-align: center;
-  font-size: 13px;
+  font-size: var(--font-sm);
   font-weight: 600;
   color: var(--color-text-title);
   position: relative;

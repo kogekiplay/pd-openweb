@@ -12,12 +12,12 @@ import ControlSelect from 'worksheet/components/ControlSelect';
 import type { FormControl } from 'src/utils/controlTypes';
 
 const Title = styled.div`
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-white);
   margin: 14px 0 10px;
   .compressWidth {
     float: right;
-    font-size: 18px;
+    font-size: var(--font-xl);
     color: var(--color-text-tertiary);
     cursor: pointer;
     &.on {
@@ -41,7 +41,7 @@ const Content = styled(VerticalMiddle)`
   overflow: hidden;
   display: flex;
   flex: 1;
-  padding: 0 8px;
+  padding: 0 var(--space-2);
   border: 1px solid var(--color-border-primary);
   border-radius: var(--radius-sm) 0 0 var(--radius-sm);
   input {
@@ -51,7 +51,7 @@ const Content = styled(VerticalMiddle)`
   }
   i.setName {
     cursor: pointer;
-    font-size: 20px;
+    font-size: var(--font-2xl);
     margin-right: 10px;
     color: var(--color-text-tertiary);
   }
@@ -77,8 +77,8 @@ const Tag = styled.div`
   background: #d8eeff;
   color: var(--color-link-hover);
   border: 1px solid var(--color-primary-transparent);
-  padding: 0 8px 0 12px;
-  font-size: 12px;
+  padding: 0 var(--space-2) 0 var(--space-3);
+  font-size: var(--font-xs);
   box-sizing: border-box;
   height: 24px;
   line-height: 22px;
@@ -88,7 +88,7 @@ const Tag = styled.div`
   }
   .close {
     color: var(--color-text-tertiary);
-    margin-left: 4px;
+    margin-left: var(--space-1);
     cursor: pointer;
   }
 `;
@@ -137,7 +137,7 @@ function StaticInput(props) {
 
 const EditShowNameCon = styled.div`
   .title {
-    font-size: 20px;
+    font-size: var(--font-2xl);
     font-weight: bold;
     margin-bottom: 10px;
   }

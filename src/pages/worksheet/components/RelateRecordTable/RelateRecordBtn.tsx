@@ -39,9 +39,9 @@ export const Button = styled.div`
   line-height: 36px;
   color: var(--color-text-title);
   border: 1px solid var(--color-border-primary);
-  font-size: 13px;
+  font-size: var(--font-sm);
   .content {
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     display: inline-flex;
     align-items: center;
     font-weight: bold;
@@ -53,7 +53,7 @@ export const Button = styled.div`
   }
   &.printButton {
     .content {
-      padding: 0 12px;
+      padding: 0 var(--space-3);
     }
   }
   &.importFromFile {

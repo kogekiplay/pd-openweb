@@ -23,7 +23,7 @@ const StyledFixedTable = styled(FixedTable)`
     border: 1px solid rgba(0, 0, 0, 0.09) !important;
     border-left: none !important;
     border-top: none !important;
-    padding: 7px 8px;
+    padding: 7px var(--space-2);
     overflow: hidden;
     &.oddRow {
       background-color: var(--color-background-secondary);
@@ -34,18 +34,18 @@ const StyledFixedTable = styled(FixedTable)`
     background-color: var(--color-background-primary);
     align-items: center;
     .controlIcon {
-      margin-right: 4px;
+      margin-right: var(--space-1);
       font-size: 15px;
       color: var(--color-text-tertiary);
     }
     .dropdownIcon {
-      margin-left: 4px;
-      font-size: 13px;
+      margin-left: var(--space-1);
+      font-size: var(--font-sm);
       color: var(--color-text-tertiary);
     }
     .controlName {
       color: var(--color-text-title);
-      font-size: 13px;
+      font-size: var(--font-sm);
       font-weight: 500;
     }
   }
@@ -56,7 +56,7 @@ const SelectControlsWrap = styled(SelectControls)`
     width: 310px !important;
     max-height: 240px;
     .Item-content {
-      padding: 0 16px;
+      padding: 0 var(--space-4);
     }
   }
 `;

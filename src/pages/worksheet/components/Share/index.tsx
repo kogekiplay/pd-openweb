@@ -163,7 +163,7 @@ export default function Share(props) {
       footer={null}
       title={<Bold600>{title || _l('分享')}</Bold600>}
       onCancel={onClose}
-      bodyStyle={isPayShare ? { padding: '12px 24px 24px' } : {}}
+      bodyStyle={isPayShare ? { padding: 'var(--space-3) var(--space-6) var(--space-6)' } : {}}
     >
       {privateVisible && (
         <React.Fragment>

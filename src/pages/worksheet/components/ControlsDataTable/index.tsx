@@ -12,7 +12,7 @@ const ColumnHead = styled.div`
   background-color: var(--color-background-secondary) !important;
   padding: 0 5px !important;
   font-weight: bold;
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-secondary);
   line-height: 34px;
   .colorCon {
@@ -36,7 +36,7 @@ const ColumnHead = styled.div`
       -webkit-line-clamp: 4;
       -webkit-box-orient: vertical;
       vertical-align: top;
-      margin-top: 8px;
+      margin-top: var(--space-2);
     }
   }
 `;

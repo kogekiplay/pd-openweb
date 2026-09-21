@@ -18,7 +18,7 @@ const Con = styled.div`
   position: relative;
   .ming.exportMenu {
     width: 280px;
-    margin-top: 4px;
+    margin-top: var(--space-1);
   }
 `;
 

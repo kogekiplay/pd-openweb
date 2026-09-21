@@ -37,7 +37,7 @@ const Wrap = styled.div`
         line-height: 34px;
       }
       .ming.Input {
-        font-size: 13px;
+        font-size: var(--font-sm);
         border: 1px solid var(--color-border-primary);
         &:hover {
           border-color: var(--color-text-disabled);
@@ -62,7 +62,7 @@ const Wrap = styled.div`
       opacity: 1;
       background: var(--color-background-primary);
       border-radius: var(--radius-sm);
-      margin: 8px 0;
+      margin: var(--space-2) 0;
       box-sizing: border-box;
       .actionIcon {
         width: 13px;
@@ -71,7 +71,7 @@ const Wrap = styled.div`
         flex: 1;
       }
       .Dropdown--input {
-        padding: 0 12px 0 12px;
+        padding: 0 var(--space-3) 0 var(--space-3);
         width: 100%;
         display: flex;
         border: 1px solid var(--color-border-primary);
@@ -103,7 +103,7 @@ const Wrap = styled.div`
       background: var(--color-background-primary);
       border: 1px solid var(--color-border-primary);
       border-radius: var(--radius-sm);
-      padding: 0 12px 0 12px;
+      padding: 0 var(--space-3) 0 var(--space-3);
       .icon {
         line-height: 35px;
       }
@@ -137,12 +137,12 @@ const Wrap = styled.div`
         color: var(--color-primary);
         border-radius: var(--radius-sm);
         display: block;
-        padding: 12px 0;
+        padding: var(--space-3) 0;
         cursor: pointer;
         text-align: center;
         font-weight: bold;
         .icon {
-          font-size: 20px;
+          font-size: var(--font-2xl);
         }
         &:hover {
           color: var(--color-link-hover);
@@ -164,7 +164,7 @@ const Wrap = styled.div`
     .iconWrap {
       display: inline-block;
       vertical-align: middle;
-      margin-left: 8px;
+      margin-left: var(--space-2);
     }
   }
   .noData {
@@ -176,12 +176,12 @@ const Wrap = styled.div`
       }
     }
     h6 {
-      font-size: 20px;
+      font-size: var(--font-2xl);
       font-weight: 500;
       color: var(--color-text-title);
       text-align: center;
       padding: 0;
-      padding-top: 32px;
+      padding-top: var(--space-8);
       margin: 0;
     }
     .text {
@@ -189,9 +189,9 @@ const Wrap = styled.div`
       text-align: center;
       color: var(--color-text-tertiary);
       line-height: 20px;
-      font-size: 13px;
+      font-size: var(--font-sm);
       width: 80%;
-      margin: 24px auto 0;
+      margin: var(--space-6) auto 0;
     }
     .addFilterCondition {
       width: 100% !important;
@@ -202,7 +202,7 @@ const Wrap = styled.div`
       line-height: 1 !important;
       text-align: center;
       &.nodata {
-        margin: 32px auto 0 !important;
+        margin: var(--space-8) auto 0 !important;
       }
       & > span {
         width: 100% !important;
@@ -215,11 +215,11 @@ const Wrap = styled.div`
         border-radius: var(--radius-sm);
         color: var(--color-white);
         display: inline-block;
-        padding: 12px 32px;
+        padding: var(--space-3) var(--space-8);
         cursor: pointer;
         font-weight: bold;
         .icon {
-          font-size: 20px;
+          font-size: var(--font-2xl);
         }
         &:hover {
           background: var(--color-link-hover);
@@ -235,7 +235,7 @@ const WrapDrop = styled.div`
   .Dropdown {
     margin-bottom: 0 !important;
     .Dropdown--input {
-      padding: 0 5px 0 12px !important;
+      padding: 0 5px 0 var(--space-3) !important;
     }
   }
 `;

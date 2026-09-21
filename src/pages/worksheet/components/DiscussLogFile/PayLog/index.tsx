@@ -19,13 +19,13 @@ import { infoKeys, refundInfoKeys, refundStatusList, selectPayStatusList, source
 
 const WrapCon = styled.div`
   overflow: auto;
-  padding: 12px 16px;
+  padding: var(--space-3) var(--space-4);
 `;
 const Wrap = styled.div`
   background: var(--color-background-primary);
   box-shadow: var(--shadow-sm);
   border-radius: 8px;
-  padding: 20px;
+  padding: var(--space-5);
   .payTitle {
     font-weight: 400;
     flex-shrink: 0;
@@ -134,8 +134,8 @@ const SelectPayStatusWrap = styled.span`
   background: var(--color-background-primary);
   box-shadow: var(--shadow-sm);
   width: fit-content;
-  padding: 8px 12px;
-  margin-bottom: 16px;
+  padding: var(--space-2) var(--space-3);
+  margin-bottom: var(--space-4);
   border-radius: var(--radius-sm);
   cursor: pointer;
   color: var(--color-text-secondary);
@@ -158,7 +158,7 @@ const PopupWrap = styled.div`
   .popupItem {
     height: 40px;
     line-height: 40px;
-    padding: 0 20px;
+    padding: 0 var(--space-5);
     cursor: pointer;
     &:hover {
       background: var(--color-background-hover);

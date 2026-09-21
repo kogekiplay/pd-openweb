@@ -17,7 +17,7 @@ const ToolBarWrap = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 16px;
+    margin-top: var(--space-4);
   }
   .separator {
     width: 70%;

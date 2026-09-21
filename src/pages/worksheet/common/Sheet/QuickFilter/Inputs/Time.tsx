@@ -27,7 +27,7 @@ const Con = styled.div`
       display: none;
     }
     .ant-picker-input input {
-      font-size: 13px;
+      font-size: var(--font-sm);
     }
   }
   &:hover:not(.active) {
@@ -67,7 +67,7 @@ const Content = styled.div`
 
 const RangePickerCon = styled.div`
   .ant-picker-input > input {
-    font-size: 13px !important;
+    font-size: var(--font-sm) !important;
   }
   .ant-picker-suffix {
     display: none;
@@ -75,9 +75,9 @@ const RangePickerCon = styled.div`
 `;
 
 const Icon = styled.i`
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-tertiary);
-  margin-right: 8px;
+  margin-right: var(--space-2);
   &.icon-cancel {
     cursor: pointer;
     &:hover {

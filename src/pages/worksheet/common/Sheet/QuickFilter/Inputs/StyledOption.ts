@@ -2,13 +2,13 @@ import styled from 'styled-components';
 
 const Option = styled.div`
   cursor: pointer;
-  font-size: 12px;
+  font-size: var(--font-xs);
   display: inline-flex;
   justify-content: center;
   align-items: center;
   margin: 2px 6px 2px 0;
   color: var(--color-text-title);
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   height: 28px;
   border: 1px solid var(--color-border-primary);
   border-radius: 26px;
@@ -20,7 +20,7 @@ const Option = styled.div`
     background-color: var(--color-primary);
     &.multiple {
       .selectedIcon {
-        font-size: 16px;
+        font-size: var(--font-lg);
         margin: 0 5px 0 -6px;
       }
       color: var(--color-link-hover);

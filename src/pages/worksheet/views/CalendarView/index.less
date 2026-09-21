@@ -144,14 +144,14 @@
   }
   .fc-timegrid-event .fc-event-time {
     vertical-align: middle;
-    font-size: 12px;
+    font-size: var(--font-xs);
   }
   .fc-v-event .fc-event-title {
     padding-left: 3px;
     font-weight: bold;
     display: inline;
     word-break: break-word;
-    font-size: 12px;
+    font-size: var(--font-xs);
   }
   /* 原先这里靠 .fc-timegrid-event-condensed 去掉短事件时间后面的连接符，
      v7 没有这个类（0 命中），规则一直没生效，删掉。 */
@@ -159,20 +159,20 @@
   .fc-daygrid-block-event .fc-event-title {
     padding-left: 6px;
     line-height: 14px;
-    font-size: 12px;
+    font-size: var(--font-xs);
   }
   .fc-dayGridMonth-view .fc-event .fc-event-time,
   .fc-dayGridMonth-view .fc-event .fc-event-title {
     line-height: 14px;
-    font-size: 12px;
+    font-size: var(--font-xs);
   }
   .fc .fc-col-header-cell-cushion {
-    font-size: 14px;
+    font-size: var(--font-md);
     line-height: 1.2;
   }
 
   .fc-toolbar-chunk:last-child {
-    padding-right: 12px;
+    padding-right: var(--space-3);
   }
   /* fc-theme-standard 是 v6 的内置主题标记，v7 把主题改成插件后就没有这个类了（0 命中）。
      下面三处去掉这层前缀，直接落到 .fc-scrollgrid（它有 tableClass 钩子，是活的）。 */
@@ -230,8 +230,8 @@
     }
     &:not(:disabled):hover {
       background: var(--color-background-hover) !important;
-      padding-top: 4px !important;
-      padding-bottom: 4px !important;
+      padding-top: var(--space-1) !important;
+      padding-bottom: var(--space-1) !important;
       border-radius: var(--radius-sm) !important;
     }
     &:not(:disabled).fc-button-active {
@@ -250,7 +250,7 @@
      三个类名在 v7 里都是 0 命中，规则从来没生效过，删掉。 */
   .fc-prev-button,
   .fc-next-button {
-    padding: 0 4px;
+    padding: 0 var(--space-1);
   }
   .fc .fc-daygrid-day-bottom {
     height: 100%;
@@ -283,7 +283,7 @@
     box-shadow: var(--shadow-lg);
     max-width: 240px;
     .fc-popover-body {
-      padding: 0 12px 12px;
+      padding: 0 var(--space-3) var(--space-3);
       max-height: 400px;
       overflow: auto;
       /* v6 是 .fc-daygrid-event-harness（事件外层包装），v7 没有这层，直接落到事件本身。 */
@@ -292,10 +292,10 @@
       }
     }
     .fc-popover-header {
-      padding: 16px 12px 0px;
+      padding: var(--space-4) var(--space-3) 0px;
       background: var(--color-background-primary);
       color: var(--color-text-title);
-      font-size: 14px;
+      font-size: var(--font-md);
       font-weight: bold;
     }
   }
@@ -317,9 +317,9 @@
      复合选择器整条作废（月视图的行高/字号一直没生效）。去掉那一半。 */
   .fc-dayGridMonth-view {
     line-height: 1 !important;
-    font-size: 12px;
+    font-size: var(--font-xs);
     .fc-daygrid-day-top {
-      font-size: 14px;
+      font-size: var(--font-md);
       height: 24px;
     }
   }
@@ -371,7 +371,7 @@
   .fc-dayGridDay-view,
   .fc-timeGridDay-view {
     line-height: 1;
-    font-size: 12px;
+    font-size: var(--font-xs);
     .fc-col-header,
     .fc-scrollgrid-section-header {
       .fc-day {
@@ -379,10 +379,10 @@
         padding-top: 2px;
         &.fc-day-today {
           .fc-col-header-cell-cushion {
-            margin: 2px 4px;
+            margin: 2px var(--space-1);
             background: var(--color-primary);
             border-radius: 11px;
-            padding: 0 4px;
+            padding: 0 var(--space-1);
             color: var(--color-white);
           }
         }
@@ -395,7 +395,7 @@
   .noData {
     text-align: center;
     color: var(--color-text-tertiary);
-    padding-top: 12px;
+    padding-top: var(--space-3);
   }
   .noDataTop {
     border-top: 1px solid var(--view-border-color);
@@ -404,7 +404,7 @@
     .text {
       color: var(--color-text-tertiary);
       padding-left: 14px;
-      padding-top: 12px;
+      padding-top: var(--space-3);
     }
   }
   .listBox {
@@ -415,7 +415,7 @@
       color: var(--color-text-disabled);
       height: 44px;
       display: flex;
-      padding: 12px;
+      padding: var(--space-3);
       input {
         flex: 1;
         border: none;
@@ -452,7 +452,7 @@
         width: 40px;
         flex: 1;
         margin: 0 5px;
-        padding: 8px 0;
+        padding: var(--space-2) 0;
         text-align: center;
         color: var(--color-text-secondary);
         font-weight: 400;
@@ -472,9 +472,9 @@
     }
     .eventListBox {
       border-top: 1px solid var(--view-border-color);
-      padding: 8px 0;
+      padding: var(--space-2) 0;
       .timeStr {
-        margin: 12px 12px 0;
+        margin: var(--space-3) var(--space-3) 0;
         font-weight: bold;
         color: var(--color-text-secondary);
       }
@@ -499,8 +499,8 @@
   background: var(--color-background-primary);
   border-radius: var(--radius-sm);
   box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
-  padding: 10px 12px;
-  margin: 8px 12px 0;
+  padding: 10px var(--space-3);
+  margin: var(--space-2) var(--space-3) 0;
   position: relative;
   overflow: hidden;
   .colorLeft {

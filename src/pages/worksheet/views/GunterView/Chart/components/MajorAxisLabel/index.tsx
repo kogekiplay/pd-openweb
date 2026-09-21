@@ -6,7 +6,7 @@ import { PERIOD_TYPE } from 'worksheet/views/GunterView/config';
 import type { RootState } from 'src/redux/types';
 
 const AxisLabel = styled.div`
-  font-size: 14px;
+  font-size: var(--font-md);
   font-weight: 500;
   white-space: nowrap;
   background: var(--color-background-primary);
@@ -14,7 +14,7 @@ const AxisLabel = styled.div`
 const YearLabel = styled.div`
   position: absolute;
   left: 0;
-  font-size: 14px;
+  font-size: var(--font-md);
   font-weight: 500;
 `;
 const paddingLeft = 15;

@@ -8,9 +8,9 @@ const Con = styled.div`
   justify-content: start;
   background-color: var(--color-background-tertiary) !important;
   .number {
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-tertiary);
-    margin-right: 8px;
+    margin-right: var(--space-2);
   }
   .requiredStatus {
     color: var(--color-error);
@@ -18,11 +18,11 @@ const Con = styled.div`
   }
   .controlName {
     font-weight: bold;
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-title);
   }
   &.cell:not(.columnHead) {
-    padding: 0 12px !important;
+    padding: 0 var(--space-3) !important;
   }
 `;
 

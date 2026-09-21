@@ -5,7 +5,7 @@ import { Dialog } from 'ming-ui';
 
 const KeywordInput = styled.textarea`
   width: 100%;
-  padding: 10px 12px;
+  padding: 10px var(--space-3);
   height: 158px;
   overflow-y: auto;
   border: 1px solid var(--color-border-primary);

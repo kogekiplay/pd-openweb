@@ -54,7 +54,7 @@ const Con = styled.div`
       .customAntSelectPlaceHolder,
       .ant-select-placeholder {
         color: var(--color-text-disabled) !important;
-        font-size: 13px !important;
+        font-size: var(--font-sm) !important;
       }
       .ant-select-input {
         height: 30px !important;
@@ -94,8 +94,8 @@ const Con = styled.div`
         }
       }
       .customAntDropdownTitleWithBG {
-        margin-top: 4px !important;
-        margin-bottom: 4px !important;
+        margin-top: var(--space-1) !important;
+        margin-bottom: var(--space-1) !important;
       }
     }
   }

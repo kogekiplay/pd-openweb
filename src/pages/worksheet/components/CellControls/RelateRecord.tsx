@@ -27,7 +27,7 @@ import RelateRecordTags from './comps/RelateRecordTags';
 const RecordCardCellRelateRecord = styled.div`
   display: inline-block;
   line-height: 21px;
-  font-size: 13px;
+  font-size: var(--font-sm);
   background-color: rgba(0, 100, 240, 0.08);
   padding: 0 10px;
   border-radius: var(--radius-sm);

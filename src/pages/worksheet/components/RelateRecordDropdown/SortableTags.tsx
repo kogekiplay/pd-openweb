@@ -46,7 +46,7 @@ export default function SortableTags() {
             <div
               className={cx('tagItem', { isDragging: dragging, draggingItem: isLayer })}
               style={{
-                padding: '4px 8px',
+                padding: 'var(--space-1) var(--space-2)',
                 borderRadius: 4,
                 backgroundColor: 'var(--color-background-disabled)',
               }}

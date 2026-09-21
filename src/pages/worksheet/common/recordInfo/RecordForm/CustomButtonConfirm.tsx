@@ -8,10 +8,10 @@ import { Dialog, Icon, Menu, MenuItem, Textarea, VerifyPasswordInput } from 'min
 import verifyPassword from 'src/components/verifyPassword';
 
 const SectionName = styled.div`
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-title);
   font-weight: 500;
-  margin: 18px 0 8px;
+  margin: 18px 0 var(--space-2);
   position: relative;
   &.required {
     &:before {
@@ -72,8 +72,8 @@ const MenuBox = styled(Menu)`
     white-space: inherit !important;
     line-height: 20px !important;
     min-height: 36px;
-    padding-top: 8px !important;
-    padding-bottom: 8px !important;
+    padding-top: var(--space-2) !important;
+    padding-bottom: var(--space-2) !important;
     white-space: break-spaces !important;
   }
 `;

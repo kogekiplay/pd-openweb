@@ -10,21 +10,21 @@ import SheetContext from 'worksheet/common/Sheet/SheetContext';
 const ItemTitle = styled.ul`
   background-color: var(--color-background-secondary);
   display: flex;
-  margin-bottom: 4px;
+  margin-bottom: var(--space-1);
   transform-origin: left;
   transform: ${props => (props.scale ? `scale(${props.scale / 100})` : 'scale(1)')};
   li {
     flex-basis: 280px;
     flex-shrink: 0;
     margin-left: ${props => (props.isStraightLine ? '100px' : '120px')};
-    font-size: 14px;
+    font-size: var(--font-md);
     .ming.Input {
       border: none;
       padding-left: 0;
       height: 28px;
       border-bottom: 2px solid var(--color-primary);
       background-color: transparent;
-      font-size: 14px;
+      font-size: var(--font-md);
       border-radius: 0;
       font-weight: bold;
     }

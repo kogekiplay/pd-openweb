@@ -11,9 +11,9 @@ import 'rc-trigger/assets/index.css';
 
 const CreateRecordWrap = styled.div`
   width: 280px;
-  margin-bottom: 8px;
+  margin-bottom: var(--space-2);
   textarea {
-    padding: 12px 30px 12px 12px;
+    padding: var(--space-3) 30px var(--space-3) var(--space-3);
     resize: none;
   }
 
@@ -21,7 +21,7 @@ const CreateRecordWrap = styled.div`
     position: absolute;
     top: 10px;
     right: 10px;
-    font-size: 16px;
+    font-size: var(--font-lg);
     color: var(--color-text-tertiary);
     &:hover {
       color: var(--color-primary);

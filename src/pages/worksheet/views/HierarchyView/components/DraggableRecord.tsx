@@ -37,7 +37,7 @@ const OperationWrap = styled(FlexCenter)`
   top: 50%;
   left: 100%;
   transform: translate(0px, -50%);
-  padding-left: 4px;
+  padding-left: var(--space-1);
   z-index: 2;
   height: 100%;
   .addHierarchyRecord {

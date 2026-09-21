@@ -13,13 +13,13 @@ const Con = styled.div`
   align-items: center;
   border-bottom: 1px solid rgba(0, 0, 0, 0.09) !important;
   margin: 0 -24px;
-  padding: 0 24px;
+  padding: 0 var(--space-6);
   .queryInput {
     /* margin: 5px 16px 0 0; */
   }
   .pagination {
     line-height: 1em;
-    margin-right: 8px;
+    margin-right: var(--space-2);
     border-radius: var(--radius-sm);
     &:hover {
       background: var(--color-background-hover);
@@ -28,7 +28,7 @@ const Con = styled.div`
   .worksheetFilterBtn {
     line-height: 1em;
     margin-top: 2px;
-    margin-right: 12px;
+    margin-right: var(--space-3);
   }
 `;
 
@@ -60,7 +60,7 @@ const Operate = styled.span`
     }
   }
   .actionWrap {
-    margin: 0 8px;
+    margin: 0 var(--space-2);
     display: inline-flex;
     height: 28px;
     align-items: center;

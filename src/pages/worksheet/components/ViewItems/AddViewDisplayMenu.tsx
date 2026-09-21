@@ -26,13 +26,13 @@ const Wrap = styled.div`
   overflow: hidden;
   box-shadow: var(--shadow-lg);
   .title {
-    padding: 0 12px 12px;
+    padding: 0 var(--space-3) var(--space-3);
   }
   .typeMenuWrap {
     border-right: 1px solid var(--color-border-primary);
     width: 180px;
     background: var(--color-background-secondary);
-    padding: 16px 6px;
+    padding: var(--space-4) 6px;
     .viewTypeItem {
       line-height: 36px;
       border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
@@ -50,7 +50,7 @@ const Wrap = styled.div`
     background: var(--color-background-primary);
     width: 540px;
     height: 440px;
-    padding: 16px 0 16px 24px;
+    padding: var(--space-4) 0 var(--space-4) var(--space-6);
     .listCon {
       overflow: auto;
       .groupTitle {
@@ -105,7 +105,7 @@ const Wrap = styled.div`
       }
     }
     .Beta {
-      padding: 4px 5px;
+      padding: var(--space-1) 5px;
       background: var(--color-success);
       border-radius: var(--radius-sm);
       color: var(--color-white);
@@ -115,7 +115,7 @@ const Wrap = styled.div`
       border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
       border: 1px solid var(--color-border-primary);
       padding: 11px 14px;
-      margin: 32px auto 48px;
+      margin: var(--space-8) auto 48px;
       i {
         color: var(--color-text-secondary);
       }
@@ -132,7 +132,7 @@ const Wrap = styled.div`
     }
   }
   .customListCon {
-    gap: 6px 12px;
+    gap: 6px var(--space-3);
   }
   .guildDescAct {
     animation-name: fadeInUp;
@@ -150,11 +150,11 @@ const GuildWrap = styled.div`
   border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
   left: 100%;
   justify-content: space-between;
-  padding: 20px 20px 16px 20px;
+  padding: var(--space-5) var(--space-5) var(--space-4) var(--space-5);
   box-sizing: border-box;
   .left {
     text-align: left;
-    margin-bottom: 16px;
+    margin-bottom: var(--space-4);
     .guildTitle {
       line-height: 14px;
     }

@@ -13,10 +13,10 @@ const Con = styled.div`
     height: 21px;
     line-height: 21px;
     padding: 0 6px;
-    font-size: 13px;
+    font-size: var(--font-sm);
     cursor: pointer;
     .icon {
-      font-size: 16px;
+      font-size: var(--font-lg);
       color: var(--color-text-tertiary);
       margin-right: 5px;
       position: relative;

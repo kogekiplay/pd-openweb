@@ -8,7 +8,7 @@ import OpinionTemplate from 'src/pages/workflow/WorkflowSettings/Detail/Approval
 const Wrap = styled.div`
   .line {
     border-top: 1px solid var(--color-border-secondary);
-    margin: 24px 0;
+    margin: var(--space-6) 0;
   }
   .btnTxt {
     input {
@@ -32,7 +32,7 @@ const Wrap = styled.div`
     border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     border: 1px solid var(--color-border-primary);
     line-height: 36px;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
   }
 `;
 

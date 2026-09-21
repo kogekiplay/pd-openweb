@@ -19,9 +19,9 @@ const SelectedFilter = styled(FlexCenter)`
   display: inline-flex;
   border-radius: var(--radius-sm);
   cursor: pointer;
-  font-size: 13px;
+  font-size: var(--font-sm);
   line-height: 29px;
-  margin-right: 16px;
+  margin-right: var(--space-4);
   vertical-align: middle;
   color: var(--color-primary);
   background-color: var(--color-primary-transparent);
@@ -30,11 +30,11 @@ const SelectedFilter = styled(FlexCenter)`
     max-width: 160px;
   }
   .filterIcon {
-    font-size: 18px;
+    font-size: var(--font-xl);
     margin-right: 6px;
   }
   .closeIcon {
-    font-size: 16px;
+    font-size: var(--font-lg);
     margin-left: 6px;
     &:hover {
       color: var(--color-link-hover);

@@ -19,7 +19,7 @@ const TableRow = styled.div`
   align-items: center;
   height: 60px;
   border-bottom: 1px solid var(--color-border-primary);
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   .operateIcon {
     opacity: 0;
   }
@@ -34,7 +34,7 @@ const TableRow = styled.div`
 const TableHeaderCon = styled.div``;
 
 const TableHeader = styled(TableRow)`
-  padding: 0 142px 0 12px;
+  padding: 0 142px 0 var(--space-3);
   height: 40px;
   &:hover {
     background: inherit;

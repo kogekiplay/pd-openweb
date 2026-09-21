@@ -107,7 +107,7 @@ export default class extends React.Component<any, any> {
       return (
         <div
           className={cx('summaryCellHead noRightBorder', className)}
-          style={{ ...style, padding: rowHeadOnlyNum ? '0 12px' : '0 24px 0 40px' }}
+          style={{ ...style, padding: rowHeadOnlyNum ? '0 var(--space-3)' : '0 var(--space-6) 0 40px' }}
         >
           =
         </div>

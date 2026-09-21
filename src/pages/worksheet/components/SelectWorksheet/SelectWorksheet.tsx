@@ -25,7 +25,7 @@ const SearchWrap = styled.div`
     position: absolute;
     top: 12px;
     left: 20px;
-    font-size: 24px;
+    font-size: var(--font-3xl);
   }
 `;
 

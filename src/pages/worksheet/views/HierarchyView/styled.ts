@@ -7,7 +7,7 @@ export const AddRecord = styled(Circle)`
   box-shadow: var(--shadow-md);
   cursor: pointer;
   .icon {
-    font-size: 18px;
+    font-size: var(--font-xl);
     color: var(--color-text-tertiary);
     transition: transform 0.25s;
     &:hover {

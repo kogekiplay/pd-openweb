@@ -26,7 +26,7 @@ const MoreBtn = styled.span`
   padding: 0 11px;
   line-height: 30px;
   border-radius: var(--radius-sm);
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-secondary);
   cursor: pointer;
   .icon {
@@ -60,7 +60,7 @@ const DropButton = styled(Button)`
     height: ${props.operateHeight}px !important;
     line-height: ${props.operateHeight - 2}px !important;
     padding: 0 !important;
-    font-size: 12px !important;
+    font-size: var(--font-xs) !important;
     width: auto;
     min-width: ${props.moreWidth || 26}px;
     min-height: ${props.operateHeight}px;
@@ -120,7 +120,7 @@ const GroupedHoverButton = styled(Button)`
         align-items: center;
         justify-content: center;
         line-height: 1;
-        font-size: 16px;
+        font-size: var(--font-lg);
         flex-shrink: 0;
         margin-left: -2px;
         margin-right: 6px;
@@ -134,7 +134,7 @@ const GroupedHoverButton = styled(Button)`
       }
       .groupedChevron {
         color: #9d9d9d;
-        font-size: 12px;
+        font-size: var(--font-xs);
         line-height: 1;
         flex-shrink: 0;
         margin: 0 -3px 0 3px;
@@ -150,8 +150,8 @@ const GroupedHoverButton = styled(Button)`
       min-height: ${props.operateHeight}px !important;
       max-height: ${props.operateHeight}px !important;
       min-width: 0 !important;
-      padding: 0 8px !important;
-      font-size: 12px !important;
+      padding: 0 var(--space-2) !important;
+      font-size: var(--font-xs) !important;
       background-color: #FFFFFF !important;
       border: 1px solid #DDDDDD !important;
       &:hover,
@@ -197,7 +197,7 @@ const GroupedIconTextCon = styled.div`
   display: inline-block;
   cursor: pointer;
   color: var(--color-text-title);
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   height: 28px;
   line-height: 28px;
   border-radius: var(--radius-sm);
@@ -208,7 +208,7 @@ const GroupedIconTextCon = styled.div`
   }
   .groupedIcon {
     margin-right: 6px;
-    font-size: 18px;
+    font-size: var(--font-xl);
     vertical-align: middle;
   }
   .groupedName {
@@ -218,11 +218,11 @@ const GroupedIconTextCon = styled.div`
     text-overflow: ellipsis;
     white-space: nowrap;
     vertical-align: middle;
-    font-size: 13px;
+    font-size: var(--font-sm);
   }
   .groupedChevron {
     margin-left: 3px;
-    font-size: 12px;
+    font-size: var(--font-xs);
     color: #9d9d9d;
     vertical-align: middle;
   }
@@ -252,9 +252,9 @@ function getButtonWidth(button, type, maxNameWidth?) {
     }
 
     div.style.display = 'inline-block';
-    div.innerHTML = `<div style="display: inline-block; margin: 0 12px; white-space: nowrap;">
+    div.innerHTML = `<div style="display: inline-block; margin: 0 var(--space-3); white-space: nowrap;">
       <span style="display: inline-block; margin: 0 2px; width:18px;"></span>
-      <span style="font-size: 13px;${nameClamp}">${name}</span>
+      <span style="font-size: var(--font-sm);${nameClamp}">${name}</span>
     </div>`;
   } else {
     div.style.position = 'absolute';

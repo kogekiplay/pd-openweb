@@ -37,8 +37,8 @@ const Con = styled.div`
     box-shadow: none;
     border: none !important;
     border-radius: var(--radius-sm);
-    padding: 4px 11px 4px !important;
-    font-size: 14px !important;
+    padding: var(--space-1) 11px var(--space-1) !important;
+    font-size: var(--font-md) !important;
     background: var(--color-background-primary) !important;
     height: 30px !important;
     .ant-picker-clear {
@@ -46,7 +46,7 @@ const Con = styled.div`
     }
     .ant-picker-input input {
       color: var(--color-text-primary) !important;
-      font-size: 13px;
+      font-size: var(--font-sm);
     }
   }
   &:hover:not(.active) {
@@ -97,7 +97,7 @@ const Content = styled.div`
 
 const PickerCon = styled.div`
   .ant-picker-input > input {
-    font-size: 13px !important;
+    font-size: var(--font-sm) !important;
   }
   .ant-picker-suffix {
     display: none;
@@ -105,9 +105,9 @@ const PickerCon = styled.div`
 `;
 
 const Icon = styled.i`
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-tertiary);
-  margin-right: 8px;
+  margin-right: var(--space-2);
   &.icon-cancel {
     cursor: pointer;
     &:hover {

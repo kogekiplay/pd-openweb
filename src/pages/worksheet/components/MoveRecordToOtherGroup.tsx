@@ -21,18 +21,18 @@ const Header = styled.div`
   height: 38px;
   border-radius: var(--radius-sm) var(--radius-sm) 0 0;
   border-bottom: 1px solid var(--color-border-primary);
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   display: flex;
   flex-direction: row;
   align-items: center;
   .icon-search {
     color: var(--color-text-secondary);
-    font-size: 20px;
+    font-size: var(--font-2xl);
   }
   input {
     border: none !important;
     flex: 1;
-    font-size: 13px;
+    font-size: var(--font-sm);
   }
 `;
 
@@ -44,7 +44,7 @@ const Content = styled(ScrollView)`
     height: 36px;
     display: flex;
     align-items: center;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     cursor: pointer;
     overflow: hidden;
     .cellOption {
@@ -64,7 +64,7 @@ const Content = styled(ScrollView)`
 
 const Empty = styled.div`
   line-height: 36px;
-  font-size: 13px;
+  font-size: var(--font-sm);
   text-align: center;
   color: var(--color-text-secondary);
 `;

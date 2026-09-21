@@ -22,7 +22,7 @@
     width: 100px;
     height: 100px;
     border-radius: 50%;
-    margin: 0 auto 16px;
+    margin: 0 auto var(--space-4);
     z-index: 1;
     .editIcon {
       width: 22px;
@@ -34,7 +34,7 @@
       background-color: var(--color-background-primary);
       border-radius: 50%;
       .editApp {
-        font-size: 16px;
+        font-size: var(--font-lg);
         position: absolute;
         left: 3px;
         top: 3px;
@@ -131,7 +131,7 @@
       .editSheetNameInput {
         width: 136px;
         height: 23px;
-        margin: 4px 0;
+        margin: var(--space-1) 0;
         border-radius: var(--radius-sm);
         border: 1px solid var(--color-border-secondary);
       }
@@ -181,12 +181,12 @@
     }
     to {
       transform: translateY(0);
-      font-size: 18px;
+      font-size: var(--font-xl);
       opacity: 1;
     }
   }
   .appInfoAct {
-    font-size: 18px;
+    font-size: var(--font-xl);
     animation-duration: 1s;
     animation-name: appInfoAnimation;
   }

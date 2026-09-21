@@ -9,7 +9,7 @@ import { isUser } from '../util';
 
 const UserPickerWrapper = styled.div`
   width: 220px;
-  padding: 16px 0;
+  padding: var(--space-4) 0;
   background: var(--color-background-primary);
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-lg);
@@ -17,12 +17,12 @@ const UserPickerWrapper = styled.div`
   .divider {
     height: 1px;
     background: var(--color-border-primary);
-    margin: 12px 0;
+    margin: var(--space-3) 0;
   }
   .userItem {
     display: flex;
     align-items: center;
-    padding: 0 20px;
+    padding: 0 var(--space-5);
     height: 40px;
     cursor: pointer;
     &:hover {

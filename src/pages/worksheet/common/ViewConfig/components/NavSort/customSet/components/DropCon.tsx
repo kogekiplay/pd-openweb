@@ -20,7 +20,7 @@ const Wrap = styled.div`
     border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     opacity: 1;
     border: 1px solid var(--color-primary);
-    padding: 0 12px;
+    padding: 0 var(--space-3);
   }
   .cover {
     position: fixed;
@@ -48,7 +48,7 @@ const WrapS = styled.div`
       vertical-align: middle;
       box-sizing: border-box;
       width: 100%;
-      padding: 0 12px;
+      padding: 0 var(--space-3);
       &:hover {
         background: var(--color-background-hover);
       }

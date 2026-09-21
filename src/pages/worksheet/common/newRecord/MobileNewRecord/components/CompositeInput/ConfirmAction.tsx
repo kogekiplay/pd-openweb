@@ -39,7 +39,7 @@ const ActionWrapper = styled.div`
 `;
 
 const Content = styled.div`
-  padding: 24px 20px 30px;
+  padding: var(--space-6) var(--space-5) 30px;
   font-size: 17px;
   font-weight: 500;
   color: var(--color-text-primary);
@@ -48,14 +48,14 @@ const Content = styled.div`
 const Footer = styled.div`
   display: flex;
   gap: 10px;
-  padding: 10px 20px;
+  padding: 10px var(--space-5);
   .basicBtn {
     display: flex;
     align-items: center;
     justify-content: center;
     flex: 1;
     height: 36px;
-    font-size: 13px;
+    font-size: var(--font-sm);
     border-radius: 36px;
     font-weight: bold;
   }

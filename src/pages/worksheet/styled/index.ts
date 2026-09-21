@@ -12,7 +12,7 @@ export const TextEllipsis = styled.div`
 `;
 
 export const Text = styled.p`
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: ${props => (props.color ? props.color : 'var(--color-text-title)')};
   text-align: ${props => props.align || 'initial'};
 `;
@@ -27,7 +27,7 @@ export const Fixed = styled.div`
 
 export const Button = styled.button`
   width: ${props => (props.fullWidth ? '100%' : 'auto')};
-  padding: 0 32px;
+  padding: 0 var(--space-8);
   line-height: 36px;
   height: 36px;
   color: var(--color-white);

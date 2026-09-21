@@ -40,7 +40,7 @@ const Footer = styled.div`
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      font-size: 20px;
+      font-size: var(--font-2xl);
       color: var(--color-text-secondary);
       background-color: var(--color-background-secondary);
     }

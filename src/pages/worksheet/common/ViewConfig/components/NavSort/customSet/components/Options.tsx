@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { isLightColor } from 'src/utils/control';
 
 const Wrap = styled.span`
-  padding: 5px 8px;
+  padding: 5px var(--space-2);
   border-radius: 18px;
 `;
 

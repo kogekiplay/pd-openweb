@@ -60,11 +60,11 @@ const Wrap = styled.div`
   }
   .conCustomFields {
     .customFieldsContainer .customFormItem {
-      padding: 0px 12px;
+      padding: 0px var(--space-3);
     }
     padding-top: 10px;
     &.conCustomFields_boolean {
-      padding-top: 16px;
+      padding-top: var(--space-4);
     }
     &.conCustomFields_enum {
       .RadioGroupCon .Radio {

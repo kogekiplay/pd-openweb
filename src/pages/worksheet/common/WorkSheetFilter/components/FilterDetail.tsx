@@ -56,7 +56,7 @@ const BackBtn = styled(FlexCenter)`
   top: 0;
   width: 32px;
   height: 32px;
-  font-size: 16px;
+  font-size: var(--font-lg);
   color: var(--color-text-secondary);
 `;
 const Content = styled.div`
@@ -71,7 +71,7 @@ const Content = styled.div`
 `;
 
 const Footer = styled(VerticalMiddle)`
-  margin-bottom: 24px;
+  margin-bottom: var(--space-6);
   font-size: 0px;
   margin-top: 19px;
   padding: ${({ isSingleFilter }) => (isSingleFilter ? '0px 4px' : '0 24px')};

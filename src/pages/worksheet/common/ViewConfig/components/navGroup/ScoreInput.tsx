@@ -13,7 +13,7 @@ const DropWrap = styled.div`
   box-shadow: var(--shadow-lg);
   .dropLi {
     line-height: 32px;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     &:hover {
       background: var(--color-background-hover);
     }
@@ -34,11 +34,11 @@ const Wrap = styled.div`
   border-radius: var(--radius-xs);
   border: 1px solid var(--color-border-primary);
   line-height: 32px;
-  padding: 0 0 0 12px;
+  padding: 0 0 0 var(--space-3);
   .iconBox {
     width: 24px;
     color: var(--color-text-tertiary);
-    font-size: 14px;
+    font-size: var(--font-md);
     position: relative;
     height: 100%;
     background: var(--color-background-primary);

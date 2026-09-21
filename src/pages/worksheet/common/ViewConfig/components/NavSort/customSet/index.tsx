@@ -16,11 +16,11 @@ const Wrap = styled.div`
   .recordItem {
     height: 36px;
     line-height: 36px;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
   }
   .reset,
   .clearBtn {
-    padding: 6px 12px;
+    padding: 6px var(--space-3);
     border-radius: var(--radius-sm);
     display: inline-block;
     color: var(--color-text-secondary);
@@ -34,7 +34,7 @@ const Wrap = styled.div`
     }
   }
   .add {
-    padding: 6px 16px;
+    padding: 6px var(--space-4);
     background: var(--color-background-secondary);
     border-radius: var(--radius-sm);
     min-width: 100px;

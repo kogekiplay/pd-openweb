@@ -16,7 +16,7 @@ const Wrap = styled.div`
   .submitCon {
     height: 100%;
     .submitContent {
-      padding: 0 40px 32px;
+      padding: 0 40px var(--space-8);
     }
   }
 `;
@@ -34,11 +34,11 @@ const WrapList = styled.div`
     width: 44px !important;
   }
   .nullCon {
-    padding-bottom: 32px;
+    padding-bottom: var(--space-8);
     border-bottom: 1px solid var(--color-border-primary);
   }
   .conLi {
-    padding: 10px 12px 10px 8px;
+    padding: 10px var(--space-3) 10px var(--space-2);
     border-bottom: 1px solid var(--color-border-secondary);
     transition: all 0.2s ease;
     .ming.Radio {

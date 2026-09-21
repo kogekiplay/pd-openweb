@@ -24,7 +24,7 @@ const ProcessToastContent = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     margin-top: 35px;
     min-width: 180px;
     height: 50px;

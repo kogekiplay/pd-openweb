@@ -18,12 +18,12 @@ import DisplayControl from './DisplayControl';
 import TitleControl from './TitleControl';
 
 const EmptyHint = styled.div`
-  margin: -6px 0 0 20px;
-  padding: 18px 12px;
+  margin: -6px 0 0 var(--space-5);
+  padding: 18px var(--space-3);
   border-radius: var(--radius-sm);
   width: 280px;
   color: var(--color-text-tertiary);
-  font-size: 13px;
+  font-size: var(--font-sm);
 `;
 
 const Wrap = styled.div`
@@ -32,7 +32,7 @@ const Wrap = styled.div`
     clear: both;
     color: rgba(0, 0, 0, 0.85);
     cursor: pointer;
-    font-size: 14px;
+    font-size: var(--font-md);
     font-weight: 400;
     line-height: 36px !important;
     height: 36px !important;
@@ -49,7 +49,7 @@ const Wrap = styled.div`
 const HierarchyViewSettingWrap = styled.div(
   ({ hsList }) => `
   margin-top: ${!hsList ? 0 : -20}px;
-  margin-bottom: 12px;
+  margin-bottom: var(--space-3);
 
   li {
     &:last-child {
@@ -66,7 +66,7 @@ const HierarchyViewSettingWrap = styled.div(
       align-items: center;
       line-height: 48px;
       width: 100%;
-      padding: 4px 0;
+      padding: var(--space-1) 0;
       border-bottom: 1px solid var(--color-border-secondary);
       &.borderBottomNone {
         border-bottom: 1px solid var(--color-white);
@@ -84,7 +84,7 @@ const HierarchyViewSettingWrap = styled.div(
         align-items: center;
         .switchVisible {
           cursor: pointer;
-          padding-left: 20px;
+          padding-left: var(--space-5);
           color: var(--color-text-secondary);
           &:hover {
             color: var(--color-primary);
@@ -103,10 +103,10 @@ const HierarchyViewSettingWrap = styled.div(
       align-items: center;
       i {
         cursor: pointer;
-        font-size: 16px;
+        font-size: var(--font-lg);
       }
       .controlName {
-        margin: 0 8px;
+        margin: 0 var(--space-2);
         max-width: 140px;
       }
       .sheetInfo {
@@ -126,11 +126,11 @@ const HierarchyViewSettingWrap = styled.div(
         max-height: 3000px;
         display: block;
         margin-top: -4px;
-        padding-bottom: 4px;
+        padding-bottom: var(--space-1);
         border-bottom: 1px solid var(--color-border-secondary);
         .content {
           padding-top: 10px;
-          padding-bottom: 24px;
+          padding-bottom: var(--space-6);
           opacity: 1;
           visibility: visible;
         }
@@ -141,7 +141,7 @@ const HierarchyViewSettingWrap = styled.div(
     margin-right: 30px;
   }
   .controlName {
-    margin: 0 4px 0 12px;
+    margin: 0 var(--space-1) 0 var(--space-3);
     color: var(--color-text-title);
   }
   .relateItem {

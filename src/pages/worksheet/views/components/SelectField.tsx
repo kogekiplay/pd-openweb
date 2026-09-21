@@ -71,7 +71,7 @@ const SelectFieldWrap = styled.div`
 
 const BoardTitleWrap = styled(FlexCenter)`
   align-items: end;
-  padding: 20px 26px;
+  padding: var(--space-5) 26px;
   border-bottom: 1px solid var(--color-border-secondary);
   h3 {
     margin-top: 0;
@@ -84,33 +84,33 @@ const BoardTitleWrap = styled(FlexCenter)`
   }
 `;
 const BoardTitle = styled.div`
-  margin-left: 24px;
+  margin-left: var(--space-6);
 `;
 
 const DisplayFieldWrap = styled.div`
-  padding: 20px 24px;
+  padding: var(--space-5) var(--space-6);
   h5 {
     margin-top: 0;
-    font-size: 14px;
-    margin-bottom: 20px;
-    margin-top: 8px;
+    font-size: var(--font-md);
+    margin-bottom: var(--space-5);
+    margin-top: var(--space-2);
   }
   .empty {
-    margin-top: 12px;
-    margin-bottom: 32px;
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-8);
     font-weight: normal;
     color: var(--color-text-secondary);
   }
 
   .Radio {
-    margin-bottom: 12px;
+    margin-bottom: var(--space-3);
   }
   .selectFieldWrap {
     min-height: 50px;
   }
 `;
 const VerifyButton = styled(Button)`
-  margin-top: 12px;
+  margin-top: var(--space-3);
 `;
 
 export default class SelectField extends Component<any, any> {

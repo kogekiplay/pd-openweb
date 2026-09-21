@@ -8,7 +8,7 @@ const Con = styled.div`
   display: inline-block;
   cursor: pointer;
   color: var(--color-text-title);
-  padding: 0px 12px;
+  padding: 0px var(--space-3);
   height: 28px;
   line-height: 28px;
   border-radius: var(--radius-sm);
@@ -21,20 +21,20 @@ const Con = styled.div`
     opacity: 0.5;
   }
   .svgIcon {
-    margin-right: 4px;
+    margin-right: var(--space-1);
   }
 `;
 
 const Icon = styled.span`
-  margin-right: 4px;
-  font-size: 18px;
+  margin-right: var(--space-1);
+  font-size: var(--font-xl);
   vertical-align: middle;
   color: var(--color-text-secondary);
 `;
 
 const Text = styled.span`
   vertical-align: middle;
-  font-size: 13px;
+  font-size: var(--font-sm);
 `;
 
 export default function IconText(props) {

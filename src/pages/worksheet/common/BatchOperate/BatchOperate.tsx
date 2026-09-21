@@ -38,16 +38,16 @@ const CancelTextContent = styled.div`
   flex-direction: row;
   align-items: center;
   .icon {
-    margin-right: 8px;
-    font-size: 16px;
+    margin-right: var(--space-2);
+    font-size: var(--font-lg);
     color: var(--color-error);
   }
 `;
 
 const ButtonsCon = styled.div`
   position: relative;
-  margin-left: 12px;
-  padding-left: 12px;
+  margin-left: var(--space-3);
+  padding-left: var(--space-3);
   &:before {
     content: ' ';
     position: absolute;

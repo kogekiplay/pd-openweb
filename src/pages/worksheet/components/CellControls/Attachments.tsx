@@ -54,7 +54,7 @@ const AttachmentCon = styled.div`
   position: relative;
   display: inline-flex;
   align-items: center;
-  margin-right: 4px;
+  margin-right: var(--space-1);
   vertical-align: middle;
   border-radius: var(--radius-sm);
   overflow: hidden;
@@ -133,7 +133,7 @@ const OperateIcon = styled.div`
   background: var(--color-background-primary);
   text-align: center;
   color: var(--color-text-tertiary);
-  font-size: 16px;
+  font-size: var(--font-lg);
   cursor: pointer;
 `;
 
@@ -146,8 +146,8 @@ const HoverPreviewPanelCon = styled.div`
   overflow: hidden;
   .fileDetail {
     text-align: left;
-    font-size: 13px;
-    padding: 8px 16px;
+    font-size: var(--font-sm);
+    padding: var(--space-2) var(--space-4);
     word-break: break-all;
   }
   .fileName {
@@ -161,7 +161,7 @@ const HoverPreviewPanelCon = styled.div`
   }
   .downloadBtn,
   .openInNewTabBtn {
-    margin-right: 16px;
+    margin-right: var(--space-4);
   }
   .downloadBtn,
   .deleteBtn,
@@ -169,7 +169,7 @@ const HoverPreviewPanelCon = styled.div`
     cursor: pointer;
     float: right;
     color: var(--color-text-tertiary);
-    font-size: 18px;
+    font-size: var(--font-xl);
     &:not(.disabled):hover {
       color: var(--color-error);
     }
@@ -204,14 +204,14 @@ const Add = styled.div`
   justify-content: center;
   align-items: center;
   position: relative;
-  margin-right: 4px;
+  margin-right: var(--space-1);
   margin-bottom: 5px;
   border-radius: var(--radius-sm);
   overflow: hidden;
   border: 1px solid var(--color-border-primary);
   background-color: var(--color-background-tertiary);
   .icon {
-    font-size: 16px;
+    font-size: var(--font-lg);
     color: var(--color-text-placeholder);
     line-height: inherit;
   }

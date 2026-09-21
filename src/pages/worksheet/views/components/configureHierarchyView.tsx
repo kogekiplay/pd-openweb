@@ -13,7 +13,7 @@ const RELATE_TYPE = [
   { text: _l('多表关联'), value: 2 },
 ];
 const VerifyButton = styled(Button)`
-  margin-top: 12px;
+  margin-top: var(--space-3);
 `;
 const HierarchyViewConfigWrap = styled.div`
   .viewStructureType {
@@ -24,7 +24,7 @@ const HierarchyViewConfigWrap = styled.div`
       }
     }
   }
-  padding: 0 30px 24px;
+  padding: 0 30px var(--space-6);
   .relateTypeRadio {
     .Radio:last-child {
       margin-left: 88px;
@@ -35,7 +35,7 @@ const HierarchyViewConfigWrap = styled.div`
       margin-right: 30px;
     }
     .controlName {
-      margin: 0 4px 0 12px;
+      margin: 0 var(--space-1) 0 var(--space-3);
       color: var(--color-text-title);
     }
     li {
@@ -70,13 +70,13 @@ const HierarchyViewConfigWrap = styled.div`
   }
   .currentSheetRelate {
     .itemText {
-      margin-left: 12px;
+      margin-left: var(--space-3);
     }
     .emptyHint {
       border-radius: var(--radius-sm);
       color: var(--color-text-secondary);
       line-height: 34px;
-      padding: 0 12px;
+      padding: 0 var(--space-3);
       background: var(--color-background-secondary);
     }
   }

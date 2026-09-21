@@ -28,11 +28,11 @@ export const Con = styled.div`
   }
   .searchBar {
     width: 100%;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     height: 34px;
     .icon {
       line-height: 35px;
-      font-size: 20px;
+      font-size: var(--font-2xl);
       color: var(--color-text-disabled);
       &.icon-close {
         cursor: pointer;
@@ -51,7 +51,7 @@ export const Con = styled.div`
       height: 36px;
       border: none;
       padding-left: 6px;
-      font-size: 13px;
+      font-size: var(--font-sm);
     }
   }
   .groupWrap {
@@ -63,7 +63,7 @@ export const Con = styled.div`
       line-height: 32px;
       .count {
         padding-left: 10px;
-        font-size: 13px;
+        font-size: var(--font-sm);
         color: var(--color-text-tertiary);
         line-height: 32px;
       }

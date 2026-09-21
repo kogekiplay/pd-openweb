@@ -24,7 +24,7 @@ const Con = styled.div`
     overflow-x: hidden;
   }
   .customFieldsContainer {
-    padding: 0 20px;
+    padding: 0 var(--space-5);
   }
   .btnsWrapper {
     padding: 7px 10px;

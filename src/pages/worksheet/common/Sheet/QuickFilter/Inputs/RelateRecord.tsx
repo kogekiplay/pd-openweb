@@ -67,7 +67,7 @@ const SelectedTags = styled.div`
     display: inline-block;
     margin: 0 0 3px 6px;
     line-height: 24px;
-    padding: 0 24px 0 10px;
+    padding: 0 var(--space-6) 0 10px;
     background-color: rgba(0, 100, 240, 0.08);
     color: var(--color-text-title);
     border-radius: var(--radius-sm);
@@ -80,13 +80,13 @@ const SelectedTags = styled.div`
       right: 4px;
       top: 4px;
       color: var(--color-text-tertiary);
-      font-size: 16px;
+      font-size: var(--font-lg);
       &:hover {
         color: var(--color-text-secondary);
       }
     }
     &.active.allowRemove {
-      padding-right: 24px !important;
+      padding-right: var(--space-6) !important;
     }
   }
 `;

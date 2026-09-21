@@ -10,7 +10,7 @@ const ErrorWrapper = styled.div`
   justify-content: center;
   align-items: center;
   height: 100%;
-  font-size: 14px;
+  font-size: var(--font-md);
   color: var(--color-text-tertiary);
 `;
 

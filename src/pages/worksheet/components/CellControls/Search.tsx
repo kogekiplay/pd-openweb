@@ -16,7 +16,7 @@ const Con = styled(EditableCellCon)`
     line-height: 32px;
   }
   .ant-select {
-    font-size: 13px;
+    font-size: var(--font-sm);
     .ant-select-suffix {
       height: 30px !important;
       border: none;
@@ -48,7 +48,7 @@ const Con = styled(EditableCellCon)`
     padding: 0 6px !important;
     .ant-select-placeholder,
     input {
-      font-size: 13px;
+      font-size: var(--font-sm);
     }
     .ant-select-input,
     .ant-select-placeholder {

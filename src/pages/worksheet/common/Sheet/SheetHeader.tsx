@@ -48,7 +48,7 @@ import SheetMoreOperate from './SheetMoreOperate';
 const Con = styled.div`
   display: flex;
   padding-left: 10px;
-  padding-right: 20px;
+  padding-right: var(--space-5);
   height: 44px;
   background-color: var(--color-background-primary);
   align-items: center;
@@ -62,7 +62,7 @@ const VerticalCenter = styled.div`
     display: flex;
     border-radius: var(--radius-sm);
     padding: 5px 5px;
-    margin-right: 8px;
+    margin-right: var(--space-2);
     cursor: pointer;
     &:hover {
       background: var(--color-background-secondary) !important;

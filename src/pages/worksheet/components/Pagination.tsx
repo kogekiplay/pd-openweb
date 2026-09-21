@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { Dropdown, Input } from 'ming-ui';
 
 const Con = styled.div`
-  font-size: 14px;
+  font-size: var(--font-md);
   color: var(--color-text-secondary);
   cursor: default;
   display: flex;
@@ -18,8 +18,8 @@ const NoData = styled.div`
   line-height: 28px;
 `;
 const PageNum = styled.span`
-  padding: 6px 8px;
-  margin: 0 8px;
+  padding: 6px var(--space-2);
+  margin: 0 var(--space-2);
   border-radius: var(--radius-sm);
   cursor: pointer;
   &.abnormalMode {
@@ -32,7 +32,7 @@ const PageNum = styled.span`
 const Btn = styled.span`
   display: inline-block;
   cursor: pointer;
-  font-size: 18px;
+  font-size: var(--font-xl);
   color: var(--color-text-tertiary);
   width: 25px;
   text-align: center;
@@ -65,14 +65,14 @@ const PageList = styled.div`
   }
 `;
 const PageSizeConfig = styled.div`
-  margin-top: 12px;
+  margin-top: var(--space-3);
   padding: 0 14px;
   .Dropdown--input {
     height: 28px !important;
   }
 `;
 const JumpPage = styled.div`
-  margin: 12px 0 6px;
+  margin: var(--space-3) 0 6px;
   padding: 0 14px;
   .Input {
     margin: 0 10px;
@@ -87,12 +87,12 @@ const JumpPage = styled.div`
    「共N行，i/n页 + 两个箭头」这种紧凑形态。bar 是给底部分页条用的宽松形态，
    默认形态一个字都没改。 */
 const BarCon = styled.div`
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-secondary);
   cursor: default;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: var(--space-4);
 `;
 const BarTotal = styled.span`
   white-space: nowrap;
@@ -104,10 +104,10 @@ const BarTotal = styled.span`
    这里统一成一套，并和页码按钮的 6px 圆角对齐。 */
 const barField = `
   height: 26px !important;
-  padding: 0 8px !important;
+  padding: 0 var(--space-2) !important;
   border-radius: 6px !important;
   border: 1px solid var(--color-border-primary) !important;
-  font-size: 13px !important;
+  font-size: var(--font-sm) !important;
   box-sizing: border-box !important;
   /* 【文字色也要统一】Dropdown 的值是次级灰、Input 是主文字黑，并排就很刺眼。
      .value 那条是给 Dropdown 内层的 span 用的，只写在外层盖不住。 */

@@ -44,7 +44,7 @@ const VoiceToTextWrapper = styled.div`
         .pendingInfo {
           margin-left: 15px;
           color: var(--color-white);
-          font-size: 13px;
+          font-size: var(--font-sm);
           font-weight: 600;
           .pendingTime {
             margin-left: 6px;

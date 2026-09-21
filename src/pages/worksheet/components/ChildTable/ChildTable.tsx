@@ -80,9 +80,9 @@ const IconBtn = styled.span`
   color: var(--color-text-tertiary);
   display: inline-block;
   height: 28px;
-  font-size: 20px;
+  font-size: var(--font-2xl);
   line-height: 28px;
-  padding: 0 4px;
+  padding: 0 var(--space-1);
   border-radius: var(--radius-sm);
   &:hover {
     background: var(--color-background-hover);
@@ -90,9 +90,9 @@ const IconBtn = styled.span`
 `;
 
 const SearchResultNum = styled.div`
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-tertiary);
-  margin-right: 16px;
+  margin-right: var(--space-4);
 `;
 
 const AddRowComp = styled.div`
@@ -102,7 +102,7 @@ const AddRowComp = styled.div`
   height: 36px;
   cursor: pointer;
   padding-left: 14px;
-  font-size: 12px;
+  font-size: var(--font-xs);
   .hoverShow {
     visibility: hidden;
   }
@@ -115,14 +115,14 @@ const AddRowComp = styled.div`
 `;
 
 const BatchAddOfAddRowComp = styled.div`
-  margin-left: 32px;
+  margin-left: var(--space-8);
   height: 28px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border: 1px solid var(--color-border-secondary);
   border-radius: var(--radius-sm);
-  padding: 0 8px;
+  padding: 0 var(--space-2);
   background: var(--color-background-primary);
   &:hover {
     color: var(--color-primary);
@@ -1477,8 +1477,8 @@ class ChildTable extends React.Component<any, any> {
             class="mdTableErrorTip"
             style="
               position: absolute;
-              font-size: 12px;
-              padding: 0px 8px;
+              font-size: var(--font-xs);
+              padding: 0px var(--space-2);
               height: 26px;
               max-width: 300px;
               line-height: 26px;
@@ -1871,7 +1871,7 @@ class ChildTable extends React.Component<any, any> {
             // 把共享的 filterControls 回填到面板，使两处筛选条件与数据始终保持同步。
             return (
               <Tooltip title={tooltipTitle} placement="bottom">
-                <span style={{ display: 'inline-block', margin: '4px 5px 0 0' }}>
+                <span style={{ display: 'inline-block', margin: 'var(--space-1) 5px 0 0' }}>
                   <WorkSheetFilter
                     style={{ paddingTop: 8 }}
                     filterCompId={`childTable-${control.controlId}`}

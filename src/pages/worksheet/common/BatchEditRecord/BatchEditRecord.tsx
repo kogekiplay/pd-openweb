@@ -16,7 +16,7 @@ import { getEditType, handleBatchUpdateRecords } from './controller';
 import EditControlItem from './EditControlItem';
 
 const Con = styled.div`
-  padding: 16px 23px;
+  padding: var(--space-4) 23px;
   .addFilterCondition {
     display: inline-block;
   }
@@ -32,15 +32,15 @@ const Title = styled.div`
 `;
 
 const Description = styled.div`
-  margin-top: 4px;
-  font-size: 13px;
+  margin-top: var(--space-1);
+  font-size: var(--font-sm);
   color: var(--color-text-tertiary);
 `;
 
 const SelectControlButton = styled.div`
   display: inline-block;
   font-weight: 500;
-  margin-top: 16px;
+  margin-top: var(--space-4);
   display: inline-flex;
   height: 36px;
   cursor: pointer;
@@ -48,8 +48,8 @@ const SelectControlButton = styled.div`
   justify-content: center;
   border-radius: var(--radius-sm);
   background-color: var(--color-background-secondary);
-  padding: 0 16px;
-  font-size: 13px;
+  padding: 0 var(--space-4);
+  font-size: var(--font-sm);
   color: var(--color-primary);
   &:hover {
     background-color: var(--color-background-hover);
@@ -59,7 +59,7 @@ const SelectControlButton = styled.div`
 const PlusIcon = styled.span`
   font-family: Arial;
   margin-right: 2px;
-  font-size: 18px;
+  font-size: var(--font-xl);
 `;
 
 const EditCon = styled.div`

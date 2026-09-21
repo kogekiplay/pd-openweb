@@ -49,7 +49,7 @@ const RecordItemWrap = styled.div`
   }
   .titleText {
     padding: 0 14px;
-    font-size: 14px;
+    font-size: var(--font-md);
     font-weight: bold;
     word-break: break-word;
     white-space: normal;
@@ -79,7 +79,7 @@ const RecordItemWrap = styled.div`
     -webkit-line-clamp: 3 !important;
     -webkit-box-orient: vertical;
     /* autoprefixer: on */
-    font-size: 13px;
+    font-size: var(--font-sm);
     line-height: 1.5;
     &.galleryViewAbstract {
       height: 77px;
@@ -123,7 +123,7 @@ const RecordItemWrap = styled.div`
     }
     .worksheetCellPureString {
       max-width: 100%;
-      padding-left: 4px;
+      padding-left: var(--space-1);
     }
     &.galleryRowfieldItem {
       .cellUsers .cellUser,
@@ -155,7 +155,7 @@ const RecordItemWrap = styled.div`
     border-radius: var(--radius-sm);
     background-color: var(--color-background-secondary);
     text-align: center;
-    font-size: 18px;
+    font-size: var(--font-xl);
     &:hover {
       box-shadow: var(--shadow-sm);
       background-color: var(--color-background-primary);
@@ -212,7 +212,7 @@ const RecordFieldsWrap = styled(FlexCenter)`
 
 const ControlName = styled(Text)`
   flex-shrink: 0;
-  margin: 0 8px 0 0;
+  margin: 0 var(--space-2) 0 0;
   color: var(--color-text-tertiary);
   overflow: hidden;
   white-space: nowrap;

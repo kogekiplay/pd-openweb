@@ -61,7 +61,7 @@ const Wrap = styled.div`
     }
   }
   .btn {
-    padding: 0 20px;
+    padding: 0 var(--space-5);
     height: 36px;
     line-height: 36px;
     border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);

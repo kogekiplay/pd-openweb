@@ -17,7 +17,7 @@ export const WrapChoose = styled.div`
   .setLi {
     height: 36px;
     line-height: 36px;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     &:hover {
       background: var(--color-background-hover);
     }

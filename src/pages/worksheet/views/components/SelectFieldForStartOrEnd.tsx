@@ -11,7 +11,7 @@ import type { FormControl } from 'src/utils/controlTypes';
 import { getTimeControls } from '../CalendarView/util';
 
 const BtnForSure = styled.div`
-  padding: 0 32px;
+  padding: 0 var(--space-8);
   line-height: 36px;
   height: 36px;
   color: var(--color-white);
@@ -20,7 +20,7 @@ const BtnForSure = styled.div`
   outline: none;
   cursor: pointer;
   border: 1px solid transparent;
-  margin-top: 32px;
+  margin-top: var(--space-8);
   box-sizing: border-box;
   display: inline-block;
   &.isUnAb {

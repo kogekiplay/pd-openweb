@@ -20,7 +20,7 @@ const nameMethodList = [
 ];
 
 const Container = styled.div`
-  font-size: 14px;
+  font-size: var(--font-md);
   .nameMethodWrap {
     align-items: center;
     height: 32px;

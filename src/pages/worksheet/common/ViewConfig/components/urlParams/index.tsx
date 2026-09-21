@@ -8,12 +8,12 @@ import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import { openShareDialog } from 'src/pages/worksheet/components/Share';
 
 const ParamsWrapper = styled.div`
-  margin-top: 20px;
+  margin-top: var(--space-5);
 
   .icon-trash {
-    font-size: 16px;
+    font-size: var(--font-lg);
     color: var(--color-text-tertiary);
-    margin-left: 16px;
+    margin-left: var(--space-4);
     cursor: pointer;
     &:hover {
       color: var(--color-error);
@@ -44,12 +44,12 @@ const AddParamsBtn = styled.div`
   display: flex;
   align-items: center;
   width: fit-content;
-  margin-top: 20px;
+  margin-top: var(--space-5);
   cursor: pointer;
   color: var(--color-text-secondary);
   i {
-    font-size: 18px;
-    margin-right: 4px;
+    font-size: var(--font-xl);
+    margin-right: var(--space-1);
   }
   span {
     font-weight: bold;

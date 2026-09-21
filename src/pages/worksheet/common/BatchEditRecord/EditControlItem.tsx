@@ -14,10 +14,10 @@ const TabContainer = styled.div`
 `;
 
 const Tab = styled.div`
-  padding: 6px 12px;
+  padding: 6px var(--space-3);
   cursor: pointer;
   border-radius: var(--radius-sm);
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: ${props => (props.active ? 'var(--color-text-title)' : 'var(--color-text-secondary)')};
   background: ${props => (props.active ? 'var(--color-background-card)' : 'transparent')};
   opacity: ${props => (props.disabled ? 0.5 : 1)};

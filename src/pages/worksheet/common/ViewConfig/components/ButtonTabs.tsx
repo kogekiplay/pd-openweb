@@ -17,7 +17,7 @@ function ButtonTabs(props) {
         return (
           <li
             className={cx('animaItem overflow_ellipsis', { active: value === item.value })}
-            style={{ padding: '8px 18px' }}
+            style={{ padding: 'var(--space-2) 18px' }}
             key={`ButtonTabs-${from}-${item.value}`}
             onClick={() => handleChange(item.value)}
           >
