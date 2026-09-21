@@ -17,7 +17,7 @@
     }
     .datepicker-caption {
       gap: 5px;
-      padding: 6px 8px 4px;
+      padding: 6px var(--space-2) var(--space-1);
       box-sizing: border-box;
 
       .datepicker-caption-item {
@@ -36,8 +36,8 @@
     }
     .datepicker-content {
       gap: 5px;
-      padding-left: 8px;
-      padding-right: 8px;
+      padding-left: var(--space-2);
+      padding-right: var(--space-2);
       box-sizing: border-box;
 
       .datepicker-col-1 {
@@ -60,7 +60,7 @@
             text-overflow: ellipsis;
             color: var(--color-text-primary);
             &:nth-child(6):not(.disabled) {
-              font-size: 20px;
+              font-size: var(--font-2xl);
               font-weight: bold;
               color: var(--color-primary);
             }

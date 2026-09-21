@@ -44,7 +44,7 @@ const OperateIcon = styled.div`
   background: var(--color-background-primary);
   text-align: center;
   color: var(--color-text-tertiary);
-  font-size: 16px;
+  font-size: var(--font-lg);
   cursor: pointer;
 `;
 
@@ -118,7 +118,7 @@ function OptionsSteps(props, ref) {
       <div className="cellOptions cellControl w100">
         <span
           className="cellOption ellipsis"
-          style={Object.assign({}, { ...getOptionStyle(option, cell), margin: '0px 4px 0px 0px', maxWidth: '100%' })}
+          style={Object.assign({}, { ...getOptionStyle(option, cell), margin: '0px var(--space-1) 0px 0px', maxWidth: '100%' })}
         >
           {option.value}
         </span>

@@ -44,7 +44,7 @@ const WidgetList = styled.div`
     min-height: 0;
   }
   .groupList {
-    padding: 17px 16px 40px 16px;
+    padding: 17px var(--space-4) 40px var(--space-4);
     box-sizing: border-box;
     &.isTemplateTab {
       display: flex;
@@ -60,9 +60,9 @@ const WidgetList = styled.div`
         font-weight: 700;
       }
       .supportBox i {
-        margin-left: 8px;
+        margin-left: var(--space-2);
         color: var(--color-text-tertiary);
-        font-size: 16px !important;
+        font-size: var(--font-lg) !important;
       }
     }
   }
@@ -70,12 +70,12 @@ const WidgetList = styled.div`
     display: flex;
     align-items: center;
     border-bottom: 1px solid var(--color-border-primary);
-    margin: 12px 0;
+    margin: var(--space-3) 0;
     .templateTabItem {
-      padding: 5px 16px;
+      padding: 5px var(--space-4);
       border-bottom: 3px solid transparent;
       color: var(--color-text-secondary);
-      font-size: 14px;
+      font-size: var(--font-md);
       cursor: pointer;
       &:hover {
         color: var(--color-primary);
@@ -97,7 +97,7 @@ const WidgetList = styled.div`
       &.ant-collapse {
         background: transparent !important;
         .ant-collapse-item > .ant-collapse-header {
-          padding: 12px 0 !important;
+          padding: var(--space-3) 0 !important;
         }
         .ant-collapse-body {
           padding-bottom: 0 !important;
@@ -117,8 +117,8 @@ const WidgetList = styled.div`
         .ant-collapse-item > .ant-collapse-header {
           align-items: center;
           min-height: 36px;
-          padding: 0 12px 0 0 !important;
-          font-size: 13px !important;
+          padding: 0 var(--space-3) 0 0 !important;
+          font-size: var(--font-sm) !important;
           font-weight: normal;
           & > div:first-child {
             line-height: 28px;
@@ -139,7 +139,7 @@ const WidgetList = styled.div`
           }
         }
         .ant-collapse-body {
-          padding: 0 0 12px 0 !important;
+          padding: 0 0 var(--space-3) 0 !important;
         }
       }
     }
@@ -151,8 +151,8 @@ const WidgetList = styled.div`
       overflow: hidden;
       .templateItemHeaderContent {
         min-height: 36px;
-        padding: 0 12px 0 14px;
-        font-size: 13px;
+        padding: 0 var(--space-3) 0 14px;
+        font-size: var(--font-sm);
         &:hover {
           background: var(--color-background-hover);
         }
@@ -175,7 +175,7 @@ const WidgetList = styled.div`
         display: none;
         flex-shrink: 0;
         color: var(--color-text-tertiary);
-        font-size: 18px;
+        font-size: var(--font-xl);
         line-height: 34px;
         cursor: pointer;
         &:hover {
@@ -186,7 +186,7 @@ const WidgetList = styled.div`
         flex-shrink: 0;
         margin-right: 10px;
         color: var(--color-text-tertiary);
-        font-size: 16px;
+        font-size: var(--font-lg);
       }
       &.hasTemplateAction:hover {
         .templateCount {
@@ -202,12 +202,12 @@ const WidgetList = styled.div`
         display: flex;
         align-items: center;
         height: 36px;
-        padding: 0 12px;
-        font-size: 14px;
+        padding: 0 var(--space-3);
+        font-size: var(--font-md);
         i {
           margin-right: 10px;
           color: var(--color-text-tertiary);
-          font-size: 16px;
+          font-size: var(--font-lg);
         }
       }
     }
@@ -221,14 +221,14 @@ const WidgetList = styled.div`
         color: rgba(128, 128, 128, 0.14);
       }
       .templateEmptyText {
-        margin-top: 12px;
+        margin-top: var(--space-3);
         color: var(--color-text-tertiary);
-        font-size: 14px;
+        font-size: var(--font-md);
       }
     }
   }
   .group {
-    margin-top: 12px;
+    margin-top: var(--space-3);
     .title {
       font-weight: 700;
     }
@@ -237,7 +237,7 @@ const WidgetList = styled.div`
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    margin-top: 12px;
+    margin-top: var(--space-3);
   }
   .widgetCustom {
     position: relative;
@@ -263,9 +263,9 @@ const WidgetList = styled.div`
     width: 48%;
     min-height: 36px;
     box-sizing: border-box;
-    margin-bottom: 12px;
+    margin-bottom: var(--space-3);
     padding-left: 10px;
-    padding-right: 4px;
+    padding-right: var(--space-1);
     list-style: none;
     position: relative;
     background-color: var(--color-background-primary);
@@ -279,7 +279,7 @@ const WidgetList = styled.div`
     .betaIcon {
       position: absolute;
       color: #6e00ff !important;
-      font-size: 16px;
+      font-size: var(--font-lg);
       top: -6px;
       right: -11px;
       background: var(--color-background-primary);
@@ -301,7 +301,7 @@ const WidgetList = styled.div`
       }
       i {
         flex-shrink: 0;
-        font-size: 16px;
+        font-size: var(--font-lg);
         width: 25px;
         display: inline-block;
         color: var(--color-text-tertiary);

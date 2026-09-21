@@ -1,7 +1,7 @@
 .custom-cascader {
   position: relative;
   width: 100%;
-  font-size: 14px;
+  font-size: var(--font-md);
 
   // 多选模式：input 跟随 tags 后面
   .cascader-selected-tags ~ .cascader-search-input {
@@ -13,7 +13,7 @@
     display: flex;
     align-items: center;
     min-height: 36px;
-    padding: 0px 12px;
+    padding: 0px var(--space-3);
     background-color: transparent;
     border: 1px solid var(--color-border-primary);
     border-radius: var(--radius-sm);
@@ -49,7 +49,7 @@
       display: flex;
       align-items: center;
       flex-wrap: wrap;
-      gap: 4px;
+      gap: var(--space-1);
       align-content: flex-start;
       position: relative;
 
@@ -59,7 +59,7 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         line-height: 34px;
-        font-size: 13px;
+        font-size: var(--font-sm);
         color: var(--color-text-disabled);
         cursor: pointer;
       }
@@ -73,7 +73,7 @@
           overflow: hidden;
           white-space: nowrap;
           border-radius: 12px;
-          padding: 0 12px;
+          padding: 0 var(--space-3);
           margin-top: 2px;
           margin-bottom: 2px;
           line-height: 24px;
@@ -84,7 +84,7 @@
           max-width: 97%;
           .cascader-selected-tag-label {
             margin-right: 6px;
-            font-size: 13px;
+            font-size: var(--font-sm);
             max-width: 100%;
           }
 
@@ -92,7 +92,7 @@
             color: var(--color-text-secondary);
             cursor: pointer;
             transition: all 0.3s;
-            font-size: 12px !important;
+            font-size: var(--font-xs) !important;
             &:hover {
               color: var(--color-primary);
             }
@@ -102,7 +102,7 @@
 
       .cascader-search-input {
         display: inline-flex;
-        font-size: 13px;
+        font-size: var(--font-sm);
         height: auto;
         line-height: 22px;
         border: none !important;
@@ -144,7 +144,7 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         line-height: 22px;
-        font-size: 13px;
+        font-size: var(--font-sm);
         color: var(--color-text-primary);
         cursor: pointer;
       }
@@ -153,7 +153,7 @@
     .cascader-input-suffix {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: var(--space-1);
       flex-shrink: 0;
       margin-right: -2px;
 
@@ -177,7 +177,7 @@
         align-items: center;
         height: 12px;
         margin-top: -6px;
-        font-size: 12px;
+        font-size: var(--font-xs);
         line-height: 1;
         text-align: center;
         pointer-events: none;
@@ -195,9 +195,9 @@
   .cascader-content {
     min-width: auto;
     box-sizing: border-box;
-    padding: 4px 0;
+    padding: var(--space-1) 0;
     overflow: hidden;
-    font-size: 14px;
+    font-size: var(--font-md);
     font-variant: initial;
     background-color: var(--color-background-card);
     border-radius: var(--radius-sm);
@@ -207,7 +207,7 @@
 
     .cascader-not-found-content {
       color: var(--color-text-disabled);
-      padding: 4px 12px;
+      padding: var(--space-1) var(--space-3);
     }
 
     .cascader-selected-value {
@@ -231,7 +231,7 @@
         display: flex;
         flex-wrap: nowrap;
         align-items: center;
-        padding: 5px 12px;
+        padding: 5px var(--space-3);
         overflow: hidden;
         line-height: 22px;
         white-space: nowrap;
@@ -245,14 +245,14 @@
         }
 
         .cascader-checkbox {
-          margin-right: 8px;
+          margin-right: var(--space-2);
         }
 
         .cascader-option-label {
           flex: auto;
-          font-size: 14px;
+          font-size: var(--font-md);
           border-radius: var(--radius-sm);
-          padding: 0 4px;
+          padding: 0 var(--space-1);
           &.cascader-option-label-selected {
             background-color: var(--color-primary-transparent);
           }
@@ -264,12 +264,12 @@
             color: var(--color-text-tertiary);
           }
           .ant-spin-dot {
-            font-size: 12px;
+            font-size: var(--font-xs);
           }
         }
 
         &.has-children {
-          padding-right: 4px;
+          padding-right: var(--space-1);
         }
       }
     }

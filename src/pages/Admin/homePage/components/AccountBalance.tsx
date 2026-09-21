@@ -18,7 +18,7 @@ const AccountBalanceHeader = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--space-3);
 `;
 
 const DashedText = styled.span`
@@ -37,14 +37,14 @@ const AIWelfarePointLine = styled.div`
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--space-2);
   min-height: 22px;
 `;
 
 const AIWelfarePointValue = styled.span`
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-1);
 
   .monthlyRemaining {
     color: var(--color-primary);

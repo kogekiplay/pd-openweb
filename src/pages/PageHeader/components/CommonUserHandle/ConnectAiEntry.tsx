@@ -10,8 +10,8 @@ const ConnectAiButton = styled.div`
   align-items: center;
   justify-content: center;
   height: 34px;
-  padding: 0 16px;
-  margin-right: 12px;
+  padding: 0 var(--space-4);
+  margin-right: var(--space-3);
   border-radius: 20px;
   border: 1px solid #6f00ff;
   cursor: pointer;
@@ -19,7 +19,7 @@ const ConnectAiButton = styled.div`
 
   .Icon {
     margin-right: 6px;
-    font-size: 18px;
+    font-size: var(--font-xl);
     color: #6f00ff;
   }
 

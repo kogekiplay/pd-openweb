@@ -10,13 +10,13 @@ import { MINGO_TASK_STATUS } from 'src/components/Mingo/ChatBot/enum';
 import { emitter } from 'src/utils/common';
 
 const Con = styled.div`
-  padding: 12px;
+  padding: var(--space-3);
   border-radius: 8px;
   border: 1px solid var(--color-border-primary);
   background: var(--color-primary-transparent);
   margin-bottom: 10px;
   .label {
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-secondary);
     margin-bottom: 5px;
     font-weight: bold;
@@ -31,10 +31,10 @@ const Con = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 12px;
+    margin-top: var(--space-3);
     border-radius: 18px;
     color: var(--color-white);
-    font-size: 13px;
+    font-size: var(--font-sm);
     font-weight: bold;
     cursor: pointer;
   }
@@ -79,7 +79,7 @@ const IconSelector = styled.div`
   background: var(--color-background-card);
   box-shadow: var(--shadow-lg);
   .title {
-    font-size: 12px;
+    font-size: var(--font-xs);
     color: var(--color-text-tertiary);
   }
   .iconList {

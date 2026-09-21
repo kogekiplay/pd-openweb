@@ -16,18 +16,18 @@ const SideMaskWrap = styled.div`
   width: 100%;
   height: 100%;
   z-index: 21;
-  padding: 16px 18px;
+  padding: var(--space-4) 18px;
   background: var(--color-background-secondary);
   display: flex;
   flex-direction: column;
   .title {
-    font-size: 18px;
+    font-size: var(--font-xl);
     font-weight: bold;
     color: var(--color-text-title);
-    margin-bottom: 20px;
+    margin-bottom: var(--space-5);
   }
   .rowHeadNumber {
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-tertiary);
     text-align: center;
   }

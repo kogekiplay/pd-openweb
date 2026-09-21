@@ -5,7 +5,7 @@ import { Icon, Textarea } from 'ming-ui';
 
 const Wrapper = styled.div`
   width: 310px;
-  padding: 20px 24px;
+  padding: var(--space-5) var(--space-6);
   background: var(--color-background-primary);
   box-shadow: 0px 4px 16px 1px rgba(0, 0, 0, 0.16);
   border-radius: var(--radius-sm);

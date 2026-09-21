@@ -26,7 +26,7 @@ const ImportWrap = styled.div`
     line-height: 56px;
     font-weight: 600;
     font-size: 17px;
-    padding-left: 24px;
+    padding-left: var(--space-6);
     border-bottom: 1px solid var(--color-border-secondary);
     .icon {
       margin-right: 18px;
@@ -36,12 +36,12 @@ const ImportWrap = styled.div`
   .importContent {
     flex: 1;
     overflow-y: auto;
-    padding-bottom: 24px;
+    padding-bottom: var(--space-6);
     .uploadStep {
       width: 640px;
       margin: 0 auto;
       .serialTitle {
-        font-size: 14px;
+        font-size: var(--font-md);
         font-family: FZLanTingHeiS;
         font-weight: 600;
         color: var(--color-text-title);
@@ -86,7 +86,7 @@ const ImportWrap = styled.div`
         .downloadBtn {
           display: inline-block;
           height: 32px;
-          font-size: 16px;
+          font-size: var(--font-lg);
           font-weight: 600;
           line-height: 32px;
           text-align: center;
@@ -122,9 +122,9 @@ const ImportWrap = styled.div`
         margin: 44px auto 0;
         text-align: center;
         line-height: 34px;
-        background: var(--color-link-hover);
+        background: var(--color-primary-dark);
         border-radius: 32px;
-        font-size: 14px;
+        font-size: var(--font-md);
         font-family: FZLanTingHeiS;
         font-weight: 600;
         color: var(--color-white);
@@ -143,7 +143,7 @@ const ColErrorInfo = styled.div`
   height: calc(100% - 56px);
   align-items: center;
   .colErrorInfo {
-    font-size: 24px;
+    font-size: var(--font-3xl);
     font-family: FZLanTingHeiS;
     font-weight: 600;
     .errorIcon {
@@ -161,18 +161,18 @@ const ColErrorInfo = styled.div`
     height: 34px;
     line-height: 34px;
     text-align: center;
-    background: var(--color-link-hover);
+    background: var(--color-primary-dark);
     border-radius: 32px;
     margin-top: 50px;
     color: var(--color-white);
-    font-size: 14px;
+    font-size: var(--font-md);
     font-weight: 600;
   }
 `;
 const ListErrorInfo = styled.div`
   height: calc(100% - 56px);
   padding: 58px 33px 0;
-  font-size: 24px;
+  font-size: var(--font-3xl);
   font-family: FZLanTingHeiS;
   font-weight: 600;
   overflow-y: auto;
@@ -264,7 +264,7 @@ const SuccessInfo = styled.div`
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  font-size: 24px;
+  font-size: var(--font-3xl);
   font-family: FZLanTingHeiS;
   font-weight: 600;
   .successIcon {
@@ -278,11 +278,11 @@ const SuccessInfo = styled.div`
     height: 34px;
     line-height: 34px;
     text-align: center;
-    background: var(--color-link-hover);
+    background: var(--color-primary-dark);
     border-radius: 32px;
     margin-top: 50px;
     color: var(--color-white);
-    font-size: 14px;
+    font-size: var(--font-md);
     font-weight: 600;
   }
 `;

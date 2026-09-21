@@ -17,7 +17,7 @@ const Wrap = styled.div`
 
   .appItem {
     border-radius: var(--radius-sm);
-    padding: 8px 6px;
+    padding: var(--space-2) 6px;
     &.active {
       svg {
         fill: var(--color-primary) !important;

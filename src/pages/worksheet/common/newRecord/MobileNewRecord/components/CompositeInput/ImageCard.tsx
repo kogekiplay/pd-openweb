@@ -29,7 +29,7 @@ const Con = styled.div`
     height: 100%;
     border-radius: 10px;
     color: var(--color-text-secondary);
-    font-size: 12px;
+    font-size: var(--font-xs);
   }
   .icon {
     position: absolute;
@@ -41,7 +41,7 @@ const Con = styled.div`
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    font-size: 12px;
+    font-size: var(--font-xs);
     color: var(--color-text-secondary);
     background-color: var(--color-background-primary);
     box-shadow: var(--shadow-sm);

@@ -468,7 +468,7 @@ export function getTableHeadHeight(columns) {
         getTextHeight(
           c.controlName + (c.required ? '*' : ''),
           c.width - 10,
-          'font-size: 13px;line-height: 1.3em;word-break: break-all;',
+          'font-size: var(--font-sm);line-height: 1.3em;word-break: break-all;',
         ),
       ),
   );

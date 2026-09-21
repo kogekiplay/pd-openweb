@@ -32,7 +32,7 @@ const DISPLAY_OPTIONS = [
 const ConfigWrap = styled.div`
   .infoWrap {
     line-height: 48px;
-    padding-left: 12px;
+    padding-left: var(--space-3);
     background-color: var(--color-background-secondary);
   }
   .addFilterControl {
@@ -61,9 +61,9 @@ const ConfigWrap = styled.div`
   .filterDesc {
     line-height: 44px;
     background: var(--color-background-secondary);
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     color: var(--color-text-title);
-    margin: 8px 0;
+    margin: var(--space-2) 0;
   }
 `;
 

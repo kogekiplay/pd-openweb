@@ -46,7 +46,7 @@ const PluginInfoItem = styled.div`
   }
   .selectItem {
     flex: 1;
-    font-size: 13px;
+    font-size: var(--font-sm);
     &.ant-select,
     & .ant-select {
       --ant-select-border-size: 1px !important;

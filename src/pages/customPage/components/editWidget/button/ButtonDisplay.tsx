@@ -17,14 +17,14 @@ const ButtonDisplayWrap = styled.div`
   .title,
   .explain {
     text-align: center;
-    margin-bottom: 12px;
+    margin-bottom: var(--space-3);
     color: var(--title-color);
   }
 `;
 
 const BtnWrap = styled.div`
-  margin: 4px 0;
-  padding: 0 8px;
+  margin: var(--space-1) 0;
+  padding: 0 var(--space-2);
   cursor: pointer;
   transition: border 0.25s;
   border: 1px solid transparent;
@@ -55,7 +55,7 @@ const BtnWrap = styled.div`
       background-color: ${props => new TinyColor(props.color).darken(20).toString()};
     }
     .icon {
-      font-size: 20px;
+      font-size: var(--font-2xl);
       margin-right: 6px;
     }
   }

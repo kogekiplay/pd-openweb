@@ -55,8 +55,8 @@ const RelateSheetWrap = styled.div`
     background: var(--color-background-secondary);
     border-radius: var(--radius-sm);
     line-height: 36px;
-    padding: 0 12px;
-    margin-top: 12px;
+    padding: 0 var(--space-3);
+    margin-top: var(--space-3);
     color: var(--color-text-tertiary);
   }
 `;
@@ -96,7 +96,7 @@ const SettingConfigWrap = styled.div`
   height: 36px;
   background: var(--color-background-secondary);
   border-radius: var(--radius-sm);
-  margin-top: 20px;
+  margin-top: var(--space-5);
   cursor: pointer;
   &:hover {
     background: var(--color-background-hover);

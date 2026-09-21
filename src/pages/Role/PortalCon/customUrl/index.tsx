@@ -14,7 +14,7 @@ import { getTranslateInfo } from 'src/utils/app';
 const Wrap = styled.div`
   overflow: hidden;
   .header {
-    padding: 24px 24px 0;
+    padding: var(--space-6) var(--space-6) 0;
     display: flex;
     & > span {
       flex: 1;
@@ -23,20 +23,20 @@ const Wrap = styled.div`
     }
   }
   .setBtn {
-    padding: 5px 20px;
+    padding: 5px var(--space-5);
     background: var(--color-primary);
     border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     color: var(--color-white) !important;
   }
   .customUrlCon {
-    padding: 0 24px 0;
+    padding: 0 var(--space-6) 0;
     overflow: auto;
   }
   .nameCon {
     width: 104px;
     height: 36px;
     line-height: 36px;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     background-color: var(--color-background-disabled);
     border-radius: var(--radius-sm);
   }
@@ -91,7 +91,7 @@ const WrapDetail = styled.div`
     line-height: 36px;
     border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-primary);
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     &:focus {
       border: 1px solid var(--color-primary);
     }
@@ -107,13 +107,13 @@ const CustomUrlSet = styled.div`
   line-height: 36px;
   background-color: var(--color-background-disabled);
   color: var(--color-text-title);
-  font-size: 14px;
+  font-size: var(--font-md);
   padding: 0 10px;
   cursor: pointer;
   padding: 0;
   width: 36px;
   color: var(--color-text-secondary);
-  font-size: 18px;
+  font-size: var(--font-xl);
   text-align: center;
   margin-left: 6px;
   background: var(--color-background-primary);

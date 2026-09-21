@@ -18,7 +18,7 @@ const HeaderWrap = styled.div`
   box-shadow: var(--shadow-md);
   z-index: 15;
   background-color: var(--color-background-primary);
-  padding: 0 24px 0 16px;
+  padding: 0 var(--space-6) 0 var(--space-4);
   .applicationIcon {
     width: 28px;
     height: 28px;

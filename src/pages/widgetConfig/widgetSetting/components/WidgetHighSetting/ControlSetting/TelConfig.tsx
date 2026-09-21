@@ -20,7 +20,7 @@ const TelConfigWrap = styled.div`
     margin: 6px 0;
     height: 36px;
     line-height: 36px;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     border: 1px solid var(--color-border-primary);
     border-radius: var(--radius-sm);
     &:hover {
@@ -28,7 +28,7 @@ const TelConfigWrap = styled.div`
     }
   }
   .title {
-    margin: 16px 0 8px 0;
+    margin: var(--space-4) 0 var(--space-2) 0;
   }
 `;
 

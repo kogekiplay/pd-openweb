@@ -11,13 +11,13 @@ const BoardTitleWrap = styled(FlexCenter)`
   border-radius: 18px;
   padding: 0 18px;
   line-height: 28px;
-  margin: 8px 0;
+  margin: var(--space-2) 0;
   font-weight: 500;
 
   .boardTitle {
     border-radius: 18px;
     line-height: 28px;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     max-width: 100%;
     overflow: hidden;
     white-space: nowrap;
@@ -30,7 +30,7 @@ const BoardTitleWrap = styled(FlexCenter)`
       vertical-align: baseline;
     }
     span {
-      margin-left: 4px;
+      margin-left: var(--space-1);
     }
   }
   .optionType {
@@ -65,7 +65,7 @@ const BoardTitleWrap = styled(FlexCenter)`
 const RecordCount = styled.div`
   box-sizing: border-box;
   padding: 0 6px;
-  margin-left: 8px;
+  margin-left: var(--space-2);
   line-height: 24px;
   min-width: 24px;
   border-radius: 12px;

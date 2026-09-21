@@ -16,12 +16,12 @@ const PopupWrap = styled(Popup)`
   }
   .titleBox {
     display: flex;
-    padding: 20px 15px 20px;
+    padding: var(--space-5) 15px var(--space-5);
     .descIconBox {
       margin-right: 15px;
       .success {
         color: var(--color-success);
-        font-size: 20px;
+        font-size: var(--font-2xl);
       }
       .error {
         color: var(--color-error);
@@ -39,13 +39,13 @@ const PopupWrap = styled(Popup)`
       color: var(--color-text-primary);
     }
     .subDesc {
-      margin-top: 8px;
-      font-size: 13px;
+      margin-top: var(--space-2);
+      font-size: var(--font-sm);
       color: var(--color-text-secondary);
     }
   }
   .contentBox {
-    padding: 0 15px 24px;
+    padding: 0 15px var(--space-6);
     flex: 1;
     overflow-y: auto;
   }
@@ -55,14 +55,16 @@ const PopupWrap = styled(Popup)`
     gap: 10px;
     button {
       flex: 1;
-      font-size: 13px;
+      font-size: var(--font-sm);
       font-weight: 500;
     }
     .cancel {
       color: var(--color-text-secondary);
     }
+    /* 主按钮要跟应用主题，不能用 --color-info（那是写死的信息蓝，不跟主题）。
+       同组的 .delete 用 --color-error 是对的：那是语义色。 */
     .primary {
-      background-color: var(--color-info) !important;
+      background-color: var(--color-primary) !important;
       color: var(--color-white);
     }
     .delete {

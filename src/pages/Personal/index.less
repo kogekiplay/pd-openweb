@@ -31,11 +31,12 @@
     cursor: pointer;
     height: 40px;
     line-height: 40px;
-    padding-left: 24px;
+    padding-left: var(--space-6);
     color: var(--color-text-title);
     &.active {
       color: var(--color-white) !important;
-      background-color: var(--color-link) !important;
+      /* 选中态属于品牌色，不是链接 —— --color-link 是写死的蓝，不跟主题 */
+      background-color: var(--color-primary) !important;
       span {
         color: var(--color-white) !important;
       }

@@ -29,21 +29,21 @@ const UsersCon = styled.div`
   cursor: pointer;
   flex: 1;
   overflow: hidden;
-  font-size: 13px;
+  font-size: var(--font-sm);
   min-height: 32px;
   padding: 0 0 0 10px;
 `;
 
 const UserItem = styled.div`
-  font-size: 13px;
+  font-size: var(--font-sm);
   display: inline-block;
   color: var(--color-text-title);
   background: var(--color-border-secondary);
   height: 24px;
   line-height: 24px;
   border-radius: 24px;
-  padding-right: 8px;
-  margin: 4px 6px 0 0;
+  padding-right: var(--space-2);
+  margin: var(--space-1) 6px 0 0;
   .userHead {
     display: inline-block !important;
     margin-right: 6px;
@@ -55,19 +55,19 @@ const UserItem = styled.div`
 `;
 
 const SingleUserItem = styled.div`
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-title);
   .userHead {
     display: inline-block !important;
-    margin-right: 8px;
+    margin-right: var(--space-2);
   }
 `;
 
 const Icon = styled.i`
   cursor: pointer;
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-tertiary);
-  margin-right: 8px;
+  margin-right: var(--space-2);
 `;
 
 const Empty = styled.span`

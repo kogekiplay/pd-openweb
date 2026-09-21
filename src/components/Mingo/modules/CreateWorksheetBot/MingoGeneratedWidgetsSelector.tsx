@@ -20,7 +20,7 @@ import type { FormControl } from 'src/utils/controlTypes';
 const Con = styled.div`
   border-radius: 8px;
   border: 1px solid var(--color-border-primary);
-  padding: 12px 0;
+  padding: var(--space-3) 0;
   background-color: var(--color-background-primary);
   .hr {
     height: 1px;
@@ -28,9 +28,9 @@ const Con = styled.div`
     margin: 10px;
   }
   .widget-item {
-    padding: 8px 17px;
+    padding: var(--space-2) 17px;
     .name {
-      font-size: 13px;
+      font-size: var(--font-sm);
       color: var(--color-text-title);
     }
     .Checkbox {
@@ -47,10 +47,10 @@ const Con = styled.div`
       opacity: 0.39;
     }
     .icon {
-      margin-right: 8px;
+      margin-right: var(--space-2);
     }
     .widget-name {
-      font-size: 13px;
+      font-size: var(--font-sm);
       color: var(--color-text-tertiary);
     }
     .options {
@@ -58,7 +58,7 @@ const Con = styled.div`
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: var(--space-3);
       .option {
         .circle {
           width: 8px;
@@ -66,23 +66,23 @@ const Con = styled.div`
           border-radius: 50%;
           margin-right: 5px;
         }
-        font-size: 12px;
+        font-size: var(--font-xs);
         color: var(--color-text-secondary);
       }
     }
     .relate-worksheet-info {
       margin: 6px 0 0 31px;
-      font-size: 12px;
+      font-size: var(--font-xs);
       color: var(--color-text-secondary);
     }
     .relate-worksheet-new-worksheet {
       margin: 6px 0 0 31px;
-      font-size: 12px;
+      font-size: var(--font-xs);
       color: var(--color-success);
       cursor: pointer;
     }
     &.widget-list-title {
-      padding: 8px 12px;
+      padding: var(--space-2) var(--space-3);
       .name {
         color: var(--color-mingo);
         font-weight: bold;
@@ -95,7 +95,7 @@ const Con = styled.div`
   .added-count {
     width: 100%;
     border-radius: 32px;
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-secondary);
     line-height: 32px;
     background: var(--color-background-primary);
@@ -107,7 +107,7 @@ const Con = styled.div`
     text-align: center;
     background: var(--color-mingo);
     border-radius: 32px;
-    font-size: 14px;
+    font-size: var(--font-md);
     font-weight: bold;
     color: var(--color-white);
     cursor: pointer;
@@ -157,7 +157,7 @@ const CreateWorksheetOfRelateRecordCon = styled.div`
     animation: ${slideUp} 0.3s ease-in-out;
     border-radius: 12px 12px 0 0;
     background: var(--color-background-primary);
-    padding: 20px 20px 100px;
+    padding: var(--space-5) var(--space-5) 100px;
     .confirmContent-title {
       font-size: 17px;
       font-weight: bold;
@@ -165,13 +165,13 @@ const CreateWorksheetOfRelateRecordCon = styled.div`
       margin-bottom: 6px;
     }
     .confirmContent-desc {
-      font-size: 14px;
+      font-size: var(--font-md);
       color: var(--color-text-title);
     }
     .confirmContent-button-con {
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: var(--space-4);
       margin-top: 26px;
     }
     .confirmContent-button {
@@ -181,7 +181,7 @@ const CreateWorksheetOfRelateRecordCon = styled.div`
       text-align: center;
       background: var(--color-mingo);
       border-radius: 34px;
-      font-size: 14px;
+      font-size: var(--font-md);
       font-weight: bold;
       color: var(--color-white);
       cursor: pointer;
@@ -205,7 +205,7 @@ const CreateWorksheetOfRelateRecordCon = styled.div`
 
 const Icon = styled.i`
   color: var(--color-success);
-  font-size: 18px;
+  font-size: var(--font-xl);
   margin-right: 2px !important;
 `;
 

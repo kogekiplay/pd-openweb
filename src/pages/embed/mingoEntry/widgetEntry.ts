@@ -251,7 +251,7 @@ function createEntryAlert(content, type = 1) {
     top: '24px',
     zIndex: 999999,
     maxWidth: 'min(420px, calc(100vw - 32px))',
-    padding: '10px 16px',
+    padding: '10px var(--space-4)',
     borderRadius: '8px',
     color: 'var(--color-text-inverse)',
     background: 'var(--color-background-inverse)',

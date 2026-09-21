@@ -8,14 +8,14 @@ import preall from 'src/common/preall';
 import { getRequest } from 'src/utils/common';
 
 const Wrap = styled.div`
-  padding-top: 20px;
+  padding-top: var(--space-5);
   max-height: 640px;
   width: 100%;
   .content {
     height: 299px;
     background: var(--color-background-secondary);
     border-radius: 9px 9px 9px 9px;
-    padding: 50px 16px 0;
+    padding: 50px var(--space-4) 0;
     .label {
       min-width: 100px;
     }

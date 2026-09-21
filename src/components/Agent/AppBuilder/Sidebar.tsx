@@ -25,7 +25,7 @@ const Wrap = styled.div`
 // building=橙点(#FF9800)、completed=绿点(#43A047)、failed=红点(#E53935)
 const StatusBox = styled.button`
   position: relative;
-  margin: 0 10px 12px;
+  margin: 0 10px var(--space-3);
   height: 36px;
   padding: 0 17px;
   border: 1px solid var(--color-border-secondary);
@@ -44,7 +44,7 @@ const StatusBox = styled.button`
 `;
 
 const StatusLabel = styled.span`
-  font-size: 14px;
+  font-size: var(--font-md);
   font-weight: 600;
   color: var(--color-text-primary);
   overflow: hidden;
@@ -77,7 +77,7 @@ const AppInfo = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 13px 18px 20px;
+  padding: 13px 18px var(--space-5);
 `;
 
 // 落地页三栏 + 左栏收起态：应用 icon 左侧的「展开会话列表」按钮（页面最左上角）
@@ -97,7 +97,7 @@ const ExpandSidebarBtn = styled.button`
   transition: all ${transitions.hover};
 
   .icon {
-    font-size: 20px;
+    font-size: var(--font-2xl);
     line-height: 1;
   }
 
@@ -131,7 +131,7 @@ const AppIcon = styled.div`
 `;
 
 const AppName = styled.div`
-  font-size: 16px;
+  font-size: var(--font-lg);
   font-weight: 600;
   color: var(--color-text-primary);
   overflow: hidden;
@@ -148,8 +148,8 @@ const NavList = styled.div`
 const NavItem = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 8px;
+  gap: var(--space-3);
+  padding: 10px var(--space-2);
   border-radius: var(--radius-sm);
   cursor: pointer;
   position: relative;
@@ -175,7 +175,7 @@ const IconCircle = styled.div`
   /* 颜色由容器的 $active 驱动并下传给内部 Icon 的 .icon——避免给 styled(Icon) 传 $active
      （styled-components v4 不支持 transient props，会把 $active 透传到 <i> DOM 触发报错） */
   .icon {
-    font-size: 18px !important;
+    font-size: var(--font-xl) !important;
     color: ${p => (p.$active ? 'var(--color-mingo)' : 'var(--color-text-tertiary)')};
   }
 `;
@@ -189,7 +189,7 @@ const NavTitle = styled.div`
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 14px;
+  font-size: var(--font-md);
   font-weight: 600;
   color: ${p => (p.$active ? 'var(--color-mingo)' : 'var(--color-text-primary)')};
   line-height: 20px;
@@ -204,7 +204,7 @@ const NavTitle = styled.div`
 `;
 
 const NavDesc = styled.div`
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: var(--color-text-tertiary);
   line-height: 17px;
   margin-top: 2px;
@@ -214,7 +214,7 @@ const NavDesc = styled.div`
 `;
 
 const NavCount = styled.span`
-  font-size: 12px;
+  font-size: var(--font-xs);
   margin-right: 5px;
   font-weight: 400;
   color: var(--color-text-disabled);
@@ -222,7 +222,7 @@ const NavCount = styled.span`
 `;
 
 const AppEmblem = styled(Icon)`
-  font-size: 20px !important;
+  font-size: var(--font-2xl) !important;
   color: var(--color-text-inverse);
 `;
 
@@ -242,8 +242,8 @@ const SkelShimmer = styled.div`
 const SkelItem = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 8px;
+  gap: var(--space-3);
+  padding: 10px var(--space-2);
 `;
 
 const SkelCircle = styled(SkelShimmer)`

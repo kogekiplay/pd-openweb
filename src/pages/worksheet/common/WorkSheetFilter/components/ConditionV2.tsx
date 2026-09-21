@@ -46,12 +46,12 @@ const ParamsDropdown = styled(Dropdown)`
 
   .titleDisplay {
     line-height: 22px;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     border-radius: 16px;
     color: var(--color-link);
     background: #d8eeff;
     border: 1px solid var(--color-primary-transparent);
-    font-size: 12px;
+    font-size: var(--font-xs);
     white-space: normal;
   }
   &.isDelete {
@@ -408,7 +408,7 @@ export default class Condition extends Component<any, any> {
           ) : (
             <div className="deletedColumn mTop6">
               <Tooltip
-                overlayInnerStyle={{ padding: '8px 10px' }}
+                overlayInnerStyle={{ padding: 'var(--space-2) 10px' }}
                 title={_l('ID: %0', condition.controlId)}
                 placement="bottom"
               >

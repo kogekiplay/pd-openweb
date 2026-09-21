@@ -118,7 +118,9 @@ export const APPROVAL_SYS = [
 export const PRINT_TYPE_STYLE = {
   [PRINT_TYPE.WORD_PRINT]: {
     icon: 'new_word',
-    background: '#1677ff 0% 0% no-repeat padding-box',
+    // 文件类型分类色（Word 蓝 / Excel 绿），【故意不跟主题】——
+    // 但同组的 Excel 用的是 var(--color-success)，这里也统一成静态语义色，别留裸 hex
+    background: 'var(--color-info) 0% 0% no-repeat padding-box',
     text: _l('Word 模板'),
     fileIcon: 'fileIcon-word',
   }, // word模版打印

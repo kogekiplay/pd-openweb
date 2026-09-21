@@ -6,12 +6,12 @@ import styled from 'styled-components';
 const Con = styled.div`
   input {
     border: none;
-    font-size: 16px;
+    font-size: var(--font-lg);
     font-weight: bold;
     text-align: center;
   }
   .name {
-    font-size: 16px;
+    font-size: var(--font-lg);
     font-weight: bold;
   }
   &.editable {

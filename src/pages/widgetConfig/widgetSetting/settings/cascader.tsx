@@ -35,7 +35,7 @@ const DataSourceWrap = styled.div`
   .info {
     line-height: 32px;
     border: 1px solid var(--color-border-primary);
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -68,9 +68,9 @@ const DataSourceWrap = styled.div`
     }
   }
   .sheetInfo {
-    margin-top: 12px;
+    margin-top: var(--space-3);
     .text {
-      margin: 0 4px;
+      margin: 0 var(--space-1);
     }
   }
 `;

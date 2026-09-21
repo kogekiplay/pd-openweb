@@ -77,7 +77,7 @@ const CoverWrap = styled.div`
   overflow-x: hidden;
   background: var(--color-background-primary);
   box-shadow: 0px 4px 12px 1px rgba(0, 0, 0, 0.1608);
-  padding: 16px;
+  padding: var(--space-4);
   .coverTitle {
     display: flex;
     align-items: center;

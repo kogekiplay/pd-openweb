@@ -12,7 +12,7 @@ const Wrapper = styled.div`
     width: 100%;
     background-color: var(--color-background-tertiary);
     border-radius: 8px;
-    padding: 16px;
+    padding: var(--space-4);
     .successColor {
       color: var(--color-success);
     }

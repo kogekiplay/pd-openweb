@@ -45,7 +45,7 @@ const ActWrap = styled.div`
     &.H36 {
       height: 36px;
     }
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     min-height: 36px;
     line-height: 36px;
     &:hover {

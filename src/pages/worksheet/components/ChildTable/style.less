@@ -7,7 +7,7 @@
 }
 .childTableCon {
   line-height: 1.5715;
-  margin: 2px 0 12px;
+  margin: 2px 0 var(--space-3);
   min-height: 74px;
   .operates {
     position: absolute;
@@ -27,14 +27,14 @@
     font-weight: 500;
     color: var(--color-text-title);
     background-color: var(--color-background-primary);
-    font-size: 16px;
+    font-size: var(--font-lg);
     width: 100%;
     z-index: 2;
   }
   .errorTip {
     width: 100%;
     color: var(--color-error);
-    font-size: 13px;
+    font-size: var(--font-sm);
     position: absolute;
     top: -25px;
     background: var(--color-background-primary);
@@ -42,7 +42,7 @@
   }
   .childTableColumnHead {
     color: var(--color-text-tertiary) !important;
-    font-size: 13px;
+    font-size: var(--font-sm);
     line-height: 34px;
   }
   .sheetViewTable {
@@ -65,7 +65,7 @@
     }
   }
   .operate {
-    margin: 0 0 12px;
+    margin: 0 0 var(--space-3);
     display: flex;
     align-items: center;
     .operateButton,
@@ -75,11 +75,11 @@
     .batchEditBtn {
       font-weight: bold;
       border-radius: var(--radius-sm);
-      margin-right: 8px;
+      margin-right: var(--space-2);
       color: var(--color-text-title);
       cursor: pointer;
-      padding: 0 16px;
-      font-size: 13px;
+      padding: 0 var(--space-4);
+      font-size: var(--font-sm);
       height: 36px;
       display: inline-flex;
       align-items: center;
@@ -94,7 +94,7 @@
       }
       &.h5,
       &.h5:not(.disabled):hover {
-        margin: 4px 0 0;
+        margin: var(--space-1) 0 0;
         background-color: transparent;
       }
     }
@@ -169,13 +169,13 @@
   }
   .header {
     flex-shrink: 0;
-    padding: 10px 24px 30px;
+    padding: 10px var(--space-6) 30px;
     background-color: var(--color-background-primary);
     .switchButton {
-      padding: 0 16px;
-      margin-right: 8px;
+      padding: 0 var(--space-4);
+      margin-right: var(--space-2);
       .icon {
-        font-size: 16px;
+        font-size: var(--font-lg);
         margin-right: 6px;
         vertical-align: middle;
       }
@@ -184,7 +184,7 @@
       }
     }
     .headerBtn {
-      margin: 4px 0 0 8px;
+      margin: var(--space-1) 0 0 var(--space-2);
       &.delete:hover {
         color: var(--color-error) !important;
       }
@@ -201,7 +201,7 @@
   }
   .title {
     color: var(--color-text-title);
-    font-size: 20px;
+    font-size: var(--font-2xl);
     line-height: 1em;
     margin-bottom: 10px;
     font-weight: bold;
@@ -215,7 +215,7 @@
     }
   }
   .forCon {
-    padding: 0 24px 14px;
+    padding: 0 var(--space-6) 14px;
   }
   .footer {
     height: 36px;
@@ -235,10 +235,10 @@
 .childTableRowDetailMobileDialog {
   .forCon {
     overflow-y: auto;
-    padding: 5px 20px 0;
+    padding: 5px var(--space-5) 0;
   }
   .header {
-    padding: 15px 20px 8px;
+    padding: 15px var(--space-5) var(--space-2);
   }
   .btnsWrapper {
     height: 50px;

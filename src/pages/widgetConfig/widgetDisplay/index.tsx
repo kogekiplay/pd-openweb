@@ -11,13 +11,13 @@ const DisplayWrap = styled.div`
   overflow: auto;
   header {
     display: flex;
-    padding: 0 32px;
-    padding-top: 20px;
+    padding: 0 var(--space-8);
+    padding-top: var(--space-5);
     align-items: center;
     justify-content: space-between;
     p {
       margin: 0;
-      font-size: 16px;
+      font-size: var(--font-lg);
       font-weight: bold;
     }
   }

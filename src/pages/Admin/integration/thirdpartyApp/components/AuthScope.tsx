@@ -5,7 +5,7 @@ import ApiScopeList from 'src/pages/Admin/components/ApiScopeList';
 const AuthScopeWrap = styled.div`
   flex: 1;
   min-height: 0;
-  padding: 18px 0 18px 16px;
+  padding: 18px 0 18px var(--space-4);
   overflow: hidden;
 `;
 

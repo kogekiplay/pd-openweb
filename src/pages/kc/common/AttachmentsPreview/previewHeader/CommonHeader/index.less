@@ -1,6 +1,6 @@
 .filePreviewHeader.previewHeader {
   z-index: 1;
-  font-size: 14px;
+  font-size: var(--font-md);
   height: 54px;
   color: rgba(255, 255, 255, 0.8);
   background-color: var(--color-background-inverse);
@@ -46,7 +46,7 @@
     input {
       border: none;
       background-color: rgba(97, 97, 97, 0.7);
-      font-size: 14px;
+      font-size: var(--font-md);
       color: var(--color-white);
       height: 34px;
       padding: 0 5px;
@@ -85,7 +85,7 @@
   .setWPSPreview {
     height: 36px;
     white-space: nowrap;
-    padding: 0 17px 0 20px;
+    padding: 0 17px 0 var(--space-5);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -124,19 +124,19 @@
     }
     &.editFileBtn {
       background-color: var(--color-success);
-      padding: 0 16px;
+      padding: 0 var(--space-4);
       &:hover {
         background-color: var(--color-success-hover);
       }
     }
   }
   .versionListCon {
-    padding: 8px 20px;
+    padding: var(--space-2) var(--space-5);
   }
   .versionList {
     overflow: hidden;
     color: var(--color-text-tertiary);
-    font-size: 12px;
+    font-size: var(--font-xs);
     user-select: text;
     .versionItem {
       line-height: 40px;
@@ -168,7 +168,7 @@
         width: 14px;
         height: 40px;
         i {
-          font-size: 14px;
+          font-size: var(--font-md);
           cursor: pointer;
           color: var(--color-primary-light);
         }
@@ -179,7 +179,7 @@
     width: 1px;
     height: 1em;
     background-color: rgba(255, 255, 255, 0.8);
-    margin: 20px 10px;
+    margin: var(--space-5) 10px;
   }
   .historyVersion,
   .more,
@@ -194,7 +194,7 @@
   .refreshNode {
     display: flex;
     align-items: center;
-    font-size: 14px;
+    font-size: var(--font-md);
     line-height: 54px;
     padding: 0 11px;
     i {
@@ -219,7 +219,7 @@
     font-weight: bold;
     transition: background-color 0.3s;
     span {
-      font-size: 13px;
+      font-size: var(--font-sm);
     }
   }
   .download,
@@ -232,7 +232,7 @@
     height: 32px;
     border-radius: var(--radius-sm);
     i {
-      font-size: 20px;
+      font-size: var(--font-2xl);
     }
     &.disable {
       color: var(--color-white);
@@ -245,7 +245,7 @@
   .more {
     .deletePopup {
       padding: 10px;
-      font-size: 13px;
+      font-size: var(--font-sm);
       line-height: 1.3em;
       .btnGroup {
         text-align: right;
@@ -260,7 +260,7 @@
   .saveTo,
   .more {
     position: relative;
-    font-size: 14px;
+    font-size: var(--font-md);
     i {
       vertical-align: middle;
     }

@@ -38,14 +38,14 @@ const QrCodeWrap = styled.div`
     background: rgba(250, 250, 250, 0.95);
     i {
       color: var(--color-primary);
-      margin: 20px 0 0;
+      margin: var(--space-5) 0 0;
       display: inline-block;
     }
     p {
-      margin: 24px auto;
+      margin: var(--space-6) auto;
     }
     .refresh {
-      padding: 10px 24px;
+      padding: 10px var(--space-6);
       background: var(--color-primary);
       opacity: 1;
       border-radius: 18px;

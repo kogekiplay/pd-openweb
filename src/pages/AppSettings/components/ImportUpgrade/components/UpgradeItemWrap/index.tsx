@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { SvgIcon } from 'ming-ui';
 
 const UpgradeContentItem = styled.div`
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
   border: 1px solid var(--color-border-primary);
   margin-bottom: 30px;
@@ -18,14 +18,14 @@ const UpgradeContentItem = styled.div`
     &.hoverRowItem:hover {
       background-color: var(--color-background-hover);
       margin: 0 -12px;
-      padding: 0 12px;
+      padding: 0 var(--space-3);
     }
   }
   .noBorder {
     border: none !important;
   }
   .actionTag {
-    padding: 3px 12px;
+    padding: 3px var(--space-3);
     border-radius: var(--radius-sm);
   }
   .actionAdd {

@@ -8,14 +8,14 @@ import CreateAIActionDialog from 'src/pages/FormSet/containers/AIAction/CreateAI
 const Con = styled.div`
   flex: 1;
   overflow-y: auto;
-  padding: 0 20px;
+  padding: 0 var(--space-5);
   display: flex;
   flex-direction: column;
   .triggerButton {
     max-width: 100%;
     height: 36px;
     border-radius: 36px;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     display: inline-flex;
     align-items: center;
     color: var(--color-text-primary);
@@ -24,7 +24,7 @@ const Con = styled.div`
     border: 2px solid var(--color-border-primary);
     background-color: var(--color-background-primary);
     .icon {
-      font-size: 16px;
+      font-size: var(--font-lg);
       color: var(--color-text-secondary);
       margin-left: 10px;
     }
@@ -36,7 +36,7 @@ const Con = styled.div`
   .addActionButton {
     height: 36px;
     border-radius: 36px;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     display: inline-flex;
     align-items: center;
     color: var(--color-text-secondary);

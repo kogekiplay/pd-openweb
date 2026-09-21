@@ -15,7 +15,7 @@ const INTERVAL = [1, 5, 10, 15, 30, 60];
 const IntervalWrap = styled(DropdownContent)`
   .item {
     line-height: 36px;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
   }
 `;
 

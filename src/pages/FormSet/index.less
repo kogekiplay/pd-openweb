@@ -35,7 +35,7 @@
       height: 100%;
       padding: 10px 0 0;
       .title {
-        margin: 24px 14px 0;
+        margin: var(--space-6) 14px 0;
         display: block;
       }
     }
@@ -52,7 +52,7 @@
       .columnRuleTitle {
         padding: 35px 40px 10px 40px;
         .addRules {
-          padding: 0 16px;
+          padding: 0 var(--space-4);
           height: 36px;
           line-height: 36px;
           display: inline-block;
@@ -68,15 +68,15 @@
           }
         }
         .columnRuleTabs {
-          margin-top: 16px;
+          margin-top: var(--space-4);
           border-bottom: 1px solid var(--color-border-primary);
           display: flex;
           .tabItem {
-            padding: 0 40px 12px;
+            padding: 0 40px var(--space-3);
             padding-bottom: 7px;
             border-bottom: 3px solid transparent;
             color: var(--color-text-secondary);
-            font-size: 14px;
+            font-size: var(--font-md);
             font-weight: 600;
             cursor: pointer;
             &.active {
@@ -89,7 +89,7 @@
           }
         }
         .columnRuleDesc {
-          margin-top: 12px;
+          margin-top: var(--space-3);
           display: flex;
           align-items: center;
         }
@@ -102,7 +102,7 @@
         align-items: center;
         justify-content: center;
         .addEmptyRules {
-          padding: 0 16px;
+          padding: 0 var(--space-4);
           height: 36px;
           line-height: 34px;
           display: inline-block;
@@ -113,7 +113,7 @@
           font-weight: bold;
           cursor: pointer;
           border: 1px solid var(--color-border-primary);
-          margin-top: 20px;
+          margin-top: var(--space-5);
           &:hover {
             color: var(--color-primary);
             border-color: var(--color-primary);
@@ -137,7 +137,7 @@
       .rulesCon {
         flex: 1;
         min-height: 0;
-        padding: 0 40px 16px 20px;
+        padding: 0 40px var(--space-4) var(--space-5);
       }
     }
   }
@@ -161,7 +161,7 @@
       height: 36px;
       border: 1px solid var(--color-border-primary);
       border-radius: var(--radius-sm);
-      padding: 0 12px;
+      padding: 0 var(--space-3);
       &:focus {
         border: 1px solid var(--color-primary);
       }
@@ -173,7 +173,7 @@
       border: 1px solid var(--color-error);
     }
     .conditionContainer {
-      margin-top: 32px;
+      margin-top: var(--space-8);
       .ming.Radio:first-child {
         width: 30%;
       }
@@ -218,7 +218,7 @@
         .fieldItem {
           background: var(--color-border-secondary);
           border-radius: var(--radius-sm);
-          padding: 0 12px;
+          padding: 0 var(--space-3);
           flex: 1;
           line-height: 36px;
         }
@@ -241,7 +241,7 @@
           height: 36px;
           border-radius: var(--radius-sm);
           box-shadow: none !important;
-          font-size: 13px;
+          font-size: var(--font-sm);
           &.flexItem {
             flex: 1;
             min-width: 0;
@@ -270,7 +270,7 @@
         .conditionValue {
           flex: 1;
           min-width: 0;
-          margin-left: 12px;
+          margin-left: var(--space-3);
           &.inputTextErrorBorder {
             .inputText {
               border: 1px solid var(--color-error);
@@ -350,8 +350,8 @@
 
       .ruleListSelect {
         width: 110px;
-        margin-right: 12px;
-        font-size: 13px;
+        margin-right: var(--space-3);
+        font-size: var(--font-sm);
         &.flexItem {
           flex: 1;
           min-width: 0;
@@ -383,10 +383,10 @@
       .actionItemCon {
         display: flex;
         align-items: flex-start;
-        margin-top: 12px;
+        margin-top: var(--space-3);
         .deleteBtn {
           line-height: 36px;
-          font-size: 16px;
+          font-size: var(--font-lg);
           margin: 0 13px;
           &:hover {
             color: var(--color-error) !important;
@@ -398,12 +398,12 @@
           height: 36px;
           background: rgba(245, 245, 245, 0.8);
           border-radius: var(--radius-sm);
-          padding: 0 12px;
+          padding: 0 var(--space-3);
           box-sizing: border-box;
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 13px;
+          font-size: var(--font-sm);
           &:hover {
             background: rgba(245, 245, 245, 1);
             .hoverColor {
@@ -415,24 +415,24 @@
     }
 
     h3 {
-      font-size: 16px;
+      font-size: var(--font-lg);
       letter-spacing: 0;
       color: var(--color-text-title);
-      padding: 0 20px;
+      padding: 0 var(--space-5);
     }
 
     .showFieldBox {
-      padding: 0 20px 10px;
+      padding: 0 var(--space-5) 10px;
 
       h5 {
-        font-size: 13px;
+        font-size: var(--font-sm);
         letter-spacing: 0;
         color: var(--color-text-title);
-        margin-top: 24px;
+        margin-top: var(--space-6);
       }
 
       li {
-        margin-top: 8px;
+        margin-top: var(--space-2);
         width: 100%;
         display: flex;
         height: 36px;
@@ -445,7 +445,7 @@
           display: inline-block;
           width: 100%;
           line-height: 36px;
-          padding: 0 9px 0 12px;
+          padding: 0 9px 0 var(--space-3);
           box-sizing: border-box;
         }
 
@@ -453,7 +453,7 @@
           line-height: 36px;
           color: var(--color-text-tertiary);
           cursor: pointer;
-          font-size: 18px;
+          font-size: var(--font-xl);
           width: 30px;
           text-align: right;
 
@@ -464,8 +464,8 @@
       }
 
       .addField {
-        margin-top: 12px;
-        font-size: 13px;
+        margin-top: var(--space-3);
+        font-size: var(--font-sm);
         letter-spacing: 0;
         color: var(--color-primary);
         height: 36px;
@@ -482,7 +482,7 @@
         &.noFied {
           width: 100%;
           background: var(--color-background-secondary);
-          padding-left: 12px;
+          padding-left: var(--space-3);
           border-radius: var(--radius-sm);
         }
 
@@ -493,11 +493,11 @@
     }
 
     .filterBox {
-      padding: 20px 0 0 0;
+      padding: var(--space-5) 0 0 0;
       border-top: 1px solid var(--color-border-primary);
 
       h5 {
-        padding: 0 20px;
+        padding: 0 var(--space-5);
       }
 
       .addFilterText {
@@ -505,10 +505,10 @@
         height: 36px;
         background: var(--color-background-secondary) 0% 0% no-repeat padding-box;
         border-radius: var(--radius-sm);
-        font-size: 13px;
-        padding: 0 12px;
+        font-size: var(--font-sm);
+        padding: 0 var(--space-3);
         display: block;
-        margin: 12px 20px;
+        margin: var(--space-3) var(--space-5);
         flex: 1;
         line-height: 36px;
       }
@@ -606,7 +606,7 @@
   box-shadow: inset 0 0 0 1px var(--color-border-secondary);
   border-radius: var(--radius-sm);
   min-height: 78px;
-  padding: 14px 24px;
+  padding: 14px var(--space-6);
   position: relative;
   cursor: pointer;
   box-sizing: border-box;
@@ -631,7 +631,7 @@
   .ruleItemOptions {
     position: absolute;
     top: -16px;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     height: 32px;
     z-index: 2;
     background: var(--color-background-primary);
@@ -692,7 +692,7 @@
     display: flex;
     .leftLabel {
       width: 65px;
-      margin-right: 20px;
+      margin-right: var(--space-5);
       color: var(--color-text-tertiary);
       text-align: right;
     }
@@ -721,13 +721,13 @@
   background: var(--color-background-primary);
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-lg);
-  font-size: 14px;
-  padding: 20px;
+  font-size: var(--font-md);
+  padding: var(--space-5);
   .title {
     color: var(--color-error);
     font-weight: bold;
     font-size: 15px;
-    margin-bottom: 32px;
+    margin-bottom: var(--space-8);
   }
   .deleteGroupBtns {
     display: flex;
@@ -768,7 +768,7 @@
       .icon {
         color: var(--color-text-tertiary);
         margin-right: 10px;
-        font-size: 14px;
+        font-size: var(--font-md);
         vertical-align: middle;
       }
       > span {
@@ -784,7 +784,7 @@
       width: 100%;
       box-sizing: border-box;
       height: 41px;
-      padding: 0px 16px 0 35px;
+      padding: 0px var(--space-4) 0 35px;
       border: none;
       border-bottom: 1px solid var(--color-background-secondary);
       &:focus {
@@ -835,7 +835,7 @@
 .addConditionTrigger {
   display: flex;
   flex-direction: column;
-  padding: 8px 0;
+  padding: var(--space-2) 0;
   width: 160px;
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-lg);
@@ -865,13 +865,13 @@
   .ming.Item .Item-content {
     padding: 0;
     .itemText {
-      padding: 0 16px;
+      padding: 0 var(--space-4);
       .Icon {
         left: 0;
       }
     }
   }
   .ming.MenuItem .Item-content.disabled {
-    padding: 0 16px;
+    padding: 0 var(--space-4);
   }
 }

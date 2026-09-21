@@ -1,7 +1,7 @@
 ﻿.AppTask {
   #copyOperation,
   .copyTitleBox {
-    font-size: 13px;
+    font-size: var(--font-sm);
     position: relative;
   }
   .copyFolder .copyTitle {
@@ -17,13 +17,13 @@
     }
   }
   .copyFolder hr {
-    margin: 20px 0 -1px 65px;
+    margin: var(--space-5) 0 -1px 65px;
     border: 0;
     border-top: 1px solid var(--color-border-secondary);
   }
   .copyFolder .copyTip {
     color: var(--color-text-tertiary) !important;
-    font-size: 16px !important;
+    font-size: var(--font-lg) !important;
     margin-top: -3px;
   }
   #copyOperation ul,
@@ -33,7 +33,7 @@
   #copyOperation li {
     position: relative;
     width: 50%;
-    margin-top: 8px;
+    margin-top: var(--space-2);
     padding: 3px 0;
     display: inline-block;
     .noClick {
@@ -42,16 +42,16 @@
     }
   }
   #copyOperation .checkOperation {
-    font-size: 13px;
+    font-size: var(--font-sm);
     display: inline-block;
     vertical-align: top;
     color: var(--color-text-title);
     cursor: pointer;
     .operationCheckbox {
-      font-size: 12px;
+      font-size: var(--font-xs);
       border-radius: var(--radius-xs);
       color: var(--color-white);
-      margin-right: 8px;
+      margin-right: var(--space-2);
       border-width: 1px;
       border-style: solid;
       margin-top: 2px;
@@ -75,7 +75,7 @@
     box-sizing: border-box;
     width: 100%;
     height: 36px;
-    padding: 8px;
+    padding: var(--space-2);
     border-width: 1px;
     border-style: solid;
     border-radius: var(--radius-sm);
@@ -84,7 +84,7 @@
     }
   }
   .copyFolder .copyDesc {
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-secondary);
   }
   .copyTitleBox {
@@ -143,7 +143,7 @@
       overflow: auto;
       overflow-x: hidden;
       li {
-        padding: 0 12px;
+        padding: 0 var(--space-3);
         width: 100%;
         box-sizing: border-box;
         cursor: pointer;

@@ -79,7 +79,7 @@ const ListWrap = styled.div`
     .order {
       flex: 0 0 auto;
       transform: scale(0.8);
-      margin-left: 4px;
+      margin-left: var(--space-1);
       .icon-arrow-down {
         margin-top: -4px;
       }

@@ -14,13 +14,13 @@
     overflow: hidden;
   }
   .adm-popup-body-position-bottom {
-    padding-bottom: calc(~'constant(safe-area-inset-bottom) - 20px') !important;
-    padding-bottom: calc(~'env(safe-area-inset-bottom) - 20px') !important;
+    padding-bottom: calc(~'constant(safe-area-inset-bottom) - var(--space-5)') !important;
+    padding-bottom: calc(~'env(safe-area-inset-bottom) - var(--space-5)') !important;
     background-color: var(--color-background-card);
   }
   .header {
     justify-content: space-between;
-    padding: 15px 15px 20px;
+    padding: 15px 15px var(--space-5);
     color: var(--color-text-tertiary);
     .closeIcon {
       width: 24px;

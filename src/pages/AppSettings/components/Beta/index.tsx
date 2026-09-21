@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const Com = styled.span`
   display: inline-block;
-  font-size: 12px;
+  font-size: var(--font-xs);
   padding: 0 3px;
   color: var(--color-white);
   background: var(--color-success);

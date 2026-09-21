@@ -23,8 +23,8 @@ const Wrap = styled.div`
   .rolePermissionInlineRow {
     display: inline-flex;
     align-items: center;
-    margin-top: 20px;
-    margin-right: 16px;
+    margin-top: var(--space-5);
+    margin-right: var(--space-4);
     vertical-align: middle;
     :global(.ming.Checkbox) {
       display: inline-flex !important;
@@ -51,7 +51,7 @@ const Wrap = styled.div`
     width: 100%;
   }
   .optionTxt {
-    font-size: 12px;
+    font-size: var(--font-xs);
     color: var(--color-text-tertiary);
   }
   .recordLoggingRangeText {

@@ -15,13 +15,13 @@ const EmptyProject = styled.div`
   flex-direction: column;
   align-items: center;
   background: var(--color-background-primary);
-  padding: 32px 0 24px;
-  margin: 10px 15px 20px;
+  padding: var(--space-8) 0 var(--space-6);
+  margin: 10px 15px var(--space-5);
   border-radius: 8px;
   font-weight: 600;
   .joinNetwork,
   .createNetwork {
-    padding: 0 20px;
+    padding: 0 var(--space-5);
     height: 36px;
     line-height: 36px;
     box-sizing: border-box;
@@ -29,7 +29,7 @@ const EmptyProject = styled.div`
     border: none;
     cursor: pointer;
     color: var(--color-white);
-    font-size: 14px;
+    font-size: var(--font-md);
     font-weight: 400;
   }
   .createNetwork {

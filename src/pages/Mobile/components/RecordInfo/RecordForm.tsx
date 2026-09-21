@@ -27,11 +27,11 @@ const LockWrap = styled.div`
     padding-top: 10px;
 
     .lockIcon {
-      font-size: 16px;
+      font-size: var(--font-lg);
       color: var(--color-text-secondary);
 
       i {
-        margin-right: 12px;
+        margin-right: var(--space-3);
       }
     }
   }

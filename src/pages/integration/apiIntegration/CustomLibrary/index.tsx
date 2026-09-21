@@ -68,10 +68,10 @@ const Content = styled.div`
     flex: 1;
     min-width: 325px;
     height: 220px;
-    margin: 12px;
+    margin: var(--space-3);
     border: 1px solid var(--color-border-secondary);
     border-radius: 8px;
-    padding: 24px 24px 0;
+    padding: var(--space-6) var(--space-6) 0;
     cursor: pointer;
     &:hover {
       box-shadow: rgba(0, 0, 0, 0.16) 0 2px 5px;
@@ -101,7 +101,7 @@ const Content = styled.div`
     .listApplyBtn {
       min-width: 66px;
       height: 30px;
-      padding: 0px 12px;
+      padding: 0px var(--space-3);
       background: var(--color-primary-transparent);
       border-radius: 15px;
       color: var(--color-primary);

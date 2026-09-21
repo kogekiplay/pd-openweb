@@ -8,7 +8,7 @@ const commonInput = `
   resize: none;
   width: 100%;
   padding: 10px;
-  font-size: 13px;
+  font-size: var(--font-sm);
   &::placeholder {
     color: var(--color-text-disabled);
   }
@@ -65,7 +65,7 @@ const H = styled.div`
   color: var(--color-text-title);
   font-weight: bold;
   vertical-align: middle;
-  margin: 16px 0;
+  margin: var(--space-4) 0;
 `;
 export const H1 = styled(H)`
   font-size: 17px;
@@ -74,8 +74,8 @@ export const H2 = styled(H)`
   font-size: 15px;
 `;
 export const H3 = styled(H)`
-  font-size: 13px;
-  margin: 20px 0 10px;
+  font-size: var(--font-sm);
+  margin: var(--space-5) 0 10px;
 `;
 
 export const Bold600 = styled.div`
@@ -85,26 +85,26 @@ export const Bold600 = styled.div`
 // 组件
 export const Tip75 = styled.div`
   color: var(--color-text-secondary);
-  font-size: 13px;
+  font-size: var(--font-sm);
 `;
 export const Tip9e = styled.div`
   color: var(--color-text-tertiary);
-  font-size: 13px;
+  font-size: var(--font-sm);
 `;
 export const Tip99 = styled.div`
   color: var(--color-text-tertiary);
-  font-size: 13px;
+  font-size: var(--font-sm);
 `;
 export const Tipbd = styled.div`
   color: var(--color-text-disabled);
-  font-size: 13px;
+  font-size: var(--font-sm);
 `;
 export const TipBlock = styled.div(
   ({ color = 'var(--color-text-tertiary)', bgcolor = 'var(--color-background-tertiary)' }) => `
   color: ${color};
-  font-size: 13px;
+  font-size: var(--font-sm);
   background-color: ${bgcolor};
-  padding: 12px;
+  padding: var(--space-3);
 `,
 );
 
@@ -114,7 +114,7 @@ export const TextBlock = styled.div`
   line-height: 36px;
   background-color: var(--color-background-tertiary);
   color: var(--color-text-title);
-  font-size: 14px;
+  font-size: var(--font-md);
   padding: 0 10px;
 `;
 
@@ -156,10 +156,10 @@ export const Fixed = styled.div(
 export const BlackBtn = styled.span`
   display: inline-block;
   cursor: pointer;
-  font-size: 13px;
-  margin-left: 16px;
+  font-size: var(--font-sm);
+  margin-left: var(--space-4);
   border-radius: 17px;
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   height: 32px;
   line-height: 32px;
   color: var(--color-white);
@@ -167,7 +167,7 @@ export const BlackBtn = styled.span`
   .icon {
     position: relative;
     top: 2px;
-    font-size: 18px;
+    font-size: var(--font-xl);
     margin-right: 6px;
   }
   :hover {
@@ -208,7 +208,7 @@ export const CardButton = styled.span`
   cursor: pointer;
   width: 22px;
   height: 22px;
-  font-size: 14px;
+  font-size: var(--font-md);
   border-radius: 22px;
   background: var(--color-background-primary);
   color: var(--color-text-secondary);
@@ -217,7 +217,7 @@ export const CardButton = styled.span`
   align-items: center;
   justify-content: center;
   border: 1px solid var(--color-background-secondary);
-  ${({ isMobile }) => (isMobile ? 'width: 32px;height: 32px;font-size: 18px;' : '')}
+  ${({ isMobile }) => (isMobile ? 'width: 32px;height: 32px;font-size: var(--font-xl);' : '')}
   &:hover {
     ${({ isMobile }) =>
       !isMobile ? ' color: var(--color-text-title); box-shadow: 0px 2px 8px 1px rgba(0, 0, 0, 0.16);' : ''}

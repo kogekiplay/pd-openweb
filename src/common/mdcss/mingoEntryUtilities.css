@@ -69,11 +69,11 @@
 }
 
 .Font12 {
-  font-size: 12px !important;
+  font-size: var(--font-xs) !important;
 }
 
 .Font18 {
-  font-size: 18px !important;
+  font-size: var(--font-xl) !important;
 }
 
 .flexColumn {

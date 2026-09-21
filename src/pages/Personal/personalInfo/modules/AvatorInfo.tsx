@@ -18,7 +18,7 @@ const Wrap = styled.div`
   bottom: 0;
   height: 50px;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
-  padding: 6px 20px;
+  padding: 6px var(--space-5);
   display: flex;
   width: 100%;
   background: var(--color-background-primary);

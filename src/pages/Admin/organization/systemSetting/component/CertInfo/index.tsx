@@ -14,12 +14,12 @@ const Wrapper = styled.div`
     width: fit-content;
     display: flex;
     align-items: center;
-    padding: 4px 0;
+    padding: var(--space-1) 0;
     cursor: pointer;
     color: var(--color-primary);
     i {
-      font-size: 18px;
-      margin-right: 4px;
+      font-size: var(--font-xl);
+      margin-right: var(--space-1);
     }
     &:hover {
       color: var(--color-primary-light);

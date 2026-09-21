@@ -14,7 +14,7 @@ const EmptyWrap = styled.div`
     height: 132px;
     border-radius: 50%;
     background-color: var(--color-background-secondary);
-    margin-bottom: 32px;
+    margin-bottom: var(--space-8);
     position: relative;
     .icon {
       font-size: 50px;

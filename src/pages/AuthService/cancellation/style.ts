@@ -22,7 +22,7 @@ export const Wrap = styled.div`
       }
       &.privacyHieght {
         height: calc(~'100% - 50px');
-        padding-bottom: 24px;
+        padding-bottom: var(--space-6);
       }
     }
     .title {
@@ -72,16 +72,16 @@ export const Wrap = styled.div`
     }
     .desMain {
       text-align: center;
-      font-size: 12px;
+      font-size: var(--font-xs);
       margin-bottom: 50px;
     }
     .sytkConTitle {
       margin-top: 40px;
-      font-size: 18px;
+      font-size: var(--font-xl);
       line-height: 34px;
     }
     .sytkcon p {
-      font-size: 14px;
+      font-size: var(--font-md);
       line-height: 24px;
       margin: 0;
     }

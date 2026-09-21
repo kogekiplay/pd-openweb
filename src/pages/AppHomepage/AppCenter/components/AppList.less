@@ -8,7 +8,7 @@
   .sortableAppItemList {
     display: flex;
     flex-wrap: wrap;
-    margin-top: 12px;
+    margin-top: var(--space-3);
   }
   .delApp {
     color: @delColor !important;
@@ -33,7 +33,7 @@
   }
   .myAppItemWrap {
     position: relative;
-    margin: 0 8px;
+    margin: 0 var(--space-2);
     height: 160px;
     transition: 0.25s ease-out;
     cursor: pointer;
@@ -43,7 +43,7 @@
     .myAppItemSelectIconWrap {
       top: 105px;
       left: -84px;
-      margin-bottom: 32px;
+      margin-bottom: var(--space-8);
       input {
         text-align: center;
       }
@@ -65,13 +65,13 @@
       // overflow: hidden;
     }
     .externalAppInfo {
-      padding: 12px;
+      padding: var(--space-3);
       text-align: center;
       .appName {
-        font-size: 14px;
+        font-size: var(--font-md);
       }
       .projectName {
-        margin-top: 4px;
+        margin-top: var(--space-1);
         color: var(--color-text-disabled);
       }
     }
@@ -114,12 +114,12 @@
     .appExplain {
       width: 100%;
       height: 36px;
-      margin-top: 12px;
+      margin-top: var(--space-3);
       text-align: center;
-      padding: 0 16px;
+      padding: 0 var(--space-4);
       box-sizing: border-box;
       line-height: 18px;
-      font-size: 14px;
+      font-size: var(--font-md);
     }
   }
 }

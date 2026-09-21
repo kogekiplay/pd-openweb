@@ -31,7 +31,7 @@ const AdminEntry = styled(VerticalMiddle)`
   border-radius: 28px;
   margin: 0 5px;
   .icon {
-    font-size: 20px;
+    font-size: var(--font-2xl);
     color: rgb(0, 0, 0, 0.6);
   }
   &:hover {

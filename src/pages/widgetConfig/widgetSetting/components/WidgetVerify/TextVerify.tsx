@@ -36,7 +36,7 @@ const ConfigWrap = styled.div`
   display: flex;
   .formatList {
     width: 250px;
-    padding-top: 16px;
+    padding-top: var(--space-4);
     border-right: 1px solid rgba(0, 0, 0, 0.08);
     .title {
       margin-bottom: 6px;
@@ -52,13 +52,13 @@ const ConfigWrap = styled.div`
   }
   .display {
     flex: 1;
-    padding: 16px 0 0 24px;
+    padding: var(--space-4) 0 0 var(--space-6);
 
     .hint {
-      margin-top: 12px;
+      margin-top: var(--space-3);
       i {
-        margin-left: 4px;
-        font-size: 14px;
+        margin-left: var(--space-1);
+        font-size: var(--font-md);
       }
     }
     .invalid {
@@ -89,7 +89,7 @@ const FormatInfo = styled.div`
     align-items: center;
     padding: 0 10px;
     i {
-      font-size: 16px;
+      font-size: var(--font-lg);
       color: var(--color-text-tertiary);
       margin-right: 10px;
       &:hover {

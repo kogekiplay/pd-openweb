@@ -27,7 +27,7 @@ const DropDownSetChoose = styled.div`
       .ant-select-selection-item,
       .ant-select-content-value {
         line-height: 36px !important;
-        font-size: 13px !important;
+        font-size: var(--font-sm) !important;
       }
     }
     &.isDelete {

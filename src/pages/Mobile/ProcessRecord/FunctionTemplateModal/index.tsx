@@ -28,7 +28,7 @@ const Wrap = styled.div`
     padding: 0 10px;
     .opinionItem {
       font-size: 17px;
-      padding: 12px 0;
+      padding: var(--space-3) 0;
       border-bottom: 1px solid var(--color-border-secondary);
     }
   }

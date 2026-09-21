@@ -16,7 +16,7 @@ import { getAppResultCodeText } from '../utils';
 import TextHeightLine from './TextHeightLine';
 
 const Box = styled.div`
-  padding-bottom: 12px;
+  padding-bottom: var(--space-3);
   .title {
     margin-left: 14px;
     display: flex;
@@ -24,7 +24,7 @@ const Box = styled.div`
   }
   .noData {
     margin-left: 14px;
-    font-size: 12px;
+    font-size: var(--font-xs);
     color: var(--color-text-secondary);
     display: flex;
     align-items: center;
@@ -74,7 +74,7 @@ const Box = styled.div`
     }
   }
   .list .listItem .avatarCon {
-    margin-right: 8px;
+    margin-right: var(--space-2);
     margin-left: 14px;
     width: 32px;
     height: 32px;
@@ -90,7 +90,7 @@ const Box = styled.div`
   .list .listItem .listItemInfo {
     flex: 1;
     height: 100%;
-    padding: 8px 0;
+    padding: var(--space-2) 0;
     width: calc(100% - 54px);
   }
   .list .listItem .listItemInfoColumCenter {
@@ -104,7 +104,7 @@ const Box = styled.div`
   .list .listItem .listItemInfoDes p {
     position: absolute;
     width: 100%;
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-secondary);
   }
   .list .listItem .listItemInfo .listItemInfoTitle {
@@ -147,12 +147,12 @@ const MoreOperateMenu = styled.ul`
   box-shadow: var(--shadow-sm);
   border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
   width: 160px;
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-title);
-  padding: 4px 0;
+  padding: var(--space-1) 0;
   li {
     line-height: 36px;
-    padding: 0 24px;
+    padding: 0 var(--space-6);
     cursor: pointer;
     &:hover {
       background-color: var(--color-primary);

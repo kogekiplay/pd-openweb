@@ -16,7 +16,7 @@ import type { RootState } from 'src/redux/types';
 const MenuWrap = styled(Menu)`
   .ant-dropdown-menu-item,
   .ant-dropdown-menu-submenu-title {
-    padding: 7px 12px;
+    padding: 7px var(--space-3);
   }
   .danger {
     color: var(--color-error) !important;

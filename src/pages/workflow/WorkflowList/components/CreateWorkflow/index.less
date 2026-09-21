@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   height: 56px;
-  padding: 0 24px;
+  padding: 0 var(--space-6);
   justify-content: space-between;
   align-items: center;
   background-color: var(--color-background-primary);
@@ -19,14 +19,14 @@
     font-size: 17px;
     border: 1px solid transparent;
     outline: none;
-    padding: 8px;
+    padding: var(--space-2);
     transition: all 0.5s;
   }
 }
 
 .createWorkflowBox {
   width: 640px;
-  margin: 80px auto 20px;
+  margin: 80px auto var(--space-5);
   padding: 30px 26px 30px 36px;
   background-color: var(--color-background-card);
   border-radius: var(--radius-sm);
@@ -35,17 +35,17 @@
     margin-top: 0;
   }
   .modeName {
-    margin: 24px 0 16px 0;
+    margin: var(--space-6) 0 var(--space-4) 0;
   }
   .triggerModeDetail {
     border-radius: 6px;
-    padding: 16px 0 16px 16px;
+    padding: var(--space-4) 0 var(--space-4) var(--space-4);
     border: 1px solid transparent;
     &:hover {
       background-color: var(--color-background-hover);
     }
     .detailExplain {
-      margin-left: 12px;
+      margin-left: var(--space-3);
     }
   }
 }

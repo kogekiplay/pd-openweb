@@ -11,7 +11,7 @@ const PopupWrap = styled.div`
   border-radius: 6px;
   background: var(--color-background-primary);
   box-shadow: var(--shadow-lg);
-  padding: 16px 24px;
+  padding: var(--space-4) var(--space-6);
   position: relative;
   .triangle {
     width: 0;

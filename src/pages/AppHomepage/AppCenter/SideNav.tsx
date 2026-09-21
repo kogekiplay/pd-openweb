@@ -62,7 +62,7 @@ const Con = styled.div`
     .resourceEntry:not(.expandBtn) {
       flex-direction: row;
       justify-content: start;
-      padding: 0 12px;
+      padding: 0 var(--space-3);
       height: 40px;
       min-height: 40px;
       .name {
@@ -77,12 +77,12 @@ const Con = styled.div`
       width: 156px;
     }
     .expandBtn {
-      margin-right: 4px;
+      margin-right: var(--space-1);
     }
   }
 `;
 const Content = styled.div`
-  padding: 16px 8px;
+  padding: var(--space-4) var(--space-2);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -99,8 +99,8 @@ const BaseEntry = styled.a`
   border-radius: 10px;
   .fullName {
     display: none;
-    margin-left: 8px;
-    font-size: 14px;
+    margin-left: var(--space-2);
+    font-size: var(--font-md);
   }
   &:hover {
     color: inherit;
@@ -111,18 +111,18 @@ const BaseEntry = styled.a`
 const ModuleEntries = styled.div``;
 
 const ModuleEntry = styled(BaseEntry)`
-  margin: 8px 0;
+  margin: var(--space-2) 0;
   min-height: 48px;
-  padding: 4px;
+  padding: var(--space-1);
   box-sizing: border-box;
   position: relative;
   .entryIcon {
-    font-size: 24px;
+    font-size: var(--font-3xl);
     color: var(--color-text-secondary);
     flex-shrink: 0;
   }
   .name {
-    font-size: 12px;
+    font-size: var(--font-xs);
     color: var(--color-text-primary);
     opacity: 0.8;
     width: 100%;
@@ -132,7 +132,7 @@ const ModuleEntry = styled(BaseEntry)`
     word-break: break-word;
   }
   .fullName {
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-text-primary);
   }
   &.isExpanded {
@@ -157,7 +157,7 @@ const ResourceEntry = styled(BaseEntry)`
   width: 40px;
   height: 40px;
   .entryIcon {
-    font-size: 20px;
+    font-size: var(--font-2xl);
   }
 `;
 
@@ -170,7 +170,7 @@ const DashboardEntry = styled.div`
     right: 0px;
     top: -2px;
     border-radius: 20px;
-    font-size: 12px;
+    font-size: var(--font-xs);
     font-weight: bold;
     text-align: center;
     line-height: 20px;
@@ -184,7 +184,7 @@ const DashboardEntry = styled.div`
     }
     &.outed {
       width: auto;
-      padding: 0 4px;
+      padding: 0 var(--space-1);
     }
   }
   .weakCount {

@@ -59,7 +59,7 @@ const ExpandBtn = styled.div`
   margin-left: 34px;
   cursor: pointer;
   color: var(--color-primary);
-  font-size: 13px;
+  font-size: var(--font-sm);
   .icon {
     margin-right: 2px;
     font-size: 15px;
@@ -74,8 +74,8 @@ const Input = styled.input`
   box-sizing: border-box;
   height: 36px;
   border-radius: var(--radius-sm);
-  padding: 0 12px;
-  font-size: 14px;
+  padding: 0 var(--space-3);
+  font-size: var(--font-md);
   &:hover {
     border-color: var(--color-text-disabled);
   }

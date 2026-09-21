@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 const SelectWrapper = styled.div`
   .selectItem {
-    font-size: 13px;
+    font-size: var(--font-sm);
     width: ${({ width }) => `${width ? width + 'px' : '100%'} !important`};
     &.ant-select,
     & .ant-select {

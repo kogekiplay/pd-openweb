@@ -9,7 +9,7 @@ import EncryptFieldList from './EncryptFieldList';
 const DetailDialog = styled(Dialog)`
   height: unset !important;
   .mui-dialog-header {
-    padding: 22px 20px 20px !important;
+    padding: 22px var(--space-5) var(--space-5) !important;
     .mui-dialog-default-title {
       font-weight: 600;
     }
@@ -22,14 +22,14 @@ const DetailDialog = styled(Dialog)`
 
 const TabWrap = styled.div`
   display: flex;
-  padding: 0 20px;
+  padding: 0 var(--space-5);
   border-bottom: 1px solid var(--color-border-primary);
   .tabItem {
     height: 100%;
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-title);
     margin-right: 26px;
-    padding-bottom: 12px;
+    padding-bottom: var(--space-3);
   }
   .active {
     color: var(--color-primary);

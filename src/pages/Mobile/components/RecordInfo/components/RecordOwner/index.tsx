@@ -17,10 +17,10 @@ const OwnerOptionPopup = styled(Popup)`
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: var(--space-5);
 
       .popupOwnerText {
-        font-size: 13px;
+        font-size: var(--font-sm);
         color: var(--color-text-tertiary);
       }
 
@@ -33,18 +33,18 @@ const OwnerOptionPopup = styled(Popup)`
         border-radius: 50%;
         background-color: var(--color-background-secondary);
         color: var(--color-text-tertiary);
-        font-size: 13px;
+        font-size: var(--font-sm);
       }
     }
     .optionBox {
-      padding-bottom: 24px;
+      padding-bottom: var(--space-6);
       .optionItem {
         font-size: 15px;
         font-weight: 600;
         color: var(--color-text-primary);
       }
       .optionItem + .optionItem {
-        margin-top: 24px;
+        margin-top: var(--space-6);
       }
     }
   }

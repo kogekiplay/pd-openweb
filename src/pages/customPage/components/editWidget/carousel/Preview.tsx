@@ -8,7 +8,7 @@ import Carousel from './Carousel';
 const Wrap = styled.div`
   display: flex;
   flex: 1;
-  padding: 10px 24px;
+  padding: 10px var(--space-6);
   min-width: 0;
   background-color: var(--color-background-tertiary);
 

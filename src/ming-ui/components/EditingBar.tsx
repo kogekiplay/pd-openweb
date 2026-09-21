@@ -31,7 +31,7 @@ const Con = styled.div`
   border-radius: 48px;
   color: var(--color-white);
   line-height: 48px;
-  padding: 0 10px 0 24px;
+  padding: 0 10px 0 var(--space-6);
   z-index: 9;
   box-shadow: var(--shadow-sm);
   display: flex;
@@ -43,7 +43,7 @@ const Con = styled.div`
 const Loading = styled.i`
   height: 1em;
   color: rgba(255, 255, 255, 0.8);
-  font-size: 20px;
+  font-size: var(--font-2xl);
   margin-right: 10px;
   animation: rotate 2s linear infinite;
 `;

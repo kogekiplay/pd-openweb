@@ -11,7 +11,7 @@ const ChangeSheetLayout = styled.span`
   font-size: 15px;
   color: var(--color-primary);
   .icon {
-    font-size: 16px;
+    font-size: var(--font-lg);
     color: var(--color-text-tertiary);
     &:hover {
       color: var(--color-primary);
@@ -22,7 +22,7 @@ const ChangeSheetLayout = styled.span`
 const PopupCon = styled.div`
   width: 360px;
   border-radius: var(--radius-sm);
-  padding: 20px;
+  padding: var(--space-5);
   box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.16);
   background-color: var(--color-background-primary);
   .title {
@@ -31,7 +31,7 @@ const PopupCon = styled.div`
     font-weight: 500;
   }
   .description {
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-secondary);
     line-height: 1.8em;
     margin: 10px 0 26px;
@@ -39,7 +39,7 @@ const PopupCon = styled.div`
   .buttons {
     text-align: right;
     .Button {
-      margin-left: 16px;
+      margin-left: var(--space-4);
     }
   }
 `;

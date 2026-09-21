@@ -21,7 +21,7 @@
       height: 100%;
       padding: 10px 0 0;
       .title {
-        margin: 24px 14px 0;
+        margin: var(--space-6) 14px 0;
         display: block;
       }
     }
@@ -45,7 +45,7 @@
     width: 100%;
     background-color: var(--color-background-primary);
     border-radius: var(--radius-lg);
-    padding: 32px;
+    padding: var(--space-8);
     h1 {
       margin: 0;
       line-height: 1em;
@@ -55,12 +55,12 @@
     .description {
       margin: 10px 0;
       line-height: 28px;
-      font-size: 13px;
+      font-size: var(--font-sm);
       color: var(--color-text-tertiary);
     }
     .status {
       vertical-align: text-top;
-      margin-left: 8px;
+      margin-left: var(--space-2);
       line-height: 24px;
     }
     .Button {
@@ -75,7 +75,7 @@
     background-color: var(--color-background-card);
 
     .publishSwitch {
-      margin-left: 12px;
+      margin-left: var(--space-3);
       width: 35px;
       height: 18px;
       vertical-align: middle;
@@ -96,7 +96,7 @@
 
     .publicConfig {
       height: 100%;
-      padding: 0 20px;
+      padding: 0 var(--space-5);
 
       .icon-refresh1 {
         &:hover {
@@ -125,7 +125,7 @@
 
       .formContentHeader {
         background: var(--color-background-card);
-        padding: 0 20px;
+        padding: 0 var(--space-5);
       }
 
       .icon-workflow_hide,
@@ -137,7 +137,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 32px 0 0 20px;
+        margin: var(--space-8) 0 0 var(--space-5);
         width: 60px;
         height: 60px;
         border-radius: var(--radius-sm);
@@ -201,7 +201,7 @@
         line-height: 1.2em;
         font-size: 36px;
         font-weight: 500 !important;
-        margin: 20px 0 6px;
+        margin: var(--space-5) 0 6px;
 
         input,
         textarea {
@@ -210,7 +210,7 @@
       }
 
       .worksheetDescription {
-        margin: 10px 20px;
+        margin: 10px var(--space-5);
 
         .mdEditor {
           .mdEditorContent {
@@ -225,14 +225,14 @@
         .customFormControlBox {
           line-height: 21px;
           box-sizing: border-box;
-          font-size: 13px;
+          font-size: var(--font-sm);
           border-radius: var(--radius-sm);
           width: 100%;
           outline: none;
           -webkit-appearance: none;
 
           &.customFormEditor {
-            padding: 0 12px;
+            padding: 0 var(--space-3);
             height: auto;
             background: var(--color-background-primary) !important;
             border: 1px solid var(--color-primary) !important;
@@ -247,7 +247,7 @@
     [data-theme='dark'] & {
       --prompt-text-bg-color: rgba(254, 249, 233, 0.1);
     }
-    padding: 12px 10px;
+    padding: var(--space-3) 10px;
     background: var(--prompt-text-bg-color);
     color: var(--color-text-secondary);
     line-height: 22px;
@@ -309,7 +309,7 @@
   .ant-drawer-header {
     background: var(--color-background-secondary);
     border-bottom: 0;
-    padding: 24px 24px 16px;
+    padding: var(--space-6) var(--space-6) var(--space-4);
     .ant-drawer-header-title {
       flex-direction: row-reverse;
       .ant-drawer-close {
@@ -326,18 +326,18 @@
     padding: 0;
     .headerTab {
       > div {
-        padding: 0 24px !important;
+        padding: 0 var(--space-6) !important;
       }
     }
     .settingContent {
-      padding: 0 24px 22px;
+      padding: 0 var(--space-6) 22px;
       flex: 1;
       overflow: auto;
 
       .customFormControlBox {
         line-height: 21px;
         box-sizing: border-box;
-        font-size: 13px;
+        font-size: var(--font-sm);
         border-radius: var(--radius-sm);
         width: 100%;
         outline: none;
@@ -345,7 +345,7 @@
         min-height: 90px;
         max-height: 700px;
         border: 1px solid var(--color-border-primary);
-        padding: 0 12px;
+        padding: 0 var(--space-3);
 
         &.customFormEditor {
           height: auto;
@@ -377,7 +377,7 @@
       }
 
       .commonMargin {
-        margin: 16px 0px 0 44px;
+        margin: var(--space-4) 0px 0 44px;
 
         .monthDropdown {
           width: 320px;
@@ -386,13 +386,13 @@
           }
         }
         .mRight4 {
-          margin-right: 4px;
+          margin-right: var(--space-1);
         }
         .limitInput {
           width: 80px;
           height: 32px;
-          margin-left: 8px;
-          margin-right: 8px;
+          margin-left: var(--space-2);
+          margin-right: var(--space-2);
         }
         .effectiveTimeDropdown {
           width: 180px;
@@ -408,7 +408,7 @@
       }
       .passwordInput {
         width: 380px;
-        font-size: 13px;
+        font-size: var(--font-sm);
         border-color: var(--color-border-primary);
       }
       .ant-picker {
@@ -426,17 +426,17 @@
         width: 380px;
       }
       .ming.Radio {
-        margin-right: 32px;
+        margin-right: var(--space-8);
       }
       .btnPositionSwitch {
         display: flex;
         background: var(--color-background-secondary);
         border-radius: var(--radius-sm);
-        padding: 4px;
+        padding: var(--space-1);
         .positionItem {
           min-width: 45px;
           height: 30px;
-          padding: 0 12px;
+          padding: 0 var(--space-3);
           line-height: 30px;
           text-align: center;
           white-space: nowrap;
@@ -453,7 +453,7 @@
     .footer {
       min-height: 66px;
       justify-content: flex-end;
-      padding: 10px 24px 20px;
+      padding: 10px var(--space-6) var(--space-5);
       text-align: left;
     }
   }
@@ -463,7 +463,7 @@
   width: 380px;
   .ming.Menu {
     width: 320px;
-    padding: 12px 0;
+    padding: var(--space-3) 0;
 
     .customFieldSearch {
       &.ming.MenuItem {
@@ -488,14 +488,14 @@
 }
 
 .mappingSection {
-  margin-top: 20px;
+  margin-top: var(--space-5);
   .fieldText {
     width: 100%;
     display: inline-block;
     height: 36px;
     line-height: 36px;
     background: var(--color-background-tertiary);
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     font-weight: 500;
     border-radius: var(--radius-sm);
   }

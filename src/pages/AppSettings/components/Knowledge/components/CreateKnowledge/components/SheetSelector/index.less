@@ -5,7 +5,7 @@
   min-height: 0;
   .sheetSchemeWrapper {
     display: flex;
-    gap: 32px;
+    gap: var(--space-8);
   }
   .createKnowledgeWrapper {
     flex-shrink: 0;
@@ -21,7 +21,7 @@
       }
       .createKnowledgeTitle {
         margin-top: 10px;
-        font-size: 13px;
+        font-size: var(--font-sm);
         color: var(--color-text-secondary);
       }
       &.active {
@@ -42,13 +42,13 @@
   .aiRecommendation {
     display: flex;
     align-items: center;
-    margin: 20px 0;
+    margin: var(--space-5) 0;
     font-weight: 600;
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-text-primary);
     .icon {
-      margin-left: 4px;
-      font-size: 16px;
+      margin-left: var(--space-1);
+      font-size: var(--font-lg);
       color: var(--color-text-secondary);
       cursor: pointer;
       &:hover {
@@ -104,7 +104,7 @@
   }
   .schemeWrapper {
     display: flex;
-    gap: 20px;
+    gap: var(--space-5);
     .schemeItem {
       &.recommendScheme {
         display: flex;
@@ -112,12 +112,12 @@
         justify-content: space-between;
         color: var(--color-text-primary);
         .schemeItemTitle {
-          font-size: 14px;
+          font-size: var(--font-md);
           font-weight: 700;
         }
         .schemeItemDescription {
           margin: 10px 0 6px;
-          font-size: 12px;
+          font-size: var(--font-xs);
           display: -webkit-box;
           -webkit-box-orient: vertical;
           -webkit-line-clamp: 3;
@@ -125,7 +125,7 @@
           overflow: hidden;
         }
         .schemeItemFooter {
-          font-size: 13px;
+          font-size: var(--font-sm);
           color: var(--color-text-tertiary);
         }
         &.active {
@@ -136,12 +136,12 @@
     }
   }
   .subTitle {
-    margin: 20px 0 8px;
-    font-size: 13px;
+    margin: var(--space-5) 0 var(--space-2);
+    font-size: var(--font-sm);
     color: var(--color-text-secondary);
   }
   .emptySheetList {
-    margin: 20px 10px 30px;
+    margin: var(--space-5) 10px 30px;
     color: var(--color-text-tertiary);
   }
   .addSheetButton {
@@ -188,20 +188,20 @@
       }
       .worksheetTitle {
         flex-shrink: 0;
-        margin-right: 20px;
+        margin-right: var(--space-5);
         width: 380px;
-        font-size: 14px;
+        font-size: var(--font-md);
         color: var(--color-text-primary);
       }
       .worksheetDescription {
         flex: 1;
-        font-size: 13px;
+        font-size: var(--font-sm);
         color: var(--color-text-secondary);
       }
       .icon-delete1 {
         margin-left: 10px;
         flex-shrink: 0;
-        font-size: 16px;
+        font-size: var(--font-lg);
         color: var(--color-text-secondary);
         cursor: pointer;
         &:hover {

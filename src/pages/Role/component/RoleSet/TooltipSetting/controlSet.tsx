@@ -38,7 +38,7 @@ const Wrap = styled.div`
       border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     }
     &.isChild {
-      margin-left: 24px;
+      margin-left: var(--space-6);
       .filedName {
         width: 236px;
       }

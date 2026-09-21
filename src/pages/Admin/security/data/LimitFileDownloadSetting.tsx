@@ -11,9 +11,9 @@ import { LIMIT_FILE_DOWNLOAD_USE_TYPE_ENUM } from './enum';
 
 const Wrap = styled.div`
   box-sizing: border-box;
-  margin: 16px 0 0;
+  margin: var(--space-4) 0 0;
   border: 1px solid var(--color-border-primary);
-  padding: 24px 8px;
+  padding: var(--space-6) var(--space-2);
   position: relative;
 
   .userItem {
@@ -22,12 +22,12 @@ const Wrap = styled.div`
     line-height: 40px;
     border-radius: 11px;
     display: inline-block;
-    margin-right: 8px;
+    margin-right: var(--space-2);
     padding: 0 15px;
 
     .delete {
       display: none;
-      font-size: 24px;
+      font-size: var(--font-3xl);
     }
 
     &.active,
@@ -51,7 +51,7 @@ const Wrap = styled.div`
 
     .name {
       color: var(--color-text-title);
-      font-size: 13px;
+      font-size: var(--font-sm);
       margin-left: 10px;
       display: inline-block;
       vertical-align: middle;
@@ -66,7 +66,7 @@ const Wrap = styled.div`
       vertical-align: middle;
       background: var(--color-border-secondary);
       color: var(--color-primary);
-      font-size: 12px;
+      font-size: var(--font-xs);
       line-height: 24px;
       text-align: center;
       &.orgRoleIcon {
@@ -91,7 +91,7 @@ const Wrap = styled.div`
     box-sizing: border-box;
 
     li {
-      padding: 0 24px;
+      padding: 0 var(--space-6);
       &:hover {
         background: var(--color-border-secondary);
       }
@@ -120,7 +120,7 @@ const Content = styled.div`
   }
   .accessTypeRadioGroup {
     .Radio-box {
-      margin-right: 8px !important ;
+      margin-right: var(--space-2) !important ;
     }
     .Radio {
       margin-right: 26px !important;
@@ -140,7 +140,7 @@ const Footer = styled.div`
     }
   }
   .updateBtn {
-    margin-right: 20px;
+    margin-right: var(--space-5);
     &.disabled {
       color: var(--color-white);
       background: var(--color-primary-transparent);

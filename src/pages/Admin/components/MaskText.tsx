@@ -6,7 +6,7 @@ const MaskTextWrap = styled.span`
   .eyeIcon {
     width: 20px;
     height: 20px;
-    font-size: 14px;
+    font-size: var(--font-md);
     display: inline-block;
     text-align: center;
     vertical-align: middle;

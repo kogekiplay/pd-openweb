@@ -26,7 +26,7 @@ const Wrap = styled.div`
   margin-top: 13px;
   .actionLi {
     border-bottom: 1px solid var(--color-border-secondary);
-    padding: 0 20px 0 26px;
+    padding: 0 var(--space-5) 0 26px;
     height: 44px;
     &:last-child {
       border-bottom: 0;

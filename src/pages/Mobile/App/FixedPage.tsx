@@ -31,10 +31,10 @@ const FixedContent = styled.div`
   }
   .fixedInfo {
     color: var(--color-text-tertiary);
-    font-size: 14px;
+    font-size: var(--font-md);
   }
   .fixRemark {
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-title);
   }
 `;

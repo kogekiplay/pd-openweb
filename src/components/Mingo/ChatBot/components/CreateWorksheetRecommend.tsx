@@ -9,8 +9,8 @@ const Con = styled.div`
   flex-direction: column;
   gap: 10px;
   .recommendTitle {
-    margin-top: 8px;
-    font-size: 13px;
+    margin-top: var(--space-2);
+    font-size: var(--font-sm);
     color: var(--color-text-secondary);
     line-clamp: 1;
   }
@@ -21,7 +21,7 @@ const Con = styled.div`
   }
   .expandButton {
     position: relative;
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-secondary);
     cursor: pointer;
     &:after {
@@ -44,12 +44,12 @@ const RecommendItem = styled.div`
   padding: 10px;
   cursor: pointer;
   .name {
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-text-primary);
     line-clamp: 1;
   }
   .description {
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-tertiary);
     line-clamp: 2;
   }

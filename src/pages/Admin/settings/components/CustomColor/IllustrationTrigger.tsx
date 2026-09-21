@@ -10,12 +10,12 @@ const GuildWrap = styled.div`
   border-radius: var(--radius-sm);
   left: 100%;
   justify-content: space-between;
-  padding-top: 20px;
+  padding-top: var(--space-5);
   box-sizing: border-box;
   overflow: hidden;
   .top {
     text-align: left;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     .guildTitle {
       line-height: 14px;
     }

@@ -30,7 +30,7 @@ const FlattenContent = styled.div`
   .flatCardItem {
     border-radius: 8px;
     background: var(--color-background-secondary);
-    margin-bottom: 12px;
+    margin-bottom: var(--space-3);
     overflow: hidden;
     box-shadow: var(--shadow-md);
     &.noBoxShadow {
@@ -46,7 +46,7 @@ const FlattenContent = styled.div`
   .rowHeader {
     min-height: 48px;
     line-height: 22px;
-    padding: 12px;
+    padding: var(--space-3);
     border-radius: 0;
     cursor: pointer;
     &.errorRow {
@@ -91,7 +91,7 @@ const FlattenContent = styled.div`
     }
     &.packUp {
       .customFormItem {
-        padding: 0 12px !important;
+        padding: 0 var(--space-3) !important;
       }
       .customFormLine {
         height: 0px;
@@ -115,7 +115,7 @@ const FlattenContent = styled.div`
   /* 卡片内标题字段字号单独处理 */
   .childTableTitleField {
     .childTableCellName {
-      font-size: 13px !important;
+      font-size: var(--font-sm) !important;
     }
     .childTableCellValue {
       font-size: 15px !important;
@@ -127,7 +127,7 @@ const ExpandAllCon = styled.span`
   position: absolute;
   display: inline-block;
   color: var(--color-primary);
-  font-size: 13px;
+  font-size: var(--font-sm);
 `;
 
 export default function ChildTableFlatComp(props) {

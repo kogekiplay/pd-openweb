@@ -39,7 +39,7 @@ const FormItem = styled.div`
     border-radius: var(--radius-sm);
   }
   .ming.Textarea {
-    padding: 16px 15px;
+    padding: var(--space-4) 15px;
     &.keyTextarea {
       min-height: 120px !important;
     }
@@ -48,7 +48,7 @@ const FormItem = styled.div`
     }
     &.remarkTextarea {
       min-height: 85px !important;
-      padding: 8px 12px !important;
+      padding: var(--space-2) var(--space-3) !important;
     }
   }
   .ming.Textarea:hover:not(:disabled),

@@ -33,10 +33,10 @@ export const LoadingButton = styled.div`
   cursor: pointer;
   height: 29px;
   line-height: 29px;
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   color: var(--color-primary);
   border-radius: var(--radius-sm);
-  font-size: 13px;
+  font-size: var(--font-sm);
 
   .loading {
     margin-right: 6px;

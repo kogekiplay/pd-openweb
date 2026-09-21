@@ -59,7 +59,7 @@ const ToolsWrap = styled.ul`
   }
   li {
     line-height: 20px;
-    padding: 0 8px;
+    padding: 0 var(--space-2);
     cursor: pointer;
     color: var(--color-text-secondary);
     &:hover {

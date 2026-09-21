@@ -14,7 +14,7 @@ const LogsWrap = styled.div`
   .logsItem {
     height: 85px;
     display: flex;
-    padding-top: 20px;
+    padding-top: var(--space-5);
     border-bottom: 1px solid var(--color-border-secondary);
     .avatar {
       width: 24px;

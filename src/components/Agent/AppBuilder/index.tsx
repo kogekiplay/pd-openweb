@@ -51,7 +51,7 @@ const Main = styled.div`
 const Content = styled.div`
   flex: 1;
   overflow-y: auto;
-  padding: 24px 30px;
+  padding: var(--space-6) 30px;
 `;
 
 // 预览 overlay：盖在 Sidebar+Main 之上，自带 Header + iframe；不替换 AppBuilder 原本内容
@@ -71,7 +71,7 @@ const PreviewWrap = styled.div`
   flex: 1;
   min-height: 0;
   display: flex;
-  padding: 0 21px 24px;
+  padding: 0 21px var(--space-6);
   background: var(--color-background-secondary);
 `;
 
@@ -145,7 +145,7 @@ function buildPreviewUrl(
 
 const DebugBar = styled.div`
   max-width: 762px;
-  margin: 0 auto 12px;
+  margin: 0 auto var(--space-3);
   display: flex;
   justify-content: flex-end;
 `;
@@ -153,14 +153,14 @@ const DebugBar = styled.div`
 const DebugToggle = styled.button`
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-1);
   height: 26px;
   padding: 0 10px;
   border: 1px solid var(--color-border-secondary);
   border-radius: var(--radius-sm);
   background: var(--color-background-card);
   color: var(--color-text-secondary);
-  font-size: 12px;
+  font-size: var(--font-xs);
   cursor: pointer;
   font-family: 'SFMono-Regular', 'SF Mono', Menlo, Consolas, monospace;
 
@@ -173,13 +173,13 @@ const DebugToggle = styled.button`
 const RawJson = styled.pre`
   max-width: 762px;
   margin: 0 auto;
-  padding: 16px 18px;
+  padding: var(--space-4) 18px;
   border: 1px solid var(--color-border-secondary);
   border-radius: 8px;
   background: var(--color-background-card);
   color: var(--color-text-primary);
   font-family: 'SFMono-Regular', 'SF Mono', Menlo, Consolas, monospace;
-  font-size: 12px;
+  font-size: var(--font-xs);
   line-height: 18px;
   white-space: pre-wrap;
   word-break: break-word;

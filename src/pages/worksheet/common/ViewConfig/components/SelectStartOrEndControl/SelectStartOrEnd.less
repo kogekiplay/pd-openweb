@@ -1,10 +1,10 @@
 .endCom {
-  margin-top: 16px;
+  margin-top: var(--space-4);
   width: 100%;
   background: rgba(255, 147, 0, 0.1);
   border-radius: var(--radius-sm);
   display: flex;
-  padding: 12px 20px;
+  padding: var(--space-3) var(--space-5);
   justify-content: center;
   align-items: center;
   .error {
@@ -19,7 +19,7 @@
 .settingContent {
   .selectBox.selectStartOrEndCon {
     position: relative;
-    margin-top: 16px;
+    margin-top: var(--space-4);
     &::before {
       content: ' ';
       width: 1px;
@@ -33,7 +33,7 @@
     .startCom {
       position: relative;
       .itemText {
-        padding-left: 20px;
+        padding-left: var(--space-5);
       }
       .tag {
         position: absolute;
@@ -48,7 +48,7 @@
       .txt {
         margin-left: 28px;
         width: 60px;
-        padding-right: 20px;
+        padding-right: var(--space-5);
       }
       .dropCon {
         width: 100%;
@@ -83,7 +83,7 @@
         }
       }
       .errorTxtOption {
-        margin: 0 0 0 24px;
+        margin: 0 0 0 var(--space-6);
       }
       &.end {
         .tag {
@@ -126,7 +126,7 @@
 
   .addControl {
     color: var(--color-primary);
-    padding: 8px 12px;
+    padding: var(--space-2) var(--space-3);
   }
 
   .ant-select-item-option-disabled {
@@ -135,7 +135,7 @@
 }
 .dropConOption {
   .ant-select-item {
-    padding: 0px 12px;
+    padding: 0px var(--space-3);
     line-height: 36px !important;
     height: 36px !important;
     transition: none;

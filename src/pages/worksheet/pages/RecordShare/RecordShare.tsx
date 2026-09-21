@@ -26,7 +26,7 @@ const MobileCon = styled.div`
 `;
 const MobileHeader = styled.div`
   height: 44px;
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   box-sizing: border-box;
   border-bottom: 1px solid var(--color-border-secondary);
   background: var(--color-background-primary);

@@ -7,7 +7,7 @@ import { downloadFile } from '../../../../../util';
 import alertImg from '../../assets/alert.png';
 
 const FailInfoCon = styled.div`
-  padding: 0 24px;
+  padding: 0 var(--space-6);
   .detailDes {
     justify-content: center;
     align-items: center;
@@ -15,15 +15,15 @@ const FailInfoCon = styled.div`
     .alertIcon {
       width: 44px;
       height: 44px;
-      margin-right: 20px;
+      margin-right: var(--space-5);
     }
     .detailDesCount {
-      font-size: 24px;
+      font-size: var(--font-3xl);
       font-weight: 600;
     }
     .desInfo {
       color: var(--color-text-secondary);
-      font-size: 14px;
+      font-size: var(--font-md);
     }
   }
   .listTitle {
@@ -41,7 +41,7 @@ const FailInfoCon = styled.div`
       border: 1px solid var(--color-primary);
       opacity: 1;
       border-radius: 28px;
-      font-size: 13px;
+      font-size: var(--font-sm);
       color: var(--color-white);
       cursor: pointer;
     }
@@ -58,9 +58,9 @@ const ImportError = styled.div`
     font-size: 56px;
   }
   .errorTxt {
-    font-size: 24px;
+    font-size: var(--font-3xl);
     font-weight: 600;
-    margin: 36px 0 16px;
+    margin: 36px 0 var(--space-4);
   }
   .errorDes {
     font-size: 14;

@@ -5,13 +5,13 @@
   height: 100%;
   background-color: var(--color-background-disabled);
   .searchBar {
-    margin: 10px 16px;
+    margin: 10px var(--space-4);
     border-radius: 18px;
     background-color: var(--color-background-secondary);
     height: 36px;
     overflow: hidden;
     line-height: 36px;
-    padding-left: 12px;
+    padding-left: var(--space-3);
     .icon-search {
       line-height: 36px;
       color: var(--color-text-tertiary);
@@ -32,7 +32,7 @@
     align-items: center;
     flex-direction: column;
     color: var(--color-text-tertiary);
-    font-size: 18px;
+    font-size: var(--font-xl);
     .iconBox {
       width: 90px;
       height: 90px;
@@ -46,16 +46,16 @@
     }
   }
   .breadNavbar {
-    padding: 0px 0 12px 16px;
+    padding: 0px 0 var(--space-3) var(--space-4);
     .ant-breadcrumb {
-      font-size: 14px;
+      font-size: var(--font-md);
       color: var(--color-primary);
       > span:last-child {
         color: var(--color-text-title);
       }
       .breadIcon {
         color: var(--color-text-placeholder);
-        margin: 0 8px;
+        margin: 0 var(--space-2);
       }
     }
   }
@@ -73,7 +73,7 @@
         font-weight: 500;
         .count {
           color: var(--color-text-tertiary);
-          padding-right: 16px;
+          padding-right: var(--space-4);
         }
         .line {
           width: 0;
@@ -87,12 +87,12 @@
       }
       .listItem {
         background-color: var(--color-background-card);
-        padding: 10px 16px 10px 0;
+        padding: 10px var(--space-4) 10px 0;
         box-sizing: border-box;
-        font-size: 14px;
+        font-size: var(--font-md);
         .radioGroupFilterTxt {
           border-radius: 12px;
-          font-size: 13px;
+          font-size: var(--font-sm);
           box-sizing: border-box;
           word-break: break-all;
         }
@@ -106,7 +106,7 @@
     }
     .searchRecordResult {
       background-color: var(--color-background-primary);
-      padding-left: 16px;
+      padding-left: var(--space-4);
       .recordItem {
         border-bottom: 1px solid var(--color-background-disabled);
         padding: 10px 0;
@@ -179,9 +179,9 @@
     .groupTitle {
       height: 40px;
       line-height: 40px;
-      font-size: 18px;
+      font-size: var(--font-xl);
       font-weight: 600;
-      padding-left: 12px;
+      padding-left: var(--space-3);
     }
     .groupDetailCon {
       flex: 1;
@@ -198,8 +198,8 @@
   right: 20px;
   bottom: 20px;
   z-index: 100;
-  padding-bottom: calc(~'constant(safe-area-inset-bottom) - 20px');
-  padding-bottom: calc(~'env(safe-area-inset-bottom) - 20px');
+  padding-bottom: calc(~'constant(safe-area-inset-bottom) - var(--space-5)');
+  padding-bottom: calc(~'env(safe-area-inset-bottom) - var(--space-5)');
 }
 
 .slideGroupFilterDrawer {

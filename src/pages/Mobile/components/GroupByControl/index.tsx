@@ -12,8 +12,8 @@ const Con = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 12px;
-  font-size: 16px;
+  padding: var(--space-3);
+  font-size: var(--font-lg);
   .controlContent {
     margin-right: 6px;
     display: flex;
@@ -33,7 +33,7 @@ const Con = styled.div`
   .count {
     color: var(--color-text-tertiary);
     font-size: 0.9em;
-    margin: 0 8px;
+    margin: 0 var(--space-2);
   }
   .controlText {
     color: var(--color-text-title);
@@ -66,7 +66,7 @@ const IconWrap = styled.div`
   margin-right: 6px;
   cursor: pointer;
   .icon-arrow-down {
-    font-size: 13px;
+    font-size: var(--font-sm);
   }
   .folded {
     transform: rotate(-90deg);

@@ -138,8 +138,8 @@ export const LayoutContent = styled.div`
     width: 100%;
     height: 32px;
     line-height: 32px;
-    margin-bottom: 8px;
-    font-size: 16px;
+    margin-bottom: var(--space-2);
+    font-size: var(--font-lg);
     input {
       border: none;
       height: 32px;
@@ -150,8 +150,8 @@ export const LayoutContent = styled.div`
       width: 100%;
       box-sizing: border-box;
       transition: width border-bottom 0.2s;
-      padding-right: 16px;
-      font-size: 16px;
+      padding-right: var(--space-4);
+      font-size: var(--font-lg);
       &::placeholder {
         color: var(--color-text-disabled);
       }
@@ -167,7 +167,7 @@ export const LayoutContent = styled.div`
     border-radius: var(--radius-sm);
   }
   .componentsWrap {
-    padding: 0 0 4px 0;
+    padding: 0 0 var(--space-1) 0;
     height: 100%;
   }
   .react-resizable-handle {

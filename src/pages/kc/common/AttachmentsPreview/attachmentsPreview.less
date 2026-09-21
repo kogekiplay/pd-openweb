@@ -130,7 +130,7 @@
     }
     .canNotView,
     .linkPreview {
-      font-size: 14px;
+      font-size: var(--font-md);
       color: var(--color-text-tertiary);
       text-align: center;
       top: 50%;
@@ -172,8 +172,8 @@
       .fileName {
         color: var(--color-white);
         line-height: 1.2em;
-        margin: 20px 0 40px;
-        font-size: 18px;
+        margin: var(--space-5) 0 40px;
+        font-size: var(--font-xl);
         .ellipsis {
           display: inline-block;
           max-width: 70%;
@@ -185,7 +185,7 @@
       .detail {
         line-height: 1;
         margin: 15px auto 30px;
-        font-size: 12px;
+        font-size: var(--font-xs);
       }
       a.detail {
         display: block;
@@ -198,7 +198,7 @@
         height: 44px;
         padding: 0;
         line-height: 44px;
-        font-size: 16px;
+        font-size: var(--font-lg);
         color: var(--color-white);
         cursor: pointer;
       }
@@ -212,7 +212,7 @@
     bottom: 0px;
     transition: transform 0.4s;
     .AttachmentInfo {
-      font-size: 13px;
+      font-size: var(--font-sm);
       color: var(--color-white);
       line-height: 26px;
       margin-left: 10px;
@@ -234,7 +234,7 @@
           margin: 0 15px;
           text-decoration: none;
           color: rgba(255, 255, 255, 0.8);
-          font-size: 12px;
+          font-size: var(--font-xs);
           border-radius: var(--radius-sm);
           padding: 3px 10px;
           border-radius: var(--radius-sm);
@@ -246,7 +246,7 @@
       }
       [class^='icon-'],
       [class*=' icon-'] {
-        font-size: 24px;
+        font-size: var(--font-3xl);
         margin: 0 15px;
         color: rgba(255, 255, 255, 0.8);
         vertical-align: middle;
@@ -264,7 +264,7 @@
         display: inline-block;
         margin: 0 15px 0 5px;
         color: var(--color-white);
-        font-size: 14px;
+        font-size: var(--font-md);
         vertical-align: middle;
         -webkit-user-select: none;
         -moz-user-select: none;
@@ -294,7 +294,7 @@
         position: relative;
         width: 70px;
         height: 70px;
-        margin: 0 4px;
+        margin: 0 var(--space-1);
         overflow: hidden;
         cursor: pointer;
         vertical-align: middle;
@@ -381,9 +381,9 @@
     }
     .attDetails {
       padding-top: 15px;
-      padding-left: 20px;
-      padding-right: 20px;
-      font-size: 13px;
+      padding-left: var(--space-5);
+      padding-right: var(--space-5);
+      font-size: var(--font-sm);
     }
 
     .attDetails .attCreator a {
@@ -420,7 +420,7 @@
 
     .attDetails .attPostInfo {
       color: var(--color-text-tertiary);
-      font-size: 12px;
+      font-size: var(--font-xs);
       line-height: 24px;
       height: 120px;
       overflow: hidden;
@@ -433,7 +433,7 @@
 
     .attDetails .postDetails {
       cursor: pointer;
-      font-size: 12px;
+      font-size: var(--font-xs);
       color: var(--color-text-tertiary);
     }
 

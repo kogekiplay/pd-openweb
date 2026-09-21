@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import BarCode from 'src/components/Form/DesktopForm/widgets/BarCode';
 
 const Con = styled.div`
-  padding: 4px 6px !important;
+  padding: var(--space-1) 6px !important;
   img {
     height: ${({ imgHeight }) => imgHeight}px !important;
     width: auto !important;

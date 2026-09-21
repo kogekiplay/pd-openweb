@@ -29,10 +29,10 @@ export const FixedContent = styled.div`
   }
   .fixedInfo {
     color: var(--color-text-tertiary);
-    font-size: 14px;
+    font-size: var(--font-md);
   }
   .fixRemark {
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-title);
     font-weight: 600;
   }
@@ -76,7 +76,7 @@ export const Wrap = styled.div`
   }
 `;
 export const WrapWx = styled.div`
-  padding: 0 32px;
+  padding: 0 var(--space-8);
   padding-top: 100px;
   text-align: center;
   img {
@@ -127,11 +127,11 @@ export const WrapWx = styled.div`
       background: var(--color-background-secondary);
       color: var(--color-text-title);
       line-height: 40px;
-      font-size: 14px;
+      font-size: var(--font-md);
       margin-top: 13px;
       .icon {
         margin-right: 13px;
-        font-size: 20px;
+        font-size: var(--font-2xl);
         color: var(--color-text-tertiary);
       }
       &.wxLogin {
@@ -208,7 +208,7 @@ export const WrapContainer = styled.div`
     width: 95%;
     min-width: 95%;
     height: auto;
-    padding: 48px 24px;
+    padding: 48px var(--space-6);
     margin: 0 auto;
     .messageConBox {
       margin: 0 auto;
@@ -229,12 +229,12 @@ export const WrapContainer = styled.div`
     }
   }
   .txtConsole {
-    font-size: 20px;
+    font-size: var(--font-2xl);
     font-weight: 500;
     text-align: center;
   }
   .pageTitle {
-    margin-bottom: 24px;
+    margin-bottom: var(--space-6);
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
@@ -251,7 +251,7 @@ export const WrapContainer = styled.div`
     line-height: 48px;
     color: var(--color-text-inverse);
     font-weight: bold;
-    font-size: 16px;
+    font-size: var(--font-lg);
     &:hover {
       background: var(--color-primary-dark);
     }
@@ -278,10 +278,10 @@ export const WrapContainer = styled.div`
     right: 48px;
     z-index: 2;
     > div {
-      gap: 4px;
+      gap: var(--space-1);
     }
     .iconCon {
-      font-size: 16px;
+      font-size: var(--font-lg);
     }
     .txt,
     .iconCon,
@@ -316,7 +316,7 @@ export const WrapUl = styled.div`
       }
       span {
         color: var(--color-text-secondary);
-        padding-bottom: 8px;
+        padding-bottom: var(--space-2);
         border-bottom: 3px solid var(--color-white);
         word-break: break-all;
         &.isCur {
@@ -329,7 +329,7 @@ export const WrapUl = styled.div`
   .footerTxt {
     margin-top: 40px;
     border-top: 1px solid var(--color-background-secondary);
-    padding-top: 24px;
+    padding-top: var(--space-6);
   }
 `;
 
@@ -345,7 +345,7 @@ export const WrapWXCon = styled.div`
     box-sizing: border-box;
     position: relative;
     overflow: hidden;
-    padding: 8px;
+    padding: var(--space-2);
     img {
       width: 100%;
       height: 100%;
@@ -363,10 +363,10 @@ export const WrapWXCon = styled.div`
         display: inline-block;
       }
       p {
-        margin: 24px auto;
+        margin: var(--space-6) auto;
       }
       .refresh {
-        padding: 10px 24px;
+        padding: 10px var(--space-6);
         background: var(--color-primary);
         opacity: 1;
         border-radius: 18px;

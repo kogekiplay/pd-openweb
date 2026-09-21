@@ -9,10 +9,10 @@ import './style.less';
 
 const ChartListWrapper = styled.div`
   min-height: 300px;
-  padding: 0 20px 8px;
+  padding: 0 var(--space-5) var(--space-2);
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: var(--space-5);
 
   .chartItem {
     z-index: 10;
@@ -21,7 +21,7 @@ const ChartListWrapper = styled.div`
     height: 300px;
     border: 1px solid var(--color-border-secondary);
     border-radius: 8px;
-    padding: 10px 20px 20px 20px;
+    padding: 10px var(--space-5) var(--space-5) var(--space-5);
     background: var(--color-background-card);
     .dragWrap {
       display: none;

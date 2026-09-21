@@ -6,7 +6,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 20px 22px;
+    padding: var(--space-5) 22px;
     font-size: 17px;
     font-weight: 500;
     color: var(--color-text-primary);
@@ -25,7 +25,7 @@
       padding: 0 22px;
       .title {
         margin-bottom: 10px;
-        font-size: 14px;
+        font-size: var(--font-md);
         font-weight: 500;
         color: var(--color-text-primary);
         &.subTitle {
@@ -33,33 +33,33 @@
           align-items: center;
           font-weight: 400;
           .icon {
-            margin-left: 4px;
+            margin-left: var(--space-1);
             color: var(--color-text-tertiary);
             cursor: pointer;
           }
         }
       }
       input {
-        margin-bottom: 20px;
+        margin-bottom: var(--space-5);
         width: 100%;
       }
       .radioBox {
         display: flex;
-        margin-bottom: 20px;
+        margin-bottom: var(--space-5);
         label {
           width: 100px;
         }
       }
       .description {
         margin-bottom: 14px;
-        font-size: 13px;
+        font-size: var(--font-sm);
         color: var(--color-text-tertiary);
       }
       .tutorial {
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-bottom: 20px;
+        margin-bottom: var(--space-5);
         height: 36px;
         background: var(--color-primary-transparent);
         border-radius: var(--radius-sm);
@@ -69,14 +69,14 @@
           color: var(--color-primary-dark);
         }
         .icon {
-          margin-left: 8px;
+          margin-left: var(--space-2);
         }
       }
       .fieldsAnalysis {
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-bottom: 20px;
+        margin-bottom: var(--space-5);
         width: 86px;
         height: 32px;
         background: var(--color-primary-transparent);
@@ -88,13 +88,13 @@
         }
       }
       .parsedFields {
-        margin-bottom: 20px;
+        margin-bottom: var(--space-5);
         .parsedFieldsHeader {
           display: flex;
           align-items: center;
           justify-content: space-between;
           margin-bottom: 6px;
-          font-size: 13px;
+          font-size: var(--font-sm);
           color: var(--color-text-primary);
           div {
             flex: 1;
@@ -135,13 +135,13 @@
               }
             }
             .icon {
-              font-size: 20px;
+              font-size: var(--font-2xl);
               color: var(--color-primary);
             }
           }
           .demoData {
             margin-top: 5px;
-            font-size: 12px;
+            font-size: var(--font-xs);
             color: var(--color-text-secondary);
           }
         }
@@ -159,21 +159,21 @@
 .fieldsAnalysisContent {
   .analysisDesc {
     margin-bottom: 15px;
-    font-size: 12px;
+    font-size: var(--font-xs);
     color: var(--color-text-secondary);
   }
   .analysisLabel {
     margin-bottom: 10px;
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-primary);
   }
   .analysisTextarea {
-    padding: 12px;
+    padding: var(--space-3);
     width: 100%;
     height: 120px;
     border: 1px solid var(--color-border-secondary);
     border-radius: var(--radius-sm);
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-primary);
     resize: none;
   }
@@ -182,6 +182,6 @@
 .mappedFieldPopup {
   .ant-select-item-option-disabled {
     color: var(--color-text-tertiary) !important;
-    font-size: 13px;
+    font-size: var(--font-sm);
   }
 }

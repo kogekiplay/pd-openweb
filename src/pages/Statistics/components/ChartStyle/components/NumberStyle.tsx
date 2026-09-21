@@ -15,7 +15,7 @@ const Wrap = styled.div`
   .chartTypeSelect {
     & > div,
     .active {
-      padding: 3px 8px !important;
+      padding: 3px var(--space-2) !important;
     }
     .active .shape {
       background-color: var(--color-primary);
@@ -28,7 +28,7 @@ const Wrap = styled.div`
     width: 32px;
     height: 32px;
     border-radius: var(--radius-sm);
-    padding: 4px;
+    padding: var(--space-1);
     border: 1px solid var(--color-border-primary);
     background-color: var(--color-background-primary);
     .colorBlock {

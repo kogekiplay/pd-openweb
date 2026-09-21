@@ -26,7 +26,7 @@ const WaterMarkSettingWrap = styled.div`
   .settingContent {
     flex: 1;
     min-width: 0;
-    padding-right: 24px;
+    padding-right: var(--space-6);
     .label {
       width: 130px;
     }
@@ -38,7 +38,7 @@ const WaterMarkSettingWrap = styled.div`
       background: var(--color-background-primary);
       border: 1px solid var(--color-border-primary);
       border-radius: var(--radius-sm);
-      padding: 4px;
+      padding: var(--space-1);
       .colorCon {
         flex: 1;
         min-width: 0;
@@ -58,7 +58,7 @@ const WaterMarkSettingWrap = styled.div`
         display: flex;
       }
       td {
-        font-size: 12px;
+        font-size: var(--font-xs);
         min-width: 80px;
         height: 44px;
         display: flex;
@@ -80,7 +80,7 @@ const WaterMarkSettingWrap = styled.div`
   }
   .previewContent {
     width: 280px;
-    padding-left: 24px;
+    padding-left: var(--space-6);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -149,7 +149,7 @@ const WaterMarkSettingWrap = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 20px;
+    margin-right: var(--space-5);
     cursor: pointer;
     border: 1px solid var(--color-border-primary);
     box-sizing: border-box;

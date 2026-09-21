@@ -14,7 +14,7 @@ const Wrap = styled.div`
   .listCon {
     background: var(--color-background-secondary);
     border-radius: 6px;
-    padding: 13px 16px;
+    padding: 13px var(--space-4);
     display: flex;
   }
   .down,

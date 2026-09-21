@@ -1,7 +1,7 @@
 @shareBoderColor: #cccccc;
 .darkHeader .header {
   margin: 0 !important;
-  padding-left: 24px;
+  padding-left: var(--space-6);
   background-color: var(--color-background-secondary);
   border-radius: var(--radius-sm) var(--radius-sm) 0 0;
 }
@@ -51,7 +51,7 @@
       position: absolute;
       right: 3px;
       bottom: 3px;
-      padding: 3px 4px;
+      padding: 3px var(--space-1);
       border-radius: var(--radius-sm);
       background: rgba(255, 255, 255, 0.4);
       display: block;
@@ -106,14 +106,14 @@
     .dItem {
       position: relative;
       padding: 0 10px 0 100px;
-      margin-bottom: 24px;
+      margin-bottom: var(--space-6);
       .itemLabel {
         position: absolute;
         left: 0px;
         min-width: 80px;
         max-width: max-content;
         text-align: right;
-        font-size: 14px;
+        font-size: var(--font-md);
         color: var(--color-text-tertiary);
         line-height: 36px;
         height: 36px;
@@ -137,7 +137,7 @@
         }
         textarea {
           height: 90px;
-          padding: 8px 12px;
+          padding: var(--space-2) var(--space-3);
         }
       }
     }
@@ -149,11 +149,11 @@
     display: inline-block;
     line-height: 36px;
     max-width: 80%;
-    font-size: 14px;
+    font-size: var(--font-md);
   }
   .closedTip {
     color: var(--color-text-tertiary);
-    font-size: 13px;
+    font-size: var(--font-sm);
     margin-top: -20px;
     margin-bottom: -6px;
   }
@@ -226,7 +226,7 @@
       }
       p {
         line-height: 1em;
-        margin: 12px 0 0;
+        margin: var(--space-3) 0 0;
         color: var(--color-text-title);
       }
       &.chat {
@@ -319,7 +319,7 @@
   .canDownloadTip {
     margin-left: 15px;
     i {
-      font-size: 20px;
+      font-size: var(--font-2xl);
       color: var(--color-text-disabled);
       vertical-align: middle;
     }
@@ -340,7 +340,7 @@
       padding: 0 5px 0 10px;
     }
     .icon-arrow-down-border {
-      font-size: 24px;
+      font-size: var(--font-3xl);
     }
     .csList {
       margin-top: 10px;
@@ -350,7 +350,7 @@
     position: relative;
     display: inline-block;
     width: 280px;
-    font-size: 13px;
+    font-size: var(--font-sm);
     line-height: 36px;
     height: 36px;
     .customSelect {
@@ -359,7 +359,7 @@
       z-index: 2 !important;
     }
     .spanShow {
-      font-size: 13px !important;
+      font-size: var(--font-sm) !important;
     }
     &:after {
       content: '';
@@ -381,7 +381,7 @@
     top: 0;
     display: inline-block;
     width: 100px;
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-title);
     .copyLinkHover {
       display: inline-block;
@@ -398,7 +398,7 @@
       position: relative;
       z-index: 11;
       margin-left: -246px;
-      margin-top: 16px;
+      margin-top: var(--space-4);
       right: 0px;
       width: 346px;
       box-sizing: border-box;
@@ -430,13 +430,13 @@
         display: inline-block;
         cursor: pointer;
         text-align: center;
-        margin-left: 12px;
+        margin-left: var(--space-3);
         height: 34px;
         line-height: 34px;
         color: var(--color-white);
         border-radius: var(--radius-sm);
         white-space: nowrap;
-        padding: 0 8px;
+        padding: 0 var(--space-2);
       }
     }
     &:hover {
@@ -449,7 +449,7 @@
   .sendToContent {
     .kcPath {
       margin-left: 13px;
-      font-size: 13px;
+      font-size: var(--font-sm);
       cursor: pointer;
       .pathStr {
         display: inline-block;
@@ -459,7 +459,7 @@
   }
   .addDescBtn {
     display: inline-block;
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-disabled);
     cursor: pointer;
   }
@@ -471,7 +471,7 @@
     vertical-align: middle;
     width: 279px;
     .selected {
-      font-size: 13px;
+      font-size: var(--font-sm);
       line-height: 34px;
       padding: 0 10px;
       border: 1px solid @shareBoderColor;
@@ -507,7 +507,7 @@
       overflow: scroll;
       .listItem {
         line-height: 34px;
-        font-size: 13px;
+        font-size: var(--font-sm);
         color: var(--color-text-title);
         padding: 0 10px;
         background-color: var(--color-background-primary) !important;
@@ -539,9 +539,9 @@
       border-top: 1px solid @shareBoderColor;
       height: 40px;
       padding: 9px 13px;
-      font-size: 13px;
+      font-size: var(--font-sm);
       i {
-        font-size: 20px;
+        font-size: var(--font-2xl);
         vertical-align: middle;
       }
       .footerStr {
@@ -550,14 +550,14 @@
     }
   }
   .shareAttachmentFooter {
-    margin: 24px 0;
+    margin: var(--space-6) 0;
     text-align: right;
     .yes {
       position: relative;
       line-height: 35px;
       display: inline-block;
       height: 35px;
-      padding: 0 24px;
+      padding: 0 var(--space-6);
       cursor: pointer;
       text-align: center;
       color: var(--color-white);
@@ -572,7 +572,7 @@
       }
     }
     .no {
-      margin-right: 32px;
+      margin-right: var(--space-8);
       cursor: pointer;
       color: var(--color-text-tertiary);
     }
@@ -627,7 +627,7 @@
     }
     .loadError {
       text-align: center;
-      font-size: 12px;
+      font-size: var(--font-xs);
       line-height: 1;
       color: var(--color-text-disabled);
       margin-top: 86px;
@@ -643,7 +643,7 @@
     margin: 6px 0 15px;
   }
   .fileName {
-    font-size: 12px;
+    font-size: var(--font-xs);
     color: var(--color-text-disabled);
     margin: 0;
   }
@@ -665,12 +665,12 @@
 .sendToTargetDropdown {
   .Dropdown--input {
     height: 36px !important;
-    font-size: 12px;
+    font-size: var(--font-xs);
     padding: 0 !important;
     text-align: center;
   }
   .icon-arrow-down-border {
-    font-size: 12px !important;
+    font-size: var(--font-xs) !important;
     margin-left: 5px !important;
     vertical-align: middle;
   }

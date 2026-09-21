@@ -19,7 +19,7 @@ const PopupWrapper = styled.div`
     border-radius: 0;
     background: var(--color-background-primary);
     border-bottom: 1px solid var(--color-border-secondary);
-    margin-bottom: 8px;
+    margin-bottom: var(--space-2);
   }
   .contentWrapper {
     height: 200px;

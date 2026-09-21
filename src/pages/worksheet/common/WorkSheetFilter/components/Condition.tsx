@@ -234,7 +234,7 @@ export default class Condition extends Component<any, any> {
             <div className="deletedColumn">
               <i className="icon icon-info"></i>
               <Tooltip
-                overlayInnerStyle={{ padding: '8px 10px' }}
+                overlayInnerStyle={{ padding: 'var(--space-2) 10px' }}
                 title={_l('ID: %0', condition.controlId)}
                 placement="bottom"
               >

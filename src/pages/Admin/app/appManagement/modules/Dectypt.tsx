@@ -22,7 +22,7 @@ const DialogWrap = styled(Dialog)`
     }
   }
   .mui-dialog-body {
-    padding: 0 20px 30px;
+    padding: 0 var(--space-5) 30px;
   }
 `;
 const Wrap = styled.div`
@@ -37,7 +37,7 @@ const Wrap = styled.div`
   overflow-y: auto;
   border: 1px dashed var(--color-border-secondary);
   box-sizing: border-box;
-  margin-bottom: 20px;
+  margin-bottom: var(--space-5);
   .uploadImg {
     width: 52px;
     height: 59px;
@@ -56,9 +56,9 @@ const Wrap = styled.div`
     }
   }
   .successTxt {
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-success);
-    margin-top: 20px;
+    margin-top: var(--space-5);
   }
 `;
 

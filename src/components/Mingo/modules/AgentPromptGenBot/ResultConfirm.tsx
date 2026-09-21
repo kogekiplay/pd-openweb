@@ -16,10 +16,10 @@ const ResultConfirmButton = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 12px;
+  margin-top: var(--space-3);
   border-radius: 18px;
   color: var(--color-white);
-  font-size: 13px;
+  font-size: var(--font-sm);
   font-weight: bold;
   cursor: pointer;
   &.disabled {

@@ -17,7 +17,7 @@ const SearchWrap = styled.div`
     border-radius: 17px;
     background: var(--color-background-secondary);
     border: 1px solid var(--color-background-secondary);
-    padding: 4px 5px 4px 35px;
+    padding: var(--space-1) 5px var(--space-1) 35px;
     width: 100%;
     &:focus {
       border-color: var(--color-primary);

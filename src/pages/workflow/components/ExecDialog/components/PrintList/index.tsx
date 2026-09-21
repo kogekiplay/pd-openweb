@@ -29,7 +29,7 @@ const MenuBox = styled.div`
     color: #465a65 !important;
   }
   .actionText {
-    margin-left: 20px;
+    margin-left: var(--space-5);
   }
   .printListLine {
     width: 100%;

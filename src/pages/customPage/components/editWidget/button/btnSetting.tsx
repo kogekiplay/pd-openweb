@@ -30,13 +30,13 @@ const BtnSettingWrap = styled.div`
   flex-basis: 360px;
   max-width: 360px;
   background-color: var(--color-background-secondary);
-  padding: 16px 0;
+  padding: var(--space-4) 0;
   .btnDisplayTab {
     display: flex;
-    padding: 0 24px;
+    padding: 0 var(--space-6);
     li {
       flex: 1;
-      padding-bottom: 16px;
+      padding-bottom: var(--space-4);
       text-align: center;
       border-bottom: 3px solid var(--color-border-secondary);
       transition: all 0.25s;
@@ -75,7 +75,7 @@ const BtnSettingWrap = styled.div`
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    padding: 10px 24px 2px;
+    padding: 10px var(--space-6) 2px;
     .iconWrap {
       color: var(--color-text-tertiary);
       cursor: pointer;
@@ -86,8 +86,8 @@ const BtnSettingWrap = styled.div`
     }
   }
   .settingItem {
-    margin-top: 20px;
-    padding: 0 24px;
+    margin-top: var(--space-5);
+    padding: 0 var(--space-6);
     &:first-child {
       margin-top: 0;
     }
@@ -96,10 +96,10 @@ const BtnSettingWrap = styled.div`
     }
     .settingTitle {
       font-weight: bold;
-      margin-bottom: 8px;
+      margin-bottom: var(--space-2);
     }
     .typeSelect {
-      font-size: 13px;
+      font-size: var(--font-sm);
       border-radius: var(--radius-sm);
       padding: 3px;
       background-color: var(--color-background-tertiary);
@@ -163,7 +163,7 @@ const BtnSettingWrap = styled.div`
           color: var(--color-white);
         }
         & > .icon {
-          font-size: 24px;
+          font-size: var(--font-3xl);
           line-height: 36px;
         }
       }
@@ -173,7 +173,7 @@ const BtnSettingWrap = styled.div`
       position: absolute;
     }
     .ant-input {
-      font-size: 13px;
+      font-size: var(--font-sm);
       box-shadow: none;
       padding: 7px 11px;
       border-radius: var(--radius-sm) 0 0 var(--radius-sm) !important;

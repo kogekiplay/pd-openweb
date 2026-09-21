@@ -11,7 +11,7 @@ import 'rc-trigger/assets/index.css';
 const ApprovalProcessBox = styled.div`
   min-width: 309px;
   border-radius: 24px 24px 24px 24px;
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   &:not(.foldCurrentNode) {
     background: var(--color-border-secondary);
   }
@@ -59,7 +59,7 @@ const ApprovalProcessBox = styled.div`
 const Box = styled.div`
   .foldNode {
     color: var(--color-white);
-    background: var(--color-link-hover);
+    background: var(--color-primary-dark);
     .approvalIcon {
       background: var(--color-background-primary);
       color: var(--color-link-hover);

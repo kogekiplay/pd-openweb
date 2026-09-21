@@ -19,7 +19,7 @@ const Wrap = styled.div`
   height: auto;
   line-height: 22px;
   background: var(--color-background-secondary);
-  padding: 8px;
+  padding: var(--space-2);
   z-index: 1;
   .hoverTextWhite {
     &:hover {
@@ -31,7 +31,7 @@ const Wrap = styled.div`
   }
   .linkCon {
     font-weight: 400;
-    font-size: 12px;
+    font-size: var(--font-xs);
   }
   .lineCenter {
     width: 0;

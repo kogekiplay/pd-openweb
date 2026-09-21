@@ -22,7 +22,7 @@ const Wrap = styled.div`
   height: 100%;
   .navConList {
     overflow: auto !important;
-    padding: 6px 8px 10px;
+    padding: 6px var(--space-2) 10px;
   }
   .optionNs {
     width: 20px;

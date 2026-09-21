@@ -19,7 +19,7 @@ const Wrap = styled.div`
   height: 100%;
   .navConList {
     overflow: auto !important;
-    padding: 6px 8px 10px;
+    padding: 6px var(--space-2) 10px;
   }
   .overflowHidden {
     overflow: hidden !important;
@@ -89,7 +89,7 @@ const Wrap = styled.div`
       font-weight: 400;
     }
     .memberTag {
-      font-size: 12px;
+      font-size: var(--font-xs);
       color: var(--color-primary);
       padding: 2px 6px;
       border-radius: 12px;
@@ -102,7 +102,7 @@ const Wrap = styled.div`
       background: var(--color-primary);
       font-weight: bold;
       padding: 2px 6px;
-      font-size: 12px;
+      font-size: var(--font-xs);
       border-radius: 12px;
       display: inline-block;
       flex-shrink: 0;

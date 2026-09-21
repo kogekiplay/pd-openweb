@@ -15,8 +15,8 @@ export const WrapHeader = styled.div`
     .tab {
       color: var(--color-text-title);
       display: inline-block;
-      margin-right: 20px;
-      padding: 0 12px;
+      margin-right: var(--space-5);
+      padding: 0 var(--space-3);
       line-height: 42px;
       border-bottom: 3px solid transparent;
       border-top: 3px solid transparent;
@@ -51,8 +51,8 @@ export const WrapNav = styled.div`
   min-height: 100%;
   overflow: auto;
   .addRole {
-    margin: 4px 12px;
-    padding: 8px;
+    margin: var(--space-1) var(--space-3);
+    padding: var(--space-2);
     border-radius: 24px;
     border: 1px solid var(--color-border-primary);
     &:hover {
@@ -64,9 +64,9 @@ export const WrapNav = styled.div`
     padding: 0 15px 0 26px;
   }
   .navCon {
-    padding: 10px 8px;
+    padding: 10px var(--space-2);
     &.roleSet {
-      padding: 6px 8px 10px;
+      padding: 6px var(--space-2) 10px;
     }
     li {
       .moreop {
@@ -76,7 +76,7 @@ export const WrapNav = styled.div`
         }
       }
       cursor: pointer;
-      padding: 0 8px 0 18px;
+      padding: 0 var(--space-2) 0 18px;
       height: 36px;
       .Icon {
         color: var(--color-text-tertiary);
@@ -134,7 +134,7 @@ export const WrapNav = styled.div`
           border-radius: 11px;
           line-height: 22px;
           height: 22px;
-          font-size: 13px;
+          font-size: var(--font-sm);
         }
         &:hover {
           background: var(--color-background-hover);
@@ -182,7 +182,7 @@ export const WrapTableCon = styled.div`
       line-height: 37px;
       height: 37px;
       background: var(--color-primary-transparent);
-      padding: 0 20px;
+      padding: 0 var(--space-5);
       border-radius: var(--radius-sm);
       &:hover {
         background: var(--color-primary-transparent);
@@ -198,7 +198,7 @@ export const WrapFooter = styled.div`
     color: var(--color-white);
     line-height: 36px;
     border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
-    font-size: 14px;
+    font-size: var(--font-md);
     font-weight: 400;
     transition:
       color ease-in 0.2s,
@@ -206,7 +206,7 @@ export const WrapFooter = styled.div`
       background-color ease-in 0;
     background: var(--color-primary);
     &:not(.disabled):hover {
-      background: var(--color-link-hover);
+      background: var(--color-primary-dark);
     }
     &.disabled {
       opacity: 0.6;
@@ -218,7 +218,7 @@ export const WrapFooter = styled.div`
     padding: 0 30px;
     line-height: 36px;
     border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
-    font-size: 14px;
+    font-size: var(--font-md);
     opacity: 1;
     border: 1px solid var(--color-border-secondary);
     margin-left: 23px;
@@ -241,7 +241,7 @@ export const WrapFooter = styled.div`
     padding: 0 30px;
     line-height: 36px;
     border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
-    font-size: 14px;
+    font-size: var(--font-md);
     opacity: 1;
     border: 1px solid var(--color-border-secondary);
     font-weight: 400;
@@ -262,10 +262,10 @@ export const WrapFooter = styled.div`
   }
 `;
 export const AddWrap = styled.div`
-  font-size: 13px;
+  font-size: var(--font-sm);
   font-weight: 400;
   color: var(--color-text-tertiary);
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   line-height: 36px;
   border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
   &:hover {

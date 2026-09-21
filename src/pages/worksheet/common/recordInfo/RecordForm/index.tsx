@@ -44,7 +44,7 @@ const Shadow = styled.div`
 
 const FixedCon = styled.div`
   z-index: -1;
-  padding: 0px 24px;
+  padding: 0px var(--space-6);
   position: absolute;
   bottom: 0px;
   width: 100%;
@@ -63,11 +63,11 @@ const StickyBar = styled.div`
   left: 0px;
   top: 0px;
   right: 10px;
-  padding: 0 14px 0 24px;
+  padding: 0 14px 0 var(--space-6);
   opacity: 0;
   transform: translateY(-32px);
   z-index: 3;
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: var(--color-text-title);
   line-height: 32px;
   display: flex;
@@ -91,19 +91,19 @@ const StickyBar = styled.div`
 `;
 
 const LockWrap = styled.div`
-  padding: 0px 32px 16px 32px;
+  padding: 0px var(--space-8) var(--space-4) var(--space-8);
   .lockContent {
     display: flex;
     align-items: center;
     border-left: 3px solid var(--color-border-primary);
     .lockIcon {
-      font-size: 16px;
+      font-size: var(--font-lg);
       color: #56799d;
       &:hover {
         ${props => (props.isAdmin ? 'cursor: pointer;color:var(--color-primary);' : '')}
       }
       i {
-        margin: 0 12px;
+        margin: 0 var(--space-3);
       }
     }
   }

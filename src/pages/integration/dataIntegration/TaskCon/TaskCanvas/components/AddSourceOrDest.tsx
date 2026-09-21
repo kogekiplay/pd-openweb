@@ -21,7 +21,7 @@ const Wrap = styled.div`
     }
   }
   .sourceCard {
-    padding: 12px 20px;
+    padding: var(--space-3) var(--space-5);
     background: var(--color-background-primary);
     border: 1px solid var(--color-border-secondary);
     border-radius: var(--radius-md);
@@ -45,14 +45,14 @@ const PopupWrap = styled.div(
   border-radius: var(--radius-sm);
   width:${width}px;
   .item {
-    padding: 12px 20px;
+    padding: var(--space-3) var(--space-5);
     background: var(--color-background-primary);
     .title {
       font-size: 15px;
       font-weight: 500;
     }
     .des {
-      font-size: 13px;
+      font-size: var(--font-sm);
       font-weight: 400;
       color: var(--color-text-tertiary);
     }

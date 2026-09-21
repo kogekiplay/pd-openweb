@@ -20,7 +20,7 @@ const Con = styled.div`
   width: 100%;
   height: 100%;
   background-color: var(--color-background-secondary);
-  padding: 12px;
+  padding: var(--space-3);
   .controlContent {
     margin-right: 6px;
     display: flex;
@@ -42,12 +42,12 @@ const Con = styled.div`
   }
   .count {
     color: var(--color-text-tertiary);
-    font-size: 12px;
-    margin: 0 8px;
+    font-size: var(--font-xs);
+    margin: 0 var(--space-2);
   }
   .controlText {
     color: var(--color-text-title);
-    font-size: 14px;
+    font-size: var(--font-md);
     font-weight: bold;
   }
   .cellOptions .cellOption {
@@ -55,7 +55,7 @@ const Con = styled.div`
   }
   .Score-wrapper.customScoreWrap .text {
     color: var(--color-text-title);
-    font-size: 14px;
+    font-size: var(--font-md);
     font-weight: bold;
     margin-left: 5px !important;
   }
@@ -82,11 +82,11 @@ const Icon = styled.div`
   align-items: center;
   justify-content: center;
   color: var(--color-text-primary);
-  font-size: 16px;
+  font-size: var(--font-lg);
   margin-right: 6px;
   cursor: pointer;
   .icon-arrow-down {
-    font-size: 13px;
+    font-size: var(--font-sm);
     &.folded {
       transform: rotate(-90deg);
     }

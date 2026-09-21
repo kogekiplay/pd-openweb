@@ -33,7 +33,7 @@ const Wrapper = styled.div`
     flex: 6;
     min-width: 40%;
     flex-grow: initial;
-    padding-right: 8px;
+    padding-right: var(--space-2);
   }
   .value {
     flex: 6;
@@ -53,7 +53,7 @@ const Wrapper = styled.div`
     line-height: 40px;
     padding: 0 10px;
     border-bottom: 1px solid var(--color-background-secondary);
-    font-size: 14px;
+    font-size: var(--font-md);
     .doneIcon {
       display: none;
       position: absolute;
@@ -93,7 +93,7 @@ const Wrapper = styled.div`
         }
       }
       i {
-        font-size: 16px;
+        font-size: var(--font-lg);
         color: var(--color-text-disabled);
         cursor: pointer;
       }
@@ -103,7 +103,7 @@ const Wrapper = styled.div`
         width: fit-content;
         height: 16px;
         line-height: 16px;
-        padding: 0 8px;
+        padding: 0 var(--space-2);
         border-radius: 27px;
         color: var(--color-error);
         background: rgba(245, 23, 68, 0.08);
@@ -111,7 +111,7 @@ const Wrapper = styled.div`
       }
       .maskIcon {
         color: var(--color-text-disabled);
-        margin-left: 8px;
+        margin-left: var(--space-2);
         cursor: pointer;
         &:hover {
           color: var(--color-primary);

@@ -8,7 +8,7 @@
     display: none;
   }
   .mui-dialog-body {
-    padding: 0px 24px 56px !important;
+    padding: 0px var(--space-6) 56px !important;
   }
   .cancelPay {
     min-width: 120px;
@@ -16,9 +16,9 @@
     line-height: 44px;
     border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-primary);
-    padding: 0 24px;
+    padding: 0 var(--space-6);
     font-weight: 600;
-    margin-right: 16px;
+    margin-right: var(--space-4);
     &:hover {
       border: 1px solid var(--color-primary);
       color: var(--color-primary);
@@ -61,7 +61,7 @@
   .orderPayWrap {
     width: unset;
     text-align: left;
-    padding-top: 32px;
+    padding-top: var(--space-8);
   }
   .orderPayCon {
     height: 230px;
@@ -74,9 +74,9 @@
   .qrCode {
     width: 160px;
     height: 160px;
-    padding: 12px 10px 0;
+    padding: var(--space-3) 10px 0;
     border-radius: 8px;
-    margin: 0 32px auto;
+    margin: 0 var(--space-8) auto;
     border: 1px solid var(--color-border-secondary);
   }
   .weChatColor {
@@ -95,12 +95,12 @@
       border-radius: 50%;
       text-align: center;
       line-height: 41px;
-      margin-bottom: 12px;
+      margin-bottom: var(--space-3);
     }
     .overTimeIcon {
       color: var(--color-warning);
       font-size: 70px;
-      margin-bottom: 12px;
+      margin-bottom: var(--space-3);
       transform: rotate(180deg);
     }
   }
@@ -116,7 +116,7 @@
     margin-bottom: 40px;
     .payChannelItem {
       height: 32px;
-      padding: 0 16px;
+      padding: 0 var(--space-4);
       border-radius: var(--radius-sm);
       border: 1px solid var(--color-border-secondary);
       margin-left: 10px;
@@ -136,7 +136,7 @@
       justify-content: center;
       border-radius: 6px;
       color: var(--color-white);
-      margin-right: 8px;
+      margin-right: var(--space-2);
       &.wechatBgColor {
         color: var(--color-success);
       }
@@ -199,7 +199,7 @@
   .line {
     height: 1px;
     border: 1px solid var(--color-background-disabled);
-    margin: 32px 0;
+    margin: var(--space-8) 0;
   }
   .mobilePayChannel {
     .mobilePayChannelItem {
@@ -213,7 +213,7 @@
       justify-content: center;
       border-radius: 6px;
       color: var(--color-white);
-      margin-right: 8px;
+      margin-right: var(--space-2);
       &.wechatBgColor {
         background-color: var(--color-success);
       }
@@ -238,7 +238,7 @@
     max-height: unset !important;
     height: 100% !important;
     .mui-dialog-body {
-      padding: 0 24px !important;
+      padding: 0 var(--space-6) !important;
       .orderPayWrap {
         padding-top: 0 !important;
       }

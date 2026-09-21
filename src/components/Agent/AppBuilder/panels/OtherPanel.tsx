@@ -7,7 +7,7 @@ const Wrap = styled.div`
   justify-content: center;
   height: 200px;
   color: var(--color-text-tertiary);
-  font-size: 14px;
+  font-size: var(--font-md);
 `;
 
 export default function OtherPanel() {

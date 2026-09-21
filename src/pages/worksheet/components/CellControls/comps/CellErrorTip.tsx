@@ -10,16 +10,16 @@ const Con = styled.div`
   ${({ pos }) => `${pos === 'top' ? 'top' : 'bottom'}: -26px;`}
   left: 0;
   white-space: nowrap;
-  padding: 0 8px;
+  padding: 0 var(--space-2);
   height: 26px;
   line-height: 26px;
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: var(--color-white);
   background-color: ${({ color }) => color || 'var(--color-error)'};
   .delIcon {
     cursor: pointer;
     color: rgba(0, 0, 0, 0.24);
-    margin-left: 8px;
+    margin-left: var(--space-2);
     &:hover {
       color: rgba(0, 0, 0, 0.5);
     }

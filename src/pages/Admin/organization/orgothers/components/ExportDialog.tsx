@@ -10,14 +10,14 @@ import 'rc-trigger/assets/index.css';
 
 const Wrap = styled.div`
   color: var(--color-text-title);
-  font-size: 13px;
+  font-size: var(--font-sm);
   display: flex;
   flex-direction: column;
   .ant-checkbox-group {
     display: flex;
     flex-direction: column;
     .ant-checkbox-group-item {
-      margin-top: 8px;
+      margin-top: var(--space-2);
     }
     .ant-checkbox {
       input {
@@ -29,7 +29,7 @@ const Wrap = styled.div`
     width: 100%;
     height: 1px;
     background-color: var(--color-border-secondary);
-    margin: 20px 0;
+    margin: var(--space-5) 0;
   }
   .exportData {
     width: 203px;
@@ -39,10 +39,10 @@ const Wrap = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     box-sizing: border-box;
     color: var(--color-text-secondary);
-    font-size: 12px;
+    font-size: var(--font-xs);
     margin-top: 10px;
     letter-spacing: 1px;
     cursor: pointer;

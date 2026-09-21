@@ -4,7 +4,7 @@ import { Button, Icon, QiniuUpload } from 'ming-ui';
 
 const Wrapper = styled.div`
   .addBtn {
-    padding: 0 16px !important;
+    padding: 0 var(--space-4) !important;
     display: flex;
     align-items: center;
     transition: none;
@@ -13,7 +13,7 @@ const Wrapper = styled.div`
     }
     .icon {
       color: var(--color-text-tertiary);
-      font-size: 18px;
+      font-size: var(--font-xl);
     }
     &:hover {
       border-color: var(--color-primary) !important;

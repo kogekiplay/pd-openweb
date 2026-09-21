@@ -3,7 +3,7 @@
   border-radius: 30px;
   height: 30px;
   background-color: var(--color-background-tertiary);
-  font-size: 13px;
+  font-size: var(--font-sm);
   vertical-align: middle;
   .inputCon {
     display: flex;
@@ -15,7 +15,7 @@
   }
   .icon-search:not(.inherit),
   .icon-cancel:not(.inherit) {
-    font-size: 18px;
+    font-size: var(--font-xl);
     color: var(--color-text-placeholder);
   }
   input {
@@ -39,8 +39,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-left: 4px;
-    font-size: 18px;
+    margin-left: var(--space-1);
+    font-size: var(--font-xl);
     cursor: pointer;
     flex-shrink: 0;
     &:hover {
@@ -65,10 +65,10 @@
   }
   &.worksheetQueryInput {
     .icon-search {
-      font-size: 20px !important;
+      font-size: var(--font-2xl) !important;
     }
     .inputCon {
-      padding: 4px 0 4px 6px;
+      padding: var(--space-1) 0 var(--space-1) 6px;
     }
   }
   &.mobileQueryInput {
@@ -79,10 +79,10 @@
       }
     }
     .inputCon {
-      padding-top: 4px;
+      padding-top: var(--space-1);
     }
     .icon:not(.inherit) {
-      font-size: 18px;
+      font-size: var(--font-xl);
       margin-top: 1px;
     }
   }

@@ -50,7 +50,7 @@ const Wrap = styled.div`
     line-height: 44px;
     .today {
       color: var(--color-white);
-      padding: 0 8px;
+      padding: 0 var(--space-2);
       height: 28px;
       line-height: 28px;
       &:hover {
@@ -66,7 +66,7 @@ const Wrap = styled.div`
       height: 28px;
       text-align: center;
       line-height: 28px;
-      font-size: 18px;
+      font-size: var(--font-xl);
       i {
         margin: 0 auto;
       }

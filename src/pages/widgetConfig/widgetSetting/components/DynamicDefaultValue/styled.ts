@@ -26,7 +26,7 @@ export const DynamicValueInputWrap = styled(FlexCenter)`
   }
   .cm-placeholder {
     color: var(--color-text-placeholder) !important;
-    font-size: 14px !important;
+    font-size: var(--font-md) !important;
     line-height: 27px !important;
     /* margin-left 删掉：CM6 的 placeholder 在 .cm-line 里，已经继承了那 10px */
   }
@@ -39,7 +39,7 @@ export const DynamicValueInputWrap = styled(FlexCenter)`
       padding: 0px !important;
     }
     .ck-content {
-      padding: 0 12px !important;
+      padding: 0 var(--space-3) !important;
     }
   }
   .datePicker {
@@ -50,7 +50,7 @@ export const DynamicValueInputWrap = styled(FlexCenter)`
     .ant-picker-input {
       height: 34px;
       line-height: 34px;
-      padding: 0 12px;
+      padding: 0 var(--space-3);
     }
     .ant-picker-clear {
       right: 12px;
@@ -71,10 +71,10 @@ export const DynamicValueInputWrap = styled(FlexCenter)`
   .otherFieldWrap {
     box-sizing: border-box;
     width: calc(100% - 36px);
-    padding: 5px 8px;
+    padding: 5px var(--space-2);
     min-height: 36px;
     line-height: 32px;
-    font-size: 14px;
+    font-size: var(--font-md);
     word-break: break-all;
     border: 1px solid var(--color-border-tertiary);
     border-radius: var(--radius-sm) 0 0 var(--radius-sm);
@@ -95,7 +95,7 @@ export const DynamicValueInputWrap = styled(FlexCenter)`
       right: 12px;
       display: none;
       height: 26px;
-      margin-top: 8px;
+      margin-top: var(--space-2);
       color: var(--color-text-tertiary);
     }
     .CityPicker-wrapper {
@@ -108,7 +108,7 @@ export const DynamicValueInputWrap = styled(FlexCenter)`
       width: 100%;
       height: 36px;
       line-height: 34px;
-      padding: 0 12px;
+      padding: 0 var(--space-3);
       border: 1px solid var(--color-border-tertiary) !important;
       border-radius: var(--radius-sm) 0 0 var(--radius-sm);
       box-sizing: border-box;
@@ -128,17 +128,17 @@ export const OtherFieldWrap = styled(FlexCenter)`
   background: #d8eeff;
   color: var(--color-primary);
   border: 1px solid var(--color-primary-transparent);
-  padding: 0 12px;
-  font-size: 12px;
+  padding: 0 var(--space-3);
+  font-size: var(--font-xs);
   box-sizing: border-box;
   height: 24px;
   margin-top: 5px;
   max-width: 100%;
   &.timeField {
-    margin: 0 6px 0 12px;
+    margin: 0 6px 0 var(--space-3);
   }
   &.haveCloseIcon {
-    padding: 0 6px 0 12px;
+    padding: 0 6px 0 var(--space-3);
   }
   &.deleted {
     background-color: var(--color-border-secondary);
@@ -204,14 +204,14 @@ export const FieldInfo = styled(FlexCenter)`
   border-radius: 24px;
   background-color: var(--tag-bg);
   border: 1px solid var(--color-border-tertiary);
-  padding-right: 8px;
-  font-size: 13px;
+  padding-right: var(--space-2);
+  font-size: var(--font-sm);
   line-height: 24px;
   margin: 5px 6px 0 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  ${props => (props.hideIcon ? 'padding-left: 8px;' : '')}
+  ${props => (props.hideIcon ? 'padding-left: var(--space-2);' : '')}
   .departWrap {
     width: 24px;
     height: 24px;
@@ -246,10 +246,10 @@ export const OtherFieldList = styled(FlexCenter)`
   flex-wrap: wrap;
   width: ${props => (props.totalWidth ? '100%' : 'calc(100% - 36px)')};
   box-sizing: border-box;
-  padding: 0 6px 5px 12px;
+  padding: 0 6px 5px var(--space-3);
   min-height: 36px;
   line-height: 32px;
-  font-size: 14px;
+  font-size: var(--font-md);
   word-break: break-all;
   border: 1px solid var(--color-border-primary);
   border-radius: var(--radius-sm) 0 0 var(--radius-sm);
@@ -275,15 +275,15 @@ export const OtherFieldList = styled(FlexCenter)`
 export const RelateControl = styled(FlexCenter)`
   background: var(--tag-bg);
   border: 1px solid var(--color-border-tertiary);
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   height: 24px;
   border-radius: 12px;
   cursor: pointer;
   margin-top: 5px;
-  margin-right: 8px;
+  margin-right: var(--space-2);
   max-width: 100%;
   span {
-    margin: 0 4px;
+    margin: 0 var(--space-1);
   }
 `;
 
@@ -293,7 +293,7 @@ export const OptionControl = styled(FlexCenter)`
     align-items: center;
     height: 24px;
     background: rgba(0, 0, 0, 0.08);
-    margin: 4px 6px 0 0;
+    margin: var(--space-1) 6px 0 0;
     padding: 0 10px;
     border-radius: 12px;
     &.isDeleted {
@@ -303,7 +303,7 @@ export const OptionControl = styled(FlexCenter)`
       }
     }
     .text {
-      margin-right: 4px;
+      margin-right: var(--space-1);
     }
   }
 `;
@@ -314,7 +314,7 @@ export const DynamicInputStyle = styled(FlexCenter)`
   border: 1px solid var(--color-border-tertiary);
   border-radius: var(--radius-sm) 0 0 var(--radius-sm);
   width: calc(100% - 36px);
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   height: 36px;
   box-sizing: border-box;
   .error,
@@ -356,7 +356,7 @@ export const SearchWorksheetWrap = styled.div`
   .addFilterCondition span {
     font-weight: 700 !important;
     .icon {
-      font-size: 13px !important;
+      font-size: var(--font-sm) !important;
       margin-right: 0 !important;
       font-weight: 700 !important;
     }
@@ -376,7 +376,7 @@ export const SearchWorksheetWrap = styled.div`
     display: flex;
     align-items: center;
     height: 36px;
-    margin-bottom: 12px;
+    margin-bottom: var(--space-3);
     .mappingControlName {
       flex: 1;
       min-width: 0;
@@ -409,7 +409,7 @@ export const SearchWorksheetWrap = styled.div`
     border-radius: var(--radius-sm);
     color: var(--color-text-disabled);
     line-height: 34px;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     background: var(--color-background-primary);
     display: flex;
     align-items: center;
@@ -433,7 +433,7 @@ export const SearchWorksheetWrap = styled.div`
   .addFilterIcon span {
     color: var(--color-primary);
     display: inline-block;
-    padding: 8px;
+    padding: var(--space-2);
     font-weight: bold;
     &:hover {
       color: var(--color-link-hover);
@@ -450,7 +450,7 @@ export const SearchWorksheetWrap = styled.div`
     display: none !important;
   }
   .conditionItem {
-    margin-bottom: 12px !important;
+    margin-bottom: var(--space-3) !important;
   }
   .conditionItemForDynamicStyle {
     .conditionItemHeader {
@@ -465,7 +465,7 @@ export const SearchWorksheetWrap = styled.div`
           background: transparent;
         }
         .ming.Dropdown .Dropdown--input {
-          padding: 0 5px 0 12px;
+          padding: 0 5px 0 var(--space-3);
         }
       }
     }
@@ -481,8 +481,8 @@ export const SearchWorksheetWrap = styled.div`
         height: 36px;
         border-radius: var(--radius-sm);
         box-shadow: none !important;
-        font-size: 13px;
-        margin-right: 12px;
+        font-size: var(--font-sm);
+        margin-right: var(--space-3);
         .ant-select-suffix {
           margin-top: -8px !important;
         }
@@ -579,7 +579,7 @@ export const WorksheetListWrap = styled.div`
     position: relative;
     z-index: 11;
     .otherMenuItem {
-      padding: 0 16px;
+      padding: 0 var(--space-4);
       line-height: 32px;
       &:hover {
         color: var(--color-white) !important;
@@ -599,7 +599,7 @@ export const DynamicTextWrap = styled.div`
     line-height: 30px;
   }
   .haveCloseIcon {
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     .icon-close {
       display: none;
     }

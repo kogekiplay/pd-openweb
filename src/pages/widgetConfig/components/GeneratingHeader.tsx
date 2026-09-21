@@ -43,14 +43,14 @@ const StatusBar = styled.div`
   border-radius: 20px;
   border: 1px solid var(--color-border-primary);
   box-shadow: var(--shadow-lg);
-  font-size: 13px;
+  font-size: var(--font-sm);
   font-weight: bold;
   padding: 0 25px;
   color: var(--color-text-title);
   .icon {
     color: var(--color-mingo);
     margin-right: 5px;
-    font-size: 18px;
+    font-size: var(--font-xl);
   }
   .generated {
     color: var(--color-success);

@@ -18,10 +18,10 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     border-radius: var(--radius-sm);
-    padding: 18px 24px 24px;
+    padding: 18px var(--space-6) var(--space-6);
     background-color: var(--color-background-secondary);
-    margin-bottom: 24px;
-    gap: 12px;
+    margin-bottom: var(--space-6);
+    gap: var(--space-3);
     .greenColor {
       color: var(--color-success);
     }
@@ -29,7 +29,7 @@ const Wrapper = styled.div`
   .formItem {
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: var(--space-5);
     .label {
       width: 90px;
       padding-right: 10px;
@@ -38,7 +38,7 @@ const Wrapper = styled.div`
     }
     input {
       border-color: var(--color-border-primary);
-      font-size: 13px;
+      font-size: var(--font-sm);
       &::placeholder {
         color: var(--color-text-disabled);
       }
@@ -60,7 +60,7 @@ const Wrapper = styled.div`
 
       &.isEnterPrise {
         input {
-          padding-left: 32px;
+          padding-left: var(--space-8);
         }
       }
 
@@ -72,7 +72,7 @@ const Wrapper = styled.div`
         .emptyText {
           height: 36px;
           line-height: 36px;
-          padding: 0 16px;
+          padding: 0 var(--space-4);
           color: var(--color-text-secondary);
         }
       }

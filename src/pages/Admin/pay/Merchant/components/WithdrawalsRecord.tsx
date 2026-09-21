@@ -13,7 +13,7 @@ import withdrawalsEmptyImg from '../../images/withdrawals.png';
 import WithdrawalsDialogFunc from './WithdrawReimburseDialog';
 
 const BalanceWrap = styled.div`
-  padding: 36px 0 25px 32px;
+  padding: 36px 0 25px var(--space-8);
   border-bottom: 1px solid var(--color-border-secondary);
   position: relative;
   .alignItemsBaseline {

@@ -3,7 +3,7 @@
   flex-direction: column;
   max-height: calc(~'100% - 40px');
   min-height: 200px;
-  font-size: 16px;
+  font-size: var(--font-lg);
   border-radius: 12px 12px 0 0;
 
   .closeIconBox {
@@ -18,7 +18,7 @@
     border-radius: 50%;
     background-color: var(--color-background-secondary);
     color: var(--color-text-tertiary);
-    font-size: 13px;
+    font-size: var(--font-sm);
   }
   .loadingBox {
     display: flex;
@@ -28,10 +28,10 @@
   .personalInfoHeaderBox {
     display: flex;
     align-items: center;
-    padding: 20px;
+    padding: var(--space-5);
 
     .avatar {
-      margin-right: 20px;
+      margin-right: var(--space-5);
       width: 40px;
       height: 40px;
       border-radius: 50%;
@@ -51,7 +51,7 @@
   .personalInfoContentBox {
     flex: 1;
     font-size: 0.9em;
-    padding: 0 20px 20px;
+    padding: 0 var(--space-5) var(--space-5);
 
     .infoItem {
       display: flex;
@@ -81,7 +81,7 @@
       }
     }
     .infoItem + .infoItem {
-      margin-top: 20px;
+      margin-top: var(--space-5);
     }
     .appointmentField {
       align-items: flex-start;
@@ -98,7 +98,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 24px;
+      margin-bottom: var(--space-6);
       width: 80px;
       height: 80px;
       border-radius: 50%;

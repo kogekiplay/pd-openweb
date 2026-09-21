@@ -11,7 +11,7 @@ import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   background: var(--color-background-secondary);
-  padding: 0 20px;
+  padding: 0 var(--space-5);
   min-height: 100%;
   .queryBox {
     max-width: 320px;
@@ -21,7 +21,7 @@ const Con = styled.div`
       font-size: 22px;
       text-align: center;
       color: var(--color-text-title);
-      padding-bottom: 32px;
+      padding-bottom: var(--space-8);
     }
     .err {
       line-height: 72px;
@@ -29,7 +29,7 @@ const Con = styled.div`
       background: var(--color-background-primary);
       border: 1px solid var(--color-border-primary);
       border-radius: var(--radius-sm);
-      font-size: 13px;
+      font-size: var(--font-sm);
       font-weight: 400;
       text-align: center;
     }
@@ -48,12 +48,12 @@ const Con = styled.div`
       background-color: var(--color-background-secondary) !important;
     }
     .btn {
-      margin-top: 24px;
+      margin-top: var(--space-6);
       height: 36px;
       opacity: 1;
       background: var(--color-primary);
       border-radius: var(--radius-sm);
-      font-size: 13px;
+      font-size: var(--font-sm);
       font-weight: 700;
       color: var(--color-white);
       line-height: 36px;
@@ -62,11 +62,11 @@ const Con = styled.div`
         background: var(--color-text-disabled) !important;
       }
       &:hover {
-        background: var(--color-link-hover);
+        background: var(--color-primary-dark);
       }
     }
     .fot {
-      font-size: 12px;
+      font-size: var(--font-xs);
       color: var(--color-text-disabled);
       margin-top: 40px;
       text-align: center;

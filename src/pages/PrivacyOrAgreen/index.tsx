@@ -17,12 +17,12 @@ const Wrap = styled.div`
     box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
     border-radius: var(--radius-sm);
     margin: 40px auto;
-    padding: 24px;
+    padding: var(--space-6);
     .headCon {
       display: flex;
     }
     .pageTitle {
-      margin-bottom: 32px;
+      margin-bottom: var(--space-8);
       display: -webkit-box;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 2;

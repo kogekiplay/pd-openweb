@@ -11,7 +11,7 @@ import { getCurrentProject } from 'src/utils/project';
 const FormItem = styled.div`
   margin-top: 25px;
   color: var(--color-text-title);
-  font-size: 14px;
+  font-size: var(--font-md);
   .userItemWrapper {
     display: flex;
     align-items: center;
@@ -53,7 +53,7 @@ const FormItem = styled.div`
   }
   &.selectUserWrap {
     justify-content: space-between;
-    gap: 16px;
+    gap: var(--space-4);
     overflow: hidden;
     .selectUserItem {
       width: calc(50% - 8px);
@@ -70,8 +70,8 @@ const AppListContainer = styled.div`
   width: 100%;
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-primary);
-  margin-top: 16px;
-  padding-top: 8px;
+  margin-top: var(--space-4);
+  padding-top: var(--space-2);
 
   .noDataContent {
     height: 100px;
@@ -87,7 +87,7 @@ const AppListContainer = styled.div`
       display: flex;
       height: 40px;
       line-height: 40px;
-      padding: 0 20px;
+      padding: 0 var(--space-5);
 
       .name {
         flex: 1;
@@ -101,7 +101,7 @@ const AppListContainer = styled.div`
           height: 24px;
           line-height: 16px;
           border-radius: var(--radius-sm);
-          margin-right: 8px;
+          margin-right: var(--space-2);
         }
       }
       .removeItem {
@@ -335,7 +335,7 @@ export default function TodoEntrustModal(props) {
     <Modal
       visible
       width={640}
-      bodyStyle={{ padding: '0 24px 16px' }}
+      bodyStyle={{ padding: '0 var(--space-6) var(--space-4)' }}
       okDisabled={
         !formData.trustee ||
         !formData.companyId ||

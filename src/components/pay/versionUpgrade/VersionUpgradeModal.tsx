@@ -49,7 +49,7 @@ const DialogWrap = styled(Dialog)`
     }
   }
   .versionWrap {
-    margin-top: 24px;
+    margin-top: var(--space-6);
     flex-wrap: wrap;
     gap: 30px;
 
@@ -60,7 +60,7 @@ const DialogWrap = styled(Dialog)`
       border-radius: 8px;
       padding: 30px;
       box-sizing: border-box;
-      font-size: 14px;
+      font-size: var(--font-md);
       &:hover {
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.08);
       }
@@ -84,7 +84,7 @@ const DialogWrap = styled(Dialog)`
         background: var(--color-primary);
         cursor: pointer;
         margin-bottom: 25px;
-        font-size: 16px;
+        font-size: var(--font-lg);
         font-weight: 600;
         &.disabled {
           color: #757575;
@@ -114,11 +114,11 @@ const DialogWrap = styled(Dialog)`
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 20px 0;
+    margin: var(--space-5) 0;
   }
 
   .contactWrapper {
-    padding: 24px 0 72px;
+    padding: var(--space-6) 0 72px;
     text-align: center;
   }
 `;

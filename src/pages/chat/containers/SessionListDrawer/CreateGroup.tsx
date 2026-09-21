@@ -53,14 +53,14 @@ const CreateGroup = props => {
     <Fragment>
       <Dropdown
         placement="topRight"
-        popupRender={() => <Menu style={{ width: 180, padding: '8px 0' }}>
-            <Menu.Item key="addSession" style={{ padding: '7px 12px' }} onClick={handleAddSession}>
+        popupRender={() => <Menu style={{ width: 180, padding: 'var(--space-2) 0' }}>
+            <Menu.Item key="addSession" style={{ padding: '7px var(--space-3)' }} onClick={handleAddSession}>
               <div className="flexRow alignItemsCenter">
                 <Icon icon="task-reply-msg" className="textSecondary Font18 mRight10" />
                 <div>{`${_l('发起聊天')} (Q)`}</div>
               </div>
             </Menu.Item>
-            <Menu.Item key="createGroup" style={{ padding: '7px 12px' }} onClick={() => createGroup({})}>
+            <Menu.Item key="createGroup" style={{ padding: '7px var(--space-3)' }} onClick={() => createGroup({})}>
               <div className="flexRow alignItemsCenter">
                 <Icon icon="group" className="textSecondary Font20 mRight10" />
                 <div>{_l('创建群组')}</div>

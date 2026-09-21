@@ -48,8 +48,8 @@ export const WrapHeader = styled.div`
       &.appNameM {
         max-width: 280px;
         font-weight: bold;
-        font-size: 24px !important;
-        padding-left: 16px;
+        font-size: var(--font-3xl) !important;
+        padding-left: var(--space-4);
         line-height: initial;
         display: flex;
         align-items: center;
@@ -94,7 +94,7 @@ export const WrapHeader = styled.div`
             color: var(--color-white);
             flex-shrink: 0;
             font-weight: bold;
-            padding: 0 20px;
+            padding: 0 var(--space-5);
             &.active {
               background-color: rgba(0, 0, 0, 0.15);
             }
@@ -112,7 +112,7 @@ export const WrapHeader = styled.div`
     white-space: nowrap;
     font-weight: bold;
     padding: 0 10px;
-    font-size: 12px;
+    font-size: var(--font-xs);
     margin-left: 5px;
     background: #fd7558;
   }
@@ -121,7 +121,7 @@ export const Wrap = styled.div`
   .infoConBox {
     height: calc(100% - 70px);
     overflow: auto;
-    padding: 24px;
+    padding: var(--space-6);
   }
   .infoBox {
     overflow: auto;
@@ -142,7 +142,7 @@ export const Wrap = styled.div`
     }
     .infoConBox {
       height: calc(100% - 140px);
-      padding: 6px 24px 24px;
+      padding: 6px var(--space-6) var(--space-6);
     }
   }
   .closeBtnN {
@@ -170,7 +170,7 @@ export const Wrap = styled.div`
     }
   }
   .logoutBox {
-    padding: 16px 24px 24px;
+    padding: var(--space-4) var(--space-6) var(--space-6);
     gap: 10px;
   }
   .opt {
@@ -183,7 +183,7 @@ export const Wrap = styled.div`
     border-radius: 6px;
     .icon {
       color: var(--color-text-secondary);
-      font-size: 18px;
+      font-size: var(--font-xl);
     }
     &:hover {
       background: #e8e8e8;
@@ -265,7 +265,7 @@ export const Wrap = styled.div`
     border-radius: var(--radius-sm);
     height: 36px;
     .themeSwitcherItem {
-      padding: 4px 12px;
+      padding: var(--space-1) var(--space-3);
       border-radius: var(--radius-sm);
       &.active {
         background: var(--color-background-card);
@@ -278,7 +278,7 @@ export const ModalWrap = styled(Popup)`
   &.appMoreActionWrap {
     .header {
       line-height: 24px;
-      padding: 20px 15px 0;
+      padding: var(--space-5) 15px 0;
       .closeIcon {
         width: 24px;
         height: 24px;
@@ -290,7 +290,7 @@ export const ModalWrap = styled(Popup)`
       }
     }
     .actionContent {
-      padding-left: 20px;
+      padding-left: var(--space-5);
       color: var(--color-text-primary);
       line-height: 50px;
       padding-bottom: 15px;

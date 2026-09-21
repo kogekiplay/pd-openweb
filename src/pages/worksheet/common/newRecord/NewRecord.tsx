@@ -28,7 +28,7 @@ const HeaderComp = styled.div`
   width: 100%;
   background: var(--color-background-primary);
   .title {
-    font-size: 20px;
+    font-size: var(--font-2xl);
     font-weight: bold;
   }
 `;

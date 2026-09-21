@@ -11,8 +11,8 @@ import OtherInput from './OtherInput';
 const CheckboxWrap = styled.div`
   display: flex;
   align-items: center;
-  padding-top: 4px !important;
-  padding-bottom: 4px !important;
+  padding-top: var(--space-1) !important;
+  padding-bottom: var(--space-1) !important;
   min-width: 0;
   height: auto;
 

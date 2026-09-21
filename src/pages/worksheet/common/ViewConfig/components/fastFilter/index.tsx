@@ -24,7 +24,7 @@ const Wrap = styled.div`
     .iconWrap {
       display: inline-block;
       vertical-align: middle;
-      margin-left: 8px;
+      margin-left: var(--space-2);
     }
   }
   .noData {
@@ -36,12 +36,12 @@ const Wrap = styled.div`
       }
     }
     h6 {
-      font-size: 20px;
+      font-size: var(--font-2xl);
       font-weight: 500;
       color: var(--color-text-title);
       text-align: center;
       padding: 0;
-      padding-top: 32px;
+      padding-top: var(--space-8);
       margin: 0;
     }
     .text {
@@ -49,9 +49,9 @@ const Wrap = styled.div`
       text-align: center;
       color: var(--color-text-tertiary);
       line-height: 20px;
-      font-size: 13px;
+      font-size: var(--font-sm);
       width: 80%;
-      margin: 24px auto 0;
+      margin: var(--space-6) auto 0;
     }
   }
   .fastFilterControlDropdown {
@@ -60,7 +60,7 @@ const Wrap = styled.div`
     .itemT {
       background: var(--color-background-secondary);
       border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
-      padding: 3px 8px 3px 10px;
+      padding: 3px var(--space-2) 3px 10px;
       border: 1px solid var(--color-border-secondary);
       i {
         color: var(--color-text-tertiary);

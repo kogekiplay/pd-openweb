@@ -6,11 +6,11 @@ import { getEnv } from './util';
 
 const Con = styled.div`
   height: 100%;
-  padding: 24px 30px;
+  padding: var(--space-6) 30px;
   display: flex;
   flex-direction: column;
   .controlName {
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-title);
     margin-bottom: 6px;
     font-weight: bold;

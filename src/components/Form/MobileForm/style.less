@@ -4,8 +4,8 @@
   margin: 0 -12px;
   color: var(--color-text-primary);
   line-height: normal;
-  font-size: 16px;
-  padding: 0 20px;
+  font-size: var(--font-lg);
+  padding: 0 var(--space-5);
 
   &.pBottom60 {
     padding-bottom: 60px !important;
@@ -22,7 +22,7 @@
     width: 100%;
     position: relative;
     flex-direction: column;
-    padding: 6px 12px;
+    padding: 6px var(--space-3);
     box-sizing: border-box;
 
     &.isFilledByAi {
@@ -61,7 +61,7 @@
     height: 1px;
     background: var(--color-border-secondary);
     clear: both;
-    margin: 0 12px;
+    margin: 0 var(--space-3);
   }
 
   // 字段标题
@@ -75,7 +75,7 @@
     line-height: 24px;
     min-height: 24px;
     padding-top: 0px;
-    padding-bottom: 4px;
+    padding-bottom: var(--space-1);
     transform: translate3d(0, 0, 0);
 
     .requiredBtnBox {
@@ -115,7 +115,7 @@
     .commonControlStyle();
     box-sizing: border-box;
     min-height: 36px;
-    padding: 6px 12px;
+    padding: 6px var(--space-3);
     width: 100%;
     line-height: 1.5;
     outline: none;
@@ -123,7 +123,7 @@
     transform: rotateZ(360deg);
 
     &.customFormControlCapsuleBox {
-      padding: 4px 12px;
+      padding: var(--space-1) var(--space-3);
       display: flex;
       align-items: center;
       flex-wrap: wrap;
@@ -212,7 +212,7 @@
     right: 12px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 16px;
+    font-size: var(--font-lg);
   }
 
   .RefreshBtn {
@@ -266,7 +266,7 @@
     justify-content: center;
 
     .icon {
-      font-size: 24px;
+      font-size: var(--font-3xl);
       color: var(--color-text-tertiary);
     }
   }
@@ -327,7 +327,7 @@
   .customFormButton {
     display: flex !important;
     align-items: center;
-    padding: 6px 20px;
+    padding: 6px var(--space-5);
     min-width: 0;
     min-height: 40px;
     max-width: 100%;
@@ -399,7 +399,7 @@
 .customFormCapsule {
   position: relative;
   display: inline-block;
-  padding: 2px 12px;
+  padding: 2px var(--space-3);
   border-radius: 16px;
   background: var(--color-background-tertiary);
   border: 1px solid var(--color-background-tertiary);
@@ -444,11 +444,11 @@
   z-index: 11;
   left: 0;
   color: var(--color-white);
-  padding: 3px 8px;
+  padding: 3px var(--space-2);
   white-space: nowrap;
   background: var(--color-error);
-  font-size: 12px;
-  margin: 0 12px;
+  font-size: var(--font-xs);
+  margin: 0 var(--space-3);
   right: 0;
   max-width: fit-content;
 
@@ -485,7 +485,7 @@
     text-decoration: none !important;
   }
   .adm-list-item {
-    padding-left: 12px !important;
+    padding-left: var(--space-3) !important;
     text-decoration: none !important;
     background: var(--color-background-card) !important;
   }

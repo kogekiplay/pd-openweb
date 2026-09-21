@@ -16,12 +16,12 @@ const ProjectSwitch = styled(VerticalMiddle)`
     display: inline-block;
     max-width: 500px;
     line-height: 1.4em;
-    font-size: 16px;
+    font-size: var(--font-lg);
   }
   .switchIcon {
-    margin-left: 4px;
+    margin-left: var(--space-1);
     display: inline-block;
-    font-size: 18px;
+    font-size: var(--font-xl);
     color: var(--color-text-tertiary);
   }
   &:hover {
@@ -44,7 +44,7 @@ const ProjectsMenu = styled.div`
 
 const ProjectItem = styled.div`
   cursor: pointer;
-  padding: 0 20px;
+  padding: 0 var(--space-5);
   font-size: 15px;
   font-weight: 500;
   height: 40px;

@@ -66,7 +66,7 @@ const Popup = styled.div`
     justify-content: center;
     height: 80px;
     color: var(--color-text-tertiary);
-    font-size: 13px;
+    font-size: var(--font-sm);
   }
 `;
 

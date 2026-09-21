@@ -14,16 +14,16 @@ const RELATE_TYPE = [
   { text: _l('多表关联'), value: 1 },
 ];
 const VerifyButton = styled(Button)`
-  margin-top: 12px;
+  margin-top: var(--space-3);
 `;
 const HierarchyViewConfigWrap = styled.div`
-  padding: 0 32px 32px 32px;
+  padding: 0 var(--space-8) var(--space-8) var(--space-8);
   .multiSheetRelate {
     .grade {
       margin-right: 30px;
     }
     .controlName {
-      margin: 0 4px 0 12px;
+      margin: 0 var(--space-1) 0 var(--space-3);
       color: var(--color-text-title);
     }
     li {
@@ -36,7 +36,7 @@ const HierarchyViewConfigWrap = styled.div`
         width: 260px;
         position: relative;
         background-color: var(--color-background-secondary);
-        margin-left: 20px;
+        margin-left: var(--space-5);
         border-radius: var(--radius-sm);
       }
       .addRelate {

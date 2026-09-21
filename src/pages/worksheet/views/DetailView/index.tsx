@@ -30,11 +30,11 @@ const LeftListWrapper = styled.div(
 
   .searchBar {
     width: ${width}px;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     height: 51px;
     .icon {
       line-height: 51px;
-      font-size: 20px;
+      font-size: var(--font-2xl);
       color: var(--color-text-disabled);
       &.icon-close {
         cursor: pointer;
@@ -53,7 +53,7 @@ const LeftListWrapper = styled.div(
       height: 51px;
       border: none;
       padding-left: 6px;
-      font-size: 13px;
+      font-size: var(--font-sm);
     }
     .expandIcon{
       height: 51px;

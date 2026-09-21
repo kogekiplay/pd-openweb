@@ -20,7 +20,7 @@ const Wrap = styled.div`
   .homepageIconWrap {
     isplay: flex;
     align-items: center;
-    padding: 8px;
+    padding: var(--space-2);
     background: rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     margin: 0 5px 0 10px;
@@ -50,7 +50,7 @@ const Wrap = styled.div`
     align-items: center;
   }
   .appName {
-    font-size: 18px;
+    font-size: var(--font-xl);
     margin: 0 2px 0 6px;
   }
   .isUpgrade {
@@ -61,7 +61,7 @@ const Wrap = styled.div`
     white-space: nowrap;
     font-weight: bold;
     padding: 0 10px;
-    font-size: 12px;
+    font-size: var(--font-xs);
     margin-left: 5px;
     background: var(--color-success);
   }
@@ -83,7 +83,7 @@ const Wrap = styled.div`
     align-items: center;
     position: relative;
     flex-shrink: 0;
-    padding: 0 20px 0 0;
+    padding: 0 var(--space-5) 0 0;
   }
   .appPkgHeaderSearch,
   .workflowHelpIconWrap {

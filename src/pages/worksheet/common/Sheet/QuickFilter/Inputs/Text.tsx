@@ -35,7 +35,7 @@ const InputCon = styled.div`
   flex: 1;
   .Input {
     width: 100%;
-    font-size: 13px !important;
+    font-size: var(--font-sm) !important;
     height: 30px !important;
     border: none !important;
     box-sizing: border-box !important;
@@ -48,15 +48,15 @@ const InputCon = styled.div`
 `;
 
 const MultipleValue = styled.div`
-  font-size: 13px;
-  padding: 0 12px;
+  font-size: var(--font-sm);
+  padding: 0 var(--space-3);
 `;
 
 const ClearIcon = styled.i`
   display: none;
-  font-size: 16px;
+  font-size: var(--font-lg);
   color: var(--color-text-tertiary);
-  margin-right: 8px;
+  margin-right: var(--space-2);
   cursor: pointer;
   &:hover {
     color: var(--color-text-secondary);
@@ -68,7 +68,7 @@ const AdvancePasteIcon = styled.span`
   border: 1px solid var(--border-color);
   border-left: none;
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  font-size: 20px;
+  font-size: var(--font-2xl);
   color: var(--color-text-tertiary);
   line-height: 30px;
   padding: 0 6px;
@@ -86,7 +86,7 @@ const IconBtn = styled.span`
   cursor: pointer;
   border-radius: var(--radius-sm);
   color: var(--color-text-tertiary);
-  font-size: 18px;
+  font-size: var(--font-xl);
   font-weight: bold;
   &.active {
     color: var(--color-primary);

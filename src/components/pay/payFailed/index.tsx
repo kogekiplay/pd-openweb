@@ -10,13 +10,13 @@ const PayFailedWrap = styled.div`
     .failedCon {
       width: 800px;
       margin: 0 auto;
-      padding: 40px 20px;
+      padding: 40px var(--space-5);
       box-shadow: var(--shadow-md);
     }
     .failIcon {
       border: 2px solid var(--color-error);
       color: var(--color-error);
-      font-size: 20px;
+      font-size: var(--font-2xl);
       width: 45px;
       height: 45px;
       border-radius: 50%;

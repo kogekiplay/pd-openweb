@@ -7,7 +7,7 @@ import BottomDragPointer from '../components/BottomDragPointer';
 import RowItem from '../rowItem';
 
 const SectionWrap = styled.div`
-  padding: 8px 12px;
+  padding: var(--space-2) var(--space-3);
   display: flex;
   flex-direction: column;
 `;

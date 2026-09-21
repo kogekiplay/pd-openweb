@@ -23,7 +23,7 @@ const Wrapper = styled.div`
     }
   }
   .controlTag {
-    font-size: 12px;
+    font-size: var(--font-xs);
     line-height: 16px;
     padding: 0 10px;
     border-radius: 16px;

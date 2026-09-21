@@ -8,7 +8,7 @@
   color: var(--color-text-tertiary);
 }
 .slideDetailTitle {
-  padding: 20px 22px 0;
+  padding: var(--space-5) 22px 0;
   position: relative;
 }
 .slideDetailTitle .attributeType {
@@ -20,7 +20,7 @@
 .slideDetailTitle .attributeName {
   width: 244px;
   display: inline-block;
-  font-size: 16px;
+  font-size: var(--font-lg);
 }
 .detailType {
   height: 46px;
@@ -28,7 +28,7 @@
   margin-bottom: 5px;
 }
 .detailType li {
-  font-size: 13px;
+  font-size: var(--font-sm);
   border-bottom: 3px solid transparent;
   height: 43px;
   line-height: 46px;
@@ -42,10 +42,10 @@
   border-bottom-color: var(--color-border-primary);
 }
 .detailType li:first-child {
-  margin-left: 20px;
+  margin-left: var(--space-5);
 }
 .detailType li:last-child {
-  margin-left: 4px;
+  margin-left: var(--space-1);
 }
 .detailContent {
   overflow-y: auto;
@@ -89,7 +89,7 @@
 }
 .attributeList .copyLink {
   width: 215px;
-  padding: 4px;
+  padding: var(--space-1);
   height: 32px;
   background: var(--color-border-secondary);
   border: 1px solid var(--color-border-primary);
@@ -104,7 +104,7 @@
   cursor: pointer;
 }
 .attributeDownload input {
-  margin-right: 8px;
+  margin-right: var(--space-2);
 }
 .attributeDownload .detailInputM {
   margin-left: 30px;
@@ -124,7 +124,7 @@
 .detailAuth .detailAuthM {
   display: block;
   margin-left: -4px;
-  margin-top: 12px;
+  margin-top: var(--space-3);
   cursor: pointer;
 }
 
@@ -136,7 +136,7 @@
 .detailLog li {
   line-height: 24px;
   width: 100%;
-  padding: 6px 20px 6px 44px;
+  padding: 6px var(--space-5) 6px 44px;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -151,7 +151,7 @@
   position: absolute;
   left: 20px;
   top: 11px;
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-disabled);
 }
 .detailLog .detailLogType.icon-edit {
@@ -160,7 +160,7 @@
 .detailLog .detailLogType.icon-trash {
   left: 21px;
   top: 13px;
-  font-size: 13px;
+  font-size: var(--font-sm);
 }
 .detailLog .detailLogTitle {
   width: 100%;
@@ -202,16 +202,16 @@
   background-size: 140px 130px;
 }
 .pinDetailCon {
-  padding: 0 20px 10px;
+  padding: 0 var(--space-5) 10px;
 }
 .pinDetailCon.abs {
-  padding: 0 20px 10px;
+  padding: 0 var(--space-5) 10px;
   position: absolute;
   bottom: 0;
   left: 0;
 }
 .pinDetailCon .Checkbox-box {
-  margin-right: 8px !important;
+  margin-right: var(--space-2) !important;
   width: 16px !important;
   height: 16px !important;
 }
@@ -221,7 +221,7 @@
 }
 .pinDetail {
   color: var(--color-text-placeholder);
-  font-size: 18px;
+  font-size: var(--font-xl);
   cursor: pointer;
 }
 .checkDownload,
@@ -235,6 +235,6 @@
 }
 
 .detailAttribute .attributeList .createHeadImg {
-  margin-top: 4px;
+  margin-top: var(--space-1);
   margin-right: 10px;
 }

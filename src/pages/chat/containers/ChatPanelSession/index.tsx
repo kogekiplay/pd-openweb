@@ -24,10 +24,10 @@ import type { MentionsInputElement } from 'src/components/MentionsInput';
 
 const WarnBox = styled.div`
   height: 40px;
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   display: flex;
   align-items: center;
-  font-size: 13px;
+  font-size: var(--font-sm);
   font-weight: bold;
   color: var(--color-error);
   background: rgba(244, 67, 54, 0.1);

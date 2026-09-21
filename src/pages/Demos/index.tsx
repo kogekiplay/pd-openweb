@@ -7,7 +7,7 @@ const Con = styled.div`
   min-height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 16px;
+  padding: var(--space-4);
 `;
 
 const RecordsCon = styled.div`

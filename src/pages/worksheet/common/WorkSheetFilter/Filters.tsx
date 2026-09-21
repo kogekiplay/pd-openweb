@@ -19,24 +19,24 @@ const Con = styled.div`
   border-radius: var(--radius-sm);
   background: var(--color-background-card);
   box-shadow: var(--shadow-lg);
-  padding: 16px 0 0;
+  padding: var(--space-4) 0 0;
   .queryTypeSelectWrapper {
-    margin-top: 12px;
+    margin-top: var(--space-3);
     display: flex;
     align-items: center;
     padding: 0 25px;
     .label {
-      font-size: 13px;
+      font-size: var(--font-sm);
       color: var(--color-text-tertiary);
     }
     .Dropdown {
       margin-top: -1px;
       .Dropdown--input {
-        padding-left: 8px;
+        padding-left: var(--space-2);
       }
     }
     .clearButton {
-      font-size: 13px;
+      font-size: var(--font-sm);
       cursor: pointer;
     }
   }
@@ -44,7 +44,7 @@ const Con = styled.div`
 
 const SwitchTab = styled.div`
   margin-bottom: 28px;
-  padding: 4px;
+  padding: var(--space-1);
   font-weight: bold;
   background: var(--color-border-secondary);
   margin: 0 auto;

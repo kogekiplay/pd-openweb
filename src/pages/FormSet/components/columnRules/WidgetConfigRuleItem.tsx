@@ -45,7 +45,7 @@ const AddRule = styled.div`
   color: var(--color-primary);
   i {
     color: var(--color-primary);
-    margin-right: 4px;
+    margin-right: var(--space-1);
     font-size: 15px;
   }
   &:hover {
@@ -68,7 +68,7 @@ const RuleStyleWrapper = styled.div`
     border: 1px solid var(--color-border-primary);
     box-sizing: border-box;
     margin-bottom: 10px;
-    padding-left: 8px;
+    padding-left: var(--space-2);
     cursor: pointer;
     &:hover {
       background: var(--color-background-hover);
@@ -77,7 +77,7 @@ const RuleStyleWrapper = styled.div`
       font-weight: bold;
     }
     .filterLabel {
-      font-size: 12px;
+      font-size: var(--font-xs);
       color: var(--color-text-secondary);
     }
     .optionsContent {

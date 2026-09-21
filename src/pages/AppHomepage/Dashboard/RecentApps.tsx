@@ -11,15 +11,15 @@ const Wrapper = styled.div`
 
   .tabList {
     display: flex;
-    padding: 0 20px;
+    padding: 0 var(--space-5);
     .tabItem {
       display: flex;
       align-items: center;
-      padding: 8px 16px;
+      padding: var(--space-2) var(--space-4);
       position: relative;
       cursor: pointer;
       border-radius: var(--radius-sm);
-      font-size: 14px;
+      font-size: var(--font-md);
       font-weight: bold;
       &::after {
         content: '';

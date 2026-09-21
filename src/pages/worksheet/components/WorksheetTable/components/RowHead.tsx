@@ -24,7 +24,7 @@ const Con = styled.div`
   padding-left: 2px;
   padding-top: 0px !important;
   padding-bottom: 0px !important;
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-tertiary);
   padding: 0px !important;
   align-items: center;
@@ -41,11 +41,11 @@ const Con = styled.div`
     display: inline-block;
     text-align: center;
     order: 1;
-    margin-left: 12px !important;
+    margin-left: var(--space-3) !important;
   }
   .moreOperate {
     order: 2;
-    margin-left: 4px;
+    margin-left: var(--space-1);
     visibility: hidden;
   }
   .topCheckbox {
@@ -131,8 +131,8 @@ const Con = styled.div`
 `;
 
 const OpenRecordBtn = styled(FlexCenter)`
-  margin-left: 8px;
-  font-size: 16px;
+  margin-left: var(--space-2);
+  font-size: var(--font-lg);
   width: 24px;
   height: 24px;
   color: var(--color-primary);

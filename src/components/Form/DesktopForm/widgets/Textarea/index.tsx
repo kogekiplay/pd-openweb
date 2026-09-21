@@ -12,7 +12,7 @@ const TextareaWrap = styled.div`
   position: relative;
   width: 100%;
   .customFormControlBox {
-    padding: 6px 12px !important;
+    padding: 6px var(--space-3) !important;
     ${props => (props.isEditing ? 'display: none;' : '')}
     ${props => (props.isSingleLine ? '' : 'line-height: 1.5;')}
     ${props =>
@@ -20,7 +20,7 @@ const TextareaWrap = styled.div`
         ? 'padding: 6px 0px !important;'
         : props.showMaskValue || props.hint
           ? ''
-          : 'position: absolute;top: 0;right: 0;left: 0;bottom: 0;z-index: 1;pointer-events: none; padding: 6px 12px !important;'}
+          : 'position: absolute;top: 0;right: 0;left: 0;bottom: 0;z-index: 1;pointer-events: none; padding: 6px var(--space-3) !important;'}
     span a {
       pointer-events: all;
     }

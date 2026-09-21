@@ -6,7 +6,7 @@ const Wrap = styled.div`
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--color-border-primary);
   border-radius: 6px;
-  padding: 40px 24px;
+  padding: 40px var(--space-6);
   cursor: pointer;
   transition:
     border-color 0.2s,

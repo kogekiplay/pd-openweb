@@ -13,7 +13,7 @@
 
   .taskStatusBox {
     width: 164px;
-    margin-left: 20px;
+    margin-left: var(--space-5);
     display: inline-block;
   }
   .taskStatus {
@@ -34,7 +34,7 @@
     z-index: 10;
     li {
       height: 32px;
-      padding-left: 16px;
+      padding-left: var(--space-4);
       line-height: 32px;
       padding-right: 10px;
       width: 100%;
@@ -57,13 +57,13 @@
         }
       }
       i {
-        margin-right: 8px;
+        margin-right: var(--space-2);
       }
     }
   }
 
   .folderGanttBtn {
-    margin-left: 8px;
+    margin-left: var(--space-2);
     display: inline-block;
     vertical-align: top;
     margin-top: 2px;
@@ -76,7 +76,7 @@
       border-style: solid;
       border-color: var(--color-text-disabled);
       text-align: center;
-      font-size: 13px;
+      font-size: var(--font-sm);
       color: var(--color-text-secondary);
       box-sizing: border-box;
       cursor: pointer;
@@ -96,15 +96,15 @@
   }
 
   .folderGanttWeekBtn {
-    margin-left: 16px;
+    margin-left: var(--space-4);
     li {
       width: auto;
-      padding: 0 12px;
+      padding: 0 var(--space-3);
     }
   }
 
   .folderGanttLevelBtn {
-    margin-left: 16px;
+    margin-left: var(--space-4);
     width: 26px;
     height: 26px;
     line-height: 26px;
@@ -130,8 +130,8 @@
     li {
       height: 32px;
       line-height: 32px;
-      padding-left: 16px;
-      padding-right: 32px;
+      padding-left: var(--space-4);
+      padding-right: var(--space-8);
       cursor: pointer;
       &:first-child {
         border-bottom: 1px solid var(--color-text-disabled);
@@ -167,7 +167,7 @@
       color: var(--color-white) !important;
       text-align: center;
       display: inline-block;
-      margin-right: 8px;
+      margin-right: var(--space-2);
     }
   }
 

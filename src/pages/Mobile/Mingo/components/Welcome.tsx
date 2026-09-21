@@ -14,7 +14,7 @@ const Wrap = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 20px;
+  padding: var(--space-5);
   .tryList {
     display: flex;
     flex-direction: column;
@@ -28,7 +28,7 @@ const Wrap = styled.div`
     box-sizing: border-box;
     line-height: 20px;
     margin-bottom: 10px;
-    padding: 14px 16px;
+    padding: 14px var(--space-4);
     border: 0;
     border-radius: 16px;
     color: var(--color-text-primary);
@@ -39,9 +39,9 @@ const Wrap = styled.div`
     box-shadow: none;
   }
   .tryTitle {
-    margin-bottom: 4px;
+    margin-bottom: var(--space-1);
     color: var(--color-mingo);
-    font-size: 13px;
+    font-size: var(--font-sm);
     font-weight: 600;
   }
   .tryText {
@@ -57,7 +57,7 @@ const Wrap = styled.div`
       display: flex;
       align-items: center;
       min-height: 50px;
-      padding: 14px 16px;
+      padding: 14px var(--space-4);
       border-radius: 16px;
       line-height: 18px;
     }

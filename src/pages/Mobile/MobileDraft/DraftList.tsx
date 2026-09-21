@@ -11,7 +11,7 @@ import { controlState, getTitleTextFromControls } from 'src/utils/control';
 
 const Wrap = styled.div`
   &.recordCardContent {
-    padding: 5px 12px;
+    padding: 5px var(--space-3);
     margin: 0 10px 10px;
     background-color: var(--color-background-primary);
     border: 1px solid var(--color-white);

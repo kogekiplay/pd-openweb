@@ -24,7 +24,7 @@ const InputCon = styled.div`
   textarea {
     box-sizing: border-box;
     background: transparent;
-    font-size: 13px;
+    font-size: var(--font-sm);
     width: 100% !important;
     line-height: 34px;
     height: 34px;
@@ -40,11 +40,11 @@ const InputCon = styled.div`
 
 const MultipleLineTip = styled.div`
   position: absolute;
-  padding: 2px 4px;
+  padding: 2px var(--space-1);
   bottom: 2px;
   left: 2px;
   right: 2px;
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: var(--color-text-disabled);
   background: var(--color-background-primary);
 `;

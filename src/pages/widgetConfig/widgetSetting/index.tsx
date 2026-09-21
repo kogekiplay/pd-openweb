@@ -25,7 +25,7 @@ const SettingWrap = styled.div`
   background-color: var(--color-background-primary);
   ${props => (!props.showSetting ? 'display: none;' : '')}
   .widgetSettingHeader {
-    margin: 14px 20px 0 20px;
+    margin: 14px var(--space-5) 0 var(--space-5);
     display: flex;
     align-items: center;
     position: relative;
@@ -44,14 +44,14 @@ const SettingWrap = styled.div`
     width: 100%;
     flex: 1;
     min-height: 0;
-    padding: 0px 20px 60px 20px;
+    padding: 0px var(--space-5) 60px var(--space-5);
     overflow-x: hidden;
   }
   .labelWrap {
     display: flex;
-    margin-top: 8px;
+    margin-top: var(--space-2);
     .icon-help {
-      margin-left: 4px;
+      margin-left: var(--space-1);
     }
     .ming.Checkbox {
       display: inline-flex;
@@ -60,7 +60,7 @@ const SettingWrap = styled.div`
         margin-right: 10px;
         flex-shrink: 0;
         .icon-help {
-          margin-left: 4px;
+          margin-left: var(--space-1);
         }
       }
       &.displayCover {

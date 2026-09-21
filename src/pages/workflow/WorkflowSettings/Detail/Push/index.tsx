@@ -27,7 +27,7 @@ const MsgTypeBtn = styled.div`
   border: 1px solid var(--color-border-primary);
   opacity: 1;
   border-radius: var(--radius-sm);
-  padding: 0 20px 0 15px;
+  padding: 0 var(--space-5) 0 15px;
   margin-right: 10px;
   cursor: pointer;
   &.active {
@@ -45,7 +45,7 @@ const MsgTypeBtn = styled.div`
     }
   }
   i {
-    font-size: 20px;
+    font-size: var(--font-2xl);
     margin-right: 5px;
   }
 `;
@@ -54,7 +54,7 @@ const BtnContent = styled.div`
   margin-top: 30px;
   border: 1px solid var(--color-border-primary);
   border-radius: var(--radius-sm);
-  padding: 20px;
+  padding: var(--space-5);
   position: relative;
   .workflowMessageTitle {
     position: absolute;
@@ -69,7 +69,7 @@ const BtnContent = styled.div`
     right: 18px;
     background: var(--color-background-primary);
     padding: 0 3px;
-    font-size: 16px;
+    font-size: var(--font-lg);
     color: var(--color-text-disabled);
     cursor: pointer;
     &:hover {

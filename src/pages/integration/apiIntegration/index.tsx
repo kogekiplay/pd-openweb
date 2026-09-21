@@ -44,7 +44,7 @@ const Wrap = styled.div`
           padding: 10px;
           font-weight: 600;
           display: inline-block;
-          font-size: 16px;
+          font-size: var(--font-lg);
         }
         &.isCur {
           border-bottom: 4px solid var(--color-primary);
@@ -61,7 +61,7 @@ const Wrap = styled.div`
 `;
 
 const WrapLib = styled.div`
-  padding: 32px 50px;
+  padding: var(--space-8) 50px;
   max-width: 1600px;
   margin: 0 auto;
   .searchCon {

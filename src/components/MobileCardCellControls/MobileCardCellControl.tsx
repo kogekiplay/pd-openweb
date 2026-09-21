@@ -17,14 +17,14 @@ const CellWrap = styled.div`
     min-width: 0;
     max-width: 100%;
     color: var(--color-text-secondary);
-    font-size: 12px;
+    font-size: var(--font-xs);
     line-height: 18px;
     margin-bottom: 3px;
   }
   .childTableCellValue {
     min-width: 0;
     max-width: 100%;
-    font-size: 14px;
+    font-size: var(--font-md);
     line-height: 18px;
     overflow: hidden;
     .RelateRecordDropdown .normalSelectedItem,
@@ -33,7 +33,7 @@ const CellWrap = styled.div`
     }
     .RelateRecordDropdown .normalSelectedItem,
     .cellRelateRecordTags > div:first-of-type {
-      padding: 4px 10px !important;
+      padding: var(--space-1) 10px !important;
     }
     > div:first-of-type,
     > span:first-of-type {
@@ -45,7 +45,7 @@ const CellWrap = styled.div`
   }
   .childTableCellValue.isMain {
     color: var(--color-text-title);
-    font-size: 14px;
+    font-size: var(--font-md);
     font-weight: 600;
   }
   .customFormNull {

@@ -7,12 +7,12 @@ const SearchCom = styled.div`
   display: flex;
   align-items: center;
   border-radius: 24px;
-  padding: 10px 10px 10px 12px;
+  padding: 10px 10px 10px var(--space-3);
   .searchWrap {
     height: 32px;
     background-color: var(--color-background-primary);
     border-radius: 24px;
-    padding: 8px 14px;
+    padding: var(--space-2) 14px;
   }
   .filterWrap {
     width: 32px;
@@ -39,7 +39,7 @@ const AppContent = styled.div`
   display: flex;
   flex-direction: column;
   background: var(--color-background-primary);
-  padding: 18px 0 10px 16px;
+  padding: 18px 0 10px var(--space-4);
   border-radius: 14px 0px 0px 14px;
   .closeIcon {
     width: 24px;

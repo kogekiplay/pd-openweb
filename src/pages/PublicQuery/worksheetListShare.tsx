@@ -115,7 +115,7 @@ class WorksheetListShare extends React.Component<any, any> {
             <div
               style={{
                 width: '100%',
-                padding: '20px 0 0',
+                padding: 'var(--space-5) 0 0',
               }}
             >
               {rowsList.length ? _l('查询到%0个结果', rowsList.length) : _l('没有查询结果')}

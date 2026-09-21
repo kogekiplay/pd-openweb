@@ -31,13 +31,13 @@ const OperateWrap = styled.div``;
 
 const OptionWrap = styled.div`
   width: 220px;
-  padding: 16px 0;
+  padding: var(--space-4) 0;
   background: var(--color-background-primary);
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-lg);
   overflow: hidden;
   .optionItem {
-    padding: 0 20px;
+    padding: 0 var(--space-5);
     height: 40px;
     cursor: pointer;
     display: flex;

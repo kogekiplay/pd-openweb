@@ -51,8 +51,8 @@ const ContentWrap = styled.div`
           background: #d8eeff;
           color: var(--color-link-hover);
           border: 1px solid var(--color-primary-transparent);
-          padding: 0px 12px;
-          font-size: 12px;
+          padding: 0px var(--space-3);
+          font-size: var(--font-xs);
           box-sizing: border-box;
         }
       }

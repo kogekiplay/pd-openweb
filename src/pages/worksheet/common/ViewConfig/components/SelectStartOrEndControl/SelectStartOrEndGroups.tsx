@@ -16,7 +16,7 @@ const WrapFragment = styled.div`
   .addMarkInput,
   .addMark {
     width: 96px;
-    margin-top: 16px;
+    margin-top: var(--space-4);
     height: 36px;
     line-height: 36px;
     margin-left: 10px;
@@ -26,7 +26,7 @@ const WrapFragment = styled.div`
     border: 1px solid var(--color-border-secondary);
     opacity: 1;
     border-radius: var(--radius-sm);
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     &:focus {
       border: 1px solid var(--color-primary);
     }
@@ -54,7 +54,7 @@ const WrapCon = styled.div`
 
   .deleted {
     opacity: 0;
-    margin-top: 16px;
+    margin-top: var(--space-4);
     height: 36px;
     line-height: 36px;
     margin-left: 10px;
@@ -82,7 +82,7 @@ const Wrap = styled.div`
   border-radius: var(--radius-sm);
   div {
     height: 36px;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     line-height: 36px;
     .icon-event:before {
       vertical-align: middle;

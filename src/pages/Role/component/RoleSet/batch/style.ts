@@ -9,10 +9,10 @@ export const Wrap = styled.div`
     overflow: hidden;
     .ant-list {
       overflow: auto;
-      padding-bottom: 8px;
+      padding-bottom: var(--space-2);
     }
     .ant-list-item {
-      padding: 8px 0 0;
+      padding: var(--space-2) 0 0;
       border-bottom: none;
       width: 100%;
       overflow-x: hidden;
@@ -29,14 +29,14 @@ export const Wrap = styled.div`
   }
   .con {
     overflow: auto;
-    padding: 15px 20px 24px;
+    padding: 15px var(--space-5) var(--space-6);
     .hasSet {
       color: var(--color-success);
     }
     .rolePermissionInlineRow {
       display: inline-flex;
       align-items: center;
-      margin-right: 8px;
+      margin-right: var(--space-2);
       vertical-align: middle;
       & > .ant-checkbox-wrapper {
         display: inline-flex !important;
@@ -76,8 +76,8 @@ export const Wrap = styled.div`
       background: var(--color-border-primary);
       border-radius: 1px;
       display: block;
-      margin-left: 8px;
-      margin-right: 20px;
+      margin-left: var(--space-2);
+      margin-right: var(--space-5);
       margin-top: -10px;
       margin-bottom: -15px;
     }

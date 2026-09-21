@@ -3,14 +3,14 @@
   .customIcon,
   .commonIcon {
     .title {
-      padding-left: 16px;
+      padding-left: var(--space-4);
       margin: 6px 0;
     }
     .iconType {
       margin-bottom: 2px;
       margin-top: 2px;
       color: var(--color-text-disabled);
-      font-size: 12px;
+      font-size: var(--font-xs);
     }
   }
   .iconsWrap {
@@ -29,7 +29,7 @@
         background-color: var(--color-background-secondary) !important;
       }
       & > .icon {
-        font-size: 24px;
+        font-size: var(--font-3xl);
         line-height: 36px;
       }
       svg {
@@ -51,7 +51,7 @@
   }
   .iconTypeList {
     display: flex;
-    padding-bottom: 8px;
+    padding-bottom: var(--space-2);
     .preButton {
       transform: rotate(180deg);
     }
@@ -80,7 +80,7 @@
       width: max-content;
       li {
         display: inline-block;
-        font-size: 12px;
+        font-size: var(--font-xs);
         line-height: 24px;
         padding: 0 10px;
         border-radius: 11px;
@@ -106,7 +106,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 12px;
+      margin-bottom: var(--space-3);
       .searchCon {
         width: 180px;
         height: 28px;
@@ -141,7 +141,7 @@
       }
       .ming.Switch--off {
         .txt {
-          margin-right: 12px;
+          margin-right: var(--space-3);
         }
       }
       .ming.Switch--on .txt {

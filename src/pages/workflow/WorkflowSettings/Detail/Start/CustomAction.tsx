@@ -27,7 +27,7 @@ export default ({ data, isAIActions }) => {
         <div className="mTop20 bold">{_l('按钮')}</div>
         <div
           className="workflowDetailDesc mTop10"
-          style={{ padding: '8px 16px', border: '1px solid var(--color-border-primary)' }}
+          style={{ padding: 'var(--space-2) var(--space-4)', border: '1px solid var(--color-border-primary)' }}
         >
           <div>{data.triggerName}</div>
           <div className="ellipsis textSecondary">{CUSTOM_ACTION_TEXT[data.clickType]}</div>

@@ -27,7 +27,7 @@ const Con = styled.div`
   align-items: center;
   background: var(--color-background-secondary);
   height: 50px;
-  padding-left: 20px;
+  padding-left: var(--space-5);
   box-shadow: var(--shadow-md);
   --dashboard-search-bg: rgba(0, 0, 0, 0.03);
   --dashboard-search-hover-bg: rgba(0, 0, 0, 0.08);
@@ -48,9 +48,9 @@ const ProjectSwitch = styled(VerticalMiddle)`
     line-height: 1.4em;
   }
   .switchIcon {
-    margin-left: 4px;
+    margin-left: var(--space-1);
     display: inline-block;
-    font-size: 18px;
+    font-size: var(--font-xl);
     color: var(--color-text-tertiary);
   }
   &:hover {
@@ -77,7 +77,7 @@ const ProjectsMenu = styled.div`
 
 const ProjectItem = styled.div`
   cursor: pointer;
-  padding: 0 20px;
+  padding: 0 var(--space-5);
   font-size: 15px;
   font-weight: 500;
   height: 40px;
@@ -123,18 +123,18 @@ const DashboardSearch = styled.div`
   display: flex;
   align-items: center;
   height: 36px;
-  padding: 12px;
+  padding: var(--space-3);
   border-radius: 18px;
   margin: 0 auto;
   cursor: pointer;
   justify-content: center;
   .icon {
-    font-size: 20px;
+    font-size: var(--font-2xl);
     color: var(--color-text-secondary);
   }
   span {
     color: var(--color-text-secondary);
-    margin: 0 2px 1px 4px;
+    margin: 0 2px 1px var(--space-1);
   }
   &:hover {
     background: var(--dashboard-search-hover-bg);
@@ -148,7 +148,7 @@ const UpgradeWrap = styled.div`
     line-height: 24px;
     background-color: var(--color-background-inverse);
     border-radius: 13px;
-    padding: 0 12px 0 10px;
+    padding: 0 var(--space-3) 0 10px;
     .icon {
       color: var(--color-warning-border);
     }

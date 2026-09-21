@@ -29,7 +29,7 @@ const TabHeaderItemWrap = styled.div`
   align-items: center;
   height: 44px;
   line-height: 44px;
-  padding: 0 16px;
+  padding: 0 var(--space-4);
   background: var(--color-background-primary);
   .Width16 {
     width: 16px;
@@ -58,7 +58,7 @@ const DragItemWrap = styled.div`
   list-style: none;
   transition: all 0.25s ease-in-out;
   transform: translate3d(0, 0, 0);
-  margin-left: 8px;
+  margin-left: var(--space-2);
   &:hover,
   &.isOpen {
     border-bottom-color: var(--color-text-placeholder);

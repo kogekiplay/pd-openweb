@@ -8,15 +8,15 @@ import WidgetColor from './WidgetColor';
 const DynamicColorWrap = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: var(--space-3);
   input {
     width: 140px;
     height: 36px;
     border-radius: var(--radius-sm);
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     box-sizing: border-box;
     border: 1px solid var(--color-border-primary);
-    margin-left: 12px;
+    margin-left: var(--space-3);
     &.disabled {
       background: var(--color-background-secondary);
       border: 1px solid var(--color-background-secondary);
@@ -25,7 +25,7 @@ const DynamicColorWrap = styled.div`
   .iconOp {
     color: var(--color-text-tertiary);
     cursor: pointer;
-    font-size: 18px;
+    font-size: var(--font-xl);
     &:hover {
       color: var(--color-text-secondary);
     }

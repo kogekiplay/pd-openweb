@@ -21,15 +21,15 @@ const DialogWrap = styled(Dialog)`
 `;
 
 const DialogContent = styled.div`
-  font-size: 13px;
+  font-size: var(--font-sm);
   height: calc(100vh - 150px);
   .description {
     width: 100%;
-    padding: 10px 16px;
+    padding: 10px var(--space-4);
     background: color-mix(in srgb, var(--color-primary) 5%, transparent);
     border-radius: var(--radius-sm);
     font-weight: 600;
-    margin: 20px 0;
+    margin: var(--space-5) 0;
     border-radius: var(--radius-sm);
   }
   .minWidth120 {

@@ -7,7 +7,7 @@
 
   .configCon {
     flex: 1;
-    padding: 32px;
+    padding: var(--space-8);
     overflow-y: auto;
 
     .configTitle {
@@ -28,7 +28,7 @@
           flex: 1;
           border-left: 1px solid var(--color-border-secondary);
           border-right: 1px solid var(--color-border-secondary);
-          padding: 16px;
+          padding: var(--space-4);
           width: 100%;
           border-radius: var(--radius-sm);
           border: 1px solid var(--color-border-secondary);
@@ -41,16 +41,16 @@
         }
       }
       .title {
-        margin: 35px 0 20px;
-        font-size: 16px;
+        margin: 35px 0 var(--space-5);
+        font-size: var(--font-lg);
         font-weight: 600;
         padding-bottom: 15px;
         border-bottom: 1px solid var(--color-border-secondary);
       }
       .subTitle {
         font-weight: 600;
-        font-size: 14px;
-        margin: 20px 0 10px;
+        font-size: var(--font-md);
+        margin: var(--space-5) 0 10px;
         position: relative;
         &.required::before {
           content: '*';
@@ -76,7 +76,7 @@
         background: var(--color-background-secondary);
         border: 1px solid var(--color-border-secondary);
         color: var(--color-primary);
-        padding-left: 12px;
+        padding-left: var(--space-3);
         cursor: pointer;
         &:hover {
           color: var(--color-link-hover);
@@ -92,7 +92,7 @@
 
   .footer {
     background-color: var(--color-background-primary);
-    padding: 10px 32px 20px;
+    padding: 10px var(--space-8) var(--space-5);
   }
 }
 

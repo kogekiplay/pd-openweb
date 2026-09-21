@@ -28,14 +28,14 @@ const getAppInfo = (appId: string) => {
 const Wrap = styled.div`
   .header {
     border-bottom: 1px solid var(--color-border-primary);
-    padding: 16px 10px;
+    padding: var(--space-4) 10px;
     background: var(--color-background-primary);
   }
   .pagination {
     margin-top: -3px;
     .icon-arrow-left-border,
     .icon-arrow-right-border {
-      font-size: 16px;
+      font-size: var(--font-lg);
     }
   }
   .statusIcon {
@@ -50,7 +50,7 @@ const SelectedFilter = styled(FlexCenter)`
   display: inline-flex;
   border-radius: var(--radius-sm);
   cursor: pointer;
-  font-size: 13px;
+  font-size: var(--font-sm);
   line-height: 29px;
   vertical-align: middle;
   color: var(--color-primary);
@@ -60,11 +60,11 @@ const SelectedFilter = styled(FlexCenter)`
     max-width: 160px;
   }
   .filterIcon {
-    font-size: 18px;
+    font-size: var(--font-xl);
     margin-right: 6px;
   }
   .closeIcon {
-    font-size: 16px;
+    font-size: var(--font-lg);
     margin-left: 6px;
     &:hover {
       color: var(--color-link-hover);

@@ -1,11 +1,11 @@
 .mui-forminput {
   // default height = 36px
-  font-size: 14px;
+  font-size: var(--font-md);
   line-height: 20px;
   background-color: var(--color-background-primary);
   border: solid 1px var(--color-border-tertiary);
   border-radius: var(--radius-sm);
-  padding: 7px 8px;
+  padding: 7px var(--space-2);
   vertical-align: bottom;
   box-sizing: border-box;
   color: var(--color-text-title);
@@ -32,7 +32,7 @@
 
   & > .mui-forminput-label {
     display: block;
-    padding: 0 4px;
+    padding: 0 var(--space-1);
     flex: 1;
     text-align: left;
     word-break: break-all;
@@ -42,7 +42,7 @@
     width: 20px;
     height: 20px;
     text-align: center;
-    font-size: 16px;
+    font-size: var(--font-lg);
     line-height: 20px;
     vertical-align: top;
     color: var(--color-text-tertiary);

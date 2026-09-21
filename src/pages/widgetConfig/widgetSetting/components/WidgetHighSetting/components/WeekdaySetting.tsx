@@ -18,7 +18,7 @@ const WeekdayWrap = styled.ul`
   box-shadow: 0 3px 12px rgb(0, 0, 0, 0.16);
   li {
     line-height: 24px;
-    padding: 6px 12px;
+    padding: 6px var(--space-3);
     min-height: 36px;
     display: flex;
     align-items: center;

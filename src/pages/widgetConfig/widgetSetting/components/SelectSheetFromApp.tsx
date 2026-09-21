@@ -11,7 +11,7 @@ import worksheetAjax from 'src/api/worksheet';
 
 const SelectItem = styled.div`
   .title {
-    margin: 24px 0 6px 0;
+    margin: var(--space-6) 0 6px 0;
   }
   .ming.Dropdown,
   .ming.Menu {

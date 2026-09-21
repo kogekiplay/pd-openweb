@@ -15,8 +15,8 @@ const Content = styled.div`
   background: var(--color-background-card);
   .inlineTitle {
     flex-shrink: 0;
-    padding: 16px 15px 8px;
-    font-size: 16px;
+    padding: var(--space-4) 15px var(--space-2);
+    font-size: var(--font-lg);
     font-weight: 600;
     color: var(--color-text-primary);
   }
@@ -39,8 +39,8 @@ const Content = styled.div`
       font-size: 15px;
       color: var(--color-text-primary);
       .updateTime {
-        margin-left: 12px;
-        font-size: 12px;
+        margin-left: var(--space-3);
+        font-size: var(--font-xs);
         color: var(--color-text-secondary);
         white-space: nowrap;
       }
@@ -53,8 +53,8 @@ const Content = styled.div`
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 24px 15px;
-      font-size: 14px;
+      padding: var(--space-6) 15px;
+      font-size: var(--font-md);
       color: var(--color-text-tertiary);
       text-align: center;
     }

@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 const Con = styled.div`
   width: 220px;
-  padding: 8px 0;
+  padding: var(--space-2) 0;
   background: var(--color-background-card);
   box-shadow: var(--shadow-lg);
   border-radius: var(--radius-sm);
@@ -24,7 +24,7 @@ const Item = styled.a`
   padding: 0 26px;
   color: var(--color-text-secondary) !important;
   .icon {
-    font-size: 20px;
+    font-size: var(--font-2xl);
     margin-right: 13px;
   }
   &:hover {

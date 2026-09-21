@@ -17,11 +17,11 @@ const Footer = styled.div`
   display: flex;
   justify-content: ${props => (props.canUseLast ? 'space-between;' : 'flex-end;')};
   align-items: center;
-  padding: 11px 20px;
+  padding: 11px var(--space-5);
   border-top: 1px solid var(--color-border-primary);
 
   .clearSignature {
-    margin-right: 20px;
+    margin-right: var(--space-5);
     color: var(--color-text-tertiary);
     cursor: pointer;
   }

@@ -10,12 +10,12 @@ export const Wrapper = styled.div`
   max-width: 250px;
   height: 24px;
   border-radius: var(--radius-sm);
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-secondary);
   background-color: var(--color-background-tertiary);
   .icon {
-    margin-right: 4px;
-    font-size: 14px;
+    margin-right: var(--space-1);
+    font-size: var(--font-md);
     color: var(--color-text-secondary);
     flex-shrink: 0;
   }

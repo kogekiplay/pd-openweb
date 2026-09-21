@@ -11,15 +11,15 @@ const ColorBox = styled.div`
   border: 1px solid var(--color-border-primary);
   border-radius: var(--radius-sm);
   cursor: pointer;
-  padding: 4px;
+  padding: var(--space-1);
   display: flex;
   justify-content: center;
   box-sizing: border-box;
   .iconBox {
-    padding: 4px;
+    padding: var(--space-1);
     line-height: 15px;
     color: rgb(177, 177, 177);
-    font-size: 14px;
+    font-size: var(--font-md);
     border-radius: var(--radius-sm);
     &:hover {
       background: var(--color-background-hover);

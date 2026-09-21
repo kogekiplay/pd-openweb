@@ -21,17 +21,17 @@ const Con = styled.div`
     width: 100%;
     height: 100%;
     overflow: auto;
-    padding: 35px 40px 32px;
+    padding: 35px 40px var(--space-8);
     display: flex;
     flex-direction: column;
     .add {
-      padding: 0 16px;
+      padding: 0 var(--space-4);
       line-height: 38px;
       height: 38px;
       background: var(--color-primary) 0% 0% no-repeat padding-box;
       border-radius: 32px;
       text-align: center;
-      font-size: 13px;
+      font-size: var(--font-sm);
       letter-spacing: 0px;
       color: var(--color-white);
       cursor: pointer;
@@ -67,7 +67,7 @@ const Con = styled.div`
       .printTemplatesList-header {
         display: flex;
         align-items: center;
-        font-size: 13px;
+        font-size: var(--font-sm);
         color: var(--color-text-secondary);
         font-weight: 600;
         padding-bottom: 11px;
@@ -97,7 +97,7 @@ const Con = styled.div`
           .fail,
           .inLine {
             height: 24px;
-            padding: 0 12px;
+            padding: 0 var(--space-3);
             border-radius: 12px;
             color: var(--color-error);
             background-color: var(--color-error-bg);

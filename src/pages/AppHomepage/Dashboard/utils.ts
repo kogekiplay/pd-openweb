@@ -120,10 +120,10 @@ export const CardItem = styled.div`
   flex-direction: column;
   min-width: 0;
   background: var(--color-background-primary);
-  padding-bottom: 12px;
+  padding-bottom: var(--space-3);
   box-shadow: var(--shadow-sm);
   border-radius: 8px;
-  margin-bottom: 20px;
+  margin-bottom: var(--space-5);
 
   &.bulletinBoard {
     padding: 0;
@@ -151,7 +151,7 @@ export const CardItem = styled.div`
     height: 48px;
     display: flex;
     align-items: center;
-    padding: 0 8px 0px 20px;
+    padding: 0 var(--space-2) 0px var(--space-5);
     position: relative;
     .titleText {
       display: flex;
@@ -161,13 +161,13 @@ export const CardItem = styled.div`
       img {
         width: 24px;
         height: 24px;
-        margin-right: 4px;
+        margin-right: var(--space-1);
       }
     }
     .viewAll {
       display: flex;
       align-items: center;
-      padding: 6px 4px 6px 10px;
+      padding: 6px var(--space-1) 6px 10px;
       margin-top: -4px;
       border-radius: var(--radius-sm);
       color: var(--color-text-tertiary);
@@ -183,18 +183,18 @@ export const CardItem = styled.div`
     flex-direction: column;
     align-items: center;
     color: var(--color-text-secondary);
-    font-size: 14px;
+    font-size: var(--font-md);
     margin-top: 36px;
     margin-bottom: 36px;
     img {
       width: 80px;
       height: 80px;
-      margin-bottom: 8px;
+      margin-bottom: var(--space-2);
     }
     .boldText {
       font-weight: bold;
-      margin-left: 4px;
-      margin-right: 4px;
+      margin-left: var(--space-1);
+      margin-right: var(--space-1);
       color: var(--color-text-title);
     }
   }

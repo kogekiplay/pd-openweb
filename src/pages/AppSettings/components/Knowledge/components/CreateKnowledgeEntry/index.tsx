@@ -8,10 +8,10 @@ const CreateKnowledgeBtnContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 16px;
+  padding: 0 var(--space-4);
   height: 36px;
   border-radius: 36px;
-  font-size: 14px;
+  font-size: var(--font-md);
   font-weight: 700;
   color: var(--color-text-inverse);
   background: var(--color-primary);
@@ -27,7 +27,7 @@ const CreateKnowledgeBtnContainer = styled.div`
     background: var(--color-primary-dark);
   }
   .icon {
-    margin-right: 8px;
+    margin-right: var(--space-2);
   }
 `;
 

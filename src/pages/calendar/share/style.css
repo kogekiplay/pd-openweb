@@ -9,7 +9,7 @@ ol,
 ul,
 textarea,
 button {
-  font-size: 12px;
+  font-size: var(--font-xs);
   font-family:
     Helvetica Neue,
     Tahoma,
@@ -87,22 +87,22 @@ a {
 }
 /*字号*/
 .Font13 {
-  font-size: 13px !important;
+  font-size: var(--font-sm) !important;
 }
 .Font14 {
-  font-size: 14px !important;
+  font-size: var(--font-md) !important;
 }
 .Font15 {
   font-size: 15px !important;
 }
 .Font16 {
-  font-size: 16px !important;
+  font-size: var(--font-lg) !important;
 }
 .Font18 {
-  font-size: 18px !important;
+  font-size: var(--font-xl) !important;
 }
 .Font20 {
-  font-size: 20px !important;
+  font-size: var(--font-2xl) !important;
 }
 .ellipsis {
   overflow: hidden;
@@ -336,9 +336,9 @@ header.joinStyle {
 }
 
 footer {
-  padding-bottom: 20px !important;
+  padding-bottom: var(--space-5) !important;
   background-color: var(--color-background-secondary);
-  padding-top: 20px !important;
+  padding-top: var(--space-5) !important;
 }
 footer .footerTitle {
   text-align: center;
@@ -365,11 +365,11 @@ footer a.addCalendar {
   background-color: var(--color-primary);
 }
 footer a.addCalendar {
-  margin-bottom: 20px;
+  margin-bottom: var(--space-5);
 }
 footer a.wAddCalendar {
   color: var(--color-primary);
-  margin-top: 12px;
+  margin-top: var(--space-3);
 }
 footer a.join.leave {
   background-color: var(--color-error);
@@ -386,7 +386,7 @@ footer a.join.leave {
 .leaveBoxTitle {
   color: var(--color-success);
   border-bottom: 1px solid var(--color-border-tertiary);
-  padding-bottom: 20px;
+  padding-bottom: var(--space-5);
 }
 .leaveBoxMessage1 {
   padding-top: 10px;
@@ -396,7 +396,7 @@ footer a.join.leave {
 #leaveBox .qrCode img {
   width: 180px;
   height: 180px;
-  margin: 20px auto 0;
+  margin: var(--space-5) auto 0;
   display: block;
 }
 #leaveBox .qrCodeMessage {
@@ -405,11 +405,11 @@ footer a.join.leave {
   color: var(--color-text-tertiary);
   padding-bottom: 30px;
   border-bottom: 1px solid var(--color-border-tertiary);
-  margin-bottom: 20px;
+  margin-bottom: var(--space-5);
 }
 .leaveBoxMessage {
   text-align: center;
-  margin-top: 20px;
+  margin-top: var(--space-5);
   color: var(--color-error);
 }
 .leaveBoxTitle span {
@@ -459,19 +459,19 @@ footer a.join.leave {
 }
 #mFooter .save {
   text-align: center;
-  padding-top: 20px;
+  padding-top: var(--space-5);
 }
 .mQRCode {
   width: 150px;
   height: 150px;
-  margin: 20px auto 0;
+  margin: var(--space-5) auto 0;
 }
 .mQRCode img {
   width: 100%;
 }
 .mDesc {
   line-height: 26px;
-  margin-top: 20px;
+  margin-top: var(--space-5);
 }
 .mDesc span {
   margin-top: 10px;

@@ -64,9 +64,9 @@ div.SessionList-item.topBGColor {
     min-width: 18px;
     background-color: var(--color-error);
     z-index: 1;
-    font-size: 12px;
+    font-size: var(--font-xs);
     font-weight: bold;
-    padding: 3px 4px;
+    padding: 3px var(--space-1);
     line-height: 1;
   }
   .unread-nopush {
@@ -84,23 +84,23 @@ div.SessionList-item.topBGColor {
   align-items: center;
   flex-wrap: wrap;
   flex: 1 1 auto;
-  margin-left: 8px;
+  margin-left: var(--space-2);
   height: 36px;
   width: 159px;
   opacity: 0;
   transition: opacity 0.3s cubic-bezier(0.18, 0.89, 0.68, 1.04);
   .name {
     flex: 1 0 0%;
-    font-size: 13px;
+    font-size: var(--font-sm);
     font-weight: 500;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
   .time {
-    font-size: 12px;
+    font-size: var(--font-xs);
     flex: 0 1 auto;
-    font-size: 12px;
+    font-size: var(--font-xs);
     min-width: 32px;
     max-width: 100px;
     overflow: hidden;
@@ -109,7 +109,7 @@ div.SessionList-item.topBGColor {
   }
   .msg {
     width: 100%;
-    font-size: 12px;
+    font-size: var(--font-xs);
     display: flex;
     align-items: center;
     &-con {

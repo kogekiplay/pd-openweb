@@ -21,7 +21,7 @@ const PayChannelItem = styled.div`
   border-radius: 10px;
   border: 1px solid var(--color-border-secondary);
   margin: 0 120px;
-  padding: 20px 24px;
+  padding: var(--space-5) var(--space-6);
   &:hover {
     box-shadow: var(--shadow-lg);
   }

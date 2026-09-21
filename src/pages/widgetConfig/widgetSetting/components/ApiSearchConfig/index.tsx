@@ -24,7 +24,7 @@ const SearchMode = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 12px;
+  padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-primary);
   cursor: pointer;
@@ -66,7 +66,7 @@ const SearchMode = styled.div`
       .defaultIcon {
         background: var(--color-background-primary);
         color: var(--color-text-tertiary);
-        font-size: 12px;
+        font-size: var(--font-xs);
         text-align: center;
         line-height: 16px;
         border: 1px solid var(--color-border-primary);
@@ -82,7 +82,7 @@ const SearchMode = styled.div`
 `;
 
 const AuthWrap = styled.div`
-  margin-top: 16px;
+  margin-top: var(--space-4);
   position: relative;
   .authRequired {
     color: var(--color-error);

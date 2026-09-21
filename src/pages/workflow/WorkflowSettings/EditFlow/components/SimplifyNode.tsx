@@ -13,7 +13,7 @@ const Box = styled.div`
   background: var(--color-background-primary);
   box-shadow: 0 1px 4px rgb(0 0 0 / 16%);
   border-radius: 20px;
-  padding: 0 12px 0 5px;
+  padding: 0 var(--space-3) 0 5px;
   position: relative;
   border: 1px solid var(--color-border-primary);
   transform: translateY(-20px);
@@ -34,7 +34,7 @@ const Box = styled.div`
     margin-right: 10px;
     border-radius: 50%;
     color: var(--color-white);
-    font-size: 20px;
+    font-size: var(--font-2xl);
   }
   .workflowOperate {
     color: var(--color-text-secondary);
@@ -44,7 +44,7 @@ const Box = styled.div`
   }
   .workflowNodeName {
     height: 28px;
-    padding: 4px;
+    padding: var(--space-1);
     font-size: 15px;
     text-align: left;
     background: var(--color-border-secondary);

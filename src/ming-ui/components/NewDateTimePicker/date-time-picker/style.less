@@ -19,7 +19,7 @@
 
   .mui-datetime-toolbar {
     height: 30px;
-    padding: 8px 18px;
+    padding: var(--space-2) 18px;
     background-color: var(--color-background-secondary);
     text-align: right;
     &:after {
@@ -37,21 +37,21 @@
       .mui-forminput {
         width: auto;
         max-width: 80px;
-        padding: 4px 6px;
+        padding: var(--space-1) 6px;
         min-height: 30px;
         box-sizing: border-box;
       }
     }
 
     & > button {
-      font-size: 13px;
+      font-size: var(--font-sm);
       line-height: 20px;
       padding: 5px 6px;
       min-width: 50px;
       vertical-align: middle;
       margin-left: 6px;
       &.Button--ghost {
-        padding: 4px 6px;
+        padding: var(--space-1) 6px;
       }
     }
   }

@@ -1,8 +1,8 @@
 .card {
   &Wrapper {
     width: 100%;
-    padding: 14px 16px 14px;
-    margin-bottom: 12px;
+    padding: 14px var(--space-4) 14px;
+    margin-bottom: var(--space-3);
     background-color: var(--color-background-primary);
     box-sizing: border-box;
     transition: box-shadow 0.3s;
@@ -32,7 +32,7 @@
       top: 0;
       height: 100%;
       width: 3px;
-      background-color: var(--color-link-hover);
+      background-color: var(--color-primary-dark);
     }
   }
   &Header {
@@ -51,7 +51,7 @@
       display: none;
       &:hover {
         color: var(--color-primary);
-        background-color: var(--color-primary) 33;
+        background-color: color-mix(in srgb, var(--color-primary) 20%, transparent);
       }
     }
     .appIcon {
@@ -62,7 +62,7 @@
       justify-content: center;
       border-radius: var(--radius-sm);
       color: var(--color-white);
-      font-size: 18px;
+      font-size: var(--font-xl);
       margin-right: 10px;
       > div {
         line-height: normal;
@@ -87,7 +87,7 @@
   &Body {
     color: var(--color-text-primary);
     font-size: 15px;
-    padding: 12px 0 0;
+    padding: var(--space-3) 0 0;
     font-weight: 500;
     word-break: break-all;
     .conent {

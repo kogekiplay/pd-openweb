@@ -6,11 +6,11 @@ import chatbotApi from 'src/pages/workflow/apiV2/chatbot';
 import { browserIsMobile } from 'src/utils/common';
 
 const PopupWrapper = styled.div`
-  padding: 16px;
+  padding: var(--space-4);
   .footerBtns {
     display: flex;
     gap: 5px;
-    margin-top: 20px;
+    margin-top: var(--space-5);
     .cancelBtn {
       background: var(--color-background-primary) !important;
       border: 1px solid var(--color-border-secondary);

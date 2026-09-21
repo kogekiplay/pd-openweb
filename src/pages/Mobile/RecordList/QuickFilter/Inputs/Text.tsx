@@ -11,8 +11,8 @@ const InputCon = styled.input`
   background-color: var(--color-background-secondary);
   height: 36px;
   border-radius: var(--radius-sm);
-  padding: 0 12px;
-  font-size: 14px;
+  padding: 0 var(--space-3);
+  font-size: var(--font-md);
 `;
 
 const SearchTypeWrap = styled.div`
@@ -20,7 +20,7 @@ const SearchTypeWrap = styled.div`
   .searchType {
     border-radius: 13px;
     background: var(--color-background-secondary);
-    padding: 0px 16px;
+    padding: 0px var(--space-4);
     line-height: 26px;
     .icon {
       margin-right: 2px;

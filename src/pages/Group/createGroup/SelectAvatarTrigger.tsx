@@ -15,13 +15,13 @@ const PopupWrap = styled.div`
     0 4px 15px 0 rgba(0, 0, 0, 0.1);
 
   .settingPictureLayerTitle {
-    font-size: 13px;
-    padding: 12px 0 0 15px;
+    font-size: var(--font-sm);
+    padding: var(--space-3) 0 0 15px;
     color: var(--color-text-tertiary);
   }
 
   .settingPictureLayerImg {
-    padding: 0 0 0 16px;
+    padding: 0 0 0 var(--space-4);
     position: relative;
     z-index: 1;
   }
@@ -45,10 +45,10 @@ const PopupWrap = styled.div`
   }
 
   .insertGroupImg {
-    font-size: 13px;
+    font-size: var(--font-sm);
     line-height: 45px;
     height: 45px;
-    padding-left: 20px;
+    padding-left: var(--space-5);
   }
 `;
 

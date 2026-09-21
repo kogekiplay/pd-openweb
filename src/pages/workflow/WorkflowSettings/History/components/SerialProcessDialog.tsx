@@ -9,7 +9,7 @@ import emptyListPng from '../images/emptyList.png';
 
 const DialogWarp = styled(Dialog)`
   .header {
-    padding: 24px 0;
+    padding: var(--space-6) 0;
   }
   li {
     &.list {
@@ -50,7 +50,7 @@ const DialogWarp = styled(Dialog)`
       border-radius: 50%;
     }
     .text {
-      margin-top: 24px;
+      margin-top: var(--space-6);
     }
   }
 `;

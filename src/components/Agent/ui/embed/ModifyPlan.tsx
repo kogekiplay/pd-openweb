@@ -27,27 +27,27 @@ const Chip = styled.div`
     background: var(--color-background-hover);
   }
   .bookIcon {
-    font-size: 18px;
+    font-size: var(--font-xl);
     color: var(--color-text-secondary);
   }
   .title {
-    margin-left: 8px;
-    font-size: 14px;
+    margin-left: var(--space-2);
+    font-size: var(--font-md);
     font-weight: bold;
   }
   .dot {
     width: 3px;
     height: 3px;
     border-radius: var(--radius-xs);
-    margin: 0 8px;
+    margin: 0 var(--space-2);
     background-color: var(--color-text-tertiary);
   }
   .count {
-    font-size: 13px;
+    font-size: var(--font-sm);
   }
   .msgIcon {
-    margin-left: 8px;
-    font-size: 18px;
+    margin-left: var(--space-2);
+    font-size: var(--font-xl);
     color: var(--color-text-secondary);
   }
 `;
@@ -73,19 +73,19 @@ const Body = styled.div`
   .editItem {
     position: relative;
     margin-bottom: 10px;
-    padding: 10px 12px;
+    padding: 10px var(--space-3);
     border: 1px solid var(--color-border-primary);
     border-radius: var(--radius-sm);
     ${({ $editable }) => $editable && 'padding-right: 44px;'}
     .context {
-      font-size: 13px;
+      font-size: var(--font-sm);
       line-height: 19px;
       color: var(--color-text-secondary);
       word-break: break-word;
     }
     .text {
       margin-top: 2px;
-      font-size: 14px;
+      font-size: var(--font-md);
       line-height: 20px;
       color: var(--color-text-primary);
       word-break: break-word;
@@ -94,7 +94,7 @@ const Body = styled.div`
       position: absolute;
       top: 12px;
       right: 12px;
-      font-size: 18px;
+      font-size: var(--font-xl);
       color: var(--color-text-tertiary);
       cursor: pointer;
       &:hover {
@@ -106,16 +106,16 @@ const Body = styled.div`
     flex-shrink: 0;
     display: flex;
     justify-content: flex-end;
-    padding-top: 12px;
+    padding-top: var(--space-3);
   }
   .submitBtn {
     height: 36px;
-    padding: 0 24px;
+    padding: 0 var(--space-6);
     border: 0;
     border-radius: var(--radius-sm);
     background: var(--color-mingo);
     color: var(--color-text-inverse);
-    font-size: 14px;
+    font-size: var(--font-md);
     font-weight: bold;
     cursor: pointer;
     transition: opacity 0.18s ease;
@@ -168,7 +168,7 @@ export function ModifyPlanDialog({
 
 const EmbedWrap = styled.div`
   width: 100%;
-  margin: 16px 0;
+  margin: var(--space-4) 0;
 `;
 
 // 会话内嵌：与输入框 chip 同样形态（撑满），点击打开只读预览弹窗，不在列表展开具体内容

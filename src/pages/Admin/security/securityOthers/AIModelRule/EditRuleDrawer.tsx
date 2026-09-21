@@ -15,7 +15,7 @@ const DrawerWrap = styled(Drawer)`
   }
   .ant-drawer-header {
     border-bottom: 1px solid var(--color-border-secondary);
-    padding: 20px 24px;
+    padding: var(--space-5) var(--space-6);
     .ant-drawer-header-title {
       flex-direction: row-reverse;
       .ant-drawer-title {
@@ -30,12 +30,12 @@ const DrawerWrap = styled(Drawer)`
     }
   }
   .ant-drawer-body {
-    padding: 24px;
+    padding: var(--space-6);
     overflow-y: auto;
   }
   .ant-drawer-footer {
     border: none;
-    padding: 16px 24px;
+    padding: var(--space-4) var(--space-6);
   }
   .Radio {
     margin-right: 26px !important;
@@ -43,7 +43,7 @@ const DrawerWrap = styled(Drawer)`
 `;
 
 const SectionTitle = styled.div`
-  font-size: 13px;
+  font-size: var(--font-sm);
   font-weight: 600;
   color: var(--color-text-primary);
 `;
@@ -55,11 +55,11 @@ const ModelTable = styled.div`
   .tableHeader {
     display: flex;
     align-items: center;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     height: 40px;
     background: var(--color-background-secondary);
     border-bottom: 1px solid var(--color-border-secondary);
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-secondary);
     font-weight: 600;
     border-radius: var(--radius-sm) var(--radius-sm) 0 0;
@@ -67,10 +67,10 @@ const ModelTable = styled.div`
   .tableRow {
     display: flex;
     align-items: center;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     height: 44px;
     border-bottom: 1px solid var(--color-border-secondary);
-    font-size: 13px;
+    font-size: var(--font-sm);
     &:last-child {
       border-bottom: none;
     }
@@ -95,7 +95,7 @@ const ModelTable = styled.div`
     align-items: center;
     justify-content: center;
     color: var(--color-text-disabled);
-    font-size: 13px;
+    font-size: var(--font-sm);
   }
 `;
 
@@ -106,11 +106,11 @@ const AppTable = styled.div`
   .tableHeader {
     display: flex;
     align-items: center;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     height: 40px;
     background: var(--color-background-secondary);
     border-bottom: 1px solid var(--color-border-secondary);
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-secondary);
     font-weight: 600;
     border-radius: var(--radius-sm) var(--radius-sm) 0 0;
@@ -118,10 +118,10 @@ const AppTable = styled.div`
   .tableRow {
     display: flex;
     align-items: center;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     height: 52px;
     border-bottom: 1px solid var(--color-border-secondary);
-    font-size: 13px;
+    font-size: var(--font-sm);
     &:last-child {
       border-bottom: none;
     }
@@ -131,7 +131,7 @@ const AppTable = styled.div`
     min-width: 0;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--space-2);
     .appIcon {
       width: 32px;
       height: 32px;
@@ -150,7 +150,7 @@ const AppTable = styled.div`
     width: 140px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--space-2);
   }
   .colAction {
     width: 48px;
@@ -162,7 +162,7 @@ const AppTable = styled.div`
     align-items: center;
     justify-content: center;
     color: var(--color-text-disabled);
-    font-size: 13px;
+    font-size: var(--font-sm);
   }
 `;
 

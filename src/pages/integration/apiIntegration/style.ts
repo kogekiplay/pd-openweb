@@ -5,7 +5,7 @@ export const TableWrap = styled.div`
   .ant-table-thead > tr > th {
     background: var(--color-background-primary) !important;
     color: var(--color-text-title);
-    font-size: 13px;
+    font-size: var(--font-sm);
     font-weight: normal;
     &:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
       display: none;
@@ -55,12 +55,12 @@ export const ActWrap = styled.div`
   &:hover {
     background: var(--color-background-hover);
   }
-  margin-left: 8px;
+  margin-left: var(--space-2);
 `;
 export const BtnWrap = styled.div`
   background: var(--color-primary);
   &:hover {
-    background: var(--color-link-hover);
+    background: var(--color-primary-dark);
   }
 `;
 export const MenuItemWrap = styled(MenuItem)`
@@ -79,13 +79,13 @@ export const RedMenuItemWrap = styled(MenuItemWrap)`
 `;
 export const WrapFooter = styled.div`
   .btn {
-    padding: 0 32px;
+    padding: 0 var(--space-8);
     background: var(--color-primary);
     color: var(--color-white);
     line-height: 36px;
     border-radius: var(--radius-sm);
     &:hover {
-      background: var(--color-link-hover);
+      background: var(--color-primary-dark);
     }
     &.disable {
       opacity: 0.5;
@@ -97,12 +97,12 @@ export const WrapFooter = styled.div`
     &:hover {
       color: var(--color-primary);
     }
-    padding: 8px 32px;
+    padding: var(--space-2) var(--space-8);
   }
 `;
 
 export const CardTopWrap = styled.div`
-  padding: 24px;
+  padding: var(--space-6);
   align-items: center;
   .iconCon {
     width: 44px;
@@ -121,14 +121,14 @@ export const CardTopWrap = styled.div`
     }
     .tip {
       position: absolute;
-      font-size: 20px;
+      font-size: var(--font-2xl);
       left: -10px;
       top: -10px;
     }
   }
   .btn {
-    padding: 0 20px;
-    margin-right: 12px;
+    padding: 0 var(--space-5);
+    margin-right: var(--space-3);
     line-height: 26px;
     color: var(--color-primary);
     border: 1px solid var(--color-primary);
@@ -144,7 +144,7 @@ export const WrapBtn = styled.div`
   background: var(--color-background-primary);
   border-radius: 18px;
   color: var(--color-text-disabled);
-  padding: 8px 12px;
+  padding: var(--space-2) var(--space-3);
   margin: 0 auto;
   &:hover {
     color: var(--color-primary);
@@ -171,7 +171,7 @@ export const MoreOperate = styled.span`
   width: 24px;
   height: 24px;
   color: var(--color-text-tertiary);
-  font-size: 18px;
+  font-size: var(--font-xl);
   &:hover {
     color: var(--color-primary);
   }

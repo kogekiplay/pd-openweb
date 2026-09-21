@@ -25,7 +25,7 @@ const GuideContainer = styled.div`
   .description {
     margin-top: 10px;
     margin-bottom: 48px;
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-text-secondary);
   }
   .stepList {
@@ -39,12 +39,12 @@ const GuideContainer = styled.div`
       align-items: flex-start;
       min-width: 0;
       .icon {
-        font-size: 24px;
+        font-size: var(--font-3xl);
         color: var(--color-text-tertiary);
       }
       .stepItemContent {
-        margin-left: 8px;
-        font-size: 13px;
+        margin-left: var(--space-2);
+        font-size: var(--font-sm);
         word-break: break-all;
         .stepTitle {
           color: var(--color-text-primary);

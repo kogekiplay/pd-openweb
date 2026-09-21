@@ -39,8 +39,8 @@ const Con = styled.div`
     color: var(--color-text-secondary);
   }
   .tip-sec {
-    font-size: 14px;
-    margin-top: 20px;
+    font-size: var(--font-md);
+    margin-top: var(--space-5);
     color: var(--color-text-tertiary);
   }
   .continueDevelop {

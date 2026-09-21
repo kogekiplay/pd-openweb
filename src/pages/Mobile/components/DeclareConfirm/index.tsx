@@ -45,8 +45,8 @@ const Con = styled.div`
     height: 36px;
     border-radius: var(--radius-sm);
     font-weight: 700 !important;
-    font-size: 14px !important;
-    padding: 0 32px !important;
+    font-size: var(--font-md) !important;
+    padding: 0 var(--space-8) !important;
     &.reject {
       color: #757575;
       background-color: #fff;

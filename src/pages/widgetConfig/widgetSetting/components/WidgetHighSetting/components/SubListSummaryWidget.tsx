@@ -13,10 +13,10 @@ const SubListSummaryDialog = styled(Dialog)`
     .summaryItem {
       display: flex;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: var(--space-3);
       .summaryControlName {
         flex: 1;
-        margin-right: 12px;
+        margin-right: var(--space-3);
         height: 36px;
         line-height: 36px;
         border-radius: var(--radius-sm);

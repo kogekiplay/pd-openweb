@@ -20,11 +20,11 @@ const Tabs = styled.div`
 `;
 
 const Tab = styled.button`
-  padding: 16px 40px 12px;
+  padding: var(--space-4) 40px var(--space-3);
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 14px;
+  font-size: var(--font-md);
   position: relative;
 
   &.curTab {
@@ -41,7 +41,7 @@ const Tab = styled.button`
 `;
 
 const TabContent = styled.div`
-  padding: 24px 0;
+  padding: var(--space-6) 0;
 `;
 
 const SettingItem = styled.div``;
@@ -50,13 +50,13 @@ const Description = styled.div`
   width: 100%;
   background: var(--color-primary-transparent);
   border-radius: var(--radius-sm);
-  padding: 10px 12px;
+  padding: 10px var(--space-3);
   line-height: 1.5;
-  font-size: 13px;
+  font-size: var(--font-sm);
 `;
 
 const SubTitle = styled.div`
-  font-size: 14px;
+  font-size: var(--font-md);
 `;
 
 const RadioGroup = styled.div``;

@@ -9,7 +9,7 @@ export const TabsSettingPopover = styled.div`
     box-shadow: none !important;
   }
   .typeSelect {
-    font-size: 13px;
+    font-size: var(--font-sm);
     border-radius: var(--radius-sm);
     width: max-content;
     padding: 3px;

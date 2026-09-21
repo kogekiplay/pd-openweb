@@ -38,7 +38,7 @@
     background-color: var(--color-background-primary);
 
     .title {
-      padding-left: 20px;
+      padding-left: var(--space-5);
       .icon {
         color: #607d8b;
         font-size: 21px;
@@ -53,7 +53,7 @@
       min-width: 0;
       display: flex;
       justify-content: flex-end;
-      padding-right: 20px;
+      padding-right: var(--space-5);
       align-items: center;
     }
   }
@@ -66,7 +66,7 @@
     justify-content: center;
     .item {
       color: var(--color-text-secondary);
-      font-size: 14px;
+      font-size: var(--font-md);
       padding: 0 28px;
       cursor: pointer;
       position: relative;
@@ -97,7 +97,7 @@
     }
     .processCount {
       color: var(--color-text-secondary);
-      margin-left: 4px;
+      margin-left: var(--space-1);
     }
     .darkRed,
     .red {
@@ -166,7 +166,7 @@
       border-radius: 25px;
       &:hover {
         color: var(--color-primary);
-        background-color: var(--color-primary) 33;
+        background-color: color-mix(in srgb, var(--color-primary) 20%, transparent);
       }
     }
     .passApprove,
@@ -203,11 +203,11 @@
   }
 
   .filterNav {
-    font-size: 13px;
+    font-size: var(--font-sm);
     border-radius: var(--radius-sm);
     background-color: var(--color-background-secondary);
     padding: 3px;
-    margin-right: 20px;
+    margin-right: var(--space-5);
     .item {
       color: var(--color-text-secondary);
       padding: 3px 23px;
@@ -221,12 +221,12 @@
     }
   }
   .processFilterTarget {
-    padding: 5px 12px 5px 15px;
+    padding: 5px var(--space-3) 5px 15px;
     margin-right: 10px;
     .icon-close {
       color: var(--color-primary);
       &:hover {
-        color: var(--color-primary-focus) b3;
+        color: color-mix(in srgb, var(--color-primary-focus) 70%, transparent);
       }
     }
     &.active {
@@ -244,7 +244,7 @@
   .content,
   .loadoingWrapper {
     width: 1000px;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
   }
 
   .spaceBetween {
@@ -258,7 +258,7 @@
 
 .myProcessApproveOverlay {
   .ant-popover-content {
-    padding: 4px 8px;
+    padding: var(--space-1) var(--space-2);
   }
   .ant-popover-arrow {
     display: none;

@@ -25,10 +25,10 @@ const WidgetBatchWrap = styled.div`
   z-index: 9;
   overflow: auto;
   overflow-x: hidden;
-  padding-bottom: 24px;
+  padding-bottom: var(--space-6);
   .titleBox {
     height: 48px;
-    padding: 8px 16px;
+    padding: var(--space-2) var(--space-4);
     background: var(--color-background-inverse);
     display: flex;
     align-items: center;
@@ -43,14 +43,14 @@ const WidgetBatchWrap = styled.div`
       justify-content: center;
       border-radius: var(--radius-sm);
       margin-right: 6px;
-      font-size: 20px;
+      font-size: var(--font-2xl);
       &:hover {
         background: var(--color-background-inverse);
       }
     }
   }
   .batchContentWrap {
-    padding: 20px;
+    padding: var(--space-5);
   }
 `;
 

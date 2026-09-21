@@ -41,8 +41,8 @@ const Wrap = styled.div`
     display: inline-flex !important;
     .Dropdown--input {
       width: 200px;
-      padding: 5px 8px 5px 12px !important;
-      margin-right: 16px;
+      padding: 5px var(--space-2) 5px var(--space-3) !important;
+      margin-right: var(--space-4);
     }
   }
   .AggregationFormula {

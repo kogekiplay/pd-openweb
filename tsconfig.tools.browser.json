@@ -39,6 +39,10 @@
   "include": [
     "tools/fc7-preview/entry.tsx",
     "tools/verify-jquery-bugfixes/entry.ts",
+    // 几何探针也跑在浏览器里（要 getComputedStyle / getBoundingClientRect）。
+    // 注意它【故意不写类型标注】，靠这份配置的 strict:false 过检 ——
+    // 它要能被原样粘进控制台，加了标注就跑不了，理由见该文件头。
+    "tools/geometry-probe.ts",
     // 这几个页面跟 src 一样会 `import './x.css'`（纯副作用），
     // 也一样用 $ / md 这类运行期全局 —— 那些 ambient 声明都在这个文件里。
     // 不带它的话 fc7-preview 的三条 CSS 导入会报 TS2882（这道门禁刚抓到）。

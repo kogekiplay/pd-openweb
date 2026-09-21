@@ -7,7 +7,7 @@ import { MAX_OPTIONS_COUNT, OPTION_COLORS_LIST } from '../../../config';
 
 const BatchAddContent = styled.div`
   .hint {
-    margin-bottom: 12px;
+    margin-bottom: var(--space-3);
   }
   .textareaWrap {
     height: 320px;

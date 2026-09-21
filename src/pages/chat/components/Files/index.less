@@ -1,7 +1,7 @@
 .ChatPanel-File-item {
   display: flex;
   position: relative;
-  padding: 10px 10px 10px 16px;
+  padding: 10px 10px 10px var(--space-4);
   border-bottom: 1px solid var(--color-border-secondary);
   cursor: pointer;
   &:hover {
@@ -17,7 +17,7 @@
   .thumbnail {
     width: 52px;
     height: 52px;
-    margin-right: 8px;
+    margin-right: var(--space-2);
     text-align: center;
     flex: 0 0 auto;
     img {
@@ -40,7 +40,7 @@
   }
   .name {
     width: 100%;
-    font-size: 14px;
+    font-size: var(--font-md);
     vertical-align: middle;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -52,7 +52,7 @@
   .time {
     display: inline-block;
     width: 110px;
-    font-size: 12px;
+    font-size: var(--font-xs);
     vertical-align: middle;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -60,7 +60,7 @@
   }
   .creator {
     display: inline-block;
-    font-size: 12px;
+    font-size: var(--font-xs);
     vertical-align: middle;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -131,8 +131,8 @@
     width: 100%;
     margin: 10px 0;
     color: var(--color-text-secondary);
-    font-size: 14px;
-    padding-left: 16px;
+    font-size: var(--font-md);
+    padding-left: var(--space-4);
     overflow: hidden;
   }
   .filter {
@@ -147,7 +147,7 @@
     .icon-bellSchedule {
       cursor: pointer;
       color: var(--color-text-tertiary);
-      font-size: 16px;
+      font-size: var(--font-lg);
       margin-left: 5px;
     }
   }
@@ -163,10 +163,10 @@
 
   .item {
     cursor: pointer;
-    font-size: 13px;
+    font-size: var(--font-sm);
     height: 29px;
-    padding: 0 12px;
-    margin-bottom: 8px;
+    padding: 0 var(--space-3);
+    margin-bottom: var(--space-2);
     border-radius: var(--radius-sm);
     display: flex;
     align-items: center;

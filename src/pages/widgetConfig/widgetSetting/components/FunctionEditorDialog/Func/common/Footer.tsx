@@ -8,7 +8,7 @@ const FooterCon = styled.div`
   display: flex;
   align-items: center;
   a {
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-primary);
     text-decoration: none;
   }

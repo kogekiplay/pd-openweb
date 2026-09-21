@@ -12,7 +12,7 @@ import { ChatGPT, DetailFooter, DetailHeader, KeyPairs, ParameterList, TestParam
 import { getCodeForSave, shouldSyncCodeMirrorContent } from './utils';
 
 const CodeSnippetButton = styled.div`
-  padding: 0 8px;
+  padding: 0 var(--space-2);
   height: 36px;
   border-radius: var(--radius-sm);
   color: var(--color-text-secondary);

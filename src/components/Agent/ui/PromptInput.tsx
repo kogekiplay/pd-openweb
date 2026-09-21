@@ -29,7 +29,7 @@ const Wrap = styled.div`
   ${() => (md.global.SysSettings.aiBrandThemeColor ? `--color-mingo: ${md.global.SysSettings.aiBrandThemeColor};` : '')}
 
   .promptInputHeader {
-    margin: 10px 12px 0;
+    margin: 10px var(--space-3) 0;
     border-bottom: 1px solid var(--color-border-secondary);
   }
 
@@ -62,12 +62,12 @@ const Footer = styled.div`
   align-items: center;
   justify-content: space-between;
   height: 48px;
-  padding: 0 8px;
+  padding: 0 var(--space-2);
 
   > div {
     display: inline-flex;
     align-items: center;
-    gap: 12px;
+    gap: var(--space-3);
   }
 
   .footerStart.recording {

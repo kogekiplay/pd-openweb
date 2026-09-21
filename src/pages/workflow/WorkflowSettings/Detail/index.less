@@ -31,7 +31,7 @@
 }
 
 .workflowSettings {
-  font-size: 13px;
+  font-size: var(--font-sm);
   .workflowDetail {
     width: 800px;
     background: var(--color-background-card);
@@ -68,7 +68,7 @@
     }
     .workflowDetailHeader {
       height: 55px;
-      padding: 0 20px;
+      padding: 0 var(--space-5);
       align-items: center;
       color: var(--color-white);
       .workflowDetailHeaderSupport {
@@ -187,7 +187,7 @@
       }
     }
     .workflowDetailBox {
-      padding: 20px 24px 32px;
+      padding: var(--space-5) var(--space-6) var(--space-8);
       .red {
         color: var(--color-error);
       }
@@ -197,7 +197,7 @@
       .flowDropdown {
         min-width: 0;
         width: 100%;
-        font-size: 13px;
+        font-size: var(--font-sm);
         &.flowDropdownMoreSelect {
           .Dropdown--input {
             height: auto;
@@ -226,7 +226,7 @@
           .dropdown-btn {
             span {
               color: var(--color-text-disabled);
-              font-size: 12px;
+              font-size: var(--font-xs);
             }
           }
         }
@@ -317,7 +317,7 @@
             }
             .tag {
               margin-right: 5px;
-              font-size: 13px;
+              font-size: var(--font-sm);
               white-space: nowrap;
               overflow: hidden;
               text-overflow: ellipsis;
@@ -353,7 +353,7 @@
       }
       .workflowDetailAddBtn {
         align-items: center;
-        font-size: 13px;
+        font-size: var(--font-sm);
         cursor: pointer;
         position: relative;
         > i {
@@ -398,7 +398,7 @@
           border-width: 1px;
           border-style: solid;
           border-radius: var(--radius-sm);
-          padding: 0 20px;
+          padding: 0 var(--space-5);
           background: var(--color-background-primary);
           cursor: pointer;
           margin-right: 10px;
@@ -435,7 +435,7 @@
       border-radius: var(--radius-sm);
       min-width: 100px;
       box-sizing: initial;
-      font-size: 13px;
+      font-size: var(--font-sm);
       &:not(:hover):not(:focus):not(.errorBorder):not(.actionClearBorder),
       &:not(.borderColorPrimary) {
         border-color: var(--color-border-primary) !important;
@@ -491,7 +491,7 @@
       }
       .actionControlDel {
         position: absolute;
-        font-size: 16px;
+        font-size: var(--font-lg);
         right: 10px;
         top: 10px;
         cursor: pointer;
@@ -515,15 +515,15 @@
         li {
           align-items: center;
           box-sizing: border-box;
-          margin: 3px 4px;
+          margin: 3px var(--space-1);
           border-radius: 26px;
           height: 28px;
-          padding: 6px 12px 6px 10px;
+          padding: 6px var(--space-3) 6px 10px;
           background-color: var(--color-background-tertiary);
           border: 1px solid var(--color-border-primary);
           .tag {
-            margin-right: 12px;
-            font-size: 13px;
+            margin-right: var(--space-3);
+            font-size: var(--font-sm);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -541,23 +541,23 @@
         height: 34px;
         vertical-align: top;
         width: 100%;
-        padding: 4px 9px 4px;
+        padding: var(--space-1) 9px var(--space-1);
       }
     }
     .actionFieldsSplit {
-      margin-top: 24px;
+      margin-top: var(--space-6);
       height: 1px;
       background: var(--color-border-primary);
       margin-right: 14px;
     }
     .workflowDetailDesc {
-      padding: 21px 16px;
+      padding: 21px var(--space-4);
       background: var(--color-background-tertiary);
       border-radius: var(--radius-sm);
       word-break: break-word;
       &.subProcessDesc {
         border: 1px solid var(--color-border-secondary);
-        padding: 8px 12px;
+        padding: var(--space-2) var(--space-3);
       }
     }
     .flowDetailNumber {
@@ -609,7 +609,7 @@
     }
     .flowBackBox {
       background: var(--color-background-disabled);
-      padding: 8px 26px 8px 12px;
+      padding: var(--space-2) 26px var(--space-2) var(--space-3);
       border-radius: var(--radius-sm);
       position: relative;
       .icon-edit {
@@ -635,7 +635,7 @@
       overflow: hidden;
     }
     .workflowMjmlPlaceholder {
-      padding: 32px 20px;
+      padding: var(--space-8) var(--space-5);
     }
     .workflowMjmlPreviewFrame {
       display: block;
@@ -648,7 +648,7 @@
       position: absolute;
       right: 5px;
       top: 2px;
-      font-size: 14px;
+      font-size: var(--font-md);
       color: var(--color-text-disabled);
       cursor: pointer;
       &:hover {
@@ -673,7 +673,7 @@
       cursor: pointer;
     }
     .workflowDetailSelectApi {
-      padding: 20px;
+      padding: var(--space-5);
       border-radius: 8px;
       border: 1px solid var(--color-border-primary);
       height: 88px;
@@ -719,7 +719,7 @@
     }
     .typeList {
       li {
-        padding: 12px;
+        padding: var(--space-3);
         border-radius: var(--radius-sm);
         cursor: pointer;
         &:hover {
@@ -833,7 +833,7 @@
     border-radius: var(--radius-sm);
     li {
       height: 56px;
-      padding: 8px 16px;
+      padding: var(--space-2) var(--space-4);
       box-sizing: border-box;
       cursor: pointer;
       &:hover {
@@ -844,7 +844,7 @@
       }
       .Radio-text {
         color: var(--color-text-title) !important;
-        font-size: 16px;
+        font-size: var(--font-lg);
       }
       .ming.Radio {
         margin-right: 0;
@@ -863,10 +863,10 @@
     border-radius: var(--radius-sm);
     cursor: pointer;
     text-align: center;
-    font-size: 14px;
+    font-size: var(--font-md);
     box-sizing: border-box;
     color: var(--color-white);
-    padding: 0 24px;
+    padding: 0 var(--space-6);
   }
   .flowTplBox {
     box-sizing: border-box;
@@ -874,7 +874,7 @@
     border-radius: var(--radius-sm);
     .flowTplHeader {
       height: 40px;
-      padding: 0 16px;
+      padding: 0 var(--space-4);
       &.gray {
         background: var(--color-background-secondary);
       }
@@ -899,10 +899,10 @@
       height: 36px;
       line-height: 36px;
       display: inline-block;
-      margin-right: 20px;
+      margin-right: var(--space-5);
       border-radius: var(--radius-sm);
       background: var(--color-background-secondary);
-      padding: 0 24px;
+      padding: 0 var(--space-6);
       border-width: 1px;
       border-style: solid;
       cursor: pointer;
@@ -925,7 +925,7 @@
       margin: 0 2px;
       height: 28px;
       line-height: 28px;
-      padding: 0 12px;
+      padding: 0 var(--space-3);
       border-radius: 14px;
       color: var(--color-white);
       cursor: pointer;
@@ -937,14 +937,14 @@
     background: var(--color-background-disabled);
     height: 40px;
     line-height: 40px;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     box-sizing: border-box;
   }
   .webhookLinkCopy {
     height: 40px;
     line-height: 40px;
     cursor: pointer;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-primary);
     background: var(--color-background-disabled);
@@ -978,7 +978,7 @@
       background: var(--color-background-disabled);
       height: 40px;
       line-height: 40px;
-      padding: 0 16px;
+      padding: 0 var(--space-4);
     }
     .w40 {
       width: 40px;
@@ -996,7 +996,7 @@
       li {
         min-height: 40px;
         align-items: center;
-        padding: 0 16px;
+        padding: 0 var(--space-4);
         border-top: 1px solid var(--color-border-primary);
         &:hover {
           background: var(--color-background-hover);
@@ -1076,7 +1076,7 @@
     }
   }
   .addConditionBtn {
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     height: 36px;
     line-height: 36px;
     background: var(--color-background-secondary);
@@ -1114,7 +1114,7 @@
     }
     .actionControlDel {
       position: absolute;
-      font-size: 16px;
+      font-size: var(--font-lg);
       right: 10px;
       top: 10px;
       cursor: pointer;
@@ -1147,7 +1147,7 @@
   }
   .workflowDetailAddBtn {
     align-items: center;
-    font-size: 13px;
+    font-size: var(--font-sm);
     cursor: pointer;
     position: relative;
     > i {

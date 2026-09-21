@@ -9,12 +9,12 @@ import Item from './Item';
 import { pathCompletion } from 'src/utils/common';
 
 const Wrap = styled.div`
-  padding: 0 24px 24px;
+  padding: 0 var(--space-6) var(--space-6);
   .apiCard {
     max-width: 800px;
-    margin-top: 24px;
+    margin-top: var(--space-6);
     align-items: center;
-    padding: 12px 24px;
+    padding: var(--space-3) var(--space-6);
     background: var(--color-background-primary);
     border-radius: 6px;
     img {

@@ -41,7 +41,7 @@
   height: 240px;
 }
 .mdEmotion .mdEmotionWrapper {
-  padding: 4px;
+  padding: var(--space-1);
   width: 380px;
   height: 188px;
   overflow-y: auto;
@@ -62,7 +62,7 @@
   content: '';
 }
 .mdEmotion.emotion-bottom {
-  margin-top: 8px;
+  margin-top: var(--space-2);
 }
 .mdEmotion.emotion-bottom .arrow,
 .mdEmotion.emotion-bottom .arrow:after {
@@ -116,7 +116,7 @@
   margin-top: -8px;
 }
 .mdEmotion.emotion-right {
-  margin-left: 8px;
+  margin-left: var(--space-2);
 }
 .mdEmotion.emotion-right .arrow,
 .mdEmotion.emotion-right .arrow:after {
@@ -144,12 +144,12 @@
 }
 .mdEmotion .mdEmotionTab .tabItem {
   display: inline-block;
-  font-size: 20px;
+  font-size: var(--font-2xl);
   line-height: 100%;
   cursor: pointer;
   vertical-align: middle;
   color: var(--color-text-secondary);
-  padding: 4px;
+  padding: var(--space-1);
   margin-right: 6px;
 }
 .mdEmotion .mdEmotionTab .tabItem:hover {
@@ -188,7 +188,7 @@
 }
 .mdEmotion .mdEmotionWrapper .mdEmotionPanel .emotionItem {
   font-size: 0;
-  margin: 4px;
+  margin: var(--space-1);
   display: inline-block;
   vertical-align: top;
   width: 25px;

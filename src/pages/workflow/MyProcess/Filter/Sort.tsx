@@ -14,7 +14,7 @@ export default props => {
             <Menu.Item
               data-event={item.icon}
               className="pLeft10"
-              style={{ padding: '7px 12px' }}
+              style={{ padding: '7px var(--space-3)' }}
               onClick={() => {
                 handleChange(item.value);
               }}

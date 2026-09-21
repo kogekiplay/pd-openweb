@@ -14,7 +14,7 @@ import Condition from './ConditionV2';
 const Con = styled.div`
   .conditionItem {
     width: calc(100% - 44px);
-    font-size: 13px;
+    font-size: var(--font-sm);
     .errorName {
       color: var(--color-error);
     }
@@ -26,7 +26,7 @@ const Con = styled.div`
         margin-bottom: 6px;
         .icon {
           transform: rotate(90deg);
-          font-size: 16px;
+          font-size: var(--font-lg);
           margin-right: 3px;
         }
       }
@@ -47,7 +47,7 @@ const Con = styled.div`
           border-radius: var(--radius-sm);
           background: transparent;
           .icon {
-            margin-left: 4px !important;
+            margin-left: var(--space-1) !important;
             vertical-align: middle;
           }
           &:hover {
@@ -63,7 +63,7 @@ const Con = styled.div`
         margin-top: 5px;
         visibility: hidden;
         i {
-          font-size: 16px;
+          font-size: var(--font-lg);
         }
       }
       &.isbool {
@@ -76,7 +76,7 @@ const Con = styled.div`
         flex: 1;
         min-width: 0;
         input {
-          font-size: 13px;
+          font-size: var(--font-sm);
         }
         .numberRange {
           input {
@@ -127,7 +127,7 @@ const Con = styled.div`
 const ConditionCon = styled.div`
   display: flex;
   flex-direction: row;
-  margin-top: 12px;
+  margin-top: var(--space-3);
   padding: ${({ isSingleFilter }) => (isSingleFilter ? '0px' : '0 24px 0 18px')};
 `;
 
@@ -142,7 +142,7 @@ const ConditionHeader = styled.div`
     padding: 2px 6px !important;
     border-radius: var(--radius-sm);
     .icon {
-      margin-left: 4px !important;
+      margin-left: var(--space-1) !important;
       vertical-align: middle;
     }
     &:hover {

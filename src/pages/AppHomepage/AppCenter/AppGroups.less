@@ -38,7 +38,7 @@
     }
   }
   .projectName {
-    font-size: 24px;
+    font-size: var(--font-3xl);
   }
   &.overdue > span {
     color: var(--color-text-secondary);
@@ -47,18 +47,18 @@
     color: var(--color-text-tertiary);
   }
   & > .icon {
-    margin-right: 8px;
+    margin-right: var(--space-2);
     color: var(--color-text-tertiary);
   }
   .appBelongInfo {
     display: flex;
     align-items: center;
-    margin: 0 10px 0 12px;
+    margin: 0 10px 0 var(--space-3);
     padding: 0 10px;
     border-radius: 14px;
     line-height: 28px;
     text-align: center;
-    font-size: 12px;
+    font-size: var(--font-xs);
     background-color: var(--color-background-secondary);
     cursor: pointer;
     &:hover {
@@ -66,7 +66,7 @@
     }
     span {
       color: var(--color-text-secondary);
-      margin-left: 4px;
+      margin-left: var(--space-1);
     }
     .purchase {
       color: var(--color-primary);
@@ -83,7 +83,7 @@
   .sortableAppItemList {
     display: flex;
     flex-wrap: wrap;
-    margin-top: 12px;
+    margin-top: var(--space-3);
   }
   .delApp {
     color: @delColor !important;
@@ -109,7 +109,7 @@
   }
   .myAppItemWrap {
     position: relative;
-    margin: 0 8px;
+    margin: 0 var(--space-2);
     height: 152px;
     transition: 0.25s ease-out;
     cursor: pointer;
@@ -119,7 +119,7 @@
     .myAppItemSelectIconWrap {
       top: 105px;
       left: -411px;
-      margin-bottom: 32px;
+      margin-bottom: var(--space-8);
     }
 
     .moreOperation {
@@ -140,13 +140,13 @@
       // overflow: hidden;
     }
     .externalAppInfo {
-      padding: 12px;
+      padding: var(--space-3);
       text-align: center;
       .appName {
-        font-size: 14px;
+        font-size: var(--font-md);
       }
       .projectName {
-        margin-top: 4px;
+        margin-top: var(--space-1);
         color: var(--color-text-disabled);
       }
     }
@@ -189,23 +189,23 @@
     .appExplain {
       width: 100%;
       height: 36px;
-      margin-top: 12px;
+      margin-top: var(--space-3);
       text-align: center;
-      padding: 0 16px;
+      padding: 0 var(--space-4);
       box-sizing: border-box;
       line-height: 18px;
-      font-size: 14px;
+      font-size: var(--font-md);
     }
   }
 }
 .addAppItemWrap {
-  font-size: 14px;
+  font-size: var(--font-md);
   position: relative;
   width: 132px;
   box-sizing: border-box;
-  margin: 0 8px;
+  margin: 0 var(--space-2);
   height: 152px;
-  padding: 10px 12px;
+  padding: 10px var(--space-3);
 
   .addAppItem {
     position: relative;
@@ -239,7 +239,7 @@
     }
   }
   .info {
-    font-size: 14px;
+    font-size: var(--font-md);
     margin-top: 11px;
     text-align: center;
   }
@@ -250,7 +250,7 @@
     width: 240px;
   }
   .ming.MenuItem {
-    font-size: 14px;
+    font-size: var(--font-md);
     .Item-content {
       .Icon {
         left: 12px;

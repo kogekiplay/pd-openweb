@@ -17,7 +17,7 @@ const Wrap = styled.div`
     overflow-y: auto;
   }
   .title {
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     margin-top: 10px;
   }
   .search {
@@ -28,7 +28,7 @@ const Wrap = styled.div`
       position: absolute;
       top: 11px;
       left: 8px;
-      font-size: 18px;
+      font-size: var(--font-xl);
     }
     input {
       box-sizing: border-box;
@@ -46,7 +46,7 @@ const Wrap = styled.div`
     }
   }
   .itemControl {
-    padding: 10px 16px;
+    padding: 10px var(--space-4);
     line-height: 16px;
     &:hover {
       background: var(--color-background-hover);

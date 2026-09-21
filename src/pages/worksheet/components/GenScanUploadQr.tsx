@@ -12,7 +12,7 @@ import { getTemporaryAttachmentFromUrl } from 'src/utils/common';
 const Popup = styled.div`
   position: relative;
   background-color: var(--color-background-card);
-  padding: 12px 20px 20px;
+  padding: var(--space-3) var(--space-5) var(--space-5);
   width: 240px;
   box-shadow: var(--shadow-xl);
   border-radius: 6px;
@@ -36,12 +36,12 @@ const Popup = styled.div`
       color: var(--color-primary);
     }
     .qrExpired {
-      font-size: 13px;
+      font-size: var(--font-sm);
       color: var(--color-text-primary);
       margin-top: 6px;
     }
     .refresh {
-      padding: 4px 20px;
+      padding: var(--space-1) var(--space-5);
       border-radius: 45px;
       background: var(--color-primary);
       color: var(--color-white);
@@ -51,13 +51,13 @@ const Popup = styled.div`
     }
   }
   .tip {
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-text-primary);
     font-weight: bold;
     text-align: center;
   }
   .danger {
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-error);
     margin: 3px 0 10px;
     text-align: center;

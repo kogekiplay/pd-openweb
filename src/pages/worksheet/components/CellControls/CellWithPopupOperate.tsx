@@ -43,9 +43,9 @@ const PopupOperateCon = styled.div`
     .iconButton {
       line-height: 26px;
       cursor: pointer;
-      padding: 0 8px;
+      padding: 0 var(--space-2);
       .icon {
-        font-size: 18px;
+        font-size: var(--font-xl);
         color: #9e9e9e;
         cursor: pointer;
         top: 2px;

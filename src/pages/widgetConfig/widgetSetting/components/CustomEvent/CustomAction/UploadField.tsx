@@ -44,7 +44,7 @@ const UploadListWrap = styled.div`
       height: 23px;
     }
     .deleteIcon {
-      font-size: 14px;
+      font-size: var(--font-md);
       color: var(--color-text-tertiary);
       &:hover {
         color: var(--color-text-secondary);
@@ -55,18 +55,18 @@ const UploadListWrap = styled.div`
     }
   }
   .uploadFooter {
-    margin-top: 20px;
+    margin-top: var(--space-5);
     display: flex;
     margin: 0 0 0 auto;
     .footerBtn {
-      padding: 8px 24px;
+      padding: var(--space-2) var(--space-6);
       cursor: pointer;
       border-radius: var(--radius-sm);
     }
     .uploadBtn {
       border: 1px solid var(--color-primary);
       color: var(--color-primary);
-      margin-right: 20px;
+      margin-right: var(--space-5);
       &:hover {
         background: var(--color-primary);
         border-color: var(--color-primary);
@@ -77,7 +77,7 @@ const UploadListWrap = styled.div`
       background: var(--color-primary);
       color: var(--color-white);
       &:hover {
-        background: var(--color-link-hover);
+        background: var(--color-primary-dark);
       }
     }
   }

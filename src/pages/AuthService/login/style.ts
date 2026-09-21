@@ -24,7 +24,7 @@ export const Wrap = styled.div`
     width: 100%;
     text-align: center;
     .changeBtn {
-      font-size: 14px;
+      font-size: var(--font-md);
       color: var(--color-primary);
       font-weight: bold;
       &:hover {
@@ -38,8 +38,8 @@ export const Wrap = styled.div`
     }
   }
   .authSwitchEntry {
-    margin-top: 8px;
-    font-size: 14px;
+    margin-top: var(--space-2);
+    font-size: var(--font-md);
     line-height: 20px;
     color: var(--color-text-secondary);
     .authSwitchLink {
@@ -59,9 +59,9 @@ export const Wrap = styled.div`
     display: block;
     background: var(--color-primary);
     border-radius: 6px;
-    font-size: 16px;
+    font-size: var(--font-lg);
     color: var(--color-text-inverse);
-    margin-top: 32px;
+    margin-top: var(--space-8);
     text-align: center;
 
     &:hover {
@@ -84,7 +84,7 @@ export const Wrap = styled.div`
     }
   }
   .loginModeSwitch {
-    margin: 16px 0 24px;
+    margin: var(--space-4) 0 var(--space-6);
     color: var(--color-primary);
     font-size: 15px;
     font-weight: 400;
@@ -117,9 +117,9 @@ export const Wrap = styled.div`
     .tpLoginDivider {
       display: flex;
       align-items: center;
-      margin: 16px 0;
+      margin: var(--space-4) 0;
       color: var(--color-text-tertiary);
-      font-size: 14px;
+      font-size: var(--font-md);
       font-weight: 400;
       line-height: 20px;
 
@@ -132,15 +132,15 @@ export const Wrap = styled.div`
       }
 
       span {
-        padding: 0 24px;
+        padding: 0 var(--space-6);
       }
     }
 
     .title {
       font-weight: bold;
-      font-size: 14px;
+      font-size: var(--font-md);
       color: var(--color-text-title);
-      margin: 32px auto 0;
+      margin: var(--space-8) auto 0;
       padding-bottom: 6px;
     }
 
@@ -158,8 +158,8 @@ export const Wrap = styled.div`
       min-width: 0;
       align-items: center;
       justify-content: center;
-      margin-bottom: 8px;
-      margin-top: 4px;
+      margin-bottom: var(--space-2);
+      margin-top: var(--space-1);
       font-weight: 700;
       font-size: 15px;
       color: var(--color-text-primary);

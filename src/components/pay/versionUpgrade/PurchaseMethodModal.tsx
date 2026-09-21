@@ -9,7 +9,7 @@ const DialogWrap = styled(Dialog)`
     color: var(--color-warning);
   }
   .mui-dialog-default-title {
-    font-size: 24px !important;
+    font-size: var(--font-3xl) !important;
   }
   .mui-dialog-close-btn {
     right: 22px !important;
@@ -21,7 +21,7 @@ const DialogWrap = styled(Dialog)`
     }
   }
   .mui-dialog-header {
-    padding: 32px 24px 16px 55px !important;
+    padding: var(--space-8) var(--space-6) var(--space-4) 55px !important;
   }
   .mui-dialog-body {
     padding: 0 55px 22px !important;
@@ -33,7 +33,7 @@ const DialogWrap = styled(Dialog)`
     border: 1px solid var(--color-border-secondary);
     border-radius: 8px;
     margin-right: 25px;
-    padding: 42px 30px 20px 25px;
+    padding: 42px 30px var(--space-5) 25px;
     box-sizing: border-box;
     &:hover {
       cursor: pointer;
@@ -44,7 +44,7 @@ const DialogWrap = styled(Dialog)`
     }
     .title {
       font-size: 19px;
-      margin-top: 20px;
+      margin-top: var(--space-5);
       margin-bottom: 10px;
     }
   }

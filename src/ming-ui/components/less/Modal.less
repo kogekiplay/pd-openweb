@@ -41,7 +41,7 @@
   }
   .ant-modal-header {
     line-height: 1em;
-    padding: 20px 24px 0;
+    padding: var(--space-5) var(--space-6) 0;
     border: none;
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
     .ant-modal-title {
@@ -59,7 +59,7 @@
   }
   .ant-modal-footer {
     border: none;
-    padding: 10px 24px 20px;
+    padding: 10px var(--space-6) var(--space-5);
   }
   .ant-modal-container {
     display: flex;
@@ -72,7 +72,7 @@
        v6 原样继承（两版 modal/style/index.js 逐行 diff 过，这一项没动）。
 
        这一圈对本仓是【净多出来的】，因为整套 mdModal 的 CSS 和几百处消费方都按 v4 那套写：
-         - 本文件自己给 .ant-modal-header 写了 padding: 20px 24px 0、
+         - 本文件自己给 .ant-modal-header 写了 padding: var(--space-5) var(--space-6) 0、
            .ant-modal-footer 写了 10px 24px 20px —— 叠上这圈就成了双份内边距；
          - 消费方靠 bodyStyle={{ padding: 0 }} 求「贴边」（全仓几十处这么写），
            叠上这圈根本贴不到边。
@@ -88,11 +88,11 @@
        为什么 antd 5 那轮没发现：这不是类名改名，而是新增的默认值 ——
        tools/verify-antd-class-names.cjs 这类按类名比对的判据天生看不见。
 
-       归零即恢复 v4 几何；同时把 body 的默认内边距按 v4 的 @modal-body-padding: 24px
+       归零即恢复 v4 几何；同时把 body 的默认内边距按 v4 的 @modal-body-padding: var(--space-6)
        补回来（v5/v6 的 bodyPadding 默认是 0），消费方的内联 bodyStyle 仍然照常覆盖。 */
     padding: 0;
     .ant-modal-body {
-      padding: 24px;
+      padding: var(--space-6);
       overflow-y: auto;
       overflow-x: hidden;
       flex: 1;

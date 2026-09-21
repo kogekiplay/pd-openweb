@@ -21,7 +21,7 @@ export const SettingCollapseWrap = styled(Collapse)`
       font-weight: bold;
       .anticon {
         color: var(--color-text-secondary) !important;
-        margin-right: 8px !important;
+        margin-right: var(--space-2) !important;
       }
       .itemAppIcon {
         width: 20px;
@@ -32,7 +32,7 @@ export const SettingCollapseWrap = styled(Collapse)`
       }
     }
     .ant-collapse-body {
-      padding: 0 0 24px 0 !important;
+      padding: 0 0 var(--space-6) 0 !important;
       & > div:first-child {
         margin-top: 0 !important;
       }

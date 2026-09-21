@@ -8,7 +8,7 @@ const Wrap = styled.div`
   justify-content: center;
   min-height: 0;
   .ant-pagination {
-    padding: 12px;
+    padding: var(--space-3);
     .ant-pagination-options {
       display: none;
     }
@@ -21,11 +21,11 @@ const Wrap = styled.div`
       a {
         color: var(--color-text-title);
         display: inline-block;
-        padding: 3px 8px;
+        padding: 3px var(--space-2);
         text-align: center;
         vertical-align: middle;
         border: 1px solid transparent;
-        font-size: 13px;
+        font-size: var(--font-sm);
         border-radius: var(--radius-sm);
       }
       a:hover {
@@ -39,9 +39,10 @@ const Wrap = styled.div`
       color: var(--color-text-title);
       a {
         text-decoration: none;
-        color: var(--color-link);
+        /* 当前页的高亮属于品牌色 —— --color-link 是写死的蓝，不跟主题 */
+        color: var(--color-primary);
         font-weight: 600;
-        border: 1px solid var(--color-link) !important;
+        border: 1px solid var(--color-primary) !important;
         &:hover {
           background-color: var(--color-background-primary);
         }

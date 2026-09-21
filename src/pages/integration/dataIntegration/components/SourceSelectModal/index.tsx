@@ -41,7 +41,7 @@ const TabList = styled.div`
     /* text-align: center; */
     li {
       display: inline-block;
-      margin-right: 32px;
+      margin-right: var(--space-8);
       box-sizing: border-box;
       border-bottom: 4px solid rgba(0, 0, 0, 0);
       a {
@@ -64,7 +64,7 @@ const DataSourceCard = styled.div`
   width: 144px;
   height: 150px;
   background: var(--color-background-primary);
-  margin: 0 12px;
+  margin: 0 var(--space-3);
   border-radius: 12px;
   box-sizing: border-box;
   cursor: pointer;
@@ -146,7 +146,7 @@ export default function SourceSelectModal({ projectId, isCreateConnector, onChan
   };
 
   return (
-    <Modal visible type="fixed" width={900} bodyStyle={{ padding: '32px' }} onCancel={onClose}>
+    <Modal visible type="fixed" width={900} bodyStyle={{ padding: 'var(--space-8)' }} onCancel={onClose}>
       <Wrapper>
         <div className="headerWrapper">
           <h5 className="Font17 textPrimary bold mBottom20">{_l('选择数据源类型')}</h5>

@@ -7,14 +7,14 @@ import { TRY_TRY_LIST } from './tryTryList';
 
 const Con = styled.div`
   .refresh-try {
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-tertiary);
     .refreshCon {
       display: flex !important;
-      margin-left: 8px;
+      margin-left: var(--space-2);
     }
     .icon {
-      font-size: 16px !important;
+      font-size: var(--font-lg) !important;
       color: var(--color-text-tertiary) !important;
       &:hover {
         color: var(--mingdao-primary-color) !important;
@@ -24,12 +24,12 @@ const Con = styled.div`
   .try-try-list {
     gap: 6px;
     flex-wrap: wrap;
-    margin: 6px 0 12px;
+    margin: 6px 0 var(--space-3);
     .try-try-item {
       display: flex;
       align-items: center;
       cursor: pointer;
-      font-size: 13px;
+      font-size: var(--font-sm);
       color: var(--color-text-title);
       min-height: 28px;
       padding: 0 10px;
@@ -41,7 +41,7 @@ const Con = styled.div`
     }
   }
   &.is-recommend {
-    padding-top: 12px;
+    padding-top: var(--space-3);
     border-top: 1px solid var(--color-border-secondary);
   }
 `;

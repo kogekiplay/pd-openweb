@@ -38,10 +38,10 @@ const UserInfoCon = styled.div`
   }
   .checkbox-userinfo {
     width: fit-content;
-    margin-bottom: 16px;
+    margin-bottom: var(--space-4);
   }
   .selectBtn {
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     height: 36px;
     line-height: 36px;
     border: 1px solid var(--color-border-secondary);

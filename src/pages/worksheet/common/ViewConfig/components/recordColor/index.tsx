@@ -28,12 +28,12 @@ const Con = styled.div`
       }
     }
     h6 {
-      font-size: 20px;
+      font-size: var(--font-2xl);
       font-weight: 500;
       color: var(--color-text-title);
       text-align: center;
       padding: 0;
-      padding-top: 32px;
+      padding-top: var(--space-8);
       margin: 0;
     }
     .text {
@@ -41,9 +41,9 @@ const Con = styled.div`
       text-align: center;
       color: var(--color-text-tertiary);
       line-height: 20px;
-      font-size: 13px;
+      font-size: var(--font-sm);
       width: 80%;
-      margin: 24px auto 0;
+      margin: var(--space-6) auto 0;
     }
   }
   .customAntSelect {
@@ -85,17 +85,17 @@ const SelectedControlCon = styled.div`
     border-color: var(--color-primary);
   }
   .controlTypeIcon {
-    font-size: 16px;
+    font-size: var(--font-lg);
     color: var(--color-text-secondary);
   }
   .controlName {
     margin-left: 10px;
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-text-title);
   }
   .endIcon {
     .icon {
-      font-size: 13px;
+      font-size: var(--font-sm);
       color: var(--color-text-tertiary);
     }
     .removeIcon {
@@ -160,19 +160,19 @@ const SelectColorShowTypeCon = styled.div`
     position: relative;
     display: inline-flex;
     border-radius: var(--radius-sm);
-    margin-right: 16px;
+    margin-right: var(--space-4);
     width: 78px;
     height: 36px;
     justify-content: center;
     align-items: center;
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-text-title);
     font-weight: bold;
     cursor: pointer;
     .selected {
       position: absolute;
       color: #f52222;
-      font-size: 18px;
+      font-size: var(--font-xl);
       right: -9px;
       top: -9px;
       border-radius: 18px;

@@ -23,7 +23,7 @@ const RuleInfo = styled.li`
   margin-top: 6px;
   & > span {
     align-self: flex-end;
-    margin-bottom: 8px;
+    margin-bottom: var(--space-2);
   }
 
   .delWrap {
@@ -31,7 +31,7 @@ const RuleInfo = styled.li`
     align-items: center;
     color: var(--color-error);
     i {
-      margin-right: 4px;
+      margin-right: var(--space-1);
     }
   }
   .relateControlInfo {
@@ -53,7 +53,7 @@ const RuleInfo = styled.li`
   }
   .rule {
     flex: 1;
-    margin-left: 8px;
+    margin-left: var(--space-2);
     line-height: 36px;
     border-radius: var(--radius-sm);
     background-color: var(--color-background-primary);
@@ -99,7 +99,7 @@ const RuleInfo = styled.li`
     }
     .name {
       flex: 1;
-      padding-left: 12px;
+      padding-left: var(--space-3);
     }
   }
 `;
@@ -107,7 +107,7 @@ const RuleInfo = styled.li`
 const RuleList = styled.ul`
   .addRule {
     color: var(--color-primary);
-    margin: 12px 0 0 20px;
+    margin: var(--space-3) 0 0 var(--space-5);
     cursor: pointer;
     i {
       margin-right: 6px;

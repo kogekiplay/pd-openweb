@@ -12,7 +12,7 @@ import { DATABASE_TYPE, isValidName } from '../../../constant';
 const Wrapper = styled.div`
   .selectItem {
     width: 100% !important;
-    font-size: 13px;
+    font-size: var(--font-sm);
     &.ant-select,
     & .ant-select {
       --ant-select-border-radius: var(--radius-sm) !important;

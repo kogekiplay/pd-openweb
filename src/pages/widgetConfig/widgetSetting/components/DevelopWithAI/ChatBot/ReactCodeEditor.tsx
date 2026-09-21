@@ -103,7 +103,7 @@ function reactCompletionSource(context) {
 const Con = styled.div`
   width: 100%;
   height: 100%;
-  padding: 0 20px;
+  padding: 0 var(--space-5);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -116,7 +116,7 @@ const Con = styled.div`
   .cm-editor {
     height: 100%;
     border-top: 1px solid var(--color-border-primary);
-    font-size: 14px;
+    font-size: var(--font-md);
     font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
     background: var(--color-background-primary);
   }
@@ -150,7 +150,7 @@ const Con = styled.div`
 
       & > li {
         margin: 0;
-        padding: 4px 8px;
+        padding: var(--space-1) var(--space-2);
         border-radius: var(--radius-sm);
         white-space: pre;
         color: var(--color-text-title);

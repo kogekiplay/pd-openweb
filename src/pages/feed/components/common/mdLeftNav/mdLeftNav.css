@@ -5,13 +5,13 @@
   top: 50px;
   bottom: 0;
   width: 250px;
-  font-size: 12px;
+  font-size: var(--font-xs);
 }
 .mdLeftNav .List-body {
   min-height: 60px;
 }
 .mdLeftNav .iconList li {
-  font-size: 13px;
+  font-size: var(--font-sm);
 }
 .mdLeftNav .List:not(.Menu) > ul > .Item {
   height: 40px !important;
@@ -36,20 +36,20 @@
 }
 .mdLeftNav .folderProjectTitle > i {
   display: inline-block;
-  font-size: 14px;
+  font-size: var(--font-md);
   margin: 5px;
   width: 20px;
   text-align: center;
 }
 .mdLeftNav .folderProjectTitle > i:first-child {
-  margin-left: 16px;
+  margin-left: var(--space-4);
   margin-right: 15px;
   text-align: left;
-  font-size: 20px;
+  font-size: var(--font-2xl);
 }
 
 .mdLeftNav .folderProjectTitle .contentName {
-  font-size: 13px;
+  font-size: var(--font-sm);
 }
 .mdLeftNav .folderProjectTitle .contentName .companyName {
   max-width: 137px;
@@ -64,7 +64,7 @@
   position: absolute;
   right: 0px;
   top: 0px;
-  margin: 12px;
+  margin: var(--space-3);
 }
 .mdLeftNav .folderProjectTitle .slide {
   visibility: hidden;
@@ -130,7 +130,7 @@
   box-sizing: border-box;
 }
 .mdLeftNav .panelHead .panelIcon {
-  font-size: 24px;
+  font-size: var(--font-3xl);
   line-height: 32px;
   margin-right: 15px;
   margin-left: auto;
@@ -154,5 +154,5 @@
   position: absolute;
   top: -17px;
   right: -28px;
-  font-size: 24px;
+  font-size: var(--font-3xl);
 }

@@ -6,8 +6,8 @@ import { FILTER_RELATION_TYPE } from '../enum';
 
 const Con = styled.div`
   position: relative;
-  padding: 12px 0;
-  margin: 12px 0;
+  padding: var(--space-3) 0;
+  margin: var(--space-3) 0;
   hr {
     margin: 0 28px;
     border: none;
@@ -17,7 +17,7 @@ const Con = styled.div`
     position: absolute;
     top: 3px;
     left: calc(50% - 27px);
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     background: var(--color-background-card);
   }
   .removeGroup {
@@ -29,7 +29,7 @@ const Con = styled.div`
     top: 0px;
     right: 24px;
     background: var(--color-background-card);
-    font-size: 16px;
+    font-size: var(--font-lg);
     color: var(--color-text-tertiary);
     cursor: pointer;
   }
@@ -51,7 +51,7 @@ const DropdownCon = styled.div`
     padding: 2px 6px !important;
     border-radius: var(--radius-sm);
     .icon {
-      margin-left: 4px !important;
+      margin-left: var(--space-1) !important;
       vertical-align: middle;
     }
     &:hover {

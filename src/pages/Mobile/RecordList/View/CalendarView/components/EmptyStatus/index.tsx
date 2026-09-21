@@ -8,7 +8,7 @@ const EmptyContainer = styled.div`
   justify-content: center;
   align-items: center;
   height: 100%;
-  font-size: 18px;
+  font-size: var(--font-xl);
   .emptyIcon {
     display: flex;
     justify-content: center;
@@ -21,8 +21,8 @@ const EmptyContainer = styled.div`
     border-radius: 50%;
   }
   .emptyTitle {
-    margin-top: 16px;
-    font-size: 18px;
+    margin-top: var(--space-4);
+    font-size: var(--font-xl);
     color: var(--color-text-tertiary);
   }
 `;

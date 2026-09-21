@@ -47,7 +47,7 @@ export const Button = styled.div`
   cursor: pointer;
   height: 36px;
   font-weight: bold;
-  padding: 0 16px;
+  padding: 0 var(--space-4);
   display: flex;
   align-items: center;
   color: var(--color-text-title);
@@ -68,10 +68,10 @@ export const LoadingButton = styled.div`
   cursor: pointer;
   height: 29px;
   line-height: 29px;
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   color: var(--color-primary);
   border-radius: var(--radius-sm);
-  font-size: 13px;
+  font-size: var(--font-sm);
   .loading {
     margin-right: 6px;
     .icon {
@@ -135,7 +135,7 @@ const SearchRecordsButton = styled(Icon)`
   position: absolute;
   cursor: pointer;
   right: 10px;
-  font-size: 20px;
+  font-size: var(--font-2xl);
   color: var(--color-text-disabled);
   &:hover {
     color: var(--color-text-secondary);

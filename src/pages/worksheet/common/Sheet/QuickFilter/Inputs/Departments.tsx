@@ -28,21 +28,21 @@ const DepartmentsCon = styled.div`
   cursor: pointer;
   flex: 1;
   overflow: hidden;
-  font-size: 13px;
+  font-size: var(--font-sm);
   min-height: 32px;
   padding: 0 0 0 10px;
 `;
 
 const DepartmentsText = styled.div`
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-title);
 `;
 
 const Icon = styled.i`
   cursor: pointer;
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-tertiary);
-  margin-right: 8px;
+  margin-right: var(--space-2);
 `;
 
 const Empty = styled.span`

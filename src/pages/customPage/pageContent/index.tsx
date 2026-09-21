@@ -44,7 +44,7 @@ const CustomPageContentWrap = styled.div`
     box-sizing: border-box;
     width: 100%;
     height: 44px;
-    padding: 0 24px 0 10px;
+    padding: 0 var(--space-6) 0 10px;
     /* 原来这里是 border-radius: 3px 3px 0 0。
        3px 在 44px 高的条上读不出「圆角容器」，而它的底色又被 CustomPageHeader
        用页面配置的 pageBgColor 覆盖掉（常常正好等于应用导航的色），
@@ -54,7 +54,7 @@ const CustomPageContentWrap = styled.div`
     box-shadow: var(--shadow-md);
     z-index: 1;
     .customPageDesc {
-      padding: 0 4px;
+      padding: 0 var(--space-1);
     }
     .nameWrap {
       display: flex;
@@ -63,7 +63,7 @@ const CustomPageContentWrap = styled.div`
       .pageName {
         color: var(--title-color);
         margin: 0 6px;
-        font-size: 18px;
+        font-size: var(--font-xl);
         font-weight: bold;
       }
     }
@@ -114,7 +114,7 @@ const CustomPageContentWrap = styled.div`
     flex: 1;
   }
   .customPageContent {
-    padding: 0 8px 0px 8px;
+    padding: 0 var(--space-2) 0px var(--space-2);
     &.isFullscreen {
       padding-top: 0;
     }

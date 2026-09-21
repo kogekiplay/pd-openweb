@@ -39,7 +39,7 @@ const ImgCon = styled.div`
     position: absolute;
     top: -8px;
     right: -8px;
-    font-size: 18px;
+    font-size: var(--font-xl);
     color: var(--color-text-disabled);
   }
 `;
@@ -413,7 +413,7 @@ export default class FillWorksheet extends React.Component<any, any> {
             flexColumn: browserIsMobile(),
           })}
           ref={this.con}
-          style={{ padding: '0 32px' }}
+          style={{ padding: '0 var(--space-8)' }}
         >
           {!loading && (
             <Fragment>

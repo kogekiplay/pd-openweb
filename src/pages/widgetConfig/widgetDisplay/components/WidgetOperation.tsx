@@ -56,14 +56,14 @@ const OperationWrap = styled.div`
     cursor: pointer;
     transition: color background-color 0.4s;
     color: var(--color-text-secondary);
-    padding: 0 4px;
-    margin-right: 4px;
+    padding: 0 var(--space-1);
+    margin-right: var(--space-1);
     background-color: var(--color-background-primary);
     box-shadow: rgba(0, 0, 0, 0.05) 0 0 4px 2px;
     border-radius: 50%;
     font-size: 0;
     i {
-      font-size: 16px;
+      font-size: var(--font-lg);
       vertical-align: middle;
     }
     &:hover:not(.customIcon) {
@@ -79,11 +79,11 @@ const OperationWrap = styled.div`
 
 const WidthMenuItem = styled(MenuItem)`
   &.isActive {
-    background: var(--color-link-hover);
+    background: var(--color-primary-dark);
     color: var(--color-white);
 
     &.ming.MenuItem .Item-content:not(.disabled):hover {
-      background: var(--color-link-hover) !important;
+      background: var(--color-primary-dark) !important;
     }
   }
   &.menuTitle {

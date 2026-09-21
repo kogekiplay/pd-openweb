@@ -10,7 +10,7 @@ const Wrapper = styled.div`
     top: 0px;
     right: 0;
     color: var(--color-text-tertiary);
-    font-size: 18px;
+    font-size: var(--font-xl);
     cursor: pointer;
     &:hover {
       color: var(--color-primary);

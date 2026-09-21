@@ -19,7 +19,7 @@ import GroupsSkeleton from './GroupsSkeleton';
 
 const Con = styled.div`
   width: 238px;
-  padding-top: 24px;
+  padding-top: var(--space-6);
   display: flex;
   flex-direction: column;
   transition: width 0.2s;
@@ -29,11 +29,11 @@ const Con = styled.div`
     margin-right: -12px;
   }
   .title {
-    font-size: 20px;
+    font-size: var(--font-2xl);
   }
   .upgradeIcon {
     color: #fcb400;
-    font-size: 16px;
+    font-size: var(--font-lg);
     margin-left: 6px;
   }
   &:not(.isFolded) {

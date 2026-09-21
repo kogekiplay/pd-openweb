@@ -9,27 +9,27 @@ const isMobile = browserIsMobile();
 
 const Con = styled.div`
   cursor: pointer;
-  padding: 4px;
+  padding: var(--space-1);
   border-radius: var(--radius-sm);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   .btnIcon {
-    font-size: 20px;
+    font-size: var(--font-2xl);
     color: var(--color-text-secondary);
   }
   .btnText {
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-title);
-    margin-left: 4px;
+    margin-left: var(--space-1);
   }
   &.size-small {
     .btnIcon {
-      font-size: 16px;
+      font-size: var(--font-lg);
     }
     .btnText {
-      font-size: 12px;
+      font-size: var(--font-xs);
     }
   }
   &:not(.isMobile) {

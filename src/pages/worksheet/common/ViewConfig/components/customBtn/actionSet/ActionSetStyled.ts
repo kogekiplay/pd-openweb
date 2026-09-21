@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const Wrap = styled.div`
   .line {
     border-top: 1px solid var(--color-border-secondary);
-    margin-top: 24px;
+    margin-top: var(--space-6);
   }
 `;
 
@@ -63,9 +63,9 @@ export const WrapCount = styled.div`
 export const WrapPopover = styled.div`
   width: 437px;
   font-weight: 400;
-  padding: 12px 6px;
+  padding: var(--space-3) 6px;
   .btn {
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     height: 36px;
     line-height: 36px;
     border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);

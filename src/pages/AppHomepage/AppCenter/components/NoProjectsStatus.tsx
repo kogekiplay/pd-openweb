@@ -25,8 +25,8 @@ const JoinGroupCon = styled.div`
   .joinOrCreateProject {
     width: 460px;
     margin: 0 auto;
-    margin-top: 24px;
-    font-size: 14px;
+    margin-top: var(--space-6);
+    font-size: var(--font-md);
     padding: 0 30px;
     line-height: 44px;
     background: var(--color-primary-transparent);

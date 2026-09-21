@@ -20,11 +20,11 @@ const Card = styled.div`
   display: flex;
   flex-direction: column;
   gap: 14px;
-  padding: 4px 0;
+  padding: var(--space-1) 0;
 `;
 
 const SectionHeader = styled.div`
-  font-size: 14px;
+  font-size: var(--font-md);
   font-weight: 600;
   color: ${colors.text};
   line-height: 1.4;
@@ -37,19 +37,19 @@ const SchemePill = styled.div`
   gap: 10px;
   max-width: 100%;
   height: 34px;
-  padding: 0 14px 0 12px;
+  padding: 0 14px 0 var(--space-3);
   border-radius: 14px;
   background: ${colors.backgroundSection};
 
   i {
-    font-size: 18px;
+    font-size: var(--font-xl);
     color: ${colors.textMuted};
     flex-shrink: 0;
   }
 `;
 
 const SchemeName = styled.span`
-  font-size: 13px;
+  font-size: var(--font-sm);
   font-weight: 600;
   color: ${colors.textMuted};
   white-space: nowrap;
@@ -61,9 +61,9 @@ const DonePill = styled.div`
   align-self: flex-start;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   height: 28px;
-  padding: 0 8px 0 14px;
+  padding: 0 var(--space-2) 0 14px;
   border: 1px solid ${colors.borderStrong};
   border-radius: 14px;
   background: ${colors.background};
@@ -77,7 +77,7 @@ const DonePill = styled.div`
 `;
 
 const DoneLabel = styled.span`
-  font-size: 13px;
+  font-size: var(--font-sm);
   font-weight: 600;
   color: ${colors.textMuted};
 `;
@@ -94,7 +94,7 @@ const DoneChevron = styled.span`
     `}
 
   i {
-    font-size: 16px;
+    font-size: var(--font-lg);
     color: ${colors.borderHover};
   }
 `;
@@ -103,13 +103,13 @@ const DoneChevron = styled.span`
 const StepList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding-left: 16px;
+  gap: var(--space-3);
+  padding-left: var(--space-4);
 `;
 
 const Muted = styled.span`
   color: ${colors.textSubtle};
-  font-size: 13px;
+  font-size: var(--font-sm);
 `;
 
 // loop 块：展开有子项时，从折叠图标位置引出一条竖线，贯穿标题行并往下延伸到子项
@@ -136,8 +136,8 @@ const LoopBlock = styled.div`
 const LoopHeader = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 14px;
+  gap: var(--space-2);
+  font-size: var(--font-md);
   font-weight: 700;
   color: ${colors.text};
   line-height: 22px;
@@ -149,7 +149,7 @@ const LoopHeader = styled.div`
 const LoopList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-1);
   padding-left: 42px;
 `;
 
@@ -157,7 +157,7 @@ const IterRow = styled.div`
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 13px;
+  font-size: var(--font-sm);
   line-height: 28px;
   color: ${colors.text};
   user-select: none;
@@ -179,7 +179,7 @@ const Chevron = styled.span`
     `}
 
   i {
-    font-size: 18px;
+    font-size: var(--font-xl);
   }
 `;
 

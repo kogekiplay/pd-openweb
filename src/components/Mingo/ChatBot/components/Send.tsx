@@ -13,7 +13,7 @@ const Con = styled.div`
   overflow: hidden;
   ${() => (md.global.SysSettings.aiBrandThemeColor ? `--color-mingo: ${md.global.SysSettings.aiBrandThemeColor};` : '')}
   .try-try-con {
-    margin: 10px 12px 0;
+    margin: 10px var(--space-3) 0;
     border-bottom: 1px solid var(--color-border-secondary);
   }
   &.focused {
@@ -45,7 +45,7 @@ const SendTextArea = styled(AutoHeightTextArea)`
   width: 100%;
   height: 100%;
   resize: none;
-  padding: 8px 12px;
+  padding: var(--space-2) var(--space-3);
   font-size: 15px;
   background: transparent;
   &::placeholder {

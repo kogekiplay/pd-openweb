@@ -18,7 +18,7 @@ const AudioBox = styled.span`
   cursor: pointer;
   position: relative;
   align-items: center;
-  font-size: 12px;
+  font-size: var(--font-xs);
   vertical-align: top;
   height: 36px;
   z-index: 1;

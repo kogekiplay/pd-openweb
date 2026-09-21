@@ -33,14 +33,14 @@ const Con = styled.div`
     }
     &.uploading {
       .Progress--circle-content {
-        font-size: 12px !important;
+        font-size: var(--font-xs) !important;
       }
     }
     &.error {
       background-color: var(--color-error-bg);
       color: var(--color-error);
       .icon {
-        font-size: 16px;
+        font-size: var(--font-lg);
         margin-right: 2px;
       }
     }
@@ -52,11 +52,11 @@ const Con = styled.div`
     flex-shrink: 0;
     align-items: center;
     justify-content: center;
-    font-size: 12px;
+    font-size: var(--font-xs);
     /* 固定行高，避免在消息气泡(line-height:24px)等大行高容器里 2 行 clamp 超出 40px 高度被遮挡 */
     line-height: 16px;
     color: var(--color-text-title);
-    padding: 4px 10px 0;
+    padding: var(--space-1) 10px 0;
     background: var(--color-background-primary);
     word-break: break-all;
     white-space: break-spaces;
@@ -80,7 +80,7 @@ const Con = styled.div`
     background-color: var(--color-background-primary);
     border-radius: 50%;
     .icon {
-      font-size: 16px;
+      font-size: var(--font-lg);
     }
   }
   &.isPicture {

@@ -11,11 +11,11 @@ const ColumnListWrap = styled.div`
   z-index: 1;
   box-shadow: var(--shadow-lg);
   .header.search {
-    padding: 0 20px;
+    padding: 0 var(--space-5);
     border-bottom: 1px solid var(--color-border-primary);
     .icon {
       color: var(--color-text-secondary);
-      font-size: 18px;
+      font-size: var(--font-xl);
       margin: 10px 0;
     }
     .searchInput {
@@ -50,14 +50,14 @@ const ColumnListWrap = styled.div`
         }
       }
       .controlItem {
-        font-size: 14px;
+        font-size: var(--font-md);
         .controlIcon {
-          font-size: 16px;
+          font-size: var(--font-lg);
           color: var(--color-text-tertiary);
-          margin-right: 12px;
+          margin-right: var(--space-3);
         }
         .controlName {
-          margin-right: 12px;
+          margin-right: var(--space-3);
         }
         .controlValue {
           color: var(--color-text-tertiary);
@@ -72,7 +72,7 @@ const ColumnListWrap = styled.div`
     .emptyText {
       color: var(--color-text-tertiary);
       margin: 10px;
-      font-size: 13px;
+      font-size: var(--font-sm);
     }
   }
   .controlTextValue {

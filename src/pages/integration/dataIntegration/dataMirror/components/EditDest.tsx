@@ -16,7 +16,7 @@ const Wrap = styled.div`
     }
   }
   .sourceCard {
-    padding: 12px 20px;
+    padding: var(--space-3) var(--space-5);
     background: var(--color-background-primary);
     border: 1px solid var(--color-border-secondary);
     border-radius: var(--radius-md);

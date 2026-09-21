@@ -19,7 +19,7 @@ const Card = styled.div`
   display: flex;
   gap: 14px;
   align-items: flex-start;
-  padding: 18px 20px;
+  padding: 18px var(--space-5);
   border: 1px solid var(--color-border-secondary);
   border-radius: 12px;
   background: var(--color-background-card);

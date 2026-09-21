@@ -47,17 +47,17 @@ const InstallDialog = styled.div`
     font-size: 36px;
   }
   .explain {
-    font-size: 18px;
+    font-size: var(--font-xl);
     margin-top: 6px;
   }
   .copyBtn {
-    margin: 32px auto;
+    margin: var(--space-8) auto;
   }
   .shareContent {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 32px;
+    margin-top: var(--space-8);
     .iconWrap {
       width: 76px;
       height: 76px;
@@ -69,19 +69,19 @@ const InstallDialog = styled.div`
     }
     .line {
       width: 160px;
-      margin: 0 16px;
+      margin: 0 var(--space-4);
       border-top: 4px dashed var(--color-border-secondary);
     }
   }
   .text {
-    margin: 32px;
-    font-size: 18px;
+    margin: var(--space-8);
+    font-size: var(--font-xl);
     color: var(--color-text-tertiary);
   }
   .selectUser {
     span {
       color: var(--color-primary);
-      margin-left: 4px;
+      margin-left: var(--space-1);
       cursor: pointer;
     }
   }

@@ -15,7 +15,7 @@ html {
     border-radius: var(--radius-sm);
     border: var(--color-border-tertiary) 1px solid;
     box-sizing: border-box;
-    padding: 0 8px;
+    padding: 0 var(--space-2);
     &:focus {
       border: var(--color-primary) 1px solid;
     }
@@ -32,12 +32,12 @@ html {
   border-radius: var(--radius-sm);
   color: var(--color-white);
   width: 208px;
-  padding: 10px 20px;
-  font-size: 13px;
+  padding: 10px var(--space-5);
+  font-size: var(--font-sm);
   .loading {
     width: 50px;
     display: inline-block;
-    margin-right: 20px;
+    margin-right: var(--space-5);
     .MdLoader {
       .MdLoader-path {
         stroke: var(--color-primary-transparent);
@@ -51,14 +51,14 @@ html {
   // box-shadow: 1px 0 0 rgba(0, 0, 0, 0.15);
   background: var(--color-background-disabled);
   box-sizing: border-box;
-  padding: 12px 0;
+  padding: var(--space-3) 0;
 
   .loadingSkeleton {
     background-color: var(--color-background-disabled);
   }
 
   .worksheetApiMenuItem {
-    font-size: 14px;
+    font-size: var(--font-md);
     padding-left: 39px;
     height: 40px;
     line-height: 40px;
@@ -78,7 +78,7 @@ html {
   }
 
   .worksheetApiMenuTitle {
-    font-size: 14px;
+    font-size: var(--font-md);
     font-weight: bold;
     padding-left: 35px;
     height: 40px;
@@ -110,7 +110,7 @@ html {
     }
 
     .worksheetApiMenuTitle {
-      padding-left: 20px;
+      padding-left: var(--space-5);
     }
 
     .worksheetApiMenuItem {
@@ -156,7 +156,7 @@ html {
 
 .worksheetApiContent1 {
   background: var(--color-background-primary);
-  padding: 48px 32px 48px 40px;
+  padding: 48px var(--space-8) 48px 40px;
   border-bottom: 1px solid rgba(153, 153, 153, 0.3);
   flex: 1.5;
 
@@ -256,7 +256,7 @@ html {
       display: inline-block;
       vertical-align: bottom;
       height: 36px;
-      padding-left: 16px;
+      padding-left: var(--space-4);
       white-space: nowrap;
       text-decoration: none;
       text-overflow: ellipsis;
@@ -274,7 +274,7 @@ html {
     border: 1px solid var(--color-border-primary);
     height: 40px;
     line-height: 40px;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     box-sizing: border-box;
     border-radius: var(--radius-sm);
   }
@@ -283,7 +283,7 @@ html {
     border: 1px solid var(--color-border-primary);
     height: 40px;
     line-height: 40px;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     box-sizing: border-box;
     border-radius: var(--radius-sm);
   }
@@ -306,7 +306,7 @@ html {
 
 .worksheetApiContent2 {
   background: #303336;
-  padding: 48px 40px 48px 32px;
+  padding: 48px 40px 48px var(--space-8);
   overflow-x: auto;
   border-bottom: 1px solid rgba(153, 153, 153, 0.3);
   flex: 1;
@@ -315,7 +315,7 @@ html {
 .errorBox {
   margin: 200px auto;
   font-weight: 500;
-  font-size: 16px;
+  font-size: var(--font-lg);
   span {
     color: var(--color-error);
     display: block;
@@ -326,7 +326,7 @@ html {
     text-align: center;
     line-height: 95px;
     font-size: 50px;
-    margin: 0 auto 24px;
+    margin: 0 auto var(--space-6);
   }
 }
 

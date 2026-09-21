@@ -9,7 +9,7 @@ import { WIDGETS_TO_API_TYPE_ENUM, WORKFLOW_SYSTEM_CONTROL } from 'src/pages/wid
 import { getShowViews } from 'src/pages/worksheet/views/util';
 
 const Item = styled.div`
-  margin-bottom: 20px;
+  margin-bottom: var(--space-5);
   .Dropdown {
     width: 260px;
     .Menu {
@@ -53,7 +53,7 @@ const TagCon = styled.ul`
     }
     .tag {
       margin-right: 5px;
-      font-size: 13px;
+      font-size: var(--font-sm);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;

@@ -48,17 +48,17 @@
 
 #chatFeedDialog {
   .header {
-    margin-left: 20px;
+    margin-left: var(--space-5);
     height: 60px;
     color: var(--color-text-title);
     .title {
       font-size: 17px !important;
-      margin-top: 20px;
+      margin-top: var(--space-5);
     }
     .dialogCloseBtn {
-      font-size: 20px;
-      margin-top: 20px;
-      margin-right: 20px;
+      font-size: var(--font-2xl);
+      margin-top: var(--space-5);
+      margin-right: var(--space-5);
     }
   }
   .dialog_loadings {
@@ -75,7 +75,7 @@
 }
 .chatFeedDialog {
   .mui-dialog-body {
-    padding: 15px 20px 0 15px !important;
+    padding: 15px var(--space-5) 0 15px !important;
     border-top: 1px solid var(--color-border-primary);
     .z-depth-1,
     nav,
@@ -108,7 +108,7 @@
     background-image: url('./icons/@{prefix}@{type}@{urlExt}');
 
     &[data-date]:before when (extract(@iconTypes, @iterator) = 'calendar') {
-      font-size: 20px;
+      font-size: var(--font-2xl);
       position: absolute;
       display: inline-block;
       width: 100%;

@@ -34,7 +34,7 @@ const AddWorkflowDialogContentWrap = styled.div`
   .selectItem {
     width: 100%;
     height: 48px;
-    font-size: 13px !important;
+    font-size: var(--font-sm) !important;
     .ant-select-suffix {
       right: 16px !important;
     }
@@ -58,11 +58,11 @@ const AddWorkflowDialogContentWrap = styled.div`
   }
   .filterWrap {
     .label {
-      margin-right: 4px;
+      margin-right: var(--space-1);
     }
     .filterItem {
       width: 160px;
-      margin-right: 20px;
+      margin-right: var(--space-5);
       .ant-select-content {
         height: 36px;
         line-height: 36px;
@@ -82,13 +82,13 @@ const AddWorkflowDialogContentWrap = styled.div`
   }
   .workflowListWrap .listItem,
   .headerCon.listItem {
-    padding: 12px 24px;
+    padding: var(--space-3) var(--space-6);
     border-bottom: 1px solid var(--color-border-secondary);
     display: flex;
     align-items: center;
     color: var(--color-text-tertiary);
     .Checkbox-box {
-      margin-right: 12px;
+      margin-right: var(--space-3);
     }
     .columnType,
     .columnStatus {
@@ -108,7 +108,7 @@ const AddWorkflowDialogContentWrap = styled.div`
         justify-content: center;
         align-items: center;
         .icon {
-          font-size: 24px;
+          font-size: var(--font-3xl);
         }
       }
     }
@@ -123,7 +123,7 @@ const SelectAppOption = styled.div`
     height: 20px;
     display: inline-block;
     border-radius: var(--radius-sm);
-    margin-right: 8px;
+    margin-right: var(--space-2);
     text-align: center;
     svg {
       margin-top: 2px;
@@ -168,13 +168,13 @@ const CheckedWorkflowWrap = styled.div`
   }
   .workflowListWrap .listItem,
   .headerCon.listItem {
-    padding: 12px 24px;
+    padding: var(--space-3) var(--space-6);
     border-bottom: 1px solid var(--color-border-secondary);
     display: flex;
     align-items: center;
     color: var(--color-text-tertiary);
     .Checkbox-box {
-      margin-right: 12px;
+      margin-right: var(--space-3);
     }
     .columnType,
     .columnStatus {
@@ -195,7 +195,7 @@ const CheckedWorkflowWrap = styled.div`
       justify-content: center;
       width: 36px;
       .icon {
-        font-size: 24px;
+        font-size: var(--font-3xl);
       }
     }
   }

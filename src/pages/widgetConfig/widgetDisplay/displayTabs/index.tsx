@@ -19,7 +19,7 @@ const DisplayTabWrap = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 24px;
+    margin-top: var(--space-6);
     .animaItem {
       height: 24px;
       line-height: 24px;

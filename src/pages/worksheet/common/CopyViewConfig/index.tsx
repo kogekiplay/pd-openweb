@@ -22,8 +22,8 @@ import {
 const ContentWrap = styled.div`
   display: flex;
   flex-direction: ${props => (props.isCopyFrom ? 'column' : 'column-reverse')};
-  gap: 24px;
-  padding: 0 24px;
+  gap: var(--space-6);
+  padding: 0 var(--space-6);
   margin-bottom: 14px;
   .SelectWrap {
     position: relative;
@@ -52,7 +52,7 @@ const ContentWrap = styled.div`
       border: none !important;
       padding: 0 10px;
       .ant-select-selection-item-remove {
-        margin-left: 8px;
+        margin-left: var(--space-2);
       }
     }
   }
@@ -67,7 +67,7 @@ const SearchCon = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   border-bottom: 1px solid var(--color-border-primary);
   margin-bottom: 6px;
   input {
@@ -98,7 +98,7 @@ const DialogWrap = styled(Dialog)`
     border-bottom: 1px solid var(--color-border-secondary) !important;
   }
   .mui-dialog-body {
-    padding: 16px 0 22px !important;
+    padding: var(--space-4) 0 22px !important;
   }
 `;
 

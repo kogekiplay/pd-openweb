@@ -32,7 +32,7 @@ const WrapItem = styled.div`
     position: absolute;
     left: -16px;
     top: 12px;
-    font-size: 14px;
+    font-size: var(--font-md);
   }
   &:hover {
     .dragIcon {

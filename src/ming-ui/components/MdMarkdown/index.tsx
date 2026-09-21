@@ -74,7 +74,7 @@ const Wrap = styled.div`
   }
   .vditor-reset {
     ${props => (props.isFullScreen ? 'padding: 10px !important;' : '')}
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-primary);
     font-family:
       'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'WenQuanYi Micro Hei',

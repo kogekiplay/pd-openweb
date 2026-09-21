@@ -24,12 +24,12 @@ const ContentWrap = styled(FlexCenter)`
     font-size: 15px;
     flex: 1;
     background-color: var(--color-background-tertiary);
-    padding: 24px;
+    padding: var(--space-6);
   }
   .configWrap {
     box-sizing: border-box;
     width: 360px;
-    padding: 24px;
+    padding: var(--space-6);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -39,12 +39,12 @@ const ContentWrap = styled(FlexCenter)`
   .content {
     p {
       font-weight: bold;
-      font-size: 16px;
-      margin: 0 0 16px 0;
+      font-size: var(--font-lg);
+      margin: 0 0 var(--space-4) 0;
     }
   }
   .urlInput {
-    margin-bottom: 12px;
+    margin-bottom: var(--space-3);
     width: 100%;
   }
   .previewBtn {

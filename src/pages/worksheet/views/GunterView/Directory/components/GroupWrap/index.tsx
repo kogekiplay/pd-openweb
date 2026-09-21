@@ -18,7 +18,7 @@ const GroupingTotalWrapper = styled.div`
   .item {
     height: 32px;
     justify-content: flex-end;
-    padding-right: 20px;
+    padding-right: var(--space-5);
     position: absolute;
     right: 0;
   }

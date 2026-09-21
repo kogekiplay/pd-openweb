@@ -23,14 +23,14 @@ const Wrap = styled.div`
   .header {
     height: 44px;
     flex-shrink: 0;
-    padding: 0 24px;
+    padding: 0 var(--space-6);
     box-shadow: var(--shadow-sm);
     justify-content: space-between;
     background-color: var(--color-background-primary);
     z-index: 1;
 
     &.mobile {
-      padding: 0 12px;
+      padding: 0 var(--space-3);
       .title {
         min-width: 0;
       }

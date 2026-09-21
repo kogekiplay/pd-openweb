@@ -34,7 +34,7 @@
 
 .ChatPanel-SearchPanel-Message {
   .search-message {
-    padding: 12px 20px;
+    padding: var(--space-3) var(--space-5);
     cursor: pointer;
     &:hover {
       background: var(--color-background-hover);
@@ -56,19 +56,19 @@
     }
     .userName {
       flex: 1;
-      font-size: 14px;
+      font-size: var(--font-md);
       color: var(--color-text-title);
-      padding-left: 12px;
+      padding-left: var(--space-3);
       padding-right: 10px;
     }
     .time {
-      font-size: 12px;
+      font-size: var(--font-xs);
       color: silver;
     }
   }
   .search-message-content {
     color: var(--color-text-title);
-    font-size: 13px;
+    font-size: var(--font-sm);
     padding-left: 49px;
     max-width: 315px;
     max-height: 60px;

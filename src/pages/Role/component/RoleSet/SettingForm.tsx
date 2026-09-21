@@ -15,7 +15,7 @@ import SheetTable, { changeSheetModel } from './SheetTable';
 const WrapCon = styled.div`
   min-height: 0;
   .optionTxt {
-    font-size: 12px;
+    font-size: var(--font-xs);
     color: var(--color-text-tertiary);
   }
   .recordLoggingRangeText {
@@ -42,7 +42,7 @@ const WrapCon = styled.div`
     min-width: 0;
   }
   .worksheetSearch {
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     input {
       background: none;
       border: none;

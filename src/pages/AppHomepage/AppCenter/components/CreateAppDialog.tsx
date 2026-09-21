@@ -14,7 +14,7 @@ const Wrapper = styled.div`
     }
   }
   .ming.Textarea {
-    padding: 5px 12px;
+    padding: 5px var(--space-3);
     line-height: 24px;
   }
   .withdraw,

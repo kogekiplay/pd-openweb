@@ -25,8 +25,8 @@ const DragPointer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    font-size: 14px;
+    gap: var(--space-2);
+    font-size: var(--font-md);
     color: var(--color-text-tertiary);
     .aiGenIcon {
       font-size: 22px;

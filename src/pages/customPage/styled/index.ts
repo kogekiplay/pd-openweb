@@ -5,7 +5,7 @@ export const Header = styled(FlexCenter)`
   position: absolute;
   left: 0;
   right: 0;
-  padding: 0 24px;
+  padding: 0 var(--space-6);
   height: 54px;
   justify-content: space-between;
   background-color: var(--color-background-primary);

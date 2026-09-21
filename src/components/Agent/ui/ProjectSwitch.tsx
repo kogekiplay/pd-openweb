@@ -31,7 +31,7 @@ const Pop = styled.div`
 
 const ProjectItem = styled.div`
   cursor: pointer;
-  padding: 0 20px;
+  padding: 0 var(--space-5);
   font-size: 15px;
   font-weight: 500;
   height: 40px;

@@ -19,7 +19,7 @@ import { reportTypes } from '../Charts/common';
 import { WithoutData } from '../components/ChartStatus';
 
 const Con = styled.div`
-  padding: 17px 20px;
+  padding: 17px var(--space-5);
   .SingleViewHeader {
     .icon-task-later,
     .addRecord {
@@ -41,9 +41,9 @@ const Con = styled.div`
   .searchInputComp + div {
     display: flex;
     align-items: center;
-    margin-left: 12px;
+    margin-left: var(--space-3);
     span:first-child {
-      margin-right: 12px;
+      margin-right: var(--space-3);
     }
   }
   .actionDivider {

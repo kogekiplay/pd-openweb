@@ -23,7 +23,7 @@ const Con = styled.div`
 const Empty = styled.div`
   width: 100%;
   text-align: center;
-  padding: 12px 0 20px;
+  padding: var(--space-3) 0 var(--space-5);
   color: var(--color-text-disabled);
 `;
 

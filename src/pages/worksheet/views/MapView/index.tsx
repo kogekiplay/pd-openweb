@@ -68,7 +68,7 @@ const NewRecordBtn = styled.div`
   background-color: var(--app-primary-color, var(--color-primary));
   ${({ clickLnglat }) => !clickLnglat && 'display: none;'}
   .icon {
-    font-size: 13px;
+    font-size: var(--font-sm);
     margin-right: 5px;
   }
 `;

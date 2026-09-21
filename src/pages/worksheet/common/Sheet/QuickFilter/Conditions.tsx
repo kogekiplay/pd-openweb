@@ -100,7 +100,7 @@ const Item = styled.div(
 );
 
 const Label = styled.div`
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-secondary);
   max-width: 140px;
   min-width: 60px;
@@ -129,8 +129,8 @@ const Operate = styled.div`
   position: relative;
   height: 32px;
   text-align: left;
-  margin-bottom: 12px;
-  margin-left: 16px;
+  margin-bottom: var(--space-3);
+  margin-left: var(--space-4);
   ${({ isConfigMode }) =>
     isConfigMode
       ? `
@@ -158,10 +158,10 @@ const ExpandBtn = styled.div(
   // top: 6px;
   // right: -${showQueryBtn ? 64 : 43}px;
   display: inline-block;
-  margin-left: 20px;
+  margin-left: var(--space-5);
   cursor: pointer;
   color: var(--color-primary);
-  font-size: 13px;
+  font-size: var(--font-sm);
   .icon {
     margin-right: 2px;
     font-size: 15px;

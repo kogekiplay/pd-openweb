@@ -9,19 +9,19 @@ import UploadCertificate from 'src/pages/certification/components/EnterpriseForm
 import { getEnterpriseDefaultFormData, getEnterpriseParams } from 'src/pages/certification/utils';
 
 const Wrapper = styled.div`
-  margin-top: 8px;
+  margin-top: var(--space-2);
   .formItem {
-    margin-bottom: 20px;
+    margin-bottom: var(--space-5);
     .labelText {
       color: var(--color-text-secondary);
       font-weight: bold;
-      margin-bottom: 8px;
+      margin-bottom: var(--space-2);
     }
   }
   .divider {
     height: 1px;
     background-color: var(--color-background-disabled);
-    margin: 16px 0;
+    margin: var(--space-4) 0;
   }
 `;
 

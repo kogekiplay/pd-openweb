@@ -20,7 +20,7 @@
   }
   &-wrapper {
     height: 400px;
-    margin-bottom: 20px;
+    margin-bottom: var(--space-5);
     .statisticsCard {
       box-shadow: 0 2px 6px 0px #00000026;
     }
@@ -43,9 +43,9 @@
 
   &-header {
     color: var(--color-text-secondary);
-    font-size: 16px;
+    font-size: var(--font-lg);
     height: 50px;
-    padding: 0 20px;
+    padding: 0 var(--space-5);
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -54,7 +54,7 @@
 
     .title {
       color: var(--color-text-primary);
-      font-size: 18px;
+      font-size: var(--font-xl);
     }
     .commonality,
     .personal {
@@ -90,7 +90,7 @@
   }
 
   &-content {
-    padding: 16px;
+    padding: var(--space-4);
     overflow: hidden;
   }
   &-nodata {
@@ -99,7 +99,7 @@
     align-items: center;
     justify-content: center;
     flex: 1;
-    padding: 20px 40px;
+    padding: var(--space-5) 40px;
 
     i {
       color: var(--color-text-disabled);
@@ -111,7 +111,7 @@
       font-size: 70px;
       border-radius: 50%;
       background: var(--color-border-secondary);
-      margin-bottom: 24px;
+      margin-bottom: var(--space-6);
     }
     .prompt {
       width: 100%;
@@ -137,7 +137,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fill, 530px);
       justify-content: center;
-      gap: 20px;
+      gap: var(--space-5);
     }
     &-wrapper {
       padding: 10px;

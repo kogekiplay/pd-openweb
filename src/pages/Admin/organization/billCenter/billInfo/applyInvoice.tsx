@@ -22,7 +22,7 @@ const ApplyInvoiceWrap = styled.ul`
   }
   li {
     flex-shrink: 0;
-    padding: 8px 0;
+    padding: var(--space-2) 0;
     line-height: 36px;
     width: 100%;
     &.half {

@@ -27,7 +27,7 @@ const Wrap = styled.div`
     color: var(--color-success);
   }
   .con {
-    padding: 24px;
+    padding: var(--space-6);
     border-top: 1px solid var(--color-border-secondary);
     .chooseTypeCon {
     }
@@ -42,7 +42,7 @@ const Wrap = styled.div`
         opacity: 0.5;
       }
       &:hover {
-        background: var(--color-link-hover);
+        background: var(--color-primary-dark);
       }
     }
   }
@@ -62,7 +62,7 @@ const Wrap = styled.div`
   .paramLi {
     height: 34px;
     line-height: 34px;
-    padding: 0 8px;
+    padding: 0 var(--space-2);
     &:hover {
       background: var(--color-background-hover);
     }
@@ -82,7 +82,7 @@ const WrapBtn = styled.div`
       opacity: 0.5;
     }
     &:hover {
-      background: var(--color-link-hover);
+      background: var(--color-primary-dark);
     }
   }
 `;

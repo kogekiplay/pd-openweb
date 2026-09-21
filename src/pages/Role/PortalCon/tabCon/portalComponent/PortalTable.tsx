@@ -32,7 +32,7 @@ const Wrap = styled.div`
     display: block;
   }
   .ant-pagination {
-    margin: 20px 20px 0;
+    margin: var(--space-5) var(--space-5) 0;
     text-align: center;
   }
   .ant-table-expanded-row-fixed {

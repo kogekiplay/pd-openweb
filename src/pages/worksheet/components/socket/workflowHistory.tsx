@@ -28,7 +28,7 @@ const StatusWrap = styled.ul`
   border-bottom: 1px solid var(--color-border-primary);
   li {
     padding: 0 10px;
-    font-size: 14px;
+    font-size: var(--font-md);
     cursor: pointer;
     border-bottom: 3px solid transparent;
     line-height: 36px;
@@ -47,7 +47,7 @@ const WorkflowList = styled.ul`
   overflow-y: auto;
   li {
     line-height: 32px;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     display: flex;
     justify-content: space-between;
     cursor: pointer;
@@ -66,7 +66,7 @@ const WorkflowList = styled.ul`
     margin-top: 130px;
     font-weight: bold;
     text-align: center;
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-text-disabled);
   }
 `;

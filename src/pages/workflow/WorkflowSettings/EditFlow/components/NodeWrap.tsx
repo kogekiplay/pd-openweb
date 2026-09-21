@@ -5,7 +5,7 @@ import CreateNode from './CreateNode';
 const Box = styled.div`
   min-width: 333px;
   border-radius: 24px 24px 24px 24px;
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   background: var(--color-border-secondary);
   .workflowBranch {
     background: var(--color-border-secondary) !important;
@@ -33,7 +33,7 @@ const Title = styled.div`
   background: var(--color-background-primary);
   box-shadow: var(--shadow-sm);
   border-radius: 20px;
-  padding: 0 20px;
+  padding: 0 var(--space-5);
   position: relative;
   border: 1px solid var(--color-border-primary);
   transform: translateY(-20px);

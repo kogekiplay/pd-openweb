@@ -32,20 +32,20 @@ const isMobile = browserIsMobile();
 
 const MessageListWrap = styled(ScrollView)`
   flex: 1;
-  padding: 0 16px;
+  padding: 0 var(--space-4);
   overflow: hidden;
   .messageListContent {
     width: 100%;
     margin: 0 auto;
-    padding: 20px 0 30px;
+    padding: var(--space-5) 0 30px;
     > *:not(.noPaddingBottom):not(:has(~ *:not(.noPaddingBottom))) {
       min-height: calc(100dvh - 336px);
     }
   }
   &.isMobile {
-    padding: 16px 20px 0;
+    padding: var(--space-4) var(--space-5) 0;
     .messageListContent {
-      padding: 20px 0;
+      padding: var(--space-5) 0;
     }
   }
   &.isChatbot {
@@ -90,7 +90,7 @@ export const MessageItemWrap = styled.div`
     display: flex;
   }
   .statusText {
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-text-secondary);
   }
   .messageContent {
@@ -150,7 +150,7 @@ export const MessageItemWrap = styled.div`
     }
     .messageContent {
       background: var(--color-mingo-transparent);
-      padding: 8px 10px;
+      padding: var(--space-2) 10px;
       border-radius: var(--radius-sm);
     }
     &.useAppThemeColor {
@@ -160,7 +160,7 @@ export const MessageItemWrap = styled.div`
     }
     &.isMobile {
       .messageContent {
-        margin-top: 24px;
+        margin-top: var(--space-6);
       }
     }
   }
@@ -170,7 +170,7 @@ export const MessageItemWrap = styled.div`
     }
   }
   .is-editing-message {
-    font-size: 12px;
+    font-size: var(--font-xs);
     color: var(--color-text-tertiary);
     .icon {
       font-size: 15px;
@@ -199,8 +199,8 @@ const MessageEditTextarea = styled(AutoHeightTextArea)`
   border: 2px solid var(--color-mingo) !important;
   border-radius: var(--radius-sm) !important;
   width: 100% !important;
-  padding: 7px 12px !important;
-  font-size: 14px !important;
+  padding: 7px var(--space-3) !important;
+  font-size: var(--font-md) !important;
 `;
 
 const ScrollToBottom = styled.div`
@@ -253,12 +253,12 @@ const ClearedLine = styled.div`
   position: relative;
   text-align: center;
   color: var(--color-text-tertiary);
-  font-size: 13px;
-  margin: 16px 0;
+  font-size: var(--font-sm);
+  margin: var(--space-4) 0;
   .text {
     z-index: 2;
     position: relative;
-    padding: 0 8px;
+    padding: 0 var(--space-2);
     background: var(--color-background-primary);
   }
   &:before {

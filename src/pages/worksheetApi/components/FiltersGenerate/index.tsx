@@ -17,7 +17,7 @@ const Wrapper = styled.div`
     border: 1px solid var(--color-border-secondary);
     border-radius: var(--radius-sm);
     height: 500px;
-    padding: 16px;
+    padding: var(--space-4);
     overflow: auto;
   }
   .viewWrapper {
@@ -25,13 +25,13 @@ const Wrapper = styled.div`
     min-width: 0;
     border: 1px solid var(--color-border-secondary);
     .selectWrapper {
-      padding: 6px 16px;
+      padding: 6px var(--space-4);
       margin-bottom: 10px;
       border-bottom: 1px solid var(--color-background-disabled);
       border-radius: var(--radius-sm);
     }
     .jsonViewWrapper {
-      padding: 12px 16px 16px;
+      padding: var(--space-3) var(--space-4) var(--space-4);
     }
     .string-value {
       white-space: pre-wrap;

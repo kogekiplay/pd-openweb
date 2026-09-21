@@ -32,14 +32,14 @@ const Wrapper = styled.div`
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    margin-top: 12px;
+    margin-top: var(--space-3);
   }
   .sampleChip {
-    padding: 7px 16px;
+    padding: 7px var(--space-4);
     border-radius: 22px;
     border: 1px solid var(--color-border-primary);
     background: var(--color-background-card);
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-text-primary);
     cursor: pointer;
     transition: all 0.2s ease;
@@ -56,7 +56,7 @@ const Wrapper = styled.div`
   }
   /* 加载中：复用全站 ming-ui Skeleton（主题化扫光），去掉其默认内边距 / 底色，芯片间留 10px 间距 */
   .chipSkeleton {
-    margin-top: 12px;
+    margin-top: var(--space-3);
     padding: 0;
     background: transparent;
     ul {
@@ -64,21 +64,21 @@ const Wrapper = styled.div`
     }
   }
   .moreLabel {
-    margin: 28px 0 12px;
-    font-size: 13px;
+    margin: 28px 0 var(--space-3);
+    font-size: var(--font-sm);
     font-weight: 600;
     color: var(--color-text-secondary);
   }
   .moreGrid {
     display: flex;
-    gap: 16px;
+    gap: var(--space-4);
     align-items: stretch;
   }
   .bigCard {
     flex: 1;
     display: flex;
     flex-direction: column;
-    padding: 20px;
+    padding: var(--space-5);
     border: 1px solid var(--color-border-secondary);
     border-radius: 8px;
     cursor: pointer;
@@ -95,17 +95,17 @@ const Wrapper = styled.div`
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 16px;
-      font-size: 24px;
+      margin-bottom: var(--space-4);
+      font-size: var(--font-3xl);
     }
     .cardTitle {
-      font-size: 16px;
+      font-size: var(--font-lg);
       font-weight: 600;
       color: var(--color-text-title);
     }
     .cardDesc {
       margin-top: 6px;
-      font-size: 13px;
+      font-size: var(--font-sm);
       color: var(--color-text-secondary);
     }
   }
@@ -114,8 +114,8 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 4px;
-    padding: 8px;
+    gap: var(--space-1);
+    padding: var(--space-2);
     border: 1px dashed rgba(216, 216, 216, 1);
     border-radius: 8px;
     background: var(--color-background-tertiary);
@@ -127,14 +127,14 @@ const Wrapper = styled.div`
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 10px 12px;
+    padding: 10px var(--space-3);
     border-radius: 6px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-text-title);
     transition: background 0.2s ease;
     .rowIcon {
-      font-size: 20px;
+      font-size: var(--font-2xl);
       color: var(--color-text-secondary);
     }
     &:hover {

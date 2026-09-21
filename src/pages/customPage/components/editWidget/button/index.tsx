@@ -27,7 +27,7 @@ const BtnWrap = styled.div`
     flex-direction: column;
     flex: 1;
     justify-content: space-between;
-    padding: 10px 24px;
+    padding: 10px var(--space-6);
     overflow: auto;
   }
 `;
@@ -45,7 +45,7 @@ const DefaultItem = styled.div`
     box-shadow: var(--shadow-lg);
   }
   .btnWrap {
-    margin: 8px 10px;
+    margin: var(--space-2) 10px;
   }
 `;
 

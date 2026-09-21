@@ -6,7 +6,7 @@
   display: inline-block;
 }
 .cellControl {
-  font-size: 13px;
+  font-size: var(--font-sm);
 }
 .cellDropdown {
   display: inline-block;
@@ -24,8 +24,8 @@
   display: inline-block;
   .cellOption {
     display: inline-block;
-    margin: 0 4px 4px 0;
-    padding: 0 8px;
+    margin: 0 var(--space-1) var(--space-1) 0;
+    padding: 0 var(--space-2);
     line-height: 21px;
     vertical-align: middle;
     border-radius: 40px;
@@ -89,7 +89,7 @@
       display: none;
     }
     .Checkbox {
-      margin-right: 20px;
+      margin-right: var(--space-5);
       margin-bottom: 6px;
     }
   }
@@ -130,7 +130,7 @@
       .StarScore-item {
         display: inline-block;
         i {
-          font-size: 16px !important;
+          font-size: var(--font-lg) !important;
         }
       }
       .text {
@@ -165,7 +165,7 @@
       margin: 5px 0;
       .cellRelationIcon {
         i {
-          font-size: 16px;
+          font-size: var(--font-lg);
           color: var(--color-text-tertiary);
           padding: 0 10px;
           line-height: 36px;
@@ -189,15 +189,15 @@
   .cellDepartment {
     display: inline-block;
     vertical-align: middle;
-    margin-bottom: 4px;
-    font-size: 13px;
+    margin-bottom: var(--space-1);
+    font-size: var(--font-sm);
     color: var(--color-text-primary);
     background-color: rgba(80, 120, 150, 0.08);
     height: 21px;
     line-height: 21px;
     margin-right: 6px;
     border-radius: 13px;
-    padding: 0 8px;
+    padding: 0 var(--space-2);
     &.disabledDepartmentOrRole {
       color: var(--color-text-secondary) !important;
       text-decoration: line-through !important;
@@ -235,11 +235,11 @@
   .cellUser {
     display: inline-block;
     vertical-align: middle;
-    margin-bottom: 4px;
-    font-size: 13px;
+    margin-bottom: var(--space-1);
+    font-size: var(--font-sm);
     color: var(--color-text-primary);
     background: var(--color-background-tertiary);
-    padding-right: 8px;
+    padding-right: var(--space-2);
     height: 21px;
     line-height: 21px;
     margin-right: 6px;
@@ -269,9 +269,9 @@
 .cellRelateWorksheets {
   .cellRelateWorksheetRecord {
     display: inline-block;
-    margin-bottom: 4px;
+    margin-bottom: var(--space-1);
     margin-right: 10px;
-    padding: 0px 8px 0 6px;
+    padding: 0px var(--space-2) 0 6px;
     background-color: color-mix(in srgb, var(--color-primary) 8%, transparent);
     border-radius: var(--radius-sm);
     line-height: 21px;
@@ -279,7 +279,7 @@
     vertical-align: middle;
     .icon {
       color: var(--color-text-tertiary) !important;
-      font-size: 14px;
+      font-size: var(--font-md);
       margin-right: 2px;
     }
     &.mutiple {
@@ -307,9 +307,9 @@
   height: 21px;
   line-height: 21px;
   padding: 0 6px;
-  font-size: 13px;
+  font-size: var(--font-sm);
   .icon {
-    font-size: 16px;
+    font-size: var(--font-lg);
     color: var(--color-text-tertiary);
     margin-right: 5px;
     position: relative;
@@ -376,7 +376,7 @@
     box-shadow: inset 0 0 0 2px var(--color-primary-focus) !important;
   }
   .ant-select-content {
-    font-size: 13px !important;
+    font-size: var(--font-sm) !important;
     height: 33px !important;
     .ant-select-input {
       padding-left: 0px !important;
@@ -514,7 +514,7 @@
   background-color: var(--color-background-primary);
   input {
     width: 100%;
-    font-size: 13px;
+    font-size: var(--font-sm);
     height: 34px;
     line-height: 34px;
     box-sizing: border-box;
@@ -525,14 +525,14 @@
 }
 
 .textControlTextArea {
-  font-size: 13px !important;
+  font-size: var(--font-sm) !important;
   padding: 7px 6px !important;
   box-sizing: border-box !important;
   border: none !important;
   resize: none !important;
   line-height: 1.5em;
   &.isMultipleLine {
-    padding-bottom: 24px !important;
+    padding-bottom: var(--space-6) !important;
   }
 }
 
@@ -591,7 +591,7 @@
 }
 
 .cellControlMobilePhoneEdit {
-  font-size: 13px;
+  font-size: var(--font-sm);
 
   .phoneNumberEditWrapper {
     width: 100%;
@@ -607,10 +607,10 @@
   position: absolute;
   white-space: nowrap;
   top: -26px;
-  padding: 0 8px;
+  padding: 0 var(--space-2);
   height: 26px;
   line-height: 26px;
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: var(--color-white);
   background-color: var(--color-error);
 }
@@ -635,7 +635,7 @@
   }
   .ant-select-content {
     z-index: 2;
-    font-size: 13px !important;
+    font-size: var(--font-sm) !important;
     padding: 0 6px !important;
     min-height: 34px !important;
     .customAntDropdownTitleWithBG {
@@ -669,7 +669,7 @@
     }
 
     .ant-select-selection-item-content > span {
-      padding-right: 24px !important;
+      padding-right: var(--space-6) !important;
     }
     .ant-select-selection-item-remove {
       right: 14px;
@@ -711,7 +711,7 @@
   .cellControlDatePickerCon {
     .ant-picker {
       height: auto;
-      padding: 5px 4px;
+      padding: 5px var(--space-1);
       border: none;
       box-shadow: none;
       background: transparent;
@@ -723,7 +723,7 @@
         height: auto !important;
       }
       .ant-picker-input input {
-        font-size: 13px;
+        font-size: var(--font-sm);
       }
     }
   }
@@ -797,7 +797,7 @@
 .sheetViewTable {
   .cell.focus.editable {
     .guideText {
-      font-size: 13px;
+      font-size: var(--font-sm);
       display: inline-block !important;
       color: var(--color-text-tertiary) !important;
     }

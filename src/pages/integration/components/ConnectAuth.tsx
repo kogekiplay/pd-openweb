@@ -36,10 +36,10 @@ const Wrap = styled.div`
   // border: 1px solid var(--color-border-primary);
   border-radius: 10px;
   .con {
-    padding: 20px 24px;
+    padding: var(--space-5) var(--space-6);
     .title {
       width: 130px;
-      padding-right: 20px;
+      padding-right: var(--space-5);
     }
   }
   .workflowSettings {
@@ -68,7 +68,7 @@ const Wrap = styled.div`
     border-radius: var(--radius-sm);
     min-width: 100px;
     box-sizing: initial;
-    font-size: 13px;
+    font-size: var(--font-sm);
   }
   .actionControlBox:not(:hover):not(:focus):not(.errorBorder):not(.actionClearBorder),
   .actionControlBox:not(.borderColorPrimary) {

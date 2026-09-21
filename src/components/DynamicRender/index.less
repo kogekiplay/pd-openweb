@@ -1,23 +1,23 @@
 .dynamicRenderContainer {
   .dynamicField {
-    margin-bottom: 20px;
+    margin-bottom: var(--space-5);
   }
 
   .dynamicTitleWrap {
     .title {
       margin-bottom: 10px;
-      font-size: 14px;
+      font-size: var(--font-md);
       font-weight: 500;
       color: var(--color-text-primary);
     }
     .hint {
-      margin-left: 4px;
+      margin-left: var(--space-1);
       color: var(--color-text-tertiary);
       cursor: pointer;
     }
     .desc {
       margin-bottom: 14px;
-      font-size: 13px;
+      font-size: var(--font-sm);
       color: var(--color-text-tertiary);
     }
   }
@@ -26,7 +26,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 20px;
+    margin-bottom: var(--space-5);
     height: 36px;
     background: var(--color-primary-transparent);
     border-radius: var(--radius-sm);
@@ -40,7 +40,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 20px;
+    margin-bottom: var(--space-5);
     width: 86px;
     height: 32px;
     background: var(--color-primary-transparent);
@@ -71,6 +71,6 @@
 .mappedFieldPopup {
   .ant-select-item-option-disabled {
     color: var(--color-text-tertiary) !important;
-    font-size: 13px;
+    font-size: var(--font-sm);
   }
 }

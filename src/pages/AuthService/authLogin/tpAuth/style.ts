@@ -50,7 +50,7 @@ export const Wrap = styled.div`
   .tpAutoBind .txt {
     line-height: 32px;
     color: var(--color-text-tertiary);
-    font-size: 16px;
+    font-size: var(--font-lg);
   }
   @media screen and (max-width: 500px) {
     background-color: var(--color-border-secondary);

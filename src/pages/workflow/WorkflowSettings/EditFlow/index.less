@@ -23,15 +23,15 @@
   .workflowEditContent {
     &:first-child {
       > :first-child {
-        margin-top: 20px;
+        margin-top: var(--space-5);
       }
       .workflowBox {
-        padding-top: 20px;
+        padding-top: var(--space-5);
       }
     }
   }
   .workflowBox {
-    padding: 16px 24px 0;
+    padding: var(--space-4) var(--space-6) 0;
     position: relative;
     &::before,
     ~ .workflowLineBtn::before {
@@ -205,8 +205,8 @@
       padding: 26px 10px 0;
       box-sizing: border-box;
       &.workflowBranchItem {
-        font-size: 13px;
-        padding: 8px 8px 12px 8px;
+        font-size: var(--font-sm);
+        padding: var(--space-2) var(--space-2) var(--space-3) var(--space-2);
         min-height: 50px;
         display: flex;
         flex-direction: column;
@@ -221,7 +221,7 @@
           min-height: 32px;
           line-height: 20px;
           background: var(--color-background-secondary);
-          padding: 6px 8px;
+          padding: 6px var(--space-2);
           .maxWidth {
             display: inline-block;
             max-width: 100%;
@@ -230,8 +230,8 @@
         .conditionSplit {
           text-align: center;
           position: relative;
-          font-size: 14px;
-          padding: 8px 0;
+          font-size: var(--font-md);
+          padding: var(--space-2) 0;
           color: var(--color-text-secondary);
           &::before {
             content: '';
@@ -300,7 +300,7 @@
       }
     }
     .workflowContent {
-      padding: 8px;
+      padding: var(--space-2);
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -316,11 +316,11 @@
         border-radius: 18px;
         margin: 6px auto;
         color: var(--color-primary);
-        font-size: 14px;
+        font-size: var(--font-md);
         min-width: 140px;
         box-sizing: border-box;
         background: var(--color-primary-transparent);
-        padding: 0 16px;
+        padding: 0 var(--space-4);
         &:hover {
           color: var(--color-white);
           background: var(--color-primary);
@@ -341,10 +341,10 @@
       .workflowContentInfo {
         height: 30px;
         line-height: 30px;
-        padding: 0 8px;
+        padding: 0 var(--space-2);
         width: 100%;
         box-sizing: border-box;
-        font-size: 13px;
+        font-size: var(--font-sm);
       }
       .icon-report,
       .icon-info_outline {
@@ -359,7 +359,7 @@
       position: absolute;
       top: -8px;
       right: -8px;
-      font-size: 18px;
+      font-size: var(--font-xl);
       width: 18px;
       height: 18px;
       background: var(--color-background-primary);
@@ -394,7 +394,7 @@
       &.active {
         border-color: var(--color-background-primary);
         &:hover {
-          background: var(--color-link-hover) !important;
+          background: var(--color-primary-dark) !important;
         }
       }
     }
@@ -442,14 +442,14 @@
     }
   }
   .workflowLineBtn {
-    padding: 16px 0;
+    padding: var(--space-4) 0;
     width: 261px;
     position: relative;
     .icon-custom_add_circle {
       width: 20px;
       height: 20px;
       display: block;
-      font-size: 20px;
+      font-size: var(--font-2xl);
       cursor: pointer;
       position: relative;
       background: var(--color-background-disabled);
@@ -469,9 +469,9 @@
       border-radius: 6px;
       box-shadow: 0 0 10px color-mix(in srgb, var(--color-primary) 90%, transparent);
       background: var(--color-background-primary);
-      margin: 20px 0;
+      margin: var(--space-5) 0;
       position: relative;
-      padding: 16px;
+      padding: var(--space-4);
       flex-wrap: wrap;
       .workflowCopyBtn {
         &:hover {
@@ -517,11 +517,11 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 16px;
+    font-size: var(--font-lg);
     color: var(--color-text-secondary);
     background: color-mix(in srgb, var(--color-overlay-paper) 10%, transparent);
     border-radius: var(--radius-sm);
-    margin-right: 8px;
+    margin-right: var(--space-2);
     &:not(.disabled):hover {
       background: var(--color-border-secondary);
     }
@@ -537,7 +537,7 @@
     width: 2px;
     height: 16px;
     background: var(-color-text-disabled);
-    margin-right: 8px;
+    margin-right: var(--space-2);
   }
 }
 
@@ -574,7 +574,7 @@
       float: right;
     }
     .Button--primary {
-      margin-left: 20px !important;
+      margin-left: var(--space-5) !important;
     }
   }
 }
@@ -585,7 +585,7 @@
   box-shadow: var(--shadow-lg);
   .createNodeDialogHeader {
     height: 55px;
-    padding: 0 24px;
+    padding: 0 var(--space-6);
     align-items: center;
     color: var(--color-white);
     background: var(--color-primary);
@@ -600,14 +600,14 @@
     }
   }
   .nodeList {
-    margin: 0 16px 20px;
+    margin: 0 var(--space-4) var(--space-5);
     li {
       width: 50%;
       box-sizing: border-box;
       border-radius: 6px;
       display: flex;
       align-items: center;
-      padding: 12px 16px;
+      padding: var(--space-3) var(--space-4);
       cursor: pointer;
       float: left;
       min-height: 66px;
@@ -615,7 +615,7 @@
         background: var(--color-background-hover);
       }
       .nodeListIcon {
-        margin-right: 12px;
+        margin-right: var(--space-3);
         min-width: 40px;
         width: 40px;
         height: 40px;
@@ -645,7 +645,7 @@
   .secondNodeList {
     margin-top: 10px;
     li {
-      padding: 12px;
+      padding: var(--space-3);
       border-radius: 8px;
       cursor: pointer;
       &:hover {
@@ -658,7 +658,7 @@
       }
       .Radio-text {
         color: var(--color-text-primary) !important;
-        font-size: 16px;
+        font-size: var(--font-lg);
       }
       .Radio--disabled {
         cursor: pointer;
@@ -669,7 +669,7 @@
     height: 40px;
     position: relative;
     input {
-      padding: 8px 32px;
+      padding: var(--space-2) var(--space-8);
       height: 40px;
       background: var(--color-background-secondary);
       border-radius: 18px;
@@ -694,7 +694,7 @@
     align-items: center;
     justify-content: center;
     height: 100%;
-    font-size: 16px;
+    font-size: var(--font-lg);
     color: var(--color-text-secondary);
     margin: 0 14px;
   }
@@ -705,12 +705,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 20px 8px;
+    margin: var(--space-5) var(--space-2);
   }
   .createNodeDialogNav {
     width: 200px;
     height: 100%;
-    padding: 20px 4px 0;
+    padding: var(--space-5) var(--space-1) 0;
     background: var(--color-background-secondary);
   }
   .createNodeDialogNavList {
@@ -761,7 +761,7 @@
     }
   }
   .createNodeDialogNavTags {
-    font-size: 13px;
+    font-size: var(--font-sm);
     margin: 2px 0;
     li {
       height: 40px;
@@ -776,7 +776,7 @@
     height: 14px;
   }
   .createNodeDialogMode {
-    margin-left: 20px;
+    margin-left: var(--space-5);
     width: 60px;
     height: 32px;
     background: var(--color-background-secondary);
@@ -810,7 +810,7 @@
     height: 36px;
     display: flex;
     align-items: center;
-    padding: 0 32px 0 16px;
+    padding: 0 var(--space-8) 0 var(--space-4);
     cursor: pointer;
     &:hover {
       background-color: var(--color-background-hover);
@@ -819,22 +819,22 @@
       color: var(--color-error);
       i {
         color: var(--color-error);
-        font-size: 16px;
+        font-size: var(--font-lg);
       }
     }
     i {
-      font-size: 14px;
+      font-size: var(--font-md);
       color: var(--color-text-secondary);
       margin-right: 10px;
     }
   }
   .flowNodeOperateMove {
-    padding-top: 8px;
-    padding-left: 16px;
+    padding-top: var(--space-2);
+    padding-left: var(--space-4);
     border-top: 1px solid var(--color-border-secondary);
   }
   .flowNodeOperateMoveBtn {
-    margin: 6px 16px;
+    margin: 6px var(--space-4);
     border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-primary);
     color: var(--color-text-secondary);
@@ -848,8 +848,8 @@
       }
     }
     .icon {
-      font-size: 16px;
-      padding: 2px 12px;
+      font-size: var(--font-lg);
+      padding: 2px var(--space-3);
       cursor: pointer;
       &:not(.disabled):hover {
         background: var(--color-background-hover);
@@ -873,13 +873,13 @@
 
 .processNodeBox {
   .processNodeAlias {
-    padding: 5px 12px;
+    padding: 5px var(--space-3);
     border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-primary);
     height: 36px;
     line-height: 36px;
     width: 100%;
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-title);
     &:focus {
       border-color: var(--color-primary);
@@ -893,10 +893,10 @@
     left: 0;
     border-radius: var(--radius-sm);
     color: var(--color-white);
-    padding: 5px 12px;
+    padding: 5px var(--space-3);
     white-space: nowrap;
     background: var(--color-error);
-    font-size: 12px;
+    font-size: var(--font-xs);
     .processNodeErrorArrow {
       position: absolute;
       transform: translateY(-5px);

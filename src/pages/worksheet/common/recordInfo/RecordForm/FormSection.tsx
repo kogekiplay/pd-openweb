@@ -19,7 +19,7 @@ const FormSectionWrap = styled.div`
   display: flex;
   flex-direction: column;
   transition: all 0.3s;
-  padding-bottom: 8px;
+  padding-bottom: var(--space-2);
   .tabContainer {
     flex: 1;
     display: flex;
@@ -54,7 +54,7 @@ const FormSectionWrap = styled.div`
       ${props =>
         props.isUnfold
           ? 'width: 24px;text-align: right;margin: 0 0 0 auto;'
-          : 'font-size: 12px;margin:4px 0 0 0;line-height: 13px'}
+          : 'font-size: var(--font-xs);margin:var(--space-1) 0 0 0;line-height: 13px'}
     }
   }
   .expandIcon {

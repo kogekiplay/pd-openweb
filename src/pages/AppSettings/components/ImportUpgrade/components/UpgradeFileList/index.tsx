@@ -9,16 +9,16 @@ import appManagementAjax from 'src/api/appManagement';
 const FileListWrap = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--space-6);
   width: 100%;
   min-height: 0;
   border-radius: 8px;
   overflow-y: auto;
   border: 1px dashed var(--color-border-secondary);
   box-sizing: border-box;
-  margin-bottom: 20px;
+  margin-bottom: var(--space-5);
   flex: 1;
-  padding: 32px 0 32px 56px;
+  padding: var(--space-8) 0 var(--space-8) 56px;
   ::-webkit-scrollbar-thumb {
     background: var(--color-background-secondary);
     background-clip: padding-box;
@@ -36,7 +36,7 @@ const FileItemWrap = styled.div`
     border: 1px solid var(--color-border-secondary);
     width: 310px;
     height: 72px;
-    padding: 0 24px 0 16px;
+    padding: 0 var(--space-6) 0 var(--space-4);
     display: flex;
     align-items: center;
     .iconWrap {
@@ -70,7 +70,7 @@ const FileItemWrap = styled.div`
     line-height: 40px;
     border: 1px solid var(--color-border-secondary);
     border-radius: var(--radius-sm);
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     box-sizing: border-box;
     &.focus {
       border: 1px solid var(--color-primary);

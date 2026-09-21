@@ -28,7 +28,7 @@ const ChooseWidgetWrap = styled.div`
   max-height: ${window.innerHeight - 24}px;
   .searchWrapper {
     border-bottom: 1px solid var(--color-border-secondary);
-    margin: 8px 16px 0;
+    margin: var(--space-2) var(--space-4) 0;
     display: flex;
     height: 38px;
     line-height: 38px;
@@ -59,10 +59,10 @@ const ChooseWidgetWrap = styled.div`
       height: 10px;
     }
     .widgetList {
-      padding: 8px 16px;
+      padding: var(--space-2) var(--space-4);
       .childCon {
         position: relative;
-        padding-left: 8px;
+        padding-left: var(--space-2);
         &::before {
           content: '';
           position: absolute;

@@ -30,8 +30,8 @@ const getTodoCount = (data, delegationId) => {
 
 const CardWrapper = styled.div`
   width: 100%;
-  padding: 12px;
-  margin-bottom: 12px;
+  padding: var(--space-3);
+  margin-bottom: var(--space-3);
   box-sizing: border-box;
   background-color: var(--color-background-primary);
   border-radius: var(--radius-sm);
@@ -48,7 +48,7 @@ const CardWrapper = styled.div`
   .title {
     margin-bottom: 6;
     color: var(--color-text-title);
-    font-size: 13px;
+    font-size: var(--font-sm);
     font-weight: bold;
   }
 
@@ -324,7 +324,7 @@ function TodoEntrustList(props) {
                               data-event="edit"
                               className="pLeft10"
                               style={{
-                                padding: '7px 12px',
+                                padding: '7px var(--space-3)',
                               }}
                               onClick={({ domEvent }) => {
                                 domEvent.stopPropagation();
@@ -340,7 +340,7 @@ function TodoEntrustList(props) {
                               data-event="cancel"
                               className="pLeft10"
                               style={{
-                                padding: '7px 12px',
+                                padding: '7px var(--space-3)',
                               }}
                               onClick={({ domEvent }) => {
                                 domEvent.stopPropagation();

@@ -18,7 +18,7 @@ const DialogFooterWrap = styled.div`
   .icon-agent_loading {
     display: inline-block;
     animation: ${iconRotate} 0.8s linear infinite;
-    font-size: 16px;
+    font-size: var(--font-lg);
     color: var(--color-text-inverse);
   }
 `;

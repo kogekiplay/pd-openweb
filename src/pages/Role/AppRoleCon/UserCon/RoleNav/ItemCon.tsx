@@ -98,7 +98,7 @@ export default class ItemCon extends React.Component<any, any> {
                 }
 
                 return (
-                  <div className="textSecondary Font12" style={{ padding: '6px 16px' }}>
+                  <div className="textSecondary Font12" style={{ padding: '6px var(--space-4)' }}>
                     {_l('我所在的角色')}
                   </div>
                 );

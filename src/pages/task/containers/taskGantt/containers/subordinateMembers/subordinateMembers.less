@@ -15,16 +15,16 @@
 
     .ganttNetwork {
       width: 210px;
-      padding: 0 12px;
+      padding: 0 var(--space-3);
       box-sizing: border-box;
       height: 48px;
       border-bottom: 1px solid rgba(117, 117, 117, 0.15);
       box-sizing: border-box;
       .ganttNetworkName {
         line-height: 48px;
-        font-size: 13px;
+        font-size: var(--font-sm);
         box-sizing: border-box;
-        padding-right: 20px;
+        padding-right: var(--space-5);
         width: 100%;
         cursor: pointer;
         &:not(:hover) {
@@ -34,7 +34,7 @@
           position: absolute;
           right: 12px;
           top: 17px;
-          font-size: 14px !important;
+          font-size: var(--font-md) !important;
         }
       }
       ul {
@@ -49,7 +49,7 @@
         overflow: auto;
         overflow-x: hidden;
         li {
-          padding: 0 12px;
+          padding: 0 var(--space-3);
           width: 100%;
           box-sizing: border-box;
           cursor: pointer;
@@ -67,8 +67,8 @@
             background: var(--color-background-primary) !important;
           }
           i {
-            font-size: 14px;
-            margin-right: 8px;
+            font-size: var(--font-md);
+            margin-right: var(--space-2);
           }
         }
       }
@@ -82,10 +82,10 @@
       }
       li {
         width: 140px;
-        padding: 8px 12px 2px;
+        padding: var(--space-2) var(--space-3) 2px;
         min-height: 30px;
         line-height: 24px;
-        font-size: 13px;
+        font-size: var(--font-sm);
         border-bottom: 1px solid rgba(117, 117, 117, 0.15);
         box-sizing: initial;
         &:last-child {
@@ -94,7 +94,7 @@
         .ganttMembersAvatar {
           display: inline-block !important;
           vertical-align: top;
-          margin-right: 8px;
+          margin-right: var(--space-2);
           cursor: default;
           box-sizing: initial;
           &.borderColorPrimary {
@@ -225,7 +225,7 @@
     background: var(--color-background-primary);
     padding: 6px 0;
     li {
-      padding: 0 12px;
+      padding: 0 var(--space-3);
       width: 100%;
       box-sizing: border-box;
       cursor: pointer;
@@ -240,7 +240,7 @@
         color: var(--color-white) !important;
       }
       i {
-        font-size: 14px;
+        font-size: var(--font-md);
         margin-right: 10px;
       }
     }

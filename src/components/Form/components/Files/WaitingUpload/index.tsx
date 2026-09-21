@@ -13,7 +13,7 @@ const CardPlaceholder = styled.div`
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-secondary);
   color: var(--color-text-primary);
-  font-size: 12px;
+  font-size: var(--font-xs);
   background-color: var(--color-background-secondary);
   .closeIcon {
     position: absolute;
@@ -24,7 +24,7 @@ const CardPlaceholder = styled.div`
     justify-content: center;
     width: 18px;
     height: 18px;
-    font-size: 16px;
+    font-size: var(--font-lg);
     color: var(--color-white);
     border-radius: 50%;
     background-color: var(--color-border-hover);
@@ -60,7 +60,7 @@ const ListPlaceholder = styled.div`
   .fileName {
     padding: 0 10px;
     flex: 1;
-    font-size: 13px;
+    font-size: var(--font-sm);
     font-weight: bold;
     color: var(--color-text-primary);
   }

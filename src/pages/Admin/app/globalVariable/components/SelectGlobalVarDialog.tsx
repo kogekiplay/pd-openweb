@@ -17,7 +17,7 @@ const SelectVarDialog = styled(Dialog)`
     display: flex;
     flex-direction: column;
     height: 100%;
-    padding: 0 20px;
+    padding: 0 var(--space-5);
     .searchCon {
       width: 100%;
       height: 36px;
@@ -26,13 +26,13 @@ const SelectVarDialog = styled(Dialog)`
       display: flex;
       border-bottom: 1px solid var(--color-border-secondary);
       .tabItem {
-        padding: 0 20px;
+        padding: 0 var(--space-5);
         height: 48px;
         line-height: 48px;
-        font-size: 14px;
+        font-size: var(--font-md);
         font-weight: 600;
         &:last-child {
-          margin-left: 32px;
+          margin-left: var(--space-8);
         }
         &.active {
           border-bottom: 3px solid var(--color-primary);

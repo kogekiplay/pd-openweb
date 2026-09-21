@@ -18,7 +18,7 @@
       position: absolute;
       right: 0;
       top: 0;
-      font-size: 14px;
+      font-size: var(--font-md);
       color: var(--color-text-tertiary);
       margin: 11px;
     }
@@ -48,7 +48,7 @@
       }
       &.multiple {
         position: relative;
-        padding-right: 8px;
+        padding-right: var(--space-2);
         &:not(.isEnd)::after {
           position: absolute;
           right: 0;
@@ -77,7 +77,7 @@
         max-width: 100%;
       }
       &.active.allowRemove {
-        padding-right: 24px !important;
+        padding-right: var(--space-6) !important;
       }
       &.active {
         background-color: var(--color-border-secondary);
@@ -92,7 +92,7 @@
         right: 4px;
         top: 4px;
         color: var(--color-text-tertiary);
-        font-size: 16px;
+        font-size: var(--font-lg);
         &:hover {
           color: var(--color-text-secondary);
         }
@@ -104,7 +104,7 @@
       margin: 6px !important;
       text-align: center;
       .icon {
-        font-size: 14px;
+        font-size: var(--font-md);
         color: var(--color-text-secondary);
       }
     }
@@ -176,8 +176,8 @@
     }
     &.mobile {
       .dropIcon {
-        margin-right: 8px !important;
-        font-size: 16px;
+        margin-right: var(--space-2) !important;
+        font-size: var(--font-lg);
         color: var(--color-text-disabled);
       }
     }
@@ -223,7 +223,7 @@
   &-search {
     height: 36px;
     margin: 6px 0 0;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     input {
       border: none !important;
       padding: 0 6px !important;
@@ -231,7 +231,7 @@
     .icon {
       color: var(--color-text-secondary);
       margin: 9px 0;
-      font-size: 20px;
+      font-size: var(--font-2xl);
     }
   }
   .loadingCon {
@@ -241,16 +241,16 @@
   &-create {
     height: 36px;
     cursor: pointer;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     margin: 6px 0;
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-primary);
     line-height: 36px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     .icon {
-      font-size: 14px;
+      font-size: var(--font-md);
     }
     &.active {
       background-color: var(--color-background-secondary);
@@ -264,9 +264,9 @@
 .RelateRecordListItem {
   position: relative;
   cursor: pointer;
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   &.isEmpty {
-    margin-bottom: 12px;
+    margin-bottom: var(--space-3);
     &::after {
       content: '';
       position: absolute;
@@ -303,7 +303,7 @@
     right: 16px;
     top: 0;
     bottom: 0;
-    font-size: 16px;
+    font-size: var(--font-lg);
     width: 20px;
     display: flex;
     align-items: center;
@@ -330,7 +330,7 @@
       line-height: 28px !important;
     }
     .selectDialogIcon {
-      margin: 8px;
+      margin: var(--space-2);
     }
     &.isDark {
       background-color: transparent !important;
@@ -341,7 +341,7 @@
   .RelateRecordDropdown-selected {
     .clearIcon,
     .dropIcon {
-      margin: 8px;
+      margin: var(--space-2);
     }
   }
 }
@@ -349,12 +349,12 @@
 .relateRecordDropdownPopup.isQuickFilter {
   .RelateRecordDropdown-selected {
     .activeSelectedItem {
-      margin-top: 4px !important;
+      margin-top: var(--space-1) !important;
       margin-bottom: 3px !important;
     }
     .clearIcon,
     .dropIcon {
-      margin: 8px;
+      margin: var(--space-2);
     }
   }
 }

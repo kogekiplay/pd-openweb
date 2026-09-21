@@ -17,7 +17,7 @@ const Con = styled.div`
       display: inline-block;
       max-width: 50%;
       margin-right: 0;
-      padding-right: 20px;
+      padding-right: var(--space-5);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;

@@ -8,7 +8,7 @@
   }
 
   .appManagementHeader {
-    padding: 0 24px;
+    padding: 0 var(--space-6);
     align-items: center;
     height: 56px;
     border-bottom: 1px solid var(--color-border-secondary);
@@ -27,7 +27,7 @@
     .selectDateInput {
       width: 200px;
       height: 36px;
-      padding: 0 12px;
+      padding: 0 var(--space-3);
       border-radius: var(--radius-sm);
       border: 1px solid var(--color-border-primary);
       box-sizing: border-box;
@@ -67,7 +67,7 @@
     }
     &.manageListHeader {
       border-color: var(--color-border-primary);
-      padding: 12px 0;
+      padding: var(--space-3) 0;
       color: var(--color-text-secondary);
       &:hover {
         background: var(--color-background-primary);
@@ -90,7 +90,7 @@
       align-items: center;
       justify-content: center;
       .icon {
-        font-size: 24px;
+        font-size: var(--font-3xl);
         color: var(--color-white);
       }
     }
@@ -117,7 +117,7 @@
       color: var(--color-text-disabled);
     }
     .emptyExplain {
-      margin-top: 20px;
+      margin-top: var(--space-5);
       color: var(--color-text-tertiary);
       font-size: 17px;
       text-align: center;
@@ -145,7 +145,7 @@
     box-sizing: border-box;
     height: 84px;
     justify-content: space-between;
-    padding: 0 0 24px;
+    padding: 0 0 var(--space-6);
   }
   .nameBox {
     display: flex;
@@ -154,7 +154,7 @@
       width: 24px;
       height: 24px;
       border-radius: 50%;
-      margin-right: 8px;
+      margin-right: var(--space-2);
     }
   }
 }

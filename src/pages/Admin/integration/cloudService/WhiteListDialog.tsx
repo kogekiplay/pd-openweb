@@ -6,9 +6,9 @@ import apiKeyAjax from 'src/pages/Admin/api/cloudApi/apiKey';
 const WhiteListDialogContent = styled.div`
   .whiteListTip {
     color: var(--color-text-secondary);
-    font-size: 13px;
+    font-size: var(--font-sm);
     line-height: 20px;
-    margin-bottom: 12px;
+    margin-bottom: var(--space-3);
   }
 
   .whiteListTextarea {
@@ -16,8 +16,8 @@ const WhiteListDialogContent = styled.div`
     height: 380px;
     border: 1px solid var(--color-border-primary);
     border-radius: var(--radius-sm);
-    padding: 10px 12px;
-    font-size: 14px;
+    padding: 10px var(--space-3);
+    font-size: var(--font-md);
     line-height: 22px;
     resize: none;
     outline: none;

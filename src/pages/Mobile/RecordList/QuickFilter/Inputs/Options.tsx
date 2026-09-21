@@ -8,11 +8,11 @@ import RightSidebar from './RightSidebar';
 
 export const Option = styled.div`
   cursor: pointer;
-  font-size: 12px;
+  font-size: var(--font-xs);
   display: inline-block;
-  margin: 0 12px 12px 0;
+  margin: 0 var(--space-3) var(--space-3) 0;
   color: var(--color-text-title);
-  padding: 4px 12px;
+  padding: var(--space-1) var(--space-3);
   border-radius: 28px;
   max-width: 200px;
   user-select: none;
@@ -23,7 +23,7 @@ export const Option = styled.div`
     background-color: var(--color-primary);
   }
   &.more {
-    padding: 3px 12px;
+    padding: 3px var(--space-3);
     border: 1px solid var(--color-border-secondary);
     background-color: var(--color-background-primary);
   }

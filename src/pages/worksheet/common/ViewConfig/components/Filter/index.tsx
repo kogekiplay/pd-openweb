@@ -28,12 +28,12 @@ const Wrap = styled.div`
   .cancelBtn {
     line-height: 32px;
     min-height: 32px;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     border-radius: 16px;
     min-width: 0;
   }
   .cancelBtn {
-    font-size: 14px;
+    font-size: var(--font-md);
     background: var(--color-background-secondary);
     &:hover {
       background: var(--color-border-secondary);

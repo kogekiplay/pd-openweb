@@ -60,7 +60,7 @@ const AgentBillingDetailWrap = styled.div`
       border-top: none;
     }
     > div {
-      padding: 0 12px;
+      padding: 0 var(--space-3);
       box-sizing: border-box;
     }
   }
@@ -87,7 +87,7 @@ const AgentBillingDetailWrap = styled.div`
     width: 180px;
   }
   .emptyList {
-    padding: 32px 0;
+    padding: var(--space-8) 0;
     text-align: center;
     color: var(--color-text-secondary);
   }
@@ -103,7 +103,7 @@ const AgentBillingDetailDrawer = styled(Drawer)`
       flex-direction: row-reverse;
       .ant-drawer-close {
         padding: 0;
-        margin: 0 0 0 16px;
+        margin: 0 0 0 var(--space-4);
       }
     }
     .ant-drawer-title {
@@ -112,7 +112,7 @@ const AgentBillingDetailDrawer = styled(Drawer)`
     }
   }
   .ant-drawer-body {
-    padding: 20px 24px;
+    padding: var(--space-5) var(--space-6);
   }
   .agentBillingDetailTitle {
     min-width: 0;
@@ -127,10 +127,10 @@ const AgentBillingDetailDrawer = styled(Drawer)`
   .agentBillingTraceId {
     display: flex;
     align-items: center;
-    margin-left: 24px;
+    margin-left: var(--space-6);
     max-width: 560px;
     min-width: 0;
-    font-size: 13px;
+    font-size: var(--font-sm);
     font-weight: normal;
     color: var(--color-text-secondary);
     .traceIdText {
@@ -146,14 +146,14 @@ const AIWelfarePointLine = styled.div`
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--space-2);
   min-height: 22px;
 `;
 
 const AIWelfarePointValue = styled.span`
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-1);
 
   .monthlyRemaining {
     color: var(--color-primary);

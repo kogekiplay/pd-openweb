@@ -20,7 +20,7 @@ const Wrap = styled.div`
     align-items: center;
     display: flex;
     height: 56px;
-    padding: 16px 6px;
+    padding: var(--space-4) 6px;
     min-width: 126px;
     &.nameWrapTr {
       min-width: 240px !important;

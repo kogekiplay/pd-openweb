@@ -8,8 +8,8 @@ const Content = styled.div`
   .warningInfo {
     color: var(--color-error) !important;
     line-height: 24px;
-    font-size: 13px;
-    margin-bottom: 20px;
+    font-size: var(--font-sm);
+    margin-bottom: var(--space-5);
   }
 `;
 

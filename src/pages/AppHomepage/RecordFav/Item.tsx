@@ -7,7 +7,7 @@ import { pathCompletion } from 'src/utils/common';
 import { addBehaviorLog } from 'src/utils/project';
 
 const RecordItem = styled.div`
-  margin-top: 12px;
+  margin-top: var(--space-3);
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-secondary);
   position: relative;
@@ -42,7 +42,7 @@ const RecordItem = styled.div`
     height: 40px;
     border: none;
     .leftContent {
-      padding: 8px 20px;
+      padding: var(--space-2) var(--space-5);
       .itemName {
         font-weight: normal;
       }
@@ -67,7 +67,7 @@ const RecordItem = styled.div`
     flex: 1;
     flex-shrink: 0;
     min-width: 0;
-    padding: 16px 20px;
+    padding: var(--space-4) var(--space-5);
     min-width: 120px;
     .itemIcon {
       width: 24px;

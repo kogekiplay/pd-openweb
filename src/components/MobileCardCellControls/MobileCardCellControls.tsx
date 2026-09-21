@@ -7,7 +7,7 @@ import type { FormControl } from 'src/utils/controlTypes';
 const MobileCardCellControlsWrap = styled.div`
   ${props => (props.colNuber === 2 ? ' display: grid;grid-template-columns: 1fr 1fr;grid-column-gap: 4px;' : '')}
   overflow: hidden;
-  padding: 16px 12px 8px;
+  padding: var(--space-4) var(--space-3) var(--space-2);
 `;
 
 export default function MobileCardCellControls(props) {

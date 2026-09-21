@@ -37,7 +37,7 @@ const Con = styled.div`
 `;
 
 const Header = styled.div`
-  padding: 0 24px 0 3px;
+  padding: 0 var(--space-6) 0 3px;
   height: 50px;
   background: var(--color-background-primary);
   box-shadow: 0px 1px 4px 1px rgba(0, 0, 0, 0.1608);
@@ -50,7 +50,7 @@ const Header = styled.div`
   .backIcon {
     display: inline-block;
     cursor: pointer;
-    font-size: 16px;
+    font-size: var(--font-lg);
     color: var(--color-text-secondary);
     width: 50px;
     text-align: center;

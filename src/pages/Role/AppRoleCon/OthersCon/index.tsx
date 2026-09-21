@@ -77,12 +77,12 @@ const ExplainCon = styled.div`
     background: var(--color-primary);
     border: none;
     color: var(--color-white);
-    font-size: 14px;
+    font-size: var(--font-md);
     border-radius: var(--radius-sm);
     font-weight: 600;
   }
   .explain-button:hover {
-    background: var(--color-link-hover);
+    background: var(--color-primary-dark);
   }
 `;
 

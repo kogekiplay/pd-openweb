@@ -22,12 +22,12 @@ const Wrap = styled.div`
     padding: 0 15px;
   }
   .subTitle {
-    font-size: 12px;
+    font-size: var(--font-xs);
     color: var(--color-text-tertiary);
   }
   input,
   textarea {
-    font-size: 13px !important;
+    font-size: var(--font-sm) !important;
     color: var(--color-text-primary);
     background-color: var(--color-background-primary);
   }

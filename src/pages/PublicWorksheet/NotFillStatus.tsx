@@ -34,7 +34,7 @@ const Con = styled.div`
     display: flex;
     align-items: center;
     height: 36px;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     border-radius: var(--radius-sm);
     background-color: var(--color-background-secondary);
     cursor: pointer;
@@ -47,16 +47,16 @@ const Con = styled.div`
   }
 `;
 const Tip1 = styled.div`
-  font-size: 24px;
+  font-size: var(--font-3xl);
   font-weight: 500;
-  padding: 0 20px;
+  padding: 0 var(--space-5);
 `;
 const Tip2 = styled.div`
   font-size: 15px;
 `;
 const Receipt = styled.div`
   word-break: break-all;
-  font-size: 14px;
+  font-size: var(--font-md);
   color: var(--color-text-secondary);
   text-align: left;
   padding: 0 50px;
@@ -69,7 +69,7 @@ const Receipt = styled.div`
   ul {
     list-style-position: outside;
     list-style: decimal;
-    margin-left: 16px;
+    margin-left: var(--space-4);
   }
   img {
     max-width: 100%;
@@ -207,7 +207,7 @@ export default function NotFillStatus(props) {
             request.statusExtra !== 'no' &&
             (canSubmitByLimit || !!_.get(abilityExpand, 'allowViewChange.isAllowViewChange')) && (
               <Tip2
-                style={{ color: 'var(--color-primary)', margin: '24px 0', fontWeight: 600 }}
+                style={{ color: 'var(--color-primary)', margin: 'var(--space-6) 0', fontWeight: 600 }}
                 className="flexRow justifyContentCenter alignItemsCenter"
               >
                 <FilledRecord
@@ -227,7 +227,7 @@ export default function NotFillStatus(props) {
           <div style={{ minHeight: !receipt ? '224px' : '200px' }}>
             {afterSubmit.action === 1 && afterSubmit.content && status === FILL_STATUS.COMPLETED && (
               <React.Fragment>
-                <Hr style={{ margin: '20px 0 4px' }} />
+                <Hr style={{ margin: 'var(--space-5) 0 var(--space-1)' }} />
                 <Receipt className="receipt">
                   <RichText data={handleReceive()} className="" disabled={true} />
                 </Receipt>

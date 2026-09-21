@@ -11,10 +11,10 @@ const Con = styled.div`
   border-radius: 16px;
   color: var(--color-white);
   font-weight: bold;
-  font-size: 13px;
+  font-size: var(--font-sm);
   background: #2f88e1;
-  padding: 0 16px;
-  margin-left: 16px;
+  padding: 0 var(--space-4);
+  margin-left: var(--space-4);
   cursor: pointer;
   line-height: 32px;
   &.disabled {

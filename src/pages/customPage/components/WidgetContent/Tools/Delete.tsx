@@ -9,23 +9,23 @@ const DelVerify = styled.div`
   box-sizing: border-box;
   width: 240px;
   background-color: var(--color-background-primary);
-  padding: 16px;
+  padding: var(--space-4);
   border-radius: var(--radius-sm);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
   p {
     margin: 0;
-    font-size: 14px;
+    font-size: var(--font-md);
     font-weight: bold;
   }
   .delComponent {
-    margin-top: 20px;
+    margin-top: var(--space-5);
     text-align: right;
     color: var(--color-error);
     cursor: pointer;
   }
   .btnGroup {
     text-align: right;
-    margin-top: 16px;
+    margin-top: var(--space-4);
     cursor: pointer;
     span {
       color: var(--color-text-tertiary);
@@ -33,10 +33,10 @@ const DelVerify = styled.div`
     .cancel {
     }
     .del {
-      margin-left: 12px;
+      margin-left: var(--space-3);
       background-color: var(--color-error);
       color: var(--color-white);
-      padding: 6px 12px;
+      padding: 6px var(--space-3);
       border-radius: var(--radius-sm);
       text-align: center;
       line-height: 36px;

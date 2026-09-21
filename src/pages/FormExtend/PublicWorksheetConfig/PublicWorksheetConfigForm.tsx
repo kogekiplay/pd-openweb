@@ -43,7 +43,7 @@ const SubmitCon = styled.div(
   }
   .icon {
     margin-left: 6px;
-    font-size: 18px;
+    font-size: var(--font-xl);
   }
   input {
     width: 200px;
@@ -269,7 +269,7 @@ class PublicWorksheetConfigForm extends React.Component<any, any> {
                   </div>
                 )}
 
-                <Hr style={{ margin: '16px 0' }} />
+                <Hr style={{ margin: 'var(--space-4) 0' }} />
               </div>
             )}
 

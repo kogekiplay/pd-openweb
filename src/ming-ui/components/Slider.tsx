@@ -78,7 +78,7 @@ const ScalePoint = styled.span`
   border-radius: 8px;
   border: 2px solid ${({ color }) => color};
   > span {
-    font-size: 12px;
+    font-size: var(--font-xs);
     user-select: none;
     white-space: nowrap;
     transform: translateX(calc(-50% + 2px));
@@ -125,7 +125,7 @@ const Input = styled.input`
   width: 68px;
   height: 36px;
   line-height: 36px;
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   border-radius: var(--radius-sm);
   background: var(--color-background-secondary);
   ${({ showAsPercent }) => (showAsPercent ? 'padding-right: 28px;' : '')}
@@ -144,7 +144,7 @@ const Input = styled.input`
       }`}
 `;
 const NumberValue = styled.span`
-  margin-left: 12px;
+  margin-left: var(--space-3);
   ${({ disabled }) => (disabled ? 'color: rgba(0,0,0,.3);' : '')}
 `;
 

@@ -7,7 +7,7 @@ import ProjectAjax from 'src/api/projectSetting';
 
 const ContentWrap = styled.div`
   .item {
-    padding: 16px 0;
+    padding: var(--space-4) 0;
     display: flex;
     justify-content: space-between;
     align-items: center;

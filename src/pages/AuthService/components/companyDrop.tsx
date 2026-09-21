@@ -12,7 +12,7 @@ const WrapCon = styled.div`
     .itemT {
       background: var(--color-background-secondary);
       border-radius: 6px;
-      padding: 3px 8px 3px 10px;
+      padding: 3px var(--space-2) 3px 10px;
       border: 1px solid var(--color-border-secondary);
       line-height: 20px;
       i {
@@ -24,12 +24,12 @@ const WrapCon = styled.div`
     }
     span.itemSpan {
       color: var(--color-text-title) !important;
-      font-size: 14px;
+      font-size: var(--font-md);
     }
     .ming.Item .Item-content:not(.disabled):hover {
       span.itemSpan {
         color: var(--color-text-inverse) !important;
-        font-size: 14px;
+        font-size: var(--font-md);
       }
     }
     .Dropdown--border,
@@ -39,7 +39,7 @@ const WrapCon = styled.div`
     .Dropdown--input {
       height: auto !important;
       min-height: 48px;
-      padding: 4px !important;
+      padding: var(--space-1) !important;
       .Dropdown--placeholder {
         line-height: 40px !important;
       }

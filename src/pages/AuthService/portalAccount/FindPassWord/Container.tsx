@@ -14,7 +14,7 @@ const Wrap = styled.div`
     justify-content: space-between;
     & > li span {
       color: var(--color-text-secondary);
-      padding-bottom: 8px;
+      padding-bottom: var(--space-2);
       border-bottom: 1px solid var(--color-white);
       &.isCur {
         color: var(--color-primary);

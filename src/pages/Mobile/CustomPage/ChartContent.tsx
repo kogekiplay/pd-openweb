@@ -57,7 +57,7 @@ const HorizontalChartContent = styled.div`
   .count {
     color: var(--color-text-title);
     font-weight: 500;
-    font-size: 20px;
+    font-size: var(--font-2xl);
     font-family:
       system-ui,
       BlinkMacSystemFont,

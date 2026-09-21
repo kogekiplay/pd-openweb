@@ -10,11 +10,11 @@ const ItemName = styled.div`
   display: flex;
   align-items: center;
   height: 36px;
-  margin-bottom: 12px;
+  margin-bottom: var(--space-3);
   div {
     &:first-child {
       width: 72px;
-      margin-right: 12px;
+      margin-right: var(--space-3);
     }
     &:last-child {
       flex: 1;
@@ -35,7 +35,7 @@ const ItemName = styled.div`
     height: 36px;
     border: 1px solid var(--color-border-primary);
     border-radius: var(--radius-xs);
-    padding: 0 12px;
+    padding: 0 var(--space-3);
   }
 `;
 

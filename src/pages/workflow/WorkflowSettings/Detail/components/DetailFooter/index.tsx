@@ -10,7 +10,7 @@ import { ACTION_ID, NODE_TYPE } from '../../../enum';
 
 const Footer = styled.div`
   background: var(--color-background-secondary);
-  padding: 0 24px;
+  padding: 0 var(--space-6);
   align-items: center;
   height: 60px;
   &.workflowDetailFooterWhile {
@@ -21,10 +21,10 @@ const Footer = styled.div`
     height: 36px;
     line-height: 36px;
     display: inline-block;
-    padding: 0 32px;
+    padding: 0 var(--space-8);
     border-radius: var(--radius-sm);
     cursor: pointer;
-    font-size: 14px;
+    font-size: var(--font-md);
     box-sizing: border-box;
   }
   .footerSaveBtn {

@@ -19,7 +19,7 @@ const INTERVAL = [1, 5, 10, 15, 30, 60];
 const IntervalWrap = styled(DropdownContent)`
   .item {
     line-height: 36px;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
   }
 `;
 
@@ -27,7 +27,7 @@ const ConfigWrap = styled.div`
   display: flex;
   .formatList {
     width: 250px;
-    padding-top: 16px;
+    padding-top: var(--space-4);
     border-right: 1px solid rgba(0, 0, 0, 0.08);
     .title {
       margin-bottom: 6px;
@@ -43,7 +43,7 @@ const ConfigWrap = styled.div`
   }
   .display {
     flex: 1;
-    padding: 16px 0 0 24px;
+    padding: var(--space-4) 0 0 var(--space-6);
   }
 `;
 

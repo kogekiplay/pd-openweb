@@ -27,7 +27,7 @@
 
 .groupsList {
   height: 100%;
-  padding: 0 32px;
+  padding: 0 var(--space-8);
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -38,7 +38,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 24px 0;
+    padding: var(--space-6) 0;
 
     .groupItem {
       display: flex;
@@ -80,7 +80,7 @@
   .mdAntTable {
     tbody > tr > td,
     thead > tr > th {
-      padding: 16px 16px !important;
+      padding: var(--space-4) var(--space-4) !important;
     }
   }
 }
@@ -88,7 +88,7 @@
 .tableList {
   flex: 1;
   min-height: 0;
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-title);
 
   .nameBox {
@@ -99,7 +99,7 @@
       width: 24px;
       height: 24px;
       border-radius: 50%;
-      margin-right: 8px;
+      margin-right: var(--space-2);
     }
   }
 
@@ -141,7 +141,7 @@
   background-color: var(--color-background-primary);
 
   div {
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     line-height: 36px;
     cursor: pointer;
 

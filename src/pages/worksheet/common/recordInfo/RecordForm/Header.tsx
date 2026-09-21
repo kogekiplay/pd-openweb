@@ -25,10 +25,10 @@ const SideBarIcon = styled(IconBtn)`
   display: flex;
   flex-shrink: 0;
   .discussCount {
-    font-size: 14px;
+    font-size: var(--font-md);
   }
   .text {
-    font-size: 13px;
+    font-size: var(--font-sm);
     margin-left: 2px;
   }
 `;

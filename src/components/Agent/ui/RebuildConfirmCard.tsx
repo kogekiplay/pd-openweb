@@ -22,9 +22,9 @@ const ACTION_HINTS = {
 const Card = styled.div`
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  padding: 12px 14px;
-  margin-top: 12px;
+  gap: var(--space-3);
+  padding: var(--space-3) 14px;
+  margin-top: var(--space-3);
   border-radius: ${radii.card};
   border: 1px solid ${colors.border};
   background: ${colors.background};
@@ -42,7 +42,7 @@ const IconBox = styled.div`
   color: #fff;
 
   i {
-    font-size: 18px;
+    font-size: var(--font-xl);
     color: #fff;
   }
 `;
@@ -56,13 +56,13 @@ const Body = styled.div`
 `;
 
 const Title = styled.div`
-  font-size: 14px;
+  font-size: var(--font-md);
   font-weight: 600;
   color: ${colors.text};
 `;
 
 const Desc = styled.div`
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: ${colors.textMuted};
   line-height: 1.6;
 `;
@@ -79,7 +79,7 @@ const ActionPill = styled.span`
   align-items: center;
   height: 28px;
   padding: 0 14px;
-  font-size: 13px;
+  font-size: var(--font-sm);
   font-weight: 600;
   border-radius: ${radii.pill};
   border: 1px solid ${colors.borderStrong};
@@ -119,7 +119,7 @@ const ActionPill = styled.span`
 `;
 
 const Resolved = styled.div`
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: ${colors.textSubtle};
   display: inline-flex;
   align-items: center;

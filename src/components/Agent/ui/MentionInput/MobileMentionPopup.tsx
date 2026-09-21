@@ -21,7 +21,7 @@ const Content = styled.div`
   .mentionAppItem {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: var(--space-3);
     min-height: 48px;
     padding: 0 18px;
   }
@@ -57,7 +57,7 @@ const Content = styled.div`
     justify-content: center;
     min-height: 160px;
     color: var(--color-text-tertiary);
-    font-size: 14px;
+    font-size: var(--font-md);
   }
 `;
 

@@ -9,7 +9,7 @@ const IconBtn = styled.span`
   width: 28px;
   height: 28px;
   text-align: center;
-  font-size: 20px;
+  font-size: var(--font-2xl);
   line-height: 28px;
   border-radius: var(--radius-sm);
   &:hover {

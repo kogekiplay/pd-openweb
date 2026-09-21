@@ -8,16 +8,16 @@ import { API_EXTENDS, PLUGIN_TYPE, pluginApiConfig, pluginConstants } from '../c
 
 const PublishDialog = styled(Dialog)`
   .mui-dialog-desc {
-    font-size: 13px !important;
-    padding-top: 8px !important;
+    font-size: var(--font-sm) !important;
+    padding-top: var(--space-2) !important;
   }
   .mui-dialog-body {
-    padding-top: 12px !important;
+    padding-top: var(--space-3) !important;
   }
 `;
 
 const FormItem = styled.div`
-  margin-bottom: 24px;
+  margin-bottom: var(--space-6);
   .labelText {
     font-weight: 500;
     margin-bottom: 10px;
@@ -27,14 +27,14 @@ const FormItem = styled.div`
     }
   }
   .ming.Input {
-    font-size: 13px;
+    font-size: var(--font-sm);
   }
   .Width60 {
     width: 60px;
   }
   .selectItem {
     width: 100% !important;
-    font-size: 13px;
+    font-size: var(--font-sm);
     &.ant-select,
     & .ant-select {
       --ant-select-border-size: 1px !important;

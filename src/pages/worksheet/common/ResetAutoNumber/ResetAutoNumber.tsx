@@ -16,7 +16,7 @@ const ResetContent = styled.div`
 
 const ResetWrap = styled.div`
   .intro {
-    padding-bottom: 8px;
+    padding-bottom: var(--space-2);
     color: var(--color-text-secondary);
   }
   .controls {
@@ -25,19 +25,19 @@ const ResetWrap = styled.div`
     overflow-y: auto;
   }
   .controlItem {
-    margin-top: 16px;
+    margin-top: var(--space-4);
   }
   .content {
     display: flex;
     justify-content: space-between;
-    padding: 0 24px 0 10px;
+    padding: 0 var(--space-6) 0 10px;
     line-height: 36px;
     background: var(--color-background-secondary);
     border-radius: var(--radius-sm);
   }
   .info {
     span {
-      margin-left: 12px;
+      margin-left: var(--space-3);
     }
   }
   .reset {

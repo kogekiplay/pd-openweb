@@ -9,7 +9,7 @@
     height: 50px;
     line-height: 50px;
     border-bottom: 1px solid var(--color-background-secondary);
-    padding: 0 24px;
+    padding: 0 var(--space-6);
   }
 
   .uploadBoxCon {
@@ -18,7 +18,7 @@
   }
 
   .uploadCon {
-    padding: 18px 24px;
+    padding: 18px var(--space-6);
     min-height: 630px;
 
     .tiTop {
@@ -27,7 +27,7 @@
       text-align: left;
       letter-spacing: 0px;
       color: var(--color-text-title);
-      font-size: 14px;
+      font-size: var(--font-md);
       font-weight: bold;
     }
 
@@ -80,7 +80,7 @@
         line-height: 32px;
         height: 32px;
         cursor: pointer;
-        font-size: 12px;
+        font-size: var(--font-xs);
         display: flex;
         align-items: center;
         width: fit-content;
@@ -125,7 +125,7 @@
 
       .form {
         color: var(--color-text-primary);
-        margin-top: 20px;
+        margin-top: var(--space-5);
       }
 
       .downLoad {
@@ -178,9 +178,9 @@
         }
 
         .closeIcon {
-          margin-left: 24px;
+          margin-left: var(--space-6);
           color: var(--color-text-disabled);
-          font-size: 13px;
+          font-size: var(--font-sm);
         }
       }
     }
@@ -198,7 +198,7 @@
 
   .activeBox {
     position: absolute;
-    padding: 15px 24px;
+    padding: 15px var(--space-6);
     bottom: 0;
     left: 0;
     width: 100%;
@@ -222,8 +222,8 @@
         border: 1px solid var(--color-primary);
 
         &:hover {
-          border: 1px solid var(--color-link-hover);
-          background: var(--color-link-hover) 0% 0% no-repeat padding-box;
+          border: 1px solid var(--color-primary-dark);
+          background: var(--color-primary-dark) 0% 0% no-repeat padding-box;
         }
 
         &.disa {
@@ -240,14 +240,14 @@
       }
 
       &.cancle {
-        margin-left: 16px;
+        margin-left: var(--space-4);
         background: var(--color-background-primary) 0% 0% no-repeat padding-box;
         border: 1px solid var(--color-primary);
         color: var(--color-primary);
 
         &:hover {
           color: var(--color-link-hover);
-          border: 1px solid var(--color-link-hover);
+          border: 1px solid var(--color-primary-dark);
         }
       }
     }

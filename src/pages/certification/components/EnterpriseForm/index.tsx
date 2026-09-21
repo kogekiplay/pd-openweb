@@ -34,32 +34,32 @@ const FormWrapper = styled(Form)`
   .moduleTitle {
     font-size: 15px;
     font-weight: 600;
-    padding: 32px 0 10px;
+    padding: var(--space-8) 0 10px;
     border-bottom: 1px solid var(--color-border-tertiary);
-    margin-bottom: 16px;
+    margin-bottom: var(--space-4);
   }
   .ant-form-item {
     margin-bottom: 0;
     .ant-form-item-required {
-      font-size: 13px !important;
+      font-size: var(--font-sm) !important;
       color: var(--color-text-secondary) !important;
       font-weight: bold;
     }
     .ant-form-item-explain-error {
-      margin-top: 4px;
-      font-size: 12px;
+      margin-top: var(--space-1);
+      font-size: var(--font-xs);
     }
 
     &:not(&.isLast) {
       border-bottom: 1px solid --color-background-disabled;
-      padding-bottom: 16px;
-      margin-bottom: 16px;
+      padding-bottom: var(--space-4);
+      margin-bottom: var(--space-4);
     }
   }
   input {
     width: 100%;
     border-color: var(--color-border-primary);
-    font-size: 13px;
+    font-size: var(--font-sm);
     &:hover {
       border-color: var(--color-border-tertiary);
     }

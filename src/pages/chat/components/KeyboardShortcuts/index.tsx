@@ -29,7 +29,7 @@ const DialogWrap = styled(Dialog)`
   .sidebarItem {
     height: 36px;
     line-height: 36px;
-    padding: 0 24px;
+    padding: 0 var(--space-6);
     cursor: pointer;
     &:hover {
       background-color: var(--color-background-hover);
@@ -45,7 +45,7 @@ const DialogWrap = styled(Dialog)`
     min-width: 0;
     min-height: 0;
     height: 100%;
-    padding: 0 36px 20px;
+    padding: 0 36px var(--space-5);
     overflow-y: auto;
     background-color: var(--color-background-card);
   }
@@ -70,7 +70,7 @@ const DialogWrap = styled(Dialog)`
   }
   .sectionTitle {
     margin-top: 30px;
-    font-size: 14px;
+    font-size: var(--font-md);
     font-weight: bold;
     color: var(--color-text-title);
   }

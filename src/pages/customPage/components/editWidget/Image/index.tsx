@@ -17,7 +17,7 @@ const ContentWrap = styled.div`
     overflow: hidden;
   }
   .imageHeader {
-    padding: 12px;
+    padding: var(--space-3);
     .cardName {
       color: var(--title-color);
     }

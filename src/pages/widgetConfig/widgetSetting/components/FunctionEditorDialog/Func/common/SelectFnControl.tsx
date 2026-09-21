@@ -13,7 +13,7 @@ const Con = styled.div`
 const Tabs = styled.div`
   margin: 10px;
   height: 36px;
-  padding: 4px;
+  padding: var(--space-1);
   border-radius: 6px;
   background-color: var(--color-border-secondary);
   box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.16);
@@ -26,7 +26,7 @@ const Tab = styled.div`
   height: 28px;
   line-height: 28px;
   text-align: center;
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-secondary);
   border-radius: 6px;
   &.active {
@@ -51,7 +51,7 @@ const Search = styled.div`
   }
 `;
 const Icon = styled.i`
-  font-size: 20px;
+  font-size: var(--font-2xl);
   color: var(--color-text-tertiary);
 `;
 const Content = styled.div`

@@ -22,12 +22,12 @@ const Header = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: ${spacing.md};
-  padding: 10px 12px 8px;
+  padding: 10px var(--space-3) var(--space-2);
 `;
 
 const Language = styled.div`
   color: ${colors.textMuted};
-  font-size: 12px;
+  font-size: var(--font-xs);
   font-weight: 500;
   line-height: 18px;
   text-transform: uppercase;
@@ -40,12 +40,12 @@ const CopyButton = styled.button`
   gap: ${spacing.xs};
   flex: 0 0 auto;
   height: 24px;
-  padding: 0 8px;
+  padding: 0 var(--space-2);
   border: 1px solid ${colors.border};
   border-radius: ${radii.item};
   background: ${colors.background};
   color: ${colors.textMuted};
-  font-size: 12px;
+  font-size: var(--font-xs);
   line-height: 18px;
   cursor: pointer;
   transition:
@@ -68,14 +68,14 @@ const CopyButton = styled.button`
 const Body = styled.div`
   overflow-x: auto;
   overflow-y: hidden;
-  padding: 0 12px 10px;
+  padding: 0 var(--space-3) 10px;
 `;
 
 const Pre = styled.pre`
   margin: 0;
   color: ${colors.text};
   font-family: ${typography.monoFamily};
-  font-size: 12px;
+  font-size: var(--font-xs);
   font-weight: 400;
   line-height: 18px;
   white-space: pre;

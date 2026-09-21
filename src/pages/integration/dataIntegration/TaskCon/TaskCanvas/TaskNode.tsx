@@ -40,7 +40,7 @@ const Wrap = styled.div`
     box-shadow: var(--shadow-sm);
     transition: box-shadow 0.2s ease-out;
     overflow: hidden;
-    padding: 0 12px 0 0;
+    padding: 0 var(--space-3) 0 0;
     &.isCurrent {
       box-shadow:
         0 1px 2px color-mix(in srgb, var(--color-primary) 16%, transparent),
@@ -71,10 +71,10 @@ export const AddNode = styled(Circle)`
   justify-content: center;
   box-shadow: var(--shadow-md);
   cursor: pointer;
-  margin-left: 4px;
+  margin-left: var(--space-1);
   z-index: 1;
   .icon {
-    font-size: 18px;
+    font-size: var(--font-xl);
     color: var(--color-text-tertiary);
     transition: transform 0.25s;
     &:hover {
@@ -90,7 +90,7 @@ const WrapAct = styled.div`
   border-radius: var(--radius-sm);
   padding: 6px 0;
   li {
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     height: 36px;
     i {
       width: 24px;
@@ -114,7 +114,7 @@ const MoreOperate = styled.span`
   width: 24px;
   height: 24px;
   color: var(--color-text-tertiary);
-  font-size: 18px;
+  font-size: var(--font-xl);
   &:hover {
     background-color: var(--color-background-secondary);
     color: var(--color-primary);
@@ -146,7 +146,7 @@ const DelNode = styled.div`
   background: var(--color-background-primary);
   box-shadow: 0px 3px 6px rgb(0 0 0 / 16%);
   position: absolute;
-  padding: 24px 20px 16px;
+  padding: var(--space-6) var(--space-5) var(--space-4);
   left: 0;
   top: 64px;
   z-index: 10;
@@ -168,8 +168,8 @@ const DelNode = styled.div`
   }
   .cancel,
   .onDel {
-    margin-top: 20px;
-    padding: 8px 20px;
+    margin-top: var(--space-5);
+    padding: var(--space-2) var(--space-5);
     display: inline-block;
     border-radius: var(--radius-sm);
     &.onDel {

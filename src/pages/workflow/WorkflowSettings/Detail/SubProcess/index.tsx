@@ -269,7 +269,7 @@ export default class SubProcess extends Component<any, any> {
 
         {data.selectNodeId && (
           <Fragment>
-            <div className="workflowDetailDesc mTop10 flexRow" style={{ padding: '10px 12px' }}>
+            <div className="workflowDetailDesc mTop10 flexRow" style={{ padding: '10px var(--space-3)' }}>
               {!data.subProcessId ? (
                 <div className="textSecondary ellipsis">{_l('节点保存后，将自动创建一个新的子流程')}</div>
               ) : (

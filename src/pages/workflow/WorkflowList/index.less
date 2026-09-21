@@ -6,10 +6,10 @@
   }
   .workflowHeader {
     width: 240px;
-    padding: 16px 0;
+    padding: var(--space-4) 0;
     border-right: 1px solid var(--color-border-primary);
     li {
-      font-size: 14px;
+      font-size: var(--font-md);
       cursor: pointer;
       padding: 0 18px;
       height: 44px;
@@ -58,7 +58,7 @@
       left: 0;
     }
     .manageListSearch {
-      padding: 20px 24px 10px;
+      padding: var(--space-5) var(--space-6) 10px;
       align-items: center;
       .w180 {
         width: 180px;
@@ -72,7 +72,7 @@
     .manageListName {
       font-weight: bold;
       font-size: 15px;
-      padding: 14px 24px 14px 34px;
+      padding: 14px var(--space-6) 14px 34px;
       align-items: center;
       a {
         color: var(--color-text-title);
@@ -80,7 +80,7 @@
       }
     }
     .manageList {
-      margin: 0 24px;
+      margin: 0 var(--space-6);
       align-items: center;
       border-bottom: 1px solid var(--color-border-secondary);
       box-sizing: border-box;
@@ -92,8 +92,8 @@
       }
       &.manageListHeader {
         border-color: var(--color-border-primary);
-        padding: 12px 0;
-        margin-right: 24px;
+        padding: var(--space-3) 0;
+        margin-right: var(--space-6);
         color: var(--color-text-secondary);
         &:hover {
           background: var(--color-background-primary);
@@ -149,7 +149,7 @@
         align-items: center;
         justify-content: center;
         .icon {
-          font-size: 24px;
+          font-size: var(--font-3xl);
           color: var(--color-white);
         }
       }
@@ -175,7 +175,7 @@
         }
       }
       .listBtn {
-        font-size: 18px;
+        font-size: var(--font-xl);
         visibility: hidden;
         cursor: pointer;
       }
@@ -255,7 +255,7 @@
       margin-top: 40px;
       border: 1px solid var(--color-border-primary);
       border-radius: 6px;
-      padding: 20px;
+      padding: var(--space-5);
       color: var(--color-text-secondary);
     }
   }
@@ -266,7 +266,7 @@
     }
     .ming.MenuItem {
       .Item-content {
-        font-size: 14px;
+        font-size: var(--font-md);
         padding-left: 0 !important;
         padding-right: 0 !important;
         &:hover {
@@ -302,21 +302,21 @@
   }
 
   .adminWorkflowCount {
-    margin: 16px 24px 0;
-    padding: 0 24px;
+    margin: var(--space-4) var(--space-6) 0;
+    padding: 0 var(--space-6);
     background: color-mix(in srgb, var(--color-primary) 5%, transparent);
     align-items: center;
     height: 40px;
   }
   .manageListSearch {
-    padding: 16px 24px 0;
+    padding: var(--space-4) var(--space-6) 0;
     align-items: center;
     .w180 {
       width: 180px;
     }
   }
   .manageList {
-    margin: 0 24px;
+    margin: 0 var(--space-6);
     align-items: center;
     border-bottom: 1px solid var(--color-border-secondary);
     &:hover {
@@ -327,8 +327,8 @@
     }
     &.manageListHeader {
       border-color: var(--color-border-primary);
-      padding: 12px 0;
-      margin-right: 24px;
+      padding: var(--space-3) 0;
+      margin-right: var(--space-6);
       color: var(--color-text-secondary);
       &:hover {
         background: var(--color-background-primary);
@@ -360,7 +360,7 @@
       align-items: center;
       justify-content: center;
       .icon {
-        font-size: 24px;
+        font-size: var(--font-3xl);
         color: var(--color-white);
       }
     }
@@ -385,7 +385,7 @@
       }
     }
     .del {
-      font-size: 18px;
+      font-size: var(--font-xl);
       visibility: hidden;
       cursor: pointer;
     }
@@ -415,14 +415,14 @@
       color: var(--color-text-disabled);
     }
     .emptyExplain {
-      margin-top: 20px;
+      margin-top: var(--space-5);
       color: var(--color-text-secondary);
       font-size: 17px;
       text-align: center;
     }
   }
   .listBtn {
-    font-size: 18px;
+    font-size: var(--font-xl);
     visibility: hidden;
     cursor: pointer;
   }

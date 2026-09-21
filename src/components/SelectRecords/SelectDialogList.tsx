@@ -14,7 +14,7 @@ const ListCon = styled.div`
   display: flex;
   flex-direction: column;
   &:not(.isMultiple) {
-    margin-bottom: 20px;
+    margin-bottom: var(--space-5);
   }
 `;
 
@@ -22,13 +22,13 @@ const ListScroll = styled(ScrollView)`
   flex: 1;
   overflow: auto;
   .scroll-viewport {
-    padding: 0 24px !important;
+    padding: 0 var(--space-6) !important;
   }
 `;
 
 const ListItemCon = styled.div`
   height: 40px;
-  padding: 0 16px;
+  padding: 0 var(--space-4);
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -38,7 +38,7 @@ const ListItemCon = styled.div`
   &.selected {
     background: var(--color-primary-transparent);
     .listItemCheck {
-      font-size: 18px;
+      font-size: var(--font-xl);
       color: var(--color-primary);
     }
   }
@@ -47,12 +47,12 @@ const ListItemCon = styled.div`
     height: 32px;
     border-radius: var(--radius-sm);
     object-fit: cover;
-    margin-right: 12px;
+    margin-right: var(--space-3);
     flex-shrink: 0;
   }
   .listItemTitle {
     flex: 1;
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-text-primary);
     overflow: hidden;
     text-overflow: ellipsis;
@@ -60,7 +60,7 @@ const ListItemCon = styled.div`
   }
   .listItemCheck {
     flex-shrink: 0;
-    margin-left: 8px;
+    margin-left: var(--space-2);
     min-width: 20px;
     display: flex;
     align-items: center;
@@ -74,7 +74,7 @@ const LoadMoreTip = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: var(--color-text-tertiary);
 `;
 
@@ -85,8 +85,8 @@ const EmptyCon = styled.div`
   justify-content: center;
   flex-direction: column;
   color: var(--color-text-tertiary);
-  font-size: 14px;
-  padding: 24px;
+  font-size: var(--font-md);
+  padding: var(--space-6);
 `;
 
 function getCoverUrl(record, coverControl) {

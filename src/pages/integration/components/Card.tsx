@@ -10,11 +10,11 @@ const Wrap = styled.div(
   background: var(--color-background-primary);
   border: 1px solid var(--color-border-secondary);
   border-radius: 8px;
-  padding: 24px 24px 0 24px;
-  margin: 0 24px 24px 0;
+  padding: var(--space-6) var(--space-6) 0 var(--space-6);
+  margin: 0 var(--space-6) var(--space-6) 0;
   box-sizing: border-box;
   &.mMargin {
-    margin: 0 0 24px 0;
+    margin: 0 0 var(--space-6) 0;
   }
   &:hover{
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.16);
@@ -29,7 +29,7 @@ const Wrap = styled.div(
       overflow: hidden;
       line-height: 32px;
       text-align: center;
-      font-size: 16px;
+      font-size: var(--font-lg);
     }
     .addConnect {
       width: 66px;

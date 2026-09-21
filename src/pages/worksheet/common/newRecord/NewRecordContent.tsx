@@ -35,7 +35,7 @@ const Con = styled.div`
   height: 100%;
   margin: 0 -24px;
   .newRecordTitle {
-    padding: 0 32px;
+    padding: 0 var(--space-8);
     flex-shrink: 0;
   }
   .customFieldsCon {

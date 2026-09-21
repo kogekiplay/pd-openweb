@@ -12,9 +12,9 @@ const THEME_COLORS = {
 };
 
 const DropComponentWrap = styled(DropComponent)`
-  padding: 0 8px 0 12px;
+  padding: 0 var(--space-2) 0 var(--space-3);
   & > i {
-    font-size: 16px !important;
+    font-size: var(--font-lg) !important;
   }
 `;
 
@@ -30,7 +30,7 @@ const renderItem = newVal => {
   return (
     <div
       className="mTop5 w100 mBottom5 flexColumn"
-      style={{ background: 'var(--color-background-primary)', padding: '0 12px', borderRadius: '3px' }}
+      style={{ background: 'var(--color-background-primary)', padding: '0 var(--space-3)', borderRadius: '3px' }}
     >
       <SectionItemWrap theme={THEME_COLORS[newVal]} color="var(--color-text-primary)" sectionstyle={newVal}>
         <div className="titleBox">

@@ -41,14 +41,14 @@ const ColorBox = styled.div(
     align-items: center;
     justify-content: center;
     .selectIcon {
-      font-size: 16px;
+      font-size: var(--font-lg);
       color: var(--color-white);
       opacity: 1;
     }
   }
   .removeIcon {
     position: absolute;
-    font-size: 16px;
+    font-size: var(--font-lg);
     top: 0;
     right: 0;
     background: var(--color-background-primary);

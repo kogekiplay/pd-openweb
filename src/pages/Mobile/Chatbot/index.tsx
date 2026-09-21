@@ -14,7 +14,7 @@ import AppPermissions from '../components/AppPermissions';
 const Wrap = styled.div`
   background: var(--color-background-primary);
   .header {
-    padding: 8px 10px;
+    padding: var(--space-2) 10px;
   }
 `;
 
@@ -101,7 +101,7 @@ export const Chatbot = props => {
         onClose={() => setHistoryVisible(false)}
       >
         <div className="flexColumn h100">
-          <div className="flexRow alignItemsCenter header" style={{ padding: '15px 15px 12px' }}>
+          <div className="flexRow alignItemsCenter header" style={{ padding: '15px 15px var(--space-3)' }}>
             <div className="Font13">{_l('历史记录')}</div>
             <div
               className="closeIcon TxtCenter"

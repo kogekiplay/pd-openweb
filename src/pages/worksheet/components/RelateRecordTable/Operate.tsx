@@ -53,9 +53,9 @@ const Con = styled.div`
     color: var(--color-text-tertiary);
     display: inline-block;
     height: 28px;
-    font-size: 20px;
+    font-size: var(--font-2xl);
     line-height: 28px;
-    padding: 0 4px;
+    padding: 0 var(--space-1);
     border-radius: var(--radius-sm);
     &:hover {
       background: var(--color-background-hover);
@@ -80,7 +80,7 @@ const Con = styled.div`
         padding-left: 0px;
         height: 28px;
         line-height: 28px;
-        font-size: 12px;
+        font-size: var(--font-xs);
         border: none;
         background: transparent;
       }
@@ -98,9 +98,9 @@ const IconBtn = styled.span`
   color: var(--color-text-tertiary);
   display: inline-block;
   height: 28px;
-  font-size: 20px;
+  font-size: var(--font-2xl);
   line-height: 28px;
-  padding: 0 4px;
+  padding: 0 var(--space-1);
   border-radius: var(--radius-sm);
   &.active {
     background: color-mix(in srgb, var(--color-primary) 12%, transparent);
@@ -125,7 +125,7 @@ const SearchInputCon = styled.div`
   }
   .clearIcon {
     cursor: pointer;
-    font-size: 20px;
+    font-size: var(--font-2xl);
     margin-left: 10px;
     color: var(--color-text-tertiary);
     &:hover {

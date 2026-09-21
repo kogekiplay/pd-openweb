@@ -9,7 +9,7 @@ export const Wrap = styled.div`
   }
   background: var(--color-background-primary);
   overflow-y: auto;
-  padding: 32px 32px;
+  padding: var(--space-8) var(--space-8);
   .timeNum {
     li {
       width: 32%;
@@ -18,7 +18,7 @@ export const Wrap = styled.div`
       background: var(--color-background-tertiary);
       border-radius: var(--radius-sm);
       text-align: left;
-      padding: 0 20px;
+      padding: 0 var(--space-5);
       .des {
         font-weight: 600;
         color: var(--color-text-secondary);
@@ -30,7 +30,7 @@ export const Wrap = styled.div`
         color: var(--color-text-title);
       }
       .txtTime {
-        font-size: 12px;
+        font-size: var(--font-xs);
         font-weight: 400;
       }
     }
@@ -69,7 +69,7 @@ export const Wrap = styled.div`
         min-width: 0;
         word-break: break-word;
         flex-shrink: 0;
-        padding: 8px 6px;
+        padding: var(--space-2) 6px;
         &.width100 {
           width: 100px;
         }
@@ -91,7 +91,7 @@ export const Wrap = styled.div`
     .pre,
     .next {
       display: inline-block;
-      margin: 0 32px;
+      margin: 0 var(--space-8);
       cursor: pointer;
       color: var(--color-text-title);
       &.disable {
@@ -104,6 +104,6 @@ export const Wrap = styled.div`
     border-radius: var(--radius-sm);
     background: var(--color-background-primary);
     border: 1px solid var(--color-text-disabled);
-    font-size: 14px;
+    font-size: var(--font-md);
   }
 `;

@@ -12,7 +12,7 @@ export const Con = styled.div`
       min-height: 110px;
       background-color: var(--color-background-primary);
       background-clip: padding-box;
-      padding: 19px 19px 18px 16px;
+      padding: 19px 19px 18px var(--space-4);
       position: relative;
       z-index: 9;
       box-shadow: var(--shadow-lg);
@@ -194,7 +194,7 @@ export const UploadBtn = styled(CustomButton)`
     display: inline-block;
     position: relative;
     top: 3px;
-    margin-right: 4px;
-    font-size: 20px;
+    margin-right: var(--space-1);
+    font-size: var(--font-2xl);
   }
 `;

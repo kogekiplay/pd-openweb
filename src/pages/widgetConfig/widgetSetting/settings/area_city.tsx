@@ -18,7 +18,7 @@ const ConfigWrap = styled.div`
   margin: 6px 0;
   height: 36px;
   line-height: 36px;
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   border: 1px solid var(--color-border-primary);
   border-radius: var(--radius-sm);
   cursor: pointer;

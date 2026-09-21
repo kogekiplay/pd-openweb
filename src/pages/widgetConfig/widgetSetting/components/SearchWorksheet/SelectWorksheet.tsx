@@ -28,10 +28,10 @@ const idContrast = {
 const SelectSheetWrap = styled.div`
   .footerBtn {
     text-align: right;
-    margin-top: 32px;
+    margin-top: var(--space-8);
   }
   .title {
-    margin: 24px 0 6px 0;
+    margin: var(--space-6) 0 6px 0;
   }
   .ming.Dropdown,
   .ming.Menu {

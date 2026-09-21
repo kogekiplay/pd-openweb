@@ -61,12 +61,12 @@ const SearchFolderCon = styled.ul`
       top: 0;
       span {
         color: var(--color-text-tertiary);
-        font-size: 14px;
+        font-size: var(--font-md);
         line-height: 40px;
       }
     }
     .icon-folder-public {
-      font-size: 18px;
+      font-size: var(--font-xl);
       margin-right: 5px;
       color: var(--color-text-tertiary);
       line-height: 40px;

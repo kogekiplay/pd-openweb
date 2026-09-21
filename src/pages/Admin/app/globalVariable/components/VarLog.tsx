@@ -48,7 +48,7 @@ const LogDrawer = styled(Drawer)`
       padding: 15px 25px;
 
       .icon {
-        font-size: 16px;
+        font-size: var(--font-lg);
         color: var(--color-text-secondary);
       }
       .icon.icon-arrow-down {
@@ -84,7 +84,7 @@ const LogDrawer = styled(Drawer)`
         }
       }
       .selectConText {
-        margin: 0 4px;
+        margin: 0 var(--space-1);
         color: var(--color-text-tertiary);
       }
       .selectLight {
@@ -99,7 +99,7 @@ const LogDrawer = styled(Drawer)`
     }
     .emptyText {
       margin-top: 100px;
-      font-size: 13px;
+      font-size: var(--font-sm);
       color: var(--color-text-disabled);
       text-align: center;
     }
@@ -109,12 +109,12 @@ const LogDrawer = styled(Drawer)`
 const LogItem = styled.div`
   display: flex;
   justify-content: space-between;
-  padding: 16px 20px;
+  padding: var(--space-4) var(--space-5);
   margin: 0 10px;
   border-bottom: 1px solid var(--color-border-secondary);
 
   .logContent {
-    font-size: 12px;
+    font-size: var(--font-xs);
     color: var(--color-text-tertiary);
     a {
       color: var(--color-text-title);
@@ -122,7 +122,7 @@ const LogItem = styled.div`
   }
   .operatorAvatar {
     display: inline-block !important;
-    margin-right: 8px;
+    margin-right: var(--space-2);
     img {
       margin-top: -2px;
     }

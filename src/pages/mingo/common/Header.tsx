@@ -13,7 +13,7 @@ const Con = styled.div`
   height: 50px;
   flex-shrink: 0;
   border-bottom: 1px solid var(--color-border-primary);
-  padding: 0 20px;
+  padding: 0 var(--space-5);
   .hap-logo {
     width: 32px;
     height: 32px;
@@ -67,10 +67,10 @@ const Con = styled.div`
     height: 36px;
     text-align: center;
     background-color: var(--color-background-secondary);
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     .title {
       width: 100%;
-      font-size: 13px;
+      font-size: var(--font-sm);
       font-weight: bold;
       color: var(--color-text-title);
     }
@@ -93,7 +93,7 @@ const WrappedButton = styled(Button)`
   justify-content: center;
 
   .icon {
-    font-size: 18px;
+    font-size: var(--font-xl);
     color: var(--color-text-tertiary) !important;
     margin-right: 5px;
   }
@@ -130,7 +130,7 @@ const QrCode = styled.div`
   height: 180px;
   background-color: var(--color-background-primary);
   border-radius: var(--radius-sm);
-  padding: 16px;
+  padding: var(--space-4);
   background-color: var(--color-background-primary);
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
   img {

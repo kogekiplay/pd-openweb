@@ -17,8 +17,8 @@ export const Wrap = styled.div`
     height: 36px;
     line-height: 36px;
     border-radius: var(--radius-sm);
-    padding: 0 12px;
-    font-size: 14px;
+    padding: 0 var(--space-3);
+    font-size: var(--font-md);
     cursor: no-drop;
     background: var(--color-background-secondary);
   }
@@ -34,13 +34,13 @@ export const Wrap = styled.div`
     height: 100%;
     .headerCon {
       border-bottom: 1px solid var(--color-border-secondary);
-      padding: 0 24px;
+      padding: 0 var(--space-6);
       height: 55px;
       line-height: 55px;
     }
     .editCon {
       overflow: auto;
-      padding: 0 24px 24px;
+      padding: 0 var(--space-6) var(--space-6);
     }
   }
   .title {
@@ -56,7 +56,7 @@ export const Wrap = styled.div`
     .itemT {
       background: var(--color-background-secondary);
       border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
-      padding: 3px 8px 3px 10px;
+      padding: 3px var(--space-2) 3px 10px;
       border: 1px solid var(--color-border-secondary);
       i {
         color: var(--color-text-tertiary);
@@ -82,7 +82,7 @@ export const Wrap = styled.div`
   }
   .ming.Input,
   .Textarea {
-    font-size: 13px;
+    font-size: var(--font-sm);
     border: 1px solid var(--color-border-primary);
     &:hover {
       border-color: var(--color-text-disabled);

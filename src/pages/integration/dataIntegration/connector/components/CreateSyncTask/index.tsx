@@ -23,13 +23,13 @@ const SyncTaskWrapper = styled.div`
     .titleText {
       font-size: 17px;
       font-weight: 600;
-      margin-top: 32px;
+      margin-top: var(--space-8);
     }
   }
 
   .selectItem {
     width: 100%;
-    font-size: 13px;
+    font-size: var(--font-sm);
     &.ant-select,
     & .ant-select {
       --ant-select-border-size: 1px !important;
@@ -59,7 +59,7 @@ const SyncTaskWrapper = styled.div`
     width: fit-content;
     border: 2px solid var(--color-border-secondary);
     border-radius: 12px;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     cursor: pointer;
     span {
       font-weight: 600;
@@ -79,7 +79,7 @@ const SyncTaskWrapper = styled.div`
       align-items: center;
       width: 24px;
       height: 24px;
-      margin-right: 8px;
+      margin-right: var(--space-2);
       border-radius: 6px;
       background: var(--color-primary-transparent);
       .svg-icon {
@@ -88,7 +88,7 @@ const SyncTaskWrapper = styled.div`
       }
     }
     span {
-      font-size: 14px;
+      font-size: var(--font-md);
       font-weight: 600;
       line-height: 24px;
       overflow: hidden;
@@ -105,8 +105,8 @@ const CardWrapper = styled.div`
   background: var(--color-background-primary);
   border: 2px solid var(--color-border-secondary);
   border-radius: 12px;
-  padding: 32px;
-  margin-top: 16px;
+  padding: var(--space-8);
+  margin-top: var(--space-4);
   cursor: pointer;
 
   .Radio-text {

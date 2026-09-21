@@ -14,12 +14,12 @@ const Con = styled.div`
   border: 1px solid var(--color-border-secondary);
   color: var(--color-text-secondary);
   font-weight: bold;
-  font-size: 13px;
+  font-size: var(--font-sm);
   user-select: none;
   .content {
     flex: 1;
     line-height: 30px;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
   }
   &:not(.disabled) {
     .content {
@@ -38,7 +38,7 @@ const Con = styled.div`
   }
   &.hasDownList {
     .content {
-      padding-right: 8px;
+      padding-right: var(--space-2);
     }
   }
 `;
@@ -46,12 +46,12 @@ const Con = styled.div`
 const DropdownIcon = styled.div`
   position: relative;
   display: inline-block;
-  padding: 0 12px 0 8px;
+  padding: 0 var(--space-3) 0 var(--space-2);
   cursor: pointer;
   text-align: center;
   line-height: 30px;
   .icon {
-    font-size: 12px;
+    font-size: var(--font-xs);
     color: var(--color-text-secondary);
   }
   &::before {

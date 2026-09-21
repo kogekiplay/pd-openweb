@@ -23,7 +23,7 @@ const EmptyStatusWrap = styled.div`
       color: var(--color-text-disabled);
     }
     .emptyTxt {
-      margin-top: 12px;
+      margin-top: var(--space-3);
       font-size: 15px;
       color: var(--color-text-disabled);
     }

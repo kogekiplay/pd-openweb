@@ -6,7 +6,7 @@ import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   text-align: center;
-  padding: 10px 0 8px;
+  padding: 10px 0 var(--space-2);
   img {
     height: 160px;
   }
@@ -16,10 +16,10 @@ const Con = styled.div`
   }
   .addFilter {
     border-radius: 36px !important;
-    padding: 0 16px !important;
+    padding: 0 var(--space-4) !important;
     background-color: var(--color-primary);
     &:hover {
-      background-color: var(--color-link-hover);
+      background-color: var(--color-primary-dark);
     }
   }
 `;

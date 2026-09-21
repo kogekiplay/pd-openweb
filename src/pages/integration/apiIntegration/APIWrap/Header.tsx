@@ -26,7 +26,7 @@ const WrapMenu = styled(Menu)`
 
 const HeadTop = styled.div`
   background: var(--color-background-primary);
-  padding-top: 24px;
+  padding-top: var(--space-6);
   textarea.des {
     height: auto;
   }

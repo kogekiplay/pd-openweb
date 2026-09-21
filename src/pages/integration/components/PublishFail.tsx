@@ -4,7 +4,7 @@ import { Dialog } from 'ming-ui';
 
 const EditShowNameCon = styled.div`
   .title {
-    font-size: 20px;
+    font-size: var(--font-2xl);
     font-weight: bold;
     margin-bottom: 10px;
   }

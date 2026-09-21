@@ -18,7 +18,7 @@ const Wrapper = styled.div`
   display: flex;
   overflow: hidden;
   margin: 0;
-  padding: 0 20px;
+  padding: 0 var(--space-5);
 
   .listWrapper {
     width: 100%;
@@ -33,7 +33,7 @@ const Wrapper = styled.div`
     min-width: 180px;
     height: 50px;
     border-radius: 8px;
-    margin: 4px 0;
+    margin: var(--space-1) 0;
     cursor: pointer;
     &:hover {
       background: var(--color-background-hover);
@@ -48,7 +48,7 @@ const AppItem = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px;
+  padding: var(--space-2);
 
   .appIcon {
     width: 32px;
@@ -64,11 +64,11 @@ const AppItem = styled.div`
     margin-left: 10px;
     min-width: 0;
     .titleName {
-      font-size: 14px;
+      font-size: var(--font-md);
       color: var(--color-text-primary);
     }
     .appName {
-      font-size: 12px;
+      font-size: var(--font-xs);
       color: var(--color-text-tertiary);
     }
   }
@@ -102,7 +102,7 @@ const ListItemSkeleton = styled.div`
   justify-content: center;
   align-items: center;
   margin-right: 48px;
-  margin-bottom: 20px;
+  margin-bottom: var(--space-5);
   .iconSkeleton {
     width: 32px;
     height: 32px;

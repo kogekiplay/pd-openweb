@@ -9,8 +9,8 @@
   background-color: var(--color-background-input);
   padding: 0px 13px;
   display: flex;
-  font-size: 14px;
-  margin: 0 10px 7px 16px;
+  font-size: var(--font-md);
+  margin: 0 10px 7px var(--space-4);
   .icon {
     line-height: 36px;
     &.searchIcon {
@@ -26,7 +26,7 @@
   height: 36px;
   background: var(--color-background-secondary);
   border-radius: 50%;
-  margin-right: 16px;
+  margin-right: var(--space-4);
   position: relative;
   overflow: hidden;
   > div {
@@ -43,7 +43,7 @@
   line-height: 50px;
   justify-content: space-between;
   background-color: var(--color-background-primary);
-  padding: 0 16px 0 0;
+  padding: 0 var(--space-4) 0 0;
   .icon {
     line-height: 50px;
     &.icon-list {
@@ -55,7 +55,7 @@
   background-color: var(--color-background-primary);
   .appCon {
     width: 100%;
-    padding: 0 6px 16px;
+    padding: 0 6px var(--space-4);
     box-sizing: border-box;
     display: flex;
     flex-wrap: wrap;
@@ -66,7 +66,7 @@
   .allOrg {
     background: var(--color-background-secondary);
     border-radius: 14px;
-    padding: 4px 14px;
+    padding: var(--space-1) 14px;
   }
 }
 .myAppItemWrap {
@@ -93,7 +93,7 @@
       }
       .icon-plus {
         color: var(--color-text-secondary);
-        font-size: 20px;
+        font-size: var(--font-2xl);
       }
       .svgWrap {
         height: inherit;

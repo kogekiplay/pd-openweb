@@ -9,8 +9,8 @@ import { relevanceImageSize } from 'statistics/common/reportConfigUtils';
 import { getIconByType } from 'src/pages/widgetConfig/util';
 
 const SearchControlWrapper = styled.div`
-  padding: 8px 5px;
-  border-bottom: 1px solid var(--color-border-primary) ff;
+  padding: var(--space-2) 5px;
+  border-bottom: 1px solid var(--color-border-primary);
   input {
     color: var(--color-white);
     border: none;
@@ -25,7 +25,7 @@ const ButtonWrapper = styled.div`
   height: 28px;
   line-height: 28px;
   color: var(--color-text-secondary);
-  margin-right: 8px;
+  margin-right: var(--space-2);
   border-radius: var(--radius-sm);
   background-color: var(--color-background-secondary);
   cursor: pointer;

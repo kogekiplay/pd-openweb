@@ -9,7 +9,7 @@
   cursor: pointer;
   border: 1px solid var(--color-border-primary);
   border-radius: var(--radius-sm);
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   box-sizing: border-box;
   position: relative;
   & > div {
@@ -28,7 +28,7 @@
     position: absolute;
     top: 50%;
     margin-top: -10px;
-    font-size: 14px;
+    font-size: var(--font-md);
     margin-left: 10px;
   }
   .dropDownLabel {
@@ -37,17 +37,17 @@
     display: flex;
     flex-wrap: wrap;
     .valueText {
-      font-size: 12px;
+      font-size: var(--font-xs);
       display: flex;
       align-items: center;
       max-width: 91%;
-      padding: 0 8px 0 10px;
+      padding: 0 var(--space-2) 0 10px;
       border-radius: 11px;
       background: var(--tag-bg);
       border: 1px solid var(--color-border-tertiary);
       color: var(--color-text-primary);
       margin-top: 5px;
-      margin-right: 8px;
+      margin-right: var(--space-2);
       height: 22px;
       &:last-child {
         margin-bottom: 5px;
@@ -60,8 +60,8 @@
         }
       }
       .settingIcon {
-        padding: 0 8px;
-        font-size: 14px;
+        padding: 0 var(--space-2);
+        font-size: var(--font-md);
         height: inherit;
         display: flex;
         align-items: center;
@@ -90,7 +90,7 @@
   display: flex;
   flex-direction: column;
   padding: 6px 0;
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-title);
   background: var(--color-background-primary);
   border-radius: var(--radius-sm);
@@ -100,13 +100,13 @@
     box-sizing: border-box;
     display: flex;
     gap: 6px;
-    padding: 5px 16px;
+    padding: 5px var(--space-4);
     button {
       cursor: pointer;
       border: none;
       outline: none;
       border-radius: var(--radius-sm);
-      padding: 0 16px;
+      padding: 0 var(--space-4);
       text-align: center;
       line-height: 28px;
       height: 28px;
@@ -124,7 +124,7 @@
       width: 100%;
       box-sizing: border-box;
       height: 36px;
-      padding: 0px 16px 0 35px;
+      padding: 0px var(--space-4) 0 35px;
       border: none;
       border-bottom: 1px solid var(--color-border-primary);
       margin-bottom: 5px;
@@ -163,7 +163,7 @@
     line-height: 36px;
     display: flex;
     align-items: center;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     box-sizing: border-box;
     flex-shrink: 0;
     &:hover {
@@ -197,7 +197,7 @@
     line-height: 33px;
     display: flex;
     align-items: center;
-    padding: 0 16px 0 42px;
+    padding: 0 var(--space-4) 0 42px;
     box-sizing: border-box;
     &:hover {
       background: var(--color-background-hover);
@@ -215,7 +215,7 @@
   .ant-dropdown-menu-item {
     line-height: 26px;
     height: 36px;
-    font-size: 13px;
+    font-size: var(--font-sm);
     transition: none !important;
   }
   .ant-dropdown-menu-item-active {

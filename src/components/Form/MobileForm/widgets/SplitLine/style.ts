@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const SectionItemWrap = styled.div`
   width: 100%;
-  padding: 4px 0;
+  padding: var(--space-1) 0;
   display: flex;
   align-items: center;
   transform: translateZ(0);
@@ -45,8 +45,8 @@ export const SectionItemWrap = styled.div`
 
   .headerArrow {
     flex-shrink: 0;
-    font-size: 18px;
-    margin-left: 12px;
+    font-size: var(--font-xl);
+    margin-left: var(--space-3);
     .iconBox {
       ${props => (props.visible ? 'transform: rotate(180deg); transition: transform 0.2s ease-in-out;' : '')};
     }
@@ -65,7 +65,7 @@ export const SectionItemWrap = styled.div`
     margin-right: 5px !important;
     color: ${props => props.theme} !important;
     i {
-      font-size: 20px;
+      font-size: var(--font-2xl);
       display: inline-block;
       transform-origin: center;
       ${props => (props.visible ? 'transform: rotate(90deg)' : '')};

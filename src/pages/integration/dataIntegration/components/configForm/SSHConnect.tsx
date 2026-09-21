@@ -10,14 +10,14 @@ import sshConfigApi from 'src/pages/integration/api/sshConfig';
 import copy from 'src/utils/copyToClipboard';
 
 const SSHCheckbox = styled(Checkbox)`
-  margin-top: 12px;
+  margin-top: var(--space-3);
   span {
     font-weight: bold;
     color: var(--color-text-secondary);
   }
 `;
 const SaveButton = styled(Button)`
-  margin-left: 16px;
+  margin-left: var(--space-4);
   &.ming.Button--disabled,
   .ming.Button--disabled:hover {
     background: var(--color-primary-light);
@@ -30,7 +30,7 @@ const CrackTextarea = styled(Textarea)`
 
 const CommonSelect = styled(Select)`
   width: 100%;
-  font-size: 13px;
+  font-size: var(--font-sm);
   &.ant-select,
   & .ant-select {
     --ant-select-border-radius: var(--radius-sm) !important;
@@ -64,13 +64,13 @@ const CommonSelect = styled(Select)`
 `;
 
 const Wrapper = styled.div`
-  padding-bottom: 24px;
+  padding-bottom: var(--space-6);
 
   .ant-select-dropdown {
     .addItem {
       height: 32px;
       line-height: 32px;
-      padding: 0 12px;
+      padding: 0 var(--space-3);
       cursor: pointer;
       color: rgba(0, 0, 0, 0.85);
       &:hover {
@@ -85,11 +85,11 @@ const Wrapper = styled.div`
 
   .copyIcon {
     width: 50px;
-    padding-top: 12px;
+    padding-top: var(--space-3);
     text-align: center;
     .icon-copy {
       color: var(--color-text-secondary);
-      font-size: 16px;
+      font-size: var(--font-lg);
       cursor: pointer;
 
       &:hover {
@@ -114,7 +114,7 @@ const OptionItem = styled.div`
   .icon-trash {
     display: none;
     color: var(--color-text-secondary);
-    font-size: 16px;
+    font-size: var(--font-lg);
     cursor: pointer;
     :hover {
       color: #f00;
@@ -135,7 +135,7 @@ const EmptyMargin = styled.div`
 const DialogWrapper = styled.div`
   .fieldLabel,
   p {
-    margin-bottom: 4px;
+    margin-bottom: var(--space-1);
   }
   input {
     width: 100%;
@@ -144,7 +144,7 @@ const DialogWrapper = styled.div`
   .copyButton {
     color: var(--color-primary);
     cursor: pointer;
-    margin-right: 8px;
+    margin-right: var(--space-2);
     &.isHide {
       display: none;
     }
@@ -153,7 +153,7 @@ const DialogWrapper = styled.div`
   .errorInfo {
     background-color: var(--color-error-bg);
     border-radius: var(--radius-sm);
-    padding: 8px 16px;
+    padding: var(--space-2) var(--space-4);
   }
 `;
 

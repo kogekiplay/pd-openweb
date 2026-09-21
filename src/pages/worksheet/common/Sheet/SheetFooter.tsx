@@ -25,7 +25,7 @@ const Con = styled.div`
   align-items: center;
   justify-content: flex-end;
   height: 48px;
-  padding: 0 16px;
+  padding: 0 var(--space-4);
   box-sizing: border-box;
   border-top: 1px solid var(--color-border-secondary);
   background: var(--color-background-card);

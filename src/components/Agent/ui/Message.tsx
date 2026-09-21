@@ -31,7 +31,7 @@ const Avatar = styled.div`
   background: ${colors.backgroundMuted};
   overflow: hidden;
   color: ${colors.textMuted};
-  font-size: 13px;
+  font-size: var(--font-sm);
   font-weight: 600;
 `;
 
@@ -52,13 +52,13 @@ const Name = styled.span`
 const Content = styled.div`
   max-width: ${({ $role }) => ($role === 'user' ? 'min(100%, 680px)' : '100%')};
   color: ${colors.text};
-  font-size: 14px;
+  font-size: var(--font-md);
   line-height: 24px;
 
   ${({ $role }) =>
     $role === 'user'
       ? css`
-          padding: 8px 10px;
+          padding: var(--space-2) 10px;
           border-radius: ${radii.userBubble};
           background: ${colors.brandSoftLight};
         `
@@ -97,7 +97,7 @@ const Action = styled.button`
   padding: 0 10px;
   color: ${colors.textMuted};
   font-family: ${typography.fontFamily};
-  font-size: 13px;
+  font-size: var(--font-sm);
   line-height: 20px;
   cursor: pointer;
   transition:
@@ -125,7 +125,7 @@ const Response = styled.div`
 const Meta = styled.div`
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-3);
   font-size: 11px;
   line-height: 24px;
   color: ${colors.textDisabled};
@@ -146,7 +146,7 @@ const CreditsRefresh = styled.button`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-left: 4px;
+  margin-left: var(--space-1);
   border: 0;
   padding: 0;
   background: transparent;
@@ -159,7 +159,7 @@ const CreditsRefresh = styled.button`
   }
 
   .icon {
-    font-size: 12px;
+    font-size: var(--font-xs);
   }
 `;
 

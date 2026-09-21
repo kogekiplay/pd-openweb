@@ -21,12 +21,12 @@ const DialogContentWrap = styled.div`
   }
   .textInput {
     .formLabel {
-      margin-bottom: 4px !important;
+      margin-bottom: var(--space-1) !important;
     }
   }
   .deleteIcon {
     color: var(--color-text-secondary);
-    font-size: 16px;
+    font-size: var(--font-lg);
     cursor: pointer;
     &:hover {
       color: var(--color-error);

@@ -13,7 +13,7 @@ export const BillInfoWrap = styled.div`
     }
     .invoiceSetting {
       color: var(--color-primary);
-      margin: 0 8px;
+      margin: 0 var(--space-2);
     }
   }
   .accountInfo {
@@ -22,12 +22,12 @@ export const BillInfoWrap = styled.div`
     i,
     .balance {
       color: var(--color-primary);
-      margin: 0 8px;
+      margin: 0 var(--space-2);
     }
     .eyeIcon {
       width: 20px;
       height: 20px;
-      font-size: 14px;
+      font-size: var(--font-md);
       display: inline-block;
       text-align: center;
       vertical-align: middle;
@@ -44,11 +44,11 @@ export const BillInfoWrap = styled.div`
       line-height: 24px;
       background-color: var(--color-primary);
       color: var(--color-white);
-      font-size: 12px;
-      padding: 0 16px;
+      font-size: var(--font-xs);
+      padding: 0 var(--space-4);
       border-radius: var(--radius-sm);
       &:hover {
-        background-color: var(--color-link-hover);
+        background-color: var(--color-primary-dark);
       }
     }
     .warningBtn {
@@ -58,21 +58,21 @@ export const BillInfoWrap = styled.div`
       color: var(--color-primary);
       &:hover {
         background-color: var(--color-background-primary);
-        border: 1px solid var(--color-link-hover);
+        border: 1px solid var(--color-primary-dark);
         color: var(--color-link-hover);
       }
     }
   }
   .emptyList {
     text-align: center;
-    padding: 24px 0;
+    padding: var(--space-6) 0;
   }
 
   .listHeader {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 24px;
+    margin-top: var(--space-6);
     .recordType {
       display: flex;
       li {
@@ -91,7 +91,7 @@ export const BillInfoWrap = styled.div`
       display: flex;
       align-items: center;
       .rows {
-        margin: 0 12px;
+        margin: 0 var(--space-3);
       }
       .date {
         transition: all 0.25s;
@@ -99,16 +99,16 @@ export const BillInfoWrap = styled.div`
         cursor: pointer;
       }
       .dateRange {
-        margin: 0 8px;
+        margin: 0 var(--space-2);
         background: var(--color-primary-transparent);
         color: var(--color-primary);
-        padding: 0 12px;
+        padding: 0 var(--space-3);
         border-radius: var(--radius-sm);
         display: inline-block;
         line-height: 28px;
         cursor: pointer;
         i {
-          margin-left: 4px;
+          margin-left: var(--space-1);
         }
       }
     }
@@ -135,7 +135,7 @@ export const BillInfoWrap = styled.div`
   .listTitle {
     display: flex;
     align-items: center;
-    padding: 12px 0;
+    padding: var(--space-3) 0;
     border-top: 1px solid var(--color-border-primary);
     border-bottom: 1px solid var(--color-border-primary);
     .item {
@@ -225,7 +225,7 @@ export const BillInfoWrap = styled.div`
   }
 
   .goToPay {
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     background-color: var(--color-warning);
     color: var(--color-white);
     line-height: 24px;
@@ -294,7 +294,7 @@ export const AccountIdOperation = styled.ul`
     /* display: none; */
   }
   li {
-    padding: 0 24px;
+    padding: 0 var(--space-6);
     cursor: pointer;
     line-height: 36px;
     transition: all 0.25s;

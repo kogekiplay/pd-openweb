@@ -7,7 +7,7 @@ import { navigateTo } from 'src/router/navigateTo';
 import { MODE } from './enum';
 
 const Con = styled.div`
-  ${({ isMobile }) => (isMobile ? 'padding: 10px 16px;' : 'padding: 0 20px;margin-bottom: 10px;')}
+  ${({ isMobile }) => (isMobile ? 'padding: 10px var(--space-4);' : 'padding: 0 var(--space-5);margin-bottom: 10px;')}
   .header {
     height: 50px;
     display: flex;
@@ -28,7 +28,7 @@ const Con = styled.div`
       align-items: center;
       line-height: normal;
       color: var(--color-text-secondary);
-      font-size: 18px;
+      font-size: var(--font-xl);
       cursor: pointer;
       &:hover {
         background: var(--color-background-hover);
@@ -46,7 +46,7 @@ const Con = styled.div`
     color: var(--color-text-secondary);
     .icon {
       color: var(--color-text-tertiary);
-      margin-right: 4px;
+      margin-right: var(--space-1);
     }
   }
 `;

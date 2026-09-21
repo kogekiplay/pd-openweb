@@ -20,7 +20,7 @@ import UserCon from './tabCon/UserCon';
 
 const Wrap = styled.div`
   width: 60%;
-  padding-right: 32px;
+  padding-right: var(--space-8);
   display: flex;
   .urlSet {
     width: 100%;
@@ -51,7 +51,7 @@ const Wrap = styled.div`
   .setBtn {
     margin-left: 6px;
     line-height: 32px;
-    padding: 0 20px;
+    padding: 0 var(--space-5);
     background: var(--color-primary);
     border-radius: var(--radius-sm);
     text-align: center;

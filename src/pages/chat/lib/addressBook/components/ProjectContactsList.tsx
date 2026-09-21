@@ -16,7 +16,7 @@ const DepartmentTreeWrapper = styled.div`
 
 const Department = styled.div`
   width: 100%;
-  padding: 4px;
+  padding: var(--space-1);
   &:hover {
     background-color: var(--color-background-hover);
   }

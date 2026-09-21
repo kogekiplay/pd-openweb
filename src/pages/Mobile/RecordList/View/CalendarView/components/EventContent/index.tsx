@@ -6,10 +6,10 @@ import { RECORD_COLOR_SHOW_TYPE } from 'worksheet/constants/enum';
 const EventContentWrapper = styled.div`
   display: flex;
   align-items: center;
-  padding: 0 4px;
+  padding: 0 var(--space-1);
   height: 16px;
   line-height: 16px;
-  font-size: 12px;
+  font-size: var(--font-xs);
   font-weight: 600;
   color: var(--color-text-primary);
   overflow: hidden;

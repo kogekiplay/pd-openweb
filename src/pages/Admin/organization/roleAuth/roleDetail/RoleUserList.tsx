@@ -13,7 +13,7 @@ const UserListWrapper = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  margin: 20px 24px 0px;
+  margin: var(--space-5) var(--space-6) 0px;
   overflow: hidden;
   .userListHeader {
     .searchInput {
@@ -28,7 +28,7 @@ const UserListWrapper = styled.div`
   .userItem {
     display: flex;
     align-items: center;
-    padding: 12px 8px;
+    padding: var(--space-3) var(--space-2);
     cursor: pointer;
     .userName,
     .createTime {

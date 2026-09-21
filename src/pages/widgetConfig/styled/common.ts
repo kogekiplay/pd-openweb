@@ -9,7 +9,7 @@ export const Button = styled.div`
   border: 1px solid var(--color-border-primary);
   transition: all 0.25s;
   i {
-    margin-right: 4px;
+    margin-right: var(--space-1);
     &.active {
       color: var(--color-success);
     }
@@ -35,14 +35,14 @@ export const DropdownOverlay = styled.div`
     display: flex;
     align-items: center;
     width: 100%;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     margin-bottom: 6px;
     border-bottom: 1px solid --color-background-disabled;
     input {
       line-height: 36px;
       border: none;
       outline: none;
-      padding-left: 8px;
+      padding-left: var(--space-2);
     }
   }
 
@@ -54,7 +54,7 @@ export const DropdownOverlay = styled.div`
       margin: 0 auto;
       line-height: 38px;
       color: var(--color-text-tertiary);
-      font-size: 13px;
+      font-size: var(--font-sm);
       text-align: center;
     }
     &.grayDropdown .item {
@@ -72,11 +72,11 @@ export const DropdownOverlay = styled.div`
       display: flex;
       align-items: center;
       line-height: 36px;
-      padding: 0 16px;
+      padding: 0 var(--space-4);
       cursor: pointer;
       transition: background-color color 0.25s;
       i {
-        margin-right: 8px;
+        margin-right: var(--space-2);
         color: var(--color-text-tertiary);
       }
       .text {

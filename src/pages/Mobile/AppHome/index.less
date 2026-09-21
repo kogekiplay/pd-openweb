@@ -75,14 +75,14 @@
         flex-direction: column;
         .content {
           flex: 1;
-          padding-bottom: 24px;
+          padding-bottom: var(--space-6);
           background-color: var(--color-background-primary);
           .appGroupEntry {
             height: 56px;
             align-items: center;
             justify-content: space-between;
             background-color: var(--color-background-primary);
-            padding: 0 16px 0 0;
+            padding: 0 var(--space-4) 0 0;
             .icon {
               line-height: 50px;
               &.icon-list {
@@ -97,7 +97,7 @@
 
         .appCon {
           width: 100%;
-          padding: 0 6px 16px;
+          padding: 0 6px var(--space-4);
           box-sizing: border-box;
           flex-wrap: wrap;
         }
@@ -105,17 +105,17 @@
         .appBelongInfo {
           display: inline-block;
           align-items: center;
-          margin-left: 12px;
-          padding: 0 12px 0 10px;
+          margin-left: var(--space-3);
+          padding: 0 var(--space-3) 0 10px;
           border-radius: 14px;
           line-height: 28px;
           text-align: center;
-          font-size: 12px;
+          font-size: var(--font-xs);
           background-color: var(--color-background-secondary);
 
           span {
             color: var(--color-text-secondary);
-            margin-left: 4px;
+            margin-left: var(--space-1);
           }
 
           .purchase {
@@ -129,7 +129,7 @@
             height: 32px;
             min-width: 68px;
             margin-right: 6px;
-            padding: 0 10px 0 20px;
+            padding: 0 10px 0 var(--space-5);
             border-radius: var(--radius-sm);
             color: var(--color-primary);
             background: var(--color-background-secondary);
@@ -146,8 +146,8 @@
           background-color: var(--color-background-input);
           padding: 0px 13px;
           display: flex;
-          font-size: 14px;
-          margin: 0 10px 15px 16px;
+          font-size: var(--font-md);
+          margin: 0 10px 15px var(--space-4);
           .icon {
             line-height: 36px;
             &.searchIcon {
@@ -168,7 +168,7 @@
           overflow: hidden;
         }
         .textScanQRCodeWrap {
-          margin-right: 8px;
+          margin-right: var(--space-2);
           > div {
             display: flex;
             justify-content: center;
@@ -179,7 +179,7 @@
           }
         }
         .mingoEntry {
-          margin-right: 16px;
+          margin-right: var(--space-4);
           img {
             width: 18px;
           }
@@ -195,7 +195,7 @@
           }
           .joinNetwork,
           .createNetwork {
-            padding: 0 20px;
+            padding: 0 var(--space-5);
             height: 36px;
             line-height: 36px;
             box-sizing: border-box;
@@ -203,7 +203,7 @@
             border: none;
             cursor: pointer;
             color: var(--color-white);
-            font-size: 14px;
+            font-size: var(--font-md);
           }
           .createNetwork {
             border-width: 1px;
@@ -255,13 +255,13 @@
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
-    padding-bottom: 16px;
+    padding-bottom: var(--space-4);
     background-color: var(--color-background-primary);
   }
   .groupHeader {
     display: flex;
     justify-content: space-between;
-    padding: 16px 16px 0;
+    padding: var(--space-4) var(--space-4) 0;
     .title {
       font-size: 17px;
       font-weight: 600;
@@ -293,7 +293,7 @@
   .chartItemWrap {
     height: 300px;
     border-bottom: 1px solid var(--color-background-secondary);
-    padding: 16px 0 15px;
+    padding: var(--space-4) 0 15px;
     box-sizing: content-box;
   }
 }

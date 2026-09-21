@@ -28,7 +28,7 @@ const WrapCon = styled.div`
 const Wrap = styled.div`
   .liInput {
     width: 110px;
-    margin-left: 8px;
+    margin-left: var(--space-2);
     .ant-input-number-actions {
       display: none;
     }

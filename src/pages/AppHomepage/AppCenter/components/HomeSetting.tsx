@@ -8,7 +8,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { FlexCenter } from 'worksheet/components/Basics';
 
 const BaseBtnCon = styled(FlexCenter)`
-  margin-left: 12px;
+  margin-left: var(--space-3);
   display: inline-flex;
   cursor: pointer;
   width: 32px;
@@ -24,7 +24,7 @@ const Hr = styled.div`
 `;
 
 const ConfigItem = styled.div`
-  padding: 24px 0;
+  padding: var(--space-6) 0;
   .switchItem {
     display: flex;
     justify-content: space-between;
@@ -35,7 +35,7 @@ const ConfigItem = styled.div`
     height: 36px;
     line-height: 36px;
     margin-left: -4px;
-    padding-left: 4px;
+    padding-left: var(--space-1);
     cursor: pointer;
     &:hover {
       background: var(--color-background-hover);
@@ -46,7 +46,7 @@ const ConfigItem = styled.div`
 const CustomDrawer = styled(Drawer)`
   .ant-drawer-header {
     border-bottom: 1px solid var(--color-border-secondary);
-    padding: 12px 24px;
+    padding: var(--space-3) var(--space-6);
   }
   .ant-drawer-header-title {
     flex-direction: row-reverse;
@@ -64,7 +64,7 @@ const CustomDrawer = styled(Drawer)`
   .ant-drawer-content-wrapper {
     box-shadow: -8px 8px 24px rgba(0, 0, 0, 0.16) !important;
     .ant-drawer-body {
-      padding: 0 24px;
+      padding: 0 var(--space-6);
     }
   }
 `;

@@ -59,14 +59,14 @@ const Meta = styled.div`
   flex: 1;
   flex-direction: column;
   justify-content: space-between;
-  padding: 8px 10px;
+  padding: var(--space-2) 10px;
 `;
 
 const Name = styled.div`
   display: -webkit-box;
   overflow: hidden;
   color: ${colors.text};
-  font-size: 12px;
+  font-size: var(--font-xs);
   line-height: 18px;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
@@ -74,7 +74,7 @@ const Name = styled.div`
 
 const Status = styled.div`
   color: ${({ $status }) => ($status === 'error' ? colors.error : colors.textMuted)};
-  font-size: 12px;
+  font-size: var(--font-xs);
   line-height: 18px;
 `;
 

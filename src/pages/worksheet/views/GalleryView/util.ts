@@ -13,7 +13,7 @@ export const getWidth = props => {
   const { coverPosition = '2' } = getCoverStyle(view);
   const cardWidth = getCardWidth(view);
   const isTopCover = coverPosition === '2';
-  const adjustedWidth = width - 16; // padding: 8px * 2
+  const adjustedWidth = width - 16; // padding: var(--space-2) * 2
   const minW = cardWidth ? Number(cardWidth) + 16 : isTopCover ? 246 : 336;
   return minW > adjustedWidth ? minW : Math.floor(adjustedWidth / Math.floor(adjustedWidth / minW));
 };

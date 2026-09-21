@@ -4,7 +4,7 @@ export const CustomMobileCascadeControl = styled.div`
   display: flex;
   align-items: center;
   min-width: 0;
-  ${props => (props.hasMultipleValues ? 'padding-top: 4px !important; padding-bottom: 4px !important;' : '')}
+  ${props => (props.hasMultipleValues ? 'padding-top: var(--space-1) !important; padding-bottom: var(--space-1) !important;' : '')}
   .cascadeMultipleContentBox {
     flex: 1;
     display: flex;
@@ -42,12 +42,12 @@ export const OptionWrap = styled.div`
 export const PopupContentBox = styled.div`
   height: 100%;
   .cascadeOptionBox {
-    padding-left: 12px;
+    padding-left: var(--space-3);
     font-size: 15px;
     .optionItem {
       display: flex;
       align-items: center;
-      padding: 12px 12px 12px 0;
+      padding: var(--space-3) var(--space-3) var(--space-3) 0;
       border-bottom: 1px solid var(--color-border-secondary);
       &:last-child {
         border-bottom: none;
@@ -59,10 +59,10 @@ export const PopupContentBox = styled.div`
     display: flex !important;
     align-items: center;
     margin-top: initial !important;
-    margin-right: 20px;
+    margin-right: var(--space-5);
     &-box {
       flex-shrink: 0;
-      margin-right: 12px !important;
+      margin-right: var(--space-3) !important;
     }
     &-text {
       font-size: 15px !important;
@@ -84,7 +84,7 @@ export const PopupContentBox = styled.div`
     height: 70%;
 
     .icon {
-      margin-bottom: 16px;
+      margin-bottom: var(--space-4);
       font-size: 120px;
       color: var(--color-text-disabled);
     }

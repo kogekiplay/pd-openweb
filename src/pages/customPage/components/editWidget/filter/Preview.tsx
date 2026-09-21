@@ -13,7 +13,7 @@ const Wrap = styled.div`
   display: flex;
   flex: 1;
   background-color: var(--color-background-tertiary);
-  padding: 11px 24px;
+  padding: 11px var(--space-6);
   min-width: 0;
 
   .addFilterItem {
@@ -78,7 +78,7 @@ const Wrap = styled.div`
       align-items: center;
       justify-content: center;
       padding: 0;
-      margin: 0 0 0 16px;
+      margin: 0 0 0 var(--space-4);
       height: auto;
     }
   }

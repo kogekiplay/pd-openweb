@@ -52,7 +52,7 @@ const Empty = styled.span`
 const Control = styled.div`
   display: flex;
   flex-direction: ${$props => $props.direction};
-  font-size: 12px;
+  font-size: var(--font-xs);
   padding-right: 14px;
   .label {
     max-width: 200px;
@@ -102,7 +102,7 @@ const Control = styled.div`
       white-space: pre-line;
     }
     .AttachmentCon {
-      margin: 0 4px 0 0;
+      margin: 0 var(--space-1) 0 0;
     }
     ${({ contentStyle }) => contentStyle}
   }

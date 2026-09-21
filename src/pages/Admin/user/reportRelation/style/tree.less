@@ -16,11 +16,11 @@
 .rootNodeItem {
   padding-bottom: 60px;
   .childNodeList {
-    padding-left: 20px;
+    padding-left: var(--space-5);
   }
   .loadMore {
-    padding: 8px 0 8px 40px;
-    margin-top: 20px;
+    padding: var(--space-2) 0 var(--space-2) 40px;
+    margin-top: var(--space-5);
     color: var(--color-primary);
     &:hover {
       background: var(--color-background-secondary);
@@ -29,7 +29,7 @@
   }
   // 垫片
   .rootNodeSheet {
-    margin-left: 20px;
+    margin-left: var(--space-5);
     height: 20px;
     border-left: 1px solid @line-color;
   }
@@ -124,7 +124,7 @@
     .circle();
     right: 4px;
     top: (@node-height / 2) - (@toggle-button-size / 2);
-    font-size: 16px;
+    font-size: var(--font-lg);
   }
 
   .opList {

@@ -5,14 +5,14 @@ import styled from 'styled-components';
 
 const TimeZone = styled.div`
   font-family: Arial Narrow;
-  font-size: 12px;
+  font-size: var(--font-xs);
   position: absolute;
   top: 0;
   bottom: 0;
   right: 4px;
   display: flex;
   align-items: center;
-  padding-left: 4px;
+  padding-left: var(--space-1);
   border-left: 1px solid var(--color-border-tertiary);
   color: var(--color-text-tertiary);
   background: var(--color-background-primary);

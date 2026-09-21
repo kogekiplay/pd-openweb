@@ -22,7 +22,7 @@ const Wrapper = styled.div`
     display: flex;
     align-items: baseline;
     gap: 48px;
-    padding-left: 16px;
+    padding-left: var(--space-4);
   }
   .successColor {
     color: var(--color-success);

@@ -18,7 +18,7 @@ const Header = styled.div`
   position: relative;
   display: flex;
   height: 50px;
-  padding: 0 10px 0 20px;
+  padding: 0 10px 0 var(--space-5);
   background-color: var(--color-background-primary);
   justify-content: space-between;
   box-shadow: 0px 1px 3px #00000029;
@@ -33,7 +33,7 @@ const Header = styled.div`
   }
   .close {
     cursor: pointer;
-    font-size: 24px;
+    font-size: var(--font-3xl);
     line-height: 50px;
     padding: 0 10px;
     color: var(--color-text-title);
@@ -42,19 +42,19 @@ const Header = styled.div`
 
 const Pagination = styled.div`
   display: flex;
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-title);
   align-items: center;
   .info {
-    margin-right: 8px;
+    margin-right: var(--space-2);
   }
   .switchBtn {
     width: 24px;
     height: 24px;
-    font-size: 16px;
+    font-size: var(--font-lg);
     border-radius: var(--radius-sm);
     cursor: pointer;
-    margin-right: 8px;
+    margin-right: var(--space-2);
     &:not(.disabled):hover {
       color: var(--color-primary);
       background: var(--color-background-secondary);
@@ -72,7 +72,7 @@ const PrintButton = styled.div`
   top: 70px;
   background: var(--color-background-overlay);
   color: var(--color-background-disabled);
-  font-size: 20px;
+  font-size: var(--font-2xl);
   border-radius: var(--radius-sm);
   padding: 5px 10px;
   cursor: pointer;
@@ -91,11 +91,11 @@ const Loading = styled.div`
   color: var(--color-text-tertiary);
   .icon {
     display: inline-block;
-    font-size: 24px;
+    font-size: var(--font-3xl);
     animation: ${rotate} 0.6s infinite linear;
   }
   p {
-    font-size: 14px;
+    font-size: var(--font-md);
     margin-top: 5px;
   }
 `;

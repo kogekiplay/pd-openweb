@@ -15,7 +15,7 @@ const Con = styled.div`
   flex-direction: column;
   position: relative;
   .description {
-    font-size: 12px;
+    font-size: var(--font-xs);
     color: var(--color-text-tertiary);
     font-weight: normal;
     margin-bottom: -10px;
@@ -26,7 +26,7 @@ const Con = styled.div`
     align-items: center;
     color: var(--color-text-tertiary);
     .icon {
-      font-size: 18px;
+      font-size: var(--font-xl);
       margin-right: 2px;
     }
   }
@@ -43,12 +43,12 @@ const Title = styled.div`
     padding-right: 50px;
   }
   .name {
-    font-size: 20px;
+    font-size: var(--font-2xl);
     font-weight: bold;
     max-width: 300px;
   }
   .equal {
-    font-size: 20px;
+    font-size: var(--font-2xl);
     font-weight: bold;
     color: var(--color-text-secondary);
     margin: 0 6px;
@@ -62,7 +62,7 @@ const PlaceHolder = styled.div`
   left: 10px;
   top: 9px;
   color: var(--color-text-disabled);
-  font-size: 14px;
+  font-size: var(--font-md);
 `;
 
 const TestButton = styled.div`
@@ -76,7 +76,7 @@ const TestButton = styled.div`
   background: var(--color-background-primary);
   border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
   border: 1px solid var(--color-primary);
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: var(--color-primary);
   &:hover {
     background: var(--color-primary);
@@ -99,7 +99,7 @@ const Editor = styled.div`
   }
   .cm-scroller {
     font-family: Monaco, monospace;
-    font-size: 14px;
+    font-size: var(--font-md);
     overflow: auto;
   }
   /* 已知 / 未知函数名。CM5 时代 .cm-customFn 是 JS mode 按注入的 keywords 染的色；
@@ -117,11 +117,11 @@ const Editor = styled.div`
 
 const Error = styled.div`
   color: var(--color-error);
-  font-size: 13px;
+  font-size: var(--font-sm);
   font-weight: 600;
-  padding: 8px 0;
+  padding: var(--space-2) 0;
   .icon {
-    margin-right: 4px;
+    margin-right: var(--space-1);
   }
 `;
 

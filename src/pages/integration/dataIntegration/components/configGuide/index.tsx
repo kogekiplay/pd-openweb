@@ -27,8 +27,8 @@ const TabList = styled.div`
       a {
         color: var(--color-text-tertiary);
         display: inline-block;
-        font-size: 13px;
-        padding-bottom: 8px;
+        font-size: var(--font-sm);
+        padding-bottom: var(--space-2);
       }
       &.isCur {
         border-bottom: 3px solid var(--color-primary);

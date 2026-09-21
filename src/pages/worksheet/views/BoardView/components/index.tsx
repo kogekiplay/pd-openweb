@@ -10,7 +10,7 @@ const BoardIconWrap = styled(FlexCenter)`
   box-sizing: border-box;
   min-width: ${props => props.size || '56px'};
   height: ${props => props.size || '56px'};
-  padding: 8px;
+  padding: var(--space-2);
   background-color: var(--color-success);
   border-radius: 6px;
 `;
@@ -28,7 +28,7 @@ export const BoardIcon = ({ size }) => (
 );
 
 const ConfigHeaderWrap = styled(FlexCenter)`
-  padding: 0 24px;
+  padding: 0 var(--space-6);
   border: 1px solid var(--color-border-secondary);
 `;
 export const ConfigHeader = ({ text }) => (
@@ -60,7 +60,7 @@ const AddWrap = styled(FlexCenter)`
 
 const AddBoardWrap = styled(AddWrap)`
   text-align: left;
-  margin: 0 auto 8px auto;
+  margin: 0 auto var(--space-2) auto;
 `;
 
 export const AddRecord = ({ onAddRecord, ...rest }) => (

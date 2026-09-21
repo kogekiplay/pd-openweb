@@ -27,7 +27,7 @@ const Con = styled.div(
     }
     .downIcon {
       line-height: 34px;
-      margin-left: 8px;
+      margin-left: var(--space-2);
     }
 `,
 );

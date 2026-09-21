@@ -13,7 +13,7 @@ const AddActionBtn = styled.div`
     border-width: 1px;
     border-style: solid;
     border-radius: var(--radius-sm);
-    padding: 0 20px;
+    padding: 0 var(--space-5);
     background: var(--color-background-secondary);
     cursor: pointer;
     margin-right: 10px;

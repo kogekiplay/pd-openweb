@@ -12,7 +12,7 @@ const Wrap = styled.div`
       padding: 10px 0px !important;
     }
     .ck-content {
-      padding: 0 12px !important;
+      padding: 0 var(--space-3) !important;
     }
   }
   .fieldEditorRemark.hasData {

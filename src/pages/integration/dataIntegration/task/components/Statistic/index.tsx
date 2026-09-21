@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import syncTaskApi from '../../../../api/syncTask';
 
 const StatisticContent = styled.div`
-  margin-top: 16px;
+  margin-top: var(--space-4);
 
   .statisticPanel {
     display: flex;
@@ -14,7 +14,7 @@ const StatisticContent = styled.div`
       display: flex;
       align-items: center;
       height: 88px;
-      padding: 0 24px;
+      padding: 0 var(--space-6);
       background: var(--color-background-tertiary);
       border-radius: var(--radius-md);
 

@@ -19,23 +19,23 @@ const ByAppWrap = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding-top: 24px;
+  padding-top: var(--space-6);
   .byAppHeader {
     display: flex;
     justify-content: space-between;
     .tabsWrap {
       height: 36px;
       line-height: 36px;
-      margin-left: 24px;
+      margin-left: var(--space-6);
       background-color: var(--color-background-secondary);
       border-radius: var(--radius-sm);
       .tabItem {
-        padding: 0 20px;
+        padding: 0 var(--space-5);
         height: 32px;
         text-align: center;
         line-height: 32px;
         margin: 2px;
-        font-size: 14px;
+        font-size: var(--font-md);
         border-radius: var(--radius-sm);
       }
       .currentTab {
@@ -44,20 +44,20 @@ const ByAppWrap = styled.div`
       }
     }
     .searchWrap {
-      padding-right: 24px;
+      padding-right: var(--space-6);
       .w200 {
         width: 200px;
       }
       .export {
         margin-left: 26px;
         min-width: 76px;
-        padding: 0 16px;
+        padding: 0 var(--space-4);
       }
     }
   }
   .summary,
   .useage {
-    padding: 6px 24px 0;
+    padding: 6px var(--space-6) 0;
     .width120 {
       width: 120px;
     }

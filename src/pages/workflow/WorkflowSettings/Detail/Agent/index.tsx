@@ -30,7 +30,7 @@ import worksheetFilter from './worksheetFilter';
 
 const AI_HELP_BTN = styled.div`
   color: var(--color-mingo-light);
-  font-size: 12px;
+  font-size: var(--font-xs);
   cursor: pointer;
   font-weight: bold;
   &:hover {
@@ -40,7 +40,7 @@ const AI_HELP_BTN = styled.div`
 
 const TABS_ITEM = styled.div`
   display: inline-flex;
-  padding: 0 12px 12px 12px;
+  padding: 0 var(--space-3) var(--space-3) var(--space-3);
   margin-right: 36px;
   font-weight: bold;
   font-size: 15px;
@@ -62,10 +62,10 @@ const TABS_ITEM = styled.div`
 const TOOLS_ITEM = styled.div`
   display: flex;
   align-items: center;
-  padding: 12px 16px;
+  padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-primary);
-  margin-top: 12px;
+  margin-top: var(--space-3);
   &:hover {
     .icon-edit {
       display: block;
@@ -74,14 +74,14 @@ const TOOLS_ITEM = styled.div`
   .agentToolsIcon {
     background: #eee3ff;
     color: var(--color-mingo-dark);
-    font-size: 24px;
+    font-size: var(--font-3xl);
     width: 40px;
     height: 40px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 8px;
+    margin-right: var(--space-2);
     align-self: flex-start;
   }
   input {
@@ -108,15 +108,15 @@ const MORE_TOOLS_LIST = styled.div`
     height: 32px;
     display: flex;
     align-items: center;
-    padding: 0 16px;
-    font-size: 12px;
+    padding: 0 var(--space-4);
+    font-size: var(--font-xs);
     color: var(--color-text-secondary);
   }
   .listItem {
     display: flex;
     align-items: center;
     height: 48px;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     cursor: pointer;
     &:hover {
       background: var(--color-background-hover);
@@ -124,7 +124,7 @@ const MORE_TOOLS_LIST = styled.div`
     .agentToolsIcon {
       background: #eee3ff;
       color: var(--color-mingo-dark);
-      font-size: 16px;
+      font-size: var(--font-lg);
       width: 32px;
       height: 32px;
       border-radius: 50%;
@@ -139,8 +139,8 @@ const MORE_TOOLS_LIST = styled.div`
 const SHEET_LIST = styled.div`
   display: flex;
   align-items: center;
-  margin-top: 12px;
-  padding: 0 15px 0 12px;
+  margin-top: var(--space-3);
+  padding: 0 15px 0 var(--space-3);
   min-height: 48px;
   background: var(--color-background-secondary);
   border-radius: var(--radius-sm);
@@ -160,7 +160,7 @@ const REQUIRED_TEXT = styled.span`
 const AI_ACTIONS_BOX = styled.div`
   display: flex;
   align-items: center;
-  padding: 0 16px;
+  padding: 0 var(--space-4);
   height: 40px;
   border: 1px solid var(--color-border-primary);
   border-top-width: 0;
@@ -176,7 +176,7 @@ const AI_ACTIONS_BOX = styled.div`
       height: 100%;
       display: inline-flex;
       align-items: center;
-      padding: 0 12px;
+      padding: 0 var(--space-3);
     }
   }
 `;

@@ -19,7 +19,7 @@ const HierarchyViewConfigWrap = styled.div`
     width: 120px;
     min-width: 120px;
     max-width: 120px;
-    margin-bottom: 20px;
+    margin-bottom: var(--space-5);
   }
 `;
 

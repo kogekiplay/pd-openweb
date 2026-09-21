@@ -24,7 +24,7 @@ const ChartColorSettingBox = styled.div(
     }
   }
   .chartWrap {
-    padding: 0 10px 8px 10px;
+    padding: 0 10px var(--space-2) 10px;
     display: flex;
     justify-content: space-between;
     gap: 6px;
@@ -88,7 +88,7 @@ const Menu = styled.div`
   box-shadow: var(--shadow-lg);
   opacity: 1;
   border-radius: var(--radius-xs);
-  font-size: 13px;
+  font-size: var(--font-sm);
   line-height: 1;
   .item {
     padding: 9px 15px;

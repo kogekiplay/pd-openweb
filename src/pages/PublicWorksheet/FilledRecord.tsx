@@ -32,7 +32,7 @@ const ModalWrapper = styled(Popup)`
       border-radius: var(--radius-sm) var(--radius-sm) 0px 0px;
 
       .arrowIcon {
-        font-size: 20px;
+        font-size: var(--font-2xl);
         color: var(--color-text-secondary);
         margin-left: 14px;
         cursor: pointer;
@@ -42,7 +42,7 @@ const ModalWrapper = styled(Popup)`
 `;
 const DividerLine = styled.div`
   border-right: 2px solid var(--color-text-disabled);
-  margin: 0 16px;
+  margin: 0 var(--space-4);
   height: 15px;
 `;
 const MyWriteButton = styled.div(
@@ -50,15 +50,15 @@ const MyWriteButton = styled.div(
     width: ${isMobile ? '100%' : 'fit-content'};
     background: ${getRgbaByColor(themeBgColor, 0.05)};
     height: 32px;
-    padding: 0 12px;
-    margin-bottom: 20px;
+    padding: 0 var(--space-3);
+    margin-bottom: var(--space-5);
     border-radius: var(--radius-sm);
     text-align: center;
     cursor: pointer;
     span {
       line-height: 32px;
       font-weight: 600;
-      font-size: 14px;
+      font-size: var(--font-md);
     }
     :hover {
       background: ${getRgbaByColor(themeBgColor, 0.1)};

@@ -14,7 +14,7 @@ const Con = styled.div``;
 
 const SelectedUser = styled(BorderBox)`
   width: 280px;
-  margin-top: 12px;
+  margin-top: var(--space-3);
   display: flex;
   align-items: center;
   padding: 0 10px;
@@ -25,14 +25,14 @@ const SelectedUser = styled(BorderBox)`
     overflow: hidden;
   }
   i.arrow {
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-text-disabled);
   }
 `;
 
 const Description = styled(Textarea)`
   min-height: 67px;
-  margin-top: 12px;
+  margin-top: var(--space-3);
 `;
 
 const ChatList = styled.div`
@@ -42,7 +42,7 @@ const ChatList = styled.div`
   ${commonShadow}
   .header {
     display: flex;
-    padding: 12px 16px;
+    padding: var(--space-3) var(--space-4);
   }
   .list {
     display: flex;
@@ -61,7 +61,7 @@ const AccountItem = styled.div`
   cursor: pointer;
   width: 100%;
   height: 36px;
-  padding: 16px;
+  padding: var(--space-4);
   display: flex;
   flex-direction: row;
   align-items: center;

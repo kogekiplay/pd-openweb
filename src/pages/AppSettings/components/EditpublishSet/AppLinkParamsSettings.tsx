@@ -9,7 +9,7 @@ import copy from 'src/utils/copyToClipboard';
 
 const LinkParamSettings = styled.div`
   width: 324px;
-  padding: 19px 20px;
+  padding: 19px var(--space-5);
   box-sizing: border-box;
   background-color: var(--color-background-primary);
   box-shadow: 0px 3px 12px 1px rgba(0, 0, 0, 0.16);
@@ -39,7 +39,7 @@ const AppLinkWrap = styled.div`
     border-radius: var(--radius-sm);
     padding: 0 17px;
     border: 1px solid var(--color-border-primary);
-    margin-left: 8px;
+    margin-left: var(--space-2);
     &:hover {
       color: var(--color-primary);
       border: 1px solid var(--color-primary);

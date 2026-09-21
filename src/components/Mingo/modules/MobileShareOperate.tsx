@@ -20,14 +20,14 @@ const WidthWrap = styled.div`
   display: flex;
   align-items: center;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 var(--space-6);
   justify-content: space-between;
 `;
 
 const LeftSection = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-3);
 `;
 
 const Divider = styled.div`

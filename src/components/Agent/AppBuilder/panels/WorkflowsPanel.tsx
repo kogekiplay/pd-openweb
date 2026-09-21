@@ -48,7 +48,7 @@ const WfCard = styled.div`
   background: var(--color-background-card);
   border: 1px solid var(--color-border-secondary);
   border-radius: 12px;
-  padding: 16px 20px;
+  padding: var(--space-4) var(--space-5);
   padding-right: 40px;
   box-shadow: var(--shadow-sm);
 
@@ -65,7 +65,7 @@ const CardTop = styled.div`
 `;
 
 const WfName = styled.div`
-  font-size: 16px;
+  font-size: var(--font-lg);
   font-weight: 600;
   color: var(--color-text-primary);
   line-height: 24px;
@@ -83,25 +83,25 @@ const TriggerBadge = styled.span`
   border-radius: 11px;
   border: 1px solid ${p => p.$border || 'var(--color-border-secondary)'};
   background: ${p => p.$bg || 'var(--color-background-card)'};
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: ${p => p.$color || 'var(--color-text-tertiary)'};
   white-space: nowrap;
   flex-shrink: 0;
 `;
 
 const Description = styled.div`
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-title);
   line-height: 20px;
-  margin-top: 8px;
+  margin-top: var(--space-2);
 `;
 
 const StepsRow = styled.div`
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 12px;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
 `;
 
 const StepChip = styled.div`
@@ -109,18 +109,18 @@ const StepChip = styled.div`
   align-items: center;
   gap: 6px;
   height: 28px;
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-secondary);
   /* 卡片内标签统一：12px + 灰底 */
   background: var(--color-background-secondary);
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: var(--color-text-primary);
   max-width: 340px;
   overflow: hidden;
 
   .icon {
-    font-size: 16px !important;
+    font-size: var(--font-lg) !important;
     flex-shrink: 0;
   }
 `;
@@ -133,7 +133,7 @@ const StepText = styled.span`
 `;
 
 const ArrowIcon = styled(Icon)`
-  font-size: 16px !important;
+  font-size: var(--font-lg) !important;
   color: var(--color-text-tertiary);
   flex-shrink: 0;
 `;

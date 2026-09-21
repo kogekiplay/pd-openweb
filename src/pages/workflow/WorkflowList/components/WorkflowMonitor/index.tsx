@@ -12,7 +12,7 @@ import './index.less';
 const MonitorWrap = styled.div`
   border-radius: var(--radius-sm);
   background: var(--color-background-primary);
-  padding: 20px 16px 16px;
+  padding: var(--space-5) var(--space-4) var(--space-4);
   box-sizing: border-box;
   overflow-y: auto;
   flex: 1;

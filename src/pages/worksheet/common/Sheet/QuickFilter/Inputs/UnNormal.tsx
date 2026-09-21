@@ -10,7 +10,7 @@ const Con = styled.div`
   border: 1px solid var(--color-border-primary) !important;
   border-radius: var(--radius-sm);
   background-color: var(--color-background-secondary);
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   color: var(--color-text-disabled);
   cursor: not-allowed;
 `;

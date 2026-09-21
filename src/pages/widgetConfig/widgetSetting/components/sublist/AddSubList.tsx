@@ -13,11 +13,11 @@ const AddSubListWrap = styled.div`
     }
   }
   label {
-    margin-top: 16px;
+    margin-top: var(--space-4);
   }
   .footerBtn {
     text-align: right;
-    margin-top: 32px;
+    margin-top: var(--space-8);
   }
   .Radio-text {
     font-weight: bold;
@@ -25,7 +25,7 @@ const AddSubListWrap = styled.div`
   .radioIntro {
     margin-left: 28px;
     font-weight: normal;
-    margin-top: 4px;
+    margin-top: var(--space-1);
   }
   .selectSheetWrap {
     margin-left: 30px;

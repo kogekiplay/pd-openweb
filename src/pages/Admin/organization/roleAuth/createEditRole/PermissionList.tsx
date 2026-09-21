@@ -12,7 +12,7 @@ import { getFeatureStatus } from 'src/utils/project';
 const PermissionListWrapper = styled.div`
   .Checkbox {
     span {
-      font-size: 14px !important;
+      font-size: var(--font-md) !important;
     }
     &.rootCheckbox {
       span {
@@ -31,7 +31,7 @@ const PermissionListWrapper = styled.div`
   .divider {
     height: 1px;
     background: var(--color-border-secondary);
-    margin: 16px 0;
+    margin: var(--space-4) 0;
   }
 `;
 

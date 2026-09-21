@@ -17,7 +17,7 @@ import LogDialog from '../../components/LogDialog';
 
 const Wrap = styled.div`
   background: var(--color-background-primary);
-  padding: 30px 24px;
+  padding: 30px var(--space-6);
   max-width: 800px;
   .optionConTb {
     min-width: 90px;
@@ -47,7 +47,7 @@ const Wrap = styled.div`
     }
     td,
     th {
-      padding: 15px 8px !important;
+      padding: 15px var(--space-2) !important;
       flex: 1;
       flex-shrink: 0;
       min-width: 0;
@@ -106,7 +106,7 @@ const Wrap = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 5px 8px;
+    padding: 5px var(--space-2);
     .activeCon {
       width: 20px;
       height: 100%;
@@ -149,7 +149,7 @@ const Wrap = styled.div`
     align-items: center;
     justify-content: space-between;
     min-width: 170px;
-    padding: 5px 8px;
+    padding: 5px var(--space-2);
     border: 1px solid var(--color-border-primary);
     border-radius: var(--radius-sm);
     &:hover {

@@ -7,18 +7,18 @@ import { Dialog } from 'ming-ui';
 
 const AssignValueContent = styled.div`
   .hint {
-    padding: 0 20px;
+    padding: 0 var(--space-5);
   }
   .switchWrap {
-    margin: 12px 0 20px 20px;
+    margin: var(--space-3) 0 var(--space-5) var(--space-5);
     .switch {
-      margin-right: 12px;
+      margin-right: var(--space-3);
     }
   }
   .content {
     display: flex;
     max-height: 445px;
-    padding: 0 20px;
+    padding: 0 var(--space-5);
     box-sizing: border-box;
     ul {
       width: 50%;
@@ -40,7 +40,7 @@ const AssignValueContent = styled.div`
       align-items: center;
       line-height: 36px;
       height: 36px;
-      padding-left: 12px;
+      padding-left: var(--space-3);
       border-bottom: 1px solid var(--color-border-primary);
       border-left: 1px solid var(--color-border-primary);
 

@@ -22,8 +22,8 @@ const UsersWrapper = styled.div`
     padding-left: 15px !important;
   }
   .projectInfo {
-    font-size: 13px;
-    margin: 16px 30px 24px 24px;
+    font-size: var(--font-sm);
+    margin: var(--space-4) 30px var(--space-6) var(--space-6);
   }
   .userListContainer {
     flex: 1;
@@ -35,9 +35,9 @@ const UsersWrapper = styled.div`
 
 const UserItem = styled.div`
   display: flex;
-  padding: 6px 0 6px 24px;
+  padding: 6px 0 6px var(--space-6);
   margin-bottom: 10px;
-  font-size: 14px;
+  font-size: var(--font-md);
   line-height: 32px;
   cursor: pointer;
   &:hover {

@@ -19,11 +19,11 @@
       border-style: solid;
       height: 32px;
       line-height: 32px;
-      font-size: 14px;
+      font-size: var(--font-md);
       cursor: pointer;
       padding: 0 18px;
       display: inline-block;
-      margin-top: 12px;
+      margin-top: var(--space-3);
       &:not(:hover):not(.active) {
         color: var(--color-text-tertiary) !important;
         border-color: var(--color-text-disabled) !important;
@@ -65,7 +65,7 @@
         height: 22px;
         line-height: 22px;
         box-sizing: border-box;
-        padding: 0 8px;
+        padding: 0 var(--space-2);
         border-radius: 19px;
         border-width: 1px;
         border-style: solid;
@@ -95,7 +95,7 @@
     cursor: pointer;
   }
   #batchTask .batchIcon {
-    font-size: 18px;
+    font-size: var(--font-xl);
     display: inline-block;
     float: left;
     margin-top: 17px;
@@ -112,17 +112,17 @@
   }
   #batchTask .batchFolder {
     height: 38px;
-    margin-top: 12px;
+    margin-top: var(--space-3);
   }
   #batchTask .batchFolder .batchFolderIcon {
-    font-size: 20px;
+    font-size: var(--font-2xl);
     display: inline-block;
     margin-top: -1px;
     vertical-align: top;
     color: #adbcca;
   }
   #batchTask .batchFolder .batchFolderIcon .icon-project-new {
-    font-size: 14px;
+    font-size: var(--font-md);
   }
   #batchTask .batchFolder .batchFolderContent {
     width: 560px;
@@ -138,7 +138,7 @@
     box-sizing: border-box;
     width: 100%;
     height: 32px;
-    padding: 4px 6px;
+    padding: var(--space-1) 6px;
     border: 1px solid var(--color-primary-light);
   }
   #batchTask .autoBatchFolder {
@@ -149,7 +149,7 @@
   }
   .batchFolderContent .batchFolderText {
     display: inline-block;
-    margin-top: 8px;
+    margin-top: var(--space-2);
     margin-left: 5px;
     vertical-align: top;
     color: var(--color-text-tertiary);
@@ -162,7 +162,7 @@
     vertical-align: top;
   }
   #batchTask .batchTaskCount {
-    font-size: 16px;
+    font-size: var(--font-lg);
     line-height: 45px;
     margin-left: 6px;
     vertical-align: top;
@@ -176,7 +176,7 @@
     margin-left: 10px;
   }
   .batchMember .icon-group {
-    font-size: 18px;
+    font-size: var(--font-xl);
     display: inline-block;
     height: 18px;
     margin-top: 5px;
@@ -193,7 +193,7 @@
     color: var(--color-text-tertiary) !important;
   }
   #batchTask .folderNameEdit {
-    font-size: 14px;
+    font-size: var(--font-md);
     display: inline-block;
     float: right;
     margin-top: 10px;
@@ -209,14 +209,14 @@
   }
   .authTask {
     height: 32px;
-    margin-top: 8px;
+    margin-top: var(--space-2);
   }
   #batchTask .categorys {
     display: none;
     margin: 15px 0;
   }
   #batchTask .categorys .icon-task-label {
-    font-size: 18px;
+    font-size: var(--font-xl);
     display: inline-block;
     height: 12px;
     vertical-align: top;
@@ -238,7 +238,7 @@
     line-height: 26px;
     display: inline-block;
     height: 26px;
-    margin-bottom: 4px;
+    margin-bottom: var(--space-1);
     padding: 0 17px;
     color: var(--color-text-primary);
     border: 0;
@@ -251,8 +251,8 @@
     margin-top: 3px;
   }
   .categorys .textboxlist-autocomplete-placeholder {
-    padding-top: 8px;
-    padding-bottom: 8px;
+    padding-top: var(--space-2);
+    padding-bottom: var(--space-2);
     color: var(--color-text-tertiary);
   }
   .categorys .textboxlist-autocomplete-placeholder,
@@ -294,11 +294,11 @@
     line-height: 32px;
     width: 155px;
     height: 32px;
-    padding-left: 16px;
+    padding-left: var(--space-4);
     cursor: pointer;
   }
   #batchTask .batchOperator li > i {
-    font-size: 14px;
+    font-size: var(--font-md);
     display: inline-block;
     margin-right: 10px;
     color: var(--color-text-tertiary);
@@ -319,7 +319,7 @@
     width: 100%;
     width: 100%;
     max-height: 320px;
-    padding: 4px 0;
+    padding: var(--space-1) 0;
     background: var(--color-background-primary);
   }
   #batchAutoFolder li {
@@ -352,7 +352,7 @@
     height: 100%;
   }
   #batchFavorite {
-    font-size: 20px;
+    font-size: var(--font-2xl);
     float: right;
     color: var(--color-text-tertiary);
     margin-top: 13px;
@@ -404,7 +404,7 @@
   }
   .autoBatchFolder .folderDetail .icon-folder-private,
   .autoBatchFolder .folderDetail .icon-folder-public {
-    font-size: 18px;
+    font-size: var(--font-xl);
     margin-right: 5px;
   }
   .autoBatchFolder .folderDetail {
@@ -414,7 +414,7 @@
   }
   .autoBatchFolder .folderDetail span {
     line-height: 40px;
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-text-tertiary);
   }
 
@@ -433,7 +433,7 @@
     .remove {
       border: 0;
       padding-right: 6px;
-      padding-left: 4px;
+      padding-left: var(--space-1);
     }
     .tagsIcon {
       width: 10px;
@@ -471,7 +471,7 @@
   overflow: hidden;
   width: 24px;
   height: 24px;
-  margin-top: 4px;
+  margin-top: var(--space-1);
   margin-right: 5px;
   margin-left: 5px;
   vertical-align: top;
@@ -486,11 +486,11 @@
 }
 .afterUpdate .markTask.lockTask,
 .afterUpdateMsg .markTask.lockTask {
-  margin-top: 8px;
+  margin-top: var(--space-2);
 }
 .afterUpdate .tipTitle,
 .afterUpdateMsg .tipTitle {
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-error);
   border-bottom: 8px #fff solid;
 }

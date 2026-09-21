@@ -14,7 +14,7 @@ const Con = styled.div`
   display: flex;
   flex-direction: column;
   .tableOperate {
-    padding: 0 24px 8px !important;
+    padding: 0 var(--space-6) var(--space-2) !important;
     height: 44px;
   }
 `;
@@ -24,9 +24,9 @@ const IconBtn = styled.span`
   cursor: pointer;
   display: inline-block;
   height: 28px;
-  font-size: 20px;
+  font-size: var(--font-2xl);
   line-height: 28px;
-  padding: 0 4px;
+  padding: 0 var(--space-1);
   border-radius: var(--radius-sm);
   &:hover {
     background: var(--color-background-hover);
@@ -35,7 +35,7 @@ const IconBtn = styled.span`
 
 const Header = styled.div`
   height: 50px;
-  padding: 0 24px;
+  padding: 0 var(--space-6);
   display: flex;
   align-items: center;
   flex-shrink: 0;
@@ -46,8 +46,8 @@ const Header = styled.div`
     width: 100%;
   }
   .split {
-    font-size: 16px;
-    margin: 0 8px;
+    font-size: var(--font-lg);
+    margin: 0 var(--space-2);
     color: var(--color-text-tertiary);
   }
   .sec {
@@ -61,7 +61,7 @@ const Header = styled.div`
   .openInNewTab {
     cursor: pointer;
     color: var(--color-text-tertiary);
-    font-size: 14px;
+    font-size: var(--font-md);
     margin-left: 6px;
     line-height: 18px;
     height: 18px;
@@ -72,7 +72,7 @@ const Header = styled.div`
   }
 `;
 const Content = styled.div`
-  padding: 0 24px 80px;
+  padding: 0 var(--space-6) 80px;
   flex: 1;
   display: flex;
   flex-direction: column;

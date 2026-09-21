@@ -9,7 +9,7 @@ import type { FormControl } from 'src/utils/controlTypes';
 const Wrap = styled.div`
   .Dropdown {
     .Dropdown--input {
-      padding: 0 5px 0 12px !important;
+      padding: 0 5px 0 var(--space-3) !important;
     }
   }
 `;

@@ -29,7 +29,7 @@ const ViewEmptyWrap = styled.div`
   }
   p {
     text-align: center;
-    margin-top: 20px;
+    margin-top: var(--space-5);
     color: var(--color-text-tertiary);
     font-size: 15px;
   }

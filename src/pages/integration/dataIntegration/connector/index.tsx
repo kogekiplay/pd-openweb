@@ -56,7 +56,7 @@ const ConnectorWrapper = styled.div`
     .nameText {
       margin-left: 10px;
       color: var(--color-text-title);
-      font-size: 14px;
+      font-size: var(--font-md);
     }
   }
 `;
@@ -81,13 +81,13 @@ const FormCard = styled.div`
   }
   .arrowIcon {
     color: var(--color-text-placeholder);
-    font-size: 24px;
-    margin: 26px 16px 0 16px;
+    font-size: var(--font-3xl);
+    margin: 26px var(--space-4) 0 var(--space-4);
     transform: rotate(-90deg);
   }
   .selectItem {
     width: 100%;
-    margin-right: 16px;
+    margin-right: var(--space-4);
     margin-top: 6px;
 
     &.ant-select,
@@ -99,7 +99,7 @@ const FormCard = styled.div`
     }
     .ant-select-content {
       min-height: 48px;
-      padding: 8px 11px !important;
+      padding: var(--space-2) 11px !important;
     }
 
     &.ant-select-focused {
@@ -113,7 +113,7 @@ const FormCard = styled.div`
     width: 180px;
     height: 48px;
     margin-top: 26px;
-    margin-left: 16px;
+    margin-left: var(--space-4);
     min-width: 180px;
     max-width: 180px;
     background: var(--color-primary);
@@ -133,9 +133,9 @@ const ContentWrapper = styled.div`
 
 const ConnectorCard = styled.div`
   min-width: 320px;
-  margin-bottom: 24px;
+  margin-bottom: var(--space-6);
   display: inline-block;
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   &.connectorCardWidth1 {
     width: 100%;
   }

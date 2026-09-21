@@ -17,7 +17,7 @@ import { APP_ROLE_TYPE } from 'src/pages/worksheet/constants/enum.js';
 import type { RootState } from 'src/redux/types';
 
 const Wrap = styled.div`
-  padding: 20px 10px 20px 10px;
+  padding: var(--space-5) 10px var(--space-5) 10px;
   .wrapTr:not(.checkBoxTr) {
     width: 30%;
   }

@@ -4,7 +4,7 @@
     width: 100%;
 
     .editorNull {
-      padding: 0 24px;
+      padding: 0 var(--space-6);
       color: var(--color-text-placeholder);
     }
 
@@ -38,12 +38,12 @@
     }
 
     .mdEditorContent {
-      font-size: 14px;
+      font-size: var(--font-md);
       // max-height: 600px;
       overflow: auto;
       word-break: break-word;
       .ck-editor__main {
-        padding: 15px 20px;
+        padding: 15px var(--space-5);
       }
 
       img {
@@ -58,13 +58,13 @@
 
       ul {
         list-style-type: disc;
-        margin-left: 16px;
-        font-size: 14px;
+        margin-left: var(--space-4);
+        font-size: var(--font-md);
       }
 
       ol {
-        margin-left: 16px;
-        font-size: 14px;
+        margin-left: var(--space-4);
+        font-size: var(--font-md);
         list-style-type: decimal;
 
         li {
@@ -82,7 +82,7 @@
       box-sizing: border-box;
       height: 55px;
       align-items: center;
-      padding: 0 24px;
+      padding: 0 var(--space-6);
 
       .caption {
         font-size: 17px;
@@ -95,18 +95,18 @@
       }
     }
     .mdEditorCancel {
-      font-size: 13px;
+      font-size: var(--font-sm);
       cursor: pointer;
       &:not(:hover) {
         color: var(--color-text-tertiary) !important;
       }
     }
     .mdEditorSave {
-      font-size: 13px;
+      font-size: var(--font-sm);
       cursor: pointer;
       color: var(--color-white);
       border-radius: var(--radius-sm);
-      margin-left: 32px;
+      margin-left: var(--space-8);
       height: 32px;
       line-height: 32px;
       padding: 0 22px;
@@ -134,7 +134,7 @@
     }
     .sheetIntroInfo,
     .mdEditorContentWrap {
-      padding: 0 24px;
+      padding: 0 var(--space-6);
     }
     .mdEditorContentWrap .editorContent {
       border: 1px solid var(--color-border-secondary);
@@ -146,7 +146,7 @@
     }
   }
   .sheetIntroDescriptionFooter {
-    padding: 20px;
+    padding: var(--space-5);
     justify-content: flex-end;
   }
   .appDescriptionHeader {

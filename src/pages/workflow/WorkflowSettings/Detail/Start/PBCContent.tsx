@@ -13,7 +13,7 @@ import { FIELD_TYPE_LIST } from '../../enum';
 import { checkJSON } from '../../utils';
 
 const GenerateJSONBox = styled.textarea`
-  padding: 12px;
+  padding: var(--space-3);
   border-radius: var(--radius-sm);
   height: 340px;
   overflow: auto;

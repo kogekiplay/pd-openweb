@@ -24,7 +24,7 @@ const MobileTableContent = styled.div`
   }
   .mobileTableItem {
     width: 0;
-    padding: 8px 0 8px 6px;
+    padding: var(--space-2) 0 var(--space-2) 6px;
     min-height: 36px;
     .editableCellCon {
       flex: 1;
@@ -79,7 +79,7 @@ const FlattenContent = styled.div`
     }
     &.packUp {
       .customFormItem {
-        padding: 0 12px !important;
+        padding: 0 var(--space-3) !important;
       }
       .customFormLine {
         height: 0px;

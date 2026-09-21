@@ -31,7 +31,7 @@ const Wrapper = styled.div`
     display: flex;
     align-items: center;
     height: 56px;
-    padding: 0 24px;
+    padding: 0 var(--space-6);
     box-shadow: var(--shadow-sm);
     .backBtn {
       width: fit-content;
@@ -47,7 +47,7 @@ const Wrapper = styled.div`
       line-height: 32px;
       border-radius: 20px;
       padding-left: 10px;
-      margin-right: 20px;
+      margin-right: var(--space-5);
       cursor: pointer;
       &:hover {
         background: var(--color-background-hover);
@@ -65,7 +65,7 @@ const Wrapper = styled.div`
       width: 250px;
       background: var(--color-background-secondary);
       border-radius: var(--radius-sm);
-      padding: 24px 0;
+      padding: var(--space-6) 0;
       text-align: center;
       margin-top: 30px;
     }
@@ -76,9 +76,9 @@ const Wrapper = styled.div`
     margin: 0 auto;
     background: var(--color-primary-transparent);
     border-radius: var(--radius-sm);
-    padding: 12px 20px;
-    margin-top: 20px;
-    font-size: 13px;
+    padding: var(--space-3) var(--space-5);
+    margin-top: var(--space-5);
+    font-size: var(--font-sm);
     color: var(--color-text-title);
   }
   .mTop56 {
@@ -90,7 +90,7 @@ const Wrapper = styled.div`
     justify-content: center;
     align-items: center;
     .qrWrapper {
-      padding: 24px;
+      padding: var(--space-6);
       box-shadow: 0px 5px 30px 1px rgba(0, 0, 0, 0.16);
       border-radius: 26px;
       position: relative;
@@ -134,7 +134,7 @@ const TypeCard = styled.div`
   align-items: center;
   width: 490px;
   height: 380px;
-  padding: 24px;
+  padding: var(--space-6);
   cursor: pointer;
   border-radius: 14px;
   &:hover {

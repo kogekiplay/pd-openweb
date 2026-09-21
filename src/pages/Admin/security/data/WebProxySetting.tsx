@@ -14,28 +14,28 @@ const portRegExp = new RegExp(
 const FormBox = styled.div`
   flex: 1;
   min-height: 0;
-  padding: 0 32px 24px 32px;
+  padding: 0 var(--space-8) var(--space-6) var(--space-8);
   display: flex;
   flex-direction: column;
   .formModuleTitle {
     color: var(--color-text-title);
     font-size: 15px;
     font-weight: 600;
-    margin: 25px 0 32px 30px;
+    margin: 25px 0 var(--space-8) 30px;
   }
   .formItem {
     display: flex;
     color: var(--color-text-title);
-    font-size: 13px;
+    font-size: var(--font-sm);
     margin-bottom: 10px;
     .formLabel {
       width: 140px;
       text-align: right;
-      margin-right: 8px;
-      margin-top: 8px;
+      margin-right: var(--space-2);
+      margin-top: var(--space-2);
       &.width135 {
         width: 135px;
-        margin-right: 20px;
+        margin-right: var(--space-5);
       }
     }
     .formRight {
@@ -61,7 +61,7 @@ const FormBox = styled.div`
       }
     }
     .errorMsg {
-      padding-top: 4px;
+      padding-top: var(--space-1);
       height: 25px;
       color: var(--color-error);
     }

@@ -9,11 +9,11 @@ const Wrap = styled.div`
   width: 240px;
   overflow-y: auto;
   .title {
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     margin-top: 10px;
   }
   .itemControl {
-    padding: 10px 16px;
+    padding: 10px var(--space-4);
     line-height: 16px;
     &:hover {
       background: var(--color-background-hover);

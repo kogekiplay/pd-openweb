@@ -11,9 +11,9 @@ const SignatureWrap = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 12px 15px;
+  padding: var(--space-3) 15px;
   .tip {
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-text-title);
     font-weight: bold;
     margin-bottom: 10px;

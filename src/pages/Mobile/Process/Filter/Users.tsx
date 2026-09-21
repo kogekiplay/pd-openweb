@@ -20,7 +20,7 @@ const UsersCon = styled.div`
     position: absolute;
     right: 0;
     line-height: 26px;
-    font-size: 16px;
+    font-size: var(--font-lg);
     color: var(--color-text-placeholder);
   }
 `;
@@ -29,8 +29,8 @@ const UserItem = styled.span`
   height: 32px;
   background: var(--color-background-secondary);
   border-radius: 14px;
-  margin: 0 8px 10px 0;
-  padding-right: 12px;
+  margin: 0 var(--space-2) 10px 0;
+  padding-right: var(--space-3);
   display: flex;
   align-items: center;
   width: max-content;
@@ -42,7 +42,7 @@ const UserItem = styled.span`
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    margin: 0 20px 0 8px;
+    margin: 0 var(--space-5) 0 var(--space-2);
     vertical-align: middle;
     display: inline-block;
     max-width: calc(100% - 69px);

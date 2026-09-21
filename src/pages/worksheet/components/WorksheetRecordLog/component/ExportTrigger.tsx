@@ -23,13 +23,13 @@ const EXPORT_OPTIONS = [
 
 const Wrap = styled.div`
   width: 220px;
-  padding: 4px 0;
+  padding: var(--space-1) 0;
   background: var(--color-background-primary);
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-lg);
   overflow: hidden;
   .exportItem {
-    padding: 0 20px;
+    padding: 0 var(--space-5);
     line-height: 44px;
     .Icon {
       color: var(--color-text-secondary);

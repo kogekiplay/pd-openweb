@@ -124,7 +124,7 @@ const TreeLoadingIcon = styled.div`
   align-items: center;
   margin-right: 10px;
   .icon {
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-text-secondary);
     animation: 2s linear infinite rotate;
   }
@@ -143,7 +143,7 @@ const AddChildBtn = styled.div`
   border-radius: var(--radius-sm);
   background: var(--color-background-primary);
   .icon {
-    font-size: 20px;
+    font-size: var(--font-2xl);
   }
   &:hover {
     background: var(--color-background-hover);

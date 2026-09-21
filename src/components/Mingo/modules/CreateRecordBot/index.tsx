@@ -21,13 +21,13 @@ import { buildFormFieldsControls, cancelStream, resolveStreamError } from '../..
 import RecordControlDataSelector from './RecordControlDataSelector';
 
 const MingoContentWrap = styled.div`
-  padding: 0 0 12px;
+  padding: 0 0 var(--space-3);
   flex: 1;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   .brandWordmark {
-    margin-left: 8px;
+    margin-left: var(--space-2);
     height: 24px;
     width: auto;
     object-fit: contain;
@@ -43,7 +43,7 @@ const MingoContentWrap = styled.div`
   }
   .sendCon {
     position: relative;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     margin: 0 auto;
     width: 100%;
     .aiFillCon {
@@ -52,12 +52,12 @@ const MingoContentWrap = styled.div`
       justify-content: end;
     }
     .enableAiFillButton {
-      font-size: 13px;
+      font-size: var(--font-sm);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 0 8px;
+      padding: 0 var(--space-2);
       height: 30px;
       border-radius: 30px;
       color: var(--color-text-secondary);
@@ -100,20 +100,20 @@ const MingoContentWrap = styled.div`
 `;
 
 const MessageRecommendWrap = styled.div`
-  margin-top: 8px;
+  margin-top: var(--space-2);
   font-size: 15px;
   hr {
     border: none;
     border-top: 1px solid var(--color-border-secondary);
-    margin: 20px 0;
+    margin: var(--space-5) 0;
   }
   .icon {
-    font-size: 16px;
+    font-size: var(--font-lg);
     margin-top: -2px;
     margin-right: 2px;
   }
   .tip {
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-secondary);
   }
 `;

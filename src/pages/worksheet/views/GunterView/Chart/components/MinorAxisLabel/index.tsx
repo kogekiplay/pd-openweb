@@ -5,7 +5,7 @@ import { PERIOD_TYPE } from 'worksheet/views/GunterView/config';
 
 const AxisLabel = styled.div`
   color: var(--color-text-title);
-  font-size: 12px;
+  font-size: var(--font-xs);
   text-align: center;
   position: relative;
   white-space: nowrap;

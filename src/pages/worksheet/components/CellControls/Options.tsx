@@ -22,10 +22,10 @@ import { FROM } from './enum';
 const OtherOptionCon = styled.div`
   background: var(--color-background-primary);
   height: 100%;
-  padding: 7px 8px;
+  padding: 7px var(--space-2);
   .icon {
     float: right;
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-text-tertiary);
     line-height: 20px;
   }
@@ -36,11 +36,11 @@ const OtherOptionTextInputCon = styled.div`
   position: relative;
   background: var(--color-background-primary);
   z-index: 2;
-  padding: 8px 12px;
+  padding: var(--space-2) var(--space-3);
   box-shadow: 0px 4px 16px 1px rgba(0, 0, 0, 0.16);
   border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
   .header {
-    margin-bottom: 8px;
+    margin-bottom: var(--space-2);
     display: flex;
   }
   .usage {
@@ -50,7 +50,7 @@ const OtherOptionTextInputCon = styled.div`
     cursor: pointer;
   }
   textarea {
-    padding: 6px 8px 24px !important;
+    padding: 6px var(--space-2) var(--space-6) !important;
     line-height: 1.5em;
   }
   &.error {

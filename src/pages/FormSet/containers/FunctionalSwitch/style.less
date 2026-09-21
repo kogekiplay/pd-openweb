@@ -1,7 +1,7 @@
 .switchBox {
   margin: 0 40px;
   background: var(--color-background-primary);
-  padding-bottom: 32px;
+  padding-bottom: var(--space-8);
   position: relative;
   h5,
   p,
@@ -21,8 +21,8 @@
     }
     p {
       color: var(--color-text-tertiary);
-      font-size: 13px;
-      margin-top: 8px;
+      font-size: var(--font-sm);
+      margin-top: var(--space-2);
     }
     ul {
       display: block;
@@ -33,12 +33,12 @@
         align-items: center;
         width: 100%;
         height: 48px;
-        padding: 0 0 0 16px;
+        padding: 0 0 0 var(--space-4);
         line-height: 48px;
         border-right: 1px solid var(--color-border-secondary);
         border-left: 1px solid var(--color-border-secondary);
         &.current {
-          background: var(--color-primary) 0d !important;
+          background: color-mix(in srgb, var(--color-primary) 5%, transparent) !important;
           border: 1px solid var(--color-primary) !important;
           z-index: 1;
           position: relative;
@@ -76,7 +76,7 @@
           display: block;
           position: relative;
           border-bottom: 1px solid var(--color-border-secondary);
-          padding-right: 16px;
+          padding-right: var(--space-4);
           .rangeBox {
             position: absolute;
             left: 105%;

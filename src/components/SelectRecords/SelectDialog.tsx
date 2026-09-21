@@ -56,22 +56,22 @@ import {
 } from './util';
 
 const Con = styled.div`
-  padding: 0 24px;
+  padding: 0 var(--space-6);
   display: flex;
   flex-direction: column;
   height: 100%;
 `;
 
 const ListModeSelectStatus = styled.div`
-  margin-right: 8px;
-  font-size: 13px;
+  margin-right: var(--space-2);
+  font-size: var(--font-sm);
   color: var(--color-text-primary);
   display: flex;
   align-items: center;
 `;
 
 const DecodeFooterButton = styled.div`
-  font-size: 13px;
+  font-size: var(--font-sm);
   line-height: 20px;
   user-select: none;
   cursor: ${props => (props.$disabled ? 'not-allowed' : 'pointer')};
@@ -106,7 +106,7 @@ const QuickFilterCon = styled.div`
   height: 0;
   overflow: hidden;
   &.filtersVisible {
-    margin: 12px 0 -5px;
+    margin: var(--space-3) 0 -5px;
     visibility: visible;
     height: auto;
     overflow: auto;
@@ -145,7 +145,7 @@ const SearchIcon = styled.div`
   line-height: 130px;
   font-size: 80px;
   color: var(--color-text-placeholder);
-  margin-bottom: 12px;
+  margin-bottom: var(--space-3);
   flex-shrink: 0;
   .iconBox {
     width: 130px;

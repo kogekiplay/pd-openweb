@@ -22,7 +22,7 @@ const Wrap = styled.div`
   .controlname {
     width: 200px;
     &.isChild {
-      margin-left: 24px;
+      margin-left: var(--space-6);
       width: 176px;
     }
   }

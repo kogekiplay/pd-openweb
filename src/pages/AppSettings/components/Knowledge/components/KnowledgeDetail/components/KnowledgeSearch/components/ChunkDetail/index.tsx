@@ -16,7 +16,7 @@ const Container = styled.div`
   display: flex;
   padding: 5px;
   border-radius: var(--radius-sm);
-  font-size: 16px;
+  font-size: var(--font-lg);
   cursor: pointer;
   color: var(--color-text-secondary);
   &:hover {
@@ -31,9 +31,9 @@ const ChunkDetailContent = styled.div`
   height: 100%;
   .baseInfoBox {
     display: flex;
-    gap: 8px;
-    margin: 8px 0 20px;
-    font-size: 12px;
+    gap: var(--space-2);
+    margin: var(--space-2) 0 var(--space-5);
+    font-size: var(--font-xs);
     color: var(--color-text-secondary);
   }
   .chunkDetailContent {
@@ -61,7 +61,7 @@ const ChunkDetailContent = styled.div`
         background-color: var(--color-background-card);
         border-radius: var(--radius-sm);
         box-shadow: var(--shadow-sm);
-        font-size: 13px;
+        font-size: var(--font-sm);
         visibility: hidden;
       }
     }
@@ -74,8 +74,8 @@ const ChunkDetailContent = styled.div`
 
 const LaunchIcon = styled(Icon)`
   padding: 2px;
-  margin-left: 8px;
-  font-size: 16px;
+  margin-left: var(--space-2);
+  font-size: var(--font-lg);
   color: var(--color-text-secondary);
   cursor: pointer;
   border-radius: var(--radius-sm);

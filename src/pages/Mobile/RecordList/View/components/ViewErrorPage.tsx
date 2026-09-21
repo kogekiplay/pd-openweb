@@ -14,12 +14,12 @@ const ViewErrorPageContainer = styled.div`
   }
   .errorTitle {
     color: var(--color-text-title);
-    font-size: 16px;
-    margin: 16px 0px 28px;
+    font-size: var(--font-lg);
+    margin: var(--space-4) 0px 28px;
   }
   .errorInfo {
     color: var(--color-text-secondary);
-    font-size: 14px;
+    font-size: var(--font-md);
   }
   .setViewBtn {
     width: 110px;

@@ -8,12 +8,12 @@ import { buriedUpgradeVersionDialog } from 'src/components/upgradeVersion';
 import { getFeatureStatus } from 'src/utils/project';
 
 const ConfigItemWrap = styled.div`
-  padding: 0 32px;
+  padding: 0 var(--space-8);
   &.hoverStyle:hover {
     background: var(--color-background-hover);
   }
   .content {
-    padding: 24px 24px 24px 0;
+    padding: var(--space-6) var(--space-6) var(--space-6) 0;
     border-bottom: 1px solid var(--color-border-secondary);
   }
 `;

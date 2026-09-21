@@ -33,9 +33,9 @@ const AppsCon = styled.div`
   padding: 0px 40px 160px 80px;
   &.isDashboard {
     padding: 0 44px;
-    margin-top: 12px;
+    margin-top: var(--space-3);
     .noExternal {
-      margin: -30px 0 20px -16px;
+      margin: -30px 0 var(--space-5) -16px;
     }
   }
 `;
@@ -51,7 +51,7 @@ const GroupTitleCon = styled(VerticalMiddle)`
     cursor: pointer;
     i {
       color: var(--color-yellow-dark);
-      font-size: 18px;
+      font-size: var(--font-xl);
     }
   }
   &:hover {
@@ -63,14 +63,14 @@ const GroupTitleCon = styled(VerticalMiddle)`
 const GroupTitleContent = styled(VerticalMiddle)`
   display: inline-flex;
   height: 28px;
-  padding: 0 8px;
+  padding: 0 var(--space-2);
   margin-left: -26px;
   max-width: 300px;
   font-size: 17px;
   font-weight: bolder;
   border-radius: var(--radius-sm);
   .mRight4 {
-    margin-right: 4px;
+    margin-right: var(--space-1);
   }
   .icon-arrow-down {
     visibility: hidden;
@@ -91,20 +91,20 @@ const GroupTitleContent = styled(VerticalMiddle)`
 
 const GroupTabs = styled.div`
   display: flex;
-  margin-top: 16px;
+  margin-top: var(--space-4);
   flex-wrap: wrap;
 `;
 
 const GroupTab = styled.div`
   cursor: pointer;
-  padding: 5px 16px;
+  padding: 5px var(--space-4);
   color: var(--color-text-secondary);
   background-color: var(--color-background-secondary);
-  margin-right: 8px;
+  margin-right: var(--space-2);
   border-radius: 36px;
   font-weight: bolder;
   max-width: 200px;
-  margin-bottom: 8px;
+  margin-bottom: var(--space-2);
   &.active,
   &:hover {
     color: ${({ themeColor }) => themeColor};
@@ -118,7 +118,7 @@ const GroupTabClickPopup = styled.div`
   align-items: center;
   width: 200px;
   height: 46px;
-  padding: 0 16px;
+  padding: 0 var(--space-4);
   background: var(--color-background-primary);
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-lg);
@@ -132,7 +132,7 @@ const GroupTabClickPopup = styled.div`
 
 const SearchInputCon = styled.div`
   display: flex;
-  padding: 24px 70px 16px 76px;
+  padding: var(--space-6) 70px var(--space-4) 76px;
   .dashboardTitle {
     font-size: 17px;
     font-weight: bold;
@@ -142,18 +142,18 @@ const SearchInputCon = styled.div`
     img {
       width: 24px;
       height: 24px;
-      margin-right: 4px;
+      margin-right: var(--space-1);
     }
   }
   &.isDashboard {
     height: 48px;
-    padding: 0 10px 0px 20px;
+    padding: 0 10px 0px var(--space-5);
     align-items: flex-end;
   }
 `;
 
 const NoExternalAppTip = styled.div`
-  margin: -12px 0 20px;
+  margin: -12px 0 var(--space-5);
 `;
 
 const NoSearchResultTip = styled.div`
@@ -166,14 +166,14 @@ const AddAppItemBtn = styled(AddAppItem)`
   margin: 0 0 0 10px !important;
   padding: 0 !important;
   .newAppBtn {
-    font-size: 13px;
+    font-size: var(--font-sm);
     display: inline-block;
     color: var(--color-white);
     line-height: 36px;
     font-weight: 700;
     border-radius: 36px;
     height: 36px;
-    padding: 0 18px 0 16px;
+    padding: 0 18px 0 var(--space-4);
     cursor: pointer;
     background: ${({ themeColor }) => themeColor};
     &:hover {
@@ -185,7 +185,7 @@ const AddAppItemBtn = styled(AddAppItem)`
 const GroupTabList = styled.div`
   display: flex;
   align-items: center;
-  padding: 15px 0 0 8px;
+  padding: 15px 0 0 var(--space-2);
 
   ul {
     overflow: hidden;
@@ -198,7 +198,7 @@ const GroupTabList = styled.div`
       cursor: pointer;
       &:first-child {
         .liContent {
-          margin-right: 24px;
+          margin-right: var(--space-6);
         }
       }
       &:hover {
@@ -228,7 +228,7 @@ const GroupTabList = styled.div`
         display: flex;
         align-items: center;
         position: relative;
-        margin-right: 32px;
+        margin-right: var(--space-8);
         .itemText {
           border-bottom: 2px solid rgba(0, 0, 0, 0);
           padding-bottom: 2px;
@@ -248,7 +248,7 @@ const GroupTabList = styled.div`
         .divideLine {
           height: 12px;
           border-right: 1px solid var(--color-border-primary);
-          margin-left: 24px;
+          margin-left: var(--space-6);
         }
         .starIcon {
           position: absolute;
@@ -256,7 +256,7 @@ const GroupTabList = styled.div`
           right: -20px;
           display: none;
           color: var(--color-text-tertiary);
-          font-size: 13px;
+          font-size: var(--font-sm);
           &.isMarked {
             color: var(--color-yellow-dark);
           }
@@ -301,7 +301,7 @@ const MorePopupContainer = styled.div`
   .groupItem {
     display: flex;
     align-items: center;
-    padding: 12px 20px;
+    padding: var(--space-3) var(--space-5);
     cursor: pointer;
     &:hover {
       background: var(--color-background-hover);
@@ -317,7 +317,7 @@ const MorePopupContainer = styled.div`
     .listStarIcon {
       display: none;
       color: var(--color-text-disabled);
-      margin-left: 8px;
+      margin-left: var(--space-2);
       &:hover {
         color: var(--color-yellow-dark);
       }

@@ -10,7 +10,7 @@ import { getAdvanceSetting, handleAdvancedSettingChange } from '../../util/setti
 const WidgetIconStyle = styled.div`
   display: flex;
   flex-wrap: wrap;
-  padding: 12px;
+  padding: var(--space-3);
   .icon_item {
     width: 34px;
     height: 34px;
@@ -42,7 +42,7 @@ const DropdownInput = styled.div`
   border-style: solid;
   border-color: var(--color-border-tertiary);
   height: 36px;
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   box-sizing: border-box;
   border-radius: var(--radius-sm);
   display: flex;

@@ -11,7 +11,7 @@ const OptionQuoteWrap = styled.div`
   .controlItem {
     cursor: pointer;
     width: fit-content;
-    padding: 0 4px;
+    padding: 0 var(--space-1);
     border-radius: var(--radius-sm);
     &:hover {
       background-color: var(--color-background-hover);

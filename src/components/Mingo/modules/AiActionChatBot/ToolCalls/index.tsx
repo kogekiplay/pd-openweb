@@ -72,24 +72,24 @@ export function filterToolCalls(toolCalls = []) {
 const Con = styled.div`
   max-width: 100%;
   > div:first-child {
-    margin-top: 8px;
+    margin-top: var(--space-2);
   }
 `;
 
 const CardCon = styled.div`
   border: 1px solid var(--color-border-primary);
   border-radius: 6px;
-  margin-bottom: 12px;
+  margin-bottom: var(--space-3);
   max-width: 100%;
   .card-header {
     height: 40px;
     border-bottom: 1px solid var(--color-border-secondary);
-    padding: 0 16px 0 12px;
+    padding: 0 var(--space-4) 0 var(--space-3);
     .tool-icon {
       width: 24px;
       height: 24px;
-      margin-right: 8px;
-      font-size: 16px;
+      margin-right: var(--space-2);
+      font-size: var(--font-lg);
       color: var(--color-white);
       border-radius: 12px;
       display: flex;
@@ -99,14 +99,14 @@ const CardCon = styled.div`
       color: var(--color-mingo-dark);
     }
     .tool-name {
-      font-size: 14px;
+      font-size: var(--font-md);
       font-weight: bold;
       color: var(--color-text-title);
       max-width: 160px;
     }
     .secondary-tool-name {
       margin-left: 10px;
-      font-size: 14px;
+      font-size: var(--font-md);
       color: var(--color-text-title);
     }
   }
@@ -129,13 +129,13 @@ const CardCon = styled.div`
 `;
 
 const JSONDataCon = styled.div`
-  padding: 16px;
+  padding: var(--space-4);
   width: 100%;
   height: 100%;
   background: var(--color-background-secondary);
-  padding: 10px 16px;
+  padding: 10px var(--space-4);
   .title {
-    font-size: 12px;
+    font-size: var(--font-xs);
     color: var(--color-text-tertiary);
     margin-bottom: 5px;
   }

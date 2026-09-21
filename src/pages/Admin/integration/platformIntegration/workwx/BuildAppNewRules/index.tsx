@@ -9,7 +9,7 @@ import gearImg from '../img/gear.gif';
 import wechatIcon from '../img/wechat_work.png';
 
 const BuildAppBox = styled.div`
-  padding: 15px 32px 0;
+  padding: 15px var(--space-8) 0;
   .stepOneContent {
     width: 480px;
     text-align: center;
@@ -66,11 +66,11 @@ const BuildAppBox = styled.div`
     }
   }
   .title {
-    font-size: 20px;
+    font-size: var(--font-2xl);
     font-weight: 600;
   }
   .subTitle {
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-tertiary);
   }
   .confirmBtn {
@@ -81,7 +81,7 @@ const BuildAppBox = styled.div`
     opacity: 1;
     border-radius: 18px;
     color: var(--color-white);
-    font-size: 14px;
+    font-size: var(--font-md);
     font-weight: 600;
     margin-top: 36px;
   }
@@ -94,8 +94,8 @@ const BuildAppBox = styled.div`
 
   .dataSynInfo {
     color: var(--color-text-secondary);
-    font-size: 13px;
-    margin-right: 8px;
+    font-size: var(--font-sm);
+    margin-right: var(--space-2);
   }
 
   .w130 {
@@ -105,7 +105,7 @@ const BuildAppBox = styled.div`
     width: 140px;
   }
   .linkTxt {
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-primary);
     cursor: pointer;
   }

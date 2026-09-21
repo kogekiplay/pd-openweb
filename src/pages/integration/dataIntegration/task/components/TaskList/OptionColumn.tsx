@@ -32,7 +32,7 @@ const OptionMenu = styled.div`
   background: var(--color-background-card);
 `;
 const MenuItem = styled.div`
-  padding: 0 20px;
+  padding: 0 var(--space-5);
   line-height: 36px;
   cursor: pointer;
   &:hover {
@@ -45,7 +45,7 @@ const RedMenuItem = styled(MenuItem)`
 const EditTaskNameWrapper = styled.div`
   position: relative !important;
   width: 310px;
-  padding: 20px 24px;
+  padding: var(--space-5) var(--space-6);
   box-shadow: var(--shadow-lg);
   border-radius: var(--radius-sm);
   background: var(--color-background-card);

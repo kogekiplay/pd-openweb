@@ -15,7 +15,7 @@ import './AddUserByTelDialog.less';
 
 const Wrap = styled.div`
   .ming.Radio .Radio-box {
-    margin-right: 8px;
+    margin-right: var(--space-2);
   }
   .ming.Radio {
     margin-right: 40px;
@@ -61,8 +61,8 @@ const Wrap = styled.div`
       opacity: 1;
       border-radius: var(--radius-sm);
       flex: 1;
-      margin-left: 16px;
-      padding: 0 12px;
+      margin-left: var(--space-4);
+      padding: 0 var(--space-3);
     }
     .role {
       width: 90px;
@@ -81,7 +81,7 @@ const Wrap = styled.div`
     }
     .del {
       opacity: 0;
-      margin-left: 16px;
+      margin-left: var(--space-4);
       line-height: 36px;
       &.op0 {
         opacity: 0 !important;

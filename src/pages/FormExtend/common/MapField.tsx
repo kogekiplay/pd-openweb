@@ -17,7 +17,7 @@ const Row = styled.div`
     display: flex;
     align-items: center;
     font-weight: 500;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     font-weight: 600;
   }
 `;

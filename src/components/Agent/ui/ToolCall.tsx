@@ -36,7 +36,7 @@ const Title = styled.span`
   overflow: hidden;
   min-width: 0;
   color: ${colors.textMuted};
-  font-size: 13px;
+  font-size: var(--font-sm);
   font-weight: 500;
   line-height: 20px;
 
@@ -73,9 +73,9 @@ const Chevron = styled.span`
 const Status = styled.span`
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-1);
   color: ${colors.textMuted};
-  font-size: 13px;
+  font-size: var(--font-sm);
   font-weight: 500;
   line-height: 20px;
 
@@ -86,9 +86,9 @@ const Status = styled.span`
 
 const Content = styled.div`
   display: grid;
-  gap: 8px;
-  margin-top: 8px;
-  padding-left: 20px;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  padding-left: var(--space-5);
   border-left: 1px solid ${colors.border};
 `;
 
@@ -99,14 +99,14 @@ const Section = styled.div`
 
 const Label = styled.div`
   color: ${colors.textMuted};
-  font-size: 12px;
+  font-size: var(--font-xs);
   font-weight: 500;
   line-height: 18px;
 `;
 
 const Plain = styled.div`
   color: ${({ $tone }) => ($tone === 'error' ? colors.error : colors.textMuted)};
-  font-size: 13px;
+  font-size: var(--font-sm);
   line-height: 20px;
   white-space: pre-wrap;
   word-break: break-word;
@@ -119,7 +119,7 @@ const RunningState = styled.div`
   gap: 6px;
   min-height: 20px;
   color: ${colors.textMuted};
-  font-size: 13px;
+  font-size: var(--font-sm);
   line-height: 20px;
 
   span {

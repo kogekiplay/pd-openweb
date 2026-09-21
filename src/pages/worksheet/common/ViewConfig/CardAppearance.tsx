@@ -18,15 +18,15 @@ import { ViewSettingWrap } from './style';
 
 const DisplayControlOption = styled(FlexCenter)`
   .icon {
-    font-size: 16px;
+    font-size: var(--font-lg);
     color: var(--color-text-secondary);
-    margin-right: 4px;
+    margin-right: var(--space-1);
   }
   span {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    margin-left: 4px;
+    margin-left: var(--space-1);
   }
 `;
 

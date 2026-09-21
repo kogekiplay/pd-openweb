@@ -18,7 +18,7 @@ const WecharPayWrap = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 16px auto 0;
+    margin: var(--space-4) auto 0;
     background: var(--color-background-primary);
     .payInfo {
       width: 280px;
@@ -27,7 +27,7 @@ const WecharPayWrap = styled.div`
     .payNum {
       width: 280px;
       text-align: left;
-      margin: 16px 0 24px 0;
+      margin: var(--space-4) 0 var(--space-6) 0;
     }
     .qrCode {
       width: 280px;
@@ -63,7 +63,7 @@ const WecharPayWrap = styled.div`
       line-height: 50px;
       font-size: 15px;
       font-weight: 600;
-      margin-top: 20px;
+      margin-top: var(--space-5);
     }
   }
   .paySuccessContent {

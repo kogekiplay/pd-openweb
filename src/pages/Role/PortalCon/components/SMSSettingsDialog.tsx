@@ -10,9 +10,9 @@ const Wrap = styled.div``;
 
 const SmsTip = styled.div`
   color: var(--color-text-secondary);
-  font-size: 13px;
+  font-size: var(--font-sm);
   line-height: 1.6;
-  margin-bottom: 8px;
+  margin-bottom: var(--space-2);
 `;
 
 const CheckRow = styled.div`
@@ -21,10 +21,10 @@ const CheckRow = styled.div`
   justify-content: space-between;
   margin-top: 10px;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--space-2);
   .countText {
     color: var(--color-text-tertiary);
-    font-size: 12px;
+    font-size: var(--font-xs);
     margin-left: auto;
   }
 `;

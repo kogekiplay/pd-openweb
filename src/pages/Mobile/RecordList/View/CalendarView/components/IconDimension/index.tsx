@@ -17,7 +17,7 @@ const IconDimensionWrapper = styled.div`
   z-index: 999;
   .icon {
     color: var(--color-text-tertiary);
-    font-size: 24px;
+    font-size: var(--font-3xl);
   }
 `;
 

@@ -16,10 +16,10 @@ const Popup = styled.div`
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-lg);
   .addFilterCondition {
-    padding: 5px 20px 20px;
+    padding: 5px var(--space-5) var(--space-5);
   }
   .conditionItem {
-    padding: 15px 20px 0;
+    padding: 15px var(--space-5) 0;
   }
 `;
 

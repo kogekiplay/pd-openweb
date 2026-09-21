@@ -11,7 +11,7 @@
 }
 
 .mobileOnStatusWrap {
-  margin: 0 16px;
+  margin: 0 var(--space-4);
   padding: 0 15px;
   background: var(--color-primary-transparent);
   height: 32px;
@@ -21,7 +21,7 @@
     height: 20px;
   }
   .remark {
-    margin: 0 12px 0 8px !important;
+    margin: 0 var(--space-3) 0 var(--space-2) !important;
     font-weight: bold;
   }
   .time {
@@ -33,11 +33,11 @@
   .adm-popup-body {
     display: flex;
     flex-direction: column;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
   }
   .statusListContainer {
     margin: 0 -16px;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     overflow-y: auto;
   }
   .statusListWrap {
@@ -56,7 +56,7 @@
       border: 1px solid var(--color-background-tertiary);
       &.active {
         background: var(--color-primary-transparent);
-        border: 1px solid var(--color-link-hover);
+        border: 1px solid var(--color-primary-dark);
       }
       .remark {
         min-height: 26px;
@@ -76,7 +76,7 @@
       min-width: 120px;
       max-width: 80%;
       height: 120px;
-      margin: 0 auto 32px;
+      margin: 0 auto var(--space-8);
       .statusItem {
         width: 100%;
         height: 100%;
@@ -84,7 +84,7 @@
       .emojiWrap {
         width: 36px;
         height: 36px;
-        margin-bottom: 16px;
+        margin-bottom: var(--space-4);
         img {
           width: 100%;
         }
@@ -95,7 +95,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(78px, 1fr));
     gap: 10px;
-    margin-bottom: 20px;
+    margin-bottom: var(--space-5);
   }
   .durationItem {
     height: 36px;
@@ -121,12 +121,12 @@
   }
   .footerBtn {
     height: 40px !important;
-    background-color: var(--color-link-hover);
-    border: 1px solid var(--color-link-hover);
+    background-color: var(--color-primary-dark);
+    border: 1px solid var(--color-primary-dark);
     color: var(--color-white);
     text-align: center;
-    font-size: 14px;
+    font-size: var(--font-md);
     border-radius: 20px;
-    margin: 16px 0 12px;
+    margin: var(--space-4) 0 var(--space-3);
   }
 }

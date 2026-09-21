@@ -15,7 +15,7 @@ const ControlsWrap = styled.div`
     margin-right: 30px;
   }
   .controlName {
-    margin: 0 12px;
+    margin: 0 var(--space-3);
     color: var(--color-text-title);
   }
   .relateItem {
@@ -32,7 +32,7 @@ const ControlsWrap = styled.div`
       display: flex;
       align-items: center;
       width: 320px;
-      padding-left: 12px;
+      padding-left: var(--space-3);
       position: relative;
       background-color: var(--color-background-secondary);
       border-radius: var(--radius-sm);
@@ -67,13 +67,13 @@ const ControlsWrap = styled.div`
   }
 `;
 const EmptyHint = styled.div`
-  padding: 12px;
+  padding: var(--space-3);
   background: var(--color-background-primary);
   border-radius: var(--radius-sm);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.24);
   width: 280px;
   color: var(--color-text-tertiary);
-  font-size: 13px;
+  font-size: var(--font-sm);
   font-weight: 500;
 `;
 
@@ -81,13 +81,13 @@ const InputWrap = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   border-bottom: 1px solid --color-background-disabled;
   input {
     line-height: 32px;
     border: none;
     outline: none;
-    padding-left: 8px;
+    padding-left: var(--space-2);
   }
 `;
 

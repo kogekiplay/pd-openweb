@@ -9,12 +9,12 @@ export const BaseSelectedItem = styled.div`
   border-radius: 24px;
   background: var(--color-border-secondary);
   max-width: 100%;
-  font-size: 13px;
+  font-size: var(--font-sm);
   .name {
     display: inline-block;
     width: calc(100% - 17px);
   }
   .icon {
-    margin-left: 4px;
+    margin-left: var(--space-1);
   }
 `;

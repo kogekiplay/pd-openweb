@@ -21,21 +21,21 @@ const Con = styled.div`
   position: relative;
   .ming.printMenu {
     width: 280px;
-    margin-top: 4px;
+    margin-top: var(--space-1);
     .split {
       color: var(--color-text-tertiary);
-      font-size: 12px;
-      margin: 12px 16px 6px;
+      font-size: var(--font-xs);
+      margin: var(--space-3) var(--space-4) 6px;
     }
     .empty {
-      margin: 20px;
+      margin: var(--space-5);
       text-align: center;
     }
     .detail {
       position: absolute;
       right: 16px;
       color: var(--color-text-tertiary);
-      font-size: 12px;
+      font-size: var(--font-xs);
     }
     hr {
       border: none;
@@ -56,7 +56,7 @@ const Con = styled.div`
       left: 16px;
     }
     .Item.noIcon .Item-content {
-      padding-left: 16px !important;
+      padding-left: var(--space-4) !important;
     }
     &.ming .Item .Item-content {
       padding-left: 44px;

@@ -21,7 +21,7 @@ const Wrap = styled.div`
   background-color: var(--color-background-primary);
   .header {
     height: 44px;
-    padding: 0 24px;
+    padding: 0 var(--space-6);
     box-shadow: var(--shadow-sm);
     justify-content: space-between;
     background-color: var(--color-background-primary);

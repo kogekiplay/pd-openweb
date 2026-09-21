@@ -26,7 +26,7 @@ const UsersWrapper = styled.div`
 
 const Department = styled.div`
   width: 100%;
-  padding: 4px;
+  padding: var(--space-1);
   border-radius: var(--radius-sm);
   &:hover {
     background-color: var(--color-background-hover);

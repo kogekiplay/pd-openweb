@@ -31,7 +31,7 @@ const VerificationPassWrap = styled.div`
   }
   .ant-form-item-explain-error {
     color: var(--color-error);
-    font-size: 12px;
+    font-size: var(--font-xs);
   }
 `;
 

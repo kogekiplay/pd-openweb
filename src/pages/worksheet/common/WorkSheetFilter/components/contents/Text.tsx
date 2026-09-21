@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 
 const Tag = styled.div`
-  font-size: 12px;
+  font-size: var(--font-xs);
   background-color: var(--tag-bg);
   border: 1px solid var(--color-border-tertiary);
   padding: 6px 10px;
@@ -20,12 +20,12 @@ const Tag = styled.div`
     color: var(--color-text-primary);
   }
   .remove {
-    margin-left: 8px;
+    margin-left: var(--space-2);
   }
 `;
 
 const DropdownWrap = styled.div`
-  padding: 6px 12px;
+  padding: 6px var(--space-3);
 `;
 
 export default class Text extends Component<any, any> {

@@ -45,7 +45,7 @@ interface DestSheetInit {
 }
 
 const OnlySyncWrapper = styled.div`
-  padding: 16px 24px;
+  padding: var(--space-4) var(--space-6);
   width: 100%;
   height: calc(100% - 32px);
 
@@ -70,18 +70,18 @@ const OnlySyncWrapper = styled.div`
     width: 643px;
   }
   .multiplePkTips {
-    padding: 10px 16px;
+    padding: 10px var(--space-4);
     background: var(--color-background-secondary);
     border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-secondary);
-    margin-bottom: 20px;
+    margin-bottom: var(--space-5);
     width: fit-content;
   }
   .loadSheetWrap {
     display: flex;
     align-items: center;
     width: fit-content;
-    margin-top: 20px;
+    margin-top: var(--space-5);
     cursor: pointer;
     color: var(--color-primary);
     &:hover {
@@ -92,8 +92,8 @@ const OnlySyncWrapper = styled.div`
     }
   }
   .timingSettingWrapper {
-    margin-bottom: 16px;
-    padding-bottom: 32px;
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-8);
     border-bottom: 1px solid var(--color-text-disabled);
   }
 `;
@@ -105,7 +105,7 @@ const NoDataContent = styled.div`
   justify-content: center;
   width: 100%;
   min-height: 200px;
-  margin-top: 24px;
+  margin-top: var(--space-6);
   border: 2px solid var(--color-border-secondary);
   border-radius: var(--radius-sm);
 

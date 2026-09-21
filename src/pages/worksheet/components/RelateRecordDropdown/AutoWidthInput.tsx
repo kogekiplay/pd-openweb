@@ -8,7 +8,7 @@ const Input = styled.input`
   padding: 0;
   margin: 0 10px;
   background: transparent;
-  font-size: 12px;
+  font-size: var(--font-xs);
   max-width: 100%;
   max-width: calc(100% - 30px);
 `;
@@ -20,7 +20,7 @@ function getWidth(value) {
 
   let width = 4;
   const span = document.createElement('span');
-  span.setAttribute('style', 'position: absolute; font-size: 12px; left: -10000px; top: -10000px');
+  span.setAttribute('style', 'position: absolute; font-size: var(--font-xs); left: -10000px; top: -10000px');
   span.innerText = value;
   document.body.appendChild(span);
   width = span.offsetWidth;

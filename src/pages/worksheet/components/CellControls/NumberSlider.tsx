@@ -39,7 +39,7 @@ const OperateIcon = styled.div`
   background: var(--color-background-primary);
   text-align: center;
   color: var(--color-text-tertiary);
-  font-size: 16px;
+  font-size: var(--font-lg);
   cursor: pointer;
 `;
 

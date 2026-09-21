@@ -30,14 +30,14 @@ const DialogWrap = styled(Dialog)`
     line-height: 29px;
     width: 580px;
     margin: 0 auto;
-    font-size: 14px;
+    font-size: var(--font-md);
   }
   .formGroup {
     width: 520px;
     margin: 0 auto;
     .required {
       color: var(--color-error);
-      margin-right: 4px;
+      margin-right: var(--space-1);
     }
     .error {
       border-color: var(--color-error) !important;
@@ -47,7 +47,7 @@ const DialogWrap = styled(Dialog)`
       margin-top: 5px;
     }
     .description {
-      font-size: 13px;
+      font-size: var(--font-sm);
       color: var(--color-text-tertiary);
       text-align: left;
       margin-top: 10px;

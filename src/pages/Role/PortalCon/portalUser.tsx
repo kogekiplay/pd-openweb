@@ -39,7 +39,7 @@ const Wrap = styled.div`
     width: 45%;
     border-radius: 22px !important;
     float: right;
-    margin-right: 12px;
+    margin-right: var(--space-3);
   }
 `;
 const WrapRejectBtn = styled.div`

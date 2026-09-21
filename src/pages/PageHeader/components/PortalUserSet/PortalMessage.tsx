@@ -30,7 +30,7 @@ const Wrap = styled.div`
     top: 50%;
     padding: 1px 5px;
     transform: translate(0px, -100%);
-    font-size: 12px;
+    font-size: var(--font-xs);
     &.isMobile {
       background-color: var(--color-error);
     }

@@ -78,8 +78,8 @@ function downloadDiagramPng(svgEl, { filename = 'diagram.png', scale = 2, backgr
 
 const Wrap = styled.div`
   position: relative;
-  margin: 16px 0;
-  padding: 20px 24px;
+  margin: var(--space-4) 0;
+  padding: var(--space-5) var(--space-6);
   border-radius: 8px;
   background: var(--color-background-secondary);
   border: 1px solid var(--color-border-secondary);
@@ -89,7 +89,7 @@ const Wrap = styled.div`
   svg {
     max-width: 100%;
     height: auto;
-    font-size: 12px;
+    font-size: var(--font-xs);
   }
 
   svg[width] {
@@ -162,7 +162,7 @@ const FullscreenBox = styled.div`
 const FullscreenContent = styled.div`
   flex: 1;
   overflow: auto;
-  padding: 20px 24px 24px;
+  padding: var(--space-5) var(--space-6) var(--space-6);
   text-align: center;
 
   svg {
@@ -176,8 +176,8 @@ const FullscreenHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 8px;
-  padding: 10px 12px 0;
+  gap: var(--space-2);
+  padding: 10px var(--space-3) 0;
   flex-shrink: 0;
 `;
 
@@ -191,7 +191,7 @@ const CloseBtn = styled.button`
   border-radius: 50%;
   background: var(--color-background-hover);
   color: var(--color-text-secondary);
-  font-size: 16px;
+  font-size: var(--font-lg);
   cursor: pointer;
   line-height: 1;
 
@@ -202,13 +202,13 @@ const CloseBtn = styled.button`
 `;
 
 const ErrorWrap = styled.div`
-  margin: 12px 0;
+  margin: var(--space-3) 0;
   padding: 10px 14px;
   border-radius: 6px;
   background: var(--color-error-bg, rgba(255, 77, 79, 0.06));
   border: 1px solid var(--color-error-border, rgba(255, 77, 79, 0.2));
   color: var(--color-error);
-  font-size: 12px;
+  font-size: var(--font-xs);
   font-family: 'SFMono-Regular', 'SF Mono', Menlo, Consolas, monospace;
   text-align: left;
 `;

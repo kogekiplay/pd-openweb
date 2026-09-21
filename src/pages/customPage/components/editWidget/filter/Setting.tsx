@@ -29,11 +29,11 @@ const Wrap = styled.div`
 
   .filterDisplayTab {
     display: flex;
-    padding: 0 24px;
-    margin-top: 20px;
+    padding: 0 var(--space-6);
+    margin-top: var(--space-5);
     li {
       flex: 1;
-      padding-bottom: 16px;
+      padding-bottom: var(--space-4);
       text-align: center;
       border-bottom: 3px solid var(--color-border-secondary);
       transition: all 0.25s;
@@ -47,7 +47,7 @@ const Wrap = styled.div`
 
   .settingsBox {
     flex: 1;
-    padding: 24px;
+    padding: var(--space-6);
     overflow-y: auto;
   }
 
@@ -57,7 +57,7 @@ const Wrap = styled.div`
     .itemT {
       background: var(--color-background-secondary);
       border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
-      padding: 3px 8px 3px 10px;
+      padding: 3px var(--space-2) 3px 10px;
       border: 1px solid var(--color-border-secondary);
       margin-right: 5px;
       i {
@@ -73,7 +73,7 @@ const Wrap = styled.div`
     position: absolute;
   }
   .ant-input {
-    font-size: 13px;
+    font-size: var(--font-sm);
     padding: 5px 11px;
     border-radius: var(--radius-sm) !important;
     &:focus,

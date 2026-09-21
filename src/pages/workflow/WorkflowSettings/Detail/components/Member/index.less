@@ -1,8 +1,8 @@
 .flowDetailMembers {
-  font-size: 12px;
+  font-size: var(--font-xs);
   > li {
     &:first-child:not(.inlineFlexRow) {
-      margin-top: 12px;
+      margin-top: var(--space-3);
     }
     line-height: normal;
     margin-top: 10px;
@@ -17,11 +17,11 @@
       margin-right: 10px;
       vertical-align: top;
       .flowDetailMemberBox {
-        padding-right: 24px;
+        padding-right: var(--space-6);
       }
       &.noDel {
         .flowDetailMemberBox {
-          padding-right: 8px;
+          padding-right: var(--space-2);
         }
       }
       .flowDetailMemberDel {
@@ -55,7 +55,7 @@
       background: var(--color-background-tertiary);
       height: 28px;
       border-radius: 26px;
-      padding-right: 12px;
+      padding-right: var(--space-3);
       align-items: center;
       display: inline-flex;
       max-width: 250px;
@@ -73,7 +73,7 @@
     .flowDetailMemberIcon {
       width: 16px;
       height: 16px;
-      font-size: 16px;
+      font-size: var(--font-lg);
       padding: 5px;
       border-radius: 50%;
       color: var(--color-white);
@@ -117,7 +117,7 @@
       width: 28px;
       height: 28px;
       display: block;
-      font-size: 16px;
+      font-size: var(--font-lg);
       border-radius: 50%;
       background: var(--color-background-secondary);
       color: var(--color-text-tertiary);
@@ -160,7 +160,7 @@
     }
     .flowDetailMemberJob {
       border-radius: 14px;
-      padding: 0 10px 0 16px;
+      padding: 0 10px 0 var(--space-4);
       border: 1px solid var(--color-border-primary);
       height: 28px;
       display: inline-flex;

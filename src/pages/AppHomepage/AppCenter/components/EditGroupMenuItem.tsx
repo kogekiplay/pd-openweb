@@ -20,7 +20,7 @@ const EditPanelCon = styled.div`
   padding-top: 2px;
   .title {
     font-weight: bold;
-    margin: 14px 0 4px 20px;
+    margin: 14px 0 var(--space-1) var(--space-5);
   }
   .groups {
     overflow-y: auto;
@@ -30,7 +30,7 @@ const EditPanelCon = styled.div`
 `;
 const Header = styled(VerticalMiddle)`
   height: 40px;
-  padding: 0 20px;
+  padding: 0 var(--space-5);
   border-bottom: 1px solid var(--color-border-secondary);
   input {
     border: none;
@@ -40,7 +40,7 @@ const Header = styled(VerticalMiddle)`
 `;
 const GroupItem = styled(VerticalMiddle)`
   cursor: pointer;
-  padding: 0 20px;
+  padding: 0 var(--space-5);
   height: 36px;
   &:hover {
     background: var(--color-background-hover);

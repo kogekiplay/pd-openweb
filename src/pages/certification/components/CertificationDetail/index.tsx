@@ -15,13 +15,13 @@ const Wrapper = styled.div`
 
   .detailContent {
     flex: 1;
-    padding: 0 24px;
+    padding: 0 var(--space-6);
     overflow: auto;
     .sectioninfo {
       font-size: 15px;
-      margin-bottom: 32px;
+      margin-bottom: var(--space-8);
       .rowItem {
-        margin-top: 20px;
+        margin-top: var(--space-5);
       }
     }
     .title {
@@ -36,7 +36,7 @@ const Wrapper = styled.div`
     }
     .label {
       color: var(--color-text-secondary);
-      margin-right: 12px;
+      margin-right: var(--space-3);
     }
     img {
       width: 140px;
@@ -50,7 +50,7 @@ const Wrapper = styled.div`
   }
 
   .footerBtn {
-    padding: 10px 12px;
+    padding: 10px var(--space-3);
     border-radius: var(--radius-sm);
     font-weight: 600;
     cursor: pointer;

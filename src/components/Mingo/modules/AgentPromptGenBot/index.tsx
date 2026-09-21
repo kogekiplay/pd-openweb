@@ -17,7 +17,7 @@ import { cancelStream, resolveStreamError } from '../../ChatBot/utils';
 import ResultConfirm from './ResultConfirm';
 
 const MingoContentWrap = styled.div`
-  padding: 0 0 12px;
+  padding: 0 0 var(--space-3);
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -30,7 +30,7 @@ const MingoContentWrap = styled.div`
   }
   .sendCon {
     position: relative;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     margin: 0 auto;
     width: 100%;
     .abort-button {

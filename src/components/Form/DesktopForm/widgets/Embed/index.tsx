@@ -17,7 +17,7 @@ const EmbedWrap = styled.div`
     border-radius: var(--radius-sm);
     ${props => (props.viewType === VIEW_DISPLAY_TYPE.sheet && !isPublicLink() ? '' : `height: ${props.height}px;`)}
     &.chartPadding {
-      padding: 8px 16px 16px;
+      padding: var(--space-2) var(--space-4) var(--space-4);
       position: relative;
       z-index: 1;
     }

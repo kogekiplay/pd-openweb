@@ -16,7 +16,7 @@ const MobileConfigWrap = styled.div`
   .navTypeIconWrap {
     width: 55px;
     height: 67px;
-    margin-bottom: 4px;
+    margin-bottom: var(--space-1);
     display: flex;
     align-items: center;
     justify-content: center;

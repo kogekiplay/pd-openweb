@@ -1,13 +1,13 @@
 import styled from 'styled-components';
 
 export const WrapCon = styled.div`
-  margin-top: 16px;
+  margin-top: var(--space-4);
   .otp-input-container {
     display: flex;
-    gap: 12px;
+    gap: var(--space-3);
     margin: 0 auto;
     justify-content: center;
-    margin-top: 32px;
+    margin-top: var(--space-8);
   }
 
   .otp-input {
@@ -27,7 +27,7 @@ export const WrapCon = styled.div`
     height: 60px;
     line-height: 48px;
     padding: 0;
-    padding-bottom: 12px;
+    padding-bottom: var(--space-3);
     -webkit-text-size-adjust: 100%;
     -webkit-appearance: none;
     -moz-appearance: textfield;
@@ -53,7 +53,7 @@ export const WrapCon = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 24px;
+    margin-top: var(--space-6);
     font-size: 15px;
     a {
       color: var(--color-text-secondary);
@@ -67,7 +67,7 @@ export const WrapCon = styled.div`
   /* 小屏幕下调整输入框大小和间距，防止超出容器 */
   @media screen and (max-width: 600px) {
     .otp-input-container {
-      gap: 8px;
+      gap: var(--space-2);
     }
 
     .otp-input {

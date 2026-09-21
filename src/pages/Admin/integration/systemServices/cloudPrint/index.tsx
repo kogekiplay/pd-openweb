@@ -13,7 +13,7 @@ const PrintItem = styled.div`
   height: 90px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-primary);
-  padding: 0 20px;
+  padding: 0 var(--space-5);
   margin-bottom: 10px;
   .verticalAlign {
     vertical-align: text-bottom;

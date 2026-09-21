@@ -8,7 +8,7 @@ export const Wrap = styled.div(
       color: var(--color-primary);
     }
   }
-  padding: 16px 10px 0 10px;
+  padding: var(--space-4) 10px 0 10px;
   .wrapTr .Dropdown--input {
     padding: 0 !important;
   }
@@ -25,7 +25,7 @@ export const Wrap = styled.div(
   .topAct {
     padding-right: 22px;
     min-height: 54px;
-    padding-bottom: 16px;
+    padding-bottom: var(--space-4);
     display: flex;
     justify-content: right;
     .act {
@@ -52,7 +52,7 @@ export const Wrap = styled.div(
     }
     .toRole {
       border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
-      padding: 0 12px;
+      padding: 0 var(--space-3);
       border: 1px solid var(--color-border-primary);
       line-height: 32px;
       display: inline-block;
@@ -74,7 +74,7 @@ export const Wrap = styled.div(
         color: var(--color-white);
       }
       .lAdd {
-        padding-left: 12px;
+        padding-left: var(--space-3);
         padding-right: 10px;
         border-radius: var(--radius-sm) 0 0 var(--radius-sm);
       }
@@ -96,7 +96,7 @@ export const Wrap = styled.div(
     .changeRole,
     .del,
     .download {
-      padding: 0 16px;
+      padding: 0 var(--space-4);
       height: 32px;
       border-radius: var(--radius-sm);
       line-height: 32px;
@@ -147,7 +147,7 @@ export const WrapPop = styled.div`
     border-radius: var(--radius-sm);
     .Item {
       .Item-content {
-        padding-left: 32px;
+        padding-left: var(--space-8);
       }
     }
 

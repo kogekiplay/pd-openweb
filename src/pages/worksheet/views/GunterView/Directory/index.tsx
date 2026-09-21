@@ -19,7 +19,7 @@ const More = styled.div`
 `;
 export const MenuOverlayWrapper = styled(Menu)`
   .ant-dropdown-menu-item {
-    padding: 7px 12px;
+    padding: 7px var(--space-3);
     transition: none;
   }
   .ant-dropdown-menu-item:hover,

@@ -10,8 +10,8 @@
 }
 
 .folderSelectDialog .folderContent .folderUrl {
-  margin: -4px 0 4px;
-  font-size: 14px;
+  margin: -4px 0 var(--space-1);
+  font-size: var(--font-md);
   height: 35px;
   line-height: 35px;
   overflow-x: hidden;
@@ -24,7 +24,7 @@
   border-top-width: 1px;
   border-bottom-width: 1px;
   margin: 0 -24px;
-  padding: 4px 24px;
+  padding: var(--space-1) var(--space-6);
   overflow: hidden;
   overflow-y: auto;
   box-sizing: border-box;
@@ -112,11 +112,11 @@
   opacity: 1;
 }
 .folderSelectDialog .folderUrl .operation .createFolder {
-  font-size: 18px;
+  font-size: var(--font-xl);
   cursor: pointer;
 }
 .folderSelectDialog .folderUrl .operation .icon-search {
-  font-size: 16px;
+  font-size: var(--font-lg);
   cursor: pointer;
   display: inline-block;
   height: 22px;
@@ -125,8 +125,8 @@
 }
 .folderSelectDialog .folderUrl .operation .folderSearch {
   display: inline-block;
-  margin-right: 12px;
-  margin-left: 12px;
+  margin-right: var(--space-3);
+  margin-left: var(--space-3);
   box-sizing: border-box;
   height: 30px;
   line-height: 30px;
@@ -138,7 +138,7 @@
   width: 0px;
   border-width: 0px;
   border-bottom: 1px solid var(--color-text-secondary);
-  font-size: 13px;
+  font-size: var(--font-sm);
 }
 .folderNode .nodeList .nodeItem,
 .folderNode .nodeList .addNewFolder,
@@ -149,7 +149,7 @@
   cursor: pointer;
 }
 .folderSelectDialog .folderNode .nodeList .nullItem {
-  font-size: 12px;
+  font-size: var(--font-xs);
   background-color: var(--color-background-secondary);
   padding-left: 56px;
 }
@@ -180,7 +180,7 @@
 .folderSelectDialog .folderNode .nodeList .nodeItem .noChange {
   float: right;
   margin-right: 10px;
-  font-size: 12px;
+  font-size: var(--font-xs);
 }
 .folderSelectDialog .folderNode .nodeList .nodeItem:hover {
   background-color: var(--color-background-hover);
@@ -188,7 +188,7 @@
 
 .folderSelectDialog .folderNode .nodeList .nodeItem .nodeName {
   margin-left: 15px;
-  font-size: 12px;
+  font-size: var(--font-xs);
   vertical-align: middle;
   max-width: 230px;
   display: inline-block;
@@ -198,7 +198,7 @@
 }
 .folderSelectDialog .folderNode .nodeList .nodeItem .nodeExt {
   display: inline-block;
-  font-size: 12px;
+  font-size: var(--font-xs);
   vertical-align: middle;
   min-width: 20px;
   max-width: 45px;
@@ -214,7 +214,7 @@
   vertical-align: middle;
   margin-left: 10px;
   display: inline-block;
-  font-size: 20px;
+  font-size: var(--font-2xl);
 }
 .folderSelectDialog .folderNode .nodeList .nodeItem .icon-attachment {
   margin: 5px -5px 0 15px;
@@ -254,8 +254,8 @@
 .folderSelectDialog .selectedHint {
   height: 30px;
   line-height: 30px;
-  font-size: 12px;
-  margin-top: 8px;
+  font-size: var(--font-xs);
+  margin-top: var(--space-2);
   padding: 0 15px;
   overflow: hidden;
   display: none !important;
@@ -266,7 +266,7 @@
     display: inline-block;
     overflow: hidden;
     white-space: nowrap;
-    font-size: 12px;
+    font-size: var(--font-xs);
     vertical-align: middle;
 }
 
@@ -278,18 +278,18 @@
     line-height: 28px;
     vertical-align: middle;
     border-radius: var(--radius-sm);
-    font-size: 12px;
-    margin-left: 8px;
+    font-size: var(--font-xs);
+    margin-left: var(--space-2);
     padding-left: 5px;
 }*/
 .folderSelectDialog .selectedHint .selectedItem {
-  font-size: 12px;
+  font-size: var(--font-xs);
 }
 
 .folderSelectDialog .selectedHint .selectedItem .item {
   margin-right: 10px;
   background-color: var(--color-text-tertiary);
-  padding: 4px;
+  padding: var(--space-1);
   border-radius: var(--radius-sm);
 }
 .folderSelectDialog .selectedHint .selectedItem .itemName {
@@ -317,7 +317,7 @@
 }
 .folderSelectDialog .folderNode .nodeItem .statusIcon {
   width: 26px;
-  margin: 0 8px;
+  margin: 0 var(--space-2);
   text-align: center;
   display: inline-block;
   position: relative;
@@ -361,21 +361,21 @@
   box-shadow: var(--shadow-lg);
 }
 .folderSelectDialog .sharePermision .shareList {
-  padding: 8px 0;
+  padding: var(--space-2) 0;
 }
 .folderSelectDialog .sharePermision ul li {
   /*height:28px;*/
   /*line-height:28px;*/
-  font-size: 14px;
+  font-size: var(--font-md);
   text-align: left;
-  padding: 5px 16px;
+  padding: 5px var(--space-4);
   overflow: hidden;
 }
 .folderSelectDialog .sharePermision ul li .desc {
   margin: 2px 0px 5px 0;
   line-height: 1.2em;
   color: var(--color-text-disabled);
-  font-size: 12px;
+  font-size: var(--font-xs);
 }
 .folderSelectDialog .sharePermision ul li .visibleName .ownerName {
   display: inline-block;
@@ -390,7 +390,7 @@
   cursor: pointer;
 }
 .folderSelectDialog .sharePermision ul li .selectSpan {
-  font-size: 14px;
+  font-size: var(--font-md);
   width: 32px;
   text-align: center;
   display: inline-block;
@@ -411,7 +411,7 @@
   border-radius: 22px;
   border: 1px solid var(--color-border-tertiary);
   display: inline-block;
-  font-size: 18px;
+  font-size: var(--font-xl);
   text-align: center;
   line-height: 20px;
   color: var(--color-text-tertiary);
@@ -423,7 +423,7 @@
 }
 
 .folderSelectDialog .nodeVisibleType .updateTypeBtn {
-  margin-left: 8px;
+  margin-left: var(--space-2);
 }
 
 .folderSelectDialog .nodeVisibleType .updateTypeBtn:hover {

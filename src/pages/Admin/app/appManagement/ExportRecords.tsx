@@ -11,7 +11,7 @@ import { dateConvertToUserZone } from 'src/utils/project';
 import AppDisplay from './modules/AppDisplay';
 
 const SearchWrap = styled.div`
-  margin-bottom: 20px;
+  margin-bottom: var(--space-5);
   .w180 {
     width: 180px;
   }

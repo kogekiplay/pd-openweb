@@ -41,7 +41,7 @@ const SearchIcon = styled.div`
   line-height: 130px;
   font-size: 80px;
   color: var(--color-text-placeholder);
-  margin-bottom: 12px;
+  margin-bottom: var(--space-3);
 `;
 
 const trashReducer = (state, action: ReduxAction) => {
@@ -225,7 +225,7 @@ export default function WorkSheetTrash(props) {
         width={document.body.clientWidth * 0.9}
         type="fixed"
         bodyStyle={{ paddingTop: 0, position: 'relative' }}
-        closeStyle={{ margin: '16px', width: '30px', height: '30px', lineHeight: '30px' }}
+        closeStyle={{ margin: 'var(--space-4)', width: '30px', height: '30px', lineHeight: '30px' }}
       >
         <Con>
           <TrashBatchOperate

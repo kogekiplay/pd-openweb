@@ -11,14 +11,14 @@ const ERROR_CODE_QUOTA_EXHAUSTED = 'quota_exhausted';
 // 数值对齐设计稿（Pixso 拦截提示 矩形22176）：卡片 #F0F0F0 圆角 5、1px #DDDDDD 描边、文案 13px；
 // 按钮 50x26 圆角 5、字号 13 粗体(700)、间距 10、右对齐；关闭=白底无描边、主按钮 #1677FF 白字。贴在输入框上方。
 const Card = styled.div`
-  margin: 0 0 8px;
+  margin: 0 0 var(--space-2);
   max-width: 100%;
-  padding: 16px;
+  padding: var(--space-4);
   background: var(--color-background-secondary);
   border: 1px solid var(--color-border-tertiary);
   border-radius: var(--radius-sm);
   .interceptMsg {
-    font-size: 13px;
+    font-size: var(--font-sm);
     line-height: 1.6;
     color: var(--color-text-primary);
     word-break: break-word;
@@ -32,9 +32,9 @@ const Card = styled.div`
   .btn {
     height: 26px;
     min-width: 50px;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     border-radius: var(--radius-sm);
-    font-size: 13px;
+    font-size: var(--font-sm);
     font-weight: 700;
     cursor: pointer;
     display: inline-flex;

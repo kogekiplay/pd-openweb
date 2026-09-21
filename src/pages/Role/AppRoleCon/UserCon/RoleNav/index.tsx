@@ -17,11 +17,11 @@ const WrapL = styled.div`
   }
 `;
 const Wrap = styled.p`
-  font-size: 12px;
+  font-size: var(--font-xs);
   font-weight: bold;
   color: var(--color-text-tertiary);
   padding-left: 18px;
-  margin: 10px 0 4px 0;
+  margin: 10px 0 var(--space-1) 0;
 `;
 
 const WrapTips = styled.div`

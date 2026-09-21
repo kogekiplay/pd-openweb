@@ -22,7 +22,7 @@ const UnNormalWrap = styled.div`
     box-shadow: var(--shadow-sm);
   }
   .unNormalText {
-    margin: 15px 0 20px;
+    margin: 15px 0 var(--space-5);
     font-size: 17px;
     color: var(--color-text-title);
     white-space: pre-wrap;

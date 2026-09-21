@@ -28,7 +28,7 @@ const ModalWrap = styled(Popup)`
   .rejectApprove {
     color: var(--color-text-tertiary);
     text-align: center;
-    padding: 4px 15px;
+    padding: var(--space-1) 15px;
     border-radius: 24px;
     border: 1px solid var(--color-border-primary);
     background-color: var(--color-background-primary);

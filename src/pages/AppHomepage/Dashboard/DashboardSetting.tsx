@@ -13,12 +13,12 @@ import { themeColors } from './utils';
 const SettingDrawer = styled(Drawer)`
   .ant-drawer-header {
     border-bottom: none;
-    padding: 24px;
+    padding: var(--space-6);
   }
   .ant-drawer-header-title {
     flex-direction: row-reverse;
     .ant-drawer-title {
-      font-size: 18px !important;
+      font-size: var(--font-xl) !important;
       font-weight: bold !important;
     }
     .ant-drawer-close {
@@ -36,7 +36,7 @@ const SettingDrawer = styled(Drawer)`
   }
   .ant-drawer-content-wrapper {
     .ant-drawer-body {
-      padding: 0 24px 24px;
+      padding: 0 var(--space-6) var(--space-6);
     }
   }
 
@@ -56,19 +56,19 @@ const SettingItem = styled.div`
     align-items: center;
     justify-content: space-between;
     .titleText {
-      font-size: 14px;
+      font-size: var(--font-md);
       font-weight: bold;
       color: var(--color-text-title);
     }
     .descriptionText {
-      margin-top: 4px;
-      font-size: 12px;
+      margin-top: var(--space-1);
+      font-size: var(--font-xs);
       color: var(--color-text-tertiary);
     }
   }
   .settingRadioGroup {
     display: flex;
-    margin-top: 16px;
+    margin-top: var(--space-4);
     .ming.Radio {
       width: 200px;
     }
@@ -103,15 +103,15 @@ const SettingItem = styled.div`
   .logoHeightSet {
     display: flex;
     align-items: center;
-    margin-top: 16px;
+    margin-top: var(--space-4);
     height: 36px;
     .contentText {
-      font-size: 14px;
+      font-size: var(--font-md);
       color: var(--color-text-title);
     }
   }
   .themeColorWrapper {
-    margin-top: 20px;
+    margin-top: var(--space-5);
     display: flex;
     flex-wrap: wrap;
     gap: 14px;
@@ -129,11 +129,11 @@ const SettingItem = styled.div`
         width: 8px;
         height: 20px;
         border-radius: var(--radius-sm);
-        margin-left: 4px;
+        margin-left: var(--space-1);
         transition: width 0.2s ease;
         .icon-done {
           color: var(--color-white);
-          font-size: 18px;
+          font-size: var(--font-xl);
         }
       }
       &:hover {
@@ -153,7 +153,7 @@ const SettingItem = styled.div`
 const SloganInput = styled(Input)`
   &.ant-input-affix-wrapper {
     transition: none !important;
-    padding: 6px 12px !important;
+    padding: 6px var(--space-3) !important;
     &:hover {
       border-color: var(--color-primary-focus) !important;
     }
@@ -178,11 +178,11 @@ const SortItem = styled.div`
   display: flex;
   align-items: center;
   height: 48px;
-  font-size: 14px;
+  font-size: var(--font-md);
   font-weight: bold;
   border: 1px solid var(--color-border-tertiary);
   border-radius: var(--radius-sm);
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   cursor: pointer;
   &:hover {
     border-color: var(--color-primary);
@@ -210,7 +210,7 @@ const AdvancedThemeItem = styled.div`
 
     i {
       color: var(--color-white);
-      font-size: 18px;
+      font-size: var(--font-xl);
     }
   }
 `;

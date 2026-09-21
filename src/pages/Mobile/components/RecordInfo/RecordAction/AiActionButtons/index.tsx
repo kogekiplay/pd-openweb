@@ -25,14 +25,14 @@ const BtnCon = styled.div`
         font-weight: 500;`}
   .icon {
     margin-right: 6px;
-    font-size: 20px;
+    font-size: var(--font-2xl);
     color: var(--color-text-tertiary);
   }
   .btnText {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    font-size: 13px;
+    font-size: var(--font-sm);
   }
 `;
 

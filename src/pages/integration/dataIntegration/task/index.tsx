@@ -4,7 +4,7 @@ import { ExecNumber, Statistic, TaskList } from './components';
 
 const SyncTaskWrapper = styled.div`
   background: var(--color-background-primary);
-  padding: 32px 32px 0;
+  padding: var(--space-8) var(--space-8) 0;
 
   .flexRowBetween {
     display: flex;
@@ -14,13 +14,13 @@ const SyncTaskWrapper = styled.div`
   }
 
   .filterContent {
-    margin-top: 24px;
+    margin-top: var(--space-6);
     position: relative;
 
     .taskListText {
       font-size: 15px;
       font-weight: 600;
-      margin-bottom: 12px;
+      margin-bottom: var(--space-3);
     }
     .searchInput {
       width: 360px;
@@ -31,11 +31,11 @@ const SyncTaskWrapper = styled.div`
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 24px;
+      font-size: var(--font-3xl);
       width: 36px;
       height: 36px;
       border-radius: 50%;
-      margin-left: 24px;
+      margin-left: var(--space-6);
       color: var(--color-text-tertiary);
       cursor: pointer;
 
@@ -49,7 +49,7 @@ const SyncTaskWrapper = styled.div`
       }
     }
     .addTaskButton {
-      padding: 8px 24px;
+      padding: var(--space-2) var(--space-6);
       background: var(--color-primary);
       border-radius: 18px;
       color: var(--color-white);
@@ -57,7 +57,7 @@ const SyncTaskWrapper = styled.div`
       cursor: pointer;
 
       &:hover {
-        background: var(--color-link-hover);
+        background: var(--color-primary-dark);
       }
     }
   }

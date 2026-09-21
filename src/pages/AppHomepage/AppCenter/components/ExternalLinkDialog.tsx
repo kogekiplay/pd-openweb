@@ -12,7 +12,7 @@ import { getThemeColors } from 'src/utils/project';
 import { LINK_PARA_FIELDS, PUBLISH_CONFIG_OPTIONS } from '../constant';
 
 const Wrapper = styled.div`
-  margin-top: 8px;
+  margin-top: var(--space-2);
   display: table;
   width: 100%;
 
@@ -26,13 +26,13 @@ const Wrapper = styled.div`
 
     .cell {
       display: table-cell;
-      padding-bottom: 24px;
+      padding-bottom: var(--space-6);
     }
     .labelText {
       position: relative;
       line-height: 36px;
-      padding-right: 16px;
-      padding-left: 8px;
+      padding-right: var(--space-4);
+      padding-left: var(--space-2);
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -45,7 +45,7 @@ const Wrapper = styled.div`
       }
     }
     .ming.Input {
-      font-size: 13px;
+      font-size: var(--font-sm);
     }
   }
 `;
@@ -106,10 +106,10 @@ const PopupWrapper = styled.div`
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-lg);
   border: 1px solid var(--color-border-secondary);
-  font-size: 14px;
+  font-size: var(--font-md);
   div {
     line-height: 36px;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
   }
   .title {
     font-weight: bold;
@@ -134,8 +134,8 @@ const TagWrapper = styled.div`
   background: #d8eeff;
   color: var(--color-link-hover);
   border: 1px solid var(--color-primary-transparent);
-  padding: 0 12px;
-  font-size: 12px;
+  padding: 0 var(--space-3);
+  font-size: var(--font-xs);
   box-sizing: border-box;
   height: 24px;
   max-width: 100%;

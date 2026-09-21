@@ -19,7 +19,7 @@ const Wrap = styled.div`
   width: 880px;
   margin: 22px auto;
   background: var(--color-background-primary);
-  padding: 36px 24px 24px;
+  padding: 36px var(--space-6) var(--space-6);
   // border: 1px solid var(--color-border-primary);
   border-radius: 10px;
   .noData {
@@ -36,13 +36,13 @@ const Wrap = styled.div`
     }
   }
   .addButtn {
-    padding: 8px 24px;
+    padding: var(--space-2) var(--space-6);
     background: var(--color-primary);
     border-radius: 21px;
     color: var(--color-white);
     display: inline-block;
     &:hover {
-      background: var(--color-link-hover);
+      background: var(--color-primary-dark);
     }
   }
 `;
@@ -54,7 +54,7 @@ const WrapCon = styled.div`
     line-height: 26px;
     display: inline-block;
     position: relative;
-    margin-bottom: 4px;
+    margin-bottom: var(--space-1);
     margin-right: 6px;
     img {
       width: 26px;
@@ -111,7 +111,7 @@ const WrapCon = styled.div`
   .ant-table.ant-table-small .ant-table-tbody > tr > td,
   .ant-table.ant-table-small tfoot > tr > th,
   .ant-table.ant-table-small tfoot > tr > td {
-    padding: 15px 8px;
+    padding: 15px var(--space-2);
     align-items: center;
     display: flex;
   }
@@ -134,13 +134,13 @@ const WrapCon = styled.div`
     width: 200px;
     left: 0;
     z-index: 100;
-    padding-bottom: 24px;
+    padding-bottom: var(--space-6);
     top: 26px;
   }
   ul.flowDetailUserList {
     text-align: left;
     i {
-      font-size: 18px;
+      font-size: var(--font-xl);
       display: inline-block;
       vertical-align: top;
       margin-top: 9px;

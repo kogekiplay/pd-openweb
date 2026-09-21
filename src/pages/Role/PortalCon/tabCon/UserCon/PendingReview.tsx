@@ -27,11 +27,11 @@ const Wrap = styled.div`
     width: calc(calc(100% - 38px) / 6);
     overflow: hidden;
   }
-  padding: 16px 10px 0 10px;
+  padding: var(--space-4) 10px 0 10px;
   .topAct {
     padding-right: 22px;
     min-height: 54px;
-    padding-bottom: 16px;
+    padding-bottom: var(--space-4);
     display: flex;
     justify-content: right;
     .pass,
@@ -67,7 +67,7 @@ const Wrap = styled.div`
       color: var(--color-primary);
       vertical-align: middle;
       line-height: 32px;
-      padding: 0 12px;
+      padding: 0 var(--space-3);
       background: var(--color-background-secondary);
       border-radius: var(--radius-sm);
       &:hover {

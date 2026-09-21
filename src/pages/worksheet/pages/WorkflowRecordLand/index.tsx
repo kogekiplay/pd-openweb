@@ -5,7 +5,7 @@ import { LoadDiv } from 'ming-ui';
 const Con = styled.div`
   position: relative;
   height: 100%;
-  padding: 20px 32px;
+  padding: var(--space-5) var(--space-8);
   .workSheetRecordInfo {
     overflow: hidden;
     max-width: 1600px;

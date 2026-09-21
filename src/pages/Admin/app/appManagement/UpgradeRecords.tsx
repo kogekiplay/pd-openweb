@@ -19,7 +19,7 @@ const STATUS = [
 const PAGE_SIZE = 50;
 
 const SearchWrap = styled.div`
-  margin-bottom: 20px;
+  margin-bottom: var(--space-5);
   .w180 {
     width: 180px;
   }

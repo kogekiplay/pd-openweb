@@ -10,7 +10,7 @@ import { formatAppsToDropdown } from '../../../util';
 import EditOptionList from './EditOptionList';
 
 const DialogFooter = styled.div`
-  margin-top: 24px;
+  margin-top: var(--space-6);
   justify-content: space-between;
   .addOptionList {
     cursor: pointer;
@@ -21,7 +21,7 @@ const DialogFooter = styled.div`
   }
   .btns {
     .text {
-      margin-right: 24px;
+      margin-right: var(--space-6);
     }
   }
 `;

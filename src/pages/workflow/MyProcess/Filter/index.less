@@ -1,9 +1,9 @@
 .processFilterDrawerWrapper {
   width: 280px;
   height: 100%;
-  padding: 16px 0;
+  padding: var(--space-4) 0;
   box-sizing: border-box;
-  margin-right: 20px;
+  margin-right: var(--space-5);
   opacity: 0;
   margin-left: -280px;
   transition:
@@ -38,11 +38,11 @@
   }
   .header {
     height: 43px;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     border-bottom: 1px solid var(--color-border-secondary);
     .reset {
-      color: var(--color-primary) e6;
-      margin: 0 20px;
+      color: color-mix(in srgb, var(--color-primary) 90%, transparent);
+      margin: 0 var(--space-5);
       &:hover {
         color: var(--color-primary) !important;
       }
@@ -52,7 +52,7 @@
     }
   }
   .filterContent {
-    padding: 16px;
+    padding: var(--space-4);
     overflow-y: auto;
   }
   .personPostBox {
@@ -68,7 +68,7 @@
     }
   }
   .itemWrapper {
-    font-size: 13px;
+    font-size: var(--font-sm);
     padding: 5px 10px;
     border: 1px solid var(--color-border-primary);
     border-radius: var(--radius-sm);
@@ -86,7 +86,7 @@
   .inputWrapper {
     input {
       flex: 1;
-      font-size: 13px;
+      font-size: var(--font-sm);
       padding: 5px 45px 5px 10px;
       border: 1px solid var(--color-border-primary);
       border-radius: var(--radius-sm);
@@ -110,7 +110,7 @@
   }
   .filterFivider {
     border-top: 1px solid var(--color-border-secondary);
-    padding-top: 16px;
+    padding-top: var(--space-4);
   }
   .selectWrapper {
     &.ant-select:not(.ant-select-disabled):hover,
@@ -129,13 +129,13 @@
       top: 40%;
     }
     .ant-select-placeholder {
-      font-size: 13px;
+      font-size: var(--font-sm);
     }
     &.ant-select-single.ant-select-show-arrow .ant-select-selection-item,
     &.ant-select-single.ant-select-show-arrow .ant-select-content-value,
     .ant-select-single.ant-select-show-arrow .ant-select-placeholder {
       opacity: 1;
-      font-size: 13px;
+      font-size: var(--font-sm);
     }
     &.ant-select-single.ant-select-open .ant-select-selection-item,
     &.ant-select-single.ant-select-open .ant-select-content-value {
@@ -173,7 +173,7 @@
       line-height: 10px;
     }
     &.ant-picker-range .ant-picker-input > input {
-      font-size: 13px;
+      font-size: var(--font-sm);
     }
   }
   .appItem {
@@ -193,36 +193,36 @@
       border-radius: var(--radius-sm);
     }
     .processAppName {
-      padding: 0 8px;
+      padding: 0 var(--space-2);
     }
     .content {
       flex: 1;
       min-width: 0;
-      padding: 10px 8px;
+      padding: 10px var(--space-2);
       border-radius: var(--radius-sm);
       &:hover {
         background-color: var(--color-background-hover);
       }
       &.active {
-        background-color: var(--color-primary-focus) 1a;
+        background-color: color-mix(in srgb, var(--color-primary-focus) 10%, transparent);
       }
     }
   }
   .processesItem {
-    padding: 9px 8px 9px 18px;
-    margin-left: 24px;
+    padding: 9px var(--space-2) 9px 18px;
+    margin-left: var(--space-6);
     border-radius: var(--radius-sm);
     &:hover {
       background-color: var(--color-background-hover);
     }
     &.active {
-      background-color: var(--color-primary-focus) 1a;
+      background-color: color-mix(in srgb, var(--color-primary-focus) 10%, transparent);
     }
   }
 }
 
 .processOptionWrapper {
-  padding: 7px 12px 7px 20px;
+  padding: 7px var(--space-3) 7px var(--space-5);
 
   &.ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
     font-weight: unset;

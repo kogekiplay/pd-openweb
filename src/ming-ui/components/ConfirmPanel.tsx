@@ -28,12 +28,12 @@ border-bottom-color: var(--color-background-primary);
 const Popup = styled.div`
   width: 280px;
   border-radius: var(--radius-sm);
-  padding: 20px;
+  padding: var(--space-5);
   box-shadow: var(--shadow-lg);
   background-color: var(--color-background-primary);
 `;
 const Title = styled.div`
-  font-size: 14px;
+  font-size: var(--font-md);
   color: var(--color-text-title);
 `;
 const Footer = styled.div`

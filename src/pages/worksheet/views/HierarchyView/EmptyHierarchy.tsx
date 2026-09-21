@@ -12,11 +12,11 @@ const EmptyHierarchyWrap = styled.div`
     border-radius: 0;
     border-bottom: 2px solid var(--color-primary);
     background-color: transparent;
-    font-size: 14px;
+    font-size: var(--font-md);
     font-weight: bold;
   }
   .titleWrap {
-    margin-bottom: 4px;
+    margin-bottom: var(--space-1);
     height: 36px;
     display: flex;
     align-items: center;
@@ -28,7 +28,7 @@ const EmptyHierarchyWrap = styled.div`
   .addWrap {
     box-sizing: border-box;
     width: 280px;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     line-height: 48px;
     transition: all 0.25s;
     border-radius: var(--radius-sm);

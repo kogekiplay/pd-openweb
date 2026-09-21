@@ -13,7 +13,7 @@ const NotifierCon = styled.div`
   flex-wrap: wrap;
   .notifierUsers {
     display: flex;
-    gap: 10px 20px;
+    gap: 10px var(--space-5);
     flex: 1;
     flex-wrap: wrap;
   }
@@ -208,7 +208,7 @@ class EarlyWarningDialog extends Component<any, any> {
             <div className="flex TxtLeft">
               {isWarning ? (
                 <Button
-                  style={{ minWidth: 0, padding: '0 8px' }}
+                  style={{ minWidth: 0, padding: '0 var(--space-2)' }}
                   type="link"
                   onClick={() => closeWarning(isWorkflow ? 0 : warningValue, [], [], onCancel)}
                 >

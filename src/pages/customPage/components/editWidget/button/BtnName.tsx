@@ -31,7 +31,7 @@ const ButtonWrap = styled.div`
     top: 10px;
     background: #00000042;
     border-radius: 50%;
-    font-size: 12px;
+    font-size: var(--font-xs);
     padding: 2px;
     .icon {
       position: relative;

@@ -46,9 +46,9 @@ const Wrap = styled.div`
     margin: 0 auto;
   }
   &.isCenterCon {
-    padding: 24px 32px;
+    padding: var(--space-6) var(--space-8);
     border-radius: var(--radius-sm);
-    margin: 32px auto;
+    margin: var(--space-8) auto;
     min-width: 800px;
     background: var(--color-background-primary);
     height: auto;
@@ -67,7 +67,7 @@ const Wrap = styled.div`
     border-radius: var(--radius-sm);
     width: 95%;
     min-width: 95%;
-    padding: 48px 24px 23px;
+    padding: 48px var(--space-6) 23px;
     .messageConBox {
       margin: 0 auto;
     }

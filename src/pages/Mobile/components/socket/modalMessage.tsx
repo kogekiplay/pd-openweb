@@ -7,15 +7,15 @@ import functionWrap from 'ming-ui/components/FunctionWrap';
 const ModalWrap = styled(Popup)`
   overflow: hidden;
   .adm-popup-body {
-    padding: 16px;
+    padding: var(--space-4);
     color: var(--color-text-title);
-    font-size: 13px;
+    font-size: var(--font-sm);
     display: flex;
     flex-direction: column;
   }
   .success {
     color: var(--color-success);
-    font-size: 20px;
+    font-size: var(--font-2xl);
   }
   .error {
     color: var(--color-error);
@@ -38,7 +38,7 @@ const ModalWrap = styled(Popup)`
       text-align: center;
       color: var(--color-white);
       line-height: 36px;
-      padding: 0 12px;
+      padding: 0 var(--space-3);
       &:last-child {
         margin-right: 0px;
       }
@@ -55,11 +55,11 @@ const ModalWrap = styled(Popup)`
 `;
 
 const BatchModalWrap = styled.div`
-  padding: 0 8px;
+  padding: 0 var(--space-2);
   box-sizing: border-box;
   .success {
     color: var(--color-success);
-    font-size: 20px;
+    font-size: var(--font-2xl);
   }
   .error {
     color: var(--color-error);
@@ -76,7 +76,7 @@ const BatchModalWrap = styled.div`
     text-align: center;
     border-top: 1px solid var(--color-border-secondary);
     border-top: 1px solid var(--color-border-secondary);
-    margin: 20px -20px -19px;
+    margin: var(--space-5) -20px -19px;
     color: var(--color-primary-focus);
   }
 `;
@@ -86,7 +86,7 @@ const DialogWrap = styled(Dialog)`
     padding-top: 36px;
   }
   .adm-dialog-content {
-    padding: 0 20px 20px;
+    padding: 0 var(--space-5) var(--space-5);
   }
   .adm-dialog-footer {
     height: 50px;

@@ -19,7 +19,7 @@ const ItemLayer = styled.div`
     width: 160px;
     line-height: 40px;
     padding-left: 10px;
-    padding-right: 4px;
+    padding-right: var(--space-1);
     background: var(--color-background-secondary);
     border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-primary);

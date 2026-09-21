@@ -12,7 +12,7 @@
       .sheetItem {
         height: 40px;
         line-height: 40px;
-        padding: 0 24px;
+        padding: 0 var(--space-6);
         position: relative;
         &.ming.Radio {
           margin-right: 0;
@@ -41,7 +41,7 @@
         align-items: center;
         justify-content: center;
         color: var(--color-text-tertiary);
-        font-size: 16px;
+        font-size: var(--font-lg);
       }
       .excelTitle {
         position: relative;
@@ -108,8 +108,8 @@
 
           .excelTitleImg,
           .excelTitleHoverImg {
-            font-size: 12px;
-            padding: 4px 2px 4px 6px;
+            font-size: var(--font-xs);
+            padding: var(--space-1) 2px var(--space-1) 6px;
             color: var(--color-white);
             border-radius: var(--radius-sm) 0 0 var(--radius-sm);
             position: relative;
@@ -159,7 +159,7 @@
 
   .buttons {
     margin-top: 25px;
-    margin-right: 24px;
+    margin-right: var(--space-6);
     text-align: right;
   }
 }

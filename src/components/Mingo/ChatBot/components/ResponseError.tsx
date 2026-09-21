@@ -8,38 +8,38 @@ const Con = styled.div`
   overflow: hidden;
   margin-top: 10px;
   height: 40px;
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-error);
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   background: rgba(244, 67, 54, 0.04);
   border-radius: var(--radius-sm);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   .errorIcon {
-    font-size: 16px;
+    font-size: var(--font-lg);
     color: var(--color-error);
-    margin-right: 8px;
+    margin-right: var(--space-2);
   }
   .errorIcon {
-    font-size: 16px;
+    font-size: var(--font-lg);
     color: var(--color-error);
-    margin-right: 8px;
+    margin-right: var(--space-2);
   }
   .retry {
-    margin-left: 20px;
-    font-size: 13px;
+    margin-left: var(--space-5);
+    font-size: var(--font-sm);
     color: var(--color-text-title);
     cursor: pointer;
     .icon {
-      font-size: 16px;
+      font-size: var(--font-lg);
       color: var(--color-text-secondary);
       margin-right: 2px;
     }
   }
   .feedback {
     margin-left: 10px;
-    font-size: 13px;
+    font-size: var(--font-sm);
     flex-shrink: 0;
   }
 `;

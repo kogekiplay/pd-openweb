@@ -14,7 +14,7 @@ const SchemeSkeletonWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 12px;
+  padding: var(--space-3);
   width: 200px;
   height: 140px;
   border: 1px solid var(--color-border-tertiary);

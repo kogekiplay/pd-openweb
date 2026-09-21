@@ -22,7 +22,7 @@
     min-width: 150px;
   }
   .manageListSearch {
-    padding: 16px 24px 0;
+    padding: var(--space-4) var(--space-6) 0;
     align-items: center;
     .w180 {
       width: 180px;
@@ -42,7 +42,7 @@
     }
   }
   .manageList {
-    margin: 0 24px;
+    margin: 0 var(--space-6);
     align-items: center;
     border-bottom: 1px solid var(--color-border-secondary);
     .chartIcon {
@@ -62,8 +62,8 @@
     }
     &.manageListHeader {
       border-color: var(--color-border-primary);
-      padding: 12px 0;
-      margin-right: 24px;
+      padding: var(--space-3) 0;
+      margin-right: var(--space-6);
       color: var(--color-text-secondary);
       &:hover {
         background: var(--color-background-primary);
@@ -99,7 +99,7 @@
       justify-content: center;
       position: relative;
       .icon {
-        font-size: 24px;
+        font-size: var(--font-3xl);
         color: var(--color-white);
       }
       .linkIcon {
@@ -115,7 +115,7 @@
         border: 1px solid var(--color-border-secondary);
         border-radius: 50%;
         i {
-          font-size: 12px;
+          font-size: var(--font-xs);
           color: var(--color-primary);
         }
       }
@@ -141,7 +141,7 @@
       }
     }
     .del {
-      font-size: 18px;
+      font-size: var(--font-xl);
       visibility: hidden;
       cursor: pointer;
     }
@@ -163,7 +163,7 @@
       color: var(--color-text-disabled);
     }
     .emptyExplain {
-      margin-top: 20px;
+      margin-top: var(--space-5);
       color: var(--color-text-tertiary);
       font-size: 17px;
       text-align: center;
@@ -220,7 +220,7 @@
   li {
     display: block !important;
     height: unset !important;
-    padding: 10px 16px !important;
+    padding: 10px var(--space-4) !important;
     .desc {
       color: var(--color-text-secondary) !important;
     }
@@ -246,7 +246,7 @@
     display: flex;
     align-items: center;
     cursor: pointer;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     height: 36px;
     &:not(.active) {
       color: var(--color-text-title) !important;

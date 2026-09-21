@@ -10,15 +10,15 @@ const Con = styled.div`
   flex-direction: row;
   align-items: center;
   .summary_list {
-    margin-left: 20px;
+    margin-left: var(--space-5);
     .summary_item {
-      margin-left: 8px;
+      margin-left: var(--space-2);
     }
     .summary_title {
       color: var(--color-text-secondary);
     }
     .summary_value {
-      margin-left: 4px;
+      margin-left: var(--space-1);
     }
   }
 `;

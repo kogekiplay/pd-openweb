@@ -506,7 +506,7 @@ class SearchWorksheetActionDialog extends Component<any, any> {
                             <div
                               className="flexRow"
                               style={{
-                                padding: '0 16px 0 14px',
+                                padding: '0 var(--space-4) 0 14px',
                                 height: 36,
                                 alignItems: 'center',
                                 borderBottom: '1px solid var(--color-border-tertiary)',

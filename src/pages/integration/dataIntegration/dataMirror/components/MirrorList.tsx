@@ -13,7 +13,7 @@ import { pathCompletion } from 'src/utils/common';
 import OptionColumn from './OptionColumn';
 
 const FilterContent = styled.div`
-  margin-top: 16px;
+  margin-top: var(--space-4);
   .searchInput {
     width: 360px;
     min-width: 360px;
@@ -23,11 +23,11 @@ const FilterContent = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 24px;
+    font-size: var(--font-3xl);
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    margin-left: 24px;
+    margin-left: var(--space-6);
     color: var(--color-text-tertiary);
     cursor: pointer;
 
@@ -51,7 +51,7 @@ const ListBox = styled.div`
     border-bottom: 1px solid var(--color-border-secondary);
     align-items: center;
     margin: 0;
-    padding: 8px 0;
+    padding: var(--space-2) 0;
     .sortIcon {
       color: var(--color-text-disabled);
       height: 8px;
@@ -65,11 +65,11 @@ const ListBox = styled.div`
     min-width: 0;
     align-items: center;
     margin: 0;
-    padding: 12px 0;
+    padding: var(--space-3) 0;
     border-bottom: 1px solid var(--color-border-secondary);
     .titleText,
     .taskNum {
-      font-size: 14px;
+      font-size: var(--font-md);
       font-weight: 700;
     }
     &:hover {
@@ -86,8 +86,8 @@ const ListBox = styled.div`
       width: 32px;
       height: 32px;
       border-radius: 16px;
-      margin-right: 8px;
-      font-size: 16px;
+      margin-right: var(--space-2);
+      font-size: var(--font-lg);
       min-width: 32px;
       .svg-icon {
         width: 20px;
@@ -127,7 +127,7 @@ const ListBox = styled.div`
 
   .name,
   .address {
-    padding-right: 8px;
+    padding-right: var(--space-2);
     width: 0;
   }
   .createTime {

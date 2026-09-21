@@ -13,11 +13,11 @@ const AutoSizePorTalTable = autoSize(PorTalTable);
 const Wrap = styled.div`
   .con {
     min-height: 400px;
-    padding-bottom: 20px;
+    padding-bottom: var(--space-5);
     overflow: auto;
   }
   .topAct {
-    padding-bottom: 16px;
+    padding-bottom: var(--space-4);
     .searchWrapper {
       width: 230px;
       height: 32px;

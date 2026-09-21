@@ -8,7 +8,7 @@
 }
 .feedNoData {
   padding: 85px;
-  font-size: 14px;
+  font-size: var(--font-md);
   color: var(--color-text-tertiary);
   text-align: center;
 }
@@ -18,7 +18,7 @@
   height: 120px;
   background: url('./image/feedEmpty.png');
   background-size: 120px !important;
-  margin-bottom: 20px;
+  margin-bottom: var(--space-5);
   cursor: pointer;
 }
 .feedNoData.normal .hide {

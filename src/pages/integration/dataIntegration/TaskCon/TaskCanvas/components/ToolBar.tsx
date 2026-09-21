@@ -51,7 +51,7 @@ const ToolBarWrap = styled.div`
   }
   .scale {
     width: 36px;
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-title);
   }
 `;

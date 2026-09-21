@@ -57,7 +57,7 @@ const Bar = styled.div`
   flex: 1;
   position: relative;
   height: 6px;
-  padding: 0 4px;
+  padding: 0 var(--space-1);
   border-radius: var(--radius-sm);
   background: var(--color-border-secondary);
 `;
@@ -66,7 +66,7 @@ const PortraitBar = styled.div`
   width: 6px;
   height: 100%;
   border-radius: var(--radius-sm);
-  margin-right: 20px;
+  margin-right: var(--space-5);
   background: var(--color-border-secondary);
 `;
 
@@ -118,7 +118,7 @@ const ScaleBox = styled.div`
   flex-direction: column;
   overflow: hidden;
   margin-top: -10px;
-  padding: 0 4px;
+  padding: 0 var(--space-1);
   .pointContent {
     width: ${({ total }) => `${total}%`};
     display: flex;
@@ -131,7 +131,7 @@ const ScaleBox = styled.div`
       transform: translateX(-50%);
       .pointCon {
         display: inline-block;
-        padding: 4px 2px;
+        padding: var(--space-1) 2px;
         margin-top: -4px;
         cursor: pointer;
       }
@@ -188,7 +188,7 @@ const PortraitScaleBox = styled.div`
   flex-direction: row;
   overflow: hidden;
   margin-left: -30px;
-  padding: 0 4px;
+  padding: 0 var(--space-1);
   .portraitPointContent {
     width: 6px;
     height: ${({ total }) => `${total}%`};
@@ -205,10 +205,10 @@ const PortraitScaleBox = styled.div`
       display:flex;
       align-items:center;
       &:first-child {
-        margin-top: 4px
+        margin-top: var(--space-1)
       }
       &:last-child {
-        margin-bottom: 4px
+        margin-bottom: var(--space-1)
       }
     }
   }
@@ -216,11 +216,11 @@ const PortraitScaleBox = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
-    padding-left: 24px;
+    padding-left: var(--space-6);
     .portraitContentItem {
       flex: 1;
       text-align: left;
-      padding: 12px 0;
+      padding: var(--space-3) 0;
       .scaleText {
         display: inline-block;
         user-select: none;
@@ -228,13 +228,13 @@ const PortraitScaleBox = styled.div`
 
       }
       &:first-child {
-        padding: 0 0 12px;
+        padding: 0 0 var(--space-3);
         .scaleText {
         }
       }
       &:last-child {
         text-align: left;
-        padding: 12px 0 0;
+        padding: var(--space-3) 0 0;
         .scaleText {
         }
       }
@@ -244,7 +244,7 @@ const PortraitScaleBox = styled.div`
 `;
 
 const SelectedOption = styled.span`
-  margin-left: 4px;
+  margin-left: var(--space-1);
   ${({ disabled }) => (disabled ? 'color: rgba(0,0,0,.3);' : '')}
 `;
 

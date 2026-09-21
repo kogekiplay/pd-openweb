@@ -17,7 +17,7 @@ import { replaceControlsTranslateInfo } from 'src/utils/translate';
 const Wrap = styled.div`
   box-sizing: border-box;
   width: 360px;
-  padding: 24px;
+  padding: var(--space-6);
   display: flex;
   flex-direction: column;
   background-color: var(--color-background-secondary);

@@ -15,7 +15,7 @@ const Wrap = styled.div`
   display: flex;
   width: 100%;
   box-sizing: border-box;
-  padding: 0 20px;
+  padding: 0 var(--space-5);
   height: 55px;
   box-shadow: 0 3px 6px rgb(0 0 0 / 16%);
   align-items: center;
@@ -32,7 +32,7 @@ const Wrap = styled.div`
     }
   }
   .title {
-    font-size: 16px;
+    font-size: var(--font-lg);
     font-weight: 400;
     color: var(--color-text-title);
   }
@@ -57,7 +57,7 @@ const Wrap = styled.div`
     box-sizing: border-box;
     padding: 0 22px;
     line-height: 36px;
-    margin-right: 16px;
+    margin-right: var(--space-4);
     border: 1px solid var(--color-primary);
     color: var(--color-primary);
     cursor: pointer;

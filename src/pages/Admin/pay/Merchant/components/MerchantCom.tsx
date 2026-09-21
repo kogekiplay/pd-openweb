@@ -51,9 +51,9 @@ const SuccessWrap = styled.div`
 const ExplainWrap = styled.div`
   background: var(--color-primary-transparent);
   border-radius: var(--radius-sm);
-  font-size: 13px;
-  padding: 12px;
-  margin-bottom: 24px;
+  font-size: var(--font-sm);
+  padding: var(--space-3);
+  margin-bottom: var(--space-6);
 `;
 
 function SuccessDialog(props) {

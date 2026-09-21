@@ -15,14 +15,14 @@ const Wrap = styled.div`
   background: var(--color-background-primary);
   border: 1px solid var(--color-background-secondary);
   border-radius: 8px;
-  padding: 0 20px 0 12px;
+  padding: 0 var(--space-5) 0 var(--space-3);
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: var(--space-4);
   .logo {
     border-radius: 8px;
     width: 48px;
     height: 48px;
-    margin: 12px 0;
+    margin: var(--space-3) 0;
   }
   .ant-switch-checked {
     background-color: rgba(40, 202, 131, 1);

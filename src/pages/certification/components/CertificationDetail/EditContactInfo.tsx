@@ -6,17 +6,17 @@ import certificationApi from 'src/api/certification';
 import { RESULT_TYPES } from '../../constant';
 
 const FormItemWrap = styled.div`
-  margin-top: 16px;
+  margin-top: var(--space-4);
   .labelText {
-    padding-bottom: 8px;
+    padding-bottom: var(--space-2);
     line-height: 1.5;
-    font-size: 14px;
+    font-size: var(--font-md);
     color: #000000d9;
   }
   input {
     width: 100%;
     border-color: var(--color-border-primary);
-    font-size: 13px;
+    font-size: var(--font-sm);
     &:hover {
       border-color: var(--color-border-tertiary);
     }

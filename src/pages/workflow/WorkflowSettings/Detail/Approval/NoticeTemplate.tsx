@@ -7,7 +7,7 @@ import { CustomTextarea } from '../components';
 const Preview = styled.div`
   box-shadow: var(--shadow-md);
   border-radius: var(--radius-sm);
-  padding: 16px 22px;
+  padding: var(--space-4) 22px;
   .circle {
     width: 32px;
     height: 32px;

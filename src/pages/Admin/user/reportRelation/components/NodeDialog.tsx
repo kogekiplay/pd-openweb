@@ -27,7 +27,7 @@ const NodeWrap = styled.div`
     }
     .info {
       flex: 1 0 0%;
-      margin-left: 16px;
+      margin-left: var(--space-4);
       padding-right: 10px;
       display: flex;
       flex-direction: column;
@@ -41,25 +41,25 @@ const NodeWrap = styled.div`
         white-space: nowrap;
         text-overflow: ellipsis;
         color: var(--color-text-tertiary);
-        font-size: 12px;
+        font-size: var(--font-xs);
       }
       .name {
         font-size: 15px;
         max-width: 135px;
-        margin-bottom: 4px;
+        margin-bottom: var(--space-1);
         color: var(--color-text-title);
         height: 20px;
         flex: unset;
       }
     }
     .resignedTag {
-      padding: 0px 8px;
+      padding: 0px var(--space-2);
       height: 20px;
       line-height: 20px;
       border-radius: 12px;
       color: var(--color-white);
       background-color: var(--color-text-disabled);
-      font-size: 12px;
+      font-size: var(--font-xs);
     }
     .subordinateCount {
       position: absolute;
@@ -94,7 +94,7 @@ const EmptyWrap = styled.div`
 `;
 
 const DialogHeaderWrap = styled.div`
-  padding-right: 16px;
+  padding-right: var(--space-4);
 `;
 
 function NodeDialogWrap(props) {

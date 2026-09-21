@@ -9,7 +9,7 @@ const MessageBox = styled.div`
   background: var(--color-background-secondary);
   border-radius: var(--radius-sm);
   align-items: center;
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   .icon-trash:hover {
     color: var(--color-error) !important;
   }

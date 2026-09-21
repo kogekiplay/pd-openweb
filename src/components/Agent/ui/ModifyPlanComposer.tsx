@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { ModifyPlanChip, ModifyPlanDialog } from './embed/ModifyPlan';
 
 const Wrap = styled.div`
-  margin: 10px 12px 0;
+  margin: 10px var(--space-3) 0;
 `;
 
 // 输入框上方的「修改搭建计划」聚合挂件：≥1 条待提交修改时由 ChatPanel 渲染。

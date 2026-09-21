@@ -7,7 +7,7 @@ import { AddOrEditSource, SourceList } from './components';
 const DataSourceWrapper = styled.div`
   background: var(--color-background-primary);
   min-height: 100%;
-  padding: 32px;
+  padding: var(--space-8);
 
   .headerWrapper {
     display: inline-flex;
@@ -16,7 +16,7 @@ const DataSourceWrapper = styled.div`
     width: 100%;
 
     .addSourceButton {
-      padding: 8px 24px;
+      padding: var(--space-2) var(--space-6);
       background: var(--color-primary);
       border-radius: 18px;
       color: var(--color-white);
@@ -24,7 +24,7 @@ const DataSourceWrapper = styled.div`
       cursor: pointer;
 
       &:hover {
-        background: var(--color-link-hover);
+        background: var(--color-primary-dark);
       }
     }
   }

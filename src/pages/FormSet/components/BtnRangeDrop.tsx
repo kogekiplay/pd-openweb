@@ -18,7 +18,7 @@ const Wrap = styled.div`
     }
   }
   .pAll16 {
-    padding: 16px;
+    padding: var(--space-4);
   }
   .flexShrink0 {
     flex-shrink: 0;
@@ -27,7 +27,7 @@ const Wrap = styled.div`
 `;
 const HeaderRange = styled.div`
   display: block;
-  padding: 16px 24px;
+  padding: var(--space-4) var(--space-6);
   font-weight: bold;
   border-bottom: 1px solid var(--color-background-secondary);
   .ming.icon-close {

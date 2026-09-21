@@ -14,7 +14,7 @@
     align-items: center;
     height: 50px;
     box-sizing: border-box;
-    padding: 0 24px !important;
+    padding: 0 var(--space-6) !important;
     border-radius: 0 !important;
     box-shadow: var(--shadow-md);
     position: relative;
@@ -87,7 +87,7 @@
 
   .chart {
     flex: 1;
-    padding: 20px;
+    padding: var(--space-5);
     &.vertical {
       width: 100%;
       min-height: 0;
@@ -115,7 +115,7 @@
   }
   .count {
     font-weight: 500;
-    font-size: 20px;
+    font-size: var(--font-2xl);
     font-family:
       system-ui,
       BlinkMacSystemFont,
@@ -194,13 +194,13 @@
   .displaySetup {
     border: 1px solid var(--color-border-primary);
     border-radius: var(--radius-sm);
-    margin-right: 12px;
+    margin-right: var(--space-3);
     &:last-child {
       margin-right: 0;
     }
     .item {
       color: var(--color-text-tertiary);
-      font-size: 14px;
+      font-size: var(--font-md);
       padding: 5px 10px;
       display: flex;
       align-items: center;
@@ -257,7 +257,7 @@
     }
   }
   .chartTypeSelect {
-    font-size: 13px;
+    font-size: var(--font-sm);
     border-radius: var(--radius-sm);
     padding: 3px;
     background-color: var(--color-background-disabled);
@@ -279,7 +279,7 @@
   }
   .chartTypeImageSelect {
     .styleItem {
-      font-size: 13px;
+      font-size: var(--font-sm);
       margin-right: 10px;
       .iconWrap {
         border-radius: 6px;
@@ -374,7 +374,7 @@
     }
   }
   .ant-modal-header {
-    padding: 24px;
+    padding: var(--space-6);
     border-bottom: none;
   }
   .ant-modal-footer {
@@ -412,7 +412,7 @@
   }
   .ant-btn-primary {
     height: 36px;
-    padding: 0 32px;
+    padding: 0 var(--space-8);
     background: var(--color-primary);
     border-color: var(--color-primary);
     &:hover {
@@ -431,7 +431,7 @@
 }
 
 .selectOptionWrapper {
-  padding: 7px 12px 7px 20px;
+  padding: 7px var(--space-3) 7px var(--space-5);
   &.ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
     font-weight: unset;
     color: var(--color-white);
@@ -475,7 +475,7 @@
     &.ant-select-single.ant-select-show-arrow .ant-select-content-value,
     .ant-select-single.ant-select-show-arrow .ant-select-placeholder {
       opacity: 1;
-      font-size: 13px;
+      font-size: var(--font-sm);
     }
     &.ant-select-single.ant-select-open .ant-select-selection-item,
     &.ant-select-single.ant-select-open .ant-select-content-value {
@@ -530,7 +530,7 @@
       line-height: 10px;
     }
     &.ant-picker-range .ant-picker-input > input {
-      font-size: 13px;
+      font-size: var(--font-sm);
     }
     &[readonly] {
       caret-color: transparent;
@@ -588,7 +588,7 @@
     width: 32px;
     height: 32px;
     border-radius: var(--radius-sm);
-    padding: 4px;
+    padding: var(--space-1);
     border: 1px solid var(--color-border-primary);
     background-color: var(--color-background-primary);
     .colorBlock {

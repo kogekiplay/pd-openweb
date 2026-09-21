@@ -8,7 +8,7 @@ body {
   position: relative;
   overflow: hidden;
   &.isGenerating {
-    padding: 12px;
+    padding: var(--space-3);
     border-radius: 6px;
     background-color: var(--color-mingo-transparent);
     > * {
@@ -58,17 +58,17 @@ body {
 .assignValueBody {
   overflow-x: hidden !important;
   padding: 0 !important;
-  padding-bottom: 20px !important;
+  padding-bottom: var(--space-5) !important;
 }
 
 .scoreSwitchScoreConfirm {
   .ant-modal-body {
-    padding: 20px 24px;
+    padding: var(--space-5) var(--space-6);
   }
 }
 
 .tipsIcon {
-  margin-left: 4px;
+  margin-left: var(--space-1);
 }
 
 .textRegexpVerifyDialog {
@@ -79,7 +79,7 @@ body {
 
 .subListSortCondition {
   .itemText {
-    padding-left: 16px;
+    padding-left: var(--space-4);
   }
 }
 

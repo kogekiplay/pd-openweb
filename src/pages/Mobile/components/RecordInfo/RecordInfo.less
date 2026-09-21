@@ -4,8 +4,8 @@
   &.recordInfoPage {
     // 兼容APP内访问落地页时底部安全区域背景色与记录详情背景色不一致
     min-height: 100vh;
-    padding-bottom: calc(constant(safe-area-inset-bottom) - 20px);
-    padding-bottom: calc(env(safe-area-inset-bottom) - 20px);
+    padding-bottom: calc(constant(safe-area-inset-bottom) - var(--space-5));
+    padding-bottom: calc(env(safe-area-inset-bottom) - var(--space-5));
   }
   .recordScroll {
     -webkit-overflow-scrolling: touch;
@@ -29,7 +29,7 @@
     align-items: center;
   }
   .header {
-    padding: 0 20px 10px;
+    padding: 0 var(--space-5) 10px;
   }
   .payWrap {
     height: 50px;
@@ -50,13 +50,13 @@
     }
   }
   .sheetNameWrap {
-    padding: 16px 20px;
+    padding: var(--space-4) var(--space-5);
     align-items: center;
     justify-content: space-between;
   }
   .sheetName {
     color: var(--color-text-tertiary);
-    font-size: 13px;
+    font-size: var(--font-sm);
     background-color: var(--color-background-secondary);
     border-radius: 20px;
     padding: 0 10px;
@@ -130,7 +130,7 @@
   }
   .title {
     color: var(--color-text-primary);
-    font-size: 24px;
+    font-size: var(--font-3xl);
     font-weight: bold;
     word-break: break-all;
   }
@@ -151,13 +151,13 @@
   }
   .mobileFieldsContainer {
     overflow: hidden;
-    padding: 20px;
+    padding: var(--space-5);
   }
   .customFieldsContainer {
-    padding: 0 20px;
+    padding: 0 var(--space-5);
   }
   .saveWrapper {
-    padding: 10px 20px 10px;
+    padding: 10px var(--space-5) 10px;
     background-color: var(--color-background-primary);
     .save {
       color: var(--color-white);
@@ -181,11 +181,11 @@
       display: none;
     }
     .am-tabs-default-bar-tab {
-      font-size: 14px;
+      font-size: var(--font-md);
       font-weight: 500;
       width: auto !important;
       border-bottom: none !important;
-      padding: 0 12px !important;
+      padding: 0 var(--space-3) !important;
       position: relative;
       .tabName {
         max-width: 100px;
@@ -195,7 +195,7 @@
         content: none !important;
       }
       &:first-child {
-        margin-left: 8px;
+        margin-left: var(--space-2);
       }
     }
     .am-tabs-default-bar-tab-active .tabName {
@@ -220,8 +220,8 @@
   .extraAction {
     position: fixed;
     bottom: 80px;
-    padding-bottom: calc(~'constant(safe-area-inset-bottom) - 20px');
-    padding-bottom: calc(~'env(safe-area-inset-bottom) - 20px');
+    padding-bottom: calc(~'constant(safe-area-inset-bottom) - var(--space-5)');
+    padding-bottom: calc(~'env(safe-area-inset-bottom) - var(--space-5)');
     right: 20px;
     z-index: 100;
     &.low {
@@ -312,12 +312,12 @@
   width: 40px;
   height: 40px;
   text-align: center;
-  font-size: 18px;
+  font-size: var(--font-xl);
   border-radius: 50%;
   background-color: var(--color-background-card);
   box-shadow: var(--shadow-md);
   z-index: 99;
-  padding-bottom: calc(~'constant(safe-area-inset-bottom) - 20px');
-  padding-bottom: calc(~'env(safe-area-inset-bottom) - 20px');
+  padding-bottom: calc(~'constant(safe-area-inset-bottom) - var(--space-5)');
+  padding-bottom: calc(~'env(safe-area-inset-bottom) - var(--space-5)');
   color: var(--color-text-secondary);
 }

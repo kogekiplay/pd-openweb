@@ -82,7 +82,7 @@ const ArrowUp = styled.span`
   cursor: pointer;
   &:hover,
   &.active {
-    border-color: transparent transparent #1677ff transparent;
+    border-color: transparent transparent var(--color-primary) transparent;
   }
 `;
 

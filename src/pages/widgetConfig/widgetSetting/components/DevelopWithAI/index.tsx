@@ -31,7 +31,7 @@ const Header = styled.div`
   background: var(--color-background-primary);
   box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.08);
   flex-shrink: 0;
-  padding: 0 16px;
+  padding: 0 var(--space-4);
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -70,7 +70,7 @@ const Preview = styled(Card)`
 
 const Editor = styled(Card)`
   position: relative;
-  padding-bottom: 20px;
+  padding-bottom: var(--space-5);
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -79,7 +79,7 @@ const Editor = styled(Card)`
     font-family: monospace;
   }
   hr {
-    margin: 0 20px;
+    margin: 0 var(--space-5);
     border: none;
     border-top: 1px solid var(--color-border-primary);
   }
@@ -90,7 +90,7 @@ const EditorHeader = styled.div`
   flex-direction: row;
   align-items: center;
   height: 48px;
-  padding: 0 20px;
+  padding: 0 var(--space-5);
   flex-shrink: 0;
 `;
 
@@ -110,13 +110,13 @@ const Terminal = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin: 0 20px;
+    margin: 0 var(--space-5);
     border-top: 1px solid var(--color-border-primary);
     border-bottom: 1px solid var(--color-border-primary);
   }
   .content {
     flex: 1;
-    padding: 4px 20px;
+    padding: var(--space-1) var(--space-5);
     color: var(--color-error);
   }
 `;
@@ -143,11 +143,11 @@ const ExitButton = styled.div`
   cursor: pointer;
   font-weight: bold;
   border-radius: var(--radius-sm);
-  padding: 0 20px;
+  padding: 0 var(--space-5);
   background: var(--color-background-secondary);
   height: 34px;
   line-height: 34px;
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-primary);
   &:hover {
     background: var(--color-border-secondary);

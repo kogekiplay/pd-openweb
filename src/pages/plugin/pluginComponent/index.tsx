@@ -59,7 +59,7 @@ const Wrapper = styled.div`
           padding: 10px;
           font-weight: 600;
           display: inline-block;
-          font-size: 16px;
+          font-size: var(--font-lg);
         }
         &.isCur {
           border-bottom: 4px solid var(--color-primary);
@@ -73,26 +73,26 @@ const Wrapper = styled.div`
   .contentWrapper {
     display: flex;
     flex-direction: column;
-    padding: 32px;
+    padding: var(--space-8);
     .contentHeader {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: var(--space-3);
       .searchInput {
         width: 220px;
         min-width: 220px;
         height: 36px;
-        margin-right: 24px;
+        margin-right: var(--space-6);
       }
       .filterDropdown {
         width: 120px;
         .Dropdown--input {
-          padding: 4px 8px 4px 12px;
+          padding: var(--space-1) var(--space-2) var(--space-1) var(--space-3);
         }
       }
       .headerBtn {
-        padding: 8px 24px;
+        padding: var(--space-2) var(--space-6);
         background: var(--color-primary);
         border-radius: 18px;
         color: var(--color-white);
@@ -100,7 +100,7 @@ const Wrapper = styled.div`
         cursor: pointer;
 
         &:hover {
-          background: var(--color-link-hover);
+          background: var(--color-primary-dark);
         }
       }
     }
@@ -112,7 +112,7 @@ const PluginListBox = styled.div`
     display: flex;
     align-items: center;
     margin: 0;
-    padding: 14px 8px;
+    padding: 14px var(--space-2);
     border-bottom: 1px solid var(--color-border-secondary);
   }
 
@@ -120,7 +120,7 @@ const PluginListBox = styled.div`
     display: flex;
     align-items: center;
     margin: 0;
-    padding: 8px;
+    padding: var(--space-2);
     border-bottom: 1px solid var(--color-border-secondary);
     cursor: pointer;
     &.isActive {
@@ -139,7 +139,7 @@ const PluginListBox = styled.div`
   }
 
   .name {
-    padding-right: 8px;
+    padding-right: var(--space-2);
     width: 0;
     flex: 9;
   }

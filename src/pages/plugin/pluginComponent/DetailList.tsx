@@ -16,7 +16,7 @@ const ListWrapper = styled.div`
     display: flex;
     align-items: center;
     margin: 0;
-    padding: 12px 16px;
+    padding: var(--space-3) var(--space-4);
     border-bottom: 1px solid var(--color-border-primary);
     .operate {
       text-align: right;
@@ -36,12 +36,12 @@ const ListWrapper = styled.div`
     .currentTag {
       height: 24px;
       line-height: 24px;
-      padding: 0px 8px;
+      padding: 0px var(--space-2);
       background: var(--color-success-bg);
       border-radius: 36px;
       color: var(--color-success);
       font-weight: 600;
-      font-size: 12px;
+      font-size: var(--font-xs);
       margin: 0px 6px;
       white-space: nowrap;
     }
@@ -49,14 +49,14 @@ const ListWrapper = styled.div`
       width: 20px;
       height: 20px;
       border-radius: 50%;
-      margin-right: 4px;
+      margin-right: var(--space-1);
     }
     .operateCon {
       display: none;
 
       .redBtn {
         color: var(--color-error);
-        margin-left: 12px;
+        margin-left: var(--space-3);
       }
       span {
         cursor: pointer;
@@ -71,7 +71,7 @@ const ListWrapper = styled.div`
     .version,
     .message {
       width: 0;
-      padding-right: 8px;
+      padding-right: var(--space-2);
     }
     .message {
       flex: 6;
@@ -115,7 +115,7 @@ const ListWrapper = styled.div`
     .createUser {
       flex: 4;
       width: 0;
-      padding-right: 8px;
+      padding-right: var(--space-2);
     }
     .createTime {
       flex: 3;
@@ -164,7 +164,7 @@ const NoDataWrapper = styled.div`
 
 const SecretDetailItem = styled.div`
   display: flex;
-  margin-bottom: 16px;
+  margin-bottom: var(--space-4);
   .labelText {
     width: 140px;
     color: var(--color-text-secondary);
@@ -173,7 +173,7 @@ const SecretDetailItem = styled.div`
     width: 180px;
     height: 36px;
     line-height: 36px;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     border-radius: var(--radius-sm);
     background: var(--color-background-secondary);
   }

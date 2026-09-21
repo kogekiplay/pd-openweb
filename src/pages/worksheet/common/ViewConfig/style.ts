@@ -38,7 +38,7 @@ export const TimeDropdownChoose = styled.div`
       span {
         line-height: 36px;
         height: 36px;
-        font-size: 13px;
+        font-size: var(--font-sm);
       }
     }
   }
@@ -123,7 +123,7 @@ export const ViewSettingWrap = styled.div`
     }
   }
   .settingContent {
-    margin-top: 8px;
+    margin-top: var(--space-2);
   }
   .Dropdown {
     background-color: var(--color-background-primary);

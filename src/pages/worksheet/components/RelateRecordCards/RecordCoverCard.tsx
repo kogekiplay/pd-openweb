@@ -63,7 +63,7 @@ const Content = styled.div`
 
 const Title = styled.div`
   font-weight: bold;
-  font-size: 14px;
+  font-size: var(--font-md);
   line-height: 20px;
   color: var(--color-text-title);
   width: 100%;
@@ -80,7 +80,7 @@ const Title = styled.div`
 const ControlCon = styled.div`
   display: flex;
   flex: 1;
-  padding: 12px 16px;
+  padding: var(--space-3) var(--space-4);
   overflow: hidden;
   flex-direction: ${({ small }) => (small ? 'column' : 'row')};
   .cover {

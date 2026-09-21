@@ -109,7 +109,7 @@ const Wrap = styled.div`
     overflow-y: auto;
     border: 1px dashed var(--color-border-secondary);
     box-sizing: border-box;
-    margin-bottom: 20px;
+    margin-bottom: var(--space-5);
     .uploadImg {
       width: 52px;
       height: 59px;
@@ -120,7 +120,7 @@ const Wrap = styled.div`
       line-height: 34px;
       border: 1px solid var(--color-primary);
       border-radius: var(--radius-sm);
-      padding: 0 12px;
+      padding: 0 var(--space-3);
       box-sizing: border-box;
     }
     .errTip {

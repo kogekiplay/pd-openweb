@@ -12,7 +12,7 @@ const Wrap = styled.div`
   h5 {
     margin: 0;
   }
-  padding: 20px;
+  padding: var(--space-5);
   width: 640px;
   background: var(--color-background-primary);
   border: 1px solid var(--color-border-primary);
@@ -24,7 +24,7 @@ const Wrap = styled.div`
   top: 100px;
   .title {
     font-weight: 400;
-    margin-top: 24px;
+    margin-top: var(--space-6);
   }
   .upload,
   .logo {
@@ -33,7 +33,7 @@ const Wrap = styled.div`
     background: var(--color-background-primary);
     border: 1px solid var(--color-border-secondary);
     border-radius: 50%;
-    margin-top: 8px;
+    margin-top: var(--space-2);
     display: inline-block;
     line-height: 56px;
     text-align: center;
@@ -42,7 +42,7 @@ const Wrap = styled.div`
   input,
   textarea {
     border: 1px solid var(--color-border-primary);
-    padding: 8px 58px 8px 15px;
+    padding: var(--space-2) 58px var(--space-2) 15px;
     border-radius: var(--radius-sm);
     width: 100%;
     &:focus {
@@ -54,14 +54,14 @@ const Wrap = styled.div`
     resize: none;
   }
   .btn {
-    margin-top: 32px;
-    padding: 8px 32px;
+    margin-top: var(--space-8);
+    padding: var(--space-2) var(--space-8);
     background: var(--color-primary);
     color: var(--color-white);
     line-height: 1em;
     border-radius: var(--radius-sm);
     &:hover {
-      background: var(--color-link-hover);
+      background: var(--color-primary-dark);
     }
   }
   .num {

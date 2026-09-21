@@ -35,7 +35,7 @@ const MarkdownContent = styled.div`
   }
   .markdown-body {
     h1 {
-      font-size: 16px !important;
+      font-size: var(--font-lg) !important;
       padding-bottom: 0 !important;
       border: none !important;
       line-height: normal !important;

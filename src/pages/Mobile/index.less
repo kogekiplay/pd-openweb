@@ -4,8 +4,8 @@
 html,
 body {
   height: 100%;
-  padding-bottom: calc(~'constant(safe-area-inset-bottom) - 20px');
-  padding-bottom: calc(~'env(safe-area-inset-bottom) - 20px');
+  padding-bottom: calc(~'constant(safe-area-inset-bottom) - var(--space-5)');
+  padding-bottom: calc(~'env(safe-area-inset-bottom) - var(--space-5)');
   background: var(--color-background-secondary) !important;
 }
 
@@ -54,7 +54,7 @@ input::placeholder {
   }
   .adm-action-sheet-button-item {
     text-align: left;
-    padding: 12px 15px;
+    padding: var(--space-3) 15px;
     .adm-action-sheet-button-item-name {
       font-size: 15px;
       display: flex;
@@ -79,7 +79,7 @@ input::placeholder {
 
 .md-adm-actionSheet.adm-action-sheet-popup {
   .adm-action-sheet-extra {
-    padding: 10px 20px 6px !important;
+    padding: 10px var(--space-5) 6px !important;
   }
 }
 
@@ -107,7 +107,7 @@ input::placeholder {
     background-color: var(--color-border-secondary);
   }
   .disabled .am-list-content {
-    color: var(--color-text-title) 80 !important;
+    color: color-mix(in srgb, var(--color-text-title) 50%, transparent) !important;
   }
 }
 

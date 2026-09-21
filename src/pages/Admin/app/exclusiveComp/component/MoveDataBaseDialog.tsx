@@ -13,8 +13,8 @@ const ContentWrap = styled.ul`
   height: 100%;
   overflow-y: scroll;
   > li {
-    margin-bottom: 20px;
-    padding: 16px 20px;
+    margin-bottom: var(--space-5);
+    padding: var(--space-4) var(--space-5);
     border-radius: 6px 6px 6px 6px;
     border: 1px solid var(--color-border-secondary);
     cursor: pointer;

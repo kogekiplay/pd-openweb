@@ -78,8 +78,8 @@ const SearchFolderCon = styled.ul`
     .icon {
       color: var(--color-text-placeholder);
       display: inline-block;
-      font-size: 14px;
-      margin-right: 8px;
+      font-size: var(--font-md);
+      margin-right: var(--space-2);
     }
     &.selected {
       background-color: var(--color-primary);

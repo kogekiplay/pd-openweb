@@ -264,7 +264,7 @@ export default function CustomPageHeader(props) {
     const res = toArray();
     return (
       <div className="customPageAutoLinkagePopover">
-        <div className="valignWrapper" style={{ padding: '0 4px 0 9px' }}>
+        <div className="valignWrapper" style={{ padding: '0 var(--space-1) 0 9px' }}>
           <div className="Font17 bold textPrimary flex">{_l('联动筛选')}</div>
           <Icon
             className="Font24 textTertiary pointer"

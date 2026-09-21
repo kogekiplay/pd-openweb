@@ -16,8 +16,8 @@ export const Con = styled.div`
   box-shadow: var(--shadow-lg);
   .moduleName {
     color: var(--color-text-tertiary);
-    font-size: 13px;
-    margin: 10px 16px;
+    font-size: var(--font-sm);
+    margin: 10px var(--space-4);
   }
   .searchUser {
   }
@@ -27,36 +27,36 @@ export const Content = styled.div`
   height: 328px;
   overflow: auto;
   hr {
-    margin: 12px 7px;
+    margin: var(--space-3) 7px;
     border: none;
     border-top: 1px solid --color-background-disabled;
   }
   .moreBtn {
     color: var(--color-primary);
     cursor: pointer;
-    padding: 4px 0 0 16px;
+    padding: var(--space-1) 0 0 var(--space-4);
   }
 `;
 
 export const UserItemCon = styled.div`
   height: 44px;
-  padding: 0 16px;
+  padding: 0 var(--space-4);
   display: flex;
   align-items: center;
   cursor: pointer;
   .userHead {
-    margin-right: 12px;
+    margin-right: var(--space-3);
   }
   .text {
     overflow: hidden;
   }
   .name {
     color: var(--color-text-title);
-    font-size: 13px;
+    font-size: var(--font-sm);
   }
   .description {
     color: var(--color-text-tertiary);
-    font-size: 12px;
+    font-size: var(--font-xs);
     .splitter {
       margin: 0 6px;
     }
@@ -78,22 +78,22 @@ export const UserListCon = styled.div`
 export const SearchUsers = styled.div`
   display: flex;
   align-items: center;
-  padding: 0 16px;
+  padding: 0 var(--space-4);
   height: 36px;
   margin: 6px 0;
   .search {
-    font-size: 18px;
+    font-size: var(--font-xl);
     color: var(--color-text-disabled);
-    margin-right: 4px;
+    margin-right: var(--space-1);
   }
   .close {
-    font-size: 16px;
+    font-size: var(--font-lg);
     color: var(--color-text-tertiary);
-    margin: 0 4px;
+    margin: 0 var(--space-1);
     cursor: pointer;
   }
   .openAddress {
-    font-size: 18px;
+    font-size: var(--font-xl);
     color: var(--color-text-secondary);
     cursor: pointer;
     &:hover {
@@ -105,7 +105,7 @@ export const SearchUsers = styled.div`
     line-height: 36px;
     outline: none;
     border: none;
-    margin-right: 12px;
+    margin-right: var(--space-3);
     &::placeholder {
       color: var(--color-text-disabled);
     }

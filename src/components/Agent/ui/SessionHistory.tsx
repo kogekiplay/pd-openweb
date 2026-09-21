@@ -16,7 +16,7 @@ const Body = styled.div`
   height: 400px;
   .searchBox {
     flex-shrink: 0;
-    margin-bottom: 12px;
+    margin-bottom: var(--space-3);
     height: 36px;
     padding: 0 10px;
     border: 1px solid var(--color-border-primary);
@@ -26,23 +26,23 @@ const Body = styled.div`
       border-color: var(--color-border-hover);
     }
     .icon-search {
-      font-size: 18px;
+      font-size: var(--font-xl);
       color: var(--color-text-tertiary);
     }
     input {
       flex: 1;
-      margin: 0 8px;
+      margin: 0 var(--space-2);
       border: none;
       outline: none;
       background: transparent;
-      font-size: 14px;
+      font-size: var(--font-md);
       color: var(--color-text-primary);
       &::placeholder {
         color: var(--color-text-secondary);
       }
     }
     .icon-cancel {
-      font-size: 16px;
+      font-size: var(--font-lg);
       color: var(--color-text-tertiary);
       cursor: pointer;
       &:hover {
@@ -55,23 +55,23 @@ const Body = styled.div`
     .sessionItem {
       cursor: pointer;
       border-radius: var(--radius-sm);
-      padding: 0 12px;
+      padding: 0 var(--space-3);
       height: 42px;
       font-size: 15px;
       color: var(--color-text-primary);
       .updateTime {
-        margin-left: 12px;
-        font-size: 12px;
+        margin-left: var(--space-3);
+        font-size: var(--font-xs);
         color: var(--color-text-secondary);
         white-space: nowrap;
       }
       .operateIcon {
-        margin-left: 8px;
+        margin-left: var(--space-2);
         width: 24px;
         height: 24px;
         flex-shrink: 0;
         border-radius: var(--radius-sm);
-        font-size: 14px;
+        font-size: var(--font-md);
         color: var(--color-text-secondary);
         cursor: pointer;
         display: none;
@@ -93,8 +93,8 @@ const Body = styled.div`
       }
     }
     .emptyStatus {
-      padding: 24px 0;
-      font-size: 14px;
+      padding: var(--space-6) 0;
+      font-size: var(--font-md);
       color: var(--color-text-tertiary);
       text-align: center;
     }

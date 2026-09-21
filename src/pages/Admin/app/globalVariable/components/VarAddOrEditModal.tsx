@@ -42,27 +42,27 @@ const VarDrawer = styled(Drawer)`
 
     .formContent {
       flex: 1;
-      padding: 8px 24px;
+      padding: var(--space-2) var(--space-6);
       overflow: auto;
     }
     .footer {
       min-height: 66px;
       justify-content: flex-end;
-      padding: 10px 24px 20px;
+      padding: 10px var(--space-6) var(--space-5);
       text-align: left;
     }
   }
 `;
 
 const FormItem = styled.div`
-  margin-bottom: 20px;
+  margin-bottom: var(--space-5);
   .labelText {
-    font-size: 14px;
+    font-size: var(--font-md);
     font-weight: 600;
     margin-bottom: 10px;
     .requiredStar {
       color: var(--color-error);
-      margin-left: 4px;
+      margin-left: var(--space-1);
     }
   }
   input {

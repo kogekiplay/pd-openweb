@@ -147,7 +147,7 @@ const ComposerArea = styled.div`
   width: 100%;
   max-width: 792px;
   margin: 0 auto;
-  padding: 8px 16px 16px;
+  padding: var(--space-2) var(--space-4) var(--space-4);
 `;
 
 // 待答提问卡：绝对贴底悬浮（相对 Wrap），不占文档流、不挤压对话区；
@@ -165,7 +165,7 @@ const DockedAskLayer = styled.div`
   max-width: 792px;
   max-height: calc(100% - 12px);
   margin: 0 auto;
-  padding: 8px 16px 16px;
+  padding: var(--space-2) var(--space-4) var(--space-4);
   pointer-events: none;
   > * {
     pointer-events: auto;
@@ -173,7 +173,7 @@ const DockedAskLayer = styled.div`
 `;
 
 const DebugLine = styled.div`
-  margin: 2px 0 8px;
+  margin: 2px 0 var(--space-2);
   font-family: 'SFMono-Regular', 'SF Mono', Menlo, Consolas, monospace;
   font-size: 11px;
   color: var(--color-text-tertiary);
@@ -183,9 +183,9 @@ const DebugLine = styled.div`
 const LoadingRow = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   .loadingHint {
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-secondary);
   }
 `;
@@ -195,12 +195,12 @@ const EmptyState = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 48px 24px;
+  padding: 48px var(--space-6);
   color: var(--color-text-secondary);
   text-align: center;
   gap: 6px;
   .title {
-    font-size: 16px;
+    font-size: var(--font-lg);
     font-weight: 600;
     color: var(--color-text-primary);
   }

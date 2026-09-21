@@ -17,7 +17,7 @@ const Wrap = styled.div`
   }
   .item {
     cursor: pointer;
-    padding: 20px 0;
+    padding: var(--space-5) 0;
     border-bottom: 1px solid --color-background-disabled;
     &:hover {
       .langName {
@@ -109,7 +109,7 @@ export default function LingualList(props) {
   const portionLangList = selectAllLangList.filter(data => !data.isSystemLang);
 
   return (
-    <Wrap className="h100 flexColumn" style={{ padding: '20px 40px' }}>
+    <Wrap className="h100 flexColumn" style={{ padding: 'var(--space-5) 40px' }}>
       <AppSettingHeader
         title={_l('语言')}
         addBtnName={_l('添加语言')}

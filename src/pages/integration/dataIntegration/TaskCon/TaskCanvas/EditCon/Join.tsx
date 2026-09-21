@@ -38,7 +38,7 @@ const PopupWrap = styled.ul`
       opacity: 0;
       display: none;
       transition: all 0.5s;
-      padding: 16px 24px;
+      padding: var(--space-4) var(--space-6);
       .titleTips {
         padding-bottom: 10px;
       }

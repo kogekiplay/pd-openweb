@@ -47,7 +47,7 @@ const Drag = styled(DragCore)`
 const MingoContentWrap = styled.div`
   position: relative;
   height: 100%;
-  padding: 0 0 12px;
+  padding: 0 0 var(--space-3);
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -63,7 +63,7 @@ const MingoContentWrap = styled.div`
   }
   .sendCon {
     position: relative;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     margin: 0 auto;
     width: 100%;
     .textAreaCon {
@@ -87,17 +87,17 @@ const MingoContentWrap = styled.div`
       font-weight: bold;
     }
     .try-tip {
-      font-size: 14px !important;
+      font-size: var(--font-md) !important;
       color: var(--color-text-secondary) !important;
-      margin-bottom: 12px !important;
+      margin-bottom: var(--space-3) !important;
     }
     .presetQuestions {
-      gap: 8px;
+      gap: var(--space-2);
       .presetQuestion {
         height: 40px;
         line-height: 38px;
-        padding: 0 12px;
-        font-size: 14px;
+        padding: 0 var(--space-3);
+        font-size: var(--font-md);
         font-weight: 500;
         &:hover {
           background: inherit;
@@ -108,7 +108,7 @@ const MingoContentWrap = styled.div`
 `;
 
 const ChatBotHeader = styled.div`
-  margin: 16px 0 10px;
+  margin: var(--space-4) 0 10px;
   .welcomeText {
     font-size: 15px;
     color: var(--color-text-primary);
@@ -116,7 +116,7 @@ const ChatBotHeader = styled.div`
   .tryTry {
     margin-top: 15px;
     .try-tip {
-      font-size: 13px;
+      font-size: var(--font-sm);
       color: var(--color-text-tertiary);
       margin-bottom: 10px;
     }
@@ -126,13 +126,13 @@ const ChatBotHeader = styled.div`
     flex-wrap: wrap;
     gap: 10px;
     .presetQuestion {
-      font-size: 14px;
+      font-size: var(--font-md);
       color: var(--color-text-primary);
       cursor: pointer;
       border-radius: 36px;
       height: 36px;
       line-height: 34px;
-      padding: 0 16px;
+      padding: 0 var(--space-4);
       border: 1px solid var(--color-border-secondary);
       &:hover {
         background: var(--color-background-disabled);

@@ -9,7 +9,7 @@ export const Con = styled.div`
   padding-bottom: 100px;
   h5,
   h6 {
-    font-size: 14px;
+    font-size: var(--font-md);
     font-weight: 600;
     color: var(--color-text-title);
     margin-top: 38px;
@@ -36,7 +36,7 @@ export const Con = styled.div`
   }
   .con {
     width: 100%;
-    padding: 24px 16px;
+    padding: var(--space-6) var(--space-4);
     background: var(--color-background-primary);
     border-radius: 8px;
     border: 1px solid var(--color-border-secondary);
@@ -66,7 +66,7 @@ export const Con = styled.div`
         color: var(--color-white);
         line-height: 32px;
         min-height: 32px;
-        padding: 0 20px;
+        padding: 0 var(--space-5);
         background: var(--color-primary);
         border-radius: var(--radius-sm);
         max-width: 155px;
@@ -113,7 +113,7 @@ export const Con = styled.div`
   }
   .moreActionCon {
     border-top: 1px solid var(--color-border-secondary);
-    padding-bottom: 20px;
+    padding-bottom: var(--space-5);
     align-items: center;
     justify-content: center;
     .SwitchDisable {
@@ -129,7 +129,7 @@ export const Con = styled.div`
   }
   .autoreserveCon {
     .Radio {
-      margin-top: 12px;
+      margin-top: var(--space-3);
     }
   }
   .w200 {
@@ -150,7 +150,7 @@ export const Con = styled.div`
     .itemT {
       background: var(--color-background-secondary);
       border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
-      padding: 2px 8px 2px 10px;
+      padding: 2px var(--space-2) 2px 10px;
       line-height: 18px;
       border: 1px solid var(--color-border-secondary);
       overflow: hidden;
@@ -186,7 +186,7 @@ export const Wrap = styled.div`
   background: var(--color-background-primary);
   box-shadow: 0px 3px 12px 1px rgba(0, 0, 0, 0.1607843137254902);
   border-radius: var(--radius-sm);
-  padding: 16px;
+  padding: var(--space-4);
   p {
     margin: 0;
   }
@@ -195,7 +195,7 @@ export const Wrap = styled.div`
     line-height: 36px;
     border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-primary);
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     &:focus {
       border: 1px solid var(--color-primary);
     }
@@ -206,10 +206,10 @@ export const WrapTxt = styled.div`
   background: var(--color-background-secondary);
   border: 1px solid var(--color-border-primary);
   border-radius: var(--radius-sm);
-  padding: 16px;
+  padding: var(--space-4);
   box-sizing: border-box;
   color: var(--color-text-title);
-  margin-top: 12px;
+  margin-top: var(--space-3);
   display: flex;
   &.createCon {
     background: var(--color-background-primary);
@@ -220,7 +220,7 @@ export const WrapTxt = styled.div`
     flex-shrink: 0;
     min-width: 0;
     flex: 1;
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-title);
     line-height: 24px;
 
@@ -232,7 +232,7 @@ export const WrapTxt = styled.div`
 
       .titleTxt {
         width: 100px;
-        font-size: 13px;
+        font-size: var(--font-sm);
         line-height: 22px;
         display: inline-block;
         min-width: 0;
@@ -242,7 +242,7 @@ export const WrapTxt = styled.div`
       .txt {
         flex: 1;
         font-weight: 500;
-        font-size: 13px;
+        font-size: var(--font-sm);
         min-width: 0;
         flex-shrink: 0;
       }

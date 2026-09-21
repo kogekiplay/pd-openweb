@@ -52,7 +52,7 @@ const Wrapper = styled.div`
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
-      padding: 24px 0 16px;
+      padding: var(--space-6) 0 var(--space-4);
       white-space: nowrap;
       .logoWrapper {
         display: flex;
@@ -86,8 +86,8 @@ const Wrapper = styled.div`
     .sortableCardsWrap {
       display: flex;
       flex-wrap: wrap;
-      gap: 20px;
-      margin-bottom: 20px;
+      gap: var(--space-5);
+      margin-bottom: var(--space-5);
 
       .sortItem {
         width: 100%;
@@ -106,7 +106,7 @@ const NewThemeSet = styled.div`
   width: 32px;
   height: 32px;
   border-radius: var(--radius-sm);
-  margin-right: 16px;
+  margin-right: var(--space-4);
   cursor: pointer;
 
   .newThemeIcon {

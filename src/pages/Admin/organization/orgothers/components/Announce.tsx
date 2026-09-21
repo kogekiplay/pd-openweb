@@ -24,7 +24,7 @@ const WrapCom = styled.div`
     }
     .toolItemLabel {
       width: 155px;
-      font-size: 13px;
+      font-size: var(--font-sm);
       color: var(--color-text-title);
     }
     .toolItemRight {
@@ -38,7 +38,7 @@ const WrapCom = styled.div`
       .mesDescribe {
         display: flex;
         align-items: center;
-        font-size: 13px;
+        font-size: var(--font-sm);
         .color_g {
           color: var(--color-text-secondary);
         }
@@ -48,7 +48,7 @@ const WrapCom = styled.div`
         display: flex;
         align-items: center;
         color: var(--color-text-title);
-        font-size: 13px;
+        font-size: var(--font-sm);
       }
     }
   }

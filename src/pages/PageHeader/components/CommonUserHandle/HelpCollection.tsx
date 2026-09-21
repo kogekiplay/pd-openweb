@@ -72,7 +72,7 @@ const collections = () => {
 
 const CollectionWrap = styled.div`
   width: 340px;
-  padding: 12px;
+  padding: var(--space-3);
   box-sizing: border-box;
   background: var(--color-background-primary);
   box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.25);
@@ -97,7 +97,7 @@ const CollectionWrap = styled.div`
     display: flex;
     align-items: center;
     color: var(--color-text-title);
-    font-size: 14px;
+    font-size: var(--font-md);
     border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     &:hover {
       background: var(--color-background-hover);

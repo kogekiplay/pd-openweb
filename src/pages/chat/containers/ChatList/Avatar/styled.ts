@@ -5,14 +5,14 @@ export const Wrap = styled.div`
     background-color: var(--color-background-tertiary);
   }
   .horizontalPadding {
-    padding: 0 12px;
+    padding: 0 var(--space-3);
   }
   .content {
     flex: 1;
     background-color: var(--color-background-card);
   }
   .footer {
-    padding: 24px 10px;
+    padding: var(--space-6) 10px;
     background-color: var(--color-background-card);
   }
   .divider {
@@ -21,7 +21,7 @@ export const Wrap = styled.div`
     background-color: var(--color-border-secondary);
   }
   .itemWrap {
-    padding: 7px 20px;
+    padding: 7px var(--space-5);
     &.notHover:hover {
       background-color: initial;
     }
@@ -33,7 +33,7 @@ export const Wrap = styled.div`
     color: var(--color-error) !important;
   }
   .myAccount {
-    padding: 3px 8px;
+    padding: 3px var(--space-2);
     border-radius: var(--radius-sm);
     &:hover {
       background-color: var(--color-border-secondary);
@@ -43,9 +43,9 @@ export const Wrap = styled.div`
     height: 32px;
     background-color: var(--color-background-primary);
     border-radius: 16px;
-    padding: 10px 12px;
+    padding: 10px var(--space-3);
     cursor: pointer;
-    margin: 16px 20px 0;
+    margin: var(--space-4) var(--space-5) 0;
     width: calc(100% - 24px);
     max-width: unset !important;
     &:hover {
@@ -66,10 +66,10 @@ export const Wrap = styled.div`
 export const PopoverWrap = styled.div`
   width: 280px;
   .horizontalPadding {
-    padding: 7px 20px;
+    padding: 7px var(--space-5);
   }
   .itemWrap {
-    padding: 7px 20px;
+    padding: 7px var(--space-5);
     &:hover,
     &.active {
       background-color: var(--color-background-hover);

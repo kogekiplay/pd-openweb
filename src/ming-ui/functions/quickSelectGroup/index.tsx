@@ -16,7 +16,7 @@ const SelectGroupWrap = styled.div(
     background-color: var(--color-background-card);
     border-radius: var(--radius-sm);
     box-shadow: ${showType === 1 ? 'var(--shadow-lg)' : 'none'};
-    padding-top: 16px;
+    padding-top: var(--space-4);
     text-align: left;
     .item,
     .projectItem {
@@ -42,7 +42,7 @@ const SelectGroupWrap = styled.div(
       }
     }
     .split {
-      margin: 5px 8px;
+      margin: 5px var(--space-2);
       height: 1px;
       background: var(--color-background-disabled);
     }

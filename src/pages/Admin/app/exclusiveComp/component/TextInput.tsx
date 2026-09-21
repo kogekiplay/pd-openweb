@@ -16,7 +16,7 @@ const FormGroup = styled.div`
     border-radius: var(--radius-sm);
     box-sizing: border-box;
     display: inline-block;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     line-height: 36px;
     &:hover {
       border-color: var(--color-text-disabled);

@@ -31,12 +31,12 @@ const Wrap = styled.div`
         color: var(--color-primary);
         border-radius: var(--radius-sm);
         display: block;
-        padding: 12px 0;
+        padding: var(--space-3) 0;
         cursor: pointer;
         text-align: center;
         font-weight: bold;
         .icon {
-          font-size: 20px;
+          font-size: var(--font-2xl);
         }
         &:hover {
           color: var(--color-link-hover);
@@ -47,7 +47,7 @@ const Wrap = styled.div`
     .iconWrap {
       display: inline-block;
       vertical-align: middle;
-      margin-left: 8px;
+      margin-left: var(--space-2);
     }
   }
   .noData {
@@ -67,7 +67,7 @@ const Wrap = styled.div`
       line-height: 1 !important;
       text-align: center;
       &.nodata {
-        margin: 32px auto 0 !important;
+        margin: var(--space-8) auto 0 !important;
       }
       & > span {
         width: 100% !important;
@@ -80,14 +80,14 @@ const Wrap = styled.div`
         border-radius: var(--radius-sm);
         color: var(--color-white);
         display: inline-block;
-        padding: 12px 32px;
+        padding: var(--space-3) var(--space-8);
         cursor: pointer;
         font-weight: bold;
         .icon {
-          font-size: 20px;
+          font-size: var(--font-2xl);
         }
         &:hover {
-          background: var(--color-link-hover);
+          background: var(--color-primary-dark);
         }
       }
     }

@@ -76,7 +76,7 @@ const WrapPopup = styled.div`
   width: 160px;
   & > div {
     line-height: 36px;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     font-weight: 400;
     &:hover {
       background: var(--color-primary);

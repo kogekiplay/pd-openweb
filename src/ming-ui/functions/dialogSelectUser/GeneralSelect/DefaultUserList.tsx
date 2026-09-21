@@ -17,7 +17,7 @@ const TitleWrapper = styled.div`
   .icon {
     margin-top: 1px;
     margin-left: 2px;
-    font-size: 18px;
+    font-size: var(--font-xl);
     ${({ open }) => open && 'transform: rotate(-90deg); display: none;'}
   }
   &:hover {

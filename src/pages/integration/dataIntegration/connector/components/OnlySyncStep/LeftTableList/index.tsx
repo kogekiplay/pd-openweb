@@ -24,17 +24,17 @@ const LeftListWrapper = styled.div`
       height: 36px;
       width: 100%;
       border-radius: var(--radius-sm);
-      font-size: 14px;
+      font-size: var(--font-md);
       cursor: pointer;
       .listItem {
         display: flex;
         justify-content: space-between;
         align-items: center;
         height: 20px;
-        margin: 8px 0;
+        margin: var(--space-2) 0;
         border-left: 3px solid transparent;
         span {
-          margin-left: 12px;
+          margin-left: var(--space-3);
           overflow: hidden;
           text-overflow: ellipsis;
           width: 150px;
@@ -42,7 +42,7 @@ const LeftListWrapper = styled.div`
         }
         .repeatIcon {
           color: var(--color-error);
-          margin-right: 8px;
+          margin-right: var(--space-2);
         }
         .deleteIcon {
           display: none;
@@ -82,8 +82,8 @@ const AddDataObjButton = styled.div`
   display: flex;
   align-items: center;
   width: fit-content;
-  margin-top: 20px;
-  padding-left: 12px;
+  margin-top: var(--space-5);
+  padding-left: var(--space-3);
   border: 0;
   border-radius: var(--radius-sm);
   color: var(--color-primary);
@@ -93,7 +93,7 @@ const AddDataObjButton = styled.div`
 const Wrapper = styled.div`
   .selectItem {
     width: 100% !important;
-    font-size: 13px;
+    font-size: var(--font-sm);
     &.ant-select,
     & .ant-select {
       --ant-select-border-radius: var(--radius-sm) !important;

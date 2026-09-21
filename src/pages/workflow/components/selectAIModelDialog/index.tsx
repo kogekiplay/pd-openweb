@@ -19,8 +19,8 @@ const DialogWrapper = styled(Dialog)`
   }
   .mui-dialog-footer {
     border-top: 1px solid var(--color-border-primary);
-    padding-top: 16px !important;
-    padding-bottom: 16px !important;
+    padding-top: var(--space-4) !important;
+    padding-bottom: var(--space-4) !important;
   }
   .emptyContent {
     flex: 1;
@@ -57,7 +57,7 @@ const NavBox = styled.div`
   }
   .listItem {
     height: 40px;
-    padding: 0 20px;
+    padding: 0 var(--space-5);
     display: flex;
     align-items: center;
     cursor: pointer;
@@ -85,7 +85,7 @@ const ModelList = styled.ul`
     height: 40px;
     display: flex;
     align-items: center;
-    padding: 0 10px 0 16px;
+    padding: 0 10px 0 var(--space-4);
     cursor: pointer;
     &:hover {
       background-color: var(--color-background-hover);
@@ -97,7 +97,7 @@ const ModelList = styled.ul`
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background-color: var(--color-link-hover);
+      background-color: var(--color-primary-dark);
       margin-left: 2px;
     }
     img {
@@ -107,7 +107,7 @@ const ModelList = styled.ul`
     }
     &.multipleItem {
       padding-left: 10px;
-      gap: 8px;
+      gap: var(--space-2);
     }
   }
 `;
@@ -125,8 +125,8 @@ const ContentBox = styled.div`
     display: grid;
     grid-template-columns: fit-content(40%) max-content max-content;
     align-items: baseline;
-    row-gap: 8px;
-    padding: 8px 0;
+    row-gap: var(--space-2);
+    padding: var(--space-2) 0;
     align-items: center;
   }
   .priceRow {
@@ -142,18 +142,18 @@ const ContentBox = styled.div`
   }
   .listItem {
     height: 24px;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     display: flex;
     align-items: center;
     border-radius: 12px;
     border: 1px solid var(--color-text-disabled);
-    font-size: 12px;
-    margin-right: 8px;
+    font-size: var(--font-xs);
+    margin-right: var(--space-2);
     .dot {
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background-color: var(--color-link-hover);
+      background-color: var(--color-primary-dark);
       margin-left: 2px;
     }
   }
@@ -165,7 +165,7 @@ const ContentBox = styled.div`
   .tokenLimitLabel {
     color: var(--color-text-secondary);
     font-weight: 600;
-    margin-bottom: 8px;
+    margin-bottom: var(--space-2);
   }
   .tokenLimitValue {
     color: var(--color-text-primary);

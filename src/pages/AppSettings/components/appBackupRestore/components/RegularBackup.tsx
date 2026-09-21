@@ -9,14 +9,14 @@ import { Days, RegularBackupTabs } from '../enum';
 
 const RegularBackupWrap = styled.div`
   width: 350px;
-  padding: 14px 20px 20px;
+  padding: 14px var(--space-5) var(--space-5);
   background: var(--color-background-primary);
   box-shadow: var(--shadow-md);
   .icon-close {
     position: absolute;
     right: 10px;
     top: 10px;
-    font-size: 16px;
+    font-size: var(--font-lg);
   }
   .label {
     width: 70px;
@@ -24,7 +24,7 @@ const RegularBackupWrap = styled.div`
   }
   .weekWrap {
     border: 1px solid var(--color-background-secondary);
-    margin: 6px 0 16px;
+    margin: 6px 0 var(--space-4);
   }
   .weekItem {
     height: 36px;

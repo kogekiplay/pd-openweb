@@ -79,8 +79,8 @@ const LayoutContent = styled.div`
   .componentTitle {
     height: 32px;
     line-height: 32px;
-    margin-bottom: 4px;
-    font-size: 16px;
+    margin-bottom: var(--space-1);
+    font-size: var(--font-lg);
     color: var(--title-color);
   }
 `;

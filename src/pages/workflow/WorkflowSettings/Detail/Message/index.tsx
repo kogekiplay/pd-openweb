@@ -43,7 +43,7 @@ const TagBox = styled.div`
 
 const SmsServiceTipsCard = styled.div`
   width: 340px;
-  padding: 20px;
+  padding: var(--space-5);
   border: 1px solid var(--color-border-secondary);
   .icon {
     color: var(--color-warning);

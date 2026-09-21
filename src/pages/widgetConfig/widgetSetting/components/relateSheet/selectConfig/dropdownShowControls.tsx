@@ -16,7 +16,7 @@ const DropdownShowControlsWrap = styled.div`
     margin-right: 0;
     margin-top: 10px;
     &:last-child {
-      margin-top: 16px;
+      margin-top: var(--space-4);
     }
     display: flex;
     .Radio-text {

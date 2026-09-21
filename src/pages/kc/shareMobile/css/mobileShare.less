@@ -37,7 +37,7 @@
       display: inline-block;
       width: 36px;
       height: 36px;
-      margin: 7px 16px;
+      margin: 7px var(--space-4);
       overflow: hidden;
       background: url(../image/mingdao-logo.png);
       background-size: cover !important;
@@ -48,19 +48,19 @@
       width: 36px;
       height: 36px;
       border-radius: 50%;
-      margin: 7px 16px 7px 0;
+      margin: 7px var(--space-4) 7px 0;
     }
     .openAPP {
       display: inline-block;
       text-decoration: none;
       float: right;
-      margin: 10px 16px;
+      margin: 10px var(--space-4);
       width: 100px;
       height: 30px;
       text-align: center;
       line-height: 28px;
       color: var(--color-primary);
-      font-size: 13px;
+      font-size: var(--font-sm);
       border: 1px solid var(--color-primary);
       border-radius: var(--radius-sm);
     }
@@ -90,7 +90,7 @@
           text-indent: 0px;
           line-height: 24px;
           text-align: center;
-          font-size: 13px;
+          font-size: var(--font-sm);
         }
       }
       .fileName {
@@ -106,14 +106,14 @@
         text-align: center;
       }
       .iosTip {
-        font-size: 13px;
+        font-size: var(--font-sm);
         color: var(--color-text-disabled);
       }
     }
     .imagePreview {
       width: 100%;
       height: 100%;
-      padding: 16px;
+      padding: var(--space-4);
       overflow: hidden;
       text-align: center;
       .table {
@@ -142,7 +142,7 @@
       border-radius: var(--radius-sm);
     }
     .saveToMingDao {
-      margin-bottom: 20px;
+      margin-bottom: var(--space-5);
       background-color: var(--color-primary);
       color: var(--color-white);
     }
@@ -151,7 +151,7 @@
       color: var(--color-text-title);
     }
     .openIniOS {
-      margin-bottom: 20px;
+      margin-bottom: var(--space-5);
       background-color: var(--color-primary);
       color: var(--color-white);
     }
@@ -163,7 +163,7 @@
     left: 0px;
     bottom: 50px;
     text-align: center;
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-disabled);
     &.pic {
       bottom: 118px;
@@ -181,7 +181,7 @@
       display: inline-block;
     }
     .downloadBtn {
-      margin-right: 20px;
+      margin-right: var(--space-5);
     }
     .deadline {
       position: relative;
@@ -250,10 +250,10 @@
   text-align: center;
   .alertDialog {
     display: inline-block;
-    padding: 8px 20px;
+    padding: var(--space-2) var(--space-5);
     background-color: rgba(0, 0, 0, 0.6);
     color: var(--color-white);
     border-radius: 50px;
-    font-size: 13px;
+    font-size: var(--font-sm);
   }
 }

@@ -4,7 +4,7 @@ import { Button, Dialog, Icon } from 'ming-ui';
 import copy from 'src/utils/copyToClipboard';
 
 const SuccessDialogContent = styled.div`
-  padding: 8px 0 4px;
+  padding: var(--space-2) 0 var(--space-1);
   min-height: 300px;
   text-align: center;
 
@@ -20,18 +20,18 @@ const SuccessDialogContent = styled.div`
 
     .icon {
       color: #fff;
-      font-size: 16px;
+      font-size: var(--font-lg);
       line-height: 1;
     }
   }
 
   .successTitle {
-    font-size: 18px;
+    font-size: var(--font-xl);
     font-weight: 600;
   }
 
   .successDesc {
-    margin-bottom: 24px;
+    margin-bottom: var(--space-6);
     line-height: 22px;
     text-align: left;
   }
@@ -39,7 +39,7 @@ const SuccessDialogContent = styled.div`
   .secretName {
     font-size: 28px;
     font-weight: 600;
-    margin-bottom: 16px;
+    margin-bottom: var(--space-4);
   }
 
   .secretValue {
@@ -49,10 +49,10 @@ const SuccessDialogContent = styled.div`
     border-radius: var(--radius-sm);
     background: var(--color-bg-primary);
     line-height: 40px;
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-text-title);
-    padding: 0 12px;
-    margin-bottom: 16px;
+    padding: 0 var(--space-3);
+    margin-bottom: var(--space-4);
     text-align: center;
   }
 `;

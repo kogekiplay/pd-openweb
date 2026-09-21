@@ -14,7 +14,7 @@ import { canEditApp, canEditData } from 'src/pages/worksheet/redux/actions/util.
 const ModalWrap = styled(Popup)`
   &.appMoreActionWrap {
     .header {
-      padding: 20px 15px 0;
+      padding: var(--space-5) 15px 0;
       .closeIcon {
         width: 24px;
         height: 24px;
@@ -27,7 +27,7 @@ const ModalWrap = styled(Popup)`
       }
     }
     .actionContent {
-      padding: 0 20px 15px;
+      padding: 0 var(--space-5) 15px;
       color: var(--color-text-primary);
       line-height: 50px;
       text-align: left;

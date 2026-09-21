@@ -28,17 +28,17 @@
 }
 .feedLeftNav .feedFixedList .Icon.icon-charger {
   color: var(--color-cyan) !important;
-  font-size: 16px;
+  font-size: var(--font-lg);
 }
 .feedLeftNav .feedFixedList .Icon.icon-task-star {
   color: var(--color-warning) !important;
-  font-size: 16px;
+  font-size: var(--font-lg);
 }
 .feedLeftNav .feedFixedList .Item.bgColorPrimaryTransparent .Item-content:hover {
   background-color: initial !important;
 }
 .feedLeftNav .avatarList .icon-official-group {
   color: var(--color-warning-border) !important;
-  font-size: 12px;
+  font-size: var(--font-xs);
   right: 22px;
 }

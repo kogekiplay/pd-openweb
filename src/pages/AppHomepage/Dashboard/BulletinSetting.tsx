@@ -23,15 +23,15 @@ const BulletinDialog = styled(Dialog)`
     display: flex;
     flex-direction: column;
     .title {
-      padding: 16px 24px;
+      padding: var(--space-4) var(--space-6);
       line-height: 26px;
     }
     .listContent {
       flex: 1;
       overflow: auto;
-      padding-bottom: 32px;
+      padding-bottom: var(--space-8);
       .addBtn {
-        margin-top: 32px;
+        margin-top: var(--space-8);
         margin-left: 36px;
         &.disabled {
           background: var(--color-background-secondary) !important;
@@ -43,7 +43,7 @@ const BulletinDialog = styled(Dialog)`
   }
   .rightWrapper {
     flex: 1;
-    padding: 24px;
+    padding: var(--space-6);
     .image {
       width: 100%;
       height: 140px;
@@ -62,10 +62,10 @@ const BulletinDialog = styled(Dialog)`
 
         .uploadBtn {
           background-color: rgba(0, 0, 0, 0.5);
-          padding: 6px 8px;
+          padding: 6px var(--space-2);
           border-radius: var(--radius-sm);
           color: var(--color-white);
-          font-size: 14px;
+          font-size: var(--font-md);
           cursor: pointer;
           &:hover {
             background-color: rgba(0, 0, 0, 0.3);
@@ -76,7 +76,7 @@ const BulletinDialog = styled(Dialog)`
     .picList {
       display: flex;
       flex-wrap: nowrap;
-      gap: 8px;
+      gap: var(--space-2);
       padding: 14px 0;
       .picItem {
         flex: 1;
@@ -106,7 +106,7 @@ const BulletinDialog = styled(Dialog)`
     }
     .linkInput {
       width: 100%;
-      margin: 8px 0 20px;
+      margin: var(--space-2) 0 var(--space-5);
       &:hover {
         border-color: var(--color-primary) !important;
       }
@@ -125,7 +125,7 @@ const ItemWrapper = styled.div`
   .bulletinItem {
     display: flex;
     align-items: center;
-    padding: 8px 16px 8px 36px;
+    padding: var(--space-2) var(--space-4) var(--space-2) 36px;
     border: 2px solid transparent;
     cursor: pointer;
 
@@ -143,7 +143,7 @@ const ItemWrapper = styled.div`
       display: none;
       cursor: pointer;
       color: var(--color-text-disabled);
-      font-size: 16px;
+      font-size: var(--font-lg);
       &:hover {
         color: var(--color-error);
       }
@@ -169,7 +169,7 @@ const TitleInput = styled(AntdInput)`
     transition: none !important;
     border-color: var(--color-border-tertiary) !important;
     border-radius: var(--radius-sm) !important;
-    padding: 6px 12px !important;
+    padding: 6px var(--space-3) !important;
     &:hover {
       border-color: var(--color-primary) !important;
     }

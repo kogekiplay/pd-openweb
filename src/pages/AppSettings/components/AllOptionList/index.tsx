@@ -36,7 +36,7 @@ const OptionListWrap = styled.div`
 const ListItem = styled.div`
   position: absolute;
   width: 243px;
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   transition: transform 0.25s;
   background-color: var(--color-background-primary);
   max-height: 550px;
@@ -69,7 +69,7 @@ const ListItem = styled.div`
     padding: 10px 0;
   }
   ul {
-    padding: 8px 0;
+    padding: var(--space-2) 0;
     max-height: 485px;
   }
 

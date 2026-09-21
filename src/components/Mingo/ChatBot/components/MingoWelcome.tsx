@@ -46,7 +46,7 @@ const MingoWelcomeWrap = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 24px 24px 16px;
+  padding: var(--space-6) var(--space-6) var(--space-4);
   overflow-y: auto;
 
   /* 落地页（landing）整体垂直居中；抽屉态保持顶部对齐 + 滚动 */
@@ -99,32 +99,32 @@ const MingoWelcomeWrap = styled.div`
     );
   }
   .subline {
-    font-size: 14px;
+    font-size: var(--font-md);
     font-weight: 600;
     color: var(--color-text-primary);
-    margin-bottom: 8px;
+    margin-bottom: var(--space-2);
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--space-1);
     &.switchable {
       cursor: pointer;
       &:hover {
         color: var(--color-mingo);
       }
       .switchArrow {
-        font-size: 16px;
+        font-size: var(--font-lg);
         color: var(--color-text-secondary);
       }
     }
   }
   .sectionLabel {
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-secondary);
     margin: 40px 0 6px;
     .accent {
       color: var(--color-text-primary);
       font-weight: 600;
-      margin: 0 4px;
+      margin: 0 var(--space-1);
     }
   }
   .tryList {
@@ -141,16 +141,16 @@ const MingoWelcomeWrap = styled.div`
     line-height: 20px;
     border-radius: 6px;
     color: var(--color-text-primary);
-    font-size: 14px;
+    font-size: var(--font-md);
     cursor: pointer;
     transition: background 0.2s ease;
     &:hover {
       background: var(--color-background-hover);
     }
     .newBadge {
-      margin-left: 8px;
+      margin-left: var(--space-2);
       color: var(--color-success);
-      font-size: 13px;
+      font-size: var(--font-sm);
       font-weight: 500;
     }
   }
@@ -181,12 +181,12 @@ const MingoWelcomeWrap = styled.div`
   }
   .welcomeTabs {
     display: flex;
-    gap: 32px;
+    gap: var(--space-8);
   }
   .welcomeTab {
     position: relative;
-    padding-bottom: 8px;
-    font-size: 14px;
+    padding-bottom: var(--space-2);
+    font-size: var(--font-md);
     color: var(--color-text-secondary);
     cursor: pointer;
     transition: color 0.2s ease;
@@ -209,21 +209,21 @@ const MingoWelcomeWrap = styled.div`
     }
   }
   .welcomeTabBody {
-    margin-top: 8px;
+    margin-top: var(--space-2);
   }
   /* 提问项去掉 hover 底色（仅保留指针），与「试一试」/「搭建」的整行高亮区分 */
   .questionItem:hover {
     background: transparent;
   }
   .qEmpty {
-    padding: 12px 0;
-    font-size: 13px;
+    padding: var(--space-3) 0;
+    font-size: var(--font-sm);
     color: var(--color-text-secondary);
   }
   .quickActions {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: var(--space-1);
     /* 应用内已移除「为 xx 应用」标签，这里补回与输入框的 40px 间距 */
     margin-top: 40px;
   }
@@ -234,13 +234,13 @@ const MingoWelcomeWrap = styled.div`
   .quickAction {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: var(--space-3);
     height: 40px;
     padding: 0;
     border-radius: 6px;
     cursor: pointer;
     color: var(--color-text-primary);
-    font-size: 14px;
+    font-size: var(--font-md);
     transition: background 0.2s ease;
     &:hover {
       background: var(--color-background-hover);
@@ -701,7 +701,7 @@ export default function MingoWelcome({ onStartTask = () => {}, landing = false, 
                       active
                       className="mTop10"
                       height="16px"
-                      itemStyle={{ margin: '12px 0' }}
+                      itemStyle={{ margin: 'var(--space-3) 0' }}
                       widths={['70%', '90%', '60%', '85%', '55%']}
                     />
                   )}

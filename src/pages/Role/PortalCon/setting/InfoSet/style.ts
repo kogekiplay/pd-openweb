@@ -6,7 +6,7 @@ export const Wrap = styled.div`
   overflow: hidden;
   z-index: 1;
   .content {
-    padding: 24px;
+    padding: var(--space-6);
     height: calc(100% - 68px);
     overflow: auto;
   }
@@ -34,7 +34,7 @@ export const WrapSortControls = styled.div`
     border-radius: var(--radius-sm);
     overflow: hidden;
     background: var(--color-background-secondary);
-    padding-left: 16px;
+    padding-left: var(--space-4);
   }
   label {
     width: 65px;

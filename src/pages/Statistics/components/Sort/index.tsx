@@ -16,24 +16,24 @@ const SortContent = styled.div`
   background-color: var(--color-background-card);
   box-shadow: var(--shadow-lg);
   width: auto !important;
-  padding: 20px !important;
+  padding: var(--space-5) !important;
   max-height: 360px;
   overflow-y: auto;
   .sortItem {
-    margin-bottom: 20px;
+    margin-bottom: var(--space-5);
     &:last-child {
       margin-bottom: 0;
     }
   }
   .sortSelect {
     border-radius: var(--radius-sm);
-    margin-top: 8px;
+    margin-top: var(--space-2);
     .item {
       width: 80px;
       color: var(--color-text-secondary);
       background-color: var(--color-background-card);
       text-align: center;
-      font-size: 14px;
+      font-size: var(--font-md);
       padding: 5px 0;
       cursor: pointer;
       border: 1px solid var(--color-border-tertiary);
@@ -59,7 +59,7 @@ const SortContent = styled.div`
 
 const CustomSortItemContent = styled.div`
   border-radius: var(--radius-sm);
-  padding: 8px 5px;
+  padding: var(--space-2) 5px;
   &:hover {
     background-color: var(--color-background-hover);
   }

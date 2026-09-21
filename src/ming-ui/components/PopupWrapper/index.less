@@ -68,7 +68,7 @@
 
     .rightBtnBox {
       display: flex;
-      gap: 16px;
+      gap: var(--space-4);
 
       .btnClear {
         color: var(--color-error);
@@ -86,12 +86,12 @@
     .widthIconTitle-center {
       max-width: 180px;
       color: var(--color-text-title);
-      font-size: 18px;
+      font-size: var(--font-xl);
     }
     .widthIconTitle-left {
       max-width: 200px;
       color: var(--color-text-tertiary);
-      font-size: 13px;
+      font-size: var(--font-sm);
     }
     .closeIcon {
       position: absolute;
@@ -104,26 +104,26 @@
       height: 24px;
       border-radius: 12px;
       background-color: var(--color-border-secondary);
-      font-size: 18px;
+      font-size: var(--font-xl);
       color: var(--color-text-tertiary);
     }
     .leftBox {
       position: absolute;
       left: 16px;
       top: 10px;
-      font-size: 18px;
+      font-size: var(--font-xl);
     }
   }
   .popupContentBox {
     // 通用按钮容器
     .commonButtonBox {
-      padding: 0 18px 12px;
+      padding: 0 18px var(--space-3);
       .commonButton {
         display: flex;
         align-items: center;
-        padding: 12px 0;
+        padding: var(--space-3) 0;
         .icon {
-          font-size: 20px;
+          font-size: var(--font-2xl);
           color: var(--color-text-tertiary);
         }
         .buttonText {

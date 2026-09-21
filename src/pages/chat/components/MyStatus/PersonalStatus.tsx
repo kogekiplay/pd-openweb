@@ -16,9 +16,9 @@ const StatusWrap = styled.div`
   align-items: center;
   height: 28px;
   border-radius: 16px;
-  padding: 10px 12px;
+  padding: 10px var(--space-3);
   font-weight: 400;
-  font-size: 13px;
+  font-size: var(--font-sm);
   border: 1px solid var(--color-border-primary);
   .statusNotStarted {
     max-width: 100%;

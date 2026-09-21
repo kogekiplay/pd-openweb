@@ -16,7 +16,7 @@ const FilterCountWrap = styled.span`
   background: var(--color-background-secondary);
   border-radius: var(--radius-sm);
   font-weight: 600;
-  font-size: 13px;
+  font-size: var(--font-sm);
   font-family: FZLanTingHeiS-DemiBold, FZLanTingHeiS;
   display: flex;
   align-items: center;
@@ -47,8 +47,8 @@ const FilterDialog = styled(Dialog)`
     }
   }
   .listTitle {
-    padding: 16px 20px 10px 20px;
-    font-size: 12px;
+    padding: var(--space-4) var(--space-5) 10px var(--space-5);
+    font-size: var(--font-xs);
     color: var(--color-text-tertiary);
     font-weight: 600;
     line-height: 12px;
@@ -56,8 +56,8 @@ const FilterDialog = styled(Dialog)`
   .listItem {
     display: flex;
     align-items: center;
-    padding: 9px 14px 9px 20px;
-    font-size: 13px;
+    padding: 9px 14px 9px var(--space-5);
+    font-size: var(--font-sm);
     color: var(--color-text-title);
     .avatarCon {
       margin-right: 10px;

@@ -30,9 +30,9 @@ const RecorderContent = styled.div`
     padding: 0 10px;
   }
   .recordTime {
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-title);
-    margin: 0 15px 0 8px;
+    margin: 0 15px 0 var(--space-2);
     font-weight: 500;
     transition: color 0.2s ease;
   }
@@ -50,7 +50,7 @@ const RecorderContent = styled.div`
     width: 28px;
     height: 28px;
     border-radius: 28px;
-    font-size: 20px;
+    font-size: var(--font-2xl);
     color: var(--color-text-tertiary);
     cursor: pointer;
     margin-right: 6px;
@@ -59,11 +59,11 @@ const RecorderContent = styled.div`
     }
   }
   .error {
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-title);
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     .icon {
-      font-size: 16px;
+      font-size: var(--font-lg);
       color: var(--color-error);
       margin-right: 6px;
     }

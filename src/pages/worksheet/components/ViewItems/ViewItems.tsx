@@ -23,7 +23,7 @@ import './ViewItems.less';
 import type { FormControl } from 'src/utils/controlTypes';
 
 const EmptyData = styled.div`
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: var(--color-text-tertiary);
   text-align: center;
   margin-top: 120px;

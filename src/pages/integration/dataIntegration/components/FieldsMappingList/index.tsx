@@ -26,7 +26,7 @@ const Wrapper = styled.div`
     display: flex;
     align-items: center;
     margin: 0;
-    padding: 8px 0px 8px 8px;
+    padding: var(--space-2) 0px var(--space-2) var(--space-2);
     border-bottom: 1px solid var(--color-border-secondary);
 
     .checkColumn {
@@ -35,10 +35,10 @@ const Wrapper = styled.div`
     .name,
     .dataType {
       width: 0;
-      padding-right: 8px;
+      padding-right: var(--space-2);
     }
     .name_dest {
-      padding-right: 20px;
+      padding-right: var(--space-5);
     }
     .name_dest,
     .dataType_dest {
@@ -55,7 +55,7 @@ const Wrapper = styled.div`
       width: 20px;
     }
     .title_dest {
-      padding-left: 16px;
+      padding-left: var(--space-4);
     }
   }
   .dataItem {
@@ -92,14 +92,14 @@ const Wrapper = styled.div`
   .itemWrapper {
     position: relative;
     margin-left: -16px;
-    padding-left: 16px;
+    padding-left: var(--space-4);
 
     .deleteIcon {
       position: absolute;
       left: 0px;
       top: 16px;
       display: none;
-      font-size: 16px;
+      font-size: var(--font-lg);
       color: var(--color-text-disabled);
       cursor: pointer;
       &:hover {
@@ -121,7 +121,7 @@ const Wrapper = styled.div`
   .systemFieldsHeader {
     display: flex;
     align-items: center;
-    padding: 24px 8px 8px 8px;
+    padding: var(--space-6) var(--space-2) var(--space-2) var(--space-2);
     border-bottom: 1px solid var(--color-border-secondary);
 
     .Checkbox {
@@ -135,7 +135,7 @@ const Wrapper = styled.div`
       i {
         color: var(--color-text-placeholder);
         font-size: 15px;
-        margin-left: 8px;
+        margin-left: var(--space-2);
       }
       &:hover {
         color: var(--color-primary);

@@ -12,7 +12,7 @@ const Wrap = styled.div`
   display: flex;
   flex-direction: column;
   gap: 28px;
-  padding: 12px 0;
+  padding: var(--space-3) 0;
 `;
 
 const Turn = styled.div`

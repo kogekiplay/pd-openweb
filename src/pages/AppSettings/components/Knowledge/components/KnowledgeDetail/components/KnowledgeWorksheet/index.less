@@ -13,7 +13,7 @@
       .knowledgeInfo {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: var(--space-2);
         .icon-backspace {
           font-size: 22px;
           color: var(--color-text-tertiary);
@@ -21,17 +21,17 @@
         }
         .knowledgeName {
           max-width: 500px;
-          font-size: 18px;
+          font-size: var(--font-xl);
           font-weight: 700;
           color: var(--color-text-primary);
           white-space: nowrap;
         }
         .knowledgeDesc {
-          font-size: 16px;
+          font-size: var(--font-lg);
           color: var(--color-text-tertiary);
         }
         .totalChunkCount {
-          font-size: 13px;
+          font-size: var(--font-sm);
           color: var(--color-text-secondary);
         }
       }
@@ -39,16 +39,16 @@
     .right {
       display: flex;
       align-items: center;
-      gap: 20px;
+      gap: var(--space-5);
       .retrieveBtn {
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 0 12px;
+        padding: 0 var(--space-3);
         min-width: 116px;
         height: 36px;
         border-radius: 36px;
-        font-size: 14px;
+        font-size: var(--font-md);
         font-weight: 700;
         color: var(--color-primary);
         border: 1px solid var(--color-primary);
@@ -59,7 +59,7 @@
         }
         .icon {
           margin-right: 10px;
-          font-size: 18px;
+          font-size: var(--font-xl);
         }
       }
     }
@@ -69,9 +69,9 @@
     min-height: 0;
     display: flex;
     flex-direction: column;
-    margin-top: 20px;
+    margin-top: var(--space-5);
     .emptyPlaceholder {
-      font-size: 13px;
+      font-size: var(--font-sm);
       color: var(--color-text-secondary);
     }
     .worksheetName {
@@ -92,12 +92,12 @@
         max-width: 250px;
         height: 24px;
         border-radius: var(--radius-sm);
-        font-size: 13px;
+        font-size: var(--font-sm);
         color: var(--color-text-secondary);
         background-color: var(--color-background-tertiary);
         .icon {
-          margin-right: 4px;
-          font-size: 14px;
+          margin-right: var(--space-1);
+          font-size: var(--font-md);
           color: var(--color-text-secondary);
         }
       }
@@ -106,8 +106,8 @@
       margin-right: 30px;
       width: 60px;
       .icon {
-        margin-right: 4px;
-        font-size: 13px;
+        margin-right: var(--space-1);
+        font-size: var(--font-sm);
         color: var(--color-text-disabled);
       }
       &.active {
@@ -121,8 +121,8 @@
       width: 70px;
       color: var(--color-text-secondary);
       .icon {
-        margin-right: 4px;
-        font-size: 14px;
+        margin-right: var(--space-1);
+        font-size: var(--font-md);
         color: var(--color-text-disabled);
       }
       &.active {
@@ -136,7 +136,7 @@
       width: 100px;
       color: var(--color-text-secondary);
       .icon {
-        margin-right: 4px;
+        margin-right: var(--space-1);
       }
       &.active {
         color: var(--color-text-primary);
@@ -159,12 +159,12 @@
     .action {
       width: 40px;
       .moreIconWrap {
-        padding: 4px;
-        margin-left: 8px;
+        padding: var(--space-1);
+        margin-left: var(--space-2);
         cursor: pointer;
         color: var(--color-text-secondary);
         .moreIcon {
-          font-size: 16px;
+          font-size: var(--font-lg);
         }
       }
     }
@@ -175,8 +175,8 @@
       gap: 10px;
     }
     .contentHeader {
-      padding: 8px 10px;
-      font-size: 13px;
+      padding: var(--space-2) 10px;
+      font-size: var(--font-sm);
       font-weight: 700;
       color: var(--color-text-secondary);
       border-bottom: 1px solid var(--color-border-primary);
@@ -191,8 +191,8 @@
       }
     }
     .worksheetItem {
-      padding: 16px 10px;
-      font-size: 13px;
+      padding: var(--space-4) 10px;
+      font-size: var(--font-sm);
       border-bottom: 1px solid var(--color-border-secondary);
       cursor: pointer;
       &:hover {
@@ -205,8 +205,8 @@
 .updateCollectionScope {
   min-height: 400px;
   .addCollectionInfo {
-    margin-bottom: 20px;
-    font-size: 13px;
+    margin-bottom: var(--space-5);
+    font-size: var(--font-sm);
     color: var(--color-text-tertiary);
     .link {
       color: var(--color-primary);
@@ -221,11 +221,11 @@
 .collectionScope {
   margin-top: 10px;
   height: 100px;
-  font-size: 13px;
+  font-size: var(--font-sm);
   .collectionScopeSwitch {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--space-2);
     margin-bottom: 10px;
     .switchText {
       font-weight: 700;
@@ -235,6 +235,6 @@
 }
 
 .deleteKnowledge {
-  margin-bottom: 20px;
+  margin-bottom: var(--space-5);
   color: var(--color-text-primary);
 }

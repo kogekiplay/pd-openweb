@@ -17,7 +17,7 @@ export default ({ data }) => {
         <div className="mTop20 bold">{_l('讨论通知')}</div>
         <div
           className="workflowDetailDesc mTop10"
-          style={{ padding: '8px 16px', border: '1px solid var(--color-border-primary)' }}
+          style={{ padding: 'var(--space-2) var(--space-4)', border: '1px solid var(--color-border-primary)' }}
         >
           <div className="ellipsis textSecondary">{_l('当外部用户收到讨论通知时（被回复、被提到）触发')}</div>
         </div>

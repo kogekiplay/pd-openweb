@@ -8,7 +8,7 @@ import { LoadDiv } from 'ming-ui';
 const Popup = styled.div`
   position: relative;
   background-color: var(--color-background-primary);
-  padding: 15px 15px 12px;
+  padding: 15px 15px var(--space-3);
   width: 230px;
   box-shadow: 0px 1px 6px 1px rgba(0, 0, 0, 0.24);
   border-radius: 6px;
@@ -18,7 +18,7 @@ const Popup = styled.div`
     line-height: 130px;
   }
   .tip {
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-text-primary);
     margin-bottom: 10px;
     font-weight: bold;

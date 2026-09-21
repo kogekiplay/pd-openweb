@@ -18,7 +18,7 @@ export const Card = styled.div`
   background: var(--color-background-card);
   border: 1px solid var(--color-border-secondary);
   border-radius: 12px;
-  padding: 18px 20px;
+  padding: 18px var(--space-5);
   display: flex;
   gap: 14px;
   align-items: flex-start;
@@ -38,7 +38,7 @@ export const CardLead = styled.div`
   color: ${p => p.$color || 'var(--color-text-secondary)'};
 
   .icon {
-    font-size: 20px;
+    font-size: var(--font-2xl);
     line-height: 1;
   }
 `;
@@ -56,26 +56,26 @@ export const CardHeader = styled.div`
 `;
 
 export const CardTitle = styled.div`
-  font-size: 14px;
+  font-size: var(--font-md);
   font-weight: 600;
   color: var(--color-text-primary);
   line-height: 20px;
 `;
 
 export const CardDesc = styled.div`
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-secondary);
   line-height: 20px;
-  margin-top: 4px;
+  margin-top: var(--space-1);
 `;
 
 export const Badge = styled.span`
   display: inline-flex;
   align-items: center;
   height: 20px;
-  padding: 0 8px;
+  padding: 0 var(--space-2);
   border-radius: 10px;
-  font-size: 12px;
+  font-size: var(--font-xs);
   line-height: 20px;
   background: ${p => p.$bg || 'var(--color-background-tertiary)'};
   color: ${p => p.$color || 'var(--color-text-secondary)'};
@@ -84,8 +84,8 @@ export const Badge = styled.span`
 export const Tags = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 12px;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
 `;
 
 export const Tag = styled.div`
@@ -96,12 +96,12 @@ export const Tag = styled.div`
   padding: 0 10px;
   border-radius: var(--radius-sm);
   background: var(--color-background-tertiary);
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: var(--color-text-secondary);
 `;
 
 export const TagIcon = styled(Icon)`
-  font-size: 14px !important;
+  font-size: var(--font-md) !important;
   color: var(--color-text-tertiary);
 `;
 
@@ -146,16 +146,16 @@ export function parseCompactList(value) {
 }
 
 export const SectionDivider = styled.div`
-  margin-top: 12px;
-  padding-top: 12px;
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
   border-top: 1px dashed var(--color-border-secondary);
 `;
 
 export const SectionLabel = styled.div`
-  font-size: 12px;
+  font-size: var(--font-xs);
   font-weight: 600;
   color: var(--color-text-tertiary);
-  margin-bottom: 8px;
+  margin-bottom: var(--space-2);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 `;
@@ -169,33 +169,33 @@ export const ChipList = styled.div`
 export const Chip = styled.div`
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-1);
   height: 26px;
   padding: 0 10px;
   border-radius: var(--radius-sm);
   background: var(--color-background-tertiary);
   border: 1px solid var(--color-border-secondary);
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: var(--color-text-secondary);
 `;
 
 export const ChipIcon = styled(Icon)`
-  font-size: 13px !important;
+  font-size: var(--font-sm) !important;
   color: ${p => p.$color || 'var(--color-text-tertiary)'};
 `;
 
 export const StepList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-1);
   margin-top: 0;
 `;
 
 export const StepItem = styled.div`
   display: flex;
   align-items: flex-start;
-  gap: 8px;
-  font-size: 13px;
+  gap: var(--space-2);
+  font-size: var(--font-sm);
   color: var(--color-text-secondary);
   line-height: 20px;
 `;
@@ -256,7 +256,7 @@ const EditIconButton = styled.button`
   }
 
   .icon {
-    font-size: 18px !important;
+    font-size: var(--font-xl) !important;
     line-height: 1;
     color: inherit;
   }
@@ -264,18 +264,18 @@ const EditIconButton = styled.button`
 
 const PopoverWrap = styled.div`
   width: 450px;
-  padding: 16px;
+  padding: var(--space-4);
   border-radius: 8px;
   background: var(--color-background-card);
   border: 1px solid var(--color-border-secondary);
   box-shadow: var(--shadow-lg);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-3);
 `;
 
 const PopoverTitle = styled.div`
-  font-size: 14px;
+  font-size: var(--font-md);
   font-weight: bold;
   color: var(--color-text-primary);
   line-height: 22px;
@@ -288,12 +288,12 @@ const PopoverTextarea = styled.textarea`
   width: 100%;
   min-height: 110px;
   max-height: 200px;
-  padding: 8px 12px;
+  padding: var(--space-2) var(--space-3);
   border: 1px solid var(--color-border-secondary);
   border-radius: 6px;
   background: var(--color-background-card);
   color: var(--color-text-primary);
-  font-size: 14px;
+  font-size: var(--font-md);
   line-height: 22px;
   resize: none;
   outline: none;
@@ -317,12 +317,12 @@ const SendButton = styled.button`
   align-items: center;
   justify-content: center;
   height: 32px;
-  padding: 0 20px;
+  padding: 0 var(--space-5);
   border: 0;
   border-radius: 6px;
   background: var(--color-mingo);
   color: #fff;
-  font-size: 14px;
+  font-size: var(--font-md);
   font-weight: 500;
   cursor: pointer;
   transition: opacity 0.18s ease;

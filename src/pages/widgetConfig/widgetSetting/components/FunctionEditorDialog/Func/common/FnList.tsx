@@ -13,7 +13,7 @@ import { functionDetails, functionTypes } from '../enum';
 const ExpandIcon = styled.i`
   display: inline-block;
   margin-top: -2px;
-  font-size: 16px;
+  font-size: var(--font-lg);
   color: var(--color-text-tertiary);
   vertical-align: middle !important;
   transform: ${({ isActive }) => `rotate(${isActive ? 0 : -90}deg)`};
@@ -30,21 +30,21 @@ const Con = styled.div`
     color: var(--color-text-primary);
   }
   .ant-collapse-header {
-    padding: 12px 14px !important;
+    padding: var(--space-3) 14px !important;
   }
   .ant-collapse > .ant-collapse-item > .ant-collapse-header .ant-collapse-arrow {
-    margin-right: 4px;
+    margin-right: var(--space-1);
     vertical-align: middle;
   }
   .fnItem {
-    font-size: 13px;
+    font-size: var(--font-sm);
     cursor: pointer;
     padding: 5px 35px !important;
     .fn {
       font-weight: 500;
     }
     .fnName {
-      font-size: 12px;
+      font-size: var(--font-xs);
       color: var(--color-text-secondary);
       cursor: pointer;
     }

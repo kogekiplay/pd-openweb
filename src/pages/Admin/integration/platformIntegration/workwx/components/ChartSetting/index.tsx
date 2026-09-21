@@ -6,13 +6,13 @@ import { Button, Input } from 'ming-ui';
 import { pathCompletion } from 'src/utils/common';
 
 const Wrap = styled.div`
-  padding: 20px 24px 0;
+  padding: var(--space-5) var(--space-6) 0;
   .ming.Button {
-    padding: 0 16px !important;
+    padding: 0 var(--space-4) !important;
     min-width: 116px !important;
   }
   input {
-    font-size: 12px !important;
+    font-size: var(--font-xs) !important;
     &::-webkit-input-placeholder,
     &:-moz-placeholder,
     &::-moz-placeholder,

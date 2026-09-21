@@ -23,7 +23,7 @@ const Wrap = styled.div(
       line-height: 35px;
       overflow: hidden;
       font-weight: bold;
-      font-size: 13px;
+      font-size: var(--font-sm);
       color: var(--color-text-secondary);
     }
     .tag {

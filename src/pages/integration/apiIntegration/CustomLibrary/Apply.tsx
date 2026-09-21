@@ -5,14 +5,14 @@ import { dialogSelectApp } from 'ming-ui/functions';
 import packageVersionAjax from 'src/pages/workflow/api/packageVersion';
 
 const ApplyBtn = styled.div`
-  padding: 0 32px;
+  padding: 0 var(--space-8);
   height: 36px;
   border-radius: 18px;
   background: var(--color-primary);
   color: var(--color-white);
   cursor: pointer;
   &:hover {
-    background: var(--color-link-hover);
+    background: var(--color-primary-dark);
   }
 `;
 

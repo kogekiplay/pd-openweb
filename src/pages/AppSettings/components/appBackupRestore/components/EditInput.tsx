@@ -14,7 +14,7 @@ const EditInputCon = styled.div`
   .input {
     border: none;
     border-bottom: 2px solid var(--color-primary);
-    padding: 4px 0;
+    padding: var(--space-1) 0;
   }
   .ant-input:focus,
   .ant-input-focused {

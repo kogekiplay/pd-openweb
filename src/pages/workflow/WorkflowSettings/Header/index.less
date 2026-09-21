@@ -6,7 +6,7 @@
   .workflowSettingsHeader {
     width: 100%;
     box-sizing: border-box;
-    padding: 0 20px;
+    padding: 0 var(--space-5);
     height: 55px;
     align-items: center;
     /* 跟 worksheetConfigHeader 用同一档主色淡底 —— 两者都是
@@ -36,8 +36,8 @@
     .workflowReturn {
       cursor: pointer;
       margin-right: 10px;
-      font-size: 20px;
-      padding: 4px;
+      font-size: var(--font-2xl);
+      padding: var(--space-1);
       color: var(--color-text-secondary);
       border-radius: 50%;
       height: 28px;
@@ -56,7 +56,7 @@
       justify-content: center;
     }
     .workflowHeaderTab {
-      margin: 0 20px;
+      margin: 0 var(--space-5);
       cursor: pointer;
       border-bottom-width: 4px;
       border-bottom-style: solid;
@@ -103,7 +103,7 @@
       align-items: center;
       justify-content: center;
       .icon {
-        font-size: 24px;
+        font-size: var(--font-3xl);
         color: var(--color-white);
       }
     }
@@ -131,7 +131,7 @@
   }
   .workflowAction {
     padding: 0 22px;
-    margin-right: 16px;
+    margin-right: var(--space-4);
     height: 38px;
     line-height: 38px;
     border-radius: var(--radius-sm);

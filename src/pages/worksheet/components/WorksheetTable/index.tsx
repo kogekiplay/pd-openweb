@@ -24,7 +24,7 @@ import { checkCellFullVisible, getRulePermissions, getTableHeadHeight, handleLif
 import './style.less';
 
 const StyledFixedTable = styled(FixedTable)`
-  font-size: 13px;
+  font-size: var(--font-sm);
   user-select: text !important;
   .colorTag {
     position: absolute;
@@ -96,7 +96,7 @@ const StyledFixedTable = styled(FixedTable)`
     display: none;
     border: 2px solid var(--color-primary-focus);
     background: var(--color-background-primary);
-    padding: 4px 5px;
+    padding: var(--space-1) 5px;
     color: var(--color-text-disabled);
     z-index: 9;
     white-space: nowrap;

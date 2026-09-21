@@ -13,12 +13,12 @@ const ScaleCon = styled.div`
   margin-top: 41px;
 `;
 const ScaleItem = styled.div`
-  margin-top: 12px;
+  margin-top: var(--space-3);
   display: flex;
   align-items: center;
   input {
     width: 100px;
-    margin: 0 20px 0 12px;
+    margin: 0 var(--space-5) 0 var(--space-3);
   }
 `;
 const Label = styled.div``;

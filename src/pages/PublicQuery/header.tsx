@@ -18,13 +18,13 @@ const PublicqueryHeader = styled.div`
     opacity: 1;
     background: var(--color-primary);
     border-radius: var(--radius-sm);
-    font-size: 13px;
+    font-size: var(--font-sm);
     font-weight: 700;
     color: var(--color-white);
     line-height: 36px;
     width: 103px;
     &:hover {
-      background: var(--color-link-hover);
+      background: var(--color-primary-dark);
     }
   }
 `;

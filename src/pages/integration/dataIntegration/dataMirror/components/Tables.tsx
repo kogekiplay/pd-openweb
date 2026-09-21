@@ -28,7 +28,7 @@ const WrapPopup = styled.div`
     }
   }
   .isChild .wsFieldName {
-    padding-left: 20px;
+    padding-left: var(--space-5);
     position: relative;
     &::before {
       z-index: 1;
@@ -74,10 +74,10 @@ const ListBox = styled.div`
     min-width: 0;
     align-items: center;
     margin: 0;
-    padding: 12px 0;
+    padding: var(--space-3) 0;
     .titleText,
     .taskNum {
-      font-size: 14px;
+      font-size: var(--font-md);
       font-weight: 700;
     }
     &:hover {

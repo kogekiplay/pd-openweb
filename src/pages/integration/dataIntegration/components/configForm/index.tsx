@@ -19,7 +19,7 @@ import TestConnectButton from './testConnectButton';
 const Wrapper = styled.div`
   .selectItem {
     width: 100%;
-    font-size: 13px;
+    font-size: var(--font-sm);
     &.ant-select,
     & .ant-select {
       --ant-select-border-radius: var(--radius-sm) !important;
@@ -36,8 +36,8 @@ const SelectCard = styled.div`
   align-items: center;
   width: 100%;
   height: 90px;
-  padding: 20px;
-  margin: 24px 0px;
+  padding: var(--space-5);
+  margin: var(--space-6) 0px;
   background: var(--color-background-primary);
   border: 2px solid var(--color-border-secondary);
   border-radius: 12px;
@@ -61,7 +61,7 @@ const SelectCard = styled.div`
     border-radius: 18px;
     color: var(--color-text-disabled);
     background: var(--color-background-primary);
-    font-size: 20px;
+    font-size: var(--font-2xl);
 
     &:hover {
       color: var(--color-primary);
@@ -71,19 +71,19 @@ const SelectCard = styled.div`
 `;
 
 const FormFooter = styled.div`
-  padding-bottom: 24px;
+  padding-bottom: var(--space-6);
 
   .info {
     background-color: var(--color-error-bg);
     border-radius: var(--radius-sm);
-    padding: 8px 16px;
+    padding: var(--space-2) var(--space-4);
   }
 `;
 
 const FormItem = styled.div`
-  margin-top: 16px;
+  margin-top: var(--space-4);
   color: var(--color-text-secondary);
-  font-size: 13px;
+  font-size: var(--font-sm);
   font-weight: bold;
 `;
 
@@ -96,14 +96,14 @@ const SourceSelectFormWrapper = styled.div`
   }
   .sourceNameInput {
     width: 50%;
-    padding-right: 12px;
+    padding-right: var(--space-3);
 
     .Input {
       background: var(--color-background-secondary);
       border: 1px solid var(--color-background-secondary) !important;
       border-radius: var(--radius-sm);
-      padding: 8px 12px 6px;
-      font-size: 13px;
+      padding: var(--space-2) var(--space-3) 6px;
+      font-size: var(--font-sm);
 
       :hover {
         border-color: var(--color-background-disabled) !important;

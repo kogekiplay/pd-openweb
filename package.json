@@ -25,7 +25,10 @@
     "typecheck:tools": "node scripts/typecheck/tools-gate.ts",
     "typecheck:strict": "node scripts/typecheck/tsc-strict-gate.ts",
     "typecheck:strict:widen": "node scripts/typecheck/tsc-strict-gate.ts --widen",
-    "typecheck:strict:stats": "node scripts/typecheck/tsc-strict-gate.ts --stats"
+    "typecheck:strict:stats": "node scripts/typecheck/tsc-strict-gate.ts --stats",
+    "geom:capture": "node tools/capture-geometry.ts",
+    "geom:diff": "node tools/compare-geometry.ts",
+    "check:typography": "node tools/audit-typography.ts --check"
   },
   "dependencies": {
     "@ant-design/colors": "^8.0.1",

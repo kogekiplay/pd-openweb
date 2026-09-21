@@ -40,7 +40,7 @@ const Wrapper = styled.div`
     bottom: 0;
   }
   .header {
-    padding: 0 24px;
+    padding: 0 var(--space-6);
     height: 50px;
   }
   .history {
@@ -59,7 +59,7 @@ const Wrapper = styled.div`
   }
   .content {
     overflow: auto;
-    padding: 0 24px 32px;
+    padding: 0 var(--space-6) var(--space-8);
     input {
       margin-bottom: 28px;
     }
@@ -71,7 +71,7 @@ const Wrapper = styled.div`
   .actionWrap {
     border: 1px solid var(--color-border-primary);
     border-radius: 8px;
-    padding: 20px 32px 30px 24px;
+    padding: var(--space-5) var(--space-8) 30px var(--space-6);
     margin-bottom: 35px;
   }
   .agentIconWrap {
@@ -87,7 +87,7 @@ const Wrapper = styled.div`
     }
   }
   .actionBtn {
-    padding: 0 32px;
+    padding: 0 var(--space-8);
     border-radius: 30px;
     line-height: 28px;
     cursor: pointer;
@@ -117,7 +117,7 @@ const Wrapper = styled.div`
       padding: 0 !important;
     }
     .cm-editor .columnTagCon {
-      padding: 2px 4px 2px 0 !important;
+      padding: 2px var(--space-1) 2px 0 !important;
     }
   }
 `;

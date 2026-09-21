@@ -27,7 +27,7 @@ const Menu = styled.ul`
   li {
     height: 36px;
     line-height: 36px;
-    padding: 0 20px;
+    padding: 0 var(--space-5);
     &:hover {
       background-color: var(--color-primary);
       color: var(--color-white);

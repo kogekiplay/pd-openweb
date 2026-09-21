@@ -11,7 +11,7 @@ const FilterTextWrap = styled.div`
   width: 100%;
   border: 1px solid var(--color-border-primary);
   border-radius: var(--radius-sm);
-  padding: 2px 12px 8px;
+  padding: 2px var(--space-3) var(--space-2);
   box-sizing: border-box;
   color: var(--color-text-title);
   margin: 10px 0;
@@ -47,7 +47,7 @@ const FilterTextWrap = styled.div`
 
   .txtFilter {
     flex: 1;
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-title);
 
     p {
@@ -58,7 +58,7 @@ const FilterTextWrap = styled.div`
 
       .titleTxt {
         width: 100px;
-        font-size: 13px;
+        font-size: var(--font-sm);
         line-height: 22px;
         display: inline-block;
       }
@@ -66,7 +66,7 @@ const FilterTextWrap = styled.div`
       .txt {
         flex: 1;
         font-weight: 500;
-        font-size: 13px;
+        font-size: var(--font-sm);
       }
     }
   }

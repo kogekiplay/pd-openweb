@@ -13,7 +13,7 @@ const Wrap = styled.div`
   display: flex;
   flex-direction: column;
   .actionWrap {
-    padding-bottom: 12px;
+    padding-bottom: var(--space-3);
   }
   .contentWrap {
     height: 390px;

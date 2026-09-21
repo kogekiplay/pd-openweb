@@ -25,7 +25,7 @@ const Wrap = styled.div`
     border: 1px solid var(--color-border-primary);
     border-radius: var(--radius-sm);
     color: var(--color-text-secondary);
-    padding: 6px 12px;
+    padding: 6px var(--space-3);
     background: var(--color-background-primary);
     display: flex;
     justify-content: space-between;

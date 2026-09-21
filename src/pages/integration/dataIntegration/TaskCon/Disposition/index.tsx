@@ -20,7 +20,7 @@ const Con = styled.div`
   width: 880px;
   margin: 22px auto;
   background: var(--color-background-primary);
-  padding: 32px 24px;
+  padding: var(--space-8) var(--space-6);
   // border: 1px solid var(--color-border-primary);
   border-radius: var(--radius-sm);
   .saveBtn {
@@ -37,7 +37,7 @@ const WrapCon = styled.div`
   .conCheckbox {
     .ming.Checkbox {
       display: inline-block;
-      margin-right: 32px;
+      margin-right: var(--space-8);
     }
   }
   .owerItem {
@@ -47,7 +47,7 @@ const WrapCon = styled.div`
     line-height: 26px;
     display: inline-block;
     position: relative;
-    margin-bottom: 4px;
+    margin-bottom: var(--space-1);
     margin-right: 6px;
     img {
       width: 26px;
@@ -93,7 +93,7 @@ const WrapCon = styled.div`
   .ant-table.ant-table-small .ant-table-tbody > tr > td,
   .ant-table.ant-table-small tfoot > tr > th,
   .ant-table.ant-table-small tfoot > tr > td {
-    padding: 15px 8px;
+    padding: 15px var(--space-2);
     align-items: center;
     display: flex;
   }
@@ -116,13 +116,13 @@ const WrapCon = styled.div`
     width: 200px;
     left: 0;
     z-index: 100;
-    padding-bottom: 24px;
+    padding-bottom: var(--space-6);
     top: 26px;
   }
   ul.flowDetailUserList {
     text-align: left;
     i {
-      font-size: 18px;
+      font-size: var(--font-xl);
       display: inline-block;
       vertical-align: top;
       margin-top: 9px;

@@ -73,7 +73,7 @@ const Setting_Config = [
 
 const SelectItem = styled.div`
   width: 100%;
-  margin-top: 24px;
+  margin-top: var(--space-6);
   &:first-child {
     margin-top: 0;
   }
@@ -81,7 +81,7 @@ const SelectItem = styled.div`
     margin-bottom: 6px;
   }
   .Dropdown--input {
-    padding: 5px 8px 5px 12px !important;
+    padding: 5px var(--space-2) 5px var(--space-3) !important;
     border-color: var(--color-border-primary) !important;
   }
   .opBtn {
@@ -103,7 +103,7 @@ const SelectItem = styled.div`
     border: 1px solid var(--color-border-primary) !important;
     height: 36px;
     border-radius: var(--radius-sm);
-    padding: 0px 12px;
+    padding: 0px var(--space-3);
     &::placeholder {
       color: var(--color-text-disabled);
     }

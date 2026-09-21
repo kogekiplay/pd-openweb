@@ -22,12 +22,12 @@ const ConfigHeader = styled(FlexCenter)`
   left: 0;
   right: 0;
   height: 50px;
-  padding: 0 24px;
+  padding: 0 var(--space-6);
   z-index: 9;
   background-color: var(--color-background-primary);
   box-shadow: var(--shadow-sm);
   .iconWrap {
-    padding-right: 24px;
+    padding-right: var(--space-6);
     cursor: pointer;
     .back {
       color: var(--color-text-secondary);
@@ -60,7 +60,7 @@ const ConfigHeader = styled(FlexCenter)`
     justify-content: center;
     align-items: center;
     height: 100%;
-    margin-right: 20px;
+    margin-right: var(--space-5);
     li {
       height: 32px;
       padding: 1px 5px;
@@ -69,7 +69,7 @@ const ConfigHeader = styled(FlexCenter)`
       font-size: 22px;
       color: var(--color-text-tertiary);
       border-radius: var(--radius-sm);
-      margin-right: 4px;
+      margin-right: var(--space-1);
       &.highlight {
         background-color: var(--color-background-hover);
       }

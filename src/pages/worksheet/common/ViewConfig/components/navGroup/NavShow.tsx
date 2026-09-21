@@ -32,7 +32,7 @@ const Wrap = styled.div`
     opacity: 1;
     background: var(--color-background-primary);
     border-radius: var(--radius-sm);
-    margin: 8px 0;
+    margin: var(--space-2) 0;
     box-sizing: border-box;
     .actionIcon {
       width: 13px;
@@ -41,7 +41,7 @@ const Wrap = styled.div`
       flex: 1;
     }
     .Dropdown--input {
-      padding: 0 12px 0 12px !important;
+      padding: 0 var(--space-3) 0 var(--space-3) !important;
       width: 100%;
       display: flex;
       border: 1px solid var(--color-border-primary);
@@ -77,8 +77,8 @@ const Wrap = styled.div`
   }
   .RelateRecordDropdown-selected .clearIcon,
   .RelateRecordDropdown-selected .dropIcon {
-    font-size: 14px;
-    margin: 11px 12px 0;
+    font-size: var(--font-md);
+    margin: 11px var(--space-3) 0;
   }
   .customAntDropdownTitle,
   .customAntDropdownTitleWithBG {

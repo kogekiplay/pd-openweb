@@ -40,24 +40,24 @@ const SideWrap = styled.div`
     flex-direction: column;
     height: calc(100% - 56px);
     overflow: auto;
-    padding: 0 24px;
+    padding: 0 var(--space-6);
     .buttonDisplayWrap {
-      padding: 20px 0;
+      padding: var(--space-5) 0;
     }
   }
   header {
-    padding: 0 24px;
+    padding: 0 var(--space-6);
     line-height: 56px;
     background-color: var(--color-background-card);
     font-weight: bold;
-    font-size: 16px;
+    font-size: var(--font-lg);
     display: flex;
     align-items: center;
     justify-content: space-between;
     box-shadow: var(--shadow-md);
     i {
       cursor: pointer;
-      font-size: 16px;
+      font-size: var(--font-lg);
     }
   }
 `;

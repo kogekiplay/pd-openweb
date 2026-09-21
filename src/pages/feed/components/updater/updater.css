@@ -1,6 +1,6 @@
 ﻿/*发布器*/
 .updaterCard {
-  font-size: 12px;
+  font-size: var(--font-xs);
   padding: 10px;
   margin: 0 0 14px 0 !important;
   overflow: visible !important;
@@ -37,7 +37,7 @@
 }
 .myUpdateItem .myUpdateType {
   float: left;
-  padding-left: 4px;
+  padding-left: var(--space-1);
 }
 .myUpdateItem .myUpdateType .falseHide {
   width: 1px;
@@ -84,7 +84,7 @@
   border: 0px;
   padding: 0;
   width: 100%;
-  font-size: 14px;
+  font-size: var(--font-md);
 }
 #textarea_Updater,
 .textarea_Updater_Edit {
@@ -161,7 +161,7 @@
   padding-left: 5px;
   line-height: 20px;
   height: 20px;
-  font-size: 14px;
+  font-size: var(--font-md);
   color: var(--color-text-secondary);
 }
 
@@ -271,25 +271,25 @@
 #Attachment_updater .updaterAttachmentSplitter {
   border: none;
   padding: 0;
-  margin: 12px 0 2px;
+  margin: var(--space-3) 0 2px;
   border-top: 1px solid;
 }
 #Attachment_updater .uploadAttachmentLink {
   color: var(--color-text-tertiary);
   cursor: pointer;
   margin-left: 0px;
-  margin-right: 20px;
+  margin-right: var(--space-5);
   display: inline-block;
 }
 #Attachment_updater .uploadAttachmentLink .icon-home-knowledge {
   display: inline-block;
   margin-top: -2px;
-  font-size: 16px;
+  font-size: var(--font-lg);
 }
 #Attachment_updater .uploadAttachmentLink .icon-localUpload {
   display: inline-block;
   margin-top: -2px;
-  font-size: 16px;
+  font-size: var(--font-lg);
   width: 15px;
 }
 #Attachment_updater .docItem {
@@ -318,7 +318,7 @@
 #Attachment_updater .kcDocItem .nodeIcon {
   height: 24px;
   width: 21px;
-  margin: 10px 12px 9px 12px;
+  margin: 10px var(--space-3) 9px var(--space-3);
 }
 #Attachment_updater .kcDocItem .nodeImg img {
   width: 100%;

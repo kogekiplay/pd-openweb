@@ -47,7 +47,7 @@ const FlexWrap = styled.div`
 
 const IncomeWrap = styled.div`
   display: flex;
-  margin-bottom: 20px;
+  margin-bottom: var(--space-5);
   .alignItemsBaseline {
     align-items: baseline;
   }

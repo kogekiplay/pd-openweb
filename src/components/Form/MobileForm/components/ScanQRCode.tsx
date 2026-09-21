@@ -24,7 +24,7 @@ const QrInputWrap = styled.div`
   color: var(--color-white);
   width: auto;
   height: 36px;
-  padding: 0 24px;
+  padding: 0 var(--space-6);
   border-radius: 24px;
   margin: 0 auto;
   background-color: var(--color-primary);

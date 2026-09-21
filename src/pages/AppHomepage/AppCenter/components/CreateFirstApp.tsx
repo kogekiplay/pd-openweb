@@ -8,7 +8,7 @@ import AddAppItem from './AddAppItem';
 
 const FullCon = styled.div`
   flex: 1;
-  padding: 56px 24px;
+  padding: 56px var(--space-6);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -21,7 +21,7 @@ const FullCon = styled.div`
     text-align: center;
   }
   .welcomeDesc {
-    margin-top: 12px;
+    margin-top: var(--space-3);
     font-size: 15px;
     color: var(--color-text-secondary);
     text-align: center;

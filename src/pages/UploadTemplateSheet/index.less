@@ -18,7 +18,7 @@
     letter-spacing: 0px;
     color: var(--color-text-primary);
     text-align: left;
-    padding: 0 20px;
+    padding: 0 var(--space-5);
     box-sizing: border-box;
     line-height: 50px;
     height: 50px;
@@ -28,7 +28,7 @@
   .con {
     max-width: 880px;
     margin: 57px auto;
-    padding-bottom: 24px;
+    padding-bottom: var(--space-6);
     h5 {
     }
     p {
@@ -47,7 +47,7 @@
       position: relative;
       margin-left: 0;
       width: 100%;
-      margin-top: 32px;
+      margin-top: var(--space-8);
       .line {
         border-top: 1px solid var(--color-border-secondary);
         margin-top: 18px;
@@ -60,7 +60,7 @@
           flex: 200;
           max-width: 220px;
           // display: inline-block;
-          padding-right: 20px;
+          padding-right: var(--space-5);
           word-break: break-all;
           &:last-child {
             flex: 450 1;
@@ -71,7 +71,7 @@
             color: var(--color-text-tertiary);
             cursor: pointer;
             line-height: 20px;
-            margin-left: 8px;
+            margin-left: var(--space-2);
             &:hover {
               color: var(--color-primary);
             }
@@ -94,7 +94,7 @@
           font-weight: bold;
         }
         &.list {
-          margin-top: 20px;
+          margin-top: var(--space-5);
           display: flex;
           align-items: center;
 
@@ -124,7 +124,7 @@
                 color: var(--color-text-tertiary);
                 &:first-child {
                   color: var(--color-text-title);
-                  margin-right: 32px;
+                  margin-right: var(--space-8);
                 }
                 &:last-child {
                   flex: 500;
@@ -155,7 +155,7 @@
       flex: 180;
       width: 180px;
       // display: inline-block;
-      padding-right: 20px;
+      padding-right: var(--space-5);
       word-break: break-all;
       &:last-child {
         flex: 450 1;
@@ -166,7 +166,7 @@
         color: var(--color-text-tertiary);
         cursor: pointer;
         line-height: 20px;
-        margin-left: 8px;
+        margin-left: var(--space-2);
         &:hover {
           color: var(--color-primary);
         }
@@ -189,12 +189,12 @@
       font-weight: bold;
     }
     &.list {
-      margin-top: 16px !important ;
-      margin-bottom: 12px !important;
+      margin-top: var(--space-4) !important ;
+      margin-bottom: var(--space-3) !important;
     }
   }
   .line {
     border-top: 1px solid var(--color-border-secondary);
-    margin-top: 12px !important ;
+    margin-top: var(--space-3) !important ;
   }
 }

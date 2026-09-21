@@ -34,15 +34,15 @@ const SettingWrapper = styled.div`
     }
     .sectionTitle {
       font-weight: bold;
-      margin-bottom: 16px;
+      margin-bottom: var(--space-4);
     }
     .tipsText {
       color: var(--color-text-secondary);
-      margin-top: 8px;
+      margin-top: var(--space-2);
     }
     .intervalInput {
       width: 60px;
-      margin: 0 12px;
+      margin: 0 var(--space-3);
     }
     .firstReadInput {
       width: 200px;
@@ -52,7 +52,7 @@ const SettingWrapper = styled.div`
       height: 36px;
       border-radius: var(--radius-sm);
       border-color: var(--color-border-primary);
-      margin-right: 8px;
+      margin-right: var(--space-2);
       transition: unset;
       box-shadow: none;
       &:hover {
@@ -68,10 +68,10 @@ const SettingWrapper = styled.div`
       width: fit-content;
       height: 36px;
       line-height: 36px;
-      padding: 0 12px;
+      padding: 0 var(--space-3);
       border-radius: var(--radius-sm);
       background: var(--color-background-secondary);
-      margin-bottom: 16px;
+      margin-bottom: var(--space-4);
     }
   }
 `;

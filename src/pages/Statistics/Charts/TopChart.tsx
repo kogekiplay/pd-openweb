@@ -66,7 +66,7 @@ const getProgressWidth = (value, maxValue) => {
 
 const TopChartContent = styled.div`
   .item {
-    padding: 6px 12px 6px 0;
+    padding: 6px var(--space-3) 6px 0;
     border-radius: var(--radius-sm);
   }
   .index {

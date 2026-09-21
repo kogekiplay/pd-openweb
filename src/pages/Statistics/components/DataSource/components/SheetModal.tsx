@@ -28,7 +28,7 @@ const Wrap = styled.div`
     border-radius: var(--radius-sm);
   }
   .searchWrap {
-    padding: 12px 10px;
+    padding: var(--space-3) 10px;
     border-bottom: 1px solid var(--color-border-secondary);
     input {
       border: none;
@@ -54,7 +54,7 @@ const Wrap = styled.div`
   }
   .viewsWrap {
     .viewItem {
-      padding: 7px 20px 7px 32px;
+      padding: 7px var(--space-5) 7px var(--space-8);
       &.active,
       &:hover {
         background-color: var(--color-background-hover);

@@ -26,17 +26,17 @@ const DialogWrapper = styled(Dialog)`
 const NavBox = styled.div`
   width: 250px;
   border-right: 1px solid var(--color-border-secondary);
-  padding: 12px 0 24px;
+  padding: var(--space-3) 0 var(--space-6);
   min-height: 0;
   ul {
-    margin: 0 12px;
+    margin: 0 var(--space-3);
   }
   li {
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     height: 36px;
     line-height: 36px;
     cursor: pointer;
-    font-size: 13px;
+    font-size: var(--font-sm);
     display: flex;
     align-items: center;
     &:hover {
@@ -49,14 +49,14 @@ const NavBox = styled.div`
     }
   }
   .createBtn {
-    font-size: 13px;
+    font-size: var(--font-sm);
     font-weight: bold;
     border: 1px solid var(--color-border-primary);
     border-radius: 16px;
     height: 32px;
     line-height: 32px;
     cursor: pointer;
-    margin: 12px 24px 0;
+    margin: var(--space-3) var(--space-6) 0;
     text-align: center;
   }
   .appIcon {
@@ -75,7 +75,7 @@ const ContentBox = styled.div`
   .searchBox {
     height: 48px;
     border-bottom: 1px solid var(--color-border-secondary);
-    padding: 0 40px 0 20px;
+    padding: 0 40px 0 var(--space-5);
     input {
       border: 0;
       width: 100%;
@@ -95,7 +95,7 @@ const ContentBox = styled.div`
   }
   .listItem {
     margin: 0 10px;
-    padding: 8px 10px;
+    padding: var(--space-2) 10px;
     cursor: pointer;
     &:hover {
       background-color: var(--color-background-hover);

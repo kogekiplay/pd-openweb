@@ -1,5 +1,5 @@
 .commentBox {
-  font-size: 13px;
+  font-size: var(--font-sm);
   border: 1px solid var(--color-border-tertiary);
   background: var(--color-background-primary);
   border-radius: var(--radius-sm);
@@ -19,7 +19,7 @@
     width: 100%;
     resize: none;
     border: 0;
-    padding: 8px 4px 6px 10px;
+    padding: var(--space-2) var(--space-1) 6px 10px;
     box-sizing: border-box;
     background-color: transparent;
     color: var(--color-text-primary);
@@ -29,13 +29,13 @@
   .commentActionsBox {
     display: flex;
     margin: 0 5px;
-    padding-top: 8px;
-    padding-bottom: 8px;
+    padding-top: var(--space-2);
+    padding-bottom: var(--space-2);
     border-top: 1px solid var(--color-border-tertiary);
   }
 
   .commentIconBtn {
-    font-size: 16px;
+    font-size: var(--font-lg);
     margin-left: 10px;
     line-height: 32px;
     color: var(--color-text-tertiary);
