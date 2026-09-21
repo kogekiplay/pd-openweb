@@ -29,7 +29,7 @@ const Wrap = styled.div`
 const WrapBar = styled.div`
   .addUser {
     line-height: 37px;
-    background: var(--color-primary);
+    background: var(--color-primary-solid);
     border-radius: var(--radius-sm);
     color: var(--color-on-primary);
     padding: 0 var(--space-3);

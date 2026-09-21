@@ -1734,7 +1734,7 @@ body .Hidden {
 .btn-primary {
   color: var(--color-on-primary);
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-  background-color: var(--color-primary);
+  background-color: var(--color-primary-solid);
   background-repeat: repeat-x;
   background-image: linear-gradient(to bottom, var(--color-primary-light), var(--color-primary));
   border-left-color: var(--color-primary);
@@ -1835,7 +1835,7 @@ body .Hidden {
 .btnBootstrap-primary {
   color: var(--color-on-primary);
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.15);
-  background-color: var(--color-primary);
+  background-color: var(--color-primary-solid);
 }
 
 .btnBootstrap-primary:hover,
@@ -2941,7 +2941,7 @@ html:not(.appHomeMobile) .ant-message {
 .mdAntSelectOption.ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
   font-weight: unset;
   color: var(--color-on-primary);
-  background-color: var(--color-primary);
+  background-color: var(--color-primary-solid);
 
   .icon {
     color: var(--color-on-primary) !important;

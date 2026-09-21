@@ -109,7 +109,7 @@ const WrapR = styled.div`
   }
   .editControl {
     padding: 6px var(--space-4);
-    background: var(--color-primary);
+    background: var(--color-primary-solid);
     border-radius: var(--radius-sm);
     color: var(--color-on-primary);
     font-weight: 400;

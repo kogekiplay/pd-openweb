@@ -47,7 +47,7 @@ const MobileConfigWrap = styled.div`
     height: 18px;
     border-radius: 50%;
     border: 2px solid var(--color-white);
-    background-color: var(--color-primary);
+    background-color: var(--color-primary-solid);
   }
   .activeTxt {
     color: var(--color-primary);

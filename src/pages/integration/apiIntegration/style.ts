@@ -80,7 +80,7 @@ export const RedMenuItemWrap = styled(MenuItemWrap)`
 export const WrapFooter = styled.div`
   .btn {
     padding: 0 var(--space-8);
-    background: var(--color-primary);
+    background: var(--color-primary-solid);
     color: var(--color-on-primary);
     line-height: 36px;
     border-radius: var(--radius-sm);

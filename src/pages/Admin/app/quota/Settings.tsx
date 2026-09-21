@@ -73,7 +73,7 @@ const ContentWrap = styled.div`
 
   .saveBtn {
     margin-right: var(--space-5);
-    background: var(--color-primary);
+    background: var(--color-primary-solid);
     color: var(--color-on-primary);
     &:hover {
       background: var(--color-primary-dark);

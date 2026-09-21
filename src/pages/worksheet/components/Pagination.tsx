@@ -158,7 +158,7 @@ const BarPage = styled.span`
     background: var(--color-background-hover);
   }
   &.current {
-    background: var(--color-primary);
+    background: var(--color-primary-solid);
     color: var(--color-on-primary);
     cursor: default;
   }

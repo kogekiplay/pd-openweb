@@ -6,7 +6,7 @@
  *   applyThemeVars.ts 写 DOM，无 React。
  *   AppThemeScope.tsx React 侧的挂载点，渲染 null，只有副作用。
  */
-export { buildThemeVars, themeVarsToCssText, onSolidPrimary, PLATFORM_PRIMARY } from './palette';
+export { antdTheme, buildThemeVars, themeVarsToCssText, PLATFORM_PRIMARY } from './palette';
 export type { ThemeMode, ThemeVars } from './palette';
 export {
   applyAppTheme,

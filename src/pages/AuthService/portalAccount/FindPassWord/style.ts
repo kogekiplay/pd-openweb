@@ -141,7 +141,7 @@ export const WrapCon = styled.div`
     line-height: 1.5;
   }
   .loginBtn {
-    background: var(--color-primary);
+    background: var(--color-primary-solid);
     height: 48px;
     border-radius: 6px;
     line-height: 48px;

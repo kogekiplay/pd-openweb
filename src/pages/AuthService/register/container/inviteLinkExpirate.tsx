@@ -13,7 +13,7 @@ const Wrap = styled.div`
     margin: 64px auto 0;
     width: 236px;
     height: 48px;
-    background: var(--color-primary);
+    background: var(--color-primary-solid);
     opacity: 1;
     border-radius: 6px;
     display: block;

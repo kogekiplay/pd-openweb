@@ -51,7 +51,7 @@ const Wrap = styled.div`
     padding: 0 var(--space-6);
     line-height: 36px;
     height: 36px;
-    background: var(--color-primary);
+    background: var(--color-primary-solid);
     border-radius: 18px;
     color: var(--color-on-primary);
     display: inline-block;

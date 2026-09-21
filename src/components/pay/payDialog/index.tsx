@@ -17,7 +17,7 @@ const PayDialogWrap = styled(Dialog)`
     text-align: center;
     vertical-align: middle;
     color: var(--color-on-primary);
-    background-color: var(--color-primary);
+    background-color: var(--color-primary-solid);
     &:hover {
       background-color: var(--color-primary-dark);
     }

@@ -20,7 +20,7 @@ export const Option = styled.div`
   &.checked {
     color: var(--color-on-primary);
     border-color: var(--color-primary);
-    background-color: var(--color-primary);
+    background-color: var(--color-primary-solid);
   }
   &.more {
     padding: 3px var(--space-3);

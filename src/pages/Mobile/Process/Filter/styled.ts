@@ -14,7 +14,7 @@ export const OptionWrap = styled.div`
   &.checked {
     color: var(--color-on-primary);
     border-color: var(--color-primary);
-    background-color: var(--color-primary);
+    background-color: var(--color-primary-solid);
   }
 `;
 

@@ -57,7 +57,7 @@ export const Wrap = styled.div`
     height: 48px;
     line-height: 48px;
     display: block;
-    background: var(--color-primary);
+    background: var(--color-primary-solid);
     border-radius: 6px;
     font-size: var(--font-lg);
     color: var(--color-on-primary);

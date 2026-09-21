@@ -53,7 +53,7 @@ const Wrapper = styled.div`
   }
   .ownerTag {
     color: var(--color-on-primary);
-    background: var(--color-primary);
+    background: var(--color-primary-solid);
     font-weight: bold;
     padding: 2px 6px;
     font-size: var(--font-xs);

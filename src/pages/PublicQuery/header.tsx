@@ -16,7 +16,7 @@ const PublicqueryHeader = styled.div`
   .btn {
     height: 36px;
     opacity: 1;
-    background: var(--color-primary);
+    background: var(--color-primary-solid);
     border-radius: var(--radius-sm);
     font-size: var(--font-sm);
     font-weight: 700;

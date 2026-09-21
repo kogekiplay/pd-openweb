@@ -74,7 +74,7 @@ const ExplainCon = styled.div`
   }
   .explain-button {
     padding: 15px 22px;
-    background: var(--color-primary);
+    background: var(--color-primary-solid);
     border: none;
     color: var(--color-on-primary);
     font-size: var(--font-md);

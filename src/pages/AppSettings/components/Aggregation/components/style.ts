@@ -188,9 +188,9 @@ export const Header = styled.div`
     border-radius: var(--radius-sm);
     text-align: center;
     font-weight: 600;
-    background: var(--color-primary);
+    background: var(--color-primary-solid);
     &:hover {
-      background: var(--color-primary);
+      background: var(--color-primary-solid);
     }
   }
   .disable,

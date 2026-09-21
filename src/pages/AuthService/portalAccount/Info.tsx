@@ -73,7 +73,7 @@ const Wrap = styled.div`
     }
   }
   .send {
-    background: var(--color-primary);
+    background: var(--color-primary-solid);
     height: 40px;
     border-radius: 6px;
     line-height: 40px;

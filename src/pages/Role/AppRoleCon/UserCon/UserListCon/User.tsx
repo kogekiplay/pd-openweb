@@ -55,7 +55,7 @@ const Wrap = styled.div`
     padding: 0px 7px;
     line-height: 18px;
     height: 18px;
-    background: var(--color-primary);
+    background: var(--color-primary-solid);
     border-radius: 9px 9px 9px 9px;
     color: var(--color-on-primary);
     .tag {
@@ -89,7 +89,7 @@ const WrapBar = styled.div`
   }
   .addUser {
     line-height: 36px;
-    background: var(--color-primary);
+    background: var(--color-primary-solid);
     border-radius: var(--radius-sm);
     color: var(--color-on-primary);
     padding: 0 var(--space-3);

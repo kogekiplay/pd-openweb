@@ -551,7 +551,9 @@ function SheetHeader(props) {
                  .textWhite 带 !important，留着会压过这里，所以要摘掉。 */
               <span
                 style={{
-                  backgroundColor: appPkg.iconColor || 'var(--color-primary)',
+                  // 【底色走实心面，不是 iconColor 原值】主色太浅时白字读不清，
+                  // --color-primary-solid 会自动换成同色相的深色档；够深的一点不变。
+                  backgroundColor: 'var(--color-primary-solid)',
                   color: 'var(--color-on-primary)',
                 }}
                 className="addRow mLeft8 overflow_ellipsis WordBreak addRecordEntry"

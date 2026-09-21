@@ -15,7 +15,7 @@ const FooterWrap = styled.div`
     display: inline-block;
     padding: 0 var(--space-8);
     color: var(--color-on-primary);
-    background-color: var(--color-primary);
+    background-color: var(--color-primary-solid);
     border-radius: var(--radius-sm);
     line-height: 36px;
     &:hover {

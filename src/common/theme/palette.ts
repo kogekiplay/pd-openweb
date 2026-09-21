@@ -210,11 +210,14 @@ export function buildThemeVars(seed: string, mode: ThemeMode = 'light'): ThemeVa
     '--color-on-app-ink': onInk(primary),
     '--color-on-app-paper': onPaper(primary),
 
-    // ——— 直接压在主题色【实心底】上的文字（按钮、徽标、分页当前页）———
-    // 上面两个是给「主题色淡底」用的，浓度不够时白纸黑字都还读得清；
-    // 压在【实心主色】上就不一样了：主色够深才配得住白字。
-    // 见 onSolidPrimary 的说明——阈值 3，不达标才翻成墨色。
-    '--color-on-primary': onSolidPrimary(primary),
+    // ——— 主题色的【实心面】：按钮、徽标、分页当前页 ———
+    // 见 solidPrimary 的说明：主色太浅就换用它的深色档，而不是把白字翻成黑字。
+    '--color-primary-solid': solidPrimary(primary, token.colorPrimaryActive),
+    '--color-primary-solid-hover': solidPrimaryHover(primary, token.colorPrimaryActive),
+    // 压在上面那个实心面上的文字。绝大多数情况下是白 ——
+    // 因为实心面已经保证够深了。留着这一层是为了兜住极端浅色（比如纯黄），
+    // 那种连深色档都撑不住白字，只能翻墨色。
+    '--color-on-primary': onSolidPrimary(solidPrimary(primary, token.colorPrimaryActive)),
   };
 }
 
@@ -230,7 +233,52 @@ function onPaper(primary: string): string {
 }
 
 /**
- * 压在【主题色实心底】上的前景色：白字够读就用白，不够才翻成墨色。
+ * 主题色的【实心面】：主按钮、徽标、分页当前页这种「大块彩底 + 文字」。
+ *
+ * 【为什么不能直接用主色】用户可以把主题色设成任意颜色，而这些地方一律配白字。
+ * 主色一浅白字就读不清 —— 2026-09-21 实测生产上 13 个真实应用主题色，
+ * 4 个配白字连 3:1 都到不了（最低 2.28）。
+ *
+ * 【为什么是换底色，不是把白字翻成黑字】
+ * 这条是**被张奇的反馈纠正过来的**，值得写清楚：
+ * 第一版做的是翻字色（见 onSolidPrimary），按 WCAG 算橙底黑字 7.58 远高于
+ * 白字 2.77，数字上是大胜。但他一眼就说「可见度变差了」——**他是对的**：
+ *   · WCAG 2.x 的对比度公式**不区分明暗极性**，同一个比值下「深底浅字」和
+ *     「浅底深字」的实际观感并不对称。这正是 WCAG 3 要换成 APCA 的原因。
+ *   · 更要紧的是，主按钮的"可见度"还包含**它像不像一个主操作**。
+ *     彩底黑字读起来像警告标签，白字压彩底才是主按钮的惯常分量。
+ *   我用一个只测字形可辨度的指标，去回答了一个关于视觉分量的问题。
+ *
+ * 换底色两头都占：白字保住（分量不变），对比度也够 ——
+ * 那 4 个色换成深色档之后分别是 3.49 / 4.29 / 4.23 / 4.34，全部过 3:1。
+ * 而且深色档是**同色相的派生色**，不是另一个颜色，观感上温和得多。
+ *
+ * 【只在不达标时才换】达标的 9 个色，实心面就是主色本身，一点不变。
+ */
+export function solidPrimary(primary: string, primaryActive: string): string {
+  return readability(primary, PURE_PAPER) >= 3 ? primary : primaryActive;
+}
+
+/**
+ * 实心面的悬停色。
+ *
+ * 常态是主色时 -> 悬停加深（深色档），这是原来的行为，9 个达标的色一点不变。
+ * 常态【已经】是深色档时 -> 悬停回到主色，也就是**变亮**。
+ * 后者是被迫的：antd 的 token 里没有比 colorPrimaryActive 更深的一档，
+ * 而本模块有一条硬规矩 —— **调色板绝不自算 lighten/darken**（见文件头），
+ * 自算会让 antd 组件和我们的 Less 分叉出两种颜色。
+ * 「悬停变亮」本身是常见做法，不是将就。
+ */
+export function solidPrimaryHover(primary: string, primaryActive: string): string {
+  return solidPrimary(primary, primaryActive) === primary ? primaryActive : primary;
+}
+
+/**
+ * 压在【实心面】上的前景色：白字够读就用白，不够才翻成墨色。
+ *
+ * 【这一层现在基本不会触发】实心面已经保证够深了，13 个真实色全都走白字。
+ * 留着是为了兜住极端浅色（纯黄那种）：连深色档都撑不住白字时，
+ * 翻墨色总比读不清强。
  *
  * 【为什么需要它】用户可以把应用主题色设成任意颜色，而全仓有一批地方
  * 写死了白字（`.textWhite` 那一类）。主色一浅，白字就读不清 ——
@@ -256,6 +304,42 @@ function onPaper(primary: string): string {
  */
 export function onSolidPrimary(primary: string): string {
   return readability(primary, PURE_PAPER) >= 3 ? PURE_PAPER : PURE_INK;
+}
+
+/**
+ * 给 `<ConfigProvider theme={...}>` 用的 antd 主题配置。
+ *
+ * 【为什么要有这个函数，而不是三处各写各的】全仓有三个地方要配 antd 主题
+ * （路由根 / 应用层 / FunctionWrap 的命令式挂载），逻辑必须一致 ——
+ * 三份拷贝迟早走样，而走样的表现是「某些弹层里的按钮和主界面不一样深」，
+ * 没人会往主题配置上想。
+ *
+ * 【为什么 Button 要单独覆盖 colorPrimary】antd 的实心主按钮直接拿全局
+ * colorPrimary 当底色。主色太浅时白字读不清（见 solidPrimary），
+ * 但又【不能】把全局 colorPrimary 改成深色档 —— 那会把链接、选中态、
+ * 进度条这些「非实心面」也一起加深，主题就不是用户选的那个颜色了。
+ * 所以只在 Button 这个组件作用域里换底色。
+ */
+export function antdTheme(seed: string): {
+  token: Record<string, string>;
+  components: Record<string, Record<string, string>>;
+} {
+  const safeSeed = seed && new TinyColor(seed).isValid ? seed : PLATFORM_PRIMARY;
+  const t = theme.getDesignToken({ token: { colorPrimary: safeSeed } });
+  const solid = solidPrimary(t.colorPrimary, t.colorPrimaryActive);
+
+  return {
+    // colorTextLightSolid = 压在实心主色上的文字。按【实心面】算，不是按主色算 ——
+    // 底色已经换深了，这里几乎总是白。
+    token: { colorPrimary: t.colorPrimary, colorTextLightSolid: onSolidPrimary(solid) },
+    components: {
+      Button: {
+        colorPrimary: solid,
+        colorPrimaryHover: solidPrimaryHover(t.colorPrimary, t.colorPrimaryActive),
+        colorPrimaryActive: solid,
+      },
+    },
+  };
 }
 
 /** 拼成可直接塞进 <style> 的声明串。 */

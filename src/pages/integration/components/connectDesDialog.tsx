@@ -56,7 +56,7 @@ const Wrap = styled.div`
   .btn {
     margin-top: var(--space-8);
     padding: var(--space-2) var(--space-8);
-    background: var(--color-primary);
+    background: var(--color-primary-solid);
     color: var(--color-on-primary);
     line-height: 1em;
     border-radius: var(--radius-sm);

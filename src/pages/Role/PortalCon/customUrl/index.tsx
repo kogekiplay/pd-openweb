@@ -24,7 +24,7 @@ const Wrap = styled.div`
   }
   .setBtn {
     padding: 5px var(--space-5);
-    background: var(--color-primary);
+    background: var(--color-primary-solid);
     border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     color: var(--color-on-primary) !important;
   }

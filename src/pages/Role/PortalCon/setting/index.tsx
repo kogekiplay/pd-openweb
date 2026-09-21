@@ -84,7 +84,7 @@ const WrapCon = styled.div`
     box-sizing: border-box;
     line-height: 36px;
     cursor: pointer;
-    background: var(--color-primary);
+    background: var(--color-primary-solid);
     color: var(--color-on-primary);
     &:hover {
       background-color: var(--color-primary-dark);

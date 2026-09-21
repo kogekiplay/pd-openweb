@@ -67,7 +67,7 @@ const AccountItem = styled.div`
   align-items: center;
   &:hover,
   &.active {
-    background: var(--color-primary);
+    background: var(--color-primary-solid);
     color: var(--color-on-primary);
   }
 `;
